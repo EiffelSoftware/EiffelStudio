@@ -4,6 +4,7 @@
 #include <mtscli.h>	// admin connection
 #include "eif_eiffel.h"
 #include "eif_garcol.h"
+#include "mt_support.h"
 #include "matisse_store.h"
 
 /*
@@ -23,7 +24,7 @@ typedef struct {
 	void* value;
 } Value;
 
-MtSTS result;
+MtSTS result=0;
 MtDatabase database;
 
 STS admin_sts;			// admin connection last op status
@@ -1358,10 +1359,8 @@ RPC_HANDLE hdl;
 }
 
 /*--------------------------------------------*/
- void c_admin_connect(host_name, database_name)
+ void c_admin_connect(char *host_name, char *database_name)
 /*--------------------------------------------*/
-char* host_name;
-char* database_name;
 {
     admin_sts = mts_rpc_connect(&admin_handle, host_name, database_name, "mtsoper", 1024, 0);
 }
@@ -1618,15 +1617,17 @@ EIF_INTEGER c;
 /*--------------------------------------------*/
 EIF_OBJ obj;
 {
-uint32 oflags;
-EIF_OBJ object;
-object = obj;
-oflags = HEADER(object)->ov_flags;
+    uint32 oflags;
+    EIF_OBJ object;
+    object = obj;
+    oflags = HEADER(object)->ov_flags;
 
-translation_table = (int *) access_current_table ();
-// *(flags+flags_index) = oflags;
-*(flags+flags_index) = translation_table [oflags&EO_TYPE];
-flags_index++;
+DEBUG_PRINTF((stderr, "c_put_flag; flags_index = %d\n", flags_index))
+    translation_table = (int *) access_current_table ();
+DEBUG_PRINTF((stderr, "\ttransation_table = 0x%lx\n", translation_table))
+    // *(flags+flags_index) = oflags;
+    *(flags+flags_index) = translation_table [oflags&EO_TYPE];
+    flags_index++;
 }
 
 

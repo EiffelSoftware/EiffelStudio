@@ -1,5 +1,11 @@
 class TYPES 
 
+inherit
+	INTERNAL
+		export
+			{NONE} all
+		end
+
 feature -- Status Report : Basic types
 
 	is_integer(object : ANY) : BOOLEAN is
@@ -55,9 +61,28 @@ feature -- Status Report : ARRAY
 			not_void : object /= Void
 		local
 			one_array : ARRAY[ANY]
+other_array: ARRAY[STRING]
+one_string:STRING
+i:INTEGER
+found:BOOLEAN
 		do
 			!!one_array.make(0,0)
 			Result := has_same_type(one_array,object)
+-- can't trust this - it returns TRue for a ARRAY[STRING]. Do another (dodgy) check:
+other_array ?= object
+if other_array /= Void then
+    if not other_array.empty then
+	-- loop through array to see if any members (nec. for HASH_TABLE arrays)
+	from i := other_array.lower until i > other_array.upper or found loop
+	    one_string ?= other_array.item(i)
+	    found := one_string = Void -- i.e. we don't want to match a STRING
+	    i := i + 1
+	end
+	Result := Result and found
+    else
+    	-- still can't tell!!!
+    end
+end
 		end -- is_array_any
 
 	is_array_integer(object : ANY) : BOOLEAN is
@@ -65,6 +90,16 @@ feature -- Status Report : ARRAY
 			not_void : object /= Void
 		local
 			one_array : ARRAY[INTEGER]
+		do
+			!!one_array.make(0,0)
+			Result := has_same_type(one_array,object)
+		end -- is_integer
+
+	is_array_boolean(object : ANY) : BOOLEAN is
+		require 
+			not_void : object /= Void
+		local
+			one_array : ARRAY[BOOLEAN]
 		do
 			!!one_array.make(0,0)
 			Result := has_same_type(one_array,object)
@@ -95,9 +130,28 @@ feature -- Status Report : ARRAY
 			not_void : object /= Void
 		local
 			one_array : ARRAY[STRING]
+other_array: ARRAY[STRING]
+one_string:STRING
+i:INTEGER
+found:BOOLEAN
 		do
 			!!one_array.make(0,0)
 			Result := has_same_type(one_array,object)
+-- can't trust this - it returns TRue for a ARRAY[STRING]. Do another (dodgy) check:
+other_array ?= object
+if other_array /= Void then
+    if not other_array.empty then
+	-- loop through array to see if any members (nec. for HASH_TABLE arrays)
+	from i := other_array.lower until i > other_array.upper or found loop
+	    one_string ?= other_array.item(i)
+	    found := one_string /= Void
+	    i := i + 1
+	end
+	Result := Result and found
+    else
+    	-- still can't tell!!!
+    end
+end
 		end -- is_array_string
 
 feature -- Status Report : LINKED_LIST
@@ -107,9 +161,21 @@ feature -- Status Report : LINKED_LIST
 			not_void : object /= Void
 		local
 			one_linked_list : LINKED_LIST[ANY]
+other_linked_list: LINKED_LIST[STRING]
+one_string:STRING
 		do
 			!!one_linked_list.make
 			Result := has_same_type(one_linked_list,object)
+-- can't trust this - it returns TRue for a LIST[STRING]. Do another (dodgy) check:
+other_linked_list ?= object
+if other_linked_list /= Void then
+    if not other_linked_list.empty then
+	one_string ?= other_linked_list.first
+	Result := Result and one_string = Void
+    else
+    	-- still can't tell!!!
+    end
+end
 		end -- is_linked_list_any
 
 	is_linked_list_integer(object : ANY) : BOOLEAN is
@@ -146,10 +212,23 @@ feature -- Status Report : LINKED_LIST
 		require 
 			not_void : object /= Void
 		local
-			one_linked_list : LINKED_LIST[STRING]
+			one_linked_list: LINKED_LIST[STRING]
+other_linked_list: LINKED_LIST[STRING]
+one_string:STRING
 		do
 			!!one_linked_list.make
 			Result := has_same_type(one_linked_list,object)
+
+-- can't trust this - it returns TRue for a LIST[ANY]. Do another (dodgy) check:
+other_linked_list ?= object
+if other_linked_list /= Void then
+    if not other_linked_list.empty then
+	one_string ?= other_linked_list.first
+	Result := Result and one_string /= Void
+    else
+    	-- still can't tell!!!
+    end
+end
 		end -- is_linked_list_string
 
 	is_linked_list(object : ANY) : BOOLEAN is
@@ -162,6 +241,24 @@ feature -- Status Report : LINKED_LIST
  			Result := one_linked_list /= Void
 		end -- is_linked_list
 
+feature -- database mapped types
+	OK_is_db_implemented_type(obj_field:ANY):BOOLEAN is
+	        -- the following is the correct implementation, but will not work at the 
+	        -- moment due to the dynamic type bug in ISE Eiffel 4.1
+	    obsolete
+			"Use ODB_SCHEMA.is_db_implemented_type"
+		do
+			Result :=
+			is_array_integer(obj_field) or 
+			is_array_double(obj_field) or 
+			is_array_real(obj_field)  or
+			is_linked_list_integer(obj_field)  or 
+			is_linked_list_double(obj_field) or 
+			is_linked_list_real(obj_field) or
+			is_linked_list_string(obj_field) or 
+			is_string(obj_field)  
+	    end
+
 feature {NONE} -- Externals
 
 	has_same_type(arg1,arg2 : ANY) : BOOLEAN is
@@ -170,20 +267,3 @@ feature {NONE} -- Externals
 	end -- has_same_type
 
 end -- class TYPES
-
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
-

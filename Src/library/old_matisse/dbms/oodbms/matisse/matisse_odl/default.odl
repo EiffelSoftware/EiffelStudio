@@ -1,51 +1,19 @@
-/****************************************************************/
-/*								*/
-/*	Schema to use store and retrieve with matisse		*/
-/*								*/
-/****************************************************************/
+//                         -*-c++-*-
+//
+// Generated schema description
+//    in MT_ODL (c) from ADB MATISSE
+//
+// Generation date: Fri May 29 09:09:51 1998
+// Generated from database testdb on host TOKYO
+//
 
-/* ---------- */
-/* Attributes */
-/* ---------- */
 
-mt_attribute MtS32 object_comparison=0;
-mt_attribute MtS32 upper=0;
-mt_attribute MtS32 lower=0;
-mt_attribute MtS32 eif_count=0;
-mt_attribute MtS32 eif_size=0;
-mt_attribute Array<Unsigned Long> flags[0] ;
-mt_attribute Array<Long> oids[0];
 
-/* -------------- */
-/* Relationships  */
-/* -------------- */
-mt_relationship List <ANY> area inverse area_of;
-mt_relationship List <ANY> area_of inverse area;
 
-/* -------- */
-/* Classes  */
-/* -------- */
+// Interface Definitions
+//----------------------
 
-interface ANY ():persistent
-{
-};
-
-interface ARRAY:ANY ():persistent
-{
-mt_attribute object_comparison;  
-mt_attribute upper;  
-mt_attribute lower;  
-mt_relationship area;
-};
-
-interface SPECIAL:ANY ():persistent
-{
-mt_attribute eif_size;  
-mt_attribute eif_count;  
-mt_relationship area;
-};
-interface IDF_TABLE:ANY ():persistent
-{
-mt_attribute flags;  
-mt_attribute oids;  
+interface Person : persistent {
+  mt_attribute MtString FirstName;
+  mt_attribute MtString LastName;
 };

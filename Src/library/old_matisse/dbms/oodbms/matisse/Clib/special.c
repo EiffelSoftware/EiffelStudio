@@ -26,9 +26,9 @@
 #endif
 
 
- void st_store();				/* Second pass of the store */
+ void st_store();                               /* Second pass of the store */
   void ext_gst_write();
-  void ext_make_header();				/* Make header */
+  void ext_make_header();                               /* Make header */
  void object_write ();
  void gen_object_write ();
  void st_clean();
@@ -37,7 +37,8 @@
 char * new_object = (char *) 0;
 uint32 obj_flags;
 extern char rt_kind;
-extern int r_fides;
+int r_mat_fides;
+int s_mat_fides;
 char * old_adress=(char*)NULL;
  char *s_buffer = (char *) 0;
  int gen_accounting=0 ;
@@ -110,7 +111,7 @@ EIF_INTEGER i;
 EIF_INTEGER i;
 {
 struct gt_info * info;
-info = (struct gt_info*) ct_value(&ce_gtype,System(i).cn_generator);
+info = (struct gt_info*) ct_value(&egc_ce_gtype,System(i).cn_generator);
 return(info!=(struct gt_info*)0);
 }
 
@@ -118,7 +119,7 @@ return(info!=(struct gt_info*)0);
 EIF_INTEGER i;
 {
 struct gt_info * info;
-info = (struct gt_info*) ct_value(&ce_gtype,System(i).cn_generator);
+info = (struct gt_info*) ct_value(&egc_ce_gtype,System(i).cn_generator);
 return(info->gt_param);
 }
 
@@ -128,7 +129,7 @@ EIF_INTEGER i;
 struct gt_info * info;
 int16 *gt_type;
 
-info = (struct gt_info*) ct_value(&ce_gtype,System(i).cn_generator);
+info = (struct gt_info*) ct_value(&egc_ce_gtype,System(i).cn_generator);
 gt_type = info->gt_type;
 for (;;)
   {
@@ -184,14 +185,14 @@ EIF_OBJ object;
  void c_set_file_descriptor(file_desc)
 EIF_INTEGER file_desc;
 {
-  fides = (int) file_desc;
+  s_mat_fides = (int) file_desc;
   allocate_gen_buffer();
 }
 
  void c_set_file_descriptor_retrieve(file_desc)
 EIF_INTEGER file_desc;
 {
-  r_fides = (int) file_desc;
+  r_mat_fides = (int) file_desc;
 }
 
  EIF_BOOLEAN c_is_expanded(object)
@@ -303,7 +304,7 @@ EIF_POINTER pointer;
   char kind_of_store;
   int n;
   kind_of_store = BASIC_STORE_3_2;
-  write(fides,&kind_of_store,sizeof(char));
+  write(s_mat_fides,&kind_of_store,sizeof(char));
 }
 
  void c_write_general_store_3_3()
@@ -311,14 +312,14 @@ EIF_POINTER pointer;
   char kind_of_store;
   int n;
   kind_of_store = GENERAL_STORE_3_3;
-  write(fides,&kind_of_store,sizeof(char));
+  write(s_mat_fides,&kind_of_store,sizeof(char));
 }
 
 
  EIF_BOOLEAN c_is_basic_store_3_2()
 {
   char kind_of_store;
-  read(r_fides,&kind_of_store,sizeof(char));
+  read(r_mat_fides,&kind_of_store,sizeof(char));
   rt_kind=BASIC_STORE;
   current_position = 0;
 return(kind_of_store == BASIC_STORE_3_2);
@@ -327,7 +328,7 @@ return(kind_of_store == BASIC_STORE_3_2);
  EIF_BOOLEAN c_is_general_store_3_3()
 {
   char kind_of_store;
-  read(r_fides,&kind_of_store,sizeof(char));
+  read(r_mat_fides,&kind_of_store,sizeof(char));
   rt_kind=BASIC_STORE;
   current_position = 0;
   return(kind_of_store == GENERAL_STORE_3_3);
@@ -537,7 +538,7 @@ return *(char**)pointer_on_special_item(i,object);
       }
     } 
   } else {
-    if (flags & EO_SPEC) {		/* Special object */
+    if (flags & EO_SPEC) {              /* Special object */
       long count, elem_size;
       char *ref, *o_ptr;
       char *vis_name;
@@ -549,8 +550,8 @@ return *(char**)pointer_on_special_item(i,object);
       vis_name = System(o_type).cn_generator;
       
       
-      info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
-      if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+      info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
+      if (info != (struct gt_info *) 0) {       /* Is the type a generic one ? */
 	/* Generic type, write in file:
 	 *    "dtype visible_name size nb_generics {meta_type}+"
 	 */
@@ -567,7 +568,7 @@ return *(char**)pointer_on_special_item(i,object);
 	dgen = *gt_gen;
       }
       
-      if (!(flags & EO_REF)) {		/* Special of simple types */
+      if (!(flags & EO_REF)) {          /* Special of simple types */
 	switch (dgen & SK_HEAD) {
 	case SK_INT:
 	  buffer_write(((long *)object), count*sizeof(EIF_INTEGER));
@@ -605,9 +606,9 @@ return *(char**)pointer_on_special_item(i,object);
 	  break;
 	}
       } else {
-	if (!(flags & EO_COMP)) {	/* Special of references */
+	if (!(flags & EO_COMP)) {       /* Special of references */
 	  buffer_write(object, count*sizeof(EIF_REFERENCE));
-	} else {			/* Special of composites */
+	} else {                        /* Special of composites */
 	  elem_size = *(long *) (o_ptr + sizeof(long));
 	  buffer_write(&(HEADER (object)->ov_flags), sizeof(uint32));
 	  for (ref = object + OVERHEAD; count > 0;
@@ -623,7 +624,7 @@ return *(char**)pointer_on_special_item(i,object);
  void ext_gst_write(object)
 char *object;
 {
-	/* Write an object in file `fides'.
+	/* Write an object in file `s_mat_fides'.
 	 * used for general store
 	 */
 
@@ -664,7 +665,7 @@ char *object;
   
   /* Generate header for stored hiearchy retrivable by other systems. */
   int i;
-  char *vis_name;			/* Visible name of a class */
+  char *vis_name;                       /* Visible name of a class */
   struct gt_info *info;
   int nb_line = 0;
   int bsize = 80;
@@ -693,7 +694,7 @@ char *object;
 
 	for (i=0; i<scount; i++) {
 		if (!account[i])
-			continue;				/* No object of dyn. type `i'. */
+			continue;                               /* No object of dyn. type `i'. */
 
 		sort_attributes(i);
 
@@ -706,8 +707,8 @@ char *object;
 				s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
 		}
 
-		info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
-		if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+		info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
+		if (info != (struct gt_info *) 0) {     /* Is the type a generic one ? */
 			/* Generic type, write in file:
 			 *    "dtype visible_name size nb_generics {meta_type}+"
 			 */

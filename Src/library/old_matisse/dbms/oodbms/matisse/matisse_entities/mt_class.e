@@ -335,6 +335,36 @@ feature -- Access
 			Result = Void or else (Result.count = instances_count)
 		end  -- all_instances
 
+	all_index_names:ARRAYED_LIST [STRING] is
+			-- list of all index names for this class whether introduced or inherited
+		local
+			classes:ARRAY[MT_CLASS]
+			i,j:INTEGER
+			rel:MT_RELATIONSHIP
+			an_obj:MT_OBJECT
+			an_att:MT_ATTRIBUTE
+			objs:ARRAY[MT_OBJECT]
+			str:STRING
+		do
+			!!Result.make(0)
+			!!rel.make("Mt Indexes")
+
+			superclasses.force(Current, superclasses.upper+1)
+			from i := superclasses.lower until i > superclasses.upper loop
+				!!an_obj.make(superclasses.item(i).cid)
+				objs := an_obj.successors(rel)
+					from j := objs.lower until j > objs.upper loop
+						!!an_att.make("Mt Name")
+						str ?= an_att.value(objs.item(j))
+						if str /= Void then
+							Result.extend(str)
+						end
+						j := j + 1
+					end
+				i := i + 1
+			end
+		end
+
 feature -- Action
 
 	remove_all_instances is
@@ -389,12 +419,16 @@ feature -- Output
 			c_attributes,p_attributes,attrs : ARRAY[MT_ATTRIBUTE]
 			i,j,k,attribute_type : INTEGER
 			is_inherited : BOOLEAN
-			today : ABSOLUTE_DATE one_class : MT_CLASS par :ARRAY[MT_CLASS] cr : ARRAY[MT_RELATIONSHIP] rs : ARRAY[MT_CLASS]
+			today : DATE_TIME 
+			one_class : MT_CLASS 
+			par :ARRAY[MT_CLASS] 
+			cr : ARRAY[MT_RELATIONSHIP] 
+			rs : ARRAY[MT_CLASS]
 		do
 			!!buffer.make(512)
 			-- Indexing
 			buffer.append("indexing%N%N")
-			buffer.append("%Tdate : %"") !!today.make buffer.append(today.out) buffer.append("%"%N%N")
+			buffer.append("%Tdate : %"") !!today.make_now buffer.append(today.formatted_out(today.Default_format_string)) buffer.append("%"%N%N")
 			buffer.append ("class ") c:=name c.to_upper
 			buffer.append (c)
 			-- Inheritance part
@@ -434,37 +468,8 @@ feature -- Output
 				if not(is_inherited) then
 					buffer.append ("%T") c:= c_attributes.item(i).name c.to_lower
 					buffer.append(c) buffer.append(" : ") 
-					attribute_type := c_attributes.item(i).type
-				if attribute_type = Mts32 then
-					buffer.append("INTEGER")
-				elseif attribute_type = Mtdouble then
-					buffer.append("DOUBLE")
-				elseif attribute_type = Mtfloat then
-					buffer.append("REAL")
-				elseif attribute_type = Mtchar or attribute_type = Mtasciichar then
-					buffer.append("CHARACTER")
-				elseif attribute_type = Mtstring or attribute_type = Mtasciistring then
-					buffer.append("STRING")
-				elseif attribute_type = Mtstring_list then
-					buffer.append("LINKED_LIST[STRING]")
-				elseif attribute_type = Mts32_list then
-					buffer.append("LINKED_LIST[INTEGER]")
-				elseif attribute_type = Mtdouble_list then
-					buffer.append("LINKED_LIST[DOUBLE]")
-				elseif attribute_type = Mtfloat_list then
-					buffer.append("LINKED_LIST[REAL]")
-				elseif attribute_type = Mtstring_array then
-					buffer.append("ARRAY[STRING]")
-				elseif attribute_type = Mts32_array then
-					buffer.append("ARRAY[INTEGER]")
-				elseif attribute_type = Mtdouble_array then
-					buffer.append("ARRAY[DOUBLE]")
-				elseif attribute_type = Mtfloat_array then
-					buffer.append("ARRAY[REAL]")
-				else
-					buffer.append("UNKOWN_TYPE")
-				end
-				buffer.append("%N%N")
+					buffer.append(attr_type(c_attributes.item(i)))
+					buffer.append("%N%N")
 				end
 				end
 				i:= i + 1
@@ -487,12 +492,105 @@ feature -- Output
 			Result := buffer
 		end -- out
 
+	out_flat : STRING is
+		local
+			buffer,c : STRING
+			c_attributes,attrs : ARRAY[MT_ATTRIBUTE]
+			i,attribute_type : INTEGER
+			today : DATE_TIME 
+			one_class : MT_CLASS 
+			cr : ARRAY[MT_RELATIONSHIP] 
+			rs : ARRAY[MT_CLASS]
+		do
+			!!buffer.make(512)
+			-- Indexing
+			buffer.append("indexing%N%N")
+			buffer.append("%Tdate : %"") !!today.make_now buffer.append(today.formatted_out(today.Default_format_string)) buffer.append("%"%N%N")
+			buffer.append ("class ") c:=name c.to_upper
+			buffer.append (c)
+
+			-- Attributes
+			buffer.append ("%N%Nfeature -- Attributes%N%N")
+			c_attributes := attributes
+			if c_attributes /= Void then
+				from
+					i:=c_attributes.lower
+				until
+					i>c_attributes.upper
+				loop
+					-- Is attribute inherited ?
+					if not(c_attributes.item(i).is_predefined_msp) then
+						buffer.append ("%T") c:= c_attributes.item(i).name c.to_lower
+						buffer.append(c) buffer.append(" : ") 
+						buffer.append(attr_type(c_attributes.item(i)))
+						buffer.append("%N%N")
+					end
+					i:= i + 1
+				end -- loop			
+			end
+
+			-- Relationships
+			buffer.append ("feature -- Relationships%N%N")
+			cr := relationships 
+			if cr/=Void then
+				from  i:=cr.lower until  i>cr.upper
+				loop
+					buffer.append ("%T") c:= cr.item(i).name c.to_lower
+					buffer.append(c) buffer.append(" : ") 
+					rs := cr.item(i).successors  c := rs.item(rs.lower).name c.to_upper buffer.append(c) buffer.append("%N")
+					i:=i+1	
+				end 
+			end
+			buffer.append("%Nend -- class ") c:=name c.to_upper buffer.append(c) buffer.append("%N") 
+			Result := buffer
+		end -- out_flat
+
+	attr_type(an_attr:MT_ATTRIBUTE) : STRING is
+		local
+			attribute_type : INTEGER
+		do
+			!!Result.make(0)
+
+			attribute_type := an_attr.type
+			if attribute_type = Mts32 then
+				Result.append("INTEGER")
+			elseif attribute_type = Mtdouble then
+				Result.append("DOUBLE")
+			elseif attribute_type = Mtfloat then
+				Result.append("REAL")
+			elseif attribute_type = Mtchar or attribute_type = Mtasciichar then
+				Result.append("CHARACTER")
+			elseif attribute_type = Mtstring or attribute_type = Mtasciistring then
+				Result.append("STRING")
+			elseif attribute_type = Mtstring_list then
+				Result.append("LINKED_LIST[STRING]")
+			elseif attribute_type = Mts32_list then
+				Result.append("LINKED_LIST[INTEGER]")
+			elseif attribute_type = Mtdouble_list then
+				Result.append("LINKED_LIST[DOUBLE]")
+			elseif attribute_type = Mtfloat_list then
+				Result.append("LINKED_LIST[REAL]")
+			elseif attribute_type = Mtstring_array then
+				Result.append("ARRAY[STRING]")
+			elseif attribute_type = Mts32_array then
+				Result.append("ARRAY[INTEGER]")
+			elseif attribute_type = Mtdouble_array then
+				Result.append("ARRAY[DOUBLE]")
+			elseif attribute_type = Mtfloat_array then
+				Result.append("ARRAY[REAL]")
+			elseif attribute_type = Mtu8_array then
+				Result.append("ARRAY[BOOLEAN]")
+			else
+				Result.append("UNKOWN_TYPE")
+			end
+		end
+
 	infix "<" (other: MT_CLASS): BOOLEAN is
 		do
 			Result := cid < other.cid
 		end --_infix_lt
 
-	to_directory ( directory : DIRECTORY) is
+	to_directory (directory : DIRECTORY) is
 		-- Create a physical file with corresponding Eiffel class
 		require
 			directory_exists  : directory /= Void and then directory.exists
@@ -520,20 +618,3 @@ feature {NONE} -- Implementation
 	stream : MT_CLASS_STREAM
 
 end -- class MT_CLASS
-
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
-

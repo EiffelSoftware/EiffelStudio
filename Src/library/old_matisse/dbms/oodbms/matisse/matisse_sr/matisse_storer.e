@@ -1,207 +1,360 @@
 class MATISSE_STORER 
 
 inherit
-
 	DATABASE_STORER
-		export {NONE} all
-		redefine make_idf_table
-		end	
-
-	DATABASE_STORER
-		export {ANY} store, store_one_object
-		end	
 
 	MATISSE_CONST
-		export {NONE} ALL
+		export 
+			{NONE} all
 		end
 
 	MATISSE_TABLES
-		export {NONE} ALL
+		export
+			{NONE} all
 		end
 
-feature -- Element change
+	TYPES
+		export 
+			{NONE} all
+		end 
 
-	putobject,put_object( object : ANY ) is
-		-- Append object o
+feature {TRAVERSAL_ACTION} -- Element change
+
+	putobject,put_object(object:ANY) is
 		do
-			-- Create new object in database
-			update_table(object) 
+debug("matisse-sr")
+	shifter.increase
+    io.put_string(shifter.out)
+    io.put_string("MATISSE_STORER.put_object ")
+    io.put_string(object.generator)
+    io.new_line
+end
+			update_table(object)
 			if is_special(object) then
 				put_special_object(object)
 			else
 				put_normal_object(object)
-			end -- if
-    		end -- putobject, put_object
+			end
+debug("matisse-sr")
+	shifter.decrease
+end
+    	end
+
+	delete_sub_closure(es:EXT_STORABLE) is
+			do
+debug("matisse-sr")
+    io.put_string(shifter.out)
+    io.put_string("MATISSE_STORER.delete_sub_closure ")
+    io.put_string(es.generator)
+    io.new_line
+end
+				if is_special(es) then
+					delete_special_object(es)
+				else
+					delete_normal_object(es)
+				end
+    		end
 
 feature {NONE} -- Implementation
-
-	update_table(object : ANY) is
+	delete_closure_orphans(es:EXT_STORABLE) is
+			-- iterate through old idf_table oids, deleting all objects
+			-- except the last one, which is an EXT_STORABLE, and was
+			-- just rewritten.
 		local
-			object_list : ARRAYED_LIST[CT_ELEMENT]
-			one_element : CT_ELEMENT
+			oid,i:INTEGER
+			one_object:MT_OBJECT
+			an_idf_proxy:PROXY_IDF_TABLE
+		do
+			oid := es.stored_table_id
+
+			if oid /= 0 then
+				!!an_idf_proxy.make(0, oid) 
+				an_idf_proxy.load
+
+debug("matisse-idf")
+	io.put_string("MATISSE_STORER.delete_closure_orphans:%N")
+end
+				from i := 0 until i >= an_idf_proxy.oids_index - 1 loop
+debug("matisse-idf")
+	io.put_string("    oid = ")
+	io.put_integer(an_idf_proxy.ith_oid(i))
+	io.new_line
+end
+					!!one_object.make(an_idf_proxy.ith_oid(i))
+					one_object.remove
+					i := i + 1
+				end
+
+debug("matisse-idf")
+	io.put_string("    deleting old IDF table, oid = ")
+	io.put_integer(oid)
+	io.new_line
+end
+				-- now delete the old IDF table
+				!!one_object.make(oid)
+				one_object.remove
+			end
+		end
+
+	update_table(object:ANY) is
+			-- Create or update object in database
+		local 
+			reverse_refs : STORE_REF_TABLE
 			field_to_update : STRING
 			one_class : MT_CLASS
 			one_object,other_object : MT_OBJECT
 			one_rel : MT_RELATIONSHIP
 			one_attribute : MT_ATTRIBUTE
-			oid1, one_integer : INTEGER
+			other_oid, one_integer : INTEGER
 			special_object : SPECIAL[ANY]
+			es:EXT_STORABLE
+			class_desc:ODB_CLASS_DESCRIPTOR
 		do
-			-- Is object referenced in table ?
-			object_list := ct.item($object)
-			if object_list = Void then 
-				-- Put element in list
-				!!one_element.make one_element.put_second($object)
-				!!object_list.make(0) object_list.start object_list.put_left(one_element)
-				ct.put(object_list,$object)
-				-- Create object in database
-				!!one_class.make(class_name(object)) one_object := one_class.new_instance
-				object_list.start object_list.item.put_first(one_object.oid.out)
-				idf_table.item.put_flag(object)
-				idf_table.item.put_oid(one_object.oid)
-				if c_is_special_object($object) then
-					special_object ?= object check special_object /= Void end
-			        	!!one_attribute.make("eif_size")
- 					one_attribute.set_value(one_object,Mts32,c_size_of_special($object))
-					!!one_attribute.make("eif_count")
-					one_attribute.set_value(one_object,Mts32,special_object.count)
-				end -- if
+debug("matisse-feat")
+    io.put_string(shifter.out)
+    io.put_string("MATISSE_STORER.update_table ")
+    io.put_string(class_name(object))
+    io.new_line
+end
+			es ?= object
+			if es /= Void then
+				if es.retrieved_id /= 0 then
+					-- use existing object in database
+					!!one_object.make(es.retrieved_id)
+					delete_closure_orphans(es)
+				else
+					-- Create object new in database
+					!!one_class.make(class_name(object)) 
+					one_object := one_class.new_instance
+					es.set_retrieved_id(one_object.oid)
+				end
+
+				-- now overwrite the IDF_TABLE id with the new one
+				es.set_stored_table_id(idf_proxy.oid)
 			else
-				-- Update references on that object ( list items after first ) in database
-				!!one_element.make one_element.put_second($object)
-				object_list.start object_list.put(one_element) 
-				-- Create object in database
-				!!one_class.make(class_name(object)) one_object := one_class.new_instance
-				object_list.start object_list.item.put_first(one_object.oid.out)
-				idf_table.item.put_flag(object) idf_table.item.put_oid(one_object.oid)
-				if c_is_special_object($object) then
-					special_object ?= object check special_object /= Void end
-					!!one_attribute.make("eif_size") one_attribute.set_value(one_object,Mts32,c_size_of_special($object))
-					!!one_attribute.make("eif_count") one_attribute.set_value(one_object,Mts32,special_object.count)
-				end -- if
+				-- Create object new in database
+				!!one_class.make(class_name(object)) 
+				one_object := one_class.new_instance
+			end
+
+			-- record it in the current IDF_TABLE
+			idf_proxy.put_flag(object)
+			idf_proxy.put_oid(one_object.oid)
+
+			-- if it's a special, create its attributes
+			if c_is_special_object($object) then
+				class_desc := odb_schema.class_descriptor(object)
+				special_object ?= object check special_object /= Void end
+				!!one_attribute.make(class_desc.db_field_name("eif_size"))
+ 				one_attribute.set_value(one_object,Mts32,c_size_of_special($object))
+				!!one_attribute.make(class_desc.db_field_name("eif_count"))
+				one_attribute.set_value(one_object,Mts32,special_object.count)
+			end
+
+			-- Is object referenced in reverse reference table yet?
+			reverse_refs := ref_tables.item($object)
+			if reverse_refs = Void then 
+				-- create reverse reference table for object
+				!!reverse_refs.make_target(one_object.oid, $object)
+				ref_tables.add_table(reverse_refs)
+			else
+				-- retrieve table for this oid and iterate through it, stitching up reverse refs
+				reverse_refs.set_target_oid(one_object.oid)
+
 				from
-					object_list.start object_list.forth
+					reverse_refs.start
 				until        
-					object_list.off
+					reverse_refs.off
 				loop
  					-- Change field in database
-					if object_list.item.first_item.is_integer  then
-						-- Element of special area
-						oid1 := ct.item(object_list.item.second_item).first.first_item.to_integer
-						!!other_object.make(oid1) 
-						!!one_rel.make("area") 
-						other_object.append_successor(one_rel,one_object)
+					other_oid := ref_tables.oid(reverse_refs.item_object_ptr)
+					!!other_object.make(other_oid) 
+					class_desc := odb_schema.class_descriptor_by_name(other_object.name)
+					if reverse_refs.is_item_object_special then	-- Element of special area
+						!!one_rel.make(class_desc.db_field_name("area"))
 					else	
-						oid1 := ct.item(object_list.item.second_item).first.first_item.to_integer
-						!!one_rel.make(object_list.item.first_item) 
-						!!other_object.make(oid1) 
+						!!one_rel.make(class_desc.db_field_name(reverse_refs.item_field_name))
 						other_object.remove_all_successors(one_rel)
-						other_object.append_successor(one_rel,one_object)
 					end
- 					object_list.forth
-				end -- loop            
-			end -- if 
-		end -- update_table
+					other_object.append_successor(one_rel,one_object)
+ 					reverse_refs.forth
+				end            
+			end 
+		end
 
-	put_normal_object(object : ANY) is
+	put_normal_object(object:ANY) is
 		local
-			nb_field,j,ftype, oid1, oid2,a_boolean, k, dt, one_l_integer : INTEGER one_integer : INTEGER_REF
+			q, ftype, other_oid, one_oid, a_boolean, k, eif_fld_idx, z:INTEGER 
+			one_integer : INTEGER_REF
 			object_field : ANY
-			field_list : ARRAYED_LIST[CT_ELEMENT] one_element : CT_ELEMENT
+			reverse_refs : STORE_REF_TABLE
 			one_object, other_object : MT_OBJECT
-			one_rel : MT_RELATIONSHIP one_attribute : MT_ATTRIBUTE
+			one_rel : MT_RELATIONSHIP 
+			one_attribute : MT_ATTRIBUTE
 			one_boolean : BOOLEAN_REF 
-			one_area : SPECIAL[ANY] one_item : ANY one_array : ARRAY[ANY]
+			one_area : SPECIAL[ANY] 
+			one_item : ANY 
+			one_array : ARRAY[ANY]
+			a_boolean_array:ARRAY[BOOLEAN]
+			a_boolean_char_array:ARRAY[CHARACTER]
+			class_desc:ODB_CLASS_DESCRIPTOR
+			feat_desc:ODB_FEATURE_DESCRIPTOR
+			mt_type_code:INTEGER
 		do
-			from
-				nb_field := field_count (object)
-				j := 1
-			until
-				j > nb_field
-			loop 
-				-- Is there anything to store ?
-				object_field := field(j,object)
-				if object_field /= Void then
-					ftype := field_type(j,object)
-					!!one_attribute.make(field_name(j,object))
-					!!one_object.make(ct.item($object).first.first_item.to_integer)
-					inspect ftype
- 					when Reference_type then -- REFERENCE
-						one_array ?= object_field  
-						if one_array /= Void then one_area ?= one_array.area end
-						if is_linked_list_double(object_field) then -- LINKED_LIST[DOUBLE]
-							one_attribute.set_value(one_object,Mtdouble_list,object_field)
-						elseif is_linked_list_real(object_field) then -- LINKED_LIST[REAL]
-							one_attribute.set_value(one_object,Mtfloat_list,object_field)
-						elseif is_linked_list_integer(object_field)   then -- LINKED_LIST[INTEGER]
-							one_attribute.set_value(one_object,Mts32_list,object_field)
-						elseif is_linked_list_string(object_field)   then -- LINKED_LIST[STRING]
-							one_attribute.set_value(one_object,Mtstring_list,object_field)
-						elseif is_string(object_field) then -- STRING
-							one_attribute.set_value(one_object,Mtstring,object_field)
-						elseif one_array=Void or else not(is_special_simple($one_area)) then  
-							-- Is tc list of pointer inside field empty ?
-							field_list := ct.item(pointer_inside_field(j-1,$object))
-							if field_list /=Void then -- REFERENCE or ARRAY[REFERENCE]
-								-- Has object in field already been stored ? 
-								if ct.item(pointer_inside_field(j-1,$object)).first.second_item/=default_pointer then
-									-- Object in field is already in database -> update database for object's field
-									oid2 := ct.item($object).first.first_item.to_integer
-									oid1 := ct.item(ct.item(pointer_inside_field(j-1,$object)).first.second_item).first.first_item.to_integer
-									!!one_rel.make(field_name(j,object))  !!one_object.make(oid2) !!other_object.make(oid1) 
-									one_object.remove_all_successors(one_rel)
-									one_object.append_successor(one_rel,other_object)
-								else    
-									!!one_element.make one_element.put_first(field_name(j,object))  one_element.put_second($object)
-									field_list.finish field_list.put_right(one_element)
-								end -- if
-							else
-								-- We want an object never seen before --> create its list
-								!!one_element.make
-								!!field_list.make(0) field_list.start field_list.put_left(one_element) 
-								!!one_element.make one_element.put_first(field_name(j,object))  one_element.put_second($object)
-								field_list.put_left(one_element)
-								ct.put(field_list,pointer_inside_field(j-1,$object))
-							end -- if
-						elseif is_array_integer(object_field)   then -- ARRAY[INTEGER]
-							one_attribute.set_value(one_object,Mts32_array,object_field)
-						elseif is_array_double(object_field)   then -- ARRAY[DOUBLE]
-							one_attribute.set_value(one_object,Mtdouble_array,object_field)
-						elseif is_array_real(object_field)   then -- ARRAY[REAL]
-							one_attribute.set_value(one_object,Mtfloat_array,object_field)
-						end -- if
-					when Integer_type then -- INTEGER
-						one_attribute.set_value(one_object,Mts32,object_field)
-					when Real_type then -- REAL
-						one_attribute.set_value(one_object,Mtfloat,object_field)
-					when Double_type then -- DOUBLE
-						one_attribute.set_value(one_object,Mtdouble,object_field)
-					when Character_type then -- CHARACTER
-						one_attribute.set_value(one_object,Mtchar,object_field)
-					when Boolean_type then -- BOOLEAN
-						one_boolean ?= field(j,object) check one_boolean/= Void end
-						if one_boolean.item then a_boolean := 1 else a_boolean := 0 end
-							one_attribute.set_value(one_object,Mts32,a_boolean)
-						else
-							-- Do not know how to store this type  (POINTER, BIT N) 
-					end -- inspect
-				end -- if  
-				j :=j + 1
-			end -- loop
-		end -- put_normal_object
+			debug("matisse-feat")
+				io.put_string(shifter.out)
+				io.put_string("put_normal_object ")
+				io.put_string(class_name(object))
+				io.new_line
+			end
 
-	put_special_object(object : ANY) is
+			class_desc := odb_schema.class_descriptor(object)
+			!!one_object.make(ref_tables.oid($object))
+
+			from 
+				class_desc.features_by_field_index.start
+			until
+				class_desc.features_by_field_index.off
+			loop
+				feat_desc := class_desc.features_by_field_index.item_for_iteration
+				eif_fld_idx := class_desc.features_by_field_index.key_for_iteration
+
+				mt_type_code := feat_desc.db_type
+				object_field := field(eif_fld_idx, object)
+				!!one_attribute.make(feat_desc.db_name)
+
+				debug("matisse-feat")
+					io.put_string(shifter.out) io.put_string(field_name(eif_fld_idx, object)) io.put_string("--") 
+					io.put_string(class_desc.db_field_name(field_name(eif_fld_idx, object))) 
+					io.put_string(" (") io.put_integer(eif_fld_idx) io.put_string(")")
+				end
+
+				if object_field /= Void then
+					ftype := field_type(eif_fld_idx, object)
+
+					inspect ftype
+ 					when Reference_type then -- Eiffel REFERENCE
+
+						if mt_type_code /= Mtrelationship_type then
+							if mt_type_code = Mtu8_array then
+								a_boolean_array ?= object_field check a_boolean_array /= Void end
+								!!a_boolean_char_array.make(a_boolean_array.lower, a_boolean_array.upper)
+								from z := a_boolean_array.lower until z > a_boolean_array.upper loop
+									if a_boolean_array.item(z) then a_boolean_char_array.put('t',z) else a_boolean_char_array.put('f',z) end
+									z := z + 1
+								end
+								one_attribute.set_value(one_object,Mtu8_array,a_boolean_char_array)
+								debug("matisse-feat") io.put_string("	----> Mtu8_array%N") end
+
+							else -- mt_type_code = Mtdouble_list, Mtfloat_list, Mts32_list, Mtstring_list, Mtstring, Mts32_array, Mtstring_array, Mtdouble_array, Mtfloat_array
+								one_attribute.set_value(one_object, mt_type_code ,object_field)
+								debug("matisse-feat") io.put_string("	----> mt_type:") io.put_integer(mt_type_code) io.new_line end
+							end
+
+						else -- mapped to a Matisse Relationship
+							one_array ?= object_field  
+							if one_array /= Void then one_area ?= one_array.area end
+
+							-- only bother with non-ARRAYs or ARRAY[reference type]
+							if one_array = Void or else not(is_special_simple($one_area)) then
+								debug("matisse-feat") io.put_string("	----> REFERENCE") end
+								-- Is tc list of pointer inside field empty ?
+								reverse_refs := ref_tables.item_i_th_field(eif_fld_idx ,$object)
+								if reverse_refs /= Void then -- REFERENCE or ARRAY[REFERENCE]
+									-- Has object in field already been stored ? 
+									if reverse_refs.is_target_stored then
+										-- Object in field is already in database -> update database for object's field
+										debug("matisse-feat") io.put_string("	----> REL (target already stored)") end
+										one_oid := ref_tables.oid($object)
+										other_oid := reverse_refs.target_oid
+										!!one_rel.make(class_desc.db_field_name(field_name(eif_fld_idx ,object)))
+										!!one_object.make(one_oid) 
+										!!other_object.make(other_oid) 
+										one_object.remove_all_successors(one_rel)
+										one_object.append_successor(one_rel,other_object)
+									else    
+										debug("matisse-feat") io.put_string("	----> add REL ref (target not yet stored)") end
+										reverse_refs.add_reverse_ref(eif_fld_idx ,$object)
+									end
+								else
+									debug("matisse-feat") io.put_string("	----> add ref table; add REL ref") end
+									-- We want an object never seen before --> create its list
+									!!reverse_refs.make_target_from_i_th_field(eif_fld_idx ,$object)
+									reverse_refs.add_reverse_ref(eif_fld_idx ,$object)
+									ref_tables.add_table(reverse_refs)
+								end
+								debug("matisse-feat") io.new_line end
+							end
+						end
+
+					when Integer_type then
+						one_attribute.set_value(one_object,Mts32,object_field)
+						debug("matisse-feat") io.put_string("	----> Mts32%N") end
+
+					when Real_type then
+						one_attribute.set_value(one_object,Mtfloat,object_field)
+						debug("matisse-feat") io.put_string("	----> Mtfloat%N") end
+
+					when Double_type then
+						one_attribute.set_value(one_object,Mtdouble,object_field)
+						debug("matisse-feat") io.put_string("	----> Mtdouble%N") end
+
+					when Character_type then
+						one_attribute.set_value(one_object,Mtchar,object_field)
+						debug("matisse-feat") io.put_string("	----> Mtchar%N") end
+
+					when Boolean_type then
+						one_boolean ?= field(eif_fld_idx,object) check one_boolean/= Void end
+						if one_boolean.item then a_boolean := 1 else a_boolean := 0 end
+						one_attribute.set_value(one_object,Mts32,a_boolean)
+						debug("matisse-feat") io.put_string("	----> Mts32%N") end
+
+					else
+						-- Do not know how to store this type  (POINTER, BIT N) 
+					end -- inspect
+
+					debug("matisse-feat")
+						if not is_ok then
+							io.put_string("	### last op Error ### ")
+							io.put_string(error_message)
+							io.new_line
+							end
+					end
+
+				else -- Void field
+					debug("matisse-feat")
+						io.put_string("	----> No Operation (field is Void)%N")
+					end
+				end
+
+				class_desc.features_by_field_index.forth
+			end -- loop
+		end
+
+	put_special_object(object:ANY) is
 		local
 			a_special : SPECIAL[ANY]
-			nb_field,j,ftype, oid1, oid2 : INTEGER
+			nb_field,j,ftype, other_oid, one_oid : INTEGER
 			object_field : ANY
-			field_list : ARRAYED_LIST[CT_ELEMENT]
-			one_element : CT_ELEMENT
-			one_object, other_object : MT_OBJECT
-			one_rel : MT_RELATIONSHIP one_attribute : MT_ATTRIBUTE
+			reverse_refs : STORE_REF_TABLE
+			one_object, other_object, one_void_object : MT_OBJECT
+			one_rel : MT_RELATIONSHIP 
+			one_attribute : MT_ATTRIBUTE
+			one_class : MT_CLASS
+			class_desc:ODB_CLASS_DESCRIPTOR
 		do
+debug("matisse-feat")
+    io.put_string(shifter.out)
+    io.put_string("PUT_SPECIAL_OBJECT%N")
+end
+			class_desc := odb_schema.class_descriptor(object)
+
 			a_special ?= object
 			check a_special /= Void end
+
+			one_oid := ref_tables.oid($object)
+			!!one_object.make(one_oid) 
+
 			from
 				nb_field := a_special.count
 				j := 0
@@ -211,72 +364,80 @@ feature {NONE} -- Implementation
 				-- Is there anything to store ?
 				object_field := a_special.item(j)
 				if object_field /= Void then
-					-- Is tc list of pointer inside field empty ?
-					field_list := ct.item(pointer_inside_special_item(j,$a_special))
-					if field_list /=Void then
+					-- Is ct list of pointer inside field empty ?
+					reverse_refs := ref_tables.item_i_th_field(j+1,$a_special)
+					if reverse_refs /= Void then
 						-- Has object in field already been stored ? 
-						if ct.item(pointer_inside_special_item(j,$a_special)).first.second_item/=default_pointer then
+						if reverse_refs.is_target_stored then
 							-- Object in field is already in database -> update database for object's field
-							oid2 := ct.item($object).first.first_item.to_integer
-							oid1 := ct.item(ct.item(pointer_inside_special_item(j,$a_special)).first.second_item).first.first_item.to_integer
-							!!one_rel.make("area")  !!one_object.make(oid2) !!other_object.make(oid1) 
+							other_oid := reverse_refs.target_oid
+							!!one_rel.make(class_desc.db_field_name("area"))
+							!!other_object.make(other_oid) 
 							one_object.append_successor(one_rel,other_object)
 						else    
-							!!one_element.make one_element.put_first((j+1).out)  one_element.put_second($object)
-							field_list.finish field_list.put_right(one_element)
-						end -- if
+							reverse_refs.add_reverse_ref(j+1, $object)
+						end
 					else
 						-- We want an object never seen before --> create its list
-						!!one_element.make
-						!!field_list.make(0) field_list.start field_list.put_left(one_element) 
-						!!one_element.make one_element.put_first((j+1).out)  one_element.put_second($object)
-						field_list.put_left(one_element)
-						ct.put(field_list,pointer_inside_special_item(j,$a_special))
-					end -- if
-				end -- if  
+						!!reverse_refs.make_target_from_i_th_field(j+1,$object)
+						reverse_refs.add_reverse_ref(j+1,$object)
+						ref_tables.add_table(reverse_refs)
+					end
+				else -- store a VOID_OBJECT to simulate Void member
+					-- Create object in database
+					!!one_class.make("VOID_OBJECT") 
+					one_void_object := one_class.new_instance
+
+					-- add it to the successors
+					!!one_rel.make("area")  
+					one_object.append_successor(one_rel, one_void_object)
+				end  
 				j :=j + 1
-			end -- loop
-		end -- put_special_object
+			end
+		end
 
-	make_idf_table(count:INTEGER;key:INTEGER_REF) is
+	delete_normal_object(es:EXT_STORABLE) is
+			-- iterate through old idf_table oids, deleting all objects
+		do
+debug("matisse-sr")
+    io.put_string(shifter.out)
+    io.put_string("delete_normal_object%N")
+end
+			delete_any_object(es)
+		end
+
+	delete_special_object(es:EXT_STORABLE) is
+		do
+			delete_any_object(es)
+debug("matisse-sr")
+    io.put_string(shifter.out)
+    io.put_string("delete_special_object%N")
+end
+		end
+
+	delete_any_object(es:EXT_STORABLE) is
+			-- iterate through old idf_table oids, deleting all objects
 		local
-			table_class : MT_CLASS
-			one_table : MT_OBJECT
-			an_idf_table : MATISSE_IDF_TABLE
+			oid,i:INTEGER
+			one_object:MT_OBJECT
+			an_idf_proxy:PROXY_IDF_TABLE
 		do
-			if key.item <=0 then
-				!!table_class.make(idf_table_name)
-				one_table := table_class.new_instance
-				!!an_idf_table.make(count,one_table.oid)
-			else
-				!!an_idf_table.make(count,key.item)
-			end -- if
-			idf_table.put(an_idf_table)
-			id_cell.put(an_idf_table.oid)
-		ensure then 
-			table_exists : idf_table.item /= Void
-		end -- make_idf_table
+			oid := es.stored_table_id
 
-	save_idf_table is 
-		do
-			idf_table.item.save
-		end -- save_idf_table
+			if oid /= 0 then
+				!!an_idf_proxy.make(0, oid) 
+				an_idf_proxy.load
 
-end -- class MATISSE_STORER
+				from i := 0 until i >= an_idf_proxy.oids_index loop
+					!!one_object.make(an_idf_proxy.ith_oid(i))
+					one_object.remove
+					i := i + 1
+				end
 
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+				-- now delete the old IDF table
+				!!one_object.make(oid)
+				one_object.remove
+			end
+		end
 
+end

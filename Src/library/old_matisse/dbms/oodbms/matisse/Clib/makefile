@@ -1,7 +1,7 @@
 INCLUDE_PATH = -I$(EIFFEL4)\bench\spec\windows\include -I$(EIFFEL4)\library\wel\spec\windows\include -I$(MATISSE)\include
 SHELL = \bin\sh
 CC = cl
-CFLAGS = -Ox -c -nologo -DWIN32  -DWORKBENCH $(INCLUDE_PATH)
+CFLAGS = -Zi -c -nologo -DWORKBENCH -DWIN32 $(INCLUDE_PATH)
 LDFLAGS = -DEBUG -STACK:1024 -subsystem:WINDOWS
 LIBS = 
 MAKE = nmake

@@ -55,10 +55,10 @@ feature -- Properties
 			non_void_result: Result /= Void
 		end;
 
-	error_code: INTEGER --JOCE--
+	error_code: INTEGER
 			-- Specify the syntax error.
 
-	error_message: STRING --JOCE--
+	error_message: STRING
 			-- Specify the syntax error message.
 
 feature -- Output
@@ -216,13 +216,13 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-	get_yacc_error_code: INTEGER is --JOCE--
+	get_yacc_error_code: INTEGER is
 			-- Get error code processed by yacc.
 		external
 			"C"
 		end;
 
-	get_yacc_error_message: STRING is --JOCE--
+	get_yacc_error_message: STRING is
 			-- Get error message processed by yacc.
 		external
 			"C"

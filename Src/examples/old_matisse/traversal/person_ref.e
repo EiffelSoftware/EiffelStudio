@@ -17,7 +17,7 @@ inherit
 		redefine default_actions
 	end	
 
-creation
+create
     make
 
 feature {ANY} 
@@ -33,8 +33,8 @@ feature {ANY}
         first_name := arg_first_name
         age := arg_age
         job := arg_job
-        !!friends.make
-		!!one_ref2.make("Joseph")
+        create friends.make
+		create one_ref2.make("Joseph")
     end
 
 	set_friends(arg_friend1,arg_friend2 :PERSON_REF) is
@@ -45,12 +45,12 @@ feature {ANY}
 
 	out : STRING is
 	do
-		!!Result.make(0);
+		create Result.make(0);
 	end 
 
 	default_actions : SAMPLE_TRAVERSAL_ACTION is
 	once
-		!!Result
+		create Result
 	end
 
 feature {ANY}

@@ -611,7 +611,7 @@ int where;			/* Are we checking invariant before or after compound? */
 				h_top = hec_stack.st_top;	/* Save hector stack */
 				h_cur = hec_stack.st_cur;
 				current_trace_level = trace_call_level;	/* Save trace call level */
-				saved_prof_top = prof_stack->st_top;
+				if (prof_stack) saved_prof_top = prof_stack->st_top;
 				exvect->ex_jbuf = (char *) exenv;	/* Longjmp address */
 				if (setjmp(exenv))
 					IC = rescue;				/* Jump to rescue clause */

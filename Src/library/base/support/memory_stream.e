@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			create internal_area.make (a_size)
 			is_resizable := True
 		ensure
-			non_void_area: area /= Void
+			non_void_area: area /= default_pointer
 			capacity_set: capacity = a_size
 			is_resizable_set: is_resizable
 		end
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			create internal_area.make (a_size)
 			is_resizable := False
 		ensure
-			non_void_area: area /= Void
+			non_void_area: area /= default_pointer
 			capacity_set: capacity = a_size
 			is_resizable_set: not is_resizable
 		end
@@ -66,7 +66,7 @@ feature -- Access
 		do
 			Result := internal_area.item
 		ensure
-			non_void_area: Result /= Void
+			non_void_area: Result /= default_pointer
 		end
 
 	item, infix "@" (i: INTEGER): INTEGER_8 is

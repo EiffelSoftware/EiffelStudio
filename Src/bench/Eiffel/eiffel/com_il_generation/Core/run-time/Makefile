@@ -6,8 +6,10 @@ MKDIR = -mkdir
 RMDIR = -rd /q /s
 CP = -copy
 
-all:: ise_runtime.dll
+all:: ISE.Runtime.dll
 
-ise_runtime.dll: $(RUNTIME_SRC) Makefile
+ISE.Runtime.dll: $(RUNTIME_SRC) Makefile
+	$(CP) $(EIFFEL_SRC)\dotnet\helpers\isekey.snk ise_runtime.key
 	csc $(CSFLAGS) -target:library -out:$@ -recurse:"*.cs"
-	gacutil $(GACFLAGS) -if ise_runtime.dll
+	gacutil $(GACFLAGS) -if ISE.Runtime.dll
+	del ise_runtime.key

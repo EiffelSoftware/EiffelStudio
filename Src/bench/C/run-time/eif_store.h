@@ -67,6 +67,7 @@ RT_LNK void ist_write(EIF_REFERENCE object);
 RT_LNK void gst_write(EIF_REFERENCE object);
 RT_LNK void store_write(void);
 RT_LNK void make_header(void);				/* Make header */
+RT_LNK void rmake_header(void);				/* Make header */
 RT_LNK void imake_header(void);				/* Make header */
 
 #ifdef __cplusplus

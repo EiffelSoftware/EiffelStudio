@@ -1,0 +1,17 @@
+#!/bin/sh -f
+
+# Shell script to be launched to :
+#	- set the PREFIX variable to the right value before doing the 'make'
+#	- do the make
+#	- move the gtk_eiffel.o file to the right directory
+
+PREFIX=`gtk-config --prefix`
+export PREFIX
+echo "PREFIX= $PREFIX"
+echo "EIFFEL4= $EIFFEL4"
+
+echo "Launching 'make'..."
+make
+
+echo "Moving generated file 'gtk_eiffel.o' to $EIFFEL4/library/vision2/implementation/gtk/spec/$PLATFORM/"
+mv gtk_eiffel.o $EIFFEL4/library/vision2/implementation/gtk/spec/$PLATFORM/.

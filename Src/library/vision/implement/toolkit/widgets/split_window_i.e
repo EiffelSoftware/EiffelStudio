@@ -32,6 +32,8 @@ feature -- Access
 			--| Depending on the value of `is_vertical', it can be the
 			--| height or the width
 
+	proportion: INTEGER
+
 	is_vertical: BOOLEAN
 			-- Is the split made vertically?
 

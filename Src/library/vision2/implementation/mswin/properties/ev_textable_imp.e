@@ -56,6 +56,7 @@ feature -- Status setting
 		deferred
 		end
 
+feature -- Inapplicable
 
 	set_default_size is
 			-- Set to the size of the text

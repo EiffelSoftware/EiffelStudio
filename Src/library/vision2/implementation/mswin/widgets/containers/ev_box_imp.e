@@ -31,14 +31,9 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 				-- Create the box with the default options.
-		local
-			cont_imp: EV_CONTAINER_IMP
 		do
-			cont_imp ?= par.implementation
-			check
-				valid_container: cont_imp /= Void
-			end
-			!! wel_window.make (cont_imp.wel_window)
+			test_and_set_parent (par)
+			!! wel_window.make (parent_imp.wel_window)
 			initialize
 			is_homogeneous := True --Default_homogeneous
 			spacing := 0 --Default spacing
@@ -116,11 +111,6 @@ feature {NONE} -- Implementation
 		do
 			Precursor (child_imp)
 			set_total_spacing
-			if child_imp.width /= 0 or child_imp.height /= 0 then
-				child_has_resized (child_imp.width, child_imp.height, child_imp)
-				child_minwidth_changed (child_imp.minimum_width)
-				child_minheight_changed (child_imp.minimum_height)
-			end
 		end
 
 --	remove_child (child_imp: EV_WIDGET_IMP) is

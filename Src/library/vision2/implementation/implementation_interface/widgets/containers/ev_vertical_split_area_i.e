@@ -1,18 +1,21 @@
 indexing
 
 	description: 
-		"EiffelVision vertical split, implementation interface."
+		"EiffelVision vertical split area, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 deferred class
+
 	EV_VERTICAL_SPLIT_AREA_I
 	
 inherit
+
 	EV_SPLIT_AREA_I
-end
+
+end -- class EV_VERTICAL_SPLIT_AREA_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

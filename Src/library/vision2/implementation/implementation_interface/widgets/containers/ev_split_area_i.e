@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"EiffelVision split, implementation interface."
+		"EiffelVision split area, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -12,8 +12,51 @@ deferred class
 	
 inherit
 	EV_CONTAINER_I
+		redefine
+			add_child_ok,
+			child_add_successful
+		end
+
+feature -- Access
 	
+	child1: EV_WIDGET_IMP
+				-- The first child of the split area
+
+	child2: EV_WIDGET_IMP
+					-- The second child of the split area
+	
+	-- 'child' defined in EV_CONTAINER is the last child added to
+	-- the split
+	
+feature -- Status report
+
+	add_child_ok: BOOLEAN is
+			-- True, if it is ok to add a child to
+			-- container. Two children
+			-- are allowed
+		do
+			Result := child2 = Void or child = Void
+		end
+	
+	child_add_successful (new_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Used in the postcondition of 'add_child'
+		do
+			Result := child = new_child and (child1 = new_child or child2 = new_child)
+		end	
+
 feature {EV_SPLIT_AREA} -- Implementation
+
+	add_child (child_i: EV_WIDGET_I) is
+			-- Add child into split area. Split area can 
+			-- have two children.
+		do
+			child ?= child_i
+			if child1 = Void then
+				add_child1 (child_i)
+			else
+				add_child2 (child_i)
+			end
+		end
 	
 	add_child1 (child_imp: EV_WIDGET_I) is
 			-- Add the first child of the split.
@@ -25,7 +68,7 @@ feature {EV_SPLIT_AREA} -- Implementation
 		deferred
 		end
 
-end
+end -- class EV_SPLIT_AREA_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -8,11 +8,14 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
+
 	EV_HORIZONTAL_BOX_I
 	
 inherit
+
 	EV_BOX_I
-end
+
+end -- class EV_HORIZONTAL_BOX_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

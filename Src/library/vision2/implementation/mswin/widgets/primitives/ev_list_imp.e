@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 			-- use set_selection to change it into a multiple
 			-- selection list.
 		do
-			initialize
 			test_and_set_parent (par)
+			initialize
 			!EV_WEL_MULTIPLE_SELECTION_LIST_BOX! wel_window.make (parent_imp.wel_window, Current)
 		end	
 

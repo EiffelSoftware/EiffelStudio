@@ -14,16 +14,46 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 		deferred
 		end
+
+feature -- Access
+
+	interface: EV_WIDGET
+			-- The interface of the current implementation
+			-- Used to give the parent of a widget to the user
+			-- and in the implementation of some widgets
+
+	parent_imp: EV_CONTAINER_IMP
+			-- Parent container of this widget
+
+	automatic_resize: BOOLEAN
+			-- Is the widget resized automatically when
+			-- the parent resize ?  In this case,
+			-- automatic_position has no effect.
+			-- True by default.
+
+	automatic_position: BOOLEAN
+			-- Does the widget take a new position when
+			-- the parent resize ?  (If it does, its size
+			-- doesn't changed).  
+			-- False by default.
 	
 feature {EV_WIDGET} -- Initialization
-	
-	
+		
 	build is
-			-- Called after creation from oui class
+			-- Called after the creation of the widget and after
+			-- having stored the parent and the current object
+			-- as the child of the parent. Many widget redefine
+			-- this feature to give their size to the parent that
+			-- adapts itself.
 		do
+			set_automatic_resize (True)
+			set_automatic_position (False)
 		end
 
-feature -- Status report
+feature -- Status Report
+
+	automatic_state: INTEGER
+			-- Current state of the widget. 
 
 	destroyed: BOOLEAN is			
 			-- Is Current widget destroyed?
@@ -43,7 +73,7 @@ feature -- Status report
 			exists: not destroyed
 		deferred
 		end
-	
+
 feature -- Status setting
 
 	destroy is
@@ -86,7 +116,28 @@ feature -- Status setting
 		ensure
 			flag = insensitive
 		end
-	
+
+	set_automatic_resize (state: BOOLEAN) is
+			-- Set `automatic_resize' at `state'.
+		require
+			exists: not destroyed
+		do
+			automatic_resize := state
+		ensure
+			automatic_resize_set: automatic_resize = state
+		end
+
+	set_automatic_position (state: BOOLEAN) is
+			-- Set `automatic_position' at `state'.
+		require
+			exists: not destroyed
+		do
+			automatic_position := state
+		ensure
+			automatic_position_set: automatic_position = state
+		end
+
+
 feature -- Measurement
 	
 	x: INTEGER is
@@ -121,25 +172,25 @@ feature -- Measurement
 			Positive_height: Result >= 0
 		end
 	
-        maximum_width: INTEGER is
-                        -- Maximum width that application wishes widget
-                        -- instance to have
-                require
-                        exists: not destroyed
-                deferred
-                ensure
-                        Result >= 0
-                end	
+	maximum_width: INTEGER is
+			-- Maximum width that application wishes widget
+			-- instance to have
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			Result >= 0
+		end	
 	
 	maximum_height: INTEGER is
-                        -- Maximum height that application wishes widget
-                        -- instance to have
-                require
-                        exists: not destroyed
-                deferred
-                ensure
-                        Result >= 0
-                end
+			-- Maximum height that application wishes widget
+			-- instance to have
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			Result >= 0
+		end
 
 	minimum_width: INTEGER is
 			-- Minimum width of widget
@@ -192,59 +243,59 @@ feature -- Resizing
 		ensure					
 			dimensions_set: dimensions_set (width, new_height)
 		end
-	
-        set_maximum_width (max_width: INTEGER) is
-                        -- Set `maximum_width' to `max_width'.
-                require
-                        exists: not destroyed
-                        large_enough: max_width >= 0
-                deferred
-                ensure
-                        max_width = max_width
-                end 
+
+	set_maximum_width (max_width: INTEGER) is
+			-- Set `maximum_width' to `max_width'.
+		require
+			exists: not destroyed
+			large_enough: max_width >= 0
+		deferred
+		ensure
+			max_width = max_width
+		end 
 
 	set_maximum_height (max_height: INTEGER) is
-                        -- Set `maximum_height' to `max_height'.
-                require
-                        exists: not destroyed
-                        large_enough: max_height >= 0
-                deferred
-                ensure
-                        max_height = max_height
-                end
+			-- Set `maximum_height' to `max_height'.
+		require
+			exists: not destroyed
+			large_enough: max_height >= 0
+		deferred
+		ensure
+			max_height = max_height
+		end
 
-        set_minimum_size (min_width, min_height: INTEGER) is
-                        -- Set `minimum_width' to `min_width'.
+	set_minimum_size (min_width, min_height: INTEGER) is
+			-- Set `minimum_width' to `min_width'.
 			-- Set `minimum_height' to `min_height'.
-                require
-                        exists: not destroyed
-                        a_min_large_enough: min_width >= 0
+		 require
+			exists: not destroyed
+			a_min_large_enough: min_width >= 0
 			height_large_enough: min_height >= 0
-                deferred
-                ensure
-                        min_width = min_width
+		deferred
+		ensure
+			min_width = min_width
 			min_height = min_height
-                end  
+		end  
         
 	set_minimum_width (min_width: INTEGER) is
-                        -- Set `minimum_width' to `min_width'.
-                require
-                        exists: not destroyed
-                        a_min_large_enough: min_width >= 0
-                deferred
-                ensure
-                        min_width = min_width    
-                end  
+			-- Set `minimum_width' to `min_width'.
+		require
+			exists: not destroyed
+			a_min_large_enough: min_width >= 0
+		deferred
+		ensure
+			min_width = min_width    
+		end  
 	
-        set_minimum_height (min_height: INTEGER) is
-                        -- Set `minimum__height' to `min_height'.
-                require
-                        exists: not destroyed
-                        height_large_enough: min_height >= 0
-                deferred
-                ensure
-                        min_height = min_height
-                end
+	set_minimum_height (min_height: INTEGER) is
+			-- Set `minimum__height' to `min_height'.
+		require
+			exists: not destroyed
+			height_large_enough: min_height >= 0
+		deferred
+		ensure
+			min_height = min_height
+		end
 
 	set_x (new_x: INTEGER) is
 			-- Put at horizontal position `new_x' relative
@@ -282,7 +333,7 @@ feature -- Resizing
 		-- the values given or the minimum values possible 
 		-- for that widget
 		do
-Result := True
+			Result := True
 --			Result := (width = new_width or else width = minimum_width) and then (height = new_height or else height = minimum_height)
 		end		
 		
@@ -349,6 +400,30 @@ feature -- Event - command association
 		deferred
 		end
 	
+feature -- Implementation
+
+	test_and_set_parent (par: EV_CONTAINER) is
+			-- Set the parent to `par.implementation'.
+			-- It is not possible to change the parent,
+			-- therefore, if there is already a parent,
+			-- we don't do anything
+		do
+			if parent_imp = Void then
+				parent_imp ?= par.implementation
+			end
+		ensure
+			valid_container: parent_imp /= Void
+		end
+
+	set_interface (the_interface: EV_WIDGET) is
+			-- Set `interface' to `the_interface'
+		require
+			valid_interface: the_interface /= Void
+		do
+			interface := the_interface
+		ensure
+			interface_set: interface = the_interface
+		end
 	
 end -- class EV_WIDGET_I
 

@@ -16,7 +16,6 @@ inherit
 
 	WEL_WM_CONSTANTS        
 
-
 feature -- Status report
 	
 	destroyed: BOOLEAN is
@@ -372,22 +371,7 @@ feature -- Event - command association
 			-- Id of the last command added by feature
 			-- 'add_command'
 
-feature {EV_WIDGET_IMP} -- Implementation
-
-	test_and_set_parent (par: EV_CONTAINER) is
-			-- Set the parent to `par.implementation'.
-		do
-			parent_imp ?= par.implementation
-		ensure
-			valid_container: parent_imp /= Void
-		end
-
-feature {EV_CONTAINER_IMP} -- Implementation
-	
-	set_parent_imp (p: EV_CONTAINER_IMP) is
-		do
-			parent_imp := p
-		end
+feature -- Implementation
 
 	set_minimum_size (min_width, min_height: INTEGER) is
 			-- set `minimum_width' to `min_width'
@@ -419,18 +403,15 @@ feature {NONE} -- Implementation
 				parent_imp.child_has_resized (width, height, Current)
 			end
 		end
-
-	parent_imp: EV_CONTAINER_IMP
-			-- Container parent of this widget
 	
 feature {EV_WIDGET_IMP} -- Implementation
 	
 	wel_window: WEL_WINDOW is
 			-- Actual WEL component
-	        deferred
+		deferred
 		end
 	
-end
+end -- class EV_WIDGET_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -47,11 +47,11 @@ feature -- Event handling
 		do
 			dc.get
 			if 	split_imp.child1 = Void then
-				!! rectangle.make (0, 0, level, height)
+				!! rectangle.make (0, 0, split_imp.level, height)
 				dc.fill_rect (rectangle, class_background)
 			end
 			if split_imp.child2 = Void then
-				!! rectangle.make (level + size, 0, width, height)
+				!! rectangle.make (split_imp.level + size, 0, width, height)
 				dc.fill_rect (rectangle, class_background)
 			end
 			dc.release
@@ -86,6 +86,7 @@ feature -- Event handling
 			if on_split (a_x) then
 				set_capture
 				is_splitting := True
+				temp_level := split_imp.level
 				invert_split
 			end
 		end
@@ -105,9 +106,9 @@ feature -- Event handling
 				else
 					acceptable_x := a_x
 				end
-				if acceptable_x /= level then
+				if acceptable_x /= temp_level then
 					invert_split
-					level := acceptable_x
+					temp_level := acceptable_x
 					invert_split
 				end
  			end
@@ -118,7 +119,7 @@ feature -- Event handling
 		do
 			if is_splitting then
 				is_splitting := False
-				split_imp.resize_children (level)
+				split_imp.resize_children (temp_level)
 				on_wm_erase_background (0)	
 				draw_split
 				release_capture
@@ -128,8 +129,11 @@ feature -- Event handling
 feature -- Basic routines
 
 	draw_split is
-			-- draw a vertical split at 'level'.
+			-- draw a vertical split at 'split_imp.level'.
+		local
+			level: INTEGER
 		do
+			level := split_imp.level
 			dc.get
 			dc.select_pen (face_pen)
 			dc.line (level, 0, level, height)
@@ -157,7 +161,7 @@ feature -- Basic routines
 			old_rop2 := dc.rop2
 			dc.set_rop2 (R2_xorpen)
 			dc.select_brush (splitter_brush)
-			dc.rectangle (level, -1, level + size, height+1)
+			dc.rectangle (temp_level, -1, temp_level + size, height+1)
 			dc.set_rop2 (old_rop2)
 			dc.release
 		end

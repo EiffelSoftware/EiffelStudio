@@ -64,8 +64,10 @@ feature {NONE} -- Implementation
 		local
 			min_track: WEL_POINT
 		do
-			!! min_track.make (container.the_child.minimum_width + 2*window_frame_width, container.the_child.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height)
-			min_max_info.set_min_track_size (min_track)
+			if container.child /= Void then
+				!! min_track.make (container.child.minimum_width + 2*window_frame_width, container.child.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height)
+				min_max_info.set_min_track_size (min_track)
+			end
 		end
 
 	on_menu_command (menu_id: INTEGER) is

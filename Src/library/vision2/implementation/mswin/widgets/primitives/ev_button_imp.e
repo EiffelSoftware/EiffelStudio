@@ -11,16 +11,21 @@ class
         
 inherit
     EV_BUTTON_I
+		redefine
+			build
+		end
  
 	EV_PRIMITIVE_IMP
 		redefine
-			wel_window
+			wel_window,
+			build
 		end
        
 	EV_BAR_ITEM_IMP
 		redefine
 			wel_window,
-			set_insensitive
+			set_insensitive,
+			build
 		end
         
 	EV_TEXT_CONTAINER_IMP
@@ -33,31 +38,26 @@ inherit
 creation
         make, make_with_text
 
-
 feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
-		local
-			par_imp: EV_CONTAINER_IMP
 		do
-			par_imp ?= par.implementation
-			check
-				valid_container: par_imp /= Void
-			end
-			!WEL_PUSH_BUTTON!wel_window.make (par_imp.wel_window, "", 0, 0, 0, 0, 0)
-			set_font (font)
+			test_and_set_parent (par)
+			!WEL_PUSH_BUTTON!wel_window.make (parent_imp.wel_window, "", 0, 0, 0, 0, 0)
 		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
         		-- Create a wel push button.
-		local
-			par_imp: EV_CONTAINER_IMP
 		do
-			par_imp ?= par.implementation
-			check
-				valid_container: par_imp /= Void
-			end
-			!WEL_PUSH_BUTTON!wel_window.make (par_imp.wel_window, txt, 0, 0, 0, 0, 0)
+			test_and_set_parent (par)
+			!WEL_PUSH_BUTTON!wel_window.make (parent_imp.wel_window, txt, 0, 0, 0, 0, 0)
+		end
+
+	build is
+			-- Called after creation. Set the current size and
+			-- notify the parent.
+		do
+			Precursor
 			set_font (font)
 			set_default_size
 		end
@@ -95,7 +95,8 @@ feature {NONE} -- Implementation
 			-- We can't use directly a wel_push_button here,
 			-- because of the descendants classes that use 
 			-- other kind of wel_button
-end
+
+end -- class EV_BUTTON_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

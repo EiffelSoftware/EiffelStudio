@@ -119,7 +119,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Implementation
 
-	child_has_resized (child_width, child_height:INTEGER; child: EV_WIDGET_IMP) is
+	child_has_resized (child_width, child_height:INTEGER; a_child: EV_WIDGET_IMP) is
 			-- Resize and replace all its children according
 			-- to the resize of one of them.
 		do
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 					parent_ask_resize ((child_width * children.count) + total_spacing, child_height)
 					notify_size_to_parent
 				else
-					child.parent_ask_resize ((minimum_width - total_spacing) // children.count, minimum_height)
+					a_child.parent_ask_resize ((minimum_width - total_spacing) // children.count, minimum_height)
 				end
 			end
 		end

@@ -17,7 +17,6 @@ inherit
 			wel_window
 		end
 
-
 feature -- Access
 
 	text: STRING is
@@ -30,7 +29,6 @@ feature -- Access
 		do
 			Result := wel_window.caret_position
 		end
-
 
 feature -- Status setting
 

@@ -15,8 +15,10 @@ deferred class
 inherit
 	
 	EV_INVISIBLE_CONTAINER_I
-		
+
 	EV_CONTAINER_IMP
+		undefine
+			add_child_ok
 		redefine
 			wel_window,
 			add_child,
@@ -40,7 +42,7 @@ feature -- Implementation
 
 	add_child (child_imp: EV_WIDGET_IMP) is
 		do
-			child_imp.set_parent_imp (Current)
+			child := child_imp
 			children.extend (child_imp)
 		end
 
@@ -66,7 +68,7 @@ feature -- Implementation
 	wel_window: EV_WEL_CONTROL_WINDOW
 		-- Actual WEL component
 
-end
+end -- class EV_INVISIBLE_CONTAINER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

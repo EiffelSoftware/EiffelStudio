@@ -16,7 +16,7 @@ inherit
 			implementation
 		end
 
-	EV_WIDGET
+	EV_PRIMITIVE
 		redefine
 			implementation
 		end

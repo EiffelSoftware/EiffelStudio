@@ -12,16 +12,44 @@ deferred class
 	
 inherit
 	EV_WIDGET_I
-	
-	
 
-feature
+feature -- Access
+
+	child: EV_WIDGET_IMP
+			-- The child of the current container
+	
+feature {EV_WIDGET_I} -- Status report
+
+	add_child_ok: BOOLEAN is
+			-- Used in the precondition of
+			-- 'add_child'. True, if it is ok to add a
+			-- child to container. Normal container have
+			-- only one child, but this feature can be
+			-- redefined in decendants.
+		do
+			Result := child = Void
+		end
+
+	child_add_successful (new_child: EV_WIDGET_I): BOOLEAN is
+			-- Used in the postcondition of 'add_child'
+		local
+			child_imp: EV_WIDGET_IMP
+		do
+			child_imp ?= new_child
+			Result := child = child_imp
+		end
+	
+feature {EV_WIDGET_I} -- Element change
 	
 	add_child (child_i: EV_WIDGET_I) is
 			-- Add child into composite
 		require
-			valid_child: child_i /= Void
+			exists: not destroyed
+			valid_child: child_i /= Void --and then not child_i.destroyed
+			add_child_ok: add_child_ok
 		deferred
+		ensure
+			child_add_successful: child_add_successful (child_i)
 		end
 
 feature -- Access
@@ -36,7 +64,7 @@ feature -- Access
 		deferred
 		end
 
-end
+end -- class EV_CONTAINER_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

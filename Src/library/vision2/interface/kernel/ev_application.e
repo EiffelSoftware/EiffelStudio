@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 	
 	make is
 		do
-			!EV_APPLICATION_IMP!implementation.make
+			!EV_APPLICATION_IMP!implementation.make (Current)
 			-- Ensure the call to main_window
 			main_window.set_application (Current)
 			implementation.iterate

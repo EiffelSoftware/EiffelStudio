@@ -35,8 +35,8 @@ feature -- Debug
 			print (widget)
 			io.put_string ("%N")
 		end
-	
-feature {EV_WIDGET_IMP} -- Implementation
+
+feature {EV_WIDGET_IMP, EV_WEL_COMMAND} -- Implementation
 	
 	implementation: EV_EVENT_DATA_I
 	

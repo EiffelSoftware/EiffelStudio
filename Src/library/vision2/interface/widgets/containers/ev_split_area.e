@@ -1,7 +1,10 @@
 indexing
-
-	description: 
-		"EiffelVision split. Split consists of two parts divided by a groove, which can be moved by the user to change the visible portion of the parts. Split is an abstract class with effective decendants horizontal and vertical split."
+	description: "EiffelVision split area. Split consists of two %
+				% parts divided by a groove, which can be moved  %
+				% by the user to change the visible portion of   %
+				% the parts. Split is an abstract class with     %
+				% effective decendants horizontal and vertical   %
+				% split."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -13,57 +16,27 @@ inherit
 
 	EV_CONTAINER 
 		redefine
-			implementation,
-			add_child,
-			add_child_ok,
-			child_add_successful
+			implementation
 		end
-	
-feature -- Access
-	
-	-- The first child of the split area
-	child1: EV_WIDGET
-	-- The second child of the split area
-	child2: EV_WIDGET 
-	
-	-- 'child' defined in EV_CONTAINER is the last child added to
-	-- the split
-	
-feature -- Status report
-	
-	add_child_ok: BOOLEAN is
-			-- True, if it is ok to add a child to
-			-- container. Two children
-			-- are allowed
-		do
-			Result := child2 = Void or child = Void
-		end
-	
-	child_add_successful (new_child: EV_WIDGET): BOOLEAN is
-			-- Used in the postcondition of 'add_child'
-		do
-			Result := child = new_child and (child1 = new_child or child2 = new_child)
-		end	
-	
-feature {EV_WIDGET}
-	
-	add_child (c: EV_WIDGET) is
-			-- Add child into split area. Split area can 
-			-- have two children.
-		do
-			child := c
-			if child1 = Void then
-				child1 := c
-				implementation.add_child1 (c.implementation)
-			else
-				child2 := c
-				implementation.add_child2 (c.implementation)
-			end
-		end
-	
 
 feature {EV_MENU_ITEM} -- Implementation
 	
 	implementation: EV_SPLIT_AREA_I	
 
-end -- class EV_MENU
+end -- class EV_SPLIT_AREA
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

@@ -161,6 +161,13 @@ feature -- Properties
 			Result := is_hector_addr (addr)
 		end;
 
+	has_debugging_information: BOOLEAN is
+			-- Has Current have any debug information?
+		do
+			Result := not removed_routines.empty or else
+			 		not debugged_routines.empty
+		end
+
 feature -- Access
 
 	eiffel_timeout_message: STRING is
@@ -191,12 +198,44 @@ feature -- Access
 
 feature -- Element change
 
+	super_melt_feature (f: E_FEATURE) is
+			-- Super melt feature `f' if it has not been super melted.
+		require
+			valid_debugged_feature: valid_debugged_feature (f);	
+			successful_compilation: Eiffel_project.successful
+		do
+			if not has_feature (f) then
+				add_feature (f)
+			end
+		end;
+
+	super_melt_class (c: E_CLASS) is
+			-- Super melt all features written in class `c'.
+		require
+			valid_c: c /= Void
+		local
+			list: LIST [E_FEATURE]
+		do
+			list := c.written_in_features;
+			from
+				list.start
+			until	
+				list.after
+			loop
+				if list.item.is_debuggable then
+					super_melt_feature (list.item);
+				end;
+				list.forth
+			end
+		end;
+
 	add_feature (f: E_FEATURE) is
 			-- Generate debuggable byte code corresponding to
 			-- `e_feature' and record the corresponding information.
 			-- Do nothing if `f' has previously been added.
 		require
 			valid_debugged_feature: valid_debugged_feature (f);	
+			successful_compilation: Eiffel_project.successful
 		do
 			debug_info.add_feature (f)
 		ensure
@@ -208,6 +247,7 @@ feature -- Element change
 		require
 			has_feature: has_feature (f)
 			valid_debugged_feature: valid_debugged_feature (f);	
+			successful_compilation: Eiffel_project.successful;
 		do
 			debug_info.switch_feature (f)
 		end
@@ -260,10 +300,48 @@ feature -- Removal
 			-- if there are compilation errors).
 		do
 			debug_info.wipe_out;
-			compilation_counter := Eiffel_project.compilation_counter;
 		ensure
 			empty_removed_routines: removed_routines.empty;
 			empty_debugged_routines: debugged_routines.empty;
+		end;
+
+	remove_feature (f: E_FEATURE) is
+			-- Remove debugging information for feature `f'.
+		require
+			successful_compilation: Eiffel_project.successful;
+			valid_debugged_feature: valid_debugged_feature (f);	
+			has_feature: has_feature (f)
+		do
+			debug_info.remove_feature (f)
+		ensure
+			not_has_f: not has_feature (f)
+		end;
+
+	remove_class (c: E_CLASS) is
+			-- Remove debugging information for features written in `c'.
+		require
+			valid_c: c /= Void
+		local
+			list: LINKED_LIST [E_FEATURE];
+			f: E_FEATURE;
+			cid: CLASS_ID
+		do
+			cid := c.id;
+			removed_routines.start;
+			list := removed_routines.duplicate (removed_routines.count);
+			debugged_routines.start;
+			list.append (debugged_routines.duplicate (debugged_routines.count));
+			from
+				list.start
+			until	
+				list.after
+			loop
+				f := list.item;
+				if cid.is_equal (f.written_in) then
+					remove_feature (list.item);
+				end;
+				list.forth
+			end
 		end;
 
 feature -- Execution
@@ -423,7 +501,15 @@ feature -- Setting
 			set: current_execution_stack_number = i
 		end;
 
-feature {UPDATE_PROJECT, DEAD_HDLR, RUN_REQUEST} -- Setting
+feature {E_PROJECT} -- Implementation
+
+	resynchronize_breakpoints is
+			-- Resychronize the breakpoints after a compilation.
+		do
+			debug_info.resynchronize_breakpoints
+		end;
+
+feature {DEAD_HDLR, RUN_REQUEST} -- Setting
 
 	set_status (s: like status) is
 			-- Set `status' to `s'.
@@ -471,9 +557,6 @@ feature {SHARED_DEBUG} -- Implementation
 	debug_info: DEBUG_INFO;
 
 feature {NONE} -- Implementation
-
-	compilation_counter: INTEGER;
-			-- Keep track of the compilation counter
 
 	quit_request: EWB_REQUEST is
 		once

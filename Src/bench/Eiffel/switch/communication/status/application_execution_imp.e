@@ -35,6 +35,12 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- recycling data
+
+	recycle is
+		do
+		end
+
 feature -- Properties
 
 	status: APPLICATION_STATUS is

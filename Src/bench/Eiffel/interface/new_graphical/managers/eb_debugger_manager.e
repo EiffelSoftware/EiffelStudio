@@ -493,16 +493,8 @@ feature -- Status setting
 			object_tool.recycle
 			evaluator_tool.recycle
 			application.recycle
-
-			recycle_debugger_data			
 		end
 		
-	recycle_debugger_data is
-			-- Recycle cross data used for debugging tools
-		do
-			Debug_value_keeper.recycle
-		end		
-
 	set_stone (st: STONE) is
 			-- Propagate `st' to tools.
 		local

@@ -28,10 +28,10 @@ feature -- Basic operations
 			dial: EV_FILE_SAVE_DIALOG
 			size: EV_RECTANGLE
 			test_file: RAW_FILE
-			error: BOOLEAN
+			error: INTEGER
 			wd: EB_WARNING_DIALOG
 		do
-			if not error then
+			if error = 0 then
 				create dial
 				cd ?= tool.class_view
 				if cd = Void then
@@ -49,32 +49,38 @@ feature -- Basic operations
 				dial.show_modal_to_window (tool.development_window.window)
 	
 				if dial.file_name /= Void then
+					error := 1
 					size := cd.bounds
 					p := tool.projector.diagram_image (size)
-					if p /= Void then
-						create png_file.make_from_string (dial.file_name)
-						create test_file.make_open_write (png_file)
-						if test_file.is_writable then
-							test_file.close
-							create png_format
-							tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
-							p.save_to_named_file (png_format, png_file)
-							tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
+					if p /= Void then 
+						if p.width * p.height > 0 then
+							create png_file.make_from_string (dial.file_name)
+							create test_file.make_open_write (png_file)
+							if test_file.is_writable then
+								test_file.close
+								create png_format
+								tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
+								p.save_to_named_file (png_format, png_file)
+								tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
+								error := 0
+							else
+								test_file.close
+							end
 						else
-							test_file.close
-							error := True
+							error := 2
 						end
 					end
 				end
-			end
-			if error then
-				if dial.file_name /= Void then
-					create wd.make_with_text (Warning_messages.w_export_to_png_failed (dial.file_name))
-					wd.show_modal_to_window (tool.development_window.window)
+			else
+				if error = 1 then
+					create wd.make_with_text (Warning_messages.w_cannot_save_png_file (dial.file_name))
+				else
+					create wd.make_with_text (Warning_messages.W_cannot_generate_png)
 				end
+				wd.show_modal_to_window (tool.development_window.window)
 			end
 		rescue
-			error := True
+			error := 1
 			retry
 		end
 

@@ -172,14 +172,87 @@ feature -- Transformation
 
 	insert_char (c: CHARACTER) is
 		do
+			if c = '%N' then
+				insert_eol (False)
+			else
+				s := clone (token.image)
+				s.insert (c, pos_in_token)
+				t_before := token.previous
+				if (t_before /= Void) then
+					s.prepend (t_before.image)
+					t_before := t_before.previous
+				end
+				t_after := token.after
+				if (t_after /= line.end_token) then
+					s.append (t_after.image)
+					t_after := t_after.next
+				end
+				whole_text.lexer.execute (s)
+				if t_before = Void then
+					line.replace_beginning_from_lexer (whole_text.lexer, t_after)
+				else
+					line.replace_from_lexer (whole_text.lexer, t_before, t_after)
+				end
+			end
+			update_current_char
+			go_right_char
 		end
 
 	delete_char is
+		local
+			t_before, t_after: EDITOR_TOKEN
 		do
+			if token = line.end_token then
+					line.merge_with_next_line (whole_text.lexer)
+			else
+				s := clone (token.image)
+				s.remove (pos_in_token)
+				t_before := token.previous
+				if (t_before /= Void) then
+					s.prepend (t_before.image)
+					t_before := t_before.previous
+				end
+				t_after := token.after
+				if (t_after /= line.end_token) then
+					s.append (t_after.image)
+					t_after := t_after.next
+				end
+				whole_text.lexer.execute (s)
+				if t_before = Void then
+					line.replace_beginning_from_lexer (whole_text.lexer, t_after)
+				else
+					line.replace_from_lexer (whole_text.lexer, t_before, t_after)
+				end
+			end
+			update_current_char				
 		end
 
 	replace_char (c: CHARACTER) is
 		do
+			if c = '%N' then
+				insert_eol (True)
+			else
+				s := clone (token.image)
+				s.put (c, pos_in_token)
+				t_before := token.previous
+				if (t_before /= Void) then
+					s.prepend (t_before.image)
+					t_before := t_before.previous
+				end
+				t_after := token.after
+				if (t_after /= line.end_token) then
+					s.append (t_after.image)
+					t_after := t_after.next
+				end
+				whole_text.lexer.execute (s)
+				if t_before = Void then
+					line.replace_beginning_from_lexer (whole_text.lexer, t_after)
+				else
+					line.replace_from_lexer (whole_text.lexer, t_before, t_after)
+				end
+			end
+			update_current_char
+			go_right_char
 		end
 
 	delete_previous is
@@ -188,12 +261,70 @@ feature -- Transformation
 			delete_char
 		end
 
-	insert_eol is
+
+	insert_eol (overwrite_current_char : BOOLEAN) is
 		local
-			s: STRING
+			t_image, s, s2: STRING
+			i_t: EDITOR_TOKEN
+			new_line : EDITOR_LINE
 		do
-			
+			if token = line.end_token then
+				create new_line.make_empty_line
+			else
+				t_image := token.image
+				if overwrite_current_char then
+					s2 := t_image.substring (pos_in_token + 1, t_image.count)
+				else
+					s2 := t_image.substring (pos_in_token, t_image.count)
+				end
+				from
+					i_t := token.next
+				until
+					i_t = line.end_token
+				loop
+					s2.append (i_t.image)
+					i_t := i_t.next
+				end
+				check
+					s2_non_empty: not (s2.empty)
+				end
+				delete_after_cursor
+				whole_text.lexer.execute (s2)
+				create new_line.make_from_lexer (lexer)
+			end
+			line.add_next (new_line)
 		end
+
+	delete_after_cursor is
+			-- Erase from cursor (included) to end of line.
+		local
+			t_eol: EDITOR_TOKEN_EOL
+			prev_token: EDITOR_TOKEN
+			
+		do
+			if token /= line.end_token then
+				prev_token := token.previous
+--				if pos_in_token = 1 then
+--					create t_eol.make
+--					if prev_token = Void then
+--						line.set_first_token (t_eol)
+--					else
+--						prev_token.set_next (t_eol)
+--						t_eol.set_previous (prev_token)
+--					end
+--					line.set_end_token (t_eol)
+--				else
+				s := token.image.substring (1, pos_in_token - 1)
+				whole_text.lexer.execute (s)
+				if prev_token = Void then
+					line.replace_beginning_from_lexer (whole_text.lexer, line.end_token)
+				else
+					line.replace_from_lexer (whole_text.lexer, prev_token, line.end_token)
+				end
+			end
+			update_current_char
+		end
+
 
 feature {NONE} -- Implementation
 
@@ -201,18 +332,20 @@ feature {NONE} -- Implementation
 			-- Make `line.next' the new value of `line'.
 			-- Change `y_in_lines' accordingly.
 		do
-			line := line.next
-			y_in_lines := y_in_lines + 1
-			update_current_char
+			if line.next /= Void then
+				line := line.next
+				y_in_lines := y_in_lines + 1
+			end
 		end
 
 	set_line_to_previous is
 			-- Make `line.previous' the new value of `line'.
 			-- Change `y_in_lines' accordingly.
 		do
-			line := line.previous
-			y_in_lines := y_in_lines - 1
-			update_current_char
+			if line.previous /= Void then
+				line := line.previous
+				y_in_lines := y_in_lines - 1
+			end
 		end
 
 	update_current_char is

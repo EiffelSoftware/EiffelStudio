@@ -58,6 +58,12 @@ feature -- Access
 			end
 		end
 
+	cursor: EV_CURSOR is
+			-- Cursor used currently on the widget.
+		do
+			Result := implementation.cursor
+		end
+
 feature -- Status report
 
 	insensitive: BOOLEAN is
@@ -262,6 +268,12 @@ feature -- Element change
 			implementation.set_parent (par)
 		ensure
 			parent_set: parent = par
+		end
+
+	set_cursor (value: EV_CURSOR) is
+			-- Make `value' the new cursor of the widget
+		do
+			implementation.set_cursor (value)
 		end
 
 	set_background_color (color: EV_COLOR) is

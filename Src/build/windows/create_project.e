@@ -10,19 +10,24 @@ inherit
 	ERROR_POPUPER;
 	QUEST_POPUPER
 		redefine
-			continue_after_question_popdown
-		end;
+			question_help_action
+		end
 
 feature 
 
 	rescued: BOOLEAN;
 
+	overwrite_project: BOOLEAN;
+			-- Overwrite existing build project?
+
 	execute (argument: STRING) is
 		local
 			dir: PLAIN_TEXT_FILE;
 			char: CHARACTER;	
-			proj_dir: STRING
+			proj_dir: STRING;
+			storage_file_name: FILE_NAME
 		do
+			overwrite_project := False;
 			proj_dir := Environment.project_directory;
 			proj_dir.wipe_out;
 			proj_dir.append (argument);	
@@ -39,10 +44,21 @@ feature
 					error_box.popup (Current, Messages.empty_project_name_er, 
 						Void)
 				else
-					!!dir.make (proj_dir);
+					!! storage_file_name.make_from_string (proj_dir);
+					storage_file_name.extend (Environment.BUILDGEN_name);
+					storage_file_name.extend (Environment.Storage_name);
+					storage_file_name.set_file_name 
+							(Environment.interface_file_name);
+						-- Rudementary check. See if the interface file
+						-- is in the Storage directory.
+					!!dir.make (storage_file_name);
 					if dir.exists then
-						question_box.popup (Current, Messages.override_qu, 
-								proj_dir)
+						question_box.popup_with_help 
+								(Current, Messages.project_exists_qu, 
+								proj_dir,
+								Widget_names.open_name,
+								Widget_names.new_choice_name,
+								Widget_names.discard_name)
 					else
 						create_initial_directories
 					end
@@ -50,13 +66,36 @@ feature
 			end
 		end;
 
-	continue_after_question_popdown (yes: BOOLEAN) is
+	question_ok_action is
+		local
+			open_project: OPEN_PROJECT
 		do
-			if yes then
+			if overwrite_project then
 				Environment.remove_project_directory;
 				create_initial_directories;
+			else
+				!! open_project;
+				open_project.execute (clone (Environment.project_directory))
+			end;
+		end;
+
+	question_cancel_action is
+		local
+			pw: CREATE_PROJ_WIN
+		do
+			if not overwrite_project then
+				!!pw.make (main_panel.base);
+				pw.popup	
 			end
-		end;	
+		end;
+
+	question_help_action is
+		do
+			overwrite_project := True;
+			question_box.popup (Current, 
+					Messages.overwrite_qu, 
+					Environment.project_directory)
+		end;
 
 feature {NONE}
 

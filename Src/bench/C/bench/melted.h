@@ -136,7 +136,7 @@
 #define BC_RCREATE              (unsigned char) 133
 #define BC_GEN_PARAM_CREATE     (unsigned char) 134
 #define BC_CREATE_EXP           (unsigned char) 135
-#define UNUSED_136              (unsigned char) 136
+#define BC_NULL_POINTER			(unsigned char) 136
 #define UNUSED_137              (unsigned char) 137
 #define UNUSED_138              (unsigned char) 138
 #define UNUSED_139              (unsigned char) 139

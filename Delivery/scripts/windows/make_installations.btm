@@ -11,6 +11,7 @@ remtrace Compile the installation executable
 WfWI "D:\Installations\Eiffel53\base_libraries.wsm" /c
 WfWI "D:\Installations\Eiffel53\borland.wsm" /c
 WfWI "D:\Installations\Eiffel53\build.wsm" /c
+WfWI "D:\Installations\Eiffel53\vision2_tour.wsm" /c
 WfWI "D:\Installations\Eiffel53\c_library.wsm" /c
 WfWI "D:\Installations\Eiffel53\dotnet.wsm" /c
 WfWI "D:\Installations\Eiffel53\eiffelcom.wsm" /c

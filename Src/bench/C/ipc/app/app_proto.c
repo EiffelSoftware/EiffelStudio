@@ -303,7 +303,7 @@ Opaque *what;		/* Generic structure describing request */
 		addr = (char *) what->op_third;		/* long -> (char *) */
 		bit_inspect((EIF_OBJ) &addr);
 		return;
-	case IN_STRING_ADDR:			/* String object inspection (hector addr) */
+	case IN_STRING_ADDR:		/* String object inspection (hector addr) */
 		addr = (char *) what->op_third;		/* long -> (char *) */
 		string_inspect(&(eif_access((EIF_OBJ) addr)));
 		return;
@@ -322,6 +322,7 @@ Opaque *what;		/* Generic structure describing request */
 		break;
 	case IN_RESULT:					/* Value of Result */
 		val = ivalue(IV_RESULT);
+		break;
 	default:
 		panic("BUG inspect");
 	}
@@ -350,12 +351,12 @@ Opaque *what;		/* Generic structure describing request */
 
 	switch (what->op_first) {		/* First value describes request */
 	case OUT_CALLED:				/* Has once routine already been called? */
-		if (onceitem(body_id) != (uint32 *)0)	/* body_id found in once list */
+		if (onceitem(body_id) != (uint32 *)0)	/* body_id found in once list*/
 			twrite("true", 4);
 		else
 			twrite("false", 5);
 		break;
-	case OUT_RESULT:				/* Result of already called once function */
+	case OUT_RESULT:			/* Result of already called once function */
 		arg_num = what->op_second;	/* Number of arguments to be passed */
 		send_once_result(s, body_id, arg_num);	/* Send result back to ewb */
 		break;
@@ -381,7 +382,6 @@ Opaque *what;		/* Generic structure describing request */
 	physical_addr = (char *) what->op_third;
 	sprintf(hector_addr, "0x%lX", eif_adopt((EIF_OBJ) &physical_addr));
 	twrite(hector_addr, strlen(hector_addr));
-	free(hector_addr);
 }
 
 private void access(s, what)
@@ -401,7 +401,6 @@ Opaque *what;		/* Generic structure describing request */
 	hector_addr = (char *) what->op_third;
 	sprintf(physical_addr, "0x%lX", eif_access((EIF_OBJ) hector_addr));
 	twrite(physical_addr, strlen(physical_addr));
-	free(physical_addr);
 }
 
 private void wean(s, what)
@@ -466,7 +465,7 @@ int amount;		/* Amount of byte codes to be downloaded */
 			send_ack(s, AK_ERROR);		/* Notify failure */
 			return;						/* And abort downloading */
 		}
-		drecord_bc(arg_1, arg_2, bc);	/* Place byte code in run-time tables */
+		drecord_bc(arg_1, arg_2, bc);	/* Place byte code in run-time tables*/
 		send_ack(s, AK_OK);				/* Byte code loaded successfully */
 	}
 
@@ -484,7 +483,6 @@ private char buffer[BUF_SIZE];
 
 private void rec_inspect();
 private void rec_sinspect();
-private void write_char ();
 
 private void obj_inspect(object)
 EIF_OBJ object;
@@ -584,7 +582,7 @@ register1 char *object;
 			/* Character attribute */
 			sprintf(buffer, "CHARACTER");
 			twrite (buffer, strlen(buffer));
-			write_char (*o_ref, buffer);
+			sprintf(buffer, "%d", *o_ref);
 			twrite (buffer, strlen(buffer));
 			break;
 		case SK_INT:
@@ -706,7 +704,7 @@ register1 char *object;
 				if (dt_type == sp_char) {
 					sprintf(buffer, "CHARACTER");
 					twrite (buffer, strlen(buffer));
-					write_char (*o_ref, buffer);
+					sprintf(buffer, "%d", *o_ref);
 					twrite (buffer, strlen(buffer));
 				} else if (dt_type == sp_int) {
 					sprintf(buffer, "INTEGER");
@@ -805,22 +803,3 @@ EIF_OBJ object;		/* Reference to a string object */
 	}
 	twrite (string_area, string_count);
 }
-
-private void write_char (c, buf)
-char c;			/* The character */
-char *buf;		/* Where it should be written */
-{
-	/* Write a character in `buffer' */
-	
-	if (c < ' ')
-	    sprintf(buf, "Ctrl-%c", c + '@');
-	else if (c > 127) {
-	    c -= 128;
-	    if (c < ' ')
-	        sprintf(buf, "Ext-Ctrl-%c", c + '@');
-	    else
-	        sprintf(buf, "Ext-%c", c);
-	} else
-	    sprintf(buf, "'%c'", c);
-}
-

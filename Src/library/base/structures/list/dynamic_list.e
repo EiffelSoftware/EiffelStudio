@@ -121,7 +121,7 @@ feature -- Removal
 		end;
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			chain_wipe_out;
 			back

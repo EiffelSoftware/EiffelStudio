@@ -102,7 +102,7 @@ feature -- Access
 		end;
 		
 	left_sibling: like parent is
-			-- Left neighbor (if any)
+			-- Left neighbor, if any
 		do
 			if parent.right_child = Current then
 				Result := parent.left_child
@@ -110,7 +110,7 @@ feature -- Access
 		end;
 		
 	right_sibling: like parent is
-			-- Right neighbor (if any)
+			-- Right neighbor, if any
 		do
 			if parent.left_child = Current then
 				Result := parent.right_child
@@ -162,7 +162,7 @@ feature -- Status report
 		end;
 		
 	has_both: BOOLEAN is
-			-- Has current node two children ?
+			-- Has current node two children?
 		do
 			Result := left_child /= Void and right_child /= Void
 		ensure

@@ -16,7 +16,6 @@ class CHARACTER_REF inherit
 
 feature -- Access
 
-
 	item: CHARACTER;
 			-- Character value
 

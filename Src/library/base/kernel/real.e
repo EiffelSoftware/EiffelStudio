@@ -24,7 +24,7 @@ expanded class REAL inherit
 feature -- Comparison
 
 	infix "<" (other: REAL): BOOLEAN is
-			-- Is `other' greater than Current ?
+			-- Is `other' greater than current real?
 		do
 			-- Built-in
 		end; -- infix "<"

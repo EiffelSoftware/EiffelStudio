@@ -99,7 +99,7 @@ feature -- Access
 		end;
 		
 	is_sibling (other: like parent): BOOLEAN is
-			-- Are `Current' and `other' siblings?
+			-- Are current node and `other' siblings?
 		do
 			Result := not is_root and other.parent = parent
 		ensure
@@ -116,7 +116,7 @@ feature -- Measurement
 		end;
 
 	count: INTEGER is
-			-- Number of elements
+			-- Number of items
 		do
 			Result := subtree_count + 1
 		end;
@@ -171,7 +171,7 @@ feature -- Status report
 		end;
 
 	empty: BOOLEAN is
-			-- Is structure empty of elements?
+			-- Is structure empty of items?
 		do
 			Result := false
 		end;
@@ -302,7 +302,7 @@ feature -- Element change
 		end;
 		
 	fill (other: TREE [G]) is
-			-- Fill with as many elements of `other' as possible.
+			-- Fill with as many items of `other' as possible.
 			-- The representations of `other' and current node
 			-- need not be the same.
 		do
@@ -431,7 +431,7 @@ feature {TREE} -- Implementation
 		end;
 
 	subtree_count: INTEGER is
-			-- Number of elements in children
+			-- Number of items in children
 		local
 			pos: CURSOR
 		do

@@ -154,7 +154,7 @@ feature -- Access
 feature -- Measurement
 
 	count: INTEGER;
-			-- Number of elements in table
+			-- Number of items in table
 
 	capacity: INTEGER is
 			-- Number of items that may be stored.

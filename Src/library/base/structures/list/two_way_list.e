@@ -210,9 +210,7 @@ feature -- Element change
 			else
 				p.put_left (active.left);
 				p.put_right (active);
-				active.left.put_right (p)
-				active.put_left (p)
-			end;
+			End;
 			count := count + 1
 		end;
 
@@ -333,7 +331,7 @@ feature -- Removal
 		end;
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			ll_wipe_out;
 			last_element := Void

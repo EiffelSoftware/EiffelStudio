@@ -2,7 +2,7 @@ indexing
 
 	description:
 		"Data structures of the most general kind, %
-		%used to contain zero or more items.";
+		%used to hold zero or more items.";
 
 	status: "See notice at end of class";
 	names: access;

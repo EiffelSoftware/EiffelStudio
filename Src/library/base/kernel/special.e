@@ -29,7 +29,7 @@ feature -- Access
 		end;
 
 	conforms_to (other: SPECIAL [T]): BOOLEAN is
-			-- Does special object conform to `other' ?
+			-- Does special object conform to `other'?
 		do
 			Result := other.count = count
 		end;

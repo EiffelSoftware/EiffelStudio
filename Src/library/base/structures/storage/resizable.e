@@ -26,10 +26,10 @@ feature -- Measurement
 			-- Percentage by which structure will grow automatically
 
 	Minimal_increase: INTEGER is 5;
-			-- Minimal number of additional elements
+			-- Minimal number of additional items
 
 	additional_space: INTEGER is
-			-- Proposed number of additional elements
+			-- Proposed number of additional items
 			--| Result is a reasonable value, resulting from a space-time tradeoff.
 		do
 			Result := max (Minimal_increase, (capacity * Growth_percentage // 100))

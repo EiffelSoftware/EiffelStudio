@@ -199,7 +199,7 @@ feature -- Element change
 
 	extend (v : like item) is
 			-- Add `v' to end.
-			-- Do not move cursor except when off.
+			-- Do not move cursor except if it was `off'.
 		do
 			list.extend (v)
 			if standard_index = 0 then list.forth end
@@ -251,7 +251,7 @@ feature -- Removal
 		end;
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			list.wipe_out
 			starter := 0

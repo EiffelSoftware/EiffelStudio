@@ -207,7 +207,8 @@ feature -- Status report
 
 
 	extendible: BOOLEAN is
-			-- May items be added? (Answer: no.)
+			-- May items be added?
+			-- (Answer: no, although array may be resized.)
 		do
 			Result := false
 		end;
@@ -229,7 +230,7 @@ feature -- Element change
 	force (v: like item; i: INTEGER) is
 			-- Assign item `v' to `i'-th entry.
 			-- Always applicable: resize the array if `i' falls out of
-			-- currently defined bounds; preserve existing elements.
+			-- currently defined bounds; preserve existing items.
 		do
 			if upper < lower then
 				resize (i, i);	
@@ -358,7 +359,7 @@ feature -- Duplication
 
 
 	copy (other: like Current) is
-			-- Reinitialize by copying all the elements of `other'.
+			-- Reinitialize by copying all the items of `other'.
 			-- (This is also used by `clone'.)
 		do
 			standard_copy (other);

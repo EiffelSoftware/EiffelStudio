@@ -52,10 +52,10 @@ feature -- Status report
 			-- Is current position past last item? (Answer: no.)
 
 	extendible: BOOLEAN is false;
-			-- May elements be added? (Answer: no.)
+			-- May items be added? (Answer: no.)
 
 	prunable: BOOLEAN is false;
-			-- May elements be removed? (Answer: no.)
+			-- May items be removed? (Answer: no.)
 
 	readable: BOOLEAN is true;
 			-- Is there a current item that may be read?

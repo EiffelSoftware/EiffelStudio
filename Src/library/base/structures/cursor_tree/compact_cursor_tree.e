@@ -101,7 +101,7 @@ feature -- Measurement
 		end;
 
 	count: INTEGER is
-			-- Number of elements in subtree
+			-- Number of items in subtree
 		do
 			Result := last - free_list_count - 1
 		end;
@@ -581,7 +581,7 @@ feature -- Removal
 		end;
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			item_table.resize (1, Block_threshold + 1)
 			next_sibling_table.resize (1, Block_threshold + 1)

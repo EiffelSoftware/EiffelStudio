@@ -180,7 +180,10 @@ feature -- Input
 				fill_buffer (token_end);
 				token_end := 0
 			end;
-			if buffer.item_code (read_index) = -1 then
+			if
+				buffer.item_code (read_index) = -1
+				or buffer.item_code (read_index) = Close_of_file
+			then
 				end_of_text := true;
 				token_type := -1;
 				token_start := token_end;
@@ -190,10 +193,11 @@ feature -- Input
 				token_start := token_end + 1
 			end;
 			read_index := token_end + 1;
+if not end_of_text then
 			if read_index > buffer_size then
 				if token_start = 1 then
 					buffer_resized := true;
-					resize_and_fill_buffer (buffer_size + extra_buffer_size, 0)
+					resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
 				else
 					fill_buffer (token_start - 1);
 					token_end := 0
@@ -223,7 +227,7 @@ feature -- Input
 				if too_big then
 					if token_start = 1 then
 						buffer_resized := true;
-						resize_and_fill_buffer (buffer_size + extra_buffer_size, 0)
+						resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
 					else
 						fill_buffer (token_start - 1);
 						token_end := 0
@@ -249,9 +253,10 @@ feature -- Input
 				end
 			end;
 			if buffer_resized then
-				resize_and_fill_buffer (standard_buffer_size, token_end);
+				resize_and_fill_buffer (Standard_buffer_size, token_end);
 				token_end := 0
 			end
+end
 		rescue
 			if read_index > buffer_size and not retried then
 				fill_buffer (token_start - 1);
@@ -446,7 +451,7 @@ feature {LEXICAL} -- Implementation
 	initialize is
 			-- Create data structures for the lexical analyzer.
 		do
-			create_buffers (standard_buffer_size, standard_line_length);
+			create_buffers (Standard_buffer_size, Standard_line_length);
 			if keyword_h_table = Void then
 				!! keyword_h_table.make (1)
 			end;
@@ -467,22 +472,25 @@ feature {LEXICAL, LEX_BUILDER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	standard_buffer_size: INTEGER is 10240;
+	Standard_buffer_size: INTEGER is 10240;
 			-- Standard buffer size
 
-	extra_buffer_size: INTEGER is 4096;
+	Extra_buffer_size: INTEGER is 4096;
 			-- size added to the initial `buffer_size' when the current token
 			-- is too big.
-			-- `extra_buffer_size' should be less than `standard_buffer_size'.
+			-- `Extra_buffer_size' should be less than `Standard_buffer_size'.
 
-	standard_line_length: INTEGER is 1024;
+	Standard_line_length: INTEGER is 1024;
 			-- Standard line length
 
-	max_token_length: INTEGER is 256;
+	Max_token_length: INTEGER is 256;
 			-- Maximum length for a token
 
-	almost_end_of_buffer: INTEGER is 9984;
-			-- Buffer_size minus max_token_length
+	Almost_end_of_buffer: INTEGER is 9984;
+			-- Buffer_size minus Max_token_length
+
+	Close_of_file: INTEGER is 255;
+			-- End-of-file indicator on some platforms
 
 	dfa: FIXED_DFA;
 			-- Automaton used for the parsing

@@ -78,8 +78,6 @@ feature -- Status setting
 
 	set_optional is
 			-- Define this construct as optional.
-			-- If the production does not match the tokens,
-			-- the construct will be parsed anyway.
 		do
 			is_optional := true
 		ensure
@@ -136,12 +134,14 @@ feature -- Transformation
 		end;
 
 	pre_action is
-			-- Do nothing here.
+			-- Semantic action executed before construct is parsed
+			-- (nothing by default; may be redefined in descendants).
 		do
 		end;
 
 	post_action is
-			-- Do nothing here.
+			-- Semantic action executed after construct is parsed
+			-- (nothing by default; may be redefined in descendants).
 		do
 		end;
 

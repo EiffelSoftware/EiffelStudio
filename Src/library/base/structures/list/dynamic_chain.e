@@ -27,7 +27,7 @@ feature -- Status report
 			-- May new items be added? (Answer: yes.)
 
 	prunable: BOOLEAN is
-			-- May items be removed ? (Answer: yes.)
+			-- May items be removed? (Answer: yes.)
 		do
 			Result :=  true
 		end;
@@ -151,7 +151,7 @@ feature -- Removal
 		end;
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			from
 				start

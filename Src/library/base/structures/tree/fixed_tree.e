@@ -108,7 +108,7 @@ feature -- Initialization
 feature -- Access
 
 	parent: FIXED_TREE [G];
-			-- Parent of `Current'
+			-- Parent of current node
 
 	first_child: like parent is
 			-- Leftmost child
@@ -123,7 +123,7 @@ feature -- Access
 		end;
 
 	left_sibling: like parent is
-			-- Left neighbor of `Current' (if any)
+			-- Left neighbor, if any
 		do
 			if position_in_parent > 1 then
 				Result := parent.array_item (position_in_parent - 1)
@@ -131,7 +131,7 @@ feature -- Access
 		end;
 
 	right_sibling: like parent is
-			-- Right neighbor of `Current' (if any)
+			-- Right neighbor, if any
 		do
 			if position_in_parent < parent.arity then
 				Result := parent.array_item (position_in_parent + 1)
@@ -141,7 +141,7 @@ feature -- Access
 feature -- Status report
 
 	child_contractable: BOOLEAN is
-			-- May items be removed from `Current'?
+			-- May items be removed?
 		do
 			Result := not child_off
 		ensure
@@ -149,7 +149,7 @@ feature -- Status report
 		end;
 
 	full: BOOLEAN is true;
-			-- Is `Current' full?
+			-- Is tree full?
 
 feature -- Element change
 
@@ -160,7 +160,7 @@ feature -- Element change
 		end;
 
 	put_left (v: like item) is
-			-- Add item `v' to the left of `Current'.
+			-- Add `v' to the left of current node.
 		require
 			is_not_root: not is_root;
 			has_left_sibling: left_sibling /= Void
@@ -172,7 +172,7 @@ feature -- Element change
 		end;
 
 	put_right (v: like item) is
-			-- Put item `v' right of `Current'.
+			-- Add `v' to the right of current node.
 		require
 			is_not_root: not is_root;
 			has_right_sibling: right_sibling /= Void
@@ -257,7 +257,6 @@ feature -- Obsolete
 
 	add (v: G) is 
 		obsolete "Use ``put'' instead."
-			-- Add `v' to `Current'.
 		do
 		end;
 
@@ -315,7 +314,7 @@ feature  {FIXED_TREE} -- Implementation
 		end;
 
 	attach_to_parent (n: like parent) is
-			-- Make `n' parent of `Current',
+			-- Make `n' parent of current node
 			-- and set `position_in_parent'.
 		do
 			parent := n;
@@ -325,10 +324,10 @@ feature  {FIXED_TREE} -- Implementation
 feature  {NONE} -- Implementation
 
 	position_in_parent: INTEGER;
-			-- Position of `Current' in parent
+			-- Position of current node in parent
 
 	extendible: BOOLEAN is false;
-			-- May new items be added to `Current'?
+			-- May new items be added?
 
 
 end -- class FIXED_TREE

@@ -138,7 +138,7 @@ feature -- Measurement
 feature -- Status report
 
 	off: BOOLEAN is
-			-- Is there no current item ?
+			-- Is there no current item?
 		local
 			size: INTEGER;
 		do
@@ -214,7 +214,7 @@ feature -- Removal
 		end
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			out_index := 0;
 			in_index := 0;

@@ -166,7 +166,7 @@ feature -- Access
 		end;
 
 	is_special (object: ANY): BOOLEAN is
-			-- Is `object' a special object ?
+			-- Is `object' a special object?
 		require
 			object_not_void: object /= Void
 		do
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_is_special (object: ANY): BOOLEAN is
-			-- Is `object' a special object ?
+			-- Is `object' a special object?
 		external
 			"C"
 		alias

@@ -18,7 +18,7 @@ deferred class COMPARABLE_STRUCT [G -> COMPARABLE] inherit
 feature -- Measurement
 
 	min: like item is
-			-- Minimum element
+			-- Minimum item
 		require
 			min_max_available
 
@@ -36,12 +36,11 @@ feature -- Measurement
 				forth
 			end
 		ensure
-		--	is_minimum:
-		--		for all elements: `Result <= element'
+		--	smallest: For every item `it' in structure, `Result' <= `it'
 		end;
 			
 	max: like item is
-			-- Maximum element
+			-- Maximum item
 		require
 			min_max_available
 
@@ -59,8 +58,7 @@ feature -- Measurement
 				forth
 			end
 		ensure
-		--	is_maximum:
-		--		for all elements: `element <= Result'
+		--	largest: For every item `it' in structure, `it' <= `Result'
 		end;
 
 	min_max_available: BOOLEAN is

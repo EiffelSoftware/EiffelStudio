@@ -171,7 +171,7 @@ feature -- Removal
 		end;
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			clear_all;
 			out_index := 1;

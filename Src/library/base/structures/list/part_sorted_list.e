@@ -79,7 +79,7 @@ feature -- Element change
 		end;
 
 	merge (other: LINEAR [G]) is
-			-- Add all elements from `other' at their proper positions.
+			-- Add all items from `other' at their proper positions.
 		do
 			from
 				other.start

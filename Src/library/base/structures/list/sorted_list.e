@@ -18,21 +18,35 @@ deferred class SORTED_LIST [G -> COMPARABLE] inherit
 feature -- Measurement
 
 	min: like item is
-			-- Minimum element
+			-- Minimum item
+		require
+			not_empty: not empty
 		do
 			Result := first
+		ensure
+			min_is_first: Result = first;
+			-- smallest: For every item `it' in list, `Result' <= `it'
 		end;
 			
 	max: like item is
-			-- Maximum element
+			-- Maximum item
+		require
+			not_empty: not empty
 		do
 			Result := last
+		ensure
+			max_is_last: Result = last;
+			-- largest: For every item `it' in list, `it' <= `Result'
 		end;
 
 	median: like item is
-			-- Median element
+			-- Median item
+		require
+			not_empty: not empty
 		do
 			Result := i_th ((count + 1) // 2)
+		ensure
+			median_definition: Result = i_th ((count + 1) // 2)
 		end;
 
 

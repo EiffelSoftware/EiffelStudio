@@ -46,7 +46,7 @@ feature -- Status report
 
 	is_developer_exception_of_name (name: STRING): BOOLEAN is
 			-- Is the last exception originally due to a developer
-			-- exception of name `name' ?
+			-- exception of name `name'?
 		do
 			Result := is_developer_exception and then
 						equal (name, developer_exception_name)

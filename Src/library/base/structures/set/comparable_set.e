@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Sets whose elements may be compared according to a total order relation";
+		"Sets whose items may be compared according to a total order relation";
 
 	status: "See notice at end of class";
 	names: comparable_set, comparable_struct;
@@ -28,25 +28,23 @@ deferred class COMPARABLE_SET [G -> COMPARABLE] inherit
 feature -- Measurement
 
 	min: G is
-			-- Minimum element
+			-- Minimum item
 		require
 			not_empty: not empty
 		do
 			Result := cs_min
 		ensure
-		--	is_minimum:
-				-- for all elements: `Result <= element'
+			-- smallest: For every item `it' in set, `Result' <= `it'
 		end;
 
 	max: G is
-			-- Maximum element
+			-- Maximum item
 		require
 			not_empty: not empty
 		do
 			Result := cs_max
 		ensure
-		--	is_maximum:
-				-- for all elements: `element <= Result'
+			-- largest: For every item `it' in set, `element' <= `it'
 		end;
 
 end -- class COMPARABLE_SET

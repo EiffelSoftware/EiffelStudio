@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 
 	expand is
 			-- Create next construct to be parsed and insert it in
-			-- the list of the elements of the sequence.
+			-- the list of the items of the sequence.
 		local
 			n: CONSTRUCT
 		do
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 
 	middle_action is
 			-- Execute this after parsing each child.
-			-- Do nothing here.
+			-- Does nothing by default; may be redefined in descendants.
 		do
 		end;
 

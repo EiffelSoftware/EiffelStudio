@@ -66,7 +66,7 @@ feature -- Removal
 feature -- Transformation
 
 	sort is
-			-- Sort all elements.
+			-- Sort all items.
 			-- Has O(`count' * log (`count')) complexity.
 			--| Uses comb-sort (BYTE February '91)
 		local

@@ -43,7 +43,7 @@ feature -- Initialization
 feature -- Access
 
 	parent: BINARY_SEARCH_TREE [G];
-			-- Parent of `Current'
+			-- Parent of current node
 
  	has (v: like item): BOOLEAN is
 			-- Does tree contain a node whose item
@@ -65,29 +65,35 @@ feature -- Access
 feature -- Measurement
 
 	min: like item is
-			-- Minimum in `Current'
+			-- Minimum item in tree
 		do
 			if has_left then
 				Result := left_child.min
 			else
 				Result := item
 			end
+		ensure
+			minimum_present: has (Result)
+			-- smallest: For every item `it' in tree, `Result' <= it
 		end;
 
 	max: like item is
-			-- Maximum in `Current'
+			-- Maximum item in tree
 		do
 			if has_right then
 				Result := right_child.max
 			else
 				Result := item
 			end
+		ensure
+			maximum_present: has (Result)
+			-- largest: For every item `it' in tree, `it' <= Result
 		end;
 
 feature	-- Status report
 
 	sorted: BOOLEAN is
-			-- Is Current sorted
+			-- Is tree sorted?
 		do
 			Result := true;
 			if
@@ -118,7 +124,7 @@ feature -- Cursor movement
 
 	preorder is
 			-- Apply `node_action' to every node's item
-			-- in `Current' using pre-order.
+			-- in tree, using pre-order.
 		do
 			node_action (item);
 			if left_child /= Void then
@@ -131,7 +137,7 @@ feature -- Cursor movement
 
 	i_infix is
 			-- Apply node_action to every node's item
-			-- in `Current' using infix order.
+			-- in tree, using infix order.
 		do
 			if left_child /= Void then
 				left_child.i_infix
@@ -144,7 +150,7 @@ feature -- Cursor movement
 
 	postorder is
 			-- Apply node_action to every node's item
-			-- in `Current' using post-order.
+			-- in tree, using post-order.
 		do
 			if left_child /= Void then
 				left_child.postorder
@@ -189,9 +195,9 @@ feature -- Element change
 feature -- Transformation
 
 	sort is
-			-- Sort `Current'.
-			--| use heapsort
-			--| the reason for the `external sort' is that
+			-- Sort tree.
+			--| Uses heapsort.
+			--| The reason for the `external sort' is that
 			--| the insertion order in the tree will ensure
 			--| it is balanced
 		local
@@ -223,6 +229,8 @@ feature -- Transformation
 			end;
 			replace (temp.item ((temp.count) // 2));
 			fill_from_sorted_special (temp.area, 0, temp.count - 1);
+		ensure
+			is_sorted: sorted
 		end;
 					
 feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
@@ -372,8 +380,8 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 feature  {NONE} -- Implementation
 
 	fill_from_sorted_special (t: SPECIAL [G]; s, e: INTEGER) is
-			-- put values from `t' in `Current' in such an order that
-			-- the tree will be balanced if `t' is sorted
+			-- Put values from `t' into tree in such an order that
+			-- the tree will be balanced if `t' is sorted.
 		local
 			m : INTEGER
 		do

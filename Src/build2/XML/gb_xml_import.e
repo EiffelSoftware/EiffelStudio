@@ -145,19 +145,19 @@ feature -- Basic operation
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 		
-	build_window (window: XM_ELEMENT; directory_name: STRING) is
+	build_window (window: XM_ELEMENT; parent_node_list: EV_TREE_NODE_LIST) is
 			-- Build a new window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
 			-- window selector.
 		require
 			window_not_void: window /= Void
-			directory_not_void: directory_name /= Void
+			parent_node_list_not_void: parent_node_list /= Void
 		do
-			internal_build_window (window, directory_name)
+			internal_build_window (window, parent_node_list)
 		end
 
-	internal_build_window (window: XM_ELEMENT; directory_name: STRING) is
+	internal_build_window (window: XM_ELEMENT; parent_node_list: EV_TREE_NODE_LIST) is
 			-- Build a window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
@@ -167,18 +167,17 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
 			an_object: GB_OBJECT
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			a_display_object: GB_DISPLAY_OBJECT
+			tree_node: EV_TREE_NODE
 		do
 			an_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
-			if not directory_name.is_empty then
-				directory_item := Window_selector.directory_object_from_name (directory_name)
-				unparent_tree_node (an_object.window_selector_item)
-				directory_item.extend (an_object.window_selector_item)
-				directory_item.expand
+			unparent_tree_node (an_object.window_selector_item)
+			parent_node_list.extend (an_object.window_selector_item)
+			tree_node ?= parent_node_list
+			if tree_node /= Void then
+				tree_node.expand
 			end
-			
 			from
 				window.start
 			until
@@ -426,9 +425,8 @@ feature {NONE} -- Implementation
 	import_system is
 			-- Import a system from the parsed XML file.
 		local
-			application_element, window_element, current_element, constants_element, constant_item_element: XM_ELEMENT
+			application_element, current_element, constants_element, constant_item_element: XM_ELEMENT
 			current_name, current_type: STRING
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			objects: ARRAYED_LIST [GB_OBJECT]
 			constant_names: ARRAYED_LIST [STRING]
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
@@ -613,12 +611,37 @@ feature {NONE} -- Implementation
 				-- At this point, all prepass stages of the XML have been completed, and the XML
 				-- representation of the imported project has been updated to avoid any clashes.
 			application_element := pipe_callback.document.root_element
+			build_window_structure (application_element, window_selector)
+
+				-- Update all names in `window_selector' to ensure that
+				-- they are current after the load.
+			Window_selector.update_displayed_names
+			
+				-- Build any constants that were deferred.
+			constants.build_deferred_elements
+		end
+		
+	build_window_structure (an_element: XM_ELEMENT; parent_node_list: EV_TREE_NODE_LIST) is
+			-- Create thw directory and window structure represented by `an_element' into `parent_node_list'.
+		require
+			an_element_not_void: an_element /= Void
+			parent_node_list_not_void: parent_node_list /= Void
+		local
+			current_element, constant_item_element: XM_ELEMENT
+			current_name, current_type: STRING
+			window_element: XM_ELEMENT
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			tree_node_path: ARRAYED_LIST [STRING]
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+			tree_node: EV_TREE_NODE
+		do
 			from
-				application_element.start
+				an_element.start
 			until
-				application_element.off
+				an_element.off
 			loop
-				current_element ?= application_element.item_for_iteration
+				current_element ?= an_element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
@@ -633,44 +656,51 @@ feature {NONE} -- Implementation
 								if window_element /= Void then
 									current_name := window_element.name
 									if current_name.is_equal (Internal_properties_string)  then
-										create directory_item.make_with_name ("")
-										directory_item.modify_from_xml (window_element)
-											-- Only add the directory if there is no matching directory in system.
-										if not Window_selector.directory_names.has (directory_item.text) then
-											window_selector.add_directory_item (directory_item)
+										full_information := get_unique_full_info (window_element)
+										element_info := full_information @ (name_string)
+										check
+											element_info_not_void: element_info /= Void
 										end
-									else
-										build_window (window_element, directory_item.text)
+										tree_node ?= parent_node_list
+										if tree_node /= Void then
+											tree_node_path := path_of_tree_node (tree_node)
+										else
+											create tree_node_path.make (1)
+										end
+										tree_node_path.extend (element_info.data)
+											-- We now retrieve an existing directory item matching the path of the
+											-- new directory. This ensures that if we are importing a project that has
+											-- the same directory structure, these directories are used.
+										directory_item ?= tree_item_matching_path (window_selector, tree_node_path)
+										if directory_item = Void then
+											create directory_item.make_with_name ("")
+											directory_item.modify_from_xml (window_element)
+											parent_node_list.extend (directory_item)	
+										end
 									end
 								end
 								current_element.forth
 							end
+							build_window_structure (current_element, directory_item)
 						elseif current_type.is_equal (Constants_string) then
-							constants_element := current_element
 							from
-								constants_element.start
+								current_element.start
 							until
-								constants_element.off
+								current_element.off
 							loop
-								constant_item_element ?= constants_element.item_for_iteration
+								constant_item_element ?= current_element.item_for_iteration
 								if constant_item_element /= Void then
 									constants.build_constant_from_xml (constant_item_element)	
 								end
-								constants_element.forth
+								current_element.forth
 							end
 						else
-							build_window (current_element, "")						
+							build_window (current_element, parent_node_list)							
 						end
 					end
 				end
-				application_element.forth
+				an_element.forth
 			end
-				-- Update all names in `window_selector' to ensure that
-				-- they are current after the load.
-			Window_selector.update_displayed_names
-			
-				-- Build any constants that were deferred.
-			constants.build_deferred_elements
 		end
 		
 	update_constant_references_in_xml (element: XM_ELEMENT) is

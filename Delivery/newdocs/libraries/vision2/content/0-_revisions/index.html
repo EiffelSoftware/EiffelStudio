@@ -85,7 +85,9 @@
 			<LI>
 				<B>EV_STANDARD_DIALOG</B> - Corrected postcondition of `make_with_text' which 
 				was checking that `text' was the same object as the STRING pased as an 
-				argument. This was incorrect, as `text' is cloned during the creation.</LI></ul>
+				argument. This was incorrect, as `text' is cloned during the creation.</LI>
+			<li><B>EV_WIDGET</B> Added `remove_real_target' which ensures that `real_target' is Void.</li>
+</ul>
 		<P><b>Breaking changes</b></P>
 		<UL>
 			<LI>
@@ -107,13 +109,16 @@
 					- No longer crashes if your `subtree_function' returns Void. In this situation, 
 					it will now behave as if the `Result' was empty.
 					<li>
-						<B>EV_BOX</B>
-					- Attempting to dock from an EV_DOCKABLE_SOURCE while the box was empty would 
-					not work. This has now been fixed.
-					<li>
-						<B>EV_TEXT_COMPONENT</B> - Calling `append_text', `prepend_text' or 
-						`insert_text' while `is_editable' is False caused a precondition failure in the 
-						implementation which is now fixed.</li>
+						<B>EV_BOX</B> - Attempting to dock from an EV_DOCKABLE_SOURCE while the box was 
+						empty would not work. This has now been fixed.
+					</li>
+					<li><B>EV_TEXT_COMPONENT</B> - Calling `append_text', `prepend_text' or `insert_text' while `is_editable' is False caused a precondition failure in the implementation which is now fixed.</li>
+					<li><B>EV_DOCKABLE_SOURCE</B>
+						<UL>
+							<li>It was previously not possible to dock to an empty window, as the target was ignored in error.</LI>
+							<li>Fixed bug which caused a crash if a dock was attempted to an empty box.</li>
+						</UL>
+					</li>
 				</ul>
 			<li>
 				<b>Windows</b>
@@ -175,8 +180,10 @@
 							<li>
 								Fixed bug where drag and drop was not working as it was attempting to perform 
 								docking instead. If both are enabled, docking has priority.</li>
+					
 						</ul>
 					</LI>
+<LI><B>EV_COMBO_BOX_IMP</B> - Fixed `set_foreground_color' and `set_background_color' which previously did nothing.</li>
 				</ul>
 			<li>
 				<b>Gtk</b>

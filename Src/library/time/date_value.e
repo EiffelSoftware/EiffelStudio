@@ -9,7 +9,7 @@ class DATE_VALUE
 
 inherit
 	DATE_MEASUREMENT
-		
+
 feature -- Access
 
 	day: INTEGER is
@@ -34,6 +34,23 @@ feature -- Access
 			-- Day, month and year coded.
 
 feature -- Element change
+
+	set_date (y, m, d: INTEGER) is
+			-- Set `year' with `y', `month' with `m' and `day' with `d'.
+		local
+			l_date: like compact_date
+		do
+			l_date := l_date & day_mask.bit_not
+			l_date := l_date | (d |<< day_shift)
+
+			l_date := l_date & month_mask.bit_not
+			l_date := l_date | (m |<< month_shift)
+
+			l_date := l_date & year_mask.bit_not
+			l_date := l_date | y
+			
+			compact_date := l_date
+		end
 
 	set_day (d: INTEGER) is
 			-- Set `day' to `d'.

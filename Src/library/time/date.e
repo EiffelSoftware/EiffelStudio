@@ -46,9 +46,7 @@ feature -- Initialization
 		require
 			correct_date: is_correct_date (y, m, d)
 		do
-			set_year (y)
-			set_month (m)
-			set_day (d)
+			set_date (y, m, d)
 		ensure
 			year_set: year = y
 			month_set: month = m

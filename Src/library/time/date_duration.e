@@ -252,6 +252,14 @@ feature -- Element Change
 			year := y
 		end
 
+	set_date (y, m, d: INTEGER) is
+			-- Set `year' with `y', `month' with `m' and `day' with `d'.
+		do
+			day := d
+			month := m
+			year := y
+		end
+
 	day_add (d: INTEGER) is
 			-- Add `d' days to `Current'.
 		do

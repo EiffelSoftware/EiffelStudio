@@ -40,16 +40,19 @@ inherit
 
 creation
 	make
-
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create a window. Window does not have any
 			-- parents
+		local
+			e: EV_ENVIRONMENT
 		do
 			base_make (an_interface)
 			title := ""
 			make_top ("EV_TITLED_WINDOW")
+			create e
+			e.application.add_root_window (interface)
 		end
 
 feature {EV_TITLED_WINDOW} -- Accelerators
@@ -358,6 +361,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/02/28 19:39:07  rogers
+--| During creation, the window is now added to the root_windows list (Still used for windows implementation).
+--|
 --| Revision 1.52  2000/02/19 05:45:01  oconnor
 --| released
 --|

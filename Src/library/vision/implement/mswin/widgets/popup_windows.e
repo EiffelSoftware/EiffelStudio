@@ -32,7 +32,7 @@ feature -- Output
 	popup is
 			-- Display the popup menu
 		local
-			ww : WEL_WINDOW
+			ww : WEL_COMPOSITE_WINDOW
 		do
 			if not exists then
 				make_track

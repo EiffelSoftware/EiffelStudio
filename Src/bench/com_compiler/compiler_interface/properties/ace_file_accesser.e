@@ -50,8 +50,6 @@ feature{NONE} -- Access
 	
 	string_default(def_opt: INTEGER): STRING is
 			-- retrieve the string default option corresponding to 'def_opt'
-		require
-			valid_ast: is_valid
 		local
 			defaults: LACE_LIST [D_OPTION_SD]
 			free_opt: FREE_OPTION_SD
@@ -300,8 +298,6 @@ feature -- Access
 
 	precompiled: STRING is
 			-- Precompiled file
-		require
-			valid_ast: is_valid
 		local
 			defaults: LACE_LIST [D_OPTION_SD]
 			found: BOOLEAN
@@ -340,8 +336,6 @@ feature -- Access
 
 	il_generation_type: INTEGER is
 			-- Type of the IL file generated if any.
-		require
-			valid_ast: is_valid
 		local
 			value: STRING
 		do
@@ -790,21 +784,6 @@ feature -- Element change
 		
 feature -- Status report
 
-	is_valid: BOOLEAN is
-			-- Does `root_ast' exist and represent a valid ace file?
-		local
-			tmp_ast: ACE_SD
-		do
-			Result := True
---			Result := False
---			if ace_file_name /= Void then
---				tmp_ast := parsed_ast (ace_file_name)
---				if tmp_ast /= Void then
---					Result := True
---				end
---			end	
-		end
-
 	last_error_message: STRING
 			-- Message describing possible errors in `make' and `apply'.
 
@@ -838,25 +817,8 @@ feature -- Saving
 				successful_save := False
 				last_error_message := Warning_messages.W_not_creatable (ace_file_name)
 			end
-
-			if successful_save then
-					-- We now check the validity of the syntax
-				successful_save := is_valid
-				if not successful_save then
-						-- Restore backup_file.
-					backup_file.open_read
-					ace_file.open_write
-					backup_file.copy_to (ace_file)
-					backup_file.close
-					ace_file.close
-
-					last_error_message := Warning_messages.W_incorrect_ace_configuration
-				end
-				check
-					backup_exists: backup_file.exists
-				end
-				backup_file.delete
-			end	
+		ensure
+			successful_save: successful_save
 		end
 		
 feature -- Environment

@@ -45,7 +45,7 @@ eunicefix=':'
 
 
 #added by ET: use default sigwaiting (only on 2.5+)
-d_usesigwait='define'
+d_dftlsigwaiting='define'
 d_bsd='undef'
 d_eunice='undef'
 d_xenix='undef'

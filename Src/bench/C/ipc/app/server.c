@@ -17,6 +17,7 @@
 #include "stream.h"
 #include "transfer.h"
 #include "logfile.h"
+#include "rqst_const.h"
 
 /* This variable records whether the workbench application was launched via
  * the ised wrapper (i.e. in debug mode) or not.
@@ -44,6 +45,19 @@ shared void dserver()
 	wide_listen();			/* Listen on the socket, waiting for requests */
 
 	/* Exiting from this routine resumes control to the debugger */
+}
+
+shared void dinterrupt()
+{
+	/* Send a request asking the daemon if the application has been
+	 * interrupted by the debugger.
+	 */
+
+	if (!debug_mode)		/* If not in debugging mode */
+		return;				/* Resume execution immediately */
+
+	send_info(EWBOUT, APP_INTERRUPT);
+	wide_listen();			/* Listen on the socket, waiting for the answer */
 }
 
 shared void winit()

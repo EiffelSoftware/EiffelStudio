@@ -15,6 +15,7 @@
 
 extern void send_bye();				/* Send final acknowledgment */
 extern void send_ack();				/* Send acknowledgment */
+extern void send_info();			/* Send information */
 extern int send_str();				/* Send string to the remote process */
 extern char *recv_str();			/* Receive string from the remote process */
 extern void trace_request();		/* Trace received request */

@@ -8,6 +8,8 @@ default
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
+	arguments ("-g")
+	working_directory ("E:\com_wizard\project\new_gui")
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("refactor_fixme")
@@ -31,7 +33,6 @@ default
 	exception_trace (yes)
 	inlining (no)
 	multithreaded (yes)
-	working_directory ("E:\com_wizard\project\new_gui")
 
 
 -------------------------------------------------
@@ -44,8 +45,9 @@ default
 -- EiffelVision2
 
 cluster
-	root_cluster:			"$EIFFEL_SRC\com_wizard\root"
-	
+	root_cluster:		"$EIFFEL_SRC\com_wizard\root"
+
+
 	all new_gui:		"$EIFFEL_SRC\com_wizard\project\new_gui"
 		exclude
 			"EIFGEN"; "resources"; "Diagrams"; "CVS"; 
@@ -139,7 +141,6 @@ external
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom.lib",
-		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom_runtime.lib",
-		"uxtheme.lib"
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom_runtime.lib"
 
 end

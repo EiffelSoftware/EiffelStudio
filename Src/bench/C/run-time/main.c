@@ -54,17 +54,16 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_boehm.h"
 #endif
 
-/* The following line is automatically uncommented when compiling a non commercial run-time */
-/*#define NON_COMMERCIAL*/
-
 #ifdef WORKBENCH
 extern void dbreak_create_table(void); /* defined in debug.c */
-#elif defined( NON_COMMERCIAL )
+#else
+// NON_COMMERCIAL is defined when compiling a non-commercial version of the run-time
+#ifdef NON_COMMERCIAL
 #ifdef EIF_WIN32
 #include "splashcom.x"
 #endif
 rt_private void display_non_commercial(void);
-
+#endif
 #endif
 
 /*

@@ -683,6 +683,12 @@
 
 /*#define HAS_GETEUID	/**/
 
+/* HAS_UTIME:
+ *	This symbol, if defined, indicates that the utime routine is
+ *	available.
+ */
+#define HAS_UTIME	/**/
+
 /* I_DIRECT:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <direct.h>.

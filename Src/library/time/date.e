@@ -465,12 +465,17 @@ feature -- Basic operations
 	month_add (m: INTEGER) is
 			-- add `m' months to the current date.
 			-- Can move days backward.
+		local
+			new_month: INTEGER
+			days_in_new_month: INTEGER
 		do
 			set_year (year + div ((month + m - 1), Months_in_year))
-			set_month (mod ((month + m - 1), Months_in_year) + 1)
-			if day > days_in_month then
-				set_day (days_in_month)
+			new_month := mod ((month + m - 1), Months_in_year) + 1
+			days_in_new_month := days_in_i_th_month (new_month, year)
+			if day > days_in_new_month then
+				set_day (days_in_new_month)
 			end
+			set_month (new_month)
 		end;
 
 	year_forth is

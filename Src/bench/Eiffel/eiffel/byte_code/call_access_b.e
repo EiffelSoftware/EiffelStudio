@@ -254,16 +254,15 @@ end
 		do
 			Result := feature_id
 			instant_context_type := context_type
-			if 	instant_context_type.is_basic
-				and then
-				not instant_context_type.is_bit
+			if
+				instant_context_type.is_basic
+				and then not instant_context_type.is_bit
 			then
 				basic_type ?= instant_context_type
 				static_type := basic_type.associated_dtype
 					-- Process the feature id of `feature_name' in the
 					-- associated reference type
-				associated_class :=
-							basic_type.associated_reference.associated_class
+				associated_class := basic_type.associated_reference.associated_class
 				feat_tbl := associated_class.feature_table
 				Result := feat_tbl.item (feature_name).feature_id
 			end

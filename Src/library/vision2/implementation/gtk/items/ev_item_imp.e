@@ -108,7 +108,7 @@ feature {EV_ANY_I} -- Implementation
 			Result.not_empty_actions.extend (agent connect_button_press_switch)
 		end
 
-feature {EV_ITEM_IMP, EV_ITEM_LIST_IMP} -- Implementation
+feature {EV_ANY_IMP} -- Implementation
 
 	item_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 		-- Used to store parent imp of items where parent stores

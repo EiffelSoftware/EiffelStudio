@@ -188,6 +188,20 @@ feature -- Status report
 			b := Result.y
 		end
 
+	get_item_rect (index: INTEGER): WEL_RECT is
+			-- Retrieves the position of the zero-based `index'-th item.
+		require
+			exists: exists
+			index_large_enough: index >= 0
+			index_small_enough: index < count
+		do
+			if not exists then
+				io.putstring ("Not exists")
+			end
+			create Result.make (0, 0, 0, 0)
+			cwin_send_message (item, Lvm_getitemrect, index, cwel_pointer_to_integer(Result.item))
+		end
+
 	get_cell_text (i,j: INTEGER): STRING is
 			-- Get the label of the cell with coordinates `i', `j' with `txt'.
 		require

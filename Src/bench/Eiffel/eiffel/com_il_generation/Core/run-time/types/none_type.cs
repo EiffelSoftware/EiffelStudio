@@ -9,9 +9,8 @@ using System;
 
 namespace EiffelSoftware.Runtime.Types {
 
-[CLSCompliantAttribute (false)]
 [Serializable]
-sealed public class NONE_TYPE: CLASS_TYPE {
+sealed public class RT_NONE_TYPE: RT_CLASS_TYPE {
 
 	public override String class_name ()
 		// Name of object's generating type who has Current as an EIFFEL_DERIVATION

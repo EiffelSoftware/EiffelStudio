@@ -10,14 +10,13 @@ using System;
 
 namespace EiffelSoftware.Runtime.Types {
 
-[CLSCompliantAttribute (false)]
 [Serializable]
-public class GENERIC_TYPE: CLASS_TYPE {
+public class RT_GENERIC_TYPE: RT_CLASS_TYPE {
 
 /*
 feature -- Access
 */
-	public TYPE[] generics;
+	public RT_TYPE[] generics;
 		// Type holding information about current generic derivation
 
 	public int count;
@@ -29,12 +28,12 @@ feature -- Access
 /*
 feature -- Status Report
 */
-
-	public override TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
+	[CLSCompliantAttribute(false)]
+	public override RT_TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
 		// Evaluate Current in context of `context_object'.
 	{
-		GENERIC_TYPE Result;
-		TYPE [] l_generics, l_other_generics;
+		RT_GENERIC_TYPE Result;
+		RT_TYPE [] l_generics, l_other_generics;
 		int i, nb;
 
 		if (has_formal ()) {
@@ -44,9 +43,9 @@ feature -- Status Report
 				// Duplicate current data as after the evaluation in context
 				// of `context_object' it will be the same except for `generics'
 				// which will only contained fully evaluated types that's why
-				// `generics' is created of type `CLASS_TYPE []'.
-			Result = (GENERIC_TYPE) MemberwiseClone();
-			l_other_generics = new CLASS_TYPE [nb];
+				// `generics' is created of type `RT_CLASS_TYPE []'.
+			Result = (RT_GENERIC_TYPE) MemberwiseClone();
+			l_other_generics = new RT_CLASS_TYPE [nb];
 			Result.set_generics (l_other_generics);
 
 				// Evaluate all types contained in `generics' in context of `context_object'
@@ -54,7 +53,7 @@ feature -- Status Report
 			for (; i < nb ; i ++) {
 				#if ASSERTIONS
 					ASSERTIONS.CHECK ("Valid element type",
-						l_generics [i].evaluated_type (context_object) is CLASS_TYPE);
+						l_generics [i].evaluated_type (context_object) is RT_CLASS_TYPE);
 				#endif
 				l_other_generics [i] = l_generics [i].evaluated_type (context_object);
 			}
@@ -70,7 +69,7 @@ feature -- Status Report
 	{
 		int i, nb;
 		byte l_flags = has_formal_flags;
-		TYPE[] l_generics;
+		RT_TYPE[] l_generics;
 		
 		if ((l_flags & 0x10) == 0x10) {
 			return (l_flags & 0x01) == 0x01;
@@ -93,7 +92,7 @@ feature -- Status Report
 		// (type of which it is a direct instance)
 	{
 		String Result = base.type_name ();
-		TYPE [] l_generics;
+		RT_TYPE [] l_generics;
 		int i, nb;
 
 		Result = String.Concat (Result, str_open_generics);
@@ -113,7 +112,7 @@ feature -- Status Report
 /*
 feature -- Settings
 */
-	public void set_generics (TYPE[] an_array)
+	public void set_generics (RT_TYPE[] an_array)
 		// Assign `an_array' to `generics'.
 	{
 		generics = an_array;
@@ -137,8 +136,8 @@ feature -- Comparison
 		// Is `other' similar to Current?
 	{
 		bool Result = false;
-		GENERIC_TYPE l_other = other as GENERIC_TYPE;
-		TYPE [] l_generics, l_other_generics;
+		RT_GENERIC_TYPE l_other = other as RT_GENERIC_TYPE;
+		RT_TYPE [] l_generics, l_other_generics;
 		int i, nb;
 
 		if (l_other != null) {

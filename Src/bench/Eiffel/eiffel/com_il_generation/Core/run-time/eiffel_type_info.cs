@@ -24,7 +24,7 @@ feature -- Assertion checking
 /*
 feature -- Access
 */
-	GENERIC_TYPE ____type();
+	RT_GENERIC_TYPE ____type();
 		/* Get generic type if any. */
 
 	String ____class_name();
@@ -53,7 +53,7 @@ feature -- Duplication
 feature -- Settings
 */
 
-	void ____set_type(GENERIC_TYPE type);
+	void ____set_type(RT_GENERIC_TYPE type);
 		/* Set `____type' with `type'. */
 }
 

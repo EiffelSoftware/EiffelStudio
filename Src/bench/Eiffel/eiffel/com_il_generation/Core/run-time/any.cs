@@ -45,7 +45,7 @@ feature -- Access
 		// (type of which it is a direct instance)
 	{
 		string Result = null;
-		GENERIC_TYPE l_gen_type;
+		RT_GENERIC_TYPE l_gen_type;
 		EIFFEL_TYPE_INFO l_current = Current as EIFFEL_TYPE_INFO;
 
 		if (Current == null) {
@@ -73,7 +73,7 @@ feature -- Status report
 		// of `other' (as per Eiffel: The Language, chapter 13)?
 	{
 		bool Result = false;
-		GENERIC_TYPE l_current_type, l_other_type;
+		RT_GENERIC_TYPE l_current_type, l_other_type;
 		EIFFEL_TYPE_INFO current_info = Current as EIFFEL_TYPE_INFO;
 		EIFFEL_TYPE_INFO other_info = other as EIFFEL_TYPE_INFO;
 
@@ -128,7 +128,7 @@ feature -- Status report
 	{
 		bool Result = false;
 		int i, nb;
-		GENERIC_TYPE l_current_type, l_other_type;
+		RT_GENERIC_TYPE l_current_type, l_other_type;
 		EIFFEL_TYPE_INFO l_current;
 
 		#if ASSERTIONS
@@ -228,9 +228,9 @@ feature -- Comparison
 									* to the special runtime field `$$____type' used to store the generic type
 									* information. If it is the case, we simply ignore it. To identify
 									* it we use the name of the attribute as well as its type which needs
-									* to be of type GENERIC_TYPE. */
+									* to be of type RT_GENERIC_TYPE. */
 								Result = (attribute.Name.Equals ("$$____type") &&
-									typeof(GENERIC_TYPE).Equals (attribute.FieldType));
+									typeof(RT_GENERIC_TYPE).Equals (attribute.FieldType));
 							}
 						}
 						if (!Result) {

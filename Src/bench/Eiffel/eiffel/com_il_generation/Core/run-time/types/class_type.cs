@@ -13,8 +13,7 @@ using EiffelSoftware.Runtime.CA;
 namespace EiffelSoftware.Runtime.Types {
 
 [Serializable]
-[CLSCompliantAttribute (false)]
-public class CLASS_TYPE: TYPE {
+public class RT_CLASS_TYPE: RT_TYPE {
 
 /*
 feature -- Access
@@ -73,6 +72,6 @@ feature -- Setting
 		type = a_type;
 	}
 
-} // class CLASS_TYPE
+}
 
 }

@@ -90,6 +90,16 @@ feature -- Element Change
 			tl_linked: tl.next /= Void and then tl.next.previous = tl
 		end
 
+feature -- Removal
+
+		wipe_out is
+				-- Erase data.
+			do
+				set_first_data (Void)
+				set_last_data (Void)
+			end
+			
+
 feature {NONE} -- Implementation
 
 	root_node: TREE_NODE [like first_data]

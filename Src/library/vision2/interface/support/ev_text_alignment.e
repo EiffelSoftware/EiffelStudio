@@ -19,7 +19,7 @@ create
 	default_create,
 	make_with_left_alignment,
 	make_with_center_alignment,
-	make_with_right_aligment
+	make_with_right_alignment
 
 feature {NONE} -- Initialization
 
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 	make_with_center_alignment is
 		do
-			set_center_aligment
+			set_center_alignment
 		end
 
 	make_with_right_alignment is
@@ -68,17 +68,17 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_left_aligned: BOOLEAN
+	is_left_aligned: BOOLEAN is
 		do
 			Result := alignment_code = 1
 		end
 
-	is_center_aligned: BOOLEAN
+	is_center_aligned: BOOLEAN is
 		do
 			Result := alignment_code = 2
 		end
 
-	is_right_aligned: BOOLEAN
+	is_right_aligned: BOOLEAN is
 		do
 			Result := alignment_code = 3
 		end
@@ -86,12 +86,10 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	alignment_code: INTEGER
-		-- Used to represent one of the three alignment states.
+		-- Used internally to represent one of the three alignment states.
 
 invariant
 	alignment_code_within_range:  alignment_code >= 1 and alignment_code <= 3
-
-feature -- Implementation
 
 end -- class EV_TEXT_ALIGNMENT
 

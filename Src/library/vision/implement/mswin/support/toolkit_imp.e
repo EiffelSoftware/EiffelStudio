@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 						done := True
 					else
 						dlg := cwin_get_last_active_popup (main_window.wel_item)
-						if dlg /= main_window.wel_item or is_dialog then
+						if dlg /= main_window.wel_item or is_dialog (dlg) then
 							msg.process_dialog_message (dlg)
 							if not msg.last_boolean_result then
 								msg.translate

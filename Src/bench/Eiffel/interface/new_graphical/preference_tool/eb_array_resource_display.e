@@ -19,7 +19,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_with_resource (a_parent: EV_CONTAINER; a_resource: like resource) is
+	make_with_resource (a_parent: EV_BOX; a_resource: like resource) is
 			-- Display Current
 		local
 			s: STRING
@@ -27,9 +27,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_parent, a_resource)
 --			set_minimum_height (130)
-			set_expand (true)
+			a_parent.set_child_expandable (Current, True)
 				
-		-- expand devrait etre a false, mais cela produit
+		-- expand devrait etre a False, mais cela produit
 		-- un bug d'affichage dans certaines conditions
 
 			s := clone (a_resource.visual_name)

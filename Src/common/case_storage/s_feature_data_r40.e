@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class S_FEATURE_DATA_R340
+class S_FEATURE_DATA_R40
 
 inherit
 
@@ -54,6 +54,7 @@ feature -- Properties
 	body: S_FREE_TEXT_DATA
 			-- Body (with locals and recue) if routine or constant
 
+
 feature -- Setting
 
 	set_body (b: like body) is
@@ -68,16 +69,6 @@ feature -- Setting
 			status := status_handler.set_reversed_engineered (status)
 		ensure then
 			is_reversed_engineered: is_reversed_engineered
-		end;
-
-	set_is_constant is
-		do
-			status := status_handler.set_is_constant (status)
-		end
-
-	set_is_once is
-		do
-			status := status_handler.set_is_once (status)
 		end
 
 	set_status (s: like status) is
@@ -86,7 +77,7 @@ feature -- Setting
 			status := s
 		end
 
-feature {FEATURE_DATA, FEATURE_ADAPTER} -- Implementation
+feature {FEATURE_DATA} -- Implementation
 
 	status_handler: FEATURE_STATUS_HANDLER is
 			-- Used to encode/decode boolean properties in `status'.
@@ -101,7 +92,7 @@ feature {NONE} -- Implementation
 			-- a bit mask, which would be _much_ more convenient but 
 			-- it's not reliable enough, so we use the `status_handler').
 
-end -- class S_FEATURE_DATA_R340
+end -- class S_FEATURE_DATA_R40
 
 
 

@@ -15,7 +15,7 @@
 		<heading>
 			<size>2</size>Window layout
 		</heading>
-		<paragraph>Unlike its predecessor EiffelBench, in EiffelStudio all windows have the same components. However, components to be displayed are chosen by the user. Moreover, windows have two modes: the edition mode and the debug mode. Basically, a standard window looks likethis:</paragraph>
+		<paragraph>In EiffelStudio all windows have the same components. However, components to be displayed are chosen by the user. Moreover, windows have two modes: the edition mode and the debug mode. Basically, a standard window looks like this:</paragraph>
 		<paragraph>
 			<image>
 				<url>/images/eiffelstudio/general_edition_mode.png</url>
@@ -70,7 +70,7 @@
 				<url>/images/eiffelstudio/general_debug_mode.png</url>
 			</image>
 		</paragraph>
-		<paragraph>In debug mode, the same tools are present, but there are three extra tools. Two are located in the left panel, which display respectively the call stack and the dynamic value of expressions. The other is in the right panel and can be use to view the state of objects while debugging.</paragraph>
+		<paragraph>In debug mode, the same tools are present, but there are three extra tools. Two are located in the left panel, which display respectively the call stack and the dynamic value of expressions. The other is in the right panel and can be used to view the state of objects while debugging.</paragraph>
 		<heading>
 			<size>2</size>Layout configuration
 		</heading>
@@ -108,9 +108,6 @@
 				</image>
 			</item>
 		</list>
-		<note>
-			<bold>Note</bold>: No more than three tools can be displayed at the same time in the left panel. Trying to add more will automatically minimize one of the displayed tools, in order to make room for the new tool.
-		</note>
 		<paragraph>Tools that can be closed have a corresponding entry in the 
 			<bold>View/Explorer Bar</bold> menu. They also have a corresponding button in the main toolbar.
 		</paragraph>

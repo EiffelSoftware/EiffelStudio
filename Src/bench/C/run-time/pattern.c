@@ -29,12 +29,12 @@ rt_private uint32 **darray = (uint32 **) 0;	/* Pointer to array recording shifti
 #endif /* EIF_THREADS */
 
 rt_private void compile(char *pattern, register int plen, uint32 *dtable);			/* Regular pattern compilation */
-rt_private void fuz_compile(EIF_OBJECT pattern, register int plen, int fuzzy);		/* Fuzzy pattern compilation */
+rt_private void fuz_compile(char *pattern, register int plen, int fuzzy);		/* Fuzzy pattern compilation */
 rt_private void free_structures(int n);	/* Free fuzzy shifting tables */
 rt_private char *qsearch(char *text, int tlen, char *pattern, int plen);		/* Sunday's Quick Search algorithm */
 rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int fuzzy);	/* Fuzzy version of Quick Search */
 
-rt_public int str_str(EIF_CONTEXT EIF_OBJECT text, EIF_OBJECT pattern, int tlen, int plen, int start, int fuzzy)
+rt_public int str_str(char *text, char *pattern, int tlen, int plen, int start, int fuzzy)
              		/* The text string */
                 	/* The pattern we are looking for */
          			/* Length of the text */
@@ -49,8 +49,6 @@ rt_public int str_str(EIF_CONTEXT EIF_OBJECT text, EIF_OBJECT pattern, int tlen,
 	 * the pattern. A 0 means an exact match. For efficiency reasons, I use a
 	 * special version of the algorithm for perfect matches, although the fuzzy
 	 * one is a generalization--RAM.
-	 * NB: as the fuzzy pattern matching uses cmalloc(), the Eiffel side must
-	 * give us protected addresses.
 	 */
 
 	EIF_GET_CONTEXT
@@ -64,30 +62,19 @@ rt_public int str_str(EIF_CONTEXT EIF_OBJECT text, EIF_OBJECT pattern, int tlen,
 
 	start--;			/* Convert index to C one (start at 0) */
 
-	/* Exact matching does not use any memory allocation at all, so it is safe
-	 * to use eif_access() now to pass true addresses.
-	 * Fuzzy pattern matching uses memory allocation to store the delta tables.
-	 * This means we have to pass EIF_OBJECT pointers to the pattern compilation
-	 * routine. But once compile is done, no more memory allocation is needed
-	 * and then we may pass the true pointer to the search function, which is
-	 * nice.
-	 */
-
 	if (fuzzy == 0) {
-		compile(eif_access(pattern), plen, eif_delta);		/* Compile pattern */
-		p = qsearch(eif_access(text) + start, tlen-start,
-			eif_access(pattern), plen);					/* Quick search */
+		compile(pattern, plen, eif_delta);		/* Compile pattern */
+		p = qsearch(text + start, tlen-start, pattern, plen);	/* Quick search */
 	} else {
 		fuz_compile(pattern, plen, fuzzy);				/* Compile pattern */
-		p = fuz_qsearch(eif_access(text) + start, tlen-start,
-			eif_access(pattern), plen, fuzzy);			/* Quick search */
+		p = fuz_qsearch(text + start, tlen-start,pattern, plen, fuzzy);		/* Quick search */
 		free_structures(fuzzy + 1);							/* Free tables */
 	}
 
 	if (p == (char *) 0)		/* `p' is the start of the found substring */
 		return 0;				/* Pattern not found */
 	else
-		return 1 + (p - eif_access(text));		/* Index within string */
+		return 1 + (p - text);		/* Index within string */
 
 	EIF_END_GET_CONTEXT
 }
@@ -102,7 +89,7 @@ rt_private void compile(char *pattern, register int plen, uint32 *dtable)
 	 */
 	
 	register1 int i;
-	register2 char *p;
+	register2 unsigned char *p, *pt;
 	register3 uint32 *dp = dtable;
 
 	plen++;		/* Increment to avoid doing it at each step of the loop */
@@ -120,11 +107,12 @@ rt_private void compile(char *pattern, register int plen, uint32 *dtable)
 	 * delta associated with the second --rightmost-- will be kept).
 	 */
 
-	for (p = pattern, i = 0; i < plen; p++, i++)
+	pt = (unsigned char *) pattern;
+	for (p = pt, i = 0; i < plen; p++, i++)
 		dtable[*p] = plen - i;
 }
 
-rt_private void fuz_compile(EIF_CONTEXT EIF_OBJECT pattern, register int plen, int fuzzy)
+rt_private void fuz_compile(char *pattern, register int plen, int fuzzy)
                 	/* The pattern we want to look at */
                    	/* The length of the pattern */
           			/* Fuzzy control */
@@ -142,7 +130,7 @@ rt_private void fuz_compile(EIF_CONTEXT EIF_OBJECT pattern, register int plen, i
 	fuzzy++;		/* Number of delta tables to build */
 
 	/* First dynamically allocate the array of delta shift tables */
-	darray = (uint32 **) cmalloc(fuzzy * sizeof(uint32 *));
+	darray = (uint32 **) malloc(fuzzy * sizeof(uint32 *));
 	if (darray == (uint32 **) 0) {
 		xraise(EN_MEM);
 		return;					/* Exception ignored */
@@ -150,7 +138,7 @@ rt_private void fuz_compile(EIF_CONTEXT EIF_OBJECT pattern, register int plen, i
 
 	/* Now allocate each of the delta tables */
 	for (i = 0; i < fuzzy; i++) {
-		new = (uint32 *) cmalloc(ASIZE * sizeof(uint32));
+		new = (uint32 *) malloc(ASIZE * sizeof(uint32));
 		if (new == (uint32 *) 0) {			/* No more memory */
 			free_structures(i - 1);			/* Free already allocated tables */
 			xraise(EN_MEM);					/* No more memory */
@@ -160,25 +148,25 @@ rt_private void fuz_compile(EIF_CONTEXT EIF_OBJECT pattern, register int plen, i
 	}
 
 	for (i = 0; i < fuzzy; i++)
-		compile(eif_access(pattern), plen - i, darray[i]);
+		compile(pattern, plen - i, darray[i]);
 
 	EIF_END_GET_CONTEXT
 }
 
-rt_private void free_structures(EIF_CONTEXT int n)
+rt_private void free_structures(int n)
 {
 	EIF_GET_CONTEXT
 	int i;
 
 	/* Free fuzzy delta shift tables from 0 to 'n' */
 	for (i = 0; i < n; i++)
-		xfree((char *) (darray[i]));	/* Free allocated delta tables */
-	xfree((char *) darray);					/* Free main table */
+		free((char *) (darray[i]));	/* Free allocated delta tables */
+	free((char *) darray);					/* Free main table */
 
 	EIF_END_GET_CONTEXT
 }
 
-rt_private char *qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, int plen)
+rt_private char *qsearch(char *text, int tlen, char *pattern, int plen)
            		/* The text we are searching through */
          		/* Length of the text */
               	/* The pattern string */
@@ -219,7 +207,7 @@ rt_private char *qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, int pl
 	EIF_END_GET_CONTEXT
 }
 
-rt_private char *fuz_qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, int plen, int fuzzy)
+rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int fuzzy)
            		/* The text we are searching through */
          		/* Length of the text */
               	/* The pattern string */

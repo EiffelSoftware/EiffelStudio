@@ -246,6 +246,26 @@ feature {EV_ANY_I} -- Implementation
 		-- implemented by `Current'.
 		-- (See bridge pattern notes in ev_any.e)
 
+	on_parented is
+			-- `Current' is about to be put into a container.
+		require
+			parent_void: parent = Void
+		do
+		ensure
+			parent_void: parent = Void
+		end
+
+	on_orphaned is
+			-- `Current' has just been removed from its container.
+		require
+			--| FIXME Make this work:
+			--| parent_void: parent = Void
+		do
+		ensure
+			--| FIXME Make this work:
+			--| parent_void: parent = Void
+		end
+
 feature -- Obsolete
 
 	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
@@ -379,6 +399,9 @@ end -- class EV_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.65  2000/04/14 20:50:57  brendel
+--| on_parented and on_orphaned defined here.
+--|
 --| Revision 1.64  2000/04/11 23:13:10  oconnor
 --| replaced postconditions previously commented out
 --|

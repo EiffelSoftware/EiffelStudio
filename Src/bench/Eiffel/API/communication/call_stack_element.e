@@ -104,8 +104,8 @@ feature -- Properties
 	routine: E_FEATURE is
 			-- Routine being called
 		do
-			if not initialized then
-				initialize_stack;
+			if private_routine = Void then
+				private_routine := origin_class.feature_with_name (routine_name);
 			end;
 			Result := private_routine;
 		end;
@@ -326,55 +326,57 @@ if enabled_debug_trace then
 	io.error.putstring (dynamic_class.name);
 	io.error.new_line;
 end
-			rout := origin_class.feature_with_name (routine_name);
-			unprocessed_l := unprocessed_values;
-			unprocessed_l.start;
-			if rout /= Void then
-				local_decl_grps := rout.locals;
-				l_count := rout.argument_count;
-				if l_count > 0 then
-					arg_names := rout.argument_names;
-					!! args_list.make (l_count);	
-					from
-						arg_names.start;
-						args_list.start
-					until
-						args_list.after
-					loop
-						value := unprocessed_l.item;
-						value.set_name (arg_names.item);
-						args_list.replace (value);
-						args_list.forth;
-						arg_names.forth;
-						unprocessed_l.forth;
-					end;
-				end;
-				if local_decl_grps /= Void then
-					!! locals_list.make (5)
-					from
-						l_count := 0;
-						local_decl_grps.start
-					until
-						local_decl_grps.after
-					loop 
+			if is_melted then
+				rout := routine;
+				unprocessed_l := unprocessed_values;
+				unprocessed_l.start;
+				if rout /= Void then
+					local_decl_grps := rout.locals;
+					l_count := rout.argument_count;
+					if l_count > 0 then
+						arg_names := rout.argument_names;
+						!! args_list.make (l_count);	
 						from
-							id_list := local_decl_grps.item.id_list;
-							id_list.start;
+							arg_names.start;
+							args_list.start
 						until
-							id_list.after
+							args_list.after
 						loop
 							value := unprocessed_l.item;
-							value.set_name (id_list.item);
-							locals_list.extend (value);
-							id_list.forth
-							unprocessed_l.forth
+							value.set_name (arg_names.item);
+							args_list.replace (value);
+							args_list.forth;
+							arg_names.forth;
+							unprocessed_l.forth;
 						end;
-						local_decl_grps.forth
 					end;
-				end;
-				if rout.is_function then
-					private_result := unprocessed_values.last;
-					private_result.set_name ("Result")
+					if local_decl_grps /= Void then
+						!! locals_list.make (5)
+						from
+							l_count := 0;
+							local_decl_grps.start
+						until
+							local_decl_grps.after
+						loop 
+							from
+								id_list := local_decl_grps.item.id_list;
+								id_list.start;
+							until
+								id_list.after
+							loop
+								value := unprocessed_l.item;
+								value.set_name (id_list.item);
+								locals_list.extend (value);
+								id_list.forth
+								unprocessed_l.forth
+							end;
+							local_decl_grps.forth
+						end;
+					end;
+					if rout.is_function then
+						private_result := unprocessed_values.last;
+						private_result.set_name ("Result")
+					end
 				end
 			end;
 			private_arguments := args_list;

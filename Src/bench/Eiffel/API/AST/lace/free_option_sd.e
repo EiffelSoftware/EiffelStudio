@@ -356,13 +356,15 @@ feature {COMPILER_EXPORTER}
 					end
 
 				when override_cluster then
-					if not value.is_name then
-						error_found := True
-					elseif compilation_modes.is_precompiling then
-						error_found := True
-					elseif universe.has_override_cluster then
-						error_found := True
-					elseif universe.has_cluster_of_name (value.value) then
+						-- Do not perform all processing as some is already done
+						-- in `build_universe' from ACE_SD through call to
+						-- `set_override_cluster'.
+					check
+						value.is_name
+						not compilation_modes.is_precompiling
+						universe.has_override_cluster
+					end
+					if universe.has_cluster_of_name (value.value) then
 						universe.set_override_cluster_name (value.value)
 					else
 						error_found := True

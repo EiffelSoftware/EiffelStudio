@@ -263,7 +263,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 	build_universe is
 			-- Analysis in order to build the universe
 		do
-
 			System.set_name (system_name);
 
 				-- Initialization
@@ -290,7 +289,12 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				-- Second adaptation of Use files
 			adapt_use;
 
+				-- Update content of clusters.
 			update_clusters;
+	
+				-- Process override cluster first.
+			Universe.process_override_cluster
+
 				-- Remove inexistant clusters from the system
 			process_removed_clusters
 
@@ -395,7 +399,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				-- Process the system level options
 		do
 			reset_system_level_options;
-			Universe.set_override_cluster_name (Void)
 			if defaults /= Void then
 				from
 					defaults.start
@@ -406,7 +409,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					defaults.forth
 				end
 			end;
-			Universe.process_override_cluster
 		end;
 
 	build_assemblies is
@@ -735,7 +737,9 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			-- `build_clusters'.
 		local
 			free_option_sd: FREE_OPTION_SD
+			l_val: OPT_VAL_SD
 		do
+			Universe.set_override_cluster_name (Void)
 			if defaults /= Void then
 				from
 					defaults.start
@@ -744,7 +748,15 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				loop
 					free_option_sd ?= defaults.item.option
 					if free_option_sd /= Void and then free_option_sd.is_override then
-						Universe.set_override_cluster_name (defaults.item.value.value)
+						l_val := defaults.item.value
+						if
+							not l_val.is_name or Compilation_modes.is_precompiling or
+							Universe.has_override_cluster
+						then
+							free_option_sd.error (l_val)
+						else
+							Universe.set_override_cluster_name (l_val.value)
+						end
 					end
 					defaults.forth
 				end

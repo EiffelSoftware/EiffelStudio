@@ -462,29 +462,21 @@ feature {COMPILER_EXPORTER, EB_CLUSTERS} -- Setting
 			old_base_name_set: old_base_name = n
 		end
 
-	restore_class_i_information is
+	restore_class_i_information (a_new_cluster: like cluster) is
 			-- Restore CLASS_I object so that we can move it from its current
 			-- location to old one.
 		require
 			old_cluster_name_not_void: old_cluster_name /= Void
-			in_universe: Lace.old_universe.has_cluster_of_name (old_cluster_name)
+			a_new_cluster_not_void: a_new_cluster /= Void
+			a_new_cluster_does_not_have_current: not a_new_cluster.classes.has (name)
 		do
-			if Lace.old_universe /= Void then
-				cluster := Lace.old_universe.cluster_of_name (old_cluster_name)
-
-				check
-					cluster_not_void: cluster /= Void
-				end
-
-					-- Insert class to new cluster `c'.
-				cluster.classes.put (Current, name)
-			end
-
 				-- Reset `override_cluster' info since it has been moved back to its previous
 				-- location.
 			base_name := old_base_name
 			old_base_name := Void
 			old_cluster_name := Void
+			set_cluster (a_new_cluster)
+			a_new_cluster.classes.put (Current, name)
 		end
 
 	reset_class_c_information (cl: CLASS_C) is

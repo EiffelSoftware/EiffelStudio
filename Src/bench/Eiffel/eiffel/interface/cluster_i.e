@@ -516,20 +516,15 @@ end;
 
 	new_cluster (name: STRING; ex_l, inc_l: LACE_LIST [FILE_NAME_SD];
 				 process_subclusters, is_lib: BOOLEAN; par_clus: like Current): CLUSTER_I is
+		local
+			l_is_override: BOOLEAN
 		do
+			l_is_override := Universe.has_override_cluster and then
+				Universe.override_cluster_name.is_equal (name)
+				
 				-- If the cluster has changed,
 				-- do a degree 6
 			if
-				is_override_cluster and then
-				Universe.has_override_cluster and then
-				Universe.override_cluster_name.is_equal (name)
-			then
-					-- Smart processing of Override cluster
-				create Result.make_from_old_cluster (Current, par_clus)
-				Result.set_cluster_name (name)
-				Result.rebuild
-				Universe.insert_cluster (Result)
-			elseif
 				not (is_lib and is_lib = is_library) and then
 				(changed (ex_l, inc_l) or else
 				process_subclusters /= is_recursive)
@@ -550,6 +545,7 @@ end;
 				Result.set_cluster_name (name);
 				Universe.insert_cluster (Result);
 			end;
+			Result.set_is_override_cluster (l_is_override)
 		end;
 
 	fill (ex_l, inc_l: LACE_LIST [FILE_NAME_SD]) is
@@ -1008,71 +1004,109 @@ end;
 		require
 			old_cluster_not_void: old_cluster /= Void
 		local
-			old_classes: like classes;
-			old_class: CLASS_I;
-		do
-			from
-				old_classes := old_cluster.classes;
-				old_classes.start
-			until
-				old_classes.after
-			loop
-				old_class := old_classes.item_for_iteration;
-				if not classes.has (old_class.name) then
-					-- the class has been removed
-					old_cluster.remove_class (old_class);
-					if Workbench.automatic_backup then
-						record_removed_class (old_class.name)
-					end
-				end;
-				old_classes.forth;
-			end;
-		end;
-
-	rebuild is
-			-- Rebuild a cluster without going through a full recompilation
-		local
-			cl_id: STRING
-			already_done: LINKED_LIST [STRING]
-			class_i: CLASS_I
 			old_classes: like classes
+			old_class, new_class: CLASS_I
+			l_new_cluster: like Current
+			ov_classes: like classes
 		do
-			old_cluster := clone (Current)
-			old_classes := old_cluster.classes
-
-			create classes.make (30)
-			if is_recursive then
-				create already_done.make
-				already_done.compare_objects
-				cl_id := physical_id (path)
-				already_done.extend (cl_id)
-			end
-			fill_recursively (path, "", already_done)
-			old_cluster := Void
-			
-				-- Process removed classes
-			from
-				old_classes.start
-			until
-				old_classes.after
-			loop
-				class_i := old_classes.item_for_iteration
-				if not classes.has (class_i.name) then
-					if class_i.old_cluster_name /= Void then
-							-- Retrieve previous cluster location of class and reset
-							-- `class_i' object so that it can be put back to its
-							-- old location.
-						class_i.restore_class_i_information
-						Workbench.change_class (class_i)
-					else
-							-- Was only in override cluster, we need to remove it from system.
-						remove_class_from_system (class_i)
-						if Workbench.automatic_backup then
-							record_removed_class (class_i.name)
+			if is_override_cluster then
+					-- Process removed classes
+				from
+					old_classes := old_cluster.classes
+					old_classes.start
+				until
+					old_classes.after
+				loop
+					old_class := old_classes.item_for_iteration
+					if not classes.has (old_class.name) then
+							-- Old class from override cluster has been either moved back
+							-- to its original location or completely removed from system.
+						if old_class.old_cluster_name /= Void then
+								-- Retrieve previous cluster location of class and reset
+								-- `class_i' object so that it can be put back to its
+								-- old location.
+							l_new_cluster := Universe.cluster_of_name (old_class.old_cluster_name)
+							if
+								l_new_cluster /= Void and then
+								l_new_cluster.classes.has (old_class.name)
+							then
+								new_class := l_new_cluster.classes.item (old_class.name)
+								new_class.reset_class_c_information (old_class.compiled_class)
+								Workbench.change_class (new_class)
+							else
+									-- Looks like `old_class' does not exist where it is supposed
+									-- to be, we simply remove it.
+								old_cluster.remove_class (old_class)
+								if Workbench.automatic_backup then
+									record_removed_class (old_class.name)
+								end
+							end
+						else
+								-- Was only in override cluster, we need to remove it from system.
+							old_cluster.remove_class (old_class)
+							if Workbench.automatic_backup then
+								record_removed_class (old_class.name)
+							end
 						end
 					end
+					old_classes.forth
 				end
-				old_classes.forth
+			else
+				if universe.has_override_cluster then
+					ov_classes := universe.override_cluster.classes
+				end
+				from
+					old_classes := old_cluster.classes;
+					old_classes.start
+				until
+					old_classes.after
+				loop
+					old_class := old_classes.item_for_iteration;
+					if
+						not classes.has (old_class.name) and then
+						(ov_classes = Void or else not ov_classes.has (old_class.name))
+					then
+							-- the class has been really removed
+						old_cluster.remove_class (old_class);
+						if Workbench.automatic_backup then
+							record_removed_class (old_class.name)
+						end
+					end;
+					old_classes.forth;
+				end;
+			end
+		end;
+
+	rebuild_override is
+			-- Rebuild override cluster without going through a full recompilation.
+		require
+			is_override_cluster: is_override_cluster
+		local
+			l_classes: like classes
+			l_class: CLASS_I
+		do
+			if is_recursive then
+				l_classes := classes
+				update_with_all_classes
+			end
+
+			from
+				classes.start
+			until
+				classes.after
+			loop
+				l_class := classes.item_for_iteration
+				if l_class.date_has_changed then
+					if l_class.is_compiled then
+						Workbench.change_class (l_class)
+					end
+					l_class.set_date
+				end
+				classes.forth
+			end
+			
+			if is_recursive then
+				reset_classes (l_classes)
 			end
 		end
 

@@ -247,11 +247,20 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 }
 
 rt_public EIF_REFERENCE makestr(register char *s, register int len)
-{
 	/* Makes an Eiffel STRING object from a C string.
 	 * This routine creates the object and returns a pointer to the newly
 	 * allocated string or raises a "No more memory" exception.
 	 */
+{
+	return makestr_with_hash (s, len, 0);
+}
+
+rt_public EIF_REFERENCE makestr_with_hash (register char *s, register int len, register int a_hash)
+	/* Makes an Eiffel STRING object from a C string with precomputed hash code value `a_hash'.
+	 * This routine creates the object and returns a pointer to the newly
+	 * allocated string or raises a "No more memory" exception.
+	 */
+{
 	EIF_GET_CONTEXT
 	EIF_REFERENCE string;					/* Were string object is located */
 
@@ -264,8 +273,8 @@ rt_public EIF_REFERENCE makestr(register char *s, register int len)
 #endif
 	nstcall = 0;
 	(egc_strmake)(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
-	nstcall = 0;
-	(egc_strset)(string, (EIF_INTEGER) len);		/* Call feature `set_count' in STRING */
+	RT_STRING_SET_HASH_CODE(string, a_hash);
+	RT_STRING_SET_COUNT(string, len);
 #ifdef WORKBENCH
 	undiscard_breakpoints(); /* the debugger can now stop again */
 #endif

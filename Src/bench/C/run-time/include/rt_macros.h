@@ -20,6 +20,22 @@
 extern "C" {
 #endif
 
+/* Macro used to initialize `count' and `internal_hash_code' of STRING. Only `count' access
+ * is defined in workbench mode, as only setting hash code makes sense for fast finalized 
+ * executable. */
+#ifdef WORKBENCH
+#define RT_STRING_SET_COUNT(string,count) \
+	nstcall = 0; \
+	(egc_strset)((EIF_REFERENCE) string, (EIF_INTEGER) count);
+#define RT_STRING_SET_HASH_CODE(string, hash)
+#else
+#define RT_STRING_SET_COUNT(string, count) \
+	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str_count_offset) = (EIF_INTEGER) count;
+#define RT_STRING_SET_HASH_CODE(string, hash) \
+	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str_hash_offset) = (EIF_INTEGER) hash;
+#endif
+
+
 /* Macro used for variable protection when using the ISE GC. */
 /* RT_GC_PROTECT(a)	push `a' into `loc_stack' so that we always have a valid
  					access to `a'. */

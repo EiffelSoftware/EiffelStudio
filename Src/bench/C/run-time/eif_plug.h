@@ -43,7 +43,8 @@ struct bit {
  * Run time functions used by generated C code.
  */
 
-RT_LNK EIF_REFERENCE makestr(register char *s, register int len);	/* Build an Eiffel string object */
+RT_LNK EIF_REFERENCE makestr_with_hash(register char *s, register int len, register int a_hash);
+RT_LNK EIF_REFERENCE makestr(register char *s, register int len);
 extern EIF_REFERENCE makebit(char *bit, long int bit_count);		/* Build an Eiffel bit object */
 extern EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, EIF_REFERENCE *items, long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 

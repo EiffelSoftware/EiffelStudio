@@ -1,98 +1,113 @@
+indexing
+	description: "Add a figure in the application editor."
+	date: "$Date$"
+	id: "$Id$"
+	revision: "$Revision$"
 
-deferred class APP_ADD_FIGURE 
+class APP_ADD_FIGURE
 
 inherit
-
 	APP_COMMAND
-	
-feature {NONE}
 
-	x, y: INTEGER;
-			-- Point where figure was removed;
+	APP_FIND_FIGURE
 
-	figure: STATE_CIRCLE;
-			-- Circle added 
-
-	undo_executed: BOOLEAN;
-			-- Was undo execute ?
-
-	
-feature 
-
-	set_initial_point is
-			-- Set the default initial point of placing the figure.
-		do
-			x := 50;
-			y := 50;
-		end;
+feature -- Access
 
 	undo is 
 		local
-			figures: APP_FIGURES;
-			sel_figure: STATE_CIRCLE;
+			sel_figure: STATE_CIRCLE
 			transitions: TRANSITION
 		do 
-			figures := application_editor.figures;
-			transitions := application_editor.transitions;
-			sel_figure := application_editor.selected_figure;
-			figures.start;
-			figures.search (figure);
+			transitions := application_editor.transitions
+			sel_figure := application_editor.selected_figure
+			figures.start
+			figures.search (figure)
 			if not figures.after then
 				figures.remove
-			end;
-			transitions.remove_element (figure.data);
-			if 			-- currently selected
-				sel_figure = figure
-			then
+			end
+			transitions.remove_element (figure.data)
+			if sel_figure = figure then
+					-- currently selected
 				application_editor.set_selected (application_editor.initial_state_circle)
-			end;
-			undo_executed := True;
-			perform_update_display;
-		end; -- undo
+			end
+			undo_executed := True
+			perform_update_display
+		end
 
-	
-feature {NONE}
+	execute (arg: EV_ARGUMENT2 [EV_POINT, BUILD_STATE]; ev_data: EV_EVENT_DATA) is
+			-- Add a state to the application if the state_stone
+			-- is not used by an existing circle. Create a circle 
+			-- and perform the specific_work. 
+		local
+			transitions: TRANSITION
+		do
+			transitions := application_editor.transitions
+			point := arg.first
+			find_figure (arg.second) 
+			if figures.after then 
+				create figure.make 
+				figure.init 
+				figure.set_data (arg.second)
+				do_specific_work
+				update_history
+			end
+		end
+
+feature {NONE} -- Implementation
 
 	do_specific_work is
 			-- Add figure to the figures and draw it, and 
 			-- update the transitions with the figures data. 
 		local
-			figures: APP_FIGURES;
-			transitions: TRANSITION;
-			point: COORD_XY_FIG
+			transitions: TRANSITION
 		do
-			figures := application_editor.figures;
-			transitions := application_editor.transitions;
-			transitions.init_element (figure.data); 
-			figures.append (figure); 
-			!!point;
-			point.set (x, y);
-			figure.set_center (point); 
-			perform_update_display;
-		end;
+			transitions := application_editor.transitions
+			transitions.init_element (figure.data) 
+			figures.append (figure) 
+			figure.set_center (point) 
+			perform_update_display
+		end
 
 	update_display is
 		do
 			if undo_executed then
-				application_editor.draw_figures;
-				undo_executed := false
+				application_editor.draw_figures
+				undo_executed := False
 			else
-				figure.draw; 
-			end;
-			application_editor.display_states; 
-			application_editor.display_transitions;
-		end;
-
-	worked_on: STRING is
-		do
-			!!Result.make (0);
-			-- added by samik
-			if figure /= Void then
-				Result.append (figure.label);
-			else 
-				Result.append ("Figure is Void")
+				figure.draw 
 			end
-			--end of samik
-		end; -- worked_on
+			application_editor.display_states 
+			application_editor.display_transitions
+		end
 
-end 
+	name: STRING is
+		do
+			Result := Command_names.app_add_state_cmd_name
+		end
+
+	comment: STRING is
+		do
+			create Result.make (0)
+			if figure /= Void and then figure.label /= Void then
+				Result.append (figure.label)
+			end
+		end
+
+feature {NONE} -- Private attributes
+
+	point: EV_POINT
+			-- Point where figure was removed
+
+	figure: STATE_CIRCLE
+			-- Circle added 
+
+	undo_executed: BOOLEAN
+			-- Was undo execute ?
+
+	figures: APP_FIGURES is
+		do
+			Result := application_editor.figures
+		end
+
+end -- class APP_ADD_FIGURE
+

@@ -460,10 +460,21 @@ rt_shared void initsig(void)
 		case 34528:
 			break;
 */
+#if defined  PROFILED_RUNTIME && defined SIGPROF
+		/* When profiling the run-time, we must not  
+		 * catch this signal.
+		 */
+		case SIGPROF:
+			break;
+#endif /* PROFILED_RUN_TIME */
+
 		default:
 			old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
 	}			
 #else
+#if defined PROFILED_RUNTIME && defined SIGPROF
+		if (sig != SIGPROF)
+#endif
 			old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
 #endif	/* EIF_THREADS */
 		if (old == SIG_IGN)

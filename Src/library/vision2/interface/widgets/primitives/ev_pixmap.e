@@ -89,7 +89,7 @@ feature -- Status setting
 			file.close
 		end
 
-	set_size (a_width, a_width: INTEGER) is
+	set_size (a_width, a_height: INTEGER) is
 			-- Assign `a_width' and `a_height' to `width' and `weight'.
 			-- Do not stretch image.
 			-- May cause cropping.
@@ -103,7 +103,7 @@ feature -- Status setting
 			height_assigned: height = a_height
 		end
 
-	stretch (a_width, a_width: INTEGER) is
+	stretch (a_width, a_height: INTEGER) is
 			-- Assign `a_width' and `a_height' to `width' and `weight'.
 			-- Stretch the image to new size.
 		require
@@ -163,6 +163,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/01 22:45:32  brendel
+--| a_width -> a_height
+--|
 --| Revision 1.21  2000/03/01 22:33:34  oconnor
 --| added copy and is_equal, added postconditions to set_size and stretch
 --|

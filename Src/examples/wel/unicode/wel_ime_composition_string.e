@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that ..."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,13 +15,16 @@ inherit
 create
 	make
 	
-feature -- Creation
+feature -- Initialization
 
-	make (input_cont: POINTER)is
+	make (a_input_context: POINTER) is
+			-- Create object with 'a_input_context' input context
+		require
+			input_context_not_void: a_input_context /= Void
 		do
-			input_context := input_cont
+			input_context := a_input_context
 		ensure
-			has_input_context: input_context /= Void
+			input_context_set: input_context = a_input_context
 		end
 
 
@@ -45,16 +47,20 @@ feature -- Access
 		
 feature -- Status Setting
 
-	set_comp_string (str: STRING) is
-			-- Set the composition to 'str'
+	set_comp_string (a_string: STRING) is
+			-- Set the composition to 'a_string'
+		require
+			string_not_void: a_string /= Void
 		local
-				a: ANY
-				bool: BOOLEAN
-				l_string: WEL_STRING
+			a: ANY
+			bool: BOOLEAN
+			l_string: WEL_STRING
 		do
-				a := str.to_c
-				create l_string.make (str)
-				bool := cwel_imm_set_composition_string (input_context, Scs_setstr, $a, 16, default_pointer, 0)
+			a := a_string.to_c
+			create l_string.make (a_string)
+			bool := cwel_imm_set_composition_string (input_context, Scs_setstr, $a, 16, default_pointer, 0)
+		ensure
+			string_set: string = a_string
 		end
 		
 feature -- Status Report
@@ -66,10 +72,9 @@ feature -- Status Report
 		do
 			nb := cwel_imm_get_candidate_list_count (input_context, count)
 			Result := count
+		ensure
+			result_valid: Result >= 0
 		end
-		
-	
-	--get_candidate_list
 		
 		
 feature -- Implementation
@@ -79,7 +84,7 @@ feature -- Implementation
 
 feature {NONE} -- Externals
 
-	cwel_imm_get_composition_string (input_loc: POINTER; type: INTEGER; buffer: POINTER; bytes: INTEGER): INTEGER is
+	cwel_imm_get_composition_string (a_input_locale: POINTER; type: INTEGER; buffer: POINTER; bytes: INTEGER): INTEGER is
 			-- Get Composition string information into 'buffer' according to 'type'
 		external
 			"C macro signature (HIMC, DWORD, LPVOID, DWORD): EIF_INTEGER use <imm.h>"
@@ -87,7 +92,7 @@ feature {NONE} -- Externals
 			"ImmGetCompositionString"
 		end	
 		
-	cwel_imm_set_composition_string (input_cont: POINTER; type: INTEGER; compbuffer: POINTER; cb: INTEGER; readbuffer: POINTER; rb: INTEGER): BOOLEAN is
+	cwel_imm_set_composition_string (a_input_context: POINTER; type: INTEGER; compbuffer: POINTER; cb: INTEGER; readbuffer: POINTER; rb: INTEGER): BOOLEAN is
 			-- Set Composition string information into '****buffer' according to 'type'
 		external
 			"C macro signature (HIMC, DWORD, LPVOID, DWORD, LPVOID, DWORD): EIF_BOOLEAN use <imm.h>"
@@ -95,12 +100,15 @@ feature {NONE} -- Externals
 			"ImmSetCompositionString"
 		end	
 		
-	cwel_imm_get_candidate_list_count (input_cont: POINTER; count: INTEGER): INTEGER is
+	cwel_imm_get_candidate_list_count (a_input_context: POINTER; count: INTEGER): INTEGER is
 			-- Get the size of the candidate for 'string'
 		external
 			"C macro signature (HIMC, LPDWORD): EIF_INTEGER use <imm.h>"
 		alias
 			"ImmGetCandidateListCount"
 		end	
+	
+invariant
+	has_input_context: input_context /= Void
 		
 end

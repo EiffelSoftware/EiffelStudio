@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			make_top (Title)
 			resize (800, 680)
 			set_menu (main_menu)
-				-- Labels
+			-- Labels
 			create input_locale_text.make(Current, "Input locale",
 				35, 45, 200, 20, -1)
 			create change_font_text.make(Current, "Font Type",
@@ -102,19 +102,17 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	
 		
-	--IMM
+		--IMM
 	imm: WEL_INPUT_METHOD_MANAGER
 	input_locale: POINTER 
 	input_locales: ARRAY[POINTER]
 	
-	--Font
+		--Font
 	log_font: WEL_LOG_FONT
 	wel_font: WEL_FONT
 
-	--IME Controls
+		--IME Controls
 	lang_edit: WEL_RICH_EDIT
 	font_list: WEL_DROP_DOWN_LIST_COMBO_BOX
 	avail_input_locales_combo: WEL_DROP_DOWN_LIST_COMBO_BOX
@@ -133,7 +131,7 @@ feature -- Access
 	multi_selection_list_box: WEL_MULTIPLE_SELECTION_LIST_BOX
 	tree_view: WEL_TREE_VIEW
 
-	--Labels
+		--Labels
 	input_locale_text, 
 	change_font_text, 
 	ime_title_text_info, 
@@ -144,10 +142,10 @@ feature -- Access
 	change_char_format_text: DISPLAY_TEXT
 	
 	main_menu: WEL_MENU is
-				-- Windows main menu created from resource
-			once
-				create Result.make_by_id (Idr_menu1_constant)
-			end
+			-- Windows main menu created from resource
+		once
+			create Result.make_by_id (Idr_menu1_constant)
+		end
 		
 feature {NONE} -- Implementation
 
@@ -193,6 +191,7 @@ feature {NONE} -- Implementation
 		end
 		
 	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+			-- Notification loop
 		local
 			tmp_str: STRING
 			cnt: INTEGER
@@ -369,7 +368,6 @@ feature {NONE} -- Implementation
 			
 			tree_view.select_item (tree_view_item1)
 		end
-		
 	
 	change_controls (str: STRING) is
 			-- Change the controls text to that of rich edit

@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that ..."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,12 +18,14 @@ create
 feature
 	
 	background_color: WEL_COLOR_REF is
-				-- Background color used for the background of the
-				-- control
-				-- Can be redefined by the user
-			do
-				create Result.make 
-			end
+			-- Background color used for the background of the
+			-- control
+			-- Can be redefined by the user
+		do
+			create Result.make 
+		ensure
+			result_not_void: Result /= Void
+		end
 			
 	foreground_color: WEL_COLOR_REF is
 			-- Foreground color used for the background of the
@@ -32,6 +33,8 @@ feature
 			-- Can be redefined by the user
 		do
 			create Result.make
+		ensure
+			result_not_void: Result /= Void
 		end
 
 end --class DISPLAY_TEXT

@@ -123,6 +123,8 @@ feature -- Type check
 			creators: EXTEND_TABLE [EXPORT_I, STRING]
 			depend_unit: DEPEND_UNIT
 			feature_name: STRING
+			vgcc1: VGCC1
+			vgcc11: VGCC11
 			vgcc2: VGCC2
 			vgcc3: VGCC3
 			vgcc4: VGCC4
@@ -133,7 +135,10 @@ feature -- Type check
 			vtug: VTUG
 			vape: VAPE
 			not_supported: NOT_SUPPORTED
-			is_default_creation: BOOLEAN
+			formal_type: FORMAL_A
+			formal_dec: FORMAL_DEC_AS
+			formal_position: INTEGER
+			is_formal_creation, is_default_creation: BOOLEAN
 			dcr_id: ID_AS
 			dcr_feat: FEATURE_I
 			the_call: like call
@@ -173,6 +178,25 @@ feature -- Type check
 					create vtec2
 					context.init_error (vtec2)
 					Error_handler.insert_error (vtec2)
+				end
+			end
+
+			if new_creation_type.is_formal then
+					-- Cannot be Void
+				formal_type ?= new_creation_type
+				formal_position := formal_type.position
+					-- Get the corresponding constraint type of the current class
+				formal_dec := context.a_class.generics.i_th (formal_position)
+				if formal_dec.has_constraint and then formal_dec.has_creation_constraint then
+					new_creation_type := formal_dec.constraint_type
+					is_formal_creation := True
+				else
+						-- An entity of type a formal generic parameter cannot be
+						-- created here because there is no creation routine constraints
+					create vgcc1
+					context.init_error (vgcc1)
+					vgcc1.set_target_name ("")
+					Error_handler.insert_error (vgcc1);					
 				end
 			end
 
@@ -216,7 +240,7 @@ feature -- Type check
 			Error_handler.checksum
 
 			creation_class := creation_type.associated_class
-			if creation_class.is_deferred then
+			if creation_class.is_deferred and then not is_formal_creation then
 					-- Associated class cannot be deferred
 				create vgcc2
 				context.init_error (vgcc2)
@@ -226,14 +250,20 @@ feature -- Type check
 				Error_handler.raise_error
 			end
 
-			if call = Void and then
-					creation_class.allows_default_creation then
-				-- Use default create
-				-- if it actually does something.
-				dcr_feat := creation_class.default_create_feature
+			if
+				call = Void and then
+				(creation_class.allows_default_creation or
+				(is_formal_creation and then formal_dec.has_default_create))
+			then
+					-- Use default create
+				if not is_formal_creation then
+					dcr_feat := creation_class.default_create_feature
+				else
+					dcr_feat := creation_class.feature_table.feature_of_rout_id (
+						System.default_create_id)
+				end
 				is_default_creation := True
-
-				if not dcr_feat.is_empty then
+				if is_formal_creation or else not dcr_feat.is_empty then
 					dcr_id := default_call.feature_name
 					dcr_id.load (dcr_feat.feature_name)
 					the_call := default_call
@@ -246,6 +276,7 @@ feature -- Type check
 
 			if the_call /= Void then
 				context.replace (creation_type)
+
 					-- Inform the next type checking that we are handling
 					-- a creation expression and that this is not needed
 					-- to check the VAPE validity of `the_call' if Current
@@ -255,26 +286,20 @@ feature -- Type check
 					-- Type check the call: note that the creation type is on
 					-- the type stack.
 				the_call.type_check	
+				feature_name := the_call.feature_name
 
 					-- But since a creation routine is a feature its TYPE_A is of type
 					-- VOID_A which is not what we want here, that's why we need to update
 					-- the type now.
-				context.replace (creation_type)
+				if is_formal_creation then
+					context.replace (formal_type)
+				else
+					context.replace (creation_type)
+				end
 
-					-- Check if creation routine is non-once procedure
-				feature_name := the_call.feature_name
-				if not creation_class.valid_creation_procedure (feature_name) then
-					create vgcc5
-					context.init_error (vgcc5)
-					vgcc5.set_target_name ("")
-					vgcc5.set_type (creation_type)
-					a_feature := creation_class.feature_table.item (feature_name)
-					vgcc5.set_creation_feature (a_feature)
-					Error_handler.insert_error (vgcc5)
-				elseif creators /= Void then
-					export_status := creators.item (feature_name)
-					if not export_status.valid_for (context.a_class) then
-							-- Creation procedure is not exported
+				if not is_formal_creation then
+						-- Check if creation routine is non-once procedure
+					if not creation_class.valid_creation_procedure (feature_name) then
 						create vgcc5
 						context.init_error (vgcc5)
 						vgcc5.set_target_name ("")
@@ -282,35 +307,68 @@ feature -- Type check
 						a_feature := creation_class.feature_table.item (feature_name)
 						vgcc5.set_creation_feature (a_feature)
 						Error_handler.insert_error (vgcc5)
-					else
-						if context.level4 then
-							context_export := context.a_feature.export_status
-							if not context_export.is_subset (export_status) then
-								create vape
-								context.init_error (vape)
-								vape.set_exported_feature (a_feature)
-								Error_handler.insert_error (vape)
-								Error_handler.raise_error
+					elseif creators /= Void then
+						export_status := creators.item (feature_name)
+						if not export_status.valid_for (context.a_class) then
+								-- Creation procedure is not exported
+							create vgcc5
+							context.init_error (vgcc5)
+							vgcc5.set_target_name ("")
+							vgcc5.set_type (creation_type)
+							a_feature := creation_class.feature_table.item (feature_name)
+							vgcc5.set_creation_feature (a_feature)
+							Error_handler.insert_error (vgcc5)
+						else
+							if context.level4 then
+								context_export := context.a_feature.export_status
+								if not context_export.is_subset (export_status) then
+									create vape
+									context.init_error (vape)
+									vape.set_exported_feature (a_feature)
+									Error_handler.insert_error (vape)
+									Error_handler.raise_error
+								end
 							end
 						end
 					end
+				else
+						-- Check that the creation feature used for creating the generic
+						-- parameter has been listed in the constraint for the generic
+						-- parameter.
+					if not formal_dec.has_creation_feature_name (feature_name) then
+						create vgcc11
+						context.init_error (vgcc11)
+						vgcc11.set_target_name ("")
+						a_feature := creation_class.feature_table.item (feature_name)
+						vgcc11.set_creation_feature (a_feature)
+						Error_handler.insert_error (vgcc11)
+					end
 				end
 			else
-				context.replace (creation_type)
-				if (creators = Void) or is_default_creation then
-				elseif creators.is_empty then
-					create vgcc5
-					context.init_error (vgcc5)
-					vgcc5.set_target_name ("")
-					vgcc5.set_type (creation_type)
-					vgcc5.set_creation_feature (Void)
-					Error_handler.insert_error (vgcc5)
+				if not is_formal_creation then
+					context.replace (creation_type)
+					if (creators = Void) or is_default_creation then
+					elseif creators.is_empty then
+						create vgcc5
+						context.init_error (vgcc5)
+						vgcc5.set_target_name ("")
+						vgcc5.set_type (creation_type)
+						vgcc5.set_creation_feature (Void)
+						Error_handler.insert_error (vgcc5)
+					else
+						create vgcc4
+						context.init_error (vgcc4)
+						vgcc4.set_target_name ("")
+						vgcc4.set_type (creation_type)
+						Error_handler.insert_error (vgcc4)
+					end
 				else
-					create vgcc4
-					context.init_error (vgcc4)
-					vgcc4.set_target_name ("")
-					vgcc4.set_type (creation_type)
-					Error_handler.insert_error (vgcc4)
+						-- An entity of type a formal generic parameter cannot be
+						-- created here because we need a creation routine call
+					create vgcc1
+					context.init_error (vgcc1)
+					vgcc1.set_target_name ("")
+					Error_handler.insert_error (vgcc1);				
 				end
 			end
 
@@ -324,8 +382,13 @@ feature -- Type check
 			context.supplier_ids.extend (depend_unit)
 
 				-- Compute creation information
-			create create_type
+			if is_formal_creation then
+				create {CREATE_FORMAL_TYPE} create_type.make (formal_position)
+			else
+				create create_type
+			end
 			create_type.set_type (creation_type.type_i)
+
 			context.creation_types.insert (create_type)
 		end
 
@@ -342,8 +405,7 @@ feature
 		do
 			create Result.make
 
-			if default_call = Void or else
-						default_call.feature_name.is_empty then
+			if default_call = Void or else default_call.feature_name.is_empty then
 				the_call := call
 			else
 				the_call := default_call

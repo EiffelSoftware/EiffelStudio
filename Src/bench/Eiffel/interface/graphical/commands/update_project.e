@@ -7,12 +7,16 @@ inherit
 
 	SHARED_WORKBENCH;
 	PROJECT_CONTEXT;
-	ICONED_COMMAND;
+	ICONED_COMMAND
+		redefine
+			text_window
+		end;
 	SHARED_DEBUG;
 	SHARED_RESCUE_STATUS;
 	SHARED_FORMAT_TABLES;
 	SHARED_RESOURCES;
-	SHARED_MELT_ONLY
+	SHARED_MELT_ONLY;
+	OBJECT_ADDR
 
 creation
 
@@ -28,6 +32,8 @@ feature
 			request.pass_address
 		end;
 
+	text_window: PROJECT_TEXT;
+
 feature {NONE}
 
 	reset_debugger is
@@ -40,7 +46,10 @@ feature {NONE}
 				debug_window.display;
 				run_info.set_is_running (false);
 				quit_cmd.recv_dead
-			end
+			end;
+				-- Get rid of adopted objects.
+			addr_table.clear_all;
+			window_manager.object_win_mgr.reset
 		end;
 
 	not_saved: BOOLEAN is
@@ -163,12 +172,22 @@ feature {NONE}
 				(argument /= Void and
 				argument = last_confirmer and end_run_confirmed)
 			then
-				compile (argument)
+				compile (argument);
+				if 
+					run_after_melt and then
+					Lace.file_name /= Void and then
+					Workbench.successfull and 
+					not System.freezing_occurred
+				then
+						-- The system has been successfully melted.
+						-- The system can be executed as required.
+					text_window.tool.debug_run_command.execute (text_window)
+				end
 			else
+				end_run_confirmed := true;
 				confirmer (text_window).call (Current,
 						"Recompiling project will end current run.%N%
-						%Start compilation anyway?", "Compile");
-				end_run_confirmed := true
+						%Start compilation anyway?", "Compile")
 			end
 		end;
 
@@ -177,6 +196,32 @@ feature {NONE}
 
 	start_c_compilation: BOOLEAN;
 			-- Do we have to start the C compilation after C Code generation?
+
+	run_after_melt: BOOLEAN;
+			-- Should we execute the system after sucessful melt?
+
+	run_after_melt2: BOOLEAN;
+			-- Should we execute the system after sucessful melt?
+			-- This boolean value is only reliable at the beginning
+			-- of the execution of this command. After a warning or
+			-- confirmation panel has been popped up, this value
+			-- can be cleared by the caller. To prevent that, we
+			-- keep track of that value in `run_after_melt' at the 
+			-- beginning of the execution, so that we can still 
+			-- rely on it after a confirmation when we resume 
+			-- (i.e. re-execute) the command
+
+feature
+
+	set_run_after_melt (b: BOOLEAN) is
+			-- Request for the system to be executed after a
+			-- successful melt compilation or not.
+			-- Assign `b' to `run_after_melt'.
+		do
+			run_after_melt2 := b
+		end;
+
+feature {NONE}
 
 	work (argument: ANY) is
 			-- Recompile the project.
@@ -188,10 +233,14 @@ feature {NONE}
 		do
 			if argument = generate_code_only then
 				arg := text_window
-				start_c_compilation := False
+				start_c_compilation := False;
+				run_after_melt := false
 			else
 				if argument = text_window then
-					start_c_compilation := True
+					start_c_compilation := True;
+						-- Should we execute the system after sucessful melt?
+						-- (See header comment of `run_after_melt2'.)
+					run_after_melt := run_after_melt2
 				end;
 				arg := argument
 			end
@@ -199,10 +248,10 @@ feature {NONE}
 				warner (text_window).gotcha_call (w_Cannot_compile)
 			elseif project_tool.initialized then
 				if not_saved and arg = text_window then
+					end_run_confirmed := false;
 					confirmer (text_window).call (Current,
 						"Some files have not been saved.%N%
-						%Start compilation anyway?", "Compile");
-					end_run_confirmed := false
+						%Start compilation anyway?", "Compile")
 				elseif compilation_allowed then
 					if Lace.file_name /= Void then
 						confirm_and_compile (arg);

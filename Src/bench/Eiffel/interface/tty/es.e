@@ -388,10 +388,14 @@ feature -- Update
 							end
 						end
 						if not option_error then
-							cn := argument (current_option)
-							current_option := current_option + 1
-							fn := argument (current_option)
-							!EWB_HISTORY!command.make (cn, fn, filter_name)
+							if current_option < argument_count then
+								cn := argument (current_option)
+								current_option := current_option + 1
+								fn := argument (current_option)
+								!EWB_HISTORY!command.make (cn, fn, filter_name)
+							else
+								option_error := True
+							end
 						end
 					end
 				else
@@ -413,10 +417,14 @@ feature -- Update
 							end
 						end
 						if not option_error then
-							cn := argument (current_option)
-							current_option := current_option + 1
-							fn := argument (current_option)
-							!EWB_PAST!command.make (cn, fn, filter_name)
+							if current_option < argument_count then
+								cn := argument (current_option)
+								current_option := current_option + 1
+								fn := argument (current_option)
+								!EWB_PAST!command.make (cn, fn, filter_name)
+							else
+								option_error := True
+							end
 						end
 					end
 				else
@@ -438,10 +446,14 @@ feature -- Update
 							end
 						end
 						if not option_error then
-							cn := argument (current_option)
-							current_option := current_option + 1
-							fn := argument (current_option)
-							!EWB_FUTURE!command.make (cn, fn, filter_name)
+							if current_option < argument_count then
+								cn := argument (current_option)
+								current_option := current_option + 1
+								fn := argument (current_option)
+								!EWB_FUTURE!command.make (cn, fn, filter_name)
+							else
+								option_error := True
+							end
 						end
 					end
 				else
@@ -463,22 +475,22 @@ feature -- Update
 							end
 						end
 						if argument (current_option).is_equal ("-show_all") then
-							if current_option + 1 < argument_count then
+							show_all := True
+							current_option := current_option + 1
+						end
+						if not option_error then
+							if current_option < argument_count then
+								cn := argument (current_option)
 								current_option := current_option + 1
-								show_all := True
+								fn := argument (current_option)
+								create ewb_senders.make (cn, fn, filter_name)
+								if show_all then
+									ewb_senders.set_all_callers
+								end;	
+								command := ewb_senders
 							else
 								option_error := True
 							end
-						end
-						if not option_error then
-							cn := argument (current_option)
-							current_option := current_option + 1
-							fn := argument (current_option)
-							create ewb_senders.make (cn, fn, filter_name)
-							if show_all then
-								ewb_senders.set_all_callers
-							end;	
-							command := ewb_senders
 						end
 					end
 				else
@@ -739,7 +751,10 @@ feature -- Update
 				if current_option < argument_count then
 					current_option := current_option + 1
 					cn := argument (current_option)
-					if argument (current_option + 1).is_equal ("verbose") then
+					if
+						current_option < argument_count and then
+						argument (current_option + 1).is_equal ("verbose")
+					then
 						current_option := current_option + 1;
 						create {EWB_DUMP_FEATURES} command.make_verbose (cn)
 					else
@@ -749,7 +764,7 @@ feature -- Update
 					option_error := True
 				end
 			elseif option.is_equal ("-dumpoperands") then
-				if current_option < argument_count then
+				if current_option + 1 < argument_count then
 					current_option := current_option + 1
 					cn := argument (current_option)
 					current_option := current_option + 1

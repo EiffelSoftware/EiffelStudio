@@ -78,52 +78,64 @@ feature -- IL generation
 			-- Generate IL code for manifest arrays.
 		local
 			real_ty: GEN_TYPE_I
-			actual_type: CL_TYPE_I
+			actual_type, target_type: CL_TYPE_I
 			expr: EXPR_B
-			class_type: SPECIAL_CLASS_TYPE
+			base_class: CLASS_C
 			local_array: INTEGER
 			i: INTEGER
+			feat_tbl: FEATURE_TABLE
+			make_feat, put_feat: FEATURE_I
 		do
 			real_ty ?= context.real_type (type)
-			class_type ?= real_ty.associated_class_type
-			check
-				class_type /= Void
-			end
+			target_type ?= real_ty.meta_generic.item (1)
+			base_class := real_ty.base_class
+			feat_tbl := base_class.feature_table
+			make_feat := feat_tbl.item_id (make_name_id)
+			put_feat := feat_tbl.item_id (put_name_id)
+			
+				-- Creation of Array
+ 			context.add_local (real_ty)
+ 			local_array := context.local_list.count
+ 			il_generator.put_dummy_local_info (real_ty, local_array)
+			il_generator.create_object (real_ty)
+ 			il_generator.generate_local_assignment (local_array)
 
-			context.add_local (real_ty)
-			local_array := context.local_list.count
-			il_generator.put_dummy_local_info (class_type.type, local_array)
-			il_generator.put_integer_32_constant (expressions.count)
-			class_type.generate_il (make_name_id)
-			il_generator.generate_local_assignment (local_array)
-
-			from
-				expressions.start
-			until
-				expressions.after
-			loop
-				expr ?= expressions.item
-				actual_type ?= context.real_type (expr.type)
-
-					-- Prepare call to `put'.
-				il_generator.generate_local (local_array)
-				il_generator.put_integer_32_constant (i)
-
-					-- Generate expression
-				expr.generate_il
-				if
-					actual_type /= Void and then
-					need_metamorphosis (actual_type)
-				then 
-						-- We generate a boxed version of type.
-					expr.generate_il_metamorphose (actual_type, True)
-				end
-				class_type.generate_il (put_name_id)
-				i := i + 1
-				expressions.forth
-			end
-
+				-- Call creation procedure of ARRAY
 			il_generator.generate_local (local_array)
+			il_generator.put_integer_32_constant (1)
+ 			il_generator.put_integer_32_constant (expressions.count)
+ 			il_generator.generate_feature_access (real_ty, make_feat.feature_id, True)
+
+ 			from
+ 				expressions.start
+ 				i := 1
+ 			until
+ 				expressions.after
+ 			loop
+ 				expr ?= expressions.item
+ 				actual_type ?= context.real_type (expr.type)
+ 
+ 					-- Prepare call to `put'.
+ 				il_generator.generate_local (local_array)
+
+ 					-- Generate expression
+ 				expr.generate_il
+ 				if
+ 					actual_type /= Void and then
+ 					need_metamorphosis (actual_type)
+ 				then 
+ 						-- We generate a metamorphosed version of type.
+ 					expr.generate_il_metamorphose (actual_type, target_type, True)
+ 				end
+
+ 				il_generator.put_integer_32_constant (i)
+ 
+ 				il_generator.generate_feature_access (real_ty, put_feat.feature_id, True)
+ 				i := i + 1
+ 				expressions.forth
+ 			end
+ 
+ 			il_generator.generate_local (local_array)
 		end
 
 feature -- Byte code generation

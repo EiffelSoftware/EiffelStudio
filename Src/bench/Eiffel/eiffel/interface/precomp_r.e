@@ -69,18 +69,17 @@ feature
 						Eiffel_project.set_system (project.system);
 						project_dir.set_has_precompiled_preobj (sys.has_precompiled_preobj)
 						project_dir.set_il_generation (sys.il_generation)
-						sys.set_precompilation (False);
-						sys.set_has_precompiled_preobj (False);
-						sys.set_msil_use_optimized_precompile (False)
+						project_dir.set_line_generation (sys.line_generation)
 						Workbench.precompiled_directories.force (project_dir, sys.compilation_id);
 						Workbench.set_precompiled_driver (project_dir.precompiled_driver);
 						Workbench.set_melted_file_name (project_dir.system_name);
 						project_dir.set_msil_generation_type (sys.msil_generation_type)
 						project_dir.set_is_precompile_finalized (sys.is_precompile_finalized)
 						project_dir.check_optional (False)
-						if sys.is_precompile_finalized then
+						if project_dir.is_precompile_finalized then
 							project_dir.check_optional (True)
 						end
+						sys.reset_loaded_precompiled_properties
 						set_precomp_dir;
 						sys.init_counters
 						sys.server_controler.init

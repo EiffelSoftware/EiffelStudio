@@ -129,6 +129,13 @@ feature -- Thread info
 			eifnet_debugger_info.set_last_icd_thread_id (tid)
 		end
 		
+	refresh_current_thread_id is
+		do
+			if current_thread_id = 0 then
+				set_current_thread_id (eifnet_debugger_info.last_icd_thread_id)				
+			end
+		end
+		
 feature -- Call stack creation
 
 	clean_current_call_stack is

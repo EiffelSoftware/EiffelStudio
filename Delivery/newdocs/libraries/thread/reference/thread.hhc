@@ -1,4 +1,4 @@
-	<LI><OBJECT type="text/sitemap"><param name="Name" value="reference"><param name="Local" value="libraries\thread\reference\index.html"></OBJECT>
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="EiffelThread Reference"><param name="Local" value="libraries\thread\reference\index.html"></OBJECT>
 	<UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="CONDITION_VARIABLE"><param name="Local" value="libraries\thread\reference\condition_variable_chart.html"></OBJECT>
 		<UL>

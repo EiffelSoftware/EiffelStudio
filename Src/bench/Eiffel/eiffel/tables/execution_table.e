@@ -144,7 +144,8 @@ end
 				!! include_set.make
 				include_set.compare_objects
 				i := 1
-				file.putstring ("#include %"eif_macros.h%"%N%
+				file.putstring ("#include %"eif_project.h%"%N%
+								%#include %"eif_macros.h%"%N%
 								%#include %"eif_struct.h%"%N%N")
 			until
 				i > nb

@@ -118,6 +118,8 @@ feature -- Access
 		do
 			if not multiple_selection_enabled and selected then
 				Result ?= (ev_children.i_th (selected_index + 1)).interface
+			else
+				Result ?= interface.selected_items.first	
 			end
 		end
 
@@ -533,6 +535,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/02/29 19:35:21  rogers
+--| Selected item now returns the first item that is selected in the list when multiple selection is enabled.
+--|
 --| Revision 1.40  2000/02/25 21:41:12  rogers
 --| In on_lbn_selchange, added code to handle the possibility of an item being destroyed within an action sequence.
 --|

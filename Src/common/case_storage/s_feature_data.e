@@ -172,4 +172,18 @@ feature -- Setting values
 			result_type_set: result_type = type
 		end;
 
+feature -- Reverse engineering details
+
+	is_reversed_engineered: BOOLEAN is
+			-- Is Current class reversed engineered?
+		do
+		end;
+
+	set_reversed_engineered is
+			-- Set `is_reversed_engineered' to True.
+		do
+		ensure
+			is_reversed_engineered: is_reversed_engineered
+		end
+
 end

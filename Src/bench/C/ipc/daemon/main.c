@@ -58,6 +58,7 @@ rt_private void process_name (char *);	/* Compute the name of Eiffel Compiler */
 #ifdef EIF_WIN32
 extern  STREAM *spawn_child(char *cmd, HANDLE *child_pid);	/* Start up child with ipc link */
 extern char *win_eif_getenv(char *k, char *app);	/* Get environment variable value */
+rt_private void display_splash(void);
 #else
 extern STREAM *spawn_child(char *cmd, Pid_t *child_pid);	/* Start up child with ipc link */
 extern char *getenv(const char *);			/* Get environment variable value */
@@ -432,15 +433,14 @@ HBITMAP LoadResourceBitmap(HINSTANCE hInstance, LPSTR lpString, HPALETTE FAR* lp
     HDC hdc;
     int iNumColors;
 
-    if (hRsrc = FindResource(hInstance, lpString, RT_BITMAP))
-	{
+    hRsrc = FindResource(hInstance, lpString, RT_BITMAP);
+    if (hRsrc) {
 		hGlobal = LoadResource(hInstance, hRsrc);
 		lpbi = (LPBITMAPINFOHEADER)LockResource(hGlobal);
 
 		hdc = GetDC(NULL);
 		*lphPalette =  CreateDIBPalette ((LPBITMAPINFO)lpbi, &iNumColors);
-		if (*lphPalette)
-		{
+		if (*lphPalette) {
 			SelectPalette(hdc,*lphPalette,FALSE);
 			RealizePalette(hdc);
 		}
@@ -452,13 +452,12 @@ HBITMAP LoadResourceBitmap(HINSTANCE hInstance, LPSTR lpString, HPALETTE FAR* lp
 			DIB_RGB_COLORS );
 
 		ReleaseDC(NULL,hdc);
-		UnlockResource(hGlobal);
 		FreeResource(hGlobal);
 	}
     return (hBitmapFinal);
 }
 
-void display_splash()
+void display_splash(void)
 {
     HDC dc, MemDC;
     HBITMAP Bitmap, OldBitmap;

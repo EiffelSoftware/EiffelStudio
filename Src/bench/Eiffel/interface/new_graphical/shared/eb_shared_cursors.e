@@ -18,6 +18,11 @@ feature -- Accepting cursor shapes
 		once
 			Result := cursor_file_content ("class")
 		end
+		
+	cur_Class_list: EV_CURSOR is
+		once
+			Result := cursor_file_content ("class_list")
+		end
 
 	cur_Favorites_folder: EV_CURSOR is
 		once
@@ -65,6 +70,11 @@ feature -- Non-Accepting cursor shapes
 		once
 			Result := cursor_file_content ("Xclass")
 		end
+		
+	cur_X_class_list: EV_CURSOR is
+		once
+			Result := cursor_file_content ("Xclass_list")
+		end
 
 	cur_X_object: EV_CURSOR is
 		once
@@ -100,6 +110,16 @@ feature -- Non-Accepting cursor shapes
 		once
 			Result := cursor_file_content ("Xfeature")
 		end
+		
+	cur_X_client_link: EV_CURSOR is
+		once
+			Result := cursor_file_content ("Xclientlnk")
+		end
+		
+	cur_X_inherit_link: EV_CURSOR is
+		once
+			Result := cursor_file_content ("Xinheritlnk")
+		end
 
 feature -- Other cursor
 
@@ -115,6 +135,20 @@ feature -- Other cursor
 			Result := cursor_file_content ("copy_selection")
 			Result.set_x_hotspot (0)
 			Result.set_y_hotspot (0)
+		end
+		
+	open_hand_cursor: EV_CURSOR is
+		once
+			Result := cursor_file_content ("open_hand")
+			Result.set_x_hotspot (8)
+			Result.set_y_hotspot (8)
+		end
+		
+	closed_hand_cursor: EV_CURSOR is
+		once
+			Result := cursor_file_content ("closed_hand")
+			Result.set_x_hotspot (8)
+			Result.set_y_hotspot (8)
 		end
 
 feature {NONE} -- Implementation

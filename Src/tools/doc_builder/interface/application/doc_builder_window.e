@@ -115,6 +115,7 @@ feature {NONE} -- Initialization
 			
 
 				-- Initial setup			
+			output_combo.disable_edit
 			update_status_report (True, "No document loaded")			
 			initialize_temp_directory
 			should_update := True
@@ -396,7 +397,6 @@ feature -- GUI Updating
 						list.after
 					loop					
 						create l_row.make_with_text (list.item)
-						l_row.set_pebble (list.item)
 						sub_elements_list.extend (l_row)
 						list.forth
 					end
@@ -457,7 +457,6 @@ feature -- GUI Updating
 					l_filters.forth
 				end
 			end	
-			output_combo.disable_edit
 		end
 
 feature -- Status Setting

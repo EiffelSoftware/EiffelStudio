@@ -47,7 +47,9 @@ feature
 			menu_item: EV_MENU_ITEM
 			description_frame: EV_FRAME
 			timer: EV_TIMEOUT
-			p: EV_PIXMAP
+			da: EV_DRAWING_AREA
+			p1, p2: EV_PIXMAP
+			t: EV_TIMEOUT
 		do
 			first_window.set_title ("Eiffel Vision Widgets")
 			first_window.set_status_bar (create {EV_STATUS_BAR}.make_for_test)
@@ -64,9 +66,16 @@ feature
 			scroll.set_minimum_size (700, 500)
 			notebook.extend (scroll)
 			notebook.set_item_text (scroll, "Welcome to EiffelVision")
-			create p
-			p.set_with_named_file ("vision.png")
-			scroll.extend (p)
+			create da
+			create p1
+			create p2
+			p2.set_with_named_file ("vision.png")
+			da.set_minimum_size (p2.width+100, p2.height+100)
+			p1.set_size (da.width, da.height)
+			scroll.extend (da)
+			create t
+			t.actions.extend (~update_face (da, p1, p2))
+			t.set_interval (500)
 
 			create scroll
 			scroll.set_minimum_size (700, 500)
@@ -182,6 +191,21 @@ feature
 			pool.forth
 		end
 
+	update_face (da: EV_DRAWING_AREA; p1, p2: EV_PIXMAP) is
+		local
+			c: EV_COLOR
+		do
+			create c.make_with_rgb (
+				random_real (1),
+				random_real (1),
+				random_real (1)
+			)
+			p1.set_foreground_color (c)
+			p1.fill_rectangle (0, 0, p1.width, p1.height)
+			p1.draw_pixmap (50, 50, p2)
+			da.draw_pixmap (0, 0, p1)
+		end
+
 	snow is
 		local
 			i: INTEGER
@@ -213,6 +237,12 @@ feature
 		do
 			random.forth
 			Result := (random.real_item * max).rounded
+		end
+
+	random_real (max: REAL): REAL is
+		do
+			random.forth
+			Result := random.real_item * max
 		end
 
 	nuke (w: EV_WIDGET) is
@@ -518,6 +548,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/05/03 17:00:12  oconnor
+--| more tests
+--|
 --| Revision 1.44  2000/05/02 20:54:42  oconnor
 --| more tests
 --|

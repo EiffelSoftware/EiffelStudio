@@ -11,13 +11,19 @@ inherit
 	EV_TREE_ITEM_I
 
 	EV_SIMPLE_ITEM_IMP
+		undefine
+			top_parent_imp
 		redefine
-			set_text
+			parent_imp,
+			set_text,
+			destroy
 		end
 
 	EV_TREE_ITEM_HOLDER_IMP
 		rename
 			item_command_count as command_count
+		redefine
+			add_item
 		end
 
 	EV_PND_SOURCE_IMP
@@ -26,10 +32,16 @@ inherit
 		rename
 			text as wel_text,
 			set_text as wel_set_text,
-			make as wel_make
+			make as wel_make,
+			children as children_nb
 		end
 
 	WEL_TVIS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_TVI_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -40,7 +52,8 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -51,6 +64,25 @@ feature {NONE} -- Initialization
 			set_mask (Tvif_text + Tvif_state + Tvif_handle)
 		end
 
+	make_with_text (txt: STRING) is
+			-- Create a row with text in it.
+		do
+			wel_make
+			set_mask (Tvif_text + Tvif_state + Tvif_handle)
+			set_text (txt)
+		end
+
+feature -- Access
+
+	parent_imp: EV_TREE_ITEM_HOLDER_IMP
+			-- Parent implementation
+
+	index: INTEGER is
+			-- Index of the current item.
+		do
+			Result := top_parent_imp.internal_get_index (Current) + 1
+		end
+
 feature -- Status report
 
 	destroyed: BOOLEAN is
@@ -59,34 +91,45 @@ feature -- Status report
 			Result := not exists
 		end
 
+	children: ARRAYED_LIST [EV_TREE_ITEM_IMP] is
+			-- List of the direct children of the tree-item.
+		do
+			if top_parent_imp = Void then
+				Result := internal_children
+			else
+				Result := top_parent_imp.get_children (Current)
+			end
+		end
+
+	count: INTEGER is
+			-- Number of direct children of the holder.
+		do
+			if top_parent_imp = Void then
+				Result := internal_children.count
+			else
+				Result := top_parent_imp.get_children_count (Current)
+			end
+		end
+
 	is_selected: BOOLEAN is
 			-- Is the item selected?
-		local
-			tree: WEL_TREE_VIEW
 		do
-			tree ?= parent_widget.implementation
-			Result := tree.is_selected (Current)
+			Result := top_parent_imp.is_selected (Current)
 		end
 
 	is_expanded: BOOLEAN is
 			-- is the item expanded ?
-		local
-			tree: WEL_TREE_VIEW
 		do
-			tree ?= parent_widget.implementation
-			Result := tree.is_expanded (Current)
+			Result := top_parent_imp.is_expanded (Current)
 		end
 
 	is_parent: BOOLEAN is
 			-- is the item the parent of other items?
-		local
-			tree: WEL_TREE_VIEW
 		do
-			if parent_imp /= Void then
-				tree ?= parent_widget.implementation
-				Result := tree.is_parent (Current)
+			if top_parent_imp /= Void then
+				Result := top_parent_imp.is_parent (Current)
 			else
-				Result := False
+				Result := (internal_children /= Void) and then (internal_children.count > 0)
 			end
 		end
 
@@ -95,94 +138,64 @@ feature -- Status setting
 	destroy is
 			-- Destroy the current item
 		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
---			destroy_item
+			{EV_SIMPLE_ITEM_IMP} Precursor
+			internal_children := Void
 		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
-		local
-			tree: EV_TREE_IMP
 		do
-			tree ?= parent_widget.implementation
 			if flag then
-				tree.select_item (Current)
+				top_parent_imp.select_item (Current)
 			else
-				tree.deselect_item (Current)
+				top_parent_imp.deselect_item (Current)
 			end
 		end
 
 	set_expand (flag: BOOLEAN) is
 			-- Expand the item if `flag', collapse it otherwise.
-		local
-			tree: EV_TREE_IMP
 		do
-			tree ?= parent_widget.implementation
 			if flag then
-				tree.expand_item (Current)
+				top_parent_imp.expand_item (Current)
 			else
-				tree.collapse_item (Current)
+				top_parent_imp.collapse_item (Current)
 			end
 		end
  
 feature -- Element change
 
-	set_parent (par: EV_TREE_ITEM_HOLDER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-			if parent_imp /= Void then
-				set_selected (False)
-				set_mask (Tvif_handle + Tvif_text)
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				parent_imp.add_item (Current)
-			end
-		end
-
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		local
-			ev_tree: EV_TREE_IMP
+			tree: EV_TREE_IMP
 		do
+			-- First we set localy the text
 			set_mask (Tvif_text)
 			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 			wel_set_text (txt)
-			if parent_imp /= Void then
-				ev_tree ?= parent_widget.implementation
-				ev_tree.notify_item_info (Current)
+
+			-- Then, we update the graphical tree.
+			tree := top_parent_imp
+			if tree /= Void then
+				tree.notify_item_info (Current)
 			end
 		end
 
-	add_item (item_imp: EV_TREE_ITEM_IMP) is
-			-- Add `item_imp' to the list
+	clear_items is
+			-- Clear all the children of the tree-item.
+			-- It destroys them.
 		local
-			struct: WEL_TREE_VIEW_INSERT_STRUCT
-			ev_tree: EV_TREE_IMP
+			c: ARRAYED_LIST [EV_TREE_ITEM_IMP]
 		do
-			!! struct.make
-			struct.set_parent (h_item)
-			struct.set_tree_view_item (item_imp)
-			ev_tree ?= parent_widget.implementation
-			ev_tree.insert_item (struct)
-			ev_tree.ev_children.force (item_imp, ev_tree.last_item)
-			ev_tree.invalidate
-		end
-
-	remove_item (item_imp: EV_TREE_ITEM_IMP) is
-			-- Remove `item_imp' from the children.
-		local
-			ev_tree: EV_TREE_IMP
-		do
-			ev_tree ?= parent_widget.implementation
-			ev_tree.remove_item (item_imp)
-			ev_tree.invalidate
+			c := children
+			from
+				c.start
+			until
+				c.after
+			loop
+				c.item.destroy
+				c.forth
+			end
 		end
 
 feature -- Event : command association
@@ -294,13 +307,62 @@ feature {NONE} -- Implementation, pick and drop
 	widget_source: EV_WIDGET_IMP is
 			-- Widget drag source used for transport
 		do
-			Result ?= parent_widget.implementation
+			Result := top_parent_imp
+		end
+
+feature {EV_TREE_IMP} -- Implementation
+
+	internal_children: ARRAYED_LIST [EV_TREE_ITEM_IMP]
+			-- Void if there is a parent, store the children
+			-- otherwise.
+
+	set_internal_children (list: ARRAYED_LIST [EV_TREE_ITEM_IMP]) is
+			-- Make `list' the new list of children
+		do
+			internal_children := list
+		end
+
+feature {NONE} -- Implementation
+
+	add_item (item_imp: EV_TREE_ITEM_IMP) is
+			-- Add `item_imp' to the list
+		do
+			if top_parent_imp /= Void then
+				top_parent_imp.general_insert_item (item_imp, h_item, Tvi_last)
+			else
+				internal_children.extend (item_imp)
+			end
+		end
+
+	insert_item (item_imp: like item_type; pos: INTEGER) is
+			-- Insert `item_imp' at the `index' position.
+		do
+			if top_parent_imp /= Void then
+				if index = 1 then
+					top_parent_imp.general_insert_item (item_imp, h_item, Tvi_first)
+				else
+					top_parent_imp.general_insert_item (item_imp, h_item, (children @ (index - 1)).h_item)
+				end
+			else
+				internal_children.go_i_th (pos)
+				internal_children.put_left (item_imp)
+			end
+		end
+
+	remove_item (item_imp: EV_TREE_ITEM_IMP) is
+			-- Remove `item_imp' from the children.
+		do
+			if top_parent_imp /= Void then
+				top_parent_imp.general_remove_item (item_imp)
+			else
+				internal_children.prune_all (item_imp)
+			end
 		end
 
 end -- class EV_TREE_ITEM_IMP
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

@@ -14,22 +14,27 @@ inherit
 
 	EV_SIMPLE_ITEM_IMP
 		undefine
-			pixmap_size_ok
+			pixmap_size_ok,
+			top_parent_imp
 		redefine
-			set_text
+			set_text,
+			parent_imp
 		end
 
 	EV_MENU_ITEM_HOLDER_IMP
 		rename
 			item_command_count as command_count
 		redefine
-			add_item
+			add_item,
+			insert_item,
+			remove_item
 		end
 
 	EV_ID_IMP
 
 creation
-	make
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -37,7 +42,42 @@ feature {NONE} -- Initialization
 			-- Create the widget with `par' as parent.
 		do
 			set_text ("")
-			id := new_id
+		end
+
+	make_with_text (txt: STRING) is
+			-- Create a row with text in it.
+		do
+			set_text (txt)
+		end
+
+feature -- Access
+
+	parent_imp: EV_MENU_ITEM_HOLDER_IMP
+			-- Parent implementation
+
+	index: INTEGER is
+			-- Index of the current item.
+		do
+			Result := parent_imp.internal_get_index (Current)
+		end
+
+	id: INTEGER is
+			-- Identifier of the item
+		do
+			Result := parent_imp.internal_get_id (Current)
+		end
+
+	menu: WEL_MENU
+			-- Wel menu used when the item is a sub-menu.
+
+	item_handler: EV_MENU_ITEM_HANDLER_IMP is
+			-- The handler of the item.
+		do
+			if parent_imp /= Void then
+				Result := parent_imp.item_handler
+			else
+				Result := Void
+			end
 		end
 
 feature -- Status report
@@ -49,33 +89,44 @@ feature -- Status report
 			Result := False
 		end
 
-	insensitive: BOOLEAN is
+	is_insensitive: BOOLEAN is
 			-- Is current menu_item insensitive ?
 		do
-			Result := not parent_menu.item_enabled (id)
+			Result := parent_imp.internal_insensitive (Current)
+		end
+
+	is_selected: BOOLEAN is
+			-- True if the current item is selected.
+			-- False otherwise.
+			-- We use it only when the grand parent is an option button.
+		local
+			menu_imp: EV_MENU_IMP
+			option: EV_OPTION_BUTTON
+			mitem: EV_MENU_ITEM
+		do
+			menu_imp ?= parent_imp
+			if menu_imp /= Void then
+				option ?= menu_imp.parent_imp
+				if option /= Void then
+					mitem ?= interface
+					Result := mitem.is_equal (option.selected_item)
+				end
+			end
+		end
+
+	count: INTEGER is
+			-- Number of direct children of the holder.
+		do
+			Result := children.count
 		end
 
 feature -- Status setting
-
-	destroy is
-			-- Destroy the current item.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			interface := Void
-		end
 
 	set_insensitive (flag: BOOLEAN) is
    			-- Set current item in insensitive mode if
    			-- `flag'.
 		do
-			if flag then
-				parent_menu.disable_item (id)
-			else
-				parent_menu.enable_item (id)
-			end
+			parent_imp.internal_set_insensitive (Current, flag)
 		end
 
 	set_selected (flag: BOOLEAN) is
@@ -87,27 +138,13 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (par: EV_MENU_ITEM_HOLDER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				ev_children := parent_imp.ev_children
-				parent_imp.add_item (Current)
-			end
-		end
-
 	set_text (txt: STRING) is
 			-- Set `text' to `txt'.
 		do
 			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 			if parent_imp /= Void then
-				parent_menu.modify_string (txt, id)
+				parent_imp.menu.modify_string (txt, id)
+				item_handler.update_menu
 			end
 		end
 
@@ -115,13 +152,48 @@ feature -- Element change
 			-- Add `an_item' into container.
 		do
 			-- First, we transform the item into a menu.
-			if submenu = Void then
-				!! submenu.make
-				ev_children := parent_imp.ev_children
-				parent_menu.delete_item (id)
-				parent_imp.insert_menu (submenu, position, text)
+			if menu = Void then
+				!! menu.make
+				if parent_imp /= Void then
+					parent_imp.internal_delete_item (Current)
+					parent_imp.internal_insert_menu (Current)
+				end
 			end
+
+			-- Then we normaly add the item.
 			{EV_MENU_ITEM_HOLDER_IMP} Precursor (an_item)
+		end
+
+	insert_item (item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
+			-- Insert `item_imp' at the position `pos'
+		do
+			-- First, we transform the item into a menu.
+			if menu = Void then
+				!! menu.make
+				if parent_imp /= Void then
+					parent_imp.internal_delete_item (Current)
+					parent_imp.internal_insert_menu (Current)
+				end
+			end
+
+			-- Then we normaly add the item.
+			{EV_MENU_ITEM_HOLDER_IMP} Precursor (item_imp, pos)
+		end
+
+	remove_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Remove `item_imp' from the menu,
+		do
+			-- First, we call the precursor
+			{EV_MENU_ITEM_HOLDER_IMP} Precursor (item_imp)
+
+			-- If there is no more children, it becomes a normal item.
+			if children = Void then
+				if parent_imp /= Void then
+					parent_imp.internal_delete_item (Current)
+					parent_imp.internal_insert_item (Current)
+				end
+				menu := Void
+			end
 		end
 
 feature -- Assertion
@@ -129,25 +201,14 @@ feature -- Assertion
 	grand_parent_is_option_button: BOOLEAN is
 			-- Is true if the grand parent is an option button.
 			-- False otherwise.
-		do
-		end
-
-	is_selected: BOOLEAN is
-			-- True if the current item is selected.
-			-- False otherwise.
-			-- We use it only when the grand parent is an option button.
 		local
-			menu: EV_MENU_IMP
-			option: EV_OPTION_BUTTON
-			mitem: EV_MENU_ITEM
+			option: EV_OPTION_BUTTON_IMP
 		do
-			menu ?= parent_imp
-			if menu /= Void then
-				option ?= menu.parent_imp
-				if option /= Void then
-					mitem ?= interface
-					Result := mitem.is_equal (option.selected_item)
-				end
+			option ?= item_handler
+			if option = Void then
+				Result := False
+			else
+				Result := True
 			end
 		end
 
@@ -169,24 +230,7 @@ feature -- Event -- removing command association
 			remove_command (Cmd_item_activate)			
 		end
 
-feature {EV_MENU_ITEM_HOLDER_IMP} -- Implementation
-	
-	parent_menu: WEL_MENU is
-			-- Wel menu that contains the current item.
-		local
-			item: EV_MENU_ITEM_IMP
-		do
-			Result ?= parent_imp
-			if Result = Void then
-				item ?= parent_imp
-				Result := item.submenu
-			end
-		end
-
-	submenu: WEL_MENU
-			-- Wel menu used when the item is a sub-menu.
-
-feature {EV_CONTAINER_IMP} -- Implementation
+feature {EV_MENU_ITEM_HANDLER_IMP} -- WEL Implementation
 
 	on_activate is
 			-- Is called by the menu when the item is activated.
@@ -196,7 +240,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		end
 
 	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
-			-- `sitem' has been selected'
+			-- `sitem' has been selected'.
 		do
 			parent_imp.on_selection_changed (sitem)
 		end

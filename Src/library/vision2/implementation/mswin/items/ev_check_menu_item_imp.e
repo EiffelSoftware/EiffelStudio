@@ -27,7 +27,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is current menu-item selected?
 		do
-			Result := parent_menu.item_checked (id)	
+			Result := parent_imp.internal_selected (Current)	
 		end
 	
 feature -- Status setting
@@ -35,11 +35,7 @@ feature -- Status setting
 	set_selected (flag: BOOLEAN) is
 			-- Make `flag' the new state of the menu-item.
 		do
-			if flag then
-				parent_menu.check_item (id)
-			else
-				parent_menu.uncheck_item (id)
-			end
+			parent_imp.internal_set_selected (Current, flag)
 		end
 
 	toggle is

@@ -12,7 +12,10 @@ inherit
 	EV_LIST_ITEM_I
 
 	EV_SIMPLE_ITEM_IMP
+		undefine
+			top_parent_imp
 		redefine
+			parent_imp,
 			set_text
 		end
 
@@ -23,8 +26,7 @@ inherit
 
 creation
 	make,
-	make_with_index,
-	make_with_all
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -34,22 +36,10 @@ feature {NONE} -- Initialization
 			set_text ("")
 		end
 
-	make_with_index (par: EV_LIST; value: INTEGER) is
-			-- Create an item with `par' as parent and `value'
-			-- as index.
-		do
-			set_text ("")
-			parent_imp ?= par.implementation
-			parent_imp.insert_item (Current, value)
-		end
-
-	make_with_all (par: EV_LIST; txt: STRING; value: INTEGER) is
-			-- Create an item with `par' as parent, `txt' as text
-			-- and `value' as index.
+	make_with_text (txt: STRING) is
+			-- Create a row with text in it.
 		do
 			set_text (txt)
-			parent_imp ?= par.implementation
-			parent_imp.insert_item (Current, value)
 		end
 
 feature -- Access
@@ -59,9 +49,8 @@ feature -- Access
 
 	index: INTEGER is
 			-- Index of the current item.
-			-- `id' is a zero-based index
 		do
-			Result := parent_imp.internal_get_index (Current)
+			Result := parent_imp.internal_get_index (Current) + 1
 		end
 
 feature -- Status report
@@ -93,16 +82,6 @@ feature -- Status report
 	
 feature -- Status setting
 
-	destroy is
-			-- Destroy the actual item.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			interface := Void
-		end
-
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		do
@@ -122,20 +101,6 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (par: EV_LIST) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				parent_imp.add_item (Current)
-			end
-		end
-
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
@@ -143,13 +108,6 @@ feature -- Element change
 			if parent_imp /= Void then
 				parent_imp.internal_set_text (Current, txt)
 			end
-		end
-
-	set_index (value: INTEGER) is
-			-- Make `value' the new index of the item in the
-			-- list.
-		do
-			parent_imp.move_item (Current, value)
 		end
 
 feature -- Event : command association
@@ -197,104 +155,6 @@ feature -- Event -- removing command association
 		do
 			remove_command (Cmd_item_dblclk)
 		end
-
-feature {EV_LIST_ITEM_HOLDER_IMP} -- Implementation for drawing
-
---	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
---			-- Draw the current item according to the given
---			-- struct.
---		local
---			dc: WEL_DC
---			rect: WEL_RECT
---		do
---			dc := struct.dc
---			rect := struct.rect_item
---
---			if struct.item_action = Oda_focus then
---				draw_focus (dc, rect)
---			elseif struct.item_action = Oda_select then
---				if struct.item_state = Ods_selected then
---					draw_selected_body (dc, rect)
---				else
---					draw_unselected_body (dc, rect)
---				end
---				if struct.item_state = Ods_focus then
---					draw_focus (dc, rect)
---				end
---			elseif struct.item_action = Oda_drawentire then
---				if struct.item_state = Ods_selected then
---					draw_selected_body (dc, rect)
---				else
---					draw_unselected_body (dc, rect)
---				end
---				if struct.item_state = Ods_focus then
---					draw_focus (dc, rect)
---				end
---			end
---		end
-
-feature {NONE} -- Implementation for drawing
-
---	draw_focus (dc: WEL_DC; rect: WEL_RECT) is
---			-- Draw the focus line around the button.
---		do
---			draw_focus_rect (dc, rect)
---		end
-
---	draw_selected_body (dc: WEL_DC; rect: WEL_RECT) is
---			-- Invert the color of the item to show the
---			-- selection.
---		do
---			dc.set_background_color (selection_color)
---			dc.set_text_color (white)
---			if pixmap_imp /= Void and text /= "" then
---				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp.dc, 0, 0, Srccopy)
---				rect.set_left (pixmap_imp.width)
---				dc.fill_rect (rect, selection_brush)
---				rect.set_left (rect.left + 5)
---				dc.draw_text (text, rect, Dt_left)
---				rect.set_left (0)
---			elseif pixmap_imp /= Void then
---				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp.dc, 0, 0, Srccopy)
---				rect.set_left (pixmap_imp.width)
---				dc.fill_rect (rect, selection_brush)
---				rect.set_left (0)
---			elseif text /= "" then
---				dc.fill_rect (rect, selection_brush)
---				dc.draw_text (text, rect, Dt_left)
---			end
---		end
-
---draw_unselected_body (dc: WEL_DC; rect: WEL_RECT) is
---		-- Draw the body of the button : bitmap + text
---		do
---			dc.set_background_color (parent_imp.background_color_imp)
---			dc.fill_rect (rect, parent_imp.background_brush)
---			if pixmap_imp /= Void and text /= "" then
---				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp.dc, 0, 0, Srccopy)
---			rect.set_left (pixmap_imp.width + 5)
---				dc.set_text_color (parent_imp.foreground_color_imp)
---				dc.draw_text (text, rect, Dt_left)
---				rect.set_left (0)
---			elseif pixmap_imp /= Void then
---				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp.dc, 0, 0, Srccopy)
---			elseif text /= "" then
---				dc.set_text_color (parent_imp.foreground_color_imp)
---				dc.draw_text (text, rect, Dt_left)
---			end
---		end	
---
---	selection_color: WEL_COLOR_REF is
---			-- Color used to draw a selection
---		once
---			!! Result.make_system (Color_highlight)
---		end
-
---	selection_brush: WEL_BRUSH is
---			-- Color used to draw a selection
---		once
---			!! Result.make_by_sys_color (Color_highlight + 1)
---		end
 
 end -- class EV_LIST_ITEM_IMP
 

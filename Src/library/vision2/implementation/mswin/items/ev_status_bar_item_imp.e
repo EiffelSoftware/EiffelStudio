@@ -11,12 +11,16 @@ inherit
 	EV_STATUS_BAR_ITEM_I
 
 	EV_SIMPLE_ITEM_IMP
+		undefine
+			top_parent_imp
 		redefine
+			parent_imp,
 			set_text
 		end
 
 creation
-	make
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -25,6 +29,24 @@ feature {NONE} -- Initialization
 		do
 			width := 50
 			text := ""
+		end
+
+	make_with_text (txt: STRING) is
+			-- Create a row with text in it.
+		do
+			width := 50
+			text := txt
+		end
+
+feature -- Access
+
+	parent_imp: EV_STATUS_BAR_IMP
+			-- Parent of the current item.
+
+	index: INTEGER is
+			-- Index of the current item.
+		do
+			Result := parent_imp.internal_get_index (Current) + 1
 		end
 
 feature -- Status report
@@ -42,14 +64,16 @@ feature -- Measurement
 
 feature -- Status setting
 
-	destroy is
-			-- Destroy the current item
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-		end
+--	destroy is
+--			-- Destroy the current item
+--		do
+--			if parent_imp /= Void then
+--				parent_imp.remove_item (Current)
+--				parent_imp := Void
+---			end
+--			interface.remove_implementation
+--			interface := Void
+--		end
 
 	set_width (value: INTEGER) is
 			-- Make `value' the new width of the item.
@@ -66,24 +90,6 @@ feature -- Status setting
 			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 			if parent_imp /= Void then
 				parent_imp.internal_set_text (Current, txt)
-			end
-		end
-
-feature -- Element change
-
-	set_parent (par: EV_STATUS_BAR) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		local
-			wid: EV_STATUS_BAR_IMP
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				parent_imp.add_item (Current)
 			end
 		end
 

@@ -30,7 +30,7 @@ feature -- Status setting
 			-- Destroy the current item.
 		do
 			group.remove_item (Current)
-			parent_imp.remove_item (Current)
+			{EV_CHECK_MENU_ITEM_IMP} Precursor
 		end
 
 	set_selected (flag: BOOLEAN) is

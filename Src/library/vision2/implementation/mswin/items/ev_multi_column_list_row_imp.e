@@ -14,7 +14,11 @@ inherit
 		rename
 			count as columns,
 			set_count as set_columns
+		undefine
+			top_parent_imp
 		redefine
+			destroy,
+			parent_imp,
 			set_cell_text
 		end
 
@@ -22,51 +26,15 @@ inherit
 
 creation
 	make,
-	make_with_text,
-	make_with_index,
-	make_with_all
-
-feature {NONE} -- Initialization
-
-	make_with_index (par: EV_MULTI_COLUMN_LIST; value: INTEGER) is
-			-- Create a row at the given `value' index in the list.
-		local
-			par_imp: EV_MULTI_COLUMN_LIST_IMP
-		do
-			create internal_text.make (1)
-			internal_text.extend ("")
-			par_imp ?= par.implementation
-			set_columns (par_imp.columns)
-			parent_imp := par_imp
-			parent_imp.insert_item (Current, value)
-		end
-
-	make_with_all (par: EV_MULTI_COLUMN_LIST; txt: ARRAY [STRING]; value: INTEGER) is
-			-- Create a row with `txt' as text at the given
-			-- `value' index in the list.
-		do
-			internal_text ?= txt.linear_representation
-			parent_imp ?= par.implementation
-			parent_imp.insert_item (Current, value)
-		end
+	make_with_text
 
 feature -- Access
 
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 			-- List implementation that contain this row
 
-	parent: EV_MULTI_COLUMN_LIST is
-			-- List that container this row
-		do
-			if parent_imp /= Void then
-				Result ?= parent_imp.interface
-			else
-				Result := Void
-			end
-		end
-
 	index: INTEGER is
-			-- Index of the row in the list
+			-- Index of the current item.
 		do
 			Result := parent_imp.internal_get_index (Current)
 		end
@@ -90,18 +58,8 @@ feature -- Status setting
 	destroy is
 			-- Destroy the actual object.
 		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
+			{EV_COMPOSED_ITEM_IMP} Precursor
 			internal_text := Void
-			interface := Void
-		end
-
-	set_index (value: INTEGER) is
-			-- Make `value' the new index of the item.
-		do
-			parent_imp.move_item (Current, value)
 		end
 
 	set_selected (flag: BOOLEAN) is
@@ -115,22 +73,6 @@ feature -- Status setting
 		end
 
 feature -- Element Change
-
-	set_parent (par: EV_MULTI_COLUMN_LIST) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		local
-			new_text: ARRAY [STRING]
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				parent_imp.add_item (Current)
-			end
-		end
 
 	set_cell_text (column: INTEGER; txt: STRING) is
 			-- Make `text ' the new label of the `column'-th

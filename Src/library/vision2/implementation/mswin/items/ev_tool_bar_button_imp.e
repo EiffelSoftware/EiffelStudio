@@ -15,10 +15,12 @@ inherit
 
 	EV_SIMPLE_ITEM_IMP
 		undefine
+			top_parent_imp,
 			pixmap_size_ok
 		redefine
 			set_text,
-			set_pixmap
+			set_pixmap,
+			parent_imp
 		end
 
 	EV_ID_IMP
@@ -26,7 +28,8 @@ inherit
 	EV_PND_SOURCE_IMP
 
 creation
-	make
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -36,16 +39,26 @@ feature {NONE} -- Initialization
 			id := new_id
 		end
 
+	make_with_text (txt: STRING) is
+			-- Create a row with text in it.
+		do
+			id := new_id
+			set_text (txt)
+		end
+
 feature -- Access
 
 	parent_imp: EV_TOOL_BAR_IMP
 			-- Parent implementation
 
 	index: INTEGER is
-			-- Index of the button in the tool-bar.
+			-- Index of the current item.
 		do
-			Result := parent_imp.internal_index (id) + 1
+			Result := parent_imp.internal_get_index (Current) + 1
 		end
+
+	id: INTEGER
+			-- Identifier of the item
 
 feature -- Status report
 
@@ -72,16 +85,6 @@ feature -- Status report
 
 feature -- Status setting
 
-	destroy is
-			-- Destroy the actual item.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_button (Current)
-				parent_imp := Void
-			end
-			interface := Void
-		end
-
 	set_insensitive (flag: BOOLEAN) is
 			-- Make the current button insensitive if `flag' and
 			-- enable if `not flag'
@@ -94,34 +97,6 @@ feature -- Status setting
 		end
 
 feature -- Element change
-
-	set_parent (par: EV_TOOL_BAR) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_button (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				parent_imp.add_button (Current)
-			end
-		end
-
-	set_parent_with_index (par: EV_TOOL_BAR; value: INTEGER) is
-			-- Make `par' the new parent of the widget and set
-			-- the current button at `value'.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_button (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				parent_imp.insert_button (Current, value)
-			end
-		end
 
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.

@@ -129,12 +129,6 @@ cluster
 	eiffel_helpers (ast):		"$EIFFEL_SRC\library\helpers\eiffel"
 
 assembly
-	"EiffelSoftware.EiffelCompiler":	"$EIFFEL_SRC\dotnet\codedom_provider\assemblies\EiffelSoftware.Compiler.Managed.dll"
-
-	"EiffelSoftware.Compiler.OutputHandler":	"$EIFFEL_SRC\dotnet\codedom_provider\assemblies\EiffelSoftware.Compiler.OutputHandler.dll"
-
-	"EiffelSoftware.Compiler.OutputDispatcher":	"$EIFFEL_SRC\dotnet\codedom_provider\assemblies\EiffelSoftware.Compiler.OutputDispatcher.dll"
-
 	"System.Configuration.Install":	"$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll"
 		prefix
 			"CONFIG_INSTALL_"

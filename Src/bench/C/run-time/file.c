@@ -100,7 +100,7 @@ extern char * dir_dot_dir (char * dir);
 private int utime();
 #endif
 
-#ifndef HAS_LINK
+#ifndef HAS_UNLINK
 #ifndef unlink
 private int unlink();
 #endif
@@ -766,7 +766,9 @@ EIF_INTEGER start;		/* Amount of characters already held in buffer */
 
 	while (amount-- > 0) {
 		c = getc(f);
-		if (c != EOF && isspace(c)) {
+		if (c == EOF)
+			break;
+		if (isspace(c)) {
 			if (EOF == ungetc(c, f))
 				eio();
 			break;
@@ -1221,7 +1223,7 @@ int how;		/* How should the time stamp be applied */
 	 * inode. The 'how' parameter tells which attributes should be set.
 	 */
 
-	Time_t tp[2];		/* Time array (0 = access time, 1 = modif time) */
+	struct utimbuf tp;	/* Time array */
 	struct stat buf;	/* File statistics */
 	int status;			/* System call status */
 
@@ -1229,20 +1231,20 @@ int how;		/* How should the time stamp be applied */
 		file_stat(name, &buf);
 		switch (how) {
 		case 0:					/* Change only access time */
-			tp[0] = stamp;
-			tp[1] = buf.st_mtime;
+			tp.actime = stamp;
+			tp.modtime = buf.st_mtime;
 			break;
 		case 1:					/* Change only modification time */
-			tp[0] = buf.st_atime;
-			tp[1] = stamp;
+			tp.actime = buf.st_atime;
+			tp.modtime = stamp;
 			break;
 		}
 	} else
-		tp[0] = tp[1] = stamp;	/* Change both access and modification times */
+		tp.actime = tp.modtime = stamp;	/* Change both access and modification times */
 	
 	for (;;) {
 		errno = 0;						/* Reset error condition */
-		status = utime(name, tp);		/* Attempt time stamp change */
+		status = utime(name, &tp);		/* Attempt time stamp change */
 		if (status == -1) {				/* An error occurred */
 			if (errno == EINTR)			/* Interrupted by signal */
 				continue;				/* Re-issue system call */
@@ -1582,10 +1584,10 @@ char *to;		/* Target name */
 public int rmdir(path)
 char *path;
 {
- #ifdef __VMS
-	printf("RMDIR not implemented under VMS yet.\n");
+#ifdef __VMS
+	printf("rmdir() not implemented under VMS yet.\n");
 	return -1;
- #else
+#else
 	/* Emulates the rmdir() system call */
 
 	char cmd[BUFSIZ];
@@ -1598,7 +1600,7 @@ char *path;
 		return -1;
 	
 	return 0;
- #endif	/* vms */
+#endif	/* vms */
 }
 #endif
 
@@ -1631,24 +1633,23 @@ struct utimbuf *times;
 #endif
 {
 	/* Emulation of utime */
- #ifdef __VMS
+#ifdef __VMS
 	return -1;
- #else
+#else
 	...
- #endif
+#endif
 
 }
 #endif
 
 
 #ifndef HAS_LINK
- #ifndef unlink
+#ifndef unlink
 
 int unlink(path)
 char *path;
 {
-  #ifdef __VMS
-	/*printf("Unlink not available: %s\n",path);*/
+#ifdef __VMS
 	int		status;
 	struct dsc$descriptor_s		deldsc;
 
@@ -1664,10 +1665,10 @@ char *path;
 
 	return 0;
 
-  #else /* ifdef __VMS */
+#else /* ifdef __VMS */
 	return -1;
-  #endif	/* vms */
+#endif	/* vms */
 }
 
- #endif		/* unlink */
+#endif		/* unlink */
 #endif		/* has link */

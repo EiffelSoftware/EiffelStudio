@@ -119,7 +119,6 @@ feature -- Basic operations
 				a_descriptor.set_inherited_interface (inherited_interface)
 				a_descriptor.update_dual (dual)
 				a_descriptor.update_dispinterface (dispinterface)
-				a_descriptor.set_guid (guid)
 				a_descriptor.set_lcid (lcid)
 				a_descriptor.set_vtbl_size (vtbl_size)
 				a_descriptor.set_flags (flags)
@@ -254,9 +253,6 @@ feature {NONE} -- Implementation
 
 	dispinterface: BOOLEAN
 			-- Is dispinterface?
-
-	guid: ECOM_GUID
-			-- IID (interface ID)
 
 	lcid: INTEGER
 			-- Locale of member names and doc strings.

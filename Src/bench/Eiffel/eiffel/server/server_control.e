@@ -45,6 +45,19 @@ feature
 			last_computed_id := id;
 		end;
 
+	forget_file (f: SERVER_FILE) is
+			-- Close the server file and remove it
+			-- from the cache.
+		require
+			good_argument: f /= Void
+		do
+			if f.is_open then
+					-- If the file is open then it is in the cache
+				f.close;
+				remove_id (f.id);
+			end;
+		end;
+
 	remove_file (f: SERVER_FILE) is
 			-- Remove file from Current
 		require
@@ -77,7 +90,7 @@ feature
 			loop
 				if (i > last_precompiled_id) then
 					f := files.item (i);
-					if f /= Void and then f.empty then
+					if f /= Void and then (f.occurence = 0) then
 						remove_file (f);
 					end;
 				end;

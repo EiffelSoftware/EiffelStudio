@@ -62,7 +62,7 @@ feature {NONE}
 
 			!!debug_run_command.make (format_bar, text_window);
 				format_bar.attach_top (debug_run_command, 0);
-				format_bar.attach_left_widget (showroutclients_command, debug_run_command, 50);
+				format_bar.attach_left_widget (showfuture_command, debug_run_command, 50);
 
 --			!!step_command.make (format_bar, text_window);
 --				format_bar.attach_top (step_command, 0);

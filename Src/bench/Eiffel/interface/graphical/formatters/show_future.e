@@ -21,14 +21,14 @@ feature
 	symbol: PIXMAP is 
 		once 
 			!!Result.make; 
-			Result.read_from_file (bm_Showfs) 
+			Result.read_from_file (bm_Showdversions) 
 		end;
  
 feature {NONE}
 
-	command_name: STRING is do Result := "add an l_...(HISTORY) value" end;
+	command_name: STRING is do Result := l_Showfuture end;
 
-	title_part: STRING is do Result := "add an l_..(HISTORY) value" end;
+	title_part: STRING is do Result := l_Future end;
 
 	display_info (i: INTEGER; f: FEATURE_STONE)  is
 			-- Display history of `f;

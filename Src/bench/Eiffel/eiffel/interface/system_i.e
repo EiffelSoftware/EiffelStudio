@@ -242,6 +242,11 @@ feature
 			-- | duplicated one in order to compair versions of a same
 			-- | feature.
 
+	onbidt: O_N_TABLE;
+			-- Correspondance table between old body ids
+			-- (changed trough `vhange_body_id' of FEATURE_I)
+			-- and new body id.
+
 	dispatch_table: DISPATCH_TABLE;
 			-- Dispatch table
 
@@ -344,6 +349,7 @@ feature
 			!!execution_table.init;
 			!!melted_set.make;
 			!!rout_info_table.make;
+			!!onbidt.make (50);
 		end;
 
 	init is
@@ -500,6 +506,17 @@ debug ("ACTIVITY");
 	io.error.putint (id);
 	io.error.new_line;
 end;
+				Inv_byte_server.remove (id);
+				Ast_server.remove (id);
+				Feat_tbl_server.remove (id);
+				Class_info_server.remove (id);
+				Inv_ast_server.remove (id);
+				Depend_server.remove (id);
+				Rep_depend_server.remove (id);
+				M_rout_id_server.remove (id);
+				M_desc_server.remove (id);
+
+				Tmp_inv_byte_server.remove (id);
 				Tmp_ast_server.remove (id);
 				Tmp_feat_tbl_server.remove (id);
 				Tmp_class_info_server.remove (id);
@@ -604,6 +621,15 @@ end;
 				-- `origin_body_index_table' and re-initialize the
 				-- melted set of feature tables.
 			if successfull then
+					-- !!!!!!!!!!!!!!
+					-- Important Note
+					-- !!!!!!!!!!!!!!
+					-- There are other references in the system to "THE" 
+					-- Original Body Index table (Namely through onces)
+					-- We CANNOT do a simple assignment of twin. We need 
+					-- to ensure that the object remains the same troughout 
+					-- a session. If you want to change it, think thoroughly
+					-- before! (Dino, that's an allusion to you, -- FRED)
 				original_body_index_table.copy (body_index_table.twin);
 				melted_set.wipe_out;
 			end;
@@ -1380,7 +1406,8 @@ end;
 				-- Just clear the rep info server
 			Tmp_rep_info_server.clear;
 
-			original_body_index_table := Void
+			-- NO !!!!!!! See comment in `init_recompilation'
+			--original_body_index_table := Void
 		end;
 
 feature  -- Freeezing
@@ -2962,23 +2989,23 @@ feature
 			Result := (current_pass = pass3_controler)
 		end;
 
-	--clear is
-				-- Clear the servers
-		--do
-			--Tmp_ast_server.clear;
-			--Tmp_feat_tbl_server.clear;
-			--Tmp_body_server.clear;
-			--Tmp_class_info_server.clear;
-			--Tmp_rep_info_server.clear;
-			--Tmp_byte_server.clear;
-			--Tmp_inv_byte_server.clear;
-			--Tmp_inv_ast_server.clear;
-			--Tmp_depend_server.clear;
-			--Tmp_rep_depend_server.clear;
-			--Tmp_rep_server.clear;
-			--Tmp_rep_feat_server.clear;
-			--Tmp_rep_info_server.clear;
-		--end;
+--	clear is
+--				-- Clear the servers
+--		do
+--			Tmp_ast_server.clear;
+--			Tmp_feat_tbl_server.clear;
+--			Tmp_body_server.clear;
+--			Tmp_class_info_server.clear;
+--			Tmp_rep_info_server.clear;
+--			Tmp_byte_server.clear;
+--			Tmp_inv_byte_server.clear;
+--			Tmp_inv_ast_server.clear;
+--			Tmp_depend_server.clear;
+--			Tmp_rep_depend_server.clear;
+--			Tmp_rep_server.clear;
+--			Tmp_rep_feat_server.clear;
+--			Tmp_rep_info_server.clear;
+--		end;
 
 	System_chunk: INTEGER is 500;
 

@@ -8,13 +8,16 @@ inherit
 	READ_SERVER [FEATURE_AS]
 		rename
 			clear as old_clear,
-			make as basic_make
+			make as basic_make,
+			has as old_has
+		redefine
+			ontable, updated_id
 		end;
 	READ_SERVER [FEATURE_AS]
 		redefine
-			clear, make
+			clear, make, ontable, updated_id, has
 		select
-			clear, make
+			clear, make, has
 		end
 
 creation
@@ -22,6 +25,39 @@ creation
 	make
 	
 feature
+
+	has (an_id: INTEGER): BOOLEAN is
+		local
+			i: INTEGER
+		do
+			Result := old_has (an_id);
+			if Result then
+				from
+					i := 1
+				until
+					(i > nb_useless) or else not Result
+				loop
+					if useless_body_ids.item (i) /= -1 then
+						Result := (updated_id (an_id) /= updated_id (useless_body_ids.item (i)))
+					end;
+					i := i + 1
+				end;
+			end;
+		end;
+
+	ontable: O_N_TABLE is
+			-- Mapping table between old id s and new ids.
+			-- Used by `change_id'
+		require else
+			True
+		once
+			Result := System.onbidt
+		end;
+
+	updated_id (i: INTEGER): INTEGER is
+		do
+			Result := ontable.item (i)
+		end;
 
 	useless_body_ids: ARRAY [INTEGER];
 			-- Set of body ids which have to desappear after a success
@@ -66,6 +102,24 @@ feature
 			useless_body_ids.put (body_id, nb_useless);
 		end;
 
+	reactivate (body_id: INTEGER) is
+		local
+			i: INTEGER;
+			real_id: INTEGER
+		do
+			real_id := updated_id (body_id);
+			from
+				i := 1
+			until
+				i > nb_useless
+			loop
+				if (updated_id(useless_body_ids.item (i)) = real_id) then
+					useless_body_ids.put (-1, i);
+				end;
+				i := i + 1
+			end;
+		end;
+
 	finalize is
 			-- Finalization after a successful recompilation
 		local
@@ -78,7 +132,11 @@ feature
 			until
 				i > nb_useless
 			loop
-				Rep_feat_server.remove (useless_body_ids.item (i));
+				if (useless_body_ids.item (i) /= -1) then
+						-- Note: `remove' will get the updated id
+						-- before performing the removal.
+					Rep_feat_server.remove (useless_body_ids.item (i));
+				end;
 				i := i + 1
 			end;
 				-- Update rep_feat server

@@ -6,7 +6,7 @@ inherit
 
 	EXECUTION_UNIT
 		redefine
-			has_replicated_body
+			server_has
 		end;
 
 creation
@@ -15,7 +15,7 @@ creation
 		
 feature 
 
-	has_replicated_body: BOOLEAN is
+	server_has: BOOLEAN is
 		do
 			Result := Rep_feat_server.has (body_id);			
 		end;

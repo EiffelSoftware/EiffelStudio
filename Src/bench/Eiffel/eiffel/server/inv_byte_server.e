@@ -7,7 +7,7 @@ inherit
 	SERVER [INVARIANT_B]
 		rename
 			item as server_item,
-			has as old_has,
+			has as server_has,
 			disk_item as disk_server_item
 		export
 			{ANY} server_item
@@ -60,7 +60,7 @@ feature
 			-- Is the id `an_id' present in `Tmp_inv_byte_server' or
 			-- Current ?
 		do
-			Result := old_has (an_id) or else Tmp_inv_byte_server.has (an_id);
+			Result := server_has (an_id) or else Tmp_inv_byte_server.has (an_id);
 		end;
 
 	Size_limit: INTEGER is 50000;

@@ -4,20 +4,38 @@ deferred class DELAY_SERVER [T -> IDABLE]
 inherit
 
 	SERVER [T]
-		rename
-			has as basic_has
 		redefine
-			put , flush, item
-		end;
-	SERVER [T]
-		redefine
-			put, flush, has, item
-		select
-			has
-		end;
+			put , flush, item, has, remove,
+			change_id
+		end
 
 feature
 
+	change_id (new_value, old_value: INTEGER) is
+		local
+			sf: SERVER_INFO;
+			temp: T;
+			real_id: INTEGER
+		do
+			real_id := updated_id (old_value);
+
+			if delayed.has (real_id) then
+				delayed.remove (real_id);
+				delayed.force (new_value);
+			end;
+
+			temp := cache.item_id (real_id);
+			if temp /= Void then
+				temp.set_id (new_value);
+			end;
+
+			sf := tbl_item (real_id);
+			if sf /= Void then
+				tbl_remove (real_id);
+				tbl_put (sf, new_value);
+			end;
+		end;
+ 
 	delayed: SEARCH_TABLE [INTEGER] is
 			-- Table of delayed ids
 		deferred
@@ -29,6 +47,18 @@ feature
 			old_item, to_remove: T;
 			id, id_to_remove: INTEGER;
 		do
+debug ("SERVER")
+	io.putstring ("Putting element of id: ");
+	io.putint (t.id);
+	io.putstring ("/");
+	io.putint (updated_id (t.id));
+	io.putstring (" into");
+	io.putstring (generator);
+	io.new_line;
+end;
+
+			t.set_id (updated_id(t.id));
+
 			id := t.id;
 				-- Put `t' in cache if not full
 			old_item := cache.item_id (id);
@@ -49,7 +79,7 @@ feature
 					-- reorganized the cache
 				cache.change_last_item (t);
 			end;
-			delayed.put (id);
+			delayed.force (id);
 		end;
 
 	item (an_id: INTEGER): T is
@@ -59,11 +89,13 @@ feature
 			server_file: SERVER_FILE;
 			id_to_remove: INTEGER;
 			to_remove: T;
+			real_id: INTEGER
 		do
-			Result := cache.item_id (an_id);
+			real_id := updated_id (an_id);
+			Result := cache.item_id (real_id);
 			if Result = Void then
 					-- Id not avaible in memory
-				info := tbl_item (an_id);
+				info := tbl_item (real_id);
 				server_file := Server_controler.file_of_id (info.id);
 				if not server_file.is_open then
 					Server_controler.open_file (server_file);
@@ -81,7 +113,37 @@ feature
 					end;
 					cache.remove;
 				end;
+				Result.set_id (real_id);
 				cache.put (Result);
+			end;
+		--rescue
+		--	Dialog_window.display ("Cannot read compilation information from disk");
+		--	retry
+		end;
+
+	remove (an_id: INTEGER) is
+			-- Remove information of id `an_id'.
+			-- NO precondition, the feature will check if the
+			-- server has the element to remove.
+		local
+			old_info: SERVER_INFO;
+			old_server_file: SERVER_FILE;
+			real_id: INTEGER
+		do
+			real_id := updated_id (an_id);
+
+			cache.remove_id (real_id);
+
+			delayed.remove (real_id);
+
+			old_info := tbl_item (real_id);
+			if old_info /= Void then
+				old_server_file := Server_controler.file_of_id (old_info.id);
+				old_server_file.remove_occurence;
+				if old_server_file.occurence = 0 then
+					file_ids.remove_item (old_server_file.id);
+				end;
+				tbl_remove (real_id);
 			end;
 		end;
 
@@ -111,8 +173,11 @@ feature
 
 	has (id: INTEGER): BOOLEAN is
 			-- Has the server an item of id `id' ?
+		local
+			real_id: INTEGER
 		do
-			Result := cache.has_id (id) or else basic_has (id)
+			real_id := updated_id (id);
+			Result := cache.has_id (real_id) or else tbl_has (real_id)
 		end;
 
 end

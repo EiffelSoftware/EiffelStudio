@@ -7,12 +7,29 @@ class TMP_BYTE_SERVER
 inherit
 
 	DELAY_SERVER [BYTE_CODE]
+		redefine
+			ontable, updated_id
+		end
 
 creation
 
 	make
 	
 feature 
+
+	ontable: O_N_TABLE is
+			-- Mapping table between old id s and new ids.
+			-- Used by `change_id'
+		require else
+			True
+		once
+			Result := System.onbidt
+		end;
+
+    updated_id (i: INTEGER): INTEGER is
+        do
+            Result := ontable.item (i)
+        end;
 
 	Cache: BYTE_CACHE is
 			-- Cache for routine tables

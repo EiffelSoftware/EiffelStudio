@@ -9,7 +9,8 @@ inherit
 
 	IDABLE
 		rename
-			id as class_id
+			id as class_id,
+			set_id as set_class_id
 		undefine
 			twin
 		end;
@@ -22,6 +23,11 @@ feature
 
 	class_id: INTEGER;
 		-- Class id where features are replicated
+
+	set_class_id (i: INTEGER) is
+		do
+			class_id := i
+		end;
 
 	make (i: INTEGER; ci: INTEGER) is
 			-- Make Current with `i' items and with

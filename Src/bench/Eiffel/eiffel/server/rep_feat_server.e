@@ -6,22 +6,20 @@ inherit
 
 	READ_SERVER [FEATURE_AS]
 		rename
-			int_tbl_item as hash_table_item,
 			item as server_item,
-			has as server_has
+			has as server_has,
+			change_id as server_change_id
 		export
-			{ANY} hash_table_item, server_has, server_item
+			{ANY} server_has, server_item, merge
+		redefine
+			ontable, updated_id
 		end;
 
 	READ_SERVER [FEATURE_AS]
-		rename
-			int_tbl_item as hash_table_item
-		export
-			{ANY} hash_table_item
 		redefine
-			has, item
+			has, item, ontable, updated_id, change_id
 		select
-			has, item
+			has, item, change_id
 		end
 
 creation
@@ -29,6 +27,20 @@ creation
 	make
 
 feature 
+
+	ontable: O_N_TABLE is
+			-- Mapping table between old id s and new ids.
+			-- Used by `change_id'
+		require else
+			True
+		once
+			Result := System.onbidt
+		end;
+
+	updated_id (i: INTEGER): INTEGER is
+		do
+			Result := ontable.item (i)
+		end;
 
 	Cache: REP_FEAT_CACHE is
 			-- Cache for routine tables
@@ -60,6 +72,16 @@ feature
 			-- Class offsets in the AST server
 		do
 			Result := Rep_server;
+		end;
+
+	change_id (new_value, old_value: INTEGER) is
+		do
+			if server_has (old_value) then
+				server_change_id (new_value, old_value)
+			end;
+			if Tmp_rep_feat_server.has (old_value) then
+				Tmp_rep_feat_server.change_id (new_value, old_value)
+			end;
 		end;
 
 end

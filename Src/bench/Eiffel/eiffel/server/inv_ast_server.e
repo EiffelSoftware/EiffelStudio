@@ -6,18 +6,13 @@ inherit
 
 	READ_SERVER [INVARIANT_AS]
 		rename
-			int_tbl_item as hash_table_item,
 			item as server_item,
 			has as server_has
 		export
-			{ANY} hash_table_item, server_has, server_item
+			{ANY} server_has, server_item, merge
 		end;
 
 	READ_SERVER [INVARIANT_AS]
-		rename
-			int_tbl_item as hash_table_item
-		export
-			{ANY} hash_table_item
 		redefine
 			has, item
 		select

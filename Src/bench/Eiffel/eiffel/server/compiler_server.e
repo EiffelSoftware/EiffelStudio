@@ -5,10 +5,14 @@ deferred class SERVER [T -> IDABLE]
 inherit
 
 	SHARED_SCONTROL
+		export
+			{NONE} all
 		undefine
 			twin
 		end;
 	SHARED_SERVER
+		export
+			{NONE} all
 		undefine
 			twin
 		end;
@@ -18,16 +22,53 @@ inherit
 			position as tbl_position,
 			item as tbl_item,
 			put as tbl_put,
-			remove as tbl_remove
-		export
-			{ANY} all
+			remove as tbl_remove,
+			change_key as tbl_change_key,
+			has as tbl_has
 		end;
 	SHARED_DIALOG
+		export
+			{NONE} all
 		undefine
 			twin
 		end;
 
 feature
+
+	updated_id (i: INTEGER): INTEGER is
+		do
+			Result := i	
+		end;
+
+	ontable: O_N_TABLE is
+			-- Mapping table between old id s and new ids.
+			-- Used by `change_id'
+			-- By default, this mechanism is disables, hence the
+			-- `False' precondition
+		require
+			False
+		do
+		end;
+
+	change_id (new_value, old_value: INTEGER) is
+		require
+			Has_old: has (old_value)
+		local
+			sf: SERVER_INFO;
+			temp: T;
+			real_id: INTEGER
+		do
+			real_id := updated_id (old_value);
+
+			temp := cache.item_id (real_id);
+			if temp /= Void then
+				temp.set_id (new_value);
+			end;
+
+			sf := tbl_item (real_id);
+			tbl_remove (real_id);
+			tbl_put (sf, new_value);
+		end;
 
 	current_id: INTEGER;
 			-- Current server file id used by primitive `put'.
@@ -36,14 +77,10 @@ feature
 			-- Set of server file ids under the control of the
 			-- current server
 
-	removed_ids: LINKED_SET [INTEGER];
-			-- Set of item ids removed from the server
-
 	make is
 			-- Initialization
 		do
 			!!file_ids.make;
-			!!removed_ids.make;
 			set_current_id;
 			tbl_make (Chunk);
 		end;
@@ -65,7 +102,7 @@ feature
 			info: SERVER_INFO
 		do
 			file_ids.add (fid);
-			force (sinf, item_id);
+			force (sinf, updated_id(item_id));
 		end;
 
 	Size_limit: INTEGER is
@@ -75,12 +112,26 @@ feature
 		end;
 
 	put (t: T) is
-			-- Append object `t' in file `file'.
+			-- Put object `t' in server.
 		local
 			old_item: T;
 		do
+debug ("SERVER")
+	io.putstring ("Putting element of id: ");
+	io.putint (t.id);
+	io.putstring ("/");
+	io.putint (updated_id (t.id));
+	io.putstring (" into");
+	io.putstring (generator);
+	io.new_line;
+end;
+				-- Update id of element
+			t.set_id (updated_id (t.id));
+
+				-- Write item to disk right away.
 			write (t);
-				-- Put `t' in cache if not full
+		
+				-- Put `t' in cache if not full.
 			old_item := cache.item_id (t.id);
 			if old_item = Void then
 					-- No previous item of id `t.id'
@@ -129,9 +180,9 @@ feature
 				end;
 			end;
 			force (info, id);
-		rescue
-			Dialog_window.display ("Cannot write compilation information to disk");
-			retry;
+		--rescue
+		--	Dialog_window.display ("Cannot write compilation information to disk");
+		--	retry;
 		end;
 
 	init_file (server_file: SERVER_FILE) is
@@ -144,36 +195,33 @@ feature
 
 	remove (an_id: INTEGER) is
 			-- Remove information of id `an_id'.
-			-- Actually, just put it in a list
-		do
-			removed_ids.add (an_id);
-		end;
-
-	remove_from_disk is
-			-- Perform the real remove on disk
+			-- NO precondition, the feature will check if the
+			-- server has the element to remove.
+			--|Note: the element will actually be removed from
+			--|disk at the end of a succesful compilation
 		local
-			an_id: INTEGER;
 			old_info: SERVER_INFO;
 			old_server_file: SERVER_FILE;
+			real_id: INTEGER
 		do
-			from
-				removed_ids.start
-			until
-				removed_ids.after
-			loop
-				an_id := removed_ids.item;
-				old_info := tbl_item (an_id);
-				if old_info /= Void then
-					old_server_file := Server_controler.file_of_id (old_info.id);
-					old_server_file.remove_occurence;
-					if old_server_file.occurence = 0 then
-						file_ids.remove_item (old_server_file.id);
-					end;
-					tbl_remove (an_id);
+			real_id := updated_id (an_id);
+			cache.remove_id (real_id);
+			old_info := tbl_item (real_id);
+			if old_info /= Void then
+				old_server_file := Server_controler.file_of_id (old_info.id);
+				old_server_file.remove_occurence;
+				if old_server_file.occurence = 0 then
+					file_ids.remove_item (old_server_file.id);
 				end;
-				removed_ids.forth
+				tbl_remove (real_id);
 			end;
-			removed_ids.wipe_out;
+		end;
+
+	has (i: INTEGER): BOOLEAN is
+			-- Does the server contain an element of
+			-- id `i'?
+		do
+			Result := tbl_has (updated_id(i))
 		end;
 
 	item (an_id: INTEGER): T is
@@ -183,11 +231,13 @@ feature
 		local
 			info: SERVER_INFO;
 			server_file: SERVER_FILE;
+			real_id: INTEGER
 		do
-			Result := cache.item_id (an_id);
+			real_id := updated_id (an_id);
+			Result := cache.item_id (real_id);
 			if Result = Void then
 					-- Id not avaible in memory
-				info := tbl_item (an_id);
+				info := tbl_item (real_id);
 				server_file := Server_controler.file_of_id (info.id);
 				if not server_file.is_open then
 					Server_controler.open_file (server_file);
@@ -199,11 +249,12 @@ feature
 						-- If cache is full, oldest is removed
 					cache.remove;
 				end;
+				Result.set_id (real_id);
 				cache.put (Result);
 			end;
-		rescue
-			Dialog_window.display ("Cannot read compilation information from disk");
-			retry;
+		--rescue
+		--	Dialog_window.display ("Cannot read compilation information from disk");
+		--	retry;
 		end;
 
 	disk_item (an_id: INTEGER): T is
@@ -213,8 +264,10 @@ feature
 		local
 			info: SERVER_INFO;
 			server_file: SERVER_FILE;
+			real_id: INTEGER
 		do
-			info := tbl_item (an_id);
+			real_id := updated_id (an_id);
+			info := tbl_item (real_id);
 			server_file := Server_controler.file_of_id (info.id);
 			if not server_file.is_open then
 				Server_controler.open_file (server_file);
@@ -222,6 +275,7 @@ feature
 				-- Id not avaible in memory
 			Result := retrieve_all
 						(server_file.file_pointer, info.position);
+			Result.set_id (real_id);
 		end;
 
 	cache: CACHE [T] is
@@ -231,11 +285,16 @@ feature
 
 	clear is
 			-- Clear the server.
+			-- Clears the server entirely.
+			-- Must not be used in conjunction with 
+			-- `take_control' since that routine relies
+			-- on shallow copy semantics!
 		local
 			info: SERVER_INFO;
 			server_file: SERVER_FILE;
 		do
 				-- Flush the cache
+				--|Does not do anything for default servers.
 			flush;
 
 				-- Empty the files
@@ -251,15 +310,9 @@ feature
 			end;
 			clear_all;
 			file_ids.wipe_out;
-
+			cache.wipe_out;
 				-- Take a new file
 			set_current_id;
-		end;
-
-	clear_cache is
-			-- Clear the cache
-		do
-			cache.wipe_out;
 		end;
 
 	take_control (other: SERVER [T]) is
@@ -273,10 +326,8 @@ feature
 			other_cache: CACHE [T];
 			old_server_file: SERVER_FILE;
 		do
+			flush;
 			other.flush;
-			removed_ids.merge (other.removed_ids);
-			remove_from_disk;
-			other.remove_from_disk;
 			from
 				other.start
 			until
@@ -328,6 +379,11 @@ feature
 				-- Create a new server which will be copied in Current
 			new := standard_twin;
 			new.make;
+debug ("SERVER")
+	io.putstring ("===== Purging: ");
+	io.putstring (generator);
+	io.putstring (" =====%N");
+end;
 			from
 					-- Iterate on items sorted by file ids so the purge
 					-- will be smooth regarding the disk space
@@ -337,6 +393,11 @@ feature
 				order.after
 			loop
 				file_id := order.item;
+debug ("SERVER")
+	io.putstring ("File: E");
+	io.putint (file_id);
+	io.new_line;
+end;
 				from
 					start
 				until
@@ -350,15 +411,32 @@ feature
 						if old_server_file.precompiled then
 							new.put_precompiled (file_id, an_id, old_info);
 						else
+debug ("SERVER")
+	io.putstring ("%TTransferring one element");
+end;
 								-- Put in purged server alive item	
 							new.write (item (an_id));
 	
 								-- Remove occurence from file where item was stored
 							old_server_file.remove_occurence;
+debug ("SERVER")
+	io.putstring (". Occurrences are now: ");
+	io.putint (old_server_file.occurence);
+	io.new_line;
+end;
 						end;
 					end;
 					forth
 				end;
+				old_server_file := Server_controler.file_of_id (file_id);
+				if old_server_file /= Void then
+debug ("SERVER")
+	io.putstring ("--> Removing the file%N");
+end;
+				if not old_server_file.precompiled then
+					Server_controler.remove_file (old_server_file);
+				end;
+end;
 				order.forth;
 			end;
 			check

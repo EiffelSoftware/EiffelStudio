@@ -1,29 +1,15 @@
+CC = cl.exe
 PROJ = wel_hook
 OBJS = $(PROJ).OBJ
 
-CFLAGS = $(CFLAGS) /DWIN32_LEAN_AND_MEAN /D_WIN32_WINNT=0x200
-LFLAGS =/DLL /SECTION:.shared,RWS \
-        /EXPORT:hook_mouse /EXPORT:unhook_mouse
+CFLAGS = -nologo -D_WIN32_WINNT=0x200 -W3 -Ox
+LFLAGS = -DLL -SECTION:.shared,RWS \
+		-EXPORT:MouseProc -EXPORT:hook_mouse -EXPORT:unhook_mouse
 
-
-LIBS =  /OUT:$(PROJ).dll kernel32.lib user32.lib advapi32.lib
-
-#############################################################
-# Debug
-#############################################################
-#CFLAGS = $(CFLAGS) /W4 /Od /YX /D_DEBUG /Zi /Fd"$(PROJ).PDB"
-#LFLAGS = $(LFLAGS) /DEBUG /DEBUGTYPE:BOTH
-
-#############################################################
-# Release
-#############################################################
-CFLAGS = $(CFLAGS) /DNDEBUG /W3 /Ox
+LIBS =  -OUT:$(PROJ).dll kernel32.lib user32.lib advapi32.lib
 
 $(PROJ).DLL: $(OBJS)
-    echo >NUL @<<$(PROJ).CRF
-$(LFLAGS) $(OBJS) $(LIBS)
-<<
-    link /NOLOGO @$(PROJ).CRF
+    link -NOLOGO $(LFLAGS) $(OBJS) $(LIBS)
 
 .cpp.obj:
-    CL $(CFLAGS) /c $<
+    $(CC) $(CFLAGS) $<

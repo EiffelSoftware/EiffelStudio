@@ -1,6 +1,6 @@
 -- Enlarged byte code for assignment
 
-class ASSIGN_BL 
+class ASSIGN_BL
 
 inherit
 
@@ -22,10 +22,10 @@ feature
 
 	expand_return: BOOLEAN;
 			-- Do we have to expand the assignment in Result ?
-	
+
 	is_bit_assignment: BOOLEAN;
 			-- Do we have an assignment to a bit?
-	
+
 	register: REGISTRABLE;
 			-- Where result is stored, for case where an entity is
 			-- assigned to a manifest string. Usually those are expanded
@@ -52,7 +52,7 @@ feature
 			!!tmp_register.make (target.c_type);
 			register := tmp_register;
 		end;
-		
+
 	last_in_result: BOOLEAN;
 			-- Is this the last assignment in Result ?
 
@@ -62,20 +62,31 @@ feature
 	simple_op_assignment: INTEGER;
 			-- Records state of simple operations with assignments
 
-	
 	find_assign_result is
 			-- Check whether this is an assignment in Result, candidate for
 			-- final 'return' optimization. This won't be done if result is
 			-- expanded or if there are some postconditions which might use
 			-- it...
+		local
+			source_type: TYPE_I;
+			target_type: TYPE_I;
 		do
-			last_in_result := target.is_result and
+			if target.is_result and
 				not context.has_postcondition and
 				not context.has_invariant and
-				not context.real_type (target.type).is_expanded
-				and source.is_simple_expr;
+				source.is_simple_expr
+			then
+				target_type := context.real_type (target.type);
+				source_type := context.real_type (source.type);
+				last_in_result :=
+					not target_type.is_expanded and
+						-- No optimization if metamorphosis
+					(target_type.is_basic or else (not source_type.is_basic))
+			else
+				last_in_result := False
+			end
 		end;
-			
+
 	last_all_in_result: BOOLEAN is
 			-- Are all the function exit points an assignment to Result ?
 		do
@@ -91,7 +102,6 @@ feature
 				and not context.has_invariant;
 		end;
 
-	
 	No_simple_op: INTEGER is Unique;
 			-- There is no simple operation assignment.
 
@@ -136,7 +146,6 @@ feature
 			end;
 		end;
 
-	
 	analyze is
 			-- Analyze assignment
 		local
@@ -299,7 +308,7 @@ feature
 				context.mark_result_used;
 			end;
 		end;
-	
+
 	generate is
 			-- Generate assignment
 		do
@@ -315,13 +324,12 @@ feature
 			end;
 		end;
 
-	
 	Simple_assignment: INTEGER is unique;
 			-- Simple assignment wanted
-	
+
 	Metamorphose_assignment: INTEGER is unique;
 			-- Metamorphose of source is necessary
-	
+
 	Clone_assignment: INTEGER is unique;
 			-- Clone of source is needed
 
@@ -389,7 +397,7 @@ feature
 				end;
 			end;
 		end;
-	
+
 	generate_regular_assignment (how: INTEGER) is
 			-- Generate the assignment
 		do
@@ -404,7 +412,7 @@ feature
 				generate_normal_assignment (how);
 			end;
 		end;
-	
+
 	generate_special (how: INTEGER) is
 			-- Generate special pre-treatment
 		local
@@ -555,7 +563,7 @@ feature
 				end;
 			end;
 		end;
-	
+
 	generate_last_assignment (how: INTEGER) is
 			-- Generate last assignment in Result
 		do

@@ -150,7 +150,10 @@ feature -- Basic operations
 		local
 			obj: EB_OBJECT_DISPLAY_PARAMETERS
 			conv_obj: OBJECT_STONE
-			dv: SPECIAL_VALUE
+			
+			spec_dv: SPECIAL_VALUE
+			nat_dv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
+			
 			dobj: DEBUGGED_OBJECT
 			item: EV_TREE_ITEM
 		do
@@ -159,24 +162,35 @@ feature -- Basic operations
 				if conv_obj /= Void then
 					item := conv_obj.tree_item 
 					if item /= Void then
-						dv ?= item.data
+						spec_dv ?= item.data
+						nat_dv ?= item.data
 					end
-					if dv /= Void then
+					if spec_dv /= Void or nat_dv /= Void then
 						Result := True
 					else
-						obj := tool.get_object_display_parameters (conv_obj.object_address)
-						if obj /= Void then
-							create dobj.make (conv_obj.object_address, 0, 1)
-							if dobj.is_special then
-								Result := True
+						if Application.is_dotnet then 
+							nat_dv ?= Application.imp_dotnet.kept_object_item (conv_obj.object_address)
+							Result := nat_dv /= Void
+						else
+							obj := tool.get_object_display_parameters (conv_obj.object_address)
+							if obj /= Void then
+								create dobj.make (conv_obj.object_address, 0, 1)
+								if dobj.is_special then
+									Result := True
+								end
 							end
 						end
 					end
 				end
 			else
-				create dobj.make (pretty_dlg.current_object.object_address, 0, 1)
-				if dobj.is_special then
-					Result := True
+				if Application.is_dotnet then
+					nat_dv ?= Application.imp_dotnet.kept_object_item (pretty_dlg.current_object.object_address)
+					Result := nat_dv /= Void
+				else
+					create dobj.make (pretty_dlg.current_object.object_address, 0, 1)
+					if dobj.is_special then
+						Result := True
+					end
 				end
 			end
 		end
@@ -199,7 +213,7 @@ feature {NONE} -- Implementation
 			-- Did the user really enter new min/max values in the dialog box?
 			-- Valid after each call to get_slice_limits.
 
-	get_slice_limits (def: BOOLEAN; address: STRING; dv: SPECIAL_VALUE) is
+	get_slice_limits (def: BOOLEAN; address: STRING; dv: ABSTRACT_SPECIAL_VALUE) is
 			-- Display a dialog box to enter new slice limits
 			-- as default values if `def', 
 			-- as object specific values otherwise,
@@ -261,9 +275,11 @@ feature {NONE} -- Implementation
 				if address /= Void then
 					debug ("DEBUGGER_INTERFACE")
 						io.put_string ("object found%N")
-						create dobj.make (address, 0, 2)
-						io.putstring ("Capacity: " + dobj.capacity.out + "%N")
-						io.putstring ("Max capacity: " + dobj.max_capacity.out + "%N")
+						if not Application.is_dotnet then
+							create dobj.make (address, 0, 2)
+							io.putstring ("Capacity: " + dobj.capacity.out + "%N")
+							io.putstring ("Max capacity: " + dobj.max_capacity.out + "%N")							
+						end
 					end
 					if for_tool then
 						obj := tool.get_object_display_parameters (address)
@@ -367,7 +383,9 @@ feature {NONE} -- Implementation
 			st_not_void: st /= Void
 		local
 			obj: EB_OBJECT_DISPLAY_PARAMETERS
-			dv: SPECIAL_VALUE
+			abs_spec_dv: ABSTRACT_SPECIAL_VALUE
+			spec_dv: SPECIAL_VALUE
+			nat_arr_dv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 			dobj: DEBUGGED_OBJECT
 			parent: EV_TREE_NODE_LIST
 			item, item2: EV_TREE_ITEM
@@ -378,31 +396,42 @@ feature {NONE} -- Implementation
 			
 			item := st.tree_item 
 			if item /= Void then
-				dv ?= item.data
+				abs_spec_dv ?= item.data
 			end
-			if dv /= Void then
+			if abs_spec_dv /= Void then
 				debug ("DEBUGGER_INTERFACE")
 					io.put_string ("Special_value found%N")
-					io.putstring ("Capacity: " + dv.capacity.out + "%N")
+					io.putstring ("Capacity: " + abs_spec_dv.capacity.out + "%N")
 				end
 				
-				get_slice_limits (False, Void, dv)
+				get_slice_limits (False, Void, abs_spec_dv)
 				if get_effective then
-					slice_min := slice_min.min (dv.capacity)
-					slice_max := slice_max.min (dv.capacity)
-					create dobj.make (dv.address, slice_min, slice_max)
-					dv.set_sp_bounds (slice_min, slice_max)
-					dv.items.wipe_out
-					dv.items.append (dobj.attributes)
+					slice_min := slice_min.min (abs_spec_dv.capacity)
+					slice_max := slice_max.min (abs_spec_dv.capacity)
+
+					abs_spec_dv.set_sp_bounds (slice_min, slice_max)
+					abs_spec_dv.items.wipe_out
+
+					spec_dv ?= abs_spec_dv
+					if spec_dv /= Void then --| SPECIAL_VALUE						
+						create dobj.make (spec_dv.address, slice_min, slice_max)
+						spec_dv.items.append (dobj.attributes)
+					else
+						nat_arr_dv ?= abs_spec_dv
+						if nat_arr_dv /= Void then
+							nat_arr_dv.fill_items (slice_min, slice_max)
+						end
+					end
+					
 					parent ?= item.parent
 					if parent /= Void then
 						parent.start
 						parent.search (item)
 						parent.remove
-						item2 := tool.debug_value_to_item (dv)
+						item2 := tool.debug_value_to_item (abs_spec_dv)
 						parent.put_left (item2)
 						item2.expand
-					end
+					end						
 				end
 			else
 				check
@@ -415,16 +444,29 @@ feature {NONE} -- Implementation
 					debug ("DEBUGGER_INTERFACE")
 						io.putstring ("Found an object at address " + st.object_address + "!%N")
 					end
-					create dobj.make (st.object_address, 0, 1)
-					debug ("DEBUGGER_INTERFACE")
-						io.putstring ("cap: " + dobj.capacity.out + "max: " + dobj.max_capacity.out + "%N")
-					end
-					if dobj.is_special then
-						get_slice_limits (False, st.object_address, Void)
-						if get_effective then
-							obj.set_lower (slice_min)
-							obj.set_higher (slice_max)
-							obj.refresh
+					--| FIXME jfiat [2003/10/08 - 18:19] Not very nice design ..
+					if Application.is_dotnet then 
+						nat_arr_dv ?= Application.imp_dotnet.kept_object_item (st.object_address)
+						if nat_arr_dv /= Void then -- is Special
+							get_slice_limits (False, st.object_address, Void)
+							if get_effective then
+								obj.set_lower (slice_min)
+								obj.set_higher (slice_max)
+								obj.refresh
+							end
+						end
+					else
+						create dobj.make (st.object_address, 0, 1)
+						debug ("DEBUGGER_INTERFACE")
+							io.putstring ("cap: " + dobj.capacity.out + "max: " + dobj.max_capacity.out + "%N")
+						end
+						if dobj.is_special then
+							get_slice_limits (False, st.object_address, Void)
+							if get_effective then
+								obj.set_lower (slice_min)
+								obj.set_higher (slice_max)
+								obj.refresh
+							end
 						end
 					end
 				end

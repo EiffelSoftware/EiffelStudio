@@ -16,6 +16,9 @@ inherit
 		end
 
 	EB_RECYCLABLE
+		export
+			{NONE} all
+		end
 
 	SHARED_APPLICATION_EXECUTION
 		export
@@ -173,9 +176,11 @@ feature -- Status setting
 			-- Add the object represented by `a_stone' to the managed objects.
 		local
 			n_obj: EB_OBJECT_DISPLAY_PARAMETERS
+			conv_spec: SPECIAL_VALUE
+			abstract_value: ABSTRACT_DEBUG_VALUE			
+			
 			exists: BOOLEAN
 			tree_item: EV_TREE_ITEM
-			conv_spec: SPECIAL_VALUE
 		do
 			debug ("debug_recv")
 				print ("EB_OBJECT_TOOL.refresh%N")
@@ -191,18 +196,33 @@ feature -- Status setting
 			end
 			if not exists then
 				tree_item := a_stone.tree_item
-				if tree_item /= Void then
-					conv_spec ?= tree_item.data
-					if conv_spec /= Void then
-						create n_obj.make_from_debug_value (conv_spec)
+				if Application.is_dotnet then
+					abstract_value ?= tree_item.data
+					if abstract_value /= Void then
+						Application.imp_dotnet.keep_object (abstract_value)					
+						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make_from_debug_value (abstract_value)
 					end
+					if n_obj = Void then
+						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make (a_stone.dynamic_class, a_stone.object_address)
+					end
+					debugger_manager.kept_objects.extend (a_stone.object_address)
+					displayed_objects.extend (n_obj)
+					
+					n_obj.to_tree_item (object_tree)
+				else
+					if tree_item /= Void then
+						conv_spec ?= tree_item.data
+						if conv_spec /= Void then
+							create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} n_obj.make_from_debug_value (conv_spec)
+						end
+					end
+					if n_obj = Void then
+						create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} n_obj.make (a_stone.dynamic_class, a_stone.object_address)
+					end
+					debugger_manager.kept_objects.extend (a_stone.object_address)
+					displayed_objects.extend (n_obj)
+					n_obj.to_tree_item (object_tree)					
 				end
-				if n_obj = Void then
-					create n_obj.make (a_stone.dynamic_class, a_stone.object_address)
-				end
-				displayed_objects.extend (n_obj)
-				debugger_manager.kept_objects.extend (a_stone.object_address)
-				n_obj.to_tree_item (object_tree)
 			end
 		end
 
@@ -239,6 +259,9 @@ feature -- Status setting
 							taddr.is_equal (addr)
 						then
 							object_tree.remove
+							if Application.is_dotnet then
+								Application.imp_dotnet.remove_kept_object_by_address (taddr)
+							end
 						else
 							object_tree.forth
 						end
@@ -272,6 +295,7 @@ feature -- Status setting
 		local
 			conv_stack: CALL_STACK_STONE
 			obj: EB_OBJECT_DISPLAY_PARAMETERS
+			cse: CALL_STACK_ELEMENT
 		do
 			debug ("debug_recv")
 				print ("EB_OBJECT_TOOL.set_stone%N")
@@ -285,9 +309,17 @@ feature -- Status setting
 						if not object_tree.is_empty then
 							object_tree.remove
 						end
-						create obj.make (current_stack_element.dynamic_class, current_stack_element.object_address)
-						obj.set_front (True)
-						obj.to_tree_item (object_tree)
+
+						cse := current_stack_element
+						if Application.is_dotnet then
+							create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} obj.make (cse.dynamic_class, cse.object_address)
+							obj.set_front (True)
+							obj.to_tree_item (object_tree)
+						else
+							create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} obj.make (cse.dynamic_class, cse.object_address)
+							obj.set_front (True)
+							obj.to_tree_item (object_tree)
+						end
 					end
 				end
 			end
@@ -392,6 +424,9 @@ feature -- Memory management
 			set_integer_resource ("min_slice", min_slice_ref.item)
 			set_integer_resource ("max_slice", max_slice_ref.item)
 			debugger_manager.kept_objects.wipe_out
+			if Application.is_dotnet then
+				Application.imp_dotnet.recycle_kept_object
+			end
 			displayed_objects.wipe_out
 			pretty_print_cmd.end_debug
 			explorer_bar_item.recycle
@@ -464,12 +499,13 @@ feature {NONE} -- Implementation
 	icons: ARRAY [EV_PIXMAP] is
 			-- List of available icons for objects.
 		once
-			create Result.make (Immediate_value, Special_value)
+			create Result.make (Immediate_value, External_reference_value)
 			Result.put (Pixmaps.Icon_void_object, Void_value)
 			Result.put (Pixmaps.Icon_object_symbol, Reference_value)
 			Result.put (Pixmaps.Icon_immediate_value, Immediate_value)
 			Result.put (Pixmaps.Icon_object_symbol, Special_value)
 			Result.put (Pixmaps.Icon_expanded_object, Expanded_value)
+			Result.put (Pixmaps.Icon_external_symbol, External_reference_value)
 		end
 
 	update_agent: PROCEDURE [ANY, TUPLE]
@@ -502,15 +538,63 @@ feature {NONE} -- Implementation
 			-- Create the tree that contains locals and parameters.
 		local
 			item: EV_TREE_ITEM
+			module_item: EV_TREE_ITEM
+
 			list: LIST [ABSTRACT_DEBUG_VALUE]
 			dv: ABSTRACT_DEBUG_VALUE
 			cse: CALL_STACK_ELEMENT
+			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
+
 			tmp: SORTABLE_ARRAY [ABSTRACT_DEBUG_VALUE]
 			i: INTEGER
 			dbg_nb: INTEGER
+
+--			exception_item: EV_TREE_ITEM
+--			l_exception_value: ABSTRACT_DEBUG_VALUE
+--			l_exception_info: EIFNET_DEBUG_VALUE_INFO
+			
 		do
-			cse := current_stack_element
 			local_tree.wipe_out
+			cse := current_stack_element
+
+			if Application.is_dotnet then
+				cse_dotnet ?= cse
+
+				create module_item
+				module_item.set_text ("Module = " + cse_dotnet.dotnet_module_filename)
+				module_item.set_pixmap (Pixmaps.Icon_green_arrow)
+				local_tree.extend (module_item)				
+
+--FIXME jfiat [2003/10/08 - 11:54] Do we want to display Exception information ?
+
+--				l_eifnet_debugger := Application.imp_dotnet.Eifnet_debugger
+--				if l_eifnet_debugger.last_managed_callback_is_exception then
+--					l_exception_value := Application.imp_dotnet.status.current_stack_element_dotnet.current_exception
+--					create l_exception_info.make (Application.imp_dotnet.eifnet_debugger.active_exception_value)
+--
+--					debug ("DEBUGGER_TRACE")
+--						print ("%N%NException ....%N### => " + l_exception_info.value_class_name + "%N")
+--						print ("### => " + l_exception_info.value_module_file_name + "%N%N")
+--					end
+--					if l_exception_value /= Void then
+--						create exception_item
+--						exception_item.set_text ("Exception raised")
+--						exception_item.set_pixmap (Pixmaps.Icon_red_cross)
+--						local_tree.extend (exception_item)
+--
+--						create item
+--						item.set_text ("Class = " + l_exception_info.value_class_name)
+--						item.set_pixmap (Pixmaps.Icon_green_arrow)
+--						exception_item.extend (item)
+--
+--						create item
+--						item.set_text ("From " + l_exception_info.value_module_file_name)
+--						item.set_pixmap (Pixmaps.Icon_green_arrow)
+--						exception_item.extend (item)				
+--						exception_item.expand
+--					end
+--				end
+			end
 			
 				-- Fill in the arguments, if any.
 			list := cse.arguments
@@ -587,51 +671,81 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	clean_debugger_kept_value is
+		require
+			Application.is_dotnet
+		local
+			l_addresses_to_keep: LINKED_LIST [STRING]
+		do
+			from
+				create l_addresses_to_keep.make
+				displayed_objects.start
+			until
+				displayed_objects.after				
+			loop
+				l_addresses_to_keep.extend (displayed_objects.item.address)
+				displayed_objects.forth				
+			end
+			Application.imp_dotnet.keep_only_objects (l_addresses_to_keep)
+		end	
+	
 	build_object_tree is
 			-- Create the tree that contains object information.
+		local
+			value: ABSTRACT_DEBUG_VALUE
 		do
 			debug ("debug_recv")
 				print ("EB_OBJECT_TOOL.build_object_tree%N")
 			end
+			object_tree.wipe_out
+			if Application.is_dotnet then
+				clean_debugger_kept_value			
+			end
+			
 			if current_object /= Void then
 				display_first := current_object.display
 				display_first_attributes := current_object.display_attributes
 				display_first_special := current_object.display_special
 				display_first_onces := current_object.display_onces
 			end
-			object_tree.wipe_out
-			create current_object.make_from_stack_element (current_stack_element)
+
+			if Application.is_dotnet then
+				value := application.imp_dotnet.status.current_stack_element_dotnet.current_object
+				Application.imp_dotnet.keep_object (value)	
+				check 
+					value_not_void: value /= Void
+				end
+				create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} current_object.make_from_debug_value (value)
+			else
+				create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} current_object.make_from_stack_element (current_stack_element)
+			end
 			current_object.set_display (display_first)
 			current_object.set_display_attributes (display_first_attributes)
 			current_object.set_display_onces (display_first_onces)
 			current_object.set_display_special (display_first_special)
 			current_object.to_tree_item (object_tree)
+			
+			add_displayed_objects_to_tree (object_tree)
+		end
+		
+	add_displayed_objects_to_tree (a_object_tree: EV_TREE) is
+			-- 
+		do
 			from
 				displayed_objects.start
 			until
 				displayed_objects.after
 			loop
-				displayed_objects.item.to_tree_item (object_tree)
+				displayed_objects.item.to_tree_item (a_object_tree)
 				displayed_objects.forth
 			end
 		end
 
-	load_object (parent: EV_TREE_NODE_LIST; addr: STRING; cl: CLASS_C) is
-			-- Create a tree item in `parent' representing object at address `addr'.
-		local
-			obj: EB_OBJECT_DISPLAY_PARAMETERS
-		do
-			debug ("debug_recv")
-				print ("EB_OBJECT_TOOL.load_object%N")
-			end
-			create obj.make (cl, addr)
-			obj.to_tree_item (parent)
-		end
 
 	fill_item (item: EV_TREE_ITEM) is
 			-- If a tree item was expandable, fill it with its children. (Not the onces)
 		local
-			conv_spec: SPECIAL_VALUE
+			conv_abs_spec: ABSTRACT_SPECIAL_VALUE
 			dv: ABSTRACT_DEBUG_VALUE
 			folder_item: EV_TREE_ITEM
 			new_item: EV_TREE_ITEM
@@ -655,13 +769,13 @@ feature {NONE} -- Implementation
 						folder_item.extend (debug_value_to_item (list.item))
 						list.forth
 					end
-					conv_spec ?= dv
-					if conv_spec /= Void then
-						if conv_spec.sp_lower > 0 then
+					conv_abs_spec ?= dv
+					if conv_abs_spec /= Void then
+						if conv_abs_spec.sp_lower > 0 then
 							folder_item.put_front (create {EV_TREE_ITEM}.make_with_text (
 								Interface_names.l_More_items))
 						end
-						if 0 <= conv_spec.sp_upper and then conv_spec.sp_upper < conv_spec.capacity - 1 then
+						if 0 <= conv_abs_spec.sp_upper and then conv_abs_spec.sp_upper < conv_abs_spec.capacity - 1 then
 							folder_item.extend (create {EV_TREE_ITEM}.make_with_text (
 								Interface_names.l_More_items))
 						end
@@ -670,16 +784,21 @@ feature {NONE} -- Implementation
 						folder_item.expand
 					end
 				end
-				flist := dv.dynamic_class.once_functions
-				if not flist.is_empty then
-					create folder_item.make_with_text (Interface_names.l_Once_functions)
-					folder_item.set_pixmap (Pixmaps.Icon_once_objects)
-					item.extend (folder_item)
-					create new_item.make_with_text (Interface_names.l_Dummy)
-						--| Add expand actions.
-					folder_item.extend (new_item)
-					folder_item.set_data (dv)
-					folder_item.expand_actions.extend (agent fill_onces (folder_item))
+				if dv.dynamic_class = Void then
+					--| FIXME: JFIAT : why do we have Void dynamic_class ?
+					--| ANSWER : because of external class in dotnet system
+				else
+					flist := dv.dynamic_class.once_functions
+					if not flist.is_empty then
+						create folder_item.make_with_text (Interface_names.l_Once_functions)
+						folder_item.set_pixmap (Pixmaps.Icon_once_objects)
+						item.extend (folder_item)
+						create new_item.make_with_text (Interface_names.l_Dummy)
+							--| Add expand actions.
+						folder_item.extend (new_item)
+						folder_item.set_data (dv)
+						folder_item.expand_actions.extend (agent fill_onces (folder_item))
+					end
 				end
 			end
 				-- We remove the dummy item.
@@ -694,26 +813,61 @@ feature {NONE} -- Implementation
 			item: EV_TREE_ITEM
 			flist: LIST [E_FEATURE]
 			dv: ABSTRACT_DEBUG_VALUE
+
+			item_dv: ABSTRACT_DEBUG_VALUE
+			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
+			l_feat: E_FEATURE
 		do
 			dv ?= parent.data
 			parent.expand_actions.wipe_out
 			if dv /= Void then
-				once_r := Application.debug_info.Once_request
 				flist := dv.dynamic_class.once_functions
-				from
-					flist.start
-				until
-					flist.after
-				loop
-					if once_r.already_called (flist.item) then
-						item := debug_value_to_item (once_r.once_result (flist.item))
-					else
-						create item
-						item.set_pixmap (Pixmaps.Icon_void_object)
-						item.set_text (flist.item.name + Interface_names.l_Not_yet_called)
+				if Application.is_dotnet then
+					l_dotnet_ref_value ?= dv
+					check
+						dotnet_ref_value: l_dotnet_ref_value /= Void
 					end
-					parent.extend (item)
-					flist.forth
+					
+					--| Eiffel dotnet |--
+					from
+						flist.start
+					until
+						flist.after
+					loop
+						l_feat := flist.item				
+						item_dv := l_dotnet_ref_value.once_function_value (l_feat)
+						if item_dv /= Void then
+							item := debug_value_to_item (item_dv)						
+						else
+							create item
+							item.set_pixmap (Pixmaps.Icon_void_object)
+							item.set_text (l_feat.name + Interface_names.l_Not_yet_called)
+						end						
+						parent.extend (item)
+
+						flist.forth
+					end
+				else 
+					--| Classic Eiffel |--
+					once_r := Application.debug_info.Once_request
+
+					from
+						flist.start
+					until
+						flist.after
+					loop
+						l_feat := flist.item
+						
+						if once_r.already_called (l_feat) then
+							item := debug_value_to_item (once_r.once_result (l_feat))
+						else
+							create item
+							item.set_pixmap (Pixmaps.Icon_void_object)
+							item.set_text (l_feat.name + Interface_names.l_Not_yet_called)
+						end
+						parent.extend (item)
+						flist.forth
+					end
 				end
 			end
 				-- We remove the dummy item.
@@ -772,5 +926,3 @@ feature {NONE} -- Implementation
 			-- Memorize the display parameters of the current object.
 
 end -- class EB_OBJECT_TOOL
-
-

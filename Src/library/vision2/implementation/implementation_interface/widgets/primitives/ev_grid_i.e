@@ -10,7 +10,6 @@ deferred class
 	EV_GRID_I
 
 inherit
-	
 	EV_CELL_I
 		rename
 			item as cell_item
@@ -322,11 +321,14 @@ feature -- Element change
 				enlarge_row_list (a_index)
 			end
 			row_list.put (a_row_data, a_index - 1)
-			
-			grid_rows.put (a_grid_row.implementation, a_index)
-			row_count := row_count + 1
+
+			if a_index > grid_rows.capacity then
+				grid_rows.resize (a_index)
+			end
+			grid_rows.go_i_th (a_index)
+			grid_rows.put_left (a_grid_row.implementation)
 		ensure
-			row_count_set: row_count = old row_count + 1
+			row_count_set: (a_index < old row_count implies (row_count = old row_count + 1)) or a_index = row_count
 		end
 
 	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
@@ -343,6 +345,8 @@ feature -- Element change
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
 		end
 
+	physical_column_count: INTEGER
+
 	insert_new_column (a_index: INTEGER) is
 			-- Insert a new column at index `a_index'.
 		require
@@ -354,10 +358,16 @@ feature -- Element change
 			create a_column
 			column_implementation := a_column.implementation
 			column_implementation.set_grid_i (Current)
-			column_implementation.set_index (a_index)
-			column_implementation.set_physical_index (column_count)
-			grid_columns.put (column_implementation, a_index)
-			column_count := column_count + 1
+
+			column_implementation.set_physical_index (physical_column_count)
+			physical_column_count := physical_column_count + 1
+			
+			if a_index > grid_columns.count then
+				grid_columns.resize (a_index)
+			end
+			grid_columns.go_i_th (a_index)
+			grid_columns.put_left (column_implementation)
+
 			show_column (a_index)
 			
 				-- Now add the header for the new item.
@@ -368,7 +378,7 @@ feature -- Element change
 			header.go_i_th (a_index)
 			header.put_left (column_implementation.header_item)
 		ensure
-			column_count_set: column_count = old column_count + 1
+			column_count_set: (a_index < old column_count implies (column_count = old column_count + 1)) or column_count = a_index
 			visible_column_count_set: visible_column_count = old visible_column_count + 1
 		end
 
@@ -395,7 +405,7 @@ feature -- Element change
 
 		ensure
 			moved: column (j) = old column (i) and then column (j) /= column (i)
-		end	
+		end
 
 	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Replace grid item at position (`a_column', `a_row') with `a_item'
@@ -438,7 +448,6 @@ feature -- Removal
 			if a_col_i /= Void and then a_col_i.is_visible then
 				visible_column_count := visible_column_count - 1
 			end
-			column_count := column_count - 1
 		ensure
 			column_count_updated: column_count = old column_count - 1
 			old_column_removed: (old column (a_column)).parent = Void
@@ -451,7 +460,6 @@ feature -- Removal
 			a_row_less_than_row_count: a_row <= row_count
 		do
 			to_implement ("EV_GRID_I.remove_row")
-			row_count := row_count - 1
 		ensure
 			row_count_updated: row_count = old row_count - 1
 			old_row_removed: (old row (a_row)).parent = Void
@@ -462,11 +470,21 @@ feature -- Measurements
 	visible_column_count: INTEGER
 			-- Number of visible columns in Current
 
-	column_count: INTEGER
+	column_count: INTEGER is
 			-- Number of columns in Current
+		do
+			if grid_columns /= Void then
+				Result := grid_columns.count
+			end
+		end
 
-	row_count: INTEGER
+	row_count: INTEGER is
 			-- Number of rows in Current
+		do
+			if	grid_rows /= Void then
+				Result := grid_rows.count
+			end
+		end
 
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 
@@ -476,7 +494,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 			valid_new_count: new_count > row_list.count
 		do
 			row_list := row_list.aliased_resized_area (new_count)
-			row_count := new_count
 		ensure
 			count_increased: row_list.count = new_count
 		end
@@ -514,15 +531,37 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 			loop
 				Result.put (i, i)
 			end
-		end		
+		end
 
-	grid_rows: HASH_TABLE [EV_GRID_ROW_I, INTEGER]
-		-- Hash table returning the appropriate EV_GRID_ROW from a given index
+	previous_visible_column_from_index (a_index: INTEGER): INTEGER is
+			-- Return the index of the previous visible column's index from `a_index'
+		require
+			a_index_valid: a_index > 0 and then a_index <= column_count
+		local
+			i: INTEGER
+			found: BOOLEAN
+			a_column: EV_GRID_COLUMN
+		do
+			from
+				i := a_index - 1
+			until
+				found or else i = 0
+			loop
+				a_column := column (i)
+				found := a_column.implementation.is_visible
+				i := i - 1
+			end
+			Result := i
+		ensure
+			index_valid: Result >= 0 and then Result < column_count
+		end
 
-	grid_columns: HASH_TABLE [EV_GRID_COLUMN_I, INTEGER]
-		-- Hash table returning the appropriate EV_GRID_COLUMN from a given index
-
+	grid_rows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
+		-- Arrayed list returning the appropriate EV_GRID_ROW from a given index
 		
+	grid_columns: EV_GRID_ARRAYED_LIST [EV_GRID_COLUMN_I]
+		-- Arrayed list returning the appropriate EV_GRID_COLUMN from a given index
+
 feature {EV_GRID_DRAWER_I} -- Implementation
 
 	drawable: EV_DRAWING_AREA
@@ -539,8 +578,8 @@ feature {NONE} -- Implementation
 		do
 			set_minimum_size (default_minimum_size, default_minimum_size)
 			create row_list.make (5)
-			create grid_columns.make (5)
-			create grid_rows.make (5)
+			create grid_columns.make (0)
+			create grid_rows.make (0)
 			
 			create drawer.make_with_grid (Current)
 			create drawable
@@ -621,7 +660,9 @@ feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := grid_columns @ a_column
+			if grid_columns.valid_index (a_column) then
+				a_col_i := grid_columns @ a_column
+			end
 			if a_col_i = Void then
 				insert_new_column (a_column)
 				a_col_i := grid_columns @ a_column
@@ -638,7 +679,9 @@ feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
 		local
 			a_row_i: EV_GRID_ROW_I
 		do
-			a_row_i := grid_rows @ a_row
+			if grid_rows.valid_index (a_row) then
+				a_row_i := grid_rows @ a_row
+			end
 			if a_row_i = Void then
 				insert_new_row (a_row)
 				a_row_i := grid_rows @ a_row

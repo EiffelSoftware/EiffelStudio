@@ -32,7 +32,9 @@ feature -- Access
 
 	check_b: EV_CHECK_BUTTON
 
-	radio_b: EV_RADIO_BUTTON
+	radio1_b: EV_RADIO_BUTTON
+	radio2_b: EV_RADIO_BUTTON
+	radio3_b: EV_RADIO_BUTTON
 
 
 feature -- Status setting
@@ -42,7 +44,9 @@ feature -- Status setting
 			!! but.make_with_text (main_widget, "Button")
 			!! toggle_b.make_with_text (main_widget, "Toggle Button")
 			!! check_b.make_with_text (main_widget, "Check Button")
-			!! radio_b.make_with_text (main_widget, "Radio Button")
+			!! radio1_b.make_with_text (main_widget, "Radio 1")
+			!! radio2_b.make_with_text (main_widget, "Radio 2")
+			!! radio3_b.make_with_text (main_widget, "Radio 3")
         	end
 
 	

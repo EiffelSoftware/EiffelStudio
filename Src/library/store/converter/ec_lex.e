@@ -27,6 +27,7 @@ feature -- Initialization
 			-- Make object.
 		do
 			!! ecl_message.make(5)
+			array_make (1, 0)
 		end;
 
 feature  -- Status report

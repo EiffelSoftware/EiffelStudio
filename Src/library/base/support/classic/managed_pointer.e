@@ -34,6 +34,9 @@ feature {NONE} -- Initialization
 			n_positive: n > 0
 		do
 			item := item.memory_alloc (n)
+			if item = default_pointer then
+				(create {EXCEPTIONS}).raise ("No more memory")
+			end
 			item.memory_set (0, n)
 			count := n
 		ensure
@@ -49,6 +52,9 @@ feature {NONE} -- Initialization
 		do
 			count := data.count
 			item := item.memory_alloc (count)
+			if item = default_pointer then
+				(create {EXCEPTIONS}).raise ("No more memory")
+			end
 			put_array (data, 0)
 		ensure
 			item_set: item /= default_pointer
@@ -62,6 +68,9 @@ feature {NONE} -- Initialization
 			n_positive: n > 0
 		do
 			item := item.memory_alloc (n)
+			if item = default_pointer then
+				(create {EXCEPTIONS}).raise ("No more memory")
+			end
 			item.memory_copy (a_ptr, n)
 			count := n
 		ensure
@@ -208,6 +217,9 @@ feature -- Concatenation
 		do
 			new_count := count + other.count
 			item := item.memory_realloc (new_count)
+			if item = default_pointer then
+				(create {EXCEPTIONS}).raise ("No more memory")
+			end
 			(item + count).memory_copy (other.item, other.count)
 			count := new_count
 		end
@@ -221,6 +233,9 @@ feature -- Resizing
 			if n > count then
 					-- Reallocate.
 				item := item.memory_realloc (n)
+				if item = default_pointer then
+					(create {EXCEPTIONS}).raise ("No more memory")
+				end
 				
 					-- Reset newly allocated memory to `0'.
 				(item + count).memory_set (0, n - count)

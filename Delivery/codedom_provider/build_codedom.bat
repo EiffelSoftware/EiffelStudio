@@ -10,9 +10,13 @@ REM in checkout\dotnet\codedom_provider
 CALL build_studio.bat /release
 IF NOT EXIST build_studio GOTO END
 IF NOT EXIST build_studio\EiffelSoftware.Codedom\EIFGEN\F_code\EiffelSoftware.Codedom.dll GOTO END
-IF NOT EXIST build_studio\EiffelSoftware.CacheBrowser\EIFGEN\F_code\EiffelSoftware.CacheBrowser.dll GOTO END
-IF NOT EXIST build_studio\EiffelSoftware.CodeDomBase\EIFGEN\F_code\EiffelSoftware.CodeDomBase.dll GOTO END
-IF NOT EXIST build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll GOTO END
+IF NOT EXIST build_studio\EiffelSoftware.CodeDom.CacheBrowser\EIFGEN\F_code\EiffelSoftware.CodeDom.CacheBrowser.dll GOTO END
+IF NOT EXIST build_studio\EiffelSoftware.CodeDom.Base\EIFGEN\F_code\EiffelSoftware.CodeDom.Base.dll GOTO END
+IF NOT EXIST build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code\EiffelSoftware.CodeDom.Vision2.dll GOTO END
+IF NOT EXIST build_studio\EiffelSoftware.CodeDom.Splitter\EIFGEN\F_code\EiffelSoftware.CodeDom.Splitter.dll GOTO END
+IF NOT EXIST build_studio\ecdpman\EIFGEN\F_code\ecdpman.exe GOTO END
+IF NOT EXIST build_studio\esplitter\EIFGEN\F_code\esplitter.exe GOTO END
+IF NOT EXIST build_studio\esplit\EIFGEN\F_code\esplit.exe GOTO END
 
 ECHO Copying files
 CD ..\..\..\delivery
@@ -25,13 +29,16 @@ MKDIR configs
 COPY ..\..\default.ecd configs\
 
 MKDIR bin
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CacheBrowser\EIFGEN\F_code\EiffelSoftware.CacheBrowser.dll bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.CacheBrowser\EIFGEN\F_code\EiffelSoftware.CodeDom.CacheBrowser.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom\EIFGEN\F_code\EiffelSoftware.Codedom.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomBase\EIFGEN\F_code\EiffelSoftware.CodeDomBase.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomBase\EIFGEN\F_code\libEiffelSoftware.CodeDomBase.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code\libEiffelSoftware.CodeDomVision2.dll bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Base\EIFGEN\F_code\EiffelSoftware.CodeDom.Base.dll bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Base\EIFGEN\F_code\libEiffelSoftware.CodeDom.Base.dll bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code\EiffelSoftware.CodeDom.Vision2.dll bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code\libEiffelSoftware.CodeDom.Vision2.dll bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Splitter\EIFGEN\F_code\EiffelSoftware.CodeDom.Splitter.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\ecdpman\EIFGEN\F_code\ecdpman.exe bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\esplitter\EIFGEN\F_code\esplitter.exe bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\esplit\EIFGEN\F_code\esplit.exe bin\
 
 CD bin
 REM in delivery\codedom\bin

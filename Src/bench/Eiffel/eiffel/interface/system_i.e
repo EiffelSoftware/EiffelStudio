@@ -2703,7 +2703,7 @@ end
 			l_header_buf: like header_generation_buffer
 			l_table_name: STRING
 			l_poly_file: INDENT_FILE
-			l_gen_tables: ARRAYED_LIST [INTEGER]
+			l_rout_ids: ARRAYED_LIST [INTEGER]
 		do
 				-- Generate tables and their initialization routines.
 			Attr_generator.init (generation_buffer)
@@ -2713,13 +2713,13 @@ end
 				used := Eiffel_table.used
 				used.start
 					-- Usually we do not have that many generic tables.
-				create l_gen_tables.make (100)
+				create l_rout_ids.make (100)
 			until
 				used.after
 			loop
 				table := Tmp_poly_server.item (used.item_for_iteration)
 				if table.has_type_table and then not table.has_one_type then
-					l_gen_tables.extend (used.item_for_iteration)
+					l_rout_ids.extend (used.item_for_iteration)
 				end
 				table.write
 				used.forth
@@ -2746,7 +2746,7 @@ end
 			l_buf.new_line
 			l_buf.new_line
 
-				-- Initialize first routines.
+				-- Initialize tables for routines.
 			l_buf.putstring ("void egc_routine_tables_init (void) {")
 			l_buf.new_line
 			l_buf.indent
@@ -2772,11 +2772,11 @@ end
 				-- Initialize then table used for finding out
 				-- redefinition of a generic type.
 			from
-				l_gen_tables.start
+				l_rout_ids.start
 			until
-				l_gen_tables.after
+				l_rout_ids.after
 			loop
-				l_rout_id := l_gen_tables.item
+				l_rout_id := l_rout_ids.item
 				l_table_name := Encoder.type_table_name (l_rout_id)
 					-- Declare initialization routine for table
 				l_header_buf.putstring ("extern void ")
@@ -2788,8 +2788,34 @@ end
 				l_buf.putstring (l_table_name)
 				l_buf.putstring ("_init();")
 				l_buf.new_line
-				l_gen_tables.forth
+				l_rout_ids.forth
 			end
+
+				-- Generate initialization for special tables.
+			from
+				create l_rout_ids.make (3)
+				l_rout_ids.extend (routine_id_counter.dispose_rout_id)
+				l_rout_ids.extend (routine_id_counter.initialization_rout_id)
+				l_rout_ids.extend (routine_id_counter.creation_rout_id)
+				l_rout_ids.start
+			until
+				l_rout_ids.after
+			loop
+				l_rout_id := l_rout_ids.item
+				l_table_name := Encoder.table_name (l_rout_id)
+					-- Declare initialization routine for table
+				l_header_buf.putstring ("extern void ")
+				l_header_buf.putstring (l_table_name)
+				l_header_buf.putstring ("_init(void);")
+				l_header_buf.new_line
+
+					-- Call the routine
+				l_buf.putstring (l_table_name)
+				l_buf.putstring ("_init();")
+				l_buf.new_line
+				l_rout_ids.forth
+			end
+			
 			l_buf.exdent
 			l_buf.putstring ("};")
 			l_buf.new_line
@@ -3457,20 +3483,22 @@ feature -- Dispose routine
 					-- Get the polymorphic table corresponding to the `dispose' routine
 					-- from DISPOSABLE.
 				entry ?= Eiffel_table.poly_table (disposable_dispose_id)
-
-				if entry /= Void then
-						-- We are using `header_generation_buffer' for the generation
-						-- because this is used for routine tables (look at
-						-- `generate_routine_table').
-						-- We are using `routine_id_counter.dispose_rout_id' and not
-						-- `disposable_dispose_id' to generate the table, because we are not
-						-- generating a standard polymorphic table and so, we cannot reuse the
-						-- one which could have been generated if there was any polymorphic
-						-- call on `dispose'.
-					entry.generate_full (routine_id_counter.dispose_rout_id,
-													header_generation_buffer)
-				end
 			end
+			if entry = Void then
+					-- Create an empty table needed as runtime expect this table
+					-- to exist.
+				create entry.make (routine_id_counter.dispose_rout_id)
+			end
+				-- We are using `header_generation_buffer' for the generation
+				-- because this is used for routine tables (look at
+				-- `generate_routine_table').
+				-- We are using `routine_id_counter.dispose_rout_id' and not
+				-- `disposable_dispose_id' to generate the table, because we are not
+				-- generating a standard polymorphic table and so, we cannot reuse the
+				-- one which could have been generated if there was any polymorphic
+				-- call on `dispose'.
+			entry.generate_full (routine_id_counter.dispose_rout_id,
+											header_generation_buffer)
 		end 
 
 feature -- Pattern table generation

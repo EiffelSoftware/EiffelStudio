@@ -550,6 +550,12 @@ end
 				-- Cannot be done earlier!
 			if creation_feature = Void then
 				creation_feature := default_create_feature
+				if creation_feature /= Void and then
+							creation_feature.empty_body then
+					-- Don't force a creation call if it does
+					-- nothing.
+					creation_feature := Void
+				end
 			end
 		end
 

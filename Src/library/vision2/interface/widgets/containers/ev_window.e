@@ -1,11 +1,11 @@
 indexing
-
-	description: 
-		"EiffelVision window. Window is a visible window on the screen."
+	description: "EiffelVision window. Window is a visible window%
+				% on the screen."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
+
 class 
 	EV_WINDOW
 
@@ -50,7 +50,9 @@ feature  -- Access
 			-- If the widget is an EV_WINDOW without parent,
 			-- this attribute will be `Void'
 		do
-			Result := implementation.parent
+			Result ?= implementation.parent
+		ensure then
+			parent_set: implementation.parent /= Void implies Result /= Void
 		end
 
 	icon_name: STRING is
@@ -73,7 +75,7 @@ feature  -- Access
 			Result := implementation.icon_mask
 		end
 
-        icon_pixmap: EV_PIXMAP is
+	icon_pixmap: EV_PIXMAP is
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon
 		require
@@ -84,7 +86,7 @@ feature  -- Access
 			valid_result: Result /= Void
 		end
 	
-        title: STRING is
+	title: STRING is
                         -- Application name to be displayed by
                         -- the window manager
                 require
@@ -93,7 +95,7 @@ feature  -- Access
                         Result := implementation.title
                 end
 
-        widget_group: EV_WIDGET is
+	widget_group: EV_WIDGET is
                         -- Widget with wich current widget is associated.
                         -- By convention this widget is the "leader" of a group
                         -- widgets. Window manager will treat all widgets in
@@ -108,7 +110,7 @@ feature  -- Access
 
 feature -- Element change
 	
-        set_icon_mask (mask: EV_PIXMAP) is
+	set_icon_mask (mask: EV_PIXMAP) is
                         -- Set `icon_mask' to `mask'.
                 require
                         exists: not destroyed
@@ -117,7 +119,7 @@ feature -- Element change
                         implementation.set_icon_mask (mask)
                 end
 
-        set_icon_pixmap (pixmap: EV_PIXMAP) is
+	set_icon_pixmap (pixmap: EV_PIXMAP) is
                         -- Set `icon_pixmap' to `pixmap'.
                 require
                         exists: not destroyed
@@ -127,7 +129,7 @@ feature -- Element change
                         implementation.set_icon_pixmap (pixmap)
                 end
 
-        set_title (new_title: STRING) is
+	set_title (new_title: STRING) is
                         -- Set `title' to `new_title'.
                 require
                         exists: not destroyed
@@ -136,7 +138,7 @@ feature -- Element change
                         implementation.set_title (new_title)
                 end
 
-        set_widget_group (group_widget: EV_WIDGET) is
+	set_widget_group (group_widget: EV_WIDGET) is
                         -- Set `widget_group' to `group_widget'.
                 require
                         exists: not destroyed
@@ -246,10 +248,10 @@ feature -- Resizing
 			max_height = max_height
 		end
 
-feature {EV_APPLICATION_IMP} -- Implementation
+feature -- Implementation
 
-        implementation: EV_WINDOW_I
-                        -- Implementation of window
+	implementation: EV_WINDOW_I
+			-- Implementation of window
 
 feature {EV_APPLICATION, EV_APPLICATION_IMP} -- Implementation
 	

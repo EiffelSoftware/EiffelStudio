@@ -20,7 +20,6 @@ feature
 		do
 			!!widget.make_unmanaged (entity_name, a_parent);
 			set_left_alignment (False);
-			widget.forbid_recompute_size;
 		end;
 
 	widget: TOGGLE_B;

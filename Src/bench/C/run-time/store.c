@@ -18,7 +18,7 @@
 #include "eif_traverse.h"
 #include "eif_cecil.h"
 #include <stdio.h>
-#include "eif_struct.h"
+#include "rt_struct.h"
 #include "eif_bits.h"
 #include "eif_plug.h"
 #include "eif_run_idr.h"

@@ -294,11 +294,17 @@ feature -- Generation Structure
 				eiffel_class.SetIsDeferred (ExternalType.IsAbstract);
 				eiffel_class.SetIsExpanded (ExternalType.IsValueType);
 			} else {
+#if ONE_MODULE
+				module = main_module;
+#else
 				if (nb_classes_generated % Nb_classes_per_module == 0) {
-					string module_name = "internal_module_" + (nb_classes_generated / Nb_classes_per_module) + ".dll";
-					module = assembly.DefineDynamicModule (module_name, module_name, is_debugging_enabled);
+					string module_name = "internal_module_" +
+						(nb_classes_generated / Nb_classes_per_module) + ".dll";
+					module = assembly.DefineDynamicModule (module_name, module_name,
+						is_debugging_enabled);
 				}
 				nb_classes_generated = nb_classes_generated + 1;
+#endif
 				eiffel_class.set_module (module);
 				eiffel_class.SetIsDeferred(IsDeferred);
 				eiffel_class.SetIsInterface(IsInterface);
@@ -2093,7 +2099,7 @@ feature -- Private
 	
 	// Main module being built
 	private ModuleBuilder main_module;
-
+	
 	// Current module used for code generation
 	private ModuleBuilder module = null;
 

@@ -28,7 +28,7 @@ feature -- Access
 			a_row_positive: a_row > 0
 			a_row_not_greater_than_row_count: a_row <= row_count
 		do
-			to_implement ("EV_GRID_I.row")
+			Result := row_internal (a_row)
 		ensure
 			row_not_void: Result /= Void
 		end
@@ -38,10 +38,21 @@ feature -- Access
 		require
 			a_column_positive: a_column > 0
 			a_column_not_greater_than_column_count: a_column <= column_count
+		do
+			Result := column_internal (a_column)
+		ensure
+			column_not_void: Result /= Void
+		end
+
+	visible_column (i: INTEGER): EV_GRID_COLUMN is
+			-- `i'-th visible column
+		require
+			i_positive: i > 0
+			i_column_not_greater_than_visible_column_count: i <= visible_column_count
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := grid_columns @ a_column
+			a_col_i := grid_columns @ i
 			if a_col_i /= Void then
 				Result := a_col_i.interface
 			end
@@ -57,26 +68,33 @@ feature -- Access
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
 		local
+			a_grid_row: EV_GRID_ROW
 			grid_row: SPECIAL [EV_GRID_ITEM_I]
 			a_item: EV_GRID_ITEM
-			a_grid_column: EV_GRID_COLUMN
+			a_grid_column_i: EV_GRID_COLUMN_I
 			grid_item_i: EV_GRID_ITEM_I
+			col_index: INTEGER
 		do
+			a_grid_row := row_internal (a_row)
 			grid_row :=  row_list @ (a_row - 1)
-			if grid_row = Void then
-					insert_new_row (a_row)
-					grid_row := row_list @ (a_row - 1)
-			end
 			if a_column > grid_row.count then
 				enlarge_row (a_row, a_column)
+				grid_row := row_list @ (a_row - 1)
 			end
 			
-			grid_item_i := grid_row @ (a_column - 1)
+			a_grid_column_i := grid_columns @ a_column
+			if a_grid_column_i /= Void then
+				col_index := a_grid_column_i.physical_index
+			else
+				col_index := a_column - 1
+			end
+			
+			grid_item_i := grid_row @ (col_index)
 			
 			if grid_item_i = Void  then
 				create a_item
 				grid_item_i := a_item.implementation
-				grid_row.put (grid_item_i, (a_column - 1))
+				grid_row.put (grid_item_i, (col_index))
 			end
 			Result := grid_item_i.interface
 		ensure
@@ -116,8 +134,14 @@ feature -- Status setting
 			-- Ensure column `a_column' is visible in `Current'.
 		require
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
+		local
+			a_col_i: EV_GRID_COLUMN_I
 		do
-			to_implement ("EV_GRID_I.show_column")
+			a_col_i := column (a_column).implementation
+			if not a_col_i.is_visible then
+				a_col_i.set_is_visible (True)
+				visible_column_count := visible_column_count + 1
+			end
 		ensure
 			column_displayed: column_displayed (a_column)
 		end
@@ -126,8 +150,14 @@ feature -- Status setting
 			-- Ensure column `a_column' is not visible in `Current'.
 		require
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
+		local
+			a_col_i: EV_GRID_COLUMN_I
 		do
-			to_implement ("EV_GRID_I.hide_column")
+			a_col_i := column (a_column).implementation
+			if a_col_i.is_visible then
+				a_col_i.set_is_visible (False)
+				visible_column_count := visible_column_count - 1
+			end	
 		ensure
 			column_not_displayed: not column_displayed (a_column)
 		end
@@ -230,8 +260,11 @@ feature -- Status report
 			-- Is column `a_column' displayed in `Current'?
 		require
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
+		local
+			a_col_i: EV_GRID_COLUMN_I
 		do
-			to_implement ("EV_GRID_I.column_displayed")
+			a_col_i := column (a_column).implementation
+			Result := a_col_i.is_visible
 		end
 		
 	single_row_selection_enabled: BOOLEAN is
@@ -325,6 +358,7 @@ feature -- Element change
 			column_implementation.set_physical_index (column_count)
 			grid_columns.put (column_implementation, a_index)
 			column_count := column_count + 1
+			show_column (a_index)
 			
 				-- Now add the header for the new item.
 				fixme ("[
@@ -335,6 +369,7 @@ feature -- Element change
 			header.put_left (column_implementation.header_item)
 		ensure
 			column_count_set: column_count = old column_count + 1
+			visible_column_count_set: visible_column_count = old visible_column_count + 1
 		end
 
 	move_row (i, j: INTEGER) is
@@ -371,22 +406,18 @@ feature -- Element change
 		local
 			a_grid_col_i: EV_GRID_COLUMN_I
 			a_grid_row_i: EV_GRID_ROW_I
+			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 		do
 			a_item.implementation.set_parent_grid_i (Current)
-			a_grid_col_i :=  grid_columns @ a_column
-			if a_grid_col_i = Void then
-				insert_new_column (a_column)
-				a_grid_col_i := grid_columns @ a_column
-			end
-			a_grid_row_i := grid_rows @ a_row
-			if a_grid_row_i = Void then
-				insert_new_row (a_row)
-				a_grid_row_i := grid_rows @ a_row
-			end
-			if a_grid_row_i.count < a_column then
+			
+				-- Create the corresponding row and column if not already present
+			a_grid_col_i :=  column_internal (a_column).implementation
+			a_grid_row_i := row_internal (a_row).implementation
+
+			a_row_data := row_list.item (a_row - 1)
+			if a_row_data.count < a_column then
 				enlarge_row (a_row, a_column)
 			end
-			
 			row_list.item (a_row - 1).put (a_item.implementation, a_grid_col_i.physical_index)
 			
 		ensure
@@ -400,8 +431,13 @@ feature -- Removal
 		require
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
+		local
+			a_col_i: EV_GRID_COLUMN_I
 		do
-			to_implement ("EV_GRID_I.remove_column")
+			a_col_i := grid_columns @ a_column
+			if a_col_i /= Void and then a_col_i.is_visible then
+				visible_column_count := visible_column_count - 1
+			end
 			column_count := column_count - 1
 		ensure
 			column_count_updated: column_count = old column_count - 1
@@ -423,22 +459,14 @@ feature -- Removal
 
 feature -- Measurements
 
+	visible_column_count: INTEGER
+			-- Number of visible columns in Current
+
 	column_count: INTEGER
 			-- Number of columns in Current
 
 	row_count: INTEGER
 			-- Number of rows in Current
-
-feature {EV_GRID_COLUMN_I, EV_GRID_I} -- Implementation
-
-	index_of_column (a_column: EV_GRID_COLUMN): INTEGER is
-			-- index of column `a_column'.
-		require
-			a_column /= Void
-			a_column_parent_grid_is_current: grid_columns.has_item (a_column.implementation)
-		do
-			Result := grid_columns.key_for_iteration
-		end
 
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 
@@ -457,7 +485,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 			-- Enlarge the row at index `a_index' to `new_count'.
 		require
 			row_exists: row_list @ (a_index - 1) /= Void
-			row_can_expand: (row_list @ a_index).count < new_count
+			row_can_expand: (row_list @ (a_index - 1)).count < new_count
 		local
 			a_row: SPECIAL [EV_GRID_ITEM_I]
 		do
@@ -474,7 +502,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 		-- The actual ordering is queried from `logical_to_physical_mapping'
 
 	visible_physical_column_indexes: SPECIAL [INTEGER] is
-			-- Phy
+			-- Zero-based indexes of the p
 		local
 			i: INTEGER
 		do
@@ -486,19 +514,14 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 			loop
 				Result.put (i, i)
 			end
-		end
-	
+		end		
+
 	grid_rows: HASH_TABLE [EV_GRID_ROW_I, INTEGER]
 		-- Hash table returning the appropriate EV_GRID_ROW from a given index
 
 	grid_columns: HASH_TABLE [EV_GRID_COLUMN_I, INTEGER]
 		-- Hash table returning the appropriate EV_GRID_COLUMN from a given index
 
-	visible_column_list: SPECIAL [INTEGER]
-		-- List of the visible column indexes in the grid from left to right.
-
-	visible_column_count: INTEGER
-		-- Number of visible columns present in the grid.
 		
 feature {EV_GRID_DRAWER_I} -- Implementation
 
@@ -590,6 +613,40 @@ feature {NONE} -- Implementation
 		-- Default minimum size dimensions for `Current'.
 
 feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
+
+	column_internal (a_column: INTEGER): EV_GRID_COLUMN is
+			-- Column number `a_column', returns a new column if it doesn't exist
+		require
+			a_column_positive: a_column > 0
+		local
+			a_col_i: EV_GRID_COLUMN_I
+		do
+			a_col_i := grid_columns @ a_column
+			if a_col_i = Void then
+				insert_new_column (a_column)
+				a_col_i := grid_columns @ a_column
+			end
+			Result := a_col_i.interface
+		ensure
+			column_not_void: Result /= Void
+		end
+
+	row_internal (a_row: INTEGER): EV_GRID_ROW is
+			-- Row `a_row',  creates a new one if it doesn't exist
+		require
+			a_row_positive: a_row > 0
+		local
+			a_row_i: EV_GRID_ROW_I
+		do
+			a_row_i := grid_rows @ a_row
+			if a_row_i = Void then
+				insert_new_row (a_row)
+				a_row_i := grid_rows @ a_row
+			end
+			Result := a_row_i.interface
+		ensure
+			row_not_void: Result /= Void
+		end
 
 	interface: EV_GRID
 			-- Provides a common user interface to possibly dependent

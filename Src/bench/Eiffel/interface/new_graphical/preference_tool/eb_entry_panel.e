@@ -163,7 +163,7 @@ feature -- Output
 			res: EB_RESOURCE_DISPLAY
 		do
 --			holder.set_selected (True)
-			if not shown then
+			if not displayed then
 				from
 					resources.start
 				until
@@ -179,7 +179,7 @@ feature -- Output
 				show
 			end
 		ensure
-			has_parent: parent /= void
+			has_parent: parent /= Void
 			visible: shown
 		end
 
@@ -188,10 +188,10 @@ feature -- Output
 			--| This only updates the pixmap on the button
 		do
 --			holder.set_selected (False)
-			set_parent (void)
 			hide
+			set_parent (Void)
 		ensure
-			orphan: parent = void
+			orphan: parent = Void
 			invisible: not shown
 		end
 

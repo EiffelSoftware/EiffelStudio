@@ -12,7 +12,7 @@ inherit
 	SHARED_APPLICATION_EXECUTION;
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		rename
 			init_from_tool as make
 		redefine
@@ -249,7 +249,7 @@ feature {NONE} -- Attributes
 			-- Has the text of some tool been edited and not saved?
 		do
 			Result := window_manager.class_win_mgr.changed or
-				system_tool.text_window.changed
+				system_tool.changed
 		end;
 
 	finalization_error: BOOLEAN is

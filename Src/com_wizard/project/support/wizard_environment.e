@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	raw_file_name: STRING is
-			-- Intermediate file for IDL generator
+			-- Intermediate file for IDL generator.
 		once
 			Result := clone (destination_folder)
 			Result.append ("idl\e2idl.output")
@@ -44,16 +44,19 @@ feature -- Access
 		end
 
 	eiffel_class_name: STRING
-			-- Eiffel class name to generate IDL
+			-- Eiffel class name to generate IDL.
+
+	class_cluster_name: STRING
+			-- Cluster to which Eiffel class belongs.
 
 	eiffel_project_name: STRING
-			-- Eiffel project name
+			-- Eiffel project name.
 
 	ace_file_name: STRING
-			-- Eiffel Ace file
+			-- Eiffel Ace file.
 
 	cluster_names: STRING
-			-- Eiffel clusters
+			-- Eiffel clusters.
 
 	in_process_server: BOOLEAN
 			-- Should in process server code be generated?
@@ -62,16 +65,16 @@ feature -- Access
 			-- Should out of process server code be generated?
 
 	idl_file_name: STRING
-			-- Path to definition file
+			-- Path to definition file.
 	
 	type_library_file_name: STRING
-			-- Path to type library
+			-- Path to type library.
 
 	destination_folder: STRING
-			-- Path to destination folder
+			-- Path to destination folder.
 	
 	project_name: STRING
-			-- Project name
+			-- Project name.
 
 	new_eiffel_project: BOOLEAN
 			-- Is new EiffelCOM project from Eiffel class?
@@ -80,7 +83,7 @@ feature -- Access
 			-- Is definition file an IDL file?
 
 	proxy_stub_file_name: STRING
-			-- Path to Proxy/Stub dll
+			-- Path to Proxy/Stub dll.
 			
 	use_universal_marshaller: BOOLEAN
 			-- Should component use universal marshaller?
@@ -98,10 +101,10 @@ feature -- Access
 			-- Should code generation be aborted?
 
 	return_code: INTEGER
-			-- Last return code
+			-- Last return code.
 
 	output_level: INTEGER
-			-- Output level
+			-- Output level.
 
 	compile_eiffel: BOOLEAN
 			-- Should generated eiffel code be compiled?
@@ -111,6 +114,9 @@ feature -- Access
 
 	stop_on_error: BOOLEAN
 			-- Should wizard stop on compilation error?
+
+	new_project: BOOLEAN
+			-- Is new project selected?
 
 feature -- Element Change
 
@@ -173,6 +179,17 @@ feature -- Element Change
 			eiffel_class_name.to_upper
 		ensure
 			name_set: eiffel_class_name /= Void and then not eiffel_class_name.empty
+		end
+
+	set_class_cluster_name (c_name: like class_cluster_name) is
+			-- Set 'class_cluster_name' to 'c_name'.
+		require
+			non_void_name: c_name /= Void
+			valid_name: not c_name.empty
+		do
+			class_cluster_name := clone (c_name)
+		ensure
+			name_set: class_cluster_name /= Void and then not class_cluster_name.empty
 		end
 
 	set_eiffel_project_name (p_name: like eiffel_project_name) is
@@ -336,6 +353,14 @@ feature -- Element Change
 			stop_on_error := a_boolean
 		ensure
 			stop_on_error_set: stop_on_error = a_boolean
+		end
+
+	set_new_project (a_boolean: like new_project) is
+			-- Set `new_project' to `a_boolean'.
+		do
+			new_project := a_boolean
+		ensure
+			new_project_set: new_project = a_boolean
 		end
 
 invariant

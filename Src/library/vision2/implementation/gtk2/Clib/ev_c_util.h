@@ -12,7 +12,7 @@
 #include <gtk/gtk.h>
 
 EIF_REAL double_array_i_th (double* double_array, int index);
-GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index);
+GValue* gtk_args_array_i_th (GValue** value_array, int index);
 
 void enable_ev_gtk_log (int a_mode);
 
@@ -62,6 +62,9 @@ char **wait_cursor_xpm (void);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.2  2003/04/15 01:32:31  king
+// Now new marshal proxy is correctly executed, updated arg function to gtk2
+//
 // Revision 1.1  2003/04/03 01:40:50  king
 // Initial gtk 2 conversion
 //

@@ -19,21 +19,20 @@ void (*ev_gtk_callback_marshal)
 
 void c_ev_gtk_callback_marshal_init (
     EIF_OBJECT callback_marshal_object,
-    void (*callback_marshal)
-	    (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)
+    void (*callback_marshal) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)
 )
         // Store the address of the Eiffel callback marshal in a global.
 {
-            ev_gtk_callback_marshal_object = eif_adopt(callback_marshal_object);
-            ev_gtk_callback_marshal = callback_marshal;
+        ev_gtk_callback_marshal_object = eif_adopt(callback_marshal_object);
+        ev_gtk_callback_marshal = callback_marshal;
 }
 
 void c_ev_gtk_callback_marshal_destroy (Void)
 		// Disconnect marshal from the eiffel system.
 {
-	eif_wean (ev_gtk_callback_marshal_object);
-	ev_gtk_callback_marshal_object = NULL;
-	ev_gtk_callback_marshal = NULL;
+        eif_wean (ev_gtk_callback_marshal_object);
+        ev_gtk_callback_marshal_object = NULL;
+        ev_gtk_callback_marshal = NULL;
 }
 
 void c_ev_gtk_callback_marshal (
@@ -52,15 +51,37 @@ void c_ev_gtk_callback_marshal (
 			}
 }
 
-// FIXME temporary wrapper for GTK_VALUE_POINTER should really be elsewhere
-void* gtk_value_pointer (void* p)
+void c_ev_gtk_new_callback_marshal (
+    GClosure *closure, GValue *return_value, guint n_param_values, const GValue *param_values, gpointer invocation_hint, gpointer marshal_data
+)
+        // Called by GTK when an `object' emits a signal,
+        // Call an `agent' with `n_args' `args'.
 {
-	return (GTK_VALUE_POINTER(*(GtkArg*)p));
+	if (ev_gtk_callback_marshal != NULL)
+	{
+		ev_gtk_callback_marshal (
+			eif_access (ev_gtk_callback_marshal_object),
+			eif_access ((EIF_OBJECT) closure->data),
+			(EIF_INTEGER) n_param_values,
+			(EIF_POINTER) param_values
+        );
+}
 }
 
-int gtk_value_int (void* p)
+// FIXME temporary wrapper for GTK_VALUE_POINTER should really be elsewhere
+void* gtk_value_pointer (EIF_POINTER p)
 {
-	return (GTK_VALUE_INT(*(GtkArg*)p));
+	return (g_value_get_pointer ((GValue*)p));
+}
+
+int gtk_value_int (EIF_POINTER p)
+{
+	return (g_value_get_int ((GValue*)p));
+}
+
+void dummy_callback (void)
+{
+	// Do nothing
 }
 
 guint c_ev_gtk_callback_marshal_signal_connect (
@@ -68,11 +89,11 @@ guint c_ev_gtk_callback_marshal_signal_connect (
     const gchar* signal,
     EIF_OBJECT agent
 )
-		// Connect an `agent' to a named `signal' emmited by a GTK `c_object'.
+		// Connect an `agent' to a named `signal' emitted by a GTK `c_object'.
 		// Return connection id.
 {
-            guint connection_id;
-            connection_id = gtk_signal_connect_full (
+	guint connection_id;
+  /*          connection_id = gtk_signal_connect_full (
                 c_object,                  // Object which emits the signal.
                 signal,                    // Name of the signal.
                 NULL,                      // Function pointer to attach.
@@ -83,7 +104,11 @@ guint c_ev_gtk_callback_marshal_signal_connect (
                 eif_wean,                  // To call on hook disconnect.
                 FALSE,                     // This is an object signal.
                 FALSE                      // Invoke handler after the signal.
-            );
+            );*/
+	GClosure *closure;
+	closure = g_cclosure_new (dummy_callback, eif_adopt (agent), (GClosureNotify)eif_wean);
+	g_closure_set_marshal (closure, c_ev_gtk_new_callback_marshal);
+	connection_id = g_signal_connect_closure (c_object, signal, closure, FALSE);
 	return connection_id;
 }
 
@@ -92,21 +117,21 @@ guint c_ev_gtk_callback_marshal_signal_connect_true (
     const gchar* signal,
     EIF_OBJECT agent
 )
-		// Connect an `agent' to a named `signal' emmited by a GTK `c_object'.
+		// Connect an `agent' to a named `signal' emitted by a GTK `c_object'.
 		// Callback always returns true.
 {
 			guint connection_id;
-            connection_id = gtk_signal_connect_full (
-                c_object,                  // Object which emits the signal.
-                signal,                    // Name of the signal.
-                (GtkSignalFunc) c_ev_gtk_callback_marshal_true_event_callback,  // Function pointer to attach.
-                NULL, // Function marshal.
-                eif_adopt (agent),         // User data for function.
-                (GtkDestroyNotify)
-                eif_wean,                  // To call on hook disconnect.
-                FALSE,                     // This is an object signal.
-                FALSE                      // Invoke handler after the signal.
-            );
+      connection_id = gtk_signal_connect_full (
+          c_object,                  // Object which emits the signal.
+          signal,                    // Name of the signal.
+          (GtkSignalFunc) c_ev_gtk_callback_marshal_true_event_callback,  // Function pointer to attach.
+          NULL, // Function marshal.
+          eif_adopt (agent),         // User data for function.
+          (GtkDestroyNotify)
+          eif_wean,                  // To call on hook disconnect.
+          FALSE,                     // This is an object signal.
+          FALSE                      // Invoke handler after the signal.
+      );
 	return connection_id;
 }
 
@@ -115,13 +140,13 @@ int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT agent)
 		// GtkFunction that passes `agent' to ev_gtk_callback_marshal
 		// and returns TRUE
 {
-            ev_gtk_callback_marshal (
-                eif_access (ev_gtk_callback_marshal_object),
-                eif_access (agent),
-                0,
-                (EIF_POINTER) NULL 
-            );
-            return TRUE;
+      ev_gtk_callback_marshal (
+          eif_access (ev_gtk_callback_marshal_object),
+          eif_access (agent),
+          0,
+          (EIF_POINTER) NULL
+      );
+      return TRUE;
 }
 
 int c_ev_gtk_callback_marshal_true_event_callback (
@@ -129,27 +154,27 @@ int c_ev_gtk_callback_marshal_true_event_callback (
 )
 		//
 {
-            ev_gtk_callback_marshal (
-                eif_access (ev_gtk_callback_marshal_object),
-                eif_access (agent),
-                0,
-                (EIF_POINTER) NULL 
-            );
-            return TRUE;
+      ev_gtk_callback_marshal (
+          eif_access (ev_gtk_callback_marshal_object),
+          eif_access (agent),
+          0,
+          (EIF_POINTER) NULL
+      );
+      return TRUE;
 }
 
 int c_ev_gtk_callback_marshal_delayed_agent_callback (EIF_OBJECT agent)
 		// GtkFunction that passes `agent' to ev_gtk_callback_marshal
 		// and returns FALSE to prevent subsequent calls.
 {
-            ev_gtk_callback_marshal (
-                eif_access (ev_gtk_callback_marshal_object),
-                eif_access (agent),
-                0,
-                (EIF_POINTER) NULL 
-            );
-            eif_wean (agent);
-            return FALSE;
+      ev_gtk_callback_marshal (
+          eif_access (ev_gtk_callback_marshal_object),
+          eif_access (agent),
+          0,
+          (EIF_POINTER) NULL
+      );
+      eif_wean (agent);
+      return FALSE;
 }
 
 void c_ev_gtk_callback_marshal_delayed_agent_call (
@@ -159,12 +184,12 @@ void c_ev_gtk_callback_marshal_delayed_agent_call (
 		// Uses c_ev_gtk_callback_marshal_false_callback so that `agent' is
 		// only called once.
 {
-            gint connection_id;
-            connection_id = gtk_timeout_add (
+      gint connection_id;
+      connection_id = gtk_timeout_add (
 				delay,
 				(GtkFunction)
-                c_ev_gtk_callback_marshal_delayed_agent_callback,
-                eif_adopt (agent)
+        c_ev_gtk_callback_marshal_delayed_agent_callback,
+        eif_adopt (agent)
 			);
 }
 
@@ -173,15 +198,14 @@ guint c_ev_gtk_callback_marshal_timeout_connect (
 )
         // Call an `agent' every `delay' milliseconds.
 {
-            guint connection_id;
-            connection_id = gtk_timeout_add_full (
+      guint connection_id;
+      connection_id = gtk_timeout_add_full (
 				delay,
 				(GtkFunction)
-                c_ev_gtk_callback_marshal_true_callback,
-				NULL,                       // No special marshal needed.
-                eif_adopt (agent),          // User data for function.
-                (GtkDestroyNotify)
-                eif_wean                    // To call on hook disconnect.
+        c_ev_gtk_callback_marshal_true_callback,
+        NULL,                       // No special marshal needed.
+        eif_adopt (agent),          // User data for function.
+        (GtkDestroyNotify) eif_wean // To call on hook disconnect.
 			);
 		return (connection_id);
 }
@@ -189,15 +213,15 @@ guint c_ev_gtk_callback_marshal_timeout_connect (
 guint c_ev_gtk_callback_marshal_idle_connect (EIF_OBJECT agent)
         // Call an `agent' when idle.
 {
-            guint connection_id;
-            connection_id = gtk_idle_add_full (
-				GTK_PRIORITY_DEFAULT,      // Priority.
-				(GtkFunction)               // Function pointer to attach.
-				c_ev_gtk_callback_marshal_true_callback,
-				NULL,                      // Function marshal.
-				eif_adopt (agent),         // User data for function.
-				(GtkDestroyNotify)
-				eif_wean                   // To call on hook disconnect.
+      guint connection_id;
+      connection_id = gtk_idle_add_full (
+  				GTK_PRIORITY_DEFAULT,      // Priority.
+  				(GtkFunction)               // Function pointer to attach.
+  				c_ev_gtk_callback_marshal_true_callback,
+  				NULL,                      // Function marshal.
+  				eif_adopt (agent),         // User data for function.
+  				(GtkDestroyNotify)
+  				eif_wean                   // To call on hook disconnect.
 			);
 		return (connection_id);
 }
@@ -214,11 +238,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 			(GtkSignalFunc)
 			c_ev_gtk_callback_marshal_true_event_callback,
 				// Function pointer to attach.
-			(GtkCallbackMarshal)
-			gtk_marshal_BOOL__POINTER, // Function marshal.
+			(GtkCallbackMarshal) gtk_marshal_BOOL__POINTER, // Function marshal.
 			eif_adopt (agent),         // User data for function.
-			(GtkDestroyNotify)
-			eif_wean,                  // To call on hook disconnect.
+			(GtkDestroyNotify) eif_wean,                  // To call on hook disconnect.
 			FALSE,                     // This is an object signal.
 			FALSE                      // Invoke handler after the signal.
 		);

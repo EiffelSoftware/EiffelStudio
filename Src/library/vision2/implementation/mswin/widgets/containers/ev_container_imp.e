@@ -253,7 +253,7 @@ feature {NONE} -- WEL Implementation
 			end
 			if w.background_color_imp /= Void or 
 				w.foreground_color_imp /= Void
-			then
+			then	
 					-- Not the default color, we need to do something here
 					-- to apply `background_color' to `control'.
 				paint_dc.set_text_color (control.foreground_color)
@@ -645,11 +645,9 @@ feature -- Status setting
 		do
 			peer ?= a_container.implementation
 			if peer = Void then
-				-- It's a widget that inherits from EV_CONTAINER,
-				-- but has implementation renamed.
-				-- If this is the case, on `a_container' this feature
-				-- had to be redefined.
-				a_container.merge_radio_button_groups (interface)
+				check
+					False
+				end
 			else
 				l := peer.radio_group
 				if l /= radio_group then
@@ -675,11 +673,9 @@ feature -- Status setting
 		do
 			peer ?= a_container.implementation
 			if peer = Void then
-				-- It's a widget that inherits from EV_CONTAINER,
-				-- but has implementation renamed.
-				-- If this is the case, on `a_container' this feature
-				-- had to be redefined.
-				a_container.unmerge_radio_button_groups (interface)
+				check
+					False
+				end
 			else
 				l := radio_group
 				from
@@ -724,7 +720,9 @@ feature -- Status setting
 					-- We now select a radio button in the new group,
 					-- that does not already have one selected.
 				if original_selected_button.parent_imp = peer then
-					select_first_radio_button
+					if has_selected_radio_button then
+						select_first_radio_button
+					end
 				elseif peer.has_radio_button then
 					peer.select_first_radio_button
 				end

@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include "eif_setup.h"
 #include "eif_eiffel.h"
-#ifdef EIF_WIN32
-#include "eif_econsole.h"
-#endif
 
 int main (int argc,char **argv,char **envp) {
 

@@ -1,0 +1,16 @@
+indexing
+	description:
+		"EiffelVision2: Multiplatform graphical library of reusable components for Eiffel"
+
+	copyright:
+		"Copyright (C) 1986-2002 Interactive Software Engineering, Inc. (ISE)"
+
+	information:
+		"[
+		Interactive Software Engineering Inc.
+		356 Storke Road, Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Electronic mail <info@eiffel.com>
+		Customer support e-mail <support@eiffel.com>
+		For latest info see award-winning pages: http://eiffel.com
+		]"

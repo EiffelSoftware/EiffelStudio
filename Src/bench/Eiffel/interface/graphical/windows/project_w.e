@@ -93,9 +93,9 @@ feature -- Initialization
 			feature_part.init_text_window
 			object_part.init_text_window
 
-			global_verti_split_window.update
-			hori_split_window.update
-			top_verti_split_window.update
+			global_verti_split_window.update_split
+			hori_split_window.update_split
+			top_verti_split_window.update_split
 		end
 
 feature -- Resource Update

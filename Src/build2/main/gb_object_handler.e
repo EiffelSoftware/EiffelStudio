@@ -340,7 +340,7 @@ feature -- Basic operation
 				layout_constructor.add_root_item (layout_item)	
 			end
 			window_object.set_layout_item (layout_item)
-			window_object.build_drop_actions_for_layout_item
+			window_object.build_drop_actions_for_layout_item (window_object.layout_item)
 			create display_win
 			titled_window ?= display_win
 			titled_window.set_size (Default_window_dimension, Default_window_dimension)
@@ -364,7 +364,7 @@ feature -- Basic operation
 				layout_constructor.add_root_item (layout_item)	
 			end
 			an_object.set_layout_item (layout_item)
-			an_object.build_drop_actions_for_layout_item
+			an_object.build_drop_actions_for_layout_item (an_object.layout_item)
 			create display_win
 			titled_window ?= display_win
 			titled_window.set_size (Default_window_dimension, Default_window_dimension)

@@ -22,7 +22,6 @@
 extern "C" {
 #endif
 
-extern fnptr **eif_address_table;		/* Table of $ operator encapsulation functions */
 extern EIF_FN_REF wfeat(int static_type, int32 feature_id, int dyn_type); /* Feature call */
 extern EIF_FN_REF wpfeat(int32 origin, int32 offset, int dyn_type);	/* Precompiled feature call */
 extern EIF_FN_REF wfeat_inv(int static_type, int32 feature_id, char *name, char *object); /* Nested feature call */
@@ -86,7 +85,7 @@ extern char desc_fill;					/* Is it an actual insertion or do we
 	}	
 
 #define MPatId(x) mpatidtab[x]
-#define FPatId(x) fpatidtab[x]
+#define FPatId(x) egc_fpatidtab[x]
 #define DLEMPatId(x) dle_mpatidtab[x]
 #define DLEFPatId(x) dle_fpatidtab[x]
 

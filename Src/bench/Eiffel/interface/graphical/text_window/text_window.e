@@ -270,9 +270,7 @@ feature {NONE}
 						change_focus;
 						cursor_x  := text_window_x_pos (c_widget, focus_start, real_x, real_y);
 						cursor_y := text_window_y_pos (c_widget, focus_start, real_x, real_y);
-			io.putstring ("TEXT_WINDOW: call tool.transport%N");
-						tool.transport (focus, current, cursor_x, cursor_y);
-			io.putstring ("TEXT WINDOW: tool.transport OK%N");
+						tool.transport (focus, current, cursor_x, cursor_y)
 					end
 				elseif argument = new_tooler then
 					if clickable_count /= 0 then

@@ -44,12 +44,16 @@ feature -- Access
 
 	item: EV_WIDGET is
 			-- Item at current position.
+		require
+			readable: readable
 		do
 			if index = 1 then
 				Result := first_cell.item
 			elseif index = 2 then
 				Result := second_cell.item
 			end
+		ensure
+			not_void: Result /= Void
 		end
 
 	first: EV_WIDGET is
@@ -350,11 +354,8 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.17  2000/03/03 02:43:12  brendel
---| Now inherits from FIXED. This implied implementing: `count' and
---| `capacity'. The features `empty' and `full' are provided.
---| Added feature `index'.
---| Renamed `item' from container, since it has a unsatisfiable precondition.
+--| Revision 1.18  2000/03/03 02:52:39  brendel
+--| Since `item' is no longer inherited, pre- and postconditions are added.
 --|
 --| Revision 1.16  2000/03/03 00:33:16  oconnor
 --| fixed first and second

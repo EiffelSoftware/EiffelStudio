@@ -33,7 +33,6 @@ feature -- Convertibility
 			l_class, l_other: CLASS_C
 			l_feat: FEATURE_I
 			l_creation_expr: CREATION_EXPR_B
-			l_nested_expr: NESTED_B
 			l_create_type: CREATE_TYPE
 			l_access: CALL_ACCESS_B
 			l_params: BYTE_LIST [PARAMETER_B]

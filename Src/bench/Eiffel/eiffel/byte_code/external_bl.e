@@ -105,7 +105,7 @@ feature
 			class_type ?= type_i;
 			is_polymorphic_access := not type_i.is_basic and then
 					class_type /= Void and then
-					Eiffel_table.is_polymorphic (rout_id, class_type.type_id, True) >= 0;
+					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) >= 0;
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current;
 			end;
@@ -152,12 +152,12 @@ feature
 			type_c := real_type (type).c_type;
 			buf := buffer
 
-			array_index := Eiffel_table.is_polymorphic (rout_id, typ.type_id, True)
+			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
 			if array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
-				table_name := rout_id.table_name;
+				table_name := routine_id.table_name;
 
 				if is_boolean then
 					buf.putstring ("EIF_TEST((");
@@ -181,7 +181,7 @@ feature
 				buf.putchar (']');
 				buf.putchar (')');
 					-- Mark routine table used.
-				Eiffel_table.mark_used (rout_id);
+				Eiffel_table.mark_used (routine_id);
 					-- Remember external routine table declaration
 				Extern_declarations.add_routine_table (table_name);
 			else
@@ -242,7 +242,7 @@ feature
 				-- Now generate the parameters of the call, if needed.
 			buf := buffer
 			if final_mode then
-				not_polymorphic := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, True) < 0
+				not_polymorphic := Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) < 0
 
 				if is_macro_extension then
 					if parameters /= Void then
@@ -374,6 +374,7 @@ feature
 			extension := e.extension;
 			feature_id := e.feature_id;
 			feature_name := e.feature_name;
+			routine_id := e.routine_id
 			if parameters /= Void then
 				from parameters.start;
 				until parameters.after

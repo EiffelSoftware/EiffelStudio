@@ -11,7 +11,8 @@ class
 inherit
 	WEL_STRUCTURE
 		rename
-			make as structure_make
+			make as structure_make,
+			class_name as exception_class_name
 		end
 
 	WEL_WS_CONSTANTS

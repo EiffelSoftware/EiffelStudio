@@ -22,8 +22,6 @@ cluster
 			"table_eiffel3"; "desc"; 
 		end
 
-	all gel:		"$EIFFEL_SRC/library/gel"
-
 	all vision2:		"$EIFFEL_SRC/library/vision2"
 		exclude
 			"mswin"; 

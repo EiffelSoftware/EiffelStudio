@@ -552,7 +552,7 @@ uint32 s_flags;
 				 */
 			if (!eequal(t_ref, s_ref))
 				return FALSE;
-			break
+			break;
 		default:
 			if (*(char **)t_ref != *(char **)s_ref)
 				/* Check equality of references */

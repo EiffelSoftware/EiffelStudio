@@ -19,7 +19,7 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			interface,
-			set_caret_position,
+			internal_set_caret_position,
 			insert_text,
 			visual_widget
 		end
@@ -101,23 +101,49 @@ feature -- Access
 
 feature -- Status report
 
+--	line_count: INTEGER is
+--			-- Number of lines present in widget.
+--		local
+--			temp_caret_pos, txt_length: INTEGER
+--		do
+--			temp_caret_pos := caret_position
+--			txt_length := text_length
+--			C.gtk_widget_hide (entry_widget)
+--			set_caret_position (text_length + 1)
+--			Result := current_line_number
+--			set_caret_position (temp_caret_pos)
+--			C.gtk_widget_show (entry_widget)
+--		end
+
 	line_count: INTEGER is
 			-- Number of lines present in widget.
 		local
-			temp_caret_pos, txt_length: INTEGER
+			temp_text: STRING
 		do
-			temp_caret_pos := caret_position
-			txt_length := text_length
-			set_caret_position (text_length + 1)
-			Result := current_line_number
-			set_caret_position (temp_caret_pos)
+			temp_text := text
+			if temp_text /= Void then
+				Result := temp_text.occurrences ('%N') + 1
+			end
 		end
+
+--	current_line_number: INTEGER is
+--			-- Returns the number of the line the cursor currently
+--			-- is on.
+--		do
+--			Result := (C.gtk_text_struct_cursor_pos_y (entry_widget) + C.gtk_text_struct_first_onscreen_ver_pixel (entry_widget)) // line_height
+--		end
 
 	current_line_number: INTEGER is
 			-- Returns the number of the line the cursor currently
 			-- is on.
+		local
+			p: POINTER
+			temp_string: STRING
 		do
-			Result := (C.gtk_text_struct_cursor_pos_y (entry_widget) + C.gtk_text_struct_first_onscreen_ver_pixel (entry_widget)) // line_height
+			p := C.gtk_editable_get_chars (entry_widget, 0, C.gtk_text_get_point (entry_widget))
+			create temp_string.make_from_c (p)
+			C.g_free (p)
+			Result := temp_string.occurrences ('%N') + 1
 		end
 
 	caret_position: INTEGER is
@@ -182,7 +208,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_caret_position (pos: INTEGER) is
+	internal_set_caret_position (pos: INTEGER) is
 			-- Set the position of the caret to `pos'.
 		do
 			C.gtk_text_set_point (entry_widget, pos - 1)
@@ -266,7 +292,7 @@ feature -- Basic operation
 
 	scroll_to_line (i: INTEGER) is
 		do
-			C.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
+		--	C.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
 		end
 
 feature -- Assertions

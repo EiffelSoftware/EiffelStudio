@@ -1064,6 +1064,7 @@ feature -- Basic operations
 			-- Start the Windows Help program with `help_file'.
 			-- `a_command' specifies the type of help requested. See
 			-- class WEL_HELP_CONSTANTS for `a_command' values.
+			-- 'data' is depandant on 'a_command'.  Check MSDN for more details.
 		require
 			exists: exists
 			help_file_not_void: help_file /= Void

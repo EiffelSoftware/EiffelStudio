@@ -1,5 +1,5 @@
 indexing
-	description: "Help constants."
+	description: "Help constants.  See MSDN for more details discussion."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,6 +10,7 @@ class
 feature -- Access
 
 	Help_context: INTEGER is
+			-- Display topic identified by specified context identifier defined in [MAP] section of .hpj file
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -86,6 +87,13 @@ feature -- Access
 			"HELP_COMMAND"
 		end
 
+	Help_contextmenu: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"HELP_CONTEXTMENU"
+		end
+
 	Help_partialkey: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
@@ -105,6 +113,34 @@ feature -- Access
 			"C [macro %"wel.h%"]"
 		alias
 			"HELP_SETWINPOS"
+		end
+
+	Help_finder: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"HELP_FINDER"
+		end
+
+	Help_setpopup_pos: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"HELP_SETPOPUP_POS"
+		end
+
+	Help_tcard: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"HELP_TCARD"
+		end
+
+	Help_wm_help: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"HELP_WM_HELP"
 		end
 
 end -- class WEL_HELP_CONSTANTS

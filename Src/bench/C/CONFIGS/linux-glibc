@@ -25,6 +25,7 @@ suffix='.a'
 wkeiflib='wkbench'
 
 
+lngpad_2='8'
 d_bsd='undef'
 d_eunice='undef'
 d_xenix='undef'

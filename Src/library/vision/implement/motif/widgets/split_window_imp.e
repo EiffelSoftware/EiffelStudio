@@ -232,7 +232,6 @@ feature -- Implementation
 	add_child (a_child: SPLIT_WINDOW_CHILD) is
 			-- Add `a_window' as currently lowest child.
 		do
-print ("Add_child")
 			if first_child = Void then
 				set_first_child (a_child)
 			else
@@ -243,7 +242,6 @@ print ("Add_child")
 	remove_child (a_child: SPLIT_WINDOW_CHILD) is
 			-- Remove `a_child' from the display.
 		do
-print ("Remove child")
 			if first_child = Void then
 				remove_first_child
 			else

@@ -129,7 +129,7 @@ feature -- Basic operation
 		do
 --			Result := get ("$EIFFEL4")
 			Result := "d:\Eiffel43"
-			Result.append ("\examples\vision2\test_all_widgets\bitmap\")
+			Result.append ("\examples\vision2\test_all_widgets\pixmaps\")
 			Result.append (a_name)
 			Result.append (".bmp")
 		end

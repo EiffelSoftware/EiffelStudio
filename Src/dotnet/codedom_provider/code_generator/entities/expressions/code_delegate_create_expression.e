@@ -38,12 +38,15 @@ feature -- Access
 	target: CODE_EXPRESSION
 			-- Target object
 			
-	method: CODE_MEMBER_REFERENCE
+	method: STRING
 			-- method name
 	
 	code: STRING is
 			-- | Result := "create {`delegate_type'}.constructor_name (`target_object.expression', $`method_name')"
 			-- Eiffel code of delegate create expression
+		local
+			l_member: CODE_MEMBER_REFERENCE
+			l_type: CODE_TYPE_REFERENCE
 		do
 			create Result.make (160)
 			
@@ -56,7 +59,13 @@ feature -- Access
 			Result.append ("}.make (")
 			Result.append (target.code)
 			Result.append (", $")
-			Result.append (method.eiffel_name)
+			l_type := target.type
+			l_member := l_type.member_from_name (method)
+			if l_member /= Void then
+				Result.append (l_member.eiffel_name)
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [method, l_type.name])
+			end
 			Result.append_character (')')
 		end
 		

@@ -204,8 +204,7 @@ feature {NONE} -- Implementation
 					system_descriptor.after
 				loop
 					if 
-						not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) or
-						system_descriptor.is_iunknown
+						not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
 					then
 						a_range := a_range + system_descriptor.library_descriptor_for_iteration.descriptors.count
 					end
@@ -220,8 +219,7 @@ feature {NONE} -- Implementation
 					system_descriptor.after
 				loop
 					if 
-						not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) or
-						system_descriptor.is_iunknown
+						not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
 					then
 						from
 							i := 1

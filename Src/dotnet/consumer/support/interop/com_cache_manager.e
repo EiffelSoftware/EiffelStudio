@@ -66,6 +66,22 @@ feature -- Basic Exportations
 			eac_path_set: eac_path = a_path
 			current_initialized: is_initialized
 		end
+		
+	unload is
+			-- unloads initialized app domain and cache releated objects to preserve resources
+		local
+			l_impl: MARSHAL_CACHE_MANAGER
+		do
+			l_impl ?= new_marshalled_cache_manager.unwrap
+			l_impl.prepare_for_unload
+			if app_domain /= Void then
+				internal_marshalled_cache_manager := Void
+				if not app_domain.is_finalizing_for_unload then
+					feature {APP_DOMAIN}.unload (app_domain)
+				end
+				app_domain := Void
+			end
+		end
 
 	consume_assembly (a_name, a_version, a_culture, a_key: SYSTEM_STRING) is
 			-- consume an assembly using it's display name parts.
@@ -77,7 +93,7 @@ feature -- Basic Exportations
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
 		do				
-			l_impl := new_marshalled_cache_manager
+			l_impl ?= new_marshalled_cache_manager.unwrap
 			l_impl.consume_assembly (a_name, a_version, a_culture, a_key)
 
 			update_current (l_impl)
@@ -110,7 +126,7 @@ feature -- Basic Exportations
 				i := i + 1
 			end
 		
-			l_impl := new_marshalled_cache_manager
+			l_impl ?= new_marshalled_cache_manager.unwrap
 			
 				-- consume assemblies
 			from
@@ -136,7 +152,7 @@ feature -- Basic Exportations
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
 		do			
-			l_impl := new_marshalled_cache_manager
+			l_impl ?= new_marshalled_cache_manager.unwrap
 			Result := l_impl.relative_folder_name (a_name, a_version, a_culture, a_key)
 
 			update_current (l_impl)
@@ -155,7 +171,7 @@ feature -- Basic Exportations
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
 		do			
-			l_impl := new_marshalled_cache_manager
+			l_impl ?= new_marshalled_cache_manager.unwrap
 			Result := l_impl.relative_folder_name_from_path (a_path)
 
 			update_current (l_impl)
@@ -173,7 +189,7 @@ feature -- Basic Exportations
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
 		do		
-			l_impl := new_marshalled_cache_manager
+			l_impl ?= new_marshalled_cache_manager.unwrap
 			Result := l_impl.assembly_info_from_assembly (a_path)
 
 			update_current (l_impl)
@@ -194,40 +210,45 @@ feature {NONE} -- Implementation
 			last_error_message := a_impl.last_error_message
 		end	
 	
-	new_marshalled_cache_manager: MARSHAL_CACHE_MANAGER is
+	new_marshalled_cache_manager: OBJECT_HANDLE is
 			-- New instance of `MARSHAL_CACHE_MANAGER' created in `a_app_domain'.
 		indexing
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		local
-			l_app_domain: APP_DOMAIN
 			l_inst_obj_handle: OBJECT_HANDLE
 			l_lifetime_lease: ILEASE
 			l_time_span: TIME_SPAN
+			l_marshal: MARSHAL_CACHE_MANAGER
 		do
 			if internal_marshalled_cache_manager = Void then
-				l_app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + feature {GUID}.new_guid.to_string, Void, Void)
-				l_inst_obj_handle ?= l_app_domain.create_instance_from (
+				check
+					app_domain_not_exists: app_domain = Void
+				end
+				app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + feature {GUID}.new_guid.to_string, Void, Void)
+				l_inst_obj_handle ?= app_domain.create_instance_from (
 					to_dotnet.get_type.assembly.location,
 					"EiffelSoftware.MetadataConsumer.MARSHAL_CACHE_MANAGER")
 				check
 					created_new_cache_manager: l_inst_obj_handle /= Void
 				end
-				l_lifetime_lease ?= l_inst_obj_handle.get_lifetime_service
+				l_lifetime_lease ?= l_inst_obj_handle.initialize_lifetime_service
 				check
 					l_lifetime_lease_not_void: l_lifetime_lease /= Void
 				end
 				l_time_span := l_lifetime_lease.renew (feature {TIME_SPAN}.from_days (356))
-				Result ?= l_inst_obj_handle.unwrap
+				
+				Result := l_inst_obj_handle
+				l_marshal ?= Result.unwrap
 				check
-					result_unwrapped: Result /= Void
+					unwrapped: l_marshal /= Void
 				end
 	
 				if eac_path = Void then
-					Result.initialize (clr_version)
+					l_marshal.initialize (clr_version)
 				else
-					Result.initialize_with_path (eac_path, clr_version)
+					l_marshal.initialize_with_path (eac_path, clr_version)
 				end
-				if Result.is_initialized then
+				if l_marshal.is_initialized then
 					internal_marshalled_cache_manager := Result
 				end
 			else
@@ -249,7 +270,16 @@ feature {NONE} -- Implementation
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		end
 
-	internal_marshalled_cache_manager: MARSHAL_CACHE_MANAGER
+	internal_marshalled_cache_manager: OBJECT_HANDLE
 			-- internal marshalled cache manager
+		indexing
+			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+		end
 
+	app_domain: APP_DOMAIN
+			-- app domain consumption is run in
+		indexing
+			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+		end
+		
 end -- class MARSHAL_CACHE_MANAGER

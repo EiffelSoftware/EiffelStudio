@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			first_window.extend (vertical_box)
 			create viewport
 			create pixmap
-			pixmap.set_with_named_file ("eiffel_wizard.bmp")
+			pixmap.set_with_named_file ("..\..\bm_About.png")
 			vertical_box.extend (viewport)
 			create button
 			button.set_pixmap (pixmap)

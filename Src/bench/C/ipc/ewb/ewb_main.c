@@ -74,4 +74,3 @@ rt_public void dexit(int status)
 #endif
 	exit(status);
 }
-

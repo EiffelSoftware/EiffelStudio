@@ -30,7 +30,7 @@ feature -- Status report
 			-- Shift to put bit in least significant place then take mod 2
 			if not is_destroyed then
 				Result := (
-					(feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object)
+					(feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (event_widget)
 					// feature {EV_GTK_EXTERNALS}.gTK_SENSITIVE_ENUM) \\ 2
 				) = 1				
 			end
@@ -41,16 +41,27 @@ feature -- Status setting
 	enable_sensitive is
 			-- Allow the object to be sensitive to user input.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (event_widget, True)
+--			if needs_event_box then
+--				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, True)
+--			end
 		end
 
 	disable_sensitive is
 			-- Set the object to ignore all user input.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (event_widget, False)
+--			if needs_event_box then
+--				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
+--			end
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	event_widget: POINTER is
+			-- 
+		deferred
+		end
 
 	interface: EV_SENSITIVE
 

@@ -41,9 +41,20 @@ feature -- Element change
 			end
 			timeouts.force (timeout, id)
 			timeout.set_id (id)
+		end
 
-			-- Then, we create the timer for the system.
-			set_timer (id, timeout.period)
+	change_interval (a_timer_id, an_interval: INTEGER) is
+			-- Set timer with `an_id' to `an_interval'.
+		require
+			a_timer_id_exists:
+				a_timer_id > 0 and then a_timer_id <= timeouts.count
+			an_interval_positive: an_interval > 0
+		do
+			if an_interval = 0 then
+				kill_timer (a_timer_id)
+			else
+				set_timer (a_timer_id, an_interval)
+			end
 		end
 
 feature -- Removal
@@ -64,7 +75,7 @@ feature {NONE} -- Implementation
 	on_timer (id: INTEGER) is
 			-- Wm_timer message.
 		do
-			(timeouts @ id).execute
+			(timeouts @ id).on_timeout
 		end
 
 end -- class EV_INTERNAL_TIMEOUT_IMP
@@ -90,6 +101,9 @@ end -- class EV_INTERNAL_TIMEOUT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/03/06 23:12:18  brendel
+--| Implemented.
+--|
 --| Revision 1.3  2000/02/19 05:45:00  oconnor
 --| released
 --|

@@ -1,7 +1,7 @@
 indexing
 	description: "A low-level string class to solve some garbage %
-		%collector problems (object move). The end-user must not use %
-		%this class. Use class STRING instead."
+		%collector problems (mainly objects moving around) when %
+		%interfacing with C APIs."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			v1.extend (wizard_page)	
 			build_navigation_bar (v1)
 			extend (v1)
+			Precursor {EV_TITLED_WINDOW}
 		end
 
 	build_navigation_bar (a_box: EV_BOX) is

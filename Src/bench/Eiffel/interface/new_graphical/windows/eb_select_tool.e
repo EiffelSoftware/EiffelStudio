@@ -20,7 +20,8 @@ inherit
 --			compatible, process_class, process_classi, process_feature
 --		end
 
---	WINDOW_ATTRIBUTES
+	EB_SHARED_INTERFACE_TOOLS
+
 	SHARED_EIFFEL_PROJECT
 	NEW_EB_CONSTANTS
 
@@ -59,7 +60,10 @@ feature {EB_TOOL_MANAGER} -- Initialization
 
 feature -- Access
 
-	tool_name: STRING is "Selector"
+	default_name: STRING is "Selector"
+--| FIXME
+--| Christophe, 19 oct 1999
+--| This manifest constant should go in class INTERFACE_NAMES
 
 feature -- Redefine
 
@@ -67,11 +71,6 @@ feature -- Redefine
 			-- A selector window does not have a correspondant stone.
 		do
 		end
-
---	target: EV_WIDGET is
---		do
---			Result := Current
---		end
 
 	compatible (dropped: STONE): BOOLEAN is
 		do
@@ -89,31 +88,31 @@ feature -- Hole processing
 	process_classi (a_stone: CLASSI_STONE) is
 			-- Process dropped stone `a_stone'.
 		local
---			new_tool: EB_CLASS_TOOL
+			new_tool: EB_CLASS_TOOL
 		do
---			new_tool := tool_supervisor.new_class_tool
---			new_tool.raise
---			new_tool.process_classi (a_stone)
+			new_tool := tool_supervisor.new_class_tool
+			new_tool.raise
+			new_tool.process_classi (a_stone)
 		end
  
 	process_class (a_stone: CLASSC_STONE) is
 			-- Process dropped stone `a_stone'.
 		local
---			new_tool: EB_CLASS_TOOL
+			new_tool: EB_CLASS_TOOL
 		do
---			new_tool := tool_supervisor.new_class_tool
---			new_tool.raise
---			new_tool.process_class (a_stone)
+			new_tool := tool_supervisor.new_class_tool
+			new_tool.raise
+			new_tool.process_class (a_stone)
 		end
  
 	process_feature (a_stone: FEATURE_STONE) is
 			-- Process dropped stone `a_stone'.
 		local
---			new_tool: EB_FEATURE_TOOL
+			new_tool: EB_FEATURE_TOOL
 		do
---			new_tool := tool_supervisor.new_feature_tool
---			new_tool.raise
---			new_tool.process_feature (a_stone)
+			new_tool := tool_supervisor.new_feature_tool
+			new_tool.raise
+			new_tool.process_feature (a_stone)
 		end
 
 feature -- Access

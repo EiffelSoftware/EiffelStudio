@@ -5,18 +5,17 @@ class UPDATE_PROJECT
 
 inherit
 
+	SHARED_APPLICATION_EXECUTION;
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
 	ICONED_COMMAND
 		redefine
 			text_window
 		end;
-	SHARED_DEBUG;
 	SHARED_RESCUE_STATUS;
 	SHARED_FORMAT_TABLES;
-	SHARED_RESOURCES;
+	SHARED_BENCH_RESOURCES;
 	SHARED_MELT_ONLY;
-	OBJECT_ADDR
 
 creation
 
@@ -36,18 +35,9 @@ feature {NONE}
 
 	reset_debugger is
 		do
-			if Run_info.is_running then
-				quit_cmd.exit_now;
-				debug_window.clear_window;
-				debug_window.put_string ("System terminated%N");
-				debug_window.display;
-				run_info.set_is_running (false);
-				quit_cmd.recv_dead
+			if Application.is_running then
+				Application.kill
 			end;
-			debug_info.wipe_out;
-				-- Get rid of adopted objects.
-			addr_table.clear_all;
-			window_manager.object_win_mgr.reset
 		end;
 
 	not_saved: BOOLEAN is
@@ -102,7 +92,7 @@ feature {NONE}
 			error_window.display;
 			restore_cursors
 		rescue
-			if not Rescue_status.fail_on_rescue then
+			if not resources.get_boolean (r_Fail_on_rescue, False) then
 				if original_exception = Io_exception then
 						-- We probably don't have the write permissions
 						-- on the server files.
@@ -161,7 +151,7 @@ feature {NONE}
 	confirm_and_compile (argument: ANY) is
 		do
 			if
-				not Run_info.is_running or else
+				not Application.is_running or else
 				(argument /= Void and
 				argument = last_confirmer and end_run_confirmed)
 			then

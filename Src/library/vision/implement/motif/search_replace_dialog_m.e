@@ -206,9 +206,16 @@ feature -- Element change
 			-- user selects find option.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			find_b.add_activate_callback (mel_vision_callback (a_command), argument)
-			find_tf.add_activate_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (find_b.activate_command);
+			if list = Void then
+				!! list.make;
+				find_b.set_activate_callback (list, Void);
+				find_tf.set_activate_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_cancel_action (a_command: COMMAND; argument: ANY) is
@@ -216,8 +223,15 @@ feature -- Element change
 			-- user selects cancel option.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			cancel_b.add_activate_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (cancel_b.activate_command);
+			if list = Void then
+				!! list.make;
+				cancel_b.set_activate_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_replace_action (a_command: COMMAND; argument: ANY) is
@@ -225,9 +239,16 @@ feature -- Element change
 			-- user selects replace option.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			replace_b.add_activate_callback (mel_vision_callback (a_command), argument)
-			replace_tf.add_activate_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (replace_b.activate_command);
+			if list = Void then
+				!! list.make;
+				replace_b.set_activate_callback (list, Void);
+				replace_tf.set_activate_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_replace_all_action (a_command: COMMAND; argument: ANY) is
@@ -235,38 +256,69 @@ feature -- Element change
 			-- user selects replace all option.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			replace_all_b.add_activate_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (replace_all_b.activate_command);
+			if list = Void then
+				!! list.make;
+				replace_all_b.set_activate_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
+
+feature -- Removal
 
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the cancel option.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			cancel_b.remove_activate_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (cancel_b.activate_command);
+			if list /= Void then	
+				list.remove_command (a_command, argument)
+			end;
 		end;
 
 	remove_find_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the find option.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			find_b.remove_activate_callback (mel_vision_callback (a_command), argument)
-			find_tf.remove_activate_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (find_b.activate_command);
+			if list /= Void then	
+				list.remove_command (a_command, argument)
+				list := vision_command_list (find_tf.activate_command);
+				list.remove_command (a_command, argument)
+			end;
 		end;
 
 	remove_replace_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the replace option.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			replace_b.remove_activate_callback (mel_vision_callback (a_command), argument)
-			replace_tf.remove_activate_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (replace_b.activate_command);
+			if list /= Void then	
+				list.remove_command (a_command, argument);
+				list := vision_command_list (replace_tf.activate_command);
+				list.remove_command (a_command, argument)
+			end;
 		end;
 
 	remove_replace_all_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the replace all option.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			replace_all_b.remove_activate_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (replace_all_b.activate_command);
+			if list /= Void then	
+				list.remove_command (a_command, argument)
+			end
 		end;
 
 feature {NONE} -- Implementation

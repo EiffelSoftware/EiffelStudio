@@ -32,7 +32,7 @@ feature -- Status setting
 			ac: like application_context
 		do
 			ac := application_context;
-			ac.add_time_out_callback (a_delay, Current, an_argument);
+			ac.set_time_out_callback (a_delay, Current, an_argument);
 			identifier := ac.last_id;
 			command := a_command;
 			is_regular_call_back := False
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 					-- dispatcher table after Current callback is invoked.
 					-- Now add the callback again and retrieve the identifier.
 				ac := application_context;
-				ac.add_time_out_callback (regular_time, Current, argument);
+				ac.set_time_out_callback (regular_time, Current, argument);
 				identifier := ac.last_id;
 			else
 					-- Callback set by next. Identifier is

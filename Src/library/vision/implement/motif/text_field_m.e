@@ -64,8 +64,15 @@ feature -- Element change
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to be executed
 			-- when an acitvate event occurs.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_activate_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (activate_command);
+			if list = Void then
+				!! list.make;
+				set_activate_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
  
 	insert (a_text: STRING; a_position: INTEGER) is
@@ -81,7 +88,7 @@ feature -- Removal
 			-- Remove `a_command' to the list of action to be executed
 			-- when an acitvate event occurs.
 		do
-			remove_activate_callback (mel_vision_callback (a_command), argument)
+			remove_command (activate_command, a_command, argument)
 		end;
 
 end -- class TEXT_FIELD_M

@@ -57,4 +57,26 @@ feature -- Execution
 		deferred
 		end;
 
+feature {NONE} -- Implementation
+
+	sorted_list (list: LINKED_LIST [E_CLASS]): SORTED_TWO_WAY_LIST [CLASS_I] is
+			-- Sorted `list' based on `class_name' from `CLASS_I'
+		require
+			valid_list: list /= Void
+		do
+			!! Result.make
+			from
+				list.start
+			until
+				list.after
+			loop
+				Result.put_front (list.item.lace_class);
+				list.forth
+			end;
+			Result.sort
+		ensure
+			valid_Result: Result /= Void;
+			sorted: Result.sorted
+		end;
+
 end -- class E_CLASS_CMD

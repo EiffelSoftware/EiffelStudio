@@ -10,7 +10,7 @@ deferred class
 	EV_TOOL_BAR_SEPARATOR_I
 
 inherit
-	EV_SEPARATOR_ITEM_I
+	EV_TOOL_BAR_ITEM_I
 		redefine
 			parent
 		end
@@ -47,6 +47,9 @@ end -- class EV_TOOL_BAR_SEPARATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/10 17:44:10  brendel
+--| Removed inheritance of obsolete class EV_SEPARATOR_ITEM.
+--|
 --| Revision 1.8  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

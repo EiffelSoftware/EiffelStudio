@@ -70,10 +70,6 @@ feature {NONE} -- Initialization
 				Graphical_resources.highlight_line_background_color.valid_actual_value
 			highlighted_line_fg_color :=
 				Graphical_resources.highlight_line_foreground_color.valid_actual_value
-			selected_clickable_bg_color :=
-				Graphical_resources.selected_clickable_background_color.valid_actual_value
-			selected_clickable_fg_color :=
-				Graphical_resources.selected_clickable_foreground_color.valid_actual_value
 		end
 
 feature -- Access
@@ -203,10 +199,16 @@ feature -- Color access
 	highlighted_line_fg_color: COLOR
 			-- Selected background color for highlighted line
 
-	selected_clickable_bg_color: COLOR
-			-- Selected background color for selection
+	selected_clickable_fg_color: COLOR is
+		once
+			!! Result.make;
+			Result.set_name ("white")
+		end;
 
-	selected_clickable_fg_color: COLOR
-			-- Unselected color
+	selected_clickable_bg_color: COLOR is
+		once
+			!! Result.make;
+			Result.set_name ("black")
+		end;
 
 end -- class GRAPHICAL_VALUES

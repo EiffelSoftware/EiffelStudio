@@ -15,10 +15,6 @@
 #ifndef _eif_threads_h_
 #define _eif_threads_h_
 
-#ifndef EIF_REENTRANT		/* Make sure we have reentrant run-time */
-#define EIF_REENTRANT
-#endif
-
 
 #ifdef POSIX_THREADS
 

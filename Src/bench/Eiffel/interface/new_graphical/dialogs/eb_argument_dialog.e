@@ -63,9 +63,6 @@ feature -- Initialization
 			--| create a shared argument window.
 		local
 			vb: EV_VERTICAL_BOX
-			hb: EV_HORIZONTAL_BOX
-			b: EV_BUTTON
-			f: EV_FRAME
 		do		
 			default_create
 			create saved_arguments.make (0)
@@ -87,8 +84,6 @@ feature -- Initialization
 			label: EV_LABEL
 			b: EV_BUTTON
 			cell: EV_CELL
-			
-			proc: PROCEDURE [ANY, TUPLE[]]
 		do
 			create Result.make_with_text ("Arguments")
 			create vbox
@@ -328,7 +323,6 @@ feature {NONE} -- Implementation
 			-- Store content of `arguments' into `root_ast'.
 		local
 			defaults: LACE_LIST [D_OPTION_SD]
-			argument_text, current_text: STRING
 			free_option: FREE_OPTION_SD
 			val: OPT_VAL_SD
 			d_option: D_OPTION_SD
@@ -390,7 +384,6 @@ feature {NONE} -- Implementation
 		local
 			free_option: FREE_OPTION_SD
 			val: OPT_VAL_SD
-			opt: OPTION_SD
 		do
 			a_string.replace_substring_all ("%%", "%%%%")
 			a_string.replace_substring_all ("%"", "%%%"")

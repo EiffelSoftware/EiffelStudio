@@ -1247,7 +1247,6 @@ end
 			melted_file: RAW_FILE
 			file_name: FILE_NAME
 			l_name: STRING
-			precomp_makefile: PRECOMP_MAKER
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Updating name.eif%N")

@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 	default_ex_style: INTEGER is
 			-- Default extended style for `Current'.
 		once
-			Result := Lvs_ex_infotip + Lvs_ex_checkboxes
+			Result := Precursor {EV_LIST_IMP} + Lvs_ex_checkboxes
 		end
 
 feature {EV_ANY_I} -- Implementation

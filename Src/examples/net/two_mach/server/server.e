@@ -23,22 +23,28 @@ feature
 
 	soc1, soc2: NETWORK_STREAM_SOCKET
 
-	make is
+	make (argv: ARRAY [STRING]) is
 			-- Accept communication with client and exchange messages
 		local
 			count: INTEGER
 		do
-			!!soc1.make_server_by_port (2001)
-			from
-				soc1.listen (5)
-				count := 0
-			until
-				count = 3
-			loop
-				process -- See below
-				count := count + 1
+			if argv.count /= 2 then
+                                io.error.putstring ("Usage: ")
+                                io.error.putstring (argv.item (0))
+                                io.error.putstring (" portnumber%N")
+                        else
+                                !!soc1.make_server_by_port (argv.item (1).to_integer)
+				from
+					soc1.listen (5)
+					count := 0
+				until
+					count = 3
+				loop
+					process -- See below
+					count := count + 1
+				end
+				soc1.cleanup
 			end
-			soc1.cleanup
 		rescue
 			soc1.cleanup
 		end

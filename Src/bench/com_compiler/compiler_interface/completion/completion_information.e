@@ -325,16 +325,16 @@ feature -- Basic Operations
     add_local (name: STRING; type: STRING) is
             -- Add local variable used for solving member completion list.
         do
-            if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not locals.has (name) then
-                locals.put (clone (name), type)
+            if not name.is_empty and then not type.is_empty and then not locals.has (name) then
+                locals.put (type, name)
             end
         end
 
     add_argument (name: STRING; type: STRING) is
             -- Add argument used for solving member completion list.
         do
-            if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not arguments.has (name) then
-                arguments.put (clone (name), type)
+            if not name.is_empty and then not type.is_empty and then not arguments.has (name) then
+                arguments.put (type, name)
             end
         end 
     

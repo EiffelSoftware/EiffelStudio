@@ -163,11 +163,11 @@ feature -- Basic operations
 			until
 				locals.after
 			loop
-				type := type_from_type_name (locals.key_for_iteration)
+				type := type_from_type_name (locals.item_for_iteration)
 				if type /= Void then
 					r_type := resolved_type (type, feature_table, fi)
 					if r_type /= Void then
-						Result.put (r_type, locals.item_for_iteration)
+						Result.put (r_type, locals.key_for_iteration)
 					end
 				end
 				locals.forth
@@ -177,11 +177,11 @@ feature -- Basic operations
 			until
 				arguments.after
 			loop
-				type := type_from_type_name (arguments.key_for_iteration)
+				type := type_from_type_name (arguments.item_for_iteration)
 				if type /= Void then
 					r_type := resolved_type (type, feature_table, fi)
 					if r_type /= Void then
-						Result.put (r_type, arguments.item_for_iteration)
+						Result.put (r_type, arguments.key_for_iteration)
 					end
 				end
 				arguments.forth

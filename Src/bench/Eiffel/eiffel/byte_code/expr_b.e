@@ -84,36 +84,49 @@ feature -- Il code generation
 	generate_il_eiffel_metamorphose (a_type: TYPE_I) is
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		require
-			a_type_is_basic: a_type.is_basic
+			a_type_is_basic: a_type.is_expanded
 		local
 			local_number: INTEGER
-			basic_i: BASIC_I
+			l_cl_type: CL_TYPE_I
 			feat: FEATURE_I
 			ref_class: CLASS_C
 			l_decl_type: CL_TYPE_I
+			l_is_basic: BOOLEAN
 		do
-			basic_i ?= a_type
-			
-				-- Assign value to a temporary local variable.
-			context.add_local (a_type)
-			local_number := context.local_list.count
-			il_generator.put_dummy_local_info (a_type, local_number)
-			il_generator.generate_local_assignment (local_number)
-			
-				-- Create _REF class
-			(create {CREATE_TYPE}.make (basic_i.reference_type)).generate_il
-			il_generator.duplicate_top
-			
-				-- Call `set_item' from the _REF class
-			ref_class := basic_i.reference_type.base_class
-			feat := ref_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id)
+				-- FIXME: For expanded type we don't do it correctly. We need to copy
+				-- the whole object. We only half support metamorphose of basic types
+				-- through the `set_item' routine.
 
-			l_decl_type := il_generator.implemented_type (feat.origin_class_id,
-				basic_i.reference_type)
+			l_cl_type ?= a_type
+			l_is_basic := l_cl_type.is_basic
+
+			if l_is_basic then
+					-- Assign value to a temporary local variable.
+				context.add_local (a_type)
+				local_number := context.local_list.count
+				il_generator.put_dummy_local_info (a_type, local_number)
+				il_generator.generate_local_assignment (local_number)
+			else
+				il_generator.pop
+			end
 			
-			il_generator.generate_local (local_number)
-			il_generator.generate_feature_access (l_decl_type,
-				feat.origin_feature_id, feat.argument_count, feat.has_return_value, False)
+				-- Create reference class
+			(create {CREATE_TYPE}.make (l_cl_type.reference_type)).generate_il
+
+			if l_is_basic then
+				il_generator.duplicate_top
+				
+					-- Call `set_item' from the _REF class
+				ref_class := l_cl_type.reference_type.base_class
+				feat := ref_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id)
+
+				l_decl_type := il_generator.implemented_type (feat.origin_class_id,
+					l_cl_type.reference_type)
+				
+				il_generator.generate_local (local_number)
+				il_generator.generate_feature_access (l_decl_type,
+					feat.origin_feature_id, feat.argument_count, feat.has_return_value, False)
+			end
 		end
 
 feature -- C generation

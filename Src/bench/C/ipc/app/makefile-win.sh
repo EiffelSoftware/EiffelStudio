@@ -6,7 +6,6 @@ MV = copy
 RM = del
 
 .c.obj:
-	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
 # Derived library object file names
@@ -29,6 +28,5 @@ CFLAGS = -I$(TOP) -I..\shared -I$(LIBRUN) -I$(LIBIDR)
 all: network.lib
 
 network.lib: $(OBJECTS) $(LIBDIR)\$(LIBNAME)
-	$(RM) $@
 	$link_line
 

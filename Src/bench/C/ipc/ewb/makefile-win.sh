@@ -24,11 +24,9 @@ OBJECTS = \
 	init.obj
 
 .c.obj:
-	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
 all:: ewb.lib
 
 ewb.lib: $(OBJECTS)
-	$(RM) $@
 	$link_line

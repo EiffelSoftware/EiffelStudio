@@ -9,11 +9,9 @@ RM = del
 OBJECTS = names.obj sizes.obj commands.obj
 
 .c.obj:
-	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
 all:: platform.lib
 
 platform.lib: $(OBJECTS)
-	$(RM) $@
 	$link_line

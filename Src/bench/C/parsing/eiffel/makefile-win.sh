@@ -7,7 +7,6 @@ MV = copy
 RM = del
 
 .c.obj:
-	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
 RUN_TIME = $(TOP)\run-time
@@ -25,13 +24,11 @@ WOBJECTS = eiffel_c.obj eif_err.obj encode.obj pretrieve.obj date.obj \
 all:: eiffel.lib
 
 eiffel.lib: $(OBJECTS)
-	$(RM) $@
 	$link_line
 
 all:: weiffel.lib
 
 weiffel.lib: $(WOBJECTS)
-	$(RM) $@
 	$link_wline
 
 parser.c : parser.cwn
@@ -44,7 +41,6 @@ wpstore.c : pstore.c
 	copy pstore.c wpstore.c
 
 wpstore.obj : wpstore.c
-	$(RM) $@
 	$(CC) -c -DWORKBENCH $(JCFLAGS) wpstore.c
 
 parser.h : parser.c

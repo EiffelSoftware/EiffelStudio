@@ -9,7 +9,6 @@ MV = move
 RM = del
 
 .c.obj:
-	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
 CFLAGS = -I. -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
@@ -53,13 +52,11 @@ all:: eif_size.h
 all:: finalized.lib
 
 finalized.lib: $(OBJECTS)
-	$(RM) $@
 	$link_line
 
 all:: wkbench.lib
 
 wkbench.lib: $(WOBJECTS)
-	$(RM) $@
 	$link_wline
 
 ..\console\econsole.lib: ..\console\econsole.c ..\console\argcargv.c
@@ -80,195 +77,148 @@ all:: ebench.lib
 	cd ..\..\run-time
 
 ebench.lib: $(EOBJECTS)
-	$(RM) $@
 	$link_eline
 
 all:: x2c.exe
 
 x2c.exe: x2c.c
-	$(RM) $@
 	$(CC) x2c.c
 
 all:: eif_config.h eif_portable.h
 
 eif_config.h : $(TOP)\eif_config.h
-	$(RM) $@
 	$(LN) $(TOP)\eif_config.h .
 
 eif_portable.h : $(TOP)\eif_portable.h
-	$(RM) $@
 	$(LN) $(TOP)\eif_portable.h .
 
 wmath.c : math.c
-	$(RM) wmath.c
 	$(LN) math.c wmath.c
 
 wmalloc.c : malloc.c
-	$(RM) wmalloc.c
 	$(LN) malloc.c wmalloc.c
 
 wgarcol.c : garcol.c
-	$(RM) wgarcol.c
 	$(LN) garcol.c wgarcol.c
 
 weif_threads.c : eif_threads.c
-	$(RM) weif_threads.c
 	$(LN) eif_threads.c weif_threads.c
 
 weif_cond_var.c : eif_cond_var.c
-	$(RM) weif_cond_var.c
 	$(LN) eif_cond_var.c weif_cond_var.c
 
 wlocal.c : local.c
-	$(RM) wlocal.c
 	$(LN) local.c wlocal.c
 
 wexcept.c : except.c
-	$(RM) wexcept.c
 	$(LN) except.c wexcept.c
 
 wstore.c : store.c
-	$(RM) wstore.c
 	$(LN) store.c wstore.c
 
 wrun_idr.c : run_idr.c
-	$(RM) wrun_idr.c
 	$(LN) run_idr.c wrun_idr.c
 
 wretrieve.c : retrieve.c
-	$(RM) wretriev.c
 	$(LN) retrieve.c wretrieve.c
 
 whash.c : hash.c
-	$(RM) whash.c
 	$(LN) hash.c whash.c
 
 wtravers.c : traverse.c
-	$(RM) wtravers.c
 	$(LN) traverse.c wtravers.c
 
 whashin.c : hashin.c
-	$(RM) whashin.c
 	$(LN) hashin.c whashin.c
 
 wtools.c : tools.c
-	$(RM) wtools.c
 	$(LN) tools.c wtools.c
 
 winterna.c : internal.c
-	$(RM) winterna.c
 	$(LN) internal.c winterna.c
 
 wpath_name.c : path_name.c
-	$(RM) wpath_name.c
 	$(LN) path_name.c wpath_name.c
 
 wplug.c : plug.c
-	$(RM) wplug.c
 	$(LN) plug.c wplug.c
 
 wcopy.c : copy.c
-	$(RM) wcopy.c
 	$(LN) copy.c wcopy.c
 
 wequal.c : equal.c
-	$(RM) wequal.c
 	$(LN) equal.c wequal.c
 
 wlmalloc.c : lmalloc.c
-	$(RM) wlmalloc.c
 	$(LN) lmalloc.c wlmalloc.c
 
 wout.c : out.c
-	$(RM) wout.c
 	$(LN) out.c wout.c
 
 wtimer.c : timer.c
-	$(RM) wtimer.c
 	$(LN) timer.c wtimer.c
 
 wurgent.c : urgent.c
-	$(RM) wurgent.c
 	$(LN) urgent.c wurgent.c
 
 wsig.c : sig.c
-	$(RM) wsig.c
 	$(LN) sig.c wsig.c
 
 whector.c : hector.c
-	$(RM) whector.c
 	$(LN) hector.c whector.c
 
 wcecil.c : cecil.c
-	$(RM) wcecil.c
 	$(LN) cecil.c wcecil.c
 
 wbits.c : bits.c
-	$(RM) wbits.c
 	$(LN) bits.c wbits.c
 
 wconsole.c : console.c
-	$(RM) wconsole.c
 	$(LN) console.c wconsole.c
 
 wfile.c : file.c
-	$(RM) wfile.c
 	$(LN) file.c wfile.c
 
 wdir.c : dir.c
-	$(RM) wdir.c
 	$(LN) dir.c wdir.c
 
 wstring.c : string.c
-	$(RM) wstring.c
 	$(LN) string.c wstring.c
 
 wmisc.c : misc.c
-	$(RM) wmisc.c
 	$(LN) misc.c wmisc.c
 
 wpattern.c : pattern.c
-	$(RM) wpattern.c
 	$(LN) pattern.c wpattern.c
 
 werror.c : error.c
-	$(RM) werror.c
 	$(LN) error.c werror.c
 
 wumain.c : umain.c
-	$(RM) wumain.c
 	$(LN) umain.c wumain.c
 
 wmemory.c : memory.c
-	$(RM) wmemory.c
 	$(LN) memory.c wmemory.c
 
 woption.c : option.c
-	$(RM) woption.c
 	$(LN) option.c woption.c
 
 wargv.c : argv.c
-	$(RM) wargv.c
 	$(LN) argv.c wargv.c
 
 wboolstr.c : boolstr.c
-	$(RM) wboolstr.c
 	$(LN) boolstr.c wboolstr.c
 
 wsearch.c : search.c
-	$(RM) wsearch.c
 	$(LN) search.c wsearch.c
 
 wmain.c : main.c
-	$(RM) wmain.c
 	$(LN) main.c wmain.c
 
 wobject_id.c : object_id.c
-	$(RM) wobject_id.c
 	$(LN) object_id.c wobject_id.c
 
 wdle.c : dle.c
-	$(RM) wdle.c
 	$(LN) dle.c wdle.c
 
 wmath.obj : wmath.c
@@ -416,14 +366,12 @@ final: finalized.lib
 work: wkbench.lib
 
 bmain.c : main.c
-	$(RM) bmain.c
 	$(LN) main.c bmain.c
 
 bmain.obj : bmain.c
 	$(CC)  $(JCFLAGS) -DWORKBENCH -DNOHOOK $*.c
 
 bexcept.c : except.c
-	$(RM) bexcept.c
 	$(LN) except.c bexcept.c
 
 bexcept.obj : bexcept.c

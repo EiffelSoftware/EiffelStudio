@@ -24,13 +24,11 @@ OBJECTS = \
 	uu.obj
 
 .c.obj:
-	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
 all:: ipc.lib
 
 ipc.lib: $(OBJECTS)
-	$(RM) $@
 	$link_line
 
 com.obj: eif_logfile.h

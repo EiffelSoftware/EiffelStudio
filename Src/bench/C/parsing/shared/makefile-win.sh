@@ -10,13 +10,11 @@ CFLAGS = $(DPFLAGS)
 OBJECTS = yacc.obj strsave.obj yacc_err.obj click.obj
 
 .c.obj:
-	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
 all:: parsing.lib
 
 parsing.lib: $(OBJECTS)
-	$(RM) $@
 	$link_line
 
 yacc.obj: $(TOP)\eif_config.h

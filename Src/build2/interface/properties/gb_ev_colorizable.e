@@ -23,6 +23,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	DEFAULT_OBJECT_STATE_CHECKER
+		undefine
+			default_create
+		end
 
 feature {GB_XML_STORE} -- Output
 
@@ -32,8 +37,7 @@ feature {GB_XML_STORE} -- Output
 			colorizable: EV_COLORIZABLE
 			default_background, default_foreground: EV_COLOR
 		do
-			colorizable ?= new_instance_of (dynamic_type_from_string (class_name (first)))
-			colorizable.default_create
+			colorizable ?= default_object_by_type (class_name (first))
 			default_background := colorizable.background_color
 			default_foreground := colorizable.foreground_color
 			

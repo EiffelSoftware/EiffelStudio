@@ -23,6 +23,11 @@ inherit
 			default_create
 		end
 		
+	DEFAULT_OBJECT_STATE_CHECKER
+		undefine
+			default_create
+		end
+		
 feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XML_ELEMENT) is
@@ -33,8 +38,7 @@ feature {GB_XML_STORE} -- Output
 			textable: EV_TEXT_ALIGNABLE
 			default_alignment: INTEGER
 		do
-			textable ?= new_instance_of (dynamic_type_from_string (class_name (first)))
-			textable.default_create
+			textable ?= default_object_by_type (class_name (first))
 			default_alignment := textable.text_alignment
 			alignment := first.text_alignment
 			if not alignment.is_equal (default_alignment) then

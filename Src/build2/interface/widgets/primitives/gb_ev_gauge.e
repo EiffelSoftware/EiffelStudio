@@ -23,6 +23,11 @@ inherit
 		end
 		
 	GB_EV_GAUGE_EDITOR_CONSTRUCTOR
+	
+	DEFAULT_OBJECT_STATE_CHECKER
+		undefine
+			default_create
+		end
 
 feature {GB_XML_STORE} -- Output
 
@@ -32,7 +37,7 @@ feature {GB_XML_STORE} -- Output
 		local
 			gauge: EV_GAUGE
 		do
-			gauge ?= new_instance_of (dynamic_type_from_string (class_name (first)))
+			gauge ?= default_object_by_type (class_name (first))
 			gauge.default_create
 			if gauge.value /= first.value then
 				add_element_containing_integer (element, Value_string, objects.first.value)

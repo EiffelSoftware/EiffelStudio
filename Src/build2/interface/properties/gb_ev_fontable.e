@@ -17,6 +17,11 @@ inherit
 		end
 		
 	GB_EV_FONTABLE_EDITOR_CONSTRUCTOR
+	
+	DEFAULT_OBJECT_STATE_CHECKER
+		undefine
+			default_create
+		end
 
 feature {GB_XML_STORE} -- Output
 
@@ -28,8 +33,7 @@ feature {GB_XML_STORE} -- Output
 		do
 			font := first.font
 			
-			fontable ?= new_instance_of (dynamic_type_from_string (class_name (first)))
-			fontable.default_create
+			fontable ?= default_object_by_type (class_name (first))
 			if not fontable.font.is_equal (font) then
 				add_element_containing_integer (element, family_string, font.family)
 				add_element_containing_integer (element, weight_string, font.weight)

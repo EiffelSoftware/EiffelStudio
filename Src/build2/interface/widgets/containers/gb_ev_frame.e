@@ -16,6 +16,11 @@ inherit
 		end
 		
 	GB_EV_FRAME_EDITOR_CONSTRUCTOR
+	
+	DEFAULT_OBJECT_STATE_CHECKER
+		undefine
+			default_create
+		end
 
 feature {GB_XML_STORE} -- Output
 
@@ -24,8 +29,7 @@ feature {GB_XML_STORE} -- Output
 		local
 			frame: EV_FRAME
 		do
-			frame ?= new_instance_of (dynamic_type_from_string (class_name (first)))
-			frame.default_create
+			frame ?= default_object_by_type (class_name (first))
 			if frame.style /= objects.first.style then
 				add_element_containing_integer (element, Style_string, objects.first.style)
 			end

@@ -18,6 +18,11 @@ inherit
 		end
 		
 	GB_EV_DESELECTABLE_EDITOR_CONSTRUCTOR
+	
+	DEFAULT_OBJECT_STATE_CHECKER
+		undefine
+			default_create
+		end
 		
 feature {GB_XML_STORE} -- Output
 
@@ -26,8 +31,7 @@ feature {GB_XML_STORE} -- Output
 		local
 			deselectable: EV_DESELECTABLE
 		do
-			deselectable ?= new_instance_of (dynamic_type_from_string (class_name (first)))
-			deselectable.default_create
+			deselectable ?= default_object_by_type (class_name (first))
 			if first.is_selected /= deselectable.is_selected then
 				add_element_containing_boolean (element, is_selected_string, objects.first.is_selected)
 			end

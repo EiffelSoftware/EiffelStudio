@@ -78,7 +78,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 	
 feature {NONE} -- Initialization
@@ -255,7 +255,7 @@ feature -- Action
 			finished_file: PLAIN_TEXT_FILE
 		do
 			if not retried and System.makefile_generator /= Void and then not types.is_empty then
-				!! generation_dir.make_from_string (Workbench_generation_path)
+				create generation_dir.make_from_string (Workbench_generation_path)
 				
 				from
 					l_types := types
@@ -271,7 +271,7 @@ feature -- Action
 						create object_name.make (5)
 						object_name.append_character (C_prefix)
 						object_name.append_integer (packet_nb)
-						!! c_file_name.make_from_string (generation_dir)
+						create c_file_name.make_from_string (generation_dir)
 						c_file_name.extend (object_name)
 
 						create object_name.make (12)
@@ -280,7 +280,7 @@ feature -- Action
 						object_name.append (Dot_c)
 						finished_file_name := clone (c_file_name)
 						c_file_name.set_file_name (object_name)
-						!! file.make (c_file_name)
+						create file.make (c_file_name)
 						file_exists := file.exists
 						if file_exists and then file.is_writable then
 							file.delete
@@ -289,14 +289,14 @@ feature -- Action
 								-- We delete `finished' only if there was a file to delete
 								-- If there was no file, maybe it was simply a melted class.
 							finished_file_name.set_file_name (Finished_file_for_make)
-							!! finished_file.make (finished_file_name)
+							create finished_file.make (finished_file_name)
 							if finished_file.exists and then finished_file.is_writable then
 								finished_file.delete
 							end
 						end
 	
 							-- C Code file removal
-						!! c_file_name.make_from_string (generation_dir)
+						create c_file_name.make_from_string (generation_dir)
 						create object_name.make (5)
 						object_name.append_character (C_prefix)
 						object_name.append_integer (packet_nb)
@@ -307,7 +307,7 @@ feature -- Action
 						object_name.append (base_file_name)
 						object_name.append (Dot_c)
 						c_file_name.set_file_name (object_name)
-						!! file.make (c_file_name)
+						create file.make (c_file_name)
 						file_exists := file.exists
 						if file_exists and then file.is_writable then
 							file.delete
@@ -326,7 +326,7 @@ feature -- Action
 								-- We delete `finished' only if there was a file to delete
 								-- If there was no file, maybe it was simply a melted class.
 							finished_file_name.set_file_name (Finished_file_for_make)
-							!! finished_file.make (finished_file_name)
+							create finished_file.make (finished_file_name)
 							if finished_file.exists and then finished_file.is_writable then
 								finished_file.delete
 							end
@@ -336,7 +336,7 @@ feature -- Action
 				end
 
 				if not is_precompiled then
-					!! c_file_name.make_from_string (generation_dir)
+					create c_file_name.make_from_string (generation_dir)
 					create object_name.make (5)
 					object_name.append_character (C_prefix)
 					object_name.append_integer (packet_number)
@@ -348,14 +348,14 @@ feature -- Action
 					object_name.append_character (Feature_table_file_suffix)
 					object_name.append (Dot_c)
 					c_file_name.set_file_name (object_name)
-					!! file.make (c_file_name)
+					create file.make (c_file_name)
 					file_exists := file.exists
 					if file_exists and then file.is_writable then
 						file.delete
 					end
 					if file_exists then
 						finished_file_name.set_file_name (Finished_file_for_make)
-						!! finished_file.make (finished_file_name)
+						create finished_file.make (finished_file_name)
 						if finished_file.exists and then finished_file.is_writable then
 							finished_file.delete
 						end
@@ -379,13 +379,13 @@ feature -- Action
 			vd21: VD21
 		do
 			class_file_name := file_name
-			!!file.make (class_file_name)
+			create file.make (class_file_name)
 
 				-- Check if the file to parse is readable
 			if not file.exists or else not file.is_readable then
 					-- Need to check for existance for the quick melt operation
 					-- since it doesn't remove unused classes.
-				!!vd21
+				create vd21
 				vd21.set_cluster (cluster)
 				vd21.set_file_name (class_file_name)
 				Error_handler.insert_error (vd21)
@@ -404,7 +404,7 @@ feature -- Action
 
 				-- Save the source class in a Backup directory
 			if save_copy and Workbench.automatic_backup then
-				!! f_name.make_from_string (cluster.backup_directory)
+				create f_name.make_from_string (cluster.backup_directory)
 				f_name.extend (lace_class.name)
 				f_name.add_extension ("e")
 				file.copy_file (f_name)
@@ -519,8 +519,8 @@ if System.class_of_id (class_id) /= Void then
 			Tmp_ast_server.put (ast_b)
 
 			if has_unique then
-				!! unique_counter
-				!! unique_values.make (7)
+				create unique_counter
+				create unique_values.make (7)
 
 				ast_b.assign_unique_values (unique_counter, unique_values)
 
@@ -838,7 +838,7 @@ feature -- Third pass: byte code production and type check
 				elseif Depend_server.has (class_id) then
 					dependances := Depend_server.item (class_id)
 				else
-					!!dependances.make (changed_features.count)
+					create dependances.make (changed_features.count)
 					dependances.set_class_id (class_id)
 				end
 
@@ -1194,7 +1194,7 @@ debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 end
 
 						ast_context.start_lines
-						!!invar_byte
+						create invar_byte
 						invar_byte.set_class_id (class_id)
 						invar_byte.set_byte_list (invar_clause.byte_node)
 						Tmp_inv_byte_server.put (invar_byte)
@@ -1339,7 +1339,7 @@ end
 --				end
 --				if invariant_changed then
 --					if invariant_feature = Void then
---						!!invariant_feature.make (Current)
+--						create invariant_feature.make (Current)
 --						invariant_feature.set_body_index
 --											(Body_index_counter.next_id)
 --					end
@@ -1382,12 +1382,12 @@ end
 --end
 --
 --						ast_context.start_lines
---						!!invar_byte
+--						create invar_byte
 --						invar_byte.set_class_id (class_id)
 --						invar_byte.set_byte_list (invar_clause.byte_node)
 --						Tmp_inv_byte_server.put (invar_byte)
 --
---						!!melted_info
+--						create melted_info
 --						melt_set.put (melted_info)
 --
 --					end
@@ -1983,7 +1983,7 @@ feature -- Class initialization
 					raw_type := p.item (lower).type
 						-- Check if there is no anchor in the parent type
 					if raw_type.has_like then
-						!!ve04
+						create ve04
 						ve04.set_class (Current)
 						ve04.set_parent_type (parent_type)
 						Error_handler.insert_error (ve04)
@@ -1999,7 +1999,7 @@ feature -- Class initialization
 					check p.lower = 1 end
 					lower := 1
 					upper := parents_as.count
-					!! pars.make_filled (upper)
+					create pars.make_filled (upper)
 				until
 					lower > upper
 				loop
@@ -2425,7 +2425,7 @@ feature
 					-- First, check if the formal generic name is not the
 					-- anme of a class in the surrounding universe.
 				if Universe.class_named (generic_name, cluster) /= Void then
-					!!vcfg1
+					create vcfg1
 					vcfg1.set_class (Current)
 					vcfg1.set_formal_name (generic_name)
 					Error_handler.insert_error (Vcfg1)
@@ -2442,7 +2442,7 @@ feature
 					next_dec := l_area.item (j)
 					if next_dec /= generic_dec then
 						if next_dec.formal_name.is_equal (generic_name) then
-							!!vcfg2
+							create vcfg2
 							vcfg2.set_class (Current)
 							vcfg2.set_formal_name (generic_name)
 							Error_handler.insert_error (vcfg2)
@@ -2504,7 +2504,7 @@ feature
 				generic_name := generic_dec.formal_name
 
 				if Universe.class_named (generic_name, cluster) /= Void then
-					!!vcfg1
+					create vcfg1
 					vcfg1.set_class (Current)
 					vcfg1.set_formal_name (generic_name)
 					Error_handler.insert_error (Vcfg1)
@@ -2613,7 +2613,7 @@ feature -- Parent checking
 						parent_actual_type.reset_constraint_error_list
 						parent_actual_type.check_constraints (Current)
 						if not parent_actual_type.constraint_error_list.is_empty then
-							!!vtcg4
+							create vtcg4
 							vtcg4.set_class (Current)
 							vtcg4.set_error_list (parent_actual_type.constraint_error_list)
 							vtcg4.set_parent_type (parent_actual_type)
@@ -2793,7 +2793,7 @@ feature -- Supplier checking
 				end
 			else
 					-- ERROR: Cannot find a supplier class
-				!!vtct
+				create vtct
 				vtct.set_class (Current)
 				vtct.set_class_name (cl_name)
 				Error_handler.insert_error (vtct)
@@ -2811,14 +2811,14 @@ feature -- Supplier checking
 			vsrc2: VSRC2
 		do
 			if generics /= Void then
-				!!vsrc1
+				create vsrc1
 				vsrc1.set_class (Current)
 				Error_handler.insert_error (vsrc1)
 				Error_handler.checksum
 			end
 
 			if is_deferred then
-				!!vsrc2
+				create vsrc2
 				vsrc2.set_class (Current)
 				Error_handler.insert_error (vsrc2)
 				Error_handler.checksum
@@ -2860,7 +2860,7 @@ feature -- Supplier checking
 					end
 
 					if error then
-						!!vsrc3
+						create vsrc3
 						vsrc3.set_class (Current)
 						vsrc3.set_creation_feature (creation_proc)
 						Error_handler.insert_error (vsrc3)
@@ -2879,7 +2879,7 @@ feature -- Supplier checking
 				creation_proc := default_create_feature
 				if (creation_proc = Void) or else
 					not system_creation.is_equal (creation_proc.feature_name) then
-					!!vd27
+					create vd27
 					vd27.set_creation_routine (system_creation)
 					vd27.set_root_class (Current)
 					Error_handler.insert_error (vd27)
@@ -2891,7 +2891,7 @@ feature -- Supplier checking
 						-- Set creation_name in System
 					System.set_creation_name (default_create_feature.feature_name)
 				else
-					!!vd27
+					create vd27
 					vd27.set_creation_routine ("")
 					vd27.set_root_class (Current)
 					Error_handler.insert_error (vd27)
@@ -3229,7 +3229,7 @@ feature -- Actual class type
 				until
 					i > count
 				loop
-					!! formal
+					create formal
 					formal.set_position (i)
 					actual_generic.put (formal, i)
 					i := i + 1
@@ -3725,11 +3725,11 @@ feature -- Initialization
 				-- Creation of the descendant list
 			create descendants.make (10)
 				-- Creation of the supplier list
-			!! suppliers.make
+			create suppliers.make
 				-- Creation of the client list
 			create clients.make (10)
 				-- Types list creation
-			!! types.make (1)
+			create types.make (1)
 		end
 
 feature -- Properties
@@ -4125,7 +4125,7 @@ feature -- Access
 			cid: INTEGER
 		do
 			cid := class_id
-			!! Result.make
+			create Result.make
 			f_table := feature_table
 			from
 				f_table.start
@@ -4219,7 +4219,7 @@ feature -- Server Access
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			!! f.make (file_name)
+			create f.make (file_name)
 			Result := f.is_readable	
 		end
 
@@ -4312,7 +4312,7 @@ feature -- Output
 			old_cluster: CLUSTER_I
 			gens: like generics
 		do
-			!!Result.make (50)
+			create Result.make (50)
 			Result.append (name)
 			Result.to_upper
 			gens := generics

@@ -134,6 +134,11 @@ feature -- Initialization
 					has_height := false
 				end
 				private_scroll_width := wel_width
+
+				if private_font /= Void then
+					set_font (private_font)
+				end
+
 				if not managed then
 					wel_hide
 				elseif parent.shown then

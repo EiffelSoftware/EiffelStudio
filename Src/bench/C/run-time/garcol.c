@@ -918,7 +918,14 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 
 	g_data.mem_used = m_data.ml_used + m_data.ml_over;	/* Total mem used */
 	gstat->mem_used = g_data.mem_used;
-	gstat->mem_collect = mem_used - g_data.mem_used;	/* Memory collected */
+		/* Sometimes during a collection we can have increased our memory
+		 * pool because for example we moved objects outside the scavenge zone
+		 * and therefore more objects have been allocated in memory. */
+	if (mem_used - g_data.mem_used > 0) {
+		gstat->mem_collect = mem_used - g_data.mem_used;	/* Memory collected */
+	} else {
+		gstat->mem_collect = 0;
+	}
 	gstat->mem_collect +=		/* Memory freed by scavenging (with overhead) */
 		g_data.mem_copied - g_data.mem_move;
 	gstat->mem_avg = ((gstat->mem_avg * (nbstat - 1)) +

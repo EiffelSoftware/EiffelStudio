@@ -146,7 +146,12 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 		do
 			if App_implementation.is_in_transport and then a_key_press and then a_key /= Void and then a_key.code = feature {EV_KEY_CONSTANTS}.Key_escape then
 					-- If a PND is in action and the Esc key is pressed then cancel it
-				a_capture_widget_imp ?= App_implementation.captured_widget.implementation
+				if App_implementation.captured_widget /= Void then
+						-- We are definitely in PND so we set a_capture_widget_imp for start_transport to be executed on it
+					a_capture_widget_imp ?= App_implementation.captured_widget.implementation
+				end
+			end	
+			if a_capture_widget_imp /= Void then
 				a_capture_widget_imp.end_transport (0, 0, 0, 0, 0 ,0 ,0 ,0)
 			else
 				if a_key_press then
@@ -400,6 +405,7 @@ feature -- Status setting
 		do
 			if not has_capture then
 				disable_debugger
+				set_focus
 				App_implementation.set_captured_widget (interface)
 				feature {EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
 				i := feature {EV_GTK_EXTERNALS}.gdk_pointer_grab (

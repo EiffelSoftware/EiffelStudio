@@ -1187,6 +1187,8 @@ end
 								dependances.remove (old_invariant_body_index)
 							end
 						end
+							-- We need to duplicate `f_suppliers' now, otherwise
+							-- we will be wiped out in `ast_context.clear2'.
 						f_suppliers := clone (ast_context.supplier_ids)
 						if invariant_feature /= Void then
 							f_suppliers.set_feature_name_id (invariant_feature.feature_name_id)

@@ -148,8 +148,19 @@ feature -- Basic operation
 			end
 		end
 		
-	replace_object_type (an_object: GB_OBJECT; a_type: STRING) is--selector_item: GB_TYPE_SELECTOR_ITEM) is
+	replace_object_type (an_object: GB_OBJECT; a_type: STRING) is
 			-- Replace `an_object' with a new object of type `selector_item'.
+		require
+			an_object_not_void: an_object /= Void
+			an_object_object_not_void: an_object.object /= Void
+			an_object_display_item_not_void: an_object.display_object /= Void
+			an_object_layout_item_not_void: an_object.layout_item /= Void
+		do
+			replace_object (an_object, build_object_from_string (a_type))
+		end
+		
+	replace_object (an_object, new_object: GB_OBJECT) is
+			-- Replace `an_object' with `new_object'.
 			-- We must transfer the children of the object, the display_object children
 			-- and the layout_item children.
 		require
@@ -160,7 +171,7 @@ feature -- Basic operation
 			
 		local
 			layout_parent_item, old_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-			new_object, parent_object: GB_OBJECT
+			parent_object: GB_OBJECT
 			original_position: INTEGER
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
@@ -184,7 +195,7 @@ feature -- Basic operation
 				-- Remove `an_object' from its parent.
 			an_object.unparent_during_type_change
 
-			new_object ?= build_object_from_string (a_type)
+			--new_object ?= build_object_from_string (a_type)
 			
 			new_object.set_layout_item (old_layout_item)
 			new_object.layout_item.set_text (new_object.short_type)
@@ -216,7 +227,7 @@ feature -- Basic operation
 				end
 				local_all_editors.forth
 			end
-		end
+		end	
 		
 	object_contained_in_object (parent_object, child_object: GB_OBJECT): BOOLEAN is
 			-- Is `child_object' a child (recursively) of `parent_object'?

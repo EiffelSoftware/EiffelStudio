@@ -6,7 +6,7 @@ class EIFFEL_ENV
 inherit
 
 	SYSTEM_CONSTANTS;
-	SHARED_EXEC_ENVIRONMENT;
+	ENV_INTERP;
 	SHARED_RESOURCES
 	
 feature {NONE}
@@ -75,6 +75,9 @@ feature {NONE}
 			Result := resources.get_string (r_Filter_path, file_name);
 			if Result.empty then
 				Result := file_name
+			else
+					-- Interpretation of the environment variables
+				Result := interpret (Result)
 			end
 		end;
 
@@ -87,6 +90,9 @@ feature {NONE}
 			Result := resources.get_string (r_Tmp_directory, file_name);
 			if Result.empty then
 				Result := file_name
+			else
+					-- Interpretation of the environment variables
+				Result := interpret (Result)
 			end
 		end;
 

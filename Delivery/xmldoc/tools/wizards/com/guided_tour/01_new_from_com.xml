@@ -20,10 +20,10 @@
 		</help>
 	</meta_data>
 	<paragraph>The first tutorial describes creating a COM component from a COM definition file that is either an IDL file or a Type Library. The tutorial focuses on creating an in-process (DLL) component, called 
-		<italic>StringManipulator</italic>. The component exposes one interface 
-		<italic>IString</italic> that includes the functions 
-		<italic>ReplaceSubstring</italic>and 
-		<italic>PruneAll</italic> corresponding respectively to the features 
+		<bold>StringManipulator</bold>. The component exposes one interface 
+		<bold>IString</bold> that includes the functions 
+		<feature_name>ReplaceSubstring</feature_name> and 
+		<feature_name>PruneAll</feature_name> corresponding respectively to the features 
 		<code>
 			<link>
 				<url>../../../../libraries/base/reference/kernel/classic/string_chart.xml</url><anchor_name>f_replace_substring</anchor_name>
@@ -35,7 +35,7 @@
 				<url>../../../../libraries/base/reference/kernel/classic/string_chart.xml</url><anchor_name>f_prune_all</anchor_name>
 				<label>prune_all</label>
 			</link>
-		</code> of the EiffelBase 
+		</code> of the class 
 		<code>
 			<link>
 				<url>../../../../libraries/base/reference/kernel/classic/string_chart.xml</url>
@@ -43,82 +43,72 @@
 					<class_name>STRING</class_name>
 				</label>
 			</link>
-		</code> and the property 
-		<italic>String</italic> that represents the manipulated string. The property can be set or read. Other languages will be able to access these features.
+		</code> from the EiffelBase library. <bold>IString</bold> also exposes the property 
+		<feature_name>String</feature_name> which represents the manipulated string. The property can be set or read.
 		<heading>
 			<size>2</size> Step by step instructions
 		</heading>
 		<list ordered="true">
 			<item>
-				<link/> Launch the EiffelCOM Wizard (from the Start menu, open Programs then EiffelXX and click EiffelCOM Wizard)
+				Launch the EiffelCOM Wizard (from the <italic>Start</italic> menu, open <italic>All Programs</italic> then <italic>EiffelStudioXX</italic> followed by <italic>Tools</italic> and click <italic>EiffelCOM Wizard</italic>).
 			</item>
 			<item>
-				<link/>Choose 
-				<italic>Create anew project from a COM definition</italic>.
+				In <bold>Project</bold>, in the <bold>Current project</bold> input field, type in <italic>string_manipulator</italic>
+				 and press <italic>enter</italic>.
+			</item>
+			<item>
+				In <bold>Project Type</bold>, choose 
+				<italic>Create a new COM component</italic>.
+			</item>
+			<item>
+				In <bold>Component Information</bold>, click the browse button (the button with <bold>...</bold>) and open the file 
+				<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\string_manipulator.idl</italic> where 
+				<italic>$ISE_EIFFEL</italic> represents the path to the EiffelStudio installation directory.
 			</item>
 			<item>
 				<link/>Click 
-				<italic>Next</italic>
+				<bold>Next</bold>.
 			</item>
 			<item>
-				<link/>Choose 
-				<italic>Server code for a new component</italic>
+				In <bold>Component Type</bold>, choose  
+				<italic>In-process (*.dll)</italic>.
 			</item>
 			<item>
-				<link/>Click 
-				<italic>Next</italic>
-			</item>
-			<item>
-				<link/>Click the top 
-				<italic>Browse</italic> button and open the file 
-				<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\string_manipulator.idl</italic>where 
-				<italic>$ISE_EIFFEL</italic> represents the path to your EIFFEL installation directory.
-			</item>
-			<item>
-				<link/>Click the bottom 
-				<italic>Browse</italic> button and select the directory where you want to create the project (later referenced as destination folder). Choose 
+				In <bold>Generation Options</bold>, click the browse button and select the directory where the project should be created (later referenced as <italic>destination folder</italic>). Choose 
 				<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated</italic> where 
-				<italic>$ISE_EIFFEL</italic> represents the path to your EIFFEL50 directory. If you work on a Windows9x machine, please choose a directory with a shorter path, for example c:\string_manipulator because Windows9x are unable to handle long path names.
+				<italic>$ISE_EIFFEL</italic> represents the path to the EiffelStudio directory.
 			</item>
 			<item>
-				<link/>Click 
-				<italic>Next</italic>
+				Select <italic>Compile C code</italic> and <italic>Compile Eiffel code</italic>.
 			</item>
 			<item>
-				<link/>Choose 
-				<italic>Automation</italic>
+				Select <italic>Clean destination folder prior to generation</italic>.
 			</item>
 			<item>
-				<link/>Click 
-				<italic>Next</italic>
+				Click <bold>Generate</bold>.
 			</item>
 			<item>
-				<link/>Click 
-				<italic>Finish</italic>
-			</item>
-			<item>
-				<link/>Wait until the wizard is done.
+				Wait until the wizard is done.
 			</item>
 		</list>
 		<heading>
 			<size>2</size> First look at the generated code
 		</heading>
 		<paragraph>
-			<link/>At the end of the processing the wizard automatically launches EiffelStudio with the generated project to help you navigate created Eiffel classes. You might want to look at the file 
-			<italic>generated.txt</italic> in the destination folder, which contains a list of files generated by the wizard. The file 
-			<italic>string_manipulator.log</italic> holds summary of the processing and error and warning messages.
+			<link/>At the end of the processing the <bold>EiffelStudio</bold> button will become enabled. Click on it. This will automatically start EiffelStudio with the generated project to help navigate through the created Eiffel classes. You might want to look at the file 
+			<italic>generated.txt</italic> in the destination folder, which contains a list of files generated by the wizard. You can also save the processing output by clicking the <bold>Save</bold> button.
 		</paragraph>
 		<paragraph>The deferred class 
-			<class_name>STRING_MANIPULATOR_COCLASS</class_name> represents component functionality. It inherits from 
-			<class_name>ISTRING_INTERFACE</class_name> that corresponds to the 
-			<italic>IString</italic> interface. It has one descendant 
-			<class_name>STRING_MANIPULATOR_COCLASS_IMP</class_name> that implements the deferred features. The default implementation is empty.
+			<class_name>STRING_MANIPULATOR_COCLASS</class_name> represents the component and exposes all its functionality. It inherits from 
+			<class_name>ISTRING_INTERFACE</class_name> which corresponds to the 
+			<bold>IString</bold> interface and has one heir 
+			<class_name>STRING_MANIPULATOR_COCLASS_IMP</class_name> which implements all the deferred features. The default implementation in the heir is empty.
 		</paragraph>
 		<heading>
 			<size>2</size> Implementing the component
 		</heading>
-		<link/> To do something more interesting than merely return an error to a client edit the implementation of the 
-		<class_name>STRING_MANIPULATOR_COCLASS_IMP</class_name> class. The wizard would not overwrite this class in future executions. There is an implementation of the class in 
+		<link/> To do something more interesting than merely returning an error to the client edit the implementation of the 
+		<class_name>STRING_MANIPULATOR_COCLASS_IMP</class_name> class. There is an implementation of the class in 
 		<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\server</italic>\.  Copy this file over to 
 		<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\server\component</italic> and freeze the project. Voila!, you have your first EiffelCOM component up and running.
 		<paragraph> </paragraph>

@@ -1299,4 +1299,25 @@ feature -- Warning messages
 										%in another editor.%N%
 										%Editing a class in several editors%N%
 										%may cause loss of data."
+	w_Invalid_options: STRING is "The selected options are invalid.%N%
+								%Please select different ones."
+
+	w_Index_already_taken: STRING is "This index is already used.%N%
+									%Please select another one."
+
+	w_Command_needs_class: STRING is "This command requires a class name.%N%
+									%It cannot be executed."
+
+	w_Command_needs_file: STRING is "This command requires a file name.%N%
+									%It cannot be executed."
+
+	w_Command_needs_directory: STRING is "This command requires a directory name.%N%
+									%It cannot be executed."
+
+	w_Command_needs_feature: STRING is "This command requires a feature name.%N%
+									%It cannot be executed."
+
+	w_Command_needs_cluster: STRING is "This command requires a cluster name.%N%
+									%It cannot be executed."
+
 end -- class WARNING_MESSAGES

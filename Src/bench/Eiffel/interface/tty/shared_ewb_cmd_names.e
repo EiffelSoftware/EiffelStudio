@@ -119,7 +119,7 @@ feature {NONE}
 
 	queries_cmd_name: STRING is "query"
 
-	quick_melt_cmd_name: STRING is "quick melt"
+	quick_melt_cmd_name: STRING is "quick_melt"
 
 	quit_cmd_name: STRING is "quit"
 

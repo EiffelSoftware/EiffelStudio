@@ -131,7 +131,7 @@ feature -- Status setting
 		do
 			private_title := s
 		ensure
-			search_directory_set: private_title = s
+			private_title_set: private_title = s
 		end
 
 feature -- Basic operations

@@ -121,7 +121,7 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	HEADER(result)->ov_flags |= flags & (EO_REF | EO_COMP | EO_TYPE);
 		/* Keep the count and the element size */
 	r_ref = RT_SPECIAL_INFO(result);
-	s_ref = RT_SPECIAL_INFO_WITH_ZONE(source, zone);
+	s_ref = RT_SPECIAL_INFO(source);
 	RT_SPECIAL_COUNT_WITH_INFO(r_ref) = RT_SPECIAL_COUNT_WITH_INFO(s_ref);
 	RT_SPECIAL_ELEM_SIZE_WITH_INFO(r_ref) = RT_SPECIAL_ELEM_SIZE_WITH_INFO (s_ref);
 

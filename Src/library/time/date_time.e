@@ -26,6 +26,11 @@ inherit
 			out
 		end
 
+	DATE_TIME_VALIDITY_CHECKER
+		undefine
+			copy, is_equal, out
+		end
+
 creation
 
 	make,
@@ -42,17 +47,7 @@ feature -- Initialization
 			-- Set `year', `month' `day' to `y', `mo', `d'.
 			-- Set `hour', `minute', `second' to `h', `mi', `s'.
 		require 
-			year_positive: y > 0
-			month_large_enough: mo >= 1;
-			month_small_enough: mo <= Months_in_year;
-			day_large_enough: d >= 1;
-			day_small_enough: d <= days_in_i_th_month (mo, y)
-			h_large_enough: h >= 0;
-			h_small_enough: h < Hours_in_day;
-			m_large_enough: mi >= 0;
-			m_small_enough: mi < Minutes_in_hour;
-			s_large_enough: s >= 0;
-			s_small_enough: s < Seconds_in_minute	
+			correct_date_time: is_correct_date_time (y, mo, d, h, mi, s)
 		do
 			!! date.make (y, mo, d);
 			!! time.make (h, mi, s)
@@ -69,17 +64,7 @@ feature -- Initialization
 			-- Set `year', `month' `day' to `y', `mo', `d'.
 			-- Set `hour', `minute', `second' to `h', `m', `s'.
 		require
-			year_positive: y > 0
-			month_large_enough: mo >= 1;
-			month_small_enough: mo <= Months_in_year;
-			day_large_enough: d >= 1;
-			day_small_enough: d <= days_in_i_th_month (mo, y)
-			h_large_enough: h >= 0;
-			h_small_enough: h < Hours_in_day;
-			m_large_enough: mi >= 0;
-			m_small_enough: mi < Minutes_in_hour;
-			s_large_enough: s >= 0;
-			s_small_enough: s < Seconds_in_minute	
+			correct_date_time: is_correct_date_time (y, mo, d, h, mi, s)
 		do
 			!! date.make (y, mo, d);
 			!! time.make_fine (h, mi, s)
@@ -159,22 +144,6 @@ feature -- Initialization
 			make_by_date_time (date_time.date, date_time.time)
 		end
 
-feature -- Preconditions
-
-	date_time_valid (s: STRING; code_string: STRING): BOOLEAN is
-			-- Is the code_string enough precise
-			-- To create an instance of type DATE_TIME
-			-- And does the string `s' correspond to `code_string'?
-		require
-			s_exists: s /= Void
-			code_exists: code_string /= Void
-		local
-			code: DATE_TIME_CODE_STRING
-		do
-			!! code.make (code_string)
-			Result := code.precise and code.correspond (s)
-		end
-	
 feature -- Access
 			
 	date: DATE;
@@ -442,7 +411,7 @@ feature {NONE} -- Externals
 		end;
 
 	c_get_date_time is
-			-- get the date from the intern clock
+			-- Get the date from the intern clock
 			-- and save it in a local variable.
 		external
 			"C"

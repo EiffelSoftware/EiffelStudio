@@ -23,6 +23,11 @@ inherit
 			out
 		end
 
+	DATE_VALIDITY_CHECKER
+		undefine
+			is_equal, out
+		end
+
 creation
  
 	make,
@@ -143,67 +148,6 @@ feature {DATE_TIME} -- Initialization
 			compact_date := c_d
 		ensure
 			compact_date_set: compact_date = c_d
-		end
-
-feature -- Preconditions
-
-	date_valid (s: STRING; code_string: STRING): BOOLEAN is
-			-- Is the code_string enough precise
-			-- To create an instance of type DATE
-			-- And does the string `s' correspond to `code_string'?
-		require
-			s_exists: s /= Void
-			code_exists: code_string /= Void
-		local
-			code: DATE_TIME_CODE_STRING
-			date: DATE
-			retried: BOOLEAN
-		do
-			if not retried then 
-				!! code.make (code_string)
-				if code.precise_date and code.correspond (s) then
-					date := code.create_date (s)
-					Result := True
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	date_valid_default (s: STRING): BOOLEAN is
-			-- Is the code_string enough precise
-			-- To create an instance of type DATE
-			-- And does the string `s' correspond to 
-			-- `date_default_format_string'?
-		require
-			s_exists: s /= Void
-		do
-			Result := date_valid (s, date_default_format_string)
-		end	
-
-	compact_date_valid (c_d: INTEGER): BOOLEAN is
-			-- Is compact date `c_d' valid?
-		local
-			y, m, d: INTEGER
-		do
-			y := c_year (c_d)
-			m := c_month (c_d)
-			d := c_day (c_d)
-			Result := (m >= 1 and m <= Months_in_year and
-			d >= 1 and d <= days_in_i_th_month (m, y) and
-			y <= 65535);
-		end
-
-	is_correct_date (y, m, d: INTEGER): BOOLEAN is
-			-- Is date specified by `y', `m', and `d' a correct date?
-		require
-			year_non_negative: y >= 0
-			month_non_negative: m >= 0
-			day_non_negative: d >= 0
-		do
-			Result := m >= 1 and m <= Months_in_year and then d >= 1 and 
-				d <= days_in_i_th_month (m, y) and then y <= 65535 and y > 0
 		end
 
 feature -- Access

@@ -3,8 +3,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
-	DATE_TIME_CODE_STRING	
+class DATE_TIME_CODE_STRING	inherit
+
+	FIND_SEPARATOR_FACILITY
 
 creation
 	make
@@ -12,7 +13,7 @@ creation
 feature -- Creation
 
 	make (s: STRING) is
-			-- Create code descriptors and hash-table.
+			-- Create code descriptors and hash-table from `s'.
 		require
 			s_exists: s /= Void
 		local
@@ -58,7 +59,7 @@ feature -- Creation
 
 feature -- Attributes
 
-	value: HASH_TABLE [DATE_TIME_CODE,INTEGER]
+	value: HASH_TABLE [DATE_TIME_CODE, INTEGER]
 			-- Hash-table representing the code string.
 
 	name: STRING is
@@ -78,10 +79,48 @@ feature -- Attributes
 			end
 		end
 
+feature -- Status report
+
+	is_date (s: STRING): BOOLEAN is
+			-- Does `s' contain a DATE?
+		require
+			non_empty_string: s /= Void and then not s.empty
+		do
+			build_parser (s)
+			Result := parser.is_date
+		end
+
+	is_time (s: STRING): BOOLEAN is
+			-- Does `s' contain a TIME?
+		require
+			non_empty_string: s /= Void and then not s.empty
+		do
+			build_parser (s)
+			Result := parser.is_time
+		end	
+
+	is_date_time (s: STRING): BOOLEAN is
+			-- Does `s' contain a DATE_TIME?
+		require
+			non_empty_string: s /= Void and then not s.empty
+		do
+			build_parser (s)
+			Result := parser.is_date_time
+		end
+
+	is_value_valid (s: STRING): BOOLEAN is
+			-- Does `s' contain a valid date or time as string representation?
+		require
+			non_empty_string: s /= Void and then not s.empty
+		do
+			build_parser (s)
+			Result := parser.is_date or parser.is_time or parser.is_date_time
+		end
+
 feature -- Interface
 
 	correspond (s: STRING): BOOLEAN is
-			-- Does the user string correspond to the code string?
+			-- Does the user string `s' correspond to the code string?
 		require
 			s_exists: s /= Void
 		local
@@ -139,7 +178,7 @@ feature -- Interface
 		end	
 
 	create_string (date_time: DATE_TIME): STRING is
-			-- Create the output of date_time according to the code string.
+			-- Create the output of `date_time' according to the code string.
 		require
 			date_time /= Void
 		local
@@ -262,7 +301,7 @@ feature -- Interface
 		end	
 	
 	create_date_string (date: DATE): STRING is
-					-- Create the output of date according to the code string.
+					-- Create the output of `date' according to the code string.
 		require
 			date_exists: date /= Void
 		local
@@ -276,7 +315,7 @@ feature -- Interface
 		end
 
 	create_time_string (time: TIME): STRING is
-					-- Create the output of time according to the code string.
+					-- Create the output of `time' according to the code string.
 		require
 			time_exists: time /= Void
 		local
@@ -290,104 +329,22 @@ feature -- Interface
 		end
 
 	create_date_time (s: STRING): DATE_TIME is
-			-- Create the DATE_TIME according to s.
+			-- Create DATE_TIME according to `s'.
 		require
 			s_exist: s /= Void
 			is_precise: precise
 			s_correspond: correspond (s)
+			valid: is_value_valid (s)
 		local
-			year, month, day, hour, minute, second: INTEGER
-			fine_second: DOUBLE
-			substrg, day_text: STRING
-			pos1, pos2, i, j: INTEGER
-			type: INTEGER
+			i: INTEGER
 		do
-			s.to_upper
-			year := 1
-			month := 1
-			day := 1
-			hour := 0
-			minute := 0
-			fine_second := 0
-			pos1 := 1
-			pos2 := 1
 			right_day_text := True
-			from 
-				i := 1
-			until 
-				pos1 > s.count
-			loop
-				pos2 := find_separator (s, pos1)
-				substrg := s.substring (pos1, pos2-1)
-				if substrg.is_equal ("AM") or substrg.is_equal ("PM") then
-					pos1 := pos2 + 1
-				else
-					if value.item (i) = Void then
-						pos1 := s.count + 1
-					else
-						type := value.item(i).type
-						inspect
-							type
-						when 1, 2 then
-							day := substrg.to_integer
-						when 3 then
-							day_text := substrg
-						when 4 then
-							year := substrg.to_integer
-						when 5 then 
-							year := substrg.to_integer + 1900
-						when 6, 7 then
-							month := substrg.to_integer
-						when 8 then
-							from
-								j := 1
-							until 
-								j > 12
-							loop
-								if months.item (j).is_equal (substrg) then
-									month := j
-								else
-									--error
-								end
-								j := j + 1
-							end
-						when 9, 10 then
-							hour := substrg.to_integer
-						when 11 then
-							if s.substring_index("PM", 1) /= 0 then
-								hour := substrg.to_integer + 12
-								if hour = 24 then 
-									hour := 12
-								end
-							elseif s.substring_index("AM", 1) /= 0 then
-								hour := substrg.to_integer
-								if hour = 12 then
-									hour := 0
-								end
-							else
-								-- If no pm or am the am by default.
-								hour := substrg.to_integer
-								if hour = 12 then
-									hour := 0
-								end
-							end
-						when 12, 13 then 
-							minute := substrg.to_integer
-						when 14, 15 then
-							second := substrg.to_integer
-						when 16 then
-							fine_second := substrg.to_double / (10^(substrg.count))
-						end
-						i := i + 2
-						pos1 := pos2+1
-					end
-				end
-			end
-			fine_second := fine_second + second	
-			!! Result.make_fine (year, month, day, hour, minute, fine_second)
-			if day_text /= Void then
+			build_parser (s)
+			!! Result.make_fine (parser.year, parser.month, parser.day, 
+					parser.hour, parser.minute, parser.fine_second)
+			if parser.day_text /= Void then
 				i := Result.date.day_of_the_week
-				right_day_text := day_text.is_equal (days.item (i))
+				right_day_text := parser.day_text.is_equal (days.item (i))
 			end
 		ensure
 			date_time_exists: Result /= Void
@@ -396,7 +353,7 @@ feature -- Interface
 		end
 
 	create_date (s: STRING): DATE is
-			-- Create a DATE according to the string s format
+			-- Create a DATE according to the format in `s'.
 		require
 			s_exists: s /= Void
 			is_precise: precise_date
@@ -431,7 +388,7 @@ feature -- Interface
 		end
 
 	create_time (s: STRING): TIME is
-			-- Create a TIME according to the string s format.
+			-- Create a TIME according to the format in `s'.
 		require
 			s_exists: s /= Void
 			is_precise: precise_time
@@ -467,7 +424,7 @@ feature -- Interface
 
 	precise: BOOLEAN is
 			-- Is the code string enough precise to create
-			-- An instance of type DATE_TIME?
+			-- nn instance of type DATE_TIME?
 		require
 			not_void: value /= Void
 		do
@@ -476,7 +433,7 @@ feature -- Interface
 
 	precise_date: BOOLEAN is
 			-- Is the code string enough precise to create
-			-- An instance of type DATE?
+			-- nn instance of type DATE?
 		require
 			not_void: value /= Void
 		local
@@ -500,7 +457,7 @@ feature -- Interface
 				when 6, 7, 8 then
 					has_month := True
 				else
-					-- Has_day, has_year and has_month no modified.
+					-- Has_day, has_year and has_month not modified.
 				end
 				i := i + 1
 			end
@@ -509,7 +466,7 @@ feature -- Interface
 
 	precise_time: BOOLEAN is
 			-- Is the code string enough precise to create
-			-- An instance of type TIME?
+			-- nn instance of type TIME?
 		require
 			not_void: value /= Void
 		local
@@ -540,43 +497,25 @@ feature -- Interface
 			Result := has_hour and has_minute and has_second
 		end
 	
-feature {NONE}
+feature {NONE} -- Implementation
 		
-	find_separator (s: STRING; i: INTEGER): INTEGER is
-			-- Position of the next separator in s starting at ith character.
-			-- ":", "/", "-", ",", " ", "."
+	parser: DATE_TIME_PARSER
+			-- Instance of date-time string parser
+
+	build_parser (s: STRING) is
+			-- Build parser from `s'.
 		require
-			s_exists: s /= Void
-			i_exists: i /= Void
-			i_small: i <= s.count
-		local
-			int: ARRAY [INTEGER]
-			j, int_tmp: INTEGER
+			non_empty_string: s /= Void and then not s.empty
 		do
-			!! int.make (0, 5)
-			int.put (s.index_of (':', i), 0)
-			int.put (s.index_of ('/', i), 1)
-			int.put (s.index_of ('-', i), 2)
-			int.put (s.index_of (',', i), 3)
-			int.put (s.index_of (' ', i), 4)
-			int.put (s.index_of ('.', i), 5)
-			Result := s.count + 1
-			from 
-				j := 0
-			until 
-				j > 5
-			loop
-				int_tmp := int.item (j)
-				if int_tmp /= 0 and int_tmp < Result then
-					Result := int_tmp
-				end
-				j := j + 1
+			if parser = Void or else not equal (parser.source_string, s) then
+				create parser.make (value, months, days)
+				parser.set_source_string (s)
+				parser.parse
 			end
 		ensure
-			index_exists: Result /= Void
-			next_index: Result > i
+			parser_created: parser /= Void
 		end
-		
+
 	days: ARRAY [STRING]
 
 	months: ARRAY [STRING]	
@@ -585,7 +524,7 @@ feature {NONE}
 			-- Is the name of the day the right one?
 
 	am_pm_index: INTEGER 
-			-- Index of the am/pm notation.
+			-- Index of the am/pm notation
 
 end -- class DATE_TIME_CODE_STRING
 

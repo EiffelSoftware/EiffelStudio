@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			cl_type: CL_TYPE_A
 			a_type: TYPE
 		do
-			cl_type ?= target_type
+			cl_type ?= target_type.actual_type
 			if cl_type /= Void then
 				feature_table := cl_type.associated_class.feature_table
 			end
@@ -308,6 +308,7 @@ feature {NONE} -- Implementation
 			non_void_feature: fi /= Void
 		local
 			type: TYPE
+			r_type: TYPE_A
 		do
 			create Result.make (10)
 			from
@@ -317,7 +318,10 @@ feature {NONE} -- Implementation
 			loop
 				type := type_from_type_name (locals.key_for_iteration)
 				if type /= Void then
-					Result.put (Local_evaluator.evaluated_type (type, feature_table, fi), locals.item_for_iteration)				
+					r_type := resolved_type (type, feature_table, fi)
+					if r_type /= Void then
+						Result.put (r_type, locals.item_for_iteration)
+					end
 				end
 				locals.forth
 			end
@@ -328,12 +332,32 @@ feature {NONE} -- Implementation
 			loop
 				type := type_from_type_name (arguments.key_for_iteration)
 				if type /= Void then
-					Result.put (Local_evaluator.evaluated_type (type, feature_table, fi), arguments.item_for_iteration)				
+					r_type := resolved_type (type, feature_table, fi)
+					if r_type /= Void then
+						Result.put (r_type, arguments.item_for_iteration)
+					end
 				end
 				arguments.forth
 			end
 		end
 
+	resolved_type (type: TYPE; feature_table: FEATURE_TABLE; fi: FEATURE_I): TYPE_A is
+			-- Solve type `type' within feature `fi' in table `feature_table'.
+		require
+			non_void_type: type /= Void
+			non_void_table: feature_table /= Void
+			non_void_feature_i: fi /= Void
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				Result := Local_evaluator.evaluated_type (type, feature_table, fi)				
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
 	type_from_type_name (name: STRING): TYPE is
 			-- Instance of {TYPE} from type name
 		local

@@ -172,201 +172,213 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Convert BSTR *  to CELL [STRING].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_17( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_17( BSTR * a_pointer );
+
+
+	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumClass *  to IENUM_CLASS_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_18( ecom_eiffel_compiler::IEnumClass * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_19( ecom_eiffel_compiler::IEnumClass * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumClass * *  to CELL [IENUM_CLASS_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_19( ecom_eiffel_compiler::IEnumClass * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_20( ecom_eiffel_compiler::IEnumClass * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEnumClass * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_19( ecom_eiffel_compiler::IEnumClass * * a_pointer );
+	void ccom_free_memory_pointed_20( ecom_eiffel_compiler::IEnumClass * * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_20( ULONG * a_pointer );
+	void ccom_free_memory_pointed_21( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumCluster *  to IENUM_CLUSTER_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_22( ecom_eiffel_compiler::IEnumCluster * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_23( ecom_eiffel_compiler::IEnumCluster * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumCluster * *  to CELL [IENUM_CLUSTER_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_23( ecom_eiffel_compiler::IEnumCluster * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_24( ecom_eiffel_compiler::IEnumCluster * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEnumCluster * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_23( ecom_eiffel_compiler::IEnumCluster * * a_pointer );
+	void ccom_free_memory_pointed_24( ecom_eiffel_compiler::IEnumCluster * * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_24( ULONG * a_pointer );
+	void ccom_free_memory_pointed_25( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelClusterDescriptor *  to IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_26( ecom_eiffel_compiler::IEiffelClusterDescriptor * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_27( ecom_eiffel_compiler::IEiffelClusterDescriptor * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelClusterDescriptor * *  to CELL [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_27( ecom_eiffel_compiler::IEiffelClusterDescriptor * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_28( ecom_eiffel_compiler::IEiffelClusterDescriptor * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelClusterDescriptor * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_27( ecom_eiffel_compiler::IEiffelClusterDescriptor * * a_pointer );
+	void ccom_free_memory_pointed_28( ecom_eiffel_compiler::IEiffelClusterDescriptor * * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelClassDescriptor *  to IEIFFEL_CLASS_DESCRIPTOR_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_29( ecom_eiffel_compiler::IEiffelClassDescriptor * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_30( ecom_eiffel_compiler::IEiffelClassDescriptor * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelClassDescriptor * *  to CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_30( ecom_eiffel_compiler::IEiffelClassDescriptor * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_31( ecom_eiffel_compiler::IEiffelClassDescriptor * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelClassDescriptor * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_30( ecom_eiffel_compiler::IEiffelClassDescriptor * * a_pointer );
+	void ccom_free_memory_pointed_31( ecom_eiffel_compiler::IEiffelClassDescriptor * * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelFeatureDescriptor *  to IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_32( ecom_eiffel_compiler::IEiffelFeatureDescriptor * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_33( ecom_eiffel_compiler::IEiffelFeatureDescriptor * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelFeatureDescriptor * *  to CELL [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_33( ecom_eiffel_compiler::IEiffelFeatureDescriptor * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_34( ecom_eiffel_compiler::IEiffelFeatureDescriptor * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelFeatureDescriptor * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_33( ecom_eiffel_compiler::IEiffelFeatureDescriptor * * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of ULONG *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_34( ULONG * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of ULONG *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_35( ULONG * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_36( BSTR * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of BSTR *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_36( BSTR * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_37( BSTR * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of BSTR *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_37( BSTR * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_38( BSTR * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of BSTR *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_38( BSTR * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert SAFEARRAY *  *  to CELL [ECOM_ARRAY [STRING]].
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_40( SAFEARRAY *  * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of SAFEARRAY *  *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_40( SAFEARRAY *  * a_pointer );
+	void ccom_free_memory_pointed_34( ecom_eiffel_compiler::IEiffelFeatureDescriptor * * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumFeature *  to IENUM_FEATURE_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_42( ecom_eiffel_compiler::IEnumFeature * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_36( ecom_eiffel_compiler::IEnumFeature * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumFeature * *  to CELL [IENUM_FEATURE_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_43( ecom_eiffel_compiler::IEnumFeature * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_37( ecom_eiffel_compiler::IEnumFeature * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEnumFeature * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_43( ecom_eiffel_compiler::IEnumFeature * * a_pointer );
+	void ccom_free_memory_pointed_37( ecom_eiffel_compiler::IEnumFeature * * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_44( ULONG * a_pointer );
+	void ccom_free_memory_pointed_38( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_45( ULONG * a_pointer );
+	void ccom_free_memory_pointed_39( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ULONG *.
+	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_46( ULONG * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_cell_40( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_40( BSTR * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert BSTR *  to CELL [STRING].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_41( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_41( BSTR * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert BSTR *  to CELL [STRING].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_42( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_42( BSTR * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert BSTR *  to CELL [STRING].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_43( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_43( BSTR * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_44( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert SAFEARRAY *  *  to CELL [ECOM_ARRAY [STRING]].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_46( SAFEARRAY *  * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of SAFEARRAY *  *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_46( SAFEARRAY *  * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -388,81 +400,63 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
+	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_50( BSTR * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of BSTR *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_50( BSTR * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_51( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_52( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_53( VARIANT_BOOL * a_pointer );
+	void ccom_free_memory_pointed_50( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_54( ULONG * a_pointer );
+	void ccom_free_memory_pointed_51( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_55( ULONG * a_pointer );
+	void ccom_free_memory_pointed_52( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_56( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_53( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_56( BSTR * a_pointer );
+	void ccom_free_memory_pointed_53( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_57( BSTR * a_pointer, EIF_OBJECT an_object );
+	void ccom_free_memory_pointed_54( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of BSTR *.
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_57( BSTR * a_pointer );
+	void ccom_free_memory_pointed_55( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_58( BSTR * a_pointer, EIF_OBJECT an_object );
+	void ccom_free_memory_pointed_56( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of BSTR *.
+	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_58( BSTR * a_pointer );
+	void ccom_free_memory_pointed_57( ULONG * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of ULONG *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_58( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -502,9 +496,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of ULONG *.
+	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_62( ULONG * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_cell_62( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_62( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -520,9 +520,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of ULONG *.
+	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_64( ULONG * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_cell_64( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_64( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -532,9 +538,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of ULONG *.
+	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_66( ULONG * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_cell_66( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_66( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -556,21 +568,21 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_70( VARIANT_BOOL * a_pointer );
+	void ccom_free_memory_pointed_70( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_71( VARIANT_BOOL * a_pointer );
+	void ccom_free_memory_pointed_71( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_72( VARIANT_BOOL * a_pointer );
+	void ccom_free_memory_pointed_72( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -646,39 +658,27 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of ULONG *.
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_85( ULONG * a_pointer );
+	void ccom_free_memory_pointed_85( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_86( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_87( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_86( ULONG * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_87( BSTR * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of BSTR *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_87( BSTR * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_88( BSTR * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of BSTR *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_88( BSTR * a_pointer );
+	void ccom_free_memory_pointed_88( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -688,9 +688,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of ULONG *.
+	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_90( ULONG * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_cell_90( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_90( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -718,33 +724,39 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Free memory of ULONG *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_93( ULONG * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of ULONG *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_94( ULONG * a_pointer );
+
+
+	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_93( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_95( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_93( BSTR * a_pointer );
+	void ccom_free_memory_pointed_95( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_94( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_96( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_94( BSTR * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of long *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_96( long * a_pointer );
+	void ccom_free_memory_pointed_96( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -766,45 +778,45 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_100( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_101( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_102( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_103( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_100( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_103( BSTR * a_pointer );
+	void ccom_free_memory_pointed_100( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_104( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_101( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_104( BSTR * a_pointer );
+	void ccom_free_memory_pointed_101( BSTR * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert BSTR *  to CELL [STRING].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_102( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_102( BSTR * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of long *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_104( long * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -814,39 +826,45 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert VARIANT *  to ECOM_VARIANT.
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_record_106( VARIANT * a_record_pointer );
+	void ccom_free_memory_pointed_106( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelClusterProperties *  to IEIFFEL_CLUSTER_PROPERTIES_INTERFACE.
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_108( ecom_eiffel_compiler::IEiffelClusterProperties * a_interface_pointer );
+	void ccom_free_memory_pointed_107( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelClusterProperties * *  to CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE].
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_109( ecom_eiffel_compiler::IEiffelClusterProperties * * a_pointer, EIF_OBJECT an_object );
+	void ccom_free_memory_pointed_108( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelClusterProperties * *.
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_109( ecom_eiffel_compiler::IEiffelClusterProperties * * a_pointer );
+	void ccom_free_memory_pointed_109( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert SAFEARRAY *  *  to CELL [ECOM_ARRAY [STRING]].
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_111( SAFEARRAY *  * a_pointer, EIF_OBJECT an_object );
+	void ccom_free_memory_pointed_110( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of SAFEARRAY *  *.
+	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_111( SAFEARRAY *  * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_cell_111( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_111( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -862,63 +880,69 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_113( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert VARIANT *  to ECOM_VARIANT.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_record_114( VARIANT * a_record_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert ecom_eiffel_compiler::IEiffelClusterProperties *  to IEIFFEL_CLUSTER_PROPERTIES_INTERFACE.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_interface_116( ecom_eiffel_compiler::IEiffelClusterProperties * a_interface_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert ecom_eiffel_compiler::IEiffelClusterProperties * *  to CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_117( ecom_eiffel_compiler::IEiffelClusterProperties * * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of ecom_eiffel_compiler::IEiffelClusterProperties * *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_117( ecom_eiffel_compiler::IEiffelClusterProperties * * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert SAFEARRAY *  *  to CELL [ECOM_ARRAY [STRING]].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_119( SAFEARRAY *  * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of SAFEARRAY *  *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_119( SAFEARRAY *  * a_pointer );
+
+
+	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_113( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_120( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_113( BSTR * a_pointer );
+	void ccom_free_memory_pointed_120( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_114( VARIANT_BOOL * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_cell_121( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_115( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_116( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_117( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_118( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_119( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_120( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_121( VARIANT_BOOL * a_pointer );
+	void ccom_free_memory_pointed_121( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -928,21 +952,69 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert SAFEARRAY *  *  to CELL [ECOM_ARRAY [STRING]].
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_124( SAFEARRAY *  * a_pointer, EIF_OBJECT an_object );
+	void ccom_free_memory_pointed_123( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of SAFEARRAY *  *.
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_124( SAFEARRAY *  * a_pointer );
+	void ccom_free_memory_pointed_124( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
 	void ccom_free_memory_pointed_125( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_126( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_127( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_128( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_129( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_130( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert SAFEARRAY *  *  to CELL [ECOM_ARRAY [STRING]].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_132( SAFEARRAY *  * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of SAFEARRAY *  *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_132( SAFEARRAY *  * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_133( VARIANT_BOOL * a_pointer );
 
 
 

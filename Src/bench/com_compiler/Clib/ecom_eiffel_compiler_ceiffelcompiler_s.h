@@ -60,6 +60,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Compiler version.
+	-----------------------------------------------------------*/
+	STDMETHODIMP compiler_version(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
 	EnumConnectionPoints of IConnectionPointContainer.
 	-----------------------------------------------------------*/
 	STDMETHODIMP EnumConnectionPoints( /* [out] */ IEnumConnectionPoints ** ppEnum );

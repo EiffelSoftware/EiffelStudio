@@ -90,6 +90,36 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::descripti
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::tool_tip(  /* [out, retval] */ BSTR * return_value )
+
+/*-----------------------------------------------------------
+	Cluster Tool Tip.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("tool_tip", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "tool_tip", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes )
 
 /*-----------------------------------------------------------
@@ -109,7 +139,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::classes( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_classes = grt_ec_Eif_compiler.ccom_ec_pointed_interface_18 (eif_access (tmp_object));
+		*some_classes = grt_ec_Eif_compiler.ccom_ec_pointed_interface_19 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -162,7 +192,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::clusters(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_clusters = grt_ec_Eif_compiler.ccom_ec_pointed_interface_22 (eif_access (tmp_object));
+		*some_clusters = grt_ec_Eif_compiler.ccom_ec_pointed_interface_23 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -220,6 +250,105 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::cluster_p
 	}
 	else
 		*path = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::relative_path(  /* [out, retval] */ BSTR * path )
+
+/*-----------------------------------------------------------
+	Relative path to cluster.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("relative_path", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "relative_path", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*path = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*path = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::is_override_cluster(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Should this cluster classes take priority over other classes with same name?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("is_override_cluster", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "is_override_cluster", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::is_library(  /* [out, retval] */ VARIANT_BOOL * path )
+
+/*-----------------------------------------------------------
+	Should this cluster be treated as library?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("is_library", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "is_library", EIF_BOOLEAN);
+	*path = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::is_recursive(  /* [out, retval] */ VARIANT_BOOL * path )
+
+/*-----------------------------------------------------------
+	Should subclusters be included recursively?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("is_recursive", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "is_recursive", EIF_BOOLEAN);
+	*path = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;

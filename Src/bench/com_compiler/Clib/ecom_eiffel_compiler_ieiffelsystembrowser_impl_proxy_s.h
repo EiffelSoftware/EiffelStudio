@@ -32,6 +32,8 @@ class IEiffelSystemBrowser_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelFeatureDescriptor_s.h"
 
+#include "ecom_eiffel_compiler_IEnumFeature_s.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -86,6 +88,18 @@ public:
 	Feature descriptor.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_feature_descriptor(  /* [in] */ EIF_OBJECT class_name1,  /* [in] */ EIF_OBJECT feature_name );
+
+
+	/*-----------------------------------------------------------
+	Search classes with names matching `a_string'.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_substring_search_classes(  /* [in] */ EIF_OBJECT a_string );
+
+
+	/*-----------------------------------------------------------
+	Search feature with names matching `a_string'.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_substring_search_features(  /* [in] */ EIF_OBJECT a_string );
 
 
 	/*-----------------------------------------------------------

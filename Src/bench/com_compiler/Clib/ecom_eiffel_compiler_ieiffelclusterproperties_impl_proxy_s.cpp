@@ -229,7 +229,7 @@ void ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_set_cluster
 EIF_BOOLEAN ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_override(  )
 
 /*-----------------------------------------------------------
-	Should this cluster classes take priority over other classes with same name.
+	Should this cluster classes take priority over other classes with same name?
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -262,7 +262,7 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_over
 void ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_set_override(  /* [in] */ EIF_BOOLEAN return_value )
 
 /*-----------------------------------------------------------
-	Should this cluster classes take priority over other classes with same name.
+	Should this cluster classes take priority over other classes with same name?
 -----------------------------------------------------------*/
 {
 	HRESULT hr;

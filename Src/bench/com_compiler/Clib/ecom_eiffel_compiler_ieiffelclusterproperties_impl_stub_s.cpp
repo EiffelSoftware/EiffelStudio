@@ -150,7 +150,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::set_clust
 STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::override(  /* [out, retval] */ VARIANT_BOOL * return_value )
 
 /*-----------------------------------------------------------
-	Should this cluster classes take priority over other classes with same name.
+	Should this cluster classes take priority over other classes with same name?
 -----------------------------------------------------------*/
 {
 	ECATCH;
@@ -173,7 +173,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::override(
 STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::set_override(  /* [in] */ VARIANT_BOOL return_value )
 
 /*-----------------------------------------------------------
-	Should this cluster classes take priority over other classes with same name.
+	Should this cluster classes take priority over other classes with same name?
 -----------------------------------------------------------*/
 {
 	ECATCH;

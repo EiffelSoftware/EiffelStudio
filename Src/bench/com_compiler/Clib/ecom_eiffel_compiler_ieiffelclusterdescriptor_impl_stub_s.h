@@ -53,6 +53,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Cluster Tool Tip.
+	-----------------------------------------------------------*/
+	STDMETHODIMP tool_tip(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
 	List of classes in cluster.
 	-----------------------------------------------------------*/
 	STDMETHODIMP classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes );
@@ -80,6 +86,30 @@ public:
 	Full path to cluster.
 	-----------------------------------------------------------*/
 	STDMETHODIMP cluster_path(  /* [out, retval] */ BSTR * path );
+
+
+	/*-----------------------------------------------------------
+	Relative path to cluster.
+	-----------------------------------------------------------*/
+	STDMETHODIMP relative_path(  /* [out, retval] */ BSTR * path );
+
+
+	/*-----------------------------------------------------------
+	Should this cluster classes take priority over other classes with same name?
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_override_cluster(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
+	Should this cluster be treated as library?
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_library(  /* [out, retval] */ VARIANT_BOOL * path );
+
+
+	/*-----------------------------------------------------------
+	Should subclusters be included recursively?
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_recursive(  /* [out, retval] */ VARIANT_BOOL * path );
 
 
 	/*-----------------------------------------------------------

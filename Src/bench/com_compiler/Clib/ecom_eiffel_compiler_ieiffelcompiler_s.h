@@ -51,6 +51,12 @@ public:
 	virtual STDMETHODIMP is_successful(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
 
 
+	/*-----------------------------------------------------------
+	Compiler version.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP compiler_version(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
 
 protected:
 

@@ -77,6 +77,16 @@ class IEiffelFeatureDescriptor;
 
 
 
+#ifndef __ecom_eiffel_compiler_IEnumFeature_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumFeature_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumFeature;
+}
+#endif
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #ifndef __ecom_eiffel_compiler_IEiffelSystemBrowser_INTERFACE_DEFINED__
@@ -129,6 +139,18 @@ public:
 	Feature descriptor.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP feature_descriptor(  /* [in] */ BSTR class_name1, /* [in] */ BSTR feature_name, /* [out, retval] */ ecom_eiffel_compiler::IEiffelFeatureDescriptor * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Search classes with names matching `a_string'.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP substring_search_classes(  /* [in] */ BSTR a_string, /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Search feature with names matching `a_string'.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP substring_search_features(  /* [in] */ BSTR a_string, /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features ) = 0;
 
 
 

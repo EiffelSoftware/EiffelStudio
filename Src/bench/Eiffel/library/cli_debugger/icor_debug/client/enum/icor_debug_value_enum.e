@@ -9,8 +9,7 @@ class
 
 inherit
 
-	ICOR_DEBUG_ENUM_WITH_NEXT [ICOR_DEBUG_VALUE]
-
+	ICOR_DEBUG_ENUM_WITH_NEXT_AND_FRAME [ICOR_DEBUG_VALUE]
 
 create 
 	make_by_pointer

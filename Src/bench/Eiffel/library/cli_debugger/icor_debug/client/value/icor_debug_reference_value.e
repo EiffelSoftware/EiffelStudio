@@ -52,6 +52,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_dereference (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)
 			end
 --		ensure
 --			success: last_call_success = 0
@@ -68,6 +69,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_dereference_strong (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)
 			end
 --		ensure
 --			success: last_call_success = 0

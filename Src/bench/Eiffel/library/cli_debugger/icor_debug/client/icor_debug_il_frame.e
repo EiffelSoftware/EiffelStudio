@@ -97,6 +97,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_local_variable (item, a_index, $l_p)
 			if l_p /= default_pointer then
 				create Result.make_by_pointer (l_p)
+				Result.set_associated_frame (Current)				
 			end
 		ensure
 			success: last_call_success = 0
@@ -121,6 +122,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_argument (item, a_index, $l_p)
 			if l_p /= default_pointer then
 				create Result.make_by_pointer (l_p)
+				Result.set_associated_frame (Current)
 			end
 		ensure
 			success: last_call_success = 0

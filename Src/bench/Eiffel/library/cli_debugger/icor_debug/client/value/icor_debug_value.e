@@ -1,5 +1,16 @@
 indexing
 	description: "[
+	
+		Descendants :
+			ICOR_DEBUG_VALUE
+				ICOR_DEBUG_OBJECT_VALUE
+				ICOR_DEBUG_HEAP_VALUE
+					ICOR_DEBUG_STRING_VALUE
+					ICOR_DEBUG_ARRAY_VALUE
+					ICOR_DEBUG_BOX_VALUE
+				ICOR_DEBUG_VALUE_WITH_VALUE
+					ICOR_DEBUG_REFERENCE_VALUE
+					ICOR_DEBUG_GENERIC_VALUE	
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +19,7 @@ class
 	ICOR_DEBUG_VALUE
 
 inherit
-	ICOR_OBJECT
+	ICOR_OBJECT_WITH_FRAME
 		redefine
 			init_icor
 		end
@@ -26,7 +37,8 @@ feature {NONE} -- Initialization
 			size := get_size
 			address_as_string := get_address.to_integer.to_hex_string	
 		end
-
+	
+			
 feature {ICOR_EXPORTER} -- Properties
 
 	type: INTEGER
@@ -44,6 +56,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugGenericValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)				
 				Result.add_ref
 			end
 		end
@@ -55,6 +68,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugReferenceValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)				
 				Result.add_ref
 			end
 		end
@@ -66,6 +80,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugHeapValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)				
 				Result.add_ref
 			end
 		end
@@ -77,6 +92,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugObjectValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)
 				Result.add_ref
 			end
 		end
@@ -90,6 +106,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 			last_call_success := cpp_query_interface_ICorDebugBoxValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)				
 				Result.add_ref
 			end
 		end
@@ -101,6 +118,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 			last_call_success := cpp_query_interface_ICorDebugStringValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)				
 				Result.add_ref
 			end
 		end
@@ -112,6 +130,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 			last_call_success := cpp_query_interface_ICorDebugArrayValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)				
 				Result.add_ref
 			end
 		end

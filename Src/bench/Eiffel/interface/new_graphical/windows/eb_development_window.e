@@ -2523,6 +2523,7 @@ feature {NONE} -- Implementation
 			address_manager.disable_formatters
 			status_bar.display_message ("")
 			status_bar.remove_cursor_position
+			text_edited := False
 		end
 
 	on_cursor_moved is
@@ -2542,6 +2543,7 @@ feature {NONE} -- Implementation
 				status_bar.display_message (Interface_names.L_syntax_error)
 			end
 			refresh_cursor_position
+			text_edited := False
 		end
 
 	on_text_back_to_its_last_saved_state is
@@ -2729,7 +2731,6 @@ feature {NONE} -- Implementation: Editor commands
 		require
 			text_loaded: not is_empty
 		local
-			cur: TEXT_CURSOR
 			l, c: INTEGER
 		do
 			l := editor_tool.text_area.cursor_y_position

@@ -155,7 +155,7 @@ feature -- Initialization
 			end
 				-- Make `$area' the substring of `c_string'
 				-- from `start_pos' .. `end_pos'.
-			($area).memory_copy (c_string + (start_pos - 1), (end_pos - start_pos + 1))
+			($area).memory_copy (c_string + (start_pos - 1), end_pos - start_pos + 1)
 			count := length
 		ensure
 			valid_count: count = end_pos - start_pos + 1

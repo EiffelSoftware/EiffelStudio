@@ -1742,34 +1742,14 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 	hide_feature_portion is
 			-- Hide the feature potion and hide the menu entries
 			-- regarding the feature tool.
-		local
-			feature_height: INTEGER
-			feature_width: INTEGER
-			h: INTEGER
 		do
 			shown_portions := shown_portions - 1
+
 			allow_resize
-
-			if not hori_split_window.is_vertical then
-				feature_height := feature_form.height
-				if not toolkit_is_motif then
-					h := height - feature_height
-					hori_split_window.set_height (h)
-					set_height (h)
-				end
-			else
-				feature_width := feature_form.width
-				if not toolkit_is_motif then
-					h := width - feature_width
-					hori_split_window.set_width (h)
-					set_width (h)
-				end
-			end
-
 			feature_form.unmanage
 			feature_part.close_windows
-
 			forbid_resize
+
 			menus.item (edit_feature_menu).button.set_insensitive
 			menus.item (special_feature_menu).button.set_insensitive
 			menus.item (format_feature_menu).button.set_insensitive
@@ -1779,7 +1759,6 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			-- Show the feature portion and the menu entries
 			-- regarding the feature tool.
 		local
-			new_length: INTEGER
 			feature_height, feature_width: INTEGER
 			mp: MOUSE_PTR
 		do
@@ -1796,29 +1775,12 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 
 			allow_resize
 			if not hori_split_window.is_vertical then
-				new_length := height + feature_height
 				feature_form.set_height (feature_height)
 				feature_form.manage
-				if not toolkit_is_motif then
-					if y + new_length > screen.visible_height then
-						new_length := screen.visible_height - y
-					end
-					set_height (new_length)
---					hori_split_window.set_height (new_length)
-				end
 			else
-				new_length := width + feature_width
 				feature_form.set_width (feature_width)
 				feature_form.manage
-				if not toolkit_is_motif then
-					if x + new_length > screen.visible_width then
-						new_length := screen.visible_width - x
-					end
-					set_width (new_length)
-					hori_split_window.set_width (new_length)
-				end
 			end
-
 			forbid_resize
 
 			show_current_stoppoint
@@ -1830,32 +1792,13 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 	hide_object_portion is
 			-- Hide the object portion and the menu entries
 			-- regarding the feature tool.
-		local
-			object_height: INTEGER
-			object_width: INTEGER
 		do
 			shown_portions := shown_portions - 1
 
 			allow_resize
-
-			if not hori_split_window.is_vertical then
-				object_height := object_form.height
-				object_form.unmanage
-				if not toolkit_is_motif then
-					set_height (height - object_height)
-					hori_split_window.set_height (height)
-				end
-			else
-				object_width := object_form.width
-				object_form.unmanage
-				if not toolkit_is_motif then
-					set_width (width - object_width)
-					hori_split_window.set_width (width)
-				end
-			end
-
-			forbid_resize
+			object_form.unmanage
 			object_part.close_windows
+			forbid_resize
 
 			menus.item (edit_object_menu).button.set_insensitive
 			menus.item (special_object_menu).button.set_insensitive
@@ -1867,7 +1810,6 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			-- Show the object portion and the menu entries
 			-- regarding the feature tool.
 		local
-			new_length: INTEGER
 			object_height: INTEGER
 			object_width: INTEGER
 			mp: MOUSE_PTR
@@ -1884,32 +1826,15 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			menus.item (format_object_menu).button.set_sensitive
 
 			allow_resize
-
 			if not hori_split_window.is_vertical then
-				new_length := height + object_height
 				object_form.set_height (object_height)
 				object_form.manage
-				if not toolkit_is_motif then
-					if y + new_length > screen.visible_height then
-						new_length := screen.visible_height - y
-					end
-					set_height (new_length)
-					hori_split_window.set_height (new_length)
-				end
 			else
-				new_length := width + object_width
-				object_form.set_height (object_width)
+				object_form.set_width (object_width)
 				object_form.manage
-				if not toolkit_is_motif then
-					if x + new_length > screen.visible_width then
-						new_length := screen.visible_width - x
-					end
-					set_width (new_length)
-					hori_split_window.set_width (new_length)
-				end
 			end
-
 			forbid_resize
+
 			show_current_object
 			mp.restore
 		end

@@ -131,7 +131,6 @@ feature
 			until
 				non_widgets.after
 			loop
-				print ("H")
 				object_menu.extend (
 					create {EV_MENU_ITEM}.make_with_text (
 						non_widgets.item.generating_type
@@ -380,6 +379,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/15 19:50:41  oconnor
+--| more tests
+--|
 --| Revision 1.4  2000/02/15 19:27:56  oconnor
 --| more tests
 --|

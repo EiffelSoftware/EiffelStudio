@@ -10,6 +10,8 @@ expanded class
 inherit
 	CHARACTER_REF
 
+create {NONE}
+
 indexing
 
 	library: "[

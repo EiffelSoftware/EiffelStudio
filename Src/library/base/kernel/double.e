@@ -11,6 +11,8 @@ expanded class DOUBLE inherit
 
 	DOUBLE_REF
 
+create {NONE}
+
 indexing
 
 	library: "[

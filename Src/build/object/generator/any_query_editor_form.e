@@ -61,7 +61,7 @@ feature {NONE} -- GUI
 			field_toggle_b.set_toggle_on
 			menu_choice_sc_l.set_visible_item_count (4)
 			deactivate_menu_fields
-			if object_tool_generator.precondition_test.state then
+			if class_importer.object_tool_generator.precondition_test.state then
 				test_toggle_b.arm
 			else	
 				test_text_field.set_insensitive

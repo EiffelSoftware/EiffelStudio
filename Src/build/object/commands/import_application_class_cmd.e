@@ -10,7 +10,7 @@ class
 
 inherit
 	
-	COMMAND
+	EV_COMMAND
 
 	EB_ENVIRONMENT
 
@@ -18,7 +18,7 @@ inherit
 
 feature
 
-	execute (arg: ANY) is
+	execute (args: EV_ARGUMENT1 [EV_LIST]; data: EV_EVENT_DATA) is
 			-- Read the description file and fill the internal structure.
 		local
 			directory: DIRECTORY
@@ -28,8 +28,9 @@ feature
 			dot_index: INTEGER
 			mp: MOUSE_PTR
 		do
-			!! mp
-			mp.set_watch_shape
+--			!! mp
+--			mp.set_watch_shape
+			available_classes_list := args.first
 			!! directory.make_open_read (Common_directory)
 			from
 				directory.start
@@ -65,12 +66,15 @@ feature
 				end
 				directory.readentry
 			end
-			mp.restore
+--			mp.restore
 		end
 
 feature {NONE} -- Implementation
 
 	get_class_name, get_feature, get_precondition: BOOLEAN
+
+	available_classes_list: EV_LIST
+			-- Graphical list of available classes
 
 	process_line (a_line: STRING) is
 			-- Add a command or a query, or create a new application class
@@ -148,7 +152,7 @@ feature {NONE} -- Implementation
 						cmd_list.forth
 					end
 				end
-				!! an_app_class.make (class_name)
+				create an_app_class.make_with_text (available_classes_list, class_name)
 				class_list.extend (an_app_class)
 				class_list.finish
 			end

@@ -63,7 +63,7 @@ feature -- Attributes
 			-- Application class currently edited in the Object editor
 			-- generator.
 		do
-			Result := object_tool_generator.edited_class
+			Result := class_importer.object_tool_generator.edited_class
 		end
 
 feature -- Interface generation

@@ -11,314 +11,136 @@ class
 
 inherit
 
-	EB_TOP_SHELL
+	EV_WINDOW
 		redefine
-			make
+			make_top_level
 		end
 
 	SHARED_CLASS_IMPORTER
 
-	COMMAND
-
-	COMMAND_ARGS
+	EV_COMMAND
 
 	CLOSEABLE
 
 	WINDOWS
-		select
-			init_toolkit
-		end
-	
+
+	CONSTANTS
+
 creation
-	make
+	make_top_level
 
 feature -- Creation
 
-	make (a_name:STRING; a_screen: SCREEN) is
+	make_top_level is
 			-- Create class selector.
+		local
+			vertical_box: EV_VERTICAL_BOX
+			horizontal_box: EV_HORIZONTAL_BOX
+			frame: EV_FRAME
+			fixed: EV_FIXED
 		do
-			{EB_TOP_SHELL} Precursor (a_name, a_screen)
-			!! top_form.make ("", Current)
-			!! available_label.make ("", top_form)
-			!! available_list.make ("", top_form)
-			!! selected_label.make ("", top_form)
-			!! selected_list.make ("", top_form)
-			!! arrow_form.make ("", top_form)
-			!! refresh_button.make ("Refresh", arrow_form)
-			!! blank_label.make ("", arrow_form)
-			!! select_button.make ("", arrow_form)
-			!! unselect_button.make ("", arrow_form)
-			!! separator1.make ("", top_form)
-			!! button_form.make ("", top_form)
-			!! generate_label.make ("Generate", top_form)
-			!! generate_tool_button.make ("Object Editor", button_form)
-			!! generate_command_button.make ("Command", button_form)
+			{EV_WINDOW} Precursor
+			create horizontal_box.make (Current)
+			horizontal_box.set_homogeneous (False)
+			horizontal_box.set_spacing (10)
+
+			create frame.make_with_text (horizontal_box, "Select a class")
+			create available_classes_list.make (frame)
+			
+			create vertical_box.make (horizontal_box)
+			vertical_box.set_expand (False)
+			vertical_box.set_homogeneous (False)
+			vertical_box.set_spacing (10)
+			create refresh_button.make (vertical_box)
+			create generate_command_button.make (vertical_box)
+			create generate_object_editor_button.make (vertical_box)
+			create fixed.make (vertical_box)
+
 			set_values
-			attach_all
 			set_callbacks
 		end
 
 	set_values is
 			-- Set values for the GUI elements
-		local
-			set_colors: SET_WINDOW_ATTRIBUTES_COM
+--		local
+--			set_colors: SET_WINDOW_ATTRIBUTES_COM
 		do
-			set_size (resources.class_importer_width, resources.class_importer_height)
+			set_minimum_width (resources.class_importer_width)
+			set_minimum_height (resources.class_importer_height)
 			set_x_y (resources.class_importer_x, resources.class_importer_y)
-			!! set_colors
-			set_colors.execute (Current)
+--			!! set_colors
+--			set_colors.execute (Current)
 			set_title ("Class importer")
-			available_label.set_text ("Available classes")
-			available_list.set_multiple_selection
-			available_list.compare_objects
-			selected_label.set_text ("Selected classes")
-			selected_list.set_single_selection
-			selected_list.compare_objects
-			select_button.set_down
-			unselect_button.set_up
-		end
-
-	attach_all is
-			-- Perform attachments.
-		do
-			arrow_form.attach_top (refresh_button, 0)
-			arrow_form.attach_top (blank_label, 0)
-			arrow_form.attach_top (select_button, 0)
-			arrow_form.attach_top (unselect_button, 0)
-			arrow_form.attach_bottom (refresh_button, 0)
-			arrow_form.attach_bottom (blank_label, 0)
-			arrow_form.attach_bottom (select_button, 0)
-			arrow_form.attach_bottom (unselect_button, 0)
-			arrow_form.attach_left (refresh_button, 0)
-			arrow_form.attach_left_widget (refresh_button, blank_label, 0)
-			arrow_form.attach_right (unselect_button, 0)
-			arrow_form.attach_right_widget (unselect_button, select_button, 0)
-			arrow_form.attach_right_widget (select_button, blank_label, 0)
-
-			button_form.set_fraction_base (2)
-			button_form.attach_top (generate_tool_button, 0)
-			button_form.attach_top (generate_command_button, 0)
-			button_form.attach_bottom (generate_tool_button, 0)
-			button_form.attach_bottom (generate_command_button, 0)
-			button_form.attach_left (generate_tool_button, 0)
-			button_form.attach_right_position (generate_tool_button, 1)
-			button_form.attach_left_position (generate_command_button, 1)
-			button_form.attach_right (generate_command_button, 0)
-
-			top_form.set_fraction_base (100)
-			top_form.attach_top (available_label, 0)
-			top_form.attach_left (available_label, 0)
-			top_form.attach_right (available_label, 0)
-			top_form.attach_top_widget (available_label, available_list, 5)
-			top_form.attach_left (available_list, 0)
-			top_form.attach_right (available_list, 0)
-			top_form.attach_bottom_widget (arrow_form, available_list, 5)
-			top_form.attach_left (arrow_form, 0)
-			top_form.attach_right (arrow_form, 0)
-			top_form.attach_bottom_widget (selected_label, arrow_form, 5)
-			top_form.attach_left (selected_label, 0)
-			top_form.attach_right (selected_label, 0)
-			top_form.attach_bottom_position (selected_label, 60)
-			top_form.attach_top_position (selected_list, 60)
-			top_form.attach_left (selected_list, 0)
-			top_form.attach_right (selected_list, 0)
-			top_form.attach_bottom_widget (separator1, selected_list, 5)
-			top_form.attach_left (separator1, 0)
-			top_form.attach_right (separator1, 0)
-			top_form.attach_bottom_widget (generate_label, separator1, 2)
-			top_form.attach_left (generate_label, 0)
-			top_form.attach_right (generate_label, 0)
-			top_form.attach_bottom_widget (button_form, generate_label, 2)
-			top_form.attach_left (button_form, 0)
-			top_form.attach_right (button_form, 0)
-			top_form.attach_bottom (button_form, 0)
+			available_classes_list.set_minimum_width (2 * resources.class_importer_width // 3)
+			refresh_button.set_text ("Refresh")
+			refresh_button.set_expand (False)
+			generate_command_button.set_text ("Generate command")
+			generate_command_button.set_expand (False)
+			generate_object_editor_button.set_text ("Object Editor")
+			generate_object_editor_button.set_expand (False)
 		end
 
 	set_callbacks is
 			-- Sets the callbacks on the GUI elements.
 		local
-			del_com: DELETE_WINDOW
-		do
-			available_list.add_default_action (Current, First)
-			selected_list.add_default_action (Current, Second)
-			select_button.add_activate_action (Current, First)
-			unselect_button.add_activate_action (Current, Second)
-			refresh_button.add_activate_action (Current, Third)
-			generate_tool_button.add_activate_action (Current, Fourth)
-			generate_command_button.add_activate_action (Current, Fifth)
-			!! del_com.make (Current)
-			set_delete_command (del_com)
+			close_cmd: CLOSE_WINDOW
+			arg: EV_ARGUMENT1 [EV_BUTTON]
+ 		do
+			create arg.make (refresh_button)
+ 			refresh_button.add_click_command (Current, arg)
+			create arg.make (generate_command_button)
+ 			generate_command_button.add_click_command (Current, arg)
+			create arg.make (generate_object_editor_button)
+ 			generate_object_editor_button.add_click_command (Current, arg)
+
+ 			create close_cmd.make (Current)
+			add_close_command (close_cmd, Void)
+		end
+
+feature -- Generation tools
+
+	object_command_generator: OBJECT_COMMAND_GENERATOR is
+			-- Command generation from a feature
+		once
+			create Result.make (Current)
+		end
+
+	object_tool_generator: OBJECT_TOOL_GENERATOR is
+			-- Object editor generation from a class
+		once
+			create Result.make (Current)
 		end
 
 feature {NONE} -- GUI attributes
 
-	top_form,
-			-- Form of the top shell
-
-	arrow_form,
-			-- Form containing the arrow buttons
-
-	button_form: FORM
-			-- Form containing the two buttons
-
-	available_label,
-			-- Available classes label
-
-	selected_label,
-			-- Selected classes label
-
-	blank_label,
-			-- Blank label
-
-	generate_label: LABEL
-			-- Generate label	
-
-	available_list,
+	available_classes_list: EV_LIST
 			-- List of available classes
 
-	selected_list: SCROLLABLE_LIST
-			-- List of selected classes
+	refresh_button,
+			-- Refresh button
 
-	select_button,
-			-- Button used to select classes
+	generate_command_button,
+			-- Button that open the object command generator
 
-	unselect_button: ARROW_B
-			-- Button used to deselect classes
-
-	generate_tool_button: PUSH_B
-			-- `Generate Tool' button
-
-	generate_command_button: PUSH_B
-			-- `Generate Command' button
-
-	refresh_button: PUSH_B
-			-- `Refresh' button
-
-	separator1: THREE_D_SEPARATOR
-			-- Separator between `selected_list' and `button_form'
+	generate_object_editor_button: EV_BUTTON
+			-- Button that open the object editor generator
 
 feature -- Command execution
 
-	execute (arg: ANY) is
+	execute (args: EV_ARGUMENT1 [EV_BUTTON]; data: EV_EVENT_DATA) is
 		do
-			if arg = First then
-				select_classes
-			elseif arg = Second then
-				unselect_classes
-			elseif arg = Third then
-				close_object_windows
-				generate_lists
-			elseif arg = Fourth then
-				if selected_list.selected_count > 0 then
-					object_tool_generator.display (selected_list.selected_item)
-				end
-			elseif arg = Fifth then
-				if selected_list.selected_count > 0 then
-					object_command_generator.display (selected_list.selected_item)
-				end
-			end
-		end
-
-	select_classes is
-			-- Move all selected classes of `available_list' into
-			-- `selected_list'.
-		local
-			selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT]
-			finished: BOOLEAN
-		do
-			if available_list.selected_count > 0 then
-				!! selected_items.make
-				selected_items := available_list.selected_items
-				from
-					selected_items.start
-				until
-					selected_items.after
-				loop
-					from
-						available_list.start
-						finished := False
-					until
-						available_list.after or finished
-					loop
-						if available_list.item.value.is_equal (selected_items.item.value) then
-							finished := True
-							available_list.remove
-						else
-							available_list.forth
-						end
-					end
-					from
-						selected_list.start
-						finished := False
-					until
-						selected_list.after or finished
-					loop
-						if selected_list.item.value > selected_items.item.value then
-							finished := True
-							selected_list.put_left (selected_items.item)
-						end
-						selected_list.forth
-					end
-					if not finished then
-						selected_list.extend (selected_items.item)
-					end
-					selected_items.forth
-				end
-				if not finished then
-					selected_list.select_item	
-				else
-					selected_list.select_i_th (selected_list.index - 2)	
-				end
-			end
-		end
-
-	unselect_classes is
-			-- Move all selected classes of `selected_list' into
-			-- `available_list'.
-		local
-			selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT]
-			finished: BOOLEAN
-		do
-			if selected_list.selected_count > 0 then
-				!! selected_items.make
-				selected_items := selected_list.selected_items
-				from
-					selected_items.start
-				until
-					selected_items.after
-				loop
-					from
-						selected_list.start
-						finished := False
-					until
-						selected_list.after or finished
-					loop
-						if selected_list.item.value.is_equal (selected_items.item.value) then
-							finished := True
-							selected_list.remove
-						else
-							selected_list.forth
-						end
-					end
-					from
-						available_list.start
-						finished := False
-					until
-						available_list.after or finished
-					loop
-						if available_list.item.value > selected_items.item.value then
-							finished := True
-							available_list.put_left (selected_items.item)
-						end
-						available_list.forth
-					end
-					if not finished then
-						available_list.extend (selected_items.item)
-					end
-					selected_items.forth
-				end
-				selected_list.select_i_th (selected_list.count)
-			end
+ 			if args.first = refresh_button then
+ 				close_object_windows
+ 				generate_lists
+ 			elseif args.first = generate_command_button then
+ 				if available_classes_list.selected then
+ 					object_command_generator.display (available_classes_list.selected_item)
+ 				end
+ 			elseif args.first = generate_object_editor_button then
+ 				if available_classes_list.selected then
+ 					object_tool_generator.display (available_classes_list.selected_item)
+ 				end
+ 			end
 		end
 
 feature 
@@ -326,23 +148,17 @@ feature
 	display is
 			-- Display class selector.
 		do
-			if not realized then
-				realize
-			else
-				show
-			end
-			generate_lists
+			show
+ 			generate_lists
 		end
 
 	close is
 			-- Close class selector, object tool generator
 			-- and object command generator.
 		do
-			if realized then
-				hide
-			end
-			close_object_windows
-			main_panel.class_importer_entry.set_toggle_off
+			hide
+ 			close_object_windows
+ 			main_panel.class_importer_entry.set_toggle_off
 		end
 
 feature {NONE}
@@ -350,12 +166,12 @@ feature {NONE}
 	close_object_windows is
 			-- Close object tool generator and object command generator.
 		do
-			if object_command_generator.realized then
-				object_command_generator.close
-			end
-			if object_tool_generator.realized then
-				object_tool_generator.close
-			end
+-- 			if object_command_generator.realized then
+-- 				object_command_generator.close
+-- 			end
+-- 			if object_tool_generator.realized then
+-- 				object_tool_generator.close
+-- 			end
 		end
 
 feature -- Lists generation
@@ -365,26 +181,15 @@ feature -- Lists generation
 		local
 			import_cmd: IMPORT_APPLICATION_CLASS_CMD	
 			selected_classes: ARRAYED_LIST [APPLICATION_CLASS]
+			arg: EV_ARGUMENT1 [EV_LIST]
+			event_data: EV_EVENT_DATA
 		do
-			!! import_cmd
-			class_list.wipe_out
-			import_cmd.execute (Void)
-			!! selected_classes.make (0)
-			available_list.wipe_out
-			from 
-				class_list.start
-			until
-				class_list.after
-			loop
-				if selected_list.has (class_list.item) then
-					selected_classes.extend (class_list.item)
-				else
-					available_list.extend (class_list.item)
-				end
-				class_list.forth
-			end
-			selected_list.wipe_out
-			selected_list.append (selected_classes)
+ 			class_list.wipe_out
+			available_classes_list.clear_items
+			create import_cmd
+			create arg.make (available_classes_list)
+			create event_data.make
+ 			import_cmd.execute (arg, event_data)
 		end
 
 end -- class CLASS_IMPORTER

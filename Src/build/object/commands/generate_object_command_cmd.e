@@ -21,10 +21,10 @@ feature
 			mp: MOUSE_PTR
 			precondition_t_b: TOGGLE_B
 		do
-			if object_command_generator.routine_list.selected_count > 0 then
-				application_class := object_command_generator.edited_class
-				application_routine ?= object_command_generator.routine_list.selected_item
-				object_command_generator.generate_command	
+			if class_importer.object_command_generator.routine_list.selected_items.count > 0 then
+				application_class := class_importer.object_command_generator.edited_class
+				application_routine ?= class_importer.object_command_generator.routine_list.selected_item
+				class_importer.object_command_generator.generate_command	
 				precondition_t_b ?= arg
 				if precondition_t_b /= Void then
 					check_precondition := precondition_t_b.state

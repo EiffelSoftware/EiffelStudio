@@ -139,10 +139,12 @@ feature -- Basic operations
 				destination.set_query (private_string)
 				if (handle.execution_type.immediate_execution) then
 					destination.execute_query
-				else 
-					handle.execution_type.set_immediate
+				else
+					-- DB_CHANGE/Oracle has a problem with immediate execution (ORA-01001: Invalid cursor) [but
+					-- it works], so let's use normal execution, which works better (Is it slower?).
+		--FIXME			handle.execution_type.set_immediate
 					destination.execute_query
-					handle.execution_type.unset_immediate
+		--FIXME			handle.execution_type.unset_immediate
 				end
 			else
 				db_spec.exec_proc_not_supported
@@ -262,7 +264,7 @@ feature {NONE} -- Implementation
 						row_number := temp_int.item
 					end
 				else
-					p_exists := 0 /= 0
+					p_exists := False
 				end
 				private_selection.terminate
 			end

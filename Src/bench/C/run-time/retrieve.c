@@ -309,7 +309,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 
 rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 nflags);	/* read the individual attributes of the object*/
 
 rt_private size_t readline (register char *ptr, size_t maxlen);
-rt_private size_t buffer_read (register char *object, size_t size);
+rt_private void buffer_read (register char *object, size_t size);
 rt_private uint32 rt_read_cid (uint32);
 rt_private uint32 rt_id_read_cid (uint32);
 rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name);
@@ -3889,58 +3889,52 @@ rt_private void rread_header (EIF_CONTEXT_NOARG)
 
 rt_private size_t readline (register char *ptr, size_t maxlen)
 {
-	size_t num_char, read_char;
+	size_t num_char = 1;
 	char c;
 
-	for (num_char = 1; num_char < maxlen; num_char ++) {
-		if ((read_char = buffer_read(&c, sizeof (char))) == (sizeof (char))) {
-			*ptr++ = c;
-			if (c == '\n') {
-				break;
-			}
-		}
-		else if (read_char == 0) {
-			if (num_char == 1) {
-				return 0;
-			}
-			else {
-				break;
-			}
-		}
-		else {
-			return 0;
+	for (; num_char < maxlen; num_char++) {
+		buffer_read (&c, sizeof(char));
+		*ptr++ = c;
+		if (c == '\n') {
+			break;
 		}
 	}
 	*ptr = '\0';
-	return (num_char);
+	return num_char;
 }
 		
-			
-rt_private size_t buffer_read (register char *ptr, size_t size)
+rt_private void buffer_read (register char *ptr, size_t size)
 {
 	RT_GET_CONTEXT
-	size_t i;
- 
-#if DEBUG & 2
-	printf ("Current position %d\n", current_position);
-	printf ("Size %d\n", size);
-	printf ("end_of_buffer %d\n", end_of_buffer);
-#endif
+	size_t l_cur_pos = current_position;
+	size_t l_end_of_buffer = end_of_buffer;
 
-	if (current_position + size >= end_of_buffer) {
-		for (i = 0; i < size ; i++) {
-			if (current_position >= end_of_buffer)
-				if ((retrieve_read_func() == 0) && size != i + 1)
-					eraise("incomplete file" , EN_RETR);
-			*(ptr++) = *(general_buffer + current_position++);
-		}
-	} else {
+	REQUIRE("ptr_not_null", ptr);
+	REQUIRE("size_positive", size > 0);
 
-		for (i = 0; i < size ; i++) {
-			*(ptr++) = *(general_buffer + current_position++);
+	while (size > 0) {
+		if (l_cur_pos + size > l_end_of_buffer) {
+			if (l_end_of_buffer > 0) {
+				size_t l_padding = l_end_of_buffer - l_cur_pos;
+				memcpy (ptr, general_buffer + l_cur_pos, l_padding);
+				size -= l_padding;
+				ptr += l_padding;
+			}
+				/* Load remaing bytes in `general_buffer'. */
+			l_end_of_buffer = retrieve_read_func ();
+			end_of_buffer = l_end_of_buffer;
+			l_cur_pos = 0;
+			if (l_end_of_buffer == 0) {
+				eraise("incomplete file" , EN_RETR);
+			}
+		} else {
+			memcpy (ptr, general_buffer + l_cur_pos, size);
+			l_cur_pos += size;
+				/* No need to continue here as we could read it all. */
+			break;
 		}
 	}
-	return (i);
+	current_position = l_cur_pos;
 }
 
 rt_public size_t retrieve_read (void)
@@ -3952,7 +3946,7 @@ rt_public size_t retrieve_read (void)
 
 	if ((char_read_func ((char *)&read_size, sizeof (short))) < sizeof (short))
 		eise_io("Retrieve: unable to read buffer size.");
-	end_of_buffer = read_size;
+	CHECK("read_size_positive", read_size > 0);
 
 	while (read_size > 0) {
 		part_read = char_read_func (ptr, read_size);
@@ -3964,8 +3958,7 @@ rt_public size_t retrieve_read (void)
 		read_size -= part_read;
 		ptr += part_read;
 	}
-	current_position = 0;
-	return (end_of_buffer);
+	return read_size;
 }
 
 rt_public size_t retrieve_read_with_compression (void)
@@ -4010,9 +4003,8 @@ rt_public size_t retrieve_read_with_compression (void)
 					(unsigned char*)dcmps_out_ptr,
 					(unsigned long*)&dcmps_out_size);
 	
-	current_position = 0;
-	end_of_buffer = dcmps_out_size;
-	return (end_of_buffer);
+	CHECK("dcmps_out_size_positive", dcmps_out_size > 0);
+	return dcmps_out_size;
 }
 
 /*

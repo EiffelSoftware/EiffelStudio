@@ -185,14 +185,14 @@ rt_private struct cecil_info * cecil_info_for_dynamic_type (uint32 dtype);
 
 #ifndef EIF_THREADS
 /*
-doc:	<attribute name="store_write_func" return_type="void (*)()" export="private">
+doc:	<attribute name="store_write_func" return_type="void (*)(size_t)" export="private">
 doc:		<summary>Action called when `general_buffer' is full.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private void (*store_write_func)(void);
+rt_private void (*store_write_func)(size_t);
 
 /*
 doc:	<attribute name="flush_buffer_func" return_type="void (*)()" export="private">
@@ -235,14 +235,14 @@ doc:	</attribute>
 rt_shared int (*char_write_func)(char *, int);
 
 /*
-doc:	<attribute name="old_store_write_func" return_type="void (*)()" export="private">
+doc:	<attribute name="old_store_write_func" return_type="void (*)(size_t)" export="private">
 doc:		<summary>Store default version of `store_write_func'.</summary>
 doc:		<access>Read/Write</access> 
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private void (*old_store_write_func)(void);
+rt_private void (*old_store_write_func)(size_t);
 
 /*
 doc:	<attribute name="old_char_write_func" return_type="int (*)(char *, int)" export="private">
@@ -403,7 +403,7 @@ rt_shared void eif_store_thread_init (void)
 /* Initialize store function pointers and globals */
 /* reset buffer size if argument is non null */
 rt_public void rt_init_store(
-	void (*store_function) (void),
+	void (*store_function) (size_t),
 	int (*char_write_function)(char *, int),
 	void (*flush_buffer_function) (void),
 	void (*st_write_function) (EIF_REFERENCE, uint32),
@@ -591,7 +591,7 @@ rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
   if (eif_is_new_recoverable_format) {
 #endif
 	rt_init_store (
-		(void (*)(void)) 0,
+		NULL,
 		char_write,
 		idr_flush,
 		ist_write,
@@ -600,7 +600,7 @@ rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 #ifdef RECOVERABLE_SCAFFOLDING
   } else {
 	rt_init_store (
-		(void (*)(void)) 0,
+		NULL,
 		char_write,
 		idr_flush,
 		ist_write,
@@ -632,7 +632,7 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 #endif
 #endif
 	rt_init_store (
-		(void (*)(void)) 0,
+		NULL,
 		stream_write,
 		idr_flush,
 		ist_write,
@@ -644,7 +644,7 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 	printf ("Storing in old independent format\n");
 #endif
 	rt_init_store (
-		(void (*)(void)) 0,
+		NULL,
 		stream_write,
 		idr_flush,
 		ist_write,
@@ -2042,19 +2042,33 @@ printf ("Free s_attr (%d) %lx\n", i, s_attr);
 rt_shared void buffer_write(char *data, size_t size)
 {
 	RT_GET_CONTEXT
-	size_t i;
+	size_t l_cur_pos = current_position;
+	size_t l_buffer_upper = buffer_size - 1;
 
-	if (current_position + size >= buffer_size) {
-		for (i = 0; i < size; i++) {
-			*(general_buffer + current_position) = *(data++);
-			if (++current_position >= buffer_size)
-				store_write_func();
+	REQUIRE("data_not_null", data);
+	REQUIRE("size_positive", size > 0);
+	REQUIRE("buffer_size_positive", buffer_size > 0);
+
+	while (size > 0) {
+		if (l_cur_pos + size - 1 > l_buffer_upper) {
+			size_t l_padding;
+			if (l_cur_pos <= l_buffer_upper) {
+				l_padding = l_buffer_upper - l_cur_pos + 1;
+				memcpy (general_buffer + l_cur_pos, data, l_padding);
+				size -= l_padding;
+				data += l_padding;
+			} else {
+				l_padding = 0;
 			}
-	} else {
-		for (i = 0; i < size; i++) {
-			*(general_buffer + current_position++) = *(data++);
+			store_write_func(l_cur_pos + l_padding);
+			l_cur_pos = 0;
+		} else {
+			memcpy (general_buffer + l_cur_pos, data, size);
+			l_cur_pos += size;
+			break;
 		}
 	}
+	current_position = l_cur_pos;
 }
 
 /* Bufferization of information on buffer. If the buffer is full
@@ -2069,7 +2083,7 @@ rt_public void new_buffer_write(char *data, int size)
 			 * finish the writing of data */
 		memcpy (general_buffer + current_position, data, buffer_size - current_position);
 		current_position = buffer_size;
-		store_write_func ();
+		store_write_func (current_position);
 			/* Recursive call to finish the storage on the IO_MEDIUM */
 		buffer_write (data + buffer_size, size - buffer_size);
 	} else {
@@ -2083,8 +2097,12 @@ rt_public void new_buffer_write(char *data, int size)
 rt_public void flush_st_buffer (void)
 {
 	RT_GET_CONTEXT
-	if (current_position != 0)
-		store_write_func();
+	size_t l_pos = current_position;
+
+	if (l_pos > 0) {
+		store_write_func(l_pos);
+		current_position = 0;
+	}
 }
 
 rt_public int char_write(char *pointer, int size)
@@ -2106,45 +2124,36 @@ rt_private int stream_write (char *pointer, int size)
 	return size;
 } 
 
-void store_write(void)
+void store_write(size_t cmps_in_size)
 {
 	RT_GET_CONTEXT
-	char* cmps_in_ptr = (char *)0;
-	char* cmps_out_ptr = (char *)0;
-	size_t cmps_in_size = 0;
-	size_t cmps_out_size = 0;
-	char * ptr = (char *)0;
-	int number_left = 0;
-	int number_writen = 0;
+	char* cmps_in_ptr = general_buffer;
+	char* cmps_out_ptr = cmps_general_buffer;
+	size_t cmps_out_size = cmp_buffer_size;
+	int number_left;
+	int number_written;
 
-	cmps_in_ptr = general_buffer;
-	cmps_in_size = current_position;
-	cmps_out_ptr = cmps_general_buffer;
-	cmps_out_size = cmp_buffer_size;
- 
 	eif_compress ((unsigned char*)cmps_in_ptr,
 					(unsigned long)cmps_in_size,
 					(unsigned char*)cmps_out_ptr,
 					(unsigned long*)&cmps_out_size);
  
-	ptr = cmps_general_buffer;
 	CHECK("not too big", (cmps_out_size + EIF_CMPS_HEAD_SIZE) < 0x7FFFFFFF);
 	number_left = (int) (cmps_out_size + EIF_CMPS_HEAD_SIZE);
  
 	while (number_left > 0) {
-		number_writen = char_write_func (ptr, number_left);
-		if (number_writen <= 0) {
+		number_written = char_write_func (cmps_out_ptr, number_left);
+		if (number_written <= 0) {
 			eio();
 		} else {
-			number_left -= number_writen;
-			ptr += number_writen;
+			number_left -= number_written;
+			cmps_out_ptr += number_written;
 		}
 	}
 
-	if (((size_t) (ptr - cmps_general_buffer)) == cmps_out_size + EIF_CMPS_HEAD_SIZE)
-		current_position = 0;
-	else
+	if (((size_t) (cmps_out_ptr - cmps_general_buffer)) != cmps_out_size + EIF_CMPS_HEAD_SIZE) {
 		eise_io("Store: incorrect compression size.");
+	}
 }
 
 rt_private void st_write_cid (uint32 dftype)

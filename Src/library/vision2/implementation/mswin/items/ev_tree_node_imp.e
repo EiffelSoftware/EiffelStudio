@@ -40,7 +40,8 @@ inherit
 
 	EV_TOOLTIPABLE_IMP
 		redefine
-			interface
+			interface,
+			set_tooltip
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
@@ -479,6 +480,12 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 				c.item.general_reset_pixmap
 				c.forth
 			end
+		end
+		
+	set_tooltip (a_tooltip: STRING) is
+			-- Assign `a_tooltip' to `internal_tooltip_string'.
+		do
+			internal_tooltip_string := clone (a_tooltip)
 		end
 
 feature {EV_TREE_IMP} -- Implementation, pick and drop

@@ -19,7 +19,7 @@ feature -- Access
 	storable_name: STRING is
 			-- Storable version of `name' used in storage.
 		do
-			Result := clone (name)
+			Result := name.twin
 			Result.to_lower
 			Result.prune_all (' ')			
 		ensure

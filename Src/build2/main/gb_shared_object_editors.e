@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 	all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR] is
 			-- All object editors in system, floating and docked.
 		do
-			Result := clone (floating_object_editors)
+			Result := floating_object_editors.twin
 			Result.force (docked_object_editor)
 		end
 

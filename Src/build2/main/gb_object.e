@@ -641,7 +641,7 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT} -- Implementation
 			gb_ev_any: GB_EV_ANY
 		do
 			create handler
-			supported_types := clone (handler.supported_types)
+			supported_types := handler.supported_types.twin
 			from
 				supported_types.start
 			until
@@ -814,22 +814,22 @@ feature {GB_BUILDER_WINDOW} -- Implementation
 			colorizeable ?= display_object
 			if colorizeable /= Void then
 				if color_stone.is_foreground then
-					colorizeable.set_foreground_color (clone (color_stone.color))
+					colorizeable.set_foreground_color (color_stone.color.twin)
 					colorizeable ?= object
-					colorizeable.set_foreground_color (clone (color_stone.color))
+					colorizeable.set_foreground_color (color_stone.color.twin)
 					a_display_object ?= display_object
 					if a_display_object /= Void then
 						colorizeable ?= a_display_object.child
-						colorizeable.set_foreground_color (clone (color_stone.color))
+						colorizeable.set_foreground_color (color_stone.color.twin)
 					end
 				else
-					colorizeable.set_background_color (clone (color_stone.color))
+					colorizeable.set_background_color (color_stone.color.twin)
 					colorizeable ?= object
-					colorizeable.set_background_color (clone (color_stone.color))
+					colorizeable.set_background_color (color_stone.color.twin)
 					a_display_object ?= display_object
 					if a_display_object /= Void then
 						colorizeable ?= a_display_object.child
-						colorizeable.set_background_color (clone (color_stone.color))
+						colorizeable.set_background_color (color_stone.color.twin)
 					end
 				end
 			end

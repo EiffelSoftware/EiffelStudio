@@ -75,7 +75,7 @@ feature -- Basic operations
 			end
 				-- Create the menu item
 			create Result.make (Current)
-			mname := clone (menu_name)
+			mname := menu_name.twin
 			if accelerator /= Void then
 				mname.append (Tabulation)
 				mname.append (accelerator.out)

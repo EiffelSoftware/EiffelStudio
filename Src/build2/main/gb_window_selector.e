@@ -619,9 +619,9 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			if not (new_name.is_empty or old_name.is_empty) then
 				
 					-- Build file names for accessing files.
-				interface_file_name := clone (file_name)
+				interface_file_name := file_name.twin
 				interface_file_name.extend (new_name + ".e")
-				implementation_file_name := clone (file_name)
+				implementation_file_name := file_name.twin
 				implementation_file_name.extend (new_name + Class_implementation_extension.as_lower + ".e")
 				
 				create l_eiffel_parser.make

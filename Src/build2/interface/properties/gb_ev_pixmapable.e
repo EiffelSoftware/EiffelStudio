@@ -65,7 +65,7 @@ feature {GB_XML_STORE} -- Output
 					pixmap_constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
 					create new_pixmap
-					new_pixmap := clone (pixmap_constant.pixmap)
+					new_pixmap := pixmap_constant.pixmap.twin
 					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
 				else
 					create new_pixmap

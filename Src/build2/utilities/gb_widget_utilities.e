@@ -272,7 +272,7 @@ feature -- Basic operations
 				new_y := (original_pixmap.height / biggest_ratio).truncated_to_integer
 			end
 
-			Result := clone (original_pixmap)
+			Result := original_pixmap.twin
 			if new_x /= 0 and new_y /= 0 then
 				Result.stretch (new_x, new_y)
 			end

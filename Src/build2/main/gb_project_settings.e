@@ -243,7 +243,7 @@ feature -- Status Setting
 			name_not_void: name /= Void
 			valid_class_name: valid_class_name (name)
 		do
-			main_window_class_name := clone (name)
+			main_window_class_name := name.twin
 		ensure
 			main_window_class_name.is_equal (name)
 		end
@@ -254,7 +254,7 @@ feature -- Status Setting
 			name_not_void: name /= Void
 			valid_class_name: valid_class_name (name)
 		do
-			application_class_name := clone (name)
+			application_class_name := name.twin
 		ensure
 			application_class_name.is_equal (name)
 		end
@@ -265,7 +265,7 @@ feature -- Status Setting
 			name_not_void: name /= Void
 			valid_class_name: valid_class_name (name)
 		do
-			constants_class_name := clone (name)
+			constants_class_name := name.twin
 		ensure
 			constants_class_name.is_equal (name)
 		end

@@ -42,6 +42,9 @@ feature -- Basic operations
 			-- `Result' is a STRING guaranteed not to be contained in `existing_names',
 			-- which is the value of `hint_name' with an underscore and a number appended to it.
 			-- The algorithm used does not guarantee that this is the first available number.
+		require
+			existing_names_not_void: existing_names /= Void
+			hint_name_not_void: hint_name /= Void
 		local
 			names: ARRAYED_LIST [STRING]
 			matches: INTEGER
@@ -52,7 +55,7 @@ feature -- Basic operations
 			hint_name_lower.to_lower
 				-- We clone `existing_names' so when we compare references, we
 				-- do not affect the list that was passed in.
-			names := clone (existing_names)
+			names := existing_names.twin
 			names.compare_objects
 			from
 				names.start
@@ -148,7 +151,7 @@ feature -- Basic operations
 		require
 			file_title_not_void: file_title /= Void
 		do
-			Result := clone (file_title)
+			Result := file_title.twin
 			Result.replace_substring_all (" ", "_")
 			Result.replace_substring_all (".", "_")
 			Result := Result.as_lower

@@ -21,8 +21,8 @@ feature {NONE} -- Initialization
 			a_name_valid: a_name /= Void and then a_value /= Void
 			a_value_valid: a_value /= Void and then a_value /= Void
 		do
-			name := clone (a_name)
-			value := clone (a_value)
+			name := a_name.twin
+			value := a_value.twin
 			create referers.make (4)
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
@@ -43,7 +43,7 @@ feature -- Access
 	value_as_string: STRING is
 			-- Value represented by `Current' as a STRING.
 		do
-			Result := clone (value)
+			Result := value.twin
 		end
 		
 	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is

@@ -38,15 +38,14 @@ feature -- Conversion
 	strip_cdata (a_string: STRING): STRING is
 			-- If CDATA is present in `a_string' then `Result' is
 			-- a copy of `a_string' with CDATA tags removed.
-			-- Otherwise, `Result' is a cpoy of the original STRING.
+			-- Otherwise, `Result' is a copy of the original STRING.
 		require
 			string_not_void: a_string /= Void
 		do
 			if has_cdata (a_string) then
 				Result := strip_cdata_strict (a_string)
 			else
-				create Result.make (1)
-				Result := Result.clone (a_string)
+				Result := a_string.twin
 			end
 		ensure
 			not has_cdata (Result)

@@ -552,7 +552,7 @@ feature {NONE} -- Implementation
 			attribute_editor_box.disable_item_expand (separator)
 			
 			create handler
-			supported_types := clone (handler.supported_types)
+			supported_types := handler.supported_types.twin
 			from
 				supported_types.start
 			until
@@ -595,7 +595,6 @@ feature {NONE} -- Implementation
 				horizontal_box.extend (event_selection_button)
 				horizontal_box.disable_item_expand (event_selection_button)
 				attribute_editor_box.extend (horizontal_box)
-				attribute_editor_box.disable_item_expand (event_selection_button)
 				event_selection_button.select_actions.extend (agent show_event_dialog)
 			end
 

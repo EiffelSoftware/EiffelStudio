@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			counter: INTEGER
 		do
 			first_window.set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
-			project_location := clone (system_status.current_project_settings.project_location)
+			project_location := system_status.current_project_settings.project_location.twin
 			if project_location.count > 40 and not project_location.has ('%N') then
 				from
 					counter := 40

@@ -54,7 +54,7 @@ void c_signal_callback (GtkObject *w, gpointer data)
     
     /* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
     /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
-	printf("c_signal_callback (%d, %d)\n", w, data); 
+	/*printf("c_signal_callback (%d, %d)\n", w, data); */
 	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
 }
 
@@ -73,7 +73,7 @@ void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data)
     callback_data_t *pcbd;
     pcbd = (callback_data_t *)data;
 
-	printf("c_event_callback (%d, %d, %d)\n", w, ev, data); 
+	/*printf("c_event_callback (%d, %d, %d)\n", w, ev, data); */
 
     if (pcbd->ev_data != NULL)
     {
@@ -196,6 +196,7 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
     callback_data_t *pcbd;
     int name_len;
 	int event = 0;
+	gint event_flags;
 
     /* Deallocation of this block is done when the */
     /* the signal is destroyed (see c_gtk_signal_destroy_data) */
@@ -221,6 +222,17 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
     name_len = strlen (name);
     if (name_len > 6 && strcmp (&name [name_len - 6], "_event") == 0) {
         event = 1;
+	}
+
+    /* Make sure the widget has motion event enabled */
+	if (strcmp(name, "motion_notify_event") == 0) {
+		event_flags = gtk_widget_get_events(GTK_WIDGET(widget));
+		printf("event_flags = %d\n", event_flags);
+		event_flags |= GDK_POINTER_MOTION_MASK;
+		printf("event_flags = %d\n", event_flags);
+		gtk_widget_set_events(GTK_WIDGET(widget), event_flags);
+		event_flags = gtk_widget_get_events(GTK_WIDGET(widget));
+		printf("event_flags = %d\n", event_flags);
 	}
 		
 	if(after) {
@@ -425,6 +437,12 @@ EIF_INTEGER c_gtk_window_y (GtkWidget *w)
 	}
 	else
 		return (-1);
+}
+
+void c_gtk_window_set_modal (GtkWindow* window, gboolean modal)
+{
+	gtk_signal_connect_object(GTK_OBJECT(window),"show",GTK_SIGNAL_FUNC(gtk_grab_add),GTK_OBJECT(window));
+	gtk_signal_connect_object(GTK_OBJECT(window),"hide",GTK_SIGNAL_FUNC(gtk_grab_remove),GTK_OBJECT(window));
 }
 
 /*********************************

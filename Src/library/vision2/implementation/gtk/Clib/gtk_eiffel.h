@@ -273,7 +273,7 @@ guint c_gtk_clist_selection_length (GtkWidget* list);
 
 /* CList */
 #define c_gtk_clist_rows(p)     (((GtkCList*)p)->rows)     /*integer*/
-#define c_gtk_clist_columns(p)  (((GtkCList*)p)->columns)  /*integer*/
+#define c_gtk_clist_columns(p)  (GTK_CLIST(p)->columns)  /*integer*/
 #define c_gtk_clist_selection_mode(p) (((GtkCList*)p)->selection_mode)  /*integer*/
 
 
@@ -317,6 +317,8 @@ void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 /* Give the position of a window. */
 EIF_INTEGER c_gtk_window_x (GtkWidget *w);
 EIF_INTEGER c_gtk_window_y (GtkWidget *w);
+
+void c_gtk_window_set_modal(GtkWindow* window, gboolean modal);
 
 
 /*==============================================================================

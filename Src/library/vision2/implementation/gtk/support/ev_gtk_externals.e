@@ -430,7 +430,14 @@ feature {NONE} -- GtkStyle functions
 		external
 			"C | %"gtk_eiffel.h%""
 		end
-	
+
+feature {NONE} -- GtkWindow function
+
+	c_gtk_window_set_modal(window: POINTER; state: BOOLEAN) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- Implementation
 	
 	routine_address (routine: POINTER): POINTER is

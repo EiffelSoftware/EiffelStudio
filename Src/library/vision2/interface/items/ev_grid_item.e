@@ -69,7 +69,7 @@ feature -- Status report
 			Result := implementation.is_parented
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	implementation: EV_GRID_ITEM_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -424,9 +424,11 @@ feature {NONE} -- Implementation
 					l_file := l_file_list.item
 					l_found := l_file.substring (l_file.count - 3, l_file.count).is_equal (".epr")
 					if l_found then
+						Result.append_character ('"')
 						Result.append (a_folder)
 						Result.append ("\")
 						Result.append (l_file)
+						Result.append_character ('"')
 					end
 					l_file_list.forth
 				end

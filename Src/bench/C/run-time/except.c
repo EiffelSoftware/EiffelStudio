@@ -180,12 +180,10 @@ rt_public void eviol(void);			/* Signals assertion violation */
 rt_public void exfail(void);			/* Signals: reached end of a rescue clause */
 rt_public void eif_panic(char *msg);			/* Run-time raised panic */
 rt_public void fatal_error(char *msg);			/* Run-time raised fatal errors */
-rt_shared void xraise(int code);			/* Raises an exception with no tag */
+rt_public void xraise(int code);			/* Raises an exception with no tag */
 rt_public struct ex_vect *exset(char *name, int origin, char *object);	/* Set execution stack on routine entrance */
 rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, BODY_INDEX bid);	/* Set execution stack on routine entrance */
-#ifndef WORKBENCH
 rt_public struct ex_vect *exft(void);	/* Entry in feature with rescue clause */
-#endif
 
 /* Exception recovery mechanism */
 rt_public void exok(void);				/* Resumption has been successful */
@@ -455,7 +453,6 @@ rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsign
 	return vector;		/* Execution vector of current Eiffel routine */
 }
 
-#ifndef WORKBENCH
 rt_public struct ex_vect *exft(void)
 {
 	/* Get an execution vector, in final mode. We don't bother setting the
@@ -492,7 +489,6 @@ rt_public struct ex_vect *exft(void)
 
 	return vector;		/* Execution vector of current Eiffel routine */
 }
-#endif
 
 rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 		/* Exec. vector of enclosing routine */
@@ -629,7 +625,7 @@ rt_public void exasrt(char *tag, int type)
  * exceptions and perform some cleanup (e.g. in a retrieve operation).
  */
 
-rt_shared void excatch(jmp_buf *jmp)
+rt_public void excatch(jmp_buf *jmp)
 		/* The jump buffer used to catch exception */
 {
 	/* Push a pseudo EX_OSTK execution vector on the exception stack. Whenever
@@ -823,7 +819,7 @@ rt_public void exfail(void)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *vector;			/* The stack vector entry at the top */
-	unsigned char code;						/* Exception code */
+//	unsigned char code;						/* Exception code */
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 
@@ -846,21 +842,27 @@ rt_public void exfail(void)
 	 */
 
 	vector = extop(&eif_stack);		/* Top level vector */
-	code = xcode(vector);			/* Failure yields a specific code */
 
-	if (code < EN_NEX && ex_ign[code]) {	/* Exception to be ignored */
-		expop(&eif_stack);					/* Remove the faulty vector */
-		return;
-	}
+// TODO: review this code to allow for processing of routine failure
+//       as specified in the forthcoming standard
+//
+//	code = xcode(vector);			/* Failure yields a specific code */
+//
+//	if (code < EN_NEX && ex_ign[code]) {	/* Exception to be ignored */
+//		expop(&eif_stack);					/* Remove the faulty vector */
+//		return;
+//	}
+//
+//
+//	/* Set up 'echtg' to be the tag of the current exception, if one can be
+//	 * computed, otherwise it is a null pointer. This will be used by the
+//	 * debugger in its stop notification request.
+//	 */
+//
+//	echval = code;		/* Keep track of the last exception code */
+//	echtg = vector->ex_name;			/* Record exception tag, if any */
 
-
-	/* Set up 'echtg' to be the tag of the current exception, if one can be
-	 * computed, otherwise it is a null pointer. This will be used by the
-	 * debugger in its stop notification request.
-	 */
-
-	echval = code;		/* Keep track of the last exception code */
-	echtg = vector->ex_name;			/* Record exception tag, if any */
+	echval = EN_FAIL;
 
 	/* Maintain the notion of original exception at this level, despite any
 	 * extra implicit raises, by recomputing the code each time. Due to the
@@ -1557,7 +1559,8 @@ rt_public void exok(void)
 	 * here--RAM).
 	 */
 
-	if (echval == 0) {
+	top = extop (&eif_stack);
+	if (echval == 0 || top->ex_type != EX_RETY) {
 		expop(&(eif_stack));		/* remove current call from `eif_stack' */
 		return;						/* No exception occurred */
 	}
@@ -1566,7 +1569,7 @@ rt_public void exok(void)
 
 	while ((top = extop(&eif_stack))) {	/* Find last enclosing call */
 		type = top->ex_type;			/* Type of the current vector */
-		if (type == EX_CALL || type == EX_RESC || type == EX_RETY) {
+		if (type == EX_CALL || type == EX_RESC || type == EX_RETY || type == EX_OSTK) {
 			expop(&eif_stack);			/* remove current call from `eif_stack' */
 			break;						/* We found a calling record */
 		}
@@ -1610,6 +1613,7 @@ rt_public void exclear(void)
 {
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
+	struct ex_vect *trace;		/* Top of trace stack */
 
 	/* If 'echval' is set to zero, then no exception occurred, so return
 	 * immediately. Otherwise, pop off the stack until we reach an execution
@@ -1628,8 +1632,12 @@ rt_public void exclear(void)
 	 * "New level" pseudo-vector.
 	 */
 
-	while (extop(&eif_trace))
-	  expop(&eif_trace);	/* Will panic if we underflow */
+	while (trace = extop(&eif_trace)) {
+		if (trace->ex_type == EN_ILVL) {
+			echlvl--;	/* Decrease exception level */
+		}
+		expop(&eif_trace);	/* Will panic if we underflow */
+	}
 
 	echval = 0;			/* No more pending exception */
 	echmem = 0;			/* We have recovered from this out of mem */

@@ -30,8 +30,6 @@ rt_private STREAM *sp;				/* Stream used for communications */
 rt_private char* reading_buffer;		/* Buffer used for communication, grows as needed */
 rt_private int allocated_buffer_size; 	/* Currently allocated size for buffer */
 
-extern Malloc_t malloc(register unsigned int nbytes);		/* Memory allocation */
-
 rt_public void tpipe(STREAM *stream)
 {
 	/* Initialize the file descriptor to be used in data exchanges with the

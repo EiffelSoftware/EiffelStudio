@@ -205,18 +205,29 @@ feature -- Element change
 		do
 			if close_command = Void then
 				if application /= Void then
-						application.exit
-						end
-				else
-					window_interface ?= interface
-					check
-						window_interface /= Void
-					end
-					!!a.make (window_interface)
-					close_command.execute (a)
+					application.exit
 				end
+				plateform_closed
+				interface.remove_implementation
+			else
+				window_interface ?= interface
+				check
+					window_interface /= Void
+				end
+				!!a.make (window_interface)
+				close_command.execute (a)
+			end
 		end
-        
+       
+	plateform_closed is
+			-- A specific function for each plateform to definitely
+			-- destroy the informations after the manager destroyed
+			-- the widget.
+		deferred
+		ensure
+			destroyed: destroyed
+		end 
+
 	set_close_command (c: EV_COMMAND) is
 		do
 			close_command := c

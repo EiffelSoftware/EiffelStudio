@@ -301,7 +301,7 @@ feature -- Status report
 			end
 			wel_character_format := current_selection_character_format
 			mask := wel_character_format.mask
-			create Result.make_with_values (start_index, end_index, flag_set (mask, cfm_face), flag_set (mask, cfm_bold), flag_set (mask, cfm_italic), flag_set (mask, cfm_size), flag_set (mask, cfm_color), flag_set (mask, cfm_strikeout), flag_set (mask, cfm_underline))
+			create Result.make_with_values (flag_set (mask, cfm_face), flag_set (mask, cfm_bold), flag_set (mask, cfm_italic), flag_set (mask, cfm_size), flag_set (mask, cfm_color), flag_set (mask, cfm_strikeout), flag_set (mask, cfm_underline))
 			if not range_already_selected then
 				safe_restore_caret
 			end
@@ -424,6 +424,45 @@ feature -- Status setting
 				wel_character_format_not_void: wel_character_format /= Void
 			end
 			set_character_format_selection (wel_character_format)
+		end
+		
+	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
+			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
+			-- `True' within `applicable_attributes', ignoring others.
+		local
+			wel_character_format: WEL_CHARACTER_FORMAT
+			mask: INTEGER
+		do
+			safe_store_caret
+			set_selection (start_position - 1, end_position - 1)
+			wel_character_format ?= format.implementation
+			check
+				wel_character_format_not_void: wel_character_format /= Void
+			end
+			if applicable_attributes.font_shape = True then
+				mask := mask | cfm_italic
+			end
+			if applicable_attributes.color then
+				mask := mask | cfm_color
+			end
+			if applicable_attributes.effects_striked_out then
+				mask := mask | cfm_strikeout
+			end
+			if applicable_attributes.effects_underlined then
+				mask := mask | cfm_underline
+			end
+			if applicable_attributes.font_family then
+				mask := mask | cfm_face
+			end
+			if applicable_attributes.font_weight then
+				mask := mask | cfm_bold
+			end
+			if applicable_attributes.font_height then
+				mask := mask | cfm_size
+			end
+			wel_character_format.set_mask (mask)
+			set_character_format_selection (wel_character_format)
+			safe_restore_caret
 		end
 		
 	buffered_format (start_pos, end_pos: INTEGER; format: EV_CHARACTER_FORMAT) is

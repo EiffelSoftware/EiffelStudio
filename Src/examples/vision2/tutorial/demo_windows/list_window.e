@@ -20,13 +20,17 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the demo in `par'.
+		local
+			cmd1: EV_ROUTINE_COMMAND
+			cmd2: EV_ROUTINE_COMMAND
+			arg: EV_ARGUMENT1 [EV_LIST_ITEM]
 		do
 			{EV_LIST} Precursor (par)
-
-			!!item1.make_with_text (Current, "This is item1")
-			!!item2.make (Current)
-			item2.set_selected (True)
-			!!item3.make_with_text (Current, "item3")
+ 			!! item1.make_with_text (Current, "This is item1")
+ 			!! item2.make (Current)
+ 			item2.set_text ("Item 2")
+ 			!! item3.make_with_text (Current, "item 3")
+			set_multiple_selection
 		end
 
 feature -- Access

@@ -405,25 +405,29 @@ feature -- Generic conformance for IL
 		local
 			i, up : INTEGER
 		do
-			il_generator.generate_generic_type_instance (true_generics.count)
-			
-			from
-				i  := true_generics.lower
-				check
-					i_start_at_one: i = 1
+			if use_info and then cr_info /= Void then
+				cr_info.generate_il_type
+			else
+				il_generator.generate_generic_type_instance (true_generics.count)
+				
+				from
+					i  := true_generics.lower
+					check
+						i_start_at_one: i = 1
+					end
+					up := true_generics.upper
+				until
+					i > up
+				loop
+					il_generator.duplicate_top
+					il_generator.put_integer_32_constant (i - 1)
+					true_generics.item (i).generate_gen_type_il (il_generator, use_info)
+					il_generator.generate_array_write (feature {IL_CONST}.il_ref)
+					i := i + 1
 				end
-				up := true_generics.upper
-			until
-				i > up
-			loop
-				il_generator.duplicate_top
-				il_generator.put_integer_32_constant (i - 1)
-				true_generics.item (i).generate_gen_type_il (il_generator, use_info)
-				il_generator.generate_array_write (feature {IL_CONST}.il_ref)
-				i := i + 1
+				
+				il_generator.generate_generic_type_settings (Current)
 			end
-			
-			il_generator.generate_generic_type_settings (Current)
 		end
 
 feature {NONE} -- Implementation: generic conformance

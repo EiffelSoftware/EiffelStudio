@@ -13,19 +13,19 @@ inherit
 	BAR_AND_TEXT
 		redefine
 			hole, build_format_bar, build_widgets,
-			open_cmd_holder, save_as_cmd_holder, save_cmd_holder,
-			tool_name, editable, create_edit_buttons,
-			display, stone, stone_type, synchronise_stone, process_system,
+			open_cmd_holder, save_cmd_holder,
+			tool_name, editable, display, stone, stone_type, 
+			synchronise_stone, process_system,
 			process_class, process_classi, process_ace_syntax, compatible,
 			set_mode_for_editing, hide, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
-			set_read_only_text_window, realized,
-			update_boolean_resource,
+			set_read_only_text_window, realized, able_to_edit,
+			update_boolean_resource, build_bar,
 			update_integer_resource,
 			update_array_resource,
 			set_default_size,
 			resources, close, update_graphical_resources,
-			raise
+			raise, build_save_as_menu_entry
 		end;
 	EB_CONSTANTS;
 
@@ -125,6 +125,12 @@ feature -- Access
 
 	has_editable_text: BOOLEAN is
 			-- Does Current tool have an editable text window?
+		do
+			Result := last_format = showtext_frmt_holder
+		end;
+
+	able_to_edit: BOOLEAN is
+			-- Are we able to edit the text?
 		do
 			Result := last_format = showtext_frmt_holder
 		end;
@@ -316,7 +322,7 @@ feature -- Graphical Interface
 	
 feature {NONE} -- Implementation; Graphical Interface
 
-	create_edit_buttons is
+	build_bar is
 		local
 			quit_cmd: QUIT_SYSTEM;
 			quit_button: EB_BUTTON;
@@ -328,12 +334,12 @@ feature {NONE} -- Implementation; Graphical Interface
 			save_cmd: SAVE_SYSTEM;
 			save_button: EB_BUTTON;
 			save_menu_entry: EB_MENU_ENTRY;
-			save_as_cmd: SAVE_AS_SYSTEM;
-			save_as_button: EB_BUTTON;
-			save_as_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR
 		do
-
+			!! hole.make (Current);
+			!! hole_button.make (hole, edit_bar);
+			!! hole_holder.make_plain (hole);
+			hole_holder.set_button (hole_button);
 			!! open_cmd.make (Current);
 			!! open_button.make (open_cmd, edit_bar);
 			!! open_menu_entry.make (open_cmd, file_menu);
@@ -342,12 +348,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! save_button.make (save_cmd, edit_bar);
 			!! save_menu_entry.make (save_cmd, file_menu);
 			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry);
-			!! save_as_cmd.make (Current);
-			!! save_as_button.make (save_as_cmd, edit_bar);
-			!! save_as_menu_entry.make (save_as_cmd, file_menu);
-			!! save_as_cmd_holder.make (save_as_cmd, save_as_button, save_as_menu_entry);
+			build_save_as_menu_entry;
 			build_print_menu_entry;
-			!! sep.make (new_name, file_menu);
+			build_edit_menu (edit_bar)
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
@@ -355,7 +358,17 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
 			exit_cmd_holder.set_menu_entry (exit_menu_entry);
-			build_edit_menu (edit_bar)
+			
+			edit_bar.attach_left (hole_button, 0);
+			edit_bar.attach_top (hole_button, 0);
+			edit_bar.attach_top (open_button, 0);
+			edit_bar.attach_top (save_button, 0);
+			edit_bar.attach_top (search_cmd_holder.associated_button, 0);
+			edit_bar.attach_top (quit_button, 0);
+			edit_bar.attach_right_widget (save_button, open_button, 0);
+			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_button, 0);
+			edit_bar.attach_right_widget (quit_button, search_cmd_holder.associated_button, 5);
+			edit_bar.attach_right (quit_button, 0);
 		end;
 
 	build_widgets is
@@ -473,9 +486,22 @@ feature {NONE} -- Implementation; Graphical Interface
 			shell_button.add_button_press_action (3, shell_cmd, Void);
 			!! shell_menu_entry.make (shell_cmd, special_menu);
 			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
+			build_filter_menu_entry;
 
 			edit_bar.attach_top (shell_button, 0);
 			edit_bar.attach_left_widget (hole_button, shell_button, 0)
+		end;
+
+	build_save_as_menu_entry is
+			-- Create a save_as command to be inserted into file menu.
+		local
+			save_as_cmd: SAVE_AS_SYSTEM;
+			save_as_menu_entry: EB_MENU_ENTRY;
+			sep: SEPARATOR
+		do
+			!! save_as_cmd.make (Current);
+			!! save_as_menu_entry.make (save_as_cmd, file_menu);
+			!! sep.make (Interface_names.t_Empty, file_menu)
 		end;
 
 feature {WINDOWS} -- Attributes
@@ -501,8 +527,6 @@ feature {NONE} -- Attributes; Commands
 	open_cmd_holder: COMMAND_HOLDER;
 
 	save_cmd_holder: TWO_STATE_CMD_HOLDER;
-
-	save_as_cmd_holder: COMMAND_HOLDER;
 
 	-- check_command: CHECK_SYSTEM;
 

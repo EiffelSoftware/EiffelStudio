@@ -33,7 +33,7 @@ feature -- Status setting
 			set_horizontal_resize (True)
 		end
 
-end -- class EV_TOOL_BAR
+end -- class EV_TOOL_BAR_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -35,7 +35,9 @@ feature -- Initialization
 		local
 			rout_as: ROUTINE_AS_B
 		do
-			rout_as ?= ast.body.content;
+			if ast /= Void then
+				rout_as ?= ast.body.content;
+			end;
 			if rout_as /= Void then
 				precondition := rout_as.precondition;
 				postcondition := rout_as.postcondition;

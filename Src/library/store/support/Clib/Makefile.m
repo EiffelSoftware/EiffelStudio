@@ -1,7 +1,7 @@
 AR = lib
 CC = cl
 CTAGS = ctags
-CFLAGS = -nologo  -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
+CFLAGS = -Ox -W3 -nologo  -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
 MAKE = nmake
 RANLIB = echo
 RM = del
@@ -16,7 +16,7 @@ OBJECTS = ext_internal.obj append_substr.obj
 
 support.lib: $(OBJECTS)
 	$(RM) $@
-	$(AR) -DEBUGTYPE:BOTH -OUT:$@ $(OBJECTS)
+	$(AR) -OUT:$@ $(OBJECTS)
 	if not exist ..\..\spec mkdir ..\..\spec
 	if not exist ..\..\spec\msc mkdir ..\..\spec\msc
 	if not exist ..\..\spec\msc\lib mkdir ..\..\spec\msc\lib

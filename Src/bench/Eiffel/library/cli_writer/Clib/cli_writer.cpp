@@ -47,12 +47,12 @@ rt_public EIF_POINTER new_ise_cache_manager ()
   /* Create new instance of ISE_Cache_ISE_COM_CACHE_MANAGER */
 {
   HRESULT hr;
-  ISE_Cache_ISE_COM_CACHE_MANAGER *pICM = NULL;
+  ISE_Cache_COM_ISE_CACHE_MANAGER *pICM = NULL;
 
-  hr = CoCreateInstance (CLSID_ISE_Cache_Impl_ISE_COM_CACHE_MANAGER,
+  hr = CoCreateInstance (CLSID_ISE_Cache_Impl_COM_ISE_CACHE_MANAGER,
                          NULL,
                          CLSCTX_INPROC_SERVER,
-                         IID_ISE_Cache_ISE_COM_CACHE_MANAGER,
+                         IID_ISE_Cache_COM_ISE_CACHE_MANAGER,
                          reinterpret_cast<void **>(&pICM));
 
   CHECK (hr, "Could not instansiate COM Object ISE_Cache_ISE_COM_CACHE_MANAGER")

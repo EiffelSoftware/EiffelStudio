@@ -32,6 +32,8 @@ feature {NONE} -- Implementation
 		do
 			inspect
 				menu_id
+
+				-- FILE menu
 			when Cmd_file_exit then
 				if closeable then
 					destroy
@@ -41,18 +43,61 @@ feature {NONE} -- Implementation
 				if open_file_dialog.selected then
 					create child.make (Current, open_file_dialog.file_name)
 				end
+
 			when Cmd_file_close then
 				if has_active_window then
 					active_window.destroy
 				end
+
+				-- EDIT menu
+			when Cmd_edit_undo then
+				
+			when Cmd_edit_redo then
+				
+			when Cmd_edit_cut then
+				
+			when Cmd_edit_copy then
+				
+			when Cmd_edit_paste then
+				
+			when Cmd_edit_indent then
+				if has_active_window then
+					child ?= active_window
+					child.unindent_selection
+				end
+
+			when Cmd_edit_unindent then
+				if has_active_window then
+					child ?= active_window
+					child.indent_selection
+				end
+
+			when Cmd_edit_comment then
+				if has_active_window then
+					child ?= active_window
+					child.comment_selection
+				end
+
+			when Cmd_edit_uncomment then
+				if has_active_window then
+					child ?= active_window
+					child.uncomment_selection
+				end
+
+			
+				-- WINDOW menu
 			when Cmd_window_tile_vertical then
 				tile_children_vertical
+
 			when Cmd_window_tile_horizontal then
 				tile_children_horizontal
+
 			when Cmd_window_cascade then
 				cascade_children
+
 			when Cmd_window_arrange then
 				arrange_icons
+
 			else
 			end
 		end

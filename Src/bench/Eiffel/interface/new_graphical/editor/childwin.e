@@ -132,6 +132,9 @@ feature -- Initialization
 
 feature -- Access
 
+	has_selection: BOOLEAN
+			-- Is there a selection?
+
 	insert_mode: BOOLEAN
 			-- Are we in insert mode?
 
@@ -146,12 +149,6 @@ feature -- Access
 
 	cursor: TEXT_CURSOR
 			-- current cursor
-
-	selection_start: TEXT_CURSOR
-			-- Position where the user has started to select
-			-- the text. This position can be below the current
-			-- cursor (and therefore represent the end of the
-			-- selection)
 
 	history: UNDO_REDO_STACK
 			-- List of undo and redo commands
@@ -237,169 +234,31 @@ feature -- Basic operations
 			end
 		end
 
-	invalidate_cursor_rect (redraw: BOOLEAN) is
-			-- Set the line where the cursor is situated to be redrawn
-			-- Redraw immediately if `redraw' is set.
-		local
-			wel_rect: WEL_RECT
-			cursor_up: INTEGER
-		do
-   				-- Invalidate old cursor location.
-   			cursor_up := (cursor.y_in_lines-first_line_displayed) * line_increment
-   			create wel_rect.make (0, cursor_up, width, cursor_up + line_increment)
-			invalidate_rect (wel_rect,true)
-			if redraw then
-				update
-			end
-		end
-
-	basic_cursor_move(action: PROCEDURE[TEXT_CURSOR,TUPLE]) is
-			-- Perform a basic cursor move such as go_left,
-			-- go_right, ... an example of agent `action' is
-			-- cursor~go_left_char
-		do
-			if not has_selection then
-					-- There is no selected text.
-				if shifted_key then
-						-- ... So start a new selection.
-					has_selection := True
-					selection_start := clone (cursor)
-				end
-				invalidate_cursor_rect (False)
-				action.call([])
-				invalidate_cursor_rect (True)
-			elseif shifted_key then
-					-- There was a selection and we go on selecting text.
-				invalidate_cursor_rect (False)
-				action.call([])
-				invalidate_cursor_rect (True)
-			else
-					-- There was a selection, but we destroy it.
-				action.call([])
-				has_selection := False
-				history.record_move
-
-					-- we have to redraw the entire screen
-					--| FIXME ARNAUD: we only need to redraw the old selected part.
-				invalidate
-				update
-			end
-		end
-
 	on_key_down (virtual_key: INTEGER; key_data: INTEGER) is
 			-- Process Wm_keydown message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
-		local
-			ch: CHARACTER
 		do
-			if virtual_key = Vk_left then
-					-- Left arrow action
-				basic_cursor_move(cursor~go_left_char)
+			if ctrled_key and shifted_key then
+				on_key_down_ctrl_shift(virtual_key, key_data)
 
-			elseif  virtual_key = Vk_right then
-					-- Right arrow action
-				basic_cursor_move(cursor~go_right_char)
+			elseif ctrled_key then
+				on_key_down_ctrl(virtual_key, key_data)
+			
+			elseif shifted_key then
+				on_key_down_shift(virtual_key, key_data)
+			
+			else
+				on_key_down_normal(virtual_key, key_data)
+			end
 
-			elseif  virtual_key = Vk_up then
-					-- Up arrow action
-				basic_cursor_move(cursor~go_up_line)
-
-			elseif  virtual_key = Vk_down then
-					-- Down arrow action
-				basic_cursor_move(cursor~go_down_line)
-
-			elseif  virtual_key = Vk_home then
-					-- Home key action
-				basic_cursor_move(cursor~go_start_line)
-
-			elseif  virtual_key = Vk_end then
-					-- End key action
-				basic_cursor_move(cursor~go_end_line)
-
-			elseif  virtual_key = Vk_delete then
-					-- Delete key action
-				if has_selection then
-					delete_selection
-				else
-					history.record_delete (cursor.item)
-					cursor.delete_char
-				end
-				invalidate
-				update
-
-			elseif  virtual_key = Vk_Back then
-					-- Backspace key action
-				if has_selection then
-					delete_selection
-				else
-					history.wipe_out
-					cursor.delete_previous
-				end
-				invalidate
-				update
-
-			elseif  virtual_key = Vk_Insert then
-					-- Insert key action
-				insert_mode := not insert_mode
-				invalidate
-				update
-
-			elseif virtual_key = Vk_Return then
-					-- Return/Enter key action
-				if has_selection then
-					delete_selection
-				end
-				history.record_insert_eol
-				cursor.insert_eol
-				invalidate
-				update
-
-			elseif virtual_key = 88 then
-				if ctrled_key then
-						-- Ctrl-X (cut)
-					cut_selection
-					invalidate
-					update
-				end
-
-			elseif virtual_key = 67 then
-				if ctrled_key then
-						-- Ctrl-C (copy)
-					copy_selection
-				end
-
-			elseif virtual_key = 86 then
-				if ctrled_key then
-						-- Ctrl-V (paste)
-					paste_selection
-					invalidate
-					update
-				end
-
-			elseif virtual_key = 90 then
-				if ctrled_key then
-						-- Ctrl-Z (undo)
-					history.undo
-					invalidate
-					update
-				end
-
-			elseif virtual_key = 82 then
-				if ctrled_key then
-						-- Ctrl-R (redo)
-					history.redo
-					invalidate
-					update
-				end
-
-			elseif virtual_key = Vk_Shift then
+				-- Handle state key.			
+			if virtual_key = Vk_Shift then
 					-- Shift key action
 				shifted_key := True
 
 			elseif virtual_key = Vk_Control then
 					-- Ctrl key action
 				ctrled_key := True
-
 			else
 				-- Key not handled, do nothing
 			end
@@ -585,7 +444,187 @@ feature -- Selection Handling
 			has_selection := False
 		end
 
+	indent_selection is
+			-- Ident the selected lines.
+		do
+			if has_selection then
+				text_displayed.indent_selection(begin_selection, end_selection)
+				invalidate
+				update
+			end
+		end
 
+	unindent_selection is
+			-- Unident the selected lines.
+		do
+			if has_selection then
+				text_displayed.unindent_selection(begin_selection, end_selection)
+				invalidate
+				update
+			end
+		end
+
+	comment_selection is
+			-- Comment the selected lines.
+		do
+			if has_selection then
+				text_displayed.comment_selection(begin_selection, end_selection)
+				invalidate
+				update
+			end
+		end
+
+	uncomment_selection is
+			-- Uncomment the selected lines.
+		do
+			if has_selection then
+				text_displayed.uncomment_selection(begin_selection, end_selection)
+				invalidate
+				update
+			end
+		end
+
+feature {NONE} -- Handle keystokes
+	
+	basic_cursor_move(action: PROCEDURE[TEXT_CURSOR,TUPLE]) is
+			-- Perform a basic cursor move such as go_left,
+			-- go_right, ... an example of agent `action' is
+			-- cursor~go_left_char
+		do
+			if not has_selection then
+					-- There is no selected text.
+				if shifted_key then
+						-- ... So start a new selection.
+					has_selection := True
+					selection_start := clone (cursor)
+				end
+				invalidate_cursor_rect (False)
+				action.call([])
+				invalidate_cursor_rect (True)
+			elseif shifted_key then
+					-- There was a selection and we go on selecting text.
+				invalidate_cursor_rect (False)
+				action.call([])
+				invalidate_cursor_rect (True)
+			else
+					-- There was a selection, but we destroy it.
+				action.call([])
+				has_selection := False
+				history.record_move
+
+					-- we have to redraw the entire screen
+					--| FIXME ARNAUD: we only need to redraw the old selected part.
+				invalidate
+				update
+			end
+		end
+
+	on_key_down_ctrl_shift (virtual_key: INTEGER; key_data: INTEGER) is
+		do
+		end
+
+	on_key_down_ctrl (virtual_key: INTEGER; key_data: INTEGER) is
+		do
+			if virtual_key = Vk_x then
+					-- Ctrl-X (cut)
+				cut_selection
+				invalidate
+				update
+
+			elseif virtual_key = Vk_c then
+					-- Ctrl-C (copy)
+				copy_selection
+
+			elseif virtual_key = Vk_v then
+					-- Ctrl-V (paste)
+				paste_selection
+				invalidate
+				update
+
+			elseif virtual_key = Vk_z then
+					-- Ctrl-Z (undo)
+				history.undo
+				invalidate
+				update
+
+			elseif virtual_key = Vk_r then
+					-- Ctrl-R (redo)
+				history.redo
+				invalidate
+				update
+			end
+		end
+
+	on_key_down_shift (virtual_key: INTEGER; key_data: INTEGER) is
+		do
+		end
+
+	on_key_down_normal (virtual_key: INTEGER; key_data: INTEGER) is
+		do
+			if virtual_key = Vk_left then
+					-- Left arrow action
+				basic_cursor_move(cursor~go_left_char)
+
+			elseif  virtual_key = Vk_right then
+					-- Right arrow action
+				basic_cursor_move(cursor~go_right_char)
+
+			elseif  virtual_key = Vk_up then
+					-- Up arrow action
+				basic_cursor_move(cursor~go_up_line)
+
+			elseif  virtual_key = Vk_down then
+					-- Down arrow action
+				basic_cursor_move(cursor~go_down_line)
+
+			elseif  virtual_key = Vk_home then
+					-- Home key action
+				basic_cursor_move(cursor~go_start_line)
+
+			elseif  virtual_key = Vk_end then
+					-- End key action
+				basic_cursor_move(cursor~go_end_line)
+
+			elseif  virtual_key = Vk_delete then
+					-- Delete key action
+				if has_selection then
+					delete_selection
+				else
+					history.record_delete (cursor.item)
+					cursor.delete_char
+				end
+				invalidate
+				update
+
+			elseif  virtual_key = Vk_back then
+					-- Backspace key action
+				if has_selection then
+					delete_selection
+				else
+					history.wipe_out
+					cursor.delete_previous
+				end
+				invalidate
+				update
+
+			elseif virtual_key = Vk_return then
+					-- Return/Enter key action
+				if has_selection then
+					delete_selection
+				end
+				history.record_insert_eol
+				cursor.insert_eol
+				invalidate
+				update
+
+
+			elseif  virtual_key = Vk_Insert then
+					-- Insert key action
+				insert_mode := not insert_mode
+				invalidate
+				update
+			end
+		end
 
 feature {NONE} -- Display functions
 	
@@ -629,20 +668,11 @@ feature {NONE} -- Display functions
 			token_selection		: INTEGER
 			token_begin_selection: INTEGER
 			token_end_selection: INTEGER
-			begin_selection		: TEXT_CURSOR -- Cursor that represents the begin of the selection
-			end_selection		: TEXT_CURSOR
 		do
 			curr_y := (a_line - first_line_displayed) * line_increment
 			cursor_line := (a_line = cursor.y_in_lines)
 
 			if has_selection then
-				if cursor > selection_start then
-					begin_selection := selection_start
-					end_selection := cursor
-				else
-					begin_selection := cursor
-					end_selection := selection_start
-				end
 				if (a_line > begin_selection.y_in_lines) and (a_line < end_selection.y_in_lines) then
 					selected_line := True
 				end
@@ -769,6 +799,22 @@ feature {NONE} -- Display functions
 			end
 		end
 
+	invalidate_cursor_rect (redraw: BOOLEAN) is
+			-- Set the line where the cursor is situated to be redrawn
+			-- Redraw immediately if `redraw' is set.
+		local
+			wel_rect: WEL_RECT
+			cursor_up: INTEGER
+		do
+   				-- Invalidate old cursor location.
+   			cursor_up := (cursor.y_in_lines-first_line_displayed) * line_increment
+   			create wel_rect.make (0, cursor_up, width, cursor_up + line_increment)
+			invalidate_rect (wel_rect,true)
+			if redraw then
+				update
+			end
+		end
+
 feature {NONE} -- Status Report
 	
 	number_of_lines: INTEGER is
@@ -839,9 +885,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private Characteristics of the window
 
-	has_selection: BOOLEAN
-			-- Is there a selection?
-
 	shifted_key: BOOLEAN
 			-- Is any of the shift key pushed?
 
@@ -853,6 +896,38 @@ feature {NONE} -- Private Characteristics of the window
 
 	clipboard: STRING
 			-- Clipboard string.
+
+	selection_start: TEXT_CURSOR
+			-- Position where the user has started to select
+			-- the text. This position can be below the current
+			-- cursor (and therefore represent the end of the
+			-- selection)
+
+	begin_selection: TEXT_CURSOR is
+			-- Beggining of the selection (always < than
+			-- `end_selection').
+		require
+			has_selection
+		do
+			if cursor > selection_start then
+				Result := selection_start
+			else
+				Result := cursor
+			end
+		end
+
+	end_selection: TEXT_CURSOR is
+			-- End of the selection (always > than
+			-- `begin_selection').
+		require
+			has_selection
+		do
+			if cursor > selection_start then
+				Result := cursor
+			else
+				Result := selection_start
+			end
+		end
 
 feature {NONE} -- Private Constants
 

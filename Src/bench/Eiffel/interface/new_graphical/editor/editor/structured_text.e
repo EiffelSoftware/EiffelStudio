@@ -151,10 +151,10 @@ feature -- Basic Operations
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is uncommented. Same for the last line of the selection.
 		do
-			symbol_selection(start_selection, end_selection, "--")
+			unsymbol_selection(start_selection, end_selection, "--")
 		end
 
-	tabify_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+	indent_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
 			-- Tabify all lines included in the selection with the string `symbol'.
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is commented. Same for the last line of the selection.
@@ -162,12 +162,12 @@ feature -- Basic Operations
 			symbol_selection(start_selection, end_selection, "%T")
 		end
 
-	untabify_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+	unindent_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
 			-- Tabify all lines included in the selection with the string `symbol'.
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is commented. Same for the last line of the selection.
 		do
-			symbol_selection(start_selection, end_selection, "%T")
+			unsymbol_selection(start_selection, end_selection, "%T")
 		end
 
 	string_selected (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR): STRING is

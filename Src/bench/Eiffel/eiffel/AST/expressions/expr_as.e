@@ -1,6 +1,6 @@
 indexing
-	description: "Abstract class for expression nodes. Version for Bench.";
-	date: "$Date$";
+	description: "Abstract class for expression nodes."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class EXPR_AS
@@ -11,11 +11,11 @@ inherit
 			byte_node
 		end
 
-feature
+feature -- Byte code generation
 
 	byte_node: EXPR_B is
 			-- Byte code type
 		deferred
-		end;
-
+		end
+		
 end -- class EXPR_AS

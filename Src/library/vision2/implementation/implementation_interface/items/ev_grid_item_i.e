@@ -132,19 +132,19 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
-			if not is_selected then
-				if parent_i.is_single_row_selection_enabled or else parent_i.is_multiple_row_selection_enabled then
-						-- We are in row selection mode so we manipulate the parent row directly
-					row_i.enable_select
-				else
+			if parent_i.is_single_row_selection_enabled or else parent_i.is_multiple_row_selection_enabled then
+					-- We are in row selection mode so we manipulate the parent row directly
+				row_i.enable_select
+			else
+				if not is_selected then
 					enable_select_internal
-					if row_i.is_selected then
-						parent_i.update_row_selection_status (row_i)
-					end
-					parent_i.update_item_selection_status (Current)
-					parent_i.redraw_client_area
-					fixme ("Perform a more optimal redraw when available")
 				end
+				if row_i.is_selected then
+					parent_i.update_row_selection_status (row_i)
+				end
+				parent_i.update_item_selection_status (Current)
+				parent_i.redraw_client_area
+				fixme ("Perform a more optimal redraw when available")
 			end
 		end
 

@@ -11,15 +11,15 @@ inherit
 	APPLICATION_EXCEPTION
 		rename
 			make as exc_make
+		undefine
+			finalize
 		end
 
 	EXCEP_CONST
 		undefine
-			finalize,
 			equals,
 			to_string,
 			get_hash_code
-			
 		end
 
 create

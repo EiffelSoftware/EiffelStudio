@@ -85,6 +85,7 @@ EXPORTS
 	exresc
 
 	EIF_once_count
+	eif_global_key
 	arg_number
 	arg_option
 	argarr

@@ -14,7 +14,9 @@ inherit
 		rename
 			User_stop_points as execution_mode
 		redefine
-			make
+			make,
+			tooltext,
+			is_tooltext_important
 		end
 
 create
@@ -45,12 +47,15 @@ feature -- Access
 				until
 					toolbar_items.after
 				loop
+						-- If text has been set then update it with state of `Current'
 					if a_launched then
-						toolbar_items.item.remove_pixmap
-						toolbar_items.item.set_pixmap (pixmap_continue @ 2)
+						if not toolbar_items.item.text.is_equal ("") then
+							toolbar_items.item.set_text (Interface_names.b_Continue)
+						end
 					else
-						toolbar_items.item.remove_pixmap						
-						toolbar_items.item.set_pixmap (pixmap @ 2)
+						if not toolbar_items.item.text.is_equal ("") then
+							toolbar_items.item.set_text (Interface_names.b_Launch)
+						end
 					end
 					toolbar_items.forth
 				end
@@ -73,6 +78,18 @@ feature {NONE} -- Attributes
 
 	name: STRING is "Exec_debug"
 			-- Name of the command.
+
+	tooltext: STRING is
+			-- Default text displayed in toolbar button
+		do
+			Result := Interface_names.b_launch
+		end
+
+	is_tooltext_important: BOOLEAN is
+			-- Is the tooltext important shown when view is 'Selective Text'
+		do
+			Result := True
+		end
 
 	internal_tooltip: STRING is
 			-- Tooltip displayed on `Current's buttons.

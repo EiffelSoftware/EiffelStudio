@@ -48,7 +48,11 @@
 			</item>
 			<item>
 				<bold>EV_SCREEN</bold> - Added `horizontal_resolution' and `vertical_resolution' which return the number of pixels per inch.
-			</item><item><bold>EV_FILE_DIALOG</bold> - Added support for multiple file extensions through the addition of `filters' which provides support for setting both a filter and an associated comment. The existing features `filter' and `set_filter' have been made obsolete.</item><item><bold>EV_FONT</bold> - Modified return type of `string_size' from TUPLE [INTEGER, INTEGER] to TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]. This does not break any existing code, but provides additional `left_offset' and `right_offset' queries (items 3, 4). Items 1, 2 still return the width and height of the string, but this is only the dimensions to be used when placing multiple strings next to each other. Some characters on more exotic fonts may still extend past this boundary, and the rectangle that fully encloses the string is given by adding the left and right offsets to the width.</item>
+			</item><item><bold>EV_FILE_DIALOG</bold> - Added support for multiple file extensions through the addition of `filters' which provides support for setting both a filter and an associated comment. The existing features `filter' and `set_filter' have been made obsolete.</item>
+<item><bold>EV_FONT</bold><list ordered="false"><item>Modified return type of `string_size' from TUPLE [INTEGER, INTEGER] to TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]. This does not break any existing code, but provides additional `left_offset' and `right_offset' queries (items 3, 4). Items 1, 2 still return the width and height of the string, but this is only the dimensions to be used when placing multiple strings next to each other. Some characters on more exotic fonts may still extend past this boundary, and the rectangle that fully encloses the string is given by adding the left and right offsets to the width.</item>
+			<item>Added `height_in_points' and `set_height_in_points' for setting the height of a font in points (1/72 of an inch). This may be used to ensure that your fonts occupy the same height on screens with varying resolutions.</item>
+		</list>
+		</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>
@@ -84,7 +88,11 @@
 						</list>
 					</item>
 					<item>
-						<bold>EV_FONT</bold> - Fixed bug when using `preferred_families' after creating a font via `make_with_values'. The family that was specified was previously ignored.    
+						<bold>EV_FONT</bold>
+						<list ordered = "false">
+						<item>Fixed bug when using `preferred_families' after creating a font via `make_with_values'. The family that was specified was previously ignored.</item>
+						<item>Fixed bug in `copy' which in certain cases could lead to a copied font not exhibiting the typeface as the original, even though no assertions were violated.</item>
+						</list>
 					</item>
 					<item> 
 						<bold>EV_SCROLL_BAR</bold> - Fixed handling of scroll bars with upper values greater than 32,000. Previously, dragging the bar of a scroll bar past this limit, corrupted the position of the bar and the `value'.

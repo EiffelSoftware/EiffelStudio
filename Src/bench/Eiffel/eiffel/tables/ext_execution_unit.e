@@ -3,29 +3,15 @@
 class EXT_EXECUTION_UNIT 
 
 inherit
-
-	EXECUTION_UNIT
-		rename
-			real_body_id as basic_real_body_id,
-			make as basic_make,
-			is_valid as old_is_valid
-		redefine
-			is_external, compound_name
-		end;
-
 	EXECUTION_UNIT
 		redefine
-			real_body_id, make,
+			real_body_id, make, is_valid,
 			is_external, compound_name,
-			is_valid
-		select
-			real_body_id, make, is_valid
+			generate_declaration
 		end
 
 creation
-
 	make
-		
 	
 feature 
 
@@ -34,10 +20,21 @@ feature
 
 	make (cl_type: CLASS_TYPE; f: EXTERNAL_I) is
 			-- Initialization
+		local
+			extension: EXTERNAL_EXT_I
 		do
-			basic_make (cl_type, f);
+			{EXECUTION_UNIT} Precursor (cl_type, f);
 			is_cpp := f.is_cpp;
 			external_name := f.external_name;
+
+			extension := f.extension
+			if extension /= Void then
+				argument_types := extension.argument_types
+				if not (argument_types /= Void and then argument_types.count > 0) then
+					argument_types := Void
+				end
+				return_type := extension.return_type
+			end
 		end;
 
 	is_external: BOOLEAN is True
@@ -46,6 +43,68 @@ feature
 	is_cpp: BOOLEAN
 			-- Is Current a C++ member?
 
+	argument_types: ARRAY [STRING]
+			-- Type of C external routine's arguments.
+
+	return_type: STRING
+			-- Return type of C external routine.
+
+	generate_declaration (file: INDENT_FILE) is
+			-- Generate external declaration for the compound routine
+			--| In this case, there is no header file.
+			--| If there is no C signature, we use `generate_declaration' from
+			--| EXECUTION_UNIT to generate the declaration.
+			--| If there is one C signature, we are using them to declare
+			--| a correct external declaration.
+		local
+			args: ARRAY [STRING]
+			i, nb: INTEGER
+		do
+			if argument_types /= Void then
+				file.putstring ("extern ")
+
+					--| If the return type is not specified we are taking the standard
+					--| one.
+				if return_type /= Void then
+					file.putstring (return_type)
+				else
+					type.generate (file)
+				end
+
+				file.putstring (" ")
+				file.putstring (external_name)
+
+					--| We generate each argument separated by a coma.
+				from
+					file.putstring (" (")
+					args := argument_types
+					i := args.lower
+					nb := args.upper
+					file.putstring (args.item (i))
+					i := i + 1
+				until
+					i > nb
+				loop
+					file.putstring (", ")
+					file.putstring (args.item (i))
+					i := i + 1
+				end
+				file.putstring (");%N")
+			else
+					-- If there is a return type, we need to declare it
+					-- Otherwise we use the `Precursor' version of `generate_declaration'
+				if return_type /= Void then
+					file.putstring ("extern ")
+					file.putstring (return_type)
+					file.putstring (" ")
+					file.putstring (external_name);
+					file.putstring ("();%N");
+				else
+					{EXECUTION_UNIT} Precursor (file)
+				end
+			end
+		end;
+		
 	compound_name: STRING is
 			-- Compound C routine name
 		do
@@ -64,7 +123,7 @@ feature
 			if frozen_body_id /= Void then
 				Result := frozen_body_id
 			else
-				Result := basic_real_body_id;
+				Result := {EXECUTION_UNIT} Precursor;
 			end;
 		end;
 

@@ -21,6 +21,11 @@ inherit
 			initialize
 		end
 		
+	GB_STORABLE_TOOL
+		undefine
+			default_create, copy, is_equal
+		end	
+		
 	GB_SHARED_TOOLS
 		export
 			{NONE} all
@@ -294,6 +299,18 @@ feature -- Access
 				found: found
 			end
 		end
+		
+	tool_bar: EV_TOOL_BAR is
+			-- A tool bar containing all buttons associated with `Current'.
+		do
+			create Result
+			Result.extend (new_directory_button)
+			Result.extend (expand_all_button)
+			Result.extend (assign_root_window_button)
+		end
+		
+	name: STRING is "Window Selector"
+			-- Full name used to represent `Current'.
 
 feature -- Status setting
 

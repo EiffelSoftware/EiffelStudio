@@ -47,7 +47,6 @@ feature {NONE} -- Initialzation
 			create String_constants.make (4)
 			create Integer_constants.make (4)
 			create directory_constants.make (4)
-			create filename_constants.make (4)
 			create pixmap_constants.make (4)
 			create deleted_constants.make (4)
 			create all_constant_names.make (4)
@@ -71,7 +70,6 @@ feature -- Access
 			Result.extend (Integer_constant_type)
 			Result.extend (String_constant_type)
 			Result.extend (Directory_constant_type)
-			Result.extend (Filename_constant_type)
 			Result.extend (Pixmap_constant_type)
 			Result.compare_objects
 		ensure
@@ -89,9 +87,6 @@ feature -- Access
 
 	directory_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All directory constants in system.
-	
-	filename_constants: ARRAYED_LIST [GB_CONSTANT]
-		-- All filename constants in system.
 	
 	pixmap_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All pixmap constants in system.
@@ -294,23 +289,6 @@ feature -- Element change
 			contained: directory_constants.has (directory_constant)
 			count_increased: directory_constants.count = old directory_constants.count + 1
 		end
-		
-	add_filename (filename_constant: GB_FILENAME_CONSTANT) is
-			-- Add `filename_constant' to `filename_constants'
-		require
-			constant_not_void: filename_constant /= Void
-		do
-			filename_constants.extend (filename_constant)
-			all_constant_names.extend (filename_constant.name)
-			if deleted_constants.has (filename_constant) then
-				deleted_constants.prune_all (filename_constant)
-			end
-			Constants_dialog.update_for_addition (filename_constant)
-			all_constants.put (filename_constant, filename_constant.name)
-		ensure
-			contained: filename_constants.has (filename_constant)
-			count_increased: filename_constants.count = old filename_constants.count + 1
-		end
 	
 	add_pixmap (pixmap_constant: GB_PIXMAP_CONSTANT) is
 			-- Add `pixmap_constant' to `pixmap_constants'.
@@ -397,7 +375,6 @@ feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operation
 			all_constant_names.wipe_out
 			pixmap_constants.wipe_out
 			directory_constants.wipe_out
-			filename_constants.wipe_out
 			Constants_dialog.reset_list
 			all_constants.clear_all
 		end
@@ -440,7 +417,6 @@ feature {NONE} -- Implementation
 			integer_constant: GB_INTEGER_CONSTANT
 			string_constant: GB_STRING_CONSTANT
 			directory_constant: GB_DIRECTORY_CONSTANT
-			filename_constant: GB_FILENAME_CONSTANT
 		do
 			if type.is_equal (Integer_constant_type) then
 				create integer_constant.make_with_name_and_value (name, value.to_integer)
@@ -451,9 +427,6 @@ feature {NONE} -- Implementation
 			elseif type.is_equal (Directory_constant_type) then
 				create directory_constant.make_with_name_and_value (name, value)
 				add_directory (directory_constant)
-			elseif type.is_equal (Filename_constant_type) then
-				create filename_constant.make_with_name_and_value (name, value)
-				add_filename (filename_constant)
 			end
 		end
 

@@ -8,7 +8,7 @@ indexing
 deferred class ISE_BUTTON
 
 inherit
-	PICT_COLOR_B;
+	ACTIVE_PICT_COLOR_B;
 	FOCUSABLE
 
 feature -- Access

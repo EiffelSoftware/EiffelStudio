@@ -53,7 +53,8 @@ feature {NONE} -- Initialization
 			["focus-in-event",       interface.focus_in_actions],
 			["focus-out-event",      interface.focus_out_actions],
 			["key-press-event",      interface.key_press_actions],
-			["key-release-event",    interface.key_release_actions]
+			["key-release-event",    interface.key_release_actions],
+			["configure-event",      interface.resize_actions]
 			>>
 			from
 				i := signal_map.lower
@@ -794,6 +795,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.57  2000/02/16 03:38:41  oconnor
+--| connected resize action sequence
+--|
 --| Revision 1.56  2000/02/14 11:40:30  oconnor
 --| merged changes from prerelease_20000214
 --|

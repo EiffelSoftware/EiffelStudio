@@ -72,7 +72,7 @@ feature -- Start output features
 	put_string (a_message: STRING) is
 			-- Put `a_message' to output window.
 		do
-			put_string (a_message)
+			interface.event_output_string (a_message)
 		end				
 
 	put_system_compiled is

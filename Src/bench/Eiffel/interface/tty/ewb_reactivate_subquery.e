@@ -12,29 +12,35 @@ feature {NONE} -- Execution
 		local
 			command_arguments: EWB_ARGUMENTS;
 			index_str: STRING;
+			first_time: BOOLEAN;
 		do
 			command_arguments := command_line_io.command_arguments;
 			from
 				index_str := "a";
 					-- Fancy string for until-clause
+				first_time := true;
 			until
 				index_str.is_integer
 			loop
+				if not first_time then
+					io.putstring ("Index must be an integer.%N");
+				end;
 				if command_arguments.argument_count > 1 then
 					index_str := command_arguments.item (2);
 				else
-					io.putstring ("--> Expression index: ");
+					io.putstring ("--> Subquery index: ");
 					command_line_io.get_name;
 					command_arguments := command_line_io.command_arguments;
 					index_str := command_arguments.item (1);
 				end;
 				if not index_str.is_integer then
 					io.putstring ("Index must be an integer.%N");
-					io.putstring ("--> Expression index: ");
+					io.putstring ("--> Subquery index: ");
 					command_line_io.get_name;
 					command_arguments := command_line_io.command_arguments;
 					index_str := command_arguments.item (1);
 				end;
+				first_time := false;
 			end;
 			index := index_str.to_integer;
 			execute;

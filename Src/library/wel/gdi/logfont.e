@@ -56,7 +56,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_height: INTEGER; a_face_name: STRING) is
-			-- Make a font with `a_height' as 'height and
+			-- Make a font with `a_height' as `height' and
 			-- `a_face_name' as `face_name'.
 		require
 			a_face_name_not_void: a_face_name /= Void
@@ -146,7 +146,7 @@ feature -- Access
 	orientation: INTEGER is
 			-- Orientation of current font.
 			-- The angle, in tenths of degrees, of each
-			-- character'sbase line (relative to the bottom
+			-- character's base line (relative to the bottom
 			-- of the page).
 		do
 			Result := cwel_log_font_get_orientation (item)
@@ -203,7 +203,7 @@ feature -- Access
 		end
 
 	quality: INTEGER is
-			-- Quality of Current font.
+			-- Quality of current font.
 			-- Specifies the output quality. The output quality 
 			-- defines how carefully the graphics device interface 
 			-- (GDI) must attempt to match the logical-font 
@@ -219,9 +219,15 @@ feature -- Access
 		end
 
 	family: INTEGER is
-			-- Family of Current font
+			-- Family of current font
 		do
 			Result := cwel_log_font_get_family (item)
+		end
+
+	pitch_and_family: INTEGER is
+			-- Pitch and family of current font
+		do
+			Result := cwel_log_font_get_pitchandfamily (item)
 		end
 
 	face_name: STRING is
@@ -562,7 +568,7 @@ feature -- Status setting
 		end
 
 	set_character_clipping_precision is
-			-- Set 'clip_precision' to character clipping precision.
+			-- Set `clip_precision' to character clipping precision.
 		do
 			set_out_precision (Clip_character_precis)
 		ensure
@@ -571,7 +577,7 @@ feature -- Status setting
 		end
 
 	set_clip_precision (a_precision: INTEGER) is
-			-- Set 'clip_precision' to 'a_precision'.
+			-- Set `clip_precision' to `a_precision'.
 		do
 			cwel_log_font_set_clipprecision (item, a_precision)
 		ensure
@@ -579,7 +585,7 @@ feature -- Status setting
 		end
 
 	set_default_clipping_precision is
-			-- Set 'clip_precision' to the default value.
+			-- Set `clip_precision' to the default value.
 		do
 			set_clip_precision (Clip_default_precis)
 		ensure
@@ -588,7 +594,7 @@ feature -- Status setting
 		end
 
 	set_stroke_clipping_precision is
-			-- Set 'clip_precision' to the storke clipping precision.
+			-- Set `clip_precision' to the storke clipping precision.
 		do
 			set_clip_precision (Clip_stroke_precis)
 		ensure
@@ -597,7 +603,7 @@ feature -- Status setting
 		end
 
 	set_quality (a_quality: INTEGER) is
-			-- Set 'quality' to `a_quality'.
+			-- Set `quality' to `a_quality'.
 		do
 			cwel_log_font_set_quality (item, a_quality)
 		ensure
@@ -605,7 +611,7 @@ feature -- Status setting
 		end
 
 	set_default_quality is
-			-- Set 'quality' to the default value.
+			-- Set `quality' to the default value.
 		do
 			set_quality (Default_quality)
 		ensure
@@ -613,7 +619,7 @@ feature -- Status setting
 		end
 
 	set_draft_quality is
-			-- Set 'quality' to the draft quality.
+			-- Set `quality' to the draft quality.
 		do
 			set_quality (Draft_quality)
 		ensure
@@ -621,7 +627,7 @@ feature -- Status setting
 		end
 
 	set_proof_quality is
-			-- Set 'quality' to the proof quality.
+			-- Set `quality' to the proof quality.
 		do
 			set_quality (Proof_quality)
 		ensure
@@ -629,7 +635,7 @@ feature -- Status setting
 		end
 
 	set_pitch (a_pitch: INTEGER) is
-			-- Set 'pitch' to `a_pitch'.
+			-- Set `pitch' to `a_pitch'.
 		do
 			cwel_log_font_set_pitchandfamily (item,
 				cwin_make_long (a_pitch,
@@ -639,7 +645,7 @@ feature -- Status setting
 		end
 
 	set_default_pitch is
-			-- Set 'pitch' to the default value.
+			-- Set `pitch' to the default value.
 		do
 			set_pitch (Default_pitch)
 		ensure
@@ -647,7 +653,7 @@ feature -- Status setting
 		end
 
 	set_fixed_pitch is
-			-- Set 'pitch' to fixed pitch.
+			-- Set `pitch' to fixed pitch.
 		do
 			set_pitch (Fixed_pitch)
 		ensure
@@ -655,7 +661,7 @@ feature -- Status setting
 		end
 
 	set_variable_pitch is
-			-- Set 'pitch' to variable pitch.
+			-- Set `pitch' to variable pitch.
 		do
 			set_pitch (Variable_pitch)
 		ensure
@@ -663,7 +669,7 @@ feature -- Status setting
 		end
 
 	set_family (a_family: INTEGER) is
-			-- Set 'family' to 'a_family'.
+			-- Set `family' to `a_family'.
 		do
 			cwel_log_font_set_pitchandfamily (item,
 				cwin_make_long (cwel_log_font_get_pitch (item),
@@ -673,7 +679,7 @@ feature -- Status setting
 		end
 
 	set_dont_care_family is
-			-- Set 'family' to don t care family.
+			-- Set `family' to dont care family.
 		do
 			set_family (Ff_dontcare)
 		ensure
@@ -681,7 +687,7 @@ feature -- Status setting
 		end
 
 	set_roman_family is
-			-- Set 'family' to roman family.
+			-- Set `family' to roman family.
 		do
 			set_family (Ff_roman)
 		ensure
@@ -689,7 +695,7 @@ feature -- Status setting
 		end
 
 	set_swiss_family is
-			-- Set 'family' to swiss family.
+			-- Set `family' to swiss family.
 		do
 			set_family (Ff_swiss)
 		ensure
@@ -697,7 +703,7 @@ feature -- Status setting
 		end
 
 	set_modern_family is
-			-- Set 'family' to modern family.
+			-- Set `family' to modern family.
 		do
 			set_family (Ff_modern)
 		ensure
@@ -705,7 +711,7 @@ feature -- Status setting
 		end
 
 	set_script_family is
-			-- Set 'family' to script family.
+			-- Set `family' to script family.
 		do
 			set_family (Ff_script)
 		ensure
@@ -713,11 +719,20 @@ feature -- Status setting
 		end
 
 	set_decorative_family is
-			-- Set 'family' to decorative family.
+			-- Set `family' to decorative family.
 		do
 			set_family (Ff_decorative)
 		ensure
 			is_decorative_family: is_decorative_family
+		end
+
+	set_pitch_and_family (a_pitch_and_family: INTEGER) is
+			-- Set `pitch_and_family' with `a_pitch_and_family'.
+		do
+			cwel_log_font_set_pitchandfamily (item,
+				a_pitch_and_family)
+		ensure
+			pitch_and_family_set: pitch_and_family = a_pitch_and_family
 		end
 
 	set_face_name (a_face_name: STRING) is

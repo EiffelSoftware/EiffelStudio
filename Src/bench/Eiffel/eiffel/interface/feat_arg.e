@@ -16,6 +16,8 @@ inherit
 	EIFFEL_LIST [TYPE]
 		rename
 			make as old_make
+		export
+			{ANY} area
 		redefine
 			copy
 		end
@@ -34,7 +36,7 @@ feature
 			-- Arrays creation
 		do
 			make_filled (n)
-			!!argument_names.make_filled (n)
+			!! argument_names.make_filled (n)
 		end
 
 	copy (other: like Current) is
@@ -50,7 +52,7 @@ feature
 			argument_names := n
 		end
 
-	put_name (s: ID_AS i: INTEGER) is
+	put_name (s: ID_AS; i: INTEGER) is
 			-- Record argument name `s'.
 		require
 			index_small_enough: i <= count
@@ -58,7 +60,7 @@ feature
 			argument_names.put_i_th (s, i)
 		end
 
-	check_types (feat_table: FEATURE_TABLE f: FEATURE_I) is
+	check_types (feat_table: FEATURE_TABLE; f: FEATURE_I) is
 			-- Check like types in arguments and instantiate arguments
 		require
 			good_argument: not (feat_table = Void or f = Void)
@@ -69,18 +71,24 @@ feature
 			vtug: VTUG
 			vtcg2: VTCG2
 			constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
+			i, nb: INTEGER
+			l_area: SPECIAL [TYPE]
+			a_area: SPECIAL [ID_AS]
+			arg_eval: ARG_EVALUATOR
 		do
 			from
-				start
+				arg_eval := Arg_evaluator
+				a_area := argument_names.area
+				l_area := area
+				nb := count
 				associated_class := feat_table.associated_class
 			until
-				after
+				i = nb
 			loop
 					-- Process anchored type for argument types
-				argument_name := argument_names.i_th (index)
-				Arg_evaluator.set_argument_name (argument_name)
-				solved_type := Arg_evaluator.evaluated_type
-														(item, feat_table, f)
+				argument_name := a_area.item (i)
+				arg_eval.set_argument_name (argument_name)
+				solved_type := arg_eval.evaluated_type (l_area.item(i), feat_table, f)
 
 				check
 						-- If an anchored type cannot be evlaluated,
@@ -115,11 +123,11 @@ feature
 					-- type of the class associated to `feat_table'.
 					-- Don't forget that the arguments are written where
 					-- the feature is written.
-				replace (solved_type)
+				l_area.put (solved_type, i)
 
 				solved_type.check_for_obsolete_class (associated_class)
 
-				forth
+				i := i + 1
 			end
 		end
 
@@ -132,17 +140,24 @@ feature
 			argument_name: ID_AS
 			vtec1: VTEC1
 			vtec2: VTEC2
+			a_area: SPECIAL [ID_AS]
+			l_area: SPECIAL [TYPE]
+			i, nb: INTEGER
+			arg_eval: ARG_EVALUATOR
 		do
 			from
-				start
+				arg_eval := Arg_evaluator
+				l_area := area
+				a_area := argument_names.area
+				nb := count
 			until
-				after
+				i = nb
 			loop
 					-- Process anchored type for argument types
-				argument_name := argument_names.i_th (index)
-				Arg_evaluator.set_argument_name (argument_name)
+				argument_name := a_area.item (i)
+				arg_eval.set_argument_name (argument_name)
 				if associated_class = f.written_class then
-					solved_type ?= item
+					solved_type ?= l_area.item (i)
 						-- Check validity of an expanded type
 					if 	solved_type.has_expanded then
 						if 	solved_type.expanded_deferred then
@@ -163,7 +178,7 @@ feature
 						System.expanded_checker.check_actual_type (solved_type)
 					end
 				end
-				forth
+				i := i + 1
 			end
 		end
 
@@ -171,46 +186,58 @@ feature
 			-- All the types are still in the system
 		local
 			type_a: TYPE_A
+			l_area: SPECIAL [TYPE]
+			i, nb: INTEGER
 		do
 			from
 				Result := True
-				start
+				l_area := area
+				nb := count
 			until
-				after or else not Result
+				i = nb or else not Result
 			loop
-				type_a ?= item
+				type_a ?= l_area.item (i)
 				Result := type_a.is_valid
-				forth
+				i := i + 1
 			end
 		end
 
 	solve_types (feat_tbl: FEATURE_TABLE f: FEATURE_I) is
 			-- Evaluates argument types in the context of `feat_tbl'.
 			-- | Take care of possible anchored types.
+		local
+			l_area: SPECIAL [TYPE]
+			i, nb: INTEGER
+			arg_eval: ARG_EVALUATOR
 		do
 			from
-				start
+				arg_eval := Arg_evaluator
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				replace (Arg_evaluator.evaluated_type (item, feat_tbl, f))
-				forth
+				l_area.put (arg_eval.evaluated_type (l_area.item (i), feat_tbl, f), i)
+				i := i + 1
 			end
 		end
 
 	pattern_types: ARRAY [TYPE_I] is
 			-- Pattern types of arguments
 		local
+			l_area: SPECIAL [TYPE]
+			r_area: SPECIAL [TYPE_I]
 			i, nb: INTEGER
 		do
 			from
-				i := 1
+				l_area := area
 				nb := count
-				!!Result.make (1, nb)
+				!! Result.make (1, nb)
+				r_area := Result.area
 			until
-				i > nb
+				i = nb
 			loop
-				Result.put (i_th (i).actual_type.meta_type, i)
+				r_area.put (l_area.item (i).actual_type.meta_type, i)
 				i := i + 1
 			end
 		end
@@ -222,32 +249,35 @@ feature
 			good_argument: other /= Void
 			good_count: count = other.count
 		local
+			l_area, o_area: SPECIAL [TYPE]
 			i, nb: INTEGER
 		do
 			from
-				i := 1
+				l_area := area
+				o_area := other.area
 				nb := count
 				Result := True
 			until
-				i > nb or else not Result
+				i = nb or else not Result
 			loop
-				Result := i_th (i).same_as (other.i_th (i))
+				Result := l_area.item (i).same_as (o_area.item (i))
 				i := i + 1
 			end
 		end
 
 	trace is
 		local
+			l_area: SPECIAL [TYPE]
 			i, nb: INTEGER
 		do
 			io.putstring ("feature argument types%N")
 			from
-				i := 1
+				l_area := area
 				nb := count
 			until
-				i > nb 
+				i = nb 
 			loop
-				io.putstring (i_th (i).actual_type.dump)
+				io.putstring (l_area.item (i).actual_type.dump)
 				io.new_line
 				i := i + 1
 			end
@@ -264,18 +294,21 @@ feature {FEATURE_I} -- Case storage
 			arg_name: STRING
 			type_a: TYPE_A
 			arg_data: S_ARGUMENT_DATA
+			l_area: SPECIAL [TYPE]
+			i, nb: INTEGER
 		do
 			!! Result.make_filled (count)
 			Result.start
 			from
 				argument_names.start
-				start
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
 				!! arg_name.make (0)
 				arg_name.append (argument_names.item)
-				type_a := item.actual_type
+				type_a := l_area.item (i).actual_type
 				check
 					valid_type_a: type_a /= Void
 				end
@@ -283,7 +316,7 @@ feature {FEATURE_I} -- Case storage
 				Result.replace (arg_data)
 				argument_names.forth
 				Result.forth
-				forth
+				i := i + 1
 			end
 		end
 

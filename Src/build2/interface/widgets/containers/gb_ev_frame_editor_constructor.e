@@ -85,7 +85,6 @@ feature {NONE} -- Implementation
 			for_all_objects (agent {EV_FRAME}.set_style (style_from_text (combo_box.selected_item.text)))
 		end
 		
-		
 	style_from_text (text: STRING): INTEGER is
 			-- `Result' is value of Ev_frame_constants matching `text'.
 		do
@@ -113,7 +112,7 @@ feature {NONE} -- Implementation
 	Style_string: STRING is "Style"
 	
 	Ev_frame_lowered_string: STRING is "Ev_frame_lowered"
-	Ev_frame_raised_string: STRING is "Ev_frame_rasied"
+	Ev_frame_raised_string: STRING is "Ev_frame_raised"
 	Ev_frame_etched_in_string: STRING is "Ev_frame_etched_in"
 	Ev_frame_etched_out_string: STRING is "Ev_frame_etched_out"
 	

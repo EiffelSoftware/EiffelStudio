@@ -25,6 +25,13 @@ inherit
 		undefine
 			copy, default_create, is_equal
 		end
+		
+	EXECUTION_ENVIRONMENT
+		rename
+			put as execution_environment_put
+		undefine
+			copy, default_create, is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -270,25 +277,43 @@ feature {NONE} -- Implementation
 
 	initialize_pixmaps is
 			-- Assign pixmaps to buttons as necessary.
-		local
-			pixmap: EV_PIXMAP
 		do
-			create pixmap
-			pixmap.set_with_named_file ("D:\work\widget_test\bitmaps\ico\properties.ico")
-			properties_button.set_pixmap (pixmap)
-			
-			create pixmap
-			pixmap.set_with_named_file ("D:\work\widget_test\bitmaps\ico\testing.ico")
-			tests_button.set_pixmap (pixmap)
-
-			create pixmap
-			pixmap.set_with_named_file ("D:\work\widget_test\bitmaps\ico\documentation.ico")
-			documentation_button.set_pixmap (pixmap)
-			
-			create pixmap
-			pixmap.set_with_named_file ("D:\work\widget_test\bitmaps\ico\icon_code_generation_color.ico")
-			generate_button.set_pixmap (pixmap)
+			properties_button.set_pixmap (pixmap_by_name ("properties"))
+			tests_button.set_pixmap (pixmap_by_name ("testing"))
+			documentation_button.set_pixmap (pixmap_by_name ("documentation"))
+			generate_button.set_pixmap (pixmap_by_name ("icon_code_generation_color"))
 		end
+		
+	pixmap_by_name (a_name: STRING): EV_PIXMAP is
+			-- `Result' is a pixmap corresponding to `a_name'.
+		require
+			name_not_void: a_name /= Void
+		local
+			file_name: FILE_NAME
+		do
+			create file_name.make_from_string (get ("ISE_VISION2_TOUR"))
+			file_name.extend ("bitmaps")
+			file_name.extend (image_extension)
+			file_name.extend (a_name + "." + image_extension)
+			create Result
+			Result.set_with_named_file (file_name.out)
+		ensure
+			result_not_void: Result /= Void
+		end
+	
+	image_extension: STRING is
+			-- Extension type of image formts on current platform.
+			-- either "png" or "ico"
+		once
+			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
+				Result := "ico"
+			else
+				Result := "png"
+			end
+		ensure
+			Result_valid: Result.is_equal ("png") or Result.is_equal ("ico")
+		end
+		
 		
 	perform_generation is
 			-- User has requested to generate a test, so

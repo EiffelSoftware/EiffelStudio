@@ -18,7 +18,7 @@
 			<bold>development object</bold> (like a class, a feature or an execution object) with a single click on the 
 			<bold>right</bold> mouse button. Then as you start moving the mouse around - not pressing any of its buttons - a pebble tracks the cursor position, and a line continuously connects the pebble to the object's original position. The pebble's shape indicates the type of the development object that you picked (oval disk for a class, cross for a feature, folder for a cluster...).
 		</paragraph>
-		<paragraph>
+		<paragraph><alignment>center</alignment>
 			<image>
 				<url>/images/eiffelstudio/editor_pick_and_drop.png</url>
 			</image>

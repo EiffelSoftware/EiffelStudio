@@ -116,7 +116,7 @@ feature -- Implementation
 			l_size.make_from_width_and_height (5, 13)
 			my_window.set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (504, 293)
-			my_window.set_client_size_size_2 (l_size)
+			my_window.set_client_size (l_size)
 			
 			tool_tip.set_active (True)
 			
@@ -193,7 +193,7 @@ feature -- Implementation
 			my_group_box.set_anchor ( feature {WINFORMS_ANCHOR_STYLES}.Top |
 									   feature {WINFORMS_ANCHOR_STYLES}.Bottom |
 									   feature {WINFORMS_ANCHOR_STYLES}.Right )
-			my_group_box.set_tab_stop_boolean_2 (False)
+			my_group_box.set_tab_stop (False)
 			my_group_box.set_text (("DateTimePicker").to_cil)
 --			my_group_box.set_size (create {DRAWING_SIZE}.make_from_width_and_height (248, 264))
 			l_size.make_from_width_and_height (248, 264)

@@ -60,10 +60,11 @@ feature {NONE} -- Status report
 			Result := handle.status.warning_message
 		end
 
-feature {NONE} -- Status setting
+feature -- Status setting
 
 	reset is
 			-- Reset `is_ok', `error_code_stored',`error_message_stored' and `warning_message' after error occurred.
+			-- Can be used to continue using the database after a failure.
 		do
 			handle.status.reset
 		ensure

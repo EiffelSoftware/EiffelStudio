@@ -64,7 +64,7 @@ feature -- Basic Operations
 			if type_mapping_table.found then
 				Result := type_mapping_table.found_item
 			else
-				Result := clone (name)
+				create Result.make_from_string (name)
 				if Result.item (name.count) = ']' then
 					Result.keep_head (Result.count - 2)
 					Result.append (native_array_string)
@@ -145,14 +145,14 @@ feature -- Basic Operations
 			l_var: like variable_mapping_table
 		do
 				-- resolve conflict names	
-			l_name := clone (name)
+			create l_name.make_from_string (name)
 			l_name.to_lower
 			l_var := variable_mapping_table
 			l_var.search (l_name)
 			if l_var.found then
 				Result := l_var.found_item
 			else
-				Result := clone (name)
+				create Result.make_from_string (name)
 				if Result.item (Result.count) = '&' then
 					Result.keep_head (Result.count - 1)
 				end
@@ -230,14 +230,14 @@ feature -- Basic Operations
 			l_var: like variable_mapping_table
 		do
 				-- resolve conflict names	
-			l_name := clone (name)
+			create l_name.make_from_string (name)
 			l_name.to_lower
 			l_var := variable_mapping_table
 			l_var.search (l_name)
 			if l_var.found then
 				Result := l_var.found_item
 			else
-				Result := clone (name)
+				create Result.make_from_string (name)
 				if Result.item (Result.count) = '&' then
 					Result.keep_head (Result.count - 1)
 				end

@@ -80,7 +80,8 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_CELL} and Precursor {EV_TEXT_ALIGNABLE} and
-				is_left_aligned and Precursor {EV_FONTABLE}
+				is_left_aligned and style = feature {EV_FRAME_CONSTANTS}.Ev_frame_etched_in
+				and Precursor {EV_FONTABLE}
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -1,0 +1,82 @@
+<document output="envision" title="Assertions Property Page">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<table>
+			<row>
+				<cell>
+					<paragraph>The Assertions property page allows you to choose which of the Design By  Contract assertions to apply globally to your project. It is possible to  override theses default assertions at the individual cluster level on the
+						<link>
+							<url>clusters_ppg.htm</url>
+							<label>  Clusters Property Page</label>
+						</link>.
+					</paragraph>
+					<paragraph>To learn more about Design By Contract please refer to the
+						<link>
+							<url>/general\guided_tour\language\tutorial-07.html</url>
+							<label>  Invitation To Eiffel</label>
+						</link>getting started help.
+						<line_break/>
+					</paragraph>
+					<heading>
+						<size>2</size>Assertions
+					</heading>
+					<paragraph>
+						<bold>Evaluate Preconditions</bold>
+					</paragraph>
+					<paragraph>Setting this property to true will perform runtime precondition assertion  verification.</paragraph>
+					<paragraph>
+						<bold>Evaluate Postconditions</bold>
+					</paragraph>
+					<paragraph>Setting this property to true will perform runtime postcondition assertion  verification.</paragraph>
+					<paragraph>
+						<bold>Evaluate   Check</bold>
+					</paragraph>
+					<paragraph>Setting this property to true will perform   runtime check assertion verification in check blocks.
+						<paragraph>
+							<bold>Evaluate   Loop Variant</bold>
+						</paragraph>
+						<paragraph>Setting this property to true will perform   runtime loop variant assertion verification on all loops.
+							<paragraph>
+								<bold>Evaluate Invariant</bold>
+							</paragraph>
+							<paragraph> Setting this property to true will perform runtime invariant assertion  verification on all classes. </paragraph>
+							<seealso>
+								<bold>See also</bold>
+								<line_break/>
+								<link>
+									<url>/20_Language\10_Eiffel_NET\60_Design_By_Contract.htm</url>
+									<label>Invitation To  Eiffel: DESIGN BY CONTRACT</label>
+								</link>
+								<line_break/>
+								<link>
+									<url>project_configuration.htm</url>
+									<label>Property Page Overview</label>
+								</link>
+								<line_break/>
+								<link>
+									<url>assembly_info.htm</url>
+									<label>Assembly InfoProperty Page</label>
+								</link>
+								<line_break/>
+								<link>
+									<url>clusters_ppg.htm</url>
+									<label>ClustersReferences Property Page</label>
+								</link>
+								<line_break/>
+								<link>
+									<url>ClustersPage.htm</url>
+									<label/>
+								</link>
+							</seealso>
+						</paragraph>
+					</paragraph>
+				</cell>
+			</row>
+		</table>
+	</paragraph></document>

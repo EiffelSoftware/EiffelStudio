@@ -79,6 +79,7 @@ feature -- Output
 			st, st2: STRUCTURED_TEXT
 			syntax_error: SYNTAX_ERROR
 			feature_error: FEATURE_ERROR
+			eiffel_error: EIFFEL_ERROR
 			error: ERROR
 			error_pos: INTEGER
 			error_file, error_string, class_name: STRING
@@ -97,11 +98,18 @@ feature -- Output
 					
 					syntax_error ?= error_list.item
 					feature_error ?= error_list.item
+					eiffel_error ?= error_list.item
 					error ?= error_list.item
+					
 					if error /= Void then
 						create st.make
-						error.print_error_message (st)
+						error_list.item.trace (st)
 						error_string := st.image
+					end
+					if eiffel_error /= Void then
+						if eiffel_error.class_c /= Void then
+							error_file := eiffel_error.class_c.file_name
+						end
 					end
 					if feature_error /= Void then
 						error_pos := feature_error.line_number
@@ -117,9 +125,7 @@ feature -- Output
 				end
 			else
 				retried := False
-				--display_error_error (st2)
 			end
-			output_window.process_text (st)
 		rescue
 			if not fail_on_rescue then
 				retried := True
@@ -147,6 +153,7 @@ feature {NONE} -- Implementation
 				string := file.last_string
 				from
 					i := 1
+					Result := 1 -- This is because the last %N is never included.
 				until
 					i > start_position
 				loop

@@ -91,9 +91,10 @@ feature -- Properties
 		end;
 
 	has_rescue: BOOLEAN is
-			-- Has the routine a rescue clause ?
+			-- Has the routine a non-empty rescue clause ?
 		do
-			Result := rescue_clause /= Void;
+			Result := (rescue_clause /= Void) and then
+					  not rescue_clause.empty
 		end;
 
 	is_deferred: BOOLEAN is

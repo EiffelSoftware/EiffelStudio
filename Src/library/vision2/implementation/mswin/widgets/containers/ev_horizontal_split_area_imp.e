@@ -24,7 +24,8 @@ inherit
 			on_size,
 			on_wm_paint,
 			class_cursor,
-			on_mouse_move
+			on_mouse_move,
+			on_left_button_down
 		end
 
 create
@@ -273,6 +274,26 @@ feature {NONE} -- Implementation
 				end
 			else
 				Precursor {EV_SPLIT_AREA_IMP} (keys, x_pos, y_pos)
+			end
+		end
+		
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttondown message handling.
+		do
+				-- Pressing the left button on the splitter to move it, was
+				-- not bringing the window it was contained in to the front.
+				-- This fixes this.
+			top_level_window_imp.move_to_foreground
+				-- We must check that we are in the correct location for the split area,
+				-- as if a notebook is placed inside, there are areas of `Current' that receive
+				-- the left button click. For example, to the right of the tabs.
+				-- This ensures that the splitter is only moved when it really should be. Julian
+			if not has_capture and x_pos - (split_position + 1) <= splitter_width then
+				-- Start to move the splitter. We capture the mouse
+				-- message to be able to move the mouse over the
+				-- left or right control without losing the "mouse focus."
+				set_click_position (x_pos, y_pos)
+				set_capture
 			end
 		end
 

@@ -97,6 +97,17 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
+	is_horizontal_scroll_bar_visible: BOOLEAN
+		-- Should horizontal scroll bar be displayed?
+		-- Always False in VIEWPORT, but declared here,
+		-- so that we do not have to redefine `set_item_size'
+		-- for scrollable areas. Applies also to
+		-- `is_vertical_scroll_bar_visible'.
+
+	is_vertical_scroll_bar_visible: BOOLEAN
+		-- Should vertical scrollbar be displayed?
+
+
 	default_style: INTEGER is
 		do
 			Result := Ws_child + Ws_clipchildren + Ws_clipsiblings + Ws_visible
@@ -174,8 +185,12 @@ feature {NONE} -- Implementation
 				has_item: item_imp /= Void
 			end
 			if scroller /= Void then
-				set_horizontal_range (0, item_imp.width)
-				set_vertical_range (0, item_imp.height)
+				if is_horizontal_scroll_bar_visible then
+					set_horizontal_range (0, item_imp.width)
+				end
+				if is_vertical_scroll_bar_visible then
+					set_vertical_range (0, item_imp.height)
+				end
 			end
 		end
 

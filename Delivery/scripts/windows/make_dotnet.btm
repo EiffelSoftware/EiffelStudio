@@ -18,17 +18,10 @@ iff not exist EIFGEN\F_code\emitter.exe then
 	CANCEL
 endiff
 copy EIFGEN\F_code\emitter.exe %INSTALL_DIR\dotnet_binaries
-copy EIFGEN\F_code\emitter.exe %INSTALL_DIR\dotnet\assemblies
 cdd %INSTALL_DIR\dotnet\assemblies
-set TMP_EIFFEL=%ISE_EIFFEL
-set ISE_EIFFEL=%INSTALL_DIR
-call build.bat
-set ISE_EIFFEL=%TMP_EIFFEL
 fullrf build.bat
 fullrf System.Object.xml
 fullrf types.xml
-fullrf emitter.exe
-unset TMP_EIFFEL
 
 remtrace Compiling Fusion Support
 cdd %EIFFEL_SRC\dotnet\VisualStudio\EnvSDK\EiffelPkgs\ISE.VS.FusionSupport

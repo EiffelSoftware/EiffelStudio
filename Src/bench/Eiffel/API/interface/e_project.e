@@ -30,7 +30,7 @@ feature -- Initialization
 			-- We just create the basic structure to enable the retrieving.
 		require
 			not_initialized: not initialized
-			is_new: project_dir.is_new
+			is_not_new: not project_dir.is_new
 			is_readable: project_dir.is_base_readable
 			is_writable: project_dir.is_base_writable
 			is_executable: project_dir.is_base_executable

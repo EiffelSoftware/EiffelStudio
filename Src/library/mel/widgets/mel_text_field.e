@@ -927,7 +927,7 @@ feature {NONE} -- Implementation
 
 	xm_text_replace (w: POINTER; spos, epos: INTEGER; a_text: POINTER) is
 		external
-			"C (Widget, XmTextPosition, XmTextPosition, char *)"
+			"C (Widget, XmTextPosition, XmTextPosition, char *) | <Xm/Text.h>"
 		alias
 			"XmTextReplace"
 		end;

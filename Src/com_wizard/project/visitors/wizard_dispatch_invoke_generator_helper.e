@@ -33,6 +33,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_NAMER_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	excepinfo_setting: STRING is
@@ -197,60 +202,43 @@ feature -- Basic operations
 			non_void_guid: Result /= Void
 		end
 
-	get_argument_from_variant (a_data_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
-				a_variable_name, a_variant_name: STRING;
-				counter: INTEGER; is_arguments_empty: BOOLEAN): STRING is
-			-- Extract data from VARIANT structure.
+	get_interface_pointer (unknown_name, a_variable_name, a_variant_name, variant_field_name: STRING; 
+					counter: INTEGER): STRING is
+			-- Get intergace pointer from Variant.
 		require
-			non_void_data_descriptor: a_data_descriptor /= Void
-			non_void_variable: a_variable_name /= Void
-			valid_variable: not a_variable_name.empty
-			non_void_variant: a_variant_name /= Void
-			valid_variant: not a_variant_name.empty
-		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			non_void_unknown_name: unknown_name /= Void
+			valid_unknown_name: not unknown_name.empty
+			non_void_variable_name: a_variable_name /= Void
+			valid_variable_name: not a_variable_name.empty
+			non_void_variant_name: a_variant_name /= Void
+			valid_variant_name: not a_variant_name.empty
+			non_void_variant_field_name: variant_field_name /= Void
+			valid_variant_field_name: not variant_field_name.empty
 		do
-			visitor := a_data_descriptor.visitor
-			create Result.make (1000)
-			if 
-				(visitor.is_interface_pointer or 
-				visitor.is_coclass_pointer) and
-				not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
-				visitor.c_type.substring_index (Idispatch_type, 1) > 0)
-			then
-				Result.append (visitor.c_type)
-				Result.append (Space)
-				Result.append (a_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (Zero)						
-				Result.append (Semicolon)
+				create Result.make (300)
+				
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
 				
-				if is_unknown (visitor.vt_type) then
-					Result.append (Iunknown)
-				else
-					Result.append (Idispatch)
-				end
+				Result.append (Open_curly_brace)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab_tab)
+				
+				Result.append (unknown_name)
 				Result.append (Space)
 				Result.append ("tmp_")
 				Result.append (a_variable_name)
 				Result.append (Space_equal_space)
 				Result.append (a_variant_name)
 				Result.append (Dot)
-				Result.append (vartype_namer.variant_field_name (visitor))
+				Result.append (variant_field_name)
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab_tab)
-				Result.append (Tab)
-
-				Result.append ("IID tmp_iid_")
-				Result.append_integer (counter)
-				Result.append (Space_equal_space)
-				Result.append (interface_descriptor_guid (a_data_descriptor, visitor).to_definition_string)
-				Result.append (Semicolon)
+				Result.append (Tab_tab)
+				
+				Result.append ("if (tmp_" + a_variable_name + " != NULL)")
 				Result.append (New_line_tab_tab_tab)
-				Result.append (Tab)
-
+				Result.append (Tab_tab_tab)
 				Result.append (Hresult_variable_name)
 				Result.append (Space_equal_space)
 				Result.append ("tmp_")
@@ -268,6 +256,139 @@ feature -- Basic operations
 				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
+				
+				Result.append (Close_curly_brace)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
+		ensure
+			non_void_result: Result /= Void
+			valid_result: not Result.empty
+		end
+
+	get_interface_pointer_pointer (unknown_name, a_variable_name, a_variant_name, variant_field_name: STRING; 
+					counter: INTEGER): STRING is
+			-- Get intergace pointer from Variant.
+		require
+			non_void_unknown_name: unknown_name /= Void
+			valid_unknown_name: not unknown_name.empty
+			non_void_variable_name: a_variable_name /= Void
+			valid_variable_name: not a_variable_name.empty
+			non_void_variant_name: a_variant_name /= Void
+			valid_variant_name: not a_variant_name.empty
+			non_void_variant_field_name: variant_field_name /= Void
+			valid_variant_field_name: not variant_field_name.empty
+		do
+				create Result.make (300)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
+				
+				Result.append (Open_curly_brace)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab_tab)
+				Result.append (unknown_name)
+				Result.append (Asterisk)
+				Result.append (Space)
+				Result.append ("tmp_")
+				Result.append (a_variable_name)
+				Result.append (Space_equal_space)
+				Result.append (a_variant_name)
+				Result.append (Dot)
+				Result.append (variant_field_name)
+				Result.append (Semicolon)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab_tab)
+				
+				Result.append ("if (tmp_" + a_variable_name + " != NULL)")
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab_tab_tab)
+				
+				Result.append ("if (* tmp_" + a_variable_name + " != NULL)")
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab_tab_tab)
+				Result.append (Tab)
+				Result.append (Hresult_variable_name)
+				Result.append (Space_equal_space)
+				Result.append (Open_parenthesis)
+				Result.append (Asterisk)
+				Result.append ("tmp_")
+				Result.append (a_variable_name)
+				Result.append (Close_parenthesis)
+				Result.append (Struct_selection_operator)
+				Result.append (Query_interface)
+				Result.append (Space_open_parenthesis)
+				Result.append ("tmp_iid_")
+				Result.append_integer (counter)
+				Result.append (Comma_space)
+				Result.append ("(void**)")
+				Result.append (Open_parenthesis)
+				Result.append (Ampersand)
+				Result.append ("tmp_tmp_")
+				Result.append (a_variable_name)
+				Result.append (Close_parenthesis)
+				Result.append (Close_parenthesis)
+				Result.append (Semicolon)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
+				
+				Result.append (Close_curly_brace)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
+				
+		ensure
+			non_void_result: Result /= Void
+			valid_result: not Result.empty
+		end
+		
+	get_argument_from_variant (a_data_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
+				a_variable_name, a_variant_name: STRING;
+				counter: INTEGER; is_arguments_empty: BOOLEAN): STRING is
+			-- Extract data from VARIANT structure.
+		require
+			non_void_data_descriptor: a_data_descriptor /= Void
+			non_void_variable: a_variable_name /= Void
+			valid_variable: not a_variable_name.empty
+			non_void_variant: a_variant_name /= Void
+			valid_variant: not a_variant_name.empty
+		local
+			visitor: WIZARD_DATA_TYPE_VISITOR
+		do
+			visitor := a_data_descriptor.visitor
+			create Result.make (1000)
+			
+			if 
+				(visitor.is_interface_pointer or 
+				visitor.is_coclass_pointer) and
+				not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+				visitor.c_type.substring_index (Idispatch_type, 1) > 0)
+			then
+				Result.append (visitor.c_type)
+				Result.append (Space)
+				Result.append (a_variable_name)
+				Result.append (Space_equal_space)
+				Result.append (Zero)						
+				Result.append (Semicolon)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
+			
+				Result.append ("IID tmp_iid_")
+				Result.append_integer (counter)
+				Result.append (Space_equal_space)
+				Result.append (interface_descriptor_guid (a_data_descriptor, visitor).to_definition_string)
+				Result.append (Semicolon)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
+				
+				Result.append ("if (" + a_variant_name + ".vt = VT_UNKNOWN)")
+				Result.append (get_interface_pointer 
+					(Iunknown, a_variable_name, a_variant_name, Variant_punkval, counter))
+				
+				Result.append ("else if (" + a_variant_name + ".vt = VT_DISPATCH)")
+				Result.append (get_interface_pointer 
+					(Idispatch, a_variable_name, a_variant_name, Variant_pdispval, counter))
+				
+
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
 
@@ -309,47 +430,14 @@ feature -- Basic operations
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
 
-				if is_unknown (visitor.vt_type) then
-					Result.append (Iunknown)
-				else
-					Result.append (Idispatch)
-				end
-				Result.append (Asterisk)
-				Result.append (Space)
-				Result.append ("tmp_")
-				Result.append (a_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (a_variant_name)
-				Result.append (Dot)
-				Result.append (vartype_namer.variant_field_name (visitor))
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab_tab)
-				Result.append (Tab)
-
-				Result.append (Hresult_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (Open_parenthesis)
-				Result.append (Asterisk)
-				Result.append ("tmp_")
-				Result.append (a_variable_name)
-				Result.append (Close_parenthesis)
-				Result.append (Struct_selection_operator)
-				Result.append (Query_interface)
-				Result.append (Space_open_parenthesis)
-				Result.append ("tmp_iid_")
-				Result.append_integer (counter)
-				Result.append (Comma_space)
-				Result.append ("(void**)")
-				Result.append (Open_parenthesis)
-				Result.append (Ampersand)
-				Result.append ("tmp_tmp_")
-				Result.append (a_variable_name)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab_tab)
-				Result.append (Tab)
-
+				Result.append ("if (" + a_variant_name + ".vt = (VT_UNKNOWN |VT_BYREF)")
+				Result.append (get_interface_pointer_pointer 
+					(Iunknown, a_variable_name, a_variant_name, Variant_ppunkval, counter))
+				
+				Result.append ("else if (" + a_variant_name + ".vt = (VT_DISPATCH |VT_BYREF)")
+				Result.append (get_interface_pointer_pointer 
+					(Idispatch, a_variable_name, a_variant_name, Variant_ppdispval, counter))
+				
 				Result.append (check_failer (is_arguments_empty, "", "DISP_E_BADVARTYPE"))
 
 				Result.append (Tab)

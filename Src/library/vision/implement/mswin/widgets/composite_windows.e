@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 				c.after
 			loop
 				current_item := c.item
-				if current_item /= Void then
+				if current_item /= Void and then current_item.managed then
 					tmp := current_item.x + current_item.width
 					if tmp > maxxw then
 						maxxw := tmp

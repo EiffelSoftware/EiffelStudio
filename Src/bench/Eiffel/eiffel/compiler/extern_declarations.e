@@ -167,7 +167,6 @@ feature
 				buffer.putstring ("%Nextern ");
 				local_routines.item_for_iteration.generate (buffer);
 				buffer.putstring (local_routines.key_for_iteration);
---				buffer.putstring ("();%N");
 				local_routines.forth;
 			end;
 
@@ -177,9 +176,9 @@ feature
 			until
 				local_routine_tables.after
 			loop
-				buffer.putstring ("extern char *(*");
+				buffer.putstring ("%Nextern char *(*");
 				buffer.putstring (local_routine_tables.item_for_iteration);
-				buffer.putstring ("[])();%N");
+				buffer.putstring ("[])();");
 				local_routine_tables.forth;
 			end;
 
@@ -189,9 +188,9 @@ feature
 			until
 				local_attribute_tables.after
 			loop
-				buffer.putstring ("extern long ");
+				buffer.putstring ("%Nextern long ");
 				buffer.putstring (local_attribute_tables.item_for_iteration);
-				buffer.putstring ("[];%N");
+				buffer.putstring ("[];");
 				local_attribute_tables.forth;
 			end;
 
@@ -201,12 +200,12 @@ feature
 			until
 				local_type_tables.after
 			loop
-				buffer.putstring ("extern int16 ");
+				buffer.putstring ("%Nextern int16 ");
 				buffer.putstring (local_type_tables.item_for_iteration);
-				buffer.putstring ("[];%N");
-				buffer.putstring ("extern int16 *");
+				buffer.putstring ("[];");
+				buffer.putstring ("%Nextern int16 *");
 				buffer.putstring (local_type_tables.item_for_iteration);
-				buffer.putstring ("_gen_type [];%N");
+				buffer.putstring ("_gen_type [];");
 				local_type_tables.forth;
 			end;
 			buffer.end_c_specific_code

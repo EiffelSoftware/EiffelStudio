@@ -1,5 +1,7 @@
 indexing
-	description: "EiffelVision EV_ARGUMENTS. Base class for command arguments";
+	description: 
+		"EiffelVision EV_ARGUMENT. Base class for command%
+		% arguments";
 	status: "See notice at end of class";
 	id: "$Id$";
 	date: "$Date$";

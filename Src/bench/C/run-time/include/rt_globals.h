@@ -70,7 +70,8 @@ typedef struct tag_rt_globals
 #endif
 #ifdef ISE_GC
 		/* Synchronizations for GC*/
-	int volatile gc_thread_status;
+	int volatile gc_thread_status_cx;
+	int gc_thread_collection_count_cx;
 #endif
 
 		/* except.c */
@@ -282,6 +283,8 @@ rt_private rt_global_context_t * rt_thr_getspecific (EIF_TSD_TYPE global_key) {
 #define eif_children_mutex 	(rt_globals->children_mutex_cx)
 #define eif_children_cond 	(rt_globals->children_cond_cx)
 #define last_child			(rt_globals->last_child_cx)
+#define gc_thread_status	(rt_globals->gc_thread_status_cx)
+#define gc_thread_collection_count	(rt_globals->gc_thread_collection_count_cx)
 
 	/* except.c */
 #define eif_trace			(rt_globals->eif_trace_cx)	/* rt_public */

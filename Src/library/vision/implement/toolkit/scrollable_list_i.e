@@ -13,160 +13,28 @@ inherit
 			cursor as screen_cursor
 		end
 
-feature  -- Access
-
-	cursor: CURSOR is
-			-- Current cursor position
-		deferred
-		end;
-
-	first: like item is
-			-- Item at first position
-		require
-			not_empty: not empty
-		deferred
-		end;
-
-	has (v: like item): BOOLEAN is
-			-- Does chain include v?
-			-- (Reference or object equality,
-			-- based on object_comparison.)
-		deferred
-		ensure
-			not_found_in_empty: Result implies not empty
-		end;
-
-	i_th (i: INTEGER): like item is
-			-- Item at i-th position
-		require
-			valid_key: valid_index (i)
-		deferred
-		end;
-
-	index: INTEGER is
-			-- Current cursor index
-		deferred
-		end;
-
-	index_of (v: like item; i: INTEGER): INTEGER is
-			-- Index of i-th occurrence of item identical to v.
-			-- (Reference or object equality,
-			-- based on object_comparison.)
-			-- 0 if none.
-		require 
-			positive_occurrences: i > 0
-		deferred
-		ensure 
-			non_negative_result: Result >= 0
-		end;
-
-	item: SCROLLABLE_LIST_ELEMENT is
-			-- Item at current position
-		require 
-			not_off: not off
-			readable: readable
-		deferred
-		end;
-
-	last: like item is
-			-- Item at last position
-		require 
-			not_empty: not empty
-		deferred
-		end;
-
-	occurrences (v: like item): INTEGER is
-			-- Number of times v appears.
-			-- (Reference or object equality,
-			-- based on object_comparison.)
-		deferred
-		ensure 
-			non_negative_occurrences: Result >= 0
-		end;
-
-feature  -- Conversion
-
-	linear_representation: LINEAR [SCROLLABLE_LIST_ELEMENT] is
-			-- Representation as a linear structure
-		deferred
-		end;
-
-feature  -- Cursor movement
-
-	back is
-			-- Move to previous position.
-		require
-			not_before: not before
-		deferred
-		ensure
-			moved_back: index = old index - 1
-		end;
-
-	finish is
-			-- Move cursor to last position.
-			-- (No effect if empty)
-		deferred
-		ensure
-			at_last: not empty implies islast
-		end;
-
-	forth is
-			-- Move to next position; if no next position,
-			-- ensure that exhausted will be true.
-		require 
-			not_after: not after
-		deferred
-		ensure
-			moved_forth: index = old index + 1
-		end;
-
-	go_i_th (i: INTEGER) is
-			-- Move cursor to i-th position.
-		require 
-			valid_cursor_index: valid_cursor_index (i)
-		deferred
-		ensure
-			position_expected: index = i
-		end;
-
-	go_to (p: CURSOR) is
-			-- Move cursor to position p.
-		require
-			cursor_position_valid: valid_cursor (p)
-		deferred
-		end;
-
-	move (i: INTEGER) is
-			-- Move cursor i positions. The cursor
-			-- may end up off if the absolute value of i
-			-- is too big.
-		deferred
-		ensure
-			too_far_right: (old index + i > count) implies exhausted;
-			too_far_left: (old index + i < 1) implies exhausted;
-			expected_index: (not exhausted) implies (index = old index + i)
-		end;
-
-	search (v: like item) is
-			-- Move to first position (at or after current
-			-- position) where item and v are equal.
-			-- If structure does not include v ensure that
-			-- exhausted will be true.
-			-- (Reference or object equality,
-			-- based on object_comparison.)
-		deferred
-		ensure
-			object_found: (not exhausted and then object_comparison and then v /= void and then item /= void) implies v.is_equal (item);
-			item_found: (not exhausted and not object_comparison) implies v = item
-		end;
-
-	start is
-			-- Move cursor to first position.
-			-- (No effect if empty)
-		deferred
-		ensure
-			at_first: not empty implies isfirst
-		end;
+	LINKED_LIST [SCROLLABLE_LIST_ELEMENT]
+		rename
+			make as ll_make,
+			append as ll_append,
+			extend as ll_extend,
+			fill as ll_fill,
+			force as ll_force,
+			merge_left as ll_merge_left,
+			merge_right as ll_merge_right,
+			put as ll_put,
+			put_front as ll_put_front,
+			put_i_th as ll_put_i_th,
+			put_left as ll_put_left,
+			put_right as ll_put_right,
+			replace as ll_replace,
+			prune as ll_prune,
+			prune_all as ll_prune_all,
+			remove as ll_remove,
+			remove_left as ll_remove_left,
+			remove_right as ll_remove_right,
+			wipe_out as ll_wipe_out
+		end
 
 feature  -- Element change
 
@@ -299,13 +167,6 @@ feature  -- Element change
 			item_replaced: item = v
 		end;
 
-feature  -- Measurement
-
-	count: INTEGER is
-			-- Number of items
-		deferred
-		end;
-
 feature  -- Removal
 
 	prune (v: like item) is
@@ -378,79 +239,6 @@ feature  -- Removal
 
 feature  -- Status report
 
-	after: BOOLEAN is
-			-- Is there no valid cursor position to the right of cursor?
-		deferred
-		end;
-
-	before: BOOLEAN is
-			-- Is there no valid cursor position to the left of cursor?
-		deferred
-		end;
-
-	changeable_comparison_criterion: BOOLEAN is
-			-- May object_comparison be changed?
-			-- (Answer: yes by default.)
-		deferred
-		end;
-
-	empty: BOOLEAN is
-			-- Is structure empty?
-		deferred
-		end;
-
-	exhausted: BOOLEAN is
-			-- Has structure been completely explored?
-		deferred
-		ensure 
-			exhausted_when_off: off implies Result
-		end;
-
-	extendible: BOOLEAN is 
-			-- May new items be added? (Answer: yes.)
-		deferred
-		end
-
-	full: BOOLEAN is
-			-- Is structure filled to capacity?
-		deferred
-		end;
-
-	isfirst: BOOLEAN is
-			-- Is cursor at first position?
-		deferred
-		ensure 
-			valid_position: Result implies not empty
-		end;
-
-	islast: BOOLEAN is
-			-- Is cursor at last position?
-		deferred
-		ensure 
-			valid_position: Result implies not empty
-		end;
-
-	object_comparison: BOOLEAN is
-			-- Must search operations use equal rather than =
-			-- for comparing references? (Default: no, use =.)
-		deferred
-		end
-
-	off: BOOLEAN is
-			-- Is there no current item?
-		deferred
-		end;
-
-	prunable: BOOLEAN is
-			-- May items be removed? (Answer: yes.)
-		deferred
-		end;
-
-	readable: BOOLEAN is
-			-- Is there a current item that may be read?
-		deferred
-		end;
-
 	selected_count: INTEGER is
 			-- Number of selected items in current list
 		deferred
@@ -479,32 +267,8 @@ feature  -- Status report
 		deferred
 		end;
 
-	valid_cursor (p: CURSOR): BOOLEAN is
-			-- Can the cursor be moved to position p?
-		deferred
-		end;
-
-	valid_cursor_index (i: INTEGER): BOOLEAN is
-			-- Is i correctly bounded for cursor movement?
-		deferred
-		ensure 
-			valid_cursor_index_definition: Result = ((i >= 0) and (i <= count + 1))
-		end;
-
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is i within allowable bounds?
-		deferred
-		ensure
-			valid_index_definition: Result = (i >= 1) and (i <= count)
-		end;
-
 	visible_item_count: INTEGER is
 			-- Number of visible item of list
-		deferred
-		end;
-
-	writable: BOOLEAN is
-			-- Is there a current item that may be modified?
 		deferred
 		end;
 
@@ -516,26 +280,6 @@ feature  -- Status setting
 		require
 			not_a_command_void: a_command /= Void
 		deferred
-		end;
-
-	compare_objects is
-			-- Ensure that future search operations will use equal
-			-- rather than = for comparing references.
-		require
-			changeable_comparison_criterion
-		deferred
-		ensure
-			object_comparison: object_comparison
-		end;
-
-	compare_references is
-			-- Ensure that future search operations will use =
-			-- rather than equal for comparing references.
-		require 
-			changeable_comparison_criterion
-		deferred
-		ensure 
-			reference_comparison: not object_comparison
 		end;
 
 	deselect_all is
@@ -587,21 +331,7 @@ feature  -- Status setting
 		require
 			a_count_large_enough: a_count > 0
 		deferred
-		end; 
-
-feature  -- Transformation
-
-	swap (i: INTEGER) is
-			-- Exchange item at i-th position with item
-			-- at cursor position.
-		require 
-			not_off: not off;
-			valid_index: valid_index (i)
-		deferred
-		ensure 
-			swapped_to_item: item = old i_th (i);
-			swapped_from_item: i_th (i) = old item
-		end;
+		end
 
 invariant
 	before_definition: before = (index = 0);

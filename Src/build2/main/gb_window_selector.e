@@ -141,6 +141,13 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 feature {NONE} -- Implementation
 
 	initialize is
@@ -310,8 +317,9 @@ feature -- Access
 			-- directory structure to the current project.
 		once
 			create Result
-			Result.set_pixmap (icon_object_window @ 1)
+			Result.set_pixmap (pixmap_by_name ("directory_search_small"))
 			Result.select_actions.extend (agent include_dirs)
+			Result.set_tooltip ("Include all sub-directories")
 		ensure
 			result_not_void: result /= Void
 		end
@@ -339,6 +347,7 @@ feature -- Access
 				create iterated_directory.make (file_name)
 				if iterated_directory.exists and not items.item.is_equal (".") and not items.item.is_equal ("..") then
 					create command_add_directory.make (Void, items.item)
+					command_add_directory.supress_warnings
 					command_add_directory.create_new_directory
 					if command_add_directory.directory_added_succesfully then
 						command_add_directory.execute

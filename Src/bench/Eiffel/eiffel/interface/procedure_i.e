@@ -14,29 +14,38 @@ inherit
 			check_local_names, duplicate_arguments
 		end
 	
-feature 
+feature -- Access
 
-	arguments: FEAT_ARG;
+	arguments: FEAT_ARG
 			-- Arguments type
 
-	obsolete_message: STRING;
+	obsolete_message: STRING
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
 
-	assert_id_set: ASSERT_ID_SET;
+	assert_id_set: ASSERT_ID_SET
 			-- Assertions to which the procedure belongs to 
+
+feature -- Status report
+
+	is_procedure: BOOLEAN is True
+			-- Current is a procedure.
+
+feature -- Settings
 
 	set_assert_id_set (set: like assert_id_set) is
 			-- Assign `set' to assert_id_set.
 		do
 			assert_id_set := set
-		end;
+		end
 
 	set_arguments (args: like arguments) is
 			-- Assign `args' to `arguments'.
 		do
-			arguments := args;
-		end;
+			arguments := args
+		ensure
+			arguments_set: arguments = args
+		end
 
 	frozen set_has_precondition (b: BOOLEAN) is
 			-- Assign `b' to `has_precondition'.
@@ -57,21 +66,25 @@ feature
 	set_obsolete_message (s: STRING) is
 			-- Assign `s' to `obsolete_message'
 		do
-			obsolete_message := s;
-		end;
+			obsolete_message := s
+		ensure
+			obsolete_message_set: obsolete_message = s
+		end
+
+feature -- Initialization
 
 	duplicate_arguments is
 			-- Do a clone of the arguments (for replication)
 		do
 			if arguments /= Void then
 				arguments := clone (arguments)
-			end;
-		end;
+			end
+		end
 
 	init_assertion_flags (content: ROUTINE_AS) is
 			-- Initialize assertion flags with `content'.
 		require
-			good_argument: content /= Void
+			content_not_void: content /= Void
 		do
 			set_is_require_else (content.is_require_else)
 			set_is_ensure_then (content.is_ensure_then)
@@ -82,85 +95,83 @@ feature
 	duplicate: like Current is
 			-- Duplicate feature
 		do
-			Result := clone (Current);
+			Result := clone (Current)
 			if arguments /= Void then
-				Result.set_arguments (clone (arguments));
-			end;
+				Result.set_arguments (clone (arguments))
+			end
 			if type /= Void then
-				Result.set_type (clone (type));
-			end;
-		end;
+				Result.set_type (clone (type))
+			end
+		end
 
 	init_arg (argument_as: EIFFEL_LIST [TYPE_DEC_AS]) is
 			-- Initialization of arguments.
 		require
-			good_argument: argument_as /= Void;
+			argument_as_not_void: argument_as /= Void
 		local
-			i, j, count, dec_count, nb_arg: INTEGER;
-			arg_type: TYPE;
-			arg_dec: TYPE_DEC_AS;
-			id_list: ARRAYED_LIST [INTEGER];
+			i, j, count, dec_count, nb_arg: INTEGER
+			arg_type: TYPE
+			arg_dec: TYPE_DEC_AS
+			id_list: ARRAYED_LIST [INTEGER]
 		do
 				-- Calculate the number of arguments.
 			from
-				i := 1;
-				count := argument_as.count;
+				i := 1
+				count := argument_as.count
 			until
 				i > count
 			loop
-				nb_arg := nb_arg + argument_as.i_th (i).id_list.count;
-				i := i + 1;
-			end;
+				nb_arg := nb_arg + argument_as.i_th (i).id_list.count
+				i := i + 1
+			end
 				-- Creation of data structures
-			!!arguments.make (nb_arg);
+			!!arguments.make (nb_arg)
 				-- Fill the data structures
-			nb_arg := 1;
+			nb_arg := 1
 			from
-				i := 1;
+				i := 1
 			until
 				i > count
 			loop
-				arg_dec := argument_as.i_th (i);
+				arg_dec := argument_as.i_th (i)
 				from
-					j := 1;
-					id_list := arg_dec.id_list;
-					arg_type := arg_dec.type;
-					dec_count := id_list.count;
+					j := 1
+					id_list := arg_dec.id_list
+					arg_type := arg_dec.type
+					dec_count := id_list.count
 				until
 					j > dec_count
 				loop
-					arguments.put_name (id_list.i_th (j), nb_arg);
-					arguments.put_i_th (arg_type, nb_arg);
-					nb_arg := nb_arg + 1;
-					j := j + 1;
-				end;
+					arguments.put_name (id_list.i_th (j), nb_arg)
+					arguments.put_i_th (arg_type, nb_arg)
+					nb_arg := nb_arg + 1
+					j := j + 1
+				end
 				i := i + 1
-			end;
-		end;
-
-	is_procedure: BOOLEAN is True;
+			end
+		end
 
 	transfer_to (other: PROCEDURE_I) is
 			-- Transfer datas form `other' into Current.
 		do
-			{FEATURE_I} Precursor (other);
-			other.set_arguments (arguments);
-			other.set_is_require_else (is_require_else);
-			other.set_is_ensure_then (is_ensure_then);
-			other.set_obsolete_message (obsolete_message);
-			other.set_has_precondition (has_precondition);
-			other.set_has_postcondition (has_postcondition);
-			other.set_assert_id_set (assert_id_set);
-		end;
+			Precursor {FEATURE_I} (other)
+			other.set_arguments (arguments)
+			other.set_is_require_else (is_require_else)
+			other.set_is_ensure_then (is_ensure_then)
+			other.set_obsolete_message (obsolete_message)
+			other.set_has_precondition (has_precondition)
+			other.set_has_postcondition (has_postcondition)
+			other.set_assert_id_set (assert_id_set)
+		end
 
 	check_local_names is
 			-- Check the conflicts between local names and feature names
 			-- for an unchanged feature
 		do
 			if not is_replicated then	
-				Body_server.item (body_index).check_local_names;
-			end;
-		end;
+				Body_server.item (body_index).check_local_names
+			end
+		end
 
 -- Note: `require else' can be used even if the feature has no
 -- precursor. There is no problem to raise an error in the normal case,
@@ -170,61 +181,63 @@ feature
 
 --	check_assertions is
 --		local
---			fas: FEATURE_AS;
---			body: BODY_AS;
---			ras: ROUTINE_AS;
---			precondition: REQUIRE_AS;
---			postcondition: ENSURE_AS;
---			ve05: VE05;
+--			fas: FEATURE_AS
+--			body: BODY_AS
+--			ras: ROUTINE_AS
+--			precondition: REQUIRE_AS
+--			postcondition: ENSURE_AS
+--			ve05: VE05
 --		do
 --			if is_origin then
---				fas := Body_server.item (body_index);
---				body := fas.body;
---				ras ?= body.content;
+--				fas := Body_server.item (body_index)
+--				body := fas.body
+--				ras ?= body.content
 --				if ras /= Void then
---					precondition := ras.precondition;
---					postcondition := ras.postcondition;
+--					precondition := ras.precondition
+--					postcondition := ras.postcondition
 --					if
 --						(precondition /= Void and then precondition.is_else)
 --					or else
 --						(postcondition /= Void and then postcondition.is_then)
 --					then
---io.error.putstring ("Error VE05: require else or ensure then%NClass: ");
---io.error.putstring (System.current_class.name);
---io.error.putstring ("%NFeature: ");
---io.error.putstring (feature_name);
---io.error.new_line;
---						!!ve05;
---						ve05.set_class (System.current_class);
---						ve05.set_feature (Current);
---						Error_handler.insert_error (ve05);
---						Error_handler.checksum;
---					end;
---				end;
---			end;
---		end;
+--io.error.putstring ("Error VE05: require else or ensure then%NClass: ")
+--io.error.putstring (System.current_class.name)
+--io.error.putstring ("%NFeature: ")
+--io.error.putstring (feature_name)
+--io.error.new_line
+--						!!ve05
+--						ve05.set_class (System.current_class)
+--						ve05.set_feature (Current)
+--						Error_handler.insert_error (ve05)
+--						Error_handler.checksum
+--					end
+--				end
+--			end
+--		end
 
 feature {NONE} -- Implementation
 
     new_api_feature: E_ROUTINE is
             -- API feature creation
         do
-			!E_PROCEDURE! Result.make (feature_name, feature_id);
+			create {E_PROCEDURE} Result.make (feature_name, feature_id)
 			update_api (Result)
-        end;
+        end
 
 	update_api (f: E_ROUTINE) is
 			-- Update the attributes of api feature `f'.
+		require
+			f_not_void: f /= Void
 		local
-			args: like arguments;
+			args: like arguments
 		do
-			args := arguments;
+			args := arguments
 			if args /= Void then
-				f.set_arguments (args.api_args);
-			end;	
-			f.set_has_precondition (has_precondition);
-			f.set_has_postcondition (has_postcondition);
-			f.set_obsolete_message (obsolete_message);
-		end;
+				f.set_arguments (args.api_args)
+			end
+			f.set_has_precondition (has_precondition)
+			f.set_has_postcondition (has_postcondition)
+			f.set_obsolete_message (obsolete_message)
+		end
 
 end

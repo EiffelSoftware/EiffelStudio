@@ -33,8 +33,8 @@ rt_private struct s_table *table;		/* Search table for deep equal */
  * Routines declarations
  */
 
-rt_private int e_field_equal(register char *target, register char *source, uint32 t_flags, uint32 s_flags);		/* Field-by-field equality */
-rt_private int e_field_iso(register char *target, register char *source, uint32 t_flags, uint32 s_flags);			/* Field-by-field isomorhphism */
+rt_private int e_field_equal(register char *target, register char *source, int16 dtype);		/* Field-by-field equality */
+rt_private int e_field_iso(register char *target, register char *source, int16 dtype);			/* Field-by-field isomorhphism */
 rt_private int rdeepiso(char *target, char *source);				/* Recursive isomorphism */
 rt_private int rdeepiter(register char *target, register char *source);			/* Iteration on normal objects */
 
@@ -96,7 +96,7 @@ rt_public int eequal(register char *target, register char *source)
 		if (!(s_flags & EO_COMP))	/* Perform a block comparison */
 			return (char) (!bcmp(source, target, Size(s_type)));
 		else
-			return e_field_equal(target, source, t_flags, s_flags);
+			return e_field_equal(target, source, s_type);
 	}
 	
 	/* Field by field comparison */
@@ -133,7 +133,7 @@ rt_public int spequal(register char *target, register char *source)
 	/* Second condition: block equality */
 	return (char) (!bcmp(source, target, s_size * sizeof(char)));
 }
-	
+
 rt_public int eiso(char *target, char *source)
 {
 	/* Compare `source ' and `target' in term of their structure:
@@ -146,6 +146,7 @@ rt_public int eiso(char *target, char *source)
 
 	uint32 s_flags;	/* Source flags */
 	uint32 t_flags;	/* Target flags */
+	int16 dtype;	/* Dynamic type */
 
 	if (target == source)
 		return TRUE;
@@ -166,13 +167,14 @@ rt_public int eiso(char *target, char *source)
 		return FALSE;
 
 	/* Check if the dynamic types are the same */
-	if ((s_flags & EO_TYPE) != (t_flags & EO_TYPE))
+	dtype = Deif_bid(s_flags & EO_TYPE);
+	if (dtype != Deif_bid(t_flags & EO_TYPE))
 		return FALSE;
-
-	/* Check iomorphism */
-	return e_field_iso(target, source, t_flags, s_flags);
+	else
+		/* Check iomorphism */
+		return e_field_iso(target, source, dtype);
 }
-
+	
 rt_public int spiso(register char *target, register char *source)
 {
 	/* Compare two special objects in term of their structures. `source'
@@ -424,83 +426,55 @@ rt_private int rdeepiter(register char *target, register char *source)
 	return TRUE;
 }
 
-rt_private int e_field_equal(register char *target, register char *source, uint32 t_flags, uint32 s_flags)
+rt_private int e_field_equal(register char *target, register char *source, int16 dtype)
 {
-	/* Eiffel standard field-by-field equality: since source type
-	 * conforms to source type, we iterate on target attributes which are
-	 * thus necessary present in the source.
+	/* Eiffel standard field-by-field equality:
+	 * Since target and source have the same dynamic type `dtype' we iterate
+	 * on the attributes of target.
 	 * Return a boolean.
 	 */
 
-	struct cnode *t_skeleton;	/* Target skeleton */
-	struct cnode *s_skeleton;	/* Source skeleton */
-	uint32 *t_types;            /* Target attribute types */
-	uint32 *s_types;            /* Source attribute types */
+	struct cnode *skeleton;	/* Target skeleton */
+	uint32 *types;            /* Target attribute types */
 #ifndef WORKBENCH
-	register3 long **t_offsets;	/* Target attribute tables */
-	register4 long **s_offsets;	/* Source attribute tables */
-	long *attr_table;			/* Attribute table */
+	register3 long *offsets;	/* Target attribute tables */
 #else
-	int32 *tcn_attr;     		/* Array of attribute keys for target object */
-	int32 *scn_attr;			/* Array of attribute keys for source object */
+	int32 *cn_attr;     		/* Array of attribute keys for target object */
 	int32 attr_key;				/* Attribute key */
-	long offset;
 #endif
-	register5 long t_index;		/* Target attribute index */
-	register6 long s_index;		/* Source attribute index */
-	int16 s_type, t_type;
+	long offset;
+	register5 long index;		/* Target attribute index */
 	char *t_ref, *s_ref;
-	int target_type, source_type;	/* Attribute type in skeleton */
+	int attribute_type;	/* Attribute type in skeleton */
 
-	s_type = Deif_bid(s_flags & EO_TYPE);
-	t_type = Deif_bid(t_flags & EO_TYPE);
-	t_skeleton = &System(t_type);
-	s_skeleton = &System(s_type);
-	t_types = t_skeleton->cn_types;
-	s_types = s_skeleton->cn_types;
+	skeleton = &System(dtype);
+	types = skeleton->cn_types;
 #ifndef WORKBENCH
-	t_offsets = t_skeleton->cn_offsets;
-	s_offsets = s_skeleton->cn_offsets;
+	offsets = skeleton->cn_offsets;
 #else
-	tcn_attr = t_skeleton->cn_attr;
-	scn_attr = s_skeleton->cn_attr;
+	cn_attr = skeleton->cn_attr;
 #endif
 
 	/* Iteration on the target attributes */
-	for (t_index = t_skeleton->cn_nbattr - 1; t_index >= 0; t_index--) {
+	for (index = skeleton->cn_nbattr - 1; index >= 0; index--) {
 #ifndef WORKBENCH
-		/* Evaluation of the attribute table */
-
-
-		attr_table = t_offsets[t_index];
-
-		/* Evaluation of the source index */
-		for (s_index = 0; s_offsets[s_index] != attr_table;s_index++)
-			;
-
-		t_ref = target + attr_table[t_type];
-		s_ref = source + attr_table[s_type];
-		
+		offset = offsets[index];
+		t_ref = target + offset;
+		s_ref = source + offset;
 #else
 		/* Evaluation of the attribute key */
-		attr_key = tcn_attr[t_index];
+		attr_key = cn_attr[index];
 
 		/* Evaluation of the target attribute offset */
-		CAttrOffs(offset,attr_key,t_type);
+		CAttrOffs(offset,attr_key,dtype);
 		t_ref = target + offset;
 
 		/* Evaluation of the source attribute offset */
-		CAttrOffs(offset,attr_key,s_type);
+		/* It is the same as the target, since they have the same dynamic type */
 		s_ref = source + offset;
-
-
-		
-		for (s_index = 0; scn_attr[s_index] != attr_key; s_index++)
-			;
 #endif
-		target_type = t_types[t_index];
-		source_type = s_types[s_index];
-		switch (target_type & SK_HEAD) {
+		attribute_type = types[index];
+		switch (attribute_type & SK_HEAD) {
 		case SK_BOOL:
 		case SK_CHAR:
 			if (*t_ref != *s_ref)
@@ -547,7 +521,7 @@ rt_private int e_field_equal(register char *target, register char *source, uint3
 	return TRUE;
 }
 
-rt_private int e_field_iso(register char *target, register char *source, uint32 t_flags, uint32 s_flags)
+rt_private int e_field_iso(register char *target, register char *source, int16 dtype)
 {
 	/* Eiffel standard field-by-field equality: since source type
 	 * conforms to source type, we iterate on target attributes which are
@@ -555,71 +529,49 @@ rt_private int e_field_iso(register char *target, register char *source, uint32 
 	 * Return a boolean.
 	 */
 
-	struct cnode *t_skeleton;	/* Target skeleton */
-	struct cnode *s_skeleton;	/* Source skeleton */
-	uint32 *t_types;            /* Target attribute types */
-	uint32 *s_types;            /* Source attribute types */
+	struct cnode *skeleton;	/* Target skeleton */
+	uint32 *types;            /* Target attribute types */
 #ifndef WORKBENCH
-	register3 long **t_offsets;	/* Target attribute tables */
-	register4 long **s_offsets;	/* Source attribute tables */
-	long *attr_table;			/* Attribute table */
+	register3 long *offsets;	/* Target attribute tables */
 #else
-	int32 *tcn_attr;				/* Array of attribute keys for target object */
-	int32 *scn_attr;                /* Array of attribute keys for source object */
+	int32 *cn_attr;                /* Array of attribute keys for source object */
 	int32 attr_key;				/* Attribute key */
-	long offset;
 #endif
-	register5 long t_index;		/* Target attribute index */
-	register6 long s_index;		/* Source attribute index */
-	int16 s_type, t_type;
+	long offset;
+	register5 long index;		/* Target attribute index */
 	char *t_ref, *s_ref, *ref1, *ref2;
-	int target_type, source_type;		/* Attribute type in skeleton */
+	int attribute_type;
 
-	s_type = Deif_bid(s_flags & EO_TYPE);
-	t_type = Deif_bid(t_flags & EO_TYPE);
-	t_skeleton = &System(t_type);
-	s_skeleton = &System(s_type);
-	t_types = t_skeleton->cn_types;
-	s_types = s_skeleton->cn_types;
+	skeleton = &System(dtype);
+	types = skeleton->cn_types;
 #ifndef WORKBENCH
-	t_offsets = t_skeleton->cn_offsets;
-	s_offsets = s_skeleton->cn_offsets;
+	offsets = skeleton->cn_offsets;
 #else
-	tcn_attr = t_skeleton->cn_attr;
-	scn_attr = s_skeleton->cn_attr;
+	cn_attr = skeleton->cn_attr;
 #endif
 
 	/* Iteration on the target attributes */
-	for (t_index = t_skeleton->cn_nbattr - 1; t_index >= 0; t_index--) {
+	for (index = skeleton->cn_nbattr - 1; index >= 0; index--) {
 #ifndef WORKBENCH
 		/* Evaluation of the attribute table */
-		attr_table = t_offsets[t_index];
+		offset = offsets[index];
 
-		/* Evaluation of the source index */
-		for (s_index = 0; s_offsets[s_index] != attr_table;s_index++)
-			;
-
-		t_ref = target + attr_table[t_type];
-		s_ref = source + attr_table[s_type];
-		
+		t_ref = target + offset;
+		s_ref = source + offset;
 #else
 		/* Evaluation of the attribute key */
-		attr_key = tcn_attr[t_index];
+		attr_key = cn_attr[index];
 
 		/* Evaluation of the target attribute offset */
-		CAttrOffs(offset,attr_key,t_type);
+		CAttrOffs(offset,attr_key,dtype);
 		t_ref = target + offset;
 
 		/* Evaluation of the source attribute offset */
-		CAttrOffs(offset,attr_key,s_type);
+		/* It is the same as the target, since they have the same dynamic type */
 		s_ref = source + offset;
-
-		for(s_index=0; scn_attr[s_index] != attr_key; s_index++)
-			;
 #endif
-		target_type = t_types[t_index];
-		source_type = s_types[s_index];
-		switch (target_type & SK_HEAD) {
+		attribute_type = types[index];
+		switch (attribute_type & SK_HEAD) {
 		case SK_BOOL:
 		case SK_CHAR:
 			if (*t_ref != *s_ref)
@@ -642,9 +594,9 @@ rt_private int e_field_iso(register char *target, register char *source, uint32 
 				return FALSE;
 			break;
 		default:
-			if ((target_type & SK_HEAD) == SK_BIT) {
-				/* BITS attribute */
-			} else if ((target_type & SK_HEAD) == SK_EXP) {
+			if ((attribute_type & SK_HEAD) == SK_BIT) {
+		/* BITS attribute */
+			} else if ((attribute_type & SK_HEAD) == SK_EXP) {
 				/* Source and target attribute are expanded of the same type.
 				 * Block comparison if the attribute type is not composite
 				 * itself else field-by-field comparison.
@@ -671,4 +623,3 @@ rt_private int e_field_iso(register char *target, register char *source, uint32 
 	}
 	return TRUE;
 }
-

@@ -8,27 +8,30 @@ class HEIR inherit
 feature
 
 	display is
+			-- Output message saying where we are.
 		do
-			io.put_string ("In class HEIR");
-			io.new_line;
-			io.put_string ("-------------------");
+			io.putstring ("In class HEIR")
 			io.new_line
-			display_routine; 
-			io.put_string (an_attribute);
-			io.new_line;
+			io.putstring ("-------------------")
 			io.new_line
-		end;
+			display_routine
+			io.putstring (a_string)
+			io.new_line
+			io.new_line
+		end
 
 	display_routine is 
+			-- Output simple message.
 		do 
-			io.put_string ("Calling a routine of class HEIR");
+			io.putstring ("Calling a routine of class HEIR")
 			io.new_line 
-		end;
+		end
 
-	an_attribute: STRING is 
+	a_string: STRING is 
+			-- Simple text string
 		do 
-			create Result.make (0);	
-			Result.append ("Showing an attribute of class HEIR");
-		end;
+			create Result.make (0)
+			Result.append ("Showing an attribute of class HEIR")
+		end
 
 end

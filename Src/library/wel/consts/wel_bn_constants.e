@@ -51,6 +51,20 @@ feature -- Access
 			"BN_DOUBLECLICKED"
 		end
 
+	Bn_killfocus: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"BN_KILLFOCUS"
+		end
+
+	Bn_setfocus: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"BN_SETFOCUS"
+		end
+
 end -- class WEL_BN_CONSTANTS
 
 --|----------------------------------------------------------------

@@ -230,7 +230,11 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				
 			else 
-				Result.append (Eif_reference)
+				if (a_data_visitor.vt_type = Vt_bool) then
+					Result.append (a_data_visitor.cecil_type)
+				else
+					Result.append (Eif_reference)
+				end
 				Result.append (Close_parenthesis)
 				Result.append (Open_parenthesis)
 				if a_data_visitor.need_generate_ce then

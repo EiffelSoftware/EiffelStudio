@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			body.append (Close_parenthesis)
 			body.append (Colon)
 
-			if a_data_visitor.is_basic_type then
+			if a_data_visitor.is_basic_type or (a_data_visitor.vt_type = Vt_bool) then
 				body.append (a_data_visitor.cecil_type)
 			else
 				body.append (Eif_reference)
@@ -390,13 +390,17 @@ feature {NONE} -- Implementation
 				an_argument.append (a_data_visitor.eiffel_type)
 				body.append (a_data_visitor.c_type)
 
+			elseif a_data_visitor.vt_type = Vt_bool then
+				an_argument.append (a_data_visitor.eiffel_type)
+				body.append (a_data_visitor.cecil_type)
+
 			elseif a_data_visitor.is_array_basic_type then
 				an_argument.append (Pointer_type)
 				body.append (Eif_pointer)
 
 			elseif a_data_visitor.is_enumeration then
 				an_argument.append (Integer_type)
-				body.append (Eif_integer)
+				body.append (a_data_visitor.c_type)
 
 			elseif 
 				a_data_visitor.is_interface or 

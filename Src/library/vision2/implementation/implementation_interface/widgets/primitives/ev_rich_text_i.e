@@ -296,7 +296,8 @@ feature -- Status setting
 		deferred
 		ensure
 			buffer_not_locked: not buffer_locked_in_append_mode and not buffer_locked_in_format_mode
-			caret_not_moved: caret_position = old caret_position
+			caret_consistent: (old buffer_locked_in_append_mode implies caret_position = 1) or
+				old buffer_locked_in_format_mode implies (caret_position = old caret_position)
 			unselected: not has_selection
 		end
 		
@@ -310,7 +311,7 @@ feature -- Status setting
 		deferred
 		ensure	
 			buffer_locked_for_append: not buffer_locked_in_append_mode
-			caret_not_moved: caret_position = old caret_position
+			caret_consistent: old caret_position <= text_length + 1 implies caret_position = old caret_position
 			unselected: not has_selection
 		end
 		
@@ -437,18 +438,18 @@ feature -- Status setting
 			l_text: STRING
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 		do
-			initialize_for_saving
+			initialize_for_loading
 			create text_file.make_open_read (a_filename)
 			text_file.read_stream (text_file.count)
 			l_text := text_file.last_string
 			text_file.close
 			create buffer.set_rich_text (Current)
 			buffer.set_with_rtf (l_text)
-			complete_saving
+			complete_loading
+			set_caret_position (1)
 		ensure
-			caret_not_moved: caret_position = old caret_position
-			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+			caret_reset: caret_position = 1
+			unselected: not has_selection
 		end
 		
 	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER is
@@ -538,6 +539,19 @@ feature -- Status setting
 	complete_saving is
 			-- Restore `Current' back to its default state before last call
 			-- to `initialize_for_saving'.
+		deferred
+		end
+		
+	initialize_for_loading is
+			-- Initialize `Current' for load operations, by performing
+			-- optimizations that prevent the control from slowing down due to
+			-- unecessary optimizations.
+		deferred
+		end
+		
+	complete_loading is
+			-- Restore `Current' back to its default state before last call
+			-- to `initialize_for_loading'.
 		deferred
 		end
 		

@@ -65,21 +65,19 @@ feature {NONE} -- Initialization
 		end
 
 	select_callback (a_tree_item: POINTER) is
-			-- Called when a tree item is selected.
+			-- Called when a tree item is selected
 		local
 			t_item: EV_TREE_ITEM_IMP
 		do
 		 	t_item ?= eif_object_from_c (a_tree_item)
-			t_item.interface.select_actions.call ([])
-		end
-
-	deselect_callback (a_tree_item: POINTER) is
-			-- Called when a tree item is deselected.
-		local
-			t_item: EV_TREE_ITEM_IMP
-		do
-		 	t_item ?= eif_object_from_c (a_tree_item)
-			t_item.interface.deselect_actions.call ([])	
+			
+			if t_item.is_selected then
+				t_item.interface.select_actions.call ([])
+				parent_tree.select_actions.call ([])
+			else
+				t_item.interface.deselect_actions.call ([])
+				parent_tree.deselect_actions.call ([])
+			end
 		end
 
 	initialize_item_box is
@@ -117,9 +115,30 @@ feature -- Status report
 		end
 
 	is_selected: BOOLEAN is
-			-- Is the item selected?
+			-- Is the item selected ?
+		local
+			list_pointer, item_pointer: POINTER
+			o: EV_ANY_IMP
+			a_counter: INTEGER
+			current_item: EV_TREE_ITEM
 		do
-			Result := (parent_tree.selected_item = interface)
+			list_pointer := GTK_TREE_SELECTION (parent_imp.list_widget)
+			if list_pointer /= Default_pointer then
+				from
+					a_counter := 0
+				until
+					a_counter = C.g_list_length (list_pointer)
+				loop
+					item_pointer := C.g_list_nth_data (
+						list_pointer,
+						a_counter
+					)
+					if item_pointer = c_object then
+						Result := True
+					end
+					a_counter := a_counter + 1
+				end
+			end	
 		end
 
 	is_expanded: BOOLEAN is
@@ -130,21 +149,21 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_selected (flag: BOOLEAN) is
+	set_selected (a_flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		do
 			--| FIXME IEK Does not function correctly.
-			if (flag) then
+			if a_flag then
 				C.gtk_tree_item_select (c_object)
 			else
 				C.gtk_tree_item_deselect (c_object)
 			end
 		end
 	
-	set_expand (flag: BOOLEAN) is
+	set_expand (a_flag: BOOLEAN) is
 			-- Expand the item if `flag', collapse it otherwise.
 		do
-			if flag then
+			if a_flag then
 				C.gtk_tree_item_expand (c_object)
 			else
 				C.gtk_tree_item_collapse (c_object)
@@ -158,7 +177,8 @@ feature {NONE} -- Implementation
 			Result := C.gtk_tree_new
 				-- Connect events to items own tree.
 			real_signal_connect (Result, "select_child", ~select_callback)
-			real_signal_connect (Result, "unselect_child", ~deselect_callback)
+				--| Gtk bug means that select_child signal gets
+				--| fired on button press.
 		end
 
 	add_to_container (v: like item) is
@@ -176,11 +196,20 @@ feature {NONE} -- Implementation
 			end
 
 			if item_subtree /= Default_pointer then
-				C.gtk_tree_append (item_subtree, item_imp.c_object)
+				C.gtk_tree_append (
+					item_subtree,
+					item_imp.c_object
+				)
 			else
-				C.gtk_tree_append (dummy_list_widget, item_imp.c_object)
+				C.gtk_tree_append (
+					dummy_list_widget,
+					item_imp.c_object
+				)
 				if parent /= Void then
-					C.gtk_tree_item_set_subtree (c_object, dummy_list_widget)
+					C.gtk_tree_item_set_subtree (
+						c_object,
+						dummy_list_widget
+					)
 					set_dummy_list_widget (Default_pointer)
 				end
 			end
@@ -197,7 +226,8 @@ feature {NONE} -- Implementation
 	remove_item_from_position (a_position: INTEGER) is
 			-- Remove item at `a_position'
 		do	
-				Precursor (a_position)
+			--| FIXME Add code for dealing with subtree.
+			Precursor (a_position)
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is
@@ -207,7 +237,11 @@ feature {NONE} -- Implementation
 		do
 			imp ?= v.implementation
 			C.gtk_tree_remove_item (list_widget, imp.c_object)
-			C.gtk_tree_insert (list_widget, imp.c_object, a_position - 1)
+			C.gtk_tree_insert (
+				list_widget,
+				imp.c_object,
+				a_position - 1
+			)
 		end
 
 	item_box: POINTER is
@@ -218,8 +252,8 @@ feature {NONE} -- Implementation
 			Result := C.g_list_nth_data (Result, 0)
 		end
 
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
+	gtk_reorder_child (a_container, a_child: POINTER; a_pos: INTEGER) is
+			-- Not needed in this class.
 		do
 			check dont_call: False end
 		end
@@ -259,6 +293,14 @@ feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
 			"GTK_TREE_ROOT_TREE"
 		end
 
+	gtk_tree_selection (a_tree: POINTER): POINTER is
+			-- Selection of root tree.
+		external
+			" C [macro <gtk/gtktree.h>]"
+		alias
+			"GTK_TREE_SELECTION"
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_ITEM
@@ -286,6 +328,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/02/29 22:28:55  king
+--| Tidied up code, fixed gtk select callback bug
+--|
 --| Revision 1.41  2000/02/29 18:43:40  king
 --| Tidied up code
 --|

@@ -46,7 +46,7 @@ feature -- Access
 			create Result.make
 		end
 		
-	show_history_command: GB_SHOW_HISTORY_COMMAND is
+	show_history_command: GB_SHOW_HIDE_HISTORY_COMMAND is
 			-- Command representing display history.
 		once
 			create Result.make
@@ -150,7 +150,6 @@ feature {GB_MAIN_WINDOW} -- Implementation
 			Result.extend (project_settings_command)
 			Result.extend (open_project_command)
 			Result.extend (close_project_command)
-			Result.extend (show_history_command)
 			Result.extend (delete_object_command)
 			Result.extend (object_editor_command)
 			Result.extend (undo_command)

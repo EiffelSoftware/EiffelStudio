@@ -61,7 +61,8 @@ feature -- Status Report
 			Result := get_xt_pixel (Current, XmNbackground)
 		ensure
 			background_color_created: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display)
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	background_pixmap: MEL_PIXMAP is
@@ -71,8 +72,9 @@ feature -- Status Report
 		do
 			Result := get_xt_pixmap (Current, XmNbackgroundPixmap)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display) 
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	depth: INTEGER is
@@ -173,13 +175,13 @@ feature -- Miscellaneous
 
 feature -- Element change
 
-	add_event_handler (a_mask: POINTER; a_callback: MEL_CALLBACK; an_argument: ANY) is
+	add_event_handler (a_mask: INTEGER; a_callback: MEL_CALLBACK; an_argument: ANY) is
 			-- Add the callback `a_callback' with argument `an_argument'
 			-- to the callback list of the widget called specified by event mask `a_mask'.
 			-- (All masks are defined in class `MEL_EVENT_MASK_CONSTANTS')
 		require
 			exists: not is_destroyed;
-			a_mask_not_void: a_mask /= default_pointer;
+			a_mask_not_void: a_mask /= 0;
 			non_void_a_callback: a_callback /= Void
 		local
 			a_callback_exec: MEL_CALLBACK_EXEC
@@ -239,15 +241,34 @@ feature -- Element change
 			xt_grab_pointer (screen_object, cursor_id)
 		end;
 
+	next_event (a_mask: INTEGER): MEL_EVENT is
+			-- Retrieve the next event with mask `a_mask' in the 
+			-- queue for Current widget and remove it from the queue
+			-- (Return immediately if event is not found)
+			-- Masks are defined in MEL_EVENT_MASK_CONSTANTS
+		require	
+			realized: realized
+		local
+			ms: MEL_CALLBACK_STRUCT
+		do
+			if x_check_window_event (display.handle, window,
+				a_mask, global_xevent_ptr)  then
+				if global_xevent_ptr /= default_pointer then
+					!! ms.make_event_only (global_xevent_ptr);
+					Result := ms.event
+				end
+			end
+		end;
+
 feature -- Removal
 
-	remove_event_handler (a_mask: POINTER; a_callback: MEL_CALLBACK; an_argument: ANY) is
+	remove_event_handler (a_mask: INTEGER; a_callback: MEL_CALLBACK; an_argument: ANY) is
 			-- Remove the callback `a_callback' with argument `an_argument'
 			-- from the callback list of the widget called specified by event mask `a_mask;.
 			-- (All masks are defined in class `MEL_EVENT_MASK_CONSTANTS')
 		require
 			exists: not is_destroyed;
-			a_mask_not_null: a_mask /= default_pointer;
+			a_mask_not_null: a_mask /= 0;
 			non_void_a_callback: a_callback  /= Void
 		local
 			a_callback_exec: MEL_CALLBACK_EXEC
@@ -313,6 +334,14 @@ feature {NONE} -- External features
 			"XDefineCursor"
 		end;
 
+	x_check_window_event (display_ptr: POINTER; a_window: POINTER; 
+				an_event_mask: INTEGER; event_ptr: POINTER): BOOLEAN is
+		external
+			"C [macro <X11/Xlib.h>] (Display *, Window, long, XEvent *): Bool"
+		alias
+			"XCheckWindowEvent"
+		end;
+
 	x_undefine_cursor (display_ptr: POINTER; a_window: POINTER) is
 		external
 			"C [macro <X11/Xlib.h>] (Display *, Window)"
@@ -339,6 +368,11 @@ feature {NONE} -- External features
 			"C [macro <X11/Xlib.h>] (Display *, Window)"
 		alias
 			"XRaiseWindow"
+		end;
+
+	global_xevent_ptr: POINTER is
+		external
+			"C [macro <mel.h>]: EIF_POINTER"
 		end;
 
 end -- class MEL_WIDGET

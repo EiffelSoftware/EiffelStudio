@@ -20,12 +20,17 @@ inherit
 
 	EV_CONTAINER_IMP
 		undefine
-			replace
-		redefine
+			replace,
 			x_position,
 			y_position,
 			screen_x,
 			screen_y,
+			minimum_width,
+			minimum_height,
+			width,
+			height,
+			is_parentable
+		redefine
 			interface,
 			initialize,
 			make,
@@ -39,6 +44,16 @@ inherit
 			on_widget_mapped,
 			destroy,
 			is_parentable
+		end
+
+	EV_GTK_WINDOW_IMP
+		undefine
+			initialize,
+			destroy,
+			show,
+			parent_imp
+		redefine
+			interface
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -62,95 +77,6 @@ feature  -- Access
 
 	item: EV_WIDGET
 			-- Current item.
-
-	x_position: INTEGER is
-			-- X coordinate of `Current'
-		do
-			Result := screen_x
-		end
-			
-	y_position: INTEGER is
-			-- Y coordinate of `Current'
-		do
-			Result := screen_y
-		end
-			
-	screen_x: INTEGER is
-			-- Horizontal position of the window on screen, 
-		local
-			a_x: INTEGER
-			a_aux_info: POINTER
-		do
-			if positioned_by_user then
-				Result := user_x_position
-			else
-				if is_displayed then
-					if has_wm_decorations then
-						feature {EV_GTK_EXTERNALS}.gdk_window_get_root_origin (
-							feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
-							$a_x, NULL)
-							Result := a_x					
-					else
-							Result := Precursor {EV_CONTAINER_IMP}
-					end
-				else
-					a_aux_info := aux_info_struct
-					if a_aux_info /= NULL then
-						Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
-					end
-				end
-			end
-		end
-		
-	screen_y: INTEGER is
-			-- Vertical position of the window on screen, 
-		local
-			a_y: INTEGER
-			a_aux_info: POINTER
-		do
-			if positioned_by_user then
-				Result := user_y_position
-			else
-				if is_displayed then
-					if has_wm_decorations then
-						feature {EV_GTK_EXTERNALS}.gdk_window_get_root_origin (
-							feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
-					    	NULL, $a_y)
-						Result := a_y					
-					else
-						Result := Precursor {EV_CONTAINER_IMP}
-					end
-				else
-					a_aux_info := aux_info_struct
-					if a_aux_info /= NULL then
-						Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
-					end
-				end
-			end
-		end
-		
-	user_x_position, user_y_position: INTEGER
-			-- Used to store user x and y positions whilst Window is off screen.
-
-	width: INTEGER is
-			-- Horizontal size measured in pixels.
-		do
-			if default_width /= -1 then
-				Result := default_width
-			else
-				Result := Precursor
-			end
-		end
-
-	height: INTEGER is
-			-- Vertical size measured in pixels.
-		do
-			if default_height /= -1 then
-				Result := default_height
-			else
-				Result := Precursor
-			end
-		end
 	
  	maximum_width: INTEGER
 			-- Maximum width that application wishes widget
@@ -179,20 +105,6 @@ feature  -- Access
 
 	menu_bar: EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
-
-	is_modal: BOOLEAN is
-			-- Must the window be closed before application continues?
-		do
-			if not is_destroyed then
-				Result := feature {EV_GTK_EXTERNALS}.gtk_window_struct_modal (c_object) = 1
-			end
-		end
-		
-	blocking_window: EV_WINDOW is
-			-- Window this dialog is a transient for.
-		do
-			Result := internal_blocking_window
-		end
 
 feature -- Status setting
 
@@ -224,72 +136,6 @@ feature -- Status setting
 				end
 			end
 			app_implementation.gtk_marshal.disable_exception_handling
-		end
-
-	enable_modal is
-			-- Set `is_modal' to `True'.
-		do
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, True)
-		end
-
-	disable_modal is
-			-- Set `is_modal' to `False'.
-		do
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, False)
-		end
-
-	set_x_position (a_x: INTEGER) is
-			-- Set horizontal offset to parent to `a_x'.
-		do
-			set_position (a_x, y_position)
-		end
-
-	set_y_position (a_y: INTEGER) is
-			-- Set vertical offset to parent to `a_y'.
-		do
-			set_position (x_position, a_y)
-		end
-
-	set_position (a_x, a_y: INTEGER) is
-			-- Set horizontal offset to parent to `a_x'.
-			-- Set vertical offset to parent to `a_y'.
-		do
-			user_x_position := a_x
-			user_y_position := a_y
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (c_object, a_x, a_y)
-			feature {EV_GTK_EXTERNALS}.gdk_window_move (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_x, a_y)
-			positioned_by_user := True
-		end
-
-	set_width (a_width: INTEGER) is
-			-- Set the horizontal size to `a_width'.
-		do
-			update_request_size
-			set_size (a_width, height)
-		end
-
-	set_height (a_height: INTEGER) is
-			-- Set the vertical size to `a_height'.
-		do
-			update_request_size
-			set_size (width, a_height)
-		end
-
-	set_size (a_width, a_height: INTEGER) is
-			-- Set the horizontal size to `a_width'.
-			-- Set the vertical size to `a_height'.
-		do
-			update_request_size
-			default_width := a_width
-			default_height := a_height
-			feature {EV_GTK_EXTERNALS}.gdk_window_resize (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_width.max (minimum_width), default_height.max (minimum_height))
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
-		end
-
-	forbid_resize is
-			-- Forbid the resize of the window.
-		do
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 0)
 		end
 
 	allow_resize is
@@ -425,22 +271,6 @@ feature -- Element change
 			end
 			menu_bar := Void
 		end
-		
-	set_blocking_window (a_window: EV_WINDOW) is
-			-- Set as transient for `a_window'.
-		local
-			win_imp: EV_WINDOW_IMP
-		do
-			internal_blocking_window := a_window
-			if a_window /= Void then
-				win_imp ?= a_window.implementation
-				feature {EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, win_imp.c_object)
-			else
-				if not is_destroyed then
-					feature {EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, NULL)
-				end		
-			end
-		end
 
 feature {EV_ANY_IMP} -- Implementation
 
@@ -459,9 +289,6 @@ feature {EV_ANY_IMP} -- Implementation
 
 	focus_widget: EV_WIDGET_IMP
 			-- Widget that has the focus.
-			
-	internal_blocking_window: EV_WINDOW
-			-- Window that `Current' is relative to.
 
 feature {NONE} -- Implementation
 
@@ -474,15 +301,6 @@ feature {NONE} -- Implementation
 			call_show_actions := False
 		end
 
-	has_wm_decorations: BOOLEAN is
-			-- Does current Window object have WM decorations.
-		do
-			Result := False
-		end
-
-	positioned_by_user: BOOLEAN
-		-- Has the Window been positioned by the user?
-
 	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
@@ -491,14 +309,6 @@ feature {NONE} -- Implementation
 			Precursor {EV_CONTAINER_IMP} (a_minimum_width, a_minimum_height)
 			feature {EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, a_minimum_width, a_minimum_height)
 		end
-
-	default_width: INTEGER
-			-- Default width for the window if set, -1 otherwise.
-			-- (see. `gtk_window_set_default_size' for more information)
-		
-	default_height: INTEGER
-			-- Default height for the window if set, -1 otherwise.
-			-- (see. `gtk_window_set_default_size' for more information)
 
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Gtk_Widget."size-allocate" happened.
@@ -625,12 +435,6 @@ feature {EV_ACCELERATOR_IMP} -- Implementation
 			-- top and a status bar at the bottom.
 			
 feature {EV_ANY_I} -- Implementation
-			
-	is_parentable: BOOLEAN is
-			-- Is `Current' parentable?
-		do
-			Result := False
-		end
 		
 	lock_update is
 			-- Lock drawing updates for `Current'

@@ -239,8 +239,7 @@ feature -- Element change
 
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Assign `a_minimum_width' in pixels to `minimum_width'.
-			-- If `width' is less than `a_minimim_width', resize.
-			-- This setting takes effect next time application is idle.
+			-- If `width' is less than `a_minimum_width', resize.
 			-- From now, `minimum_width' is fixed and will not be changed
 			-- dynamically by the application anymore.
 		require
@@ -254,8 +253,7 @@ feature -- Element change
 
 	set_minimum_height (a_minimum_height: INTEGER) is
 			-- Set `a_minimum_height' in pixels to `minimum_height'.
-			-- If `height' is less than `a_minimim_height', resize.
-			-- This setting takes effect next time application is idle.
+			-- If `height' is less than `a_minimum_height', resize.
 			-- From now, `minimum_height' is fixed and will not be changed
 			-- dynamically by the application anymore.
 		require
@@ -271,7 +269,6 @@ feature -- Element change
 			-- Assign `a_minimum_height' to `minimum_height'
 			-- and `a_minimum_width' to `minimum_width' in pixels.
 			-- If `width' or `height' is less than minimum size, resize.
-			-- This setting takes effect next time application is idle.
 			-- From now, minimum size is fixed and will not be changed
 			-- dynamically by the application anymore.
 		require

@@ -274,6 +274,7 @@ void check_options(EIF_CONTEXT struct eif_opt *opt, int dtype)
 			/* User wants profiling. */
 		start_profile(vector->ex_rout, vector->ex_orig, dtype);
 	}
+	EIF_END_GET_CONTEXT
 }
 
 void check_options_stop(EIF_CONTEXT_NOARG)
@@ -303,6 +304,8 @@ void check_options_stop(EIF_CONTEXT_NOARG)
 			/* User wants profiling. */
 		stop_profile();
 	}
+
+	EIF_END_GET_CONTEXT
 }
 
 #endif /* WORKBENCH */

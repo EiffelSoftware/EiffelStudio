@@ -87,6 +87,8 @@ rt_public int str_str(EIF_CONTEXT EIF_OBJ text, EIF_OBJ pattern, int tlen, int p
 		return 0;				/* Pattern not found */
 	else
 		return 1 + (p - eif_access(text));		/* Index within string */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void compile(char *pattern, register int plen, uint32 *dtable)
@@ -158,16 +160,20 @@ rt_private void fuz_compile(EIF_CONTEXT EIF_OBJ pattern, register int plen, int 
 
 	for (i = 0; i < fuzzy; i++)
 		compile(eif_access(pattern), plen - i, darray[i]);
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void free_structures(EIF_CONTEXT int n)
 {
 	EIF_GET_CONTEXT
+	
 	/* Free fuzzy delta shift tables from 0 to 'n' */
-
 	while (n > 0)
 		xfree((char *) (darray[n--]));	/* Free allocated delta tables */
 	xfree((char *) darray);					/* Free main table */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, int plen)
@@ -207,6 +213,8 @@ rt_private char *qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, int pl
 		tx += delta[*(tx + plen)];	/* Shift to next text location */
 	}
 	return (char *) 0;		/* No substring found */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *fuz_qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, int plen, int fuzzy)
@@ -255,5 +263,7 @@ rt_private char *fuz_qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, in
 	}
 
 	return (char *) 0;		/* No substring found */
+
+	EIF_END_GET_CONTEXT
 }
 

@@ -73,6 +73,8 @@ rt_public char *(*wfeat(int static_type, int32 feature_id, int dyn_type))(EIF_CO
 		return pattern[DLEMPatId(body_id)].toi;
 	}
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *(*wpfeat(int32 origin, int32 offset, int dyn_type))(EIF_CONTEXT_NOARG /* ??? */)
@@ -108,6 +110,8 @@ rt_public char *(*wpfeat(int32 origin, int32 offset, int dyn_type))(EIF_CONTEXT_
 		return pattern[DLEMPatId(body_id)].toi;
 	}
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *(*wfeat_inv(int static_type, int32 feature_id, char *name, char *object))(EIF_CONTEXT_NOARG /* ??? */)
@@ -158,6 +162,8 @@ rt_public char *(*wfeat_inv(int static_type, int32 feature_id, char *name, char 
 		return pattern[DLEMPatId(body_id)].toi;
 	}
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *(*wpfeat_inv(int32 origin, int32 offset, char *name, char *object))(EIF_CONTEXT_NOARG /* ??? */)
@@ -204,6 +210,8 @@ rt_public char *(*wpfeat_inv(int32 origin, int32 offset, char *name, char *objec
 		return pattern[DLEMPatId(body_id)].toi;
 	}
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 
@@ -260,6 +268,7 @@ rt_public void wexp(EIF_CONTEXT int static_type, int32 feature_id, int dyn_type,
 									 * the IC was return to the previous 
 									 * state.
 									 */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void wpexp(EIF_CONTEXT int32 origin, int32 offset, int dyn_type, char *object)
@@ -312,6 +321,7 @@ rt_public void wpexp(EIF_CONTEXT int32 origin, int32 offset, int dyn_type, char 
 									 * the IC was return to the previous 
 									 * state.
 									 */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public long wattr(int static_type, int32 feature_id, int dyn_type)
@@ -478,6 +488,8 @@ rt_public char *(*wdisp(int dyn_type))(EIF_CONTEXT_NOARG /* ??? */)
 		return pattern[DLEMPatId(body_id)].toi;
 	}
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 /*

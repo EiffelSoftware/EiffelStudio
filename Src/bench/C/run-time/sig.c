@@ -152,6 +152,8 @@ rt_private Signal_t ehandlr(EIF_CONTEXT register int sig)
 		echsig = sig;				/* Signal's number */
 		xraise(EN_SIG);				/* Operating system signal */
 	}
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public Signal_t exfpe(int sig)
@@ -254,6 +256,7 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG)
 			xraise(EN_SIG);			/* Operating system signal */
 		}
 	}
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -780,7 +783,10 @@ rt_public long esignum(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 {
 	/* Number of last signal */
 	EIF_GET_CONTEXT
+
 	return (long) echsig;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void esigcatch(long int sig)

@@ -35,7 +35,7 @@ rt_public void mem_free(char *object)
 	 * irreversibly freed, which will have unpredictable consequences if some
 	 * other object still references it--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	union overhead *zone = HEADER(object);
 	uint32 flags = zone->ov_flags;
 	unsigned int nbytes = Size(Dtype(object));
@@ -49,6 +49,8 @@ rt_public void mem_free(char *object)
 
 	eiffel_usage -= (nbytes + OVERHEAD);
 	if (eiffel_usage < 0) eiffel_usage = 0;
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -60,6 +62,7 @@ rt_public void mem_speed(void)
 	/* Dynamically set the allocation flag 'cc_for_speed' to true, to indicate
 	 * to that the user cares more about raw speed than memory consumption.
 	 */
+	EIF_GET_CONTEXT
 
 	if (cc_for_speed)			/* Already compiled for speed */
 		return;					/* Nothing to be done */
@@ -67,6 +70,8 @@ rt_public void mem_speed(void)
 	cc_for_speed = 1;			/* We are compiled for speed from now on */
 	if (gen_scavenge & GS_OFF)	/* Generation scavenging turned off? */
 		gen_scavenge = GS_SET;	/* Allow malloc to try again */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void mem_slow(void)
@@ -76,6 +81,7 @@ rt_public void mem_slow(void)
 	 * speed. Note that if generation scavenging has already been enabled,
 	 * we continue to use it.
 	 */
+	EIF_GET_CONTEXT
 
 	if (!cc_for_speed)			/* Already compiled for memory */
 		return;					/* Nothing to be done */
@@ -83,6 +89,8 @@ rt_public void mem_slow(void)
 	cc_for_speed = 0;			/* We are compiled for speed from now on */
 	if (gen_scavenge == GS_SET)	/* Scavenging still wating to be activated */
 		gen_scavenge = GS_OFF;	/* Turn it off */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void mem_tiny(void)
@@ -90,6 +98,7 @@ rt_public void mem_tiny(void)
 	/* Basically the same as mem_slow(), but scavenging zone are freed if they
 	 * have been allocated.
 	 */
+	EIF_GET_CONTEXT
 
 	if (gen_scavenge & GS_ON)	/* Generation scavenging turned on */
 		sc_stop();				/* Free 'to' and explode 'from' space */
@@ -100,17 +109,22 @@ rt_public void mem_tiny(void)
 	if (gen_scavenge != GS_OFF)
 		panic("memory flags corrupted");
 #endif
+	EIF_END_GET_CONTEXT
 }
 
 /*
  * Memory coalescing.
  */
 
-rt_private int m_largest = 0;		/* Size of the largest coalesced block */
+rt_private int m_largest = 0;		/* Size of the largest coalesced block */ /* %%ss mt */
 
 rt_public int mem_largest(void)
 {
+	EIF_GET_CONTEXT
+
 	return m_largest;			/* Return size of the largest block */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void mem_coalesc(void)
@@ -122,8 +136,11 @@ rt_public void mem_coalesc(void)
 	 * no coalescing occurred, and it is stored in m_largest (to avoid an
 	 * attribute on the Eiffel side).
 	 */
-	
+	EIF_GET_CONTEXT
+
 	m_largest = full_coalesc(ALL_T);
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -160,7 +177,7 @@ rt_public void mem_pset(long int value)
  * Memory usage.
  */
 
-rt_private struct emallinfo mem_stats;
+rt_private struct emallinfo mem_stats; /* %%ss mt */
 
 rt_public void mem_stat(long int type)
 {
@@ -170,15 +187,19 @@ rt_public void mem_stat(long int type)
 	 * the integrity of the data (otherwise, the memory statistics could
 	 * suddenly be changed by a call to the GC)--RAM.
 	 */
+	EIF_GET_CONTEXT
 	
 	struct emallinfo *sm = meminfo(type);	/* Get structure by type */
 
 	bcopy(sm, &mem_stats, sizeof(struct emallinfo));
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public long mem_info(long int field)
 {
 	/* Extracts values from the emallinfo structure */
+	EIF_GET_CONTEXT
 
 	switch (field) {
 	case 0:
@@ -192,16 +213,16 @@ rt_public long mem_info(long int field)
 	default:
 		eraise("invalid mem_info request", EN_PROG);
 	}
-
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 /*
  * GC statistics.
  */
 
-rt_private struct gacstat gc_stats;
-rt_private long gc_count;
+rt_private struct gacstat gc_stats; /* %%ss mt */
+rt_private long gc_count; /* %%ss mt */
 
 rt_public void gc_mon(char flag)
 {
@@ -216,7 +237,7 @@ rt_public void gc_stat(long int type)
 	 * the integrity of the data (otherwise, the memory statistics could
 	 * suddenly be changed by a call to the GC)--RAM.
 	 */
-	
+	EIF_GET_CONTEXT
 	struct gacstat *gs = &g_stat[type];	/* Get structure by type */
 
 	bcopy(gs, &gc_stats, sizeof(struct gacstat));
@@ -225,11 +246,14 @@ rt_public void gc_stat(long int type)
 		gc_count = g_data.nb_full;
 	else
 		gc_count = g_data.nb_partial;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public long gc_info(long int field)
 {
 	/* Extracts values from the gacstat structure */
+	EIF_GET_CONTEXT
 
 	switch (field) {
 	case 0:
@@ -251,13 +275,14 @@ rt_public long gc_info(long int field)
 	default:
 		eraise("invalid gc_info request", EN_PROG);
 	}
-
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public double gc_infod(long int field)
 {
 	/* Extracts values from the gacstat structure */
+	EIF_GET_CONTEXT
 
 	switch (field) {
 	case 8:
@@ -279,8 +304,8 @@ rt_public double gc_infod(long int field)
 	default:
 		eraise("invalid gc_info request", EN_PROG);
 	}
-
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 /*

@@ -1,0 +1,136 @@
+system
+	sample
+
+root
+	application: make_and_launch
+
+default
+	assertion (no)
+	msil_generation (yes)
+	disabled_debug (yes)
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("vision2_windows")
+	disabled_debug ("vision2_windows_gdi")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
+	debug (no)
+	line_generation (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (no)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
+	msil_generation_type ("exe")
+	msil_assembly_compatibility ("None")
+	check_vape (yes)
+	console_application (no)
+
+cluster
+	root_cluster:		"$ISE_EIFFEL\examples\dotnet\vision2\data_grid"
+
+	all base_net:		"$ISE_EIFFEL\library.net\base"
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; 
+		end
+
+	all wel:		"$ISE_EIFFEL\library\wel"
+		exclude
+			"spec"; "clib"; "wel_dispatcher.e"; "wel_string.e"; "wel_main_arguments.e"; "wel_identified.e"; "wel_object_id_manager.e"; "wel_font_family_enumerator.e"; "wel_blocking_dispatcher.e"; "wel_dispatcher_delegate.e"; 
+		end
+
+	all wel_net:		"$ISE_EIFFEL\library.net\wel"
+
+	all vision2:		"$ISE_EIFFEL\library\vision2"
+		exclude
+			"Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp.e"; 
+		end
+
+	all vision2_net:		"$ISE_EIFFEL\library.net\vision2"
+
+	all vision2_extensions:		"$ISE_EIFFEL\library\vision2_extension"
+
+assembly
+	"mscorlib":	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+
+	"system_":	"System","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			system_dll_
+		end
+
+	"system_xml":	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			xml_
+		end
+
+	"system_drawing":	"System.Drawing","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			drawing_
+		end
+
+	"accessibility":	"Accessibility","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+
+	"system_runtime_serialization_formatters_soap":	"System.Runtime.Serialization.Formatters.Soap","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+
+	"system_windows_forms":	"System.Windows.Forms","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			winforms_
+		end
+
+	"System_Data":	"System.Data","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			data_
+		end
+
+	"System_Web":	"System.Web","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			web_
+		end
+
+	"System_Web_RegularExpressions":	"System.Web.RegularExpressions","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			web_
+		end
+
+	"Microsoft.VisualC, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"Microsoft.VisualC","7.0.3300.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			"microsoft_visualc_"
+		end
+
+	"System.DirectoryServices, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"System.DirectoryServices","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			"system_directoryservices_"
+		end
+
+	"cscompmgd, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"cscompmgd","7.0.3300.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			"cscompmgd_"
+		end
+
+	"System.Runtime.Remoting, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089":	"System.Runtime.Remoting","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			"system_runtime_remoting_"
+		end
+
+	"System.EnterpriseServices, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"System.EnterpriseServices","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			"system_enterpriseservices_"
+		end
+
+external
+
+	include_path:
+		"$(ISE_EIFFEL)\library\vision2\spec\include",
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
+		"$(ISE_EIFFEL)\C_library\zlib"
+
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+
+end

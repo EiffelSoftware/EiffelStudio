@@ -1231,7 +1231,7 @@ end;
 								-- Keep track of the feature adaptation.
 								-- The deferred features must have the same
 								-- signature
-							!!join.make (inherit_feat, inherited_feature);
+							!! join.make (inherit_feat, inherited_feature);
 							adaptations.put_front (join);
 debug ("ACTIVITY")
 	io.putstring ("joining feature: ");

@@ -21,13 +21,13 @@ create
 
 feature {NONE} -- Initialization
 		
-		initialize is
-				-- Initialize `Current'
-			do
-				Precursor {EV_DIALOG_IMP}
-				feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
-					-- We don't want any decorations at all
-			end
+	initialize is
+			-- Initialize `Current'
+		do
+			Precursor {EV_DIALOG_IMP}
+			feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
+				-- We don't want any decorations at all
+		end
 
 feature -- Status setting	
 		

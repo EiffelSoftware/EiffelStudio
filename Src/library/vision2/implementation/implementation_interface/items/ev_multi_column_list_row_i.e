@@ -22,6 +22,21 @@ feature -- Initialization
 		deferred
 		end
 
+	make_with_index (par:EV_MULTI_COLUMN_LIST; value: INTEGER) is
+			-- Create a row at the given `value' index in the list.
+		require
+			valid_parent: par /= Void
+		deferred
+		end
+
+	make_with_all (par:EV_MULTI_COLUMN_LIST; txt: ARRAY [STRING]; value: INTEGER) is
+			-- Create a row with `txt' as text at the given
+			-- `value' index in the list.
+		require
+			valid_parent: par /= Void
+		deferred
+		end
+
 feature -- Access
 
 	parent: EV_MULTI_COLUMN_LIST is
@@ -70,6 +85,16 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_index (value: INTEGER) is
+			-- Make `value' the new index of the item.
+		require
+			exists: not destroyed
+			has_parent: parent /= Void
+		deferred
+		ensure
+			index_set: index = value
+		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.

@@ -7,7 +7,7 @@ indexing
 	
 class
 	EV_LIST_ITEM_IMP
-	
+
 inherit
 	EV_LIST_ITEM_I
 		redefine
@@ -24,7 +24,7 @@ inherit
 creation
 	make,
 	make_with_text,
-	make_with_pixmap,
+	make_with_index,
 	make_with_all
 
 feature {NONE} -- Initialization
@@ -35,18 +35,37 @@ feature {NONE} -- Initialization
 			set_text ("")
 		end
 
+	make_with_index (par: EV_LIST; value: INTEGER) is
+			-- Create an item with `par' as parent and `value'
+			-- as index.
+		do
+			set_text ("")
+			parent_imp ?= par.implementation
+			parent_imp.insert_item (Current, value)
+		end
+
+	make_with_all (par: EV_LIST; txt: STRING; value: INTEGER) is
+			-- Create an item with `par' as parent, `txt' as text
+			-- and `value' as index.
+		do
+			set_text (txt)
+			parent_imp ?= par.implementation
+			parent_imp.insert_item (Current, value)
+		end
+
 feature -- Access
 
 	parent_imp: EV_LIST_ITEM_HOLDER_IMP
 			-- Parent of the current item
 
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is the item selected
+	index: INTEGER is
+			-- Index of the current item.
+			-- `id' is a zero-based index
 		do
-			Result := parent_imp.is_selected (id)
+			Result := parent_imp.internal_get_index (Current)
 		end
+
+feature -- Status report
 
 	destroyed: BOOLEAN is
 			-- Is current object destroyed ?
@@ -55,11 +74,10 @@ feature -- Status report
 			Result := False
 		end
 
-	index: INTEGER is
-			-- Index of the current item.
-			-- `id' is a zero-based index
+	is_selected: BOOLEAN is
+			-- Is the item selected
 		do
-			Result := id + 1
+			Result := parent_imp.internal_is_selected (Current)
 		end
 
 	is_first: BOOLEAN is
@@ -80,7 +98,7 @@ feature -- Status setting
 			-- Destroy the actual item.
 		do
 			if parent_imp /= Void then
-				parent_imp.remove_item (id)
+				parent_imp.remove_item (Current)
 				parent_imp := Void
 			end
 			interface := Void
@@ -90,9 +108,9 @@ feature -- Status setting
 			-- Select the item if `flag', unselect it otherwise.
 		do
 			if flag then
-				parent_imp.select_item (id + 1)
+				parent_imp.internal_select_item (Current)
 			else
-				parent_imp.deselect_item (id + 1)
+				parent_imp.internal_deselect_item (Current)
 			end
 		end
 
@@ -110,7 +128,7 @@ feature -- Element change
 			-- `par' can be Void then the parent is the screen.
 		do
 			if parent_imp /= Void then
-				parent_imp.remove_item (id)
+				parent_imp.remove_item (Current)
 				parent_imp := Void
 			end
 			if par /= Void then
@@ -124,9 +142,15 @@ feature -- Element change
 		do
 			text := txt
 			if parent_imp /= Void then
-				parent_imp.delete_string (id)
-				parent_imp.insert_string_at (txt, id)
+				parent_imp.internal_set_text (Current, txt)
 			end
+		end
+
+	set_index (value: INTEGER) is
+			-- Make `value' the new index of the item in the
+			-- list.
+		do
+			parent_imp.move_item (Current, value)
 		end
 
 feature -- Event : command association

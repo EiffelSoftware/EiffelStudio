@@ -34,38 +34,10 @@ feature {NONE} -- Initialization
 			set_text (txt)
 		end
 
-	make_with_pixmap (pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent and `pix'
-			-- as pixmap.
-		do
-			make
---			set_pixmap (pix)
-		end
-
-	make_with_all (txt: STRING; pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent, `txt' as text
-			-- and `pix' as pixmap.
-		do
-			make
-			set_text (txt)
---			set_pixmap (pix)
-		end
-
 feature -- Access
 
-	text: STRING 
+	text: STRING
 			-- Current label of the item
-
-	id: INTEGER
-		-- Id of the item in its container
-
-feature -- Element change
-
-	set_id (new_id: INTEGER) is
-			-- Set `id' to `new_id'
-		do
-			id := new_id
-		end
 
 feature -- Event : command association
 

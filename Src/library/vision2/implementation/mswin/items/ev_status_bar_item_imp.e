@@ -17,9 +17,7 @@ inherit
 
 creation
 	make,
-	make_with_text,
-	make_with_pixmap,
-	make_with_all
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -68,7 +66,7 @@ feature -- Status setting
 		do
 			text := txt
 			if parent_imp /= Void then
-				parent_imp.set_text_part (id - 1, txt)
+				parent_imp.internal_set_text (Current, txt)
 			end
 		end
 

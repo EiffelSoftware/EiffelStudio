@@ -36,9 +36,7 @@ inherit
 
 creation
 	make,
-	make_with_text,
-	make_with_pixmap,
-	make_with_all
+	make_with_text
 
 feature {NONE} -- Initialization
 

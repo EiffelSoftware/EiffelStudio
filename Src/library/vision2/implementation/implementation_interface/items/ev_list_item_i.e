@@ -11,6 +11,34 @@ deferred class
 inherit
 	EV_ITEM_I
 
+feature {NONE} -- Initialization
+
+	make_with_index (par: EV_LIST; value: INTEGER) is
+			-- Create an item with `par' as parent and `value'
+			-- as index.
+		require
+			valid_parent: par /= Void
+		deferred
+		end
+
+	make_with_all (par: EV_LIST; txt: STRING; value: INTEGER) is
+			-- Create an item with `par' as parent, `txt' as text
+			-- and `value' as index.
+		require
+			valid_parent: par /= Void
+		deferred
+		end
+
+feature -- Access
+
+	index: INTEGER is
+			-- Index of the current item.
+		require
+			exists: not destroyed
+			has_parent: parent_imp /= Void
+		deferred
+		end
+
 feature -- Status report
 
 	is_selected: BOOLEAN is
@@ -21,17 +49,11 @@ feature -- Status report
 		deferred
 		end
 
-	index: INTEGER is
-			-- Index of the current item.
-		require
-			exists: not destroyed
-		deferred
-		end
-
 	is_first: BOOLEAN is
 			-- Is the item first in the list ?
 		require
 			exists: not destroyed
+			has_parent: parent_imp /= Void
 		deferred
 		end
 
@@ -39,6 +61,7 @@ feature -- Status report
 			-- Is the item last in the list ?
 		require
 			exists: not destroyed
+			has_parent: parent_imp /= Void
 		deferred
 		end
 
@@ -66,6 +89,15 @@ feature -- Element change
 	set_parent (par: EV_LIST) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
+		deferred
+		end
+
+	set_index (value: INTEGER) is
+			-- Make `value' the new index of the item in the
+			-- list.
+		require
+			exists: not destroyed
+			has_parent: parent_imp /= Void
 		deferred
 		end
 

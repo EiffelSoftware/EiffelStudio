@@ -29,23 +29,6 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
-	make_with_pixmap (pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent and `pix'
-			-- as pixmap.
-		require
-			valid_pixmap: is_valid (pix)
-		deferred
-		end
-
-	make_with_all (txt: STRING; pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent, `txt' as text
-			-- and `pix' as pixmap.
-		require
-			valid_text: txt /= Void
-			valid_pixmap: is_valid (pix)
-		deferred
-		end
-
 feature -- Access
 
 	text: STRING is

@@ -24,9 +24,7 @@ inherit
 
 creation
 	make,
-	make_with_text,
-	make_with_pixmap,
-	make_with_all
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -47,24 +45,6 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_pixmap (par: EV_MENU_ITEM_HOLDER; pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent and `pix'
-			-- as pixmap.
-		do
-			!EV_MENU_ITEM_IMP! implementation.make_with_pixmap (pix)
-			implementation.set_interface (Current)
-			set_parent (par)
-		end
-
-	make_with_all (par: EV_MENU_ITEM_HOLDER; txt: STRING; pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent, `txt' as text
-			-- and `pix' as pixmap.
-		do
-			!EV_MENU_ITEM_IMP! implementation.make_with_all (txt, pix)
-			implementation.set_interface (Current)
-			set_parent (par)
-		end
-	
 feature -- Access
 
 	parent: EV_MENU_ITEM_HOLDER is
@@ -117,7 +97,7 @@ feature -- Implementation
 end -- class EV_MENU_ITEM
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision Library: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

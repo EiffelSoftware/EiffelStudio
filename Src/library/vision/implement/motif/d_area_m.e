@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
 			mel_draw_make (a_drawing_area.identifier, mc, man);
-			make_gc (mel_screen)
+			create_gc (mel_screen)
 		end
 
 feature -- Access

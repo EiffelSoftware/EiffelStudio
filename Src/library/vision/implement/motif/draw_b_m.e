@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			set_shadow_in (False);
 			set_push_button_enabled (True);
 			a_draw_b.set_font_imp (Current);
-			make_gc (mel_screen)
+			create_gc (mel_screen)
 		end;
 
 feature -- Access

@@ -444,11 +444,11 @@ feature {COMPILER_EXPORTER}
 					end
 					
 				when msil_key_file_name then
-					if value.is_name then
-						System.set_msil_key_file_name (value.value)	
-					else
-						error_found := True
-					end
+--					if value.is_name then
+--						System.set_msil_key_file_name (value.value)	
+--					else
+--						error_found := True
+--					end
 
 				when line_generation then
 					if value.is_no then
@@ -624,52 +624,52 @@ feature {COMPILER_EXPORTER}
 					
 				when version then
 					if value.is_name then
-						System.set_version (value.value)	
+						System.set_msil_version (value.value)	
 					else
 						error_found := True
 					end
 					
 				when title then
-					if value.is_name then
-						System.set_title (value.value)	
-					else
-						error_found := True
-					end
+--					if value.is_name then
+--						System.set_title (value.value)	
+--					else
+--						error_found := True
+--					end
 					
 				when description then
-					if value.is_name then
-						System.set_description (value.value)	
-					else
-						error_found := True
-					end
+--					if value.is_name then
+--						System.set_description (value.value)	
+--					else
+--						error_found := True
+--					end
 					
 				when company then
-					if value.is_name then
-						System.set_company (value.value)	
-					else
-						error_found := True
-					end
+--					if value.is_name then
+--						System.set_company (value.value)	
+--					else
+--						error_found := True
+--					end
 					
 				when product then
-					if value.is_name then
-						System.set_product (value.value)	
-					else
-						error_found := True
-					end
+--					if value.is_name then
+--						System.set_product (value.value)	
+--					else
+--						error_found := True
+--					end
 					
 				when copyright then
-					if value.is_name then
-						System.set_copyright (value.value)	
-					else
-						error_found := True
-					end
+--					if value.is_name then
+--						System.set_copyright (value.value)	
+--					else
+--						error_found := True
+--					end
 					
 				when trademark then
-					if value.is_name then
-						System.set_trademark (value.value)	
-					else
-						error_found := True
-					end
+--					if value.is_name then
+--						System.set_trademark (value.value)	
+--					else
+--						error_found := True
+--					end
 					
 				else
 					error_found := True

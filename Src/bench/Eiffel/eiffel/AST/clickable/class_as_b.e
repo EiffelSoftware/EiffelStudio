@@ -87,6 +87,7 @@ feature -- Initialization
 			obsolete_message ?= yacc_arg (9);	
 			click_class_name ?= click_list.first;
 			click_class_name.set_node (Current);
+			end_position := yacc_int_arg (0);
 		ensure then
 			class_name_exists: class_name /= Void;
 			suppliers_exists: suppliers /= Void;
@@ -126,7 +127,28 @@ feature -- Stoning
 		end;
 
 	click_list: CLICK_LIST;
- 
+
+feature -- Access
+
+	feature_with_name (n: STRING): FEATURE_AS_B is
+			-- Feature ast with internal name `n'
+		local
+			cur: CURSOR
+		do
+			if features /= Void then
+				cur := features.cursor
+				from
+					features.start
+				until
+					features.after or else Result /= Void
+				loop
+					Result := features.item.feature_with_name (n)
+					features.forth
+				end
+				features.go_to (cur)
+			end;
+		end;
+
 feature -- Formatting
 
 	format (ctxt: FORMAT_CONTEXT_B) is
@@ -135,7 +157,6 @@ feature -- Formatting
 		do
 			ctxt.put_text_item (ti_Before_class_declaration);
 			ctxt.prepare_class_text;
-			ctxt.format_class_comments;			
 			if indexes /= void and not indexes.empty then
 				ctxt.put_text_item (ti_Before_indexing);
 				ctxt.put_text_item (ti_Indexing_keyword);
@@ -234,34 +255,77 @@ feature -- Formatting
 			ctxt.new_line;
 		end;
 
-feature {FORMAT_REGISTRATION} -- Implementation
+feature {AST_REGISTRATION} -- Implementation
 
-	register (format_reg: FORMAT_REGISTRATION) is
+	register (ast_reg: AST_REGISTRATION) is
 			-- Register the feature clauses and
-			-- invariant in `format_reg'.
+			-- invariant in `ast_reg'.
 		local
 			f: like features;	
-			fc: FEATURE_CLAUSE_AS_B;
-			inv_adapter: INVARIANT_ADAPTER
+			fc, next_fc: FEATURE_CLAUSE_AS_B;
+			inv_adapter: INVARIANT_ADAPTER;
+			e_file: EIFFEL_FILE;
+			l_count: INTEGER;
+			feature_list: EIFFEL_LIST_B [FEATURE_AS_B];
+			i: INTEGER;
 		do
 			f := features;
 			if f /= Void then
-				from
-					f.start
-				until
-					f.after
-				loop
-					fc := f.item;
-					fc.register_features (format_reg);
-						-- Register the feature clause
-						-- after registering the features
-					format_reg.register_feature_clause (fc);
-					f.forth
+				l_count := f.count;	
+				i := 1;
+				if ast_reg.already_extracted_comments then
+					-- This means that the comments are already 
+					-- extracted so there is no record additional 
+					-- information to extract comments.
+					from
+					until
+						i > l_count
+					loop
+						fc := f.i_th (i);
+							-- Register all the features.
+						fc.register_features (ast_reg);
+							-- Now Register feature clause.
+						ast_reg.register_feature_clause (fc);
+						i := i + 1;
+					end
+				else
+					e_file := ast_reg.eiffel_file;
+					-- This means we are registering non precompiled
+					-- features for an eiffel project or we are
+					-- current precompiling features.
+					from
+						if l_count > 0 then
+							fc := f.i_th (1);
+						end
+					until
+						i > l_count
+					loop
+						i := i + 1;
+						if i > l_count then
+							e_file.set_next_feature_clause (Void);
+						else
+							next_fc := f.i_th (i);
+							e_file.set_next_feature_clause (next_fc);
+						end;
+						e_file.set_current_feature_clause (fc);
+							-- Need to set next feature if it exists
+							-- for extracting feature clause comments.
+						feature_list := fc.features;	
+							-- Register all the features.
+						fc.register_features (ast_reg);
+							-- Now Register feature clause.
+						if feature_list.empty then
+							e_file.set_next_feature (Void);
+						else
+							e_file.set_next_feature (feature_list.i_th (1));
+						end;
+						ast_reg.register_feature_clause (fc);
+						fc := next_fc;
+					end
 				end
 			end;
 			if invariant_part /= Void then
-				!! inv_adapter;
-				inv_adapter.register (invariant_part, format_reg);
+				ast_reg.register_invariant (invariant_part)
 			end
 		end;
 

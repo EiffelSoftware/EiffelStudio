@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Cursors for widget lists."
+		"Cursor for widget lists."
 	status: "See notice at end of class"
 	keywords: "container, widget list, cursor"
 	date: "$Date$"
@@ -26,7 +26,8 @@ feature {EV_WIDGET_LIST} -- Initialization
 			index := current_index
 		end;
 
-feature {EV_WIDGET_LIST, EV_WIDGET_LIST_I, EV_ITEM_LIST, EV_ITEM_LIST_I} -- Access
+feature {EV_WIDGET_LIST, EV_WIDGET_LIST_I, EV_ITEM_LIST, EV_ITEM_LIST_I}
+	-- Access
 
 	index: INTEGER;
 		-- Index of current item
@@ -54,6 +55,9 @@ end -- class ARRAYED_LIST_CURSOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/18 00:52:23  oconnor
+--| formatting, layout and comment tweaks
+--|
 --| Revision 1.4  2000/02/29 19:20:23  oconnor
 --| removed simicolons from indexing
 --|
@@ -80,7 +84,6 @@ end -- class ARRAYED_LIST_CURSOR
 --|
 --| Revision 1.1.2.1  1999/11/05 19:53:05  oconnor
 --| initial
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

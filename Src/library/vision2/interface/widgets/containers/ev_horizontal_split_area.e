@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 
 	select_from (a_hor, a_vert: INTEGER): INTEGER is
 			-- Return `a_hor'.
-			-- See `{EV_SPLIT_AREA}.select_from'
+			-- See `{EV_SPLIT_AREA}.select_from'.
 		do
 			Result := a_hor
 		end
@@ -78,6 +78,9 @@ end -- class EV_HORIZONTAL_SPLIT_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/18 00:52:23  oconnor
+--| formatting, layout and comment tweaks
+--|
 --| Revision 1.16  2000/03/17 23:50:03  oconnor
 --| comments
 --|

@@ -157,28 +157,27 @@ feature -- Element change
 feature -- Event handling
 
 	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when `selected_item' changes.
+			-- Actions to be performed when `selected_item' changes.
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	implementation: EV_NOTEBOOK_I
+			-- Responsible for interaction with the native graphics toolkit.
 
 feature {NONE} -- Implementation
 
 	create_action_sequences is
-			-- Create action sequences for button.
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_WIDGET_LIST} Precursor
 			create selection_actions
 		end
 
 	create_implementation is
-			-- Create implementation of button.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_NOTEBOOK_IMP} implementation.make (Current)
 		end
-
-feature {EV_ANY, EV_ANY_I} -- Implementation
-
-	implementation: EV_NOTEBOOK_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
 
 invariant
 	tab_position_within_range: is_useable implies
@@ -219,6 +218,9 @@ end -- class EV_NOTEBOOK
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/18 00:52:23  oconnor
+--| formatting, layout and comment tweaks
+--|
 --| Revision 1.19  2000/03/17 23:50:03  oconnor
 --| comments
 --|
@@ -244,7 +246,7 @@ end -- class EV_NOTEBOOK
 --| added --| FIXME Not for release
 --|
 --| Revision 1.13.6.9  2000/01/27 17:45:21  rogers
---| Added is_useable implies to the start of tab_position_within_range invariant.
+--| Added is_useable implies to the start of tab_position_within_range invariant
 --|
 --| Revision 1.13.6.8  2000/01/19 08:03:47  oconnor
 --| fixed off by one error in invariant

@@ -1,8 +1,8 @@
 indexing
 	description:
-		"Eiffel Vision dialog window. Window objects that can be modal, %N%
-		%which means the application waits for the user to close the window %N%
-		%before it continues. Dialogs cannot be resized by the user."
+		"Window intended for transient user interaction.%N%
+		%Optionaly modal. A modal dialog blocks the rest of the application%
+		%until closed."
 	status: "See notice at end of class"
 	keywords: "dialog, dialogue, popup, window"
 	date: "$Date$"
@@ -32,20 +32,21 @@ feature -- Basic operations
 
 	show_modal is
 			-- Show and wait until window is closed.
+			-- Disable interaction with other windows in the application.
 		do
 			implementation.show_modal
 		end
 
 feature {NONE} -- Implementation
 
+	implementation: EV_DIALOG_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 	create_implementation is
-			-- Create implementation of dialog box.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_DIALOG_IMP} implementation.make (Current)
 		end
-
-	implementation: EV_DIALOG_I
-			-- Implementation of the dialog.
 
 end -- class EV_DIALOG
 
@@ -70,6 +71,9 @@ end -- class EV_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/18 00:52:23  oconnor
+--| formatting, layout and comment tweaks
+--|
 --| Revision 1.13  2000/03/01 20:28:52  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -1,6 +1,13 @@
 indexing
 	description:
-		"Eiffel Vision titled window. Top level titled window."
+		"Top level titled window. Contains a single widget."
+	appearance:
+		" __________________ %N%
+		%|`title'       _[]X|%N%
+		%|------------------|%N%
+		%|                  |%N%
+		%|      `item'      |%N%
+		%|__________________|"
 	status: "See notice at end of class"
 	keywords: "window, title bar, title"
 	date: "$Date$"
@@ -25,10 +32,10 @@ feature -- Access
 
 	accelerators: ACTIVE_LIST [EV_ACCELERATOR]
 			-- Key combination shortcuts associated with this window.
-			--| FIXME The same key combination can be added to this list.
-			--| GTK takes only the latest one set. Object-comparison is turned on
-			--| for this list, so that the user can check whether a specific
-			--| accelerator is already installed using `has'.
+		--| FIXME The same key combination can be added to this list.
+		--| GTK takes only the latest one set. Object-comparison is turned on
+		--| for this list, so that the user can check whether a specific
+		--| accelerator is already installed using `has'.
 
 	icon_name: STRING is
 			-- Alternative name, displayed when window is minimised.
@@ -145,29 +152,29 @@ feature -- Element change
 			icon_pixmap_assigned: icon_pixmap.is_equal (an_icon)
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TITLED_WINDOW_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Create implementation of window with a title
+			-- Responsible for interaction with the native graphics toolkit.
 		do   
 			create {EV_TITLED_WINDOW_IMP} implementation.make (Current)
 		end
 
 	create_action_sequences is
-			-- Create action sequences.
+				-- See `{EV_ANY}.create_action_sequences'.
 		do   
 			Precursor
 			create accelerators
 			accelerators.compare_objects
 			accelerators.add_actions.extend (implementation~connect_accelerator)
-			accelerators.remove_actions.extend (implementation~disconnect_accelerator)
+			accelerators.remove_actions.extend
+				(implementation~disconnect_accelerator)
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_TITLED_WINDOW_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
 
 invariant
 	accelerators_not_void: accelerators /= Void
@@ -195,6 +202,9 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/18 00:52:23  oconnor
+--| formatting, layout and comment tweaks
+--|
 --| Revision 1.9  2000/03/08 02:57:04  brendel
 --| Commented out postconditions regarding is_minimized, because GTK window
 --| is not actually minimized until the end of the event.

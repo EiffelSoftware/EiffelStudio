@@ -1,6 +1,13 @@
 indexing
 	description:
-		"Eiffel Vision window.  Top level window without title bar."
+		"Top level window. Contains a single widget.%N%
+		%`title' is not displayed."
+	appearance:
+		" _____________ %N%
+		%|____________X|%N%
+		%|             |%N%
+		%|   `item'    |%N%
+		%|_____________|"
 	status: "See notice at end of class"
 	keywords: "toplevel, window, popup" 
 	date: "$Date$"
@@ -134,7 +141,7 @@ feature -- Status setting
 		end
 
 	set_x_position (a_x: INTEGER) is
-			-- Set horizontal offset from parent to `a_x' pixels.
+			-- Assign `a_x' to `x_position' in pixels.
 		do
 			implementation.set_x_position (a_x)
 		ensure
@@ -142,7 +149,7 @@ feature -- Status setting
 		end
 
 	set_y_position (a_y: INTEGER) is
-			-- Set vertical offset from parent to `a_y' pixels.
+			-- Assign `a_y' to `y_position' in pixels.
 		do
 			implementation.set_y_position (a_y)
 		ensure
@@ -150,8 +157,7 @@ feature -- Status setting
 		end
 
 	set_position (a_x, a_y: INTEGER) is
-			-- Set horizontal offset from parent to `a_x' pixels.
-			-- Set vertical offset from parent to `a_y' pixels.
+			-- Assign `a_x' to `x_position' and `a_y' to `y_position' in pixels.
 		do
 			implementation.set_position (a_x, a_y)
 		ensure
@@ -160,7 +166,7 @@ feature -- Status setting
 		end
 
 	set_width (a_width: INTEGER) is
-			-- Set the horizontal size to `a_width' pixels.
+			-- Assign `a_width' to `width' in pixels.
 		require
 			a_width_positive_or_zero: a_width >= 0
 		do
@@ -170,7 +176,7 @@ feature -- Status setting
 		end
 
 	set_height (a_height: INTEGER) is
-			-- Set the vertical size to `a_height' pixels.
+			-- Assign `a_height' to `height' in pixels.
 		require
 			a_height_positive_or_zero: a_height >= 0
 		do
@@ -180,8 +186,7 @@ feature -- Status setting
 		end
 
 	set_size (a_width, a_height: INTEGER) is
-			-- Set the horizontal size to `a_width' pixels.
-			-- Set the vertical size to `a_height' pixels.
+			-- Assign `a_width' to `width' and `a_height' to `height' in pixels.
 		require
 			a_width_positive_or_zero: a_width >= 0
 			a_height_positive_or_zero: a_height >= 0
@@ -248,7 +253,7 @@ feature -- Status setting
 		end
 
 	set_title (a_title: STRING) is
-			-- Make `text' the new title.
+			-- Assign `a_title' to `title'.
 		require
 			a_title_not_void: a_title /= Void
 		do
@@ -258,7 +263,7 @@ feature -- Status setting
 		end
 
 	set_menu_bar (a_menu_bar: EV_MENU_BAR) is
-			-- Set `menu_bar' to `a_menu_bar'.
+			-- Assign `a_menu_bar' to `menu_bar'.
 		require
 			no_menu_bar_assigned: menu_bar = Void
 			a_menu_bar_not_void: a_menu_bar /= Void
@@ -269,15 +274,15 @@ feature -- Status setting
 		end
 
 	remove_menu_bar is
-			-- Set `menu_bar' to `Void'.
+			-- Make `menu_bar' `Void'.
 		do
 			implementation.remove_menu_bar
 		ensure
 			void: menu_bar = Void
 		end
 
-	set_status_bar (a_bar: EV_STATUS_BAR) is
-			-- Make `a_bar' the new status bar of the window.
+	set_status_bar (a_status_bar: EV_STATUS_BAR) is
+			-- Assign `a_status_bar' to `status_bar'.
 		require
 			no_status_bar_assigned: status_bar = Void
 			a_bar_not_void: a_bar /= Void
@@ -288,7 +293,7 @@ feature -- Status setting
 		end
 
 	remove_status_bar is
-			-- Set `status_bar' to `Void'.
+			-- Make `status_bar' `Void'.
 		do
 			implementation.remove_status_bar
 		ensure
@@ -303,16 +308,21 @@ feature -- Event handling
 	move_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Actions to be performed when window moves.
 
+feature {EV_WINDOW, EV_ANY_I} -- Implementation
+
+	implementation: EV_WINDOW_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Create implementation of window.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_WINDOW_IMP} implementation.make (Current)
 		end
 
 	create_action_sequences is
-			-- Create empty action sequences, not yet connected to events.
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_CELL} Precursor
 			create close_actions
@@ -320,22 +330,16 @@ feature {NONE} -- Implementation
 			create move_actions
 		end
 
-feature {EV_WINDOW, EV_ANY_I} -- Implementation
-
-	implementation: EV_WINDOW_I
-            -- Responsible for interaction with the underlying native graphics
-            -- toolkit.
-
 invariant
 	title_not_void: is_useable implies title /= Void
 
 
-	--| FIXME IEK When Using X we can only use hints to set max/min dimensions,
-	--| This means that the width can be greater than the max width set (& height)
+--| FIXME IEK When Using X we can only use hints to set max/min dimensions,
+--| This means that the width can be greater than the max width set (& height)
 	--width_not_greater_than_maximum_width: width <= maximum_width
 	--height_not_greater_than_maximum_height: height <= maximum_height
 
-	--| FIXME Do not hold
+--| FIXME Do not hold
 	--consistent_horizontal_bounds: maximum_width >= minimum_width 
 	--consistent_vertical_bounds: maximum_height >= minimum_height
 
@@ -366,6 +370,9 @@ end -- class EV_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/03/18 00:52:23  oconnor
+--| formatting, layout and comment tweaks
+--|
 --| Revision 1.48  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

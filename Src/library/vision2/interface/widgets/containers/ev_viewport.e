@@ -1,6 +1,18 @@
 indexing
 	description:
-		"Eiffel Vision viewport."
+		"Displays a single widget that may be larger that the container.%
+		%Clipping may occur."
+	appearance:
+		" - - - - - - - - - - - - - - -  ^%N%
+		%|             `item'          |`y_offset'%N%
+		%                                v%N%
+		%|          ---------------    |%N%
+		%           |             |%N%
+		%|          |  viewport   |    |%N%
+		%           |             |%N%
+		%|          ---------------    |%N%
+		% - - - - - - - - - - - - - - -%N%
+		%<`x_offset'>"
 	status: "See notice at end of class"
 	keywords: "container, virtual, display"
 	date: "$Date$"
@@ -19,13 +31,6 @@ inherit
 create
 	default_create,
 	make_for_test
-
-feature {NONE} -- Initialization
-
-	create_implementation is
-		do
-			create {EV_VIEWPORT_IMP} implementation.make (Current)
-		end
 
 feature -- Access
 
@@ -47,19 +52,19 @@ feature -- Access
 
 feature -- Element change
 
-	set_x_offset (a_x: INTEGER) is
-			-- Set `x_offset' to `a_x'.
+	set_x_offset (an_x: INTEGER) is
+			-- Assign `an_x' to `x_offset'.
 		require
-			a_x_within_bounds: a_x >= 0 and then
-				a_x <= (item.width - width)
+			an_x_within_bounds: an_x >= 0 and then
+				an_x <= (item.width - width)
 		do
-			implementation.set_x_offset (a_x)
+			implementation.set_x_offset (an_x)
 		ensure
-			assigned: x_offset = a_x
+			assigned: x_offset = an_x
 		end
 
 	set_y_offset (a_y: INTEGER) is
-			-- Set `y_offset' to `a_y'.
+			-- Assign `a_y' to `y_offset'.
 		require
 			a_y_within_bounds: a_y >= 0 and then
 				a_y <= (item.height - height)
@@ -72,6 +77,13 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	implementation: EV_VIEWPORT_I
+			-- Responsible for interaction with the native graphics toolkit.
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_VIEWPORT_IMP} implementation.make (Current)
+		end
 
 invariant
 --|FIXME This invariant needs to be reworked.
@@ -103,6 +115,9 @@ end -- class EV_VIEWPORT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/18 00:52:23  oconnor
+--| formatting, layout and comment tweaks
+--|
 --| Revision 1.5  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|
@@ -119,7 +134,9 @@ end -- class EV_VIEWPORT
 --| makred invariant as needing more work
 --|
 --| Revision 1.1.2.4  2000/02/12 01:06:28  king
---| Removed client_equal invariant as this can never hold for items smaller than the viewport, changed is_useable to is_displayed in offset invariants as size is not calculated until realization (drawn on screen)
+--| Removed client_equal invariant as this can never hold for items smaller
+--| than the viewport, changed is_useable to is_displayed in offset invariants
+--| as size is not calculated until realization (drawn on screen)
 --|
 --| Revision 1.1.2.3  2000/02/10 21:55:48  oconnor
 --| added is_useable to invariants
@@ -129,7 +146,6 @@ end -- class EV_VIEWPORT
 --|
 --| Revision 1.1.2.1  2000/01/28 19:54:10  brendel
 --| Initial.
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

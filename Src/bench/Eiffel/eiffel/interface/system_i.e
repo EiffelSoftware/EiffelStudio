@@ -361,7 +361,6 @@ feature -- Properties
 			local_workbench.change_class (pointer_class)
 			local_workbench.change_class (array_class)
 			local_workbench.change_class (tuple_class)
-			local_workbench.change_class (to_special_class)
 			local_workbench.change_class (bit_class)
 			local_workbench.change_class (routine_class)
 			local_workbench.change_class (procedure_class)
@@ -422,7 +421,6 @@ feature -- Properties
 			pointer_class.compiled_class.record_precompiled_class_in_system
 			array_class.compiled_class.record_precompiled_class_in_system
 			tuple_class.compiled_class.record_precompiled_class_in_system
-			to_special_class.compiled_class.record_precompiled_class_in_system
 			bit_class.compiled_class.record_precompiled_class_in_system
 			routine_class.compiled_class.record_precompiled_class_in_system
 			procedure_class.compiled_class.record_precompiled_class_in_system
@@ -671,12 +669,13 @@ end
 				-- at each recompilation in case it might changed during
 				-- a recompilation. It happens if at the first compilation
 				-- you do, there is an error, then those IDs from the routines
-				-- of ANY will definitely be changed
+				-- of ANY/SPECIAL will definitely be changed
 			internal_default_rescue_id := -1
 			internal_default_create_id := -1
+			internal_special_make_id := - 1
 		end
 
-feature -- default_rescue routine
+feature -- ANY.default_rescue routine id
 
 	default_rescue_id: INTEGER is
 			-- Routine id of default rescue from ANY.
@@ -700,7 +699,7 @@ feature -- default_rescue routine
 			end
 		end
 
-feature -- default_create routine
+feature -- ANY.default_create routine id
 
 	default_create_id: INTEGER is
 			-- Routine id of default create from ANY.
@@ -723,14 +722,41 @@ feature -- default_create routine
 				internal_default_create_id := Result
 			end
 		end
+		
+feature -- SPECIAL.make routine id
 
+	special_make_id: INTEGER is
+			-- Routine id of `make' from SPECIAL.
+			-- Return 0 if SPECIAL has not been compiled or
+			-- does not have a feature named `make'.
+		local
+			feature_i: FEATURE_I
+		do
+			Result := internal_special_make_id
+			if Result < 0 then
+				Result := 0
+				if special_class /= Void and then
+						special_class.compiled_class /= Void then
+					feature_i := special_class.compiled_class.
+						feature_table.item_id (names.make_name_id)
+					if feature_i /= Void then
+						Result := feature_i.rout_id_set.first
+					end
+				end
+				internal_special_make_id := Result
+			end
+		end
+		
 feature {NONE} -- Implementation: predefined routine IDs
 
 	internal_default_rescue_id: INTEGER
-			-- Once per compilation value of routine id of `default_rescue_id'.
+			-- Once per compilation value of routine id of `default_rescue_id' from ANY.
 
 	internal_default_create_id: INTEGER
-			-- Once per compilation value of routine id of `default_create'.
+			-- Once per compilation value of routine id of `default_create' from ANY.
+
+	internal_special_make_id: INTEGER
+			-- Once per compilation value of routine id of `make' from SPECIAL.
 
 feature -- Recompilation 
 
@@ -1139,7 +1165,6 @@ end
 			pointer_class.compiled_class.mark_class (marked_classes)
 			array_class.compiled_class.mark_class (marked_classes)
 			tuple_class.compiled_class.mark_class (marked_classes)
-			to_special_class.compiled_class.mark_class (marked_classes)
 			bit_class.compiled_class.mark_class (marked_classes)
 			routine_class.compiled_class.mark_class (marked_classes)
 			procedure_class.compiled_class.mark_class (marked_classes)

@@ -6,7 +6,7 @@ class CLASS_DEPENDANCE
 inherit
 
 	EXTEND_TABLE [FEATURE_DEPENDANCE, STRING];
-	COMPILER_IDABLE
+	IDABLE
 		undefine
 			is_equal, copy
 		end;

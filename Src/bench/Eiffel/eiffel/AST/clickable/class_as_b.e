@@ -21,7 +21,7 @@ inherit
 			format
 		end;
 
-	COMPILER_IDABLE;
+	IDABLE;
 
 	SHARED_INST_CONTEXT
 

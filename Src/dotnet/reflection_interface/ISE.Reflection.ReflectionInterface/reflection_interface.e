@@ -221,6 +221,7 @@ feature -- Retrieval
 			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
 			an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY
 			dir: SYSTEM_IO_DIRECTORY
+			read_lock_filename: STRING
 		do
 			if not retried then
 				create Result.make
@@ -251,14 +252,17 @@ feature -- Retrieval
 									last_error := support.get_last_error
 									last_read_successful := False		
 								else
-									read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))	
+									read_lock_filename ?= assembly_path.clone
+									read_lock_filename := read_lock_filename.Concat_String_String_String (read_lock_filename, "\", support.Read_Lock_Filename)
+									read_lock := file.Create_ (read_lock_filename)
 									if read_lock = Void then
 										support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
 										last_error := support.get_last_error
 										last_read_successful := False
 									else
 										read_lock.Close
-										assembly_xml_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", Dtd_Assembly_Filename, Xml_Extension)
+										assembly_xml_filename ?= assembly_path.clone
+										assembly_xml_filename := assembly_xml_filename.Concat_String_String_String_String (assembly_xml_filename, "\", Dtd_Assembly_Filename, Xml_Extension)
 										if file.exists (assembly_xml_filename) then
 											an_eiffel_assembly := eiffel_assembly (assembly_xml_filename)
 											if an_eiffel_assembly /= Void then
@@ -274,7 +278,10 @@ feature -- Retrieval
 											last_error := support.get_last_error
 											last_read_successful := False										
 										end
-										file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+										file.Delete (read_lock_filename)
+									end
+									if read_lock_filename /= Void and then file.exists (read_lock_filename) then
+										file.Delete (read_lock_filename)
 									end
 								end
 							end
@@ -297,8 +304,8 @@ feature -- Retrieval
 				support.create_error (error_messages.No_assembly, error_messages.No_assembly_message)
 				last_error := support.get_last_error
 				last_read_successful := False		
-				if assembly_path /= Void and then assembly_path.get_length > 0 then
-					file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+				if read_lock_filename /= Void and then file.exists (read_lock_filename) then
+					file.Delete (read_lock_filename)
 				end
 			end
 		rescue
@@ -327,6 +334,7 @@ feature -- Retrieval
 			error: ISE_REFLECTION_ERRORINFO
 			retried: BOOLEAN
 			dir: SYSTEM_IO_DIRECTORY 
+			read_lock_filename: STRING
 		do
 			if not retried then
 				current_history.search_for_assembly (a_descriptor)
@@ -348,7 +356,9 @@ feature -- Retrieval
 								last_error := support.get_last_error
 								last_read_successful := False		
 							else
-								read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))	
+								read_lock_filename ?= assembly_path.clone
+								read_lock_filename := read_lock_filename.Concat_String_String_String (read_lock_filename, "\", support.Read_Lock_Filename)
+								read_lock := file.Create_ (read_lock_filename)
 								if read_lock = Void then
 									support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
 									last_error := support.get_last_error
@@ -372,7 +382,10 @@ feature -- Retrieval
 										last_error := support.get_last_error
 										last_read_successful := False									
 									end
-									file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+									file.Delete (read_lock_filename)
+								end
+								if read_lock_filename /= Void and then file.exists (read_lock_filename) then
+									file.Delete (read_lock_filename)
 								end
 							end
 						end
@@ -385,8 +398,8 @@ feature -- Retrieval
 				end
 			else
 				Result := Void
-				if assembly_path /= Void and then assembly_path.get_length > 0 then
-					file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+				if read_lock_filename /= Void and then file.exists (read_lock_filename) then
+					file.Delete (read_lock_filename)
 				end
 				last_read_successful := False
 			end
@@ -420,6 +433,7 @@ feature -- Retrieval
 			error: ISE_REFLECTION_ERRORINFO
 			retried: BOOLEAN
 			dir: SYSTEM_IO_DIRECTORY
+			read_lock_filename: STRING
 		do
 			if not retried then
 				current_history.search_for_type (a_type)
@@ -447,7 +461,9 @@ feature -- Retrieval
 									last_error := support.get_last_error
 									last_read_successful := False		
 								else
-									read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+									read_lock_filename ?= assembly_path.clone
+									read_lock_filename := read_lock_filename.Concat_String_String_String (read_lock_filename, "\", support.Read_Lock_Filename)
+									read_lock := file.Create_ (read_lock_filename)
 									if read_lock = Void then
 										support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
 										last_error := support.get_last_error
@@ -467,7 +483,7 @@ feature -- Retrieval
 											last_error := support.get_last_error
 											last_read_successful := False										
 										end
-										file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+										file.Delete (read_lock_filename)
 									end
 								end
 							end	
@@ -481,8 +497,8 @@ feature -- Retrieval
 				end
 			else
 				Result := Void
-				if assembly_path /= Void and then assembly_path.get_length > 0 then
-					file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+				if read_lock_filename /= Void and then file.exists (read_lock_filename) then
+					file.Delete (read_lock_filename)
 				end
 				last_read_successful := False
 			end

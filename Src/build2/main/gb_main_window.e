@@ -771,10 +771,20 @@ feature {NONE} -- Implementation
 			output: STRING
 			a_dialog: EV_DOCKABLE_DIALOG
 			storable_tool: GB_STORABLE_TOOL
+			one_item_maximized: BOOLEAN
 		do
 			output := ""
 			create info.make (1, multiple_split_area.count)
 			linear_rep := clone (multiple_split_area.linear_representation)
+				-- Firstly determine if one item is maximized
+			from
+				linear_rep.start
+			until
+				linear_rep.off or one_item_maximized
+			loop
+				one_item_maximized := multiple_split_area.is_item_maximized (linear_rep.item)
+				linear_rep.forth
+			end
 			from
 				linear_rep.start
 			until
@@ -788,7 +798,7 @@ feature {NONE} -- Implementation
 				output := output + "_"
 				if multiple_split_area.is_item_maximized (linear_rep.item) then
 					output := output + "maximized"
-				elseif multiple_split_area.is_item_minimized (linear_rep.item) then
+				elseif multiple_split_area.is_item_minimized (linear_rep.item) and not one_item_maximized then
 					output := output + "minimized"
 				else
 					output := output + "normal"

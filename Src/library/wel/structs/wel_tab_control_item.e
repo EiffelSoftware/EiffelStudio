@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			temp_window: WEL_CONTROL_WINDOW
 		do
 			make
-			!! temp_window.make_with_coordinates (a_parent, "", 0, 0, 0, 0)
+			create temp_window.make_with_coordinates (a_parent, "", 0, 0, 0, 0)
 			set_window (temp_window)
 		end
 		
@@ -71,7 +71,7 @@ feature -- Access
 	text: STRING is
 			-- Item text
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwel_tc_item_get_psztext (item))
 		ensure
 			result_not_void: Result /= Void
@@ -105,7 +105,7 @@ feature -- Element change
 		require
 			a_text_not_void: a_text /= Void
 		do
-			!! str_text.make (a_text)
+			create str_text.make (a_text)
 			cwel_tc_item_set_psztext (item, str_text.item)
 			cwel_tc_item_set_cchtextmax (item, a_text.count)
 		ensure

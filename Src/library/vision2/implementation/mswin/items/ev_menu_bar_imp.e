@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create `Current' with interface `an_interface'.
 		do
-			Precursor (an_interface)
+			Precursor {EV_MENU_ITEM_LIST_IMP} (an_interface)
 			wel_make
 		end
 		

@@ -24,6 +24,7 @@ feature  -- Initialization
 			generate_dll := False
 			root_class_name := Default_root_class_name
 			creation_routine_name := Default_creation_routine_name
+			clr_version := clr_version_10
 		end
 
 feature -- Setting
@@ -65,6 +66,18 @@ feature -- Setting
 		ensure
 			console_application_set: console_application = a_bool
 		end
+		
+	set_clr_version (a_version: like clr_version) is
+			-- set `clr_version' with `a_version'
+		require
+			non_void_version: a_version /= Void
+			valid_version: is_valid_clr_version (a_version)
+		do
+			clr_version := clone (a_version)
+		ensure
+			clr_version_set: equal (clr_version, a_version)
+		end
+		
 
 feature -- Access
 
@@ -93,6 +106,23 @@ feature -- Access
 
 	console_application: BOOLEAN
 			-- Is it a console application system?
+			
+	clr_version: STRING
+			-- version of clr to target
+			
+	is_valid_clr_version (a_version: STRING): BOOLEAN is
+			-- is `a_version' a valid clr version?
+		require
+			non_void_version: a_version /= Void
+		do
+			Result := not a_version.is_empty and then a_version.is_equal (clr_version_10) or a_version.is_equal (clr_version_11)
+		end
+		
+	clr_version_10: STRING is "v1.0.3705"
+			-- version 1.0 of CLR
+			
+	clr_version_11: STRING is "v1.1.4322"
+			-- version 1.1 of CLR
 
 feature {NONE} -- Implementation
 
@@ -115,5 +145,11 @@ feature {NONE} -- Constants
 
 	Exe_type: STRING is "exe"
 			-- EXE type
+
+invariant
+	non_void_root_class_name: root_class_name /= Void
+	non_void_creation_routine_name: creation_routine_name /= Void
+	non_void_clr_version: clr_version /= Void
+	valid_clr_version: is_valid_clr_version (clr_version)
 
 end -- class WIZARD_INFORMATION

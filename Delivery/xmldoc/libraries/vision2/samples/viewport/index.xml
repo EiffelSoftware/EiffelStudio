@@ -1,5 +1,11 @@
-<document output="studio" title="Viewport Sample">
-	<meta_data/>
+<document title="Viewport Sample">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Samples/Eiffel Class Library Samples/EiffelVision 2 Samples</envision_location>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<image> 
 			<url>viewport.png</url> 

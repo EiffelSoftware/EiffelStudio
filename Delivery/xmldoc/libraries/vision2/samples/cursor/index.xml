@@ -1,5 +1,11 @@
-<document output="studio" title="Cursor Sample">
-	<meta_data/>
+<document title="Cursor Sample">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Samples/Eiffel Class Library Samples/EiffelVision 2 Samples</envision_location>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<image> 
 			<url>cursor_test.png</url> 

@@ -11,7 +11,7 @@ indexing
 	revision: "$Revision $"
 
 
-class VTAT1 OBSOLETE "NOT THE SAME MEANING AS THE BOOK"
+class VTAT1 obsolete "NOT THE SAME MEANING AS THE BOOK"
 
 inherit
 

@@ -51,8 +51,7 @@ feature -- Basic operations
 			end
 
 			create command.make (100)
-			command.append (eiffel_compiler)
-			command.append (" -flatshort -filter com ")
+			command.append (eiffel_compiler + " -flatshort -filter com ")
 			command.append (shared_wizard_environment.eiffel_class_name)
 			command.append (" -project ")
 			command.append (shared_wizard_environment.eiffel_project_name)

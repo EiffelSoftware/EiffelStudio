@@ -142,7 +142,11 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	 * the anchor pseudo-object.
 	 */
 
+#ifdef VXWORKS
+	memset (&anchor, 0, sizeof(anchor));	/* Reset header */
+#else	/* VXWORKS */
 	bzero(&anchor, sizeof(anchor));	/* Reset header */
+#endif	/* VXWORKS */
 	anchor.boot = (EIF_REFERENCE)  &root;	/* To boostrap cloning process */
 
 	if (0 == source)
@@ -272,7 +276,11 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	clone = eif_access(map_next());				/* Get next stacked object */
 	*(EIF_REFERENCE *)  (enclosing + offset) = clone;	/* Attach new object */
 	hash_zone = hash_search(&hclone, source);	/* Get an hash table entry */
+#ifdef VXWORKS
+	memcpy (clone, source, size);				/* Block copy */
+#else	/* VXWORKS */
 	bcopy(source, clone, size);					/* Block copy */
+#endif	/* VXWORKS */
 	*hash_zone = clone;					/* Fill it in with the clone address */
 
 	/* Once the duplication is done, the receiving object might refer to a new
@@ -740,7 +748,11 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 		ref = spobj + OVERHEAD;
 		dftype = HEADER(ref)->ov_flags & EO_TYPE;
 		dtype = Deif_bid(dftype);
+#ifdef VXWORKS
+		memset (spobj, 0, count * elem_size);
+#else	/* VXWORKS */
 		bzero(spobj, count * elem_size);
+#endif	/* VXWORKS */
 			/* Initialize new expanded elements, if any */
 		init = (char *(*)(EIF_REFERENCE)) (XCreate(dtype)); /* %%ss cast? added */
 #ifdef MAY_PANIC
@@ -754,5 +766,9 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 			(init)(ref);					/* Call initialization routine */
 		}
 	} else
+#ifdef VXWORKS
+		memset (spobj, 0, count * elem_size);
+#else	/* VXWORKS */
 		bzero(spobj, count * elem_size);
+#endif
 }

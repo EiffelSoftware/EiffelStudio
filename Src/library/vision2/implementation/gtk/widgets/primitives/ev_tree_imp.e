@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_line_style (list_widget, feature {EV_GTK_EXTERNALS}.gTK_CTREE_LINES_DOTTED_ENUM)
 			feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SELECTION_BROWSE_ENUM)
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_expander_style (list_widget, feature {EV_GTK_EXTERNALS}.gTK_CTREE_EXPANDER_SQUARE_ENUM)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_set_shadow_type (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
+			--feature {EV_GTK_EXTERNALS}.gtk_clist_set_shadow_type (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_show_stub (list_widget, True)
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_indent (list_widget, 17)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
@@ -97,6 +97,8 @@ feature {NONE} -- Initialization
 	
 	timer: EV_TIMEOUT
 		-- Timer used for refresh hack.
+		
+	timer_interval: INTEGER is 50
 	
 	on_time_out is
 			-- Called on a timer, needed to correctly refresh tree widget.
@@ -104,13 +106,11 @@ feature {NONE} -- Initialization
 			a_wid: INTEGER
 		do
 			timer.set_interval (0)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			a_wid := feature {EV_GTK_EXTERNALS}.gtk_clist_columns_autosize (list_widget) + 16
 			if tree_width /= a_wid then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (list_widget, a_wid, -1)
 				tree_width := a_wid
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 	
 	visual_widget: POINTER is
@@ -190,32 +190,30 @@ feature {NONE} -- Initialization
 				a_screen_x, a_screen_y]
 
 			tree_item_imp := row_from_y_coord (a_y)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 	
-			if a_type = feature {EV_GTK_EXTERNALS}.gDK_BUTTON_PRESS_ENUM then
+			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
 				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
 				end
 				if 
-					tree_item_imp /= Void and then
-					tree_item_imp.pointer_button_press_actions_internal /= Void and then tree_item_imp = selected_item_imp then
-						--| IEK This is a hack that prevents the dialog freezing in Studio when show_modal_to_window is called.
-						timeout_imp ?= (create {EV_TIMEOUT}).implementation
-						timeout_imp.interface.actions.extend (agent (tree_item_imp.pointer_button_press_actions_internal).call (t))
-						timeout_imp.set_interval_kamikaze (100)
+					tree_item_imp /= Void and then tree_item_imp.pointer_button_press_actions_internal /= Void then
+							--| This prevents freezing on possible show_modal_to_window calls for dialogs		
+						if not feature {EV_GTK_EXTERNALS}.gtk_ctree_is_hot_spot (list_widget, a_x, a_y) then
+							timeout_imp ?= (create {EV_TIMEOUT}).implementation
+							timeout_imp.interface.actions.extend (agent (tree_item_imp.pointer_button_press_actions_internal).call (t))
+							timeout_imp.set_interval_kamikaze (100)
+						end
 				end
-
-			elseif a_type = feature {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then
+			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
 				if pointer_double_press_actions_internal /= Void then
 					pointer_double_press_actions_internal.call (t)
 				end
-				if 
-					tree_item_imp /= Void and then
-					tree_item_imp.pointer_double_press_actions_internal /= Void and then tree_item_imp = selected_item_imp then
-						tree_item_imp.pointer_double_press_actions_internal.call (t)
+				if tree_item_imp /= Void and then tree_item_imp.pointer_double_press_actions_internal /= Void then
+						if not feature {EV_GTK_EXTERNALS}.gtk_ctree_is_hot_spot (list_widget, a_x, a_y) then
+							tree_item_imp.pointer_double_press_actions_internal.call (t)
+						end
 				end
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 
 	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
@@ -256,15 +254,13 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
 			if a_tree_node_imp /= Void then
 				a_tree_node_imp.expand_callback
 			end
 			if timer.interval = 0 then
-				timer.set_interval (500)
+				timer.set_interval (timer_interval)
 			end	
-			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 
 	collapse_callback (a_tree_item: POINTER) is
@@ -272,14 +268,12 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
 			if a_tree_node_imp /= Void then
 				a_tree_node_imp.collapse_callback
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 			if timer.interval = 0 then
-				timer.set_interval (500)
+				timer.set_interval (timer_interval)
 			end
 		end
 		
@@ -291,7 +285,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			--feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			if a_tree_node_imp /= Void and then a_tree_node_imp /= selected_node then
 				if select_actions_internal /= Void then
 					select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
@@ -300,7 +293,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 					a_tree_node_imp.select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 			end
-			--feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 			selected_node := a_tree_node_imp
 		end
 		
@@ -310,7 +302,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			if a_tree_node_imp /= Void and selected_node /= Void then
 				if deselect_actions_internal /= Void then
 					deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
@@ -319,7 +310,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 					a_tree_node_imp.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 
 feature -- Status report
@@ -611,7 +601,6 @@ feature {NONE} -- Implementation
 			tree_item_imp: EV_TREE_NODE_IMP
 			parent_item_imp: EV_TREE_ITEM_IMP
 		do	
-			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			from
 				tree_item_imp ?= an_item.implementation
 				parent_item_imp ?= tree_item_imp.parent_imp
@@ -627,7 +616,6 @@ feature {NONE} -- Implementation
 				-- Show the node `an_item'
 			tree_item_imp ?= an_item.implementation
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_node_moveto (list_widget, tree_item_imp.tree_node_ptr, 0, 0.0, 1.0)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 			
 	previous_selected_item: EV_TREE_NODE
@@ -648,9 +636,7 @@ feature {NONE} -- Implementation
 	append (s: SEQUENCE [EV_TREE_ITEM]) is
 			-- Add 's' to 'Current'
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			Precursor (s)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 
 	wipe_out is
@@ -705,6 +691,7 @@ feature {NONE} -- Implementation
 				ev_children.put_left (item_imp)
 			end
 			if count = 1 then
+				selected_node := item_imp
 				item_imp.enable_select
 			end
 		end
@@ -755,7 +742,7 @@ feature {NONE} -- Implementation
 
 feature {EV_TREE_NODE_IMP} -- Implementation
 
-	spacing: INTEGER is 5
+	spacing: INTEGER is 3
 			-- Spacing between pixmap and text.
 
 	row_height: INTEGER is

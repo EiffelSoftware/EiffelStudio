@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	EV_ITEM_IMP
+		redefine
+			interface
+		end
 	
 	EV_ID_IMP
 
@@ -74,6 +77,10 @@ feature -- Status setting
 			-- `Current' to reflect available targets.
 		deferred
 		end
+		
+feature {EV_ANY_I} -- Interface
+
+	interface: EV_TOOL_BAR_ITEM
 		
 end -- class EV_TOOL_BAR_ITEM_IMP
 

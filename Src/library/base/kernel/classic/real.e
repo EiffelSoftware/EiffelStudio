@@ -7,7 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class REAL inherit
+frozen expanded class REAL inherit
 
 	REAL_REF
 

@@ -8,7 +8,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class TYPED_POINTER [G]
+frozen expanded class TYPED_POINTER [G]
 
 inherit
 	POINTER_REF

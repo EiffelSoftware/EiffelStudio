@@ -7,7 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class BOOLEAN
+frozen expanded class BOOLEAN
 
 inherit
 	BOOLEAN_REF

@@ -58,7 +58,7 @@ feature -- Context commands
 	Cont_scale_max_right_cmd_name: STRING is "Maximum position";
 	Cont_scale_min_cmd_name: STRING is "Minimum value";
 	Cont_scale_output_cmd_name: STRING is "Output only";
-	Cont_scale_show_cmd_name: STRING is "Show text";
+	Cont_scale_show_cmd_name: STRING is "Show value";
 	Cont_scale_text_cmd_name: STRING is "Set text";
 	Cont_sep_dir_cmd_name: STRING is "Separator direction";
 	Cont_sep_line_cmd_name: STRING is "Line style";

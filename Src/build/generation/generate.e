@@ -58,6 +58,7 @@ feature
 			if not rescued then
 				!!mp
 				mp.set_watch_shape
+				save_edited_commands
 				generate_files	
 				mp.restore
 			else
@@ -85,6 +86,26 @@ feature
 			Result := main_panel.base
 		end
 
+feature -- Command save
+
+	save_edited_commands is
+			-- Save every command currently edited in a command
+			-- editor.
+		local
+			cmd_tool_list: LINKED_LIST [COMMAND_TOOL]
+		do
+			cmd_tool_list := window_mgr.command_tools
+			from
+				cmd_tool_list.start
+			until
+				cmd_tool_list.after
+			loop
+				if cmd_tool_list.item.command_editor_shown then
+					cmd_tool_list.item.save_command
+				end
+				cmd_tool_list.forth
+			end
+		end
 feature -- Code generation
 
 	generate_files is

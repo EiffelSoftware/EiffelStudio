@@ -1,4 +1,4 @@
-#This file was created by <oconnor> Wed Sep  8 09:47:37 1999
+#This file was created by <oconnor> Wed Sep  8 11:18:43 1999
 #LyX 1.0 (C) 1995-1999 Matthias Ettrich and the LyX Team
 \lyxformat 2.15
 \textclass article
@@ -35,7 +35,9 @@ Interactive Software Engineering
 \newline 
 
 \size default 
-Partial code review 19990908
+Code review 19990908
+\newline 
+REVIEW IN PROGRESS
 \size large 
 
 \newline 
@@ -94,17 +96,368 @@ The review only covered a handfull of classes but many important general
  the remaining classes.
  This will be facilitated by a set of standards emerging from the first
  meeting.
-\layout Section
-
-Report
 \layout Standard
 
 The report covers standards and actions decided on during the review as
  well as the basic report of the classes reviwed.
+\layout Section
+
+Classes
 \layout Subsection
 
+EV_ANY
+\layout Enumerate
+
+There should be a "Keywords" field in every indexing clause.
+\layout Enumerate
+
+Change the name of feature `destroyed'.
+ (Maybe introduce the positive instead - exists ?)
+\layout Enumerate
+
+Change the comment of feature `destroyed'.
+\layout Enumerate
+
+Change the postcondition of feature `destroyed'.
+\layout Enumerate
+
+Feature `is_valid' needs a postcondition.
+\layout Enumerate
+
+Featyre `same' is obsolete.
+\layout Enumerate
+
+Find a justification for feature `remove_implementation' or remove it.
+\layout Enumerate
+
+Find a better comment for feature `remove_implementation'.
+\layout Enumerate
+
+Feature `file_exists' does not belong to class EV_ANY, move it somewhere
+ else.
+\layout Enumerate
+
+Replace all occurences of "!!" with "create".
+ (This is true for many more classes and should probably be done automatically
+ with a script!)
+\layout Subsection
+
+EV_PND_SOURCE
+\layout Enumerate
+
+Remove "the" from the comment of feature `data_type'.
+ (The same is true for many more comments!)
+\layout Enumerate
+
+`set_* ' features require always postconditions, often preconditions, comments
+ should tell what units are used.
+\layout Enumerate
+
+Rename feature `transportable' to `is_transportable'.
+\layout Enumerate
+
+Remove the "the" from the comment of feature `transportable' resp.
+ `is_transportable'.
+\layout Enumerate
+
+Reword the comment of feature `set_data_type'.
+\layout Enumerate
+
+Rename `desactivate_pick_and_drop' into `deactivate_pick_and_drop'.
+\layout Enumerate
+
+Reword the comment of feature `desactivate_pick_and_drop' resp.
+ `deactivate_pick_and_drop'.
+\layout Subsection
+
+EV_PND_TARGET
+\layout Enumerate
+
+The feature clause name "Access" is wrong.
+\layout Enumerate
+
+The indexing clause mentions "Abstract", but the class is not deferred.
+ (see also EV_PND_SOURCE)
+\layout Subsection
+
+EV_PND_TYPE
+\layout Enumerate
+
+The indexing clause mentions "Abstract", but the class is not deferred.
+\layout Enumerate
+
+Postconditions are missing
+\layout Enumerate
+
+Remove "the" from the comment of feature `identifier'.
+\layout Enumerate
+
+Wrong feature clause comments.
+\layout Enumerate
+
+Rename `hash_code' into `identifier' instead of delegating to it.
+\layout Enumerate
+
+`counter' needs comment.
+\layout Enumerate
+
+`counter' needs postcondition.
+\layout Subsection
+
+EV_PND_EVENT_DATA
+\layout Enumerate
+
+Correct tabulation of indexing clause.
+\layout Enumerate
+
+feature `make' needs comment and postcondition, "!!" needs to be fixed.
+\layout Enumerate
+
+`set_*' needs postconditions.
+\layout Enumerate
+
+Check why in `set_data_type ( x: EV_PND_TYPE)' x is not declared as anchored.
+\layout Subsection
+
+EV_WIDGET
+\layout Enumerate
+
+Feature `make' needs a postcondition.
+\layout Enumerate
+
+`widget_make' needs a description, a better name.
+ It needs to be assured that it will be called in any creation procedure
+ - think about how to enforce a special order.
+\layout Enumerate
+
+Comment of `parent' needs to be fixed and extended.
+ Check the quotes.
+\layout Enumerate
+
+Comment of `background_color' needs to be reworded.
+ (To be read as <feature name> "is" <comment>)
+\layout Enumerate
+
+Comment of `foregrounf_color' needs to be reworded.
+ (To be read as <feature name> "is" <comment>).
+ 2nd line of comment needs to be deleted.
+\layout Enumerate
+
+`is_window' should use assignment attempt and should nowhere be redefined.
+\layout Enumerate
+
+Functions that return a boolean variable with no argument should start with
+ `is_'.
+\layout Enumerate
+
+Split `set_insensitive' into `enable_...' and `disable_...' or find better names.
+ (Generally when there are no obvious better names (like `hide' and show')
+ always use `enable_...' and `disable_...'.
+\layout Enumerate
+
+`set_x' needs better name (maybe keep `set_x' as synonym)
+\layout Enumerate
+
+`set_parent' fix postcondition.
+\layout Enumerate
+
+`width', `height', `set_width', `set_height' should explain the units used
+ in their comment (In this case: Pixel).
+\layout Enumerate
+
+`set_x_y' needs better name.
+\layout Enumerate
+
+`show' and `hide' needs better comment (parent or is_window to implementation.is_
+shown)
+\layout Enumerate
+
+`add_accel*', `remove_accel*' add comment that explains it deals with keyboard
+ accelerators.
+\layout Enumerate
+
+Introduce notion of "Slot" instead of `add_*_command' and `remove_*_command'.
+\layout Enumerate
+
+All button commands should use new (but not yet existent mouse input device
+ information abstraction).
+ It should be thought about a general device information hierachy.
+\layout Enumerate
+
+Group all `add_*_command' and all `remove_*_command' in 2 feature clauses.
+ (Not relevant if "slot" is beeing introduced.
+\layout Enumerate
+
+`add_leave_notify_command_ reword and check comment.
+\layout Subsection
+
+EV_PRIMITIVE
+\layout Enumerate
+
+Fix indexing clause.
+\layout Subsection
+
+EV_CONTAINER
+\layout Enumerate
+
+The indexing clauses has to be modified.
+\layout Enumerate
+
+Features "client_width" and "client_height": - Comments have to specify
+ the units.
+ - Postconditions are needed.
+\layout Enumerate
+
+Feature "manager" : - Rename in "is_manager".
+ - Comments need to be more clear.
+\layout Enumerate
+
+Feature "accept_child": - Rename in "is_full" (in the implementation too).
+ - Postcondition needed.
+ - Change comment.
+\layout Enumerate
+
+Features "propagate_background_color", "propagate_foregrounnd_color": -
+ Need precondition "is_propagatable".
+ - Flag to know if the widget accept the propagation of the color.
+ Its value will be by default True.
+ - Need Postcondition.
+\layout Subsection
+
+EV_INVISIBLE_CONTAINER
+\layout Enumerate
+
+Indexing clauses: Cut description field in 2 lines ended with '%N%'.
+\layout Subsection
+
+EV_FIXED
+\layout Enumerate
+
+Feature "make": Need postcondition.
+\layout Enumerate
+
+Rename "feature -- acces" renamed in "feature -- Status report"
+\layout Subsection
+
+EV_BOX
+\layout Enumerate
+
+Indexing clauses: - Cut description field.
+ - Remove id.
+\layout Enumerate
+
+Rename "feature -- Access" in "feature --Status report"
+\layout Enumerate
+
+Feature "border_width": - Add the units in the comments.
+ - Needs more precised postcondition.
+\layout Enumerate
+
+Feature "spacing" - Check if "padding" would not be more relevant as a name.
+ - Needs postcondition.
+\layout Enumerate
+
+Features "is_child_expandable" and "set_child_expandable" moved back to
+ EV_WIDGET as "is_expandable", "set_expandable" and "set_not_expandable".
+\layout Enumerate
+
+Feature "set_spacing": - Add the units in the comments.
+ - Needs postcondition.
+\layout Enumerate
+
+Add features "is_vertical_box" and "is_horizontal_box".
+\layout Subsection
+
+EV_VERTICAL_BOX
+\layout Enumerate
+
+Check indexing clauses.
+\layout Enumerate
+
+Needs postconditions in every features.
+\layout Subsection
+
+EV_SPLIT_AREA
+\layout Enumerate
+
+Indexing clauses: Change the description field.
+\layout Enumerate
+
+Reimplement the class as 100% EiiffelVision2.
+\layout Enumerate
+
+Feature "position": - Comments need to be more precised: Units, from letf
+ to right.
+\layout Enumerate
+
+Remove feature "is_first_area_shrinkable" because the minimum size of the
+ children are sufficient.
+\layout Enumerate
+
+Check why "feature {EV_MENU_ITEM} -- Implementation" is exported to EV_MENU_ITEM.
+\layout Subsection
+
+EV_SCROLLABLE_AREA
+\layout Enumerate
+
+Divided in 2 widgets, the scrollable area and the scollbar, so that there
+ is no scrollbar by default.
+\layout Subsection
+
+EV_UNTILED_WINDOW
+\layout Enumerate
+
+Change indexing clauses.
+\layout Enumerate
+
+Needs posconditions in every features.
+\layout Enumerate
+
+Change the comment of feature "make_top_level".
+ (Now it assumes that every window is without a parent is a top_level_window.)
+\layout Enumerate
+
+Rename "widget_make" as "initialize".
+\layout Enumerate
+
+Need more precise postcondition for feature "maximum_width".
+\layout Enumerate
+
+Change the comment of feature "Title" ("name displayed on top of window").
+\layout Enumerate
+
+Feature "widget_group": Check what it corresponds to.
+ If it deals only with minimize, remove this feature from EV_WINDOW and
+ put it in another class that would handle a list of windows.
+\layout Enumerate
+
+Rename feature "Forbid_resize" in "disable_resize", "allow_resize" in "enable_re
+size".
+\layout Enumerate
+
+Rename feature "set_modal" in "enable_modal" and "disable_modal".
+\layout Enumerate
+
+Feature "set_maximim_size": - Units in comments.
+ - Precondition are commented (This is because the size features in GTK
+ have to be tested or/and reimplemented).
+\layout Enumerate
+
+Feature "show" needs postcondition "is_shown".
+\layout Enumerate
+
+The indentifiers "window_position_mouse" (..) will be removed and replaced
+ with "make_with_position_mouse" (..).
+\layout Enumerate
+
+Check if we can remove assertion feature "parent_needed".
+\layout Enumerate
+
+Feature "is_window" will be defined once with an assignment attemp.
+\layout Section
+
 Standards
-\layout Subsubsection
+\layout Subsection
 
 Comments
 \layout Standard
@@ -152,7 +505,7 @@ read correctly from the `is'.
 \layout Enumerate
 
 have a descriptions of the units that apply to its arguments,
-\layout Subsubsection
+\layout Subsection
 
 Indentation
 \layout Enumerate
@@ -161,7 +514,7 @@ Tab stops in editors must be set to eight spaces.
 \layout Enumerate
 
 Indentation must be done with tabs only, never spaces.
-\layout Subsubsection
+\layout Subsection
 
 Indexing clauses
 \layout Standard
@@ -184,7 +537,7 @@ A keywords field should be included even if empty.
 
 Use %N% to separate class description lines.
  (See new style in compiler RSN)
-\layout Subsubsection
+\layout Subsection
 
 Features which take a boolean
 \layout Enumerate
@@ -193,7 +546,7 @@ No feature should take a single boolean, it must be split into two features.
 \layout Enumerate
 
 Such feature pairs must use the enable_x/disable_x naming pattern.
-\layout Subsubsection
+\layout Subsection
 
 Boolean features
 \layout Enumerate
@@ -214,7 +567,7 @@ Use positive names i.e.
 \layout Enumerate
 
 Never include the reverse feature.
-\layout Subsubsection
+\layout Subsection
 
 Creation style
 \layout Enumerate
@@ -226,7 +579,7 @@ Replace creation with create.
 \layout Enumerate
 
 After create, each new valid routine must start on a new line.
-\layout Subsubsection
+\layout Subsection
 
 Miscellaneous
 \layout Enumerate
@@ -268,7 +621,7 @@ Property descriptions should have `able' on the end of the name if applicable.
 \layout Enumerate
 
 For commands binding features, group adds together, also group removes together.
-\layout Subsection
+\layout Section
 
 General Tasks
 \layout Enumerate
@@ -284,7 +637,7 @@ Create a new abstration class EV_DEVICE for I/O (and other?) devices, Mouse
 \layout Enumerate
 
 Create a slots abstraction for attaching commands to events.
-\layout Subsection
+\layout Section
 
 Specific tasks
 \layout Enumerate

@@ -113,7 +113,6 @@ feature {AST_EIFFEL} -- Output
 				ctxt.put_text_item (ti_Export_keyword);
 				ctxt.indent;
 				ctxt.new_line;
-				ctxt.set_separator (ti_Semi_colon);
 				ctxt.set_new_line_between_tokens;
 				ctxt.format_ast (exports)
 				ctxt.exdent

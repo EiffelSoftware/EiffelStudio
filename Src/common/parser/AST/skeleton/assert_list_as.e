@@ -64,7 +64,6 @@ feature {AST_EIFFEL} -- Output
 			if assertions /= void then
 				simple_put_clause_keywords (ctxt);
 				ctxt.new_line;
-				ctxt.set_separator (ti_Semi_colon);
 				ctxt.set_new_line_between_tokens;
 				ctxt.indent;
 				simple_format_assertions (ctxt);

@@ -9,7 +9,7 @@ class CASE_STORAGE
 
 inherit
 
-	ICONED_COMMAND_2
+	ICONED_COMMAND
 		redefine
 			text_window
 		end;

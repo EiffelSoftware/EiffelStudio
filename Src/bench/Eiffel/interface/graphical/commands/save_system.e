@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 					new_file.new_line
 				end; 
 				new_file.close;
-				show_text ?= text_window.last_format;
+				show_text ?= text_window.last_format_2.associated_command;
 				if show_text /= Void then
 					--| Only set the file name if it is an Ace file
 					--| (and not the show_clusters file name).

@@ -9,7 +9,7 @@ class QUIT_FILE
 
 inherit
 
-	ICONED_COMMAND_2;
+	ICONED_COMMAND;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_ok as loose_changes

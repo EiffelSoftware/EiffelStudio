@@ -9,7 +9,7 @@ class SEARCH_STRING
 
 inherit
 
-	ICONED_COMMAND_2
+	ICONED_COMMAND
 
 creation
 

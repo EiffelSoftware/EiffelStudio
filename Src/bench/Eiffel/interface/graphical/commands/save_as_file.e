@@ -9,7 +9,7 @@ class SAVE_AS_FILE
 
 inherit
 
-	ICONED_COMMAND_2
+	ICONED_COMMAND
 		redefine
 			licence_checked
 		end;

@@ -9,7 +9,7 @@ class SAVE_FILE
 
 inherit
 
-	ICONED_COMMAND_2
+	ICONED_COMMAND
 		redefine
 			dark_symbol, licence_checked
 		end

@@ -30,6 +30,11 @@ inherit
 
 	EV_PND_TARGET_IMP
 
+	WEL_WINDOWS_ROUTINES
+		export
+			{NONE} all
+		end
+
 	WEL_BIT_OPERATIONS
 		export
 			{NONE} all
@@ -41,6 +46,16 @@ inherit
 		end
 
 	WEL_WS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_MK_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_VK_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -324,13 +339,6 @@ feature -- Event - command association
 			add_command (Cmd_leave_notify, cmd, arg)
 		end
 
-	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget is exposed.
-		do
-			add_command (Cmd_expose, cmd, arg)
-		end
-
 	add_get_focus_command  (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the widget get the focus.
@@ -338,7 +346,7 @@ feature -- Event - command association
 			add_command (Cmd_get_focus, cmd, arg)
 		end
 
-	add_loose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_lose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the widget loose the focus.
 		do
@@ -409,14 +417,6 @@ feature -- Event -- removing command association
 			remove_command (Cmd_destroy)
 		end
 
-	remove_expose_commands is
-			-- Empty the list of commands to be executed when
-			-- the widget has to be redrawn because it was exposed from
-			-- behind another widget.
-		do
-			remove_command (Cmd_expose)
-		end
-
 	remove_key_press_commands is
 			-- Empty the list of commands to be executed when
 			-- a key is pressed on the keyboard while the widget has the
@@ -474,10 +474,10 @@ feature -- Implementation
 			-- Parent container of this widget. The same than
 			-- parent but with a different type.
 		do
-			if parent = default_parent.item then
+			if wel_parent = default_parent.item then
 				Result := Void
 			else
-				Result ?= parent
+				Result ?= wel_parent
 			end
 		end
 
@@ -489,14 +489,18 @@ feature -- Implementation
 
 feature {NONE} -- Implementation, mouse button events
 
-	get_button_data (keys, x_pos, y_pos: INTEGER): EV_BUTTON_EVENT_DATA is
+	get_button_data (button, keys, x_pos, y_pos: INTEGER): EV_BUTTON_EVENT_DATA is
 			-- Give the event data with the values `x_pos',
 			-- `y_pos' and `keys'
+		local
+			wid: EV_WIDGET
 		do
 			!! Result.make
-			Result.implementation.set_widget (interface)
-			Result.implementation.set_x (x_pos)
-			Result.implementation.set_y (y_pos)
+			wid ?= interface
+			Result.implementation.set_all (wid, x_pos, y_pos, button,
+				flag_set (keys, Mk_shift), flag_set (keys, Mk_control),
+				flag_set (keys, Mk_lbutton), flag_set (keys, Mk_mbutton),
+				flag_set (keys, Mk_rbutton))
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -507,7 +511,7 @@ feature {NONE} -- Implementation, mouse button events
 			data: EV_BUTTON_EVENT_DATA
 		do
 			if has_command (Cmd_button_one_press) then
-				data := get_button_data (keys, x_pos, y_pos)
+				data := get_button_data (1, keys, x_pos, y_pos)
 				execute_command (Cmd_button_one_press, data)
 			end
 		end
@@ -520,7 +524,7 @@ feature {NONE} -- Implementation, mouse button events
 			data: EV_BUTTON_EVENT_DATA
 		do
 			if has_command (Cmd_button_two_press) then
-				data := get_button_data (keys, x_pos, y_pos)
+				data := get_button_data (2, keys, x_pos, y_pos)
 				execute_command (Cmd_button_two_press, data)
 			end
 		end
@@ -533,7 +537,7 @@ feature {NONE} -- Implementation, mouse button events
 			data: EV_BUTTON_EVENT_DATA
 		do
 			if has_command (Cmd_button_three_press) then
-				data := get_button_data (keys, x_pos, y_pos)
+				data := get_button_data (3, keys, x_pos, y_pos)
 				execute_command (Cmd_button_three_press, data)
 			end
 		end
@@ -546,7 +550,7 @@ feature {NONE} -- Implementation, mouse button events
 			data: EV_BUTTON_EVENT_DATA
 		do
 			if has_command (Cmd_button_one_release) then
-				data := get_button_data (keys, x_pos, y_pos)
+				data := get_button_data (1, keys, x_pos, y_pos)
 				execute_command (Cmd_button_one_release, data)
 			end
 		end
@@ -559,7 +563,7 @@ feature {NONE} -- Implementation, mouse button events
 			data: EV_BUTTON_EVENT_DATA
 		do
 			if has_command (Cmd_button_two_release) then
-				data := get_button_data (keys, x_pos, y_pos)
+				data := get_button_data (2, keys, x_pos, y_pos)
 				execute_command (Cmd_button_two_release, data)
 			end
 		end
@@ -572,7 +576,7 @@ feature {NONE} -- Implementation, mouse button events
 			data: EV_BUTTON_EVENT_DATA
 		do
 			if has_command (Cmd_button_three_release) then
-				data := get_button_data (keys, x_pos, y_pos)
+				data := get_button_data (3, keys, x_pos, y_pos)
 				execute_command (Cmd_button_three_release, data)
 			end
 		end
@@ -585,7 +589,7 @@ feature {NONE} -- Implementation, mouse button events
 			data: EV_BUTTON_EVENT_DATA
 		do
 			if has_command (Cmd_button_one_dblclk) then
-				data := get_button_data (keys, x_pos, y_pos)
+				data := get_button_data (1, keys, x_pos, y_pos)
 				execute_command (Cmd_button_one_dblclk, data)
 			end
 		end
@@ -598,7 +602,7 @@ feature {NONE} -- Implementation, mouse button events
 			data: EV_BUTTON_EVENT_DATA
 		do
 			if has_command (Cmd_button_two_dblclk) then
-				data := get_button_data (keys, x_pos, y_pos)
+				data := get_button_data (2, keys, x_pos, y_pos)
 				execute_command (Cmd_button_two_dblclk, data)
 			end
 		end
@@ -611,7 +615,7 @@ feature {NONE} -- Implementation, mouse button events
 			data: EV_BUTTON_EVENT_DATA
 		do
 			if has_command (Cmd_button_three_press) then
-				data := get_button_data (keys, x_pos, y_pos)
+				data := get_button_data (3, keys, x_pos, y_pos)
 				execute_command (Cmd_button_three_dblclk, data)
 			end
 		end
@@ -636,6 +640,7 @@ feature {NONE} -- Implementation, mouse move, enter and leave events
 			-- the creation of an object for nothing.
 		local
 			data: EV_MOTION_EVENT_DATA
+			wid: EV_WIDGET
 		do
 			if cursor_on_widget.item /= Current then
 				if cursor_on_widget.item /= Void then
@@ -646,9 +651,11 @@ feature {NONE} -- Implementation, mouse move, enter and leave events
 			end
 			if has_command (Cmd_motion_notify) then
 				!! data.make
-				data.implementation.set_widget (interface)
-				data.implementation.set_x (x_pos)
-				data.implementation.set_y (y_pos)
+				wid ?= interface
+				data.implementation.set_all (wid, x_pos, y_pos,
+				flag_set (keys, Mk_shift), flag_set (keys, Mk_control),
+				flag_set (keys, Mk_lbutton), flag_set (keys, Mk_mbutton),
+				flag_set (keys, Mk_rbutton))
 				execute_command (Cmd_motion_notify, data)
 			end
 		end
@@ -667,7 +674,21 @@ feature {EV_WIDGET_IMP} -- on_mouse_leave must be visible
 
 feature {NONE} -- Implementation, key events
 
-	on_char (character_code, key_data: INTEGER) is
+	get_key_data (virtual_key, key_data: INTEGER): EV_KEY_EVENT_DATA is
+			-- Give the event data with the values `x_pos',
+			-- `y_pos' and `keys'
+		local
+			wid: EV_WIDGET
+		do
+			!! Result.make
+			wid ?= interface
+			Result.implementation.set_all (wid, virtual_key,
+				key_to_string (key_data), key_down (Vk_shift),
+				key_down (Vk_control), key_locked (Vk_capital),
+				key_locked (Vk_numlock), key_locked (Vk_scroll))
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
 			-- Executed when a key is pressed.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -675,10 +696,7 @@ feature {NONE} -- Implementation, key events
 			data: EV_KEY_EVENT_DATA
 		do
 			if has_command (Cmd_key_press) then
-				!! data.make
-				data.implementation.set_widget (interface)
-				data.implementation.set_string (character_code.ascii_char.out)
-				data.implementation.set_state (key_data)
+				data := get_key_data (virtual_key, key_data)
 				execute_command (Cmd_key_press, data)
 			end
 		end
@@ -691,9 +709,7 @@ feature {NONE} -- Implementation, key events
 			data: EV_KEY_EVENT_DATA
 		do
 			if has_command (Cmd_key_release) then
-				!! data.make
-				data.implementation.set_widget (interface)
-				data.implementation.set_keyval (key_data)
+				data := get_key_data (virtual_key, key_data)
 				execute_command (Cmd_key_release, data)
 			end
 		end
@@ -744,7 +760,7 @@ feature -- Deferred features
 		deferred
 		end
 
-	parent: WEL_WINDOW is
+	wel_parent: WEL_WINDOW is
 		deferred
 		end
 

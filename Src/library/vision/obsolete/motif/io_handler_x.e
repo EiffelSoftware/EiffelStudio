@@ -17,7 +17,6 @@ inherit
 
 	EVENT_HDL
 
-
 creation
 
 	make
@@ -32,34 +31,37 @@ feature {NONE}
 
 	call_back is
 			-- Call the command.
+		require
+			valid_command: command /= Void
 		local
 			command_clone: COMMAND;
 			context_data: CONTEXT_DATA
 		do
-			if not (command = Void) then
-				if command.is_template then
-					command_clone := clone (command)
-				else
-					command_clone := command
-				end;
-				command_clone.set_context_data (context_data);
-				command_clone.execute (argument)
+			if command.is_template then
+				command_clone := clone (command)
+			else
+				command_clone := command
 			end;
+			command_clone.set_context_data (context_data);
+			command_clone.execute (argument)
 		end; 
 
 	command: COMMAND;
-				-- Command to call
-
-feature 
+			-- Command to call
 
 	make (an_io_handler: IO_HANDLER; an_application_context: POINTER) is
-					-- Create an X io_handler.
+					-- Create a openlook io_handler.
 		require
-			an_io_handler_exists: not (an_io_handler = Void)
+			an_io_handler_exists: an_io_handler /= Void
 		do
-			c_data := c_io_create (an_application_context, Current, $call_back);
-			call_back
+			c_data := c_io_create (an_application_context, 
+						Current, $call_back);
+			if false then
+				call_back
+			end
 	   	end; 
+
+feature 
 
 	is_call_back_set: BOOLEAN is
 			-- Is a call back already set ?
@@ -93,13 +95,13 @@ feature
 			not is_call_back_set
 		end; 
 
-	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; 
+			an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when `a_file' has
 			-- data available.
 		require else
 			no_call_back_already_set: not is_call_back_set;
-			not_a_command_void: not (a_command = Void)
-		
+			not_a_command_void: a_command /= Void
 		do
 			c_io_set_read_call_back (c_data, a_file.handle);
 			command := a_command;
@@ -108,13 +110,13 @@ feature
 			is_call_back_set
 		end;
 
-	set_write_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_write_call_back (a_file: IO_MEDIUM; a_command: COMMAND; 
+		an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when `a_file' is
 			-- available for writing.
 		require else
 			no_call_back_already_set: not is_call_back_set;
-			not_a_command_void: not (a_command = Void)
-		
+			not_a_command_void: a_command /= Void
 		do
 			c_io_set_write_call_back (c_data, a_file.handle);
 			command := a_command;
@@ -123,7 +125,34 @@ feature
 			is_call_back_set
 		end
 
+	destroy is
+			-- Free `c_data' C structure.
+		local
+			null_pointer: POINTER
+		do
+			check
+				not_freed: c_data /= null_pointer
+			end;
+			c_free_io (c_data);
+			c_data := null_pointer;
+		ensure then
+			is_data_freed: is_data_freed
+		end
+		
+	is_data_freed: BOOLEAN is
+			-- Is `c_data' freed ?
+		local
+			null_pointer: POINTER
+		do
+			Result := null_pointer = c_data
+		end;
+
 feature {NONE} -- External features
+
+	c_free_io (data: POINTER) is
+		external
+			"C"
+		end;
 
 	c_io_create (scr_obj: POINTER; obj: G_ANY_I; cb: POINTER): POINTER is
 		external

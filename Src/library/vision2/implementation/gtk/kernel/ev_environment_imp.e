@@ -15,10 +15,6 @@ inherit
 create
 	make
 
-feature -- Status report
-
-	platform: INTEGER is 0
-
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -32,9 +28,6 @@ feature {NONE} -- Initialization
 		do
 			is_initialized := True
 		end
-
-invariant
-	platform_matches_interface: platform = interface.Ev_platform_gtk
 
 end -- class EV_ENVIRONMENT_IMP
 
@@ -59,6 +52,9 @@ end -- class EV_ENVIRONMENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/13 19:23:58  rogers
+--| Removed platform.
+--|
 --| Revision 1.4  2001/06/07 23:08:03  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

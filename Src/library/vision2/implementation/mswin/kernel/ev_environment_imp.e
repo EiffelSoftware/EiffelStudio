@@ -28,17 +28,6 @@ feature {NONE} -- Initialization
 			is_initialized := True
 		end
 
-feature -- Status report
-
-	platform: INTEGER is
-			-- Return the code of the win32 implementation.
-		do
-			Result := interface.Ev_platform_win32
-		end
-
-invariant
-	platform_matches_interface: platform = interface.Ev_platform_win32
-
 end -- class EV_ENVIRONMENT_IMP
 
 --!-----------------------------------------------------------------------------
@@ -63,6 +52,9 @@ end -- class EV_ENVIRONMENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/13 19:24:48  rogers
+--| Removed platform.
+--|
 --| Revision 1.5  2001/06/07 23:08:12  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

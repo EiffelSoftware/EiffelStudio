@@ -40,29 +40,9 @@ feature {NONE} -- Implementation
 
 	sort_toc is
 			-- Sort new toc from selected options
-		local
-			l_name: STRING
-			l_filters: ARRAYED_LIST [DOCUMENT_FILTER]
 		do
 			Shared_constants.Application_constants.set_index_file_name (index_filename_text.text)
-			if filter_combo.selected_item.text.is_equal ("EiffelStudio Filtered") then
-				l_name := "EiffelStudio"
-			elseif filter_combo.selected_item.text.is_equal ("ENViSioN! Filtered") then
-				l_name := "ENViSioN!"
-			elseif filter_combo.selected_item.text.is_equal ("Unfiltered") then
-				l_name := "Unfiltered"
-			end
-			l_filters := Shared_project.filter_manager.filters
-			from
-				l_filters.start
-			until
-				l_filters.after
-			loop
-				if l_filters.item.description.is_equal (l_name) then
-					Shared_project.filter_manager.set_filter (l_filters.item)
-				end
-				l_filters.forth
-			end			
+			Shared_project.filter_manager.set_filter_by_description (filter_combo.selected_item.text)		
 			Shared_toc_manager.sort_toc (
 				index_root_check.is_selected,
 				include_empty_dirs_check.is_selected,

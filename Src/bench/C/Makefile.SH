@@ -168,7 +168,7 @@ Makefiles::
 	echo "Making "Makefiles" in $(DIR)$$i..."; \
 	(cd $$i || exit 1; \
 	if test ! -f Makefile; then /bin/sh Makefile.SH; fi; \
-	$(MAKE) $(MFLAGS) Makefiles) \
+	$(MAKE) $(MFLAGS) Makefiles); \
 	done
 
 Makefiles.SH:: Makefile.SH
@@ -187,7 +187,7 @@ Makefiles.SH:: Makefile.SH
 	echo "Making Makefiles.SH in $(DIR)$$i..."; \
 	(cd $$i || exit 1; $(MAKE) $(MFLAGS) -f ../Makefile \
 	Makefile TOP=$$newtop CURRENT=$(DIR)$$i;\
-	$(MAKE) $(MFLAGS) Makefiles.SH) \
+	$(MAKE) $(MFLAGS) Makefiles.SH); \
 	done
 
 all::

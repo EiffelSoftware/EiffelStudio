@@ -44,7 +44,7 @@ feature {NONE} -- initialization
 				handle := default_pointer
 			end
 			structure_make
-			cwel_msgboxparams_set (item, handle, a_main_arguments.current_instance.item, a_wel_string1.item,
+			cwel_msgboxparams_set (item, handle, a_main_arguments.resource_instance.item, a_wel_string1.item,
 			a_wel_string2.item, a_style, default_pointer, cwin_make_lang_id (a_language, a_sublanguage))
 		end
 
@@ -74,7 +74,7 @@ feature {NONE} -- initialization
 				handle := default_pointer
 			end
 			structure_make
-			cwel_msgboxparams_set (item, a_window.item, a_main_arguments.current_instance.item, a_wel_string1.item,
+			cwel_msgboxparams_set (item, a_window.item, a_main_arguments.resource_instance.item, a_wel_string1.item,
 			a_wel_string2.item, a_style, cwin_make_int_resource (an_id),
 			cwin_make_lang_id (a_language, a_sublanguage))
 		end

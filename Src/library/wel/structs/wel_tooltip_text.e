@@ -93,7 +93,7 @@ feature -- Element change
 	set_text_id (an_id: INTEGER) is
 			-- Set `text' with a string resource identifier `an_id'.
 		do
-			set_instance (main_args.current_instance)
+			set_instance (main_args.resource_instance)
 			cwel_tooltiptext_set_lpsztext (item,
 				cwin_make_int_resource (an_id))
 		ensure

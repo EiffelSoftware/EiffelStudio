@@ -92,7 +92,7 @@ feature -- Basic operations
 			Result.fill_blank
 			create a_wel_string.make (Result)
 			nb := cwin_load_string (
-				wr_main_args.current_instance.item,
+				wr_main_args.resource_instance.item,
 				an_id, a_wel_string.item, Result.count)
 			Result := a_wel_string.string
 			Result.keep_head (nb)

@@ -331,7 +331,7 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
 			widget.pointer_motion_actions_internal.call 
-				([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+				([a_screen_x - widget.screen_x, a_screen_y - widget.screen_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 		end
 
 	pointer_button_release_action_intermediary (a_c_object: POINTER; a_x, a_y, a_button: INTEGER;

@@ -63,6 +63,8 @@ rem Copy the config
 rem
 copy eif_config.h run-time
 copy eif_portable.h run-time
+copy config.sh bench
+copy make.w32 bench\make.bat
 copy config.sh console
 copy make.w32 console\make.bat
 copy config.sh desc
@@ -108,6 +110,8 @@ cd ..\idrs
 ..\rt-converter.exe makefile-win.sh makefile
 cd ..\console
 ..\rt-converter.exe makefile-win.sh makefile
+cd ..\bench
+..\rt-converter.exe makefile-win.sh makefile
 cd ..\ipc\daemon
 ..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\ewb
@@ -136,6 +140,8 @@ echo call make>> make.bat
 echo cd ..\..>> make.bat
 echo cd platform>> make.bat
 echo call make>> make.bat
+echo cd ..\bench >> make.bat
+echo call make >> make.bat
 echo cd ..>> make.bat
 echo cd ipc\daemon>> make.bat
 echo call make>> make.bat
@@ -168,6 +174,7 @@ echo del make.bat >> cleanup.bat
 echo del cleanup.bat >> cleanup.bat
 
 copy cleanup.bat console\
+copy cleanup.bat bench\
 copy cleanup.bat desc\
 copy cleanup.bat ipc\app\
 copy cleanup.bat ipc\daemon\
@@ -182,7 +189,9 @@ copy cleanup.bat run-time\
 copy cleanup.bat run-time\OBJDIR\
 copy cleanup.bat run-time\LIB\
 
-cd console
+cd bench
+call cleanup
+cd ..\console
 call cleanup
 cd ..\desc
 call cleanup

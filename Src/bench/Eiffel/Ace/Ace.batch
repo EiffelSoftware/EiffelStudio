@@ -27,7 +27,8 @@ cluster
 
 -- ES3 SPECIFIC CLUSTERS
 
-		limand:				"$BENCH/Eiffel/limand";
+		liman_common:		"$BENCH/Eiffel/limand/common";
+		liman_bench:		"$BENCH/Eiffel/limand/bench";
 		beurk:				"$BENCH/Eiffel/beurk";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
 		debugclas:			"$BENCH/Eiffel/debug";

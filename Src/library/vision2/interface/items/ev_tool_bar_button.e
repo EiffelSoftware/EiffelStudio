@@ -52,7 +52,7 @@ feature -- Access
 	parent: EV_TOOL_BAR is
 			-- Parent of the current item.
 		do
-			Result ?= Precursor {EV_ITEM}
+			Result ?= Precursor {EV_TOOL_BAR_ITEM}
 		end
 
 	gray_pixmap: EV_PIXMAP is
@@ -122,8 +122,8 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_TOOL_BAR_ITEM} and Precursor {EV_ITEM} and
-				Precursor {EV_PICK_AND_DROPABLE} and Precursor {EV_TEXTABLE} and
+			Result := Precursor {EV_TOOL_BAR_ITEM}
+				and Precursor {EV_TEXTABLE} and
 				Precursor {EV_TOOLTIPABLE} and Precursor {EV_SENSITIVE}
 		end
 		

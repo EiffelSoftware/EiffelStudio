@@ -136,6 +136,10 @@ feature -- Change
 			proportion := p
 		end
 
+	update_split is
+		do
+		end
+
 	realize_current is
 			-- Create the actual Windows window.
 		local

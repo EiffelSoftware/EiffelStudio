@@ -4833,6 +4833,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 	struct item 	*result = NULL;		/* Result of the function (NULL if none) */
 	struct stochunk *previous_scur = saved_scur;
 	struct item		*previous_stop = saved_stop;
+	uint32			type = 0;			/* Dynamic type of the result */
 	
 	rout_id = Routids(stype)[fid];
 	CBodyId(body_id,rout_id,Dtype(otop()->it_ref));
@@ -4851,8 +4852,13 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 		xinterp(MTC melt[body_id]);
 		sync_needed = 1;					/* Compulsory synchronisation */
 		}
-	if (otop()!=previous_otop) /* a result has been pushed on the stack */
+	if (otop()!=previous_otop) {/* a result has been pushed on the stack */
 		result = opop(); 
+		type = result->type & SK_HEAD;
+		if ((type == SK_EXP || type == SK_REF) && (result->it_ref != NULL))
+			result->type = type | Dtype(result->it_ref);
+
+	}
 
 	undiscard_breakpoints();		/* restore previous state. */
 	IC = OLD_IC;					/* Restore IC back-up */

@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 				loop
 					a_click_ast := list_area.item (pos - 1);
 					clickable := a_click_ast.node;
-					if clickable.is_class then
+					if clickable.is_class or else clickable.is_precursor then
 						!CLASSC_STONE! stone.make 
 							(clickable.associated_eiffel_class (ref_class))
 					else

@@ -49,6 +49,7 @@ feature -- Behavior
 		do
 			if control = help_button then
 			elseif control = id_back then
+				terminate (Idcancel)
 			end
 		end
 	

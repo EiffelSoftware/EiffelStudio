@@ -21,7 +21,8 @@ rt_public int is_in_spt (struct special_table *spt, EIF_REFERENCE object)
 	long *hkeys;
 	int32 	count;
 
-	assert (object != (EIF_REFERENCE)  0);
+	assert (object != (EIF_REFERENCE)  0);		/* Cannot be Void. */
+	assert (!(HEADER (object)->ov_size & B_FWD));	/* Cannot be forwarded. */
 	if (spt == (struct special_table *) 0)
 		return 0;
 	

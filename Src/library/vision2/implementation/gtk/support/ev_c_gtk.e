@@ -21,6 +21,12 @@ feature -- Externals
 		external
 			" C | %"gtk_eiffel.h%""
 		end
+		
+	c_gdk_colormap_query_color (a_colormap: POINTER; a_pixel: INTEGER; a_gdkcolor_result: POINTER) is
+			-- Retrieve `a_gdkcolor_result' values from `a_pixel' using `a_colormap'.
+		external
+			" C (GdkColormap *, gulong, GdkColor *)| %"gtk_eiffel.h%""
+		end
 
 	gdk_display: POINTER is
 			-- Display * Result

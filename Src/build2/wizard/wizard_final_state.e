@@ -121,12 +121,39 @@ feature {NONE} -- Implementation
 			title.set_text ("Completing the%N" + wizard_title)
 			message.set_text (final_message)
 		end
+		
+	project_location_wrapped: STRING is
+			-- As project location may be very long, we must wrap it,
+			-- in order to ensure that we do not get a very wide window
+			-- just for displaying the location. Note that we also
+			-- reset the width of the window here. This is a
+			-- way of getting round the wizards standard behaviour.
+		local
+			project_location: STRING
+			counter: INTEGER
+		do
+			first_window.set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
+			project_location := system_status.current_project_settings.project_location
+			if project_location.count > 40 and not project_location.has ('%N') then
+				from
+					counter := 40
+				until
+					counter > project_location.count
+				loop
+					project_location.insert_character ('%N', counter)
+					counter := counter + 40
+				end
+			end
+			Result := project_location
+		end
+		
 
 	final_message: STRING is
+			-- Final message displayed by wizard.
 		do
 			Result := "Clicking 'Finish' will generate a new Eiffel Vision2%
 			%%Nproject corresponding to the following information : %N%N" +
-			"Project location : " + system_status.current_project_settings.project_location +
+			"Project location : " + project_location_wrapped +
 			"%N%NProject name : " + system_status.current_project_settings.project_name +
 			"%NApplication class name : " + system_status.current_project_settings.application_class_name +
 			"%NWindow class name : " + system_status.current_project_settings.main_window_class_name
@@ -135,13 +162,13 @@ feature {NONE} -- Implementation
 		end
 
 	pixmap_icon_location: FILE_NAME is
-			--
+			-- Icon used.
 		once
 			create Result.make_from_string ("eiffel_wizard_icon.png")
 		end
 	
 	back is
-			--
+			-- Back to previous page.
 		do
 			Precursor {WIZARD_FINAL_STATE_WINDOW}
 			main_window.show

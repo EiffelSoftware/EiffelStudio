@@ -20,8 +20,7 @@ feature
 	symbol: PIXMAP is
 			-- Icon for the class tool
 		once
-			!!Result.make;
-			Result.read_from_file (bm_Class)
+			Result := bm_Class
 		end;
 
 	stone_type: INTEGER is do Result := Class_type end;

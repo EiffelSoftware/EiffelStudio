@@ -24,8 +24,7 @@ feature
 
 	symbol: PIXMAP is 
 		once 
-			!!Result.make; 
-			Result.read_from_file (bm_Showtext) 
+			Result := bm_Showtext 
 		end;
 	
 feature {NONE}
@@ -37,7 +36,7 @@ feature
 	format (stone: STONE) is
 			-- Show text of `stone' in `text_window'
 		local
-			stone_text: STRING
+			stone_text: STRING;
 		do
 			if stone /= Void then
 				stone_text := stone.origin_text;
@@ -51,7 +50,7 @@ feature
 					text_window.set_editable;
 					text_window.show_image;
 					text_window.set_root_stone (stone);
-					text_window.set_last_format (Current)
+					text_window.set_last_format (Current);
 				end
 			end
 		end;

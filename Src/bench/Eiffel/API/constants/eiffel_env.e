@@ -26,322 +26,290 @@ feature {NONE}
 			Result.append ("/help/")
 		end;
 
-	bm_Breakpoint: STRING is
+	bm_Breakpoint: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/breakpoint.bm")
+			Result := pixmap_file_content ("breakpoint.bm");
 		end;
 
-	bm_Check: STRING is
+	bm_Check: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/check.bm")
+			Result := pixmap_file_content ("check.bm");
 		end;
 
-	bm_Class: STRING is
+	bm_Class: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/class.bm")
+			Result := pixmap_file_content ("class.bm");
 		end;
 
-	bm_Continue: STRING is
+	bm_Continue: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/continue.bm")
+			Result := pixmap_file_content ("continue.bm");
 		end;
 
-	bm_Dark_save: STRING is
+	bm_Dark_save: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/dark_save.bm")
+			Result := pixmap_file_content ("dark_save.bm");
 		end;
 
-	bm_Debug_quit: STRING is
+	bm_Debug_quit: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/debug_quit.bm")
+			Result := pixmap_file_content ("debug_quit.bm");
 		end;
 
-	bm_Debug_run: STRING is
+	bm_Debug_run: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/debug_run.bm")
+			Result := pixmap_file_content ("debug_run.bm");
 		end;
 
-	bm_Explain: STRING is
+	bm_Explain: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/explain.bm")
+			Result := pixmap_file_content ("explain.bm");
 		end;
 
-	bm_Finalize: STRING is
+	bm_Finalize: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/finalize.bm")
+			Result := pixmap_file_content ("finalize.bm");
 		end;
 
-	bm_Font: STRING is
+	bm_Font: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/font.bm")
+			Result := pixmap_file_content ("font.bm");
 		end;
 
-	bm_Freeze: STRING is
+	bm_Freeze: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/freeze.bm")
+			Result := pixmap_file_content ("freeze.bm");
 		end;
 
-	bm_Ice: STRING is
+	bm_Ice: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/ice.bm")
+			Result := pixmap_file_content ("ice.bm");
 		end;
 
-	bm_Line: STRING is
+	bm_Line: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/line.bm")
+			Result := pixmap_file_content ("line.bm");
 		end;
 
-	bm_Next: STRING is
+	bm_Next: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/next.bm")
+			Result := pixmap_file_content ("next.bm");
 		end;
 
-	bm_Object: STRING is
+	bm_Object: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/object.bm")
+			Result := pixmap_file_content ("object.bm");
 		end;
 
-	bm_Object_inv: STRING is
+	bm_Object_inv: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/object_inv.bm")
+			Result := pixmap_file_content ("object_inv.bm");
 		end;
 
-	bm_Open: STRING is
+	bm_Open: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/open.bm")
+			Result := pixmap_file_content ("open.bm");
 		end;
 
-	bm_Quit: STRING is
+	bm_Quit: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/quit.bm")
+			Result := pixmap_file_content ("quit.bm");
 		end;
 
-	bm_Routine: STRING is
+	bm_Routine: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/routine.bm")
+			Result := pixmap_file_content ("routine.bm");
 		end;
 
-	bm_Run: STRING is
+	bm_Run: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/run.bm")
+			Result := pixmap_file_content ("run.bm");
 		end;
 
-	bm_Save: STRING is
+	bm_Save: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/save.bm")
+			Result := pixmap_file_content ("save.bm");
 		end;
 
-	bm_Save_as: STRING is
+	bm_Save_as: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/save_as.bm")
+			Result := pixmap_file_content ("save_as.bm");
 		end;
 
-	bm_Search: STRING is
+	bm_Search: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/search.bm")
+			Result := pixmap_file_content ("search.bm");
 		end;
 	
-	bm_Setstop: STRING is
+	bm_Setstop: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/setstop.bm")
+			Result := pixmap_file_content ("setstop.bm");
 		end;
 	
-	bm_Shell: STRING is
+	bm_Shell: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/shell.bm")
+			Result := pixmap_file_content ("shell.bm");
 		end;
 	
-	bm_Showaversions: STRING is
+	bm_Showaversions: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showaversions.bm")
+			Result := pixmap_file_content ("showaversions.bm");
 		end;
 
-	bm_Showdversions: STRING is
+	bm_Showdversions: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showdversions.bm")
+			Result := pixmap_file_content ("showdversions.bm");
 		end;
 
-	bm_Showancestors: STRING is
+	bm_Showancestors: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showancestors.bm")
+			Result := pixmap_file_content ("showancestors.bm");
 		end;
 
-	bm_Showattributes: STRING is
+	bm_Showattributes: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showattributes.bm")
+			Result := pixmap_file_content ("showattributes.bm");
 		end;
 
-	bm_Showcallers: STRING is
+	bm_Showcallers: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showcallers.bm")
+			Result := pixmap_file_content ("showcallers.bm");
 		end;
 
-	bm_Showclients: STRING is
+	bm_Showclients: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showclients.bm")
+			Result := pixmap_file_content ("showclients.bm");
 		end;
 
-	bm_Showclusters: STRING is
+	bm_Showclusters: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showclusters.bm")
+			Result := pixmap_file_content ("showclusters.bm");
 		end;
 
-	bm_Showcustom: STRING is
+	bm_Showcustom: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showcustom.bm")
+			Result := pixmap_file_content ("showcustom.bm");
 		end;
 
-	bm_Showdeferreds: STRING is
+	bm_Showdeferreds: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showdeferreds.bm")
+			Result := pixmap_file_content ("showdeferreds.bm");
 		end;
 
-	bm_Showdescendants: STRING is
+	bm_Showdescendants: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showdescendants.bm")
+			Result := pixmap_file_content ("showdescendants.bm");
 		end;
 
-	bm_Showexternals: STRING is
+	bm_Showexternals: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showexternals.bm")
+			Result := pixmap_file_content ("showexternals.bm");
 		end;
 
-	bm_Showflat: STRING is
+	bm_Showflat: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showflat.bm")
+			Result := pixmap_file_content ("showflat.bm");
 		end;
 
-	bm_Showfs: STRING is
+	bm_Showfs: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showfs.bm")
+			Result := pixmap_file_content ("showfs.bm");
 		end;
 
-	bm_Showonces: STRING is
+	bm_Showonces: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showonces.bm")
+			Result := pixmap_file_content ("showonces.bm");
 		end;
 
-	bm_Showroutines: STRING is
+	bm_Showroutines: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showroutines.bm")
+			Result := pixmap_file_content ("showroutines.bm");
 		end;
 
-	bm_Showshort: STRING is
+	bm_Showshort: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showshort.bm")
+			Result := pixmap_file_content ("showshort.bm");
 		end;
 
-	bm_Showstops: STRING is
+	bm_Showstops: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showstops.bm")
+			Result := pixmap_file_content ("showstops.bm");
 		end;
 
-	bm_Showsuppliers: STRING is
+	bm_Showsuppliers: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showsuppliers.bm")
+			Result := pixmap_file_content ("showsuppliers.bm");
 		end;
 
-	bm_Showtext: STRING is
+	bm_Showtext: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/showtext.bm")
+			Result := pixmap_file_content ("showtext.bm");
 		end;
 
-	bm_Step: STRING is
+	bm_Step: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/step.bm")
+			Result := pixmap_file_content ("step.bm");
 		end;
 
-	bm_System: STRING is
+	bm_System: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/system.bm")
+			Result := pixmap_file_content ("system.bm");
 		end;
 
-	bm_Update: STRING is
+	bm_Update: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/update.bm")
+			Result := pixmap_file_content ("update.bm");
 		end;
 
-	bm_Tower: STRING is
+	bm_Tower: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/tower.bm")
+			Result := pixmap_file_content ("tower.bm");
 		end;
  
-	bm_class_cur: STRING is
+	bm_class_cur: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/class_cur.bm")
+			Result := pixmap_file_content ("class_cur.bm");
 		end;
 
-	bm_entity_cur: STRING is
+	bm_entity_cur: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/entity_cur.bm")
+			Result := pixmap_file_content ("entity_cur.bm");
 		end;
 
-	bm_object_cur: STRING is
+	bm_object_cur: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/object_cur.bm")
+			Result := pixmap_file_content ("object_cur.bm");
 		end;
 
-	bm_explain_cur: STRING is
+	bm_explain_cur: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/explain_cur.bm")
+			Result := pixmap_file_content ("explain_cur.bm");
 		end;
 
-	bm_default: STRING is
+	bm_default: PIXMAP is
 		do
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bitmaps/default.bm")
+			Result := pixmap_file_content ("default.bm");
+		end;
+
+	bm_system_cur: PIXMAP is
+		do
+			Result := pixmap_file_content ("system_cur.bm");
+		end;
+
+	pixmap_file_content (fn: STRING): PIXMAP is
+		local
+			full_path: STRING
+		do
+			full_path := Eiffel3_dir_name.duplicate;
+			full_path.append ("/bitmaps/");
+			full_path.append (fn);
+			!!Result.make;
+			Result.read_from_file (full_path);
+			if not Result.is_valid then
+				io.error.putstring ("Warning: can not read pixmap file ");
+				io.error.putstring (full_path);
+				io.error.new_line;
+			end;
 		end;
 
 

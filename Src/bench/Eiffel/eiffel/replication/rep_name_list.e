@@ -73,7 +73,7 @@ feature
 			new_feat: FEATURE_I;
 				-- Replicated feature
 		do
-debug ("REPLICATION")
+debug ("HAS_CALLS")
 			io.error.putstring ("in has calls %N ");
 end;
 			cur := cursor;
@@ -88,7 +88,7 @@ end;
 					f_name := old_feat.feature_name;
 					not_selected := not_selected or else 
 							not new_feat.is_selected;
-debug ("REPLICATION")
+debug ("HAS_CALLS")
 					io.error.putstring ("feature name ");
 					io.error.putstring (f_name);
 					io.error.putstring (" selected: ");
@@ -119,7 +119,7 @@ end;
 			written_in: INTEGER;
 		do
 debug ("REPLICATION")
-	io.error.putstring ("in update new features%N");
+	--io.error.putstring ("in update new features%N");
 end;
 			written_in := f_table.feat_tbl_id;
 			if Rep_depend_server.has (orig_written_in) then
@@ -136,11 +136,11 @@ end;
 			loop
 				new_feat := f_table.item (item.rep_feature.feature_name);
 debug ("REPLICATION")
-	io.error.putstring ("retrieving new feature: ");
-	io.error.putstring (new_feat.feature_name);
-	io.error.putstring (" ");
-	io.error.putstring (new_feat.generator);
-	io.error.new_line;
+	--io.error.putstring ("retrieving new feature: ");
+	--io.error.putstring (new_feat.feature_name);
+	--io.error.putstring (" ");
+	--io.error.putstring (new_feat.generator);
+	--io.error.new_line;
 end;
 				item.set_new_feature (new_feat);
 				old_feat := item.old_feature;
@@ -150,11 +150,11 @@ end;
 					old_feat.written_in = orig_written_in
 				then
 debug ("REPLICATION")
-	io.error.putstring ("%Tcreating rep depend unit for: ");
-	io.error.putstring (old_feat.feature_name);
-	io.error.putstring ("%N in class: ");
-	io.error.putstring (System.class_of_id (orig_written_in).class_name);
-	io.error.new_line;
+	--io.error.putstring ("%Tcreating rep depend unit for: ");
+	--io.error.putstring (old_feat.feature_name);
+	--io.error.putstring ("%N in class: ");
+	--io.error.putstring (System.class_of_id (orig_written_in).class_name);
+	--io.error.new_line;
 end;
 					old_name := old_feat.feature_name;
 					new_name := new_feat.feature_name;
@@ -173,8 +173,6 @@ end;
 				feat_dependence /= Void and then 
 				feat_dependence.count > 0
 			then
-io.error.putstring ("adding to tmp_rep_server%N");
-io.error.new_line;
 				Tmp_rep_depend_server.put (dependencies)
 			end;
 			go_to (cur)	
@@ -194,13 +192,13 @@ io.error.new_line;
 		do
 			cur := cursor;
 debug ("REPLICATION")
-	io.error.putstring ("update old features%N");
-	io.error.putstring ("feature name: ");
-	io.error.putstring (item.rep_feature.feature_name);
-	io.error.putstring (item.rep_feature.generator);
-	io.error.putstring ("written in: ");
-	io.error.putstring (item.rep_feature.written_class.class_name);
-	io.error.new_line;
+	--io.error.putstring ("update old features%N");
+	--io.error.putstring ("feature name: ");
+	--io.error.putstring (item.rep_feature.feature_name);
+	--io.error.putstring (item.rep_feature.generator);
+	--io.error.putstring ("written in: ");
+	--io.error.putstring (item.rep_feature.written_class.class_name);
+	--io.error.new_line;
 end;
 			from
 				start
@@ -211,16 +209,16 @@ end;
 				old_feat := old_feature_from_table (item.rep_feature,
 									orig_written_in);
 debug ("REPLICATION")
-	io.error.putstring ("rep feat: ");
-	io.error.putstring (item.rep_feature.feature_name);
-	io.error.putstring (" ");
-	io.error.putstring ("old feat: ");
-				if old_feat = Void then
-	io.error.putstring (" Void" );
-				else
-	io.error.putstring (old_feat.feature_name);
-				end;
-	io.error.new_line;
+	--io.error.putstring ("rep feat: ");
+	--io.error.putstring (item.rep_feature.feature_name);
+	--io.error.putstring (" ");
+	--io.error.putstring ("old feat: ");
+				--if old_feat = Void then
+	--io.error.putstring (" Void" );
+				--else
+	--io.error.putstring (old_feat.feature_name);
+				--end;
+	--io.error.new_line;
 end;
 				item.set_old_feature (old_feat);
 				forth

@@ -48,9 +48,8 @@ feature
 		end;
 
 	eiffel_symbol: PIXMAP is
-		once
-			!!Result.make;
-			Result.read_from_file (bm_Tower)
+		do
+			Result := bm_Tower
 		end;
 
 	tool_name: STRING is do Result := l_Project end;

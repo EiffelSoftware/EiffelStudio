@@ -18,8 +18,7 @@ feature
 	symbol: PIXMAP is
 			-- Icon for the routine tool
 		once
-			!!Result.make;
-			Result.read_from_file (bm_Routine)
+			Result := bm_Routine
 		end;
 
 	

@@ -598,14 +598,14 @@ end;
 						ast_context.clear2;
 					end;
 					record_suppliers (feature_i, dependances);
-				elseif (feature_i.is_deferred or else
-						feature_i.is_external) and then
-					(id = feature_i.written_in) then
+				--elseif (feature_i.is_deferred or else
+						--feature_i.is_external) and then
+					--(id = feature_i.written_in) then
 						-- Just type check it. See if VRRR or
 						-- VMRX error has occurred.
-					ast_context.set_a_feature (feature_i);
-					feature_i.type_check;
-					ast_context.clear2;
+					--ast_context.set_a_feature (feature_i);
+					--feature_i.type_check;
+					--ast_context.clear2;
 				end;
 
 				feat_table.forth;
@@ -2835,19 +2835,26 @@ end;
 			new_feat_as, old_feat_as: FEATURE_AS;
 			rep_features: LINKED_LIST [S_REP_NAME];
 		do
+			rep_class_info := Tmp_rep_info_server.item (id);
+debug ("ACTUAL_REPLICATION")
+	io.error.putstring ("Replication for class ");
+	io.error.putstring (class_name);
+	io.error.new_line;
+	rep_class_info.trace;	
+end;
 debug ("REPLICATION")
 	io.error.putstring ("Replication for class ");
 	io.error.putstring (class_name);
-	io.new_line;
+	io.error.new_line;
+	rep_class_info.trace;	
 end;
-			rep_class_info := Tmp_rep_info_server.item (id);
 			from
 				!!rep_table.make (rep_class_info.count, id);
 				rep_class_info.start
 			until
 				rep_class_info.after
 			loop
-				stored_rep_name_list := rep_class_info.item;
+				stored_rep_name_list := rep_class_info.item_for_iteration;
 				rep_features := stored_rep_name_list.replicated_features;
 				from
 					rep_features.start

@@ -46,8 +46,7 @@ feature
 
 	symbol: PIXMAP is 
 		once 
-			!!Result.make; 
-			Result.read_from_file (bm_Save) 
+			Result := bm_Save 
 		end;
  
 	
@@ -55,8 +54,7 @@ feature {NONE}
 
 	dark_symbol: PIXMAP is
 		once
-			!!Result.make;
-			Result.read_from_file (bm_Dark_save)
+			Result := bm_Dark_save
 		end;
 
 	command_name: STRING is do Result := l_Save end

@@ -32,9 +32,7 @@ feature {NONE} -- Initialization
 				orientation, weight, italic, underline,
 				strike_out, charset, output_precision,
 				clip_precision, quality, pitch_and_family, a_wel_string.item)
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			gdi_make
 		end
 
 	make_indirect (a_log_font: WEL_LOG_FONT) is
@@ -43,9 +41,7 @@ feature {NONE} -- Initialization
 			a_log_font_not_void: a_log_font /= Void
 		do
 			item := cwin_create_font_indirect (a_log_font.item)
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			gdi_make
 		end
 
 feature -- Re-initialisation

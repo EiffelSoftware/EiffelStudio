@@ -18,6 +18,7 @@
 #include "timehdr.h"
 #include "stream.h"
 #include "listen.h"
+#include "eif_logfile.h"
 
 #ifdef EIF_WIN32
 #define ACTIVE_TM	1		/* Active checks performed every 1 seconds */
@@ -38,7 +39,6 @@ rt_private int active_check(STREAM *sp, int pid);	/* Monitor connection to detec
 #endif
 #endif
 
-extern void dexit (int);
 
 
 rt_public void dwide_listen(void)

@@ -36,7 +36,7 @@ feature
                 do
                         ti ?= top
                         check
-                                valid_tooltip_initializer: ti/= void
+                                valid_tooltip_initializer: ti/= Void
                         end
                         Result := ti.label
                 end	
@@ -60,7 +60,7 @@ feature
 			-- the widgets with their corresponding name and parents) 
 			-- and attach them appropriately in the interface.
 		require
-			not_void_page: page /= Void;
+			not_Void_page: page /= Void;
 		do
 			pages.extend (page);
 		ensure
@@ -130,7 +130,7 @@ feature
             -- Set current_page to `page', update the drawing_sw
             -- working area with `page'
         require
-            not_void_page: page /= Void;
+            not_Void_page: page /= Void;
             page_exists: pages.has (page);
         do
 			current_page := page
@@ -142,9 +142,9 @@ feature {NONE}
 			-- Set current_page to `page', update the drawing_sw
 			-- working area with `page'
 		require
-			not_void_page: page /= Void;
+			not_Void_page: page /= Void;
 			page_exists: pages.has (page);
-			current_page_non_void: current_page /= Void
+			current_page_non_Void: current_page /= Void
 		do
 			current_page.hide;
 			current_page.set_symbol;
@@ -172,9 +172,6 @@ feature
 					!! mp;					
 					mp.set_watch_shape;
 					page.make_unmanaged (page_sw);
-					if Resources.background_color /= Void then
-						page.set_background_color (Resources.background_color)
-					end;
 					if not page.empty then
 						page.go_i_th (1);
 						page.update_display

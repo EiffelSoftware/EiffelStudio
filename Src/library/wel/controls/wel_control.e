@@ -147,19 +147,23 @@ feature {WEL_DIALOG} -- Implementation
 			-- Set `default_window_procedure' with the
 			-- previous window procedure and set the
 			-- new one with `cwel_window_procedure_address'
+		local
+			p: POINTER
 		do
 				-- Keep the previous one
-			default_window_procedure := cwel_integer_to_pointer (
-				cwin_get_window_long (item, Gwl_wndproc))
+			default_window_procedure := cwin_get_window_long (item, Gwl_wndproc)
+
 				-- Set the new one
-			cwin_set_window_long (item, Gwl_wndproc,
-				cwel_pointer_to_integer (cwel_window_procedure_address))
+			cwin_set_window_long (item, Gwl_wndproc, cwel_window_procedure_address)
+				
+			p := internal_data
+			feature {WEL_INTERNAL_DATA}.set_default_window_procedure (p, default_window_procedure)
 		end
 
-	call_default_window_procedure (msg, wparam, lparam: INTEGER): INTEGER is
+	call_default_window_procedure (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
 		do
 			Result := cwin_call_window_proc (default_window_procedure,
-				item, msg, wparam, lparam)
+				hwnd, msg, wparam, lparam)
 		end
 
 	destroy_from_dialog is

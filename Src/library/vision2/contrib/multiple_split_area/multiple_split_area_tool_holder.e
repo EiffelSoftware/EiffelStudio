@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Create `Current', and initalize with
 			-- tool `a_tool'. Use `display_name' for title of `a_tool'.
 		local
-			vertical_box, main_box: EV_VERTICAL_BOX
+			vertical_box: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
 			frame: EV_FRAME
 			temp_cell: EV_CELL
@@ -85,15 +85,30 @@ feature {NONE} -- Initialization
 				-- Set up docking for `Current'.
 			label.enable_dockable
 			label.set_real_source (main_box)
-			label.dock_ended_actions.extend (agent docking_started)
+			label.dock_ended_actions.extend (agent docking_ended)
+			label.dock_started_actions.extend (agent docking_started)
 		end
 		
 	docking_started is
-			--
+			-- Respond to dock starting on `Current'.
+		do
+			--parent_window (parent_area).lock_update
+			parent_area.initialize_docking_areas (Current)
+		end
+		
+		
+	docking_ended is
+			-- A dock has ended, so close dialog, and restore `Current'
 		local
 			dialog: EV_DOCKABLE_DIALOG
+			tool_holder: GB_TOOL_HOLDER
+			box: EV_VERTICAL_BOX
+			original_position, new_position: INTEGER
+			above: BOOLEAN
 		do
-				-- 
+			parent_area.store_positions
+			original_position := parent_area.all_holders.index_of (Current, 1)
+			parent_window (parent_area).lock_update
 			dialog := parent_dockable_dialog (tool)
 			if dialog /= Void then
 				dialog.close_request_actions.wipe_out
@@ -102,7 +117,26 @@ feature {NONE} -- Initialization
 			if parent /= Void then
 				parent.prune (Current)
 			end
-			parent_area.rebuild_without_holder (Current)
+				-- `main_box' is moved during a transport, so we must re-insert it
+				-- in `Current'
+			if dialog = Void then
+				if main_box.parent /= Void then
+					check
+						data_is_integer: main_box.parent.data.out.is_integer
+					end
+					new_position := main_box.parent.data.out.to_integer
+					check
+						position_retrieved: new_position > 0					
+					end
+					main_box.parent.prune_all (main_box)
+					extend (main_box)
+				end
+				parent_area.update_for_holder_position_change (original_position, new_position)
+				parent_area.rebuild
+				parent_area.restore_stored_positions
+			end
+			parent_area.remove_docking_areas
+			parent_window (parent_area).unlock_update
 		end
 		
 	destroy_dialog_and_restore (dialog: EV_DOCKABLE_DIALOG) is
@@ -112,6 +146,8 @@ feature {NONE} -- Initialization
 			parented_in_dialog: parent_dockable_dialog (tool) = dialog
 		do
 			tool.parent.prune_all (tool)
+			parent_area.linear_representation.prune_all (tool)
+			parent_area.all_holders.prune_all (Current)
 			dialog.destroy
 			parent_window (parent_area).lock_update
 			parent_area.insert_widget (tool, display_name, original_parent_position.min (parent_area.count + 1))
@@ -139,9 +175,11 @@ feature -- Basic operation
 			command_tool_bar_set: command_tool_bar = a_tool_bar
 		end
 		
-feature {MULTIPLE_SPLIT_AREA}-- Access
+feature {MULTIPLE_SPLIT_AREA, GB_TOOL_HOLDER}-- Access
 	
 	lower_box, upper_box: EV_VERTICAL_BOX
+	
+	main_box: EV_VERTICAL_BOX
 
 feature -- Access
 
@@ -213,6 +251,10 @@ feature -- Access
 		do
 			maximize_button.set_pixmap (parent_area.maximize_pixmap)
 		end
+
+feature {GB_TOOL_HOLDER} -- Implementation
+
+	top_insert_cell, bottom_insert_cell: EV_CELL
 		
 feature {MULTIPLE_SPLIT_AREA} -- Implemnetation
 

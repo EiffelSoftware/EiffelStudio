@@ -179,8 +179,17 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			-- Is `Current' external to `parent_area' and
 			-- therefore contained in a dockable dialog?
 		do
-			Result := parent_dockable_dialog (Current) /= Void
+			Result := parent_dockable_dialog (main_box) /= Void
+				-- Note that we do not check `Current', as `main_box'
+				-- is pruned from `Current' during the external dock, and only
+				-- re-inserted when the dialog is closed.
 		end
+		
+	is_minimized: BOOLEAN
+		-- Is `Current' minimized?
+		
+	is_maximized: BOOLEAN
+		-- Is `Current' maximized?
 
 feature {MULTIPLE_SPLIT_AREA}-- Access
 
@@ -190,12 +199,6 @@ feature {MULTIPLE_SPLIT_AREA}-- Access
 
 	tool: EV_WIDGET
 		-- Tool in `Current'.
-
-	is_minimized: BOOLEAN
-		-- Is `Current' minimized?
-		
-	is_maximized: BOOLEAN
-		-- Is `Current' maximized?
 		
 	disable_minimized is
 			-- Assign `False' to `minimized'.

@@ -5,7 +5,7 @@ class SHOW_CLUSTERS
 
 inherit
 
-	LONG_FORMATTER
+	FORMATTER
 		redefine
 			dark_symbol, display_temp_header, post_fix
 		end

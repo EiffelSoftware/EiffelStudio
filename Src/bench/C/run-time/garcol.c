@@ -606,6 +606,10 @@ public void reclaim()
 
 	full_sweep();				/* Reclaim ALL the objects in the system */
 
+#ifdef __WINDOWS_386__
+	eif_free_dlls();
+#endif
+
 #ifdef DEBUG
 	dprintf(1)("reclaim: ready to die!\n");
 #endif

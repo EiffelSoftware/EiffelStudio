@@ -91,7 +91,7 @@ feature -- Properties
 	dynamic_runtime,
 	exception_stack_managed,
 	force_recompile,
-	generate_eac_metadata,
+	full_type_checking,
 	msil_culture,
 	msil_assembly_compatibility,
 	msil_full_name,
@@ -189,7 +189,7 @@ feature {NONE} -- Codes and names.
 			Result.force (dynamic_runtime, "dynamic_runtime")
 			Result.force (exception_stack_managed, "exception_trace")
 			Result.force (force_recompile, "force_recompile")
-			Result.force (generate_eac_metadata, "generate_eac_metadata")
+			Result.force (full_type_checking, "full_type_checking")
 			Result.force (il_verifiable, "il_verifiable")
 			Result.force (inlining, "inlining")
 			Result.force (inlining_size, "inlining_size")
@@ -569,11 +569,11 @@ feature {COMPILER_EXPORTER}
 						error_found := True
 					end
 
-				when generate_eac_metadata then
+				when full_type_checking then
 					if value.is_no then
-						System.set_generate_eac_metadata (False)
+						System.set_full_type_checking (False)
 					elseif value.is_yes then
-						System.set_generate_eac_metadata (True)
+						System.set_full_type_checking (True)
 					else
 						error_found := True
 					end

@@ -637,31 +637,6 @@ feature {NONE} -- Status Setting
 			create Result.initialize (free_option, val)
 		end
 		
-	new_special_option_sd (type_id: INTEGER; a_name: STRING; flag: BOOLEAN): D_OPTION_SD is
-			-- Create new `D_OPTION_SD' node corresponding to a free
-			-- option clause. If `a_name' Void then it is `free_option (flag)'.
-		require
-			valid_type_id: type_id > 0
-			type_id_big_enough: type_id < feature {FREE_OPTION_SD}.free_option_count
-		local
-			argument_sd: FREE_OPTION_SD
-			v: OPT_VAL_SD
-		do
-			create argument_sd.make (type_id)
-			if a_name /= Void then
-				create v.make (new_id_sd (a_name, True))
-			else
-				if flag then
-					create v.make_yes
-				else
-					create v.make_no
-				end
-			end
-			create Result.initialize (argument_sd, v)
-		ensure
-			result_not_void: Result /= Void
-		end
-		
 feature {NONE} -- Element Change
 
 	initialize_mode is

@@ -149,6 +149,7 @@ feature -- Linear iteration
 			-- Put `item_for_iteration' on the first element of the cache
 		do
 			position := -1
+			after := false
 			forth 
 		end
 

@@ -42,7 +42,11 @@ feature -- Access
 			non_void_type: a_type /= Void
 		do
 			check_eac_for_type (a_type)
-			Result := cache_reflection.type_name (a_type)
+			if a_type.equals_type (feature {TYPE}.get_type ("System.Void")) then
+				Result := "NONE"
+			else
+				Result := cache_reflection.type_name (a_type)
+			end
 			if Result /= Void then
 				Result.prepend ((create {CODE_REFERENCED_ASSEMBLY}.make (a_type.assembly)).assembly_prefix)
 			else

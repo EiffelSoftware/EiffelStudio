@@ -209,38 +209,40 @@ feature -- Access
 			color_struct_size: INTEGER
 			temp_alpha: CHARACTER
 			temp_alpha_int: INTEGER
+			local_c: EV_C_EXTERNALS
 		do
+			local_c := C
 			create Result.make_with_alpha_zero (width, height)
 			Result.set_originating_pixmap (interface)
-			a_gdkimage := C.gdk_image_get (C.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
+			a_gdkimage := local_c.gdk_image_get (local_c.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
 			from
 				a_width := width * 4
-				a_color_map := C.gdk_rgb_get_cmap
-				a_visual := C.gdk_colormap_get_visual (a_color_map)
-				a_visual_type := C.gdk_visual_struct_type (a_visual)
-				a_color := C.c_gdk_color_struct_allocate
+				a_color_map := local_c.gdk_rgb_get_cmap
+				a_visual := local_c.gdk_colormap_get_visual (a_color_map)
+				a_visual_type := local_c.gdk_visual_struct_type (a_visual)
+				a_color := local_c.c_gdk_color_struct_allocate
 				array_size := a_width * height
 				array_area := Result.area
-				color_struct_size := C.c_gdk_color_struct_size
+				color_struct_size := local_c.c_gdk_color_struct_size
 				temp_alpha_int := 255
-				temp_alpha := temp_alpha_int.ascii_char
+				temp_alpha := temp_alpha_int.to_character
 			until
 				array_offset = array_size
 			loop
-				a_pixel := C.gdk_image_get_pixel (
+				a_pixel := local_c.gdk_image_get_pixel (
 					a_gdkimage,
 					(array_offset \\ (a_width) // 4), -- Zero based X coord
 					((array_offset) // a_width) -- Zero based Y coord
 				)
---C.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
-				array_area.put (C.gdk_color_struct_red (a_color).ascii_char, array_offset)
-				array_area.put (C.gdk_color_struct_green (a_color).ascii_char, array_offset + 1)
-				array_area.put (C.gdk_color_struct_blue (a_color).ascii_char, array_offset + 2)
+				local_c.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
+				array_area.put (local_c.gdk_color_struct_red (a_color).to_character, array_offset)
+				array_area.put (local_c.gdk_color_struct_green (a_color).to_character, array_offset + 1)
+				array_area.put (local_c.gdk_color_struct_blue (a_color).to_character, array_offset + 2)
 				array_area.put (temp_alpha, array_offset + 3)
 				array_offset := array_offset + 4
 			end
-			C.c_gdk_color_struct_free (a_color)
-			C.gdk_image_destroy (a_gdkimage)
+			local_c.c_gdk_color_struct_free (a_color)
+			local_c.gdk_image_destroy (a_gdkimage)
 		end
 
 feature -- Duplication

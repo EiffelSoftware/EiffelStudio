@@ -167,7 +167,6 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			second: like ev_type
 			temp_string: STRING
 			box_parent1, box_parent2: EV_BOX
-			child_object: GB_OBJECT
 			children: ARRAYED_LIST [GB_OBJECT]
 		do
 			full_information := get_unique_full_info (element)

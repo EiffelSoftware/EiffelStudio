@@ -49,8 +49,6 @@ feature {GB_XML_STORE} -- Output
 		local
 			temp_column_positions_string, temp_row_positions_string,
 			temp_widths_string, temp_heights_string: STRING
-			an_object: GB_OBJECT
-			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			current_table_widget: EV_WIDGET
 			children: ARRAYED_LIST [GB_OBJECT]
 		do			

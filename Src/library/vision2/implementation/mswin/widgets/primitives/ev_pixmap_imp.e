@@ -1,11 +1,11 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description	: "EiffelVision pixmap. Mswindows implementation for %
-				  %simple pixmap (not drawable, not self-displayable)"
-	status		: "See notice at end of class"
-	date		: "$Date$"
-	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	description:
+		"Eiffel Vision pixmap. Mswindows implementation for%N%
+		%simple pixmap (not drawable, not self-displayable)"
+	status: "See notice at end of class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_PIXMAP_IMP
@@ -13,7 +13,8 @@ class
 inherit
 	EV_PIXMAP_I
 		redefine
-			interface
+			interface,
+			on_parented
 		end
 
 	EV_PIXMAP_IMP_STATE
@@ -26,7 +27,7 @@ inherit
 			default_create
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -1176,27 +1177,32 @@ invariant
 
 end -- class EV_PIXMAP_IMP
 
---|----------------------------------------------------------------
---| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/12 17:00:17  brendel
+--| Added redefine of on_parented.
+--| Fixed indexing clause to EV2 standards.
+--| Updated copyright notice.
+--|
 --| Revision 1.29  2000/04/12 01:34:55  pichery
 --| New pixmap implementation.
 --| Use 3 differents states depending on

@@ -42,6 +42,8 @@ feature -- Initialization
 			description.append (Space)
 			description.append (Interface)
 			description.append (Dot)
+
+			type_library_descriptor := a_descriptor.type_library_descriptor
 		end
 
 feature -- Access

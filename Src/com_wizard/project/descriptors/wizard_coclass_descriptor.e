@@ -47,9 +47,6 @@ feature -- Access
 	lcid: INTEGER
 			-- Locale of member names and doc strings.
 
-	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
-			-- Type library descriptor
-
 	default_dispinterface_name: STRING
 			-- Name of default interface.
 
@@ -102,16 +99,6 @@ feature -- Element Change
 			lcid := a_lcid
 		ensure
 			valid_lcid: lcid = a_lcid
-		end
-
-	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
-			-- Set `type_library_descriptor' with `a_descriptor'.
-		require
-			non_void_descriptor: a_descriptor /= Void
-		do
-			type_library_descriptor := a_descriptor
-		ensure
-			valid_type_library: type_library_descriptor = a_descriptor
 		end
 
 	set_default_dispinterface (a_name: STRING) is

@@ -45,7 +45,6 @@ feature -- Basic operations
 			tmp_type_attr: ECOM_TYPE_ATTR
 			tmp_type_lib: ECOM_TYPE_LIB
 			tmp_guid: ECOM_GUID
-			tmp_lib_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
 			name := clone (a_documentation.name)
 
@@ -66,18 +65,18 @@ feature -- Basic operations
 			create guid.make_from_guid (tmp_type_attr.guid)
 
 
-			tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
+			type_library_descriptor := system_descriptor.library_descriptor (tmp_guid)
 			if name = Void or else name.empty then
 				create name.make (100)
 				name.append ("interface_")
-				name.append (tmp_lib_descriptor.name)
+				name.append (type_library_descriptor.name)
 				name.append ("_")
 				name.append_integer (a_type_info.index_in_type_lib + 1)
 			end
 
 			if prefixed_libraries.has (tmp_guid) then
 				name.prepend (Underscore)
-				name.prepend (tmp_lib_descriptor.name)
+				name.prepend (type_library_descriptor.name)
 			end
 
 			eiffel_class_name := name_for_class (name, type_kind, False)
@@ -90,7 +89,7 @@ feature -- Basic operations
 			system_descriptor.add_c_type (name)
 
 			create c_header_file_name.make (100)
-			if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
+			if not Non_generated_type_libraries.has (type_library_descriptor.guid) then
 				c_header_file_name := header_name (name)
 			end
 
@@ -131,6 +130,7 @@ feature -- Basic operations
 				a_descriptor.set_lcid (lcid)
 				a_descriptor.set_vtbl_size (vtbl_size)
 				a_descriptor.set_flags (flags)
+				a_descriptor.set_type_library (type_library_descriptor)
 			end
 
 	create_function_descriptors (a_type_info: ECOM_TYPE_INFO) is
@@ -274,6 +274,9 @@ feature {NONE} -- Implementation
 
 	feature_names: SORTED_TWO_WAY_LIST [STRING]
 			-- Names of functions and features.
+
+	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			-- Type library descriptor
 
 feature {NONE} -- Implementation
 

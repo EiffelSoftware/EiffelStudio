@@ -84,7 +84,7 @@ feature -- Properties
 	msil_full_name,
 	il_verifiable,
 	cls_compliant,
-	cls_compliant_name,
+	dotnet_naming_convention,
 	inlining, 
 	inlining_size,
 	ise_gc_runtime,
@@ -176,7 +176,7 @@ feature {NONE} -- Codes and names.
 			Result.force (force_recompile, "force_recompile");
 			Result.force (generate_eac_metadata, "generate_eac_metadata");
 			Result.force (cls_compliant, "cls_compliant")
-			Result.force (cls_compliant_name, "cls_compliant_name")
+			Result.force (dotnet_naming_convention, "dotnet_naming_convention")
 		end
 
 feature {COMPILER_EXPORTER}
@@ -414,28 +414,28 @@ feature {COMPILER_EXPORTER}
 						-- names are too. However, you might want to
 						-- keep your Eiffel names in which case, after
 						-- having set `cls_compliant (yes)' you
-						-- have to do `cls_compliant_name (no)'. If
-						-- you do it the other way the `cls_compliant_name (no)'
+						-- have to do `dotnet_naming_convention (no)'. If
+						-- you do it the other way the `dotnet_naming_convention (no)'
 						-- option will not be taken into account.
 						-- Also you cannot change this option after
 						-- the first successful compilation as it might
 						-- break a lot of stuff.
 					if value.is_no then
 						System.set_cls_compliant (False)
-						System.set_cls_compliant_name (False)
+						System.set_dotnet_naming_convention (False)
 					elseif value.is_yes then
 						System.set_cls_compliant (True)
-						System.set_cls_compliant_name (True)
+						System.set_dotnet_naming_convention (True)
 					else
 						error_found := True
 					end
 
-				when cls_compliant_name then
+				when dotnet_naming_convention then
 						-- See `cls_compliant' comment above.
 					if value.is_no then
-						System.set_cls_compliant_name (False)
+						System.set_dotnet_naming_convention (False)
 					elseif value.is_yes then
-						System.set_cls_compliant_name (True)
+						System.set_dotnet_naming_convention (True)
 					else
 						error_found := True
 					end

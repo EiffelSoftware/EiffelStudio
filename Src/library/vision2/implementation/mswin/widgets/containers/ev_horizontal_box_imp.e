@@ -99,7 +99,7 @@ feature {NONE} -- Basic operation
 		do
 			if childvisible_nb /= 0 then
 				lchild := ev_children
-				expandable := children_expandable
+				expandable := non_expandable_children
 				cur := lchild.cursor
 				cheight := client_height
 				bwidth := border_width

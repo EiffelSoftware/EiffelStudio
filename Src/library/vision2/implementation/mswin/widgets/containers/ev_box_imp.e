@@ -78,14 +78,14 @@ feature -- Access
 	childexpand_nb: INTEGER is
 			-- Number of children, which are expanded and visible
 		do
-			if children_expandable = Void then
+			if non_expandable_children = Void then
 				Result := childvisible_nb
 			else
-				Result := childvisible_nb - children_expandable.count
+				Result := childvisible_nb - non_expandable_children.count
 			end
 		end
 
-	children_expandable: ARRAYED_LIST [INTEGER]
+	non_expandable_children: ARRAYED_LIST [INTEGER]
 			-- Position of the non expandable children in growing order.
 
 feature -- Status report
@@ -96,14 +96,14 @@ feature -- Status report
 		local
 			child_imp: EV_WIDGET_IMP
 		do
-			if children_expandable = Void then
+			if non_expandable_children = Void then
 				Result := True
 			else
 				child_imp ?= child.implementation
 				check
 					valid_cast: child_imp /= Void
 				end
-				Result := not children_expandable.has (ev_children.index_of (child_imp, 1))
+				Result := not non_expandable_children.has (ev_children.index_of (child_imp, 1))
 			end
 		end
 
@@ -142,19 +142,19 @@ feature -- Status setting
 
 			-- Then, we set the information
 			if flag then
-				if children_expandable /= Void then
-					children_expandable.prune_all (index)
-					if children_expandable.empty then
-						children_expandable := Void
+				if non_expandable_children /= Void then
+					non_expandable_children.prune_all (index)
+					if non_expandable_children.empty then
+						non_expandable_children := Void
 					end
 				end
 			else
-				if children_expandable = Void then
-					create children_expandable.make (1)
-					children_expandable.extend (index)
+				if non_expandable_children = Void then
+					create non_expandable_children.make (1)
+					non_expandable_children.extend (index)
 				else
 					from
-						list := children_expandable
+						list := non_expandable_children
 						placed := False
 						list.start
 					until

@@ -89,7 +89,15 @@ feature -- VARIANT field names -- 14
 
 	Variant_byref: STRING is "byref"
 
-	Variant_brecval: STRING is "brecVal"
+	Variant_brecval: STRING is "pvRecord"
+	
+	Variant_llval: STRING is "llVal"
+	
+	Variant_ullval: STRING is "ullVal"
+
+	Variant_pllval: STRING is "pllVal"
+	
+	Variant_pullval: STRING is "pullVal"
 
 feature -- C to Eiffel conversion function names for arrays.
 

@@ -1265,27 +1265,8 @@ feature {NONE} -- Events
 	cpu_ticks: INTEGER is
 			-- 
 		do
-			c_cpu_ticks ($Result)
 		end
 		
-	c_cpu_ticks (i: TYPED_POINTER [INTEGER]) is
-			-- CPU ticks since app started
-		external
-			"C inline use <windows.h>"
-		alias
-			"[
-				{
-				 	_int64 ticks,*ticks_ptr;
- 					FILETIME creation,exit,kernel,user;
-  					BOOL status;
-  					status = GetProcessTimes(GetCurrentProcess(),&creation,&exit,&kernel,&user);
-  					ticks = *(_int64 *)&user+*(_int64 *)&kernel;
-  					ticks = ticks / (10000000/CLOCKS_PER_SEC);
-					*$i = ticks;
-				}
-			]"
-		end
-			
 	timer: EV_TIMEOUT
 			-- Timer used to force direct the graph.
 			

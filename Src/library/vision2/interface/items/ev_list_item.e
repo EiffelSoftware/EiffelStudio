@@ -1,8 +1,8 @@
 indexing	
 	description: 
-		"Eiffel Vision list item. For use in EV_LIST and EV_COMBO_BOX."
+		"Item for use in EV_LIST and EV_COMBO_BOX."
 	status: "See notice at end of class"
-	keywords: "list, item"
+	keywords: "list, item, combo"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,7 +23,7 @@ create
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is `Current' selected?
+			-- Is `Current' selected in `parent'?
 		require
 			parent_not_void: parent /= Void
 		do
@@ -32,8 +32,73 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_selected
 		end
 
+feature -- Status setting
+
+	enable_select is
+			-- Set `is_selected' `True'.
+		require
+			parent_not_void: parent /= Void
+		do
+			implementation.set_selected (True)
+		ensure
+			is_selected: is_selected
+		end
+
+	disable_select is
+			-- Set `is_selected' `False'.
+		require
+			parent_not_void: parent /= Void
+		do
+			implementation.set_selected (False)
+		ensure
+			not_selected: not is_selected
+		end
+
+	toggle is
+			-- Change `is_selected'.
+		require
+			parent_not_void: parent /= Void
+		do
+			implementation.toggle
+		ensure
+			state_changed: old is_selected = not is_selected
+		end
+
+feature -- Event handling
+
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to be performed when selected.
+
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to be performed when deselected.
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_LIST_ITEM_I
+			-- Responsible for interaction with the native graphics toolkit.
+
+feature {NONE} -- Implementation
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_LIST_ITEM_IMP} implementation.make (Current)
+		end
+
+	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
+		do
+			{EV_SIMPLE_ITEM} Precursor
+			create select_actions
+			create deselect_actions
+		end
+
+feature -- Obsolete
+
 	is_first: BOOLEAN is
 			-- Is `Current' first in list?
+		obsolete
+			"use my_list.first = Current"
 		require
 			parent_not_void: parent /= Void
 		do
@@ -44,6 +109,8 @@ feature -- Status report
 
 	is_last: BOOLEAN is
 			-- Is `Current' last in list?
+		obsolete
+			"use my_list.last = Current"
 		require
 			parent_not_void: parent /= Void
 		do
@@ -51,68 +118,6 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.is_last
 		end
-
-feature -- Status setting
-
-	enable_select is
-			-- Select `Current' in list.
-		require
-			parent_not_void: parent /= Void
-		do
-			implementation.set_selected (True)
-		ensure
-			is_selected: is_selected
-		end
-
-	disable_select is
-			-- Deselect `Current' in list.
-		require
-			parent_not_void: parent /= Void
-		do
-			implementation.set_selected (False)
-		ensure
-			not_selected: not is_selected
-		end
-
-	toggle is
-			-- Change selection state.
-		require
-			has_parent: parent /= Void
-		do
-			implementation.toggle
-		ensure
-			state_changed: old is_selected = not is_selected
-		end
-
-feature -- Event handling
-
-	select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when item is selected.
-
-	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when item is deselected.
-
-feature {NONE} -- Implementation
-
-	create_implementation is
-			-- Create implementation of list item.
-		do
-			create {EV_LIST_ITEM_IMP} implementation.make (Current)
-		end
-
-	create_action_sequences is
-			-- Create action sequences.
-		do
-			{EV_SIMPLE_ITEM} Precursor
-			create select_actions
-			create deselect_actions
-		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_LIST_ITEM_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
 
 invariant
 	select_actions_not_void: select_actions /= Void
@@ -141,6 +146,9 @@ end -- class EV_LIST_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/23 01:39:43  oconnor
+--| comments, formatting
+--|
 --| Revision 1.28  2000/03/09 20:09:09  king
 --| Removed inheritance from PND, now in simple item
 --|

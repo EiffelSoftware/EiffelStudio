@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision menu separator."
+		"Horizontal scored line separator for use in EV_MENU."
 	status: "See notice at end of class."
 	keywords: "menu, item, separator"
 	date: "$Date$"
@@ -21,17 +21,18 @@ inherit
 create
 	default_create
 
-feature {NONE} -- Implementation
-
-	create_implementation is
-		do
-			create {EV_MENU_SEPARATOR_IMP} implementation.make (Current)
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_MENU_SEPARATOR_I
-			-- Platform dependent access.
+		-- Responsible for interaction with the native graphics toolkit.
+
+feature {NONE} -- Implementation
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_MENU_SEPARATOR_IMP} implementation.make (Current)
+		end
 
 end -- class EV_MENU_SEPARATOR
 
@@ -56,6 +57,9 @@ end -- class EV_MENU_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/23 01:40:33  oconnor
+--| comments, formatting
+--|
 --| Revision 1.7  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|
@@ -90,7 +94,6 @@ end -- class EV_MENU_SEPARATOR
 --|
 --| Revision 1.2.2.2  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -215,8 +215,6 @@ feature -- IL code generation
 		local
 			left_type: TYPE_I
 			right_type: TYPE_I
-			cl_type: CL_TYPE_I
-			feat: FEATURE_I
 		do
 			left_type := context.real_type (left.type)
 			right_type := context.real_type (right.type)

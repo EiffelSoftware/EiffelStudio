@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 				-- Doing the convertion this way will stop us from walking down a string
 				-- twice when there is no %N nor %R%N in the string.
 			if index > 0 and then (index = 1 or else a_string @ index - 1 /= '%R') then
-				a_string.replace_substring_all ("%N", "%R%N")
+				clone (a_string).replace_substring_all ("%N", "%R%N")
 			end
 		end
 
@@ -476,6 +476,11 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2001/06/29 17:21:15  rogers
+--| `convert_string' now clones the string before modifying it. Fixes a bug
+--| where appending a text with a %N twice from within an agent would cause
+--| the second time to fail as the string contained a %R.
+--|
 --| Revision 1.39  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

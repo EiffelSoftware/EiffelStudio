@@ -8,6 +8,11 @@ deferred class
 
 inherit
 	EB_GRAPHICAL_COMMAND
+	
+	EB_SHARED_WINDOW_MANAGER
+		export
+			{NONE} all
+		end
 
 feature -- Access
 

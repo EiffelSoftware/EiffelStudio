@@ -29,10 +29,13 @@ feature {NONE} -- Initialization
 		end
 
 	make_for_test is
+		local
+			pixmap: EV_PIXMAP
 		do
 			default_create
-			extend (create {EV_LABEL}.make_with_text ("Label in a scrollable area."))
-			item.set_minimum_size (150,150)
+			create pixmap
+			pixmap.set_with_named_file ("test_pixmap")
+			extend (pixmap)
 		end
 
 feature -- Access
@@ -156,6 +159,9 @@ end -- class EV_SCROLLABLE_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/03 02:56:00  oconnor
+--| pux pixmap in area in make_with_test
+--|
 --| Revision 1.12  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

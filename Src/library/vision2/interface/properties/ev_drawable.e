@@ -401,7 +401,7 @@ feature -- Drawing operations (filled)
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
-			-- The arc is then closed by two segments through (`x', 'y').
+			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians, start at the 3
 			-- o'clock angle and grow counterclockwise.
 		require

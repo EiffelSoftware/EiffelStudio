@@ -137,7 +137,7 @@ feature -- Status Report
 	is_text_on_button: BOOLEAN
 			-- Is there a text displayed in the toggle button as well as a pixmap?
 
-feature {EB_EXPLORER_BAR_MANAGER} -- Status setting
+feature -- Status setting
 
 	unmaximize is
 			-- If an item is maximized, unmaximize it.

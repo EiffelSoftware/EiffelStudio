@@ -268,6 +268,13 @@ feature -- Status setting
 			then
 				explorer_parent.associated_command.execute
 			end
+			if
+					-- Another tool is maximized.
+				 not explorer_parent.is_maximized and
+				 explorer_parent.parent.is_maximized
+			then
+				explorer_parent.parent.unmaximize
+			end
 		end
 
 	pop_feature_flat is

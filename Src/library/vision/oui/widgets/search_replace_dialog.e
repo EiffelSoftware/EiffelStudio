@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 		ensure 
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name);
-				in_replace_mode: replace_mode
+			in_replace_mode: replace_mode
 		end;
 
 feature -- Status report
@@ -69,7 +69,7 @@ feature -- Status report
 		end
 
 	replace_text: STRING is
-			-- Text to replace `search_text' with.
+			-- Text to replace `search_text' with
 		require
 			exists: not destroyed;
 			replace_mode: replace_mode
@@ -96,7 +96,7 @@ feature -- Status report
 feature -- Status setting
 
 	show_direction_request is
-			-- Show the direction requestor
+			-- Show the direction requestor.
 		require
 			exists: not destroyed;
 			not_popped_up: not is_popped_up
@@ -114,7 +114,7 @@ feature -- Status setting
 		end
 
 	enable_direction_request is
-			-- Enable the direction requestor
+			-- Enable the direction requestor.
 		require
 			exists: not destroyed;
 			not_popped_up: not is_popped_up
@@ -123,7 +123,7 @@ feature -- Status setting
 		end
 
 	disable_direction_request is
-			-- Disable the direction requestor
+			-- Disable the direction requestor.
 		require
 			exists: not destroyed;
 			not_popped_up: not is_popped_up
@@ -132,7 +132,7 @@ feature -- Status setting
 		end
 
 	show_match_case is
-			-- Show match case requestor
+			-- Show match case requestor.
 		require
 			exists: not destroyed;
 			not_popped_up: not is_popped_up
@@ -141,7 +141,7 @@ feature -- Status setting
 		end
 
 	hide_match_case is
-			-- Hide match case requestor
+			-- Hide match case requestor.
 		require
 			exists: not destroyed;
 			not_popped_up: not is_popped_up
@@ -150,7 +150,7 @@ feature -- Status setting
 		end
 
 	enable_match_case is
-			-- Enable match case requestor
+			-- Enable match case requestor.
 		require
 			exists: not destroyed;
 			not_popped_up: not is_popped_up
@@ -159,7 +159,7 @@ feature -- Status setting
 		end
 
 	disable_match_case is
-			-- Disable match case requestor
+			-- Disable match case requestor.
 		require
 			exists: not destroyed;
 			not_popped_up: not is_popped_up
@@ -178,7 +178,7 @@ feature -- Status setting
 		end
 
 	set_replace_text (a_text: STRING)  is
-			-- Set `replace_text' to `a_text'
+			-- Set `replace_text' to `a_text'.
 		require
 			exists: not destroyed
 		do
@@ -196,7 +196,7 @@ feature -- Status setting
 		end
 
 	set_search_text (a_text: STRING) is
-			-- Set `search_text' to `a_text'
+			-- Set `search_text' to `a_text'.
 		require
 			exists: not destroyed;
 			valid_text: a_text /= Void

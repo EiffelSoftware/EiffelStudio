@@ -49,7 +49,7 @@ feature
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		do
-			if Tmp_byte_server.has (an_id) then
+			if Tmp_inv_byte_server.has (an_id) then
 				Result := Tmp_inv_byte_server.disk_item (an_id);
 			else
 				Result := disk_server_item (an_id);

@@ -96,7 +96,8 @@ feature {NONE} -- Implementation
 			arg: EV_ARGUMENT1 [ERROR_POPUPER]
 --			set_dialog_att: SET_DIALOG_ATTRIBUTES_COM
 		do
-			create error_d.make_default (par.popuper_parent, Widget_names.error_window, Void)
+			create error_d.make (par.popuper_parent)
+			error_d.set_title (Widget_names.error_window)
 			create arg.make (par)
 			error_d.add_ok_command (Current, arg)
 --			!! set_dialog_att

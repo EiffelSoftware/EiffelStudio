@@ -114,6 +114,7 @@ feature -- Element change
 			w.wel_set_parent (ww)
 			w.set_top_level_window_imp (top_level_window_imp)
 			notify_change (2 + 1)
+			new_item_actions.call ([v])
 		end
 
 	replace (v: like item) is
@@ -150,6 +151,7 @@ feature -- Element change
 			ww ?= Current
 			w.wel_set_parent (ww)
 			w.set_top_level_window_imp (top_level_window_imp)
+			new_item_actions.call ([v])
 		end
 
 	put_right (v: like item) is
@@ -168,9 +170,9 @@ feature -- Element change
 			ww ?= Current
 			w.wel_set_parent (ww)
 			w.set_top_level_window_imp (top_level_window_imp)
+			new_item_actions.call ([v])
 		end
 
-	
 
 feature -- Removal
 
@@ -204,6 +206,7 @@ feature -- Removal
 			a_parent_imp: EV_CONTAINER_IMP
 			old_index: INTEGER
 		do
+			remove_item_actions.call ([item])
 			old_index := index
 			child_imp ?= item.implementation
 			check

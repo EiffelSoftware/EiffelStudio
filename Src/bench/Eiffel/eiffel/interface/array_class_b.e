@@ -4,7 +4,6 @@ class
 	ARRAY_CLASS_B 
 
 inherit
-
 	CLASS_C
 		redefine
 			check_validity, mark_all_used
@@ -93,7 +92,7 @@ feature	-- Dead code removal
 			-- Mark `make', default creation routine of ARRAYS used at
 			-- run-time.
 		do
-			remover.record (feature_table.item ("make"), Current);
+			remover.record (feature_table.item_id (Names_heap.make_name_id), Current);
 		end;
 
 feature {NONE}

@@ -18,6 +18,11 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -463,8 +468,8 @@ feature -- Plug and Makefile file
 			creators.start
 
 				-- Make string declaration
-			set_count_feat := string_cl.feature_table.item ("set_count")
-			set_make_feat := string_cl.feature_table.item ("make")
+			set_count_feat := string_cl.feature_table.item_id (Names_heap.set_count_name_id)
+			set_make_feat := string_cl.feature_table.item_id (Names_heap.make_name_id)
 			str_make_name := clone (Encoder.feature_name (id, set_make_feat.body_index))
 			set_count_name := clone (Encoder.feature_name (id, set_count_feat.body_index))
 			buffer.putstring ("extern void ")
@@ -473,7 +478,7 @@ feature -- Plug and Makefile file
 			buffer.putstring (set_count_name)
 			buffer.putstring ("();%N")
 			if system.has_separate then
-				to_c_feat := string_cl.feature_table.item ("to_c")
+				to_c_feat := string_cl.feature_table.item_id (Names_heap.to_c_name_id)
 				to_c_name := clone (Encoder.feature_name (id, to_c_feat.body_index))
 				buffer.putstring ("extern void ")
 				buffer.putstring (to_c_name)
@@ -494,7 +499,7 @@ feature -- Plug and Makefile file
 				arr_type_id := cl_type.type_id
 				creators := array_cl.creators
 				creators.start
-				creation_feature := array_cl.feature_table.item ("make")
+				creation_feature := array_cl.feature_table.item_id (Names_heap.make_name_id)
 				arr_make_name := clone (Encoder.feature_name (id, creation_feature.body_index))
 				system.set_array_make_name (arr_make_name)
 			else
@@ -513,7 +518,7 @@ feature -- Plug and Makefile file
 			if rout_cl.types /= Void and then not rout_cl.types.is_empty then
 				cl_type := rout_cl.types.first
 				id := cl_type.static_type_id
-				set_rout_disp_feat := rout_cl.feature_table.item ("set_rout_disp")
+				set_rout_disp_feat := rout_cl.feature_table.item_id (Names_heap.set_rout_disp_name_id)
 				set_rout_disp_name := clone (Encoder.feature_name (id, set_rout_disp_feat.body_index))
 
 				buffer.putstring ("extern void ")

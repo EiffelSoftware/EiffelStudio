@@ -1,14 +1,21 @@
--- Byte code for manifest arrays
+indexing
+	description: "Byte code for manifest arrays"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ARRAY_CONST_B 
 
 inherit
-
 	EXPR_B
 		redefine
 			make_byte_code, enlarged, enlarge_tree, is_unsafe,
 			optimized_byte_node, calls_special_features, size,
 			pre_inlined_code, inlined_byte_code, generate_il
+		end
+
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
 		end
 	
 feature 
@@ -140,7 +147,7 @@ feature -- Byte code generation
 			target_type := real_ty.meta_generic.item (1);
 			base_class := real_ty.base_class;
 			f_table := base_class.feature_table;
-			feat_i := f_table.item ("make");
+			feat_i := f_table.item_id (Names_heap.make_name_id);
 				-- Need to insert expression into
 				-- the stack back to front in order
 				-- to be inserted into the area correctly

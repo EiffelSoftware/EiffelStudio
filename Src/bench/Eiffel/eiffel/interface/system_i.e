@@ -642,8 +642,8 @@ feature -- default_rescue routine
 		once
 			if any_class /= Void and then
 					any_class.compiled_class /= Void then
-				feature_i := any_class.compiled_class.feature_table.item 
-														("default_rescue")
+				feature_i := any_class.compiled_class.
+					feature_table.item_id (names.default_rescue_name_id)
 				if feature_i /= Void then
 					Result := feature_i.rout_id_set.first
 				end
@@ -661,8 +661,8 @@ feature -- default_create routine
 		once
 			if any_class /= Void and then
 					any_class.compiled_class /= Void then
-				feature_i := any_class.compiled_class.feature_table.item 
-														("default_create")
+				feature_i := any_class.compiled_class.
+					feature_table.item_id (names.default_create_name_id)
 				if feature_i /= Void then
 					Result := feature_i.rout_id_set.first
 				end
@@ -2985,7 +2985,7 @@ feature -- Dispose routine
 			feature_i: FEATURE_I
 		once
 			if memory_class /= Void then
-				feature_i := memory_class.feature_table.item ("dispose")
+				feature_i := memory_class.feature_table.item_id (names.dispose_name_id)
 				if feature_i /= Void then
 					Result := feature_i.rout_id_set.first
 				end

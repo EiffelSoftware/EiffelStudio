@@ -42,11 +42,18 @@ feature {NONE} -- Implementation
 			when Cmd_exit then
 				destroy
 			when Cmd_print then
-				printer_dc.start_document ("WEL Print Test")
-				!! rect.make (0, 0, x_resolution, y_resolution)
-				draw (printer_dc, rect)
-				printer_dc.new_frame
-				printer_dc.end_document
+				!! printer_dc.make
+				if printer_dc.exists then
+					printer_dc.start_document ("WEL Print Test")
+					printer_dc.start_page
+					!! rect.make (0, 0, x_resolution, y_resolution)
+					draw (printer_dc, rect)
+					printer_dc.end_page
+					printer_dc.end_document
+				else
+					error_message_box ("Unable to print. %
+						%There is no default printer.")
+				end
 			end
 		end
 
@@ -67,23 +74,18 @@ feature {NONE} -- Implementation
 			a_dc.draw_centered_text ("Hello, Printer!", a_rect)
 		end
 
-	printer_dc: WEL_DEFAULT_PRINTER_DC is 
+	printer_dc: WEL_DEFAULT_PRINTER_DC
 			-- DC used to print
-		once
-			!! Result.make
-		ensure
-			Result_not_void: Result /= Void
-		end
 
 	x_resolution: INTEGER is
 			-- Horizontal printer resolution 
-		once
+		do
 			Result := printer_dc.device_caps (Horizontal_resolution)
 		end
 
 	y_resolution: INTEGER is
 			-- Vertical printer resolution 
-		once
+		do
 			Result := printer_dc.device_caps (Vertical_resolution)
 		end
 

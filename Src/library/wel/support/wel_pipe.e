@@ -218,12 +218,16 @@ feature -- Output
 			valid_count: count > 0
 			output_open: not output_closed
 		local
-			str_area: ANY
+			l_str: WEL_STRING
+			l_read_bytes: INTEGER
 		do
-			create last_string.make (count)
-			str_area := last_string.area
-			last_read_successful := cwin_read_file (output_handle, $str_area, count, $last_read_bytes, default_pointer)
-			last_string.set_count (last_read_bytes)
+			create l_str.make_empty (count)
+			last_read_successful := cwin_read_file (output_handle, l_str.item,
+				count, $l_read_bytes, default_pointer)
+
+			last_read_bytes := l_read_bytes
+			l_str.set_count (l_read_bytes)
+			last_string := l_str.string
 		end
 
 feature {NONE} -- Implementation

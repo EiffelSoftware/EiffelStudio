@@ -1,0 +1,46 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Efficient expanded implementation for .NET</title>
+<link rel="stylesheet" type="text/css" href="../../default.css">
+</head>
+
+<body>
+
+<h1>Efficient .NET implementation of expanded</h1>
+<h2>Type Layout</h2>
+<p>From our previous code generation which generated:</p>
+<ol>
+  <li>A</li>
+  <li>Imp.A</li>
+  <li>Create.A</li>
+</ol>
+<p>we found that C# could not cope with those if A belonged to a non-null 
+namespace. So first we need to let the user decide if he wants a dot between 
+`Imp' or `Create' and the class name.</p>
+<p>But now we want expanded types, so we need two different implementations, one 
+that will correspond to the Eiffel reference type (equivalent to our `Imp' 
+class) and the other that will correspond to the expanded type. Therefore we 
+came up with the following new classes:</p>
+<ol>
+  <li>A</li>
+  <li>Ref.A (reference implementation)</li>
+  <li>Value.A (expanded implementation)</li>
+  <li>CreateRef.A</li>
+  <li>CreateValue.A</li>
+</ol>
+<p>where you can replace the dot by nothing depending on the code generation 
+flag specified by user.</p>
+<h2>Code generation</h2>
+<p>Once the layout is done, then it is quite easy to do the code generation. 
+Each time that an Eiffel routine refers to an expanded type we should use its 
+expanded implementation Value.A as part of the signature (locals, arguments, 
+attributes), otherwise we use its associated interface A.</p>
+
+</body>
+
+</html>

@@ -9,8 +9,6 @@ class
 	EV_CURSOR_CODE_IMP
 
 inherit
-	EV_CURSOR_CODE_I
-
 	WEL_IDC_CONSTANTS
 		export
 			{NONE} all

@@ -15,15 +15,15 @@ inherit
 			interface
 		end
 
-	EV_COMPOSED_ITEM_IMP
+	EV_ITEM_IMP
 		rename
-			count as columns,
-			set_count as set_columns
+	--		count as columns,
+	--		set_count as set_columns
 		undefine
 			parent
 		redefine
 			destroy,
-			set_cell_text,
+	--		set_cell_text,
 			parent_imp,
 			interface
 		end
@@ -36,12 +36,74 @@ inherit
 			pnd_press
 		end
 
+	EV_PIXMAPABLE_IMP
+		redefine
+			interface
+		end
+
 create
 	make
 
-feature -- Access
+feature {NONE} -- Initialization
 
---|FIXME
+	make (an_interface: like interface)is
+			-- Create the row with one column by default.
+			-- The sub-items start at 2. 1 is the index of
+			-- the current item.
+		do
+			base_make (an_interface)
+		--	create internal_text.make (1)
+		--	internal_text.extend ("")
+		--	create internal_pixmap.make (1)
+		--	internal_pixmap.extend (Void)
+		end
+
+	initialize is
+		do
+			is_initialized := True
+		end
+
+feature -- Status report
+
+	is_selected: BOOLEAN is
+			-- Is the item selected
+		do
+			Result := parent_imp.internal_is_selected (Current)
+		end
+
+feature -- Status setting
+
+	enable_select is
+			-- Select Current.
+			-- Must be in a multi column list.
+		do
+			parent_imp.internal_select (Current)
+		end
+
+	disable_select is
+			-- Deselect Current.
+			-- Must be in a multi column list.
+		do
+			parent_imp.internal_deselect (Current)
+		end
+		
+	toggle is
+			-- Change the state of selection of the item.
+			-- Must be in a multi column list.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	update is
+			-- Layout of row has been changed.
+		do
+		end
+
+feature {EV_ANY_I} -- Access
 
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 		local
@@ -76,16 +138,6 @@ feature -- Access
 
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is the item selected?
-		do
-			Result := parent_imp.internal_is_selected (Current)
-		end
-
-feature -- Status setting
-
 	set_parent (par: like parent) is
 			-- Make `par' the new parent of the widget.
 		do
@@ -99,20 +151,8 @@ feature -- Status setting
 	destroy is
 			-- Destroy the actual object.
 		do
-			{EV_COMPOSED_ITEM_IMP} Precursor
-			internal_text := Void
-		end
-
-	enable_select is
-			-- Select Current.
-		do
-			parent_imp.internal_select (Current)
-		end
-
-	disable_select is
-			-- Deselect Current.
-		do
-			parent_imp.internal_deselect (Current)
+		--	{EV_COMPOSED_ITEM_IMP} Precursor
+		--	internal_text := Void
 		end
 
 feature -- Element Change
@@ -121,10 +161,10 @@ feature -- Element Change
 			-- Make `text ' the new label of the `column'-th
 			-- cell of the row.
 		do
-			{EV_COMPOSED_ITEM_IMP} Precursor (column, txt)
-			if parent_imp /= Void then
-				parent_imp.set_cell_text (column - 1, index - 1, txt)
-			end
+		--	{EV_COMPOSED_ITEM_IMP} Precursor (column, txt)
+		--	if parent_imp /= Void then
+		--		parent_imp.set_cell_text (column - 1, index - 1, txt)
+		--	end
 		end
 
 feature {EV_PICK_AND_DROPABLE_I} -- Pick and Drop
@@ -186,6 +226,10 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/23 18:18:03  brendel
+--| Revised.
+--| To be implemented.
+--|
 --| Revision 1.27  2000/03/22 20:23:40  rogers
 --| Added pnd_press.
 --|

@@ -25,7 +25,6 @@ feature -- Initialization
 			default_create
 			create classes_double_click_agents.make
 			set_data (a_cluster)
-			collapse_actions.extend (agent fake_load)
 			expand_actions.extend (agent load)
 		end
 
@@ -194,6 +193,11 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				remove
 				i := i + 1
 			end
+				-- By removing `load' from `expand_actions', it ensures that
+				-- the contents of the item are no longer created dynamically.
+				-- This ensures that the tree retains its state as nodes are contracted and
+				-- then expanded.
+			expand_actions.wipe_out
 		end
 
 	on_class_drop (cstone: CLASSI_STONE) is

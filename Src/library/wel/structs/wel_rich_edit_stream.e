@@ -74,15 +74,12 @@ feature -- Basic operations
 			-- Called before the streams.
 			-- May be redefined to make special operations.
 		do
-			print ("init_stream%N")
 		end
 
 	finish_action is
 			-- Called after the streams.
 			-- May be redefined to make special operations.
 		do
-			print ("finish_stream%N")
-
 		end
 
 	release_stream is

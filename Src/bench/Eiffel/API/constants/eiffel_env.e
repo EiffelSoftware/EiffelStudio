@@ -64,6 +64,17 @@ feature {NONE}
 
 	Default_precompiled_location: STRING is
 			-- Default location for the precompiled base
+			-- $EIFFEL3/precomp/spec/$PLATFORM
+		local
+			dir_name: DIRECTORY_NAME
+		once
+			!!dir_name.make_from_string (Eiffel3_dir_name);
+			dir_name.extend_from_array (<<"precomp", "spec", Execution_environment.get ("PLATFORM")>>);
+			Result := dir_name
+		end;
+
+	Default_precompiled_base_location: STRING is
+			-- Default location for the precompiled base
 			-- $EIFFEL3/precomp/spec/$PLATFORM/base
 		local
 			dir_name: DIRECTORY_NAME

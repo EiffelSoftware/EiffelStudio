@@ -209,7 +209,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			then
 					-- For the melt_only version, if no precompiled project is specified,
 					-- return $EIFFEL3/precomp/spec/$PLATFORM/base
-				Result := Default_precompiled_location
+				Result := Default_precompiled_base_location
 			end
 		end;
 

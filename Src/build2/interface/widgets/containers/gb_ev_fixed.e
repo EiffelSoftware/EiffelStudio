@@ -449,13 +449,13 @@ feature {NONE} -- Implementation
 				end
 				first.forth
 			end
-			if biggest_x + scrolling_distance > scrollable_area.width then
-				drawing_area.set_minimum_width (biggest_x + scrolling_distance)
+			if biggest_x > scrollable_area.width then
+				drawing_area.set_minimum_width (biggest_x)
 			else
 				drawing_area.set_minimum_width (scrollable_area.width)
 			end
-			if biggest_y + scrolling_distance > scrollable_area.height then
-				drawing_area.set_minimum_height (biggest_y + scrolling_distance)
+			if biggest_y > scrollable_area.height then
+				drawing_area.set_minimum_height (biggest_y)
 			else
 				drawing_area.set_minimum_height (scrollable_area.height)
 			end
@@ -633,7 +633,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if resizing_widget then
-					-- Modify automatic scrolling as appropriate.
+					-- Update scrolling status.
 				update_scrolling (x, y)
 				temp_x := x				
 				if snap_button.is_selected then
@@ -689,6 +689,7 @@ feature {NONE} -- Implementation
 				draw_widgets
 			end
 			if moving_widget then
+					-- Update scrolling status.
 				update_scrolling (x, y)
 				if snap_button.is_selected then
 					new_x := x - ((x - x_offset) \\ grid_size)
@@ -724,88 +725,145 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	y_scrolling_velocity: INTEGER is
+			-- `Result' is desired y scrolling velocity based on the last known position
+			-- of the mouse pointer.
+		do
+			if last_y > drawing_area.height and scrolled_y_once and scrolling_y_start = y_bottom then
+				Result := (last_y - drawing_area.height) // 20 + 1
+			elseif last_y > scrollable_area.height + scrollable_area.y_offset and scrolling_y_start = y_center then
+				Result := (last_y - scrollable_area.height - scrollable_area.y_offset) // 20 + 1		
+			elseif last_y < scrollable_area.y_offset then
+				Result := - ((scrollable_area.y_offset - last_y) //20 + 1)
+			end
+		end
+		
 		
 	update_scrolling (x, y: INTEGER) is
 			-- Update current scrolling to reflect mouse coordinates `x', `y'.
 		do
-			if (x > drawing_area.width - scrolling_distance * 2) and not scrolled_x_once then
-					scrolled_x_once := True
-					scrolling_x_start := x_right
+				-- First deal with the x axis
+			if (x > drawing_area.width) and not scrolled_x_once then
+				scrolled_x_once := True
+				scrolling_x_start := x_right
+				start_x_scrolling
+			elseif (x > drawing_area.width) and scrolled_x_once and scrolling_x_start = x_right then
+				if not scrolling_x then
 					start_x_scrolling
-				elseif (x > drawing_area.width - scrolling_distance * 2) and scrolled_x_once and scrolling_x_start = x_right then
-					if not scrolling_x then
-						start_x_scrolling
-					end
-				elseif scrolling_x_start = x_right then
-					if scrolling_x then
-						end_x_scrolling
-					end
 				end
-				if (x > scrollable_area.width + scrollable_area.x_offset - scrolling_distance * 2) and not scrolled_x_once then
-					scrolled_x_once := True
-					scrolling_x_start := x_center
+			elseif scrolling_x_start = x_right then
+				if scrolling_x then
+					end_x_scrolling
+				end
+			end
+			if (x > scrollable_area.width + scrollable_area.x_offset) and not scrolled_x_once then
+				scrolled_x_once := True
+				scrolling_x_start := x_center
+				start_x_scrolling
+			elseif (x > scrollable_area.width + scrollable_area.x_offset) and scrolled_x_once and scrolling_x_start = x_center then
+				if not scrolling_x then
 					start_x_scrolling
-				elseif (x > scrollable_area.width + scrollable_area.x_offset - scrolling_distance * 2) and scrolled_x_once and scrolling_x_start = x_center then
-					if not scrolling_x then
-						start_x_scrolling
-					end
-				elseif scrolling_x_start = x_center then
-					if scrolling_x then
-						end_x_scrolling
-					end
-				end	
-				if x < scrollable_area.x_offset + scrolling_distance then
-					if not scrolling_x then
-						start_x_scrolling
-					end
 				end
+			elseif scrolling_x_start = x_center then
+				if scrolling_x then
+					end_x_scrolling
+				end
+			end	
+			if x < scrollable_area.x_offset then
+				if not scrolling_x then
+					start_x_scrolling
+				end
+			end
+			
+				-- Then Y axis.
+			if (y > drawing_area.height) and not scrolled_y_once then
+				scrolled_y_once := True
+				scrolling_y_start := y_bottom
+				start_y_scrolling
+			elseif (y > drawing_area.height) and scrolled_y_once and scrolling_y_start = y_bottom then
+				if not scrolling_y then
+					start_y_scrolling
+				end
+			elseif scrolling_y_start = y_bottom then
+				if scrolling_y then
+					end_y_scrolling
+				end
+			end
+			if (y > scrollable_area.height + scrollable_area.y_offset) and not scrolled_y_once then
+				scrolled_y_once := True
+				scrolling_y_start := y_center
+				start_y_scrolling
+			elseif (y > scrollable_area.height + scrollable_area.y_offset) and scrolled_y_once and scrolling_y_start = y_center then
+				if not scrolling_y then
+					start_y_scrolling
+				end
+			elseif scrolling_y_start = y_center then
+				if scrolling_y then
+					end_y_scrolling
+				end
+			end	
+			if y < scrollable_area.y_offset then
+				if not scrolling_y then
+					start_y_scrolling
+				end
+			end
 		end
 		
-
-	last_x, last_y: INTEGER
-		-- Last known cooridnates of mouse pointer.
-		
-	x_right, x_center: INTEGER is unique
-		-- Constants used with `scrolling_x_start'.
-		
-	scrolling_x_start: INTEGER
-		-- Where did the scrolling operation start?
-			-- `x_right' if started when reached edge of `drawing_area'.
-			-- `x_center' if started when reached visible edge of `drawing_area'.
-	
-		
-	timeout: EV_TIMEOUT
-		-- Used to execute the timing of scrolling.
-	
-	scrolling_x: BOOLEAN
-
-	scrolled_x_once: BOOLEAN
-		-- Have we scrolled in the x direction since the last
-		-- button 1 release?
-		
 	start_x_scrolling is
-			-- Begin the automatic scrolling.
+			-- Begin automatic scrolling on x axis.
 		do
 			if not scrolling_x then
-					-- Create a timeout which will repeatedly cause the scrolling to
-					-- take place.
-				create timeout.make_with_interval (25)
-				timeout.actions.extend (agent scroll_x)
+				if not scrolling_y then
+						-- Create a timeout which will repeatedly cause the scrolling to
+						-- take place.
+					create timeout.make_with_interval (25)
+					timeout.actions.extend (agent scroll)	
+				end
 				scrolling_x := True
 			end
 		end
 		
-	end_x_scrolling is
-			-- 
+	start_y_scrolling is
+			-- Begin automatic scrolling on y axis.
 		do
-			if scrolling_x then
-				timeout.destroy
-				scrolling_x := False
+			if not scrolling_y then
+				if not scrolling_x then
+						-- Create a timeout which will repeatedly cause the scrolling to
+						-- take place.
+					create timeout.make_with_interval (25)
+					timeout.actions.extend (agent scroll)	
+				end			
+				scrolling_y := True
 			end
 		end
 		
+	end_x_scrolling is
+			-- End scrolling on x axis.
+		do
+				-- Only destroy if not scrolling in either
+				-- direction. `timeout' controls scrolling in
+				-- both directions.
+			if not scrolling_y then
+				timeout.destroy
+			end
+			scrolling_x := False
+		end
 		
-	scroll_x is
+	end_y_scrolling is
+			-- End scrolling on y axis.
+		do
+				-- Only destroy if not scrolling in either
+				-- direction. `timeout' controls scrolling in
+				-- both directions.
+			if not scrolling_x then
+				timeout.destroy
+			end
+			scrolling_y := False
+		end
+		
+		
+		
+	scroll is
 			--
 		local
 			current_velocity: INTEGER
@@ -817,6 +875,16 @@ feature {NONE} -- Implementation
 				-- Max 0 ensures that if we are scrolling to the left, we do not
 				-- move to less than position 0.
 			scrollable_area.set_x_offset ((scrollable_area.x_offset + current_velocity).max (0))
+			
+			
+			current_velocity := y_scrolling_velocity
+			if current_velocity > 0 then
+				drawing_area.set_minimum_height (drawing_area.height + current_velocity)
+				
+			end
+				-- Max 0 ensures that if we are scrolling to the top, we do not
+				-- move to less than position 0.
+			scrollable_area.set_y_offset ((scrollable_area.y_offset + current_velocity).max (0))
 		end
 		
 		
@@ -952,7 +1020,46 @@ feature {NONE} -- Implementation
 			drawing_area.set_pointer_style (cursor)
 		end
 
-feature {NONE} -- Attributes.
+feature {NONE} -- Scrolling attributes.
+
+	last_x, last_y: INTEGER
+		-- Last known cooridnates of mouse pointer.
+		
+	x_right, x_center: INTEGER is unique
+		-- Constants used with `scrolling_x_start'.
+		
+	y_bottom, y_center: INTEGER is unique
+		-- Constants used with `scrolling_y_start'.
+		
+	scrolling_x_start: INTEGER
+		-- Where did the scrolling operation start?
+			-- `x_right' if started when reached edge of `drawing_area'.
+			-- `x_center' if started when reached visible edge of `drawing_area'.
+			
+	scrolling_y_start: INTEGER
+		-- Where did the scrolling operation start?
+			-- `y_bottom' if started when reached the bottom of `drawing_area'.
+			-- `y_center' if started when reached visible edge of `drawing_area'.
+		
+	timeout: EV_TIMEOUT
+		-- Used to execute the timing of scrolling.
+		
+	scrolling_x: BOOLEAN
+		-- Are we currently scrolling onx axis??
+		
+	scrolling_y: BOOLEAN
+			-- Are we currently scrolling on y axis?
+		
+
+	scrolled_x_once: BOOLEAN
+		-- Have we scrolled in the x direction since the last
+		-- button 1 release?
+		
+	scrolled_y_once:BOOLEAN 
+		-- Have we scrolled in the y direction since the last
+		-- button 1 release?
+
+feature {NONE} -- Attributes
 
 	snap_button: EV_CHECK_BUTTON
 		-- Snap to grid enabled?
@@ -999,9 +1106,6 @@ feature {NONE} -- Attributes.
 	accuracy_value: INTEGER is 3
 			-- Value which determines how close pointer must be
 			-- to lines/points for resizing.
-			
-	scrolling_distance: INTEGER is 0
-		-- Distance from edge of area when scrolling begins.
 
 	list: EV_LIST
 		-- Contains all children of represented EV_FIXED.

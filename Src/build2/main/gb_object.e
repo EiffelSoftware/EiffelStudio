@@ -388,37 +388,6 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT} -- Element change
 				status_bar_label.remove_text
 			end
 		end
-		
-	display_invalid_drop_message (obj2: GB_OBJECT; new_type: STRING; does_accept_child: boolean) is
-			-- Display message in status bar indicating the invalid drop status of `obj2'.
-			-- `new_type' is the type of the transported object, and `does_accept_child' is
-			-- result of last call to `override_drop_on_child' which is False if the child is
-			-- of the wrong type to be contained.
-		require
-			target_not_void: obj2 /= Void
-			new_type_not_empty: new_type /= Void and not (new_type.count = 0)
-		do
-			if obj2.is_full and obj2.layout_item.count = 0 then
-				set_status_text ("Pointed target (" + obj2.short_type + ") does not accept children.")
-			elseif not does_accept_child then
-				set_status_text ("Pointed target (" + obj2.short_type + ") does not accept children of type " + new_type + ".")
-			elseif obj2.is_full then
-				set_status_text ("Pointed target (" + obj2.short_type + ") is full.")
-			end
-		end
-		
-		
-	display_parent_in_child_message (obj1, obj2: GB_OBJECT; new_type: STRING) is
-			-- Display message in status bar indicating that `ob1' cannot be parented
-			-- in `obj2' as `ob2' is `obj1' or is parent of `obj1'.
-		do
-			if obj1 = obj2 then
-				set_status_text ("Cannot parent " + new_type + " in itself.")
-			else
-				set_status_text ("Cannot parent " + new_type + " in one of its children.")
-			end
-		end
-		
 
 	create_layout_item is
 			-- Create a layout_item associated with `Current'.
@@ -760,6 +729,36 @@ feature {NONE} -- Implementation
 				add_new_component (a_component)
 			else
 				add_new_component_in_parent (a_component)
+			end
+		end
+		
+	display_invalid_drop_message (obj2: GB_OBJECT; new_type: STRING; does_accept_child: boolean) is
+			-- Display message in status bar indicating the invalid drop status of `obj2'.
+			-- `new_type' is the type of the transported object, and `does_accept_child' is
+			-- result of last call to `override_drop_on_child' which is False if the child is
+			-- of the wrong type to be contained.
+		require
+			target_not_void: obj2 /= Void
+			new_type_not_empty: new_type /= Void and not (new_type.count = 0)
+		do
+			if obj2.is_full and obj2.layout_item.count = 0 then
+				set_status_text ("Pointed target (" + obj2.short_type + ") does not accept children.")
+			elseif not does_accept_child then
+				set_status_text ("Pointed target (" + obj2.short_type + ") does not accept children of type " + new_type + ".")
+			elseif obj2.is_full then
+				set_status_text ("Pointed target (" + obj2.short_type + ") is full.")
+			end
+		end
+		
+		
+	display_parent_in_child_message (obj1, obj2: GB_OBJECT; new_type: STRING) is
+			-- Display message in status bar indicating that `ob1' cannot be parented
+			-- in `obj2' as `ob2' is `obj1' or is parent of `obj1'.
+		do
+			if obj1 = obj2 then
+				set_status_text ("Cannot parent " + new_type + " in itself.")
+			else
+				set_status_text ("Cannot parent " + new_type + " in one of its children.")
 			end
 		end
 

@@ -60,6 +60,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Precompile.
+	-----------------------------------------------------------*/
+	STDMETHODIMP precompile( void );
+
+
+	/*-----------------------------------------------------------
 	Was last compilation successful?
 	-----------------------------------------------------------*/
 	STDMETHODIMP is_successful(  /* [out, retval] */ VARIANT_BOOL * return_value );

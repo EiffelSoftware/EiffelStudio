@@ -67,6 +67,16 @@ class IEiffelCompletionInfo;
 
 
 
+#ifndef __ecom_eiffel_compiler_IEiffelHTMLDocGenerator_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEiffelHTMLDocGenerator_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEiffelHTMLDocGenerator;
+}
+#endif
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #ifndef __ecom_eiffel_compiler_IEiffelProject_INTERFACE_DEFINED__
@@ -155,6 +165,12 @@ public:
 	Completion information
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP completion_information(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelCompletionInfo * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Help documentation generator
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP html_doc_generator(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * return_value ) = 0;
 
 
 

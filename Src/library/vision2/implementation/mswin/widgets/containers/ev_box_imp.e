@@ -17,6 +17,10 @@ inherit
 	EV_BOX_I
 
 	EV_INVISIBLE_CONTAINER_IMP
+		undefine
+			compute_minimum_width,
+			compute_minimum_height,
+			compute_minimum_size
 		redefine
 			make,
 			client_width,
@@ -37,10 +41,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	child: EV_WIDGET_IMP
-			-- A special size, the one who give the minimum_size to the
-			-- box.
 
 	client_width: INTEGER is
 			-- Width of the client area of container
@@ -67,8 +67,14 @@ feature -- Access
 			-- Total space occupied by spacing. One spacing
 			-- between two consecutives children.
 		do
-			Result := spacing * ( children.count - 1 )
+			Result := spacing * (childvisible_nb - 1)
 		end
+
+	childvisible_nb: INTEGER
+			-- Number of children which are visible
+
+	childexpand_nb: INTEGER
+			-- Number of children, which are expanded and visible
 
 feature -- Element change
 
@@ -89,51 +95,7 @@ feature -- Element change
 			end
 		end
 
-feature {NONE} -- Basic operation
-
-	modulo (a, b: INTEGER): INTEGER is
-				-- a modulo b
-		require
-			b_not_null: b /= 0
-		do
-			Result := a \\ b
-			if Result <= 0 then
-				Result := Result + b
-			end
-		ensure
-			result_large_enough: Result >= 1
-			result_small_enough: Result <= b
-		end
-
-	index: INTEGER
-		-- Index of the last child which received a rest.
-
-	rest (total_rest: INTEGER): INTEGER is
-				-- Give the rest we must add to the current child of
-				-- ev_children when the size of the parent is not a 
-				-- multiple of the number of children.
-		do
-			if total_rest > 0 and then (modulo(ev_children.index - index, ev_children.count) < total_rest or index = ev_children.index) then
-				Result := 1
-			elseif total_rest < 0 and then index /= ev_children.index and then modulo(index - ev_children.index, ev_children.count) <= total_rest.abs then
-				Result := - 1
-			else
-				Result := 0
-			end
-		end
-
-	initialize_length_at_minimum is
-			-- Initialize the width of the window and of the children.
-		deferred
-		end
-
-feature {EV_WIDGET_I} -- Implementation
-
-	childvisible_nb: INTEGER
-			-- Number of children which are visible
-
-	childexpand_nb: INTEGER
-			-- Number of children, which are expanded and visible
+feature -- Assertion
 
   	child_add_successful (new_child: EV_WIDGET_I): BOOLEAN is
   			-- Used in the postcondition of 'add_child'
@@ -143,6 +105,22 @@ feature {EV_WIDGET_I} -- Implementation
  			child_imp ?= new_child
  			Result := ev_children.has (child_imp)
  		end
+
+feature {NONE} -- Basic operation
+
+	rest (total_rest: INTEGER): INTEGER is
+				-- Give the rest we must add to the current child of
+				-- ev_children when the size of the parent is not a 
+				-- multiple of the number of children.
+		do
+			if total_rest > 0 then
+				Result := 1
+			elseif total_rest < 0 then
+				Result := -1
+			else
+				Result := 0
+			end
+		end
 
 feature {NONE} -- Deferred features
 

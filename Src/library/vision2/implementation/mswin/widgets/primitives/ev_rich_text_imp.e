@@ -281,11 +281,11 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
    			-- Default style used to create the control
   		do
-  			Result := ws_visible + ws_child + ws_hscroll
+  			Result := ws_visible + ws_child
 					+ Ws_vscroll + Ws_border 
-					+ Es_multiline + Es_autohscroll
+					+ Es_multiline
 					+ Es_disablenoscroll
-  		end
+		end
 
 	on_char (character_code, key_data: INTEGER) is
 		do

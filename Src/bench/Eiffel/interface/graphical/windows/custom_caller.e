@@ -22,8 +22,8 @@ feature -- Actions
 		deferred
 		end;
 
-	execute_save_action (a_cust_tool: like associated_custom_tool) is
-			-- Action performed when save button is activated
+	execute_ok_action (a_cust_tool: like associated_custom_tool) is
+			-- Action performed when ok button is activated
 		deferred
 		end;
 

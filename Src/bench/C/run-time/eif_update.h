@@ -52,7 +52,7 @@ extern short wshort(void);
 extern long wlong(void);
 extern int32 wint32(void);
 extern uint32 wuint32(void);
-extern void wread(char *buffer, int nbytes);
+extern void wread(char *buffer, size_t nbytes);
 
 #ifdef __cplusplus
 }

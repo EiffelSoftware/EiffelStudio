@@ -1,13 +1,8 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		" EiffelVision container. Allows only one children.%
-		% Deferred class, parent of all the containers.%
-		% Mswindows implementation."
-	note: " This class would be the equivalent of a wel_composite_window%
-		% in the wel hierarchy."
+		"Eiffel Vision container. Mswindow implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -455,6 +450,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/04/26 18:35:55  brendel
+--| Indexing clause.
+--|
 --| Revision 1.49  2000/04/14 23:34:19  rogers
 --| Removed widget_parent and widget_orphaned as on_parented is no
 --| longer needed in new_item_actions and on_orphaned is no longer

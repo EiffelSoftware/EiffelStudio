@@ -357,7 +357,6 @@ feature -- Status setting
 			create stream.make (internal_text)
 			insert_rtf_stream_in (stream)
 			stream.release_stream
-			print (stream.error)
 			buffer_locked_in_append_mode := False
 		end
 		
@@ -481,7 +480,6 @@ feature -- Status setting
 				create stream.make (internal_text)
 				rtf_stream_in (stream)
 				stream.release_stream
-				print (stream.error)
 			elseif buffer_locked_in_append_mode then
 				
 				generate_rtf_heading				
@@ -489,7 +487,6 @@ feature -- Status setting
 				create stream.make (internal_text)
 				rtf_stream_in (stream)
 				stream.release_stream
-				print (stream.error)
 			end
 			buffer_locked_in_append_mode := False
 			buffer_locked_in_format_mode := False

@@ -70,6 +70,11 @@ inherit
 			{NONE} all
 		end
 
+	DEBUG_OUTPUT
+		export
+			{NONE} all
+		end
+
 creation
 	make
 	
@@ -134,6 +139,8 @@ feature -- Access
 			-- Is current class generic?
 		do
 			Result := generics /= Void
+		ensure
+			result_is_generic: Result implies (generics /= Void)
 		end
 
 	is_removable: BOOLEAN is
@@ -3281,29 +3288,11 @@ feature -- default_create routine
 			-- The version of `default_create' from ANY.
 			-- Void if ANY has not been compiled yet or
 			-- does not posess the feature or class is deferred.
-		local
-			ftab: FEATURE_TABLE
-			item: FEATURE_I
-			pos : INTEGER
+		require
+			any_class_compiled: System.any_class /= Void
 		do
-			if not is_deferred and then (System.any_class /= Void) then
-				from
-					ftab := feature_table
-					pos  := ftab.iteration_position
-					ftab.start
-				until
-					ftab.after or (Result /= Void)
-				loop
-					item := ftab.item_for_iteration
-
-					if item.rout_id_set.first = System.default_create_id then
-						Result := item
-					end
-
-					ftab.forth
-				end
-
-				ftab.go (pos)
+			if not is_deferred then
+				Result := feature_table.feature_of_rout_id (System.default_create_id)
 			end
 		end
 
@@ -3313,16 +3302,13 @@ feature -- default_create routine
 		local
 			dcr_feat : FEATURE_I
 		do
-			-- Answer is NO if class is deferred
+				-- Answer is NO if class is deferred
 			if not is_deferred then
 				dcr_feat := default_create_feature
-				-- Answer is NO if the class has no 
-				-- 'default_create'
-				if dcr_feat /= Void then
-					Result := (creators = Void) or else
-							  (not creators.is_empty and then
-							   creators.has (dcr_feat.feature_name))
-				end
+					-- Answer is NO if the class has no 
+					-- 'default_create'
+				Result := dcr_feat /= Void and then (
+					(creators = Void) or else (not creators.is_empty and then creators.has (dcr_feat.feature_name)))
 			end
 		end
 
@@ -3701,6 +3687,11 @@ feature -- Properties
 
 	generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			-- Formal generical parameters
+
+	generic_features: HASH_TABLE [FORMAL_ATTRIBUTE_I, INTEGER]
+			-- Collect all possible generic derivations inherited or current.
+			-- Indexed by `rout_id' of formal generic parmater.
+			-- Updated during `pass2' of INHERIT_TABLE.
 
 	topological_id: INTEGER
 			-- Unique number for a class. Could change during a topological
@@ -4285,6 +4276,16 @@ feature {COMPILER_EXPORTER} -- Setting
 			obsolete_message := m
 		end
 
+	set_generic_features (f: like generic_features) is
+			-- Set `generic_features' to `f'.
+		require
+			f_not_void: f /= Void
+		do
+			generic_features := f
+		ensure
+			generic_features_set: generic_features = f
+		end
+
 feature -- Removal
 
 	clear_syntax_error is
@@ -4295,6 +4296,201 @@ feature -- Removal
 			not_has_syntax: not has_syntax_error
 		end
 
+feature -- Genericity
+
+	formal_at_position (n: INTEGER): FORMAL_ATTRIBUTE_I is
+			-- Find first FORMAL_ATTRIBUTE_I in `generic_features' that
+			-- matches position `n'.
+		require
+			has_formal: is_generic
+		local
+			l_formals: like generic_features
+			l_formal: FORMAL_A
+		do
+			from
+				l_formals := generic_features
+				l_formals.start
+			until
+				l_formals.after or Result /= Void
+			loop
+				l_formal ?= l_formals.item_for_iteration.type
+				if l_formal /= Void and then l_formal.position = n then
+					Result := l_formals.item_for_iteration
+				end
+				l_formals.forth
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	update_generic_features is
+			-- Update `generic_features' with information of Current.
+		local
+			l_parents: like parents
+			l_formal, l_parent_formal: FORMAL_ATTRIBUTE_I
+			l_formal_type: FORMAL_A
+			l_generic_features, l_old: like generic_features
+			l_inherited_formals: SEARCH_TABLE [INTEGER]
+			l_rout_id_set: ROUT_ID_SET
+			i, nb: INTEGER
+		do
+				-- Cleaned previously stored information.
+			l_old := generic_features
+			generic_features := Void
+
+				-- Collect all information about parent formal generic parameters.
+			from
+				l_parents := parents
+				l_parents.start
+			until
+				l_parents.after
+			loop
+				l_generic_features := l_parents.item.associated_class.generic_features
+				if l_generic_features /= Void then
+					from
+						l_generic_features.start
+					until
+						l_generic_features.after
+					loop
+							-- Extract parent generic parameter and perform instantiation
+							-- in current class.
+						l_parent_formal := l_generic_features.item_for_iteration
+						l_formal := l_parent_formal.duplicate
+						l_formal.set_type (l_formal.type.instantiated_in (l_parents.item))
+						l_formal.set_is_origin (False)
+						if l_old /= Void and then l_old.has (l_formal.rout_id_set.first) then
+							l_formal.set_feature_id (
+								l_old.item (l_formal.rout_id_set.first).feature_id)
+						else
+							l_formal.set_feature_id (feature_id_counter.next)
+						end
+						l_formal.set_origin_feature_id (l_parent_formal.origin_feature_id)
+
+						if not l_formal.type.same_as (l_parent_formal.type) then
+								-- If there is an implicit type change of the formal
+								-- generic parameter, then we need to generate
+								-- a new body for specifying the new type of the formal
+								-- generic parameter.
+							l_formal.set_written_in (class_id)
+						end
+						
+						extend_generic_features (l_formal)
+						l_generic_features.forth
+					end
+				end
+				l_parents.forth
+			end
+
+			l_generic_features := generic_features
+			
+			if is_generic then
+				create l_inherited_formals.make (generics.count)
+				if l_generic_features = Void then
+					create l_generic_features.make (generics.count)
+					generic_features := l_generic_features
+				else
+					from
+						l_generic_features.start
+					until
+						l_generic_features.after
+					loop
+						l_formal := l_generic_features.item_for_iteration
+						if l_formal.is_formal then	
+							l_formal_type ?= l_formal.type
+							l_inherited_formals.put (l_formal_type.position)
+						end
+						l_generic_features.forth
+					end
+				end
+
+				from
+					i := 1
+					nb := generics.count
+				until
+					i > nb
+				loop
+					if not l_inherited_formals.has (i) then
+						create l_formal_type
+						l_formal_type.set_position (i)
+						
+						create l_formal
+						l_formal.set_feature_name ("_" + name_in_upper + "_Formal#" + i.out)
+						l_formal.set_type (l_formal_type)
+						l_formal.set_written_in (class_id)
+						l_formal.set_origin_class_id (class_id)
+					
+						create l_rout_id_set.make (1)
+						l_rout_id_set.put (l_formal.new_rout_id)
+						l_formal.set_rout_id_set (l_rout_id_set)
+						l_formal.set_is_origin (True)
+						l_formal.set_position (i)
+
+						if l_old /= Void and then l_old.has (l_rout_id_set.first) then
+							l_formal.set_feature_id (
+								l_old.item (l_formal.rout_id_set.first).feature_id)
+						else
+							l_formal.set_feature_id (feature_id_counter.next)
+						end
+						l_formal.set_origin_feature_id (l_formal.feature_id)
+
+						l_generic_features.put (l_formal, l_rout_id_set.first)
+					end
+					i := i + 1
+				end
+			else
+					-- FIXME: Manu 01/02/2002. Add assertion that shows
+					-- that all FORMAL_ATTRIBUTE_I.type of `l_generic_features'
+					-- are not instances of FORMAL_I.
+			end
+		
+ 			debug ("FORMAL_GENERIC")
+				if l_generic_features /= Void then
+					print ("%NFor class " + name_in_upper + ": " + l_generic_features.count.out)
+					print (" local + inherited generic parameters%N")
+				end
+ 			end
+		end
+		
+feature {NONE} -- Genericity
+
+	extend_generic_features (an_item: FORMAL_ATTRIBUTE_I) is
+			-- Insert `an_item' in `generic_features'. If `generic_features'
+			-- is not yet created, creates it.
+		require
+			an_item_not_void: an_item /= Void
+		local
+			l_generic_features: like generic_features
+			l_rout_id_set: ROUT_ID_SET
+			l_rout_id, i, nb: INTEGER
+		do
+			l_generic_features := generic_features
+			if l_generic_features = Void then
+				create l_generic_features.make (5)
+				generic_features := l_generic_features
+			end
+			
+			from
+				l_rout_id_set := an_item.rout_id_set
+				i := 1
+				nb := l_rout_id_set.count
+			until
+				i > nb
+			loop
+				l_rout_id := l_rout_id_set.item (i)
+				if not l_generic_features.has (l_rout_id) then
+					l_generic_features.put (an_item, l_rout_id)
+				else
+						-- Should we report an error in this case, as it is not
+						-- well implemented by compiler?
+					check
+						same_type: l_generic_features.item (l_rout_id).type.same_as (an_item.type)
+					end
+				end
+
+				i := i + 1	
+			end
+		end
+		
 feature -- Implementation
 
 	invariant_feature: INVARIANT_FEAT_I
@@ -4590,6 +4786,22 @@ feature -- Degree -2/-3
 			finalization_needed := v
 		ensure
 			finalization_needed_set: finalization_needed = v
+		end
+
+feature -- output
+
+	debug_output: STRING is
+			-- Generate a nice representation of Current to be seen
+			-- in debugger.
+		local
+			l_name: STRING
+		do
+			l_name := name_in_upper
+			create Result.make (l_name.count + 6)
+			Result.append_integer (class_id)
+			Result.append_character (':')
+			Result.append_character (' ')
+			Result.append (l_name)
 		end
 
 feature {NONE} -- Implementation

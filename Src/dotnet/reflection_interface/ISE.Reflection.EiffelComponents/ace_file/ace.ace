@@ -1,0 +1,17 @@
+system
+	"ISE.Reflection.EiffelComponents"
+
+root
+	EIFFEL_ASSEMBLY (root_cluster): "make"
+
+default
+	assertion (all)
+	line_generation (yes)
+	il_generation ("dll")
+
+cluster	
+	root_cluster: "F:\reflection_interface\ISE.Reflection.EiffelComponents"
+	
+	all dot_net_base: "F:\Eiffel50\library\base.net"
+	
+end

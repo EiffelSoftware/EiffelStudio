@@ -64,6 +64,8 @@ feature -- Status report
 		local
 			wel_point: WEL_POINT
 			widget_imp: EV_WIDGET_IMP
+			combo_box: EV_COMBO_BOX
+			internal_combo_box: EV_INTERNAL_COMBO_BOX_IMP
 		do
 				-- Assign the cursor position to `wel_point'.
 			create wel_point.make (x, y)
@@ -73,6 +75,12 @@ feature -- Status report
 			if widget_imp /= Void then
 					-- Result is interface of `widget_imp'.
 				Result := widget_imp.interface
+			end
+				-- Combo boxes must be handled as a special case, as
+				-- they are comprised of two widgets.
+			internal_combo_box ?= wel_point.window_at
+			if internal_combo_box /= Void then
+				Result := internal_combo_box.parent.interface
 			end
 		end
 

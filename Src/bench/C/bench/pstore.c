@@ -22,6 +22,7 @@
 #include "eif_error.h"
 #include "eif_compress.h"
 #include "pstore.h"
+#include "x2c.h"		/* For LNGPAD macro */
 
 #ifdef EIF_WIN32
 #include <io.h>
@@ -181,7 +182,7 @@ rt_private long pst_store(char *object, long int object_count)
 			long count, elem_size;
 			char *ref;
 
-			o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
+			o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 			count = *(long *) o_ptr;
 			if (!(flags & EO_COMP)) {		/* Special of references */
 				for (ref = object; count > 0; count--, ref = (char *) ((char **) ref + 1)) {

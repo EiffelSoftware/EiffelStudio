@@ -778,165 +778,165 @@ feature {NONE} -- External features
 	odbc_get_error_message: POINTER is
 			-- C buffer which contains the error_message.
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_error_code: INTEGER is
 			-- C buffer which contains the error code.
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_warn_message: POINTER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_new_descriptor: INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_init_order (no_descriptor: INTEGER; command: POINTER; argnum: INTEGER) is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_start_order (no_descriptor: INTEGER) is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_next_row (no_descriptor: INTEGER): INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_terminate_order (no_descriptor: INTEGER) is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 
 	odbc_close_cursor (no_descriptor: INTEGER) is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 
 	odbc_exec_immediate (no_descriptor: INTEGER; command: POINTER) is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_put_data (no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_sensitive_mixed: BOOLEAN is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_identifier_quoter: POINTER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_qualifier_seperator: POINTER is 
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_conv_type (index: INTEGER): INTEGER is
 		external
-			"C"	
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_count (no_descriptor: INTEGER): INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_data_len (no_descriptor: INTEGER ind: INTEGER): INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_col_len (no_descriptor: INTEGER ind: INTEGER): INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_col_type (no_descriptor: INTEGER ind: INTEGER): INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_integer_data (no_descriptor: INTEGER ind: INTEGER): INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_float_data (no_descriptor: INTEGER ind: INTEGER): DOUBLE is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_real_data (no_descriptor: INTEGER ind: INTEGER): DOUBLE is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_boolean_data (no_descriptor: INTEGER ind: INTEGER): BOOLEAN is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_is_null_data (no_descriptor: INTEGER ind: INTEGER): BOOLEAN is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_date_data (no_descriptor: INTEGER ind: INTEGER): INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_hour: INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_sec: INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_min: INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_year: INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_day: INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_get_month: INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_c_string_type: INTEGER is
@@ -990,79 +990,79 @@ feature {NONE} -- External features
 
 	c_odbc_make (i: INTEGER) is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_disconnect is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_commit is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_rollback is
 		external
-			"C"
+			"C use %"odbc.h%""
 		alias
 			"odbc_rollback"
 		end
 
 	odbc_trancount: INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		alias
 			"odbc_trancount"
 		end
 
 	odbc_begin is
 		external
-			"C"
+			"C use %"odbc.h%""
 		alias
 			"odbc_begin"
 		end
 
 	odbc_support_proc: INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_connect (user_name, user_passwd, dbName: POINTER) is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_date_to_str (year, month, day, hour, minute, second, type: INTEGER): POINTER is
 		-- Get string format of the TIME (type=0), DATE (type=1) or TIMESTAMP (type=2)
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_driver_name: POINTER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_support_create_proc: INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_unset_catalog_flag (desc: INTEGER) is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_hide_qualifier (command: POINTER): POINTER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_pre_immediate (desc, argNum: INTEGER) is
 		external
-		    "C"
+		    "C use %"odbc.h%""
 		end
 
 	is_binary (s: STRING): BOOLEAN is
@@ -1134,27 +1134,27 @@ feature {NONE} -- External features
 
    	odbc_set_parameter (no_desc, seri, direction, type: INTEGER; value: POINTER) is
 		external
-		    "C"
+		    "C use %"odbc.h%""
 		end
 
 	odbc_stru_of_date (year, mon, day, hour, minute, sec, mode: INTEGER): POINTER is
 		external
-		    "C"
+		    "C use %"odbc.h%""
 		end
 
 	odbc_str_from_str (ptr: POINTER): POINTER is
 		external
-		    "C"
+		    "C use %"odbc.h%""
 		end
 
 	odbc_str_len (val: POINTER): INTEGER is
 		external
-		    "C"
+		    "C use %"odbc.h%""
 		end
 
 	odbc_str_value (val: POINTER): POINTER is
 		external
-		    "C"
+		    "C use %"odbc.h%""
 		end
 
 	obj_is_integer (obj: ANY): BOOLEAN is
@@ -1239,23 +1239,23 @@ feature {NONE} -- External features
 
 	odbc_set_qualifier (qlf: POINTER) is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_set_owner (owner: POINTER) is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 
 	odbc_available_descriptor : INTEGER is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 	odbc_clear_error is
 		external
-			"C"
+			"C use %"odbc.h%""
 		end
 
 end -- class ODBC

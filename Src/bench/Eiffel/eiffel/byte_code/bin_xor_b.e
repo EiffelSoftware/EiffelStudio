@@ -7,9 +7,34 @@ inherit
 			Bc_xor as operator_constant,
 			il_xor as il_operator_constant
 		redefine
-			is_commutative, print_register
+			is_commutative, print_register, built_in_enlarged
 		end;
-	
+
+feature -- Enlarging
+
+	built_in_enlarged: EXPR_B is
+			-- Enlarge node. Try to get rid of useless code if possible.
+		local
+			l_left_val, l_right_val: VALUE_I
+		do
+			left := left.enlarged
+			right := right.enlarged
+			if context.final_mode then
+				l_left_val := left.evaluate
+				l_right_val := right.evaluate
+				if l_left_val.is_boolean and then l_left_val.same_type (l_right_val) then
+					create {CONSTANT_B} Result.make (
+						create {BOOL_VALUE_I}.make (not l_left_val.is_equivalent (l_right_val)))
+				else
+					access := access.enlarged
+					Result := Current
+				end
+			else
+				access := access.enlarged
+				Result := Current
+			end
+		end
+
 feature 
 
 	is_commutative: BOOLEAN is True;

@@ -6,7 +6,8 @@ inherit
 			Bc_not as operator_constant,
 			Il_not as il_operator_constant
 		redefine
-			generate_operator, is_built_in, print_register
+			generate_operator, is_built_in, print_register,
+			enlarged
 		end;
 	
 feature
@@ -32,5 +33,28 @@ feature
 		do
 			Result := context.real_type (expr.type).is_boolean;
 		end;
+
+feature -- Enlarging
+
+	enlarged: EXPR_B is
+			-- Enlarge expression.
+		local
+			l_val: VALUE_I
+		do
+			if not is_built_in or not context.final_mode then
+				Result := Precursor {UNARY_B}
+			else
+				expr := expr.enlarged
+				l_val := expr.evaluate
+				if l_val.is_boolean then
+					create {CONSTANT_B} Result.make (l_val.unary_not)
+				else
+					if access /= Void then
+						access := access.enlarged
+					end
+					Result := Current
+				end
+			end
+		end
 
 end

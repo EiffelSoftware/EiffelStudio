@@ -41,12 +41,34 @@ feature
 			{BIN_EQUAL_B} Precursor;
 		end;
 
-	enlarged: BIN_NE_BL is
+	enlarged: EXPR_B is
 			-- Enlarge node
+		local
+			l_left_val, l_right_val: VALUE_I
 		do
-			!!Result;
-			Result.fill_from (Current);
-		end;
+			left := left.enlarged
+			right := right.enlarged
+			if context.final_mode then
+				l_left_val := left.evaluate
+				l_right_val := right.evaluate
+				if
+					l_left_val.same_type (l_right_val) and then
+					l_left_val.is_equivalent (l_right_val)
+				then
+					create {CONSTANT_B} Result.make (create {BOOL_VALUE_I}.make (False))
+				else
+						-- They are either not of the same type, or if they are they might
+						-- have different values. For the moment, we simply proceed to
+						-- traditional code generation (no optimization done, as you could
+						-- have an INTEGER_8 constant of value 1, and an INTEGER constant of value 1
+						-- and no comparison features at the moment enables us to tell they
+						-- are the same value without computation.
+					create {BIN_NE_BL} Result.make (left, right)
+				end
+			else
+				create {BIN_NE_BL} Result.make (left, right)
+			end
+		end
 
 feature -- IL code generation
 

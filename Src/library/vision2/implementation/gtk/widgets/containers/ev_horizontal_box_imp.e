@@ -49,11 +49,11 @@ feature {EV_BOX} -- Implementation
 			gtk_widget_show (child_imp.box_widget)
 
 			gtk_box_pack_start (child_imp.box_widget, child_imp.widget, 
-			    child_imp.expandable,
+			    True,
 			    child_imp.vertical_resizable, 0)
 
 			gtk_box_pack_start (widget, child_imp.box_widget, 
-			    child_imp.expandable,
+			    True,
 			    child_imp.vertical_resizable, 0)
 
 			-- Sets the resizing options.
@@ -72,30 +72,33 @@ feature {EV_HORIZONTAL_BOX_IMP} -- Implementation
 			-- changed the settings of his child `the_child'.
 			-- Redefined because the child is in a vbox to allow
 			-- vertical resize options.
+		local
+			child_interface: EV_WIDGET
 		do
+			child_interface ?= the_child.interface
 			inspect
 				the_child.resize_type
 			when 0 then
 				-- 0 : no horizontal nor vertical resizing, the widget moves
-				c_gtk_box_set_child_options (widget, the_child.box_widget, The_child.expandable, False)
+				c_gtk_box_set_child_options (widget, the_child.box_widget, is_child_expandable (child_interface), False)
 					-- To forbid horizontal resizing
 				c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, False)
 					-- To forbid vertical resizing
 			when 1 then
 				-- 1 : horizontal resizing but no vertical resizing, only the width changes
-				c_gtk_box_set_child_options (widget, the_child.box_widget, The_child.expandable, True)
+				c_gtk_box_set_child_options (widget, the_child.box_widget, is_child_expandable (child_interface), True)
 					-- To allow horizontal resizing
 				c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, False)
 					-- To forbid vertical resizing
 			when 2 then
 				-- 2 : no horizontal resizing but vertical resizing, only the height changes
-				c_gtk_box_set_child_options (widget, the_child.box_widget, The_child.expandable, False)
+				c_gtk_box_set_child_options (widget, the_child.box_widget, is_child_expandable (child_interface), False)
 					-- To forbid horizontal resizing
 				c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, True)
 					-- To allow vertical resizing
 			when 3 then
 				-- 3 : horizontal resizing and vertical resizing, both width and height change
-				c_gtk_box_set_child_options (widget, the_child.box_widget, The_child.expandable, True)
+				c_gtk_box_set_child_options (widget, the_child.box_widget, is_child_expandable (child_interface), True)
 					-- To allow horizontal resizing
 				c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, True)
 					-- To allow vertical resizing

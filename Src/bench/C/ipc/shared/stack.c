@@ -543,8 +543,7 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 		case SK_POINTER: *(EIF_POINTER *)(ip->it_addr) = new_value->it_ptr; break;
 		case SK_STRING: *(EIF_REFERENCE *)(ip->it_addr) = RTMS(new_value->it_ref); break;
 		case SK_REF:
-			new_object = (EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref))));
-			new_object = eif_access(new_object);
+			new_object = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref)))));
 			*(EIF_REFERENCE *)(ip->it_addr) = new_object;
 			break;
 		case SK_BIT:

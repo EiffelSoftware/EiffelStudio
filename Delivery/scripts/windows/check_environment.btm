@@ -15,6 +15,7 @@ iff not defined NO_COMPILE then
 		echo TMP_EIFFEL_SRC not defined. Cannot continue
 		CANCEL
 	endiff
+	remtrace EIFFEL_SRC is %EIFFEL_SRC
 	iff isdir %EIFFEL_SRC then
 		echo Warning: %EIFFEL_SRC will be erased by the script!
 	endiff

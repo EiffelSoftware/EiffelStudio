@@ -11,9 +11,6 @@ class
 	
 inherit
 	EV_APPLICATION_I
-		rename
-			root_window as main_window
-		end
 
 	EV_ACCELERATOR_HANDLER_IMP
 		rename
@@ -72,6 +69,14 @@ feature {NONE} -- Initialization
 			destroy_application
 		end
 
+feature -- Root window
+
+	main_window: EV_UNTITLED_WINDOW_IMP is
+			-- Current main window of the application
+		once
+			Result := root_windows.first
+		end
+
 feature -- Status setting
 
 	destroy_application is
@@ -79,6 +84,34 @@ feature -- Status setting
 		do
 			if accelerator_table /= Void then
 				accelerator_table.destroy
+			end
+		end
+
+	set_root_window is
+		do
+			main_window.application.put (Current)
+			set_application_main_window (main_window)
+		end
+
+feature -- Element change
+
+	add_root_window (w: EV_UNTITLED_WINDOW_IMP) is
+			-- Add `w' to the list of root windows.
+		do
+			root_windows.extend (w)
+		end
+
+	remove_root_window (w: EV_UNTITLED_WINDOW_IMP) is
+			-- Remove `w' from the root windows list.
+		do
+			if root_windows.count /= 1 then
+				root_windows.start
+				if root_windows.item = w then
+					root_windows.remove
+					set_root_window
+				else
+					root_windows.prune (w)
+				end
 			end
 		end
 
@@ -104,15 +137,6 @@ feature -- Basic operation
 			-- Exit the application
 		do
 			main_window.destroy
-		end
-
-	splash_pixmap (pix: EV_PIXMAP) is
-			-- Show the splash screen pixmap `pix'.
-		do
-			create splash_screen.make
-			splash_screen.set_background_pixmap (pix)
-			splash_screen.set_minimum_size (pix.width, pix.height)
-			splash_screen.show
 		end
 
 feature -- Implementation
@@ -145,17 +169,6 @@ feature -- Implementation
 				end
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	set_root_window is
-		do
-			main_window.application.put (Current)
-			set_application_main_window (main_window)
-		end
-
-	splash_screen: EV_UNTITLED_WINDOW_IMP
-			-- Splash screen of the application
 
 feature {NONE} -- WEL Implemenation
 

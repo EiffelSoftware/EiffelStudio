@@ -602,7 +602,9 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		EIF_END_GET_CONTEXT
 	}
 	eif_thr_exit ();
+#ifndef SOLARIS_THREADS
 	return (EIF_THR_ENTRY_TYPE) 0;	/* 	NOTREACHED. */
+#endif
 }
 
 

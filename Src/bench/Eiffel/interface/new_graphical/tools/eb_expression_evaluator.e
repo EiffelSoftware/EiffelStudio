@@ -39,6 +39,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFNET_EXPORTER		
+		export
+			{NONE} all
+		end
+		
 create
 	make
 
@@ -150,8 +155,10 @@ feature -- Status setting
 			cst: CALL_STACK_STONE
 		do
 			cst ?= a_stone
-			if cst /= Void then
-				refresh_context_expressions
+			if cst /= Void and then application.is_stopped then
+				if not application.is_dotnet or else application.imp_dotnet.callback_notification_processed then
+					refresh_context_expressions
+				end
 			end
 		end
 
@@ -215,13 +222,9 @@ feature {NONE} -- Event handling
 		local
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 		do
-			if Application.is_dotnet then -- FIXME jfiat [2003/10/22 - 12:35] 
-				raise_dot_net_warning
-			else
-				create dlg.make
-				dlg.set_callback (agent add_expression (dlg))
-				dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
-			end
+			create dlg.make
+			dlg.set_callback (agent add_expression (dlg))
+			dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
 		end
 
 	edit_expression is
@@ -270,22 +273,17 @@ feature {NONE} -- Event handling
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 			
 		do
-			if Application.is_dotnet then
-					--| FIXME jfiat [2003/10/22 - 12:34]
-				raise_dot_net_warning
+			ost ?= s
+			if ost /= Void then
+				create dlg.make_with_object (ost.object_address)
+				dlg.set_callback (agent add_expression (dlg))
+				dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
 			else
-				ost ?= s
-				if ost /= Void then
-					create dlg.make_with_object (ost.object_address)
+				cst ?= s
+				if cst /= Void then
+					create dlg.make_with_class (cst.e_class)
 					dlg.set_callback (agent add_expression (dlg))
 					dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
-				else
-					cst ?= s
-					if cst /= Void then
-						create dlg.make_with_class (cst.e_class)
-						dlg.set_callback (agent add_expression (dlg))
-						dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
-					end
 				end
 			end
 		end
@@ -399,6 +397,8 @@ feature {NONE} -- Implementation
 			dmp: DUMP_VALUE
 			ost: OBJECT_STONE
 			res: STRING
+
+			en_drv: EIFNET_DEBUG_REFERENCE_VALUE
 		do
 			create Result
 			Result.extend (expr.context)
@@ -409,6 +409,11 @@ feature {NONE} -- Implementation
 				Result.extend (res)
 				if dmp.address /= Void then
 					create ost.make (dmp.address, " ", dmp.dynamic_class)
+					en_drv ?= dmp.eifnet_debug_value
+					if en_drv /= Void then
+						application.imp_dotnet.keep_object (en_drv)
+						
+					end
 					Result.set_pebble (ost)
 					Result.set_accept_cursor (ost.stone_cursor)
 					Result.set_deny_cursor (ost.X_stone_cursor)

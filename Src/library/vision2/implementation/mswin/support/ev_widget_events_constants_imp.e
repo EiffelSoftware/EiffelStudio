@@ -79,6 +79,10 @@ feature -- Event for text_components
 			-- The text inside the component is modified by the
 			-- user
 
+	Cmd_update: INTEGER is 18
+			-- The text inside the componant is going to be
+			-- update after a change of the user.
+
 end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP
 
 --|----------------------------------------------------------------

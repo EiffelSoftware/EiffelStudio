@@ -25,6 +25,7 @@ feature -- Creation
 			-- Creation
 		local
 			h2: EV_HORIZONTAL_BOX
+			reset_b: EV_BUTTON
 		do
 			Precursor (h, new_caller)
 			create h2
@@ -39,6 +40,8 @@ feature -- Creation
 
 			create change_b.make_with_text_and_action ("Change ...",~change)
 			h2.extend (change_b)
+			create reset_b.make_with_text_and_action ("Auto",~change)
+			h2.extend (reset_b)
 --			change_b.disable_vertical_resize
 --			change_b.disable_horizontal_resize
 			h2.disable_item_expand (change_b)
@@ -71,8 +74,8 @@ feature -- Commands
 			-- Create Color Tool.
 		do
 --			create color_tool
---			color_tool.set_modal
 --			color_tool.select_color (resource.actual_value)
+--			color_tool.show_modal
 		end
 
 feature -- Display

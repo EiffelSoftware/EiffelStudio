@@ -70,4 +70,7 @@ feature -- Server size configuration
 	Chunk: INTEGER is 500
 			-- Size of a HASH_TABLE block
 
+invariant
+	cache_not_void: cache /= Void
+
 end

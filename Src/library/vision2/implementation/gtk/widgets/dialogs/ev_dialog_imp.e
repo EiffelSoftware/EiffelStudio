@@ -13,14 +13,14 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color
 		redefine
-			initialize,
 			interface
 		end
 
 	EV_TITLED_WINDOW_IMP
 		redefine
 			make,
-			interface
+			interface,
+			call_close_request_actions
 		end
 
 create
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			C.gtk_window_set_policy (c_object, 0, 0, 1) -- False, False, True
 			enable_closeable
 		end
-
+		
 feature -- Status Report
 
 	is_closeable: BOOLEAN is
@@ -134,6 +134,16 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	call_close_request_actions is
+			-- Call the cancel actions if dialog is closeable.
+		do
+			if is_dialog_closeable and then internal_default_cancel_button /= Void then
+				if internal_default_cancel_button.select_actions /= Void then
+					internal_default_cancel_button.select_actions.call ([])
+				end
+			end
+		end
+
 	interface: EV_DIALOG
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
@@ -168,6 +178,9 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2001/06/22 00:50:03  king
+--| Now using initialize precursor
+--|
 --| Revision 1.15  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

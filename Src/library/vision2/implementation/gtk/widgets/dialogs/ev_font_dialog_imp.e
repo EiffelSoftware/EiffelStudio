@@ -16,7 +16,8 @@ inherit
 
 	EV_STANDARD_DIALOG_IMP
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 create
@@ -54,7 +55,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize the dialog.
 		do
-			signal_connect_true ("delete_event", ~on_cancel)
+			Precursor {EV_STANDARD_DIALOG_IMP}
 			real_signal_connect (
 				gtk_font_selection_dialog_struct_ok_button (c_object),
 				"clicked",
@@ -206,6 +207,9 @@ end -- class EV_FONT_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2001/06/22 00:50:03  king
+--| Now using initialize precursor
+--|
 --| Revision 1.8  2001/06/14 18:45:31  rogers
 --| Corrected spelling mistake. familys is now families.
 --|

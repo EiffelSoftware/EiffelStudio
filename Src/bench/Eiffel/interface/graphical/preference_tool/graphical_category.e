@@ -29,34 +29,34 @@ feature {TTY_RESOURCES} -- Initialization
 			-- Initialize all rsources valid for Current.
 		do
 			!! font.make ("font", rt, "");
-			!! breakable_font.make ("breakable_font", rt, "*times-medium-o-*-140-*");
-			!! class_font.make ("class_font", rt, "*times-medium-o-*-140-*");
-			!! cluster_font.make ("cluster_font", rt, "*times-medium-o-*-140-*");
-			!! comment_font.make ("comment_font", rt, "*times-medium-r-*-140-*");
-			!! default_text_font.make ("default_text_font", rt, "*times-medium-o-*-140-*");
-			!! error_font.make ("error_font", rt, "*times-medium-o-*-140-*");
-			!! feature_font.make ("feature_font", rt, "*times-medium-o-*-140-*");
-			!! keyword_font.make ("keyword_font", rt, "*times-bold-r-*-140-*");
-			!! object_font.make ("object_font", rt, "*times-medium-o-*-140-*");
-			!! text_font.make ("text_font", rt, "*times-medium-r-*-140-*");
-			!! string_text_font.make ("string_text_font", rt, "fixed");
-			!! symbol_font.make ("symbol_font", rt, "*times-medium-r-*-140-*");
-			!! html_font.make ("html_font", rt, "*times-medium-r-*-140-*");
+			!! breakable_font.make ("breakable_font", rt, "-*-courier-medium-r-*-*-12-*");
+			!! class_font.make ("class_font", rt, "-*-times-medium-i-normal-*-12-*");
+			!! cluster_font.make ("cluster_font", rt, "-*-times-medium-i-normal-*-12-*");
+			!! comment_font.make ("comment_font", rt, "-*-courier-medium-r-*-*-12-*");
+			!! default_text_font.make ("default_text_font", rt, "-*-courier-medium-r-*-*-12-*");
+			!! error_font.make ("error_font", rt, "-*-times-medium-r-normal-*-12-*");
+			!! feature_font.make ("feature_font", rt, "-*-times-medium-i-normal-*-12-*");
+			!! keyword_font.make ("keyword_font", rt, "-*-times-bold-r-normal-*-12-*");
+			!! object_font.make ("object_font", rt, "-*-times-medium-i-normal-*-12-*");
+			!! text_font.make ("text_font", rt, "-*-courier-medium-r-*-*-12-*");
+			!! string_text_font.make ("string_text_font", rt, "-*-times-medium-r-normal-*-12-*");
+			!! symbol_font.make ("symbol_font", rt, "-*-times-medium-r-normal-*-12-*");
+			!! html_font.make ("html_font", rt, "-*-courier-medium-r-*-*-12-*");
 
 			!! background_color.make ("background_color", rt, "");
 			!! foreground_color.make ("foreground_color", rt, "");
 
 			!! text_background_color.make ("text_background_color", rt, "white");
 			!! text_foreground_color.make ("text_foreground_color", rt, "black");
-			!! breakable_color.make ("breakable_color", rt, "black");
-			!! class_color.make ("class_color", rt, "black");
-			!! cluster_color.make ("cluster_color", rt, "black");
+			!! breakable_color.make ("breakable_color", rt, "red");
+			!! class_color.make ("class_color", rt, "magenta");
+			!! cluster_color.make ("cluster_color", rt, "DarkRed");
 			!! comment_color.make ("comment_color", rt, "red");
 			!! default_text_color.make ("default_text_color", rt, "black");
 			!! error_color.make ("error_color", rt, "red");
-			!! feature_color.make ("feature_color", rt, "black");
+			!! feature_color.make ("feature_color", rt, "green4");
 			!! keyword_color.make ("keyword_color", rt, "blue");
-			!! object_color.make ("object_color", rt, "black");
+			!! object_color.make ("object_color", rt, "brown");
 			!! stop_color.make ("stop_color", rt, "red");
 			!! string_text_color.make ("string_text_color", rt, "black");
 			!! symbol_color.make ("symbol_color", rt, "black");

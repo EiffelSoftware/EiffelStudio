@@ -10,19 +10,19 @@
 			<list ordered="false">
 				<item>
 					<link>
-						<url>01_introduction.html</url>
+						<url>01_introduction.xml</url>
 						<label>Introduction</label>
 					</link>
 				</item>
 				<item>
 					<link>
-						<url>content/index.html</url>
+						<url>content/index.xml</url>
 						<label>Content</label>
 					</link>
 				</item>
 				<item>
 					<link>
-						<url>reference/index.html</url>
+						<url>reference/index.xml</url>
 						<label>Reference</label>
 					</link>
 				</item>
@@ -31,12 +31,12 @@
 				<bold>See Also</bold>
 				<line_break/>
 				<link>
-					<url>../../technologies/com/index.html</url>
+					<url>../../technologies/com/index.xml</url>
 					<label>The    Component Object Model</label>
 				</link>
 				<line_break/>
 				<link>
-					<url>../../tools/wizards/com/index.html</url>
+					<url>../../tools/wizards/com/index.xml</url>
 					<label>EiffelCOM    wizard</label>
 				</link>
 			</seealso>

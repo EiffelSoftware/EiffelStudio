@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>A 
 			<link>
-				<url>../reference/structures/index.html</url>
+				<url>../reference/structures/index.xml</url>
 				<label>Structures</label>
 			</link>         cluster includes wrappers for COM structures and additional         data structures.
 		</paragraph>

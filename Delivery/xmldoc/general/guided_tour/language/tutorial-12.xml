@@ -278,7 +278,7 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 				<comment>]</comment>
 			</code>, using the syntax for manifest tuples introduced in 
 			<link>
-				<url>tutorial-11.html#36752</url>
+				<url>tutorial-11.xml#36752</url>
 			</link> .  You will always use tuples for the argument to 
 			<code>
 				<string>call</string>

@@ -38,7 +38,7 @@
 						<note>
 							<bold>Note</bold>: Take a look at how to 
 							<link>
-								<url>../60_query_variables/index.html</url>
+								<url>../60_query_variables/index.xml</url>
 								<label>bind variables</label>
 							</link> to a query.
 						</note>
@@ -64,12 +64,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>../30_database_selection/index.html</url>
+				<url>../30_database_selection/index.xml</url>
 				<label>Performing a database selection.</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>../50_data_object_coupling/index.html</url>
+				<url>../50_data_object_coupling/index.xml</url>
 				<label>Coupling database data and Eiffel objects.</label>
 			</link>
 			<line_break/>

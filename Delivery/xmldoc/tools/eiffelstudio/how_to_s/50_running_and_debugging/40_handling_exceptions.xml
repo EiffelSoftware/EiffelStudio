@@ -9,7 +9,7 @@
 		</paragraph>
 		<paragraph>The EXCEPTIONS class also provides ways to raise exception, via its feature 
 			<link>
-				<url>/libraries/base/reference/kernel/exceptions.html#f_raise</url>
+				<url>/libraries/base/reference/kernel/exceptions.xml#f_raise</url>
 				<label>'raise'</label>
 			</link>.
 		</paragraph>

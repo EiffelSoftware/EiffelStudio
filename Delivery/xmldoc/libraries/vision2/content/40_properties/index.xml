@@ -9,15 +9,15 @@
 	<paragraph>
 		<paragraph>  This cluster contains all the common properties available for Vision2 
 			<link>
-				<url>/libraries/vision2/content/10_widgets/index.html</url>
+				<url>/libraries/vision2/content/10_widgets/index.xml</url>
 				<label>widgets</label>
 			</link> and  
 			<link>
-				<url>../20_items/index.html</url>
+				<url>../20_items/index.xml</url>
 				<label>items</label>
 			</link>. Every Vision2 widget has the same set of properties inherited from EV_WIDGET,  but many widgets also inherit additional properties, further refining the  behavior of the widget. To view the classes contained in the  property cluster, click 
 			<link>
-				<url>/libraries/vision2/reference/interface/properties/index.html</url>
+				<url>/libraries/vision2/reference/interface/properties/index.xml</url>
 				<label>here</label>
 			</link>. 
 		</paragraph>
@@ -25,13 +25,13 @@
 			<list ordered="false">
 				<item>
 					<link>
-						<url>../../reference/interface/properties/ev_pick_and_dropable_chart.html</url>
+						<url>../../reference/interface/properties/ev_pick_and_dropable_chart.xml</url>
 						<label>EV_PICK_AND_DROPABLE</label>
 					</link>
 					<list ordered="false">
 						<item>For an overview of the Pick and Drop mechanism, click 
 							<link>
-								<url>ev_pick_and_dropable.html</url>
+								<url>ev_pick_and_dropable.xml</url>
 								<label>here</label>
 							</link>.
 						</item>
@@ -39,7 +39,7 @@
 				</item>
 				<item>
 					<link>
-						<url>../../reference/interface/properties/ev_sensitive_chart.html</url>
+						<url>../../reference/interface/properties/ev_sensitive_chart.xml</url>
 						<label>EV_SENSITIVE</label>
 					</link>
 					<list ordered="false">
@@ -50,7 +50,7 @@
 				</item>
 				<item>
 					<link>
-						<url>../../reference/interface/properties/ev_colorizable_chart.html</url>
+						<url>../../reference/interface/properties/ev_colorizable_chart.xml</url>
 						<label>EV_COLORIZABLE</label>
 					</link>
 					<list ordered="false">
@@ -62,7 +62,7 @@
 				</item>
 				<item>
 					<link>
-						<url>../../reference/interface/properties/ev_help_contextable_chart.html</url>
+						<url>../../reference/interface/properties/ev_help_contextable_chart.xml</url>
 						<label>EV_HELP_CONTEXTABLE</label>
 					</link>
 					<list ordered="false">
@@ -71,7 +71,7 @@
 				</item>
 				<item>
 					<link>
-						<url>../../reference/interface/properties/ev_positioned_chart.html</url>
+						<url>../../reference/interface/properties/ev_positioned_chart.xml</url>
 						<label>EV_POSITIONED</label>
 					</link>
 					<list ordered="false">
@@ -84,7 +84,7 @@
 				</item>
 				<item>
 					<link>
-						<url>../../reference/interface/properties/ev_containable_chart.html</url>
+						<url>../../reference/interface/properties/ev_containable_chart.xml</url>
 						<label>EV_CONTAINABLE</label>
 					</link>
 					<list ordered="false">

@@ -29,7 +29,7 @@
 			</heading>
 			<paragraph>Modification to all constant types is performed from the constants dialog, accessible from the 
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/interface_construction.html#main_toolbar</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/interface_construction.xml#main_toolbar</url>
 					<label>main toolbar</label>
 				</link> via the 
 				<image> 
@@ -143,26 +143,26 @@
 							</heading>
 							<paragraph>Constants may be associated to properties of your 
 								<link>
-									<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/02_notation.html#object</url>
+									<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/02_notation.xml#object</url>
 									<label>objects</label>
 								</link> via an 
 								<link>
-									<url>../40_object_editor/40_object_editor/index.html</url>
+									<url>../40_object_editor/40_object_editor/index.xml</url>
 									<label> object editor</label>
 								</link> targeted to that 
 								<link>
-									<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/02_notation.html#object</url>
+									<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/02_notation.xml#object</url>
 									<label>object</label>
 								</link>. The 
 								<image> 
 									<url>/images/eiffelbuild/icons/icon_format_onces_color.png</url>
 								</image> button denotes the use of a constant value. For more information regarding using constants, in 
 								<link>
-									<url>../40_object_editor/index.html</url>
+									<url>../40_object_editor/index.xml</url>
 									<label> object editors</label>
 								</link>, see 
 								<link>
-									<url>../40_object_editor/index.html</url>
+									<url>../40_object_editor/index.xml</url>
 									<label> object editor</label>
 								</link>. 
 							</paragraph>
@@ -174,7 +174,7 @@
 									<bold>See also</bold>: 
 									<line_break/>
 									<link>
-										<url>../40_object_editor/index.html</url>
+										<url>../40_object_editor/index.xml</url>
 										<label>Object editor</label>
 									</link>
 									<line_break/>

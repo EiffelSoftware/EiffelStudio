@@ -45,13 +45,13 @@
 					</paragraph>
 					<paragraph>  Right clicking on any node in the class view will display a 
 						<link>
-							<url>context_menu.html</url>
+							<url>context_menu.xml</url>
 							<label>  context menu</label>
 						</link> for the current node. 
 					</paragraph>
 					<paragraph>For details of the hierarchy displayed in the Object Browser, click 
 						<link>
-							<url>hierarchy.html</url>
+							<url>hierarchy.xml</url>
 							<label>  here</label>
 						</link>. 
 					</paragraph>
@@ -64,7 +64,7 @@
 						</link>
 						<line_break/>
 						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
 							<label>Class View</label>
 						</link>
 						<line_break/>

@@ -13,7 +13,7 @@
 				<cell>
 					<paragraph>  Right clicking on any item displayed in the 
 						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
 							<label>Class View</label>
 						</link>  will open a context menu for that item, as demonstrated in the following screenshot:
 					</paragraph>
@@ -45,25 +45,25 @@
 						<item>  Copy - Copies the text of the current target to the clipboard.  </item>
 						<item>  Sort Alphabetically - Sorts all items in the 
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
 								<label>Class View</label>
 							</link> alphabetically.
 						</item>
 						<item>  Sort By Type - Sorts all items in the 
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
 								<label>Class View</label>
 							</link> by type.
 						</item>
 						<item>  Sort By Access - Sorts all items in the 
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
 								<label>Class View</label>
 							</link> by access type.
 						</item>
 						<item>  Group By Type - Sorts all items in the 
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
 								<label>Class View</label>
 							</link> by type.
 						</item>
@@ -73,7 +73,7 @@
 						<bold>See also</bold>
 						<line_break/>
 						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
 							<label>Class View</label>
 						</link>
 						<line_break/>

@@ -69,7 +69,7 @@ console<symbol>:</symbol> <class_name>WINDOW</class_name> <keyword>is</keyword>
 		</paragraph>
 		<paragraph>The "Hello World" system at the beginning of this discussion (section 
 			<link>
-				<url>tutorial-05.html#35212</url>
+				<url>tutorial-05.xml#35212</url>
 			</link> ) used an output instruction of the form 
 			<code>
 				<string>io</string>
@@ -355,7 +355,7 @@ console<symbol>:</symbol> <class_name>WINDOW</class_name> <keyword>is</keyword>
 				<keyword>unique</keyword>
 			</code> values ( 
 			<link>
-				<url>tutorial-11.html#94304</url>
+				<url>tutorial-11.xml#94304</url>
 			</link> ) for the 
 			<code>
 				<string>v</string>
@@ -717,7 +717,7 @@ enter <symbol>(</symbol> i <symbol>:</symbol> <class_name>INTEGER</class_name> ;
 		</heading>
 		<paragraph>The basic forms of creation instruction, and the one most commonly used, are the two illustrated earlier ( 
 			<link>
-				<url>tutorial-07.html#59651</url>
+				<url>tutorial-07.xml#59651</url>
 			</link> ):
 		</paragraph>
 		<code_block>

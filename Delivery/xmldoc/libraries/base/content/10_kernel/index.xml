@@ -24,7 +24,7 @@
 					<item>Arrays: class ARRAY</item>
 					<item>Tuples: class 
 						<link>
-							<url>../../reference/kernel/tuple_chart.html</url>
+							<url>../../reference/kernel/tuple_chart.xml</url>
 							<label>TUPLE</label>
 						</link>
 					</item>
@@ -359,28 +359,28 @@
 		</heading>
 		<paragraph>A new Kernel Library class is introduced: 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link>.
 			<line_break/> Alone among all classes, class 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> has a variable number of generic parameters. 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link>, 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [X], 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [X, Y], 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [X, Y, Z] and so on are all valid types, assuming valid types X, Y, Z and so on.
 			<line_break/> Conformance rules:
@@ -396,7 +396,7 @@
 		</paragraph>
 		<paragraph>(and hence to 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [T
 			<sub_script>1</sub_script>, T
@@ -407,7 +407,7 @@
 		</paragraph>
 		<paragraph>In particular all tuple types conform to 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link>, with no parameter.
 		</paragraph>
@@ -421,11 +421,11 @@
 		</paragraph>
 		<paragraph>Definition: a "tuple type" is any type based on class 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link>, i.e. any type of the form 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [T
 			<sub_script>1</sub_script>, T
@@ -434,7 +434,7 @@
 		</paragraph>
 		<note>(Note 1: CONF1 should be understood in terms of the underlying mathematical model. Mathematically, 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [T
 			<sub_script>1</sub_script>, T
@@ -459,7 +459,7 @@
 		</paragraph>
 		<paragraph>Semantics: an instance of 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [T
 			<sub_script>1</sub_script>, T
@@ -468,21 +468,21 @@
 			<sub_script>1</sub_script>, the second element being an instance of T
 			<sub_script>2</sub_script> etc. (The precise definition is the mathematical one given in note 1.) Note that there can be more than n elements to the tuple: for example a tuple with first element 5 and second element "FOO" is an instance of all of the following tuple types: 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link>; 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [INTEGER]; 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [INTEGER, STRING].
 		</paragraph>
 		<note> (Note 2: It may seem restrictive at first to permit only one class, 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link>, to have an arbitrary number of actual generic parameters. Why not have a general mechanism for declaring any class C so that all of C [X], C [X, Y] etc. are valid? But in fact this is not really a restriction. To obtain this effect without any complicated language convention, just declare C as
 		</note>
@@ -509,7 +509,7 @@
 		</paragraph>
 		<paragraph>denotes an instance of 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [T
 			<sub_script>1</sub_script>, T
@@ -522,18 +522,18 @@
 		<paragraph>[1, 2, 3]</paragraph>
 		<paragraph>is a tuple with three elements (representing an instance of 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [INTEGER, INTEGER, INTEGER]),
 		</paragraph>
 		<paragraph> [1, [2, 3]]</paragraph>
 		<paragraph>is a tuple with two elements, the second one itself a tuple; the overall expression represents an instance of 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [INTEGER, 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [INTEGER, INTEGER].
 			<line_break/> As a special case of tuple expression syntax, the delimiters [ and ] are replaced by parentheses for the tuple representing the actual argument list of a routine call (see section 4).
@@ -543,37 +543,37 @@
 		</heading>
 		<paragraph>The exact specification of class 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> will be described in an addition to ELKS. The principal features are:
 		</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
-					<url>../../reference/kernel/tuple.html#f_count</url>
+					<url>../../reference/kernel/tuple.xml#f_count</url>
 					<label>count</label>
 				</link> (number of significant elements)
 			</item>
 			<item>
 				<link>
-					<url>../../reference/kernel/tuple.html#f_item</url>
+					<url>../../reference/kernel/tuple.xml#f_item</url>
 					<label>item</label>
 				</link> (i), with the obvious precondition: the i-th element, of type 
 				<link>
-					<url>../../reference/kernel/any_chart.html</url>
+					<url>../../reference/kernel/any_chart.xml</url>
 					<label>ANY</label>
 				</link> (since the value of i is not known at compile time); also first, second, third, fourth and fifth, of the appropriate types.
 			</item>
 			<item>
 				<link>
-					<url>../../reference/kernel/tuple.html#f_put</url>
+					<url>../../reference/kernel/tuple.xml#f_put</url>
 					<label>put</label>
 				</link> (x, i), with the obvious precondition: replace i-th element with x. If argument x is not of the appropriate type T
 				<sub_script>i</sub_script>   there is no effect.
 			</item>
 			<item>
 				<link>
-					<url>../../reference/kernel/tuple.html#f_is_equal</url>
+					<url>../../reference/kernel/tuple.xml#f_is_equal</url>
 					<label>is_equal</label>
 				</link>: redefined to consider only the first n elements, where n is the smaller length.
 			</item>
@@ -582,7 +582,7 @@
 		<list ordered="false">
 			<item>stripped (i): a tuple of type 
 				<link>
-					<url>../../reference/kernel/tuple_chart.html</url>
+					<url>../../reference/kernel/tuple_chart.xml</url>
 					<label>TUPLE</label>
 				</link> [T
 				<sub_script>1</sub_script>, T
@@ -608,7 +608,7 @@
 			<sub_script>n</sub_script>&gt;&gt;, will continue to be supported.
 			<line_break/> Second, we can define functions that return multiple results. This is a quite significant increase in expressive power. No common language has that. (You have to go to Lisp and functional languages.) Just define 
 			<link>
-				<url>../../reference/kernel/tuple_chart.html</url>
+				<url>../../reference/kernel/tuple_chart.xml</url>
 				<label>TUPLE</label>
 			</link> [...] as the result type; in the function, you will write things like
 		</paragraph>
@@ -631,7 +631,7 @@
 		</heading>
 		<paragraph>For a set of important applications of tuples see the book chapter on 
 			<link>
-				<url>../20_structures/70_iteration.html</url>
+				<url>../20_structures/70_iteration.xml</url>
 				<label>agents and iterators</label>
 			</link> which also covers aspects of numerical software and related topics following from the tuple mechanism.
 		</paragraph>
@@ -642,13 +642,13 @@
 		<list ordered="false">
 			<item>Conformance of ARRAY types to 
 				<link>
-					<url>../../reference/kernel/tuple_chart.html</url>
+					<url>../../reference/kernel/tuple_chart.xml</url>
 					<label>TUPLE</label>
 				</link> types is not yet fully supported.
 			</item>
 			<item>Class 
 				<link>
-					<url>../../reference/kernel/tuple_chart.html</url>
+					<url>../../reference/kernel/tuple_chart.xml</url>
 					<label>TUPLE</label>
 				</link> does not have features such as first and second. You must use item and, in most cases, an assignment attempt.
 			</item>

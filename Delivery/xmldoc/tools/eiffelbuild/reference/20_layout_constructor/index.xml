@@ -10,11 +10,11 @@
 	<paragraph>
 		<paragraph>The layout constructor provides a view of the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>objects</label>
 			</link> you have defined in your system, in which the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>objects</label>
 			</link> may be manipulated.
 		</paragraph>
@@ -31,17 +31,17 @@
 		</paragraph>
 		<paragraph>The information displayed, only shows you the structure of the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>objects</label>
 			</link>, and although it gives you an indication of the final appearance of the interface you are building, you cannot see the details of the interface. i.e. color, sizes, tool tips etc.
 		</paragraph>
 		<paragraph>All 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>objects</label>
 			</link> displayed in here are 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 				<label>pickable</label>
 			</link>, so can be easily manipulated, e.g. 
 			<link>
@@ -56,12 +56,12 @@
 		<note>
 			<bold>Note</bold>: If the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
 			</link> in the tree has the 
 			<bold>Name</bold> property set, then the text corresponds to the name, otherwise, the text is the type of the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
 			</link>.
 		</note>

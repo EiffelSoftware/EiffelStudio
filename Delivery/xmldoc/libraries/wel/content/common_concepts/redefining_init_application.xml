@@ -9,7 +9,7 @@
 	<paragraph>
 		<paragraph>WEL_APPLICATION  contains a feature init_application which does nothing by default, but is called before the application  is started. This can be redefined to execute tasks that must be performed before the application is running.  A common redefinition is to allow the loading of common dll's, see 
 			<link>
-				<url>/libraries/wel/samples/list_view/index.html</url>
+				<url>/libraries/wel/samples/list_view/index.xml</url>
 				<label>list_view</label>
 			</link>  sample for a demonstration of this technique. 
 		</paragraph>

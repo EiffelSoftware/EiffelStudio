@@ -13,7 +13,7 @@
 		</heading>
 		<paragraph>A few utility classes complement the 
 			<link>
-				<url>../10_kernel/index.html</url>
+				<url>../10_kernel/index.xml</url>
 				<label>kernel</label>
 			</link> facilities. PRIMES, RANDOM and FIBONACCI are part of the data structure taxonomy; the others are meant to be used as ancestors by  classes needing their features.
 		</paragraph>

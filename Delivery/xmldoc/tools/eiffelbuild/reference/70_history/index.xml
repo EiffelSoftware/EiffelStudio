@@ -10,7 +10,7 @@
 	<paragraph>
 		<paragraph>EiffelBuild has an limitless undo/redo mechanism built in. However, this mechanism only applies to the structure of the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>objects</label>
 			</link> you are developing in your project.
 		</paragraph>
@@ -28,11 +28,11 @@
 				<label>delete</label>
 			</link> an 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
 			</link> in your project, this will be recorded in the history. If you modify properties of an 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
 			</link> (Using an 
 			<link>

@@ -8,39 +8,39 @@
 		</heading>
 		<paragraph>The classes of the predefined level, which only support stream    communication (not datagrams), are 
 			<link>
-				<url>../reference/abstract/client_server/client_chart.html</url>
+				<url>../reference/abstract/client_server/client_chart.xml</url>
 				<label>CLIENT</label>
 			</link>,    
 			<link>
-				<url>../reference/abstract/client_server/server_chart.html</url>
+				<url>../reference/abstract/client_server/server_chart.xml</url>
 				<label>SERVER</label>
 			</link>,    and their descendants 
 			<link>
-				<url>../reference/local/client_server/unix_client_chart.html</url>
+				<url>../reference/local/client_server/unix_client_chart.xml</url>
 				<label>UNIX_CLIENT</label>
 			</link>,    
 			<link>
-				<url>../reference/local/client_server/unix_server_chart.html</url>
+				<url>../reference/local/client_server/unix_server_chart.xml</url>
 				<label>UNIX_SERVER</label>
 			</link>,    
 			<link>
-				<url>../reference/network/client_server/network_client_chart.html</url>
+				<url>../reference/network/client_server/network_client_chart.xml</url>
 				<label>NETWORK_CLIENT</label>
 			</link>    and 
 			<link>
-				<url>../reference/network/client_server/network_server_chart.html</url>
+				<url>../reference/network/client_server/network_server_chart.xml</url>
 				<label>NETWORK_SERVER</label>
 			</link>.    All the architecture of a client-server application is already available    through these classes. All you have to do is to specify the address you    want to use, what you want to send, when you want to send it, and what    you want to do when you receive data. The rest will be taken care of    automatically.
 		</paragraph>
 		<paragraph>The UNIX_
 			<italic/>classes are meant for systems running on the same    machine, using 
 			<link>
-				<url>../reference/local/socket/unix_stream_socket_chart.html</url>
+				<url>../reference/local/socket/unix_stream_socket_chart.xml</url>
 				<label>UNIX_STREAM_SOCKET</label>
 			</link>;    the NETWORK_
 			<italic/>classes support inter-machine communication, using 
 			<link>
-				<url>../reference/network/socket/network_socket_chart.html</url>
+				<url>../reference/network/socket/network_socket_chart.xml</url>
 				<label>NETWORK_SOCKET</label>
 			</link>.
 		</paragraph>
@@ -49,7 +49,7 @@
 		</heading>
 		<paragraph>When you want to write an application, your client should inherit    from 
 			<link>
-				<url>../reference/local/client_server/unix_client_chart.html</url>
+				<url>../reference/local/client_server/unix_client_chart.xml</url>
 				<label>UNIX_CLIENT</label>
 			</link>    for example, and in your creation procedure, you have to setup your    address, and then call the inherited make routine, with your address as    an argument. You are then provided with some send and receive routines.
 		</paragraph>
@@ -58,17 +58,17 @@
 		</heading>
 		<paragraph>For the server, you inherit for example from 
 			<link>
-				<url>../reference/local/client_server/unix_server_chart.html</url>
+				<url>../reference/local/client_server/unix_server_chart.xml</url>
 				<label>UNIX_SERVER</label>
 			</link>.    In the same way as for the client, you set up your address in the    creation procedure, and then call the 
 			<italic>make</italic> creation procedure    inherited from 
 			<link>
-				<url>../reference/local/client_server/unix_server_chart.html</url>
+				<url>../reference/local/client_server/unix_server_chart.xml</url>
 				<label>UNIX_SERVER</label>
 			</link>.    After that your creation procedure should call 
 			<italic>execute</italic>, which is    inherited from 
 			<link>
-				<url>../reference/abstract/client_server/server_chart.html</url>
+				<url>../reference/abstract/client_server/server_chart.xml</url>
 				<label>SERVER</label>
 			</link>,    and provides you with a loop calling 
 			<italic>receive</italic>, 

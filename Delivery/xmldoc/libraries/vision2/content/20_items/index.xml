@@ -9,7 +9,7 @@
 	<paragraph>
 		<paragraph>  All Vision2 items inherit EV_ITEM.  To view the classes contained in the items cluster, click 
 			<link>
-				<url>/libraries/vision2/reference/interface/items/index.html</url>
+				<url>/libraries/vision2/reference/interface/items/index.xml</url>
 				<label>here</label>
 			</link>. 
 		</paragraph>

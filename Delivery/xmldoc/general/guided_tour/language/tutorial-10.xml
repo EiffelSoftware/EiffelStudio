@@ -51,15 +51,15 @@
 			</code> and any other class listed.  Eiffel supports 
 			<bold>multiple</bold> inheritance: a class may have as many parents as it needs.  Later sections ( 
 			<link>
-				<url>tutorial-10.html#21906</url>
+				<url>tutorial-10.xml#21906</url>
 			</link> and 
 			<link>
-				<url>tutorial-10.html#69912</url>
+				<url>tutorial-10.xml#69912</url>
 			</link> ) will explain how to handle possible conflicts between parent features.
 		</paragraph>
 		<paragraph>This discussion will rely on the terminology introduced on page 
 			<link>
-				<url>tutorial-06.html#INHERITANCE AND CLIENT TERMS</url>
+				<url>tutorial-06.xml#INHERITANCE AND CLIENT TERMS</url>
 			</link> : 
 			<span>descendants</span> of a class are the class itself, its heirs, the heirs of its heirs and so on. 
 			<span>Proper descendants</span> exclude the class itself.  The reverse notions are 
@@ -199,7 +199,7 @@
 				<string>deposits_count</string>
 			</code>, originally a function, as an attribute.  The Uniform Access Principle (page 
 			<link>
-				<url>tutorial-07.html#UNIFORM ACCESS</url>
+				<url>tutorial-07.xml#UNIFORM ACCESS</url>
 			</link> ) guarantees that the redefinition makes no change for clients, which will continue to use the feature under the form 
 			<code>
 				<string>acc</string>
@@ -301,7 +301,7 @@
 		</paragraph>
 		<paragraph>In addition, it follows from the earlier discussion of tuples ( 
 			<link>
-				<url>tutorial-11.html#36752</url>
+				<url>tutorial-11.xml#36752</url>
 			</link> ), that TUPLE 
 			<code>
 				<comment>[</comment>
@@ -420,7 +420,7 @@
 				<string>x</string>
 			</code> of any reference type ( 
 			<link>
-				<url>tutorial-07.html#12485</url>
+				<url>tutorial-07.xml#12485</url>
 			</link> ) is a consequence of the Type Conformance rule, since 
 			<code>
 				<string>Void</string>
@@ -429,7 +429,7 @@
 				<string>NONE</string>
 			</code> which by construction ( 
 			<link>
-				<url>tutorial-06.html#82680</url>
+				<url>tutorial-06.xml#82680</url>
 			</link> ) conforms to all types.
 		</paragraph>
 		<paragraph>Polymorphism also yields a more precise definition of "instance".  A 
@@ -1039,7 +1039,7 @@
 		<paragraph>These applications make deferred classes a central tool of the Eiffel method's support for seamlessness and reversibility.  The last one in particular uses deferred classes and features to model objects from an application domain, without any commitment to implementation, design, or even software (and computers).  Deferred classes are the ideal tool here: they express the properties of the domain's abstractions, without any temptation of implementation bias, yet with the precision afforded by type declarations, inheritance structures (to record classifications of the domain concepts), and contracts to express the abstract properties of the objects being described.  </paragraph>
 		<paragraph>Rather than using a separate method and notation for analysis and design, this apprroach integrates seamlessly with the subsequent phases (assuming the decision is indeed taken to develop a software system): it suffices to refine the deferred classes progressively by introducing effective elements, either by modifying the classes themselves, or by introducing design- and implementation-oriented descendants.  In the resulting system, the classes that played an important role for analysis, and are the most meaningful for customers, will remain important; as we have seen ( 
 			<link>
-				<url>tutorial-04.html#24218</url>
+				<url>tutorial-04.xml#24218</url>
 			</link> ) this 
 			<span>direct mapping</span> property is a great help for extendibility.
 		</paragraph>
@@ -1186,7 +1186,7 @@
 				<string>Current</string>
 			</code>will be explained in 
 			<link>
-				<url>tutorial-10.html#46019</url>
+				<url>tutorial-10.xml#46019</url>
 			</link> ; you may understand it, in the following class, as equivalent to 
 			<code>
 				<string>COMPARABLE</string>
@@ -1655,7 +1655,7 @@ In the redeclared version of a routine, it is not permitted to use a require or 
 				<string>forth</string>
 			</code> in 
 			<link>
-				<url>tutorial-10.html#41757</url>
+				<url>tutorial-10.xml#41757</url>
 			</link>, would be almost useless -- wishful thinking; the rule makes them binding on all effectings in descendants.
 		</paragraph>
 		<paragraph>From the Assertion Redeclaration rule follows an interesting technique: 
@@ -1668,7 +1668,7 @@ In the redeclared version of a routine, it is not permitted to use a require or 
 				<string>LIST</string>
 			</code> provided an example.  We wrote the routine (page 
 			<link>
-				<url>tutorial-10.html#17380</url>
+				<url>tutorial-10.xml#17380</url>
 			</link> ) as
 		</paragraph>
 		<code_block>
@@ -1781,7 +1781,7 @@ full: BOOLEAN is
 		</paragraph>
 		<paragraph>All this is not a violation of the Final Name rule (page 
 			<link>
-				<url>tutorial-10.html#25265</url>
+				<url>tutorial-10.xml#25265</url>
 			</link> ), since the name clashes prohibited by the rule involve two 
 			<span>different</span> features having the same final name; here the result is just 
 			<span>one</span> feature, resulting from the join of all the inherited versions.
@@ -1965,7 +1965,7 @@ class ARRAYED_LIST [ G ] inherit
 		</paragraph>
 		<paragraph>As with the Contract Form ( 
 			<link>
-				<url>tutorial-09.html#78482</url>
+				<url>tutorial-09.xml#78482</url>
 			</link> ), producing the Flat Form is the responsibility of tools in the development environment.  In EiffelStudio, you will just click the "Flat" icon.
 		</paragraph>
 		<paragraph>The Contract Form of the Flat Form of a class is known as its F 
@@ -2233,7 +2233,7 @@ class TEACHING_ASSISTANT inherit
 			</code> is only needed in case of replication.  If the Repeated Inheritance rule would imply sharing, as with change_address, and one or both of the shared versions has been redeclared, the Final Name rule makes the class invalid, since it now has 
 			<bold>two different features</bold> with the same name.  (This is only a problem if both versions are effective; if one or both are deferred there is no conflict but a mere case of feature joining as explained in 
 			<link>
-				<url>tutorial-10.html#61102</url>
+				<url>tutorial-10.xml#61102</url>
 			</link> .  ) The two possible solutions follow from the previous discussions:
 		</paragraph>
 		<paragraph>If you do want sharing, one of the two versions must take precedence over the other.  It suffices to 
@@ -2493,12 +2493,12 @@ class TEACHING_ASSISTANT inherit
 		</heading>
 		<paragraph>The Type Conformance rule ( 
 			<link>
-				<url>tutorial-10.html#65123</url>
+				<url>tutorial-10.xml#65123</url>
 			</link> ) ensures type safety by requiring all assignments to be from a more specific source to a more general target.
 		</paragraph>
 		<paragraph>Sometimes you can't be sure of the source object's type.  This happens for example when the object comes from the outside -- a file, a database, a network.  The persistence storage mechanism( 
 			<link>
-				<url>tutorial-07.html#35815</url>
+				<url>tutorial-07.xml#35815</url>
 			</link> ) includes, along with the procedure 
 			<code>
 				<string>store</string>

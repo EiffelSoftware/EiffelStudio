@@ -10,15 +10,15 @@
 	<paragraph>
 		<paragraph>The Component viewer allows you to view the structure of a 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#component</url>
 				<label>component</label>
 			</link> without having to create new 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>objects</label>
 			</link> from the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#component</url>
 				<label>component</label>
 			</link>.
 		</paragraph>
@@ -43,15 +43,15 @@
 		</heading>
 		<paragraph>To target a 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#component</url>
 				<label>component</label>
 			</link> into the tool, 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 				<label>pick</label>
 			</link> the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#component</url>
 				<label>component</label>
 			</link> from the 
 			<link>
@@ -59,7 +59,7 @@
 				<label>component_viewer</label>
 			</link>, and 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 				<label>drop</label>
 			</link> on the
 			<image>
@@ -68,11 +68,11 @@
 		</paragraph>
 		<paragraph>Alternatively, you can hold down the Ctrl key while starting a 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 				<label>pick</label>
 			</link> on a 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#component</url>
 				<label>component</label>
 			</link> in the 
 			<link>
@@ -80,7 +80,7 @@
 				<label> component_selector</label>
 			</link>. This will automatically target the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#component</url>
 				<label>component</label>
 			</link> to the component viewer. If the viewer is currently hidden, it will also make it visible.
 		</paragraph>
@@ -107,7 +107,7 @@
 					<label>EiffelVision2</label>
 				</link> controls are displayed exactly as is defined in the 
 				<link>
-					<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+					<url>/tools/eiffelbuild/reference/02_notation.xml#component</url>
 					<label>component</label>
 				</link>.
 			</item>
@@ -122,7 +122,7 @@
 					<label>EiffelVision2</label>
 				</link> containers are represented by frames so they are immediately visible. This makes the actual structure represented by the 
 				<link>
-					<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+					<url>/tools/eiffelbuild/reference/02_notation.xml#component</url>
 					<label>component</label>
 				</link> completely visible.
 			</item>

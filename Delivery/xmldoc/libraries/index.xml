@@ -11,67 +11,67 @@
 			<list ordered="false">
 				<item>
 					<link>
-						<url>base/index.html</url>
+						<url>base/index.xml</url>
 						<label>EiffelBase</label>
 					</link>: Eiffel Software's's acclaimed open-source library covering the fundamental algorithms and data structures of computing science.
 				</item>
 				<item output="studio">
 					<link>
-						<url>com/index.html</url>
+						<url>com/index.xml</url>
 						<label>EiffelCOM</label>
 					</link>: your tool of choice for building and using Microsoft COM components.
 				</item>
 				<item output="studio">
 					<link>
-						<url>eiffel2java/index.html</url>
+						<url>eiffel2java/index.xml</url>
 						<label>Eiffel2Java</label>
 					</link>: Java interface library.
 				</item>
 				<item output="studio">
 					<link>
-						<url>lex/index.html</url>
+						<url>lex/index.xml</url>
 						<label>Lex&amp;Parse</label>
 					</link>: lexical analysis and parsing libraries.
 				</item>
 				<item output="studio">
 					<link>
-						<url>net/index.html</url>
+						<url>net/index.xml</url>
 						<label>Net</label>
 					</link>: the client-server library for exchanging object structures across the network, between identical or different machine architectures.
 				</item>
 				<item output="studio">
 					<link>
-						<url>store/index.html</url>
+						<url>store/index.xml</url>
 						<label>Store</label>
 					</link>: object-relational database interface library.
 				</item>
 				<item output="studio">
 					<link>
-						<url>thread/index.html</url>
+						<url>thread/index.xml</url>
 						<label>Thread</label>
 					</link>: multi-threading library.
 				</item>
 				<item output="studio">
 					<link>
-						<url>time/index.html</url>
+						<url>time/index.xml</url>
 						<label>Time</label>
 					</link>: time and date library.
 				</item>
 				<item>
 					<link>
-						<url>vision2/index.html</url>
+						<url>vision2/index.xml</url>
 						<label>Vision2</label>
 					</link>: the extensive multi-platform graphical library for producing modern GUI applications that will run on Windows as well as Unix, Linux, VMS and other X-based platforms.
 				</item>
 				<item output="studio">
 					<link>
-						<url>web/index.html</url>
+						<url>web/index.xml</url>
 						<label>Web</label>
 					</link>: Web interface library with support for easy development of CGI scripts in Eiffel.
 				</item>
 				<item>
 					<link>
-						<url>wel/index.html</url>
+						<url>wel/index.xml</url>
 						<label>WEL</label>
 					</link>: powerful graphical library for Windows platforms.
 				</item>

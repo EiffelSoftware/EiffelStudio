@@ -16,7 +16,7 @@
 		</heading>
 		<paragraph>The list and chain classes are characterized, for their traversal properties, as being linear and, more precisely, bilinear. In the traversal hierarchy, the relevant deferred classes are LINEAR and BILINEAR, introduced in the 
 			<link>
-				<url>10_taxonomy.html</url>
+				<url>10_taxonomy.xml</url>
 				<label>discussion</label>
 			</link> of the general taxonomy.
 		</paragraph>
@@ -289,7 +289,7 @@ empty_property<symbol>:</symbol> is_empty <keyword>implies</keyword> <symbol>(</
 		</list>
 		<paragraph>The class also provides implementations of prune, prune_all and wipe_out from 
 			<link>
-				<url>../../reference/structures/access/collection_chart.html</url>
+				<url>../../reference/structures/access/collection_chart.xml</url>
 				<label>COLLECTION</label>
 			</link>. To make these implementations useful, it defines queries extendible and prunable so that they return the value true.
 		</paragraph>

@@ -12,7 +12,7 @@
 				<cell>
 					<paragraph>  Documenting an Eiffel ENViSioN! project can be done only through using the 
 						<link>
-							<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\html_report_wizard.htm</url>
+							<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project.xml_report_wizard.htm</url>
 							<label>  HTML Report Project Wizard</label>
 						</link> from the Add New Project dialog. This  project wizard is only available in the Eiffel ENViSioN! Enterprise Edition.
 					</paragraph>
@@ -28,7 +28,7 @@
 						<bold>See Also:</bold>
 						<line_break/>
 						<link>
-							<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\html_report_wizard.htm</url>
+							<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project.xml_report_wizard.htm</url>
 							<label>  HTML Report Project Wizard</label>
 						</link>
 					</seealso>

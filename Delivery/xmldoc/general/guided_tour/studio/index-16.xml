@@ -9,7 +9,7 @@
 		</paragraph>
 		<paragraph>So far the project modifications that we have made used the text editor in the Editing Tool.  We used graphics, but as a way to reflect system structures, not to build them ( 
 			<link>
-				<url>index-07.html#46460</url>
+				<url>index-07.xml#46460</url>
 			</link>, and subsequent discussions).
 		</paragraph>
 		<paragraph>In line with the principles of seamlessness and reversibility recalled at the beginning of this Tour, EiffelStudio's text-diagram interaction is bi-directional.  When you make a textual modification, the next incremental recompilation will update the diagram; but you can also work directly from the diagram, and the text will be generated or updated after each graphical operation.  </paragraph>
@@ -21,7 +21,7 @@
 			</heading>
 			<paragraph>We are going to play with the root cluster.  Make sure the Cluster tree and the Context Tool are up.  Also make sure that the Context tool is in Isolate rather than Linked behavior ( 
 				<link>
-					<url>index-11.html#89659</url>
+					<url>index-11.xml#89659</url>
 				</link> ); you can see this by going to the 
 				<code>
 					<keyword>Edit menu</keyword>
@@ -312,7 +312,7 @@
 					<keyword>Client</keyword>
 				</code> as the next relation to make links (the link creation buttons were shown on page 
 				<link>
-					<url>index.html#LINK CREATION</url>
+					<url>index.xml#LINK CREATION</url>
 				</link> ).  Pick-and-drop from the 
 				<code>
 					<string>TESTROOT</string>
@@ -780,7 +780,7 @@
 			</paragraph>
 			<paragraph>You may remember that when we generated HTML documentation, the dialog (page 
 				<link>
-					<url>index.html#DOCUMENTATION VIEW</url>
+					<url>index.xml#DOCUMENTATION VIEW</url>
 				</link> ) asked you to select a view among the available ones.  You can choose a different view for each cluster.
 			</paragraph>
 		</div>

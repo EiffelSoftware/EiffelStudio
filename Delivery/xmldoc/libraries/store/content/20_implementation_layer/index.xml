@@ -66,7 +66,7 @@
 			</heading>
 			<paragraph>As seen in the 
 				<link>
-					<url>../10_interface_layer/10_database_connection/index.html</url>
+					<url>../10_interface_layer/10_database_connection/index.xml</url>
 					<label>interface connection</label>
 				</link> part, active database selection is performed by the {DATABASE_APPL}.set_base feature: when a DATABASE_APPL object calls set_base, database represented by this object is activated.
 			</paragraph>
@@ -89,7 +89,7 @@
 				<bold>See Also</bold>
 				<line_break/>
 				<link>
-					<url>../10_interface_layer/index.html</url>
+					<url>../10_interface_layer/index.xml</url>
 					<label>The interface layer</label>
 				</link>
 				<line_break/>

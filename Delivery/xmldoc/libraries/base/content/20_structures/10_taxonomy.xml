@@ -10,7 +10,7 @@
 		<paragraph> A container data structure (or container in the sequel) is an object which serves to store and access collections of objects, called the 
 			<bold>items</bold> of the container. All classes describing containers are descendants of the deferred class 
 			<link>
-				<url>../../reference/structures/access/container_chart.html</url>
+				<url>../../reference/structures/access/container_chart.xml</url>
 				<label>CONTAINER</label>
 			</link>.
 		</paragraph>
@@ -28,19 +28,19 @@
 		</list>
 		<paragraph> For each of these criteria the Base library offers a single-inheritance hierarchy of deferred classes. The top of the access hierarchy is class 
 			<link>
-				<url>../../reference/structures/access/collection_chart.html</url>
+				<url>../../reference/structures/access/collection_chart.xml</url>
 				<label>COLLECTION</label>
 			</link>; the top of the storage hierarchy is class 
 			<link>
-				<url>/libraries/base/reference/structures/storage/box_chart.html</url>
+				<url>/libraries/base/reference/structures/storage/box_chart.xml</url>
 				<label>BOX</label>
 			</link>; the top of the traversal hierarchy is class 
 			<link>
-				<url>/libraries/base/reference/structures/traversing/traversable_chart.html</url>
+				<url>/libraries/base/reference/structures/traversing/traversable_chart.xml</url>
 				<label>TRAVERSABLE</label>
 			</link>. These three classes are heirs of the most general class, 
 			<link>
-				<url>../../reference/structures/access/container_chart.html</url>
+				<url>../../reference/structures/access/container_chart.xml</url>
 				<label>CONTAINER</label>
 			</link>.
 		</paragraph>

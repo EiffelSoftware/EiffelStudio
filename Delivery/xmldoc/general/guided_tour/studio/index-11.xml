@@ -23,7 +23,7 @@
 			</paragraph>
 			<paragraph>If for some reason the window doesn't look like the next figure, it's easy to reconstruct it: make sure both the Cluster tree and the Feature tree are visible (if not, click the corresponding buttons as recalled on page 
 				<link>
-					<url>index.html#CLUSTERS/FEATURES BUTTON</url>
+					<url>index.xml#CLUSTERS/FEATURES BUTTON</url>
 				</link> ); target the tool to class 
 				<code>
 					<string>LIST</string>

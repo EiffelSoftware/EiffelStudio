@@ -8,7 +8,7 @@
 			<size>3</size>
 			<content>
 				<link>
-					<url>index-99-document-info.html#pgfId-467816</url>
+					<url>index-99-document-info.xml#pgfId-467816</url>
 					<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
 				</link>
 			</content>
@@ -18,7 +18,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-02.html#pgfId-471615</url>
+						<url>index-02.xml#pgfId-471615</url>
 						<label>1 OVERVIEW AND PREREQUISITES</label>
 					</link>
 				</content>
@@ -27,7 +27,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-03.html#pgfId-333608</url>
+						<url>index-03.xml#pgfId-333608</url>
 						<label>2 COPYING THE EXAMPLE FILES</label>
 					</link>
 				</content>
@@ -36,7 +36,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-04.html#pgfId-264352</url>
+						<url>index-04.xml#pgfId-264352</url>
 						<label>3 STARTING EIFFELSTUDIO AND OPENING A PROJECT</label>
 					</link>
 				</content>
@@ -45,7 +45,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-05.html#pgfId-258371</url>
+						<url>index-05.xml#pgfId-258371</url>
 						<label>4 COMPILING AND EXECUTING A SYSTEM</label>
 					</link>
 				</content>
@@ -54,7 +54,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-06.html#pgfId-3038</url>
+						<url>index-06.xml#pgfId-3038</url>
 						<label>5 A LOOK AT THE PROJECT DIRECTORY</label>
 					</link>
 				</content>
@@ -63,7 +63,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-07.html#pgfId-475544</url>
+						<url>index-07.xml#pgfId-475544</url>
 						<label>6 STARTING TO BROWSE</label>
 					</link>
 				</content>
@@ -72,7 +72,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-08.html#pgfId-479692</url>
+						<url>index-08.xml#pgfId-479692</url>
 						<label>7 CLASS VIEWS</label>
 					</link>
 				</content>
@@ -81,7 +81,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-09.html#pgfId-495679</url>
+						<url>index-09.xml#pgfId-495679</url>
 						<label>8 PRODUCING AND EXPORTING DOCUMENTATION</label>
 					</link>
 				</content>
@@ -90,7 +90,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-10.html#pgfId-510970</url>
+						<url>index-10.xml#pgfId-510970</url>
 						<label>9 BROWSING FEATURES</label>
 					</link>
 				</content>
@@ -99,7 +99,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-11.html#pgfId-511185</url>
+						<url>index-11.xml#pgfId-511185</url>
 						<label>10 RETARGETING THROUGH PICK-AND-DROP</label>
 					</link>
 				</content>
@@ -108,7 +108,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-12.html#pgfId-515538</url>
+						<url>index-12.xml#pgfId-515538</url>
 						<label>11 RECOMPILING AND EDITING</label>
 					</link>
 				</content>
@@ -117,7 +117,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-13.html#pgfId-519836</url>
+						<url>index-13.xml#pgfId-519836</url>
 						<label>12 HANDLING SYNTAX AND VALIDITY ERRORS</label>
 					</link>
 				</content>
@@ -126,7 +126,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-14.html#pgfId-515824</url>
+						<url>index-14.xml#pgfId-515824</url>
 						<label>13 DEBUGGING AND RUN-TIME MONITORING</label>
 					</link>
 				</content>
@@ -135,7 +135,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-15.html#pgfId-522626</url>
+						<url>index-15.xml#pgfId-522626</url>
 						<label>14 COMPUTING PROJECT METRICS</label>
 					</link>
 				</content>
@@ -144,7 +144,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-16.html#pgfId-527344</url>
+						<url>index-16.xml#pgfId-527344</url>
 						<label>15 GRAPHICS-BASED DESIGN</label>
 					</link>
 				</content>
@@ -153,7 +153,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-17.html#pgfId-527441</url>
+						<url>index-17.xml#pgfId-527441</url>
 						<label>16 HOW EIFFELSTUDIO COMPILES</label>
 					</link>
 				</content>
@@ -162,7 +162,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-18.html#pgfId-522597</url>
+						<url>index-18.xml#pgfId-522597</url>
 						<label>17 THE COMMAND-LINE COMPILER</label>
 					</link>
 				</content>
@@ -171,7 +171,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-19.html#pgfId-527948</url>
+						<url>index-19.xml#pgfId-527948</url>
 						<label>18 EXECUTING A SYSTEM WITHIN AND WITHOUT EIFFELSTUDIO</label>
 					</link>
 				</content>
@@ -180,7 +180,7 @@
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-20.html#pgfId-521093</url>
+						<url>index-20.xml#pgfId-521093</url>
 						<label>19 APPENDIX: WRITING DOCUMENTATION FILTERS WITH EFF, THE EIFFEL FILTER FORMAT</label>
 					</link>
 				</content>

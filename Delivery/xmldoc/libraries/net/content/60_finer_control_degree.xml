@@ -6,7 +6,7 @@
 			<italic/>and
 			<italic/>OUR_SERVER, which are part of two different    systems and will run concurrently. The communication uses streams rather    than datagrams; the datagram form of communication will be examined in    section 
 			<link>
-				<url>70_datagram_sockets.html</url>
+				<url>70_datagram_sockets.xml</url>
 				<label>using datagram sockets</label>
 			</link>.
 		</paragraph>
@@ -54,7 +54,7 @@
 						<italic>accepted</italic>, whose value is    here assigned to the local entity 
 						<italic>soc2</italic>. To receive objects, the    server will use operations of the form introduced earlier ( 
 						<link>
-							<url>20_overview.html#structures</url>
+							<url>20_overview.xml#structures</url>
 							<label>An    overview of EiffelNet, sending and receiving object structures</label>
 						</link>):    
 						<code_block>Missing code block</code_block>

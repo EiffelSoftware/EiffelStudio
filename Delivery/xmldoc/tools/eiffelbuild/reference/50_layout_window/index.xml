@@ -10,7 +10,7 @@
 	<paragraph>
 		<paragraph>The Display window provides a view of the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>objects</label>
 			</link> in your system, but unlike the 
 			<link>
@@ -46,7 +46,7 @@
 		</paragraph>
 		<paragraph>All properties that have been set on the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>objects</label>
 			</link> in your project are set in the 
 			<link>

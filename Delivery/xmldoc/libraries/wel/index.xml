@@ -15,19 +15,19 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>content/index.html</url>
+					<url>content/index.xml</url>
 					<label>Content</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>samples/index.html</url>
+					<url>samples/index.xml</url>
 					<label>Samples</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>reference/index.html</url>
+					<url>reference/index.xml</url>
 					<label>Reference</label>
 				</link>
 			</item>

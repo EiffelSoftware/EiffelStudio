@@ -8,7 +8,7 @@
 				<url>/images/eiffelbuild/icons/icon_save_color.png</url>
 			</image> in the 
 			<link>
-				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.html</url>
+				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label>main toolbar</label>
 			</link>.
 		</paragraph>
@@ -22,7 +22,7 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>/tools/eiffelbuild/reference/10_general_interface_description/40_key_shortcuts.html</url>
+				<url>/tools/eiffelbuild/reference/10_general_interface_description/40_key_shortcuts.xml</url>
 				<label>Key shortcuts</label>
 			</link>
 		</seealso>

@@ -394,7 +394,7 @@
 		</paragraph>
 		<info>Some variants of the basic creation instruction will be reviewed later: instruction with an explicit type; creation expressions.  See 
 			<link>
-				<url>tutorial-11.html#28280</url>
+				<url>tutorial-11.xml#28280</url>
 			</link>.
 		</info>
 		<heading>
@@ -520,7 +520,7 @@
 		</paragraph>
 		<paragraph>The default initialization rules seen earlier for attributes (see the table on page 
 			<link>
-				<url>tutorial-07.html#25630</url>
+				<url>tutorial-07.xml#25630</url>
 			</link> ) also serve to initialize local entities and 
 			<code>
 				<string>Result</string>
@@ -572,7 +572,7 @@
 </code_block>
 		<paragraph>Following the principle of Uniform Access (page 
 			<link>
-				<url>tutorial-07.html#UNIFORM ACCESS</url>
+				<url>tutorial-07.xml#UNIFORM ACCESS</url>
 			</link> ), this form is the same for calls to attributes and to functions without arguments.  In thisexample, feature 
 			<code>
 				<string>count</string>
@@ -743,16 +743,16 @@
 		</paragraph>
 		<paragraph>Three mechanisms introduced below -- expanded types (page 
 			<link>
-				<url>tutorial-07.html#40534</url>
+				<url>tutorial-07.xml#40534</url>
 			</link>
 			<link>
-				<url>tutorial-07.html#40534</url>
+				<url>tutorial-07.xml#40534</url>
 			</link> ), genericity (page 
 			<link>
-				<url>tutorial-08.html#15572</url>
+				<url>tutorial-08.xml#15572</url>
 			</link> ) and anchored declarations (page 
 			<link>
-				<url>tutorial-10.html#46019</url>
+				<url>tutorial-10.xml#46019</url>
 			</link> )-- will generalize the notion of type slightly.  But they do not change the fundamental property that 
 			<bold>every type is based on a class</bold>, called the type's 
 			<bold>base class</bold> .  In the examples seen so far, each type 
@@ -896,7 +896,7 @@
 				<string>ANY</string>
 			</code> seen earlier (page 
 			<link>
-				<url>tutorial-06.html#82680</url>
+				<url>tutorial-06.xml#82680</url>
 			</link> ).
 		</paragraph>
 		<paragraph>Assignment uses the symbol 
@@ -1166,7 +1166,7 @@
 				<string>x</string>
 			</code> and would, if evaluated, yield an exception as explained in 
 			<link>
-				<url>tutorial-09.  html#10722</url>
+				<url>tutorial-09. .xml#10722</url>
 			</link>below.  )
 		</paragraph>
 		<paragraph>
@@ -1374,7 +1374,7 @@
 				<string>y</string>
 			</code> of the form illustrated by the figure on page 
 			<link>
-				<url>tutorial-00.html#35291</url>
+				<url>tutorial-00.xml#35291</url>
 			</link> can cause objects to become unreachable.  This is the case for the object identified as OBJ2 on that figure (the object to which 
 			<code>
 				<string>x</string>
@@ -1502,7 +1502,7 @@
 				<string>NONE</string>
 			</code> .  Because of the global inheritance structure (page 
 			<link>
-				<url>tutorial-06.html#82680</url>
+				<url>tutorial-06.xml#82680</url>
 			</link> ) this means it is in fact available to no useful client at all, and is equivalent in practice to 
 			<code>
 				<keyword>feature</keyword>
@@ -1566,7 +1566,7 @@
 				<string>B</string>
 			</code>, ...This enables a group of related classes to provide each other with privileged access, without requiring the introduction of a special module category above the class level (see 
 			<link>
-				<url>tutorial-06.html#29888</url>
+				<url>tutorial-06.xml#29888</url>
 			</link> ).
 		</paragraph>
 		<paragraph>Exporting features selectively to a set of classes 
@@ -1865,18 +1865,18 @@ make <symbol>(</symbol>sum<symbol>:</symbol> <class_name>INTEGER</class_name><sy
 		</list>
 		<paragraph>The last case is particularly interesting is that it allows the class designer to set the precise way in which clients will manipulate the class instances, respecting the properties of the class and its integrity.  The exported routines may, through the Design by Contract mechanism reviewed later ( 
 			<link>
-				<url>tutorial-09.html#30455</url>
+				<url>tutorial-09.xml#30455</url>
 			</link> ), place some further restrictions on the permitted modifications, for example by requiring the withdrawn amount to be positive.
 		</paragraph>
 		<paragraph>These rules follow directly from the more general goals (reusability, extendibility, reliability) and principles (Uniform Access, information hiding) underlying Eiffel software design.  They reflect a view that each class must denote a well-understood abstraction, defined by a set of exported features chosen by the class designer -- the "control panel".  </paragraph>
 		<paragraph>The class documentation (the 
 			<span>contract form</span>, see page 
 			<link>
-				<url>tutorial-09.html#78482</url>
+				<url>tutorial-09.xml#78482</url>
 			</link> ) makes this view clear to client authors; no violation of that interface is permitted.  This approach also paves the way for future 
 			<bold>generalization</bold> -- the final step of the cluster lifecycle, seen earlier on page 
 			<link>
-				<url>tutorial-04.html#10958</url>
+				<url>tutorial-04.xml#10958</url>
 			</link> -- of the most promising components, and their inclusion into reusable libraries.
 		</paragraph>
 	</paragraph></document>

@@ -12,7 +12,7 @@
 		</heading>
 		<paragraph> A Widget is the fundamental building block of your applications GUI, components such as Windows, Buttons and Labels are examples of such. The widget set of Vision2 provide you with the flexibility to easily create powerful graphical applications. All widgets in Vision2 inherit from 
 			<link>
-				<url>/libraries/vision2/reference/interface/widgets/ev_widget_chart.html</url>
+				<url>/libraries/vision2/reference/interface/widgets/ev_widget_chart.xml</url>
 				<label> EV_WIDGET</label>
 			</link> and the features provided in 
 			<code>
@@ -25,27 +25,27 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>/libraries/vision2/content/10_widgets/00_primitives/index.html</url>
+					<url>/libraries/vision2/content/10_widgets/00_primitives/index.xml</url>
 					<label>Primitives</label>
 				</link>         -- These are elements of the user interface that are mainly         responsible for interaction with the user, such as an 
 				<link>
-					<url>/libraries/vision2/reference/interface/widgets/primitives/ev_button_chart.html</url>
+					<url>/libraries/vision2/reference/interface/widgets/primitives/ev_button_chart.xml</url>
 					<label>EV_BUTTON</label>
 				</link>.
 			</item>
 			<item>
 				<link>
-					<url>/libraries/vision2/content/10_widgets/10_containers/index.html</url>
+					<url>/libraries/vision2/content/10_widgets/10_containers/index.xml</url>
 					<label>Containers</label>
 				</link>         -- These are used to contain other widgets and position them         in a certain way, such as an 
 				<link>
-					<url>/libraries/vision2/reference/interface/widgets/containers/ev_vertical_box_chart.html</url>
+					<url>/libraries/vision2/reference/interface/widgets/containers/ev_vertical_box_chart.xml</url>
 					<label> EV_VERTICAL_BOX         </label>
 				</link> that stacks its         children one by one vertically.
 			</item>
 			<item>
 				<link>
-					<url>/libraries/vision2/content/10_widgets/20_common_dialogs/index.html</url>
+					<url>/libraries/vision2/content/10_widgets/20_common_dialogs/index.xml</url>
 					<label>Dialogs</label>
 				</link>         -- These are popup dialog windows used for interacting with the user for tasks such as opening a         file (EV_FILE_OPEN_DIALOG) or displaying a message (EV_MESSAGE_DIALOG).  You may construct your own dialogs by inheriting EV_DIALOG. 
 			</item>
@@ -55,14 +55,14 @@
 		</heading>
 		<paragraph>All widgets in Vision2 are based around the default_create mechanism    in Eiffel, this means that all that needs to be done to create a widget    is to declare a reference to a type (such as 
 			<link>
-				<url>../../reference/interface/widgets/primitives/ev_button_chart.html</url>
+				<url>../../reference/interface/widgets/primitives/ev_button_chart.xml</url>
 				<label>EV_BUTTON</label>
 			</link>) and then call    create on that reference. An example of this is as follows.
 		</paragraph>
 		<code_block>Missing</code_block>
 		<paragraph>Along with the default creation, Vision2 also includes a few    convenience creation functions. Examples of this are    make_with_text for all widgets that may have text associated with them    (those that inherit from 
 			<link>
-				<url>../../reference/interface/properties/ev_textable_chart.html</url>
+				<url>../../reference/interface/properties/ev_textable_chart.xml</url>
 				<label> EV_TEXTABLE</label>
 			</link>), this saves a call to set_text    upon default creation of the textable widget.
 		</paragraph>
@@ -78,11 +78,11 @@
 		<paragraph> As EV_PRIMITIVE is of type EV_WIDGET, the following facilities are provided for setting the minimum size : set_minimum_width, set_minimum_height and set_minimum_size. </paragraph>
 		<paragraph> The minimum size of a widget is the smallest possible size that it can possibly be inside its parent container. If an 
 			<link>
-				<url>../../reference/interface/widgets/primitives/ev_button_chart.html</url>
+				<url>../../reference/interface/widgets/primitives/ev_button_chart.xml</url>
 				<label>EV_BUTTON</label>
 			</link> was created and set with a minimum_size of width/height (100, 100), if this button was inserted in to an 
 			<link>
-				<url>../../reference/interface/widgets/containers/ev_horizontal_box_chart.html</url>
+				<url>../../reference/interface/widgets/containers/ev_horizontal_box_chart.xml</url>
 				<label> EV_HORIZONTAL_BOX</label>
 			</link>, then the box's size could never be below (100, 100) or it would break the minimum size of the button. 
 			<bold>The size of a container must always be greater or equal to the minimum sizes of its children.</bold>
@@ -97,19 +97,19 @@
 		<list ordered="false">
 			<item>Setting 
 				<link>
-					<url>/libraries/vision2/content/40_properties/index.html</url>
+					<url>/libraries/vision2/content/40_properties/index.xml</url>
 					<label> properties</label>
 				</link> for the widget such as color and the minimum size that a widget can possibly be in its parent container.
 			</item>
 			<item>Making the widget respond to user 
 				<link>
-					<url>/libraries/vision2/content/30_events/index.html</url>
+					<url>/libraries/vision2/content/30_events/index.xml</url>
 					<label> events</label>
 				</link> via the use of agents and action sequences.
 			</item>
 			<item>Placing the widget inside a 
 				<link>
-					<url>/libraries/vision2/content/10_widgets/10_containers/index.html</url>
+					<url>/libraries/vision2/content/10_widgets/10_containers/index.xml</url>
 					<label> container</label>
 				</link> widget (either a window or a child of a window) so it can be shown on screen.
 			</item>

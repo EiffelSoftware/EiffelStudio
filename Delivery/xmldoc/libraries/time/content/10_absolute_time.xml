@@ -69,7 +69,7 @@
 				<class_name>TIME</class_name>
 			</code>. The duration of this interval is given by the function duration. However, this duration is not canonical (See 
 			<link>
-				<url>20_duration.html</url>
+				<url>20_duration.xml</url>
 				<label>Duration</label>
 			</link> for precisions). In 
 			<code>

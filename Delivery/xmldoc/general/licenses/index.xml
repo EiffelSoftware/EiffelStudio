@@ -4,13 +4,13 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>iffel.html</url>
+					<url>iffel.xml</url>
 					<label>IFFEL</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>end_user.html</url>
+					<url>end_user.xml</url>
 					<label>End user License Agreement</label>
 				</link>
 			</item>

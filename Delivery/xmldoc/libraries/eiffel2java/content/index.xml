@@ -7,7 +7,7 @@
 		<paragraph>The Java interface allows you to call Java routines or attributes from your Eiffel code. It uses the Java Native Interface (JNI) provided by the Java Development Kit (JDK) 1.1.8. You can get more information about the JNI at: </paragraph>
 		<paragraph>
 			<link>
-				<url>http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html</url>
+				<url>http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.xml</url>
 				<label>http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html</label>
 			</link>
 		</paragraph>
@@ -17,7 +17,7 @@
 		<list ordered="false">
 			<item>JDK 1.1.8 should be correctly set up (download it at 
 				<link>
-					<url>http://java.sun.com/products/jdk/1.1/index.html</url>
+					<url>http://java.sun.com/products/jdk/1.1/index.xml</url>
 					<label>http://java.sun.com/products/jdk/1.1/index.html</label>
 				</link>)
 			</item>

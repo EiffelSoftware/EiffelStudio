@@ -12,7 +12,7 @@
 				<cell>
 					<paragraph>  The Clusters Property Page allows you to add, edit and remove clusters to and  from your projects the configuration(s).To learn more about what a  cluster is an how they are an essential part of the Eiffel environment please  refer to the 
 						<link>
-							<url>/general\guided_tour\language\tutorial-04.html</url>
+							<url>/general\guided_tour\language\tutorial-04.xml</url>
 							<label>guided tour</label>
 						</link>.
 					</paragraph>

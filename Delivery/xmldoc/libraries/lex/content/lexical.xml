@@ -14,7 +14,7 @@
 		</paragraph>
 		<paragraph>Figure 1 shows the inheritance structure of the classes discussed in this chapter. Class L_INTERFACE has also been included although we will only study it in the 
 			<link>
-				<url>parsing.html</url>
+				<url>parsing.xml</url>
 				<label>next chapter</label>
 			</link>; it belongs to the Parse library, where it takes care of the interface between parsing and lexical analysis.
 		</paragraph>

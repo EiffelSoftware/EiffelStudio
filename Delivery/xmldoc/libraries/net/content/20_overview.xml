@@ -108,7 +108,7 @@
 					<paragraph>Assuming that the type of 
 						<italic>iom1 </italic>is IO_MEDIUM or    a conforming type such as 
 						<link>
-							<url>../../base/reference/kernel/file_chart.html</url>
+							<url>../../base/reference/kernel/file_chart.xml</url>
 							<label>FILE</label>
 						</link>    or one of the _SOCKET classes, and that the type of 
 						<italic>struct1</italic>    conforms to STORABLE 

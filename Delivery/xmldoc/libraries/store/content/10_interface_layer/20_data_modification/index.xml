@@ -5,7 +5,7 @@
 		<note>
 			<bold>Note</bold>: Take a look at the 
 			<link>
-				<url>../50_data_object_coupling/index.html#insert</url>
+				<url>../50_data_object_coupling/index.xml#insert</url>
 				<label>Data Storing</label>
 			</link> capability if you want to 
 			<bold>insert</bold> table rows.
@@ -26,17 +26,17 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>../50_data_object_coupling/index.html#insert</url>
+				<url>../50_data_object_coupling/index.xml#insert</url>
 				<label>Data storing</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>../70_stored_procedures/index.html</url>
+				<url>../70_stored_procedures/index.xml</url>
 				<label>Stored procedures</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>../../20_implementation_layer/index.html</url>
+				<url>../../20_implementation_layer/index.xml</url>
 				<label>Implementation</label>
 			</link>
 			<line_break/>

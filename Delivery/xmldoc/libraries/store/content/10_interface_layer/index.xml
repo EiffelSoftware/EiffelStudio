@@ -6,49 +6,49 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>10_database_connection/index.html</url>
+					<url>10_database_connection/index.xml</url>
 					<label>Connecting</label>
 				</link> to the database.
 			</item>
 			<item>
 				<link>
-					<url>20_data_modification/index.html</url>
+					<url>20_data_modification/index.xml</url>
 					<label>Modifying</label>
 				</link> database objects.
 			</item>
 			<item>
 				<link>
-					<url>30_database_selection/index.html</url>
+					<url>30_database_selection/index.xml</url>
 					<label>Selecting</label>
 				</link> data from the database.
 			</item>
 			<item>
 				<link>
-					<url>40_selection_access/index.html</url>
+					<url>40_selection_access/index.xml</url>
 					<label>Accessing</label>
 				</link> data selected from the database.
 			</item>
 			<item>
 				<link>
-					<url>50_data_object_coupling/index.html</url>
+					<url>50_data_object_coupling/index.xml</url>
 					<label>Coupling</label>
 				</link> database objects with Eiffel objects.
 			</item>
 			<item>
 				<link>
-					<url>60_query_variables/index.html</url>
+					<url>60_query_variables/index.xml</url>
 					<label>Binding variables</label>
 				</link> in a database query.
 			</item>
 			<item>Using 
 				<link>
-					<url>70_stored_procedures/index.html</url>
+					<url>70_stored_procedures/index.xml</url>
 					<label>stored procedures</label>
 				</link>.
 			</item>
 			<item>Dealing with database 
 				<link>
-					<url>80_database_control/index.html</url>
+					<url>80_database_control/index.xml</url>
 					<label>status and behavior</label>
 				</link>. 
 			</item>
@@ -60,7 +60,7 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>../20_implementation_layer/index.html</url>
+				<url>../20_implementation_layer/index.xml</url>
 				<label>The implementation layer</label>
 			</link>
 		</seealso>

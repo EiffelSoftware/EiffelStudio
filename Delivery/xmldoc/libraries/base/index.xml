@@ -12,7 +12,7 @@
 			<line_break/>  Version: 5.0
 			<line_break/>  Availability: Open Source, 
 			<link>
-				<url>/general/licenses/iffel.html</url>
+				<url>/general/licenses/iffel.xml</url>
 				<label>IFFEL License</label>
 			</link>.
 		</paragraph>
@@ -20,7 +20,7 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>content/index.html</url>
+					<url>content/index.xml</url>
 					<label>Content</label>
 				</link>
 			</item>

@@ -4,13 +4,13 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>lexical.html</url>
+					<url>lexical.xml</url>
 					<label>Lexical analysis</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>parsing.html</url>
+					<url>parsing.xml</url>
 					<label>Parsing</label>
 				</link>
 			</item>

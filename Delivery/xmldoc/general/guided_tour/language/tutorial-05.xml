@@ -105,7 +105,7 @@
 				<keyword>is</keyword>
 			</code> .  As will be seen in 
 			<link>
-				<url>tutorial-09.html#78482</url>
+				<url>tutorial-09.xml#78482</url>
 			</link>, the tools of EiffelStudio know about this convention and use it to include the header comment in the automatically generated class documentation.  
 		</paragraph>
 		<paragraph>The body of the feature is introduced by the 

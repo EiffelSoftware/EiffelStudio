@@ -28,7 +28,7 @@
 		</heading>
 		<paragraph>If 
 			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type</url>
+				<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#build_type</url>
 				<label> build type</label>
 			</link> is selected as 
 			<bold>Project</bold> in the 
@@ -40,19 +40,19 @@
 		<list ordered="false">
 			<item>A class named as 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.html#window_class_name</url>
+					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#window_class_name</url>
 					<label> window class name</label>
 				</link> setting + '_IMP' representing the implementation of your window.
 			</item>
 			<item>A class named as 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.html#window_class_name</url>
+					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#window_class_name</url>
 					<label> window class name</label>
 				</link> setting representing the interface of your window.
 			</item>
 			<item>A class named as 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.html#application_class_name</url>
+					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#application_class_name</url>
 					<label> application class name</label>
 				</link> setting which is an EV_APPLICATION which will launch your window class.
 			</item>
@@ -88,7 +88,7 @@
 		</heading>
 		<paragraph>If 
 			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type</url>
+				<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#build_type</url>
 				<label> build_type</label>
 			</link> is selected as 
 			<bold>Class</bold> in the 
@@ -100,13 +100,13 @@
 		<list ordered="false">
 			<item>A class named as 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.html#window_class_name</url>
+					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#window_class_name</url>
 					<label> window class name</label>
 				</link> setting + '_IMP' representing the implementation of your window.
 			</item>
 			<item>A class named as 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.html#window_class_name</url>
+					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#window_class_name</url>
 					<label> window class name</label>
 				</link> setting representing the interface of your window.
 			</item>
@@ -138,7 +138,7 @@
 		</note>
 		<paragraph>Looking at a generated system, you will see that the 
 			<link>
-				<url>/tools/eiffelbuild/reference/40_object_editor/index.html#events</url>
+				<url>/tools/eiffelbuild/reference/40_object_editor/index.xml#events</url>
 				<label> events</label>
 			</link> connected to your controls are defined as deferred in the implementation and actually implemented in the interface class. This means that if you return to EiffelBuild with a previously generated system, and add a new event to a control, then you will have to implement the definition in the interface class yourself (as the class interface class is not re-generated).
 		</paragraph>

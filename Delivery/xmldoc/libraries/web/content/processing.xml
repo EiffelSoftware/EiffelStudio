@@ -53,7 +53,7 @@
 		</heading>
 		<paragraph>The Eiffel-Web application has the possibility to send a selection of different HTTP headers. They can be found in class CGI_RESPONSE_HEADER. In particular, it is advised to generate a status for each request, the value of the most common ones may be found in class     CGI_ 
 			<link>
-				<url>/libraries/web/reference/cgi_facilities/cgi_common_status_types.html</url>
+				<url>/libraries/web/reference/cgi_facilities/cgi_common_status_types.xml</url>
 				<label>COMMON_STATUS_TYPE</label>
 			</link>.
 		</paragraph>

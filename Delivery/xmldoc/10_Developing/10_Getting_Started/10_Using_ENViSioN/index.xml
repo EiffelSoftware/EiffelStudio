@@ -19,7 +19,7 @@
 							<item>  The  mechanics of using Eiffel ENViSioN! to support the creation of Eiffel for .NET  software, documented in the topics referenced below.</item>
 							<item>  The Eiffel method and language and how they work with Microsoft .NET, found in 
 								<link>
-									<url>\20_Language\index.html</url>
+									<url>\20_Language\index.xml</url>
 									<label>  Eiffel, The Language</label>
 								</link>.
 							</item>
@@ -28,7 +28,7 @@
 						<list ordered="false">
 							<item>
 								<link>
-									<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.html</url>
+									<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.xml</url>
 									<label>  Adding a New Project</label>
 								</link>
 							</item>
@@ -40,7 +40,7 @@
 							</item>
 							<item>
 								<link>
-									<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+									<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
 									<label>  Class View</label>
 								</link>
 							</item>
@@ -73,7 +73,7 @@
 							<bold>See Also</bold>
 							<line_break/>
 							<link>
-								<url>/20_Language/index.html</url>
+								<url>/20_Language/index.xml</url>
 								<label>Eiffel, The Language</label>
 							</link>
 							<line_break/>
@@ -83,7 +83,7 @@
 							</link>
 							<line_break/>
 							<link>
-								<url>/technologies/dotnet/samples/index.html</url>
+								<url>/technologies/dotnet/samples/index.xml</url>
 								<label>Samples</label>
 							</link>
 							<line_break/>

@@ -45,7 +45,7 @@
 				</label>
 			</link>, which is part of the EiffelCOM library. This class includes the feature 
 			<link>
-				<url>../../../../libraries/com/reference/interfaces/ecom_stub.html#f_create_item</url>
+				<url>../../../../libraries/com/reference/interfaces/ecom_stub.xml#f_create_item</url>
 				<label>create_item</label>
 			</link> to initialize the component for COM.
 		</paragraph>

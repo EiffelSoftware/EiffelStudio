@@ -5,37 +5,37 @@
 			<list ordered="false">
 				<item>A 
 					<link>
-						<url>../reference/constants/index.html</url>
+						<url>../reference/constants/index.xml</url>
 						<label>Constants</label>
 					</link>         cluster provides standard COM contants and enumerations.
 				</item>
 				<item>A 
 					<link>
-						<url>01_interfaces.html</url>
+						<url>01_interfaces.xml</url>
 						<label>Interfaces</label>
 					</link>         cluster includes wrappers for standard interfaces that the         EiffelCOM wizard does not generate and deferred classes: 
 					<link>
-						<url>../reference/interfaces/ecom_interface.html</url>
+						<url>../reference/interfaces/ecom_interface.xml</url>
 						<label>ECOM_INTERFACE</label>
 					</link>, 
 					<link>
-						<url>../reference/interfaces/ecom_queriable.html</url>
+						<url>../reference/interfaces/ecom_queriable.xml</url>
 						<label>ECOM_QUERIABLE</label>
 					</link>, and 
 					<link>
-						<url>../reference/interfaces/ecom_stub.html</url>
+						<url>../reference/interfaces/ecom_stub.xml</url>
 						<label>ECOM_STUB</label>
 					</link>.
 				</item>
 				<item>A 
 					<link>
-						<url>02_structures.html</url>
+						<url>02_structures.xml</url>
 						<label>Structures</label>
 					</link>         cluster includes wrappers for COM structures and additional         data structures.
 				</item>
 				<item>A 
 					<link>
-						<url>../reference/support/index.html</url>
+						<url>../reference/support/index.xml</url>
 						<label>Support</label>
 					</link>         cluster provides access to helper classes.
 				</item>
@@ -44,12 +44,12 @@
 				<bold>See Also</bold>
 				<line_break/>
 				<link>
-					<url>/technologies/com/index.html</url>
+					<url>/technologies/com/index.xml</url>
 					<label>The    Component Object Model</label>
 				</link>
 				<line_break/>
 				<link>
-					<url>../../../tools/wizards/com/index.html</url>
+					<url>../../../tools/wizards/com/index.xml</url>
 					<label>EiffelCOM    wizard</label>
 				</link>
 			</seealso>

@@ -11,7 +11,7 @@
 		</paragraph>
 		<paragraph>In offering these varying levels of abstraction and control, EiffelNet follows the principles set by other libraries of the ISE Eiffel environment (see for example the discussion of EiffelLex in reference [ 
 			<link>
-				<url>95_bibliography.html</url>
+				<url>95_bibliography.xml</url>
 				<label>2</label>
 			</link>]). Some users require a mechanism that will be very easy to learn and will hide all the details in common cases; other users (or the same at later stagesof their work) need to access the whole array of facilities available at the level of the underlying hardware or software. The various components of the library should address all these needs.
 		</paragraph>
@@ -24,21 +24,21 @@
 		<list ordered="false">
 			<item>Familiarity with the basic Eiffel concepts: classes, inheritance, features, assertions, exception handling (see reference [ 
 				<link>
-					<url>95_bibliography.html</url>
+					<url>95_bibliography.xml</url>
 					<label>1</label>
 				</link>]).
 			</item>
 			<item>Experience of writing software with Eiffel.</item>
 			<item>Basic knowledge of the EiffelBase libraries, as described in reference [ 
 				<link>
-					<url>95_bibliography.html</url>
+					<url>95_bibliography.xml</url>
 					<label>2</label>
 				</link>].
 			</item>
 		</list>
 		<paragraph>Familiarity with the basic concepts of client-server computing will also be helpful (see for example reference [ 
 			<link>
-				<url>95_bibliography.html</url>
+				<url>95_bibliography.xml</url>
 				<label>3</label>
 			</link>]; if you are new to this area, however, you will still be able to use EiffelNet, as this manual defines all the needed concepts.
 		</paragraph>
@@ -47,28 +47,28 @@
 		</heading>
 		<paragraph>
 			<link>
-				<url>10_clients_servers.html</url>
+				<url>10_clients_servers.xml</url>
 				<label>Section 2</label>
 			</link> discusses the notion of client and server. 
 			<link>
-				<url>20_overview.html</url>
+				<url>20_overview.xml</url>
 				<label>Section 3</label>
 			</link> presents an overview of EiffelNet's facilities. 
 			<link>
-				<url>30_predefined_level.html</url>
+				<url>30_predefined_level.xml</url>
 				<label>Section 4</label>
 			</link> describes the predefined level: a set of high-level classes that provide a complete framework, covering the most common uses and limiting the developer'swork to the strict minimum. Sections 
 			<link>
-				<url>40_examples.html</url>
+				<url>40_examples.xml</url>
 				<label>5</label>
 			</link> to 
 			<link>
-				<url>90_complexe_example.html</url>
+				<url>90_complexe_example.xml</url>
 				<label>10</label>
 			</link> describe the facilities in detail through a set of increasingly ambitious examples (whose texts may all be found in the directory 
 			<bold>$ISE_EIFFEL/examples/net</bold> of the Eiffel distribution). 
 			<link>
-				<url>10_clients_servers.html</url>
+				<url>10_clients_servers.xml</url>
 				<label>Section 11</label>
 			</link> is a short bibliography.
 		</paragraph>

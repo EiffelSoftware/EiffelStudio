@@ -61,7 +61,7 @@ feature -- Status report
 			le: EXCEPTION
 			conv_de: EIFFEL_EXCEPTION
 		do
-			conv_de ?= feature {EXCEPTION_MANAGER}.last_exception
+			conv_de ?= feature {ISE_RUNTIME}.last_exception
 			Result := conv_de.tag
 		end
 
@@ -87,7 +87,7 @@ feature -- Status report
 			conv_fl: EIFFEL_EXCEPTION
 			le: EXCEPTION
 		do
-			le := feature {EXCEPTION_MANAGER}.last_exception
+			le := feature {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				conv_fl ?= le
 				if conv_fl /= Void then
@@ -106,7 +106,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {EXCEPTION_MANAGER}.last_exception
+			le := feature {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				create Result.make_from_cil (le.target_site.name)
 			else
@@ -120,7 +120,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {EXCEPTION_MANAGER}.last_exception
+			le := feature {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				create Result.make_from_cil (le.target_site.reflected_type.full_name)
 			else
@@ -133,7 +133,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {EXCEPTION_MANAGER}.last_exception
+			le := feature {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				Result := exception_to_code (le)
 			else
@@ -146,7 +146,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {EXCEPTION_MANAGER}.last_exception
+			le := feature {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				create Result.make_from_cil (le.stack_trace)
 			else
@@ -161,7 +161,7 @@ feature -- Status report
 			conv_fl: EIFFEL_EXCEPTION
 			le: EXCEPTION
 		do
-			le := feature {EXCEPTION_MANAGER}.last_exception
+			le := feature {ISE_RUNTIME}.last_exception
 			if le /= Void and then le.inner_exception /= Void then
 				le := le.inner_exception
 				conv_fl ?= le
@@ -181,7 +181,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {EXCEPTION_MANAGER}.last_exception
+			le := feature {ISE_RUNTIME}.last_exception
 			if le /= Void and then le.inner_exception /= Void then
 				Result := exception_to_code (le.inner_exception)
 			else
@@ -195,7 +195,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {EXCEPTION_MANAGER}.last_exception
+			le := feature {ISE_RUNTIME}.last_exception
 			if le /= Void and then le.inner_exception /= Void then
 				le := le.inner_exception
 				create Result.make_from_cil (le.target_site.name)
@@ -210,7 +210,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {EXCEPTION_MANAGER}.last_exception
+			le := feature {ISE_RUNTIME}.last_exception
 			if le /= Void and then le.inner_exception /= Void then
 				le := le.inner_exception
 				create Result.make_from_cil (le.target_site.reflected_type.full_name)
@@ -247,7 +247,7 @@ feature -- Status setting
 			fle: EIFFEL_EXCEPTION
 		do
 			create fle.make (Developer_exception, name)
-			feature {EXCEPTION_MANAGER}.raise (fle)
+			feature {ISE_RUNTIME}.raise (fle)
 		end
 
 	raise_retrieval_exception (name: STRING) is
@@ -256,7 +256,7 @@ feature -- Status setting
 			fle: EIFFEL_EXCEPTION
 		do
 			create fle.make (Retrieve_exception, name)
-			feature {EXCEPTION_MANAGER}.raise (fle)
+			feature {ISE_RUNTIME}.raise (fle)
 		end
 
 	die (code: INTEGER) is

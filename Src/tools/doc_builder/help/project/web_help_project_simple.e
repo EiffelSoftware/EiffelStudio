@@ -209,7 +209,7 @@ feature -- Access
 			replace_token (l_text, html_toc_token, formatter.node_text (a_node))
 			l_file.put_string (l_text)
 			l_file.close
-			
+						
 				-- Process children
 			from				
 				l_children_with_parents.start
@@ -235,18 +235,26 @@ feature {NONE} -- Implementation
 			l_util: UTILITY_FUNCTIONS
 			l_dir: DIRECTORY
 		do
-			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
-			if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
-				create l_util
-				l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
-			else						
-				l_filename.extend (toc.name)	
+			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)		
+			if generation_data.filter_toc_hash.count > 1 then		
+				if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
+					create l_util
+					l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
+				else						
+					l_filename.extend (toc.name)	
+				end
+				create l_dir.make (l_filename.string)
+				if not l_dir.exists then
+					l_dir.create_dir
+				end
+				l_filename.extend ("sub_tocs")	
+			else
+				l_filename.extend ("sub_tocs")	
+				create l_dir.make (l_filename.string)
+				if not l_dir.exists then
+					l_dir.create_dir
+				end
 			end
-			create l_dir.make (l_filename.string)
-			if not l_dir.exists then
-				l_dir.create_dir
-			end				
-			l_filename.extend ("sub_tocs")	
 			create Result.make (l_filename.string)
 			if not Result.exists then
 				Result.create_dir

@@ -18,6 +18,7 @@
 #include "macros.h"
 #include "except.h"
 #include "timer.h"
+#include "tools.h"		/* For hashcode() */
 #include <stdio.h>
 #ifdef I_STRING
 #include <string.h>
@@ -28,6 +29,8 @@
 public int trace_call_level = 0;	/* call level for E-TRACE
 					 * recursive calls (whether direct or indirect).
 					 */
+
+public struct profile_stack *prof_stack;
 
 /* INTERNAL TRACE VARIABLES */
 
@@ -224,7 +227,7 @@ void exitprf()
 			for (j = 0; j < f_values[i].htab->h_size; j++) {
 				if (f_values[i].htab->h_keys[j] != 0) {
 					features = (struct profile_information *) f_values[i].htab->h_values;
-					fprintf(prof_output, "[%d]\t%.2f\t%.2f\t%d\t%s from %s\t[%d]\n", index,
+					fprintf(prof_output, "[%d]\t%.2f\t%.2f\t%ld\t%s from %s\t[%d]\n", index,
 		    				features[j].all_total_time,
 						features[j].descendent_time,
 		    				features[j].number_of_calls,
@@ -245,12 +248,11 @@ void exitprf()
 
 void start_profile(name, origin, dtype)
 char *name;				/* The routine name */
-int origin;				/* The ancestor where 'name' is written, iff not in 'dtype'
+int origin;				/* The ancestor where 'name' is written, if and only if not in 'dtype' */
 int dtype;				/* The class in which the routine is defined */
 {
 	/* Initializes the timer, the number of calls and the featurename for a new 'prof_stack' entry (see below). */
 
-	struct profile_information *p_i;	/* The information to change */
 	struct profile_information *new_p_i;	/* New information */
 	double dummy;				/* User time, returned by getcputime is not of interest here */
 
@@ -281,28 +283,30 @@ void stop_profile()
 	struct profile_information *p_i;	/* The information to change */
 	double dummy, new_value;
 
-	if ((p_i = prof_stack_top()) == (struct profile_information *) 0)
-		eraise("Profile stack error...", EN_FATAL);		/* Stack is empty ==> Bailing out... */
+	if ((p_i = prof_stack_top()) != (struct profile_information *) 0) {
 
-	getcputime(&dummy, &new_value);					/* Get the new time */
-	p_i->all_total_time = new_value - p_i->this_total_time;		/* Compute the difference */
-	p_i->is_running = 0;						/* Mark that the function isn't running anymore */
+		getcputime(&dummy, &new_value);					/* Get the new time */
 
-	if (gc_ran) {
-		p_i->all_total_time -= last_gc_time;
-		gc_ran = 0;
+		p_i->all_total_time = new_value - p_i->this_total_time;		/* Compute the difference */
+		p_i->is_running = 0;						/* Mark that the function isn't running anymore */
+
+		if (gc_ran && !gc_running) {
+fprintf(stderr, "GC RAN!!! for %.2f seconds during %s from %s\n", last_gc_time, p_i->featurename, Classname(p_i->dtype));
+			p_i->all_total_time -= last_gc_time;
+			gc_ran = 0;
+		}
+
+		if (prof_stack->top->link->link != prof_stack->bot) {
+			struct profile_information *stk_item;
+
+			stk_item = prof_stack->top->link->link->info;
+			stk_item->all_total_time -= p_i->all_total_time;
+			stk_item->descendent_time += p_i->all_total_time;
+		}
+
+		update_class_table(p_i);					/* Record times in the table */
+		prof_stack_pop();							/* Pop feature from the stack */
 	}
-
-	if (prof_stack->top->link->link != prof_stack->bot) {
-		struct profile_information *stk_item;
-
-		stk_item = prof_stack->top->link->link->info;
-		stk_item->all_total_time -= p_i->all_total_time;
-		stk_item->descendent_time += p_i->all_total_time;
-	}
-
-	update_class_table(p_i);					/* Record times in the table */
-	prof_stack_pop();							/* Pop feature from the stack */
 }
 
 void start_trace(name, origin, dtype)
@@ -373,7 +377,6 @@ void prof_stack_pop()
 	prof_stack->top->link = prof_stack->top->link->link;	/* Unchain old item */
 
 	xfree(old_it);			/* Free memory used by the stack emtry */
-
 }
 
 struct profile_information* prof_stack_top()
@@ -382,7 +385,7 @@ struct profile_information* prof_stack_top()
 	 * The stack is empty if and only if the previous item of the top is the bottom item, i.e. top->link == 0.
 	 */
 
-	return (prof_stack->top->link == (struct prof_item *) 0 ? (struct profile_information *) 0 : prof_stack->top->link->info);
+	return (prof_stack->top->link->link == (struct prof_item *) 0 ? (struct profile_information *) 0 : prof_stack->top->link->info);
 }
 
 void prof_stack_init()
@@ -513,7 +516,7 @@ struct profile_information *item;
 		p_i->number_of_calls += item->number_of_calls;
 		p_i->all_total_time += item->all_total_time;
 		p_i->descendent_time += item->descendent_time;
-
+		
 		if (prof_stack->top->link->link != prof_stack->bot) {
 			for (stk_p_i = prof_stack->top->link->link;
 				    (!(stk_p_i->info->dtype == item->dtype && stk_p_i->info->origin == item->origin && stk_p_i->info->pi_hcode == f_hcode));
@@ -527,6 +530,8 @@ struct profile_information *item;
 				stk_p_i->info->this_total_time += p_i->all_total_time;
 			}
 		}
+
+		xfree(item);
 	}
 }
 

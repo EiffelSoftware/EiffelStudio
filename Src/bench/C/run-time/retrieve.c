@@ -1498,7 +1498,7 @@ rt_private int direct_read (register char *object, int size)
 
 rt_private int buffer_read (register char *object, int size)
 {
-	register i;
+	register int i;
  
 #if DEBUG & 2
 	printf ("Current position %d\n", current_position);

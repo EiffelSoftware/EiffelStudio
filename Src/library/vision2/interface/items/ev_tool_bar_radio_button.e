@@ -1,6 +1,6 @@
 indexing
 	description:
-		" EiffelVision tool-bar radio button. An exclusif%
+		" EiffelVision tool-bar radio button. An exclusive%
 		% two state button for the tool-bar."
 	status: "See notice at end of class."
 	date: "$Date$"

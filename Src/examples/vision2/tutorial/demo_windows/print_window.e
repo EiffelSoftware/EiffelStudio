@@ -31,6 +31,11 @@ feature {NONE} -- Initialization
 			!! cmd.make (~execute1)
 			add_click_command (cmd, Void)
 		end
+	
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+		end
 
 feature -- Access
 

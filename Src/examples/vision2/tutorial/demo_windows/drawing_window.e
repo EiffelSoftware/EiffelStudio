@@ -68,6 +68,11 @@ feature {NONE} -- Initialization
 			set_background_color (color)
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+		end
+
 feature -- Access
 
 	popup: EV_POPUP_MENU

@@ -47,12 +47,17 @@ feature {NONE} -- Initialization
 			set_parent (par)
 			!!button_list.make
 
-				-- Sets the tabs for the action window
+			end
+
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
 			set_container_tabs
 			tab_list.extend(table_tab)
 			tab_list.extend(dyntable_tab)
 			create action_window.make(Current,tab_list)
 		end
+
 
 feature -- Execution
 

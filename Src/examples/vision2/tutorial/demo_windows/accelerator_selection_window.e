@@ -61,6 +61,11 @@ feature -- Execution features
 			end
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window
+		do
+		end
+
 	execute2 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Executed when we press the first button
 		do

@@ -30,6 +30,13 @@ feature {NONE} -- Initialization
 			add_click_command (cmd, Void)
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window
+		do
+		
+		end
+
+
 feature -- Access
 
 	dialog: EV_COLOR_DIALOG

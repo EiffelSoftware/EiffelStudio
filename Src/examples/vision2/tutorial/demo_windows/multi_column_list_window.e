@@ -14,6 +14,7 @@ inherit
 		redefine
 			make
 		end
+	DEMO_WINDOW
 
 creation
 	make
@@ -25,6 +26,7 @@ feature {NONE} -- Initialization
 		local
 			type: EV_PND_TYPE
 		do
+			--{EV_MULTI_COLUMN_LIST} Precursor (Void)
 			make_with_text (par, <<"Part 1", "Part 2", "Part 3", "Part 4", "Part 5">>)
 			set_multiple_selection
 			set_columns_width (<<80, 80, 80, 80, 80>>)		
@@ -48,6 +50,16 @@ feature {NONE} -- Initialization
 			!! row4.make_with_all (Current, <<"This","is","Last","created","row">>, 2)
 			row4.set_selected (True)
 			row4.set_data (4)
+			--set_parent (par)
+			set_single_selection
+		end
+
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+			set_primitive_tabs
+			tab_list.extend (multi_column_list_tab)
+			create action_window.make (Current, tab_list)
 		end
 
 feature -- Access

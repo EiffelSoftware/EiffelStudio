@@ -25,18 +25,17 @@ feature {NONE} -- Initialization
 			-- We create the table first without parent as it
 			-- is faster.
 		do
-			{EV_HORIZONTAL_RANGE} Precursor (Void)
-
-			set_gauge_tabs
-			create range_tab.make(Void)
-			tab_list.extend(range_tab)
-			create action_window.make(Current,tab_list)
+			{EV_HORIZONTAL_RANGE} Precursor (par)
 			make_with_range (par, 0, 100)
-			set_parent(par)
+			set_parent (par)
 		end
 
-
-
-	range_tab: RANGE_TAB
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+			set_gauge_tabs
+			--tab_list.extend(range_tab)
+			create action_window.make(Current,tab_list)
+		end
 
 end -- class RANGE_WINDOW

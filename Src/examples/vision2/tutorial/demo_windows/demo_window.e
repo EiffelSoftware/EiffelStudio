@@ -15,6 +15,13 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
+feature {DEMO_ITEM} -- Initialise tabs when the window is shown.
+
+	set_tabs is
+			-- Set the tabs for the action window.
+		deferred
+		end
+
 feature -- Status report
 
 	action_window_shown: BOOLEAN is
@@ -75,7 +82,7 @@ feature -- Basic operation
 			-- Sets the gauge tabs
 		do
 			set_primitive_tabs
-			tab_list.extend(gauge_tab)
+			--tab_list.extend(gauge_tab)
 		end
 
 	tab_list:LINKED_LIST[ANY_TAB]
@@ -148,13 +155,71 @@ feature -- Basic operation
 			create Result.make (Void)
 		end
 
+--	gauge_tab: GAUGE_TAB is
+--			-- Creation of the gauge tab
+--		once
+--			create Result.make (Void)
+--		end
 
-	gauge_tab: GAUGE_TAB is
-			-- Creation of the gauge tab
+	textable_tab: TEXTABLE_TAB is
+			-- Creation of the textable tab.
 		once
 			create Result.make (Void)
 		end
 
+	fontable_tab: FONTABLE_TAB is
+			-- Creation of the fontable tab.
+		once
+			create Result.make (Void)
+		end
+
+	pixmapable_tab: PIXMAPABLE_TAB is
+			-- Creation of the pixmapable_tab.
+		once
+			create Result.make (Void)
+		end
+
+	toggle_button_tab: TOGGLE_BUTTON_TAB is
+			-- Creation of the toggle_button_tab.
+		once
+			create Result.make (Void)
+		end
+
+	check_button_tab: CHECK_BUTTON_TAB is
+			-- Creation of the check_button_tab.
+		once
+			create Result.make (Void)
+		end
+
+	radio_button_tab: RADIO_BUTTON_TAB is
+			-- Creation of the radio_button_tab.
+		once
+			create Result.make (Void)
+		end
+
+	option_tab: OPTION_TAB is
+			-- Creation of the option _tab.
+		once
+			create Result.make (Void)
+		end
+
+	multi_column_list_tab: MULTI_COLUMN_LIST_TAB is
+			-- Creation of the multi_column_list_tab.
+		once
+			create Result.make (Void)
+		end
+
+	text_field_tab: TEXT_FIELD_TAB is
+			-- Creation of the text_field_tab.
+		once
+			create Result.make (Void)
+		end
+
+	text_component_tab: TEXT_COMPONENT_TAB is
+			-- Creation of the text_component_tab.
+		once
+			create Result.make (Void)
+		end
 
 feature -- Deferred features
 

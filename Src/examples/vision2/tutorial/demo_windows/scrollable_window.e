@@ -29,11 +29,14 @@ feature {NONE} -- Initialization
 			{EV_SCROLLABLE_AREA} Precursor (par)
 			create pix.make_from_file (pixmap_path ("isepower"))
 			create ta.make_with_pixmap (Current, pix)
+		end
 
-				-- Sets the tabs for the action window
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
 			set_container_tabs
 			tab_list.extend(scrollable_area_tab)
-			create action_window.make(Current,tab_list)
+			create action_window.make (Current, tab_list)	
 		end
 
 feature -- Access

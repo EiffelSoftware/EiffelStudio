@@ -61,6 +61,11 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+		end
+
 feature -- Access
 
 	label: EV_LABEL

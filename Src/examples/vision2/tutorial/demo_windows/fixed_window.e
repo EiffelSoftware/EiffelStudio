@@ -34,11 +34,15 @@ feature {NONE} -- Initialization
 			button2.set_x_y (200, 50)
 			xvel:=20
 			yvel:=20
-
-			--Sets the tabs for the action window
-			set_container_tabs
-			create action_window.make(Current,tab_list)
 		end
+
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+			set_container_tabs
+			create action_window.make (Current, tab_list)
+		end
+
 
 feature -- Access
 

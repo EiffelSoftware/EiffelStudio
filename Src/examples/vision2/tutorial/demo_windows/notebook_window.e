@@ -37,7 +37,11 @@ feature {NONE} -- Initialization
 			set_current_page (2)
 			set_parent (par)
 			
-				--Sets the tabs for the action window
+		end
+	
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
 			set_container_tabs
 			tab_list.extend(notebook_tab)
 			create action_window.make(Current,tab_list)

@@ -28,7 +28,11 @@ feature {NONE} -- Initialization
 			{EV_FRAME} Precursor (par)
 			set_text ("A frame with text")
 
-				-- Sets the tabs for the action window
+		end
+
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
 			set_container_tabs
 			create frame_tab.make(Void)
 			tab_list.extend(frame_tab)

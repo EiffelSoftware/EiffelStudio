@@ -26,20 +26,21 @@ feature {NONE} -- Initialization
 			-- is faster.
 		do
 			{EV_HORIZONTAL_SCROLL_BAR} Precursor (Void)
-			
-			set_gauge_tabs
-			create scroll_bar_tab.make (Void)
-			tab_list.extend(scroll_bar_tab)
-			create action_window.make(Current,tab_list)
 			make_with_range (par, 0, 100)
-			set_parent(par)
+			set_parent (par)
+--			create cmd.make (~execute1)
+		end
 
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+			set_gauge_tabs
+			--tab_list.extend(scroll_bar_tab)
+			create action_window.make(Current,tab_list)
 		end
 
 
 feature -- Access
-
-	scroll_bar_tab: SCROLL_BAR_TAB
 
 end -- class SCROLL_BAR_WINDOW
 

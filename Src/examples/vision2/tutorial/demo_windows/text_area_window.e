@@ -27,6 +27,11 @@ feature {NONE} -- Initialization
 			append_text ("This is a text area.")
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+		end
+
 feature -- Access
 
 

@@ -1,8 +1,6 @@
 indexing
-	description: "EiffelVision window. Window is a visible window%
-				% on the screen."
-	status: "See notice at end of class"
-	id: "$Id$"
+	description: "Objects that represent a window displayed on screen."
+	keywords: window
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,25 +24,21 @@ creation
 feature {NONE} -- Initialization
 
 	make_root is
-			-- Create a root window for the application.
+			-- Create as application's root window.
 		do
 			create {EV_WINDOW_IMP} implementation.make_root
 			widget_make (Void)
 		end
 
 	make_top_level is
-			-- Create a top level window (a Window 
-			-- without a parent).
+			-- Create without parent.
 		do
 			create {EV_WINDOW_IMP} implementation.make
 			widget_make (Void)
 		end
 
 	make (par: EV_WINDOW) is
-			-- Create a window with a parent. Current
-			-- window will be closed when the parent is
-			-- closed. The parent of window is a window 
-			-- (and not any EV_CONTAINER).
+			-- Create as child of `par'. Destroyed when `par' destoyed. 
 		do
 			create {EV_WINDOW_IMP} implementation.make_with_owner (par)
 			widget_make (par)
@@ -53,59 +47,61 @@ feature {NONE} -- Initialization
 feature  -- Access
 
 	icon_name: STRING is
-			-- Short form of application name to be
-			-- displayed by the window manager when
-			-- application is iconified 
+			-- Alternative name, displayed when window iconified.
 		require
 			exists: not destroyed
 		do
 			Result := implementation.icon_name
+		ensure
+			valid_result: Result = implementation.icon_name
 		end 
 	
 	icon_mask: EV_PIXMAP is
-			-- Bitmap that could be used by window manager
-			-- to clip `icon_pixmap' bitmap to make the
-			-- icon nonrectangular 
+			-- Mask for `icon_pixmap'.
 		require
 			exists: not destroyed
 		do
 			Result := implementation.icon_mask
+		ensure
+			valid_result: Result = implementation.icon_mask
 		end
 
 	icon_pixmap: EV_PIXMAP is
-			-- Bitmap that could be used by the window manager
-			-- as the application's icon
+			-- Window icon.
 		require
 			exists: not destroyed
 		do
 			Result := implementation.icon_pixmap
 		ensure
-			valid_result: Result /= Void
+			valid_result: Result = implementation.icon_pixmap
 		end
 
 feature -- Status report
 
 	is_minimized: BOOLEAN is
-			-- Is the window minimized (iconic state)?
+			--is minimized?
 		require
 			exists: not destroyed
 		do
 			Result := implementation.is_minimized
+		ensure
+			valid_result: Result = implementation.is_minimized
 		end
 
 	is_maximized: BOOLEAN is
-			-- Is the window maximized (take the all screen).
+			-- Is maximized?
 		require
 			exists: not destroyed
 		do
 			Result := implementation.is_maximized
+		ensure
+			valid_result: Result = implementation.is_maximized
 		end
 
 feature -- Status setting
 
 	raise is
-			-- Raise a window. ie: put the window on the front
-			-- of the screen.
+			-- Bring to front of screen.
 		require
 			exists: not destroyed
 		do
@@ -113,8 +109,7 @@ feature -- Status setting
 		end
 
 	lower is
-			-- Lower a window. ie: put the window on the back
-			-- of the screen.
+			-- Move to back of screen.
 		require
 			exists: not destroyed
 		do
@@ -122,7 +117,7 @@ feature -- Status setting
 		end
 
 	minimize is
-			-- Minimize the window.
+			-- Minimize.
 		require
 			exists: not destroyed
 		do
@@ -132,7 +127,7 @@ feature -- Status setting
 		end
 
 	maximize is
-			-- Minimize the window.
+			-- Maximize.
 		require
 			exists: not destroyed
 		do
@@ -142,8 +137,8 @@ feature -- Status setting
 		end
 
 	restore is
-			-- Restore the window when it is minimized or
-			-- maximized. Do nothing otherwise.
+			-- Restore to original position when minimized or
+			-- maximized.
 		require
 			exists: not destroyed
 		do
@@ -156,7 +151,7 @@ feature -- Status setting
 feature -- Element change
 
 	set_icon_name (txt: STRING) is
-			-- Make `txt' the new icon name.
+			-- Assign `txt' to icon name.
 		require
 			exists: not destroyed
 			valid_name: txt /= Void
@@ -165,7 +160,7 @@ feature -- Element change
 		end
 
 	set_icon_mask (pixmap: EV_PIXMAP) is
-			-- Make `pixmap' the new icon mask.
+			-- Assign `pixmap' to icon mask.
 		require
 			exists: not destroyed
 			valid_mask: is_valid (pixmap)
@@ -174,7 +169,7 @@ feature -- Element change
 		end
 
 	set_icon_pixmap (pixmap: EV_PIXMAP) is
-			-- Make `pixmap' the new icon pixmap.
+			-- Assign `pixmap' to icon.
 		require
 			exists: not destroyed
 			valid_pixmap: is_valid (pixmap)
@@ -189,19 +184,19 @@ feature -- Implementation
 		
 end -- class EV_WINDOW
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------
 

@@ -84,7 +84,6 @@ rt_shared unsigned char eif_visible_is_off = (unsigned char) 1;
 rt_public void eifvisex (void) {
     /* Enable the visible exception */
 
-	assert (cecil_lock);
 	EIF_CECIL_LOCK;
     eif_visible_is_off = (unsigned char) 0;
 	EIF_CECIL_UNLOCK;
@@ -93,7 +92,6 @@ rt_public void eifvisex (void) {
 rt_public void eifuvisex (void)  {
     /* Disable visible exception */
 
-	assert (cecil_lock);
 	EIF_CECIL_LOCK;
     eif_visible_is_off = (unsigned char) 1;
 	EIF_CECIL_UNLOCK;

@@ -87,6 +87,18 @@ feature -- Setting
 			popup
 		end
 
+feature -- Inapplicable
+
+	is_iconic_state: BOOLEAN is False;
+
+	set_iconic_state is
+		do
+		end;
+
+	set_normal_state is
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	implementation: FORM_D_I

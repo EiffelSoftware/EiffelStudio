@@ -1931,7 +1931,20 @@ rt_public void c_npop(register int nb_items)
 	top = cop_stack.st_top;
 	top -= nb_items;				/* Hopefully, we remain in current chunk */
 	if (top >= arena) {
-		cop_stack.st_top = top;		/* Yes! Update top */
+			/* If `top' is at the bottom of the current chunk, we need
+			 * to update current top to points to the top of previous
+			 * chunk if any. */
+		if ((top == arena) && (cop_stack.st_cur->sk_prev)) {
+				/* We need to change chunk here */
+			s = cop_stack.st_cur->sk_prev;
+			cop_stack.st_cur = s;
+			cop_stack.st_top = s->sk_end;
+			cop_stack.st_end = s->sk_end;
+			if (d_cxt.pg_status == PG_RUN)	/* Program is running */
+				c_stack_truncate();
+		} else {
+			cop_stack.st_top = top;		/* Yes! Update top */
+		}
 		return;						/* Done, how lucky we were! */
 	}
 

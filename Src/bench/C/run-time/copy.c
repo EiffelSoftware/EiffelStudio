@@ -686,3 +686,21 @@ int shallow_or_deep;
 	}
 }
 
+EIF_BOOLEAN c_check_assert (b)
+EIF_BOOLEAN b;
+{
+
+	/*
+	 * Set `in_assertion' to `b', and return the previous value 
+	 * of `in_assertion' (needed for the `clone feature in class
+	 * GENERAL to turn assertion checking of before the call to
+	 * `setup'
+	 */
+
+	EIF_BOOLEAN temp;
+
+	temp = ((in_assertion != (int) 0)?(EIF_BOOLEAN)0:(EIF_BOOLEAN)1);
+	in_assertion = ((b != (EIF_BOOLEAN) 0)?0:~0);
+
+	return ((EIF_BOOLEAN) temp);
+}

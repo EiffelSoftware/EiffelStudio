@@ -233,6 +233,29 @@
 	</Events>
 </item>
 <item type="EV_MENU_SEPARATOR"><Internal_properties>
+	<id>178</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_MENU_ITEM"><Internal_properties>
+	<id>10</id>
+	<name>properties_menu_item</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><Constant>properties_button_text</Constant>
+		</Text>
+	</EV_TEXTABLE>
+<EV_PIXMAPABLE><Pixmap_path><Constant>info_png</Constant>
+		</Pixmap_path>
+	</EV_PIXMAPABLE>
+<Events><Event>select_actions EV_MENU_ITEM_ACTION_SEQUENCES on_config_info</Event>
+	</Events>
+</item>
+<item type="EV_MENU_SEPARATOR"><Internal_properties>
 	<id>7</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -262,21 +285,6 @@
 <EV_TEXTABLE><Text><![CDATA[Edit]]></Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
-<item type="EV_MENU_ITEM"><Internal_properties>
-	<id>10</id>
-	<name>properties_menu_item</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><Constant>properties_button_text</Constant>
-		</Text>
-	</EV_TEXTABLE>
-<EV_PIXMAPABLE><Pixmap_path><Constant>info_png</Constant>
-		</Pixmap_path>
-	</EV_PIXMAPABLE>
-<Events><Event>select_actions EV_MENU_ITEM_ACTION_SEQUENCES on_config_info</Event>
-	</Events>
-</item>
 <item type="EV_MENU_ITEM"><Internal_properties>
 	<id>11</id>
 	<name>delete_menu_item</name>
@@ -919,7 +927,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>173</id>
+	<id>55</id>
 	<name>precompile_cache_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -935,7 +943,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>55</id>
+	<id>56</id>
 	<name>compiler_values_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -949,7 +957,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>56</id>
+	<id>57</id>
 	<name>root_class_combo_box</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -964,7 +972,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>57</id>
+	<id>58</id>
 	<name>precompile_ace_file_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -976,7 +984,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>58</id>
+	<id>59</id>
 	<name>precompile_ace_file_combo_box</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -991,7 +999,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>59</id>
+	<id>60</id>
 	<name>precompile_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1003,7 +1011,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>60</id>
+	<id>61</id>
 	<name>browse_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1022,7 +1030,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>61</id>
+	<id>62</id>
 	<name>metadata_cache_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1034,7 +1042,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>62</id>
+	<id>63</id>
 	<name>metadata_cache_combo_box</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1049,7 +1057,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>63</id>
+	<id>64</id>
 	<name>metadata_cache_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1061,7 +1069,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>64</id>
+	<id>65</id>
 	<name>metadata_cache_browse_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1080,7 +1088,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>174</id>
+	<id>66</id>
 	<name>precompile_cache_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1092,7 +1100,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>175</id>
+	<id>67</id>
 	<name>precompile_cache_combo_box</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1107,7 +1115,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>176</id>
+	<id>68</id>
 	<name>precompile_cache_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1119,7 +1127,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>177</id>
+	<id>69</id>
 	<name>precompile_cache_browse_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1141,7 +1149,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>65</id>
+	<id>70</id>
 	<name>prefixes_frame</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1156,7 +1164,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>66</id>
+	<id>71</id>
 	<name>prefixes_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1170,7 +1178,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_MULTI_COLUMN_LIST"><Internal_properties>
-	<id>67</id>
+	<id>72</id>
 	<name>prefixes_list</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1184,7 +1192,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>68</id>
+	<id>73</id>
 	<name>prefix_components_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1197,7 +1205,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TEXT_FIELD"><Internal_properties>
-	<id>69</id>
+	<id>74</id>
 	<name>prefix_text_field</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1213,7 +1221,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_TEXT_FIELD"><Internal_properties>
-	<id>70</id>
+	<id>75</id>
 	<name>assembly_file_name_text_field</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1228,7 +1236,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>71</id>
+	<id>76</id>
 	<name>assembly_file_name_browse_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1247,7 +1255,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>72</id>
+	<id>77</id>
 	<name>assembly_file_name_buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1260,7 +1268,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>73</id>
+	<id>78</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1270,7 +1278,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>74</id>
+	<id>79</id>
 	<name>assembly_file_name_add_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1289,7 +1297,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>75</id>
+	<id>80</id>
 	<name>assembly_file_name_remove_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1308,7 +1316,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>76</id>
+	<id>81</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1321,7 +1329,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>77</id>
+	<id>82</id>
 	<name>applications_frame</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1337,7 +1345,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>78</id>
+	<id>83</id>
 	<name>applications_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1351,7 +1359,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LIST"><Internal_properties>
-	<id>79</id>
+	<id>84</id>
 	<name>applications_list</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1364,7 +1372,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>80</id>
+	<id>85</id>
 	<name>buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1377,7 +1385,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>81</id>
+	<id>86</id>
 	<name>left_buttons_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1388,7 +1396,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>82</id>
+	<id>87</id>
 	<name>add_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1406,7 +1414,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>83</id>
+	<id>88</id>
 	<name>remove_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1424,7 +1432,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>84</id>
+	<id>89</id>
 	<name>right_buttons_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1442,7 +1450,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_DIALOG"><Internal_properties>
-	<id>85</id>
+	<id>90</id>
 	<name>ecdm_new_configuration_dialog</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1457,7 +1465,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>86</id>
+	<id>91</id>
 	<name>main_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1469,7 +1477,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>87</id>
+	<id>92</id>
 	<name>top_box</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1485,7 +1493,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>88</id>
+	<id>93</id>
 	<name>title_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1499,7 +1507,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>89</id>
+	<id>94</id>
 	<name>title_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1520,7 +1528,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>90</id>
+	<id>95</id>
 	<name>subtitle_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1533,7 +1541,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>91</id>
+	<id>96</id>
 	<name>subtitle_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1546,7 +1554,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>92</id>
+	<id>97</id>
 	<name>subtitle_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1564,7 +1572,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>93</id>
+	<id>98</id>
 	<name>top_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1576,7 +1584,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>94</id>
+	<id>99</id>
 	<name>new_configuration_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1592,7 +1600,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>95</id>
+	<id>100</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1601,7 +1609,7 @@ the proper security access rights.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>96</id>
+	<id>101</id>
 	<name>bottom_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1615,7 +1623,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_FRAME"><Internal_properties>
-	<id>97</id>
+	<id>102</id>
 	<name>config_info_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1630,7 +1638,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>98</id>
+	<id>103</id>
 	<name>config_info_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1644,7 +1652,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>99</id>
+	<id>104</id>
 	<name>config_name_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1659,7 +1667,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>100</id>
+	<id>105</id>
 	<name>config_name_edit_box</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1671,7 +1679,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TEXT_FIELD"><Internal_properties>
-	<id>101</id>
+	<id>106</id>
 	<name>config_name_text_field</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1688,7 +1696,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>102</id>
+	<id>107</id>
 	<name>config_name_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1700,7 +1708,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>103</id>
+	<id>108</id>
 	<name>config_info_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1712,7 +1720,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>104</id>
+	<id>109</id>
 	<name>configuration_folder_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1727,7 +1735,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>105</id>
+	<id>110</id>
 	<name>configuration_folder_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1740,7 +1748,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TEXT_FIELD"><Internal_properties>
-	<id>106</id>
+	<id>111</id>
 	<name>configuration_folder_text_field</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1753,7 +1761,7 @@ the proper security access rights.]]></Text>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>107</id>
+	<id>112</id>
 	<name>browse_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1774,7 +1782,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>108</id>
+	<id>113</id>
 	<name>applications_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1789,7 +1797,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>109</id>
+	<id>114</id>
 	<name>applications_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1803,7 +1811,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>110</id>
+	<id>115</id>
 	<name>applications_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1818,7 +1826,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LIST"><Internal_properties>
-	<id>111</id>
+	<id>116</id>
 	<name>applications_list</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1831,7 +1839,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>112</id>
+	<id>117</id>
 	<name>applications_buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1844,7 +1852,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>113</id>
+	<id>118</id>
 	<name>add_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1862,7 +1870,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>114</id>
+	<id>119</id>
 	<name>remove_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1881,7 +1889,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>115</id>
+	<id>120</id>
 	<name>buttons_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1896,7 +1904,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>116</id>
+	<id>121</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1905,7 +1913,7 @@ the proper security access rights.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>117</id>
+	<id>122</id>
 	<name>buttons_box</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1919,7 +1927,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>118</id>
+	<id>123</id>
 	<name>bottom_buttons_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1930,7 +1938,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>119</id>
+	<id>124</id>
 	<name>ok_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1949,7 +1957,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>120</id>
+	<id>125</id>
 	<name>cancel_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1970,7 +1978,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_DIALOG"><Internal_properties>
-	<id>121</id>
+	<id>126</id>
 	<name>ecdm_configuration_properties_dialog</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1985,7 +1993,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>122</id>
+	<id>127</id>
 	<name>main_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1997,7 +2005,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>123</id>
+	<id>128</id>
 	<name>top_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2012,7 +2020,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>124</id>
+	<id>129</id>
 	<name>configuration_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2027,7 +2035,7 @@ the proper security access rights.]]></Text>
 	</EV_PIXMAP>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>125</id>
+	<id>130</id>
 	<name>name_text_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2047,7 +2055,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>126</id>
+	<id>131</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2056,7 +2064,7 @@ the proper security access rights.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>127</id>
+	<id>132</id>
 	<name>location_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2070,7 +2078,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>128</id>
+	<id>133</id>
 	<name>location_title_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2085,7 +2093,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_TEXT_FIELD"><Internal_properties>
-	<id>129</id>
+	<id>134</id>
 	<name>location_text_field</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2100,7 +2108,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>130</id>
+	<id>135</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2109,7 +2117,7 @@ the proper security access rights.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_TABLE"><Internal_properties>
-	<id>131</id>
+	<id>136</id>
 	<name>file_properties_table</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2129,7 +2137,7 @@ the proper security access rights.]]></Text>
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>132</id>
+	<id>137</id>
 	<name>created_title_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2144,7 +2152,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>133</id>
+	<id>138</id>
 	<name>created_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2158,7 +2166,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>134</id>
+	<id>139</id>
 	<name>modified_title_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2173,7 +2181,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>135</id>
+	<id>140</id>
 	<name>modified_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2188,7 +2196,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>136</id>
+	<id>141</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2197,7 +2205,7 @@ the proper security access rights.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>137</id>
+	<id>142</id>
 	<name>applications_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2211,7 +2219,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>138</id>
+	<id>143</id>
 	<name>applications_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2226,7 +2234,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LIST"><Internal_properties>
-	<id>139</id>
+	<id>144</id>
 	<name>applications_list</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2237,7 +2245,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>140</id>
+	<id>145</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2246,7 +2254,7 @@ the proper security access rights.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>141</id>
+	<id>146</id>
 	<name>buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2260,7 +2268,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>142</id>
+	<id>147</id>
 	<name>left_button_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2271,7 +2279,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>143</id>
+	<id>148</id>
 	<name>ok_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2289,7 +2297,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>144</id>
+	<id>149</id>
 	<name>right_button_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2303,7 +2311,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_DIALOG"><Internal_properties>
-	<id>145</id>
+	<id>150</id>
 	<name>ecdm_about_dialog</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2318,7 +2326,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>146</id>
+	<id>151</id>
 	<name>main_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2330,7 +2338,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>147</id>
+	<id>152</id>
 	<name>inside_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2343,7 +2351,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>148</id>
+	<id>153</id>
 	<name>left_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2357,7 +2365,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>149</id>
+	<id>154</id>
 	<name>left_top_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2370,7 +2378,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>150</id>
+	<id>155</id>
 	<name>es_logo_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2386,7 +2394,7 @@ the proper security access rights.]]></Text>
 	</EV_PIXMAP>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>151</id>
+	<id>156</id>
 	<name>left_bottom_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2399,7 +2407,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>152</id>
+	<id>157</id>
 	<name>right_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2414,7 +2422,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>153</id>
+	<id>158</id>
 	<name>title_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2434,7 +2442,7 @@ the proper security access rights.]]></Text>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>154</id>
+	<id>159</id>
 	<name>version_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2446,7 +2454,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>155</id>
+	<id>160</id>
 	<name>version_title</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2462,7 +2470,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>156</id>
+	<id>161</id>
 	<name>version_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2479,7 +2487,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>157</id>
+	<id>162</id>
 	<name>content_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2493,7 +2501,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>158</id>
+	<id>163</id>
 	<name>copyright_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2509,7 +2517,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>159</id>
+	<id>164</id>
 	<name>web_address_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2533,7 +2541,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>160</id>
+	<id>165</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2542,7 +2550,7 @@ the proper security access rights.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>161</id>
+	<id>166</id>
 	<name>bottom_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2556,7 +2564,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>162</id>
+	<id>167</id>
 	<name>left_bottom_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2567,7 +2575,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>163</id>
+	<id>168</id>
 	<name>ok_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2585,7 +2593,7 @@ the proper security access rights.]]></Text>
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>164</id>
+	<id>169</id>
 	<name>right_bottom_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2599,7 +2607,7 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_DIALOG"><Internal_properties>
-	<id>165</id>
+	<id>170</id>
 	<name>ecdm_output_dialog</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2614,7 +2622,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>166</id>
+	<id>171</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2627,7 +2635,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TEXT"><Internal_properties>
-	<id>167</id>
+	<id>172</id>
 	<name>output</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2646,7 +2654,7 @@ the proper security access rights.]]></Text>
 	</EV_TEXT_COMPONENT>
 </item>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>168</id>
+	<id>173</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2655,7 +2663,7 @@ the proper security access rights.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>169</id>
+	<id>174</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2666,7 +2674,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>170</id>
+	<id>175</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2676,7 +2684,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>171</id>
+	<id>176</id>
 	<name>ok_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2692,7 +2700,7 @@ the proper security access rights.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>172</id>
+	<id>177</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>

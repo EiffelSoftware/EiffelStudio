@@ -27,7 +27,7 @@ feature {NONE}-- Initialization
 	initialize is
 			-- Initialize `Current'.
 		local 
-			l_ev_menu_separator_1, l_ev_menu_separator_2: EV_MENU_SEPARATOR
+			l_ev_menu_separator_1, l_ev_menu_separator_2, l_ev_menu_separator_3: EV_MENU_SEPARATOR
 			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
 			l_ev_cell_1, l_ev_cell_2: EV_CELL
 			internal_font: EV_FONT
@@ -42,16 +42,17 @@ feature {NONE}-- Initialization
 			create save_menu_item
 			create revert_menu_item
 			create l_ev_menu_separator_1
+			create properties_menu_item
+			create l_ev_menu_separator_2
 			create exit_menu_item
 			create edit_menu
-			create properties_menu_item
 			create delete_menu_item
 			create options_menu
 			create show_text_menu_item
 			create show_tooltips_menu_item
 			create help_menu
 			create help_content_menu_item
-			create l_ev_menu_separator_2
+			create l_ev_menu_separator_3
 			create about_menu_item
 			create window_box
 			create tool_bars_box
@@ -132,16 +133,17 @@ feature {NONE}-- Initialization
 			file_menu.extend (save_menu_item)
 			file_menu.extend (revert_menu_item)
 			file_menu.extend (l_ev_menu_separator_1)
+			file_menu.extend (properties_menu_item)
+			file_menu.extend (l_ev_menu_separator_2)
 			file_menu.extend (exit_menu_item)
 			menu.extend (edit_menu)
-			edit_menu.extend (properties_menu_item)
 			edit_menu.extend (delete_menu_item)
 			menu.extend (options_menu)
 			options_menu.extend (show_text_menu_item)
 			options_menu.extend (show_tooltips_menu_item)
 			menu.extend (help_menu)
 			help_menu.extend (help_content_menu_item)
-			help_menu.extend (l_ev_menu_separator_2)
+			help_menu.extend (l_ev_menu_separator_3)
 			help_menu.extend (about_menu_item)
 			extend (window_box)
 			window_box.extend (tool_bars_box)
@@ -226,10 +228,10 @@ feature {NONE}-- Initialization
 			save_menu_item.set_pixmap (save_png)
 			revert_menu_item.set_text (revert_button_text)
 			revert_menu_item.set_pixmap (revert_png)
-			exit_menu_item.set_text ("Exit")
-			edit_menu.set_text ("Edit")
 			properties_menu_item.set_text (properties_button_text)
 			properties_menu_item.set_pixmap (info_png)
+			exit_menu_item.set_text ("Exit")
+			edit_menu.set_text ("Edit")
 			delete_menu_item.set_text ("Delete")
 			delete_menu_item.set_pixmap (delete_png)
 			options_menu.set_text ("Options")
@@ -372,8 +374,8 @@ feature {NONE}-- Initialization
 			new_menu_item.select_actions.extend (agent on_config_new)
 			save_menu_item.select_actions.extend (agent on_config_save)
 			revert_menu_item.select_actions.extend (agent on_revert)
-			exit_menu_item.select_actions.extend (agent on_close)
 			properties_menu_item.select_actions.extend (agent on_config_info)
+			exit_menu_item.select_actions.extend (agent on_close)
 			delete_menu_item.select_actions.extend (agent on_config_delete)
 			show_text_menu_item.select_actions.extend (agent on_show_text)
 			show_tooltips_menu_item.select_actions.extend (agent on_show_tooltips)
@@ -421,7 +423,7 @@ feature -- Access
 
 	menu: EV_MENU_BAR
 	file_menu, edit_menu, options_menu, help_menu: EV_MENU
-	new_menu_item, save_menu_item, revert_menu_item, exit_menu_item, properties_menu_item, 
+	new_menu_item, save_menu_item, revert_menu_item, properties_menu_item, exit_menu_item, 
 	delete_menu_item, help_content_menu_item, about_menu_item: EV_MENU_ITEM
 	show_text_menu_item, show_tooltips_menu_item: EV_CHECK_MENU_ITEM
 	window_box, configurations_box, edit_box, general_box, general_titles_box, general_values_box, 
@@ -480,13 +482,13 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_close is
-			-- Called by `select_actions' of `exit_menu_item'.
+	on_config_info is
+			-- Called by `select_actions' of `properties_menu_item'.
 		deferred
 		end
 	
-	on_config_info is
-			-- Called by `select_actions' of `properties_menu_item'.
+	on_close is
+			-- Called by `select_actions' of `exit_menu_item'.
 		deferred
 		end
 	

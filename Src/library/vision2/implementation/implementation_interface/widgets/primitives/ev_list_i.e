@@ -161,6 +161,29 @@ feature -- Element change
 		deferred
 		end
 
+feature -- Basic operation
+
+	find_item_by_data (data: ANY): EV_LIST_ITEM is
+			-- Find a child with data equal to `data'.
+		require
+			exists: not destroyed
+			valid_data: data /= Void
+		local
+			list: LINKED_LIST [EV_LIST_ITEM_IMP]
+		do
+			from
+				list := ev_children
+				list.start
+			until
+				list.after or Result /= Void
+			loop
+				if data.is_equal (list.item.data) then
+					Result ?= list.item.interface
+				end
+				list.forth
+			end
+		end
+
 feature -- Event : command association
 
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	

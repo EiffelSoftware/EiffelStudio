@@ -125,11 +125,11 @@ feature -- Events
 					end
 					
 					lw := line_width
-					grow := lw // 2 + 1
-					ax := min_x.truncated_to_integer
-					ay := min_y.truncated_to_integer
-					w := max_x.truncated_to_integer - ax + lw + 2
-					h := max_y.truncated_to_integer - ay + lw + 2
+					grow := as_integer (lw / 2) + 1
+					ax := as_integer (min_x)--.truncated_to_integer
+					ay := as_integer (min_y)--.truncated_to_integer
+					w := as_integer (max_x) - ax + lw + 2--.truncated_to_integer - ax + lw + 2
+					h := as_integer (max_y) - ay + lw + 2--.truncated_to_integer - ay + lw + 2
 					create Result.make (ax - grow, ay - grow, w, h)
 				end
 				internal_bounding_box := Result.twin

@@ -1,7 +1,7 @@
 indexing
 	description: "[
 
-				`text's in a `font' displayed on p1 == point.
+				`text's in a `font' displayed on p0 == point.
 		
 					p0---------------------------p2
 					|fooooooooooooooooooooooooooo
@@ -10,8 +10,8 @@ indexing
 					|foobar
 					p1
 					
-					p4.y - p1.y  is the should height of a character to match scale
-					p4.x - p1.x  is the should width of a character to match scale
+					p3.y - p0.y  is the should height of a character to match scale
+					p3.x - p0.x  is the should width of a character to match scale
 		
 				]"
 	status: "See notice at end of class"
@@ -139,7 +139,7 @@ feature -- Status report
 			l_point_array: like point_array
 		do
 			l_point_array := point_array
-			Result := (l_point_array.item (2).x_precise - l_point_array.item (0).x_precise).truncated_to_integer
+			Result := as_integer (l_point_array.item (2).x_precise - l_point_array.item (0).x_precise)
 		end
 
 	height: INTEGER is
@@ -148,7 +148,7 @@ feature -- Status report
 			l_point_array: like point_array
 		do
 			l_point_array := point_array
-			Result := (l_point_array.item (1).y_precise - l_point_array.item (0).y_precise).truncated_to_integer
+			Result := as_integer (l_point_array.item (1).y_precise - l_point_array.item (0).y_precise)
 		end
 
 	is_default_font_used: BOOLEAN
@@ -215,7 +215,7 @@ feature -- Status setting
 			
 			scale_factor := should_height / real_height
 			
-			scaled_font := font_factory.scaled_font (id_font, (id_font.font.height * scale_factor).truncated_to_integer.max (1))
+			scaled_font := font_factory.scaled_font (id_font, as_integer (id_font.font.height * scale_factor).max (1))
 			
 			p0 := l_point_array.item (0)
 			l_point_array.item (3).set_precise (p0.x_precise + scaled_font.width, p0.y_precise + scaled_font.height)
@@ -268,7 +268,7 @@ feature {EV_MODEL_GROUP} -- Figure group
 			
 			l_font := scaled_font
 			l_point_array := point_array
-			should_height := (l_point_array.item (3).y_precise - l_point_array.item (0).y_precise).truncated_to_integer.max (1)
+			should_height := as_integer (l_point_array.item (3).y_precise - l_point_array.item (0).y_precise).max (1)
 			if should_height /= l_font.height then
 			
 				scaled_font := font_factory.scaled_font (id_font, should_height)

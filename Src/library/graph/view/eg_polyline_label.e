@@ -207,16 +207,16 @@ feature {NONE} -- Implementation
 					check
 						has_projection: has_projection (lx, ly, nearest_start.x_precise, nearest_start.y_precise, nearest_end.x_precise, nearest_end.y_precise)
 					end
-					new_x := nx.truncated_to_integer
-					new_y := ny.truncated_to_integer
+					new_x := as_integer (nx)
+					new_y := as_integer (ny)
 				else
 					-- go to nearest point
 					if distance (lx, ly, x1, y1) < distance (lx, ly, x2, y2) then
-						new_x := x1.truncated_to_integer
-						new_y := y1.truncated_to_integer
+						new_x := as_integer (x1)
+						new_y := as_integer (y1)
 					else
-						new_x := x2.truncated_to_integer
-						new_y := y2.truncated_to_integer
+						new_x := as_integer (x2)
+						new_y := as_integer (y2)
 					end				
 				end
 				b := distance (x1, y1, x2, y2)
@@ -228,19 +228,19 @@ feature {NONE} -- Implementation
 			else
 				b := distance (x1, y1, x2, y2)
 				if b = 0.0 or else position_on_line <= 0.0 then
-					new_x := x1.truncated_to_integer
-					new_y := y1.truncated_to_integer
+					new_x := as_integer (x1)
+					new_y := as_integer (y1)
 				elseif position_on_line >= 1.0 then
-					new_x := x2.truncated_to_integer
-					new_y := y2.truncated_to_integer
+					new_x := as_integer (x2)
+					new_y := as_integer (y2)
 				else
 					a := b * position_on_line
 					h := x2 - x1
 					g := a * h / b
 					d := y2 - y1
 					c := a * d / b
-					new_x := (x1 + g).truncated_to_integer
-					new_y := (y1 + c).truncated_to_integer
+					new_x := as_integer (x1 + g)
+					new_y := as_integer (y1 + c)
 				end
 			end
 			
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			label_group.set_x_y (nx.truncated_to_integer + 1, ny.truncated_to_integer + 1)
+			label_group.set_x_y (as_integer (nx) + 1, as_integer (ny) + 1)
 		end
 
 	project_to_line (ax, ay, x1, y1, x2, y2: DOUBLE): TUPLE [DOUBLE, DOUBLE] is

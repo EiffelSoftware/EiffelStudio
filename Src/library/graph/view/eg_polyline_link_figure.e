@@ -300,8 +300,8 @@ feature -- Element change
 				j_th_equals_j_plus_one_th: l_point_array.item (j) = l_point_array.item (j - 1)
 			end		
 
-			new_x := line.i_th_point_x (i) // 2 + line.i_th_point_x (j) // 2
-			new_y := line.i_th_point_y (i) // 2 + line.i_th_point_y (j) // 2
+			new_x := as_integer (line.i_th_point_x (i) / 2 + line.i_th_point_x (j) / 2)
+			new_y := as_integer (line.i_th_point_y (i) / 2 + line.i_th_point_y (j) / 2)
 			
 			create new_point.make (new_x, new_y)
 			l_point_array.put (new_point , j - 1)
@@ -325,10 +325,7 @@ feature -- Element change
 			request_update
 		ensure
 			one_added: old line.point_count + 1 = line.point_count
-			j_now_j_plus_one: old (line).i_th_point_x (j) = line.i_th_point_x (j + 1) and old (line).i_th_point_y (j) = line.i_th_point_y (j + 1)
-			new_x_located_between_i_j: i_th_point_x (i) // 2 + old i_th_point_x (j) // 2 = i_th_point_x (j)
-			new_y_located_between_i_j: i_th_point_y (i) // 2 + old i_th_point_y (j) // 2 = i_th_point_y (j)
-			j_th_edge_move_handler_at_j_th_x_position: edge_move_handlers.i_th (i).point_x = i_th_point_x (i + 1)
+			j_now_j_plus_one: old (line).i_th_point_x (j) = line.i_th_point_x (j + 1) and old (line).i_th_point_y (j) = line.i_th_point_y (j + 1)			j_th_edge_move_handler_at_j_th_x_position: edge_move_handlers.i_th (i).point_x = i_th_point_x (i + 1)
 			j_th_edge_move_handler_at_j_th_y_position: edge_move_handlers.i_th (i).point_y = i_th_point_y (i + 1)
 		end
 		
@@ -419,8 +416,8 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 						line.set_i_th_point_position (3, nx + 150, ny + 50)
 						set_start_point_to_edge
 						set_end_point_to_edge
-						line.set_i_th_point_position (2, line.i_th_point_x (1) + reflexive_radius, line.i_th_point_y (1) - reflexive_radius // 3)
-						line.set_i_th_point_position (3, line.i_th_point_x (4) + reflexive_radius, line.i_th_point_y (4) + reflexive_radius // 3)
+						line.set_i_th_point_position (2, line.i_th_point_x (1) + reflexive_radius, line.i_th_point_y (1) - as_integer (reflexive_radius / 3))
+						line.set_i_th_point_position (3, line.i_th_point_x (4) + reflexive_radius, line.i_th_point_y (4) + as_integer (reflexive_radius / 3))
 					end
 				end
 				invalidate

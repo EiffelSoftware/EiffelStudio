@@ -77,7 +77,7 @@ feature -- Access
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
 			
-			Result := distance (p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise).truncated_to_integer
+			Result := as_integer (distance (p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise))
 		end
 		
 	point_a_x: INTEGER is
@@ -162,7 +162,7 @@ feature -- Events
 				l_point_array := point_array
 				pa := l_point_array.item (0)
 				pb := l_point_array.item (1)
-				lw := line_width // 2
+				lw := as_integer (line_width / 2)
 				
 				pa_val := pa.x
 				pb_val := pb.x

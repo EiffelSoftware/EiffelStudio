@@ -106,13 +106,13 @@ feature -- Status report
 	width: INTEGER is
 			-- Width of pixmap.
 		do
-			Result := (point_array.item (1).x_precise - point_array.item (0).x_precise).truncated_to_integer
+			Result := as_integer (point_array.item (1).x_precise - point_array.item (0).x_precise)
 		end
 
 	height: INTEGER is
 			-- Height of Pixmap.
 		do
-			Result := (point_array.item (2).y_precise - point_array.item (0).y_precise).truncated_to_integer
+			Result := as_integer (point_array.item (2).y_precise - point_array.item (0).y_precise)
 		end
 
 	is_default_pixmap_used: BOOLEAN

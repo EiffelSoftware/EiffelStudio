@@ -179,6 +179,8 @@ copy cleanup.bat parsing\shared\
 copy cleanup.bat platform\
 copy cleanup.bat idrs\
 copy cleanup.bat run-time\
+copy cleanup.bat run-time\OBJDIR
+copy cleanup.bat LIB\
 
 cd console
 call cleanup
@@ -203,6 +205,10 @@ call cleanup
 cd ..\idrs
 call cleanup
 cd ..\run-time
+call cleanup
+cd OBJDIR
+call cleanup
+cd ..\..\LIB
 call cleanup
 cd ..
 

@@ -182,10 +182,12 @@ invariant
 	selected_items_first_is_selected_item:
 		is_useable and not selected_items.empty implies
 		selected_items.first = selected_item
-	selected_items_empty_xor_selected_item_not_void:
-		is_useable implies selected_items.empty xor selected_item /= Void
-	selection_size_within_bounds:
+	selected_items_empty_xor_selected_item_not_void: is_useable implies
+		selected_items.empty xor selected_item /= Void
+	single_selection_implies_selected_items:
 		is_useable and not multiple_selection_enabled implies
+		selected_items.count <= 1
+	selection_size_within_bounds: is_useable implies
 		selected_items.count <= 1
 
 end -- class EV_LIST
@@ -211,6 +213,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/30 17:36:27  brendel
+--| Added invariant.
+--|
 --| Revision 1.40  2000/03/21 02:11:50  oconnor
 --| comments and formatting
 --|

@@ -93,11 +93,13 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 				end
 			end
 			callback_notification_processed := True
+			print ("End of estudio notification%N")
 		end
 
 feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR}  -- Trigger eStudio status
 
-	callback_notification_processed: BOOLEAN		
+	callback_notification_processed: BOOLEAN
+			-- Is callback notification processed and done ?
 		
 feature {APPLICATION_EXECUTION} -- load and save
 
@@ -126,7 +128,7 @@ feature -- Properties
 		end
 		
 	set_status (a_status: like status) is
-			-- 
+			-- Set the value of Application status to `a_status'
 		do
 			Application.set_status (a_status)
 		end
@@ -184,7 +186,7 @@ feature -- Bridge to Debugger
 		end
 
 	exception_to_string: STRING is
-			-- Exception output
+			-- Exception "ToString" output
 		require
 			exception_occured: exception_occured
 		local
@@ -207,7 +209,7 @@ feature -- Bridge to Debugger
 		end
 		
 	exception_message: STRING is
-			-- Exception output
+			-- Exception "GetMessage" output
 		require
 			exception_occured: exception_occured
 		local
@@ -290,6 +292,7 @@ feature -- Execution
 			-- control of bench. Therefore, these addresses cannot be
 			-- referenced the next time we stop the application.
 		do
+--| This is not require for dotnet system, but we may adapt it for others uses
 --			keep_objects (kept_objects)		
 --			cont_request.send_breakpoints
 			inspect application.execution_mode
@@ -430,21 +433,18 @@ feature -- Controle execution
 					loop
 						l_th := l_threads.item (i)
 						print ("        => " + l_th.get_id.to_hex_string 
---								+ " DebugState=0x" + l_th.get_debug_state.to_hex_string
---								+ " UserState=0x" + l_th.get_user_state.to_hex_string
 								+ "%N"
 						)
 						i := i + 1
 					end
 				end
 			end
-
---			print ("[info] Nb of Threads : " + Eifnet_debugger_info.icd_process.enumerate_threads.count.out + "%N")			
 		end
 
 feature -- Stepping
 
 	step_out is
+			-- Stepping out of the routine
 		do
 			process_before_running
 			
@@ -462,6 +462,7 @@ feature -- Stepping
 		end
 		
 	step_into is
+			-- Stepping into next routine
 		do
 			process_before_running
 			
@@ -475,6 +476,7 @@ feature -- Stepping
 		end
 
 	step_next is
+			-- Stepping to next step point
 		do
 			process_before_running
 
@@ -500,6 +502,8 @@ feature -- Stepping
 feature {NONE} -- Stepping
 
 	step_range (a_bstep_in: BOOLEAN) is
+			-- Step over the next range
+			-- faster than stepping next for each dotnet step.
 		local
 			l_current_il_offset: INTEGER
 			l_call_stack_element: CALL_STACK_ELEMENT_DOTNET
@@ -678,10 +682,10 @@ feature -- BreakPoints
 						l_il_offset_list.after
 					loop
 						l_il_offset := l_il_offset_list.item
-						eifnet_debugger.Eifnet_debugger_info.request_breakpoint_add (l_module_name, l_class_token, l_feature_token, l_il_offset)
+						eifnet_debugger.Eifnet_debugger_info.request_breakpoint_add (bp, l_module_name, l_class_token, l_feature_token, l_il_offset)
 	
 						if l_is_entry_point and then Il_debug_info_recorder.entry_point_token /= l_feature_token then
-							eifnet_debugger.Eifnet_debugger_info.request_breakpoint_add (
+							eifnet_debugger.Eifnet_debugger_info.request_breakpoint_add (bp,
 									l_module_name, l_class_token, Il_debug_info_recorder.entry_point_token , l_il_offset
 								)
 						end
@@ -746,10 +750,10 @@ feature -- BreakPoints
 						l_il_offset_list.after
 					loop
 						l_il_offset := l_il_offset_list.item
-						eifnet_debugger.Eifnet_debugger_info.request_breakpoint_remove (l_module_name, l_class_token, l_feature_token, l_il_offset)
+						eifnet_debugger.Eifnet_debugger_info.request_breakpoint_remove (bp, l_module_name, l_class_token, l_feature_token, l_il_offset)
 	
 						if l_is_entry_point and then Il_debug_info_recorder.entry_point_token /= l_feature_token then
-							eifnet_debugger.Eifnet_debugger_info.request_breakpoint_remove (
+							eifnet_debugger.Eifnet_debugger_info.request_breakpoint_remove (bp, 
 									l_module_name, l_class_token, Il_debug_info_recorder.entry_point_token , l_il_offset
 								)
 						end
@@ -765,6 +769,8 @@ feature -- BreakPoints
 feature {NONE} -- Implementation
 
 	display_feature_info (f: E_FEATURE) is
+			-- Display info related to feature `f'
+			-- debug purpose only
 		require
 			f /= Void
 		local
@@ -825,7 +831,7 @@ feature {NONE} -- Implementation
 feature -- Evaluation
 
 	notify_evaluation_done is
-		local
+			-- Notify that an evaluation is done.
 		do
 			debug ("debugger_trace")
 				print ("%N%T !!! notify_evaluation_done !!! %N")
@@ -835,7 +841,7 @@ feature -- Evaluation
 feature {NONE} -- Events on notification
 
 	notify_execution_on_exit_process is
-			-- 
+			-- Notify the system is exiting
 		do
 			--| We need to stop
 			--| Already "stopped" but let's be sure ..
@@ -845,6 +851,8 @@ feature {NONE} -- Events on notification
 		end
 		
 	notify_execution_on_stopped is
+		local
+			need_to_continue: BOOLEAN
 		do
 			debug ("debugger_trace")
 				print ("%N*** REASON TO STOP *** %N")
@@ -855,6 +863,7 @@ feature {NONE} -- Events on notification
 				end
 			end -- debug
 			
+--| Useless, but we may need it one day
 --			Application_notification_controller.notify_on_before_stopped	
 
 			--| We need to stop
@@ -870,30 +879,79 @@ feature {NONE} -- Events on notification
 				print (" ########################################### %N")
 				print (" ### CallStack : Head level ## 0x"+Eifnet_debugger_info.last_step_complete_reason.to_hex_string +" ## %N")
 				print (" ########################################### %N")
+--| uncomment next ligneto have different kind of debug output
 --				io.put_new_line
 --				print (frame_callstack_info (Eifnet_debugger.active_frame))
 --				io.put_new_line
 				display_full_callstack_info
 			end
 
-			if Eifnet_debugger_info.last_managed_callback_is_breakpoint then
-				status.set_reason_as_break
-			end
 			if Eifnet_debugger_info.last_managed_callback_is_step_complete then
 				status.set_reason_as_step
-			end			
-			if Eifnet_debugger_info.last_managed_callback_is_exception then
+			elseif Eifnet_debugger_info.last_managed_callback_is_breakpoint then
+				status.set_reason_as_break
+				need_to_continue := not do_stop_on_breakpoint				
+			elseif Eifnet_debugger_info.last_managed_callback_is_exception then
 				status.set_reason_as_raise				
 				status.set_exception (0, "Exception occured .. waiting for information")
-
 			end
+--| not true in case of empty stack .. when exception occurs during launching
 --			set_current_execution_stack (1)
 			Application.set_current_execution_stack_number (Application.number_of_stack_elements)
 
-			Application_notification_controller.notify_on_after_stopped
+			if need_to_continue then
+				status.set_is_stopped (False)
+				eifnet_debugger_info.set_data_changed (False)
+				eifnet_debugger.do_continue
+			else
+				Application_notification_controller.notify_on_after_stopped				
+			end			
 		end
+		
+	do_stop_on_breakpoint: BOOLEAN is
+			-- In case of conditional breakpoint, do we really stop on it ?
+		local
+			l_bp: BREAKPOINT
+			expr: EB_EXPRESSION
+		do
+			if eifnet_debugger_info.last_control_mode_is_stepping then
+				debug ("debugger_trace")
+					print ("Stepping then continue ..%N")
+				end
+				Result := True
+			else
+				l_bp := Eifnet_debugger_info.current_breakpoint
+				if l_bp /= Void and then l_bp.has_condition then
+					debug ("debugger_trace")
+						print ("CONDITIONAL BP %N")
+					end
+					expr := l_bp.condition
+					if expr /= Void then		
+						expr.evaluate
+						if expr.error_message = Void then
+							Result := (expr.final_result_type.is_basic) and then
+									(expr.final_result_value.output_value.is_equal ("True"))
+							debug ("debugger_trace")
+								print ("Evaluation result = " + Result.out + "%N")
+							end
+						else		
+							debug ("debugger_trace")
+								print ("Evaluation error = " + expr.error_message + "%N")
+							end
+							Result := False
+						end
+					else
+						Result := True						
+					end
+				else
+					Result := True
+				end					
+			end		
+		end	
 
 	display_breakpoint_info (icd_bp: ICOR_DEBUG_BREAKPOINT) is
+			-- display information related to `icd_bp'
+			-- debug purpose only
 		local
 			l_icd_bp: ICOR_DEBUG_BREAKPOINT
 			l_icd_func_bp: ICOR_DEBUG_FUNCTION_BREAKPOINT
@@ -1060,31 +1118,38 @@ feature -- Call stack related
 feature -- Object Keeper
 
 	keep_object (adv: ABSTRACT_DEBUG_VALUE) is
+			-- Keep a reference to this data `adv' because we may need it later
+			-- for object browsing and expression evaluation
 		do
 			Debug_value_keeper.keep (adv)
 		end
 
 	remove_kept_object_by_address (add: STRING) is
+			-- we don't need to keep a reference on this object addressed by `add'
 		do
 			Debug_value_keeper.remove_by_address (add)
 		end
 
 	recycle_kept_object is
+			-- recycle the "keeper" container
 		do
 			Debug_value_keeper.recycle
 		end
 
 	keep_only_objects (a_addresses: LIST [STRING]) is
+			-- Remove all ref kept, and keep only the ones contained in `a_addresses'
 		do
 			Debug_value_keeper.keep_only (a_addresses)
 		end
 
 	kept_object_item (a_address: STRING): ABSTRACT_DEBUG_VALUE is
+			-- Keep this object addressed by `a_address'
 		do
 			Result := Debug_value_keeper.debug_value_kept.item (a_address)
 		end
 
 	know_about_kept_object (a_address: STRING): BOOLEAN is
+			-- Do we have a reference for the object addressed by `a_address' ?
 		do
 			Result := Debug_value_keeper.know_about (a_address)
 		end

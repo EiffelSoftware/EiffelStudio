@@ -197,13 +197,16 @@ feature {NONE} -- Message loop, we redefine it because the user
 			done: BOOLEAN
 			dlg: POINTER
 		do
+			main_win ?= main_window
+			check
+				main_win /= Void
+			end
+			main_win.show
+			
 			interface.post_launch_actions.call ([])
+
 			from
 				create msg.make
-				main_win ?= main_window
-				check
-					main_win /= Void
-				end
 			until
 				done
 			loop
@@ -342,6 +345,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/11 18:14:33  brendel
+--| First window is now shown after postlaunch actions.
+--|
 --| Revision 1.29  2000/04/10 16:11:50  brendel
 --| Reverted wrong implementation of message_loop.
 --|

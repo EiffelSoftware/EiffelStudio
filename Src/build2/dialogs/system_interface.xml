@@ -8,7 +8,7 @@
 		<Value >New...</Value>
 		</Constant>
 	<Constant ><type >DIRECTORY</type>
-		<Name >png_location</Name>
+		<Name >pixmap_location</Name>
 		<Value >D:\Eiffel54\build\bitmaps\png</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
@@ -47,14 +47,14 @@
 		<Name >icon_component_viewer_color_png</Name>
 		<Value >D:\Eiffel54\build\bitmaps\png\icon_component_viewer_color.png</Value>
 		<is_absolute >False</is_absolute>
-		<Directory >png_location</Directory>
+		<Directory >pixmap_location</Directory>
 		<Filename >icon_component_viewer_color.png</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >lightbulb_png</Name>
 		<Value >D:\Eiffel54\build\bitmaps\png\lightbulb.png</Value>
 		<is_absolute >False</is_absolute>
-		<Directory >png_location</Directory>
+		<Directory >pixmap_location</Directory>
 		<Filename >lightbulb.png</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
@@ -65,7 +65,7 @@
 		<Name >icon_component_build_view_color_png</Name>
 		<Value >D:\Eiffel54\build\bitmaps\png\icon_component_build_view_color.png</Value>
 		<is_absolute >False</is_absolute>
-		<Directory >png_location</Directory>
+		<Directory >pixmap_location</Directory>
 		<Filename >icon_component_build_view_color.png</Filename>
 		</Constant>
 	<Constant ><type >INTEGER</type>
@@ -96,7 +96,7 @@
 		<Name >icon_component_display_view_color_png</Name>
 		<Value >D:\Eiffel54\build\bitmaps\png\icon_component_display_view_color.png</Value>
 		<is_absolute >False</is_absolute>
-		<Directory >png_location</Directory>
+		<Directory >pixmap_location</Directory>
 		<Filename >icon_component_display_view_color.png</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>

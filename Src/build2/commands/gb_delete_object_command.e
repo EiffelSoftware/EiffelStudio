@@ -87,7 +87,7 @@ feature {GB_WINDOW_SELECTOR} -- Basic operation
 		do
 			titled_window_object ?= an_object
 			if titled_window_object = Void then
-				delete_position := an_object.parent_object.layout_item.index_of (an_object.layout_item, 1)
+				delete_position := an_object.parent_object.children.index_of (an_object, 1)
 				create command_delete.make (an_object)
 				history.cut_off_at_current_position
 				command_delete.execute

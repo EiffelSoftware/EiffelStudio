@@ -148,7 +148,7 @@ feature
 	run_time: STRING is
 			-- Run time with which the application must be linked
 		do
-			Result := "$(RUN_TIME3)/libwkbench.a"
+			Result := "$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libwkbench.a"
 		end;
 
 	generate_other_objects is

@@ -83,25 +83,27 @@ feature {GB_OBJECT_EDITOR} -- Implementation
 
 	constant_removed (constant: GB_PIXMAP_CONSTANT) is
 			-- Update `Current' to reflect removal of `constant' from system.
+		require
+			constant_not_void: constant /= Void
 		local
 			list_item: EV_LIST_ITEM
 		do
-			if constants_button.is_selected then
-				if constants_combo_box.selected_item /= Void and then
-					constants_combo_box.selected_item.text.is_equal (constant.name) then
-					constants_button.disable_select
-				end
-				list_item := list_item_with_matching_text (constants_combo_box, constant.name)
-				check
-					list_item_not_void: list_item /= Void
-				end
-				constants_combo_box.prune_all (list_item)
-				constants_combo_box.first.enable_select
+			if constants_combo_box.selected_item /= Void and then
+				constants_combo_box.selected_item.text.is_equal (constant.name) then
+				constants_button.disable_select
 			end
+			list_item := list_item_with_matching_text (constants_combo_box, constant.name)
+			check
+				list_item_not_void: list_item /= Void
+			end
+			constants_combo_box.prune_all (list_item)
+			constants_combo_box.first.enable_select
 		end
 		
 	constant_changed (constant: GB_PIXMAP_CONSTANT) is
 			-- `constant' has changed, so update representation in `Current'.
+		require
+			constant_not_void: constant /= Void
 		local
 			found: BOOLEAN
 		do
@@ -120,6 +122,8 @@ feature {GB_OBJECT_EDITOR} -- Implementation
 
 	constant_added (constant: GB_PIXMAP_CONSTANT) is
 			-- Update `Current' to reflect addition of `constant' to system.
+		require
+			constant_not_void: constant /= Void
 		local
 			list_item: EV_LIST_ITEM
 		do

@@ -56,8 +56,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current' and build interface.
 		local
 			horizontal_box: EV_HORIZONTAL_BOX
-			radio_button: EV_RADIO_BUTTON
-			operation_frame, arguments_frame: EV_FRAME
+			operation_frame: EV_FRAME
 			clear_button: EV_BUTTON
 			main_vertical_box: EV_VERTICAL_BOX
 			list_item: EV_LIST_ITEM
@@ -70,7 +69,16 @@ feature {NONE} -- Initialization
 			
 				-- Add basic controls.
 			create clear_button.make_with_text ("Clear")
-			main_vertical_box.extend (clear_button)
+			create horizontal_box
+			horizontal_box.set_padding_width (5)
+			horizontal_box.extend (clear_button)
+			create help_button.make_with_text ("?")
+			help_button.select_actions.extend (agent show_help)
+			help_button.set_tooltip (help)
+			horizontal_box.extend (help_button)
+			horizontal_box.disable_item_expand (help_button)
+			help_button.set_minimum_width (help_button.minimum_height)
+			main_vertical_box.extend (horizontal_box)
 			clear_button.select_actions.extend (agent drawable.clear)
 			create mode_combo
 			mode_combo.disable_edit
@@ -93,7 +101,7 @@ feature {NONE} -- Initialization
 			mode_combo.first.enable_select
 			create horizontal_box
 			main_vertical_box.extend (horizontal_box)
-			horizontal_box.extend (create {EV_LABEL}.make_with_text ("Drawing mode "))
+			horizontal_box.extend (create {EV_LABEL}.make_with_text ("Drawing mode  "))
 			horizontal_box.disable_item_expand (horizontal_box.i_th (1))
 			horizontal_box.extend (mode_combo)
 			
@@ -466,7 +474,8 @@ feature -- Status report
 
 	help: STRING is
 			-- Instructions on how to use the control.
-		do
+		once
+			Result := "Select a drawing operation and click on the drawable control.%NThe drawing will occur at the clicked position.%NIf an operation requires further arguments, these will be available below the selected operation."
 		end
 
 feature {NONE} -- Contract support
@@ -479,6 +488,15 @@ feature {NONE} -- Contract support
 		end
 
 feature {NONE} -- Implementation
+
+	show_help is
+			-- Display help for `Current'.
+		local
+			information_dialog: EV_INFORMATION_DIALOG
+		do
+			create information_dialog.make_with_text (help)
+			information_dialog.show_modal_to_window (parent_window (Current))
+		end
 
 	update_tiled_status is
 			-- Update `drawable' to use tiling dependent on state
@@ -501,8 +519,6 @@ feature {NONE} -- Implementation
 				tiled_check_button.disable_sensitive
 			end
 		end
-		
-		
 
 	add_text_entry_with_label (a_text: STRING) is
 			-- Add `text_entry' and label marked `a_text'
@@ -585,7 +601,6 @@ feature {NONE} -- Implementation
 			-- Add `filled_check_button' to `argument_holder',
 			-- at first position.
 		local
-			a_parent: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			if filled_check_button.parent /= Void then
@@ -615,6 +630,8 @@ feature {NONE} -- Implementation
 	segment_radio_button, straight_line_radio_button, draw_arc_radio_button,
 	draw_rectangle_radio_button, draw_ellipse_radio_button,
 	draw_pie_slice_radio_button, pixmap_radio_button: EV_RADIO_BUTTON
+	
+	help_button: EV_BUTTON
 	
 	argument_holder: EV_VERTICAL_BOX
 	

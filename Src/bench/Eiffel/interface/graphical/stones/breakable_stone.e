@@ -8,12 +8,12 @@ indexing
 class BREAKABLE_STONE 
 
 inherit
-
 	STONE
 		redefine
 			header
-		end;
-	SHARED_DEBUG
+		end
+
+	SHARED_APPLICATION_EXECUTION
 
 creation
 

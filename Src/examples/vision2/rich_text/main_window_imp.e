@@ -29,12 +29,10 @@ feature {NONE}-- Initialization
 		local 
 			l_ev_menu_bar_1: EV_MENU_BAR
 			l_ev_menu_2: EV_MENU
-			l_ev_vertical_box_1: EV_VERTICAL_BOX
-			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+			l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 			l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
 			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
-			l_ev_label_1: EV_LABEL
-			l_ev_cell_1, l_ev_cell_2: EV_CELL
+			l_ev_cell_1: EV_CELL
 			l_ev_frame_1, l_ev_frame_2: EV_FRAME
 		do
 			Precursor {EV_TITLED_WINDOW}
@@ -46,7 +44,8 @@ feature {NONE}-- Initialization
 			create exit_menu_item
 			create options_menu
 			create word_wrapping_menu_item
-			create l_ev_vertical_box_1
+			create show_tab_control_menu_item
+			create main_vertical_box
 			create l_ev_horizontal_box_1
 			create font_selection
 			create size_selection
@@ -58,14 +57,11 @@ feature {NONE}-- Initialization
 			create italic_button
 			create underlined_button
 			create striked_through_button
+			create tab_control_holder
 			create l_ev_horizontal_separator_1
-			create l_ev_horizontal_box_2
-			create l_ev_label_1
-			create l_ev_cell_1
-			create tab_width_entry
 			create rich_text
-			create l_ev_cell_2
-			create l_ev_horizontal_box_3
+			create l_ev_cell_1
+			create l_ev_horizontal_box_2
 			create l_ev_frame_1
 			create general_label
 			create l_ev_frame_2
@@ -77,8 +73,9 @@ feature {NONE}-- Initialization
 			l_ev_menu_2.extend (exit_menu_item)
 			l_ev_menu_bar_1.extend (options_menu)
 			options_menu.extend (word_wrapping_menu_item)
-			extend (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
+			options_menu.extend (show_tab_control_menu_item)
+			extend (main_vertical_box)
+			main_vertical_box.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (font_selection)
 			l_ev_horizontal_box_1.extend (size_selection)
 			l_ev_horizontal_box_1.extend (color_toolbar)
@@ -89,30 +86,30 @@ feature {NONE}-- Initialization
 			format_toolbar.extend (italic_button)
 			format_toolbar.extend (underlined_button)
 			format_toolbar.extend (striked_through_button)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_separator_1)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (l_ev_label_1)
-			l_ev_horizontal_box_2.extend (l_ev_cell_1)
-			l_ev_horizontal_box_2.extend (tab_width_entry)
-			l_ev_vertical_box_1.extend (rich_text)
-			l_ev_vertical_box_1.extend (l_ev_cell_2)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_3.extend (l_ev_frame_1)
+			main_vertical_box.extend (tab_control_holder)
+			tab_control_holder.extend (l_ev_horizontal_separator_1)
+			main_vertical_box.extend (rich_text)
+			main_vertical_box.extend (l_ev_cell_1)
+			main_vertical_box.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (general_label)
-			l_ev_horizontal_box_3.extend (l_ev_frame_2)
+			l_ev_horizontal_box_2.extend (l_ev_frame_2)
 			l_ev_frame_2.extend (caret_position_label)
 			
+			set_minimum_width (window_width)
+			set_minimum_height (window_height)
 			set_title ("Rich Text Example")
 			l_ev_menu_2.set_text ("File")
 			exit_menu_item.set_text ("Exit")
 			options_menu.set_text ("Options")
 			word_wrapping_menu_item.enable_select
 			word_wrapping_menu_item.set_text ("Word Wrapping")
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_separator_1)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_2)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
+			show_tab_control_menu_item.set_text ("Tab Control Bar")
+			main_vertical_box.set_padding_width (tiny_padding)
+			main_vertical_box.disable_item_expand (l_ev_horizontal_box_1)
+			main_vertical_box.disable_item_expand (tab_control_holder)
+			main_vertical_box.disable_item_expand (l_ev_cell_1)
+			main_vertical_box.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_1.disable_item_expand (font_selection)
 			l_ev_horizontal_box_1.disable_item_expand (size_selection)
 			l_ev_horizontal_box_1.disable_item_expand (color_toolbar)
@@ -124,18 +121,10 @@ feature {NONE}-- Initialization
 			italic_button.set_text ("I")
 			underlined_button.set_text ("U")
 			striked_through_button.set_text ("S")
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_1)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_1)
-			l_ev_horizontal_box_2.disable_item_expand (tab_width_entry)
-			l_ev_label_1.set_text ("Tab Width")
-			l_ev_cell_1.set_minimum_width (tiny_padding)
-			tab_width_entry.set_text ("1")
-			tab_width_entry.value_range.adapt (create {INTEGER_INTERVAL}.make (1, 250))
-			tab_width_entry.set_value (1)
-			rich_text.set_text ("Some sample text.%N%NTab samples:%N%N1st tab		3rd tab		5th tab		7th tab%N%NData		Data		Data		Data%N%NSome more text.%N%NAnd a little more.%N%NThe end.")
-			l_ev_cell_2.set_minimum_height (tiny_padding)
-			l_ev_horizontal_box_3.set_padding_width (tiny_padding)
-			l_ev_horizontal_box_3.disable_item_expand (l_ev_frame_2)
+			rich_text.set_text ("Some sample text.%N%NTab samples:%N%N1st tab		3rd tab		5th tab		7th tab%N%NData		Data		Data		Data%N%NSome more text.%N%NAnd a little more.%N%NFinally all available fonts:%N")
+			l_ev_cell_1.set_minimum_height (tiny_padding)
+			l_ev_horizontal_box_2.set_padding_width (tiny_padding)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_frame_2)
 			l_ev_frame_1.set_style (1)
 			l_ev_frame_2.set_minimum_width (caret_position_status_bar_width)
 			l_ev_frame_2.set_style (1)
@@ -143,6 +132,7 @@ feature {NONE}-- Initialization
 				--Connect events.
 			exit_menu_item.select_actions.extend (agent exit)
 			word_wrapping_menu_item.select_actions.extend (agent word_wrapping_toggled)
+			show_tab_control_menu_item.select_actions.extend (agent show_tab_control_toggled)
 			font_selection.select_actions.extend (agent font_selected)
 			size_selection.select_actions.extend (agent font_size_selected)
 			size_selection.return_actions.extend (agent font_size_selected)
@@ -151,7 +141,6 @@ feature {NONE}-- Initialization
 			italic_button.select_actions.extend (agent italic_selected)
 			underlined_button.select_actions.extend (agent underline_selected)
 			striked_through_button.select_actions.extend (agent strike_through_selected)
-			tab_width_entry.change_actions.extend (agent tab_width_changed (?))
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -163,12 +152,12 @@ feature -- Access
 
 	exit_menu_item: EV_MENU_ITEM
 	options_menu: EV_MENU
-	word_wrapping_menu_item: EV_CHECK_MENU_ITEM
+	word_wrapping_menu_item, show_tab_control_menu_item: EV_CHECK_MENU_ITEM
+	main_vertical_box, tab_control_holder: EV_VERTICAL_BOX
 	font_selection, size_selection: EV_COMBO_BOX
 	color_toolbar, format_toolbar: EV_TOOL_BAR
 	color_button: EV_TOOL_BAR_BUTTON
 	bold_button, italic_button, underlined_button, striked_through_button: EV_TOOL_BAR_TOGGLE_BUTTON
-	tab_width_entry: EV_SPIN_BUTTON
 	rich_text: EV_RICH_TEXT
 	general_label, caret_position_label: EV_LABEL
 
@@ -194,6 +183,11 @@ feature {NONE} -- Implementation
 	
 	word_wrapping_toggled is
 			-- Called by `select_actions' of `word_wrapping_menu_item'.
+		deferred
+		end
+	
+	show_tab_control_toggled is
+			-- Called by `select_actions' of `show_tab_control_menu_item'.
 		deferred
 		end
 	
@@ -229,11 +223,6 @@ feature {NONE} -- Implementation
 	
 	strike_through_selected is
 			-- Called by `select_actions' of `striked_through_button'.
-		deferred
-		end
-	
-	tab_width_changed (a_value: INTEGER) is
-			-- Called by `change_actions' of `tab_width_entry'.
 		deferred
 		end
 	

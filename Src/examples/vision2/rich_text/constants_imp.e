@@ -29,10 +29,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	window_height: INTEGER is 
+			-- `Result' is INTEGER constant named window_height.
+		once
+			Result := 320
+		end
+
 	caret_position_status_bar_width: INTEGER is 
 			-- `Result' is INTEGER constant named caret_position_status_bar_width.
 		once
 			Result := 100
+		end
+
+	window_width: INTEGER is 
+			-- `Result' is INTEGER constant named window_width.
+		once
+			Result := 540
 		end
 
 	font_selection_combo_box_width: INTEGER is 

@@ -52,9 +52,10 @@ feature -- Creation
         local
             ext_name: ANY
         do
+			widget_index := widget_manager.last_inserted_position;
             ext_name := a_scrolled_window.identifier.to_c;
             screen_object := create_scrolled_w ($ext_name,
-                    a_scrolled_window.parent.implementation.screen_object);
+					parent_screen_object (a_scrolled_window, widget_index));
        end;
 
 feature 
@@ -117,8 +118,6 @@ feature
 			c_set_color (vertical_widget, color_implementation.pixel (screen), $ext_name);
 			c_set_color (horizontal_widget, color_implementation.pixel (screen), $ext_name);
 		end;
-
-
 
 feature {NONE}
 

@@ -66,10 +66,8 @@ feature -- Status setting
 			file: RAW_FILE
 		do
 			create file.make_open_read (file_name)
-			read_from_file (file)
+			set_with_file (file)
 			file.close
-		ensure
-			file_not_open: not file.open
 		end
 
 	set_size (a_x, a_y: INTEGER) is
@@ -126,6 +124,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/18 17:48:50  king
+--| Corrected previous changes
+--|
 --| Revision 1.16  2000/02/18 03:20:36  oconnor
 --| added set_with_named_file
 --|

@@ -75,10 +75,6 @@ feature {NONE} -- Retrieval
 		do
 			ace_arguments_list.wipe_out
 			ace_combo.wipe_out
-			create l_row
-			ace_arguments_list.extend (l_row)
-			l_row.put_front (no_arg_string)
-			ace_combo.extend (create {EV_LIST_ITEM}.make_with_text (no_arg_string))
 			set_mode (Ace_mode)
 			root_ast := retrieve_ace
 			if root_ast /= Void then
@@ -106,9 +102,9 @@ feature {NONE} -- Retrieval
 										-- Add argument to list.
 									create l_row
 									ace_arguments_list.extend (l_row)
-									l_row.put_front (argument_value)
+									l_row.put_front (clone (argument_value))
 										-- Add argument to combo.
-									ace_combo.extend (create {EV_LIST_ITEM}.make_with_text (argument_value))
+									ace_combo.extend (create {EV_LIST_ITEM}.make_with_text (clone (argument_value)))
 								end					
 								defaults.remove
 								defaults.back
@@ -130,43 +126,54 @@ feature {NONE} -- Retrieval
 			-- Retrieve and initialize the user specific arguments from 'arguments.wb'.
 		local
 			l_row: EV_MULTI_COLUMN_LIST_ROW
+			l_last_string, l_pnem_last_string: STRING
 		do	
 			user_arguments_list.wipe_out
 			user_combo.wipe_out
-			create l_row
-			user_arguments_list.extend (l_row)
-			l_row.put_front (no_arg_string)
-			user_combo.extend (create {EV_LIST_ITEM}.make_with_text (no_arg_string))
 			set_mode (User_mode)
 			create arguments_file.make (Arguments_file_name)
 			if not arguments_file.exists then
 				-- Create new arguments file.
 				arguments_file.create_read_write
 			end
+			arguments_file.open_read
 			if not arguments_file.is_empty then
 				from
-					arguments_file.open_read
 					arguments_file.start
 				until
 					arguments_file.end_of_file
 				loop
 					arguments_file.read_line
+					if l_last_string /= Void then
+						l_pnem_last_string := l_last_string
+					end
+					l_last_string := clone (arguments_file.last_string)
 					if 
-						arguments_file.last_string /= Void and 
-						not (arguments_file.last_string.is_empty or else
-							arguments_file.last_string.is_equal (no_arg_string) or else
-							arguments_file.last_string.is_equal (" "))
+						l_last_string /= Void and 
+						not (l_last_string.is_empty or else
+							l_last_string.is_equal (no_arg_string) or else
+							l_last_string.is_equal (" "))
 					then
 							-- Add argument to list.
 						create l_row
 						user_arguments_list.extend (l_row)
-						l_row.put_front (clone (arguments_file.last_string))
+						l_row.put_front (clone (l_last_string))
 							-- Add argument to combo.
-						user_combo.extend (create {EV_LIST_ITEM}.make_with_text (arguments_file.last_string))
+						user_combo.extend (create {EV_LIST_ITEM}.make_with_text (clone (l_last_string)))
 					end
 				end
-				arguments_file.close	
+				if not user_arguments_list.is_empty then
+					user_arguments_list.prune (user_arguments_list.last)
+					user_combo.prune (user_combo.last)
+				end
+				if l_pnem_last_string /= Void then
+					saved_argument := l_pnem_last_string
+				end
+			else
+				-- File was empty so it must have just been created.
+				saved_argument := No_arg_string
 			end
+			arguments_file.close
 		end
 		
 	retrieve_ace: ACE_SD is
@@ -187,20 +194,16 @@ feature -- Storage
 	store_arguments (a_root_ast: ACE_SD) is
 			-- Store the current arguments to their corresponding files and set current 
 			-- arguments for system execution.
-		local
-			l_arg: STRING
 		do
-			if current_argument.text.is_equal (no_arg_string) then
-				l_arg := " "
+			if not argument_check.is_selected or current_argument.text.is_empty then
+				saved_argument := No_arg_string
 			else
-      			l_arg := current_argument.text	
+      			saved_argument := current_argument.text	
       		end
 			if Workbench.system_defined then
-      			Lace.argument_list.put_front (l_arg)
-      		else
-      			saved_argument := l_arg
-           	end
-			save_ace_arguments (a_root_ast)
+      			Lace.argument_list.put_front (saved_argument)
+      		end
+           	save_ace_arguments (a_root_ast)
 			save_custom_arguments
 			synch_with_others
 		end
@@ -252,7 +255,7 @@ feature {NONE} -- Storage
              	until
             		ace_arguments_list.after
              	loop
-             		argument_text := escape_argument (ace_arguments_list.item.i_th (1))
+             		argument_text := clone (ace_arguments_list.item.i_th (1))
              		defaults.extend (new_d_option (argument_text))
 			    	ace_arguments_list.forth
              	end
@@ -285,11 +288,14 @@ feature {NONE} -- Storage
 			until
 				user_arguments_list.after
 			loop
-				argument_text := clone (escape_argument (user_arguments_list.item.i_th (1)))
+				argument_text := clone (user_arguments_list.item.i_th (1))
 				arguments_file.putstring (argument_text)
 				arguments_file.new_line
 				user_arguments_list.forth
 			end
+				-- Also save current argument here for retrieval in new execution of compiler.
+			arguments_file.putstring (clone (saved_argument))
+			arguments_file.new_line
 			arguments_file.close
 		end
 
@@ -369,11 +375,12 @@ feature {NONE} -- GUI
 			create argument_check.make_with_text ("Enable arguments")
 			l_frame.extend (vbox)
 			vbox.extend (argument_check)
+			vbox.disable_item_expand (argument_check)
 			vbox.extend (notebook)
 			Result.extend (l_frame)
 			
-			ace_arguments_list.set_all_editable
-			user_arguments_list.set_all_editable
+			ace_arguments_list.set_all_columns_editable
+			user_arguments_list.set_all_columns_editable
 			ace_combo.disable_edit
 			user_combo.disable_edit
 			
@@ -397,6 +404,10 @@ feature {NONE} -- GUI
 				-- Combo actions.
 			ace_combo.select_actions.force_extend (agent argument_selected (ace_combo))
 			user_combo.select_actions.force_extend (agent argument_selected (user_combo))
+			
+				-- Argument text actions.
+			ace_current_arg_text.key_release_actions.extend (agent arg_text_changed)
+			user_current_arg_text.change_actions.extend (agent arg_text_changed)
 		end
 
 	populate_by_template (a_vbox: EV_VERTICAL_BOX) is
@@ -481,53 +492,51 @@ feature -- Status Setting
 				if l_controls_list.item (l_counter) /= Current then
 					l_control ?= l_controls_list.item (l_counter)
 					l_control.update
+--					l_control.synch_check_box (argument_check.is_selected)
 				end
 				l_counter := l_counter + 1
 			end
 		end
 	
+	synch_check_box (a_flag: BOOLEAN) is
+			-- Synchronize the check box.
+		do
+			if a_flag and not argument_check.is_selected then
+				argument_check.enable_select
+			elseif argument_check.is_selected then
+				argument_check.disable_select
+			end
+		end	
+	
 	update is
 			-- Update all elements after changes.
 		do
+			if not argument_check.is_selected then	
+				argument_check.enable_select
+			end
 			retrieve_ace_arguments
 			retrieve_user_arguments
-			current_new_arg_text := Void
 				-- Determine last argument run and set mode and argument to this.
 				-- If not use Ace mode as default.
-			if
-				workbench.system_defined and 
-				not lace.argument_list.is_empty and then
-				not lace.argument_list.first.is_empty and then
-				not lace.argument_list.first.is_equal (" ")
-			then
-				current_new_arg_text := lace.argument_list.first
-			elseif 
-				saved_argument /= Void and then
-				not saved_argument.is_empty and then
-				not saved_argument.is_equal (" ")
-			then
-				current_new_arg_text := saved_argument
-			end
 			
-			if current_new_arg_text /= Void then
+			if saved_argument /= Void and not saved_argument.is_equal (No_arg_string) then
 				if ace_arguments_list.there_exists (agent row_duplicate (?)) then
 					notebook.select_item (notebook.i_th (1))
-					ace_arguments_list.select_item (current_new_arg_text, 1)
-					select_combo_item (current_new_arg_text)
-					set_mode (Ace_mode)					
+					set_mode (Ace_mode)
+					ace_arguments_list.select_item (saved_argument, 1)
+					select_combo_item (saved_argument)
 				elseif user_arguments_list.there_exists (agent row_duplicate (?)) then
 					notebook.select_item (notebook.i_th (2))
-					user_arguments_list.select_item (current_new_arg_text, 1)
-					select_combo_item (current_new_arg_text)
 					set_mode (User_mode)
+					user_arguments_list.select_item (saved_argument, 1)
+					select_combo_item (saved_argument)
 				else
 					notebook.select_item (notebook.i_th (1))
 					set_mode (Ace_mode)
 				end			
 			else
-				notebook.select_item (notebook.i_th (1))
-				set_mode (Ace_mode)
-			end		
+				argument_check.disable_select
+			end
 			refresh
 		end
 
@@ -556,8 +565,6 @@ feature {NONE} -- Status Setting
 			free_option: FREE_OPTION_SD
 			val: OPT_VAL_SD
 		do
-			a_string.replace_substring_all ("%%", "%%%%")
-			a_string.replace_substring_all ("%"", "%%%"")
 			create free_option.make (feature {FREE_OPTION_SD}.arguments)
 			create val.make (new_id_sd (a_string, True))
 			create Result.initialize (free_option, val)
@@ -620,26 +627,6 @@ feature {NONE} -- Element Change
 			store_arguments (root_ast)
 			synch_with_others
 		end
-		
-	escape_argument (argument_text: STRING): STRING is
-   			-- Turn `argument_text' into a string that can be safely added to
-        	-- the ace file. Escape all special characters.
-    	do
-			if 
-				argument_text = Void or else 
-				argument_text.is_empty
-			then
-				Result := " "
-            else
-            	Result := clone (argument_text)
-            	Result.replace_substring_all ("%N", " ")
-            	Result.replace_substring_all ("  ", " ")
-            	Result.replace_substring_all ("%%", "%%%%")
-            	Result.replace_substring_all ("%"", "%%%"")
-            end
-     	ensure
-        	valid_result: Result /= Void
-      	end
 	
 feature {NONE} -- GUI Properties
 
@@ -697,14 +684,6 @@ feature {NONE} -- Actions
 			elseif mode = 2 then
 				set_mode (1)
 			end
-			if saved_argument /= Void then
-				if not saved_argument.is_empty then
-						-- Retrieve previous argument for new mode.
-					l_arg := current_argument.text
-					current_argument.set_text (saved_argument)
-					saved_argument := l_arg
-				end
-			end
 			refresh
 		end
 
@@ -712,12 +691,38 @@ feature {NONE} -- Actions
 			-- Argument check box has been selected.
 		do
 			if argument_check.is_selected then
-				notebook.disable_sensitive				
+				notebook.enable_sensitive				
 			else
-				notebook.enable_sensitive
+				notebook.disable_sensitive
 			end
-
+			if notebook.index_of (notebook.selected_item, 1) = 1 then
+				set_mode (Ace_mode)
+			else
+				set_mode (User_mode)
+			end
+--			synch_with_others
 		end
+
+	arg_text_changed (key: EV_KEY) is
+			-- Argument text has changed; check for new line and disallow.
+		local
+			l_text: STRING
+			l_caret_pos: INTEGER
+		do
+			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then				
+				l_caret_pos := current_argument.caret_position
+				l_text := clone (current_argument.text.substring (1, l_caret_pos - 2))
+				if not l_text.is_empty then
+					l_text.replace_substring_all ("%N", "")
+					l_caret_pos := l_text.count
+					l_text := current_argument.text
+					l_text.replace_substring_all ("%N", "")
+					current_argument.set_text (l_text)
+					current_argument.set_caret_position (l_caret_pos + 1)
+				end
+			end
+			
+		end		
 
 	on_list_edited is
 			-- Action to be performed when list row argument has been in-place edited.
@@ -737,13 +742,13 @@ feature {NONE} -- Actions
 			l_argument: STRING
 		do	
 			if not current_argument.text.is_empty then
-				l_argument := escape_argument (current_argument.text)
+				l_argument := clone (current_argument.text)
 				create l_row
 				l_row.put_front (l_argument)
-				current_new_arg_text := l_argument
+				saved_argument := l_argument
 				if not argument_list.there_exists (agent row_duplicate (?))  then
 					argument_list.extend (l_row)
-					argument_combo.extend (create {EV_LIST_ITEM}.make_with_text (current_new_arg_text))
+					argument_combo.extend (create {EV_LIST_ITEM}.make_with_text (saved_argument))
 					argument_list.last.enable_select
 					argument_combo.last.enable_select
 				end
@@ -757,15 +762,14 @@ feature {NONE} -- Actions
 	row_duplicate (a_row: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN is
 			-- Does text in 'a_row' already exist in row in the list?
 		do
-			Result := a_row.first.is_equal (current_new_arg_text)
+			Result := a_row.first.is_equal (saved_argument)
 		end
 
 	remove_argument is
 			-- Action to take when user chooses to remove an existing argument.
 		do
 			if 
-				argument_list.selected_item /= Void and then
-				not argument_list.selected_item.i_th (1).is_equal (no_arg_string)
+				argument_list.selected_item /= Void 
 			then
 				argument_list.prune (argument_list.selected_item)
 				argument_combo.prune (argument_combo.selected_item)
@@ -814,7 +818,7 @@ feature {NONE} -- Actions
 				current_argument.set_text ("")
 			end	
 		ensure
-			column_is_full_width: argument_list.column_width (1) = argument_list.width
+			column_is_full_width: argument_list.column_width (1) = argument_list.width - 15
 		end
 
 	select_combo_item (a_string: STRING) is

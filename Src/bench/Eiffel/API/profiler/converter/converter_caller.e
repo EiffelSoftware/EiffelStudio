@@ -23,6 +23,8 @@ feature {EWB_GENERATE} -- Initialization
 			if arguments.count /= 2 then
 				help
 			else
+					-- Create the directory needed for the conversion
+				Create_profiler_directory;
 
 					-- Check whether the profile file exists.
 				check_profile_file (arguments.item (1), arguments.item (2));
@@ -93,7 +95,7 @@ feature {PROF_CONVERTER} -- Implementation
 			!! file.make (translat_file);
 			exists := file.exists
 		end -- check_project_directory
-	
+
 	do_convertion is
 			-- Creates both files and initiates conversion.
 		do

@@ -27,8 +27,8 @@ feature -- Initialization
 		require
 			m_is_valid: m.is_equal ("workbench") or else m.is_equal ("final")
 		do
-			profiler := p;
-			profiler.to_lower;
+			profiler_type := p;
+			profiler_type.to_lower;
 			arguments := a;
 			output_file := f;
 			compile_type := m;
@@ -40,8 +40,8 @@ feature -- Status report
 			-- Must the profiler be invoked in order to convert its
 			-- output?
 		do
-			if profiler.is_equal ("gprof") or else
-			   profiler.is_equal ("win32_ms") then
+			if profiler_type.is_equal ("gprof") or else
+			   profiler_type.is_equal ("win32_ms") then
 				Result := true;
 			end;
 		end;
@@ -54,16 +54,16 @@ feature -- Execution
 		require
 			must_invoke_profiler: must_invoke_profiler
 		do
-			if profiler.is_equal ("gprof") then
+			if profiler_type.is_equal ("gprof") then
 				invoke_gprof;
-			elseif profiler.is_equal ("win32_ms") then
+			elseif profiler_type.is_equal ("win32_ms") then
 				invoke_win32_ms;
 			end;
 		end;
 
 feature {NONE} -- Attributes
 
-	profiler: STRING
+	profiler_type: STRING
 		-- The profiler used.
 
 	arguments: STRING

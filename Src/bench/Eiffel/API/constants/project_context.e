@@ -60,6 +60,13 @@ feature {NONE} -- Eiffel Project Directories
 			Result.extend (Documentation);
 		end;
 
+	Profiler_path: DIRECTORY_NAME is
+			-- Directory of the profiler's output files
+		once
+			!! Result.make_from_string (Eiffel_gen_path);
+			Result.extend (Profiler)
+		end;
+
 	Eiffel_gen_path: DIRECTORY_NAME is
 		once
 			!! Result.make_from_string (Project_directory);
@@ -168,6 +175,17 @@ feature {NONE} -- Directory creation
 				d.create
 			end
 		end;
+
+	Create_profiler_directory is
+			-- Directory where the profiler files are generated
+		local
+			d: DIRECTORY
+		once
+			!! d.make (Profiler_path);
+			if not d.exists then
+				d.create
+			end
+		end
 
 feature {NONE} -- DLE Directories
 

@@ -21,7 +21,7 @@ feature -- Initialization
 			-- Load the specific profiler-configuration file.
 		do
 			!! shared_prof_config;
-			profiler := prof;
+			profiler_type := prof;
 			prof.to_lower;
 			read_config_file (prof);
 			shared_prof_config.set_config_name (prof)
@@ -285,7 +285,7 @@ feature {EWB_GENERATE, GENERATE_PROFILE_INFO_CMD} -- Error handling
 	shared_prof_config: SHARED_PROF_CONFIG
 		-- Shared configuration values
 
-	profiler: STRING
+	profiler_type: STRING
 		-- The profile tool used for profiling.
 
 	Invalid_profiler_type: INTEGER is unique

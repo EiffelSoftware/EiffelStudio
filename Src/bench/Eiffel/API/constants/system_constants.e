@@ -63,6 +63,8 @@ feature {NONE}
 
 	Dot_x: STRING is ".x"
 
+	Dot_profile_information: STRING is ".pfi"
+
 	Driver: STRING is
 		once
 			Result := Platform_constants.Driver
@@ -138,6 +140,8 @@ feature {NONE}
 		end;
 
 	Project_txt: STRING is "project.txt"
+
+	Profiler: STRING is "Profiler"
 
 	Removed_log_file_name: STRING is "REMOVED";
 

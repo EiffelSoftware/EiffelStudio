@@ -48,8 +48,6 @@ feature {NONE} -- Initialization
 			-- Create `Current' and assign `an_object' to `object'.
 		require
 			an_object_not_void: an_object /= Void
-		local
-			pixmaps: GB_SHARED_PIXMAPS
 		do
 			default_create
 			set_object (an_object)

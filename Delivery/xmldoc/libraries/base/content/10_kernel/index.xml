@@ -541,13 +541,13 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>../../reference/kernel/tuple.xml#f_count</url>
+					<url>../../reference/kernel/tuple.xml</url><anchor_name>f_count</anchor_name>
 					<label>count</label>
 				</link> (number of significant elements)
 			</item>
 			<item>
 				<link>
-					<url>../../reference/kernel/tuple.xml#f_item</url>
+					<url>../../reference/kernel/tuple.xml</url><anchor_name>f_item</anchor_name>
 					<label>item</label>
 				</link> (i), with the obvious precondition: the i-th element, of type 
 				<link>
@@ -557,14 +557,14 @@
 			</item>
 			<item>
 				<link>
-					<url>../../reference/kernel/tuple.xml#f_put</url>
+					<url>../../reference/kernel/tuple.xml</url><anchor_name>f_put</anchor_name>
 					<label>put</label>
 				</link> (x, i), with the obvious precondition: replace i-th element with x. If argument x is not of the appropriate type T
 				<sub_script>i</sub_script> there is no effect.
 			</item>
 			<item>
 				<link>
-					<url>../../reference/kernel/tuple.xml#f_is_equal</url>
+					<url>../../reference/kernel/tuple.xml</url><anchor_name>f_is_equal</anchor_name>
 					<label>is_equal</label>
 				</link>: redefined to consider only the first n elements, where n is the smaller length.
 			</item>

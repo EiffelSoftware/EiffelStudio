@@ -11,16 +11,25 @@ inherit
 feature -- Editable
 
 	create_editor is
+			-- Create a new instance by raising a command tool.
 		local
-			ed: COMMAND_TOOL
+			cmd_tool: COMMAND_TOOL
 		do
 			if command_editor = Void then
-				ed := window_mgr.command_tool
-				ed.set_command (Current)
+				cmd_tool := window_mgr.command_tool
+				cmd_tool.set_command (Current)
 			else
-				ed := command_editor.command_tool
+				cmd_tool := command_editor.command_tool	
 			end
-			ed.display
+			cmd_tool.display
+		end	
+
+	choose_instance is
+		local
+			instances_list: CMD_ED_CHOICE_WND
+		do
+			!! instances_list.make_with_cmd (main_panel.base, Current)
+			instances_list.popup_with_list (instances)
 		end
 
 	has_instances: BOOLEAN is
@@ -110,7 +119,6 @@ feature -- Editable
 			s: BUILD_STATE
 			b: BEHAVIOR
 			command_tools: LINKED_LIST [COMMAND_TOOL]
-			ed: COMMAND_TOOL		
 			cmd_tool: COMMAND_TOOL
 			observers: LINKED_LIST [CMD_INSTANCE]		
 		do
@@ -161,20 +169,8 @@ feature -- Editable
 				end
 				Shared_app_graph.forth
 			end
-				-- Get instances that hasn't been
-				-- inserted into a behaviour yet
---			command_tools := associated_instance_editors
---			from
---				command_tools.start
---			until
---				command_tools.after
---			loop
---				ed := command_tools.item
---				if not Result.has (ed.command_instance) then
---					Result.extend (ed.command_instance)
---				end
---				command_tools.forth
---			end
+				--| Get instances that hasn't been
+				--| inserted into a behaviour yet
 			command_tools := associated_command_tools
 			from
 				command_tools.start
@@ -208,10 +204,6 @@ feature -- Editable
 				end
 				tool_list.forth
 			end
--- 			a_tool := main_panel.command_tool
--- 			if  a_tool.command_instance /= Void and then a_tool.edited_command = Current then
--- 				Result.extend (a_tool)
--- 			end
 		end
 
 	instance_counter: INT_GENERATOR
@@ -309,7 +301,8 @@ feature -- Editing
 	edited: BOOLEAN is
 			-- Is Current command being edited?
 		do
-			Result := not (command_editor = Void)
+			Result := command_editor /= Void and not command_editor.destroyed
+						and then command_editor.shown
 		end
 
 

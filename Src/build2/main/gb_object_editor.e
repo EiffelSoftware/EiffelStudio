@@ -17,17 +17,22 @@ inherit
 		end
 		
 	INTERNAL
+		export
+			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
 		
-	GB_CONSTANTS
-
 	GB_DEFAULT_STATE
 	
 	GB_SHARED_OBJECT_EDITORS
+		export {NONE}
+			all
+		end
 		
 	GB_NAMING_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
@@ -50,13 +55,27 @@ inherit
 		end
 		
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+			{ANY} parent_window
 		undefine
 			default_create, copy, is_equal
 		end
 		
 	EIFFEL_RESERVED_WORDS
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
+		end
+		
+	EV_STOCK_COLORS
+		rename
+			implementation as stock_colors_implementation
+		export
+			{NONE} all
+		undefine
+			copy, is_equal, default_create
 		end
 
 feature -- Initialization
@@ -272,7 +291,7 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 				end
 				set_title_from_name
 				update_editors_for_name_change
-				name_field.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+				name_field.set_foreground_color (black)
 				name_field.set_text (object.name)
 			else
 					-- Now check that the name has actually changed. If it has not changed,
@@ -426,9 +445,9 @@ feature {NONE} -- Implementation
 				object.set_edited_name (name_field.text)
 				if object_handler.name_in_use (name_field.text, object) or 
 					(reserved_words.has (name_field.text.as_lower)) then
-					name_field.set_foreground_color ((create {EV_STOCK_COLORS}).red)
+					name_field.set_foreground_color (red)
 				else
-					name_field.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+					name_field.set_foreground_color (black)
 				end
 				if name_field.text.is_empty then
 					object.layout_item.set_text (object.type.substring (4, object.type.count))

@@ -173,12 +173,13 @@ feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is the current time before `other'?
+		local
+			l_current, l_other: like compact_time
 		do
-			Result := hour < other.hour or else
-				(hour = other.hour and then 
-				(minute < other.minute or else
-				(minute = other.minute and then
-				(fine_second < other.fine_second))))
+			l_current := compact_time
+			l_other := other.compact_time
+			Result := (l_current < l_other) or else
+				((l_current = l_other) and (fractional_second < other.fractional_second))
 		end
 
 feature -- Measurement

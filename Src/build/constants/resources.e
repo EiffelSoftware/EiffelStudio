@@ -154,13 +154,13 @@ feature {NONE} -- Integer Values initialization
 			window_free_list_number 
 				:= resource.get_integer ("window_free_list_number", 0);
 			command_file_name
-				:= resource.get_string ("command_file_name", "cmd");
+				:= resource.get_string ("command_file_name", "command");
 			command_file_name.to_lower;
 			perm_window_file_name
-				:= resource.get_string ("perm_window_file_name", "perm_w");
+				:= resource.get_string ("perm_window_file_name", "perm_wind");
 			perm_window_file_name.to_lower;
 			temp_window_file_name
-				:= resource.get_string ("temp_window_file_name", "temp_w");
+				:= resource.get_string ("temp_window_file_name", "temp_wind");
 			temp_window_file_name.to_lower;
 			default_toolkit
 			:= resource.get_string ("default_toolkit", "MOTIF");

@@ -96,9 +96,11 @@ feature -- Catalog commands
 
 feature -- Command Editor commands
 
+	Cmd_add_arg_and_create_cmd_name: STRING is "Create command by adding argument";
 	Cmd_add_argument_cmd_name: STRING is "Add Argument";
 	Cmd_add_label_cmd_name: STRING is "Add Label";
 	Cmd_create_instance_cmd_name: STRING is "Create instance";
+	Cmd_cut_arg_and_create_cmd_name: STRING is "Create command by cutting argument";
 	Cmd_cut_argument_cmd_name: STRING is "Cut Argument";
 	Cmd_cut_parent_cmd_name: STRING is "Cut parent";
 	Cmd_cut_label_cmd_name: STRING is "Cut Label";
@@ -106,6 +108,11 @@ feature -- Command Editor commands
 	Cmd_set_parent_cmd_name: STRING is "Set parent";
 	Cmd_non_undoable_cmd_name: STRING is "Non-undoable command";
 	Cmd_undoable_cmd_name: STRING is "Undoable command";
+
+feature -- Command Instance commands
+
+	Cmd_add_observer_cmd_name: STRING is "Add observer";
+	Cmd_remove_observer_cmd_name: STRING is "Remove observer";
 
 feature -- Misc commands
 

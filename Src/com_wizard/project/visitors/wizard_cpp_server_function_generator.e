@@ -138,14 +138,14 @@ feature {NONE} -- Implementation
 						else
 							variables.append (in_variable_set_up (func_desc.arguments.item.name, visitor))
 							variables.append (New_line_tab)
-							if visitor.is_basic_type  then
+							if visitor.is_basic_type or visitor.is_enumeration then
 								arguments.append (Comma_space)
 								arguments.append (Open_parenthesis)
 								arguments.append (visitor.cecil_type)
 								arguments.append (Close_parenthesis)
 								arguments.append (Tmp_clause)
 								arguments.append (func_desc.arguments.item.name)
-							elseif not visitor.is_pointed and then is_boolean (visitor.vt_type) then
+							elseif (visitor.vt_type = Vt_bool) then
 								arguments.append (Comma_space)
 								arguments.append (Open_parenthesis)
 								arguments.append (Eif_boolean)
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 								arguments.append (func_desc.arguments.item.name)
 								arguments.append (Close_parenthesis)
 							end
-							if not visitor.is_basic_type and not (not visitor.is_pointed and is_boolean (visitor.vt_type)) then
+							if not visitor.is_basic_type and not (visitor.vt_type = Vt_bool) then
 								free_object.append (Eif_wean)
 								free_object.append (Space_open_parenthesis)
 								free_object.append (Tmp_clause)

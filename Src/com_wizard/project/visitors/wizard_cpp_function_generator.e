@@ -42,18 +42,18 @@ feature {NONE} -- Implementation
 				visitor.visit (arguments.item.type)
 
 				if is_paramflag_fretval (arguments.item.flags) then
-					if visitor.is_basic_type then
-						message_output.add_warning (Current, message_output.Not_pointer_type)
+					pointed_descriptor ?= arguments.item.type
+					if pointed_descriptor /= Void then
+						create visitor
+						visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
+						if visitor.is_basic_type or visitor.is_enumeration or (visitor.vt_type = Vt_bool) then
+							ccom_feature_writer.set_result_type (visitor.cecil_type)
+						else
+							ccom_feature_writer.set_result_type (Eif_reference)
+						end
 					else
-						pointed_descriptor ?= arguments.item.type
-						if pointed_descriptor /= Void then
-							create visitor
-							visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
-							if visitor.is_basic_type or visitor.is_enumeration or (visitor.vt_type = Vt_bool) then
-								ccom_feature_writer.set_result_type (visitor.cecil_type)
-							else
-								ccom_feature_writer.set_result_type (Eif_reference)
-							end
+						if visitor.is_basic_type or visitor.is_enumeration or (visitor.vt_type = Vt_bool) then
+							ccom_feature_writer.set_result_type (visitor.cecil_type)
 						else
 							ccom_feature_writer.set_result_type (Eif_reference)
 						end
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 					then
 						Result.append (visitor.c_type)
 
-					elseif not visitor.is_pointed and is_boolean (visitor.vt_type) then
+					elseif (visitor.vt_type = Vt_bool) then
 						Result.append (Eif_boolean)
 
 					elseif visitor.is_interface or visitor.is_structure then

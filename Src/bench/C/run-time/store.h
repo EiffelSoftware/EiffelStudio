@@ -76,7 +76,7 @@ extern void store_write(void);
 extern int (*char_write_func)(char *, int);
 extern int char_write(char *pointer, int size);
 
-extern void rt_init_store(void (*store_function) (void), int buf_size);
+extern void rt_init_store(void (*store_function) (void), int (*char_write_function)(char *, int), int buf_size);
 extern void rt_reset_store(void);
 
 extern long get_offset(uint32 o_type, uint32 attrib_num);          /* get offset of attrib in object*/

@@ -21,14 +21,14 @@ inherit
 		end;
 	GRAPHICAL_VALUES
 		undefine
-			copy, setup
+			is_equal, copy, setup
 		end;
 	TEXT_WINDOW
 		rename
 			current_line as current_text_line,
 			count as text_count
 		undefine
-			copy, setup
+			is_equal, copy, setup
 		redefine
 			put_address, put_feature_name, put_feature, put_feature_error,
 			put_error, put_class, put_after_class, put_classi, put_cluster,
@@ -40,11 +40,11 @@ inherit
 		end;
 	SHARED_APPLICATION_EXECUTION
 		undefine
-			copy, setup
+			is_equal, copy, setup
 		end
 	EB_CONSTANTS
 		undefine
-			copy, setup
+			is_equal, copy, setup
 		end
 
 feature -- Access

@@ -428,7 +428,8 @@ feature -- C generation
 					end
 					c_name := Encoder.feature_name (written_type.static_type_id,
 						creation_feature.body_index)
-					buffer.putstring (");%N%T")
+					buffer.putstring (");")
+					buffer.new_line
 					buffer.putstring (c_name)
 					buffer.putchar ('(')
 					reg.print_register

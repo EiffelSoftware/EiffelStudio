@@ -44,9 +44,11 @@ library emitter
         [restricted] void Missing10();
         [restricted] void Missing11();
         [id(0x60020005)]
-        HRESULT initialize();
+        HRESULT initialize([in] BSTR a_clr_version);
         [id(0x60020006)]
-        HRESULT initialize_with_path([in] BSTR a_path);
+        HRESULT initialize_with_path(
+                        [in] BSTR a_path, 
+                        [in] BSTR a_clr_version);
         [id(0x60020007)]
         HRESULT is_initialized([out, retval] VARIANT_BOOL* pRetVal);
         [id(0x60020008)]

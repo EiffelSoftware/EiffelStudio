@@ -22,7 +22,6 @@ inherit
 			count as columns,
 			set_count as set_columns
 		undefine
-			--destroy,
 			parent
 		redefine
 			parent_imp,
@@ -31,7 +30,6 @@ inherit
 
 create
 	make
-	--make_with_text
 
 feature {NONE} -- Initialization
 
@@ -54,43 +52,12 @@ feature {NONE} -- Initialization
 			is_initialized := True
 		end
 
-	make_with_text (txt: ARRAY [STRING]) is
-			-- Create a row with text in it.
-		local
-			i: INTEGER
-		do
-			-- create the arrayed_lists where the text and
-			-- the pixmaps will be stored.
-			from
-				create internal_text.make (0)
-				create internal_pixmaps.make (0)
-				i := txt.lower
-			until
-				i > txt.upper
-			loop
-				internal_text.extend (txt @ i)
-				internal_pixmaps.extend (Void)
-				i := i + 1
-			end
-
- 		end
-
 feature -- Access
 
 	columns: INTEGER is
 			-- Number of columns in the row
 		do
 			Result := internal_text.count
-		end
-
-	index: INTEGER is
-			-- Index of the row in the list
-			-- (starting from 1).
-		do
-			-- The `ev_children' array has to contain
-			-- the same rows in the same order than in the gtk
-			-- part.
-			Result := parent_imp.ev_children.index_of (Current, 1)
 		end
 
 	background_color: EV_COLOR is
@@ -145,23 +112,6 @@ feature -- Status setting
 			internal_text := Void
 			internal_pixmaps := Void
 			parent_imp := Void	
-		end
-
-	set_index (value: INTEGER) is
-			-- Make `value' the new index of the item.
-		local
-			local_array: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
-		do
-			-- moving the gtk row
-			C.gtk_clist_row_move (parent_imp.list_widget, index - 1, value - 1)
-
-			-- updating the parent `ev_children' array
-			--local_array := parent_imp.ev_children
-			--local_array.search (Current)
-			--local_array.remove
-
-			--local_array.go_i_th (value)
-			--local_array.put_left (Current)
 		end
 
 	set_selected (flag: BOOLEAN) is
@@ -220,7 +170,7 @@ feature -- Element Change
 		do
 			-- Prepare the pixmap and the text.
 			txt := a_text.to_c
-			--pix_imp := (internal_pixmaps @ column)
+			pix_imp := (internal_pixmaps @ column)
 
 			-- Set the pixmap and the text in the given column.
 			if (pix_imp /= void) then
@@ -239,6 +189,7 @@ feature -- Element Change
 			pix_imp: EV_PIXMAP_IMP
 			txt: STRING
 			a: ANY
+			pixdata, mask, pixmap_pointer: POINTER
 		do
 			-- Prepare the pixmap and the text.
 			pix_imp ?= pix.implementation
@@ -247,7 +198,10 @@ feature -- Element Change
 
 			-- Set the pixmap and the text in the given column.
 			if (pix_imp /= void) then
-				C.c_gtk_clist_set_pixtext (parent_imp.list_widget, index - 1, column - 1, pix_imp.c_object, $a)
+				C.gtk_pixmap_get (pix_imp.c_object, $pixdata, $mask)
+				pixmap_pointer := C.gtk_pixmap_new (pixdata, mask)
+				C.gtk_widget_show (pixmap_pointer)
+				C.c_gtk_clist_set_pixtext (parent_imp.list_widget, index - 1, column - 1, pixmap_pointer, $a)
 			else
 				C.c_gtk_clist_set_pixtext (parent_imp.list_widget, index - 1, column - 1, default_pointer, $a)
 			end
@@ -343,6 +297,16 @@ feature -- Event -- removing command association
 
 feature {EV_ANY_I} -- Implementation
 
+	index: INTEGER is
+			-- Index of the row in the list
+			-- (starting from 1).
+		do
+			-- The `ev_children' array has to contain
+			-- the same rows in the same order than in the gtk
+			-- part.
+			Result := parent_imp.ev_children.index_of (Current, 1)
+		end
+
 	C: EV_C_EXTERNALS is
 			-- Access to external C functions.
 		once
@@ -377,6 +341,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/02/16 23:00:51  king
+--| Removed redundant features
+--|
 --| Revision 1.25  2000/02/16 20:23:46  king
 --| Corrected inheritence, add C feature
 --|

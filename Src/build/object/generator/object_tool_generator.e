@@ -271,6 +271,7 @@ feature -- Command execution
 			-- Exclude all queries.
 		do
 			move_all_items (included_list, excluded_list)
+			properties_rc.set_size (0, 0)
 		end
 
 	move_items (source_list, target_list: SCROLLABLE_LIST) is
@@ -351,20 +352,26 @@ feature -- Command execution
 		local
 			any_editor_form: ANY_QUERY_EDITOR_FORM
 			boolean_editor_form: BOOLEAN_QUERY_EDITOR_FORM
+			new_height: INTEGER
 		do
 			if form_table.has (a_query.query_name) and form_table.item (a_query.query_name) /= Void then
+				new_height := properties_rc.height + form_table.item (a_query.query_name).height
 				form_table.item (a_query.query_name).manage
 			else
+				new_height := properties_rc.height
 				if a_query.query_type.is_equal ("BOOLEAN") then
 					!! boolean_editor_form.make ("", properties_rc)
 					boolean_editor_form.set_query (a_query)
 					form_table.force (boolean_editor_form, a_query.query_name)
+					new_height := new_height + boolean_editor_form.height
 				else
 					!! any_editor_form.make ("", properties_rc)
 					any_editor_form.set_query (a_query)
 					form_table.force (any_editor_form, a_query.query_name)
+					new_height := new_height + any_editor_form.height
 				end
 			end
+			properties_rc.set_size (properties_rc.width, new_height)
 		end
 
 	remove_query_editor_form (a_query: APPLICATION_QUERY) is
@@ -372,15 +379,18 @@ feature -- Command execution
 		require
 			query_not_void: a_query /= Void
 			item_referenced: form_table.has (a_query.query_name)
+		local
+			new_height: INTEGER
 		do
+			new_height := properties_rc.height - form_table.item (a_query.query_name).height
 			form_table.item (a_query.query_name).unmanage
+			properties_rc.set_size (properties_rc.width, new_height)
 		end
 feature -- Closeable
 
 	close is
 			-- Close object tool generator.
 		do
-			--exclude_all_queries
 			hide
 		end
 
@@ -388,18 +398,27 @@ feature -- Closeable
 			-- Display object tool generator.
 		require
 			class_not_void: application_class /= Void
+		local	
+			mp: MOUSE_PTR
+			previous_class: APPLICATION_CLASS	
 		do
+			!! mp
+			mp.set_watch_shape
+			previous_class := edited_class
+			edited_class ?= application_class
+			check
+				edited_class_not_void: edited_class /= Void
+			end
 			if not realized then
 				realize
 			else
 				show
 			end
-			raise
-			edited_class ?= application_class
-			check
-				edited_class_not_void: edited_class /= Void
+			if previous_class = Void or else not edited_class.class_name.is_equal (previous_class.class_name) then
+				update_interface
 			end
-			update_interface
+			mp.restore
+			raise
 		end
 
 feature {NONE} -- Implementation
@@ -434,19 +453,6 @@ feature {NONE} -- Implementation
 				end
 				query_list.forth
 			end
-
---  			exclude_all_queries
---  			excluded_list.wipe_out
---  			included_list.wipe_out
---  			query_list := edited_class.query_list
---  			from
---  				query_list.start
---  			until
---  				query_list.after
---  			loop
---  				excluded_list.extend (query_list.item)
---  				query_list.forth
---  			end
 		end
 
 feature -- Attributes

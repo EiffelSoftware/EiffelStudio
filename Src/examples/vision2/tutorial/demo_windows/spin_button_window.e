@@ -27,18 +27,21 @@ feature {NONE} -- Initialization
 		do
 			{EV_SPIN_BUTTON} Precursor (par)
 			set_gauge_tabs
-		--	create spin_button_tab.make(Void)
-		--	tab_list.extend(spin_button_tab)
+			tab_list.extend(spin_button_tab)
 			create action_window.make(Current,tab_list)
-		--	make_with_range (par, 0, 100)
 			set_parent(par)
 		
 		end
+
+
+
+
 
 	set_tabs is
 			-- Set the tabs for the action window.
 		do
 		end
+
 
 feature -- Access
 	

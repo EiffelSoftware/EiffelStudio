@@ -144,11 +144,7 @@ feature -- New feature description
 					if external_body.alias_name /= Void then
 						extern_proc.set_alias_name (external_body.alias_name.value);
 					end;
-					extern_proc.set_special_id (ext_lang.special_id);
-					extern_proc.set_special_file_name (ext_lang.special_file_name);
-					extern_proc.set_arg_list (ext_lang.arg_list);
-					extern_proc.set_return_type (ext_lang.return_type);
-					extern_proc.set_include_list (ext_lang.include_list);
+					extern_proc.set_extension (ext_lang.extension_i (external_body));
 
 -- Assertions and Rescue compound are not supported in
 -- externals.
@@ -156,9 +152,7 @@ feature -- New feature description
 --						(content.has_assertion or else content.has_rescue);
 
 						-- if there's a macro or a signature then encapsulate
-					extern_proc.set_encapsulated
-						(external_body.language_name.is_special
-						or else external_body.language_name.has_signature);
+					extern_proc.set_encapsulated (ext_lang.need_encapsulation);
 					proc := extern_proc;
 				else
 					!DYN_PROC_I!proc;
@@ -195,11 +189,7 @@ feature -- New feature description
 					if external_body.alias_name /= Void then
 						extern_func.set_alias_name (external_body.alias_name.value);
 					end;
-					extern_func.set_special_id (ext_lang.special_id);
-					extern_func.set_special_file_name (ext_lang.special_file_name);
-					extern_func.set_arg_list (ext_lang.arg_list);
-					extern_func.set_return_type (ext_lang.return_type);
-					extern_func.set_include_list (ext_lang.include_list);
+					extern_func.set_extension (ext_lang.extension_i (external_body));
 
 -- Assertions and Rescue compound are not supported in
 -- externals.
@@ -207,9 +197,7 @@ feature -- New feature description
 --						(content.has_assertion or else content.has_rescue);
 
 						-- if there's a macro or a signature then encapsulate
-					extern_func.set_encapsulated
-						(external_body.language_name.is_special
-						or else external_body.language_name.has_signature);
+					extern_func.set_encapsulated (ext_lang.need_encapsulation);
 					extern_func.set_type (type);
 					func := extern_func;
 				else

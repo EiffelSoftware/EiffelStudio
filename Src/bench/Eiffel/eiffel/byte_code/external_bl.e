@@ -148,9 +148,8 @@ feature
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
 			-- Generate external call in a `typ' context
 		local
-			rout_table: ROUT_TABLE;
 			entry: POLY_TABLE [ENTRY];
-			internal_name, table_name: STRING;
+			table_name: STRING;
 			i: INTEGER;
 			is_boolean: BOOLEAN
 		do
@@ -199,78 +198,24 @@ feature
 					-- The call is not polymorphic in the given context,
 					-- so the name can be hardwired.
 				if encapsulated then
-						-- Let's see if there's some include file to add to the .h file
-						-- for the final mode only.
-						-- We don't need to test if an include file is already in the
-						-- shared_include_set of the current class because this
-						-- shared set is a set and every item appears only once
-					if (is_special_ext or has_include_list) then
-						if is_special_ext and not ((special_id = dll16_id) or (special_id = dll32_id)) then
-							shared_include_set.extend (special_file_name);
-						end;
-						if has_include_list then
-							from
-								i := include_list.lower
-							until
-								i > include_list.upper
-							loop
-								shared_include_set.extend (include_list.item (i));
-								i := i + 1;
-							end;
-						end;
-					end;
+					extension.generate_header_files
+
 						-- Now generate the right name to call the external
 						-- In the case of a signature or a macro, the call will be direct
 						-- In the case of a dll, the encapsulation will be called (encoded name)
-					if (special_id = dll16_id) or (special_id = dll32_id) then
-						rout_table ?= entry;
-						internal_name := clone (rout_table.feature_name (typ.type_id));
-						generated_file.putstring (internal_name);
-					else
-						if special_id = macro_id then
-								--| External procedure will be generated as:
-								--| (void) (c_proc (args));
-								--| The extra parenthesis are necessary if c_proc is
-								--| an affectation e.g. c_proc(arg1, arg2) arg1 = arg2
-								--| Without the parenthesis, the cast is done only on the first
-								--| argument, not the entire expression (affectation)
-							generated_file.putchar ('(');
-						end;
-						internal_name := external_name;
-						generated_file.putstring (internal_name);
-					end;
-						-- To avoid problems, the prototype of the function has to be added
-						-- to the .h file.
-						-- A prototype is added only if it's a dll, or if it's an external
-						-- for which there's no include file defining it.
-					if
-						(special_id = dll16_id
-					or
-						 special_id = dll32_id
-					or
-						 (has_signature and not has_include_list and not is_special_ext))
-					then
-						Extern_declarations.add_routine (real_type (type).c_type, internal_name);
-					end;
+					extension.generate_external_name (generated_file, external_name,
+						entry, typ, real_type (type).c_type);
 				else
-					internal_name := external_name;
-					generated_file.putstring (internal_name);
-					if has_include_list then
-							-- The external uses some include files
-							-- We assume the declaration of the function is
-							-- done in one of these include files
-						from
-							i := include_list.lower
-						until
-							i > include_list.upper
-						loop
-							shared_include_set.extend (include_list.item (i));
-							i := i + 1
-						end;
+					generated_file.putstring (external_name);
+					if
+						extension /= Void and then
+						extension.has_include_list
+					then
+						extension.generate_header_files
 					else
 							-- Remember external routine declaration
 						Extern_declarations.add_routine
-							(real_type (type).c_type, internal_name);
+							(real_type (type).c_type, external_name);
 					end;
 				end;
 			end;
@@ -280,11 +225,14 @@ feature
 			-- Generate final portion of C code.
 		local
 			generate_parenthesis: BOOLEAN
+			is_macro_extension: BOOLEAN
 		do
+			is_macro_extension := encapsulated and then extension.is_macro
+
 			generate_access_on_type (gen_reg, class_type);
 				-- Now generate the parameters of the call, if needed.
 			generate_parenthesis := not (is_attribute or
-					(context.final_mode and special_id = macro_id and parameters = Void));
+					(context.final_mode and is_macro_extension and parameters = Void));
 			if generate_parenthesis then
 				generated_file.putchar ('(');
 			end;
@@ -300,7 +248,7 @@ feature
 			if
 				context.final_mode and then
 				not Eiffel_table.poly_table (rout_id).is_polymorphic (class_type.type_id) and then
-				special_id = macro_id and encapsulated
+				is_macro_extension
 			then
 					--| See comments in `generate_access_on_type'
 				generated_file.putchar (')');
@@ -321,23 +269,29 @@ feature
 		local
 			expr: EXPR_B;
 			i: INTEGER;
+			generate_cast: BOOLEAN
+			arg_types: ARRAY [STRING]
 		do
 			if parameters /= Void then
+				generate_cast := context.final_mode and then
+					extension /= Void and then
+					extension.generate_parameter_cast
+
+				if generate_cast then
+					arg_types := extension.argument_types
+					i := arg_types.lower
+				end
+
 				from
 					parameters.start;
-					if has_arg_list then
-						i := arg_list.lower;
-					end;
 				until
 					parameters.after
 				loop
 					expr ?= parameters.item;	-- Cannot fail
 						-- add cast before parameter
-					if context.final_mode
-						and then has_arg_list
-						and then (special_id /= dll16_id) and (special_id /= dll32_id) then
+					if generate_cast then
 						generated_file.putchar ('(');
-						generated_file.putstring (arg_list.item (i));
+						generated_file.putstring (arg_types.item (i));
 						generated_file.putstring (") ");
 					end;
 					expr.print_register;
@@ -394,13 +348,9 @@ feature
 			type := e.type;
 			parameters := e.parameters;
 			encapsulated := e.encapsulated;
+			extension := e.extension;
 			feature_id := e.feature_id;
 			feature_name := e.feature_name;
-			special_id := e.special_id;
-			special_file_name := e.special_file_name;
-			include_list := e.include_list;
-			arg_list := e.arg_list;
-			return_type := e.return_type;
 			if parameters /= Void then
 				from parameters.start;
 				until parameters.after

@@ -27,82 +27,54 @@ inherit
 	
 feature -- Attributes for externals
 
-	special_id: INTEGER;
-			-- special id of external if it is
-
-	special_file_name: STRING;
-			-- File name including the macro definition
- 
-	arg_list: EXTERNALS_LIST;
-			-- List of arguments for the signature
-
-	return_type: STRING;
-			-- Result type of signature
-
-	include_list: EXTERNALS_LIST;
-			-- List of include files
+	extension: EXTERNAL_EXT_I
+			-- Encapsulation of the external extension
 
 feature -- Routines for externals
 
 	is_special: BOOLEAN is
 			-- Does the external declaration include a macro
 		do
-			Result := (special_file_name /= Void);
+			Result := extension /= Void and then extension.is_macro
 		end;
 
 	has_signature: BOOLEAN is
 			-- Does the external declaration include a signature ?
 		do
-			Result := (has_arg_list or else has_return_type);
+			Result := extension /= Void and then extension.has_signature
 		end;
 
 	has_arg_list: BOOLEAN is
 			-- Does the signature include arguments ?
 		do
-			Result := (arg_list /= Void) and then (arg_list.count > 0);
+			Result := extension /= Void and then extension.has_arg_list
 		end;
 
 	has_return_type: BOOLEAN is
 			-- Does the signature include a result type ?
 		do
-			Result := (return_type /= Void);
+			Result := extension /= Void and then extension.has_return_type
 		end;
 
 	has_include_list: BOOLEAN is
 			-- Does the external declaration include a list of include files ?
 		do
-			Result := (include_list /= Void) and then (include_list.count > 0);
+			Result := extension /= Void and then extension.has_include_list
 		end;
 
-	set_special_id (i: INTEGER) is
-			-- Assign `i' to `special_id'
+	include_list: ARRAY [STRING] is
+			-- Include list
 		do
-			special_id := i;
-		end;
+			if extension /= Void then
+				Result := extension.header_files
+			end
+		end
 
-	set_special_file_name (s: STRING) is
-			-- Assign `s' to `special_file_name'
+	set_extension (e: like extension) is
+			-- Assign `e' to `extension'.
 		do
-			special_file_name := s;
-		end;
-
-	set_arg_list (a: like arg_list) is
-			-- Assign `a' to `arg_list'
-		do
-			arg_list := a;
-		end;
-
-	set_return_type (s: STRING) is
-			-- Assign `s' to `return_type'
-		do
-			return_type := s;
-		end;
-
-	set_include_list (a: like include_list) is
-			-- Assign `a' to `include_list'
-		do
-			include_list := a;
-		end;
+			extension := e
+		end
 
 feature -- Incrementality
 
@@ -113,25 +85,11 @@ feature -- Incrementality
 		do
 			other_ext ?= other
 			if other_ext /= Void then
-				if include_list /= Void then
-					Result := include_list.equiv (other_ext.include_list)
-				else
-					Result := other_ext.include_list = Void
-				end;
-				Result := Result and then
-					same_signature (other) and then
+				Result := same_signature (other) and then
 					equal (alias_name, other_ext.alias_name) and then
 					encapsulated = other_ext.encapsulated
 				if Result and then encapsulated then
-					if arg_list /= Void then
-						Result := arg_list.equiv (other_ext.arg_list)
-					else
-						Result := other_ext.arg_list = Void
-					end
-					Result := Result and then
-						equal (return_type, other_ext.return_type) and then
-						equal (special_file_name, other_ext.special_file_name) and then
-						special_id = other_ext.special_id
+					Result := equal (extension, other_ext.extension)
 				end
 			end
 		end
@@ -209,11 +167,7 @@ feature
 			external_b.set_type (access_type);
 			external_b.set_external_name (external_name);
 			external_b.set_encapsulated (encapsulated);
-			external_b.set_special_id (special_id);
-			external_b.set_special_file_name (special_file_name);
-			external_b.set_include_list (include_list);
-			external_b.set_arg_list (arg_list);
-			external_b.set_return_type (return_type);
+			external_b.set_extension (extension);
 			
 			Result := external_b;
 		end;
@@ -224,11 +178,7 @@ feature
 			procedure_transfer_to (other);
 			other.set_alias_name (alias_name);
 			other.set_encapsulated (encapsulated);
-			other.set_special_id (special_id);
-			other.set_arg_list (arg_list);
-			other.set_return_type (return_type);
-			other.set_special_file_name (special_file_name);
-			other.set_include_list (include_list);
+			other.set_extension (extension);
 		end;
 
 	new_rout_unit: EXTERNAL_UNIT is

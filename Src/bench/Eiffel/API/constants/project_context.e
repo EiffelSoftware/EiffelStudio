@@ -24,6 +24,13 @@ feature -- Eiffel Project Directories
 			create Result.make (5)
 		end
 
+	Local_assembly_path: DIRECTORY_NAME is
+			-- Path to where local assemblies are emitted.
+		once
+			create Result.make_from_string (Project_directory_name);
+			Result.extend_from_array (<<Eiffelgen, Local_assemblies>>);
+		end
+
 	Backup_path: DIRECTORY_NAME is
 			-- Path to the backup directory
 		once

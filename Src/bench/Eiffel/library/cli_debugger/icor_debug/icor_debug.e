@@ -120,8 +120,11 @@ feature {ICOR_EXPORTER} -- Access
 		local
 			l_hr: INTEGER
 		do
-			l_hr := cwin_close_handle (process_info.process_handle)
-			l_hr := cwin_close_handle (process_info.thread_handle)
+			if process_info /= Void then
+				l_hr := cwin_close_handle (process_info.process_handle)
+				l_hr := cwin_close_handle (process_info.thread_handle)
+				process_info := Void
+			end
 		end
 		
 

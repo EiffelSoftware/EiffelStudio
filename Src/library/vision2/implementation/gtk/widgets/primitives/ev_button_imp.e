@@ -93,12 +93,12 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	is_default_push_button: BOOLEAN is
+	is_default_push_button: BOOLEAN --is
 			-- Is this button currently a default push button 
 			-- for a particular container?
-		do
-			Result := GTK_WIDGET_HAS_DEFAULT (visual_widget)
-		end
+--		do
+--			Result := GTK_WIDGET_HAS_DEFAULT (visual_widget)
+--		end
 		
 feature -- Status Setting
 
@@ -106,6 +106,8 @@ feature -- Status Setting
 			-- Set the style of the button corresponding
 			-- to the default push button.
 		do
+			--| FIXME IEK Add default push button style
+			is_default_push_button := True
 		--	enable_can_default
 			--C.gtk_widget_grab_default (visual_widget)
 		end
@@ -118,6 +120,7 @@ feature -- Status Setting
 		do
 			--GTK_WIDGET_UNSET_FLAGS (visual_widget, C.GTK_HAS_DEFAULT_ENUM)
 			--C.gtk_widget_draw_default (visual_widget)
+			is_default_push_button := False
 			from
 				par_ptr := C.gtk_widget_struct_parent (visual_widget)
 			until

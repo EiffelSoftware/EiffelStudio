@@ -20,6 +20,8 @@
 #include "stream.h"
 #include "listen.h"
 #include "eif_logfile.h"
+#include <string.h>
+#include <signal.h>
 
 #ifdef EIF_WIN32
 #define ACTIVE_TM	1		/* Active checks performed every 1 seconds */

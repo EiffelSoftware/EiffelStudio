@@ -53,6 +53,10 @@
 #include "rt_garcol.h"
 #include "rt_main.h"
 
+#ifdef BOEHM_GC
+#include "rt_boehm.h"
+#endif
+
 #define null (char *) 0					/* Null pointer */
 
 /* The following line is automatically uncommented when compiling a non commercial run-time */
@@ -204,6 +208,7 @@ rt_public void eif_alloc_init(void)
 	eif_chunk_size = chunk_size >= CHUNK_SZ_MIN ? chunk_size : CHUNK_SZ_MIN;
 								/* Reasonable chunk size. */
 
+#ifdef ISE_GC
 	/* Set scavenge size. */
 	if (!scavenge_size) {
 		env_var = getenv ("EIF_MEMORY_SCAVENGE");
@@ -253,7 +258,8 @@ rt_public void eif_alloc_init(void)
 	}
 	eif_gs_limit = gs_limit;	
 								/* Reasonable gs_limit. */
-				
+#endif /* ISE GC */
+
 	/* Set Size of local stack chunk. */
 	if (!stack_chunk)	/* Is maximum size of objects in GSZ not set yet? */
 	{
@@ -264,7 +270,8 @@ rt_public void eif_alloc_init(void)
 			stack_chunk = STACK_CHUNK;	/* RT default setting. */
 	}
 	eif_stack_chunk = stack_chunk;	
-	
+
+#ifdef ISE_GC
 	/* Set full coalesce period. */
 	if (!c_per)	/* Is full coalesce period not set yet? */
 	{
@@ -307,6 +314,7 @@ rt_public void eif_alloc_init(void)
 	ENSURE ("Full collection period must be postive.", plsc_per >= 0);
 	ENSURE ("Threshold of allocation must be positive", th_alloc >= TH_ALLOC_MIN);
 	/*************** End of Postconditions. ******************/
+#endif /* ISE_GC */
 }
 
 rt_public void eif_rtinit(int argc, char **argv, char **envp)
@@ -324,6 +332,10 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 #ifdef EIF_WIN32
 	set_windows_exception_filter();
+#endif
+
+#ifdef BOEHM_GC
+	GC_register_displacement (OVERHEAD);
 #endif
 
 	starting_working_directory = (char *) eif_malloc (PATH_MAX + 1);
@@ -485,7 +497,9 @@ rt_public void failure(void)
 		 * Doing so, enables a safe `reclaim' that will not traverse `loc_set'
 		 * objects.
 		 */
+#ifdef ISE_GC
 	st_reset (&loc_set);
+#endif
 
 	trapsig(emergency);					/* Weird signals are trapped */
 	esfail(MTC_NOARG);							/* Dump the execution stack trace */

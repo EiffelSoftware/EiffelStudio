@@ -326,14 +326,16 @@ feature {NONE} -- Event handling
 	auto_slice_selected is
 			-- Called by `select_actions' of `auto_set_slice_button'.
 		do
-			lower_slice_field.set_text ("0")
-			upper_slice_field.set_text ((-1).out) --(current_dump_value.last_string_representation_length - 1).out)
-			slice_min_ref.set_item (0)
-			slice_max_ref.set_item (-1)
-			refresh
-			
-			set_limits (0, current_dump_value.last_string_representation_length - 1)			
-			upper_slice_field.set_text (slice_max.out)
+			if has_object then
+				lower_slice_field.set_text ("0")
+				upper_slice_field.set_text ((-1).out) --(current_dump_value.last_string_representation_length - 1).out)
+				slice_min_ref.set_item (0)
+				slice_max_ref.set_item (-1)
+				refresh
+				
+				set_limits (0, current_dump_value.last_string_representation_length - 1)			
+				upper_slice_field.set_text (slice_max.out)
+			end
 		end
 	
 	word_wrap_toggled is

@@ -2303,10 +2303,7 @@ feature -- Dead code removal
 			pointer_ref_class.compiled_class.mark_all_used (remover);
 
 				-- Protection of feature `make' of class STRING
-			string_class.compiled_class.mark_all_used (remover);
-
-				-- New line at the end of the last line of dots
-			io.error.new_line;
+			string_class.compiled_class.mark_all_used (remover)
 		end;
 
 	is_used (f: FEATURE_I): BOOLEAN is

@@ -323,10 +323,22 @@ feature -- Status report
 			Result := variable_type = Vt_i1
 		end
 
+	has_character (variable_type: INTEGER): BOOLEAN is
+			-- Is variable character or character array or character pointer?
+		do
+			Result := (variable_type & Vt_i1) = Vt_i1
+		end
+
 	is_integer2 (variable_type: INTEGER): BOOLEAN is
 			-- Is variable short integer?
 		do
 			Result := variable_type = Vt_i2
+		end
+
+	has_integer2 (variable_type: INTEGER): BOOLEAN is
+			-- Is variable short integer or short integer array or short integer pointer?
+		do
+			Result := (variable_type & Vt_i2) = Vt_i2
 		end
 
 	is_integer4 (variable_type: INTEGER): BOOLEAN is
@@ -335,22 +347,46 @@ feature -- Status report
 			Result := variable_type = Vt_i4
 		end
 
-	is_real4 (variable_type: INTEGER): BOOLEAN is
+	has_integer4 (variable_type: INTEGER): BOOLEAN is
+			-- Is variable long integer or long integer array or long integer pointer?
+		do
+			Result := (variable_type & Vt_i4) = Vt_i4
+		end
+
+	is_real (variable_type: INTEGER): BOOLEAN is
 			-- Is variable real?
 		do
 			Result := variable_type = Vt_r4
 		end
 
-	is_real8 (variable_type: INTEGER): BOOLEAN is
+	has_real (variable_type: INTEGER): BOOLEAN is
+			-- Is variable real or real array or real pointer?
+		do
+			Result := (variable_type & Vt_r4) = Vt_r4
+		end
+
+	is_double (variable_type: INTEGER): BOOLEAN is
 			-- Is variable double?
 		do
 			Result := variable_type = Vt_r8
 		end
 
+	has_double (variable_type: INTEGER): BOOLEAN is
+			-- Is variable double or double array or double pointer?
+		do
+			Result := (variable_type & Vt_r8) = Vt_r8
+		end
+
 	is_boolean (variable_type: INTEGER): BOOLEAN is
-			-- Is variable boolen?
+			-- Is variable boolean?
 		do
 			Result := variable_type = Vt_bool
+		end
+
+	has_boolean (variable_type: INTEGER): BOOLEAN is
+			-- Is variable boolean or boolen array or boolean pointer?
+		do
+			Result := (variable_type & Vt_bool) = Vt_bool
 		end
 
 	is_date (variable_type: INTEGER): BOOLEAN is
@@ -359,10 +395,22 @@ feature -- Status report
 			Result := variable_type = Vt_date
 		end
  
+	has_date (variable_type: INTEGER): BOOLEAN is
+			-- Is variable date or date array or date pointer?
+		do
+			Result := (variable_type & Vt_date) = Vt_date
+		end
+
 	is_error (variable_type: INTEGER): BOOLEAN is
 			-- Is variable error?
 		do
 			Result := variable_type = Vt_error
+		end
+
+	has_error (variable_type: INTEGER): BOOLEAN is
+			-- Is variable error or error array or error pointer?
+		do
+			Result := (variable_type & Vt_error) = Vt_error
 		end
 
 	is_variant (variable_type: INTEGER): BOOLEAN is
@@ -371,10 +419,22 @@ feature -- Status report
 			Result := variable_type = Vt_variant
 		end
 
+	has_variant (variable_type: INTEGER): BOOLEAN is
+			-- Is variable variant or variant array or variant pointer?
+		do
+			Result := (variable_type & Vt_variant) = Vt_variant
+		end
+
 	is_currency (variable_type: INTEGER): BOOLEAN is
 			-- Is variable currency?
 		do
 			Result := variable_type = Vt_cy
+		end
+
+	has_currency (variable_type: INTEGER): BOOLEAN is
+			-- Is variable currency or currency array or currency pointer?
+		do
+			Result := (variable_type & Vt_cy) = Vt_cy
 		end
 
 	is_bstr (variable_type: INTEGER): BOOLEAN is
@@ -383,16 +443,34 @@ feature -- Status report
 			Result := variable_type = Vt_bstr
 		end
 
-	is_dispatch (variable_type: INTEGER): BOOLEAN is
-			-- Is dispatch interface?
+	has_bstr (variable_type: INTEGER): BOOLEAN is
+			-- Is variable bstr or bstr array or bstr pointer?
+		do
+			Result := (variable_type & Vt_bstr) = Vt_bstr
+		end
+
+	is_idispatch (variable_type: INTEGER): BOOLEAN is
+			-- Is IDispatch interface pointer?
 		do
 			Result := variable_type = Vt_dispatch
 		end
 
-	is_unknown (variable_type: INTEGER): BOOLEAN is
-			-- Is IUnknown interface?
+	has_idispatch (variable_type: INTEGER): BOOLEAN is
+			-- Is variable IDispatch interface pointer or IDispatch interface pointer array or IDispatch interface pointer pointer?
+		do
+			Result := (variable_type & Vt_dispatch) = Vt_dispatch
+		end
+
+	is_iunknown (variable_type: INTEGER): BOOLEAN is
+			-- Is IUnknown interface pointer?
 		do
 			Result := variable_type = Vt_unknown
+		end
+
+	has_iunknown (variable_type: INTEGER): BOOLEAN is
+			-- Is variable IUnknown interface pointer or IUnknown interface pointer array or IUnknown interface pointer pointer?
+		do
+			Result := (variable_type & Vt_unknown) = Vt_unknown
 		end
 
 	is_decimal (variable_type: INTEGER): BOOLEAN is
@@ -401,10 +479,22 @@ feature -- Status report
 			Result := variable_type = Vt_decimal
 		end
 
+	has_decimal (variable_type: INTEGER): BOOLEAN is
+			-- Is variable decimal or decimal array or decimal pointer?
+		do
+			Result := (variable_type & Vt_decimal) = Vt_decimal
+		end
+
 	is_unsigned_char (variable_type: INTEGER): BOOLEAN is
 			-- Is variable unsigned char?
 		do
 			Result := variable_type = Vt_ui1
+		end
+
+	has_unsigned_char (variable_type: INTEGER): BOOLEAN is
+			-- Is variable unsigned char or unsigned char array or unsigned char pointer?
+		do
+			Result := (variable_type & Vt_ui1) = Vt_ui1
 		end
 
 	is_unsigned_short (variable_type: INTEGER): BOOLEAN is
@@ -413,10 +503,22 @@ feature -- Status report
 			Result := variable_type = Vt_ui2
 		end
 
+	has_unsigned_short (variable_type: INTEGER): BOOLEAN is
+			-- Is variable unsigned short or unsigned short array or unsigned short pointer?
+		do
+			Result := (variable_type & Vt_ui2) = Vt_ui2
+		end
+
 	is_unsigned_long (variable_type: INTEGER): BOOLEAN is
 			-- Is variable unsigned long?
 		do
 			Result := variable_type = Vt_ui4
+		end
+
+	has_unsigned_long (variable_type: INTEGER): BOOLEAN is
+			-- Is variable unsigned long or unsigned long array or unsigned long pointer?
+		do
+			Result := (variable_type & Vt_ui4) = Vt_ui4
 		end
 
 	is_long_long (variable_type: INTEGER): BOOLEAN is
@@ -425,10 +527,22 @@ feature -- Status report
 			Result := variable_type = Vt_i8
 		end
 
+	has_long_long (variable_type: INTEGER): BOOLEAN is
+			-- Is variable long long or long long array or long long pointer?
+		do
+			Result := (variable_type & Vt_i8) = Vt_i8
+		end
+
 	is_unsigned_long_long (variable_type: INTEGER): BOOLEAN is
 			-- Is variable unsigned long long?
 		do
 			Result := variable_type = Vt_ui8
+		end
+
+	has_unsigned_long_long (variable_type: INTEGER): BOOLEAN is
+			-- Is variable unsigned long long or unsigned long long array or unsigned long long pointer?
+		do
+			Result := (variable_type & Vt_ui8) = Vt_ui8
 		end
 
 	is_int (variable_type: INTEGER): BOOLEAN is
@@ -437,10 +551,22 @@ feature -- Status report
 			Result := variable_type = Vt_int
 		end
 
+	has_int (variable_type: INTEGER): BOOLEAN is
+			-- Is variable int or int array or int pointer?
+		do
+			Result := (variable_type & Vt_int) = Vt_int
+		end
+
 	is_unsigned_int (variable_type: INTEGER): BOOLEAN is
 			-- Is variable unsigned int?
 		do
 			Result := variable_type = Vt_uint
+		end
+
+	has_unsigned_int (variable_type: INTEGER): BOOLEAN is
+			-- Is variable unsigned int or unsigned int array or unsigned int pointer?
+		do
+			Result := (variable_type & Vt_uint) = Vt_uint
 		end
 
 	is_void (variable_type: INTEGER): BOOLEAN is
@@ -449,16 +575,34 @@ feature -- Status report
 			Result := variable_type = Vt_void
 		end
 
+	has_void (variable_type: INTEGER): BOOLEAN is
+			-- Is variable void or void array or void pointer?
+		do
+			Result := (variable_type & Vt_void) = Vt_void
+		end
+
 	is_hresult (variable_type: INTEGER): BOOLEAN is
-			-- Is variable int?
+			-- Is variable HRESULT?
 		do
 			Result := variable_type = Vt_hresult
+		end
+
+	has_hresult (variable_type: INTEGER): BOOLEAN is
+			-- Is variable HRESULT or HRESULT array or HRESULT pointer?
+		do
+			Result := (variable_type & Vt_hresult) = Vt_hresult
 		end
 
 	is_ptr (variable_type: INTEGER): BOOLEAN is
 			-- Is variable ptr?
 		do
 			Result := variable_type = Vt_ptr
+		end
+
+	has_ptr (variable_type: INTEGER): BOOLEAN is
+			-- Is variable ptr or ptr array or ptr pointer?
+		do
+			Result := (variable_type & Vt_ptr) = Vt_ptr
 		end
 
 	is_safearray (variable_type: INTEGER): BOOLEAN is
@@ -515,16 +659,16 @@ feature -- Status report
 			Result := is_character (a_var_type) or
 					is_integer2 (a_var_type) or
 					is_integer4 (a_var_type) or
-					is_real4 (a_var_type) or
-					is_real8 (a_var_type) or
+					is_real (a_var_type) or
+					is_double (a_var_type) or
 					is_boolean (a_var_type) or
 					is_date (a_var_type) or
 					is_error (a_var_type) or
 					is_variant (a_var_type) or
 					is_currency (a_var_type) or
 					is_bstr (a_var_type) or
-					is_dispatch (a_var_type) or
-					is_unknown (a_var_type) or
+					is_idispatch (a_var_type) or
+					is_iunknown (a_var_type) or
 					is_decimal (a_var_type) or
 					is_unsigned_char (a_var_type) or
 					is_unsigned_short (a_var_type) or

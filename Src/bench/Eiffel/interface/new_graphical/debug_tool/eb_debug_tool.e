@@ -165,6 +165,7 @@ feature {NONE} -- Initialization
 			create stop_points_cmd
 			create stop_points_status_cmd			
 
+			create argument_cmd.make (Current)
 			create debug_run_cmd.make (Current)
 			create debug_status_cmd.make (Current)
 			create display_exception_cmd.make (Current)
@@ -424,7 +425,7 @@ feature
 	clear_cursor_position is
 			-- Clear the saved cursor position.
 		do
-			saved_cursor := Void
+			saved_cursor := 0
 		end
 
 	saved_cursor: INTEGER
@@ -570,6 +571,9 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 			i: EV_MENU_ITEM
 		do
 			create i.make_with_text (a_menu, Interface_names.m_Debug_run)
+			i.add_select_command (argument_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Debug_run)
 			i.add_select_command (debug_run_cmd, Void)
 
 			create i.make_with_text (a_menu, Interface_names.m_Debug_status)
@@ -603,7 +607,7 @@ feature -- Commands
 	stop_points_cmd: EB_DEBUG_STOPIN_HOLE_CMD
 	stop_points_status_cmd: EB_STOPPOINTS_STATUS_CMD
 
-
+	argument_cmd: EB_PROMPT_ARGUMENT_CMD
 	debug_run_cmd: EB_DEBUG_RUN_CMD
 	step_out_cmd: EB_EXEC_LAST_CMD
 	step_cmd: EB_EXEC_STEP_CMD

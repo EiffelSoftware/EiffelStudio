@@ -239,10 +239,14 @@ feature -- Status setting
 			-- Enable tree functionality for `Current'.
 		do
 			is_tree_enabled := True
-				-- The row offsets must always be computed when
-				-- in tree mode so when enabling it, recompute.
-			recompute_row_offsets (1)
-			redraw_client_area
+				
+			if row_count > 0 then
+					-- The row offsets must always be computed when
+					-- in tree mode so when enabling it, recompute unless
+					-- there are no rows contained.
+				recompute_row_offsets (1)
+				redraw_client_area
+			end
 		ensure
 			tree_enabled: is_tree_enabled
 		end	
@@ -1023,7 +1027,13 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			i, j, k: INTEGER
 			current_item: EV_GRID_ROW_I
 			old_i: INTEGER
+			internal_index: INTEGER
 		do
+			fixme ("[
+				We always recompute from the first item for now as otherwise we must ensure that we find the top level
+				tree node that is the first expanded if the row is current hidden and start from there
+				]")
+			internal_index := 1
 			if not is_row_height_fixed or is_tree_enabled then
 					-- Only perform recomputation if the rows do not all have the same height
 					-- or there is tree functionality enabled. Otherwise, we do not need to
@@ -1033,8 +1043,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					row_offsets.extend (0)
 					rows.start
 				else
-					i := row_offsets @ (an_index)
-					rows.go_i_th (an_index)
+					i := row_offsets @ (internal_index)
+					rows.go_i_th (internal_index)
 				end
 				
 				if row_offsets.count < rows.count + 1 then
@@ -1901,7 +1911,7 @@ feature {NONE} -- Implementation
 		end
 
 	row_internal (a_row: INTEGER): EV_GRID_ROW_I is
-			-- Row `a_row',  creates a new one if it doesn't exist
+			-- Row `a_row', creates a new one if it doesn't exist
 		require
 			a_row_positive: a_row > 0
 		local
@@ -2064,6 +2074,7 @@ invariant
 	visible_column_count_not_greater_than_column_count: visible_column_count <= column_count
 	hidden_node_count_zero_when_tree_disabled: not is_tree_enabled implies hidden_node_count = 0
 	hidden_node_count_positive_when_tree_enabled: is_tree_enabled implies hidden_node_count >= 0
+	hidden_node_count_no_greated_than_rows_less_one: is_tree_enabled and row_count > 0 implies hidden_node_count <= row_count - 1
 	tree_disabled_implies_visible_rows_equal_hidden_rows: not is_tree_enabled implies row_count = visible_row_count
 	
 end

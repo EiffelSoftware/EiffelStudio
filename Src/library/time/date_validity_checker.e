@@ -34,6 +34,25 @@ feature -- Preconditions
 				code.is_date (s)
 		end
 
+	date_valid_with_base (s: STRING; code_string: STRING; 
+							base: INTEGER): BOOLEAN is
+			-- Is the code_string enough precise
+			-- To create an instance of type DATE
+			-- And does the string `s' correspond to `code_string'?
+			-- Use base century `base'.
+		require
+			s_exists: s /= Void
+			code_exists: code_string /= Void
+			base_valid: base > 0 and (base \\ 100 = 0)
+		local
+			code: DATE_TIME_CODE_STRING
+		do
+			create code.make (code_string)
+			code.set_base_century (base)
+			Result := code.precise_date and code.correspond (s) and then
+				code.is_date (s)
+		end
+
 	date_valid_default (s: STRING): BOOLEAN is
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
@@ -43,6 +62,19 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := date_valid (s, date_default_format_string)
+		end	
+
+	date_valid_default_with_base (s: STRING; base: INTEGER): BOOLEAN is
+			-- Is the code_string enough precise
+			-- To create an instance of type DATE
+			-- And does the string `s' correspond to 
+			-- `date_default_format_string'?
+			-- Use base century `base'.
+		require
+			s_exists: s /= Void
+			base_valid: base > 0 and (base \\ 100 = 0)
+		do
+			Result := date_valid_with_base (s, date_default_format_string, base)
 		end	
 
 	compact_date_valid (c_d: INTEGER): BOOLEAN is

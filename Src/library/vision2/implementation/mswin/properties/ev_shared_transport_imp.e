@@ -29,7 +29,6 @@ feature -- Access
 			wel_window_at_cursor_position := wel_point.window_at
 				-- Retrieve WEL_WINDOW at cursor position
 			if wel_window_at_cursor_position /= Void then
-				io.putstring ("Window not void")
 					-- If the cursor is currently over a WEL_WINDOW
 				Result ?= wel_window_at_cursor_position
 				if Result = Void then

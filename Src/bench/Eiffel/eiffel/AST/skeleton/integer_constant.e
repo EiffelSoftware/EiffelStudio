@@ -355,11 +355,11 @@ feature -- Type checking
 	type_check is
 			-- Type check an integer type
 		do
-			if is_integer then
+			if constant_type /= Void then
+				ast_context.put (constant_type)
+			else
 					-- Put onto the type stack an integer actual type
 				ast_context.put (manifest_type)
-			else
-				ast_context.put (create {NATURAL_A}.make (size))
 			end
 		end
 
@@ -695,58 +695,20 @@ feature {NONE} -- Translation
 			valid_sign: ("%U+-").has (sign)
 			s_not_void: s /= Void
 			s_large_enough: s.count > 2
+			constant_type_not_void: constant_type /= Void
+			constant_type_is_natural: constant_type.is_natural
 		local
 			i, j: INTEGER
 			last_integer: INTEGER
 			area: SPECIAL [CHARACTER]
 			val: CHARACTER
+			l_natural: NATURAL_A
 		do
-			is_initialized := True
+			l_natural ?= constant_type
+			size := l_natural.size
 			j := s.count - 1
-			area := s.area
 
-			from
-			until
-				(j - i) < 2 or i = 8
-			loop
-				val := area.item (j - i).lower
-				if val >= 'a' then
-					last_integer := last_integer | ((val.code - 87) |<< (i * 4))
-				else
-					last_integer := last_integer | ((val.code - 48) |<< (i * 4))
-				end
-				i := i + 1
-			end
-			
-			lower := last_integer
-
-			if j > 9 then
-				from
-					last_integer := 0
-				until
-					(j - i) < 2 or i = 16
-				loop
-					val := area.item (j - i).lower
-					if val >= 'a' then
-						last_integer := last_integer | ((val.code - 87) |<< (i * 4))
-					else
-						last_integer := last_integer | ((val.code - 48) |<< (i * 4))
-					end
-					i := i + 1
-				end
-				upper := last_integer
-			else
-				upper := 0
-			end
-
-				-- Force size of integer constant depending on number of hexadecimal characters in string
-				-- or on integer value:
-				--   (s in 0x0         .. 0xFF)       or (value in -0x80       .. 0x7F)       => size = 8
-				--   (s in 0x100       .. 0xFFFF)     or (value in -0x8000     .. 0x7FFF)     => size = 16
-				--   (s in 0x10000     .. 0xFFFFFFFF) or (value in -0x80000000 .. 0x7FFFFFFF) => size = 32
-				--   (s in 0x100000000 .. 0xFFFFFFFFFFFFFFFF) or (value in ...)               => size = 64
-
-				-- Count leading zeroes
+				-- Compute leading zeros:
 			from
 				i := 3
 			until
@@ -756,51 +718,64 @@ feature {NONE} -- Translation
 			end
 				-- Set `i' to number of meanigful digits
 			i := j - i + 2
-			if i <= 2 and then (lower <= 0x7F or else sign = '-' and then lower = 0x80) then
-					-- Value in -0x80 .. 0x7F
-				compatibility_size := 8
-				size := 8
-			elseif sign = '%U' and then j <= 3 then
-					-- Value in 0x80 .. 0xFF
-				compatibility_size := 8
-				size := 16
-			elseif i <= 4 and then (lower <= 0x7FFF or else sign = '-' and then lower = 0x8000) then
-					-- Value in -0x8000 .. 0x7FFF
-				compatibility_size := 16
-				size := 16
-			elseif sign = '%U' and then j <= 5 then
-					-- Value in 0x8000 .. 0xFFFF
-				compatibility_size := 16
-				size := 32
-			elseif i <= 8 and then (lower >= 0 or else sign = '-' and then lower = 0x80000000) then
-					-- Value in -0x80000000 .. 0x7FFFFFFF
-				compatibility_size := 32
-				size := 32
-			elseif sign = '%U' and then j <= 9 then
-					-- Value in 0x80000000 .. 0xFFFFFFFF
-				compatibility_size := 32
-				size := 64
-			elseif i < 16 or else i = 16 and then (s.item (j - i + 2) <= '7' or else sign = '-' and then lower = 0 and then upper = 0x80000000) then
-					-- Value in -0x8000000000000000 .. 0x7FFFFFFFFFFFFFFF
-				compatibility_size := 64
-				size := 64
-			elseif sign = '%U' and then j <= 17 then
-					-- Value in 0x8000000000000000 .. 0xFFFFFFFFFFFFFFFF
-				compatibility_size := 64
-				size := 64
-			else
-					-- Value is out of range
-				compatibility_size := 64
-				size := 64
-				is_initialized := False
-			end
-				-- Set `size'
-			if size < 32 then
-				size := 32
-			end
-			if sign = '-' then
-				negate
-				check is_initialized implies (upper < 0 or else (upper = 0 and then lower = 0)) end
+
+				-- Ensures that manifest constant fits for `constant_type'
+			is_initialized := (i // 2) <= (size // 8)
+
+			if is_initialized then
+				from
+				until
+					(j - i) < 2 or i = 8
+				loop
+					val := area.item (j - i).lower
+					if val >= 'a' then
+						last_integer := last_integer | ((val.code - 87) |<< (i * 4))
+					else
+						last_integer := last_integer | ((val.code - 48) |<< (i * 4))
+					end
+					i := i + 1
+				end
+				
+				lower := last_integer
+
+				if j > 9 then
+					from
+						last_integer := 0
+					until
+						(j - i) < 2 or i = 16
+					loop
+						val := area.item (j - i).lower
+						if val >= 'a' then
+							last_integer := last_integer | ((val.code - 87) |<< (i * 4))
+						else
+							last_integer := last_integer | ((val.code - 48) |<< (i * 4))
+						end
+						i := i + 1
+					end
+					upper := last_integer
+				else
+					upper := 0
+				end
+
+				if i <= 2 then
+						-- Value in 0x00 .. 0xFF
+					compatibility_size := 8
+				elseif i <= 4 then
+						-- Value in 0x0000 .. 0xFFFF
+					compatibility_size := 16
+				elseif i <= 8 then
+						-- Value in 0x00000000 .. 0xFFFFFFFF
+					compatibility_size := 32
+				elseif i <= 16 then
+						-- Value in 0x0000000000000000 .. 0xFFFFFFFFFFFFFFFF
+					compatibility_size := 64
+				else
+					check
+							-- Out of range values should have been checked above when computing
+							-- value for `is_initialized'.
+						False
+					end
+				end
 			end
 		end
 
@@ -815,6 +790,7 @@ feature {NONE} -- Translation
 			last_integer: INTEGER
 			area: SPECIAL [CHARACTER]
 			val: CHARACTER
+			l_integer: INTEGER_A
 		do
 			is_initialized := True
 			j := s.count - 1
@@ -916,6 +892,14 @@ feature {NONE} -- Translation
 			if sign = '-' then
 				negate
 				check is_initialized implies (upper < 0 or else (upper = 0 and then lower = 0)) end
+			end
+			if is_initialized then
+					-- Check that we have a constant that matches `constant_type'.
+				l_integer ?= constant_type
+				if l_integer /= Void then
+					is_initialized := compatibility_size <= size
+					size := l_integer.size
+				end
 			end
 		end
 
@@ -1024,11 +1008,13 @@ feature {NONE} -- Translation
 			area: SPECIAL [CHARACTER]
 			i, nb: INTEGER
 			is_32bits, done: BOOLEAN
+			l_integer: INTEGER_A
 		do
 			is_initialized := True
-			nb := s.count
+
 				-- Count leading zeroes
 			from
+				nb := s.count
 				i := 1
 			until
 				i >= nb or else s.item (i) /= '0'
@@ -1048,7 +1034,6 @@ feature {NONE} -- Translation
 				if not is_32bits and then is_neg and then s.is_equal (largest_integer_32) then
 					done := True
 					compatibility_size := 32
-					size := 32
 					lower := 0x80000000
 					upper := -1
 				end
@@ -1081,7 +1066,6 @@ feature {NONE} -- Translation
 					else
 						check False end
 					end
-					size := 32
 				elseif nb < 19 or else nb = 19 and then (s < largest_integer_64 or else is_neg and then s.is_equal (largest_integer_64)) then
 					from
 						i := 0
@@ -1096,15 +1080,27 @@ feature {NONE} -- Translation
 						last_int_64 := -last_int_64
 					end
 
-					size := 64
 					compatibility_size := 64
 					lower := (last_int_64 & 0x00000000FFFFFFFF).to_integer
 					upper := ((last_int_64 |>> 32) & 0x00000000FFFFFFFF).to_integer
 				else
 						-- Value is out of range
-					size := 64
 					compatibility_size := 64
 					is_initialized := False
+				end
+			end
+			if is_initialized then
+					-- Check that we have a constant that matches `constant_type'.
+				l_integer ?= constant_type
+				if l_integer /= Void then
+					size := l_integer.size
+					is_initialized := compatibility_size <= size
+				else
+					if compatibility_size = 64 then
+						size := 64
+					else
+						size := 32
+					end
 				end
 			end
 		end

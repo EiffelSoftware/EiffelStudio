@@ -94,6 +94,8 @@ feature -- Access
 					Result := dll16_id;
 				elseif lower_copy.is_equal (dll32_type) then
 					Result := dll32_id;
+				elseif lower_copy.is_equal (dllwin32_type) then
+					Result := dllwin32_id;
 				end;
 			end;
 		end;
@@ -210,7 +212,11 @@ feature {NONE} -- Implementation
 									raise_external_error ("Illegal file name for macro specification%N%
 															%(a %" or > may be missing)",loc_begin,loc_end);
 								end;
-							elseif lower_copy.is_equal (dll16_type) or lower_copy.is_equal (dll32_type) then
+							elseif
+								lower_copy.is_equal (dll16_type) or
+								lower_copy.is_equal (dll32_type) or
+								lower_copy.is_equal (dllwin32_type)
+							then
 									-- get the file name and the extra arg for dll
 								rest := segment.substring (place + 1, segment.count);
 								rest.left_adjust;
@@ -249,7 +255,7 @@ feature {NONE} -- Implementation
 									loc_begin := source.substring_index (segment, 1);
 									loc_end := loc_begin + segment.count - 1;
 									raise_external_error ("Illegal dll declaration for external%N%
-															%(It must be of the form [dll16/dll32 filename])",
+															%(It must be of the form [dll16/dll32/dllwin32 filename])",
 															loc_begin,loc_end);
 								end;
 									-- if we reached this point, everything seems to be OK
@@ -261,7 +267,7 @@ feature {NONE} -- Implementation
 								loc_end := loc_begin + special_type.count - 1;
 									-- special_type is not "macro"
 								raise_external_error ("Illegal type declaration for external file%N%
-														%(type must be one of: macro, dll16, dll32)",loc_begin,loc_end);
+														%(type must be one of: macro, dll16, dll32, dllwin32)",loc_begin,loc_end);
 							end;
 								-- updating image for next operation
 							image.tail (image.count - pos);
@@ -272,7 +278,7 @@ feature {NONE} -- Implementation
 								--  no space found between [ and ]; something's missing
 							raise_external_error ("Missing file name: only one word between brackets%N%
 													%(file declaration must be of the form [type file],%N%
-													%where type is one of: macro, dll16, dll32)", loc_begin,
+													%where type is one of: macro, dll16, dll32, dllwin32)", loc_begin,
 loc_end);
 						end;
 					else
@@ -286,7 +292,7 @@ loc_end);
 								-- situation where []
 							raise_external_error ("Empty file declaration: nothing between the brackets%N%
 													%(file declaration must be of the form [type file],%N%
-													%where type is one of: macro dll16, dll32)", loc_begin,
+													%where type is one of: macro dll16, dll32, dllwin32)", loc_begin,
 loc_end);
 						end;
 					end;

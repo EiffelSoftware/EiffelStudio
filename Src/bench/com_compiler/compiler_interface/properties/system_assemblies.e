@@ -79,8 +79,7 @@ feature -- Access
 			l_assembly: ASSEMBLY_SD
 			l_cluster_name: STRING
 		do
-			l_cluster_name := clone (a_cluster_name)
-			l_cluster_name.to_lower
+			l_cluster_name := a_cluster_name.as_lower
 			
 			if not assemblies_table.has (l_cluster_name) then
 				if a_prefix /= Void and not a_prefix.is_empty then
@@ -90,8 +89,6 @@ feature -- Access
 				end
 				assemblies_table.put (l_assembly, l_cluster_name)
 				assemblies_impl.extend (l_assembly)
-			else
-				--create last_exception
 			end
 		end
 		
@@ -113,8 +110,7 @@ feature -- Access
 			l_public_key_token: STRING
 			l_culture: STRING
 		do
-			l_cluster_name := clone (a_cluster_name)
-			l_cluster_name.to_lower
+			l_cluster_name := a_cluster_name.as_lower
 			
 			if a_culture = Void or else a_culture.is_empty then
 				l_culture := "neutral"	
@@ -128,8 +124,6 @@ feature -- Access
 				end
 				assemblies_table.put (l_assembly, l_cluster_name)
 				assemblies_impl.extend (l_assembly)
-			else
-				--create last_exception
 			end
 		end
 
@@ -140,7 +134,7 @@ feature -- Access
 			copy_assemblies: like assemblies_impl
 			cluster_name: ID_SD
 		do
-				-- Save assemblies
+			-- Save assemblies
 			copy_assemblies := clone (assemblies_impl)
 			l_assemblies := ace_accesser.root_ast.assemblies
 			if l_assemblies = Void then
@@ -181,7 +175,7 @@ feature -- Access
 
 			ace_accesser.apply
 		end
-		
+
 feature -- Access
 		
 	assemblies: IENUM_ASSEMBLY_INTERFACE is
@@ -236,15 +230,14 @@ feature -- Validation
 			l_index: INTEGER
 			l_char: CHARACTER
 		do
-			l_char := a_identifier.item (1)
-			Result := l_char.is_alpha
+			Result := a_identifier.item (1).is_alpha
 			if Result then
 				from 
-					l_index := 1
+					l_index := 2
 				until
-					l_index > a_identifier.count or 
-						not Result
+					l_index > a_identifier.count or not Result
 				loop
+					l_char := a_identifier.item (l_index)
 					Result := Result and (l_char.is_alpha or l_char.is_digit or l_char = '_')
 					l_index := l_index + 1
 				end
@@ -266,23 +259,7 @@ feature -- Validation
 			Result := a_cluster_name /= Void and not a_cluster_name.is_empty
 		end
 		
-
 feature {NONE} -- Implementation
-	
-	format_cluster_name (a_cluster_name: STRING): STRING is
-			-- format cluster name
-		require
-			non_void_cluster_name: a_cluster_name /= Void
-			valid_cluster_name: not a_cluster_name.is_empty
-		do
-			Result := clone (a_cluster_name)
-			Result.to_lower
-		ensure
-			valid_result: Result /= Void
-		end
-		
-		
-feature {NONE} -- Initialization
 	
 	ace_accesser: ACE_FILE_ACCESSER
 	assemblies_table: HASH_TABLE [ASSEMBLY_SD, STRING]

@@ -180,7 +180,7 @@ feature -- Basic operation
 				build_application_file
 			end
 			
-			if not generating_single_window then
+			if not (generating_single_window or constants.all_constants.is_empty) then
 				build_constants_file
 				if project_settings.load_constants then
 					build_constants_load_file

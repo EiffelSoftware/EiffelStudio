@@ -456,6 +456,12 @@ feature -- Event - command association
 							   arguments)
 		end	
 	
+	add_expose_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		do
+			implementation.add_expose_command (command, 
+							      arguments)
+		end	
+	
 	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		do
 			implementation.add_key_press_command (command, 

@@ -182,8 +182,7 @@ rt_private size_t parsing_retrieve_read_with_compression (void)
 	lzo1x_decompress (dcmps_in_ptr, dcmps_in_size,
 					dcmps_out_ptr, &dcmps_out_size, NULL);
 
-	current_position = 0;
-	end_of_buffer = dcmps_out_size;
-	return (end_of_buffer);
+	CHECK("dcmps_out_size_positive", dcmps_out_size > 0);
+	return dcmps_out_size;
 }
 

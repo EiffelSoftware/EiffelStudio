@@ -7,6 +7,10 @@ XCOPY /Y Src\Build2\utilities\eiffel_env.e .\interface
 XCOPY /Y Src\Build2\utilities\gb_general_utilities.e .\interface
 XCOPY /Y Src\Build2\main\gb_supported_events.e .\interface
 
+REM Copy modified vision2 interface failes needed.
+XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmap.e .\interface
+XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmapable.e .\interface
+
 
 REM Copy all the editor constructor classes into interface.
 XCOPY /Y Src\Build2\interface\gb_ev_pixmap_handler.e .\interface

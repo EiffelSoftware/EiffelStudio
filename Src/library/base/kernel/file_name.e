@@ -28,15 +28,26 @@ feature
 			new_size: INTEGER
 			str1, str2: ANY
 		do
-			new_size := path.count + file_name.count + 3;
-			if path.capacity < new_size then
-				path.resize (new_size)
+			new_size := count + file_name.count + 5;
+			if capacity < new_size then
+				resize (new_size)
 			end
-			str1 := path.area;
-			str2 := file_name.area;
-			c_append_file_name ($path, $str1, $str2);
+			str1 := to_c;
+			str2 := file_name.to_c;
+			c_append_file_name ($Current, $str1, $str2);
 		ensure
 			valid_file_name: is_valid
+		end
+
+	add_extension (ext: STRING) is
+			-- Append the extension `ext' to the file name
+		require
+			string_exists: ext /= Void
+			non_empty_extension: not ext.empty
+			valid_extension: is_extension_valid (ext)
+		do
+			append_character ('.');
+			append (ext)
 		end
 
 feature
@@ -46,7 +57,7 @@ feature
 		local
 			any: ANY
 		do
-			any := path.to_c
+			any := to_c
 			Result := c_is_file_valid ($any)
 		end
 
@@ -59,13 +70,13 @@ feature
 			Result := c_is_file_name_valid ($any)
 		end
 
-	exists: BOOLEAN is
-			-- Does the file name exist?
+	is_extension_valid (ext: STRING): BOOLEAN is
+			-- Is `ext' a valid extension for the operating system?
 		local
 			any: ANY
 		do
-			any := path.to_c;
-			Result := c_file_exists ($any)
+			any := ext.to_c;
+			Result := c_is_extension_valid ($any)
 		end
 
 feature {NONE} -- Externals
@@ -80,12 +91,12 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-	c_is_file_valid (p: POINTER): BOOLEAN is
+	c_is_extension_valid (p: POINTER): BOOLEAN is
 		external
 			"C"
 		end
 
-	c_file_exists (p: POINTER): BOOLEAN is
+	c_is_file_valid (p: POINTER): BOOLEAN is
 		external
 			"C"
 		end
@@ -94,7 +105,7 @@ end -- class FILE_NAME
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, 1995, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

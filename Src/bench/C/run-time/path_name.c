@@ -390,7 +390,8 @@ rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 	} else {
 
 #if defined EIF_WINDOWS || defined EIF_OS2
-		strcat ((char *)p, "\\");
+		if (p[strlen(p) - 1] != '\\')
+			strcat ((char *)p, "\\");
 
 #elif defined EIF_VMS_V6_ONLY
 		/* vms: append unix separator iff no delimiter present */

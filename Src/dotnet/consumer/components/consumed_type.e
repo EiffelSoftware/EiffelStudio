@@ -83,58 +83,70 @@ feature -- Access
 			-- Class procedures
 		local
 			i, nb_prop_event_proc: INTEGER
-			tmp: ARRAY [CONSUMED_PROCEDURE]
+			event_or_set_procedures: ARRAY [CONSUMED_PROCEDURE]
 			l_event: CONSUMED_EVENT
 		do
-			create tmp.make (0, properties.count + events.count * 3)
+			if properties /= Void and events /= Void then
+				create event_or_set_procedures.make (1, properties.count + events.count * 3)
+			elseif properties /= Void then
+				create event_or_set_procedures.make (1, properties.count)
+			elseif events /= Void then
+				create event_or_set_procedures.make (1, 3 * events.count)
+			else
+				create event_or_set_procedures.make (0, 0)
+			end
 			from
-				i := 0
+				i := 1
 			until
-				i = properties.count
+				properties = void or else
+				i = properties.count or else
+				properties.upper <= properties.lower
 			loop
 				if properties.item (i).setter /= Void then
-					tmp.put (properties.item (i).setter, i)
+					nb_prop_event_proc := nb_prop_event_proc + 1
+					event_or_set_procedures.put (properties.item (i).setter, nb_prop_event_proc)
 				end
 				i := i + 1
 			end
 			from
-				nb_prop_event_proc := i
-				i := 0
+				i := 1
 			until
-				i = events.count
+				events = Void or else
+				i = events.count or else
+				events.upper <= events.lower
 			loop
 				l_event := events.item (i)
 				if l_event.raiser /= Void then
-					tmp.put (l_event.raiser, nb_prop_event_proc)
 					nb_prop_event_proc := nb_prop_event_proc + 1
+					event_or_set_procedures.put (l_event.raiser, nb_prop_event_proc)
 				end
 				if l_event.remover /= Void then
-					tmp.put (l_event.remover, nb_prop_event_proc)
 					nb_prop_event_proc := nb_prop_event_proc + 1
+					event_or_set_procedures.put (l_event.remover, nb_prop_event_proc)
 				end
 				if l_event.adder /= Void then
-					tmp.put (l_event.adder, nb_prop_event_proc)
 					nb_prop_event_proc := nb_prop_event_proc + 1
+					event_or_set_procedures.put (l_event.adder, nb_prop_event_proc)
 				end
 				i := i + 1
 			end
 			
-			create Result.make (0, procedures.count + nb_prop_event_proc+1)
+			create Result.make (1, internal_procedures.count + nb_prop_event_proc)
 			from
-				i := 0
+				i := 1
 			until
-				i = procedures.count
+				i > internal_procedures.count
 			loop
-				Result.put (procedures.item (i), i)
+				Result.put (internal_procedures.item (i), i)
 				i := i + 1
 			end
 			from
 				nb_prop_event_proc := i
-				i := 0
+				i := 1
 			until
-				i = tmp.count
+				i > event_or_set_procedures.count or else event_or_set_procedures.item (i) = Void
 			loop
-				Result.put (tmp.item (i), nb_prop_event_proc)
+				Result.put (event_or_set_procedures.item (i), nb_prop_event_proc)
 				i := i + 1
 				nb_prop_event_proc := nb_prop_event_proc + 1
 			end
@@ -145,40 +157,47 @@ feature -- Access
 	functions: ARRAY [CONSUMED_FUNCTION] is
 			-- Class functions
 		local
-			i, j: INTEGER
-			tmp: ARRAY [CONSUMED_FUNCTION]
+			i, j, nb_getter: INTEGER
+			get_functions: ARRAY [CONSUMED_FUNCTION]
 			l_event: CONSUMED_EVENT
 		do
-			create tmp.make (0, properties.count)
-			from
-				i := 0
-			until
-				i = properties.count
-			loop
-				if properties.item (i).getter /= Void then
-					tmp.put (properties.item (i).getter, i)
+			if properties = Void then
+				Result := internal_functions
+			else
+				create get_functions.make (1, properties.count)
+				from
+					i := 1
+				until
+					properties = Void or else
+					i = properties.count or else
+					properties.upper <= properties.lower
+				loop
+					if properties.item (i).getter /= Void then
+						nb_getter := nb_getter + 1
+						get_functions.put (properties.item (i).getter, nb_getter)
+					end
+					i := i + 1
 				end
-				i := i + 1
-			end
-			
-			create Result.make (0, functions.count + i+1)
-			from
-				i := 0
-			until
-				i = functions.count
-			loop
-				Result.put (functions.item (i), i)
-				i := i + 1
-			end
-			from
-				j := i
-				i := 0
-			until
-				i = tmp.count
-			loop
-				Result.put (tmp.item (i), j)
-				i := i + 1
-				j := j + 1
+				
+				create Result.make (1, internal_functions.count + nb_getter)
+				from
+					i := 1
+				until
+					i > internal_functions.count
+				loop
+					Result.put (internal_functions.item (i), i)
+					i := i + 1
+				end
+				from
+					j := i
+					i := 1
+				until
+					i > get_functions.count or else get_functions.item (i) = Void 
+				loop
+					Result.put (get_functions.item (i), j)
+					i := i + 1
+					j := j + 1
+				end
 			end
 		ensure
 			non_void_result: Result /= Void

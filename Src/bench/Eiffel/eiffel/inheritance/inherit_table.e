@@ -822,7 +822,6 @@ end;
 					-- A deferred feature cannot be frozen
 				!!vffd4;
 				vffd4.set_class_id (Result.written_in);
-				vffd4.set_body_id (Result.body_id);
 				Error_handler.insert_error (vffd4);
 			end;
 		end;
@@ -830,6 +829,7 @@ end;
 	clear is
 			-- Clear the second pass processor
 		do
+			previous_feature_table := Void;
 			feature_table := Void;
 			parents := Void;
 			body_table.clear_all;

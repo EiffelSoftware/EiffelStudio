@@ -283,10 +283,10 @@ feature -- Generation
 		end;
 	
 	has_creation_routine: BOOLEAN is
-			-- Does the class type need a creation routine for
-			-- expanded reference ?
+			-- Does the class type need an initialization routine ?
+			--| i.e has the skeleton a bit or an expanded attribute at least ?
 		do
-			skeleton.go_expanded;
+			skeleton.go_bits;
 			Result := not skeleton.offright;
 		end;
 
@@ -313,7 +313,7 @@ feature -- Generation
 			c_name := init_procedure_name;
 			skel := skeleton;
 			nb_ref := skel.nb_reference;
-			skel.go_expanded;
+			skel.go_bits;
 				-- There are some expandeds here...
 				-- Generate a procedure which will be in charge of all the
 				-- initialisation bulk.
@@ -334,6 +334,17 @@ feature -- Generation
 			file.new_line;
 			file.putstring ("l[1] = parent;");
 			file.new_line;
+			from
+			until
+				skeleton.offright or else not skeleton.item.is_bits
+			loop
+					-- Initialize dynamic type of the bit attribute
+				file.putstring ("HEADER(l[0] + ");
+				skel.generate(file);
+				file.putstring(")->ov_flags = bit_dtype;");
+				file.new_line;
+				skeleton.forth
+			end;
 				-- Current class type is composite
 			file.putstring ("HEADER(l[0])->ov_flags |= EO_COMP;");
 			file.new_line;
@@ -607,7 +618,7 @@ feature -- Skeleton generation
 				end;
 
 					-- Composite class type flag
-				if skeleton.nb_expanded > 0 then
+				if has_creation_routine then
 					Skeleton_file.putstring ("'\01',%N");
 				else
 					Skeleton_file.putstring ("'\0',%N");
@@ -759,7 +770,7 @@ feature -- Byte code generation
 			end;
 
 				-- Composite class type flag
-			if skeleton.nb_expanded > 0 then
+			if has_creation_routine then
 				ba.append ('%/001/');
 			else
 				ba.append ('%U');

@@ -314,13 +314,21 @@ feature -- Primitives
 			-- parameters in its formal generic declarations ?
 		local
 			base_generics: EIFFEL_LIST [FORMAL_DEC_AS];
-			generic_count: INTEGER;
+			i, generic_count: INTEGER;
 		do
 			base_generics := associated_class.generics;
 			if base_generics /= Void then
 				generic_count := base_generics.count;
+				Result := generic_count = generics.count;
+				from
+					i := 1
+				until
+					i > generic_count or else not Result
+				loop
+					Result := generics.item (i).good_generics;
+					i := i + 1
+				end
 			end;
-			Result := generic_count = generics.count;
 		end;
 
 	check_generics (context_class: CLASS_C) is
@@ -384,10 +392,10 @@ feature -- Primitives
 				is_expanded = other_gen_type.is_expanded
 			then
 				from
-					Result := True;
 					i := 1;
 					nb := generics.count;
 					other_generics := other_gen_type.generics;
+					Result := nb = other_generics.count
 				until
 					i > nb or else not Result
 				loop

@@ -1223,20 +1223,20 @@ feature
 				end;
 				local_cursor := local_cursor.right
 			end;
-				-- Take care of possible removed classes
-			from
-				local_cursor := old_syntactical_suppliers.first_element
-			until
-				local_cursor = Void
-			loop
-				a_class := local_cursor.item.supplier;
-				supplier_clients := a_class.syntactical_clients;
-				if supplier_clients.empty then
-						-- `a_class' is no more in the system
-					System.remove_old_class (a_class);
-				end;
-				local_cursor := local_cursor.right
-			end;
+--				-- Take care of possible removed classes
+--			from
+--				local_cursor := old_syntactical_suppliers.first_element
+--			until
+--				local_cursor = Void
+--			loop
+--				a_class := local_cursor.item.supplier;
+--				supplier_clients := a_class.syntactical_clients;
+--				if supplier_clients.empty then
+--						-- `a_class' is no more in the system
+--					System.remove_old_class (a_class);
+--				end;
+--				local_cursor := local_cursor.right
+--			end;
 		end;
 			
 	remove_relations is

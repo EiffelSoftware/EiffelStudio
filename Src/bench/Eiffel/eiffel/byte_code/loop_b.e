@@ -116,7 +116,7 @@ feature -- Byte code generation
 					invariant_part.make_byte_code (ba);
 				end;
 					-- Variant loop byte code
-				if variant_part = Void then
+				if variant_part /= Void then
 					context.set_assertion_type (In_loop_variant);
 					variant_part.make_byte_code (ba);
 					ba.append_short_integer (variant_local_number);
@@ -137,6 +137,7 @@ feature -- Byte code generation
 
 				-- Write jump value for conditional exit
 			ba.write_forward;
+			make_breakable (ba)
 		end;
 
 end

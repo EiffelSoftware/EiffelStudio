@@ -108,7 +108,12 @@ feature -- Type check, byte code and dead code removal
 				if type /= Void then
 						-- Check specified creation type
 					new_creation_type := type.actual_type;
-					if new_creation_type.is_none then
+					if 	new_creation_type.is_none
+						or else
+						new_creation_type.is_expanded
+						or else
+						not new_creation_type.type_i.is_reference
+					then
 							-- Cannot create instance of NONE
 						!!vgcc3;
 						context.init_error (vgcc3);

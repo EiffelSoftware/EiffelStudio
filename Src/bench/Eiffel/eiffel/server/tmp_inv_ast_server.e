@@ -73,6 +73,7 @@ feature
 
 				-- Update cache
 			Inv_ast_server.cache.copy (cache);
+			cache.make;
 
 			clear;
 		end;

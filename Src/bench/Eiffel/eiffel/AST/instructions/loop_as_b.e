@@ -111,6 +111,7 @@ feature -- Debugger
 			if compound /= Void then
 				compound.find_breakable;
 			end;
+			record_break_node
 		end
 
 end

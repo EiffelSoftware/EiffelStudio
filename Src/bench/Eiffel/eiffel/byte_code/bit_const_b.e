@@ -28,7 +28,8 @@ feature
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a bit constant
 		do
-			-- FIME
+			ba.append (Bc_bit);
+			ba.append_bit (value)
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is

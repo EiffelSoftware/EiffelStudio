@@ -1167,9 +1167,10 @@ feature -- Dead code removal
 					-- In final mode dead code removal process is on.
 					-- In workbench mode all the features are considered
 					-- used.
-			Result := 	byte_context.workbench_mode 
-						or else
-						System.is_used (Current)
+--			Result := 	byte_context.workbench_mode 
+--						or else
+--						System.is_used (Current)
+			Result := True
 		end;
 
 feature -- Byte code access
@@ -1399,12 +1400,13 @@ feature -- Debugging
 					-- The feature is frozen. Ask the execution
 					-- table to generate a new body id.	
 				new_body_id := Execution_table.debuggable_body_id;
-				Result.set_real_body_id (new_body_id)
+				Result.set_real_body_id (new_body_id);
+				Result.set_was_frozen
 			end;
 
 			-- Compute the list of breakable AST nodes
 			-- (will be used when generating the byte
-			-- code array).
+			-- code array). Specific to debug mode.
 			fa := Body_server.item (body_id);
 			Context.start_lines; -- Ast_context
 			fa.find_breakable;
@@ -1412,14 +1414,23 @@ feature -- Debugging
 			-- Compute the debuggable byte code.
 			Byte_context.init (class_type.type);
 			Byte_context.set_class_type (class_type);
+
+			-- Pass the instruction line generated in
+			-- trhe AST context to the Byte_context.
+			-- Specific to debug mode.
 			Byte_context.set_instruction_line (context.instruction_line);
-			Byte_array.clear;
-			Byte_context.set_debug_mode (True);
+
 			bc := Byte_server.item (body_id);
+
+			Byte_context.set_debug_mode (True);
+
+			Byte_context.set_byte_code (bc);
+			Byte_array.clear;
 			bc.make_byte_code (Byte_array);
 			Result.set_byte_code (Byte_array.character_array);
 			Result.set_breakable_points (Byte_context.breakable_points);
-			Byte_context.clear_all
+			Byte_context.clear_all;
+			Context.clear2
 		end;
 
 end

@@ -130,10 +130,7 @@ feature
 							else
 								Result.put (export_status, feature_name);
 							end;
-							if (not a_feature.is_procedure)
-								or else
-								a_feature.is_once
-							then
+							if not a_feature.type.is_void then
 								!!vgcp21;
 								vgcp21.set_class_id (a_class.id);
 								vgcp21.set_creation_feature (a_feature);

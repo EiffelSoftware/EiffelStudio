@@ -58,29 +58,34 @@ feature
 			types: LINKED_LIST [CLASS_TYPE];
 			info: PATTERN_INFO;
 			c_pattern_info: C_PATTERN_INFO;
+			assoc_class: CLASS_C;
 		do
 			from
 				i := 1;
 			until
 				i > count
 			loop
-				info := info_array.item (i);
-				from
-					types := info.associated_class.types;
-					types.start
-				until
-					types.offright
-				loop
-					c_pattern := 
-						info.instantiation_in (types.item.type).c_pattern;
-					!!c_pattern_info;
-					c_pattern_info.set_pattern (c_pattern);
-					if not c_patterns.has (c_pattern_info) then
-						c_pattern_info.set_c_pattern_id
-											(c_pattern_id_counter.next);
-						c_patterns.put (c_pattern_info);
+				info := info_array.item (i);	
+				assoc_class := info.associated_class;
+				if assoc_class /= Void then
+						-- Classes could be removed
+					from
+						types := info.associated_class.types;
+						types.start
+					until
+						types.offright
+					loop
+						c_pattern := 
+							info.instantiation_in (types.item.type).c_pattern;
+						!!c_pattern_info;
+						c_pattern_info.set_pattern (c_pattern);
+						if not c_patterns.has (c_pattern_info) then
+							c_pattern_info.set_c_pattern_id
+												(c_pattern_id_counter.next);
+							c_patterns.put (c_pattern_info);
+						end;
+						types.forth;
 					end;
-					types.forth;
 				end;
 				i := i + 1;
 			end;

@@ -53,6 +53,7 @@ feature
 			end;
 			temp_name.append (to_append);
 			Result := temp_name.twin;
+			Result.to_lower;
 		end;
 
 	Fix_notation: STRING is

@@ -29,8 +29,9 @@ feature
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
+io.putstring ("sdfasasd%N");
 			init (c, a_text_window);
-			!!request.make (Rqst_run)
+			!!request.make (Rqst_application)
 		end;
 
 	

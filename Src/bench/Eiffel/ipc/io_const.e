@@ -5,12 +5,12 @@ class IO_CONST
 	
 feature {NONE}
 
-	Listen_to_const: INTEGER is 4; 
+	Listen_to_const: INTEGER is 8; 
 		--  Process reads from here
-		-- #define EWBIN 4
+		-- #define EWBIN 8
 
-	Send_to_to_const: INTEGER is 3 
+	Send_to_to_const: INTEGER is 7 
 		-- Process writes to there
-		-- #define EWBOUT 3
+		-- #define EWBOUT 7
 
 end

@@ -189,12 +189,17 @@ feature
 				nested_b.set_message (access);
 				Result := nested_b.enlarged;
 			else
-					-- Enlarge current node
-				left := left.enlarged;
-				right := right.enlarged;
-				access := access.enlarged;
-				Result := Current;
+				Result := built_in_enlarged;
 			end;
+		end;
+
+	built_in_enlarged: like Current is
+			-- Binary op enlarged node
+		do
+			left := left.enlarged;
+			right := right.enlarged;
+			access := access.enlarged;
+			Result := Current;
 		end;
 
 feature -- Byte code generation

@@ -10,7 +10,7 @@ inherit
 			set_base_type as set_rout_id
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
-			is_basic, instantiated_in, same_as
+			is_basic, instantiated_in, same_as, meta_type
 		end;
 	SHARED_LIKE_CONTROLER;
 
@@ -127,9 +127,15 @@ feature -- Primitives
 		end;
 
 	type_i: TYPE_I is
-			-- C type of `actual_type'
+			-- Reduced type of `actual_type'
 		do
 			Result := actual_type.type_i;
+		end;
+
+	meta_type: TYPE_I is
+			-- C type for `actual_type'
+		do
+			Result := actual_type.meta_type
 		end;
 
 	is_basic: BOOLEAN is

@@ -70,15 +70,15 @@ feature {NONE}
 			request_handler.execute
 		end;
 
+	db_info_handler: DB_INFO_HDLR;
+	job_done_handler: JOB_DONE_HDLR;
+	failure_handler: FAILURE_HDLR;
+	melt_handler: MELT_HDLR;
+
 	pass_adresses is
 			-- Create all possible kinds of RQST_HANDLER that the outside could
 			-- send on the pipe `Listen_to_const', and pass the corresponding 
 			-- addresses to C so that C can set the proper object.
-		local
-			db_info_handler: DB_INFO_HDLR;
-			job_done_handler: JOB_DONE_HDLR;
-			failure_handler: FAILURE_HDLR;
-			melt_handler: MELT_HDLR
 		do
 			!!db_info_handler.make;
 			!!job_done_handler.make;

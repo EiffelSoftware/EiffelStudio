@@ -68,7 +68,8 @@ feature
 					Result := True;
 					i := 1;
 				until
-					i > count
+					(i > count) or else
+					(not Result)
 				loop
 					Result := item (i).conform_to (generic_param);
 					i := i + 1;

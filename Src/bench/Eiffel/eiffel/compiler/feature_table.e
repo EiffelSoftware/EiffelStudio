@@ -266,6 +266,24 @@ end;
 			f.check_types (Current);
 		end;
 
+	feature_of_feature_id (i: INTEGER): FEATURE_I is
+			-- Feature of feature_id id equal to `i'.
+		local
+			feat: FEATURE_I;
+		do
+			from
+				start
+			until
+				offright or else Result /= Void
+			loop
+				feat := item_for_iteration;
+				if feat.feature_id = i then
+					Result := feat;
+				end;
+				forth;
+			end;
+		end;
+
 	feature_of_body_id (i: INTEGER): FEATURE_I is
 			-- Feature of body id equal to `i'.
 		local
@@ -277,7 +295,7 @@ end;
 				offright or else Result /= Void
 			loop
 				feat := item_for_iteration;
-				if feat.feature_id = i then
+				if feat.body_id = i then
 					Result := feat;
 				end;
 				forth;

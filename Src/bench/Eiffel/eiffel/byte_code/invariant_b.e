@@ -134,14 +134,7 @@ feature -- Byte code geenration
 			Temp_byte_code_array.append_integer (0);
 			Temp_byte_code_array.append_integer (0);
 		
-				-- Header for debuggable invariants
-			if context.debug_mode then
-				Temp_byte_code_array.append (Bc_debuggable);
-				body_id := associated_class.invariant_feature.body_id;
-				Temp_byte_code_array.append_integer (body_id);
-			else
-				Temp_byte_code_array.append (Bc_start);
-			end;
+			Temp_byte_code_array.append (Bc_start);
 
 			Temp_byte_code_array.append_integer (0);
 				-- Void result type

@@ -287,7 +287,7 @@ feature -- Status setting
 			is_modal := flag
 			modal_modified := True
 			if flag then
-				gui_object.set_modal
+				gui_object.set_modal (True)
 			else
 				--XX set_normal
 			end

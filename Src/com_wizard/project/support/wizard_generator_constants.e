@@ -251,7 +251,7 @@ feature -- Access
 
 	Iunknown_clsid: STRING is "IID_IUnknown"
 
-	Hresult_variable: STRING is "HRESULT hr;%N"
+	Hresult_variable: STRING is "HRESULT hr = 0;%N"
 																		
 	Routine_clause: STRING is "_routine"
 

@@ -74,29 +74,78 @@ feature {NONE} -- Initialization
 		local
 			vb: EV_VERTICAL_BOX
 			buttons_box: EV_HORIZONTAL_BOX
-			name_frame, cluster_frame, file_frame: EV_FRAME
+			identification_frame, properties_frame: EV_FRAME
+			cluster_label, name_label, file_label, parents_label, creation_label: EV_LABEL
 			cancel_b: EV_BUTTON	-- Button to discard the class 
+			bbox: EV_HORIZONTAL_BOX
+			sz: INTEGER
 		do
 			target := a_target
 
 			make_with_title (Interface_names.t_New_class)
+			set_height (Layout_constants.dialog_unit_to_pixels (400).min ((create {EV_SCREEN}).height))
+			set_width (Layout_constants.dialog_unit_to_pixels (300).min ((create {EV_SCREEN}).width))
 			set_icon_pixmap (Pixmaps.Icon_dialog_window)
 
 				-- Build the widgets
 			create class_entry
 			class_entry.change_actions.extend (agent update_file_entry)
 			create file_entry
+			create creation_entry
 			create cluster_list
+			cluster_list.set_minimum_size (Cluster_list_minimum_width, Cluster_list_minimum_height)
+			create deferred_check.make_with_text (Interface_names.L_deferred)
+			deferred_check.select_actions.extend (~on_deferred)
+			create expanded_check.make_with_text (Interface_names.L_expanded)
+			expanded_check.select_actions.extend (~on_expanded)
+			create empty_check.make_with_text (Interface_names.L_empty)
+			create parents_list.make
+			parents_list.text_field.focus_in_actions.extend (~on_focus_in)
+			parents_list.text_field.focus_out_actions.extend (~on_focus_out)
 
 				-- Build the frames
-			create name_frame.make_with_text (Interface_names.l_Class_name)
-			create cluster_frame.make_with_text (Interface_names.l_Cluster)
-			create file_frame.make_with_text (Interface_names.l_File_name)
-			name_frame.extend (class_entry)
-			file_frame.extend (file_entry)
-
-			cluster_list.set_minimum_size (Cluster_list_minimum_width, Cluster_list_minimum_height)
-			cluster_frame.extend (cluster_list)
+			create properties_frame.make_with_text (Interface_names.l_Properties)
+			create identification_frame.make_with_text (Interface_names.l_Identification)
+			create name_label.make_with_text (Interface_names.l_Class_name)
+			name_label.align_text_left
+			create cluster_label.make_with_text (Interface_names.l_Cluster)
+			cluster_label.align_text_left
+			create file_label.make_with_text (Interface_names.l_File_name)
+			file_label.align_text_left
+			create vb
+			sz := name_label.width.max (file_label.width)
+			name_label.set_minimum_width (sz)
+			file_label.set_minimum_width (sz)
+			create bbox
+			extend_no_expand (bbox, name_label)
+			bbox.extend (class_entry)
+			extend_no_expand (vb, bbox)
+			create bbox
+			extend_no_expand (bbox, file_label)
+			bbox.extend (file_entry)
+			extend_no_expand (vb, bbox)
+			extend_no_expand (vb, cluster_label)
+			vb.extend (cluster_list)
+			identification_frame.extend (vb)
+			
+			create vb
+			create bbox
+			bbox.enable_homogeneous
+			bbox.extend (deferred_check)
+			bbox.extend (expanded_check)
+			bbox.extend (empty_check)
+			extend_no_expand (vb, bbox)
+			create creation_label.make_with_text (Interface_names.l_Creation)
+			creation_label.align_text_left
+			create bbox
+			extend_no_expand (bbox, creation_label)
+			bbox.extend (creation_entry)
+			extend_no_expand (vb, bbox)
+			create parents_label.make_with_text (Interface_names.l_Parent_classes)
+			parents_label.align_text_left
+			extend_no_expand (vb, parents_label)
+			vb.extend (parents_list)
+			properties_frame.extend (vb)
 
 				-- Build the buttons
 			create create_button.make_with_text_and_action (Interface_names.b_Create, agent create_new_class)
@@ -111,13 +160,12 @@ feature {NONE} -- Initialization
 			extend_no_expand (buttons_box, create_button)
 			extend_no_expand (buttons_box, cancel_b)
 
-				-- Build the vertical layout (Class name, File name, cluster, buttons)
+				-- Build the vertical layout
 			create vb
 			vb.set_padding (Layout_constants.Small_border_size)
 			vb.set_border_width (Layout_constants.Small_border_size)
-			extend_no_expand (vb, name_frame)
-			extend_no_expand (vb, file_frame)
-			vb.extend (cluster_frame) -- Expandable item
+			vb.extend (identification_frame)
+			vb.extend (properties_frame)
 			extend_no_expand (vb, buttons_box)
 
 				-- Add the main container to the dialog.
@@ -404,13 +452,25 @@ feature {NONE} -- Implementation
 		local
 			input: RAW_FILE
 			in_buf: STRING
-			cn: STRING
+			cn, cr: STRING
 			wd: EV_WARNING_DIALOG
 			retried: BOOLEAN
 			writing: BOOLEAN
+			clf: FILE_NAME
+			inheritance: STRING
+			par: STRING
+			pcnt: INTEGER
+			last: BOOLEAN
 		do
 			if not retried then
-				create input.make (Default_class_file)
+				clf := clone (Templates_path)
+				if empty_check.is_selected then
+					clf.set_file_name ("empty")
+				else
+					clf.set_file_name ("full")
+				end
+				clf.add_extension ("cls")
+				create input.make (clf)
 				if input.exists and then input.is_readable then
 					input.open_read
 					input.read_stream (input.count)
@@ -418,6 +478,47 @@ feature {NONE} -- Implementation
 					cn := class_name
 					cn.to_upper
 					in_buf.replace_substring_all ("$classname", cn)
+					if deferred_check.is_selected then
+						in_buf.replace_substring_all ("$class_type", "deferred ")
+					elseif expanded_check.is_selected then
+						in_buf.replace_substring_all ("$class_type", "expanded ")
+					else
+						in_buf.replace_substring_all ("$class_type", "")
+					end
+					pcnt := parents_list.count
+					if pcnt > 0 then
+							--| Ten characters for "%Ninherit%N",
+							--| 15 for each line for each parent.
+						create inheritance.make (10 + 15 * pcnt)
+						from
+							inheritance.append ("%Ninherit%N")
+							parents_list.list.start
+							last := parents_list.list.after
+						until
+							last
+						loop
+							par := parents_list.list.item.text
+							par.to_upper
+							inheritance.append_character ('%T')
+							inheritance.append (par)
+							inheritance.append_character ('%N')
+							parents_list.list.forth
+							last := parents_list.list.after
+							if not last then
+								inheritance.append_character ('%N')
+							end
+						end
+						in_buf.replace_substring_all ("$inheritance_clause", inheritance)
+					else
+						in_buf.replace_substring_all ("$inheritance_clause", "")
+					end
+					cr := creation_entry.text
+					if not deferred_check.is_selected and then cr /= Void then
+						in_buf.replace_substring_all ("$creation_clause", "%Ncreate%N%T" + cr + "%N")
+					else
+						in_buf.replace_substring_all ("$creation_clause", "")
+					end
+						--| In case we crash later, to know where we were.
 					writing := True
 					output.open_write
 					output.putstring (in_buf)
@@ -550,6 +651,37 @@ feature {NONE} -- Implementation
 			cancelled_set: cancelled
 		end
 
+	on_deferred is
+			-- User selected deferred => uncheck expanded.
+		do
+			if deferred_check.is_selected then
+				expanded_check.disable_select
+				creation_entry.disable_sensitive
+			else
+				creation_entry.enable_sensitive
+			end
+		end
+
+	on_expanded is
+			-- User selected expanded => uncheck deferred.
+		do
+			if expanded_check.is_selected then
+				deferred_check.disable_select
+			end
+		end
+
+	on_focus_in is
+			-- When the parents list has the focus, we disable the default push button.
+		do
+			remove_default_push_button
+		end
+
+	on_focus_out is
+			-- When the parents list loses the focus, we enable the default push button.
+		do
+			set_default_push_button (create_button)
+		end
+
 feature {NONE} -- Vision2 widgets
 
 	create_button: EV_BUTTON
@@ -564,6 +696,21 @@ feature {NONE} -- Vision2 widgets
 	file_entry: EV_TEXT_FIELD
 			-- Text field in which the user may type the file name of the class.
 
+	creation_entry: EV_TEXT_FIELD
+			-- Text field in which the user may type the (main) creation procedure of the class.
+
+	parents_list: EV_ADD_REMOVE_LIST
+			-- List in which the user enters the class parents.
+
+	deferred_check: EV_CHECK_BUTTON
+			-- Check box which defines whether the class is deferred.
+
+	expanded_check: EV_CHECK_BUTTON
+			-- Check box which defines whether the class is expanded.
+
+	empty_check: EV_CHECK_BUTTON
+			-- Check box which defines whether the class is a dummy class (few features).
+
 feature {NONE} -- Constants
 
 	Cluster_list_minimum_width: INTEGER is
@@ -575,7 +722,7 @@ feature {NONE} -- Constants
 	Cluster_list_minimum_height: INTEGER is
 			-- Minimum height for the cluster list.
 		do
-			Result := Layout_constants.Dialog_unit_to_pixels (300)
+			Result := Layout_constants.Dialog_unit_to_pixels (100)
 		end
 
 end -- class EB_CREATE_CLASS_DIALOG

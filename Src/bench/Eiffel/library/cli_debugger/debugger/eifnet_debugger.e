@@ -141,6 +141,7 @@ feature -- Initialization
 		
 	init_debugging_data is
 		do
+			debug_value_keeper.initialize
 			if eifnet_dbg_evaluator = Void then
 				create eifnet_dbg_evaluator.make (Current)				
 			end
@@ -155,6 +156,7 @@ feature -- Initialization
 			exit_process_occurred := False
 			
 			il_debug_info_recorder.reset_debugging_live_data
+			debug_value_keeper.terminate		
 				-- not required
 			last_dbg_call_success := 0
 			last_string_value_length := 0
@@ -317,7 +319,7 @@ feature -- Status
 	last_dbg_call_succeed: BOOLEAN is
 		do
 			Result := (last_dbg_call_success = 0)
-		end		
+		end
 
 feature -- Callback notification about synchro
 

@@ -316,7 +316,7 @@ gboolean c_ev_any_imp_invariant (GtkWidget* c_object)
 rt_private void c_eif_wean (gpointer data)
 	/* Call `eif_wean' on Eiffel object represented by `data'. */
 {
-	EIF_REFERENCE ref = eif_wean ((EIF_OBJECT) data);
+	(void) eif_wean ((EIF_OBJECT) data);
 }
 //------------------------------------------------------------------------------
 // EiffelVision2: library of reusable components for ISE Eiffel.
@@ -339,6 +339,9 @@ rt_private void c_eif_wean (gpointer data)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.9  2001/08/08 16:51:35  manus
+// Avoid a useless local variable declaration.
+//
 // Revision 1.8  2001/06/26 19:01:15  manus
 // Added `c_eif_wean' which is an encapsulation of `eif_wean' that has the correct
 // signature for `GtkDestroyNotify'.

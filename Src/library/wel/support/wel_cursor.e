@@ -9,7 +9,7 @@ class
 	WEL_CURSOR
 
 inherit
-	WEL_RESOURCE
+	WEL_GRAPHICAL_RESOURCE
 
 	WEL_SYSTEM_METRICS
 		export
@@ -22,7 +22,8 @@ creation
 	make_by_file,
 	make_by_bitmask,
 	make_by_predefined_id,
-	make_by_pointer
+	make_by_pointer,
+	make_by_icon_info
 
 feature {NONE} -- Initialization
 
@@ -47,28 +48,27 @@ feature {NONE} -- Initialization
 		local
 			a1, a2: WEL_CHARACTER_ARRAY
 		do
-			!! a1.make (and_plane)
-			!! a2.make (xor_plane)
+			create a1.make (and_plane)
+			create a2.make (xor_plane)
 			item := cwin_create_cursor (
 				main_args.current_instance.item,
 				x_hot_spot, y_hot_spot, cursor_width,
 				cursor_height, a1.item, a2.item)
 		end
 
-	make_by_file (file_name: FILE_NAME) is
-			-- Load a cusor file named `file_name'.
-			-- Only Windows 95.
-		require
-			file_name_not_void: file_name /= Void
-		local
-			a_wel_string: WEL_STRING
-		do
-			!! a_wel_string.make (file_name)
-			item := cwin_load_image (default_pointer, a_wel_string.item,
-				Image_cursor, 0, 0, Lr_loadfromfile)
-		end
-
 feature -- Access
+
+	x_hotspot: INTEGER is
+			-- Specifies the x-coordinate of a cursor's hot spot. 
+		do
+			Result := get_icon_info.x_hotspot
+		end
+	
+	Y_hotspot: INTEGER is
+			-- Specifies the y-coordinate of a cursor's hot spot. 
+		do
+			Result := get_icon_info.y_hotspot
+		end
 
 	previous_cursor: WEL_CURSOR
 			-- Previously assigned cursor
@@ -86,7 +86,7 @@ feature -- Basic operations
 		do
 			p := cwin_set_cursor (item)
 			if p /= default_pointer then
-				!! previous_cursor.make_by_pointer (p)
+				create previous_cursor.make_by_pointer (p)
 			end
 		end
 
@@ -155,28 +155,13 @@ feature {NONE} -- Externals
 			"CreateCursor"
 		end
 
-	cwin_load_image (hinstance, name: POINTER; type, width, height,
-				load_flags: INTEGER): POINTER is
-			-- SDK LoadImage
-		external
-			"C [macro <wel.h>] (HINSTANCE, LPCSTR, UINT, int, int, %
-				%UINT): EIF_POINTER"
-		alias
-			"LoadImage"
-		end
+feature {NONE} -- Constants
 
-	Lr_loadfromfile: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"LR_LOADFROMFILE"
-		end
-
-	Image_cursor: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"IMAGE_CURSOR"
+	Image_type: INTEGER is
+		-- Constant defining the type of the image
+		-- See WEL_IMAGE_CONSTANTS for possible values.
+		do
+			Result := Image_cursor
 		end
 
 end -- class WEL_CURSOR

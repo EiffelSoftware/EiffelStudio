@@ -90,11 +90,7 @@ feature -- Access
 	dotnet_name: STRING is
 			-- .NET name
 		do
-			if internal_method.get_is_special_name and internal_method.get_name.starts_with (("get_").to_cil) then
-				create name.make_from_cil (meth.get_name.substring (4))
-			else
-				create Result.make_from_cil (internal_method.get_name)
-			end
+			create Result.make_from_cil (internal_method.get_name)
 		end
 	
 	eiffel_name: STRING

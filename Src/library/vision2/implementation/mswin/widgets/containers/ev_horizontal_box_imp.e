@@ -126,8 +126,17 @@ feature {NONE} -- Basic operation
 				else
 					int1 := children_size - children_width
 					int2 := childexpand_nb.max (1)
-					rate := int1 // int2
-					total_rest := int1 \\ int2
+						-- It is possible that int1 < 0.
+						-- This occurs when `Current' has a minimum width and
+						-- the children are larger. Because of the minimum
+						-- width, `Current' does not expand.
+					if int1 >= 0 then
+						rate := int1 // int2
+						total_rest := int1 \\ int2
+					else
+						rate := 0
+						total_rest := 0
+					end
 
 						-- Then, we ask the children to move and resize.
 						-- Be carefull to the expanded child.

@@ -76,6 +76,27 @@ feature -- Conveniences
 			Result.set_base_type (a_class.id);
 				-- Base type class is expanded
 			Result.set_is_expanded (a_class.is_expanded);
+			if a_class.is_expanded then
+				record_exp_dependance (a_class);
+			end;
+		end;
+
+	record_exp_dependance (a_class: CLASS_C) is
+		local
+			d: DEPEND_UNIT;
+			f: FEATURE_I
+		do
+			System.current_class.set_has_expanded;
+			a_class.set_is_used_as_expanded
+			if System.in_pass3 then
+				!!d.make (a_class.id, -2);
+				context.supplier_ids.add (d);
+				f := a_class.creation_feature;
+				if f /= Void then
+					!!d.make (a_class.id, f.feature_id);
+					context.supplier_ids.add (d);
+				end;
+			end;
 		end;
 
 	actual_type: CL_TYPE_A is
@@ -110,6 +131,9 @@ feature -- Conveniences
 			Result.set_base_type (a_class.id);
 					-- Base type class is expanded
 			Result.set_is_expanded (a_class.is_expanded);
+			if a_class.is_expanded then
+				record_exp_dependance (a_class);
+			end;
 		end;
 
 	has_like: BOOLEAN is

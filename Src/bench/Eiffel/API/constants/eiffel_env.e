@@ -351,7 +351,7 @@ feature {NONE}
 			!!Result.make;
 			Result.read_from_file (full_path);
 			if not Result.is_valid then
-				io.error.putstring ("Warning: can not read pixmap file ");
+				io.error.putstring ("Warning: cannot read pixmap file ");
 				io.error.putstring (full_path);
 				io.error.new_line;
 			end;

@@ -4,6 +4,14 @@ inherit
 
 	ATTR_DESC
 		redefine
+			is_expanded, same_as
+		select
+			same_as
+		end
+	ATTR_DESC
+		rename
+			same_as as basic_same_as
+		redefine
 			is_expanded
 		end
 	
@@ -42,6 +50,17 @@ feature
 		once
 			Result := Expanded_level;
 		end;
+
+    same_as (other: ATTR_DESC): BOOLEAN is
+            -- Is `other' equal to Current ?
+        local
+            other_exp: EXPANDED_DESC;
+        do
+            if basic_same_as (other) then
+                other_exp ?= other;
+                Result := other_exp.type_id = type_id
+            end;
+        end;
 
 	sk_value: INTEGER is
 			-- Sk value

@@ -7,7 +7,8 @@ inherit
 
 	TOOL_W
 		redefine
-			save_command, set_default_format
+			save_command, set_default_format,
+			hole
 		end;
 	TOP_SHELL
 		rename

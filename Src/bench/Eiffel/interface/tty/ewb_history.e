@@ -87,11 +87,6 @@ feature
 			record_ancestors (classes, feature_i);
 			record_descendants (classes, class_c, feature_i.rout_id_set.first);
 
-			display.put_string ("%NVersion of feature: ");
-			feature_i.append_clickable_name (display, class_c);
-			display.put_string (" from class: ");
-			written_cl.append_clickable_name (display);
-			display.new_line;
 			rout_id_set := feature_i.rout_id_set;
 			from
 				i := 1

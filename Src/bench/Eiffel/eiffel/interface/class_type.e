@@ -504,6 +504,31 @@ feature -- Generation
 			file.new_line;
 		end;
 
+	mark_creation_routine (r: REMOVER) is
+			-- Mark all the routines called in the creation routine
+		local
+			exp_desc: EXPANDED_DESC;
+			cl: CLASS_C;
+			creation_feature: FEATURE_I
+			pos: INTEGER
+		do
+			pos := skeleton.position;
+			from
+				skeleton.go_expanded;
+			until
+				skeleton.after
+			loop
+				exp_desc ?= skeleton.item;
+				cl := exp_desc.class_type.associated_class;
+				creation_feature := cl.creation_feature;
+            	if creation_feature /= Void then
+					r.record (creation_feature, cl);
+				end;
+				skeleton.forth;
+			end;
+			skeleton.go (pos);
+		end;
+
 	init_procedure_name: STRING is
 			-- C name of the procedure used to initialize the object
 		do

@@ -161,10 +161,10 @@ feature
                 ctxt.put_keyword ("frozen ");
             end;
 			if is_infix then
-				ctxt.put_keyword ("infix ");
+				--ctxt.put_keyword ("infix ");
 				ctxt.prepare_for_main_infix;
 			else
-				ctxt.put_keyword ("prefix ");
+				--ctxt.put_keyword ("prefix ");
 				ctxt.prepare_for_main_prefix;
 			end;
 			ctxt.put_main_fix;

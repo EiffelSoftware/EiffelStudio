@@ -192,6 +192,11 @@ feature
 
 			Error_handler.checksum;
 				-- Treat the renamings
+				--| Needs to be done twice
+				--| a is processed
+				--| if `rename b as a' is done afterwards, we need to
+				--| reprocess the inherit_feat for a again.
+			check_renamings;
 			check_renamings;
 				-- Analyze features inherited under the same final name
 			analyze;
@@ -307,6 +312,10 @@ debug ("ACTIVITY")
 		io.error.putstring ("The class is now deferred%N");
 	end;
 end;
+					if a_class.is_used_as_expanded then
+						!!depend_unit.make (a_class.id, -2);
+						pass2_control.propagators.add (depend_unit)
+					end;
 					!!depend_unit.make (a_class.id, -1);
 					pass2_control.propagators.add (depend_unit)
 				end;
@@ -338,6 +347,12 @@ end;
 						end;
 					end;
 					old_creators.forth
+				end;
+				if a_class.is_used_as_expanded and then
+					(new_creators  = Void or else new_creators.count > 1)
+				then
+					!!depend_unit.make (a_class.id, -2);
+					pass2_control.propagators.add (depend_unit)
 				end;
 				old_creators := Void
 			end;
@@ -526,15 +541,24 @@ end;
 	check_renamings is
 			-- Check all the renamings made in the table of
 			-- inherited features
+		local
+			c_keys: ARRAY [STRING];
+			i, nb: INTEGER;
+			inh_feat: INHERIT_FEAT
 		do
 			from
-				start;
+				c_keys := current_keys;
+				i := 1;
+				nb := c_keys.count
 			until
-				after
+				i > nb
 			loop
-					-- Check the renamings on one name
-				item_for_iteration.check_renamings;
-				forth;
+				inh_feat := item (c_keys.item (i));
+				if inh_feat /= Void then
+						-- Check the renamings on one name
+					inh_feat.check_renamings;
+				end;
+				i := i + 1;
 			end;
 		end;
 

@@ -48,24 +48,39 @@ feature
 			elseif argument = get_out then
 				text_window.tool.clean_type
 			else
+				warner.popdown;
 				execute_licenced (argument)
 			end
 		end;
 
 feature -- Licence managment
 
+	license_problem: BOOLEAN;
+
+	license_window: LICENSE_W is
+		once
+			!! Result.make
+		end;
+
 	execute_licenced (argument: ANY) is
 		do
-			if licence_checked then
+			if license_problem then
+				license_problem := False;
+				if (argument = Void) then
+					license_window.set_exclusive_grab;
+					license_window.popup
+				end;
+			elseif licence_checked then
 				work (argument)
 			else
 				if licence.daemon_alive and then try_reconnect then
 					work (argument)
 				else
-					 warner.custom_call (Void, "%
-						%  YOU HAVE LOST YOUR LICENCE!%N%
+					license_problem := True;
+					warner.custom_call (Current, "%
+						%You have lost your licence!%N%
 						%(You can still save your changes%N%
-						% and exit the project)", Void, Void, " Ok ");
+						%and exit the project.)", "Close", "Info...", Void);
 				end;
 			end;
 		end;
@@ -77,10 +92,10 @@ feature -- Licence managment
 				licence.open_licence;
 				Result := licence.licenced and then licence_checked;
 			end;
-			if Result then
-				io.error.putstring ("ISE license manager: recognized application%N%
-					%Application now properly licensed%N");
-			end;
+--			if Result then
+--				io.error.putstring ("ISE license manager: recognized application%N%
+--					%Application now properly licensed%N");
+--			end;
 		end;
 
 	licence_checked: BOOLEAN is

@@ -9,7 +9,8 @@ inherit
 
 	HOLE
 		redefine
-			compatible, symbol, stone_type, command_name
+			compatible, symbol, stone_type, command_name,
+			full_symbol, transport_stone
 		end
 
 creation
@@ -18,10 +19,30 @@ creation
 
 feature 
 
+	transport_stone: STONE is
+		local
+			rt: ROUTINE_TEXT;
+			fs: FEATURE_STONE;
+		do
+			rt ?= tool.text_window
+			if (rt /= Void) then
+				fs := rt.root_stone
+				if (fs /= Void) then
+					Result := fs.class_c.stone
+				end
+			end
+		end;
+
 	symbol: PIXMAP is
 			-- Icon for the class tool
 		once
 			Result := bm_Class
+		end;
+
+	full_symbol: PIXMAP is
+			-- Icon for the class tool
+		once
+			Result := pixmap_file_content ("class_dot.bm");
 		end;
 
 	stone_type: INTEGER is do Result := Class_type end;

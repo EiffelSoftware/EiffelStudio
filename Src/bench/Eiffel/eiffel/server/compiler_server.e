@@ -85,6 +85,10 @@ feature
 	set_current_id is
 			-- Set `current_id' to a new value.
 		do
+debug ("SERVER")
+	io.error.putstring (generator);
+	io.error.putstring (" set_current_id%N");
+end;
 			Server_controler.compute_new_id;
 			current_id := Server_controler.last_computed_id;
 			file_ids.add (current_id);

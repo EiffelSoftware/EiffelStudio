@@ -11,8 +11,10 @@ inherit
 			origin_text
 		select
 			origin_text
-		end
-	
+		end;
+--	SHARED_DEBUG
+-- Removed to cut dependancies for the batch only version
+
 creation
 
 	make
@@ -54,6 +56,9 @@ feature -- making
 			Result.append (feature_i.feature_name);
 			Result.append ("    Class: ");
 			Result.append (class_c.signature);
+--			if Debug_info.is_breakpoint_set (feature_i, 1) then
+--				Result.append ("   (stop)");
+--			end;
 		end;
  
 feature -- dragging

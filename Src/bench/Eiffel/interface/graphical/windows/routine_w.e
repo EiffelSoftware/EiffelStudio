@@ -55,6 +55,7 @@ feature
 			-- Reset the window contents
 		do
 			old_reset;
+			class_hole.set_empty_symbol;
 			change_class_command.clear;
 			change_routine_command.clear;
 		end;
@@ -81,8 +82,8 @@ feature
 				build_bar;
 				!!format_bar.make (new_name, global_form);
 				build_format_bar;
-				!!command_bar.make (new_name, global_form);
-				build_command_bar;
+--				!!command_bar.make (new_name, global_form);
+--				build_command_bar;
 				text_window.set_last_format (default_format);
 			attach_all	
 		end
@@ -91,16 +92,22 @@ feature
 		do
 			default_attach_all;
 
-			global_form.detach_right (text_window);
-
-			global_form.attach_right (command_bar, 0);
-			global_form.attach_right_widget (command_bar, text_window, 0);
-			global_form.attach_top_widget (edit_bar, command_bar, 0);
-			global_form.attach_bottom_widget (format_bar, command_bar, 0);
+--			global_form.detach_right (text_window);
+--
+--			global_form.attach_right (command_bar, 0);
+--			global_form.attach_right_widget (command_bar, text_window, 0);
+--			global_form.attach_top_widget (edit_bar, command_bar, 0);
+--			global_form.attach_bottom_widget (format_bar, command_bar, 0);
 		end
 
 	change_class_command: CHANGE_CL_ROUT;
 	change_routine_command: CHANGE_ROUTINE;
+
+	hole: ROUTINE_HOLE;
+			-- Hole caraterizing current
+	class_hole: ROUT_CLASS_HOLE;
+			-- Hole for version of routine for a particular class.
+	tool_name: STRING is do Result := l_Routine end;
 
 feature {NONE}
 
@@ -136,15 +143,9 @@ feature {NONE}
 		do
 	   		search_command.close;
 	   		change_font_command.close (text_window);
-			debug_run_command.close
+--			debug_run_command.close
 	   	 end;
 
-	tool_name: STRING is do Result := l_Routine end;
-
-	hole: ROUTINE_HOLE;
-			-- Hole caraterizing current
-	class_hole: ROUT_CLASS_HOLE;
-			-- Hole for version of routine for a particular class.
 
 	command_bar: FORM;
 			-- Bar with the command buttons (set stoppoint, run...)
@@ -156,25 +157,25 @@ feature {NONE}
 --			!!next_command.make (format_bar, text_window);
 --			!!line_command.make (format_bar, text_window);
 --			!!continue_command.make (format_bar, text_window);
-			!!break_command.make (command_bar, text_window);
-				command_bar.attach_left (break_command, 0);
-				command_bar.attach_top (break_command, 100);
-
-			!!unbreak_command.make (command_bar, text_window);
-				command_bar.attach_left (unbreak_command, 0);
-				command_bar.attach_top_widget (break_command, unbreak_command, 0);
-
-			!!debug_showbreak.make (command_bar, text_window);
-				command_bar.attach_left (debug_showbreak, 0);
-				command_bar.attach_top_widget (unbreak_command, debug_showbreak, 0);
-
-			!!debug_run_command.make (command_bar, text_window);
-				command_bar.attach_left (debug_run_command, 0);
-				command_bar.attach_top_widget (debug_showbreak, debug_run_command, 25);
-
-			!!debug_quit_command.make (command_bar, text_window);
-				command_bar.attach_left (debug_quit_command, 0);
-				command_bar.attach_top_widget (debug_run_command, debug_quit_command, 25);
+--			!!break_command.make (command_bar, text_window);
+--				command_bar.attach_left (break_command, 0);
+--				command_bar.attach_top (break_command, 100);
+--
+--			!!unbreak_command.make (command_bar, text_window);
+--				command_bar.attach_left (unbreak_command, 0);
+--				command_bar.attach_top_widget (break_command, unbreak_command, 0);
+--
+--			!!debug_showbreak.make (command_bar, text_window);
+--				command_bar.attach_left (debug_showbreak, 0);
+--				command_bar.attach_top_widget (unbreak_command, debug_showbreak, 0);
+--
+--			!!debug_run_command.make (command_bar, text_window);
+--				command_bar.attach_left (debug_run_command, 0);
+--				command_bar.attach_top_widget (debug_showbreak, debug_run_command, 25);
+--
+--			!!debug_quit_command.make (command_bar, text_window);
+--				command_bar.attach_left (debug_quit_command, 0);
+--				command_bar.attach_top_widget (debug_run_command, debug_quit_command, 25);
 		end;
 
 	build_format_bar is

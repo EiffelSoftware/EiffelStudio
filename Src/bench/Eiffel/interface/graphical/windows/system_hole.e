@@ -8,7 +8,8 @@ inherit
 	PROJECT_CONTEXT;
 	HOLE
 		redefine
-			work, symbol, stone_type, command_name
+			work, symbol, stone_type, command_name,
+			full_symbol
 		end
 
 creation
@@ -23,7 +24,12 @@ feature
 			Result := bm_System
 		end;
 
-	
+	full_symbol: PIXMAP is
+			-- Icon for the class tool
+		once
+			Result := pixmap_file_content ("system_dot.bm");
+		end;
+
 feature {NONE}
 
 	work (argument: ANY) is

@@ -58,6 +58,11 @@ feature
 			open_write;
 			basic_close;	
 			id := i;
+debug ("SERVER")
+	io.error.putstring ("Creating file E");
+	io.error.putint (i);
+	io.error.new_line;
+end;
 		end;
 
 	add_occurence is

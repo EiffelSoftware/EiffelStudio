@@ -58,6 +58,14 @@ feature
 			-- Do nothing
 		end;
 
+	equiv (other: like Current): BOOLEAN is
+			-- Equiv for propagation of pass2/pass3
+			-- character and integer values must be
+			-- propagated
+		do
+			Result := True;
+		end;
+
 	generate (file: INDENT_FILE) is
 			-- Generate value in `file'.
 		require

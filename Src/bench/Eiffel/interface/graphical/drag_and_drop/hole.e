@@ -46,10 +46,20 @@ feature
 
 feature {NONE}
 
+	transport_stone: STONE is
+		do
+			Result := tool.text_window.root_stone
+		end;
+
 	work (argument: ANY) is
+		local
+			rs: STONE;
 		do
 			if argument = transporter_arg then
-				tool.transport (Current, void, screen.x, screen.y)
+				rs := transport_stone;
+				if rs /= Void then
+					tool.transport (rs, void, screen.x, screen.y)
+				end;
 			else
 				if tool /= project_tool then
 					tool.synchronize
@@ -70,10 +80,25 @@ feature {NONE}
 feature  -- to redefine
 
 	symbol: PIXMAP is do end;
+	full_symbol: PIXMAP is do end;
 	icon_symbol: PIXMAP is do Result := symbol end;
 	command_name: STRING is do end;
 	stone_type: INTEGER is do end;
 	stone_name: STRING is do Result := command_name end;
+
+	set_empty_symbol is
+		do
+			if pixmap /= symbol then
+				set_symbol (symbol)
+			end
+		end
+
+	set_full_symbol is
+		do
+			if pixmap /= full_symbol then
+				set_symbol (full_symbol)
+			end
+		end
 
 feature -- useless
 

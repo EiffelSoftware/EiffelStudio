@@ -8,7 +8,7 @@ inherit
 	HOLE
 		redefine
 			compatible, symbol, stone_type, command_name,
-			icon_symbol
+			icon_symbol, full_symbol
 		end
 
 creation
@@ -21,6 +21,12 @@ feature
 			-- Icon for the explain tool
 		once
 			Result := bm_Explain
+		end;
+
+	full_symbol: PIXMAP is
+			-- Icon for the class tool
+		once
+			Result := pixmap_file_content ("explain_dot.bm");
 		end;
 
 	icon_symbol: PIXMAP is

@@ -50,6 +50,12 @@ feature
 			last_caller := cmd
 		end;
 
+	gotcha_call (a_message: STRING) is
+		do
+			set_no_grab;
+			custom_call (Void, a_message, Void, Void, Void);
+		end;
+
 	custom_call (a_command: COMMAND_W; a_message: STRING;
 		ok_text, help_text, cancel_text: STRING) is
 			-- A gotcha custom call is when a popup has one (or more) button
@@ -74,7 +80,11 @@ feature
 			else
 				set_cancel_label (cancel_text)
 			end;
-			set_exclusive_grab;
+
+			if (a_command /= Void) then
+				set_exclusive_grab;
+			end
+			
 			popup;
 		end;
 

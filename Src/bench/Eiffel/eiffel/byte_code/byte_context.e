@@ -504,6 +504,7 @@ feature
 			assign: ASSIGN_BL;
 			call: CALL_B;
 			compound: BYTE_LIST [BYTE_NODE];
+			rassign: REVERSE_BL
 		do
 				-- We won't need any RTLI if the only statement is an expanded
 				-- assignment in Result or a single call.
@@ -518,7 +519,8 @@ feature
 					if compound /= Void and then compound.count = 1 then
 						assign ?= compound.first;
 						call ?= compound.first;
-						if assign /= Void then
+						rassign ?= assign;
+						if assign /= Void and then (rassign = Void) then
 							if assign.expand_return then
 									-- Assignment in Result is expanded in a
 									-- return instruction
@@ -527,12 +529,12 @@ feature
 								call ?= assign.source;
 								if call /= Void and then call.is_single then
 										-- Simple assignment of a single call
-									Result := workbench_mode;
+									Result := has_invariant;
 								end;
 							end;
 						elseif call /= Void and then call.is_single then
 								-- A single call
-							Result := workbench_mode;
+							Result := has_invariant;
 						end;
 					end;
 						-- If there is a rescue clause, then we'll

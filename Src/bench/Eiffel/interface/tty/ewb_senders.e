@@ -81,6 +81,7 @@ feature
 			cfeat: STRING;
 			client: CLASS_C;
 			ftable: FEATURE_TABLE;
+			first_time: BOOLEAN
 		do
 			fid := feature_i.feature_id;
 			clients := class_c.clients;
@@ -98,15 +99,20 @@ feature
 					fdep := dep.item_for_iteration;
 					cfeat := dep.key_for_iteration;
 					from
-						fdep.start
+						fdep.start;
+						first_time := True;
 					until
 						fdep.after
 					loop
 						if (fdep.item.id = class_c.id) and
 							(fdep.item.feature_id = fid) then
 							client := clients.item;
-							client.append_clickable_name (display);
-							display.put_string (".");
+							if first_time then
+								client.append_clickable_name (display);
+								display.new_line;
+							end;
+							first_time := False;
+							display.put_string ("   ");
 							client.feature_table.item (cfeat).append_clickable_name (display, client);
 							display.new_line;
 						end;

@@ -248,6 +248,13 @@ feature -- Incrementality
 					Result := (other.assert_id_set = Void)
 				end
 			end
+debug ("ACTIVITY")
+	if not Result then
+		io.error.putstring ("%T%T");
+		io.error.putstring (feature_name);
+		io.error.putstring (" is not equiv%N");
+	end;
+end;
 		end;
 
 	select_table_equiv (other: FEATURE_I): BOOLEAN is

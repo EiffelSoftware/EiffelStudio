@@ -58,7 +58,6 @@ feature
 			pass_c: PASS2_C;
 			current_class: CLASS_C;
 			id: INTEGER;
-			has_expanded, code_replication_on: BOOLEAN
 		do
 			from
 				changed_classes.start
@@ -102,12 +101,12 @@ end;
 				end;
 			end;
 
-			has_expanded := System.has_expanded;
-			code_replication_on := not System.code_replication_off;
+			if System.has_expanded and then not extra_check_list.empty then
+				System.check_vtec;
+			end;
+
 			if
-				code_replication_on 
-			or else
-				has_expanded
+				not System.code_replication_off
 			then
 				from
 					extra_check_list.start;
@@ -116,16 +115,11 @@ end;
 				loop
 					current_class := extra_check_list.first;
 					System.set_current_class (current_class);
-					if has_expanded then
-						current_class.check_expanded;
-					end;
-					if code_replication_on then
-						id := current_class.id;
-						if Tmp_rep_info_server.has (id) then
-							current_class.process_replicated_features;
-						elseif Tmp_rep_server.has (id) then
-							Tmp_rep_server.remove (id)
-						end;
+					id := current_class.id;
+					if Tmp_rep_info_server.has (id) then
+						current_class.process_replicated_features;
+					elseif Tmp_rep_server.has (id) then
+						Tmp_rep_server.remove (id)
 					end;
 					extra_check_list.remove;
 				end;

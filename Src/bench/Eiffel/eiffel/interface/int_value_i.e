@@ -4,7 +4,7 @@ inherit
 
 	VALUE_I
 		redefine
-			generate, is_integer, is_equal
+			generate, is_integer, is_equal, equiv
 		end
 	
 feature 
@@ -34,6 +34,11 @@ feature
 			-- Is `other' equal to Current ?
 		do
 			Result := int_val = other.int_val;
+		end;
+
+	equiv (other: INT_VALUE_I): BOOLEAN is
+		do
+			Result := is_equal (other)
 		end;
 
 	generate (file: INDENT_FILE) is

@@ -4,7 +4,7 @@ inherit
 
 	VALUE_I
 		redefine
-			generate, is_character
+			generate, is_character, equiv
 		end
 	
 feature 
@@ -22,6 +22,11 @@ feature
 			-- Is the current constant a character one ?
 		do
 			Result := True;
+		end;
+
+	equiv (other: CHAR_VALUE_I): BOOLEAN is
+		do
+			Result := char_val = other.char_val
 		end;
 
 	valid_type (t: TYPE_A): BOOLEAN is

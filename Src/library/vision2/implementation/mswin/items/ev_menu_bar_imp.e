@@ -31,6 +31,76 @@ feature {NONE} -- Initialization
 			wel_make
 		end
 
+feature {NONE} -- Implementation
+
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
+
+	set_pointer_style (value: EV_CURSOR) is
+			-- Make `value' the new cursor of the widget
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
+
+	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
+			-- `Result' is absolute screen coordinates in pixels
+			-- of coordinates `a_x', a_y_' on `Current'.
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
+
+	cursor_on_widget: CELL [EV_WIDGET_IMP] is
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
+
+	set_heavy_capture is
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
+
+	release_heavy_capture is
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
+
+	set_capture is
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
+
+	release_capture is
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_BAR
@@ -58,6 +128,9 @@ end -- class EV_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/11 16:55:15  rogers
+--| Added features required by EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.8  2000/04/10 16:27:57  brendel
 --| Modified creation sequence.
 --|

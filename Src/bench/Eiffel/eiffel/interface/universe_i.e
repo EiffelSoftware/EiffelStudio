@@ -360,6 +360,7 @@ feature -- Access
 			has_override_cluster: has_override_cluster
 		local
 			c: CURSOR
+			l_cluster: CLUSTER_I
 		do
 				-- Saving position
 			c := clusters.cursor
@@ -370,7 +371,10 @@ feature -- Access
 			until
 				override_cluster_names.after
 			loop
-				Result.extend (cluster_of_name (override_cluster_names.item_for_iteration))
+				l_cluster := cluster_of_name (override_cluster_names.item_for_iteration)
+				if l_cluster /= Void then
+					Result.extend (l_cluster)
+				end
 				override_cluster_names.forth
 			end
 

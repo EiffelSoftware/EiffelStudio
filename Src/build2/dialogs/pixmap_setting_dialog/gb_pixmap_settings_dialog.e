@@ -132,6 +132,7 @@ feature {NONE} -- Initialization
 			check_buttons_box.hide
 			check_buttons_cell.hide
 			all_object_and_event_names := object_handler.all_object_and_event_names
+			retrieve_all_names
 		end
 
 feature {NONE} -- Implementation
@@ -442,7 +443,6 @@ feature {NONE} -- Implementation
 				ok_button.disable_sensitive
 			end
 		end
-		
 
 	cancel_button_pressed is
 			-- Called by `select_actions' of `cancel_button'.
@@ -466,9 +466,7 @@ feature {NONE} -- Implementation
 			text: STRING
 		do
 			text := absolute_text.text.as_lower
-			if basic_valid_name (text) then
-				
-				--| FIXME check current names also.
+			if valid_class_name (text) and not existing_names.has (text) then
 				absolute_text.set_foreground_color (black)
 				ok_button.enable_sensitive
 			else
@@ -483,8 +481,7 @@ feature {NONE} -- Implementation
 			text: STRING	
 		do
 			text := relative_text.text.as_lower
-			if basic_valid_name (text) then	
-				--| FIXME check current names also.
+			if valid_class_name (text) and not existing_names.has (text) then	
 				relative_text.set_foreground_color (black)
 				ok_button.enable_sensitive
 			else
@@ -522,6 +519,7 @@ feature {NONE} -- Implementation
 			list_item: EV_LIST_ITEM
 			directory_constant: GB_DIRECTORY_CONSTANT
 			pixmap_constant: GB_PIXMAP_CONSTANT
+			new_pixmap: EV_PIXMAP
 		do
 			from
 				create dialog
@@ -543,7 +541,7 @@ feature {NONE} -- Implementation
 					list_item.set_pixmap (new_pixmap)
 					pixmap_list.extend (list_item)
 					pixmap_list.check_item (list_item)
-					create pixmap_constant.set_attributes (pixmap_file_title_to_constant_name (file_title), "", file_path, file_title, False)
+					create pixmap_constant.set_attributes (get_unique_pixmap_name (file_title), "", file_path, file_title, False)
 					list_item.set_data (pixmap_constant)
 					display_pixmap_info (list_item)
 					list_item.select_actions.extend (agent display_pixmap_info (list_item))
@@ -561,8 +559,8 @@ feature {NONE} -- Implementation
 			end
 			if not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 				if not mode_is_modify then
-					absolute_text.set_text (pixmap_file_title_to_constant_name (file_title))
-					relative_text.set_text (pixmap_file_title_to_constant_name (file_title))
+					absolute_text.set_text (get_unique_pixmap_name (file_title))
+					relative_text.set_text (get_unique_pixmap_name (file_title))
 				end
 				if Constants.matching_directory_constant_name (file_path) /= Void then
 					directory_constant ?= constants.all_constants.item (Constants.matching_directory_constant_name (file_path))
@@ -625,6 +623,9 @@ feature {NONE} -- Implementation
 						list_item.set_data (pixmap_constant)
 						list_item.select_actions.extend (agent display_pixmap_info (list_item))
 						list_item.deselect_actions.extend (agent item_unselected (list_item))
+						
+							-- Now add name to `existing_names' so clashes can be checked.
+						existing_names.put (pixmap_constant.name, pixmap_constant.name)
 					end
 					files.forth
 				end
@@ -647,13 +648,17 @@ feature {NONE} -- Implementation
 			directory_constant: GB_DIRECTORY_CONSTANT
 			list_item: EV_LIST_ITEM
 			matching_directory_names: ARRAYED_LIST [STRING]
-		do
+		do		
 			built_from_frame.enable_sensitive
 			ok_button.enable_sensitive
 			pixmap_constant ?= a_list_item.data
 			check
 				data_was_pixmap_constant: pixmap_constant /= Void
 			end
+				-- Now remove name from `existing_names' so it does not clash with itself.
+				-- The current name must be replaced after modification is complete.
+			existing_names.remove (pixmap_constant.name)
+			
 			if pixmap_constant.is_absolute then
 				absolute_constant_radio_button.enable_select
 			else
@@ -695,7 +700,7 @@ feature {NONE} -- Implementation
 		end
 		
 	item_unselected (a_list_item: EV_LIST_ITEM) is
-			-- `a_list_item' 
+			-- `a_list_item' has been unselected in `Current'
 		local
 			pixmap_constant: GB_PIXMAP_CONSTANT
 		do
@@ -705,30 +710,48 @@ feature {NONE} -- Implementation
 			end
 			if absolute_constant_radio_button.is_selected and not absolute_text.foreground_color.is_equal (red) then
 				pixmap_constant.set_attributes (absolute_text.text.as_lower, pixmap_constant.value, pixmap_constant.directory, pixmap_constant.filename, True)	
+					-- Add new name to `exising_names' so clashes may be determined.
+				existing_names.put (pixmap_constant.name, pixmap_constant.name)
 			elseif not relative_text.foreground_color.is_equal (red) and not relative_directory_combo.foreground_color.is_equal (red) then
 				pixmap_constant.set_attributes (relative_text.text.as_lower, pixmap_constant.value, relative_directory_combo.text, pixmap_constant.filename, False)	
+					-- Add new name to `exising_names' so clashes may be determined.
+				existing_names.put (pixmap_constant.name, pixmap_constant.name)
 			end
 		end
 		
 	get_unique_pixmap_name (a_file_name: STRING): STRING is
+		require
+			file_name_not_void: a_file_name /= Void
 			-- `Result' is a name based on `a_file_name' but guaranteed to be unique.
-		local
-			l_array: ARRAYED_LIST [STRING]
 		do
-			--|FIXME temporary 
 			Result := pixmap_file_title_to_constant_name (a_file_name)
---			create l_array.make (1000)
---			l_array := clone (Object_handler.all_object_and_event_names)
---			l_array.finish
---			l_array.merge_right (Constants.all_constant_names)
---			l_array.finish
---			l_array.merge_right (Reserved_words.linear_representation)
---			l_array.finish
---			l_array.merge_right (Build_reserved_words.linear_representation)
---			Result := unique_name (l_array, Result)
+			Result := unique_name_from_hash_table (existing_names, Result)
+		ensure
+			Result_not_void: Result /= Void
 		end
-	
-	new_pixmap: EV_PIXMAP
+		
+	retrieve_all_names is
+			-- Retrieve all names in use in system in `existing_names'.
+		do
+			create existing_names.make (200)
+			Object_handler.all_object_and_event_names.do_all (agent add_to_existing_names)
+			Constants.all_constant_names.do_all (agent add_to_existing_names)
+			Reserved_words.linear_representation.do_all (agent add_to_existing_names)
+			Build_reserved_words.linear_representation.do_all (agent add_to_existing_names)
+		end
+		
+	add_to_existing_names (current_name: STRING) is
+		require
+			current_name_not_void: current_name /= Void
+		do
+			existing_names.put (current_name, current_name)
+		ensure
+			name_added: existing_names.has (current_name)
+		end
+		
+	existing_names: HASH_TABLE [STRING, STRING]
+		-- All names already in use in system. Initially generated when `Current' is displayed,
+		--and subsequently updated as a user modifies file names.
 
 	last_pixmap_name: STRING
 	

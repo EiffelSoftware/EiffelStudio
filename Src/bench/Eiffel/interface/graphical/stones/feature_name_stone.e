@@ -14,13 +14,13 @@ inherit
 			make as old_make,
 			check_validity as old_check_validity
 		redefine
-			history_name
+			history_name, feature_name
 		end;
 	FEATURE_STONE
 		rename
 			make as old_make
 		redefine
-			check_validity, history_name
+			check_validity, history_name, feature_name
 		select
 			check_validity 
 		end 

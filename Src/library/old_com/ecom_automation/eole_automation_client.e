@@ -27,6 +27,8 @@ feature -- Access
 			-- CLSID of server object
 			-- Must be redefined in descendant.
 		deferred
+		ensure
+			valid_class_identifier: Result /= Void and then is_valid_guid (Result)
 		end
 
 	is_valid: BOOLEAN is

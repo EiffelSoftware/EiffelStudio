@@ -167,37 +167,4 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 		deferred
 		end
 
-feature -- Initialization
-
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
-
 end -- class EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP

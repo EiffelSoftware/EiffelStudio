@@ -21,7 +21,6 @@ cluster
 	wel_structures: 	"$EIFFEL4\library\wel\structs";
 	wel_support:		"$EIFFEL4\library\wel\support";
 	wel_windows:		"$EIFFEL4\library\wel\windows";
-	wel_win32:		"$EIFFEL4\library\wel\win32";
 
 	-- EiffelBase
 	kernel: 		"$EIFFEL4\library\base\kernel";

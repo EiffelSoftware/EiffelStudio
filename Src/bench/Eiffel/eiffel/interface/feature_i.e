@@ -1198,7 +1198,7 @@ end;
 			old_type, new_type: TYPE_A;
 			i, arg_count: INTEGER;
 			new_ext, old_ext: EXTERNAL_I;
-			new_extension, old_extension: EXTERNAL_EXT_I;
+			new_extension, old_extension: CPP_EXTENSION_I;
 			old_arguments: like arguments;
 			current_class: CLASS_C;
 			vdrd51: VDRD51;
@@ -1206,6 +1206,7 @@ end;
 			vdrd53: VDRD53;
 			vdrd6: VDRD6;
 			vdrd7: VDRD7;
+			vdrd71: VDRD71;
 			ve01: VE01;
 			ve02: VE02;
 			ve02a: VE02A;
@@ -1245,19 +1246,18 @@ end;
 					-- be encapsulated. Bad. -- Fabrice.
 
 					-- C++ redeclaration
-				old_extension := old_ext.extension
-				new_extension := new_ext.extension
+				old_extension ?= old_ext.extension
+				new_extension ?= new_ext.extension
 
 				if
-					(old_extension /= Void and old_extension.is_cpp) /=
-					(new_extension /= Void and new_extension.is_cpp)
+					(old_extension /= Void) /= (new_extension /= Void)
+					or else
+					((new_extension /= Void) and then new_extension.type /= old_extension.type)
 				then
-					-- Error C++ => C or C => C++
-			--	elseif
-			--		(new_extension /= Void and new_extension.is_cpp) and then
-			--		new_extension.type /= old_extension.type
-			--	then
-					-- Error: two different C++ types
+						-- Error C++ => C or C => C++
+					!! vdrd71
+					vdrd71.init (old_feature, Current);
+					Error_handler.insert_error (vdrd71);
 				end
 			end;
 

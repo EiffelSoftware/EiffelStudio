@@ -155,7 +155,6 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 			gb_ev_any: GB_EV_ANY
 			new_type_element: XM_ELEMENT
 			vision2_type: STRING
-			new_name: STRING
 			events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 		do
 			objects_written := objects_written + 1

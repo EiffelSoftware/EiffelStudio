@@ -99,6 +99,8 @@ feature -- Constants
 	internal_copy_name_id: INTEGER is 89
 	put_value_at_name_id: INTEGER is 90
 	set_bit_with_mask_name_id: INTEGER is 91
+	memory_alloc_name_id: INTEGER is 92
+	memory_free_name_id: INTEGER is 93
 	
 			-- Predefined name IDs constants
 

@@ -917,6 +917,7 @@ feature {NONE} -- Incrementality
 			System.set_use_all_cluster_as_namespace (True)
 			System.set_check_generic_creation_constraint (True)
 			System.set_has_syntax_warning (False)
+			System.set_msil_use_optimized_precompile (False)
 		end
 
 end -- class ACE_SD

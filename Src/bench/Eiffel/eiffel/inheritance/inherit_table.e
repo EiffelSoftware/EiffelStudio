@@ -169,6 +169,11 @@ feature
 			equiv_tables: BOOLEAN;
 		do
 			a_class := pass_c
+
+			if System.il_generation then
+				a_class.init_class_interface
+			end
+
 			supplier_status_modified := is_supplier_status_modified;
 
 			a_cluster := a_class.cluster;
@@ -395,6 +400,10 @@ end;
 -- generated temporarily in final mode in order to generate the
 -- static C routine tables.
 
+			if System.il_generation and then not a_class.is_external then
+				a_class.class_interface.process_features (resulting_table)
+			end
+
 				-- Put the resulting table in the temporary feature table
 				-- server.
 			Tmp_feat_tbl_server.put (resulting_table);
@@ -496,13 +505,15 @@ end;
 				parent_table.after
 			loop
 					-- Take one feature 
-				feature_i := parent_table.item_for_iteration.duplicate;
+				feature_i := parent_table.item_for_iteration.duplicate
+
 					-- Instantiation of the feature in its parent
 				feature_i.instantiate (parent_c.parent_type);
-		
+
 					-- Creation of an inherited feature information unit	
 				create info.make (feature_i)
 				info.set_parent (parent_c);
+
 					-- Add the information to the concerned instance of
 					-- INHERIT_FEAT
 				add_inherited_feature (info, feature_i.feature_name_id);
@@ -881,6 +892,7 @@ end;
 
 			Result := yacc_feature.new_feature;
 			Result.set_feature_name_id (feature_name_id);
+			Result.set_original_name_id (feature_name_id);
 			Result.set_written_in (a_class.class_id);
 			Result.set_is_frozen (feat.is_frozen);
 			Result.set_is_infix (feat.is_infix);

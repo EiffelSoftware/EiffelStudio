@@ -28,10 +28,10 @@ create
 feature {NONE} -- Initialization
 
 	initialize is
-			-- Set `padding' 1.
+			-- Set `padding' to default.
 		do
 			Precursor
-			set_padding (1)
+			set_padding (Default_padding)
 		end
 
 	make_for_test is
@@ -45,6 +45,11 @@ feature {NONE} -- Initialization
 			f.extend (create {EV_LABEL}.make_with_text (
 				"This looks just like a normal statusbar item..."))
 			extend (f)
+			create f
+			f.set_style (Ev_frame_lowered)
+			f.extend (create {EV_LABEL}.make_with_text (
+				"Item 2"))
+			extend (f)
 			extend (create {EV_BUTTON}.make_with_text ("Button"))
 			extend (create {EV_TEXT_FIELD}.make_with_text ("Text field"))
 			extend (create {EV_CHECK_BUTTON}.make_with_text ("Check button"))
@@ -55,8 +60,13 @@ feature {EV_ANY} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state.
 		do
-			Result := Precursor or padding = 1
+			Result := Precursor or padding = Default_padding
 		end
+
+feature {NONE} -- Implementation
+
+	Default_padding: INTEGER is 2
+			-- `padding' at creation.
 
 end -- class EV_STATUS_BAR
 
@@ -81,8 +91,8 @@ end -- class EV_STATUS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.20  2000/04/28 23:46:55  brendel
---| redefined is_in_default_state.
+--| Revision 1.21  2000/04/28 23:56:10  brendel
+--| Added Default_padding.
 --|
 --| Revision 1.18  2000/04/28 21:47:05  brendel
 --| Made platform independent.

@@ -11,6 +11,12 @@
 
 */
 
+#include "config.h"
+#ifdef EIF_WINDOWS
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
 #include "portable.h"
 #include <signal.h>
 #include <stdlib.h>
@@ -21,10 +27,6 @@
 #include "cecil.h"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
-
-#ifdef EIF_WINDOWS
-#include <windows.h>
-#endif
 
 #ifdef __VMS
 public int	putenv ();
@@ -343,7 +345,7 @@ EIF_OBJ k;
 		free (key);
 		free (lower_k);
 		RegCloseKey (hkey);
-		return (EIF_OBJ) 0;
+		return (EIF_OBJ) getenv (k);
 		}
 
 	free (key);
@@ -601,7 +603,7 @@ void eif_free_dlls()
 			free(eif_dll_table[i].dll_name);
 
 			module_ptr = eif_dll_table[i].dll_module_ptr;
-			if (module_ptr > 32)
+			if (module_ptr != NULL)
 				(void) FreeLibrary(module_ptr);
 		}
 		free(eif_dll_table);

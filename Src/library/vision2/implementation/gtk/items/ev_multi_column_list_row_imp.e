@@ -17,7 +17,8 @@ inherit
 			set_count as set_columns
 		undefine
 			destroy,
-			destroyed
+			destroyed--,
+--			top_parent_imp
 		redefine
 			set_foreground_color,
 			set_background_color,
@@ -27,9 +28,7 @@ inherit
 
 creation
 	make,
-	make_with_text,
-	make_with_index,
-	make_with_all
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -66,54 +65,7 @@ feature {NONE} -- Initialization
 
  		end
 
-	make_with_index (par:EV_MULTI_COLUMN_LIST; value: INTEGER) is
-			-- Create a row at the given `value' index in the list.
-		do
-			make
-
-			if par /= Void then
-				set_columns (par.columns)
-			end
-
-			-- set `par' as parent and put the row at the given position
-			set_parent (par)
-			set_index (value)
-		end
-
-	make_with_all (par:EV_MULTI_COLUMN_LIST; txt: ARRAY [STRING]; value: INTEGER) is
-			-- Create a row with `txt' as text at the given
-			-- `value' index in the list.
-		local
-			i: INTEGER
-		do
-			-- set the text of the row
-			from
-				create internal_text.make (0)
-				create internal_pixmaps.make (0)
-				i := txt.lower
-			until
-				i > txt.upper
-			loop
-				internal_text.extend (txt @ i)
-				internal_pixmaps.extend (Void)
-				i := i + 1
-			end
-
-			-- set `par' as parent and put the row at the given position
-			set_parent (par)
-			set_index (value)
-		end
-
 feature -- Access
-
-	parent: EV_MULTI_COLUMN_LIST is
-		do
-			if parent_imp /= void then
-				Result ?= parent_imp.interface
-			else
-				Result := Void
-			end
-		end
 
 	columns: INTEGER is
 			-- Number of columns in the row

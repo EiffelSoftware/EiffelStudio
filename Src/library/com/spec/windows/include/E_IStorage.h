@@ -50,10 +50,11 @@ public:
 	STATSTG * ccom_stat (DWORD grfStatFlag);	
 	
 	// Queries
-	IStorage * ccom_storage();	
+	EIF_POINTER ccom_item();
 	IRootStorage * ccom_root_storage();
 private:
 	IStorage * pStorage;	
+
 };
 
 #ifdef __cplusplus

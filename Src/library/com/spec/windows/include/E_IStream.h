@@ -53,7 +53,7 @@ public:
 	IStream * ccom_clone ();
 	
 	// Queries
-	IStream * ccom_stream (){return pStream;};
+	IStream * ccom_item (){return pStream;};
 	EIF_INTEGER ccom_end_of_stream_reached();
 private:
 	IStream * pStream;

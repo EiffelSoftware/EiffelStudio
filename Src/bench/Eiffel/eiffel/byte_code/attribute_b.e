@@ -14,7 +14,7 @@ inherit
 			reverse_code, expanded_assign_code, assign_code,
 			make_end_assignment, make_end_reverse_assignment,
 			creation_access, enlarged, is_creatable, is_attribute, read_only,
-			assigns_to, pre_inlined_code
+			assigns_to, pre_inlined_code, generate_il_call_access
 		end
 
 feature 
@@ -89,10 +89,26 @@ feature
 
 feature -- IL code generation
 
+	generate_il_call_access (is_target_of_call: BOOLEAN) is
+			-- Generate IL code for an access to an attribute variable.
+		local
+			l_need_address: BOOLEAN
+		do
+			l_need_address := need_address (is_target_of_call)
+			generate_il_call_attribute (True, l_need_address)
+		end
+
 	generate_il_call (invariant_checked: BOOLEAN) is
+		do
+			generate_il_call_attribute (invariant_checked, False)
+		end
+
+	generate_il_call_attribute (invariant_checked, address_required: BOOLEAN) is
 			-- Generate IL code for feature call.
 			-- If `invariant_checked' generates invariant check
 			-- before call.
+		require
+			il_generation: system.il_generation
 		local
 			r_type: TYPE_I
 			cl_type: CL_TYPE_I
@@ -164,24 +180,29 @@ feature -- IL code generation
 				if not l_cancel_attribute_generation then
 						-- We push code to access Current attribute.
 					class_c := System.class_of_id (written_in)
-					if class_c.is_frozen or class_c.is_single then
-						il_generator.generate_attribute (target_type, attribute_id)
+					if address_required then
+						il_generator.generate_attribute_address (target_type,
+							r_type, attribute_id)
 					else
-						il_generator.generate_feature_access (target_type,
-							attribute_id, 0, True, True)
-					end
+						if class_c.is_frozen or class_c.is_single then
+							il_generator.generate_attribute (target_type, attribute_id)
+						else
+							il_generator.generate_feature_access (target_type,
+								attribute_id, 0, True, True)
+						end
 
-						-- Generate cast if we have to generate verifiable code
-						-- since attribute might have been redefined and in this
-						-- case its type for IL generation is the one from the
-						-- parent not the redefined one. Doing the cast enable
-						-- the verifier to find out that what we are doing is
-						-- correct.
-					if
-						system.il_verifiable and then not r_type.is_expanded
-						and then not r_type.is_none
-					then
-						il_generator.generate_check_cast (r_type, r_type)
+							-- Generate cast if we have to generate verifiable code
+							-- since attribute might have been redefined and in this
+							-- case its type for IL generation is the one from the
+							-- parent not the redefined one. Doing the cast enable
+							-- the verifier to find out that what we are doing is
+							-- correct.
+						if
+							system.il_verifiable and then not r_type.is_expanded
+							and then not r_type.is_none
+						then
+							il_generator.generate_check_cast (r_type, r_type)
+						end
 					end
 				end
 			end

@@ -67,7 +67,7 @@ feature {PREFERENCE_CATEGORY} -- User Interface
 			attach_left_widget (name_label, text, 5);
 			attach_right (text, 1)
 
-			text.set_width (150)
+			text.set_width (250)
 			text.add_activate_action (Current, Void);
 		end
 

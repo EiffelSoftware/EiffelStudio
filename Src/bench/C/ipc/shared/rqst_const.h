@@ -14,6 +14,7 @@
 #define _rqst_const_h_
 
 /* Request types */
+/* Don't forget to update u_Request array in rqst_idrs.c. */
 #define EIF_OPAQUE		1		/* Opaque data request */
 #define ACKNLGE			2		/* Acknowledgment (positive/negative) */
 #define TRANSFER		3		/* Data transfer via daemon */
@@ -53,6 +54,7 @@
 #define DUMP_VARIABLES	37		/* Send the locals and the arguments of a feature on the call stack */
 #define APPLICATION_CWD	38		/* Send current directory to launch application */
 #define OVERFLOW_DETECT	39		/* Specify the stack overflow management: set a depth at which the application raises an exception */
+#define MAX_REQUEST_TYPE 39		/* To update with new value of max request type.
 
 /* Acknowledgments codes */
 #define AK_OK			0       /* Everything is ok */

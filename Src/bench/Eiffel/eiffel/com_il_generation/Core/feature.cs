@@ -23,7 +23,7 @@ internal class FEATURE
 	public FEATURE( int ID, int arg_count) {
 		argument_count = arg_count;
 		parameter_type_ids = new int [arg_count];
-		return_type_id = COMPILER.NoValue;
+		return_type_id = COMPILER.No_value;
 		info = new FEATURE_INFO(arg_count);
 	}
 
@@ -64,12 +64,24 @@ internal class FEATURE
 	public FieldInfo attribute_builder;
 	internal MethodBuilder setter_builder;
 
-
 #if ASSERTIONS
 	// Was `create_method_builder' called?
 	private bool is_method_builder_created;
 #endif
-	
+
+/*
+feature -- Status Report
+*/
+
+	public Boolean has_return_type {
+		get {
+			return return_type_id != COMPILER.No_value;
+		}
+	}
+/*
+feature -- Settings
+*/
+
 	// Set `RealName' with `FeatureName'.
 	public void set_real_name( string FeatureName ) {
 		#if ASSERTIONS
@@ -206,7 +218,7 @@ internal class FEATURE
 		#if ASSERTIONS
 			if( is_method_builder_created && !(is_attribute && info.is_redefined))
 				throw new ApplicationException( "create_method_builder: Already done" );
-			if( info.feature_id == COMPILER.NoValue )
+			if( info.feature_id == COMPILER.No_value )
 				throw new ApplicationException( "create_method_builder: No Feature ID" );
 		#endif
 
@@ -259,7 +271,7 @@ internal class FEATURE
 				.DefineField( att_name, COMPILER.Classes [return_type_id].Builder,
 							  FieldAttributes.Public );
 		} else {
-			if (return_type_id == COMPILER.NoValue)
+			if (return_type_id == COMPILER.No_value)
 				return_type = COMPILER.VoidType;
 			else
 				return_type = COMPILER.Classes [return_type_id].Builder;

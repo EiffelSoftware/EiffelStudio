@@ -19,7 +19,7 @@ feature
             -- Build specific explanation image for current error
             -- in `a_clickable'.
         do
-			error_window.put_string ("(String too long)")
+			error_window.put_string ("(String too long)%N")
         end;
 
 end

@@ -114,13 +114,12 @@ feature
 			depend_list.go (pos);
 		end;
 
-	changed_status_empty_intersection (feature_depend: FEATURE_DEPENDANCE): BOOLEAN is
-			-- Is the intersection of `feature_depend'.suppliers and `changed_status'
-			-- empty ?
+	changed_status_empty_intersection (feature_suppliers: SORTED_SET [INTEGER]): BOOLEAN is
+			-- Is the intersection of `feature_suppliers' and `changed_status' empty ?
 		require
-			good_argument: feature_depend /= Void
+			good_argument: feature_suppliers /= Void
 		do
-			Result := changed_status.disjoint (feature_depend.suppliers)
+			Result := changed_status.disjoint (feature_suppliers);
 		end;
 
 	set_removed_features (r: like removed_features) is

@@ -34,6 +34,10 @@ inherit
 		undefine
 			twin
 		end;
+	SHARED_PASS
+		undefine
+			twin
+		end;
 	EXCEPTIONS
 		undefine
 			twin
@@ -95,6 +99,9 @@ feature
 	new_body_id: INTEGER;
 			-- Last new computed body id
 
+	supplier_status_modified: BOOLEAN;
+			-- The status (expanded, deferred) of a supplier has changed
+
 	adaptations: LINKED_LIST [FEATURE_ADAPTATION] is
 			-- List of redefinitions and joins
 		once
@@ -103,13 +110,6 @@ feature
 
 	new_externals: LINKED_LIST [STRING];
 			-- New externals introduced into the class
-
-	
-	set_a_class (cl: like a_class) is
-			-- Assign `cl' to `a_class'.
-		do
-			a_class := cl;
-		end;
 
 	make (n: INTEGER) is
 			-- Hash table creation
@@ -122,7 +122,7 @@ feature
 			!!new_externals.make;
 		end;
 
-	pass2 (pass_c: PASS2_C) is
+	pass2 (pass_c: PASS2_C; is_supplier_status_modified: BOOLEAN) is
 			-- Second pass of the compiler on class `cl'. The ultimate
 			-- goal here is to calculate the feature table `inherited_features'.
 		require
@@ -140,6 +140,7 @@ feature
 			creation_name: STRING;
 		do
 			a_class := pass_c.associated_class;
+			supplier_status_modified := is_supplier_status_modified;
 
 				-- Verbose
 			a_cluster := a_class.cluster;
@@ -244,8 +245,13 @@ feature
 			check
 				No_error: not Error_handler.has_error;
 			end;
+
 				-- Pass2 controler evaluation
 			pass2_control := feature_table.pass2_control (resulting_table);
+			if previous_feature_table /= Void then
+					-- Add the modifications done since the last unsuccessful compilation
+				previous_feature_table.fill_pass2_control (pass2_control, resulting_table);
+			end;
 
 				-- Process externals
 			if a_class.changed then
@@ -278,10 +284,12 @@ feature
 							-- The new export status is more restrictive than the old one
 						not old_creators.item_for_iteration.equiv (new_creators.item (creation_name))
 					then
-							-- The routine is not a creation routine any more
-							-- or the export status has changed
-						!!depend_unit.make (a_class.id, resulting_table.item (creation_name).feature_id);
-						pass2_control.propagators.add (depend_unit);
+						if resulting_table.has (creation_name) then
+								-- The routine is not a creation routine any more
+								-- or the export status has changed
+							!!depend_unit.make (a_class.id, resulting_table.item (creation_name).feature_id);
+							pass2_control.propagators.add (depend_unit);
+						end;
 					end;
 					old_creators.forth
 				end;
@@ -353,8 +361,6 @@ feature
 			else
 					-- No previous compilation
 				feature_table := Empty_table;
---					-- Ensure third pass will be done later
---				a_class.do_pass3;	
 			end;
 				-- Prepare `inherited_features'.
 			inherited_features.set_feat_tbl_id (a_class.id);
@@ -760,6 +766,11 @@ feature
 			external_i: EXTERNAL_I;
 		do
 			feature_name := feat.internal_name;
+debug ("ACTIVITY")
+	io.error.putstring ("FEATURE_UNIT on ");
+	io.error.putstring (feature_name);
+	io.error.putstring ("%N");
+end;
 			Result := yacc_feature.new_feature;
 			Result.set_feature_name (feature_name);
 			Result.set_written_in (a_class.id);
@@ -809,7 +820,11 @@ end;
 					Result.set_rout_id_set (feature_i.rout_id_set.twin);
 					Result.set_is_selected (feature_i.is_selected);
 				end;
-				if not is_the_same then
+				if not is_the_same or else
+					(supplier_status_modified and then
+					not pass2_controler.changed_status.disjoint (feature_i.suppliers))
+							-- The status of one of the suppliers of the feature has changed
+				then
 					-- Feature has changed of body between two 
 					-- recompilations; attribute `body_id' must be renew and the
 					-- old body id should be remove from the body

@@ -54,6 +54,30 @@ feature
 			Result := not (propagators.empty and then melted_propagators.empty)
 		end;
 
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring ("Propagators:%N");
+			from
+				propagators.start
+			until
+				propagators.after
+			loop
+				propagators.item.trace;
+				propagators.forth
+			end;
+			io.error.putstring ("Melted propagators:%N");
+			from
+				melted_propagators.start
+			until
+				melted_propagators.after
+			loop
+				melted_propagators.item.trace;
+				melted_propagators.forth
+			end;
+		end;
+
 invariant
 
 	removed_features_exists: removed_features /= Void;

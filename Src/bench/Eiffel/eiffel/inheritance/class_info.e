@@ -68,9 +68,13 @@ feature
 	features: EIFFEL_LIST [FEATURE_CLAUSE_AS] is
 			-- Feature abstract syntax
 		require
-			Tmp_ast_server_ok: Tmp_ast_server.has (id);
+			ast_server_ok: Tmp_ast_server.has (id) or else Ast_server.has (id);
 		do
-			Result := Tmp_ast_server.item (id).features;
+			if Tmp_ast_server.has (id) then
+				Result := Tmp_ast_server.item (id).features;
+			else
+				Result := Ast_server.item (id).features;
+			end;
 		end;
 
 	creation_table (feat_table: FEATURE_TABLE): EXTEND_TABLE [EXPORT_I, STRING] is

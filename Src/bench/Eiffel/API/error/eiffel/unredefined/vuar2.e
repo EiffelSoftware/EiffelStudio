@@ -52,16 +52,24 @@ feature
 	build_explain (a_clickable: CLICK_WINDOW) is
 			-- Build specific explanation image for current error
 			-- in `a_clickable'.
+		local
+			class_name: STRING;
 		do
 			old_build_explain (a_clickable);
 			a_clickable.put_string ("%T%Ttarget ");
 			a_clickable.put_string (formal_type.dump);
-			a_clickable.put_string ("%T%Tsource	");
+			a_clickable.put_string ("%N%T%Tsource	");
 			a_clickable.put_string (actual_type.dump);
-			a_clickable.put_string ("%T%Tfor argument `");
+			a_clickable.put_string ("%N%T%Tfor argument `");
 			a_clickable.put_string (argument_name);
-			a_clickable.put_string ("'%N")
+			a_clickable.put_string ("' of ");
+			a_clickable.put_string (feature_i.feature_name);
+			a_clickable.put_string (" written in ");
+			class_name := feature_i.written_class.class_name.duplicate;
+			class_name.to_upper;
+			a_clickable.put_string (class_name);
+			a_clickable.new_line;
 		end;
 
 end
-		
+

@@ -44,6 +44,40 @@ feature -- Final mode
 			end;
 		end;
 
+feature -- Incrementality
+
+	equiv (other: like Current): BOOLEAN is
+			-- Incrementality test on the select table in second pass.
+		require
+			good_argument: other /= Void
+		local
+			id: INTEGER;
+			f1, f2: FEATURE_I;
+		do
+			if other.count = count then
+					-- At least the counts should be the same.
+				from
+					start;
+					Result := True
+				until
+					offright or else not Result
+				loop
+					id := key_for_iteration;
+					f2 := other.item (id);
+					if f2 = Void then
+						Result := False
+					else
+						f1 := item_for_iteration;
+						check
+							f1.feature_name.is_equal (f2.feature_name);
+						end;
+						Result := f1.select_table_equiv (f2);					
+					end;
+					forth
+				end;
+			end;
+		end;
+
 feature -- Generation
 
 	descriptors (c: CLASS_C): DESC_LIST is

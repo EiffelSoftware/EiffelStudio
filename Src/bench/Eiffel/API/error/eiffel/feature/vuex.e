@@ -53,14 +53,19 @@ feature
         do
 			old_build_explain (a_clickable);
 			a_clickable.put_string ("%Tfeature ");
-			a_clickable.put_clickable_string (
-				static_class.feature_named (feature_name),
-				feature_name);
+-- FIXME
+--			a_clickable.put_clickable_string (
+--				static_class.feature_named (feature_name),
+--				feature_name);
+			a_clickable.put_string (feature_name);
 			a_clickable.put_string (" from class ");
-			a_clickable.put_clickable_string (static_class, static_class.signature);
+-- FIXME
+--			a_clickable.put_clickable_string (static_class, static_class.signature);
+			a_clickable.put_string (static_class.signature);
 			a_clickable.put_string (" is not exported to class ");
 			compiled_class := System.class_of_id (class_id);
-			a_clickable.put_clickable_string (compiled_class, compiled_class.signature);
+--			a_clickable.put_clickable_string (compiled_class, compiled_class.signature);
+			a_clickable.put_string (compiled_class.signature);
 			a_clickable.put_string ("%N")
 		end
 

@@ -52,7 +52,7 @@ feature
 	trace is
 		do
 			io.error.putstring ("[EXPANDED ");
-			io.error.putint (type_id);
+			io.error.putstring (class_type.associated_class.class_name);
 			io.error.putstring ("]");
 		end;
 

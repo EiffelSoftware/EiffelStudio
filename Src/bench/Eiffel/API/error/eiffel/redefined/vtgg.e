@@ -38,9 +38,7 @@ feature
 				error_list.offright
 			loop
 				io.error.putchar ('%T');
--- FIXME:
---				error_list.item.build_explain;
-				error_list.item.trace;
+				error_list.item.build_explain (a_clickable);
 				error_list.forth;
 			end;
 		end;

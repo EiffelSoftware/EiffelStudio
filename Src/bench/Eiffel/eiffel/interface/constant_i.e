@@ -221,7 +221,9 @@ feature -- Byte code generation
 				
 			melted_feature := ba.melted_feature;
 			melted_feature.set_body_id (dispatch.real_body_id);
-			M_feature_server.put (melted_feature);
+			if not System.freeze then
+				M_feature_server.put (melted_feature);
+			end;
 
 			Dispatch_table.mark_melted (dispatch);
 			Execution_table.mark_melted (exec);

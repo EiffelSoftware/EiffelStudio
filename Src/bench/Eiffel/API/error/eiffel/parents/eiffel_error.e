@@ -35,7 +35,7 @@ feature
 			error_window.put_clickable_string (stone (dummy_reference), code);
 			error_window.put_string (" in class ");
 			compiled_class := System.class_of_id (class_id);
-			!!class_stone.make (compiled_class);
+			class_stone := compiled_class.stone;
 			error_window.put_clickable_string (class_stone, class_stone.signature);
 			error_window.put_string (":%N");
 			build_explain (error_window)

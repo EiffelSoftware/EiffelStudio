@@ -296,7 +296,7 @@ feature -- Creation feature
 					clients.after
 				loop
 						-- recompile the client
-					Workbench.add_class_to_recompile (clients.item.lace_class);`
+					Workbench.add_class_to_recompile (clients.item.lace_class);
 					clients.forth;
 				end;
 
@@ -314,7 +314,7 @@ feature -- Creation feature
 			until
 				classes.offright
 			loop
-					-- make on CLASS_I reset the default options
+					-- reset_options on CLASS_I reset the default options
 				classes.item_for_iteration.reset_options;
 				classes.forth
 			end;

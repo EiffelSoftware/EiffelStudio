@@ -5,9 +5,6 @@ class VRLE1
 inherit
 
 	FEATURE_ERROR
-		redefine
-			Error_string
-		end;
 	
 feature 
 
@@ -22,10 +19,5 @@ feature
 
 	code: STRING is "VRLE";
 			-- Error code
-
-	Error_string: STRING is
-		do
-			Result := "Warning "
-		end;
 
 end

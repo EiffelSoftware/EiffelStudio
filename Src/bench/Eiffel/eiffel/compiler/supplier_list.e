@@ -13,7 +13,7 @@ creation
 
 feature 
 
-	remove_occurence (l: FEATURE_DEPENDANCE) is
+	remove_occurence (l: SORTED_SET [DEPEND_UNIT]) is
 			-- Remove one occurence for each supplier of id
 			-- included in `l'.
 		require
@@ -46,7 +46,7 @@ feature
 			end;
 		end;
 
-	add_occurence (l: FEATURE_DEPENDANCE) is
+	add_occurence (l: SORTED_SET [DEPEND_UNIT]) is
 			-- Add one occurence for each supplier of id
 			-- included in `l'.
 		require

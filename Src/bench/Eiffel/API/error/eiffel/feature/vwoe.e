@@ -56,7 +56,9 @@ feature
 			a_clickable.put_string ("%TThere is no feature `");
 			a_clickable.put_string (op_name);
 			a_clickable.put_string ("' in class ");
-			a_clickable.put_clickable_string (other_class, other_class.class_name);
+-- FIXME
+--			a_clickable.put_clickable_string (other_class, other_class.class_name);
+			a_clickable.put_string (other_class.class_name);
 			a_clickable.put_string ("%N")
 		end
 

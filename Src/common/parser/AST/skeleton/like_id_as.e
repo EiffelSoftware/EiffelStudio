@@ -90,10 +90,12 @@ feature -- Implementation of inherited deferred features
 					like_feature.set_actual_type 
 			(anchor_type.solved_type (feat_table, anchor_feature).actual_type);
 					Result := like_feature;
-						-- There is a dependance between `f' and the `anchor_feature'
-						-- Record it for the propagation of the recompilations
-					!!depend_unit.make (anchor_feature.written_in, anchor_feature.feature_id);
---					context.supplier_ids.add (depend_unit);
+					if System.in_pass3 then
+							-- There is a dependance between `f' and the `anchor_feature'
+							-- Record it for the propagation of the recompilations
+						!!depend_unit.make (anchor_feature.written_in, anchor_feature.feature_id);
+						context.supplier_ids.add (depend_unit);
+					end;
 				end;
 			else
 				argument_position := f.argument_position (anchor);

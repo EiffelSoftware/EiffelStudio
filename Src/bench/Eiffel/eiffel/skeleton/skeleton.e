@@ -108,6 +108,12 @@ feature
 			go (old_pos);
 		end;
 
+	go_reference is
+			-- Go to the reference attributes
+		do
+			goto (Reference_level);
+		end;
+
 	go_expanded is
 			-- Go to the expanded
 		do

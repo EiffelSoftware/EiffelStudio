@@ -35,6 +35,7 @@ feature
             -- Build specific explanation image for current error
             -- in `a_clickable'.
         do
+-- FIX ME
 			a_clickable.put_string ("%TSpecial error: case [");
 			a_clickable.put_string (error_case.out);
 			a_clickable.put_string ("]%N");

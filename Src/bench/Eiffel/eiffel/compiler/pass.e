@@ -2,6 +2,10 @@
 
 deferred class PASS
 
+inherit
+
+	SHARED_WORKBENCH
+
 feature -- Attributes
 
 	changed_classes: LINKED_LIST [PASS_C];
@@ -9,11 +13,6 @@ feature -- Attributes
 			-- referenced by the PASS_C objects
 
 feature
-
-	level: INTEGER is
-			-- Compilation level
-		deferred
-		end;
 
 	make is
 		do
@@ -34,16 +33,23 @@ debug ("COUNT")
 	io.error.putint (changed_classes.count);
 	io.error.putstring (") ");
 end;
-				changed_classes.start;
 				pass_c := changed_classes.first;
+				System.set_current_class (pass_c.associated_class);
 				pass_c.execute;
-				changed_classes.remove;
+				changed_classes.start;
+				changed_classes.search (pass_c);
+				if not changed_classes.after then
+					changed_classes.remove;
+				end;
 			end;
+			System.set_current_class (Void);
 		end;
 
 	controler_of (a_class: CLASS_C): PASS_C is
 			-- Find the controler of `a_class', create it if
 			-- it does not exist
+		require
+			good_argument: a_class /= Void
 		local
 			found: BOOLEAN;
 			pass_c: PASS_C;
@@ -71,11 +77,15 @@ end;
 
 	new_controler (a_class: CLASS_C): PASS_C is
 			-- Create a controler for `a_class' in current pass
+		require
+			good_argument: a_class /= Void
 		deferred
 		end;
 
 	insert_new_class (a_class: CLASS_C) is
 			-- `a_class' must be recompiled by the current pass
+		require
+			good_argument: a_class /= Void
 		local
 			pass_c: PASS_C;
 		do
@@ -85,6 +95,8 @@ end;
 
 	remove_class (a_class: CLASS_C) is
 			-- Remove the controler of `a_class'
+		require
+			good_argument: a_class /= Void
 		local
 			found: BOOLEAN;
 			pass_c: PASS_C;
@@ -115,8 +127,7 @@ end;
 	trace is
 			-- Trace
 		do
-			io.error.putstring ("PASS_CONTROLER ");
-			io.error.putint (level);
+			io.error.putstring (generator);
 			io.error.putstring (": trace%N");
 			from
 				changed_classes.start

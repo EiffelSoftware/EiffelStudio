@@ -5,6 +5,9 @@ class VTUG2
 inherit
 
 	VTUG1
+		redefine
+			code
+		end;
 	
 feature 
 
@@ -15,6 +18,12 @@ feature
 			-- Assign `i' to `entity_name' ?
 		do
 			entity_name := i;
+		end;
+
+	code: STRING is
+			-- Error code
+		do
+			Result := "VTUG2"
 		end;
 
 end

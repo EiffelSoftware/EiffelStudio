@@ -4,9 +4,8 @@ class VD32
 
 inherit
 
-	ERROR
+	WARNING
 		redefine
-			Error_string,
 			build_explain
 		end;
 
@@ -34,11 +33,6 @@ feature
 			-- Error code
 		do
 			Result := "VD32";
-		end;
-
-	Error_string: STRING is
-		do
-			Result := "Warning "
 		end;
 
 	build_explain (a_clickable: CLICK_WINDOW) is

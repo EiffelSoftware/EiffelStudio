@@ -278,13 +278,17 @@ feature
 			class_info.set_id (id);
 
 				-- Initialization of the current class
-			init (ast, class_info);
+			init (ast, class_info, old_syntactical_suppliers);
 
 				-- Check sum error
 			Error_handler.checksum;
 			check
 				No_error: not Error_handler.has_error;
 			end;
+
+				-- The class has not been removed (modification of the
+				-- number of generics)
+			if System.class_of_id (id) /= Void then
 
 				-- Update syntactical supplier/client relations and take
 				-- care of removed classes
@@ -316,6 +320,7 @@ feature
 				-- Clear `filters' because new filters will be re-processed
 			   -- for the class by the shared instance of INSTANTIATOR
 			filters.wipe_out;
+			end;
 		ensure
 			No_error: not Error_handler.has_error;
 		rescue
@@ -336,11 +341,6 @@ feature -- Building conformance table
 		require
 			topological_id_processed: topological_id > 0;
 		do
-debug ("CONFORMANCE");
-	io.error.putstring ("Fill conformance table of ");
-	io.error.putstring (class_name);
-	io.error.new_line;
-end;
 				-- Resize the table after the topological sort
 			conformance_table.resize (1, topological_id);
 			conformance_table.clear_all;
@@ -358,13 +358,6 @@ end;
 			a_parent: CLASS_C;
 			a_table: ARRAY [BOOLEAN];
 		do
-debug ("CONFORMANCE");
-	io.error.putstring ("%Tset entry of ");
-	io.error.putstring (class_name);
-	io.error.putstring (" in ");
-	io.error.putstring (cl.class_name);
-	io.error.new_line;
-end;
 			a_table := cl.conformance_table;
 			if a_table.item (topological_id) = False then
 					-- The parent has not been inserted yet
@@ -380,79 +373,6 @@ end;
 				end;
 			end;
 		end;
-		
-feature -- Propagation of second pass
-	
-	propagate_pass2 is
-			-- Ask the compiler to recalculate the feature table for the
-			-- direct descendants. The feature table of the current
-			-- class  has varied between two compilations, the feature
-			-- tables of the direct descendants must be recalculated.
-		local
-			descendant: CLASS_C;
-			local_cursor: LINKABLE [CLASS_C];
-			expanded_modified: BOOLEAN;
-		do
-			from
-				changed2 := True;
-				local_cursor := descendants.first_element;
-				expanded_modified := pass2_controler.changed_classes.item.expanded_modified;
-			until
-				local_cursor = Void
-			loop
-				descendant := local_cursor.item;
-					-- Mark the descendant so if it is not syntactically
-					-- `changed', its feature table will be at least
-					-- recalculated.
-				descendant.set_changed2 (True);
---					-- Set the compilation status of the descendant
---				descendant.do_pass2;
-					-- Insert the descendant in the changed classes list
-					-- of the system if not present.
-				pass2_controler.insert_new_class (descendant);
-				if expanded_modified then
-					pass2_controler.set_expanded_modified (descendant);
-				end;
-				pass3_controler.insert_new_class (descendant);
-				pass4_controler.insert_new_class (descendant);
-
-				local_cursor := local_cursor.right
-			end;
-		end;
-
-feature -- Propagation of third pass
-
-	propagate_pass3 (pass2_control: PASS2_CONTROL; status_modified: BOOLEAN) is
-			-- Ask to the compiler to execute the third pass on all
-			-- the clients of the class
-		require
-			good_argument: pass2_control /= Void;
-			good_context: pass2_control.propagate_pass3;
-		local
-			client: CLASS_C;
-			local_cursor: LINKABLE [CLASS_C];
-		do
-			from
-				local_cursor := clients.first_element
-			until
-				local_cursor = Void
-			loop
-				client := local_cursor.item;
-					-- Remember the cause for type checking `client'.
-				client.propagators.update (pass2_control);
-				if status_modified then
-					client.propagators.add_changed_status (id);
-				end;
---					-- Set the compilation status of the client
---				client.do_pass3;
-					-- Insert the client in the changed classes list
-					-- of the system if not present
-				pass3_controler.insert_new_class (client);
-				pass4_controler.insert_new_class (client);
-
-				local_cursor := local_cursor.right
-			end;
-		end;
 
 feature -- Third pass: byte code production and type check
 
@@ -464,8 +384,6 @@ feature -- Third pass: byte code production and type check
 			--	for all the other features.
 			-- 2. the class is marked `changed3' only, make a type check
 			--	on all the features of the class.
---		require
---			third_pass_has_to_be_done: make_pass3
 		local
 			feat_table: FEATURE_TABLE;
 				-- Feature table of the class
@@ -477,7 +395,6 @@ feature -- Third pass: byte code production and type check
 			new_suppliers: like suppliers;
 			feature_name: STRING;
 			f_suppliers: FEATURE_DEPENDANCE;
-			f_list: SORTED_TWO_WAY_LIST [INTEGER];
 			removed_features: SEARCH_TABLE [FEATURE_I];
 			melted_info: FEAT_MELTED_INFO;
 			melt_set: like melted_set;
@@ -495,9 +412,9 @@ feature -- Third pass: byte code production and type check
 					-- For a changed class, the supplier list has
 					-- to be updated
 				if Tmp_depend_server.has (id) then
-					dependances := Tmp_depend_server.disk_item (id);
+					dependances := Tmp_depend_server.item (id);
 				elseif Depend_server.has (id) then
-					dependances := Depend_server.disk_item (id);
+					dependances := Depend_server.item (id);
 				else
 					!!dependances.make (changed_features.count);
 					dependances.set_id (id);
@@ -517,10 +434,9 @@ feature -- Third pass: byte code production and type check
 				feat_table.offright
 			loop
 				feature_i := feat_table.item_for_iteration;
+				feature_name := feature_i.feature_name;
 
 				if	feature_i.to_generate_in (Current) then
-
-					feature_name := feature_i.feature_name;
 
 						-- For a feature written in the class
 					feature_changed := 	changed_features.has (feature_name)
@@ -570,17 +486,18 @@ feature -- Third pass: byte code production and type check
 						feature_i.change_body_id;
 					end;
 	
-					if 	feature_i.in_pass3
+					ast_context.set_a_feature (feature_i);
+
+					if feature_i.in_pass3 and then
 							-- No type check for constants and attributes.
 							-- [It is done in second pass.]
-						and then
 						(	feature_changed
 							or else
 							not (	f_suppliers = Void
 									or else
-									propagators.empty_intersection (f_suppliers)
-									or else
-									propagators.changed_status_empty_intersection (f_suppliers)
+									(propagators.empty_intersection (f_suppliers)
+									and then
+									propagators.changed_status_empty_intersection (f_suppliers.suppliers))
 								)
 						)
 					then
@@ -598,7 +515,6 @@ end;
 							dependances.remove (feature_name);
 						end;
 
-						ast_context.set_a_feature (feature_i);
 						Error_handler.mark;
 						feature_i.type_check;
 						type_check_error := Error_handler.new_error;
@@ -628,9 +544,15 @@ end;
 							end;
 
 						end;
-
-						ast_context.clear2;
+					else
+							-- Check the conflicts between local variable names
+							-- and feature names
+-- FIX ME
+-- ONLY needed when new features are inserted in the feature table
+						feature_i.check_local_names
 					end;
+
+					ast_context.clear2;
 
 					if	feature_changed
 						and then
@@ -642,6 +564,13 @@ end;
 					end;
 					type_check_error := False;
 
+				elseif not feature_i.in_pass3 then
+					if dependances.has (feature_name) then
+						dependances.remove (feature_name);
+					end;
+					!!f_suppliers.make;
+					feature_i.record_suppliers (f_suppliers);
+					dependances.put (f_suppliers, feature_name);
 				end;
 
 				feat_table.forth;
@@ -715,6 +644,38 @@ end;
 			end;
 		end;
 
+	print_clients is
+		do
+			io.error.putstring ("Clients of ");
+			io.error.putstring (class_name);
+			io.error.new_line;
+			from
+				clients.start
+			until
+				clients.after
+			loop
+				io.error.putstring ("%T");
+				io.error.putstring (clients.item.class_name);
+				io.error.new_line;
+				clients.forth
+			end;
+			io.error.new_line;
+			io.error.putstring ("Syntactical clients of ");
+			io.error.putstring (class_name);
+			io.error.new_line;
+			from
+				syntactical_clients.start
+			until
+				syntactical_clients.after
+			loop
+				io.error.putstring ("%T");
+				io.error.putstring (syntactical_clients.item.class_name);
+				io.error.new_line;
+				syntactical_clients.forth
+			end;
+			io.error.new_line;
+		end;
+
 	invariant_pass3 (	dependances: CLASS_DEPENDANCE;
 						new_suppliers: like suppliers;
 						melt_set: like melted_set) is
@@ -757,9 +718,9 @@ end;
 						or else
 						not	(	f_suppliers = Void
 								or else
-								propagators.empty_intersection (f_suppliers)
-								or else
-								propagators.changed_status_empty_intersection (f_suppliers)
+								(propagators.empty_intersection (f_suppliers)
+								and then
+								propagators.changed_status_empty_intersection (f_suppliers.suppliers))
 							)
 					)
 				then
@@ -1057,6 +1018,7 @@ feature -- Skeleton processing
 
 						System.freeze_set2.put (id);
 						System.melted_set.put (id);
+					else
 					end;
 				end;
 				local_cursor := local_cursor.right
@@ -1067,16 +1029,18 @@ changed4 := False;
 
 feature -- Class initialization
 
-	init (ast: CLASS_AS; class_info: CLASS_INFO) is
+	init (ast: CLASS_AS; class_info: CLASS_INFO; old_suppliers: like syntactical_suppliers) is
 			-- Initialization of the class with AST produced by yacc
 		require
 			good_argument: ast /= Void;
 		local
 			old_parents: like parents;
+			old_generics: like generics;
 			parents_as: EIFFEL_LIST [PARENT_AS];
 			p: ARRAY [PARENT_AS];
 			lower, upper: INTEGER;
 			raw_type: CLASS_TYPE_AS;
+			cl_type: CLASS_TYPE;
 			parent_type: CL_TYPE_A;
 			parent_class: CLASS_C;
 			parent_list: PARENT_LIST;
@@ -1084,6 +1048,10 @@ feature -- Class initialization
 			ve04: VE04;
 			old_is_expanded: BOOLEAN;
 			old_is_deferred: BOOLEAN;
+			a_client: CLASS_C;
+			changed_status: BOOLEAN;
+			class_i: CLASS_I;
+			changed_generics: BOOLEAN
 		do
 				-- Check if obsolete clause was present.
 				-- (Void if none was present)
@@ -1106,17 +1074,49 @@ feature -- Class initialization
 				-- Deferred mark
 			old_is_deferred := is_deferred;
 			is_deferred := ast.is_deferred;
-			if old_is_deferred /= is_deferred and then old_parents /= Void then
+			if (old_is_deferred /= is_deferred and then old_parents /= Void) then
 				pass2_controler.set_deferred_modified (Current);
+				changed_status := True;
 			end;
 
 				-- Expanded mark
 			old_is_expanded := is_expanded;
 			is_expanded := ast.is_expanded;
-			if is_expanded /= old_is_expanded and then old_parents /= Void then
+			if (is_expanded /= old_is_expanded and then old_parents /= Void) then
 					-- The expanded status has been modifed
 					-- (`old_parents' is Void only for the first compilation of the class)
 				pass2_controler.set_expanded_modified (Current);
+				changed_status := True;
+			end;
+
+			if changed_status then
+
+				pass2_controler.add_changed_status (Current);
+				from
+					syntactical_clients.start
+				until
+					syntactical_clients.after
+				loop
+					a_client := syntactical_clients.item;
+					a_client.set_changed2 (True);
+					pass2_controler.set_supplier_status_modified (a_client);
+					pass3_controler.insert_new_class (a_client);
+					pass4_controler.insert_new_class (a_client);
+					syntactical_clients.forth;
+				end;
+
+					-- All the skeletons must be processed
+				changed4 := True;
+				from
+					types.start
+				until
+					types.after
+				loop
+					cl_type := types.item;
+					cl_type.set_is_changed (True);
+					cl_type.type.set_is_expanded (is_expanded);
+					types.forth
+				end;
 			end;
 
 				-- Initialization of the parent types `parents': put
@@ -1184,10 +1184,58 @@ feature -- Class initialization
 				!!parents.make (0);
 			end;
 				-- Init generics
+			old_generics := generics;
+
 			generics := ast.generics;
+
 			if generics /= Void then
 					-- Check generic parameter declaration rule
 				check_generics;
+			end;
+
+			if old_parents /= Void then
+				-- Recompilation of the class
+				if generics /= Void then
+					if
+						old_generics = Void
+					or else
+						old_generics.count /= generics.count
+					then
+						changed_generics := True
+					else
+						from
+							old_generics.start;
+							generics.start
+						until
+							changed_generics or else generics.after
+						loop
+							if not generics.item.equiv (old_generics.item) then	
+								changed_generics := True
+							end;
+							generics.forth;
+							old_generics.forth;
+						end;
+					end;
+				elseif old_generics /= Void then
+					changed_generics := True
+				end;
+			end;
+			if changed_generics then
+				from
+					syntactical_clients.start
+				until
+					syntactical_clients.offright
+				loop
+					Workbench.add_class_to_recompile (syntactical_clients.item.lace_class);
+					syntactical_clients.item.set_changed (True);
+					syntactical_clients.forth
+				end;
+					-- The syntactical client/supplier relation must be consistent before
+					-- the removal
+				update_syntactical_relations (old_suppliers);
+				class_i := lace_class;
+				System.remove_class (Current);
+				Workbench.change_class (class_i);
 			end;
 
 			if old_parents /= Void and then not changed then
@@ -1277,10 +1325,9 @@ feature
 					supplier_clients := a_class.syntactical_clients;
 					supplier_clients.start;
 					supplier_clients.search_same (Current);
-					check
-						not_after: not supplier_clients.after
+					if not supplier_clients.after then
+						supplier_clients.remove;	
 					end;
-					supplier_clients.remove;	
 				end;
 				local_cursor := local_cursor.right
 			end;
@@ -1992,7 +2039,10 @@ feature -- Actual class type
 			new_class_type: CLASS_TYPE;
 			local_cursor: LINKABLE [GEN_TYPE_I]
 		do
+io.error.putstring ("Update types ");
+io.error.putstring (class_name);
 			if not types.has_type (data) then
+io.error.putstring ("Creation of a new type%N");
 					-- Found a new type for the class
 				new_class_type := new_type (data);
 					-- If class is TO_SPECIAL or else SPECIAL
@@ -2021,6 +2071,9 @@ feature -- Actual class type
 				loop
 						-- Instantiation of the filter with `data'
 					filter := local_cursor.item.instantiation_in (data);
+io.error.putstring ("Propagation on filter%N");
+local_cursor.item.dump (io.error);
+io.error.new_line;
 					filter.base_class.update_types (filter);
 					local_cursor := local_cursor.right
 				end;
@@ -2282,6 +2335,7 @@ feature {NONE} -- External features
 feature -- PS
 
 	signature: STRING is
+		obsolete "Use append_clickable_signature"
 		local
 			formal_dec: FORMAL_DEC_AS;
 			constraint_type: TYPE_A;
@@ -2315,16 +2369,64 @@ feature -- PS
 			end;
 			Result.to_upper;
 			end;
-		rescue
-			-- FIX ME ?
-			!!Result.make (50);
-			Result.append (class_name);
+--		rescue
+--			-- FIX ME ?
+--			!!Result.make (50);
+--			Result.append (class_name);
+--			if generics /= Void then
+--				Result.append (" [ ... ]");
+--			end;
+--			Result.to_upper;
+--			error := True;
+--			retry;
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+			-- Append the signature of current class in `a_clickable'
+		local
+			formal_dec: FORMAL_DEC_AS;
+			constraint_type: TYPE_A;
+			c_name: STRING;
+		do
+			append_clickable_name (a_clickable);
 			if generics /= Void then
-				Result.append (" [ ... ]");
+				a_clickable.put_string (" [");
+				from
+					generics.start
+				until
+					generics.after
+				loop
+					formal_dec := generics.item;
+					c_name := formal_dec.formal_name;
+					c_name.to_upper;
+					a_clickable.put_string (c_name);
+					if formal_dec.constraint /= Void then
+						a_clickable.put_string (" -> ");
+						constraint_type := formal_dec.constraint.actual_type;
+io.error.putstring ("Clickable signature change dump%N");
+						a_clickable.put_string (constraint_type.dump)
+					end;
+					generics.forth;
+					if not generics.after then
+						a_clickable.put_string (", ");
+					end;
+				end;
 			end;
-			Result.to_upper;
-			error := True;
-			retry;
+		end;
+
+	append_clickable_name (a_clickable: CLICK_WINDOW) is
+			-- Append the name ot the current class in `a_clickable'
+		local
+			c_name: STRING;
+		do
+			c_name := class_name.duplicate;
+			c_name.to_upper;
+			a_clickable.put_clickable_string (stone, c_name);
+		end;
+
+	stone: CLASSC_STONE is
+		do
+			!!Result.make (Current)
 		end;
 
 	feature_named (n: STRING): FEATURE_I is

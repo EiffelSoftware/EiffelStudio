@@ -21,11 +21,14 @@ creation
 feature
 
 	suppliers: SORTED_SET [INTEGER];
-		-- Ids of the suppliers for the feature
+			-- Set of all the syntactical suppliers of the feature
 
-	add_supplier (a_class_id: INTEGER) is
+	add_supplier (a_class: CLASS_C) is
+			-- Add the class to the list of suppliers
+		require
+			good_argument: a_class /= Void
 		do
-			suppliers.add (a_class_id)
+			suppliers.add (a_class.id)
 		end;
 
 	make is 
@@ -38,6 +41,20 @@ feature
 		do
 			sorted_set_wipe_out;
 			suppliers.wipe_out;
+		end;
+
+feature -- Debug
+
+	trace is
+		do
+			from
+				start
+			until
+				after
+			loop
+				item.trace;
+				forth
+			end;
 		end;
 
 end

@@ -8,22 +8,14 @@ inherit
 	
 feature 
 
-	call_body_id: INTEGER;
-			-- Body id of the involved feature
+	feature_i: FEATURE_I;
+			-- Feature_i of the involved feature
 
-	call_written_in: INTEGER;
-			-- Id of the class where the involved feature is written in
-
-	set_call_body_id (i: INTEGER) is
-			-- Assign `i' to `call_body_id'.
+	set_feature_i (f: FEATURE_I) is
+			-- Assign `f' to `feature_i'.
 		do
-			call_body_id := i;
-		end;
-
-	set_call_written_in (i: INTEGER) is
-			-- Assign `i' to `call_written_in'.
-		do
-			call_written_in := i;
+			feature_i := f;
+			
 		end;
 
 	code: STRING is

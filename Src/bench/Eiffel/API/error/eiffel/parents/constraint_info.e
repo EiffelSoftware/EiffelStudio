@@ -42,20 +42,20 @@ feature
 			formal_number := i;
 		end;
 
-	trace is
+	build_explain (a_clickable: CLICK_WINDOW) is
 		require
 			type /= Void;
 			type1 /= Void;
 			type2 /= Void;
 		do
-			error_window.put_string (type.dump);
-			error_window.put_string (" [");
-			error_window.put_string (formal_number.out);
-			error_window.put_string ("]: ");
-			error_window.put_string (type1.dump);
-			error_window.put_string (" doesn't conform to ");
-			error_window.put_string (type2.dump);
-			error_window.put_string ("%N");
+			a_clickable.put_string (type.dump);
+			a_clickable.put_string (" [");
+			a_clickable.put_string (formal_number.out);
+			a_clickable.put_string ("]: ");
+			a_clickable.put_string (type1.dump);
+			a_clickable.put_string (" doesn't conform to ");
+			a_clickable.put_string (type2.dump);
+			a_clickable.put_string ("%N");
 		end
 
 end

@@ -30,14 +30,12 @@ feature
 feature 
 
 	update (s: STRING) is
-		
 		local
 			template_file_name: FILE_NAME;
 			class_file_name: FILE_NAME;	
 			new_template_file_name: FILE_NAME;
 			file: PLAIN_TEXT_FILE;
 			unix_command: STRING;
-			mp: MOUSE_PTR;
 		do
 			!! template_file_name.make_from_string (Environment.templates_directory);
 			template_file_name.set_file_name (document_name);
@@ -62,13 +60,7 @@ feature
 			unix_command.extend (' ');
 			unix_command.append (new_template_file_name);
 
-			!! mp;
-			mp.set_watch_shape;
 			Environment.system (unix_command);
-			mp.restore;
-			if Environment.return_code < 0 then
-				error_box.popup (Current, Messages.update_text_er, document_name);
-			end;
 		end;
 
 	foo: STRING is

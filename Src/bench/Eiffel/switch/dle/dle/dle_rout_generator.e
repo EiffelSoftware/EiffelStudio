@@ -33,7 +33,7 @@ feature
 		do
 			current_file.putstring ("void dle_erout");
 			current_file.putint (file_counter);
-			current_file.putstring ("()");
+			current_file.putstring ("(void)");
 			current_file.new_line;
 			current_file.putchar ('{');
 			current_file.new_line;

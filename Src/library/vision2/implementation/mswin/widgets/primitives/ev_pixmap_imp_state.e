@@ -49,14 +49,34 @@ feature -- Misc.
 			-- Build a WEL_ICON from `bitmap' and `mask_bitmap'.
 		local
 			icon_info: WEL_ICON_INFO
+			mem_dc: WEL_MEMORY_DC
+			empty_mask_bitmap: WEL_BITMAP
+			raster_operations: WEL_RASTER_OPERATIONS_CONSTANTS
 		do
 			create icon_info.make
 			icon_info.set_fIcon (True)
 			icon_info.set_color_bitmap (bitmap)
 			if mask_bitmap /= Void then
 				icon_info.set_mask_bitmap (mask_bitmap)
+				create Result.make_by_icon_info (icon_info)
+			else
+				-- create an empty mask
+				create mem_dc.make
+				create empty_mask_bitmap.make_compatible (
+					mem_dc,
+					width,
+					height
+					)
+				mem_dc.select_bitmap (empty_mask_bitmap)
+				create raster_operations
+				mem_dc.pat_blt (0, 0, width, height, 
+					raster_operations.blackness)
+				mem_dc.unselect_bitmap
+				mem_dc.delete
+				icon_info.set_mask_bitmap (empty_mask_bitmap)
+				create Result.make_by_icon_info (icon_info)
+				empty_mask_bitmap.delete
 			end
-			create Result.make_by_icon_info (icon_info)
 		end
 
 feature -- Measurement
@@ -94,6 +114,9 @@ end -- class EV_PIXMAP_IMP_STATE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/05/03 04:36:40  pichery
+--| Removed parameter in feature `set_with_default'.
+--|
 --| Revision 1.4  2000/05/03 00:37:00  pichery
 --| Added feature `build_icon' + Refactoring.
 --|

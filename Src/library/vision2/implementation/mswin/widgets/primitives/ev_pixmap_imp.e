@@ -78,45 +78,15 @@ feature -- Loading/Saving
 			is_initialized := True -- Turn constract back on
 		end
 
-	set_with_default (pixmap_name: STRING) is
+	set_with_default is
 			-- Initialize the pixmap with the default
-			-- image named `pixmap_name'.
+			-- pixmap (Vision2 logo)
 			--
 			-- Exceptions "Unable to retrieve icon information"
-		local
-			icon_id: POINTER
 		do
 			is_initialized := False -- Turn contracts off
 
-			if pixmap_name.is_equal ("Information") then
-					-- Read the predefined Icon.
-				create icon.make_by_predefined_id (
-					Idi_constants.Idi_information
-					)
-				retrieve_icon_information
-
-			elseif pixmap_name.is_equal ("Warning") then
-					-- Read the predefined Icon.
-				create icon.make_by_predefined_id (
-					Idi_constants.Idi_warning
-					)
-				retrieve_icon_information
-
-			elseif pixmap_name.is_equal ("Error") then
-				create icon.make_by_predefined_id (
-					Idi_constants.Idi_error
-					)
-				retrieve_icon_information
-
-			elseif pixmap_name.is_equal ("Question") then
-				create icon.make_by_predefined_id (
-					Idi_constants.Idi_question
-					)
-				retrieve_icon_information
-
-			elseif pixmap_name.is_equal ("Vision2") then
-				c_ev_load_pixmap($Current, Default_pointer, $update_fields)
-			end
+			c_ev_load_pixmap($Current, Default_pointer, $update_fields)
 				
 				-- Update width & height attributes.
 			width := bitmap.width
@@ -1282,6 +1252,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/05/03 04:36:39  pichery
+--| Removed parameter in feature `set_with_default'.
+--|
 --| Revision 1.35  2000/05/03 00:36:33  pichery
 --| Added feature `set_with_icon' + Refactoring.
 --|

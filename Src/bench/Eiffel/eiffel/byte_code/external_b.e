@@ -24,8 +24,8 @@ feature
 	type: TYPE_I;
 			-- Type of the call
 
-	parameters: BYTE_LIST [BYTE_NODE];
-			-- Feature parameters {list of EXPR_B}: can be Void
+	parameters: BYTE_LIST [EXPR_B];
+			-- Feature parameters: can be Void
 
 feature -- Attributes for externals
 
@@ -145,7 +145,7 @@ feature -- Byte code generation
 				until
 					parameters.after
 				loop
-					param ?= parameters.item;
+					param := parameters.item;
 					param.make_byte_code (ba);
 					if 	(not param.is_hector)
 						and then

@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			-- Notify `manager' of the dropping of `cs'.
 		do
 			if not selected then
-				enable_select
+				execute
 			end
 --			if cs.class_i /= associated_class.lace_class then
 				manager.set_stone (cs)

@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			-- Notify `manager' of the dropping of `fs'.
 		do
 			if not selected then
-				enable_select
+				execute
 			end
 			if fs.e_feature /= associated_feature then
 				manager.set_stone (fs)

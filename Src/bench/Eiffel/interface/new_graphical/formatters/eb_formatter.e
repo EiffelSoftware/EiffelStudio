@@ -11,9 +11,6 @@ inherit
 	SHARED_CONFIGURE_RESOURCES
 
 	EB_RADIO_COMMAND_FEEDBACK
-		redefine
-			enable_select
-		end
 
 	EB_SHARED_WINDOW_MANAGER
 
@@ -68,17 +65,6 @@ feature -- Setting
 			-- Set `accelerator' to `accel'.
 		do
 			accelerator := accel
-		end
-
-	enable_select is
-			-- Select `Current' as a formatter.
-		do
-			Precursor {EB_RADIO_COMMAND_FEEDBACK}
-			if widget_owner /= Void then
-				widget_owner.set_widget (widget)
-			end
-		ensure then
-			selected: selected
 		end
 
 	set_manager (a_manager: like manager) is

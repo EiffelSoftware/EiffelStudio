@@ -20,6 +20,18 @@ inherit
 			set_text
 		end
 
+feature -- Status setting
+
+	clear_selection is
+		deferred
+		end
+
+feature {EV_OPTION_BUTTON} -- Status report
+
+	selected_item: EV_MENU_ITEM is
+		deferred
+		end
+
 feature {NONE} -- Inapplicable
 
 	set_center_alignment is
@@ -58,6 +70,12 @@ feature {NONE} -- Inapplicable
 				Inapplicable: False
 			end
 		end
+
+feature {EV_OPTION_BUTTON, EV_MENU_IMP} -- Implementation
+
+	menu_items_array: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+			-- List of the children (menu_items) of the
+			-- child (menu). We need it for `selected item'.
 
 end -- class EV_OPTION_BUTTON_I
 

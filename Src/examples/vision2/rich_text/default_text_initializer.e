@@ -198,34 +198,53 @@ feature -- Status setting
 				
 			create paragraph_format
 			paragraph_format.enable_center_alignment
-			rich_text.format_paragraph (rich_text.line_number_from_position (3177), rich_text.line_number_from_position (3177), paragraph_format)
+			rich_text.format_paragraph (3177, 3177, paragraph_format)
 
 			paragraph_format.enable_right_alignment
-			rich_text.format_paragraph (rich_text.line_number_from_position (3673), rich_text.line_number_from_position (3673), paragraph_format)
+			rich_text.format_paragraph (3673, 3673, paragraph_format)
 
 			paragraph_format.enable_justification
-			rich_text.format_paragraph (rich_text.line_number_from_position (4150), rich_text.line_number_from_position (4150), paragraph_format)
+			rich_text.format_paragraph (4150, 4150, paragraph_format)
 		
 			create paragraph_format
 			paragraph_format.enable_justification
 			paragraph_format.set_left_margin (200)
-			rich_text.format_paragraph (rich_text.line_number_from_position (paragraph_start_index + 21), rich_text.line_number_from_position (paragraph_start_index + 21), paragraph_format)
+			rich_text.format_paragraph (paragraph_start_index + 21, paragraph_start_index + 21, paragraph_format)
 			
 			create paragraph_format
 			paragraph_format.enable_justification
 			paragraph_format.set_right_margin (200)
-			rich_text.format_paragraph (rich_text.line_number_from_position (paragraph_start_index + 536), rich_text.line_number_from_position (paragraph_start_index + 536), paragraph_format)
+			rich_text.format_paragraph (paragraph_start_index + 536, paragraph_start_index + 536, paragraph_format)
 			
 			create paragraph_format
 			paragraph_format.enable_justification
 			paragraph_format.set_top_spacing (100)
-			rich_text.format_paragraph (rich_text.line_number_from_position (paragraph_start_index + 1090), rich_text.line_number_from_position (paragraph_start_index + 1090), paragraph_format)
+			rich_text.format_paragraph (paragraph_start_index + 1090, paragraph_start_index + 1090, paragraph_format)
 			
 			create paragraph_format
 			paragraph_format.enable_justification
 			paragraph_format.set_top_spacing (0)
 			paragraph_format.set_bottom_spacing (100)
-			rich_text.format_paragraph (rich_text.line_number_from_position (paragraph_start_index + 1756), rich_text.line_number_from_position (paragraph_start_index + 1756), paragraph_format)			
+			rich_text.format_paragraph (paragraph_start_index + 1756, paragraph_start_index + 1756, paragraph_format)			
+			
+			create font.make_with_values (feature {EV_FONT_CONSTANTS}.family_roman,
+				feature {EV_FONT_CONSTANTS}.weight_regular,
+				feature {EV_FONT_CONSTANTS}.shape_regular,
+				12)
+--			from
+--				counter := 1
+--			until
+--				counter > 100
+--			loop
+--				create character_format.make_with_font (font)
+--				character_format.set_color (colors.i_th (1))
+--				rich_text.buffered_format (counter * 4, counter * 4 + 2, character_format)
+--				create character_format.make_with_font (font)
+--				character_format.set_background_color (colors.i_th (3))
+--				rich_text.buffered_format (counter * 4 + 2, counter * 4 + 4, character_format)
+--				counter := counter + 1
+--			end
+--			rich_text.flush_buffer
 		end
 	
 feature {NONE} -- Implementation

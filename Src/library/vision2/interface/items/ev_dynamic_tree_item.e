@@ -196,7 +196,7 @@ feature -- Status report
 					variant
 						index - i
 					until
-						i = index or linear.after
+						i = index or linear.off
 					loop
 						linear.forth
 						i := i + 1
@@ -255,7 +255,7 @@ feature -- Cursor movement
 						linear.start
 						i := 1
 					until
-						linear.after
+						linear.off
 					loop
 						linear.forth
 						i := i + 1
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 				from
 					linear.start
 				until
-					linear.after
+					linear.off
 				loop
 					implementation.extend (linear.item)
 					linear.forth

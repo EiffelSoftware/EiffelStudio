@@ -20,11 +20,12 @@ feature -- Filtering; Implementation
 			-- Filter the `Current' format with `filtername'.
 		local
 			new_text: STRING;
-			root_stone: STONE
+			root_stone: STONE;
+			mp: MOUSE_PTR
 		do
 			root_stone := text_window.root_stone;
 			if root_stone /= Void then
-				set_global_cursor (watch_cursor);
+				!! mp.set_watch_cursor;
 				new_text := filtered_text (root_stone, filtername);
 				if new_text /= Void then
 					text_window.clear_text;
@@ -36,7 +37,7 @@ feature -- Filtering; Implementation
 					filter_name := clone (filtername);
 					filtered := true
 				end;
-				restore_cursors
+				mp.restore
 			end
 		end;
 

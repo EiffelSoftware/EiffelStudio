@@ -82,7 +82,8 @@ feature -- Formatting
 			modified_class, position_saved: BOOLEAN;
 			last_cursor_position, last_top_position: INTEGER;
 			retried: BOOLEAN;
-			same_stone, error: BOOLEAN
+			same_stone, error: BOOLEAN;
+			mp: MOUSE_PTR
 		do
 			if not retried then
 				classc_stone ?= stone;
@@ -106,7 +107,7 @@ feature -- Formatting
 					if stone /= Void and then stone.is_valid then
 						same_stone := equal (stone, text_window.root_stone);
 						display_temp_header (stone);
-						set_global_cursor (watch_cursor);
+						!! mp.set_watch_cursor;
 						stone_text := stone.origin_text;
 						if stone_text = Void then
 							stone_text := "";
@@ -161,7 +162,7 @@ feature -- Formatting
 							position_saved := true
 						end;
 						text_window.set_editable;
-						text_window.show_image;
+						text_window.display;
 						text_window.set_mode_for_editing;
 						if position_saved then
 							if last_cursor_position > text_window.size then
@@ -177,13 +178,14 @@ feature -- Formatting
 						end;
 						text_window.set_last_format (Current);
 						display_header (stone);
-						restore_cursors
+						mp.restore
 					end;
 					filtered := false
 				end
 			else
+				!! mp.do_nothing;
+				mp.restore
 				warner (text_window).gotcha_call (w_Cannot_retrieve_info);
-				restore_cursors
 			end
 		rescue
 			if original_exception = Io_exception then

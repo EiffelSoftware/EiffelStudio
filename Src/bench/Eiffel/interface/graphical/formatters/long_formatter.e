@@ -44,6 +44,8 @@ feature -- Execution
 
 	execute (argument: ANY) is
 			-- Ask for a confirmation before executing the format.
+		local
+			mp: MOUSE_PTR
 		do
 			if last_warner /= Void then
 				last_warner.popdown
@@ -52,9 +54,9 @@ feature -- Execution
 					-- The user wants to execute this format,
 					-- even though it's a long format.
 				if not text_window.changed then
-					set_global_cursor (watch_cursor);
+					!! mp.set_watch_cursor;
 					execute_licenced (formatted);
-					restore_cursors
+					mp.restore
 				else
 					warner (text_window).call (Current, l_File_changed)
 				end
@@ -62,9 +64,9 @@ feature -- Execution
 					-- No confirmation required.
 				formatted ?= text_window.root_stone;
 				if not text_window.changed then
-					set_global_cursor (watch_cursor);
+					!! mp.set_watch_cursor;
 					execute_licenced (formatted);
-					restore_cursors
+					mp.restore
 				else
 					warner (text_window).call (Current, l_File_changed)
 				end

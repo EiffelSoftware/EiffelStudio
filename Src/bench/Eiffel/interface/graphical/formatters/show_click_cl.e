@@ -58,7 +58,8 @@ feature -- Formatting
 			position_saved: BOOLEAN;
 			root_stone: CLASSC_STONE;
 			retried: BOOLEAN;
-			tool: BAR_AND_TEXT
+			tool: BAR_AND_TEXT;
+			mp: MOUSE_PTR
 		do
 			if not retried then
 				root_stone ?= text_window.root_stone;
@@ -70,7 +71,7 @@ feature -- Formatting
 					if stone /= Void and then stone.is_valid then
 						if stone.clickable then
 							display_temp_header (stone);
-							set_global_cursor (watch_cursor);
+							!! mp.set_watch_cursor;
 							text_window.clean;
 							text_window.set_file_name (file_name (stone));
 							display_info (stone);
@@ -83,7 +84,7 @@ feature -- Formatting
 								position_saved := true
 							end;
 							text_window.set_editable;
-							text_window.show_image;
+							text_window.display;
 							text_window.set_read_only;
 							if position_saved then
 								if last_cursor_position > text_window.size then
@@ -99,7 +100,7 @@ feature -- Formatting
 							text_window.set_last_format (Current);
 							filtered := false;
 							display_header (stone);
-							restore_cursors
+							mp.restore
 						else
 							tool ?= text_window.tool;
 							if tool /= Void then

@@ -31,12 +31,23 @@ feature -- Initialization
 			child_assigned_correctly: child = a_child
 			text_assigned_correctly: text.is_equal (a_name)
 			count_now_one: count = 1
-		end
+		end		
 
 feature -- Access
 
 	child: EV_CONTAINER
 		-- Real container contained in and
 		-- made visible by `Current'.
+		
+feature {GB_TITLED_WINDOW_OBJECT} -- Implementation
+
+	set_child (a_child: EV_CONTAINER) is
+			-- Assign `a_child' to `child. This is necessary as we must
+			-- rebuild windows when we reset the objects.
+		do
+			child := a_child
+		ensure
+			child_set: child = a_child
+		end
 
 end -- class GB_DISPLAY_OBJECT

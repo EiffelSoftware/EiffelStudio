@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			element_not_void: xml_elem /= Void
 		local
 			node, sub_node: XM_ELEMENT
-			attribute: XM_ATTRIBUTE
+			l_attribute: XM_ATTRIBUTE
 			pref_name, 
 			pref_description,
 			pref_value: STRING
@@ -321,12 +321,12 @@ feature {NONE} -- Implementation
 					if node /= Void then
 						if node.name.is_equal ("PREF") then
 								-- Found preference
-							attribute := node.attribute_by_name ("NAME")
-							if attribute /= Void then
-								pref_name := attribute.value
-								attribute := node.attribute_by_name ("DESCRIPTION")
-								if attribute /= Void then
-									pref_description := attribute.value
+							l_attribute := node.attribute_by_name ("NAME")
+							if l_attribute /= Void then
+								pref_name := l_attribute.value
+								l_attribute := node.attribute_by_name ("DESCRIPTION")
+								if l_attribute /= Void then
+									pref_description := l_attribute.value
 								else
 										-- No description specified
 									pref_description := ""

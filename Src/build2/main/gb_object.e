@@ -38,7 +38,9 @@ feature {NONE} -- Initialization
 			-- Do not instantiate `object' from type.
 		do
 			type := a_type
+				-- The names should never be `Void'.
 			create name.make (0)
+			create edited_name.make (0)
 		ensure
 			type_assigned: type = a_type
 		end
@@ -386,8 +388,10 @@ feature -- Basic operations
 			-- Assign `new_name' to `name'.
 		require
 			name_not_void: new_name /= Void
+			no_object_has_name: not object_handler.named_object_exists (new_name, Current)
 		do
 			name := new_name
+			edited_name := new_name
 		ensure
 			name_assigned: name.is_equal (new_name)
 		end
@@ -468,6 +472,49 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				end
 			end
 		end
+		
+feature {GB_OBJECT_EDITOR} -- Implementation
+
+	edited_name: STRING
+		-- The name being entered for `Current' in an object editor.
+		
+	set_edited_name (a_name: STRING) is
+			-- Assign `a_name' to `edited_name'.
+		require
+			name_not_void: a_name /= Void
+		do
+			edited_name := a_name
+		ensure
+			name_set: edited_name.is_equal (a_name)
+		end
+		
+
+	cancel_edited_name is
+			-- Assign `name' to `edited_name'.
+		do
+			edited_name := name
+		end
+		
+	accept_edited_name is
+			-- Assign `edited_name' to `name'
+		do
+			name := edited_name
+		end
+	
+	output_name: STRING is
+			-- Representation of `name' of `Current'
+			-- Used so that we do not have to distinguish between the
+			-- cases where we are editing a name or not editing a name.
+			-- When we are not editing, `edited_name' and `name' are
+			-- identical.
+		do
+			if edited_name.is_equal (name) then
+				Result := name
+			else
+				Result := edited_name
+			end
+		end
+		
 		
 feature {GB_CODE_GENERATOR} -- Implementation
 

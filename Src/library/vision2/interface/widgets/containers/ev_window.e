@@ -48,7 +48,14 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
- 
+
+	upper_bar: EV_VERTICAL_BOX 
+			-- Room at top of window. (Example use: toolbars.)
+			-- Positioned below menu bar.
+
+	lower_bar: EV_VERTICAL_BOX
+			-- Room at bottom of window. (Example use: statusbar.)
+
 	parent: EV_WINDOW is
 			-- Window of which `Current' is a child.
 		do
@@ -85,15 +92,6 @@ feature -- Access
 			Result := implementation.menu_bar
 		ensure
 			bridge_ok: Result = implementation.menu_bar
-		end
-
-	status_bar: EV_WIDGET is
-			-- Horizontal bar at bottom of client area that contains
-			-- helpful information for the user.
-		do
-			Result := implementation.status_bar
-		ensure
-			bridge_ok: Result = implementation.status_bar
 		end
 
 feature -- Status report
@@ -280,25 +278,6 @@ feature -- Status setting
 			void: menu_bar = Void
 		end
 
-	set_status_bar (a_status_bar: EV_WIDGET) is
-			-- Assign `a_status_bar' to `status_bar'.
-		require
-			no_status_bar_assigned: status_bar = Void
-			a_status_bar_not_void: a_status_bar /= Void
-		do
-			implementation.set_status_bar (a_status_bar)
-		ensure
-			a_status_bar_assigned: status_bar = a_status_bar
-		end
-
-	remove_status_bar is
-			-- Make `status_bar' `Void'.
-		do
-			implementation.remove_status_bar
-		ensure
-			void: status_bar = Void
-		end
-
 feature -- Event handling
 
 	close_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -326,10 +305,43 @@ feature {NONE} -- Implementation
 	create_action_sequences is
 			-- See `{EV_ANY}.create_action_sequences'.
 		do
+			create upper_bar
+			create lower_bar
 			{EV_CELL} Precursor
 			create close_actions
 			create resize_actions
 			create move_actions
+		end
+
+feature -- Obsolete
+
+	status_bar: EV_WIDGET is
+			-- Horizontal bar at bottom of client area that contains
+			-- helpful information for the user.
+		obsolete
+			"Use {EV_WINDOW}.lower_bar as container for your status bar."
+		do
+			check
+				inapplicable: False
+			end
+		end
+
+	remove_status is
+			-- Make `status_bar' `Void'.
+		obsolete
+			"Use {EV_WINDOW}.lower_bar as container for your status bar."
+		do
+			check
+				inapplicable: False
+			end
+		end
+
+	set_status_bar (a_status_bar: EV_WIDGET) is
+			-- Assign `a_status_bar' to `status_bar'.
+		obsolete
+			"Use: lower_bar.extend (...)"
+		do
+			lower_bar.extend (a_status_bar)
 		end
 
 invariant
@@ -348,6 +360,9 @@ invariant
 	close_actions_not_void: close_actions /= Void
 	resize_actions_not_void: resize_actions /= Void
 	move_actions_not_void: move_actions /= Void
+
+	upper_bar_not_void: is_useable implies upper_bar /= Void
+	lower_bar_not_void: is_useable implies lower_bar /= Void
 
 end -- class EV_WINDOW
 
@@ -372,6 +387,15 @@ end -- class EV_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/06/07 18:42:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.41.2.4  2000/05/04 01:10:47  brendel
+--| Moved creation of bars.
+--|
+--| Revision 1.41.2.2  2000/05/03 19:10:08  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.55  2000/05/03 00:24:57  pichery
 --| Removed useless blocking windows.
 --|

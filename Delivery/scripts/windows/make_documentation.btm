@@ -31,8 +31,12 @@ cdd %DOCUMENT_DIR
 if isdir newdocs fullrd newdocs
 if exist newdocs fullrf newdocs
 exprt -r %DEFAULT_CVS_TAG -d newdocs Delivery/newdocs
+
 remtrace Setup files
-cd newdocs
+cd newdocs\technologies\dotnet\samples
+sed -e "s/var eiffel_studio.*$/var eiffel_studio = true;/g" instal.js >> new_instal.js
+move new_instal.js instal.js
+cd %DOCUMENT_DIR\newdocs
 copy default.css ..
 fullrf internal\eiffel.hhc
 copy internal\eiffel.hhp .

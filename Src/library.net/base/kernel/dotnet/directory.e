@@ -137,7 +137,7 @@ feature -- Access
 	change_name (new_name: STRING) is
 			-- Change file name to `new_name'
 		require
-			not_new_name_Void: new_name /= Void
+			not_new_name_void: new_name /= Void
 			file_exists: exists
 		local
 			ext_old_name, ext_new_name: SYSTEM_STRING
@@ -230,7 +230,8 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
-				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.Read, name.to_cil)
+				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.Read,
+					name.to_cil)
 				pa.demand
 			end
 			Result := not retried
@@ -249,7 +250,8 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
-				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.path_discovery, name.to_cil)
+				create pa.make_from_access_and_path (
+					feature {FILE_IOPERMISSION_ACCESS}.path_discovery, name.to_cil)
 				pa.demand
 			end
 			Result := not retried
@@ -268,7 +270,8 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
-				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.write, name.to_cil)
+				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.write,
+					name.to_cil)
 				pa.demand
 			end
 			Result := not retried
@@ -339,10 +342,10 @@ feature -- Removal
 		end
 
 	delete_content_with_action (
-		action: PROCEDURE [ANY, TUPLE]
-		is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
-		file_number: INTEGER
-) is
+			action: PROCEDURE [ANY, TUPLE]
+			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
+			file_number: INTEGER)
+		is
 			-- Delete all files located in current directory and its
 			-- subdirectories. 
 			--
@@ -433,10 +436,10 @@ feature -- Removal
 		end
 
 	recursive_delete_with_action (
-		action: PROCEDURE [ANY, TUPLE]
-		is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
-		file_number: INTEGER
-) is
+			action: PROCEDURE [ANY, TUPLE]
+			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
+			file_number: INTEGER)
+		is
 			-- Delete directory, its files and its subdirectories.
 			--
 			-- `action' is called each time `file_number' files has

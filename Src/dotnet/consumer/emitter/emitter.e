@@ -159,21 +159,19 @@ feature {NONE} -- Implementation
 			if not no_copyright_display then
 				display_copyright		
 			end
+			create cr
+			if not cr.is_initialized then
+				(create {EIFFEL_XML_SERIALIZER}).serialize (create {CACHE_INFO}.make, cr.Absolute_info_path)
+			end
 			if init then
-				create cr
-				if cr.is_initialized then
-					process_error ("Cache already initialized!")
-				else
-					(create {EIFFEL_XML_SERIALIZER}).serialize (create {CACHE_INFO}.make, cr.Absolute_info_path)
-					from
-						i := 1
-					until
-						i > initial_assemblies.count
-					loop
-						ass := feature {ASSEMBLY}.load_from (initial_assemblies.item(i).to_cil)
-						consume_in_eac (ass)
-						i := i + 1
-					end
+				from
+					i := 1
+				until
+					i > initial_assemblies.count
+				loop
+					ass := feature {ASSEMBLY}.load_from (initial_assemblies.item(i).to_cil)
+					consume_in_eac (ass)
+					i := i + 1
 				end
 			elseif list_assemblies then
 				assemblies := (create {CACHE_READER}).consumed_assemblies

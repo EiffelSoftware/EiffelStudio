@@ -6,6 +6,7 @@
 			<table>
 				<row><cell><bold>Computer/Processor</bold></cell><cell>MIPS.</cell></row>
 				<row><cell><bold>Operating System</bold></cell><cell>Irix 6.5 with either Gnome 2.6 or GTK+ 2.4.</cell></row>
+				<row><cell><bold>C compiler</bold></cell><cell>MIPSPro C compiler V2.4 or later.</cell></row>				
 				<row><cell><bold>Memory</bold></cell><cell>256 MB of RAM (512Mb recommended).</cell></row>
 				<row><cell><bold>Hard Disk</bold></cell><cell>400Mb uncompressed hard disk space (700Mb recommended).</cell></row>
 				<row><cell><bold>Drive</bold></cell><cell>CD-ROM or DVD drive (not required for Free Edition downloads).</cell></row>
@@ -14,7 +15,7 @@
 			</table>
 		</paragraph>
 		<heading><size>2</size>Checking your environment</heading>
-		<paragraph>EiffelStudio 5.5 requires GTK+ 2.4.0 or above to function properly. You can check that you have this installed correctly by typing the following command:<code_block>pkg-config --modversion gtk+-2.0</code_block>The command should succeed and the version number of GTK+ should appear. If it is not 2.4.0 or above then you cannot continue the installation of EiffelStudio. You first need to install GTK+ 2.4.0.</paragraph>
+		<paragraph>EiffelStudio 5.5 requires GTK+ 2.4.0 or above to function properly. You can check that you have this installed correctly by typing the following command:<code_block>pkg-config --modversion gtk+-2.0</code_block>The command should succeed and the version number of GTK+ should appear. If it is not 2.4.0 or above then you cannot continue the installation of EiffelStudio. You first need to install GTK+ 2.4.0. You can download it from <link><url>http://freeware.sgi.com</url><label>http://freeware.sgi.com</label></link>.</paragraph>
 		<heading><size>2</size>Installing the Free Edition</heading>
 		<paragraph>After downloading the <bold>Eiffel55.tgz</bold> installation package, you should manually extract its contents to your hard drive. For example, you can extract it into /usr/local using the following command (assuming that you have permission to /usr/local and that the file Eiffel55.tgz was saved in /tmp):</paragraph>
 		<code_block>

@@ -59,9 +59,9 @@ inherit
 			background_brush,
 			on_draw_item
 		redefine
-			set_menu,
-			default_style,
 			default_ex_style,
+			default_style,
+			set_menu,
 			on_size,
 			on_get_min_max_info,
 			on_destroy,
@@ -94,7 +94,6 @@ feature {NONE} -- Initialization
 			check
 				parent_not_void: par_imp /= Void
 			end
---			make_top ("EV_CHILD_WINDOW")
 			make_child (par_imp, "EV_WINDOW")
 --			!! min_track.make (0,0)
 --			!! max_track.make (system_metrics.screen_width, system_metrics.screen_height)
@@ -444,11 +443,17 @@ feature {EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
+	top_level_window_imp: WEL_WINDOW is
+			-- Top level window that contains the current widget.
+		do
+			Result := Current
+		end
+
 feature {NONE} -- Implementation
 
 	default_style: INTEGER is
 		-- Set with the option `Ws_clipchildren' to avoid flashing.
-		once
+		do
 			Result := Ws_border + Ws_dlgframe + Ws_sysmenu 
 					+ Ws_thickframe + Ws_overlapped
 					+ Ws_minimizebox + Ws_maximizebox
@@ -456,11 +461,8 @@ feature {NONE} -- Implementation
 		end
 
 	default_ex_style: INTEGER is
-		-- Set with the option `Ws_ex_controlparent' to allow
-		-- the user to use the tab key.
-		once
-			Result := Ws_ex_controlparent + Ws_ex_left
-					+ Ws_ex_ltrreading
+		do
+			Result := Ws_ex_controlparent
 		end
 
 	on_show is
@@ -549,6 +551,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	system_metrics: WEL_SYSTEM_METRICS is
+			-- System metrics to query things like
+			-- window_frame_width
+		once
+			!!Result
+		end
+
 feature {EV_STATIC_MENU_BAR_IMP} -- implementation
 
 	set_menu (a_menu: WEL_MENU) is
@@ -560,15 +569,6 @@ feature {EV_STATIC_MENU_BAR_IMP} -- implementation
 			else
 				set_minimum_size (2*window_frame_width, title_bar_height + menu_bar_height + window_border_height + 2 * window_frame_height)
 			end
-		end
-
-feature {NONE} -- Implementation
-
-	system_metrics: WEL_SYSTEM_METRICS is
-			-- System metrics to query things like
-			-- window_frame_width
-		once
-			!!Result
 		end
 
 feature {NONE} -- Inapplicable
@@ -586,6 +586,15 @@ feature {NONE} -- Inapplicable
 			-- necessary to send him back the information
 			-- Do nothing for a window
 		do
+		end
+
+	set_top_level_window_imp (a_window: WEL_WINDOW) is
+			-- Make `a_window' the new `top_level_window_imp'
+			-- of the widget.
+		do
+			check
+				Inapplicable: False
+			end
 		end
 
 end -- class EV_WINDOW_IMP

@@ -42,6 +42,14 @@ feature -- Messages
 								%%N%
 								%Click Back and choose a valid creation routine name."
 
+	m_Wizard_instalation_error: STRING is
+								"The wizard can not be completed because its instalation is not complete.%N%
+								%The COM component %"ISE.VS.VisionSupport%" is missing or not registred.%N%
+								%%N%
+								%Contact support@eiffel.com for more details.%N%
+								%%N%
+								%Click Abort to finish the wizard."
+
 	m_Empty_root_class_external_name_error: STRING is
 								"Please chose a .NET name for the root class.%N%
 								%The .NET name is the name that will be used%N%
@@ -97,6 +105,7 @@ feature -- Messages
 feature -- Titles
 
 	t_Creation_routine_name_error: STRING is "Creation Routine Name Error"
+	t_Wizard_instalation_error: STRING is "Wizard instalation Error"
 	t_Empty_creation_routine_external_name_error: STRING is "Empty Creation Routine .NET Name Error"
 	t_Empty_root_class_external_name_error: STRING is "Empty Root Class .NET Name Error"
 	t_Filename_error: STRING is ".NET Assembly Filename Error"

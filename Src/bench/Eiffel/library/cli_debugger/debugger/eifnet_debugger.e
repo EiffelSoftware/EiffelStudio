@@ -753,16 +753,19 @@ feature -- Function Evaluation
 			l_status := Application.imp_dotnet.status
 			l_status.set_is_evaluating (True)
 				--| Let use the evaluating mecanism instead of the normal one
-				--| then let's disable the timer
+				--| then let's disable the timer for ec callback
 			stop_dbg_timer
+				--| We then call function evaluation on `a_icd'
 			l_icd_eval.call_function (l_func, 1, << a_icd >>)
 			do_continue
+				--| And we wait for all callback to be finished
 			lock_and_wait_for_callback
 			reset_data_changed
 
 			if 
 				Application.imp_dotnet.eifnet_debugger.last_managed_callback_is_exception 
 			then
+				check False end
 				Result := Void --"WARNING: Could not evaluate output"
 				debug ("DEBUGGER_TRACE_EVAL")
 					display_last_exception

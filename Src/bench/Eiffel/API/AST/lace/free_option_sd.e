@@ -17,6 +17,8 @@ inherit
 
 	SHARED_EIFFEL_PARSER
 
+	SHARED_OVERRIDDEN_METADATA_CACHE_PATH
+
 create
 	initialize,
 	make
@@ -420,7 +422,9 @@ feature {COMPILER_EXPORTER}
 
 				when metadata_cache_path then
 					if value.is_name then
-						System.set_metadata_cache_path ((create {ENV_INTERP}).interpreted_string (value.value))
+						if overridden_metadata_cache_path = Void then
+							System.set_metadata_cache_path ((create {ENV_INTERP}).interpreted_string (value.value))
+						end
 					else
 						error_found := True
 					end

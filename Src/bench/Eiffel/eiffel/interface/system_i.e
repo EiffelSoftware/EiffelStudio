@@ -54,6 +54,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_OVERRIDDEN_METADATA_CACHE_PATH
+
 create
 	make
 
@@ -4026,6 +4028,7 @@ feature -- Conveniences
 			msil_version := Void
 			msil_assembly_compatibility := Void
 			set_line_generation (False)
+			metadata_cache_path := overridden_metadata_cache_path
 		end
 		
 	reset_loaded_precompiled_properties is

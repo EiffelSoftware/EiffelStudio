@@ -50,7 +50,9 @@ feature -- Access
 	parent: EV_GRID is
 			-- Grid to which current row belongs
 		do
-			to_implement ("EV_GRID_ROW.parent")
+			if parent_grid_i /= Void then
+				Result := parent_grid_i.interface
+			end
 		end
 
 	item (i: INTEGER): EV_GRID_ITEM is
@@ -188,6 +190,21 @@ feature -- Element change
 		ensure
 			--color_set: forall (item(i).background_color  = a_color)
 		end
+
+feature {EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
+
+	set_parent_grid_i (a_parent_grid_i: EV_GRID_I) is
+			-- Set `parent_grid_i' to `a_parent_grid_i'
+		require
+			a_parent_grid_i_not_void: a_parent_grid_i /= Void
+		do
+			parent_grid_i := a_parent_grid_i
+		ensure
+			parent_grid_i_set: parent_grid_i = a_parent_grid_i
+		end
+
+	parent_grid_i: EV_GRID_I
+		-- Grid that `Current' resides in.
 		
 invariant
 	no_subrows_implies_not_expanded: subrow_count = 0 implies not is_expanded

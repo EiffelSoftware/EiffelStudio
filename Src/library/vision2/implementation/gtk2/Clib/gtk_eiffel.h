@@ -20,7 +20,6 @@
 #include "eif_argv.h"
 #include "ev_gtk_callback_marshal.h"
 
-EIF_REFERENCE c_match_font_name (char * pattern);
 
 /*==============================================================================
  gtk_window functions

@@ -35,40 +35,6 @@
 
 
 
-/*********************************
- *
- * Function: `c_match_font_name'
- * 
- * Author:   Vincent Brendel
- * Date:     12 jan 2000
- *
- * Note:     Cannot be moved to Eiffel, because it returns a char **
- *
- * Uses XListFonts to match `pattern' to a final font name.
- * Returns NULL string if no match is found.
- * As maximum, we pass 1 because we want only the first match.
- *
- *********************************/
-
-EIF_REFERENCE c_match_font_name (char * pattern)
-{
-	EIF_REFERENCE res;
-	char ** match_list; // array of null-term. strings.
-	int list_size; // return var for XListFonts.
-
-	match_list = XListFonts (gdk_display, pattern, 1, &list_size);
-
-	// list empty means no match found.
-	if (list_size == 0) return NULL;
-
-	// return first (and only) string in list.
-	if (match_list[0])
-		res = RTMS(match_list [0]);
-	else
-		res = NULL;
-	XFreeFontNames(match_list);
-	return res;
-}
 
 void c_gtk_window_set_modal (GtkWindow* window, gboolean modal)
 {

@@ -76,7 +76,7 @@ feature -- Execution
 				st.add_new_line;
 			else
 				if not Application.debugged_routines.empty then
-					st.add_string ("Active stop points:");
+					st.add_string ("Enabled stop points:");
 					st.add_new_line;
 					st.add_new_line;
 					display_debuggable_routines (st, Application.debugged_routines)
@@ -86,7 +86,7 @@ feature -- Execution
 				st.add_new_line;
 				st.add_new_line;
 				if not Application.removed_routines.empty then
-					st.add_string ("Non-active stop points:");
+					st.add_string ("Disabled stop points:");
 					st.add_new_line;
 					st.add_new_line;
 					display_debuggable_routines (st, Application.removed_routines)

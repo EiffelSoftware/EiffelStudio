@@ -10,7 +10,8 @@ default
 	--exception_stack_managed(yes);
 	--fail_on_rescue (yes);
 	--debug("RESOURCES");
-	--debug("storer");
+	--debug("STORER_CHECK");
+	--debug("STORER");
 	--precompiled ("$LOCAL_PRECOMPILE");
 
 cluster
@@ -37,7 +38,7 @@ cluster
 
 	generation:		"$BUILD/Generation";
 
-	transporter:	"$BUILD/Transport/common";
+	transporter:	"$BUILD/Transport";
 
 	context_commands:   "$BUILD/Context/Commands";
 	context_editor:	 	"$BUILD/Context/Editor";

@@ -99,6 +99,7 @@ feature
 		local
 			index: INTEGER
 		do
+			warning_message := Void;
 			fill_list;
 			index := list.index_of (associated_command.filter_name, 1);
 			if index = 0 then index := 1 end;
@@ -108,11 +109,8 @@ feature
 			text_field.set_text (associated_command.shell_command_name);
 			popup;
 			raise;
-				-- If we popped up the warner when we filled the 
-				-- filter name list, we have now to raise it.
-			if last_warner /= Void and then last_warner.is_popped_up then
-				last_warner.popup;
-				last_warner.raise 
+			if warning_message /= Void then
+				warner (associated_command.text_window). gotcha_call (warning_message)
 			end
 		end;
 
@@ -160,13 +158,17 @@ feature {NONE}
 			-- and fill the scroll_list.
 		local
 			filter_dir: DIRECTORY;
-			file_name: STRING;
+			file_name, file_suffix: STRING;
+			name_count: INTEGER;
 			filter_names: SORTED_TWO_WAY_LIST [STRING]
 		do
 			!!filter_dir.make (filter_path);
 			if not filter_dir.exists then
-				warner (associated_command.text_window).gotcha_call 
-					(w_Directory_not_exist (filter_path))
+				warning_message := w_Directory_not_exist (filter_path);
+				list.wipe_out;
+				list.put_right ("")
+			elseif not filter_dir.is_readable then
+				warning_message := w_Directory_wrong_permissions (filter_path);
 				list.wipe_out;
 				list.put_right ("")
 			else
@@ -179,13 +181,15 @@ feature {NONE}
 				until
 					file_name = Void
 				loop
-					if 
-						file_name.count > 4 and then 
-						file_name.substring (file_name.count - 3, 
-									file_name.count).is_equal (".fil")
-					then
-						file_name.head (file_name.count - 4);
-						filter_names.extend (file_name)
+					name_count := file_name.count;
+					if name_count > 4 then 
+						file_suffix := 
+							file_name.substring (name_count - 3, name_count);
+						file_suffix.to_lower;
+						if file_suffix.is_equal (".fil") then
+							file_name.head (name_count - 4);
+							filter_names.extend (file_name)
+						end
 					end;
 					filter_dir.readentry;
 					file_name := filter_dir.lastentry
@@ -209,7 +213,8 @@ feature {NONE}
 		end;
 
 	list: SCROLL_LIST;
-	text_field: TEXT_FIELD
+	text_field: TEXT_FIELD;
+	warning_message: STRING;
 
 invariant
 

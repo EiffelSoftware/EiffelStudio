@@ -63,9 +63,6 @@ feature -- Access
 			-- Saved project file
 		deferred
 		end
-
-	default_topic: HELP_TOPIC
-			-- Default topic to display on opening
 	
 feature -- Status Setting
 

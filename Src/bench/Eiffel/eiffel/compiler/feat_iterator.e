@@ -108,7 +108,7 @@ feature {NONE}
 								if descendant_feature.is_attribute then
 									mark_alive (descendant_feature);
 								else
-									mark_and_record
+									mark
 										(descendant_feature, descendant_class);
 								end;
 							end;

@@ -13,6 +13,7 @@ extern "C" {
 extern EIF_POINTER new_cordebug ();
 
 extern EIF_INTEGER dbg_timer_id ();
+extern EIF_BOOLEAN dbg_is_synchronizing();
 extern void dbg_init_synchro();
 extern void dbg_terminate_synchro ();
 

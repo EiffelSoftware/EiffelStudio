@@ -1,7 +1,5 @@
 <document title="Introduction to EiffelThread" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Introduction
@@ -10,7 +8,7 @@
 			<link>
 				<url>/libraries/thread/index.xml</url>
 				<label>EiffelThread library</label>
-			</link>documentation. In this section we will only see what is required to 
+			</link> documentation. In this section we will only see what is required to 
 			<link>
 				<url>10_compilation.xml</url>
 				<label>enable threading at the level of the compiler</label>

@@ -52,19 +52,19 @@
 			<item>If you are using CECIL in multithreaded mode, you must compile your C files with the same defined symbols as those used to compile the generated C-code in multithreaded mode. </item>
 			<item>Threaded code can safely refer to unsafe code ONLY from the initial thread. </item>
 		</list>
-		<note>
+		<paragraph>
 			<bold>Note</bold>: if you use the libraries Net and MEL in multithreaded mode, you should use libmtnet. a and libmtmel. a. When using MEL, you have to be aware that Motif 1. 2 is not threaded-safe (i.e not reentrant). Motif 2. x is threaded-safe. 
-		</note>
+		</paragraph>
 		<heading>
 			<size>2</size>Thread Safe Eiffel libraries
 		</heading>
-		<note>Most ISE Eiffel libraries are not thread safe. This means that even though you can use them in a multithreaded environment, you will need to add the necessary protection to ensure that objects are accessed only by one thread at a time. </note>
-		<note>Most of the issues is related to the use of EiffelBase containers which have been designed at a time where threads where not present. In the future we will certainly provide a version of EiffelBase which will be designed to be thread safe, in the meantime, you have to use basic protection mechanism such a mutexes to guarantee a safe execution of your programs. </note>
-		<note>Here is a summary of what you need to include in your project settings when using our libraries:</note>
-		<note>- EiffelBase: not thread safe, no externals required</note>
-		<note>- WEL: partly thread safe regarding creation of graphical objects that belongs to two different threads, but since it relies on EiffelBase, be aware of what has been said. Other libraries have the same dependency on EiffelBase and this warning will not be repeated. Change the library wel. lib by mtwel. lib</note>
-		<note>- MEL: you have to be aware that Motif 1. 2 is not thread safe and that Motif 2. x is. Therefore you can use MEL in a multithreaded program only if you have Motif 2. x. In this case, you need to include libmtmel. a instead of libmel. a</note>
-		<note>- EiffelNet: thread safe with above limitation on EiffelBase. Change the library net. lib by mtnet. lib on Windows. For unix based systems, change libnet. a by libmtnet. a</note>
-		<note>- COM: not thread safe. Change com. lib and com_runtime. lib into mtcom. lib and mtcom_runtime. lib. </note>
+		<paragraph>Most ISE Eiffel libraries are not thread safe. This means that even though you can use them in a multithreaded environment, you will need to add the necessary protection to ensure that objects are accessed only by one thread at a time. </paragraph>
+		<paragraph>Most of the issues is related to the use of EiffelBase containers which have been designed at a time where threads where not present. In the future we will certainly provide a version of EiffelBase which will be designed to be thread safe, in the meantime, you have to use basic protection mechanism such a mutexes to guarantee a safe execution of your programs. </paragraph>
+		<paragraph>Here is a summary of what you need to include in your project settings when using our libraries:</paragraph>
+		<paragraph>- EiffelBase: not thread safe, no externals required</paragraph>
+		<paragraph>- WEL: partly thread safe regarding creation of graphical objects that belongs to two different threads, but since it relies on EiffelBase, be aware of what has been said. Other libraries have the same dependency on EiffelBase and this warning will not be repeated. Change the library wel. lib by mtwel. lib</paragraph>
+		<paragraph>- MEL: you have to be aware that Motif 1. 2 is not thread safe and that Motif 2.x is. Therefore you can use MEL in a multithreaded program only if you have Motif 2.x. In this case, you need to include libmtmel.a instead of libmel.a</paragraph>
+		<paragraph>- EiffelNet: thread safe with above limitation on EiffelBase. Change the library net.lib by mtnet.lib on Windows. For unix based systems, change libnet.a by libmtnet.a</paragraph>
+		<paragraph>- COM: not thread safe. Change com. lib and com_runtime.lib into mtcom.lib and mtcom_runtime.lib. </paragraph>
 	</paragraph>
 </document>

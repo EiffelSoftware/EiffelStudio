@@ -40,6 +40,9 @@ feature -- Access
 	Missing_array_generic_type_error: INTEGER is 0x01000009
 			-- Missing TYPE attribute on array definition
 
+	Incompatible_xml_file_error: INTEGER is 0x01000004
+			-- XML file is not compatible with version of consumer
+
 feature {NONE} -- Implementation
 
 	error_message_table: HASH_TABLE [STRING, INTEGER] is
@@ -56,6 +59,7 @@ feature {NONE} -- Implementation
 			Result.put ("Missing count on array definition", Missing_array_count_error)
 			Result.put ("Missing lower bound on array definition", Missing_array_lower_bound_error)
 			Result.put ("Missing generic type on array definition", Missing_array_generic_type_error)
+			Result.put ("Incompatible xml file", Incompatible_xml_file_error)
 		end
 
 end -- class EIFFEL_XML_SERIALIZATION_ERRORS

@@ -39,16 +39,20 @@ feature -- Preconditions
 			c_t_not_void: c_t /= Void
 		local
 			h, m, s: INTEGER
+			l_c_t: like compact_time
 		do
-			h := c_hour (c_t)
-			m := c_minute (c_t)
-			s := c_second (c_t)
+			l_c_t := compact_time
+			compact_time := c_t
+			h := hour
+			m := minute
+			s := second
+			compact_time := l_c_t
 			Result := (h >= 0 and h < Hours_in_day and
-			m >= 0 and m < Minutes_in_hour and
-			s >= 0 and s < Seconds_in_minute)	
+				m >= 0 and m < Minutes_in_hour and
+				s >= 0 and s < Seconds_in_minute)	
 		end
 
-	Is_correct_time (h, m: INTEGER; s: DOUBLE; 
+	is_correct_time (h, m: INTEGER; s: DOUBLE; 
 					 twelve_hour_scale: BOOLEAN): BOOLEAN is
 			-- Is time represented by `h', `m', `code', and `s' correct?
 			-- `twelve_hour_scale' specifies if the hour range is 1 - 12

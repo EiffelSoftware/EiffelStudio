@@ -44,7 +44,9 @@ feature -- Initialization
 		require
 			correct_time: is_correct_time (h, m, s, False)
 		do
-			compact_time := c_make_time (h, m, s)
+			set_hour (h)
+			set_minute (m)
+			set_second (s)
 		ensure
 			hour_set: hour = h
 			minute_set: minute = m
@@ -72,14 +74,11 @@ feature -- Initialization
 	make_now is
 			-- Set current time according to timezone.
 		local
-			h, m, s: INTEGER
+			l_date: C_DATE
 		do
-			c_get_date_time
-			h := c_hour_now
-			m := c_minute_now
-			s := c_second_now
-			make (h, m, s)
-			fractional_second := c_millisecond_now / 1000
+			create l_date
+			make (l_date.hour_now, l_date.minute_now, l_date.second_now)
+			fractional_second := l_date.millisecond_now / 1000
 		end
 
 	make_by_seconds (sec: INTEGER) is
@@ -356,40 +355,6 @@ feature -- Output
 			Result := code.create_time_string (Current)
 		end	
 	
-feature {NONE} -- Externals 
-	
-	c_get_date_time is
-		external
-			"C"
-		end
-	
-	c_hour_now: INTEGER is
-		external
-			"C  (): EIF_INTEGER | %"datetime.h%""
-		end
-
-	c_minute_now: INTEGER is
-		external
-			"C  (): EIF_INTEGER | %"datetime.h%""
-		end
-
-	c_second_now: INTEGER is
-		external
-			"C (): EIF_INTEGER | %"datetime.h%""
-		end
-
-	c_millisecond_now: INTEGER is
-		external
-			"C (): EIF_INTEGER | %"datetime.h%""
-		ensure
-			correct_range: 0 <= Result and Result < 1000
-		end
-
-	c_make_time (h, m, s: INTEGER): INTEGER is
-		external
-			"C"
-		end
-
 invariant
 
 	second_large_enough: second >= 0

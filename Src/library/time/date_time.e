@@ -107,17 +107,12 @@ feature -- Initialization
 	make_now is
 			-- Get the date and the time from the system.
 		local
-			y, m, d, h, mi, s: INTEGER
+			l_date: C_DATE
 		do 
-			c_get_date_time
-			y := c_year_now
-			m := c_month_now
-			d := c_day_now
-			h := c_hour_now
-			mi := c_minute_now
-			s := c_second_now
-			create date.make (y, m, d) 
-			create time.make_fine (h, mi, s + c_millisecond_now / 1000)
+			create l_date
+			create date.make (l_date.year_now, l_date.month_now, l_date.day_now) 
+			create time.make_fine (l_date.hour_now, l_date.minute_now,
+				l_date.second_now + l_date.millisecond_now / 1000)
 		end
 
 	make_from_string_default (s: STRING) is
@@ -407,53 +402,6 @@ feature -- Output
 		do
 			create code.make (s)
 			Result := code.create_string (Current)
-		end
-
-feature {NONE} -- Externals
-
-	c_year_now: INTEGER is
-			-- Current year recorded by c_get_date_time.
-		external 
-			"C"
-		end
-
-	c_month_now: INTEGER is
-			-- Current month recorded by c_get_date_time.
-		external
-			"C"
-		end
-
-	c_day_now: INTEGER is
-			-- Current day recorded by c_get_date_time.
-		external
-			"C"
-		end
-
-	c_hour_now: INTEGER is
-		external
-			"C"
-		end
-
-	c_minute_now: INTEGER is
-		external
-			"C"
-		end
-
-	c_second_now: INTEGER is
-		external
-			"C"
-		end
-
-	c_millisecond_now: INTEGER is
-		external
-			"C"
-		end
-
-	c_get_date_time is
-			-- Get the date from the intern clock
-			-- and save it in a local variable.
-		external
-			"C"
 		end
 
 end -- class DATE_TIME

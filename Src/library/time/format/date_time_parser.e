@@ -196,7 +196,9 @@ feature -- Basic operations
 			second_val: INTEGER
 			s: STRING
 			has_seps: BOOLEAN
+			l_year_now: INTEGER
 		do
+			l_year_now := (create {C_DATE}).year_now
 			s := clone (source_string)
 			s.to_upper
 			year_val := 1
@@ -246,9 +248,9 @@ feature -- Basic operations
 								
 								-- We need a smart century correction
 								-- eventually.
-								if year_val - c_year_now > 50 then
+								if year_val - l_year_now > 50 then
 									year_val := year_val - 100
-								elseif c_year_now - year_val > 50 then
+								elseif l_year_now - year_val > 50 then
 									year_val := year_val + 100
 								end
 							else
@@ -313,14 +315,6 @@ feature -- Basic operations
 			string_parsed: parsed
 		end
 
-feature {NONE} -- Externals
-
-	c_year_now: INTEGER is
-			-- Today's year
-		external
-			"C"
-		end
-		
 feature {NONE} -- Implementation
 
 	year_val: INTEGER

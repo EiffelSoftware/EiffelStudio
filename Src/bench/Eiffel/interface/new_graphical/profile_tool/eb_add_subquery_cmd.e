@@ -35,6 +35,7 @@ feature -- Command Execution
 			txt: STRING
 			operator: SUBQUERY_OPERATOR
 			string_arg: STRING
+			error_dialog: EB_MESSAGE_WINDOW
 		do
 			txt := query_window.subquery
 			if txt /= Void and then not txt.empty then 
@@ -47,10 +48,12 @@ feature -- Command Execution
 					create operator.make (string_arg)
 					query_window.all_operators.extend (operator)
 					query_window.all_operators.append (subquery_operators)
-					query_window.update_query_form
+					query_window.update_query_frame
 					query_window.subquery_text.set_text ("")
+				else
+					create error_dialog.make_default (query_window, "Error", "Un jour, il sera utile de mettre un autre message ici")
+					error_dialog.show
 				end
-
 			end
 		end
 

@@ -27,13 +27,6 @@ inherit
 			default_create
 		end
 		
-	VISUAL_STUDIO_INFORMATION
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
 feature {NONE} -- Initialization
 
 	default_create is 

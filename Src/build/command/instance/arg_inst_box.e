@@ -29,7 +29,7 @@ feature
 			command_tool := tool
 			box_create (a_name, a_parent)
 			set_column_layout
-			set_preferred_count (5)
+			set_preferred_count (3)
 			parent_scrolled_w ?= a_parent
 			if parent_scrolled_w /= Void then
 				parent_scrolled_w.set_working_area (Current)

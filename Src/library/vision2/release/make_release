@@ -42,8 +42,9 @@ do
 		#then
 		#	 echo "> 80 cols! $file"
 		#fi
-		grep -v -- "--|" $file > $file.new
-		mv -f $file.new $file
+		grep -v "^[ 	]*--|" < $file > $file.tmp
+		sed -e 's/--|.*//g' < $file.tmp > $file
+		rm -f $file.tmp
 	fi
 done
 cd ..

@@ -60,6 +60,14 @@ feature {NONE} -- Implementation
 			Result := Current
 		end
 
+feature {NONE} -- Inapplicable
+
+	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
+			-- `sitem' has been selected'
+			-- do nothing here
+		do
+		end
+
 end -- class EV_STATIC_MENU_BAR_IMP
 
 --|----------------------------------------------------------------

@@ -1,6 +1,7 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: 
+		"Command used for displaying an entry panel %
+		%in the preference tool"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,7 +44,7 @@ feature -- Linking
 		do
 			leaf := l
 			if l /= void then
-				l.add_activate_command(Current, void)
+				l.add_select_command(Current, void)
 			end
 		end
 
@@ -51,7 +52,7 @@ feature -- Linking
 		do
 			if m /= void then
 				menu_item := m
-				m.add_activate_command(Current, void)
+				m.add_select_command(Current, void)
 			end
 		end
 
@@ -64,14 +65,14 @@ feature -- Linking
 			end
 		end
 
---	unlink_all is
+	unlink_all is
 			-- deletes all links
---		do
+		do
 --			items.wipe_out
---			leaf := void
---			menu_item := void
---			button := void
---		end
+			leaf := Void
+			menu_item := Void
+			button := Void
+		end
 
 
 feature -- Execution
@@ -85,6 +86,7 @@ feature -- Execution
 			panel.tool.display_panel (panel)
 
 --			leaf.set_selected (true)
+--			button.set_selected (true)
 --			menu_item.set_state (true)
 		end
 

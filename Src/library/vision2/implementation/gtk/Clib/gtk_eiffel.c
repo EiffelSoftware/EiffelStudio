@@ -355,6 +355,6 @@ c_gtk_widget_show_children_recurse (GtkWidget *widget,
                                   gpointer   client_data)
 {
     gtk_widget_show (widget);
-    gtk_widget_draw_children (widget);
+    c_gtk_widget_show_children (widget);
 }
 

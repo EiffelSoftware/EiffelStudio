@@ -598,7 +598,7 @@ feature -- Element change
 	set_timer (timer_id, time_out: INTEGER) is
 			-- Set a timer idenfied by `timer_id' with a
 			-- `time_out' value (in milliseconds).
-			-- See also `on_timer'.
+			-- See also `on_timer', `kill_timer'.
 		require
 			exists: exists
 			positive_timer_id: timer_id > 0
@@ -897,6 +897,7 @@ feature -- Basic operations
 
 	kill_timer (timer_id: INTEGER) is
 			-- Kill the timer identified by `timer_id'.
+			-- See also `set_timer', `on_timer'.
 		require
 			exists: exists
 			positive_timer_id: timer_id > 0
@@ -943,7 +944,7 @@ feature -- Removal
 			not_exists: not exists
 		end
 
-feature {NONE} -- Messages
+feature -- Messages
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Wm_size message
@@ -1023,6 +1024,7 @@ feature {NONE} -- Messages
 
 	on_char (virtual_key, key_data: INTEGER) is
 			-- Wm_char message
+			-- See class WEL_VK_CONSTANTS for `virtual_key' value.
 		require
 			exists: exists
 		do
@@ -1077,11 +1079,9 @@ feature {NONE} -- Messages
 		do
 		end
 
-	on_set_cursor (hit_code: INTEGER): BOOLEAN is
+	on_set_cursor (hit_code: INTEGER) is
 			-- Wm_setcursor message.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
-			-- If True further processing is halted.
-			-- (False by default)
 		require
 			exists: exists
 		do
@@ -1114,6 +1114,7 @@ feature {NONE} -- Messages
 	on_timer (timer_id: INTEGER) is
 			-- Wm_timer message.
 			-- A Wm_timer has been received from `timer_id'
+			-- See also `set_timer', `kill_timer'.
 		require
 			exists: exists
 			positive_timer_id: timer_id > 0
@@ -1228,6 +1229,12 @@ feature {NONE} -- Implementation
 			unregistered: not registered (Current)
 		end
 
+	default_process_message (msg, wparam, lparam: INTEGER) is
+			-- Process `msg' which has not been processed by
+			-- `process_message'.
+		do
+		end
+
 feature {WEL_DISPATCHER}
 
 	frozen window_process_message, process_message (hwnd: POINTER; msg,
@@ -1244,9 +1251,7 @@ feature {WEL_DISPATCHER}
 					c_mouse_message_x (lparam),
 					c_mouse_message_y (lparam))
 			elseif msg = Wm_setcursor then
-				if on_set_cursor (cwin_lo_word (lparam)) then
-					Result := 1
-				end
+				on_set_cursor (cwin_lo_word (lparam))
 			elseif msg = Wm_size then
 				on_size (wparam,
 					cwin_lo_word (lparam),
@@ -1280,9 +1285,9 @@ feature {WEL_DISPATCHER}
 					c_mouse_message_y (lparam))
 			elseif msg = Wm_timer then
 				on_timer (wparam)
-			elseif msg = wm_setfocus then
+			elseif msg = Wm_setfocus then
 				on_set_focus
-			elseif msg = wm_killfocus then
+			elseif msg = Wm_killfocus then
 				on_kill_focus
 			elseif msg = Wm_char then
 				on_char (wparam, lparam)
@@ -1303,12 +1308,6 @@ feature {WEL_DISPATCHER}
 			else
 				default_process_message (msg, wparam, lparam)
 			end
-		end
-
-	default_process_message (msg, wparam, lparam: INTEGER) is
-			-- Process `msg' which has not been processed by
-			-- `process_message'.
-		do
 		end
 
 	call_default_window_procedure (msg, wparam, lparam: INTEGER): INTEGER is
@@ -1578,6 +1577,25 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HWND, UINT, WPARAM, LPARAM)"
 		alias
 			"SendMessage"
+		end
+
+	cwin_post_message_result (hwnd: POINTER; msg, wparam,
+				lparam: INTEGER): BOOLEAN is
+			-- SDK PostMessage (with the result)
+		external
+			"C [macro <wel.h>] (HWND, UINT, %
+				%WPARAM, LPARAM): EIF_BOOLEAN"
+		alias
+			"PostMessage"
+		end
+
+	cwin_post_message (hwnd: POINTER; msg, wparam,
+				lparam: INTEGER) is
+			-- SDK PostMessage (without the result)
+		external
+			"C [macro <wel.h>] (HWND, UINT, WPARAM, LPARAM)"
+		alias
+			"PostMessage"
 		end
 
 	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is

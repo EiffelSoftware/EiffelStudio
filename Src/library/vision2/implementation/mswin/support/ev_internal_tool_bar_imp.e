@@ -11,7 +11,6 @@ inherit
 	WEL_CONTROL_WINDOW
 		redefine
 			default_style,
---			background_brush,
 			on_wm_erase_background,
 			on_control_id_command
 		end
@@ -26,16 +25,6 @@ feature {NONE} -- WEL Implementation
 		do
 			Result ?= children.first
 		end
-
---   	background_brush: WEL_BRUSH is
-  -- 			-- Current window background color used to refresh the window when
-   --			-- requested by the WM_ERASEBKGND windows message.
-   --			-- By default there is no background 
-	--	do
- 	--		if exists and toolbar.background_color_imp /= Void then
- 	--			create Result.make_solid (toolbar.background_color_imp)
- 	--		end
- 	--	end
 
 	on_wm_erase_background (wparam: INTEGER) is
 			-- Wm_erasebkgnd message.

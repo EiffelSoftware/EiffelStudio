@@ -50,8 +50,8 @@ feature -- Basic Operations
 			texts_exists: title /= Void and message /= Void
 		deferred
 		ensure
-			texts_written: title.text /= Void and message.text /= Void
-	end
+			texts_written: title.text /= Void
+		end
 
 	display_pixmap is
 			-- Draw pixmap

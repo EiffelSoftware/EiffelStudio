@@ -39,13 +39,6 @@ inherit
 			default_create
 		end
 		
-	GB_GENERAL_UTILITIES
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
 feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XM_ELEMENT) is

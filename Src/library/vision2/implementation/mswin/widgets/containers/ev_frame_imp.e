@@ -43,9 +43,14 @@ inherit
 			on_char,
 			on_key_up
 		redefine
-			on_size,
+			default_style,
 			on_paint,
 			background_brush
+		end
+
+	WEL_PS_CONSTANTS
+		export
+			{NONE} all
 		end
 
 creation
@@ -56,14 +61,8 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the frame with the default options.
-		local
-			wlf: WEL_LOG_FONT
-			wel_font: WEL_FONT
 		do
-			!! wlf.make (1, "Arial")
-			!! box_text_font.make_indirect (wlf)
 			make_with_text (par, "")
-			private_box.set_font (box_text_font)
 		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
@@ -74,8 +73,8 @@ feature {NONE} -- Initialization
 			check
 				parent_not_void: par_imp /= Void
 			end
-			make_with_coordinates (par_imp, "Frame", 0, 0, 0, 0)
-			!! private_box.make (Current, txt, 0, 0, 0, 0, 0)
+			make_with_coordinates (par_imp, txt, 0, 0, 0, 0)
+			!WEL_ANSI_VARIABLE_FONT! private_font.make
 		end
 
 feature -- Access
@@ -148,6 +147,12 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 feature {NONE} -- Implementation : WEL features
 
+	default_style: INTEGER is
+		do
+			Result := {WEL_CONTROL_WINDOW} Precursor + Ws_clipchildren
+					+ Ws_clipsiblings
+		end
+
 	background_brush: WEL_BRUSH is
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
@@ -159,43 +164,79 @@ feature {NONE} -- Implementation : WEL features
 			end
 		end
 
-	on_size (code, new_width, new_height: INTEGER) is
-			-- Resize the frame according to parent.
-		require else
-			box_not_void: private_box /= Void
-			box_exists: private_box.exists
-		do
-			private_box.resize ((new_width).max (minimum_width),
-								(new_height).max (minimum_height))
-		end
-
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+		local
+			top: INTEGER
 		do
-			if box_text_font /= Void then
-				private_box.set_font (box_text_font)
+			paint_dc.select_font (private_font)
+			paint_dc.set_background_color (background_color)
+			paint_dc.text_out (10, 0, text)
+			if text.empty then
+				top := 0
+			else
+				top := private_font.log_font.height // 2
+			end
+			paint_dc.select_pen (shadow_pen)
+			paint_dc.line (0, top, 0, height - 1)
+			paint_dc.line (0, height - 2, width - 2, height - 2)
+			paint_dc.line (width - 2, height - 2, width - 2, top)
+			if text.empty then
+				paint_dc.line (0, top, width - 2, top)
+			else
+				paint_dc.line (0, top, 7, top)
+				paint_dc.line (width - 2, top, paint_dc.string_size (text).width + 13 , top)
+			end
+
+			paint_dc.select_pen (highlight_pen)
+			paint_dc.line (1, top + 1, 1, height - 2)
+			paint_dc.line (0,  height - 1, width - 1, height - 1)
+			paint_dc.line (width - 1, height - 1, width - 1, top)
+			if text.empty then
+				paint_dc.line (1, 1, width - 3, 1)
+			else
+				paint_dc.line (1, top + 1, 7, top +1)
+				paint_dc.line (width - 3, top + 1, paint_dc.string_size (text).width + 13, top + 1)
 			end
 		end
 
-	private_box: WEL_GROUP_BOX
-			-- Frame around the container
+	shadow_pen: WEL_PEN is
+			-- Pen with the shadow color
+		local
+			color: WEL_COLOR_REF
+		do
+			!! color.make_system (Color_btnshadow)
+			!! Result.make (ps_solid, 1, color)
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
+		end
+
+	highlight_pen: WEL_PEN is
+			-- Pen with the highlight color
+		local
+			color: WEL_COLOR_REF
+		do
+			!! color.make_system (Color_btnhighlight)
+			!! Result.make (ps_solid, 1, color)
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
+		end
+
+	private_font: WEL_FONT
+
+	box_width: INTEGER is 4
+
+	box_height: INTEGER is 4
 
 	box_text_height: INTEGER is
-			-- Text height of the box title
-		local
-			a_log_font: WEL_LOG_FONT
 		do
-			a_log_font := private_box.font.log_font
-			Result := a_log_font.height
+			if text.empty then
+				Result := 0
+			else
+				Result := private_font.log_font.height
+			end
 		end
-	
-	box_text_font: WEL_FONT
-			-- Font for the box title
-
-	box_height: INTEGER is 2
-			-- Height of frame
-
-	box_width: INTEGER is 2
-			-- Width of frame
 
 end -- class EV_FRAME_IMP
 

@@ -277,15 +277,20 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	expand_callback is
 			-- Called when `Current' is expanded.
 		do
+			remove_dummy_node
 			is_expanded := True
-			expand_actions_internal.call (empty_tuple)
+			if expand_actions_internal /= Void then
+				expand_actions_internal.call (empty_tuple)
+			end
 		end
 
 	collapse_callback is
 			-- Called when `Current' is collapsed.
 		do
 			is_expanded := False
-			collapse_actions_internal.call (empty_tuple)
+			if collapse_actions_internal /= Void then
+				collapse_actions_internal.call (empty_tuple)
+			end
 		end
 
 	tree_node_ptr: POINTER
@@ -307,27 +312,6 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			C.gtk_label_get (text_label, $text_ptr)
 			if gtk_pixmap /= NULL and then parent_tree_imp /= Void then
 				C.gtk_pixmap_get (C.gtk_pixmap_struct_pixmap (gtk_pixmap), $gdkpix, $gdkmask)
-				success := C.gtk_ctree_get_node_info (
-					parent_tree_imp.list_widget,
-					tree_node_ptr,
-					NULL,
-					NULL,
-					NULL,
-					NULL,
-					NULL,
-					NULL,
-					$is_leaf,
-					$is_expded
-				)
-				C.gtk_ctree_node_set_pixtext (
-					parent_tree_imp.list_widget,
-					tree_node_ptr,
-					0,
-					text_ptr,-- text,
-					5, -- spacing
-					gdkpix,
-					gdkmask
-				)
 				C.gtk_ctree_set_node_info (
 					parent_tree_imp.list_widget,
 					tree_node_ptr,
@@ -470,7 +454,10 @@ feature {NONE} -- Implementation
 			-- Remove from tree if present
 			par_tree_imp := parent_tree_imp
 			if par_tree_imp /= Void then
-				if a_position = 1 and then count > 1 then
+				if count = 1 and then not is_expanded then
+					--| Hack needed to prevent seg fault on removal if last item in collapse_actions.
+					remove_on_expand_node := item_imp.tree_node_ptr
+				else
 					C.gtk_ctree_remove_node (par_tree_imp.list_widget, item_imp.tree_node_ptr)
 				end
 				item_imp.set_item_and_children (NULL)
@@ -484,6 +471,17 @@ feature {NONE} -- Implementation
 
 			if par_tree_imp /= Void then
 				par_tree_imp.update_pnd_status
+			end
+		end
+		
+	remove_on_expand_node: POINTER
+	
+	remove_dummy_node is
+			--
+		do
+			if remove_on_expand_node /= NULL then
+				C.gtk_ctree_remove_node (parent_tree_imp.list_widget, remove_on_expand_node)
+				remove_on_expand_node := NULL
 			end
 		end
 

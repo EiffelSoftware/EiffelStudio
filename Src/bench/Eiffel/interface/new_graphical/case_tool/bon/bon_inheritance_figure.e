@@ -69,8 +69,8 @@ feature {CONTEXT_DIAGRAM} -- XML
 			l_namespace: XM_NAMESPACE
 		do
 			if vertices.count > 2 then
-				create l_namespace.make ("", "")
-				create Result.make_child (a_parent, "INHERITANCE_FIGURE", l_namespace)
+				create l_namespace.make_default
+				create Result.make (a_parent, "INHERITANCE_FIGURE", l_namespace)
 				Xml_routines.add_attribute ("SRC", l_namespace, descendant.name, Result)
 				Xml_routines.add_attribute ("TRG", l_namespace, ancestor.name, Result)
 				from
@@ -78,7 +78,7 @@ feature {CONTEXT_DIAGRAM} -- XML
 				until	
 					vertices.islast
 				loop
-					create vertice_xml_element.make_child (Result, "MIDPOINT", l_namespace)
+					create vertice_xml_element.make (Result, "MIDPOINT", l_namespace)
 					vertice_xml_element.put_last (
 						Xml_routines.xml_node (
 							vertice_xml_element,

@@ -425,8 +425,7 @@ feature {NONE} -- Implementation
 
 	quick_sort (min, max: INTEGER) is
 			-- Apply `quick_sort' algorithm.
-		require
-			in_bounds: min < max
+			-- If `max' < `min' then it stops
 		local
 			pivo_index: INTEGER
 		do

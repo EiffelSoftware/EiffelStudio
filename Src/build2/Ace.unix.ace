@@ -62,11 +62,6 @@ cluster
 			assertion (no)
 		end
 
-	all wizard_library:		"$EIFFEL_SRC/library/wizard"
-		exclude
-			"mswin"; "wizard_window.e"; "wizard_project_manager.e"; "wizard_shared.e"; "wizard_initial_state_window.e"; 
-		end
-
 	all preferences:		"$EIFFEL_SRC/library/preferences"
 		exclude
 			"registry"; 

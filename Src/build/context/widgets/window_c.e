@@ -18,7 +18,7 @@ inherit
 			set_x_y, set_size, set_visual_name,
 			raise, x, y, set_real_x_y, is_window,
 			add_to_window_list, retrieve_set_visual_name, 
-			shown
+			shown, is_able_to_be_grouped
 		end;
 	COMPOSITE_C
 		rename
@@ -33,7 +33,7 @@ inherit
 			reset_modified_flags,
 			raise, x, y, set_real_x_y, is_window,
 			add_to_window_list, retrieve_set_visual_name, 
-			shown
+			shown, is_able_to_be_grouped
 		select
 			reset_modified_flags, undo_cut
 		end
@@ -113,7 +113,6 @@ feature {NONE}
 
 feature 
 
-
 	set_start_hidden (flag: BOOLEAN) is
 		do
 			start_hidden := flag
@@ -149,11 +148,18 @@ feature
 		end
 
 	is_window: BOOLEAN is
+			-- Is Current a window? (True)
 		do
 			Result := True
 		end;
 
 	is_in_a_group: BOOLEAN is
+			-- Is Current in a group? (False)
+		do
+		end;
+
+	is_able_to_be_grouped: BOOLEAN is
+			-- Is Current able to be grouped? (False)
 		do
 		end;
 
@@ -375,7 +381,7 @@ feature -- Hack for motif
 			Result := widget.y - old_y
 		end;
 
-feature {NONE}
+feature {NONE} -- Code generation
 
 	position_initialization (context_name: STRING): STRING is
 			-- Eiffel code for the position of current context

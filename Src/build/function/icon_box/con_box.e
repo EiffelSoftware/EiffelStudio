@@ -23,14 +23,12 @@ creation
 
 	make
 
-        
 feature {NONE}
 
 	create_new_icon is
-                do
-                        !!new_icon.make (associated_editor);
-                end;
-
+		do
+	   		!!new_icon.make (associated_editor);
+		end;
 	
 feature 
 

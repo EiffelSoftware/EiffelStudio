@@ -59,6 +59,7 @@
 #define UUID_IEIFFELPARAMETERDESCRIPTOR         E1FFE192-D5EB-434B-9D21-EC3E4FF0058f
 #define UUID_IEIFFELHTMLDOCUMENTATIONGENERATOR  E1FFE119-790F-48CB-8869-DB06184f97b4
 #define UUID_IEIFFELHTMLDOCUMENTATIONEVENTS     E1FFE13E-ED26-4DED-AAFB-21FA8B28e879
+#define UUID_IEIFFELSUPPORT						E1FFE14A-52C6-4692-B12E-49E0331E74FF
 
 // =========================================================================
 //                                                                 Enum GUID
@@ -103,6 +104,7 @@ enum
     DISPID_EiffelComCompiler_ProjectProperties,
     DISPID_EiffelComCompiler_CompletionInformation,
     DISPID_EiffelComCompiler_HtmlDocumentationGenerator,
+    DISPID_EiffelComCompiler_Support,
 
     // IEiffelProjectProperties dispatch ID's
 
@@ -146,7 +148,6 @@ enum
     DISPID_EiffelComCompiler_RemoveFileLocks,
     DISPID_EiffelComCompiler_DisplayWarnings,
     DISPID_EiffelComCompiler_DiscardAssertions,
-    DISPID_EiffelComCompiler_ExpandPath,
     DISPID_EiffelComCompiler_GenerateMsilKeyFileName,
 
     // IEiffelCompilerEvents dispatch ID's
@@ -472,7 +473,11 @@ enum
 
     DISPID_EiffelComCompiler_InnerException,
     DISPID_EiffelComCompiler_Message,
-    DISPID_EiffelComCompiler_ExceptionCode
+    DISPID_EiffelComCompiler_ExceptionCode,
+
+    // IEiffelSupport dispatch ID's
+    DISPID_EiffelComCompiler_ExpandPath,
+    DISPID_EiffelComCompiler_EiffelClassNameToDotnetName
 
 };
 

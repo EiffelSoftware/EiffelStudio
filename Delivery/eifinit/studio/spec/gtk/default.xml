@@ -514,8 +514,8 @@
 	</TOPIC>
 	<TOPIC TOPIC_ID="Graphics" ICON="icon_preferences_folder">
 		<HEAD>Graphical Elements</HEAD>
-		<TEXT DESCRIPTION="All-purpose editor font" IMMEDIATE_EFFECT="no">editor_font<FONT>courier-r-regular-12-screen</FONT></TEXT>
-		<TEXT DESCRIPTION="Keyword editor font" IMMEDIATE_EFFECT="no">keyword_font<FONT>courier-r-bold-12-screen</FONT></TEXT>
+		<TEXT DESCRIPTION="All-purpose editor font" IMMEDIATE_EFFECT="no">editor_font<FONT>Sans-r-regular-12-screen</FONT></TEXT>
+		<TEXT DESCRIPTION="Keyword editor font" IMMEDIATE_EFFECT="no">keyword_font<FONT>Sans-r-bold-12-screen</FONT></TEXT>
 		<TEXT DESCRIPTION="Tabulation size" IMMEDIATE_EFFECT="no">tab_step<INTEGER>4</INTEGER></TEXT>
 		<TEXT DESCRIPTION="Mouse wheel scroll full page" IMMEDIATE_EFFECT="yes">mouse_wheel_scroll_full_page<BOOLEAN>False</BOOLEAN></TEXT>
 		<TEXT DESCRIPTION="Mouse wheel scroll size" IMMEDIATE_EFFECT="yes">mouse_wheel_scroll_size<INTEGER>3</INTEGER></TEXT>

@@ -28,7 +28,7 @@ feature -- Access
 feature -- Basic operations
 
 	generate_functions_and_properties (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
-					a_desc: WIZARD_INTERFACE_DESCRIPTOR) is
+					a_desc: WIZARD_INTERFACE_DESCRIPTOR; an_interface_name: STRING) is
 			-- Generate functions and properties of 'a_desc'
 		local
 			function_generator: WIZARD_CPP_SERVER_FUNCTION_GENERATOR
@@ -74,7 +74,7 @@ feature -- Basic operations
 			if a_desc.inherited_interface /= Void and not
 					a_desc.inherited_interface.c_type_name.is_equal (Iunknown_type) and then
 					not a_desc.inherited_interface.c_type_name.is_equal (Idispatch_type) then
-				generate_functions_and_properties (a_component_descriptor, a_desc.inherited_interface)
+				generate_functions_and_properties (a_component_descriptor, a_desc.inherited_interface, an_interface_name)
 			end		
 		end
 

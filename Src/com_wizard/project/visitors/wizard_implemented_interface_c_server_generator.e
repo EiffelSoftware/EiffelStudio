@@ -84,7 +84,7 @@ feature -- Basic operations
 			cpp_class_writer.add_member (member_writer, Private)
 
 
-			generate_functions_and_properties (a_descriptor, a_descriptor.interface_descriptor)
+			generate_functions_and_properties (a_descriptor, a_descriptor.interface_descriptor, a_descriptor.interface_descriptor.name)
 
 			cpp_class_writer.add_constructor (constructor (a_descriptor))
 

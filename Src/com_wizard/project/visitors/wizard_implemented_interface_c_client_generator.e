@@ -84,7 +84,7 @@ feature -- Basic operations
 
 			end
 
-			generate_functions_and_properties (a_descriptor, a_descriptor.interface_descriptor)
+			generate_functions_and_properties (a_descriptor, a_descriptor.interface_descriptor, a_descriptor.interface_descriptor.name)
 
 			add_default_function
 			cpp_class_writer.set_destructor (destructor (a_descriptor))

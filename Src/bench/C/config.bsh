@@ -26,6 +26,7 @@ ccflags='-N -M -w- -tWM -DEIF_THREADS'
 #
 link_line='&$compiler_path\bin\tlib /c $@ +$**'
 link_wline='&$compiler_path\bin\tlib /c $@ +$**'
+link_eline='&$compiler_path\bin\tlib /c $@ +$**'
 cc='bcc32'
 optimize='-O2'
 extra_object_files=''

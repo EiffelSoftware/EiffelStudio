@@ -24,6 +24,7 @@ feature {NONE}
 			file_name: STRING;
 			aok: BOOLEAN;
 			show_text: SHOW_TEXT;
+			char: CHARACTER;
 			default_name: FILE_NAME
 		do
 			if text_window.file_name /= Void then
@@ -58,9 +59,10 @@ feature {NONE}
 				new_file.open_write;
 				to_write := text_window.text; 
 				new_file.putstring (to_write);
-				if to_write.item (to_write.count) /= '%N' then 
-					-- Add a carriage return like vi if there's none at the end 
-					new_file.putchar ('%N')
+				char := to_write.item (to_write.count);
+				if char /= '%N' and then char /= '%R' then
+						-- Add a carriage return like vi if there's none at the end 
+					new_file.new_line
 				end; 
 				new_file.close;
 				show_text ?= text_window.last_format;

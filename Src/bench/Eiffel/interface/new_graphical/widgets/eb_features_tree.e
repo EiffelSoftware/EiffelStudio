@@ -266,7 +266,11 @@ feature {NONE} -- Implementation
 			l_feature: E_FEATURE
 			l_clause: FEATURE_CLAUSE_AS
 		do
-			l_data := selected_item.data
+				-- When features tree is created, there is no element and therefore
+				-- no selected items.
+			if selected_item /= Void then
+				l_data := selected_item.data
+			end
 			if a_key.code = feature {EV_KEY_CONSTANTS}.Key_enter and then l_data /= Void then
 				l_feature ?= l_data
 				if l_feature /= Void then

@@ -1,0 +1,351 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ISE EiffelBench</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="styles/tech.css">
+</head>
+
+<body>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
+      <TR>
+              <TD><IMG SRC="styles/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
+                      BORDER="0"><IMG SRC="styles/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
+                      BORDER="0"></TD>
+      </TR>
+</TABLE>
+
+<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<tr><td>
+
+<h1>
+<a name="Linux">
+Linux</a>
+
+</h1>
+
+<h2>
+<a name="linuxglibc">Linux-glibc</a>
+
+</h2>
+
+<blockquote>
+
+<p>
+This version of ISE Eiffel was built using the 2.0.34 version of the kernel using
+glibc-2.0.7 and elf format.
+
+</p>
+
+  <p>If you are using an environment as described above you should set the
+  PLATFORM environment variable to `<b>linux-glibc</b>'. If you plan to release
+  your software on different version of the Linux OS you should statically link
+  your application otherwise it may not work as expected on different version of
+  the Linux kernel.
+
+</p>
+
+  <h3>`eifid' doesn't return a valid value
+
+</h3>
+
+  <blockquote>
+    <p>Make sure your machine is configured as a "network" machine and not as a standalone machine even if no network card is installed.
+    There should be a valid entry in the "/etc/hosts" file for the local host.<br>
+
+</p>
+
+    <p>Make sure a command like "ifconfig lo 127.0.0.1" is also executed at boot time. If you type /sbin/ifconfig, you should see
+    something like:
+
+</p>
+
+    <blockquote>
+      <p>lo        Link encap:Local Loopback&nbsp;<br>
+          inet addr:127.0.0.1  Bcast:127.255.255.255  Mask:255.0.0.0<br>
+          UP BROADCAST LOOPBACK RUNNING  MTU:3584  Metric:1<br>
+          RX packets:1050 errors:0 dropped:0 overruns:0<br>
+          TX packets:1050 errors:0 dropped:0 overruns:0
+
+</p>
+
+    </blockquote>
+  </blockquote>
+  <h3><br>
+ BUG with the backspace key
+
+</h3>
+
+  <blockquote>
+    <p>Under certain linux configuration, the BackSpace key has a strange behaviour within ebench: it deletes the character before the cursor,
+    then moves the cursor to right. This bug hasn't been fixed yet, but there is a workaround. Add these two lines into your .Xdefaults file
+    (you may have to perform a "xrdb .Xdefaults" if you don't launch X again after the modification):<br>
+    <br>
+    ebench*XmText*Translations:	\<br>
+    override &lt;Key>osfBackSpace: delete-previous-character() backward-character()
+
+</p>
+
+  </blockquote>
+  <h3><br>
+ XKeysymDB problem
+
+</h3>
+
+  <blockquote>
+    <p>You may experience trouble while trying to use the BackSpace key. If so, you have to check that the file
+    /usr/lib/X11/XKeysymDB has the definition of the osf symbols, which should be the case
+    if you have installed Motif properly. When you have this file correct, and if you still cannot use the
+    BackSpace key, you will have to try the following command:<br>
+    <br>
+    xmodmap -e "keysym Delete = BackSpace"<br>
+    <br>
+    Check with your xmodmap man page.<br>
+    <br>
+    Note that you may want to add this command to your configuration files so that this is done each time you run your X server.<br>
+    <br>
+
+</p>
+
+  </blockquote>
+</blockquote>
+
+<h2>
+linux-glibc2.1
+
+</h2>
+
+<blockquote>
+
+<p>
+This delivery has been compiled with the distribution RedHat 6.0 (linux  2.2.5-15, glibc 2.1.1-6).
+
+</p>
+
+<p>
+If you are using an environment as described above you should set the PLATFORM
+environment variable to `<b>linux-glibc2.1</b>'. If you plan to release your
+software on different version of the Linux OS you should statically link your
+application otherwise it may not work as expected on different version of the
+Linux kernel.
+
+</p>
+
+  <p>Otherwise, the rest of the information given for `<a href="#linuxglibc">linux-glibc'</a>
+  should be the same.
+
+</p>
+
+</blockquote>
+
+<p>
+&nbsp;
+
+</p>
+
+<h1><a name="Windows">Windows</a></h1>
+
+<p>ISE products run smoothly on Windows 95/98/NT/2000. Look at the <a href="c_compilers.html">C
+compiler</a> pages to know more about Windows requirements.</p>
+
+<p>Due to the way Windows 95/98 manage the graphical user resources you will
+notice sometimes that some icons of EiffelBench, EiffelCase or EiffelBuild will
+disappear. This just means that you are running to low on graphical user
+resources, closing some applications should fix the problem.</p>
+
+<p>&nbsp;</p>
+
+<h1><a name="alpha">Digital Unix</a></h1>
+
+<p>To run ISE Eiffel on this platform, please set your environment variable PLATFORM:
+<blockquote>
+
+<p>setenv PLATFORM alpha
+</blockquote>
+
+<p>Also, add to your LD_LIBRARY_PATH the path to the Eiffel run-time shared libraries.
+<blockquote>
+
+<p>setenv LD_LIBRARY_PATH $EIFFEL4/bench/spec/$PLATFORM/lib:$LD_LIBRARY_PATH
+</blockquote>
+
+<p>You need to have at least a Digital Unix system version 4.0 or higher. The C configuration file uses cc as default compiler.
+
+<p>ISE EiffelBench doesn't support any multithreaded mechanism on Digital Unix. However, you can compile multi-threaded programs using the POSIX libraries,
+since ISE Eiffel 4.5 provides with Beta-test multi-threaded run-times.&nbsp;
+
+<h1>&nbsp;</h1>
+
+<h1><a name="SGI">SGI</a></h1>
+
+<p>This release has been compiled on IRIX64 sgi 6.5 with cc.
+
+<p>Please your PLATFORM environment variable to sgi if you are running on sgi 6.x.  This release is not compatible
+with sgi-5.x.
+
+<p>&nbsp;
+
+<h1><a name="Solaris24">Solaris 2.4</a></h1>
+<p>This note does not apply to any version other than Solaris 2.4.</p>
+<ul>
+  <li> C compiler:<br>
+    You can not use the C compiler shipped with non development system since it is only used to rebuild the kernel.<br>
+If you have installed the SPROcc package, the default location for the C compiler is
+    /opt/SUNWspro/bin/cc.
+</li>
+  <li> Displaying on another Sun machine: When running the Solaris 2.4 version of EiffelBench on a computer, do not display on another Sun computer running Open Windows.
+This may crash the X server on that other computer. This bug occurs somewhat randomly (usually only in the second consecutive execution of EiffelBench) and does not arise
+for any platform other than Solaris 2.4.  We have not yet been able to determine what causes it.<br>
+<br>
+The following do NOT cause any problem:
+<br>
+	- Running on a Solaris computer and displaying on the same computer (the most common case).
+<br>
+	- Running on a Solaris computer and displaying on a non-Sun computer.
+<br>
+	- Executing other tools of the environment, in particular EiffelBuild.</li>
+</ul>
+<h1>&nbsp;</h1>
+
+<h1><a name="Solaris25+">Solaris 2.5 and greater</a></h1>
+
+<p>This version is the same as the SOLARIS-2.4 release (PLATFORM = solaris)&nbsp;
+except in multithreaded mode. Please read the entry concerning Solaris 2.4.
+
+<h1>&nbsp;</h1>
+
+<h1><a name="Unicos">Unicos</a></h1>
+
+<h2> CRAY unicos-t3d</h2>
+
+<blockquote>
+
+<p>Please your PLATFORM environment variable to unicos-t3d if you are running on CRAY unicos-t3d.&nbsp;<br>
+<br>
+This version of ISE Eiffel provides only the run-times located $EIFFEL4/bench/spec/unicos-t3d/lib/. . You will also found
+the binary `finish_freezing' to compile the generated C-code in $EIFFEL4/bench/spec/unicos-t3d/bin/.<br>
+<br>
+To run an Eiffel program on CRAY you need to compile the Eiffel code on another platform. Then, you will be able to compile
+the generated C-code by launching `finish_freezing' on CRAY in the &lt;your_system_path>/EIFGEN/F_code .</p>
+
+<p>&nbsp;</p>
+
+<h3>PORTABILITY OF GENERATED C CODE</h3>
+
+<p>The frozen C-code (in EIFGEN/W_code) is portable between platforms only if the length of the C integer is the same as the platform where the
+C code has been generated. Since an C integer (type int) is 8 bytes length. You need to compile the Eiffel code on a system with the same
+length of int. (So far, all the Eiffel compilers are running on platforms with 4-bytes-length-integers.<br>
+<br>
+The Finalized C code (in EIFGEN/F_code) is fully portable between all the supported platforms.</p>
+
+<p>&nbsp;</p>
+
+<h3>SETTINGS BEFORE LAUNCHING C COMPILATION</h3>
+
+<p>You may have to unset TARGET and use the production compiler before any
+compilation, the tests on CRAY have been performed with this settings:
+  </p>
+
+<blockquote>
+
+<p>
+setting the production compiler:<br>
+% eval `setpe prod`<br>
+<br>
+unsetting TARGET:<br>
+% unsetenv TARGET<br>
+<br>
+Updating PLATFORM:<br>
+% setenv PLATFORM unicos-t3d<br>
+<br>
+  </p>
+
+</blockquote>
+
+</blockquote>
+
+<h2> CRAY unicos-C90</h2>
+
+<blockquote>
+
+<p>Please your PLATFORM environment variable to unicos-c90 if you are running on CRAY unicos-c90.&nbsp;<br>
+<br>
+This version of ISE Eiffel provides only the run-times located $EIFFEL4/bench/spec/unicos-c90/lib/. . You will also found
+the binary `finish_freezing' to compile the generated C-code in $EIFFEL4/bench/spec/unicos-c90/bin/.<br>
+<br>
+To run an Eiffel program on CRAY you need to compile the Eiffel code on another platform. Then, you will be able to compile
+the generated C-code by launching `finish_freezing' on CRAY in the &lt;your_system_path>/EIFGEN/F_code .</p>
+
+  <h3>&nbsp;</h3>
+
+  <h3>PORTABILITY OF GENERATED C CODE:</h3>
+
+<p>The frozen C-code (in EIFGEN/W_code) is portable between platforms only if the length of the C integer is the same as the platform where the
+C code has been generated. Since an C integer (type int) is 8 bytes length. You need to compile the Eiffel code on a system with the same
+length of int. (So far, all the Eiffel compilers are running on platforms with 4-bytes-length-integers.<br>
+<br>
+The Finalized C code (in EIFGEN/F_code) is fully portable between all the supported platforms.</p>
+
+<p>&nbsp;</p>
+
+<h3>SETTINGS BEFORE LAUNCHING C COMPILATION</h3>
+
+<p>You may have to unset TARGET and use the production compiler before any
+compilation, the tests on CRAY have been performed with this settings::</p>
+
+  <blockquote>
+
+<p>setting the production compiler:<br>
+% eval `setpe prod`<br>
+<br>
+unsetting TARGET:<br>
+% unsetenv TARGET<br>
+<br>
+Updating PLATFORM:<br>
+% setenv PLATFORM unicos-c90</p>
+
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<h1><a name="UnixWare">UnixWare</a></h1>
+
+<h2>Limitation of the process memory</h2>
+
+<p>Under csh, type `limit' to display the limits associated with the current user. `limit -h' display the limits built in the Unix kernel.
+
+<p>If the maximum memory is limited, use the "System Tuner" (in the Admin Tools folder) to set the value to unlimited:
+
+<p>In the process limit parameter section, modify the values for SVMMLIM and HVMMLIM to 0x7FFFFFFF (unlimited).
+
+<p>&nbsp;
+
+<h1><a name="Motif12">Motif 1.2</a></h1>
+<p>Most of the Unix version of ISE products are linked either dynamically or
+statically with the Motif 1.2 version given with the corresponding Platform. Due
+to limitations or Motif 1.2 certains graphical functionality of some ISE
+products are limited:</p>
+
+<ul>
+  <li>EiffelBench: the split area of the project tool are horizontal and not a
+    mixture of horizontal and vertical split area as done on Linux and Windows</li>
+  <li>EiffelCase: the scrollbar of the system architecture does not work.</li>
+</ul>
+
+<p>List of Platforms using Motif 1.2:
+<ul>
+  <li><a href="#Solaris24">Solaris</a></li>
+  <li><a href="#sgi">SGI</a></li>
+  <li><a href="#alpha">Digital Unix</a></li>
+  <li><a href="#unixware">UnixWare</a></li>
+</ul>
+
+</td></tr></table>
+</body>
+
+</html>

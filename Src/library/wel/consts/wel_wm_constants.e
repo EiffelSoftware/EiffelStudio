@@ -192,6 +192,9 @@ feature -- Access
 
 	Wm_getdlgcode: INTEGER is 135
 			-- Declared in Windows as WM_GETDLGCODE
+			
+	Wm_syncpaint: INTEGER is 136
+			-- Declared in Windows as WM_SYNCPAINT
 
 	Wm_ncmousemove: INTEGER is 160
 			-- Declared in Windows as WM_NCMOUSEMOVE

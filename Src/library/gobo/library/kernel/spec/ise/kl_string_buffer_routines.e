@@ -27,10 +27,10 @@ feature -- Initialization
 		require
 			non_negative_n: n >= 0
 		local
-			a_string: STRING
+			to_special: TO_SPECIAL [CHARACTER]
 		do
-			!! a_string.make (n)
-			Result := a_string.area
+			!! to_special.make_area (n)
+			Result := to_special.area
 		ensure
 			string_buffer_not_void: Result /= Void
 			count_set: Result.count = n

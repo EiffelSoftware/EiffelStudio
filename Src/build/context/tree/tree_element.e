@@ -115,7 +115,7 @@ feature
 			text_image_create;
 			set_foreground_color (Resources.foreground_figure_color);
 			set_background_color (Resources.background_figure_color);
-			set_text (a_context.full_label);
+			set_text (a_context.title_label);
 			attach_drawing (tree);
 			tree.append (Current);
 		end;

@@ -1,5 +1,4 @@
 indexing
-
 	description: "Node for bit constant. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,7 +52,7 @@ feature -- Type check and byte code
 	byte_node: BIT_CONST_B is
 			-- Associated byte code
 		do
-			!! Result
+			create Result
 			Result.set_value (value)
 		end
 
@@ -62,8 +61,8 @@ feature
 	value_i: BIT_VALUE_I is
 			-- Interface constant value
 		do
-			!! Result
-			Result.set_bit_val (value)
+			create Result
+			Result.set_bit_value (value)
 		end
 
 feature -- Output

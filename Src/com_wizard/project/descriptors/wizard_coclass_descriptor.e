@@ -105,7 +105,6 @@ feature -- Basic operations
 			loop
 				interface_descriptors.item.disambiguate_c_names (Current)
 				feature_c_names.append (interface_descriptors.item.feature_c_names)
-				feature_eiffel_names.append (interface_descriptors.item.feature_eiffel_names)
 				interface_descriptors.forth
 			end
 

@@ -185,7 +185,7 @@ feature -- Implementation
 					mc_list ?= widget_pointed
 					if mc_list /= Void then
 						wel_point.screen_to_client (mc_list)
-						tg := mc_list.find_item_at_position (wel_point.x, wel_point.y).interface
+					--| FIXME	tg := mc_list.find_item_at_position (wel_point.x, wel_point.y).interface
 					else
 						tree ?= widget_pointed
 						if tree /= Void then
@@ -301,6 +301,10 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/02/17 00:23:24  brendel
+--| Commented out line that assumes that EV_MULTI_COLUMN_LIST_ROW is pick
+--| and dropable, but that is not yet implemented.
+--|
 --| Revision 1.11  2000/02/15 19:24:01  rogers
 --| Changed the export status of implementation features to EV_ANY_I.
 --|

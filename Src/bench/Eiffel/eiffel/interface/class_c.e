@@ -3869,14 +3869,6 @@ feature -- Server Access
 			Result := lace_class.cluster
 		end
 
-	hidden: BOOLEAN is
-			-- Is the class hidden in the precompilation sets?
-		do
-			Result := lace_class.hidden
-		ensure
-			hide_only_when_precompiled: Result implies is_precompiled
-		end
-
 	file_name: STRING is
 			-- File name of the class
 		do

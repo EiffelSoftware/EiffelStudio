@@ -14,9 +14,10 @@ inherit
 			interface
 		end
 	
-	EV_TEXTABLE_I
+	EV_TEXT_ALIGNABLE_I
 		redefine
-			interface
+			interface,
+			default_alignment
 		end
 
 	EV_FRAME_CONSTANTS
@@ -44,6 +45,15 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_FRAME
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
+			
+feature {NONE} -- Implementation
+			
+	default_alignment: INTEGER is
+			-- Default alignment used during
+			-- creation of real implementation
+		do
+			Result := feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_left
+		end
 
 end -- class EV_FRAME_I
 

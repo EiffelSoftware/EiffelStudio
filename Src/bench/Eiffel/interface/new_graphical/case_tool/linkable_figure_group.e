@@ -156,7 +156,7 @@ feature -- Status report
 				x := point.x_abs
 				y := point.y_abs
 			end
-			create Result.set (x, y, (w - x + 20).max (0), (h - y + 20).max (0))
+			create Result.set (x, y, (w - x).max (0), (h - y).max (0))
 		end
 
 feature {LINKABLE_FIGURE_GROUP} -- Implementation

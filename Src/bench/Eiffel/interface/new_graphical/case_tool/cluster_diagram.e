@@ -1401,15 +1401,15 @@ feature {DIAGRAM_COMPONENT} -- Implementation
 			if on_top then
 				f.point.set_origin (point)
 				cluster_figures.extend (f)
-				cluster_layer.put_front (f)
+				cluster_layer.extend (f)
 				f.set_parent (Void)
 			else
 				cluster_layer.extend (f)
 			end
 			f.enable_needed_on_diagram
-			cluster_mover_layer.extend (f.resizer_bottom_right)
 			cluster_mover_layer.extend (f.resizer_top_left)			
 			cluster_mover_layer.extend (f.resizer_top_right)
+			cluster_mover_layer.extend (f.resizer_bottom_right)
 			cluster_mover_layer.extend (f.resizer_bottom_left)			
 			cluster_mover_layer.extend (f.name_mover)
 			parent_cluster := f.cluster_i.parent_cluster
@@ -1570,7 +1570,7 @@ feature {NONE} -- Implementation
 			a_class: CLASS_I
 			new_cluster_i: CLUSTER_I
 			cf: CLASS_FIGURE
-			new_clf: CLUSTER_FIGURE
+			new_clf, clf: CLUSTER_FIGURE
 		do
 			if not a_create_class_dialog.cancelled then
 				a_class := a_create_class_dialog.class_i
@@ -1582,15 +1582,17 @@ feature {NONE} -- Implementation
 					check cf_not_void: cf /= Void end
 
 					new_cluster_i := a_create_class_dialog.cluster
-					new_clf := cluster_figure_by_cluster (new_cluster_i)
-					if new_clf = Void then
+					clf := cluster_figure_by_cluster (new_cluster_i)
+					if clf = Void then
 						new_clf := new_cluster_figure (new_cluster_i)
+						clf := new_clf
 					end
-					check new_clf_not_void: new_clf /= Void end
+					check clf_not_void: clf /= Void end
 					context_editor.history.do_named_undoable (
 						Interface_names.t_Diagram_include_class_cmd,
 						~include_dropped_class_in_cluster (cf, a_x, a_y, new_clf, True),
 						~remove_dropped_class_in_cluster (cf, new_clf))
+					context_editor.update_bounds (Current)
 				end
 			end
 		end
@@ -1629,9 +1631,10 @@ feature {NONE} -- Implementation
 				a_class.update
 				context_editor.update_bounds (Current)
 			else
-				new_clf := cluster_figure_by_cluster (new_cluster_i)
 				a_class.point.set_position (a_class.width, a_class.height)
 				a_class.update
+				new_clf := cluster_figure_by_cluster (new_cluster_i)
+				new_clf.update_minimum_size
 			end
 			a_class.invalidate
 			refresh
@@ -1685,7 +1688,7 @@ feature {NONE} -- Events
 				clf.update_minimum_size
 				if clf.classes.is_empty then
 						-- Give a decent minimal size to new cluster.
-					clf.set_size (0, 20)
+					clf.set_size (0, 0)
 				end
 			else
 				clf.point.set_position (
@@ -1726,7 +1729,7 @@ feature {NONE} -- Events
 						-- No need to add a cluster.
 					new_clf := Void
 				end
-				include_dropped_class_in_cluster (cf, drop_x, drop_y, new_clf,True)
+				include_dropped_class_in_cluster (cf, drop_x, drop_y, new_clf, True)
 				context_editor.history.register_named_undoable (
 					Interface_names.t_Diagram_include_class_cmd,
 					~include_dropped_class_in_cluster (cf, drop_x, drop_y, new_clf, False),

@@ -181,6 +181,9 @@ feature -- Access: tokens
 	object_type_token: INTEGER
 			-- Token for `System.Object' in `mscorlib'.
 
+	gc_type_token: INTEGER
+			-- Token for `System.GC' in `mscorlib'.
+
 	math_type_token: INTEGER
 			-- Token for `System.Math' type in `mscorlib'.
 
@@ -912,17 +915,22 @@ feature -- Metadata description
 			class_type_can_be_created: not class_type.associated_class.is_interface
 		local
 			l_meth_token: INTEGER
+			l_gc_method_token: INTEGER
 			l_sig: like method_sig
 			l_ctor_token: INTEGER
 			l_uni_string: like uni_string
+			l_class: CLASS_C
+			l_needs_special_gc_call: BOOLEAN
 		do
 				-- Do not use `uni_string' as it might be used by `class_type_token'.
 			create l_uni_string.make (".ctor")
 			l_sig := default_sig
+			
+			l_class := class_type.associated_class
 
 			if
 				is_reference or
-				class_type.is_precompiled or class_type.associated_class.is_external or
+				class_type.is_precompiled or l_class.is_external or
 				il_code_generator.il_module (class_type) /= Current
 			then
 				l_meth_token := md_emit.define_member_ref (l_uni_string,
@@ -943,6 +951,35 @@ feature -- Metadata description
 				il_code_generator.generate_current
 				il_code_generator.method_body.put_call (feature {MD_OPCODES}.Call, l_ctor_token,
 					0, False)
+
+					-- Following calls enable or disable call to `Finalize' from descendants
+					-- of ANY that do not conform to MEMORY.
+				if l_class.simple_conform_to (System.any_class.compiled_class) then
+					if not System.memory_descendants.has (l_class) then
+						create l_uni_string.make ("SuppressFinalize")
+						l_needs_special_gc_call := True
+					elseif is_single_inheritance_implementation then
+							-- Force a call to `ReRegisterForFinalize' as maybe the main branch
+							-- of inheritance includes a call to `SuppressFinalize' as it did not
+							-- conform to MEMORY, and therefore we need to re-register
+							-- current object so that `dispose' is called.
+						create l_uni_string.make ("ReRegisterForFinalize")
+						l_needs_special_gc_call := True
+					end
+					if l_needs_special_gc_call then
+						create l_sig.make
+						l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+						l_sig.set_parameter_count (1)
+						l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+						l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+						il_code_generator.generate_current
+						l_gc_method_token := md_emit.define_member_ref (l_uni_string,
+							gc_type_token, l_sig)
+						il_code_generator.method_body.put_call (feature {MD_OPCODES}.Call,
+							l_gc_method_token, 1, False)
+					end
+				end
+
 				il_code_generator.generate_return
 				method_writer.write_current_body
 
@@ -1718,6 +1755,7 @@ feature {NONE} -- Once per modules being generated.
 		do
 			mscorlib_token := 0
 			object_type_token := 0
+			gc_type_token := 0
 			math_type_token := 0
 			system_exception_token := 0
 			compute_mscorlib_token
@@ -1796,6 +1834,8 @@ feature {NONE} -- Once per modules being generated.
 		do
 			object_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Object"), mscorlib_token)
+			gc_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("System.GC"), mscorlib_token)
 			runtime_type_handle_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (type_handle_class_name), mscorlib_token)
 			math_type_token := md_emit.define_type_ref (

@@ -344,7 +344,7 @@ feature {NONE}
 	prepare_evaluation (a_frame: ICOR_DEBUG_FRAME) is
 			-- Prepare data for evaluation.
 		local
-			l_frame: ICOR_DEBUG_FRAME
+--			l_frame: ICOR_DEBUG_FRAME
 			l_chain: ICOR_DEBUG_CHAIN
 			l_icd_thread: ICOR_DEBUG_THREAD
 			l_icd_eval: ICOR_DEBUG_EVAL
@@ -352,19 +352,20 @@ feature {NONE}
 		do
 			last_eval_is_exception := False
 			save_state_info
-			l_frame := a_frame
-			if l_frame /= Void then
-				l_frame := eifnet_debugger.current_icor_debug_frame
-			end
-			-- FIXME JFIAT: check deeply if this does not cause any crash
-			-- so far no crash, but if it crashes, comment next {if .. end}
-			if l_frame /= Void then
-				l_chain := l_frame.get_chain
-				l_icd_thread := l_chain.get_thread
-				l_icd_eval := l_icd_thread.create_eval
-				l_chain.clean_on_dispose
-				l_icd_thread.clean_on_dispose --| this is a temp data
-			end
+
+--			-- FIXME JFIAT: check deeply if this does not cause any crash
+--			-- so far no crash, but if it crashes, comment next {if .. end}
+--			l_frame := a_frame
+--			if l_frame /= Void then
+--				l_frame := eifnet_debugger.current_icor_debug_frame
+--			end
+--			if l_frame /= Void then
+--				l_chain := l_frame.get_chain
+--				l_icd_thread := l_chain.get_thread
+--				l_icd_eval := l_icd_thread.create_eval
+--				l_chain.clean_on_dispose
+--				l_icd_thread.clean_on_dispose --| this is a temp data
+--			end
 			if l_icd_eval = Void then
 				l_icd_thread := eifnet_debugger.icor_debug_thread
 				l_icd_eval := l_icd_thread.create_eval

@@ -155,11 +155,13 @@ feature {NONE} -- Implementation
 			close_fct: INTEGER
 		do
 			if new_status then
-				close_fct := feature {EV_GTK_EXTERNALS}.gDK_FUNC_CLOSE_ENUM
+				close_fct := feature {EV_GTK_EXTERNALS}.Gdk_func_close_enum
 			end
+			close_fct := close_fct.bit_or (feature {EV_GTK_EXTERNALS}.Gdk_func_move_enum)
+		    close_fct := close_fct.bit_or (feature {EV_GTK_EXTERNALS}.Gdk_func_resize_enum)
 			feature {EV_GTK_EXTERNALS}.gdk_window_set_functions (
 				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
-				feature {EV_GTK_EXTERNALS}.gDK_FUNC_MOVE_ENUM.bit_or (close_fct)
+				close_fct
 			)
 			is_dialog_closeable := new_status
 		end

@@ -32,6 +32,7 @@ feature
 			-- Set project_initialized to True.
 		do 		
 			project_initialized := True 
+			enable_toggle_buttons
 		end
 
 	unset_project_initialized is 
@@ -39,6 +40,7 @@ feature
 		do 		
 			project_initialized := False ;
 			set_title (Widget_names.main_panel)
+			disable_toggle_buttons
 		end;
 
 	set_saved_symbol is
@@ -238,6 +240,8 @@ feature
 			base.initialize_window_attributes;
 			!! del_com.make (Current);
 			base.set_delete_command (del_com);
+			
+			disable_toggle_buttons
 		end
 
 	realize is
@@ -336,5 +340,30 @@ feature -- Interface
 				Shared_window_list.forth
 			end;
 		end;
-
+	
+feature -- Enabel/disable buttons
+	
+	enable_toggle_buttons is
+		do
+			cont_cat_t.set_sensitive
+			cont_tree_t.set_sensitive
+			history_t.set_sensitive
+			editor_t.set_sensitive
+			cmd_cat_t.set_sensitive
+			app_edit_t.set_sensitive
+			interface_t.set_sensitive
+			interface_only_t.set_sensitive
+		end
+	
+	disable_toggle_buttons is
+		do
+			cont_cat_t.set_insensitive
+			cont_tree_t.set_insensitive
+			history_t.set_insensitive
+			editor_t.set_insensitive
+			cmd_cat_t.set_insensitive
+			app_edit_t.set_insensitive
+			interface_t.set_insensitive
+			interface_only_t.set_insensitive
+		end		
 end

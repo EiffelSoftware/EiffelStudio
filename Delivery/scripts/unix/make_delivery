@@ -102,6 +102,14 @@ remtrace wizards
 exprt -r $DEFAULT_CVS_TAG -d wizards Delivery/wizards
 remtrace C_library
 exprt -r $DEFAULT_CVS_TAG -d C_library Src/C_library
+remtrace Free add ons
+exprt -r $DEFAULT_CVS_TAG -d free_add_ons free_add_ons
+cd $INSTALL_DIR/free_add_ons
+gunzip -c gobo/gobo30.tar.gz | tar -xf -
+fullrf gobo/gobo30.tar.gz
+fullrf gobo/gobo30win.tgz
+fullrd wex
+cd $INSTALL_DIR
 remtrace root
 exprt -l -r $DEFAULT_CVS_TAG Delivery/
 move Delivery/* . >> $INSTALL_LOG

@@ -129,15 +129,6 @@ feature -- Status setting
 			end
 		end
 
-	add_resize_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of actions to execute when the
-			-- widget is resized.
-		require
-			not_a_command_void: a_command /= Void
-		do
-			resize_actions.add (Current, a_command, argument)
-		end
-
 feature -- Status report
 
 	closeable: BOOLEAN is

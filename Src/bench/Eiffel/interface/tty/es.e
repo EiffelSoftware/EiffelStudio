@@ -183,7 +183,7 @@ feature -- Properties
 	option: STRING
 			-- Current option being analyzed
 
-	help_messages: EXTEND_TABLE [STRING, STRING] is
+	help_messages: HASH_TABLE [STRING, STRING] is
 			-- Help message table
 		once
 			create Result.make (25)

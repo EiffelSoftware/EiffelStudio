@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 					progress_text_2.set_text ("Precompiling " + lib_name + " library: ")
 					create command.make (50)
 					command.append (Eiffel_compiler_command)
-					command.append ("2 -precompile -ace ")
+					command.append (" -precompile -ace ")
 					command.append (lib_ace)
 					command.append (" -project_path ")
 					command.append (proj_path)

@@ -234,7 +234,7 @@ feature -- Basic operation
 			wparent: EB_WINDOW
 		do
 			if not is_show_requested then
-				wparent := Window_manager.last_focused_window
+--				wparent := Window_manager.last_focused_window
 				if wparent /= Void then
 					show_relative_to_window (wparent.window)
 				else

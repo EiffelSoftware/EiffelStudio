@@ -3598,6 +3598,18 @@ feature -- Variables access
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldtoken,
 				actual_class_type_token (a_type_id))
 		end
+		
+	put_type_instance (a_type: TYPE_I) is
+			-- Put instance of System.Type corresponding to `a_type' on stack.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			put_type_token (a_type.static_type_id)
+			internal_generate_external_call (current_module.mscorlib_token, 0,
+				system_type_class_name, "GetTypeFromHandle",
+				static_type, << type_handle_class_name >>,
+				system_type_class_name, False)
+		end
 
 	put_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate access to feature of `a_feature_id' in `type_i'.

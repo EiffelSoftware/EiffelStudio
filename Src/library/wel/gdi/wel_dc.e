@@ -1976,7 +1976,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro <windows.h>] (HDC, LPCSTR, int, LPSIZE)"
 		alias
-			"GetTextExtentPoint"
+			"GetTextExtentPoint32"
 		end
 
 	cwin_get_tabbed_text_extent (hdc: POINTER; s: POINTER;

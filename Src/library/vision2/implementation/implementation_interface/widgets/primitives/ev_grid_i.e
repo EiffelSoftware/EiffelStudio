@@ -1184,7 +1184,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			loop
 				a_col := column_internal (i)
 				if a_col.is_visible then
-					Result.put (j, a_col.physical_index)
+					Result.put (a_col.physical_index, j)
 						-- SPECIAL is zero based so `j' starts at zero
 					j := j + 1
 				end

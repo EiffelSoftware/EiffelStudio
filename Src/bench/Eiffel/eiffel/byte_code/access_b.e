@@ -425,6 +425,7 @@ feature -- Code generation
 			param: PARAMETER_B
 			protect: PROTECT_B
 			type_c: TYPE_C
+			l_has_protection: BOOLEAN
 		do
 			p := parameters
 			if p = Void then
@@ -438,10 +439,10 @@ feature -- Code generation
 					i := 1
 					nb := p.count
 					if is_external then
-						!! Result.make (1, nb)
+						create Result.make (1, nb)
 						j := 1
 					else
-						!! Result.make (1, nb + 1)
+						create Result.make (1, nb + 1)
 						Result.put ("EIF_REFERENCE", 1)
 						j := 2
 					end
@@ -450,26 +451,29 @@ feature -- Code generation
 				loop
 					expr := p @ i
 					param ?= expr
+					l_has_protection := False
 					if param = Void then
-							-- PROTECT_B
+							-- Needs protection?
 						protect ?= expr
 						if protect /= Void then
 							param ?= protect.expr
-						else
-								-- Shouldn't happen
-							check
-								False
-							end
+							l_has_protection := True
 						end
 					end
-						-- FIXME
-					if param = Void then
-						type_c := real_type (expr.type).c_type
+					
+					if l_has_protection then
+						Result.put ("EIF_OBJECT", j)
 					else
-						type_c := real_type (param.attachment_type).c_type
+							-- FIXME
+						if param = Void then
+							type_c := real_type (expr.type).c_type
+						else
+							type_c := real_type (param.attachment_type).c_type
+						end
+	
+						Result.put (type_c.c_string, j)
 					end
-
-					Result.put (type_c.c_string, j)
+					
 					i := i +1
 					j := j +1
 				end

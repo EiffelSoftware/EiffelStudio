@@ -956,6 +956,27 @@ feature --|FIXME all of these need implementating
 			notify_change (2 + 1)
 		end
 
+	put_left (v: like item) is
+			-- Add `v' to left of `item'
+		local
+			a_wel_item: WEL_TAB_CONTROL_ITEM
+			ww: WEL_WINDOW
+			widget_imp: EV_WIDGET_IMP
+			child_imp: EV_WIDGET_I
+		do
+			child_imp := v.implementation
+			ww ?= child_imp
+			!! a_wel_item.make
+			a_wel_item.set_window (ww)
+			insert_item (index - 1, a_wel_item)
+			index := index + 1
+			widget_imp ?= child_imp
+			widget_imp.wel_set_parent (Current)
+			widget_imp.set_top_level_window_imp (top_level_window_imp)
+			widget_imp.hide
+			notify_change (2 + 1)
+		end
+
 	remove is
 			-- Remove `item'
 		local
@@ -1120,6 +1141,9 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/03/03 18:34:43  brendel
+--| Implemented feature `put_left'.
+--|
 --| Revision 1.46  2000/02/23 02:23:56  brendel
 --| Removed on_menu_command from inh. clause.
 --|

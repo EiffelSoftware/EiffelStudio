@@ -120,6 +120,14 @@ feature {NONE} -- Private feature
 -- 			end
 -- 		end
 
+feature -- Implementation
+
+	lexer: EIFFEL_SCANNER is
+			-- Eiffel Lexer
+		once
+			create Result.make
+		end
+
 feature {NONE} -- Implementation
 
 	chapter: PARAGRAPH

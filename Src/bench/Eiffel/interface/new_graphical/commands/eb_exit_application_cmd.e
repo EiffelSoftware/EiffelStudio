@@ -7,24 +7,21 @@ class
 	EB_EXIT_APPLICATION_CMD
 
 inherit
-	GRAPHICS
+--	GRAPHICS
 	PROJECT_CONTEXT
 	SHARED_APPLICATION_EXECUTION
-	PIXMAP_COMMAND
-		rename
-			init as make
+	EV_COMMAND
 		redefine
-			license_checked
+--			license_checked
 		end
-	WARNER_CALLBACKS
-		rename
-			execute_warner_help as exit_anyway,
-			execute_warner_ok as do_not_exit
-		end
+--	WARNER_CALLBACKS
+--		rename
+--			execute_warner_help as exit_anyway,
+--			execute_warner_ok as do_not_exit
+--		end
+	EB_SHARED_INTERFACE_TOOLS
+	INTERFACE_NAMES
 
-creation
-	make
-	
 feature -- Callbacks
 
 	exit_anyway is
@@ -34,17 +31,14 @@ feature -- Callbacks
 			if Application.is_running then
 				Application.kill
 			end
-			discard_licenses
+--			discard_licenses
 
 			if Project_tool.initialized then
 				Project_tool.save_environment
 			end
-			exit
-		end
-
-	do_not_exit (argument: ANY) is
-		do
-			do_exit := false
+				-- exit not reachable now.
+			project_tool.destroy
+--			exit
 		end
 
 feature -- License managment
@@ -54,64 +48,66 @@ feature -- License managment
 
 feature -- Properties
 
-	symbol: PIXMAP is 
-			-- Pixmap for the button.
-		once 
-			Result := Pixmaps.bm_Quit 
-		end
+--	symbol: EV_PIXMAP is 
+--			-- Pixmap for the button.
+--		once 
+--			Result := Pixmaps.bm_Quit 
+--		end
 	
 feature {NONE} -- Implementation
 
-	work (argument: ANY) is
+	execute (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- Quit project after saving.
+		local
+			d: EV_WARNING_DIALOG
 		do
-			if Project_tool.initialized then
-				-- Project_file is not void
-				if do_exit or else (last_confirmer /= Void and then argument = last_confirmer) then
-					exit_anyway
-				elseif
-					window_manager.class_win_mgr.changed or else
-					(is_system_tool_created and then system_tool.changed)
+			if arg = Void then
+				if 
+					Project_tool.initialized and then
+					tool_supervisor.has_modified_editor_tools
 				then
-					do_exit := True
-					warner (popup_parent).custom_call (Current,
-						"Some files have not been saved.",
-						"Don't exit", "Exit anyway", Void)
+					create d.make_with_text (project_tool.parent, t_Confirm, "Quit no save?")
+					d.show
+--					warner (popup_parent).custom_call (Current,
+--						"Some files have not been saved.",
+--						"Don't exit", "Exit anyway", Void)
 				else
-					confirmer (popup_parent).call (Current, 
-						"Quit EiffelBench?", "Exit")
+					create d.make_with_text (project_tool.parent, t_Confirm, "Quit EiffelBench?")
+					d.show_ok_cancel_buttons
+					d.add_ok_command(Current, do_exit)
+					d.show
+--					confirmer (popup_parent).call (Current, 
+--						"Quit EiffelBench?", "Exit")
 				end
 			else
-				if do_exit or else (last_confirmer /= Void and then argument = last_confirmer) then
+				if arg = do_exit then
 					exit_anyway
-				else
-					confirmer (popup_parent).call (Current, 
-						"Quit EiffelBench?", "Exit")
 				end
 			end
 		end
 
 feature {NONE} -- Attributes
 
-	do_exit: BOOLEAN
-			-- Should be called: `must_exit' OR comment has to change
-			-- Do we really have to exit?
-
-	name: STRING is
-			-- Name of the command.
-		do
-			Result := Interface_names.f_Exit_project
-		end
- 
-	menu_name: STRING is
-			-- Name used in menu entry
-		do
-			Result := Interface_names.m_Exit_project
+	do_exit : EV_ARGUMENT1 [ANY] is
+		once
+			create Result.make (Void)
 		end
 
-	accelerator: STRING is
-			-- Accelerator action for menu entry
-		do
-		end
+--	name: STRING is
+--			-- Name of the command.
+--		do
+--			Result := Interface_names.f_Exit_project
+--		end
 
+--	menu_name: STRING is
+--			-- Name used in menu entry
+--		do
+--			Result := Interface_names.m_Exit_project
+--		end
+
+--	accelerator: STRING is
+--			-- Accelerator action for menu entry
+--		do
+--		end
+--
 end -- class EB_EXIT_APPLICATION_CMD

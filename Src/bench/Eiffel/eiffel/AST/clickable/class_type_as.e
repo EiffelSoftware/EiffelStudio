@@ -350,44 +350,53 @@ feature -- Conveniences
 						vtug.set_base_class (associated_class)
 						Error_handler.insert_error (vtug)
 					elseif generics /= Void then
-						from
-							temp := cl_generics
-							!! cl_generics.make_filled (temp.count)
-							pos := temp.index
-							temp.start
-						until
-							temp.after
-						loop
-							cl_generics.put_i_th (temp.item, temp.index)
-							temp.forth
-						end
-						temp.go_i_th (pos)
-						from
-							generics.start
-							cl_generics.start
-						until
-							-- Take care of variable num. of
-							-- generics in TUPLEs.
-							generics.after 
-								or else 
-							cl_generics.after
-								or else
-								 error
-						loop
-							nb_errors := Error_handler.nb_errors
-							t1 := generics.item
-							t1.check_constraint_type (a_class)
-							error := Error_handler.nb_errors /= nb_errors
-							if not error then
-								t2 := cl_generics.item.constraint
-								if t2 /= Void then
-									t1.actual_type.check_const_gen_conformance
-										(t2.actual_type, a_class)
-									error := Error_handler.new_error
-								end
+						if not is_tuple_type then
+							from
+								temp := cl_generics
+								!! cl_generics.make_filled (temp.count)
+								pos := temp.index
+								temp.start
+							until
+								temp.after
+							loop
+								cl_generics.put_i_th (temp.item, temp.index)
+								temp.forth
 							end
-							generics.forth
-							cl_generics.forth
+							temp.go_i_th (pos)
+							from
+								generics.start
+								cl_generics.start
+							until
+								generics.after or else error
+							loop
+								nb_errors := Error_handler.nb_errors
+								t1 := generics.item
+								t1.check_constraint_type (a_class)
+								error := Error_handler.nb_errors /= nb_errors
+								if not error then
+									t2 := cl_generics.item.constraint
+									if t2 /= Void then
+										t1.actual_type.check_const_gen_conformance
+											(t2.actual_type, a_class)
+										error := Error_handler.new_error
+									end
+								end
+								generics.forth
+								cl_generics.forth
+							end
+						else
+								-- TUPLE: has no generics
+							from
+								generics.start
+							until
+								generics.after or else error
+							loop
+								nb_errors := Error_handler.nb_errors
+								t1 := generics.item
+								t1.check_constraint_type (a_class)
+								error := Error_handler.nb_errors /= nb_errors
+								generics.forth
+							end
 						end
 					end
 				end

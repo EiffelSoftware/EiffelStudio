@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			implementation.test_and_set_parent (par)
 			implementation.parent_imp.add_child (implementation)
 			implementation.build
---			implementation.initialize_colors
+			implementation.initialize_colors
 			managed := par.manager
  		ensure
  			exists: not destroyed
@@ -83,27 +83,32 @@ feature -- Status report
 			-- parent.manager = False (Always true except 
 			-- when the container is EV_FIXED). This is 
 			-- set in the procedure set_default
-		
-	automatic_resize: BOOLEAN is
-			-- Is the widget resized automatically when
-			-- the parent resize ? In this case,
-			-- automatic_position has no effect.
-			-- True by default
+
+	expandable: BOOLEAN is
+			-- Does the widget expand its cell to take the
+			-- size the parent would like to give to it.
 		require
 			exists: not destroyed
 		do
-			Result := implementation.automatic_resize
+			Result := implementation.expandable
+		end
+		
+	horizontal_resizable: BOOLEAN is
+			-- Does the widget change its width when the parent
+			-- want to resize the widget
+		require
+			exists: not destroyed
+		do
+			Result := implementation.horizontal_resizable	
 		end
 
-	automatic_position: BOOLEAN is
-			-- Does the widget take a new position when
-			-- the parent resize ?
-			-- (If it does, its size doesn't changed).
-			-- False by default
+	vertical_resizable: BOOLEAN is
+			-- Does the widget change its width when the parent
+			-- want to resize the widget
 		require
 			exists: not destroyed
 		do
-			Result := implementation.automatic_position
+			Result := implementation.vertical_resizable	
 		end
 
 	background_color: EV_COLOR is
@@ -178,24 +183,32 @@ feature -- Status setting
 			flag = insensitive	
 		end
 
-	set_automatic_resize (flag: BOOLEAN) is
-			-- Make `flag' the new `automatic_resize' state.
+	set_expand (flag: BOOLEAN) is
+			-- Make `flag' the new expand option.
 		require
 			exists: not destroyed
 		do
-			implementation.set_automatic_resize (flag)
-		ensure
-			automatic_resize_set: automatic_resize = flag
+			implementation.set_expand (flag)
 		end
 
-	set_automatic_position (flag: BOOLEAN) is
-			-- Make `flag' the new `automatic_position' state.
+	set_horizontal_resize (flag: BOOLEAN) is
+			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
 		do
-			implementation.set_automatic_position (flag)
+			implementation.set_horizontal_resize (flag)
 		ensure
-			automatic_position_set: automatic_position = flag
+			horizontal_resize_set: horizontal_resizable = flag
+		end
+
+	set_vertical_resize (flag: BOOLEAN) is
+			-- Adapt `resize_type' to `flag'.
+		require
+			exists: not destroyed
+		do
+			implementation.set_vertical_resize (flag)
+		ensure
+			vertical_resize_set: vertical_resizable = flag
 		end
 
 	set_background_color (color: EV_COLOR) is

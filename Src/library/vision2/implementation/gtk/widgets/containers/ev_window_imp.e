@@ -196,6 +196,7 @@ feature -- Status setting
 			user_x_position := a_x
 			user_y_position := a_y
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (c_object, a_x, a_y)
+			feature {EV_GTK_EXTERNALS}.gdk_window_move (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_x, a_y)
 			positioned_by_user := True
 		end
 
@@ -430,11 +431,18 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 			a_aux_info: POINTER
 			i: INTEGER
 		do
-			if is_displayed then		
-				i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
-					feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
-					$a_x, NULL)
-					Result := a_x
+			if is_displayed then
+				if has_wm_decorations then
+					feature {EV_GTK_EXTERNALS}.gdk_window_get_root_origin (
+						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+						$a_x, NULL)
+						Result := a_x					
+				else
+					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+						$a_x, NULL)
+						Result := a_x
+				end
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
@@ -450,11 +458,18 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 			a_aux_info: POINTER
 			i: INTEGER
 		do
-			if is_displayed then		
-				i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
-					feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
-				    NULL, $a_y)
-				Result := a_y
+			if is_displayed then
+				if has_wm_decorations then
+					feature {EV_GTK_EXTERNALS}.gdk_window_get_root_origin (
+						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+				    	NULL, $a_y)
+					Result := a_y					
+				else
+					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+				    	NULL, $a_y)
+					Result := a_y
+				end
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
@@ -477,6 +492,12 @@ feature {EV_ANY_IMP} -- Implementation
 			-- Window that `Current' is relative to.
 
 feature {NONE} -- Implementation
+
+	has_wm_decorations: BOOLEAN is
+			-- Does current Window object have WM decorations.
+		do
+			Result := False
+		end
 
 	positioned_by_user: BOOLEAN
 		-- Has the Window been positioned by the user?

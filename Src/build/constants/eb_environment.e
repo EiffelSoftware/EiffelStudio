@@ -28,7 +28,7 @@ feature -- Directory name constants
 	State_name: STRING is "State";
 	Storage_name: STRING is "Storage";
 	Templates_name: STRING is "templates";
-	temporary_postfix: STRING is ".TMP";
+	temporary_postfix: STRING is "TMP";
 	Widgets_name: STRING is "Widgets";
 	Windows_name: STRING is "Windows";
 
@@ -62,201 +62,164 @@ feature -- File name constants
 
 feature -- File names for EiffelBuild
 
-	Ace_file: STRING is
+	Ace_file: FILE_NAME is
 		once
-			Result := clone (EiffelBuild_directory);
-			Result.extend (directory_separator);
-			Result.append (Ace_name);
-			Result.extend (directory_separator);
-			Result.append (Ace_name);
+			!! Result.make_from_string (EiffelBuild_directory);
+			Result.extend (Ace_name);
+			Result.set_file_name (Ace_name);
 		end;
 
-	Color_names_file: STRING is
+	Color_names_file: FILE_NAME is
 		once
-			Result := clone (Resources_directory);
-			Result.extend (directory_separator);
-			Result.append (Color_names_file_name)
+			!! Result.make_from_string (Resources_directory);
+			Result.set_file_name (Color_names_file_name)
+		end;
+
+	Merge1_file: FILE_NAME is
+		once
+			!! Result.make_from_string (EiffelBuild_bin);
+			Result.set_file_name (Merge1_file_name)
+		end;
+
+	Merge2_file: FILE_NAME is
+		once
+			!! Result.make_from_string (EiffelBuild_bin);
+			Result.set_file_name (Merge2_file_name)
 		end;
 
 feature -- Directory names for EiffelBuild
 
-	Bitmaps_directory: STRING is
+	Bitmaps_directory: DIRECTORY_NAME is
 			-- Directory containing the various
 			-- bitmaps for EiffelBuild.
-		local
-			win: WINDOWS
 		once
-			Result := clone (EiffelBuild_directory);
-			Result.extend (directory_separator);
-			Result.append (Bitmaps_name);
+			!! Result.make_from_string (EiffelBuild_directory);
+			Result.extend (Bitmaps_name);
 		end;
 
-	Eiffel3_directory: STRING is
+	Eiffel3_directory: DIRECTORY_NAME is
 		once	
-			!!Result.make (0);
-			Result.append (get (Eiffel3_variable_name));
+			!! Result.make_from_string (get (Eiffel3_variable_name));
 		end;
 
-	EiffelBuild_directory: STRING is
+	EiffelBuild_directory: DIRECTORY_NAME is
 			-- Directory referenced by the 
 			-- Eiffel3_var_name
-		local
-			env_var: STRING;
-			temp: ANY;
 		once
-			!! Result.make (0);
-			Result.append (Eiffel3_directory);
-			Result.extend (directory_separator);
-			Result.append (Build_name);
+			!! Result.make_from_string (Eiffel3_directory);
+			Result.extend (Build_name);
 		end;
 
-	EiffelBuild_bin: STRING is
-		local
-			env_var: STRING;
-			temp: ANY;
-			plat: STRING;
+	EiffelBuild_bin: DIRECTORY_NAME is
 		once
-			Result := clone (EiffelBuild_directory);
-			Result.extend (directory_separator);
-			Result.append (Spec_name);
-			Result.extend (directory_separator);
-			plat := get (Platform_variable_name);
-			if plat /= Void then
-				Result.append (plat);
-							Result.extend (directory_separator);
-			end;
-			Result.append (Bin_name);
+			!! Result.make_from_string (EiffelBuild_directory);
+			Result.extend_from_array (<< Spec_name,
+							get (Platform_variable_name),
+							Bin_name >>);
 		end;
 
-	Help_directory: STRING is
+	Help_directory: DIRECTORY_NAME is
 			-- Directory containing the Eiffel
 			-- text of predefined commands
 		once
-			Result := clone (EiffelBuild_directory);
-			Result.extend (directory_separator);
-			Result.append (Help_name);
+			!! Result.make_from_string (EiffelBuild_directory);
+			Result.extend (Help_name);
 		end;
 
-	Predefined_commands_directory: STRING is
+	Predefined_commands_directory: DIRECTORY_NAME is
 			-- Directory containing the Eiffel
 			-- text of predefined commands
 		once
-			Result := clone (EiffelBuild_directory);
-			Result.extend (directory_separator);
-			Result.append (Library_name);
-			Result.extend (directory_separator);
-			Result.append (Commands_name);
+			!! Result.make_from_string (EiffelBuild_directory);
+			Result.extend_from_array (<< Library_name, Commands_name >>);
 		end;
 
-	Resources_directory: STRING is
+	Resources_directory: DIRECTORY_NAME is
 			-- Directory containing resources
 		once
-			Result := clone (EiffelBuild_directory);
-			Result.extend (directory_separator);
-			Result.append (Resources_name);
+			!! Result.make_from_string (EiffelBuild_directory);
+			Result.extend (Resources_name);
 		end;
 
 feature -- Directory names for projects
 
-	Application_directory: STRING is
+	Application_directory: DIRECTORY_NAME is
 		do
-			Result := Generated_directory;
-			Result.extend (directory_separator);
-			Result.append (Application_name);
+			Result := Classes_directory;
+			Result.extend (Application_name);
 		end;
 
-	Classes_directory: STRING is
+	Classes_directory: DIRECTORY_NAME is
 			-- Directory for generated Eiffel
 			-- classes
-			--| Has separator at end
 		do
-			Result.append (Generated_directory);
-			Result.extend (directory_separator);
+			!! Result.make_from_string (Project_directory);
+			Result.extend (Classes_name);
 		end;
 
-	Context_directory: STRING is 
+	Context_directory: DIRECTORY_NAME is 
 		do
-			Result := Generated_directory;
-			Result.extend (directory_separator);
-			Result.append (Widgets_name);
+			Result := Classes_directory;
+			Result.extend (Widgets_name);
 		end;
 
-	Commands_directory: STRING is
+	Commands_directory: DIRECTORY_NAME is
 		do
-			Result := Generated_directory;
-			Result.extend (directory_separator);
-			Result.append (Commands_name);
+			Result := Classes_directory;
+			Result.extend (Commands_name);
 		end;
 
-	Generated_directory: STRING is
-			-- Directory for generated Eiffel
-			-- classes
-			--| Has no separator at end
+	Groups_directory: DIRECTORY_NAME is 
 		do
-			Result := clone (Project_directory);
-			Result.extend (directory_separator);
-			Result.append (Classes_name);
+			Result := Classes_directory;
+			Result.extend (Groups_name);
 		end;
 
-	Groups_directory: STRING is 
-		do
-			Result := Generated_directory;
-			Result.extend (directory_separator);
-			Result.append (Groups_name);
-		end;
-
-	Restore_directory: STRING is
+	Restore_directory: DIRECTORY_NAME is
 			-- Session storage directory
 		do
-			Result := clone (Project_directory);
-			Result.extend (directory_separator);
-			Result.append (Restore_name);
+			!! Result.make_from_string (Project_directory);
+			Result.extend (Restore_name);
 		end;
 
-	State_directory: STRING is
+	State_directory: DIRECTORY_NAME is
 		do
-			Result := Generated_directory;
-			Result.extend (directory_separator);
-			Result.append (State_name);
+			Result := Classes_directory;
+			Result.extend (State_name);
 		end;
 
-	Storage_directory: STRING is
+	Storage_directory: DIRECTORY_NAME is
 			-- Session storage directory
 		do
-			Result := clone (Project_directory);
-			Result.extend (directory_separator);
-			Result.append (Storage_name);
+			!! Result.make_from_string (Project_directory);
+			Result.extend (Storage_name);
 		end;
 
-	Templates_directory: STRING is
+	Templates_directory: DIRECTORY_NAME is
 			-- Session storage directory
 		do
-			Result := Generated_directory;
-			Result.extend (directory_separator);
-			Result.append (Templates_name);
+			Result := Classes_directory;
+			Result.extend (Templates_name);
 		end;
 
-	Windows_directory: STRING is
+	Windows_directory: DIRECTORY_NAME is
 		do
-			Result := Generated_directory;
-			Result.extend (directory_separator);
-			Result.append (Windows_name);
+			Result := Classes_directory;
+			Result.extend (Windows_name);
 		end;
 
-	Widgets_directory: STRING is
+	Widgets_directory: DIRECTORY_NAME is
 		do
-			Result := Generated_directory;
-			Result.extend (directory_separator);
-			Result.append (Widgets_name);
+			Result := Classes_directory;
+			Result.extend (Widgets_name);
 		end;
 
 feature -- File names for Project
 
-	Project_ace_file: STRING is
+	Project_ace_file: FILE_NAME is
 		once
-			Result := clone (Generated_directory);
-			Result.extend (directory_separator);
-			Result.append (Ace_name);
+			!! Result.make_from_string (Classes_directory);
+			Result.set_file_name (Ace_name);
 		end;
 
 feature -- Directory creation
@@ -270,8 +233,8 @@ feature -- Directory creation
 		local
 			ace_f: PLAIN_TEXT_FILE;
 		do
-			if is_directory (Generated_directory) then
-				remove_directory (Generated_directory);
+			if is_directory (Classes_directory) then
+				remove_directory (Classes_directory);
 			end;
 			if is_directory (Storage_directory) then
 				remove_directory (Storage_directory);
@@ -298,7 +261,7 @@ feature -- Directory creation
 			dir_name: DIRECTORY_NAME;
 		do
 			mkdir (Project_directory);
-			mkdir (Generated_directory);
+			mkdir (Classes_directory);
 			mkdir (Windows_directory);
 			mkdir (State_directory);
 			mkdir (Widgets_directory);
@@ -332,7 +295,8 @@ feature {NONE} -- Directory remove (recursive)
 		local
 			dir: DIRECTORY;
 			dir_name: STRING;
-			full_file_name, file_name: STRING;
+			file_name: STRING;
+			full_file_name: DIRECTORY_NAME;
 			file: PLAIN_TEXT_FILE
 		do
 			dir_name := clone (p);
@@ -347,9 +311,8 @@ feature {NONE} -- Directory remove (recursive)
 				if not (file_name.is_equal (".") or else
 					file_name.is_equal (".."))
 				then
-					full_file_name := clone (p);
-					full_file_name.extend (Directory_separator);
-					full_file_name.append (file_name);
+					!! full_file_name.make_from_string (p);
+					full_file_name.extend (file_name);
 					!! file.make (full_file_name);
 					if file.is_directory then
 						remove_directory (full_file_name)

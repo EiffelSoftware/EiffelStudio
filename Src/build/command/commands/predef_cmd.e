@@ -32,16 +32,16 @@ feature
 
 	eiffel_text: STRING is
 		local
-			fn, full_path: STRING;	
+			full_path: FILE_NAME;	
+			fn: STRING;
 			f: PLAIN_TEXT_FILE
 		do
-			full_path := clone (Environment.predefined_commands_directory);
-			full_path.extend (Environment.directory_separator);
+			!! full_path.make_from_string (Environment.predefined_commands_directory);
 				fn := clone (eiffel_type);
 				fn.to_lower;
 				fn.append (".e");
-			full_path.append (fn);
-			!!f.make (full_path);
+			full_path.extend (fn);
+			!! f.make (full_path);
 			f.open_read;
 			f.readstream (f.count);
 			Result := f.laststring;

@@ -89,10 +89,7 @@ end
 			old_item := cache.item_id (id (t))
 			if old_item = Void then
 					-- No previous item of id `t.id'
-				if cache.is_full then
-					cache.remove
-				end
-				cache.put (t)
+				cache.force (t)
 			else
 					-- There is a previous item and routine `item_id' 
 					-- reorganized the cache
@@ -199,12 +196,8 @@ end
 				end
 				Result := retrieve_all (server_file.descriptor, info.position)
 					-- Insert it in the queue
-				if cache.is_full then
-						-- If cache is full, oldest is removed
-					cache.remove
-				end
 				Result.set_id (real_id)
-				cache.put (Result)
+				cache.force (Result)
 			end
 		end
 

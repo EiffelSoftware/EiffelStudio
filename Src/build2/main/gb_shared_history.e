@@ -15,6 +15,5 @@ feature -- Access
 		once
 			create Result
 		end
-		
 
 end -- class GB_ACCESSIBLE_HISTORY

@@ -489,6 +489,9 @@ feature {COMPILER_EXPORTER} -- Compiled class
 			elseif Current = local_system.native_array_class then
 				create {NATIVE_ARRAY_B} Result.make (Current)
 
+			elseif Current = local_system.type_class then
+				create {TYPE_CLASS_C} Result.make (Current)
+
 			else
 				if is_external_class then
 					create {EXTERNAL_CLASS_C} Result.make (Current)

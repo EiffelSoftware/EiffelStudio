@@ -372,12 +372,14 @@ feature -- Properties
 			local_workbench.change_class (procedure_class)
 			local_workbench.change_class (function_class)
 			local_workbench.change_class (typed_pointer_class)
+			local_workbench.change_class (type_class)
 
 			if not il_generation then
 				local_workbench.change_class (wide_char_class)
 			else
 				local_workbench.change_class (native_array_class)
 				local_workbench.change_class (system_string_class)
+				local_workbench.change_class (system_type_class)
 				local_workbench.change_class (arguments_class)
 			end
 
@@ -440,6 +442,7 @@ feature -- Properties
 			procedure_class.compiled_class.record_precompiled_class_in_system
 			function_class.compiled_class.record_precompiled_class_in_system
 			typed_pointer_class.compiled_class.record_precompiled_class_in_system
+			type_class.compiled_class.record_precompiled_class_in_system
 
 			if not il_generation then
 				wide_char_class.compiled_class.record_precompiled_class_in_system
@@ -447,6 +450,7 @@ feature -- Properties
 				native_array_class.compiled_class.record_precompiled_class_in_system
 				system_string_class.compiled_class.record_precompiled_class_in_system
 				arguments_class.compiled_class.record_precompiled_class_in_system
+				system_type_class.compiled_class.record_precompiled_class_in_system
 			end
 		end
 
@@ -1312,6 +1316,7 @@ end
 			procedure_class.compiled_class.mark_class (marked_classes)
 			function_class.compiled_class.mark_class (marked_classes)
 			typed_pointer_class.compiled_class.mark_class (marked_classes)
+			type_class.compiled_class.mark_class (marked_classes)
 
 			if not il_generation then
 				wide_char_class.compiled_class.mark_class (marked_classes)
@@ -1319,6 +1324,7 @@ end
 				native_array_class.compiled_class.mark_class (marked_classes)
 				system_string_class.compiled_class.mark_class (marked_classes)
 				arguments_class.compiled_class.mark_class (marked_classes)
+				system_type_class.compiled_class.mark_class (marked_classes)
 			end
 
 				-- Now mark all classes reachable from `unref_classes'.

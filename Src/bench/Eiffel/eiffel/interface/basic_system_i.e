@@ -79,6 +79,9 @@ feature -- Access
 	arguments_class: CLASS_I
 			-- Class ARGUMENTS
 			
+	type_class, system_type_class: CLASS_I
+			-- Class TYPE
+			
 feature -- Access: XX_REF classes
 
 	character_ref_class: CLASS_I
@@ -237,6 +240,28 @@ feature -- Access
 			compiled: function_class.is_compiled
 		do
 			Result := function_class.compiled_class.class_id
+		ensure
+			valid_result: Result > 0
+		end
+
+	system_type_id: INTEGER is
+			-- Id of class STRING
+		require
+			system_type_class_exists: system_type_class /= Void
+			compiled: system_type_class.is_compiled
+		do
+			Result := system_type_class.compiled_class.class_id
+		ensure
+			valid_result: Result > 0
+		end
+
+	eiffel_type_id: INTEGER is
+			-- Id of class STRING
+		require
+			type_class_exists: type_class /= Void
+			compiled: type_class.is_compiled
+		do
+			Result := type_class.compiled_class.class_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -614,6 +639,26 @@ feature -- Settings
 			arguments_class := c
 		ensure
 			arguments_class: arguments_class = c
+		end
+
+	set_type_class (c: CLASS_I) is
+			-- Assign `c' to `type_class'.
+		require
+			c_not_void: c /= Void
+		do
+			type_class := c
+		ensure
+			type_class_set: type_class = c
+		end
+
+	set_system_type_class (c: CLASS_I) is
+			-- Assign `c' to `system_type_class'.
+		require
+			c_not_void: c /= Void
+		do
+			system_type_class := c
+		ensure
+			system_type_class_set: system_type_class = c
 		end
 
 feature -- Settings: XX_REF classes

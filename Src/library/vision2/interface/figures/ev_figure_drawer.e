@@ -435,6 +435,7 @@ feature -- Figure drawing
 			scaled_font.set_height (
 				(scaled_font.height *
 				text_figure.point.scale_y_abs).rounded)
+			scaled_font.preferred_families.append (cur_font.preferred_families)
 			d.set_font (scaled_font)
 			d.set_foreground_color (text_figure.foreground_color)
 			d.draw_text_top_left (c.x, c.y, text_figure.text)

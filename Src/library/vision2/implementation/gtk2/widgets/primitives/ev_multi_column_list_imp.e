@@ -16,10 +16,8 @@ inherit
 		redefine
 			interface,
 			initialize,
-			item,
 			call_pebble_function,
 			wipe_out,
-			append,
 			pixmaps_size_changed,
 			remove_row_pixmap
 		end

@@ -11,8 +11,7 @@ inherit
 	EV_LIST_ITEM_LIST_I
 		redefine
 			call_pebble_function,
-			interface,
-			wipe_out
+			interface
 		end
 
 	EV_PRIMITIVE_IMP
@@ -20,7 +19,6 @@ inherit
 			call_pebble_function,
 			initialize,
 			interface,
-			make,
 			pre_pick_steps,
 			enable_transport
 		end
@@ -30,7 +28,6 @@ inherit
 			destroy
 		redefine
 			interface,
-			--add_to_container,
 			insert_i_th,
 			remove_i_th,
 			initialize

@@ -17,7 +17,6 @@ inherit
 		redefine
 			interface,
 			initialize,
-			visual_widget,
 			needs_event_box,
 			set_parent_imp
 		end

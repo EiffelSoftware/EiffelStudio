@@ -27,8 +27,7 @@ inherit
 		
 	EV_FONTABLE_IMP
 		redefine
-			interface,
-			visual_widget
+			interface
 		end
 
 create

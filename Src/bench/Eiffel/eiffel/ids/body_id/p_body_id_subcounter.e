@@ -24,9 +24,7 @@ feature {NONE} -- Initialization
 	make (comp_id: INTEGER) is
 			-- Create a new counter associated with `comp_id'.
 		do
-			compilation_id := comp_id;
-			prefix_name := "P";
-			prefix_name.append_integer (comp_id)
+			compilation_id := comp_id
 		end
 
 feature -- Access
@@ -40,7 +38,22 @@ feature -- Access
 
 feature {BODY_ID} -- Implementation
 
-	prefix_name: STRING;
+	prefix_name (type_id: TYPE_ID): STRING is
 			-- Prefix for generated C function names
+		local
+			p_type_id: P_TYPE_ID
+		do
+			p_type_id ?= type_id;
+			if p_type_id /= Void then
+				Result := P_buffer;
+				eif000 ($Result, type_id.compilation_id, compilation_id)
+			elseif type_id.is_dynamic then
+				Result := B_buffer;
+				eif011 ($Result, compilation_id)
+			else
+				Result := C_buffer;
+				eif011 ($Result, compilation_id)
+			end
+		end
 
 end -- class P_BODY_ID_SUBCOUNTER

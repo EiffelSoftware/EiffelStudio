@@ -7,12 +7,16 @@ inherit
 	P_COMPILER_SUBCOUNTER
 		redefine
 			make
-		end
+		end;
 	TYPE_SUBCOUNTER
 		rename
 			make as csc_make
 		redefine
 			next_id, prefix_name
+		end;
+	ENCODER
+		export
+			{NONE} all
 		end
 
 creation
@@ -25,8 +29,8 @@ feature {NONE} -- Initialization
 			-- Create a new counter associated with `comp_id'.
 		do
 			compilation_id := comp_id;
-			prefix_name := "P";
-			prefix_name.append_integer (comp_id)
+			prefix_name := "P000000";
+			eif011 ($prefix_name, comp_id)
 		end
 
 feature -- Access

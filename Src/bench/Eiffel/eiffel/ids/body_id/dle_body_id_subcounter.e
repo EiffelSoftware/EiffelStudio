@@ -25,10 +25,20 @@ feature -- Access
 
 feature {BODY_ID} -- Implementation
 
-	prefix_name: STRING is
+	prefix_name (type_id: TYPE_ID): STRING is
 			-- Prefix for generated C function names
-		once
-			Result := "D"
+		local
+			p_type_id: P_TYPE_ID
+		do
+			p_type_id ?= type_id;
+			if p_type_id /= Void then
+				Result := F_buffer;
+				eif011 ($Result, type_id.compilation_id)
+			elseif type_id.is_dynamic then
+				Result := "D"
+			else
+				Result := "DN"
+			end
 		end
 
 end -- class DLE_BODY_ID_SUBCOUNTER

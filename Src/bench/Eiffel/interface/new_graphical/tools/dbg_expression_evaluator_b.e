@@ -293,9 +293,9 @@ feature -- EXPR_B evaluation
 			if     a_value_i.is_integer		then
 				l_integer ?= a_value_i
 				if l_integer.size = 64 		then
-					tmp_result_value := integer_64_to_dump_value (l_integer.to_integer_64)
+					tmp_result_value := integer_64_to_dump_value (l_integer.integer_64_value)
 				else
-					tmp_result_value := integer_to_dump_value (l_integer.value)
+					tmp_result_value := integer_to_dump_value (l_integer.integer_32_value)
 				end
 			elseif a_value_i.is_string		then
 				l_string ?= a_value_i

@@ -77,7 +77,7 @@ feature -- Status report
 	clipboard_content: STRING is
 			-- `Result' is current clipboard content.
 		do
-			--| FIXME IEK Needs implementing with clipboard from app_imp
+			Result := App_implementation.clipboard.text
 		end
 
 feature -- status settings

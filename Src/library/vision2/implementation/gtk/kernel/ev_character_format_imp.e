@@ -80,7 +80,10 @@ feature {NONE} -- Implementation
 			-- Family used by `Current'.
 		
 	height: INTEGER
-			--  Height of `Current'.
+			--  Height of `Current' in screen pixels.
+
+	height_in_points: INTEGER
+			-- Height of `Current' in points
 		
 	weight: INTEGER
 			-- Weight of `Current'.

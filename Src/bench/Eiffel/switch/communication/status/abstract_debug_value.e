@@ -54,17 +54,6 @@ feature -- Access
 		deferred
 		end;
 
-	attribute: E_FEATURE is
-			-- Attribute feature
-		require
-			is_attribute: is_attribute
-		do
-			Result := e_class.feature_with_name (name)
-		ensure
-			valid_result: Result /= Void implies Result.is_attribute and then
-				equal (Result.name, name)
-		end;
-
 	item_number: INTEGER
 			-- number of the object in the local list, attribute list, etc...
 

@@ -5,32 +5,33 @@ indexing
 	revision: "$Revision$"
 
 class
-	DEFAULT_NULL_VALUE
+	NUMERIC_NULL_VALUE
 
-feature -- Access
+feature {NONE} -- Access
 	
-	default_null_value: DOUBLE is
+	numeric_null_value: DOUBLE is
 			-- Default value set to integer, double or real field instead of NULL.
+			-- Real and integer values are TRUNCATED.
 		do
-			Result := default_null_value_ref.item
+			Result := numeric_null_value_ref.item
 		end
 
-	set_default_null_value (a_value: DOUBLE) is
+	set_numeric_null_value (a_value: DOUBLE) is
 			-- Set `a_value' to the default numeric NULL value.
 		do
-			default_null_value_ref.set_item (a_value)
+			numeric_null_value_ref.set_item (a_value)
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
-	default_null_value_ref: DOUBLE_REF is
+	numeric_null_value_ref: DOUBLE_REF is
 			-- Reference to the value. 
 		once
 			create Result
 			Result.set_item (0.0)
 		end
 
-end -- class DEFAULT_NULL_VALUE
+end -- class NUMERIC_NULL_VALUE
 
 --|----------------------------------------------------------------
 --| EiffelStore: library of reusable components for ISE Eiffel.

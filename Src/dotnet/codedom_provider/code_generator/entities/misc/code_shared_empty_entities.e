@@ -40,14 +40,19 @@ feature -- Access
 
 	Empty_type_reference: CODE_TYPE_REFERENCE is
 			-- Empty type reference
+		local
+			l_member_reference: CODE_MEMBER_REFERENCE
 		once
 			Result := None_type_reference
+			create l_member_reference.make ("empty_", None_type_reference, False)
+			l_member_reference.set_initialized
+			Result.add_member (l_member_reference)
 		end
 		
 	Empty_member_reference: CODE_MEMBER_REFERENCE is
 			-- Empty member reference
 		once
-			Result := Empty_type_reference.member ("empty_", Void, False)
+			Result := Empty_type_reference.member ("empty_", Void)
 		end
 	
 	Empty_expression: CODE_EXPRESSION is

@@ -18,17 +18,6 @@ creation
 
 	make
 	
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize the command. Default indentation is 4.
-		do
-			init (a_text_window);
-			indent := 4
-		ensure
-			default_indent: indent = 4
-		end;
-
 feature -- Properties
 
 	symbol: PIXMAP is 

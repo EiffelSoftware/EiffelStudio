@@ -160,8 +160,8 @@ feature -- Element change
 			end
 			feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_lower (adjustment, value_range.lower)
 			internal_set_upper
+			internal_set_value (temp_value)	
 			feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
-			internal_set_value (temp_value)
 		end
 
 feature {NONE} -- Implementation

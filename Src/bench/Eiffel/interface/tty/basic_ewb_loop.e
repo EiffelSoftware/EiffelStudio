@@ -202,10 +202,12 @@ feature -- Initialization
 		local
 			ewb_cmd: EWB_CMD;
 		do
-			!!Result.make (1, 3);
+			!!Result.make (1, 4);
 			Result.set_parent (Main_menu);
 
 			!EWB_ARGS! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+			!EWB_QUICK_MELT! ewb_cmd;
 			Result.add_entry (ewb_cmd);
 			!EWB_COMP! ewb_cmd;
 			Result.add_entry (ewb_cmd);

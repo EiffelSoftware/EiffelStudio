@@ -21,7 +21,7 @@ feature -- Properties
 		local
 			ewb_cmd: EWB_CMD
 		do
-			!!Result.make (1,7)
+			!!Result.make (1,8)
 
 			!EWB_ARGS! ewb_cmd;
 			Result.add_entry (ewb_cmd);
@@ -32,6 +32,8 @@ feature -- Properties
 			!EWB_FREEZE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 			!EWB_COMP! ewb_cmd;
+			Result.add_entry (ewb_cmd)
+			!EWB_QUICK_MELT! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 			!EWB_RUN! ewb_cmd;
 			Result.add_entry (ewb_cmd);

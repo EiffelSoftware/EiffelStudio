@@ -665,4 +665,23 @@ feature -- Show Window (SW) constants
 	Sw_otherunzoom: INTEGER is 4
 			-- Declared in Windows as SW_OTHERUNZOOM
 
+feature -- Window Activate Mode
+
+	Wa_active: INTEGER is 1
+			-- Activated by some method other than a mouse click (for 
+			-- example, by a call to the SetActiveWindow function or by use 
+			-- of the keyboard interface to select the window). 
+			--
+			-- Declared in Windows as WA_ACTIVE
+
+	Wa_clickactive: INTEGER is 2
+			-- Activated by a mouse click.
+			--
+			-- Declared in Windows as WA_CLICKACTIVE
+
+	Wa_inactive: INTEGER is 0
+			-- Deactivated.
+			--
+			-- Declared in Windows as WA_INACTIVE
+
 end -- class WEL_WINDOW_CONSTANTS

@@ -322,9 +322,20 @@ feature -- Access
 		require
 			other_not_void: other /= Void
 			valid_start_index: start_index >= 1 and start_index <= count + 1
+		local
+			l_other_count: INTEGER
 		do
-			if start_index <= count then
-				Result := to_cil.index_of (other.to_cil, start_index - 1) + 1
+			if other = Current then
+				if start_index = 1 then
+					Result := 1
+				end
+			else
+				l_other_count := other.count
+				if l_other_count = 0 then
+					Result := start_index
+				elseif start_index <= (count - l_other_count + 1) then
+					Result := to_cil.index_of (other.to_cil, start_index - 1) + 1
+				end
 			end
 		ensure
 			valid_result: Result = 0 or else
@@ -449,7 +460,9 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			if other.count <= count then
+			if other = Current then
+				Result := True
+			elseif other.count <= count then
 				Result := substring_index (other, 1) > 0
 			end
 		end
@@ -668,25 +681,41 @@ feature -- Element change
 			valid_index_pos: valid_index (index_pos)
 			enough_space: (count - index_pos) >= (end_pos - start_pos)
 		local
-			other_area: like internal_string_builder
+			l_other_area, l_area: like internal_string_builder
 			start0, end0, index0, i: INTEGER
 		do
-			other_area := other.internal_string_builder
+			l_other_area := other.internal_string_builder
+			l_area := internal_string_builder
 			start0 := start_pos - 1
 			end0 := end_pos - 1
 			index0 := index_pos - start_pos
-			from
-				i := start0
-			until
-				i > end0
-			loop
-				internal_string_builder.set_chars (index0 + i, other_area.chars (i))
-				i := i + 1
+				-- We perform the copy in a specific direction becuase if `Current = other'
+				-- then we may have some overlapping and doing it in a specific direction
+				-- avoids the overlapping issue.
+			if index_pos < start_pos then
+				from
+					i := start0
+				until
+					i > end0
+				loop
+					l_area.set_chars (index0 + i, l_other_area.chars (i))
+					i := i + 1
+				end
+			else
+				from
+					i := end0
+				until
+					i < start0
+				loop
+					l_area.set_chars (index0 + i, l_other_area.chars (i))
+					i := i - 1
+				end
 			end
 		ensure
+			same_count: count = old count
 			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),
 			--     item (index_pos + i) = other.item (start_pos + i)
-		end
+  		end
 
 	replace_substring (s: STRING; start_index, end_index: INTEGER) is
 			-- Copy the characters of `s' to positions

@@ -56,6 +56,8 @@ feature {ICOR_EXPORTER} -- Access
 			-- variable. If the static field could possibly be relative to either
 			-- a thread, context, or appdomain, then pFrame will help the debugger
 			-- determine the proper value.
+		require
+			frame_not_void: a_frame /= Void
 		local
 			p: POINTER
 		do

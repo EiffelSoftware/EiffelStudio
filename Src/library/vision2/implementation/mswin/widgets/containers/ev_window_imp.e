@@ -941,24 +941,31 @@ feature {EV_ANY_I} -- Implementation
 			-- message `msg'.
 		local
 			a_menu: WEL_MENU
+			modeless_dialog_imp: EV_DIALOG_IMP_MODELESS
 		do
 				-- The `Wm_ncactive' message is sent by windows when the
 				-- non client area of Current needs to be changed to indicate an
 				-- active or non active state (Blue or Grey as default).
 			if msg = Wm_ncactivate then
 					-- `wparam' is equal to 1 then the non client area of
-					-- `Current' is being changed to indicate active.				
-				if wparam = 1 then
-					if application_imp.pick_and_drop_source /= Void or application_imp.awaiting_movement or
-						application_imp.transport_just_ended or application_imp.override_from_mouse_activate then
-						disable_default_processing
-						override_movement := False
-						application_imp.clear_transport_just_ended
-					end
-				else
-					if application_imp.override_from_mouse_activate then
-						disable_default_processing
-						application_imp.clear_override_from_mouse_activate
+					-- `Current' is being changed to indicate active.
+					-- We could use class INTERNAL to find this out, but I do not
+					-- want to add inheritance from another class. If you think it is a better
+					-- solution, then I see no reason why we should not do it. Julian 08/14/02
+				modeless_dialog_imp ?= Current
+				if modeless_dialog_imp /= Void then
+					if wparam = 1 then
+						if application_imp.pick_and_drop_source /= Void or application_imp.awaiting_movement or
+							application_imp.transport_just_ended or application_imp.override_from_mouse_activate then
+							disable_default_processing
+							override_movement := False
+							application_imp.clear_transport_just_ended
+						end
+					else
+						if application_imp.override_from_mouse_activate then
+							disable_default_processing
+							application_imp.clear_override_from_mouse_activate
+						end
 					end
 				end
 			elseif msg = Wm_activate then

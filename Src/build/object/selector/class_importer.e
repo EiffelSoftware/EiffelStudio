@@ -44,13 +44,15 @@ feature -- Creation
 			!! selected_label.make ("", top_form)
 			!! selected_list.make ("", top_form)
 			!! arrow_form.make ("", top_form)
+			!! refresh_button.make ("Refresh", arrow_form)
+			!! blank_label.make ("", arrow_form)
 			!! select_button.make ("", arrow_form)
 			!! unselect_button.make ("", arrow_form)
 			!! separator1.make ("", top_form)
 			!! button_form.make ("", top_form)
-			!! generate_tool_button.make ("Generate Tool", button_form)
-			!! generate_command_button.make ("Generate Command", button_form)
-			!! refresh_button.make ("Refresh", button_form)
+			!! generate_label.make ("Generate", top_form)
+			!! generate_tool_button.make ("Object Editor", button_form)
+			!! generate_command_button.make ("Command", button_form)
 			set_values
 			attach_all
 			set_callbacks
@@ -61,7 +63,8 @@ feature -- Creation
 		local
 			set_colors: SET_WINDOW_ATTRIBUTES_COM
 		do
-			set_size (resources.class_selector_width, resources.class_selector_height)
+			set_size (resources.class_importer_width, resources.class_importer_height)
+			set_x_y (resources.class_importer_x, resources.class_importer_y)
 			!! set_colors
 			set_colors.execute (Current)
 			set_title ("Class importer")
@@ -78,48 +81,54 @@ feature -- Creation
 	attach_all is
 			-- Perform attachments.
 		do
+			arrow_form.attach_top (refresh_button, 0)
+			arrow_form.attach_top (blank_label, 0)
 			arrow_form.attach_top (select_button, 0)
 			arrow_form.attach_top (unselect_button, 0)
+			arrow_form.attach_bottom (refresh_button, 0)
+			arrow_form.attach_bottom (blank_label, 0)
 			arrow_form.attach_bottom (select_button, 0)
 			arrow_form.attach_bottom (unselect_button, 0)
-			arrow_form.attach_left (select_button, 70)
-			arrow_form.attach_right (unselect_button, 70)
+			arrow_form.attach_left (refresh_button, 0)
+			arrow_form.attach_left_widget (refresh_button, blank_label, 0)
+			arrow_form.attach_right (unselect_button, 0)
+			arrow_form.attach_right_widget (unselect_button, select_button, 0)
+			arrow_form.attach_right_widget (select_button, blank_label, 0)
 
-			button_form.set_fraction_base (100)
+			button_form.set_fraction_base (2)
 			button_form.attach_top (generate_tool_button, 0)
-			button_form.attach_top (refresh_button, 0)
 			button_form.attach_top (generate_command_button, 0)
 			button_form.attach_bottom (generate_tool_button, 0)
-			button_form.attach_bottom (refresh_button, 0)
 			button_form.attach_bottom (generate_command_button, 0)
-			button_form.attach_left_position (generate_tool_button, 0)
-			button_form.attach_right_position (generate_tool_button, 33)
-			button_form.attach_left_position (generate_command_button, 33)
-			button_form.attach_right_position (generate_command_button, 66)
-			button_form.attach_left_position (refresh_button, 66)
-			button_form.attach_right_position (refresh_button, 100)
+			button_form.attach_left (generate_tool_button, 0)
+			button_form.attach_right_position (generate_tool_button, 1)
+			button_form.attach_left_position (generate_command_button, 1)
+			button_form.attach_right (generate_command_button, 0)
 
 			top_form.set_fraction_base (100)
 			top_form.attach_top (available_label, 0)
 			top_form.attach_left (available_label, 0)
 			top_form.attach_right (available_label, 0)
 			top_form.attach_top_widget (available_label, available_list, 5)
-			top_form.attach_left (available_list, 5)
-			top_form.attach_right (available_list, 5)
-			top_form.attach_bottom_widget (arrow_form, available_list, 15)
+			top_form.attach_left (available_list, 0)
+			top_form.attach_right (available_list, 0)
+			top_form.attach_bottom_widget (arrow_form, available_list, 5)
 			top_form.attach_left (arrow_form, 0)
 			top_form.attach_right (arrow_form, 0)
-			top_form.attach_bottom_widget (selected_label, arrow_form, 0)
+			top_form.attach_bottom_widget (selected_label, arrow_form, 5)
 			top_form.attach_left (selected_label, 0)
 			top_form.attach_right (selected_label, 0)
 			top_form.attach_bottom_position (selected_label, 60)
 			top_form.attach_top_position (selected_list, 60)
-			top_form.attach_left (selected_list, 5)
-			top_form.attach_right (selected_list, 5)
+			top_form.attach_left (selected_list, 0)
+			top_form.attach_right (selected_list, 0)
 			top_form.attach_bottom_widget (separator1, selected_list, 5)
 			top_form.attach_left (separator1, 0)
 			top_form.attach_right (separator1, 0)
-			top_form.attach_bottom_widget (button_form, separator1, 2)
+			top_form.attach_bottom_widget (generate_label, separator1, 2)
+			top_form.attach_left (generate_label, 0)
+			top_form.attach_right (generate_label, 0)
+			top_form.attach_bottom_widget (button_form, generate_label, 2)
 			top_form.attach_left (button_form, 0)
 			top_form.attach_right (button_form, 0)
 			top_form.attach_bottom (button_form, 0)
@@ -156,8 +165,14 @@ feature {NONE} -- GUI attributes
 	available_label,
 			-- Available classes label
 
-	selected_label: LABEL
-			-- Selected classes
+	selected_label,
+			-- Selected classes label
+
+	blank_label,
+			-- Blank label
+
+	generate_label: LABEL
+			-- Generate label	
 
 	available_list,
 			-- List of available classes
@@ -323,6 +338,12 @@ feature
 			-- Close class selector.
 		do
 			hide
+			if object_command_generator.realized then
+				object_command_generator.close
+			end
+			if object_tool_generator.realized then
+				object_tool_generator.close
+			end
 			main_panel.class_importer_entry.set_toggle_off
 		end
 

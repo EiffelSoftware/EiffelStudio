@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 		local
 			cmd_name: STRING
-        do
+		do
 			if last_warner /= Void then
 				last_warner.popdown
 			end;

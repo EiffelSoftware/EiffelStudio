@@ -25,6 +25,7 @@ feature
 		local
 			workbench_mode: BOOLEAN;
 		do
+			!!c_old_expressions.make;
 			workbench_mode := context.workbench_mode;
 			context.set_assertion_type (0);
 
@@ -134,14 +135,14 @@ feature
 			if precondition /= Void then
 				generate_precondition;
 			end;
+				-- Generate old variables
+			generate_old_variables;
 			if rescue_clause /= Void then
 					-- Generate a `setjmp' C instruction in case of a
 					-- rescue clause
 				generated_file.putstring ("RTEJ;");
 				generated_file.new_line;
 			end;
-				-- Generate old variables
-			generate_old_variables;
 				-- Generate local expanded variable creations
 			generate_expanded_variables;
 				-- Now we want the body
@@ -172,6 +173,7 @@ feature
 			generated_file.new_line;
 				-- Leave a blank line after function definition
 			generated_file.new_line;
+			c_old_expressions := Void
 		end;
 
 	generate_compound is
@@ -544,7 +546,7 @@ feature
 			context.set_assertion_type (In_postcondition);
 			workbench_mode := context.workbench_mode;
 			if workbench_mode or else context.assertion_level.check_postcond
-		   then
+		   	then
 				if workbench_mode then
 					generated_file.putstring ("if (RTAL & CK_ENSURE) {");
 					generated_file.new_line;
@@ -717,6 +719,18 @@ feature -- Byte code generation
 				ba.mark_forward;
 				precondition.make_byte_code (ba);
 				ba.write_forward;
+			end;
+			if postcondition /= Void then 	-- Make byte code for old expression
+					--! Order is important since interpretor pops expression
+					--! bottom up.
+				from
+					old_expressions.finish
+				until
+					old_expressions.before
+				loop
+					old_expressions.item.make_initial_byte_code (ba);
+					old_expressions.back
+				end
 			end;
 			context.record_breakable (ba);	-- Breakpoint on body entrance
 			if compound /= Void then

@@ -79,6 +79,12 @@ feature {TEXT_ITEM} -- Implementation
 		deferred
 		end;
 
+    process_feature_error (text: FEATURE_ERROR_TEXT) is
+            -- Process error feature text.
+        do
+            process_feature_text (text)
+        end;
+
 	process_feature_text (text: FEATURE_TEXT) is
 			-- Process feature text `text'.
 		require

@@ -6,7 +6,7 @@
 #ifndef _err_msg_h
 #define _err_msg_h
 
-#ifndef __WATCOMC__
+#ifndef __WINDOWS_386__
 #include <stdio.h>
 #define print_err_msg fprintf
 #else

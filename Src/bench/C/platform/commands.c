@@ -15,7 +15,7 @@
 #include "dir.h"
 #include "file.h"	/* for PATH_MAX */
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 #include <windows.h>
 #endif
 
@@ -33,7 +33,7 @@ fnptr send_address, set_address;
 void eif_call_finish_freezing(c_code_dir, freeze_cmd_name)
 EIF_OBJ c_code_dir, freeze_cmd_name;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	char *cmd, *current_dir, *eiffel_dir;
 
 	current_dir = getcwd(NULL, PATH_MAX);
@@ -86,7 +86,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 void eif_gr_call_finish_freezing(request, c_code_dir, freeze_cmd_name)
 EIF_OBJ request, c_code_dir, freeze_cmd_name;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	eif_call_finish_freezing(c_code_dir, freeze_cmd_name);
 #else
 	DIR *dirp;
@@ -123,7 +123,7 @@ EIF_OBJ request, c_code_dir, freeze_cmd_name;
 void eif_link_driver (c_code_dir, system_name, prelink_command_name, driver_name)
 EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	char *ini_path, *src, *eiffel_dir, *eiffel_plt, *system_exe;
 	FILE *ini_file, *fi, *fo;
 	char buffer[4096];
@@ -201,7 +201,7 @@ void eif_gr_link_driver (request, c_code_dir, system_name, prelink_command_name,
 EIF_OBJ request;
 EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	eif_link_driver(c_code_dir, system_name, prelink_command_name, driver_name);
 #else
 	char *cmd;

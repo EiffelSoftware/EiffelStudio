@@ -9,6 +9,10 @@
 #include <unistd.h>
 #endif
 
+#if defined EIF_WINDOWS
+#include <winsock.h>
+#endif
+
 #ifndef MAXHOSTNAMELEN      /* added for dgux and other platforms maybe */
 #define MAXHOSTNAMELEN 128
 #endif

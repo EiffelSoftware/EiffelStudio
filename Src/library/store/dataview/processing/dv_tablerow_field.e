@@ -466,6 +466,7 @@ feature {DV_COMPONENT} -- Basic operations
 			-- with code `attribute_code' of `table_row'.
 		require
 			is_activated: is_activated
+			typing_ok: table_row.Table_code = attribute_code
 		do
 			if is_date or else is_datetime then
 				set_datetime (table_row)
@@ -541,7 +542,7 @@ indexing
 			ISE Building
 			360 Storke Road, Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
-			Electronic mail <info@eiffel.com>
+			Contact: http://contact.eiffel.com
 			Customer support http://support.eiffel.com
 			]"
 

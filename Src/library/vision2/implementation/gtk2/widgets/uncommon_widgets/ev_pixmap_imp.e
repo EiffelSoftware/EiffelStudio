@@ -219,8 +219,12 @@ feature -- Element change
 
 	pixbuf_from_drawable_with_size (a_width, a_height: INTEGER): POINTER is
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure with dimensions `a_width' * `a_height'
+		local
+			a_pixbuf: POINTER
 		do
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (pixbuf_from_drawable, a_width, a_height, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
+			a_pixbuf := pixbuf_from_drawable
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
+			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 		end
 
 	set_size (a_x, a_y: INTEGER) is

@@ -129,11 +129,11 @@ feature -- Access
 			!! Result.make (a_label, managed, oui_parent)
 		end;
 
-	label_g (a_label_gadget: LABEL_G; managed: BOOLEAN; oui_parent: COMPOSITE): LABEL_G_W is
-			-- MS-Windows implementation of `a_label_gadget'
-		do
-			!! Result.make (a_label_gadget, managed, oui_parent)
-		end;
+	--label_g (a_label_gadget: LABEL_G; managed: BOOLEAN; oui_parent: COMPOSITE): LABEL_G_W is
+	--		-- MS-Windows implementation of `a_label_gadget'
+	--	do
+	--		!! Result.make (a_label_gadget, managed, oui_parent)
+	--	end;
 
 	menu_b (a_menu_b: MENU_B; managed: BOOLEAN; oui_parent: MENU): MENU_BUTTON_WINDOWS is
 			-- MS-Windows implementation of `a_menu_b'
@@ -147,11 +147,11 @@ feature -- Access
 			!! Result.make (a_pulldown, managed, oui_parent)
 		end; 
 
-	message (a_message: MESSAGE; managed: BOOLEAN; oui_parent: COMPOSITE): MESSAGE_WINDOWS is
-			-- MS-Windows implementation of `a_message'
-		do
-			!! Result.make (a_message, managed, oui_parent)
-		end; 
+	--message (a_message: MESSAGE; managed: BOOLEAN; oui_parent: COMPOSITE): MESSAGE_WINDOWS is
+	--		-- MS-Windows implementation of `a_message'
+	--	do
+	--		!! Result.make (a_message, managed, oui_parent)
+	--	end; 
 
 	message_d (a_message_dialog: MESSAGE_D; oui_parent: COMPOSITE): MESSAGE_DIALOG_WINDOWS is
 			-- MS-Windows implementation of `a_message_dialog'
@@ -189,11 +189,11 @@ feature -- Access
 			!! Result.make (a_popup, oui_parent)
 		end; 
 
-	prompt (a_prompt: PROMPT; managed: BOOLEAN; oui_parent: COMPOSITE): PROMPT_WINDOWS is
-			-- MS-Windows implementation of `a_prompt'
-		do
-			!! Result.make (a_prompt, managed, oui_parent)
-		end; 
+	--prompt (a_prompt: PROMPT; managed: BOOLEAN; oui_parent: COMPOSITE): PROMPT_WINDOWS is
+	--		-- MS-Windows implementation of `a_prompt'
+	--	do
+	--		!! Result.make (a_prompt, managed, oui_parent)
+	--	end; 
 
 	prompt_d (a_prompt_dialog: PROMPT_D; oui_parent: COMPOSITE): PROMPT_DIALOG_WINDOWS is
 			-- MS-Windows implementation of `a_prompt_dialog'
@@ -207,11 +207,11 @@ feature -- Access
 			!! Result.make (a_push_b, managed, oui_parent)
 		end; 
 
-	push_bg (a_push_b_gadget: PUSH_BG; managed: BOOLEAN; oui_parent: COMPOSITE): PUSH_BG_WINDOWS is
-			-- MS-Windows implementation of `a_push_b_gadget'
-		do
-			!! Result.make (a_push_b_gadget, managed, oui_parent)
-		end;
+	--push_bg (a_push_b_gadget: PUSH_BG; managed: BOOLEAN; oui_parent: COMPOSITE): PUSH_BG_WINDOWS is
+	--		-- MS-Windows implementation of `a_push_b_gadget'
+	--	do
+	--		!! Result.make (a_push_b_gadget, managed, oui_parent)
+	--	end;
 
 	question_d (a_question_dialog: QUESTION_D; oui_parent: COMPOSITE): QUESTION_DIALOG_WINDOWS is
 			-- MS-Windows implementation of `a_question_dialog'
@@ -237,11 +237,11 @@ feature -- Access
 			!! Result.make (a_scale, managed, oui_parent)
 		end; 
 
-	scroll_list (a_list: SCROLL_LIST; managed, is_fixed: BOOLEAN; oui_parent: COMPOSITE): SCROLL_LIST_WINDOWS is
-			-- MS-Windows implementation of `a_list'
-		do
-			!! Result.make (a_list, managed, is_fixed, oui_parent)
-		end; 
+	--scroll_list (a_list: SCROLL_LIST; managed, is_fixed: BOOLEAN; oui_parent: COMPOSITE): SCROLL_LIST_WINDOWS is
+	--		-- MS-Windows implementation of `a_list'
+	--	do
+	--		!! Result.make (a_list, managed, is_fixed, oui_parent)
+	--	end; 
 
 	scrollable_list (a_scrollable_list: SCROLLABLE_LIST; managed, is_fixed:BOOLEAN; oui_parent: COMPOSITE): SCROLLABLE_LIST_WINDOWS is
 			-- Toolkit implementation of `a_scrollable_list'
@@ -289,11 +289,11 @@ feature -- Access
 			!! Result.make (a_separator, managed, oui_parent)
 		end; 
 
-	separator_g (a_separator_gadget: SEPARATOR_G; managed: BOOLEAN; oui_parent: COMPOSITE): SEPARATOR_G_WINDOWS is
-			-- MS-Windows implementation of `a_separator_gadget'
-		do
-			!! Result.make (a_separator_gadget, managed, oui_parent)
-		end; 
+	--separator_g (a_separator_gadget: SEPARATOR_G; managed: BOOLEAN; oui_parent: COMPOSITE): SEPARATOR_G_WINDOWS is
+	--		-- MS-Windows implementation of `a_separator_gadget'
+	--	do
+	--		!! Result.make (a_separator_gadget, managed, oui_parent)
+	--	end; 
 
 	tabbed_text (a_text: TABBED_TEXT; managed: BOOLEAN; oui_parent: COMPOSITE): TABBED_TEXT_WINDOWS is
 			-- Toolkit implementation of `a_text'
@@ -335,11 +335,11 @@ feature -- Access
 			!! Result.make (a_toggle_b, managed, oui_parent)
 		end; 
 
-	toggle_bg (a_toggle_b_gadget: TOGGLE_BG; managed: BOOLEAN; oui_parent: COMPOSITE): TOGGLE_BG_WINDOWS is
-			-- MS-Windows implementation of `a_toggle_b_gadget'
-		do
-			!! Result.make (a_toggle_b_gadget, managed, oui_parent)
-		end;
+	--toggle_bg (a_toggle_b_gadget: TOGGLE_BG; managed: BOOLEAN; oui_parent: COMPOSITE): TOGGLE_BG_WINDOWS is
+	--		-- MS-Windows implementation of `a_toggle_b_gadget'
+	--	do
+	--		!! Result.make (a_toggle_b_gadget, managed, oui_parent)
+	--	end;
  
 	top_shell (a_top_shell: TOP_SHELL): TOP_SHELL_WINDOWS is
                         -- MS-Windows implementation of `a_top_shell'

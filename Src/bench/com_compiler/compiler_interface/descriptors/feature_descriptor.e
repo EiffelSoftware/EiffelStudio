@@ -92,7 +92,7 @@ feature -- Access
             -- Feature name.
         do
         	if internal_name = Void then
-	            internal_name := clone (compiler_feature.feature_name)
+	            internal_name := compiler_feature.feature_name.twin
 	            if is_infix then
 	                internal_name.replace_substring_all ("_infix_", "")
 	                if internal_name.is_equal ("ge") then

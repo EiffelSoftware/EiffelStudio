@@ -39,8 +39,8 @@ feature -- Type check, byte code and dead code removal
 			expr.type_check;
 				-- Check if the type of the expression is boolean
 			current_context := context.item;
-			if not context.item.conform_to (expression_type) then
-				make_error;
+			if not current_context.conform_to (expression_type) then
+				make_error (current_context);
 			end;
 				
 				-- Update the type stack
@@ -61,14 +61,14 @@ feature -- Type check, byte code and dead code removal
 			Result := Boolean_type;
 		end;
 	
-	make_error is
+	make_error (t: TYPE_A) is
 			-- Raise error
 		local
 			vwbe3: VWBE3;
 		do
 			!!vwbe3;
 			context.init_error (vwbe3);
-			vwbe3.set_assertion (Current);
+			vwbe3.set_type (t);
 			Error_handler.insert_error (vwbe3);
 		end;
 

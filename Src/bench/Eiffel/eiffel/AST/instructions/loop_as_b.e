@@ -69,7 +69,7 @@ feature -- Type check, byte code and dead code removal
 			if not current_context.conform_to (Boolean_type) then
 				!!vwbe4;
 				context.init_error (vwbe4);
-				vwbe4.set_loop_expression (stop);
+				vwbe4.set_type (current_context);
 				Error_handler.insert_error (vwbe4);
 			end;
 

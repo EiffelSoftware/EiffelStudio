@@ -43,10 +43,10 @@ feature -- Type check, byte code and dead code removal
 
 				-- Check conformance to boolean
 			current_context := context.item;
-			if 	not context.item.conform_to (Boolean_type) then
+			if 	not current_context.conform_to (Boolean_type) then
 				!!vwbe2;
 				context.init_error (vwbe2);
-				vwbe2.set_clause (Current);
+				vwbe2.set_type (current_context);
 				Error_handler.insert_error (vwbe2);
 			end;
 

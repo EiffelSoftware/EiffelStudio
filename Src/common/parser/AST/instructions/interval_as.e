@@ -59,8 +59,6 @@ feature -- Type check and byte code
 			if error_found then
 				!!vomb2;
 				context.init_error (vomb2);
-				vomb2.set_multi_branch (Inspect_control.node);
-				vomb2.set_interval (Current);
 				vomb2.set_type (error_type);
 				Error_handler.insert_error (vomb2);
 			end;

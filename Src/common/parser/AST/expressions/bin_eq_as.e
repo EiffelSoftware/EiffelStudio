@@ -41,9 +41,8 @@ feature -- Type check, byte code and dead code removal
 			then
 				!!vweq;
 				context.init_error (vweq);
-				vweq.set_type1 (left_type);
-				vweq.set_type2 (right_type);
-				vweq.set_node (Current);
+				vweq.set_left_type (left_type);
+				vweq.set_right_type (right_type);
 				Error_handler.insert_error (vweq);
 			end;
 

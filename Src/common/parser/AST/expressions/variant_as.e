@@ -25,15 +25,15 @@ feature
 			Result := Integer_type;
 		end;
 
-	make_error is
+	make_error (t: TYPE_A) is
 			-- Raise error
 		local
-			vade: VAVE;
+			vave: VAVE;
 		do
-			!!vade;
-			context.init_error (vade);
-			vade.set_variant_part (Current);
-			Error_handler.insert_error (vade);
+			!!vave;
+			context.init_error (vave);
+			vave.set_type (t);
+			Error_handler.insert_error (vave);
 		end;
 
 end

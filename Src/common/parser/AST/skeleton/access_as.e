@@ -11,6 +11,10 @@ inherit
 
 feature
 
+	access_name: STRING is
+		deferred
+		end;
+
 	byte_node: ACCESS_B is
 			-- Associated byte code
 		do

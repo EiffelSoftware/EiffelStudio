@@ -61,7 +61,7 @@ feature -- Type check, byte code and dead code removal
 					-- Error
 				!!vomb1;
 				context.init_error (vomb1);
-				vomb1.set_multi_branch (Current);
+				vomb1.set_type (current_item);
 				Error_handler.insert_error (vomb1);
 					-- Cannot go on here
 				Error_handler.raise_error;

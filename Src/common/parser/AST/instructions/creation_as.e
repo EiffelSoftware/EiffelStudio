@@ -81,6 +81,7 @@ feature -- Type check, byte code and dead code removal
 			if not access.is_creatable then
 				!!vgcc7;
 				context.init_error (vgcc7);
+				vgcc7.set_target_name (target.access_name);
 				vgcc7.set_type (creation_type);
 				Error_handler.insert_error (vgcc7);
 					-- Cannot go on here
@@ -92,6 +93,7 @@ feature -- Type check, byte code and dead code removal
 					-- created
 				!!vgcc1;
 				context.init_error (vgcc1);
+				vgcc1.set_target_name (target.access_name);
 				vgcc1.set_type (creation_type);
 				Error_handler.insert_error (vgcc1);
 			elseif 	creation_type.is_none
@@ -103,6 +105,7 @@ feature -- Type check, byte code and dead code removal
 					-- An entity of expanded type cannot be created
 				!!vgcc3;
 				context.init_error (vgcc3);
+				vgcc3.set_target_name (target.access_name);
 				vgcc3.set_type (creation_type);
 				Error_handler.insert_error (vgcc3);
 			else
@@ -118,6 +121,7 @@ feature -- Type check, byte code and dead code removal
 							-- Cannot create instance of NONE
 						!!vgcc3;
 						context.init_error (vgcc3);
+						vgcc3.set_target_name (target.access_name);
 						vgcc3.set_type (creation_type);
 						Error_handler.insert_error (vgcc3);
 					elseif
@@ -127,6 +131,7 @@ feature -- Type check, byte code and dead code removal
 							-- the entity type
 						!!vgcc31;
 						context.init_error (vgcc31);
+						vgcc31.set_target_name (target.access_name);
 						vgcc31.set_type (creation_type);
 						Error_handler.insert_error (vgcc31);
 					else
@@ -144,6 +149,7 @@ feature -- Type check, byte code and dead code removal
 						-- Associated class cannot be deferred
 					!!vgcc2;
 					context.init_error (vgcc2);
+					vgcc2.set_target_name (target.access_name);
 					vgcc2.set_type (creation_type);
 					Error_handler.insert_error (vgcc2);
 				end;
@@ -161,6 +167,7 @@ feature -- Type check, byte code and dead code removal
 					then
 						!!vgcc5;
 						context.init_error (vgcc5);
+						vgcc5.set_target_name (target.access_name);
 						vgcc5.set_type (creation_type);
 						a_feature := 		
 							creation_class.feature_table.item (feature_name);
@@ -173,6 +180,7 @@ feature -- Type check, byte code and dead code removal
 								-- Creation procedure is not exported
 							!!vgcc8;
 							context.init_error (vgcc8);
+							vgcc8.set_target_name (target.access_name);
 							vgcc8.set_type (creation_type);
 							a_feature := 
 								creation_class.feature_table.item
@@ -192,12 +200,14 @@ feature -- Type check, byte code and dead code removal
 					elseif creators.empty then
 						!!vgcc8;
 						context.init_error (vgcc8);
+						vgcc8.set_target_name (target.access_name);
 						vgcc8.set_type (creation_type);
 						vgcc8.set_creation_feature (Void);
 						Error_handler.insert_error (vgcc8);
 					else
 						!!vgcc4;
 						context.init_error (vgcc4);
+						vgcc4.set_target_name (target.access_name);
 						vgcc4.set_type (creation_type);
 						Error_handler.insert_error (vgcc4);
 					end;

@@ -51,7 +51,7 @@ feature -- Update
 			end
 		ensure
 			in_tmp_class_comments_server: not class_comments.empty implies
-						Tmp_class_comments_server.has (class_ast.id.id)
+						Tmp_class_comments_server.has (class_ast.id)
 		end;
 
 feature {AST_EIFFEL} -- Element change

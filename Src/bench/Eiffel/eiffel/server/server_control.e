@@ -4,7 +4,7 @@ class SERVER_CONTROL
 
 inherit
 
-	CACHE [SERVER_FILE]
+	CACHE [SERVER_FILE, FILE_ID]
 		rename
 			make as cache_make
 		redefine
@@ -13,17 +13,21 @@ inherit
 
 feature
 
-	files: ARRAY [SERVER_FILE];
-			-- Array of all the files under the control of the
-			-- current object.
+	files: HASH_TABLE [SERVER_FILE, FILE_ID];
+			-- Table of all the files under the control of the
+			-- current object
 
-	last_computed_id: INTEGER;
+	file_counter: FILE_COUNTER;
+			-- Server file id counter
+
+	last_computed_id: FILE_ID;
 			-- Last new computed server file id
 
 	make is
 		do
 			cache_make;
-			!!files.make (1, Chunk);
+			!! files.make (Chunk);
+			!! file_counter.make
 		end;
 
 	Chunk: INTEGER is 50;
@@ -33,18 +37,14 @@ feature
 			-- Compute a new server file id and assign it to `last_computed_id'.
 		local
 			new_file: SERVER_FILE;
-			nb, id: INTEGER;
+			id: FILE_ID
 		do
 			id := new_id;
-			!!new_file.make (id);
-			nb := files.count;
-			if id > nb then
-				files.resize (1, nb + Chunk);
-			end;
+			!! new_file.make (id);
 			files.put (new_file, id);
 debug ("SERVER")
-	io.error.putstring ("Creating new file: ");
-	io.error.putint (id);
+	io.error.put_string ("Creating new file: ");
+	io.error.put_string (id.file_name);
 	io.error.new_line;
 end;
 			last_computed_id := id;
@@ -61,8 +61,8 @@ end;
 				f.close;
 				remove_id (f.id);
 debug ("SERVER")
-	io.error.putstring ("Forget file: E");
-	io.error.putint (f.id);
+	io.error.put_string ("Forget file: ");
+	io.error.put_string (f.id.file_name);
 	io.error.new_line;
 end;
 			end;
@@ -83,8 +83,8 @@ end;
 				-- Remove file from the disk
 			f.delete;
 debug ("SERVER")
-	io.error.putstring ("Remove file: E");
-	io.error.putint (f.id);
+	io.error.put_string ("Remove file: ");
+	io.error.put_string (f.id.file_name);
 	io.error.new_line;
 end;
 		end;
@@ -92,53 +92,47 @@ end;
 	remove_useless_files is
 			-- Remove all empty files from disk
 		local
-			i, nb: INTEGER;
-			f: SERVER_FILE;
+			file: SERVER_FILE
 		do
 			from
-				i := 1;
-				nb := files.count;
+				files.start
 			until
-				i > nb
+				files.after
 			loop
-				if (i > last_precompiled_id) then
-					f := files.item (i);
-					if f /= Void and then (f.occurence = 0) then
-						if not f.is_static then
-							remove_file (f);
-						end
-					end;
+				file := files.item_for_iteration;
+				if
+					file /= Void and then
+					not (file.precompiled or file.is_static) and then
+					file.occurence = 0
+				then
+					remove_file (file);
 				end;
-				i := i + 1
+				files.forth
 			end
 		end;
 
-	new_id: INTEGER is
+	new_id: FILE_ID is
 			-- New id
-		local
-			i, nb: INTEGER;
 		do
 			from
-				i := 1;
-				nb := files.count;
+				files.start
 			until
-				i > nb or else Result > 0
+				files.after or else files.item_for_iteration = Void
 			loop
-				if files.item (i) = Void then
-					Result := i
-				end;
-				i := i + 1
+				files.forth
 			end;
-			if Result = 0 then
-				Result := nb + 1
-			end;
+			if not files.after then
+				Result := files.key_for_iteration
+			else
+				Result := file_counter.next_id
+			end
 		end;
 
-	file_of_id (i: INTEGER): SERVER_FILE is
+	file_of_id (i: FILE_ID): SERVER_FILE is
 			-- File of id `i'.
 		require
-			index_small_enough: i <= files.upper;
-			index_large_enough: i >= files.lower;
+			id_not_void: i /= Void
+			file_exists: files.has (i)
 		do
 			Result := files.item (i)
 		end;
@@ -160,8 +154,8 @@ end;
 			f.open;
 			put (f);
 debug ("SERVER")
-	io.error.putstring ("Opening file: E");
-	io.error.putint (f.id);
+	io.error.put_string ("Opening file: ");
+	io.error.put_string (f.id.file_name);
 	io.error.new_line;
 end;
 		ensure
@@ -182,41 +176,39 @@ end;
 			end;
 		end;
 
+feature -- Status report
+
 	is_readable: BOOLEAN is
 			-- Are the server files readable?
 		local
-			i, files_upper: INTEGER;
 			file: SERVER_FILE
 		do
 			from
 				Result := true;
-				i := files.lower;
-				files_upper := files.upper
+				files.start
 			until
-				not Result or i > files_upper
+				not Result or files.after
 			loop
-				file:= files.item (i);
+				file:= files.item_for_iteration;
 				if file /= Void and then file.exists then
 					Result := file.is_readable
 				end;
-				i := i + 1
+				files.forth
 			end
 		end;
 
 	is_writable: BOOLEAN is
 			-- Are the server files readable and writable?
 		local
-			i, files_upper: INTEGER;
 			file: SERVER_FILE
 		do
 			from
-				Result := true;
-				i := files.lower;
-				files_upper := files.upper
+				Result := True;
+				files.start
 			until
-				not Result or i > files_upper
+				not Result or files.after
 			loop
-				file:= files.item (i);
+				file:= files.item_for_iteration;
 				if file /= Void and then file.exists then
 					if file.precompiled or file.is_static then
 						Result := file.is_readable
@@ -224,52 +216,27 @@ end;
 						Result := (file.is_readable and file.is_writable)
 					end
 				end;
-				i := i + 1
+				files.forth
 			end
 		end;
 
-feature -- Precompilation
-
-	last_precompiled_id: INTEGER;
-			-- Last id corresponding to a precompiled
-			-- server file
-
-	save_precompiled_id is
-			-- Save the value of last precompiled server file
-			-- id after a precompilation
-			--|require: System.precompilation
-		local
-			i, nb: INTEGER
-		do
-			from
-				i := 1;
-				nb := files.count
-			until
-				i > nb
-			loop
-				if files.item (i) /= Void then
-					files.item (i).set_precompiled;
-					last_precompiled_id := i
-				end;
-				i := i + 1
-			end;
-		end;
+feature -- Initialization
 
 	init is
-			-- Update the path names of the various server files
+			-- Update the path names of the various server files.
 		local
-			i, nb: INTEGER;
+			file: SERVER_FILE
 		do
 			from
-				i := 1;
-				nb := files.count;
+				files.start
 			until
-				i > nb
+				files.after
 			loop
-				if files.item (i) /= Void then
-					files.item (i).update_path (i <= last_precompiled_id)
+				file := files.item_for_iteration;
+				if file /= Void then
+					file.update_path
 				end;
-				i := i + 1
+				files.forth
 			end;
 		end;
 
@@ -282,4 +249,4 @@ feature -- SERVER_FILE sizes
 			chunk_size := s
 		end
 
-end
+end -- class SERVER_CONTROL

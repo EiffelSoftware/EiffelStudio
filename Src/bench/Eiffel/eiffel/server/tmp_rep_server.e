@@ -6,7 +6,7 @@ class TMP_REP_SERVER
 
 inherit
 
-	SERVER [REP_FEATURES]
+	COMPILER_SERVER [REP_FEATURES, CLASS_ID]
 		rename
 			make as basic_make,
 			put as old_put
@@ -14,7 +14,7 @@ inherit
 			make_index, init_file
 		end;
 
-	SERVER [REP_FEATURES]
+	COMPILER_SERVER [REP_FEATURES, CLASS_ID]
 		redefine
 			put, make_index, make, init_file
 		select
@@ -27,7 +27,7 @@ creation
 	
 feature 
 
-	index: EXTEND_TABLE [READ_INFO, INTEGER];
+	index: EXTEND_TABLE [READ_INFO, FEATURE_AS_ID];
 			-- Offsets of objects tracked by the store append: offsets in
 			-- file Tmp_ast_file of instances of FEATURE_AS are put
 			-- in the hash table with keys the object ids of the
@@ -51,6 +51,12 @@ feature
 		once
 			!!Result.make;
 		end;
+
+	id (t: REP_FEATURES): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.class_id
+		end
 
 	put (t: REP_FEATURES) is
 			-- Append object `t' in file ".TMP_AST".

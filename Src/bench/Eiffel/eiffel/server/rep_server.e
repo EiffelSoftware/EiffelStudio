@@ -4,7 +4,7 @@ class REP_SERVER
 
 inherit
 
-	SERVER [REP_FEATURES]
+	COMPILER_SERVER [REP_FEATURES, CLASS_ID]
 		rename
 			item as server_item,
 			has as server_has,
@@ -12,7 +12,7 @@ inherit
 		export
 			{ANY} server_item
 		end;
-	SERVER [REP_FEATURES]
+	COMPILER_SERVER [REP_FEATURES, CLASS_ID]
 		redefine
 			disk_item, has, item
 		select
@@ -31,7 +31,13 @@ feature
 			!!Result.make;
 		end;
 
-	item (an_id: INTEGER): REP_FEATURES is
+	id (t: REP_FEATURES): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.class_id
+		end
+
+	item (an_id: CLASS_ID): REP_FEATURES is
 			-- Replicate features of class id `an_id'. 
 			-- Look first in the temporary rep feat server.
 		require else
@@ -44,7 +50,7 @@ feature
 			end;
 		end;
 
-	disk_item (an_id: INTEGER): REP_FEATURES is
+	disk_item (an_id: CLASS_ID): REP_FEATURES is
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		do
@@ -55,11 +61,11 @@ feature
 			end;
 		end;
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: CLASS_ID): BOOLEAN is
 			-- Is the id `an_id' present in `Tmp_rep_feat_server' or
 			-- Current ?
 		require else
-			positive_id: an_id > 0;
+			positive_id: an_id /= Void
 		do
 			Result := server_has (an_id) or else Tmp_rep_server.has (an_id);
 		end;

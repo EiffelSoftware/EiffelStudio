@@ -4,7 +4,7 @@ class REP_INFO_CACHE
 
 inherit
 
-	CACHE [REP_CLASS_INFO]
+	CACHE [REP_CLASS_INFO, CLASS_ID]
 
 creation
 

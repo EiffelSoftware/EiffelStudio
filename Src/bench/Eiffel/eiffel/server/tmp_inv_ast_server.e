@@ -5,12 +5,12 @@ class TMP_INV_AST_SERVER
 
 inherit
 
-	READ_SERVER [INVARIANT_AS_B]
+	READ_SERVER [INVARIANT_AS_B, CLASS_ID]
 		rename
 			clear as old_clear,
 			make as basic_make
 		end;
-	READ_SERVER [INVARIANT_AS_B]
+	READ_SERVER [INVARIANT_AS_B, CLASS_ID]
 		redefine
 			clear, make
 		select
@@ -23,7 +23,7 @@ creation
 	
 feature
 
-	to_remove: LINKED_LIST [INTEGER];
+	to_remove: LINKED_LIST [CLASS_ID];
 			-- Id of invariants to remove from the invariant server
 			-- when finalization
 
@@ -32,6 +32,7 @@ feature
 		do
 			basic_make;
 			!!to_remove.make;
+			to_remove.compare_objects
 		end;
 
 	Cache: INV_AST_CACHE is
@@ -40,7 +41,7 @@ feature
 			!!Result.make;
 		end;
 
-	remove_id (i: INTEGER) is
+	remove_id (i: CLASS_ID) is
 			-- Insert `i' in `to_remove'.
 		do
 			if not to_remove.has (i) then
@@ -49,7 +50,7 @@ feature
 			remove (i);
 		end;
 
-	offsets: EXTEND_TABLE [SERVER_INFO, INTEGER] is
+	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
 			-- Class offsets in the temporary AST class server
 		do
 			Result := Tmp_ast_server;

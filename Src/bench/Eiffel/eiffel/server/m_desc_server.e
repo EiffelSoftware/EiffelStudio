@@ -2,13 +2,19 @@ class M_DESC_SERVER
 
 inherit
 
-	SERVER [MELTED_DESC]
+	COMPILER_SERVER [MELTED_DESC, CLASS_ID]
 
 creation
 
 	make
 
 feature
+
+	id (t: MELTED_DESC): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.class_id
+		end
 
 	Cache: M_DESC_CACHE is
 		once

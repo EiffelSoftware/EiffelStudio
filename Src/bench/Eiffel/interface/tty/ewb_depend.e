@@ -28,7 +28,7 @@ feature
 			fid: INTEGER;
 			st: STRUCTURED_TEXT
 		do
-			dep := Depend_server.item (class_c.id.id);
+			dep := Depend_server.item (class_c.id);
 			fdep := dep.item (f.feature_name);
 
 			!! st.make

@@ -1,6 +1,6 @@
 class STAT_CALL_SERVER inherit
 
-	DELAY_SERVER [DLE_STATIC_CALLS]
+	DELAY_SERVER [DLE_STATIC_CALLS, INTEGER_ID]
 
 creation
 
@@ -13,7 +13,7 @@ feature -- Server
 			!!Result.make
 		end;
 
-	Delayed: SEARCH_TABLE [INTEGER] is
+	Delayed: SEARCH_TABLE [INTEGER_ID] is
 			-- Cache for delayed items
 		local
 			csize: INTEGER

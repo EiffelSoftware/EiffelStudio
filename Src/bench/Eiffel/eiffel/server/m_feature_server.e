@@ -4,13 +4,19 @@ class M_FEATURE_SERVER
 
 inherit
 
-	SERVER [MELT_FEATURE]
+	COMPILER_SERVER [MELT_FEATURE, REAL_BODY_ID]
 
 creation
 
 	make
 	
 feature 
+
+	id (t: MELT_FEATURE): REAL_BODY_ID is
+			-- Id associated with `t'
+		do
+			Result := t.real_body_id
+		end
 
 	Cache: M_FEATURE_CACHE is
 			-- Cache for routine tables

@@ -4,7 +4,7 @@ class REP_CACHE
 
 inherit
 
-	CACHE [REP_FEATURES]
+	CACHE [REP_FEATURES, CLASS_ID]
 
 creation
 

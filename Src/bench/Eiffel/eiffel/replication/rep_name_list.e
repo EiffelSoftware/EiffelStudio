@@ -119,8 +119,8 @@ debug ("REPLICATION")
 	--io.error.putstring ("in update new features%N");
 end;
 			written_in := f_table.feat_tbl_id;
-			if Rep_depend_server.has (orig_written_in.id) then
-				dependencies := Rep_depend_server.item (orig_written_in.id);
+			if Rep_depend_server.has (orig_written_in) then
+				dependencies := Rep_depend_server.item (orig_written_in);
 			else
 				!!dependencies.make (2);
 				dependencies.set_id (orig_written_in);
@@ -231,8 +231,7 @@ end;
 			i: INTEGER;
 			rout_id: ROUTINE_ID;
 		do
-			s_table := Feat_tbl_server.item
-							(written_in.id).origin_table;
+			s_table := Feat_tbl_server.item (written_in).origin_table;
 			rout_id_set := rep_feat.rout_id_set;
 			from
 				count := rout_id_set.count;

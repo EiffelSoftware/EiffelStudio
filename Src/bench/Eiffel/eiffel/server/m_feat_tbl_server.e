@@ -4,7 +4,7 @@ class M_FEAT_TBL_SERVER
 
 inherit
 
-	SERVER [MELTED_FEATURE_TABLE]
+	COMPILER_SERVER [MELTED_FEATURE_TABLE, TYPE_ID]
 
 creation
 
@@ -12,6 +12,12 @@ creation
 
 	
 feature 
+
+	id (t: MELTED_FEATURE_TABLE): TYPE_ID is
+			-- Id associated with `t'
+		do
+			Result := t.type_id
+		end
 
 	Cache: M_FEAT_TBL_CACHE is
 			-- Cache for routine tables

@@ -92,7 +92,7 @@ feature
 						-- having undergone a "body id change". In that case the
 						-- body id is not valid if the system has an equivalent
 						-- one which is different.
-					elseif equal (System.onbidt.item (body_id.id), body_id.id) then
+					elseif equal (System.onbidt.item (body_id), body_id) then
 						Result := server_has
 					end;
 				end;
@@ -101,7 +101,7 @@ feature
 
 	server_has: BOOLEAN is
 		do
-			Result := Body_server.has (body_id.id)
+			Result := Body_server.has (body_id)
 		end;
  
 end

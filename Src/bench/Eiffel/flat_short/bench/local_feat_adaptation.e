@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 		do
 			Result := private_target_select_table;
 			if Result = Void then
-				Result := Feat_tbl_server.item (target_class.id.id).origin_table
+				Result := Feat_tbl_server.item (target_class.id).origin_table
 			end;
 		end;
 				

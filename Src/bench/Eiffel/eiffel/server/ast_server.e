@@ -4,13 +4,19 @@ class AST_SERVER
 
 inherit
 
-	SERVER [CLASS_AS_B]
+	COMPILER_SERVER [CLASS_AS_B, CLASS_ID]
 
 creation
 
 	make
 	
 feature 
+
+	id (t: CLASS_AS_B): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.id
+		end
 
 	Cache: AST_CACHE is
 			-- Cache for routine tables

@@ -4,7 +4,7 @@ class TMP_OPT_BYTE_SERVER
 
 inherit
 
-	DELAY_SERVER [BYTE_CODE]
+	DELAY_SERVER [BYTE_CODE, BODY_ID]
 		redefine
 			clear
 		end
@@ -15,13 +15,19 @@ creation
 
 feature
 
+	id (t: BYTE_CODE): BODY_ID is
+			-- Id associated with `t'
+		do
+			Result := t.byte_id
+		end
+
 	Cache: BYTE_CACHE is
 			-- Cache for routine tables
 		once
 			!!Result.make;
 		end;
 
-	Delayed: SEARCH_TABLE [INTEGER] is
+	Delayed: SEARCH_TABLE [BODY_ID] is
 			-- Cache for delayed items
 		local
 			csize: INTEGER

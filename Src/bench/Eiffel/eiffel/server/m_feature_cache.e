@@ -4,7 +4,7 @@ class M_FEATURE_CACHE
 
 inherit
 
-	CACHE [MELT_FEATURE]
+	CACHE [MELT_FEATURE, REAL_BODY_ID]
 
 creation
 

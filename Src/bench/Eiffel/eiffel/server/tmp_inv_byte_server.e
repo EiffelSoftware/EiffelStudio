@@ -6,12 +6,12 @@ class TMP_INV_BYTE_SERVER
 
 inherit
 
-	DELAY_SERVER [INVARIANT_B]
+	DELAY_SERVER [INVARIANT_B, CLASS_ID]
 		rename
 			make as basic_make,
 			flush as basic_flush
 		end;
-	DELAY_SERVER [INVARIANT_B]
+	DELAY_SERVER [INVARIANT_B, CLASS_ID]
 		redefine
 			flush, make
 		select
@@ -24,14 +24,21 @@ creation
 
 feature
 
-	to_remove: LINKED_LIST [INTEGER];
+	to_remove: LINKED_LIST [CLASS_ID];
 			-- Ids to remove during finalization
+
+	id (t: INVARIANT_B): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.id
+		end
 
 	make is
 			-- Hash table creation
 		do
 			basic_make;
 			!!to_remove.make;
+			to_remove.compare_objects
 		end;
 
 	Cache: INV_BYTE_CACHE is
@@ -40,7 +47,7 @@ feature
 			!!Result.make;
 		end;
 
-	Delayed: SEARCH_TABLE [INTEGER] is
+	Delayed: SEARCH_TABLE [CLASS_ID] is
 			-- Cache for delayed items
 		local
 			csize: INTEGER
@@ -49,7 +56,7 @@ feature
 			!!Result.make ((3 * csize) // 2);
 		end;
 
-	remove_id (i: INTEGER) is
+	remove_id (i: CLASS_ID) is
 			-- Insert `i' in `to_remove'.
 		do
 			if not to_remove.has (i) then
@@ -58,7 +65,7 @@ feature
 		end;
 
 	flush is
-			-- Finalization after a successfull recompilation.
+			-- Finalization after a successful recompilation.
 		do
 			basic_flush;
 			from

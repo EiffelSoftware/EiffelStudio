@@ -6,7 +6,7 @@ class TMP_FEAT_TBL_SERVER
 
 inherit
 
-	DELAY_SERVER [FEATURE_TABLE]
+	DELAY_SERVER [FEATURE_TABLE, CLASS_ID]
 
 creation
 
@@ -14,13 +14,19 @@ creation
 	
 feature 
 
+	id (t: FEATURE_TABLE): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.feat_tbl_id
+		end
+
 	Cache: FEAT_TBL_CACHE is
 			-- Cache for routine tables
 		once
 			!!Result.make;
 		end;
 
-	Delayed: SEARCH_TABLE [INTEGER] is
+	Delayed: SEARCH_TABLE [CLASS_ID] is
 			-- Cache for delayed items
 		local
 			csize: INTEGER

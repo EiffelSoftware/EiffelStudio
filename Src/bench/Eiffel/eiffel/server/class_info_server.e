@@ -4,7 +4,7 @@ class CLASS_INFO_SERVER
 
 inherit
 
-	SERVER [CLASS_INFO]
+	COMPILER_SERVER [CLASS_INFO, CLASS_ID]
 		rename
 			item as server_item,
 			has as server_has,
@@ -12,7 +12,7 @@ inherit
 		export
 			{ANY} server_item
 		end;
-	SERVER [CLASS_INFO]
+	COMPILER_SERVER [CLASS_INFO, CLASS_ID]
 		redefine
 			has, item, disk_item
 		select
@@ -32,7 +32,7 @@ feature
 			!!Result.make;
 		end;
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: CLASS_ID): BOOLEAN is
 			-- Is an item of id `an_id' present in the current server ?
 		do
 			Result := 	server_has (an_id)
@@ -40,7 +40,13 @@ feature
 						Tmp_class_info_server.has (an_id);
 		end;
 					
-	item (an_id: INTEGER): CLASS_INFO is
+	id (t: CLASS_INFO): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.id
+		end
+
+	item (an_id: CLASS_ID): CLASS_INFO is
 			-- Feature table of id `an_id'. Look first in the temporary
 			-- feature table server. It not present, look in itself.
 		require else
@@ -53,7 +59,7 @@ feature
 			end; 
 		end;
 
-	disk_item (an_id: INTEGER): CLASS_INFO is
+	disk_item (an_id: CLASS_ID): CLASS_INFO is
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		do

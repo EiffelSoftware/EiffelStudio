@@ -4,7 +4,7 @@
 
 class STAT_CALL_SERVER inherit
 
-	DELAY_SERVER [DLE_STATIC_CALLS]
+	DELAY_SERVER [DLE_STATIC_CALLS, INTEGER_ID]
 		redefine
 			clear
 		end
@@ -13,6 +13,14 @@ creation
 
 	make
 	
+feature -- Access
+
+	id (t: DLE_STATIC_CALLS): INTEGER_ID is
+			-- Id associated with `t'
+		do
+			Result := t.type_id
+		end
+
 feature -- Element change
 
 	mark_static (rout_id: ROUTINE_ID; type_id: INTEGER) is
@@ -22,11 +30,13 @@ feature -- Element change
 			rout_id_not_void: rout_id /= Void
 		local
 			static_calls: DLE_STATIC_CALLS
+			tid: INTEGER_ID
 		do
-			if has (type_id) then
-				static_calls := item (type_id)
+			!! tid.make (type_id)
+			if has (tid) then
+				static_calls := item (tid)
 			else
-				!! static_calls.make (type_id)
+				!! static_calls.make (tid)
 			end;
 			static_calls.extend (rout_id);
 			put (static_calls)
@@ -39,8 +49,11 @@ feature -- Status report
 			-- on an object of type `type_id' dynamically bound?
 		require
 			rout_id_not_void: rout_id /= Void
+		local
+			tid: INTEGER_ID
 		do
-			Result := not has (type_id) or else not item (type_id).has (rout_id)
+			!! tid.make (type_id)
+			Result := not has (tid) or else not item (tid).has (rout_id)
 		end;
 
 feature -- Server
@@ -51,7 +64,7 @@ feature -- Server
 			!!Result.make
 		end;
 
-	Delayed: SEARCH_TABLE [INTEGER] is
+	Delayed: SEARCH_TABLE [INTEGER_ID] is
 			-- Cache for delayed items
 		local
 			csize: INTEGER

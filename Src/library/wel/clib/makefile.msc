@@ -1,9 +1,9 @@
 # wel.lib - Makefile for Microsoft C
 
-EIFFEL_SRC="E:"
-EIFFEL_SRC2="d:\Eiffel43-6"
+EIFFEL_SRC="d:\butte_project"
+EIFFEL_SRC2="d:\Eiffel43"
 CC = cl
-CFLAGS = -c -Ox -I$(EIFFEL_SRC)\library\wel\spec\windows\include -I$(EIFFEL_SRC2)\bench\spec\windows\include
+CFLAGS = -c -Zi -I$(EIFFEL_SRC)\library\wel\spec\windows\include -I$(EIFFEL_SRC2)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<
@@ -12,9 +12,8 @@ OBJ = disptchr.obj enumfont.obj estream.obj msgboxpa.obj registry.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
-	lib /OUT:$@ $(OBJ)
+	lib /OUT:$@ -DEBUGTYPE:BOTH $(OBJ)
 	if not exist $(EIFFEL_SRC)\library\wel\spec\msc mkdir $(EIFFEL_SRC)\library\wel\spec\msc
 	if not exist $(EIFFEL_SRC)\library\wel\spec\msc\lib mkdir $(EIFFEL_SRC)\library\wel\spec\msc\lib
 	copy $@ $(EIFFEL_SRC)\library\wel\spec\msc\lib
 	del $@
-	del *.obj

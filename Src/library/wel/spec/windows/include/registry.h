@@ -31,7 +31,7 @@ typedef struct {
 		PFILETIME LastWriteTime;
 		} REG_KEY;
 
-extern EIF_INTEGER cwin_reg_create_key (EIF_OBJ main_obj, EIF_INTEGER parent_key,
+extern EIF_INTEGER cwin_reg_create_key (EIF_INTEGER parent_key,
 									EIF_POINTER keyName, EIF_INTEGER access_mode);
 
 extern EIF_INTEGER cwin_reg_open_key (EIF_INTEGER parent_key, EIF_POINTER keyName,
@@ -51,6 +51,16 @@ extern EIF_POINTER cwin_reg_query_value (EIF_INTEGER key, EIF_POINTER value_name
 extern EIF_POINTER cwin_reg_def_query_value (EIF_INTEGER key, EIF_POINTER value_name);
 
 extern EIF_POINTER cwin_reg_enum_key (EIF_INTEGER key, EIF_INTEGER index);
+
+extern EIF_POINTER cwin_reg_enum_value (EIF_INTEGER key, EIF_INTEGER index);
+
+extern EIF_BOOLEAN cwin_reg_delete_value (EIF_INTEGER key, EIF_POINTER value_name);
+
+extern EIF_INTEGER cwin_reg_subkey_number(EIF_INTEGER key);
+
+extern EIF_INTEGER cwin_reg_value_number(EIF_INTEGER key);
+
+extern EIF_INTEGER cwin_reg_connect_key(EIF_POINTER hostname, EIF_INTEGER key);
 
 #endif  /* __WEL_REGISTRY__ */
 

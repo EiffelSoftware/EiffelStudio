@@ -489,10 +489,6 @@ rt_shared void initsig(void)
 	for (sig = 1; sig < NSIG; sig++)
 		osig_ign[sig] = sig_ign[sig];
 
-#ifdef EIF_WIN_31
-	for (sig = 1; sig < NSIG; sig++)
-		sig_ign[sig] = 0;
-#endif
 	EIF_END_GET_CONTEXT
 }
 

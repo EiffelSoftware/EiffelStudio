@@ -69,7 +69,6 @@ feature {NONE} -- Initialization
 			first_cell.merge_radio_button_groups (second_cell)
 			previous_split_position := -1
 			sep.pointer_button_press_actions.extend (~on_click)
-			half_sep_dimension := select_from (sep.width, sep.height) // 2
 		end
 
 feature -- Access
@@ -410,6 +409,7 @@ feature {NONE} -- Implementation
 		local
 			origin: TUPLE [INTEGER, INTEGER]
 		do
+			half_sep_dimension := select_from (sep.width, sep.height) // 2
 			offset := select_from (a_x, a_y)
 			x_origin := select_from (
 				scr_x - a_x - first_cell.width,
@@ -539,6 +539,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/06 20:22:12  brendel
+--| Moved location of 1/2 sep. width calculation.
+--|
 --| Revision 1.22  2000/03/06 19:50:12  brendel
 --| Moved a lot of implementation from descendants into this class to reduce
 --| duplication of code in horizontal and vertical split area.

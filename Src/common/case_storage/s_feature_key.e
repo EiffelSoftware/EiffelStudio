@@ -35,7 +35,6 @@ feature -- Properties
 
 invariant
 
-	valid_class_id: class_id /= Void;
 	valid_feature_name: feature_name /= Void and then not feature_name.empty
 
 end -- class S_FEATURE_KEY

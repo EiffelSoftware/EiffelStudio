@@ -1,7 +1,11 @@
+indexing
+	description: "Byte code associated to agent creation"
+	date: "$Date$"
+	revision: "$Revision$"
+	
 class ROUTINE_CREATION_B 
 
 inherit
-
 	EXPR_B
 		redefine
 			make_byte_code, enlarged, generate_il,
@@ -13,14 +17,14 @@ feature  -- Initialization
 
 	init (cl_type: CL_TYPE_I; cl_id: INTEGER; f: FEATURE_I; 
 		  r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
-		  omap, cmap : ARRAY_CONST_B) is
+		  omap: ARRAY_CONST_B) is
 			-- Initialization
 		require
 			valid_type: cl_type /= Void
 			valid_id: cl_id /= 0
 			valid_feature: f /= Void
 			valid_type: r_type /= Void
-			valid_maps: omap /= Void or cmap /= Void
+			valid_maps: omap /= Void
 		do
 			class_type := cl_type
 			if System.il_generation then
@@ -33,28 +37,26 @@ feature  -- Initialization
 			rout_id := f.rout_id_set.first
 			type := r_type
 			arguments := args
-			open_map := omap
-			closed_map := cmap
+			open_positions := omap
 			record_feature (cl_id, feature_id)
 		end
 
 	set_ids (cl_type : CL_TYPE_I; r_id: INTEGER; f_id: INTEGER;
 			 r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
-			 omap, cmap : ARRAY_CONST_B) is
+			 omap: ARRAY_CONST_B) is
 			-- Set ids and type
 		require
 			valid_class_type: cl_type /= Void
 			valid_routine_id: r_id /= 0
 			valid_type: r_type /= Void
-			valid_maps: omap /= Void or cmap /= Void
+			valid_maps: omap /= Void
 		do
 			class_type := cl_type
 			rout_id := r_id
 			feature_id := f_id
 			type := r_type
 			arguments := args
-			open_map := omap
-			closed_map := cmap
+			open_positions := omap
 		end
 	
 feature -- Attributes
@@ -77,11 +79,8 @@ feature -- Attributes
 	arguments: TUPLE_CONST_B
 			-- Argument list
 
-	open_map: ARRAY_CONST_B
+	open_positions: ARRAY_CONST_B
 			-- Index mapping for open arguments
-
-	closed_map: ARRAY_CONST_B
-			-- Index mapping for closed arguments
 
 feature -- Address table
 
@@ -111,12 +110,8 @@ feature -- Status report
 				Result := arguments.has_gcable_variable
 			end
 
-			if open_map /= Void then
-				Result := Result or else open_map.has_gcable_variable
-			end
-
-			if closed_map /= Void then
-				Result := Result or else closed_map.has_gcable_variable
+			if open_positions /= Void then
+				Result := Result or else open_positions.has_gcable_variable
 			end
 		end
 
@@ -127,12 +122,8 @@ feature -- Status report
 				Result := arguments.has_call
 			end
 
-			if open_map /= Void then
-				Result := Result or else open_map.has_call
-			end
-
-			if closed_map /= Void then
-				Result := Result or else closed_map.has_call
+			if open_positions /= Void then
+				Result := Result or else open_positions.has_call
 			end
 		end
 
@@ -142,35 +133,28 @@ feature -- Status report
 				Result := arguments.used (r)
 			end
 
-			if open_map /= Void then
-				Result := Result or else open_map.used (r)
-			end
-
-			if closed_map /= Void then
-				Result := Result or else closed_map.used (r)
+			if open_positions /= Void then
+				Result := Result or else open_positions.used (r)
 			end
 		end
 
 	enlarged: ROUTINE_CREATION_BL is
 			-- Enlarge node
 		local
-			omap_enl, cmap_enl : ARRAY_CONST_B
+			omap_enl : ARRAY_CONST_B
 		do
 			!!Result
 
-			if open_map /= Void then
-				omap_enl := open_map.enlarged
-			end
-			if closed_map /= Void then
-				cmap_enl := closed_map.enlarged
+			if open_positions /= Void then
+				omap_enl := open_positions.enlarged
 			end
 
 			if arguments /= Void then
 				Result.set_ids (class_type, rout_id, feature_id, type,
-								arguments.enlarged, omap_enl, cmap_enl)
+								arguments.enlarged, omap_enl)
 			else
 				Result.set_ids (class_type, rout_id, feature_id, type,
-								Void, omap_enl, cmap_enl)
+								Void, omap_enl)
 			end
 		end
 
@@ -205,15 +189,8 @@ feature -- IL code generation
 			end
 
 				-- Open map
-			if open_map /= Void then
-				open_map.generate_il
-			else
-				il_generator.put_void
-			end
-
-				-- Closed map
-			if closed_map /= Void then
-				closed_map.generate_il
+			if open_positions /= Void then
+				open_positions.generate_il
 			else
 				il_generator.put_void
 			end
@@ -236,13 +213,8 @@ feature -- Byte code generation
 			end
 
 				-- Open map
-			if open_map /= Void then
-				open_map.make_byte_code (ba)
-			end
-
-				-- Closed map
-			if closed_map /= Void then
-				closed_map.make_byte_code (ba)
+			if open_positions /= Void then
+				open_positions.make_byte_code (ba)
 			end
 
 				-- Get address of routine
@@ -274,19 +246,11 @@ feature -- Byte code generation
 				ba.append_short_integer (0)
 			end
 
-			if open_map /= Void then
+			if open_positions /= Void then
 					-- We have an open map
 				ba.append_short_integer (1)
 			else
 					-- We don't have an open map
-				ba.append_short_integer (0)
-			end
-
-			if closed_map /= Void then
-					-- We have a closed map
-				ba.append_short_integer (1)
-			else
-					-- We don't have a closed map
 				ba.append_short_integer (0)
 			end
 

@@ -31,7 +31,7 @@ feature {AST_FACTORY} -- Initialization
 			if target /= Void then
 				if target.target /= Void then
 						-- Target is an entity
-					!!access_id_as
+					create access_id_as
 					access_id_as.set_feature_name (target.target)
 					target_ast := access_id_as
 				else
@@ -73,14 +73,11 @@ feature -- Attributes
 	target_type : CL_TYPE_A
 			-- Type of the target.
 
-	open_map: ARRAY [INTEGER]
-			-- Maps i'th open operand to its position.
+	open_positions: ARRAYED_LIST [INTEGER]
+			-- Open positions in operands_tuple.
 
-	closed_map: ARRAY [INTEGER]
-			-- Maps i'th closed operand to its position.
-
-	closed_type: TUPLE_TYPE_A
-			-- Type of closed argument tuple.
+	operands_tuple: ARRAY [TYPE_A]
+			-- TUPLE type which hold all open and closed values needed for agent call.
 
 	target_ast: AST_EIFFEL
 			-- Ast created for target during type checking.
@@ -199,7 +196,7 @@ feature -- Type check, byte code and dead code removal
 				(not a_feature.is_routine or else
 				a_feature.is_external)
 			then
-				!! not_supported
+				create  not_supported
 				context.init_error (not_supported)
 				not_supported.set_message ("Agent creation on `" + feature_name + "' is%
 					% not supported because it is either an attribute, a constant or%
@@ -207,7 +204,7 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.insert_error (not_supported)
 			else
 					-- Dependance
-				!! depend_unit.make (a_class.class_id, a_feature)
+				create  depend_unit.make (a_class.class_id, a_feature)
 				context.supplier_ids.extend (depend_unit)
 
 				type := routine_type (a_table, a_feature, a_class.class_id)
@@ -229,17 +226,17 @@ feature -- Type check, byte code and dead code removal
 			tuple_b: TUPLE_CONST_B
 			new_list, blist: BYTE_LIST [BYTE_NODE]
 			tuple_type_i: TUPLE_TYPE_I
-			idx, cnt: INTEGER
 			op: OPERAND_B
 			p : PARAMETER_B
 			int: INTEGER_CONSTANT
-			open_b, closed_b: ARRAY_CONST_B
+			open_b: ARRAY_CONST_B
+			l_void: ATTRIBUTE_B
 		do
 			a_class := target_type.associated_class
 			a_table := a_class.feature_table
 			a_feature := a_table.item (feature_name)
 
-			!!Result
+			create Result
 
 			if target_ast /= Void then
 					-- Closed target
@@ -249,93 +246,82 @@ feature -- Type check, byte code and dead code removal
 			access_b := call_ast.byte_node
 			blist := access_b.parameters
 
-			-- Setup the closed arguments.
-			if closed_map /= Void then
-				!!new_list.make_filled (closed_map.count)
-				new_list.start
-				
-				idx := 0
-				if target_b /= Void then
-					-- First closed argument is the target.
-					new_list.put (target_b)
-					new_list.forth
-					idx := 1
-				end
+				-- Setup closed arguments in `operands_tuple'.
+			check
+					-- `operands_tuple' should be set in `routine_type'.
+				operands_tuple_not_void: operands_tuple /= Void
+			end
+			create new_list.make_filled (operands_tuple.count)
+			new_list.start
 
-				if blist /= Void then
-					from
-						blist.start
-					until
-						blist.after
-					loop
-						p ?= blist.item
-						op ?= p.expression
-						if op = Void then
-							new_list.put (blist.item)
-							new_list.forth
-							idx := idx+1
-						end
-						blist.forth
+				-- Generate fake `ATTRIBUTE_B' instance that corresponds to
+				-- a non-initialized value of `operands_tuple'.
+			create l_void
+			l_void.set_type (create {NONE_I})
+			
+			if target_b /= Void then
+					-- First closed argument is target.
+				new_list.put (target_b)
+			else
+				new_list.put (l_void)
+			end
+			new_list.forth
+
+			if blist /= Void then
+					-- Insert values in `new_list'.
+				from
+					blist.start
+				until
+					blist.after
+				loop
+					p ?= blist.item
+					op ?= p.expression
+					if op /= Void then
+							-- Open operands, we insert Void.
+						new_list.put (l_void)
+					else
+							-- Closed operands, we insert its expression.
+						new_list.put (blist.item)
 					end
+					new_list.forth
+					blist.forth
 				end
 			end
 
-			if new_list /= Void then
-				new_list.start
-				!!tuple_b
-				tuple_b.set_expressions (new_list)
-				tuple_type_i := closed_type.type_i
-				tuple_b.set_type (tuple_type_i)
-			end
+				-- Create TUPLE_CONST_B instance which holds all closed arguments.
+			new_list.start
+			create tuple_b
+			tuple_b.set_expressions (new_list)
+			tuple_type_i := (create {TUPLE_TYPE_A}.make (System.tuple_id, operands_tuple)).type_i
+			tuple_b.set_type (tuple_type_i)
 
-			-- Setup open map
-
-			if open_map /= Void then
-				cnt := open_map.count
-				!!new_list.make_filled (cnt)
+				-- Setup open_positions
+			if open_positions /= Void then
+				create new_list.make_filled (open_positions.count)
 				from
 					new_list.start
-					idx := 1
+					open_positions.start
 				until
-					idx > cnt
+					open_positions.after
 				loop
 					create int.make_default
-					int.set_lower (open_map.item (idx))
+					int.set_lower (open_positions.item)
 					new_list.put (int)
-					idx := idx + 1
 					new_list.forth
+					open_positions.forth
 				end
+
+					-- Create ARRAY_CONST_B which holds all open positions in 
+					-- above generated tuple.
 				new_list.start
-				!!open_b
+				create open_b
 				open_b.set_type (integer_array_type_i)
 				open_b.set_expressions (new_list)
 			end
 
-			-- Setup closed map
-
-			if closed_map /= Void then
-				cnt := closed_map.count
-				!!new_list.make_filled (cnt)
-				from
-					new_list.start
-					idx := 1
-				until
-					idx > cnt
-				loop
-					create int.make_default
-					int.set_lower (closed_map.item (idx))
-					new_list.put (int)
-					idx := idx + 1
-					new_list.forth
-				end
-				new_list.start
-				!!closed_b
-				closed_b.set_type (integer_array_type_i)
-				closed_b.set_expressions (new_list)
-			end
-
+				-- Initialize ROUTINE_CREATION_B instance
 			Result.init (target_type.type_i, a_class.class_id, a_feature,
-						 type.type_i, tuple_b, open_b, closed_b)
+						 type.type_i, tuple_b, open_b)
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -432,9 +418,9 @@ feature {NONE} -- Type
 			t, tgt_type, solved_type:TYPE_A
 			generics: ARRAY [TYPE_A]
 			args: FEAT_ARG
-			oargtypes, cargtypes: ARRAY [TYPE_A]
+			oargtypes, argtypes: ARRAY [TYPE_A]
 			tuple: TUPLE_TYPE_A
-			count, idx, oidx, cidx: INTEGER
+			count, idx, oidx: INTEGER
 			operand: OPERAND_AS
 			is_open: BOOLEAN
 		do
@@ -450,12 +436,11 @@ feature {NONE} -- Type
 										   a_feature.type, a_table, a_feature
 																 )
 					-- Find type of feature in context of `target_type'
-				solved_type := solved_type.instantiation_in (target_type, cid)
-				generics.put (solved_type.deep_actual_type, 3)
+				solved_type := solved_type.instantiation_in (target_type, cid).deep_actual_type
+				generics.put (solved_type, 3)
 			else
 					-- generics are: base_type, open_types
 				create generics.make (1, 2)
-
 				create Result.make (System.procedure_class_id, generics)
 			end
 
@@ -494,19 +479,33 @@ feature {NONE} -- Type
 
 			args := a_feature.arguments
 
-			-- Setup mapping
+				-- Compute `operands_tuple' and type of TUPLE needed to determine current 
+				-- ROUTINE type.
 
-			count := 0
-			oidx  := 1
-			cidx  := 1
+				-- Create `argtypes', array used to initialize type of `operands_tuple'.
+				-- This array can hold all arguments of the routine plus Current.
+			if args /= Void then
+				count := args.count + 1
+			else
+				count := 1
+			end
+			create argtypes.make (1, count)
 
+
+				-- Create `oargtypes'. But first we need to find the `count', number
+				-- of open operands.
 			if target = Void or else target.class_type /= Void then
+					-- No target is specified, or just a class type is specified.
+					-- Therefore there is at least one argument
 				count := 1
 				oidx := 2
 			else
-				cidx := 2
+					-- Target was specified
+				count := 0
+				oidx  := 1
 			end
 
+				-- Compute number of open positions.
 			if operands /= Void then
 				from
 					operands.start
@@ -524,36 +523,27 @@ feature {NONE} -- Type
 				end
 			end
 
+				-- Create `oargytpes' with `count' parameters. This array
+				-- is used to create current ROUTINE type.
 			create oargtypes.make (1, count)
 
 			if count > 0 then
-				create open_map.make (1, count)
+				create open_positions.make (count)
 				if oidx > 1 then
-					open_map.put (0,1)
-					oargtypes.put (tgt_type,1)
+						-- Target is open, so insert it.
+					open_positions.extend (1)
+					oargtypes.put (tgt_type, 1)
 				end
 			end
 
-			if args /= Void then
-				count := args.count + 1 - count
-			else
-				count := 1 - count
-			end
-
-			create cargtypes.make (1, count)
-
-			if count > 0 then
-				create closed_map.make (1, count)
-				if cidx > 1 then
-					closed_map.put (0,1)
-					cargtypes.put (tgt_type,1)
-				end
-			end
+				-- Always insert target's type in `argtypes' as first argument.
+			argtypes.put (tgt_type, 1)
 
 				-- Create argument types
 			if args /= Void then
 				from
-					idx := 1
+						-- `idx' is 2, because at position `1' we have target of call.
+					idx := 2
 					args.start
 					if operands /= Void then
 						operands.start
@@ -564,6 +554,7 @@ feature {NONE} -- Type
 					t := Void
 					is_open := False
 
+						-- Let's find out if this is really an open operand.
 					if operands /= Void then
 						operand := operands.item
 						if operand.is_open then
@@ -571,38 +562,36 @@ feature {NONE} -- Type
 						end
 
 						if operand.class_type /= Void then
-							-- Use type specification
+								-- Use type specification
 							t := operand.type_a
 						end
 					else
 						is_open := True
 					end
 
+						-- Get type of operand.
 					if is_open then
 						if t = Void then
 							t := args.item.actual_type
 						end
-
-						solved_type := Creation_evaluator.evaluated_type (
-														t, a_table, a_feature
-																		 )
-						solved_type := solved_type.instantiation_in (target_type, cid)
-
-						oargtypes.put (solved_type.deep_actual_type, oidx)
-						open_map.put (idx, oidx)
-						oidx := oidx + 1
 					else
 						t := args.item.actual_type
-
-						solved_type := Creation_evaluator.evaluated_type (
-														t, a_table, a_feature
-																		 )
-						solved_type := solved_type.instantiation_in (target_type, cid)
-
-						cargtypes.put (solved_type.deep_actual_type, cidx)
-						closed_map.put (idx, cidx)
-						cidx := cidx + 1
 					end
+
+						-- Evaluate type of operand in current context
+					solved_type := Creation_evaluator.evaluated_type (t, a_table, a_feature)
+					solved_type := solved_type.instantiation_in (target_type, cid).deep_actual_type
+
+						-- If it is open insert it in `oargtypes' and insert
+						-- position in `open_positions'.
+					if is_open then
+						oargtypes.put (solved_type, oidx)
+						open_positions.extend (idx)
+						oidx := oidx + 1
+					end
+
+						-- Add type to `argtypes'.
+					argtypes.put (solved_type, idx)
 
 					idx := idx + 1
 					args.forth
@@ -615,15 +604,13 @@ feature {NONE} -- Type
 
 				-- Create open argument type tuple
 			create tuple.make (System.tuple_id, oargtypes)
-
+				-- Insert it as second generic parameter of ROUTINE.
 			generics.put (tuple, 2)
 
-				-- Create closed argument type tuple
-			create tuple.make (System.tuple_id, cargtypes)
-
-			closed_type := tuple
+				-- Set `operands_tuple'
+			operands_tuple := argtypes
 		ensure
-			exists: Result /= Void and closed_type /= Void
+			exists: Result /= Void and operands_tuple /= Void
 		end
 
 	integer_array_type_i : GEN_TYPE_I is

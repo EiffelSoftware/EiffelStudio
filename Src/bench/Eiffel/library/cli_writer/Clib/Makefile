@@ -12,6 +12,9 @@ all:: cli_writer.lib
 .c.obj:
 	$(CC) $(CFLAGS) -c $<
 
+ise_cache_manager.c: ise_cache_manager.idl
+	midl -notlb -header ise_cache_manager.h -iid ise_cache_manager.c ise_cache_manager.idl
+
 OBJ = cli_writer.obj ise_vs_fusion_support.obj ise_cache_manager.obj
 
 cli_writer.lib: $(OBJ)

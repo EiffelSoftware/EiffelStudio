@@ -13,6 +13,9 @@ class
 
 inherit
 	EV_TEXT_I
+		undefine
+			selected_text
+		end
 
 	EV_TEXT_AREA_IMP
 		rename
@@ -28,13 +31,17 @@ inherit
 			set_tab_stops,
 			set_default_tab_stops,
 			set_tab_stops_array,
-			selection_end,
-			selection_start,
+			selected_text,
+			wel_selection_end,
+			wel_selection_start,
 			set_selection,
 			has_selection,
-			set_text_limit
+			set_text_limit,
+			insert_text
 		redefine
-			set_background_color
+			search,
+			set_background_color,
+			set_position
 		end
 
 	WEL_RICH_EDIT
@@ -50,7 +57,9 @@ inherit
 			destroy as wel_destroy,
 			clip_cut as cut_selection,
 			clip_copy as copy_selection,
-			unselect as deselect_all
+			unselect as deselect_all,
+			selection_start as wel_selection_start,
+			selection_end as wel_selection_end
 		undefine
 			remove_command,
 			set_width,
@@ -76,6 +85,41 @@ creation
 	make,
 	make_with_text
 
+feature -- Access
+
+	character_format: EV_CHARACTER_FORMAT is
+			-- Current character format.
+		local
+			wel: WEL_CHARACTER_FORMAT		
+		do
+			!! Result.make
+			wel?= Result.implementation
+			wel.set_all_masks
+			cwin_send_message (item, Em_getcharformat, 1,
+				wel.to_integer)
+		end
+
+feature -- Status setting
+
+	apply_format (format: EV_TEXT_FORMAT) is
+			-- Apply the given format to the text.
+		local
+			tt: EV_TEXT
+		do
+			tt ?= interface
+			format.apply (tt)
+		end
+
+	set_position (pos: INTEGER) is
+			-- set current insertion position
+		local
+			format: EV_CHARACTER_FORMAT
+		do
+			format := character_format
+			set_caret_position (pos)
+			set_character_format (format)
+		end
+
 feature -- Element change
 
 	set_background_color (color: EV_COLOR) is
@@ -85,7 +129,26 @@ feature -- Element change
 			wel_set_background_color (background_color_imp)
 		end
 
+	set_character_format (format: EV_CHARACTER_FORMAT) is
+			-- Apply `format' to the selection and make it the
+			-- current character format.
+		local
+			wel: WEL_CHARACTER_FORMAT
+		do
+			wel ?= format.implementation
+			set_character_format_selection (wel)
+		end
+
 feature -- Basic operation
+
+	search (str: STRING): INTEGER is
+			-- Search the string `str' in the text.
+			-- If `str' is find, it returns its start
+			-- index in the text, otherwise, it returns
+			-- `Void'
+		do
+			Result := find (str, True, 0) + 1
+		end
 
 	index_from_position (value_x, value_y: INTEGER): INTEGER is
 			-- One-based character index of the character which is
@@ -98,7 +161,23 @@ feature -- Basic operation
 			-- to the upper-left corner of the client area of the
 			-- control.
 		do
-			result := character_index_from_position (value_x, value_y) + 1
+			Result := character_index_from_position (value_x, value_y) + 1
+		end
+
+	position_from_index (value: INTEGER): EV_COORDINATES is
+			-- Coordinates of a character at `value' in
+			-- the client area.
+			-- A returned coordinate can be negative if the
+			-- character has been scrolled outside the edit
+			-- control's client area.
+			-- The coordinates are truncated to integer values and
+			-- are in screen units relative to the upper-left
+			-- corner of the client area of the control.
+		local
+			wel: WEL_POINT
+		do
+			wel := position_from_character_index (value - 1)
+			!! Result.set (wel.x, wel.y)
 		end
 
 end -- class EV_TEXT

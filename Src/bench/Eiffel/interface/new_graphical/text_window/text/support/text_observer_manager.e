@@ -18,9 +18,9 @@ feature -- Initialization
 	make is
 		-- Initialize `Current'.
 		do
-			create edition_observer_list.make
-			create selection_observer_list.make
-			create lines_observer_list.make
+			create edition_observer_list.make (10)
+			create selection_observer_list.make (10)
+			create lines_observer_list.make (10)
 		end
 
 feature -- Status report
@@ -96,8 +96,9 @@ feature -- Operations
  				if edition_observer_list.item = a_text_observer then
 					found := true
 					edition_observer_list.remove
+				else
+					edition_observer_list.forth
 				end 
-				edition_observer_list.forth
 			end
 			from 
 				selection_observer_list.start
@@ -108,8 +109,9 @@ feature -- Operations
  				if selection_observer_list.item = a_text_observer then
 					found := true
 					selection_observer_list.remove
+				else
+					selection_observer_list.forth
 				end 
-				selection_observer_list.forth
 			end
 			from 
 				lines_observer_list.start
@@ -120,8 +122,9 @@ feature -- Operations
  				if lines_observer_list.item = a_text_observer then
 					found := true
 					lines_observer_list.remove
+				else
+					lines_observer_list.forth
 				end 
-				lines_observer_list.forth
 			end
 		end
 
@@ -362,13 +365,13 @@ feature -- Memory management
 
 feature {NONE} -- Implementation
 
-	edition_observer_list: LINKED_LIST [TEXT_OBSERVER]
+	edition_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of editor observers.
 
-	selection_observer_list: LINKED_LIST [TEXT_OBSERVER]
+	selection_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of editor observers.
 
-	lines_observer_list: LINKED_LIST [TEXT_OBSERVER]
+	lines_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of editor observers.
 
 end -- class TEXT_OBSERVER_MANAGER

@@ -21,6 +21,7 @@ inherit
 			build_tools_menu,
 			build_favorites_menu,
 			refresh,
+			recycle,
 			destroy_imp,
 			destroy
 		end
@@ -83,10 +84,11 @@ inherit
 			on_text_reset, on_text_edited, 
 			on_selection_begun, on_selection_finished,
 			on_text_back_to_its_last_saved_state,
-			on_text_fully_loaded
+			on_text_fully_loaded,
+			on_text_loaded
 		end
 
-		--| FIXME XR: To warn editor commands to refresh their state when the current editor changes.
+		-- To warn editor commands to refresh their state when the current editor changes.
 	TEXT_OBSERVER_MANAGER
 		rename
 			changed as text_changed,
@@ -94,10 +96,11 @@ inherit
 			make as text_make
 		undefine
 			on_block_removed,
-			on_line_inserted, on_line_modified, on_line_removed,
+			on_text_block_loaded,
+			on_line_inserted, on_line_modified, on_line_removed
+		redefine
 			on_selection_begun, on_selection_finished,
 			on_text_back_to_its_last_saved_state,
-			on_text_block_loaded,
 			on_text_edited, on_text_fully_loaded, on_text_loaded, on_text_reset,
 			recycle
 		end
@@ -141,6 +144,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new development window.
 		do
+			text_make
 			unified_stone := context_unified_stone
 				-- Build the history manager, the address manager, ...
 			create history_manager.make (Current)
@@ -1134,6 +1138,7 @@ feature -- Menu Building
 		do
 			editor := editor_tool.text_area
 			create editor_commands.make (10)
+			create selection_commands.make (10)
 
 			create edit_menu.make_with_text (Interface_names.m_Edit)
 
@@ -1173,7 +1178,8 @@ feature -- Menu Building
 			cmd.set_menu_name (Interface_names.m_select_all)
 			cmd.add_agent (~select_all)
 			command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer (cmd)
+			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			edit_menu.extend (command_menu_item)
 
@@ -1185,7 +1191,7 @@ feature -- Menu Building
 			cmd.set_menu_name (Interface_names.m_Search + "%T" + Editor_preferences.shorcut_name_for_action (3))
 			cmd.add_agent (editor~search)
 			command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer (cmd)
 			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			edit_menu.extend (command_menu_item)
@@ -1194,8 +1200,9 @@ feature -- Menu Building
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_Replace + "%T" + Editor_preferences.shorcut_name_for_action (4))
 			cmd.add_agent (editor~replace)
+			cmd.set_needs_editable (True)
 			command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer (cmd)
 			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			edit_menu.extend (command_menu_item)
@@ -1209,7 +1216,7 @@ feature -- Menu Building
 			cmd.set_menu_name (Interface_names.m_Find_next + "%T" + Editor_preferences.shorcut_name_for_action (6))
 			cmd.add_agent (editor~find_next)
 			command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer (cmd)
 			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
@@ -1219,7 +1226,7 @@ feature -- Menu Building
 			cmd.set_menu_name (Interface_names.m_Find_previous + "%T" + Editor_preferences.shorcut_name_for_action (7))
 			cmd.add_agent (editor~find_previous)
 			command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer(cmd)
 			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
@@ -1229,7 +1236,8 @@ feature -- Menu Building
 			os_cmd.set_menu_name (Interface_names.m_Find_selection + "%T" + Editor_preferences.shorcut_name_for_action (5))
 			os_cmd.add_agent (editor~find_selection)
 			command_menu_item := os_cmd.new_menu_item
-			editor_tool.text_area.add_selection_observer(os_cmd)
+			add_selection_observer(os_cmd)
+			selection_commands.extend (os_cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
 
@@ -1242,7 +1250,9 @@ feature -- Menu Building
 			create sub_menu.make_with_text (Interface_names.m_Advanced)
 
 			create os_cmd.make (Current)
-			editor_tool.text_area.add_selection_observer(os_cmd)
+			os_cmd.set_needs_editable (True)
+			add_selection_observer (os_cmd)
+			selection_commands.extend (os_cmd)
 			os_cmd.set_menu_name (Interface_names.m_Indent)
 			os_cmd.add_agent (editor~indent_selection)
 			command_menu_item := os_cmd.new_menu_item
@@ -1250,7 +1260,9 @@ feature -- Menu Building
 			sub_menu.extend (command_menu_item)
 
 			create os_cmd.make (Current)
-			editor_tool.text_area.add_selection_observer(os_cmd)
+			os_cmd.set_needs_editable (True)
+			add_selection_observer (os_cmd)
+			selection_commands.extend (os_cmd)
 			os_cmd.set_menu_name (Interface_names.m_Unindent)
 			os_cmd.add_agent (editor~unindent_selection)
 			command_menu_item := os_cmd.new_menu_item
@@ -1258,7 +1270,9 @@ feature -- Menu Building
 			sub_menu.extend (command_menu_item)
 
 			create os_cmd.make (Current)
-			editor_tool.text_area.add_selection_observer(os_cmd)
+			os_cmd.set_needs_editable (True)
+			add_selection_observer(os_cmd)
+			selection_commands.extend (os_cmd)
 			os_cmd.set_menu_name (Interface_names.m_To_lower)
 			os_cmd.add_agent (editor~set_selection_case (True))
 			command_menu_item := os_cmd.new_menu_item
@@ -1266,7 +1280,9 @@ feature -- Menu Building
 			sub_menu.extend (command_menu_item)
 
 			create os_cmd.make (Current)
-			editor_tool.text_area.add_selection_observer(os_cmd)
+			os_cmd.set_needs_editable (True)
+			add_selection_observer(os_cmd)
+			selection_commands.extend (os_cmd)
 			os_cmd.set_menu_name (Interface_names.m_To_upper)
 			os_cmd.add_agent (editor~set_selection_case (False))
 			command_menu_item := os_cmd.new_menu_item
@@ -1274,19 +1290,21 @@ feature -- Menu Building
 			sub_menu.extend (command_menu_item)
 
 			create cmd.make
+			cmd.set_needs_editable (True)
 			cmd.set_menu_name (Interface_names.m_Comment)
 			cmd.add_agent (editor~comment_selection)
 			command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer(cmd)
 			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
 
 			create cmd.make
+			cmd.set_needs_editable (True)
 			cmd.set_menu_name (Interface_names.m_Uncomment)
 			cmd.add_agent (editor~uncomment_selection)
 			command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer(cmd)
 			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
@@ -1296,20 +1314,22 @@ feature -- Menu Building
 
 				-- Insert if block
 			create cmd.make
+			cmd.set_needs_editable (True)
 			cmd.set_menu_name (Interface_names.m_If_block)
 			cmd.add_agent (editor~embed_in_block("if  then", 3))
 			command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer(cmd)
 			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
 
 				-- Insert debug block
 			create cmd.make
+			cmd.set_needs_editable (True)
 			cmd.set_menu_name (Interface_names.m_debug_block)
 			cmd.add_agent (editor~embed_in_block("debug", 5))
 			command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer(cmd)
 			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
@@ -1320,9 +1340,10 @@ feature -- Menu Building
 
 				-- Complete word
 			create cmd.make
+			cmd.set_needs_editable (True)
 			cmd.set_menu_name (Interface_names.m_Complete_word + "%T" + Editor_preferences.shorcut_name_for_action (1))
 			command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer(cmd)
 			editor_commands.extend (cmd)
 			cmd.add_agent (editor~complete_feature_name)
 
@@ -1331,11 +1352,12 @@ feature -- Menu Building
 
 				-- Complete class name
 			create cmd.make
+			cmd.set_needs_editable (True)
 			cmd.set_menu_name (Interface_names.m_Complete_class_name + "%T" + Editor_preferences.shorcut_name_for_action (2))
 			command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer(cmd)
 			editor_commands.extend (cmd)
-			cmd.add_agent (editor~complete_feature_name)
+			cmd.add_agent (editor~complete_class_name)
 
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
@@ -1350,7 +1372,7 @@ feature -- Menu Building
 				cmd.set_menu_name (Interface_names.m_Show_formatting_marks)
 			end
 			formatting_marks_command_menu_item := cmd.new_menu_item
-			editor_tool.text_area.add_edition_observer(cmd)
+			add_edition_observer(cmd)
 			editor_commands.extend (cmd)
 			cmd.add_agent (~toggle_formatting_marks)
 
@@ -2042,10 +2064,18 @@ feature -- Multiple editor management
 			-- set `an_editor' as main editor
 		local
 			old_index: INTEGER
+			new_index: INTEGER
 		do
 			old_index := current_editor_index
-			current_editor_index := editors.index_of (an_editor, 1)
-			if old_index /= current_editor_index then
+			new_index := editors.index_of (an_editor, 1)
+			if
+				editors.valid_index (new_index) and
+				old_index /= new_index
+			then
+				current_editor.remove_observer (Current)
+				current_editor_index := new_index
+				current_editor.add_edition_observer (Current)
+				current_editor.add_selection_observer (Current)
 				from
 					editors.start
 				until
@@ -2056,46 +2086,91 @@ feature -- Multiple editor management
 					end
 					editors.forth
 				end
-			end
-			update_paste_cmd
-			if current_editor.is_empty then
-				from
-					editor_commands.start
-				until
-					editor_commands.after
-				loop
-					editor_commands.item.on_text_reset
-					editor_commands.forth
+				update_paste_cmd
+					-- Since the current editor has changed,
+					-- it may be in a different state than the current state,
+					-- and we have to update the state and send events accordingly....*sigh*
+				if text_state = 0 then
+					if current_editor.text_is_fully_loaded then
+						on_text_loaded
+						on_text_fully_loaded
+					end
+				elseif text_state = 1 then
+					if current_editor.text_is_fully_loaded then
+						on_text_fully_loaded
+					elseif current_editor.is_empty then
+						on_text_reset
+					end
+				else
+						-- State was fully loaded.
+					if current_editor.is_empty then
+						on_text_reset
+					end
 				end
-			else
-				from
-					editor_commands.start
-				until
-					editor_commands.after
-				loop
-					editor_commands.item.on_text_loaded
-					editor_commands.forth
+				if selection_state = 0 then
+					if current_editor.has_selection then
+						on_selection_begun
+					end
+				else
+						-- Selection state is there is a selection.
+					if not current_editor.has_selection then
+						on_selection_finished
+					end
 				end
-			end
-		end
+				if edition_state = 0 then
+					if current_editor.changed then
+							--| True is safer for the diagram.
+						on_text_edited (True)
+					end
+				else
+					if not current_editor.changed then
+						on_text_back_to_its_last_saved_state
+					end
+				end
+				
+					-- Now for the "editability" of the editor...
+				if current_editor.is_editable then
+					from
+						editor_commands.start
+					until
+						editor_commands.after
+					loop
+						editor_commands.item.on_editable
+						editor_commands.forth
+					end
+					from
+						selection_commands.start
+					until
+						selection_commands.after
+					loop
+						selection_commands.item.on_editable
+						selection_commands.forth
+					end
+				else
+					from
+						editor_commands.start
+					until
+						editor_commands.after
+					loop
+						editor_commands.item.on_not_editable
+						editor_commands.forth
+					end
+					from
+						selection_commands.start
+					until
+						selection_commands.after
+					loop
+						selection_commands.item.on_not_editable
+						selection_commands.forth
+					end
+				end
 
-	on_selection_begun is
-			-- Update `editor_copy_cmd' and `editor_cut_command'
-			-- (to be performed when selection starts in one fo the editors)
-		do
-			editor_copy_cmd.enable_sensitive
-			if current_editor.is_editable then
-				editor_cut_cmd.enable_sensitive
-			end
-		end
-	
-	on_selection_finished is
-			-- Update `editor_copy_cmd' and `editor_cut_command'
-			-- (to be performed when selection stops in one fo the editors)
-		do
-			if not current_editor.has_selection then
-				editor_copy_cmd.disable_sensitive
-				editor_cut_cmd.disable_sensitive
+					-- Last thing, update the menu entry for the formatting marks.
+				if current_editor.view_invisible_symbols then
+					formatting_marks_command_menu_item.set_text (Interface_names.m_Hide_formatting_marks)
+				else
+					formatting_marks_command_menu_item.set_text(Interface_names.m_Show_formatting_marks)
+				end
 			end
 		end
 
@@ -2117,7 +2192,48 @@ feature -- Multiple editor management
 			end
 		end
 				
-					
+feature {NONE} -- Implementation (Multiple editors)
+
+	text_state: INTEGER
+			-- Can be 0 if the current editor is empty, 1 if loaded, 2 if fully loaded.
+
+	edition_state: INTEGER
+			-- Can be 0 if the text has not been edited, 1 if it has been.
+
+	selection_state: INTEGER
+			-- Can be 0 if there is no selection,
+			-- 1 if selection began,
+			-- 2 if selection ended.
+
+	on_selection_begun is
+			-- Update `editor_copy_cmd' and `editor_cut_command'
+			-- (to be performed when selection starts in one of the editors)
+		do
+				-- FIXME XR: Some day we'll have to merge clipboard commands with other editor commands.
+			editor_copy_cmd.enable_sensitive
+			if current_editor.is_editable then
+				editor_cut_cmd.enable_sensitive
+			end
+			Precursor {TEXT_OBSERVER_MANAGER}
+			selection_state := 1
+		end
+	
+	on_selection_finished is
+			-- Update `editor_copy_cmd' and `editor_cut_command'
+			-- (to be performed when selection stops in one fo the editors)
+		do
+			if not current_editor.has_selection then
+				editor_copy_cmd.disable_sensitive
+				editor_cut_cmd.disable_sensitive
+			end
+			Precursor {TEXT_OBSERVER_MANAGER}
+			if current_editor.has_selection then
+				selection_state := 2
+			else
+				selection_state := 0
+			end
+		end
+
 feature {NONE} -- Multiple editor management
 
 	editors: ARRAYED_LIST [EB_EDITOR]
@@ -2494,12 +2610,58 @@ feature {NONE} -- Implementation
 			end
 			address_manager.enable_formatters
 			update_paste_cmd
+			Precursor {TEXT_OBSERVER_MANAGER}
+			text_state := 0
 		end
 
+	on_text_loaded is
+			-- Update editor commands.
+		do
+			Precursor {TEXT_OBSERVER_MANAGER}
+			text_state := 1
+		end
+					
 	on_text_fully_loaded is
 			-- The main editor has just been reloaded.
 		do
 			update_paste_cmd
+			Precursor {TEXT_OBSERVER_MANAGER}
+			text_state := 2
+			if current_editor.is_editable then
+				from
+					editor_commands.start
+				until
+					editor_commands.after
+				loop
+					editor_commands.item.on_editable
+					editor_commands.forth
+				end
+				from
+					selection_commands.start
+				until
+					selection_commands.after
+				loop
+					selection_commands.item.on_editable
+					selection_commands.forth
+				end
+			else
+				from
+					editor_commands.start
+				until
+					editor_commands.after
+				loop
+					editor_commands.item.on_not_editable
+					editor_commands.forth
+				end
+				from
+					selection_commands.start
+				until
+					selection_commands.after
+				loop
+					selection_commands.item.on_not_editable
+					selection_commands.forth
+				end
+			end
 		end
 
 	on_text_back_to_its_last_saved_state is
@@ -2512,6 +2674,8 @@ feature {NONE} -- Implementation
 				set_title (str)
 			end
 			address_manager.enable_formatters
+			Precursor {TEXT_OBSERVER_MANAGER}
+			edition_state := 0
 		end			
 		
 
@@ -2527,6 +2691,8 @@ feature {NONE} -- Implementation
 				set_title (str)
 			end
 			address_manager.disable_formatters
+			Precursor {TEXT_OBSERVER_MANAGER} (unused)
+			edition_state := 1
 		end
 
 	on_back is
@@ -2656,23 +2822,30 @@ feature {NONE} -- Implementation
 			Window_manager.create_dynamic_lib_window
 		end
 
-	toggle_formatting_marks is
-			-- Show/Hide formatting marks in the editor and update related menu item.
+	recycle is
+			-- Call the precursors.
 		do
-			editor_tool.text_area.toggle_view_invisible_symbols
-			if editor_tool.text_area.view_invisible_symbols then
-				formatting_marks_command_menu_item.set_text (Interface_names.m_Hide_formatting_marks)
-			else
-				formatting_marks_command_menu_item.set_text(Interface_names.m_Show_formatting_marks)
-			end
+			{EB_TOOL_MANAGER} Precursor
+			{TEXT_OBSERVER_MANAGER} Precursor
 		end
 
-feature -- Implementation: Editor commands
+feature {NONE} -- Implementation: Editor commands
 
 	select_all is
 			-- Select the whole text in the focused editor.
 		do
 			current_editor.select_all
+		end
+
+	toggle_formatting_marks is
+			-- Show/Hide formatting marks in the editor and update related menu item.
+		do
+			current_editor.toggle_view_invisible_symbols
+			if current_editor.view_invisible_symbols then
+				formatting_marks_command_menu_item.set_text (Interface_names.m_Hide_formatting_marks)
+			else
+				formatting_marks_command_menu_item.set_text(Interface_names.m_Show_formatting_marks)
+			end
 		end
 
 feature {NONE} -- Implementation / Menus
@@ -2759,6 +2932,9 @@ feature {EB_TOOL} -- Implementation / Commands
 			-- All commands that can be put in a toolbar.
 	
 	editor_commands: ARRAYED_LIST [EB_EDITOR_COMMAND]
+			-- Commands relative to the main editor.
+	
+	selection_commands: ARRAYED_LIST [EB_ON_SELECTION_COMMAND]
 			-- Commands relative to the main editor.
 	
 	save_as_cmd: EB_SAVE_FILE_AS_COMMAND

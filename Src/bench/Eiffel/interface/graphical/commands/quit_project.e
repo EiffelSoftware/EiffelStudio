@@ -38,13 +38,13 @@ feature {NONE}
 					project_tool.set_changed (false);
 					restore_cursors;
 					quit_cmd.exit_now;
-					discard_license;
+					discard_licence;
 					exit
 				else
 					confirmer.call (Current, "Do you really want to exit ?", "Exit");
 				end
 			else
-				discard_license;
+				discard_licence;
 				exit
 			end;
 		end;

@@ -59,7 +59,7 @@ feature {NONE}
 					name_chooser.call (Current)
 				end
 			elseif argument = warner then
-				discard_license;
+				discard_licence;
 				exit
 			end
 		end;

@@ -63,7 +63,7 @@ cluster
 	mel_widgets (mel):            	"$/widgets";
 
 
--- Eiffelvision
+-- EiffelVision
         vision:                        	"$EIFFEL4/library/vision";
         vision_figures (vision):        "$/figures";
         vision_imp_motif (vision):      "$/implement/motif";

@@ -22,15 +22,16 @@ inherit
 		end
 
 creation 
-	make
+	make,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif arrow button gadget.
 		require
-			a_name_exists: a_name /= Void;
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
@@ -39,13 +40,15 @@ feature {NONE} -- Initialization
 			screen_object := 
 				xm_create_arrow_button_gadget 
 					(a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 feature -- Status report

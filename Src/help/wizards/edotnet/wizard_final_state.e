@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			message_and_title_box.extend (message)
 			message_and_title_box.disable_item_expand (message)
 
-			local_pixmap := pixmap.ev_clone
+			local_pixmap := clone (pixmap)
 			local_pixmap.set_minimum_height (dialog_unit_to_pixels(312))
 			local_pixmap.set_minimum_width (165)
 			local_pixmap.draw_pixmap (91, 9, pixmap_icon)

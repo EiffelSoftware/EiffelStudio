@@ -9,8 +9,12 @@ class
 
 inherit
 	EV_APPLICATION
+		rename 
+			copy as copy_application
 		undefine
 			help_engine
+		select 
+			copy_application
 		end
 
 	WIZARD_SHARED

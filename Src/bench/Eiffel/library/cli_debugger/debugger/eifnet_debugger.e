@@ -12,6 +12,8 @@ inherit
 	WEL_PROCESS_LAUNCHER
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
+
+	SHARED_DEBUG_VALUE_KEEPER
 	
 	SHARED_DBG_EVALUATOR
 		export
@@ -58,6 +60,7 @@ inherit
 	SHARED_EIFNET_DEBUG_VALUE_FORMATTER
 		export
 			{NONE} all
+			{EIFNET_EXPORTER} edv_formatter
 		end
 		
 	SHARED_TYPE_I
@@ -141,7 +144,7 @@ feature -- Initialization
 			if eifnet_dbg_evaluator = Void then
 				create eifnet_dbg_evaluator.make (Current)				
 			end
-			Eifnet_debugger_info.set_debugger (Current)			
+			Eifnet_debugger_info.set_debugger (Current)
 		end
 		
 	reset_debugging_data is
@@ -152,9 +155,7 @@ feature -- Initialization
 			exit_process_occurred := False
 			
 			il_debug_info_recorder.reset_debugging_live_data
-			
 				-- not required
-			last_stepper := Void
 			last_dbg_call_success := 0
 			last_string_value_length := 0
 		end
@@ -415,37 +416,18 @@ feature {NONE} -- Stepping Implementation
 
 	last_stepper: ICOR_DEBUG_STEPPER
 
-	get_stepper: BOOLEAN is
+	new_stepper: ICOR_DEBUG_STEPPER is
 			-- Retrieve or Create Stepper
 			-- Result value is the error code
 		local
-			l_stepper: ICOR_DEBUG_STEPPER
-			l_thread: ICOR_DEBUG_THREAD
-			l_frame: ICOR_DEBUG_FRAME	
-			l_error: INTEGER			
+			edti: EIFNET_DEBUGGER_THREAD_INFO
 		do
-			if last_stepper /= Void then
-				last_stepper.deactivate
-				last_stepper.release
-				last_stepper := Void				
-			end
-			
-			l_thread := icor_debug_thread
-			if l_thread /= Void then
-				l_frame := l_thread.get_active_frame
-				if l_thread.last_call_succeed and then l_frame /= Void then
-					l_stepper := l_frame.create_stepper			
-					l_error := l_frame.last_call_success
-					l_frame.clean_on_dispose
-				else
-					l_stepper := l_thread.create_stepper
-					l_error := l_thread.last_call_success
-				end	
-				Result := l_error = 0
-				last_stepper := l_stepper
-				last_stepper.add_ref
+			edti := eifnet_debugger_info.managed_thread (application.status.current_thread_id)
+			if edti /= Void then
+				Result := edti.new_stepper
+				Result.add_ref 
 			else
-				Result := False
+				Result := Void
 				eif_debug_display ("[DBG/WARNING] No thread available ...")
 			end
 		end
@@ -457,22 +439,22 @@ feature {NONE} -- Stepping Implementation
 --								or else (a_mode = cst_control_step_out)						
 			controller_exists: icor_debug_controller /= Void
 		local
-			l_succeed: BOOLEAN
+			l_stepper: ICOR_DEBUG_STEPPER
 		do
-			l_succeed := get_stepper
-			if l_succeed then
+			l_stepper := new_stepper
+			if l_stepper /= Void then
 				--| Manage the step
 				inspect	a_mode
 				when cst_control_step_next then
-					last_stepper.step (False)
+					l_stepper.step (False)
 				when cst_control_step_into then
-					last_stepper.step (True)
+					l_stepper.step (True)
 				when cst_control_step_out then
-					last_stepper.step_out
+					l_stepper.step_out
 				else
-					last_stepper.step (False)
+					l_stepper.step (False)
 				end
-				check last_stepper.check_last_call_succeed end
+				check l_stepper.check_last_call_succeed end
 				
 				do_continue
 			else
@@ -487,18 +469,18 @@ feature -- Stepping Access
 	do_step_range (a_bstep_in: BOOLEAN; a_il_ranges: ARRAY [TUPLE [INTEGER, INTEGER]]) is
 			-- Step next.
 		local
-			l_succeed: BOOLEAN
+			l_stepper: ICOR_DEBUG_STEPPER
 		do
 			debug ("debugger_trace_operation")
-				print ("[enter] EIFNET_DEBUGGER.do_step_range ("+a_bstep_in.out+")%N")
+				print ("[enter] EIFNET_DEBUGGER.do_step_range (" + a_bstep_in.out + ")%N")
 			end
-			l_succeed := get_stepper
-			if l_succeed then
+			l_stepper := new_stepper
+			if l_stepper /= Void then
 				debug  ("DEBUGGER_TRACE_EIFNET")
-					print ("[>] Stepping using ICorDebugStepper [0x"+last_stepper.out+"]%N")
+					print ("[>] Stepping using ICorDebugStepper [0x" + l_stepper.out + "]%N")
 				end
-				last_stepper.step_range (a_bstep_in, a_il_ranges)
-				check last_stepper.check_last_call_succeed end				
+				l_stepper.step_range (a_bstep_in, a_il_ranges)
+				check l_stepper.check_last_call_succeed end				
 
 				do_continue
 			else
@@ -653,7 +635,7 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 		local
 			l_cse: CALL_STACK_ELEMENT_DOTNET
 		do
-			l_cse ?= application.status.current_stack_element
+			l_cse ?= application.status.current_call_stack_element
 			Result := l_cse.icd_frame
 		end
 
@@ -1125,9 +1107,11 @@ feature -- Specific function evaluation
 			l_icd_class: ICOR_DEBUG_CLASS
 		do
 			l_icd_class := icor_debug_class (a_adapted_class_type)			
-			Result := once_function_value_on_icd_class (a_icd_frame,
-								l_icd_class, a_adapted_class_type, a_feat)
-			l_icd_class.clean_on_dispose
+			if l_icd_class /= Void then
+				Result := once_function_value_on_icd_class (a_icd_frame,
+									l_icd_class, a_adapted_class_type, a_feat)
+				l_icd_class.clean_on_dispose
+			end
 		end
 
 	once_function_value_on_icd_class (a_icd_frame: ICOR_DEBUG_FRAME; a_icd_class: ICOR_DEBUG_CLASS; a_adapted_class_type: CLASS_TYPE; a_feat: E_FEATURE): ICOR_DEBUG_VALUE is

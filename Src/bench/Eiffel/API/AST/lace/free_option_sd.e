@@ -1,3 +1,10 @@
+indexing
+
+	description:
+		"AST structure in Lace file for setting system level options.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class FREE_OPTION_SD
 
 inherit

@@ -164,6 +164,7 @@ feature -- Initialization
 			inlining_size := static.inlining_size;
 			keep_assertions := static.keep_assertions;
 			do_not_check_vape := static.do_not_check_vape;
+			address_expression_allowed := static.address_expression_allowed;
 			removed_log_file := static.removed_log_file;
 			used_features_log_file := static.used_features_log_file;
 			dle_poly_server := static.dle_poly_server;

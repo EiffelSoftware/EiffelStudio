@@ -568,9 +568,9 @@ feature {AST_EIFFEL} -- Output
 				ctxt.put_text_item (ti_L_curly)
 				ctxt.put_class_name (p_name)
 				ctxt.put_text_item (ti_R_curly)
+				ctxt.put_text_item (ti_space)
 			end
 
-			ctxt.put_text_item (ti_space)
 			ctxt.put_text_item (ti_Precursor_keyword)
 
 				-- We simply use an empty feature name.

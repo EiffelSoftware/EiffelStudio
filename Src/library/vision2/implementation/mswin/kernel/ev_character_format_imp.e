@@ -128,13 +128,22 @@ feature -- Element change
 
 	set_font (value: EV_FONT) is
 			-- Make `value' the new font.
-			-- Height is in `twips' (1/20 of a printer point).
 		local
 			imp: EV_FONT_IMP
 		do
 			imp ?= value.implementation
 			set_face_name (imp.wel_log_font.face_name)
-			set_height (imp.wel_log_font.height * 20)
+		--	set_height (imp.wel_log_font.height)
+		--	set_styles (imp.wel_log_font.style)
+		--	set_pitch (imp.wel_log_font.pitch)
+		--	set_family (imp.wel_log_font.family)
+			set_char_set (imp.wel_log_font.char_set)
+		--	set_orientation (imp.wel_log_font.orientation)
+		--	set_escapement (imp.wel_log_font.escapement)
+		--	set_width (imp.wel_log_font.width)
+		--	set_quality (imp.wel_log_font.quality)
+		--	set_clip_precision (imp.wel_log_font.clip_precision)
+		--	set_out_precision (imp.wel_log_font.out_precision)
 		end
 
 	set_color (value: EV_COLOR) is

@@ -21,7 +21,7 @@ EIF_REFERENCE c_ev_any_imp_get_eif_reference_from_object_id (GtkWidget* c_object
             int eif_oid;
             EIF_REFERENCE eif_reference = NULL;
             
-	    if ((eif_oid = (int) g_object_get_data (
+	    if ((eif_oid = (int) (rt_int_ptr) g_object_get_data (
                 G_OBJECT (c_object),
                 "eif_oid"
             ))) {
@@ -56,13 +56,13 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
             g_object_set_data (
                 G_OBJECT (c_object),
                 "eif_oid",
-                (gpointer*) eif_oid
+                (gpointer*) (rt_int_ptr) eif_oid
             );
             g_signal_connect (
                 G_OBJECT (c_object),
                 "destroy",
                 (GCallback) c_ev_any_imp_c_object_dispose,
-                (gpointer*) eif_oid
+                (gpointer*) (rt_int_ptr) eif_oid
             );
 }
 
@@ -104,6 +104,10 @@ void set_debug_mode (int a_debug_mode)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.6  2005/02/12 01:23:42  manus
+// Removed C compiler warnings by adding cast to (rt_int_ptr) before convert to
+//   or from a pointer.
+//
 // Revision 1.5  2004/07/20 01:24:29  king
 // Added function pointer cast to prevent C compiler warning
 // Updated remaining deprecated gtk event handling setup code

@@ -59,7 +59,10 @@ feature
 						from
 							old_c.start
 						until
-							old_c.after or else (old_c.item.conforms_to (inst) and then old_c.item.is_equivalent (inst))
+							old_c.after or else 
+							(old_c.item.conforms_to (inst) and then 
+							 old_c.item.same_type (inst) and then 
+							 old_c.item.is_equivalent (inst))
 						loop
 							old_c.forth
 						end;
@@ -132,7 +135,8 @@ feature
 						until
 							found or else removed_old_template_list.after
 						loop
-							found := (inst.is_equivalent (removed_old_template_list.item))
+							found := (inst.same_type (removed_old_template_list.item) and then 
+								  inst.is_equivalent (removed_old_template_list.item))
 							removed_old_template_list.forth
 						end;
 

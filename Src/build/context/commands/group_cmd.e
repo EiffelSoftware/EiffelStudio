@@ -59,7 +59,7 @@ feature
 				-- Erase the new elements
 			group_c.hide_tree_elements;
 			!!new_contexts.make;
-				--merge empties the group_c subtree list
+			--merge empties the group_c subtree list
 			new_contexts.merge_right (group_c.subtree);
 				-- Reset parent
 			from
@@ -86,6 +86,7 @@ feature
 
 	work (argument: ANY) is
 		do
+			context.select_tree_element_if_parent_selected
 		end;
 
 	undo is
@@ -152,6 +153,7 @@ feature
 			parent.show_tree_elements;
 			tree.display (old_contexts.first);
 			context_catalog.add_new_group (context.group_type);
+			context.select_tree_element_if_parent_selected;
 			mp.restore
 		end;
 

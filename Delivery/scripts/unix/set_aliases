@@ -175,6 +175,9 @@ fi
 # Unzip the F_code of $1, compile it, clean up
 untgz_ccode ()
 {
+if [ -d F_code ]; then
+	fullrd F_code
+fi
 if [ ! -f $1.tar.gz ]; then
 	remtrace "Couldnt find $1.tar.gz"
 	CANCEL
@@ -186,7 +189,7 @@ if [ ! -d F_code ]; then
 	CANCEL
 fi
 cd F_code
-finish_freezing -silent
+finish_freezing -silent >> $INSTALL_LOG
 if [ ! -f $1 ]; then
 	remtrace Couldnt generate $1
 	CANCEL
@@ -227,34 +230,6 @@ move EIFGEN/F_code/$1 .
 clean_project
 fi
 }
-# Un.tar.gz the C code, compile it, move the executable ($1) to the current directory, delete the C code
-un_tgz_ccode ()
-{
-if [ -d F_code ]; then
-	fullrd F_code
-fi
-if [ ! -f $1.tar.gz ]; then
-	remtrace Cannot find $1.tar.gz
-	CANCEL
-fi
-gunzip $1.tar.gz
-tar -xf $1.tar
-fullrf $1.tar
-if [ ! -d F_code ]; then
-	remtrace "Tar didnt work?!"
-	CANCEL
-fi
-cd F_code
-finish_freezing -silent >> $INSTALL_LOG
-if [ ! -e $1 ]; then
-	remtrace Couldnt compile $1
-	CANCEL
-fi
-mv $1 ..
-cd ..
-fullrd F_code
-}
-
 
 # Tests....
 testpar ()

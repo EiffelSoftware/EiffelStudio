@@ -18,13 +18,10 @@ if [ ! -d $EXPORT_DIR ]; then
 	CANCEL
 fi
 
-remtrace Clean up the files
-fullrd $INSTALL_DIR
-
 remtrace Compile C code of the libraries
 remtrace \"A tout seigneur tout honneur\", let\'s start with the run-time
 if [ ! -e c.tar.gz ]; then
-	remtrace "No.tar.gz for the C directory"
+	remtrace 'No.tar.gz for the C directory'
 	CANCEL
 fi
 gunzip c.tar.gz
@@ -35,12 +32,12 @@ if [ ! -d C ]; then
 fi
 fullrf c.tar
 cd C
-source Configure >> $INSTALL_LOG
+source quick_configure >> $INSTALL_LOG
 
 remtrace Then the Eiffel libraries
 cd $EXPORT_DIR
 if [ ! -e libs.tar.gz ]; then
-	remtrace "No.tar.gz for the library directory"
+	remtrace 'No.tar.gz for the library directory'
 	CANCEL
 fi
 gunzip libs.tar.gz
@@ -52,27 +49,33 @@ fi
 fullrf libs.tar
 
 remtrace Then the C libraries
-if [ ! -e c_lib.tar.gz ]; then
-	remtrace "No.tar.gz for the C_library directory"
+if [ ! -e c_libs.tar.gz ]; then
+	remtrace 'No.tar.gz for the C_library directory'
 	CANCEL
 fi
-gunzip c_lib.tar.gz
-tar -xf c_lib.tar
+gunzip c_libs.tar.gz
+tar -xf c_libs.tar
 if [ ! -d C_library ]; then
 	remtrace No C_library directory
 	CANCEL
 fi
-fullrf c_lib.tar
+fullrf c_libs.tar
 source compile_libraries
 
 remtrace Extract the delivery
 if [ ! -e delivery.tar.gz ]; then
-	remtrace No.tar.gz of the delivery
+	remtrace 'No.tar.gz of the delivery'
 	CANCEL
 else
 	remtrace Delivery
-	if [ -d $INSTALL_DIR ]; then fullrd $INSTALL_DIR fi
+	if [ -d $INSTALL_DIR ]; then
+		fullrd $INSTALL_DIR
+	fi
 	safe_md $INSTALL_DIR
+	if [ ! -d $INSTALL_DIR ]; then
+		remtrace Cannot create $INSTALL_DIR
+		CANCEL
+	fi
 	mv delivery.tar.gz $INSTALL_DIR
 	cd $INSTALL_DIR
 	gunzip delivery.tar.gz
@@ -87,8 +90,8 @@ safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 
-cp C/run-time/lib/*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
-cp C/run-time/lib/*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
+cp C/run-time/*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
+cp C/run-time/*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
 	
 remtrace Recompile EiffelStudio
 cd $EXPORT_DIR

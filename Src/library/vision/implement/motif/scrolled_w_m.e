@@ -74,7 +74,7 @@ feature
 				color_implementation.remove_object (Current)
 			end;
 			bg_color := a_color;
-			color_implementation ?= background_color.implementation;
+			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
 			pix := color_implementation.pixel (screen);
 			xm_change_bg_color (screen_object, pix);

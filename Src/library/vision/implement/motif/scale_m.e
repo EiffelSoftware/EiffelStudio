@@ -519,6 +519,7 @@ feature -- Color
 		local
 			pixmap_implementation: PIXMAP_X;
 			color_implementation: COLOR_X;
+			pix: POINTER
 		do
 			if bg_pixmap /= Void then
 				pixmap_implementation ?= bg_pixmap.implementation;
@@ -530,12 +531,11 @@ feature -- Color
 				color_implementation.remove_object (Current)
 			end;
 			bg_color := a_color;
-			color_implementation ?= background_color.implementation;
+			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
-			xm_change_bg_color (screen_object, 
-						color_implementation.pixel (screen));
-			xm_change_bg_color (slide_widget, 
-						color_implementation.pixel (screen));
+			pix := color_implementation.pixel (screen);
+			xm_change_bg_color (screen_object, pix);
+			xm_change_bg_color (slide_widget, pix);
 			if fg_color /= Void then
 				update_foreground_color
 			end

@@ -145,7 +145,7 @@ feature
 			if menu_c /= Void then
 				Result := old_create_context (menu_c);
 				Result.widget.manage;
-				shake_parent (menu_c);
+				--shake_parent (menu_c);
 			end;
 		end;
 
@@ -156,7 +156,7 @@ feature {NONE}
 		do
 			a_parent.set_x_y (a_parent.x, a_parent.y);
 			a_parent.set_size (a_parent.width, a_parent.width);
-		end;
+		end
 
 	
 feature 

@@ -398,8 +398,8 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 					-- Retrieve next character change index.
 				counter := next_change_of_character (counter, l_text_length + 1)
 
-				current_paragraph_index := paragraph_indexes.i_th (current_lower_line_index)
 				if counter > current_paragraph_index and not paragraphs_exhausted then
+					current_paragraph_index := paragraph_indexes.i_th (current_lower_line_index)
 					if current_paragraph_index /= last_counter then
 						buffer.append_text_for_rtf (l_text.substring (last_counter, current_paragraph_index - 1), current_format)
 						last_counter := current_paragraph_index

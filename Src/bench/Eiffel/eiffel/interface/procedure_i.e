@@ -9,14 +9,16 @@ inherit
 			duplicate,
 			has_postcondition, has_precondition, is_ensure_then,
 			is_require_else, is_procedure, argument_names, arguments,
-			obsolete_message, assert_id_set, set_assert_id_set
+			obsolete_message, assert_id_set, set_assert_id_set,
+			check_local_names
 		end;
 	FEATURE_I
 		redefine
 			transfer_to, duplicate,
 			has_postcondition, has_precondition, is_ensure_then,
 			is_require_else, is_procedure, argument_names, arguments,
-			obsolete_message, assert_id_set, set_assert_id_set
+			obsolete_message, assert_id_set, set_assert_id_set,
+			check_local_names
 		select
 			transfer_to
 		end

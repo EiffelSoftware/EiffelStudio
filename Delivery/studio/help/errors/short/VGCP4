@@ -1,3 +1,4 @@
 Error: invalid creation procedure for expanded class.
-What to do: make sure that class lists zero or one name of creation
-  procedure having no arguments; or make the class non-expanded.
+What to do: make sure that class lists the version of the procedure
+  `default_create' (inherited from ANY) as one of the creation
+  procedure.

@@ -4,16 +4,18 @@ VGCP, chapter 18 (Creating objects), page 285
 
      A Creation_clause appearing in the Creators part of a
      class  `C'  is  valid if and only if it satisfies the
-     following four conditions, the last three  for  every
-     Feature_identifier    `fname'    in    the   clause's
-     Feature_list:
+     following four conditions:
 
         1 `C' is effective.
 
-        2 `fname' is the final name of a procedure of `C'.
+        2 For  every identifier `fname'  in  the  clause's
+          Feature_list,  `fname' is  the  final name  of a
+          procedure of `C'.
 
-        3 `fname' appears only once in the Feature_list.
+        3 For  every identifier `fname'  in  the  clause's
+          Feature_list,  `fname' appears  only once in the
+          Feature_list.
 
-        4 If  `C'  is  expanded,  that  procedure  has  no
-          arguments,   and   no  other  Feature_identifier
-          appears in the Feature_list.
+        4 If `C' is expanded, the version of the procedure
+          `default_create' (inherited from ANY)  is listed
+          in Feature_list.

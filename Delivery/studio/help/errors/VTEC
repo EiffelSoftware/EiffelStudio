@@ -8,7 +8,6 @@ VTEC, chapter 12 (Types), page 209
 
         1 `C' is not a deferred class.
 
-        2 `C' either  has  no  Creators  part,  or  has  a
-          Creators  part  containing  exactly one creation
-          procedure, with no argument,  available  to  `B'
-          for creation.
+        2 `C''s version of  the procedure `default_create'
+          (inherited from `ANY') is one  of  the  creation
+          procedures of `C' available to `B' for creation.

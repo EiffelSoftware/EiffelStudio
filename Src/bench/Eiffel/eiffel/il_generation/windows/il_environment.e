@@ -144,12 +144,11 @@ feature -- Access
 			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
 				feature {WEL_REGISTRY_ACCESS_MODE}.Key_read)
 			if p /= default_pointer then
-				check
-					known_runtime: sdk_keys.has (version)
-				end
-				key := reg.key_value (p, sdk_keys.item (version))
-				if key /= Void then
-					Result := key.string_value
+				if sdk_keys.has (version) then
+					key := reg.key_value (p, sdk_keys.item (version))
+					if key /= Void then
+						Result := key.string_value
+					end
 				end
 				reg.close_key (p)		
 			end
@@ -170,18 +169,14 @@ feature -- Query
 	
 	use_cordbg (a_string: STRING): BOOLEAN is
 			-- Should Current use cordbg.exe?
-		require
-			a_string_not_void: a_string /= Void
 		do
-			Result := a_string.is_equal ("cordbg")
+			Result := a_string /= Void and then a_string.is_equal ("cordbg")
 		end
 		
 	use_dbgclr (a_string: STRING): BOOLEAN is
 			-- Should Current use DbgCLR.exe?
-		require
-			a_string_not_void: a_string /= Void
 		do
-			Result := a_string.is_equal ("DbgCLR")
+			Result := a_string /= Void and then a_string.is_equal ("DbgCLR")
 		end
 	
 	Dotnet_debugger_path (a_debug: STRING): STRING is
@@ -258,7 +253,7 @@ feature -- Constants
 	v1_1: STRING is "v1.1.4322"
 			-- Version number of v1.1 of Microsoft .NET
 			
-	v2_0: STRING is "v2.0.40301"
+	v2_0: STRING is "v2.0.40426"
 			-- Temporary version number of the v2.0 of Microsoft .NET
 
 feature {NONE} -- Constants

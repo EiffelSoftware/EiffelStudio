@@ -137,10 +137,10 @@ feature
 			Result.extend (create {EV_HORIZONTAL_BOX}.make_for_test)
 			Result.extend (create {EV_HORIZONTAL_SPLIT_AREA}.make_for_test)
 			Result.extend (create {EV_NOTEBOOK}.make_for_test)
-			Result.extend (create {EV_SCROLLABLE_AREA}.make_for_test)
+--|FIXME		Result.extend (create {EV_SCROLLABLE_AREA}.make_for_test)
 			Result.extend (create {EV_VERTICAL_BOX}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SPLIT_AREA}.make_for_test)
-			Result.extend (create {EV_VIEWPORT}.make_for_test)
+--|FIXME		Result.extend (create {EV_VIEWPORT}.make_for_test)
 			Result.extend (create {EV_BUTTON}.make_for_test)
 			Result.extend (create {EV_CHECK_BUTTON}.make_for_test)
 			Result.extend (create {EV_DRAWING_AREA}.make_for_test)
@@ -151,11 +151,11 @@ feature
 			Result.extend (create {EV_LABEL}.make_for_test)
 			Result.extend (create {EV_LIST}.make_for_test)
 --|FIXME		Result.extend (create {EV_OPTION_BUTTON}.make_for_test)
-			Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
+--|FIXME		Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
 			Result.extend (create {EV_TEXT_FIELD}.make_for_test)
 			Result.extend (create {EV_TOGGLE_BUTTON}.make_for_test)
 			Result.extend (create {EV_TOOL_BAR}.make_for_test)
-			Result.extend (create {EV_TREE}.make_for_test)
+--|FIXME		Result.extend (create {EV_TREE}.make_for_test)
 			Result.extend (create {EV_VERTICAL_PROGRESS_BAR}.make_for_test)
 			Result.extend (create {EV_VERTICAL_RANGE}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SCROLL_BAR}.make_for_test)
@@ -213,13 +213,13 @@ feature
 			Result.extend (create {EV_LIST_ITEM})
 			Result.extend (create {EV_MENU_ITEM})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			Result.extend (create {EV_STATUS_BAR_ITEM})
+--FXIME			Result.extend (create {EV_STATUS_BAR_ITEM})
 			Result.extend (create {EV_TOOL_BAR_BUTTON})
 			Result.extend (create {EV_TOOL_BAR_SEPARATOR})
 			Result.extend (create {EV_TOOL_BAR_TOGGLE_BUTTON})
 			Result.extend (create {EV_TOOL_BAR_RADIO_BUTTON})
 			Result.extend (create {EV_TOOL_BAR_RADIO_BUTTON})
-			Result.extend (create {EV_ACCELERATOR})
+--FXIME			Result.extend (create {EV_ACCELERATOR})
 			Result.extend (create {EV_COLOR})
 			Result.extend (create {EV_COORDINATES})
 			Result.extend (create {EV_CURSOR})
@@ -235,7 +235,7 @@ feature
 			Result.extend (create {EV_MENU})
 			Result.extend (create {EV_MENU_BAR})
 			Result.extend (create {EV_SCREEN})
-			Result.extend (create {EV_STATUS_BAR})
+--FXIME			Result.extend (create {EV_STATUS_BAR})
 		end
 
 --|	features: LINKED_LIST [EV_PROCEDURE_WIDGET [ANY, TUPLE]] is
@@ -336,6 +336,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/07 22:09:24  oconnor
+--| Commented out feature that do not yet work on windows
+--|
 --| Revision 1.11  2000/03/07 18:27:40  oconnor
 --| removed scrolling area pending implementation in WEL
 --|

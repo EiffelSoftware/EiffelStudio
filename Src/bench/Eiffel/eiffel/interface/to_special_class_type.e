@@ -155,7 +155,7 @@ feature
 				file.putint (gen_type.associated_class_type.id.id - 1);
 				file.putchar (')');
 			end;
-			if gen_param.is_reference then
+			if gen_param.is_reference or else gen_param.is_bit then
 				file.putstring (" | EO_REF");
 			end;
 			file.putstring (";%N");

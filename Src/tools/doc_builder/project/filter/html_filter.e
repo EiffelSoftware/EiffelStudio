@@ -85,7 +85,7 @@ feature -- Tag
 					Buffered_tags.remove
 				end				
 			end
-			if element_attribute_mappings.has (a_local_part) then
+			if element_attribute_mappings.has (a_local_part) and not Attribute_stack.is_empty then
 				Attribute_stack.remove
 			end
 			previous_elements.remove
@@ -135,7 +135,10 @@ feature -- Tag
 				end				
 				if not l_content.is_equal (Empty_tag) and not l_content.is_empty and write then					
 					if in_attribute then
-						output_string.insert_string ("%"" + l_content + "%"", content_write_position)
+						if restore_attribute_value > 0 then
+							attribute_value_write_position := restore_attribute_value
+						end
+						output_string.insert_string ("%"" + l_content + "%"", content_write_position)												
 					else
 						output_string.insert_string (l_content, content_write_position)
 					end
@@ -189,7 +192,7 @@ feature {NONE} -- Processing
 					write_element (e, True, True)
 					write_attribute ("rel", False)
 					output_string.insert_string ("%"stylesheet%"", attribute_value_write_position)
-					process_attribute_element ("url")									
+					process_attribute_element ("url")				
 				else
 					write_element (e, is_start, True)
 				end					
@@ -274,6 +277,7 @@ feature {NONE} -- Processing
 			l_prev_element := Previous_elements.item
 			
 			if l_prev_element /= Void and attributable_elements.has (l_prev_element) then
+				
 				if attribute_attribute_mappings.has (a_name) then
 					l_att := " " + attribute_attribute_mappings.item (a_name) + "=%"" + a_value + "%""	
 				else
@@ -298,6 +302,12 @@ feature {NONE} -- Processing
 					output_string.insert_string (l_att, attribute_write_position)
 					attribute_write_position := output_string.count
 				end					
+				
+				if attributable_elements.has (l_prev_element) and in_attribute then
+					restore_attribute_value := attribute_value_write_position + l_att.count
+				else
+					restore_attribute_value := 0
+				end
 			end					
 			previous_attribute := [a_name, a_value]
 		end		
@@ -330,10 +340,10 @@ feature {NONE} -- Query
 			create l_util
 			create l_shared			
 			create l_link.make (filename, a_url)
-			create l_filename.make_from_string (l_link.absolute_url)
-			create l_dir.make (l_filename.string)
-			if not l_dir.exists then				
-				if not l_link.external_link then								
+			if not l_link.external_link then
+				create l_filename.make_from_string (l_link.absolute_url)
+				create l_dir.make (l_filename.string)
+				if not l_dir.exists then							
 						-- Convert to relative links
 					Result := l_link.relative_url
 					create l_filename.make_from_string (l_util.file_no_extension (Result))
@@ -342,11 +352,12 @@ feature {NONE} -- Query
 						Result := l_filename.string
 					end
 				else
+						-- A directory
 					Result := a_url
-				end				
+				end
 			else
-					-- A directory
-				Result := a_url
+					-- A external link
+				Result := a_url			
 			end		
 		end		
 
@@ -418,7 +429,11 @@ feature {NONE} -- Output
 		do			
 			if is_class then
 				write_element ("span", True, False)
-				l_att := " class=%"" + e + "%""
+				if in_pre_tag then					
+					l_att := " class=%"block_" + e + "%""
+				else					
+					l_att := " class=%"" + e + "%""	
+				end
 			else
 				l_att := " " + Element_attribute_mappings.item (e) + "="
 				attribute_value_write_position := attribute_write_position + Element_attribute_mappings.item (e).count + 2
@@ -502,6 +517,9 @@ feature {NONE} -- Implementation
 				Result.prune_all_trailing ('%T')
 				Result.replace_substring_all ("amp;", "")
 			end
+			Result.replace_substring_all ("<", "&lt;")
+			Result.replace_substring_all (">", "&gt;")
+			Result.replace_substring_all ("%"", "&quot;")
 		end
 
 	in_pre_tag: BOOLEAN is
@@ -510,4 +528,7 @@ feature {NONE} -- Implementation
 			Result := Previous_elements.has ("code_block")
 		end
 
+	restore_attribute_value: INTEGER
+			-- Value to restore `attribute_value_write_position' to after regaulr attribute processing
+	
 end -- class HTML_FILTER

@@ -33,7 +33,8 @@ inherit
 			foreground_color,
 			background_color,
 			set_foreground_color,
-			set_background_color
+			set_background_color,
+			needs_event_box
 		redefine
 			interface,
 			width,
@@ -44,6 +45,7 @@ inherit
 
 	EV_PIXMAP_ACTION_SEQUENCES_IMP
 		redefine
+			needs_event_box,
 			interface,
 			destroy
 		end
@@ -53,21 +55,18 @@ create
 
 feature {NONE} -- Initialization
 
+	needs_event_box: BOOLEAN is True
+
 	make (an_interface: like interface) is
 			-- Create a gtk pixmap of size (1 * 1) with no mask.
 		local
 			gdkpix, gdkmask: POINTER
 		do
 			base_make (an_interface)
-				-- Create a new pixmap
 			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, 1, 1, Default_color_depth)
-				-- Box the pixmap into a container to receive events
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
 			gtk_image := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_new
+			set_c_object (gtk_image)
 			set_pixmap (gdkpix, gdkmask)
-			
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, gtk_image)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (gtk_image)
 
 				-- Initialize the Graphical Context
 			gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
@@ -149,8 +148,6 @@ feature -- Element change
 	set_with_default is
 			-- Initialize the pixmap with the default
 			-- pixmap (Vision2 logo)
-			--
-			-- Exceptions "Unable to retrieve icon information"
 		do
 			set_from_xpm_data (default_pixmap_xpm)
 		end
@@ -168,12 +165,58 @@ feature -- Element change
 		end
 
 	pixbuf_from_drawable: POINTER is
-			-- 
+			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
+		local
+			a_pix, mask_pixbuf: POINTER
 		do
+			a_pix := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (Result, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
 			if mask /= default_pointer then
-				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, 0, 0, 0, 0, -1, -1)
+				mask_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, 0, 0, 0, 0, -1, -1)
+				mask_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (mask_pixbuf, True, '%/255/', '%/255/', '%/255/')
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (mask_pixbuf, a_pix, 0, 0, width, height, 0, 0, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 254)
+				a_pix := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (a_pix, False, '%/0/', '%/0/', '%/0/')
+				draw_mask_on_pixbuf (a_pix, mask_pixbuf)
 			end
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (Result, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
+			Result := a_pix
+		end
+
+	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				int x, y;
+				
+				GdkPixbuf *pixbuf, *mask;
+				
+				pixbuf = (GdkPixbuf*) $a_pixbuf_ptr;
+				mask = (GdkPixbuf*) $a_mask_ptr; 
+				
+				for (y = 0; y < gdk_pixbuf_get_height (pixbuf); y++)
+				{
+					guchar *src, *dest;
+					
+					src = gdk_pixbuf_get_pixels (mask) + y * gdk_pixbuf_get_rowstride (mask);
+					dest = gdk_pixbuf_get_pixels (pixbuf) + y * gdk_pixbuf_get_rowstride (pixbuf);
+					
+					for (x = 0; x < gdk_pixbuf_get_width (pixbuf); x++)
+					{
+						if (src [0] == 0)
+							dest [3] = 0;
+						
+						src += 4;
+						dest += 4;				
+					}
+					
+				}
+			]"
+		end
+		
+
+	pixbuf_from_drawable_with_size (a_width, a_height: INTEGER): POINTER is
+			-- Return a GdkPixbuf object from the current Gdkpixbuf structure with dimensions `a_width' * `a_height'
+		do
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (pixbuf_from_drawable, a_width, a_height, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
 		end
 
 	set_size (a_x, a_y: INTEGER) is
@@ -389,7 +432,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 			a_style: POINTER
 		do
 			a_style := feature {EV_GTK_EXTERNALS}.gtk_widget_get_style (App_implementation.default_gtk_window)
-			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_xpm_d (App_implementation.default_gdk_window, $gdkmask, NULL, a_xpm_data)
+			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_xpm_d (App_implementation.default_gdk_window, $gdkmask, NULL, a_xpm_data)	
 			set_pixmap (gdkpix, gdkmask)
 		end
 
@@ -398,13 +441,10 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 		require
 			a_stock_id_not_null: a_stock_id /= NULL
 		local
-			a_drawable_pixbuf, a_pixbuf: POINTER
+			a_pixbuf: POINTER
 		do
-			set_size (48, 48)
 			a_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_render_icon (gtk_image, a_stock_id, gtk_icon_size_dialog, NULL)
 			a_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_pixbuf, 48, 48, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_hyper)		
-			a_drawable_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (a_pixbuf, a_drawable_pixbuf, 0, 0, -1, -1, 1, 1, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 0)
 			set_pixmap_from_pixbuf (a_pixbuf)
 		end
 

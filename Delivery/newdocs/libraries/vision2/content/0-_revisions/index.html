@@ -89,9 +89,12 @@
 			<li><B>EV_WIDGET</B> - Added `remove_real_target' which ensures that `real_target' is Void.</li>
 			<li><B>EV_WIDGET_ACTION_SEQUENCES</B>  - Added `mouse_wheel_actions', fired each time that the mouse wheel is scrolled.</li>
 			<LI><B>EV_NOTEBOOK</B> - Now inherits EV_FONTABLE permitting a font to be applied to the item texts.</li>
-			<li><B>EV_ENVIRONMENT</B> - Added `mouse_wheel_scroll_lines' which returns an INTEGER corresponding to the number of lines that should be scrolled in response to each mouse wheel scroll event received.</li>
+			<li><B>EV_ENVIRONMENT</B><ul class="square"><li>Added `mouse_wheel_scroll_lines' which returns an INTEGER corresponding to the number of lines that should be scrolled in response to each mouse wheel scroll event received.</li>
+			<li>Added `has_printer' which returns `True' if at least one printer is installed.</li></ul></li>
 			<li><B>EV_PRINT_CONTEXT</B> - Added `horizontal_resolution' and `vertical_resolution' which return the page size in pixels of the page type selected from an EV_PRINT_DIALOG. This permits you to adjust the figure world you are printing to an EV_PRINT_PROJECTOR based on the limits of the page, as determined by `horizontal_resolution' and `vertical_resolution' in pixels.</li>
-			<li><B>EV_APPLCIATION</B> - Added `process_events_until_stopped' and `stop_processing', similar to `process_events', except the processing is executed until `stop_processing' is called.</li>
+			<li><B>EV_APPLICATION</B> - Added `process_events_until_stopped' and `stop_processing', similar to `process_events', except the processing is executed until `stop_processing' is called.</li>
+	<li><B>EV_PRINT_PROJECTOR</B> - Added `has_printer' check to `make_with_context', ensuring that if you are to print to a printer, at least one printer is available.</li>
+	<li><B>EV_PRINT_CONTEXT</B> - `default_create' now initializes a set of standard values, permitting the printing to the default printer, using US letter size.</li>
 </ul>
 		<P><b>Breaking changes</b></P>
 		<UL>
@@ -146,6 +149,7 @@
 								image is now updated immediately. Also, using `copy' on a pixmap in a similar
 								situation that was originally set with a masked icon, and passing a pixmap
 								created from a bitmap file would cause a crash.</LI>
+	<li>Fixed display error in handling of pixmaps created from a PNG with a transparant color,  using `set_with_named_file'. The background would be garbled and partially black.</li>
 						</ul>
 					<LI>
 						<B>EV_LIST</B>
@@ -191,6 +195,7 @@
 					</LI>
 <LI><B>EV_COMBO_BOX_IMP</B><UL><LI>Fixed `set_foreground_color' and `set_background_color' which previously did nothing.</li>
 				<LI>Fixed bug in selection. If during execution of the `select_actions' of an item contained, you called `enable_select' on another item within the combo box, subsequently selecting the originally selected item would no longer fire its `select_actions'.</UL>
+				<li><B>EV_PRINT_DIALOG</B> - Querying `print_context' from a print dialog if a user selected "Cancel" would previously crash.</li>
 				</ul>
 			<li>
 				<b>Gtk</b>
@@ -291,7 +296,7 @@
 				iterated which allows for greater flexibility.<br>
 				<br>
 				The following list details some of the breaking changes, and how to fix them:
-				<ul>
+				<ul class="square">
 					<li>
 						<B>item</B>
 					- If you were using `item', you should change this to `item_at_position'. A

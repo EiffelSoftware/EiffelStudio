@@ -152,6 +152,42 @@ feature {NONE} -- Agent Handlers
 			put_string ("%N")
 		end
 		
+	on_completion_quick_test (args: ARRAYED_LIST [STRING]) is
+			-- perform a specific test 
+		local
+			l_args: ECOM_ARRAY [STRING]
+			l_var_args: ECOM_VARIANT
+			l_types: ECOM_ARRAY [STRING]
+			l_var_types: ECOM_VARIANT
+			l_file_name: STRING
+			fd: FEATURE_DESCRIPTOR
+			return_names, return_descriptions, return_indexes: ECOM_VARIANT
+		do
+			l_file_name := "D:\Src\library\base\structures\list\arrayed_list.e"
+			put_string ("Perfoming custome quick test")
+			--completion_interface.flush_completion_features (l_file_name)
+			create l_args.make_from_array (<<"a_first", "a_second">>, 1, <<1>>, <<2>>)
+			create l_types.make_from_array (<<"STRING", "ANY">>, 1, <<1>>, <<2>>)
+			create l_var_args.make
+			create l_var_types.make
+			l_var_args.set_string_array (l_args)
+			l_var_types.set_string_array (l_types)
+			--completion_interface.initialize_feature ("a_new_feature", l_var_args, l_var_types, "STRING", 11, l_file_name)
+			--completion_interface.initialize_feature ("make2", l_var_args, l_var_types, Void, 2, l_file_name)
+			create return_names.make
+			create return_descriptions.make
+			create return_indexes.make
+			--fd ?= completion_interface.target_feature ("a_new_feature", "make2", l_file_name)
+			--completion_interface.target_features ("feature {STRING}.", "make2", l_file_name, return_names, return_descriptions, return_indexes)
+			put_string ("%N    Result=")
+			if return_names.string_array /= Void then
+				--display_entries (return_names, return_descriptions, return_indexes)					
+			else
+				put_string (Void)
+			end
+		end
+		
+		
 feature {NONE} -- Implementation
 
 	perform_completion_info_tests (interface: IEIFFEL_COMPLETION_INFO_INTERFACE) is
@@ -319,6 +355,7 @@ feature {NONE} -- Output
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("3", "Test target_feature", agent on_target_feature_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("4", "Test target_features", agent on_target_features_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("a", "Perform all completion info test", agent on_all_completion_info_test))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("q", "Perform quick test", agent on_completion_quick_test))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("x", "Exit Menu", Void))
 			menu.set_return_item (menu.items.last)
 		end

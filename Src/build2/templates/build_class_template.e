@@ -30,6 +30,10 @@ feature {NONE} -- Initialization
 
 				-- Initialize properties of all widgets.<SET>
 
+
+				-- Connect events.
+			<EVENT_CONNECTION>
+
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
@@ -45,5 +49,7 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
+
+	<EVENT_DECLARATION>	
 
 end -- class <CLASS_NAME>

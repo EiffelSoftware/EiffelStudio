@@ -10,7 +10,8 @@ inherit
 			setup_dialog,
 			on_ok,
 			parent,
-			on_wm_destroy
+			on_wm_destroy,
+			on_control_command
 		end
 
 	APPLICATION_IDS
@@ -19,6 +20,16 @@ inherit
 		end
 
 	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
+	EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
+	WEL_HELP_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -43,6 +54,7 @@ feature {NONE} -- Initialization
 			create help_button.make_by_id (Current, Help_button_constant)
 			create id_back.make_by_id (Current, Id_back_constant)
 			create welcome_static.make_by_id (Current, Title_static_constant)
+			help_topic_id := 731
 
 			new_project := False
 		end
@@ -90,6 +102,26 @@ feature -- Behavior
 			end
 		end
 
+	on_help is
+			-- Invoce Help.
+		local
+			tmp_help_path: STRING			
+		do
+			tmp_help_path := clone (get ("EIFFEL4"))
+			tmp_help_path.append ("\wizards\com\eiffelcom.hlp")
+			win_help (tmp_help_path, Help_context, help_topic_id)
+		end
+
+	on_control_command (control: WEL_CONTROL) is
+			-- A command has been received from `control'.
+		do
+			if control = help_button then
+				on_help
+			elseif control = id_back then
+				terminate (Idcancel)
+			end
+		end
+
 feature -- Access
 
 	open_project_radio: WEL_RADIO_BUTTON
@@ -118,6 +150,9 @@ feature -- Access
 			
 	id_back: WEL_PUSH_BUTTON
 			-- Back (greyed) button
+
+	help_topic_id: INTEGER
+			-- Topic ID for Help
 
 	parent: MAIN_WINDOW
 			-- Parent window

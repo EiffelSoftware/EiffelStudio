@@ -79,7 +79,7 @@ feature -- Basic operation
 				s ?= test_list.item.entry (1)
 				p ?= test_list.item.entry (2)
 				tmp := "  " + s + ":"
-				from start until tmp.count > 14 loop
+				from until tmp.count > 14 loop
 					tmp.append (" ")
 				end
 				description.append (tmp)
@@ -712,6 +712,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/16 17:29:19  oconnor
+--| typo
+--|
 --| Revision 1.23  2000/03/16 17:08:36  oconnor
 --| tweaked output format
 --|

@@ -15,6 +15,8 @@ inherit
 		end;
 	SHARED_WORKBENCH
 
+	SHARED_EIFFEL_PARSER
+
 creation {ERROR_HANDLER}
 
 	init
@@ -46,13 +48,13 @@ feature {NONE} -- Initialization
 
 	init is
 			-- Initialize `start_position' and `end_position'.
+		local
+			p: like Eiffel_parser
 		do
-			start_position := get_start_position;
-			end_position := get_end_position;
-			file_name := get_yacc_file_name;
-			error_code := get_yacc_error_code
-			error_message := get_yacc_error_message
-		end;
+			p := Eiffel_parser
+			make (p.start_position, p.end_position, p.filename,
+				p.error_code, p.error_message)
+		end
 
 feature -- Properties
 
@@ -222,38 +224,6 @@ feature -- Output
 				st.add_string ("^");
 				st.add_new_line
 			end;
-		end;
-
-feature {NONE} -- Externals
-
-	get_start_position: INTEGER is
-			-- Get start position processed by yacc
-		external
-			"C"
-		end;
-
-	get_end_position: INTEGER is
-			-- Get end position processed by yacc.
-		external	
-			"C"
-		end;
-
-	get_yacc_file_name: STRING is
-			-- Get file name processed by yacc.
-		external
-			"C"
-		end;
-
-	get_yacc_error_code: INTEGER is
-			-- Get error code processed by yacc.
-		external
-			"C"
-		end;
-
-	get_yacc_error_message: STRING is
-			-- Get error message processed by yacc.
-		external
-			"C"
 		end;
 
 end -- class SYNTAX_ERROR

@@ -273,6 +273,13 @@ feature -- Basic operations
 			end
 		end;
 
+	infix "|..|" (other: INTEGER): INTEGER_INTERVAL is
+			-- Interval from current element to `other'
+			-- (empty if `other' less than current integer)
+		do
+			create Result.make (item, other)
+		end
+
 feature -- Output
 
 	out: STRING is

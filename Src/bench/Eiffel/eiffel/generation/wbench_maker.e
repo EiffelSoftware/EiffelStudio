@@ -43,49 +43,49 @@ feature
 
 	add_cecil_objects is
 		do
-			cecil_rt_basket.put ("network.o");
-			cecil_rt_basket.put ("wmath.o");
-			cecil_rt_basket.put ("wmalloc.o");
-			cecil_rt_basket.put ("wgarcol.o");
-			cecil_rt_basket.put ("wlocal.o");
-			cecil_rt_basket.put ("wexcept.o");
-			cecil_rt_basket.put ("wstore.o");
-			cecil_rt_basket.put ("wretrieve.o");
-			cecil_rt_basket.put ("whash.o");
-			cecil_rt_basket.put ("wtraverse.o");
-			cecil_rt_basket.put ("whashin.o");
-			cecil_rt_basket.put ("wtools.o");
-			cecil_rt_basket.put ("winternal.o");
-			cecil_rt_basket.put ("wplug.o");
-			cecil_rt_basket.put ("wcopy.o");
-			cecil_rt_basket.put ("wequal.o");
-			cecil_rt_basket.put ("wlmalloc.o");
-			cecil_rt_basket.put ("wout.o");
-			cecil_rt_basket.put ("wtimer.o");
-			cecil_rt_basket.put ("wurgent.o");
-			cecil_rt_basket.put ("wsig.o");
-			cecil_rt_basket.put ("whector.o");
-			cecil_rt_basket.put ("wcecil.o");
-			cecil_rt_basket.put ("wbits.o");
-			cecil_rt_basket.put ("wfile.o");
-			cecil_rt_basket.put ("wdir.o");
-			cecil_rt_basket.put ("wstring.o");
-			cecil_rt_basket.put ("wmisc.o");
-			cecil_rt_basket.put ("wpattern.o");
-			cecil_rt_basket.put ("werror.o");
-			cecil_rt_basket.put ("wumain.o");
-			cecil_rt_basket.put ("wmemory.o");
-			cecil_rt_basket.put ("wargv.o");
-			cecil_rt_basket.put ("wboolstr.o");
-			cecil_rt_basket.put ("wsearch.o");
-			cecil_rt_basket.put ("wmain.o");
-			cecil_rt_basket.put ("debug.o");
-			cecil_rt_basket.put ("interp.o");
-			cecil_rt_basket.put ("option.o");
-			cecil_rt_basket.put ("update.o");
-			cecil_rt_basket.put ("wbench.o");
-			cecil_rt_basket.put ("wrun_idr.o");
-			cecil_rt_basket.put ("console.o");
+			cecil_rt_basket.extend ("network.o");
+			cecil_rt_basket.extend ("wmath.o");
+			cecil_rt_basket.extend ("wmalloc.o");
+			cecil_rt_basket.extend ("wgarcol.o");
+			cecil_rt_basket.extend ("wlocal.o");
+			cecil_rt_basket.extend ("wexcept.o");
+			cecil_rt_basket.extend ("wstore.o");
+			cecil_rt_basket.extend ("wretrieve.o");
+			cecil_rt_basket.extend ("whash.o");
+			cecil_rt_basket.extend ("wtraverse.o");
+			cecil_rt_basket.extend ("whashin.o");
+			cecil_rt_basket.extend ("wtools.o");
+			cecil_rt_basket.extend ("winternal.o");
+			cecil_rt_basket.extend ("wplug.o");
+			cecil_rt_basket.extend ("wcopy.o");
+			cecil_rt_basket.extend ("wequal.o");
+			cecil_rt_basket.extend ("wlmalloc.o");
+			cecil_rt_basket.extend ("wout.o");
+			cecil_rt_basket.extend ("wtimer.o");
+			cecil_rt_basket.extend ("wurgent.o");
+			cecil_rt_basket.extend ("wsig.o");
+			cecil_rt_basket.extend ("whector.o");
+			cecil_rt_basket.extend ("wcecil.o");
+			cecil_rt_basket.extend ("wbits.o");
+			cecil_rt_basket.extend ("wfile.o");
+			cecil_rt_basket.extend ("wdir.o");
+			cecil_rt_basket.extend ("wstring.o");
+			cecil_rt_basket.extend ("wmisc.o");
+			cecil_rt_basket.extend ("wpattern.o");
+			cecil_rt_basket.extend ("werror.o");
+			cecil_rt_basket.extend ("wumain.o");
+			cecil_rt_basket.extend ("wmemory.o");
+			cecil_rt_basket.extend ("wargv.o");
+			cecil_rt_basket.extend ("wboolstr.o");
+			cecil_rt_basket.extend ("wsearch.o");
+			cecil_rt_basket.extend ("wmain.o");
+			cecil_rt_basket.extend ("debug.o");
+			cecil_rt_basket.extend ("interp.o");
+			cecil_rt_basket.extend ("option.o");
+			cecil_rt_basket.extend ("update.o");
+			cecil_rt_basket.extend ("wbench.o");
+			cecil_rt_basket.extend ("wrun_idr.o");
+			cecil_rt_basket.extend ("console.o");
 		end;
 
 	add_eiffel_objects is
@@ -121,14 +121,14 @@ feature
 							!!file_name.make (16);
 							file_name.append (object_name);
 							file_name.append (Dot_o);
-							object_baskets.item (cl_type.packet_number).put (file_name);
+							object_baskets.item (cl_type.packet_number).extend (file_name);
 
 								-- Descriptor file
 							!!file_name.make (16);
 							file_name.append (object_name);
 							file_name.append_character (Descriptor_file_suffix);
 							file_name.append (Dot_o);
-							descriptor_baskets.item (cl_type.packet_number).put (file_name);
+							descriptor_baskets.item (cl_type.packet_number).extend (file_name);
 						end;
 
 						types.forth;
@@ -142,7 +142,7 @@ feature
 						file_name.append_integer (i);
 						file_name.append_character (Feature_table_file_suffix);
 						file_name.append (Dot_o);
-						feat_table_baskets.item (a_class.packet_number).put (file_name);
+						feat_table_baskets.item (a_class.packet_number).extend (file_name);
 					end;
 				end;
 				i := i + 1;

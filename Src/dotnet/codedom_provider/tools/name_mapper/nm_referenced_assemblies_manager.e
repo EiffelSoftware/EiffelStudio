@@ -8,7 +8,7 @@ class
 	NM_REFERENCED_ASSEMBLIES_MANAGER
 
 inherit
-	CODE_REFERENCED_ASSEMBLIES
+	CODE_SHARED_REFERENCED_ASSEMBLIES
 
 	NM_REGISTRY_KEYS
 		export
@@ -98,8 +98,8 @@ feature -- Basic Operations
 						until
 							i = l_count
 						loop
-							if not has_file (l_assemblies.item (i)) then
-								add_file (l_assemblies.item (i))
+							if not Referenced_assemblies.has_file (l_assemblies.item (i)) then
+								Referenced_assemblies.extend_file (l_assemblies.item (i))
 							end
 							i := i + 1
 						end
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			until
 				Startup_assemblies.after
 			loop
-				add_file (Startup_assemblies.item)
+				Referenced_assemblies.extend_file (Startup_assemblies.item)
 				Startup_assemblies.forth
 			end
 		end

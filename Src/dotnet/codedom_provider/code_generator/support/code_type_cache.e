@@ -19,13 +19,6 @@ inherit
 			{NONE} all
 		end
 
-	CODE_REFERENCED_ASSEMBLIES
-		rename
-			reset as reset_assemblies
-		export
-			{NONE} all
-		end
-
 	CODE_SHARED_GENERATION_CONTEXT
 		export
 			{NONE} all

@@ -78,7 +78,7 @@ feature -- Implementation
 				end
 				an_eiffel_type_name.to_upper
 
-				l_referenced_assemblies := (create {CODE_REFERENCED_ASSEMBLIES}).referenced_assemblies
+				l_referenced_assemblies := (create {CODE_SHARED_REFERENCED_ASSEMBLIES}).Referenced_assemblies
 				from
 					l_referenced_assemblies.start
 				until

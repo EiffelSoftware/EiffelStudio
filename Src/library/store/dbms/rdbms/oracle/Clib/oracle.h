@@ -131,25 +131,25 @@ static CONST text  *oci_func_tab[] =  {(text *) "not used",
 void * ora_safe_alloc (void *ptr);
 void change_to_low(char *buf);
 void c_ora_make (int m_size);
-int ora_new_descriptor(void);
+int ora_new_descriptor(void); //
 int ora_first_descriptor_available (void);
 int ora_available_descriptor (void);
 int ora_max_descriptor (void);
-int ora_exec_immediate (int no_desc, text *order);
-int ora_init_order (text order[1024], int no_desc);
+void ora_exec_immediate (int no_desc, text *order); //
+void ora_init_order (text order[1024], int no_desc); //
 sword describe_define(Cda_Def *cda, int no_desc);
 void print_header(sword ncols, int no_desc);
 void print_rows(Cda_Def *cda, sword ncols, int no_desc);
 int ora_put_data (int no_des, int index, char *result);
 int ora_put_select_name (int no_des, int i, char *result);
-int ora_start_order (int no_desc);
-int ora_terminate_order (int no_des);
-int ora_next_row (int no_des);
-int ora_set_parameter(int no_desc, text *stmt_buf, text *ph, char *value);
-int ora_connect (text *name, text *passwd);
-int ora_disconnect (void);
-int ora_rollback (void);
-int ora_commit (void);
+void ora_start_order (int no_desc); //
+void ora_terminate_order (int no_des); //
+int ora_next_row (int no_des); //
+void ora_set_parameter(int no_desc, text *stmt_buf, text *ph, char *value); //
+void ora_connect (text *name, text *passwd); //
+void ora_disconnect (void); //
+void ora_rollback (void); //
+void ora_commit (void); //
 int ora_trancount (void);
 int ora_get_integer_data (int, int);
 double ora_get_float_data (int, int);
@@ -171,6 +171,7 @@ int ora_get_count (int no_des);
 int ora_get_col_len (int no_des, int i);
 void ora_clear_error (void);
 char * ora_get_error_message (void);
+int ora_get_error_code (void);
 void ora_c_free(char *ptr);
 void ora_error_handler(Cda_Def *cursor);
 int ora_c_character_type (void);

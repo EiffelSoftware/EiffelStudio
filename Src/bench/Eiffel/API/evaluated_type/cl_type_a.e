@@ -12,6 +12,7 @@ inherit
 	TYPE_A
 		redefine
 			is_expanded,
+			is_separate,
 			instantiation_in,
 			valid_generic,
 			duplicate,
@@ -28,6 +29,9 @@ feature -- Properties
 
 	is_expanded: BOOLEAN;
 			-- Is the type expanded ?
+
+	is_separate: BOOLEAN;
+			-- Is the current actual type a separate one ?
 
 	is_valid: BOOLEAN is
 		do
@@ -50,6 +54,8 @@ feature -- Access
 						equal (base_class_id, other_class_type.base_class_id)
 						and then
 						is_expanded = other_class_type.is_expanded
+						and then
+						is_separate = other_class_type.is_separate
 		end;
 
 	associated_eclass: E_CLASS is
@@ -72,6 +78,8 @@ feature -- Output
 		do
 			if is_expanded then
 				st.add_string ("expanded ");
+			elseif is_separate then
+				st.add_string ("separate ");
 			end;
 			associated_eclass.append_name (st);
 		end;
@@ -86,6 +94,9 @@ feature -- Output
 			if is_expanded then
 				!!Result.make (class_name.count + 9);
 				Result.append ("expanded ");
+			elseif is_separate then
+				!!Result.make (class_name.count + 9);
+				Result.append ("separate ");
 			else
 				!!Result.make (class_name.count);
 			end;
@@ -98,6 +109,12 @@ feature {COMPILER_EXPORTER}
 			-- Assign `b' to `is_expanded'.
 		do
 			is_expanded := b;
+		end;
+
+	set_is_separate (b: BOOLEAN) is
+			-- Assign `b' to `is_separate'.
+		do
+			is_separate := b;
 		end;
 
 	associated_class: CLASS_C is
@@ -113,16 +130,18 @@ feature {COMPILER_EXPORTER}
 		do
 			!!Result;
 			Result.set_is_expanded (is_expanded);
+			Result.set_is_separate (is_separate);
 			Result.set_base_id (base_class_id);
 		end;
 
 	meta_type: TYPE_I is
 			-- Meta type of the type
 		do
-			if not is_expanded then
-				Result := Reference_c_type
-			else
+				-- FIXME ???: separate
+			if is_expanded then
 				Result := type_i;
+			else
+				Result := Reference_c_type
 			end;
 		end;
 
@@ -146,7 +165,7 @@ feature {COMPILER_EXPORTER}
 			Result := is_expanded;
 		end;
 
--- Conformance
+feature {COMPILER_EXPORTER} -- Conformance
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does `other' conform to Current ?
@@ -154,6 +173,7 @@ feature {COMPILER_EXPORTER}
 			current_class, parent_class: CLASS_C;
 			other_class_type: CL_TYPE_A;
 		do
+				-- FIXME???: separate
 			other_class_type ?= other.actual_type;
 			if other_class_type /= Void then
 					-- `other' is also a class type
@@ -218,8 +238,7 @@ feature {COMPILER_EXPORTER}
 			Result := parent.duplicate;
 		end;
 
-
--- Instantitation of a feature type
+feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 
 	feature_type (f: FEATURE_I): TYPE_A is
 			-- Instantiation of the feature type in the context of
@@ -249,7 +268,7 @@ feature {COMPILER_EXPORTER}
 			end;
 		end;
 
--- Instantiation of a type in the context of a descendant one
+feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a descendant one
 
 	instantiation_of (type: TYPE_B; class_id: CLASS_ID): TYPE_A is
 			-- Instantiation of type `type' written in class of id `class_id'

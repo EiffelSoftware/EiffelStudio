@@ -364,7 +364,7 @@ feature -- Access
 				if i \\ 6 = 1 then
 					curr_item := items_by_name.item (a_layout.item(i))
 					if curr_item /= Void then
-						temp_layout.resize (temp_layout.lower, temp_layout.upper + 6)
+						temp_layout.conservative_resize (temp_layout.lower, temp_layout.upper + 6)
 						temp_layout.put (a_layout.item (i), j)
 					else
 						check

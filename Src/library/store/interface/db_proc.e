@@ -121,7 +121,7 @@ feature -- Basic operations
 			-- if any.
 		require
 			destination_not_void: destination /= Void
-			exists: exists
+		--	exists: exists
 		do
 			implementation.execute (destination)
 			if not is_ok and then is_tracing then

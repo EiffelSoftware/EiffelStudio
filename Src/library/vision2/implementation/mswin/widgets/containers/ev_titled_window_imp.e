@@ -232,12 +232,12 @@ feature -- Status setting
 		local
 			new_style: INTEGER
 		do
+			new_style := style
+			new_style := clear_flag (new_style, Ws_maximizebox)
+			new_style := clear_flag (new_style, Ws_minimizebox)
+			new_style := clear_flag (new_style, Ws_sizebox)
+			set_style (new_style)
 			if shown then
-				new_style := style
-				new_style := clear_flag (new_style, Ws_maximizebox)
-				new_style := clear_flag (new_style, Ws_minimizebox)
-				new_style := clear_flag (new_style, Ws_sizebox)
-				set_style (new_style)
 				hide
 				show
 			end
@@ -248,12 +248,12 @@ feature -- Status setting
 		local
 			new_style: INTEGER
 		do
+			new_style := style
+			new_style := set_flag (new_style, Ws_maximizebox)
+			new_style := set_flag (new_style, Ws_minimizebox)
+			new_style := set_flag (new_style, Ws_sizebox)
+			set_style (new_style)
 			if shown then
-				new_style := style
-				new_style := set_flag (new_style, Ws_maximizebox)
-				new_style := set_flag (new_style, Ws_minimizebox)
-				new_style := set_flag (new_style, Ws_sizebox)
-				set_style (new_style)
 				hide
 				show
 			end

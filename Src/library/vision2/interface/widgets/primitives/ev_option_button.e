@@ -2,12 +2,6 @@ indexing
 	description: 
 		"EiffelVision option button is a button that%
 		% displays a popup_menu when we click on it."
-	note: "On Linux platform, because of GTK, it is better%
-		% to follow the following step to be able to display%
-		% the selected item at the beginning:%
-		% 1- create the menu with a parent Void,%
-		% 2- create the item with the menu as a parent%
-		% 3- set the option button as the menu's parent"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,6 +42,25 @@ feature {NONE} -- Initialization
 			managed := par.manager
 			widget_make (par)
 		end	
+
+feature -- Status setting 
+
+	clear_selection is
+			-- Clear the selection by putting the `text'
+			-- of the menu on the option button if there is one,
+		    -- otherwise the first menu item.
+		do
+			implementation.clear_selection
+		end
+
+feature -- Status report
+
+	selected_item: EV_MENU_ITEM is
+			-- which menu item is selected.
+			-- Void if the selection is the `text' of the menu.
+		do
+			Result := implementation.selected_item
+		end
 
 feature {NONE} -- Implementation
 

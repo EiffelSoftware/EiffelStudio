@@ -34,45 +34,43 @@ feature -- Access
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		require
-			positive_occurrences: i > 0;
+			positive_occurrences: i > 0
 		local
-			occur, pos: INTEGER;
+			occur, pos: INTEGER
 		do
-			if object_comparison then
-				if v /= Void then
-					from
-						start;
-						pos := 1
-					until
-						off or else (occur = i)
-					loop
-						if item /= Void and then v.is_equal (item) then
-							occur := occur + 1
-						end;
-						forth;
-						pos := pos + 1
+			if object_comparison and v /= Void then
+				from
+					start
+					pos := 1
+				until
+					off or (occur = i)
+				loop
+					if item /= Void and then v.is_equal (item) then
+						occur := occur + 1
 					end
+					forth
+					pos := pos + 1
 				end
 			else
 				from
-					start;
+					start
 					pos := 1
 				until
-					off or else (occur = i)
+					off or (occur = i)
 				loop
 					if item = v then
 						occur := occur + 1
-					end;
-					forth;
+					end
+					forth
 					pos := pos + 1
 				end
-			end;
+			end
 			if occur = i then
 				Result := pos - 1
-			end;
+			end
 		ensure
 			non_negative_result: Result >= 0
-		end;
+		end
 
 	search (v: like item) is
 			-- Move to first position (at or after current
@@ -81,17 +79,12 @@ feature -- Access
 			-- based on `object_comparison'.)
 			-- If no such position ensure that `exhausted' will be true.
 		do
-			if object_comparison then
-				if v = Void then
-					finish;
-					if not after then forth end
-				else
-					from
-					until
-						exhausted or else (item /= Void and then v.is_equal (item))
-					loop
-						forth
-					end
+			if object_comparison and v /= Void then
+				from
+				until
+					exhausted or else (item /= Void and then v.is_equal (item))
+				loop
+					forth
 				end
 			else
 				from
@@ -102,11 +95,11 @@ feature -- Access
 				end
 			end
 		ensure
-			object_found: (not exhausted and then object_comparison and then v /= Void and then item /= Void)
-				 implies v.is_equal (item);
+			object_found: (not exhausted and object_comparison)
+				 implies equal (v, item)
 			item_found: (not exhausted and not object_comparison)
 				 implies v = item
-		end;
+		end
 
 	index: INTEGER is
 			-- Index of current position

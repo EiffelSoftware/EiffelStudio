@@ -1,7 +1,10 @@
 indexing
 
 	description: 
-		"Updated version of S_FEATURE_DATA for versions 3.3.1 and up.";
+		"Updated version of S_FEATURE_DATA for versions 3.3.1 and up. %
+		%In fact, everything has been put in R340; this R331 exists %
+		%only for compatibility and will be removed, as well as %
+		%S_NEW_FEATURE_DATA and S_DELETED_FEATURE_DATA";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -15,7 +18,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Properties
@@ -29,8 +31,6 @@ feature -- Setting
 			-- Set `is_reversed_engineered' to True.
 		do
 			is_reversed_engineered := True
-		ensure then
-			is_reversed_engineered: is_reversed_engineered
 		end
 
 end -- class S_FEATURE_DATA_R331

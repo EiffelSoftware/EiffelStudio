@@ -51,6 +51,7 @@ feature -- Execution
 				display_window.show
 			else
 				display_window.hide
+				display_window.set_size (0, 0)
 			end
 			set_selected (not is_selected)
 		end

@@ -50,6 +50,7 @@ feature -- Execution
 				builder_window.show
 			else
 				builder_window.hide
+				builder_window.set_size (0, 0)
 			end
 			set_selected (not is_selected)
 		end

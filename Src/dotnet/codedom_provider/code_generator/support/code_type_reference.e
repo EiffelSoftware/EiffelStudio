@@ -99,6 +99,7 @@ feature -- Access
 							Result := Name_formatter.full_formatted_type_name (name)
 						end
 					else
+						-- Type hasn't been generated yet, give it its Eiffel name
 						Result := Name_formatter.full_formatted_type_name (name)
 					end
 				end

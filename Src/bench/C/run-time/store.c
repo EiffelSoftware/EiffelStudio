@@ -524,7 +524,7 @@ rt_shared void internal_store(char *object)
 printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsigned int *), sorted_attributes);
 #endif
 			if (sorted_attributes == (unsigned int **) 0){
-				xfree((char *)accounting);
+				xfree(account);
 				xraise(EN_MEM);
 			}
 			memset (sorted_attributes, 0, scount * sizeof(unsigned int *));
@@ -547,7 +547,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 				sorted_attributes = (unsigned int **) 0;
 			}
 		eise_io("Store: unable to write the kind of storable.");
-		}
+	}
 
 #if DEBUG & 3
 		printf ("\n %d", c);

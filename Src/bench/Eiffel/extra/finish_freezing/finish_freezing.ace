@@ -33,7 +33,7 @@ cluster
 
 	es3sh:			"main";
 				
-	resources:		"resources";
+	resources:		"..\..\API\resources\common";
 	
 	-- Windows status box
 	statusbox:		"spec\windows";

@@ -272,7 +272,7 @@ feature -- Conversion
 		do
 			Result := item.to_integer_8
 		end
-
+		
 	to_integer_16: INTEGER_16 is
 			-- Convert `item' into an INTEGER_16 value.
 		require
@@ -280,6 +280,12 @@ feature -- Conversion
 			not_too_big: item <= 32767
 		do
 			Result := item.to_integer_16
+		end
+
+	to_integer, to_integer_32: INTEGER is
+			-- Return `item'.
+		do
+			Result := item
 		end
 
 	to_integer_64: INTEGER_64 is
@@ -418,9 +424,9 @@ feature -- Bit operations
 			n_less_than_32: n < 32
 		do
 			if b then
-				Result := item | (1 |<< n)
+				Result := item | ((1).to_integer_32 |<< n)
 			else
-				Result := item & (1 |<< n).bit_not
+				Result := item & ((1).to_integer_32 |<< n).bit_not
 			end
 		end
 

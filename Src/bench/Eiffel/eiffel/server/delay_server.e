@@ -154,19 +154,21 @@ end
 			to_remove: T
 			id_to_remove: H
 		do
-			from
-				c := cache
-				c.start
-			until
-				c.after
-			loop
-				to_remove := c.item_for_iteration
-				id_to_remove := id (to_remove)
-				if delayed.has (id_to_remove) then
-					write (to_remove)
-					delayed.remove (id_to_remove)
+			c := cache
+			if not c.is_empty then
+				from
+					c.start
+				until
+					c.after
+				loop
+					to_remove := c.item_for_iteration
+					id_to_remove := id (to_remove)
+					if delayed.has (id_to_remove) then
+						write (to_remove)
+						delayed.remove (id_to_remove)
+					end
+					c.forth
 				end
-				c.forth
 			end
 		end
 

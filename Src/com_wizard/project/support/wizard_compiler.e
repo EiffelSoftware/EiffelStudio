@@ -239,7 +239,7 @@ feature -- Basic Operations
 			end
 			create l_process_launcher
 			l_process_launcher.run_hidden
-			environment.abort_request_actions.extend (agent l_process_launcher.terminate_process)
+			environment.add_abort_request_action (agent l_process_launcher.terminate_process)
 			l_process_launcher.launch (l_cmd, a_folder, agent message_output.add_text)
 			if eiffel_compilation_successful (a_folder) then
 				l_local_folder := a_folder.twin
@@ -249,8 +249,7 @@ feature -- Basic Operations
 			else
 				environment.set_abort (Eiffel_compilation_error)
 			end
-			environment.abort_request_actions.finish
-			environment.abort_request_actions.remove
+			environment.remove_abort_request_action
 		end
 
 	check_finish_freezing_status (a_folder: STRING) is
@@ -474,3 +473,4 @@ end -- class WIZARD_COMPILER
 --| 356 Storke Road, Goleta, CA 93117 USA
 --| http://www.eiffel.com
 --+----------------------------------------------------------------
+

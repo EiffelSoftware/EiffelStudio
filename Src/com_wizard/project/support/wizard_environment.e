@@ -31,6 +31,8 @@ feature {NONE} -- Initialization
 			is_client := True
 			Compile_c := True
 			Compile_eiffel := True
+			create abort_request_actions.make (10)
+			create abort_request_actions_mutex
 		end
 
 feature -- Access
@@ -118,15 +120,6 @@ feature -- Access
 			non_void_message: Result /= Void
 		end
 	
-	abort_request_actions: LIST [ROUTINE [ANY, TUPLE[]]] is
-			-- Abort requestion actions
-		do
-			if internal_abort_requestion_actions = Void then
-				create internal_abort_requestion_actions.make (10)
-			end
-			Result := internal_abort_requestion_actions
-		end
-
 feature -- Element Change
 
 	set_is_eiffel_interface is
@@ -327,6 +320,7 @@ feature -- Element Change
 		do
 			abort := True
 			error_code := a_error_code
+			abort_request_actions_mutex.lock
 			from
 				abort_request_actions.start
 			until
@@ -335,6 +329,7 @@ feature -- Element Change
 				abort_request_actions.item.call (Void)
 				abort_request_actions.forth
 			end
+			abort_request_actions_mutex.unlock
 		ensure
 			abort: abort
 			error_code_set: error_code = a_error_code
@@ -386,6 +381,25 @@ feature -- Element Change
 			cleanup := a_boolean
 		ensure
 			cleanup_set: cleanup = a_boolean
+		end
+
+	add_abort_request_action (a_action: ROUTINE [ANY, TUPLE[]]) is
+			-- Add `a_action' to `abort_request_actions'.
+		require
+			non_void_action: a_action /= Void
+		do
+			abort_request_actions_mutex.lock
+			abort_request_actions.extend (a_action)
+			abort_request_actions_mutex.unlock
+		end
+
+	remove_abort_request_action is
+			-- Remove last added action from `abort_request_actions'.
+		do
+			abort_request_actions_mutex.lock
+			abort_request_actions.finish
+			abort_request_actions.remove
+			abort_request_actions_mutex.unlock
 		end
 
 feature {NONE} -- Implementation
@@ -451,8 +465,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_abort_requestion_actions: ARRAYED_LIST [ROUTINE [ANY, TUPLE[]]]
+	abort_request_actions: ARRAYED_LIST [ROUTINE [ANY, TUPLE[]]]
 			-- Abort request actions cell
+
+	abort_request_actions_mutex: MUTEX
+			-- Mutex used to access `abort_request_actions_mutex'
 
 invariant
 	valid_type: is_new_component xor is_eiffel_interface xor is_client

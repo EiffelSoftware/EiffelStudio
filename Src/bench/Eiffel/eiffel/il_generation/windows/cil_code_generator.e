@@ -1661,6 +1661,11 @@ feature -- Features info
 
 						insert_setter (l_setter_token, current_type_id, feat.feature_id)
 
+						create l_ca_factory
+						if l_is_attribute then
+							l_ca_factory.set_feature_custom_attributes (feat, l_setter_token)
+						end
+
 						if is_cls_compliant then
 							define_custom_attribute (l_setter_token,
 								current_module.cls_compliant_ctor_token, not_cls_compliant_ca)
@@ -1719,9 +1724,6 @@ feature -- Features info
 				if not is_override_or_c_external and (not is_static or else l_is_attribute) then
 					create l_ca_factory
 					l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
-					if l_is_attribute then
-						l_ca_factory.set_feature_custom_attributes (feat, l_setter_token)
-					end
 				end
 			end
 		end

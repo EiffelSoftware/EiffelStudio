@@ -87,7 +87,6 @@ feature -- Basic operations
 			if child /= Void then
 				child.on_first_display
 			end
-			{EV_CONTAINER_IMP} Precursor
 			already_displayed := True
 		end
 

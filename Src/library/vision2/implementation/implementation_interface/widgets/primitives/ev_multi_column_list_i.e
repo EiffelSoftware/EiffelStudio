@@ -241,6 +241,31 @@ feature -- Element change
 		deferred
 		end
 
+feature -- Basic operation
+
+	find_item_by_data (data: ANY): EV_MULTI_COLUMN_LIST_ROW is
+			-- Find a child with data equal to `data'.
+		require
+			exists: not destroyed
+			valid_data: data /= Void
+		local
+			list: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
+			litem: EV_MULTI_COLUMN_LIST_ROW
+		do
+			from
+				list := ev_children
+				list.start
+			until
+				list.after or Result /= Void
+			loop
+				litem ?= list.item.interface
+				if litem.data.is_equal (data) then
+					Result ?= litem
+				end
+				list.forth
+			end
+		end
+
 feature -- Event : command association
 
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	

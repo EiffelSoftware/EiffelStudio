@@ -25,14 +25,18 @@ feature
 			basic_text: BASIC_TEXT;
 			clickable_text: CLICKABLE_TEXT;
 			breakable_mark: BREAKABLE_MARK;
-			filter_item: FILTER_ITEM
+			filter_item: FILTER_ITEM;
+			class_name_text: CLASS_NAME_TEXT
 		do
 			new_line_text ?= t;
 			basic_text ?= t;
 			clickable_text ?= t;
 			breakable_mark ?= t;
+			class_name_text ?= t;
 		
-			if clickable_text /= void then
+			if class_name_text /= Void then
+				process_class_name_text (class_name_text)
+			elseif clickable_text /= void then
 				process_clickable_text (clickable_text)
 			elseif basic_text /= void then
 				process_basic_text (basic_text)
@@ -68,6 +72,11 @@ feature
 	process_clickable_text (t: CLICKABLE_TEXT) is
 		do
 			process_basic_text (t);
+		end;
+
+	process_class_name_text (t: CLASS_NAME_TEXT) is
+		do
+			process_clickable_text (t)
 		end;
 
 	process_breakable_mark (t: BREAKABLE_MARK) is

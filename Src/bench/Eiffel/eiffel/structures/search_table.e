@@ -3,19 +3,6 @@
 class SEARCH_TABLE [H -> HASHABLE]
 
 inherit
-
-	ARRAY [H]
-		rename
-			make as basic_make,
-			item as array_item,
-			put as array_put,
-			clear_all as array_clear_all,
-			force as array_force,
-			has as array_has,
-			count as array_count
-		export
-			{SEARCH_TABLE} area, lower, upper
-		end;
 	ARRAY [H]
 		rename
 			make as basic_make,
@@ -27,8 +14,6 @@ inherit
 		export
 			{SEARCH_TABLE} area, lower, upper
 		redefine
-			clear_all
-		select
 			clear_all
 		end
 
@@ -167,10 +152,10 @@ feature -- Insertion, deletion
 	clear_all is
 			-- Reset all items to default values.
 		do
-			array_clear_all;
-			deleted_marks.clear_all;
-			count := 0;
-			control := 0;
+			{ARRAY} precursor
+			deleted_marks.clear_all
+			count := 0
+			control := 0
 			position := 0
 		end;
 

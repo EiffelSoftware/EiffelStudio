@@ -43,8 +43,8 @@ feature {NONE} -- Initialization
 			y_hot_spot_small_enough: y_hot_spot < cursor_height
 			and_plane_not_void: and_plane /= Void
 			xor_plane_not_void: xor_plane /= Void
-			and_plane_not_empty: not and_plane.empty
-			xor_plane_not_empty: not xor_plane.empty
+			and_plane_not_empty: not and_plane.is_empty
+			xor_plane_not_empty: not xor_plane.is_empty
 		local
 			a1, a2: WEL_CHARACTER_ARRAY
 		do

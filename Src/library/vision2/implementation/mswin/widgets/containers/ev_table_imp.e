@@ -18,19 +18,17 @@ inherit
 	EV_TABLE_I
 
 	EV_CONTAINER_IMP
-		undefine
-			add_child_ok
 		redefine
-			add_child,
 			set_insensitive,
 			child_minwidth_changed,
 			child_minheight_changed,
 			on_first_display,
-			update_display
+			child_added
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		redefine
+			make,
 			move_and_resize
 		end
 
@@ -39,30 +37,24 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create a table widget with `par' as
 			-- parent.
 		local
-			par_imp: WEL_WINDOW
 			fix: FIXED_LIST [INTEGER]
 		do
-			par_imp ?= par.implementation
-			check
-				valid_parent: par_imp /= Void
-			end
-			make_with_coordinates (par_imp, "Table", 0, 0, 0, 0)
-			-- We create the implementation variables.
-			!! ev_children.make (1)
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
+			!! ev_children.make (2)
 			!! columns_value.make (1)
 			!! fix.make_filled (4)
 			columns_value.extend (fix)
 			!! rows_value.make (0)
 			!! fix.make_filled (4)
 			rows_value.extend (fix)
-			-- We initialise the default state of the table
 			set_homogeneous (Default_homogeneous)
 			set_row_spacing (Default_row_spacing)
 			set_column_spacing (Default_column_spacing)
+			set_text ("EV_TABLE")
 		end	
 
 feature -- Access
@@ -101,15 +93,18 @@ feature -- Status settings
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
 				-- `flag'.
+		local
+			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
 		do
 			if not ev_children.empty then
+				list := ev_children
 				from
-					ev_children.start
+					list.start
 				until
-					ev_children.after
+					list.after
 				loop
-					ev_children.item.widget.set_insensitive (flag)
-					ev_children.forth
+					list.item.widget.set_insensitive (flag)
+					list.forth
 				end
 			end
 			{EV_CONTAINER_IMP} Precursor (flag)
@@ -175,12 +170,12 @@ feature -- Status settings
 
 			-- We show the child and resize the container
 			child_imp.show
-			if already_displayed then
-				child_imp.on_first_display
-				child_minwidth_changed (child_imp.minimum_width, child_imp)
-				child_minheight_changed (child_imp.minimum_height, child_imp)
-				initialize_at_minimum
-			end
+			-- XX Normally the feature set_parent is called for all the
+			-- children then it should call on_first_display
+--			if already_displayed then
+--				child_imp.on_first_display
+				update_display
+--			end
 		end
 
 feature -- Element change
@@ -189,8 +184,102 @@ feature -- Element change
 				-- Add a child to the table. the child doesn't appear, it has to be
 				-- placed after in the table to be shown.
 		do
-			child := child_imp
-			child.hide
+			child_imp.hide
+		end
+
+	remove_child (child_imp: EV_WIDGET_IMP) is
+			-- Remove the given child from the children of
+			-- the container.
+		local
+			tchild: EV_TABLE_CHILD_IMP
+		do
+			child_minwidth_changed (0, child_imp)
+			child_minheight_changed (0, child_imp)
+			tchild := find_widget_child (child_imp)
+			ev_children.prune_all (tchild)
+			update_display
+		end
+
+	set_top_level_window_imp (a_window: WEL_WINDOW) is
+			-- Make `a_window' the new `top_level_window_imp'
+			-- of the widget.
+		local
+			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+		do
+			top_level_window_imp := a_window
+			if not ev_children.empty then
+				list := ev_children
+				from
+					list.start
+				until
+					list.after
+				loop
+					list.item.widget.set_top_level_window_imp (a_window)
+					list.forth
+				end
+			end
+		end
+
+feature -- Basic operations
+
+	propagate_background_color is
+			-- Propagate the current background color of the container
+			-- to the children.
+		local
+			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+		do
+			if not ev_children.empty then
+				list := ev_children
+				from
+					list.start
+				until
+					list.after
+				loop
+					list.item.widget.set_background_color (background_color)
+					list.forth
+				end
+			end
+		end
+
+	propagate_foreground_color is
+			-- Propagate the current foreground color of the container
+			-- to the children.
+		local
+			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+		do
+			if not ev_children.empty then
+				list := ev_children
+				from
+					list.start
+				until
+					list.after
+				loop
+					list.item.widget.set_foreground_color (foreground_color)
+					list.forth
+				end
+			end
+		end
+
+feature -- Assertions
+
+	add_child_ok: BOOLEAN is
+			-- Used in the precondition of
+			-- 'add_child'. True, if it is ok to add a
+			-- child to container
+		do
+			Result := True
+		end
+
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' a child of the container?
+		do
+			Result := find_widget_child (a_child) /= Void
+		end
+
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
+		do
+			Result := not a_child.shown
 		end
 
 feature {NONE} -- Implementation attributes
@@ -756,8 +845,8 @@ feature {NONE} -- EiffelVision implementation
 				end
 			end
 			already_displayed := True
-			child_minwidth_changed (0, child)
-			child_minheight_changed (0, child)
+			child_minwidth_changed (0, Void)
+			child_minheight_changed (0, Void)
 			initialize_at_minimum
   		end
 
@@ -768,9 +857,10 @@ feature {NONE} -- EiffelVision implementation
 			-- on the case.
 		do
 			if already_displayed then
-				child_minwidth_changed (0, child)
-				child_minheight_changed (0, child)				initialize_at_minimum
+				child_minwidth_changed (0, Void)
+				child_minheight_changed (0, Void)
 				initialize_at_minimum
+--				initialize_at_minimum
 				parent_ask_resize (child_cell.width, child_cell.height)
 			end
 		end

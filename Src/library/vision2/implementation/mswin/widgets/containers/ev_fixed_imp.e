@@ -16,9 +16,9 @@ inherit
 
 	EV_INVISIBLE_CONTAINER_IMP
 		redefine
+			make,
 			child_minwidth_changed,
-			child_minheight_changed,
-			update_display
+			child_minheight_changed
 		end
 		
 creation
@@ -26,38 +26,54 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create the fixed container in  ev_window.
-		local
-			par_imp: WEL_WINDOW
 		do
-			par_imp ?= par.implementation
-			check
-				parent_not_void: par_imp /= Void
-			end
-			initialize
-			make_with_coordinates (par_imp, "Fixed", 0, 0, 0, 0)
+			{EV_INVISIBLE_CONTAINER_IMP} Precursor
+			!! ev_children.make (2)
+			set_text ("EV_FIXED")
+		end
+
+feature -- Element change
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+		do
+			ev_children.extend (child_imp)
+		end
+
+	remove_child (child_imp: EV_WIDGET_IMP) is
+			-- Remove the given child from the children of
+			-- the container.
+		do
+			ev_children.prune_all (child_imp)
 		end
 
 feature {NONE} -- Implementation
-
-	update_display is
-			-- Do nothing for a non manager container.
-		do
-		end
-
-feature {NONE} -- Implementation for automatic size compute
 
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
 		do
+			check
+				Do_nothing_here: True
+			end
 		end
 
 	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
 		do
+			check
+				Do_nothing_here: True
+			end
+		end
+
+	update_display is
+			-- Update the display of the children in the container.
+		do
+			check
+				Do_nothing_here: True
+			end
 		end
 
 end -- class EV_FIXED_IMP

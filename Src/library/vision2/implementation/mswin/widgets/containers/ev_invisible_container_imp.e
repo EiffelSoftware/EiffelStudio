@@ -14,25 +14,14 @@ inherit
 	EV_INVISIBLE_CONTAINER_I
 
 	EV_CONTAINER_IMP
-		undefine
-			add_child_ok
 		redefine
-			add_child,
 			set_insensitive,
 			on_first_display
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 
-feature {NONE} -- Initialization
-
-	initialize is
-			-- Initialize the container by creating ev_children
-		do 
-			!! ev_children.make (2)
-		end
-
-feature {NONE} -- Access
+feature -- Access
 	
 	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			-- List of the children of the box
@@ -42,46 +31,121 @@ feature -- Status setting
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
    			-- `flag'.
+		local
+			list: ARRAYED_LIST [EV_WIDGET_IMP]
 		do
 			if not ev_children.empty then
+				list := ev_children
 				from
-					ev_children.start
+					list.start
 				until
-					ev_children.after
+					list.after
 				loop
-					ev_children.item.set_insensitive (flag)
-					ev_children.forth
+					list.item.set_insensitive (flag)
+					list.forth
 				end
 			end
 			{EV_CONTAINER_IMP} Precursor (flag)
 		end
 
-feature -- Implementation
+feature -- Element change
 
-	add_child (child_imp: EV_WIDGET_IMP) is
+	set_top_level_window_imp (a_window: WEL_WINDOW) is
+			-- Make `a_window' the new `top_level_window_imp'
+			-- of the widget.
+		local
+			list: ARRAYED_LIST [EV_WIDGET_IMP]
 		do
-			{EV_CONTAINER_IMP} Precursor (child_imp)
-			ev_children.extend (child_imp)
+			top_level_window_imp := a_window
+			if not ev_children.empty then
+				list := ev_children
+				from
+					list.start
+				until
+					list.after
+				loop
+					list.item.set_top_level_window_imp (a_window)
+					list.forth
+				end
+			end
 		end
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature -- Basic operation
 
 	on_first_display is
 			-- Called by the top_level window.
 		local
 			i: INTEGER
+			list: ARRAYED_LIST [EV_WIDGET_IMP]
 		do
 			if not ev_children.empty then
+				list := ev_children
 				from
 					i := 1
 				until
-					i = ev_children.count + 1
+					i = list.count + 1
 				loop
-					(ev_children @ i).on_first_display
+					(list @ i).on_first_display
 					i := i + 1
 				end
 			end
 			parent_ask_resize (minimum_width, minimum_height)
+		end
+
+feature -- Basic operations
+
+	propagate_background_color is
+			-- Propagate the current background color of the container
+			-- to the children.
+		local
+			list: ARRAYED_LIST [EV_WIDGET_IMP]
+		do
+			if not ev_children.empty then
+				list := ev_children
+				from
+					list.start
+				until
+					list.after
+				loop
+					list.item.set_background_color (background_color)
+					list.forth
+				end
+			end
+		end
+
+	propagate_foreground_color is
+			-- Propagate the current foreground color of the container
+			-- to the children.
+		local
+			list: ARRAYED_LIST [EV_WIDGET_IMP]
+		do
+			if not ev_children.empty then
+				list := ev_children
+				from
+					list.start
+				until
+					list.after
+				loop
+					list.item.set_foreground_color (foreground_color)
+					list.forth
+				end
+			end
+		end
+
+feature -- Assertion features
+
+	add_child_ok: BOOLEAN is
+			-- Used in the precondition of
+			-- 'add_child'. True, if it is ok to add a
+			-- child to container.
+		do
+			Result := True
+		end
+
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' a child of the container?
+		do
+			Result := ev_children.has (a_child)
 		end
 
 end -- class EV_INVISIBLE_CONTAINER_IMP

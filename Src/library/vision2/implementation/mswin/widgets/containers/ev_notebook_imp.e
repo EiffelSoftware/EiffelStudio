@@ -13,15 +13,13 @@ inherit
 	EV_NOTEBOOK_I
 
 	EV_CONTAINER_IMP
-		undefine
-			add_child_ok
 		redefine
-			plateform_build,
-			add_child,
 			child_minheight_changed,
 			child_minwidth_changed,
+			on_first_display,
 			set_insensitive,
-			on_first_display
+			set_default_minimum_size,
+			child_added
 		end
 
 	EV_FONTABLE_IMP
@@ -70,34 +68,23 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create a fixed widget with, `par' as
 			-- parent.
 			-- We cannot use make if we want to have access
 			-- to the creation data.
-		local
-			wel_imp: WEL_WINDOW
 		do
-			wel_imp ?= par.implementation
-			check
-				parent_not_void: wel_imp /= Void
-			end
-			wel_make (wel_imp, 0, 0, 10, 10, 0)
+			wel_make (default_parent.item, 0, 0, 0, 0, 0)
 			tab_pos := Pos_top
 		end
 
-	plateform_build (par: EV_CONTAINER_IMP) is
-			-- Called after creation. Set the current size and
-			-- notify the parent.
-		do
-			{EV_CONTAINER_IMP} Precursor (par)
-			set_font (font)
-			if tab_pos = Pos_top or tab_pos = Pos_bottom then
-				set_minimum_height (tab_height)
-			else
-				set_minimum_width (tab_height)
-			end
-		end
+feature -- Access
+
+	top_level_window_imp: WEL_WINDOW
+			-- Top level window that contains the current widget.
+
+	tab_pos: INTEGER
+			-- Actual position of the tab.
 
 feature -- Status report
 
@@ -108,12 +95,23 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_default_minimum_size is
+			-- Set the current minimum size.
+		do
+			set_font (font)
+			if tab_pos = Pos_top or tab_pos = Pos_bottom then
+				set_minimum_height (tab_height)
+			else
+				set_minimum_width (tab_height)
+			end
+		end
 	
 	set_tab_position (pos: INTEGER) is
 			-- set position of tabs (left, right, top or bottom)
 		do
  			tab_pos := pos
- 			set_style (default_style)
+ 			set_style (basic_style)
 			set_font (font)
 		end
 
@@ -168,13 +166,17 @@ feature -- Element change
 		-- label `label'.
 		local
 			wel_item: WEL_TAB_CONTROL_ITEM
-			widget_imp: WEL_WINDOW
+			ww: WEL_WINDOW
+			widget_imp: EV_WIDGET_IMP
 		do
-			widget_imp ?= child_imp
+			ww ?= child_imp
 			!! wel_item.make
 			wel_item.set_text (label)
-			wel_item.set_window (widget_imp)
+			wel_item.set_window (ww)
 			insert_item (count, wel_item)
+			widget_imp ?= child_imp
+			child_minwidth_changed (widget_imp.minimum_width, widget_imp)
+			child_minheight_changed (widget_imp.minimum_height, widget_imp)
 		end
 
 	set_font (f: EV_FONT) is
@@ -197,6 +199,49 @@ feature -- Element change
 			end
 		end
 
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into composite. In this container, `child' is the
+			-- child of the container whose page is currently selected.
+		do
+			child_imp.hide
+		end
+
+	remove_child (a_child: EV_WIDGET_IMP) is
+			-- Remove the given child from the children of
+			-- the container.
+		local
+			index: INTEGER
+		do
+			index := get_child_index (a_child)
+			child_minwidth_changed (0, a_child)
+			child_minheight_changed (0, a_child)
+			delete_item (index - 1)
+		end
+
+	set_top_level_window_imp (a_window: WEL_WINDOW) is
+			-- Make `a_window' the new `top_level_window_imp'
+			-- of the widget.
+		local
+			index: INTEGER
+			child_item: WEL_TAB_CONTROL_ITEM
+			child_imp: EV_WIDGET_IMP
+		do
+			top_level_window_imp := a_window
+			from
+				index := 0
+			until
+				index = count
+			loop
+				child_item := get_item (index)
+				child_imp ?= child_item.window
+				check
+					child_imp_not_void: child_imp /= Void
+				end
+				child_imp.set_top_level_window_imp (a_window)
+				index := index + 1
+			end
+		end
+
 feature -- Event - command association
 	
 	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -215,27 +260,136 @@ feature -- Event -- removing command association
 			remove_command (Cmd_switch)
 		end	
 
-feature -- Implementation
+feature -- Basic operation
 
-	tab_pos: INTEGER
-			-- Actual position of the tab.
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite. In this container, `child' is the
-			-- child of the container whose page is currently selected.
+	propagate_background_color is
+			-- Propagate the current background color of the container
+			-- to the children.
+		local
+			index: INTEGER
+			child_item: WEL_TAB_CONTROL_ITEM
+			child_imp: EV_WIDGET_IMP
 		do
-			{EV_CONTAINER_IMP} Precursor (child_imp)
-			child_imp.hide
+			from
+				index := 0
+			until
+				index = count
+			loop
+				child_item := get_item (index)
+				child_imp ?= child_item.window
+				check
+					child_imp_not_void: child_imp /= Void
+				end
+				child_imp.set_background_color (background_color)
+				index := index + 1
+			end
 		end
 
-	top_level_window_imp: WEL_WINDOW
-			-- Top level window that contains the current widget.
-
-	set_top_level_window_imp (a_window: WEL_WINDOW) is
-			-- Make `a_window' the new `top_level_window_imp'
-			-- of the widget.
+	propagate_foreground_color is
+			-- Propagate the current foreground color of the container
+			-- to the children.
+		local
+			index: INTEGER
+			child_item: WEL_TAB_CONTROL_ITEM
+			child_imp: EV_WIDGET_IMP
 		do
-			top_level_window_imp := a_window
+			from
+				index := 0
+			until
+				index = count
+			loop
+				child_item := get_item (index)
+				child_imp ?= child_item.window
+				check
+					child_imp_not_void: child_imp /= Void
+				end
+				child_imp.set_foreground_color (foreground_color)
+				index := index + 1
+			end
+		end
+
+	get_child_index (a_child: EV_WIDGET_IMP): INTEGER is
+			-- Return the index of the children in the notebook.
+		require
+			valid_child: is_child (a_child)
+		local
+			test: BOOLEAN
+			child_item: WEL_TAB_CONTROL_ITEM
+			child_imp: EV_WIDGET_IMP
+		do
+			from
+				Result := 0
+			until
+				(Result = count) or test
+			loop
+				Result := Result + 1
+				child_item := get_item (Result)
+				child_imp ?= child_item.window
+				if a_child.is_equal (child_imp) then
+					test := True
+				end
+			end
+		end
+
+	on_first_display is
+			-- Called by the top_level window.
+			-- Almost the same action than adjust_items.
+		local
+			index: INTEGER
+			child_item: WEL_TAB_CONTROL_ITEM
+			child_imp: EV_WIDGET_IMP
+		do
+			from
+				index := 0
+			until
+				index = count
+			loop
+				child_item := get_item (index)
+				child_imp ?= child_item.window
+				check
+					child_imp_not_void: child_imp /= Void
+				end
+				child_imp.on_first_display
+				index := index + 1
+			end
+		end
+
+feature -- Assertion features
+
+	add_child_ok: BOOLEAN is
+			-- True, if it is ok to add a child to
+			-- container. With a notebook, it is 
+			-- always ok.
+		do
+			Result := True
+		end
+
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' a child of the container?
+			-- We cannot use the usual context.
+			-- A child is a child if the notebook is
+			-- its parent.
+		local
+			index: INTEGER
+			child_item: WEL_TAB_CONTROL_ITEM
+			child_imp: EV_WIDGET_IMP
+		do
+			from
+				index := 0
+			until
+				(index = count) or Result
+			loop
+				child_item := get_item (index)
+				child_imp ?= child_item.window
+				Result := a_child.is_equal (child_imp)
+				index := index + 1
+			end
+		end
+
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
+		do
+			Result := not a_child.shown
 		end
 
 feature {NONE} -- Implementation for automatic size compute
@@ -274,29 +428,6 @@ feature {NONE} -- Implementation for automatic size compute
 
 feature {NONE} -- WEL Implementation
 
-	on_first_display is
-			-- Called by the top_level window.
-			-- Almost the same action than adjust_items.
-		local
-			index: INTEGER
-			child_item: WEL_TAB_CONTROL_ITEM
-			child_imp: EV_WIDGET_IMP
-		do
-			from
-				index := 0
-			until
-				index = count
-			loop
-				child_item := get_item (index)
-				child_imp ?= child_item.window
-				check
-					child_imp_not_void: child_imp /= Void
-				end
-				child_imp.on_first_display
-				index := index + 1
-			end
-		end
-
 	adjust_items is
 			-- Adjust the size of the windows of the items
 			-- to the current size.
@@ -321,6 +452,14 @@ feature {NONE} -- WEL Implementation
 		end
 
  	default_style: INTEGER is
+ 			-- Default style used to create the control
+		do
+			Result := Ws_child + Ws_visible + Ws_group
+				+ Ws_tabstop + Ws_clipchildren + Ws_clipsiblings
+				+ Tcs_singleline
+		end
+
+ 	basic_style: INTEGER is
  			-- Default style used to create the control
  		do
  			Result := Ws_visible + Ws_child + Ws_group + Ws_tabstop

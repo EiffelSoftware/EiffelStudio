@@ -11,7 +11,7 @@ class
 inherit
 	EV_SCROLLABLE_AREA_I
 
-	EV_CONTAINER_IMP
+	EV_SINGLE_CHILD_CONTAINER_IMP
 		redefine
 			child_minwidth_changed,
 			child_minheight_changed,
@@ -20,6 +20,7 @@ inherit
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		redefine
+			make,
 			default_ex_style,
 			move_and_resize
 		end
@@ -29,16 +30,23 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-		local
-			par_imp: WEL_COMPOSITE_WINDOW
+	make is
 		do
-			par_imp ?= par.implementation
-			check
-				parent_not_void: par_imp /= Void
-			end
-			wel_make (par_imp, "Scrollable Area")
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
+			set_text ("Scrollable Area")
 			!! scroller.make_with_options (Current, 0, 10, 0, 10, 1, 20, 1, 20)
+		end
+
+feature -- Element change
+
+	set_top_level_window_imp (a_window: WEL_WINDOW) is
+			-- Make `a_window' the new `top_level_window_imp'
+			-- of the widget.
+		do
+			top_level_window_imp := a_window
+			if child /= Void then
+				child.set_top_level_window_imp (a_window)
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -14,7 +14,8 @@ inherit
 	EV_SPLIT_AREA_IMP
 		redefine
 			child_minwidth_changed,
-			child_minheight_changed
+			child_minheight_changed,
+			set_default_minimum_size
 		end
 	
 creation
@@ -58,6 +59,14 @@ feature {NONE} -- Access
 			else
 				Result := width - child2.minimum_width - size
 			end
+		end
+
+feature -- Element change
+
+	set_default_minimum_size is
+			-- Initialize the size of the widget.
+		do
+			set_minimum_height (size)
 		end
 
 feature {NONE} -- Basic operation

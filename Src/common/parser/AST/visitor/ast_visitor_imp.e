@@ -385,14 +385,6 @@ feature -- Implementation
 		do
 		end
 
-	process_exp_type_as (l_as: EXP_TYPE_AS) is
-		do
-		end
-
-	process_separate_type_as (l_as: SEPARATE_TYPE_AS) is
-		do
-		end
-
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 		do
 		end
@@ -489,5 +481,8 @@ feature -- Implementation
 		do
 		end
 
+	process_void_as (l_as: VOID_AS) is
+		do
+		end
 
 end -- class AST_VISITOR_IMP

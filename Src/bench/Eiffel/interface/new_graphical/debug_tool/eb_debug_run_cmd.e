@@ -239,10 +239,15 @@ feature -- Execution
 					Application.remove_condition (f, index)
 						-- Run the program
 					execute
-						-- Put back the status of the modified breakpoint.
+						-- Put back the status of the modified breakpoint This will prevent
+						-- the display of the temporary breakpoint (if not already present
+						-- at `index' in `f'.)
 					Application.set_breakpoint_status (f, index, old_bp_status)
 					if old_bp_status /= 0 and cond /= Void then
-						Application.set_condition (f, index, cond)
+							-- Restore condition after we stopped, otherwise if the evaluation
+							-- does not evaluate to True then it will not stopped.
+						debugger_manager.set_on_stopped_action (
+							agent application.set_condition (f, index, cond))
 					end
 				end
 			else

@@ -42,10 +42,15 @@ feature -- Settings
 			i: INTEGER
 			block_rva: INTEGER
 		do
-			block_rva := pad_up (data_location, Block_size) - Block_size
+			block_rva := pad_up (data_location, Block_size)
+			if block_rva /= data_location then
+					-- Block was not aligned on a `Block_size' boundary, so we remove `Block_size'
+					-- from `block_rva' to find in which `Block_size' RVA is `data_location'.
+				block_rva := block_rva - Block_size	
+			end
 			i := data_location - block_rva
 			c_set_block_rva (item, block_rva)
-			c_set_fixup (item, feature {CLI_PE_FILE_CONSTANTS}.Image_reloc_highlow |
+			c_set_fixup (item, feature {CLI_PE_FILE_CONSTANTS}.Image_reloc_highlow +
 				i.to_integer_16)
 		end
 

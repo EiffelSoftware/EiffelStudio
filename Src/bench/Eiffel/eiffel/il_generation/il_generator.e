@@ -172,6 +172,7 @@ feature {NONE} -- Type description
 				-- and IDs used by the IL code generator in a topological
 				-- order.
 			generate_class_mappings (classes)
+			generate_class_attributes (classes)
 
 				-- Generate only features description for each Eiffel class type
 				-- with their IL code.
@@ -251,6 +252,44 @@ feature {NONE} -- Type description
 				i := i + 1
 			end
 			degree_output.put_end_degree
+		end
+
+	generate_class_attributes (classes: ARRAY [CLASS_C]) is
+			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
+			-- topological order.
+		require
+			classes_not_void: classes /= Void
+		local
+			class_c: CLASS_C
+			i, nb: INTEGER
+			types: TYPE_LIST
+		do
+			from
+				i := classes.lower
+				nb := classes.upper
+			variant
+				nb - i + 1
+			until
+				i > nb
+			loop
+				class_c := classes.item (i)
+				if class_c /= Void and then not class_c.is_external then
+					System.set_current_class (class_c)
+					from
+						types := class_c.types
+						types.start
+					until
+						types.after
+					loop
+							-- Generate correspondance between Eiffel IDs and
+							-- CIL information.
+						Il_generator.generate_class_attributes (types.item)
+
+						types.forth
+					end
+				end
+				i := i + 1
+			end
 		end
 
 	generate_features_description (classes: ARRAY [CLASS_C]) is

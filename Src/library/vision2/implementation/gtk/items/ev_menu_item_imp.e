@@ -19,6 +19,8 @@ inherit
 	EV_SIMPLE_ITEM_IMP
 		undefine
 			pixmap_size_ok
+		redefine
+			parent_imp
 		end
 
 	EV_MENU_ITEM_HOLDER_IMP
@@ -87,29 +89,6 @@ feature -- Status setting
  		end
 
 feature -- Element change
-
-	set_parent (par: EV_MENU_ITEM_HOLDER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		local
-			par_imp: EV_MENU_ITEM_HOLDER_IMP
-		do
-			if parent_imp /= Void then
-				gtk_object_ref (widget)
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				par_imp ?= par.implementation
-				check
-					parent_not_void: par_imp /= Void
-				end
-				parent_imp := par_imp
-				par_imp.add_item (Current)
-				show
-				gtk_object_unref (widget)
-			end
-		end
 
 	set_index (pos: INTEGER) is
 			-- Make `pos' the new index of the item in the

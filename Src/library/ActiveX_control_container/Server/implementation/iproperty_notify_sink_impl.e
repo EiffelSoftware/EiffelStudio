@@ -17,14 +17,14 @@ feature -- Basic Operations
 			-- No description available.
 			-- `disp_id' [in].  
 		do
-			-- Put Implementation here.
+			-- No Implementation.
 		end
 
 	on_request_edit (disp_id: INTEGER) is
 			-- No description available.
 			-- `disp_id' [in].  
 		do
-			-- Put Implementation here.
+			-- No Implementation.
 		end
 
 

@@ -109,16 +109,16 @@ feature -- Access
 	creation_name: STRING;
 			-- Creation procedure name
 
-	c_file_names: FIXED_LIST [STRING];
+	c_file_names: LIST [STRING];
 			-- C file names to include
 
-	include_paths: FIXED_LIST [STRING];
+	include_paths: LIST [STRING];
 			-- Include paths to add in the Makefile C flags
 
-	object_file_names: FIXED_LIST [STRING];
+	object_file_names: LIST [STRING];
 			-- Object file names to link with the application
 
-	makefile_names: FIXED_LIST [STRING];
+	makefile_names: LIST [STRING];
 			-- Makefile names to execute before the linking
 
 feature -- Access for the precompilation configuration

@@ -2168,7 +2168,7 @@ feature -- Case storage informatio
 			end
 		end
 
-	deal_with_loc (loc: FIXED_LIST [TYPE_DEC_AS]; li_st: LINKED_LIST [STRING] ) is
+	deal_with_loc (loc: EIFFEL_LIST [TYPE_DEC_AS]; li_st: LINKED_LIST [STRING] ) is
 		local
 			id_list: FIXED_LIST [ ID_AS ]
 			line: TYPE_DEC_AS

@@ -43,7 +43,7 @@ feature
 			-- Clone
 		do
 			{EIFFEL_LIST} Precursor (other)
-			set_argument_names (clone (argument_names))
+			set_argument_names (clone (other.argument_names))
 		end
 
 	set_argument_names (n: like argument_names) is

@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			unprocessed_l: like unprocessed_values;
 			args_list: like private_arguments;
 			feat_args: E_FEATURE_ARGUMENTS;
-			arg_names: FIXED_LIST [STRING];
+			arg_names: LIST [STRING];
 			rout: like routine
 		do
 debug ("DEBUGGER_TRACE")

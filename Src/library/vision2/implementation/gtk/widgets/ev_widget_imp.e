@@ -114,9 +114,15 @@ feature -- Status report
 		end
 
 	shown: BOOLEAN is
-			-- Is current widget visible?
+			-- Is current widget visible in the parent?
                 do
                         Result := c_gtk_widget_visible (widget)
+		end
+
+	displayed: BOOLEAN is
+			-- Is current widget visible on the screen?
+                do
+                        Result := c_gtk_widget_displayed (widget)
 		end
 
 feature -- Status setting
@@ -439,7 +445,7 @@ feature -- Event - command association
 	
 	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		do
-			add_command (widget, "destroy", cmd, arg)
+			add_command (widget, "destroy", cmd, arg, default_pointer)
 		end
 	
 	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

@@ -316,6 +316,7 @@ feature {NONE} -- Implementation
 			split_area: EV_HORIZONTAL_SPLIT_AREA
 		do
 			create Result
+			Result.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 			Result.set_minimum_size (300, 250)
 			Result.set_title ("EV_FIXED child positioner")
 			create vertical_box
@@ -726,6 +727,7 @@ feature {NONE} -- Implementation
 				draw_widgets
 			end
 			if moving_widget then
+				widget := first.i_th (selected_item_index)
 					-- Update scrolling status.
 				update_scrolling (x, y)
 				if snap_button.is_selected then

@@ -240,7 +240,7 @@ feature -- Output
 			text.wipe_out;
 			wipe_out;
 				-- Reset the values for output window to default
-			init_values (false);
+			init_values;
 		ensure then
 			empty_text: text.empty;
 		end;

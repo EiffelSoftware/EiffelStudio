@@ -11,7 +11,7 @@ feature -- Access
 	Scf_all: INTEGER is
 			-- Apply format to all text.
 		external
-			"C [macro <richedit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"SCF_ALL"
 		end
@@ -19,7 +19,7 @@ feature -- Access
 	Scf_selection: INTEGER is
 			-- Apply format to selection only.
 		external
-			"C [macro <richedit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"SCF_SELECTION"
 		end
@@ -27,7 +27,7 @@ feature -- Access
 	Scf_word: INTEGER is
 			-- Apply format to word only.
 		external
-			"C [macro <richedit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"SCF_WORD"
 		end

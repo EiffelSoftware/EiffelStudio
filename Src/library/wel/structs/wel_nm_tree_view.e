@@ -36,6 +36,13 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	action: INTEGER is
+			-- Information about the notification-specific action flag.
+			-- See class WEL_TVAF_CONSTANTS for the meaning of this parameter.
+		do
+			Result := cwel_nm_treeview_get_action (item)
+		end
+
 	new_item: WEL_TREE_VIEW_ITEM is
 			-- Information about the new item state
 		do
@@ -48,6 +55,14 @@ feature -- Access
 			-- Information about the old item state
 		do
 			!! Result.make_by_pointer (cwel_nm_treeview_get_itemold (item))
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	position: WEL_POINT is
+			-- Mouse coordinates when notification occurred.
+		do
+			!! Result.make_by_pointer (cwel_nm_treeview_get_ptdrag (item))
 		ensure
 			result_not_void: Result /= Void
 		end

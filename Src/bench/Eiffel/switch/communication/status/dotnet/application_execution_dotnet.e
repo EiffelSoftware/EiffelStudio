@@ -398,6 +398,7 @@ feature -- Execution
 				eifnet_debugger.set_last_control_mode_is_kill
 				eifnet_debugger.terminate_debugging
 			end
+			application.process_termination
 		end
 
 	process_termination is

@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 			timer.destroy
 			timer := Void
 			triggering_item := Void
-			Precursor
+			Precursor {EV_TEXT_FIELD_IMP}
 		end
 		
 feature {EV_ANY_I} -- Implementation

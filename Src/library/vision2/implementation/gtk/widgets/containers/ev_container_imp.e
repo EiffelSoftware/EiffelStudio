@@ -300,7 +300,7 @@ feature -- Command
 			--| being destroyed when the container is destroyed.
 		do
 			interface.wipe_out
-			Precursor				
+			Precursor {EV_WIDGET_IMP}
 		end
 
 feature -- Event handling

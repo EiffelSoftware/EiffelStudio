@@ -225,7 +225,7 @@ feature -- Status setting
 			remove_menu_bar
 		--	lower_bar.destroy
 		--	upper_bar.destroy
-			Precursor
+			Precursor {EV_CONTAINER_IMP}
 		end
 
 	hide is

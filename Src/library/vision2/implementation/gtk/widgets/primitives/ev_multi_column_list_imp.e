@@ -483,7 +483,7 @@ feature -- Status setting
 			-- Destroy screen widget implementation and EV_LIST_ITEM objects.
 		do
 			clear_items
-			{EV_PRIMITIVE_IMP} Precursor 
+			Precursor {EV_PRIMITIVE_IMP}
 		end
 
 	show_title_row is

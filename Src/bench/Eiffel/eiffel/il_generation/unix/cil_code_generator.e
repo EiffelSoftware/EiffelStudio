@@ -308,6 +308,11 @@ feature -- Settings
 
 feature -- Cleanup
 
+	clean_debug_information (a_class_type: CLASS_TYPE) is
+			-- Clean recorded debug information.
+		do
+		end
+
 	cleanup is
 			-- Clean up all data structures that were used for this code generation.
 		do

@@ -441,6 +441,12 @@ feature {NONE} -- Settings
 
 feature -- Cleanup
 
+	clean_debug_information (a_class_type: CLASS_TYPE) is
+			-- Clean recorded debug information.
+		do
+			Il_debug_info_recorder.clean_class_type_info_for (a_class_type)
+		end
+		
 	cleanup is
 			-- Clean up all data structures that were used for this code generation.
 		local

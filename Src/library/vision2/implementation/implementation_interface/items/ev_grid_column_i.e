@@ -35,14 +35,14 @@ feature {NONE} -- Initialization
 
 feature {EV_GRID_I} -- Initialization
 
-	set_grid_i (a_grid_i: EV_GRID_I) is
+	set_parent_i (a_grid_i: EV_GRID_I) is
 			-- Make `Current' associated with `a_grid_i'
 		require
 			a_grid_i_not_void: a_grid_i /= Void
 		do
-			parent_grid_i := a_grid_i
+			parent_i := a_grid_i
 		ensure
-			parent_grid_i = a_grid_i
+			parent_i = a_grid_i
 		end
 
 	set_physical_index (a_index: INTEGER) is
@@ -75,7 +75,7 @@ feature -- Access
 			i_less_than_count: i <= count
 			is_parented: parent /= Void
 		do
-			Result := parent_grid_i.item (index, i)
+			Result := parent_i.item (index, i)
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -83,8 +83,8 @@ feature -- Access
 	parent: EV_GRID is
 			-- Grid to which current column belongs
 		do
-			if parent_grid_i /= Void then
-				Result := parent_grid_i.interface
+			if parent_i /= Void then
+				Result := parent_i.interface
 			end
 		end
 		
@@ -104,7 +104,7 @@ feature -- Access
 			until
 				i > count
 			loop
-				a_item := parent_grid_i.item_internal (index, i, create_if_void)
+				a_item := parent_i.item_internal (index, i, create_if_void)
 				if a_item /= Void and then a_item.is_selected then
 					Result.extend (a_item.interface)
 				end
@@ -131,7 +131,7 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			Result := parent_grid_i.grid_columns.index_of (Current, 1)
+			Result := parent_i.columns.index_of (Current, 1)
 		ensure
 			index_positive: Result > 0
 			index_less_than_column_count: Result <= parent.column_count
@@ -142,7 +142,7 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			Result := parent_grid_i.row_count
+			Result := parent_i.row_count
 		ensure
 			count_positive: Result > 0
 		end
@@ -150,7 +150,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected.
 		do
-			if parent_grid_i /= Void then
+			if parent_i /= Void then
 				Result := selected_item_count = count
 			end		
 		end
@@ -164,7 +164,7 @@ feature -- Element change
 			a_item_not_void: a_item /= Void
 			is_parented: parent /= Void
 		do
-			parent_grid_i.set_item (index, i, a_item)
+			parent_i.set_item (index, i, a_item)
 		ensure
 			item_set: item (i) = a_item
 		end
@@ -206,28 +206,28 @@ feature -- Element change
 			is_parented: parent /= Void
 		do
 			header_item.set_width (a_width)
-			parent_grid_i.header.item_resize_end_actions.call ([header_item])
+			parent_i.header.item_resize_end_actions.call ([header_item])
 		ensure
 			width_set: width = a_width
 		end
 
 feature {EV_GRID_I} -- Implementation
 
-	remove_parent_grid_i is
-			-- Set `parent_grid_i' to Void
+	remove_parent_i is
+			-- Set `parent_i' to Void
 		require
 			is_parented: parent /= Void
 		do
-			parent_grid_i := Void
+			parent_i := Void
 		ensure
-			parent_grid_i_unset: parent_grid_i = Void
+			parent_i_unset: parent_i = Void
 		end
 
 	enable_select is
 			-- Select the object.
 		do
 			selected_item_count := count
-			parent_grid_i.redraw_client_area
+			parent_i.redraw_client_area
 			fixme ("EV_GRID_COLUMN_I:enable_select - Perform a more optimal redraw when available")	
 		end
 
@@ -277,9 +277,9 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN} -- Implementation
 		-- Is the column visible in the grid?
 
 	physical_index: INTEGER
-		-- Physical index of column row data stored in `parent_grid_i'
+		-- Physical index of column row data stored in `parent_i'
 
-	parent_grid_i: EV_GRID_I
+	parent_i: EV_GRID_I
 		-- Grid that `Current' resides in.
 		
 	header_item: EV_HEADER_ITEM

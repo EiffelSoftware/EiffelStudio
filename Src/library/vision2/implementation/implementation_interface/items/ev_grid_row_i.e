@@ -55,15 +55,15 @@ feature {EV_GRID_I} -- Initialization
 			internal_index := a_index
 		end
 
-	set_grid_i (a_grid_i: EV_GRID_I) is
+	set_parent_i (a_grid_i: EV_GRID_I) is
 			-- Make `Current' associated with `a_grid_i'
 		require
 			a_grid_i_not_void: a_grid_i /= Void
-			grid_not_already_set: parent_grid_i = Void
+			grid_not_already_set: parent_i = Void
 		do
-			parent_grid_i := a_grid_i
+			parent_i := a_grid_i
 		ensure
-			parent_grid_i = a_grid_i
+			parent_i = a_grid_i
 		end
 
 feature -- Access
@@ -106,8 +106,8 @@ feature -- Access
 	parent: EV_GRID is
 			-- Grid to which current row belongs
 		do
-			if parent_grid_i /= Void then
-				Result := parent_grid_i.interface
+			if parent_i /= Void then
+				Result := parent_i.interface
 			end
 		end
 
@@ -117,7 +117,7 @@ feature -- Access
 			i_within_bounds: i > 0 and i <= count
 			is_parented: parent /= Void
 		do
-			Result := parent_grid_i.item (i, index)
+			Result := parent_i.item (i, index)
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -139,7 +139,7 @@ feature -- Access
 				i > count
 			loop
 					-- If `is_selected' then we need to make sure there are no Void items contained within `Current'
-				a_item := parent_grid_i.item_internal (i, index, create_if_void)
+				a_item := parent_i.item_internal (i, index, create_if_void)
 				if a_item /= Void and then a_item.is_selected then
 					Result.extend (a_item.interface)
 				end
@@ -192,15 +192,15 @@ feature -- Status report
 			Result := internal_index
 		ensure
 			index_positive: Result > 0
-			indexes_equivalent: parent_grid_i.grid_rows.i_th (internal_index) = Current
+			indexes_equivalent: parent_i.rows.i_th (internal_index) = Current
 			index_less_than_row_count: Result <= parent.row_count
 		end
 
 	count: INTEGER is
 			-- Number of items in current
 		do
-			if parent_grid_i /= Void then
-				Result := parent_grid_i.column_count
+			if parent_i /= Void then
+				Result := parent_i.column_count
 			end
 		ensure
 			count_not_negative: count >= 0
@@ -238,12 +238,12 @@ feature -- Status setting
 				update_parent_expanded_node_counts_recursively (expanded_items)
 					-- Update the expanded node counts for `Current' and all parent nodes.
 					
-				parent_grid_i.adjust_hidden_node_count ( - expanded_items)
+				parent_i.adjust_hidden_node_count ( - expanded_items)
 					-- Update the hidden node count.
 			
-				parent_grid_i.recompute_row_offsets (index)
-				parent_grid_i.recompute_vertical_scroll_bar
-				parent_grid_i.redraw_client_area
+				parent_i.recompute_row_offsets (index)
+				parent_i.recompute_vertical_scroll_bar
+				parent_i.redraw_client_area
 			end
 		ensure
 			is_expanded: is_expanded
@@ -278,12 +278,12 @@ feature -- Status setting
 				update_parent_expanded_node_counts_recursively (- collapsed_items)
 					-- Update the expanded node counts for `Current' and all parent nodes.
 					
-				parent_grid_i.adjust_hidden_node_count (collapsed_items)
+				parent_i.adjust_hidden_node_count (collapsed_items)
 					-- Update the hidden node count.
 				
-				parent_grid_i.recompute_row_offsets (index)
-				parent_grid_i.recompute_vertical_scroll_bar
-				parent_grid_i.redraw_client_area
+				parent_i.recompute_row_offsets (index)
+				parent_i.recompute_vertical_scroll_bar
+				parent_i.redraw_client_area
 			end
 		ensure
 			not_is_expanded: not is_expanded
@@ -295,8 +295,8 @@ feature -- Status setting
 			is_parented: parent /= Void
 		do
 			internal_height := a_height
-			if not parent_grid_i.is_row_height_fixed then
-				parent_grid_i.recompute_row_offsets (index)
+			if not parent_i.is_row_height_fixed then
+				parent_i.recompute_row_offsets (index)
 			end
 		ensure
 			height_set: height = a_height
@@ -311,7 +311,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			a_item_not_void: a_item /= Void
 			is_parented: parent /= Void
 		do
-			parent_grid_i.set_item (i, index, a_item)
+			parent_i.set_item (i, index, a_item)
 		ensure
 			item_set: item (i) = a_item
 		end
@@ -349,11 +349,11 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			end
 			
 				-- Update the hidden node count in the parent grid.
-			parent_grid_i.adjust_hidden_node_count ((row_imp.subnode_count_recursive + 1) - row_imp.expanded_subnode_count_recursive)
+			parent_i.adjust_hidden_node_count ((row_imp.subnode_count_recursive + 1) - row_imp.expanded_subnode_count_recursive)
 			
-			parent_grid_i.recompute_row_offsets (index)
-			parent_grid_i.recompute_vertical_scroll_bar
-			parent_grid_i.redraw_client_area
+			parent_i.recompute_row_offsets (index)
+			parent_i.recompute_vertical_scroll_bar
+			parent_i.redraw_client_area
 		ensure
 			added: a_row.parent_row = interface
 			subrow (subrow_count) = a_row
@@ -383,8 +383,8 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			-- Select the object.
 		do
 			selected_item_count := count
-			parent_grid_i.update_row_selection_status (Current)
-			parent_grid_i.redraw_client_area
+			parent_i.update_row_selection_status (Current)
+			parent_i.redraw_client_area
 			fixme ("EV_GRID_ROW_I:enable_select - Perform a more optimal redraw when available")	
 		end
 
@@ -392,8 +392,8 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			-- Deselect the object.
 		do
 			disable_select_internal
-			parent_grid_i.update_row_selection_status (Current)
-			parent_grid_i.redraw_client_area
+			parent_i.update_row_selection_status (Current)
+			parent_i.redraw_client_area
 			fixme ("EV_GRID_ROW_I:disable_select - Perform a more optimal redraw when available")	
 		end
 
@@ -405,15 +405,15 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 
 feature {EV_GRID_I} -- Implementation
 
-	remove_parent_grid_i  is
-			-- Set `parent_grid_i' to `Void.
+	remove_parent_i  is
+			-- Set `parent_i' to `Void.
 		require
 			is_parented: parent /= Void
 		do
-			parent_grid_i := Void
+			parent_i := Void
 			internal_index := 0
 		ensure
-			parent_grid_i_unset: parent_grid_i = Void
+			parent_i_unset: parent_i = Void
 		end
 
 feature {EV_GRID_ROW_I} -- Implementation
@@ -467,7 +467,7 @@ feature {EV_GRID_I} -- Implementation
 			until
 				i > count
 			loop
-				a_item := parent_grid_i.item_internal (i, index, False)
+				a_item := parent_i.item_internal (i, index, False)
 				if a_item /= Void and then a_item.internal_is_selected then
 					a_item.disable_select_internal
 				end
@@ -479,7 +479,7 @@ feature {EV_GRID_I} -- Implementation
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 
-	parent_grid_i: EV_GRID_I
+	parent_i: EV_GRID_I
 		-- Grid that `Current' resides in.
 		
 	parent_row_i: EV_GRID_ROW_I

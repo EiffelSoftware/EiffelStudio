@@ -57,15 +57,25 @@ typedef unsigned int uint32;
 /*
  * Integer 32 bit constants
  */
+#ifndef INT32_MAX
 #define INT32_MAX 2147483647
+#endif
+
+#ifndef INT32_MIN
 #define INT32_MIN (- INT32_MAX - 1)
+#endif
 
 /*
  * Integer 16 bit constants
  */
 
-#define INT16_MAX 65535
-#define UINT16_MAX 32767
+#ifndef INT16_MAX
+#define INT16_MAX 32767
+#endif
+
+#ifndef UINT16_MAX
+#define UINT16_MAX 65535U
+#endif
 
 /*
  * Scope control pseudo-keywords

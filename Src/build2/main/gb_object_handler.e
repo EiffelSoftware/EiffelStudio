@@ -1200,7 +1200,7 @@ feature {GB_COMMAND_DELETE_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implement
 				editor := editors.item
 					-- Update the editor if `Current' or a child of `Current'
 					-- is contained.
-				if editor.object /= Void and (object_contained_in_object (deleted_object, editor.object) or
+				if editor.object /= Void and then (object_contained_in_object (deleted_object, editor.object) or
 					deleted_object = editor.object) then
 						-- If we are the docked object editor, then just empty it.
 						-- If not, we destroy the editor and the containing window.

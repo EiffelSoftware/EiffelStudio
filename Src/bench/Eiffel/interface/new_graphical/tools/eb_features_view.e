@@ -114,6 +114,7 @@ feature -- Status setting
 					managed_formatters.item.set_stone (fst)
 					managed_formatters.forth
 				end
+				internal_stone := Void
 			elseif
 				internal_stone /= Void and then
 				internal_stone.e_feature /= fst.e_feature or else

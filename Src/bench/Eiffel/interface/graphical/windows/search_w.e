@@ -33,16 +33,14 @@ feature -- Initialization
 			tool := a_tool;
 			srd_make (Interface_names.n_X_resource_name, a_tool.popup_parent);
 			set_title (Interface_names.t_Search);
-			if a_tool.has_editable_text then
-				set_replace
-			else
-				set_search
-			end;
 			add_find_action (Current, find_it);
 			add_replace_action (Current, replace_it);
 			add_replace_all_action (Current, replace_it_all);
 			add_cancel_action (Current, cancel_it);
-			set_composite_attributes (Current)
+			set_composite_attributes (Current);
+			set_default_position (False);
+			hide_direction_request;
+			realize;
 		end;
 
 feature -- Closing
@@ -50,7 +48,6 @@ feature -- Closing
 	close is
 		do
 			if is_popped_up then
-				unrealize;
 				popdown
 			end
 		end;
@@ -59,9 +56,30 @@ feature -- Access
 
 	call is
 			-- Record calling text_window `a_text_window' and popup current.
+		local
+			new_x, new_y: INTEGER;
+			p: like parent
 		do
-			popup;
-			raise
+			if tool.has_editable_text then
+				set_replace
+			else
+				set_search
+			end;
+			p := parent;
+			new_x := p.x + (p.width - width) // 2;
+			new_y := p.x - (height // 2);
+			if new_x + width > screen.width then
+				new_x := screen.width - width
+			elseif new_x < 0 then
+				new_x := 0
+			end;
+			if new_y + height > screen.height then
+				new_y := screen.height - height
+			elseif new_y < 0 then
+				new_y := 0
+			end;
+			set_x_y (new_x, new_y);
+			popup
 		end;
 
 feature {NONE} -- Properties
@@ -96,7 +114,7 @@ feature {NONE} -- Properties
 feature {NONE} -- Implementation
 
 	work (argument: ANY) is
-        do
+		do
 			if last_warner /= Void then
 				last_warner.popdown
 			end;

@@ -29,6 +29,12 @@ inherit
 			{NONE} all
 		end
 		
+	EB_DEBUG_TOOL_DATA
+		export
+			{NONE} all
+			{APPLICATION_EXECUTION_IMP} optimized_jit_debugging_enabled
+		end		
+		
 create {SHARED_APPLICATION_EXECUTION}
 	make
 
@@ -38,7 +44,7 @@ feature {NONE} -- Initialization
 			-- Initialize current.
 		do
 			create debug_info.make
-			displayed_string_size := 50
+			displayed_string_size := default_displayed_string_size
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
 		ensure

@@ -18,9 +18,11 @@ feature
 		do
 			ext_str := command_name.to_c;
 			job_nb := async_shell ($ext_str);
-			if (job_nb /= -1) then
-				sent_jobs.put (command_name, job_nb.out)
-			end
+			--if (job_nb /= -1) then
+				-- Future version for keeping track
+				-- of processes.
+				-- sent_jobs.put (command_name, job_nb.out)
+			--end
 		end;
 
 	command_name: STRING;

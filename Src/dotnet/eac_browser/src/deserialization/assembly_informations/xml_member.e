@@ -3,7 +3,7 @@ class
 
 creation
 	make
-	
+
 feature -- Initialization
 
 	make is
@@ -24,7 +24,7 @@ feature -- Access
 
 	number_of_char: INTEGER
 			-- Number of char of the type in the xml file.
-			
+
 feature -- Status Setting
 
 	set_name (a_name: like name) is
@@ -57,7 +57,6 @@ feature -- Status Setting
 		ensure
 			number_of_char_set: number_of_char = a_number_of_char
 		end
-		
 
 invariant
 	non_void_name: name /= Void

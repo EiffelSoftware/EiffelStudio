@@ -8,19 +8,16 @@ indexing
 class
 	CACHE
 
---create
---	make
---
---feature {NONE} -- Initialization
---
---	make is
---		do
---			create assemblies.make
---		ensure
---			assemblies_set: assemblies /= Void
---		end
---
+
 feature -- Access
+	
+	assemblies_informations: HASH_TABLE [ASSEMBLY_INFORMATION, STRING] is
+			-- Comments related to an assembly. The key is the {CONSUMED_ASSEMBLY}.out field.
+		once
+			create Result.make (10)
+		ensure
+			assemblies_informations_set: Result /= Void
+		end
 	
 	assemblies: LINKED_LIST [CONSUMED_ASSEMBLY] is
 			-- linked list of all assemblies contained in EAC. Is initialize during construction of widget tree.

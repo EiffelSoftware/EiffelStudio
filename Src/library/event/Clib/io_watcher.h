@@ -36,18 +36,3 @@ guint c_io_watcher_add_watch_callback (EIF_OBJECT io_watcher, gint handle);
 // Customer support e-mail <support@eiffel.com>
 // For latest info see award-winning pages: http://www.eiffel.com
 //------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// CVS log
-//------------------------------------------------------------------------------
-//
-// $Log$
-// Revision 1.1  2000/08/10 17:37:59  etienne
-// Moved file from .. to separate C code from Eiffel code.
-//
-// Revision 1.1  2000/05/16 16:05:10  oconnor
-// initial
-//
-//------------------------------------------------------------------------------
-// End of CVS log
-//------------------------------------------------------------------------------

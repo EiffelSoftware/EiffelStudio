@@ -318,6 +318,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
  			Result.put (max_type, max_name_id)
  			Result.put (min_type, min_name_id)
  			Result.put (offset_type, infix_plus_name_id)
+			Result.put (to_real_64_type, to_real_64_name_id)
+			Result.put (to_real_32_type, to_real_32_name_id)
  			Result.put (to_real_32_type, truncated_to_real_name_id)
  			Result.put (to_real_32_type, to_real_name_id)
  			Result.put (to_real_64_type, to_double_name_id)

@@ -10,6 +10,9 @@ indexing
 
 class MESSAGE 
 
+obsolete
+	"This is only implemented for Motif.  Use MEL_MESSAGE_BOX instead."
+
 inherit
 
 	TERMINAL_OUI
@@ -45,7 +48,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.message (Current, man);
+			implementation := toolkit.message (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
@@ -171,15 +174,6 @@ feature
 			implementation.set_right_alignment
 		end;
 
-	set_end_alignment is
-			-- Set message alignment to right.
-		obsolete "Use ``set_right_alignment'' instead."
-		require
-			exists: not destroyed
-		do
-			implementation.set_right_alignment
-		end;
-
 	set_help_label (a_label: STRING) is
 			-- Set `a_label' as label for help button,
 			-- by default this label is `help'.
@@ -211,15 +205,6 @@ feature
 
 	set_left_alignment is
 			-- Set message alignment to beginning.
-		require
-			exists: not destroyed;
-		do
-			implementation.set_left_alignment
-		end;
-
-	set_start_alignment is 
-			-- Set message alignment to beginning.
-		obsolete "Use ``set_left_alignment'' instead."
 		require
 			exists: not destroyed;
 		do

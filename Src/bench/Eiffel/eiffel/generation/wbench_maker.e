@@ -20,8 +20,11 @@ feature
 			-- Generates the .c -> .o compilation rule
 		do
 			Make_file.putstring ("%
+				%%N.SUFFIXES:.cpp%N%N%
 				%.c.o:%N%
-				%%T$(CC) $(CFLAGS) -c $<%N%N");
+				%%T$(CC) $(CFLAGS) -c $<%N%N%
+				%.cpp.o:%N%
+				%%T$(CPP) $(CPPFLAGS) -c $<%N%N");
 		end;
 
 	generate_specific_defines is

@@ -8,7 +8,7 @@ class
 	EV_COLOR_SELECTION_DIALOG
 
 inherit
-	EV_STANDARD_DIALOG
+	EV_SELECTION_DIALOG
 		redefine
 			implementation
 		end
@@ -23,6 +23,50 @@ feature {NONE} -- Initialization
 			-- parent.
 		do
 			!EV_COLOR_SELECTION_DIALOG_IMP! implementation.make (par)
+			implementation.set_interface (Current)
+		end
+
+feature -- Access
+
+	color: EV_COLOR is
+			-- Current selected color
+		require
+			exists: not destroyed
+		do
+			Result := implementation.color
+		end
+
+feature -- Element change
+
+	select_color (a_color: EV_COLOR) is
+			-- Select `a_color'.
+		require
+			exists: not destroyed
+		do
+			implementation.select_color (a_color)
+		end
+
+feature -- Event - command association
+
+	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the "Help" button is pressed.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_help_command (cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_help_commands is
+			-- Empty the list of commands to be executed when
+			-- "Help" button is pressed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_help_commands
 		end
 
 feature -- Implementation

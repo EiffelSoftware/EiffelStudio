@@ -160,6 +160,18 @@ feature -- Status report
             Result := db_spec.descriptor_is_available
         end
 
+feature -- Error handling
+
+--	code_error: INTEGER is
+--		do
+--			handle.status.error_code
+--		end
+
+--	message_error: STRING is
+--		do
+--			handle.status.message_error
+--		end
+
 end -- class DATABASE_SELECTION
 
 --|----------------------------------------------------------------

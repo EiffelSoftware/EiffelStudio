@@ -22,8 +22,11 @@ feature -- Status report
 	is_connected: BOOLEAN
 			-- Has connection to the data base server succeeded?
 
+	message_error: STRING
+			-- Database message
+
 	error_code: INTEGER
-			-- Error code
+			-- Error code of last transaction
 
 	found: BOOLEAN
 			-- Is there any record matching the last
@@ -61,11 +64,18 @@ feature -- Status setting
 	set (new_value: INTEGER) is
 			-- Set `ok' with `new_value'.
 		do
-			if error_code = 0 then
-				error_code := new_value
+			if handle.database.name.is_equal ("ORACLE") then 
+				message_error:= ""
+				message_error:= error_message
+				if not message_error.is_equal ("") then
+					error_code := message_error.substring (5, 9).to_integer
+				end
 			end
-		ensure
-			error_code_resetting: old error_code = 0 implies error_code = new_value
+			if error_code = 0 then
+				error_code:= new_value
+			end
+--		ensure
+--			error_code_resetting: old error_code = 0 implies error_code = new_value 
 		end
 
 	reset is

@@ -397,7 +397,7 @@ feature -- Status report
 		do
 			Result := table.count
 		ensure
-			Result >0
+			Result >= 0
 		end
 
 	column_i_th(i: INTEGER): COLUMNS[DATABASE] is

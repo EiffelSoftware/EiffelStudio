@@ -25,20 +25,21 @@ typedef union {
 extern char *rout_obj_new_args (int count);
 extern void rout_obj_free_args (char *);
 
-/* Routines to fill argument structure */
-
-extern void rout_obj_putb (char *args, int idx, EIF_BOOLEAN b);
-extern void rout_obj_putc (char *args, int idx, EIF_CHARACTER c);
-extern void rout_obj_putd (char *args, int idx, EIF_DOUBLE d);
-extern void rout_obj_puti (char *args, int idx, EIF_INTEGER i);
-extern void rout_obj_putp (char *args, int idx, EIF_POINTER p);
-extern void rout_obj_putf (char *args, int idx, EIF_REAL f);
-extern void rout_obj_putr (char *args, int idx, EIF_REFERENCE r);
-
 /* Calls */
 
-extern void rout_obj_call_procedure (char *rout, char *tgt, char *args);
 extern void rout_obj_call_function (char *cur, char *res, char *rout, char *tgt, char *args);
+
+/* Macros */
+
+#define rout_obj_call_procedure(r,t,a) ((void(*)(char *, char *, EIF_ARG_UNION *))(r))((t), (a), (EIF_ARG_UNION *)0)
+
+#define rout_obj_putb(a,i,v) (((EIF_ARG_UNION *)(a))[i].barg = *((EIF_BOOLEAN *)v))
+#define rout_obj_putc(a,i,v) (((EIF_ARG_UNION *)(a))[i].carg = *((EIF_CHARACTER *)v))
+#define rout_obj_putd(a,i,v) (((EIF_ARG_UNION *)(a))[i].darg = *((EIF_DOUBLE *)v))
+#define rout_obj_puti(a,i,v) (((EIF_ARG_UNION *)(a))[i].iarg = *((EIF_INTEGER *)v))
+#define rout_obj_putp(a,i,v) (((EIF_ARG_UNION *)(a))[i].parg = *((EIF_POINTER *)v))
+#define rout_obj_putf(a,i,v) (((EIF_ARG_UNION *)(a))[i].farg = (EIF_REAL)v)
+#define rout_obj_putr(a,i,v) (((EIF_ARG_UNION *)(a))[i].rarg = (EIF_REFERENCE)v)
 
 #endif
 

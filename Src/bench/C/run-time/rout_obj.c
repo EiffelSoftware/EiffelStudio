@@ -72,66 +72,6 @@ rt_public void  rout_obj_free_args (char *args)
 	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
-/* Routines to fill argument structure.                             */
-/*------------------------------------------------------------------*/
-
-rt_public void rout_obj_putb (char *args, int idx, EIF_BOOLEAN b)
-
-{
-	((EIF_ARG_UNION *)args)[idx].barg = b;
-}
-/*------------------------------------------------------------------*/
-
-rt_public void rout_obj_putc (char *args, int idx, EIF_CHARACTER c)
-
-{
-	((EIF_ARG_UNION *)args)[idx].carg = c;
-}
-/*------------------------------------------------------------------*/
-
-rt_public void rout_obj_putd (char *args, int idx, EIF_DOUBLE d)
-
-{
-	((EIF_ARG_UNION *)args)[idx].darg = d;
-}
-/*------------------------------------------------------------------*/
-
-rt_public void rout_obj_puti (char *args, int idx, EIF_INTEGER i)
-
-{
-	((EIF_ARG_UNION *)args)[idx].iarg = i;
-}
-/*------------------------------------------------------------------*/
-
-rt_public void rout_obj_putp (char *args, int idx, EIF_POINTER p)
-
-{
-	((EIF_ARG_UNION *)args)[idx].parg = p;
-}
-/*------------------------------------------------------------------*/
-
-rt_public void rout_obj_putf (char *args, int idx, EIF_REAL f)
-
-{
-	((EIF_ARG_UNION *)args)[idx].farg = f;
-}
-/*------------------------------------------------------------------*/
-
-rt_public void rout_obj_putr (char *args, int idx, EIF_REFERENCE r)
-
-{
-	((EIF_ARG_UNION *)args)[idx].rarg = r;
-}
-/*------------------------------------------------------------------*/
-
-rt_public void rout_obj_call_procedure (char *rout, char *tgt, char *args)
-
-{
-	EIF_ARG_UNION   result;
-
-	((void(*)(char *, char *, EIF_ARG_UNION *))rout)(tgt, args, &result);
-}
-/*------------------------------------------------------------------*/
 
 rt_public void rout_obj_call_function (char *cur, char *res, char *rout, char *tgt, char *args)
 

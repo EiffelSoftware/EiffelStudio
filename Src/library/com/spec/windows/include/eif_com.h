@@ -20,5 +20,9 @@
 #include <OBJBASE.H>
 #include <OCIDL.H>
 
+#include "ecom_font.h"
+#include "ecom_picture23.h"
+
+
 #endif // !__EIF_COM_H_INC__
 

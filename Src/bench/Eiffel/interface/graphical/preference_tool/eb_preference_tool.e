@@ -100,7 +100,7 @@ feature {NONE} -- Constants
 	m_Help: STRING is
 		   -- Menu names
 		do
-			Result := Interface_names.m_Help
+			Result := Interface_names.f_Help
 		end;
 
 	b_Ok: STRING is

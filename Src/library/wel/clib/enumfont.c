@@ -5,15 +5,15 @@
  *
  */
 
-#ifndef __WEL_ENUMFONT__
-#	include <enumfont.h>
+#include "wel_globals.h"
+
+#ifndef EIF_THREADS
+	EIF_ENUM_FONT_FAMILY_PROCEDURE wel_enum_font_fam_procedure = NULL;
+	/* Address of the Eiffel routine `converter' (class WEL_FONT_FAMILY_ENUMERATOR) */
+	
+	EIF_OBJ font_family_enumerator = NULL;
+	/* Address of the Eiffel object WEL_FONT_FAMILY_ENUMERATOR created */
 #endif
-
-EIF_ENUM_FONT_FAMILY_PROCEDURE wel_enum_font_fam_procedure = NULL;
-/* Address of the Eiffel routine `converter' (class WEL_FONT_FAMILY_ENUMERATOR) */
-
-EIF_OBJ font_family_enumerator = NULL;
-/* Address of the Eiffel object WEL_FONT_FAMILY_ENUMERATOR created */
 
 int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT * lpelf, NEWTEXTMETRIC * lpntm, int font_type, LPARAM lparam)
 {
@@ -24,6 +24,7 @@ int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT * lpelf, NEWTEXTMETRIC * 
 	 * -- PK.
 	 */
 
+	WGTCX
 	if (font_family_enumerator)
 	{
 		((wel_enum_font_fam_procedure) (
@@ -38,6 +39,8 @@ int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT * lpelf, NEWTEXTMETRIC * 
 	{
 		return 0; /* Stop the enumeration. */
 	}
+
+	WEDCX
 }
 
 /*

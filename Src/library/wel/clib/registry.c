@@ -29,15 +29,15 @@ EIF_INTEGER cwin_reg_create_key(
 	lpdwDisposition = (LPDWORD)malloc(sizeof (DWORD));
 
     result = RegCreateKeyEx(
-            (HKEY) parent_key ,						 	// handle of an open key
-            (LPCTSTR)keyName,							// address of subkey name
-            0,											// reserved
-            REG_NONE,									// address of class string
-			REG_OPTION_NON_VOLATILE,					// special options flag
-			(REGSAM)access_mode,						// desired security access
-			NULL,										// address of key security structure
-            &phkResult,                                 // address of buffer for opened handle
-			lpdwDisposition );							// address of disposition value buffer
+            (HKEY) parent_key ,		 	// handle of an open key
+            (LPCTSTR)keyName,			// address of subkey name
+            0,							// reserved
+            REG_NONE,					// address of class string
+			REG_OPTION_NON_VOLATILE,	// special options flag
+			(REGSAM)access_mode,		// desired security access
+			NULL,						// address of key security structure
+            &phkResult,					// address of buffer for opened handle
+			lpdwDisposition );			// address of disposition value buffer
 
 
 	if (*lpdwDisposition==REG_CREATED_NEW_KEY)

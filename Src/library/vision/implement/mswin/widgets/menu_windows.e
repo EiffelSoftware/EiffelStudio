@@ -24,7 +24,8 @@ inherit
 		redefine
 			set_managed,
 			realized,
-			realize_children
+			realize_children,
+			set_insensitive
 		end
 
 	MANAGER_WINDOWS
@@ -32,7 +33,8 @@ inherit
 			set_managed,
 			unrealize,
 			realized,
-			realize_children
+			realize_children,
+			set_insensitive
 		select
 			unrealize
 		end
@@ -92,6 +94,25 @@ feature -- Status setting
 				managed := flag
 				realize
 			end
+		end
+
+	set_insensitive (flag: BOOLEAN) is
+			-- Set current widget in insensitive mode if `flag'. This means
+			-- that any events with an event type of KeyPress,
+			-- KeyRelease, ButtonPress, ButtonRelease, MotionNotify,
+			-- EnterNotify, LeaveNotify, FocusIn or FocusOut will
+			-- not be dispatched to current widget and to all its children.
+			-- Set it to sensitive mode otherwise.
+		local
+			m: MENU_WINDOWS
+		do
+			if exists then
+				if parent /= Void and then parent.exists then
+					m ?= parent
+					m.set_insensitive_widget (Current, flag)
+				end
+			end
+			private_attributes.set_insensitive (flag)
 		end
 
 	check_widget (widget: TOGGLE_B_WINDOWS) is
@@ -206,6 +227,16 @@ feature -- Status setting
 		end
 
 feature -- Element change
+
+	set_insensitive_widget (w: WIDGET_WINDOWS; flag: BOOLEAN) is
+			-- Set a widget insensitive in the menu.
+		do
+			if flag then
+				disable_position (index_of (w) - unmanaged_count(w) - 1)
+			else
+				enable_position (index_of (w) - unmanaged_count(w) - 1)
+			end
+		end
 
 	manage_item (w: WIDGET_WINDOWS) is
 			-- Manage a item in the menu.

@@ -10,6 +10,9 @@ class
 	MAIN_WINDOW
 
 inherit
+--	CASE_CLASS
+--		-- Inheritance only to add some classes to the system
+
 	EV_WINDOW
 		redefine	
 			make_top_level
@@ -51,6 +54,7 @@ feature -- Initialization
 			c15: MC_LIST_DEMO_WINDOW
 			c16: DIALOG_DEMO_WINDOW
 			c18: COMBO_DEMO_WINDOW
+--			c19: STATUS_DEMO_WINDOW
 		do
 			{EV_WINDOW} Precursor
 			!!container.make (Current)
@@ -73,6 +77,7 @@ feature -- Initialization
 			!!c15.make (Current)
 			!!c16.make (Current)
 			!!c18.make (Current)
+--			!!c19.make (Current)
 			
 			!!b.make_button (Current, "Label", "", c1)
 			!!b.make_button (Current, "Buttons", pixname("buttons"), c10)
@@ -91,6 +96,7 @@ feature -- Initialization
 			!!b.make_button (Current, "MC List", "", c15)
 			!!b.make_button (Current, "Dialog", "", c16)
 			!!b.make_button (Current, "Combo box", "", c18)
+--			!!b.make_button (Current, "Status Bar", "", c19)
 
 			set_values
 		end
@@ -101,7 +107,7 @@ feature -- Command execution
 			-- called when actions window is deleted.
 		do
  			arg.first.effective_button.set_state (False)
-			if not arg.first.actions_window.destroyed then
+			if arg.first.actions_window /= Void and then not arg.first.actions_window.destroyed then
 				arg.first.actions_window.destroy
 			end
 			arg.first.hide
@@ -112,12 +118,8 @@ feature -- Status setting
 	
 	set_values is
 			-- Set the values on the widgets
-		local
-			pwd: EV_PASSWORD_FIELD
-			char: CHARACTER
 		do
 			set_title ("Test all widgets")
-			!! pwd.make (container)
 		end
 
 feature -- Basic operation
@@ -125,8 +127,9 @@ feature -- Basic operation
 	pixname (a_name: STRING): STRING is
 			-- Return the complete path of the given pixmap : root/../pixmaps/name
 		do
---			Result := root_directory_name
-			Result := "d:\vision2_kaci\example\test_all_widgets\bitmap\"
+--			Result := get ("$EIFFEL4")
+			Result := "d:\Eiffel43"
+			Result.append ("\examples\vision2\test_all_widgets\bitmap\")
 			Result.append (a_name)
 			Result.append (".bmp")
 		end

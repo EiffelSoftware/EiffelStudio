@@ -62,6 +62,15 @@ feature {NONE} -- Initialization
 			key: EV_KEY
 		do
 			enable_sensitive
+				-- Enable/disable the setting, based on the current preferences.
+			if Preferences.boolean_resource_value (Preferences.Tools_on_top, True) then
+				enable_selected
+				System_status.enable_tools_always_on_top
+			else
+				disable_selected
+				System_status.disable_tools_always_on_top
+			end
+			
 				-- Now add an accelerator
 			create key.make_with_code ((create {EV_KEY_CONSTANTS}).key_t)
 			create acc.make_with_key_combination (key, True, False, False)
@@ -82,7 +91,6 @@ feature -- Access
 		do
 			Result := (create {GB_SHARED_PIXMAPS}).Icon_builder_window
 		end
-
 
 feature -- Execution
 

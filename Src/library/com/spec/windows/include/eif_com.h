@@ -14,12 +14,12 @@
 #ifndef __EIF_COM_H_INC__
 #define __EIF_COM_H_INC__
 
-#include <OBJBASE.H>
-#include <OCIDL.H>
 #include <OAIDL.H>
 #include <OBJIDL.H>
 #include <oleauto.h>
 #include <OLECTL.H>
+#include <OBJBASE.H>
+#include <OCIDL.H>
 
 #endif // !__EIF_COM_H_INC__
 

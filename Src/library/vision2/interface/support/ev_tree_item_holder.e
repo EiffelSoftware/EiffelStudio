@@ -18,6 +18,26 @@ feature {EV_TREE_ITEM, EV_TREE_ITEM_I} -- Implementation
 
 	implementation: EV_TREE_ITEM_HOLDER_I
 
+feature -- Access
+
+	count: INTEGER is
+			-- Number of items
+		require
+			exists: not destroyed
+		do
+			Result := implementation.count
+		end
+
+	get_item (index: INTEGER): EV_TREE_ITEM is
+			-- Give the item of the tree (or tree item) at
+			-- `index'.
+		require
+			exists: not destroyed
+			item_exists: (index <= count) and (index >= 0)
+		do
+			Result := implementation.get_item(index)
+		end
+
 end -- class EV_TREE_ITEM_HOLDER
 
 --|----------------------------------------------------------------

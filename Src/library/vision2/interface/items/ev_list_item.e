@@ -49,11 +49,35 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is the item selected
+			-- Is the item selected ?
 		require
 			exists: not destroyed
 		do
 			Result := implementation.is_selected
+		end
+
+	index: INTEGER is
+			-- Index of the current item.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.index
+		end
+
+	is_first: BOOLEAN is
+			-- Is the item first in the list ?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_first
+		end
+
+	is_last: BOOLEAN is
+			-- Is the item last in the list ?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_last
 		end
 
 feature -- Status setting

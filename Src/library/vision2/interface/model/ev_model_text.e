@@ -28,8 +28,7 @@ inherit
 			is_equal
 		redefine
 			default_create,
-			recursive_transform,
-			set_x_y
+			recursive_transform
 		end
 
 	EV_FONT_CONSTANTS
@@ -204,22 +203,23 @@ feature -- Status setting
 		local
 			l_point_array: like point_array
 			p0: EV_COORDINATE
-			should_height: INTEGER
+			should_height, real_height, scale_factor: DOUBLE
 		do
+			real_height := id_font.font.height
+			
 			id_font := an_id_font
 			font_factory.register_font (id_font)
-			if is_default_font_used then
-				scaled_font := font
-				is_default_font_used := False
-				l_point_array := point_array
-				p0 := l_point_array.item (0)
-				l_point_array.item (3).set_precise (p0.x_precise + font.width, p0.y_precise + font.height)
-			else
-				l_point_array := point_array
-				should_height := (l_point_array.item (3).y_precise - l_point_array.item (0).y_precise).truncated_to_integer.max (1)
+			
+			l_point_array := point_array
+			should_height := l_point_array.item (3).y_precise - l_point_array.item (0).y_precise
+			
+			scale_factor := should_height / real_height
+			
+			scaled_font := font_factory.scaled_font (id_font, (id_font.font.height * scale_factor).truncated_to_integer.max (1))
+			
+			p0 := l_point_array.item (0)
+			l_point_array.item (3).set_precise (p0.x_precise + scaled_font.width, p0.y_precise + scaled_font.height)
 
-				scaled_font := font_factory.scaled_font (id_font, should_height)
-			end
 			update_dimensions
 			invalidate
 			center_invalidate
@@ -237,14 +237,6 @@ feature -- Status setting
 			invalidate
 		ensure
 			text_assigned: text = a_text
-		end
-feature -- Element change
-
-	set_x_y (a_x, a_y: INTEGER) is
-			-- Set `x' to `a_x' and `y' to `a_y'.
-		do
-			center_invalidate -- FIX_ME: should not be required at all.
-			Precursor {EV_MODEL_ATOMIC} (a_x, a_y)
 		end
 		
 feature -- Events

@@ -204,22 +204,11 @@ feature {NONE} -- Implementation
 			create separator
 			tool_holder.extend (separator)
 			tool_holder.disable_item_expand (separator)
-			create horizontal_split_area
 			create horizontal_box
 			tool_holder.extend (horizontal_box)
+			create vertical_split_area.make_with_tools (type_selector, component_selector, "Type selector", "Component selector")
+			create horizontal_split_area.make_with_tools (vertical_split_area, layout_constructor, "Layout constructor")
 			horizontal_box.extend (horizontal_split_area)
-			create vertical_split_area
-			horizontal_split_area.extend (vertical_split_area)
-			vertical_split_area.set_minimum_width (100)
-			type_selector.set_minimum_size (100, 100)
-			create gb_tool_holder.make_with_tool (type_selector, "Type selector")
-			vertical_split_area.extend (gb_tool_holder)
-			create gb_tool_holder.make_with_tool (component_selector, "Component selector")
-			vertical_split_area.extend (gb_tool_holder)
-			component_selector.set_minimum_height (100)
-			create gb_tool_holder.make_with_tool (layout_constructor, "Layout constructor")
-			horizontal_split_area.extend (gb_tool_holder)
-			layout_constructor.set_minimum_size (100, 100)
 			horizontal_box.extend (docked_object_editor)
 			horizontal_box.disable_item_expand (docked_object_editor)
 			
@@ -335,10 +324,10 @@ feature {NONE} -- Implementation
 	menus_initialized: BOOLEAN
 		-- Has `initialize_menus' been called?
 		
-	horizontal_split_area: GB_HORIZONTAL_SPLIT_AREA
+	horizontal_split_area: GB_HORIZONTAL_SPLIT_AREA_TOOL_HOLDER
 		-- Horizontal split area holding main tools.
 		
-	vertical_split_area: GB_VERTICAL_SPLIT_AREA
+	vertical_split_area: GB_VERTICAL_SPLIT_AREA_TOOL_HOLDER
 		-- Vertical split area holding main tools.
 		
 invariant

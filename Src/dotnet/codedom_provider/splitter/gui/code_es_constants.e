@@ -8,7 +8,15 @@ class
 
 inherit
 	CODE_ES_CONSTANTS_IMP
-	
+		redefine
+			manager_icons_dir
+		end
+
+feature -- Access
+
+	manager_icons_dir: STRING is "icons"
+			-- Relative path to icons directory
+
 end -- class CODE_ES_CONSTANTS
 
 --+--------------------------------------------------------------------

@@ -1293,9 +1293,11 @@ feature -- Basic operations
 
 	pat_blt (x_destination, y_destination, a_width, a_height: INTEGER;
 			raster_operation: INTEGER) is
-			-- Copy a bitmap from the `dc_source' to
-			-- `y_source' to `x_destination', `y_destination',
-			-- using with `raster_operation'.
+			-- Paint the rectangle specified by `x_destination', 
+			-- `y_destination', `a_width', `a_height' using the brush
+			-- that is currently selected into this device context.
+			-- The brush color and the surface color or colors are 
+			-- combined by using the `raster_operation'.
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
 			-- `raster_operation' values.
 		require

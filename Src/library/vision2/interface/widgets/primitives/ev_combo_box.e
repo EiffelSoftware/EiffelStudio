@@ -75,12 +75,11 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			text_not_void: a_text /= Void
 			no_carriage_returns: not a_text.has ('%R')
-			a_text_not_empty: not a_text.is_empty
 			combo_box_is_editable: is_editable
 		do
 			set_editable_text (a_text)
 		ensure
-			text_set: check_text_modification (Void, a_text)
+			text_set: check_text_modification ("", a_text)
 		end
 
 	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is

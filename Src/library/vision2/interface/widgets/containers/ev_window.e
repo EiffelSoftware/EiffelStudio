@@ -296,7 +296,6 @@ feature -- Implementation
 
 	implementation: EV_WINDOW_I
 			-- Implementation of window
-		
 invariant
 --        Depth_is_zero: depth = 0
 --        Has_no_parent: parent = Void

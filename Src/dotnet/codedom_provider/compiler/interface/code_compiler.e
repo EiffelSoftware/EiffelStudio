@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 				if l_compiler_path = Void then
 					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_compiler_path, [])
 				else
-					create l_start_info.make_from_file_name_and_arguments (l_compiler_path + Directory_separator.out + Compiler_file_name, "-batch -finalize -ace " + ace_file_name)
+					create l_start_info.make_from_file_name_and_arguments (l_compiler_path + Directory_separator.out + Compiler_file_name, "-batch -finalize -ace %"" + ace_file_name + "%"")
 					l_start_info.set_working_directory (compilation_directory)
 					l_start_info.set_create_no_window (True)
 					l_start_info.set_redirect_standard_error (True)

@@ -6,7 +6,7 @@ root
 default
 
 	assertion (all);
-	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
+	--precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
 
@@ -37,7 +37,7 @@ cluster
 external
 
 	include_path:
-		"$ISE_EIFFEL\library\store\dbms\rdbms\odbc\Clib";
+		"$ISE_EIFFEL\library\store\dbms\rdbms\odbc\Clib",
 				"$ISE_EIFFEL\library\time\Clib"
 
 	object:

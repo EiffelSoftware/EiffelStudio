@@ -10,6 +10,8 @@ class
 inherit
 
 	EB_OBJECT_DISPLAY_PARAMETERS
+	
+	DEBUG_VALUE_EXPORTER
 
 create {SHARED_DEBUG}
 	make, make_from_debug_value, make_from_stack_element
@@ -140,6 +142,7 @@ feature {NONE} -- Specific Implementation
 			flist: LIST [E_FEATURE]
 
 			item_dv: ABSTRACT_DEBUG_VALUE
+			dummy_dv: DUMMY_MESSAGE_DEBUG_VALUE
 			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
 			l_feat: E_FEATURE
 		do
@@ -156,14 +159,22 @@ feature {NONE} -- Specific Implementation
 			
 			--| Eiffel dotnet |--
 			if not flist.is_empty then
-				l_dotnet_ref_value.get_object_value
+				if l_dotnet_ref_value /= Void then
+					l_dotnet_ref_value.get_object_value
+				end
 				from
 					flist.start
 				until
 					flist.after
 				loop
-					l_feat := flist.item				
-					item_dv := l_dotnet_ref_value.once_function_value (l_feat)
+					l_feat := flist.item
+					if l_dotnet_ref_value /= Void then
+						item_dv := l_dotnet_ref_value.once_function_value (l_feat)
+					else
+						create dummy_dv.make_with_name (l_feat.name)
+						dummy_dv.set_message ("Could not retrieve information")
+						item_dv := dummy_dv
+					end
 					if item_dv /= Void then
 						item := debug_value_to_item (item_dv)						
 					else
@@ -175,7 +186,9 @@ feature {NONE} -- Specific Implementation
 	
 					flist.forth
 				end
-				l_dotnet_ref_value.release_object_value
+				if l_dotnet_ref_value /= Void then
+					l_dotnet_ref_value.release_object_value
+				end
 			end
 				-- We remove the dummy item.
 			parent.start

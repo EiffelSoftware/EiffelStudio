@@ -40,7 +40,9 @@ inherit
 			on_key_up,
 			on_set_focus,
 			on_kill_focus,
-			on_paint
+			on_set_cursor,
+			on_paint,
+			on_accelerator_command
 		redefine
 			default_style,
 			background_brush,

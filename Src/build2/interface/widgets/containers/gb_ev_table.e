@@ -119,7 +119,7 @@ feature -- Access
 				-- at least once, so this is a temporary fix.
 			if world /= Void then
 				selected_item := Void
-				prompt_label.set_text (select_prompt)
+				update_prompt
 				draw_widgets
 			end
 			homogeneous_button.select_actions.resume
@@ -234,11 +234,7 @@ feature {GB_XML_STORE} -- Output
 			element_info := full_information @ (Border_width_string)
 			if element_info /= Void then
 				for_all_objects (agent {EV_TABLE}.set_border_width (element_info.data.to_integer))
-			end
-			
-			
-			
-			
+			end			
 				-- All the building for an EV_FIXED needs to be deferred so
 				-- we set up some deferred building now.
 			deferred_builder.defer_building (Current, element)
@@ -468,15 +464,24 @@ feature {NONE} -- Implementation
 			ok_button: EV_BUTTON
 			cell: EV_CELL
 			status_bar: EV_FRAME
+			split_area: EV_HORIZONTAL_SPLIT_AREA
+			table_content: ARRAYED_LIST [EV_WIDGET]
+			list_item: EV_LIST_ITEM
+			layout_rows_entry, layout_columns_entry: GB_INTEGER_INPUT_FIELD
+			label: EV_LABEL
 		do
+				-- Reset the selected item.
+			selected_item := Void
 			create Result
+			Result.set_minimum_size (300, 250)
+			Result.show_actions.extend (agent initialize_sizing)
 			Result.set_title ("EV_TABLE child positioner")
 			create vertical_box
 			Result.extend (vertical_box)
 			create horizontal_box
 			vertical_box.extend (horizontal_box)
 			create drawing_area
-			drawing_area.set_minimum_size (200, 200)
+			drawing_area.set_minimum_size (100, 100)
 			
 			drawing_area.pointer_motion_actions.force_extend (agent track_movement (?, ?))
 			drawing_area.pointer_button_press_actions.force_extend (agent button_pressed (?, ?, ?))
@@ -490,26 +495,65 @@ feature {NONE} -- Implementation
 			create ok_button.make_with_text ("Done")
 			ok_button.select_actions.extend (agent Result.destroy)			
 			create scrollable_area
-			scrollable_area.set_minimum_size (200, 200)
 			create h1
 			create status_bar
 			status_bar.set_style ((create {EV_FRAME_CONSTANTS}).Ev_frame_lowered)
 			h1.extend (status_bar)
-			create prompt_label.make_with_text (select_prompt)
+			
+			create prompt_label
+			update_prompt
 			status_bar.extend (prompt_label)
 			h1.extend (ok_button)
 			h1.disable_item_expand (ok_button)
 			vertical_box.extend (h1)
 			vertical_box.disable_item_expand (h1)
-
-			horizontal_box.extend (scrollable_area)
+			create split_area
+			horizontal_box.extend (split_area)
+			create vertical_box
+			split_area.extend (scrollable_area)
+			split_area.enable_item_expand (scrollable_area)
+			split_area.extend (vertical_box)
+			create list
+			list.set_minimum_width (100)
+			vertical_box.extend (list)
+			split_area.disable_item_expand (vertical_box)
+			create layout_rows_entry.make (Current, vertical_box, "Rows", agent set_rows_and_draw (?), agent valid_row_value (?))
+			create layout_columns_entry.make (Current, vertical_box, "Columns", agent set_columns_and_draw (?), agent valid_column_value (?))
+			layout_rows_entry.set_text (first.rows.out)
+			layout_columns_entry.set_text (first.columns.out)
+			vertical_box.disable_item_expand (layout_rows_entry)
+			vertical_box.disable_item_expand (layout_columns_entry)
+			
 			scrollable_area.extend (drawing_area)
-			scrollable_area.resize_actions.force_extend (agent set_initial_area_size)
+				-- Now create a list item for all children.
+			table_content ?= first.linear_representation
+			from
+				table_content.start
+			until
+				table_content.off
+			loop
+				create list_item.make_with_text (class_name (table_content.item))
+				list_item.set_data (table_content.item)
+				list_item.select_actions.extend (agent item_selected (table_content.item))
+				list_item.deselect_actions.extend (agent check_unselect)
+				list.extend (list_item)
+				table_content.forth
+			end
 		end
 		
-	set_initial_area_size is
+	initialize_sizing is
+			-- Set up automatic re-sizing when window is re-sized.
+			-- Also initialize size of scrollable area for the first time.
+		do
+			adjust_scrollable_area
+			scrollable_area.resize_actions.force_extend (agent adjust_scrollable_area)
+		end
+		
+		
+	adjust_scrollable_area is
 			-- Set initial size of `drawing_area' relative to `scrollable_area'
 		do
+			io.putstring (scrollable_area.width.out + "%N")
 			drawing_area.set_minimum_size (scrollable_area.width.max (first.columns * grid_size + diagram_border * 2),
 				scrollable_area.height.max (first.rows * grid_size + diagram_border * 2))
 		end
@@ -946,11 +990,10 @@ feature {NONE} -- Implementation
 					-- Only perform the query if valid coordinates.
 				if x <= first.columns and y <= first.rows then
 					selected_item := first.item (x, y)
-					if selected_item = Void then
-						prompt_label.set_text (select_prompt)
-					else
-						prompt_label.set_text ("Position highlighted widget")
+					if selected_item /= Void then
+						list.item_by_data (selected_item).enable_select
 					end
+					update_prompt
 				end
 				draw_widgets
 			end
@@ -1008,6 +1051,28 @@ feature {NONE} -- Implementation
 			for_all_objects (agent {EV_TABLE}.resize (column_value, first.rows))
 		end
 		
+	set_rows_and_draw (row_value: INTEGER) is
+			-- Resize table to accomodate `row_value' rows.
+		do
+			for_all_objects (agent {EV_TABLE}.resize (first.columns, row_value))
+			drawing_area.set_minimum_height (grid_size * row_value + diagram_border * 2)
+			rows_entry.set_text (row_value.out)
+			update_editors
+			draw_widgets
+			update_prompt
+		end
+		
+	set_columns_and_draw (column_value: INTEGER) is
+			-- Resize table to accomodate `column_value' columns.
+		do
+			for_all_objects (agent {EV_TABLE}.resize (column_value, first.rows))
+			drawing_area.set_minimum_width (grid_size * column_value +  diagram_border * 2)
+			columns_entry.set_text (column_value.out)
+			update_editors
+			draw_widgets
+			update_prompt
+		end
+		
 	set_border_width (border_width: INTEGER) is
 			-- Assign `border_width' to border width of table.
 		do
@@ -1057,6 +1122,45 @@ feature {NONE} -- Implementation
 			end
 		end
 
+
+	item_selected (widget: EV_WIDGET) is
+			-- Item representing `widget' in `list' has
+			-- become selected, so update_display to
+			-- reflect this.
+		do
+			selected_item := widget
+			draw_widgets
+		end
+		
+	check_unselect is
+			-- If no item is selected in `list' any more,
+			-- then we must remove the highlighting from
+			-- the display.
+		do
+			if list.selected_items.count = 0 then
+				selected_item := Void
+				draw_widgets
+			end
+		end
+	
+	table_minimal_full: BOOLEAN is
+			-- Is table represented by `Current', 
+			-- 1x1 and full?
+		do
+			Result := first.widget_count = 1 and first.rows = 1 and first.columns = 1			
+		end
+	
+	update_prompt is
+			-- Update `prompt_label'.
+		do
+			if table_minimal_full then
+				prompt_label.set_text (full_prompt)
+			elseif selected_item /= Void then
+				prompt_label.set_text (position_prompt)
+			else
+				prompt_label.set_text (select_prompt)
+			end
+		end
 
 feature {NONE} -- Attributes
 
@@ -1153,7 +1257,16 @@ feature {NONE} -- Attributes
 		-- calculate new size/position of `selected_item', based on the current mouse
 		-- position.
 		
-	select_prompt: STRING is "Please select desired widget"
+	select_prompt: STRING is "Please select desired widget."
 		-- Prompt to help user.
+		
+	full_prompt: STRING is "Child fills table. Resize to manipulate."
+		-- Prompt when table is full.
+		
+	position_prompt: STRING is "Position highlighted widget."
+		-- Prompt when widget is selected.
+		
+	list: EV_LIST
+		-- All children are contained in here.
 
 end -- class GB_EV_TABLE

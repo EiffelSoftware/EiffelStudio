@@ -67,8 +67,6 @@ feature -- Access
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
-		local
-			alignment: EV_TEXT_ALIGNMENT
 		do
 			text_entry.change_actions.block
 			editable_button.select_actions.block

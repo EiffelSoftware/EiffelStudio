@@ -37,40 +37,14 @@ feature -- IL code generation
 
 	generate_il is
 			-- Generate IL byte code
-		local
-			has_result: BOOLEAN
-			il_label_done: IL_LABEL
-			r_type: TYPE_I
 		do
 				-- Put a breakable point on feature name.
 			il_generator.put_line_info (start_line_number)
 			il_generator.flush_sequence_points (context.class_type)
-
-			r_type := context.real_type(result_type)
-			has_result := not r_type.is_void
-
-			il_generator.set_once_generation (True)
-			il_generator.set_global_once_generation (is_global_once)
-			
-			il_generator.generate_once_done_info (feature_name)
-			if has_result then
-				il_generator.generate_once_result_info (feature_name, r_type)
-			end
-
-			il_generator.generate_once_test
-			il_label_done := il_label_factory.new_label
-			il_generator.branch_on_true (il_label_done)
-
-				-- Mark once as being computed from now on.
-			il_generator.generate_once_computed
+			il_generator.generate_once_prologue
 			generate_il_body
-
 			il_generator.put_debug_info (end_location)
-
-			il_generator.mark_label (il_label_done)
-			il_generator.generate_once_return (has_result)
-			
-			il_generator.set_once_generation (False)
+			il_generator.generate_once_epilogue
 		end
 
 feature -- C code generation

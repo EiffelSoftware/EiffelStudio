@@ -627,11 +627,11 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 				xraise(EN_MEM);
 			}
 			{
-				long * o_ref;
+				EIF_REFERENCE o_ref;
 
-				o_ref = (long *) (newadd + (HEADER(newadd)->ov_size & B_SIZE) - LNGPAD_2);
-				*o_ref++ = count; 		
-				*o_ref = spec_size;
+				o_ref = newadd + (HEADER(newadd)->ov_size & B_SIZE) - LNGPAD_2;
+				*(EIF_INTEGER *) o_ref = count;
+				*(EIF_INTEGER *) (o_ref + sizeof(EIF_INTEGER)) = spec_size;
 				/* FIXME spec_elm_size[dtypes[flags & EO_TYPE]] = elm_size;*/
 			} 
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
@@ -837,11 +837,11 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 				xraise(EN_MEM);
 			}
 			{
-				long * o_ref;
+				EIF_REFERENCE o_ref;
 
-				o_ref = (long *) (newadd + (HEADER(newadd)->ov_size & B_SIZE) - LNGPAD_2);
-				*o_ref++ = count; 		
-				*o_ref = spec_size;
+				o_ref = newadd + (HEADER(newadd)->ov_size & B_SIZE) - LNGPAD_2;
+				*(EIF_INTEGER *) o_ref = count;
+				*(EIF_INTEGER *) (o_ref + sizeof(EIF_INTEGER)) = spec_size;
 				spec_elm_size[dtypes[flags & EO_TYPE]] = elm_size;
 			} 
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
@@ -1728,7 +1728,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count, elem_size;
-			EIF_REFERENCE ref, *o_ptr;
+			EIF_REFERENCE ref, o_ptr;
 			char *vis_name;
 			uint32 dgen;
 			int16 *gt_type;
@@ -1958,7 +1958,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count, elem_size;
-			EIF_REFERENCE ref, *o_ptr;
+			EIF_REFERENCE ref, o_ptr;
 			char *vis_name;
 			uint32 dgen;
 			int16 *gt_type;

@@ -85,7 +85,10 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		do
-			Result := feature {SYSTEM_OBJECT}.equals_object_object (Current, other)
+			Result := Current = other
+			if not Result then
+				Result := feature {ISE_RUNTIME}.standard_equal (Current, other)
+			end
 		ensure
 			same_type: Result implies same_type (other)
 			symmetric: Result implies other.standard_is_equal (Current)
@@ -339,7 +342,10 @@ feature {NONE} -- Implement .NET feature
 		local
 			l_other: ANY
 		do
-			Result := Precursor {SYSTEM_OBJECT} (obj)
+			l_other ?= obj
+			if l_other /= Void then
+				Result := is_equal (l_other)
+			end
 		end
 
 	frozen to_string: SYSTEM_STRING is

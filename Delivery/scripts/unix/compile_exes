@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
  
 # Set up the environment
 source set_aliases
@@ -12,6 +12,7 @@ INSTALL_LOG=$COMPILE_LOG
 INSTALL_DIR=$FINAL_INSTALL_DIR
 echo > $INSTALL_LOG
 
+
 if [ "$ISE_EIFFEL" = "" -o $"ISE_EIFFEL" = "" ]; then
 	remtrace Couldnt find environment variable ISE_EIFFEL and/or ISE_PLATFORM
 	CANCEL
@@ -22,6 +23,8 @@ if [ ! -d $EXPORT_DIR ]; then
 	remtrace Couldnt find the directory with the tgzs.
 	CANCEL
 fi
+
+cd $EXPORT_DIR
 
 remtrace Compile C code of the libraries
 remtrace \"A tout seigneur tout honneur\", let\'s start with the run-time
@@ -61,26 +64,25 @@ else
 	fullrf delivery.tar
 fi
 
-cd $EXPORT_DIR
 # These directories should already have been created by make_delivery. Whatever...
 safe_md $INSTALL_DIR/studio/spec
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
-copy studio/config/unix studio/config/$ISE_PLATFORM
+move $INSTALL_DIR/studio/config/unix $INSTALL_DIR/studio/config/$ISE_PLATFORM
 move $INSTALL_DIR/studio/spec/unix/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 fullrd $INSTALL_DIR/studio/spec/unix
 move $INSTALL_DIR/precomp/spec/unix $INSTALL_DIR/precomp/spec/$ISE_PLATFORM
 
+
+cd $EXPORT_DIR
 cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
 cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
 fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libebench.a
 cp C/run-time/*.h $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 cp C/run-time/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 	
-move $ISE_EIFFEL/studio/config/unix $ISE_EIFFEL/studio/config/$ISE_PLATFORM
-
 remtrace "Put x2c in the new delivery"
 # It should already have been compiled by the configure of the run-time.
 cd $EXPORT_DIR/C/run-time

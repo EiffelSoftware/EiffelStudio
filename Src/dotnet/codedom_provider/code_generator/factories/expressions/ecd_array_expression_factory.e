@@ -73,14 +73,14 @@ feature {NONE} -- Implementation
 				end
 				an_array_create_expression.set_array_type (l_type_name)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_creation_type, ["array creation expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_creation_type, ["array creation expression"])
 			end
 			size := a_source.size_expression
 			if size /= Void then
 				code_dom_generator.generate_expression_from_dom (size)
 				an_array_create_expression.set_size (last_expression)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_array_size, [])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_array_size, [])
 			end
 			generate_initializers (a_source, an_array_create_expression)
 		ensure
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_initializers, ["array create expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_initializers, ["array create expression"])
 			end
 		end		
 
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 				code_dom_generator.generate_expression_from_dom (a_target_object)
 				an_array_indexer_expression.set_target_object (last_expression)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["array indexer expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["array indexer expression"])
 			end
 			generate_indices (a_source, an_array_indexer_expression)
 		ensure
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_indices, ["array indexer expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_indices, ["array indexer expression"])
 			end
 		end		
 

@@ -9,6 +9,11 @@ class
 inherit
 	ECD_FACTORY
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 feature {ECD_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_event (a_source: SYSTEM_DLL_CODE_MEMBER_EVENT) is
@@ -328,7 +333,7 @@ feature {NONE} -- Components initialization.
 				if l_comment_statement /= Void then
 					a_feature.add_comment (l_comment_statement.comment)
 				else
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Failed_assignment_attempt, ["ECD_STATEMENT", "ECD_COMMENT_STATEMENT", "comments generation of "])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Failed_assignment_attempt, ["ECD_STATEMENT", "ECD_COMMENT_STATEMENT", "comments generation of "])
 				end
 				i := i + 1
 			end
@@ -366,16 +371,16 @@ feature {NONE} -- Components initialization.
 				if l_routine /= Void then
 					l_routine.set_deferred (True)
 				else
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Failed_assignment_attempt, ["ECD_FEATURE", "ECD_ROUTINE", "member status initialization"])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Failed_assignment_attempt, ["ECD_FEATURE", "ECD_ROUTINE", "member status initialization"])
 				end
 			end
 			a_feature.set_frozen (scope_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.final)
 			a_feature.set_once_routine (scope_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.static)
 			if scope_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.override then
 				if current_type = Void then
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.missing_current_type, ["member status initialization"])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.missing_current_type, ["member status initialization"])
 				elseif a_feature.name = Void or else a_feature.name.is_empty then
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.missing_feature_name, ["member status initialization"])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.missing_feature_name, ["member status initialization"])
 				else
 					current_type.add_redefine_clause (current_type.name, a_feature.name)
 				end
@@ -391,7 +396,7 @@ feature {NONE} -- Components initialization.
 				or access_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.assembly
 			then
 				if current_type = Void then
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.missing_current_type, ["member status initialization"])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.missing_current_type, ["member status initialization"])
 				else
 					a_feature.add_feature_clause (current_type.name)
 				end

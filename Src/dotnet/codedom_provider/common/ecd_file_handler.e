@@ -6,6 +6,12 @@ indexing
 class
 	ECD_FILE_HANDLER
 
+inherit
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	Directory_separator: CHARACTER is
@@ -53,15 +59,15 @@ feature -- Basic Operations
 		do
 			last_copy_successful := False
 			if l_retried then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Could_not_copy, [a_source, a_dest])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Could_not_copy, [a_source, a_dest])
 			else
 				create l_source.make (a_source)
 				if not l_source.exists then
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_file, [l_source])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_file, [l_source])
 				else
 					create l_dest.make (a_dest)
 					if l_dest.exists then
-						(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.File_exists, [l_dest])
+						Event_manager.raise_event (feature {ECD_EVENTS_IDS}.File_exists, [l_dest])
 						l_dest.delete
 					end
 					l_source.open_read

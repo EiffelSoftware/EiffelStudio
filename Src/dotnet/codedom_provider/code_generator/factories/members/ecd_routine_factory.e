@@ -175,7 +175,7 @@ feature {NONE} -- Routine Initialization
 			non_void_routine: a_creation_routine /= Void
 		do
 			if current_type = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["creation routine initialization (" + context (a_creation_routine) + ")"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["creation routine initialization (" + context (a_creation_routine) + ")"])
 			else
 				a_creation_routine.set_type_feature (Initialization)
 				current_type.add_creation_routine (a_creation_routine)
@@ -194,14 +194,14 @@ feature {NONE} -- Routine Initialization
 			non_void_root_procedure: a_root_procedure /= Void
 		do
 			if current_type = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["root creation routine initialization (" + context (a_root_procedure) + ")"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["root creation routine initialization (" + context (a_root_procedure) + ")"])
 			else
 				a_root_procedure.set_type_feature (Initialization)
 				current_type.add_feature (a_root_procedure)
 				initialize_routine (a_source, a_root_procedure)
 				
 				if a_root_procedure.name = Void then
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_feature_name, ["root creation routine initialization (" + context (a_root_procedure) + ")"])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_feature_name, ["root creation routine initialization (" + context (a_root_procedure) + ")"])
 				else
 					Compilation_context.set_root_creation_routine_name (a_root_procedure.name)
 					Compilation_context.set_root_class_name (current_type.name)
@@ -219,7 +219,7 @@ feature {NONE} -- Routine Initialization
 			non_void_procedure: a_procedure /= Void
 		do
 			if current_type = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["root creation routine initialization (" + context (a_procedure) + ")"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["root creation routine initialization (" + context (a_procedure) + ")"])
 			else
 				a_procedure.set_type_feature (Basic_operations)
 				current_type.add_feature (a_procedure)
@@ -236,7 +236,7 @@ feature {NONE} -- Routine Initialization
 			l_name: STRING
 		do
 			if current_type = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["property getter initialization (" + context (a_property_getter) + ")"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["property getter initialization (" + context (a_property_getter) + ")"])
 			else
 				create l_name.make (a_source.name.length + 4)
 				l_name.append ("get_")
@@ -275,7 +275,7 @@ feature {NONE} -- Routine Initialization
 			l_name: STRING
 		do
 			if current_type = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["property setter initialization"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["property setter initialization"])
 			else
 				create l_name.make (a_source.name.length + 4)
 				l_name.append ("set_")
@@ -289,7 +289,7 @@ feature {NONE} -- Routine Initialization
 				generate_statements (a_source.set_statements, a_property_setter)
 	
 				if a_source.type = Void then
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_return_type, ["property setter initialization"])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_return_type, ["property setter initialization"])
 				else
 					code_dom_generator.generate_type_reference_from_dom (a_source.type)
 					a_property_setter.set_property_type_name (last_return_type.name)
@@ -329,7 +329,7 @@ feature {NONE} -- Routine Initialization
 			non_void_function: a_function /= Void
 		do
 			if current_type = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["routine initialization"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["routine initialization"])
 			else
 				if a_source.return_type.base_type.equals (("System.Boolean").to_cil) then
 					a_function.set_type_feature (Status_report)
@@ -359,7 +359,7 @@ feature {NONE} -- Routine Initialization
 		local
 			l_routine_name: STRING
 		do
-			if a_source.name.equals (".ctor") then
+			if a_source.name.equals ((".ctor").to_cil) then
 				l_routine_name := "make"
 			else
 				l_routine_name := a_source.name
@@ -371,7 +371,7 @@ feature {NONE} -- Routine Initialization
 			a_routine.set_name (l_routine_name)
 			
 			if current_type = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["routine initialization"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["routine initialization"])
 			else
 				a_routine.set_implemented_type_name (current_type.name)
 			end
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 			if l_method = Void then
 				l_property ?= a_source
 				if l_property = Void then
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Failed_assignment_attempt, ["SYSTEM_DLL_CODE_TYPE_MEMBER", "SYSTEM_DLL_CODE_MEMBER_METHOD or SYSTEM_DLL_CODE_MEMBER_PROPERTY", "statements generation of " + context (a_routine)])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Failed_assignment_attempt, ["SYSTEM_DLL_CODE_TYPE_MEMBER", "SYSTEM_DLL_CODE_MEMBER_METHOD or SYSTEM_DLL_CODE_MEMBER_PROPERTY", "statements generation of " + context (a_routine)])
 				else
 					l_arguments := l_property.parameters
 				end
@@ -444,15 +444,15 @@ feature {NONE} -- Implementation
 						if l_argument_expression /= Void then
 							a_routine.add_argument (l_argument_expression)
 						else
-							(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Failed_assignment_attempt, ["ECD_EXPRESSION", "ECD_ARGUMENT_EXPRESSION", "arguments generation of " + context (a_routine)])
+							Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Failed_assignment_attempt, ["ECD_EXPRESSION", "ECD_ARGUMENT_EXPRESSION", "arguments generation of " + context (a_routine)])
 						end
 					else
-						(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Void_argument, [context (a_routine)])
+						Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Void_argument, [context (a_routine)])
 					end
 					i := i + 1
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_parameters, [context (a_routine)])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_parameters, [context (a_routine)])
 			end
 		end	
 
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 			if l_method = Void then
 				l_property ?= a_source
 				if l_property = Void then
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Failed_assignment_attempt, ["ECD_EXPRESSION", "ECD_ARGUMENT_EXPRESSION", "result generation of " + context (a_function)])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Failed_assignment_attempt, ["ECD_EXPRESSION", "ECD_ARGUMENT_EXPRESSION", "result generation of " + context (a_function)])
 				else
 					l_return_type := l_property.type
 				end
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 				l_return_type := l_method.return_type
 			end
 			if l_return_type = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_return_type, [context (a_function)])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_return_type, [context (a_function)])
 			else
 				code_dom_generator.generate_type_reference_from_dom (l_return_type)
 				a_function.set_returned_type (last_return_type.name)
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 			l_try_catch_statement: ECD_TRY_CATCH_FINALLY_STATEMENT
 		do
 			if a_statements = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_statements, [context (a_routine)])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_statements, [context (a_routine)])
 			else
 				from
 					l_count := a_statements.count
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 				loop
 					l_statement := a_statements.item (i)
 					if l_statement = Void then
-						(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Void_statement, [context (a_routine)])
+						Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Void_statement, [context (a_routine)])
 					else
 						code_dom_generator.generate_statement_from_dom (l_statement)
 						l_declaration_variable_statement ?= last_statement
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 			l_locals: LIST [ECD_VARIABLE_DECLARATION_STATEMENT]
 		do
 			if current_routine = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_routine, ["try catch feature initialization (" + context (a_routine) + ")"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_routine, ["try catch feature initialization (" + context (a_routine) + ")"])
 			else
 				l_feature_name := "try_catch_" + current_routine.name
 	
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 				l_rescue_feature.add_statement (a_try_catch_statement)
 	
 				if current_type = Void then
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["routine initialization"])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["routine initialization"])
 				else
 					current_type.add_feature (l_rescue_feature)
 				end

@@ -18,7 +18,7 @@ feature -- Status Report
 			if Features.found then
 				Result := Features.found_item
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Feature_name_not_found, [a_name])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Feature_name_not_found, [a_name])
 			end
 		end
 
@@ -212,7 +212,7 @@ feature -- Basic Operation
 						i := i + 1
 					end
 				else
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_consumed_type, [an_external_type_name])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_consumed_type, [an_external_type_name])
 				end
 			end
 		end

@@ -75,12 +75,12 @@ feature {NONE} -- Implementation
 			if current_namespace /= Void then
 				a_property_reference_expression.set_current_namespace (current_namespace.name)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_namespace, ["property reference expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_namespace, ["property reference expression"])
 			end
 			if current_type /= Void then
 				a_property_reference_expression.set_current_class (current_type.name)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["property reference expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["property reference expression"])
 			end
 		ensure
 			property_reference_expression_ready: a_property_reference_expression.ready
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			non_void_source: a_source /= Void
 			non_void_property_set_value_reference_expression: a_property_set_value_reference_expression /= Void
 		do
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Does_nothing, ["property set value reference expression"])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Does_nothing, ["property set value reference expression"])
 		end
 
 end -- class ECD_PROPERTY_EXPRESSION_FACTORY

@@ -19,6 +19,11 @@ inherit
 			{NONE} all
 		end
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 feature {ECD_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_base_reference_expression (a_source: SYSTEM_DLL_CODE_BASE_REFERENCE_EXPRESSION) is
@@ -33,7 +38,7 @@ feature {ECD_CONSUMER_FACTORY} -- Visitor features.
 		local
 			a_base_reference_expression: ECD_BASE_REFERENCE_EXPRESSION
 		do
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["base reference expression"])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["base reference expression"])
 			create a_base_reference_expression.make
 			initialize_base_reference_expression (a_source, a_base_reference_expression)
 			set_last_expression (a_base_reference_expression)
@@ -284,7 +289,7 @@ feature {NONE} -- Implementation
 			non_void_source: a_source /= Void
 			non_void_last_expression: last_expression /= Void
 		do
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["base reference expression"])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["base reference expression"])
 		end
 
 	initialize_binary_operator_expression (a_source: SYSTEM_DLL_CODE_BINARY_OPERATOR_EXPRESSION; a_binary_operator_expression: ECD_BINARY_OPERATOR_EXPRESSION) is
@@ -332,7 +337,7 @@ feature {NONE} -- Implementation
 			l_snippet_expression: ECD_SNIPPET_EXPRESSION
 		do
 			if current_type = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["base reference expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["base reference expression"])
 			end
 
 			a_type_to_cast := a_source.target_type
@@ -417,18 +422,18 @@ feature {NONE} -- Implementation
 				code_dom_generator.generate_expression_from_dom (target)
 				an_attribute_reference_expression.set_target_object (last_expression)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["attribute reference expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["attribute reference expression"])
 			end
 			
 			if current_namespace /= Void then
 				an_attribute_reference_expression.set_current_namespace (current_namespace.name)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_namespace, ["attribute reference expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_namespace, ["attribute reference expression"])
 			end
 			if current_type /= Void then
 				an_attribute_reference_expression.set_current_class (current_type.name)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["attribute reference expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["attribute reference expression"])
 			end
 		ensure
 			attribute_reference_expression_ready: an_attribute_reference_expression.ready
@@ -465,7 +470,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["indexer expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["indexer expression"])
 			end
 		end
 
@@ -488,7 +493,7 @@ feature {NONE} -- Implementation
 				create create_type_name.make_from_cil (create_type.base_type)
 				an_object_create_expression.set_target_type (create_type_name)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_creation_type, ["object create expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_creation_type, ["object create expression"])
 			end
 			generate_creation_arguments (a_source, an_object_create_expression)
 			an_object_create_expression.set_constructor_name ("make")
@@ -516,7 +521,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_parameters, ["object create expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_parameters, ["object create expression"])
 			end
 		end
 
@@ -552,7 +557,7 @@ feature {NONE} -- Implementation
 		local			
 			a_type_name: STRING
 		do
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["typeof expression"])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["typeof expression"])
 			create a_type_name.make_from_cil (a_source.type.base_type)
 			if not Resolver.is_generated_type (a_type_name) then
 				Resolver.add_external_type (a_type_name)

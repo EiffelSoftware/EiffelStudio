@@ -6,6 +6,12 @@ indexing
 class
 	ECD_VARIABLE_CACHE
 
+inherit
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	variable_type (a_name: STRING): STRING is
@@ -15,7 +21,7 @@ feature -- Access
 			if Variables.found then
 				Result := Variables.found_item
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Variable_name_not_found, [a_name])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Variable_name_not_found, [a_name])
 			end
 		end
 

@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 					a_routine_invoke_expression.set_routine (a_routine)
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_method, ["method invoke expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_method, ["method invoke expression"])
 			end
 			generate_arguments (a_source, a_routine_invoke_expression)
 		end
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_parameters, ["method invoke expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_parameters, ["method invoke expression"])
 			end
 		end
 
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 				code_dom_generator.generate_expression_from_dom (target_object)
 				a_routine_reference_expression.set_target_object (last_expression)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["method reference expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["method reference expression"])
 			end
 
 			create routine_name.make_from_cil (a_source.method_name)
@@ -131,12 +131,12 @@ feature {NONE} -- Implementation
 			if current_namespace /= Void then
 				a_routine_reference_expression.set_current_namespace (current_namespace.name)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_namespace, ["method reference expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_namespace, ["method reference expression"])
 			end
 			if current_type /= Void then
 				a_routine_reference_expression.set_current_class (current_type.name)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["method reference expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["method reference expression"])
 			end
 		end
 

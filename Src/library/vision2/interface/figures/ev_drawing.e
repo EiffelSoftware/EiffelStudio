@@ -54,9 +54,10 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_plane (plane_number: INTEGER) is
+		--| FIXME IEK 141099  make_fig undefined
 		do
 			max_plane := plane_number
-			make_fig 
+			--make_fig 
 		end
 
 feature -- Access
@@ -67,15 +68,17 @@ feature -- Access
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
+			--| FIXME IEK 14101999 1st line is incorrect
 			-- Copy of the sub-list beginning at cursor position
 			-- and comprising min (`n', count-position+1) items
 		require else
 			not_off: not off
 			valid_sublist: n >= 0
 		do
-			Result := {LINKED_LIST} Precursor (n)
-			Result.attach_drawing_imp_with_parent (Current, drawing)
-			Result.set_origin (origin)
+			--Result := {LINKED_LIST} Precursor (n)
+			--Result.attach_drawing_imp_with_parent (Current, drawing)
+			--Result.set_origin (origin)
+			Result := Void
 		end
 
 

@@ -78,7 +78,7 @@ feature
 	text_field_label: STRING is "Text field"
 	translation_label: STRING is "Translation"
 	transition_line_label: STRING is "Transition line"
-	user_label: STRING is "User defined commands"
+	user_label: STRING is "User-defined commands"
 	wastebasket_label: STRING is "Wastebasket"
 	windows_label: STRING is "Windows"
 	window_label: STRING is "Window commands"

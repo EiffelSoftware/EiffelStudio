@@ -51,6 +51,7 @@ feature -- Initialization
 			-- Initialize 'Current'
 		do
 			Precursor {EV_WINDOW_IMP}
+			set_size (400, 400)
 		end
 
 	initialize_client_area is
@@ -121,9 +122,9 @@ feature -- Status setting
 
 			if selected_button /= Void then
 				if selected_button.is_equal (internal_accept) then
-					interface.ok_actions.call ([])
+					interface.ok_actions.call (Void)
 				elseif selected_button.is_equal (ev_cancel) then
-					interface.cancel_actions.call ([])
+					interface.cancel_actions.call (Void)
 				end
 			end
 		end

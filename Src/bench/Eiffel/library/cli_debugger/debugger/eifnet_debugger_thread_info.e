@@ -24,7 +24,6 @@ feature {NONE} -- Initialization
 			-- Initialize Current
 		require
 			icd_thread_pointer_not_null: p /= Default_pointer
---			thread_id_valid: icdth_id > 0
 		local
 			r: INTEGER
 		do

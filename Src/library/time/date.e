@@ -187,8 +187,7 @@ feature -- Preconditions
 		end	
 
 	compact_date_valid (c_d: INTEGER): BOOLEAN is
-		require
-			c_d_not_void: c_d /= Void
+			-- Is compact date `c_d' valid?
 		local
 			y, m, d: INTEGER
 		do

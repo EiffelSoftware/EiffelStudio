@@ -16,27 +16,28 @@
 #include <stdio.h>
 #include <windows.h>
 #include <commdlg.h>
-#define EIF_WINDOWS				/* Used to trick err_msg.h */
+#define EIF_WINDOWS							/* Used to trick err_msg.h */
 #include "argcargv.h"
 #include "..\..\..\run-time\error.h"		/* Needs relative path here... */
 #include "err_msg.h"
 #include "eif_cons.h"
 
-#define BUFFER_SIZE 255
+#define BUFFER_SIZE 128
+#define BUFFER_LINES 4000
 
-#define BUFFER(x,y) *(pBuffer + y * cxBuffer + x)
 static char *pBuffer = NULL ;
-static int line_max ;
+static int line_max;
 static int cxBuffer;
+char szAppName[] = "console";
 
 static HANDLE eif_coninfile, eif_conoutfile;
 static char eif_console_buffer [BUFFER_SIZE];
 
 static int xCaret, yCaret;
-static int cxChar, cyChar, cxClient, cyClient, cyBuffer;
+static int cxChar, cyChar, cxClient, cyClient;
 static int iVscrollPos, iVscrollMax, iVscrollInc;
 static int line_height;
-static HDC hdc;
+static HDC client_dc;
 
 int dummy_length;
 
@@ -59,6 +60,42 @@ HWND eif_conout_window;
 LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG lParam);
 void eif_PutWindowedOutput(char *s, int l);
 static HWND hEdit;
+
+char *BUFFER_STRING(int x,int y)
+{
+	int yy;
+	yy = y % BUFFER_LINES;
+	return (pBuffer + yy * cxBuffer + x);
+}
+
+char BUFFER_CHAR(int x,int y)
+{
+	int yy;
+	yy = y % BUFFER_LINES;
+	return *(pBuffer + yy * cxBuffer + x);
+}
+
+void SET_BUFFER(int x, int y, char c)
+{
+	int yy;
+	yy = y % BUFFER_LINES;
+	*(pBuffer + yy * cxBuffer + x) = c;		
+}
+
+char *all_buffer ()
+{
+	char *temp;
+	int i;            
+
+	temp = malloc (BUFFER_LINES * (BUFFER_SIZE + 2));
+	memset (temp, 0, sizeof (temp));
+	for (i=0; i< min (line_max + 1, BUFFER_LINES); i++)
+	{
+		strncat (temp, BUFFER_STRING (0, i), BUFFER_SIZE);
+		strcat (temp, "\r\n");
+	}
+	return temp;
+}
 
 EIF_INTEGER eif_console_readint()
 {
@@ -186,7 +223,6 @@ long eif_console_readline(char *s,long bound,long start)
 		return (read + 1);
 
 	return bound - start + 1;
-
 }
 
 long eif_console_readstream(char *s, long bound)
@@ -421,7 +457,8 @@ void eif_make_console()
 	if (windowed_application)
 	{
 		WNDCLASS wc;
-			
+		
+	
 		wc.style         = CS_VREDRAW | CS_HREDRAW;
 		wc.lpfnWndProc   = (LPVOID) eif_console_wndproc;
 		wc.cbClsExtra    = 0;
@@ -431,14 +468,14 @@ void eif_make_console()
 		wc.hIcon         = NULL;
 		wc.hCursor       = NULL;
 		wc.hbrBackground = (HBRUSH) GetStockObject (BLACK_BRUSH);
-		wc.lpszMenuName  = NULL;
-		wc.lpszClassName = "EiffelConsole";
+		wc.lpszMenuName  = szAppName;
+		wc.lpszClassName = szAppName;
 			
 		if (!RegisterClass (&wc))
 			return;
 
-		eif_conout_window = CreateWindow ("EiffelConsole", "Eiffel Console",
-			WS_SYSMENU | WS_VISIBLE | WS_VSCROLL |  WS_THICKFRAME |WS_OVERLAPPED | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
+		eif_conout_window = CreateWindow (szAppName, "Eiffel Console",
+			WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | WS_DLGFRAME | WS_THICKFRAME | WS_GROUP | 40 | WS_VSCROLL,
 			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, eif_hInstance, NULL) ;
 
 		ShowWindow (eif_conout_window, SW_SHOW);
@@ -488,6 +525,8 @@ void eif_GetWindowedInput()
 LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG lParam)
 {
 	LPCREATESTRUCT lpcs;
+	HDC hdc;
+	HMENU hMenu;
 	static int first_line, iMaxWidth;
 	static int buffer_start_pos, buffer_length, buffer_on;
 
@@ -495,18 +534,23 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 	PAINTSTRUCT ps ;
 	TEXTMETRIC  tm ;
 
+	OPENFILENAME ofn;
+	FILE *f;
+	static char *szFilter [] = {"Console Files (*.txt)", "*.txt","All Files (*.*)", "*.*",""};
+	char szFile[MAX_PATH];
+
 	switch (wMsg)
 		{
 		case WM_CREATE :
-			hdc = GetDC (hwnd) ;
-			SelectObject (hdc, GetStockObject (SYSTEM_FIXED_FONT)) ;
-			GetTextMetrics (hdc, &tm) ;
+			client_dc = GetDC (hwnd) ;
+			SelectObject (client_dc, GetStockObject (SYSTEM_FIXED_FONT)) ;
+			GetTextMetrics (client_dc, &tm) ;
 			cxChar = tm.tmAveCharWidth ;
 			cyChar = tm.tmHeight ;
 
-			iMaxWidth = 255;
-            			cxBuffer = 255;
-			cyBuffer = 1000;
+			
+			iMaxWidth = BUFFER_SIZE;
+            cxBuffer = BUFFER_SIZE;
 			line_max = 0;
 			iVscrollPos = 0;
 			buffer_on = FALSE;
@@ -514,7 +558,7 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 				// allocate memory for buffer and clear it
 
 			if (pBuffer != NULL) free (pBuffer) ;
-			if ((pBuffer = (char *) malloc (cxBuffer * cyBuffer)) == NULL)
+			if ((pBuffer = (char *) malloc (cxBuffer * BUFFER_LINES)) == NULL)
 			{
 				MessageBox (hwnd, "Window too large.  Cannot "
 					"allocate enough memory.", "Eiffel Console",
@@ -522,9 +566,9 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 			}
 			else
 			{
-				for (y = 0 ; y < cyBuffer ; y++)
+				for (y = 0 ; y < BUFFER_LINES ; y++)
 					for (x = 0 ; x < cxBuffer ; x++)
-						BUFFER(x,y) = ' ';
+						SET_BUFFER(x,y, ' ');
 			}
 
 				// set caret to upper left corner
@@ -532,6 +576,47 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 			yCaret = 0;
 
 			return 0 ;
+
+		case WM_COMMAND:
+			hMenu = GetMenu (hwnd);
+			switch (LOWORD (wParam))
+				{
+					case 1: //CMD_SAVE_AS
+							ofn.lStructSize = sizeof(OPENFILENAME);
+							ofn.hwndOwner = hwnd;
+							ofn.hInstance = NULL;
+							ofn.lpstrFilter = szFilter [0];
+							ofn.lpstrCustomFilter = NULL;
+							ofn.nMaxCustFilter = 0;
+							ofn.nFilterIndex = 0;
+							strcpy (szFile, "console.txt");
+							ofn.lpstrFile = szFile;
+							ofn.nMaxFile = MAX_PATH;
+							ofn.lpstrFileTitle = NULL;
+							ofn.nMaxFileTitle = MAX_PATH;
+							ofn.lpstrInitialDir = NULL;
+							ofn.lpstrTitle = NULL;
+							ofn.Flags = OFN_OVERWRITEPROMPT;
+							ofn.nFileOffset = 0;
+							ofn.nFileExtension = 0;
+							ofn.lpstrDefExt = "txt";
+							ofn.lCustData = 0L;
+							ofn.lpfnHook = NULL;
+							ofn.lpTemplateName = NULL;
+							if (GetSaveFileName (&ofn)) {
+								f = fopen (ofn.lpstrFile, "wb");
+								if (f != NULL) {
+									fputs (all_buffer(), f);
+									fclose (f);
+								}
+							}
+							return 0;
+
+					case 2: //CMD_EXIT
+							MessageBox (hwnd, "Exit not implemented", szAppName, MB_OK);
+							return 0;
+				}
+			break;
 
 		case WM_SIZE:
 				// obtain window size in pixels
@@ -543,7 +628,10 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 			iVscrollPos = min (iVscrollPos, iVscrollMax);
 			if (iVscrollMax > 0)
 			{
-				SetScrollRange (hwnd, SB_VERT, 0, iVscrollMax, FALSE);
+				if (line_max > BUFFER_LINES)
+					SetScrollRange (hwnd, SB_VERT, iVscrollMax - BUFFER_LINES, iVscrollMax,TRUE) ;
+				else
+					SetScrollRange (hwnd, SB_VERT, 0, iVscrollMax,TRUE) ;
 				SetScrollPos   (hwnd, SB_VERT, iVscrollPos, TRUE);
 			}
 
@@ -622,9 +710,9 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 
 				case VK_DELETE :
 					for (x = xCaret ; x < cxBuffer - 1 ; x++)
-						BUFFER (x, yCaret) = BUFFER (x + 1, yCaret) ;
+						SET_BUFFER (x, yCaret, BUFFER_CHAR (x + 1, yCaret));
 				
-					BUFFER (cxBuffer - 1, yCaret) = ' ' ;
+					SET_BUFFER (cxBuffer - 1, yCaret,' ');
 				
 					HideCaret (hwnd) ;
 					hdc = GetDC (hwnd) ;
@@ -635,7 +723,7 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 					SetBkMode (hdc, OPAQUE);				
 
 					TextOut (hdc, xCaret * cxChar, yCaret * cyChar,
-							& BUFFER (xCaret, yCaret),
+							BUFFER_STRING (xCaret, yCaret),
 							cxBuffer - xCaret) ;
 				
 					ShowCaret (hwnd) ;
@@ -681,10 +769,6 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 							break ;
 
 						case '\n' :                    // line feed
-							if (++yCaret == cyBuffer)
-							{
-								yCaret = 0 ;
-							}
 							break ;
 
 						case '\r' :                    // carriage return
@@ -694,11 +778,12 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 							memset (eif_console_buffer, 0, BUFFER_SIZE);
 							for (i=0; i< (xCaret - buffer_start_pos); i++)
 							{
-								eif_console_buffer [i] = BUFFER (buffer_start_pos + i, line_max);
+								eif_console_buffer [i] = BUFFER_CHAR (buffer_start_pos + i, line_max);
                             }
 							line_max++;
 
 							iVscrollMax = max (0, line_max + 2 - cyClient / cyChar);
+							//iVscrollMax = min (line_max, BUFFER_LINES);
 							iVscrollPos = iVscrollMax;
 
 							if (iVscrollMax > 0)
@@ -714,25 +799,22 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 							break ;
 
 						default :						// character codes
-							BUFFER (xCaret, line_max) = (char) wParam ;
+							SET_BUFFER (xCaret, line_max, (char) wParam);
                             
 							HideCaret (hwnd) ;
-							hdc = GetDC (hwnd) ;
 
-							SelectObject (hdc,GetStockObject (SYSTEM_FIXED_FONT)) ;
-							SetTextColor (hdc, RGB (175, 175, 175));
-							SetBkMode (hdc, TRANSPARENT);
+							SelectObject (client_dc,GetStockObject (SYSTEM_FIXED_FONT)) ;
+							SetTextColor (client_dc, RGB (175, 175, 175));
+							SetBkMode (client_dc, TRANSPARENT);
 
-							TextOut (hdc, xCaret * cxChar, yCaret * cyChar,
-								& BUFFER (xCaret, line_max), 1) ;
+							TextOut (client_dc, xCaret * cxChar, yCaret * cyChar,
+								BUFFER_STRING (xCaret, line_max), 1) ;
 
 							ShowCaret (hwnd) ;
-							ReleaseDC (hwnd, hdc) ;
 
-							if (++xCaret == cxBuffer)
+							if (xCaret < cxBuffer)
 							{
-								xCaret = 0 ;
-                            	if (++yCaret == cyBuffer) yCaret = 0 ;
+								xCaret++;
 							}
 							break ;
 						}
@@ -749,8 +831,8 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 			SetBkMode (hdc, TRANSPARENT);
 
 			SelectObject (hdc, GetStockObject (SYSTEM_FIXED_FONT));
-			for (y = 0 ; y < (line_max - iVscrollPos + 1); y++)
-				TextOut (hdc, 0, y * cyChar, & BUFFER(0,(y + iVscrollPos)), cxBuffer);
+			for (y = 0 ; y < line_max - iVscrollPos + 1; y++)
+				TextOut (hdc, 0, y * cyChar, BUFFER_STRING(0,(y + iVscrollPos)), cxBuffer);
 			EndPaint (hwnd, &ps);
 			return 0;
 		}
@@ -761,12 +843,14 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 void output_all ()
 {
 	int y;
-	SetTextColor (hdc, RGB (175, 175, 175));
-	SelectObject (hdc, GetStockObject (BLACK_BRUSH));
-	SetBkMode (hdc, TRANSPARENT);
-	Rectangle (hdc, 0, 0, 1200, 1000);
-	for (y = 0 ; y < (line_max - iVscrollPos + 1); y++)
-		TextOut (hdc, 0, y * cyChar, & BUFFER(0,(y + iVscrollPos)), cxBuffer);
+	SetTextColor (client_dc, RGB (175, 175, 175));
+	SelectObject (client_dc, GetStockObject (BLACK_BRUSH));
+	SetBkMode (client_dc, TRANSPARENT);
+	Rectangle (client_dc, 0, 0, 1200, 1000);
+	for (y = 0 ; y < line_max - iVscrollPos + 1; y++)
+	{
+		TextOut (client_dc, 0, y * cyChar, BUFFER_STRING(0,(y + iVscrollPos)), cxBuffer);
+	}
 }
 
 void eif_PutWindowedOutput(char *s, int l)
@@ -794,23 +878,34 @@ void eif_PutWindowedOutput(char *s, int l)
 					break;
 
 				case '\t':
-					xCaret = xCaret + 8;
+					if (xCaret < cxBuffer - 8)
+					{
+						xCaret = xCaret + 8;
+						ix += 8;
+					}
 					break;
 
 				default:
-					BUFFER (ix, line_max) = s[i - start];
-					xCaret ++;
-					ix ++;
+					SET_BUFFER (ix, line_max, s[i - start]);
+					if (xCaret < cxBuffer)
+					{
+						xCaret ++;
+						ix ++;
+					}
 					break;
 			}
 	}
 	if (next_line)
 	{
 		iVscrollMax = max (0, line_max + 2 - line_height);
+		//iVscrollMax = min (line_max, BUFFER_LINES);
 		iVscrollPos = iVscrollMax;
 		if (iVscrollMax > 0)  
 		{
-			SetScrollRange (eif_conout_window, SB_VERT, 0, iVscrollMax,TRUE) ;
+			if (line_max > BUFFER_LINES)
+				SetScrollRange (eif_conout_window, SB_VERT, iVscrollMax - BUFFER_LINES, iVscrollMax,TRUE) ;
+			else
+				SetScrollRange (eif_conout_window, SB_VERT, 0, iVscrollMax,TRUE) ;
 			SetScrollPos   (eif_conout_window, SB_VERT, iVscrollMax, TRUE);
 		}
 	}

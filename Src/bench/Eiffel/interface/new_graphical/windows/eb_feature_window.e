@@ -15,8 +15,6 @@ inherit
 
 	NEW_EB_CONSTANTS
 
-	EB_SHARED_INTERFACE_TOOLS
-
 creation
 	make, make_top_level
 
@@ -57,14 +55,26 @@ feature {NONE} -- Initialization
 	initialize_main_menu is
 			-- Create and initialize `menu_bar'.
 		do
+			create menu_bar.make (Current)
+			create file_menu.make_with_text (menu_bar, Interface_names.m_File)
+			tool.build_file_menu (file_menu)
+			create format_menu.make_with_text (menu_bar, Interface_names.m_Formats)
+			tool.build_format_menu (format_menu)
+			create windows_menu.make_with_text (menu_bar, Interface_names.m_Windows)
+			build_windows_menu (windows_menu)
 		end
-
 
 feature -- Access
 
 	tool: EB_FEATURE_TOOL
 			-- the profile tool
 
+	file_menu: EV_MENU
+
+	format_menu: EV_MENU
+
+	windows_menu: EV_MENU
+ 
 feature -- Tool management
 
 	set_tool_title (t: like tool; s: STRING) is

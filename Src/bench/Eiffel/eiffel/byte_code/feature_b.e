@@ -32,6 +32,11 @@ feature
 	body_id: BODY_ID
 			-- Body Id of the feature.
 
+	is_once: BOOLEAN
+			-- Is the current feature a once function
+			--| Used when inlining is turned on in final mode, because we are not
+			--| allowed to inline once routines
+
 	parameters: BYTE_LIST [EXPR_B];
 			-- Feature parameters: can be Void
 
@@ -82,6 +87,7 @@ feature
 			feature_id := f.feature_id;
 			body_id := f.body_id
 			routine_id := f.rout_id_set.first
+			is_once := f.is_once
 		end;
 
 	is_feature: BOOLEAN is True;
@@ -292,14 +298,16 @@ feature -- Inlining
 			bc: STD_BYTE_CODE
 			old_c_t: CL_TYPE_I
 		do
-			type_i := context_type;
-			if not type_i.is_basic then
-				cl_type ?= type_i; -- Cannot fail
-					-- Inline only if it is not polymorphic and if it can be inlined.
-				if Eiffel_table.is_polymorphic (routine_id, cl_type.type_id, True) = -1 then
-					inliner := System.remover.inliner;
-					inline := inliner.inline (body_id)
-				end;
+			if not is_once then
+				type_i := context_type;
+				if not type_i.is_basic then
+					cl_type ?= type_i; -- Cannot fail
+						-- Inline only if it is not polymorphic and if it can be inlined.
+					if Eiffel_table.is_polymorphic (routine_id, cl_type.type_id, True) = -1 then
+						inliner := System.remover.inliner;
+						inline := inliner.inline (type, body_id)
+					end;
+				end
 			end
 
 			if inline then

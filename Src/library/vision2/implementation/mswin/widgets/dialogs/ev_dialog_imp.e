@@ -12,6 +12,8 @@ class
 inherit
 
 	EV_DIALOG_I
+		rename
+			expandable as never_displayed
 		redefine
 			build
 		end
@@ -42,8 +44,7 @@ feature -- Initialization
 			vbox.set_spacing (10)
 			!! display_area.make (vbox)
 			!! action_area.make (vbox)
-			display_area.set_automatic_resize (True)
-			action_area.set_automatic_resize (False)
+			action_area.set_expand (False)
 			show
 		end
 

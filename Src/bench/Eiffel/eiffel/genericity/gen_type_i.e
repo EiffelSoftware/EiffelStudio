@@ -222,30 +222,44 @@ feature -- Access
 			i, count: INTEGER
 			sep, tmp: STRING
 			l_meta: like meta_generic
+			l_class_c: like base_class
+			l_is_precompiled: BOOLEAN
+			l_cl_type: like associated_class_type
 		do
-			Result := clone (base_class.name)
-
-			l_meta := meta_generic
-
-				-- Append generic information.
-			count := l_meta.count
-			if count > 0 then
-				from
-					i := 1
-					sep := "_"
-				until
-					i > count
-				loop
-					Result.append (sep)
-					tmp := clone (l_meta.item (i).il_type_name (a_prefix))
-					tmp.remove_head (tmp.last_index_of ('.', tmp.count))
-					tmp.to_lower
-					Result.append (tmp)
-					i := i + 1
+			l_class_c := base_class
+			l_is_precompiled := l_class_c.is_precompiled
+			if l_is_precompiled then
+				l_cl_type := associated_class_type
+				l_is_precompiled := l_cl_type.is_precompiled
+				if l_is_precompiled then
+					Result := associated_class_type.il_type_name (a_prefix)
 				end
 			end
-			
-			Result := internal_il_type_name (Result, a_prefix)
+			if not l_is_precompiled then
+				Result := clone (l_class_c.name)
+		
+				l_meta := meta_generic
+		
+					-- Append generic information.
+				count := l_meta.count
+				if count > 0 then
+					from
+						i := 1
+						sep := "_"
+					until
+						i > count
+					loop
+						Result.append (sep)
+						tmp := clone (l_meta.item (i).il_type_name (a_prefix))
+						tmp.remove_head (tmp.last_index_of ('.', tmp.count))
+						tmp.to_lower
+						Result.append (tmp)
+						i := i + 1
+					end
+				end
+				
+				Result := internal_il_type_name (Result, a_prefix)
+			end
 		end
 
 	append_signature (st: STRUCTURED_TEXT) is

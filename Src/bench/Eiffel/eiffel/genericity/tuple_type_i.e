@@ -57,8 +57,23 @@ feature
 
 	il_type_name (a_prefix: STRING): STRING is
 			-- Class name of current type.
+		local
+			l_class_c: like base_class
+			l_is_precompiled: BOOLEAN
+			l_cl_type: like associated_class_type
 		do
-			Result := internal_il_type_name (clone (base_class.name), a_prefix)
+			l_class_c := base_class
+			l_is_precompiled := l_class_c.is_precompiled
+			if l_is_precompiled then
+				l_cl_type := associated_class_type
+				l_is_precompiled := l_cl_type.is_precompiled
+				if l_is_precompiled then
+					Result := associated_class_type.il_type_name (a_prefix)
+				end
+			end
+			if not l_is_precompiled then
+				Result := internal_il_type_name (clone (l_class_c.name), a_prefix)
+			end
 		end
 
 feature -- Generic conformance

@@ -37,7 +37,8 @@ inherit
 
 creation
 
-	make
+	make,
+	make_from_tool
 
 feature -- Access
 

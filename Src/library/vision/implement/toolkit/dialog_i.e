@@ -60,8 +60,6 @@ feature
 	popup is
 			-- Popup current dialog shell with no grab on it.
 		deferred
-		ensure
-			is_popped_up
 		end; 
 
 	raise is

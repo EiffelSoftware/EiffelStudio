@@ -230,7 +230,7 @@ feature -- Access
             -- Feature signature.
             -- Do not use E_FEATURE as `name' might be different
         local
-            type: TYPE
+            type: TYPE_AS
             args: FEAT_ARG
         do
 			create Result.make (50)

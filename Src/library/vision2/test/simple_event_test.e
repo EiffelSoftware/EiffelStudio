@@ -36,11 +36,11 @@ feature -- Access
 			h := wgt.height
 			
 			s.set_pointer_position (x+(w/2), y+(h/2))
-			sleep 1
+			sleep (1)
 			s.fake_pointer_button_press (1)
-			sleep 1
+			sleep (1)
 			s.fake_pointer_button_release (1)
-			sleep 2
+			sleep (2)
 			if
 				selected and
 				pressed and

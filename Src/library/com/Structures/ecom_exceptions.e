@@ -42,7 +42,7 @@ feature -- Element Change
 feature {NONE} -- Implementation
 
 	formatter: POINTER is
-			-- Error messages formatter
+			-- Error messages formatter.
 		once
 			Result := ccom_initialize_formatter
 		ensure
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 		end
 
 	dispose is
-			-- Free formatter first
+			-- Free formatter first.
 		do
 			ccom_delete_formatter (formatter)
 		end

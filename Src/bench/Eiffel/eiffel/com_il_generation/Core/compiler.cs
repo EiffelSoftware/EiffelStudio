@@ -514,8 +514,8 @@ feature -- Generation Structure
 				MethodAttributes.Public | MethodAttributes.Static,
 				Type.GetType ("void"), Type.EmptyTypes);
 
-			entry_point.SetCustomAttribute (CA.debugger_hidden_attr ());
-			entry_point.SetCustomAttribute (CA.debugger_step_through_attr ());
+			entry_point.SetCustomAttribute (CA.debugger_hidden_attr);
+			entry_point.SetCustomAttribute (CA.debugger_step_through_attr);
 			
 			Generator = entry_point.GetILGenerator();
 			eiffel_entry_point = ((FEATURE) (Classes [TypeID].
@@ -974,7 +974,7 @@ feature -- Generation Structure
 					ParameterTypes [i] = Classes [param_info [i]].Builder;
 
 				MethodBuilder Override = ((TypeBuilder) Classes [CurrentTypeID].Builder).
-					DefineMethod (OverridePrefix + ParentMethod.name () + counter.ToString(),
+					DefineMethod (Override_prefix + ParentMethod.name () + counter.ToString(),
 						MethodAttributes.Virtual | MethodAttributes.Final |
 							MethodAttributes.Private,
 						ParentMethod.method_builder.ReturnType,
@@ -1001,7 +1001,7 @@ feature -- Generation Structure
 				if (Method.is_attribute && ParentMethod.is_attribute) {
 						// Generate MethodImpl on Setter.
 					Override = ((TypeBuilder) Classes [CurrentTypeID].Builder).
-						DefineMethod (OverridePrefix + SetterPrefix + ParentMethod.name () +
+						DefineMethod (Override_prefix + Setter_prefix + ParentMethod.name () +
 							counter.ToString(), MethodAttributes.Virtual | MethodAttributes.Final |
 								MethodAttributes.Private, VoidType,
 							new Type [1] {ParentMethod.method_builder.ReturnType});
@@ -2180,8 +2180,8 @@ feature -- Statics
 	internal static System.Web.Services.WebMethodAttribute WebMethodAttribute = new System.Web.Services.WebMethodAttribute();
 
 	// Prefix for override functions used to emulate renaming/covariance
-	internal static String OverridePrefix = "__";
-	internal static String SetterPrefix = "_set_";
+	internal static String Override_prefix = "__";
+	internal static String Setter_prefix = "_set_";
 	
 	// Last exception
 	internal static Exception LastException = new System.ApplicationException();

@@ -13,6 +13,8 @@
 #include <stdio.h>
 #ifdef EIF_WIN32
 #include <windows.h>
+#else
+#include <stdlib.h>
 #endif
 #include "load_pixmap.h"
 #include "png.h"
@@ -284,6 +286,7 @@ unsigned char c_ev_read_n_bytes(
 		nRequestedBufferSize - pBufFile->nCurrBufferSize,
 		MINIMUM_BYTES_TO_READ_PER_ACCESS
 		);
+
 	nBytesRead = fread(&(pBufFile->pBuffer[pBufFile->nCurrBufferSize]), 1, 
 				       (size_t)nBytesToRead, pBufFile->pFile);
 	
@@ -881,7 +884,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	pAlphaImage = (unsigned char *) malloc(width * height);
 	pAlphaData = pAlphaImage;
 
-	for (row = 0; row < height; row--)
+	for (row = 0; row < height; row++)
 		{
 		unsigned char *pSrc = ppImage[row];
 		unsigned long column;

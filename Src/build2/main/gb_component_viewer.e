@@ -353,6 +353,10 @@ feature {NONE} -- Implementation
 			if display_object /= Void then
 				pick_and_dropable ?= display_object.child
 				pick_and_dropable.remove_pebble
+					-- We must remove the ability to drop another object into
+					-- the display object.
+				display_object.drop_actions.wipe_out
+				display_object.child.drop_actions.wipe_out
 			end
 			pick_and_dropable ?= an_object.display_object
 				-- We need this as menu bars are not pick and dropable.

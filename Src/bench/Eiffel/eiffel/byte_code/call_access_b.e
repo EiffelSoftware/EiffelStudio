@@ -504,7 +504,11 @@ feature {NONE} -- Debug
 	debug_output: STRING is
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			Result := Names_heap.item (feature_name_id)
+			if feature_name_id > 0 then
+				Result := Names_heap.item (feature_name_id)
+			else
+				Result := "Not yet set"
+			end
 		end
 
 end -- class CALL_ACCESS_B

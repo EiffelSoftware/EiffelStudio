@@ -75,8 +75,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize generator.
 		do
-			internal_duplicate_rout_id := System.any_class.compiled_class.feature_table.item_id (
-				feature {PREDEFINED_NAMES}.Internal_duplicate_name_id).rout_id_set.first
+			standard_twin_rout_id := System.any_class.compiled_class.feature_table.item_id (
+				feature {PREDEFINED_NAMES}.Standard_twin_name_id).rout_id_set.first
 			internal_finalize_rout_id := System.any_class.compiled_class.feature_table.item_id (
 				feature {PREDEFINED_NAMES}.finalize_name_id).rout_id_set.first
 			internal_to_string_rout_id := System.any_class.compiled_class.feature_table.item_id (
@@ -91,8 +91,8 @@ feature -- Access
 	current_class_type: CLASS_TYPE
 			-- Currently class type being handled.
 
-	internal_duplicate_rout_id, internal_finalize_rout_id, internal_to_string_rout_id: INTEGER
-			-- Routine ID of `internal_duplicate', `finalize' and `to_string' from ANY.
+	standard_twin_rout_id, internal_finalize_rout_id, internal_to_string_rout_id: INTEGER
+			-- Routine ID of `standard_twin', `finalize' and `to_string' from ANY.
 
 	last_parents: ARRAY [INTEGER]
 			-- List of parents tokens last described after call to `update_parents'.
@@ -867,36 +867,35 @@ feature -- Class info
 		local
 			l_ca_factory: CUSTOM_ATTRIBUTE_FACTORY
 			l_class: CLASS_C
-			l_attributes: EIFFEL_LIST [CREATION_EXPR_AS]
+			l_attributes: BYTE_LIST [BYTE_NODE]
 		do
 			current_class_type := class_type
 			l_class := class_type.associated_class
-			check
-				l_class.most_recent_ast /= Void
-			end
 			create l_ca_factory
+
 				-- First we generate attributes common to both generated class and interface.
-			l_attributes := l_class.most_recent_ast.custom_attribute
+			l_attributes := l_class.custom_attributes
 			if l_attributes /= Void then
-				l_ca_factory.generate_custom_attribute (
+				l_ca_factory.generate_custom_attributes (
 					class_type_token (class_type.implementation_id), class_type, l_attributes)
 					-- Generate custome attribute on interface if it is generated.
 				if class_type.static_type_id /= class_type.implementation_id then
-					l_ca_factory.generate_custom_attribute (
+					l_ca_factory.generate_custom_attributes (
 						class_type_token (class_type.static_type_id), class_type, l_attributes)
 				end
 			end
+	
 				-- Then we generate only class or interface specific attribute if we indeed
 				-- generate a class and an interface associated to an Eiffel class.
 			if class_type.static_type_id /= class_type.implementation_id then
-				l_attributes := l_class.most_recent_ast.class_custom_attribute
+				l_attributes := l_class.class_custom_attributes
 				if l_attributes /= Void then
-					l_ca_factory.generate_custom_attribute (
+					l_ca_factory.generate_custom_attributes (
 						class_type_token (class_type.implementation_id), class_type, l_attributes)
 				end
-				l_attributes := l_class.most_recent_ast.interface_custom_attribute
+				l_attributes := l_class.interface_custom_attributes
 				if l_attributes /= Void then
-					l_ca_factory.generate_custom_attribute (
+					l_ca_factory.generate_custom_attributes (
 						class_type_token (class_type.static_type_id), class_type, l_attributes)
 				end
 			end
@@ -2137,8 +2136,8 @@ feature -- IL Generation
 			end
 		end
 
-	generate_feature_internal_duplicate (feat: FEATURE_I) is
-			-- Generate IL code for feature `internal_duplicate' from ANY.
+	generate_feature_standard_twin (feat: FEATURE_I) is
+			-- Generate IL code for feature `standard_twin' from ANY.
 		require
 			feat_not_void: feat /= Void
 		local

@@ -25,11 +25,6 @@ if [ ! "$NO_COMPILE" ]; then
 		echo FINALIZATION_DIR not defined. Cannot continue
 		CANCEL
 	fi
-	if [ ! -f $FINALIZATION_DIR/finalizedbench.ace ]; then
-		echo No finalization ace available in $FINALIZATION_DIR. Cannot continue
-		CANCEL
-	fi
-	
 	which ec >> $INSTALL_LOG
 	if [ $? -ne	0 ]; then
 		echo Cannot find a version of ec. Cannot continue

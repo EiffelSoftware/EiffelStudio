@@ -332,24 +332,26 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 /*
  * Posix 1003.1b signals
  */
-
+#if (_POSIX_C_SOURCE==199309L)
 #ifdef SIGRTMIN
 #define EIF_DFLT_SIGRTMIN
 #endif
 #ifdef SIGRTMAX
 #define EIF_DFLT_SIGRTMAX
 #endif
+#endif /* _POSIX_C_SOURCE */
 
 /*
  * Signals reserved for Posix 1003.1c.
  */
-
+#if (_POSIX_C_SOURCE==199506L)
 #ifdef SIGPTINTR
 #define EIF_DFLT_SIGPTINTR
 #endif
 #ifdef SIGPTRESCHED
 #define EIF_DFLT_SIGPTRESCHED
 #endif
+#endif /* _POSIX_C_SOURCE */
 
 /* Mutex management */
 

@@ -538,6 +538,36 @@ feature {NONE} -- Implementation
 			set_selection_label (selection_label)
 		end
 
+	set_default_button is
+			-- Set the default button for the dialog.
+		local
+			default_button_set: BOOLEAN
+		do
+			if ok_button_hidden then
+				unset_default_button_style (ok_button)
+			else
+				set_default_button_style (ok_button)
+				default_button_set := True
+			end
+			if not cancel_button_hidden and then not default_button_set then
+				set_default_button_style (cancel_button)
+				default_button_set := True
+			else
+				unset_default_button_style (cancel_button)
+			end
+			if not help_button_hidden and then not default_button_set then
+				set_default_button_style (help_button)
+				default_button_set := True
+			else
+				unset_default_button_style (help_button)
+			end
+			if not apply_button_hidden and then not default_button_set then
+				set_default_button_style (apply_button)
+			else
+				unset_default_button_style (apply_button)
+			end
+		end
+
 	set_fonts is
 			-- Set the font's on the controls.
 		do

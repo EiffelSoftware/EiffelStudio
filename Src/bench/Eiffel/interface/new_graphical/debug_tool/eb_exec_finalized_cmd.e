@@ -14,6 +14,9 @@ inherit
 		end
 	SHARED_EIFFEL_PROJECT
 
+	EB_SHARED_INTERFACE_TOOLS
+		-- only for Argument_list!
+
 	NEW_EB_CONSTANTS
 
 creation
@@ -54,8 +57,8 @@ feature {NONE} -- Execution
 							Warning_messages.w_MakefileSH_more_recent)
 					else
 --						create mp.set_watch_cursor
---						appl_name.extend (' ')
---						appl_name.append (argument_window.argument_list)
+						appl_name.extend (' ')
+						appl_name.append (Argument_list)
 						create cmd_exec
 						cmd_exec.execute (appl_name)
 --						mp.restore

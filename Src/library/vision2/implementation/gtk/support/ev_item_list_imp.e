@@ -68,9 +68,9 @@ feature {NONE} -- Implementation
 		--	end
 		--	remove_item_actions.call ([w_imp])
 
-			C.gtk_widget_ref (p)
+			C.gtk_object_ref (p)
 			C.gtk_container_remove (list_widget, p)
-			C.gtk_widget_unref (p)
+			C.gtk_object_unref (p)
 		end
 
 feature {NONE} -- Implementation

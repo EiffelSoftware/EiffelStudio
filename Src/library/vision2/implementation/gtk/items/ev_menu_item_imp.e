@@ -121,7 +121,6 @@ feature -- Assertion
 
 feature -- Event : command association
 
---	add_activate_command ( command: EV_COMMAND; 
 	add_select_command ( command: EV_COMMAND; 
 			       arguments: EV_ARGUMENT) is
 			-- Add 'command' to the list of commands to be
@@ -134,7 +133,6 @@ feature -- Event : command association
 
 feature -- Event -- removing command association
 
---	remove_activate_commands is
 	remove_select_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is activated.

@@ -57,7 +57,7 @@ EIF_INTEGER get_unix_family(EIF_POINTER add)
 void set_unix_sock_path(EIF_POINTER add, EIF_POINTER path)
 	/*x set the unix domain socket path name */
 {
-	strncpy(((struct sockaddr_un *)add)->sun_path, (char *) path, strlen((char *) path));
+	memcpy(((struct sockaddr_un *)add)->sun_path, (char *) path, strlen((char *) path));
 }
 
 EIF_POINTER get_unix_sock_path(EIF_POINTER add)

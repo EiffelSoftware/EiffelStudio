@@ -131,6 +131,7 @@ feature {NONE} -- Initialization
 			-- Initialize combo box.
 		do
 			{EV_TEXT_COMPONENT_IMP} Precursor
+			{EV_LIST_ITEM_HOLDER_IMP} Precursor
 			create text_field.make_with_combo (Current)
 			create combo.make_with_combo (Current)
 			create ev_children.make (2)
@@ -633,6 +634,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.63  2000/03/24 19:30:38  rogers
+--| Added call to {EV_LIST_ITEM_HOLDER_IMP} Precursor in initialize.
+--|
 --| Revision 1.62  2000/03/23 17:55:45  rogers
 --| Removed some redundent lines.
 --|

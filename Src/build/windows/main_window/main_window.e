@@ -156,7 +156,7 @@ feature
 			top_form.attach_left_widget (state_b, help_b, 0)
 			top_form.attach_left_widget (help_b, namer_b, 0)
 			top_form.attach_left_widget (namer_b, cut_b, 0)
-			top_form.attach_left_widget (cut_b, create_proj_b, 0)
+		--samik	top_form.attach_left_widget (cut_b, create_proj_b, 0)
 		--samik	top_form.attach_right_widget (create_proj_b, focus_label, 0)
 			top_form.attach_right_widget (load_proj_b, create_proj_b, 0)
 			top_form.attach_right_widget (save_b, load_proj_b, 0)

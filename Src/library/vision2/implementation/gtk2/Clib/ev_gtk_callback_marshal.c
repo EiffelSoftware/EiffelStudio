@@ -57,26 +57,37 @@ void c_ev_gtk_new_callback_marshal (
         // Called by GTK when an `object' emits a signal,
         // Call an `agent' with `n_args' `args'.
 {
-	if (ev_gtk_callback_marshal != NULL)
+	/*int i;
+	printf ("Number of events passed = %i\n", n_param_values);
+	for (i = 0 ; i < n_param_values ; i++)
+	{
+		printf ("Value of parameter %i is %s\n", i, G_VALUE_TYPE_NAME (param_values + i));
+	}*/
+
+
+	//printf ("Type of GValue %s", G_VALUE_TYPE_NAME(param_values));
+	if (ev_gtk_callback_marshal != NULL && closure != NULL)
 	{
 		ev_gtk_callback_marshal (
 			eif_access (ev_gtk_callback_marshal_object),
 			eif_access ((EIF_OBJECT) closure->data),
-			(EIF_INTEGER) n_param_values,
-			(EIF_POINTER) param_values
-        );
-}
+			(EIF_INTEGER) n_param_values - 1,
+			(EIF_POINTER) ((GValue*)param_values + 1)
+       		 );
+	}
 }
 
 // FIXME temporary wrapper for GTK_VALUE_POINTER should really be elsewhere
 void* gtk_value_pointer (EIF_POINTER p)
 {
-	return (g_value_get_pointer ((GValue*)p));
+	//printf ("Calling gtk_value_pointer with a GValue that represents %s\n", G_VALUE_TYPE_NAME((GValue*)p));
+	return g_value_peek_pointer ((GValue*)p);
 }
 
 int gtk_value_int (EIF_POINTER p)
 {
-	return (g_value_get_int ((GValue*)p));
+//	printf ("Calling gtk_value_uint with a GValue that represents %s\n", G_VALUE_TYPE_NAME(p));
+	return (g_value_get_uint ((GValue*)p));
 }
 
 void dummy_callback (void)

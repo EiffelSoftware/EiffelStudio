@@ -270,7 +270,7 @@ char c;
 
 public void file_pd(f, val)
 FILE *f;
-double *val;
+double val;
 {
 	/* Write double `val' onto `f' */
 

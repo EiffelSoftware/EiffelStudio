@@ -198,5 +198,8 @@ extern struct opstack op_stack;		/* Operational stack */
 #define BC_NOT_REC			107
 #define BC_END_PRE			108
 #define BC_END_FST_PRE		109
+#define BC_CAST_LONG     	110
+#define BC_CAST_FLOAT    	111
+#define BC_CAST_DOUBLE  	112
 
 #endif

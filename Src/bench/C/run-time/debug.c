@@ -711,7 +711,7 @@ public void initdb()
 
 	top = stack_allocate(STACK_CHUNK);		/* Create one */
 	if (top == (struct dcall *) 0)	 		/* Could not create stack */
-		fatal("can't create debugger stack");
+		fatal_error("can't create debugger stack");
 }
 
 private int nb_calls()

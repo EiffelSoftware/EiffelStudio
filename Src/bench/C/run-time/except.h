@@ -196,7 +196,7 @@ extern void exinv();			/* Invariant record */
 extern void exasrt();			/* Assertion record */
 extern void exfail();			/* Signals: reached end of a rescue clause */
 extern void panic();			/* Run-time raised panic */
-extern void fatal();			/* Run-time raised fatal errors */
+extern void fatal_error();			/* Run-time raised fatal errors */
 extern void exok();				/* Resumption has been successful */
 extern void esfail();			/* Eiffel system failure */
 extern void ereturn();			/* Return to lastly recorded rescue entry */

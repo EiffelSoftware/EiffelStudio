@@ -30,7 +30,7 @@ private IDRF idrf;			/* IDR filter for serializations */
 public void prt_init()
 {
 	if (-1 == idrf_create(&idrf, IDRF_SIZE))
-		fatal("cannot initialize streams");		/* Run-time routine */
+		fatal_error("cannot initialize streams");		/* Run-time routine */
 }
 
 /*

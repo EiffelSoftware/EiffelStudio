@@ -644,6 +644,84 @@ end:
 		break;
 
 	/*
+	 * Cast of a numeric type
+	 */
+
+	case BC_CAST_LONG:
+#ifdef DEBUG
+		dprintf(2)("BC_CAST_LONG\n");
+#endif
+		last = otop ();
+		switch (last->type & SK_HEAD) {
+			case (SK_FLOAT):{
+				float f = last->it_float;
+				last->it_long = f;
+				}
+				break;
+			case (SK_DOUBLE):{
+				double d = last->it_double;
+				last->it_long = d;
+				}
+				break;
+			default:
+				panic ("Illegal cast operation");
+			}
+		last->type = SK_INT;
+		break;
+
+	/*
+	 * Cast of a numeric type
+	 */
+
+	case BC_CAST_FLOAT:
+#ifdef DEBUG
+		dprintf(2)("BC_CAST_FLOAT\n");
+#endif
+		last = otop ();
+		switch (last->type & SK_HEAD) {
+			case (SK_INT):{
+				long l = last->it_long;
+				last->it_float = l;
+				}
+				break;
+			case (SK_DOUBLE):{
+				double d = last->it_double;
+				last->it_float = d;
+				}
+				break;
+			default:
+				panic ("Illegal cast operation");
+			}
+		last->type = SK_FLOAT;
+		break;
+
+	/*
+	 * Cast of a numeric type
+	 */
+
+	case BC_CAST_DOUBLE:
+#ifdef DEBUG
+		dprintf(2)("BC_CAST_DOUBLE\n");
+#endif
+		last = otop ();
+		switch (last->type & SK_HEAD) {
+			case (SK_INT):{
+				long l = last->it_long;
+				last->it_double = l;
+				}
+				break;
+			case (SK_FLOAT):{
+				float f = last->it_float;
+				last->it_double = f;
+				}
+				break;
+			default:
+				panic ("Illegal cast operation");
+			}
+		last->type = SK_DOUBLE;
+		break;
+
+	/*
 	 * Assignment to result.
 	 */
 	case BC_RASSIGN:
@@ -3895,6 +3973,7 @@ char *start;
 	register4 char *string;			/* Strings for assertions tag */
 	int type;						/* Stores type informations, usually */
 	int i;
+	double d;
 
 	IC = start;
 	for (;;) {					/* Indentation is wrong on purpose--RAM */
@@ -3954,8 +4033,8 @@ char *start;
 	 */
 	case BC_LASSIGN:
 		code = get_short();		/* Get the local number (from 1 to locnum) */
-		fprintf(fd, "0x%X %s #%d meta-type=%d\n", 
-			IC - sizeof(short) - 1, "BC_LASSIGN", code, type);
+		fprintf(fd, "0x%X %s #%d\n", 
+			IC - sizeof(short) - 1, "BC_LASSIGN", code);
 		break;
 
 	/*
@@ -4452,7 +4531,8 @@ char *start;
 	 * Real constant.
 	 */
 	case BC_FLOAT:
-		/* FIXME */
+		d = get_double();
+		fprintf(fd, "0x%X BC_FLOAT %f\n", IC - sizeof(double) - 1, d);
 		break;
 
 	/*
@@ -4676,6 +4756,22 @@ char *start;
 	case BC_NULL:
 		fprintf(fd, "0x%X BC_NULL\n", IC - 1);
 		return;
+
+	/*
+	 * Cast operator
+	 */
+
+	case BC_CAST_LONG:
+		fprintf(fd, "0x%X BC_CAST_LONG\n", IC - 1);
+		break;
+
+	case BC_CAST_FLOAT:
+		fprintf(fd, "0x%X BC_CAST_FLOAT\n", IC - 1);
+		break;
+
+	case BC_CAST_DOUBLE:
+		fprintf(fd, "0x%X BC_CAST_DOUBLE\n", IC - 1);
+		break;
 
 	default:
 		fprintf(fd, "0x%X UNKNOWN (opcode = %d)\n", IC - 1, code);

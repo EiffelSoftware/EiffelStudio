@@ -37,13 +37,20 @@ struct eif_opt {
 #define CK_INVARIANT	  8
 
 /* Assertion level values */
-#define AS_NO			  0
-#define AS_CHECK	  	128
-#define AS_LOOP		  	192
-#define AS_REQUIRE		224
-#define AS_ENSURE		240
-#define AS_INVARIANT	248
-#define AS_ALL			248
+
+/* The order is no, require, ensure, invariant, loop, check
+ * and for example, specifying ensure implies verifying require so
+ * AS_ENSURE is AS_REQUIRE+CK_ENSURE and so on for all the
+ * different levels.
+ */
+
+#define AS_NO				0
+#define AS_REQUIRE			CK_REQUIRE
+#define AS_ENSURE			(AS_REQUIRE+CK_ENSURE)
+#define AS_INVARIANT		(AS_ENSURE+CK_INVARIANT)
+#define AS_LOOP		  		(AS_INVARIANT+CK_LOOP)
+#define AS_CHECK	  		(AS_LOOP+CK_CHECK)
+#define AS_ALL				AS_CHECK
 
 /* Debug level values */
 #define DB_NO				0		 /* No debug */

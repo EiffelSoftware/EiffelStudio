@@ -128,7 +128,7 @@ feature -- Status report
 		bool Result = false;
 		int i, nb;
 		GENERIC_TYPE l_current_type, l_other_type;
-		EIFFEL_TYPE_INFO l_current, l_other;
+		EIFFEL_TYPE_INFO l_current;
 
 		#if ASSERTIONS
 			ASSERTIONS.REQUIRE ("other_not_void", other != null);

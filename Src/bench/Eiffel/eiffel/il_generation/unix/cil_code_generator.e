@@ -426,7 +426,7 @@ feature -- Class info
 		do
 		end
 
-	generate_class_mappings (class_type: CLASS_TYPE) is
+	generate_class_mappings (class_type: CLASS_TYPE; for_interface: BOOLEAN) is
 			-- Define all types, both external and eiffel one.
 		require
 			class_type_not_void: class_type /= Void

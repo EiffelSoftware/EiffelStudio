@@ -38,7 +38,7 @@ feature -- Basic operations
 			a_var_desc := a_type_info.var_desc (an_index)
 			a_documentation := a_type_info.documentation (a_var_desc.member_id)
 			if a_documentation.name = Void or else a_documentation.name.count = 0 then
-				create name.make (0)
+				create name.make (100)
 				name.append ("field_")
 				name.append_integer (an_index + 1)
 			else

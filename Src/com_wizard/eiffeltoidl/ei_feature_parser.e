@@ -34,7 +34,7 @@ feature -- Basic operations
 					inputs.first.substring_index (Infix_feature_indicator, 1) < 1 and -- Remove infix feature
 					inputs.first.substring_index (Prefix_feature_indicator, 1) < 1 then -- Remove prefix feature
 
-				create l_comment.make (0)
+				create l_comment.make (100)
 
 				inputs.first.replace_substring_all (Feature_indicator, Empty_string)
 

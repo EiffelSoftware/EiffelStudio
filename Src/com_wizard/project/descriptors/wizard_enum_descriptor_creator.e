@@ -41,7 +41,7 @@ feature -- Basic operations
 			tmp_guid := tmp_type_lib.library_attributes.guid
 			tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
 			if name = Void or else name.count = 0 then
-				create name.make (0)
+				create name.make (100)
 				name.append ("enum_")
 				name.append (tmp_lib_descriptor.name)
 				name.append ("_")
@@ -53,7 +53,7 @@ feature -- Basic operations
 				name.prepend (tmp_lib_descriptor.name)
 			end
 
-			create eiffel_class_name.make (0)
+			create eiffel_class_name.make (100)
 			eiffel_class_name.append ("ECOM_")
 			eiffel_class_name.append (name_for_class (name, type_kind, False))
 			eiffel_class_name.to_upper
@@ -62,7 +62,7 @@ feature -- Basic operations
 			if is_forbidden_c_word (name) then
 				name.prepend ("a_")
 			end
-			create c_type_name.make (0)
+			create c_type_name.make (100)
 			c_type_name.append (name)
 			system_descriptor.add_c_type (name)
 
@@ -95,7 +95,7 @@ feature -- Basic operations
 				a_documentation := a_type_info.documentation (member_id)
 				elem_name := clone (a_documentation.name)
 				if elem_name = Void or else elem_name.count = 0 then
-					create elem_name.make (0)
+					create elem_name.make (100)
 					elem_name.append (name)
 					elem_name.append ("_element_")
 					elem_name.append_integer(i + 1)

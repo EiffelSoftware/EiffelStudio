@@ -30,7 +30,7 @@ feature -- Initialization
 			
 			eiffel_class_name := name_for_class (name, type_kind, Shared_wizard_environment.client)
 
-			create c_header_file_name.make (0)
+			create c_header_file_name.make (100)
 			c_header_file_name.append ("ecom_")
 			c_header_file_name.append (name)
 			c_header_file_name.append (".h")

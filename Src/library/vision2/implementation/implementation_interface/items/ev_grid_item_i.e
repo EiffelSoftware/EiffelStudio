@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	background_color: EV_COLOR is
-			-- Background color of current item if any
+			-- Background color of current item
 		do
 			if internal_background_color /= Void then
 				Result := internal_background_color.twin
@@ -57,7 +57,7 @@ feature -- Access
 		end
 
 	foreground_color: EV_COLOR is
-			-- Foreground color of current item if any
+			-- Foreground color of current item
 		do
 			if internal_foreground_color /= Void then
 				Result := internal_foreground_color.twin
@@ -77,6 +77,7 @@ feature -- Access
 		end
 
 	parent: EV_GRID is
+			-- Grid to which `Current' is displayed in
 		do
 			if parent_grid_i /= Void then
 				Result := parent_grid_i.interface
@@ -99,10 +100,14 @@ feature -- Status setting
 			-- Set `is_selected' `True'.
 		do
 			if not is_selected then
-				is_selected := True
-				parent_row_i.increase_selected_item_count
-				parent_grid_i.redraw_client_area
-				fixme ("Perform a more optimal redraw when available")				
+				if parent_grid_i.single_row_selection_enabled then
+					parent_row_i.enable_select
+				else
+					internal_is_selected := True
+					parent_row_i.increase_selected_item_count
+					parent_grid_i.redraw_client_area
+					fixme ("Perform a more optimal redraw when available")
+				end
 			end
 		end
 
@@ -110,7 +115,7 @@ feature -- Status setting
 			-- Set `is_selected' `False'.
 		do
 			if is_selected then
-				is_selected := False
+				internal_is_selected := False
 				parent_row_i.decrease_selected_item_count
 				parent_grid_i.redraw_client_area
 				fixme ("Perform a more optimal redraw when available")				
@@ -125,8 +130,15 @@ feature -- Status report
 			Result := parent_grid_i /= Void
 		end
 		
-	is_selected: BOOLEAN
+	is_selected: BOOLEAN is
 			-- Is `Current' selected?
+		do
+			if parent_row_i.is_selected or else parent_column_i.is_selected then
+				Result := True
+			else
+				Result := internal_is_selected
+			end
+		end
 
 feature -- Element change
 
@@ -143,6 +155,9 @@ feature -- Element change
 		end
 		
 feature {EV_GRID_I} -- Implementation
+
+	internal_is_selected: BOOLEAN
+		-- Has `enable_select' been called on `Current'
 
 	set_parents (a_parent_grid_i: EV_GRID_I; a_parent_column_i: EV_GRID_COLUMN_I; a_parent_row_i: EV_GRID_ROW_I) is
 			-- Set the appropriate grid, column and row parents

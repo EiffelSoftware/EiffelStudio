@@ -102,12 +102,6 @@ feature -- Save
 		deferred
 		end
 
-	save_resource (res: RESOURCE) is
-			-- save `res' at the position `path')
-		deferred
-		end
-
-
 feature -- Status report
 
 	root_folder_i: RESOURCE_FOLDER_I

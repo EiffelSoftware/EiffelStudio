@@ -91,11 +91,6 @@ feature -- Status Report
 			bridge_ok: Result = implementation.is_destroyed
 		end
 
-feature -- Status Report
-
-	default_create_called: BOOLEAN
-			-- Has `default_create' been called?
-
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	 implementation: EV_ANY_I
@@ -163,10 +158,11 @@ feature {EV_ANY} -- Implementation
 	is_initialized: BOOLEAN
 			-- Has `Current' been initialized properly?
 			
-feature --
+feature -- Duplication
 
 	copy (other: like Current) is
-			-- 
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
 		do
 			check
 				cannot_copy_this_vision2_class: False
@@ -195,6 +191,9 @@ feature {NONE} -- Contract support
 			end
 			Result := True
 		end
+		
+	default_create_called: BOOLEAN
+			-- Has `default_create' been called?
 
 feature {EV_ANY} -- Contract support
 

@@ -68,32 +68,35 @@ feature -- Access
 			objects.extend (vision2_object)
 			widget.pointer_button_release_actions.force_extend (agent start_timer)
 			widget.key_release_actions.force_extend (agent start_timer)
-		end	
+		end
 		
-		start_timer is
-				-- Start a timer which is used to delay execution of `check_state'
-				-- until after the staate has changed.
-			local
-				timer: EV_TIMEOUT
-			do
-				create timer.make_with_interval (10)
-				timer.actions.extend (agent check_state)
-				timer.actions.extend (agent timer.destroy)
+	has_user_events: BOOLEAN is True
+		-- Does `Current' have user events which must be set?
+		
+	start_timer is
+			-- Start a timer which is used to delay execution of `check_state'
+			-- until after the staate has changed.
+		local
+			timer: EV_TIMEOUT
+		do
+			create timer.make_with_interval (10)
+			timer.actions.extend (agent check_state)
+			timer.actions.extend (agent timer.destroy)
+		end
+		
+	check_state is
+			--  Check state of `user_event_widget' and update first object in response.
+		require
+			widget_not_void: user_event_widget /= Void
+		do
+			if user_event_widget.is_selected then
+				for_first_object (agent {EV_DESELECTABLE}.enable_select)
+				update_editors
+			else
+				for_all_objects (agent {EV_DESELECTABLE}.disable_select)
+				update_editors
 			end
-			
-		check_state is
-				--  Check state of `user_event_widget' and update first object in response.
-			require
-				widget_not_void: user_event_widget /= Void
-			do
-				if user_event_widget.is_selected then
-					for_first_object (agent {EV_DESELECTABLE}.enable_select)
-					update_editors
-				else
-					for_all_objects (agent {EV_DESELECTABLE}.disable_select)
-					update_editors
-				end
-			end
+		end
 			
 	user_event_widget: like ev_type	
 

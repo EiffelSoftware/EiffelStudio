@@ -17,7 +17,8 @@ inherit
 	GB_EV_ANY
 		undefine
 			attribute_editor,
-			set_up_user_events
+			set_up_user_events,
+			has_user_events
 		redefine
 			ev_type
 		end

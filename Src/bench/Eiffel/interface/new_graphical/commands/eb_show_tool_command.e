@@ -50,7 +50,7 @@ feature -- Access
 	description: STRING is
 			-- Description for current command.
 		do
-			Result := "Show/hide " + name
+			Result := "Show/hide " + explorer_bar_item.title
 		end
 
 	menu_name: STRING is
@@ -60,9 +60,9 @@ feature -- Access
 		end
 
 	name: STRING is
+			-- Name to be displayed.
 		do
-			Result := clone (menu_name)
-			Result.prune_all ('&')
+			Result := explorer_bar_item.title
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is

@@ -25800,13 +25800,6 @@ feature -- External C structs
 	
 feature -- Externals
 
-	frozen c_gtk_menu_popup (menu: POINTER; x, y: INTEGER) is
-			-- Show `menu' on (`x', `y').
-			-- (from EV_C_GTK)
-		external
-			"C | %"ev_menu_imp.h%""
-		end
-
 	frozen gdk_current_time: INTEGER is
 			-- (from EV_C_GTK)
 		external

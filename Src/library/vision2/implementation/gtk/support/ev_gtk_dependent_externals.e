@@ -8,6 +8,13 @@ class
 
 feature -- Externals
 
+	frozen c_gtk_menu_popup (menu: POINTER; x, y: INTEGER) is
+			-- Show `menu' on (`x', `y').
+			-- (from EV_C_GTK)
+		external
+			"C | %"ev_menu_imp.h%""
+		end
+
 	frozen c_gdk_colormap_query_color (a_colormap: POINTER; a_pixel: INTEGER; a_gdkcolor_result: POINTER) is
 			-- Retrieve `a_gdkcolor_result' values from `a_pixel' using `a_colormap'.
 			-- (from EV_C_GTK)

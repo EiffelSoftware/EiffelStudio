@@ -30,7 +30,6 @@ feature
 		local
 			figures: APP_FIGURES;
 			sel_figure: STATE_CIRCLE;
-			void_figure: STATE_CIRCLE;
 			transitions: TRANSITION
 		do 
 			figures := application_editor.figures;
@@ -45,7 +44,7 @@ feature
 			if 			-- currently selected
 				sel_figure = figure
 			then
-				application_editor.set_selected (void_figure)
+				application_editor.set_selected (application_editor.initial_state_circle)
 			end;
 			undo_executed := True;
 			perform_update_display;

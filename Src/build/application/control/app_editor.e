@@ -190,11 +190,11 @@ feature -- Drawing area
 				if implementation /= Void then
 					state_list.set_selected (a_circle);
 				end;
-				main_panel.set_current_state (a_circle.data)
 				figures.set_selected (a_circle);
 				selected_figure := a_circle;
 				if selected_figure /= Void then
 					selected_figure.select_figure
+					main_panel.set_current_state (a_circle.data)
 				end;
 			end
 		end; 
@@ -374,7 +374,7 @@ feature {NONE} -- State and transition list
 				state_list.go_i_th (state_list.index_of (a_string_scrollable_element, 1))
 				state_list.select_item;
 			else
-				state_list.deselect_item
+--				state_list.deselect_item
 			end;
 		end; -- highlight_state
 

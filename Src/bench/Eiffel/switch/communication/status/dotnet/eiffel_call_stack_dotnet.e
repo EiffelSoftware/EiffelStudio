@@ -178,6 +178,7 @@ feature {NONE} -- Initialization
 			if l_active_thread /= Void then
 				l_enum_chain := l_active_thread.enumerate_chains
 				if l_active_thread.last_call_succeed and then l_enum_chain.get_count > 0 then
+					l_enum_chain.reset
 					l_chains := l_enum_chain.next (l_enum_chain.get_count)
 					from
 						c := l_chains.lower
@@ -189,6 +190,7 @@ feature {NONE} -- Initialization
 						if l_chain /= Void then
 							l_enum_frames := l_chain.enumerate_frames
 							if l_chain.last_call_succeed and then l_enum_frames.get_count > 0 then
+								l_enum_frames.reset
 								l_frames := l_enum_frames.next (l_enum_frames.get_count)
 								from
 									i := l_frames.lower

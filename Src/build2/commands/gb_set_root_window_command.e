@@ -53,6 +53,7 @@ feature -- Basic operations
 				-- Execute `Current'.
 		do
 			window_selector.change_root_window
+			window_selector.update_select_root_window_command
 		end
 		
 end -- class GB_SET_ROOT_WINDOW_COMMAND

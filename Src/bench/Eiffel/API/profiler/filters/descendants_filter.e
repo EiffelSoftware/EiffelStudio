@@ -35,7 +35,7 @@ feature -- Checking
 
 	copy_value (item: PROFILE_DATA) is
 		do
-			item_value := item.descendants_sec;
+			item_value := item.descendants;
 		end
 
 	filtering_is_allowed: BOOLEAN is

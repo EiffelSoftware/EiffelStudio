@@ -76,6 +76,12 @@ feature -- Adding information
 			profile_data.stop_computation;
 		end;
 
+	compute_percentages is
+			-- Launch the computation of the percentages
+		do
+			profile_data.compute_percentages (total_execution_time)
+		end
+
 feature -- Status report
 
 	is_total_time_available: BOOLEAN is

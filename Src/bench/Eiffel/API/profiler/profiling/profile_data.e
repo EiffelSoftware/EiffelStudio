@@ -17,13 +17,14 @@ inherit
 
 feature -- Creation feature
 
-	make(num_call : INTEGER; time, self_s, descen: REAL) is
+	make(num_call : INTEGER; feature_percentage, feature_total, feature_descendants: REAL) is
 			-- Create profile data for a single function
 		do
-			calls := num_call;
-			self := self_s;
-			descendant := descen;
-			per_cent_time := time;
+			calls := num_call
+			total := feature_total
+			descendants := feature_descendants
+			percentage := feature_percentage
+			self := total - descendants
 		end;
 
 feature -- Output
@@ -32,29 +33,29 @@ feature -- Output
 			-- Representation for output.
 		do
 			!! Result.make (0);
-			Result.append_string ("|%T");
-			Result.append_string (number_of_calls.out);
-			Result.append_string ("%T|%T");
-			Result.append_string (self.out);
-			Result.append_string ("%T|%T");
-			Result.append_string (descendant.out);
-			Result.append_string ("%T|%T");
-			Result.append_string (per_cent_time.out);
-			Result.append_string ("%T|%T");
-			Result.append_string (int_function.name);
-		end;
+			Result.append_string ("|%T")
+			Result.append_string (calls.out)
+			Result.append_string ("%T|%T")
+			Result.append_string (self.out)
+			Result.append_string ("%T|%T")
+			Result.append_string (descendants.out)
+			Result.append_string ("%T|%T")
+			Result.append_string (percentage.out)
+			Result.append_string ("%T|%T")
+			Result.append_string (int_function.name)
+		end
 
 feature -- Compare
 
 	is_equal (other: like Current): BOOLEAN is
 			-- is `Current' equal to `other'?
 		do
-			Result := number_of_calls = other.number_of_calls and then
+			Result := calls = other.calls and then
 					self = other.self and then
-					descendant = other.descendant and then
-					per_cent_time = other.per_cent_time and then
-					int_function.is_equal (other.int_function);
-		end;
+					descendants = other.descendants and then
+					percentage = other.percentage and then
+					int_function.is_equal (other.int_function)
+		end
 
 feature -- copy features
 
@@ -62,59 +63,31 @@ feature -- copy features
 			-- Reinitialize by copying the attributes of `other'.
 			-- (This is also used by `clone'.)
 		deferred
-		end;
+		end
 
 feature -- Status report
-
-	number_of_calls: INTEGER is
-			-- Number of calls to the function.
-		do
-			Result := calls;
-		end;
 
 	function: FUNCTION is
 			-- The function where all is about.
 		deferred
-		end;
+		end
 
-	self_sec: REAL is
-			-- Time spent in the function itself.
-		do
-			Result := self;
-		end;
 
-	descendants_sec: REAL is
-			-- Time spent in the descendants of the function.
-		do
-			Result := descendant;
-		end;
-
-	total_sec: REAL is
-			-- Time spent in both the function itself and
-			-- its descendants.
-		do
-			Result := self + descendant;
-		end;
-
-	percentage: REAL is
-			-- Percentage of time the function executed during
-			-- the run.
-		do
-			Result := per_cent_time;
-		end;
-
-feature {PROFILE_DATA} -- attributes
+feature -- attributes
 
 	calls: INTEGER
 		-- Number of calls made to the function
 
+	total,
+		-- Total amount of seconds spent in the function.
+
 	self,
 		-- Total amount of seconds spent in the function itself.
 
-	descendant,
+	descendants,
 		-- Total amount of seconds spent in the descendants of the function.
 
-	per_cent_time: REAL
+	percentage: REAL
 		-- Percentage of time spent in the function and the descendants.
 
 	int_function: FUNCTION
@@ -122,11 +95,19 @@ feature {PROFILE_DATA} -- attributes
 
 feature {PROFILE_SET} -- Spit Information (for debugging)
 
-    spit_info is
-            -- Spits all kinds of information about Current.
-        do
+	spit_info is
+		-- Spits all kinds of information about Current.
+		do
 			io.error.putstring (out);
 			io.error.new_line
-        end
+		end
+
+	compute_percentage (max_total: REAL) is
+		require
+			max_not_null: max_total /= 0
+		do
+			percentage := total * 100 / max_total
+		end
+
 
 end -- class PROFILE_DATA

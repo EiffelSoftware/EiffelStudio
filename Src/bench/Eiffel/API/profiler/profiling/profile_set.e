@@ -238,6 +238,19 @@ end;
 			end;
 		end;
 
+	compute_percentages (max_total: REAL) is
+			-- Compute the percentages for Eiffel features
+		do
+			from
+				eiffel_profiling_list.start
+			until
+				eiffel_profiling_list.after
+			loop
+				eiffel_profiling_list.item.compute_percentage (max_total)
+				eiffel_profiling_list.forth
+			end
+		end
+
 feature -- Status report
 
 	number_of_feature_calls: INTEGER is
@@ -248,7 +261,7 @@ feature -- Status report
 			until
 				eiffel_profiling_list.after
 			loop
-				Result := Result + eiffel_profiling_list.item.number_of_calls;
+				Result := Result + eiffel_profiling_list.item.calls;
 				eiffel_profiling_list.forth;
 			end;
 		end;
@@ -261,7 +274,7 @@ feature -- Status report
 			until
 				c_profiling_list.after
 			loop
-				Result := Result + c_profiling_list.item.number_of_calls;
+				Result := Result + c_profiling_list.item.calls;
 				c_profiling_list.forth;
 			end;
 		end;
@@ -301,63 +314,63 @@ feature {NONE} -- Implementation
 			-- Initialization of column-attributes for the
 			-- language Eiffel.
 		do
-			calls_min_eiffel := data.number_of_calls;
-			calls_max_eiffel := data.number_of_calls;
-			calls_avg_eiffel := data.number_of_calls;
+			calls_min_eiffel := data.calls;
+			calls_max_eiffel := data.calls;
+			calls_avg_eiffel := data.calls;
 			percentage_min_eiffel := data.percentage;
 			percentage_max_eiffel := data.percentage;
 			percentage_avg_eiffel := data.percentage;
-			descendants_min_eiffel := data.descendants_sec;
-			descendants_max_eiffel := data.descendants_sec;
-			descendants_avg_eiffel := data.descendants_sec;
-			self_min_eiffel := data.self_sec;
-			self_max_eiffel := data.self_sec;
-			self_avg_eiffel := data.self_sec;
-			total_min_eiffel := data.total_sec;
-			total_max_eiffel := data.total_sec;
-			total_avg_eiffel := data.total_sec;
+			descendants_min_eiffel := data.descendants;
+			descendants_max_eiffel := data.descendants;
+			descendants_avg_eiffel := data.descendants;
+			self_min_eiffel := data.self;
+			self_max_eiffel := data.self;
+			self_avg_eiffel := data.self;
+			total_min_eiffel := data.total;
+			total_max_eiffel := data.total;
+			total_avg_eiffel := data.total;
 		end;
 
 	init_c (data: C_PROFILE_DATA) is
 			-- Initialization of column-attributes for the
 			-- language C.
 		do
-			calls_min_c := data.number_of_calls;
-			calls_max_c := data.number_of_calls;
-			calls_avg_c := data.number_of_calls;
+			calls_min_c := data.calls;
+			calls_max_c := data.calls;
+			calls_avg_c := data.calls;
 			percentage_min_c := data.percentage;
 			percentage_max_c := data.percentage;
 			percentage_avg_c := data.percentage;
-			descendants_min_c := data.descendants_sec;
-			descendants_max_c := data.descendants_sec;
-			descendants_avg_c := data.descendants_sec;
-			self_min_c := data.self_sec;
-			self_max_c := data.self_sec;
-			self_avg_c := data.self_sec;
-			total_min_c := data.total_sec;
-			total_max_c := data.total_sec;
-			total_avg_c := data.total_sec;
+			descendants_min_c := data.descendants;
+			descendants_max_c := data.descendants;
+			descendants_avg_c := data.descendants;
+			self_min_c := data.self;
+			self_max_c := data.self;
+			self_avg_c := data.self;
+			total_min_c := data.total;
+			total_max_c := data.total;
+			total_avg_c := data.total;
 		end;
 
 	init_cycle (data: CYCLE_PROFILE_DATA) is
 			-- Initialization of column-attributes for the
 			-- cycles.
 		do
-			calls_min_cycle := data.number_of_calls;
-			calls_max_cycle := data.number_of_calls;
-			calls_avg_cycle := data.number_of_calls;
+			calls_min_cycle := data.calls;
+			calls_max_cycle := data.calls;
+			calls_avg_cycle := data.calls;
 			percentage_min_cycle := data.percentage;
 			percentage_max_cycle := data.percentage;
 			percentage_avg_cycle := data.percentage;
-			descendants_min_cycle := data.descendants_sec;
-			descendants_max_cycle := data.descendants_sec;
-			descendants_avg_cycle := data.descendants_sec;
-			self_min_cycle := data.self_sec;
-			self_max_cycle := data.self_sec;
-			self_avg_cycle := data.self_sec;
-			total_min_cycle := data.total_sec;
-			total_max_cycle := data.total_sec;
-			total_avg_cycle := data.total_sec;
+			descendants_min_cycle := data.descendants;
+			descendants_max_cycle := data.descendants;
+			descendants_avg_cycle := data.descendants;
+			self_min_cycle := data.self;
+			self_max_cycle := data.self;
+			self_avg_cycle := data.self;
+			total_min_cycle := data.total;
+			total_max_cycle := data.total;
+			total_avg_cycle := data.total;
 		end;
 
 	update_eiffel (data: EIFFEL_PROFILE_DATA) is
@@ -367,34 +380,34 @@ feature {NONE} -- Implementation
 			if calls_min_eiffel = -1 then
 				init_eiffel (data);
 			else
-				if data.number_of_calls < calls_min_eiffel then
-					calls_min_eiffel := data.number_of_calls;
+				if data.calls < calls_min_eiffel then
+					calls_min_eiffel := data.calls;
 				end;
-				if data.number_of_calls > calls_max_eiffel then
-					calls_max_eiffel := data.number_of_calls;
+				if data.calls > calls_max_eiffel then
+					calls_max_eiffel := data.calls;
 				end;
-				calls_avg_eiffel := calls_avg_eiffel + data.number_of_calls;
-				if data.descendants_sec < descendants_min_eiffel then
-					descendants_min_eiffel := data.descendants_sec;
+				calls_avg_eiffel := calls_avg_eiffel + data.calls;
+				if data.descendants < descendants_min_eiffel then
+					descendants_min_eiffel := data.descendants;
 				end;
-				if data.descendants_sec > descendants_max_eiffel then
-					descendants_max_eiffel := data.descendants_sec;
+				if data.descendants > descendants_max_eiffel then
+					descendants_max_eiffel := data.descendants;
 				end;
-				descendants_avg_eiffel := descendants_avg_eiffel + data.descendants_sec;
-				if data.self_sec < self_min_eiffel then
-					self_min_eiffel := data.self_sec;
+				descendants_avg_eiffel := descendants_avg_eiffel + data.descendants;
+				if data.self < self_min_eiffel then
+					self_min_eiffel := data.self;
 				end;
-				if data.self_sec > self_max_eiffel then
-					self_max_eiffel := data.self_sec;
+				if data.self > self_max_eiffel then
+					self_max_eiffel := data.self;
 				end;
-				self_avg_eiffel := self_avg_eiffel + data.self_sec;
-				if data.total_sec < total_min_eiffel then
-					total_min_eiffel := data.total_sec;
+				self_avg_eiffel := self_avg_eiffel + data.self;
+				if data.total < total_min_eiffel then
+					total_min_eiffel := data.total;
 				end;
-				if data.total_sec > total_max_eiffel then
-					total_max_eiffel := data.total_sec;
+				if data.total > total_max_eiffel then
+					total_max_eiffel := data.total;
 				end;
-				total_avg_eiffel := total_avg_eiffel + data.total_sec;
+				total_avg_eiffel := total_avg_eiffel + data.total;
 				if data.percentage < percentage_min_eiffel then
 					percentage_min_eiffel := data.percentage;
 				end;
@@ -411,34 +424,34 @@ feature {NONE} -- Implementation
 			if calls_min_c = -1 then
 				init_c (data);
 			else
-				if data.number_of_calls < calls_min_c then
-					calls_min_c := data.number_of_calls;
+				if data.calls < calls_min_c then
+					calls_min_c := data.calls;
 				end;
-				if data.number_of_calls > calls_max_c then
-					calls_max_c := data.number_of_calls;
+				if data.calls > calls_max_c then
+					calls_max_c := data.calls;
 				end;
-				calls_avg_c := calls_avg_c + data.number_of_calls;
-				if data.descendants_sec < descendants_min_c then
-					descendants_min_c := data.descendants_sec;
+				calls_avg_c := calls_avg_c + data.calls;
+				if data.descendants < descendants_min_c then
+					descendants_min_c := data.descendants;
 				end;
-				if data.descendants_sec > descendants_max_c then
-					descendants_max_c := data.descendants_sec;
+				if data.descendants > descendants_max_c then
+					descendants_max_c := data.descendants;
 				end;
-				descendants_avg_c := descendants_avg_eiffel + data.descendants_sec;
-				if data.self_sec < self_min_c then
-					self_min_c := data.self_sec;
+				descendants_avg_c := descendants_avg_eiffel + data.descendants;
+				if data.self < self_min_c then
+					self_min_c := data.self;
 				end;
-				if data.self_sec > self_max_c then
-					self_max_c := data.self_sec;
+				if data.self > self_max_c then
+					self_max_c := data.self;
 				end;
-				self_avg_c := self_avg_c + data.self_sec;
-				if data.total_sec < total_min_c then
-					total_min_c := data.total_sec;
+				self_avg_c := self_avg_c + data.self;
+				if data.total < total_min_c then
+					total_min_c := data.total;
 				end;
-				if data.total_sec > total_max_c then
-					total_max_c := data.total_sec;
+				if data.total > total_max_c then
+					total_max_c := data.total;
 				end;
-				total_avg_c := total_avg_c + data.total_sec;
+				total_avg_c := total_avg_c + data.total;
 				if data.percentage < percentage_min_c then
 					percentage_min_c := data.percentage;
 				end;
@@ -455,34 +468,34 @@ feature {NONE} -- Implementation
 			if calls_min_cycle = -1 then
 				init_cycle (data);
 			else
-				if data.number_of_calls < calls_min_cycle then
-					calls_min_cycle := data.number_of_calls;
+				if data.calls < calls_min_cycle then
+					calls_min_cycle := data.calls;
 				end;
-				if data.number_of_calls > calls_max_cycle then
-					calls_max_cycle := data.number_of_calls;
+				if data.calls > calls_max_cycle then
+					calls_max_cycle := data.calls;
 				end;
-				calls_avg_cycle := calls_avg_cycle + data.number_of_calls;
-				if data.descendants_sec < descendants_min_cycle then
-					descendants_min_cycle := data.descendants_sec;
+				calls_avg_cycle := calls_avg_cycle + data.calls;
+				if data.descendants < descendants_min_cycle then
+					descendants_min_cycle := data.descendants;
 				end;
-				if data.descendants_sec > descendants_max_cycle then
-					descendants_max_cycle := data.descendants_sec;
+				if data.descendants > descendants_max_cycle then
+					descendants_max_cycle := data.descendants;
 				end;
-				descendants_avg_cycle := descendants_avg_cycle + data.descendants_sec;
-				if data.self_sec < self_min_cycle then
-					self_min_cycle := data.self_sec;
+				descendants_avg_cycle := descendants_avg_cycle + data.descendants;
+				if data.self < self_min_cycle then
+					self_min_cycle := data.self;
 				end;
-				if data.self_sec > self_max_cycle then
-					self_max_cycle := data.self_sec;
+				if data.self > self_max_cycle then
+					self_max_cycle := data.self;
 				end;
-				self_avg_cycle := self_avg_cycle + data.self_sec;
-				if data.total_sec < total_min_cycle then
-					total_min_cycle := data.total_sec;
+				self_avg_cycle := self_avg_cycle + data.self;
+				if data.total < total_min_cycle then
+					total_min_cycle := data.total;
 				end;
-				if data.total_sec > total_max_cycle then
-					total_max_cycle := data.total_sec;
+				if data.total > total_max_cycle then
+					total_max_cycle := data.total;
 				end;
-				total_avg_cycle := total_avg_cycle + data.total_sec;
+				total_avg_cycle := total_avg_cycle + data.total;
 				if data.percentage < percentage_min_cycle then
 					percentage_min_cycle := data.percentage;
 				end;

@@ -13,7 +13,14 @@ inherit
 feature -- Access
 
 	name: STRING is
-			-- Name of the font
+			-- Face name.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	system_name: STRING is
+			-- System name.
 		require
 			exists: not destroyed
 		deferred

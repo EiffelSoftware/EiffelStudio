@@ -12,7 +12,7 @@ inherit
 			assign_code, expanded_assign_code, reverse_code,
 			make_end_assignment, make_end_reverse_assignment,
 			bit_assign_code, assigns_to, array_descriptor,
-			pre_inlined_code
+			pre_inlined_code, is_separate
 		end
 	
 feature 
@@ -147,5 +147,13 @@ feature -- Inlining
 			!!Result;
 			Result.fill_from (Current);
 		end
+
+feature -- Concurrent Eiffel
+
+	is_separate: BOOLEAN is
+			-- Local type
+		do
+			Result := context.byte_code.locals.item(position).is_separate;
+		end;
 
 end

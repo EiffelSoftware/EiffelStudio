@@ -99,9 +99,18 @@ feature {NONE} -- Initialization
 					main_window.show
 					post_launch_actions.extend (agent open_with_name (command_line.argument_array @ 1))
 					launch
-				else
+				end
+			end
+		
+			if command_line.argument_array.count = 4 then
+				-- In this situation, Build is being loaded by a double click from the VisualStudio explorer.
+				-- The arguments are as follows:
+				-- 1. The location to the installation directory of Build. This points to the root directory of Build.
+				-- 2. "visualstudio_project" which informs Build it has been launched from VS.
+				-- 3. Full path to location of BPR file.
+				if (command_line.argument_array @ 2).as_lower.is_equal (Visual_studio_project_argument) then
 					system_status.enable_wizard_system
-					create wizard_manager.make_and_launch_as_modify_wizard (visual_studio_information.Visual_studio_pixmap_location)
+					create wizard_manager.make_and_launch_as_modify_wizard (visual_studio_information.Visual_studio_pixmap_location)					
 				end
 			end
 

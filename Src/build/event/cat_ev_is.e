@@ -5,10 +5,10 @@ inherit
 
 	EV_ICON_STONE
 		-- added by samik
-		undefine
-			init_toolkit
-		-- end of samik     
-		end;
+        undefine
+            init_toolkit
+        -- end of samik     
+        end;
 	HOLE
 		rename
 			target as source

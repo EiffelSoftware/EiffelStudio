@@ -39,4 +39,28 @@ feature
 			Result := not (scale = Void)
 		end;
 
+	specific_add (a_widget: WIDGET; a_command: COMMAND) is
+			-- Add	the command represented by `a_cmd_instance' to 
+			-- `a_context' according to the kind of event.
+		local
+			scale_widget: SCALE
+		do
+			scale_widget ?= a_widget
+			if scale_widget /= Void then
+				scale_widget.add_move_action (a_command, Void)
+			end
+		end
+
+	specific_remove (a_widget: WIDGET; a_command: COMMAND	) is
+			-- Remove `a_command' from `a_widget' according to the
+			-- kind of event.
+		local
+			scale_widget: SCALE
+		do
+			scale_widget ?= a_widget
+			if scale_widget /= Void then
+				scale_widget.remove_move_action (a_command, Void)
+			end
+		end
+
 end

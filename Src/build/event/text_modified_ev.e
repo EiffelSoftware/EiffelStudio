@@ -39,4 +39,28 @@ feature
 			Result := not (text = Void)
 		end;
 
+	specific_add (a_widget: WIDGET; a_command: COMMAND) is
+			-- Add	the command represented by `a_cmd_instance' to 
+			-- `a_context' according to the kind of event.
+		local
+			text_widget: TEXT
+		do
+			text_widget ?= a_widget
+			if text_widget /= Void then
+				text_widget.add_modify_action (a_command, Void)
+			end
+		end
+
+	specific_remove (a_widget: WIDGET; a_command: COMMAND	) is
+			-- Remove `a_command' from `a_widget' according to the
+			-- kind of event.
+		local
+			text_widget: TEXT
+		do
+			text_widget ?= a_widget
+			if text_widget /= Void then
+				text_widget.remove_modify_action (a_command, Void)
+			end
+		end
+
 end

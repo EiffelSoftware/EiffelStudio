@@ -64,6 +64,9 @@ feature {NONE} --samik, this was CATALOG
 		do
 			page_make (cat);
 			append_general_events;
+			-- added by samik
+	--		set_focus_string (Focus_labels.general_label)
+			-- end of samik
 		end
 
 end -- class GENERAL_EVENTS   

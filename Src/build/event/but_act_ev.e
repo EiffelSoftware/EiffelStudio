@@ -41,4 +41,30 @@ feature
 			Result := (not (a_button = Void)) and (toggle = Void);
 		end;
 
+feature 
+
+	specific_add (a_widget: WIDGET; a_command: COMMAND) is
+			-- Add	`a_command' to `a_widget' according to the 
+			-- kind of event.
+		local
+			button_widget: BUTTON
+		do
+			button_widget ?= a_widget
+			if button_widget /= Void then
+				button_widget.add_activate_action (a_command, Void)
+			end
+		end
+
+	specific_remove (a_widget: WIDGET; a_command: COMMAND	) is
+			-- Remove `a_command' from `a_widget' according to the
+			-- kind of event.
+		local
+			button_widget: BUTTON
+		do
+			button_widget ?= a_widget
+			if button_widget /= Void then
+				button_widget.remove_activate_action (a_command, Void)
+			end
+		end
+
 end

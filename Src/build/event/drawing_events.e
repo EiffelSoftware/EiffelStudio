@@ -63,6 +63,9 @@ feature {NONE}
 			extend (expose_ev);
 			extend (input_ev);
 			extend (resize_ev);
+			-- added by samik
+	--		set_focus_string (Focus_labels.drawing_label)
+			-- end of samik	
 		end
 
 end -- class TEXT_EVENTS   

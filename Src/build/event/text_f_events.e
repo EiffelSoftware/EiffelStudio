@@ -61,6 +61,9 @@ feature {NONE} --samik, this was CATALOG
 		do
 			make_page (cat);
 			extend (key_return_ev);
+			-- added by samik
+			--button.set_focus_string (Focus_labels.text_field_label)
+			-- end of samik
 		end
 
 end

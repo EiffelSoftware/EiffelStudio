@@ -41,4 +41,46 @@ feature
 			Result := (not (scale = Void)) or (not (toggle = Void))
 		end;
 
+	specific_add (a_widget: WIDGET; a_command: COMMAND) is
+			-- Add	the command represented by `a_cmd_instance' to 
+			-- `a_context' according to the kind of event.
+		local
+			scrollbar_widget: SCROLLBAR
+				-- This one should be useless.
+			toggle_b_widget: TOGGLE_B
+			scale_widget: SCALE
+		do
+			scrollbar_widget ?= a_widget
+			toggle_b_widget ?= a_widget
+			scale_widget ?= a_widget
+			if scrollbar_widget /= Void then
+				scrollbar_widget.add_value_changed_action (a_command, Void)
+			elseif toggle_b_widget /= Void then
+				toggle_b_widget.add_value_changed_action (a_command, Void)
+			elseif scale_widget /= Void then
+				scale_widget.add_value_changed_action (a_command, Void)
+			end
+		end
+
+	specific_remove (a_widget: WIDGET; a_command: COMMAND	) is
+			-- Remove `a_command' from `a_widget' according to the
+			-- kind of event.
+		local
+			scrollbar_widget: SCROLLBAR
+				-- This one should be useless.
+			toggle_b_widget: TOGGLE_B
+			scale_widget: SCALE
+		do
+			scrollbar_widget ?= a_widget
+			toggle_b_widget ?= a_widget
+			scale_widget ?= a_widget
+			if scrollbar_widget /= Void then
+				scrollbar_widget.remove_value_changed_action (a_command, Void)
+			elseif toggle_b_widget /= Void then
+				toggle_b_widget.remove_value_changed_action (a_command, Void)
+			elseif scale_widget /= Void then
+				scale_widget.remove_value_changed_action (a_command, Void)
+			end
+		end
+
 end

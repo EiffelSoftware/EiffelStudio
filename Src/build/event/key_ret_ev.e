@@ -39,4 +39,28 @@ feature
 			Result := not (a_tf = Void);
 		end;
 
+	specific_add (a_widget: WIDGET; a_command: COMMAND) is
+			-- Add	`a_command' to `a_widget' according to the 
+			-- kind of event.
+		local
+			text_field_widget: TEXT_FIELD
+		do
+			text_field_widget ?= a_widget
+			if text_field_widget /= Void then
+				text_field_widget.set_action ("<Key>Return", a_command, Void)
+			end
+		end
+
+	specific_remove (a_widget: WIDGET; a_command: COMMAND	) is
+			-- Remove `a_command' from `a_widget' according to the
+			-- kind of event.
+		local
+			text_field_widget: TEXT_FIELD
+		do
+			text_field_widget ?= a_widget
+			if text_field_widget /= Void then
+				text_field_widget.remove_action ("<Key>Return")
+			end
+		end
+
 end

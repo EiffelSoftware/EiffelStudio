@@ -137,7 +137,7 @@ feature
 			text_c: TEXT_C;
 			text_f_c: TEXT_FIELD_C;
 			dr_area_c: DR_AREA_C;
-			list: SCROLL_LIST_C;
+			list: SCROLLABLE_LIST_C;
 			scale_c: SCALE_C;
 			previous_optional_page: EVENT_PAGE;
 			page: EVENT_PAGE

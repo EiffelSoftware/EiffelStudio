@@ -308,22 +308,26 @@ feature {NONE}
 	current_label: STRING;
 			-- Current selected label
 	
-	curr_trans: SORTED_TWO_WAY_LIST [TRAN_NAME] is
+	curr_trans: ARRAYED_LIST [TRAN_NAME] is
 			-- All the  transitions of a selected state in alphabetical order
 		local
 			state: STATE
+			a_sorted_list: SORTED_TWO_WAY_LIST [TRAN_NAME]
 		do
+			!! Result.make (0)
 			if selected_figure /= Void then
 				state := selected_figure.data;	
-				if
-					not (state = Void)
-				then
-					Result := transitions.all_transitions (state)
-				else
-					!!Result.make
+				if state /= Void then
+					a_sorted_list := transitions.all_transitions (state)
+					from
+						a_sorted_list.start
+					until
+						a_sorted_list.after
+					loop
+						Result.extend (a_sorted_list.item)
+						a_sorted_list.forth
+					end
 				end;
-			else
-				!!Result.make
 			end;
 		end; 
 
@@ -357,12 +361,16 @@ feature {NONE} -- State and transition list
 	highlight_state is
 			-- Highlight selected_figure (i.e. state) in state_list.
 			-- Don't highlight if selected_figure is void.
+		local
+			a_string_scrollable_element: STRING_SCROLLABLE_ELEMENT
 		do
 			if
 				not (selected_figure = Void)
 			then
 				state_list.start;
-				state_list.search_equal (selected_figure.text);
+				!! a_string_scrollable_element.make (0)
+				a_string_scrollable_element.append (selected_figure.text)
+				state_list.go_i_th (state_list.index_of (a_string_scrollable_element, 1))
 				state_list.select_item;
 			else
 				state_list.deselect_item
@@ -411,25 +419,37 @@ feature {NONE}
 			end;
 		end; 
 
-	states: SORTED_TWO_WAY_LIST [STRING] is
+	states: ARRAYED_LIST [STRING_SCROLLABLE_ELEMENT] is
 			-- All the state names of the application in alphabetical order
 		local
 			text: STRING;
 			circle: STATE_CIRCLE
+			a_str_scr_elt: STRING_SCROLLABLE_ELEMENT
 		do
 			from
 				figures.start;
-				!!Result.make
+				!!Result.make (0)
 			until
 				figures.after
 			loop
 				circle ?= figures.figure;
-				if
-					not (circle = Void) and then 
-					not Result.has (circle.text)
-				then	
-					Result.extend (circle.text)
-				end;
+				!! a_str_scr_elt.make (0)
+				if circle /= Void then
+					a_str_scr_elt.append (circle.text)
+					if
+						not Result.has (a_str_scr_elt)
+					then	
+						from
+							Result.start
+						until
+							Result.after or else Result.item.value <= circle.text
+						loop
+							Result.forth
+						end
+						Result.put_left (a_str_scr_elt)
+						Result.back
+					end;
+				end
 				figures.forth
 			end
 		end; -- states
@@ -507,7 +527,6 @@ feature {NONE}
 			-- samik
 		do
 			make_visible		
-			
 		end;
 
 	make_visible is
@@ -609,6 +628,7 @@ feature {NONE}
 			circle: STATE_CIRCLE;
 			expose_data: EXPOSE_DATA;
 			rename_com: RENAME_COMMAND
+			a_string_scrollable_element: STRING_SCROLLABLE_ELEMENT
 		do
 			if argument = expose_action then
 				expose_data ?= context_data;
@@ -633,19 +653,22 @@ feature {NONE}
 			elseif argument = set_state_action then
 				if (state_list.selected_item = Void) then
 					state_list.start;
-					state_list.search_equal (selected_figure.text);
-					state_list.select_item;
+					!! a_string_scrollable_element.make (0)
+					a_string_scrollable_element.append (selected_figure.text)
+					state_list.go_i_th (state_list.index_of (a_string_scrollable_element, 1))					state_list.select_item;
 					display_transitions;
 				else
-					select_state (state_list.selected_item)
+					select_state (state_list.selected_item.value)
 				end;
 			elseif argument = set_label_action then
 				if (transition_list.selected_item = Void) then
 					transition_list.start;
-					transition_list.search_equal (current_label);
+					!! a_string_scrollable_element.make (0)
+					a_string_scrollable_element.append (current_label)
+					transition_list.go_i_th (state_list.index_of (a_string_scrollable_element, 1))
 					transition_list.select_item;
 				else
-					current_label := transition_list.selected_item;
+					current_label := transition_list.selected_item.value;
 				end;
 			end;
 		end; 

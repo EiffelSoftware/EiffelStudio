@@ -63,7 +63,7 @@ feature -- Creation
 		do
 			!! form_list.make (1, Context_const.total_nbr_of_forms)
 
-			Precursor (a_name, a_parent)
+			{FORM} Precursor (a_name, a_parent)
 			!! focus_area_form.make (Widget_names.form1, Current)
 			!! context_hole.make (Current, focus_area_form)
 			!! first_separator.make (Widget_names.separator, Current)
@@ -103,6 +103,7 @@ feature -- Creation
 				-- * Creation of the forms *
 				-- *************************
 
+			!! behavior_form.make (Current)
 			!! geometry_form.make (Current)
 			!! label_text_form.make (Current)
 			!! perm_wind_form.make (Current)
@@ -121,7 +122,6 @@ feature -- Creation
 			!! text_field_form.make (Current)
 			!! color_form.make (Current)
 			!! drawing_box_form.make (Current)
-			!! behavior_form.make (Current)
 			!! bull_resize_form.make (Current)
 			!! grid_form.make (Current)
 			!! toggle_form.make (Current)

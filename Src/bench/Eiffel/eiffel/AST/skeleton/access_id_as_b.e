@@ -12,22 +12,29 @@ class ACCESS_ID_AS_B
 inherit
 
 	ACCESS_ID_AS
-		rename
-			feature_name as old_id_feature_name,
-			parameters as old_id_parameters
+		redefine
+			feature_name, parameters
 		end;
 
 	ACCESS_INV_AS_B
 		rename
 			access_type as feature_access_type
+		redefine
+			feature_name, parameters
 		end;
 
 	ACCESS_INV_AS_B
 		redefine
-			access_type
+			access_type, feature_name, parameters
 		select 
-			access_type, parameters, feature_name
+			access_type
 		end
+
+feature -- Properties
+
+	feature_name: ID_AS_B
+
+	parameters: EIFFEL_LIST_B [EXPR_AS_B]
 
 feature
 

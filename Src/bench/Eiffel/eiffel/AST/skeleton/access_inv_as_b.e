@@ -13,17 +13,20 @@ class ACCESS_INV_AS_B
 inherit
 
 	ACCESS_INV_AS
-		rename
-			feature_name as old_feature_name,
-			parameters as old_parameters
+		redefine
+			feature_name, parameters
 		end;
 
 	ACCESS_FEAT_AS_B
 		redefine
-			is_export_valid
-		select
-			feature_name, parameters
+			is_export_valid, feature_name, parameters
 		end
+
+feature -- Properties
+
+	feature_name: ID_AS_B
+
+	parameters: EIFFEL_LIST_B [EXPR_AS_B]
 
 feature
 

@@ -63,7 +63,6 @@ feature {EB_PRINTER} -- Basic operations
 		local
 			cmd: STRING
 			name: STRING
-			i: INTEGER
 			fn: FILE_NAME
 			file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
@@ -72,20 +71,12 @@ feature {EB_PRINTER} -- Basic operations
 			sent_text: STRING
 		do
 			if not retried then
-				cmd := "lp -d "
+				cmd := "lpr "
 				name := interface.context.printer_name
-				i := name.index_of ('@', 1)
 				cmd.append (name)
 				
 					-- Generate the file we put the text in.
-				tmp_dir := (create {EXECUTION_ENVIRONMENT}).get ("TMP")
-				if tmp_dir /= Void then
-					create fn.make_from_string (tmp_dir)
-				else
-					create fn.make_from_string ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
-				end
-				fn.set_file_name ("prn_buffer")
-				fn.add_extension ("tmp")
+				create fn.make_temporary_name
 				create file.make (fn)
 				if file.exists then
 					file.open_write
@@ -94,7 +85,6 @@ feature {EB_PRINTER} -- Basic operations
 				end
 				sent_text := interface.text.image
 				sent_text.prune_all ('%R')
-				sent_text.replace_substring_all ("%N", "%R%N")
 				file.putstring (sent_text)
 				file.close
 				

@@ -47,6 +47,8 @@ extern char *build_out(EIF_OBJECT object);		/* Build tagged out in C buffer */
  * Building `out' string for simple types.
  */
 
+RT_LNK EIF_REFERENCE c_outu(EIF_NATURAL_32 i);
+RT_LNK EIF_REFERENCE c_outu64(EIF_NATURAL_64 i);
 RT_LNK EIF_REFERENCE c_outi(EIF_INTEGER i);
 RT_LNK EIF_REFERENCE c_outi64(EIF_INTEGER_64 i);
 RT_LNK EIF_REFERENCE c_outr32(EIF_REAL_32 f);

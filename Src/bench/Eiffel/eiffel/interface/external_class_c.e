@@ -157,11 +157,27 @@ feature -- Access
 			Result := lace_class.assembly
 		end
 
+	type_from_consumed_type_in_assembly (
+			an_assembly: ASSEMBLY_I;
+			c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A
+		is
+			-- Given an external type `c' in assembly `an_assembly'
+			-- get its associated CL_TYPE_A.
+			-- Void, if `c' is not part of system.
+		require
+			an_assembly_not_void: an_assembly /= Void
+			c_not_void: c /= Void
+		do
+			Result := internal_type_from_consumed_type_in_assembly (an_assembly, False, c)
+		end
+
 	type_from_consumed_type (c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A is
 			-- Given an external type `c' get its associated CL_TYPE_A.
 			-- Void, if `c' is not part of system.
 		require
 			c_not_void: c /= Void
+			c_in_assembly_of_current_class:
+				lace_class.assembly.referenced_assemblies.item (c.assembly_id) /= Void
 		do
 			Result := internal_type_from_consumed_type (False, c)
 		end
@@ -571,8 +587,25 @@ feature {NONE} -- Initialization
 			-- If `force_compilation' automatically add it for later compilation
 		require
 			c_not_void: c /= Void
+			c_in_assembly_of_current_class:
+				lace_class.assembly.referenced_assemblies.item (c.assembly_id) /= Void
+		do
+			Result := internal_type_from_consumed_type_in_assembly (
+				lace_class.assembly.referenced_assemblies.item (c.assembly_id),
+				force_compilation, c)
+		end
+
+	internal_type_from_consumed_type_in_assembly (
+			an_assembly: ASSEMBLY_I; force_compilation: BOOLEAN;
+			c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A
+		is
+			-- Given an external type `c' in assembly `an_assembly' get its
+			-- associated CL_TYPE_A.
+			-- If `force_compilation' automatically add it for later compilation
+		require
+			assembly_not_void: an_assembly /= Void
+			c_not_void: c /= Void
 		local
-			l_assembly: ASSEMBLY_I
 			l_result: CLASS_I
 			l_class: CLASS_C
 			l_is_array: BOOLEAN
@@ -580,7 +613,6 @@ feature {NONE} -- Initialization
 			l_array_type: CONSUMED_ARRAY_TYPE
 			l_type_a: CL_TYPE_A
 		do
-			l_assembly := lace_class.assembly.referenced_assemblies.item (c.assembly_id)
 			l_array_type ?= c
 			l_is_array := l_array_type /= Void
 			if l_is_array then
@@ -593,7 +625,7 @@ feature {NONE} -- Initialization
 						System.native_array_class.compiled_class.class_id, l_generics)				
 				end
 			else
-				l_result := l_assembly.dotnet_classes.item (c.name)
+				l_result := an_assembly.dotnet_classes.item (c.name)
 				if l_result = Void then
 						-- Case where this is a class from `mscorlib' that is in fact
 						-- written as an Eiffel class, e.g. INTEGER, ....

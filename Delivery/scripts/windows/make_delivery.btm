@@ -115,6 +115,9 @@ fullrd tests
 fullrd tutorial
 fullrd widget_test
 cd ..
+cd wel
+fullrd unicode
+cd ..
 cd ..
 remtrace precomp
 safe_md %INSTALL_DIR\precomp

@@ -93,6 +93,9 @@ feature -- Transformation
 		local
 			tmp_string, tmp_string2: STRING
 		do
+			if system_descriptor.c_types.has (name) then
+				name.prepend ("a_")
+			end
 			tmp_string := clone (interface_eiffel_name)
 			tmp_string.to_lower
 			tmp_string2 := clone (tmp_string)

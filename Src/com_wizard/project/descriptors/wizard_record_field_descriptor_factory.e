@@ -13,6 +13,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	create_descriptor (a_type_info: ECOM_TYPE_INFO; an_index: INTEGER; 
@@ -23,6 +28,7 @@ feature -- Basic operations
 			a_type_desc: ECOM_TYPE_DESC
 			a_documentation: ECOM_DOCUMENTATION
 			var_type: INTEGER
+			tmp_string: STRING
 		do
 			a_var_desc := a_type_info.var_desc (an_index)
 			a_documentation := a_type_info.documentation (a_var_desc.member_id)
@@ -33,6 +39,16 @@ feature -- Basic operations
 			else
 				name := a_documentation.name
 			end
+
+			if is_forbidden_c_word (name) then
+				name.prepend ("a_")
+			end
+			tmp_string := clone (name)
+			tmp_string.to_lower
+			if eiffel_key_words.has (tmp_string) then
+				name.prepend ("a_")
+			end
+
 			description := a_documentation.doc_string
 			a_type_desc := a_var_desc.elem_desc.type_desc
 			data_type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, a_type_desc, a_system_descriptor)

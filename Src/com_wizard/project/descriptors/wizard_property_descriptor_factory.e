@@ -68,6 +68,10 @@ feature -- Basic operations
 			end
 
 			eiffel_name := name_for_feature (name)
+
+			if is_forbidden_c_word (name) then
+				name.prepend ("a_")
+			end
 			description := clone (a_documentation.doc_string)
 			if description.empty then
 				description := clone (No_description_available)

@@ -3,7 +3,7 @@
 //  EiffelCOM
 //  Copyright (C) Interactive Software Engineering, 1999.
 //
-//  File:		ecom_runtime_c_e.c
+//  File:		ecom_runtime_c_e.cpp
 //
 //  Contents:	Runtime conversion functions from C to Eiffel
 //

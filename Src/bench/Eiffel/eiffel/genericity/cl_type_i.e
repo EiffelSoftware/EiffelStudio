@@ -179,13 +179,13 @@ feature
 			-- Has `Current' an associated class type?
 		do
 			if is_expanded then
-				is_expanded := false
+				is_expanded := False
 				Result := base_class.types.has_type (Current)
-				is_expanded := true
+				is_expanded := True
 			elseif is_separate then
-				is_separate := false
+				is_separate := False
 				Result := base_class.types.has_type (Current)
-				is_separate := true
+				is_separate := True
 			else
 				Result := base_class.types.has_type (Current)
 			end
@@ -199,34 +199,16 @@ feature
 			types: TYPE_LIST
 		do
 			if is_expanded then
-				Result := associated_expanded_class_type
+				is_expanded := False
+				Result := base_class.types.conservative_search_item (Current)
+				is_expanded := True
 			elseif is_separate then
-				Result := associated_separate_class_type
+				is_separate := False
+				Result := base_class.types.conservative_search_item (Current)
+				is_separate := True
 			else
 				Result := base_class.types.conservative_search_item (Current)
 			end
-		end
-
-	associated_expanded_class_type: CLASS_TYPE is
-			-- Associated expanded class type
-		require
-			is_expanded: is_expanded
-			has: has_associated_class_type
-		do
-			is_expanded := false
-			Result := associated_class_type
-			is_expanded := true
-		end
-
-	associated_separate_class_type: CLASS_TYPE is
-			-- Associated separate class type
-		require
-			is_separate: is_separate
-			has: has_associated_class_type
-		do
-			is_separate := false
-			Result := associated_class_type
-			is_separate := true
 		end
 
 	type_id: INTEGER is
@@ -238,7 +220,9 @@ feature
 	expanded_type_id: INTEGER is
 			-- Type id of the corresponding expanded class type
 		do
-			Result := associated_expanded_class_type.type_id
+			is_expanded := False
+			Result := base_class.types.conservative_search_item (Current).type_id
+			is_expanded := True
 		end
 
 	generate_cecil_value (file: INDENT_FILE) is

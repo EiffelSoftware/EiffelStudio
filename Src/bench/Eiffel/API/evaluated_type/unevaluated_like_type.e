@@ -10,7 +10,7 @@ inherit
 	LIKE_TYPE_A
 		redefine
 			is_like_current, has_associated_class,
-			type_i, associated_class, internal_conform_to
+			type_i, associated_class, conform_to
 		end
 
 create
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	solved_type (feat_table: FEATURE_TABLE f: FEATURE_I): like Current is
+	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): like Current is
 			-- Calculated type in function of the feature `f' which has
 			-- the type Current and the feautre table `feat_table
 		do
@@ -110,12 +110,12 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	internal_conform_to (other: TYPE_A in_generics: BOOLEAN): BOOLEAN is
-			-- Does Current conform to `other' ?
+	conform_to (other: TYPE_A): BOOLEAN is
+			-- Does Current conform to `other' in `a_context_class'?
 		do
 		end
 	
-	instantiation_in (type: TYPE_A written_id: INTEGER): like Current is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): like Current is
 		do
 		end
 

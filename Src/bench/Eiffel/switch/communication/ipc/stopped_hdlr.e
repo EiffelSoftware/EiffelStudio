@@ -40,6 +40,8 @@ feature
 			offset: INTEGER;
 			address: STRING;
 			reason: INTEGER;
+			excep_code: INTEGER
+			excep_tag: STRING
 			l_status: APPLICATION_STATUS_CLASSIC;	
 			retry_clause: BOOLEAN
 			cse: CALL_STACK_ELEMENT_CLASSIC
@@ -66,7 +68,6 @@ feature
 
 					-- Read object address and convert it to hector address.
 				read_string;
-
 				address := hector_addr (last_string);
 	
 					-- Read origin of feature
@@ -89,9 +90,11 @@ feature
 
 					-- Read exception code.
 				read_int;
+				excep_code := last_int
 
 					-- Read assertion tag.
 				read_string;
+				excep_tag := last_string
 
 				debug ("DEBUGGER_TRACE")
 					io.error.put_string ("STOPPED_HDLR: Application is stopped - finished reading%N")
@@ -105,7 +108,7 @@ feature
 				end
 				l_status.set_is_stopped (True)
 				l_status.set (name, address, org_type, dyn_type, offset, reason)
-				l_status.set_exception (last_int, last_string)
+				l_status.set_exception (excep_code, excep_tag)
 
 				debug ("DEBUGGER_TRACE")
 					io.error.put_string ("STOPPED_HDLR: Finished setting status (Now calling after cmd)%N")
@@ -159,6 +162,9 @@ feature
 					Application.process_termination;
 				end
 			end
+			debug ("DEBUGGER_TRACE")
+				io.error.put_string ("STOPPED_HDLR: finished%N")
+			end			
 --		rescue
 -- FIXME ARNAUD
 -- toTo: write a beautiful message box instead of this crappy message

@@ -1,0 +1,12 @@
+Empty list
+extend (2): 2 (idx: 0)
+l.start
+put_left (1): 1, 2 (idx: 2)
+l.forth
+put_left (6): 1, 2, 6 (idx: 4)
+l.back
+put_left (3): 1, 2, 3, 6 (idx: 4)
+put_left (5): 1, 2, 3, 5, 6 (idx: 5)
+l.back
+put_left (4): 1, 2, 3, 4, 5, 6 (idx: 5)
+Execution completed

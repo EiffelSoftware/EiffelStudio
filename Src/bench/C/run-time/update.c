@@ -801,7 +801,7 @@ rt_public void desc_updt(void)
 				rout_count = wshort();
 				SAFE_ALLOC(desc_ptr, struct desc_info, rout_count);
 				for (i=0; i<rout_count;i++) {
-					desc_ptr[i].info = wshort();
+					desc_ptr[i].info = wuint32();
 					desc_ptr[i].type = wshort();
 /* GENCONF */
 					desc_ptr[i].gen_type = wtype_array((int16 *)0);

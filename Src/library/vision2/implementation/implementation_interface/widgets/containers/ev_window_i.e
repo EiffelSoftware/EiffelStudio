@@ -29,12 +29,6 @@ feature -- Access
 	lower_bar: EV_VERTICAL_BOX
 			-- Room at bottom of `Current'. (Example use: statusbar.)
 
-	is_modal: BOOLEAN is
-			-- Must `Current' be closed before other windows can
-			-- receive user events?
-		deferred
-		end
-
 	maximum_width: INTEGER is
 			-- Maximum width that `Current' can take.
 		deferred
@@ -97,20 +91,6 @@ feature -- Access
 		end
 
 feature -- Status setting
-
-	enable_modal is
-			-- Set `is_modal' to `True'.
-		deferred
-		ensure
-			is_modal: is_modal
-		end
-
-	disable_modal is
-			-- Set `is_modal' to `False'.
-		deferred
-		ensure
-			not_is_modal: not is_modal
-		end
 
 	disable_user_resize is
 			-- Forbid the resize of the window.

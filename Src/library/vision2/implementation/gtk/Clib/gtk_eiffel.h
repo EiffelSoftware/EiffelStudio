@@ -15,6 +15,7 @@
 ==============================================================================*/
 
 #include <gtk/gtk.h>
+#include <stdlib.h>
 #include "eif_eiffel.h"
 #include "eif_argv.h"
 
@@ -162,13 +163,13 @@ EIF_BOOLEAN c_gtk_widget_minimum_size_set (GtkWidget *w, guint width, guint heig
  *********************************//*  
     the coordinates, size and minimum size of a widget
 */
-#define c_gtk_widget_x(p)      (((GtkWidget*)p)->allocation.x)      /*integer*/
-#define c_gtk_widget_y(p)      (((GtkWidget*)p)->allocation.y)      /*integer*/
-#define c_gtk_widget_width(p)  (((GtkWidget*)p)->allocation.width)  /*integer*/
-#define c_gtk_widget_height(p) (((GtkWidget*)p)->allocation.height) /*integer*/
+#define c_gtk_widget_x(p)      (GTK_WIDGET(p)->allocation.x)      /*integer*/
+#define c_gtk_widget_y(p)      (GTK_WIDGET(p)->allocation.y)      /*integer*/
+#define c_gtk_widget_width(p)  (GTK_WIDGET(p)->allocation.width)  /*integer*/
+#define c_gtk_widget_height(p) (GTK_WIDGET(p)->allocation.height) /*integer*/
 
-#define c_gtk_widget_minimum_width(p)  (((GtkWidget*)p)->requisition.width)  /*integer*/
-#define c_gtk_widget_minimum_height(p) (((GtkWidget*)p)->requisition.height) /*integer*/
+#define c_gtk_widget_minimum_width(p)  (GTK_WIDGET(p)->requisition.width)  /*integer*/
+#define c_gtk_widget_minimum_height(p) (GTK_WIDGET(p)->requisition.height) /*integer*/
 
 /* set size */
 void c_gtk_widget_set_size (GtkWidget *widget, int width, int height);
@@ -229,8 +230,8 @@ int c_gtk_get_text_max_length (GtkWidget* text);
  gtk_combo functions
 ==============================================================================*/
 
-#define c_gtk_combo_entry(p) (((GtkCombo*)p)->entry)  /*GtkWidget**/
-#define c_gtk_combo_list(p)  (((GtkCombo*)p)->list)   /*GtkWidget**/
+#define c_gtk_combo_entry(p) (GTK_COMBO(p)->entry)  /*GtkWidget**/
+#define c_gtk_combo_list(p)  (GTK_COMBO(p)->list)   /*GtkWidget**/
 
 
 /*==============================================================================
@@ -262,6 +263,12 @@ gint c_gtk_list_selected_item (GtkWidget *item);
 /* List : number of rows */
 guint c_gtk_list_rows (GtkWidget *list);
 
+/*==============================================================================
+ gtk_notebook functions
+==============================================================================*/
+
+/* Number of pages in a notebook */
+gint c_gtk_notebook_count (GtkWidget *notebook);
 
 /*==============================================================================
  gtk_list functions
@@ -273,9 +280,9 @@ gint c_gtk_clist_ith_selected_item (GtkWidget* list, guint i);
 guint c_gtk_clist_selection_length (GtkWidget* list);
 
 /* CList */
-#define c_gtk_clist_rows(p)     (((GtkCList*)p)->rows)     /*integer*/
+#define c_gtk_clist_rows(p)     (GTK_CLIST(p)->rows)     /*integer*/
 #define c_gtk_clist_columns(p)  (GTK_CLIST(p)->columns)  /*integer*/
-#define c_gtk_clist_selection_mode(p) (((GtkCList*)p)->selection_mode)  /*integer*/
+#define c_gtk_clist_selection_mode(p) (GTK_CLIST(p)->selection_mode)  /*integer*/
 
 
 /*==============================================================================
@@ -310,7 +317,7 @@ void c_gtk_text_insert (GtkWidget *widget, const char *txt);
 void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 				  gint expand, gint fill);
 
-#define c_gtk_container_border_width(p)     (((GtkContainer*)p)->border_width)     /*integer*/
+#define c_gtk_container_border_width(p)     (GTK_CONTAINER(p)->border_width)     /*integer*/
 
 
 /*==============================================================================

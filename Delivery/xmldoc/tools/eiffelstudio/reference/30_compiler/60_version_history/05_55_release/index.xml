@@ -8,7 +8,7 @@
 			<item>Full support for new <code><keyword>convert</keyword></code> keyword.</item>
 			<item>Made <code><keyword>Void,</keyword></code> previously a feature of <code><class_name>ANY</class_name></code>, a keyword. This prevents the renaming of <code><feature_name>Void</feature_name></code> into <code><feature_name>not_void</feature_name></code> previously possible when it was a routine of <code><class_name>ANY</class_name></code>.</item>			
 			<item>Added support for reference and expanded constraints on a formal generic parameter.</item>
-			<item>Added support for .NET 2.0 runtime.</item>
+			<item>Added support for Microsoft .NET 2.0 runtime.</item>
 		</list>
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
@@ -22,6 +22,7 @@
 			<item>In multithreaded mode, fixed dead lock on Unix plaforms when evaluating global onces.</item>
 			<item>Removed obsolete <feature_name>eifcid</feature_name>, <feature_name>eif_expand</feature_name> and <feature_name>eifexp</feature_name> from the CECIL interface, one has to use <feature_name>eif_type_id</feature_name> instead.</item>
 			<item>In .NET, changed the naming conventions of resources included in an assembly. The extension `.resources' is appended for resources that are originally provided as `.resx' or `.txt' files. Other files are embedded as is in the assembly and the name of the resource is the name of the file.</item>
+			<item>In .NET, now all classes inherit from <class_name>ANY</class_name>. Before all classes inherited from <class_name>SYSTEM_OBJECT</class_name>. As a consequence you can now have Eiffel generic classes where the generic parameter is a .NET class. However none of the features of <class_name>ANY</class_name> are directly accessible to .NET classes.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes
@@ -36,6 +37,9 @@
 			<size>3</size>Compiler issues
 		</heading>
 		<list ordered="false">
+			<item>Enabled creation of SPECIAL instances, no need to create an instance of TO_SPECIAL or ARRAY to get a SPECIAL instance. Now you can simply do:<code_block>my_special: <class_name>SPECIAL</class_name> [<class_name>INTEGER</class_name>]
+<keyword>create</keyword> my_special.<feature_name>make</feature_name> (10)</code_block>
+			</item>
 			<item>Fixed issue about conformance checking of type containing a formal generic parameter. We would always evaluate the formal to its constraint, thus allowing the code below to be accepted where it should not have been:
 			<code_block>
 <keyword>class</keyword> <class_name>A</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
@@ -62,7 +66,7 @@
 			<size>3</size>.NET issues
 		</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Fixed incorrect code generation of native arrays which would cause the code to be rejected in newer version of the .NET Framework.</item>
 		</list>
 		<heading>
 			<size>3</size>Store/Retrieve issues

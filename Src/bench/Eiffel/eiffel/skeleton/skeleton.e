@@ -54,6 +54,15 @@ feature -- Access
 	area: SPECIAL [ATTR_DESC]
 			-- Storage
 
+feature -- Status Report
+
+	has_references: BOOLEAN is
+			-- Does current have some references (i.e. true reference,
+			-- fake references for referencing expanded objects)
+		do
+			Result := (nb_reference + nb_expanded) > 0
+		end
+		
 feature -- Comparison
 
 	equiv (old_skeletons: ARRAY [SKELETON]; other: SKELETON): BOOLEAN is

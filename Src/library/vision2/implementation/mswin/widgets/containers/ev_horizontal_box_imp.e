@@ -262,6 +262,8 @@ feature {NONE} -- Basic operation
 			initialize_length_at_minimum
 			if old_width >= minimum_width and shown then
 				set_local_width (old_width)
+			else
+				set_width (minimum_width)
 			end
 		end
 

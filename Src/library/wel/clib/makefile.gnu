@@ -1,7 +1,7 @@
 # wel.a - Makefile for Microsoft C
 
-EIFFEL_SRC=f:/Eiffel45
-EIFFEL_SRC2=f:/Eiffel45
+EIFFEL_SRC=C:/Eiffel50
+EIFFEL_SRC2=C:/Eiffel50
 CC = gcc
 CFLAGS = -c -O2 -I$(EIFFEL_SRC)/library/wel/spec/windows/include -I$(EIFFEL_SRC2)/bench/spec/windows/include
 RM = rm

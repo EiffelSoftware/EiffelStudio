@@ -187,9 +187,7 @@ feature {NONE} -- Implementation
 		do
 			if not is_in_final_collect then
 				if c_object /= NULL then
-					if internal_id /= 0 then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
-					end			
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
 					--| This is the signal attached in ev_any_imp.c
 					--| used for GC/Ref-Counting interaction.
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)

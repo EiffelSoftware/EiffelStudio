@@ -10,7 +10,7 @@ inherit
 
 feature -- Status Report
 
-	appply_user_precondition: BOOLEAN is
+	apply_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `appply'.
 			-- Redefine in descendants if needed.
 		do
@@ -250,10 +250,10 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	appply is
+	apply is
 			-- Apply changes
 		require
-			appply_user_precondition: appply_user_precondition
+			apply_user_precondition: apply_user_precondition
 		deferred
 
 		end

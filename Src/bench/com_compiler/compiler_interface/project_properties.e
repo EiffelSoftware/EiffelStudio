@@ -23,7 +23,7 @@ inherit
 			clusters,
 			compilation_type,
 			assemblies,
-			appply,
+			apply,
 			set_system_name,
 			set_root_class_name,
 			set_creation_routine,
@@ -179,7 +179,7 @@ feature -- Access
 	compilation_type: INTEGER is
 			-- IL Compilation type.
 		local
-			enum: ECOM_X__EIF_COMPILATON_TYPES_ENUM
+			enum: ECOM_X__EIF_COMPILATION_TYPES_ENUM
 		do
 			if is_valid then
 				create enum
@@ -333,7 +333,7 @@ feature -- Element change
 	set_compilation_type (return_value: INTEGER) is
 			-- Compilation type.
 		local
-			enum: ECOM_X__EIF_COMPILATON_TYPES_ENUM
+			enum: ECOM_X__EIF_COMPILATION_TYPES_ENUM
 		do
 			if is_valid then
 				create enum
@@ -407,7 +407,7 @@ feature -- Status report
 		
 feature -- Basic operations
 
-	appply is
+	apply is
 			-- Apply changes.
 		do
 			if is_valid then

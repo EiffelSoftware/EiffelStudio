@@ -12,7 +12,7 @@
 
 void* pointer_array_i_th (void** pointer_array, int index);
 
-char* string_pointer_deref (char** pointer) { return *pointer; }
+char* string_pointer_deref (char** pointer);
 
 void enable_ev_gtk_log (void);
 
@@ -39,6 +39,9 @@ void enable_ev_gtk_log (void);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.4  2000/04/18 21:43:23  king
+// Moved string_pointer_deref definition from header to source
+//
 // Revision 1.3  2000/04/18 17:57:53  oconnor
 // Renamed get_pointer_from_array_by_index -> pointer_array_i_th
 // Added string_pointer_deref (pointer: POINTER): POINTER

@@ -56,7 +56,7 @@ feature -- Initialization
 			set_default_position (False);
 				-- When user closes via the window manager close button
 			set_parent_action ("<Unmap>,<Prop>", Current, exit_b);
-			set_width (200)
+			realize;
 		end;
 
 	make_with_widget (a_parent: COMPOSITE; a_widget: WIDGET) is
@@ -90,6 +90,7 @@ feature
 		local
 			str: SCROLLABLE_LIST_STRING_ELEMENT
 		do
+			set_width (200);
 			caller := command;
 			list.wipe_out;
 			!! str.make (0);
@@ -172,7 +173,7 @@ feature {NONE} -- Implementation
 			x1, y1: INTEGER;
 			a_widget: WIDGET
 		do
-			realize;
+			--realize;
 			if map_widget /= Void then
 				x1 := map_widget.real_x;
 				y1 := map_widget.real_y;

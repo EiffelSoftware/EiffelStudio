@@ -18,12 +18,14 @@
 #include "except.h"
 #include "store.h"
 #include "garcol.h"
+#include "compress.h"
 
 #ifdef EIF_OS2
 #include <io.h>
 #endif
 
 rt_private fnptr make_index;	/* Index building routine */
+rt_private fnptr need_index;	/* Index checking routine */
 rt_private char *server;		/* Current server used */
 rt_private long pst_store();	/* Recursive store */
 
@@ -44,10 +46,10 @@ EIF_INTEGER f_desc;
 		esys();
 }
 
-long store_append(f_desc, o, mid, s)
+long store_append(f_desc, o, mid, nid, s)
 EIF_INTEGER f_desc;
 char *o;
-fnptr mid;
+fnptr mid, nid;
 char *s;
 {
 	/* Append `o' in file `f', and applies routine `mid'
@@ -72,6 +74,7 @@ char *s;
 	if (result==-1) esys();
 
 	make_index = mid;
+	need_index = nid;
 	server = s;
 	gc_stopped = !gc_ison();
 	gc_stop();					/* Procedure `make_index' may call the GC
@@ -126,13 +129,23 @@ long object_count;
 	union overhead *zone = HEADER(object);
 	uint32 flags;
 	int is_expanded;
-	long saved_file_pos = lseek(fides, 0, SEEK_CUR);
-
+	EIF_BOOLEAN object_needs_index;
+	long saved_file_pos;
 	long saved_object_count = object_count;
 
-	if (saved_file_pos==-1) esys();
+	object_needs_index = (EIF_BOOLEAN) ((EIF_BOOLEAN (*)())need_index)(server,object);
 
-	saved_file_pos += current_position;
+	if (object_needs_index) {
+			/* If the object needs an index, the buffer is flushed so that
+			 * a new compression header is stored just before the object
+			 * thus the decompression will work when starting the retrieve
+			 * there
+			 */
+		flush_st_buffer();
+
+		saved_file_pos = lseek(fides, 0, SEEK_CUR);
+		if (saved_file_pos==-1) esys();
+	}
 
 	flags = zone->ov_flags;
 	is_expanded = (flags & EO_EXP) != (uint32) 0;
@@ -190,7 +203,8 @@ zone->ov_flags);
 		st_write(object);		/* Write the object on the disk */
 
 	/* Call `make_index' on `server' with `object' */
-    (make_index)(server,object,saved_file_pos,object_count-saved_object_count);
+    if (object_needs_index)
+		(make_index)(server,object,saved_file_pos,object_count-saved_object_count);
 
 	return object_count;
 }
@@ -208,11 +222,26 @@ EIF_INTEGER file_desc;
 
 rt_private void partial_store_write()
 {
-	register char * ptr = general_buffer;
-	register int number_left = current_position;
-
-	int number_writen;
-
+	char* cmps_in_ptr = (char *)0;
+	char* cmps_out_ptr = (char *)0;
+	int cmps_in_size = 0;
+	int cmps_out_size = 0;
+	register char * ptr = (char *)0;
+	register int number_left = 0;
+	int number_writen = 0;
+	
+	cmps_in_ptr = general_buffer;
+	cmps_in_size = current_position;
+	cmps_out_ptr = cmps_general_buffer;
+	
+	eif_compress ((unsigned char*)cmps_in_ptr, 
+				  (unsigned long)cmps_in_size, 
+				  (unsigned char*)cmps_out_ptr, 
+				  (unsigned long*)&cmps_out_size);
+				  
+	ptr = cmps_general_buffer;
+	number_left = cmps_out_size + EIF_CMPS_HEAD_SIZE;
+	
 	while (number_left > 0) {
 		number_writen = write (fides, ptr, number_left);
 		if (number_writen <= 0)
@@ -220,9 +249,10 @@ rt_private void partial_store_write()
 		number_left -= number_writen;
 		ptr += number_writen;
 		}
-	if (ptr - general_buffer == current_position)
+		
+	if (ptr - cmps_general_buffer == cmps_out_size + EIF_CMPS_HEAD_SIZE)
 		current_position = 0;
 	else
-		eio();
+		eio();		
 }
 

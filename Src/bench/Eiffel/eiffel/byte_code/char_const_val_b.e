@@ -53,7 +53,7 @@ feature -- Generation
 			current_feature_table := System.class_of_id (written_in).feature_table
 			constant_i ?= current_feature_table.origin_table.item (rout_id)
 			char_value ?= constant_i.value
-			Result := char_value.char_val
+			Result := char_value.character_value
 		end
 
 end

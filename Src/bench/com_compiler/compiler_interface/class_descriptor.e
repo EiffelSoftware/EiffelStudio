@@ -109,9 +109,11 @@ feature -- Access
 			indexing_clause: INDEXING_CLAUSE_AS
 		do
 			if is_in_system then
-				indexing_clause := compiler_class.compiled_class.ast.top_indexes
-				if indexing_clause /= Void then
-					Result := indexing_clause.description
+				if compiler_class.compiled_class.ast /= Void then
+					indexing_clause := compiler_class.compiled_class.ast.top_indexes
+					if indexing_clause /= Void then
+						Result := indexing_clause.description
+					end					
 				end
 			end
 		end
@@ -246,14 +248,18 @@ feature -- Access
 		do
 			if is_in_system then
 				l := compiler_class.compiled_class.creators
-				create res.make (l.count)
-				from
-					l.start
-				until
-					l.after
-				loop
-					res.extend (feature_with_name (l.key_for_iteration))
-					l.forth
+				if l /= Void then
+					create res.make (l.count)
+					from
+						l.start
+					until
+						l.after
+					loop
+						res.extend (feature_with_name (l.key_for_iteration))
+						l.forth
+					end
+				else
+					create res.make (0)
 				end
 				create Result.make (res)
 			end

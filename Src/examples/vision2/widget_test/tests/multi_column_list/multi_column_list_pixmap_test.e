@@ -26,19 +26,19 @@ feature {NONE} -- Implementation
 				-- Build the first row.
 			create multi_column_list_row
 			multi_column_list_row.fill (<<"1, 1", "2, 1", "3, 1">>)
-			multi_column_list_row.set_pixmap (selected_pixmap)
+			multi_column_list_row.set_pixmap (numbered_pixmap (1))
 			multi_column_list.extend (multi_column_list_row)
 			
 				-- Build the second row.
 			create multi_column_list_row
 			multi_column_list_row.fill (<<"1, 2", "2, 2", "3, 2">>)
-			multi_column_list_row.set_pixmap (selected_pixmap)
+			multi_column_list_row.set_pixmap (numbered_pixmap (1))
 			multi_column_list.extend (multi_column_list_row)
 			
 				-- Build the third row.		
 			create multi_column_list_row
 			multi_column_list_row.fill (<<"1, 3", "2, 3", "3, 3">>)
-			multi_column_list_row.set_pixmap (selected_pixmap)
+			multi_column_list_row.set_pixmap (numbered_pixmap (1))
 			multi_column_list.extend (multi_column_list_row)
 			
 			widget := multi_column_list
@@ -47,17 +47,5 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	multi_column_list: EV_MULTI_COLUMN_LIST
-	
-	selected_pixmap: EV_PIXMAP is
-			--
-		local
-			filename: FILE_NAME
-		once
-			create filename.make_from_string (current_working_directory)
-			filename.extend ("png")
-			filename.extend ("shell.png")
-			create Result
-			Result.set_with_named_file (filename)	
-		end
 
 end -- class MULTI_COLUMN_LIST_PIXMAP_TEST

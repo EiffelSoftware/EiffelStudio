@@ -7,7 +7,17 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class DIRECTORY creation
+class DIRECTORY
+
+inherit
+	MEMORY
+		export
+			{NONE} all
+		redefine
+			dispose
+		end
+
+creation
 
 	make, make_open_read
 
@@ -172,6 +182,16 @@ feature -- Status report
 		do
 			external_name := name.to_c;
 			Result := file_exists ($external_name)
+		end;
+
+feature -- Removal
+
+	dispose is
+			-- Ensure this medium is closed when garbage collected.
+		do
+			if not is_closed then
+				close;
+			end;
 		end;
 
 

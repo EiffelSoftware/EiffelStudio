@@ -1,70 +1,29 @@
 indexing
-	description: "Objects that ..."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Template for the first state of a wizard"
+	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 deferred class
 	WIZARD_FINAL_STATE_WINDOW
 
 inherit
-	WIZARD_STATE_WINDOW
+	WIZARD_INITIAL_STATE_WINDOW
 		export
 			{NONE} all
 		redefine
-			proceed_with_current_info,is_final_state, display_pixmap
+			display,
+			proceed_with_current_info,
+			is_final_state
 		end
 
 feature -- Basic Operations
 
 	display is
-		do
-			build
-		end
-
-	build is
-			-- Special display box for the first and the last state
-		local
-			h1: EV_HORIZONTAL_BOX
-			sep_v: EV_VERTICAL_SEPARATOR
-			cont: EV_CONTAINER
+			-- Display Current State
 		do
 			first_window.set_final_state ("Finish")
-
-			Create h1
-			create message
-			message.align_text_left
-			message.set_minimum_height (180)
-			message.set_background_color (white_color)
-			create title
-			title.set_background_color (white_color)
-			title.align_text_center
-			title.align_text_middle
-			title.set_font (title_font)
-
-			create sep_v
-			cont := pixmap.parent
-			if cont /= Void then
-				cont.prune (pixmap)
-			end
-			pixmap.set_minimum_height (312)
-			pixmap.set_minimum_width (165)
-			pixmap.draw_pixmap (91, 9, pixmap_icon)
-
-			h1.extend (pixmap)
-			h1.extend (sep_v)
-
-			Create choice_box
-			choice_box.set_minimum_width (330)
-			choice_box.extend (title)
-			choice_box.extend (message)
-			h1.extend (choice_box)
-
-			h1.disable_item_expand (sep_v)
-			h1.disable_item_expand (choice_box)
-
-			display_state_text
-			main_box.extend (h1)			
+			build
 		end
 
 	proceed_with_current_info is
@@ -113,7 +72,7 @@ feature -- Basic Operations
 			fi: PLAIN_TEXT_FILE
 			f_name: FILE_NAME
 		do
-			create fi.make_open_read_write(template_path + "/" + template_name)
+			create fi.make_open_read_write(template_path + "\" + template_name)
 			fi.read_stream (fi.count)
 			s:= clone (fi.last_string)
 			if map_list /= Void then
@@ -139,7 +98,7 @@ feature -- Basic Operations
 
 		end
 
-	notify_user(s: STRING) is
+	notify_user (s: STRING) is
 			-- Output
 		require
 			not_void: s /= Void
@@ -149,35 +108,10 @@ feature -- Basic Operations
 			progress.set_proportion(iteration/total)
 		end
 
-	total,iteration: INTEGER
-
-	pixmap_location: STRING is "eiffel_wizard.bmp"
-
-	pixmap_icon_location: STRING is
-			-- Path in which can be found the pixmap icon associated with
-			-- the current state.
-		deferred
-		ensure
-			exists: Result /= Void
-		end
+	total, iteration: INTEGER
 
 	ebench_launcher: EBENCH_LAUNCHER
 		-- Class to launch ebench after the generation
-
-	display_pixmap is
-			-- Draw pixmap
-		local
-			fi: FILE_NAME
-		do
-			Precursor {WIZARD_STATE_WINDOW}
-
-			create fi.make_from_string (wizard_pixmaps_path)
-			fi.extend (pixmap_icon_location)
-			pixmap_icon.set_with_named_file (fi)
-
---			pixmap.set_minimum_width(pixmap.width)
---			pixmap.redraw
-		end
 
 feature -- Access
 

@@ -86,10 +86,10 @@ feature {NONE} -- Initialization
 			if list_widget /= Default_pointer then
 				from
 					i := 1
-					create col_titles.make (columns)
-					create col_widths.make (columns)
+					create col_titles.make (column_count)
+					create col_widths.make (column_count)
 				until
-					i > columns
+					i > column_count
 				loop
 					col_titles.extend (column_title (i))
 					col_widths.extend (column_width (i))
@@ -185,7 +185,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	columns: INTEGER is
+	column_count: INTEGER is
 			-- Number of columns in the list.
 		do
 			if list_widget /= Default_pointer then
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	expand_columns_to (a_columns: INTEGER) is
+	expand_column_count_to (a_columns: INTEGER) is
 		do
 			create_list (a_columns)
 		end
@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 			end
 
 			item_imp ?= v.implementation
-			--| FIXME N/A item_imp.set_columns (columns)
+			--| FIXME N/A item_imp.set_column_count (column_count)
 			item_imp.set_parent_imp (Current)
 
 			-- update the list of rows of the column list:
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 
 			-- add text in the gtk column list row:
 			
-			if v.count <= columns then
+			if v.count <= column_count then
 			end
 		end
 
@@ -625,6 +625,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/03/27 17:18:44  brendel
+--| columns -> column_count
+--|
 --| Revision 1.48  2000/03/25 01:50:25  king
 --| Half implemented changes
 --|

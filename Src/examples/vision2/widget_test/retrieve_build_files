@@ -51,6 +51,8 @@ cp -r ./Src/build2/modified_libraries/vision2/ev_pixmapable.e ./interface/
 # Copy any required dialogs
 cp -r ./Src/build2/dialogs/gb_fixed_positioner/gb_fixed_positioner.e ./interface/
 cp -r ./Src/build2/dialogs/gb_fixed_positioner/gb_fixed_positioner_imp.e ./interface/
+cp -r ./Src/build2/dialogs/gb_fixed_positioner/gb_table_positioner.e ./interface/
+cp -r ./Src/build2/dialogs/gb_fixed_positioner/gb_table_positioner_imp.e ./interface/
 cp -r ./Src/build2/dialogs/constants.e ./interface/
 
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Clean up the files
 remtrace Update all source files.

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 remtrace Retrieve libraries
 cd $INSTALL_DIR

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Set up the environment
 LASTTIME=`date +%s`
@@ -6,7 +6,7 @@ LASTTIME_TOT=`date +%s`
 OLD_PATH=$PATH
 INIT_DIR=`pwd`
 TMP_EIFFEL_SRC=""
-source set_aliases
+. set_aliases
 echo > $INSTALL_LOG
 
 echo $* > tmpin$$.tmp
@@ -47,7 +47,7 @@ cd $INIT_DIR
 remtrace Approximative starting time:
 remtrace `date +%c`
 
-source check_environment
+. check_environment
 cd $INIT_DIR
 if [ -e $EXPORT_DIR ]; then
 	fullrd $EXPORT_DIR
@@ -130,7 +130,7 @@ exprt -r $DEFAULT_CVS_TAG -d docs Delivery/newdocs
 cd $INIT_DIR
 
 remtrace "Putting the Eiffel libraries in the delivery"
-source make_libraries
+. make_libraries
 give_time_to "export the Eiffel libraries"
 cd $INIT_DIR
 

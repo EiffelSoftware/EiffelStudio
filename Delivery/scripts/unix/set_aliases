@@ -1,23 +1,25 @@
-#!/bin/bash
+#!/bin/sh
 
 # Define some parameters
 # File in which the status of the installation generation is logged
-INSTALL_LOG=~/DELIVERY/install.log
+INSTALL_LOG=`pwd`/install.log
 # File in which the status of the installation compilation is logged
-COMPILE_LOG=~/DELIVERY/compile.log
-# The following directory is going to be used to compile the compiler
-FINALIZATION_DIR=~/DELIVERY/finalized
+COMPILE_LOG=`pwd`/compile.log
 # Where the new delivery is set up. Warning: this directory is erased!
-INSTALL_DIR=~/DELIVERY/Eiffel51
+INSTALL_DIR=`pwd`/Eiffel51
 # Where the final delivery is set up (local machine). Warning: directory erased too!
-FINAL_INSTALL_DIR=~/DELIVERY/Eiffel51
+FINAL_INSTALL_DIR=`pwd`/Eiffel51
 # Where all.tar.gz files should be stored
-EXPORT_DIR=~/DELIVERY/PorterPackage_51_5
+EXPORT_DIR=`pwd`/PorterPackage_51_6
 # What tag to use to CVS export everything
 DEFAULT_CVS_TAG=HEAD
-# Where to check out all source files
-NEW_EIFFEL_SRC=~/DELIVERY/tmp50dev
 
+# Used only when making PorterPackage to checkout the sources
+NEW_EIFFEL_SRC=`pwd`/tmp51dev
+# The following directory is going to be used to compile the compiler
+FINALIZATION_DIR=`pwd`/finalized
+
+echo > $INSTALL_LOG
 
 # OK, this is all for user-defined data. Leave me alone now, I'll do my magic :)
 
@@ -100,9 +102,6 @@ echo Exiting...
 remtrace final time:
 remtrace `date +%c`
 PATH=$OLD_PATH
-if [ "$TMP_EIFFEL_SRC" ]; then
-EIFFEL_SRC=$TMP_EIFFEL_SRC
-fi
 cd $INIT_DIR
 exit
 }                                                                                   
@@ -144,7 +143,7 @@ fi
 default_make ()
 {
 save_path
-$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_LOG
+$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $COMPILE_LOG
 cd $TMP_PATH
 }
 all_makes ()
@@ -182,14 +181,13 @@ if [ ! -f $1.tar.gz ]; then
 	remtrace "Couldnt find $1.tar.gz"
 	CANCEL
 fi
-gunzip $1.tar.gz
-tar -xf $1.tar
+gunzip -c $1.tar.gz | tar -xf -
 if [ ! -d F_code ]; then
 	remtrace "No F_code for $1"
 	CANCEL
 fi
 cd F_code
-$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $INSTALL_LOG
+$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $COMPILE_LOG
 if [ ! -f $1 ]; then
 	remtrace Couldnt generate $1
 	CANCEL
@@ -204,7 +202,7 @@ fff ()
 {
 if [ -d EIFGEN/F_code ]; then
 cd EIFGEN/F_code
-$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $INSTALL_LOG
+$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $COMPILE_LOG
 cd ../..
 fi
 }
@@ -213,14 +211,14 @@ wff ()
 {
 if [ -d EIFGEN/W_code ]; then
 cd EIFGEN/W_code
-$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $INSTALL_LOG
+$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $COMPILE_LOG
 cd ../..
 fi
 }
 # Finalize at the Eiffel level only
 finalize ()
 {
-$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -batch -finalize -ace $* >>$INSTALL_LOG
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -batch -finalize -ace $* >> $COMPILE_LOG
 }
 # Move up the generated finalized exe (its name is the parameter) and delete the compiled files
 cleanup_eiffel ()

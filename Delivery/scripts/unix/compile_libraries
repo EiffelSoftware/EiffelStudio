@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 INITIAL_DIR=`pwd`
 

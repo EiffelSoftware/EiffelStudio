@@ -1,20 +1,19 @@
-#!/bin/bash
+#!/bin/sh
  
 # Set up the environment
-source set_aliases
+. set_aliases
 LASTTIME=`date +%s`
 LASTTIME_TOT=`date +%s`
 OLD_PATH=$PATH
 INIT_DIR=`pwd`
-TMP_EIFFEL_SRC=$EIFFEL_SRC
-EIFFEL_SRC=$EXPORT_DIR
-INSTALL_LOG=$COMPILE_LOG
+EIFFEL_SRC=$EXPORT_DIR; export EIFFEL_SRC
+ISE_EIFFEL=$FINAL_INSTALL_DIR; export ISE_EIFFEL
 INSTALL_DIR=$FINAL_INSTALL_DIR
-echo > $INSTALL_LOG
 
+echo > $COMPILE_LOG
 
-if [ "$ISE_EIFFEL" = "" -o $"ISE_EIFFEL" = "" ]; then
-	remtrace Couldnt find environment variable ISE_EIFFEL and/or ISE_PLATFORM
+if [ -z "$ISE_PLATFORM" ]; then
+	remtrace Couldnt find environment variable ISE_PLATFORM
 	CANCEL
 fi
 
@@ -24,23 +23,19 @@ if [ ! -d $EXPORT_DIR ]; then
 	CANCEL
 fi
 
-cd $EXPORT_DIR
-
 remtrace Compile C code of the libraries
 remtrace \"A tout seigneur tout honneur\", let\'s start with the run-time
 if [ ! -e c.tar.gz ]; then
 	remtrace 'No.tar.gz for the C directory'
 	CANCEL
 fi
-gunzip c.tar.gz
-tar -xf c.tar
+gunzip -c c.tar.gz | tar -xf -
 if [ ! -d C ]; then
 	remtrace No C directory
 	CANCEL
 fi
-fullrf c.tar
 cd C
-source quick_configure >> $INSTALL_LOG
+. quick_configure >> $COMPILE_LOG
 
 cd $EXPORT_DIR
 remtrace Extract the delivery
@@ -57,32 +52,30 @@ else
 		remtrace Cannot create $INSTALL_DIR
 		CANCEL
 	fi
-	move delivery.tar.gz $INSTALL_DIR
 	cd $INSTALL_DIR
-	gunzip delivery.tar.gz
-	tar -xf delivery.tar
-	fullrf delivery.tar
+	gunzip -c $EXPORT_DIR/delivery.tar.gz | tar -xf -
 fi
 
+cd $EXPORT_DIR
 # These directories should already have been created by make_delivery. Whatever...
 safe_md $INSTALL_DIR/studio/spec
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
-move $INSTALL_DIR/studio/config/unix $INSTALL_DIR/studio/config/$ISE_PLATFORM
+copy studio/config/unix studio/config/$ISE_PLATFORM
 move $INSTALL_DIR/studio/spec/unix/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 fullrd $INSTALL_DIR/studio/spec/unix
 move $INSTALL_DIR/precomp/spec/unix $INSTALL_DIR/precomp/spec/$ISE_PLATFORM
 
-
-cd $EXPORT_DIR
 cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
 cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
 fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libebench.a
 cp C/run-time/*.h $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 cp C/run-time/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 	
+move $ISE_EIFFEL/studio/config/unix $ISE_EIFFEL/studio/config/$ISE_PLATFORM
+
 remtrace "Put x2c in the new delivery"
 # It should already have been compiled by the configure of the run-time.
 cd $EXPORT_DIR/C/run-time
@@ -112,32 +105,28 @@ if [ ! -e libs.tar.gz ]; then
 	remtrace 'No.tar.gz for the library directory'
 	CANCEL
 fi
-gunzip libs.tar.gz
-tar -xf libs.tar
+gunzip -c libs.tar.gz | tar -xf -
 if [ ! -d library ]; then
 	remtrace No library directory
 	CANCEL
 fi
-fullrf libs.tar
 
 remtrace Then the C libraries
 if [ ! -e c_libs.tar.gz ]; then
 	remtrace 'No.tar.gz for the C_library directory'
 	CANCEL
 fi
-gunzip c_libs.tar.gz
-tar -xf c_libs.tar
+gunzip -c c_libs.tar.gz | tar -xf -
 if [ ! -d C_library ]; then
 	remtrace No C_library directory
 	CANCEL
 fi
-fullrf c_libs.tar
 
 cd $EXPORT_DIR
-source compile_libraries
+. compile_libraries
 
 cd $INSTALL_DIR
-source $EXPORT_DIR/compile_libraries
+. $EXPORT_DIR/compile_libraries
 
 
 remtrace Recompile EiffelStudio
@@ -146,6 +135,6 @@ untgz_ccode ec
 move ec $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
 cd $EXPORT_DIR
-source compile_wizards
+. compile_wizards
 
 CANCEL

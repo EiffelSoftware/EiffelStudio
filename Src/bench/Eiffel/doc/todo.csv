@@ -11,10 +11,10 @@ interface,,,,,,,
 ,3,"Give current interface status (Compiling, running, editing)",Xavier,INT0007,Xavier,2,Done
 ,3,Tip of the day,Xavier,INT0008,,,
 ,3,Feature tree: clicking a feature clause should center the editor onto it,Xavier,INT0009,Xavier,1,Done
-,3,"Feature tree: give different icons for the various types of feature (once, deferred, do, external, attribute)",Xavier,INT0010,,,
+,3,"Feature tree: give different icons for the various types of feature (once, deferred, do, external, attribute)",Xavier,INT0010,Xavier,1,Done
 ,2,"When minimizing tools, let them keep their place instead of putting them at the bottom",Xavier,INT0011,,,
 ,3,Optimize useless computations for tools that are not displayed,Xavier,INT0012,,,
-,4,Give a warning when no match is found in the address manager,Xavier,INT0013,Xavier,1,
+,4,Give a warning when no match is found in the address manager,Xavier,INT0013,Xavier,1,Done
 ,4,Add a status bar,Xavier,INT0014,Xavier,3,Done
 ,4,Improve the default handling of tool sizes,Xavier,INT0015,Xavier,3,
 ,4,Make it easier to import libraries (XML description file for each) + make it possible to generate such XML files,Xavier,INT0016,Xavier,5,
@@ -23,7 +23,7 @@ interface,,,,,,,
 ,2,Make it possible to drop onto the context tool labels,Julian,INT0019,,,
 ,4,"Improve new class command (deferred, parents,…)",Xavier,INT0020,Xavier,2,Done
 ,3,"Improve new cluster command (import existing cluster, create top-level cluster)",Xavier,INT0021,Xavier,2,Done
-,4,New blank project: let the user choose the root class name and root feature name,Xavier,INT0022,,,
+,4,New blank project: let the user choose the root class name and root feature name,Xavier,INT0022,Xavier,1,Done
 ,4,Give support for the feature tree even if the project is half-compiled,Xavier,INT0023,Xavier,1,Done
 ,2,"When opening an existing Ace, if a .epr file exists, propose to open it",Julian,INT0024,,,
 ,3,"At start-up, propose to create a library instead of an executable",Xavier,INT0025,,,
@@ -41,7 +41,7 @@ interface,,,,,,,
 ,3,"Add a class with queries relative to the validity of names (for classes, features, system,…)",Xavier,INT0036,Xavier,2,Done
 ,4,"Save all backed up files in a file, and propose to reopen these back-ups at next start-up",Julian,INT0037,,,
 ,3,Add a way to pick the current stone from the address,Xavier,INT0038,,,
-,3,Give a different icon in the cluster tree to deferred/effective classes,Xavier,INT0039,,,
+,3,Give a different icon in the cluster tree to deferred/effective classes,Xavier,INT0039,Xavier,1,
 ,2,Give a way to choose among the last 'star-list' in the address (such as not closing the choice dialog when ctrl is pressed at selection time),Julian,INT0040,,,
 ,3,"Support Ctrl-right click everywhere + add a preference telling what to do (open a new window, a new editor window, a new context window, send to current editor, send to current context, send to external editor...)",Xavier,INT0041,,,
 ,2,"Gray out raise all, minimize all, raise all unsaved, run finalized, recent projects when they do not make sense",Julian,INT0042,,,
@@ -65,19 +65,19 @@ interface,,,,,,,
 
 
 
-Formats,,,,,,
-,2,Do not display obsolete features in the exported features,Xavier,FMT0001,Xavier,2
-,2,Let the user customize the formats,Xavier,FMT0002,,
-,2,Add a formatter that yields the path/cluster/indexing clause of a class,Xavier,FMT0003,,
-,3,Give features without a named feature clause,Xavier,FMT0004,,
-,4,Unify names (interface vs flat contracts...),Xavier,FMT0005,,
-,2,Add a formatter for the invariant,Arnaud,FMT0006,,
-,3,List of class names and class paths in the system,Arnaud,FMT0007,,
-,3,Let the user print the format,Raphael,FMT0008,,
-,3,"For all feature formats, give the choice between the name-only display, the basic text display and the flat form",Xavier,FMT0009,Xavier,10
-,3,Being able to query location of creation of class instance,Manus,FMT0010,,
-,3,Being able to find location of assignment to an attribute,Manus,FMT0011,,
-,3,List of creation features for a class (can be put in the exported features),Xavier,FMT0012,,
+Formats,,,,,,,
+,2,Do not display obsolete features in the exported features,Xavier,FMT0001,Xavier,2,
+,2,Let the user customize the formats,Xavier,FMT0002,,,
+,2,Add a formatter that yields the path/cluster/indexing clause of a class,Xavier,FMT0003,,,
+,3,Give features without a named feature clause,Xavier,FMT0004,,,
+,4,Unify names (interface vs flat contracts...),Xavier,FMT0005,Xavier,1,Done?
+,2,Add a formatter for the invariant,Arnaud,FMT0006,,,
+,3,List of class names and class paths in the system,Arnaud,FMT0007,,,
+,3,Let the user print the format,Raphael,FMT0008,,,
+,3,"For all feature formats, give the choice between the name-only display, the basic text display and the flat form",Xavier,FMT0009,Xavier,10,
+,3,Being able to query location of creation of class instance,Manus,FMT0010,,,
+,3,Being able to find location of assignment to an attribute,Manus,FMT0011,,,
+,3,List of creation features for a class (can be put in the exported features),Xavier,FMT0012,,,
 
 
 
@@ -96,7 +96,7 @@ debugger,,,,,,,
 ,5,Feature evaluation,Arnaud,DBG0001,Xavier,10,Done
 ,4,debug_output feature used to display objects in the debugger,Xavier,DBG0002,,,
 ,4,STRING viewer in the object tool,Xavier,DBG0003,Xavier,2,
-,4,Stack overflow detection,Xavier,DBG0004,,,
+,4,Stack overflow detection,Xavier,DBG0004,Xavier,2,
 ,2,Allow to choose on which exceptions the program should stop,Xavier,DBG0005,,,
 ,2,Support debugging of processes not launched from EiffelStudio (like VC++),Xavier,DBG0006,,,
 ,3,Give the ability to override violated assertions and continue anyway,Xavier,DBG0007,,,

@@ -218,9 +218,6 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 
 			-- if (FAILED (`variable_name'))
-			-- {
-			--	com_eraise (f.c_format_message (`variable_name'), HRESULT_CODE (`variable_name'));
-			-- }
 
 			Result.append (Tab)
 			Result.append (If_keyword)
@@ -233,8 +230,84 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
 			Result.append (New_line_tab)
+
+			-- {
+
 			Result.append (Open_curly_brace)
 			Result.append (New_line_tab_tab)
+
+			-- 	if ((HRESULT_FACILITY (hr) == FACILITY_ITF) && (HRESULT_CODE  (hr) > 1024))
+
+			Result.append (If_keyword)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Open_parenthesis)
+			Result.append (Hresult_facility)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Hresult_variable_name)
+			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (C_equal)
+			Result.append (Space)
+			Result.append ("FACILITY_ITF")
+			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (C_and)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Hresult_code)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Hresult_variable_name)
+			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (More)
+			Result.append (Space)
+			Result.append_integer (1024)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (New_line_tab_tab_tab)
+
+			-- 		com_eraise (rt_ec.ccom_ec_lpstr (eename (HRESULT_CODE (hr) - 1024)), HRESULT_CODE (hr) -1024);
+
+			Result.append (Com_eraise)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Ec_mapper)
+			Result.append (Dot)
+			Result.append ("ccom_ec_lpstr")
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append ("eename")
+			Result.append (Open_parenthesis)
+			Result.append (Hresult_code)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Hresult_variable_name)
+			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (Minus)
+			Result.append (Space)
+			Result.append_integer (1024)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Comma)
+			Result.append (Hresult_code)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Hresult_variable_name)
+			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (Minus)
+			Result.append (Space)
+			Result.append_integer (1024)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab)
+
+			--	com_eraise (f.c_format_message (`variable_name'), HRESULT_CODE (`variable_name'));
+
 			Result.append (Com_eraise)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
@@ -254,6 +327,9 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
+
+			-- }
+
 			Result.append (Close_curly_brace)
 			Result.append (Semicolon)
 		ensure

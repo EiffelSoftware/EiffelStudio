@@ -21,7 +21,7 @@ inherit
 
 creation
 
-	make
+	make, make_licensed
 
 feature -- Initialization
 
@@ -91,6 +91,24 @@ feature -- Initialization
 				retry
 			end;
 		end;
+
+	make_licensed is
+		do
+			if init_licence then
+				make
+				discard_licence
+			end
+		end
+
+feature -- Licensing
+
+	init_licence: BOOLEAN is
+		do
+			licence.set_version (3.5)
+			licence.set_application_name ("eiffelbench")
+			licence.get_licence
+			Result := licence.licensed
+		end
 
 feature -- Properties
 

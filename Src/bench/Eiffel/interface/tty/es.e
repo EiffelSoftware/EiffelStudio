@@ -15,12 +15,12 @@ inherit
 		redefine
 			add_usage_special_cmds, add_help_special_cmds,
 			loop_cmd, is_precompiled_option,
-			process_special_options
+			process_special_options, new_license
 		end
 
 creation
 
-	make, make_batch
+	make, make_licensed
 
 feature -- Access
 
@@ -35,25 +35,12 @@ feature -- Access
 			Result := option.is_equal ("-precompile")
 		end;
 
-feature -- Creation
-
-	make_batch is
-		do
-			if init_licence then
-				make;
-				discard_licence;
-			end;
-		end; 
-
 feature -- Licensing
 
-	init_licence: BOOLEAN is
+	new_license: LICENCE is
 		do
-			licence.set_version (3.5);
-			licence.set_application_name ("eiffelbench");
-			licence.get_licence;
-			Result := licence.licensed;
-		end;
+			!BENCH_LICENCE!Result.make
+		end
 
 feature -- Update
 

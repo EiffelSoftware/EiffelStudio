@@ -83,18 +83,7 @@ feature -- HTML Stylesheet
 		do
 			create stylesheet.make (stylesheet_filename)
 		end	
-	
-	copy_stylesheet is
-			-- Copy the loaded stylesheet to the temporary directory
-		local
-			l_stylesheet_name: FILE_NAME
-		do
-			if stylesheet /= Void then
-				create l_stylesheet_name.make_from_string (Shared_constants.Application_constants.Temporary_directory)
-				l_stylesheet_name.extend ((create {UTILITY_FUNCTIONS}).short_name (stylesheet.name))
-			end
-		end		
-		
+
 	remove_stylesheet is
 			-- Remove stylesheet
 		do

@@ -57,12 +57,12 @@ feature -- Basic operations
 					is_aborted_stack.extend (False)
 					snapshot.start
 				variant
-					snapshot.count - snapshot.index
+					snapshot.count + 1 - snapshot.index
 				until
-					snapshot.after
+					snapshot.off
 					or is_aborted_stack.item
 				loop
-					if item.valid_operands (a_pebble_tuple) then
+					if snapshot.item.valid_operands (a_pebble_tuple) then
 						snapshot.item.call (a_pebble_tuple)
 					end
 					snapshot.forth
@@ -139,6 +139,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/26 05:05:10  oconnor
+--| fixed item.vail_operands to snapshot.item.valid_operands in call
+--|
 --| Revision 1.6  2000/02/25 20:31:06  oconnor
 --| changed to match new action sequence implementation. See ACTION_SEQUENCE 1.14
 --|

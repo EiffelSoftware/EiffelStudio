@@ -11,11 +11,11 @@ inherit
 		redefine
 			dispose, copy, is_equal
 		end
-		
+
 create
 	make,
 	make_from_pointer
-	
+
 feature {NONE} -- Initialization
 
 	make (a_size: INTEGER) is
@@ -23,16 +23,14 @@ feature {NONE} -- Initialization
 		require
 			valid_size: a_size >= 0
 		do
-			area := area.memory_alloc (a_size)
-			count := a_size
-			capacity := a_size
+			create area.make (a_size)
 			is_resizable := True
 		ensure
+			non_void_area: area /= Void
 			capacity_set: capacity = a_size
-			count_set: count = a_size
 			is_resizable_set: is_resizable
 		end
-	
+
 	make_from_pointer (an_area: POINTER; a_size: INTEGER) is
 			-- Initialize Current with `an_area' and `a_size'.
 			-- Current will not be resizable as we do not know
@@ -41,25 +39,23 @@ feature {NONE} -- Initialization
 			an_area_not_null: an_area /= default_pointer
 			valid_size: a_size >= 0
 		do
-			area := an_area
-			capacity := a_size
-			count := a_size
+			create area.make (a_size)
 			is_resizable := False
 		ensure
+			non_void_area: area /= Void
 			capacity_set: capacity = a_size
-			count_set: count = a_size
 			is_resizable_set: not is_resizable
 		end
 
 feature -- Access
 
-	count: INTEGER
-			-- Number of bytes used in Current.
-
-	capacity: INTEGER
+	capacity: INTEGER is
 			-- Number of bytes in Current.
+		do
+			Result := area.count
+		end
 
-	area: POINTER
+	area: MANAGED_POINTER
 			-- Memory area that holds data.
 
 	item, infix "@" (i: INTEGER): INTEGER_8 is
@@ -67,9 +63,9 @@ feature -- Access
 		require
 			valid_index: valid_index (i)			
 		do
-			($Result).memory_copy (area + i, 1)
+			($Result).memory_copy (area.item + i, 1)
 		end
-		
+
 feature -- Status report
 
 	valid_index (i: INTEGER): BOOLEAN is
@@ -77,19 +73,19 @@ feature -- Status report
 		do
 			Result := (0 <= i) and then (i < capacity)
 		end
-	
+
 	is_resizable: BOOLEAN
 			-- Can Current be resized?
 
 feature -- Setting
 
-	set_count (n: INTEGER) is
+	set_capacity (n: INTEGER) is
 		require
 			valid_index: valid_index (n - 1)
 		do
-			count := n
+			area.resize (n)
 		ensure
-			count_set: count = n
+			capacity_set: capacity = n
 		end
 
 feature -- Element change
@@ -98,11 +94,8 @@ feature -- Element change
 			-- Replace `i'-th entry by `v'.
 		require
 			valid_index: valid_index (i)
-		local
-			l_offset: POINTER
 		do
-			l_offset := area + i
-			l_offset.memory_copy ($v, 1)
+			area.put_integer_8 (v, i)
 		ensure
 			inserted: item (i) = v
 		end
@@ -110,15 +103,11 @@ feature -- Element change
 	force (v: INTEGER_8; i: INTEGER) is
 			-- Replace `i'-th entry by `v'.
 			-- If `i' is out of bound, reallocate Current.
-		local
-			l_offset: POINTER
 		do
 			if not valid_index (i) then
-				area := area.memory_realloc (i + 1)
-				capacity := i + 1
+				area.resize (i + 1)
 			end
-			l_offset := area + i
-			l_offset.memory_copy ($v, 1)
+			area.put_integer_8 (v, i)
 		ensure
 			inserted: item (i) = v
 		end
@@ -128,18 +117,9 @@ feature -- Element change
 		require
 			other_not_void: other /= Void
 			resizable: is_resizable
-		local
-			new_count: INTEGER
-			l_offset: POINTER
 		do
-			new_count := count + other.count
-			if new_count > capacity then
-				area := area.memory_realloc (new_count)
-				capacity := new_count
-			end
-			l_offset := area + count
-			l_offset.memory_copy (other.area, other.count)
-			count := new_count
+			area.resize (capacity + other.capacity)
+			area.append (other.area)
 		end
 
 feature -- Comparison
@@ -148,7 +128,7 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := count = other.count and then area.memory_compare (other.area, count)
+			Result := capacity = other.capacity and then area.item.memory_compare (other.area.item, capacity)
 		end
 
 feature -- Duplication
@@ -156,9 +136,9 @@ feature -- Duplication
 	copy (other: like Current) is
 			-- Copy other in Current
 		do
-			area.memory_free
-			make (other.count)
-			area.memory_copy (other.area, other.count)
+			area.item.memory_free
+			make (other.capacity)
+			area.item.memory_copy (other.area.item, other.capacity)
 		end
 
 feature {NONE} -- Disposal
@@ -166,10 +146,11 @@ feature {NONE} -- Disposal
 	dispose is
 			-- Release `area'.
 		do
-			area.memory_free
+			area.item.memory_free
 		end
-		
+
 invariant
-	area_not_null: area /= default_pointer
+	non_void_area: area /= Void
+	area_not_null: area.item /= default_pointer
 
 end -- class MEMORY_STREAM

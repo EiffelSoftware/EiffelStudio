@@ -99,25 +99,47 @@ feature -- Access
 	parameters: LINE [TYPE_A]
 			-- Features with arguments encountered during type check
 
-	level1: BOOLEAN
-			-- Level for checking old expression wich should be only in
-			-- postconditions
-			-- [Set on when type chking postconditions].
+	depend_unit_level: INTEGER_8
+			-- Current level used to create new instances of DEPEND_UNIT.
 
-	level2: BOOLEAN
+	is_checking_postcondition: BOOLEAN is
+			-- Are we currently checking a postcondition.
+			-- Needed to ensure that old expression only appears in
+			-- postconditions
+		do
+			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_ensure_flag) =
+				feature {DEPEND_UNIT}.is_in_ensure_flag
+		end
+
+	is_checking_invariant: BOOLEAN is
 			-- Level of analysis for access, When analyzing an access id,
 			-- (instance of ACCESS_ID_AS), locals, arguments
 			-- are not taken into account if set to True.
 			-- Useful for analyzing class invariant.
 			-- [Set on when analyzing invariants].
+		do
+			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_invariant_flag) =
+				feature {DEPEND_UNIT}.is_in_invariant_flag
+		end
 
 	level3: BOOLEAN
 			-- Level for analysis of feature rescue clause: usefull for
 			-- validating `retry' instruction
 			--[Set on when analyzing rescue clause]
 
-	level4: BOOLEAN
+	is_checking_precondition: BOOLEAN is
 			-- Level for analysis of precondition
+		do
+			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_require_flag) =
+				feature {DEPEND_UNIT}.is_in_require_flag
+		end
+
+	is_checking_check: BOOLEAN is
+			-- Level for analyzis of check clauses
+		do
+			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_check_flag) =
+				feature {DEPEND_UNIT}.is_in_check_flag
+		end
 
 	check_for_special_error: BOOLEAN
 			-- Flag for checking the vape error and vaol error
@@ -159,17 +181,31 @@ feature -- Setting
 			current_feature_set: current_feature = f
 		end
 
-	set_level1 (b: BOOLEAN) is
-			-- Assign `b' to `level1'.
+	set_is_checking_postcondition (b: BOOLEAN) is
+			-- Assign `b' to `is_checking_postcondition'.
 		do
-			level1 := b;
-		end;
+			if b then
+				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_ensure_flag
+			else
+				depend_unit_level := depend_unit_level &
+					feature {DEPEND_UNIT}.is_in_ensure_flag.bit_not
+			end
+		ensure
+			is_checking_postcondition_set: is_checking_postcondition = b
+		end
 
-	set_level2 (b: BOOLEAN) is
-			-- Assign `b' to `level2'.
+	set_is_checking_invariant (b: BOOLEAN) is
+			-- Assign `b' to `is_checking_invariant'.
 		do
-			level2 := b;
-		end;
+			if b then
+				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_invariant_flag
+			else
+				depend_unit_level := depend_unit_level &
+					feature {DEPEND_UNIT}.is_in_invariant_flag.bit_not
+			end
+		ensure
+			is_checking_invariant_set: is_checking_invariant = b
+		end
 
 	set_level3 (b: BOOLEAN) is
 			-- Assign `b' to `level3'.
@@ -185,13 +221,35 @@ feature -- Setting
 			is_in_creation_expression_set: is_in_creation_expression = b
 		end
 
-	set_level4 (b: BOOLEAN) is
-			-- Assign `b' to `level4'.
+	set_is_checking_precondition (b: BOOLEAN) is
+			-- Assign `b' to `is_checking_precondition'.
 			-- Also set `b' to check_for_vape.
 		do
-			level4 := b
+			if b then
+				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_require_flag
+			else
+				depend_unit_level := depend_unit_level &
+					feature {DEPEND_UNIT}.is_in_require_flag.bit_not
+			end
+				-- FIXME: Manu: 03/20/2004: It is not normal that we
+				-- set `check_for_special_error'.
 			check_for_special_error := b
-		end;
+		ensure
+			is_checking_precondition_set: is_checking_precondition = b
+		end
+
+	set_is_checking_check (b: BOOLEAN) is
+			-- Assign `b' to `is_checking_check'.
+		do
+			if b then
+				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_check_flag
+			else
+				depend_unit_level := depend_unit_level &
+					feature {DEPEND_UNIT}.is_in_check_flag.bit_not
+			end
+		ensure
+			is_checking_check_set: is_checking_check = b
+		end
 
 	check_for_vape: BOOLEAN is
 			-- Is Current checking for vape error?
@@ -236,9 +294,9 @@ feature -- Setting
 	feature_name_id: INTEGER is
 			-- Name of the current feature analyzed
 		require
-			feature_exists: current_feature /= Void or else level2
+			feature_exists: current_feature /= Void or else is_checking_invariant
 		do
-			if not level2 then
+			if not is_checking_invariant then
 					-- Not checking invariant
 				Result := current_feature.feature_name_id
 			else
@@ -442,10 +500,8 @@ feature -- Managing the type stack
 			parameters.wipe_out;
 			instruction_line.wipe_out;
 			last_conversion_info := Void
-			level1 := False;
-			level2 := False;
+			depend_unit_level := 0
 			level3 := False;
-			level4 := False;
 			check_for_special_error := False;
 			supplier_ids.wipe_out;
 			separate_calls.make (1, 0)

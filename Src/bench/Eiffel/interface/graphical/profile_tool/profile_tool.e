@@ -24,12 +24,75 @@ feature {NONE} -- Initialization
 		require
 			a_command_not_void: a_command /= Void
 		do
+			!! open_tools.make 
 			command := a_command;
 			top_shell_make (l_X_resourse_name, Project_tool.screen);
 			set_title ("Profile Tool");
 			!! quit_cmd.make (Current);
+			!! run_prof_query_cmd.make (Current);
 			set_delete_command (quit_cmd);
 			build_widgets
+		end
+
+feature -- Graphical User Interface
+
+	show_new_window (st: STRUCTURED_TEXT; pq: PROFILER_QUERY;
+				po: PROFILER_OPTIONS; profinfo: PROFILE_INFORMATION) is
+			-- Create and show a new PROFILE_QUERY_WINDOW
+		local
+			new_window: PROFILE_QUERY_WINDOW
+		do
+			!! new_window.make (Current);
+			new_window.set_query_result (st, pq, po, profinfo);
+			new_window.popup;
+			open_tools.extend (new_window)
+		end
+
+feature {RUN_PROFILE_QUERY_CMD} -- Access
+
+	fill_values (shared_values: SHARED_QUERY_VALUES) is
+			-- Fill `shared_values' with value specified
+			-- by the user.
+		local
+			parser: QUERY_PARSER
+		do
+				--| Copy the language names
+			if eiffel_switch.state then
+				shared_values.language_names.force ("eiffel", shared_values.language_names.count + 1)
+			end;
+			if c_switch.state then
+				shared_values.language_names.force ("c", shared_values.language_names.count + 1)
+			end;
+			if recursive_switch.state then
+				shared_values.language_names.force ("cycle", shared_values.language_names.count + 1)
+			end;
+
+				--| Copy the output column switches
+			if number_of_calls_switch.state then
+				shared_values.output_names.force ("calls", shared_values.output_names.count + 1)
+			end;
+			if time_switch.state then
+				shared_values.output_names.force ("self", shared_values.output_names.count + 1)
+			end;
+			if descendent_switch.state then
+				shared_values.output_names.force ("descendents", shared_values.output_names.count + 1)
+			end;
+			if total_time_switch.state then
+				shared_values.output_names.force ("total", shared_values.output_names.count + 1)
+			end;
+			if percentage_switch.state then
+				shared_values.output_names.force ("percentage", shared_values.output_names.count + 1)
+			end;
+			if name_switch.state then
+				shared_values.output_names.force ("featurename", shared_values.output_names.count + 1)
+			end;
+
+				--| Copy the filename
+			shared_values.filenames.force (input_text.text, shared_values.filenames.count + 1);
+
+				--| Copy the subqueries
+			!! parser;
+			parser.parse (query_text.text, shared_values)
 		end
 
 feature {NONE} -- Graphical User Interface
@@ -90,6 +153,7 @@ feature {NONE} -- Graphical User Interface
 
 				-- Commands
 			exit_button.add_activate_action (quit_cmd, Void);
+			run_button.add_activate_action (run_prof_query_cmd, Void);
 
 			global_form.set_fraction_base (2);
 
@@ -172,8 +236,11 @@ feature {NONE} -- Graphical User Interface
 
 feature {NONE} -- Attributes
 
-	quit_cmd: QUIT_PROFILE_TOOL
+	quit_cmd: QUIT_PROFILE_TOOL;
 			-- Command to quit Current
+
+	run_prof_query_cmd: RUN_PROFILE_QUERY_CMD;
+			-- Command to run the typed query
 
 	global_form,
 			-- Form for Current
@@ -254,8 +321,11 @@ feature {NONE} -- Attributes
 	file_menu: MENU_PULL;
 			-- File menu
 
-	command: SHOW_PROFILE_TOOL
+	command: SHOW_PROFILE_TOOL;
 			-- Command that invokes Current
+
+	open_tools: LINKED_LIST [PROFILE_QUERY_WINDOW]
+			-- List of all open query windows
 
 feature {NONE} -- Execution Arguments
 
@@ -268,9 +338,19 @@ feature {QUIT_PROFILE_TOOL} -- Implementation
 
 	close is
 			-- Close Current
+		local
+			a_wnd: PROFILE_QUERY_WINDOW
 		do
-				--| FIXME:
-				--| Needs `close_windows'.
+			from
+				open_tools.start
+			until
+				open_tools.after
+			loop
+				a_wnd := open_tools.item;
+				a_wnd.popdown;
+				a_wnd.destroy;
+				open_tools.remove
+			end;
 			command.done_profiling
 		end
 
@@ -284,7 +364,8 @@ feature {NONE} -- Execution
 				browse_for_inputfile
 			elseif arg = last_name_chooser then
 					--| User came up with OK in file selection
-				last_name_chooser.popdown;
+				input_text.set_text (last_name_chooser.selected_file);
+				last_name_chooser.popdown
 			end
 		end
 
@@ -303,6 +384,15 @@ feature {NONE} -- Implementation
 			new_name_chooser.set_open_file;
 			new_name_chooser.add_ok_action (Current, Void);
 			new_name_chooser.call (Current)
+		end;
+
+feature {PROFILE_QUERY_WINDOW} -- Window updates
+
+	query_window_is_closed (a_window: PROFILE_QUERY_WINDOW) is
+			-- Update list of open query_windows.
+		do
+			open_tools.start;
+			open_tools.prune (a_window)
 		end
 
 end -- class PROFILE_TOOL

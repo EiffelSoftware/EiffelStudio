@@ -16,11 +16,82 @@ feature -- Access
 			"TBS_AUTOTICKS"
 		end
 
-	Tbs_horz: INTEGER is 0
-		--| Undocumented style
+	Tbs_vert: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"TBS_VERT"
+		end
 
-	Tbs_vert: INTEGER is 2
-		--| Undocumented style
+	Tbs_horz: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"TBS_HORZ"
+		end
+
+	Tbs_top: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"TBS_TOP"
+		end
+
+	Tbs_bottom: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"TBS_BOTTOM"
+		end
+
+	Tbs_left: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"TBS_LEFT"
+		end
+
+	Tbs_right: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"TBS_RIGHT"
+		end
+
+	Tbs_both: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"TBS_BOTH"
+		end
+
+	Tbs_noticks: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"TBS_NOTICKS"
+		end
+
+	Tbs_enableselrange: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"TBS_ENABLESELRANGE"
+		end
+
+	Tbs_fixedlength: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"TBS_FIXEDLENGTH"
+		end
+
+	Tbs_nothumb: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"TBS_NOTHUMB"
+		end
 
 end -- class WEL_TBS_CONSTANTS
 

@@ -1354,6 +1354,7 @@ interface IEiffelClusterProperties: IDispatch
 //---------------------------------------------------------------------
 
 [
+    dual,
     object,
     uuid (UUID_IEiffelAssemblyProperties),
     helpstring ("Eiffel Assembly Properties (for Ace file).")

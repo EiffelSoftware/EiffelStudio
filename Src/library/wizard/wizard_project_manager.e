@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Initialize and launch application
 		do
 			if argument_count < 1 then
-				io.put_string("wizard.exe -arg1 [resource_path]%N")
+				io.put_string("wizard -arg1 [resource_path]%N")
 			else
 				default_create
 				set_application (Current)

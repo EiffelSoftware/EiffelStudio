@@ -8,7 +8,6 @@ class
 	EV_DIALOG_CONSTANTS
 	
 create
-	
 	default_create
 	
 feature -- Button Texts

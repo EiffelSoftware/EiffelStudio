@@ -13,8 +13,8 @@
 extern "C" {
 #endif
 
-int cwel_string_length();
-void cwel_set_string_length (int length);
+/* Macro mostly used for the EM_GETLINE message */
+#define cwel_set_size_in_string(ptr,n) (*((WORD *) (ptr)) = (WORD) (n))
 
 #ifdef __cplusplus
 }

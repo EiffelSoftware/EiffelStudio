@@ -174,9 +174,7 @@ feature {NONE} -- Filling
 
 				-- Retrieve root_class creation procedure if any
 			tmpstr := root_ast.root.creation_procedure_name
-			if tmpstr = Void then
-				root_creation_field.disable_sensitive
-			else
+			if tmpstr /= Void then
 				if tmpstr.is_empty then
 					root_creation_field.remove_text
 				else
@@ -186,6 +184,7 @@ feature {NONE} -- Filling
 
 				-- Retrieve existing precompiled libraries from installation
 				-- directory.
+			precompiled_combo.enable_sensitive
 			initialize_precompiled
 
 				-- Retrieve default options.
@@ -308,7 +307,6 @@ feature {NONE} -- Filling AST
 		do
 			title := precompiled_combo.text
 			if
-				precompiled_combo.is_sensitive and then
 				not title.is_equal ("None")
 			then
 				pre := new_precompiled_sd
@@ -584,6 +582,8 @@ feature {NONE} -- Standard precompiled libraries
 	initialize_precompiled is
 			-- Initialize `precompiled_combo' with currently available precompiled
 			-- libraries.
+		require
+			combo_is_sensitive: precompiled_combo.is_sensitive
 		local
 			l: like available_precompiled
 		do

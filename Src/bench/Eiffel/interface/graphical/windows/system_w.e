@@ -44,6 +44,7 @@ feature
 
 	display is
 		do
+			set_default_format;
 			if not realized then
 				realize
 			elseif not shown then

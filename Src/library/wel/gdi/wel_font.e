@@ -19,6 +19,7 @@ inherit
 		export
 			{NONE} all
 		end
+		
 create 
 	make,
 	make_indirect,
@@ -163,6 +164,110 @@ feature -- Access
 		do
 			Result := string_size (a_string).integer_item (2)
 		end
+		
+	string_size_extended (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- [width, height, leading overhang, trailing overhang] of `a_string'.
+			-- Not all fonts have characters that fit completely within the bounds of
+			-- the standard `string_size'. See `char_abc_widths' from WEL_DC which
+			-- retrives information regarding Windows ABC structures for truetype
+			-- fonts. If a character has a negative "a" or "c" value which causes it
+			-- to extended past the boundaries of the rectange specified by the first two 
+			-- INTEGER values, use the final two INTEGER values to determine the number
+			-- of pixels the characters extend in either direction past the bounds. This
+			-- is necessary to completely encompass the string in a rectangle.
+			-- The third INTEGER value of `Result' corresponds to the maximum character extent
+			-- to the left hand side (before the string), with a negative value specifying a protuding point.
+			-- The fourth integer value of `Result' corresponds to the maximum character extent
+			-- to the right hand side (after the string), with a negative value indicating that it protudes)
+		local
+			cur_width, cur_height: INTEGER
+			screen_dc: WEL_SCREEN_DC
+			bounding_rect: WEL_RECT
+			wel_string: WEL_STRING
+			counter: INTEGER
+			count: INTEGER
+			line_start_index: INTEGER
+			greatest_a, greatest_c: INTEGER
+			pointer: POINTER
+			error_code: INTEGER
+			current_c: INTEGER
+			area: SPECIAL [CHARACTER]
+			screen_dc_pointer: POINTER
+			bounding_rect_pointer: POINTER
+			bounding_rect_width: INTEGER
+			current_character: CHARACTER
+			text_format: INTEGER
+		do
+			if a_string.is_empty then
+				cur_width := 0
+				cur_height := 0
+			else
+				create wel_string.make (a_string)
+				area := a_string.area
+				pointer := wel_string.item
+				create bounding_rect.make (0, 0, 32767, 32767)
+				create screen_dc
+				screen_dc.get
+				screen_dc.select_font (Current)
+				count := wel_string.count
+				text_format := Dt_calcrect | Dt_expandtabs | Dt_noprefix
+				
+					-- Store pointers to structures for quicker access.
+				screen_dc_pointer := screen_dc.item
+				bounding_rect_pointer := bounding_rect.item
+				
+				from
+					counter := 1
+					line_start_index := 1
+						-- Retrieve the greatest a value for the first character before iteration.
+					greatest_a := greatest_a.min (get_char_a_width (screen_dc, area.item (counter - 1).code))
+				until
+					counter > count
+				loop
+					current_character := area.item (counter - 1)
+					if current_character = '%N' then
+						greatest_a := greatest_a.min (get_char_a_width (screen_dc, area.item (line_start_index).code))
+						if counter < count then
+							current_c := get_char_c_width (screen_dc, a_string.item (counter - 1).code)
+						end
+						error_code := screen_dc.cwin_draw_text (screen_dc_pointer, pointer + (line_start_index - 1), counter - line_start_index, bounding_rect_pointer, text_format)
+						bounding_rect_width := bounding_rect.width
+						
+						if current_c < 0 then
+							greatest_c := greatest_c.max (bounding_rect_width + current_c.abs)
+						else
+							greatest_c := greatest_c.max (bounding_rect_width)
+						end
+
+						cur_width := bounding_rect_width.max (cur_width)
+						cur_height := cur_height + bounding_rect.height
+						line_start_index := counter + 1
+					end
+					counter := counter + 1
+				end
+				
+					-- Now check the final character of the last line.
+				error_code := screen_dc.cwin_draw_text (screen_dc_pointer, pointer + (line_start_index - 1), counter - line_start_index, bounding_rect_pointer, text_format)
+				bounding_rect_width := bounding_rect.width
+				
+				current_c := get_char_c_width (screen_dc, area.item (counter - 2).code)
+				if current_c < 0 then
+					greatest_c := greatest_c.max (bounding_rect_width + current_c.abs)
+				else
+					greatest_c := greatest_c.max (bounding_rect_width)
+				end
+				cur_width := bounding_rect_width.max (cur_width)
+				cur_height := cur_height + bounding_rect.height
+				
+				greatest_c := cur_width - greatest_c
+
+
+				screen_dc.unselect_font
+				screen_dc.quick_release
+			end
+
+			Result := [cur_width, cur_height, greatest_a.abs, greatest_c.abs]
+		end
 
 	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is
 			-- [width, height] of `a_string'.
@@ -183,7 +288,7 @@ feature -- Access
 				screen_dc.draw_text (a_string, bounding_rect, Dt_calcrect | Dt_expandtabs | Dt_noprefix)
 				cur_width := bounding_rect.width
 				cur_height := bounding_rect.height
-
+				
 				screen_dc.unselect_font
 				screen_dc.quick_release
 			end
@@ -193,6 +298,23 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	get_char_a_width (dc: WEL_DC; character_code: INTEGER): INTEGER is
+			-- `Result' is "a" width from truetype font character `character_code'.
+		require
+			dc_not_void: dc /= Void
+			character_code_positive: character_code > 0
+		do
+			Result := dc.char_abc_widths (character_code, character_code).i_th (1).a
+		end
+		
+	get_char_c_width (dc: WEL_DC; character_code: INTEGER): INTEGER is
+			-- `Result' is "c" width from truetype font character `character_code'.
+		require
+			dc_not_void: dc /= Void
+			character_code_positive: character_code > 0
+		do
+			Result := dc.char_abc_widths (character_code, character_code).i_th (1).c
+		end
 
 	cwin_create_font (a_height, a_width, escapement, orientation, weight,
 			italic, underline, strike_out,

@@ -217,9 +217,6 @@ interface IEiffelCompiler: IUnknown
   [helpstring ("Compiler version.")]
   HRESULT compiler_version ([out, retval] BSTR * return_value);
 
-  [helpstring ("Return ISE_EIFFEL environment var.")]
-  HRESULT ise_eiffel ([out, retval] BSTR * return_value);
-
   [helpstring ("Takes a path and expands it using the env vars.")]
   HRESULT expand_path ([in] BSTR a_path, [out, retval] BSTR * return_value);
 
@@ -1106,6 +1103,9 @@ interface IEiffelSystemAssemblies: IDispatch
   [helpstring ("Add a signed assembly to the project.")]
   HRESULT add_assembly ([in] BSTR assembly_prefix, [in] BSTR cluster_name, [in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey);
 
+  [helpstring ("Add a local assembly to the project.")]
+  HRESULT add_local_assembly ([in] BSTR assembly_prefix, [in] BSTR cluster_name, [in] BSTR a_path);
+
   [helpstring ("Remove an assembly from the project.")]
   HRESULT remove_assembly ([in] BSTR assembly_identifier);
 
@@ -1132,9 +1132,6 @@ interface IEiffelSystemAssemblies: IDispatch
 
   [helpstring ("Is 'prefix' a valid assembly prefix")]
   HRESULT is_valid_prefix ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
-
-  [helpstring ("Has the 'prefix' already been allocated to another assembly")]
-  HRESULT is_prefix_allocated ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
 
   [propget, helpstring ("Returns all of the assemblies in an enumerator")]
   HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
@@ -1217,9 +1214,6 @@ interface IEiffelClusterProperties: IDispatch
   [id (EIFFELCLUSTERPROP_ParentName), propget, helpstring ("Name of the parent cluster.")]
   HRESULT parent_name ([out, retval] BSTR * return_value);
 
-  [id (EIFFELCLUSTERPROP_ParentName), propput, helpstring ("Name of the parent cluster.")]
-  HRESULT parent_name ([in] BSTR new_value);
-
   [id (EIFFELCLUSTERPROP_HasParent), propget, helpstring ("Does the current cluster have a parent cluster?")]
   HRESULT has_parent ([out, retval] VARIANT_BOOL * return_value);
 
@@ -1267,9 +1261,6 @@ interface IEiffelAssemblyProperties: IDispatch
 
   [id (ISECompilerID_is_local), propget, helpstring ("Is the assembly local")]
   HRESULT is_local ([out, retval] VARIANT_BOOL * a_bool);
-
-  [id (ISECompilerID_is_signed), propget, helpstring ("Is the assembly local")]
-  HRESULT is_signed ([out, retval] VARIANT_BOOL * a_bool);
 
   [id (ISECompilerID_assembly_cluster_name), propget, helpstring ("Assembly cluster name.")]
   HRESULT assembly_cluster_name ([out, retval] BSTR * return_value);

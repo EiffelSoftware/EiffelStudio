@@ -180,9 +180,9 @@ feature -- Basic operations
 			min := minimum
 			max := maximum
 			if scroll_code = Sb_pagedown then
-				new_pos := old_pos + page
+				new_pos := old_pos + p
 			elseif scroll_code = Sb_pageup then
-				new_pos := old_pos - page
+				new_pos := old_pos - p
 			elseif scroll_code = Sb_linedown then
 				new_pos := old_pos + line
 			elseif scroll_code = Sb_lineup then

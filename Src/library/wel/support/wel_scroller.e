@@ -319,91 +319,101 @@ feature -- Element change
 
 feature -- Basic operations
 
-	on_horizontal_scroll (scroll_code, position: INTEGER) is
+	on_horizontal_scroll (scroll_code, pos: INTEGER) is
 			-- Scroll the window horizontaly.
 		require
 			window_exists: window.exists
 		local
+			old_pos, new_pos: INTEGER
+			min, max, p: INTEGER
 			inc: INTEGER
-			pos: INTEGER
 		do
-			pos := horizontal_position
+			old_pos := horizontal_position
+			p := horizontal_page
+			min := minimal_horizontal_position
+			max := maximal_horizontal_position
 			if scroll_code = Sb_pagedown then
-				inc := horizontal_page
-				pos := pos + inc
+				inc := p
+				new_pos := old_pos + inc
 			elseif scroll_code = Sb_pageup then
-				inc := -horizontal_page
-				pos := pos + inc
+				inc := -p
+				new_pos := old_pos + inc
 			elseif scroll_code = Sb_linedown then
 				inc := horizontal_line
-				pos := pos + inc
+				new_pos := old_pos + inc
 			elseif scroll_code = Sb_lineup then
 				inc := -horizontal_line
-				pos := pos + inc
+				new_pos := old_pos + inc
 			elseif scroll_code = Sb_thumbposition then
-				inc := position - pos
-				pos := position
+				inc := pos - old_pos
+				new_pos := pos
 			elseif scroll_code = Sb_thumbtrack then
-				inc := position - pos
-				pos := position
+				inc := pos - old_pos
+				new_pos := pos
+			elseif scroll_code = Sb_top then
+				new_pos := min
+			elseif scroll_code = Sb_bottom then
+				new_pos := max - p + 1
 			end
-			if pos > maximal_horizontal_position then
-				pos := maximal_horizontal_position
-				inc :=  maximal_horizontal_position - horizontal_position
-			elseif pos < minimal_horizontal_position then
-				pos := minimal_horizontal_position
-				inc := minimal_horizontal_position - horizontal_position
+			if new_pos > max - p + 1 then
+				new_pos := max - p + 1
+				inc := new_pos - old_pos
+			elseif new_pos < min then
+				new_pos := min
+				inc := new_pos - old_pos
 			end
-			if pos /= horizontal_position then
-				horizontal_update (-inc, pos)
-				debug ("scroll_position")
-					print (pos)
-					print ("=horizontal position%N")
-				end
+
+			if old_pos /= new_pos then
+				horizontal_update (-inc, new_pos)
 			end
 		end
 
-	on_vertical_scroll (scroll_code, position: INTEGER) is
-			-- Scroll the window vertically.
+	on_vertical_scroll (scroll_code, pos: INTEGER) is
+			-- Scroll the window verticaly.
 		require
 			window_exists: window.exists
 		local
+			old_pos, new_pos: INTEGER
+			min, max, p: INTEGER
 			inc: INTEGER
-			pos: INTEGER
 		do
-			pos := vertical_position
+			old_pos := vertical_position
+			p := vertical_page
+			min := minimal_vertical_position
+			max := maximal_vertical_position
 			if scroll_code = Sb_pagedown then
-				inc := vertical_page
-				pos := pos + inc
+				inc := p
+				new_pos := old_pos + inc
 			elseif scroll_code = Sb_pageup then
-				inc := -vertical_page
-				pos := pos + inc
+				inc := -p
+				new_pos := old_pos + inc
 			elseif scroll_code = Sb_linedown then
 				inc := vertical_line
-				pos := pos + inc
+				new_pos := old_pos + inc
 			elseif scroll_code = Sb_lineup then
 				inc := -vertical_line
-				pos := pos + inc
+				new_pos := old_pos + inc
 			elseif scroll_code = Sb_thumbposition then
-				inc := position - pos
-				pos := position
+				inc := pos - old_pos
+				new_pos := pos
 			elseif scroll_code = Sb_thumbtrack then
-				inc := position - pos
-				pos := position
+				inc := pos - old_pos
+				new_pos := pos
+			elseif scroll_code = Sb_top then
+				new_pos := min
+			elseif scroll_code = Sb_bottom then
+				new_pos := max - p + 1
 			end
-			if pos > maximal_vertical_position then
-				pos := maximal_vertical_position
-				inc :=  maximal_vertical_position - vertical_position 
-			elseif pos < minimal_vertical_position then
-				pos := minimal_vertical_position
-				inc := minimal_vertical_position - vertical_position
+			if new_pos > max - p + 1 then
+				new_pos := max - p + 1
+				inc := new_pos - old_pos
+			elseif new_pos < min then
+				new_pos := min
+				inc := new_pos - old_pos
 			end
-			if pos /= vertical_position then
-				vertical_update (-inc, pos)
-				debug ("scroll_position")
-					print (pos)
-					print ("=vertical position%N")
-				end
+
+			if old_pos /= new_pos then
+				vertical_update (-inc, new_pos)
 			end
 		end
 

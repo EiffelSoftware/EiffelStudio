@@ -50,13 +50,15 @@
 
 rt_public char* cmps_general_buffer = (char *) 0;
 
-rt_public int fides;
 rt_public char *general_buffer = (char *) 0;
 rt_public int current_position = 0;
-rt_public int buffer_size = EIF_BUFFER_SIZE;
+rt_public long buffer_size = 0;
 rt_public int end_of_buffer = 0;
 rt_private char *s_buffer = (char *) 0;
 
+#ifndef EIF_THREADS
+rt_private int s_fides;	/* File descriptor used during the storing process */
+#endif /* EIF_THREADS */
 
 /*
  * Function declarations
@@ -72,9 +74,10 @@ rt_private void object_write (char *object);
 rt_private void gen_object_write (char *object);
 rt_public long get_offset (uint32 o_type, uint32 attrib_num);
 rt_public long get_alpha_offset (uint32 o_type, uint32 attrib_num);
-rt_public void allocate_gen_buffer(void);
 rt_public void store_write(void);
 rt_public void free_sorted_attributes(void);
+rt_public void allocate_gen_buffer(void);
+rt_public void buffer_write(register char *data, int size);
 
 rt_public void rt_reset_store (void);
 rt_public void rt_init_store(
@@ -97,6 +100,15 @@ rt_public int (*char_write_func)(char *, int);
  */
 rt_shared char *account = (char *) 0;	/* Array of traversed dyn types */
 rt_shared unsigned int **sorted_attributes = (unsigned int **) 0;	/* Array of sorted attributes */
+
+/* Declarations to work with streams */
+rt_private char *stream_buffer;
+rt_private int stream_buffer_position;
+rt_private long stream_buffer_size;
+
+/* Functions to write on the specified IO_MEDIUM */
+rt_private int (char_write) (char *, int);
+rt_private int (stream_write) (char *, int);
 
 rt_private int accounting = 0;
 
@@ -160,16 +172,16 @@ rt_public void rt_reset_store(void) {
 /* Functions definitions */
 
 /* Basic store */
+/* Store object hierarchy of root `object' without header. */
 rt_public void estore(EIF_INTEGER file_desc, char *object)
 {
-	/* Store object hierarchy of root `object' without header. */
-	fides = (int) file_desc;
+	s_fides = (int) file_desc;
 
 	rt_init_store (
 		store_write,
 		char_write,
 		flush_st_buffer,
-		gst_write,
+		st_write,
 		make_header,
 		0,
 		EIF_BUFFER_SIZE);
@@ -180,14 +192,34 @@ rt_public void estore(EIF_INTEGER file_desc, char *object)
 	rt_reset_store ();
 }
 
+rt_public void stream_estore(char **buffer, char *object)
+{
+	rt_init_store (
+		store_write,
+		stream_write,
+		flush_st_buffer,
+		st_write,
+		make_header,
+		0,
+		EIF_BUFFER_SIZE);
+
+	stream_buffer = *buffer;
+	stream_buffer_size = sizeof (*buffer);
+	stream_buffer_position = 0;
+
+	allocate_gen_buffer();
+	internal_store(object);
+
+	*buffer = stream_buffer;
+	rt_reset_store ();
+}
+
 /* General store */
+/* Store object hierarchy of root `object' and produce a header
+ * so it can be retrieved by other systems. */
 rt_public void eestore(EIF_INTEGER file_desc, char *object)
 {
-	/* Store object hierarchy of root `object' and produce a header
-	 * so it can be retrieved by other systems.
-	 */
-
-	fides = (int) file_desc;
+	s_fides = (int) file_desc;
 
 	rt_init_store (
 		store_write,
@@ -204,15 +236,35 @@ rt_public void eestore(EIF_INTEGER file_desc, char *object)
 	rt_reset_store ();
 }
 
+rt_public void stream_eestore(char **buffer, char *object)
+{
+	rt_init_store (
+		store_write,
+		stream_write,
+		flush_st_buffer,
+		gst_write,
+		make_header,
+		TR_ACCOUNT,
+		EIF_BUFFER_SIZE);
+
+	stream_buffer = *buffer;
+	stream_buffer_size = sizeof (*buffer);
+	stream_buffer_position = 0;
+	
+	allocate_gen_buffer();
+	internal_store(object);
+	*buffer = stream_buffer;
+
+	rt_reset_store ();
+}
+
 /* Independent store */
+/* Use file decscriptor so sockets and files can be used for storage
+ * Store object hierarchy of root `object' and produce a header
+ * so it can be retrieved by other systems. */
 rt_public void sstore (EIF_INTEGER file_desc, char *object)
 {
-	/* Use file decscriptor so sockets and files can be used for storage
-	 * Store object hierarchy of root `object' and produce a header
-	 * so it can be retrieved by other systems.
-	 */
-
-	fides = (int) file_desc;
+	s_fides = (int) file_desc;
 
 	rt_init_store (
 		store_write,
@@ -223,7 +275,7 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 		INDEPEND_ACCOUNT,
 		EIF_BUFFER_SIZE);
 
-	run_idr_init ();
+	run_idr_init (buffer_size, 0);
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
 
 	internal_store(object);
@@ -235,26 +287,65 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 	rt_reset_store ();
 }
 
+rt_public void stream_sstore (char **buffer, char *object)
+{
+	rt_init_store (
+		store_write,
+		stream_write,
+		idr_flush,
+		ist_write,
+		imake_header,
+		INDEPEND_ACCOUNT,
+		EIF_BUFFER_SIZE);
+
+	stream_buffer = *buffer;
+	stream_buffer_size = sizeof (*buffer);
+	stream_buffer_position = 0;
+
+	run_idr_init (buffer_size, 0);
+	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
+	
+	internal_store(object);
+
+	run_idr_destroy ();
+	xfree (idr_temp_buf);
+	idr_temp_buf = (char *)0;
+
+	*buffer = stream_buffer;
+	rt_reset_store ();
+}
+
+/* Stream allocation */
+rt_public char **stream_malloc (int stream_size)	/*08/04/98*/
+{
+	char *buffer;
+	char **real_buffer;
+
+	buffer = malloc(stream_size);
+	if (buffer == (char *) 0) 
+		enomem ();
+	else {
+		real_buffer = (char **) malloc (sizeof (char *));
+		if (real_buffer == (char **) 0)
+			enomem ();
+		else
+			*real_buffer = buffer;
+			return real_buffer;
+	}
+}
+
 rt_public void allocate_gen_buffer (void)
 {
 	EIF_GET_CONTEXT
 	if (general_buffer == (char *) 0) {
-		char g_status = g_data.status;
-
-		g_data.status |= GC_STOP;
-		general_buffer = (char *) xmalloc (EIF_BUFFER_ALLOCATED_SIZE * sizeof (char), C_T, GC_OFF);
-/* FIXME: EIF_BUFFER_ALLOCATED_SIZE = buffer_size + padding size
-if no compression, use buffer_size -> 1k instead of 32k + padding
-*/
+		general_buffer = (char *) xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
 		if (general_buffer == (char *) 0)
-			eraise ("out of memory", EN_PROG);
-
-		/* compression */
-		cmps_general_buffer = (char *) xmalloc (EIF_CMPS_BUFFER_ALLOCATED_SIZE * sizeof (char), C_T, GC_OFF);
+			eraise ("Out of memory for general_buffer creation", EN_PROG);
+	
+			/* compression */
+		cmps_general_buffer = (char *) xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
 		if (cmps_general_buffer == (char *) 0)
-			eraise ("out of memory", EN_PROG);
-
-		g_data.status = g_status;
+			eraise ("out of memory for cmps_general_buffer creation", EN_PROG);
 	}
 
 	current_position = 0;
@@ -276,7 +367,7 @@ rt_private void internal_store(char *object)
 			xraise(EN_MEM);
 		bzero(account, scount * sizeof(char));
 		if (accounting == INDEPEND_ACCOUNT)
-			c = INDEPENDENT_STORE_4_0;
+			c = INDEPENDENT_STORE_4_3;
 		else {
 			c = GENERAL_STORE_4_0;
 
@@ -320,7 +411,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 
 		account = (char *) 0;
 	}
-	/* Write in file `fides' the count of stored objects */
+	/* Write the count of stored objects */
 	if (accounting == INDEPEND_ACCOUNT)
 		widr_multi_int (&obj_nb, 1);
 	else
@@ -330,12 +421,11 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 		printf (" %lx", obj_nb);
 #endif
 
-	st_store(object);			/* Write objects to be stored in `fides' */
+	st_store(object);		/* Write objects to be stored */
 
-						/* flush the buffer */
-		flush_buffer_func();
+	flush_buffer_func();	/* flush the buffer */
 #if DEBUG & 3
-		printf ("\n");
+	printf ("\n");
 #endif
 }
 
@@ -403,7 +493,7 @@ rt_private void st_store(char *object)
 
 rt_public void st_write(char *object)
 {
-	/* Write an object in file `fides'.
+	/* Write an object'.
 	 * Use for basic and general (before 3.3) store
 	 */
 
@@ -453,7 +543,7 @@ rt_public void st_write(char *object)
 
 rt_private void gst_write(char *object)
 {
-	/* Write an object in file `fides'.
+	/* Write an object.
 	 * used for general store
 	 */
 
@@ -498,7 +588,7 @@ rt_private void gst_write(char *object)
 
 rt_private void ist_write(char *object)
 {
-	/* Write an object in file `fides'.
+	/* Write an object.
 	 * used for independent store
 	 */
 
@@ -1279,16 +1369,50 @@ rt_public void buffer_write(register char *data, int size)
 	}
 }
 
+/* Bufferization of information on buffer. If the buffer is full
+ * we write the buffer on IO_MEDIUM and flush the buffer so we can
+ * do another write operation */
+rt_public void new_buffer_write(register char *data, int size)
+{
+	if (current_position + size >= buffer_size) {
+			/* Copy the data buffer into the general_buffer until the last one is full
+			 * launch a writing operation on the IO_MEDIUM and do a recursive call to
+			 * finish the writing of data */
+		memcpy (general_buffer + current_position, data, buffer_size - current_position);
+		current_position = buffer_size;
+		store_write_func ();
+			/* Recursive call to finish the storage on the IO_MEDIUM */
+		buffer_write (data + buffer_size, size - buffer_size);
+	} else {
+			/* Copy the data buffer into the general_buffer
+			 * Set also `current_position' to the position in the general_buffer */
+		memcpy (general_buffer + current_position, data, size);
+		current_position += size;
+	}
+}
+
 rt_public void flush_st_buffer (void)
 {
 	if (current_position != 0)
 		store_write_func();
 }
 
-int char_write(char *pointer, int size)
+rt_private int char_write(char *pointer, int size)
 {
-    return write(fides, pointer, size);
+    return write(s_fides, pointer, size);
 }
+
+rt_private int stream_write (char *pointer, int size)
+{
+	if (stream_buffer_size - stream_buffer_position < size) {
+		stream_buffer_size += buffer_size;
+		stream_buffer = realloc (stream_buffer, stream_buffer_size);
+	}
+
+	memcpy ((stream_buffer + stream_buffer_position), pointer, size);
+	stream_buffer_position += size;
+	return size;
+} 
 
 void store_write(void)
 {

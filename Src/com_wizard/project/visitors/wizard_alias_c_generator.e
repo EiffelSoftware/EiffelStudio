@@ -8,9 +8,12 @@ deferred class
 	WIZARD_ALIAS_C_GENERATOR
 
 inherit
-	WIZARD_C_WRITER_GENERATOR
+	WIZARD_TYPE_GENERATOR
 
 feature -- Access
+
+	c_writer: WIZARD_WRITER_C_FILE
+			-- Writer of C file.
 
 	generate (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
 			-- Generate C alias.

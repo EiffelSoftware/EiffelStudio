@@ -124,7 +124,7 @@ end;
 		require
 			good_argument: other /= Void;
 		local
-			feature_i, other_feature_i: FEATURE_I;
+			old_feature_i, new_feature_i: FEATURE_I;
 			feature_name: STRING;
 			propagators, melted_propagators: SORTED_SET [DEPEND_UNIT];
 			removed_features: SEARCH_TABLE [FEATURE_I];
@@ -144,39 +144,39 @@ end;
 				offright
 			loop
 					-- Old feature
-				feature_i := item_for_iteration;
-				feature_name := feature_i.feature_name;
+				old_feature_i := item_for_iteration;
+				feature_name := old_feature_i.feature_name;
 					-- New feature
-				other_feature_i := other.item (feature_name);
+				new_feature_i := other.item (feature_name);
 					-- First condition, `other' must have the feature
-					-- name. Second condition, `feature_i' and
-					-- `other_feature_i' must have the same interface
-				if not (	(other_feature_i /= Void
+					-- name. Second condition, `old_feature_i' and
+					-- `new_feature_i' must have the same interface
+				if not (	(new_feature_i /= Void
 							and then
-							feature_i.same_interface (other_feature_i))
+							old_feature_i.same_interface (new_feature_i))
 						or else
 							-- We don't want to trigger a third pass
 							-- on a client of the associated class
 							-- changed of interface between two
 							-- recompilations
-						feature_i.export_status.is_none)
+						old_feature_i.export_status.is_none)
 				then
 					propagate_feature := True;
 				end;
 
-				if 	feature_i.written_in = feat_tbl_id then
-					if feature_i.is_external then
+				if 	old_feature_i.written_in = feat_tbl_id then
+					if old_feature_i.is_external then
 							-- Delete one occurence of an external feature
-						external_i ?= feature_i;
+						external_i ?= old_feature_i;
 						Result.remove_external (external_i.external_name);
 					end;
-					if 	other_feature_i = Void
+					if 	new_feature_i = Void
 						or else
-						other_feature_i.written_in /= feat_tbl_id
+						new_feature_i.written_in /= feat_tbl_id
 					then
 							-- A feature written in the associated class
 							-- disapear
-						removed_features.put (feature_i);
+						removed_features.put (old_feature_i);
 						propagate_feature := True;
 					end;
 				end;
@@ -184,21 +184,21 @@ end;
 				if propagate_feature then
 debug ("ACTIVITY")
 	io.error.putstring ("%Tfeature ");
-	io.error.putstring (feature_i.feature_name);
+	io.error.putstring (old_feature_i.feature_name);
 	io.error.putstring (" is propagated to clients%N");
 end;
-					!!depend_unit.make (feat_tbl_id, feature_i.feature_id);
+					!!depend_unit.make (feat_tbl_id, old_feature_i.feature_id);
 					propagators.put (depend_unit);
 					propagate_feature := False;
 				end;
 
-				if 	other_feature_i /= Void
+				if 	new_feature_i /= Void
 					and then
-					feature_i.is_attribute /= other_feature_i.is_attribute
+					old_feature_i.is_attribute /= new_feature_i.is_attribute
 				then
 						-- Detect an attribute changed into a function.
 					if depend_unit = Void then
-						!!depend_unit.make (feat_tbl_id, feature_i.feature_id);
+						!!depend_unit.make (feat_tbl_id, old_feature_i.feature_id);
 					end;
 					melted_propagators.put (depend_unit);
 				end;
@@ -210,6 +210,32 @@ end;
 		end;
 					
 		-- Check
+
+	update_table is
+			-- Check if the references to the supplier classes
+			-- are still valid and remove the entry otherwise
+		local
+			type_a: TYPE_A;
+			used_keys: ARRAY [STRING];
+			base_type: INTEGER;
+		do
+			from
+				start
+			until
+				offright
+			loop
+				type_a ?= item_for_iteration.type;
+				if type_a /= Void then
+					base_type := type_a.base_type;
+					if base_type > 0 and then
+						System.class_of_id (type_a.base_type) = Void
+					then
+						remove (key_for_iteration)
+					end;
+				end;
+				forth
+			end
+		end;
 
 	check_table is
 			-- Check all the features in the table

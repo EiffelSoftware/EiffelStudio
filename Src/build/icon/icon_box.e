@@ -4,16 +4,8 @@ class ICON_BOX [T->DATA]
 inherit
 
 	EB_BOX [T]
-		rename
-			set_icons as box_set_icons,
-			merge_icons as box_merge_icons
-		end;
-
-	EB_BOX [T]
 		redefine
-			extend,
-			merge_icons, set_icons
-		select
+			extend, manage,
 			merge_icons, set_icons
 		end
 
@@ -124,13 +116,13 @@ feature {NONE}
 	merge_icons is
 		do
 			check_number_of_icons;
-			box_merge_icons;	
+			{EB_BOX} Precursor	
 		end; -- merge_icons
 
 	set_icons is
 		do
 			check_number_of_icons;
-			box_set_icons;	
+			{EB_BOX} Precursor	
 		end; -- set_icons
 		
 
@@ -191,24 +183,34 @@ feature
 		end; -- add
 
 	refresh_display is
-		require
-			positions_same: icons_index = index
 		local
 			icon: ICON_STONE
 		do
 			from
+				go_i_th (1)
+				icons.go_i_th (1)
 			until
 				after 
 			loop
-				icon := icons.item;
-				icon.set_data (item);
-					--if not icon.managed then
-						--icon.set_managed (True);
-					--end;
-				icons.forth;
-				forth;	
-			end;
-		end; 
+				icon := icons.item
+				icon.set_data (item)
+					if not icon.managed then
+						icon.manage
+					end
+				icons.forth
+				forth	
+			end
+		ensure
+			positions_same: icons_index = index
+		end 
+
+	manage is
+		do
+			{EB_BOX} Precursor
+			if not empty then
+				refresh_display
+			end
+		end
 
 feature {NONE}
 

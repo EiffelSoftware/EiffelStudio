@@ -3,8 +3,8 @@
 // typelib filename: <could not determine filename>
 
 [
-  uuid(278F236A-167B-3FBA-A191-3765763381D0),
-  version(0.1)
+  uuid(A15DF32A-0F73-3C93-89FD-A8783996C0DB),
+  version(1.0)
 ]
 library AssemblyManagerInterface
 {
@@ -42,7 +42,7 @@ library AssemblyManagerInterface
     };
 
     [
-      uuid(020CF4CC-43BA-3BA4-9E0D-2F9C67D4AE9E),
+      uuid(05624193-ECF7-3E13-9F0B-3AC39344E8CB),
       version(1.0)
     ]
     coclass AssemblyManagerInterface {

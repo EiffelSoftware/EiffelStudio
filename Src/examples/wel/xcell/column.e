@@ -12,7 +12,7 @@ feature -- Access
 	remove_top is
 			-- Remove the top of the column.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		do
 			finish
 			remove
@@ -23,7 +23,7 @@ feature -- Access
 	the_top: G is
 			-- The top of the column
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		do
 			finish
 			Result := item

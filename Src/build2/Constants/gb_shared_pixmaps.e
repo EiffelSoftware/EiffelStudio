@@ -16,6 +16,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 
 feature -- Pngs
 
@@ -354,16 +359,6 @@ feature {NONE} -- Update
 		
 feature {NONE} -- Implementation
 
-	visual_studio_information: VISUAL_STUDIO_INFORMATION is
-			-- `Result' is instance of VISUAL_STUDIO_INFORMATION.
-			-- Is a Once, as the state will never change during the
-			-- execution of Build.
-		once
-			create Result
-		ensure
-			Result_not_void: Result /= Void
-		end
-		
 	pixmap_warning_dialog: EV_WARNING_DIALOG is
 			-- Dialog to be displayed, when a pixmap is
 			-- missing from the installation.

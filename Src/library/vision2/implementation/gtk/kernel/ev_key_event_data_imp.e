@@ -18,25 +18,40 @@ inherit
 
 feature -- Initialization
 	
-		initialize (p: POINTER) is
+	initialize (p: POINTER) is
 			-- Creation and initialization of 'parent's 
 			-- fields according to C pointer 'p'
 		local
 			c_str: POINTER
 			str: STRING
-			
+			keycod, gtk_state: INTEGER
+			-- gtk_state is the `state' value given by GTK fonction
+			shift, control, caps_lock, num_lock, scroll_lock: BOOLEAN
 		do
-			Precursor (p)			
-	--		set_state (c_gdk_event_state (p))
-			set_keycode (c_gdk_event_keyval (p))
-	--		set_length (c_gdk_event_length (p))
-			
+			Precursor (p)
+--			set_length (c_gdk_event_length (p))
+
+			keycod:= c_gdk_event_keyval (p)
+			gtk_state:= c_gtk_event_keys_state (p)
 			c_str := c_gdk_event_string (p)
 			!!str.make (0)
-			str.from_c (c_str)
-			set_string (str)
+
+-- alex, temporary: see if it is worth it
+			if c_str/= default_pointer then
+				str.from_c (c_str)
+			end
+
+			shift:= bit_set (gtk_state, 1)
+			control:= bit_set (gtk_state, 4)
+			caps_lock:= bit_set (gtk_state, 2)
+			num_lock:= bit_set (gtk_state, 32)
+			scroll_lock:= False
+
+			set_all (widget, keycod, str, shift, control,
+					caps_lock, num_lock, scroll_lock)
+
 		end
-	
+
 end -- class EV_KEY_EVENT_DATA_IMP
 
 --|----------------------------------------------------------------

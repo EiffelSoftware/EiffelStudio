@@ -57,7 +57,11 @@ feature
 			byte_list.analyze;
 
 				-- Routine's name				
-			generated_file.putstring ("void ");
+			generated_file.putstring ("%
+										%/*%N%
+										% * Invariant%N%
+										% */%N%
+										%void ");
 			if context.final_mode then	
 				body_id := Invariant_id;
 			else

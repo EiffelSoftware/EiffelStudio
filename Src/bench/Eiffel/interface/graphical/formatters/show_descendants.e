@@ -49,7 +49,7 @@ feature {NONE}
 				!!d.make (descendants.item);
 				text_window.put_string (tabs(i));
 				text_window.put_clickable_string (d, d.signature);
-				text_window.put_string ("%N");
+				text_window.new_line;
 				display_info (i+1, d);
 				descendants.forth
 			end

@@ -131,6 +131,9 @@ feature
 
 	generate (class_type: CLASS_TYPE; file: INDENT_FILE) is
 			-- Generate feature written in `class_type' in `file'.
+		require else
+			valid_file: file /= Void;
+			file_open_for_writing: file.is_open_write or file.is_open_append;
 		do
 			if (not is_none_attribute) and then used then
 				-- Generation of a routine to access the attribute

@@ -182,6 +182,8 @@ feature
 			end;
 				-- Check if the feature renamed are available
 			check_validity1;
+
+			Error_handler.checksum;
 				-- Treat the renamings
 			check_renamings;
 				-- Analyze features inherited under the same final name

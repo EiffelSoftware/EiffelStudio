@@ -173,12 +173,22 @@ feature -- Compilation
 			loop
 				Workbench.recompile;
 				if not Workbench.successfull then
-					io.error.putstring ("%NPress <return> to resume compilation ");
-					io.readline;
+					io.error.putstring ("%NPress <return> to resume compilation%N");
+					wait_for_return;
 				else
 					exit := True
 				end
 			end;
+		end;
+
+feature {NONE}
+
+	wait_for_return is
+		do
+			io.readline;
+--		rescue
+--				-- FIXME: Should abort for CTRL C
+--			retry
 		end;
 
 feature -- Precompilation

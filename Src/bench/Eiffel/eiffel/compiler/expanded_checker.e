@@ -54,39 +54,41 @@ feature {NONE}
 			vlec: VLEC;
 			finished: BOOLEAN;
 			attr_desc: ATTR_DESC;
+			stop_recursion: BOOLEAN;
 		do
-			if not id_set.has (class_type.associated_class.id) then
-				from
-					current_skeleton := class_type.skeleton;
+			stop_recursion := id_set.has (class_type.associated_class.id);
+			from
+				current_skeleton := class_type.skeleton;
 debug
 io.error.putstring ("Recursive check%N");
 current_skeleton.trace;
 end;
-					current_skeleton.go_expanded;
-				until
-					current_skeleton.after or else finished
-				loop
-					attr_desc := current_skeleton.item;	
-					if attr_desc.is_expanded = False then
-						finished := True
+				current_skeleton.go_expanded;
+			until
+				current_skeleton.after or else finished
+			loop
+				attr_desc := current_skeleton.item;	
+				if attr_desc.is_expanded = False then
+					finished := True
+				else
+					expanded_desc ?= attr_desc;
+					client_type := System.class_type_of_id (expanded_desc.type_id);
+					id := client_type.associated_class.id;
+					if id = current_type.associated_class.id then
+							-- Found expanded circuit
+						!!vlec;
+						vlec.set_class_id (id);
+						vlec.set_class_type (current_type);
+						Error_handler.insert_error (vlec);
 					else
-						expanded_desc ?= attr_desc;
-						client_type := System.class_type_of_id (expanded_desc.type_id);
-						id := client_type.associated_class.id;
-						if id = current_type.associated_class.id then
-								-- Found expanded circuit
-							!!vlec;
-							vlec.set_class_id (id);
-							vlec.set_class_type (current_type);
-							Error_handler.insert_error (vlec);
-						else
-							id_set.put (id);
+						id_set.put (id);
+						if not stop_recursion then
 							recursive_check (client_type);
 						end;
 					end;
-			
-					current_skeleton.forth;
 				end;
+
+				current_skeleton.forth;
 			end;
 		end;
 

@@ -49,7 +49,7 @@ feature {NONE}
 				if (c.class_c /= classc_stone.class_c) then
 					text_window.put_string (tabs (1));
 					text_window.put_clickable_string (classc_stone, classc_stone.signature);
-					text_window.put_string ("%N");
+					text_window.new_line;
 				end;
 				suppliers.forth
 			end

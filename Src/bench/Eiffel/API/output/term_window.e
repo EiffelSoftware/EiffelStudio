@@ -15,4 +15,6 @@ feature
 
 	new_line is do io.error.new_line end;
 
+	put_char (c: CHARACTER) is do io.error.putchar (c) end;
+
 end

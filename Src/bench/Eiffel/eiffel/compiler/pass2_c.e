@@ -113,19 +113,22 @@ feature
 			do_pass2 := real_pass2 or else assert_prop_list /= Void;
 
 			if pass2_control.propagate_pass3 then
-				do_pass2 := True;
+					-- Propagation of pass3 does NOT imply a pass 2 on all the
+					-- descendants
+--				do_pass2 := True;
 				do_pass3 := True;
+			end;
+
+			if do_pass3 then
+				-- Propagation of third pass in order to type check
+				-- clients of the current class
+				propagate_pass3 (pass2_control, expanded_modified or deferred_modified);
 			end;
 
 			if do_pass2 then
 					-- Propagation of second pass in order to update
 					-- feature table of direct descendants
 				propagate_pass2 (real_pass2);
-				if do_pass3 then
-					-- Propagation of third pass in order to type check
-					-- clients of the current class
-					propagate_pass3 (pass2_control, expanded_modified or deferred_modified);
-				end;
 				associated_class.set_skeleton (resulting_table.skeleton);
 				if not System.freeze then
 					resulting_table.melt;
@@ -169,8 +172,10 @@ feature -- Propagation of second pass
 					pass2_controler.set_assertion_prop_list
 					(descendant, assert_prop_list.duplicate (assert_prop_list.count));
 				end;
-				pass3_controler.insert_new_class (descendant);
-				pass4_controler.insert_new_class (descendant);
+					-- Propagation of pass2 does NOT imply a pass3 or 4 on all
+					-- the descendants
+--				pass3_controler.insert_new_class (descendant);
+--				pass4_controler.insert_new_class (descendant);
 
 				local_cursor := local_cursor.right
 			end;

@@ -54,7 +54,7 @@ feature {NONE}
 				loop
 					text_window.put_string ("Cluster: ");
 					text_window.put_string (clusters.item.cluster_name);
-					text_window.put_string ("%N");
+					text_window.new_line;
 					classes := clusters.item.classes;
 
 					sorted_class_names.wipe_out;
@@ -71,7 +71,7 @@ feature {NONE}
 					until
 						sorted_class_names.after
 					loop
-						text_window.put_string ("%T");
+						text_window.put_char ('%T');
 						a_classi := classes.item (sorted_class_names.item);
 						a_classc := a_classi.compiled_class;
 						if a_classc /= Void  then
@@ -81,7 +81,7 @@ feature {NONE}
 							!!a_classi_stone.make (classes.item (sorted_class_names.item));
 							text_window.put_clickable_string (a_classi_stone, a_classi_stone.signature)
 						end;
-						text_window.put_string ("%N");
+						text_window.new_line;
 						sorted_class_names.forth
 					end;
 					clusters.forth

@@ -26,6 +26,8 @@ feature
 	generable: BOOLEAN is
 			-- An offset table has to be always generated because og
 			-- the C main skeleton structure.
+		require else
+			True
 		do
 			Result := True;
 		end;

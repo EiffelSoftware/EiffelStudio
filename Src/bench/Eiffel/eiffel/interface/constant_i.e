@@ -138,6 +138,7 @@ feature -- C code generation
 					file.putstring ("done = 1;");
 					file.new_line;
 					file.putstring ("Result = ");
+-- FIXME double /real
 					value.generate (file);
 					file.putchar (';');
 					file.new_line;
@@ -146,6 +147,7 @@ feature -- C code generation
 					file.putstring ("return Result;");
 				else
 					file.putstring ("return ");
+-- FIXME double /real
 					value.generate (file);
 					file.putchar (';');
 				end;

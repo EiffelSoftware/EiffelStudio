@@ -9,11 +9,7 @@ feature {NONE}
 	Error_handler: ERROR_HANDLER is
 			-- GUI Error handler
 		once
-			if batch_mode then
-				!!Result.make
-			else
-				!ERROR_W!Result.make
-			end;
+			!!Result.make
 		end;
 
 end

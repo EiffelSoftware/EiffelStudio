@@ -132,6 +132,7 @@ feature
 		local
 			parent_table: FEATURE_TABLE;
 			vhrc1: VHRC1;
+			vhrc3: VHRC3;
 		do
 			if renaming /= Void then
 				from
@@ -140,7 +141,13 @@ feature
 				until
 					renaming.offright
 				loop
-					if not parent_table.has (renaming.key_for_iteration) then
+					if renaming.key_for_iteration.is_equal (renaming.item_for_iteration) then
+						!!vhrc3;
+						vhrc3.set_class_id (System.current_class.id);
+						vhrc3.set_parent_id (parent_id);
+						vhrc3.set_feature_name (renaming.key_for_iteration);
+						Error_handler.insert_error (vhrc3);
+					elseif not parent_table.has (renaming.key_for_iteration) then
 						!!vhrc1;
 						vhrc1.set_class_id (System.current_class.id);
 						vhrc1.set_parent_id (parent_id);

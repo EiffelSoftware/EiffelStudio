@@ -373,6 +373,26 @@ end;
 			f.check_types (Current);
 		end;
 
+	check_expanded is
+			-- Check the expanded validity rules
+		local
+			class_c: CLASS_C;
+		do
+			class_c := associated_class;
+io.error.putstring ("Checking expanded of ");
+io.error.putstring (associated_class.class_name);
+io.error.new_line;
+			from
+				start
+			until
+				offright
+			loop
+				item_for_iteration.check_expanded (class_c);
+				forth;
+			end;
+			Error_handler.checksum;
+		end;
+
 	feature_of_feature_id (i: INTEGER): FEATURE_I is
 			-- Feature of feature_id id equal to `i'.
 		local

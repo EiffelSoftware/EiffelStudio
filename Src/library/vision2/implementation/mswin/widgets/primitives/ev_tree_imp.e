@@ -133,37 +133,6 @@ feature -- Access
 			end
 		end
 
-feature -- Event : command association
-
---|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when an item has been selected.
---|FIXME		do
---|FIXME			add_command (Cmd_select, cmd, arg)
---|FIXME		end
---|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when an item has been unselected.
---|FIXME		do
---|FIXME			add_command (Cmd_unselect, cmd, arg)
---|FIXME		end
-
-feature -- Event -- removing command association
-
---|FIXME	remove_select_commands is	
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when an item has been selected.
---|FIXME		do
---|FIXME			remove_command (Cmd_select)
---|FIXME		end
---|FIXME
---|FIXME	remove_unselect_commands is	
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when an item has been unselected.
---|FIXME		do
---|FIXME			remove_command (Cmd_unselect)
---|FIXME		end
-
 feature -- Basic operations
 
 	general_insert_item (item_imp: EV_TREE_ITEM_IMP; par, after: POINTER; an_index: INTEGER) is
@@ -186,10 +155,6 @@ feature -- Basic operations
 			struct.set_tree_view_item (item_imp)
 			wel_insert_item (struct)
 			all_ev_children.force (item_imp, last_item)
-	
-
-		
-			--ev_children.force (item_imp)
 
 			-- Then, we add the subitems if there are some.
 			if item_imp.internal_children /= Void then
@@ -343,8 +308,8 @@ feature {NONE} -- WEL Implementation
 			if p /= default_pointer then
 				elem := clist.item (p)
 				if elem /= Void then
-					--| FIXME elem.execute_command (Cmd_item_deactivate, Void)
-					--| FIXME execute_command (Cmd_unselect, Void)
+					elem.interface.deselect_actions.call ([])
+					interface.deselect_actions.call ([elem.interface])
 				end
 			end
 
@@ -352,8 +317,8 @@ feature {NONE} -- WEL Implementation
 			if p /= default_pointer then
 				elem := clist.item (p)
 				if elem /= Void then
-					--| FIXME elem.execute_command (Cmd_item_activate, Void)
-					--| FIXME execute_command (Cmd_select, Void)
+					elem.interface.select_actions.call ([])
+					interface.select_actions.call ([elem.interface])
 				end
 			end
 		end
@@ -362,9 +327,10 @@ feature {NONE} -- WEL Implementation
 			-- a parent item's list of child items has expanded
 			-- or collapsed.
 		do
-			if info.action = Tve_collapse or
-				info.action = Tve_expand then
-				--| FIXME (all_ev_children @ info.new_item.h_item).execute_command (Cmd_item_subtree, Void)
+			if info.action = Tve_collapse then
+				(all_ev_children @ info.new_item.h_item).interface.collapse_actions.call ([])
+			elseif info.action = Tve_expand then
+				(all_ev_children @ info.new_item.h_item).interface.expand_actions.call ([])
 			end
 		end
 
@@ -502,6 +468,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/03/13 18:30:56  rogers
+--| Removed old command association. Connected the select, deselect, collapse and expand events to the tree, and also propogated them to the items of the tree.
+--|
 --| Revision 1.46  2000/03/13 17:55:41  rogers
 --| Redefined on_mouse_move so the pointer_motion_actions can be called on the child.
 --|

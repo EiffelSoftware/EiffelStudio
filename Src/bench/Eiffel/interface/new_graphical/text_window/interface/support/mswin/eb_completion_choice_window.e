@@ -263,7 +263,6 @@ feature {NONE} -- Events handling
 			-- process user entry
 		local
 			searched_w: STRING
-			last_selected: STRING
 			lc: CHARACTER
 		do
 			if not to_be_inserted.text.is_empty then
@@ -410,10 +409,10 @@ feature {NONE} -- Implementation
 		do
 			if choice_list.selected_item /= Void then
 				ix:= choice_list.index_of (choice_list.selected_item, 1) + index_offset
-				editor.complete_class_from_window (sorted_names.item (ix))
+				editor.complete_class_from_window (sorted_names.item (ix), '%U')
 			else
 				if not to_be_inserted.text.is_empty then
-					editor.complete_class_from_window (to_be_inserted.text)
+					editor.complete_class_from_window (to_be_inserted.text, character_to_append)
 				end
 			end
 		end

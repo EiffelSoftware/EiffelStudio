@@ -517,11 +517,14 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			refresh
 		end
 
-	complete_class_from_window (completed: STRING) is
+	complete_class_from_window (completed: STRING; appended_character: CHARACTER) is
 			-- Insert `completed' in the editor.
 		do
 			if not completed.is_empty then
 				text_displayed.insert_string (completed)
+			end
+			if appended_character /= '%U' then
+				text_displayed.insert_char (appended_character)
 			end
 			refresh
 		end

@@ -50,19 +50,9 @@ feature {NONE} -- Initialization
 
 	internal_font_height: INTEGER is
 			-- `Result' is height of font used by `Current'.
-		local
-			screen_dc: WEL_SCREEN_DC
-			extent: WEL_SIZE
-		do
-			create screen_dc
-			screen_dc.get
-			screen_dc.select_font ((create {WEL_SHARED_FONTS}).gui_font)
-			extent := screen_dc.string_size ("X")
-			screen_dc.unselect_font 
-			screen_dc.quick_release
-			Result := extent.height
+		deferred
 		end
-
+		
 feature {EV_ANY_I} -- Status report
 
 	is_editable: BOOLEAN is

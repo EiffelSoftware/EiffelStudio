@@ -82,6 +82,7 @@ feature -- Basic operations
 			cur: TEXT_CURSOR
 		do
 			cur := chwin.cursor
+			chwin.forget_selection
 			cur.make_from_character_pos (x_start, y_start, chwin)
 			cur.delete_n_chars (message.count)
 		end

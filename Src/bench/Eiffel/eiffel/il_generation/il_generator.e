@@ -777,14 +777,14 @@ feature {NONE} -- Type description
 				System.creation_name /= Void
 			then
 					-- Update the root class info
-				a_class := System.root_class.compiled_class
+				a_class := system.root_class.compiled_class
 				root_feat := a_class.feature_table.item (System.creation_name)
-				l_decl_type := il_generator.implemented_type (root_feat.origin_class_id,
+				l_decl_type := il_generator.implemented_type (root_feat.written_in,
 					a_class.types.first.type)
 				il_generator.define_entry_point (
 					a_class.types.first.implementation_id,
 					l_decl_type.associated_class_type,
-					root_feat.origin_feature_id, root_feat.has_arguments)
+					root_feat.written_feature_id, root_feat.has_arguments)
 			end
 		end
 		

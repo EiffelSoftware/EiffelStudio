@@ -229,13 +229,12 @@ feature -- Status setting
 						abstract_value ?= a_stone.debug_value
 					end
 					if abstract_value /= Void then
-						Application.imp_dotnet.keep_object (abstract_value)					
 						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make_from_debug_value (Current, abstract_value)
 					end
 					if n_obj = Void then
 						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make (Current, a_stone.dynamic_class, a_stone.object_address)
 					end
-					debugger_manager.kept_objects.extend (a_stone.object_address)
+					debugger_manager.keep_object (a_stone.object_address)
 					displayed_objects.extend (n_obj)
 					
 					n_obj.to_tree_item (object_tree)
@@ -249,7 +248,7 @@ feature -- Status setting
 					if n_obj = Void then
 						create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} n_obj.make (Current, a_stone.dynamic_class, a_stone.object_address)
 					end
-					debugger_manager.kept_objects.extend (a_stone.object_address)
+					debugger_manager.keep_object (a_stone.object_address)
 					displayed_objects.extend (n_obj)
 					n_obj.to_tree_item (object_tree)					
 				end
@@ -289,9 +288,6 @@ feature -- Status setting
 							taddr.is_equal (addr)
 						then
 							object_tree.remove
-							if Application.is_dotnet then
-								Application.imp_dotnet.remove_kept_object_by_address (taddr)
-							end
 						else
 							object_tree.forth
 						end
@@ -748,23 +744,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clean_debugger_kept_value is
-		require
-			Application.is_dotnet
-		local
-			l_addresses_to_keep: LINKED_LIST [STRING]
-		do
-			from
-				create l_addresses_to_keep.make
-				displayed_objects.start
-			until
-				displayed_objects.after				
-			loop
-				l_addresses_to_keep.extend (displayed_objects.item.address)
-				displayed_objects.forth				
-			end
-			Application.imp_dotnet.keep_only_objects (l_addresses_to_keep)
-		end	
 	
 	build_object_tree is
 			-- Create the tree that contains object information.
@@ -775,9 +754,6 @@ feature {NONE} -- Implementation
 				print ("EB_OBJECT_TOOL.build_object_tree%N")
 			end
 			object_tree.wipe_out
-			if Application.is_dotnet then
-				clean_debugger_kept_value			
-			end
 			
 			if current_object /= Void then
 				display_first := current_object.display
@@ -789,7 +765,6 @@ feature {NONE} -- Implementation
 			if Application.is_dotnet then
 				if not Application.call_stack_is_empty then
 					value := application.imp_dotnet.status.current_stack_element_dotnet.current_object
-					Application.imp_dotnet.keep_object (value)	
 					check 
 						value_not_void: value /= Void
 					end

@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Objects used to evaluate features in dotnet system"
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -47,6 +47,9 @@ feature -- Status
 	
 	last_call_success: INTEGER
 			-- last_call_success from ICOR_DEBUG_EVAL
+
+	last_eval_is_exception: BOOLEAN
+			-- last eval raised an Eval Exception
 
 feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 
@@ -309,104 +312,6 @@ feature {DBG_EVALUATOR} -- Class construction facilities
 			Result.set_associated_frame (a_frame)
 		end				
 
-feature {NONE} -- Implementation : ICorDebugClass
-
-	reference_integer_32_icd_class: ICOR_DEBUG_CLASS is
-			-- IcorDebugClass for reference INTEGER
-		once
-			Result := eifnet_debugger.reference_integer_32_icd_class
-		ensure
-			Result /= Void
-		end
-		
-	reference_real_icd_class: ICOR_DEBUG_CLASS is
-			-- IcorDebugClass for reference REAL
-		once
-			Result := eifnet_debugger.reference_real_icd_class
-		ensure
-			Result /= Void
-		end
-		
-	reference_double_icd_class: ICOR_DEBUG_CLASS is
-			-- IcorDebugClass for reference DOUBLE
-		once
-			Result := eifnet_debugger.reference_double_icd_class
-		ensure
-			Result /= Void
-		end		
-
-	reference_boolean_icd_class: ICOR_DEBUG_CLASS is
-			-- IcorDebugClass for reference BOOLEAN
-		once
-			Result := eifnet_debugger.reference_boolean_icd_class
-		ensure
-			Result /= Void
-		end
-
-	reference_character_icd_class: ICOR_DEBUG_CLASS is
-			-- IcorDebugClass for reference CHARACTER
-		once
-			Result := eifnet_debugger.reference_character_icd_class
-		ensure
-			Result /= Void
-		end
-						
-	eiffel_string_icd_class: ICOR_DEBUG_CLASS is
-			-- IcorDebugClass for STRING
-		once
-			Result := eifnet_debugger.eiffel_string_icd_class
-		ensure
-			Result /= Void
-		end
-		
-	reference_integer_32_set_item_method: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for reference INTEGER.set_item (..)
-		once
-			Result := eifnet_debugger.reference_integer_32_set_item_method
-		ensure
-			Result /= Void
-		end
-		
-	reference_real_set_item_method: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for reference REAL.set_item (..)
-		once
-			Result := eifnet_debugger.reference_real_set_item_method
-		ensure
-			Result /= Void
-		end
-		
-	reference_double_set_item_method: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for reference DOUBLE.set_item (..)
-		once
-			Result := eifnet_debugger.reference_double_set_item_method
-		ensure
-			Result /= Void
-		end
-		
-	reference_boolean_set_item_method: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for reference BOOLEAN.set_item (..)
-		once
-			Result := eifnet_debugger.reference_boolean_set_item_method
-		ensure
-			Result /= Void
-		end
-				
-	reference_character_set_item_method: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for reference CHARACTER.set_item (..)
-		once
-			Result := eifnet_debugger.reference_character_set_item_method
-		ensure
-			Result /= Void
-		end	
-		
-	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for STRING.make_from_cil (..)
-		once
-			Result := eifnet_debugger.eiffel_string_make_from_cil_constructor
-		ensure
-			Result /= Void
-		end		
-
 feature {NONE} -- Backup state
 
 	saved_last_managed_callback: INTEGER
@@ -416,13 +321,13 @@ feature {NONE} -- Backup state
 	save_state_info is
 			-- Save current debugger state information
 		do
-			saved_last_managed_callback := application.imp_dotnet.eifnet_debugger.last_managed_callback			
+			saved_last_managed_callback := eifnet_debugger.last_managed_callback			
 		end	
 
 	restore_state_info is
 			-- Restore saved debugger state information
 		do
-			application.imp_dotnet.eifnet_debugger.set_last_managed_callback (saved_last_managed_callback)
+			eifnet_debugger.set_last_managed_callback (saved_last_managed_callback)
 		end	
 		
 feature {NONE}
@@ -441,6 +346,7 @@ feature {NONE}
 			l_icd_eval: ICOR_DEBUG_EVAL
 			l_status: APPLICATION_STATUS_DOTNET
 		do
+			last_eval_is_exception := False
 			save_state_info
 			if a_frame /= Void then
 				l_chain := a_frame.get_chain
@@ -506,10 +412,13 @@ feature {NONE}
 					print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occured %N")
 				end
 				eifnet_debugger.do_clear_exception
+			elseif eifnet_debugger.last_managed_callback_is_eval_exception then
+				-- Exception !!			
+				last_eval_is_exception := True
 			end
 			l_status.set_is_evaluating (False)
 			eifnet_debugger.start_dbg_timer
-			restore_state_info			
+			restore_state_info
 		end
 
 	complete_function_evaluation: ICOR_DEBUG_VALUE is
@@ -540,7 +449,10 @@ feature {NONE}
 					print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occured %N")
 				end
 				eifnet_debugger.do_clear_exception
-			else
+			elseif eifnet_debugger.last_managed_callback_is_eval_exception then
+				Result := Void
+				last_eval_is_exception := True
+			else				
 				Result := l_icd_eval.get_result
 			end
 			l_status.set_is_evaluating (False)
@@ -568,4 +480,186 @@ feature {NONE}
 			end
 		end
 
-end
+feature {NONE} -- Implementation : ICor... once per session
+
+	reference_integer_32_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for reference INTEGER
+		do
+			Result := once_reference_integer_32_icd_class
+			if Result = Void then
+				once_reference_integer_32_icd_class := eifnet_debugger.reference_integer_32_icd_class
+				Result := once_reference_integer_32_icd_class
+			end
+		ensure
+			Result /= Void
+		end
+		
+	reference_real_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for reference REAL
+		do
+			Result := once_reference_real_icd_class
+			if Result = Void then
+				once_reference_real_icd_class := eifnet_debugger.reference_real_icd_class
+				Result := once_reference_real_icd_class
+			end
+		ensure
+			Result /= Void
+		end
+		
+	reference_double_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for reference DOUBLE
+		do
+			Result := once_reference_double_icd_class
+			if Result = Void then
+				once_reference_double_icd_class := eifnet_debugger.reference_double_icd_class
+				Result := once_reference_double_icd_class
+			end
+		ensure
+			Result /= Void
+		end		
+
+	reference_boolean_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for reference BOOLEAN
+		do
+			Result := once_reference_boolean_icd_class
+			if Result = Void then
+				once_reference_boolean_icd_class := eifnet_debugger.reference_boolean_icd_class
+				Result := once_reference_boolean_icd_class
+			end
+		ensure
+			Result /= Void
+		end
+
+	reference_character_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for reference CHARACTER
+		do
+			Result := once_reference_character_icd_class
+			if Result = Void then
+				once_reference_character_icd_class := eifnet_debugger.reference_character_icd_class
+				Result := once_reference_character_icd_class
+			end
+		ensure
+			Result /= Void
+		end
+						
+	eiffel_string_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for STRING
+		do
+			Result := once_eiffel_string_icd_class
+			if Result = Void then
+				once_eiffel_string_icd_class := eifnet_debugger.eiffel_string_icd_class
+				Result := once_eiffel_string_icd_class
+			end
+		ensure
+			Result /= Void
+		end
+		
+	reference_integer_32_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for reference INTEGER.set_item (..)
+		do
+			Result := once_reference_integer_32_set_item_method
+			if Result = Void then
+				once_reference_integer_32_set_item_method := eifnet_debugger.reference_integer_32_set_item_method
+				Result := once_reference_integer_32_set_item_method
+			end
+		ensure
+			Result /= Void
+		end
+		
+	reference_real_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for reference REAL.set_item (..)
+		do
+			Result := once_reference_real_set_item_method
+			if Result = Void then
+				once_reference_real_set_item_method := eifnet_debugger.reference_real_set_item_method
+				Result := once_reference_real_set_item_method
+			end
+		ensure
+			Result /= Void
+		end
+		
+	reference_double_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for reference DOUBLE.set_item (..)
+		do
+			Result := once_reference_double_set_item_method
+			if Result = Void then
+				once_reference_double_set_item_method := eifnet_debugger.reference_double_set_item_method
+				Result := once_reference_double_set_item_method
+			end
+		ensure
+			Result /= Void
+		end
+		
+	reference_boolean_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for reference BOOLEAN.set_item (..)
+		do
+			Result := once_reference_boolean_set_item_method
+			if Result = Void then
+				once_reference_boolean_set_item_method := eifnet_debugger.reference_boolean_set_item_method
+				Result := once_reference_boolean_set_item_method
+			end
+		ensure
+			Result /= Void
+		end
+				
+	reference_character_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for reference CHARACTER.set_item (..)
+		do
+			Result := once_reference_character_set_item_method
+			if Result = Void then
+				once_reference_character_set_item_method := eifnet_debugger.reference_character_set_item_method
+				Result := once_reference_character_set_item_method
+			end
+		ensure
+			Result /= Void
+		end	
+		
+	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for STRING.make_from_cil (..)
+		do
+			Result := once_eiffel_string_make_from_cil_constructor
+			if Result = Void then
+				once_eiffel_string_make_from_cil_constructor := eifnet_debugger.eiffel_string_make_from_cil_constructor
+				Result := once_eiffel_string_make_from_cil_constructor
+			end
+		ensure
+			Result /= Void
+		end
+
+feature {NONE} -- Private Implementation : ICor... once per session
+
+	reset_once_per_session is
+			-- Reset the data related to one debugging session
+		do
+			once_reference_integer_32_icd_class          := Void
+			once_reference_real_icd_class                := Void
+			once_reference_double_icd_class              := Void
+			once_reference_boolean_icd_class             := Void
+			once_reference_character_icd_class           := Void
+			once_eiffel_string_icd_class                 := Void
+
+			once_reference_integer_32_set_item_method    := Void
+			once_reference_real_set_item_method          := Void
+			once_reference_double_set_item_method        := Void
+			once_reference_boolean_set_item_method       := Void
+			once_reference_character_set_item_method     := Void
+
+			once_eiffel_string_make_from_cil_constructor := Void
+		end
+
+	once_reference_integer_32_icd_class          : ICOR_DEBUG_CLASS
+	once_reference_real_icd_class                : ICOR_DEBUG_CLASS
+	once_reference_double_icd_class              : ICOR_DEBUG_CLASS
+	once_reference_boolean_icd_class             : ICOR_DEBUG_CLASS
+	once_reference_character_icd_class           : ICOR_DEBUG_CLASS
+	once_eiffel_string_icd_class                 : ICOR_DEBUG_CLASS
+
+	once_reference_integer_32_set_item_method    : ICOR_DEBUG_FUNCTION
+	once_reference_real_set_item_method          : ICOR_DEBUG_FUNCTION
+	once_reference_double_set_item_method        : ICOR_DEBUG_FUNCTION
+	once_reference_boolean_set_item_method       : ICOR_DEBUG_FUNCTION
+	once_reference_character_set_item_method     : ICOR_DEBUG_FUNCTION
+
+	once_eiffel_string_make_from_cil_constructor : ICOR_DEBUG_FUNCTION
+
+end	

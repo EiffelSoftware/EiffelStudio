@@ -45,6 +45,7 @@ feature
 			cse: CALL_STACK_ELEMENT_CLASSIC
 			expr: EB_EXPRESSION
 			need_to_stop: BOOLEAN
+			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			if not retry_clause then
 				Application_notification_controller.notify_on_before_stopped
@@ -119,9 +120,9 @@ feature
 						expr := Application.condition (cse.routine, cse.break_index)
 						if expr /= Void then
 							expr.evaluate
-							if expr.error_message = Void then
-								need_to_stop := (expr.final_result_type.is_basic) and then
-												(expr.final_result_value.output_value.is_equal ("True"))
+							evaluator := expr.expression_evaluator
+							if evaluator.error_message = Void then
+								need_to_stop := evaluator.final_result_is_true_boolean_value
 							else
 								need_to_stop := False
 							end

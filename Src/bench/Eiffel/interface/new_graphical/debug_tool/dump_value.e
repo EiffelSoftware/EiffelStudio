@@ -148,7 +148,6 @@ feature -- Dotnet creation
 		require
 			arg_not_void: a_eifnet_dsv /= Void			
 		do
---			is_dotnet_value := True
 			eifnet_debug_value := a_eifnet_dsv
 			value_frame_dotnet := eifnet_debug_value.icd_frame
 			value_dotnet := eifnet_debug_value.icd_referenced_value
@@ -277,27 +276,32 @@ feature -- Status report
 		require
 			is_reference: address /= Void
 		local
-			o: DEBUGGED_OBJECT_CLASSIC
+			o: DEBUGGED_OBJECT
+			attribs: LIST [ABSTRACT_DEBUG_VALUE]
 			att: ABSTRACT_DEBUG_VALUE
 		do
 			if application.is_classic then			
 				debug ("debug_recv")
 					print ("DUMP_VALUE.to_basic%N")
 				end
-				create o.make (address, 0, 1)
+				create {DEBUGGED_OBJECT_CLASSIC} o.make (address, 0, 1)
+			else
+				create {DEBUGGED_OBJECT_DOTNET} o.make (address, 0, 1)				
+			end
+			attribs := o.attributes
+			if attribs /= Void then
 				from
-					o.attributes.start
+					attribs.start
 				until
-					o.attributes.after
+					attribs.after
 				loop
-					att := o.attributes.item
+					att := attribs.item
 					if att.name.is_equal ("item") then
 						Result := att.dump_value
 					end
-					o.attributes.forth
+					attribs.forth
 				end
 			end
-				
 			if Result = Void then
 				Result := Current
 			end
@@ -391,6 +395,10 @@ feature -- Status report
 		require
 			object_with_debug_output: address /= Void and has_formatted_output
 		do
+			debug ("debugger_trace")
+				print (generating_type + ".string_representation (" + min.out + ", " + max.out + ")%N")
+			end
+			
 			debug ("debug_recv")
 				print ("DUMP_VALUE.string_representation of " + dynamic_class.name_in_upper + "%N")
 			end
@@ -406,7 +414,7 @@ feature -- Status report
 					--| we display `...' to show that there is something more.
 				if (max > 0) and then last_string_representation_length > (max - min + 1) then
 					Result.append ("...")
-				end				
+				end
 			else
 				Result := "Could not find string representation"
 			end
@@ -500,7 +508,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current
 		do
 			Result := a_dbg.debug_output_value_from_object_value (value_frame_dotnet, value_dotnet, value_object_dotnet, dynamic_class_type, min, max)
-			last_string_representation_length := a_dbg.last_string_value_length				
+			last_string_representation_length := a_dbg.last_string_value_length
 		end
 
 	classic_debug_output_evaluated_string (min, max: INTEGER): STRING is
@@ -508,19 +516,21 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		local
 			expr: EB_EXPRESSION
 			l_final_result_value: DUMP_VALUE
+			evaluator: DBG_EXPRESSION_EVALUATOR
+			l_feat: FEATURE_I
 		do
+			l_feat := debug_output_feature_i (dynamic_class)
 			create expr.make_with_object (
 					create {DEBUGGED_OBJECT_CLASSIC}.make_with_class (value_address, debuggable_class),
-					debuggable_feature_name
+					l_feat.feature_name
 				)
 			expr.evaluate
+			evaluator := expr.expression_evaluator
 
-			l_final_result_value := expr.final_result_value
-			if expr.error_message = Void and then not l_final_result_value.is_void then
+			l_final_result_value := evaluator.final_result_value
+			if evaluator.error_message = Void and then not l_final_result_value.is_void then
 				Result := l_final_result_value.classic_string_representation (min, max)
 				last_string_representation_length := l_final_result_value.last_string_representation_length
-			else
-				Result := expr.error_message
 			end
 		end
 
@@ -528,6 +538,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			-- Full generic type using evaluation of generating_type on the related object
 		local
 			expr: EB_EXPRESSION
+			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			if generating_type_evaluation_enabled then
 				if application.is_dotnet then
@@ -545,10 +556,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 							"generating_type"
 						)
 					expr.evaluate			
-					if expr.error_message = Void and then not expr.final_result_value.is_void then
-						Result := expr.final_result_value.classic_string_representation (0, -1)
-	--				else
-	--					Result := expr.error_message
+					evaluator := expr.expression_evaluator
+					if evaluator.error_message = Void and then not evaluator.final_result_value.is_void then
+						Result := evaluator.final_result_value.classic_string_representation (0, -1)
 					end				
 				end			
 			end
@@ -632,6 +642,38 @@ feature -- Access
 				Result.append (full_output)
 			end
 		end
+		
+	generating_type_representation: STRING is
+			-- {TYPE}.generating_type string representation
+		local
+			l_generating_type_string: STRING
+			retried: BOOLEAN
+		do
+			if not retried then
+				create Result.make (100)
+	
+				if is_void then
+					Result := "NONE"
+				elseif dynamic_class /= Void then
+					if dynamic_class.is_generic then
+						l_generating_type_string := generic_type_evaluated_string
+					end
+					if l_generating_type_string	/= Void then
+						Result := l_generating_type_string
+					else
+						Result := dynamic_class.name_in_upper
+					end
+				else		
+					Result := "ANY"
+				end
+			else
+				Result := ""
+			end
+		rescue
+				-- just in case to avoid a stupid crash (we never know ..)
+			retried := True
+			retry
+		end		
 
 	output_value: STRING is
 			-- String representation of the value of `Current'.
@@ -712,7 +754,7 @@ feature -- Access
 			Result := type /= Type_object and type /= Type_string and type /= Type_string_dotnet
 		end
 
-feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, EIFNET_EXPORTER} -- Internal data
+feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUATOR} -- Internal data
 
 	value_boolean	: BOOLEAN
 	value_character	: CHARACTER

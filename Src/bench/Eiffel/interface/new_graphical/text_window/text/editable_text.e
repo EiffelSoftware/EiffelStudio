@@ -326,7 +326,7 @@ feature -- Basic Operations
 					remove_white_spaces
 					history.bind_current_item_to_next
 				end
-				indent := cursor.line.indentation.out
+				indent := cursor.line.indentation
 				if cursor.x_in_characters <= indent.count then
 					indent.keep_head (cursor.x_in_characters - 1)
 				end

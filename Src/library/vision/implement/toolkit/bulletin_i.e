@@ -23,11 +23,22 @@ feature
 		deferred
 		end;
 
-	circulate_up is
-		--circulate the children of the bulletin up
+	allow_recompute_size is
+			-- Allow Current bulletin to recompute its size
+			-- according to its children.
 		deferred
 		end;
 
+	forbid_recompute_size is
+			-- Forbid Current bulletin to recompute its size
+			-- according to its children.
+		deferred
+		end;
+
+	circulate_up is
+			-- Circulate the children of the bulletin up
+		deferred
+		end;
 
 	circulate_down is
 		--circulate the children of the bulletin down

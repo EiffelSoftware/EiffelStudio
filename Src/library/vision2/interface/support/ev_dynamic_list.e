@@ -437,6 +437,7 @@ feature -- Contract support
 			-- Is `a_list' a parent of `Current'?
 		require
 			a_list_not_void: a_list /= Void
+			not_destroyed: not is_destroyed
 		deferred
 		end
 

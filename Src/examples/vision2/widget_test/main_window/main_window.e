@@ -50,8 +50,6 @@ feature {NONE} -- Initialization
 			type_selector: GB_TYPE_SELECTOR
 			editor: GB_OBJECT_EDITOR
 			event_selector: EVENT_SELECTOR
-			documentation_display: DOCUMENTATION_DISPLAY
-			temp_font: EV_FONT
 		do
 			register_type_change_agent (agent clear_idle_actions)
 				-- Clear any agents from the idle actions, as a new widget
@@ -62,10 +60,6 @@ feature {NONE} -- Initialization
 				-- The first type change agent that we register locks the update, so
 				-- that the user does not see the changes taking place.
 			register_type_change_agent (agent lock_current)
-			
---						-- Create the editor and parent.
---		create editor
---		object_editor.extend (editor)
 
 				-- Create the type selector and parent.
 			create type_selector
@@ -103,6 +97,7 @@ feature {NONE} -- Initialization
 			tests_button.select_actions.extend (agent update_tool_bar_radio_buttons (tests_button))			
 			documentation_button.select_actions.extend (agent update_tool_bar_radio_buttons (documentation_button))
 			main_notebook.selection_actions.extend (agent update_buttons)
+			modify_text_size.set_value (11)
 
 				-- Initialize button pixmaps.
 			initialize_pixmaps
@@ -113,12 +108,6 @@ feature {NONE} -- Initialization
 			if installation_location = Void then
 				search_parent_box.disable_sensitive
 			end
-			
-				-- Now select font for `flat_short_display'
-			temp_font := flat_short_display.font
-			temp_font.set_family (feature {EV_FONT_CONSTANTS}.Family_typewriter)
-			modify_text_size.set_value (temp_font.height)
-			flat_short_display.set_font (temp_font)
 			
 				-- Connect missing pixmaps to show_actions.
 			application.post_launch_actions.extend (agent display_missing_pixmaps)
@@ -145,12 +134,9 @@ feature {NONE} -- Implementation
 
 	update_text_size (value: INTEGER) is
 			-- adjust font size of `flat_short_display' by `value'.
-		local
-			font: EV_FONT
 		do
-			font := flat_short_display.font
-			font.set_height (value)
-			flat_short_display.set_font (font)
+			set_current_text_size (value)
+			documentation_display.update_text_size
 		end
 
 	display_about_dialog is
@@ -408,6 +394,9 @@ feature {NONE} -- Implementation
 		once
 			Create Result.make_with_ev_text (flat_short_display)
 		end
+		
+	documentation_display: DOCUMENTATION_DISPLAY
+		-- A tool to display the documentation.
 
 end -- class MAIN_WINDOW
 

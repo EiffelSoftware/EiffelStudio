@@ -78,11 +78,11 @@ feature -- Basic Operations
 			"GenerateXmlInheritElement"
 		end
 
-	commit is
+	Commit is
 		external
 			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
 		alias
-			"commit"
+			"Commit"
 		end
 
 	GenerateXmlClassBody is
@@ -97,13 +97,6 @@ feature -- Basic Operations
 			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
 		alias
 			"GenerateXmlClassHeader"
-		end
-
-	exists (a_filename: STRING): BOOLEAN is
-		external
-			"IL signature (System.String): System.Boolean use ISE.Reflection.TypeStorer"
-		alias
-			"exists"
 		end
 
 	GenerateXmlElementFromInheritanceClauses (xml_element: STRING; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
@@ -160,6 +153,13 @@ feature -- Basic Operations
 			"IL signature (System.String): System.Void use ISE.Reflection.TypeStorer"
 		alias
 			"MakeTypeStorer"
+		end
+
+	Exists (a_filename: STRING): BOOLEAN is
+		external
+			"IL signature (System.String): System.Boolean use ISE.Reflection.TypeStorer"
+		alias
+			"Exists"
 		end
 
 	GenerateXmlElementsFromAssertions (assertions: SYSTEM_COLLECTIONS_ARRAYLIST; assertion_type: STRING) is

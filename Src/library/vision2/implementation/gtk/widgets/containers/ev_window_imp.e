@@ -162,14 +162,14 @@ feature -- Status setting
 			-- Raise a window. ie: put the window on the front
 			-- of the screen.
 		do
-			C.gdk_window_raise (C.gtk_widget_struct_window(c_object))
+			C.gdk_window_raise (C.gtk_widget_struct_window (c_object))
 		end
 
 	lower is
 			-- Lower a window. ie: put the window on the back
 			-- of the screen.
 		do
-			C.gdk_window_lower (C.gtk_widget_struct_window(c_object))
+			C.gdk_window_lower (C.gtk_widget_struct_window (c_object))
 		end
 
 	minimize is
@@ -204,7 +204,7 @@ feature -- Element change
 		local
 			gdkwin: POINTER
 		do
---FIXME			c_gtk_window_set_icon_name(c_object, eiffel_to_c (new_name))
+--FIXME			c_gtk_window_set_icon_name (c_object, eiffel_to_c (new_name))
 			icon_name_holder := new_name
                 end
 
@@ -305,6 +305,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/02/24 01:49:32  king
+--| Properly indented code
+--|
 --| Revision 1.35  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

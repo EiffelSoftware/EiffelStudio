@@ -65,7 +65,7 @@ feature {NONE} -- WEL Implementation
 		do
 			item_type := measure_item.ctl_type
 			if item_type = (feature {WEL_ODT_CONSTANTS}.Odt_menu) then
-				menu_item_imp ?= eif_id_object (measure_item.item_data)
+				menu_item_imp ?= eif_id_any_object (measure_item.item_data)
 				if menu_item_imp /= Void then
 					menu_item_imp.on_measure_item (measure_item)
 				end
@@ -86,7 +86,7 @@ feature {NONE} -- WEL Implementation
 		do
 			item_type := draw_item.ctl_type
 			if item_type = (feature {WEL_ODT_CONSTANTS}.Odt_menu) then
-				menu_item_imp ?= eif_id_object (draw_item.item_data)
+				menu_item_imp ?= eif_id_any_object (draw_item.item_data)
 				if menu_item_imp /= Void then
 					menu_item_imp.on_draw_item (draw_item)
 				end

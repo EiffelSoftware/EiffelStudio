@@ -20,7 +20,9 @@ inherit
 			execute
 		end
 
-	WINDOW_ATTRIBUTES
+	NEW_EB_CONSTANTS
+
+--	WINDOW_ATTRIBUTES
 
 creation
 
@@ -36,7 +38,7 @@ feature -- Initialization
 			create list.make (display_area)
 			create exit_b.make_with_text (action_area, Interface_names.b_Cancel)
 			allow_resize
-			set_modal
+			set_modal (True)
 			list.add_selection_command (Current, Void)
 			exit_b.add_click_command (Current, exit_it)
 --			set_composite_attributes (Current)
@@ -180,6 +182,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	list_exists: list /= Void
+--	list_exists: list /= Void
 
 end -- class EB_CHOICE_WINDOW

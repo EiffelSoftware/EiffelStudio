@@ -862,9 +862,9 @@ feature -- Code generation
 
 			if is_debug_info_enabled then
 				il_code_generator.define_custom_attribute (entry_point_token,
-					debugger_step_through_ctor_token, debugger_step_through_ca)
+					debugger_step_through_ctor_token, Void)
 				il_code_generator.define_custom_attribute (entry_point_token,
-					debugger_hidden_ctor_token, debugger_hidden_ca)
+					debugger_hidden_ctor_token, Void)
 			end
 
 			il_code_generator.start_new_body (entry_point_token)

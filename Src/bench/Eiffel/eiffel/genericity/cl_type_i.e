@@ -94,19 +94,22 @@ feature
 		local
 			exp: EXPANDED_DESC
 			types: TYPE_LIST
-			old_cursor: CURSOR
 			ref: REFERENCE_DESC
 		do
 			if is_expanded then
-				!!exp
+				!! exp
 				is_expanded := False
 
 				types := base_class.types
-				old_cursor := types.cursor
-				types.compare_references
-				types.search (Current)
-				exp.set_class_type (types.item)
-				types.go_to (old_cursor)
+
+				check
+						--| The type should be present
+					has_type: types.has_type (Current)
+				end
+
+				if types.has_type (Current) then
+					exp.set_class_type (types.found_item)
+				end
 
 				is_expanded := True
 				Result := exp
@@ -179,7 +182,6 @@ feature
 			has: has_associated_class_type
 		local
 			types: TYPE_LIST
-			old_cursor: CURSOR
 		do
 			if is_expanded then
 				Result := associated_expanded_class_type
@@ -187,11 +189,15 @@ feature
 				Result := associated_separate_class_type
 			else
 				types := base_class.types
-				old_cursor := types.cursor
-				types.compare_references
-				types.search (Current)
-				Result := types.item
-				types.go_to (old_cursor)
+
+				check
+						--| The type should be present
+					has_type: types.has_type (Current)
+				end
+
+				if types.has_type (Current) then
+					Result := types.found_item
+				end
 			end
 		end
 

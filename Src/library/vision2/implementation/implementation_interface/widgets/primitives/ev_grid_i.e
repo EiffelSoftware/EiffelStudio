@@ -316,23 +316,23 @@ feature -- Element change
 			i_positive: a_index > 0
 		local
 			a_column: EV_GRID_COLUMN
-			header_item: EV_HEADER_ITEM
+			column_implementation: EV_GRID_COLUMN_I
 		do
 			create a_column
-			a_column.implementation.set_grid_i (Current)
-			a_column.implementation.set_index (a_index)
-			a_column.implementation.set_physical_index (column_count)
-			grid_columns.put (a_column.implementation, a_index)
+			column_implementation := a_column.implementation
+			column_implementation.set_grid_i (Current)
+			column_implementation.set_index (a_index)
+			column_implementation.set_physical_index (column_count)
+			grid_columns.put (column_implementation, a_index)
 			column_count := column_count + 1
 			
 				-- Now add the header for the new item.
-			create header_item
 				fixme ("[
 					Needs to use the actual index of the column taking into account those that are hidden before it.
 					Also headers before may be needed to pad it out.
 					]")
 			header.go_i_th (a_index)
-			header.put_left (header_item)
+			header.put_left (column_implementation.header_item)
 		ensure
 			column_count_set: column_count = old column_count + 1
 		end

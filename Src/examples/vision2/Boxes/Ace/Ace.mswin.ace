@@ -3,7 +3,7 @@ system
 
 root
 
-	boxes (main): "make"
+	boxes (ROOT_CLUSTER): "make"
 
 default
 

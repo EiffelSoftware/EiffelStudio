@@ -198,18 +198,27 @@ feature {NONE} -- Initialization
 											end
 										end
 										if l_class_type /= Void and then l_feature_i /= Void then
-											
-											l_il_offset := l_frame_il.get_ip
-											l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
-										
+											l_stack_object := l_frame_il.get_argument (0)
+												--| FIXME jfiat 2004/06/03 : why Current may be Void ?
+												--| If JITdebugging is enabled (badly), this may cause problem
+												--| resulting in Void l_stack_object
+												--| We may require to check this and fix this potential bug
+												--| but this seems to be fixed by doing in the good way
+												--| the JITdebugging settings
+												--| Nota: we leave this comment, just in case this occurs again...
+											check
+												stack_object_not_void: l_stack_object /= Void
+											end
+												
 												--| Here we have a valid Eiffel callstack point
 											create call.make(level)
-	
-												-- Compute data to get address and co ...
-											l_stack_object := l_frame_il.get_argument (0)
+											
+												--| Compute data to get address and co ...
+											l_il_offset := l_frame_il.get_ip
+											l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
+
 											l_stack_adv := debug_value_from_icdv (l_stack_object)
 											l_hexaddress := l_stack_adv.address
-
 											l_stack_drv ?= l_stack_adv
 											if l_stack_drv/= Void then
 												l_class_type := l_stack_drv.dynamic_class_type
@@ -217,19 +226,18 @@ feature {NONE} -- Initialization
 												l_class_type := l_stack_adv.dynamic_class.types.first
 											end
 
-	
 											call.set_private_current_object (l_stack_adv)
 											call.set_routine (
-													l_frame_il,
-													False, -- is_melted (this is a dotnet system)
-													l_hexaddress,
-													l_class_type, -- dyn type
-													l_feature_i.written_class, -- origin class
-													l_feature_i, -- routine, routine_name ...
-													l_line_number -- break_index / line number
-												)
+											l_frame_il,
+											False, 			-- is_melted (No since this is a dotnet system)
+											l_hexaddress,
+											l_class_type, 	-- dynmic class type
+											l_feature_i.written_class, 	-- origin class
+											l_feature_i, 	-- routine, routine_name ...
+											l_line_number 	-- break_index / line number
+											)
 											extend (call)
-	
+
 											level := level + 1
 										end
 									end

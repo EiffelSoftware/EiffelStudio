@@ -51,6 +51,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
+			enable_vertical_button_style
 		end
 		
 	visual_widget: POINTER is
@@ -61,25 +62,24 @@ feature {NONE} -- Implementation
 		
 feature -- Status report
 
-	has_vertical_button_style: BOOLEAN is
+	has_vertical_button_style: BOOLEAN
 			-- Is the `pixmap' displayed vertically above `text' for
 			-- all buttons contained in `Current'? If `False', then
 			-- the `pixmap' is displayed to left of `text'.
-		do
-			--| FIXME IEK Implement me
-		end
 		
 feature -- Status setting
 
 	enable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `True'.
 		do
+			has_vertical_button_style := True
 			--| FIXME IEK Implement me
 		end
 		
 	disable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `False'.
 		do
+			has_vertical_button_style := False
 			--| FIXME IEK Implement me
 		end
 		

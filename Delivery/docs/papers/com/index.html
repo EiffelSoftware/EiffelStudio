@@ -37,7 +37,7 @@
         <li><a href="library.html">The EiffelCOM library</a> &nbsp;</li>
       </ol>
       <p>&nbsp;</p>
-      <h1>Release Notes, Build 4</h1>
+      <h1>Release Notes, Build 5</h1>
     </td>
   </tr>
 </table>
@@ -45,22 +45,18 @@
   <li>Bug fixes:
     <ul>
       <li>Various compilation problems of the generated code are corrected.</li>
-      <li>Some restrictive preconditions are removed.</li>
+      <li>Some restrictive preconditions and postconditions are removed.</li>
       <li>Multiple conversion function problems are corrected.</li>
-      <li>The wizard correctly recognizes [source] interfaces.</li>
+      <li>The wizard correctly generates interface hierarchy for dual
+        interfaces.</li>
+      <li>Automatic initialization of structures is added.</li>
+      <li>Support for access of Eiffel class attributes from COM is added.</li>
+      <li>Multiple memory management problems are corrected.</li>
     </ul>
   </li>
   <li>New features:
     <ul>
-      <li>Enhanced comment generation: the wizard generates link to a help file
-        if known; for each function argument the comments specify whether it is
-        [in] or [out]; for each optional argument the comments specify the
-        default value.</li>
-      <li>For each interface two implementations are always generated: client
-        implementation (simple wrapping) and server implementation, which
-        requires user completion.</li>
-      <li>Call backs are supported: Simple call back (passing interface pointer)
-        and connection points (supported only for clients (sinks)).</li>
+      <li>Connection points are implemented on the server side.</li>
     </ul>
   </li>
   <li>Improvements: 
@@ -71,11 +67,11 @@
   <li>Known limitations:
     <ul>
       <li>Control containers are not implemented. </li>
-      <li>Connection points are not supported on the server side.</li>
     </ul>
-    <p>&nbsp;</p>
   </li>
 </ol>
+&nbsp;
+    <p>&nbsp;</p>
 &nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

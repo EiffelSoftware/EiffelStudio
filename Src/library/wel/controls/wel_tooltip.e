@@ -79,6 +79,67 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
+	autopop_delay_time: INTEGER is
+			-- Length of time (in milliseconds) before the
+			-- tooltip window is hidden if the cursor remains
+			-- stationary in the tool's bounding rectangle after
+			-- the tooltip window has appeared.
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item, Ttm_getdelaytime,
+				Ttdt_autopop, 0)
+		ensure
+			positive_result: result >= 0
+		end
+
+	initial_delay_time: INTEGER is
+			-- Length of time (in milliseconds) that the
+			-- cursor must remain stationary within the bounding
+			-- rectangle of a tool before the tooltip window is
+			-- displayed.
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item, Ttm_getdelaytime,
+				Ttdt_initial, 0)
+		ensure
+			positive_result: result >= 0
+		end
+
+	reshow_delay_time: INTEGER is
+			-- Length of the delay (in milliseconds) before
+			-- subsequent tooltip windows are displayed when the
+			-- cursor is moved from one tool to another.
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item, Ttm_getdelaytime,
+				Ttdt_reshow, 0)
+		ensure
+			positive_result: result >= 0
+		end
+
+	background_color: WEL_COLOR_REF is
+			-- Background color used for the tooltip.
+		require
+			exists: exists
+		do
+			create Result.make_by_color (cwin_send_message_result (item, Ttm_gettipbkcolor, 0, 0))
+		ensure
+			result_not_void: result /= Void
+		end
+
+	text_color: WEL_COLOR_REF is
+			-- Color used for the text of the tooltip.
+		require
+			exists: exists
+		do
+			create Result.make_by_color (cwin_send_message_result (item, Ttm_gettiptextcolor, 0, 0))
+		ensure
+			result_not_void: result /= Void
+		end
+
 feature -- Status setting
 
 	activate is
@@ -106,7 +167,7 @@ feature -- Status setting
 			positive_delay: delay >= 0
 		do
 			cwin_send_message (item, Ttm_setdelaytime,
-				Ttdt_automatic, delay)
+				Ttdt_automatic, cwin_make_long (delay, 0))
 		end
 
 	set_autopop_delay_time (delay: INTEGER) is
@@ -119,7 +180,7 @@ feature -- Status setting
 			positive_delay: delay >= 0
 		do
 			cwin_send_message (item, Ttm_setdelaytime,
-				Ttdt_autopop, delay)
+				Ttdt_autopop, cwin_make_long (delay, 0))
 		end
 
 	set_initial_delay_time (delay: INTEGER) is
@@ -132,7 +193,7 @@ feature -- Status setting
 			positive_delay: delay >= 0
 		do
 			cwin_send_message (item, Ttm_setdelaytime,
-				Ttdt_initial, delay)
+				Ttdt_initial, cwin_make_long (delay, 0))
 		end
 
 	set_reshow_delay_time (delay: INTEGER) is
@@ -144,7 +205,33 @@ feature -- Status setting
 			positive_delay: delay >= 0
 		do
 			cwin_send_message (item, Ttm_setdelaytime,
-				Ttdt_reshow, delay)
+				Ttdt_reshow, cwin_make_long (delay, 0))
+		end
+
+	set_background_color (a_color: WEL_COLOR_REF) is
+			-- Background color used for the tooltip.
+		require
+			exists: exists
+			color_not_void: a_color /= Void
+		do
+			cwin_send_message (item, Ttm_settipbkcolor, a_color.item, 0)
+		ensure
+			color_set: background_color.red = a_color.red and then
+					background_color.green = a_color.green and then
+					background_color.blue = a_color.blue
+		end
+
+	set_text_color (a_color: WEL_COLOR_REF) is
+			-- Color used for the text of the tooltip.
+		require
+			exists: exists
+			color_not_void: a_color /= Void
+		do
+			cwin_send_message (item, Ttm_settiptextcolor, a_color.item, 0)
+		ensure
+			color_set: text_color.red = a_color.red and then
+					text_color.green = a_color.green and then
+					text_color.blue = a_color.blue
 		end
 
 feature -- Basic operations

@@ -30,12 +30,7 @@ feature -- Properties
 	tool: CLASS_W;
 			-- Class tool
 
-	name: STRING is 
-		do
-			Result := Interface_names.f_Version
-		end;
-
-	menu_name: STRING is
+	name, menu_name: STRING is
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_Version
@@ -51,18 +46,27 @@ feature -- Properties
 		end;
 
 	read_in_file (argument: ANY) is
+			-- Read in the file that was selected in the choice window list.
 		local
 			file_name: STRING;
-			f: PLAIN_TEXT_FILE
+			f: PLAIN_TEXT_FILE;
+			pos: INTEGER
 		do
-			file_name := version_list.i_th (choice.position);
-			!! f.make (file_name);
-			if f.exists and then f.is_readable and then f.is_plain then
-				f.read_stream (f.count);
-				text_window.set_text (f.last_string)
+			pos := choice.position;
+			if pos = 1 then
+				tool.set_stone (stone);
+				tool.synchronize
 			else
- 				warner (popup_parent).gotcha_call
-					(Warning_messages.w_Cannot_read_file (file_name))
+					-- Didn't record the first entry into `version_list'.
+					-- The first entry is always the Current stone. 
+				file_name := version_list.i_th (pos - 1);
+				!! f.make (file_name);
+				if f.exists and then f.is_readable and then f.is_plain then
+					tool.show_file (f)
+				else
+ 					warner (popup_parent).gotcha_call
+						(Warning_messages.w_Cannot_read_file (file_name))
+				end
 			end	
 		end;
 
@@ -73,13 +77,17 @@ feature -- Closure
 			if choice /= Void then	
 				choice.popdown
 			end;
+			stone := Void;
 			version_list := Void
 		end
 
 feature {NONE} -- Implementation
 
+	stone: STONE;
+			-- Stone of class window
+
 	choice: CHOICE_W;
-			-- Window for user choices.
+			-- Window for user choices
 
 	version_list: ARRAYED_LIST [FILE_NAME];
 
@@ -89,7 +97,7 @@ feature {NONE} -- Execution
 			-- Execute the command.
 		local
 			classc: CLASSC_STONE;
-			classi: CLASSI_STONE;
+			classi: CLASSI_STONE
 		do
 			if (choice /= Void) and then (arg = choice) then
 				if choice.position /= 0 then
@@ -137,10 +145,19 @@ feature {NONE} -- Implementation
 			!! version_list.make (1);
 			!! output_list.make;
 			!! stats.make_compilation_stat;
+			comp_nbr := stats.number_of_compilations;
+			!! temp.make (0);
+			temp.append ("Current: ");
+			!! file.make (classi.file_name);
+			if file.exists then
+				temp.append (date_string (file.date));
+				temp.prune ('%N')
+			end;
+			output_list.extend (temp);
 			from
-				i := 1
+				i := comp_nbr
 			until
-				i > comp_nbr
+				i = 0
 			loop
 				!! fname.make_from_string (Backup_path);
 				!! temp.make (9);
@@ -155,13 +172,16 @@ feature {NONE} -- Implementation
 					temp.append_integer (i);
 					temp.append (": ");
 					temp.append (date_string (file.date));
+					temp.prune ('%N');
 					version_list.extend (fname)
-					output_list.extend (fname)
-				end	
+					output_list.extend (temp)
+				end;
+				i := i - 1
 			end
 			if choice = Void then
 				!! choice.make (popup_parent)
 			end;
+			stone := tool.stone;
 			choice.popup (Current, output_list)
 		end
 

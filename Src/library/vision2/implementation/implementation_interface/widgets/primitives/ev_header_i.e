@@ -52,7 +52,7 @@ feature -- Access
 				end
 				forth
 			end
-			go_to (cursor)
+			go_to (l_cursor)
 		ensure
 			result_non_negative: Result >= 0
 			index_not_changed: index = old index

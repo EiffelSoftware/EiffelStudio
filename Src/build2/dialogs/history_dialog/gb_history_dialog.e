@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			set_default_push_button (close_button)
 			set_default_cancel_button (close_button)
 			set_icon_pixmap (icon)
+			add_initial_item
 		end
 
 feature {NONE} -- Implementation
@@ -76,26 +77,12 @@ feature -- Basic operation
 			if history_list.select_actions.is_empty then
 				history_list.select_actions.extend (agent item_selected)
 			end
-			last_selected_item := history_list.count
+			last_selected_item := history_list.count - 1
 		ensure
 			history_list.count = old history_list.count + 1
-			last_selected_item = history_list.count
+			last_selected_item = history_list.count - 1
 		end
 		
-feature {GB_SHOW_HISTORY_COMMAND} -- Basic operation
-		
-	select_current_history_position is
-			-- Ensure that the item representing the current position in
-			-- the history is selected.
-		do
-				-- Only select the position if an item should be selected.
-				-- If we are at the start of the history then no item
-				-- should be selected.
-			if history.current_position >= 0 then
-				select_item (history.current_position)	
-			end
-		end
-
 feature {GB_GLOBAL_HISTORY} -- Implementation
 
 	select_item (position: INTEGER) is
@@ -106,7 +93,7 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 			history_list.select_actions.block;
 			(history_list @ position).enable_select
 			history_list.select_actions.resume
-			last_selected_item := position
+			last_selected_item := position - 1
 		ensure
 			item_selected: (history_list @ position).is_selected
 		end	
@@ -143,8 +130,9 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 			-- Clear `history_list' completely.
 		do
 			history_list.wipe_out
+			add_initial_item
 		ensure
-			history_list_empty: history_list.is_empty
+			history_list_empty: history_list.count = 1
 		end
 
 feature {NONE} -- Implementation		
@@ -155,17 +143,30 @@ feature {NONE} -- Implementation
 			index_of_current_item: INTEGER
 		do
 			index_of_current_item := history_list.index_of (history_list.selected_item, 1)
-			if last_selected_item > index_of_current_item then
-				history.step_from (last_selected_item, index_of_current_item)
-			elseif last_selected_item < index_of_current_item then
-				history.step_from (last_selected_item + 1, index_of_current_item)
+			if last_selected_item > index_of_current_item - 1 then
+				history.step_from (last_selected_item, index_of_current_item - 1)
+			elseif last_selected_item < index_of_current_item - 1 then
+				history.step_from (last_selected_item + 1, index_of_current_item - 1)
 			end	
-			last_selected_item := index_of_current_item
+			last_selected_item := index_of_current_item - 1
 				-- We must now update
 			command_handler.update
 		end
 	
 	last_selected_item: INTEGER
 		-- Last item selected in `history_list'.
+		
+	add_initial_item is
+			-- Add initial item representing start state to `history_list'.
+		require
+			history_list_empty: history_list.is_empty
+		do
+			add_command_representation ("Start of History")
+		ensure
+			history_list_has_one_item: history_list.count = 1
+		end
+		
+invariant
+	history_list_not_void: history_list /= Void
 
 end -- class GB_HISTORY_DIALOG

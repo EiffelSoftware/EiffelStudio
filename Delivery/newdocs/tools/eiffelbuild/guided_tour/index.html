@@ -8,24 +8,24 @@
 
 	<BODY>
 		<H1>EiffelBuild Tour</H1>
-		<P>EiffelBuild is stand alone application which is launched externally from EiffelStudio.</P>
+		<P>EiffelBuild is a standalone application which is launched externally from EiffelStudio.</P>
 		<H2>EiffelBuild notions</H2>
-		<P>There are some certain notations that you will need to familiarise yourself with in order to understand this documentation. The notions are specific to EiffelBuild and are as follows:
+		<P>There are some notations that you will need to familiarise yourself with in order to understand this documentation. The notions are specific to EiffelBuild and are as follows:
 		<UL>
-			<LI><B>Object</B> - In EiffelBuild, an object is a representation of a vision2 widget and all its properties, including all children and their respective properties.</LI>
-			<LI><B>Component</B> - Is a representation of an object. From one component, you can make multiple EiffelBuild objects. You can consider a component to be a template for an EiffelBuild object.</LI>
+			<LI><B>Object</B> - In EiffelBuild, an object is a representation of a vision2 widget and all its properties, including all its children and their respective properties.</LI>
+			<LI><B>Component</B> - Is a representation of an object. From a single component, you can make several EiffelBuild objects. You can consider a component to be a template for an EiffelBuild object.</LI>
 		</UL>
 
 </P>
 		<H2>What does it look like?</H2>
 		<CENTER><IMG SRC="eiffelbuild_main_window.png" ALT="eiffelbuild_main_window" /></CENTER><BR><BR>
 
-		<P>The image above is a screen shot of the EiffelBuild during the development of a project. The numbered areas are as follows:</P>
+		<P>The image above is a screenshot of EiffelBuild during the development of a project. The numbered areas are as follows:</P>
 		<OL>
 			<LI><B>Type Selector</B> - This tool allows you to select the supported Vision2 widgets.</LI>
-			<LI><B>Component Tool</B> - This tool allows provides facilites for building custom components for use within your projects. <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Picking</a> an object from the Layout Constructor and <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Dropping</a> in here will cause a new component to be created which is a representation of the object, all its children and their properties. When you wish to use this component in the project you are developing, just <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Pick</a> it and <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Drop</a> it back into the Layout Constructor on an object that will accept a new child.</LI>
-			<LI><B>Layout Constructor</B> - This contains a representation of the system you are developing. <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Pick</a></LI> a Vision2 type and drop on an object within this tool, to create a new object of the type you selected parented in the object that you <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Dropped</a> on.
-			<LI><B>Docked Object Editor</B> - This allows you to edit the properties of a widget. This object editor is considered "docked" and the currently selected object in the Layout Constructor will automatically be targeted to this editor. As you edit a property in the editor, all current representations of that object in EiffelBuild will be updated to reflect this name. An example of this is when you edited the text of an EV_BUTTON, the name change will automatically show up in the "display window" (Selectable from the tool bar). Multiple "floating" object editors which appear in their own windows are available by selecting the appropriate tool bar button.</LI>
+			<LI><B>Component Tool</B> - This tool provides facilites for building custom components for use within your projects. <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Picking</a> an object from the Layout Constructor and <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">dropping</a> in here will cause a new component to be created which is a representation of the object, all its children and their properties. When you wish to use this component in the project you are developing, just <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">pick</a> it and <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">drop</a> it back into the Layout Constructor on an object that will accept a new child.</LI>
+			<LI><B>Layout Constructor</B> - This contains a representation of the system you are developing. <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Pick</a></LI> a Vision2 type and drop it on an object within this tool, to create a new object of the type you picked parented in the object that you dropped on.
+			<LI><B>Docked Object Editor</B> - This allows you to edit the properties of a widget. This object editor is considered "docked" and the currently selected object in the Layout Constructor will automatically be targeted to this editor. As you edit a property in the editor, all current representations of that object in EiffelBuild will be updated to reflect this name. An example of this is when you edit the text of an EV_BUTTON, the name change will automatically show up in the "display window" (selectable from the tool bar). Several "floating" object editors which appear in their own windows are available by selecting the appropriate tool bar button.</LI>
 		</OL>
 	</BODY>
 </HTML>

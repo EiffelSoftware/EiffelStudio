@@ -432,4 +432,6 @@ EXPORTS
 	eifvisexp
 	eifuvisexp
 	eifreturntype
+	eifrout
+	eiflocate
 

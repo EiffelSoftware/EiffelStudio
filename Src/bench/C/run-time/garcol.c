@@ -845,17 +845,17 @@ rt_public void reclaim(void)
 	int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
 #endif
 
+#ifdef RECLAIM_DEBUG
+	fprintf(stderr, "reclaim: collecting all objects...\n");
+#endif
 
 #if ! defined CUSTOM || defined NEED_OPTION_H
 	if (egc_prof_enabled)
 		exitprf();			/* Store profile information */
 #endif
 
-	if (eif_no_reclaim || (g_data.status & GC_STOP))	/* Does user want no reclaim? */
+	if (eif_no_reclaim)	/* Does user want no reclaim? */
 		return;	
-#ifdef RECLAIM_DEBUG
-	fprintf(stderr, "reclaim: collecting all objects...\n");
-#endif
 	/* Reset GC status otherwise full_sweep() might skip some memory blocks
 	 * (those previously used as partial scavenging areas).
 	 */
@@ -1036,7 +1036,7 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	 * the loc_set stack. Those variables are the local roots for the garbage
 	 * collection process.
 	 */
-	mark_stack(&loc_set, MARK_SWITCH, moving);
+	mark_simple_stack(&loc_set, MARK_SWITCH, moving);
 
 	/* The stack of local variables holds the addresses of variables
 	 * in the process's stack which refers to the objects, hence the
@@ -3937,7 +3937,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	 * the loc_set stack. Those variables are the local roots for the garbage
 	 * collection process.
 	 */
-	mark_stack(&loc_set, GEN_SWITCH, moving);
+	mark_simple_stack(&loc_set, GEN_SWITCH, moving);
 
 	/* Then deal with remembered set, which records the addresses of all the
 	 * old objects pointing to new ones.

@@ -9,27 +9,9 @@ indexing
 class GENERATE_PROFILE_INFO_CMD
 
 inherit
-	TOOL_COMMAND
-
-creation
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_tool: PROFILE_TOOL) is
-			-- Create Current
-		require
-			a_tool_not_void: a_tool /= Void
-		do
-			profile_tool := a_tool
-		ensure
-			profile_tool_set: profile_tool.is_equal (a_tool)
-		end
-
-feature -- Access
-
-	profile_tool: PROFILE_TOOL
-			-- Profile tool
+	ISE_COMMAND;
+	EB_CONSTANTS;
+	WINDOWS
 
 feature -- Command execution
 
@@ -43,7 +25,7 @@ feature -- Command execution
 			if arg = Void and then dlg = Void then
 					--| Create the dialog
 
-				!! dlg.make (profile_tool)
+				!! dlg.make (Profile_tool)
 				dlg.call (Current);
 			elseif arg = dlg then
 					--| Get info from the dialog

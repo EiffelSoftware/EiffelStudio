@@ -1,0 +1,28 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "core", "core.csproj", "{8A8FE952-8694-4301-BE46-7857522ABC0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "runtime", "run-time\runtime.csproj", "{37441A0A-37F3-48EB-850C-E90D611F3658}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+		{8A8FE952-8694-4301-BE46-7857522ABC0D}.0 = {37441A0A-37F3-48EB-850C-E90D611F3658}
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{8A8FE952-8694-4301-BE46-7857522ABC0D}.Debug.ActiveCfg = Debug|.NET
+		{8A8FE952-8694-4301-BE46-7857522ABC0D}.Debug.Build.0 = Debug|.NET
+		{8A8FE952-8694-4301-BE46-7857522ABC0D}.Release.ActiveCfg = Release|.NET
+		{8A8FE952-8694-4301-BE46-7857522ABC0D}.Release.Build.0 = Release|.NET
+		{37441A0A-37F3-48EB-850C-E90D611F3658}.Debug.ActiveCfg = Debug|.NET
+		{37441A0A-37F3-48EB-850C-E90D611F3658}.Debug.Build.0 = Debug|.NET
+		{37441A0A-37F3-48EB-850C-E90D611F3658}.Release.ActiveCfg = Release|.NET
+		{37441A0A-37F3-48EB-850C-E90D611F3658}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

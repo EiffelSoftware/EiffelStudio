@@ -85,15 +85,16 @@ extern "C" {
 /*
  * Generation scavenging parameters
  */
-#define GS_LIMIT		512		/* Max size for allocation in scavenge zone */
+#define GS_LIMIT		512		/* Max size for allocation in scavenge zone. */
 #ifdef VXWORKS
 #define GS_ZONE_SZ_DEFAULT	2*PAGESIZE_VALUE
 #else
 #ifdef EIF_STRING_OPTIMIZATION
 #define GS_ZONE_SZ_DEFAULT	2097152	/* Size of a scavenge zone (2MB) */
-#else
-#define GS_ZONE_SZ_DEFAULT 307200
+#else	/* EIF_STRING_OPTIMIZATION */
+#define GS_ZONE_SZ_DEFAULT 307200	/* Size is 300K by default. */
 #endif	/* EIF_STRING_OPTIMIZATION */
+#endif	/* VXWORKS */
 #define GS_FLOATMARK (eif_scavenge_size >> 2 + \
 					  eif_scavenge_size >> 3 + \
 					  eif_scavenge_size >> 5)	/* Leave that much free, this is

@@ -345,7 +345,8 @@ feature {NONE} -- Implementation
 			when Ev_font_family_sans then
 				wel_log_font.set_swiss_family
 				wel_log_font.set_variable_pitch
-				when Ev_font_family_typewriter then
+
+			when Ev_font_family_typewriter then
 				wel_log_font.set_modern_family
 				wel_log_font.set_fixed_pitch
 
@@ -735,6 +736,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/11 19:29:45  pichery
+--| cosmetics
+--|
 --| Revision 1.31  2000/03/09 16:14:59  brendel
 --| Improved comment and implementation of string_width_and_height.
 --|

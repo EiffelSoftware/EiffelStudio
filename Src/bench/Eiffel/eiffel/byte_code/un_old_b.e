@@ -3,6 +3,8 @@ class UN_OLD_B
 inherit
 
 	UNARY_B
+		rename
+			Bc_old as operator_constant
 		redefine
 			type, make_byte_code, enlarged,
 			is_unsafe, optimized_byte_node,
@@ -48,13 +50,6 @@ feature
 			Result.set_expr (expr.enlarged);
 			old_expr := Context.byte_code.old_expressions;
 			old_expr.extend (Result);
-		end;
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-			Result := Bc_old
 		end;
 
 feature -- Byte code generation

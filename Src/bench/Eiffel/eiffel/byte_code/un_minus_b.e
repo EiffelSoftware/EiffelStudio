@@ -3,6 +3,8 @@ class UN_MINUS_B
 inherit
 
 	UNARY_B
+		rename
+			Bc_uminus as operator_constant
 		redefine
 			generate_operator, is_built_in
 		end;
@@ -13,13 +15,6 @@ feature
 			-- Generate the unary operator
 		do
 			generated_file.putchar ('-');
-		end;
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-			Result := Bc_uminus
 		end;
 
 	is_built_in: BOOLEAN is

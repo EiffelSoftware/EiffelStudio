@@ -1,8 +1,9 @@
 class UN_NOT_B 
 
 inherit
-
 	UNARY_B
+		rename
+			Bc_not as operator_constant
 		redefine
 			generate_operator, is_built_in
 		end;
@@ -13,13 +14,6 @@ feature
 			-- Generate the unary operator
 		do
 			generated_file.putchar ('!');
-		end;
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-			Result := Bc_not
 		end;
 
 	is_built_in: BOOLEAN is

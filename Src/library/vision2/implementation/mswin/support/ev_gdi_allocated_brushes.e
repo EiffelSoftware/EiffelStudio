@@ -40,6 +40,10 @@ feature -- Access
 				-- want to retrieve.
 			create fake_object.make_with_values(a_pattern, a_color)
 
+			if allocated_objects.count > Max_allocated_brushes then
+				allocated_objects.clear_all
+			end
+
 			if allocated_objects.has(fake_object) then
 					-- Requested pen has been already allocated. We return the
 					-- item found in our table.
@@ -68,5 +72,7 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+	Max_allocated_brushes: INTEGER is 50
 
 end -- class EV_GDI_ALLOCATED_BRUSHES

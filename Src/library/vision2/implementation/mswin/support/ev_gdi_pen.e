@@ -21,7 +21,6 @@ inherit
 			is_equal
 		end
 
-
 creation
 	make_with_values
 
@@ -44,9 +43,9 @@ feature -- Access
 			color_hash_value: REAL
 		do
 			color_hash_value :=
-				262144.0*color.red +
-				4096.0*color.green +
-				64.0*color.blue
+				262144.0*color_red +
+				4096.0*color_green +
+				64.0*color_blue
 			Result := (
 				color_hash_value.abs.floor +
 				line_width * 2 +
@@ -60,8 +59,14 @@ feature -- Access
 	line_width: INTEGER
 			-- Width of the pen
 
-	color: WEL_COLOR_REF
-			-- Color of the pen
+	color_red: INTEGER
+			-- Color of the pen (red component)
+
+	color_blue: INTEGER
+			-- Color of the pen (blue component)
+
+	color_green: INTEGER
+			-- Color of the pen (green component)
 
 	item: WEL_PEN
 			-- WEL Pen object
@@ -74,7 +79,9 @@ feature -- Comparison
 			Result := 
 				dashed_line_mode = other.dashed_line_mode and then
 				line_width = other.line_width and then
-				color.is_equal(other.color)
+				color_red = other.color_red and then
+				color_green = other.color_green and then
+				color_blue = other.color_blue
 		end
 
 feature -- Element change
@@ -87,7 +94,9 @@ feature -- Element change
 		do
 			dashed_line_mode := a_dashed_mode
 			line_width := a_width
-			color := a_color
+			color_red := a_color.red
+			color_blue := a_color.blue
+			color_green := a_color.green
 		end
 
 	set_item(a_pen: WEL_PEN) is
@@ -95,8 +104,5 @@ feature -- Element change
 		do
 			item := a_pen
 		end
-
-invariant
-	color_not_void: color /= Void
 
 end -- class EV_GDI_PEN

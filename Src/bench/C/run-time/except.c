@@ -250,6 +250,12 @@ rt_private int ex_tagc[] = {
 /* Strings used as separator for Eiffel stack dumps */
 rt_private char *retried =
 "===============================================================================";
+#ifdef EIF_THREADS
+rt_private char *thr_enter =
+"******************************** Thread exception *****************************";
+rt_private char *thr_failed =
+"*******************************************************************************";
+#endif	/* EIF_THREADS */
 rt_private char *failed =
 "-------------------------------------------------------------------------------";
 rt_private char *branch_enter =
@@ -318,6 +324,8 @@ rt_public void enomem(EIF_CONTEXT_NOARG)
 
 	EIF_END_GET_CONTEXT
 }
+
+
 
 rt_public struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object)
 			/* The routine name */
@@ -1948,6 +1956,25 @@ rt_private void dump_stack(EIF_CONTEXT void (*append_trace)(char *))
 	eif_trace.st_end = eif_trace.st_cur->sk_end;
 
 	/* Print header of history table */
+	
+#ifdef EIF_THREADS
+	/* At first, if we are in the MT mode, print the thread id */
+	sprintf(buffer, "%s\n", thr_enter);
+	append_trace(buffer);
+	
+	if (!eif_thr_is_root)
+		sprintf (buffer,"%-19.19s %-22.22s 0x%x %s\n", "In thread", 
+			"Child thread", eif_thr_context->tid, "(thread id)");
+	else
+		sprintf (buffer,"%-19.19s %-22.22s 0x%x %s\n", "In thread",
+			"Root thread", eif_thr_context->tid, "(thread id)");
+		
+	append_trace(buffer);
+	sprintf(buffer, "%s\n", thr_failed);
+	append_trace(buffer);
+
+#endif 	/* EIF_THREADS */
+
 	sprintf(buffer, "%s\n", failed);
 	append_trace(buffer);
 	sprintf(buffer, "%-19.19s %-22.22s %-29.29s %-6.6s\n",

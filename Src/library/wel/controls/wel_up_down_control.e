@@ -54,14 +54,7 @@ feature -- Access
 	position: INTEGER is
 			-- Current position
 		do
-			Result := cwin_lo_word (cwin_send_message_result (item, Udm_getpos, to_wparam (0), to_lparam (0)))
-				-- Because we are use `Udm_getpos' and not `Udm_getpos32',
-				-- we need to apply this conversion to the result in order to
-				-- correctly deal with negative values. At some point, all settings and
-				-- queries should use 32 bit functions.
-			if Result > 32768 then
-				Result := Result - 65536
-			end
+			Result := cwin_send_message_result_integer (item, Udm_getpos32, to_wparam (0), to_lparam (0))
 		end
 
 	minimum: INTEGER is
@@ -106,8 +99,8 @@ feature -- Element change
 			-- Set `minimum' and `maximum' with `a_minimum' and
 			-- `a_maximum'.
 		do
-			cwin_send_message (item, Udm_setrange, to_wparam (0),
-				cwin_make_long (a_maximum, a_minimum))
+			cwin_send_message (item, Udm_setrange32, to_wparam (a_minimum),
+				to_lparam (a_maximum))
 		end
 
 	set_buddy_window (a_window: WEL_WINDOW) is

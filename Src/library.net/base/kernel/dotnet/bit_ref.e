@@ -20,6 +20,9 @@ class BIT_REF inherit
 create {BIT_REF}
 	make, make_initialized
 
+convert
+	to_reference: {BIT_REF}
+	
 feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
@@ -485,6 +488,14 @@ feature -- Output
 			end
 		end
 
+feature -- Conversion
+
+	to_reference: BIT_REF is
+			-- Associated reference of Current.
+		do
+			create Result.make_initialized (values.twin, count)
+		end
+	
 feature {BIT_REF} -- Implementation
 
 	values: SPECIAL [INTEGER]

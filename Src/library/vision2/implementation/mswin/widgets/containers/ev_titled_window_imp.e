@@ -204,10 +204,8 @@ feature -- Element change
 			previous_icon_pixmap := current_icon_pixmap
 			current_icon_pixmap := icon
 			current_icon_pixmap.increment_reference
-				
-				-- Set the icon
-			set_class_icon (icon)
-			set_class_small_icon (icon)
+
+			set_icon (icon, icon)
 
 				-- Destroy the old icon
 			if previous_icon_pixmap /= Void then
@@ -246,7 +244,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Can be redefined to return a user-defined icon.
 		do
 			make_id
-			Result := "EV_TITLED_WINDOW_IMP_" + id.out
+			Result := "EV_TITLED_WINDOW_IMP"
 		end
 
 	internal_icon_name: STRING

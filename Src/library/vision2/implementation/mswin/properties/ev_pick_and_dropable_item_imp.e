@@ -14,7 +14,8 @@ inherit
 		undefine
 			set_pointer_style
 		redefine
-			pnd_press
+			pnd_press,
+			check_drag_and_drop_release
 		end
 
 feature -- Access
@@ -65,6 +66,19 @@ feature -- Access
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
+			end
+		end
+
+	check_drag_and_drop_release (a_x, a_y: INTEGER) is
+			-- End transport if in drag and drop.
+			--| Releasing the left button ends drag and drop.
+		do
+			if mode_is_drag_and_drop and press_action =
+				Ev_pnd_end_transport then
+				end_transport (a_x, a_y, 1)
+				pnd_original_parent.set_parent_source_false
+				pnd_original_parent.set_item_source (Void)
+				pnd_original_parent.set_item_source_false
 			end
 		end
 
@@ -127,6 +141,10 @@ end -- class EV_PICK_AND_DROPABLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/27 23:02:48  rogers
+--| Redefined check_drag_and_drop_release from
+--| EV_PICK_AND_DROPABLE_IMP.
+--|
 --| Revision 1.5  2000/04/21 21:51:18  rogers
 --| Added set_capture, release_capture, set_heavy_capture and
 --| release_heavy_capture. Each item had these previously.

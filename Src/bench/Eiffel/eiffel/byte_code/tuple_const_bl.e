@@ -257,26 +257,12 @@ feature {NONE} -- C code generation
 					buf.putint (position)
 					buf.putchar (')')
 				else
-					-- Generation of the RTAS protection
-					-- since the array contains references
-					buf.putstring ("RTAS(")
-					if metamorphosed then
-						metamorphose_regs.item (i).print_register
-					else
-						expr.print_register
-					end
-					buf.putstring (", ")
-					array_area_reg.print_register
-					buf.putstring (");")
-					buf.new_line
 					buf.putchar ('*')
-					target_type.c_type.generate_access_cast (buf)
 					buf.putchar ('(')
+					target_type.c_type.generate_access_cast (buf)
 					array_area_reg.print_register
-					buf.putstring (gc_plus)
+					buf.putchar('+');
 					buf.putint (position)
-					buf.putstring (gc_star)
-					target_type.c_type.generate_size (buf)
 					buf.putchar (')')
 					buf.putstring (" = ")
 					if metamorphosed then
@@ -284,6 +270,22 @@ feature {NONE} -- C code generation
 					else
 						expr.print_register
 					end
+					buf.putchar (';')
+					buf.new_line
+						-- Generation of the RTAS_OPT protection
+						-- since the array contains references
+					buf.putstring ("RTAS_OPT(")
+					if metamorphosed then
+						metamorphose_regs.item (i).print_register
+					else
+						expr.print_register
+					end
+					buf.putchar (',')
+					buf.putint (position)
+					buf.putchar (',')
+					array_area_reg.print_register
+					buf.putchar (')')
+					buf.new_line
 				end
 				buf.putchar (';')
 				buf.new_line

@@ -49,12 +49,6 @@ feature -- Generation
 					buf.putstring ("*((EIF_POINTER *)")
 				when C_ref then
 						--! Could be bit or ref
-					buf.putstring ("RTAS(")
-					argument_regs.item(1).print_register
-					buf.putstring (", ")
-					gen_reg.print_register
-					buf.putstring (");")
-					buf.new_line
 					buf.putstring ("*((EIF_REFERENCE *)")
 				end
 
@@ -65,6 +59,16 @@ feature -- Generation
 				parameters.i_th (1).print_register
 				buf.putstring (";")
 				buf.new_line
+				if type_c.level = C_ref then
+					buf.putstring ("RTAS_OPT(")
+					argument_regs.item(1).print_register
+					buf.putchar (',')
+					parameters.i_th (2).print_register
+					buf.putchar (',')
+					gen_reg.print_register
+					buf.putstring (");")
+					buf.new_line
+				end
 				buf.putstring ("/* END INLINED CODE */")
 				buf.new_line
 	

@@ -9,7 +9,7 @@ all:: clean oracle_store.lib
 	$(CC) $(CFLAGS) $<
 
 oracle_store.lib: $(OBJ) oracle.h
-		del $@
+		-del $@
 		lib -OUT:$@ $(OBJ)  
 		if not exist ..\..\..\..\spec mkdir ..\..\..\..\spec
 		if not exist ..\..\..\..\spec\msc mkdir ..\..\..\..\spec\msc
@@ -19,4 +19,4 @@ oracle_store.lib: $(OBJ) oracle.h
 oracle.obj: oracle.c oracle.h
 
 clean:
-	del *.obj *.lib
+	-del *.obj *.lib

@@ -2677,9 +2677,14 @@ void SetBackgroundStyleRecursively (GtkWidget *widget, gpointer data)
   {
     for (i = 0; i < 5; i++)
 	{
-	  widgetStyle->bg[i].red = nr;
-	  widgetStyle->bg[i].green = ng;
-	  widgetStyle->bg[i].blue = nb;
+	  /* We do not change the color when GTK_STATE_SELECTED
+	   * because of EV_TEXT_AREA */
+	  if (i != 3)
+	  {
+		widgetStyle->bg[i].red = nr;
+	  	widgetStyle->bg[i].green = ng;
+		widgetStyle->bg[i].blue = nb;
+	  }
 	}
 
     /* --- Set the style of the widget --- */

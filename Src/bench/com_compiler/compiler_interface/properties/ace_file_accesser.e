@@ -892,10 +892,9 @@ feature -- Environment
 			-- valid versions of CLR supported by compiler
 		once
 			create Result.make
-			Result.extend("1.0.3705")
--- TEMP/FIXME Paul
--- This version number is subject to change.
-			Result.extend("1.1.4322") 
+			Result.compare_objects
+			Result.extend("v1.0.3705")
+			Result.extend("v1.1.4322") 
 		end
 
 

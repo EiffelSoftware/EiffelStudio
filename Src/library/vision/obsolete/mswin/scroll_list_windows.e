@@ -42,6 +42,16 @@ inherit
 			move as wel_move,
 			item as wel_item
 		undefine
+			on_left_button_up,
+			on_key_up,
+			on_left_button_down,
+			on_key_down,
+			on_right_button_up,
+			on_set_cursor,
+			on_right_button_down,
+			on_mouse_move,
+			on_size,
+			on_move,
 			default_style,
 			on_destroy
 		redefine
@@ -90,14 +100,6 @@ inherit
 			move as wel_move,
 			item as wel_item
 		undefine
-			default_style,
-			on_destroy
-		redefine
-			on_lbn_selchange
-		end
-
-	PRIMITIVE_WINDOWS
-		undefine
 			on_left_button_up,
 			on_key_up,
 			on_left_button_down,
@@ -105,7 +107,16 @@ inherit
 			on_right_button_up,
 			on_set_cursor,
 			on_right_button_down,
-			on_mouse_move
+			on_mouse_move,
+			on_size,
+			on_move,
+			default_style,
+			on_destroy
+		redefine
+			on_lbn_selchange
+		end
+
+	PRIMITIVE_WINDOWS
 		redefine
 			realize, 
 			unrealize, 

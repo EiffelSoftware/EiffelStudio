@@ -194,11 +194,11 @@ feature -- Processing
 			-- process interface
 		do
 			c_type := clone (interface_descriptor.c_type_name)
-			create c_post_type.make (100)
+			create c_post_type.make (0)
 			c_header_file := clone (interface_descriptor.c_header_file_name)
 			eiffel_type := clone (interface_descriptor.eiffel_class_name)
-			create ce_function_name.make (100)
-			create ec_function_name.make (100)
+			create ce_function_name.make (0)
+			create ec_function_name.make (0)
 		end
 
 	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -208,7 +208,7 @@ feature -- Processing
 		do
 			create impl_interface.make_from_interface (interface_descriptor)
 			c_type := clone (interface_descriptor.c_type_name)
-			create c_post_type.make (100)
+			create c_post_type.make (0)
 			is_interface := True
 			c_header_file := clone (interface_descriptor.c_header_file_name)
 			create ce_function_name.make (100)
@@ -232,7 +232,8 @@ feature -- Processing
 				ce_function_name.append ("ccom_ce_pointed_dispatch")
 				ec_function_name.append ("ccom_ec_dispatch")
 			else
-				eiffel_type := clone (impl_interface.eiffel_class_name)
+--				eiffel_type := clone (impl_interface.eiffel_class_name)
+				eiffel_type := clone (interface_descriptor.eiffel_class_name)
 
 				need_generate_ce := True
 				need_generate_ec := True
@@ -246,7 +247,7 @@ feature -- Processing
 				ce_function_signature.append (" * a_interface")
 
 				create ce_function_body.make (10000)
-				ce_function_body.append (ce_function_body_interface (eiffel_type))
+				ce_function_body.append (ce_function_body_interface (impl_interface.eiffel_class_name))
 
 				create ce_function_return_type.make (100)
 				ce_function_return_type.append (Eif_reference)
@@ -422,34 +423,13 @@ feature {NONE} -- Implementation
 			valid_c_type: not a_c_type.empty
 		do
 			create Result.make (10000)
-			Result.append (tab)
-
-			-- EIF_TYPE_ID type_id = -1;
-
-			Result.append (Eif_type_id)
-			Result.append (Space)
-			Result.append (Type_id)
-			Result.append (Space_equal_space)
-			Result.append (Minus)
-			Result.append (One)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append (Tab)
 
 			-- EIF_OBJECT eif_object = 0;
 
 			Result.append (Eif_object)
 			Result.append (Space)
-			Result.append (Eif_object_variable)
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- EIF_POINTER_FUNCTION item = 0;
-
-			Result.append (Eif_pointer_function)
-			Result.append (Space)
-			Result.append (Item_clause)
+			Result.append ("eif_object")
 			Result.append (Space_equal_space)
 			Result.append (Zero)
 			Result.append (Semicolon)
@@ -470,60 +450,39 @@ feature {NONE} -- Implementation
 			-- eif_object = eif_protect (eif_ref);
 
 			Result.append (Eif_object_variable)
-			Result.append (Space_equal_space)
+			Result.append (Space)
+			Result.append (Equal_sign)
+			Result.append (Space)
 			Result.append (Eif_protect)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
-			Result.append (Eif_ref_variable)
+			Result.append ("eif_ref")
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- type_id = eif_type_id ("`a_class_name'");
-
-			Result.append (Type_id)
-			Result.append (Space_equal_space)
-			Result.append (Eif_type_id_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append (a_class_name)
-			Result.append (Double_quote)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- item = eif_pointer_function ("item", type_id);
-
-			Result.append (Item_clause)
-			Result.append (Space_equal_space)
-			Result.append (Eif_pointer_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append (Item_clause)
-			Result.append (Double_quote)
-			Result.append (Comma_space)
-			Result.append (Type_id)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- a_pointer = item (eif_access (eif_object));
+			-- a_pointer =  (`a_c_type') eif_field (eif_access (eif_object), "item", EIF_POINTER);
 
 			Result.append (A_pointer)
 			Result.append (Space_equal_space)
-			Result.append (Item_clause)
-			Result.append (Space)
 			Result.append (Open_parenthesis)
+			Result.append (a_c_type)
+			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (Eif_field)
+			Result.append (Space_open_parenthesis)
 			Result.append (Eif_access)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
+			Result.append (Space_open_parenthesis)
 			Result.append (Eif_object_variable)
 			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			Result.append (Double_quote)
+			Result.append ("item")
+			Result.append (Double_quote)
+			Result.append (Comma_space)
+			Result.append (Eif_pointer)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
-			Result.append (New_line_tab)
 
 			-- eif_wean (eif_object);
 

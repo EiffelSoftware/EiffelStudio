@@ -43,14 +43,14 @@ Before installing the Eiffel53.tgz package you need to install the following com
 
 	http://ftp.gnu.org/pub/gnu/tar/tar-1.13.tar.gz
 
-	Then you can type the following commands as a root user:
+	Then you can type the following commands:
 
 	tar xvfz tar-1.13.tar.gz
 	cd tar-1.13
 	cp /usr/share/automake-1.6/config.* .
 	./configure
 	make
-	make install
+	sudo make install
 
 	Then `tar' should be installed in /usr/local/bin. So make sure to update your PATH
 	environment variable. To ensure this is the correct tar version, typing

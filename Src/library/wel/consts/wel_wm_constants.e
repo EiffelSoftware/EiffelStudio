@@ -624,6 +624,9 @@ feature -- Access
 
 	Wm_appcommand: INTEGER is 793
 			-- Declared in Windows as WM_APPCOMMAND
+			
+	Wm_themechanged: INTEGER is 794
+			-- Declared in Windows as WM_THEMECHANGED
 
 	Wm_handheldfirst: INTEGER is 856
 			-- Declared in Windows as WM_HANDHELDFIRST

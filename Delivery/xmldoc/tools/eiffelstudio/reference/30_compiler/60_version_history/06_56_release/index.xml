@@ -73,6 +73,9 @@
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues
+			<list ordered="false">
+				<item>Fixed <feature_name>deep_twin</feature_name> from <class_name>ANY</class_name> in .NET code generation.</item>
+			</list>
 		</heading>
 		<list ordered="false">
 			<item>Corrected C code on Windows for constants of type <class_name>INTEGER_64</class_name>. Before constants of this type between <code><number>-2147483648</number></code> and <code><number>-1</number></code> could be processed as positive 64-bit values.</item>

@@ -16,6 +16,9 @@ inherit
 		end
 
 	WEL_SYSTEM_METRICS
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 

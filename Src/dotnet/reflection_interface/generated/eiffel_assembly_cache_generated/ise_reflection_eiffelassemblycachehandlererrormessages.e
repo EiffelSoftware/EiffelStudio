@@ -20,11 +20,11 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	AssemblyDescriptionGenerationFailed: STRING is
+	HasWriteLock: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
 		alias
-			"AssemblyDescriptionGenerationFailed"
+			"HasWriteLock"
 		end
 
 	HasReadLockMessage: STRING is
@@ -32,6 +32,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
 		alias
 			"HasReadLockMessage"
+		end
+
+	AssemblyDescriptionReadingFailed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
+		alias
+			"AssemblyDescriptionReadingFailed"
 		end
 
 	HasWriteLockMessage: STRING is
@@ -46,6 +53,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
 		alias
 			"IndexUpdateFailedMessage"
+		end
+
+	AssemblyDescriptionGenerationFailed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
+		alias
+			"AssemblyDescriptionGenerationFailed"
 		end
 
 	TypeStorageFailedMessage: STRING is
@@ -67,6 +81,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
 		alias
 			"AssemblyRemovalFailedMessage"
+		end
+
+	AssemblyDescriptionReadingFailedMessage: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
+		alias
+			"AssemblyDescriptionReadingFailedMessage"
 		end
 
 	HasReadLock: STRING is
@@ -125,11 +146,11 @@ feature -- Basic Operations
 			"AssemblyStorageFailed"
 		end
 
-	HasWriteLock: STRING is
+	AssemblyDescriptionUpdateFailed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
 		alias
-			"HasWriteLock"
+			"AssemblyDescriptionUpdateFailed"
 		end
 
 	AssemblyDirectoryCreationFailed: STRING is
@@ -137,6 +158,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
 		alias
 			"AssemblyDirectoryCreationFailed"
+		end
+
+	AssemblyDescriptionUpdateFailedMessage: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
+		alias
+			"AssemblyDescriptionUpdateFailedMessage"
 		end
 
 	IndexUpdateFailed: STRING is

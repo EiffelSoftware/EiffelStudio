@@ -134,6 +134,13 @@ feature -- Basic Operations
 			"Commit"
 		end
 
+	UpdateAssemblyDescription (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY; new_path: STRING) is
+		external
+			"IL signature (ISE.Reflection.EiffelAssembly, System.String): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"UpdateAssemblyDescription"
+		end
+
 	RemoveAssembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
@@ -153,6 +160,13 @@ feature -- Basic Operations
 			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"GenerateAssemblyXmlFile"
+		end
+
+	AssemblyTypesFromXml (xml_filename: STRING): SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL signature (System.String): System.Collections.ArrayList use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"AssemblyTypesFromXml"
 		end
 
 	PrepareTypeStorage is

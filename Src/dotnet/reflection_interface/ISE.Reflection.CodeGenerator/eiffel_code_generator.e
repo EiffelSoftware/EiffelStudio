@@ -113,9 +113,7 @@ feature -- Basic Operations
 			if eiffel_cluster_path.indexof (reflection_support.Eiffelkey) > -1 then
 				eiffel_cluster_path := eiffel_cluster_path.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
 			end
-			full_external_name := eiffel_class.FullExternalName
-			filename := eiffel_cluster_path.Concat_String_String_String (eiffel_cluster_path, formatter.FormatTypeName (full_external_name).ToLower, Eiffel_class_extension)
-			intern_generate_eiffel_class (filename)
+			intern_generate_eiffel_class (eiffel_cluster_path)
 		end
 
 	generate_eiffel_class_from_path (an_eiffel_class: like eiffel_class; a_path: STRING) is

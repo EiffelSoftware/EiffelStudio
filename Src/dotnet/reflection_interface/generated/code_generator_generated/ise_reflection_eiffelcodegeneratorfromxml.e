@@ -40,13 +40,6 @@ feature -- Access
 
 feature -- Basic Operations
 
-	Make is
-		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
-		alias
-			"Make"
-		end
-
 	MakeFromInfo (an_assembly_description_filename: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
@@ -54,11 +47,53 @@ feature -- Basic Operations
 			"MakeFromInfo"
 		end
 
+	Make is
+		external
+			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
+		alias
+			"Make"
+		end
+
+	MakeFromInfoAndPath (an_assembly_description_filename: STRING; new_path: STRING) is
+		external
+			"IL signature (System.String, System.String): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
+		alias
+			"MakeFromInfoAndPath"
+		end
+
+	GenerateEiffelCodeFromXmlAndPath (type_description_filename: STRING; a_path: STRING) is
+		external
+			"IL signature (System.String, System.String): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
+		alias
+			"GenerateEiffelCodeFromXmlAndPath"
+		end
+
 	GenerateEiffelCodeFromXml (type_description_filename: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
 		alias
 			"GenerateEiffelCodeFromXml"
+		end
+
+	DotnetLibraryRelativePath: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorFromXml"
+		alias
+			"DotnetLibraryRelativePath"
+		end
+
+	UpdateAssemblyDescription (new_path: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
+		alias
+			"UpdateAssemblyDescription"
+		end
+
+	EiffelClassFromXml (type_description_filename: STRING): ISE_REFLECTION_EIFFELCLASS is
+		external
+			"IL signature (System.String): ISE.Reflection.EiffelClass use ISE.Reflection.EiffelCodeGeneratorFromXml"
+		alias
+			"EiffelClassFromXml"
 		end
 
 end -- class ISE_REFLECTION_EIFFELCODEGENERATORFROMXML

@@ -60,6 +60,7 @@ feature {NONE} -- Implementation
 		
 	update_editors_for_name_change (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR) is
 			-- For all editors referencing `vision2_object', update `name'.
+			-- If you wish to update all editors, pass `Void' as `calling_object_editor'.
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			local_item: GB_OBJECT_EDITOR

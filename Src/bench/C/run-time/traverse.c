@@ -19,6 +19,7 @@
 #include "hashin.h"
 #include "hector.h"
 #include "traverse.h"
+#include "memory.h"
 
 #ifdef I_STRING
 #include <string.h>				/* For bzero() */
@@ -65,10 +66,6 @@ shared long obj_nb;				/* Counter of marked objects */
 private char *rcsid =
 	"$Id$";
 #endif
-
-extern char gc_ison();
-extern void gc_stop();
-extern void gc_run();
 
 
 #ifdef DEBUG

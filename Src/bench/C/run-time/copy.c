@@ -20,6 +20,7 @@
 #include "except.h"
 #include "local.h"
 #include "hector.h"
+#include "garcol.h"
 
 #define SHALLOW		1		/* Copy first level only */
 #define DEEP		2		/* Recursive copy */
@@ -37,8 +38,6 @@ private void rdeepclone();			/* Recursive cloning */
 private void expanded_update();		/* Expanded reference update */
 private void efcopy();				/* Copy field by field */
 private char *duplicate();			/* Duplication with aging tests */
-
-extern int refers_new_object();		/* Does object point to new ones? */
 
 #ifndef lint
 private char *rcsid =
@@ -101,7 +100,6 @@ char *source;
 	} anchor;
 
 #ifdef DEBUG
-	extern long nomark();
 	int xobjs;
 #endif
 

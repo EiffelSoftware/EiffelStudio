@@ -43,6 +43,11 @@
 #endif
 #endif
 
+#ifdef __VMS
+extern char *   dir_dot_dir (char * dir);
+#endif
+
+
 extern EIF_POINTER dir_open();
 extern void dir_rewind();
 extern char *dir_search();

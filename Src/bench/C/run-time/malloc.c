@@ -31,6 +31,9 @@
 #include "macros.h"			/* For macro LNGPAD */
 #include "local.h"			/* For epop() */
 #include "sig.h"
+#ifndef TEST
+#include "main.h"
+#endif
 
 #define NBLOCKS			26		/* Number of block lists (max size is 2^27-1) */
 
@@ -145,11 +148,6 @@ shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */
  * of allocated data goes beyond th_alloc, a cycle of acollect() is run.
  */
 public long eiffel_usage = 0;			/* Monitor Eiffel memory usage */
-extern long th_alloc;					/* Allocation threshold (in bytes) */
-
-#if defined (HAS_SMART_MMAP) && PTRSIZ > 4
-extern char *root_obj;
-#endif
 
 /* Error message commonly used */
 private char *inconsistency = "free-list inconsistency";
@@ -186,8 +184,6 @@ shared char *gmalloc();					/* Wrapper to xmalloc */
 shared char *get_to_from_core();		/* Get a free eiffel chunk from kernel */
 
 #ifdef HAS_SMART_MMAP
-extern Caddr_t mmap();
-extern int munmap ();
 private void free_unused();
 #else
 #ifdef HAS_SBRK
@@ -195,19 +191,9 @@ private void free_unused();
 #endif
 #endif
 
-extern char *to_chunk();				/* Base address of partial 'to' chunk */
-extern void erembq();					/* Quick insertion in moved set */
-
-extern struct stack moved_set;			/* Describes the new generation */
-#ifndef TEST
-extern int cc_for_speed;				/* Optimized for speed or for memory */
-#else
+#ifdef TEST
 private int cc_for_speed = 1;	/* Optimized for speed */
 #endif
-extern struct chunk *last_from;			/* Last 'from' chunk used by plsc() */
-extern struct sc_zone ps_from;			/* Partial scavenging 'from' zone */
-extern struct sc_zone ps_to;			/* Partial scavenging 'to' zone */
-extern int gc_running;				/* Is the GC running? */
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
@@ -2828,9 +2814,6 @@ unsigned int max_dt;
 
 	struct chunk *chunk;		/* Current chunk */
 	char *arena;				/* Arena in chunk */
-#ifndef TEST
-	extern int scount;			/* Maximum dynamic type as given by Eiffel */
-#endif
 
 	if (max_dt == 0)			/* Maximum dtype left unspecified */
 		max_dtype = scount - 1;

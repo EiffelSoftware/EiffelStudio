@@ -21,6 +21,9 @@
 #include "local.h"			/* For epop() */
 #include "out.h"			/* For build_out() */
 #include "hector.h"
+#include "interp.h"
+#include "update.h"
+#include "main.h"
 
 #undef STACK_CHUNK
 #define STACK_CHUNK		200			/* Number of items in a stack chunk */
@@ -111,12 +114,6 @@ private struct ex_vect *last_call();	/* Last call recorded on Eiffel stack */
 public void dmove();					/* Move inside calling context stack */
 private void call_down();				/* Move cursor downwards */
 private void call_up();					/* Move cursor upwards */
-
-extern struct opstack op_stack;			/* Operational stack */
-extern long melt_count;					/* Size of the melting table */
-/* tnh */
-extern void dinterrupt();
-extern void dserver();
 
 #ifndef lint
 private char *rcsid =

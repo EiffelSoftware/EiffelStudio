@@ -38,6 +38,7 @@ extern void conform_updt();				/* Update conformance table */
 extern void option_updt();				/* Update of the option table */
 extern void routinfo_updt();			/* Update routine information table */
 extern void desc_updt();				/* Update the descriptors */
+extern long melt_count;					/* Size of melting table */
 
 
 /* Read information from file `fil'.

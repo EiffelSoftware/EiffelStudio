@@ -17,6 +17,8 @@
 #include "garcol.h"
 #include "except.h"
 #include "macros.h"
+#include "main.h"
+#include "memory.h"
 
 #ifdef I_STRING
 #include <string.h>
@@ -24,17 +26,6 @@
 #include <strings.h>
 #endif
 
-extern uint32 gen_scavenge;		/* Malloc flag, controls scavenging */
-extern int cc_for_speed;		/* Optimized for speed of for memory */
-extern long th_alloc;			/* Allocation threshold, in bytes */
-extern long plsc_per;			/* Period of plsc() in acollect() */
-extern int gc_monitor;			/* GC monitoring flag */
-
-extern int full_coalesc();		/* Perform free blocks coalescing */
-extern void gfree();			/* Garbage collector's free routine */
-
-extern long eiffel_usage;		/* For memory statistics */
-extern void sc_stop();
 
 public void mem_free(object)
 char *object;

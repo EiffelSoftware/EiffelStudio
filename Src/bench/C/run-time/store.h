@@ -43,6 +43,9 @@ extern int fides;			/* File descriptor used by `store_write' */
 extern char fstoretype;		/* File storage type used by `store_write' */
 extern void st_write();			/* Write an object in file */
 extern char *account;			/* Array of traversed dyn types */
+extern void allocate_gen_buffer();
+extern long get_alpha_offset();
+extern int fides;			/* File descriptor used by `store_write' */
 
 #ifdef EIF_WINDOWS
 public void buffer_write(char *data, int size);

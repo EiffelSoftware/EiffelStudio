@@ -157,4 +157,35 @@ extern char *xrealloc();			/* Reallocate with GC turned on/off */
 extern char *sprealloc();			/* Reallocate an Eiffel special object */
 extern struct emallinfo *meminfo();	/* Memory statistics */
 
+/*
+ * Shared variables
+ */
+extern struct emallinfo m_data;		/* Accounting info from malloc */
+extern struct emallinfo c_data;		/* Accounting info from malloc for C */
+extern struct emallinfo e_data;		/* Accounting info from malloc for Eiffel */
+extern struct ck_list cklst;		/* Head and tail of chunck list */
+extern uint32 gen_scavenge;			/* Is Generation Scavenging running ? */
+extern struct sc_zone sc_from;		/* Scavenging 'from' zone */
+extern struct sc_zone sc_to;		/* Scavenging 'to' zone */
+extern struct stack hec_stack;		/* The hector stack (objects seen from C) */
+extern long eiffel_usage;			/* For memory statistics */
+
+/*
+ * Shared routines
+ */
+extern int split_block();			/* Block spliting */
+extern void lxtract();				/* Extraction from free list */
+extern void rel_core();				/* Give memory back to kernel */
+extern int chunk_coalesc();			/* Coalescing to reduce fragmentation */
+extern char *get_to_from_core();	/* Get to_space from core for partial scavenging */
+extern void memck();
+extern void mem_diagnose();			/* Memory usage dump */
+extern int full_coalesc();			/* Perform free blocks coalescing */
+extern void sc_stop();
+shared char *eif_set();				/* Set Eiffel object prior use */
+
+#ifndef TEST
+extern int cc_for_speed;			/* Priority to speed or memory? */
+#endif
+
 #endif

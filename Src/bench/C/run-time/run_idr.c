@@ -28,6 +28,10 @@
 #endif
 #include "eiffel.h"
 #include "bits.h"
+#incoude "retrieve.h"
+#include "store.h"
+#include "error.h"
+#include "run_idr.h"
 #include "../idrs/idrf.h"
 #ifdef EIF_OS2
 #include <io.h>
@@ -43,14 +47,6 @@ shared char *idr_temp_buf;	/* This is shared so it can be freed
 							 */
 
 private int amount_read = 0;	/* Amount read into buffer (see check_capacity) */
-
-extern int fides;
-extern char fstoretype;
-
-extern int r_fides;
-extern char r_fstoretype;
-
-extern void eio();
 
 
 public bool_t run_idr_setpos(idrs, pos)

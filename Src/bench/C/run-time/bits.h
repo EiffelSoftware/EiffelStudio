@@ -31,6 +31,9 @@
  */
 public int b_equal();	/* needed in interp.c */
 
+extern char *b_clone();			/* Clones bit */
+extern void b_copy();			/* Copies bit */
+extern char *bmalloc();			/* Bit object creation */
 extern void b_put();
 extern char b_item();
 extern char *b_shift();
@@ -42,5 +45,6 @@ extern char *b_xor();
 extern char *b_not();
 extern char *b_out();
 extern char *b_mirror();
+extern int bit_dtype;
 
 #endif

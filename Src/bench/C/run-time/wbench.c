@@ -19,6 +19,7 @@
 #include "wbench.h"
 #include "interp.h"
 #include "plug.h"
+#include "project.h"			/* for tabinit() */
 
 /* The following functions implement the access to object features and 
  * attributes in workbench mode, they are:
@@ -34,8 +35,6 @@
  * `wptype (origin, offset, dyn_type)'
  * `wdisp (dyn_type)'
  */
-
-extern void tabinit();
 
 public char *(*wfeat(static_type, feature_id, dyn_type))()
 int static_type, dyn_type;

@@ -23,6 +23,21 @@
 #include "macros.h"
 #include "debug.h"
 #include "err_msg.h"
+#include "main.h"
+#include "garcol.h"
+#include "error.h"
+
+#ifdef WORKBENCH
+#ifndef NOHOOK					/* For debug_mode */
+#ifdef EIF_WIN_31
+#include "shared.h"				/* in extra/mswin/ipc */
+#elif defined EIF_WIN32
+#include "server.h"				/* in extra/win32/ipc/app */
+#else							/* Unix */
+#include "server.h"				/* ../ipc/app */
+#endif /* EIF_WIN_31 */
+#endif /* NOHOOK */
+#endif /* WORKBENCH */
 
 #include <stdlib.h>				/* For exit(), abort() */
 
@@ -31,8 +46,6 @@
 #else
 #include <strings.h>
 #endif
-
-extern int in_assertion;
 
 #undef STACK_CHUNK
 #undef MIN_FREE
@@ -230,11 +243,6 @@ private char *branch_exit =
 private char *botched = "Eiffel stack botched";
 private char *vanished = "main entry point vanished";
 
-extern char *ename;					/* Name of the Eiffel program running */
-extern char *root_obj;				/* Address of the root object */
-extern char *error_tag();			/* English description out of errno code */
-extern void reclaim();				/* GC routine used to collect objects */
-
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
 #ifndef DEBUG
@@ -247,8 +255,6 @@ struct test {
 	char *name;			/* Routine name */
 	char *origin;		/* Routine written in */
 };
-
-extern struct test test_system[];	/* Array of pseudo-system description */
 
 /* These are default values for tests */
 #define Class(x)		test_system[(int) x].class
@@ -1488,11 +1494,7 @@ public void esfail()
 }
 
 #ifdef WORKBENCH
-extern shared void dbreak();
 
-#ifndef NOHOOK
-extern int debug_mode;
-#endif
 private void exception(how)
 int how;		/* Implicit or explicit exception? */
 {

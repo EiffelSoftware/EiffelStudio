@@ -83,6 +83,7 @@ extern void sync_registers();		/* Resynchronize registers on routine */
 
 extern char *IC;					/* Byte code to interpret */
 extern struct opstack op_stack;		/* Operational stack */
+extern void idump();
 
 /*
  * Byte-code tokens

@@ -17,10 +17,23 @@
 #include "garcol.h"
 #include "except.h"
 #include "sig.h"
+
 #ifdef WORKBENCH
 #include "interp.h"
 #include "update.h"
+#ifdef EIF_WIN_31						/* for winit() */
+#include "network.h"					/* extra/mswin/ipc */
+#elif defined EIF_WIN32
+#include "server.h"						/* extra/win32/ipc/app */
+#else									/* Unix */
+#include "server.h"						/* ../ipc/app */
+#endif /* EIF_WIN_31 */
+#endif /* WORKBENCH */
+
+#ifdef EIF_WINDOWS
+#include "econsole.h"					/* show_trace(), extra/win32/console */
 #endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "err_msg.h"
@@ -35,6 +48,13 @@
 #else
 #include <strings.h>
 #endif
+#include "umain.h"
+#include "argv.h"
+#ifdef DEBUG
+#include "malloc.h"						/* for mem_diagnose */
+#endif
+#include "main.h"
+#include "project.h"					/* for einit() */
 
 #define null (char *) 0					/* Null pointer */
 
@@ -64,8 +84,7 @@ public char **melt;						/* Byte code array */
 public int *mpatidtab;					/* Table of pattern id's indexed by body id's */
 public struct eif_opt *eoption;			/* Option table */
 public struct p_interface *pattern;		/* Pattern table */
-extern void winit();					/* Workbench debugger initialization */
-extern void einit();					/* System-dependent initializations */
+
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #else
 public struct cnode *esystem;			/* Eiffel system (updated by DLE) */
@@ -77,23 +96,11 @@ public long *nbref;						/* Gives # of references (updated by DLE) */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #endif
 
-extern void esdie();	/* need prototype for this routine */
-
 public void failure();					/* The Eiffel exectution failed */
 private Signal_t emergency();			/* Emergency exit */
 
-extern void umain();					/* User's initialization routine */
-extern void arg_init();					/* Command line arguments saving */
 #ifndef EIF_WIN_31
 public unsigned TIMEOUT;     /* Time out for interprocess communications */
-#endif
-
-#ifdef EIF_WINDOWS
-extern void show_trace();
-#endif
-
-#ifdef DEBUG
-extern void mem_diagnose();				/* Memory usage dump */
 #endif
 
 public void eif_rtinit(argc, argv, envp)
@@ -105,7 +112,6 @@ char **envp;
 	jmp_buf exenv;						/* Jump buffer for rescue */
 #ifndef EIF_WIN_31
 	char *eif_timeout;
-	extern char *getenv();				/* Get environment variable value */
 #endif
 
 
@@ -115,8 +121,6 @@ char **envp;
 	 */
 
 #ifdef EIF_WIN_31
-	extern int _argc;
-	extern char **_argv;
 
 	_fmode = O_BINARY;
 	_grow_handles (40);

@@ -26,6 +26,10 @@
 #include "dle.h"		/* For dle_reclaim */
 #include "option.h"		/* For exitprf */
 #include "object_id.h"	/* For the object id and separate stacks */
+#include "hector.h"
+#ifndef TEST
+#include "main.h"
+#endif
 
 #ifdef WORKBENCH
 #include "interp.h"
@@ -209,25 +213,7 @@ shared void st_wipe_out();			/* Remove unneeded chunk from stack */
 private int st_extend();			/* Extends size of stack */
 private int reset();				/* Reset stack to its initial state */
 
-extern struct emallinfo m_data;		/* Accounting info from malloc */
-extern struct emallinfo c_data;		/* Accounting info from malloc for C */
-extern struct emallinfo e_data;		/* Accounting info from malloc for Eiffel */
-extern struct ck_list cklst;		/* Head and tail of chunck list */
-
-extern int split_block();			/* Block spliting */
-extern void lxtract();				/* Extraction from free list */
-extern void rel_core();				/* Give memory back to kernel */
-extern int chunk_coalesc();			/* Coalescing to reduce fragmentation */
-extern char *get_to_from_core();	/* Get to_space from core for partial scavenging */
-
-extern uint32 gen_scavenge;			/* Is Generation Scavenging running ? */
-extern struct sc_zone sc_from;		/* Scavenging 'from' zone */
-extern struct sc_zone sc_to;		/* Scavenging 'to' zone */
-extern struct stack hec_stack;		/* The hector stack (objects seen from C) */
-extern struct stack hec_saved;		/* The hector stack (objects kept by C) */
-#ifndef TEST
-extern int cc_for_speed;			/* Priority to speed or memory? */
-#else
+#ifdef TEST
 private int cc_for_speed = 1;			/* Priority to speed or memory? */
 #endif
 
@@ -236,7 +222,6 @@ private void mark_ex_stack();		/* Marks the exception stacks */
 #ifdef WORKBENCH
 private void mark_op_stack();		/* Marks operational stack */
 
-extern struct opstack op_stack;		/* Operational stack */
 #define DISP(x,y) call_disp(x,y)
 
 #else
@@ -244,7 +229,7 @@ extern struct opstack op_stack;		/* Operational stack */
  * moving objects (i.e. set to False if no assertion and exception_trace(yes)
  * is not used in the Ace file
  */
-extern EIF_BOOLEAN exception_stack_managed;	/* Is the stack managed (always True in workbench mode) */
+#include "project.h"			/* for exception_stack_managed */
 
 #define DISP(x,y) (Dispose(x))(y)
 
@@ -280,8 +265,6 @@ static int fdone = 0;	/* Tracing flag to only get the last full collect */
 private int nb_items();				/* Number of items held in a stack */
 #ifndef MEMCHK
 #define memck(x)	;				/* No memory checking compiled */
-#else
-extern void memck();
 #endif
 #endif
 

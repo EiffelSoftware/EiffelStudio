@@ -29,5 +29,9 @@ extern void map_start();			/* Reset LIFO stack into a FIFO one */
 extern EIF_OBJ map_next();			/* Get next object as in a FIFO stack */
 extern void map_reset();			/* Reset maping table */
 
+#ifdef DEBUG						/* For copy.c */
+extern long nomark();
+#endif
+
 #endif
 

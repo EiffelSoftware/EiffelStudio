@@ -24,6 +24,8 @@
 #include "bits.h"
 #include "plug.h"
 #include "run_idr.h"
+#include "error.h"
+#include "main.h"
 
 #ifdef EIF_OS2
 #include <io.h>
@@ -45,18 +47,16 @@
 
 public int fides;
 public char fstoretype;
-public char * general_buffer = (char *) 0;
+public char *general_buffer = (char *) 0;
 public int current_position = 0;
 public int buffer_size = 1024;
 public int end_of_buffer = 0;
 private char *s_buffer = (char *) 0;
-extern char *idr_temp_buf; 			/*temporary buffer for idr floats and doubles*/
 
 
 /*
  * Function declarations
  */
-extern void eio();
 private void internal_store();
 private void st_store();				/* Second pass of the store */
 private void ist_write();
@@ -78,8 +78,6 @@ public void free_sorted_attributes();
  */
 shared char *account = (char *) 0;			/* Array of traversed dyn types */
 shared unsigned int **sorted_attributes = (unsigned int **) 0;	/* Array of sorted attributes */
-
-extern int scount;					/* Maximum dtype */
 
 private int accounting = 0;
 
@@ -141,9 +139,6 @@ EIF_CHARACTER file_storage_type;
 	 * Store object hierarchy of root `object' and produce a header
      * so it can be retrieved by other systems.
      */
-	extern void run_idr_init();
-	extern void run_idr_destroy();
-	extern void idr_flush();
 
 	fides = (int) fd;
 	fstoretype = file_storage_type;

@@ -22,7 +22,9 @@
 #include "store.h"
 #include "bits.h"
 #include "run_idr.h"
+#include "error.h"
 #include "../parsing/shared/limits.h"
+#include "traverse.h"
 
 #include <ctype.h>					/* For isspace() */
 
@@ -62,7 +64,6 @@
 public struct htable *rt_table;		/* Table used for solving references */
 public int32 nb_recorded = 0;		/* Number of items recorded in Hector */
 public char rt_kind;			/* Kind of storable */
-extern char *idr_temp_buf;		/*temporary buffer for idr float and double */
 
 /*
  * Private data declaration
@@ -85,11 +86,6 @@ public char r_fstoretype;	/* File storage type used for retrieve */
 /*
  * Function declations
  */
-extern void eio();			/* prototypes were missing TNH */
-extern void allocate_gen_buffer();
-extern int idr_read_line();
-extern long get_alpha_offset();
-
 public char *irt_make();			/* Do the independant retrieve */
 public char *grt_make();			/* Do the general retrieve (3.3 and later) */
 public char *irt_nmake();			/* Retrieve n objects  independent form*/
@@ -283,7 +279,6 @@ long objectCount;
 
 #if DEBUG & 2
 /*	long saved_objectCount = objectCount;
-	extern long nomark();
 
 	if (objectCount == 0)
 		panic("no object to retrieve");*/
@@ -616,7 +611,6 @@ long objectCount;
 
 #if DEBUG & 1
 /*	long saved_objectCount = objectCount;
-	extern long nomark();
 
 	if (objectCount == 0)
 		panic("no object to retrieve");*/

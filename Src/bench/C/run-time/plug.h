@@ -33,14 +33,10 @@ struct bit {
  * Run time functions used by generated C code.
  */
 
-extern char *b_clone();				/* Clones bit */
-extern void b_copy();				/* Copies bit */
-extern char *bmalloc();				/* Bit object creation */
 extern char *makestr();				/* Build an Eiffel string object */
 extern char *makebit();				/* Build an Eiffel bit object */
 extern char *striparr();			/* Build an Eiffel ARRAY[ANY] object for strip*/
 extern int str_dtype;				/* Dynamic type for string */
-extern int bit_dtype;				/* Dynamic type for bit */
 extern int arr_dtype;				/* Dynamic type for ARRAY[ANY] */
 extern int32 disp_rout_id;			/* Dispose routine id */ 
 extern void (*eif_strmake)();		/* STRING creation feature */

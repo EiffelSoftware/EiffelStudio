@@ -225,6 +225,7 @@ extern struct ex_vect *exnext();	/* Read next eif_trace item from bottom */
 
 /* Routines for run-time usage only */
 extern struct ex_vect *extop();	/* Top of Eiffel stack */
+extern void esdie();
 
 /* Eiffel interface with class EXCEPTIONS */
 extern long eeocode();			/* Original exception code */

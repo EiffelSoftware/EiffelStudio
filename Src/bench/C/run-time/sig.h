@@ -69,3 +69,8 @@ extern void esigresall();	/* Reset all signal to their default handling */
 extern void esigresdef();	/* Reset a signal to its default handling */
 
 #endif
+
+#ifdef HAS_SYS_SIGLIST
+	extern char *sys_siglist[];
+#endif
+

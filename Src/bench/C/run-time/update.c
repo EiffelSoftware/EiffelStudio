@@ -33,6 +33,11 @@
 #include "file.h"
 #include "err_msg.h"
 #include "dle.h"
+#include "project.h"				/* For rcdt, rcorigin, rcoffset, ... */
+
+#ifdef DEBUG
+#include "interp.h"					/* For idump() */
+#endif
 
 private void cecil_updt();			/* Cecil update */
 private char **names_updt();		/* String array */
@@ -45,10 +50,6 @@ public long melt_count;				/* Size of melting table */
 
 /* TEMPORARY */
 FILE *fil;
-#define TEST
-#ifdef TEST
-extern void idump();
-#endif
 
 public void update(ignore_updt)
 char ignore_updt;
@@ -318,11 +319,6 @@ int nbytes;
 private void root_class_updt ()
 {
 	/* Update the root class info */
-
-	extern int32 rcorigin;
-	extern int rcdt;
-	extern int32 rcoffset;
-	extern int rcarg;
 
 	rcorigin = wlong();
 	rcdt = wlong();

@@ -144,6 +144,11 @@ extern void st_wipe_out();			/* Remove unneeded chunk from stack */
 extern void eremb();				/* Remembers old object */
 extern void erembq();				/* Quick veersion (no GC call) of eremb */
 extern void onceset();				/* Recording of once function result */
+extern int refers_new_object();		/* Does an object refers to young ones ? */
+extern void gc_stop();				/* Stop the garbage collector */
+extern void gc_run();				/* Restart the garbage collector */
+extern char *to_chunk();			/* Base address of partial 'to' chunk */
+extern void gfree();				/* Garbage collector's free routine */
 
 /* Exported data-structure declarations */
 extern struct stack loc_set;			/* Local variable stack */
@@ -151,10 +156,23 @@ extern struct stack loc_stack;			/* Local indirection stack */
 extern struct stack once_set;			/* Once functions */
 extern struct gacinfo g_data;			/* Garbage collection status */
 extern struct gacstat g_stat[GST_NBR];	/* Collection statistics */
+extern struct stack moved_set;			/* Describes the new generation */
+extern struct chunk *last_from;			/* Last 'from' chunk used by plsc() */
+extern struct sc_zone ps_from;			/* Partial scavenging 'from' zone */
+extern struct sc_zone ps_to;			/* Partial scavenging 'to' zone */
 
 /* To start timing or not for GC-profiling */
 extern int gc_ran;				/* Has the GC been running */
 extern int gc_running;			/* Is the GC currently running */
-extern double last_gc_time;			/* Time spent during the last run */
+extern double last_gc_time;		/* Time spent during the last run */
+
+/* Exported variables */
+extern char *root_obj;			/* Address of the 'root' object */
+extern uint32 tenure;			/* Tenure value for next generation cycle */
+extern long th_alloc;			/* Allocation threshold (in bytes) */
+extern long plsc_per;			/* Period of plsc() in acollect() */
+extern int gc_monitor;			/* GC monitoring flag */
+extern int r_fides;				/* moved here from retrieve.c */
+
 
 #endif

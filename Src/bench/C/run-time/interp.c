@@ -5804,7 +5804,6 @@ char *start;
 	 */
 	case BC_BIT:
 		{
-			extern char *b_out();
 			char *str;
 			int nb_uint32;
 

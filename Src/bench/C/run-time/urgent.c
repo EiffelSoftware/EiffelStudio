@@ -19,6 +19,7 @@
 #include "config.h"
 #include "portable.h"
 #include "urgent.h"
+#include "malloc.h"
 
 /* Urgent memory chunks are held in an array. The urgent_index variable gives
  * the index in urgent_mem[] which holds the address of a free chunk of memory.
@@ -31,9 +32,6 @@ private int urgent_index = -1;				/* Last index with free chunk */
 /* Getting and releasing chunks */
 shared void ufill();			/* Get as many chunks as possible */
 shared char *uchunk();			/* Urgent allocation of a stack chunk */
-
-/* I don't want to include malloc.h for a single declaration--RAM */
-extern char *cmalloc();
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST

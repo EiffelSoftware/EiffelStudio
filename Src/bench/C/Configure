@@ -20,7 +20,7 @@
 
 # $Id$
 #
-# Generated on Wed Oct 26 08:44:23 PDT 1994 [metaconfig 3.0 PL35]
+# Generated on Fri Nov 18 10:15:57 PST 1994 [metaconfig 3.0 PL44]
 
 cat >/tmp/c1$$ <<EOF
 ARGGGHHHH!!!!!
@@ -89,6 +89,7 @@ if test -f /hp-ux -a -f /bin/ksh; then
 		cat <<'EOM'
 (Feeding myself to ksh to avoid nasty sh bug in "here document" expansion.)
 EOM
+		unset ENV
 		exec /bin/ksh $0 "$@"
 	fi
 else
@@ -175,6 +176,8 @@ vi=''
 zcat=''
 hint=''
 myuname=''
+osname=''
+osvers=''
 Author=''
 Date=''
 Header=''
@@ -235,6 +238,8 @@ pagesize=''
 d_keepsig=''
 d_link=''
 d_lstat=''
+d_memcpy=''
+d_memmove=''
 d_mkdir=''
 d_mmap=''
 d_open3=''
@@ -247,6 +252,8 @@ d_telldir=''
 d_rename=''
 d_rmdir=''
 d_rusage=''
+d_safebcpy=''
+d_safemcpy=''
 d_sbrk=''
 d_bsdpgrp=''
 d_setpgrp=''
@@ -338,6 +345,7 @@ libpth=''
 plibpth=''
 xlibpth=''
 libs=''
+lns=''
 longsize=''
 d_mymalloc=''
 mallocobj=''
@@ -415,6 +423,108 @@ yacc=''
 yaccflags=''
 CONFIG=''
 
+define='define'
+undef='undef'
+smallmach='pdp11 i8086 z8000 i80286 iAPX286'
+rmlist=''
+
+: We must find out about Eunice early
+eunicefix=':'
+if test -f /etc/unixtovms; then
+	eunicefix=/etc/unixtovms
+fi
+if test -f /etc/unixtovms.exe; then
+	eunicefix=/etc/unixtovms.exe
+fi
+
+: list of known cpp symbols
+al="AMIX BIT_MSF BSD BSD4_3 BSD_NET2 CRAY DGUX DOLPHIN DPX2"
+al="$al GO32 HP700 I386 I80960 I960 Lynx M68000 M68K MACH"
+al="$al MIPSEB MIPSEL MSDOS MTXINU MVS"
+al="$al M_COFF M_I186 M_I286 M_I386 M_I8086 M_I86 M_I86SM"
+al="$al M_SYS3 M_SYS5 M_SYSIII M_SYSV M_UNIX M_XENIX"
+al="$al NeXT OCS88 OSF1 PARISC PC532 PORTAR POSIX"
+al="$al PWB R3000 SVR3 SVR4"
+al="$al SYSTYPE_BSD SYSTYPE_SVR4 SYSTYPE_SYSV"
+al="$al UTEK UTS UTek UnicomPBB UnicomPBD Utek VMS"
+al="$al _AIX _AIX32 _AM29000 _COFF _CRAY _EPI _IBMR2"
+al="$al _MIPSEB _MIPSEL _M_COFF _M_I86 _M_I86SM _M_SYS3"
+al="$al _M_SYS5 _M_SYSIII _M_SYSV _M_UNIX _M_XENIX _R3000"
+al="$al _SYSTYPE_BSD _SYSTYPE_BSD43 _SYSTYPE_SVR4"
+al="$al _SYSTYPE_SYSV _SYSV3 _UNICOS"
+al="$al __386BSD__ __BIG_ENDIAN __BIG_ENDIAN__ __BSD_4_4__"
+al="$al __DGUX__ __DPX2__ __H3050R __H3050RX"
+al="$al __LITTLE_ENDIAN __LITTLE_ENDIAN__ __MACH__"
+al="$al __MIPSEB __MIPSEB__ __MIPSEL __MIPSEL__"
+al="$al __Next__ __OSF1__ __PARAGON__ __PWB __STDC__"
+al="$al ____386BSD____ __alpha __alpha__ __amiga"
+al="$al __bsd4_2 __bsd4_2__ __bsdi__ __convex__"
+al="$al __host_mips__"
+al="$al __hp9000s200 __hp9000s300 __hp9000s400 __hp9000s500"
+al="$al __hp9000s500 __hp9000s700 __hp9000s800"
+al="$al __hppa __hpux __i286 __i286__ __i386 __i386__"
+al="$al __i486 __i486__ __i860 __i860__"
+al="$al __m68k __m68k__ __m88100__ __m88k __m88k__"
+al="$al __mc68000 __mc68000__ __mc68020 __mc68020__"
+al="$al __mc68030 __mc68030__ __mc68040 __mc68040__"
+al="$al __mc88100 __mc88100__ __mips __mips__"
+al="$al __motorola__ __osf__ __pa_risc __sparc__ __stdc__"
+al="$al __sun __sun__ __svr3__ __svr4__ __ultrix __ultrix__"
+al="$al __unix __unix__ __vax __vax__"
+al="$al _host_mips _mips _unix"
+al="$al a29k aegis alliant am29000 amiga ansi ardent"
+al="$al bsd bsd43 bsd4_2 bsd4_3 bsd4_4 bull"
+al="$al convex cray ctix encore gcos gimpel"
+al="$al hcx host_mips hp200 hp300 hp700 hp800"
+al="$al hp9000 hp9000s300 hp9000s400 hp9000s500"
+al="$al hp9000s700 hp9000s800 hp9k8 hpux"
+al="$al i186 i286 i386 i486 i8086"
+al="$al i80960 i860 iAPX286 ibm interdata is68k"
+al="$al linux luna luna88k m68k m88100 m88k"
+al="$al mc300 mc500 mc68000 mc68010 mc68020 mc68030"
+al="$al mc68040 mc68060 mc68k mc68k32 mc700"
+al="$al mc88000 mc88100 merlin mert mips mvs n16"
+al="$al ncl_el ncl_mr"
+al="$al news1500 news1700 news1800 news1900 news3700"
+al="$al news700 news800 news900 ns16000 ns32000"
+al="$al ns32016 ns32332 ns32k nsc32000 os osf"
+al="$al parisc pc532 pdp11 plexus posix pyr"
+al="$al riscix riscos sequent sgi sinix sony sony_news"
+al="$al sonyrisc sparc sparclite spectrum stratos"
+al="$al sun sun3 sun386 svr4 sysV68 sysV88"
+al="$al titan tower tower32 tower32_200 tower32_600 tower32_700"
+al="$al tower32_800 tower32_850 tss u3b u3b2 u3b20 u3b200"
+al="$al u3b5 ultrix unix unixpc unos vax venix vms"
+al="$al xenix z8000"
+
+gccversion=''
+: no include file wanted by default
+inclwanted=''
+
+i_sysselct=''
+i_whoami=''
+: change the next line if compiling for Xenix/286 on Xenix/386
+xlibpth='/usr/lib/386 /lib/386'
+
+: general looking path for locating libraries
+glibpth="/lib/pa1.1 /usr/lib/large /lib /usr/lib $xlibpth"
+glibpth="$glibpth /lib/large /usr/lib/small /lib/small"
+glibpth="$glibpth /usr/ccs/lib /usr/ucblib /usr/local/lib /usr/shlib"
+
+: Private path used by Configure to find libraries.  Its value
+: is prepended to libpth. This variable takes care of special
+: machines, like the mips.  Usually, it should be empty.
+plibpth=''
+
+: default library list
+libswanted=''
+: full support for void wanted by default
+defvoidused=15
+
+: libraries wanted for XDR support and socket support
+libswanted="c_s rpc xdr bsd socket inet nsl m"
+lex="flex"
+lexflags="-lB8 -C"
 : script used to extract .SH files with variable substitutions
 cat >extract <<'EOS'
 CONFIG=true
@@ -513,6 +623,7 @@ error=''
 silent=''
 extractsh=''
 optdef='optdef.sh'
+rm -f $optdef
 
 : option parsing
 while test $# -gt 0; do
@@ -542,7 +653,8 @@ while test $# -gt 0; do
 			echo "$me: use '-U symbol=', not '-D symbol='." >&2
 			echo "$me: ignoring -D $1" >&2
 			;;
-		*=*) echo "$1" >> $optdef;;
+		*=*) echo "$1" | \
+				sed -e "s/'/'\"'\"'/g" -e "s/=\(.*\)/='\1'/" >> $optdef;;
 		*) echo "$1='define'" >> $optdef;;
 		esac
 		shift
@@ -559,7 +671,7 @@ while test $# -gt 0; do
 		esac
 		shift
 		;;
-	-V) echo "$me generated by metaconfig 3.0 PL35." >&2
+	-V) echo "$me generated by metaconfig 3.0 PL44." >&2
 		exit 0;;
 	--) break;;
 	-*) echo "$me: unknown option $1" >&2; shift; error=true;;
@@ -629,109 +741,8 @@ echo " "
 : Here we go...
 echo "Beginning of configuration questions for $package."
 
-define='define'
-undef='undef'
-smallmach='pdp11 i8086 z8000 i80286 iAPX286'
-rmlist=''
-
 trap 'echo " "; rm -rf $rmlist; exit 1' 1 2 3 15
 
-: We must find out about Eunice early
-eunicefix=':'
-if test -f /etc/unixtovms; then
-	eunicefix=/etc/unixtovms
-fi
-if test -f /etc/unixtovms.exe; then
-	eunicefix=/etc/unixtovms.exe
-fi
-
-: list of known cpp symbols
-al="AMIX BIT_MSF BSD BSD4_3 BSD_NET2 CRAY DGUX DOLPHIN DPX2"
-al="$al GO32 HP700 I386 I80960 I960 Lynx M68000 M68K MACH"
-al="$al MIPSEB MIPSEL MSDOS MTXINU MVS"
-al="$al M_COFF M_I186 M_I286 M_I386 M_I8086 M_I86 M_I86SM"
-al="$al M_SYS3 M_SYS5 M_SYSIII M_SYSV M_UNIX M_XENIX"
-al="$al NeXT OCS88 OSF1 PARISC PC532 PORTAR POSIX"
-al="$al PWB R3000 SVR3 SVR4"
-al="$al SYSTYPE_BSD SYSTYPE_SVR4 SYSTYPE_SYSV"
-al="$al UTEK UTS UTek UnicomPBB UnicomPBD Utek VMS"
-al="$al _AIX _AIX32 _AM29000 _COFF _CRAY _EPI _IBMR2"
-al="$al _MIPSEB _MIPSEL _M_COFF _M_I86 _M_I86SM _M_SYS3"
-al="$al _M_SYS5 _M_SYSIII _M_SYSV _M_UNIX _M_XENIX _R3000"
-al="$al _SYSTYPE_BSD _SYSTYPE_BSD43 _SYSTYPE_SVR4"
-al="$al _SYSTYPE_SYSV _SYSV3 _UNICOS"
-al="$al __386BSD__ __BIG_ENDIAN __BIG_ENDIAN__ __BSD_4_4__"
-al="$al __DGUX__ __DPX2__ __H3050R __H3050RX"
-al="$al __LITTLE_ENDIAN __LITTLE_ENDIAN__ __MACH__"
-al="$al __MIPSEB __MIPSEB__ __MIPSEL __MIPSEL__"
-al="$al __Next__ __OSF1__ __PARAGON__ __PWB __STDC__"
-al="$al ____386BSD____ __alpha __alpha__ __amiga"
-al="$al __bsd4_2 __bsd4_2__ __bsdi__ __convex__"
-al="$al __host_mips__"
-al="$al __hp9000s200 __hp9000s300 __hp9000s400 __hp9000s500"
-al="$al __hp9000s500 __hp9000s700 __hp9000s800"
-al="$al __hppa __hpux __i286 __i286__ __i386 __i386__"
-al="$al __i486 __i486__ __i860 __i860__"
-al="$al __m68k __m68k__ __m88100__ __m88k __m88k__"
-al="$al __mc68000 __mc68000__ __mc68020 __mc68020__"
-al="$al __mc68030 __mc68030__ __mc68040 __mc68040__"
-al="$al __mc88100 __mc88100__ __mips __mips__"
-al="$al __motorola__ __osf__ __pa_risc __sparc__ __stdc__"
-al="$al __sun __sun__ __svr3__ __svr4__ __ultrix __ultrix__"
-al="$al __unix __unix__ __vax __vax__"
-al="$al _host_mips _mips _unix"
-al="$al a29k aegis alliant am29000 amiga ansi"
-al="$al bsd bsd43 bsd4_2 bsd4_3 bsd4_4 bull"
-al="$al convex cray ctix encore gcos gimpel"
-al="$al hcx host_mips hp200 hp300 hp700 hp800"
-al="$al hp9000 hp9000s300 hp9000s400 hp9000s500"
-al="$al hp9000s700 hp9000s800 hp9k8 hpux"
-al="$al i186 i286 i386 i486 i8086"
-al="$al i80960 i860 iAPX286 ibm interdata is68k"
-al="$al linux luna luna88k m68k m88100 m88k"
-al="$al mc300 mc500 mc68000 mc68010 mc68020 mc68030"
-al="$al mc68040 mc68060 mc68k mc68k32 mc700"
-al="$al mc88000 mc88100 merlin mert mips mvs n16"
-al="$al ncl_el ncl_mr"
-al="$al news1500 news1700 news1800 news1900 news3700"
-al="$al news700 news800 news900 ns16000 ns32000"
-al="$al ns32016 ns32332 ns32k nsc32000 os osf"
-al="$al parisc pc532 pdp11 plexus posix pyr"
-al="$al riscix riscos sequent sgi sinix sony sony_news"
-al="$al sonyrisc sparc sparclite spectrum stratos"
-al="$al sun sun3 sun386 svr4 sysV68 sysV88"
-al="$al tower tower32 tower32_200 tower32_600 tower32_700"
-al="$al tower32_800 tower32_850 tss u3b u3b2 u3b20 u3b200"
-al="$al u3b5 ultrix unix unixpc unos vax venix vms"
-al="$al xenix z8000"
-
-gccversion='1'
-: no include file wanted by default
-inclwanted=''
-
-i_sysselct=''
-i_whoami=''
-: change the next line if compiling for Xenix/286 on Xenix/386
-xlibpth='/usr/lib/386 /lib/386'
-
-: general looking path for locating libraries
-glibpth="/lib/pa1.1 /usr/lib/large /lib /usr/lib $xlibpth"
-glibpth="$glibpth /lib/large /usr/lib/small /lib/small"
-glibpth="$glibpth /usr/ccs/lib /usr/ucblib /usr/local/lib /usr/shlib"
-
-: Private path used by Configure to find libraries.  Its value
-: is prepended to libpth. This variable takes care of special
-: machines, like the mips.  Usually, it should be empty.
-plibpth=''
-
-: default library list
-libswanted=''
-: full support for void wanted by default
-defvoidused=15
-
-: libraries wanted for XDR support and socket support
-libswanted="c_s rpc xdr bsd socket inet nsl m"
-lexflags="-lB8 -C"
 : Some greps do not return status, grrr.
 echo "grimblepritz" >grimble
 if grep blurfldyick grimble >/dev/null 2>&1 ; then
@@ -790,7 +801,7 @@ THIS PACKAGE SEEMS TO BE INCOMPLETE.
 You have the option of continuing the configuration process, despite the
 distinct possibility that your kit is damaged, by typing 'y'es.  If you
 do, don't blame me if something goes wrong.  I advise you to type 'n'o
-and contact the author (eiffel@eiffel.com).
+and contact the author (xavierl@ankara.eiffel.com).
 
 EOM
 		echo $n "Continue? [n] $c" >&4
@@ -968,7 +979,7 @@ EOH
 
 Much effort has been expended to ensure that this shell script will run on any
 Unix system.  If despite that it blows up on yours, your best bet is to edit
-Configure and run it again.  Also, let me (eiffel@eiffel.com)
+Configure and run it again.  Also, let me (xavierl@ankara.eiffel.com)
 know how I blew it.  If you can't run Configure for some reason, you'll have to
 generate a config.sh file by hand.
 
@@ -1080,7 +1091,10 @@ for dir in \$*; do
 	fi
 	;;
 	*)
-	if test -f \$dir/\$thing; then
+	for thisthing in \$dir/\$thing; do
+		: just loop through to pick last item
+	done
+	if test -f \$thisthing; then
 		echo \$dir/\$thing
 		exit 0
 	elif test -f \$dir/\$thing.exe; then
@@ -1111,6 +1125,7 @@ mv
 rm
 sed
 sort
+touch
 tr
 uniq
 "
@@ -1206,12 +1221,50 @@ FOO
 	;;
 esac
 
+: determine whether symbolic links are supported
+echo " "
+$touch blurfl
+if $ln -s blurfl sym > /dev/null 2>&1 ; then
+	echo "Symbolic links are supported." >&4
+	lns="$ln -s"
+else
+	echo "Symbolic links are NOT supported." >&4
+	lns="$ln"
+fi
+$rm -f blurfl sym
+
+: see whether [:lower:] and [:upper:] are supported character classes
+echo " "
+up='[A-Z]'
+low='[a-z]'
+case "`echo AbyZ | $tr '[:lower:]' '[:upper:]' 2>/dev/null`" in
+ABYZ)
+	echo "Good, your tr supports [:lower:] and [:upper:] to convert case." >&4
+	up='[:upper:]'
+	low='[:lower:]'
+	;;
+*)
+	echo "Your tr only supports [a-z] and [A-Z] to convert case." >&4
+	;;
+esac
+: set up the translation script tr, must be called with ./tr of course
+cat >tr <<EOSC
+$startsh
+case "\$1\$2" in
+'[A-Z][a-z]') exec $tr '$up' '$low';;
+'[a-z][A-Z]') exec $tr '$low' '$up';;
+esac
+exec $tr "\$@"
+EOSC
+chmod +x tr
+$eunicefix tr
+
 : Try to determine whether config.sh was made on this system
 case "$config_sh" in
 '')
 myuname=`( ($uname -a) 2>/dev/null || hostname) 2>&1`
-myuname=`echo $myuname | $sed -e 's/^[^=]*=//' | \
-	tr '[A-Z]' '[a-z]' | tr '\012' ' '`
+myuname=`echo $myuname | $sed -e 's/^[^=]*=//' -e 's/\///g' | \
+	./tr '[A-Z]' '[a-z]' | tr '\012' ' '`
 dflt=n
 if test "$fastread" = yes; then
 	dflt=y
@@ -1236,12 +1289,12 @@ if test -f config.sh; then
 	case "$ans" in
 	n*|N*) echo "OK, I'll ignore it."; mv config.sh config.sh.old;;
 	*)  echo "Fetching default answers from your old config.sh file..." >&4
-		tmp="$n"
-		tans="$c"
+		tmp_n="$n"
+		tmp_c="$c"
 		. ./config.sh
 		cp config.sh UU
-		n="$tmp"
-		c="$tans"
+		n="$tmp_n"
+		c="$tmp_c"
 		hint=previous
 		;;
 	esac
@@ -1255,108 +1308,243 @@ EOM
 	cd hints; ls -C *.sh | $sed 's/\.sh/   /g' >&4
 	dflt=''
 	: Half the following guesses are probably wrong... If you have better
-	: tests or hints, please send them to eiffel@eiffel.com
+	: tests or hints, please send them to xavierl@ankara.eiffel.com
 	: The metaconfig authors would also appreciate a copy...
-	$test -f /irix && dflt="$dflt sgi"
-	$test -f /xenix && dflt="$dflt sco_xenix"
-	$test -f /dynix && dflt="$dflt dynix"
-	$test -f /dnix && dflt="$dflt dnix"
-	$test -f /bin/mips && /bin/mips && dflt="$dflt mips"
-	$test -d /NextApps && test -f /usr/adm/software_version && dflt="$dflt next"
-	$test -d /usr/include/minix && dflt="$dflt minix"
+	$test -f /irix && osname=irix
+	$test -f /xenix && osname=sco_xenix
+	$test -f /dynix && osname=dynix
+	$test -f /dnix && osname=dnix
+ 	$test -f /unicos && osname=unicos && osvers=`$uname -r`
+	$test -f /bin/mips && /bin/mips && osname=mips
+	$test -d /NextApps && set X `hostinfo | grep 'NeXT Mach.*:' | \
+		$sed -e 's/://' -e 's/\./_/'` && osname=next && osvers=$4
+	$test -d /usr/apollo/bin && osname=apollo
+	$test -f /etc/saf/_sactab && osname=svr4
+	$test -d /usr/include/minix && osname=minix
 	if $test -f $uname; then
 		set X $myuname
 		shift
 
-		$test -f $5.sh && dflt="$dflt $5"
-
 		case "$5" in
-		fps*) dflt="$dflt fps";;
+		fps*) osname=fps ;;
 		mips*)
 			case "$4" in
-			umips) dflt="$dflt umips";;
-			*) dflt="$dflt mips";;
+			umips) osname=umips ;;
+			*) osname=mips ;;
 			esac;;
-		[23]100) dflt="$dflt mips";;
-		next*) dflt="$dflt next" ;;
-		news*) dflt="$dflt news" ;;
+		[23]100) osname=mips ;;
+		next*) osname=next ;;
+		news*) osname=news ;;
 		i386*)
 			if $test -f /etc/kconfig; then
-				if $contains _SYSV3 /usr/include/stdio.h > /dev/null 2>&1; then
-					dflt="$dflt isc_3_2_3"
-				elif $contains _POSIX_SOURCE /usr/include/stdio.h \
-					>/dev/null 2>&1
-				then
-					dflt="$dflt isc_3_2_2"
+				osname=isc
+				if test "$lns" = "ln -s"; then
+					osvers=4
+				elif $contains _SYSV3 /usr/include/stdio.h > /dev/null 2>&1 ; then
+					osvers=3
+				elif $contains _POSIX_SOURCE /usr/include/stdio.h > /dev/null 2>&1 ; then
+					osvers=2
 				fi
 			fi
 			;;
 		esac
 
 		case "$1" in
-		aix) dflt="$dflt aix_rs" ;;
-		sunos) case "$3" in
-			3.4) dflt="$dflt sunos_3_4" ;;
-			3.5) dflt="$dflt sunos_3_5" ;;
-			4.0.1) dflt="$dflt sunos_4_0_1" ;;
-			4.0.2) dflt="$dflt sunos_4_0_2" ;;
-			4.1.1) dflt="$dflt sunos_4_1_1" ;;
-			4.1.2) dflt="$dflt sunos_4_1_2" ;;
-			4.1.3) dflt="$dflt sunos_4_1_3" ;;
-			5.0) dflt="$dflt solaris_2_0" ;;
-			5.1) dflt="$dflt solaris_2_1" ;;
-			5.2) dflt="$dflt solaris_2_2" ;;
-			5.3) dflt="$dflt solaris_2_3" ;;
+		aix) osname=aix
+			tmp=`( (oslevel) 2>/dev/null || echo "not found") 2>&1`
+			case "$tmp" in
+			'not found') osvers=3.2.0 ;;
+			'<3240'|'<>3240') osvers=3.2.0 ;;
+			'=3240'|'>3240'|'<3250'|'<>3250') osvers=3.2.4 ;;
+			'=3250'|'>3250') osvers=3.2.5 ;;
+			*) osvers='' ;;
 			esac
 			;;
-		dnix) dflt="$dflt dnix" ;;
-		dgux) dflt="$dflt dgux" ;;
-		genix) dflt="$dflt genix" ;;
-		hp*ux) dflt="$dflt hpux" ;;
-		next) dflt="$dflt next" ;;
-		irix) dflt="$dflt sgi" ;;
-		ultrix) case "$3" in
-			3*) dflt="$dflt ultrix_3" ;;
-			4*) dflt="$dflt ultrix_4" ;;
+		dnix) osname=dnix
+			osvers="$3"
+			;;
+		domainos) osname=apollo
+			osvers="$3"
+			;;
+		dgux) osname=dgux 
+			osvers="$3"
+			;;
+		freebsd) osname=freebsd 
+			osvers="$3" ;;
+		genix) osname=genix ;;
+		hp*) osname=hpux 
+			case "$3" in
+			*.08.*) osvers=9 ;;
+			*.09.*) osvers=9 ;;
+			*.10.*) osvers=10 ;;
+			*)	osvers="$3" ;;
 			esac
 			;;
-		osf1) dflt="$dflt osf1" ;;
-		uts) dflt="$dflt uts" ;;
-		$2) if test -f /etc/systemid; then
-				set `echo $3 | sed 's/\./ /'` $4
-				if $test -f sco_$1_$2_$3.sh; then
-					dflt="$dflt sco_$1_$2_$3"
-				elif $test -f sco_$1_$2.sh; then
-					dflt="$dflt sco_$1_$2"
-				elif $test -f sco_$1.sh; then
-					dflt="$dflt sco_$1"
+		irix) osname=irix
+			case "$3" in
+			4*) osvers=4 ;;
+			5*) osvers=5 ;;
+			*)	osvers="$3" ;;
+			esac
+			;;
+		linux) osname=linux
+			case "$3" in
+			1*) osvers=1 ;;
+			*)	osvers="$3" ;;
+			esac
+			;;
+		netbsd*) osname=netbsd 
+			osvers="$3"
+			;;
+		bsd386) osname=bsd386
+			osvers=`$uname -r`
+			;;
+		next*) osname=next ;;
+		solaris) osname=solaris
+			case "$3" in
+			5*) osvers=`echo $3 | $sed 's/^5/2/g'` ;;
+			*)	osvers="$3" ;;
+			esac
+			;;
+		sunos) osname=sunos
+			case "$3" in
+			5*) osname=solaris
+				osvers=`echo $3 | $sed 's/^5/2/g'` ;;
+			*)	osvers="$3" ;;
+			esac
+			;;
+		titanos) osname=titanos
+			case "$3" in
+			1*) osvers=1 ;;
+			2*) osvers=2 ;;
+			3*) osvers=3 ;;
+			4*) osvers=4 ;;
+			*)	osvers="$3" ;;
+			esac
+			;;
+		ultrix) osname=ultrix
+			osvers="$3"
+			;;
+		osf1)	case "$5" in
+				alpha)  osname=dec_osf
+					case "$3" in
+						[vt]1\.*) osvers=1 ;;
+						[vt]2\.*) osvers=2 ;;
+						[vt]3\.*) osvers=3 ;;
+					esac
+					;;
+			hp*)	osname=hp_osf1	;;
+			mips)	osname=mips_osf1 ;;
+			esac
+			;;
+		uts) osname=uts 
+			osvers="$3"
+			;;
+		$2) case "$osname" in
+			*isc*) ;;
+			*freebsd*) ;;
+ 			svr*)
+				: svr4.x or possibly later
+				case "svr$3" in	
+				${osname}*)
+					osname=svr$3
+					osvers=$4
+					;;
+				esac
+				case "$osname" in
+				svr4.0)
+					: Check for ESIX
+					if test -f /stand/boot ; then
+						eval `grep '^INITPROG=[a-z/0-9]*$' /stand/boot`
+						if test -n $INITPROG -a -f $INITPROG; then
+			isesix=`strings -a $INITPROG|grep 'ESIX SYSTEM V/386 Release 4.0'`
+							if test -n $isesix; then
+								osname=esix4
+							fi
+						fi
+					fi
+					;;
+				esac
+				;;
+			*)	if test -f /etc/systemid; then
+					osname=sco
+					set `echo $3 | $sed 's/\./ /g'` $4
+					if $test -f sco_$1_$2_$3.sh; then
+						osvers=$1.$2.$3
+					elif $test -f sco_$1_$2.sh; then
+						osvers=$1.$2
+					elif $test -f sco_$1.sh; then
+						osvers=$1
+					fi
+				else
+					case "$osname" in
+					'') : Still unknown.  Probably a generic Sys V.
+						osname="sysv"
+						osvers="$3"
+						;;
+					esac
 				fi
-			fi
+				;;
+			esac
+			;;
+		*)	case "$osname" in
+			'') : Still unknown.  Probably a generic BSD.
+				osname="$1"
+				osvers="$3"
+				;;
+			esac
 			;;
 		esac
 	else
 		if test -f /vmunix -a -f news_os.sh; then
-			(what /vmunix | tr '[A-Z]' '[a-z]') > ../UU/kernel.what 2>&1
+			(what /vmunix | ../UU/tr '[A-Z]' '[a-z]') > ../UU/kernel.what 2>&1
 			if $contains news-os ../UU/kernel.what >/dev/null 2>&1; then
-				dflt="$dflt news_os"
+				osname=news_os
 			fi
 			$rm -f ../UU/kernel.what
 		fi
 	fi
-	set X `echo $dflt | tr ' ' '\012' | sort | uniq`
-	shift
-	dflt=''
-	for file in $*; do
-		if $test -f "$file.sh"; then
-			dflt="$dflt $file"
-		fi
-	done
-	set X $dflt
-	shift
-	dflt=${1+"$@"}
-	case "$dflt" in
-	'') dflt=none;;
+	
+	: Now look for a hint file osname_osvers, unless one has been
+	: specified already.
+	case "$hintfile" in
+	''|' ')
+		file=`echo "${osname}_${osvers}" | $sed -e 's@\.@_@g' -e 's@_$@@'`
+		: Also try without trailing minor version numbers.
+		xfile=`echo $file | $sed -e 's@_[^_]*$@@'`
+		xxfile=`echo $xfile | $sed -e 's@_[^_]*$@@'`
+		xxxfile=`echo $xxfile | $sed -e 's@_[^_]*$@@'`
+		xxxxfile=`echo $xxxfile | $sed -e 's@_[^_]*$@@'`
+		case "$file" in
+		'') dflt=none ;;
+		*)  case "$osvers" in
+			'') dflt=$file
+				;;
+			*)  if $test -f $file.sh ; then
+					dflt=$file
+				elif $test -f $xfile.sh ; then
+					dflt=$xfile
+				elif $test -f $xxfile.sh ; then
+					dflt=$xxfile
+				elif $test -f $xxxfile.sh ; then
+					dflt=$xxxfile
+				elif $test -f $xxxxfile.sh ; then
+					dflt=$xxxxfile
+				elif $test -f "${osname}.sh" ; then
+					dflt="${osname}"
+				else
+					dflt=none
+				fi
+				;;
+			esac
+			;;
+		esac
+		;;
+	*)
+		dflt=`echo $hintfile | $sed 's/\.sh$//'`
+		;;
 	esac
+			
 	$cat <<EOM
 
 You may give one or more space-separated answers, or "none" if appropriate.
@@ -1365,17 +1553,40 @@ If your OS version has no hints, DO NOT give a wrong version -- say "none".
 EOM
 	rp="Which of these apply, if any?"
 	. ../UU/myread
-	for file in $ans; do
+	tans=$ans
+	for file in $tans; do
 		if $test -f $file.sh; then
 			. ./$file.sh
 			$cat $file.sh >> ../UU/config.sh
-		elif $test X$ans = X -o X$ans = Xnone ; then
+		elif $test X$tans = X -o X$tans = Xnone ; then
 			: nothing
 		else
-			echo "$file.sh does not exist -- ignored"
+			: Give one chance to correct a possible typo.
+			echo "$file.sh does not exist"
+			dflt=$file
+			rp="hint to use instead?"
+			. ../UU/myread
+			for file in $ans; do
+				if $test -f "$file.sh"; then
+					. ./$file.sh
+					$cat $file.sh >> ../UU/config.sh
+				elif $test X$ans = X -o X$ans = Xnone ; then
+					: nothing
+				else
+					echo "$file.sh does not exist -- ignored."
+				fi
+			done
 		fi
 	done
+
 	hint=recommended
+	: Remember our hint file for later.
+	if $test -f "$file.sh" ; then
+		hintfile="$file"
+	else
+		hintfile=''
+	fi
+
 	cd ..
 fi
 cd UU
@@ -1383,15 +1594,15 @@ cd UU
 *)
 	echo " "
 	echo "Fetching default answers from $config_sh..." >&4
-	tmp="$n"
-	tans="$c"
+	tmp_n="$n"
+	tmp_c="$c"
 	cd ..
 	cp $config_sh config.sh 2>/dev/null
 	. ./config.sh
 	cd UU
 	cp ../config.sh .
-	n="$tmp"
-	c="$tans"
+	n="$tmp_n"
+	c="$tmp_c"
 	hint=previous
 	;;
 esac
@@ -1640,7 +1851,7 @@ if test -f /venix; then
 	echo exit 0 >venix
 else
 	echo " "
-	if xenix; then
+	if ./xenix; then
 		: null
 	else
 		echo "Nor is it Venix..."
@@ -1652,7 +1863,7 @@ $rm -f foo
 
 : see if we need a special compiler
 echo " "
-if usg; then
+if ./usg; then
 	case "$cc" in
 	'') case "$Mcc" in
 		/*) dflt='Mcc';;
@@ -1692,44 +1903,33 @@ else
 	. ./myread
 	cc="$ans"
 fi
-case "$cc" in
-gcc*)
-	echo "Checking out which version of gcc you have..." >&4
-	$cat >gccvers.c <<EOM
+echo " "
+echo "Checking if you are using GNU cc ..." >&4
+$cat >gccvers.c <<EOM
 #include <stdio.h>
-int main()
-{
-	char *v;
-	v = "unknown";
+int main() {
 #ifdef __GNUC__
 #ifdef __VERSION__
-	v = __VERSION__;
-#endif
-#endif
-	switch((int) v[0]) {
-		case '1': printf("1\n"); break;
-		case '2': printf("2\n"); break;
-		case '3': printf("3\n"); break;
-		default: break;
-	}
-#ifdef __GNUC__
-	return 0;
+	printf("%s\n", __VERSION__);
 #else
-	return 1;
+	printf("%s\n", "1");
 #endif
+#endif
+	exit(0);
 }
 EOM
-	if $cc -o gccvers gccvers.c >/dev/null 2>&1; then
-		gccversion=`./gccvers`
-		echo "You appear to have version $gccversion."
-	else
-		echo "Doesn't appear to be GNU cc after all."
-	fi
-	$rm -f gccvers*
-	if $test "$gccversion" = '1'; then
-		cpp=`./loc gcc-cpp $cpp $pth`
-	fi
-	;;
+if $cc -o gccvers gccvers.c >/dev/null 2>&1; then
+	gccversion=`./gccvers`
+	case "$gccversion" in
+	'') echo "You are not using GNU cc." ;;
+	*)  echo "You are using GNU cc $gccversion." ;;
+	esac
+else
+	echo "I can't compile the test program -- Assuming it isn't GNU cc."
+fi
+$rm -f gccvers*
+case "$gccversion" in
+1*) cpp=`./loc gcc-cpp $cpp $pth` ;;
 esac
 
 : decide how portable to be
@@ -2189,19 +2389,16 @@ esac
 
 dflt=''
 case "$ccflags" in
-'')	case "$cc" in
-	*gcc*)
-		if $test "$gccversion" = '1'; then
-			dflt='-fpcc-struct-return'
-		fi
-		;;
+'')	
+	case "$gccversion" in
+	1*) dflt='-fpcc-struct-return' ;;
 	esac
 	case "$optimize" in
-	*-g*) dflt="$dflt -DDEBUG";;
+	*-g*) dflt="$dflt -DDEBUGGING";;
 	esac
-	case "$cc" in
-	*gcc*)	if test -d /etc/conf/kconfig.d &&
-		  $contains _POSIX_VERSION $usrinc/sys/unistd.h >/dev/null 2>&1
+	case "$gccversion" in
+	2*) if test -d /etc/conf/kconfig.d &&
+			$contains _POSIX_VERSION $usrinc/sys/unistd.h >/dev/null 2>&1
 		then
 			dflt="$dflt -posix"
 		fi
@@ -2276,12 +2473,8 @@ esac
 
 : the following weeds options from ccflags that are of no interest to cpp
 cppflags="$ccflags"
-case "$cc" in
-*gcc*)
-	if $test "$gccversion" = "1"; then
-		cppflags="$cppflags -D__GNUC__"
-	fi
-	;;
+case "$gccversion" in
+1*) cppflags="$cppflags -D__GNUC__"
 esac
 case "$mips_type" in
 '');;
@@ -2332,13 +2525,16 @@ esac
 
 : flags used in final linking phase
 case "$ldflags" in
-'') if venix; then
+'') if ./venix; then
 		dflt='-i -z'
 	else
-		dflt='none'
+		dflt=''
 	fi
 	case "$ccflags" in
 	*-posix*) dflt="$dflt -posix" ;;
+	esac
+	case "$dflt" in
+	'') dflt='none' ;;
 	esac
 	;;
 *) dflt="$ldflags";;
@@ -2405,7 +2601,6 @@ none) libpth=' ';;
 esac
 
 : compute shared library extension
-echo " "
 case "$so" in
 '')
 	if xxx=`./loc libc.sl X $libpth`; $test -f "$xxx"; then
@@ -2414,9 +2609,15 @@ case "$so" in
 		dflt='so'
 	fi
 	;;
-	
 *) dflt="$so";;
 esac
+$cat <<EOM
+
+On some systems, shared libraries may be available.  Answer 'none' if
+you want to suppress searching of shared libraries for the remaining
+of this configuration.
+
+EOM
 rp='What is the file extension used for shared libraries?'
 . ./myread
 so="$ans"
@@ -2432,53 +2633,36 @@ case "$libswanted" in
 '') libswanted='c_s';;
 esac
 for thislib in $libswanted; do
-	case "$thislib" in
-	dbm) thatlib=ndbm;;
-	*_s) thatlib=NONE;;
-	*) thatlib="${thislib}_s";;
-	esac
 	
-	if xxx=`./loc lib$thislib.a X $libpth`; $test -f "$xxx"; then
-		echo "Found -l$thislib."
+	if xxx=`./loc lib$thislib.$so.[0-9]'*' X $libpth`; $test -f "$xxx"; then
+		echo "Found -l$thislib (shared)."
 		case " $dflt " in
-		*"-l$thislib "*|*"-l$thatlib "*);;
-		*) dflt="$dflt -l$thislib";;
-		esac
-	elif xxx=`./loc lib$thatlib.a X $libpth`; $test -f "$xxx"; then
-		echo "Found -l$thatlib."
-		case " $dflt " in
-		*"-l$thatlib "*);;
-		*) dflt="$dflt -l$thatlib";;
-		esac
-	elif xxx=`./loc lib$thislib.$so.[0-9]'*' X $libpth`; $test -f "$xxx"; then
-		echo "Found -l$thislib (shared only)."
-		case " $dflt " in
-		*"-l$thislib "*|*"-l$thatlib "*);;
+		*"-l$thislib "*);;
 		*) dflt="$dflt -l$thislib";;
 		esac
 	elif xxx=`./loc lib$thislib.$so X $libpth` ; $test -f "$xxx"; then
-		echo "Found -l$thislib (shared only)."
+		echo "Found -l$thislib (shared)."
 		case " $dflt " in
-		*"-l$thislib "*|*"-l$thatlib "*);;
+		*"-l$thislib "*);;
 		*) dflt="$dflt -l$thislib";;
+		esac
+	elif xxx=`./loc lib$thislib.a X $libpth`; $test -f "$xxx"; then
+		echo "Found -l$thislib."
+		case " $dflt " in
+		*"-l$thislib "*);;
+		*) dflt="$dflt -l$thislib";;
+		esac
+	elif xxx=`./loc lib${thislib}_s.a X $libpth`; $test -f "$xxx"; then
+		echo "Found -l${thislib}_s."
+		case " $dflt " in
+		*"-l$thislib "*);;
+		*) dflt="$dflt -l${thislib}_s";;
 		esac
 	elif xxx=`./loc Slib$thislib.a X $xlibpth`; $test -f "$xxx"; then
 		echo "Found -l$thislib."
 		case " $dflt " in
-		*"-l$thislib "*|*"-l$thatlib "*);;
+		*"-l$thislib "*);;
 		*) dflt="$dflt -l$thislib";;
-		esac
-	elif xxx=`./loc Slib$thatlib.a X $xlibpth`; $test -f "$xxx"; then
-		echo "Found -l$thatlib."
-		case " $dflt " in
-		*"-l$thatlib "*);;
-		*) dflt="$dflt -l$thatlib";;
-		esac
-	elif xxx=`./loc lib$thatlib.$so X $libpth`; $test -f "$xxx"; then
-		echo "Found -l$thatlib (shared only)."
-		case "$dflt" in
-		*-l$thislib*|*-l$thatlib*);;
-		*) dflt="$dflt -l$thatlib";;
 		esac
 	else
 		echo "No -l$thislib."
@@ -2584,19 +2768,22 @@ case "$libs" in
 '') ;;
 *)  for thislib in $libs; do
 	case "$thislib" in
+	-lc|-lc_s)
+		: Handle C library specially below.
+		;;
 	-l*)
-		thislib=`expr X$thislib : 'X-l\(.*\)'`
-		if try=`./loc lib$thislib.a X $libpth`; $test -f "$try"; then
+		thislib=`echo $thislib | $sed -e 's/^-l//'`
+		if try=`./loc lib$thislib.$so.'*' X $libpth`; $test -f "$try"; then
+			:
+		elif try=`./loc lib$thislib.$so X $libpth`; $test -f "$try"; then
+			:
+		elif try=`./loc lib$thislib.a X $libpth`; $test -f "$try"; then
 			:
 		elif try=`./loc lib$thislib X $libpth`; $test -f "$try"; then
 			:
 		elif try=`./loc $thislib X $libpth`; $test -f "$try"; then
 			:
 		elif try=`./loc Slib$thislib.a X $xlibpth`; $test -f "$try"; then
-			:
-		elif try=`./loc lib$thislib.$so.'*' X $libpth`; $test -f "$try"; then
-			:
-		elif try=`./loc lib$thislib.$so X $libpth`; $test -f "$try"; then
 			:
 		else
 			try=''
@@ -2744,6 +2931,10 @@ elif com="$sed -n -e 's/^__//' -e '/|Undef/d' -e '/|Proc/s/ .*//p'";\
 	eval $xscan;\
 	$contains '^fprintf$' libc.list >/dev/null 2>&1; then
 		eval $xrun
+elif com="$sed -n -e '/Def. Text/s/.* \([^ ]*\)\$/\1/p'";\
+	eval $xscan;\
+	$contains '^fprintf$' libc.list >/dev/null 2>&1; then
+		eval $xrun
 else
 	nm -p $* 2>/dev/null >libc.tmp
 	com="$sed -n -e 's/^.* [ADTS]  *_[_.]*//p' -e 's/^.* [ADTS] //p'";\
@@ -2852,10 +3043,10 @@ yes)
 	case "$tres" in
 	true)
 		echo "$sym() found." >&4;
-		case "$was" in $undef) . whoa; esac; eval "$var=\$td";;
+		case "$was" in $undef) . ./whoa; esac; eval "$var=\$td";;
 	*)
 		echo "$sym() NOT found." >&4;
-		case "$was" in $define) . whoa; esac; eval "$var=\$tu";;
+		case "$was" in $define) . ./whoa; esac; eval "$var=\$tu";;
 	esac;;
 *)
 	case "$was" in
@@ -2974,8 +3165,8 @@ eval $inlibc
 : function used to set $1 to $val
 setvar='var=$1; eval "was=\$$1"; td=$define; tu=$undef;
 case "$val$was" in
-$define$undef) . whoa; eval "$var=\$td";;
-$undef$define) . whoa; eval "$var=\$tu";;
+$define$undef) . ./whoa; eval "$var=\$td";;
+$undef$define) . ./whoa; eval "$var=\$tu";;
 *) eval "$var=$val";;
 esac'
 
@@ -3007,7 +3198,7 @@ EOM
 			val="$undef"
 		fi
 	else
-		if usg; then
+		if ./usg; then
 			echo "You do not have _setjmp and _longjmp, but that's fine." >&4
 		else
 			cat <<EOM
@@ -3048,7 +3239,7 @@ main()
 	exit(0);
 }
 EOP
-	if $cc $ccflags -o set set.c $libs >/dev/null 2>&1; then
+	if $cc $ccflags -o set set.c $ldflags $libs >/dev/null 2>&1; then
 		./set 2>/dev/null
 		case $? in
 		0) echo "You have to use setpgrp() instead of setpgrp(pid, pgrp)." >&4
@@ -3057,7 +3248,7 @@ EOP
 			val="$define";;
 		esac
 	else
-		if usg; then
+		if ./usg; then
 			xxx="USG one, i.e. you use setpgrp()."
 			val="$undef"
 		else
@@ -3102,7 +3293,8 @@ eval $setvar
 
 : see if the directory entry stores field length
 echo " "
-if $contains 'd_namlen' $xinc >/dev/null 2>&1; then
+$cppstdin $cppflags $cppminus < "$xinc" > try.c
+if $contains 'd_namlen' try.c >/dev/null 2>&1; then
 	echo "Good, your directory entry keeps length information in d_namlen." >&4
 	val="$define"
 else
@@ -3111,6 +3303,7 @@ else
 fi
 set d_dirnamlen
 eval $setvar
+$rm -f try.c
 
 : see if dup2 exists
 set dup2 d_dup2
@@ -3154,7 +3347,7 @@ EOP
 		esac
 	else
 		echo "(The test program did not compile correctly -- Guessing.)"
-		if bsd; then
+		if ./bsd; then
 			d_eofpipe="$define"
 		else
 			d_eofpipe="$undef"
@@ -3269,7 +3462,7 @@ case "$myhostname" in
 *) cont='';;
 esac
 if $test "$cont"; then
-	if xenix; then
+	if ./xenix; then
 		echo 'Oh, dear.  Maybe "/etc/systemid" is the key...'
 		if tans=`cat /etc/systemid 2>&1` ; then
 			myhostname=$tans
@@ -3312,14 +3505,6 @@ fi
 set $myhostname
 myhostname=$1
 
-: translate upper to lower if necessary
-case "$myhostname" in
-*[A-Z]*)
-	echo "(Normalizing case in your host name)"
-	myhostname=`echo $myhostname | tr '[A-Z]' '[a-z]'`
-	;;
-esac
-
 : verify guess
 if $test "$myhostname" ; then
 	dflt=y
@@ -3339,11 +3524,19 @@ while $test "X$myhostname" = X ; do
 	myhostname="$ans"
 done
 
+: translate upper to lower if necessary
+case "$myhostname" in
+*[A-Z]*)
+	echo "(Normalizing case in your host name)"
+	myhostname=`echo $myhostname | ./tr '[A-Z]' '[a-z]'`
+	;;
+esac
+
 : a little sanity check here
 case "$phostname" in
 '') ;;
 *)
-	case `$phostname | tr '[A-Z]' '[a-z]'` in
+	case `$phostname | ./tr '[A-Z]' '[a-z]'` in
 	$myhostname$mydomain|$myhostname) ;;
 	*)
 		case "$phostname" in
@@ -3368,7 +3561,7 @@ elif set gethostname val -f d_gethname; eval $csym; $val; then
 	d_gethname="$define"
 	call=gethostname
 elif set uname val -f d_uname; eval $csym; $val; then
-	if xenix; then
+	if ./xenix; then
 		$cat <<'EOM'
 uname() was found, but you're running xenix, and older versions of xenix
 have a broken uname(). If you don't really know whether your xenix is old
@@ -3631,7 +3824,7 @@ if $cc -o try $ccflags try.c >/dev/null 2>&1; then
 	fi
 else
 	$echo $n "(I can't seem to compile the test program. Assuming $c"
-	if bsd; then
+	if ./bsd; then
 		echo "they do.)"
 		val="$define"
 	else
@@ -3674,6 +3867,10 @@ y*) val="$define" ;;
 esac
 set d_maypanic
 eval $setvar
+
+: see if memmove exists
+set memmove d_memmove
+eval $inlibc
 
 : see if mkdir exists
 set mkdir d_mkdir
@@ -3790,6 +3987,106 @@ eval $inlibc
 set getrusage d_rusage
 eval $inlibc
 
+: can bcopy handle overlapping blocks?
+val="$undef"
+case "$d_bcopy" in
+"$define")
+	echo " "
+	echo "Checking to see if your bcopy() can do overlapping copies..." >&4
+	$cat >foo.c <<'EOCP'
+main()
+{
+char buf[128], abc[128];
+char *b;
+int len;
+int off;
+int align;
+
+bcopy("abcdefghijklmnopqrstuvwxyz0123456789", abc, 36);
+
+for (align = 7; align >= 0; align--) {
+	for (len = 36; len; len--) {
+		b = buf+align;
+		bcopy(abc, b, len);
+		for (off = 1; off <= len; off++) {
+			bcopy(b, b+off, len);
+			bcopy(b+off, b, len);
+			if (bcmp(b, abc, len))
+				exit(1);
+		}
+	}
+}
+exit(0);
+}
+EOCP
+	if $cc foo.c -o safebcpy $ccflags $libs >/dev/null 2>&1 ; then
+		if ./safebcpy 2>/dev/null; then
+			echo "Yes, it can."
+			val="$define"
+		else
+			echo "It can't, sorry."
+		fi
+	else
+		echo "(I can't compile the test program, so we'll assume not...)"
+	fi
+	;;
+esac
+$rm -f foo.* safebcpy core
+set d_safebcpy
+eval $setvar
+
+: see if memcpy exists
+set memcpy d_memcpy
+eval $inlibc
+
+: can memcpy handle overlapping blocks?
+val="$undef"
+case "$d_memcpy" in
+"$define")
+	echo " "
+	echo "Checking to see if your memcpy() can do overlapping copies..." >&4
+	$cat >foo.c <<'EOCP'
+main()
+{
+char buf[128], abc[128];
+char *b;
+int len;
+int off;
+int align;
+
+memcpy(abc, "abcdefghijklmnopqrstuvwxyz0123456789", 36);
+
+for (align = 7; align >= 0; align--) {
+	for (len = 36; len; len--) {
+		b = buf+align;
+		memcpy(abc, b, len);
+		for (off = 1; off <= len; off++) {
+			memcpy(b, b+off, len);
+			memcpy(b+off, b, len);
+			if (memcmp(b, abc, len))
+				exit(1);
+		}
+	}
+}
+exit(0);
+}
+EOCP
+	if $cc foo.c -o safemcpy $ccflags $ldflags $libs >/dev/null 2>&1 ; then
+		if ./safemcpy 2>/dev/null; then
+			echo "Yes, it can."
+			val="$define"
+		else
+			echo "It can't, sorry."
+		fi
+	else
+		echo "(I can't compile the test program, so we'll assume not...)"
+	fi
+	;;
+esac
+$rm -f foo.* safemcpy core
+set d_safemcpy
+eval $setvar
+
 : see if sbrk exists
 set sbrk d_sbrk
 eval $inlibc
@@ -3848,10 +4145,10 @@ while $test "$cont"; do
 	var=$2; eval "was=\$$2";
 	if $test "$xxx" && $test -r "$xxx";
 	then eval $xxf;
-		eval "case \"\$$var\" in $undef) . whoa; esac"; eval "$var=\$td";
+		eval "case \"\$$var\" in $undef) . ./whoa; esac"; eval "$var=\$td";
 		cont="";
 	else eval $xxnf;
-		eval "case \"\$$var\" in $define) . whoa; esac"; eval "$var=\$tu"; fi;
+		eval "case \"\$$var\" in $define) . ./whoa; esac"; eval "$var=\$tu"; fi;
 	set $yyy; shift; shift; yyy=$@;
 	case $# in 0) cont="";;
 	2) xxf="echo \"but I found <\$1> $instead.\" >&4";
@@ -3862,7 +4159,7 @@ while $test "$cont"; do
 done;
 while $test "$yyy";
 do set $yyy; var=$2; eval "was=\$$2";
-	eval "case \"\$$var\" in $define) . whoa; esac"; eval "$var=\$tu";
+	eval "case \"\$$var\" in $define) . ./whoa; esac"; eval "$var=\$tu";
 	set $yyy; shift; shift; yyy=$@;
 done'
 
@@ -3973,41 +4270,13 @@ else
 	d_sysernlst="$undef"
 fi
 
-: see if time exists
-echo " "
-if set time val -f d_time; eval $csym; $val; then
-	echo 'time() found.' >&4
-	val="$define"
-	case "$timetype" in
-	'')
-		if $contains 'time_t;' `./findhdr sys/types.h` >/dev/null 2>&1 ; then
-			dflt='time_t';
-		else
-			dflt='long';
-		fi
-		;;
-	*)  dflt="$timetype"
-		;;
-	esac
-	echo " "
-	rp="What type is returned by time() on this sytem?"
-	. ./myread
-	timetype="$ans"
-else
-	echo 'time() not found, hope that will do.' >&4
-	val="$undef"
-	timetype='int';
-fi
-set d_time
-eval $setvar
-
 : define an is-a-typedef? function
 typedef='type=$1; var=$2; def=$3; shift; shift; shift; inclist=$@;
 case "$inclist" in
 "") inclist="sys/types.h";;
 esac;
-eval "val=\$$var";
-case "$val" in
+eval "varval=\$$var";
+case "$varval" in
 "")
 	$rm -f temp.c;
 	for inc in $inclist; do
@@ -4020,8 +4289,28 @@ case "$val" in
 		eval "$var=$def";
 	fi;
 	$rm -f temp.?;;
-*) eval "$var=$val";;
+*) eval "$var=$varval";;
 esac'
+
+: see if time exists
+echo " "
+if set time val -f d_time; eval $csym; $val; then
+	echo 'time() found.' >&4
+	val="$define"
+	set time_t timetype long stdio.h sys/types.h
+	eval $typedef
+	dflt="$timetype"
+	echo " "
+	rp="What type is returned by time() on this sytem?"
+	. ./myread
+	timetype="$ans"
+else
+	echo 'time() not found, hope that will do.' >&4
+	val="$undef"
+	timetype='int';
+fi
+set d_time
+eval $setvar
 
 : see if this is a sys/times.h system
 set sys/times.h i_systimes
@@ -4117,7 +4406,7 @@ fi
 echo " "
 case "$val3" in
 "$define") echo "You have POSIX termios.h... good!" >&4;;
-*) if Cppsym pyr; then
+*) if ./Cppsym pyr; then
 		case "`/bin/universe`" in
 		ucb) if $test `./findhdr sgtty.h`; then
 				val2="$define"
@@ -4134,7 +4423,7 @@ case "$val3" in
 				echo "<termio.h> not found--you could have problems." >&4
 			fi;;
 		esac
-	elif usg; then
+	elif ./usg; then
 		if $test `./findhdr termio.h`; then
 			echo "<termio.h> found." >&4
 			val="$define"
@@ -4250,7 +4539,7 @@ EOP
 esac
 case "$abortsig" in
 '') echo "(I wasn't able to compute the signal name--guessing)"
-	if usg; then
+	if ./usg; then
 		dflt="SIGIOT"
 	else
 		dflt="SIGILL"
@@ -4499,7 +4788,7 @@ $cat >cpp_stuff.c <<'EOCP'
 RCAT(Rei,ser)
 ACAT(Cir,cus)
 EOCP
-$cpp cpp_stuff.c >cpp_stuff.out 2>&1
+$cppstdin $cppflags $cppminus <cpp_stuff.c >cpp_stuff.out 2>&1
 if $contains 'Circus' cpp_stuff.out >/dev/null 2>&1; then
 	echo "Oh!  Smells like ANSI's been here."
 	echo "We can catify or stringify, separately or together!"
@@ -4516,6 +4805,7 @@ to have to edit the values of CAT[2-5] in config.h...
 EOM
 	cpp_stuff="/* Help! How do we handle cpp_stuff? */*/"
 fi
+$rm -f cpp_stuff.*
 
 : check for length of double
 echo " "
@@ -4629,6 +4919,7 @@ case "$ans" in
 none) lexflags='';;
 *) lexflags="$ans";;
 esac
+
 : check for length of long
 echo " "
 case "$longsize" in
@@ -4822,7 +5113,7 @@ EOM
 	chmod +x $mkdep
 	$eunicefix $mkdep
 	if $mkdep dep.c >dep.out 2>/dev/null &&
-		$contains 'dep.o : dep.h' dep.out >/dev/null 2>&1
+		$contains 'dep.o: dep.h' dep.out >/dev/null 2>&1
 	then
 		echo "Looks like we can use $cc -MM."
 	else
@@ -5203,30 +5494,33 @@ $rm -f try.c try
 : see if ar generates random libraries by itself
 echo " "
 echo "Checking how to generate random libraries on your machine..." >&4
-$cat >a.c <<EOP
-f() { exit(0); }
+echo 'int bar1() { return bar2(); }' > bar1.c
+echo 'int bar2() { return 2; }' > bar2.c
+$cat > foo.c <<'EOP'
+main() { printf("%d\n", bar1()); exit(0); }
 EOP
-$cc -c a.c >/dev/null 2>&1
-ar rc ran.a a.o >/dev/null 2>&1
-$cat >b.c <<EOP
-main() { f(); }
-EOP
-cp ran.a lib.a
-if ar ts ran.a >/dev/null 2>&1; then
-	if $cc -o b b.c lib.a >/dev/null 2>&1; then
-		echo "ar appears to generate random libraries itself."
-		orderlib=false
-		ranlib=":"
-	else
+$cc $ccflags -c bar1.c >/dev/null 2>&1
+$cc $ccflags -c bar2.c >/dev/null 2>&1
+$cc $ccflags -c foo.c >/dev/null 2>&1
+ar rc bar.a bar2.o bar1.o >/dev/null 2>&1
+if $cc $ccflags $ldflags -o foobar foo.o bar.a $libs > /dev/null 2>&1 &&
+	./foobar >/dev/null 2>&1; then
+	echo "ar appears to generate random libraries itself."
+	orderlib=false
+	ranlib=":"
+elif ar ts bar.a >/dev/null 2>&1 &&
+	$cc $ccflags $ldflags -o foobar foo.o bar.a $libs > /dev/null 2>&1 &&
+	./foobar >/dev/null 2>&1; then
 		echo "a table of contents needs to be added with 'ar ts'."
 		orderlib=false
 		ranlib="ar ts"
-	fi
 else
 	if $test -f /usr/bin/ranlib; then
 		ranlib=/usr/bin/ranlib
 	elif $test -f /bin/ranlib; then
 		ranlib=/bin/ranlib
+	elif $test -f /usr/local/bin/ranlib; then
+		ranlib=/usr/local/bin/ranlib
 	fi
 
 	if $test -n "$ranlib"; then
@@ -5239,20 +5533,20 @@ else
 		ranlib=":"
 	fi
 fi
-$rm -f a.* b.c b.o b ran.a lib.a
+$rm -f foo* bar* 
 
 : see how many register declarations we want to use
 case "$registers" in
 '')
-	if Cppsym vax; then
+	if ./Cppsym vax; then
 		dflt=6
-	elif Cppsym sun mc68000 mips; then
+	elif ./Cppsym sun mc68000 mips; then
 		dflt=10
-	elif Cppsym pyr; then
+	elif ./Cppsym pyr; then
 		dflt=14
-	elif Cppsym ns32000 ns16000; then
+	elif ./Cppsym ns32000 ns16000; then
 		dflt=5
-	elif Cppsym $smallmach; then
+	elif ./Cppsym $smallmach; then
 		dflt=3
 	else
 		: if you have any other numbers for me, please send them in
@@ -5297,7 +5591,7 @@ main()
 		exit(1);	/* Not enough memory */
 	if (nbrk != obrk)
 		exit(2);	/* Unreliable sbrk() */
-	nbrk = (char *) sbrk(-INC);
+	nbrk = sbrk(-INC);
 	if (nbrk == (char *) -1)
 		exit(3);	/* May have understood negative arg as huge positive */
 	if (obrk != (char *) sbrk(0))
@@ -5324,7 +5618,6 @@ EOC
 	fi
 	;;
 *)
-	sbrksmart="$undef"
 	echo "Since you don't have sbrk(), let's forget about the smart test!"
 	;;
 esac
@@ -6072,6 +6365,8 @@ vi='$vi'
 zcat='$zcat'
 hint='$hint'
 myuname='$myuname'
+osname='$osname'
+osvers='$osvers'
 Author='$Author'
 Date='$Date'
 Header='$Header'
@@ -6132,6 +6427,8 @@ pagesize='$pagesize'
 d_keepsig='$d_keepsig'
 d_link='$d_link'
 d_lstat='$d_lstat'
+d_memcpy='$d_memcpy'
+d_memmove='$d_memmove'
 d_mkdir='$d_mkdir'
 d_mmap='$d_mmap'
 d_open3='$d_open3'
@@ -6144,6 +6441,8 @@ d_telldir='$d_telldir'
 d_rename='$d_rename'
 d_rmdir='$d_rmdir'
 d_rusage='$d_rusage'
+d_safebcpy='$d_safebcpy'
+d_safemcpy='$d_safemcpy'
 d_sbrk='$d_sbrk'
 d_bsdpgrp='$d_bsdpgrp'
 d_setpgrp='$d_setpgrp'
@@ -6235,6 +6534,7 @@ libpth='$libpth'
 plibpth='$plibpth'
 xlibpth='$xlibpth'
 libs='$libs'
+lns='$lns'
 longsize='$longsize'
 d_mymalloc='$d_mymalloc'
 mallocobj='$mallocobj'

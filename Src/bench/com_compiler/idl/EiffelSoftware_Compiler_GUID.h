@@ -11,7 +11,7 @@
 //                                                              Library GUID
 
 #define UUID_LIBEIFFELCOMPILER                  E1FFE1C0-2C7D-4D1C-A98B-4599BDCDFA58
-#define MAJ_LIBEIFFELCOMPILER					2
+#define MAJ_LIBEIFFELCOMPILER					5
 #define MIN_LIBEIFFELCOMPILER					5
 #define VER_LIBEIFFELCOMPILER					MAJ_LIBEIFFELCOMPILER.MIN_LIBEIFFELCOMPILER
 
@@ -26,6 +26,7 @@
 #define UUID_CEIFFELCOMPILER                    E1FFE1D7-9FDE-4260-9055-9AB7E92122CD
 #define UUID_CEIFFELCOMPLETIONINFO				E1FFE150-3E39-4A44-A034-38F8B422D8DF
 #define UUID_CEIFFELPROJECT                     E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E
+#define UUID_EIFFELHTMLDOCUMENTATIONGENERATOR	E1FFE19D-0455-4E0B-BD7D-FD9E7742761C
 
 // =========================================================================
 //                                                            Interface GUID
@@ -193,8 +194,8 @@ enum
 
     // IEiffelHtmlDocumentationGenerator dispatch ID's
 
-    DISPID_EiffelComCompiler_AddExcludedCluster,
-    DISPID_EiffelComCompiler_RemoveExcludedCluster,
+    DISPID_EiffelComCompiler_AddIncludedCluster,
+    DISPID_EiffelComCompiler_RemoveIncludedCluster,
     DISPID_EiffelComCompiler_StartGeneration,
     DISPID_EiffelComCompiler_AdviseStatusCallback,
     DISPID_EiffelComCompiler_UnadviseStatusCallback,

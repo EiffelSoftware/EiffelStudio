@@ -443,6 +443,27 @@ interface IEiffelCompletionInfo: IDispatch
 };
 
 //---------------------------------------------------------------------
+// IEiffelHtmlDocumentationGenerator
+//---------------------------------------------------------------------
+[
+	object,
+	dual,
+	uuid (UUID_IEIFFELHTMLDOCUMENTATIONGENERATOR),
+	helpstring ("Eiffel Project HTML Documentation Generator.")
+]
+interface IEiffelHtmlDocumentationGenerator: IDispatch
+{
+	[id (DISPID_EiffelComCompiler_AddIncludedCluster), helpstring ("Include a cluster in generation.")]
+	HRESULT AddIncludedCluster ([in] BSTR bstrFullClusterName);
+
+	[id (DISPID_EiffelComCompiler_RemoveIncludedCluster), helpstring ("Remove an included cluster from generation.")]
+	HRESULT RemoveIncludedCluster ([in] BSTR bstrFullClusterName);
+
+	[id (DISPID_EiffelComCompiler_StartGeneration), helpstring ("Generate the HTML documents into path.")]
+	HRESULT StartGeneration ([in] BSTR bstrGenerationPath);
+};
+
+//---------------------------------------------------------------------
 // IEiffelHtmlDocumentationEvents
 //---------------------------------------------------------------------
 [
@@ -470,33 +491,6 @@ interface IEiffelHtmlDocumentationEvents: IDispatch
 
 	[id (DISPID_EiffelComCompiler_ShouldContinue), helpstring ("Should compilation continue.")]
 	HRESULT ShouldContinue ([in, out] VARIANT_BOOL* pvbContinue);
-};
-
-//---------------------------------------------------------------------
-// IEiffelHtmlDocumentationGenerator
-//---------------------------------------------------------------------
-[
-	object,
-	dual,
-	uuid (UUID_IEIFFELHTMLDOCUMENTATIONGENERATOR),
-	helpstring ("Eiffel Project HTML Documentation Generator.")
-]
-interface IEiffelHtmlDocumentationGenerator: IDispatch
-{
-	[id (DISPID_EiffelComCompiler_AddExcludedCluster), helpstring ("Exclude a cluster from being generated.")]
-	HRESULT AddExcludedCluster ([in] BSTR bstrFullClusterName);
-
-	[id (DISPID_EiffelComCompiler_RemoveExcludedCluster), helpstring ("Include a cluster to be generated.")]
-	HRESULT RemoveExcludedCluster ([in] BSTR bstrFullClusterName);
-
-	[id (DISPID_EiffelComCompiler_StartGeneration), helpstring ("Generate the HTML documents into path.")]
-	HRESULT StartGeneration ([in] BSTR bstrGenerationPath);
-
-	[id (DISPID_EiffelComCompiler_AdviseStatusCallback), helpstring ("Add a callback interface.")]
-	HRESULT AdviseStatusCallback ([in] IEiffelHtmlDocumentationEvents* pIEiffelHtmlDocumentationEvents);
-
-	[id (DISPID_EiffelComCompiler_UnadviseStatusCallback), helpstring ("Remove a callback interface.")]
-	HRESULT UnadviseStatusCallback ([in] IEiffelHtmlDocumentationEvents* pIEiffelHtmlDocumentationEvents);
 };
 
 /*
@@ -1668,6 +1662,16 @@ library EiffelComCompiler
 	{
 		[default] interface IEiffelCompiler;
 		[default, source] interface IEiffelCompilerEvents;
+	};
+	
+	//---------------------------------------------------------------------
+	// CEiffelHtmlDocumentationGenerator
+	//---------------------------------------------------------------------
+	[uuid (UUID_EIFFELHTMLDOCUMENTATIONGENERATOR), noncreatable]
+	coclass CEiffelHtmlDocumentationGenerator
+	{
+		[default] interface IEiffelHtmlDocumentationGenerator;
+		[default, source] interface IEiffelHtmlDocumentationEvents;
 	};
 
 	//---------------------------------------------------------------------

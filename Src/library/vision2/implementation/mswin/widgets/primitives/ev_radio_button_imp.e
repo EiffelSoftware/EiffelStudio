@@ -20,7 +20,8 @@ inherit
 			process_message,
 			default_alignment,
 			on_erase_background,
-			background_brush
+			background_brush,
+			on_wm_theme_changed
 		redefine
 			interface,
 			initialize,
@@ -104,7 +105,8 @@ inherit
 		redefine
 			on_key_down,
 			on_getdlgcode,
-			default_style
+			default_style,
+			on_erase_background
 		end
 		
 create
@@ -260,6 +262,17 @@ feature {NONE} -- Implementation, focus event
 				-- If the widget is not hidden then invalidate.
 				invalidate
 			end
+		end
+		
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+		do
+			disable_default_processing
+			set_message_return_value (to_lresult (1))
 		end
 
 feature {EV_ANY_I} -- Implementation

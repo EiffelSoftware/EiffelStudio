@@ -12,8 +12,6 @@ class
 inherit
 
 	WIDGET_M
-		undefine
-			clean_up_callbacks
 		redefine
 			remove_action, set_action,
 			set_background_color, set_background_pixmap
@@ -69,7 +67,11 @@ feature -- Status setting
 		require
 			not_text_void: a_text /= Void
 		do
-			set_mnemonic_from_text (a_text, True)
+			if a_text.empty then
+				set_label_as_string (a_text)
+			else
+				set_mnemonic_from_text (a_text, True)
+			end
 		ensure
 			text_set: text.is_equal (a_text)
 		end;

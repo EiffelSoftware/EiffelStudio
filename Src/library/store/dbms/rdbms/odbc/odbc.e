@@ -69,9 +69,10 @@ feature -- For DATABASE_CHANGE
 			Result := odbc_hide_qualifier ($c_temp)
 		end
 
-	pre_immediate (descriptor, i: INTEGER): INTEGER is
+	pre_immediate (descriptor, i: INTEGER) is
 		do
-			Result := odbc_pre_immediate (descriptor, i)
+			odbc_pre_immediate (descriptor, i)
+			is_error_updated := False
 		end
 
 feature -- For DATABASE_FORMAT
@@ -119,11 +120,12 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			tmp_str.left_adjust
 			if tmp_str.count > 1 and then (tmp_str.substring (1, 1)).is_equal ("{") then
 				if uht.count > 0 then
-			--FIXME:must be droppable...		if uhandle.execution_type.immediate_execution then
-			--			uhandle.status.set (odbc_pre_immediate (descriptor, uht.count))
-			--		else
-			--			uhandle.status.set (odbc_init_order (descriptor, $c_temp, uht.count))
-			--		end
+					if uhandle.execution_type.immediate_execution then
+						odbc_pre_immediate (descriptor, uht.count)
+					else
+						odbc_init_order (descriptor, $c_temp, uht.count)
+					end
+					is_error_updated := False
 					if para /= Void then
 -- ADDED PGC
 						para.release
@@ -131,7 +133,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 					else
 						create para.make (uht.count)
 					end
-					bind_args_value (descriptor, uht, uhandle) -- PGC: Pourquoi ???
+					bind_args_value (descriptor, uht) -- PGC: Pourquoi ???
 				end
 --				if para /= Void then
 --					para.release
@@ -196,7 +198,8 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 						para.set (odbc_str_from_str ($tmp_c), i)
 					end
 				end -- Null value
-		--		uhandle.status.set (odbc_set_parameter (descriptor, i, 1, type, para.get (i)))
+				odbc_set_parameter (descriptor, i, 1, type, para.get (i))
+				is_error_updated := False
 				i := i + 1
 			end
 		end
@@ -1028,7 +1031,7 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	odbc_pre_immediate (desc, argNum: INTEGER): INTEGER is
+	odbc_pre_immediate (desc, argNum: INTEGER) is
 		external
 		    "C"
 		end
@@ -1046,7 +1049,7 @@ feature {NONE} -- External features
 
 	para: DB_PARA_ODBC
 
-	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE)   is
+	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING])   is
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require
@@ -1090,8 +1093,9 @@ feature {NONE} -- External features
 				        tmp_c := tmp_str.to_c
 					para.set (odbc_str_from_str ($tmp_c), i)
 				end
-			--	uhandle.status.set (odbc_set_parameter (descriptor, i, 1, type, para.get (i)))
-				uhandle.status.set (odbc_set_parameter (descriptor, uht.key_for_iteration.to_integer, 1, type, para.get (i)))
+			--	odbc_set_parameter (descriptor, i, 1, type, para.get (i))
+				odbc_set_parameter (descriptor, uht.key_for_iteration.to_integer, 1, type, para.get (i))
+				is_error_updated := False
 				i := i + 1
 				uht.forth
 			end
@@ -1099,7 +1103,7 @@ feature {NONE} -- External features
 
 feature {NONE} -- External features
 
-   	odbc_set_parameter (no_desc, seri, direction, type: INTEGER; value: POINTER): INTEGER is
+   	odbc_set_parameter (no_desc, seri, direction, type: INTEGER; value: POINTER) is
 		external
 		    "C"
 		end

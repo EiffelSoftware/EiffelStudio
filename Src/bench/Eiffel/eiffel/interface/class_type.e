@@ -221,44 +221,38 @@ feature -- Conveniences
 			-- Full type name of Current as used in IL code generation with
 			-- namespace specification.
 		require
-			System.il_generation
-		local
-			l_class: like associated_class
-			l_name: STRING
+			il_generation: System.il_generation
 		do
-			Result := type.il_type_name
-			l_class := associated_class
-			if not l_class.is_external then
-				l_name := l_class.lace_class.actual_namespace
-				if not l_name.is_empty then
-					l_name := il_casing.namespace_casing (l_name) + "."
-				end
-				Result := l_name + il_casing.pascal_casing (Result, feature {IL_CASING_CONVERSION}.upper_case)
-			end
+			Result := internal_full_il_name_with (Void)
+		ensure
+			full_il_create_type_name_not_void: Result /= Void
+			full_il_create_type_name_not_empty: not Result.is_empty
 		end
 		
 	full_il_implementation_type_name: STRING is
 			-- Full type name of implementation of Current in IL code generation
 			-- with namespace specification.
 		require
-			System.il_generation
-		local
-			l_class: like associated_class
-			l_name: STRING
+			il_generation: System.il_generation
 		do
-			Result := type.il_type_name
-			l_class := associated_class
-			if not l_class.is_external then
-				l_name := l_class.lace_class.actual_namespace
-				if l_name.is_empty then
-					l_name := "Impl."
-				else
-					l_name := il_casing.namespace_casing (l_name) + ".Impl."		
-				end
-				Result := l_name + il_casing.pascal_casing (Result, feature {IL_CASING_CONVERSION}.upper_case)
-			end
+			Result := internal_full_il_name_with ("Impl")
+		ensure
+			full_il_create_type_name_not_void: Result /= Void
+			full_il_create_type_name_not_empty: not Result.is_empty
 		end
-		
+
+	full_il_create_type_name: STRING is
+			-- Full type name of implementation of Current in IL code generation
+			-- with namespace specification.
+		require
+			il_generation: System.il_generation
+		do
+			Result := internal_full_il_name_with ("Create")
+		ensure
+			full_il_create_type_name_not_void: Result /= Void
+			full_il_create_type_name_not_empty: not Result.is_empty
+		end
+
 	associated_class: CLASS_C is
 			-- Associated class
 		require
@@ -1498,6 +1492,40 @@ feature -- Debug
 			type.trace
 		end
 
+feature {NONE} -- IL naming
+
+	internal_full_il_name_with (prefix_str: STRING): STRING is
+			-- Full type name of Current using `prefix_str' in IL code generation
+			-- with namespace specification.
+		require
+			il_generation: System.il_generation
+			prefix_valid: prefix_str /= Void implies not prefix_str.is_empty
+		local
+			l_class: like associated_class
+			l_name: STRING
+		do
+			Result := type.il_type_name
+			l_class := associated_class
+			if not l_class.is_external then
+				l_name := l_class.lace_class.actual_namespace
+				if prefix_str /= Void then
+					if l_name.is_empty then
+						l_name := prefix_str + "."
+					else
+						l_name := il_casing.namespace_casing (l_name) + "." + prefix_str + "."		
+					end
+				else
+					if not l_name.is_empty then					
+						l_name := il_casing.namespace_casing (l_name) + "."
+					end
+				end
+				Result := l_name + il_casing.pascal_casing (Result, feature {IL_CASING_CONVERSION}.upper_case)
+			end
+		ensure
+			internal_full_il_name_with_not_void: Result /= Void
+			internal_full_il_name_with_not_empty: not Result.is_empty
+		end
+		
 invariant
 	type_not_void: type /= Void
 	valid_type_id: type_id > 0

@@ -77,7 +77,8 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 #endif
 
 /* Tuning for Solaris Threads */
-#ifdef SOLARIS_THREADS
+#if defined SOLARIS_THREADS
+#define HAS_SEMA
 #endif
 
 /* Tuning for VxWorks */
@@ -91,6 +92,16 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 #ifdef EIF_WIN32
 #define EIF_NO_POSIX_SEM
 #endif
+
+/* Tuning for Unixware threads */
+#ifdef UNIXWARE_THREADS
+#define SOLARIS_THREADS
+#define NEED_SYNCH_H
+#define HASNT_SCHED_H
+#define HASNT_SEMAPHORE_H
+#define HAS_SEMA
+#endif
+
 
 /* Exported functions */
 extern void eif_thr_init_root(void);
@@ -151,7 +162,11 @@ extern EIF_POINTER eif_thr_last_thread(void);
 
 /* Defaults for semaphores */
 #ifndef EIF_NO_POSIX_SEM
+
+#ifndef HASNT_SEMAPHORE_H 
 #include <semaphore.h>
+#endif /* semaphore.h */
+
 #define EIF_SEM_TYPE	sem_t
 #define EIF_SEM_INIT(sem,count,msg) \
 	if (sem_init (sem, 0, (unsigned int) count)) eif_thr_panic (msg)
@@ -171,6 +186,15 @@ extern EIF_POINTER eif_thr_last_thread(void);
 	if (sem_destroy(sem)) eif_thr_panic(msg)
 #endif
 
+#ifdef  HAS_SEMA
+#define sem_t					sema_t
+#define sem_init(sem,shr,count)	sema_init(sem,count,USYNC_THREAD,0)
+#define sem_post				sema_post
+#define sem_wait				sema_wait
+#define sem_trywait				sema_trywait
+#define sem_destroy				sema_destroy
+#endif
+
 /* --------------------------------------- */
 
 #ifdef EIF_POSIX_THREADS
@@ -182,6 +206,10 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #include <pthread.h>
 #ifndef HASNT_SCHED_H
 #include <sched.h>
+#endif
+
+#ifdef NEED_SYNCH_H
+#include <synch.h>
 #endif
 
 /* Types */
@@ -410,7 +438,12 @@ extern EIF_POINTER eif_thr_last_thread(void);
 /*-------------------------*/
 
 #include <thread.h>
+#ifndef HASNT_SCHED_H
 #include <sched.h>
+#endif
+#ifdef NEED_SYNCH_H
+#include <synch.h>
+#endif
 
  /* Types */
 
@@ -429,6 +462,7 @@ typedef struct {
 #define EIF_TSD_VAL_TYPE		void *
 
 /* Tuning for condition variables */
+#ifndef EIF_NO_CONDVAR
 #define pthread_cond_t			cond_t
 #define pthread_condattr_t		condattr_t
 #define pthread_cond_destroy	cond_destroy
@@ -436,16 +470,7 @@ typedef struct {
 #define pthread_cond_wait		cond_wait
 #define pthread_cond_signal		cond_signal
 #define pthread_cond_broadcast	cond_broadcast
-
-/* Tuning for semaphores */
-#ifndef EIF_NO_SOLARIS_SEM
-#define sem_t					sema_t
-#define sem_init(sem,shr,count)	sema_init(sem,count,USYNC_THREAD,0)
-#define sem_post				sema_post
-#define sem_wait				sema_wait
-#define sem_trywait				sema_trywait
-#define sem_destroy				sema_destroy
-#endif
+#endif	/* EIF_NO_CONDVAR */
 
 /* Constants */
 #define EIF_THR_CREATION_FLAGS THR_NEW_LWP | THR_DETACHED

@@ -141,9 +141,9 @@ feature -- Basic operation
 			-- Hide all windows displayed to `Current'.
 			-- i.e. display window, all floarint object editors etc etc.
 		do
-			command_handler.show_hide_builder_window_command.disable_selected
-			command_handler.show_hide_component_viewer_command.disable_selected
-			command_handler.show_hide_display_window_command.disable_selected
+			command_handler.show_hide_builder_window_command.safe_disable_selected
+			command_handler.show_hide_component_viewer_command.safe_disable_selected
+			command_handler.show_hide_display_window_command.safe_disable_selected
 			command_handler.show_history_command.disable_selected
 			destroy_floating_editors
 		end	

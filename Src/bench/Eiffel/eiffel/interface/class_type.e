@@ -64,6 +64,8 @@ inherit
 			{NONE} all
 		end
 
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -1711,6 +1713,7 @@ feature -- Byte code generation
 			parent_list: like parent_types
 			ba: BYTE_ARRAY
 			creation_feature: FEATURE_I
+			class_name: STRING
 		do
 			ba := Byte_array
 			ba.clear
@@ -1719,7 +1722,16 @@ feature -- Byte code generation
 			ba.append_short_integer (type_id - 1)
 
 				-- 2. generator string
-			ba.append_string (associated_class.name)
+			class_name := associated_class.name
+			if class_name.count > ba.max_string_count then
+				fixme ("Report that class name is too long.")
+				class_name := class_name.substring (1, ba.max_string_count - 3)
+				class_name.append_string ("...")
+			end
+			check
+				class_name_not_too_long: class_name.count <= ba.max_string_count
+			end
+			ba.append_string (class_name)
 
 				-- 3. number of attributes
 			ba.append_integer (skeleton.count)

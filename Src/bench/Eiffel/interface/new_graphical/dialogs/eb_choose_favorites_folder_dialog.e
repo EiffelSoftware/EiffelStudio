@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 				a_favorites.after
 			loop
 				an_item := a_favorites.item
-				if an_item.is_folder then
+				if an_item.is_folder and not an_item.is_class then
 					a_folder_item ?= an_item
 					tree_item := build_tree_folder (a_folder_item)
 					tree_item.set_pixmap (Pixmaps.Icon_favorites_folder @ 1)

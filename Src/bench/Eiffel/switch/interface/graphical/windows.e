@@ -269,8 +269,10 @@ feature {NONE} -- Implementation
 
 	ewb_display: SCREEN is
 			-- Display of EiffelBench.
+		local
+			s: STRING
 		once
-			!! Result.make ("")
+			!! Result.make (s)
 		end
 
 end -- class WINDOWS

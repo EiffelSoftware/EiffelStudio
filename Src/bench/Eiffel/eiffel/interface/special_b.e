@@ -59,6 +59,9 @@ feature -- Typing
 			-- New class type for class SPECIAL
 		do
 			create Result.make (data)
+			if has_externals then
+				system.set_freeze
+			end
 		end
 
 feature -- Status report

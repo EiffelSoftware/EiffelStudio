@@ -1,0 +1,76 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>CECIL - C to Eiffel</title>
+<LINK REL=StyleSheet HREF="../../../../default.css">
+</head>
+
+<body>
+
+<h2>array</h2>
+
+<p>This example shows how to create an Eiffel array from an 
+existing C array.</p>
+
+<p>After you have done the appropriate steps to compile the example, you will 
+get a `cecil.exe' on windows, or `cecil' on Unix.</p>
+
+<p>Launch the program and you will be prompted for 10 integers that will be 
+inserted in a C array, it will then initialize the Eiffel array and calls <span class="efeature">display</span> from the <span class="eclass">MY_ARRAY</span> class.</p>
+
+<p>A typical output will be:</p>
+
+<pre>$ ./cecil 
+Enter 10 integers:
+Enter element 1: 1
+Enter element 2: 2
+Enter element 3: 3
+Enter element 4: 4
+Enter element 5: 5
+Enter element 6: 6
+Enter element 7: 7
+Enter element 8: 8
+Enter element 9: 9   
+Enter element 10: 10
+
+Display an Eiffel Array: 
+@1 = 1
+@2 = 2
+@3 = 3
+@4 = 4
+@5 = 5
+@6 = 6
+@7 = 7
+@8 = 8
+@9 = 9
+@10 = 10
+</pre>
+<h2>string</h2>
+
+<p>This example shows how to create an Eiffel string from an 
+existing C string.</p>
+
+<p>After you have done the appropriate steps to compile the example, you will 
+get a `cecil.exe' on windows, or `cecil' on Unix.</p>
+
+<p>Launch the program and you will be prompted for a string, it will then initialize the Eiffel 
+string and calls <span class="efeature">io.put_string</span> from the <span class="eclass">
+STD_FILES</span> class.</p>
+
+
+<p>A typical output will be:</p>
+<pre>$ ./cecil 
+Enter a string to convert in Eiffel string:
+Hello World!
+Now printing the Eiffel string from Eiffel.
+
+Hello World!
+</pre>
+
+
+</body>
+
+</html>

@@ -1,0 +1,130 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>CECIL - Eiffel to C</title>
+<LINK REL=StyleSheet HREF="../../../..default.css">
+</head>
+
+<body>
+
+<h2>array</h2>
+
+<p>This example shows how to create a C array from an 
+existing Eiffel array.</p>
+
+<p>After you have done the appropriate steps to compile the example, you will 
+get a `cecil.exe' on windows, or `cecil' on Unix.</p>
+
+<p>Launch the program and you will be prompted for 10 integers that will be 
+inserted in an Eiffel array, it will then initialize the C array and display it.</p>
+
+
+<p>A typical output will be:</p>
+
+<pre>$ ./cecil 
+This example create n array on the Eiffel side and print it on the C side
+Enter 10 integers: 
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+Displaying from C 
+@1 = 1
+@2 = 2
+@3 = 3
+@4 = 4
+@5 = 5
+@6 = 6
+@7 = 7
+@8 = 8
+@9 = 9
+@10 = 10
+</pre>
+
+<p>&nbsp;</p>
+
+
+<h2>object</h2>
+<p>This example shows the Eiffel memory management and all issues when passing 
+an Eiffel object reference to C. In the example, you can edit the file `root_class.e' 
+to modify the example:</p>
+<pre>--	give_to_c (o1)
+	give_to_c_by_pointer ($o1) -- Choose the way you pass it </pre>
+<p>When you choose the firt possibility (commented by default), <span class="efeature">give_to_c</span> will 
+use the CECIL API <span class="efeature">eif_adopt</span> to keep a reference on the Eiffel object.</p>
+<p>When you choose the second possibility, <span class="efeature">give_to_c_by_pointer</span> will use the 
+CECIL API <span class="efeature">eif_protect</span> to keep a reference on the Eiffel objet.</p>
+<p>Until <span class="efeature">forget_from_c</span> is called from the C side, the object o1 will not be 
+collected since we have protected it through the call to <span class="efeature">give_to_c</span> or 
+<span class="efeature">give_to_c_by_pointer</span>.</p>
+<p>At the end after the object o1 is collected, we try to perform an operation 
+on it which will fail with a call on void target exception.</p>
+<p>A typical output will be:</p>
+<p class="code">$ cecil <br>
+Creating o1<br>
+Object string is o1<br>
+Give it to C<br>
+Losing reference to initial o1 from Eiffel<br>
+Collecting...<br>
+Display new o1:<br>
+Object string is o2<br>
+Display o1 given to C:<br>
+Object string is o1<br>
+Losing reference from C<br>
+Losing reference from Eiffel<br>
+Collecting...<br>
+An Eiffel object of type OBJECT is collected<br>
+Old o1 forgot from both C and Eiffel:<br>
+Raise a Void exception..<br>
+<br>
+cecil: system execution failed.<br>
+Following is the set of recorded exceptions:<br>
+<br>
+-------------------------------------------------------------------------------<br>
+Class / Object Routine Nature of exception Effect<br>
+-------------------------------------------------------------------------------<br>
+ROOT_CLASS make @26 display: <br>
+&lt;30068030&gt; Feature call on void target. Fail<br>
+-------------------------------------------------------------------------------<br>
+ROOT_CLASS make @26 <br>
+&lt;30068030&gt; Routine failure. Fail<br>
+-------------------------------------------------------------------------------<br>
+ROOT_CLASS root's creation <br>
+&lt;30068030&gt; Routine failure. Exit<br>
+-------------------------------------------------------------------------------<br>
+An Eiffel object of type OBJECT is collected</p>
+<h2>string</h2>
+
+<p>This example shows how to create a C string from an existing Eiffel string.</p>
+
+<p>After you have done the appropriate steps to compile the example, you will 
+get a `cecil.exe' on windows, or `cecil' on Unix.</p>
+
+<p>Launch the program and you will be prompted for a string from Eiffel and a C 
+string will be created and display.</p>
+
+
+<p>A typical output will be:</p>
+
+
+<p class="code">$ cecil<br>
+Enter a string to convert into a C string: <br>
+Hello World!<br>
+<br>
+Here is the C string: <br>
+Hello World!</p>
+
+
+</body>
+
+</html>

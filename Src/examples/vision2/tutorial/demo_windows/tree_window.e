@@ -19,6 +19,7 @@ creation
 	make
 
 feature {NONE} -- Initialization
+
 	make (par: EV_CONTAINER) is
 			-- Create the demo in `par'.
 		local
@@ -84,13 +85,16 @@ feature -- Execution features
 
 	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Execution for an item
+		local
+			item: EV_TREE_ITEM
 		do
-			if tree_item1.parent = tree_item2 then
-				tree_item1.set_parent (tree_item3)
-			elseif tree_item1.parent = tree_item3 then
-				tree_item1.set_parent (Current)
+			item := action_item
+			if item.parent = tree_item2 then
+				item.set_parent (tree_item3)
+			elseif item.parent = tree_item3 then
+				item.set_parent (Current)
 			else
-				tree_item1.set_parent (tree_item2)
+				item.set_parent (tree_item2)
 			end
 		end
 

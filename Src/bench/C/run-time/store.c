@@ -1823,33 +1823,11 @@ rt_private struct cecil_info * cecil_info_for_dynamic_type (uint32 dtype)
 {
 	struct cecil_info *result;
 	struct cnode node = System(dtype);
-	char *l_name;
-	char *l_class_name = node.cn_generator;
-	int l_free_needed = 1;
-
-	if (EIF_NEEDS_EXPANDED_KEYWORD(node)) {
-		l_name = eif_malloc (10 + strlen (l_class_name));
-		l_name [0] = '\0';
-		strcat (l_name, "expanded ");
-		strcat (l_name, l_class_name);
-	} else if (EIF_NEEDS_REFERENCE_KEYWORD(node)) {
-		l_name = eif_malloc (11 + strlen (l_class_name));
-		l_name [0] = '\0';
-		strcat (l_name, "reference ");
-		strcat (l_name, l_class_name);
-	} else {
-		l_name = l_class_name;
-		l_free_needed = 0;
-	}
 
 	if (EIF_IS_EXPANDED_TYPE(node)) {
-		result = (struct cecil_info *) ct_value(&egc_ce_exp_type, l_name);
+		result = (struct cecil_info *) ct_value(&egc_ce_exp_type, node.cn_generator);
 	} else {
-		result = (struct cecil_info *) ct_value(&egc_ce_type, l_name);
-	}
-
-	if (l_free_needed) {
-		eif_free (l_name);
+		result = (struct cecil_info *) ct_value(&egc_ce_type, node.cn_generator);
 	}
 
 	return result;

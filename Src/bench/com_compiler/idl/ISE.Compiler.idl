@@ -1,34 +1,24 @@
-////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+// ISE.Compiler.IDL	    : Interface definitions for COM Compiler
 //
-// ISE.Compiler.idl
-// Definitions for ISE Eiffel COM Compiler
+// Last commit by		: $Author$
+// Date					: $Date$
+// Revision				: $Revision$
 //
-// (c)2002 Eiffel Software
-//
-////////////////////////////////////////////////////////////////////////////////////////
+// Notes				: Interfaces, enums and structs relating to ENViSioN! 2.0
 
-//
-// Header files
-//
-
+// GUID's for type library
 #include "ise_compiler_guid.h"
-
-//
-// Dependant IDL
-//
-
+// Depenancies
 import "oaidl.idl";
 
-
-///////////////////////////////////////////////////////////////////////
-//---------------------------------------------------------------------
-//
-// Forward Declarations
-//
-//---------------------------------------------------------------------
-///////////////////////////////////////////////////////////////////////
+// =========================================================================
+//                                                                 Constants
 
 #define EIFFEL_BASE_DISPID  10000
+
+// =========================================================================
+//                                                      Forward Declarations
 
 interface IEiffelProject;
 interface IEiffelCompletionInfo;
@@ -67,13 +57,8 @@ enum EIF_ASSERTIONS;
 enum EIF_CLUSTER_NAMESPACE_GENERATION;
 
 
-///////////////////////////////////////////////////////////////////////
-//---------------------------------------------------------------------
-//
-// Dispatch Id's
-//
-//---------------------------------------------------------------------
-///////////////////////////////////////////////////////////////////////
+// =========================================================================
+//															   Dispatch Id's
 
 enum
 {
@@ -105,16 +90,19 @@ enum
     DISPID_last_exception,
 
     // IEiffelSystemClusters Dispatch ID's
-    DISPID_cluster_tree,
-    DISPID_flat_clusters,
-    DISPID_store,
-    DISPID_add_cluster,
-    DISPID_remove_cluster,
-    DISPID_cluster_properties,
-    DISPID_cluster_properties_by_id,
-    DISPID_change_cluster_name,
-    DISPID_is_valid_name,
-    DISPID_get_cluster_fullname,
+    DISPID_GetClusterTree,
+    DISPID_GetAllClusters,
+    DISPID_GetClusterProperties,
+    DISPID_GetClusterPropertiesById,
+	DISPID_GetClusterFullName,
+	DISPID_ChangeClusterName,
+    DISPID_AddCluster,
+    DISPID_RemoveCluster,
+	DISPID_StoreClusters,
+	DISPID_IsClusterNameAvailable,
+    DISPID_IsValidClusterName,
+
+	DISPID_store,
 
     // IEiffelSystemAssemblies Dispatch ID's
     DISPID_add_assembly,
@@ -168,14 +156,8 @@ enum
 
 
 
-///////////////////////////////////////////////////////////////////////
-//---------------------------------------------------------------------
-//
-// Enum Declarations
-//
-//---------------------------------------------------------------------
-///////////////////////////////////////////////////////////////////////
-
+// =========================================================================
+//                                                         Enum Declarations
 
 [
     uuid (UUID_EnumEIF_EXCEPTIONS),
@@ -285,14 +267,52 @@ typedef enum EIF_FEATURE_TYPES
     EIF_FEATURE_TYPES_Procedure = 1024
 } EIF_FEATURE_TYPES;
 
+// =========================================================================
+//                                                    Interface Declarations
 
-///////////////////////////////////////////////////////////////////////
+[
+    dual,
+    object,
+    uuid (UUID_IEiffelSystemClusters),
+    helpstring ("Eiffel System Clusters.")
+]
+interface IEiffelSystemClusters: IDispatch
+{
+	[id( DISPID_GetClusterTree ), helpstring( "Retrieve enumerator of clusters in tree form." )]
+	HRESULT GetClusterTree( [out, retval] IEnumClusterProp** ppIEnumClusterProp);
+	
+	[id( DISPID_GetAllClusters ), helpstring( "Retrieve enumerator of all defined clusters." )]
+	HRESULT GetAllClusters( [out, retval] IEnumClusterProp** ppIEnumClusterProp);
+
+	[id( DISPID_GetClusterFullName ), helpstring( "Get a clusters full name from its name." )]
+	HRESULT GetClusterFullName( [in] BSTR bstrName, [out, retval] BSTR* pbstrFullName );
+
+	[id( DISPID_GetClusterProperties ), helpstring( "Retrieve a clusters properties by its name." )]
+    HRESULT GetClusterProperties( [in] BSTR bstrName, [out, retval] IEiffelClusterProperties** ppIEiffelClusterProperties );
+
+	[id( DISPID_GetClusterPropertiesById ), helpstring( "Retrieve a clusters properties by its ID." )]
+    HRESULT GetClusterPropertiesById( [in] ULONG nClusterId, [out, retval] IEiffelClusterProperties** ppIEiffelClusterProperties );
+
+	[id( DISPID_ChangeClusterName ), helpstring( "Change a clusters name." )]
+	HRESULT ChangeClusterName( [in] BSTR bstrName, [in] BSTR bstrNewName );
+
+	[id( DISPID_AddCluster ), helpstring( "Add a cluster to system clusters." )]
+    HRESULT AddCluster( [in] BSTR bstrName, [in] BSTR bstrParentName, [in] BSTR bstrPath);
+
+	[id( DISPID_RemoveCluster ), helpstring( "Remove a cluster from system clusters." )]
+    HRESULT RemoveCluster( [in] BSTR bstrName );
+
+	[id( DISPID_StoreClusters ), helpstring( "Persist current changes to disk" )]
+	HRESULT Store();
+
+	[id( DISPID_IsClusterNameAvailable ), helpstring( "Determins if 'bstrName' is available as a cluster name" )]
+    HRESULT IsClusterNameAvailable( [in] BSTR bstrName, [out, retval] VARIANT_BOOL* pvbAvailable );
+
+	[id( DISPID_IsValidClusterName ), helpstring( "Validates a cluster name" )]
+    HRESULT IsValidClusterName( [in] BSTR bstrName, [out, retval] VARIANT_BOOL* pvbValid );
+};
+
 //---------------------------------------------------------------------
-//
-// Interface Declarations
-//
-//---------------------------------------------------------------------
-///////////////////////////////////////////////////////////////////////
 
 
 [
@@ -454,6 +474,9 @@ interface IEiffelCompiler: IDispatch
 
     [helpstring ("Can product be run? (i.e. is it activated or was run less than 10 times)")]
     HRESULT can_run ([out, retval] VARIANT_BOOL * return_value);
+    
+    [helpstring ("Set state indicating if compiler warnings should be displayed")]
+    HRESULT set_display_warnings ([in] VARIANT_BOOL vbShow);
 };
 //---------------------------------------------------------------------
 
@@ -464,14 +487,26 @@ interface IEiffelCompiler: IDispatch
 ]
 interface IEiffelCompilerEvents: IUnknown
 {
+    [helpstring ("Beginning compilation.")]
+    HRESULT BeginCompile ();
+
+    [helpstring ("Start of new degree phase in compilation.")]
+    HRESULT BeginDegree ([in] LONG ulDegree);
+    
+    [helpstring ("Finished compilation.")]
+    HRESULT EndCompile ([in] VARIANT_BOOL vbSucessful);
+
     [helpstring ("Should compilation continue.")]
-    HRESULT should_continue ([in, out] VARIANT_BOOL * a_boolean);
+    HRESULT ShouldContinue ([in, out] VARIANT_BOOL* pvbContinue);
 
     [helpstring ("Output string.")]
-    HRESULT output_string ([in] BSTR a_string);
+    HRESULT OutputString ([in] BSTR bstrOutput);
 
     [helpstring ("Last error.")]
-    HRESULT last_error ([in] BSTR error_message, [in] BSTR file_name, [in] ULONG line_number);
+    HRESULT OutputError ([in] BSTR bstrFullError, [in] BSTR bstrShortError, [in] BSTR bstrCode, [in] BSTR bstrFileName, [in] ULONG ulLine, [in] ULONG ulCol);
+    
+    [helpstring ("Last warning.")]
+    HRESULT OutputWarning ([in] BSTR bstrFullWarning, [in] BSTR bstrShortWarning, [in] BSTR bstrCode, [in] BSTR bstrFileName, [in] ULONG ulLine, [in] ULONG ulCol);
 };
 //---------------------------------------------------------------------
 [
@@ -1191,46 +1226,7 @@ interface IEiffelProjectProperties: IDispatch
 };
 //---------------------------------------------------------------------
 
-[
-    dual,
-    object,
-    uuid (UUID_IEiffelSystemClusters),
-    helpstring ("Eiffel System Clusters.")
-]
-interface IEiffelSystemClusters: IDispatch
-{
-    [id (DISPID_cluster_tree), helpstring ("Cluster tree.")]
-    HRESULT cluster_tree ([out, retval] IEnumClusterProp ** return_value);
 
-    [id (DISPID_flat_clusters), helpstring ("Cluster in a flat form.")]
-    HRESULT flat_clusters ([out, retval] IEnumClusterProp ** return_value);
-
-    [id (DISPID_store), helpstring ("Save changes.")]
-    HRESULT store ();
-
-    [id (DISPID_add_cluster), helpstring ("Add a cluster to the project.")]
-    HRESULT add_cluster ([in] BSTR cluster_name, [in] BSTR parent_name, [in] BSTR cluster_path);
-
-    [id (DISPID_remove_cluster), helpstring ("Remove a cluster from the project.")]
-    HRESULT remove_cluster ([in] BSTR cluster_name);
-
-    [id (DISPID_cluster_properties), helpstring ("Cluster properties.")]
-    HRESULT cluster_properties ([in] BSTR cluster_name, [out, retval] IEiffelClusterProperties ** return_value);
-
-    [id (DISPID_cluster_properties_by_id), helpstring ("Cluster properties.")]
-    HRESULT cluster_properties_by_id ([in] ULONG cluster_id, [out, retval] IEiffelClusterProperties ** return_value);
-
-    [id (DISPID_change_cluster_name), helpstring ("Change cluster name.")]
-    HRESULT change_cluster_name ([in] BSTR a_name, [in] BSTR a_new_name);
-
-    [id (DISPID_is_valid_name), helpstring ("Checks to see if a cluster name is valid")]
-    HRESULT is_valid_name ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
-
-    [id (DISPID_get_cluster_fullname), helpstring ("Retrieves a clusters full name from its name")]
-    HRESULT get_cluster_fullname ([in] BSTR cluster_name, [out, retval] BSTR * return_value);
-};
-
-//---------------------------------------------------------------------`
 
 [
     dual,
@@ -1437,9 +1433,10 @@ interface IEiffelSystemExternals: IDispatch
 
 [
     uuid (UUID_LibEiffelCompiler),
+    version(2.0),
     helpstring ("Eiffel language compiler library.")
 ]
-library eiffel_compiler
+library EiffelComCompiler
 {
     //
     // Dendant IDL/Type libraries

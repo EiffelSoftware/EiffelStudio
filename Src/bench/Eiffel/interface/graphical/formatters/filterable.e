@@ -44,7 +44,7 @@ feature
 		local
 			full_pathname: FILE_NAME;
 			filter_file: PLAIN_TEXT_FILE;
-			context: FORMAT_CONTEXT;
+			tmp_text: STRUCTURED_TEXT;
 			text_filter: TEXT_FILTER
 		do
 			if filtername.empty then
@@ -57,8 +57,8 @@ feature
 				if filter_file.exists and then filter_file.is_readable then
 					!!text_filter.make_from_filename (full_pathname);
 					file_suffix := text_filter.file_suffix;
-					context := filter_context (stone);
-					text_filter.process_text (context.text);
+					tmp_text := filter_context_text (stone);
+					text_filter.process_text (tmp_text);
 					Result := text_filter.image
 				else
 					warner (text_window).gotcha_call 
@@ -166,7 +166,7 @@ feature
 
 feature {NONE}
 
-	filter_context (stone: STONE): FORMAT_CONTEXT is
+	filter_context_text (stone: STONE): STRUCTURED_TEXT is
 		require
 			not_stone_void: stone /= Void
 		deferred

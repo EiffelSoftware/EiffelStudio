@@ -57,12 +57,19 @@ feature -- Basic Operation
 			end
 			debugging_information.select_actions.extend (agent update_debugging_information)
 			
+			create client_of_window.make_with_text ("Generated code as client of EV_TITLED_WINDOW?")
+			if project_settings.client_of_window then
+				client_of_window.enable_select
+			end
+			client_of_window.select_actions.extend (agent update_client_information)
+			
 			-- Effectively removed from wizard, as it is not very important.
 			-- For now, it can jsut stay here, but if it is really going to be
 			-- removed for good, then just take it out.
 			--choice_box.extend (locals_grouped)
 			choice_box.extend (attributes_local)
 			choice_box.extend (debugging_information)
+			choice_box.extend (client_of_window)
 			set_updatable_entries(<<>>)
 		end		
 
@@ -118,6 +125,17 @@ feature {NONE} -- Implementation
 				project_settings.disable_debugging_output
 			end
 		end
+		
+	update_client_information is
+			-- Update project_Settings based on state of `client_of_window'.
+		do
+			if client_of_window.is_selected then
+				project_settings.enable_client_of_window
+			else
+				project_settings.disable_client_of_window
+			end
+		end
+		
 
 	locals_grouped: EV_CHECK_BUTTON
 		-- Should all local declarations be grouped, or individual?
@@ -128,7 +146,10 @@ feature {NONE} -- Implementation
 	
 	debugging_information: EV_CHECK_BUTTON
 		-- Should debugging information be generated for each
-		-- connected event.
+		-- connected event?
+		
+	client_of_window: EV_CHECK_BUTTON
+		-- Should generated code be a client of EV_WINDOW?
 	
 	project_settings: GB_PROJECT_SETTINGS is
 			-- `Result' is current project settings of the system.

@@ -457,6 +457,8 @@ feature -- Byte code computation
 			byte_code := body.byte_node;
 			byte_code.set_byte_id (i);
 				-- Put it in the temporary byte code server
+			byte_code.set_old_expressions (byte_context.old_expressions);
+			byte_context.clear_old_expressions;
 			Tmp_byte_server.put (byte_code);
 		end;
 
@@ -1177,8 +1179,6 @@ feature -- Byte code access
 
 	access (access_type: TYPE_I): ACCESS_B is
 			-- Byte code access for current feature
-		require
-			access_type_exists: access_type /= Void;
 		local
 			feature_b: FEATURE_B;
 		do

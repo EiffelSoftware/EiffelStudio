@@ -27,113 +27,123 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
+		local 
+			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, 
+			l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, 
+			l_ev_horizontal_box_9, l_ev_horizontal_box_10: EV_HORIZONTAL_BOX
+			l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4, 
+			l_ev_vertical_box_5, l_ev_vertical_box_6: EV_VERTICAL_BOX
+			l_ev_frame_1: EV_FRAME
+			l_ev_cell_1, l_ev_cell_2: EV_CELL
+			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+			l_ev_label_1, l_ev_label_2: EV_LABEL
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
 			
-			create l_horizontal_box_12
-			create l_vertical_box_15
-			create l_horizontal_box_13
-			create l_vertical_box_16
-			create l_horizontal_box_14
+			create l_ev_horizontal_box_1
+			create l_ev_vertical_box_1
+			create l_ev_horizontal_box_2
+			create l_ev_vertical_box_2
+			create l_ev_horizontal_box_3
 			create select_pixmap_button
-			create l_horizontal_box_15
+			create l_ev_horizontal_box_4
 			create select_directory_button
-			create l_horizontal_box_16
-			create l_frame_6
-			create l_vertical_box_17
+			create l_ev_horizontal_box_5
+			create l_ev_frame_1
+			create l_ev_vertical_box_3
 			create pixmap_list
 			create check_buttons_cell
 			create check_buttons_box
-			create l_cell_8
+			create l_ev_cell_1
 			create check_all_button
 			create uncheck_all_button
-			create l_horizontal_box_17
+			create l_ev_horizontal_box_6
 			create pixmap_location_label
 			create pixmap_path_label
 			create built_from_frame
-			create l_vertical_box_18
-			create l_horizontal_box_18
-			create l_vertical_box_19
+			create l_ev_vertical_box_4
+			create l_ev_horizontal_box_7
+			create l_ev_vertical_box_5
 			create absolute_constant_radio_button
 			create absolute_constant_box1
 			create absolute_text
-			create l_horizontal_separator_2
-			create l_horizontal_box_19
+			create l_ev_horizontal_separator_1
+			create l_ev_horizontal_box_8
 			create relative_constant_radio_button
 			create relative_constant_box
-			create l_horizontal_box_20
-			create l_label_7
+			create l_ev_horizontal_box_9
+			create l_ev_label_1
 			create relative_text
-			create l_horizontal_box_21
-			create l_label_8
+			create l_ev_horizontal_box_10
+			create l_ev_label_2
 			create relative_directory_combo
-			create l_vertical_box_20
+			create l_ev_vertical_box_6
 			create ok_button
 			create cancel_button
-			create l_cell_9
+			create l_ev_cell_2
 			
-			extend (l_horizontal_box_12)
-			l_horizontal_box_12.extend (l_vertical_box_15)
-			l_vertical_box_15.extend (l_horizontal_box_13)
-			l_horizontal_box_13.extend (l_vertical_box_16)
-			l_vertical_box_16.extend (l_horizontal_box_14)
-			l_horizontal_box_14.extend (select_pixmap_button)
-			l_vertical_box_16.extend (l_horizontal_box_15)
-			l_horizontal_box_15.extend (select_directory_button)
-			l_vertical_box_15.extend (l_horizontal_box_16)
-			l_horizontal_box_16.extend (l_frame_6)
-			l_frame_6.extend (l_vertical_box_17)
-			l_vertical_box_17.extend (pixmap_list)
-			l_vertical_box_17.extend (check_buttons_cell)
-			l_vertical_box_17.extend (check_buttons_box)
-			check_buttons_box.extend (l_cell_8)
+			extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (select_pixmap_button)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (select_directory_button)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_5)
+			l_ev_horizontal_box_5.extend (l_ev_frame_1)
+			l_ev_frame_1.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (pixmap_list)
+			l_ev_vertical_box_3.extend (check_buttons_cell)
+			l_ev_vertical_box_3.extend (check_buttons_box)
+			check_buttons_box.extend (l_ev_cell_1)
 			check_buttons_box.extend (check_all_button)
 			check_buttons_box.extend (uncheck_all_button)
-			l_vertical_box_15.extend (l_horizontal_box_17)
-			l_horizontal_box_17.extend (pixmap_location_label)
-			l_horizontal_box_17.extend (pixmap_path_label)
-			l_vertical_box_15.extend (built_from_frame)
-			built_from_frame.extend (l_vertical_box_18)
-			l_vertical_box_18.extend (l_horizontal_box_18)
-			l_horizontal_box_18.extend (l_vertical_box_19)
-			l_vertical_box_19.extend (absolute_constant_radio_button)
-			l_horizontal_box_18.extend (absolute_constant_box1)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_6)
+			l_ev_horizontal_box_6.extend (pixmap_location_label)
+			l_ev_horizontal_box_6.extend (pixmap_path_label)
+			l_ev_vertical_box_1.extend (built_from_frame)
+			built_from_frame.extend (l_ev_vertical_box_4)
+			l_ev_vertical_box_4.extend (l_ev_horizontal_box_7)
+			l_ev_horizontal_box_7.extend (l_ev_vertical_box_5)
+			l_ev_vertical_box_5.extend (absolute_constant_radio_button)
+			l_ev_horizontal_box_7.extend (absolute_constant_box1)
 			absolute_constant_box1.extend (absolute_text)
-			l_vertical_box_18.extend (l_horizontal_separator_2)
-			l_vertical_box_18.extend (l_horizontal_box_19)
-			l_horizontal_box_19.extend (relative_constant_radio_button)
-			l_horizontal_box_19.extend (relative_constant_box)
-			relative_constant_box.extend (l_horizontal_box_20)
-			l_horizontal_box_20.extend (l_label_7)
-			l_horizontal_box_20.extend (relative_text)
-			relative_constant_box.extend (l_horizontal_box_21)
-			l_horizontal_box_21.extend (l_label_8)
-			l_horizontal_box_21.extend (relative_directory_combo)
-			l_horizontal_box_12.extend (l_vertical_box_20)
-			l_vertical_box_20.extend (ok_button)
-			l_vertical_box_20.extend (cancel_button)
-			l_vertical_box_20.extend (l_cell_9)
+			l_ev_vertical_box_4.extend (l_ev_horizontal_separator_1)
+			l_ev_vertical_box_4.extend (l_ev_horizontal_box_8)
+			l_ev_horizontal_box_8.extend (relative_constant_radio_button)
+			l_ev_horizontal_box_8.extend (relative_constant_box)
+			relative_constant_box.extend (l_ev_horizontal_box_9)
+			l_ev_horizontal_box_9.extend (l_ev_label_1)
+			l_ev_horizontal_box_9.extend (relative_text)
+			relative_constant_box.extend (l_ev_horizontal_box_10)
+			l_ev_horizontal_box_10.extend (l_ev_label_2)
+			l_ev_horizontal_box_10.extend (relative_directory_combo)
+			l_ev_horizontal_box_1.extend (l_ev_vertical_box_6)
+			l_ev_vertical_box_6.extend (ok_button)
+			l_ev_vertical_box_6.extend (cancel_button)
+			l_ev_vertical_box_6.extend (l_ev_cell_2)
 			
 			set_title (pixmap_settings_dialog_title)
-			l_horizontal_box_12.set_padding_width (10)
-			l_horizontal_box_12.set_border_width (10)
-			l_horizontal_box_12.disable_item_expand (l_vertical_box_20)
-			l_vertical_box_15.set_padding_width (5)
-			l_vertical_box_15.disable_item_expand (l_horizontal_box_13)
-			l_vertical_box_15.disable_item_expand (l_horizontal_box_17)
-			l_vertical_box_15.disable_item_expand (built_from_frame)
-			l_horizontal_box_13.disable_item_expand (l_vertical_box_16)
-			l_vertical_box_16.set_padding_width (10)
-			l_vertical_box_16.disable_item_expand (l_horizontal_box_14)
-			l_vertical_box_16.disable_item_expand (l_horizontal_box_15)
+			l_ev_horizontal_box_1.set_padding_width (10)
+			l_ev_horizontal_box_1.set_border_width (10)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_6)
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_6)
+			l_ev_vertical_box_1.disable_item_expand (built_from_frame)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.set_padding_width (10)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_3)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_4)
 			select_pixmap_button.set_text ("Select Individual ...")
 			select_directory_button.set_text ("Select Directory...")
-			l_frame_6.set_minimum_width (150)
-			l_frame_6.set_minimum_height (150)
-			l_vertical_box_17.set_border_width (small_padding)
-			l_vertical_box_17.disable_item_expand (check_buttons_cell)
-			l_vertical_box_17.disable_item_expand (check_buttons_box)
+			l_ev_frame_1.set_minimum_width (150)
+			l_ev_frame_1.set_minimum_height (150)
+			l_ev_vertical_box_3.set_border_width (small_padding)
+			l_ev_vertical_box_3.disable_item_expand (check_buttons_cell)
+			l_ev_vertical_box_3.disable_item_expand (check_buttons_box)
 			check_buttons_cell.set_minimum_height (small_padding)
 			check_buttons_box.set_padding_width (small_padding)
 			check_buttons_box.disable_item_expand (check_all_button)
@@ -142,30 +152,30 @@ feature {NONE}-- Initialization
 			check_all_button.set_tooltip ("Check all items, for inclusion as new pixmap constants")
 			uncheck_all_button.set_text ("Uncheck all")
 			uncheck_all_button.set_tooltip ("Uncheck all items")
-			l_horizontal_box_17.disable_item_expand (pixmap_location_label)
+			l_ev_horizontal_box_6.disable_item_expand (pixmap_location_label)
 			pixmap_location_label.disable_sensitive
 			pixmap_location_label.set_text ("Pixmap location")
 			pixmap_location_label.align_text_left
 			built_from_frame.disable_sensitive
 			built_from_frame.set_text ("Built from")
-			l_vertical_box_18.set_padding_width (5)
-			l_horizontal_box_18.disable_item_expand (l_vertical_box_19)
-			l_vertical_box_19.disable_item_expand (absolute_constant_radio_button)
-			l_horizontal_box_19.merge_radio_button_groups (l_vertical_box_19)
+			l_ev_vertical_box_4.set_padding_width (5)
+			l_ev_horizontal_box_7.disable_item_expand (l_ev_vertical_box_5)
+			l_ev_vertical_box_5.disable_item_expand (absolute_constant_radio_button)
+			l_ev_horizontal_box_8.merge_radio_button_groups (l_ev_vertical_box_5)
 			absolute_constant_radio_button.set_text ("Absolute PIXMAP constant named")
 			absolute_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
-			l_horizontal_box_19.disable_item_expand (relative_constant_radio_button)
-			l_vertical_box_19.merge_radio_button_groups (l_horizontal_box_19)
+			l_ev_horizontal_box_8.disable_item_expand (relative_constant_radio_button)
+			l_ev_vertical_box_5.merge_radio_button_groups (l_ev_horizontal_box_8)
 			relative_constant_box.set_padding_width (5)
-			l_horizontal_box_20.disable_item_expand (l_label_7)
-			l_label_7.set_text ("Relative PIXMAP constant named:")
+			l_ev_horizontal_box_9.disable_item_expand (l_ev_label_1)
+			l_ev_label_1.set_text ("Relative PIXMAP constant named:")
 			relative_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
-			l_horizontal_box_21.set_padding_width (5)
-			l_horizontal_box_21.disable_item_expand (l_label_8)
-			l_label_8.set_text ("Comprised of DIRECTORY: ")
-			l_vertical_box_20.set_padding_width (10)
-			l_vertical_box_20.disable_item_expand (ok_button)
-			l_vertical_box_20.disable_item_expand (cancel_button)
+			l_ev_horizontal_box_10.set_padding_width (5)
+			l_ev_horizontal_box_10.disable_item_expand (l_ev_label_2)
+			l_ev_label_2.set_text ("Comprised of DIRECTORY: ")
+			l_ev_vertical_box_6.set_padding_width (10)
+			l_ev_vertical_box_6.disable_item_expand (ok_button)
+			l_ev_vertical_box_6.disable_item_expand (cancel_button)
 			ok_button.disable_sensitive
 			ok_button.set_text (ok_button_text)
 			ok_button.set_minimum_width (default_button_width)
@@ -191,6 +201,20 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
+feature -- Access
+
+	select_pixmap_button, select_directory_button, check_all_button, uncheck_all_button, 
+	ok_button, cancel_button: EV_BUTTON
+	pixmap_list: EV_CHECKABLE_LIST
+	check_buttons_cell: EV_CELL
+	check_buttons_box, absolute_constant_box1: EV_HORIZONTAL_BOX
+	pixmap_location_label, pixmap_path_label: EV_LABEL
+	built_from_frame: EV_FRAME
+	absolute_constant_radio_button, relative_constant_radio_button: EV_RADIO_BUTTON
+	absolute_text, relative_text: EV_TEXT_FIELD
+	relative_constant_box: EV_VERTICAL_BOX
+	relative_directory_combo: EV_COMBO_BOX
+
 feature {NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN is
@@ -205,22 +229,6 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
-	l_horizontal_box_12, l_horizontal_box_13, l_horizontal_box_14, l_horizontal_box_15, 
-	l_horizontal_box_16, check_buttons_box, l_horizontal_box_17, l_horizontal_box_18, 
-	absolute_constant_box1, l_horizontal_box_19, l_horizontal_box_20, l_horizontal_box_21: EV_HORIZONTAL_BOX
-	l_vertical_box_15, l_vertical_box_16, l_vertical_box_17, l_vertical_box_18, l_vertical_box_19, 
-	relative_constant_box, l_vertical_box_20: EV_VERTICAL_BOX
-	select_pixmap_button, select_directory_button, check_all_button, uncheck_all_button, 
-	ok_button, cancel_button: EV_BUTTON
-	l_frame_6, built_from_frame: EV_FRAME
-	pixmap_list: EV_CHECKABLE_LIST
-	check_buttons_cell, l_cell_8, l_cell_9: EV_CELL
-	pixmap_location_label, pixmap_path_label, l_label_7, l_label_8: EV_LABEL
-	absolute_constant_radio_button, relative_constant_radio_button: EV_RADIO_BUTTON
-	absolute_text, relative_text: EV_TEXT_FIELD
-	l_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
-	relative_directory_combo: EV_COMBO_BOX
 	
 	select_pixmap_pressed is
 			-- Called by `select_actions' of `select_pixmap_button'.

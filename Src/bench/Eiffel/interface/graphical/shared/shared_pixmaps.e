@@ -23,6 +23,11 @@ feature -- Access
 			Result := pixmap_file_content ("clr_bp");
 		end;
 
+	bm_Graph: PIXMAP is
+		once
+			Result := pixmap_file_content ("graph");
+		end;
+
 	bm_graphical_Breakablepoint: PIXMAP is
 		once
 			Result := pixmap_file_content ("gbreakpt");
@@ -78,6 +83,378 @@ feature -- Access
 		once
 			Result := pixmap_file_content ("current")
 		end;
+
+	bm_Debug_quit: PIXMAP is
+		once
+			Result := pixmap_file_content ("dbgquit");
+		end;
+
+	bm_Debug_run: PIXMAP is
+		once
+			Result := pixmap_file_content ("dbgrun");
+		end;
+
+	bm_Debug_status: PIXMAP is
+		once
+			Result := pixmap_file_content ("dbgstatu");
+		end;
+
+	bm_Debug_step: PIXMAP is
+		once
+			Result := pixmap_file_content ("dbgstep");
+		end;
+
+	bm_Down_stack: PIXMAP is
+		once
+			Result := pixmap_file_content ("dn_stack");
+		end;
+
+	bm_Exec_last: PIXMAP is
+		once
+			Result := pixmap_file_content ("execlast");
+		end;
+
+	bm_Exec_nostop: PIXMAP is
+		once
+			Result := pixmap_file_content ("execnost");
+		end;
+
+	bm_Exec_step: PIXMAP is
+		once
+			Result := pixmap_file_content ("execstep");
+		end;
+
+	bm_Exec_stop: PIXMAP is
+		once
+			Result := pixmap_file_content ("execstop");
+		end;
+
+	bm_Explain: PIXMAP is
+		once
+			Result := pixmap_file_content ("explain");
+		end;
+
+	bm_Explain_dot: PIXMAP is
+		once
+			Result := pixmap_file_content ("expldot");
+		end;
+
+	bm_Explain_icon: PIXMAP is
+		once
+			Result := pixmap_file_content ("explicon");
+		end;
+
+	bm_Filter: PIXMAP is
+		once
+			Result := pixmap_file_content ("filter");
+		end;
+
+	bm_General: PIXMAP is
+		once
+			Result := pixmap_file_content ("general");
+		end;
+
+	bm_Hide_object: PIXMAP is
+		once
+			Result := pixmap_file_content ("obj_up")
+		end;
+
+	bm_Hide_routine: PIXMAP is
+		once
+			Result := pixmap_file_content ("rout_up")
+		end;
+
+	bm_Next_target: PIXMAP is
+		once
+			Result := pixmap_file_content ("histfort")
+		end;
+
+	bm_Object: PIXMAP is
+		once
+			Result := pixmap_file_content ("object");
+		end;
+
+	bm_Object_dot: PIXMAP is
+		once
+			Result := pixmap_file_content ("objdot");
+		end;
+
+	bm_Object_icon: PIXMAP is
+		once
+			Result := pixmap_file_content ("objicon");
+		end;
+
+	bm_Object_inv: PIXMAP is
+		once
+			Result := pixmap_file_content ("objinv");
+		end;
+
+	bm_Open: PIXMAP is
+		once
+			Result := pixmap_file_content ("open");
+		end;
+
+	bm_Preference_project: PIXMAP is
+		once
+			Result := pixmap_file_content ("project");
+		end;
+
+	bm_Previous_target: PIXMAP is
+		once
+			Result := pixmap_file_content ("histback")
+		end;
+
+	bm_Profiler: PIXMAP is
+		once
+			Result := pixmap_file_content ("profiler");
+		end;
+
+	bm_Project: PIXMAP is
+		once
+			Result := pixmap_file_content ("tower");
+		end;
+
+	bm_Project_icon: PIXMAP is
+		once
+			Result := pixmap_file_content ("projicon");
+		end;
+
+	bm_Quick_update: PIXMAP is
+		once
+			Result := pixmap_file_content ("qupdate");
+		end;
+
+	bm_Quit: PIXMAP is
+		once
+			Result := pixmap_file_content ("quit");
+		end;
+
+	bm_Routine: PIXMAP is
+		once
+			Result := pixmap_file_content ("routine");
+		end;
+
+	bm_Routine_dot: PIXMAP is
+		once
+			Result := pixmap_file_content ("routdot");
+		end;
+
+	bm_Routine_icon: PIXMAP is
+		once
+			Result := pixmap_file_content ("routicon");
+		end;
+
+	bm_Run: PIXMAP is
+		once
+			Result := pixmap_file_content ("run");
+		end;
+
+	bm_Save: PIXMAP is
+		once
+			Result := pixmap_file_content ("save");
+		end;
+
+	bm_Save_as: PIXMAP is
+		once
+			Result := pixmap_file_content ("save_as");
+		end;
+
+	bm_Search: PIXMAP is
+		once
+			Result := pixmap_file_content ("search");
+		end;
+	
+	bm_Setstop: PIXMAP is
+		once
+			Result := pixmap_file_content ("setstop");
+		end;
+
+	bm_Shell: PIXMAP is
+		once
+			Result := pixmap_file_content ("shell");
+		end;
+	
+	bm_Showaversions: PIXMAP is
+		once
+			Result := pixmap_file_content ("saversio");
+		end;
+
+	bm_Showdversions: PIXMAP is
+		once
+			Result := pixmap_file_content ("sdversio");
+		end;
+
+	bm_Showancestors: PIXMAP is
+		once
+			Result := pixmap_file_content ("sancesto");
+		end;
+
+	bm_Showhistory: PIXMAP is
+		once
+			Result := pixmap_file_content ("shistory");
+		end;
+
+	bm_Showindexing: PIXMAP is
+		once
+			Result := pixmap_file_content ("sindexin");
+		end;
+
+	bm_Showattributes: PIXMAP is
+		once
+			Result := pixmap_file_content ("sattribu");
+		end;
+
+	bm_Showcallers: PIXMAP is
+		once
+			Result := pixmap_file_content ("scallers");
+		end;
+
+	bm_Showclass_list: PIXMAP is
+		once
+			Result := pixmap_file_content ("sclasses");
+		end;
+
+	bm_Showclients: PIXMAP is
+		once
+			Result := pixmap_file_content ("sclients");
+		end;
+
+	bm_Showclusters: PIXMAP is
+		once
+			Result := pixmap_file_content ("scluster");
+		end;
+
+	bm_Showdeferreds: PIXMAP is
+		once
+			Result := pixmap_file_content ("sdeferre");
+		end;
+
+	bm_Showdescendants: PIXMAP is
+		once
+			Result := pixmap_file_content ("sdescend");
+		end;
+
+	bm_Showexported: PIXMAP is
+		once
+			Result := pixmap_file_content ("sexporte");
+		end;
+
+	bm_Showexternals: PIXMAP is
+		once
+			Result := pixmap_file_content ("sexterna");
+		end;
+
+	bm_Showflat: PIXMAP is
+		once
+			Result := pixmap_file_content ("sflat");
+		end;
+
+	bm_Showfs: PIXMAP is
+		once
+			Result := pixmap_file_content ("sfshort");
+		end;
+
+	bm_Showcluster_hier_list: PIXMAP is
+		once
+			Result := pixmap_file_content ("scluhier");
+		end;
+
+	bm_Showmodified: PIXMAP is
+		once
+			Result := pixmap_file_content ("smodifie");
+		end;
+
+	bm_Showonces: PIXMAP is
+		once
+			Result := pixmap_file_content ("sonces");
+		end;
+
+	bm_Showroutines: PIXMAP is
+		once
+			Result := pixmap_file_content ("sroutine");
+		end;
+
+	bm_Showshort: PIXMAP is
+		once
+			Result := pixmap_file_content ("sshort");
+		end;
+
+	bm_Showstatistics: PIXMAP is
+		once
+			Result := pixmap_file_content ("sstatist");
+		end;
+
+	bm_Showstops: PIXMAP is
+		once
+			Result := pixmap_file_content ("sstops");
+		end;
+
+	bm_Showsuppliers: PIXMAP is
+		once
+			Result := pixmap_file_content ("ssupplie");
+		end;
+
+	bm_Showhomonyms: PIXMAP is
+		once
+			Result := pixmap_file_content ("shomonym");
+		end;
+
+	bm_Showtext: PIXMAP is
+		once
+			Result := pixmap_file_content ("stext");
+		end;
+
+	bm_Show_object: PIXMAP is
+		once
+			Result := pixmap_file_content ("obj_down")
+		end;
+
+	bm_Show_routine: PIXMAP is
+		once
+			Result := pixmap_file_content ("routdown")
+		end;
+
+	bm_Slice: PIXMAP is
+		once
+			Result := pixmap_file_content ("slice")
+		end;
+
+	bm_Step: PIXMAP is
+		once
+			Result := pixmap_file_content ("step");
+		end;
+
+	bm_System: PIXMAP is
+		once
+			Result := pixmap_file_content ("system");
+		end;
+
+	bm_System_dot: PIXMAP is
+		once
+			Result := pixmap_file_content ("systdot");
+		end;
+
+	bm_System_icon: PIXMAP is
+		once
+			Result := pixmap_file_content ("systicon");
+		end;
+
+	bm_Update: PIXMAP is
+		once
+			Result := pixmap_file_content ("update");
+		end;
+
+	bm_Up_stack: PIXMAP is
+		once
+			Result := pixmap_file_content ("up_stack");
+		end;
+
+	bm_default: PIXMAP is
+		once
+			Result := pixmap_file_content ("default");
+		end;
+
+feature -- Obsolete pixmaps (keep this routines around till 3.5 even though they are not used)
 
 	bm_Dark_breakpoint: PIXMAP is
 		once
@@ -262,356 +639,6 @@ feature -- Access
 	bm_Dark_system: PIXMAP is
 		once
 			Result := pixmap_file_content ("dsystem");
-		end;
-
-	bm_Debug_quit: PIXMAP is
-		once
-			Result := pixmap_file_content ("dbgquit");
-		end;
-
-	bm_Debug_run: PIXMAP is
-		once
-			Result := pixmap_file_content ("dbgrun");
-		end;
-
-	bm_Debug_status: PIXMAP is
-		once
-			Result := pixmap_file_content ("dbgstatu");
-		end;
-
-	bm_Debug_step: PIXMAP is
-		once
-			Result := pixmap_file_content ("dbgstep");
-		end;
-
-	bm_Down_stack: PIXMAP is
-		once
-			Result := pixmap_file_content ("dn_stack");
-		end;
-
-	bm_Exec_last: PIXMAP is
-		once
-			Result := pixmap_file_content ("execlast");
-		end;
-
-	bm_Exec_nostop: PIXMAP is
-		once
-			Result := pixmap_file_content ("execnost");
-		end;
-
-	bm_Exec_step: PIXMAP is
-		once
-			Result := pixmap_file_content ("execstep");
-		end;
-
-	bm_Exec_stop: PIXMAP is
-		once
-			Result := pixmap_file_content ("execstop");
-		end;
-
-	bm_Explain: PIXMAP is
-		once
-			Result := pixmap_file_content ("explain");
-		end;
-
-	bm_Explain_dot: PIXMAP is
-		once
-			Result := pixmap_file_content ("expldot");
-		end;
-
-	bm_Explain_icon: PIXMAP is
-		once
-			Result := pixmap_file_content ("explicon");
-		end;
-
-	bm_Filter: PIXMAP is
-		once
-			Result := pixmap_file_content ("filter");
-		end;
-
-	bm_Hide_object: PIXMAP is
-		once
-			Result := pixmap_file_content ("obj_up")
-		end;
-
-	bm_Hide_routine: PIXMAP is
-		once
-			Result := pixmap_file_content ("rout_up")
-		end;
-
-	bm_Next_target: PIXMAP is
-		once
-			Result := pixmap_file_content ("histfort")
-		end;
-
-	bm_Object: PIXMAP is
-		once
-			Result := pixmap_file_content ("object");
-		end;
-
-	bm_Object_dot: PIXMAP is
-		once
-			Result := pixmap_file_content ("objdot");
-		end;
-
-	bm_Object_icon: PIXMAP is
-		once
-			Result := pixmap_file_content ("objicon");
-		end;
-
-	bm_Object_inv: PIXMAP is
-		once
-			Result := pixmap_file_content ("objinv");
-		end;
-
-	bm_Open: PIXMAP is
-		once
-			Result := pixmap_file_content ("open");
-		end;
-
-	bm_Preference_project: PIXMAP is
-		once
-			Result := pixmap_file_content ("project");
-		end;
-
-	bm_Previous_target: PIXMAP is
-		once
-			Result := pixmap_file_content ("histback")
-		end;
-
-	bm_Project: PIXMAP is
-		once
-			Result := pixmap_file_content ("tower");
-		end;
-
-	bm_Project_icon: PIXMAP is
-		once
-			Result := pixmap_file_content ("projicon");
-		end;
-
-	bm_Quit: PIXMAP is
-		once
-			Result := pixmap_file_content ("quit");
-		end;
-
-	bm_Routine: PIXMAP is
-		once
-			Result := pixmap_file_content ("routine");
-		end;
-
-	bm_Routine_dot: PIXMAP is
-		once
-			Result := pixmap_file_content ("routdot");
-		end;
-
-	bm_Routine_icon: PIXMAP is
-		once
-			Result := pixmap_file_content ("routicon");
-		end;
-
-	bm_Run: PIXMAP is
-		once
-			Result := pixmap_file_content ("run");
-		end;
-
-	bm_Save: PIXMAP is
-		once
-			Result := pixmap_file_content ("save");
-		end;
-
-	bm_Save_as: PIXMAP is
-		once
-			Result := pixmap_file_content ("save_as");
-		end;
-
-	bm_Search: PIXMAP is
-		once
-			Result := pixmap_file_content ("search");
-		end;
-	
-	bm_Setstop: PIXMAP is
-		once
-			Result := pixmap_file_content ("setstop");
-		end;
-
-	bm_Shell: PIXMAP is
-		once
-			Result := pixmap_file_content ("shell");
-		end;
-	
-	bm_Showaversions: PIXMAP is
-		once
-			Result := pixmap_file_content ("saversio");
-		end;
-
-	bm_Showdversions: PIXMAP is
-		once
-			Result := pixmap_file_content ("sdversio");
-		end;
-
-	bm_Showancestors: PIXMAP is
-		once
-			Result := pixmap_file_content ("sancesto");
-		end;
-
-	bm_Showhistory: PIXMAP is
-		once
-			Result := pixmap_file_content ("shistory");
-		end;
-
-	bm_Showindexing: PIXMAP is
-		once
-			Result := pixmap_file_content ("sindexin");
-		end;
-
-	bm_Showattributes: PIXMAP is
-		once
-			Result := pixmap_file_content ("sattribu");
-		end;
-
-	bm_Showcallers: PIXMAP is
-		once
-			Result := pixmap_file_content ("scallers");
-		end;
-
-	bm_Showclass_list: PIXMAP is
-		once
-			Result := pixmap_file_content ("sclasses");
-		end;
-
-	bm_Showclients: PIXMAP is
-		once
-			Result := pixmap_file_content ("sclients");
-		end;
-
-	bm_Showclusters: PIXMAP is
-		once
-			Result := pixmap_file_content ("scluster");
-		end;
-
-	bm_Showdeferreds: PIXMAP is
-		once
-			Result := pixmap_file_content ("sdeferre");
-		end;
-
-	bm_Showdescendants: PIXMAP is
-		once
-			Result := pixmap_file_content ("sdescend");
-		end;
-
-	bm_Showexported: PIXMAP is
-		once
-			Result := pixmap_file_content ("sexporte");
-		end;
-
-	bm_Showexternals: PIXMAP is
-		once
-			Result := pixmap_file_content ("sexterna");
-		end;
-
-	bm_Showflat: PIXMAP is
-		once
-			Result := pixmap_file_content ("sflat");
-		end;
-
-	bm_Showfs: PIXMAP is
-		once
-			Result := pixmap_file_content ("sfshort");
-		end;
-
-	bm_Showmodified: PIXMAP is
-		once
-			Result := pixmap_file_content ("smodifie");
-		end;
-
-	bm_Showonces: PIXMAP is
-		once
-			Result := pixmap_file_content ("sonces");
-		end;
-
-	bm_Showroutines: PIXMAP is
-		once
-			Result := pixmap_file_content ("sroutine");
-		end;
-
-	bm_Showshort: PIXMAP is
-		once
-			Result := pixmap_file_content ("sshort");
-		end;
-
-	bm_Showstatistics: PIXMAP is
-		once
-			Result := pixmap_file_content ("sstatist");
-		end;
-
-	bm_Showstops: PIXMAP is
-		once
-			Result := pixmap_file_content ("sstops");
-		end;
-
-	bm_Showsuppliers: PIXMAP is
-		once
-			Result := pixmap_file_content ("ssupplie");
-		end;
-
-	bm_Showhomonyms: PIXMAP is
-		once
-			Result := pixmap_file_content ("shomonym");
-		end;
-
-	bm_Showtext: PIXMAP is
-		once
-			Result := pixmap_file_content ("stext");
-		end;
-
-	bm_Show_object: PIXMAP is
-		once
-			Result := pixmap_file_content ("obj_down")
-		end;
-
-	bm_Show_routine: PIXMAP is
-		once
-			Result := pixmap_file_content ("routdown")
-		end;
-
-	bm_Slice: PIXMAP is
-		once
-			Result := pixmap_file_content ("slice")
-		end;
-
-	bm_Step: PIXMAP is
-		once
-			Result := pixmap_file_content ("step");
-		end;
-
-	bm_System: PIXMAP is
-		once
-			Result := pixmap_file_content ("system");
-		end;
-
-	bm_System_dot: PIXMAP is
-		once
-			Result := pixmap_file_content ("systdot");
-		end;
-
-	bm_System_icon: PIXMAP is
-		once
-			Result := pixmap_file_content ("systicon");
-		end;
-
-	bm_Update: PIXMAP is
-		once
-			Result := pixmap_file_content ("update");
-		end;
-
-	bm_Up_stack: PIXMAP is
-		once
-			Result := pixmap_file_content ("up_stack");
-		end;
-
-	bm_default: PIXMAP is
-		once
-			Result := pixmap_file_content ("default");
 		end;
 
 feature {NONE} -- Update

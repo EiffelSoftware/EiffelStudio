@@ -12,7 +12,8 @@ inherit
 		undefine
 			same_as
 		redefine
-			class_name, generics, is_deep_equal
+			class_name, generics, is_deep_equal,
+			associated_eiffel_class, append_to
 		end;
 
 	TYPE_B
@@ -20,12 +21,11 @@ inherit
 			is_deep_equal, has_like, simple_format
 		redefine
 			format, fill_calls_list, replicate,
-			check_constraint_type, solved_type_for_format
+			check_constraint_type, solved_type_for_format,
+			append_to
 		end;
 
 	SHARED_INST_CONTEXT;
-
-	STONABLE
 
 feature -- Attributes
 
@@ -159,18 +159,30 @@ feature -- Conveniences
 	record_exp_dependance (a_class: CLASS_C) is
 		local
 			d: DEPEND_UNIT;
-			f: FEATURE_I
+			f: FEATURE_I;
+			c_class: CLASS_C
 		do
-			System.current_class.set_has_expanded;
-			a_class.set_is_used_as_expanded
-			if System.in_pass3 then
-				!!d.make (a_class.id, -2);
-				context.supplier_ids.extend (d);
-				f := a_class.creation_feature;
-				if f /= Void then
-					!!d.make (a_class.id, f.feature_id);
+			c_class := System.current_class;
+			if c_class /= Void then
+-- *** FIXME ****
+-- This was done since actual_type is called on the generic
+-- parameters when the signature of the class is requested.
+-- This approach seems ok but the FIXME is to make YOU
+-- aware that there could be potential problems.
+				-- Only mark the class if it is used during a
+				-- compilation not when querying the actual
+				-- type
+				c_class.set_has_expanded;
+				a_class.set_is_used_as_expanded
+				if System.in_pass3 then
+					!!d.make (a_class.id, -2);
 					context.supplier_ids.extend (d);
-				end;
+					f := a_class.creation_feature;
+					if f /= Void then
+						!!d.make (a_class.id, f.feature_id);
+						context.supplier_ids.extend (d);
+					end;
+				end
 			end;
 		end;
 
@@ -186,7 +198,7 @@ feature -- Conveniences
 		do
 			a_cluster := Inst_context.cluster;
 			a_class_i := Universe.class_named (class_name, a_cluster);
-				-- Bug fix: `append_clickable_signature' can be called on invalid
+				-- Bug fix: `append_signature' can be called on invalid
 				-- types by the error mechanism
 			if a_class_i /= Void then
 				if generics = Void then
@@ -299,21 +311,64 @@ feature -- Conveniences
 			end;
 		end;
 
-feature -- Stoning
- 
-	stone (reference_class: E_CLASS): CLASSC_STONE is
+feature -- Output
+
+	append_to (ow: OUTPUT_WINDOW) is
 		local
-			aclassi: CLASS_I
+			class_c: CLASS_C;
+			e_class: E_CLASS;
+			class_i: CLASS_I;
+			c_name: STRING
+		do
+			c_name := clone (class_name);
+			c_name.to_lower;
+			class_c := System.current_class;
+			if class_c /= Void then
+				class_i := Universe.class_named (c_name, class_c.cluster)
+			else
+				class_i := Universe.class_with_name (c_name)
+			end;
+			c_name.to_upper;
+			if class_i = Void then
+				ow.put_string (c_name);
+			else
+				e_class := class_i.compiled_eclass;
+				if e_class /= Void then
+					ow.put_class (e_class, c_name)
+				else
+					ow.put_classi (class_i, c_name)
+				end
+			end;
+			if generics /= Void then
+				from
+					generics.start;
+					ow.put_string (" [");
+				until
+					generics.after
+				loop
+					generics.item.append_to (ow);
+					if not generics.islast then
+						ow.put_string (", ");
+					end;
+					generics.forth;
+				end;
+				ow.put_string ("]");
+			end;
+		end;
+ 
+	associated_eiffel_class (reference_class: E_CLASS): E_CLASS is
+		local
+			aclassi: CLASS_I;
+			eclass: E_CLASS
 		do
 				-- Check if we can find the class in the cluster.
 				-- If the class is not compiled anymore (or doesnot
 				-- exist at all), the resulting stone will not be
 				-- valid (`is_valid' = false because `class_c' = Void).
-			aclassi := Universe.class_named (class_name, reference_class.cluster);
+			aclassi := Universe.class_named 
+						(class_name, reference_class.cluster);
 			if aclassi /= Void then
-				!!Result.make (aclassi.compiled_eclass)
-			else
-				!!Result.make (Void)
+				Result := aclassi.compiled_eclass
 			end
 		end;
 

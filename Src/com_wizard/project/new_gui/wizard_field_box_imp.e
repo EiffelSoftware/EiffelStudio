@@ -45,7 +45,7 @@ feature {NONE}-- Initialization
 			disable_item_expand (field_combo)
 			
 				--Connect events.
-			field_combo.select_actions.extend (agent on_return)
+			field_combo.select_actions.extend (agent on_select)
 			field_combo.change_actions.extend (agent on_change)
 			field_combo.return_actions.extend (agent on_return)
 			field_combo.focus_in_actions.extend (agent on_mouse_enter)
@@ -77,13 +77,18 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_return is
+	on_select is
 			-- Called by `select_actions' of `field_combo'.
 		deferred
 		end
 	
 	on_change is
 			-- Called by `change_actions' of `field_combo'.
+		deferred
+		end
+	
+	on_return is
+			-- Called by `return_actions' of `field_combo'.
 		deferred
 		end
 	

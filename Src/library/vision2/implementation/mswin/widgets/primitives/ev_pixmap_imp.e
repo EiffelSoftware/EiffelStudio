@@ -37,11 +37,9 @@ feature {NONE} -- Initialization
 			!! screen
 			screen.get
 			!! internal_dc.make_by_dc (screen)
---			internal_dc.set_background_opaque
 			!! bmp.make_compatible (screen, 1, 1)
 			internal_dc.select_bitmap (bmp)
 			screen.release
-			is_free := True
 		end
 
 	make_with_size (w, h: INTEGER) is
@@ -64,7 +62,6 @@ feature {NONE} -- Initialization
 			!! color.make_rgb (0, 0, 0)
 			set_foreground_color (color)
 			clear
-			is_free := True
 		end
 
 feature -- Access
@@ -90,10 +87,6 @@ feature -- Status report
 			Result := (bitmap = Void)
 		end
 
-	is_free: BOOLEAN
-			-- Is the pixmap free and then can be added in a
-			-- control?
-
 feature -- Status setting
 
 	destroy is
@@ -102,12 +95,6 @@ feature -- Status setting
 			internal_dc.delete
 			internal_dc := Void
 			internal_bitmap := Void
-		end
-
-	set_free_status (flag: BOOLEAN) is
-			-- Make the pixmap free.
-		do
-			is_free := flag
 		end
 
 feature -- Measurement
@@ -122,6 +109,27 @@ feature -- Measurement
 			-- Height of the pixmap.
 		do
 			Result := bitmap.height
+		end
+
+feature -- Status setting
+
+	reference is
+			-- Reference the current pixmap.
+		do
+			if internal_ref = 0 then
+				internal_delete_dc
+			end
+			internal_ref := internal_ref + 1
+		end
+
+	unreference is
+			-- Unreference the current pixmap.
+		do
+			internal_ref := internal_ref - 1
+			if internal_ref = 0 then
+				internal_create_dc
+			end
+
 		end
 
 feature -- Element change
@@ -173,6 +181,10 @@ feature -- Implementation
 
 	internal_bitmap: WEL_BITMAP
 			-- A bitmap kept in memory when the dc is destroyed.
+
+	internal_ref: INTEGER
+			-- Number of object that currently use the
+			-- bitmap. Drawing areas not counted.
 
 	internal_create_dc is
 			-- Create the `internal_dc' that allow to draw on the

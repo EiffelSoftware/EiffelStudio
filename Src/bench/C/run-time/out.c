@@ -58,21 +58,14 @@ rt_private char *rcsid =
  * Routine for printing representation
  */
 
-rt_public EIF_REFERENCE c_generator(register EIF_REFERENCE Current)
-{
-	/* Class name from which the Eiffel object is an instance.
+rt_public EIF_REFERENCE c_generator_of_type (EIF_INTEGER dftype)
+	/* Class name associated with dynamic type `dftype'.
 	 * Return a reference on an Eiffel instance of STRING.
 	 */
-
-	register2 uint32 flags = HEADER(Current)->ov_flags; /* Object flags */
+{
 	char *generator;
-
-	if (flags & EO_SPEC)
-		return makestr("SPECIAL", 7);
-	
-	generator = System(Deif_bid(flags)).cn_generator;
-
-	return makestr(generator, strlen(generator));
+	generator = System (Deif_bid(dftype)).cn_generator;
+	return makestr (generator, strlen (generator));
 }
 
 rt_public EIF_REFERENCE c_tagged_out(EIF_OBJECT object)

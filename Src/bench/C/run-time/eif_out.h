@@ -25,8 +25,10 @@ extern "C" {
  * Function declarations 
  */
 
-RT_LNK EIF_REFERENCE  c_generator(register EIF_REFERENCE Current); /* Eiffel feature `generator' (GENERAL) */
-RT_LNK EIF_REFERENCE c_tagged_out(EIF_OBJECT object);	/* Eiffel feature `tagged_out' (GENERAL) */
+RT_LNK EIF_REFERENCE  c_generator_of_type(EIF_INTEGER dftype); /* Called by `generator' from ANY */
+#define c_generator(obj)	c_generator_of_type (Dftype (obj))
+
+RT_LNK EIF_REFERENCE c_tagged_out(EIF_OBJECT object);	/* Called by `tagged_out' from ANY */
 RT_LNK char *eif_out(EIF_REFERENCE object);		/* Build the output of an EIF_REFERENCE */
 extern char *build_out(EIF_OBJECT object);		/* Build tagged out in C buffer */
 

@@ -12,31 +12,31 @@ Installing the Files
 
 The installation of the files are done by copying the files from the
 delivery medium to the hard disk, for example to directory
-/usr/local/Eiffel4. If you have an Eiffel4 on CD-ROM, you can either copy
-the whole directory Eiffel4 to your hard disk or run directly from the
+/usr/local/Eiffel50. If you have an Eiffel50 on CD-ROM, you can either copy
+the whole directory Eiffel50 to your hard disk or run directly from the
 CD-ROM.
 
 If the delivery medium is a gzipped tar file, you need to untar the file to
 the desired location. For example,
 
-cd /usr/local/Eiffel4
+cd /usr/local/Eiffel50
 gunzip -c _delivery_file.tar.gz | tar xvf -
 
 
 Setting the Environment Variables
 ---------------------------------
 
-Set environment variable EIFFEL5 to the Eiffel4 directory you want to run
+Set environment variable ISE_EIFFEL to the Eiffel50 directory you want to run
 Eiffel from. This directory can be on your hard disk (for example
-/usr/local/Eiffel4) or on CD-ROM.
+/usr/local/Eiffel50) or on CD-ROM.
 
 Set your PLATFORM environment variable to specify you platform.
 For example for Linux computers, the value should be `linux'.
 
-Add the following directory to your path: $EIFFEL5/bench/spec/$PLATFORM/bin.
+Add the following directory to your path: $ISE_EIFFEL/bench/spec/$PLATFORM/bin.
 
 If you chose to run Eiffel from the CD-ROM you have to copy the directory
-Eiffel4/install to you hard disk and set environment variable EIF_LICENSE to
+Eiffel50/install to you hard disk and set environment variable EIF_LICENSE to
 point there.
 
 
@@ -47,7 +47,7 @@ Run the command `eifid' and send the output to register@eiffel.com.
 
 We will send you registration keys for the products you have
 purchased. The keys should be put at the end of the file
-$EIFFEL5/install/registration if you run Eiffel from your hard disk,
+$ISE_EIFFEL/install/registration if you run Eiffel from your hard disk,
 or $EIF_LICENSE/registration if you run Eiffel from a CD-ROM. After
 that you should run the command eiflicense, which will install the
 license keys.
@@ -73,22 +73,9 @@ Or, if you want a log of the connections to eifdaemon:
         % (nohup eifdaemon -l &)
 
 
-EiffelBench
------------
+EiffelStudio
+------------
 
 Now everything should be Ok and you should be able to run the compiler.
 Launch 'ebench' for the interactive graphical user interface of the
 compiler of 'es4' for command line interface.
-
-
-EiffelCase and EiffelBuild
---------------------------
-
-In order to run EiffelCase or EiffelBuild you need separate license keys.
-The installation is as above. You also have to add the binary directory (for
-example, $EIFFEL5/case/spec/$PLATFORM/bin) of the desired product to your
-path. 
-
-For more information, refer to the README file in $EIFFEL5/case or
-$EIFFEL5/build.
-

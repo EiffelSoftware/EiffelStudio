@@ -250,19 +250,19 @@ rt_public EIF_REFERENCE dir_next(EIF_POINTER d)
 #endif
 }
 
-rt_public EIF_OBJECT dir_current(void)
+rt_public EIF_REFERENCE dir_current(void)
 {
 	/* Return the Eiffel string corresponding to the current working
 	 * directory.  Note this always returns a new string.
 	 */
 
 	char *cwd;
-	char *cwd_string;
+	EIF_REFERENCE  cwd_string;
 
-	cwd = getcwd(NULL, PATH_MAX);
-	cwd_string = makestr(cwd, strlen (cwd));
+	cwd = getcwd (NULL, PATH_MAX);
+	cwd_string = RTMS(cwd);
 	free (cwd);	/* Not `eif_free', getcwd() call malloc in POSIX.1 */
-	return ((EIF_OBJECT)cwd_string);
+	return cwd_string;
 }
 
 rt_public EIF_CHARACTER eif_dir_separator (void)

@@ -26,7 +26,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 
 	make, make_word_wrapped
 
@@ -37,7 +37,7 @@ feature -- Initialization
 		do
 			init_common_controls_dll
 			init_rich_edit_dll
-			!! private_attributes
+			create private_attributes
 			is_multi_line_mode := True
 			is_horizontal_scrollbar := True
 			is_vertical_scrollbar := True
@@ -252,8 +252,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style for creation.
 		do
-			Result := {TEXT_IMP} Precursor
-
+			Result := Precursor {TEXT_IMP}
 			if is_read_only then
 				Result := Result + Es_readonly
 			end

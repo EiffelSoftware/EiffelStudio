@@ -82,7 +82,7 @@ inherit
 			{NONE} all
 		end
 
-creation 
+create 
 	make
 
 feature {NONE} -- Initialization 
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 	make (a_bulletin: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a bulletin.
 		do
-			!! private_attributes
+			create private_attributes
 			default_position := true;
 			parent ?= oui_parent.implementation;
 			managed := man

@@ -16,7 +16,7 @@ inherit
 			implementation, parent, set_size, set_height, set_width
 		end
 
-creation
+create
 
 	make, make_unmanaged
 
@@ -57,7 +57,7 @@ feature {NONE} -- Initiazliation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			!OPTION_B_IMP! implementation.make (Current, man, a_parent);
+			create {OPTION_B_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;

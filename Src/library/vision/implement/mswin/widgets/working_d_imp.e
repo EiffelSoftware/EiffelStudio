@@ -20,7 +20,7 @@ inherit
 			allow_recompute_size as allow_resize
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation
@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 	icon: WEL_ICON is
 			-- The windows standard working icon
 		once
-			!! Result.make_by_predefined_id (Idi_asterisk)
+			create Result.make_by_predefined_id (Idi_asterisk)
 		end
 
 	class_name: STRING is

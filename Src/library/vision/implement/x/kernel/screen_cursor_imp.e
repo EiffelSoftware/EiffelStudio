@@ -33,7 +33,7 @@ inherit
 			display, dispose
 		end
 		
-creation
+create
 	make,
 	make_for_screen
 

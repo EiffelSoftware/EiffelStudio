@@ -28,7 +28,7 @@ inherit
 			is_equal, copy
 		end;
 
-creation
+create
 
 	make
 
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			until
 				i > 5
 			loop
-				!! new_list.make;
+				create new_list.make;
 				put (new_list, i);
 				i := i+1
 			end;
@@ -89,7 +89,7 @@ feature -- Element change
 		local
 			command_info: COMMAND_EXEC
 		do
-			!! command_info.make (a_command, argument);
+			create command_info.make (a_command, argument);
 			item (number).extend (command_info)
 		end;
 
@@ -104,7 +104,7 @@ feature -- Removal
 			is_removed: BOOLEAN;
 			list: LINKED_LIST [COMMAND_EXEC]
 		do
-			!! command_info.make (a_command, argument);
+			create command_info.make (a_command, argument);
 			list := item (number);
 			list.start;
 			list.search (command_info);
@@ -153,9 +153,9 @@ feature {NONE} -- Execution
 					list.after
 				loop
 					if list.item.command.context_data_useful then
-						!! buttons.make (5);
+						create buttons.make (5);
 						buttons.put (True, number);
-						!! butclick_data.make (widget_m.widget_oui,
+						create butclick_data.make (widget_m.widget_oui,
 								be.x, be.y, be.x_root, be.y_root,
 								number, buttons);
 						list.item.execute (butclick_data)

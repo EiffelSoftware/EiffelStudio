@@ -170,7 +170,7 @@ feature {WIDGET_IMP} -- Implementation
 			w_implementation: WIDGET_IMP
 			local_widget_oui: WIDGET
 		do
-			!! Result.make (10);
+			create Result.make (10);
 			widget_area := widget_manager.area
 			wc := widget_manager.count;			
 			from

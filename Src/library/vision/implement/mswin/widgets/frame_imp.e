@@ -74,7 +74,7 @@ inherit
 			class_name, on_paint
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -84,9 +84,9 @@ feature -- Initialization
 		local
 			wlf: WEL_LOG_FONT
 		do
-			!! wlf.make (1, "Arial")
-			!! box_text_font.make_indirect (wlf)
-			!! private_attributes
+			create wlf.make (1, "Arial")
+			create box_text_font.make_indirect (wlf)
+			create private_attributes
 			parent ?= oui_parent.implementation
 			managed := man
 		end
@@ -120,7 +120,7 @@ feature -- Initialization
 			wc ?= parent
 			make_with_coordinates (wc, "", x, y, private_attributes.width,
 				 private_attributes.height)
-			!! private_box.make (Current, "", 0, 0, 0, 0, private_box_id)
+			create private_box.make (Current, "", 0, 0, 0, 0, private_box_id)
 			private_box.set_font (box_text_font)
 		end
 
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 		local
 			resize_data: RESIZE_CONTEXT_DATA
 		do
-			!! resize_data.make (owner, new_width, new_height, code)
+			create resize_data.make (owner, new_width, new_height, code)
 			private_box.resize ((new_width).max (0), (new_height).max (0))
 			resize_actions.execute (Current, resize_data)
 		end

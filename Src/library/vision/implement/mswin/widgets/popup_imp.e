@@ -16,7 +16,7 @@ inherit
 
 	POPUP_I
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -16,7 +16,7 @@ inherit
 
 	PROMPT_I
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -16,7 +16,7 @@ inherit
 			implementation
 		end
 
-creation
+create
 
 	make, make_unmanaged
 	
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			!PICT_COLOR_B_IMP!implementation.make (Current, a_parent, man);
+			create {PICT_COLOR_B_IMP} implementation.make (Current, a_parent, man);
 			implementation.set_widget_default;
 			set_default
 		end;
@@ -115,7 +115,7 @@ feature -- Element change
 		local
 			a_pixmap: PIXMAP;
 		do
-			!!a_pixmap.make;
+			create a_pixmap.make;
 			a_pixmap.read_from_file (a_pixmap_name);
 			set_pixmap (a_pixmap);
 		end;

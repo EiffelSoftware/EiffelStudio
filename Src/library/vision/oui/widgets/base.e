@@ -16,7 +16,7 @@ inherit
 			implementation
 		end
 
-creation
+create
 
 	make
 	
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 				identifier:= clone (a_name);
 			end;	
 			screen := a_screen;
-			!BASE_IMP!implementation.make (Current);
+			create {BASE_IMP} implementation.make (Current);
 			set_default
 		end;
 

@@ -73,7 +73,7 @@ inherit
 			on_bn_clicked
 		end
 
-creation 
+create 
 	make
 
 feature  
@@ -83,7 +83,7 @@ feature
 		local
 			a_box: BOX_WINDOWS;
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation;
 			a_box ?= parent
 			if a_box /= Void then
@@ -205,7 +205,7 @@ feature -- Status setting
 				end
 				managed := flag
 			else
-				{BUTTON_IMP} precursor (flag)
+				precursor {BUTTON_IMP} (flag)
 			end
 		end
 

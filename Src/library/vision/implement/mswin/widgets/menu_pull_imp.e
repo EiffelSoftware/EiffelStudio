@@ -17,7 +17,7 @@ inherit
 
 	SIZEABLE_WINDOWS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,7 +25,7 @@ feature -- Initialization
 	make (a_pulldown: MENU_PULL; man: BOOLEAN; oui_parent: MENU) is
 			-- Create a menu_pull.
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			check
 				valid_parent: parent /= Void
@@ -34,7 +34,7 @@ feature -- Initialization
 			set_y (parent.y)
 			managed := man
 			text := a_pulldown.identifier
-			!! menu_button.make (text, oui_parent)
+			create menu_button.make (text, oui_parent)
 			menu_button.attach_menu (a_pulldown)
 		end
 

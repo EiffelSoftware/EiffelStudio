@@ -70,7 +70,7 @@ feature -- Status setting
 					set_windows_sensitive
 				end
 			end
-			{WM_SHELL_IMP} Precursor (wid_list)
+			Precursor {WM_SHELL_IMP} (wid_list)
 		end
 
 	popdown is
@@ -102,9 +102,9 @@ feature -- Status setting
 		
 	realize is
 		do
-			{WM_SHELL_IMP} Precursor
+			Precursor
 				-- set initial focus
-			if initial_focus /= void then
+			{WM_SHELL_IMP} if initial_focus /= void then
 				initial_focus.wel_set_focus
 			end
 		end

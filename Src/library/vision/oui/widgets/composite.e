@@ -41,7 +41,7 @@ feature -- Access
 		require
 			exists: not destroyed
 		do
-			!! Result.make (10);
+			create Result.make (10);
 			widget_manager.descendants_of (Current, Result);
 		ensure
 			valid_result: Result /= Void

@@ -15,7 +15,7 @@ inherit
 			class_name
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -23,10 +23,10 @@ feature -- Initialization
 	make (a_base: BASE) is
 			-- Make a base.
 		do
-			!! private_attributes
+			create private_attributes
 			private_title := a_base.identifier
 			if private_title.is_integer then
-				!! class_icon.make_by_id (private_title.to_integer)
+				create class_icon.make_by_id (private_title.to_integer)
 				if not class_icon.exists then	
 					class_icon := null_class_icon
 				end

@@ -37,7 +37,7 @@ inherit
 			is_equal
 		end;
 
-creation
+create
 
 	make, 
 	make_for_screen
@@ -128,12 +128,12 @@ feature -- Element change
 			def_screen := display.default_screen;
 				-- True reading the file as a xpm format.
 				-- If this fails then try to read it as bitmap format.
-			!! attr.make;
+			create attr.make;
 			attr.set_valuemask (XpmSize+XpmInfos+XpmRGBCloseness);
 			attr.set_red_closeness(65535);
 			attr.set_blue_closeness(65535);
 			attr.set_green_closeness(65535);
-			!! xpm_format.make_from_file (def_screen, a_file_name, attr);
+			create xpm_format.make_from_file (def_screen, a_file_name, attr);
 			if xpm_format.is_valid then
 				is_allocated := True;
 				identifier := xpm_format.pixmap.identifier;
@@ -146,7 +146,7 @@ feature -- Element change
 				end;
 			else
 				if xpm_format.error = XpmFileInvalid then
-					!! bitmap_format.make_from_file (def_screen, a_file_name);
+					create bitmap_format.make_from_file (def_screen, a_file_name);
 					if bitmap_format.is_valid then
 						is_allocated := True;
 						height := bitmap_format.height;
@@ -154,7 +154,7 @@ feature -- Element change
 						hot_x := bitmap_format.x_hot;
 						hot_y := bitmap_format.y_hot;
 
-						!! gc.make (def_screen);
+						create gc.make (def_screen);
 						gc.set_background_color (def_screen.white_pixel);
 						gc.set_foreground_color (def_screen.black_pixel);
 						pixmap := bitmap_format.to_pixmap (def_screen, gc);
@@ -193,14 +193,14 @@ feature -- Element change
 			free_resources;
 			mel_d := display;
 			mel_s := mel_d.default_screen;
-			!! mp.make (mel_s,
+			create mp.make (mel_s,
 					p_width, p_height, mel_s.default_depth);
 			if mp.is_valid then
 				identifier := mp.identifier;
 				depth := mp.depth;
 				number_of_colors := 1;
 				mel_widget ?= a_widget;
-				!! gc.make (mel_s);
+				create gc.make (mel_s);
 				copy_area (mel_widget, gc, x, y, p_width, p_height, 0, 0);
 				gc.destroy;
 				is_allocated := True; 
@@ -222,7 +222,7 @@ feature -- Output
 		local
 			xmp_format: MEL_XPM_FORMAT
 		do
-			!! xmp_format.write_to_file
+			create xmp_format.write_to_file
 				(display, a_file_name,
 				Current, Void, Void);
 			last_operation_correct_ref.set_item (xmp_format.is_valid)
@@ -240,8 +240,8 @@ feature -- Element change
 		do
 			if bitmap = Void then
 				def_screen := display.default_screen;
-				!! bitmap.make (def_screen, width, height, 1)
-				!! gc.make (bitmap);
+				create bitmap.make (def_screen, width, height, 1)
+				create gc.make (bitmap);
 				gc.set_background_color (def_screen.white_pixel);
 				gc.set_foreground_color (def_screen.black_pixel);
 				bitmap.copy_plane (Current, gc, 0, 0, width, height, 0, 0, 1);
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 	last_operation_correct_ref: BOOLEAN_REF is
 			-- Cell for storing the success of the last operation
 		once
-			!! Result
+			create Result
 		end
 	
 end -- class PIXMAP_IMP

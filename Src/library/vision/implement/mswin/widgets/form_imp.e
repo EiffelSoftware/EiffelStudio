@@ -22,7 +22,7 @@ inherit
 
 	FORM_I
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -30,7 +30,7 @@ feature -- Initialization
 	make (a_form: FORM; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a form.
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			check
 				parent_exists: parent /= Void
@@ -56,7 +56,7 @@ feature -- Status setting
 			-- Show current form.
 		do
 			update_all
-			{BULLETIN_IMP} Precursor
+			Precursor {BULLETIN_IMP}
 		end
 
 	set_enclosing_size is
@@ -79,7 +79,7 @@ feature -- Status setting
 		do
 			if private_attributes.width /= new_width
 			or else private_attributes.height /= new_height then
-				{BULLETIN_IMP} Precursor (new_width, new_height)
+				Precursor {BULLETIN_IMP} (new_width, new_height)
 				if not updating then
 					update_all
 				end
@@ -90,7 +90,7 @@ feature -- Status setting
 			-- Set width to `new_width'.
 		do
 			if private_attributes.width /= new_width then
-				{BULLETIN_IMP} Precursor (new_width)
+				Precursor {BULLETIN_IMP} (new_width)
 				if not updating then
 					update_all
 				end
@@ -101,7 +101,7 @@ feature -- Status setting
 			-- Set height to `new_height'.
 		do
 			if private_attributes.height /= new_height then
-				{BULLETIN_IMP} Precursor (new_height)
+				Precursor {BULLETIN_IMP} (new_height)
 				if not updating then
 					update_all
 				end
@@ -158,7 +158,7 @@ feature	-- Implementation
 			-- Initialize the current form
 		do
 			fraction_base := 100
-			!!form_child_list.make
+			create form_child_list.make
 		end
 
 	fraction_base: INTEGER

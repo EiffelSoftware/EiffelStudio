@@ -19,7 +19,7 @@ inherit
 			parent, implementation
 		end;
 
-creation
+create
 
 	make, make_unmanaged
 
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			identifier:= clone (a_name);
 			widget_manager.new (Current, a_parent);
-			!OPT_PULL_IMP! implementation.make (Current, man, a_parent);
+			create {OPT_PULL_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;

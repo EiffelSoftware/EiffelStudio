@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 					pixmap_windows ?= icon_pixmap.implementation
 					wel_dib := pixmap_windows.dib
 					if wel_dib /= Void then
-						!! wel_bitmap.make_by_dib (paint_dc, wel_dib, dib_rgb_colors)
+						create wel_bitmap.make_by_dib (paint_dc, wel_dib, dib_rgb_colors)
 						h := icon_height - wel_dib.height
 						if h > 0 then
 							draw_y := h // 2
@@ -162,9 +162,9 @@ feature {NONE} -- Implementation
 		local
 		 	track: WEL_POINT
 		do
-			!! track.make (min_width + shell_width, min_height + shell_height)
+			create track.make (min_width + shell_width, min_height + shell_height)
 			min_max_info.set_min_track_size (track)
-			!! track.make (max_width + shell_width, max_height + shell_height)
+			create track.make (max_width + shell_width, max_height + shell_height)
 			min_max_info.set_max_track_size (track)
 			Precursor (min_max_info)
 		end

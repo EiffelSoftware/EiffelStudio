@@ -65,14 +65,14 @@ inherit
 			background_brush
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
 
 	make (a_button: PUSH_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation;
 			private_text := clone (a_button.identifier);
 			a_button.set_font_imp (Current);

@@ -31,7 +31,7 @@ inherit
 		end
 
 
-creation
+create
 
 	make
 

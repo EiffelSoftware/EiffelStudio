@@ -56,7 +56,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 
 	make
 
@@ -95,7 +95,7 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			!! Result.make (5);
+			create Result.make (5);
 			from
 				i := 1
 			until

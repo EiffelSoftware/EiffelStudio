@@ -45,7 +45,7 @@ inherit
 
 	GRABABLE_WINDOWS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -53,7 +53,7 @@ feature -- Initialization
 	make (an_override_s: OVERRIDE_S; oui_parent: COMPOSITE) is
 			-- Create the widget
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			shell_width := 2 * window_border_height
 			shell_height := 2 * window_border_width

@@ -12,7 +12,7 @@ class
 inherit
 	G_ANY;
 
-creation
+create
 
 	make
 
@@ -21,7 +21,7 @@ feature -- Initalization
 	make is
 			-- Create object
 		do
-			!WIDGET_RESOURCE_IMP!implementation.make
+			create {WIDGET_RESOURCE_IMP} implementation.make
 		end;
 
 feature -- Status report

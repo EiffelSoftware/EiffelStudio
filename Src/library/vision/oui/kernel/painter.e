@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 	coord_xy (x, y: INTEGER): COORD_XY is
 			-- Set of coordinates
 		do
-			!! Result;
+			create Result;
 			Result.set (x, y)
 		ensure
 			x_set: Result.x = x;

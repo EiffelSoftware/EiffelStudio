@@ -94,7 +94,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 			a_window_not_void: a_window /= Void
 			oui_parent_not_void: oui_parent /= Void
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			split_visible := True
 			is_vertical := vertical
@@ -454,14 +454,14 @@ feature -- {NONE} -- Implementation
 		do
 			if is_vertical then
 				value := a_x
-				!! cursor.make_by_predefined_id (Idc_sizewe)
+				create cursor.make_by_predefined_id (Idc_sizewe)
 			else
-				!! cursor.make_by_predefined_id (Idc_sizens)
+				create cursor.make_by_predefined_id (Idc_sizens)
 				value := a_y
 			end
 
 			if split_visible and then on_split (value) then
-				!! window_dc.make (Current)
+				create window_dc.make (Current)
 				window_dc.get
 				split_position := value - split_width // 2
 				invert_split (window_dc)
@@ -542,7 +542,7 @@ feature -- {NONE} -- Implementation
 			point: WEL_POINT
 			pos: INTEGER
 		do
-			!! point.make (0, 0)
+			create point.make (0, 0)
 			point.set_cursor_position
 			point.screen_to_client (Current)
 			if is_vertical then
@@ -553,9 +553,9 @@ feature -- {NONE} -- Implementation
 
 			if on_split (pos) then
 				if is_vertical then
-					!! cursor.make_by_predefined_id (Idc_sizewe)
+					create cursor.make_by_predefined_id (Idc_sizewe)
 				else
-					!! cursor.make_by_predefined_id (Idc_sizens)
+					create cursor.make_by_predefined_id (Idc_sizens)
 				end
 			else
 				cursor := Void

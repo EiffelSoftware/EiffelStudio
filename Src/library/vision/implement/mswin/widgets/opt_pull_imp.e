@@ -63,7 +63,7 @@ inherit
 			exists
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -73,13 +73,13 @@ feature -- Initialization
 		local
 			opt_b_windows: OPTION_B_IMP
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			managed := man
 			if man then
-				!! option_button.make ("dummy", oui_parent)
+				create option_button.make ("dummy", oui_parent)
 			else
-				!! option_button.make_unmanaged ("dummy", oui_parent)
+				create option_button.make_unmanaged ("dummy", oui_parent)
 			end
 			opt_b_windows ?= option_button.implementation
 			opt_b_windows.set_option_pull (Current)
@@ -95,7 +95,7 @@ feature -- Initialization
 				set_width (30)
 				--set_height (item_height)
 				wel_make (wc, x, y, width, height, id_default)
-				!! button_list.make (5)
+				create button_list.make (5)
 				realize_children
 				if private_selected_button /= Void
 				and then private_selected_button.managed then
@@ -194,7 +194,7 @@ feature -- Status setting
 			max_width, new_height: INTEGER
 			s: STRING
 		do
-			!! screen_dc
+			create screen_dc
 			screen_dc.get
 			s := b.text
 			max_width := screen_dc.string_width (s).max (width - 24)
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 		local
 			screen_dc: WEL_SCREEN_DC
 		once
-			!! screen_dc
+			create screen_dc
 			screen_dc.get
 			Result := screen_dc.string_height ("I")
 			screen_dc.release

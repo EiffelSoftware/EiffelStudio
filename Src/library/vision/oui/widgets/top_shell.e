@@ -18,7 +18,7 @@ inherit
 			implementation
 		end
 
-creation
+create
 
 	make
 	
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			screen := a_screen;
 			identifier := clone (a_name);
 			widget_manager.new (Current, Void);
-			!TOP_SHELL_IMP!implementation.make (Current);
+			create {TOP_SHELL_IMP} implementation.make (Current);
 			set_default
 		end;
 	

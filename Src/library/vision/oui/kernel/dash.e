@@ -13,7 +13,7 @@ inherit
 
 	LINKED_LIST [INTEGER]
 
-creation
+create
 
 	make
 

@@ -83,14 +83,14 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
 
 	make (a_scale: SCALE; man: BOOLEAN; oui_parent: COMPOSITE) is
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			a_scale.set_font_imp (Current)
 			managed := man
@@ -154,9 +154,9 @@ feature -- Status setting
 			if exists then
 				scroll_bar.destroy
 				if flag then
-					!! scroll_bar.make_horizontal (Current, 0, 0, 0, 0 , scroll_bar_id)
+					create scroll_bar.make_horizontal (Current, 0, 0, 0, 0 , scroll_bar_id)
 				else
-					!! scroll_bar.make_vertical (Current, 0, 0, 0, 0, scroll_bar_id)
+					create scroll_bar.make_vertical (Current, 0, 0, 0, 0, scroll_bar_id)
 				end					
 				on_size (0, width, height)
 			end
@@ -194,17 +194,17 @@ feature -- Status setting
 					if (width = 0) then
 						set_width (100)
 					end
-					!! text_static.make (Current, text, 0, value_height + scroll_height, width, (height - value_height - scroll_height).max (0), id_default)
-					!! value_static.make (Current, "" , 0, 0, 0, 0, id_default)
-					!! scroll_bar.make_horizontal (Current, 0, text_height, width, scroll_height, scroll_bar_id)
+					create text_static.make (Current, text, 0, value_height + scroll_height, width, (height - value_height - scroll_height).max (0), id_default)
+					create value_static.make (Current, "" , 0, 0, 0, 0, id_default)
+					create scroll_bar.make_horizontal (Current, 0, text_height, width, scroll_height, scroll_bar_id)
 				else
 					if height = 0 then set_height (100) end
 					if width = 0 then set_width (20) end
-					!! text_static.make (Current, text, scroll_width + value_width, 0,(width  - value_width - scroll_width).max (0), 0, id_default)
-					!! value_static.make (Current, "", 0, 0, 0, 0, id_default)
+					create text_static.make (Current, text, scroll_width + value_width, 0,(width  - value_width - scroll_width).max (0), 0, id_default)
+					create value_static.make (Current, "", 0, 0, 0, 0, id_default)
 					value_static.set_style (Ws_visible + Ws_child + Ws_group +
 						Ws_tabstop + Ss_right)
-					!! scroll_bar.make_vertical (Current, value_width, 0, scroll_width, height, scroll_bar_id)
+					create scroll_bar.make_vertical (Current, value_width, 0, scroll_width, height, scroll_bar_id)
 				end
 				if not is_value_shown then 
 					value_static.hide
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 		local
 			resize_data: RESIZE_CONTEXT_DATA
 		do
-			!! resize_data.make (owner, a_width, a_height, a_type)
+			create resize_data.make (owner, a_width, a_height, a_type)
 			if is_horizontal then
 				scroll_bar.resize (width, scroll_height)
 				scroll_bar.move (0, text_height)
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 						value := a_position
 					elseif scroll_code = Sb_thumbtrack then
 						value := a_position
-						!! scale_data.make (widget_oui)
+						create scale_data.make (widget_oui)
 						move_actions.execute (Current, scale_data)
 					end
 					set_value (value)
@@ -434,13 +434,13 @@ feature {NONE} -- Implementation
 						value := maximum - a_position
 					elseif scroll_code = Sb_thumbtrack then
 						value := maximum - a_position
-						!! scale_data.make (widget_oui)
+						create scale_data.make (widget_oui)
 						move_actions.execute (Current, scale_data)
 					end
 					set_value (maximum - value)
 				end
 				--update_value_static
-				!! scale_data.make (widget_oui)
+				create scale_data.make (widget_oui)
 				value_changed_actions.execute (Current, scale_data)
 			end
 		end

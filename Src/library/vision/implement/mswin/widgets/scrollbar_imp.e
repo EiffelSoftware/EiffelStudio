@@ -71,7 +71,7 @@ inherit
 
 	SIZEABLE_WINDOWS
 
-creation
+create
 
 	make
 
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			-- Create a scrollbar with `a_scrollbar' as identifier,
 			-- `oui_parent' as parent managed or unmanaged and call `set_default'.
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			identifier := a_scrollbar.identifier
 			managed := man
@@ -387,7 +387,7 @@ feature {NONE} -- Implementation
 		local
 			cd: SCROLLING_DATA_WINDOWS
 		do
-			!! cd.make (owner, a_code, a_position, not is_horizontal)
+			create cd.make (owner, a_code, a_position, not is_horizontal)
 			value_changed_actions.execute (Current, cd)
 		end
 
@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 		local
 			cd: SCROLLING_DATA_WINDOWS
 		do
-			!! cd.make (owner, a_code, a_position, not is_horizontal)
+			create cd.make (owner, a_code, a_position, not is_horizontal)
 			move_actions.execute (Current, cd)
 		end
 

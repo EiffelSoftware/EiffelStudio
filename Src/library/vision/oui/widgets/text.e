@@ -17,7 +17,7 @@ inherit
 			implementation
 		end
 
-creation
+create
 
 	make, make_word_wrapped, make_unmanaged, make_word_wrapped_unmanaged
 
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			!TEXT_IMP!implementation.make (Current, man, a_parent);
+			create {TEXT_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			!TEXT_IMP! implementation.make_word_wrapped (Current, man, a_parent);
+			create {TEXT_IMP} implementation.make_word_wrapped (Current, man, a_parent);
 			set_default
 		end;
 

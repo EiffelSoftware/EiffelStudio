@@ -14,25 +14,25 @@ feature {NONE} -- Access
 	draw_figure_command: DRAW_FIG_COM is
 			-- Command to draw a figure or a world
 		once
-			!! Result
+			create Result
 		end;
 
 	popdown_command: POPDOWN_COM is
 			-- Command to popdown a shell
 		once
-			!! Result
+			create Result
 		end;
 
 	popup_command: POPUP_COM is
 			-- Command to popup a shell
 		once
-			!! Result
+			create Result
 		end;
 
 	quit_now_command: QUIT_NOW_COM is
 			-- Command to quit the application incondionnally
 		once
-			!! Result
+			create Result
 		end;
 
 end -- class STD_COMMANDS

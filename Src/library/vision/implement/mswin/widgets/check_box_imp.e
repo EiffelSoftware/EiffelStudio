@@ -17,7 +17,7 @@ inherit
 			class_name
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initalization
@@ -25,9 +25,9 @@ feature {NONE} -- Initalization
 	make (a_check_box: CHECK_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Make a check box.
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
-			!! toggle_list.make
+			create toggle_list.make
 			initialize
 			managed := man
 		end

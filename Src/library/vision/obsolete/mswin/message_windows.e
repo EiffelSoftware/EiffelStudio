@@ -16,7 +16,7 @@ inherit
 
 	MESSAGE_I
  
-creation
+create
 	make
 
 feature {NONE} -- Initialization

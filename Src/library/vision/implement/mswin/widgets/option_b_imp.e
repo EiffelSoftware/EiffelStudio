@@ -17,7 +17,7 @@ inherit
 
 	OPTION_B_I
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,7 +25,7 @@ feature -- Initialization
 	make (an_option_button: OPTION_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create an option_b
 		do
-			!! private_attributes
+			create private_attributes
 			an_option_button.set_font_imp (Current)
 			managed := man
 			parent ?= oui_parent.implementation

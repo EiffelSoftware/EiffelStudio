@@ -138,7 +138,7 @@ inherit
 
 	SCROLL_L_I
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -146,12 +146,12 @@ feature -- Initialization
 	make (a_list: SCROLL_LIST; man, is_fixed: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Initialize the list.
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			managed := man
 			a_list.set_font_imp (Current)
 			a_list.set_list_imp (Current)
-			!! private_list.make (10)
+			create private_list.make (10)
 			private_attributes.set_width (100)
 			private_attributes.set_height (100)
 			private_visible_item_count := 1
@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 			al : ARRAYED_LIST [STRING]
 		do
 			if multiple_selection then
-				!! Result.make
+				create Result.make
 				al ?= wel_selected_strings.linear_representation
 				check
 					al_exists: al /= Void
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 			al : ARRAYED_LIST [INTEGER]
 		do
 			if multiple_selection then
-				!! Result.make
+				create Result.make
 				al ?= wel_selected_items.linear_representation
 				check
 					al_exists: al /= Void
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 					Result.forth
 				end
 			else
-				!! Result.make
+				create Result.make
 				if wel_single_selected then
 					Result.extend (selected_position)
 				end
@@ -691,7 +691,7 @@ feature {NONE} -- Implementation
 		local
 			cd: SINGLE_DATA
 		do
-			!! cd.make (oui_widget, selected_position, "")
+			create cd.make (oui_widget, selected_position, "")
 			selection_change_actions.execute (Current, cd)
 		end
 

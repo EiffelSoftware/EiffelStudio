@@ -26,12 +26,12 @@ feature {NONE} -- Implementation
 
 	application_class_cell: CELL [STRING] is
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 	application_context_cell: CELL [MEL_APPLICATION_CONTEXT] is
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end;
 
 end -- class SHARED_MEL_DISPLAY

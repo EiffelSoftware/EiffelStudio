@@ -72,7 +72,7 @@ feature -- Access
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (an_item);
+			create ms.make_localized (an_item);
 			Result := item_exists (ms);
 			ms.destroy
 		end; 
@@ -88,7 +88,7 @@ feature -- Access
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (an_item);
+			create ms.make_localized (an_item);
 			Result := mel_index_of (ms, i);
 			ms.destroy
 		end;
@@ -156,7 +156,7 @@ feature -- Status report
 			mel_table: MEL_STRING_TABLE;
 			ms: MEL_STRING
 		do
-			!! Result.make;
+			create Result.make;
 			c := selected_count;
 			if c > 0 then
 				mel_table := mel_selected_items;
@@ -194,7 +194,7 @@ feature -- Element change
 		do
 			list := vision_command_list (single_selection_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_single_selection_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -207,7 +207,7 @@ feature -- Element change
 			ms: MEL_STRING;
 			i: INTEGER
 		do
-			!! ms.make_localized (an_item);
+			create ms.make_localized (an_item);
 			i := index;
 			if i = 0 then	
 				i := i + 1;
@@ -224,7 +224,7 @@ feature -- Element change
 			ms: MEL_STRING;
 			i: INTEGER
 		do
-			!! ms.make_localized (an_item);
+			create ms.make_localized (an_item);
 			if count > 0 then
 				i := index + 1
 			end;
@@ -293,7 +293,7 @@ feature -- Element change
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (an_item);
+			create ms.make_localized (an_item);
 			replace_item_pos (ms, index);
 			ms.destroy
 		end;
@@ -303,7 +303,7 @@ feature -- Element change
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (an_item);
+			create ms.make_localized (an_item);
 			replace_item_pos (ms, i);
 			ms.destroy
 		end;
@@ -336,7 +336,7 @@ feature -- Duplication
 			ms: MEL_STRING
 		do
 			from
-				!! Result.make;
+				create Result.make;
 				mel_table := items;
 				current_count := count;
 				current_position := index;
@@ -407,7 +407,7 @@ feature -- Cursor movement
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (an_item);	
+			create ms.make_localized (an_item);	
 			index := item_pos_from (ms, index);
 			ms.destroy;
 			if index = 0 then
@@ -485,7 +485,7 @@ feature -- Removal
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (an_item);
+			create ms.make_localized (an_item);
 			from
 			until
 				item_exists (ms)
@@ -621,7 +621,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			if not other.empty then
-				!! Result.make (other.count);
+				create Result.make (other.count);
 				from
 					other.start;
 					i := 1
@@ -647,7 +647,7 @@ feature {NONE} -- Obsolete features
 		do
 			list := vision_command_list (browse_selection_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_browse_selection_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -661,7 +661,7 @@ feature {NONE} -- Obsolete features
 		do
 			list := vision_command_list (default_action_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_default_action_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -675,7 +675,7 @@ feature {NONE} -- Obsolete features
 		do
 			list := vision_command_list (extended_selection_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_extended_selection_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -689,7 +689,7 @@ feature {NONE} -- Obsolete features
 		do
 			list := vision_command_list (multiple_selection_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_multiple_selection_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)

@@ -69,7 +69,7 @@ inherit
 
 	SIZEABLE_WINDOWS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -77,9 +77,9 @@ feature -- Initialization
 	make (a_text_field: TEXT_FIELD; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a text field.
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
-			!! private_text.make (0)
+			create private_text.make (0)
 			managed := man
 			a_text_field.set_font_imp (Current)
 		end
@@ -283,8 +283,8 @@ feature {NONE} -- Implementation
 				code_large_enough: code >= virtual_keys.lower
 				code_small_enough: code <= virtual_keys.upper
 			end
-			!! k.make_from_key_state
-			!! cd.make (owner, code, virtual_keys @ code, k);
+			create k.make_from_key_state
+			create cd.make (owner, code, virtual_keys @ code, k);
 			key_release_actions.execute (Current, cd)
 			if code = Vk_shift then
 				shift_pressed_cell.set_item (False)
@@ -297,8 +297,8 @@ feature {NONE} -- Implementation
 			kw: KEYBOARD_WINDOWS
 			kpd: KYPRESS_DATA
 		do
-			!! kw.make_from_key_state
-			!! kpd.make (owner, code, virtual_keys @ code, kw) 
+			create kw.make_from_key_state
+			create kpd.make (owner, code, virtual_keys @ code, kw) 
 			key_press_actions.execute (Current, kpd)
 			if code = Vk_return then
 				activate_actions.execute (Current, kpd)
@@ -430,7 +430,7 @@ feature {NONE} -- Implementation
 	shift_pressed_cell: BOOLEAN_REF is
 			-- Is the shift-key pressed?
 		once
-			!! Result
+			create Result
 		end
 
 	find_top_parent (a_window: WEL_WINDOW): WEL_WINDOW is

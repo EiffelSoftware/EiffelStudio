@@ -15,7 +15,7 @@ inherit
 
 	MESSAGE_BOX_M
 
-creation
+create
 	make
  
 end -- class MESSAGE_M

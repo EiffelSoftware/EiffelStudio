@@ -23,7 +23,7 @@ inherit
 
 	DRAWING
 
-creation
+create
 
 	make
 
@@ -33,7 +33,7 @@ feature -- Initialization
 			-- Create a screen specified by `a_screen_name'.
 		do
 			screen_name := clone (a_screen_name);
-			!SCREEN_IMP! implementation.make (Current)
+			create {SCREEN_IMP} implementation.make (Current)
 		end;
 
 feature -- Access

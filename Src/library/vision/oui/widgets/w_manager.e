@@ -35,7 +35,7 @@ inherit
 			{ANY} has, i_th, valid_index, area
 		end
 
-creation
+create
 
 	make
 
@@ -248,7 +248,7 @@ feature -- Basic operations
 			list: LINKED_LIST [WIDGET]
 		do
 			widget_area := area;
-			!! list.make;
+			create list.make;
 			list.put_front (widget)
 			from
 					-- Calculate the number of widgets
@@ -352,7 +352,7 @@ feature -- Basic operations
 			i, j: INTEGER;
 			b_routines: BASIC_ROUTINES
 		do
-			!! b_routines;
+			create b_routines;
 			from
 				i := 1
 			until
@@ -422,7 +422,7 @@ feature {COMPOSITE} -- Basic operations
 			widget_area: like area
 		do
 			widget_area := area;
-			!! Result.make (10);
+			create Result.make (10);
 			wc := count;
 			position := index_of (w);
 			current_depth := w.depth;

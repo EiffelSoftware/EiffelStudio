@@ -14,7 +14,7 @@ feature {NONE} -- Implementation
 	widget_manager: W_MANAGER is
 			-- EiffelVision widget manager 
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			Valid_result: Result /= Void
 		end

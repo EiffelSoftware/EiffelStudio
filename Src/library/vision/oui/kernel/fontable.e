@@ -46,7 +46,7 @@ feature -- Element change
 		local
 			a_font: FONT;
 		do
-			!! a_font.make;
+			create a_font.make;
 			a_font.set_name (a_font_name);
 			set_font (a_font);
 		end;

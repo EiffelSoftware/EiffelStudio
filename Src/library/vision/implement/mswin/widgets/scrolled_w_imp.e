@@ -85,14 +85,14 @@ inherit
 
 	SIZEABLE_WINDOWS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
 
 	make (a_scrolled_window: SCROLLED_W; man: BOOLEAN; oui_parent: COMPOSITE) is
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			managed := man
 			set_default
@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 				resize_for_shell
 				wc ?= parent
 				make_with_coordinates (wc, "", x, y, width, height)
-				!! scroller.make_with_options (Current, 0, 1, 0, 1,
+				create scroller.make_with_options (Current, 0, 1, 0, 1,
 					granularity, granularity * 10,
 					granularity, granularity * 10)
 				realized := True
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			if working_area /= Void then
 				wel_set_horizontal_position (position)
 				working_area.set_x (- position)
-				!! cd.make (widget_oui, 0, position, False)
+				create cd.make (widget_oui, 0, position, False)
 				value_changed_actions.execute (Current, cd)
 			end
 		end
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			if working_area /= Void then
 				wel_set_vertical_position (position)
 				working_area.set_y (- position)
-				!! cd.make (widget_oui, 0, position, True)
+				create cd.make (widget_oui, 0, position, True)
 				value_changed_actions.execute (Current, cd)
 			end
 		end

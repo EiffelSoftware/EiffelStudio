@@ -484,7 +484,7 @@ feature {NONE} -- Implementation
 	id_children: HASH_TABLE [INTEGER, WIDGET_IMP] is
 			-- id in menu for a child
 		once
-			!! Result.make (5)
+			create Result.make (5)
 		ensure
 			result_not_void: Result /= Void
 		end

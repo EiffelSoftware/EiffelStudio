@@ -81,7 +81,7 @@ inherit
 
 	SIZEABLE_WINDOWS
 
-creation
+create
 	make,make_word_wrapped
 
 feature -- Initialization
@@ -89,8 +89,8 @@ feature -- Initialization
 	make,make_word_wrapped (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create the text_windows
 		do
-			!! private_text.make (0)
-			!! private_attributes;
+			create private_text.make (0)
+			create private_attributes;
 			init_common_controls_dll
 			init_rich_edit_dll
 			a_text.set_font_imp (Current)
@@ -104,7 +104,7 @@ feature -- Initialization
 		local
 			rich_edit_dll: WEL_RICH_EDIT_DLL
 		once
-			!! rich_edit_dll.make
+			create rich_edit_dll.make
 			rich_edit_dll.set_shared
 		end
 
@@ -221,13 +221,13 @@ feature -- Status report
 
 	hide_selection is
 		do
-			{WEL_RICH_EDIT} Precursor
+			Precursor {WEL_RICH_EDIT}
 			is_selection_visible := False
 		end
 
 	show_selection is
 		do
-			{WEL_RICH_EDIT} Precursor
+			Precursor {WEL_RICH_EDIT}
 			is_selection_visible := True
 		end
 
@@ -315,7 +315,7 @@ feature -- Status report
 			win_point: WEL_POINT
 		do
 			win_point := position_from_character_index (char_pos)
-			!! Result
+			create Result
 			Result.set (win_point.x, win_point.y)
 		end
 
@@ -377,7 +377,7 @@ feature -- Status setting
 					unselect
 				end
 				windows_color ?= c.implementation
-				!! char_format.make
+				create char_format.make
 				char_format.set_text_color (windows_color)
 				text_count := text.count
 				if text_count > 1 then
@@ -770,8 +770,8 @@ feature {NONE} -- Notifications
 			kw: KEYBOARD_WINDOWS
 			kpd: KYPRESS_DATA
 		do
-			!! kw.make_from_key_state
-			!! kpd.make (owner, virtual_key, virtual_keys @ virtual_key, kw) 
+			create kw.make_from_key_state
+			create kpd.make (owner, virtual_key, virtual_keys @ virtual_key, kw) 
 			if virtual_key = vk_return or virtual_key = vk_tab then
 				activate_actions.execute (Current, kpd)
 			end
@@ -798,7 +798,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style for window control;
 		do
-			Result := {WEL_RICH_EDIT} Precursor + Es_left + Es_autovscroll
+			Result := Precursor {WEL_RICH_EDIT} + Es_left + Es_autovscroll
 			if not is_word_wrap_mode then
 				Result := Result + Es_autohscroll
 			end

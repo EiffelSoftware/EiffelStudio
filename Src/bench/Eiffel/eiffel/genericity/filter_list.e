@@ -46,4 +46,18 @@ feature
 			end;
 		end;
 
+feature
+
+	trace is
+		do
+			from
+				start
+			until
+				after
+			loop
+				item.trace
+				forth
+			end;
+		end;
+
 end

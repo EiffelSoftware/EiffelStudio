@@ -333,7 +333,7 @@ feature
 	melt is
 			-- Melt current table
 		do
-			io.putstring ("POLY_TABLE.melt: Should not be calles anymore%N");
+			io.putstring ("POLY_TABLE.melt: Should not be called anymore%N");
 		end;
 			
 	make_byte_code (ba: BYTE_ARRAY) is

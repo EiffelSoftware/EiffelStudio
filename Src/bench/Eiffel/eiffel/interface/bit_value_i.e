@@ -56,4 +56,9 @@ feature
 			!VQMC6!Result;
 		end;
 
+	trace is
+		do
+			io.error.putstring (bit_val);
+		end;
+
 end

@@ -12,7 +12,10 @@ class INSTANTIATOR
 
 inherit
 
-	FILTER_LIST;
+	FILTER_LIST
+		redefine
+			trace
+		end;
 	SHARED_WORKBENCH
 
 creation
@@ -219,7 +222,6 @@ feature -- Debug
 		local
 			data: GEN_TYPE_I;
 			local_cursor: LINKABLE [GEN_TYPE_I];
-			i, nb: INTEGER
 		do
 			io.error.putstring ("Instantiator.trace%N");
 			from

@@ -56,4 +56,9 @@ feature
 			!VQMC1!Result;
 		end;
 
+	trace is
+		do
+			io.error.putbool (bool_val);
+		end;
+
 end

@@ -367,10 +367,7 @@ feature
 				-- Put the resulting table in the temporary feature table
 				-- server.
 			Tmp_feat_tbl_server.put (resulting_table);
-debug ("HAS_CALLS")
-			resulting_table.trace_replications;
-end;
-debug ("TRACE_TABLE")
+debug ("HAS_CALLS", "TRACE_TABLE")
 			resulting_table.trace_replications;
 end;
 				-- Update `Tmp_body_server'.
@@ -877,8 +874,8 @@ end;
 						!!assert_prop_list.make;
 						assert_prop_list.add (feature_i.rout_id_set.first)
 					else
-						is_the_same := old_description.is_body_equiv (yacc_feature);
---							and then Result.same_interface (feature_i);
+						is_the_same := old_description.is_body_equiv (yacc_feature)
+							and then Result.same_interface (feature_i);
 debug ("ACTIVITY")
 	if not is_the_same then
 		io.error.putchar ('%T');

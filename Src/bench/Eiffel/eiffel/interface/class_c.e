@@ -44,7 +44,7 @@ feature
 	parents: FIXED_LIST [CL_TYPE_A];
 			-- Parent classes
 
-	descendants: LINKED_LIST [like Current];
+	descendants: LINKED_LIST [CLASS_C];
 			-- Direct descendants of the current class
 
 	clients: LINKED_LIST [CLASS_C];
@@ -129,10 +129,6 @@ feature
 
 	creation_feature: FEATURE_I;
 			-- Creation feature for expanded types
-
-	date: INTEGER;
-			-- Last modification sate of the associated file
-			-- [Needed for time stamp]
 
 	melted_set: SORTED_SET [MELTED_INFO];
 			-- Melting information list
@@ -423,11 +419,11 @@ feature -- Third pass: byte code production and type check
 			temp: STRING
 		do
 				-- Verbose
-			io.error.putstring ("Degree 3: class ");
+			io.putstring ("Degree 3: class ");
 				temp := class_name.duplicate;
 				temp.to_upper;
-			io.error.putstring (temp);
-			io.error.new_line;
+			io.putstring (temp);
+			io.new_line;
 
 			from
 					-- Initialization for actual types evaluation
@@ -685,7 +681,6 @@ end;
 					removed_features.forth;
 				end;
 			end;
-
 			if rep_removed and then rep_dep /= Void then
 				Tmp_rep_depend_server.put (rep_dep)
 			end;
@@ -1167,6 +1162,11 @@ feature -- Skeleton processing
 			new_skeleton, old_skeleton: SKELETON;
 			local_cursor: LINKABLE [CLASS_TYPE]
 		do
+debug ("SKELETON")
+io.error.putstring ("Class: ");
+io.error.putstring (class_name);
+io.error.putstring (" process_skeleton%N");
+end;
 			from
 				feature_table_changed := changed2;
 				local_cursor := types.first_element
@@ -1186,11 +1186,27 @@ feature -- Skeleton processing
 					then
 						class_type.set_is_changed (True);
 						class_type.set_skeleton (new_skeleton);
+debug ("SKELETON")
+io.error.putstring ("Changed_skeleton:%N");
+new_skeleton.trace;
+io.error.putstring ("Old skeleton:%N");
+old_skeleton.trace;
+io.error.new_line;
+end;
 
 						System.freeze_set2.put (id);
 						System.melted_set.put (id);
 					else
+debug ("SKELETON")
+io.error.putstring ("Skeleton has not changed:%N");
+new_skeleton.trace;
+io.error.new_line;
+end;
 					end;
+				else
+debug ("SKELETON")
+io.error.putstring ("Nothing is done%N");
+end;
 				end;
 				local_cursor := local_cursor.right
 			end;
@@ -1223,6 +1239,7 @@ feature -- Class initialization
 			changed_status: BOOLEAN;
 			class_i: CLASS_I;
 			changed_generics: BOOLEAN
+			changed_expanded: BOOLEAN;
 		do
 				-- Check if obsolete clause was present.
 				-- (Void if none was present)
@@ -1258,6 +1275,7 @@ feature -- Class initialization
 					-- (`old_parents' is Void only for the first compilation of the class)
 				pass2_controler.set_expanded_modified (Current);
 				changed_status := True;
+				changed_expanded := True;
 			end;
 
 			if changed_status then
@@ -1268,7 +1286,19 @@ feature -- Class initialization
 					syntactical_clients.after
 				loop
 					a_client := syntactical_clients.item;
-					a_client.set_changed2 (True);
+					if changed_expanded then
+							-- `changed' is set to True so that a complete
+							-- pass2 is done on the client. `feature_unit'
+							-- will find the type changes
+						if not a_client.changed then
+							a_client.set_changed (True);
+								-- The ast is in the temporary server
+								-- so pass 2 can be done the same way
+							pass1_controler.insert_changed_class (a_client);
+						end;
+					else
+						set_changed2 (True);
+					end;
 					pass2_controler.set_supplier_status_modified (a_client);
 					pass3_controler.insert_new_class (a_client);
 					pass4_controler.insert_new_class (a_client);
@@ -2033,7 +2063,7 @@ feature -- Supplier checking
 
 feature -- Order relation for inheritance and topological sort
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: CLASS_C): BOOLEAN is
 			-- Order relation on classes
 		do
 			Result := topological_id < other.topological_id;
@@ -2121,15 +2151,6 @@ feature -- Convenience features
 			-- Assign `i' to `id'.
 		do
 			id := i;
-		end;
-
-	set_date is
-			-- Update `date'.
-		local
-			str: ANY;
-		do
-			str := file_name.to_c;
-			date := eif_date ($str);
 		end;
 
 	set_invariant_feature (f: INVARIANT_FEAT_I) is
@@ -2683,11 +2704,6 @@ feature -- Process the creation feature
 feature {NONE} -- External features
 
 	c_parse (f: POINTER; s: STRING): CLASS_AS is
-		external
-			"C"
-		end;
-
-	eif_date (s: ANY): INTEGER is
 		external
 			"C"
 		end;

@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 					elseif ace_file_path_tag.is_equal (string_tag) then
 						ace_file_path := clone (value)
 					else
-						error_value := incompatible_value
+						error_value := corrupt_value
 					end
 
 					line_number := line_number + 1
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 					line := clone (last_string)
 				end
 			else
-				error_value := incompatible_value
+				error_value := corrupt_value
 			end
 		rescue
 			retried := True

@@ -179,6 +179,55 @@ feature {EV_ANY} -- Contract support
 			Result := is_initialized and not is_destroyed
 		end
 
+	action_sequences: HASH_TABLE [ACTION_SEQUENCE [TUPLE], STRING] is
+			-- Linear structure containing action sequences.
+		local
+			internal: INTERNAL
+			i: INTEGER
+			aseq: ACTION_SEQUENCE [TUPLE]
+		do
+			create internal
+			create Result.make (10)
+			from
+				i := 1
+			until
+				i > internal.field_count (Current)
+			loop
+				aseq ?= internal.field (i, Current)
+				if aseq /= Void then
+					Result.force (aseq, internal.field_name (i, Current))
+				end
+				i := i + 1
+			end
+		end
+
+	action_sequence_test_widget: EV_WIDGET is
+			-- Widget for testing action sequences.
+		local
+			box: EV_VERTICAL_BOX
+			label: EV_LABEL
+			aseqs: HASH_TABLE [ACTION_SEQUENCE [TUPLE], STRING]
+			ev_as: EV_ACTION_SEQUENCE [TUPLE]
+		do
+			create box
+			Result := box
+			from
+				aseqs := action_sequences
+				aseqs.start
+			until
+				aseqs.after
+			loop
+				create label.make_with_text (aseqs.key_for_iteration)
+				label.align_text_left
+				box.extend (label)
+				ev_as ?= aseqs.item_for_iteration
+				if ev_as /= Void then
+					ev_as.force_extend (label~align_text_right)
+				end
+				aseqs.forth
+			end
+		end
+
 invariant
 	is_initialized: is_initialized
 	is_coupled:
@@ -217,6 +266,9 @@ end -- class EV_ANY
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/15 18:45:33  oconnor
+--| added beginings of actions sequence testing system
+--|
 --| Revision 1.8  2000/02/14 11:40:47  oconnor
 --| merged changes from prerelease_20000214
 --|

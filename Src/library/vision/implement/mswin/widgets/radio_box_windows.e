@@ -29,8 +29,6 @@ feature -- Initialization
 			parent ?= oui_parent.implementation
 			!! toggle_list.make
 			initialize
-			set_margin_width (5)
-			set_margin_height (5)
 			only_one := True
 			managed := man
 		end

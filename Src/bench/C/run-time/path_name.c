@@ -4,9 +4,10 @@
 	platform independent manipulation of path names
 
 */
+
 #define implement
 #include "eif_config.h"
-#include "eif_path_name.h"
+#include "eif_path_name.h"	/* this includes eif_portable.h */
 
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
@@ -108,7 +109,8 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_POINTER p)
 	if ( strchr( (char *)p,'/') != NULL)	/* no slash allowed */
 		return EIF_FALSE;
 	return EIF_TRUE;
-#else
+
+#else  /* must be Unix */
 		/* FIXME */
 	return EIF_TRUE;
 #endif
@@ -237,10 +239,10 @@ rt_public EIF_BOOLEAN eif_path_name_compare(EIF_POINTER s, EIF_POINTER t, EIF_IN
 		/* Test to see if `s' and `t' represent the same path name */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return EIF_TEST(!strnicmp(s, t, length));
-#elif defined (__VMS)
-	implement this routine
-	return EIF_TEST(blah blah blah);
-#else
+#elif defined (EIF_VMS)
+	/** **FIXME** **VMS** implement this routine for VMS */
+	return EIF_TEST (!strncasecmp(s, t, length) );
+#else	/* Unix */
 	return EIF_TEST(!strncmp(s, t, length));
 #endif
 }
@@ -251,59 +253,66 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 {
 		/* If the path is not empty, include a separator */
 		/* Otherwise, it will just be a relative path name */
-#ifdef __VMS
-	char	vcopy[PATH_MAX];
 
-		/* ASSUMING P & V ARE VALID DIRECTORY & SUBDIR AND IN VMS FORMAT */
-	if (p == NULL)	{	/* if p is empty, just return what's in v */
-		strcpy(p,v);
-		}
-		/* allowable forms for v are [.subdir] or subdir */
-		/* make [p] look like [p. */
-		p[strlen((char *)p)-1]='.'; /* change ] to .*/
-		/* make v or [.v] look like v] */
-		/* don't mess with v, use a copy */
-		strcpy(vcopy,v);
-		if (v[0]!='[') {			/* just looks like v */
-				strcat( (char *)vcopy,"]");
-				}
-		else	{	/* change [.v] to v] */
-				strcpy((char *)vcopy,(char *)v[2]);
-				}
-		/* now concat [p. and v] to get [p.v] */
-		strcat( (char *)p, (char *)vcopy);
-		(eif_strset)(string, strlen ((char *)p));
-#else	/* not vms */
+#ifdef EIF_VMS
+	/* ASSUMING P & V ARE VALID DIRECTORY & SUBDIR AND IN VMS FORMAT */
+	/* allowable forms for p are device:[dir]file	*/
+	/* allowable forms for v are [.subdir] or subdir */
+	/* make p "[x]" look like "[x." if p is not "[x.]" */
+	if (*((char *)p) != '\0') {
+	    char *q = p + strlen(p) - 1;	/* q --> last char of p	*/
+	    char *w = (char*)v;			/* w --> 1st char of v	*/
+	    /* skip leading delimiters [ or [. in second string */
+	    if (*w == '[') {			/* if w starts with [	*/
+		if (*++w == '.')		/* skip it, check for .	*/
+		    ++w;			/*   skip . also 	*/
+	    }
+	    /* check trailing delimiter in first string */
+	    if (*q == ':') {			/* if a : (device only)	*/
+		*++q = '[';			/*   append [ after :	*/
+	    } else if (*q == ']') {		/* if a ]		*/
+		if (*(q-1) != '.')		/* if not .]		*/
+		    *q = '.';			/*   make it so		*/
+	    } else {				/* none (name only)	*/
+		*++q = ':'; *++q = '[';		/* append :[		*/
+	    }
+	    /* q still --> last char of p  (p + strlen(p) -1)  */
+	    strcpy (++q, w);			/* append 2nd string (v) */
+	    /* ensure it has a closing ] */
+	    if ( *(w = p + strlen(p) - 1) != ']')
+		strcat (p, "]");
+	} else { /* p is empty string */
+	    /* what to do with v??? */
+	    strcpy (p,v);
+	}
+
+#else	/* (not) EIF_VMS */
 	if (*((char *)p) != '\0')
 #if defined EIF_WINDOWS || defined EIF_OS2
 		strcat ((char *)p, "\\");
-#else
-			/* Unix */
+#else	/* Unix */
 		strcat ((char *)p, "/");
-#endif
-
+#endif  /* Windows/Unix */
 	strcat ((char *)p, (char *)v);
+
+#endif	/* EIF_VMS */
+
 	(eif_strset)(string, strlen ((char *)p));
-#endif
 }
 
 rt_public void eif_set_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
 {
 		/* Set the absolute part of the path name */
-#ifdef __VMS
-	strcat ((char *)p,"[");
-	strcat ((char *)p, (char *)v);
-	strcat ((char *)p,"]");
-	(eif_strset)(string, strlen ((char *)p));
+#ifdef EIF_VMS
+	/* assume *p == '\0' ? */
+	strcat (strcat (strcat ((char*)p, "["), (char*)v), "]");
 #elif defined EIF_WIN32 || defined EIF_OS2
 	strcat ((char *)p, (char *)v);
-	(eif_strset)(string, strlen ((char *)p));
-#else
-		/* Unix */
+#else	/* Unix */
 	strcat ((char *)p, "/");
 	strcat ((char *)p, (char *)v);
-	(eif_strset)(string, strlen ((char *)p));
 #endif
+	(eif_strset)(string, strlen ((char *)p));
 }
 
 rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
@@ -314,7 +323,7 @@ rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 	} else {
 #if defined EIF_WINDOWS || defined EIF_OS2
 		strcat ((char *)p, "\\");
-#elif !defined (__VMS)		/* no separator for vms */
+#elif !defined (EIF_VMS)		/* no separator for vms */
 		strcat ((char *)p, "/");
 #endif
 		strcat ((char *)p, (char *)v);

@@ -12,6 +12,8 @@
 */
 
 #include "eif_config.h"
+#include "eif_portable.h"	/* must come before <errno.h> for VMS */
+
 #ifdef I_STRING
 #include <string.h>
 #else
@@ -44,7 +46,11 @@
 #endif
 
 
-#ifdef __VMS
+#ifdef EIF_VMS
+struct utimbuf {
+    time_t actime;      /* access time */
+    time_t modtime;     /* modification time */
+};
 #define lib$rename_file		LIB$RENAME_FILE
 #define lib$delete_file		LIB$DELETE_FILE
 #include <lib$routines.h>
@@ -82,7 +88,6 @@
 #include <sys/file.h>
 #endif
 
-#include "eif_portable.h"
 #include "eif_except.h"
 #include "eif_plug.h"
 #include "eif_error.h"
@@ -110,7 +115,7 @@ rt_private void swallow_nl(FILE *f);		/* Swallow next character if new line */
 
 #ifndef HAS_UTIME
 /* rt_private int utime(); */ /* %%ss removed and replaced by below */
-#ifdef __VMS
+#ifdef EIF_VMS
 rt_private int utime(char *path, char *times);		/* %%ss */
 #else
 rt_private int utime(char *path, struct utimbuf *times);	/* %%ss */
@@ -228,7 +233,7 @@ rt_public EIF_POINTER file_binary_reopen(char *name, int how, FILE *old)
 	 * to another place, for instance.
 	 */
 
-#if defined  EIF_WINDOWS  ||  __VMS || defined EIF_OS2
+#if defined  EIF_WINDOWS  ||  EIF_VMS || defined EIF_OS2
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'b'), old);
 #else
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'\0'), old);
@@ -305,7 +310,7 @@ rt_public void file_flush(FILE *fp)
 	/* Flush data held in stdio buffer */
 
 	errno = 0;
-#ifdef __VMS
+#ifdef EIF_VMS
 	if (0 != fsync(fileno(fp)))
 #else
 	if (0 != fflush(fp))
@@ -322,7 +327,7 @@ rt_public  EIF_INTEGER file_size (FILE *fp)
 	errno = 0;
 	fd = fileno(fp);
 
-#ifdef __VMS
+#ifdef EIF_VMS
 	/* handle vms bug by positioning to end before fsync-ing --mark howard*/
 	current_pos = lseek(fd,0,SEEK_CUR);
 	lseek(fd,0,SEEK_END);
@@ -822,7 +827,7 @@ rt_public void file_stat (char *path, struct stat *buf)
 	/* This is an encapsulation of the stat() system call. The routine either
 	 * succeeds and returns or fails and raises the appropriate exception.
 	 */
-#ifdef __VMS
+#ifdef EIF_VMS
 #define UID_MASK 0x0000FFFF	/* in VMS, uid contains gid in upper word */
 #endif
 
@@ -835,7 +840,7 @@ rt_public void file_stat (char *path, struct stat *buf)
 		status = stat(path, buf);		/* Watch for symbolic links */
 #else
 		status = stat(path, buf);		/* Get file statistics */
-#ifdef __VMS
+#ifdef EIF_VMS
 		buf->st_uid = buf->st_uid & UID_MASK;
 #endif
 #endif
@@ -1119,7 +1124,7 @@ rt_public void file_mkdir(char *path)
 	/* Create directory `path' */
 
 	int status;			/* System call status */
-#ifdef __VMS
+#ifdef EIF_VMS
 	char duplicate[PATH_MAX];
 	strcpy(duplicate,path);
 #endif
@@ -1139,7 +1144,7 @@ rt_public void file_mkdir(char *path)
 			else
 				esys();		/* Raise exception */
 		}
-#ifdef __VMS
+#ifdef EIF_VMS
 		/* Under VMS, mkdir will not grant delete privelege by default
 		 * on directory just created. However if no delete priv then
 		 * then VMS thinks the project isn't writable. This is one
@@ -1429,7 +1434,7 @@ rt_public EIF_BOOLEAN file_creatable(char *path)
 	char temp [PATH_MAX];
 	char *ptr;
 
-#ifdef __VMS
+#ifdef EIF_VMS
 	/* You can't do a stat() on a directory under VMS
 	 * Just return true for now, fix this later!
 	 */
@@ -1588,10 +1593,10 @@ rt_public int rename(char *from, char *to)
 #endif
 
 #ifndef HAS_RMDIR
-rt_public int rmdir(char *path)
+rt_public int rmdir(const char *path)
 {
-#ifdef __VMS
-	printf("rmdir() not implemented under VMS yet.\n");
+#ifdef EIF_VMS
+	printf("rmdir(\"%s\") not implemented under VMS yet.\n", path);
 	return -1;
 #else
 	/* Emulates the rmdir() system call */
@@ -1629,14 +1634,14 @@ rt_public int mkdir(char *path)
 #endif
 
 #ifndef HAS_UTIME
-#ifdef __VMS
+#ifdef EIF_VMS
 rt_private int utime(char *path, char *times)
 #else
 rt_private int utime(char *path, struct utimbuf *times)
 #endif
 {
 	/* Emulation of utime */
-#ifdef __VMS
+#ifdef EIF_VMS
 	return -1;
 #elif defined EIF_OS2
 	return -1;
@@ -1653,7 +1658,7 @@ rt_private int utime(char *path, struct utimbuf *times)
 
 int unlink(char *path)
 {
-#ifdef __VMS
+#ifdef EIF_VMS
 	int		status;
 	struct dsc$descriptor_s		deldsc;
 
@@ -1669,9 +1674,9 @@ int unlink(char *path)
 
 	return 0;
 
-#else /* ifdef __VMS */
+#else  /* EIF_VMS */
 	return -1;
-#endif	/* vms */
+#endif /* EIF_VMS */
 }
 
 #endif		/* unlink */

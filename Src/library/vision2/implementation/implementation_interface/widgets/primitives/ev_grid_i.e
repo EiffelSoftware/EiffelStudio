@@ -79,19 +79,23 @@ feature -- Access
 			grid_item_i: EV_GRID_ITEM_I
 			col_index: INTEGER
 		do
+				-- Retrieve column from grid
+			a_grid_column_i := column_internal (a_column)
+			col_index := a_grid_column_i.physical_index
+			
 			grid_row_i := row_internal (a_row)
 			grid_row :=  internal_row_data @ a_row
+
 			if a_column > grid_row.count then
 				enlarge_row (a_row, a_column)
 				grid_row := internal_row_data @ a_row
 			end
 			
-			a_grid_column_i := column_internal (a_column)
-			col_index := a_grid_column_i.physical_index
+
 			
 			grid_item_i := grid_row @ (col_index)
 			
-			if grid_item_i = Void  then
+			if grid_item_i = Void then
 				create a_item
 				grid_item_i := a_item.implementation
 				grid_item_i.set_parents (Current, a_grid_column_i, grid_row_i)
@@ -456,13 +460,19 @@ feature -- Status setting
 		require
 			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
 			a_column_count_positive: a_column_count >= 1
+		local
+			add_columns: BOOLEAN
 		do
-			fixme ("Implement correct reducing of column count")
 			from
+				add_columns := a_column_count > grid_columns.count
 			until
 				grid_columns.count = a_column_count
 			loop
-				add_column_at (grid_columns.count + 1, True)
+				if add_columns then
+					add_column_at (grid_columns.count + 1, True)
+				else
+					remove_column (grid_columns.count)
+				end
 			end
 			recompute_horizontal_scroll_bar
 			redraw_client_area

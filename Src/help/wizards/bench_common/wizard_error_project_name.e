@@ -23,8 +23,8 @@ feature -- basic Operations
 	display_state_text is
 			-- Display message text relative to current state.
 		do
-			title.set_text (Interface_names.t_Project_name_error_state)
-			message.set_text (Interface_names.m_Project_name_error_state)
+			title.set_text (Bench_interface_names.t_Project_name_error_state)
+			message.set_text (Bench_interface_names.m_Project_name_error_state)
 		end
 
 	final_message: STRING is

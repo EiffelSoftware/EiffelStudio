@@ -40,7 +40,7 @@ feature -- Display
 		do
 			Precursor (new_resource)
 			tmpstr := new_resource.value
-			if tmpstr /= Void and then not tmpstr.empty then
+			if tmpstr /= Void and then not tmpstr.is_empty then
 				text_f.set_text (tmpstr)
 			else
 				text_f.remove_text

@@ -149,15 +149,18 @@ feature {CACHE_READER} -- Access
 						l_registry_key := feature {REGISTRY}.local_machine
 						l_registry_key := l_registry_key.open_sub_key ("SOFTWARE")
 						l_registry_key := l_registry_key.open_sub_key ("ISE")
-						l_registry_key := l_registry_key.open_sub_key ("Eiffel55")
+						l_registry_key := l_registry_key.open_sub_key ("Eiffel56")
 						
 						l_obj := Current
 						create l_file_info.make (l_obj.get_type.assembly.location)
 						l_str := l_file_info.name.substring_integer_integer (0, l_file_info.name.length - 4)
 						l_registry_key := l_registry_key.open_sub_key (l_str)
-						
-						l_obj := l_registry_key.get_value (Ise_key)
-						l_str ?= l_obj
+						if l_registry_key /= Void then
+							l_obj := l_registry_key.get_value (Ise_key)
+							l_str ?= l_obj
+						else
+							l_str := Void
+						end
 						
 						if l_str /= Void then
 							Result := l_str

@@ -93,8 +93,7 @@ creation
 
 feature -- Access
 
-	--implementation: TABBED_TEXT_IMP
-	implementation: TABBED_TEXT_WINDOWS --VISIONLITE
+	implementation: TABBED_TEXT_WINDOWS
 
 	dummy_text: WEL_RICH_EDIT
 
@@ -148,7 +147,6 @@ feature -- Output
 			implementation.wel_hide
 			set_changed (True);
 			st_process_text (texts);
-	--		set_cursor_position (0);
 			set_changed (False)
 			implementation.wel_show;
 			dummy_text.hide

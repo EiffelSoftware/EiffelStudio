@@ -16,6 +16,81 @@ feature -- Initialization
 		deferred
 		end
 
+feature -- Access
+
+	parent: EV_MULTI_COLUMN_LIST is
+			-- List that container this row
+		deferred
+		end
+
+	columns: INTEGER is
+			-- Number of columns in the row
+		require
+--			exists: not destroyed
+		deferred
+		end
+
+	interface: EV_MULTI_COLUMN_LIST_ROW
+			-- Interface of current implementation.
+
+feature -- Status report
+	
+	is_selected: BOOLEAN is
+			-- Is the item selected
+		require
+--			exists: not destroyed
+		deferred
+		end
+
+feature -- Status setting
+
+	set_selected (flag: BOOLEAN) is
+			-- Select the item if `flag', unselect it otherwise.
+		require
+--			exists: not destroyed
+		deferred
+		end
+
+	toggle is
+			-- Change the state of selection of the item.
+		require
+--			exists: not destroyed
+		do
+			set_selected (not is_selected)
+		end
+
+feature -- Element Change
+
+	set_cell_text (column: INTEGER; a_text: STRING) is
+			-- Make `text ' the new label of the `column'-th
+			-- cell of the row.
+		require
+--			exists: not destroyed
+			column_exists: column >= 1 and column <= columns
+			text_not_void: a_text /= Void
+		deferred
+		end
+
+	set_text (a_text: ARRAY[STRING]) is
+		require
+--			exists: not destroyed
+			text_not_void: a_text /= Void
+			text_length_ok: a_text.count <= columns
+		deferred
+		end
+
+	set_interface (list: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Make `list' the new interface.
+		require
+			list_not_void: list /= Void
+		do
+			interface := list
+		end
+
+invariant
+	parent_not_void: parent /= Void
+	parent_exists: not parent.destroyed
+
 end -- class EV_MULTI_COLUMN_LIST_ROW_I
 
 --|----------------------------------------------------------------

@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_window_new (C.Gtk_window_toplevel_enum))
 			-- `set_title' causes the window to be realized.
 			set_title("")
+			C.gtk_window_set_policy (c_object, 0, 0, 1)
 			accel_group := C.gtk_accel_group_new
 			C.gtk_window_add_accel_group (c_object, accel_group)
 		end
@@ -273,6 +274,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2001/06/21 22:35:04  king
+--| Correctly setting policy
+--|
 --| Revision 1.2  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

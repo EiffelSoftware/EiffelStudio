@@ -12,6 +12,11 @@ expanded external class TYPED_POINTER [G]
 
 inherit
 	POINTER_REF
+		rename
+			item as pointer_item,
+		export
+			{NONE} pointer_item
+		end
 
 create {NONE}
 

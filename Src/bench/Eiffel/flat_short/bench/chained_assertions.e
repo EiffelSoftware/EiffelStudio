@@ -18,20 +18,6 @@ creation
 
 	make
 
-feature
-
-	has_assertion (id: INTEGER): BOOLEAN is
-		do
-			from
-				start
-			until
-				after or else Result
-			loop
-				Result := (item.written_in = id);
-				forth
-			end
-		end;
-
 feature -- Output
 
 	format_precondition (ctxt: FORMAT_CONTEXT_B) is

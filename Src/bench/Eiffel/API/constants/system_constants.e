@@ -64,7 +64,7 @@ feature {NONE}
 			Result := Platform_constants.Dot_o
 		end;
 
-	Dot_workbench: STRING is "project.eif"
+	Dot_workbench: STRING is "precomp.epr"
 
 	Dot_x: STRING is ".x"
 

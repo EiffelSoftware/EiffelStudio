@@ -38,14 +38,12 @@ feature -- Report
 		require
 			font_not_void: a_font /= Void
  		do
---			Result := a_font.is_specified
 		end
 
 	set_label_font (a_font: FONT) is
 			-- Set font of every labels
 		require
 			font_not_void: a_font /= Void
---			font_valid: a_font.is_specified
    		do
 			label_font := a_font					 	
 		end
@@ -54,7 +52,6 @@ feature -- Report
 			-- Set font of every buttons
 		require
 			font_not_void: a_font /= Void
---			font_valid: a_font.is_specified
    		do
 			 button_font := a_font
 		end
@@ -63,7 +60,6 @@ feature -- Report
 			-- Set font of every texts
 		require
 			font_not_void: a_font /= Void
---			font_valid: a_font.is_specified
  		do
 			text_font := a_font		 
 		end

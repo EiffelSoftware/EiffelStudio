@@ -45,8 +45,20 @@ feature -- Status setting
 	
 	set_tab_position (pos: INTEGER) is
 			-- set position of tabs (left, right, top or bottom)
+		local
+			gtk_pos: INTEGER
 		do
-			gtk_notebook_set_tab_pos (widget, pos)
+			inspect pos
+			when Pos_left then
+				gtk_pos := 0
+			when Pos_right then
+				gtk_pos := 1
+			when Pos_top then
+				gtk_pos := 2
+			when Pos_bottom then
+				gtk_pos := 3
+			end
+			gtk_notebook_set_tab_pos (widget, gtk_pos)
 		end
 	
 	

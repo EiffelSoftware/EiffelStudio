@@ -62,9 +62,9 @@ feature {NONE} -- Initialization
 			non_void_file_name: a_file_name /= Void
 			valid_file_name: not a_file_name.is_empty
 		do
-			internal_name := a_name.as_lower
+			internal_name := a_name
+			feature_name := a_name
 			file_name := a_file_name.as_lower
-			feature_name := clone (internal_name)
 			description := a_description
 			start_position := a_start_position
 			if a_arguments /= Void then

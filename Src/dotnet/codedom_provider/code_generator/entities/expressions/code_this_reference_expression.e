@@ -12,8 +12,6 @@ inherit
 	CODE_SHARED_TYPE_REFERENCE_FACTORY
 		export
 			{NON} all
-		undefine
-			is_equal
 		end
 	
 create
@@ -21,12 +19,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_type: like current_type) is
 			-- Creation routine
+		require
+			non_void_type: a_type /= Void
 		do
+			current_type := a_type
+		ensure
+			current_type_set: current_type = a_type
 		end
 		
 feature -- Access
+
+	current_type: CODE_GENERATED_TYPE
+			-- Type including this expression
 
 	code: STRING is
 			-- | Result := "Current"
@@ -42,6 +48,9 @@ feature -- Status Report
 		do
 			Result := Type_reference_factory.type_reference_from_code (current_type)
 		end
+
+invariant
+	non_void_current_type: current_type /= Void
 
 end -- class CODE_THIS_REFERENCE_EXPRESSION
 

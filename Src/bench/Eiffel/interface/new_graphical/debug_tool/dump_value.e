@@ -192,14 +192,14 @@ feature -- Status report
 					obj.attributes.after
 				loop
 					cv_spec ?= obj.attributes.item
-					if cv_spec /= Void and then cv_spec.name.is_equal ("area") then
+					if cv_spec /= Void and then cv_spec.name.is_equal (area_name) then
 						Result := cv_spec.raw_string_value
 						Result.prune_all ('%U')
 					end
 					obj.attributes.forth
 				end
 			elseif dynamic_type.simple_conform_to (sc) then
-				f := sc.feature_with_name ("area").ancestor_version (dynamic_type)
+				f := sc.feature_with_name (area_name).ancestor_version (dynamic_type)
 				create obj.make (value_object, min, max)
 				from
 					obj.attributes.start
@@ -222,6 +222,9 @@ feature -- Status report
 				else
 					Result := expr.error_message
 				end
+			end
+			if Result = Void then
+				Result := "Could not find string representation"
 			end
 		end
 
@@ -439,6 +442,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Private Constants
 	
 	debuggable_class_name: STRING is "debug_output"
+	area_name: STRING is "area"
 	
 	Type_unknown	: INTEGER is 0
 	Type_boolean	: INTEGER is 1

@@ -29,7 +29,7 @@ cluster
 
 	library wel:		"$ISE_EIFFEL\library\wel"
 		exclude
-			"spec"; "clib"; "wel_dispatcher.e"; "wel_string.e"; "wel_main_arguments.e"; "wel_identified.e"; "wel_object_id_manager.e"; "wel_font_family_enumerator.e"; "wel_blocking_dispatcher.e"; "wel_dispatcher_delegate.e"; 
+			"spec"; "clib"; "classic";
 		end
 
 	library wel_net:		"$ISE_EIFFEL\library.net\wel"

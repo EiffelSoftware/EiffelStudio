@@ -67,7 +67,10 @@ feature {NONE} -- Initialization
 			format_menu := format_m;
 			special_menu := special_m;
 			make_form (a_form);
-			set_composite_attributes (a_form)
+			set_composite_attributes (a_form);
+            set_composite_attributes (edit_m);
+            set_composite_attributes (format_m);
+            set_composite_attributes (special_m)
 		end;
 
 feature -- Resource Update
@@ -327,31 +330,17 @@ feature {NONE} -- Implementation; Graphical Interface
 			quit_cmd: QUIT_FILE;
 			quit_button: EB_BUTTON;
 			quit_menu_entry: EB_MENU_ENTRY;
-			exit_menu_entry: EB_MENU_ENTRY;
-			change_font_cmd: CHANGE_FONT;
-			change_font_button: EB_BUTTON;
-			change_font_menu_entry: EB_MENU_ENTRY;
-			search_cmd: SEARCH_STRING;
-			search_button: EB_BUTTON;
-			search_menu_entry: EB_MENU_ENTRY;
+			exit_menu_entry: EB_MENU_ENTRY
 		do
 				-- Creation of all the commands, holes, buttons, and menu entries
 			!! hole.make (Current);
 			!! hole_button.make (hole, edit_bar);
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
-			!! search_cmd.make (Current);
-			!! search_button.make (search_cmd, edit_bar);
-			!! search_menu_entry.make (search_cmd, edit_menu);
-			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
-			!! change_font_cmd.make (text_window);
-			!! quit_cmd.make (text_window);
+			build_edit_menu (edit_bar);
+			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			if create_menus then
-				!! change_font_menu_entry.make (change_font_cmd, preference_menu);
-				!! change_font_cmd_holder.make_plain (change_font_cmd);
-				change_font_cmd_holder.set_menu_entry (change_font_menu_entry);
-
 				!! quit_menu_entry.make (quit_cmd, file_menu);
 				!! quit.make (quit_cmd, quit_button, quit_menu_entry);
 
@@ -359,8 +348,6 @@ feature {NONE} -- Implementation; Graphical Interface
 				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
 				exit_cmd_holder.set_menu_entry (exit_menu_entry)
 			else
-				!! change_font_cmd_holder.make_plain (change_font_cmd);
-
 				!! quit.make_plain (quit_cmd);
 				quit.set_button (quit_button)
 			end;
@@ -369,12 +356,12 @@ feature {NONE} -- Implementation; Graphical Interface
 				-- I know it's not really maintainable.
 			edit_bar.attach_left (hole_button, 0);
 			edit_bar.attach_top (hole_button, 0);
-			edit_bar.attach_top (search_button, 0);
+			edit_bar.attach_top (search_cmd_holder.associated_button, 0);
 			edit_bar.attach_top (quit_button, 0);
 			edit_bar.attach_right (quit_button, 0);
 			edit_bar.detach_left (quit_button);
-			edit_bar.attach_right_widget (quit_button, search_button, 5);
-			edit_bar.detach_left (search_button)
+			edit_bar.attach_right_widget (quit_button, search_cmd_holder.associated_button, 5);
+			edit_bar.detach_left (search_cmd_holder.associated_button)
 		end;
 
 	build_format_bar is
@@ -388,7 +375,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			attr_menu_entry: EB_TICKABLE_MENU_ENTRY;
 		do
 				-- First we create all objects.
-			!! once_cmd.make (text_window);
+			!! once_cmd.make (Current);
 			!! once_button.make (once_cmd, format_bar);
 			!! once_menu_entry.make (once_cmd, format_menu);
 			!! showonce_frmt_holder.make (once_cmd, once_button, once_menu_entry)
@@ -486,21 +473,21 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! slice_menu_entry.make_button_only (slice_cmd, special_menu);
 			slice_menu_entry.add_activate_action (slice_cmd, Void);
 			!! slice_cmd_holder.make (slice_cmd, slice_button, slice_menu_entry)
-			!! current_target_cmd.make (text_window);
+			!! current_target_cmd.make (Current);
 			!! sep.make (new_name, special_menu);
 			!! current_target_menu_entry.make (current_target_cmd, special_menu);
 			!! current_target_cmd_holder.make_plain (current_target_cmd);
 			current_target_cmd_holder.set_menu_entry (current_target_menu_entry)
-			!! next_target_cmd.make (text_window);
+			!! next_target_cmd.make (Current);
 			!! next_target_button.make (next_target_cmd, edit_bar);
 			!! next_target_menu_entry.make (next_target_cmd, special_menu);
 			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry);
-			!! previous_target_cmd.make (text_window);
+			!! previous_target_cmd.make (Current);
 			!! previous_target_button.make (previous_target_cmd, edit_bar);
 			!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
 			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry);
 
-			!! history_list_cmd.make (text_window);
+			!! history_list_cmd.make (Current);
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 

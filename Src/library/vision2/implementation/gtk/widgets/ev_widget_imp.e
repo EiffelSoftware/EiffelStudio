@@ -8,7 +8,6 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
         EV_WIDGET_IMP 
         
 inherit
@@ -25,27 +24,24 @@ inherit
 
 feature {NONE} -- Initialization	
 
-	widget_make (par: EV_CONTAINER) is
+	widget_make (an_interface: EV_WIDGET) is
 			-- This is a general initialization for 
 			-- widgets and has to be called by all the 
 			-- widgets with parents.
 		local
-			par_imp: EV_CONTAINER_IMP
 			s: string
 			ev_str: ANY
 			con_id: INTEGER
-
 		do
-			par_imp ?= par.implementation
-			check
-				parent_not_void: par_imp /= Void
-			end
-			plateform_build (par_imp)
-			--gtk_widget_show (widget)
-			par_imp.add_child (Current)
-			build
+			-- Set the interface
+			interface ?= an_interface
 
-			-- connect gtk widget destroy signal to EV_WIDGET_IMP.destroy_signal_callback
+			-- Initialize the datas
+			set_default_options
+			set_default_colors
+
+			-- Set a default destroy event.
+ 			-- connect gtk widget destroy signal to EV_WIDGET_IMP.destroy_signal_callback
 			!!s.make (0)
 			s := "destroy"
 			ev_str ?= s.to_c
@@ -60,11 +56,12 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	plateform_build (par: EV_CONTAINER_I) is
-			-- Plateform dependant initializations.
+	set_default_minimum_size is
+			-- Initialize the size of the widget.
+			-- Redefine by some widgets.
 		do
-			parent_imp ?= par
-		end	
+			-- To implement
+		end
 
 feature -- Access
 
@@ -170,16 +167,47 @@ feature -- Status setting
 			end
 		end
 
+feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+			-- Before to remove the widget from the
+			-- container, we increment the number of
+			-- reference on the object otherwise gtk
+			-- destroyed the object. And after having
+			-- added the object to another container,
+			-- we remove this supplementary reference.
+		local
+			par_imp: EV_CONTAINER_IMP
+		do
+			if parent_imp /= Void then
+				gtk_object_ref (widget)
+				parent_imp.remove_child (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				show
+				par_imp ?= par.implementation
+				check
+					parent_not_void: par_imp /= Void
+				end
+				parent_imp ?= par_imp
+				par_imp.add_child (Current)
+				gtk_object_unref (widget)
+			end
+		end
+
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		do
-			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
+--			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
 		end
 
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		do
-			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
+--			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
 		end
 	
 feature -- Measurement

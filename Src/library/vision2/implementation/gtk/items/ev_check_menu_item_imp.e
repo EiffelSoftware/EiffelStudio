@@ -18,15 +18,17 @@ inherit
 		end
 
 creation
+	make,
 	make_with_text
+--	make_with_pixmap,
+--	make_with_all
 
 feature {NONE} -- Initialization
 	
-	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
+	make_with_text (txt: STRING) is
 			-- Create menu item
 		do
 			widget := gtk_check_menu_item_new
-			show
 			gtk_check_menu_item_set_show_toggle (widget, True)
 			initialize
 			create_text_label (txt)

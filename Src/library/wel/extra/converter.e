@@ -30,10 +30,10 @@ feature -- Access
 
 feature -- Basic operations
 
-	convert (input_file: STRING) is
+	extract_definition (input_file: STRING) is
 			-- Scans input_file for "#define id integer" and puts them in output_file
 		require
-			input_file_not_Void: input_file /= Void
+			input_file_not_void: input_file /= Void
 			input_file_not_empty: not input_file.is_empty
 			input_file_exists: file_exists (input_file)
 		local

@@ -7,7 +7,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class CMD
+deferred class BUILD_CMD
 
 inherit
 
@@ -25,6 +25,7 @@ feature
 			if (transition_label /= Void) then
 				control.transit (transition_label)
 			end
+			execute_observers
 		end;
 
 	context_data: CONTEXT_DATA;
@@ -52,7 +53,56 @@ feature
 			-- Set transition exit label to `s'
 		do
 			transition_label := s;
+			
 		end;
+
+	add_observer (new_command: BUILD_CMD) is
+			-- Add `new_command' to the list of commands to be
+			-- executed if `Current' is executed.
+		require
+			valid_command: new_command /= Void
+		do
+			if observer_list = Void then
+				!! observer_list.make 
+			end
+			observer_list.extend (new_command)
+		end
+
+	remove_observer (old_command: BUILD_CMD; i: INTEGER) is
+			-- Remove `old_command' from the list of commands to be 
+			-- executed when `Current' is executed.
+		require
+			valid_command: old_command /= Void
+		do
+			observer_list.go_i_th (i)
+			observer_list.prune (old_command)
+		end
+
+	observer_count: INTEGER is
+			-- Number of observers
+		do
+			Result := observer_list.count
+		end
+
+feature {NONE}
+
+	execute_observers is
+			-- Execute all commands in `observer_list'.
+		do
+			if observer_list /= Void then
+				from
+					observer_list.start
+				until
+					observer_list.after
+				loop
+					observer_list.item.execute
+					observer_list.forth
+				end
+			end
+		end
+
+	observer_list: LINKED_LIST [BUILD_CMD] 
+			-- List of commands to be executed when `Current' is.
 
 feature {META_COMMAND}
 
@@ -64,7 +114,7 @@ feature {META_COMMAND}
 			context_data = a_context_data
 		end
 
-end -- class CMD
+end -- class BUILD_CMD
 
 --|----------------------------------------------------------------
 --| EiffelBuild library.

@@ -82,11 +82,9 @@ feature -- Access
 				used_cell_count := used_cell_count + widget_cells_used
 				internal_item_list.forth
 			end
-				-- If the cells used equal the toal number of cells,
+				-- If the cells used equal the total number of cells,
 				-- then the table is full.
-			if used_cell_count = rows * columns then
-				Result := True
-			end
+			Result := used_cell_count = rows * columns
 		end
 		
 	before: BOOLEAN is
@@ -562,7 +560,6 @@ feature -- Element change
 			-- Current cursor position.
 		local
 			an_item: like item
-			temp_cursor: EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]
 		do
 			if index > 0 and then index <= count then
 				an_item := item

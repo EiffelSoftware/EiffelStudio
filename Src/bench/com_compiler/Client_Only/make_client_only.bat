@@ -16,24 +16,19 @@ del Clib\*.cpp
 del Clib\*.c
 del Clib\*.h
 
-copy generated\Common\Include Clib
+copy generated\Common\Include Clib\
 
-copy generated\Server\Clib\*.* Clib
+copy generated\Server\Clib\*.* Clib\
 
-copy generated\Server\Include Clib
+copy generated\Server\Include Clib\
 
-copy generated\Client\Clib\*.* Clib
+copy generated\Client\Clib\*.* Clib\
 
-copy generated\Client\Include Clib
-
-rename generated\ISE.tlb ISE.Compiler.tlb
-
-copy generated\ISE.Compiler.tlb .\
+copy generated\Client\Include Clib\
 
 copy to_replace\*.* Clib\
 
 cd Clib
 call make_msc.bat
-nmake makefile_server.msc
 
 cd ..

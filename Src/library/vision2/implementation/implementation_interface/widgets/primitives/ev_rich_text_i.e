@@ -36,6 +36,7 @@ feature -- Element change
 			-- current character format.
 		require
 			exists: not destroyed
+			valid_format: format /= Void
 		deferred
 --		ensure
 --			format_set: character_format = format

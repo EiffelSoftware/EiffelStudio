@@ -96,7 +96,7 @@ rt_private Callback_ids dbg_last_callback_id;
 #define LOCKED_DBG_CB_ID_VALUE LOCKED_VALUE(dbg_last_callback_id)
 #define LOCKED_DBG_CB_ID_SET_VALUE(v) LOCKED_SET_VALUE(dbg_last_callback_id, v)
 #define LOCKED_DBG_CB_ID_IS_EQUAL(v) LOCKED_VALUE_IS_EQUAL(dbg_last_callback_id, v)
-#define LOCKED_DBG_CB_NAME(v) Callback_name(LOCKED_DBG_CB_ID_VALUE)
+#define LOCKED_DBG_CB_NAME Callback_name((e_callback_id) LOCKED_DBG_CB_ID_VALUE)
 
 rt_private UINT dbg_timer;
 #define LOCKED_DBG_TIMER_VALUE LOCKED_VALUE(dbg_timer)
@@ -115,6 +115,10 @@ rt_private bool dbg_estudio_notification_processing;
 #define LOCKED_ES_NOTIFICATION_START LOCKED_SET_VALUE(dbg_estudio_notification_processing, true)
 #define LOCKED_ES_NOTIFICATION_STOP LOCKED_SET_VALUE(dbg_estudio_notification_processing, false)
 
+rt_private bool dbg_estudio_evaluation_processing;
+#define LOCKED_ES_EVALUATION_START LOCKED_SET_VALUE(dbg_estudio_evaluation_processing, true)
+#define LOCKED_ES_EVALUATION_STOP LOCKED_SET_VALUE(dbg_estudio_evaluation_processing, false)
+
 rt_private UINT dbg_keep_synchro;
 #define LOCKED_DBG_KEEP_SYNCHRO LOCKED_SET_VALUE(dbg_keep_synchro, 1)
 #define LOCKED_DBG_STOP_SYNCHRO LOCKED_SET_VALUE(dbg_keep_synchro, 0)
@@ -130,7 +134,7 @@ rt_private volatile LONG dbg_state ;
 
 rt_private void reset_variables() {
 	/* Reset variables used in the synchro */
-	LOCKED_DBG_STATE_SET_VALUE (0);
+	LOCKED_DBG_STATE_SET_VALUE(0);
 	LOCKED_DBG_CB_ID_SET_VALUE(CB_NONE);
 	LOCKED_DBG_START_TIMER_RESET;
 	LOCKED_DBG_KEEP_SYNCHRO;
@@ -336,7 +340,7 @@ rt_private void dbg_resume_estudio_thread () {
 #define DBG_INIT_CRITICAL_SECTION	dbg_init_critical_section ()
 #define DBG_INIT_ESTUDIO_THREAD_HANDLE dbg_init_estudio_thread_handle ()
 #define DBG_CLOSE_ESTUDIO_THREAD_HANDLE dbg_close_estudio_thread_handle ()
-#define DBG_SUSPEND_ESTUDIO_THREAD dbg_suspend_estudio_thread (); 
+#define DBG_SUSPEND_ESTUDIO_THREAD dbg_suspend_estudio_thread ();
 #define DBG_RESUME_ESTUDIO_THREAD  dbg_resume_estudio_thread (); 
 /*
 #define DBG_SUSPEND_ESTUDIO_THREAD 
@@ -548,6 +552,7 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 	REQUIRE(LOCKED_DBG_TIMER_IS_NOT_SET, "Timer disabled (context = evaluating)")
 
 	/*** Do  ***/
+	LOCKED_ES_EVALUATION_START;
 
 	DBGTRACE("[ES::Eval] START evaluation");
 
@@ -624,6 +629,7 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 	/*** Ensure ***/
 	ENSURE(eval_callback_proceed, "Last callback is be about evaluation")
 	/*** End  ***/
+	LOCKED_ES_EVALUATION_STOP;
 }
 
 /*

@@ -15,9 +15,16 @@ feature -- Access
 			-- `default_value' if this value is not known
 		require
 			name_not_void: name /= Void
+		local
+			string_value: STRING
 		do
 			if has (name) then
-				Result := item (name).to_integer;
+				string_value := item (name);
+				if string_value.is_integer then
+					Result := string_value.to_integer
+				else
+					Result := default_value
+				end;
 				if free_resource then
 					remove (name)
 				end
@@ -32,9 +39,16 @@ feature -- Access
 		require
 			name_not_void: name /= Void;
 			valid_default_value: default_value >= 0
+		local
+			string_value: STRING
 		do
 			if has (name) then
-				Result := item (name).to_integer.abs;
+				string_value := item (name);
+				if string_value.is_integer then
+					Result := string_value.to_integer.abs
+				else
+					Result := default_value
+				end;
 				if free_resource then
 					remove (name)
 				end
@@ -50,9 +64,16 @@ feature -- Access
 			-- `default_value' if this value is not known
 		require
 			name_not_void: name /= Void
+		local
+			string_value: STRING
 		do
 			if has (name) then
-				Result := item (name).to_boolean;
+				string_value := item (name);
+				if string_value.is_boolean then
+					Result := string_value.to_boolean
+				else
+					Result := default_value
+				end;
 				if free_resource then
 					remove (name)
 				end
@@ -66,9 +87,16 @@ feature -- Access
 			-- `default_value' if this value is not known
 		require
 			name_not_void: name /= Void
+		local
+			string_value: STRING
 		do
 			if has (name) then
-				Result := item (name).to_real;
+				string_value := item (name);
+				if string_value.is_real then
+					Result := string_value.to_real
+				else
+					Result := default_value
+				end;
 				if free_resource then
 					remove (name)
 				end

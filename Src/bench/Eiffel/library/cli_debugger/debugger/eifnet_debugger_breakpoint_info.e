@@ -34,11 +34,11 @@ feature -- Access
 			l_succeed: BOOLEAN
 		do
 			debug ("debugger_bp_trace")
-				print ("Request Add BP - line=" + a_line.to_hex_string+ "%N")
-				print ("%T Module = "+a_module_name+" %N")
-				print ("%T ClassToken = "+ a_class_token.out + "~0x" + a_class_token.to_hex_string+" %N")
-				print ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
-				print ("%N")
+				io.error.put_string ("Request Add BP - line=" + a_line.to_hex_string+ "%N")
+				io.error.put_string ("%T Module = "+a_module_name+" %N")
+				io.error.put_string ("%T ClassToken = "+ a_class_token.out + "~0x" + a_class_token.to_hex_string+" %N")
+				io.error.put_string ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
+				io.error.put_string ("%N")
 			end
 			create l_bp.make (a_bp, resolved_module_key (a_module_name), a_class_token, a_feature_token, a_line)
 			l_bp.activate
@@ -57,11 +57,11 @@ feature -- Access
 			l_icd_bp: ICOR_DEBUG_BREAKPOINT
 		do
 			debug ("debugger_bp_trace")
-				print ("Request Remove BP - line=" + a_line.to_hex_string+ "%N")
-				print ("%T Module = "+a_module_name+" %N")
-				print ("%T ClassToken = "+ a_class_token.out + "~0x" + a_class_token.to_hex_string+" %N")
-				print ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
-				print ("%N")
+				io.error.put_string ("Request Remove BP - line=" + a_line.to_hex_string+ "%N")
+				io.error.put_string ("%T Module = "+a_module_name+" %N")
+				io.error.put_string ("%T ClassToken = "+ a_class_token.out + "~0x" + a_class_token.to_hex_string+" %N")
+				io.error.put_string ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
+				io.error.put_string ("%N")
 			end
 			create l_bp.make (a_bp, resolved_module_key (a_module_name), a_class_token, a_feature_token, a_line)
 
@@ -87,7 +87,7 @@ feature -- Access
 					bp_removed: not breakpoints.has (l_bp)
 				end
 			
-				debug ("debugger_bp_trace") print ("BreakPoint REMOVED ! %N") end
+				debug ("debugger_bp_trace") io.error.put_string ("BreakPoint REMOVED ! %N") end
 			end
 		end
 	
@@ -207,7 +207,7 @@ feature {NONE} -- Notification
 
 				l_bp_for_addition := breakpoints_for_addition_by_module.item (a_mod_key)
 				debug ("debugger_bp_trace")
-					print (" - EifnetBreakPoint: " + l_bp_for_addition.count.out + " to be added for this module.%N")
+					io.error.put_string (" - EifnetBreakPoint: " + l_bp_for_addition.count.out + " to be added for this module.%N")
 				end
 				from
 					l_bp_for_addition.start
@@ -270,9 +270,9 @@ feature {NONE} -- Implementation
 				l_icd_class := l_icd_module.get_class_from_token (l_class_token)
 				if not l_icd_module.last_call_succeed or else l_icd_class = Void then
 					debug ("debugger_bp_trace")
-						print ("[ERROR] During Breakpoint addition, eStudio got confused with Module ...%N")
-						print ("        class_token is not inside module %N")
-						print ("        " + l_icd_module.module_name + "%N")
+						io.error.put_string ("[ERROR] During Breakpoint addition, eStudio got confused with Module ...%N")
+						io.error.put_string ("        class_token is not inside module %N")
+						io.error.put_string ("        " + l_icd_module.module_name + "%N")
 					end
 					l_icd_module := Void
 				end
@@ -294,21 +294,21 @@ feature {NONE} -- Implementation
 							l_icd_bp.activate (True) -- not useful ... by default, but .. just to be sure ;)
 							Result := True
 
-							debug ("debugger_bp_trace") print ("BreakPoint ADDED ! %N") end
+							debug ("debugger_bp_trace") io.error.put_string ("BreakPoint ADDED ! %N") end
 						else
 							debug ("debugger_bp_trace") 
-								print ("Error[" + l_icd_code.last_error_code_id 
+								io.error.put_string ("Error[" + l_icd_code.last_error_code_id 
 										+ "] in ICorDebugCode->CreateBreakpoint for (" 
 										+ l_feat_token.out + ")%N") 
 							end
 						end		
 					end
 				else
-					debug ("debugger_bp_trace") print ("Error while retrieving function_by_token (" + l_feat_token.out + ")%N") end
+					debug ("debugger_bp_trace") io.error.put_string ("Error while retrieving function_by_token (" + l_feat_token.out + ")%N") end
 				end
 			else
 				debug ("debugger_bp_trace")
-					print ("Information not yet available, wait for class loading during JIT execution (" 
+					io.error.put_string ("Information not yet available, wait for class loading during JIT execution (" 
 							+ l_class_token.out 
 							+ "."
 							+ l_feat_token.out 
@@ -404,7 +404,7 @@ feature -- debug purpose only
 			end
 
 			l_output.append_string ("  #===================================%N")
-			print (l_output + "%N")
+			io.error.put_string (l_output + "%N")
 		end
 
 end -- class EIFNET_DEBUGGER_BREAKPOINT_INFO

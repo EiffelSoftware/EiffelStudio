@@ -34,6 +34,12 @@ feature -- Generation
 			generate_ancestors (class_c, class_type)
 		end
 
+	generate_metadata (classes: ARRAY [CLASS_C]) is
+			-- Store Eiffel names to allow roundtrip
+			-- when consuming metadata again.
+		do
+		end
+
 feature {NONE} -- Not applicable
 
 	generate_class_custom_attribute (class_type: CLASS_TYPE) is

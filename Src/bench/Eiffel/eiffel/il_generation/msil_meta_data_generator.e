@@ -48,6 +48,34 @@ feature -- Generation
 			end
 		end
 
+	generate_metadata (classes: ARRAY [CLASS_C]) is
+			-- Store Eiffel names to allow roundtrip
+			-- when consuming metadata again.
+		local
+			i, nb: INTEGER
+			class_c: CLASS_C
+			metadata_generator: EAC_META_DATA_GENERATOR
+		do
+			from
+				i := classes.lower
+				nb := classes.upper
+				create metadata_generator.make
+			variant
+				nb - i + 1
+			until
+				i > nb
+			loop
+				class_c := classes.item (i)
+				if class_c /= Void and then class_c.is_external and then
+				class_c.ast.top_indexes /= Void and then
+				class_c.ast.top_indexes.assembly_name /= Void then
+					metadata_generator.add (class_c)
+				end
+				i := i + 1
+			end
+			metadata_generator.generate
+		end
+
 feature {NONE} -- Feature generation
 
 	generate_feature (feat: FEATURE_I; in_current_class: BOOLEAN; type_id: INTEGER) is

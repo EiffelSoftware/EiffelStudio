@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_draw_area (c_object, a_x, a_y, a_width, a_height)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width, a_height)
 		end
 		
 	clear_and_redraw is
@@ -98,7 +98,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 
 	drawable: POINTER is
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
 		end
 		
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 				(a_key.code = App_implementation.Key_constants.Key_up or else a_key.code = App_implementation.Key_constants.Key_down)
 			then
 				-- This is a hack for Studio to force trailing cursors to be undrawn upon key scrolling.
-				feature {EV_GTK_EXTERNALS}.gtk_widget_queue_draw (c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
 			end				
 		end
 

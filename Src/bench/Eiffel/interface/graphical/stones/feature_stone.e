@@ -17,95 +17,62 @@ inherit
 			origin_text, is_valid
 		end;
 
-	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT;
 
 	HASHABLE_STONE
-		undefine
-			header
 		redefine
-			origin_text, is_valid, synchronized_stone
-		end
+			origin_text, is_valid, synchronized_stone, header
+		end;
 
---	SHARED_DEBUG
--- Removed to cut dependancies for the batch only version
+	INTERFACE_W
 
 creation
 
-	make, make_with_positions
+	make
 
 feature -- Initialization
 
-	make (a_featurei: FEATURE_I; a_class: CLASS_C) is
+	make (a_feature: E_FEATURE; a_class: E_CLASS) is
 		do
-			feature_i := a_featurei;
-			private_start_position := -1;
-			private_end_position := -1;
-			class_c := a_class
-		end;
-
-	make_with_positions (a_featurei: FEATURE_I; 
-			a_class: CLASS_C; s, e: INTEGER) is
-		do
-			feature_i := a_featurei;
-			private_start_position := s;
-			private_end_position := e;
-			class_c := a_class
+			start_position := -1;
+			end_position := -1;
+			e_feature := a_feature;
+			e_class := a_class
 		end;
 
 feature -- Properties
  
-	feature_i: FEATURE_I;
-	class_c: CLASS_C;
+	e_feature: E_FEATURE;
+	e_class: E_CLASS;
 
-	start_position: INTEGER is
+	start_position: INTEGER;
 			-- Start position of the feature in
 			-- the origin file
-		do
-			Result := private_start_position;
-			if Result = -1 then
-				initialize_positions;
-				Result := private_start_position
-			end;
-		end;
 
-	end_position: INTEGER is
+	end_position: INTEGER;
 			-- End position of the feature in
 			-- the origin file
-		do
-			Result := private_end_position;
-			if Result = -1 then
-				initialize_positions;
-				Result := private_end_position
-			end;
-		end;
 
 	icon_name: STRING is
-		require else
-			is_valid
 		local
 			temp: STRING
 		do
 			!!Result.make (0);
-			Result.append (feature_i.feature_name);
+			Result.append (e_feature.name);
 			Result.append (" (");
-			temp := clone (class_c.class_name)
+			temp := clone (e_class.name)
 			temp.to_upper;
 			Result.append (temp);
 			Result.append (")");
 		end;
 
 	header: STRING is
-		require else
-			is_valid
 		do
 			!!Result.make (0);
 			Result.append ("Feature: ");
-			Result.append (feature_i.feature_name);
+			Result.append (e_feature.name);
 			Result.append ("    Class: ");
-			Result.append (class_c.signature);
---			if Debug_info.is_breakpoint_set (feature_i, 1) then
---				Result.append ("   (stop)");
---			end;
+			Result.append (e_class.signature);
 		end;
  
 feature -- dragging
@@ -119,7 +86,7 @@ feature -- dragging
 			temp := normal_origin_text;
 			if temp /= Void then
 				Result := "-- Version from class: ";
-				cn := clone (feature_i.written_class.class_name)
+				cn := clone (e_feature.written_class.name)
 				cn.to_upper;
 				Result.append (cn);
 				Result.append ("%N%N%T");
@@ -145,9 +112,9 @@ feature -- dragging
 			!! Result.make (1, 2);
 				temp := "-- Version from class: ";
 				sp := temp.count;
-				ep :=  feature_i.written_class.class_name.count;
+				ep := e_feature.written_class.name.count;
 				ep := ep + sp;
-			!! cs.make (feature_i.written_class.stone, sp, ep);
+			!! cs.make (e_feature.written_class.stone, sp, ep);
 			Result.put (cs, 1);
 				sp := ep + 3;
 				ep := sp + end_position - start_position;
@@ -156,13 +123,13 @@ feature -- dragging
 		end;
  
 	file_name: STRING is
-			-- The one from class origin of `feature_i'
+			-- The one from class origin of `e_feature'
 		do
-			if feature_i /= Void and then 
-				feature_i.written_class /= Void and then
-				class_c /= Void
+			if e_feature /= Void and then 
+				e_feature.written_class /= Void and then
+				e_class /= Void
 			then
-				Result := feature_i.written_class.file_name
+				Result := e_feature.written_class.file_name
 			end;
 		end;
  
@@ -171,7 +138,7 @@ feature -- dragging
 	signature: STRING is
 			-- Signature of Current feature
 		do
-			Result := feature_i.signature
+			Result := e_feature.signature
 		end;
 
 	stone_type: INTEGER is do Result := Routine_type end;
@@ -187,7 +154,7 @@ feature -- dragging
 			-- Line number of feature text.
 		require
 			valid_start_position: start_position > 0;
-			valid_feature: feature_i /= Void 
+			valid_feature: e_feature /= Void 
 		local
 			file: RAW_FILE;
 			start_line_pos: INTEGER;
@@ -207,28 +174,48 @@ feature -- dragging
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
+				-- Don't like side effects but it is
+				-- useful here.
+			check_validity;
+			if start_position = 0 then
+					-- Body as cannot be found
+				Result := False
+			else
+				Result := fs_valid and then e_class /= Void 
+						and then e_feature /= Void
+			end
+		end;
+
+	check_validity is
+			-- Check the validity of feature stone.
+		local
+			body_as: FEATURE_AS
+		do
 			if start_position = -1 then
-				initialize_positions;
-				if private_start_position = 0 then
-					feature_i := Void
-				end
-			end;
-			Result := fs_valid and then class_c /= Void 
-						and then feature_i /= Void
+					-- Position has not been initialized
+				body_as := e_feature.ast;
+				if body_as /= Void then
+					start_position := body_as.start_position
+					end_position := body_as.end_position
+				else
+					start_position := 0
+					end_position := 0
+				end	
+			end
 		end;
 
 	synchronized_stone: FEATURE_STONE is
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore)
 		local
-			new_feature_i: FEATURE_I
+			new_e_feature: like e_feature
 		do
-			if class_c /= Void and feature_i /= Void then
-				if System.id_array.item (class_c.id) = class_c then
-					new_feature_i := class_c.feature_table.item
-													(feature_i.feature_name);
-					if new_feature_i /= Void then
-						Result := new_feature_i.stone (class_c)
+			if e_class /= Void and e_feature /= Void then
+				if Eiffel_system.class_of_id (e_class.id) = e_class then
+					new_e_feature := e_class.feature_with_name (e_feature.name);
+					if new_e_feature /= Void then
+						-- FIXME !!!
+						--Result := e_feature.stone (e_class)
 					end
 				end
 			end
@@ -239,7 +226,7 @@ feature -- Hashable
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := class_c.class_name.hash_code
+			Result := e_class.name.hash_code
 		end;
 
 feature {NONE} -- Implementation
@@ -249,19 +236,5 @@ feature {NONE} -- Implementation
 
 	private_end_position: INTEGER;
 			-- End position for feature
-
-	initialize_positions is
-		local
-			body_as: FEATURE_AS
-		do
-			body_as := feature_i.body;
-			if body_as /= Void then
-				private_start_position := body_as.start_position
-				private_end_position := body_as.end_position
-			else
-				private_start_position := 0
-				private_end_position := 0
-			end	
-		end;
 
 end

@@ -16,7 +16,9 @@ inherit
 			is_valid
 		end;
 
-	SHARED_WORKBENCH
+	SHARED_EIFFEL_PROJECT;
+
+	INTERFACE_W
 
 creation
 
@@ -100,13 +102,14 @@ feature -- dragging
 			new_cluster: CLUSTER_I
 		do
 			if class_i /= Void then
-				new_cluster := Universe.cluster_of_name (class_i.cluster.cluster_name);
+				new_cluster := Eiffel_Universe.cluster_of_name 
+							(class_i.cluster.cluster_name);
 				if
 					new_cluster /= Void and then
 					new_cluster.classes.has_item (class_i)
 				then
 					if class_i.compiled then
-						Result := class_i.compiled_class.stone
+						Result := class_i.compiled_eclass.stone
 					else
 						Result := class_i.stone
 					end

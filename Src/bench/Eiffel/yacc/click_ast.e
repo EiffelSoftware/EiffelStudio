@@ -6,13 +6,24 @@ class CLICK_AST
 
 inherit
 
-	CLICK_INDIR
-		redefine
-			node
-		end;
 	AST_YACC
 
-feature 
+feature -- Properties
+
+    start_position: INTEGER;
+
+    end_position: INTEGER;
+
+    node: STONABLE;
+        	-- An AST that is stonable
+
+feature -- Setting
+
+	set_node (n: like node) is
+			-- Set `node' to `n'.
+		do
+			node := n
+		end;
 
 	pass_click_set is
 			-- Pass address of `click_set' and `node_function' to yacc.
@@ -33,8 +44,18 @@ feature
 			node := click_indir_yacc_arg (0)
 		end;
 
-	node: STONABLE;
-		-- An AST is indirectly referenced
+feature {NONE} -- Implementation
+
+    node_function: like node is 
+		do 
+			Result := node 
+		end;
+
+    start_function: INTEGER is 
+		do 
+			Result := start_position 
+		end
+
 
 feature {NONE}
 

@@ -6,17 +6,12 @@ class FREEZE_PROJECT
 inherit
  
 	UPDATE_PROJECT
-		rename
-			freezing_actions as freeze_system
-		undefine
-			freeze_system
 		redefine
-			launch_c_compilation, freeze_system,
+			launch_c_compilation, 
 			confirm_and_compile,
 			command_name, symbol,
-			compilation_allowed
+			compilation_allowed, perform_compilation
 		end
-	C_COMPILE_ACTIONS
  
 creation
 
@@ -56,8 +51,13 @@ feature {NONE}
 			if start_c_compilation then
 				error_window.put_string
 					("Launching C compilation in background...%N");
-				finish_freezing;
+				Eiffel_project.call_finish_freezing (True);
 			end
+		end;
+
+	perform_compilation (arg: ANY) is
+		do
+			Eiffel_project.freeze
 		end;
 
 feature 

@@ -10,7 +10,8 @@ inherit
 		redefine
 			send
 		end;
-	BEURK_HEXER
+	BEURK_HEXER;
+	BASIC_ROUTINES
 
 creation
 
@@ -32,14 +33,14 @@ feature
 	dynamic_type: STRING;
 			-- Dynamic type of object being inspected
 
-	attributes: LIST [ATTRIBUTE];
+	attributes: LINKED_LIST [DEBUG_VALUE];
 			-- Attributes of object being inspected (sorted by name)
 
 	send is
 			-- Send inpect request to application.
 		local
 			obj_addr, dt_lower: STRING;
-			c_stone: CLASSC_STONE
+			class_i: CLASS_I
 		do
 			send_rqst_3 (Rqst_sp_lower, 0, 0, sp_lower);
 			send_rqst_3 (Rqst_sp_upper, 0, 0, sp_upper);
@@ -49,16 +50,20 @@ feature
 			obj_addr := c_tread;
 			if dynamic_type.is_equal ("SPECIAL") then
 				is_special := true;
-				!LINKED_LIST [ATTRIBUTE]! attributes.make;
+				attributes.make;
 				capacity := c_tread.to_integer;
 				recv_attributes (attributes, Void)
 			else
 				is_special := false;
-				!SORTED_TWO_WAY_LIST [ATTRIBUTE]! attributes.make;
+				!SORTED_TWO_WAY_LIST [DEBUG_VALUE]! attributes.make;
 				dt_lower := clone (dynamic_type);
 				dt_lower.to_lower;
-				c_stone ?= Universe.class_stone (dt_lower);
-				recv_attributes (attributes, c_stone.class_c)
+				class_i := Universe.class_with_name (dt_lower);
+				if class_i = Void then
+					recv_attributes (attributes, Void)
+				else
+					recv_attributes (attributes, class_i.compiled_eclass)
+				end
 			end;
 				-- Convert the physical addresses received from
 				-- the application to hector addresses.
@@ -72,16 +77,16 @@ feature
 			end
 		end;
 
-	recv_attributes (attr_list: LIST [ATTRIBUTE]; class_c: CLASS_C) is
-			-- Receive `class_c''s attribute info from application and 
+	recv_attributes (attr_list: LINKED_LIST [DEBUG_VALUE]; e_class: E_CLASS) is
+			-- Receive `e_class attribute info from application and 
 			-- store it in `attr_list'.
 		local
 			attr_name, type_name: STRING;
 			i, attr_nb: INTEGER;
-			attr: ATTRIBUTE;
-			exp_attr: EXPANDED_ATTR;
-			spec_attr: SPECIAL_ATTR;
-			c_stone: CLASSC_STONE;
+			attr: DEBUG_VALUE;
+			exp_attr: EXPANDED_VALUE;
+			spec_attr: SPECIAL_VALUE;
+			class_i: CLASS_I
 			lower_type_name: STRING
 		do
 			attr_nb := c_tread.to_integer;
@@ -93,34 +98,43 @@ feature
 				attr_name := c_tread;
 				type_name := c_tread;
 				if type_name.is_equal ("BOOLEAN") then
-					!BOOLEAN_ATTR!attr.make (attr_name, class_c, c_tread)
+					!BOOLEAN_VALUE! attr.make_attribute (attr_name, 
+							e_class, c_tread.to_boolean)
 				elseif type_name.is_equal ("INTEGER") then
-					!INTEGER_ATTR!attr.make (attr_name, class_c, c_tread)
+					!INTEGER_VALUE! attr.make_attribute (attr_name, 
+							e_class, c_tread.to_integer)
 				elseif type_name.is_equal ("REAL") then
-					!REAL_ATTR!attr.make (attr_name, class_c, c_tread)
+					!REAL_VALUE! attr.make_attribute (attr_name, 
+							e_class, c_tread.to_real)
 				elseif type_name.is_equal ("DOUBLE") then
-					!DOUBLE_ATTR!attr.make (attr_name, class_c, c_tread)
+					!DOUBLE_VALUE! attr.make_attribute (attr_name, 
+							e_class, c_tread.to_double)
 				elseif type_name.is_equal ("CHARACTER") then
-					!CHARACTER_ATTR!attr.make (attr_name, class_c, c_tread)
+					!CHARACTER_VALUE! attr.make_attribute (attr_name, 
+							e_class, charconv (c_tread.to_integer))
 				elseif type_name.is_equal ("POINTER") then
-					!POINTER_ATTR!attr.make (attr_name, class_c, c_tread)
+					!POINTER_VALUE! attr.make_attribute (attr_name, e_class, c_tread)
 				elseif type_name.is_equal ("BIT") then
-					!BIT_ATTR!attr.make (attr_name, class_c, c_tread)
+					!BITS_VALUE! attr.make_attribute (attr_name, e_class, c_tread)
 				elseif type_name.is_equal ("expanded") then
 					type_name := c_tread;
-					!EXPANDED_ATTR!attr.make (attr_name, class_c, type_name);
+					!EXPANDED_VALUE! attr.make_attribute (attr_name, e_class, type_name);
 					lower_type_name := clone (type_name);
 					lower_type_name.to_lower;
-					c_stone ?= Universe.class_stone (lower_type_name);
+					class_i := Universe.class_with_name (lower_type_name);
 					exp_attr ?= attr;
-					recv_attributes (exp_attr.attributes, c_stone.class_c)
+					if class_i = Void then
+						recv_attributes (exp_attr.attributes, Void)
+					else
+						recv_attributes (exp_attr.attributes, class_i.compiled_eclass)
+					end;
 				elseif type_name.is_equal ("SPECIAL") then
-					!SPECIAL_ATTR!attr.make (attr_name, class_c, 
+					!SPECIAL_VALUE! attr.make_attribute (attr_name, e_class, 
 								c_tread, c_tread.to_integer);
 					spec_attr ?= attr;
 					recv_attributes (spec_attr.items, Void)
 				else
-					!REFERENCE_ATTR!attr.make (attr_name, class_c, 
+					!REFERENCE_VALUE! attr.make_attribute (attr_name, e_class, 
 													type_name, c_tread)
 				end
 				attr_list.extend (attr);

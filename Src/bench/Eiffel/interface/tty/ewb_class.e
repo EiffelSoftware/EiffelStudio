@@ -53,17 +53,17 @@ feature {NONE} -- Execution
 			-- Execute Current command.
 		local
 			class_i: CLASS_I;
-			class_c: CLASS_C
+			e_class: E_CLASS
 		do
-			class_i := Universe.unique_class (class_name);
+			class_i := Eiffel_universe.class_with_name (class_name);
 			if class_i /= Void then
 				if want_compiled_class then
-					class_c := class_i.compiled_class;
-					if class_c = Void then
+					e_class := class_i.compiled_eclass;
+					if e_class = Void then
 						io.error.putstring (class_name);
 						io.error.putstring (" is not in the system%N");
 					else
-						process_compiled_class (class_c);
+						process_compiled_class (e_class);
 					end;
 				else
 					process_uncompiled_class (class_i);
@@ -77,12 +77,12 @@ feature {NONE} -- Execution
 			name_cleared: class_name = Void
 		end;
 
-	process_compiled_class (class_c: CLASS_C) is
-			-- Process compiled class `class_c'.
+	process_compiled_class (e_class: E_CLASS) is
+			-- Process compiled class `e_class'.
 			-- (Do nothing by default).
 		require
 			want_compiled_class: want_compiled_class;
-			valid_class_c: class_c /= Void
+			valid_e_class: e_class /= Void
 		do
 		end;
 

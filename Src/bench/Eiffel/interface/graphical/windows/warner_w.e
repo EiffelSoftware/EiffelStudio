@@ -197,7 +197,7 @@ feature {NONE} -- Clickable features
 			error_message.append (s);
 		end;
 
-	put_clickable_string (a: ANY; s: STRING) is
+	put_clickable_string (a: STONE; s: STRING) is
 		do
 			put_string (s)
 		end;

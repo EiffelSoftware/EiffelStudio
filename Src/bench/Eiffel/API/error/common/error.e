@@ -36,12 +36,10 @@ feature
 feature -- Debug pupose
 
 	print_error_message is
-		local
-			dummy_reference: CLASS_C
 		do
 			put_string (Error_string);
 			put_string (" code: ");
-			put_clickable_string (stone (dummy_reference), code);
+			put_clickable_string (stone (Void), code);
 			if subcode /= 0 then
 				put_char ('(');
 				put_int (subcode);
@@ -116,7 +114,7 @@ feature -- Clicking
 			error_window.put_string (s)
 		end;
 
-	put_clickable_string (a: ANY; s: STRING) is
+	put_clickable_string (a: STONE; s: STRING) is
 		do
 			error_window.put_clickable_string (a, s)
 		end;
@@ -143,10 +141,10 @@ feature -- Clicking
 
 feature -- stoning
 
-	stone (reference_class: CLASS_C): ERROR_STONE is
+	stone (reference_class: E_CLASS): ERROR_STONE is
 			-- Reference class is useless here
 		do
-			!!Result.make (Current)
+			!! Result.make (Current)
 		end
 
 end

@@ -66,25 +66,25 @@ feature {NONE} -- Execution
 			!! Result.do_nothing
 		end;
 
-	process_compiled_class (class_c: CLASS_C) is
+	process_compiled_class (e_class: E_CLASS) is
 			-- Execute associated command
 		local
 			cmd: like associated_cmd;
-			ctxt: FORMAT_CONTEXT_B
+			ctxt: CLASS_TEXT_FORMATTER
 		do
 			cmd := clone (associated_cmd);
-			!! ctxt.make (class_c);
-			set_context_attributes (ctxt);
-			cmd.set (class_c, output_window);
+			!! ctxt;
+			set_format_attributes (ctxt);
+			cmd.set (e_class, output_window);
 			cmd.set_filter_name (filter_name);	
 			cmd.set_text_formatter (ctxt);	
 			cmd.execute
 		end;
 
-	set_context_attributes (ctxt: FORMAT_CONTEXT_B) is
+	set_format_attributes (ctxt: CLASS_TEXT_FORMATTER) is
 			-- Set context attributes `ctxt'.
 		do
-			ctxt.set_current_class_only;
+			ctxt.set_one_class_only;
 			ctxt.set_order_same_as_text;
 		end;
 

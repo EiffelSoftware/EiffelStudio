@@ -94,10 +94,11 @@ feature
 				run_info.dump_stack;
 		--	end;
 
-			if Run_info.feature_i /= Void then
-				Window_manager.routine_win_mgr.show_stoppoint (Run_info.feature_i, Run_info.break_index)
+			if Run_info.e_feature /= Void then
+				Window_manager.routine_win_mgr.show_stoppoint 
+							(Run_info.e_feature, Run_info.break_index)
 			end;		
-			Run_info.display_status;
+			Run_info.display_status (Debug_window);
 			restore_cursors
 		end;
 

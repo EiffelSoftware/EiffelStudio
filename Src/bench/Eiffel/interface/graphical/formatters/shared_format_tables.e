@@ -12,15 +12,15 @@ feature
 			stone_not_void: stone /= Void;
 			valid_stone: stone.is_valid
 		local
-			ctxt: FORMAT_CONTEXT_B
+			ctxt: CLASS_TEXT_FORMATTER
 		do
 			if flat_table.has (stone) then
 				Result := flat_table.item (stone)
 			else
-				!! ctxt.make (stone.class_c);
-				ctxt.set_in_bench_mode;
-				ctxt.execute;
-				if not ctxt.execution_error then
+				!! ctxt;
+				ctxt.set_clickable;
+				ctxt.format (stone.e_class);
+				if not ctxt.error then
 					Result := ctxt.text;
 					flat_table.put (Result, stone);
 					record_in_history (stone, flat_table)
@@ -34,16 +34,16 @@ feature
 			stone_not_void: stone /= Void;
 			valid_stone: stone.is_valid
 		local
-			ctxt: FORMAT_CONTEXT_B
+			ctxt: CLASS_TEXT_FORMATTER
 		do
 			if flatshort_table.has (stone) then
 				Result := flatshort_table.item (stone)
 			else
-				!! ctxt.make (stone.class_c);
-				ctxt.set_in_bench_mode;
+				!! ctxt;
+				ctxt.set_clickable;
 				ctxt.set_is_short;
-				ctxt.execute;
-				if not ctxt.execution_error then
+				ctxt.format (stone.e_class);
+				if not ctxt.error then
 					Result := ctxt.text;
 					flatshort_table.put (Result, stone);
 					record_in_history (stone, flatshort_table)
@@ -57,17 +57,17 @@ feature
 			stone_not_void: stone /= Void;
 			valid_stone: stone.is_valid
 		local
-			ctxt: FORMAT_CONTEXT_B
+			ctxt: CLASS_TEXT_FORMATTER
 		do
 			if short_table.has (stone) then
 				Result := short_table.item (stone)
 			else
-				!! ctxt.make (stone.class_c);
-				ctxt.set_in_bench_mode;
+				!! ctxt;
+				ctxt.set_clickable;
 				ctxt.set_is_short;
-				ctxt.set_current_class_only;
-				ctxt.execute;
-				if not ctxt.execution_error then
+				ctxt.set_one_class_only;
+				ctxt.format (stone.e_class);
+				if not ctxt.error then
 					Result := ctxt.text;
 					short_table.put (Result, stone);
 					record_in_history (stone, short_table)
@@ -81,17 +81,17 @@ feature
 			stone_not_void: stone /= Void;
 			valid_stone: stone.is_valid
 		local
-			ctxt: FORMAT_CONTEXT_B
+			ctxt: CLASS_TEXT_FORMATTER
 		do
 			if clickable_table.has (stone) then
 				Result := clickable_table.item (stone)
 			else
-				!! ctxt.make (stone.class_c);
-				ctxt.set_in_bench_mode;
-				ctxt.set_current_class_only;
+				!! ctxt;
+				ctxt.set_clickable;
+				ctxt.set_one_class_only;
 				ctxt.set_order_same_as_text;
-				ctxt.execute;
-				if not ctxt.execution_error then
+				ctxt.format (stone.e_class);
+				if not ctxt.error then
 					Result := ctxt.text;
 					clickable_table.put (Result, stone);
 					record_in_history (stone, clickable_table)
@@ -105,15 +105,15 @@ feature
 			stone_not_void: stone /= Void;
 			valid_stone: stone.is_valid
 		local
-			ctxt: FORMAT_FEAT_CONTEXT
+			ctxt: ROUTINE_TEXT_FORMATTER
 		do
 			if rout_flat_table.has (stone) then
 				Result := rout_flat_table.item (stone)
 			else
-				!! ctxt.make (stone.class_c);
-				ctxt.set_in_bench_mode;
-				ctxt.execute (stone.feature_i);
-				if not ctxt.execution_error then
+				!! ctxt;
+				ctxt.set_clickable;
+				ctxt.format (stone.e_feature, stone.e_class);
+				if not ctxt.error then
 					Result := ctxt.text;
 					rout_flat_table.put (Result, stone);
 					record_in_history (stone, rout_flat_table)
@@ -127,15 +127,15 @@ feature
 			stone_not_void: stone /= Void;
 			valid_stone: stone.is_valid
 		local
-			ctxt: DEBUG_CONTEXT
+			ctxt: ROUTINE_TEXT_FORMATTER
 		do
 			if debug_table.has (stone) then
 				Result := debug_table.item (stone)
 			else
-				!! ctxt.make (stone.class_c);
-				ctxt.set_in_bench_mode;
-				ctxt.execute (stone.feature_i);
-				if not ctxt.execution_error then
+				!! ctxt;
+				ctxt.set_clickable;
+				ctxt.format_debuggable (stone.e_feature, stone.e_class);
+				if not ctxt.error then
 					Result := ctxt.text;
 					debug_table.put (Result, stone);
 					record_in_history (stone, debug_table)

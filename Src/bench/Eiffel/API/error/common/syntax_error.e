@@ -69,7 +69,6 @@ feature
 	trace is
 			-- Debug purpose
 		local
-			dummy_reference: CLASS_C;
 			file: PLAIN_TEXT_FILE;
 			previous_line: STRING;
 			current_line: STRING;
@@ -101,7 +100,7 @@ feature
 						-- Error happened in a class
 					put_string (" in class ");
 					put_clickable_string (
-							stone (System.current_class),
+							stone (System.current_class.e_class),
 							System.current_class.signature)
 				else
 						-- Error happened while parsing a "use" file
@@ -111,7 +110,7 @@ feature
 					end;
 				end
 			else
-				put_clickable_string (ace_stone (dummy_reference), " in Ace file")
+				put_clickable_string (ace_stone, " in Ace file")
 			end;
 			new_line;
 			build_explain;
@@ -205,13 +204,12 @@ feature {NONE} -- Externals
 
 feature -- stoning
 
-	stone (reference_class: CLASS_C): CL_SYNTAX_STONE is
-			-- Reference class is useless here
+	stone (reference_class: E_CLASS): CL_SYNTAX_STONE is
 		do
 			!!Result.make (Current, reference_class)
 		end;
 
-	ace_stone (reference_class: CLASS_C): ACE_SYNTAX_STONE is
+	ace_stone: ACE_SYNTAX_STONE is
 			-- Reference class is useless here
 		do
 			!!Result.make (Current)

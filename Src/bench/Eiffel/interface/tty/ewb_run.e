@@ -17,6 +17,7 @@ inherit
 		redefine
 			loop_action
 		end;
+	SHARED_EXEC_ENVIRONMENT;
 	PROJECT_CONTEXT;
 	SHARED_MELT_ONLY
 
@@ -30,9 +31,10 @@ feature {NONE} -- Implementation
 			f: RAW_FILE;
 			make_f: INDENT_FILE;
 			error: BOOLEAN;
-			system_name: STRING
+			system_name: STRING;
+			cmd_exec: EXTERNAL_COMMAND_EXECUTOR
 		do
-			system_name := clone (System.system_name);
+			system_name := clone (Eiffel_system.name);
 			if system_name = Void then
 				io.putstring ("You must compile a project first.%N");
 			else
@@ -48,7 +50,7 @@ feature {NONE} -- Implementation
 				!!f.make (appl_name);
 				if not f.exists then
 					io.putstring ("The system ");
-				io.putstring (appl_name);
+					io.putstring (appl_name);
 					io.putstring (" does not exist.%N");
 				else
 					if not melt_only then
@@ -65,8 +67,10 @@ feature {NONE} -- Implementation
 							-- Get the arguments
 						appl_name.extend (' ');
 						appl_name.append (arguments);
-						Execution_environment.put (Workbench_generation_path, "MELT_PATH");
-						Execution_environment.system (appl_name);
+						Execution_environment.put (Workbench_generation_path, 
+										"MELT_PATH");
+						!! cmd_exec;
+						cmd_exec.execute (appl_name);
 					end;
 				end
 			end

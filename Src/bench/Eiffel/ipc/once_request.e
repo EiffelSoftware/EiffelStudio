@@ -22,7 +22,7 @@ feature
 			init_recv_c
 		end;
 
-	already_called (once_routine: FEATURE_I): BOOLEAN is
+	already_called (once_routine: E_FEATURE): BOOLEAN is
 			-- Has `once_routine' already been called?
 		require
 			exists: once_routine /= Void;
@@ -40,7 +40,7 @@ feature
 	
 debug ("ONCE")
 	io.error.putstring ("Once routine `");
-	io.error.putstring (once_routine.feature_name);
+	io.error.putstring (once_routine.name);
 	io.error.putstring ("' (");
 	io.error.putint (Debug_info.real_body_id (once_routine));
 	if Result then
@@ -52,7 +52,7 @@ debug ("ONCE")
 end
 		end;
 
-	once_result (once_function: FEATURE_I): DEBUG_VALUE is
+	once_result (once_function: E_FEATURE): DEBUG_VALUE is
 			-- Result of `once_function'
 		require
 			exists: once_function /= Void;

@@ -127,17 +127,16 @@ feature
 				change_cluster;
 				file_name := file_entry.text;
 				if aok then
-					!!class_i.make;
-					class_i.set_class_name (class_name);
 					!!f_name.make_from_string (cluster.path);
 					f_name.set_file_name (file_name);
 					base_name := file_name;
-					!!file.make (f_name);
+					!! file.make (f_name);
+					!! class_i.make;
+					class_i.set_class_name (class_name);
 					class_i.set_base_name (base_name);
-					class_i.set_cluster (cluster);
-					class_i.set_date;
-					if cluster.classes.has (f_name) then
-						warner (class_text).gotcha_call (w_Class_already_in_cluster (class_name));
+					if cluster.has_base_name (base_name) then
+						warner (class_text).gotcha_call 
+							(w_Class_already_in_cluster (base_name));
 					elseif
 						(not file.exists and then not file.is_creatable)
 					then
@@ -152,7 +151,7 @@ feature
 							file.putstring (stone.signature);
 							file.new_line;
 							file.close;
-							cluster.classes.put (class_i, class_name);
+							cluster.add_new_classs (class_i);
 							stone := class_i.stone;
 							class_text.receive (stone);
 							popdown;

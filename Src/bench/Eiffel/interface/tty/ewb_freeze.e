@@ -12,12 +12,8 @@ inherit
 	EWB_COMP
 		redefine
 			name, help_message, abbreviation,
-			execute, loop_action
+			execute, loop_action, perform_compilation
 		end
-
-creation
-
-	make
 
 feature -- Properties
 
@@ -40,10 +36,11 @@ feature {NONE} -- Execution
 
 	loop_action is
 		do
-			if Project_read_only.item then
+			if Eiffel_project.is_read_only then
 				io.error.put_string ("Read-only project: cannot compile.%N")
 			elseif 
-				command_line_io.confirmed ("Freezing implies some C compilation and linking.%N%
+				command_line_io.confirmed 
+					("Freezing implies some C compilation and linking.%N%
 							%Do you want to do it now") 
 			then
 				execute
@@ -52,27 +49,26 @@ feature {NONE} -- Execution
 
 	execute is
 		do
-			if Project_read_only.item then
+			if Eiffel_project.is_read_only then
 				io.error.put_string ("Read-only project: cannot compile.%N")
 			else	
 				init;
-				if Lace.file_name /= Void then
-					-- Do not call the once function `System' directly
-					-- since it's value may be replaced during the first
-					-- compilation (as soon as we figured out whether the
-					-- system describes a Dynamic Class Set or not).
-					Workbench.system.set_freeze (True);
+				if Eiffel_project.lace_file_name /= Void then
 					compile;
-					if Workbench.successfull then
-						project.save_project;
+					if Eiffel_project.successful then
 						print_tail;
 						prompt_finish_freezing (False);
-						if System.is_dynamic then
-							dle_link_system
-						end
 					end
 				end;
 			end;
 		end;
+
+feature {NONE} -- Implementation
+
+    perform_compilation is
+            -- Melt eiffel project.
+        do
+            Eiffel_project.freeze;
+        end;
 
 end -- class EWB_FREEZE

@@ -28,6 +28,7 @@ inherit
 	SHARED_INST_CONTEXT;
 	SHARED_RESCUE_STATUS;
 	SHARED_FORMAT_INFO;
+	COMPILER_EXPORTER
 
 creation
 
@@ -35,16 +36,16 @@ creation
 
 feature -- Initialization
 
-	make (c: CLASS_C) is
+	make (c: E_CLASS) is
 			-- Initialize Current for bench.
 		do
-			class_c := c;
+			class_c := c.compiled_info;
 			current_class_only := False;
 			reset_format_booleans;
 			last_was_printed := True;
 			initialize;
 		ensure then
-			class_c_set: class_c = c;
+			class_c_set: class_c = c.compiled_info;
 			batch_mode:	not in_bench_mode;
 			analyze_ancestors: not current_class_only;
 			do_flat: not is_short;
@@ -439,7 +440,7 @@ feature -- Element change
 			if not tabs_emitted then
 				emit_tabs
 			end;
-			!! p.make(c);
+			!! p.make(c.e_class);
 			s := clone (c.class_name)
 			s.to_upper;
 			!! item.make (s, p);
@@ -671,7 +672,7 @@ feature {NONE} -- Implementation
 				feature_i := adapt.target_feature;
 				f_name := adapt.final_name;
 				if feature_i /= void and then in_bench_mode then
-					stone := feature_i.stone (adapt.target_class);
+					stone := feature_i.api_feature.stone (adapt.target_class.e_class);
 					!CLICKABLE_TEXT!item.make (f_name, stone);
 				else			
 					!! item.make (f_name)
@@ -719,7 +720,7 @@ feature {NONE} -- Implementation
 				-- Use source feature for stone.
 			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
-				stone := feature_i.stone (adapt.target_class);
+				stone := feature_i.api_feature.stone (adapt.target_class.e_class);
 				! CLICKABLE_TEXT !item.make (f_name, stone)
 			else
 				!! item.make (f_name)
@@ -770,7 +771,7 @@ feature {NONE} -- Implementation
 				-- Use source feature for stone.
 			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
-				stone := feature_i.stone (adapt.target_class);
+				stone := feature_i.api_feature.stone (adapt.target_class.e_class);
 				!CLICKABLE_TEXT!item.make (f_name, stone)
 			else	
 				!!item.make (f_name)

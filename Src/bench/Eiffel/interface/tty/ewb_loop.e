@@ -15,10 +15,6 @@ inherit
 			c_menu
 		end
 
-creation
-
-	make
-
 feature -- Properties
 
 	c_menu: EWB_MENU is
@@ -31,11 +27,11 @@ feature -- Properties
 			Result.add_entry (ewb_cmd);
 			!EWB_F_COMPILE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
-			!EWB_FINALIZE! ewb_cmd.make (False, Current);
+			!EWB_FINALIZE! ewb_cmd.make (False);
 			Result.add_entry (ewb_cmd)
-			!EWB_FREEZE! ewb_cmd.make (Current);
+			!EWB_FREEZE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
-			!EWB_COMP! ewb_cmd.make (Current);
+			!EWB_COMP! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 			!EWB_RUN! ewb_cmd;
 			Result.add_entry (ewb_cmd);

@@ -54,10 +54,10 @@ feature {NONE}
 				elseif Run_info.is_stopped then
 					request.make (Rqst_quit);
 					request.send;
-					if Run_info.feature_i /= Void then
+					if Run_info.e_feature /= Void then
 						Run_info.set_is_stopped (False);
 						Window_manager.routine_win_mgr.show_stoppoint
-								(Run_info.feature_i, Run_info.break_index)
+								(Run_info.e_feature, Run_info.break_index)
 					end	
 				else
 					request.make (Rqst_kill);

@@ -35,39 +35,38 @@ feature
 			-- Show the "debug" format of `stone' if it is debuggable.
 		local
 			tool: BAR_AND_TEXT;
-			feature_i: FEATURE_I;
+			e_feature: E_FEATURE;
 			message: STRING
 		do
 			if stone /= Void then
-				feature_i := stone.feature_i;
-				if feature_i.body_index /= 0 and then
-					feature_i.is_debuggable 
-				then
+				e_feature := stone.e_feature;
+				if e_feature.is_debuggable then
 					old_format (stone)
 				else
 					tool ?= text_window.tool;
 					if tool /= Void then
 						tool.showtext_command.execute (stone)
 					end;
-					if feature_i.body_index = 0 then
+					if e_feature.body_id = 0 then
 							--FIXME need specify error message
 						message := w_Cannot_debug_feature
-					elseif feature_i.is_external then
+					elseif e_feature.is_external then
 						message := w_Cannot_debug_externals
-					elseif feature_i.is_deferred then
+					elseif e_feature.is_deferred then
 						message := w_Cannot_debug_deferreds
-					elseif feature_i.is_unique then
+					elseif e_feature.is_unique then
 						message := w_Cannot_debug_uniques
-					elseif feature_i.is_constant then
+					elseif e_feature.is_constant then
 						message := w_Cannot_debug_constants
-					elseif feature_i.is_attribute then
+					elseif e_feature.is_attribute then
 						message := w_Cannot_debug_attributes
-					elseif feature_i.is_dynamic then
+					elseif not e_feature.written_class.is_debuggable then
+						message := w_Cannot_debug_feature
+					else
+							-- Has to be dle!!!
 							-- DLE temporary constraint:
 							-- Cannot debug routines from the DC-set.
 						message := w_Cannot_debug_dynamics
-					else
-						message := w_Cannot_debug_feature
 					end;
 					warner (text_window).gotcha_call (message)
 				end;

@@ -23,7 +23,7 @@ feature
 			construct_list_make (n)
 		end;
 
-	clickable_stones (aclass_c: CLASS_C): ARRAY [CLICK_STONE] is
+	clickable_stones (a_class: E_CLASS): ARRAY [CLICK_STONE] is
 			-- Equivalent of current with stones for the interface,
 			-- the `aclass_c' argument is needed as a context
 		local
@@ -39,7 +39,7 @@ feature
 			loop
 				a_click_ast := i_th (pos);
 				!!new_click_stone.make
-					(a_click_ast.node.stone (aclass_c),
+					(a_click_ast.node.stone (a_class),
 					a_click_ast.start_position,
 					a_click_ast.end_position);
 				Result.put (new_click_stone, pos);

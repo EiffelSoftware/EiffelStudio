@@ -64,8 +64,8 @@ feature
 		do
 			root_stone := text_window.root_stone;
 			if root_stone /= Void then
-				change_class_command.update_classc (root_stone.class_c);
-				change_routine_command.set_text (root_stone.feature_i.feature_name);
+				change_class_command.update_class_name (root_stone.e_class.name);
+				change_routine_command.set_text (root_stone.e_feature.name);
 			end
 		end; 
 	

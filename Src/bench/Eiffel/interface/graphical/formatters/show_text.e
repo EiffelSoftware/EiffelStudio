@@ -55,7 +55,7 @@ feature {ROUTINE_WIN_MGR}
 			fs ?= stone;
 			if
 				(fs /= Void) and then
-				Debug_info.has_breakpoint_set (fs.feature_i) 
+				Debug_info.has_breakpoint_set (fs.e_feature) 
 			then
 				new_title.append ("   (stop)");		
 			end;
@@ -89,7 +89,7 @@ feature
 			stone_text, class_name: STRING;
 			filed_stone: FILED_STONE;
 			classc_stone: CLASSC_STONE;
-			classc: CLASS_C;
+			e_class: E_CLASS;
 			class_text: CLASS_TEXT;
 			modified_class, position_saved: BOOLEAN;
 			last_cursor_position, last_top_position: INTEGER;
@@ -101,11 +101,11 @@ feature
 				if 
 					classc_stone /= Void and then classc_stone.is_valid
 				then
-					classc := classc_stone.class_c;
+					e_class := classc_stone.e_class;
 					if
-						not classc.is_precompiled
+						not e_class.is_precompiled
 					and then
-						classc.lace_class.date_has_changed
+						e_class.lace_class.date_has_changed
 					then
 						modified_class := true
 					end;
@@ -148,7 +148,7 @@ feature
 										-- Do not display the warning message
 										-- if the format has been changed
 										-- internally (resynchronization, ...)
-									class_name := classc_stone.class_c.class_name;
+									class_name := classc_stone.e_class.name;
 									error := true;
 									warner (text_window).gotcha_call 
 										(w_Class_modified (class_name))

@@ -150,9 +150,9 @@ feature {NONE}
 
 feature -- stoning
  
-	stone (reference_class: CLASS_C): CLASSC_STONE is
+	stone (reference_class: E_CLASS): CLASSC_STONE is
 		do
-			!!Result.make (System.root_class.compiled_class)
+			!! Result.make (System.root_class.compiled_eclass)
 		end
 
 end

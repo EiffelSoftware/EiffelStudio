@@ -89,7 +89,7 @@ feature
 		local
 			bpts: BREAK_LIST;
 			bp: BREAKPOINT;
-			routine: FEATURE_I
+			routine: E_FEATURE
 		do
 			Debug_info.remove_all_breakpoints;
 			inspect Run_info.execution_mode
@@ -107,7 +107,7 @@ feature
 				if Run_info.is_running then
 						-- If the application is not running, there is no 
 						-- current routine ...
-					routine := Run_info.feature_i;
+					routine := Run_info.e_feature;
 					if 
 						routine /= Void and then 
 						Debug_info.has_feature (routine) 
@@ -122,7 +122,7 @@ feature
 				if Run_info.is_running then
 						-- If the application is not running, there is no 
 						-- current routine ...
-					routine := Run_info.feature_i;
+					routine := Run_info.e_feature;
 					if 
 						routine /= Void and then 
 						Debug_info.has_feature (routine) 
@@ -136,7 +136,7 @@ feature
 				if Run_info.is_running then
 						-- If the application is not running, there is no 
 						-- current routine ...
-					routine := Run_info.feature_i;
+					routine := Run_info.e_feature;
 					if 
 						routine /= Void and then 
 						Debug_info.has_feature (routine) 
@@ -150,7 +150,7 @@ feature
 				if Run_info.is_running then
 						-- If the application is not running, there is no 
 						-- current routine ...
-					routine := Run_info.feature_i;
+					routine := Run_info.e_feature;
 					if 
 						routine /= Void and then 
 						Debug_info.has_feature (routine) 
@@ -161,7 +161,7 @@ feature
 			when Out_of_routine then
 					-- Execution with all breakable points set except
 					-- those of the current routine.
-				routine := Run_info.feature_i;
+				routine := Run_info.e_feature;
 				if Run_info.is_running and then routine /= Void then 
 					Debug_info.set_out_of_routine_breakables (routine)
 				else

@@ -35,12 +35,12 @@ feature -- Property
 
 feature -- Execution
 
-	execute (target_feat: FEATURE_I) is
+	execute (a_target_feat: E_FEATURE) is
 			-- Format feature_as and make all items
 			-- clickable with class `c' as context
 		require
 			class_set: class_c /= Void 
-			valid_target_feat: target_feat /= Void 
+			valid_target_feat: a_target_feat /= Void 
 		local
 			start_pos, end_pos: INTEGER;
 			file: RAW_FILE;
@@ -52,9 +52,13 @@ feature -- Execution
 			comment: EIFFEL_COMMENTS;
 			nbr, i, rout_id: INTEGER;
 			written_in_class: CLASS_C;
-			c_comments: CLASS_COMMENTS
+			c_comments: CLASS_COMMENTS;
+			target_feat: FEATURE_I;
+			f_table: FEATURE_TABLE
 		do
 			if not rescued then
+				f_table := class_c.feature_table;
+				target_feat := f_table.item (a_target_feat.name);
 				execution_error := false;
 				Error_handler.wipe_out;
 				f_ast := target_feat.body;
@@ -75,7 +79,7 @@ feature -- Execution
 						-- feature table of written_in_class
 						-- (the evaluation of args and result in the 
 						-- written_in class of feature_).
-					s_table := written_in_class.feature_table.origin_table;
+					s_table := f_table.origin_table;
 					rout_id_set := target_feat.rout_id_set;
 					nbr := rout_id_set.count;
 					from

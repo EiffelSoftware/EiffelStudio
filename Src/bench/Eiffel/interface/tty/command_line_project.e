@@ -11,21 +11,15 @@ class COMMAND_LINE_PROJECT
 inherit
 
 	SHARED_ERROR_BEHAVIOR;
+	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT
-		redefine
-			init_project_directory
-		end;
 	WINDOWS;
-	SHARED_RESCUE_STATUS;
 	SHARED_LICENSE
 		rename
 			class_name as except_class_name
-		end
+		end;
 
 feature -- Properties
-
-	init_project_directory: PROJECT_DIR;
-			-- Dummy attribute used for once initialization
 
 	project_name: STRING;
 			-- Name of the project directory. 
@@ -54,173 +48,96 @@ feature -- Update
 	init_project is
 			-- Initialize the project, i.e.
 		local
-			project_dir: PROJECT_DIR;
-			workbench_file: RAW_FILE;
+			project_dir: PROJECT_DIRECTORY;
+			project_eif_file: RAW_FILE;
 			temp: STRING;
-			fn: FILE_NAME
+			fn: FILE_NAME;
 		do
-			if not retried then
-				error_occurred := False;
+			error_occurred := False;
 
-					-- Project directory
-				!! project_dir.make (project_name); 
-	
-					-- Workbench file
-				!! fn.make_from_string (project_dir.name);
-				fn.extend (Eiffelgen);
-				fn.set_file_name (Dot_workbench);
-				!!workbench_file.make (fn);
+				-- Project directory
+			!! project_dir.make (project_name); 
 
-				if not project_dir.exists then
-					!! temp.make (0);
-					temp.append ("Directory: ");
-					temp.append (project_dir.name);
-					temp.append (" does not exist");
-					error_occurred := True;
-				else
+			if not project_dir.exists then
+				!! temp.make (0);
+				temp.append ("Directory: ");
+				temp.append (project_dir.name);
+				temp.append (" does not exist");
+				error_occurred := True;
+			else
+					-- Is the project new?
+				project_is_new := project_dir.is_new;
+				if project_is_new then
+					if
+						not project_dir.is_readable or else
+						not project_dir.is_writable or else
+						not project_dir.is_executable
+					then
+						!! temp.make (0);
+						temp.append ("Directory: ");
+						temp.append (project_dir.name);
+						temp.append (" does not have appropriate permissions.")
 
-						-- Is the project new?
-					project_is_new := project_dir.is_new or else
-								(not workbench_file.exists)
-
-					if project_is_new then
-						if
-							not project_dir.is_readable or else
-							not project_dir.is_writable or else
-							not project_dir.is_executable
-						then
-							!! temp.make (0);
-							temp.append ("Directory: ");
-							temp.append (project_dir.name);
-							temp.append (" does not have appropriate permissions.")
-	
-							error_occurred := True;
-						else
-							init_project_directory := project_dir;
-							if project_dir /= Project_directory then end;
-							Create_compilation_directory;
-							Create_generation_directory;
-						end
+						error_occurred := True;
 					else
-						if not workbench_file.is_readable then
-							!! temp.make (0);
-							temp.append (workbench_file.name);
-							temp.append (" is not readable");
-							error_occurred := True
-						elseif not workbench_file.is_plain then
-							!! temp.make (0);
-							temp.append (workbench_file.name);
-							temp.append (" is not a file");
-							error_occurred := True
-						else
-							init_project_directory := project_dir;
-							if project_dir /= Project_directory then end
-						end;
+							-- Create a new project.
+						Eiffel_project.make (project_dir);
+					end
+				else
+					project_eif_file := project_dir.project_eif_file;
+					if not project_eif_file.is_readable then
+						!! temp.make (0);
+						temp.append (project_eif_file.name);
+						temp.append (" is not readable");
+						error_occurred := True
+					elseif not project_eif_file.is_plain then
+						!! temp.make (0);
+						temp.append (project_eif_file.name);
+						temp.append (" is not a file");
+						error_occurred := True
 					end;
 				end;
-				if error_occurred then
-					io.error.putstring (temp);
-					io.error.new_line;
-				end
-			else
-				error_occurred := True;
-				retried := False;
-				!! temp.make (0);
-				temp.append ("Project in: ");
-				temp.append (project_dir.name);
-				temp.append ("%NCannot be retrieved. Check permissions");
-				temp.append (" and please try again");
+			end;
+			if error_occurred then
 				io.error.putstring (temp);
 				io.error.new_line;
-			end
-		rescue
-			if Rescue_status.is_unexpected_exception then
-				retried := True;
-				retry
 			end
 		end;
 
 	retrieve_project is
 			-- Retrieve existing project.
+		require
+			valid_project_name: project_name /= Void and then 
+							not project_name.empty
 		local
 			workb: WORKBENCH_I;
 			init_work: INIT_WORKBENCH;
-			workbench_file: RAW_FILE;
+			project_eif_file: RAW_FILE;
 			precomp_r: PRECOMP_R;
 			extendible_r: EXTENDIBLE_R;
-			temp: STRING
+			temp: STRING;
+			project_dir: PROJECT_DIRECTORY;
 		do
-			if not retried then
-				!!workb;
-				!!workbench_file.make_open_read (Project_file_name);
-				workb ?= workb.retrieved (workbench_file);
-				if workb = Void then
-					retried := True;
-				end;
-			end;
-			if not retried then
-				if not workbench_file.is_closed then
-					workbench_file.close
-				end
-				!!init_work.make (workb);
-				Workbench.init;
-
-					-- Set the ace file ONLY if -ace is used
-				if Ace_name /= Void then
-					check_ace_file (Ace_name);
-					Workbench.lace.set_file_name (Ace_name);
-				end;
-
-				if System.uses_precompiled then
-					!!precomp_r;
-					precomp_r.set_precomp_dir
-				end;
-				if System.is_dynamic then
-					!!extendible_r;
-					extendible_r.set_extendible_dir
-				end;
-				System.server_controler.init;
-				Universe.update_cluster_paths;
-
-				check_permissions
-			else
-				retried := False;
-				if not workbench_file.is_closed then
-					workbench_file.close
-				end;
+			!! project_dir.make (project_name);
+			Eiffel_project.retrieve (project_dir);
+			if Eiffel_project.retrieval_error then
 				!! temp.make (0);
 				temp.append ("Project in: ");
-				temp.append (Project_directory.name);
+				temp.append (Project_directory);
 				temp.append (" is corrupted. Cannot continue");
 				io.error.putstring (temp);
 				io.error.new_line;
 				error_occurred := True
-			end
-		rescue
-			if Rescue_status.is_unexpected_exception then
-				retried := True;
-				retry
-			end
-		end;
-
-	check_permissions is
-			-- Check to see if the project writable/readable
-			-- Most of the commands need only read permissions
-			-- It is the default behavior
-		do
-			if is_project_writable then
-				Project_read_only.set_item (false)
-			elseif is_project_readable then
-				Project_read_only.set_item (true);
-				io.error.put_string (
-					"No write permissions on project.%N%
-					%Project opened in read-only mode.%N")
-			else
+			elseif Eiffel_project.read_write_error then
 				io.error.put_string (
 					"Project is not readable; check permissions.%N");
 				error_occurred := true
+			elseif Eiffel_project.is_read_only then
+				io.error.put_string (
+					"No write permissions on project.%N%
+					%Project opened in read-only mode.%N")
 			end
-		end
+		end;
 
 	make_new_project (is_loop: BOOLEAN) is
 			-- Initialize project as a new one.
@@ -231,9 +148,6 @@ feature -- Update
 			init_work: INIT_WORKBENCH;
 			file: PLAIN_TEXT_FILE
 		do
-			!!workb;
-			!!init_work.make (workb);
-			workb.make;
 			if is_loop then
 				if Ace_name /= Void then
                     check_ace_file (Ace_name);
@@ -252,7 +166,7 @@ feature -- Update
 				end
 				check_ace_file (Ace_name);
 			end;
-			Workbench.lace.set_file_name (Ace_name);
+			Eiffel_project.set_lace_file_name (Ace_name);
 		end
 
 feature -- Output
@@ -261,36 +175,26 @@ feature -- Output
 			-- Clear the servers and save the system structures
 			-- to disk.
 		local
-			file: RAW_FILE;
+			finished: BOOLEAN;
 			temp: STRING
 		do
-			if not retried then
-				System.server_controler.wipe_out;
-				!!file.make (Project_file_name);
-				file.open_write;
-				Workbench.basic_store (file);
-				file.close;
-			else
-				retried := False;
-				if not file.is_closed then
-					file.close
-				end;
+			from
+			until
+				finished
+			loop
+				Eiffel_project.save_project;
+				if Eiffel_project.save_error then
 					!! temp.make (0);
 					temp.append ("Error: could not write to ");
 					temp.append (Project_file_name);
 					temp.append ("%NPlease check permissions and disk space");
-				io.error.putstring (temp);
-				io.error.new_line;
-				if stop_on_error or else termination_requested then
-					lic_die (-1)
-				else
-					save_project
+					io.error.putstring (temp);
+					io.error.new_line;
+					finished := stop_on_error or else termination_requested;
+					if not finished then
+						lic_die (-1)
+					end
 				end
-			end
-		rescue
-			if Rescue_status.is_unexpected_exception then
-				retried := True;
-				retry
 			end
 		end;
 
@@ -324,9 +228,8 @@ feature -- Check Ace file
 		do
 			!! f.make (fn);
 			if
-				f.exists and then f.is_readable and then f.is_plain
+				not (f.exists and then f.is_readable and then f.is_plain)
 			then
-			else
 				io.error.putstring ("Ace file `");
 				io.error.putstring (fn);
 				if f.exists then

@@ -40,10 +40,10 @@ feature {NONE}
 	display_info (c: CLASSC_STONE) is
 			-- Display suppliers of `c' in tree form.
 		local
-			ewb_suppliers: E_SHOW_SUPPLIERS
+			cmd: E_SHOW_SUPPLIERS
 		do
-			!! ewb_suppliers.make (c.class_c, text_window);
-			ewb_suppliers.execute
+			!! cmd.make (c.e_class, text_window);
+			cmd.execute
 		end
 
 	display_temp_header (stone: STONE) is

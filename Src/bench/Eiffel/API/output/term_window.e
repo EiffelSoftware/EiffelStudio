@@ -11,7 +11,7 @@ feature
 
 	put_string (s: STRING) is do io.error.putstring (s) end;
 
-	put_clickable_string (a: ANY; s: STRING) is do io.error.putstring (s) end;
+	put_clickable_string (a: STONE; s: STRING) is do io.error.putstring (s) end;
 
 	new_line is do io.error.new_line end;
 

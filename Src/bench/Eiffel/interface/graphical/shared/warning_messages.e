@@ -136,11 +136,13 @@ feature {NONE}
 		require
 			class_name_not_void: class_name /= Void
 		local
-			upper_name: STRING
+			base_name, upper_name: STRING
 		do	
+				-- ****** FIXME arg name to be changed to base_name
+			base_name := class_name;
 			!!Result.make (30);
-			Result.append ("Class ");
-			upper_name := clone (class_name);
+			Result.append ("Class with file name ");
+			upper_name := clone (base_name);
 			upper_name.to_upper;
 			Result.append (upper_name);
 			Result.append (" already exist in cluster")

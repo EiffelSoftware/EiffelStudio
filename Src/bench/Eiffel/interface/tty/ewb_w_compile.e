@@ -16,11 +16,4 @@ inherit
 			abbreviation as w_compile_abb
 		end;
 
-feature -- Properties
-
-	c_code_directory: STRING is
-		do
-			Result := Workbench_generation_path
-		end;
-
 end -- class EWB_W_COMPILE

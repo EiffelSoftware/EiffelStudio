@@ -35,55 +35,55 @@ feature	{} -- Initialization of the C/Eiffel interface
 	set_int (v: INTEGER) is
 			-- Receive an integer value.
 		do
-			!INTEGER_VALUE!item.make (v)
+			!INTEGER_VALUE! item.make (v)
 		end;
 
 	set_bool (v: BOOLEAN) is
 			-- Receive a boolean value.
 		do
-			!BOOLEAN_VALUE!item.make (v)
+			!BOOLEAN_VALUE! item.make (v)
 		end;
 
 	set_char (v: CHARACTER) is
 			-- Receive a character value.
 		do
-			!CHARACTER_VALUE!item.make (v)
+			!CHARACTER_VALUE! item.make (v)
 		end;
 
 	set_real (v: REAL) is
 			-- Receive a real value.
 		do
-			!REAL_VALUE!item.make (v)
+			!REAL_VALUE! item.make (v)
 		end;
 
 	set_double (v: DOUBLE) is
 			-- Receive a double value.
 		do
-			!DOUBLE_VALUE!item.make (v)
+			!DOUBLE_VALUE! item.make (v)
 		end;
 	
 	set_ref (ref: POINTER; type: INTEGER) is
 			-- Receive a reference value.
 		do
-			!REFERENCE_VALUE!item.make (ref, type)
+			!REFERENCE_VALUE! item.make (ref, type)
 		end;
 
 	set_point (v: POINTER) is
 			-- Receive a pointer value.
 		do
-			!POINTER_VALUE!item.make (v)
+			!POINTER_VALUE! item.make (v)
 		end;
 
 	set_bits (ref: POINTER; size: INTEGER)  is
 			-- Receive a bit value.
 		do
-			!BITS_VALUE!item.make (ref, size)
+			!BITS_VALUE! item.make (ref, size)
 		end;
 
 	set_void is
 			-- Set `item' to Void.
 		do
-			item := Void
+			item := Void;
 		end;
 
 feature -- Status report

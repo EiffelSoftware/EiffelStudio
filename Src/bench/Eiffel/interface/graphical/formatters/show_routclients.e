@@ -42,7 +42,7 @@ feature {NONE}
 		local
 			cmd: E_SHOW_CALLERS;
 		do
-			!! cmd.make (f.feature_i, f.class_c, text_window);
+			!! cmd.make (f.e_feature, f.e_class, text_window);
 			if cmd.has_valid_feature then
 				cmd.execute
 			end

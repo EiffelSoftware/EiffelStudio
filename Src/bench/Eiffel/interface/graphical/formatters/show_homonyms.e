@@ -42,7 +42,7 @@ feature {NONE}
 		local
 			cmd: E_SHOW_ROUTINE_HOMONYMNS;
 		do
-			!! cmd.make (f.feature_i, f.class_c, text_window);
+			!! cmd.make (f.e_feature, f.e_class, text_window);
 			cmd.execute
 		end;
 

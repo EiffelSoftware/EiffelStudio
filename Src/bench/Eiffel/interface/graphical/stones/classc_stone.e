@@ -18,14 +18,16 @@ inherit
 			is_valid
 		end;
 
-	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT;
 	
 	HASHABLE_STONE
 		undefine
 			header
 		redefine
 			is_valid, synchronized_stone
-		end
+		end;
+
+	INTERFACE_W
 
 creation
 
@@ -33,25 +35,25 @@ creation
 	
 feature -- making
 
-	make (aclassc: CLASS_C) is
+	make (a_class: E_CLASS) is
 			-- Copy all information from argument
 			-- OR KEEP A REFERENCE?
 		do
-			class_c := aclassc
+			e_class := a_class
 		end;
 
-	class_c: CLASS_C;
+	e_class: E_CLASS;
 
 feature -- dragging
 
 	signature: STRING is
 		do
-			Result := class_c.signature
+			Result := e_class.signature
 		end;
 
 	icon_name: STRING is
 		do
-			Result := clone (class_c.class_name)
+			Result := clone (e_class.name)
 			Result.to_upper;
 		end;
 
@@ -62,8 +64,8 @@ feature -- dragging
 			Result.append (signature);
 			Result.append ("  ");
 			Result.append ("Cluster: ");
-			Result.append (class_c.cluster.cluster_name);
-			if class_c.is_precompiled then
+			Result.append (e_class.cluster.cluster_name);
+			if e_class.is_precompiled then
 				Result.append ("   (precompiled)")
 			end
 		end;
@@ -74,14 +76,14 @@ feature -- dragging
  
 	click_list: ARRAY [CLICK_STONE] is
 		do
-			Result := class_c.click_list
+			Result := e_class.click_list
 		end;
  
 	file_name: STRING is
 			-- The one from CLASSC
 		do
-			if class_c /= Void then
-				Result := class_c.file_name
+			if e_class /= Void then
+				Result := e_class.file_name
 			end
 		end;
 
@@ -101,9 +103,7 @@ feature -- dragging
 			-- Is Current an element with recorded structures information?
 			-- Yes. (FIXME?)
 		do
-			--if not Error_handler.has_error then
-				Result := class_c.clickable
-			--end
+			Result := e_class.is_clickable
 		end
 
 feature -- Status report
@@ -111,7 +111,7 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-			Result :=  fs_valid and then class_c /= Void
+			Result :=  fs_valid and then e_class /= Void
 		end;
 
 feature -- Synchronization
@@ -123,16 +123,17 @@ feature -- Synchronization
 		local
 			new_cluster: CLUSTER_I
 		do
-			if class_c /= Void then
-				if System.id_array.item (class_c.id) = class_c then
-					Result := class_c.stone
+			if e_class /= Void then
+				if Eiffel_system.class_of_id (e_class.id) = e_class then
+					Result := e_class.stone
 				else
-					new_cluster := Universe.cluster_of_name (class_c.cluster.cluster_name);
+					new_cluster := Eiffel_universe.cluster_of_name 
+							(e_class.cluster.cluster_name);
 					if 
 						new_cluster /= Void and then
-						new_cluster.classes.has_item (class_c.lace_class)
+						new_cluster.classes.has_item (e_class.lace_class)
 					then
-						Result := class_c.lace_class.stone
+						Result := e_class.lace_class.stone
 					end
 				end
 			end
@@ -143,7 +144,7 @@ feature -- Hashable
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := class_c.class_name.hash_code
+			Result := e_class.name.hash_code
 		end;
 
 end

@@ -42,7 +42,7 @@ feature {NONE}
 		local
 			cmd: E_SHOW_EXTERNALS
 		do
-			!! cmd.make (c.class_c, text_window);
+			!! cmd.make (c.e_class, text_window);
 			cmd.execute
 		end;
 

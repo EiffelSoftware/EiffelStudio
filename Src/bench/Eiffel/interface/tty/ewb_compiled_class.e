@@ -19,7 +19,7 @@ feature {NONE} -- Properties
 
 	want_compiled_class: BOOLEAN is
 			-- Does current menu selection want a
-			-- compiled class (class_c)?
+			-- compiled class (e_class)?
 			-- (True)
 		do
 			Result := True
@@ -36,13 +36,13 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Execution
 
-	process_compiled_class (class_c: CLASS_C) is
-			-- Process compiled class `class_c'.
+	process_compiled_class (e_class: E_CLASS) is
+			-- Process compiled class `e_class'.
 		local
 			cmd: like associated_cmd
 		do
 			cmd := clone (associated_cmd);  
-			cmd.set (class_c, output_window);  
+			cmd.set (e_class, output_window);  
 			cmd.execute
 		end;
 

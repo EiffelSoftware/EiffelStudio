@@ -18,21 +18,62 @@
 		<h2>Eiffel Studio 5.4</h2>
 		<p><b>Interface modifications</b></p>
 		<ul class="circle">
-			<li><b>EV_ITEM_PIXMAP_SCALER</b> - New class added which provides no new functionality, but is a clean abstraction of `pixmaps_width', `pixmaps_height' and `set_pixmaps_size' which were all defined independently in EV_TREE, EV_LIST, EV_MULTI_COLUMN_LIST and EV_COMBO_BOX. Your code will not be affected by this change.</li>
-			<li><b>EV_TOOL_BAR</b> - Added three new features `has_vertical_button_style', `enable_vertical_button_style' and `disable_vertical_button_style'. The default style for buttons is vertical and was the only style previously available, in which the `pixmap' is displayed above `text'. When vertical style is disabled, the `pixmap' of a button will be displayed to the left of its `text'.</li>
-	<LI><B>EV_TREE</B> - No longer inherits EV_TREE_NODE_CONTAINER which is now obsolete. Made `selected' obsolete, use selected_item /= Void instead.</li>
-					<LI><B>EV_TREE_NODE</B> - Now inherits EV_TREE_NODE_LIST instead of EV_TREE_NODE_CONTAINER. This provides more functionality at the level of the node, but does not change the features available in non deferred descendents, as they all previously inherited EV_TREE_NODE_LIST. Changed type of `parent' to EV_TREE_NODE_LIST from EV_TREE_NODE_CONTAINER. Removed three obsolete features - `align_text_left', align_text_center' and `align_text_right'.</LI>
-					<LI><B>EV_TREE_ITEM</B> - Strengthened `is_expandable' so that it checks `parent_tree' is not Void, this brings it into line with the preconditions of `expand'.</LI>
-					<LI><B>EV_DYNAMIC_TREE_ITEM</B> - Strengthened `is_expandable' to check `parent_tree', in line with preconditions of `expand'. Added "valid_operands" precondition to `set_subtree_function' which ensures that you only pass a function with valid operands.</LI>
-					<LI><B>EV_TREE_NODE_CONTAINER</B> - Now obsolete, you should use EV_TREE_NODE_LIST instead.</LI>
-		<LI><B>EV_MULTI_COLUMN_LIST</B> - Added missing postconditions to `align_text_left', `align_text_right', `align_text_center' and other miscellaneous features that were missing relevent postconditions.</LI>
+			<li>
+				<b>EV_ITEM_PIXMAP_SCALER</b>
+			- New class added which provides no new functionality, but is a clean 
+			abstraction of `pixmaps_width', `pixmaps_height' and `set_pixmaps_size' which 
+			were all defined independently in EV_TREE, EV_LIST, EV_MULTI_COLUMN_LIST and 
+			EV_COMBO_BOX. Your code will not be affected by this change.
+			<li>
+				<b>EV_TOOL_BAR</b>
+			- Added three new features `has_vertical_button_style', 
+			`enable_vertical_button_style' and `disable_vertical_button_style'. The default 
+			style for buttons is vertical and was the only style previously available, in 
+			which the `pixmap' is displayed above `text'. When vertical style is disabled, 
+			the `pixmap' of a button will be displayed to the left of its `text'.
+			<LI>
+				<B>EV_TREE</B>
+			- No longer inherits EV_TREE_NODE_CONTAINER which is now obsolete. Made 
+			`selected' obsolete, use selected_item /= Void instead.
+			<LI>
+				<B>EV_TREE_NODE</B>
+			- Now inherits EV_TREE_NODE_LIST instead of EV_TREE_NODE_CONTAINER. This 
+			provides more functionality at the level of the node, but does not change the 
+			features available in non deferred descendents, as they all previously 
+			inherited EV_TREE_NODE_LIST. Changed type of `parent' to EV_TREE_NODE_LIST from 
+			EV_TREE_NODE_CONTAINER. Removed three obsolete features - `align_text_left', 
+			align_text_center' and `align_text_right'.
+			<LI>
+				<B>EV_TREE_ITEM</B>
+			- Strengthened `is_expandable' so that it checks `parent_tree' is not Void, 
+			this brings it into line with the preconditions of `expand'.
+			<LI>
+				<B>EV_DYNAMIC_TREE_ITEM</B>
+			- Strengthened `is_expandable' to check `parent_tree', in line with 
+			preconditions of `expand'. Added "valid_operands" precondition to 
+			`set_subtree_function' which ensures that you only pass a function with valid 
+			operands.
+			<LI>
+				<B>EV_TREE_NODE_CONTAINER</B>
+			- Now obsolete, you should use EV_TREE_NODE_LIST instead.
+			<LI>
+				<B>EV_MULTI_COLUMN_LIST</B> - Added missing postconditions to 
+				`align_text_left', `align_text_right', `align_text_center' and other 
+				miscellaneous features that were missing relevent postconditions.</LI>
 		</ul>
 		<P><b>Breaking changes</b></P>
 		<UL>
-			<LI><B>EV_TREE_NODE_CONTAINER</B> - This class is no longer used in EiffelVision2, and if you were relying on it, you should use EV_TREE_NODE_LIST instead. The type of `parent' for tree nodes has been changed from  EV_TREE_NODE_CONTAINER to EV_TREE_NODE_LIST, so if you retrieve the `parent' and then attempt to iterate, you may have declared an instance of EV_TREE_NODE_CONTAINER. In this situation, you should simply change the definition to EV_TREE_NODE_LIST instead. </LI>
+			<LI>
+				<B>EV_TREE_NODE_CONTAINER</B> - This class is no longer used in EiffelVision2, 
+				and if you were relying on it, you should use EV_TREE_NODE_LIST instead. The 
+				type of `parent' for tree nodes has been changed from EV_TREE_NODE_CONTAINER to 
+				EV_TREE_NODE_LIST, so if you retrieve the `parent' and then attempt to iterate, 
+				you may have declared an instance of EV_TREE_NODE_CONTAINER. In this situation, 
+				you should simply change the definition to EV_TREE_NODE_LIST instead.
+			</LI>
 		</UL>
 		<p><b>Bug fixes</b></p>
-		<ul>
+		<UL>
 			<li>
 				<b>Platform independent</b>
 				<ul>
@@ -41,14 +82,27 @@
 				<b>Windows</b>
 				<ul>
 					<LI>
-						<B>EV_TEXT_COMPONENT</B> - fixed bug in `select_region' which would fail if 
-						`start_pos' was greater than `end_pos'.</LI>
-					<LI><B>EV_PIXMAP</B> - `expose_actions' previously had a feature contained related to the implementation, and calling `wipe_out' on `expose_actions' would stop the image from being redrawn. There are now no side effects related to `expose_actions'.</LI>
-					<LI><B>EV_LIST</B> - Calling `disable_sensitive' when already non sensitive would loose the original selection, and calling `enable_sensitive' when already sensitive would alter the selected item. The features will no longer alter the selection if called twice.</LI>
+						<B>EV_TEXT_COMPONENT</B>
+					- fixed bug in `select_region' which would fail if `start_pos' was greater than 
+					`end_pos'.
+					<LI>
+						<B>EV_PIXMAP</B>
+					- `expose_actions' previously had a feature contained related to the 
+					implementation, and calling `wipe_out' on `expose_actions' would stop the image 
+					from being redrawn. There are now no side effects related to `expose_actions'.
+					<LI>
+						<B>EV_LIST</B> - Calling `disable_sensitive' when already non sensitive would 
+						loose the original selection, and calling `enable_sensitive' when already 
+						sensitive would alter the selected item. The features will no longer alter the 
+						selection if called twice.</LI>
 				</ul>
 			<li>
 				<b>Gtk</b></li>
-		</ul>
+			<UL>
+				<LI>
+					<STRONG>EV_TREE_NODE</STRONG> - Now expansion state remains the same when 
+					'set_pixmap' is called.</LI></UL>
+		</UL>
 		<h2>Eiffel Studio 5.3</h2>
 		<p><b>Interface modifications</b></p>
 		<ul class="circle">

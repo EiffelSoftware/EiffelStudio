@@ -9,6 +9,14 @@ class
 
 inherit
 	ECOM_TYPE_KIND
+		export
+			{NONE} all
+		end
+
+	ECOM_TYPE_FLAGS
+		export
+			{NONE} all
+		end
 
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
@@ -56,8 +64,8 @@ feature -- Basic operations
 				Result := Alias_creator.create_descriptor 
 					(a_documentation, a_type_info)
 			elseif type = Tkind_union then
-				create Union_creator
-				Result := Union_creator.create_descriptor 
+				create Record_creator
+				Result := Record_creator.create_descriptor  
 					(a_documentation, a_type_info)
 			elseif type = Tkind_module then
 				message_output.add_warning (Current, message_output.Type_info_module)

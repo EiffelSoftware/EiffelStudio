@@ -83,6 +83,28 @@ feature -- Access
 		do
 			Result := implementation.character_displayed (an_index)
 		end
+		
+	tab_positions: ACTIVE_LIST [INTEGER] is
+			-- Width of each tab position in pixels, from left to right.
+			-- Insert values to update tab widths used in `Current'.
+			-- All additional tab positions use `tab_width'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.tab_positions
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	tab_width: INTEGER is
+			-- Default width in pixels of each tab in `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.tab_width
+		ensure
+			result_non_negative: Result >= 0
+		end
 
 feature -- Status setting
 
@@ -154,6 +176,17 @@ feature -- Status setting
 			implementation.flush_buffer
 		ensure
 			buffer_not_locked: not buffer_locked_in_append_mode and not buffer_locked_in_format_mode
+		end
+		
+	set_tab_width (a_width: INTEGER) is
+			-- Assign `a_width' to `tab_width'.
+		require
+			not_destroyed: not is_destroyed
+			width_positive: a_width > 0
+		do
+			implementation.set_tab_width (a_width)
+		ensure
+			tab_width_set: tab_width = a_width
 		end
 
 feature {NONE} -- Contract support

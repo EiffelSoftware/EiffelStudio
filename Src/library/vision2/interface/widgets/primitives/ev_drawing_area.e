@@ -70,6 +70,16 @@ feature -- Event - command association
 			implementation.add_resize_command (cmd, arg)
 		end
 
+	add_paint_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget has to be redrawn.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_expose_command (cmd, arg)
+		end
+
 feature -- Event - command removal
 
 	remove_resize_commands is
@@ -79,6 +89,15 @@ feature -- Event - command removal
 			exists: not destroyed
 		do
 			implementation.remove_resize_commands
+		end
+
+	remove_paint_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget has to be redrawn.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_expose_commands
 		end
 
 feature -- Implementation

@@ -353,7 +353,7 @@ feature {EB_COMMAND} -- Search commands
 		end
 
 	find_selection is
-			-- Find next occurence of selection.
+			-- Find next occurrence of selection.
 		do
 			if not text_displayed.selection_is_empty then
 				search_tool.set_current_searched (text_displayed.selected_string)

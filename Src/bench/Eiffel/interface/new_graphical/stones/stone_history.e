@@ -60,7 +60,7 @@ feature -- Resource Update
 		end
 
 	update is
-			-- Update Current with the registred resources.
+			-- Update Current with the registered resources.
 		do
 			rearrange_history
 		end

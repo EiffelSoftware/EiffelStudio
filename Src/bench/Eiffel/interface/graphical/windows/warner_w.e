@@ -21,7 +21,8 @@ inherit
 			popup
 		select
 			popup
-		end
+		end;
+	SET_WINDOW_ATTRIBUTES
 
 creation
 
@@ -40,6 +41,7 @@ feature
 			add_help_action (Current, help_it);
 			allow_resize;
 			set_default_position (false);
+			set_composite_attributes (Current);
 			realize
 		end;
 

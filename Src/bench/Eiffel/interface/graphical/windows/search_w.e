@@ -10,7 +10,8 @@ inherit
 	PROMPT_D
 		rename
 			make as prompt_dialog_create
-		end
+		end;
+	SET_WINDOW_ATTRIBUTES
 
 creation
 
@@ -35,7 +36,8 @@ feature
 			set_ok_label ("Next");
 			add_ok_action (Current, ok_it);
 			text_window.set_action ("Ctrl<Key>d", Current, ok_it);
-			add_cancel_action (Current, cancel_it)
+			add_cancel_action (Current, cancel_it);
+			set_composite_attributes (Current)
 		end;
 
 	close is

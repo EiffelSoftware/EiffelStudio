@@ -231,13 +231,13 @@ rt_public void send_bool_value(EIF_BOOLEAN value)
 }
 
 /* send a reference value to the application */
-rt_public void send_ref_value(long value)
+rt_public void send_ref_value(EIF_REFERENCE value)
 {
 	struct item item;
 	
 	/* fill in the item to send */
 	item.type = SK_REF;
-	item.it_ref = (char *)value;
+	item.it_ref = value;
 	item.it_addr = NULL;
 	
 	/* send the request */

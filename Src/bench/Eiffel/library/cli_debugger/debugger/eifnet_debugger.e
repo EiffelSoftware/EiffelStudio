@@ -691,16 +691,6 @@ feature -- Function Evaluation
 			end
 		end
 
-	generating_type_feature_i (a_class_c: CLASS_C): FEATURE_I is
-		local
-			l_e_feat: E_FEATURE
-		do
-			l_e_feat := a_class_c.feature_with_name ("generating_type")
-			if l_e_feat /= Void then
-				Result := l_e_feat.associated_feature_i
-			end
-		end
-
  	generating_type_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 
  				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; a_class_type: CLASS_TYPE): STRING is
 			-- ANY.generating_)type: STRING evaluation result
@@ -709,10 +699,10 @@ feature -- Function Evaluation
 			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
+			l_md_import: MD_IMPORT
 			l_module_name: STRING
 			l_feature_token: INTEGER
 			
-			l_feat: FEATURE_I
 			l_class_type: CLASS_TYPE
 			l_func: ICOR_DEBUG_FUNCTION
 
@@ -720,53 +710,39 @@ feature -- Function Evaluation
 		do	
 			l_icd := a_icd
 			l_icd_object := a_icd_obj
-
 			l_class_type := a_class_type
-			l_class_type := eiffel_system.system.any_class.compiled_class.types.first
 			
-			l_feat := generating_type_feature_i (l_class_type.associated_class)
-
-			if l_feat /= Void then
-				l_icd_class := l_icd_object.get_class
-				l_icd_module := l_icd_class.get_module
-				l_module_name := l_icd_module.get_name
+			l_icd_class := l_icd_object.get_class
+			l_icd_module := l_icd_class.get_module		
+			l_md_import := l_icd_module.get_md_import_interface
+			l_feature_token := l_md_import.find_method (l_icd_class.get_token, "generating_type")
 			
-				l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feat, l_class_type)
-				l_feature_token := 0x60000C0
-				l_func := l_icd_module.get_function_from_token (l_feature_token)
+			l_func := l_icd_module.get_function_from_token (l_feature_token)
 
-				if l_func /= Void then
-					l_icd := evaluator.function_evaluation (a_frame, l_func, <<l_icd>>)
-					if l_icd /= Void then
-						create l_value_info.make (l_icd)
-						Result := string_value_from_string_class_object_value (l_value_info.interface_debug_object_value, 0, -1)							
-					else
-						Result := Void -- "WARNING: Could not evaluate output"	
-					end
+			if l_func /= Void then
+				l_icd := evaluator.function_evaluation (a_frame, l_func, <<l_icd>>)
+				if l_icd /= Void then
+					create l_value_info.make (l_icd)
+					Result := string_value_from_string_class_object_value (l_value_info.interface_debug_object_value, 0, -1)							
 				else
-					debug ("DEBUGGER_TRACE_EVAL")
-						print ("EIFNET_DEBUGGER.generating_type_.. :: Unable to retrieve ICorDebugFunction %N")
-						print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
-						print ("                                :: module_name   = %"" + l_module_name + "%"%N")
-						print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
-					end
+					Result := Void -- "WARNING: Could not evaluate output"	
 				end
 			else
 				debug ("DEBUGGER_TRACE_EVAL")
-					print ("EIFNET_DEBUGGER.generating_type_.. :: Unable to retrieve FEATURE_I [" 
-						+ l_class_type.associated_class.name_in_upper
-						+"] %N")
+					l_module_name := l_icd_module.get_name
+				
+					print ("EIFNET_DEBUGGER.generating_type_.. :: Unable to retrieve ICorDebugFunction %N")
+					print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
+					print ("                                :: module_name   = %"" + l_module_name + "%"%N")
+					print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
 				end
 			end
+
 			debug ("DEBUGGER_TRACE_EVAL")
 				if Result = Void then
-					print ("ANY.generating_type.. :: Error ! %N")
+					print (l_class_type.full_il_type_name + ".generating_type.. :: Error ! %N")
 				end
 			end
--- FIXME JFIAT: remove, this was for test ..
---			if Result = Void then
---				Result := "???"
---			end
 		end	
 
  	debug_output_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 

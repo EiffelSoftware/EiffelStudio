@@ -7,7 +7,7 @@ class MELTED_DESC
 inherit
 
 	CHARACTER_ARRAY;
-	COMPILER_IDABLE
+	IDABLE
 		rename
 			id as class_id,
 			set_id as set_class_id

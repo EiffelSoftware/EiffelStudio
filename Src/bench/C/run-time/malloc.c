@@ -19,6 +19,10 @@
 #ifdef HAS_SMART_MMAP
 #include <sys/mman.h>
 #endif
+
+#include <stdio.h>			/* For eif_trace_types() */
+#include <signal.h>
+
 #include "eiffel.h"			/* For bcopy/memcpy */
 #include "malloc.h"
 #include "garcol.h"			/* For Eiffel flags and function declarations */
@@ -60,6 +64,11 @@
 #define CHUNK_TYPE(c)	(((c) == c_hlist)? C_T : EIFFEL_T)
 #define FREE_LIST(t)	((t)? c_hlist : e_hlist)
 #define BUFFER(c)		(((c) == c_hlist)? c_buffer : e_buffer)
+
+/* For eif_trace_types() */
+
+#define CHUNK_T     0           /* Scanning a chunk */
+#define ZONE_T      1           /* Scanning a generation scavenging zone */
 
 /* The main data-structures for malloc are filled-in statically at
  * compiled time, so that no special initialization routine is
@@ -2981,6 +2990,7 @@ int type;					/* Type is either CHUNK_T or ZONE_T */
 }
 
 private void output_free_list(f)
+FILE *f;
 {
 	int ncblocks[NBLOCKS];		/* Number of C blocks in free list */
 	int ncsize[NBLOCKS];		/* Size of C free list (with overhead) */
@@ -3084,7 +3094,157 @@ int sig;
 	output_table(stdout);
 }
 
-#endif
+public eif_mem_info(flag)
+EIF_BOOLEAN flag;
+{
+	printf("diagnosing memory...\n");
+	if (flag){
+		printf("\tcollecting...\n");
+		fflush(stdout);
+		mksp();
+	}
+	printf("\tscanning...\n");
+	memck(0);
+	output_table(stdout);
+}
+
+#endif /* MEMCHK */
+
+
+
+private uint32 *type_use = 0;       /* Object usage table by dynamic type */
+private uint32 c_mem;				/* C memory used (bytes) */
+
+private void inspect();
+private void check_obj();
+
+
+private void check_obj(object)
+char *object;
+{
+	int dtype;
+	uint32 flags;
+	uint32 mflags;
+
+	flags = HEADER(object)->ov_flags;		/* Fetch Eiffel flags */
+	dtype = flags & EO_TYPE;
+
+	if (flags & EO_C) {						/* Not an Eiffel object */
+		mflags = HEADER(object)->ov_size;
+		c_mem += (mflags & B_SIZE) + OVERHEAD;
+		return;;
+	}
+
+	if (dtype <= scount)
+		type_use[flags & EO_TYPE]++;
+}
+
+
+private void inspect_chunk(chunk, arena, type)
+register5 char *chunk;		/* A struct chunk or struct sc_zone */
+register6 char *arena;		/* Arena were objects are stored */
+int type;					/* Type is either CHUNK_T or ZONE_T */
+{
+	/* Consistency checks on the chunk's contents */
+
+	register1 union overhead *zone;		/* Malloc info zone */
+	register2 uint32 size;				/* Object's size in bytes */
+	register3 char *end;				/* First address beyond chunk */
+	register4 uint32 flags;				/* Eiffel flags */
+
+	switch (type) {
+	case CHUNK_T:
+		end = (char *) arena + ((struct chunk *) chunk)->ck_length;
+		break;
+	case ZONE_T:
+		end = (char *) ((struct sc_zone *) chunk)->sc_top;
+		break;
+	}
+
+	for (
+		zone = (union overhead *) arena;
+		(char *) zone < end;
+		zone = (union overhead *) (((char *) zone) + (size & B_SIZE) + OVERHEAD)
+	) {
+		size = zone->ov_size;			/* Size and flags */
+
+		if (type == CHUNK_T && !(size & B_BUSY)) {
+			continue;
+		}
+		arena = (char *) (zone + 1);	/* Get public object pointer */
+
+		if (!(size & B_BUSY) && type != ZONE_T)		/* Object is free */
+			continue;
+
+		if (zone->ov_flags & EO_C) {	/* Not an Eiffel object */
+			check_obj(arena);
+			continue;
+		}
+
+		if (type == CHUNK_T) {			/* Not in scavenge zone */
+
+			if (((struct chunk *) chunk)->ck_type == C_T && size & B_C)
+				continue;
+		}
+
+		check_obj(arena);
+	}
+}
+
+
+private void eif_memck()
+{
+	struct chunk *chunk;		/* Current chunk */
+	char *arena;				/* Arena in chunk */
+
+	if (type_use == (uint32 *) 0) {
+		type_use = (uint32 *) xmalloc(scount * sizeof(uint32), C_T, GC_OFF);
+		if (type_use == (uint32 *) 0) {
+			printf("memck: cannot build object table\n");
+			fflush(stdout);
+			return;
+		}
+	}
+	bzero(type_use, scount * sizeof(uint32));
+
+	c_mem = 0;					/* Initializes C memory usage */
+
+	for (chunk = cklst.ck_tail; chunk; chunk = chunk->ck_prev) {
+
+		arena = (char *) (chunk + 1);
+
+		if (arena == ps_to.sc_arena)
+			continue;			/* Skip 'to' zone since it is always empty */
+
+		inspect_chunk((char *)chunk, arena, CHUNK_T);
+	}
+
+	/* If generation scavenging is active, check 'from' zone */
+	if (gen_scavenge & GS_ON)
+		inspect_chunk((char *)&sc_from, sc_from.sc_arena, ZONE_T);
+
+	fflush(stdout);				/* Make sure we always see messages */
+}
+
+public void eif_trace_types(f)
+FILE *f;
+{
+	int i;
+	uint32 use;
+	uint32 usage;
+
+	eif_memck();
+	for (i = 0; i < scount; i++) {
+		use = type_use[i];
+		if (use == 0)
+			continue;
+		usage = use * (Size(i) + OVERHEAD);
+		fprintf(f, "\t%s: %d (%d bytes)\n", System(i).cn_generator, use, usage);
+	}
+	fprintf(f, "C memory usage (bytes): %ld\n", c_mem);
+	fflush(f);
+}
+
 
 #ifndef lint
 private char *e_what =

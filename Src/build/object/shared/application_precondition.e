@@ -250,37 +250,37 @@ feature {NONE} -- Code generation
 
 feature {NONE} -- Boolean operators
 
-	or_keyword: STRING is "or"
+	or_keyword: STRING is " or "
 			-- Boolean operator `or'
 
 	or_index: INTEGER is unique
 			-- Index for operator `or'
 
-	and_keyword: STRING is "and"
+	and_keyword: STRING is " and "
 			-- Boolean operator `and'
 
 	and_index: INTEGER is unique
 			-- Index for operator `and'
 
-	xor_keyword: STRING is "xor"
+	xor_keyword: STRING is " xor "
 			-- Boolean operator `xor'
 
 	xor_index: INTEGER is unique
 			-- Index for operator `xor'
 
-	implies_keyword: STRING is "implies"
+	implies_keyword: STRING is " implies "
 			-- Boolean operator `implies'
 
 	implies_index: INTEGER is unique
 			-- Index for operator `implies'
 
-	or_else_keyword: STRING is "or else"
+	or_else_keyword: STRING is " or else "
 			-- Boolean operator `or else'
 
 	or_else_index: INTEGER is unique
 			-- Index for operator `or else'
 
-	and_then_keyword: STRING is "and then"
+	and_then_keyword: STRING is " and then "
 			-- Boolean operator `and then'.
 
 	and_then_index: INTEGER is unique

@@ -2,7 +2,7 @@ indexing
 
 	description:
 		"Command to apply changes in resources immediately, %
-		%don't save them."
+		%without saving them."
 	date: "$Date$"
 	revision: "$Revision$"
 

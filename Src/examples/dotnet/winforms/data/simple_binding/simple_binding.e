@@ -4,6 +4,18 @@ indexing
 class
 	SIMPLE_BINDING
 
+inherit 
+	WINFORMS_FORM
+		rename
+			make as make_form
+		undefine
+			to_string, finalize, equals, get_hash_code
+		redefine
+			dispose_boolean
+		end
+
+	ANY
+
 create
 	make
 
@@ -32,7 +44,7 @@ feature {NONE} -- Initialization
 			create dob_binding.make (("").to_cil, cust_list, ("").to_cil)
 			dob_binding.add_format ((create {WINFORMS_CONVERT_EVENT_HANDLER}.make (Current, $text_box_DOB_FormatDate)))
 			dob_binding.add_parse ((create {WINFORMS_CONVERT_EVENT_HANDLER}.make (Current, $text_box_DOB_ParseDate)))
-			text_box_DOB.data_bindings.add (dob_binding)
+			text_box_DOB.data_bindings.add_binding (dob_binding)
 
 			dummy := text_box_address.data_bindings.add_string (("Text").to_cil, cust_list, ("address").to_cil)
 
@@ -40,7 +52,7 @@ feature {NONE} -- Initialization
 			-- Position is managed by the Form's BindingContext so hook the position changed
 			-- event on the BindingContext
 			--create l_handler.make (Current, $customers_PositionChanged)
-			my_window.binding_context.item (cust_list).add_position_changed (create {EVENT_HANDLER}.make (Current, $customers_position_changed))
+			binding_context.item (cust_list).add_position_changed (create {EVENT_HANDLER}.make (Current, $customers_position_changed))
 
 			-- Set up the initial text for the DATA VCR Panel
 --			text_box_position.set_text ("Record " + (binding_context.item (cust_list).position + 1).to_string + " of " + cust_list.count)
@@ -48,13 +60,10 @@ feature {NONE} -- Initialization
 			-- Set the minimum form size to the client size + the height of the title bar
 --			set_minimum_size (l_size(368, (413 + feature {SYSTEM_INFORMATION}.CaptionHeight)))
 
-			dummy_2 := my_window.show_dialog
+			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
 
 feature -- Access
-
-	my_window: WINFORMS_FORM
-			-- Main window.
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER	
 			-- System.ComponentModel.Container
@@ -91,12 +100,10 @@ feature -- Implementation
 			--
 		local
 			l_array: NATIVE_ARRAY [SYSTEM_STRING]
-			l_control_array: NATIVE_ARRAY [WINFORMS_CONTROL]
+--			l_control_array: NATIVE_ARRAY [WINFORMS_CONTROL]
 			l_point: DRAWING_POINT
 			l_size: DRAWING_SIZE
 		do
-			create my_window.make
-			
 			create components.make
 			create text_box_title.make
 			create label_first_name.make
@@ -117,11 +124,11 @@ feature -- Implementation
 			create text_box_first_name.make
 			create button_move_last.make
 
-			my_window.set_text (("Customer Details").to_cil)
+			set_text (("Customer Details").to_cil)
 			l_size.make_from_width_and_height (5, 13)
-			my_window.set_auto_scale_base_size (l_size)
+			set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (368, 413)
-			my_window.set_client_size (l_size)
+			set_client_size (l_size)
 
 			l_point.make_from_x_and_y (8, 32)
 			label_ID.set_location (l_point)
@@ -263,59 +270,67 @@ feature -- Implementation
 			button_move_last.set_text ((">|").to_cil)
 			button_move_last.add_click (create {EVENT_HANDLER}.make (Current, $button_move_last_Click))
 
-			create l_control_array.make (5)
-			l_control_array.put (0, text_box_position)
-			l_control_array.put (1, button_move_first)
-			l_control_array.put (2, button_move_prev)
-			l_control_array.put (3, button_move_next)
-			l_control_array.put (4, button_move_last)
-			panel_VCR_control.controls.add_range (l_control_array)
-			
-			create l_control_array.make (13)
-			l_control_array.put (0, text_box_DOB)
-			l_control_array.put (1, label_DOB)
-			l_control_array.put (2, panel_VCR_control)
-			l_control_array.put (3, text_box_title)
-			l_control_array.put (4, label_title)
-			l_control_array.put (5, text_box_address)
-			l_control_array.put (6, text_box_last_name)
-			l_control_array.put (7, text_box_first_name)
-			l_control_array.put (8, text_box_ID)
-			l_control_array.put (9, label_address)
-			l_control_array.put (10, label_last_name)
-			l_control_array.put (11, label_first_name)
-			l_control_array.put (12, label_ID)
-			my_window.controls.add_range (l_control_array)
+--			create l_control_array.make (5)
+--			l_control_array.put (0, text_box_position)
+--			l_control_array.put (1, button_move_first)
+--			l_control_array.put (2, button_move_prev)
+--			l_control_array.put (3, button_move_next)
+--			l_control_array.put (4, button_move_last)
+--			panel_VCR_control.controls.add_range (l_control_array)
+--			
+--			create l_control_array.make (13)
+--			l_control_array.put (0, text_box_DOB)
+--			l_control_array.put (1, label_DOB)
+--			l_control_array.put (2, panel_VCR_control)
+--			l_control_array.put (3, text_box_title)
+--			l_control_array.put (4, label_title)
+--			l_control_array.put (5, text_box_address)
+--			l_control_array.put (6, text_box_last_name)
+--			l_control_array.put (7, text_box_first_name)
+--			l_control_array.put (8, text_box_ID)
+--			l_control_array.put (9, label_address)
+--			l_control_array.put (10, label_last_name)
+--			l_control_array.put (11, label_first_name)
+--			l_control_array.put (12, label_ID)
+--			controls.add_range (l_control_array)
 		end
 
 feature {NONE} -- Implementation
 
-	dispose is
-			-- method call when form is disposed.
+	dispose_boolean (a_disposing: BOOLEAN) is
+			-- method called when form is disposed.
 		local
 			dummy: WINFORMS_DIALOG_RESULT
+			retried: BOOLEAN
 		do
-			dummy := feature {WINFORMS_MESSAGE_BOX}.show (("Disposed !").to_cil)
+			if not retried then
+				if components /= Void then
+					components.dispose	
+				end
+			end
+			Precursor {WINFORMS_FORM}(a_disposing)
+		rescue
+			retried := true
+			retry
 		end
 
-
-		text_box_DOB_FormatDate (sender: SYSTEM_OBJECT; e: WINFORMS_CONVERT_EVENT_ARGS) is
-				--
-			do
+	text_box_DOB_FormatDate (sender: SYSTEM_OBJECT; e: WINFORMS_CONVERT_EVENT_ARGS) is
+			--
+		do
 --				-- We only deal with converting to strings from dates
 --				if (e.DesiredType != typeof(string)) return 
 --				if (e.Value.GetType() != typeof(DateTime)) return 
 --
 --				DateTime dt = (DateTime)e.Value
 --				e.Value = dt.ToLongDateString()
-			end
-			
+		end
+		
 
-		text_box_DOB_ParseDate (sender: SYSTEM_OBJECT; e: WINFORMS_CONVERT_EVENT_ARGS) is
-				-- Parse the textbox contents and turn them back into a date\
-			local
-				rescued: BOOLEAN
-			do
+	text_box_DOB_ParseDate (sender: SYSTEM_OBJECT; e: WINFORMS_CONVERT_EVENT_ARGS) is
+			-- Parse the textbox contents and turn them back into a date\
+		local
+			rescued: BOOLEAN
+		do
 --
 --				-- We only deal with converting to dates and strings
 --				if (e.DesiredType != typeof(DateTime)) return 
@@ -328,50 +343,50 @@ feature {NONE} -- Implementation
 --				}
 --				catch(Exception ex) {
 --					MessageBox.Show(ex.Message)
-			rescue
-				rescued := True
-				retry
+		rescue
+			rescued := True
+			retry
+		end
+		
+
+	button_move_first_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+			-- When the MoveFirst button is clicked set the position for the CustomersList
+			-- to the first record
+		do
+			binding_context.item (cust_list).set_position (0)
+		end
+
+
+	button_move_last_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+			-- When the MoveLast button is clicked set the position for the CustomersList
+			-- to the last record
+		do
+			binding_context.item (cust_list).set_position (cust_list.count - 1)
+		end
+
+
+	button_move_next_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+			-- When the MoveNext button is clicked increment the position for the CustomersList
+		do
+			if binding_context.item (cust_list).position < cust_list.count - 1 then
+				binding_context.item (cust_list).set_position (binding_context.item (cust_list).position + 1)
 			end
-			
+		end
 
-		button_move_first_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				-- When the MoveFirst button is clicked set the position for the CustomersList
-				-- to the first record
-			do
-				my_window.binding_context.item (cust_list).set_position (0)
+
+	button_move_prev_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+			-- When the MovePrev button is clicked decrement the position for the CustomersList
+		do
+			if binding_context.item (cust_list).position > 0 then
+				binding_context.item (cust_list).set_position (binding_context.item (cust_list).position - 1)
 			end
+		end
 
-
-		button_move_last_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				-- When the MoveLast button is clicked set the position for the CustomersList
-				-- to the last record
-			do
-				my_window.binding_context.item (cust_list).set_position (cust_list.count - 1)
-			end
-
-
-		button_move_next_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				-- When the MoveNext button is clicked increment the position for the CustomersList
-			do
-				if my_window.binding_context.item (cust_list).position < cust_list.count - 1 then
-					my_window.binding_context.item (cust_list).set_position (my_window.binding_context.item (cust_list).position + 1)
-				end
-			end
-
-
-		button_move_prev_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				-- When the MovePrev button is clicked decrement the position for the CustomersList
-			do
-				if my_window.binding_context.item (cust_list).position > 0 then
-					my_window.binding_context.item (cust_list).set_position (my_window.binding_context.item (cust_list).position - 1)
-				end
-			end
-
-		customers_position_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				-- Position has changed - update the DATA VCR panel
-			do
-				text_box_position.set_text (("Customers_position_changed...").to_cil)--(String.Format("Record {0} of {1}").to_cil), my_window.binding_context.item (cust_list).position + 1, cust_list.count)
-			end
+	customers_position_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+			-- Position has changed - update the DATA VCR panel
+		do
+			text_box_position.set_text (("Customers_position_changed...").to_cil)--(String.Format("Record {0} of {1}").to_cil), binding_context.item (cust_list).position + 1, cust_list.count)
+		end
 
 
 end -- Class SIMPLE_BINDING

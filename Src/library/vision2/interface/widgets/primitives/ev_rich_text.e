@@ -214,6 +214,7 @@ feature -- Access
 		do
 			Result := implementation.position_from_index (an_index)
 		ensure
+			result_not_void: Result /= Void
 			position_valid: Result.x >= 0 and Result.x <= width and
 				Result.y >= 0 and Result.y <= height
 			text_not_changed: text.is_equal (old text)
@@ -279,7 +280,7 @@ feature -- Access
 feature -- Status setting
 
 	set_current_format (format: EV_CHARACTER_FORMAT) is
-			-- apply `format' to current caret position, applicable
+			-- Apply `format' to current caret position, applicable
 			-- to next typed characters.
 		require
 			not_destroyed: not is_destroyed
@@ -439,7 +440,7 @@ feature -- Status setting
 		end
 		
 	set_tab_width (a_width: INTEGER) is
-			-- Assign `a_width' to `tab_width'.
+			-- Assign `a_width' in pixels to `tab_width'.
 		require
 			not_destroyed: not is_destroyed
 			width_positive: a_width > 0

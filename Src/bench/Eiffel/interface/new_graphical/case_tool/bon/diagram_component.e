@@ -148,7 +148,7 @@ feature {DIAGRAM_COMPONENT, CLASS_PLACEMENT} -- Implementation
 			px, wx: INTEGER
 		do
 			wx := world.point.x
-			if point.origin /= void and then point.origin /= world.point then
+			if point.origin /= Void and then point.origin /= world.point then
 				px := (point.origin.x_abs / point.origin.scale_x_abs).rounded
 			end
 			Result := world.x_to_default_grid (wx + px + ax) - px - wx
@@ -160,7 +160,7 @@ feature {DIAGRAM_COMPONENT, CLASS_PLACEMENT} -- Implementation
 			py, wy: INTEGER
 		do
 			wy := world.point.y
-			if point.origin /= void and then point.origin /= world.point then
+			if point.origin /= Void and then point.origin /= world.point then
 				py := (point.origin.y_abs / point.origin.scale_y_abs).rounded
 			end
 			Result := world.y_to_default_grid (wy + py + ay) - py - wy
@@ -180,9 +180,11 @@ feature {NONE} -- Implementation
 		local
 			d_area: EV_DRAWING_AREA
 		do
-			d_area := world.context_editor.area
-			if d_area /= Void and then not d_area.has_capture then
-				d_area.enable_capture
+			if world /= Void then
+				d_area := world.context_editor.area
+				if d_area /= Void and then not d_area.has_capture then
+					d_area.enable_capture
+				end
 			end
 		end
 		
@@ -191,10 +193,12 @@ feature {NONE} -- Implementation
 		local
 			d_area: EV_DRAWING_AREA
 		do
-			d_area := world.context_editor.area
---			world.context_editor.scroll_if_necessary (True)
-			if d_area /= Void and then d_area.has_capture then
-				d_area.disable_capture
+			if world /= Void then
+				d_area := world.context_editor.area
+	--			world.context_editor.scroll_if_necessary (True)
+				if d_area /= Void and then d_area.has_capture then
+					d_area.disable_capture
+				end
 			end
 		end
 		

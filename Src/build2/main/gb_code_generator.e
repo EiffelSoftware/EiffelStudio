@@ -251,27 +251,7 @@ feature {NONE} -- Implementation
 				element.forth
 			end
 		end
-		
-		
-		
-		
-	actual_name (element: XML_ELEMENT) is
-			--
-		local
-			current_element: XML_ELEMENT
-			current_name: STRING
-		do
-			element.start
-			current_element ?= element.item_for_iteration
-			if current_element /= Void then
-				current_name := current_element.name.to_utf8
-				check
-					current_name.is_equal (Internal_properties_string)
-				end
-			end
-		end
-		
-		
+
 	add_local (local_type, name: STRING) is
 			--
 		local

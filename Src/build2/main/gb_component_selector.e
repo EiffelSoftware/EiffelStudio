@@ -22,6 +22,11 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
+		
+	GB_WIDGET_UTILITIES
+		undefine
+			default_create, is_equal, copy
+		end
 
 create
 	default_create
@@ -40,9 +45,17 @@ feature {NONE} -- Initialization
 			-- Add a new component representing `an_object'.
 		local
 			component_item: GB_COMPONENT_SELECTOR_ITEM
+			dialog: GB_COMPONENT_NAMER_DIALOG
+			new_component_name: STRING
 		do
-			create component_item.make_from_object (an_object, "Component_" + (count + 1).out)
-			extend (component_item)
+			create dialog
+			dialog.show_modal_to_window (parent_window (Current))
+			new_component_name := dialog.name
+			
+			if not new_component_name.is_empty then
+				create component_item.make_from_object (an_object, new_component_name)--"Component_" + (count + 1).out)		
+				extend (component_item)
+			end
 		end
 		
 	is_valid_object (an_object: GB_OBJECT): BOOLEAN is

@@ -52,8 +52,6 @@ feature -- Modification & Insertion
 	add_left (v: like item) is
 			-- Put `v' to the left of cursor position.
 			-- Do not move cursor.
-		require else
-			not_before: not before
 		local
 			temp: like item
 		do

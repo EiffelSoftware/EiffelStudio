@@ -21,9 +21,9 @@ feature -- Directory Paths
 				create Result.make_from_string (l_path)		
 				Result.extend ("tools")
 				Result.extend ("doc_builder")						
+			else
+				create Result.make_from_string ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
 			end
-				-- Uncomment for delivery installation version
-			create Result.make_from_string ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
 		end
 
 	resources_directory: DIRECTORY_NAME is

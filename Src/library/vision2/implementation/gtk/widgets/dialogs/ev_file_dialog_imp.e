@@ -96,7 +96,7 @@ feature -- Status report
 		do
 			if not file_name.is_empty then
 				Result := file_name.mirrored
-				Result.head (Result.index_of ('/', 1) - 1)
+				Result.keep_head (Result.index_of ('/', 1) - 1)
 				Result.mirror
 			else
 				Result := ""
@@ -108,7 +108,7 @@ feature -- Status report
 		do
 			if not file_name.is_empty then
 				Result := clone (file_name)
-				Result.head	(Result.count - Result.mirrored.index_of ('/', 1) + 1)
+				Result.keep_head	(Result.count - Result.mirrored.index_of ('/', 1) + 1)
 			else
 				Result := ""
 			end

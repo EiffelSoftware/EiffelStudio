@@ -10,11 +10,6 @@ inherit
 	WINFORMS_TREE_NODE
 		rename
 			make_from_text as make_from_node
-		undefine
-			equals,
-			get_hash_code,
-			to_string,
-			finalize
 		end
 
 	ANY

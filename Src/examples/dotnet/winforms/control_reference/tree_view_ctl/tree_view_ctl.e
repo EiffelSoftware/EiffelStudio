@@ -9,13 +9,11 @@ inherit
 		rename
 			make as make_form,
 			refresh as refresh_winform
-		undefine
-			to_string, finalize, equals, get_hash_code
 		redefine
 			dispose_boolean
 		end
 
-	ANY
+	EXCEPTIONS
 
 create
 	make
@@ -25,8 +23,6 @@ feature {NONE} -- Initialization
 	make is
 			-- | Call `initialize_components' then `fill_directory_tree'.
 			-- Entry point.
-		local
-			l_dec: DECIMAL
 		do
 			initialize_components
 			
@@ -75,7 +71,6 @@ feature {NONE} -- Implementation
 			l_size: DRAWING_SIZE
 			l_point: DRAWING_POINT
 			l_decimal: DECIMAL
-			l_image: DRAWING_BITMAP
 			l_bitmap: DRAWING_BITMAP
 		do
 			create resources.make_from_resource_source (Current.get_type)
@@ -362,7 +357,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		rescue
-			res := feature {WINFORMS_MESSAGE_BOX}.show (feature {EXCEPTION_MANAGER}.last_exception.message)
+			res := feature {WINFORMS_MESSAGE_BOX}.show (tag_name)
 			rescued := True
 			retry
 		end
@@ -428,13 +423,13 @@ feature {NONE} -- Implementation
 				i = drives.count
 			loop
 				l_drive := drives.item (i)
-				l_ptr := feature {MARSHAL}.string_to_hglobal_ansi (l_drive)
+				l_ptr := feature {MARSHAL}.string_to_h_global_ansi (l_drive)
 				if l_ext.get_drive_type (l_ptr) = Drive_fixed then
 					create root.make_from_text (drives.item (i))
 					return := directory_tree.nodes.add_tree_node (root)
 					add_directories (root)
 				end
-				feature {MARSHAL}.free_hglobal (l_ptr)
+				feature {MARSHAL}.free_h_global (l_ptr)
 				i := i + 1
 			end
 		rescue

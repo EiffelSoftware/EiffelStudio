@@ -15,13 +15,15 @@ feature -- Directory Paths
 			-- Root working directory for application
 		local
 			l_path: STRING
-		once			
-			l_path := get ("EIFFEL_SRC")			
+		once
+			l_path := get ("EIFFEL_SRC")
 			if l_path /= Void then
 				create Result.make_from_string (l_path)		
 				Result.extend ("tools")
 				Result.extend ("doc_builder")						
 			end
+				-- Uncomment for delivery installation version
+			create Result.make_from_string ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
 		end
 
 	resources_directory: DIRECTORY_NAME is
@@ -176,6 +178,12 @@ feature -- Table of Contents Preferences
 			l_code_dir.extend ("reference")
 			Result.extend (l_code_dir.string)
 			
+				-- Parse
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("parse")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
+			
 				-- COM
 			create l_code_dir.make_from_string (l_project_root.string)			
 			l_code_dir.extend ("com")
@@ -220,6 +228,7 @@ feature -- Table of Contents Preferences
 			Result.extend ("net")
 			Result.extend ("com")
 			Result.extend ("lex")
+			Result.extend ("parse")
 			Result.extend ("eiffel2java")
 			Result.extend ("store")
 			Result.extend ("thread")

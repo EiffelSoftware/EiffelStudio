@@ -1816,7 +1816,7 @@ feature -- Externals
 		
 	frozen signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER) is
 		external
-			"C macro use <gtk/gtk.h>"
+			"C macro signature (GtkObject *, gpointer) use <gtk/gtk.h>"
 		alias
 			"gtk_signal_disconnect_by_data"
 		end

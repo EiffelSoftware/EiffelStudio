@@ -10,9 +10,6 @@ class
 	MAIN_WINDOW
 
 inherit
---	CASE_CLASS
---		-- Inheritance only to add some classes to the system
-
 	EV_WINDOW
 		redefine	
 			make_top_level
@@ -54,7 +51,7 @@ feature -- Initialization
 			c15: MC_LIST_DEMO_WINDOW
 			c16: DIALOG_DEMO_WINDOW
 			c18: COMBO_DEMO_WINDOW
---			c19: STATUS_DEMO_WINDOW
+			c19: STATUS_DEMO_WINDOW
 		do
 			{EV_WINDOW} Precursor
 			!!container.make (Current)
@@ -77,7 +74,7 @@ feature -- Initialization
 			!!c15.make (Current)
 			!!c16.make (Current)
 			!!c18.make (Current)
---			!!c19.make (Current)
+			!!c19.make (Current)
 			
 			!!b.make_button (Current, "Label", "", c1)
 			!!b.make_button (Current, "Buttons", pixname("buttons"), c10)
@@ -96,7 +93,7 @@ feature -- Initialization
 			!!b.make_button (Current, "MC List", "", c15)
 			!!b.make_button (Current, "Dialog", "", c16)
 			!!b.make_button (Current, "Combo box", "", c18)
---			!!b.make_button (Current, "Status Bar", "", c19)
+			!!b.make_button (Current, "Status Bar", "", c19)
 
 			set_values
 		end

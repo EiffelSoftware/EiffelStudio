@@ -65,7 +65,7 @@ feature -- Status setting
 			menu_item.set_insensitive (True)
 			!! check_menu_item.make_with_text (menu, "Auto save")
 			!! menu_item5.make_with_text (menu, "Quit")
-			menu_item5.add_activate_command (Current, Void)
+			menu_item5.add_select_command (Current, Void)
 						
 			!! menu.make_with_text (static, "Edit")
 			!! check_menu_item.make_with_text (menu, "Cut")

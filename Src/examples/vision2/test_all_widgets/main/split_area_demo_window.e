@@ -39,7 +39,7 @@ feature -- Status setting
 			-- Set the widgets in the demo windows.
 		local
 			button: EV_BUTTON
-			texta: EV_TEXT_AREA
+			texta: EV_TEXT
 		do
 			-- The first child of the vertical split area
 			-- is a horizontal split area

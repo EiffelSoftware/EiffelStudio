@@ -35,10 +35,9 @@ feature -- Status setting
 	set_widgets is
 			-- Set the widgets in the demo windows.
 		local
-			ta: EV_TEXT_AREA
+			ta: EV_TEXT
 		do
 			!! ta.make (main_widget)
-			ta.set_size (300, 300)
 		end
 	
 	set_values is

@@ -7,7 +7,7 @@ inherit
 		redefine
 			generate, print_register, free_register,
 			basic_register, generate_access_on_type,
-			is_polymorphic, has_call, generate_on, generate_access,
+			is_polymorphic, generate_on, generate_access,
 			analyze_on, analyze, set_parent, parent, set_register, register
 		end
 
@@ -245,10 +245,5 @@ end
 			type := a.type
 			routine_id := a.routine_id
 		end
-
-	has_call: BOOLEAN is true
-			-- The expression has at least one call
-			-- Not really true but it should accelerate semi-strict boolean
-			-- operations on attributes (avoid useless access).
 
 end

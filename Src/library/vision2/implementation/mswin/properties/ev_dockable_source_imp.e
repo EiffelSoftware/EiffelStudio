@@ -53,6 +53,15 @@ feature -- Status setting
 					awaiting_movement := False
 				end
 			else
+					-- We now check to see if the left mouse button is not down.
+					-- Although we should never be in this state, it appears that
+					-- lists and trees loose the WM_LBUTTONUP message if you click on an item.
+					-- This means that without this special processing, if you click on the item
+					-- of a dockable tree, then the docking mechanism will start, and never finish
+					-- until you click again. Julian.
+				if not application_imp.key_pressed (application_imp.Vk_lbutton) then
+					check_dragable_release (a_x, a_y)
+				end
 				execute_dragging (a_x, a_y, 0, 0, 0.5, a_screen_x, a_screen_y)
 			end
 		end

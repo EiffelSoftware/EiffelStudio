@@ -36,14 +36,20 @@ feature -- Initialization
 	font: EV_FONT
 
 	test_font is
-				-- Attempt at exhaustive testing of new EV_FONT.
-		local
-			i: INTEGER
+			-- Attempt at exhaustive testing of new EV_FONT.
 		do
 			create my_device
 			first_window.extend (my_device)
 			my_device.set_minimum_size (300, 300)
+			my_device.expose_actions.extend (~on_repaint_font)
+			create fd.make_with_drawable (my_device)
+		end
 
+	on_repaint_font (x, y, w, h: INTEGER) is
+			-- Do the projection
+		local
+			i: INTEGER
+		do
 			create font
 
 			create p.make_with_position (2, 10)
@@ -51,7 +57,7 @@ feature -- Initialization
 			text.set_text ("Default")
 			text.set_font (font)
 			text.set_point (p)
-			my_device.draw_figure_text (text)
+			fd.draw_figure_text (text)
 	
 			font.set_height (32)
 			font.set_weight (Ev_font_weight_regular)
@@ -61,7 +67,7 @@ feature -- Initialization
 				text.set_text (font.name)
 				p.set_y (i * 24 + 30)
 				p.invalidate_absolute_position
-				my_device.draw_figure_text (text)
+				fd.draw_figure_text (text)
 				i := i + 1
 			end
 
@@ -90,7 +96,7 @@ feature -- Initialization
 				font.set_weight (i)
 				p.set_y (150 + i * 20)
 				p.invalidate_absolute_position
-				my_device.draw_figure_text (text)
+				fd.draw_figure_text (text)
 				i := i + 1
 			end
 		end
@@ -103,26 +109,22 @@ feature -- Initialization
 			create my_device
 			first_window.extend (my_device)
 			my_device.set_minimum_size (300, 300)
+			create fd.make_with_drawable (my_device)
 
 			create p.make_with_position (10, 10)
 			create dot.make_with_point (p)
-			my_device.draw_figure_dot (dot)
+			fd.draw_figure_dot (dot)
 
 			create p1.make_with_position (20, 30)
 			create p2.make_with_position (100, 100)
 			create line.make_with_points (p1, p2)
-			my_device.draw_figure_line (line)
-
-			create p1.make_with_position (40,50)
-			create p2.make_with_position (90,90)
-			create arrow.make_with_points (p1, p2)
-			my_device.draw_figure_arrow (arrow)
+			fd.draw_figure_line (line)
 
 			create p1.make_with_position (70,20)
 			create p2.make_with_position (130,90)
 			create p3.make_with_position (120,50)
 			create arc.make_with_points (p1, p2, p3)
-			my_device.draw_figure_arc (arc)
+			fd.draw_figure_arc (arc)
 
 			create polyline
 			create p.make_with_position (200, 10)
@@ -136,7 +138,7 @@ feature -- Initialization
 			create p.make_with_position (240, 40)
 			polyline.add_point (p)
 			polyline.set_closed (True)
-			my_device.draw_figure_polyline (polyline)
+			fd.draw_figure_polyline (polyline)
 
 			create polygon
 			create p.make_with_position (200, 110)
@@ -150,37 +152,37 @@ feature -- Initialization
 			create p.make_with_position (240, 140)
 			polygon.add_point (p)
 			polygon.set_fill_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
-			my_device.draw_figure_polygon (polygon)
+			fd.draw_figure_polygon (polygon)
 
 			create p1.make_with_position (70,120)
 			create p2.make_with_position (130,190)
 			create p3.make_with_position (120,150)
 			create triangle.make_with_points (p1, p2, p3)
 			triangle.set_fill_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
-			my_device.draw_figure_triangle (triangle)
+			fd.draw_figure_triangle (triangle)
 
 			create p.make_with_position (150, 150)
 			create text.make_with_point_and_text (p, "EV_FIGURE_TEXT")
-			my_device.draw_figure_text (text)
+			fd.draw_figure_text (text)
 
 			create p1.make_with_position (140,50)
 			create p2.make_with_position (190,90)
 			create rectangle.make_with_points (p1, p2)
 			rectangle.set_fill_color (create {EV_COLOR}.make_with_rgb (1, 1, 0))
-			my_device.draw_figure_rectangle (rectangle)
+			fd.draw_figure_rectangle (rectangle)
 
 			create p1.make_with_position (40,150)
 			create p2.make_with_position (90,190)
 			create ellipse.make_with_points (p1, p2)
 			ellipse.set_fill_color (create {EV_COLOR}.make_with_rgb (0, 1, 1))
-			my_device.draw_figure_ellipse (ellipse)
+			fd.draw_figure_ellipse (ellipse)
 
 			create p1.make_with_position (140,150)
 			create p2.make_with_position (190,190)
 			create eql.make_with_points (p1, p2)
 			eql.set_side_count (7)
 			eql.set_fill_color (create {EV_COLOR}.make_with_rgb (1, 0, 1))
-			my_device.draw_figure_equilateral (eql)
+			fd.draw_figure_equilateral (eql)
 
 			--picture
 			--pie
@@ -192,7 +194,13 @@ feature -- Initialization
 			create my_device
 			first_window.extend (my_device)
 			my_device.set_minimum_size (300, 300)
+			my_device.expose_actions.extend (~on_repaint_test)
+			create fd.make_with_drawable (my_device)
+		end
 
+	on_repaint_test (x, y, w, h: INTEGER) is
+			-- Do the projection
+		do
 			my_device.set_fill_color (create {EV_COLOR}.make_with_rgb (1, 0, 0))
 
 			my_device.clear
@@ -213,7 +221,7 @@ feature -- Initialization
 			my_device.draw_point (10, 10)
 			my_device.draw_text (10, 200, "Text-primitive")
 			my_device.draw_segment (5, 5, 100, 50)
-			my_device.draw_straight_line (100, 30, 120, 35)
+			--my_device.draw_straight_line (100, 30, 120, 35)
 			--my_device.draw_pixmap (80, 16, Void)
 			my_device.draw_arc (90, 25, 20, 30, 0, 0.75 * 3.14)
 			my_device.draw_rectangle (10, 110, 10, 15)
@@ -221,8 +229,7 @@ feature -- Initialization
 			my_device.draw_polyline (<<create {EV_COORDINATES}.set (80, 110),
 				create {EV_COORDINATES}.set (90, 120),
 				create {EV_COORDINATES}.set (90, 130)>>, True)
-			my_device.draw_pie_slice (100, 100, 20, 20, 0.1, 0.25 * 3.14)
-
+			my_device.draw_pie_slice (100, 100, 20, 20, 0.1, 0.25 * 3.14)			my_device.draw_text (10, 200, "Text-primitive")
 		end
 
 	make_world is
@@ -339,7 +346,8 @@ feature -- Initialization
 
 			my_device.pointer_button_press_actions.extend (~on_click)
 
-			create projector.make (my_world, my_device)
+			create fd.make_with_drawable (my_device)
+			create projector.make (my_world, fd)
 		end
 
 	first_window: EV_TITLED_WINDOW is
@@ -398,6 +406,7 @@ feature -- Initialization
 feature -- Access
 
 	my_world: EV_FIGURE_WORLD
+	fd: EV_FIGURE_DRAWER
 
 	dot: EV_FIGURE_DOT
 	ellipse: EV_FIGURE_ELLIPSE

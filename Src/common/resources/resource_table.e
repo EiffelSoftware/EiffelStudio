@@ -120,13 +120,13 @@ feature -- Access
 			name_not_void: name /= Void
 		local
 			a_text: STRING;
-			a_list: ARRAYED_LIST [STRING];
+			a_list: LINKED_LIST [STRING];
 			c, pos, last_pos: INTEGER;
 			an_entry: STRING
 		do
 			if has (name) then
 				a_text := item (name);
-				!! a_list.make (10);
+				!! a_list.make;
 				from
 					c := a_text.count;
 					last_pos := 1;
@@ -158,10 +158,12 @@ feature -- Access
 				from
 					!! Result.make (1, a_list.count);
 					a_list.start
+					pos := 1
 				until
 					a_list.after
 				loop
-					Result.put (a_list.item, a_list.index);
+					Result.put (a_list.item, pos);
+					pos := pos + 1
 					a_list.forth
 				end
 			else

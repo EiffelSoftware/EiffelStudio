@@ -10,6 +10,11 @@ deferred class
 inherit
 	EB_STONABLE
 	
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
+	
 feature -- Access
 	
 	stone: STONE
@@ -164,7 +169,13 @@ feature -- "Save command" related features
 
 	save_text is
 			-- Launch the save command.
+		local
+			cst: CLASSC_STONE
 		do
+			cst ?= stone
+			if cst /= Void then
+				Eiffel_project.Workbench.change_class (cst.class_i)
+			end
 			save_cmd.execute
 		end
 

@@ -195,7 +195,6 @@ feature -- Status setting
 				-- as they represents the start of the paragraphs to be formattted, and then apply a character offset from that point.
 				
 			paragraph_start_index := rich_text.text.substring_index ("Alignment", 2000)
-			print (paragraph_start_index)
 				
 			create paragraph_format
 			paragraph_format.enable_center_alignment

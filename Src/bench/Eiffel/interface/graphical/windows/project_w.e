@@ -11,7 +11,7 @@ inherit
 
 	TOOL_W
 		redefine
-			text_window, tool_name, process_system, process_error,
+			tool_name, process_system, process_error,
 			process_object, process_breakable, process_class,
 			process_classi, compatible, process_feature,
 			process_class_syntax, process_ace_syntax, display
@@ -50,8 +50,6 @@ feature -- Initialization
 			build_widgets;
 			set_title (l_project);
 			set_icon_name (tool_name);
-			set_default_position;
-			realize;
 			if bm_Project_icon.is_valid then
 				set_icon_pixmap (bm_Project_icon);
 			end;
@@ -60,10 +58,12 @@ feature -- Initialization
 			set_action ("<Visible>", Current, remapped);
 			set_delete_command (quit_cmd_holder.associated_command);
 			set_composite_attributes (Current);
-			text_window.set_font_to_default;
+			set_font_to_default;
 			!! app_stopped_cmd;
 			Application.set_before_stopped_command (app_stopped_cmd);
 			Application.set_after_stopped_command (app_stopped_cmd);
+			set_default_position;
+			realize;
 		end;
 
 feature -- Properties
@@ -105,8 +105,6 @@ feature -- Properties
 	eb_shell: EB_SHELL is
 		do
 			Result := Void
-		ensure then
-			result_is_void: Result = Void
 		end;
 
 feature -- Access
@@ -142,12 +140,6 @@ feature -- Window Settings
 			initialized = true
 		end;
 
-	set_changed (f: BOOLEAN) is
-			-- Assign `f' to `changed'.
-		do
-			changed := f
-		end
-
 	display is
 			-- Display Current on the screen
 		do
@@ -165,13 +157,10 @@ feature -- Window Implementation
 
 	popup_file_selection is
 		do
-			open_command.execute (text_window);
+			open_command.execute (Current);
 		end;
 
 feature -- Window Properties
-
-	changed: BOOLEAN;
-			-- Is or has the window changed?
 
 	initialized: BOOLEAN;
 			-- Is the workbench created?
@@ -201,9 +190,6 @@ feature -- Window Properties
 			Result := l_Project
 		end;
 
-	text_window: PROJECT_TEXT;
-			-- Text window associated with Current.
-
 feature -- Window Holes
 
 	stop_points_hole_holder: HOLE_HOLDER;
@@ -223,10 +209,6 @@ feature -- Pulldown Menus
 	menu_bar: BAR;
 			-- Menu bar in the top section of the window.
 
-	edit_menu: MENU_PULL;
-			-- Edit menu.
-			-- Only used during debugging
-
 	special_menu: MENU_PULL;
 			-- Menu for commands.
 			-- Only used during debugging
@@ -234,9 +216,6 @@ feature -- Pulldown Menus
 	format_menu: MENU_PULL;
 			-- Menu for formats.
 			-- Only used during debugging
-
-	file_menu: MENU_PULL;
-			-- File menu.
 
 	compile_menu: MENU_PULL;
 			-- Compile menu.
@@ -307,7 +286,7 @@ feature -- Execution Implementation
 					if is_system_window_hidden then
 						system_tool.show
 						is_system_window_hidden := False;
-					elseif system_tool.text_window.in_use then
+					elseif system_tool.in_use then
 						system_tool.show
 					end;
 					raise
@@ -360,21 +339,20 @@ feature -- Execution Implementation
 			-- the part is displayed
 		local
 			display_cmd: DISPLAY_ROUTINE_PORTION;
-			new_stone: FEATURE_STONE;
-			text_w: ROUTINE_TEXT
+			new_stone: FEATURE_STONE
 		do
 			display_cmd ?= display_feature_cmd_holder.associated_command
 			if display_cmd /= Void then
 				if display_cmd.is_shown then
-					text_w := feature_part.text_window
-					if (text_w.root_stone /= Void) and then
-							text_w.root_stone.e_feature /= Void and then
-							not equal (text_w.root_stone.e_feature.body_id, e_feature.body_id) then
+					if (feature_part.stone /= Void) and then
+							feature_part.stone.e_feature /= Void and then
+							not equal (feature_part.stone.e_feature.body_id, 
+								e_feature.body_id) 
+					then
 						!! new_stone.make (e_feature, e_feature.written_class)
 						feature_part.process_feature (new_stone)
-						--feature_part.text_window.redisplay_breakable_mark (index)
+						feature_part.text_window.redisplay_breakable_mark (e_feature, index)
 					end;
-					feature_part.text_window.redisplay_breakable_mark (index)
 				end
 			end
 		end
@@ -414,7 +392,7 @@ feature -- Graphical Interface
 			form_manager.attach_bottom_position (object_form, 3);
 			
 			build_menu;
-			build_text;
+			build_text_windows;
 			build_top;
 			build_icing;
 			build_format_bar;
@@ -509,7 +487,7 @@ feature -- Graphical Interface
 			!! change_font_button.make (change_font_cmd, classic_bar);
 			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
 			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
 			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
 			change_font_cmd_holder.set_sensitive (False);
@@ -541,17 +519,6 @@ feature -- Graphical Interface
 
 		end;
 
-	build_text is
-			-- Build console text window.
-		do
-			if tabs_disabled then
-				!! text_window.make (new_name, Current, Current);
-			else
-				!PROJECT_TAB_TEXT! text_window.make (new_name, Current, Current)
-			end;
---			text_window.set_size (200, 100);
-		end;
-
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		local
@@ -579,22 +546,22 @@ feature -- Graphical Interface
 		do
 			!! format_bar.make (new_name, std_form);
 
-			!! stop_cmd.make (text_window);
+			!! stop_cmd.make (Current);
 			!! stop_button.make (stop_cmd, format_bar)
 			stop_button.set_action ("!c<Btn1Down>", stop_cmd, stop_cmd.Format_and_run);
 			!! stop_menu_entry.make (stop_cmd, debug_menu);
 			!! exec_stop_frmt_holder.make (stop_cmd, stop_button, stop_menu_entry);
-			!! step_cmd.make (text_window);
+			!! step_cmd.make (Current);
 			!! step_button.make (step_cmd, format_bar);
 			step_button.set_action ("!c<Btn1Down>", step_cmd, step_cmd.Format_and_run);
 			!! step_menu_entry.make (step_cmd, debug_menu);
 			!! exec_step_frmt_holder.make (step_cmd, step_button, step_menu_entry);
-			!! last_cmd.make (text_window);
+			!! last_cmd.make (Current);
 			!! last_button.make (last_cmd, format_bar);
 			last_button.set_action ("!c<Btn1Down>", last_cmd, last_cmd.Format_and_run);
 			!! last_menu_entry.make (last_cmd, debug_menu);
 			!! exec_last_frmt_holder.make (last_cmd, last_button, last_menu_entry);
-			!! nostop_cmd. make (text_window);
+			!! nostop_cmd. make (Current);
 			!! nostop_button.make (nostop_cmd, format_bar);
 			nostop_button.set_action ("!c<Btn1Down>", nostop_cmd, nostop_cmd.Format_and_run);
 			!! nostop_menu_entry.make (nostop_cmd, debug_menu);
@@ -649,6 +616,8 @@ feature -- Graphical Interface
 			finalize_cmd: FINALIZE_PROJECT;
 			finalize_button: EB_BUTTON;
 			finalize_menu_entry: EB_MENU_ENTRY;
+			precompile_cmd: PRECOMPILE_PROJECT;
+			precompile_menu_entry: EB_MENU_ENTRY;
 			special_cmd: SPECIAL_COMMAND;
 			special_button: EB_BUTTON;
 			debug_quit_cmd: DEBUG_QUIT;
@@ -663,14 +632,14 @@ feature -- Graphical Interface
 			separator: SEPARATOR
 		do
 			!! icing.make (new_name, std_form);
-			!! update_cmd.make (text_window);
+			!! update_cmd.make (Current);
 			!! update_button.make (update_cmd, icing);
 			update_button.set_action ("!c<Btn1Down>", update_cmd, update_cmd.generate_code_only);
 			!! update_menu_entry.make (update_cmd, compile_menu);
 			!! update_cmd_holder.make (update_cmd, update_button, update_menu_entry);
-			!! debug_run_cmd.make (icing, text_window);
+			!! debug_run_cmd.make (icing, Current);
 			!! debug_run_button.make (debug_run_cmd, icing);
-			debug_run_button.add_button_click_action (3, debug_run_cmd, debug_run_cmd.specify_args);
+			debug_run_button.add_button_press_action (3, debug_run_cmd, debug_run_cmd.specify_args);
 			debug_run_button.set_action ("!c<Btn1Down>", debug_run_cmd, debug_run_cmd.melt_and_run);
 			!! debug_run_menu_entry.make (debug_run_cmd, debug_menu);
 			!! debug_run_cmd_holder.make (debug_run_cmd, debug_run_button, debug_run_menu_entry);
@@ -687,16 +656,20 @@ feature -- Graphical Interface
 			!! special_button.make (special_cmd, icing);
 			!! special_cmd_holder.make_plain (special_cmd);
 			special_cmd_holder.set_button (special_button);
-			!! freeze_cmd.make (text_window);
+			!! freeze_cmd.make (Current);
 			!! freeze_button.make (freeze_cmd, icing);
 			freeze_button.set_action ("!c<Btn1Down>", freeze_cmd, freeze_cmd.generate_code_only);
 			!! freeze_menu_entry.make (freeze_cmd, compile_menu);
 			!! freeze_cmd_holder.make (freeze_cmd, freeze_button, freeze_menu_entry);
-			!! finalize_cmd.make (text_window);
+			!! finalize_cmd.make (Current);
 			!! finalize_button.make (finalize_cmd, icing);
 			finalize_button.set_action ("!c<Btn1Down>", finalize_cmd, finalize_cmd.generate_code_only);
 			!! finalize_menu_entry.make (finalize_cmd, compile_menu);
 			!! finalize_cmd_holder.make (finalize_cmd, finalize_button, finalize_menu_entry);
+			!! precompile_cmd.make (Current);
+			!! precompile_menu_entry.make (precompile_cmd, compile_menu);
+			!! precompile_cmd_holder.make_plain (precompile_cmd);
+			precompile_cmd_holder.set_menu_entry (precompile_menu_entry);
 
 			!! separator.make (new_name, debug_menu);
 
@@ -735,9 +708,9 @@ feature -- Graphical Interface
 			std_form.attach_top_widget (menu_bar, classic_bar, 2);
 			std_form.attach_right_widget (icing, classic_bar, 0);
 
-			std_form.attach_left (text_window, 0);
-			std_form.attach_top_widget (classic_bar, text_window, 0);
-			std_form.attach_right_widget (icing, text_window, 0);
+			std_form.attach_left (text_window.widget, 0);
+			std_form.attach_top_widget (classic_bar, text_window.widget, 0);
+			std_form.attach_right_widget (icing, text_window.widget, 0);
 			-- (text_window will resize when window grows)
 
 			-- std_form.attach_left (xterminal, 5);
@@ -746,7 +719,7 @@ feature -- Graphical Interface
 			-- (xterminal will resize when window grows)
 			-- std_form.attach_bottom (xterminal, 5);
 
-			std_form.attach_bottom_widget (format_bar, text_window, 0);
+			std_form.attach_bottom_widget (format_bar, text_window.widget, 0);
 
 			std_form.attach_top_widget (menu_bar, icing, 2);
 			std_form.attach_right (icing, 0);
@@ -806,6 +779,8 @@ feature -- Commands
 	freeze_cmd_holder: COMMAND_HOLDER;
 
 	finalize_cmd_holder: COMMAND_HOLDER;
+
+	precompile_cmd_holder: COMMAND_HOLDER;
 
 	change_font_cmd_holder: COMMAND_HOLDER;
 

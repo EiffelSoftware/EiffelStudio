@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Command to exit the application"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,18 +7,12 @@ class
 	EB_EXIT_APPLICATION_CMD
 
 inherit
---	GRAPHICS
 	PROJECT_CONTEXT
 	SHARED_APPLICATION_EXECUTION
 	EV_COMMAND
 		redefine
 --			license_checked
 		end
---	WARNER_CALLBACKS
---		rename
---			execute_warner_help as exit_anyway,
---			execute_warner_ok as do_not_exit
---		end
 	EB_SHARED_INTERFACE_TOOLS
 	INTERFACE_NAMES
 

@@ -189,12 +189,19 @@ feature -- Basic operations
 							print ("An_x : " + an_x.out + "%N")
 							print ("a_width : " + a_width.out + "%N")
 						end
-						grid_item := current_row @ (current_index_in_row - 1)
-
-						current_item_x_position  := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
-						current_column_width := column_offsets @ (column_counter + 1) - column_offsets @ (column_counter)
+						if current_row /= Void then
+							grid_item := current_row @ (current_index_in_row - 1)
+							
+							if grid_item /= Void then
+	
+								current_item_x_position  := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
+								current_column_width := column_offsets @ (column_counter + 1) - column_offsets @ (column_counter)
 						
-						grid_item.redraw (current_item_x_position , current_item_y_position, current_column_width, current_row_height, grid.drawable)
+								grid_item.redraw (current_item_x_position , current_item_y_position, current_column_width, current_row_height, grid.drawable)
+							end
+						else
+							--drawable.fill
+						end
 						
 						column_counter := column_counter + 1
 						current_index_in_row := current_index_in_row + 1

@@ -591,7 +591,7 @@ extern "C" {
 		if (_lwp_mutex_lock(m)) \
 			eraise (msg, EN_EXT);
 #define EIF_LW_MUTEX_UNLOCK(m,msg) \
-		if (_lwp_mutex_unlock(m) \
+		if (_lwp_mutex_unlock(m)) \
 			eraise (msg, EN_EXT);
 #define EIF_LW_MUTEX_DESTROY(m,msg) \
 		eif_free(m);

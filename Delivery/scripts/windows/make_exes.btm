@@ -75,10 +75,12 @@ fullrf %INSTALL_DIR\releases\home\lib\msc\ebench.lib
 copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 copy %EIFFEL_SRC\C\eif_confmagic.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 copy %EIFFEL_SRC\C\console\eif_econsole.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
+copy %EIFFEL_SRC\C\platform\eif_commands.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC
 
 remtrace Compile the commercial run-times
 remtrace Compile a run-time for Borland
+fullrd C
 exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd C
 alias pause echo
@@ -124,7 +126,13 @@ remtrace Copy the header files
 copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 copy %EIFFEL_SRC\C\eif_confmagic.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 copy %EIFFEL_SRC\C\console\eif_econsole.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
+copy %EIFFEL_SRC\C\platform\eif_commands.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC
+
+remtrace We need to copy finalized.lib to ISE_EIFFEL so that the new run-time is used to compile the exe's.
+cd %ISE_EIFFEL\studio\spec\%ISE_PLATFORM\lib\msc
+move finalized.lib finalized.lib_backup
+copy %EIFFEL_SRC\C\run-time\LIB\finalized.lib .
 
 remtrace Then the C libraries
 cd %EIFFEL_SRC\C_library

@@ -20,7 +20,8 @@ inherit
 			add_child,
 			child_minheight_changed,
 			child_minwidth_changed,
-			on_first_display
+			on_first_display,
+			set_insensitive
 		end
 
 	EV_FONTABLE_IMP
@@ -47,7 +48,8 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
-			on_key_up
+			on_key_up,
+			on_draw_item
 		redefine
 			default_style,
 			default_ex_style,
@@ -97,30 +99,30 @@ feature -- Status setting
 			-- set position of tabs (left, right, top or bottom)
 		local
 			temp_window: wel_window
-			children: LINKED_LIST [WEL_TAB_CONTROL_ITEM]
+			ev_children: LINKED_LIST [WEL_TAB_CONTROL_ITEM]
 		do
 			tab_pos := pos
 			temp_window := wel_parent 
 			if count > 0 then
 				from
-					!! children.make
+					!! ev_children.make
 				until
-					children.count = count
+					ev_children.count = count
 				loop
-					children.extend (get_item (children.count))
-					children.last.window.set_parent (temp_window)
-					children.last.window.hide
+					ev_children.extend (get_item (ev_children.count))
+					ev_children.last.window.set_parent (temp_window)
+					ev_children.last.window.hide
 				end
 				wel_destroy
 				wel_make (temp_window, 0, 0, 0, 0, 0)
 				from
-					children.start
+					ev_children.start
 				until
-					children.after
+					ev_children.after
 				loop
-					children.item.window.set_parent (Current)
-					insert_item (count, children.item)
-					children.forth
+					ev_children.item.window.set_parent (Current)
+					insert_item (count, ev_children.item)
+					ev_children.forth
 				end
 			else
 				wel_destroy
@@ -128,6 +130,32 @@ feature -- Status setting
 			end
 			set_font (font)
 			set_minimum_height (tab_height)
+		end
+
+	set_insensitive (flag: BOOLEAN) is
+			-- Set current widget in insensitive mode if
+   			-- `flag'.
+		local
+			index: INTEGER
+			child_item: WEL_TAB_CONTROL_ITEM
+			child_imp: EV_WIDGET_IMP
+		do
+			if insensitive /= flag then
+				from
+					index := 0
+				until
+					index = count
+				loop
+					child_item := get_item (index)
+					child_imp ?= child_item.window
+					check
+						child_imp_not_void: child_imp /= Void
+					end
+					child_imp.set_insensitive (flag)
+					index := index + 1
+				end
+				{EV_CONTAINER_IMP} Precursor (flag)
+			end
 		end
 
 feature -- Element change
@@ -160,11 +188,11 @@ feature -- Element change
 
 feature -- Implementation
 
-	add_child (child_imp: EV_WIDGET_I) is
+	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite. In this container, `child' is the
 			-- child of the container whose page is currently selected.
 		do
-			child ?= child_imp
+			child := child_imp
 			child_imp.hide
 		end
 

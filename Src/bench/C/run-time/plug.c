@@ -299,16 +299,32 @@ rt_public EIF_INTEGER sp_count(EIF_REFERENCE spobject)
 {
 	/* Return the count of a special or TUPLE object */
 
-	EIF_REFERENCE ref; 
+	EIF_INTEGER res; 
 
 	REQUIRE ("Not null.", spobject != NULL);
 	REQUIRE ("Must be a special object", HEADER (spobject)->ov_flags & EO_SPEC);
 
-	ref = spobject + (HEADER(spobject)->ov_size & B_SIZE) - LNGPAD_2;
+	res = RT_SPECIAL_COUNT(spobject);
 
-	ENSURE ("Must be positive", *(EIF_INTEGER *) ref >= 0);
+	ENSURE ("Must be positive", res >= 0);
 
-	return *(EIF_INTEGER *)ref;
+	return res;
+}
+
+rt_public EIF_INTEGER sp_elem_size(EIF_REFERENCE spobject)
+{
+	/* Return the size of the element of a SPECIAL */
+
+	EIF_INTEGER res;
+
+	REQUIRE ("Not null.", spobject != NULL);
+	REQUIRE ("Must be a special object", HEADER (spobject)->ov_flags & EO_SPEC);
+
+	res = RT_SPECIAL_ELEM_SIZE(spobject);
+
+	ENSURE ("Must be positive", res >= 0);
+
+	return res;
 }
 
 

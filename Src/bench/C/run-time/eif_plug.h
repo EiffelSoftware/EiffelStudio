@@ -113,6 +113,7 @@ extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
 		(Dftype(obj1) == Dftype(obj2))
 
 RT_LNK EIF_INTEGER sp_count(EIF_REFERENCE spobject);		/* Count of a special object */
+RT_LNK EIF_INTEGER sp_elem_size(EIF_REFERENCE spobject);	/* Size of element a special object */
 RT_LNK void chkinv(EIF_REFERENCE obj, int where);	/* Invariant control call */
 
 #ifdef WORKBENCH

@@ -716,15 +716,18 @@ feature -- Element change
 		require
 			non_negative_argument: n >= 0
 		local
-			i: INTEGER
+			i, j: INTEGER
 		do
 			if n < count then
 				from
+					j := count - n
+					i := 0
 				until
 					i = n
 				loop
-					internal_string_builder.set_chars (i, internal_string_builder.get_chars (i + n))
+					internal_string_builder.set_chars (i, internal_string_builder.get_chars (j))
 					i := i + 1
+					j := j + 1
 				end
 				set_count (n)
 			end
@@ -1463,7 +1466,7 @@ feature {STRING_HANDLER} -- Implementation
 		require
 			valid_count: 0 <= number and number <= capacity
 		do
-			internal_string_builder.set_length (capacity)
+			internal_string_builder.set_length (number)
 		ensure
 			new_count: count = number
 		end

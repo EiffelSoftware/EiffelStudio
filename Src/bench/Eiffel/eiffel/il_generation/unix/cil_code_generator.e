@@ -396,6 +396,13 @@ feature -- Class info
 		do
 		end
 
+	generate_class_attributes (class_type: CLASS_TYPE) is
+			-- Define custom attributes of `class_type'.
+		require
+			class_type_not_void: class_type /= Void
+		do
+		end
+
 	define_default_constructor (class_type: CLASS_TYPE) is
 			-- Define default constructor for implementation of `class_type'
 		require

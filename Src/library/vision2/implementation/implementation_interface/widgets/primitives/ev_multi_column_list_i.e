@@ -245,9 +245,50 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		require
 			child_not_void: child /= Void
 			child_dirty: child.update_needed
-		deferred
+		local
+			cur: CURSOR
+			txt: STRING
+			list: LINKED_LIST [STRING]
+		do
+			list := child.interface
+			cur := list.cursor
+			from
+				list.start
+			until
+				list.after
+			loop
+				txt := list.item
+				if txt = Void then
+					txt := ""
+				end
+				if list.index > columns then
+					add_column
+				end
+				set_text_on_position (list.index, a_row, txt)
+				list.forth
+			end
+			list.go_to (cur)
+			child.update_performed
 		ensure
 			child_updated: not child.update_needed
+		end
+
+	add_column is
+			-- Append new column at end.
+		deferred
+		ensure
+			column_count_increased: columns = old columns + 1
+		end
+
+	set_text_on_position (a_x, a_y: INTEGER; a_text: STRING) is
+			-- Set the label of the cell with coordinates `a_x', `a_y'
+			-- with `txt'.
+		require
+			a_x_large_enough: a_x > 0
+			a_y_large_enough: a_y > 0
+			a_x_small_enough: a_x <= columns
+			a_y_small_enough: a_y <= count
+		deferred
 		end
 
 	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE []]
@@ -285,6 +326,10 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/24 19:36:08  brendel
+--| Moved update_child back again. Added `add_column' and
+--| `set_text_on_position' to support the function.
+--|
 --| Revision 1.35  2000/03/24 17:56:28  brendel
 --| Made `update_child' deferred because it needs some platform specific
 --| stuff.

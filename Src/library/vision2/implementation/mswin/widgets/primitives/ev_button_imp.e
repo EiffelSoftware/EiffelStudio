@@ -26,7 +26,9 @@ inherit
 		redefine
 			on_key_down,
 			initialize,
-			interface
+			interface,
+			redraw_current_push_button,
+			update_current_push_button
 		end
    
 	EV_INTERNALLY_PROCESSED_TEXTABLE_IMP
@@ -116,7 +118,8 @@ inherit
 		redefine
 			default_style,
 			on_bn_clicked,
-			wel_set_text
+			wel_set_text,
+			process_message
 		end
 
 	EV_BUTTON_ACTION_SEQUENCES_IMP
@@ -226,27 +229,17 @@ feature -- Status setting
 		end
 
 	enable_default_push_button is
-			-- Set the default style of `Current'.
-		local
-			new_style: INTEGER
+			-- Set the style "default_push_button" of `Current'.
 		do
-			new_style := set_flag (style, Bs_defpushbutton)
-			set_style (new_style)
-
+			put_bold_border
 			is_default_push_button := True
-			invalidate
 		end
 
 	disable_default_push_button is
-			-- Remove the style default style of `Current'. 
-		local
-			new_style: INTEGER
+			-- Remove the style "default_push_button"  of `Current'. 
 		do
-			new_style := clear_flag (style, Bs_defpushbutton)
-			set_style (new_style)
-
+			remove_bold_border
 			is_default_push_button := False
-			invalidate
 		end
 
 	enable_can_default is
@@ -292,6 +285,53 @@ feature -- Element change
 			set_default_minimum_size
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	put_bold_border is
+			-- Put a bold border to the button
+		do
+			cwin_send_message (wel_item, Bm_setstyle, Bs_pushbutton | Bs_defpushbutton, 1)
+		end
+
+	remove_bold_border is
+			-- Remove the bold border to the button
+		do
+			cwin_send_message (wel_item, Bm_setstyle, Bs_pushbutton, 1)
+		end
+
+feature {NONE} -- Implementation, focus event
+
+	update_current_push_button is
+			-- Update the current push button
+			--
+			-- Current is a push button, so we set it to be
+			-- the current push button.
+		local
+			top_level_dialog_imp: EV_DIALOG_I
+		do
+			top_level_dialog_imp ?= application_imp.window_with_focus
+			if top_level_dialog_imp /= Void then
+				top_level_dialog_imp.set_current_push_button (interface)
+			end
+		end
+
+	redraw_current_push_button (focused_button: EV_BUTTON) is
+			-- Put a bold border on the default push button
+		do
+			if focused_button = Void or else 
+				focused_button.implementation /= Current
+			then
+					-- Current is not the `focused_button' or there
+					-- is focused button at all. In all case, we should
+					-- remove our bold border.
+				remove_bold_border
+			else
+					-- Current is the `focused_button' draw the
+					-- bold border.
+				put_bold_border
+			end
+		end
+
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
@@ -326,6 +366,19 @@ feature {NONE} -- WEL Implementation
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
+	process_message (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: INTEGER): INTEGER is
+			-- Process all message plus `WM_GETDLGCODE'.
+		do
+			if msg = Wm_getdlgcode then
+					--| We prevent here Windows to redraw the default push button by itself
+					--| as we do the redrawing by ourselves.
+				Result := 0
+				set_default_processing (False)
+			else
+				Result := Precursor (hwnd, msg, wparam, lparam)
+			end
+		end
+		
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -394,6 +447,12 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2001/06/29 21:54:41  pichery
+--| - Changed the behavior of the `default_push_button', we now use
+--|   `current_push_button': the currently focused push button.
+--| - The redrawing of the button with bold border is now done in vision2
+--|   rather than by Windows itself.
+--|
 --| Revision 1.55  2001/06/11 22:11:19  pichery
 --| Process Enter and Escape Key for EV_DIALOG_IMP (contrary to
 --| EV_DIALOG_IMP_MODAL/MODELESS we cannot use on_wm_command

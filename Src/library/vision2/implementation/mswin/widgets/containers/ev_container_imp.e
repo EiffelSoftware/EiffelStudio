@@ -23,7 +23,8 @@ inherit
 			minimum_width,
 			minimum_height,
 			initialize_sizeable,
-			ev_apply_new_size
+			ev_apply_new_size,
+			redraw_current_push_button
 		redefine
 			interface,
 			initialize,
@@ -41,11 +42,6 @@ inherit
 		end
 
 	WEL_HWND_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_SWP_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -379,9 +375,44 @@ feature {EV_CONTAINER_IMP} -- Implementation
 	adjust_tab_ordering (ordered_widgets: ARRAYED_LIST [WEL_WINDOW]; 
 				widget_depths: ARRAYED_LIST [INTEGER]; depth: INTEGER) is
 			-- Adjust tab ordering of children in `Current'.
-			-- used when `Current' is a child of an EV_DIALOG_IMP_MODAL
+			-- Used when `Current' is a child of an EV_DIALOG_IMP_MODAL
 			-- or an EV_DIALOG_IMP_MODELESS.
 		deferred
+		end
+
+feature {NONE} -- Implementation, focus event
+
+	redraw_current_push_button (focused_button: EV_BUTTON) is
+			-- Put a bold border on the `focused_button' and
+			-- remove any bold border on the other buttons.
+			--
+			-- Used when `Current' is a child of an EV_DIALOG_IMP.
+		local
+			l: LINEAR [EV_WIDGET]
+			cs: CURSOR_STRUCTURE [EV_WIDGET]
+			cur: CURSOR
+			widget_imp: EV_WIDGET_IMP
+		do
+			l := interface.linear_representation
+			cs ?= l
+			if cs /= Void then
+				cur := cs.cursor
+			end
+			from
+				l.start
+			until
+				l.after
+			loop
+				widget_imp ?= l.item.implementation
+				check 
+					widget_imp_non_void: widget_imp /= Void
+				end
+				widget_imp.redraw_current_push_button (focused_button)
+				l.forth
+			end
+			if cs /= Void then
+				cs.go_to (cur)
+			end
 		end
 
 feature {NONE} -- Implementation : deferred features
@@ -638,6 +669,12 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2001/06/29 21:54:41  pichery
+--| - Changed the behavior of the `default_push_button', we now use
+--|   `current_push_button': the currently focused push button.
+--| - The redrawing of the button with bold border is now done in vision2
+--|   rather than by Windows itself.
+--|
 --| Revision 1.55  2001/06/07 23:08:14  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

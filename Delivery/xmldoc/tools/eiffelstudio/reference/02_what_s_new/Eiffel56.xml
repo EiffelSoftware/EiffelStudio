@@ -6,7 +6,17 @@
 		<heading><size>2</size>Graphical environment</heading>
 			<heading><size>3</size>Improvements</heading>
 			<list ordered="false">
-				<item></item>
+				<item>New implementation of the diagram tool with enhanced performance and functionalities
+					<list ordered="false">
+						<item>Support for UML view.</item>
+						<item>Auto-arrange of classes using force directed graph.</item>
+						<item>Multiple selection of classes.</item>
+						<item>Improved speed/behavior of drawing/scrolling operations especially on large diagram.</item>
+					</list>
+				</item>
+				<item>Improved look and feel of applications using the EiffelVision library under Windows XP theme engine.</item>
+				<item>Improved keyboard navigation in EiffelStudio windows/dialogs.</item>
+				<item>Full support for 64 bits operating systems such as Windows, Linux, Solaris, Irix, VMS,...</item>
 			</list>
 			<heading><size>3</size>Changes</heading>
 			<list ordered="false">
@@ -14,7 +24,7 @@
 			</list>
 			<heading><size>3</size>Bug fixes</heading>
 			<list ordered="false">
-				<item></item>
+				<item>Fixed infinite loop in finish_freezing which could use all the available memory.</item>
 			</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">

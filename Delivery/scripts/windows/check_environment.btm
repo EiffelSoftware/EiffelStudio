@@ -40,10 +40,6 @@ iff not defined NO_DOCUMENTATION then
 		echo Error: %DOCUMENT_DIR is not a directory
 		CANCEL
 	endiff
-	iff not exist %DOCUMENT_DIR\document.exe then
-		echo Cannot find document.exe in %DOCUMENT_DIR
-		CANCEL
-	endiff
 	iff "%@SEARCH[hhc.exe]" == "" then
 		echo Cannot find the HTML help compiler
 		CANCEL

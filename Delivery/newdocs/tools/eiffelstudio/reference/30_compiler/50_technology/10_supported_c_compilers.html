@@ -1,0 +1,82 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Supported C compilers</TITLE>
+		<META NAME="MS-HKWD" CONTENT="supported C compilers">
+		<META NAME="MS-HKWD" CONTENT="C compilers, support">
+		<LINK REL=Stylesheet HREF="../../../../../default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Supported C compilers</H1>
+                <h2>Unix/Linux Users:</h2>
+        <p>ISE EiffelStudio supports `gcc' on most platforms and the
+                native `cc' compiler if it is an ANSI C compiler.</p>
+        <p>&nbsp;</p>
+                <h2>Microsoft Visual C++ Users</h2>
+                <p>ISE EiffelStudio supports only version 6.0 of the
+                Microsoft Visual C++ environment. You can still use older
+                versions of the Microsoft C++ environment (version 4.1, 4.2 or
+                5.0) as long as you have the latest Platform SDK from Microsoft,
+                but this won't be supported by ISE.</p>
+                <p>Make sure that the Microsoft tools are correctly setup to run
+                from the MS-DOS prompt:</p>
+                <ul>
+                  <li>On Windows NT or 2000, the installation of VC++ should do it
+                    automatically.
+                  <li>On Windows 95/98/Me, you need to copy the content of the file
+                    `vcvars32.bat' from the `bin' directory of the VC
+                    installation into your autoexec.bat file and to reboot your
+                    machine so that changes take effect.</li>
+                </ul>
+        <p>By default the installation program will set in the registry
+                keys the ISE_C_COMPILER key to `msc'.</p>
+        <p>&nbsp;</p>
+                <h2>Borland C++ Users:</h2>
+        <p>ISE EiffelStudio only supports version 5.5.1 of
+                Borland C++ that is included in the installation of ISE
+        EiffelStudio. We do not support any other versions. Check with ISE for
+        the availability of newer version of the Borland C++ compiler.<p>By default the installation program will set in the registry
+                keys the ISE_C_COMPILER key to `bcb'.
+                <p>&nbsp;
+                <h2>Changing your C compiler on Windows</h2>
+                <p>&nbsp;<p>You can do it in two different ways. The first one
+        is using the registry keys of the Windows™ operating system, the
+        second one modifies the environment variables.
+                <p>&nbsp;<p>When modifying the registry keys, simply create a `compiler.reg' file with the following
+                content:&nbsp;<br>
+        <center>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td bgColor="#ffffcc">
+                        <pre>REGEDIT4
+
+[HKEY_CURRENT_USER\Software\ISE\Eiffel50]
+
+[HKEY_CURRENT_USER\Software\ISE\Eiffel50\ec]
+&quot;ISE_C_COMPILER&quot;=&quot;C_COMPILER&quot;
+
+[HKEY_CURRENT_USER\Software\ISE\Eiffel50\finish_freezing]
+&quot;ISE_C_COMPILER&quot;=&quot;C_COMPILER&quot;</pre>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                </center>
+        <p>&nbsp;<p>Where you can replace &quot;C_COMPILER&quot; by either:
+                <ul>
+                  <li>msc for Microsoft Visual C++
+                  <li>bcb for Borland C++
+                </ul>
+                <p>Then double click on the file and everything will be ready to
+                use your new C compiler.</p>
+        <p>&nbsp;</p>
+        <p>When modifying the environment variables, simply defines
+        ISE_C_COMPILER to be either:</p>
+                <ul>
+                  <li>msc for Microsoft Visual C++
+                  <li>bcb for Borland C++
+                </ul>
+	</BODY>
+</HTML>

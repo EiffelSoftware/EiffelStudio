@@ -41,7 +41,7 @@ rt_private void desop(char *buf, int size, void (*crypter)())
 	}
 }
 
-rt_public void decrypt(char *buf, int size)
+rt_public void des_decrypt(char *buf, int size)
 	 /* Pointer to data to be decrypted */
 	 /* Size in bytes of encrypted data */
 {
@@ -50,7 +50,7 @@ rt_public void decrypt(char *buf, int size)
 	desop(buf, size, dedes);		/* DES decryption */
 }
 
-rt_public void encrypt(char *buf, int size)
+rt_public void des_encrypt(char *buf, int size)
 	 /* Pointer to data to be encrypted */
 	 /* Size in bytes of encrypted data */
 {

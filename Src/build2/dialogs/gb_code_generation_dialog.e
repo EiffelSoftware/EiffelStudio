@@ -25,6 +25,11 @@ inherit
 		end
 		
 	GB_CONSTANTS
+	
+	GB_SHARED_STATUS_BAR
+		undefine
+			default_create, copy
+		end
 
 create
 	make_default
@@ -38,26 +43,34 @@ feature {NONE} -- Initialization
 			padding_cell: EV_CELL
 		do
 			default_create
-			create widget_holder
-			create label.make_with_text ("Generating code")
-			create progress_bar
-			progress_bar.set_minimum_width (200)
-			progress_bar.set_proportion (0.25)
-			label.align_text_center
-			widget_holder.extend (label)
 			
-			create horizontal_box
-			widget_holder.extend (horizontal_box)
-			create padding_cell
-			horizontal_box.extend (padding_cell)
-			horizontal_box.extend (progress_bar)
-			create padding_cell
-			horizontal_box.extend (padding_cell)
-			horizontal_box.disable_item_expand (progress_bar)
-
-			widget_holder.set_padding_width (20)
-			widget_holder.set_border_width (20)
-			extend (widget_holder)
+				-- Create all widgets.
+			create l_vertical_box_1
+			create l_horizontal_box_1
+			create l_cell_1
+			create l_label_1
+			create l_horizontal_box_2
+			create generation_progress
+			
+				-- Build_widget_structure.
+			extend (l_vertical_box_1)
+			l_vertical_box_1.extend (l_horizontal_box_1)
+			l_horizontal_box_1.extend (l_cell_1)
+			l_horizontal_box_1.extend (l_label_1)
+			l_vertical_box_1.extend (l_horizontal_box_2)
+			l_horizontal_box_2.extend (generation_progress)
+			
+				-- Initialize properties of all widgets.
+			
+			set_minimum_width (250)
+			disable_user_resize
+			set_title ("Generation progress")
+			l_vertical_box_1.disable_item_expand (l_horizontal_box_2)
+			l_horizontal_box_1.disable_item_expand (l_cell_1)
+			l_cell_1.set_minimum_width (10)
+			l_label_1.set_text ("Generating...")
+			l_label_1.align_text_left
+			l_horizontal_box_2.set_border_width (10)
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 			show_actions.extend (agent start_generation)
 		end
@@ -65,21 +78,17 @@ feature {NONE} -- Initialization
 feature {GB_GENERATION_COMMAND} -- Basic operation
 		
 	show_completion is
-			--
+			-- Display to user that completion has finished.
 		local
 			temp_label: EV_LABEL
 			temp_file_name: FILE_NAME
 		do
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
-			progress_bar.set_proportion (1)
-			label.set_text ("Generation completed")
-			create temp_file_name.make_from_string (system_status.current_project_settings.project_location)
-			create temp_label.make_with_text ("Files generated in : " + temp_file_name)		
-			widget_holder.extend (temp_label)
-			create ok_button.make_with_text ((create {EV_DIALOG_CONSTANTS}).ev_ok)
-			widget_holder.extend (ok_button)
-			ok_button.select_actions.extend (agent destroy)
+			generation_progress.set_proportion (1)
+			set_timed_status_text ("Generation successful - " + system_status.current_project_settings.project_location)
+			destroy
 		end
+		
 
 	start_generation is
 			-- Begin generation and set generation
@@ -88,7 +97,7 @@ feature {GB_GENERATION_COMMAND} -- Basic operation
 			code_generator: GB_CODE_GENERATOR
 		do
 			create code_generator
-			code_generator.set_progress_bar (progress_bar)
+			code_generator.set_progress_bar (generation_progress)
 			code_generator.generate
 			show_completion
 		end
@@ -96,18 +105,12 @@ feature {GB_GENERATION_COMMAND} -- Basic operation
 		
 feature {NONE} -- Implementation
 
-	widget_holder: EV_VERTICAL_BOX
-		-- Main container to hold all widgets.
-		
-	label: EV_LABEL
-		
-	progress_bar: EV_HORIZONTAL_PROGRESS_BAR
-		-- Progress bar to display current progress of code
-		-- generation.
-		
-	ok_button: EV_BUTTON
-		-- Used to get user confirmation after generation
-		-- is complete.
+	l_vertical_box_1: EV_VERTICAL_BOX
+	l_horizontal_box_1, l_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_cell_1: EV_CELL
+	l_label_1: EV_LABEL
+	generation_progress: EV_HORIZONTAL_PROGRESS_BAR
+
 
 end -- class GB_CODE_GENERATION_DIALOG
 

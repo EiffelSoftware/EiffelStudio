@@ -29,11 +29,19 @@ feature {NONE} -- Initialization
 
 	launch (interface: EV_APPLICATION) is
 			-- Launch the main window and the application.
+		local
+			w: EV_UNTITLED_WINDOW_IMP
 		do
-			main_window ?= interface.main_window.implementation
-			main_window.connect_to_application ($exit_from_main_window, $Current)
-		ensure then
-			valid_window: main_window /= Void
+			-- Prepare and show the splash_screen
+			interface.initialize
+
+			w ?= interface.first_window.implementation
+
+			-- Add the window in `root_windows'.
+			add_root_window (w)
+
+			-- set the widget's attribut `application' to `interface'.
+			w.application.put (Current)
 		end
 
 feature -- Access
@@ -76,6 +84,12 @@ feature {NONE} -- Implementation
        iterate is
                         -- Loop the application.
                 do
+			-- Destroy the spalsh screen if there is one.
+			if (splash_screen /= void) then
+				splash_screen.destroy
+			end
+
+			-- Start the application.
                         gtk_main
                 end
 
@@ -84,6 +98,34 @@ feature {NONE} -- Implementation
 			-- closed the main window.
 		do
 			if not main_window.has_close_command then
+				exit
+			end
+		end
+
+feature {EV_UNTITLED_WINDOW_I} -- Root windows management
+
+	add_root_window (w: EV_UNTITLED_WINDOW_IMP) is
+			-- Add `w' to the list of root windows.
+		do
+			-- Add the window in the windows array.
+			root_windows.extend (w)
+
+			-- connect its life to remove_root_window
+			 w.connect_to_application ($remove_root_window, $Current, $w)			
+		end
+
+	remove_root_window (w: EV_UNTITLED_WINDOW_IMP) is
+			-- Remove `w' from the root windows list.
+		require else
+			root_windows_non_empty: root_windows.count > 0
+		do
+			-- Remove the window from the windows array.
+			root_windows.start
+			root_windows.prune (w)
+
+			-- Test if `root_windows' is empty.
+			-- If so, we have to end the application.
+			if (root_windows.empty) then
 				exit
 			end
 		end

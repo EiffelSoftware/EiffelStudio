@@ -1,9 +1,9 @@
 /*
-	ARGCARGV.H - Cleanup for extra arguments due to debugger.
+	eif_argcargv.h - Cleanup for extra arguments due to debugger.
 */
 
-#ifndef _argcargv_h
-#define _argcargv_h
+#ifndef _eif_argcargv_h
+#define _eif_argcargv_h
 
 #include "shword.h"
 
@@ -13,4 +13,4 @@ typedef void (* EIF_CLEANUP)();
 	/* Register `f' as a clean up function */
 extern void eif_register_cleanup(EIF_CLEANUP f);
 
-#endif /* _argcargv_h */
+#endif /* _eif_argcargv_h */

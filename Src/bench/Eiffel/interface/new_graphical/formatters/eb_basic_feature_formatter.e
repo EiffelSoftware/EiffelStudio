@@ -91,7 +91,7 @@ feature -- Status setting
 	set_associated_feature (a_feature: E_FEATURE) is
 			-- Associate `Current' with `a_feature'.
 		do
-			set_associated_feature (a_feature)
+			associated_feature := a_feature
 		end
 
 feature {NONE} -- Properties

@@ -23,7 +23,7 @@ feature {NONE}
 
 	descriptor: EC_DESCRIPTOR;
 
-	book: BOOK2;
+	book: BOOK;
 
 	converter1, converter2: CONVERTER;
 
@@ -53,13 +53,13 @@ feature {NONE}
 			descriptor.set_field ("still_published", Boolean_ttype);
 			descriptor.set_delimiters('(', ')');
 			descriptor.set_use_label (False);
+			descriptor.set_field ("author", String_ttype);
+			descriptor.set_field ("title", String_ttype);
+			descriptor.set_use_label (False);
 			descriptor.set_field ("quantity", Integer_ttype);
 			descriptor.set_label_separator('/');
 			descriptor.set_field ("price", Real_ttype);
 			descriptor.set_use_label(False);
-			descriptor.set_field ("author", String_ttype);
-			descriptor.set_field ("title", String_ttype);
-			descriptor.set_use_label (False);
 			descriptor.set_field_separator ('$');
 			descriptor.check_conformity (book);
 			if descriptor.ecd_error then

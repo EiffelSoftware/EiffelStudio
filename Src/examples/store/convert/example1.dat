@@ -1,1 +1,8 @@
-author:"John Wikrosky";title:"Learning";quantity:5;price:6.99;author:"Joe;Mitchell";title:"Learning it easy";quantity:10;price:4.95;author: "Jill D.";title:"Cooking";quantity:12;price:9.95;author:"Herbert W.F.T & Al.";title:"Reading";quantity:25;price:5.0;author:"Max W."; title:"Teaching";quantity:8;price:6.95;author:"Franck K."; title:"Horse-Riding";quantity:2;price:23.50;author:"Michael F.W."; title:"Computer Science";quantity:7;price:12.00;author:"Mike H."; title:"Mathematics";quantity:100;price:2.50
+author:"John Wikrosky";title:"Learning";quantity:5;price:6.99;still_published:True;
+author:"Joe;Mitchell";title:"Learning it easy";quantity:10;price:4.95;still_published:True;
+author: "Jill D.";title:"Cooking";quantity:12;price:9.95;still_published:True;
+author:"Herbert W.F.T & Al.";title:"Reading";quantity:25;price:5.0;still_published:True;
+author:"Max W."; title:"Teaching";quantity:8;price:6.95;still_published:True;
+author:"Franck K."; title:"Horse-Riding";quantity:2;price:23.50;still_published:True;
+author:"Michael F.W."; title:"Computer Science";quantity:7;price:12.00;still_published:True;
+author:"Mike H.";title:"Mathematics";quantity:100;price:2.50;still_published:True;

@@ -88,6 +88,8 @@ feature {AST_EIFFEL} -- Output
 				-- We simply use an empty feature name.
 			ctxt.prepare_for_feature ("", parameters)
 			ctxt.put_current_feature
+
+			ctxt.commit
 		end
 
 feature {COMPILER_EXPORTER} -- Replication {PRECURSOR_AS, USER_CMD, CMD}

@@ -18,11 +18,6 @@ inherit
 		end
 	
 	REFACTORING_HELPER
-	
-	EV_STOCK_COLORS
-		export
-			{NONE} all
-		end
 
 feature -- Access
 
@@ -941,7 +936,7 @@ feature {NONE} -- Drawing implementation
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			set_minimum_size (default_minimum_size, default_minimum_size)
-			set_background_color (white)
+			set_background_color ((create {EV_STOCK_COLORS}).white)
 			is_horizontal_scrolling_per_item := False
 			is_vertical_scrolling_per_item := True
 			is_header_displayed := True
@@ -1437,10 +1432,6 @@ feature {NONE} -- Implementation
 			a_column_i: EV_GRID_COLUMN_I
 		do
 			a_column_i := (create {EV_GRID_COLUMN}).implementation
-			a_column_i.set_grid_i (Current)
-
-			a_column_i.set_physical_index (physical_column_count)
-			physical_column_count := physical_column_count + 1
 			
 			if a_index > grid_columns.count then
 				if replace_existing_item then
@@ -1457,6 +1448,11 @@ feature {NONE} -- Implementation
 			else
 				grid_columns.put_left (a_column_i)
 			end
+
+				-- Set column's internal data
+			a_column_i.set_physical_index (physical_column_count)
+			a_column_i.set_grid_i (Current)
+			physical_column_count := physical_column_count + 1
 
 			show_column (a_index)
 			
@@ -1506,6 +1502,7 @@ feature {NONE} -- Implementation
 					-- Update the index of `grid_row_i' and subsequent rows in `grid_rows'
 				update_grid_row_indices (a_index)
 			end
+
 				-- Set grid of `grid_row' to `Current'
 			grid_row_i.set_grid_i (Current)
 
@@ -1688,13 +1685,17 @@ invariant
 	drawer_not_void: is_initialized implies drawer /= Void
 	drawable_not_void: is_initialized implies drawable /= Void
 	header_positioned_corrently: is_initialized implies header_viewport.x_offset >= 0 and header_viewport.y_offset = 0
-	internal_client_x_valid_while_vertical_scrollbar_hidden: is_initialized and then not vertical_scroll_bar.is_show_requested implies internal_client_x = 0
-	internal_client_x_valid_while_vertical_scrollbar_shown: is_initialized and then vertical_scroll_bar.is_show_requested implies internal_client_x >= 0
-	internal_client_y_valid_while_horizontal_scrollbar_hidden: is_initialized and then not horizontal_scroll_bar.is_show_requested implies internal_client_y = 0
-	internal_client_y_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies internal_client_y >= 0
+	internal_client_y_valid_while_vertical_scrollbar_hidden: is_initialized and then not vertical_scroll_bar.is_show_requested implies internal_client_y = 0
+	internal_client_y_valid_while_vertical_scrollbar_shown: is_initialized and then vertical_scroll_bar.is_show_requested implies internal_client_y >= 0
+	internal_client_x_valid_while_horizontal_scrollbar_hidden: is_initialized and then not horizontal_scroll_bar.is_show_requested implies internal_client_x = 0
+	internal_client_x_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies internal_client_x >= 0
 	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = grid_rows.count
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
+	single_item_selection_enabled_implies_only_single_item_selected: single_item_selection_enabled implies selected_items.count <= 1
+	single_item_selected_enabled_implies_no_rows_selected: single_item_selection_enabled implies selected_rows.count = 0
+	single_row_selection_enabled_implies_only_single_row_selected: single_row_selection_enabled implies selected_rows.count <= 1
+	visible_column_count_not_greater_than_column_count: visible_column_count <= column_count
 	
 end
 

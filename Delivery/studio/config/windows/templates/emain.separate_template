@@ -1,0 +1,70 @@
+/*
+	EMAIN.TEMPLATE - Main entry point template for Windows. 
+*/
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <dos.h>
+#include <windows.h>
+
+#include "eif_macros.h"
+#include "eif_sig.h"
+#include "eif_econsole.h"
+
+extern void emain(int, char **);
+extern int main(int, char **, char **);
+extern void egc_init_plug (void); 
+
+APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	char **eif_environ;
+	int argc;
+	char **argv;
+	
+		/* These variables are used by the WEL library */
+	ghInstance = hInstance;
+	eif_hInstance = hInstance;
+	eif_hPrevInstance = hPrevInstance;
+	eif_lpCmdLine = lpCmdLine;
+	eif_nCmdShow = nCmdShow;
+
+		/* Initialization of the command line which is going to be passed to eiffel */
+	get_argcargv (&argc, &argv);
+	eif_environ = (char **) GetEnvironmentStrings();
+	main(argc, argv, eif_environ);
+	FreeEnvironmentStrings ((LPTSTR) eif_environ);
+	return 0;
+}
+
+int main (int argc, char ** argv, char ** envp)
+{
+	eif_alloc_init();
+#ifdef EIF_THREADS
+	eif_thr_init_root();
+#endif
+{
+	GTCX
+	struct ex_vect *exvect;
+	jmp_buf exenv;
+
+	egc_init_plug();
+	initsig();
+	initstk();
+	exvect = exset((char *) 0, 0, (char *) 0);
+	exvect->ex_jbuf = &exenv;
+	if (echval = setjmp(exenv))
+		default_rescue();
+
+	eif_rtinit(argc, argv, envp);
+	if (egc_prof_enabled) initprf();
+	emain(argc, argv);
+	reclaim();
+	exit(0);
+}
+}
+
+#ifdef __cplusplus
+}
+#endif

@@ -1,0 +1,226 @@
+--
+-- Config.eif for Microsoft Visual C++ 5.0 or greater
+--
+
+-- Directory separator
+directory_separator: "\"
+subcommand_separator: "%N%T"
+quick_compilation: True
+
+-- include_path
+include_path: "$(INCLUDE_PATH)"
+
+-- C-compiler
+cc: "cl"
+cpp: "cl"
+
+-- C-linker
+sharedlink: "link"
+
+-- optimization flags
+wkoptimize: "-Od -Zi"
+optimize: "-Ox"
+
+-- compiler flags
+ccflags: "-YX -Fp..\ebench.pch -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
+mtccflags: "-YX -Fp..\ebench.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
+cppflags: "-YX -Fp..\ebench.pch -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
+mtcppflags: "-YX -Fp..\ebench.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
+shared_flags: "-DEIF_USE_DLL"
+
+large: ""
+
+-- linker flags
+ar: ""
+ld: ""
+ldflags: ""
+mtldflags: "-NODEFAULTLIB:libc"
+console_flags: "-SUBSYSTEM:CONSOLE"
+windows_flags: "-SUBSYSTEM:WINDOWS"
+ldsharedflags: "-dll -incremental:no"
+mtldsharedflags: "-dll -incremental:no"
+
+-- eiffel run-time specification
+prefix: "$(ISE_C_COMPILER)\"
+shared_prefix: "$(ISE_C_COMPILER)\dll_"
+mt_prefix: "mt"
+eiflib: "finalized"
+wkeiflib: "wkbench"
+suffix: ".lib"
+shared_suffix: ".dll"
+shared_rt_suffix: ".lib"
+
+-- libraries
+libs: ""
+mtlibs: ""
+sharedlibs: "USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.lib SHELL32.lib\%N%
+			%%TCOMDLG32.lib UUID.lib OLE32.lib OLEAUT32.lib COMCTL32.lib MPR.LIB $(ISE_SHAREDLIBS)"
+
+mkdep: ""
+
+-- platform $(MV) command
+mv: "copy"
+cp: "copy"
+
+ranlib: "echo"
+
+-- platform remove command
+rm: "-del"
+rmdir: "rd"
+
+-- make program
+make: "nmake -s -nologo"
+command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -e ISE_EIFFEL=$(ISE_EIFFEL) -f %%i%""
+
+dpflags: ""
+
+continuation: "\"
+
+appl_make: "$appl.exe: $appl.lnk $appl.res%N%
+%%T$(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\version.eif .%N%
+%%T$(COMMAND_MAKEFILE)%N%
+%%Tlink @$appl.lnk%N%
+%%N%
+%..\..\$appl.rc:%N%
+%%Tif not exist ..\..\$appl.rc $(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc ..\..\$appl.rc%N%
+%%N%
+%$appl.res: ..\..\$appl.rc Makefile%N%
+%%Trc -r -fo$appl.res ..\..\$appl.rc%N%
+%%N%
+%$appl.lnk: $(OBJECTS) e1\emain.obj $appl.res $precompilelibs Makefile%N%
+%%T$(RM) $@%N%
+%%T@echo $(LDFLAGS) -OUT:$appl.exe > $@%N%
+%%T@echo e1\emain.obj >> $@%N%
+%%T@echo $library $(EXTERNALS) >> $@%N%
+%%T@echo $sharedlibs >> $@%N%
+%$precompile_libs_command%
+%%T@echo $appl.res >> $@%N%
+%%T@echo $(OBJECTS) >> $@%N%
+%"
+
+-- precompilation
+precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
+%%T$(RM) driver.exe%N%
+%%Tlink @driver.lnk%N%
+%%T$(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\version.eif .%N%
+%%Tif not exist $(ISE_C_COMPILER) mkdir $(ISE_C_COMPILER)%N%
+%%T$(MV) driver.exe $(ISE_C_COMPILER)\driver.exe%N%
+%%T$(MV) precomp.lib $(ISE_C_COMPILER)\precomp.lib%N%
+%%T$(RM) driver.exe%N%
+%%T$(RM) precomp.lib%N%
+%%N%
+%driver.rc: $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc%N%
+%%T$(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc driver.rc%N%
+%%N%
+%driver.res: driver.rc%N%
+%%Trc -r driver.rc%N%
+%%N%
+%precomp.lib: $(C_OBJECTS) $(EXTERNALS)%N%
+%%T$(RM) $@%N%
+%%Tlib -nologo -OUT:precomp.lib $(C_OBJECTS) $(EXTERNALS)%N%
+%%N%
+%driver.lnk: e1\emain.obj $(OBJECTS) driver.res $precompilelibs%N%
+%%Techo $(LDFLAGS) -OUT:driver.exe > $@%N%
+%%Techo e1\emain.obj >> $@%N%
+%%Techo USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.LIB COMDLG32.lib >> $@%N%
+%%Techo UUID.lib OLE32.lib OLEAUT32.lib COMCTL32.LIB SHELL32.lib MPR.LIB>> $@%N%
+%$precompile_libs_command%
+%%Techo $(OBJECTS) >> $@%N%
+%%Techo $(EXTERNALS) $(EIFLIB) >> $@%N%
+%%Techo driver.res >> $@"
+
+-- cecil
+cecil_make: "$(STATIC_CECIL): $(OBJECTS) $(EXTERNALS) $(EIFLIB) $precompilelibs%N%
+%%T$(RM) $@%N%
+%%Tlib -nologo -OUT:$(STATIC_CECIL) $(OBJECTS) $(EXTERNALS) $(EIFLIB) $precompilelibs"
+
+cecil_def: "%
+%DEF_FILE= c_$appl.def %N%
+%c_$appl.def: %N%
+%%T$(RM) $@%N%
+%%Techo LIBRARY c_$appl.dll > $@%N%
+%%Techo DESCRIPTION %'c_$appl.dll%' >> $@%N%
+%%Ttype $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\templates\cecil.def  >> $@"
+
+cecil_dynlib: "%T/def:$(DEF_FILE) \%N%
+	%%T/OUT:$(SHARED_CECIL) /IMPLIB:c_dll_$appl.lib%N"
+
+system_dynlib: "%T/def:$(DEF_FILE) \%N%
+	%%T/OUT:$(SYSTEM_IN_DYNAMIC_LIB) /IMPLIB:dll_$appl.lib $appl.res%N"
+
+-- done
+completed: "%Techo done > completed.eif"
+
+all: "all:: "
+
+intermediate_file_ext: "lib"
+
+make_intermediate: "%T$(RM) $@%N%
+%%Tlib -nologo -OUT:$@ $obj%N%T$(CREATE_TEST)"
+
+-- options below are for config internal use
+-- mind the spaces!
+
+no_subs: "!NO!SUBS!"
+
+-- platform change directory command
+cd: "cd"
+
+-- text for remove command
+rm_text: "RM ="
+
+-- text for make command
+make_text: "MAKE"
+
+-- text for C-compiler command
+cc_text: "$(CC) $(CFLAGS)"
+
+cobj_text: ".c.obj:"
+cppobj_text: ".cpp.obj:"
+xobj_text: ".x.obj:"
+xppobj_text: ".xpp.obj:"
+
+obj_text: ".obj "
+
+eobj_text: "$(OBJECTS"
+
+objects__text: "$(OBJECTS)"
+
+-- text for precompilation
+precompile_text: "precompile $appl"
+
+appl_text: "appl_make $appl"
+
+cecil_text: "cecil_make $appl"
+
+-- platform 'parent' directory
+updir: ".."
+
+emain_text: "emain"
+
+emain_obj_text: "emain.obj"
+
+objects_text: "OBJECTS = "
+c_objects_text: "C_OBJECTS = "
+
+eobjects_text: "EOBJECTS = "
+
+obj_file_ext: "obj"
+
+executable_file_ext: ".exe"
+
+driver_text: "\driver"
+
+driver_filename: "driver.exe"
+
+externals_text: "EXTERNALS"
+
+externals_continuation_text: "EXTERNALS =  \"
+
+precomp_lib_command_text: "@echo $precompiled_library >> $@%N%T"
+
+start_test: "if not exist finished"
+
+end_test: ""
+
+create_test: "echo %"finished%" >> finished"

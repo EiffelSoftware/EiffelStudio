@@ -2420,7 +2420,10 @@ feature -- Dead code removal
 
 				-- Protection of feature `make' of class TUPLE
 			tuple_class.compiled_class.mark_all_used (remover)
-
+debug ("DEAD_CODE")
+			remover.dump_alive
+			remover.dump_marked
+end
 		end
 
 	is_used (f: FEATURE_I): BOOLEAN is

@@ -39,10 +39,7 @@ feature {NONE} -- Implementation
 	interface: EV_FONTABLE
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
-
-invariant
-	font_not_void: is_usable implies font /= Void
-
+			
 end -- class EV_FONTABLE_I
 
 --|----------------------------------------------------------------

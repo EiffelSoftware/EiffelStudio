@@ -12,7 +12,8 @@ inherit
 	EV_HORIZONTAL_BOX
 		redefine
 			make_for_test,
-			initialize
+			initialize,
+			is_in_default_state
 		end
 
 	EV_FRAME_CONSTANTS
@@ -49,6 +50,14 @@ feature {NONE} -- Initialization
 			extend (create {EV_CHECK_BUTTON}.make_with_text ("Check button"))
 		end
 
+feature {EV_ANY} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state.
+		do
+			Result := Precursor or padding = 1
+		end
+
 end -- class EV_STATUS_BAR
 
 --!-----------------------------------------------------------------------------
@@ -72,8 +81,8 @@ end -- class EV_STATUS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.19  2000/04/28 23:43:59  brendel
---| Padding = 1.
+--| Revision 1.20  2000/04/28 23:46:55  brendel
+--| redefined is_in_default_state.
 --|
 --| Revision 1.18  2000/04/28 21:47:05  brendel
 --| Made platform independent.

@@ -30,14 +30,14 @@ IMPORTANT
 
 This delivery consists of a directory and two files.
 
-The directory is called `Eiffel4' and
+The directory is called `Eiffel50' and
 includes the ISE Eiffel delivery for the platforms
 and product selection corresponding to your order.
 
 The two files are the following:
 
 	- `README.EIFFEL', whose contents are the present
-	  text. The file `README' in the `Eiffel4' directory
+	  text. The file `README' in the `Eiffel50' directory
 	  has identical contents.
 
 	- A file listing the full contents of the tape,
@@ -57,10 +57,11 @@ you purchased the system from ISE:
 	telephone 805-685-1006, fax 805-685-6869,
 	E-mail
 		<info@eiffel.com> (general information)
-		<support@eiffel.com> (customer support)
+	Web page:
+		http://support.eiffel.com (customer support)
 
 To find out the version of the environment that you have,
-look up file `VERSION' in the `Eiffel4' directory.
+look up file `VERSION' in the `Eiffel50' directory.
 
 Be sure to check the documentation in the subdirectory `doc'.
 Note that there now are HTML versions of some of the basic

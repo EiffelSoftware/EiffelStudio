@@ -79,7 +79,7 @@ feature {NONE} -- Execution
 					System_tool.close
 				end
 				if Profile_tool /= Void then
-					Profile_tool.close
+--					Profile_tool.close
 				end
 				if Preference_tool /= Void then
 --					Preference_tool.close
@@ -93,7 +93,7 @@ feature {NONE} -- Execution
 					System_tool.force_raise
 				end
 				if Profile_tool /= Void then
-					Profile_tool.raise
+--					Profile_tool.raise
 				end
 				if Preference_tool /= Void then
 --					Preference_tool.raise

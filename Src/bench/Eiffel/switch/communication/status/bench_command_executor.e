@@ -10,8 +10,8 @@ indexing
 class BENCH_COMMAND_EXECUTOR
 
 inherit
+	SHARED_STATUS
 
-	SHARED_STATUS;
 	SHARED_EXEC_ENVIRONMENT
 
 feature -- Command Execution

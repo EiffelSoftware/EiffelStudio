@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"A network datagram socket.";
+		"Network datagram sockets"
 
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -26,6 +26,8 @@ inherit
 		rename
 			address as socket_address,
 			set_peer_address as socket_set_peer_address
+		undefine
+			is_valid_peer_address
 		end
 
 creation
@@ -47,7 +49,7 @@ feature -- Initialization
 			is_open_write := True;
 			is_open_read := True
 			timeout := default_timeout
-		ensure
+		ensure then
 			timeout_set_to_default: timeout = default_timeout
 		end;
 

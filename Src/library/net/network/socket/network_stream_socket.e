@@ -17,6 +17,8 @@ inherit
 		rename
 			address as old_socket_address,
 			set_peer_address as old_socket_set_peer_address
+		undefine
+			is_valid_peer_address
 		end
 
 	NETWORK_SOCKET

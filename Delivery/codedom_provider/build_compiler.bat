@@ -12,6 +12,8 @@ REM in "checkout\Eiffel\ace"
 DEL *.epr
 RD /q /s EIFGEN
 sed -e "s/\"ec\"/\"ecdpc\"/" batch.mswin.ace > ecdpc.ace
+REM Patch CL_TYPE_I to allow for alias clauses on class name
+COPY /Y ..\..\..\cl_type_i.e ..\..\Eiffel\eiffel\genericity\
 ec -finalize -batch -c_compile -ace ecdpc.ace
 IF NOT EXIST EIFGEN\F_Code\ecdpc.exe GOTO END
 

@@ -103,6 +103,8 @@ feature -- Element change
 	force (v: INTEGER_8; i: INTEGER) is
 			-- Replace `i'-th entry by `v'.
 			-- If `i' is out of bound, reallocate Current.
+		require
+			positive_index: i > 0
 		do
 			if not valid_index (i) then
 				area.resize (i + 1)

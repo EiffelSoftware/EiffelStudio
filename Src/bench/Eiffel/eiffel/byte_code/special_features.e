@@ -68,7 +68,7 @@ feature -- Byte code special generation
 			valid_function_type: valid_function_type (function_type)
 		do
 			inspect function_type
-			when equal_type then
+			when is_equal_type then
 				ba.append (Bc_eq)
 			when to_character_type then
 				check integer_type: type_of (basic_type) = integer_type end
@@ -129,7 +129,7 @@ feature -- C special code generation
 				generate_lower_upper (buffer, basic_type, function_type, target)
 			when is_digit_type then
 				generate_is_digit (buffer, basic_type, target)
-			when equal_type then
+			when is_equal_type then
 				generate_equal (buffer, target, parameter)
 			when to_character_type then
 				buffer.putstring ("(EIF_CHARACTER) ")
@@ -188,10 +188,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 	c_type_table: HASH_TABLE [INTEGER, INTEGER] is
 		once
 			create Result.make (100)
-			Result.put (equal_type, feature {PREDEFINED_NAMES}.is_equal_name_id)
-			Result.put (equal_type, feature {PREDEFINED_NAMES}.standard_is_equal_name_id)
-			Result.put (equal_type, feature {PREDEFINED_NAMES}.deep_equal_name_id)
-			Result.put (equal_type, feature {PREDEFINED_NAMES}.standard_deep_equal_name_id)
+			Result.put (is_equal_type, feature {PREDEFINED_NAMES}.is_equal_name_id)
+			Result.put (is_equal_type, feature {PREDEFINED_NAMES}.standard_is_equal_name_id)
 			Result.put (out_type, feature {PREDEFINED_NAMES}.out_name_id)
 			Result.put (hash_code_type, feature {PREDEFINED_NAMES}.hash_code_name_id)
 			Result.put (hash_code_type, feature {PREDEFINED_NAMES}.code_name_id)
@@ -242,10 +240,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 	byte_type_table: HASH_TABLE [INTEGER, INTEGER] is
 		once
 			create Result.make (100)
-			Result.put (equal_type, feature {PREDEFINED_NAMES}.is_equal_name_id)
-			Result.put (equal_type, feature {PREDEFINED_NAMES}.standard_is_equal_name_id)
-			Result.put (equal_type, feature {PREDEFINED_NAMES}.deep_equal_name_id)
-			Result.put (equal_type, feature {PREDEFINED_NAMES}.standard_deep_equal_name_id)
+			Result.put (is_equal_type, feature {PREDEFINED_NAMES}.is_equal_name_id)
+			Result.put (is_equal_type, feature {PREDEFINED_NAMES}.standard_is_equal_name_id)
 			Result.put (max_type, feature {PREDEFINED_NAMES}.max_name_id)
 			Result.put (min_type, feature {PREDEFINED_NAMES}.min_name_id)
 			Result.put (generator_type, feature {PREDEFINED_NAMES}.generator_name_id)
@@ -279,7 +275,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 feature {NONE} -- Fast access to feature name
 
 	min_type_id: INTEGER is 1
-	equal_type: INTEGER is 1
+	is_equal_type: INTEGER is 1
 	set_item_type: INTEGER is 2
 	out_type: INTEGER is 3
 	hash_code_type: INTEGER is 4

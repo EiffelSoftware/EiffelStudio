@@ -90,7 +90,7 @@ of running the make utility (`make' for Borland or `nmake' for Microsoft) in
 .\EIFGEN\W_CODE. But first, make sure to delete the .RES file.
 
 If you have created a resource file using Microsoft Developer Studio, you will
-probably need to change the file $ISE_EIFFEL\bench\spec\windows\config\msc\config.eif.
+probably need to change the file $ISE_EIFFEL\studio\spec\windows\config\msc\config.eif.
 Retrieve the following portion of text:
 
 -------------

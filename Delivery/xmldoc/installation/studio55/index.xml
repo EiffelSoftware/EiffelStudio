@@ -1,0 +1,16 @@
+<document title="Software Installation for EiffelStudio 5.4">	
+	<meta_data></meta_data>	
+	<paragraph>						
+		<paragraph>
+			<list ordered="false">
+				<item><link><label>Windows and .NET</label><url>windows.xml</url></link></item>
+				<item><link><label>Mac OS X (10.3 or higher)</label><url>mac.xml</url></link></item>
+				<item><link><label>Linux (excluding RedHat 9 or glibc version prior to 2.3.2)</label><url>linux.xml</url></link></item>
+				<item><link><label>Linux (RedHat 9 or glibc version prior to 2.3.2)</label><url>linuxrh.xml</url></link></item>
+				<item><link><label>Solaris</label><url>solaris.xml</url></link></item>
+				<item><link><label>FreeBSD (up to version 4.0)</label><url>freebsd.xml</url></link></item>
+				<item><link><label>LinuxPPC</label><url>linuxppc.xml</url></link></item>
+			</list>
+		</paragraph>			
+	</paragraph>
+</document>

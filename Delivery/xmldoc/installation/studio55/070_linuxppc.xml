@@ -1,0 +1,74 @@
+<document title="EiffelStudio 5.4 for LinuxPPC">
+	<meta_data></meta_data>
+	<paragraph>
+		<heading><size>2</size>Requirements</heading>
+		<paragraph>
+			<table>
+				<row><cell>Computer/Processor</cell><cell>Power	PC with 300 MHz or higher Pentium II class processor or equivalent recommended (single or dual processor system)</cell></row>
+				<row><cell>Operating System</cell><cell>glibc 2.1.3 or above and GTK+ 1.2.7 (GTK+ 1.2.9 source is included with EiffelStudio)</cell></row>
+				<row><cell>Memory</cell><cell>128 MB of RAM (256Mb recommended)</cell></row>
+				<row><cell>Hard Disk</cell><cell>300Mb uncompressed hard disk space (500Mb recommended) </cell></row>
+				<row><cell>Drive</cell><cell>CD-ROM or DVD drive (not required for Free Edition downloads)</cell></row>
+				<row><cell>Display</cell><cell>Super VGA (800 x 600) or higher resolution video adapter and monitor</cell></row>
+				<row><cell>Peripherals</cell><cell>Keyboard and mouse or compatible pointing device</cell></row>
+			</table>
+		</paragraph>
+		<heading><size>2</size>Installation</heading>
+		<paragraph>The installation of the files is done by copying the files from the delivery medium to the hard disk, for example to directory /usr/local/Eiffel54.</paragraph>
+
+		<paragraph>If the delivery medium is a gzipped tar file, you need to untar the file to the desired location. For example:</paragraph>
+		<code_block>
+	cd /usr/local
+	gunzip -c _delivery_file.tar.gz | tar xvf -</code_block>
+
+		<paragraph>This will install EiffelStudio 5.4 in to /usr/local/Eiffel54.</paragraph>
+
+		<heading><size>3</size>Setting the Environment Variables</heading>
+
+		<paragraph>Set environment variable ISE_EIFFEL to the Eiffel54 directory you want to run Eiffel from. This directory can be on your hard disk (/usr/local/Eiffel54) 
+or on CD-ROM.</paragraph>
+
+		<paragraph>Set your ISE_PLATFORM environment variable to specify your platform. For example for Linux computers, the value should be `linux-glibc2.1'.</paragraph>
+	
+		<paragraph>Add the following directory to your path: $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin.</paragraph>
+
+		<heading><size>3</size>Setting Up the Examples</heading>
+
+		<paragraph>Most of the examples requires that you have a precompiled version of EiffelBase. 
+To build it, simply run the script $ISE_EIFFEL/make_install after having done all 
+the above steps. This script also prompts you to precompile EiffelVision2 which 
+is not required to compile the examples and you can safely skip this step if you 
+do not intend to use a precompiled of EiffelVision2.</paragraph>
+
+		<heading><size>3</size>Gtk+</heading>
+
+		<paragraph>EiffelStudio 5.4 requires Gtk+ 1.2.8 or above to function correctly. You can check 
+that you have this installed correctly by typing `gtk-config --version'. If the 
+reply is not `1.2.*' then gtk+ is not installed correctly. If the reply is 1.2.* 
+you can skip the rest of this section.</paragraph>
+
+		<paragraph>Included with the delivery is the source code for Gtk+, to install 
+Gtk+ on your system look in the $ISE_EIFFEL/library/gel directory. There 
+Gtk+ you can
+conveniently type `Make' and then Gtk+ will be compiled, you will then need to 
+type 'Make install' (you may need to be Root to do this) to copy over the gtk+ 
+configuration files required for C compilation.</paragraph>
+
+		<paragraph>You will then need to set/update the LD_LIBRARY_PATH environment variable to allow the linker to find the gtk libraries. This should be set to include the 
+$ISE_EIFFEL/library/gel/gtk/lib directory. If you have a version of gtk that 
+is below 1.2.6 you will have to make sure that this directory comes before the 
+directory where the existing gtk+ library files are based.</paragraph>
+
+		<heading><size>3</size>EiffelStudio</heading>
+
+		<paragraph>Now everything should be Ok and you should be able to run the compiler. Launch 'estudio' for the interactive graphical user interface of the compiler of 'ec' 
+for command line interface.</paragraph>
+
+
+		<heading><size>3</size>EiffelStudio Appearance</heading>
+
+		<paragraph>EiffelStudio for Unix uses the gtk+ theme engine to allow for custom appearance such as changing the default font size and color of windows, etc. If you do not 
+have a theme manager (such as that provided with Gnome) you can copy the .gtkrc file from $ISE_EIFFEL/eifinit/studio/spec/gtk directory to your $HOME directory. You can then edit the XLFD in the .gtkrc file to alter the default size of the fonts that Studio employs. The current font point size is 10, recommended values are 10, 12 or 14. This will install Eiffel 5 in to /usr/local/Eiffel5x.</paragraph>
+		<paragraph><link><label>Online Support</label><url>http://www.eiffel.com/general/general_feedback.html</url></link></paragraph>
+	</paragraph>
+</document>

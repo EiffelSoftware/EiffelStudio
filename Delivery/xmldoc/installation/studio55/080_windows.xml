@@ -1,0 +1,19 @@
+<document title="EiffelStudio 5.4 for Windows and .NET">
+	<meta_data></meta_data>
+	<paragraph>
+		<heading><size>2</size>Requirements</heading>
+		<paragraph>
+			<table>
+				<row><cell>Computer/Processor</cell><cell>PC with 300 MHz or higher Pentium II class processor or equivalent recommended (single or dual processor system)</cell></row>
+				<row><cell>Operating System</cell><cell>Windows NT/2000/XP (.NET support is for Microsoft Windows XP and 2000 only.)</cell></row>
+				<row><cell>Memory</cell><cell>128 Mb of RAM or higher (256Mb recommended)</cell></row>
+				<row><cell>Hard Disk</cell><cell>150Mb uncompressed hard disk space (500Mb recommended).  Hard disk space requirements will vary depending on configuration; custom installation choices may require more or less space. Space required for installation of the Microsoft .NET Framework will also be required.</cell></row>
+				<row><cell>Drive</cell><cell>CD-ROM drive (not required for Free Edition downloads)</cell></row>
+				<row><cell>Display</cell><cell>Super VGA (800 x 600) or higher resolution video adapter and monitor</cell></row>
+				<row><cell>Peripherals</cell><cell>Keyboard and mouse or compatible pointing device</cell></row>
+			</table>
+		</paragraph>
+		<heading><size>2</size>Installation</heading>
+		<paragraph><link><label>Online Support</label><url>http://www.eiffel.com/general/general_feedback.html</url></link></paragraph>
+	</paragraph>
+</document>

@@ -51,7 +51,6 @@ feature {NONE} -- Initialization
 		require
 			text_not_void: a_text /= Void
 			an_action_not_void: an_action /= Void
-			default_create_not_already_called: not default_create_called
 		do
 			default_create
 			set_text (a_text)

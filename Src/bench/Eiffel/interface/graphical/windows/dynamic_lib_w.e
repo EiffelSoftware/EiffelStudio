@@ -48,8 +48,8 @@ feature -- Initialization
 			set_default_format
 			set_default_position
 			eb_shell.display
-			init_text_window
 			dynamic_lib_exports := Eiffel_dynamic_lib.dynamic_lib_exports
+			init_text_window
 		end
 
 feature -- Representation
@@ -158,7 +158,7 @@ feature -- Status setting
 
 feature -- Update
 
-   update_save_symbol is
+	update_save_symbol is
 			-- Update the save symbol in tool.
 		do
 			if save_cmd_holder /= Void then
@@ -225,6 +225,7 @@ feature -- Stone process
 			local_showclick_frmt_holder: FORMAT_HOLDER
 		do
 			display_clickable_dynamic_lib_exports(False)
+			update_save_symbol
 		end
 
 	show_file_content (a_file_name: STRING) is
@@ -234,6 +235,7 @@ feature -- Stone process
 			a_file: PLAIN_TEXT_FILE
 			content:STRING
 		do
+
 			!!a_file.make_open_read (a_file_name)
 			a_file.readstream (a_file.count)
 
@@ -249,7 +251,6 @@ feature -- Stone process
 
 			update_save_symbol
 			--reset_stone
-
 		ensure
 			up_to_date: not text_window.changed
 			--no_stone: stone = Void
@@ -259,28 +260,28 @@ feature -- Stone process
 		local
 			dl_exp:DYNAMIC_LIB_EXPORT_FEATURE
 			class_name: STRING
+			st:STRUCTURED_TEXT
 		do
 
- 			text_window.hide
- 			text_window.clear_window
+			!! st.make
+			st.add_string ("%N-- EXPORTED FEATURE(s) OF THE SHARED LIBRARY %N-- SYSTEM : " )
 
-			text_window.put_string( "%N-- EXPORTED FEATURE(s) OF THE SHARED LIBRARY %N-- SYSTEM : " )
-			text_window.put_string( eiffel_system.name )
-			text_window.put_string( "%N" )
+			st.add_string( eiffel_system.name )
+			st.add_string( "%N" )
 
 			from
 				dynamic_lib_exports.start
 			until
 				dynamic_lib_exports.after
 			loop
-				text_window.put_string( "%N-- CLASS [" )
+				st.add_string( "%N-- CLASS [" )
 
 				class_name := clone(dynamic_lib_exports.item_for_iteration.item.dl_class.name)
 
 				class_name.to_upper
-				text_window.put_string(class_name)
+				st.add_string(class_name)
 
-				text_window.put_string( "]%N" )
+				st.add_string( "]%N" )
 				from 
 					dynamic_lib_exports.item_for_iteration.start
 				until
@@ -295,35 +296,37 @@ feature -- Stone process
 						class_name := clone(dl_exp.dl_class.name)
 						class_name.to_upper
 						if is_clickable then
-							text_window.put_class (dl_exp.dl_class, class_name)
+							st.add_classi (dl_exp.dl_class.lace_class, class_name)
 						else
-							text_window.put_string (class_name)
+							st.add_string (class_name)
 						end
 
 						if (dl_exp.dl_creation /=Void) and then (dl_exp.dl_routine.id /= dl_exp.dl_creation.id) then
-							text_window.put_string (" (")
+							st.add_string (" (")
 							if is_clickable then
-								text_window.put_feature (dl_exp.dl_creation, dl_exp.dl_creation.name)
+--  								st.add_feature_name (dl_exp.dl_creation, dl_exp.dl_creation.name)
+								st.add_feature_name (dl_exp.dl_creation.name,dl_exp.dl_class)
 							else
-								text_window.put_string (dl_exp.dl_creation.name)
+								st.add_string (dl_exp.dl_creation.name)
 							end
-							text_window.put_string (")")
+							st.add_string (")")
 						elseif (dl_exp.dl_creation =Void) then
-							text_window.put_string (" (!!)")
+							st.add_string (" (!!)")
 						end
 						if (dl_exp.dl_routine /= Void) then
-							text_window.put_string (" : ")
+							st.add_string (" : ")
 							if is_clickable then
-								text_window.put_feature (dl_exp.dl_routine, dl_exp.dl_routine.name)
+--  								st.add_feature_name (dl_exp.dl_routine, dl_exp.dl_routine.name)
+								st.add_feature_name (dl_exp.dl_routine.name, dl_exp.dl_class)
 							else
-								text_window.put_string (dl_exp.dl_routine.name)
+								st.add_string (dl_exp.dl_routine.name)
 							end
 						end
 						if (dl_exp.dl_index /= 0) then
-							text_window.put_string (" @ ")
-							text_window.put_int (dl_exp.dl_index)
+							st.add_string (" @ ")
+							st.add_int (dl_exp.dl_index)
 						end
-						text_window.put_string ("%N")
+						st.add_string ("%N")
 
 
 						dynamic_lib_exports.item_for_iteration.forth
@@ -332,8 +335,12 @@ feature -- Stone process
 				dynamic_lib_exports.forth
 			end
 
-
+			text_window.hide
+   			text_window.clear_window
+			text_window.process_text (st)
+			text_window.set_top_character_position (0)
  			text_window.show
+			text_window.display
 			text_window.set_changed(False)
 		end
 

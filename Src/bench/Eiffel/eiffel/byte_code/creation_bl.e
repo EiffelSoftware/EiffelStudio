@@ -325,6 +325,8 @@ feature -- Concurrent Eiffel
 			if call /= Void then
 				feat ?= call.message;
 				generated_file.putstring (feat.feature_name);
+			else 
+				generated_file.putstring ("_no_cf");
 			end;
 			generated_file.putstring ("%");");
 			generated_file.new_line;

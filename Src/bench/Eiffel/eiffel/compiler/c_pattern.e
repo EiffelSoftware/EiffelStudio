@@ -304,11 +304,12 @@ feature -- Pattern generation
 
 			file.putstring ("%
 				%{%N%
-				%%TEIF_REFERENCE Current;%N");
+				%%TEIF_REFERENCE Current;%N%
+				%%TEIF_INTEGER ack = _concur_command_ack;%N");
 			if not result_type.is_void then
 				file.putchar ('%T');
 				result_type.generate (file);
-				file.putstring ("result;%N%Tstruct item *it;%N");
+				file.putstring ("result;%N");
 			end;
 			generate_argument_declaration (1, file);
 			generate_separate_get (file);
@@ -317,12 +318,11 @@ feature -- Pattern generation
 			file.putstring ("%Telse%N%T%T");
 			generate_routine_call (False, file);
 			if result_type.is_void then
-				file.putstring ("CURSPA(_concur_current_client->sock, ack);%N")
+				file.putstring ("%TCURSPA(_concur_current_client->sock, ack);%N")
 			else
+				file.putstring ("%T");
 				file.putstring (result_type.separate_send_macro);
-				file.putstring ("(result, %"name%", ");
-				file.putstring (result_type.c_string);
-				file.putstring ("));%N");
+				file.putstring ("(result);%N");
 			end;
 			file.putstring ("}%N%N");
 		end;
@@ -450,7 +450,7 @@ feature -- Pattern generation
 		local
 			i: INTEGER
 		do
-			file.putstring ("%TCurrent = eif_separate_id_object(sep_oid);%N");
+			file.putstring ("%TCurrent = CUROBJ;%N");
 			from
 				i := argument_count;
 			until
@@ -461,7 +461,7 @@ feature -- Pattern generation
 				file.putstring (" = ");
 				file.putstring (argument_types.item (i).separate_get_macro);
 				file.putchar ('(');
-				file.putint (i);
+				file.putint (i - 1);
 				file.putstring (");%N");
 				i := i - 1;
 			end

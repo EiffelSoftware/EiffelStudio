@@ -1088,6 +1088,7 @@ feature -- Byte code generation
 			if system.has_separate and then arguments /= Void then
 					-- Reserve separeate parameters
 				process_sep_paras_in_byte_code (ba, True);
+				search_for_separate_call_in_precondition;
 			end;
 			inh_assert := Context.inherited_assertion;
 			if Context.origin_has_precondition then
@@ -1098,8 +1099,10 @@ feature -- Byte code generation
 				context.set_assertion_type (In_precondition);
 				ba.append (Bc_precond);
 				ba.mark_forward;
-				ba.sep_mark_backward;
-				ba.append (Bc_sep_unset);
+				if has_separate_call_in_precondition then
+					ba.sep_mark_backward;
+					ba.append (Bc_sep_unset);
+				end;
 			end;
 			if Context.origin_has_precondition and then (precondition /= Void) then
 				context.set_is_prec_first_block (True);
@@ -1117,9 +1120,6 @@ feature -- Byte code generation
 				inh_assert.make_precondition_byte_code (ba);
 			end;
 			if have_assert then
-				if system.has_separate then
-					search_for_separate_call_in_precondition;
-				end;
 				if has_separate_call_in_precondition then
 					ba.append (Bc_sep_raise_prec);
 						-- Reserve separeate parameters
@@ -1423,6 +1423,8 @@ feature -- Concurrent Eiffel
 							generated_file.indent;
 							generated_file.new_line;
 							free_partial_sep_paras (i);
+							generated_file.putstring ("CURRSFW;")
+							generated_file.new_line;
 							generated_file.putstring ("goto ")
 							Context.print_reservation_label;
 							generated_file.putstring (";")

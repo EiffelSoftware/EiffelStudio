@@ -223,7 +223,7 @@ feature -- Concurrent Eiffel
 			generated_file.indent
 			generated_file.putstring ("CURSARI(constant_execute_query, oid_of_sep_obj(")
 			reg.print_register;
-			generated_file.putstring ("), constant_query, %"")
+			generated_file.putstring ("), constant_attribute, %"")
 			generated_file.putstring(typ.base_class.e_class.name_in_upper)
 			generated_file.putstring("%", %"")
 			generated_file.putstring(attribute_name)

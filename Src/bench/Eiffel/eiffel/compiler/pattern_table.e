@@ -198,9 +198,17 @@ feature -- Generation
 				%#include %"macros.h%"%N%
 				%#include %"struct.h%"%N%
 				%#include %"interp.h%"%N%N");
+	
+			if System.has_separate then
+				Pattern_file.putstring ("%
+					%#include %"curextern.h%"%N%N");
+			end;
 
 			generate_pattern;
 
+			if System.has_separate then
+				generate_separate_pattern
+			end
 				-- Generate pattern table
 			Pattern_file.putstring ("struct p_interface fpattern[] = {%N")
 			from
@@ -218,6 +226,23 @@ feature -- Generation
 			end;
 			Pattern_file.putstring ("};%N%N");
 
+			if System.has_separate then
+					-- Generate separate pattern table
+				Pattern_file.putstring ("fnptr separate_pattern[] = {%N")
+				from
+					i := 1;
+					nb := c_pattern_id_counter.value;
+				until
+					i > nb
+				loop
+					Pattern_file.putstring ("(fnptr) sepcall");
+					Pattern_file.putint (i);
+					Pattern_file.putstring (",%N");
+					i := i + 1;
+				end;
+				Pattern_file.putstring ("};%N%N");
+			end
+
 			Pattern_file.close;
 		end;
 
@@ -234,6 +259,23 @@ feature -- Generation
 				c_patterns.forth;
 			end;
 		end;
+
+feature -- Concurrent Eiffel
+
+    generate_separate_pattern is
+            -- Generate pattern for separate calls
+		require
+			has_separate_calls: System.has_separate
+        do
+            from
+                c_patterns.start
+            until
+                c_patterns.after
+            loop
+                c_patterns.item_for_iteration.generate_separate_pattern;
+                c_patterns.forth;
+            end;
+        end;
 
 feature -- DLE
 
@@ -265,9 +307,15 @@ feature -- DLE
 			Pattern_file.putstring ("%
 				%#include %"macros.h%"%N%
 				%#include %"struct.h%"%N%
-				%#include %"interp.h%"%N%N");
+				%#include %"interp.h%"%N%			
+				%#include %"curextern.h%"%N%N");
 
 			generate_dle_pattern;
+
+            if System.has_separate then
+                generate_separate_pattern
+            end;
+
 			nb := c_pattern_id_counter.value;
 
 			Pattern_file.putstring ("void dle_epattern()");
@@ -291,6 +339,8 @@ feature -- DLE
 				Pattern_file.putstring ("enomem();");
 				Pattern_file.new_line;
 				Pattern_file.exdent;
+
+-- FIXME: separate patterns
 				Pattern_file.putstring ("bcopy(fpattern, pattern, ");
 				Pattern_file.putint (dle_level);
 				Pattern_file.putstring (" * sizeof(struct p_interface));");

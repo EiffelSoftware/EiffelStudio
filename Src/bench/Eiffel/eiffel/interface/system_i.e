@@ -3462,29 +3462,6 @@ feature -- Main file generation
 
 			if has_separate then
 				Initialization_file.putstring ("#include %"curextern.h%"%N%N")
-
-				Initialization_file.putstring ("extern ");
-				Initialization_file.putstring (root_class_name);
-				Initialization_file.putstring ("case(); %N");
-				from
-					classes.start
-				until
-					classes.after
-				loop
-					class_array := classes.item_for_iteration
-					nb := class_counter.item (classes.key_for_iteration).count
-					from i := 1 until i > nb loop
-						a_class := class_array.item (i);
-						if a_class /= Void and then a_class.actual_type.type_i.is_separate then
-							Initialization_file.putstring ("extern ");
-							Initialization_file.putstring (a_class.actual_type.associated_class.class_name);
-							Initialization_file.putstring ("case(); %N");
-						end;
-						i := i + 1
-					end;
-					classes.forth;
-				end;
-				Initialization_file.putstring ("%N");
 			end
 
 			if  creation_name /= Void then
@@ -3538,7 +3515,7 @@ feature -- Main file generation
 					-- The last line Only for Workbench Mode
 			end
 
-			Initialization_file.putstring ("%Troot_obj = RTLN(");
+			Initialization_file.putstring ("%T%Troot_obj = RTLN(");
 			if final_mode then
 				Initialization_file.putint (dtype);
 			else
@@ -3581,9 +3558,6 @@ feature -- Main file generation
 			end;
 
 			if has_separate then
-				Initialization_file.putstring ("%T%Tserver_execute(");
-				Initialization_file.putstring (root_class_name);
-				Initialization_file.putstring (");%N");
 				Initialization_file.putstring ("%T}%N");
 
 				Initialization_file.putstring ("%Telse {%N%
@@ -3592,16 +3566,15 @@ feature -- Main file generation
 				Initialization_file.putstring ("%T%TCURIS(%"conf%", root_obj);%N");
 
 					-- Only for Workbench Mode
-				Initialization_file.putstring ("%T%Tif (!strlen(argv[5])) {%N%
+				Initialization_file.putstring ("%T%Tif (!strcmp(argv[5], %"_no_cf%")) {%N%
 					%%T%T%TRTCI(root_obj);%N%
 					%%T%T%T_concur_invariant_checked = 1;%N%
 					%%T%T}%N%
 					%%T%Telse%N%
 					%%T%T%T_concur_invariant_checked = 0;%N");
 
-				Initialization_file.putstring ("%T%Tserver_execute(argv[4]);%N");
-
 				Initialization_file.putstring ("%T}%N");
+				Initialization_file.putstring ("%Tserver_execute();%N");
 			end
 
 			Initialization_file.putstring ("}%N");

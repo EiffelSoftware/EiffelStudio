@@ -48,10 +48,10 @@ feature
 	c_string: STRING is "EIF_POINTER"
 			-- String generated for the type.
 
-	separate_get_macro: STRING is "not_implemented"
+	separate_get_macro: STRING is "CURGP"
 			-- String generated to access the argument to a separate call
 
-	separate_send_macro: STRING is "not_implemented"
+	separate_send_macro: STRING is "CURSQRP"
 			-- String generated to return the result of a separate call
 
 	generate (file: INDENT_FILE) is

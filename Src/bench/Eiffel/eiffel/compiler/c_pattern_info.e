@@ -53,6 +53,14 @@ feature
 			pattern.generate_pattern (c_pattern_id, Pattern_file);
 		end;
 
+feature -- Concurrent Eiffel
+
+	generate_separate_pattern is
+			-- Generate pattern for separate calls
+		do
+			pattern.generate_separate_pattern (c_pattern_id, Pattern_file);
+		end
+
 feature -- Debug
 
 	trace is

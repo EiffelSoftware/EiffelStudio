@@ -16,7 +16,7 @@ inherit
 			launch_c_compilation, 
 			confirm_and_compile,
 			name, menu_name, accelerator,
-			compilation_allowed, perform_compilation
+			perform_compilation
 		end;
 	UPDATE_PROJECT
 		rename
@@ -25,12 +25,11 @@ inherit
 			launch_c_compilation,
 			confirm_and_compile,
 			name, menu_name, accelerator,
-			compilation_allowed, perform_compilation,
+			perform_compilation,
 			precompile_now
 		select
 			precompile_now
 		end;
-	SHARED_MELT_ONLY
  
 creation
 
@@ -103,12 +102,6 @@ feature {NONE} -- Implementation
 		end;
 
 feature {NONE} -- Attributes
-
-	compilation_allowed: BOOLEAN is
-			-- Is compilation allowed?
-		do
-			Result := not melt_only
-		end
 
 	name: STRING is
 			-- Name of the command.

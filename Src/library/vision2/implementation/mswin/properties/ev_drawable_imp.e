@@ -273,16 +273,12 @@ feature -- Drawing operations
 				reset_pen
 			end
 			dc.set_pixel (x, y, wel_fg_color)
-			
-			on_drawing_modified
 		end
 
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
 			draw_text_top_left (x, y - font.ascent, a_text)
-			
-			on_drawing_modified
 		end
 
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
@@ -298,8 +294,6 @@ feature -- Drawing operations
 				internal_initialized_font := True
 			end
 			dc.text_out (x, y, a_text)
-			
-			on_drawing_modified
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
@@ -330,33 +324,6 @@ feature -- Drawing operations
 			dc.move_to (internal_x1, internal_y1)
 			
 			dc.line_to (internal_x2, internal_y2)
-			on_drawing_modified
-		end
-
-	draw_straight_line (x1, y1, x2, y2: INTEGER) is
-			-- Draw infinite straight line through (`x1','y1') and (`x2','y2').
-		local
-			ax1, ax2, ay1, ay2, dx, dy: INTEGER
-		do
-			--| VB: Should work now. Draws lines that are too big.
-			--| Catch worst cases like when `dy' approaches zero.
-			--| This implementation is the same for GTK.
-			dx := (x2 - x1)
-			dy := (y2 - y1)
-			if dy /= 0 then
-				ax1 := x1 - ((dx / dy) * y2).rounded
-				ax2 := x1 - ((dx / dy) * (y1 - height)).rounded
-				ay1 := 0
-				ay2 := height
-			else
-				ay1 := y1
-				ay2 := y2
-				ax1 := 0
-				ax2 := width
-			end
-			draw_segment (ax1, ay1, ax2, ay2)			
-			
-			on_drawing_modified
 		end
 
 	draw_arc (
@@ -415,8 +382,6 @@ feature -- Drawing operations
 			else
 				dc.set_pixel (x_start_arc, y_start_arc, wel_fg_color)
 			end
-			
-			on_drawing_modified
 		end
 
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
@@ -428,8 +393,6 @@ feature -- Drawing operations
 			pixmap_imp ?= a_pixmap.implementation
 			create bounding_area.make (0, 0, pixmap_imp.width, pixmap_imp.height)
 			draw_sub_pixmap (x, y, a_pixmap, bounding_area)
-			
-			on_drawing_modified
 		end
 
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
@@ -559,8 +522,6 @@ feature -- Drawing operations
 					-- Free GDI objects
 				s_dc.release
 			end
-			
-			on_drawing_modified
 		end
 
 	draw_rectangle (x, y, a_width, a_height: INTEGER) is
@@ -572,7 +533,6 @@ feature -- Drawing operations
 				reset_pen
 			end
 			dc.rectangle (x, y, x + a_width, y + a_height)
-			on_drawing_modified
 		end
 
 	draw_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
@@ -585,8 +545,6 @@ feature -- Drawing operations
 				reset_pen
 			end
 			dc.ellipse (x, y, x + a_bounding_width, y + a_bounding_height)
-			
-			on_drawing_modified
 		end
 
 	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
@@ -629,8 +587,6 @@ feature -- Drawing operations
 				reset_pen
 			end
 			dc.polyline (flat_points)
-			
-			on_drawing_modified
 		end
 
 	draw_pie_slice (
@@ -695,8 +651,6 @@ feature -- Drawing operations
 				dc.move_to ((left + semi_width).rounded, (top + semi_height).rounded)
 				dc.line_to (x_start_arc, y_start_arc)
 			end
-			
-			on_drawing_modified
 		end
 
 feature -- Filling operations
@@ -710,8 +664,6 @@ feature -- Filling operations
 				reset_brush
 			end
 			dc.rectangle (x, y, x + a_width + 1, y + a_height + 1)
-			
-			on_drawing_modified
 		end 
 
 	fill_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
@@ -724,8 +676,6 @@ feature -- Filling operations
 				reset_brush
 			end
 			dc.ellipse (x, y, x + a_bounding_width + 1, y + a_bounding_height + 1)
-			
-			on_drawing_modified
 		end
 
 	fill_polygon (points: ARRAY [EV_COORDINATE]) is
@@ -755,8 +705,6 @@ feature -- Filling operations
 				reset_brush
 			end
 			dc.polygon (flat_points)
-			
-			on_drawing_modified
 		end
 
 	fill_pie_slice (
@@ -824,17 +772,10 @@ feature -- Filling operations
 				end
 				dc.pie (left, top, right, bottom, x_start_arc,
 					y_start_arc, x_end_arc, y_end_arc)
-				
-				on_drawing_modified
 			end
 		end
 
 feature {NONE} -- Implementation
-
-	on_drawing_modified is
-			-- Called when the content of the drawing has been modified.
-		do
-		end
 
 	wel_drawing_mode: INTEGER
 			-- The WEL equivalent for the drawing_mode_* selected.

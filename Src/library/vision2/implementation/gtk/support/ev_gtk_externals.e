@@ -7,210 +7,7 @@ indexing
 
 class EV_GTK_EXTERNALS
 
-feature {NONE} -- GTK macros for casting types
-	
-	gtk_object (widget: POINTER): POINTER is
-		external 
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_OBJECT"
-		end
-	
-	gtk_container (widget: POINTER): POINTER is
-		external 
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_CONTAINER"
-		end
-	
-	gtk_editable (widget: POINTER): POINTER is
-		external 
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_EDITABLE"
-		end
-	
-	gtk_box (widget: POINTER): POINTER is
-		external 
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_BOX"
-		end
-	
-	gtk_menu_item (widget: POINTER): POINTER is
-		external 
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_MENU_ITEM"
-		end
-	
-	gtk_menu_bar (widget: POINTER): POINTER is
-		external 
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_MENU_BAR"
-		end
-	
-	gtk_menu (widget: POINTER): POINTER is
-		external 
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_MENU"
-		end
-	
-	gtk_scrolled_window (widget: POINTER): POINTER is
-		external 
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_SCROLLED_WINDOW"
-		end
-	
-feature {NONE} -- GTK C functions
-
-	-- window
-	gtk_window_new (opt: INTEGER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_window_set_title (widget: POINTER; t: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_window_set_policy (w:POINTER; allow_shrink, allow_grow, auto_shrink: BOOLEAN) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	--scrolled window
-	gtk_scrolled_window_new (hadj, vadj: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_scrolled_window_set_policy (w: POINTER; h, v: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	-- widget
-	gtk_widget_show (w: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_widget_hide (w: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_widget_realize (w: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end	
-	
-	gtk_widget_unrealize (w: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end	
-	
-	gtk_widget_set_sensitive (w: POINTER; sensitive: BOOLEAN) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_widget_set_usize (widget: POINTER; w,h: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_widget_set_uposition (widget: POINTER; x,y: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_widget_grab_default (w: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_widget_destroy (w: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_widget_reparent (w: POINTER; p: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	-- general
-	gtk_set_locale is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_rc_parse (f: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_main is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_main_quit is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_signal_handlers_destroy (widget: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_signal_disconnect (widget: POINTER; id: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	-- button
-	gtk_button_new_with_label (label: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_button_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	-- toggle button
-	gtk_toggle_button_new_with_label (label: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_toggle_button_set_state (button: POINTER; state: BOOLEAN) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_toggle_button_toggled (button: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_toggle_button_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	-- check button
-	gtk_check_button_new_with_label (label: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_check_button_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	-- radio button
-	gtk_radio_button_new (gp: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_radio_button_new_with_label (gp: POINTER; label: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_radio_button_group (gp: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	-- container
-	gtk_container_add (container, widget: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_container_border_width (container: POINTER; width: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
+feature {NONE} -- GTK C functions for separators
 
 	gtk_hseparator_new: POINTER is
 		external "C | <gtk/gtk.h>"
@@ -219,15 +16,9 @@ feature {NONE} -- GTK C functions
 	gtk_vseparator_new: POINTER is
 		external "C | <gtk/gtk.h>"
 		end
-		
-	gtk_fixed_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_dialog_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
 
+feature {NONE} -- GTK C functions for tooltips
+		
 	gtk_tooltips_new: POINTER is
 		external "C | <gtk/gtk.h>"
 		end
@@ -248,11 +39,12 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 	
+feature {NONE} -- GTK C functions for label
+
 	gtk_label_new (l: POINTER): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
 	
-
 	gtk_label_set (l: POINTER; text: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
@@ -261,26 +53,7 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 	
-	gtk_exit (n: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_table_new (rows, columns: INTEGER; homogenous: BOOLEAN): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_table_set_col_spacings (t: POINTER; n: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_table_set_row_spacings (t: POINTER; n: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_table_attach (table, widget: POINTER; lef, right, top, bottom,
-					  x_opt, y_opt, x_pad, y_pad: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
+feature {NONE} -- GTK C functions for toolbars
 
 	gtk_toolbar_new (o, s: INTEGER): POINTER is
 		external "C | <gtk/gtk.h>"
@@ -306,39 +79,14 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 			
-	--gtkbox
-	
-	gtk_hbox_new (homegenous: BOOLEAN; spacing: INTEGER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_vbox_new (homegenous: BOOLEAN; spacing: INTEGER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-		
-	gtk_box_pack_start (box, widget: POINTER; e, f: BOOLEAN; p: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_box_pack_end (box, widget: POINTER; e, f: BOOLEAN; p: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_box_set_homogeneous (box: POINTER; homogeneous: BOOLEAN) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_box_set_spacing (box: POINTER; spacing: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
+feature {NONE} -- GTK C functions for frames
 
-	
-	-- gtkframe
 	gtk_frame_new (l: POINTER): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
 	
-	-- gtkeditable
+feature {NONE} -- GTK C functions for gtkeditable
+
 	gtk_editable_insert_text (widget, text: POINTER; text_length, position: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
@@ -351,7 +99,8 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 	
-	-- gtkentry
+feature {NONE} -- GTK C functions for text_component
+
 	gtk_entry_new: POINTER is
 		external "C | <gtk/gtk.h>"
 		end
@@ -392,7 +141,8 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 
-	-- gtktext
+feature {NONE} -- GTK C functions for gtktext
+
 	gtk_text_new (hadj, vajd: POINTER): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
@@ -421,7 +171,8 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 	
-	-- menu 
+feature {NONE} -- GTK C functions for menu
+ 
 	gtk_menu_new: POINTER is
 		external "C | <gtk/gtk.h>"
 		end	
@@ -430,20 +181,8 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end		
 	
-	-- menu item
-	gtk_menu_item_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_menu_item_new_with_label (label_text: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_menu_item_set_submenu (menu_item: POINTER; submenu: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end	
-	
-	-- menu bar
+feature {NONE} -- GTK C functions for menu item
+
 	gtk_menu_bar_new: POINTER is
 		external "C | <gtk/gtk.h>"
 		end
@@ -451,47 +190,9 @@ feature {NONE} -- GTK C functions
 	gtk_menu_bar_append (menu: POINTER; menu_item: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end	
-	
-	--notebook
-	gtk_notebook_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_notebook_set_tab_pos (notebook: POINTER; pos: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_notebook_append_page (notebook, child, label: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_notebook_set_page (notebook: POINTER; page: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	--paned
-	gtk_hpaned_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_vpaned_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
 
-	gtk_paned_add1 (paned: POINTER; child: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_paned_add2 (paned: POINTER; child: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	--pixmap
-	gtk_pixmap_new (pixmap, mask: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end 
-	
-	-- List
+feature {NONE} -- GTK C functions for list
+
 	gtk_list_new: POINTER is
 		external "C | <gtk/gtk.h>"
 		end
@@ -504,82 +205,7 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 
-	-- List item
-	gtk_list_item_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_list_item_new_with_label (label_text: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_list_item_select (list_item: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_list_item_deselect (list_item: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
 feature {NONE} -- code in the glue library
-
-
-	c_gtk_init_toolkit is
-		external "C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_signal_connect (widget: POINTER; event: POINTER; 
-			      routine: POINTER; object: POINTER; 
-			      arguments: POINTER; event_data: POINTER; 
-			      set_event_data_rtn: POINTER;
-			      mouse_button: INTEGER; 
-			      double_click: BOOLEAN): INTEGER is
-		external "C | %"gtk_eiffel.h%""
-		end
-
-	-- widget
-	c_gtk_widget_destroyed (widget: POINTER): BOOLEAN is
-		external "C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_widget_set_flags (w: POINTER; flags: INTEGER) is
-		external "C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_widget_realized (w: POINTER): BOOLEAN is
-		external "C | %"gtk_eiffel.h%""
-		end	
-	
-	c_gtk_widget_visible (w: POINTER): BOOLEAN is
-		external "C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_widget_height (w: POINTER): INTEGER is
-		external "C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_widget_width (w: POINTER): INTEGER is
-		external "C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_widget_sensitive (w: POINTER): BOOLEAN is
-		external "C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_widget_set_size (w: POINTER; width, height: INTEGER) is
-		external "C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_widget_minimum_width (w: POINTER): INTEGER is
-		external "C | %"gtk_eiffel.h%""
-		end
-	c_gtk_widget_minimum_height (w: POINTER): INTEGER is
-		external "C | %"gtk_eiffel.h%""
-		end
-	
-	c_free_call_back_block (p: POINTER) is
-		external "C | %"gtk_eiffel.h%""
-		end
 
 	c_gtk_toolbar_append_item (t: POINTER; text, tip, private_tip,
 							   icon: POINTER; func: POINTER;
@@ -598,23 +224,11 @@ feature {NONE} -- code in the glue library
 		external "C | %"gtk_eiffel.h%""
 		end
 	
-	
---XX	c_gtk_create_button_with_label (label_widget, label_text: POINTER): POINTER is
-			-- out: label_widget pointer to buttons label widget
-			-- in: label_text  text of label
---		external "C"
-	--		end
-	
 	-- push_b
 	c_gtk_get_label_widget (button: POINTER): POINTER is
 		external "C | %"gtk_eiffel.h%""
 		end
 	
-	-- toggle button
-	c_gtk_toggle_button_active (button: POINTER): BOOLEAN is
-		external "C | %"gtk_eiffel.h%""
-		end
-
 	-- text
 	c_gtk_get_text_length (text: POINTER): INTEGER is
 		external
@@ -627,26 +241,6 @@ feature {NONE} -- code in the glue library
 			"C | %"gtk_eiffel.h%""
 		end	
 	
-	-- containers
-	c_gtk_widget_show_children (widget: POINTER) is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-	
-	-- pixmap
-	c_gtk_pixmap_create_empty (parent: POINTER): POINTER is
-		external "C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_pixmap_create_from_xpm (parent: POINTER; file_name: POINTER): POINTER is
-		external "C | %"gtk_eiffel.h%""
-		end
-
-
-	c_gtk_pixmap_read_from_xpm (widget, parent: POINTER; file_name: POINTER) is
-		external "C | %"gtk_eiffel.h%""
-		end
-
 	-- list
 
 	c_gtk_add_list_item (list: POINTER; item: POINTER) is

@@ -16,7 +16,7 @@ feature {EV_TREE_ITEM} -- Implementation
 			-- Add `item' to the list
 		require
 			exists: not destroyed
-			valid_item: an_item.is_valid
+			valid_item: is_valid (an_item)
 		deferred
 		end
 

@@ -103,7 +103,7 @@ cluster
 external
 
 	include_path:
-		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `$EIFFEL_SRC/library/vision2/implementation/gtk/Clib/vision2-gtk-config --devel --include_path`",
 		"\$(EIFFEL_SRC)/C_library/libpng",
 		"\$(EIFFEL_SRC)/C_library/zlib",
 		"\$(EIFFEL_SRC)/library/vision2/spec/include"

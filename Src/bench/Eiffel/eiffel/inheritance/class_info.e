@@ -115,12 +115,14 @@ feature -- Access
 								create vgcp2;
 								vgcp2.set_class (a_class);
 								vgcp2.set_feature_name (feature_name);
+								vgcp2.set_location (feature_list.item.start_location)
 								Error_handler.insert_error (vgcp2);
 							else
 								if Result.has (feature_name) then
 									create vgcp3;
 									vgcp3.set_class (a_class);
 									vgcp3.set_feature_name (feature_name);
+									vgcp3.set_location (feature_list.item.start_location)
 									Error_handler.insert_error (vgcp3);
 								else
 									has_default_create := has_default_create or a_feature = l_def_create
@@ -130,6 +132,7 @@ feature -- Access
 									create vgcp21;
 									vgcp21.set_class (a_class);
 									vgcp21.set_feature_name (feature_name);
+									vgcp21.set_location (feature_list.item.start_location)
 									Error_handler.insert_error (vgcp21);
 								end;
 							end;

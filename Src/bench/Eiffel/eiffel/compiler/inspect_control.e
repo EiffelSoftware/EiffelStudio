@@ -126,6 +126,7 @@ feature
 						create vomb3
 						context.init_error (vomb3)
 						vomb3.set_interval (Result.intersection (i.item))
+						vomb3.set_location (interval.end_location)
 						Error_handler.insert_error (vomb3)
 					end
 					i.forth
@@ -160,6 +161,7 @@ feature {NONE} -- Implementation
 					create vomb4
 					context.init_error (vomb4)
 					vomb4.set_unique_feature (constant_i)
+					vomb4.set_location (bound.start_location)
 					Error_handler.insert_error (vomb4)
 				else
 					unique_names.extend (constant_name)
@@ -172,6 +174,7 @@ feature {NONE} -- Implementation
 						context.init_error (vomb6)
 						vomb6.set_unique_feature (constant_i)
 						vomb6.set_written_class (last_class)
+						vomb6.set_location (bound.start_location)
 						Error_handler.insert_error (vomb6)
 					end
 				end
@@ -184,6 +187,7 @@ feature {NONE} -- Implementation
 				create vomb5
 				context.init_error (vomb5)
 				vomb5.set_positive_value (positive_value)
+				vomb5.set_location (bound.start_location)
 				Error_handler.insert_error (vomb5)
 			end
 		ensure

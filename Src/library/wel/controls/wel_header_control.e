@@ -118,12 +118,10 @@ feature -- Status report
 		require
 			exists: exists
 			a_point_exists: a_point /= Void and then a_point.exists
-		local
-			hit_test_info: WEL_HD_HIT_TEST_INFO
 		do
-			create hit_test_info.make
-			hit_test_info.set_point (a_point)
-			cwin_send_message (item, Hdm_hit_test, to_wparam (0), hit_test_info.item)
+			create Result.make
+			Result.set_point (a_point)
+			cwin_send_message (item, Hdm_hit_test, to_wparam (0), Result.item)
 		end
 		
 	get_image_list: WEL_IMAGE_LIST is

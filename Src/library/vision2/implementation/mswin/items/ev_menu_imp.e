@@ -16,6 +16,8 @@ inherit
 		end
 
 	EV_MENU_ITEM_IMP
+		undefine
+			escape_pnd
 		redefine
 			interface,
 			make,
@@ -276,6 +278,10 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2001/06/14 00:10:43  rogers
+--| Undefined version of `escape_pnd' originally from EV_PICK_AND_DROPABLE_IMP,
+--| we must now use the version from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.23  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

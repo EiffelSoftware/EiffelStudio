@@ -443,7 +443,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 	 * have not been moved around wrt the GC stacks. But it doen't hurt--RAM.
 	 */
 
-	if (object != ptr && zone->ov_flags & EO_REM)
+	if (object != ptr && HEADER(ptr)->ov_flags & EO_REM)
 		erembq(object);				/* No GC call wanted */
 
 	/* Reset extra-items with zeros */
@@ -1733,8 +1733,10 @@ rt_private void xfreeblock(union overhead *zone, uint32 r)
 	 * it happens to be free, then we do coalescing. And so on...
 	 */
 	
+#ifndef EIF_MALLOC_OPTIMIZATION
 	while ((size = coalesc(zone)))	/* Perform coalescing as long as possible */
 		r += size;					/* And upadte size of block */
+#endif	/* EIF_MALLOC_OPTIMIZATION */
 		
 	/* Now 'zone' points to the block to be freed, and 'r' is the
 	 * size (eventually, this is a coalesced block). Reset all the
@@ -1858,7 +1860,11 @@ rt_public char *xrealloc(register char *ptr, register unsigned int nbytes, int g
 	 * us is not, by extraordinary, free.
 	 */
 	
+#ifdef EIF_MALLOC_OPTIMIZATION
+	size_gain = 0;
+#else	/* EIF_MALLOC_OPTIMIZATION */
 	size_gain = coalesc(zone);	/* Function has a side effect (this is C) */
+#endif	/* EIF_MALLOC_OPTIMIZATION */
 
 #ifdef DEBUG
 	dprintf(16)("realloc: coalescing added %d bytes (block is now %d bytes)\n",

@@ -29,6 +29,7 @@ feature -- Basic operations
 			-- Generate C server for implemented interface.
 		local
 			interface_generator: WIZARD_COMPONENT_INTERFACE_C_SERVER_GENERATOR
+			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 		do
 			Precursor {WIZARD_COMPONENT_C_SERVER_GENERATOR} (an_interface)
 			cpp_class_writer.set_name (an_interface.impl_c_type_name (False))
@@ -40,7 +41,18 @@ feature -- Basic operations
 			cpp_class_writer.add_parent (an_interface.interface_descriptor.c_type_name,
 					an_interface.interface_descriptor.namespace, Public)
 			cpp_class_writer.add_import (an_interface.interface_descriptor.c_header_file_name)
-			cpp_class_writer.add_other_source (iid_definition (an_interface.interface_descriptor.name, an_interface.interface_descriptor.guid))
+
+			from
+				interface_descriptor := an_interface.interface_descriptor
+			until
+				interface_descriptor = Void or else
+				interface_descriptor.c_type_name.is_equal (Iunknown_type) or
+				interface_descriptor.c_type_name.is_equal (Idispatch_type)
+			loop
+				cpp_class_writer.add_other_source 
+						(iid_definition (interface_descriptor.name, interface_descriptor.guid))
+				interface_descriptor := interface_descriptor.inherited_interface
+			end
 
 			create interface_generator.make (an_interface, an_interface.interface_descriptor, cpp_class_writer)
 			interface_generator.generate_functions_and_properties (an_interface.interface_descriptor)
@@ -79,7 +91,7 @@ feature {NONE} -- Implementation
 	add_constructor (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- Add constructor.
 		do
-			cpp_class_writer.add_constructor (constructor (an_interface))
+--			cpp_class_writer.add_constructor (constructor (an_interface))
 		end
 
 	constructor (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_WRITER_CPP_CONSTRUCTOR is
@@ -124,6 +136,7 @@ feature {NONE} -- Implementation
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
 			tmp_body: STRING
+			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 		do
 			create func_writer.make
 
@@ -135,73 +148,34 @@ feature {NONE} -- Implementation
 			create tmp_body.make (1000)
 			tmp_body.append (Tab)
 
-			tmp_body.append (If_keyword)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Riid)
-			tmp_body.append (C_equal)
-			tmp_body.append (Iunknown_clsid)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (New_line_tab_tab)
-			tmp_body.append (Star_ppv)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Static_cast)
-			tmp_body.append (Less)
-			tmp_body.append (an_interface.interface_descriptor.c_type_name)
-			tmp_body.append (Asterisk)
-			tmp_body.append (More)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (This)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Else_keyword)
+			tmp_body.append (case_body_in_query_interface 
+						(an_interface.interface_descriptor.c_type_name,
+						an_interface.interface_descriptor.namespace,
+						Iunknown_clsid))
 
 			if dispatch_interface then
 				tmp_body.append (Space)
-				tmp_body.append (If_keyword)
-				tmp_body.append (Space_open_parenthesis)
-				tmp_body.append (Riid)
-				tmp_body.append (C_equal)
-				tmp_body.append (iid_name (Idispatch_type))
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (New_line_tab_tab)
-				tmp_body.append (Star_ppv)
-				tmp_body.append (Space_equal_space)
-				tmp_body.append (Static_cast)
-				tmp_body.append (Less)
-				tmp_body.append (an_interface.interface_descriptor.c_type_name)
-				tmp_body.append (Asterisk)
-				tmp_body.append (More)
-				tmp_body.append (Open_parenthesis)
-				tmp_body.append (This)
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (Semicolon)
-				tmp_body.append (New_line_tab)
-				tmp_body.append (Else_keyword)
+				tmp_body.append (case_body_in_query_interface 
+						(an_interface.interface_descriptor.c_type_name,
+						an_interface.interface_descriptor.namespace,
+						iid_name (Idispatch_type)))
 			end
-
-			tmp_body.append (Space)
-			tmp_body.append (If_keyword)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Riid)
-			tmp_body.append (C_equal)
-			tmp_body.append (iid_name (an_interface.interface_descriptor.c_type_name))
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (New_line_tab_tab)
-			tmp_body.append (Star_ppv)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Static_cast)
-			tmp_body.append (Less)
-			tmp_body.append (an_interface.interface_descriptor.c_type_name)
-			tmp_body.append (Asterisk)
-			tmp_body.append (More)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (This)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Else_keyword)
-
+			
+			from
+				interface_descriptor := an_interface.interface_descriptor
+			until
+				interface_descriptor = Void or else
+				interface_descriptor.c_type_name.is_equal (Iunknown_type) or
+				interface_descriptor.c_type_name.is_equal (Idispatch_type)
+			loop
+				tmp_body.append (Space)
+				tmp_body.append (case_body_in_query_interface 
+						(interface_descriptor.c_type_name,
+						interface_descriptor.namespace,
+						iid_name (interface_descriptor.c_type_name)))
+				interface_descriptor := interface_descriptor.inherited_interface
+			end
+			
 			tmp_body.append (New_line_tab_tab)
 			tmp_body.append (Return)
 			tmp_body.append (Space_open_parenthesis)

@@ -136,12 +136,10 @@ feature -- Text operations
 		require
 			first_fewer_than_last: a <= b
 		do
-			if b <= count then
+			if b <= count and then b > a then
 					-- Does not highlight if `b' is beyond the
 					-- bounds of the text.
-				if b > a then
-					set_selection (a, b)
-				end
+				set_selection (a, b)
 			end
 		end
 

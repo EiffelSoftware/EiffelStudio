@@ -56,6 +56,12 @@ end -- class EV_PROGRESSBAR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.4.1  2000/05/03 19:09:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.9  2000/04/13 18:03:39  brendel
 --| Removed set_proportion and proportion since they are defined in EV_GAUGE_I
 --|

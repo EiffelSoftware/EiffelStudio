@@ -56,6 +56,12 @@ end -- class EV_DIRECTORY_DIALOG_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.4.1  2000/05/03 19:09:03  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

@@ -19,14 +19,17 @@ inherit
 			show
 		redefine
 			interface,
-			initialize
+			initialize,
+			set_text,
+			on_activate
 		end
 
 	EV_MENU_ITEM_LIST_IMP
 		redefine
 			interface,
 			initialize,
-			list_widget
+			list_widget,
+			insert_menu_item
 		end
 
 create
@@ -44,6 +47,17 @@ feature {NONE} -- Initialization
 			Precursor
 		end
 
+feature -- Element change
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		do
+			real_text := clone (a_text)
+			key := C.gtk_label_parse_uline (text_label,
+				eiffel_to_c (u_lined_filter (a_text)))
+			C.gtk_widget_show (text_label)
+		end
+
 feature -- Basic operations
 
 	show is
@@ -54,7 +68,7 @@ feature -- Basic operations
 		do
 			pc := (create {EV_SCREEN}).pointer_position
 			bw := C.gtk_container_struct_border_width (list_widget)
-			if not interface.empty then
+			if not interface.is_empty then
 				C.c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw)
 			end
 		end
@@ -63,14 +77,59 @@ feature -- Basic operations
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		do
-			if not interface.empty then
+			if not interface.is_empty then
 				C.c_gtk_menu_popup (list_widget,
 					a_widget.screen_x + a_x,
 					a_widget.screen_y + a_y)
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
+			-- Generic menu item insertion.
+		local
+			accel_group: POINTER
+			menu_imp: EV_MENU_IMP
+		do
+			Precursor {EV_MENU_ITEM_LIST_IMP} (an_item_imp, pos)
+			if an_item_imp.key /= 0 then
+				accel_group := C.gtk_menu_ensure_uline_accel_group (list_widget)
+				menu_imp ?= an_item_imp
+				if menu_imp = Void then
+					C.gtk_widget_add_accelerator (an_item_imp.c_object,
+						eiffel_to_c ("activate"),
+						accel_group,
+						an_item_imp.key,
+						0,
+						0)
+				else
+					C.gtk_widget_add_accelerator (menu_imp.c_object,
+						eiffel_to_c ("activate_item"),
+						accel_group,
+						menu_imp.key,
+						0,
+						0)
+				end
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
+
+	on_activate is
+		local
+			p_imp: EV_MENU_ITEM_LIST_IMP
+		do
+			p_imp ?= parent_imp
+			if p_imp /= Void then
+				if p_imp.item_select_actions_internal /= Void then
+					p_imp.item_select_actions_internal.call ([interface])
+				end
+			end
+			if select_actions_internal /= Void then
+				select_actions_internal.call ([])
+			end
+		end
 
 	list_widget: POINTER
 
@@ -99,6 +158,18 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.23.2.3  2001/02/23 17:23:45  king
+--| Now redefines `set_text', `insert_menu_item' and `on_activate'.
+--|
+--| Revision 1.23.2.2  2000/12/15 19:40:03  king
+--| Changed .empty to .is_empty
+--|
+--| Revision 1.23.2.1  2000/05/03 19:08:52  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.33  2000/04/25 17:57:59  brendel
 --| Implemented show_at.
 --| Corrected show.

@@ -1,7 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision toggle tool bar, implementation interface."
+		"EiffelVision toggle tool bar button. Implementation interface."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,8 +46,11 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.10  2000/06/07 17:27:41  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.11  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.2.3  2000/08/17 20:19:32  rogers
+--| Removed fixme not reviewed. Description.
 --|
 --| Revision 1.6.2.2  2000/05/09 21:12:42  king
 --| Integrated changes to selectable/deselectable

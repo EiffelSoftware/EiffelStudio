@@ -80,6 +80,12 @@ end -- class EV_DYNAMIC_TABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.1  2000/05/03 19:09:05  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

@@ -12,30 +12,47 @@ inherit
 	EV_TOOL_BAR_ITEM
 		redefine
 			implementation,
-			create_action_sequences,
+			is_in_default_state,
 			parent
 		end
 
 	EV_ITEM
 		redefine
 			implementation,
-			create_action_sequences,
+			is_in_default_state,
 			parent
 		end
 
 	EV_PICK_AND_DROPABLE
 		redefine
-			implementation,
-			create_action_sequences
+			is_in_default_state,
+			implementation
 		end
 
 	EV_TEXTABLE
+		undefine
+			initialize
 		redefine
+			is_in_default_state,
 			implementation
 		end
 
 	EV_TOOLTIPABLE
+		undefine
+			initialize
 		redefine
+			is_in_default_state,
+			implementation
+		end
+
+	EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES
+		redefine
+			implementation
+		end
+
+	EV_SENSITIVE
+		redefine
+			is_in_default_state,
 			implementation
 		end
 
@@ -48,12 +65,14 @@ feature -- Access
 	parent: EV_TOOL_BAR is
 			-- Parent of the current item.
 		do
-			Result ?= {EV_ITEM} Precursor
+			Result ?= Precursor {EV_ITEM}
 		end
 
 	gray_pixmap: EV_PIXMAP is
 			-- Gray image displayed when the button is not hot
 			-- i.e. when the mouse cursor is not over it.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.gray_pixmap
 		ensure
@@ -66,6 +85,7 @@ feature -- Element change
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
 			-- Assign `a_gray_pixmap' to `gray_pixmap'.
 		require
+			not_destroyed: not is_destroyed
 			gray_pixmap_not_void: a_gray_pixmap /= Void
 		do
 			implementation.set_gray_pixmap (a_gray_pixmap)
@@ -76,45 +96,24 @@ feature -- Element change
 
 	remove_gray_pixmap is
 			-- Make `gray_pixmap' `Void'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.remove_gray_pixmap
 		ensure
 			gray_pixmap_remove: gray_pixmap = Void
 		end
 
-feature -- Status report
+feature {NONE} -- Contract support
 
-	is_sensitive: BOOLEAN is
-			-- Is the current button sensitive?
-		require
-			has_parent: parent /= Void
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
 		do
-			Result := implementation.is_sensitive
+			Result := Precursor {EV_TOOL_BAR_ITEM} and Precursor {EV_ITEM} and
+				Precursor {EV_PICK_AND_DROPABLE} and Precursor {EV_TEXTABLE} and
+				Precursor {EV_TOOLTIPABLE} and Precursor {EV_SENSITIVE}
 		end
-
-feature -- Status setting
-
-	enable_sensitive is
-			-- Set `is_sensitive' `True'.
-		do
-			implementation.enable_sensitive
-		ensure
-			is_sensitive: is_sensitive
-		end
-
-	disable_sensitive is
-			-- Set `is_sensitive' `False'.
-		do
-			implementation.disable_sensitive
-		ensure
-			not_is_sensitive: not is_sensitive
-		end
-
-feature -- Event handling
-
-	select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to be performed when pressed.
-
+		
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_BUTTON_I
@@ -128,14 +127,6 @@ feature {NONE} -- Implementation
 			create {EV_TOOL_BAR_BUTTON_IMP} implementation.make (Current)
 		end
 
-	create_action_sequences is
-			-- See `{EV_ANY}.create_action_sequences'.
-		do
-			{EV_ITEM} Precursor
-			{EV_PICK_AND_DROPABLE} Precursor
-			create select_actions
-		end
-
 feature -- Obsolete
 
 	press_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -144,9 +135,6 @@ feature -- Obsolete
 		do
 			Result := select_actions
 		end
-
-invariant
-	select_actions_not_void: select_actions /= Void
 
 end -- class EV_TOOL_BAR_BUTTON
 
@@ -165,85 +153,3 @@ end -- class EV_TOOL_BAR_BUTTON
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.16  2000/06/07 17:28:05  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.7.2.2  2000/05/10 23:03:04  king
---| Integrated inital tooltipable changes
---|
---| Revision 1.7.2.1  2000/05/03 19:09:58  oconnor
---| mergred from HEAD
---|
---| Revision 1.15  2000/04/17 16:06:10  brendel
---| Replaced press_actions with select_actions.
---|
---| Revision 1.14  2000/04/07 22:28:19  brendel
---| EV_SIMPLE_ITEM -> EV_ITEM.
---|
---| Revision 1.13  2000/04/07 22:15:41  brendel
---| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
---|
---| Revision 1.12  2000/03/24 03:10:22  oconnor
---| formatting and comments
---|
---| Revision 1.11  2000/03/20 23:07:53  pichery
---| Added the notion of gray pixmap, as well as the features `set_gray_pixmap'
---| and `remove_gray_pixmap' to set and remove the gray pixmap.
---| The gray pixmap is displayed in the toolbar when the cursor is not over
---| the button.
---|
---| Revision 1.10  2000/03/01 19:48:53  king
---| Corrected export clauses for implementation and create_imp/act_seq
---|
---| Revision 1.9  2000/02/22 18:39:47  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.8  2000/02/14 11:40:47  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.7.4.9  2000/02/04 21:16:35  king
---| Now calling create_action_sequence precursor from pnd
---|
---| Revision 1.7.4.8  2000/02/01 20:14:05  king
---| Now descendant of ev_tool_bar_item
---|
---| Revision 1.7.4.7  2000/01/28 22:24:20  oconnor
---| released
---|
---| Revision 1.7.4.6  2000/01/28 18:58:43  king
---| Added press actions to tool bar button
---|
---| Revision 1.7.4.5  2000/01/27 19:30:37  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.7.4.4  2000/01/26 23:19:15  king
---| Removed redundant features, changed set_sensitive to enable and disable
---|
---| Revision 1.7.4.3  2000/01/20 16:55:55  rogers
---| Implemented create_implementation, added some comments and created both
---| pick_actions and drop_Actions in create_action_sequences.
---|
---| Revision 1.7.4.2  1999/12/17 21:11:02  rogers
---| Now inherits EV_PICK_AND_DROPABLE instead of EV_PND_SOURCE and
---| EV_PND_TARGET. Make procedures have been removed, ready for
---| re-implementation. The addition and removal of commands have been
---| commented, ready for re-implementation.
---|
---| Revision 1.7.4.1  1999/11/24 17:30:43  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.6.2.3  1999/11/04 23:10:52  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.6.2.2  1999/11/02 17:20:11  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

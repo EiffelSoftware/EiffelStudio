@@ -1,7 +1,8 @@
 indexing
 	description: "Procedure widget."
 
-class EV_PROCEDURE_WIDGET [TARGET, OPERANDS -> TUPLE create make end]
+class
+	EV_PROCEDURE_WIDGET [TARGET, OPERANDS -> TUPLE create make end]
 
 inherit
 	EV_PROCEDURE [TARGET, OPERANDS]
@@ -58,7 +59,7 @@ feature {NONE} -- Initialization
 				end
 				box.extend (label)
 				box.disable_child_expand (label)
-				if operand_type (i) = internal.dynamic_type_from_type_name ("STRING") then
+				if operand_type (i) = internal.dynamic_type_from_string ("STRING") then
 					create tf
 					box.extend (tf)
 					tf.drop_actions.extend (tf~set_text)

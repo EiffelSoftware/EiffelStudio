@@ -18,6 +18,8 @@ inherit
 			interface
 		end
 
+	EV_DRAWING_AREA_ACTION_SEQUENCES_I
+
 feature -- Drawing operations
 
 	redraw is
@@ -25,8 +27,8 @@ feature -- Drawing operations
 		deferred
 		end
 
-	redraw_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Redraw the rectangle (`x1',`y1') - (`x2', `y2')
+	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Redraw the rectangle described.
 		deferred
 		end
 
@@ -35,8 +37,8 @@ feature -- Drawing operations
 		deferred
 		end
 
-	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Clear and Redraw the rectangle (`x1',`y1') - (`x2', `y2')
+	clear_and_redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Clear and Redraw the rectangle described.
 		deferred
 		end
 
@@ -74,6 +76,18 @@ end -- class EV_DRAWING_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.11.4.3  2001/05/11 17:09:32  king
+--| Updated rectangle functions to use new semantic
+--|
+--| Revision 1.11.4.2  2000/07/24 21:30:48  oconnor
+--| inherit action sequences _I class
+--|
+--| Revision 1.11.4.1  2000/05/03 19:09:06  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/03/03 03:58:34  pichery
 --| added feature `flush'
 --|

@@ -10,8 +10,14 @@ class
 
 inherit
 	EV_FILE_OPEN_DIALOG_I
+		redefine
+			interface
+		end
 
 	EV_FILE_DIALOG_IMP
+		redefine
+			interface
+		end
 
 	WEL_OPEN_FILE_DIALOG
 		rename
@@ -27,6 +33,113 @@ inherit
 
 create
 	make
+
+feature {EV_ANY_I}
+
+	--| FIXME These features are all required by EV_POSITIONED and
+	--| EV_POSITIONABLE. Is there a way to implement these?
+
+	set_x_position (a: INTEGER) is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	set_y_position (a: INTEGER) is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	set_height (a: INTEGER) is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	set_width (a: INTEGER) is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	set_size (a, b: INTEGER) is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	x_position: INTEGER is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	y_position: INTEGER is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	screen_x: INTEGER is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	screen_y: INTEGER is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	width: INTEGER is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	set_position (a, b: INTEGER) is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	height: INTEGER is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	minimum_width: INTEGER is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	minimum_height: INTEGER is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+feature {EV_ANY_I}
+
+	interface: EV_FILE_OPEN_DIALOG
 
 end -- class EV_FILE_OPEN_DIALOG_IMP
 
@@ -51,6 +164,19 @@ end -- class EV_FILE_OPEN_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/07 23:08:14  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.8.3  2001/01/31 19:44:53  rogers
+--| Redefined interface.
+--|
+--| Revision 1.3.8.2  2000/09/05 16:47:49  rogers
+--| Added deferred features from EV_POSTIONABLE and EV_POSITIONED. These
+--| features need to be implemented.
+--|
+--| Revision 1.3.8.1  2000/05/03 19:09:22  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.5  2000/03/07 01:53:25  brendel
 --| Released
 --|

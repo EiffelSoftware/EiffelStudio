@@ -1,55 +1,137 @@
 indexing
 	description: 
-		"Base class for every Eiffel Vision application.%N%
-		%Applications should inherit this class and implement prepare and%
-		%first_window. Creating an application with `make_and_launch' will%
-		%construct the application object, call `prepare' then start%
-		%proccessing events."
-	note:
-		"`destroy' causes all windows to be destroyed,%N%
-		%and the application to quit."
+		"Eiffel Vision Application.%N%
+		%To start an Eiffel Vision application: create exactly one%
+		%EV_APPLICATION object and call `launch' after setting up initial%
+		%window(s)"
 	status: "See notice at end of class"
 	keywords: "application, accelerator, event loop"
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class 
+class 
 	EV_APPLICATION
-
---|FIXME Provide access to modifier key state (Shift, Alt, Meta ect).
 
 --|FIXME Add mechanism for dealing with file/pipe/socket events.
 
 inherit
 	EV_ANY
 		redefine
-			create_action_sequences,
+			implementation,
+			application_exists,
+			initialize
+		end
+
+	EV_APPLICATION_ACTION_SEQUENCES
+		redefine
 			implementation
 		end
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialization is
 
-	make_and_launch is
-			-- Create and launch application.
+	initialize is
+			-- Mark `Current' as initialized.
 		do
-			default_create
-			launch
-		end
-
-	prepare is
-			-- Do pre-launch preperation.
-			-- Called by `launch' just before starting the application.
-		deferred
+			set_tooltip_delay (default_tooltip_delay)
+			is_initialized := True
 		end
 
 feature -- Access
-	
-	first_window: EV_WINDOW is
-			-- Must be defined as a once funtion to create the application's
-			-- first_window.
-		deferred
+
+	windows: LINEAR [EV_WINDOW] is
+			-- All of the application's windows.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.windows
 		ensure
-			top_level_window: Result.parent = Void
+			bridge_ok: Result.is_equal (implementation.windows)
+		end
+		
+	locked_window: EV_WINDOW is
+			-- Window currently locked. Void if no window 
+			-- is currently locked.
+			--
+			-- See `{EV_WINDOW}.lock_update' for more details
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.locked_window
+		end
+
+	help_accelerator: EV_ACCELERATOR is
+			-- Accelerator that displays contextual help
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.help_accelerator
+		ensure
+			bridge_ok: Result.is_equal (implementation.help_accelerator)
+		end
+
+	contextual_help_accelerator: EV_ACCELERATOR is
+			-- Accelerator that enables contextual help mode
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.contextual_help_accelerator
+		ensure
+			bridge_ok: Result.is_equal
+				(implementation.contextual_help_accelerator)
+		end
+			
+	help_engine: EV_HELP_ENGINE is
+			-- Object that handles contextual help display requests
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.help_engine
+		ensure
+			bridge_ok: Result.is_equal (implementation.help_engine)
+		end
+
+	clipboard: EV_CLIPBOARD is
+			-- Native platform clipboard access.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.clipboard
+		end
+
+feature -- Element Change
+
+	set_help_accelerator (an_accelerator: EV_ACCELERATOR) is
+			-- Assign `an_accelerator' to `help_accelerator'
+		require
+			not_destroyed: not is_destroyed
+			an_accelerator_not_void: an_accelerator /= Void
+		do
+			implementation.set_help_accelerator (an_accelerator)
+		ensure
+			help_accelerator_assigned: help_accelerator = an_accelerator
+		end
+
+	set_contextual_help_accelerator (an_accelerator: EV_ACCELERATOR) is
+			-- Assign `an_accelerator' to `contextual_help_accelerator'
+		require
+			not_destroyed: not is_destroyed
+			an_accelerator_not_void: an_accelerator /= Void
+		do
+			implementation.set_contextual_help_accelerator (an_accelerator)
+		ensure
+			contextual_help_accelerator_assigned:
+				contextual_help_accelerator = an_accelerator
+		end
+
+	set_help_engine (an_engine:  EV_HELP_ENGINE) is
+			-- Assign `an_engine' to `help_engine'
+		require
+			not_destroyed: not is_destroyed
+			an_engine_not_void: an_engine /= Void
+		do
+			implementation.set_help_engine (an_engine)
+		ensure
+			help_engine_set: help_engine = an_engine
 		end
 
 feature -- Basic operation
@@ -58,26 +140,16 @@ feature -- Basic operation
 			-- Start the application.
 			-- Call `prepare' the Begin event processing.
 		require
-			post_launch_actions_not_void: post_launch_actions /= Void
+			not_destroyed: not is_destroyed
+			default_create_called: default_create_called
 			not_already_launched: not is_launched
-		local
-			dummy: EV_WINDOW
 		do
 			is_launched := True
-
-				-- This causes the once function to be executed,
-				-- otherwise, if the user does not access it in prepare,
-				-- the invariant fails.
-			dummy := first_window
-			check
-				first_window_not_void: first_window /= Void
-			end
-
-			prepare
-			post_launch_actions.extend (~remove_post_launch_actions)
 			implementation.launch
 		ensure
 			is_launched: is_launched
+		rescue
+			is_launched := False
 		end
 
 	process_events is
@@ -86,6 +158,7 @@ feature -- Basic operation
 			-- handle any events that may be in its queue.
 			-- (Should be called from time to time during extended computation.)
 		require
+			not_destroyed: not is_destroyed
 			is_launched: is_launched
 		do
 			implementation.process_events
@@ -94,9 +167,30 @@ feature -- Basic operation
 	sleep (msec: INTEGER) is
 			-- Wait for `msec' milliseconds and return.
 		require
+			not_destroyed: not is_destroyed
 			msec_non_negative: msec >= 0 
 		do
 			implementation.sleep (msec)
+		end
+
+	enable_contextual_help is
+			-- Change mouse cursor to help cursor.
+			-- Capture mouse input.
+			-- Send help context of widget being clicked to help engine for
+			-- Processing.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_contextual_help
+		end
+	
+	display_help_for_widget (a_widget: EV_WIDGET) is
+			-- Display contextual help for `a_widget', if any.
+		require
+			not_destroyed: not is_destroyed
+			a_widget_not_void: a_widget /= Void
+		do
+			implementation.display_help_for_widget (a_widget)
 		end
 
 feature -- Status report
@@ -107,10 +201,49 @@ feature -- Status report
 	tooltip_delay: INTEGER is
 			-- Time in milliseconds which the pointer must be stationary over
 			-- a widget before a tooltips apears.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.tooltip_delay
 		ensure
 			bridge_ok: Result = implementation.tooltip_delay
+		end
+
+	default_tooltip_delay: INTEGER is 500
+			-- Default delay in milleseconds of tool tips.
+	
+	focused_widget: EV_WIDGET is
+			-- Widget that has keyboard focus.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.focused_widget
+		ensure
+			bridge_ok: Result = implementation.focused_widget
+		end
+
+	ctrl_pressed: BOOLEAN is
+			-- Is ctrl key currently pressed?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.ctrl_pressed
+		end
+
+	alt_pressed: BOOLEAN is
+			-- Is alt key currently pressed?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.alt_pressed
+		end
+
+	shift_pressed: BOOLEAN is
+			-- Is shift key currently pressed?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.shift_pressed
 		end
 
 feature -- Status setting
@@ -118,6 +251,7 @@ feature -- Status setting
 	set_tooltip_delay (a_delay: INTEGER) is
 			-- Assign `a_delay' to `tooltip_delay'.
 		require
+			not_destroyed: not is_destroyed
 			a_delay_non_negative: a_delay >= 0
 		do
 			implementation.set_tooltip_delay (a_delay)
@@ -127,40 +261,31 @@ feature -- Status setting
 
 feature -- Event handling
 
-	post_launch_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to be performed as after the application is launched.
-
-	pick_actions: EV_PND_ACTION_SEQUENCE
-			-- Actions to be performed when a pick and drop "pick" occurs.
-
-	drop_actions: EV_PND_ACTION_SEQUENCE
-			-- Actions to be performed when a pick and drop "drop" occurs.
-
-	idle_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions be performed take when the application is otherwise idle.
-
 	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE []]) is
 			-- Perform `an_action' one time when the application is next idle.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.do_once_on_idle (an_action)
 		end
+		
+feature {NONE} -- Contract support
 
-	--| FIXME is `destroy_actions' needed?
+	application_exists: BOOLEAN is
+			-- Does the application exist? This is used to stop
+			-- manipulation of widgets before an application is created.
+			-- As we are now in the process of creating the application,
+			-- we return True.
+		do
+			Result := True
+		end
 
-feature {EV_WINDOW, EV_PICK_AND_DROPABLE, EV_ANY_I}
-		-- Implementation
+feature {EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE} -- Implementation
 	
 	implementation: EV_APPLICATION_I
 			-- Responsible for interaction with the native graphics toolkit.
-
-	create_action_sequences is
-			-- See `{EV_ANY}.create_action_sequences'.
-		do
-			create post_launch_actions
-			create pick_actions
-			create drop_actions
-			create idle_actions
-		end
+			
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
@@ -169,23 +294,12 @@ feature {EV_WINDOW, EV_PICK_AND_DROPABLE, EV_ANY_I}
 			create {EV_APPLICATION_IMP} implementation.make (Current)
 		end
 
-feature {NONE} -- Implementation
-
-	remove_post_launch_actions is
-			-- Remove the `post_launch_actions (They are only needed once).
-		do
-			post_launch_actions := Void
-		end
-
 invariant
-	pick_actions_not_void: pick_actions /= Void
-	drop_actions_not_void: drop_actions /= Void
-	idle_actions_not_void: idle_actions /= Void
-	first_window_not_void: is_initialized implies first_window /= Void
-	tooltip_delay_non_negative: tooltip_delay >= 0
+	tooltip_delay_not_negative: tooltip_delay >= 0
+	windows_not_void: windows /= Void
 
 end -- class EV_APPLICATION
-
+	
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
@@ -201,129 +315,3 @@ end -- class EV_APPLICATION
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.27  2000/05/01 19:31:46  pichery
---| Changed export clause for a group of features.
---|
---| Revision 1.26  2000/04/20 18:20:42  brendel
---| Added note.
---|
---| Revision 1.25  2000/04/05 17:45:46  brendel
---| Reverted to old destroy.
---|
---| Revision 1.24  2000/04/05 15:47:25  brendel
---| Corrected `destroy'.
---|
---| Revision 1.23  2000/04/05 01:58:28  brendel
---| destroy now quits the Eiffel Vision application.
---| This can be done in a nicer way, though.
---|
---| Revision 1.22  2000/03/27 19:10:10  oconnor
---| spelink mistak
---|
---| Revision 1.21  2000/03/27 19:06:14  oconnor
---| added fixme
---|
---| Revision 1.20  2000/03/27 19:05:12  oconnor
---| added fixme
---|
---| Revision 1.19  2000/03/27 19:00:31  oconnor
---| added comment
---|
---| Revision 1.18  2000/03/23 19:03:05  brendel
---| Removed once_idle_actions.
---|
---| Revision 1.17  2000/03/23 18:53:44  oconnor
---| modified once idle actions interface
---|
---| Revision 1.16  2000/03/23 17:44:05  brendel
---| Added `once_idle_actions'.
---|
---| Revision 1.15  2000/03/21 19:57:40  brendel
---| Added dummy variable to `launch' that accesses `first_window', which
---| should now resolve the problem that users have to use `first_window' in
---| `prepare' in order not to violate the invariant (first_window /= Void).
---|
---| Revision 1.14  2000/03/16 01:11:25  oconnor
---| Removed root window features.
---|
---| Revision 1.13  2000/03/15 23:05:46  brendel
---| Removed `accelerator_actions'.
---|
---| Revision 1.12  2000/02/22 18:39:48  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.11  2000/02/14 11:40:47  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.10.6.19  2000/01/28 21:16:59  brendel
---| Added feature `tooltip_delay'.
---|
---| Revision 1.10.6.18  2000/01/28 20:02:20  oconnor
---| released
---|
---| Revision 1.10.6.17  2000/01/27 19:30:40  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.10.6.16  2000/01/26 18:08:51  brendel
---| Added feature `sleep'.
---|
---| Revision 1.10.6.15  2000/01/21 18:20:00  oconnor
---| fixed accelerator_actions
---|
---| Revision 1.10.6.14  2000/01/21 18:16:07  oconnor
---| added accelerator_actions for keyboard accelerators
---|
---| Revision 1.10.6.13  2000/01/21 00:47:32  oconnor
---| cosmetics
---|
---| Revision 1.10.6.12  2000/01/20 17:36:19  king
---| Added idle_actions and internal_idle_actions.
---|
---| Revision 1.10.6.11  1999/12/17 21:03:49  rogers
---| addition of drop actions.
---|
---| Revision 1.10.6.10  1999/12/16 09:20:18  oconnor
---| provide user access to root windows list
---|
---| Revision 1.10.6.9  1999/12/15 05:21:12  oconnor
---| formatting
---|
---| Revision 1.10.6.8  1999/12/15 03:57:22  oconnor
---| export implementation to EV_PICK_AND_DROPABLE
---|
---| Revision 1.10.6.7  1999/12/14 16:52:57  oconnor
---| renamed EV_PND_SOURCE -> EV_PICK_AND_DROPABLE
---|
---| Revision 1.10.6.6  1999/12/13 19:31:13  oconnor
---| kernel/ev_application.e
---|
---| Revision 1.10.6.5  1999/12/08 01:47:51  oconnor
---| export remove_post_launch_actions to none
---|
---| Revision 1.10.6.4  1999/12/07 20:46:36  oconnor
---| revised layout and comments
---|
---| Revision 1.10.6.3  1999/12/01 00:36:09  oconnor
---| added precondition
---|
---| Revision 1.10.6.2  1999/11/30 23:41:31  oconnor
---| added process events
---|
---| Revision 1.10.6.1  1999/11/24 17:30:43  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.10.2.5  1999/11/04 23:07:47  oconnor
---| reorganised
---|
---| Revision 1.10.2.4  1999/11/02 17:20:11  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

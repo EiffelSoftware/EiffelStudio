@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision cursor, mswindows implementation."
@@ -118,8 +117,14 @@ end -- class EV_CURSOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.9  2000/06/07 17:27:53  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.10  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.8.5  2000/08/21 22:05:53  rogers
+--| Removed fixme's as this class is now obsolete.
+--|
+--| Revision 1.4.8.4  2000/06/12 20:15:39  rogers
+--| Added two FIXME's to features that need implementing.
 --|
 --| Revision 1.4.8.3  2000/05/04 17:37:14  brendel
 --| Moved obsolete clause.

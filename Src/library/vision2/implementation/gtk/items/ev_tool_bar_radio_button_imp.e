@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision tool-bar radio button. implementation%
@@ -21,11 +20,13 @@ inherit
 			parent_imp,
 			make,
 			interface,
-			connect_signals,
-			initialize
+			initialize,
+			create_select_actions
 		end
 
 	EV_RADIO_PEER_IMP
+		undefine
+			visual_widget
 		redefine
 			interface
 		end
@@ -47,16 +48,24 @@ feature {NONE} -- Initialization
 			avoid_reselection := False
 		end
 
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Redefined to prevent unwanted signal connection.
+		do
+			create Result
+		end
+
 	initialize is
 			-- Initialize default settings for radio item.
 		do
 			Precursor
+			connect_signals
 			align_text_left
 		end
 
 feature -- Status setting
 
 	enable_select is
+			-- Select `Current' in its grouping.
 		do
 			C.gtk_toggle_button_set_active (c_object, True)
 		end
@@ -64,6 +73,7 @@ feature -- Status setting
 feature -- Status report
 
 	is_selected: BOOLEAN is
+			-- Is `Current' selected.
 		do
 			Result := C.gtk_toggle_button_get_active (c_object)
 		end
@@ -76,7 +86,7 @@ feature {NONE} -- Implementation
 		end
 
 	connect_signals is
-			-- Connect on_activate to toggled signal
+			-- Connect on_activate to toggled signal.
 		do
 			signal_connect ("toggled", ~on_activate, Void)
 		end
@@ -86,8 +96,6 @@ feature {NONE} -- Implementation
 		local
 			a_peers: like peers
 			radio_imp: like Current
-			a: ANY
-			a_signal: STRING
 		do
 			if is_selected and then not avoid_reselection then
 				a_peers := peers
@@ -102,7 +110,9 @@ feature {NONE} -- Implementation
 					end
 					a_peers.forth
 				end
-				interface.select_actions.call ([])
+				if select_actions_internal /= Void then
+					select_actions_internal.call ([])
+				end
 			end
 
 			if not avoid_reselection then
@@ -160,8 +170,20 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.24  2000/06/07 17:27:29  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.25  2001/06/07 23:08:02  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.7.2.7  2000/10/09 18:02:25  king
+--| Made compilable
+--|
+--| Revision 1.7.2.6  2000/09/07 21:36:01  king
+--| Corrected comment
+--|
+--| Revision 1.7.2.5  2000/09/06 23:18:39  king
+--| Reviewed
+--|
+--| Revision 1.7.2.4  2000/08/01 21:32:34  king
+--| Changed on_activate to prevent unnecessasy instantiation of A.S.
 --|
 --| Revision 1.7.2.3  2000/05/10 00:01:41  king
 --| Corrected make to make toggle button instead of button

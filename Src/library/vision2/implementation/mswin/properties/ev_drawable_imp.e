@@ -13,52 +13,15 @@ inherit
 			interface
 		end
 
+	EV_FONTABLE_IMP
+		export
+			{NONE} wel_set_font
+		redefine
+			interface,
+			set_font
+		end
+
 	EV_DRAWABLE_CONSTANTS
-
-	WEL_DIB_COLORS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_ROP2_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_TA_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_WINDOWS_ROUTINES
-		export
-			{NONE} all
-		end
-
-	WEL_COLOR_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_PS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_BRUSH_STYLE_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_RASTER_OPERATIONS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_HS_CONSTANTS
-		export
-			{NONE} all
-		end
 
 	EXCEPTIONS
 		rename
@@ -66,12 +29,23 @@ inherit
 			class_name as exception_class_name
 		end
 
+	EV_SHARED_GDI_OBJECTS			export {NONE} all end
+	WEL_DIB_COLORS_CONSTANTS		export {NONE} all end
+	WEL_ROP2_CONSTANTS 				export {NONE} all end
+	WEL_TA_CONSTANTS				export {NONE} all end
+	WEL_WINDOWS_ROUTINES			export {NONE} all end
+	WEL_COLOR_CONSTANTS				export {NONE} all end
+	WEL_PS_CONSTANTS				export {NONE} all end
+	WEL_BRUSH_STYLE_CONSTANTS		export {NONE} all end
+	WEL_RASTER_OPERATIONS_CONSTANTS export {NONE} all end
+	WEL_HS_CONSTANTS 				export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	initialize is
 			-- Set some default values.
 		do
-			create internal_font
+			set_default_font
 			create foreground_color.make_with_rgb (0, 0, 0)
 			create background_color.make_with_rgb (1, 1, 1)
 
@@ -133,12 +107,6 @@ feature -- Access
 	dashed_line_style: BOOLEAN
 			-- Are lines drawn dashed?
 
-	font: EV_FONT is
-			-- Character appearance.
-		do
-			Result := internal_font
-		end
-
 feature {NONE} -- Implementation
 
 	width: INTEGER is
@@ -157,10 +125,14 @@ feature -- Element change
 
 	set_background_color (a_color: EV_COLOR) is
 			-- Assign `a_color' to `background_color'.
+		local
+			a_color_imp: EV_COLOR_IMP
+			background_color_imp: EV_COLOR_IMP
 		do
-			if not a_color.is_equal(background_color) then
-				background_color.copy (a_color)
-
+			a_color_imp ?= a_color.implementation
+			background_color_imp ?= background_color.implementation
+			if a_color_imp.item /= background_color_imp.item then
+				background_color_imp.set_color (a_color_imp.item)
 					-- update current background brush (lazzy evaluation)
 				internal_initialized_background_brush := False
 			end
@@ -175,9 +147,7 @@ feature -- Element change
 			a_color_imp ?= a_color.implementation
 			foreground_color_imp ?= foreground_color.implementation
 			if a_color_imp.item /= foreground_color_imp.item then
---				foreground_color.copy (a_color)
-				foreground_color := a_color
-			
+				foreground_color_imp.set_color (a_color_imp.item)							
 					-- update current pen & brush (lazzy evaluation)
 				internal_initialized_brush := False
 				internal_initialized_pen := False
@@ -226,6 +196,7 @@ feature -- Element change
 				clip_area.width + clip_area.x,
 				clip_area.height + clip_area.y)
 			dc.select_clip_region (region)
+			region.delete
 		end
 
 	remove_clip_area is
@@ -236,6 +207,7 @@ feature -- Element change
 			clip_area := Void
 			create region.make_rect (0, 0, width, height)
 			dc.select_clip_region (region)
+			region.delete
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP) is
@@ -269,7 +241,8 @@ feature -- Element change
 	set_font (a_font: EV_FONT) is
 			-- Set `font' to `a_font'.
 		do
-			internal_font := a_font
+			private_font := a_font
+			private_wel_font := Void
 			internal_initialized_font := False
 		end
 
@@ -281,13 +254,13 @@ feature -- Clearing and drawing operations
 			clear_rectangle (0, 0, width + 1, height + 1)
 		end
 
-	clear_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Erase rectangle (`x1, `y1) - (`x2', `y2') 
-			-- with `background_color'.
+	clear_rectangle (x1, y1, a_width, a_height: INTEGER) is
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height' in `background_color'.
 		local
 			a_rect: WEL_RECT
 		do
-			create a_rect.make (x1, y1, x2, y2)
+			create a_rect.make (x1, y1, x1 + a_width, y1 + a_height)
 			dc.fill_rect (a_rect, our_background_brush)
 		end
 
@@ -300,10 +273,20 @@ feature -- Drawing operations
 				reset_pen
 			end
 			dc.set_pixel (x, y, wel_fg_color)
+			
+			on_drawing_modified
 		end
 
 	draw_text (x, y: INTEGER; a_text: STRING) is
-			-- Draw `a_text' at (`x', `y') using `font'.
+			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
+		do
+			draw_text_top_left (x, y - font.ascent, a_text)
+			
+			on_drawing_modified
+		end
+
+	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
 			if not internal_initialized_text_color then
 				dc.set_text_color (wel_fg_color)
@@ -315,16 +298,39 @@ feature -- Drawing operations
 				internal_initialized_font := True
 			end
 			dc.text_out (x, y, a_text)
+			
+			on_drawing_modified
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
+		local
+			internal_x1, internal_x2, internal_y1, internal_y2: INTEGER
 		do
 			if not internal_initialized_pen then
 				reset_pen
 			end
-			dc.move_to (x1, y1)
-			dc.line_to (x2, y2)
+			internal_x1 := x1
+			internal_y1 := y1
+					--| area.
+			if x2 > internal_x1 then
+				internal_x2 := x2 + 1
+			elseif x2 < internal_x1 then
+				internal_x2 := x2 - 1
+			else
+				internal_x2 := x2
+			end
+			if y2 > internal_y1 then
+				internal_y2 := y2 + 1
+			elseif y2 < internal_y1 then
+				internal_y2 := y2 - 1
+			else
+				internal_y2 := y2
+			end
+			dc.move_to (internal_x1, internal_y1)
+			
+			dc.line_to (internal_x2, internal_y2)
+			on_drawing_modified
 		end
 
 	draw_straight_line (x1, y1, x2, y2: INTEGER) is
@@ -349,47 +355,64 @@ feature -- Drawing operations
 				ax2 := width
 			end
 			draw_segment (ax1, ay1, ax2, ay2)			
+			
+			on_drawing_modified
 		end
 
 	draw_arc (
 		x,y : INTEGER;
-		a_vertical_radius, a_horizontal_radius: INTEGER;
-		a_start_angle, an_aperture: REAL
-	) is
-			-- Draw a part of an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle'
-			-- + `an_aperture'.
-			-- Angles are measured in radians.
+		a_bounding_width, a_bounding_height: INTEGER;
+		a_start_angle, an_aperture: REAL) is
+			-- Draw part of an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Angles are measured in radians, and go
+			-- counterclockwise from the 3 o'clock angle.
 		local
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
 		do
-			left := x - a_horizontal_radius
-			right := x + a_horizontal_radius
-			top := y - a_vertical_radius
-			bottom := y + a_vertical_radius
-			x_start_arc := x + (a_horizontal_radius * 
-				cosine (a_start_angle)).rounded
-			y_start_arc := y - (a_vertical_radius * 
-				sine (a_start_angle)).rounded
-			x_end_arc := x + (a_horizontal_radius * 
-				cosine ((a_start_angle + an_aperture))).rounded
-			y_end_arc := y - (a_vertical_radius * 
-				sine ((a_start_angle + an_aperture))).rounded
-
+			left := x
+			top := y
+			right := a_bounding_width
+			bottom := a_bounding_height
+			
+			x_start_arc := x + (a_bounding_width / 2 + (a_bounding_width / 2)* cosine (a_start_angle)).rounded
+			y_start_arc := y + (a_bounding_height / 2 + (a_bounding_height / 2)* sine (a_start_angle)).rounded
+			x_end_arc := x + (a_bounding_width / 2 + (a_bounding_width / 2)* cosine (a_start_angle + an_aperture)).rounded
+			y_end_arc := y + (a_bounding_height / 2 + (a_bounding_height / 2)* sine (-(a_start_angle + an_aperture))).rounded				
 			if not internal_initialized_pen then
 				reset_pen
 			end
-			dc.arc (left, top, right, bottom, x_start_arc,
+			dc.arc (left, top, right + left, bottom + top, x_start_arc,
 				y_start_arc, x_end_arc, y_end_arc)
+			
+			on_drawing_modified
 		end
 
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		local
+			pixmap_imp		: EV_PIXMAP_IMP_STATE
+			bounding_area	: EV_RECTANGLE
+		do
+			pixmap_imp ?= a_pixmap.implementation
+			create bounding_area.make (0, 0, pixmap_imp.width, pixmap_imp.height)
+			draw_sub_pixmap (x, y, a_pixmap, bounding_area)
+			
+			on_drawing_modified
+		end
+
+	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
+			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
+		local
 			pixmap_height		: INTEGER
 			pixmap_width		: INTEGER
+			source_x			: INTEGER
+			source_y			: INTEGER
+			source_width		: INTEGER
+			source_height		: INTEGER
 			display_mask_bitmap	: WEL_BITMAP
 			display_bitmap		: WEL_BITMAP
 			s_dc				: WEL_SCREEN_DC
@@ -397,91 +420,119 @@ feature -- Drawing operations
 			display_bitmap_dc	: WEL_MEMORY_DC
 			pixmap_imp			: EV_PIXMAP_IMP_STATE
 			pixmap_imp_drawable	: EV_PIXMAP_IMP_DRAWABLE
+			tmp_bitmap			: WEL_BITMAP
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			pixmap_height := pixmap_imp.height
 			pixmap_width := pixmap_imp.width
-			
-				-- Allocate GDI objects
-			create s_dc
-			s_dc.get
+			source_x := area.x
+			source_y := area.y
+			source_width := area.width
+			source_height := area.height
 
-			if pixmap_imp.has_mask then -- Display a masked pixmap
+			if
+				pixmap_imp.icon /= Void 
+			and then
+				source_x = 0
+			and then
+				source_y = 0
+			and then
+				source_width = pixmap_width
+			and then
+				source_height = pixmap_height
+			then
+				dc.draw_icon_ex (
+					pixmap_imp.icon, 
+					x, y, 
+					pixmap_width, pixmap_height, 
+					0, Void, Drawing_constants.Di_normal
+				)
+			else
+					-- Allocate GDI objects
+				create s_dc
+				s_dc.get
 
-					-- Create the mask and image used for display. 
-					-- They are different than the real image because 
-					-- we need to apply logical operation in order 
-					-- to display the masked bitmap.
-				create display_mask_bitmap.make_by_bitmap(pixmap_imp.mask_bitmap)
-				create display_mask_dc.make
-				display_mask_dc.select_bitmap(display_mask_bitmap)
-					-- Display_mask_dc = NOT MASK
-				display_mask_dc.pat_blt(0, 0, pixmap_width, pixmap_height, Dstinvert)
+				if pixmap_imp.has_mask then -- Display a masked pixmap
+	
+						-- Create the mask and image used for display. 
+						-- They are different than the real image because 
+						-- we need to apply logical operation in order 
+						-- to display the masked bitmap.
+					tmp_bitmap := pixmap_imp.get_mask_bitmap
+					create display_mask_bitmap.make_by_bitmap (tmp_bitmap)
+					tmp_bitmap.decrement_reference
+					tmp_bitmap := Void
+					
+					create display_mask_dc.make
+					display_mask_dc.select_bitmap(display_mask_bitmap)
+						-- Display_mask_dc = NOT MASK
+					display_mask_dc.pat_blt
+						(source_x, source_y, source_width, source_height, Dstinvert)
 
-				create display_bitmap.make_by_bitmap(pixmap_imp.bitmap)
-				create display_bitmap_dc.make_by_dc(s_dc)
-				display_bitmap_dc.select_bitmap(display_bitmap)
-					-- display_bitmap_dc = IMAGE AND (NOT MASK)
-				display_bitmap_dc.bit_blt (0, 0, pixmap_width, pixmap_height, 
-						display_mask_dc, 0, 0, Srcand)
-
-					-- Apply NOT MASK
-				dc.bit_blt (
-					x, 
-					y, 
-					pixmap_width, 
-					pixmap_height, 
-					display_mask_dc, 
-					0, 
-					0, 
-					Maskpaint
-					)
-
-					-- Apply IMAGE AND (NOT MASK)
-				dc.bit_blt (
-					x, 
-					y,
-					pixmap_width, 
-					pixmap_height, 
-					display_bitmap_dc,
-					0, 
-					0, 
-					Srcpaint
-					)
-
-					-- Free GDI Objects
-				display_bitmap_dc.unselect_bitmap
-				display_bitmap_dc.delete
-				display_mask_dc.unselect_bitmap
-				display_mask_dc.delete
-				display_bitmap.delete
-				display_mask_bitmap.delete
-
-			else -- Display a not masked pixmap.
-
-				pixmap_imp_drawable ?= pixmap_imp
-				if pixmap_imp_drawable = Void then
-					create display_bitmap.make_by_bitmap(pixmap_imp.bitmap)
+					tmp_bitmap := pixmap_imp.get_bitmap
+					create display_bitmap.make_by_bitmap(tmp_bitmap)
+					tmp_bitmap.decrement_reference
+					tmp_bitmap := Void
+					
 					create display_bitmap_dc.make_by_dc(s_dc)
 					display_bitmap_dc.select_bitmap(display_bitmap)
-				else
-					display_bitmap_dc := pixmap_imp_drawable.dc
+
+						-- display_bitmap_dc = IMAGE AND (NOT MASK)
+					display_bitmap_dc.bit_blt (
+						source_x, source_y, 
+						source_width, source_height, 
+						display_mask_dc, 0, 0, Srcand
+					)
+
+						-- Apply NOT MASK
+					dc.bit_blt (
+						x, y, 
+						source_width, source_height, 
+						display_mask_dc, source_x, source_y, Maskpaint
+					)
+
+						-- Apply IMAGE AND (NOT MASK)
+					dc.bit_blt (
+						x, y,
+						source_width, source_height, 
+						display_bitmap_dc, source_x, source_y, Srcpaint
+					)
+
+						-- Free GDI Objects
+					display_bitmap_dc.unselect_bitmap
+					display_bitmap_dc.delete
+					display_mask_dc.unselect_bitmap
+					display_mask_dc.delete
+					display_bitmap.delete
+					display_mask_bitmap.delete
+	
+				else -- Display a not masked pixmap.
+
+					pixmap_imp_drawable ?= pixmap_imp
+					if pixmap_imp_drawable = Void then
+						tmp_bitmap := pixmap_imp.get_bitmap
+						create display_bitmap.make_by_bitmap(tmp_bitmap)
+						tmp_bitmap.decrement_reference
+						tmp_bitmap := Void
+						
+						create display_bitmap_dc.make_by_dc(s_dc)
+						display_bitmap_dc.select_bitmap(display_bitmap)
+					else
+						display_bitmap_dc := pixmap_imp_drawable.dc
+					end
+
+					dc.bit_blt (
+						x, y, 
+						source_width, source_height, 
+						display_bitmap_dc, source_x, source_y, Srccopy
+					)
 				end
 
-				dc.bit_blt (
-					x, 
-					y, 
-					pixmap_width, 
-					pixmap_height, 
-					display_bitmap_dc, 
-					0, 
-					0, 
-					Srccopy
-					)
+					-- Free GDI objects
+				s_dc.release
 			end
-
-				-- Free GDI objects
-			s_dc.release
+			
+			on_drawing_modified
 		end
 
 	draw_rectangle (x, y, a_width, a_height: INTEGER) is
@@ -493,18 +544,21 @@ feature -- Drawing operations
 				reset_pen
 			end
 			dc.rectangle (x, y, x + a_width, y + a_height)
+			on_drawing_modified
 		end
 
-	draw_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
-			-- Draw an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
+	draw_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
+			-- Draw an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
 		do
 			remove_brush
 			if not internal_initialized_pen then
 				reset_pen
 			end
-			dc.ellipse (x - a_horizontal_radius, y - a_vertical_radius,
-				x + a_vertical_radius, y + a_vertical_radius)
+			dc.ellipse (x, y, x + a_bounding_width, y + a_bounding_height)
+			
+			on_drawing_modified
 		end
 
 	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
@@ -515,11 +569,12 @@ feature -- Drawing operations
 			flat_points: ARRAY [INTEGER]
 			flat_index: INTEGER
 			i: INTEGER
+			coords: EV_COORDINATES
 		do
 			if is_closed then
 				create flat_points.make (1, 2 * points.count + 2)
 			else
-				!! flat_points.make (1, 2 * points.count)
+				create flat_points.make (1, 2 * points.count)
 			end
 			flat_index := 1
 			from
@@ -527,9 +582,10 @@ feature -- Drawing operations
 			until
 				i > points.upper
 			loop
-				flat_points.put ((points.item (i)).x, flat_index)
+				coords := points.item (i)
+				flat_points.put (coords.x, flat_index)
 				flat_index := flat_index + 1
-				flat_points.put ((points.item (i)).y, flat_index)
+				flat_points.put (coords.y, flat_index)
 				i := i + 1
 				flat_index := flat_index + 1
 			end
@@ -545,41 +601,45 @@ feature -- Drawing operations
 				reset_pen
 			end
 			dc.polyline (flat_points)
+			
+			on_drawing_modified
 		end
 
 	draw_pie_slice (
 		x, y: INTEGER;
-		a_vertical_radius, a_horizontal_radius: INTEGER;
+		a_bounding_width, a_bounding_height: INTEGER;
 		a_start_angle, an_aperture: REAL
 	) is
-			-- Draw a part of an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' + 
-			-- `an_aperture'.
-			-- The arc is then closed by two segments through (`x', `y').
-			-- Angles are measured in radians.
+			-- Draw part of an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- The arc is then closed by two segments through (`x', 'y').
+			-- Angles are measured in radians, start at the
+			-- 3 o'clock angle and grow counterclockwise.
 		local
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
 		do
-			left := x - a_horizontal_radius
-			right := x + a_horizontal_radius
-			top := y - a_vertical_radius
-			bottom := y + a_vertical_radius
-			x_start_arc := x + (a_horizontal_radius * 
-				cosine (a_start_angle)).rounded
-			y_start_arc := y - (a_vertical_radius * 
-				sine (a_start_angle)).rounded
-			x_end_arc := x + (a_horizontal_radius * 
-				cosine ((a_start_angle + an_aperture))).rounded
-			y_end_arc := y - (a_vertical_radius * 
-				sine ((a_start_angle + an_aperture))).rounded
+			left := x
+			top := y
+			right := x + a_bounding_width
+			bottom := top + a_bounding_height
+			
+			
+			x_start_arc := x + (a_bounding_width / 2 + (a_bounding_width / 2)* cosine (a_start_angle)).rounded
+			y_start_arc := y + (a_bounding_height / 2 + (a_bounding_height / 2)* sine (a_start_angle)).rounded
+			x_end_arc := x + (a_bounding_width / 2 + (a_bounding_width / 2)* cosine (a_start_angle + an_aperture)).rounded
+			y_end_arc := y + (a_bounding_height / 2 + (a_bounding_height / 2)* sine (-(a_start_angle + an_aperture))).rounded	
+			
 			remove_brush
 			if not internal_initialized_pen then
 				reset_pen
 			end
 			dc.pie (left, top, right, bottom, x_start_arc,
 				y_start_arc, x_end_arc, y_end_arc)
+			
+			on_drawing_modified
 		end
 
 feature -- Filling operations
@@ -592,20 +652,23 @@ feature -- Filling operations
 			if not internal_initialized_brush then
 				reset_brush
 			end
-			dc.rectangle (x, y, x + a_width, y + a_height)
+			dc.rectangle (x, y, x + a_width + 1, y + a_height + 1)
+			
+			on_drawing_modified
 		end 
 
-	fill_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
-			-- Draw an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Fill with `background_color'.
+	fill_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
+			-- Fill an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
 		do
 			remove_pen
 			if not internal_initialized_brush then
 				reset_brush
 			end
-			dc.ellipse (x - a_horizontal_radius, y - a_vertical_radius,
-				x + a_vertical_radius, y + a_vertical_radius)
+			dc.ellipse (x, y, x + a_bounding_width + 1, y + a_bounding_height + 1)
+			
+			on_drawing_modified
 		end
 
 	fill_polygon (points: ARRAY [EV_COORDINATES]) is
@@ -614,17 +677,19 @@ feature -- Filling operations
 		local
 			flat_points: ARRAY [INTEGER]
 			i, flat_i: INTEGER
+			coords: EV_COORDINATES
 		do
-			!! flat_points.make (1, 2 * points.count)
+			create flat_points.make (1, 2 * points.count)
 			flat_i := 1
 			from
 				i := points.lower
 			until
 				i > points.upper
 			loop
-				flat_points.put ((points.item (i)).x, flat_i)
+				coords := points.item (i)
+				flat_points.put (coords.x, flat_i)
 				flat_i := flat_i + 1
-				flat_points.put ((points.item (i)).y, flat_i)
+				flat_points.put (coords.y, flat_i)
 				flat_i := flat_i + 1
 				i := i + 1
 			end
@@ -633,44 +698,59 @@ feature -- Filling operations
 				reset_brush
 			end
 			dc.polygon (flat_points)
+			
+			on_drawing_modified
 		end
 
 	fill_pie_slice (
 		x, y :INTEGER;
-		a_vertical_radius, a_horizontal_radius: INTEGER;
+		a_bounding_width, a_bounding_height: INTEGER;
 		a_start_angle, an_aperture: REAL
 	) is
-			-- Draw a part of an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' +
-			-- `an_aperture'.
-			-- The arc is then closed by two segments through (`x', `y').
-			-- Angles are measured in radians.
+			-- Fill part of an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- The arc is then closed by two segments through (`x', 'y').
+			-- Angles are measured in radians, start at the 3
+			-- o'clock angle and grow counterclockwise.
 		local
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
+			internal_bounding_width, internal_bounding_height: INTEGER
 		do
-			left := x - a_horizontal_radius
-			right := x + a_horizontal_radius
-			top := y - a_vertical_radius
-			bottom := y + a_vertical_radius
-			x_start_arc := x + (a_horizontal_radius * 
-				cosine (a_start_angle)).rounded
-			y_start_arc := y - (a_vertical_radius * 
-				sine (a_start_angle)).rounded
-			x_end_arc := x + (a_horizontal_radius * 
-				cosine ((a_start_angle + an_aperture))).rounded
-			y_end_arc := y - (a_vertical_radius * 
-				sine ((a_start_angle + an_aperture))).rounded
+			--| We add one to `a_bounding_width' and `a_bounding_height' as
+			--| when we fill on Windows, the filled area seems to be slightly smaller
+			--| than when we simple draw.
+			
+			left := x
+			top := y
+			internal_bounding_width := a_bounding_width + 1
+			internal_bounding_height := a_bounding_height + 1
+			right := x + internal_bounding_width
+			bottom := top + internal_bounding_height
+			
+			x_start_arc := x + (internal_bounding_width / 2 + (internal_bounding_width / 2)* cosine (a_start_angle)).rounded
+			y_start_arc := y + (internal_bounding_height / 2 + (internal_bounding_height / 2)* sine (a_start_angle)).rounded
+			x_end_arc := x + (internal_bounding_width / 2 + (internal_bounding_width / 2)* cosine (a_start_angle + an_aperture)).rounded
+			y_end_arc := y + (internal_bounding_height / 2 + (internal_bounding_height / 2)* sine (-(a_start_angle + an_aperture))).rounded				
+			
 			remove_pen
 			if not internal_initialized_brush then
 				reset_brush
 			end
 			dc.pie (left, top, right, bottom, x_start_arc,
 				y_start_arc, x_end_arc, y_end_arc)
+			
+			on_drawing_modified
 		end
 
 feature {NONE} -- Implementation
+
+	on_drawing_modified is
+			-- Called when the content of the drawing has been modified.
+		do
+		end
 
 	wel_drawing_mode: INTEGER
 			-- The WEL equivalent for the Ev_drawing_mode_* selected.
@@ -679,10 +759,12 @@ feature {NONE} -- Implementation
 		local
 			font_imp: EV_FONT_IMP
 		do
-			font_imp ?= internal_font.implementation
-			Result := font_imp.wel_font
-		ensure
-			not_void: Result /= Void
+			if private_font /= Void then
+				font_imp ?= private_font.implementation
+				Result := font_imp.wel_font
+			else
+				Result := private_wel_font
+			end
 		end
 
 	wel_bg_color: WEL_COLOR_REF is
@@ -703,13 +785,16 @@ feature {NONE} -- Implementation
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
 		do
+			Result := allocated_brushes.get (Void, wel_bg_color)
 			if not internal_initialized_background_brush then
-				internal_background_brush := allocated_brushes.get(
-					Void, wel_bg_color)
 				internal_initialized_background_brush := True
+				internal_background_brush := Result
+			elseif Result /= internal_background_brush then
+					-- If it is different, it means that `wel_bg_color' changed
+					-- since last time and we need to update it
+				internal_background_brush.decrement_reference
+				internal_background_brush := Result
 			end
-
-			Result := internal_background_brush
 		end
 
 	set_background_brush is
@@ -722,12 +807,22 @@ feature {NONE} -- Implementation
 			-- Restore brush to tile or color.
 		local
 			pix_imp: EV_PIXMAP_IMP
+			a_wel_bitmap: WEL_BITMAP
 		do
 			if not internal_initialized_brush then
+
+					-- Reset `internal_brush'.
+				if internal_brush /= Void then
+					internal_brush.decrement_reference
+					internal_brush := Void
+				end
+
 				if tile /= Void then
 					pix_imp ?= tile.implementation
+					a_wel_bitmap := pix_imp.get_bitmap
 					internal_brush := allocated_brushes.get(
-						pix_imp.bitmap, Void)
+						a_wel_bitmap, Void)
+					a_wel_bitmap.decrement_reference
 				else
 					internal_brush := allocated_brushes.get(
 						Void, wel_fg_color)
@@ -757,6 +852,13 @@ feature {NONE} -- Implementation
 				end
 
 				if not internal_initialized_pen then
+
+						-- Reset `internal_pen'.
+					if internal_pen /= Void then
+						internal_pen.decrement_reference
+						internal_pen := Void
+					end
+
 					if dashed_line_style then
 						dmode := Ps_dot
 					else
@@ -778,8 +880,12 @@ feature {NONE} -- Implementation
 				dc.unselect_pen
 			end
 			dc.select_pen (empty_pen)
-			internal_initialized_pen := False
-			internal_pen := Void
+
+			if internal_pen /= Void then
+				internal_initialized_pen := False
+				internal_pen.decrement_reference
+				internal_pen := Void
+			end
 		end
 
 	remove_brush is
@@ -789,19 +895,40 @@ feature {NONE} -- Implementation
 				dc.unselect_brush
 			end
 			dc.select_brush (empty_brush)
-			internal_initialized_brush := False
-			internal_brush := Void
+
+			if internal_brush /= Void then
+				internal_initialized_brush := False
+				internal_brush.decrement_reference
+				internal_brush := Void
+			end
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Command
+
+	destroy is
+			-- Destroy actual object.
+		do
+			if internal_brush /= Void then
+				internal_brush.decrement_reference
+				internal_brush := Void
+			end
+			if internal_pen /= Void then
+				internal_pen.decrement_reference
+				internal_pen := Void
+			end
+			if internal_background_brush /= Void then
+				internal_background_brush.decrement_reference
+				internal_background_brush := Void
+			end
+
+			is_destroyed := True
+		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DRAWABLE
 
 feature {EV_DRAWABLE_IMP} -- Internal datas.
-
-	internal_font: EV_FONT
-			-- Font used to draw text.
 
 	internal_background_brush: WEL_BRUSH
 			-- Buffered background brush. Created in order to
@@ -850,41 +977,157 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 			create Result.make (Ps_null, 1, wel_fg_color)
 		end
 
-	allocated_pens: EV_GDI_ALLOCATED_PENS is
+feature {NONE} -- Non-applicable
+
+	wel_set_font (a_font: WEL_FONT) is
+			-- Make `a_font' new font of widget.
+		do
+		end
+
+feature {NONE} -- Constants
+
+	Drawing_constants: WEL_DRAWING_CONSTANTS is
+			-- WEL Drawing constants.
 		once
 			create Result
 		end
 
-	allocated_brushes: EV_GDI_ALLOCATED_BRUSHES is
-		once
-			create Result
-		end
+invariant
+	reference_tracked_on_brush:
+		internal_brush /= Void implies internal_brush.reference_tracked
+
+	brush_exists:
+		internal_brush /= Void implies internal_brush.exists
+
+	reference_tracked_on_pen:
+		internal_pen /= Void implies internal_pen.reference_tracked
 
 end -- class EV_DRAWABLE_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.29  2000/06/07 17:27:55  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.30  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.14.4.27  2001/05/23 23:42:57  rogers
+--| Modified arguments to `draw_arc', `draw_ellipse', `draw_pie_slice',
+--| `fill_ellipse', `fill_pie_slice', so we no longer pass two radii but a
+--| bounding box instead. Draw arc was never previously working. Also,
+--| where there was an apeture, corrected them, so they are drawn the correct
+--| way round, starting at 3 oclock and going anti clockwise.
+--|
+--| Revision 1.14.4.26  2001/05/18 16:34:22  rogers
+--| Removed destroy_just_called.
+--|
+--| Revision 1.14.4.25  2001/05/07 20:06:42  rogers
+--| Clear_rectangle now uses width and height instead of absolute coordinates.
+--|
+--| Revision 1.14.4.24  2001/05/07 16:21:56  pichery
+--| Fixed `draw_segment'. Calling `draw_segment (0, 0, 100, 0)' was not
+--| actually drawing an horizontal line
+--|
+--| Revision 1.14.4.23  2001/05/04 17:56:48  rogers
+--| Corrected draw_segment. Both end points are now included within the
+--| segment. Previously, the second point was not included in the line.
+--|
+--| Revision 1.14.4.22  2001/05/04 17:33:11  rogers
+--| Fixed clear_rectangle so that if the second set of coordinates is smaller
+--| than the first, the rectangle is still cleared including all coordinates.
+--|
+--| Revision 1.14.4.21  2001/05/04 16:18:23  rogers
+--| Fixed bug in clear_rectangle. The rectangle that was being drawn, did not
+--| include `x2', `y2'.
+--|
+--| Revision 1.14.4.20  2001/03/04 22:23:10  pichery
+--| - Added `on_drawing_modified' to track drawing modifications
+--| - renammed `bitmap' into `get_bitmap'
+--|
+--| Revision 1.14.4.19  2001/02/23 23:46:49  pichery
+--| Added tight reference tracking for wel_bitmaps.
+--|
+--| Revision 1.14.4.18  2000/11/30 22:13:08  gauthier
+--| Fixed speed bugs in `draw_polyline' and `fill_polygon'.
+--|
+--| Revision 1.14.4.17  2000/11/28 00:26:35  gauthier
+--| Added `draw_sub_pixmap'.
+--|
+--| Revision 1.14.4.16  2000/11/14 21:01:27  rogers
+--| Replaced instances of !! with create.
+--|
+--| Revision 1.14.4.15  2000/10/28 01:12:40  manus
+--| Inherits now from EV_FONTABLE_IMP for better font cache mechanism. This implies to rename
+--| `internal_font' into `private_font'.
+--|
+--| Revision 1.14.4.14  2000/10/27 02:07:59  manus
+--| Changed behavior of `our_background_brush' so that it always gets the current default
+--| background color. Before it was not the case, when you changed the color appearance of the
+--| Windows.
+--|
+--| Revision 1.14.4.13  2000/10/16 14:25:29  pichery
+--| Added reference tracking
+--|
+--| Revision 1.14.4.12  2000/10/03 19:08:19  gauthier
+--| Is now using `default_font', which is created once. This avoids adding one
+--| GDI object for each call to `initialize'.
+--|
+--| Revision 1.14.4.11  2000/09/13 18:23:59  manus
+--| Added EV_SHARED_GDI_OBJECTS that keeps track of most of brushes and pens allocated in Vision2.
+--| Now EV_SHARED_GDI_OJECTS is a heir to EV_DRAWABLE_IMP and EV_CONTAINER_IMP. The first, we just move
+--| the onces to the heir, for the second we use them in `on_color_control' in order to reuse brushes
+--| that are created since we cannot delete them right after their use.
+--|
+--| Revision 1.14.4.10  2000/08/18 18:14:39  brendel
+--| Corrected `draw_text'.
+--|
+--| Revision 1.14.4.9  2000/08/15 22:57:10  brendel
+--| Added `draw_text_top_left'.
+--|
+--| Revision 1.14.4.8  2000/08/11 19:14:01  rogers
+--| Fixed copyright clause. Now use ! instead of |. Formatting.
+--|
+--| Revision 1.14.4.7  2000/08/08 00:47:45  manus
+--| We now call `delete' on the region we create in `set_clip_area' and
+--| `remove_clip_area' to reduce the number of GDI objects. This should be taken
+--| care of by the GC, but it is better to do it manually because GC is not
+--| deterministic.
+--|
+--| `fill_rectangle' does the same job on Unix and Windows by adding 1 to
+--| `a_width' and `a_height'.
+--|
+--| Revision 1.14.4.6  2000/08/03 16:10:45  brendel
+--| Adapted `draw_ellipse' for fitting exacty in same_sized `draw_ellipse'.
+--| (This needs to be looked in for every fill operation)
+--|
+--| Revision 1.14.4.5  2000/06/27 08:20:00  pichery
+--| - Improved the function `draw_pixmaps'
+--| - Cosmetics
+--|
+--| Revision 1.14.4.4  2000/06/24 02:43:35  brendel
+--| Fixed screw-up.
+--|
+--| Revision 1.14.4.3  2000/06/23 16:02:16  rogers
+--| Set_background_color and set_foreground_color had some bad optimisations
+--| which would not allow you to reset one of them with a modified color that
+--| had already been used to set them with. This has been fixed.
 --|
 --| Revision 1.14.4.2  2000/05/27 01:54:07  pichery
 --| Cosmetics

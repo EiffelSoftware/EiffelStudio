@@ -1,8 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Implementation of a pick and drop source."
 	status: "See notice at end of class"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,26 +10,46 @@ deferred class
 inherit
 	EV_PICK_AND_DROPABLE_I
 
+	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
+		redefine
+			create_drop_actions
+		end
 
-	EV_PND_EVENTS_CONSTANTS_IMP
+	WEL_SYSTEM_METRICS
+
+feature {NONE} -- Initialization
+
+	create_drop_actions: EV_PND_ACTION_SEQUENCE is
+			-- Create a drop action sequence.
+		do
+			Result := Precursor
+			interface.init_drop_actions (Result)
+		end
 
 feature -- Access
 
 	capture_enabled: BOOLEAN is
 			-- Is the mouse currently captured?
-			-- See constants Capture_xxxx at the end of the class
+			-- See constants Capture_xxxx at the end of the class.
 		do
 			Result := internal_capture_status.item
 		end
 
 	capture_type: INTEGER is
-			-- Type of capture to use when capturing the mouse
-			-- See constants Capture_xxxx at the end of the class
+			-- Type of capture to use when capturing the mouse.
+			-- See constants Capture_xxxx at the end of the class.
 		do
 			Result := internal_capture_type.item
 		ensure
 			valid_result: Result = Capture_normal or
 						  Result = Capture_heavy
+		end
+
+	transport_executing: BOOLEAN is
+			-- Is a pick and drop or drag and drop currently
+			-- being executed?
+		do
+			Result := is_pnd_in_transport or is_dnd_in_transport
 		end
 
 feature -- Status setting
@@ -84,17 +102,9 @@ feature -- Status setting
 			when
 				Ev_pnd_end_transport
 			then
-				end_transport (a_x, a_y, a_button)
+				end_transport
+					(a_x, a_y, a_button, 0, 0, 0, a_screen_x, a_screen_y)
 			else
-				-- If there is no drag and drop on `Current' then
-				-- we make `Current' the topmost window as soon as
-				-- the left button is pressed. If there is drag and drop
-				-- on `Current' and a press did not lead to execution of the
-				-- drag and drop then this will happen during
-				-- check_drag_and_drop_release.
-				if a_button = 1 then
-					top_level_window_imp.move_to_foreground
-				end
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
@@ -108,18 +118,19 @@ feature -- Status setting
 			--| initial drag and drop execution is started, possibly before
 			--| movement thresh hold has been passed.
 		do
-			original_x := -1
-			original_y := -1
-			awaiting_movement := False
-			if mode_is_drag_and_drop and press_action =
-				Ev_pnd_end_transport then
-				end_transport (a_x, a_y, 1)
-			else
-				-- If we have not started an actual drag and drop then make
-				-- `Current' the topmost window. We have to wait for the release
-				-- if `Current' has drag and drop enabled which is true if
-				-- check_drag_and_drop_release has been called.
-				top_level_window_imp.move_to_foreground
+			if mode_is_drag_and_drop then
+				application_imp.end_awaiting_movement
+				if press_action = Ev_pnd_end_transport then
+					end_transport (a_x, a_y, 1, 0, 0, 0, 0, 0)
+					-- If Current has drag and drop, but we are waiting for the
+					-- mouse movement then we raise the window containing `Current'
+					-- to the foreground.
+				elseif awaiting_movement then
+						original_top_level_window_imp.move_to_foreground
+				end
+				original_x := -1
+				original_y := -1
+				awaiting_movement := False
 			end
 		end
 
@@ -129,8 +140,9 @@ feature -- Status setting
 			--| `Current' while pick/drag and drop is in process.
 		do
 			if awaiting_movement then
-				if (original_x - a_x).abs > 3 or (original_y - a_y).abs > 3 then
-					real_start_transport (original_x, original_y, 1,
+				if (original_x - a_x).abs > drag_and_drop_starting_movement or
+					(original_y - a_y).abs > drag_and_drop_starting_movement
+					then real_start_transport (original_x, original_y, 1,
 						original_x_tilt, original_y_tilt, original_pressure,
 						a_screen_x + (original_x - a_x), a_screen_y +
 						(original_y - a_y))
@@ -150,6 +162,20 @@ feature -- Status setting
 				end
 			end
 		end
+
+	escape_pnd is
+			-- Escape the pick and drop.
+		do
+			application_imp.clear_transport_just_ended
+				-- If we are executing a pick and drop
+			if application_imp.pick_and_drop_source /= Void then
+					-- We use default values which cause pick and drop to end.
+				application_imp.pick_and_drop_source.end_transport (0, 0, 2, 0, 0, 0,
+					0, 0)
+			end
+		ensure
+			not_in_transport: not transport_executing
+		end
 	
 
 feature {EV_ANY_I} -- Implementation
@@ -158,32 +184,68 @@ feature {EV_ANY_I} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Initialize the pick/drag and drop mechanism.
 		do
-			if mode_is_pick_and_drop and a_button = 3 then
-				real_start_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt,
-					a_pressure, a_screen_x, a_screen_y)
-			elseif mode_is_pick_and_Drop and a_button = 1 then
-				top_level_window_imp.move_to_foreground
-			elseif mode_is_drag_and_drop and a_button = 1 then
-				if not awaiting_movement then
-						-- Store arguments so they can be passed to
-						-- real_start_transport.
-					original_x := a_x
-					original_y := a_y
-					original_x_tilt := a_x_tilt
-					original_y_tilt := a_y_tilt
-					original_pressure := a_pressure
-					awaiting_movement := True
+			application_imp.clear_transport_just_ended
+			if mode_is_pick_and_drop and a_button /= 3 then
+			else	
+				call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
+				if pebble /= Void then
+					if mode_is_pick_and_drop and a_button = 3 then
+						real_start_transport (a_x, a_y, a_button, a_x_tilt,
+							a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+					elseif mode_is_drag_and_drop and a_button = 1 then
+						if not awaiting_movement then
+								-- Store arguments so they can be passed to
+								-- real_start_transport.
+							original_x := a_x
+							original_y := a_y
+							original_x_tilt := a_x_tilt
+							original_y_tilt := a_y_tilt
+							original_pressure := a_pressure
+							awaiting_movement := True
+							application_imp.start_awaiting_movement
+						end
+					elseif mode_is_target_menu and a_button = 3 then
+						(create {EV_ENVIRONMENT}).application.
+							implementation.target_menu (pebble).show
+					end
 				end
 			end
 		end
 		
+	modify_widget_appearance (starting: BOOLEAN) is
+			-- Modify the appearence of widgets to reflect current
+			-- state of pick and drop and dropable targets.
+			-- If `starting' then the pick and drop is starting,
+			-- else it is ending.
+		local
+			window_imp: EV_WINDOW_IMP
+			windows: LINEAR [EV_WINDOW]
+		do
+			windows := application_imp.windows
+			from
+				windows.start
+			until
+				windows.off
+			loop
+				window_imp ?= windows.item.implementation
+				check
+					window_implementation_not_void: window_imp /= Void
+				end
+				window_imp.update_for_pick_and_drop (starting)
+				windows.forth
+			end
+		end
+		
+
 	real_start_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Actually start the pick/drag and drop mechanism.
-		require else
+		require
 			not_already_transporting: not is_pnd_in_transport and
-				not is_dnd_in_transport 
+				not is_dnd_in_transport
+			original_window_void: original_top_level_window_imp = Void
 		local
+			pt, win_pt: WEL_POINT
 			env: EV_ENVIRONMENT
 		do
 			if
@@ -193,21 +255,31 @@ feature {EV_ANY_I} -- Implementation
 				--| Drag and drop is always started with the left button press.
 				--| Pick and drop is always started with the right button press.
 			then
+					-- We need to store `top_level_window_imp' for use later if `Current'
+					-- is unparented during the pick and drop execution.
+				original_top_level_window_imp := top_level_window_imp
+				
+					-- We now create the screen at the start of every pick.
+					-- See `pnd_screen' comment for explanation.
+				create pnd_screen
+
 				interface.pointer_motion_actions.block
 					-- Block `pointer_motion_actions'.
 
+					-- Update `application_imp' with pick_and_drop info.
+				application_imp.transport_started (Current)
+				
+				modify_widget_appearance (True)
+				
 				create env
-					-- Create `env'
-					--| See description for EV_ENVIRONMENT.
-				if pebble_function /= Void then
-					pebble_function.call ([a_x, a_y])
-					pebble := pebble_function.last_result
-					-- Set the data to be transported.
-				end
-				env.application.pick_actions.call ([pebble])
+
 					-- Execute pick_actions for the application.
-				interface.pick_actions.call ([a_x, a_y])
+				env.application.pick_actions.call ([pebble])
+
 					-- Execute pick_actions for `Current'.
+				if pick_actions_internal /= Void then
+					pick_actions_internal.call ([a_x, a_y])
+				end
 				if mode_is_pick_and_drop then
 					is_pnd_in_transport := True
 						-- Assign `True' to `is_pnd_in_transport'
@@ -217,9 +289,15 @@ feature {EV_ANY_I} -- Implementation
 				end
 				pointer_x := a_screen_x
 				pointer_y := a_screen_y
-				if pick_x = 0 and pick_y = 0 then
-					pick_x := a_screen_x
-					pick_y := a_screen_y
+				if pebble_positioning_enabled then
+					create pt.make (pick_x, pick_y)
+					create win_pt.make (a_screen_x, a_screen_y)
+					pt.client_to_screen (win_pt.window_at)
+					internal_pick_x := pt.x
+					internal_pick_y := pt.y
+				else
+					internal_pick_x := a_screen_x
+					internal_pick_y := a_screen_y
 				end
 				press_action := Ev_pnd_end_transport
 				motion_action := Ev_pnd_execute
@@ -227,24 +305,26 @@ feature {EV_ANY_I} -- Implementation
 				pnd_stored_cursor := cursor_pixmap
 				set_capture_type (Capture_heavy)
 
+					-- Assign correct pointer for transport.
+				update_pointer_style (pointed_target)
+
 					-- Start the capture (as late as possible because 
 					-- we can't debug when the capture is enabled)
-				enable_capture
+				internal_enable_capture
 			end
 		end
 
-	end_transport (a_x, a_y, a_button: INTEGER) is
+	end_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Terminate the pick and drop mechanism.
 		local
 			env: EV_ENVIRONMENT
-			target: EV_PICK_AND_DROPABLE
+			target: EV_ABSTRACT_PICK_AND_DROPABLE
 		do
-			io.putstring ("Transport Ended%N")
+			modify_widget_appearance (False)
 				-- Remove the capture (as soon as possible because we can't
-				-- debug
-				-- when the capture is enabled)
+				-- debug when the capture is enabled)
 			disable_capture
-
 				-- Return capture type to capture_normal.
 				--| normal capture only works on the current windows thread.
 			set_capture_type (Capture_normal)
@@ -255,12 +335,29 @@ feature {EV_ANY_I} -- Implementation
 				-- Remove the line drawn from source position to Pointer.
 			erase_rubber_band
 
+				-- Restore the cursor.
+			if pnd_stored_cursor /= Void then
+					-- Restore the cursor style of `Current' if necessary.
+				internal_set_pointer_style (pnd_stored_cursor)
+			else
+					-- Restore the standard cursor style.
+				internal_set_pointer_style (Default_pixmaps.Standard_cursor)
+			end
+
+			create env
+			
+			application_imp.transport_ended
+
+			application_imp.set_transport_just_ended
+
 			if
 				(a_button = 3 and is_pnd_in_transport) or
 				(a_button = 1 and is_dnd_in_transport)
-				-- Check that transport can be started.
+				-- Check that transport can be ended.
 				--| Drag and drop is always ended with the left button release.
 				--| Pick and drop is always ended with the right button press.
+				--| Drop actions only need to be called if the transport
+				--| has actually ended correctly.
 			then
 				target := pointed_target
 					-- Retrieve `target'.
@@ -274,48 +371,36 @@ feature {EV_ANY_I} -- Implementation
 				-- Return state ready for next drag/pick and drop.
 			interface.pointer_motion_actions.resume
 				-- Resume `pointer_motion_actions'.
-			create env
+			
 			env.application.drop_actions.call ([pebble])
 				-- Execute drop_actions for the application.
 			is_dnd_in_transport := False
 			is_pnd_in_transport := False
-			pick_x := 0
-			pick_y := 0
 			last_pointed_target := Void
 				-- Assign `Void' to `last_pointer_target'.
-			if pnd_stored_cursor /= Void then
-					-- Restore the cursor style of `Current' if necessary.
-				set_pointer_style (pnd_stored_cursor)
-			else
-					-- Restore the standard cursor style.
-				set_pointer_style (Default_pixmaps.Standard_cursor)
-			end
 			press_action := Ev_pnd_start_transport
 			if pebble_function /= Void then
 				pebble := Void
 			end
+			original_top_level_window_imp.allow_movement
+			original_top_level_window_imp := Void
+		ensure then
+			original_window_void: original_top_level_window_imp = Void
+			press_action_Reset: press_action = Ev_pnd_start_transport
+			not_has_capture: internal_capture_status = False
 		end
 
-	pointed_target: EV_PICK_AND_DROPABLE is
+	real_pointed_target: EV_PICK_AND_DROPABLE is
 			-- Hole at mouse position
 		local
 			wel_point: WEL_POINT
-			current_target: EV_PICK_AND_DROPABLE
+			current_target: EV_ABSTRACT_PICK_AND_DROPABLE
 			widget_imp_at_cursor_position: EV_WIDGET_IMP
 			wel_window_at_cursor_position: WEL_WINDOW
-			list: EV_LIST
-			list_imp: EV_LIST_IMP
-			list_item: EV_LIST_ITEM_IMP
-			tree: EV_TREE			
-			tree_imp: EV_TREE_IMP
-			tree_item: EV_TREE_NODE_IMP
-			mcl: EV_MULTI_COLUMN_LIST
-			mcl_imp: EV_MULTI_COLUMN_LIST_IMP
-			mcl_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 			current_target_object_id: INTEGER
-			tb: EV_TOOL_BAR
-			tb_imp: EV_TOOL_BAR_IMP
-			tb_item: EV_TOOL_BAR_BUTTON_IMP
+			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM]
+			item_imp: EV_ITEM_IMP
+			sensitive: EV_SENSITIVE
 		do
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
@@ -328,95 +413,40 @@ feature {EV_ANY_I} -- Implementation
 				widget_imp_at_cursor_position ?= wel_window_at_cursor_position
 					-- Retrieve the implementation of the Vision2 Widget at
 					-- Cursor position and check it is not Void.
-				check 
-					widget_imp_at_cursor_position /= Void
-				end
-	
-				current_target := widget_imp_at_cursor_position.interface
-					-- Current pick and drop target is the interface of 
-
-				current_target_object_id := current_target.object_id
-						-- The current_target_object_id is set to the widget.
-						-- If a widget holds items, we now need to check that
-						-- the correct target is in fact one of its children.
-					
-				list ?= current_target
-				if list /= Void then
-					list_imp ?= list.implementation
-							-- Retrieve implementation of list.
-					check	
-						list_imp /= Void
-					end
-					list_item := list_imp.find_item_at_position (
-					wel_point.x - list.screen_x, wel_point.y - list.screen_y)
-							-- Return list item at cursor position.
-					if list_item /= Void then
-						if not list_item.interface.drop_actions.empty then
-				-- If the cursor is over an item and the item is a
-				-- pick and drop target then we set the target id to that of the
-				-- item, as the items are conceptually 'above' the list and so
-				-- if a list and one of its items are pnd targets then the 
-				-- item should recieve.
-							current_target_object_id :=
-								list_item.interface.object_id
-						end
-					end
-				end
 				
-				tree ?= current_target
-				if tree /= Void then
-					tree_imp ?= tree.implementation
-							-- Retrieve implementation of tree.
-					check	
-						tree_imp /= Void
-					end
-					tree_item := tree_imp.find_item_at_position (
-					wel_point.x - tree.screen_x, wel_point.y - tree.screen_y)
-							-- Return list item at cursor position.
-					if tree_item /= Void then
-						if not tree_item.interface.drop_actions.empty then
-							current_target_object_id :=
-								tree_item.interface.object_id
-						end
-					end
-				end
+				if widget_imp_at_cursor_position /= Void then	
+					current_target := widget_imp_at_cursor_position.interface
+						-- Current pick and drop target is the interface of 
 
-				mcl ?= current_target
-				if mcl /= Void then
-					mcl_imp ?= mcl.implementation
-							-- Retrieve implementation of tree.
-					check	
-						mcl_imp /= Void
-					end
-					mcl_item := mcl_imp.find_item_at_position (
-					wel_point.x - mcl.screen_x, wel_point.y - mcl.screen_y)
-							-- Return list item at cursor position.
-					if mcl_item /= Void then
-						if not mcl_item.interface.drop_actions.empty then
-							current_target_object_id :=
-								mcl_item.interface.object_id
-						end
-					end
-				end
+					current_target_object_id := current_target.object_id
+							-- The current_target_object_id is set to the
+							-- widget.
+							-- If a widget holds items, we now need to check
+							-- that the correct target is in fact one of its
+							-- children.
 
-				tb ?= current_target
-				if tb /= Void then
-					tb_imp ?= tb.implementation
-							-- Retrieve implementation of tree.
-					check	
-						tb_imp /= Void
-					end
-					tb_item := tb_imp.find_item_at_position (
-					wel_point.x - tb.screen_x, wel_point.y - tb.screen_y)
-							-- Return list item at cursor position.
-					if tb_item /= Void then
-						if not tb_item.interface.drop_actions.empty then
-							current_target_object_id :=
-								tb_item.interface.object_id
-						end
-					end
-				end
 					
+					item_list_imp ?= widget_imp_at_cursor_position
+					if item_list_imp /= Void then
+						item_imp ?= item_list_imp.find_item_at_position (wel_point.x
+							- item_list_imp.screen_x, wel_point.y - item_list_imp.screen_y)
+						if item_imp /= Void then
+						if not item_imp.interface.drop_actions.is_empty then
+								-- If the cursor is over an item and the item is a
+								-- pick and drop target then we set the target id to that of the
+								-- item, as the items are conceptually 'above' the list and so
+								-- if a list and one of its items are pnd targets then the 
+								-- item should recieve.
+							sensitive ?= item_imp.interface
+								-- If an item is not `sensitive' then it cannot be dropped on.
+							if sensitive = Void or (sensitive /= Void and then sensitive.is_sensitive) then
+								Current_target_object_id := item_imp.interface.object_id
+							end
+						end
+						end
+					end
+				end
+						
 				global_pnd_targets.start
 				global_pnd_targets.search (current_target_object_id)
 				if not global_pnd_targets.exhausted then
@@ -425,19 +455,31 @@ feature {EV_ANY_I} -- Implementation
 					Result ?= interface.id_object (global_pnd_targets.item)
 				end
 			end
-		end 
+		end
+
+	query_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER): ANY is
+			-- `Result' is result of `pebble_function'.
+		do
+			if pebble_function /= Void then
+				pebble_function.call ([a_x, a_y])
+				Result := pebble_function.last_result
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 
 	is_pnd_in_transport: BOOLEAN
 		-- Is `Current' executing pick and drop?
+
 	is_dnd_in_transport: BOOLEAN
 		-- Is `Current' executing drag and drop?
 	
 	press_action: INTEGER
 		-- State which is used to decide action on pick/drag and drop press.
+
 	release_action: INTEGER
 		-- State which is used to describe action on pick/drag and drop release.
+
 	motion_action: INTEGER
 		-- State which is used to describe action on pick/drab and drop
 		-- pointer motion.
@@ -453,16 +495,21 @@ feature {EV_ANY_I} -- Implementation
 		-- Hold the last position that the rubber band was drawn to.
 		--| Used to stop unecessary re-draw of the band when no movement.
 
+	internal_pick_x, internal_pick_y: INTEGER
+		-- Rubber band starting position.
+		-- Only initialised when a pick/drag and drop is started.
 
+	original_x, original_y: INTEGER
+	original_x_tilt, original_y_tilt, original_pressure: DOUBLE
 		-- Hold the values passed to start transport so when a drag and drop
 		-- actually starts, with real_start_transport,these can be passed
 		-- as arguments.
-	original_x, original_y: INTEGER
-	original_x_tilt, original_y_tilt, original_pressure: DOUBLE
 
-		-- Is a drag and drop awaiting mouse movement?
 	awaiting_movement: BOOLEAN
+		-- Is a drag and drop awaiting mouse movement?
 
+	drag_and_drop_starting_movement: INTEGER is 3
+		-- Pointer movement in pixels required to start a drag and drop.
 
 	cursor_pixmap: EV_CURSOR
 			-- Cursor used on the widget.
@@ -471,31 +518,62 @@ feature {EV_ANY_I} -- Implementation
 			-- Cursor used on the widget before PND started.
 
 	set_pointer_style (new_cursor: EV_CURSOR) is
-			-- Make `new_cursor' the new cursor of the widget
+			-- Assign `new_cursor' to cursor used on `Current'.
+			-- Can be called through `interface'.
+		do
+				-- PND overrides the cursor of `Current' so
+				-- if we are currently executing PND then we must store
+				-- `new_cursor' in `pnd_stored_cursor' which holds the cursor
+				-- that is restored when the PND ends.
+			if not transport_executing then
+				internal_set_pointer_style (new_cursor)
+			end
+			pnd_stored_cursor := new_cursor
+		end
+
+	internal_set_pointer_style (new_cursor: EV_CURSOR) is
+			-- Assign `new_cursor' to cursor used on `Current'.
+			-- Only called through implementation.
 		local
 			wel_cursor: WEL_CURSOR
 			cursor_imp: EV_PIXMAP_IMP_STATE
 		do
-			if new_cursor /= Void then
-				cursor_pixmap := new_cursor
-				if cursor_on_widget.item = Current then
-					cursor_imp ?= cursor_pixmap.implementation
-					wel_cursor := cursor_imp.cursor
-					if wel_cursor = Void then
-						wel_cursor := cursor_imp.build_cursor
-					end
---| FIXME ARNAUD:
---| Windows 95: The width and height of the cursor must be the values returned
---|	by the GetSystemMetrics  function for SM_CXCURSOR and SM_CYCURSOR. In
---| addition, either the cursor bit depth must match the bit depth of the
---| display or the cursor must be monochrome. 
---| See MSDN:Platform SDK:Windows User Interface:SetCursor
-					wel_cursor.set
-				end
+				-- We do a global setting. This means that if the widget
+				-- where the cursor is has a different cursor than
+				-- `new_cursor' it will flash, but this is better than to
+				-- wait until the on_set_cursor event (WM_SETCURSOR) is
+				-- called to change the shape of the cursor.
+			cursor_pixmap := new_cursor
+			cursor_imp ?= cursor_pixmap.implementation
+			wel_cursor := cursor_imp.cursor
+			if wel_cursor = Void then
+				wel_cursor := cursor_imp.build_cursor
+				wel_cursor.enable_reference_tracking
 			else
-				cursor_imp := Void
+				wel_cursor.increment_reference
 			end
+				-- The cursor has been just built from `cursor_imp'
+				-- so we can use it's width and height to check they match
+				-- the cursor size from WEL_SYSTEM_METRICS.
+				--| If we are running on Windows 95 we need to check that
+				--| the cursor size is valid.	 	
+			check
+				cursor_size_valid: (create {WEL_WINDOWS_VERSION}
+					).is_windows_95
+					implies (cursor_imp.width = cursor_width and
+					cursor_imp.height = cursor_height)
+			end
+			
+			if current_wel_cursor /= Void then
+				current_wel_cursor.decrement_reference
+				current_wel_cursor := Void
+			end
+			current_wel_cursor := wel_cursor
+			wel_cursor.set
 		end
+		
+	current_wel_cursor: WEL_CURSOR
+			-- Current cursor set, Void if none.
 
 	cursor_on_widget: CELL [EV_WIDGET_IMP] is
 			-- Cursor of `Current'.
@@ -520,7 +598,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			pnd_screen.set_invert_mode
 			pnd_screen.draw_segment
-				(pick_x, pick_y, old_pointer_x, old_pointer_y)
+				(internal_pick_x, internal_pick_y, old_pointer_x, old_pointer_y)
 		end
 
 	erase_rubber_band  is
@@ -532,14 +610,25 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	pnd_screen: EV_SCREEN is
-			-- `Result' is screen, used for drawing rubber band.
-		once
-			create Result
-		end
+	pnd_screen: EV_SCREEN
+			-- Screen, used for drawing rubber band.
+		--| This was previously a `Once' function, but on Windows 98,
+		--| the screen appeared to become corrupted from time to time.
+		--| We now create this screen in `real_start_transport' which
+		--| is a reasonable trade off. When EV_SCREEN is fixed on Win98
+		--| Then this can be a once again.
 
 	enable_capture is
+			-- Enable capture.
+			--| Accessible through the interface of widget.
+		do
+			set_capture_type (Capture_heavy)
+			internal_enable_capture
+		end
+
+	internal_enable_capture is
 			-- Grab all user events.
+			--| Not accessible through the interface of widget.
 		do
 			inspect capture_type
 			when Capture_heavy then
@@ -564,6 +653,13 @@ feature {EV_ANY_I} -- Implementation
 			-- Top level window that contains `Current'.
 		deferred
 		end
+
+	original_top_level_window_imp: EV_WINDOW_IMP
+			-- Top level window of `Current' at start of transport.
+			-- We need this, as `Current' may be removed from its parent
+			-- during the transport, therefore making it impossible for us
+			-- to call `top_level_window_imp' after this has occurred as it
+			-- recursively checks the parents of `Currents'.
 
 	set_heavy_capture is
 		deferred
@@ -596,6 +692,19 @@ feature {EV_ANY_I} -- Implementation
 			Create Result
 		end
 
+feature {NONE} -- Implementation
+
+	application_imp: EV_APPLICATION_IMP is
+			-- `Result' is implementation of application from environment.
+		local
+			environment: EV_ENVIRONMENT
+		do
+			create environment
+			Result ?= environment.application.implementation
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 feature -- Public constants
 
 	Capture_heavy: INTEGER is 1
@@ -610,29 +719,296 @@ feature -- Public constants
 
 end -- class EV_PICK_AND_DROPABLE_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.30  2000/06/07 17:27:54  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.31  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.8.8.79  2001/06/04 22:12:39  rogers
+--| Removed redundent require else.
+--|
+--| Revision 1.8.8.78  2001/05/01 00:00:05  rogers
+--| Improved comment.
+--|
+--| Revision 1.8.8.77  2001/03/20 18:23:39  rogers
+--| Pnd_Screen is no longer a once function, but created at the start of
+--| each transport in `real_start_transport'. This fixes a problem with the
+--| screen on Windows 98.
+--|
+--| Revision 1.8.8.76  2001/03/16 19:26:28  rogers
+--| Added modify_widget_appearence.
+--|
+--| Revision 1.8.8.75  2001/02/25 17:55:24  pichery
+--| Added tight reference tracking for GDI objects.
+--|
+--| Revision 1.8.8.74  2001/02/23 23:42:30  pichery
+--| Added reference tracking for the current cursor.
+--|
+--| Revision 1.8.8.73  2001/02/16 19:20:30  rogers
+--| Removed unreferenced variable from application_imp.
+--|
+--| Revision 1.8.8.72  2001/02/16 17:24:36  rogers
+--| Added `original_top_level_window_imp'. As `Current' may be un parented
+--| during a pick and drop, we need to know the original
+--| `top_level_window_imp' at the end of the pick/drag and drop.
+--|
+--| Revision 1.8.8.71  2001/02/13 23:11:50  rogers
+--| Added query_pebble_function.
+--|
+--| Revision 1.8.8.70  2001/02/10 01:39:40  rogers
+--| Added application_imp which reduces repeated code in `Current'.
+--|
+--| Revision 1.8.8.68  2001/02/08 18:04:56  rogers
+--| Removed unecessary calls to `move_to_foreground' on `top_level_window_imp'.
+--|
+--| Revision 1.8.8.67  2001/02/06 20:22:08  rogers
+--| End_transport calls allow_movement on `top_level_window_imp. This fixes a
+--| bug when cancelling a pick and drop, and then attempting to raise the
+--| `top_level_window_imp' with alt-tab on the keyboard.
+--|
+--| Revision 1.8.8.66  2001/02/06 01:45:18  rogers
+--| Modified real_pointed_target. There is no longer a relience on knowing
+--| about each time of item and holder. One general check is now done when
+--| checking if an item is the target. This greatly simplifies the code and
+--| will make it much easier to add new cases.
+--|
+--| Revision 1.8.8.65  2001/01/31 17:22:42  rogers
+--| Added post condition to escape_pnd. Comments.
+--|
+--| Revision 1.8.8.64  2001/01/29 21:27:47  rogers
+--| Optimized transport_executing.
+--|
+--| Revision 1.8.8.63  2001/01/29 21:05:43  rogers
+--| implemented internal_set_pointer_style with previous implementation from
+--| set_pointer_style. set_pointer_style now calls internal_set_pointer_style
+--| when necessary. This fixes a bug in setting the pointer_style of a widget
+--| when in a pick and drop started from that widget.
+--|
+--| Revision 1.8.8.62  2001/01/22 21:14:15  rogers
+--| Real_start_transport now calls update_pointer_style to update the
+--| current cursor. This fixes a bug whereby you would have to move the
+--| mouse for the cursor to be updated after starting a pick and drop.
+--|
+--| Revision 1.8.8.61  2001/01/19 19:20:16  rogers
+--| Removed previous commit. The bug was fixed but it introduced a bug with
+--| restoring the cursor after use. Both bugs can be fixed as soon as we have
+--| a way of knowing in `Current' whether seT_pointer_style was called from the
+--| interface or the pick and drop implementation in EV_PICK_AND_DROPABLE_I.
+--|
+--| Revision 1.8.8.60  2001/01/18 18:41:13  rogers
+--| Fixed bug in set_pointer_style. If set_pointer_style is called during
+--| a pick/drag and drop, then we now store the new pointer style for use when
+--| restoring the cursor after transport.
+--|
+--| Revision 1.8.8.59  2001/01/16 22:43:14  rogers
+--| Fixed bug in check_drag_and_drop_release. If the release has occured
+--| before the real transport has started (i.e. awaiting_movement := True)
+--| then we must raise the top level window to the foreground.
+--|
+--| Revision 1.8.8.58  2001/01/02 19:17:08  rogers
+--| Formatting to 80 columns.
+--|
+--| Revision 1.8.8.57  2000/12/29 00:31:02  rogers
+--| Removed call_press_event, discard_press_event and keep_press_event.
+--|
+--| Revision 1.8.8.56  2000/12/15 19:48:52  rogers
+--| Fixed a bug in real_start_transport. If you had a very slow pebble function
+--| and had pebble_positioning enabled, if the mouse was moved over another
+--| widget during the pebble functions execution, then the band would be drawn
+--| relative to the wrong widget.
+--|
+--| Revision 1.8.8.55  2000/12/15 18:28:27  rogers
+--| Fixed bugs with the pebble_position. Once set, it now remains. Added
+--| internal_pick_x, internal_pick_y.
+--|
+--| Revision 1.8.8.54  2000/12/08 03:10:24  manus
+--| Check for Windows 95 is done within the check to avoid useless computation.
+--|
+--| Revision 1.8.8.53  2000/12/07 00:25:11  rogers
+--| The application is retrieved and notified of the pick and drop ending
+--| before we call the drop_actions. It was previously called after, and
+--| would cause a system to crash if a dialog was displayed during the
+--| drop_actions and that dialog was then closed by pressing escape.
+--| Comment improvement.
+--|
+--| Revision 1.8.8.52  2000/12/04 23:34:58  rogers
+--| Set_pointer_style now queries is_windows95 instead of is_windows_95 for
+--| compilation on 4.5 which uses an old version of WEL_WINDOWS_VERSION.
+--|
+--| Revision 1.8.8.51  2000/12/04 22:29:31  rogers
+--| Set_pointer_style now only checks that the size of the cursor is correct
+--| if Windows 95 is being used. This check is not required for other
+--| versions.
+--|
+--| Revision 1.8.8.50  2000/11/28 21:34:20  manus
+--| Renamed call to `empty' into `is_empty' as now defined in CONTAINER.
+--|
+--| Revision 1.8.8.49  2000/11/27 22:56:52  rogers
+--| Fixed bug in real_pointed_target, where a disabled tool bar button with
+--| drop_actions would still be set as the target when the mouse was over it.
+--| This was overlooked probabably because most items do not inherit
+--| EV_SENSITIVE.
+--|
+--| Revision 1.8.8.48  2000/11/27 19:13:10  rogers
+--| Added call_press_event, discard_press_event and keep_press_event, for use
+--| internally so we can cancel the press_actions when a pick and drop is
+--| cancelled.
+--|
+--| Revision 1.8.8.47  2000/11/14 19:55:16  rogers
+--| Improved comment on disable_capture.
+--|
+--| Revision 1.8.8.46  2000/11/14 19:41:06  rogers
+--| Streamlined enable_capture. Comments.
+--|
+--| Revision 1.8.8.44  2000/11/07 01:09:04  rogers
+--| Fixed real_start_transport. I had mistakenly commited a change in the
+--| capture type from heavy to normal.
+--|
+--| Revision 1.8.8.43  2000/11/06 17:45:47  rogers
+--| Renamed pnd_escape to escape_pnd. Removed a_key from the parameters.
+--|
+--| Revision 1.8.8.42  2000/11/03 23:45:19  rogers
+--| Modified real_start_transport and end_transport so they now update the
+--| application.
+--|
+--| Revision 1.8.8.41  2000/11/02 18:39:55  rogers
+--| Corrected start_transport so that if we are not starting a transport,
+--|  `Current' is now raised to the foreground before checking that the
+--| pebble /= Void.
+--|
+--| Revision 1.8.8.40  2000/11/02 17:51:27  rogers
+--| Pressing any button apart from the right will raise `Current' to the
+--| foreground. The exception is pressing the left button when drag and drop is
+--| enabled on `Current'.
+--|
+--| Revision 1.8.8.38  2000/10/31 23:49:18  rogers
+--| Fixed bug in check_drag_and_drop_release. previously,
+--| `top_level_window_imp' would be raised to the foreground even if there
+--| was no drag and drop on `Current'. This caused `top_level_window_imp' to
+--| be raised to the foreground twice when a left button was pressed on a
+--| widget without drag and drop.
+--|
+--| Revision 1.8.8.37  2000/10/31 19:47:19  rogers
+--| Now inherits WEL_SYSTEM_METRICS so we can check that the cursor width and
+--| height correspond to those of windows before setting a new_cursor.
+--|
+--| Revision 1.8.8.36  2000/10/25 23:08:48  rogers
+--| Please ignore last log message for this file. Should have read:
+--| modified transport_executing and minor formatting.
+--|
+--| Revision 1.8.8.33  2000/10/24 18:47:17  king
+--| Updated end_transport signature
+--|
+--| Revision 1.8.8.32  2000/09/23 00:22:47  manus
+--| Fixed `set_pebble_position' that was working on global screen position and
+--| not relative to current widget: fix is in `real_start_transport' where
+--| pick_x and pick_y are computed correctly to do the conversion client to
+--| screen coordinates.
+--|
+--| Revision 1.8.8.31  2000/09/22 23:24:08  manus
+--| Cosmetics
+--| Fixed a windows bug where calling `set_pointer_style' did not change the
+--| cursor shape until we process the event loop (through a WM_SETCURSOR
+--| callback). Now it change it right away which can make the cursor blinks
+--| if cursor associated with current widget is different from the one we
+--| just set.
+--|
+--| Revision 1.8.8.30  2000/09/13 15:40:20  manus
+--| Removed a useless `else' clause in `set_pointer_stylee'.
+--|
+--| Revision 1.8.8.29  2000/09/06 02:26:00  manus
+--| Cosmetics
+--|
+--| Revision 1.8.8.28  2000/08/14 23:51:06  rogers
+--| Fixed bug in end_transport. The cursor is now restored to its original
+--| state before the drop_actions are executed.
+--|
+--| Revision 1.8.8.27  2000/08/11 20:51:41  king
+--| Removed setting of widget_x/y
+--|
+--| Revision 1.8.8.26  2000/08/11 19:14:28  rogers
+--| Fixed copyright clause. Now use ! instead of |.
+--|
+--| Revision 1.8.8.25  2000/08/10 22:58:51  rogers
+--| Removed FIXME_NOT_REVIEWED. Comments, formatting to 80 columns.
+--|
+--| Revision 1.8.8.24  2000/08/04 00:40:36  rogers
+--| Replaced action sequence calls through the interface of `Current' with
+--| calls to the internal action sequences.
+--|
+--| Revision 1.8.8.23  2000/07/25 18:51:43  brendel
+--| Changed type of real_pointed_target to EV_PICK_AND_DROPABLE.
+--|
+--| Revision 1.8.8.22  2000/07/25 16:04:50  brendel
+--| Fixed precursor call.
+--|
+--| Revision 1.8.8.21  2000/07/25 15:52:25  brendel
+--| Redefined create_drop_actions.
+--|
+--| Revision 1.8.8.20  2000/07/24 22:44:32  rogers
+--| Now inherits EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP.
+--|
+--| Revision 1.8.8.19  2000/07/24 19:39:43  rogers
+--| Moved call_pebble_function up so it is platform independent.
+--|
+--| Revision 1.8.8.18  2000/07/24 17:39:14  king
+--| Now setting widget_x/y b4 call to pointed target
+--|
+--| Revision 1.8.8.17  2000/07/17 20:48:38  brendel
+--| EV_PICK_AND_DROPABLE -> EV_ABSTRACT_PICK_AND_DROPABLE.
+--|
+--| Revision 1.8.8.16  2000/07/17 17:55:09  brendel
+--| pointed_target -> real_pointed_target.
+--| TEMPORARILY added call_pebble_function.
+--|
+--| Revision 1.8.8.15  2000/07/13 01:51:42  brendel
+--| Now does not start PND anymore when pebble_function returns a Void pebble.
+--|
+--| Revision 1.8.8.14  2000/07/12 22:20:53  brendel
+--| Added check for `target_menu_mode' in `start_transport'. If this is
+--| True, show the context menu for `pebble'.
+--|
+--| Revision 1.8.8.13  2000/07/12 16:17:13  rogers
+--| Very minor format.
+--|
+--| Revision 1.8.8.12  2000/07/10 17:50:15  rogers
+--| Corrected the start trasnsport type within real_start_transport.
+--|
+--| Revision 1.8.8.11  2000/06/27 20:14:24  rogers
+--| Fixed bug in Pointed target. Pointed target previously assumed that all
+--| wel_window's pointed at had a corresponding EV_wIDGET_IMP. This is not
+--| true for EV_COMBO_bOX_IMP. So now we check that
+--| widget_imp_at_cursor_position is not void before checking the PND.
+--|
+--| Revision 1.8.8.10  2000/06/22 16:18:45  rogers
+--| Removed debugging io.putstring from end_transport.
+--|
+--| Revision 1.8.8.9  2000/06/12 23:49:12  rogers
+--| Removed inheritence from EV_PND_EVENTS_CONSTANTS_IMP as they were not
+--| referenced at all.
+--|
+--| Revision 1.8.8.8  2000/06/09 17:41:03  rogers
+--| Added drag_and_drop_starting_movement which is the movement required in
+--| pixels, for a drag and drop to start. This removes some `magic' numbers.
 --|
 --| Revision 1.8.8.7  2000/05/30 16:30:00  rogers
 --| Removed unreferenced local variables.

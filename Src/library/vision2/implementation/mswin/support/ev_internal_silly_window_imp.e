@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" A silly window that doesn't do anything. Used%
@@ -21,7 +20,6 @@ inherit
 		redefine
 			on_wm_vscroll,
 			on_wm_hscroll,
-			on_draw_item,
 			default_style,
 			on_wm_notify
 		end
@@ -38,7 +36,7 @@ create
 feature {NONE} -- Implementation
 
 	default_style: INTEGER is
-			-- Default style of the window.
+			-- Windows default style used in creation of `Current'.
 		do
 			Result := Ws_overlappedwindow
 		end
@@ -49,7 +47,7 @@ feature {NONE} -- Implementation
 			-- But as we can't implement a deferred feature
  			-- with an external, it is not possible.
  		local
- 			gauge: EV_GAUGE_IMP
+			range: EV_RANGE_IMP
  			p: POINTER
  		do
 			-- To avoid the commands to be call two times, we check that
@@ -57,18 +55,23 @@ feature {NONE} -- Implementation
 			if cwin_lo_word (wparam) /= Sb_endscroll then
 	 			p := cwin_get_wm_vscroll_hwnd (wparam, lparam)
 	 			if p /= default_pointer then
-	 				-- The message comes from a gauge,
- 					gauge ?= window_of_item (p)
-						if gauge /= Void then
-	 						check
- 							gauge_exists: gauge.exists
- 						end
- 						--| FIXME gauge.execute_command (gauge.Cmd_gauge, Void)
- 					end
+		 				-- The message comes from a gauge
+						-- If it is a range then we need to call the change actions.
+ 					range ?= window_of_item (p)
+					if range /= Void then
+ 						check
+ 							range_exists: range.exists
+						end
+						if range.change_actions_internal /= Void then
+							range.change_actions_internal.call
+								([range.interface.value])
+						end
+					end
  				else
- 					-- The message comes from a window scroll bar
- 					on_vertical_scroll (cwin_get_wm_vscroll_code (wparam, lparam),
- 						cwin_get_wm_vscroll_pos (wparam, lparam))
+ 						-- The message comes from a window scroll bar
+ 					on_vertical_scroll (cwin_get_wm_vscroll_code
+						(wparam, lparam), cwin_get_wm_vscroll_pos
+						(wparam, lparam))
  				end
 			end
  		end
@@ -76,7 +79,7 @@ feature {NONE} -- Implementation
  	on_wm_hscroll (wparam, lparam: INTEGER) is
  			-- Wm_hscroll message.
  		local
- 			gauge: EV_GAUGE_IMP
+ 			range: EV_RANGE_IMP
  			p: POINTER
  		do
 			-- To avoid the commands to be call two times, we check that
@@ -84,18 +87,23 @@ feature {NONE} -- Implementation
 			if cwin_lo_word (wparam) /= Sb_endscroll then
 	 			p := cwin_get_wm_hscroll_hwnd (wparam, lparam)
 	 			if p /= default_pointer then
-	 				-- The message comes from a gauge
-	 				gauge ?= window_of_item (p)
-	 				if gauge /= Void then
+	 					-- The message comes from a gauge
+						-- If it is a range then we need to call the change actions.
+	 				range ?= window_of_item (p)
+	 				if range /= Void then
 	 					check
-	 						gauge_exists: gauge.exists
+	 						range_exists: range.exists
 	 					end
-	 					--| FIXME gauge.execute_command (gauge.Cmd_gauge, Void)
+	 					if range.change_actions_internal /= Void then
+							range.change_actions_internal.call
+								([range.interface.value])
+						end
 	 				end
 				else
- 					-- The message comes from a window scroll bar
- 					on_horizontal_scroll (cwin_get_wm_hscroll_code (wparam, lparam),
-						cwin_get_wm_hscroll_pos (wparam, lparam))
+ 						-- The message comes from a window scroll bar
+ 					on_horizontal_scroll (cwin_get_wm_hscroll_code
+						(wparam, lparam), cwin_get_wm_hscroll_pos
+						(wparam, lparam))
  				end
 			end
  		end
@@ -106,11 +114,11 @@ feature {NONE} -- Implementation
 			info: WEL_NMHDR
 			ww: WEL_WINDOW
 		do
-			!! info.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create info.make_by_pointer (cwel_integer_to_pointer (lparam))
 			if
-				children.has (info.window_from)
+				has_child (info.window_from)
 			then
-				{WEL_FRAME_WINDOW} Precursor (wparam, lparam)
+				Precursor {WEL_FRAME_WINDOW} (wparam, lparam)
 			else
 				-- message has been sent to the wrong window (the old parent)
 				-- this is a win32 bug
@@ -123,7 +131,7 @@ feature {NONE} -- Implementation
 
 				if info.window_from /= Void then
 					ww := info.window_from.parent
-					if ww /= Void then
+					if ww /= Void and then ww /= Current then
 						ww.increment_level
 						ww.on_wm_notify (wparam, lparam)
 						if
@@ -137,41 +145,86 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_draw_item (id: INTEGER; struct: WEL_DRAW_ITEM_STRUCT) is
-			-- If wm_draw is recieved for a status bar then
-			-- Re-draw `bar'.
+feature {NONE} -- Implemetation
+
+	has_child (w: WEL_WINDOW): BOOLEAN is
+			-- Is `w' a child of Current?
+		require
+			exists: exists
+			w_exists: w /= Void implies w.exists
+		local
+			hwnd, win: POINTER
 		do
-	--		bar ?= struct.window_item
-	--		if bar /= Void then
-	--			bar.draw_item (id, struct)		
-	--		end
+			if w /= Void then
+				from
+					hwnd := cwin_get_window (item, Gw_child)
+					win := w.item
+				until
+					hwnd = default_pointer or Result
+				loop
+					Result := win = hwnd
+					hwnd := cwin_get_window (hwnd, Gw_hwndnext)
+				end
+			end
 		end
-		 		
+
 end -- class EV_INTERNAL_SILLY_WINDOW_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.10  2000/06/07 17:27:57  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.11  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.2.10  2001/05/16 02:32:37  manus
+--| Implemented `has_child': fast way of finding if a given window is a direct
+--| child of Current.
+--|
+--| Revision 1.6.2.9  2001/02/19 16:35:38  manus
+--| Speed optimization by avoiding too many calls to `parent_imp' use a local
+--| variable instead.
+--|
+--| Revision 1.6.2.8  2000/11/10 19:44:56  rogers
+--| Replaced !! with create.
+--|
+--| Revision 1.6.2.7  2000/09/13 22:13:46  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.6.2.6  2000/08/22 00:23:08  rogers
+--| Fixed on_wm_vscroll and on_wm_hscroll, so they call the change actions
+--| for a range. Previously the change_actions for EV_RANGE were never fired.
+--|
+--| Revision 1.6.2.5  2000/08/11 19:52:14  rogers
+--| Removed fixme NOT_REVIEWED. Removed redefinition of on_draw_item as it
+--| did nothing. Formatting. Fixed copyright notice.
+--|
+--| Revision 1.6.2.4  2000/07/24 21:56:56  manus
+--| Fixed a possible infinite recursion with the following code:
+--|
+--| 	first_window := create {EV_TITLED_WINDOW}
+--| 	first_window.extend (create {EV_MULTI_COLUMN_LIST})
+--| 	first_window.show
+--| 	first_window.wipe_out
+--|
+--| because the message `on_wm_notify' was sent to the one who called it.
 --|
 --| Revision 1.6.2.3  2000/05/30 16:29:10  rogers
 --| Removed unreferenced local variables.
@@ -204,7 +257,8 @@ end -- class EV_INTERNAL_SILLY_WINDOW_IMP
 --| Altered to fit in with the review branch.
 --|
 --| Revision 1.6.4.2  1999/12/17 17:07:14  rogers
---| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP. ev_item_holder_imp.e
+--| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP.
+--| ev_item_holder_imp.e
 --|
 --| Revision 1.6.4.1  1999/11/24 17:30:21  oconnor
 --| merged with DEVEL branch

@@ -23,6 +23,8 @@ inherit
 			interface
 		end
 
+	EV_ITEM_ACTION_SEQUENCES_IMP
+
 feature -- Status setting
 
 	destroy is
@@ -31,7 +33,6 @@ feature -- Status setting
 			if parent_imp /= Void then
 				parent_imp.prune (interface)
 			end
-			destroy_just_called := True
 			is_destroyed := True
 		end
 
@@ -52,14 +53,6 @@ feature {EV_PICK_AND_DROPABLE_I} -- Status report
 			end
 		end
 
-feature {EV_PICK_AND_DROPABLE_I} -- Implementation
-
-	invalidate is
-			-- Should invalidate the top parent.
-		do
-			--| FIXME Explanation why body empty.
-		end
-
 feature {EV_ITEM_LIST_I} -- Implementation
 
 	on_parented is
@@ -78,42 +71,49 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ITEM
 
-feature -- Inapplicable
-
-	align_text_center,
-	align_text_right,
-	align_text_left is
-		do
-			check
-				inapplicable: False
-			end
-		end
-
 end -- class EV_ITEM_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.21  2000/06/07 17:27:52  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.22  2001/06/07 23:08:11  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.7.4.8  2001/05/18 17:08:46  rogers
+--| Removed destroy_just_called.
+--|
+--| Revision 1.7.4.7  2000/08/24 21:56:28  rogers
+--| Removed align_text_center, align_text_right and align_text_left as redundent.
+--|
+--| Revision 1.7.4.6  2000/08/11 19:18:36  rogers
+--| Fixed copyright clause. Now use ! instead of |.
+--|
+--| Revision 1.7.4.5  2000/07/24 22:45:48  rogers
+--| Now inherits EV_ITEM_ACTION_SEQUENCES_IMP.
+--|
+--| Revision 1.7.4.4  2000/06/12 16:03:59  rogers
+--| Comments, formatting.
+--|
+--| Revision 1.7.4.3  2000/06/12 15:50:44  rogers
+--| Removed invalidate as it was never re-defined and therefore had no use.
 --|
 --| Revision 1.7.4.2  2000/05/18 23:12:44  rogers
 --| set_parent renamed to set_parent_imp and parameter is now of type
@@ -134,7 +134,8 @@ end -- class EV_ITEM_IMP
 --| Added pnd_motion and pnd_press as deferred.
 --|
 --| Revision 1.17  2000/03/24 19:17:30  rogers
---| Changed export status of on_parented and on_orphaned to EV_ITEM_LIST_I from NONE.
+--| Changed export status of on_parented and on_orphaned to EV_ITEM_LIST_I
+--| from NONE.
 --|
 --| Revision 1.16  2000/03/23 23:37:03  brendel
 --| Added on_parented and on_orphaned. Not called yet.
@@ -143,10 +144,12 @@ end -- class EV_ITEM_IMP
 --| Removed set_pointer_style.
 --|
 --| Revision 1.14  2000/03/17 23:31:22  rogers
---| Added set_pointer_style and cursor_on_widget, both with to_be_implemented_checks.
+--| Added set_pointer_style and cursor_on_widget, both with
+--| to_be_implemented_checks.
 --|
 --| Revision 1.13  2000/02/29 22:38:25  rogers
---| Removed redundent code from destroy, and added destroy_just_called := True and is_destroyed := True into destroy.
+--| Removed redundent code from destroy, and added destroy_just_called :=
+--| True and is_destroyed := True into destroy.
 --|
 --| Revision 1.12  2000/02/24 01:43:55  brendel
 --| Changed postcondition on `set_parent' to be exactly the same, but without
@@ -156,7 +159,8 @@ end -- class EV_ITEM_IMP
 --| Changed spaces with tabs.
 --|
 --| Revision 1.10  2000/02/22 23:08:37  rogers
---| Added parent_set which was taken from EV_ITEM_I, and improved comment on implementation feature clause.
+--| Added parent_set which was taken from EV_ITEM_I, and improved comment on
+--| implementation feature clause.
 --|
 --| Revision 1.9  2000/02/19 05:44:59  oconnor
 --| released

@@ -1,7 +1,8 @@
 indexing
 	description:
-		"A figure that has no childs."
+		"Figures that cannot contain other figures."
 	status: "See notice at end of class"
+	keywords: "figure, atomic"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,20 +13,6 @@ inherit
 	EV_FIGURE
 		redefine
 			default_create
-		select
-			out
-		end
-
-	EV_DRAWABLE_CONSTANTS
-		undefine
-			default_create,
-			out
-		end
-
-	EV_TESTABLE_NON_WIDGET
-		undefine
-			default_create,
-			out
 		end
 
 feature {NONE} -- Initialization
@@ -33,22 +20,9 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create with default attributes.
 		do
-			create foreground_color.make_with_rgb (0, 0, 0)
+			Precursor {EV_FIGURE}
+			set_foreground_color (Default_colors.Black)
 			line_width := 1
-			logical_function_mode := Ev_drawing_mode_copy
-			{EV_FIGURE} Precursor
-		end
-
-	make_for_test is
-			-- Create interesting.
-		do
-			default_create
-			set_foreground_color (create {EV_COLOR}.make_with_rgb (
-				random_real / 2 + 0.5,
-				random_real / 2 + 0.5,
-				random_real / 2 + 0.5))
-			set_line_width (random_from_range (1, 8))
-			set_random_values_for_points
 		end
 
 feature -- Access
@@ -57,99 +31,69 @@ feature -- Access
 			-- The color of text, lines, etc.
 
 	line_width: INTEGER
-			-- The width in pixels of the line, when a line is drawn.
+			-- Thickness of lines.
 
-	logical_function_mode: INTEGER
-			-- Logical function to be used in Graphic Context.
+	dashed_line_style: BOOLEAN
+			-- Are lines drawn dashed?
 
 feature -- Status setting
 
-	set_foreground_color (color: EV_COLOR) is
-			-- Set line/text-color to `color'.
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `foreground_color'.
 		require
-			color_exists: color /= Void
+			a_color_not_void: a_color /= Void
 		do
-			foreground_color := color
+			foreground_color := a_color
+			invalidate
+		ensure
+			foreground_color_assigned: foreground_color = a_color
 		end
 
-	set_line_width (width: INTEGER) is
-			-- Set line-width to `width'.
+	set_line_width (a_width: INTEGER) is
+			-- Assign `a_width' to `line_width'.
 		require
-			width_non_negative: width >= 0
+			a_width_non_negative: a_width >= 0
 		do
-			line_width := width
+			line_width := a_width
+			invalidate
+		ensure
+			line_width_assigned: line_width = a_width
 		end
 
-	set_logical_function_mode (mode: INTEGER) is
-			-- Set line-width to `width'.
-		require
-			mode_valid: mode >= 0 and then mode <= 15
+	enable_dashed_line_style is
+			-- Draw lines dashed.
 		do
-			logical_function_mode := mode
+			dashed_line_style := True
+		ensure
+			dashed_line_style_enabled: dashed_line_style
 		end
 
-feature -- Miscellaneous
-
-	test_widget: EV_WIDGET is
-			-- Pixmap displaying `Current'.
-		local
-			p: EV_PIXMAP
-			a_world: EV_FIGURE_WORLD
-			a_projector: EV_STANDARD_PROJECTION
-			n: INTEGER
+	disable_dashed_line_style is
+			-- Draw lines solid.
 		do
-			create p.make_with_size (300, 100)
-			create a_world
-			a_world.extend (Current)
-			create a_projector.make (a_world, p)
-			a_projector.project
-			p.set_foreground_color (create {EV_COLOR}.make_with_rgb (0.7, 0.7, 0.7))
-			p.set_font (create {EV_FONT})
-			from n := 1 until n > point_count loop
-				p.draw_text (3, n * 12 + 3,
-					"(" + get_point_by_index (n).x_abs.out +
-					", " + get_point_by_index (n).y_abs.out + ")")
-				n := n + 1
-			end
-			Result := p
+			dashed_line_style := False
+		ensure
+			dashed_line_style_disabled: not dashed_line_style
 		end
-
-feature {NONE} -- Implementation
-
-	set_random_values_for_points is
-			-- Set all points to have random values for testing purposes.
-		local
-			n: INTEGER
-		do
-			from n := 1 until n > point_count loop
-				get_point_by_index (n).set_x (random_from_range (3, 297))
-				get_point_by_index (n).set_y (random_from_range (3, 97))
-				n := n + 1
-			end
-		end
-
-	random_from_range (a_min, a_max: INTEGER): INTEGER is
-			-- Any integer between `a_min', `a_max'.
-		do
-			random.forth
-			Result := (random.real_item * (a_max - a_min)).rounded + a_min
-		end
-
-	random_real: DOUBLE is
-			-- Double value in range [0, 1].
-		do
-			random.forth
-			Result := random.real_item
-		end
-
-	random: RANDOM is
-			-- Generator.
-		once
-			create Result.make
-		end
-
+		
 invariant
 	foreground_color_exists: foreground_color /= Void
 	line_width_non_negative: line_width >= 0
 
 end -- class EV_ATOMIC_FIGURE
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------

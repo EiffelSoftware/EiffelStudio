@@ -10,8 +10,16 @@ class
 
 inherit
 	EV_FONT_I
+		redefine
+			string_size
+		end
 
 	EV_FONT_CONSTANTS
+
+	WEL_SHARED_FONTS
+		export
+			{NONE} all
+		end
 
 	WEL_FONT_FAMILY_CONSTANTS
 		export
@@ -53,11 +61,16 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 			base_make (an_interface)
 			create wel_font.make_indirect (default_wel_log_font)
 
+				-- Create and setup the preferred font face mechanism
+			create preferred_faces
+			preferred_faces.add_actions.extend (~update_preferred_faces)
+			preferred_faces.remove_actions.extend (~update_preferred_faces)
+
 				-- Retrieve shape, weight and family from
 				-- the default font returned by Windows.
 			shape := convert_font_shape(default_wel_log_font.italic)
 			weight := convert_font_weight(default_wel_log_font.weight)
-			family := Ev_font_family_screen
+			family := family_screen
 			internal_face_name := default_wel_log_font.face_name
 			update_internal_is_proportional(default_wel_log_font)
 		end
@@ -82,21 +95,9 @@ feature -- Access
 
 	height: INTEGER is
 			-- Preferred font height measured in screen pixels.
-			-- NOTE: this function may return 0, which means that
-			--       the font has been created without any particular
-			--       height restriction - Windows use the best value
-			--       and we can't know what height it is. Too bad !
 		do
-				-- retrieve current values
-			wel_log_font.update_by_font(wel_font)
-
-				-- return value
-			Result := wel_log_font.height.abs
+			Result := wel_font.height
 		end
-
-	preferred_face: STRING
-			-- Preferred user font.
-			-- `family' will be ignored when not Void.
 
 feature -- Element change
 
@@ -122,13 +123,13 @@ feature -- Element change
 				-- change value
 			weight := a_weight
 			inspect weight
-			when Ev_font_weight_thin then
+			when weight_thin then
 				wel_log_font.set_weight (100)
-			when Ev_font_weight_regular then
+			when weight_regular then
 				wel_log_font.set_weight (400)
-			when Ev_font_weight_bold then
+			when weight_bold then
 				wel_log_font.set_weight (700)
-			when Ev_font_weight_black then
+			when weight_black then
 				wel_log_font.set_weight (900)
 			else
 				check impossible: False end
@@ -147,9 +148,9 @@ feature -- Element change
 				-- change value
 			shape := a_shape
 			inspect shape
-			when Ev_font_shape_regular then
+			when shape_regular then
 				wel_log_font.set_not_italic
-			when Ev_font_shape_italic then
+			when shape_italic then
 				wel_log_font.set_italic
 			else
 				check impossible: False end
@@ -160,42 +161,10 @@ feature -- Element change
 		end
 
 	set_height (a_height: INTEGER) is
-			-- Set `a_height' as preferred font size.
+			-- Set `a_height' as preferred font size in pixels.
 		do
-				-- retrieve current values
-			wel_log_font.update_by_font(wel_font)
-
-				-- change value
-			wel_log_font.set_height (a_height)
-
-				-- commit changes to `wel_log_font' into `wel_font'.
-			wel_font.set_indirect (wel_log_font)
-		end
-
-	set_preferred_face (a_preferred_face: STRING) is
-			-- Set `a_preferred_face' as preferred font face.
-		do
-				-- retrieve current values
-			wel_log_font.update_by_font(wel_font)
-
-				-- change value
-			preferred_face := a_preferred_face
-
-				-- commit changes to `wel_log_font' into `wel_font'.
-			update_font_face
-		end
-
-	remove_preferred_face is
-			-- Set `a_preferred_face' to Void.
-		do
-				-- retrieve current values
-			wel_log_font.update_by_font(wel_font)
-
-				-- change value
-			preferred_face := Void
-
-				-- commit changes to `wel_log_font' into `wel_font'.
-			update_font_face
+			wel_font.set_height (a_height)
+			wel_log_font.update_by_font (wel_font) 
 		end
 
 feature -- Status report
@@ -223,25 +192,43 @@ feature -- Status report
 	width: INTEGER is
 			-- Character width of current fixed-width font.
 		do
-			Result := string_width ("x")
+			Result := wel_font.width
 		end
 
 	minimum_width: INTEGER is
 			-- Width of the smallest character in the font.
 		do
-			Result := string_width ("l")
+			Result := wel_font.string_width ("l")
 		end
 
 	maximum_width: INTEGER is
 			-- Width of the biggest character in the font.
 		do
-			Result := string_width ("W")
+			Result := wel_font.string_width ("W")
 		end
 
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
 		do
-			Result := string_width_and_height (a_string).integer_item (1)
+			Result := wel_font.string_width (a_string)
+		end
+
+	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is
+			-- [width, height] in pixels of `a_string' in the current font,
+			-- taking into account line breaks ('%N').
+		do
+			Result := wel_font.string_size (a_string)
+				--| FIXME The Result from `wel_font' is not correctly being
+				--| returned when `Current' is italic. The width is smaller
+				--| than the displayed width. I believe the overhang from
+				--| text_metric should be taken into account, but when
+				--| queried, this would always return 0. See TEXTMETRIC from
+				--| MSDN. For now, if `Current' is italic then we add 1/6 of the
+				--| height. Julian 11/01/2001
+			if shape = shape_italic then
+				Result.force (Result.integer_item (2) // 6 +
+					Result.integer_item (1), 1)
+			end
 		end
 
 	horizontal_resolution: INTEGER is
@@ -262,28 +249,15 @@ feature -- Status report
 			Result := internal_is_proportional
 		end
  
-feature -- Obsolete
-
-	system_name: STRING is
-			-- Platform dependent font name.
-		do
-			Result := "Obsolete"
-		end
-
- 	is_standard: BOOLEAN is True
- 			-- Is the font standard and information available (except for name)?
-
 feature {EV_ANY_I} -- Access
 
 	wel_font: WEL_FONT
 			-- Basic WEL font.
 
-feature {EV_FONTABLE_IMP} -- Access
+feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Access
 
 	set_by_wel_font (wf: WEL_FONT) is
 			-- Set state by passing an already created WEL_FONT.
-		obsolete
-			"This is not the way we do things in vision2."
 		do
 			wel_font := wf
 			wel_log_font.update_by_font (wel_font)
@@ -291,10 +265,11 @@ feature {EV_FONTABLE_IMP} -- Access
 			weight := convert_font_weight(wel_log_font.weight)
 			family := convert_font_family(wel_log_font.family,
 				wel_log_font.pitch)
-			preferred_face := clone(wel_log_font.face_name)
+			preferred_faces.wipe_out
+			preferred_faces.extend (clone(wel_log_font.face_name))
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	wel_log_font: WEL_LOG_FONT is
 			-- Structure used to specify font characteristics.
@@ -312,41 +287,48 @@ feature {NONE} -- Implementation
 			wel_screen_font_pitch := Result.pitch
 		end
 
-	gui_font: WEL_DEFAULT_GUI_FONT is
-		-- Default screen (WEL) font.
-		once
-			create Result.make
-		end
-
 	destroy is
 			-- Destroy `Current'.
 		do
 			wel_font.delete
+			wel_font := Void
+		end
+
+	update_preferred_faces (a_face: STRING) is
+		do
+				-- retrieve current values
+			wel_log_font.update_by_font(wel_font)
+
+				-- commit changes to `wel_log_font' into `wel_font'.
+			update_font_face
 		end
 
 	update_font_face is
 			-- Find a font face based on properties
 			-- `preferred_face' and `family'.
+		local
+			lower_face: STRING
+			found: BOOLEAN
 		do
 				-- First, set the family
 			inspect family
-			when Ev_font_family_screen then
+			when family_screen then
 				wel_log_font.set_family(wel_screen_font_family)
 				wel_log_font.set_pitch(wel_screen_font_pitch)
 
-			when Ev_font_family_roman then
+			when family_roman then
 				wel_log_font.set_roman_family
 				wel_log_font.set_variable_pitch
 
-			when Ev_font_family_sans then
+			when family_sans then
 				wel_log_font.set_swiss_family
 				wel_log_font.set_variable_pitch
 
-			when Ev_font_family_typewriter then
+			when family_typewriter then
 				wel_log_font.set_modern_family
 				wel_log_font.set_fixed_pitch
 
-			when Ev_font_family_modern then
+			when family_modern then
 				wel_log_font.set_modern_family
 				wel_log_font.set_variable_pitch
 			else
@@ -354,8 +336,24 @@ feature {NONE} -- Implementation
 			end
 
 				-- Then, set the face name (if any)
-			if preferred_face /= Void then
-				wel_log_font.set_face_name (preferred_face)
+			if not preferred_faces.is_empty then
+				from
+					preferred_faces.start
+				until
+					found or preferred_faces.after
+				loop
+					lower_face := clone(preferred_faces.item)
+					lower_face.to_lower
+					found := Font_enumerator.font_faces.has (lower_face)
+					preferred_faces.forth
+				end
+				if found then
+					wel_log_font.set_face_name (lower_face)
+				else
+						-- Preferred face not found, leave Windows do
+						-- its best.
+					wel_log_font.set_face_name ("")
+				end
 			else
 					-- Leave Windows choose the font that best
 					-- match our attributes.
@@ -469,32 +467,32 @@ feature {NONE} -- Implementation
 
 	wel_screen_font_family: INTEGER
 			-- Windows Family (Ff_roman, Ff_swiss, ...) associated
-			-- to Ev_font_family_screen.
+			-- to family_screen.
 
 	wel_screen_font_pitch: INTEGER
 			-- Windows Pitch (Ff_roman, Ff_swiss, ...) associated
-			-- to Ev_font_family_screen.
+			-- to family_screen.
 
 
 	convert_font_family(wel_family: INTEGER; wel_pitch: INTEGER): INTEGER is
 			-- Convert a Windows Font Family into a Vision2 Font Family.
 		do
 			if wel_family = wel_screen_font_family then
-				Result := Ev_font_family_screen
+				Result := family_screen
 			elseif wel_family = Ff_roman then
-				Result := Ev_font_family_roman
+				Result := family_roman
 			elseif wel_family = Ff_swiss then
-				Result := Ev_font_family_sans
+				Result := family_sans
 			elseif wel_family = Ff_modern then
 				if wel_pitch = Variable_pitch then
-					Result := Ev_font_family_modern
+					Result := family_modern
 				else
-					Result := Ev_font_family_typewriter
+					Result := family_typewriter
 				end
 			else
 					-- none of the above match, so we take
 					-- an arbitrary family
-				Result := Ev_font_family_sans
+				Result := family_sans
 			end
 		end
 
@@ -504,13 +502,13 @@ feature {NONE} -- Implementation
 		do
 			inspect wel_weight
 			when 1..249 then
-				Result := Ev_font_weight_thin
+				Result := weight_thin
 			when 250..549 then
-				Result := Ev_font_weight_regular
+				Result := weight_regular
 			when 550..799 then
-				Result := Ev_font_weight_bold
+				Result := weight_bold
 			when 800..1000 then
-				Result := Ev_font_weight_black
+				Result := weight_black
 			else
 				check impossible: False end
 			end
@@ -521,49 +519,13 @@ feature {NONE} -- Implementation
 			-- a vision2 shape constant.
 		do
 			if wel_italic then
-				Result := Ev_font_shape_italic
+				Result := shape_italic
 			else
-				Result := Ev_font_shape_regular
+				Result := shape_regular
 			end
 		end
 
 feature {EV_TEXTABLE_IMP} -- Implementation
-
-	string_width_and_height (a_string: STRING): TUPLE [INTEGER, INTEGER] is
-			-- [width, height] of `a_string'.
-		require
-			a_string_not_void: a_string /= Void
-		local
-			cur_width, cur_height: INTEGER
-			index, n: INTEGER
-			screen_dc: WEL_SCREEN_DC
-			extent: WEL_SIZE
-		do
-			create screen_dc
-			screen_dc.get
-			screen_dc.select_font (wel_font)
-			from
-				n := 1
-			until
-				n > a_string.count
-			loop
-				index := a_string.index_of ('%N', n)
-				if index > 0 then
-					extent := screen_dc.string_size (a_string.substring
-						(n,index - 1))
-					n := index + 1
-				else
-					extent := screen_dc.string_size (a_string.substring
-						(n,a_string.count))
-					n := a_string.count + 1
-				end
-				cur_width := cur_width.max (extent.width)
-				cur_height := cur_height + extent.height
-			end
-			screen_dc.unselect_font
-			screen_dc.quick_release
-			Result := [cur_width, cur_height]
-		end
 
 	string_width_and_height_ignore_new_line (a_string: STRING):
 		TUPLE [INTEGER, INTEGER] is
@@ -582,6 +544,22 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 			screen_dc.unselect_font
 			screen_dc.quick_release
 			Result := [extent.width, extent.height]
+		end
+
+	Font_enumerator: EV_WEL_FONT_ENUMERATOR_IMP is
+			-- Enumerate Installed fonts
+		once
+			create Result
+		end
+
+feature -- Obsolete
+
+	string_width_and_height (a_string: STRING): TUPLE [INTEGER, INTEGER] is
+			-- [width, height] of `a_string'.
+		obsolete
+			"Use `string_size'."
+		do
+			Result := wel_font.string_size (a_string)
 		end
 
 feature {NONE} -- Not used
@@ -621,24 +599,6 @@ feature {NONE} -- Not used
 				wel_log_font.set_escapement (an_escapement.to_integer)
 			else	
 				wel_log_font.set_escapement (0)
-			end
-		end
-
-	OLD_set_family (a_family: STRING) is
-			-- Set family based on a value in `a_family'.
-		do
-			if a_family.is_equal ("decorative") then
-				wel_log_font.set_decorative_family 
-			elseif a_family.is_equal ("modern") then
-				wel_log_font.set_modern_family 
-			elseif a_family.is_equal ("script") then
-				wel_log_font.set_script_family 
-			elseif a_family.is_equal ("roman") then
-				wel_log_font.set_roman_family
-			elseif a_family.is_equal ("swiss") then
-				wel_log_font.set_swiss_family
-			else
-				wel_log_font.set_dont_care_family
 			end
 		end
 
@@ -715,21 +675,21 @@ invariant
 
 end -- class EV_FONT_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 
 --|-----------------------------------------------------------------------------
@@ -737,6 +697,72 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.16.4.17  2001/01/31 23:41:57  rogers
+--| Removed old_set_family as redundent.
+--|
+--| Revision 1.16.4.15  2001/01/11 19:28:41  rogers
+--| Fixed bug in string_size, so the size returned will cover `Current' when it
+--| is italic. Formatting.
+--|
+--| Revision 1.16.4.14  2000/12/11 18:13:31  pichery
+--| Removed useless obsolete message since the feature is really
+--| used.
+--|
+--| Revision 1.16.4.13  2000/12/08 03:09:07  manus
+--| Use `height' and `set_height' from WEL_FONT instead of implementing it
+--| here.
+--|
+--| Revision 1.16.4.13  2000/12/08 02:55:29  manus
+--| Use `height' and `set_height' from WEL_FONT instead of reimplementing
+--| something the same code everywhere.
+--|
+--| Revision 1.16.4.12  2000/11/29 00:46:19  rogers
+--| Changed empty to is_empty.
+--|
+--| Revision 1.16.4.11  2000/11/07 22:34:55  king
+--| Accounted for font constants name change
+--|
+--| Revision 1.16.4.10  2000/10/28 01:02:59  manus
+--| Removed code from EV_FONT_IMP (width, height, string_width, string_height,
+--| string_size) and put it in WEL_FONT. Therefore I adapted the code to take
+--| this into account.
+--|
+--| Revision 1.16.4.9  2000/10/16 14:21:45  pichery
+--| - Removed obsolete features
+--| - Replaced `dispose' with `delete'.
+--|
+--| Revision 1.16.4.8  2000/10/12 15:50:23  pichery
+--| Added reference tracking for GDI objects to decrease
+--| the number of GDI objects alive.
+--|
+--| Revision 1.16.4.7  2000/08/11 19:14:54  rogers
+--| Fixed copyright clause. Now use ! instead of |.
+--|
+--| Revision 1.16.4.6  2000/08/08 00:36:07  manus
+--| `wel_log_font' is now exported to all windows implementations
+--|
+--| Revision 1.16.4.5  2000/07/27 17:21:42  pichery
+--| Removed obsolete call
+--|
+--| Revision 1.16.4.4  2000/06/25 18:01:52  brendel
+--| Obsoleted string_width_and_height, now called string_size.
+--| Cosmetics for string_size.
+--|
+--| Revision 1.16.4.3  2000/06/15 17:24:07  rogers
+--| Make now calls add_actions and remove_actions on preferred faces, instead
+--| of added_actions and removed_actions, due to a name change.
+--|
+--| Revision 1.16.4.2  2000/06/15 03:41:41  pichery
+--| Remove `preferred_face'
+--| Added features to select the best font among
+--| `preferred_faces'.
+--|
+--| Revision 1.16.4.1  2000/05/03 19:09:13  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.34  2000/05/01 23:37:11  rogers
 --| Column formatting.
 --|

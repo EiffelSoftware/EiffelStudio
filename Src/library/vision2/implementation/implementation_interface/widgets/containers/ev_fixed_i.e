@@ -112,8 +112,8 @@ end -- class EV_FIXED_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.8  2000/06/07 17:27:48  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.9  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
 --| Revision 1.3.4.3  2000/05/05 23:37:23  brendel
 --| Strengthened preconditions.
@@ -123,10 +123,6 @@ end -- class EV_FIXED_I
 --|
 --| Revision 1.3.4.1  2000/05/03 19:09:05  oconnor
 --| mergred from HEAD
---|
---| $Log$
---| Revision 1.8  2000/06/07 17:27:48  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|
 --| Revision 1.7  2000/05/02 00:40:26  brendel
 --| Reintroduced EV_FIXED.

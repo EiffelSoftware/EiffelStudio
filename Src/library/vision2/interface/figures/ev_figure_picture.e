@@ -1,7 +1,7 @@
 indexing
 	description:
-		"A figure representing a pixmap at a given position."
-	status: "See notice at end of file"
+		"Pixmaps drawn on `point'."
+	status: "See notice at end of class"
 	keywords: "figure, picture, pixmap"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,69 +12,42 @@ class
 inherit
 	EV_ATOMIC_FIGURE
 		redefine
-			default_create,
-			make_for_test
+			default_create
+		end
+
+	EV_SINGLE_POINTED_FIGURE
+		undefine
+			default_create
 		end
 
 create
 	default_create,
 	make_with_point,
-	make_with_point_and_pixmap,
-	make_for_test
+	make_with_pixmap
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create in (0, 0)
 		do
-			Precursor
-			create pixmap
+			Precursor {EV_ATOMIC_FIGURE}
+			pixmap := default_pixmap
+			is_default_pixmap_used := True
 		end
 
-	make_with_point (p: EV_RELATIVE_POINT) is
-			-- Create on `p'.
+	make_with_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Create with `a_pixmap'.
 		require
-			p_exists: p /= Void
-			p_not_in_figure: p.figure = Void
+			a_pixmap_not_void: a_pixmap /= Void
 		do
 			default_create
-			set_point (p)
-		end
-
-	make_with_point_and_pixmap (p: EV_RELATIVE_POINT; a_pixmap: EV_PIXMAP) is
-			-- Create with `a_pixmap' on `p'.
-		require
-			p_exists: p /= Void
-			p_not_in_figure: p.figure = Void
-		do
-			default_create
-			set_point (p)
 			set_pixmap (a_pixmap)
-		end
-
-	make_for_test is
-			-- Create interesting.
-		do
-			Precursor
-			set_pixmap (create {EV_PIXMAP}.make_for_test)
 		end
 
 feature -- Access
 
 	pixmap: EV_PIXMAP
 			-- The pixmap that is displayed.
-
-	point_count: INTEGER is
-			-- A pixmap-figure consists of only one point.
-		once
-			Result := 1
-		end
-
-	point: EV_RELATIVE_POINT is
-			-- The position of this picture.
-		do
-			Result := get_point_by_index (1)
-		end
 
 feature -- Status report
 
@@ -94,17 +67,11 @@ feature -- Status report
 			assigned: Result = pixmap.height
 		end
 
-feature -- Status setting
 
-	set_point (pos: EV_RELATIVE_POINT) is
-			-- Change the reference of `point' with `pos'.
-		require
-			pos_exists: pos /= Void
-		do
-			set_point_by_index (1, pos)
-		ensure
-			point_assigned: point = pos
-		end
+	is_default_pixmap_used: BOOLEAN
+			-- Is `Current' using a default pixmap?
+
+feature -- Status setting
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set the pixmap to `a_pixmap'.
@@ -112,6 +79,8 @@ feature -- Status setting
 			a_pixmap_not_void: a_pixmap /= Void
 		do
 			pixmap := a_pixmap
+			is_default_pixmap_used := False
+			invalidate
 		ensure
 			pixmap_assigned: pixmap = a_pixmap
 		end
@@ -120,10 +89,18 @@ feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
 			-- Is the point on (`x', `y') on this figure?
+		local
+			ax, ay: INTEGER
 		do
-			--| FIXME Rotation and scaling!
-			Result := point_on_rectangle (x, y, point.x_abs, point.y_abs,
-				point.x_abs + width, point.y_abs + height)
+			ax := point.x_abs
+			ay := point.y_abs
+			Result := point_on_rectangle (x, y, ax, ay, ax + width, ay + height)
+		end
+
+	Default_pixmap: EV_PIXMAP is
+			-- Pixmap set by `default_create'.
+		once
+			create Result
 		end
 
 invariant
@@ -146,24 +123,3 @@ end -- class EV_FIGURE_PICTURE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.6  2000/04/27 19:10:50  brendel
---| Centralized testing code.
---|
---| Revision 1.5  2000/04/26 15:56:34  brendel
---| Added CVS Log.
---| Added copyright notice.
---| Improved description.
---| Added keywords.
---| Formatted for 80 columns.
---| Added make_for_test.
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

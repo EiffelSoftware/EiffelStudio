@@ -19,7 +19,12 @@ feature -- Status report
 	pointer_position: EV_COORDINATES is
 			-- Position of the screen pointer.
 		deferred
-		end 
+		end
+
+	widget_at_position (x, y: INTEGER): EV_WIDGET is
+			-- Widget at position (`x', `y') if any.
+		deferred
+		end
 
 feature -- Basic operation
 
@@ -91,6 +96,15 @@ end -- class EV_SCREEN_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/07 23:08:11  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.4.2  2000/10/06 21:40:30  rogers
+--| Implemented widget_at_position.
+--|
+--| Revision 1.2.4.1  2000/05/03 19:09:09  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/04/25 22:54:11  king
 --| Removed invalid post-condition on set_pointer_position
 --|

@@ -69,6 +69,12 @@ end -- class EV_MENU_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2001/06/07 23:08:11  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.17.4.1  2000/05/03 19:09:09  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.22  2000/04/05 21:16:10  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

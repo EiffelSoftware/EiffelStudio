@@ -95,6 +95,12 @@ end -- class EV_CHILD_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.8.1  2000/05/03 19:09:17  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.4  2000/03/14 03:02:54  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

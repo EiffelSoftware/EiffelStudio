@@ -53,7 +53,6 @@ feature {NONE} -- Initialization
 			C.c_gdk_gcvalues_struct_free (gcvalues)
 			C.gdk_gc_unref (gc)
 			is_destroyed := True
-			destroy_just_called := True
 		end
 
 feature -- Status report
@@ -67,6 +66,23 @@ feature -- Status report
 			temp_pointer := C.gdk_window_get_pointer (NULL, $a_x, $a_y, NULL)
 			create Result.set (a_x, a_y)
 		end
+
+	widget_at_position (x, y: INTEGER): EV_WIDGET is
+			-- Widget at position ('x', 'y') if any.
+		do
+		end
+
+feature -- Status setting
+
+	set_default_colors is
+			-- Set foreground and background color to their default values.
+		local
+			a_default_colors: EV_STOCK_COLORS
+		do
+			create a_default_colors
+			set_background_color (a_default_colors.default_background_color)
+			set_foreground_color (a_default_colors.default_foreground_color)
+		end	
 
 feature -- Basic operation
 
@@ -88,7 +104,6 @@ feature -- Basic operation
 			-- Set pointer position to (a_x, a_y).
 		local
 			a_success_flag: BOOLEAN
-			a_display: POINTER
 		do
 			check
 				x_test_capable: x_test_capable
@@ -219,6 +234,35 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.7  2001/05/18 18:20:19  king
+--| Removed destroy_just_called code
+--|
+--| Revision 1.3.4.6  2000/11/06 19:40:33  king
+--| Acccounted for default to stock name change
+--|
+--| Revision 1.3.4.5  2000/10/27 16:54:46  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.3.4.4  2000/10/07 01:39:22  andrew
+--| made compilable
+--|
+--| Revision 1.3.4.3  2000/08/18 18:19:41  king
+--| Removed unused local
+--|
+--| Revision 1.3.4.2  2000/05/03 19:08:53  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.16  2000/05/02 18:55:32  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

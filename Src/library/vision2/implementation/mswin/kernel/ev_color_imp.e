@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision color. Mswindows implementation";
 	status: "See notice at end of class";
@@ -27,17 +26,18 @@ creation
 
 feature -- Initialization
 
-	initialize is
-		do
-			is_initialized := True
-		end
-
 	make (an_interface: like interface) is
-			-- Create a color. 
+			-- Create `Current' with interface `an_interface'. 
 		do
 			base_make (an_interface)
 			wel_make
 			name := default_name
+		end
+
+	initialize is
+			-- Initialize `Current'.
+		do
+			is_initialized := True
 		end
 
 feature {EV_COLOR} -- Access
@@ -92,7 +92,7 @@ feature {EV_COLOR} -- Element change
 			name.copy (a_name)
 		end
 
-feature {EV_ANY_I, EV_DEFAULT_COLORS_IMP}
+feature {EV_ANY_I, EV_STOCK_COLORS_IMP}
 
 	set_with_system_id (id: INTEGER) is
 		local
@@ -194,8 +194,8 @@ feature -- Status setting
 			-- No externals to deallocate, just set the flags.
 		do
 			is_destroyed := True
-			destroy_just_called := True
 		end
+		
 feature {NONE} -- Implementation
 
 	delta: REAL is
@@ -205,32 +205,43 @@ feature {NONE} -- Implementation
 			Result := 1/255
 		end
 
-
 end -- class EV_COLOR_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.6  2000/06/07 17:27:53  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.7  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.8.7  2001/05/18 16:55:21  rogers
+--| Removed destroy_just_called.
+--|
+--| Revision 1.3.8.6  2000/11/06 19:37:07  king
+--| Accounted for default to stock name change
+--|
+--| Revision 1.3.8.5  2000/08/11 19:14:54  rogers
+--| Fixed copyright clause. Now use ! instead of |.
+--|
+--| Revision 1.3.8.4  2000/06/12 19:44:42  rogers
+--| Reviewed class. Comments, formatting.
 --|
 --| Revision 1.3.8.3  2000/05/16 22:22:59  rogers
 --| Added delta. For use in postcondtions and assertions.
@@ -252,7 +263,8 @@ end -- class EV_COLOR_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.3.10.2  1999/12/17 17:26:39  rogers
---| Altered to fit in with the review branch. Make now takes an interface. Colors now take reals, but can be returned in a variety of formats.
+--| Altered to fit in with the review branch. Make now takes an interface.
+--| Colors now take reals, but can be returned in a variety of formats.
 --|
 --| Revision 1.3.10.1  1999/11/24 17:30:17  oconnor
 --| merged with DEVEL branch

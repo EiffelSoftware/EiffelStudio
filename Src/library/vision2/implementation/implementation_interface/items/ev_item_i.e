@@ -20,6 +20,8 @@ inherit
 			interface
 		end
 
+	EV_ITEM_ACTION_SEQUENCES_I
+
 feature -- Access
 
 	parent: EV_ITEM_LIST [EV_ITEM] is
@@ -68,8 +70,11 @@ end -- class EV_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.14  2000/06/07 17:27:41  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.15  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.8.4.3  2000/07/24 21:31:44  oconnor
+--| inherit action sequences _I class
 --|
 --| Revision 1.8.4.2  2000/05/18 00:29:04  king
 --| Added check to parent

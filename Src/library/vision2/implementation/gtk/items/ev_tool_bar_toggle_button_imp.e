@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision toggle tool bar, implementation interface."
@@ -37,12 +36,13 @@ feature -- Initialization
 feature -- Status setting
 
 	disable_select is
-			-- Unselect the current button.
+			-- Unselect `Current'.
 		do
 			C.gtk_toggle_button_set_active (c_object, False)
 		end
 
 	enable_select is
+			-- Select `Current'.
 		do
 			C.gtk_toggle_button_set_active (c_object, True)
 		end	
@@ -50,6 +50,7 @@ feature -- Status setting
 feature -- Status report
 
 	is_selected: BOOLEAN is
+			-- Is `Current' selected.
 		do
 			Result := C.gtk_toggle_button_get_active (c_object)
 		end
@@ -81,8 +82,11 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.12  2000/06/07 17:27:29  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.13  2001/06/07 23:08:02  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.8.2.4  2000/09/06 23:18:39  king
+--| Reviewed
 --|
 --| Revision 1.8.2.3  2000/05/10 18:47:34  king
 --| Corrected make procedure

@@ -23,6 +23,8 @@ inherit
 			interface
 		end
 
+	EV_MENU_ITEM_ACTION_SEQUENCES_I
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_ITEM
@@ -50,8 +52,11 @@ end -- class EV_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.31  2000/06/07 17:27:41  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.32  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.27.4.3  2000/07/24 21:31:44  oconnor
+--| inherit action sequences _I class
 --|
 --| Revision 1.27.4.2  2000/05/11 21:18:39  king
 --| Inheriting from EV_SENSITIVE

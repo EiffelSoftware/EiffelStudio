@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_DEFAULT_COLORS_IMP
+	EV_STOCK_COLORS_IMP
 
 inherit
 	C_GTK_WIDGET
@@ -107,7 +107,7 @@ feature -- Access
 			Result := Color_dialog_fg
 		end
 
-end -- class EV_DEFAULT_COLORS_IMP
+end -- class EV_STOCK_COLORS_IMP
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -130,12 +130,11 @@ end -- class EV_DEFAULT_COLORS_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.11  2000/06/07 17:27:34  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.12  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.10  2000/05/12 19:27:07  pichery
---| Added colors `Color_3d_face', `Color_3d_highlight',
---| `Color_3d_shadow'.
+--| Revision 1.7.4.3  2000/11/06 19:38:29  king
+--| Accounted for default to stock name change
 --|
 --| Revision 1.7.4.2  2000/05/13 03:24:49  pichery
 --| Added new colors

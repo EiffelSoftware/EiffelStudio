@@ -10,6 +10,9 @@ class
 
 inherit
 	EV_FRAME_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
 		redefine
 			interface
 		end
@@ -18,7 +21,8 @@ inherit
 		undefine
 			make
 		redefine
-			interface
+			interface,
+			container_widget
 		end
 
 create
@@ -30,8 +34,16 @@ feature {NONE} -- Initialization
 			-- Create frame.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_frame_new (NULL))
+			set_c_object (C.gtk_event_box_new)
+			container_widget := C.gtk_frame_new (NULL)
+			C.gtk_widget_show (container_widget)
+			C.gtk_container_add (c_object, container_widget)
+			C.gtk_frame_set_label (container_widget, NULL)
+			internal_alignment_code := C.Gtk_justify_left_enum
 		end
+
+	container_widget: POINTER
+			-- Pointer to the gtkframe widget as c_object is event box
 
 feature -- Access
 
@@ -40,7 +52,7 @@ feature -- Access
 		local
 			gtk_style: INTEGER
 		do
-			gtk_style := C.gtk_frame_struct_shadow_type (c_object)
+			gtk_style := C.gtk_frame_struct_shadow_type (container_widget)
 			if gtk_style = C.Gtk_shadow_in_enum then
 				Result := Ev_frame_lowered
 			elseif gtk_style = C.Gtk_shadow_out_enum then
@@ -85,7 +97,7 @@ feature -- Element change
 			--| FIXME incorporate border_width.
 			--| NB This is not gtk_container_set_border_width!
 			--| Maybe we have to draw the frame ourselves.
-			C.gtk_frame_set_shadow_type (c_object, gtk_style)
+			C.gtk_frame_set_shadow_type (container_widget, gtk_style)
 		end
 
 feature -- Status setting
@@ -93,29 +105,46 @@ feature -- Status setting
 	align_text_left is
 			-- Display `text' left aligned.
 		do
-			C.gtk_frame_set_label_align (c_object, 0, 0)
+			C.gtk_frame_set_label_align (container_widget, 0, 0)
+			internal_alignment_code := C.Gtk_justify_left_enum
 		end
 
 	align_text_right is
 			-- Display `text' right aligned.
 		do
-			C.gtk_frame_set_label_align (c_object, 0.5, 0)
+			C.gtk_frame_set_label_align (container_widget, 1, 0)
+			internal_alignment_code := C.Gtk_justify_right_enum
 		end
         
 	align_text_center is
 			-- Display `text' centered.
 		do
-			C.gtk_frame_set_label_align (c_object, 1, 0)
+			C.gtk_frame_set_label_align (container_widget, 0.5, 0)
+			internal_alignment_code := C.gtk_justify_center_enum
 		end
 
-feature -- Status report
+feature -- Access
+
+	alignment: EV_TEXT_ALIGNMENT is
+			-- Alignment of the text in the label.
+		do
+			if internal_alignment_code = C.Gtk_justify_center_enum then
+				create Result.make_with_center_alignment
+			elseif internal_alignment_code = C.Gtk_justify_left_enum then
+				create Result.make_with_left_alignment
+			elseif internal_alignment_code = C.Gtk_justify_right_enum then
+				create Result.make_with_right_alignment
+			else
+				check alignment_code_not_set: False end
+			end
+		end
 
 	text: STRING is
 			-- Text of the frame
 		local
 			p: POINTER
 		do
-			p := C.gtk_frame_struct_label (c_object)
+			p := C.gtk_frame_struct_label (container_widget)
 			if p /= NULL then
 				create Result.make_from_c (p)
 				if Result.count = 0 then
@@ -129,14 +158,19 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- set the `text' of the frame
 		do
-			C.gtk_frame_set_label (c_object, eiffel_to_c (a_text))
+			C.gtk_frame_set_label (container_widget, eiffel_to_c (a_text))
 		end
 
 	remove_text is
 			-- Make `text' `Void'.
 		do
-			C.gtk_frame_set_label (c_object, NULL)
+			C.gtk_frame_set_label (container_widget, NULL)
 		end
+
+feature {NONE} -- Implementation
+
+	internal_alignment_code: INTEGER
+		-- Code used to represent label alignment
 
 feature {EV_ANY_I} -- Implementation
 
@@ -167,8 +201,40 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.13  2000/06/07 17:27:37  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.14  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.7.4.10  2000/10/27 16:54:42  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.7.4.9  2000/09/18 18:06:43  oconnor
+--| reimplemented propogate_[fore|back]ground_color for speeeeed
+--|
+--| Revision 1.7.4.8  2000/08/30 22:41:28  king
+--| Setting frame text to NULL to hide label on init
+--|
+--| Revision 1.7.4.7  2000/08/29 16:40:22  king
+--| Removed unused local variables
+--|
+--| Revision 1.7.4.6  2000/08/25 00:52:08  king
+--| Fixed alignment bugs in Frame
+--|
+--| Revision 1.7.4.5  2000/08/24 23:55:26  king
+--| Implemented alignment
+--|
+--| Revision 1.7.4.4  2000/08/08 00:03:14  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.7.4.3  2000/06/14 18:18:35  king
+--| Converted to using container_widget
 --|
 --| Revision 1.7.4.2  2000/05/25 00:35:50  king
 --| Implemented external in Eiffel

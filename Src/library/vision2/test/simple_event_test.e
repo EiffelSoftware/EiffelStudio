@@ -8,13 +8,16 @@ creation
 
 	make_and_launch
 
-
 feature -- Access
 
-	first_window: EV_TITLED_WINDOW is
-		once
-			create Result
+	make_and_launch is
+		do
+			default_create
+			prepare
+			launch
 		end
+
+	first_window: EV_TITLED_WINDOW
 
 	selected, pressed, released: BOOLEAN
 
@@ -57,6 +60,8 @@ feature -- Access
 			t: EV_TIMEOUT
 			b: EV_BUTTON
 		do
+			create first_window
+			first_window.show
 			create t
 			create b.make_with_text ("Test button")
 			b.select_actions.extend (~on_select)

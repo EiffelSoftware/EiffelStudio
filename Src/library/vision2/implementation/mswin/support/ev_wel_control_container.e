@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"A common class for the heirs of the WEL_CONTROL_WINDOW."
@@ -10,12 +9,11 @@ deferred class
 	EV_WEL_CONTROL_CONTAINER_IMP
 
 inherit
-	EV_WIDGET_EVENTS_CONSTANTS_IMP
 
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			shown as is_displayed,
 			destroy as wel_destroy,
@@ -29,86 +27,92 @@ inherit
 			x as x_position,
 			y as y_position,
 			text as wel_text,
-			set_text as wel_set_text
+			set_text as wel_set_text,
+			has_capture as wel_has_capture
 		undefine
-			window_process_message,
 			set_width,
 			set_height,
-			remove_command,
 			on_left_button_down,
+			on_middle_button_down,
 			on_right_button_down,
 			on_left_button_up,
+			on_middle_button_up,
 			on_right_button_up,
 			on_left_button_double_click,
+			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
 			on_key_down,
 			on_key_up,
 			on_set_focus,
 			on_kill_focus,
+			on_desactivate,
 			on_set_cursor,
 			on_draw_item,
 			background_brush,
 			on_color_control,
  			on_wm_vscroll,
  			on_wm_hscroll,
+			on_char,
 			show,
 			hide,
 			on_destroy,
-			on_size
+			on_size,
+			x_position,
+			y_position,
+			on_notify,
+			on_sys_key_down,
+			on_sys_key_up,
+			default_process_message
 		redefine
 			default_style,
-			default_ex_style
+			default_ex_style,
+			class_name
 		end
 
 feature {NONE} -- Initialization
 
 	make is
-			-- Create the box with the default options.
+			-- Create `Current' with `default_parent'.
 		do
 			wel_make (default_parent, "")
-		end
-
-feature -- Access
-
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
 		end
 
 feature {NONE} -- Implementation
 
 	top_level_window_imp: WEL_WINDOW
-			-- Top level window that contains the current widget.
+			-- Top level window that contains `Current'.
 
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
+			-- Default style used by windows at creation.
 		do
 			Result := Ws_child + Ws_clipchildren
 					+ Ws_clipsiblings + Ws_visible
 		end
 
 	default_ex_style: INTEGER is
+			-- Extended style used by windows at creation.
 		do
 			Result := Ws_ex_controlparent
 		end
 
+	class_name: STRING is
+			-- Window class name to create.
+		do
+			Result := generator
+		end
+	
 feature {NONE} -- Deferred features
 
 	default_parent: WEL_FRAME_WINDOW is
+			-- Parent of `Current' when a parent is required and has not
+			-- been specified.
 		deferred
 		end
 
-feature {NONE} -- Feature that should be directly implemented by externals
+feature {NONE} -- Features that should be directly implemented by externals.
 
 	mouse_message_x (lparam: INTEGER): INTEGER is
 			-- Encapsulation of the c_mouse_message_x function of
@@ -175,29 +179,74 @@ feature {NONE} -- Feature that should be directly implemented by externals
 
 end -- class EV_WEL_CONTROL_CONTAINER_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.21  2000/05/03 20:13:23  brendel
+--| Revision 1.22  2001/06/07 23:08:14  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.12.8.14  2001/01/26 23:44:38  rogers
+--| Undefined on_sys_key_up inherited from WEL.
+--|
+--| Revision 1.12.8.13  2001/01/09 22:21:47  rogers
+--| Undefined default_process_message from WEL.
+--|
+--| Revision 1.12.8.12  2000/11/27 20:23:04  rogers
+--| Undefined on_notify from WEL_CONTROL_WINDOW as we now use the version
+--| inherited from EV_CONTAINER_IMP.
+--|
+--| Revision 1.12.8.11  2000/11/14 23:40:27  rogers
+--| Removed premature addition of on_notify undefinition.
+--|
+--| Revision 1.12.8.10  2000/11/14 21:04:48  rogers
+--| Changed all instances of `bang bang' to create.
+--|
+--| Revision 1.12.8.8  2000/10/10 23:56:30  raphaels
+--| Added `on_desactivate' in list of undefined features from WEL_WINDOW.
+--|
+--| Revision 1.12.8.7  2000/08/11 20:11:39  rogers
+--| Removed fixme NOT_REVIEWED. Comments. Fixed copyright clause.
+--|
+--| Revision 1.12.8.6  2000/08/08 01:46:44  manus
+--| No need for the `wel_window_parent' hack due to a bug in the compiler.
+--| Added undefine clauses for the `on_middle_button_*' routines that are now
+--| defines in WEL.
+--| `class_name' now returns `generator' for debugging purposes in `Spy++'.
+--|
+--| Revision 1.12.8.5  2000/07/12 16:13:49  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
+--|
+--| Revision 1.12.8.4  2000/06/13 18:39:31  rogers
+--| Removed undefintion of remove_command.
+--|
+--| Revision 1.12.8.3  2000/06/13 17:26:52  rogers
+--| Removed inheritance from EV_WIDGET_EVENTS_CONSTANTS_IMP as they were
+--| used in the old event system and are no longer required by Vision2.
+--|
+--| Revision 1.12.8.2  2000/05/03 22:35:00  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.12.8.1  2000/05/03 19:09:18  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.20  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.

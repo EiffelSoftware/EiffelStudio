@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision accelerator. Mswindows implementation."
 	status: "See notice at end of class"
@@ -38,7 +37,7 @@ create
 feature {NONE} -- Initialization
 	
 	make (an_interface: like interface) is
-			-- Connect interface.
+			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			make_id
@@ -46,6 +45,7 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
+			-- Initialize `Current'.
 		do
 			is_initialized := True
 		end
@@ -53,24 +53,24 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	key: EV_KEY is
-			-- Key that has to pressed to trigger actions.
+			-- `Result' is key used by `Current' key combination.
 		do
 			create Result.make_with_code (key_code_from_wel (wel_key))
 		end
 
-	shift_key: BOOLEAN is
+	shift_required: BOOLEAN is
 			-- Must the shift key be pressed?
 		do
 			Result := flag_set (flags, Fshift)
 		end
 
-	alt_key: BOOLEAN is
+	alt_required: BOOLEAN is
 			-- Must the alt key be pressed?
 		do
 			Result := flag_set (flags, Falt)
 		end
 
-	control_key: BOOLEAN is
+	control_required: BOOLEAN is
 			-- Must the control key be pressed?
 		do
 			Result := flag_set (flags, Fcontrol)
@@ -84,38 +84,38 @@ feature -- Element change
 			wel_set_key (key_code_to_wel (a_key.code))
 		end
 
-	enable_shift_key is
+	enable_shift_required is
 			-- "Shift" must be pressed for the key combination.
 		do
 			set_flags (set_flag (flags, Fshift))
 		end
 
-	disable_shift_key is
-			-- "Shift" is not part of the key combination.
+	disable_shift_required is
+			-- Remove "Shift" from the key combination of `Current'.
 		do
 			set_flags (clear_flag (flags, Fshift))
 		end
 
-	enable_alt_key is
+	enable_alt_required is
 			-- "Alt" must be pressed for the key combination.
 		do
 			set_flags (set_flag (flags, Falt))
 		end
 
-	disable_alt_key is
-			-- "Alt" is not part of the key combination.
+	disable_alt_required is
+			-- Remove "Alt" from the key combination of `Current'.
 		do
 			set_flags (clear_flag (flags, Falt))
 		end
 
-	enable_control_key is
+	enable_control_required is
 			-- "Control" must be pressed for the key combination.
 		do
 			set_flags (set_flag (flags, Fcontrol))
 		end
 
-	disable_control_key is
-			-- "Control" is not part of the key combination.
+	disable_control_required is
+			-- Remove "Control" from the key combination of `Current'.
 		do
 			set_flags (clear_flag (flags, Fcontrol))
 		end
@@ -126,18 +126,23 @@ feature {NONE} -- Implementation
 			-- Integer representation of key combination.
 		do
 			Result := key.code
-			if control_key then
+			if control_required then
 				Result := Result + 2048
 			end
-			if alt_key then
+			if alt_required then
 				Result := Result + 1024
 			end
-			if shift_key then
+			if shift_required then
 				Result := Result + 512
 			end
 		end
 
-	destroy is do end
+	destroy is
+			-- Destroy `Current'.
+		do
+			destroy_item
+			is_destroyed := True
+		end
 
 end -- class EV_ACCELERATOR_IMP
 
@@ -162,6 +167,24 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.6  2001/05/18 20:50:19  pichery
+--| Updated for destroy_just_called
+--|
+--| Revision 1.6.4.5  2000/09/08 00:19:09  rogers
+--| Changed feature names to match those of the interface.
+--|
+--| Revision 1.6.4.4  2000/06/12 19:46:46  rogers
+--| Remove FIXME from destroy. Destroy now calls destroy_item instead of dispose.
+--|
+--| Revision 1.6.4.3  2000/06/12 19:27:06  rogers
+--| Implemented destroy with a FIXME, as a temporary measure.
+--|
+--| Revision 1.6.4.1  2000/05/03 19:09:12  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/03/16 17:11:24  brendel
 --| Implemented.
 --|

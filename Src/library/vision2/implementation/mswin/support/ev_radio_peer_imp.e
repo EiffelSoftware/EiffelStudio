@@ -31,7 +31,8 @@ feature -- Status report
 				radio_group.go_to (cur)
 			else
 				check
-					-- This item should be selected as enforced by other contracts.
+					-- This item should be selected as enforced by
+					-- other contracts.
 					is_selected: is_selected
 				end
 				Result.extend (interface)
@@ -58,7 +59,8 @@ feature -- Status report
 				radio_group.go_to (cur)
 			else
 				check
-					-- This item should be selected as enforced by other contracts.
+					-- This item should be selected as enforced by
+					-- other contracts.
 					is_selected: is_selected
 				end
 				Result := interface
@@ -83,7 +85,7 @@ feature {EV_ANY_I} -- Implementation
 				remove_from_radio_group
 			end
 			radio_group := a_list
-			if radio_group.empty then
+			if radio_group.is_empty then
 				enable_select
 			end
 			radio_group.extend (Current)
@@ -103,7 +105,7 @@ feature {EV_ANY_I} -- Implementation
 			check
 				removed: not radio_group.has (Current)
 			end
-			if is_selected and then not radio_group.empty then
+			if is_selected and then not radio_group.is_empty then
 				radio_group.first.enable_select
 			end
 			radio_group := Void
@@ -134,6 +136,18 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.6.3  2000/11/29 00:45:14  rogers
+--| Changed empty to is_empty.
+--|
+--| Revision 1.2.6.2  2000/08/03 16:36:52  rogers
+--| Formatting to 80 columns.
+--|
+--| Revision 1.2.6.1  2000/05/03 19:09:18  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.2  2000/02/25 02:18:32  brendel
 --| Implemented.
 --|

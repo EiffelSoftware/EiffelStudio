@@ -55,31 +55,44 @@ while (<>) {
 		$string = "\"$string\"";
 
 		# Create GTK-code with GDK external.
-		$gtk_code = shift (@fields);
-		$gdk_ext = $gtk_code;
-		$gtk_code =~ tr/[A-Z]/[a-z]/;
-		$gtk_code = "${gtk_code}_keysym";
+		$gdk_ext = shift (@fields);
+		$gtk_code = "${identifier}_keysym";
 		
 		$wel_code = shift (@fields);
 
-		# Append to the big strings.
-		$eif_statement = "Result.put ($wel_code, $identifier)";
-		$v2_to_wel_array = "$v2_to_wel_array\t\t\t$eif_statement\n";
+		if (@fields > 0) {
+			$id_override = shift (@fields);
+			$id_override = "Key_$id_override";
+		} else {
+			$id_override = "";
+		}
 
-		$eif_statement = "Result.put ($identifier, $wel_code)";
+		# Append to the big strings.
+		if ($id_override eq "") {
+			$eif_statement = "Result.put ($wel_code, $identifier)";
+			$v2_to_wel_array = "$v2_to_wel_array\t\t\t$eif_statement\n";
+			$eif_statement = "Result.put ($identifier, $wel_code)";
+		} else {
+			$eif_statement = "Result.put ($id_override, $wel_code)";
+		}
 		$wel_to_v2_array = "$wel_to_v2_array\t\t\t$eif_statement\n";
 
-		$eif_statement = "Result.put ($gtk_code, $identifier)";
-		$v2_to_gtk_array = "$v2_to_gtk_array\t\t\t$eif_statement\n";
-
-		$eif_statement = "Result.put ($identifier, $gtk_code)";
+		if ($id_override eq "") {
+			$eif_statement = "Result.put ($gtk_code, $identifier)";
+			$v2_to_gtk_array = "$v2_to_gtk_array\t\t\t$eif_statement\n";
+			$eif_statement = "Result.put ($identifier, $gtk_code)";
+		} else {
+			$eif_statement = "Result.put ($id_override, $gtk_code)";
+		}
 		$gtk_to_v2_array = "$gtk_to_v2_array\t\t\t$eif_statement\n";
 
-		$eif_statement = "Result.put ($string, $identifier)";
-		$key_strings = "$key_strings\t\t\t$eif_statement\n";
+		if ($id_override eq "") {
+			$eif_statement = "Result.put ($string, $identifier)";
+			$key_strings = "$key_strings\t\t\t$eif_statement\n";
 
-		$eif_statement = "$identifier: INTEGER is unique";
-		$key_constants = "$key_constants\n\t$eif_statement\n\t\t\t$comment\n";
+			$eif_statement = "$identifier: INTEGER is unique";
+			$key_constants = "$key_constants\n\t$eif_statement\n\t\t\t$comment\n";
+		}
 
 		$eif_statement = "\n\t$gtk_code: INTEGER is\n\t\texternal\n\t\t\t\"C [macro <gdk/gdkkeysyms.h>]\"\n\t\talias\n\t\t\t\"$gdk_ext\"\n\t\tend";
 		$gdk_externals = "$gdk_externals$eif_statement\n";
@@ -196,7 +209,7 @@ $v2_to_wel_array		end
 	wel_to_v2_table: HASH_TABLE [INTEGER, INTEGER] is
 			-- Vision2 keycodes indexed by WEL key code.
 		once
-			create Result.make (10)
+			create Result.make (128)
 $wel_to_v2_array		end
 
 end -- class EV_WEL_KEY_CONVERSION
@@ -273,7 +286,7 @@ $v2_to_gtk_array		end
 	gtk_to_v2_table: HASH_TABLE [INTEGER, INTEGER] is
 			-- Vision2 keycodes indexed by GTK key code.
 		once
-			create Result.make (10)
+			create Result.make (128)
 $gtk_to_v2_array		end
 
 feature {NONE} -- Externals
@@ -303,6 +316,15 @@ close (OH);
 #===============================================================================
 #
 # $Log$
+# Revision 1.12  2001/06/07 23:07:57  rogers
+# Merged DEVEL branch into Main trunc.
+#
+# Revision 1.11.2.2  2000/08/31 18:03:21  oconnor
+# added CAPS keys
+#
+# Revision 1.11.2.1  2000/05/03 19:08:24  oconnor
+# mergred from HEAD
+#
 # Revision 1.11  2000/04/12 19:25:27  brendel
 # Semicolons! (PERL, remember...?)
 #

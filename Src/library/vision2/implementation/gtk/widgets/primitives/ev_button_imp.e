@@ -20,7 +20,10 @@ inherit
 			interface,
 			initialize,
 			make,
-			pointer_over_widget
+			pointer_over_widget,
+			set_foreground_color,
+			foreground_color_pointer,
+			visual_widget
 		end
  
 	EV_PIXMAPABLE_IMP
@@ -28,7 +31,8 @@ inherit
 			set_pixmap,
 			remove_pixmap,
 			interface,
-			initialize
+			initialize,
+			visual_widget
 		end
      
 	EV_TEXTABLE_IMP
@@ -36,15 +40,26 @@ inherit
 			set_text,
 			remove_text,
 			interface,
-			initialize
+			initialize,
+			visual_widget
 		end
 
---FIXME	EV_BAR_ITEM_IMP
+	EV_BUTTON_ACTION_SEQUENCES_IMP
+		redefine
+			interface,
+			visual_widget
+		end
 
 create
         make
 
 feature {NONE} -- Initialization
+
+	button_widget: POINTER is
+		-- Pointer to gtk*button as c_object is event box in check button.
+		do
+			Result := c_object
+		end
 	
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.
@@ -54,18 +69,13 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
-			-- Set up action sequence connection and `Precursor' initialization,
+			-- `Precursor' initialization,
 			-- create button box to hold label and pixmap.
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
-			connect_signal_to_actions (
-				"clicked",
-				interface.select_actions,
-				Void
-			)
 			is_initialized := True
 			align_text_center
 		end
@@ -76,7 +86,7 @@ feature {NONE} -- Initialization
 			box: POINTER
 		do
 			box := C.gtk_hbox_new (False, 0)
-			C.gtk_container_add (c_object, box)
+			C.gtk_container_add (button_widget, box)
 			C.gtk_widget_show (box)
 			C.gtk_box_pack_start (box, text_label, True, True, padding)
 			C.gtk_widget_hide (text_label)
@@ -95,7 +105,7 @@ feature -- Access
 			-- Is this button currently a default push button 
 			-- for a particular container?
 		do
-			Result := GTK_WIDGET_CAN_DEFAULT (c_object)
+			Result := GTK_WIDGET_HAS_DEFAULT (button_widget)
 		end
 
 feature -- Status Setting
@@ -104,15 +114,40 @@ feature -- Status Setting
 			-- Set the style of the button corresponding
 			-- to the default push button.
 		do
-			GTK_WIDGET_SET_FLAGS (c_object, C.GTK_CAN_DEFAULT_ENUM)
-			C.gtk_widget_grab_default (c_object)
+			enable_can_default
+			C.gtk_widget_grab_default (button_widget)
 		end
 
 	disable_default_push_button is
 			-- Remove the style of the button corresponding
 			-- to the default push button.
+		local
+			par_ptr: POINTER
 		do
-			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_DEFAULT_ENUM)
+			GTK_WIDGET_UNSET_FLAGS (button_widget, C.GTK_HAS_DEFAULT_ENUM)
+			C.gtk_widget_draw_default (button_widget)
+			from
+				par_ptr := C.gtk_widget_struct_parent (button_widget)
+			until
+				GTK_IS_WINDOW (par_ptr) or else par_ptr = NULL
+			loop
+				par_ptr := C.gtk_widget_struct_parent (par_ptr)
+			end
+
+			if par_ptr /= NULL then
+				C.gtk_window_set_default (par_ptr, NULL)
+			end			
+		end
+
+	enable_can_default is
+			-- Allow the style of the button to be the default push button.
+		do
+			GTK_WIDGET_SET_FLAGS (button_widget, C.GTK_CAN_DEFAULT_ENUM)
+		end
+
+	set_foreground_color (a_color: EV_COLOR) is
+		do
+			real_set_foreground_color (text_label, a_color)
 		end
 
 feature -- Element change
@@ -173,17 +208,26 @@ feature {EV_APPLICATION_IMP} -- Implementation
 		local
 			a_gtk_pix: POINTER
 		do
-			Result := Precursor (a_gdkwin, a_x, a_y)
-			if not Result then
-				a_gtk_pix := gtk_pixmap
-				if a_gtk_pix /= NULL then
-					-- No struct member call if gtk_pix is a NULL pointer.
-					Result := a_gdkwin = C.gtk_widget_struct_window (a_gtk_pix)
+			if is_displayed then
+				Result := Precursor (a_gdkwin, a_x, a_y)
+				if not Result then
+					a_gtk_pix := gtk_pixmap
+					if a_gtk_pix /= NULL then
+						-- No struct member call if gtk_pix is a NULL pointer.
+						Result := a_gdkwin = C.gtk_widget_struct_window (a_gtk_pix)
+					end
 				end
 			end
 		end
 	
 feature {NONE} -- implementation
+
+	foreground_color_pointer: POINTER is
+		do
+			Result := C.gtk_style_struct_fg (
+				C.gtk_widget_struct_style (text_label)
+			)
+		end
 
 	padding: INTEGER is 3
 			-- Number of pixels of extra space arround text and pixmap.
@@ -192,18 +236,23 @@ feature {NONE} -- implementation
 			-- GtkHBox in button.
 			-- Holds label and pixmap.
 		do
-			Result := C.gtk_container_children (c_object)
+			Result := C.gtk_container_children (button_widget)
 			Result := C.g_list_nth_data (Result, 0)
 		end
 
-	is_default_button: BOOLEAN
-			-- Temporary flag whose only use is to enable functions
-			-- `is_default_push_button', `enable_default_push_button'
-			-- and `disable_default_push_button' to be executed
-			-- without raising zillions of assertion violations.
-			--| FIXME implement cited function, then remove me.
+	visual_widget: POINTER is
+		do
+			Result := button_widget
+		end
 
 feature {NONE} -- Externals
+
+	gtk_is_window (a_widget: POINTER): BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>]: EIF_BOOLEAN"
+		alias
+			"GTK_IS_WINDOW"
+		end
 
 	gtk_widget_can_default (a_widget: POINTER): BOOLEAN is
 		external
@@ -219,20 +268,6 @@ feature {NONE} -- Externals
 			"GTK_WIDGET_HAS_DEFAULT"
 		end
 
-	gtk_widget_set_flags (a_widget: POINTER; a_flag: INTEGER) is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_WIDGET_SET_FLAGS"
-		end
-
-	gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER) is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_WIDGET_UNSET_FLAGS"
-		end
-
 feature {EV_ANY_I} -- implementation
 
 	interface: EV_BUTTON
@@ -240,7 +275,7 @@ feature {EV_ANY_I} -- implementation
 			-- functionality implemented by `Current'
 
 invariant
-	button_box_not_void: is_useable implies button_box /= Void
+	button_box_not_void: is_usable implies button_box /= Void
 
 end -- class EV_BUTTON_IMP
 
@@ -265,11 +300,52 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.37  2000/06/07 20:08:04  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.38  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.36  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.26.4.19  2001/04/17 17:04:29  king
+--| Optimized pointer_over_widget
+--|
+--| Revision 1.26.4.18  2001/02/16 00:25:31  rogers
+--| Replaced useable with usable.
+--|
+--| Revision 1.26.4.17  2000/10/27 16:54:43  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.26.4.16  2000/10/07 00:08:08  andrew
+--| Redefining visual_widget to return button_widget
+--|
+--| Revision 1.26.4.15  2000/08/23 00:33:38  king
+--| Moved macros up to widget_imp
+--|
+--| Revision 1.26.4.14  2000/08/16 18:44:01  king
+--| Corrected set_foreground functionality
+--|
+--| Revision 1.26.4.13  2000/08/08 00:03:15  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.26.4.12  2000/07/24 21:36:10  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.26.4.11  2000/07/05 23:57:49  king
+--| Removed obscure fixme
+--|
+--| Revision 1.26.4.10  2000/06/22 22:13:54  king
+--| Correctly implemented disable_default_push_button
+--|
+--| Revision 1.26.4.8  2000/06/15 21:18:03  king
+--| Made button_widget a function to return c_object for previous compatibility
+--|
+--| Revision 1.26.4.7  2000/06/15 19:06:58  king
+--| routines now call button_widget instead of c_object
 --|
 --| Revision 1.26.4.6  2000/06/01 22:04:32  king
 --| Implemented pointer_over_widget to deal with pixmap

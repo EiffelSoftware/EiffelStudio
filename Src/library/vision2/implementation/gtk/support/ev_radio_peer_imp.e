@@ -35,7 +35,7 @@ feature -- Status report
 				until
 					cur = NULL
 				loop
-					peer_imp ?= eif_object_from_c (C.gslist_struct_data (cur))
+					peer_imp ?= eif_object_from_c (widget_object (cur))
 					Result.extend (peer_imp.interface)
 					cur := C.gslist_struct_next (cur)
 				end
@@ -56,13 +56,21 @@ feature -- Status report
 				until
 					cur = NULL or else Result /= void
 				loop
-					peer_imp ?= eif_object_from_c (C.gslist_struct_data (cur))
+					peer_imp ?= eif_object_from_c (widget_object (cur))
 					if peer_imp.is_selected then
 						Result := peer_imp.interface
 					end
 					cur := C.gslist_struct_next (cur)
 				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	widget_object (a_list: POINTER): POINTER is
+			-- Returns c_object relative to a_list data.
+		do
+			Result := C.gslist_struct_data (a_list)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -97,6 +105,15 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.7.2.2  2000/06/15 22:15:00  king
+--| Added widget_object to return c_object from radio_item in gslist
+--|
+--| Revision 1.7.2.1  2000/05/03 19:08:43  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/05/02 18:55:25  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

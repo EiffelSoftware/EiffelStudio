@@ -1,11 +1,9 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision table child. Used only for windows. This%
+		"EiffelVision table child. Used only on windows implementation. This%
 		% object is a link between a table and one of its child.%
 		% Each child of a table is store in a table_child."
-	author: ""
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,8 +16,7 @@ creation
 feature -- Initialization
 
 	make (a_widget: EV_WIDGET_IMP; parent: EV_TABLE_IMP) is
-			-- Create a table child according to a widget and its
-			-- attachments in the table
+			-- Create `Current' with `a_widget' and parent as `parent'.
 		require
 			valid_child: a_widget /= Void
 			valid_parent: parent /= Void
@@ -31,32 +28,31 @@ feature -- Initialization
 feature -- Access
 
 	table: EV_TABLE_IMP
-			-- The table
+			-- The table to which `Current' is linked.
 
 	widget: EV_WIDGET_IMP
-			-- The child of the table
+			-- The widget_contained.
 
 	top_attachment: INTEGER
-			-- The top line of the table to which the child is
-			-- attach.
+			-- The top attatchment of `widget' in the 1 based table
+			-- coordinates.
 
 	left_attachment: INTEGER
-			-- The left line of the table to which the child is
-			-- attach.
+			-- The left attatchment of `widget' in the 1 based table
+			-- coordinates.
 
 	bottom_attachment: INTEGER
-			-- The bottom line of the table to which the child is
-			-- attach.
+			-- The bottom attatchment of `widget' in the 1 based table
+			-- coordinates.
 
 	right_attachment: INTEGER
-			-- The right line of the table to which the child is
-			-- attach.
-
+			-- The right attatchment of `widget' in the 1 based table
+			-- coordinates.
 feature -- Element change
 
 	set_attachment (top, left, bottom, right: INTEGER) is
 				-- Make `top', `left', `bottom' and `right' the new attachments
-				-- of `widget'. 
+				-- of `widget'.
 		require
 			good_vertical_dimension: bottom >= top
 			good_horizontal_dimension: right >= left
@@ -67,7 +63,7 @@ feature -- Element change
 			right_attachment := right 
 		ensure
 			dimension_set: top_attachment = top and left_attachment = left
-							and bottom_attachment = bottom and right_attachment = right
+				and bottom_attachment = bottom and right_attachment = right
 		end
 
 invariant
@@ -80,27 +76,42 @@ invariant
 
 end -- class EV_TABLE_CHILD_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2001/06/07 23:08:14  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.8.4  2000/08/11 19:00:27  rogers
+--| Fixed copyright clause. Now use ! instead of |.
+--|
+--| Revision 1.2.8.3  2000/06/13 16:09:43  rogers
+--| Removed FIXME NOT_REVIEWED. Comments, formatting.
+--|
+--| Revision 1.2.8.2  2000/06/09 22:15:32  rogers
+--| Removed FIXME not for release.
+--|
+--| Revision 1.2.8.1  2000/05/03 19:09:18  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.3  2000/02/14 11:40:42  oconnor
 --| merged changes from prerelease_20000214
 --|

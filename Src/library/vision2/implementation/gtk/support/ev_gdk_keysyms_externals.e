@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "External C routines for accessing gdk keysyms constants";
 	status: "See notice at end of class";
@@ -6,7 +5,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class EV_GDK_KEYSYMS_EXTERNALS
+class
+	EV_GDK_KEYSYMS_EXTERNALS
 
 feature {NONE} -- Numbers
 	
@@ -596,6 +596,18 @@ end -- class EV_GDK_KEYSYMS_EXTERNALS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.3  2000/10/06 20:11:47  oconnor
+--| cosmetics
+--|
+--| Revision 1.3.4.2  2000/09/06 23:18:42  king
+--| Reviewed
+--|
+--| Revision 1.3.4.1  2000/05/03 19:08:42  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.5  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

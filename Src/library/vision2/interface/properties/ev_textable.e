@@ -11,19 +11,18 @@ deferred class
 
 inherit
 	EV_ANY
-		undefine
-			create_action_sequences
 		redefine
+			is_in_default_state,
 			implementation
 		end
 
 feature {NONE} -- Initialization
 
 	make_with_text (a_text: STRING) is
-			-- Create the textable and agging `a_text' to `text'
+			-- Create `Current' and assign `a_text' to `text'
 		require
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.empty
+			a_text_not_empty: not a_text.is_empty
 			default_create_not_already_called: not default_create_called
 		do
 			default_create
@@ -31,47 +30,61 @@ feature {NONE} -- Initialization
 		ensure
 			text_assigned: text.is_equal (a_text) and text /= a_text
 		end
-
-	make_for_test is
-			-- Cycle through alignments.
-		local
-			align_timer: EV_TIMEOUT
-		do
-			create align_timer.make_with_interval (1500)
-			align_timer.actions.extend (~cycle_alignment)
-			create alignment
-		end
-
+		
 feature -- Access
 
 	text: STRING is
 			-- Text displayed in textable.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result:= implementation.text
 		ensure
 			bridge_ok: equal (Result, implementation.text)
 			not_void_implies_cloned: Result /= Void implies
 				Result /= implementation.text
-		end 
+		end
+
+	alignment: EV_TEXT_ALIGNMENT is
+			-- Current text positioning.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.alignment
+		ensure
+			alignment_not_void: Result /= Void
+		end
 
 feature -- Status setting
 
 	align_text_center is
 			-- Display `text' centered.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.align_text_center
+		ensure
+			alignment_set: alignment.is_center_aligned
 		end
 
 	align_text_right is
 			-- Display `text' right aligned.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.align_text_right
+		ensure
+			alignment_set: alignment.is_right_aligned
 		end
         
 	align_text_left is
 			-- Display `text' left aligned.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.align_text_left
+		ensure
+			alignment_set: alignment.is_left_aligned
 		end
 
 feature -- Element change
@@ -79,8 +92,9 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		require
+			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.empty
+			a_text_not_empty: not a_text.is_empty
 		do
 			implementation.set_text (a_text)
 		ensure
@@ -89,12 +103,39 @@ feature -- Element change
 
 	remove_text is
 			-- Make `text' `Void'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.remove_text
 		ensure
 			text_removed: text = Void
 		end
+		
+feature {NONE} -- Contract support
+	
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := Precursor {EV_ANY} and text = Void
+		end
 
+	cycle_alignment is
+			-- Set another alignment.
+		do
+			if alignment.is_left_aligned then
+				align_text_center
+			elseif alignment.is_center_aligned then
+				align_text_right
+			elseif alignment.is_right_aligned then
+				align_text_left
+			end
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TEXTABLE_I
+			-- Responsible for interaction with the native graphics toolkit.
+			
 feature -- Obsolete
 
 	set_center_alignment is
@@ -102,7 +143,7 @@ feature -- Obsolete
 		obsolete
 			"Use: align_text_center."
 		do
-			implementation.align_text_center
+			align_text_center
 		end
 
 	set_right_alignment is
@@ -110,7 +151,7 @@ feature -- Obsolete
 		obsolete
 			"Use: align_text_right."
 		do
-			implementation.align_text_right
+			align_text_right
 		end
         
 	set_left_alignment is
@@ -118,35 +159,12 @@ feature -- Obsolete
 		obsolete
 			"Use: align_text_left."
 		do
-			implementation.align_text_left
+			align_text_left
 		end
-
-feature {EV_TEXTABLE_I} -- Implementation
-
-	alignment: EV_TEXT_ALIGNMENT
-			-- Current text positioning.
-
-	cycle_alignment is
-			-- Set another alignment.
-		do
-			if alignment.is_left_aligned then
-				alignment.set_center_alignment
-				align_text_center
-			elseif alignment.is_center_aligned then
-				alignment.set_right_alignment
-				align_text_right
-			elseif alignment.is_right_aligned then
-				alignment.set_left_alignment
-				align_text_left
-			end
-		end
-
-	implementation: EV_TEXTABLE_I
-			-- Responsible for interaction with the native graphics toolkit.
 
 invariant
 	text_not_void_implies_text_not_empty:
-		is_useable and text /= Void implies text.count > 0
+		is_usable and text /= Void implies text.count > 0
 
 end -- class EV_TEXTABLE
 
@@ -165,119 +183,3 @@ end -- class EV_TEXTABLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.22  2000/06/07 17:28:07  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.12.4.2  2000/05/10 23:02:13  king
---| Change precond to use empty
---|
---| Revision 1.12.4.1  2000/05/03 19:10:03  oconnor
---| mergred from HEAD
---|
---| Revision 1.21  2000/04/28 00:41:00  brendel
---| Added make_for_test that sets all aligments.
---|
---| Revision 1.20  2000/03/29 20:24:16  brendel
---| Improved postconditions.
---|
---| Revision 1.19  2000/03/17 01:23:34  oconnor
---| formatting and layout
---|
---| Revision 1.18  2000/03/01 22:44:02  brendel
---| amd -> and
---|
---| Revision 1.17  2000/03/01 22:30:26  oconnor
---| corrected postconditions
---|
---| Revision 1.16  2000/03/01 20:39:55  king
---| Moved implementation featureto bottom of class for consistency
---|
---| Revision 1.15  2000/02/29 18:09:08  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.14  2000/02/22 18:39:49  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.13  2000/02/14 11:40:49  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.12.6.19  2000/02/08 09:43:40  oconnor
---| fixed text postcondition
---|
---| Revision 1.12.6.18  2000/02/04 21:17:19  king
---| Uncommented invariants, added make_with_text
---|
---| Revision 1.12.6.17  2000/01/28 20:00:11  oconnor
---| released
---|
---| Revision 1.12.6.16  2000/01/27 19:30:47  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.12.6.15  2000/01/27 18:05:41  brendel
---| Removed invariant about empty text.
---|
---| Revision 1.12.6.14  2000/01/19 23:23:08  oconnor
---| added  is_useable to text_not_void_implies_text_not_empty invariant
---|
---| Revision 1.12.6.13  2000/01/18 19:33:34  oconnor
---| Removed inheritance of fontable,
---| ont all texables are actualy fontable as well,
---| those that are should now inherit fontable explicitly.
---|
---| Revision 1.12.6.12  2000/01/17 02:43:15  oconnor
---| fixed comment for feature text
---|
---| Revision 1.12.6.11  2000/01/13 18:28:14  oconnor
---| tweaked comments
---|
---| Revision 1.12.6.10  2000/01/07 23:31:45  king
---| Added obsolete calls for previously replaced features.
---|
---| Revision 1.12.6.9  2000/01/07 22:55:07  king
---| Corrected spelling mistake in align_text_right
---|
---| Revision 1.12.6.8  2000/01/07 17:19:21  oconnor
---| renamed allignment features, added remove_text
---|
---| Revision 1.12.6.7  2000/01/06 18:37:20  king
---| Critical review. Removed some features; now only consists of text and
---| set_text
---| along with the alignment functions.
---|
---| Revision 1.12.6.6  1999/12/16 03:49:55  oconnor
---| mutiple inheritance of creation_action_sequences tweaked
---|
---| Revision 1.12.6.5  1999/12/16 03:45:48  oconnor
---| added width and height
---|
---| Revision 1.12.6.4  1999/12/06 18:01:29  brendel
---| Now inherits from EV_FONTABLE.
---|
---| Revision 1.12.6.3  1999/12/02 20:06:14  brendel
---| Commented out feature `parent_needed'.
---|
---| Revision 1.12.6.2  1999/11/29 23:14:13  brendel
---| Added keywords and changed tags on assertions.
---|
---| Revision 1.12.6.1  1999/11/24 17:30:48  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.12.2.4  1999/11/23 23:01:25  oconnor
---| undefine create_action_sequences on repeated inherit
---|
---| Revision 1.12.2.3  1999/11/04 23:10:54  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.12.2.2  1999/11/02 17:20:12  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------
- 

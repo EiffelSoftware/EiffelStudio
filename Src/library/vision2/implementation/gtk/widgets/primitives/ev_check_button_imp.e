@@ -1,38 +1,41 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
-        description: 
-                "EiffelVision check button, gtk implementation.";
-        status: "See notice at end of class";
-        id: "$Id$";
-        date: "$Date$";
-        revision: "$Revision$"
-        
+	description: "EiffelVision check button, gtk implementation.";
+	status: "See notice at end of class";
+	id: "$Id$";
+	date: "$Date$";
+	revision: "$Revision$"
+	
 class
-        EV_CHECK_BUTTON_IMP
-        
+	EV_CHECK_BUTTON_IMP
+
 inherit
-        EV_CHECK_BUTTON_I
+	EV_CHECK_BUTTON_I
 		redefine
 			interface
 		end
 	
 	EV_TOGGLE_BUTTON_IMP
 		redefine
-			make, set_text, interface
+			make, set_text, interface, button_widget
 		end
-        
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-        make (an_interface: like interface) is
-                        -- Create a gtk check button.
+	make (an_interface: like interface) is
+			-- Create a gtk check button.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_check_button_new)
-                end
+			set_c_object (C.gtk_event_box_new)
+			button_widget := C.gtk_check_button_new
+			C.gtk_widget_show (button_widget)
+			C.gtk_container_add (c_object, button_widget)
+		end
+
+	button_widget: POINTER 
+			-- Pointer to gtkbutton widget as c_object is event box.
 			
 
 feature -- Element change
@@ -78,6 +81,35 @@ end -- class EV_CHECK_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.7.4.6  2000/10/27 16:54:43  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.7.4.5  2000/09/06 23:18:47  king
+--| Reviewed
+--|
+--| Revision 1.7.4.4  2000/08/08 00:03:15  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.7.4.3  2000/06/15 21:18:57  king
+--| Redefined button_widget to be an attribute that returns gtkwidget
+--|
+--| Revision 1.7.4.2  2000/06/15 19:09:30  king
+--| Now uses event box
+--|
+--| Revision 1.7.4.1  2000/05/03 19:08:50  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/05/02 18:55:30  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

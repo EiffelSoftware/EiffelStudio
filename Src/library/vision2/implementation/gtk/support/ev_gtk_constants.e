@@ -1,11 +1,11 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description: "EV_GTK_CONSTANTS - copied from C include files"
 	version: "0.1 - 3/6/98 (gtk+-99.4)"
 	author: "Richie Bielak"
 
-class EV_GTK_CONSTANTS
+class
+	EV_GTK_CONSTANTS
 
 feature
 
@@ -91,6 +91,18 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.8.3  2000/10/06 20:11:47  oconnor
+--| cosmetics
+--|
+--| Revision 1.5.8.2  2000/09/06 23:18:42  king
+--| Reviewed
+--|
+--| Revision 1.5.8.1  2000/05/03 19:08:43  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/02/14 11:40:29  oconnor
 --| merged changes from prerelease_20000214
 --|

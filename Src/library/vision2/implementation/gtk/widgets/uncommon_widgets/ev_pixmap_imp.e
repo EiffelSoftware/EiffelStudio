@@ -12,7 +12,8 @@ class
 inherit
 	EV_PIXMAP_I
 		redefine
-			interface
+			interface,
+			flush
 		end
 
 	EV_DRAWABLE_IMP
@@ -40,6 +41,12 @@ inherit
 			destroy
 		end
 
+	EV_PIXMAP_ACTION_SEQUENCES_IMP
+		redefine
+			interface,
+			destroy
+		end
+
 create
 	make
 
@@ -51,7 +58,7 @@ feature {NONE} -- Initialization
 			maskgc: POINTER
 		do
 			Result := C.gdk_pixmap_new (
-				C.gdk_root_parent,
+				default_gdk_window,
 				a_width, a_height,
 				-1
 			)
@@ -70,13 +77,13 @@ feature {NONE} -- Initialization
 			gdkpix, gdkmask: POINTER
 		do
 			base_make (an_interface)
-			gdkpix := C.gdk_pixmap_new (C.gdk_root_parent, 1, 1, -1)
+			gdkpix := C.gdk_pixmap_new (default_gdk_window, 1, 1, -1)
 			--gdkmask := create_mask (1, 1)
 			--| FIXME IEK correctly implement masking function	
 			set_c_object (C.gtk_event_box_new)
 			gtk_pixmap := C.gtk_pixmap_new (gdkpix, gdkmask)
-			C.gtk_widget_show (gtk_pixmap)
 			C.gtk_container_add (c_object, gtk_pixmap)
+			C.gtk_widget_show (gtk_pixmap)
 				-- Initialize the GC
 			gc := C.gdk_gc_new (C.gtk_pixmap_struct_pixmap (gtk_pixmap))
 			C.gdk_gc_set_function (gc, C.GDK_COPY_ENUM)
@@ -92,7 +99,7 @@ feature {NONE} -- Initialization
 			gdkpix, gdkmask: POINTER
 		do
 			unref_data
-			gdkpix := C.gdk_pixmap_new (C.gdk_root_parent, a_x, a_y, -1)
+			gdkpix := C.gdk_pixmap_new (default_gdk_window, a_x, a_y, -1)
 			--gdkmask := create_mask (a_x, a_y)
 			--| FIXME IEK correctly implement masking function	
 			set_pixmap (gdkpix, gdkmask)
@@ -100,34 +107,11 @@ feature {NONE} -- Initialization
 
 feature -- Drawing operations
 
-	redraw is
-			-- Redraw the window without clearing it.
-		do
-			check false end
-		end
-
-	redraw_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Redraw the rectangle (`x1',`y1') - (`x2', `y2')
-		do
-			check false end
-		end
-
-	clear_and_redraw is
-			-- Redraw the window after clearing it.
-		do
-			check false end
-		end
-
-	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Clear and Redraw the rectangle (`x1',`y1') - (`x2', `y2')
-		do
-			check false end
-		end
-
 	flush is
-			-- Update immediately the screen if needed
 		do
-			check false end
+			if is_displayed then
+				C.gtk_widget_draw (gtk_pixmap, NULL)
+			end
 		end
 
 feature -- Measurement
@@ -174,7 +158,7 @@ feature -- Element change
 			if pixfile /= Void then
 					-- The medium is a file.
 				gdkpix := C.gdk_pixmap_create_from_xpm (
-					C.gdk_root_parent,
+					default_gdk_window,
 					$gdkmask,
 					NULL,
 					eiffel_to_c (pixfile.name)
@@ -218,16 +202,14 @@ feature -- Element change
 			i, j: INTEGER
 			pix: CHARACTER
 			p, pixp: POINTER
-			bitmap: POINTER
 			maskgc: POINTER
 			color: POINTER
-			bool: BOOLEAN
 		do
 			if error_code /= Loadpixmap_error_noerror then
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
 			end
 			gdkpix := C.gdk_pixmap_new (
-				C.gdk_root_parent,
+				default_gdk_window,
 				pixmap_width,
 				pixmap_height,
 				-1	
@@ -296,7 +278,7 @@ feature -- Element change
 			C.set_gdk_color_struct_blue (bg, Max_16_bit)
 			
 			gdkpix := C.gdk_pixmap_create_from_data (
-				C.gdk_root_parent,
+				default_gdk_window,
 				$a, 32, 32, -1, $fg, $bg)
 
 			--gdkmask := create_mask (32, 32)
@@ -315,7 +297,7 @@ feature -- Element change
 			-- Exceptions "Unable to retrieve icon information"
 		do
 			unref_data
-			c_ev_load_pixmap ($Current, Default_pointer, $update_fields)
+			c_ev_load_pixmap ($Current, NULL, $update_fields)
 		end
 
 	stretch, stretch_image (a_x, a_y: INTEGER) is
@@ -327,10 +309,15 @@ feature -- Element change
 			-- Set the size of the pixmap to `a_x' by `a_y'.
 		local
 			tempgdkpix, gdkmask: POINTER
-			wid, hgt: INTEGER
+			foreg_clr: EV_COLOR
 		do
-			tempgdkpix := C.gdk_pixmap_new (C.gdk_root_parent,
+			tempgdkpix := C.gdk_pixmap_new (default_gdk_window,
 								a_x, a_y, -1)
+			create foreg_clr
+			foreg_clr.copy (foreground_color)
+			set_foreground_color (background_color)
+			C.gdk_draw_rectangle (tempgdkpix, gc, 1, 0, 0, -1, -1)
+			set_foreground_color (foreg_clr)
 			C.gdk_draw_pixmap (
 				tempgdkpix,
 				gc,
@@ -353,6 +340,49 @@ feature -- Element change
 
 feature -- Access
 
+	raw_image_data: EV_RAW_IMAGE_DATA is
+		local
+			a_gdkimage: POINTER
+			a_pixel: INTEGER
+			a_color: POINTER
+			a_color_map: POINTER
+			color_struct_size: INTEGER
+			a_width: INTEGER
+			array_offset, array_size: INTEGER
+			array_area: SPECIAL [CHARACTER]
+temp_alpha: CHARACTER
+temp_alpha_int: INTEGER
+		do
+			create Result.make_with_alpha_zero (width, height)
+			Result.set_originating_pixmap (interface)
+			a_gdkimage := C.gdk_image_get (C.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
+			from
+				a_width := width * 4
+				a_color_map := C.gdk_window_get_colormap (C.gtk_widget_struct_window (Default_gtk_window))
+				color_struct_size := C.c_gdk_color_struct_size
+				array_size := a_width * height
+				array_area := Result.area
+temp_alpha_int := 255
+temp_alpha := temp_alpha_int.ascii_char
+			until
+				array_offset = array_size
+			loop
+				a_pixel := C.gdk_image_get_pixel (
+					a_gdkimage,
+					(array_offset \\ (a_width) // 4), -- Zero based X coord
+					((array_offset) // a_width) -- Zero based Y coord
+				)
+
+				a_color := C.gdk_colormap_struct_colors (a_color_map) + (a_pixel * color_struct_size)
+				array_area.put (C.gdk_color_struct_red (a_color).ascii_char, array_offset)
+				array_area.put (C.gdk_color_struct_green (a_color).ascii_char, array_offset + 1)
+				array_area.put (C.gdk_color_struct_blue (a_color).ascii_char, array_offset + 2)
+array_area.put (temp_alpha, array_offset + 3)
+--| FIXME IEK Add support for pixmap alpha.
+				array_offset := array_offset + 4
+			end
+		end
+
 	mask: POINTER is
 			-- Pointer to the GdkBitmap used for masking.
 		do
@@ -360,7 +390,7 @@ feature -- Access
 		end
 
 
-feature {EV_DEFAULT_PIXMAPS_IMP} -- Implementation
+feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 	set_pixmap (pix, msk: POINTER) is
 			-- Set the GtkPixmap using Gdk pixmap data and mask.
@@ -416,7 +446,7 @@ feature {EV_PIXMAPABLE_IMP, EV_CURSOR_IMP, EV_MULTI_COLUMN_LIST_IMP} -- Implemen
 	gtk_pixmap: POINTER
 		-- Pointer to the gtk pixmap widget.
 
-feature {EV_DEFAULT_PIXMAPS_IMP} -- Implementation
+feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 	set_from_xpm_data (a_xpm_data: POINTER) is
 			-- Pixmap symbolizing a piece of information.
@@ -424,14 +454,18 @@ feature {EV_DEFAULT_PIXMAPS_IMP} -- Implementation
 			xpm_data_not_null: a_xpm_data /= NULL
 		local
 			gdk_pixmap: POINTER
+			a_mask: POINTER
+			a_style: POINTER
 		do
+			a_style := C.gtk_widget_get_style (default_gtk_window)
 			gdk_pixmap := C.gdk_pixmap_create_from_xpm_d (
-				C.gdk_root_parent,
-				Default_pointer,
-				Default_pointer,
+				default_gdk_window,
+				$a_mask,
+				C.gtk_style_struct_bg (a_style),
+				-- 1st in array is GTK_STATE_NORMAL
 				a_xpm_data
 			)
-			set_pixmap (gdk_pixmap, Default_pointer)
+			set_pixmap (gdk_pixmap, a_mask)
 		end
 
 feature {NONE} -- Implementation
@@ -489,8 +523,84 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.37  2000/06/07 17:27:40  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.38  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.15.2.30  2001/06/01 22:50:44  etienne
+--| Fix problem with `set_size' changing `foreground_color'.
+--|
+--| Revision 1.15.2.29  2001/05/18 18:19:48  king
+--| Removed FIXME
+--|
+--| Revision 1.15.2.28  2001/04/17 21:05:46  king
+--| Changed flush so widget is only redrawn if displayed
+--|
+--| Revision 1.15.2.27  2000/12/21 20:26:05  king
+--| Now setting background color on pixmap resize
+--|
+--| Revision 1.15.2.26  2000/12/21 19:12:39  king
+--| Optimized raw_image_data
+--|
+--| Revision 1.15.2.25  2000/11/20 17:30:22  andrew
+--| Corrected raw image data retrieval
+--|
+--| Revision 1.15.2.24  2000/11/06 19:40:33  king
+--| Acccounted for default to stock name change
+--|
+--| Revision 1.15.2.23  2000/11/04 01:10:41  andrew
+--| Improved raw_image_data routine
+--|
+--| Revision 1.15.2.21  2000/10/27 16:54:46  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.15.2.20  2000/10/07 02:56:31  andrew
+--| Update
+--|
+--| Revision 1.15.2.19  2000/10/03 00:43:48  king
+--| Implemented raw_image_data
+--|
+--| Revision 1.15.2.18  2000/09/06 17:48:45  oconnor
+--| Use new default_gdk_window feature instead of gdk_root_parent to try
+--| to get a basis for visuals that will work better on workstations that
+--| have different color depths for diverent windows.
+--|
+--| Revision 1.15.2.17  2000/08/28 18:24:57  king
+--| Reverted flush implementation
+--|
+--| Revision 1.15.2.16  2000/08/24 23:18:34  king
+--| Implemented flush to use clipping area
+--|
+--| Revision 1.15.2.15  2000/08/23 23:24:10  king
+--| Removed redundant redraw features
+--|
+--| Revision 1.15.2.13  2000/08/23 23:09:28  king
+--| Trying new implementation of flush
+--|
+--| Revision 1.15.2.11  2000/08/23 00:38:14  king
+--| Made compilable with expose AS change
+--|
+--| Revision 1.15.2.10  2000/08/08 00:03:17  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.15.2.9  2000/08/01 19:31:06  king
+--| Changed Default_pointer's to NULL's
+--|
+--| Revision 1.15.2.8  2000/07/31 18:57:31  king
+--| Removed unused local variables
+--|
+--| Revision 1.15.2.7  2000/07/25 01:16:49  oconnor
+--| added EV_PIXMAP_ACTION_SEQUENCES_IMP
+--|
+--| Revision 1.15.2.6  2000/06/27 23:52:32  king
+--| Removed repeated definition of flush
 --|
 --| Revision 1.15.2.5  2000/05/08 23:02:19  king
 --| Tidied up code

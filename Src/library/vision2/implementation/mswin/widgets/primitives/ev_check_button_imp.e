@@ -67,6 +67,12 @@ end -- class EV_CHECK_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2001/06/07 23:08:16  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.20.8.1  2000/05/03 19:09:49  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.25  2000/02/25 21:28:16  brendel
 --| Formatting.
 --|

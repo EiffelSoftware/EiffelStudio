@@ -1,8 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		" A particular type of item-holder that uses an arrayed-list to store the%
-		% children."
+		" A particular type of item-holder that uses an arrayed-list to store%
+		% the children. Mswin implementation."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,72 +9,16 @@ indexing
 deferred class
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [G -> EV_ITEM]
 
+obsolete "No longer used by Vision2."
+
 inherit
 	EV_ITEM_LIST_IMP [G]
-	
-feature -- Access
-
-	get_item (an_index: INTEGER): G is
-			-- Give the item of the list at the zero-base
-			-- `an_index'.
-		local
-			aa: ASSIGN_ATTEMPT [G]
-		do
-			create aa
-			Result := aa.attempt (ev_children @ an_index)
-		end
-
-feature -- Element change
-
-	remove_all_items is
-			-- Remove `ev_children' without destroying them.
-		do
-			--from
-			--	ev_children.finish
-			--until
-			--	ev_children.count = 0
-			--loop
-			--	ev_children.item.set_parent (Void)
-			--	ev_children.back
-			--end
-		end
-
-feature -- Basic operations
-
-	find_item_by_data (data: ANY): G is
-			-- Find a child with data equal to `data'.
-		local
-			list: ARRAYED_LIST [EV_ITEM_IMP]
-			litem: EV_ITEM_IMP
-			aa: ASSIGN_ATTEMPT [G]
-		do
-			from
-				list := ev_children
-				list.start
-				create aa
-			until
-				list.after or Result /= Void
-			loop
-				litem ?= list.item
-				if litem.interface.data.is_equal (data) then
-					Result := aa.attempt (litem)
-				end
-				list.forth
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	--ev_children: ARRAYED_LIST [EV_ITEM_IMP] is
-	--		-- List used to store the items.
-	--	deferred
-	--	end
 
 end -- class EV_ARRAYED_LIST_ITEM_HOLDER_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
@@ -87,13 +30,33 @@ end -- class EV_ARRAYED_LIST_ITEM_HOLDER_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.2.5  2000/08/03 17:59:09  rogers
+--| Made obsolete.
+--|
+--| Revision 1.3.2.4  2000/08/02 22:46:27  rogers
+--| Removed get_item and find_item_by_data. Added FIXME saying this class is
+--| no longer required by Vision2.
+--|
+--| Revision 1.3.2.3  2000/06/12 20:36:08  rogers
+--| Removed remove_all_items.
+--|
+--| Revision 1.3.2.2  2000/06/12 20:30:40  rogers
+--| Removed FIXME to_be_reviewed. Comments, formatting. Removed commented out
+--| ev_children as it is redundent.
+--|
+--| Revision 1.3.2.1  2000/05/03 19:09:17  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/04/05 21:16:11  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|
@@ -122,7 +85,8 @@ end -- class EV_ARRAYED_LIST_ITEM_HOLDER_IMP
 --| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP.
 --|
 --| Revision 1.3.4.2  1999/12/17 17:07:14  rogers
---| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP. ev_item_holder_imp.e
+--| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP.
+--| ev_item_holder_imp.e
 --|
 --| Revision 1.3.4.1  1999/11/24 17:30:20  oconnor
 --| merged with DEVEL branch

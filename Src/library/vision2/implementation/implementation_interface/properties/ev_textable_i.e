@@ -20,7 +20,12 @@ feature -- Access
 	text: STRING is
 			-- Text displayed in label.
 		deferred
-		end 
+		end
+
+	alignment: EV_TEXT_ALIGNMENT is
+			-- Current text positioning.
+		deferred
+		end
 
 feature -- Status setting
 
@@ -45,7 +50,7 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.empty
+			a_text_not_empty: not a_text.is_empty
 		deferred
 		ensure
 			text_assigned: text.is_equal (a_text)
@@ -87,8 +92,14 @@ end -- class EV_TEXTABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.10  2000/06/07 17:27:45  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.11  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.7.4.4  2000/11/29 00:35:59  rogers
+--| Changed empty to is_empty.
+--|
+--| Revision 1.7.4.3  2000/08/24 21:50:22  rogers
+--| Added alignment as deferred.
 --|
 --| Revision 1.7.4.2  2000/05/10 23:00:48  king
 --| Changed set_text precond to use empty

@@ -6,14 +6,14 @@ CC = cl
 #	-I..\spec\include \
 #	-I$(VISION_PRERELEASE)\libpng \
 #	-I$(VISION_PRERELEASE)\zlib \
-#	-I$(EIFFEL4)\bench\spec\windows\include
+#	-I$(ISE_EIFFEL)\bench\spec\windows\include
 
 # Release version
 CFLAGS = -c -O1 \
 	-I..\spec\include \
-	-I$(VISION_PRERELEASE)\libpng \
-	-I$(VISION_PRERELEASE)\zlib \
-	-I$(EIFFEL4)\bench\spec\windows\include
+	-I$(ISE_EIFFEL)\C_library\libpng \
+	-I$(ISE_EIFFEL)\C_library\zlib \
+	-I$(ISE_EIFFEL)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

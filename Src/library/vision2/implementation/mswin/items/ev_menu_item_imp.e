@@ -22,7 +22,9 @@ inherit
 			set_capture,
 			release_capture,	
 			set_heavy_capture,
-			release_heavy_capture
+			release_heavy_capture,
+			remove_pixmap,
+			set_pixmap
 		end
 
 	EV_TEXTABLE_IMP
@@ -33,6 +35,8 @@ inherit
 		end
 
 	EV_ID_IMP
+
+	EV_MENU_ITEM_ACTION_SEQUENCES_IMP
 
 create
 	make
@@ -59,7 +63,7 @@ feature -- Access
 			-- Text displayed in label.
 		do
 			Result := wel_text
-			if Result.empty then	
+			if Result.is_empty then	
 				Result := Void
 			end
 		end 
@@ -160,8 +164,37 @@ feature {NONE} -- Implementation
 	has_parent: BOOLEAN is
 			-- Is this menu item in a menu?
 		do
-			Result := parent_imp /= Void and then 
-				      parent_imp.item_exists (id)
+			Result := parent_imp /= Void and then
+				parent_imp.item_exists (id)
+		end
+
+	remove_pixmap is
+			-- Remove pixmap from `Current'.
+		do
+			if private_pixmap /= Void then
+				private_pixmap := Void
+				if parent_imp /= Void then
+					parent_imp.internal_replace (
+						Current, parent_imp.index_of (interface, 1))
+				end
+			end
+		end
+
+	set_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Assign `a_pixmap' to `pixmap'.
+		local
+			pos: INTEGER
+		do
+			--|FIXME Currently, either the text or the pixmap can be displayed.
+			--| We need to be able to display both.
+			--| Also, when loading a pixmap directly from an icon, the
+			--| transparent color is displayed visibly.
+			Precursor (a_pixmap)
+			if parent_imp /= Void then
+				pos := parent_imp.index_of (interface, 1)
+				parent_imp.internal_replace (Current, pos)
+
+			end
 		end
 
 feature {EV_ANY_I} -- Pick and Drop
@@ -218,46 +251,87 @@ feature {EV_ANY_I} -- Pick and Drop
 			end
 		end
 
+feature {NONE} -- Contract Support
+
+	parent_is_sensitive: BOOLEAN is
+			-- is parent of `Current' sensitive?
+		do
+			if parent_imp /= Void then
+				Result := parent_imp.is_sensitive
+			end
+		end
+
 
 feature {EV_ANY_I} -- Implementation
 
 	on_activate is
 			-- `Current' has been clicked on.
 		do
-			interface.select_actions.call ([])
+			if select_actions_internal /= Void then
+				select_actions_internal.call ([])
+			end
 		end
 
 	interface: EV_MENU_ITEM
 
-invariant
-	has_parent_implies_consistent_sensitive_state:
-		has_parent implies is_sensitive = parent_imp.item_enabled (id)
-
 end -- class EV_MENU_ITEM_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.38  2000/06/07 17:27:52  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.39  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.24.4.14  2000/11/29 00:47:13  rogers
+--| Changed empty to is_empty.
+--|
+--| Revision 1.24.4.13  2000/08/29 23:03:09  rogers
+--| Removed unreferenced variable.
+--|
+--| Revision 1.24.4.12  2000/08/21 22:44:49  rogers
+--| Added fixme to set_pixmap from ev_menu_item_imp.e
+--|
+--| Revision 1.24.4.11  2000/08/21 17:59:37  rogers
+--| Implemented paret_is_sensitive.
+--|
+--| Revision 1.24.4.9  2000/08/18 19:34:28  rogers
+--| Redefined remove_pixmap from EV_ITEM_IMP so it will actually work
+--| with `Current'.
+--|
+--| Revision 1.24.4.8  2000/08/16 19:03:45  rogers
+--| Removed invariant as it does not make sense for EV_MENU_IMP which inherits
+--| `Current'.
+--|
+--| Revision 1.24.4.7  2000/08/16 00:00:31  rogers
+--| Added parent_is_sensitive for contract support purposes.
+--|
+--| Revision 1.24.4.6  2000/08/11 19:18:18  rogers
+--| Fixed copyright clause. Now use ! instead of |.
+--|
+--| Revision 1.24.4.5  2000/08/03 23:43:47  rogers
+--| All action sequence calls are no longer done through the interface, they
+--| use the internal action sequence instead.
+--|
+--| Revision 1.24.4.4  2000/07/24 22:49:17  rogers
+--| Now inherits EV_MENU_ITEM_ACTION_SEQUENCES_IMP.
 --|
 --| Revision 1.24.4.3  2000/06/05 16:50:39  manus
 --| Added `text_length' in `EV_TEXTABLE_IMP' to improve the performance of its

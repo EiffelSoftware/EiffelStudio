@@ -14,6 +14,8 @@ inherit
 			interface
 		end
 
+	EV_TEXT_FIELD_ACTION_SEQUENCES_I
+
 feature -- Status report
 
 	capacity: INTEGER is
@@ -62,6 +64,15 @@ end --class EV_TEXT_FIELD_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.16.4.2  2000/07/24 21:30:48  oconnor
+--| inherit action sequences _I class
+--|
+--| Revision 1.16.4.1  2000/05/03 19:09:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.18  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

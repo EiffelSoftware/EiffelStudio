@@ -5,19 +5,13 @@
 #===============================================================================
 
 all:
-	make -C Clib
-	make -C interface/events
-	make -C interface/kernel
-	make -C implementation/gtk/Clib
 	./gen_key_classes < keys.def
-	grep -x -L "\--| FIXME Not for release" `find interface -name "*.e"` > list_released
-	grep -x -l "\--| FIXME Not for release" `find interface -name "*.e"` > list_unreleased
+	cd Clib ; finish_freezing -library
+	cd implementation/gtk/Clib ; finish_freezing -library
 
 clean:
 	make -C interface/events clean
 	make -C implementation/gtk/Clib clean
-	rm list_released
-	rm list_unreleased
 
 #===============================================================================
 # End of file

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision tree item. Mswindows implementation."
 	status: "See notice at end of class"
@@ -18,11 +17,22 @@ inherit
 		undefine
 			parent
 		redefine
-			interface
+			interface,
+			set_tooltip
 		end
 
 create
 	make
+
+feature {NONE} -- Implementation
+
+	set_tooltip (a_tooltip: STRING) is
+			-- Assign `a_tooltip' to `tooltip'.
+		do
+				-- Assign `a_tooltip' to `tooltip'.
+			tooltip := clone (a_tooltip)
+		end
+
 
 feature {EV_ANY_I} -- Implementation
 
@@ -30,21 +40,21 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_TREE_ITEM_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 
 --|-----------------------------------------------------------------------------
@@ -52,8 +62,29 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.69  2000/06/07 17:27:52  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.70  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.24.4.12  2000/12/20 19:00:50  rogers
+--| Removed redundent_code from set_tooltip.
+--|
+--| Revision 1.24.4.11  2000/12/19 18:11:49  pichery
+--| Removed unused local variable.
+--|
+--| Revision 1.24.4.10  2000/11/17 00:40:30  rogers
+--| ev_tool_bar_button_imp.e
+--|
+--| Revision 1.24.4.9  2000/10/19 23:17:45  rogers
+--| Removed one of the two fixmes relating to the same bug.
+--|
+--| Revision 1.24.4.8  2000/08/11 19:16:06  rogers
+--| Fixed copyright clause. Now use ! instead of |.
+--|
+--| Revision 1.24.4.7  2000/07/20 22:57:30  rogers
+--| Aded fixme in set_tooltip.
+--|
+--| Revision 1.24.4.5  2000/06/12 18:36:43  rogers
+--| Revied, comments, formatting.
 --|
 --| Revision 1.24.4.4  2000/05/16 20:19:43  king
 --| Converted to new tree item structure

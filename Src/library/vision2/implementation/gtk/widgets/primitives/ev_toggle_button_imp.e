@@ -1,18 +1,15 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
-        description: 
-                "EiffelVision toggle button, gtk implementation.";
-        status: "See notice at end of class";
-        id: "$Id$";
-        date: "$Date$";
-        revision: "$Revision$"
-        
+	description: "EiffelVision toggle button, gtk implementation.";
+	status: "See notice at end of class";
+	id: "$Id$";
+	date: "$Date$";
+	revision: "$Revision$"
+	
 class
-        EV_TOGGLE_BUTTON_IMP
-        
+	EV_TOGGLE_BUTTON_IMP
+	
 inherit
-        EV_TOGGLE_BUTTON_I
+	EV_TOGGLE_BUTTON_I
 		redefine
 			interface
 		end
@@ -22,14 +19,14 @@ inherit
 			make,
 			interface
 		end
-        
+	
 create
 	make
 
 feature {NONE} -- Initialization
 
-        make (an_interface: like interface) is
-                        -- Create a gtk toggle button.
+	make (an_interface: like interface) is
+			-- Create a gtk toggle button.
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_toggle_button_new)
@@ -40,28 +37,31 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
-			C.gtk_toggle_button_set_active (c_object, True)
+			C.gtk_toggle_button_set_active (button_widget, True)
 		end
 
-        disable_select is
-        		-- Set `is_selected' `False'.
-                do
-			C.gtk_toggle_button_set_active (c_object, False)
-                end
-
-        toggle is
-			-- Change the state of the toggle button to
-			-- opposite
+	disable_select is
+				-- Set `is_selected' `False'.
 		do
-			C.gtk_toggle_button_toggled (c_object)
-                end
+			C.gtk_toggle_button_set_active (button_widget, False)
+		end
+
+	toggle is
+			-- Change the state of the toggle button.
+		do
+			if is_selected then
+				disable_select
+			else
+				enable_select
+			end
+		end
 
 feature -- Status report
 	
 	is_selected: BOOLEAN is
 			-- Is toggle button pressed?
 		do
-			Result := C.gtk_toggle_button_get_active (c_object)
+			Result := C.gtk_toggle_button_get_active (button_widget)
 		end 
 
 feature {EV_ANY_I}
@@ -91,8 +91,37 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.21  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.22  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.16.2.9  2000/10/27 16:54:44  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.16.2.8  2000/09/06 23:18:48  king
+--| Reviewed
+--|
+--| Revision 1.16.2.7  2000/09/04 18:21:42  oconnor
+--| simplify toggle implementation
+--|
+--| Revision 1.16.2.6  2000/08/14 16:32:43  king
+--| Workaround for gtk bug when calling toggled function on init
+--|
+--| Revision 1.16.2.5  2000/08/08 00:03:16  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.16.2.4  2000/06/15 21:20:27  king
+--| Removed needless setting of button_widget as it isnow a function in button_imp
+--|
+--| Revision 1.16.2.3  2000/06/15 19:11:50  king
+--| routines now using button_widget instead of c_object
 --|
 --| Revision 1.16.2.2  2000/05/09 20:31:07  king
 --| Integrated selectable/deselectable

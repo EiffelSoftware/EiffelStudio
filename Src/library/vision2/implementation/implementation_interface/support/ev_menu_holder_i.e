@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision menu-container, implementation interface";
@@ -7,6 +6,9 @@ indexing
 
 deferred class
 	EV_MENU_HOLDER_I
+
+obsolete
+	"No longer used by vision2."
 
 inherit
 	EV_ANY_I
@@ -49,6 +51,15 @@ end -- class EV_MENU_HOLDER_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.8.4.2  2000/08/17 22:08:42  rogers
+--| Removed fixme. Made obsolete.
+--|
+--| Revision 1.8.4.1  2000/05/03 19:09:00  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/02/22 18:39:42  oconnor
 --| updated copyright date and formatting
 --|

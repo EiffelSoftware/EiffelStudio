@@ -19,6 +19,8 @@ inherit
 			interface
 		end
 
+	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_I
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -129,8 +131,8 @@ feature -- Status setting
 			an_index_within_range: an_index > 0 and an_index <= count
 		deferred
 		ensure
-			item_deselected: 
-				not selected_items.has (interface.i_th (an_index))
+			item_selected: 
+				selected_items.has (interface.i_th (an_index))
 		end
 
 	deselect_item (an_index: INTEGER) is
@@ -147,7 +149,7 @@ feature -- Status setting
 			-- Make `selected_items' empty.
 		deferred
 		ensure
-			selected_items_empty: selected_items.empty
+			selected_items_empty: selected_items.is_empty
 		end
 
 	enable_multiple_selection is
@@ -291,21 +293,17 @@ feature -- Element change
 			a_column_within_range: a_column > 0 and a_column <= column_count
 			a_width_positive: a_width > 0
 		do
-			if a_column <= column_widths.count then
-				column_widths.go_i_th (a_column)
-				column_widths.replace (a_width)
-			else
-				from	
-				until
-					column_widths.count = a_column - 1
-				loop
-					column_widths.extend (Default_column_width) 
-				end
-				column_widths.extend (a_width)
-			end
+			update_column_width (a_width, a_column)
 			column_width_changed (a_width, a_column)
 		ensure
 			a_width_assigned: a_width = column_width (a_column)
+		end
+
+	resize_column_to_content (a_column: INTEGER) is
+			-- Resize column `a_column' to width of its widest text.
+		require
+			a_column_within_range: a_column > 0 and a_column <= column_count
+		deferred
 		end
 
 	set_column_widths (widths: ARRAY [INTEGER]) is         
@@ -496,6 +494,28 @@ feature {EV_ANY_I} -- Implementation
 			child_updated: not child.update_needed
 		end
 
+	update_column_width (a_width: INTEGER; a_column: INTEGER) is
+			-- Assign `a_width' `column_width'(`a_column').
+		require
+			a_column_within_range: a_column > 0 and a_column <= column_count
+			a_width_positive: a_width >= 0
+		do
+			if a_column <= column_widths.count then
+				column_widths.go_i_th (a_column)
+				column_widths.replace (a_width)
+			else
+				from	
+				until
+					column_widths.count = a_column - 1
+				loop
+					column_widths.extend (Default_column_width) 
+				end
+				column_widths.extend (a_width)
+			end
+		ensure
+			a_width_assigned: a_width = column_width (a_column)
+		end
+
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
 			-- Set the label of the cell with coordinates `a_column',
 			-- `a_row' with `a_text'.
@@ -619,8 +639,27 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.55  2000/06/07 17:27:50  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.56  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.23.4.8  2001/01/10 23:10:38  rogers
+--| You may now pass 0 to set_column_width.
+--|
+--| Revision 1.23.4.7  2000/12/01 17:59:09  rogers
+--| Added resize_column_to_content.
+--|
+--| Revision 1.23.4.6  2000/11/28 21:33:16  manus
+--| Renamed call to `empty' into `is_empty' as now defined in CONTAINER.
+--|
+--| Revision 1.23.4.5  2000/11/28 21:02:59  king
+--| Abstracted update_column_width for execution on column resize
+--|
+--| Revision 1.23.4.4  2000/09/09 00:27:06  rogers
+--| Fixed post condition of select_item. Previously it had the post condition
+--| of deselect item. I am suprised it was never found before.
+--|
+--| Revision 1.23.4.3  2000/07/24 21:30:48  oconnor
+--| inherit action sequences _I class
 --|
 --| Revision 1.23.4.2  2000/05/09 20:30:09  king
 --| Added comments to _changed features

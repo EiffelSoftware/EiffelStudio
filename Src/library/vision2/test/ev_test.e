@@ -49,6 +49,12 @@ end -- class EV_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2001/06/07 23:08:57  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.6.1  2000/05/03 19:10:21  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.2  2000/03/09 02:17:21  oconnor
 --| renamed class
 --|

@@ -20,112 +20,130 @@ inherit
 			interface
 		end
 
+	EV_GAUGE_ACTION_SEQUENCES_IMP
+		export
+			{EV_CONTAINER_IMP, EV_INTERNAL_SILLY_WINDOW_IMP}
+				change_actions_internal
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
-			-- Default initialization of every gauge.
+			-- Default initialization of `Current'.
 		do
-			Precursor
+			Precursor {EV_PRIMITIVE_IMP}
+			create value_range.make (0, 100)
+			value_range.change_actions.extend (~set_range)
 			wel_set_range (0, 100)
 			wel_set_step (1)
 			wel_set_leap (10)
 			wel_set_value (0)
 		end
 
-feature -- Access
-
-	range: INTEGER_INTERVAL is
-			-- Get `minimum' and `maximum' as interval.
-		do
-			create Result.make (minimum, maximum)
-		end
-
 feature -- Status setting
 
 	step_forward is
-			-- Increase the current value of one step.
+			-- Increase `value' by `step'.
+		local
+			original_value: INTEGER
 		do
-			wel_set_value (maximum.min (value + step))
+			original_value := value
+			wel_set_value (value_range.upper.min (value + step))
+			if original_value /= value then
+				if change_actions_internal /= Void then
+					change_actions_internal.call ([value])
+				end
+			end
 		end
 
 	step_backward is
-			-- Decrease the current value of one step.
+			-- Decrease `value' by `step'.
+		local
+			original_value: INTEGER
 		do
-			wel_set_value (minimum.max (value - step))
+			original_value := value
+			wel_set_value (value_range.lower.max (value - step))
+			if original_value /= value then
+				if change_actions_internal /= Void then
+					change_actions_internal.call ([value])
+				end
+			end
 		end
 
 	leap_forward is
 			-- Increment `value' by `leap' if possible.
+		local
+			original_value: INTEGER
 		do
-			wel_set_value (maximum.min (value + leap))
+			original_value := value
+			wel_set_value (value_range.upper.min (value + leap))
+			if original_value /= value then
+				if change_actions_internal /= Void then
+					change_actions_internal.call ([value])
+				end
+			end
 		end
 
 	leap_backward is
 			-- Decrement `value' by `leap' if possible.
+		local
+			original_value: INTEGER
 		do
-			wel_set_value (minimum.max (value - leap))
+			original_value := value
+			wel_set_value (value_range.lower.max (value - leap))
+			if original_value /= value then
+				if change_actions_internal /= Void then
+					change_actions_internal.call ([value])
+				end
+			end
 		end
 
 feature -- Element change
 
 	set_value (a_value: INTEGER) is
-			-- Set `value' to `a_value'.
+			-- Assign `a_value' to `value'.
+		local
+			original_value: INTEGER
 		do
+			original_value := value
 			wel_set_value (a_value)
+			if original_value /= value then
+				if change_actions_internal /= Void then
+					change_actions_internal.call ([value])
+				end
+			end
 		end
 
 	set_step (a_step: INTEGER) is
-			-- Set `step' to `a_step'.
+			-- Assign `a_step' to `step'.
 		do
 			wel_set_step (a_step)
 		end
 
 	set_leap (a_leap: INTEGER) is
-			-- Set `leap' to `a_leap'.
+			-- Assign `a_leap' to `leap'.
 		do
 			wel_set_leap (a_leap)
 		end
 
-	set_minimum (a_minimum: INTEGER) is
-			-- Set `minimum' to `a_minimum'.
+	set_range is
+			-- Reflect value of `value_range' in `Current'.
 		do
-			wel_set_range (a_minimum, maximum)
-		end
-
-	set_maximum (a_maximum: INTEGER) is
-			-- Set `maximum' to `a_maximum'.
-		do
-			wel_set_range (minimum, a_maximum)
-		end
-
-	set_range (a_range: INTEGER_INTERVAL) is
-			-- Set `range' to `a_range'.
-		do
-			wel_set_range (a_range.lower, a_range.upper)
-		end
-
-	reset_with_range (a_range: INTEGER_INTERVAL) is
-			-- Set `range' to `a_range'.
-			-- Set `value' to `a_range.lower'.
-		do
-			wel_set_range (a_range.lower, a_range.upper)
-			wel_set_value (a_range.lower)
+			wel_set_range (value_range.lower, value_range.upper)
 		end
 
 feature -- Deferred
 
 	on_scroll (scroll_code, pos: INTEGER) is
 			-- Called when gauge changed.
-			--| Is called from EV_CONTAINER_IMP.
-			--| FIXME Not generated for EV_RANGE's at least.
 		do
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed.
 		do
-			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
+			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
 	wel_set_value (a_value: INTEGER) is
@@ -144,33 +162,85 @@ feature -- Deferred
 		deferred
 		end
 
-feature {EV_ANY_I, EV_INTERNAL_SILLY_CONTAINER_IMP} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GAUGE
 
 end -- class EV_GAUGE_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/07 23:08:16  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.8.14  2001/02/02 00:52:46  rogers
+--| On_key_down now calls process_tab_key before Precursor. This ensures that
+--| any tab movement we do in our implementation can be overriden by the user
+--| with key_press_actions.
+--|
+--| Revision 1.2.8.13  2000/11/01 01:56:31  manus
+--| Cosmetics on Precursor
+--|
+--| Revision 1.2.8.12  2000/09/13 22:10:54  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.2.8.11  2000/09/13 19:14:14  rogers
+--| Altered to use value_range from the interface. Removed now redundent
+--| features. Comments, Formatting.
+--|
+--| Revision 1.2.8.10  2000/09/06 02:33:11  manus
+--| No need for exporting to a class which does not belong to the system anymore
+--|
+--| Revision 1.2.8.9  2000/08/22 00:25:13  rogers
+--| change_actions_internal, inherited from EV_GAUGE_ACTION_SEQUENCES_IMP is
+--| now also exported to EV_INTERNAL_SILLY_WINDOW_IMP.
+--|
+--| Revision 1.2.8.8  2000/08/11 18:51:31  rogers
+--| Fixed copyright clauses. Now use ! instead of |. Formatting.
+--|
+--| Revision 1.2.8.7  2000/08/08 02:31:17  manus
+--| Added export of `change_actions_internal' to EV_CONTAINER_IMP where it is
+--| used.
+--|
+--| Revision 1.2.8.6  2000/08/04 20:31:16  rogers
+--| All action sequence calls through the interface have been replaced with
+--| calls to the internal action sequences.
+--|
+--| Revision 1.2.8.5  2000/07/24 23:48:33  rogers
+--| Now inherits EV_GAUGE_ACTION_SEQUENCES_IMP.
+--|
+--| Revision 1.2.8.4  2000/06/22 19:10:09  rogers
+--| All calls to `change_actions' are now passed the current value of
+--| `Current'.
+--|
+--| Revision 1.2.8.3  2000/06/19 18:26:03  rogers
+--| Comments, formatting.
+--|
+--| Revision 1.2.8.2  2000/06/19 17:48:33  rogers
+--| Connected change_actions when user changes `value'.
+--|
+--| Revision 1.2.8.1  2000/05/03 19:09:50  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/04/13 18:18:11  brendel
 --| Default minimum = 0; value = 0.
 --|

@@ -18,16 +18,34 @@ feature -- Access
 		do
 			if text_length > 0 then
 				Result := wel_text
-				unescape_ampersands (Result)
 			end
-		end 
+		end
+
+	alignment: EV_TEXT_ALIGNMENT is
+			-- Alignment of `text' on `Current'.
+		do
+			inspect text_alignment
+				when text_alignment_left then 
+					create Result.make_with_left_alignment
+				when text_alignment_right then
+					create Result.make_with_right_alignment
+				when text_alignment_center then
+					create Result.make_with_center_alignment
+				end
+		end
+
+	text_alignment: INTEGER
+			-- Current text alignment. Possible value are
+			--	* Text_alignment_left
+			--	* Text_alignment_right
+			--	* Text_alignment_center
 
 feature -- Element change
 
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		do
-			wel_set_text (escaped_text (a_text))
+			wel_set_text (a_text)
 		end
 
 	remove_text is
@@ -36,7 +54,34 @@ feature -- Element change
 			wel_set_text (create {STRING}.make (0))
 		end
 
+	align_text_center is
+			-- Display `text' centered.
+		do
+			text_alignment := text_alignment_center
+		end
+
+	align_text_right is
+			-- Display `text' right aligned.
+		do
+			text_alignment := text_alignment_right
+		end
+        
+	align_text_left is
+			-- Display `text' left aligned.
+		do
+			text_alignment := text_alignment_left 	
+		end
+
 feature {NONE} -- Implementation
+
+	Text_alignment_left: INTEGER is 0
+			-- Left aligned text.
+
+	Text_alignment_right: INTEGER is 1
+			-- Right aligned text.
+
+	Text_alignment_center: INTEGER is 2
+			-- Centered text.
 
 	wel_set_text (a_text: STRING) is
 			-- Set `a_text' in WEL object.
@@ -57,78 +102,8 @@ feature {NONE} -- Implementation
 			positive_length: Result >= 0
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	escaped_text (s: STRING): STRING is
-			-- `text' with doubled ampersands.
-		do
-			if s /= Void then
-				Result := clone (s)
-				escape_ampersands (Result)
-			end
-		end
-
-	escape_ampersands (s: STRING) is
-			-- Replace all occurrences of "&" with "&&".
-			--| Cannot be replaced with {STRING}.replace_substring_all because
-			--| we only want it to happen once, not forever.
-		require
-			s_not_void: s /= Void
-		local
-			n: INTEGER
-		do
-			from
-				n := 1
-			until
-				n > s.count
-			loop
-				n := s.index_of ('&', n)
-				if n > 0 then
-					s.insert ("&", n)
-					n := n + 2
-				else
-					n := s.count + 1
-				end
-			end
-		ensure
-			ampersand_occurrences_doubled: s.occurrences ('&') =
-				(old clone (s)).occurrences ('&') * 2
-		end
-
-	unescape_ampersands (s: STRING) is
-			-- Replace all occurrences of "&&" with "&".
-			--| Cannot be replaced with {STRING}.replace_substring_all because
-			--| it will replace any number of ampersands with only one.
-			--| Has to be a previously escaped string. Enforced with a check
-			--| inside routine body.
-		require
-			s_not_void: s /= Void
-		local
-			n: INTEGER
-		do
-			from
-				n := 1
-			until
-				n > s.count
-			loop
-				n := s.index_of ('&', n)
-				if n > 0 then
-					s.remove (n)
-					check
-						is_escaped_string: (s @ n) = '&'
-					end
-					n := n + 1
-				else
-					n := s.count + 1
-				end
-			end
-		ensure
-			ampersand_occurrences_halved: (old clone (s)).occurrences ('&') =
-				s.occurrences ('&') * 2
-		end
-
 	line_count: INTEGER is
-			-- Number of lines `text' uses.
+			-- Number of lines required by `text'.
 		do
 			if text /= Void then
 				Result := text.occurrences ('%N') + 1
@@ -138,17 +113,6 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 feature -- Obsolete
-
-	safe_text: STRING is
-			-- Convenience function for Windows implementation.
-			-- Returns `text' but if `Void' returns empty string.
-		obsolete
-			"Just use `wel_text'."
-		do
-			Result := wel_text
-		ensure
-			not_void: Result /= Void
-		end
 
 	set_default_minimum_size is
 			-- Set to the size of the text.
@@ -162,29 +126,45 @@ feature -- Obsolete
 
 end -- class EV_TEXTABLE_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.24  2000/06/07 17:27:56  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.25  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.12.4.7  2001/04/24 15:59:51  rogers
+--| Removed all features which processed ampersands, as the new class
+--| ev_internally_processed_textable_imp now contains these features.
+--| Any class which must add extra ampersands internally will inherit
+--| ev_internally_processed_textable_imp.
+--|
+--| Revision 1.12.4.6  2001/01/22 20:01:37  rogers
+--| Removed obsolete feature `safe_text'.
+--|
+--| Revision 1.12.4.4  2000/08/24 21:58:26  rogers
+--| Added alignment, text_alignment, align_text_center, align_text_right,
+--| align_text_left And corresponding constants.
+--|
+--| Revision 1.12.4.3  2000/08/11 19:13:14  rogers
+--| Fixed copyright clause. Now use ! instead of |.
 --|
 --| Revision 1.12.4.2  2000/06/05 16:50:40  manus
 --| Added `text_length' in `EV_TEXTABLE_IMP' to improve the performance of its
@@ -192,10 +172,6 @@ end -- class EV_TEXTABLE_IMP
 --|
 --| Revision 1.12.4.1  2000/05/03 19:09:16  oconnor
 --| mergred from HEAD
---|
---| $Log$
---| Revision 1.24  2000/06/07 17:27:56  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|
 --| Revision 1.23  2000/04/10 18:25:52  brendel
 --| Reverted to old imp of `text'.

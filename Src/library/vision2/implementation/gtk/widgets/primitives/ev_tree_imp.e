@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision Tree, gtk implementation";
@@ -12,7 +11,9 @@ inherit
 	EV_TREE_I
 		redefine
 			interface,
-			initialize
+			initialize,
+			wipe_out,
+			call_pebble_function
 		end
 
 	EV_PRIMITIVE_IMP
@@ -20,16 +21,33 @@ inherit
 			interface,
 			destroy,
 			initialize,
-			colorizable_object
+			visual_widget,
+			button_press_switch,
+			create_pointer_motion_actions,
+			set_to_drag_and_drop,
+			able_to_transport,
+			ready_for_pnd_menu,
+			enable_transport,
+			disable_transport,
+			start_transport_filter,
+			pre_pick_steps,
+			post_drop_steps,
+			call_pebble_function
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
 		redefine
 			interface,
-			insert_i_th,
 			remove_i_th,
-			list_widget
+			reorder_child,
+			i_th,
+			add_to_container,
+			list_widget,
+			visual_widget,
+			count
 		end
+
+	EV_TREE_ACTION_SEQUENCES_IMP
 
 create
 	make
@@ -39,26 +57,31 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create an empty Tree.
 		local
-			scroll_window: POINTER
+			a_event_box: POINTER
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
-			scroll_window := C.gtk_scrolled_window_new (NULL, NULL)
-			C.gtk_widget_show (scroll_window)
-			C.gtk_container_add (c_object, scroll_window)
+			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
 			C.gtk_scrolled_window_set_policy (
-				scroll_window, 
+				c_object, 
 				C.GTK_POLICY_AUTOMATIC_ENUM,
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
 
-			list_widget := C.gtk_tree_new
-			C.gtk_tree_set_selection_mode (
-				list_widget,
-				C.GTK_SELECTION_SINGLE_ENUM
-			)
+			list_widget := C.gtk_ctree_new (1, 0)
+			a_event_box := C.gtk_event_box_new
+			C.gtk_widget_show (a_event_box)
+			C.gtk_container_add (a_event_box, list_widget)
+			--C.gtk_widget_set_usize (list_widget, 100, 100)
+			C.gtk_ctree_set_line_style (list_widget, C.GTK_CTREE_LINES_DOTTED_ENUM)
+			C.gtk_clist_set_selection_mode (list_widget, C.GTK_SELECTION_BROWSE_ENUM)
+			C.gtk_ctree_set_expander_style (list_widget, C.GTK_CTREE_EXPANDER_SQUARE_ENUM)
+			C.gtk_clist_set_shadow_type (list_widget, C.GTK_SHADOW_NONE_ENUM)	
+			C.gtk_scrolled_window_add_with_viewport (c_object, a_event_box)
 			C.gtk_widget_show (list_widget)
-			C.gtk_scrolled_window_add_with_viewport (scroll_window, list_widget)
+			create ev_children.make (0)
+			create tree_node_ptr_table.make (100)
+			-- Make initial hash table with room for 100 child pointers, may be increased later.
+			C.gtk_clist_set_row_height (list_widget, row_height)
 		end
 
 	initialize is
@@ -67,106 +90,495 @@ feature {NONE} -- Initialization
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_TREE_I} Precursor
+			real_signal_connect (visual_widget, "motion_notify_event", ~motion_handler, Default_translate)
+
 
 			real_signal_connect (
 				list_widget,
-				"select_child",
+				"tree-select-row",
 				~select_callback,
-				default_translate
+				~gtk_value_pointer_to_tuple
 			)
-			
-			-- Gtk bug means that select_child signal
-			-- is fired on mouse press regardless.
+
+			real_signal_connect (
+				list_widget,
+				"tree-expand",
+				~expand_callback,
+				~gtk_value_pointer_to_tuple
+			)
+
+			real_signal_connect (
+				list_widget,
+				"tree-collapse",
+				~collapse_callback,
+				~gtk_value_pointer_to_tuple
+			)
+			connect_button_press_switch
+				-- Needed so items are always hooked up, even though widget may not need to be.
+		end
+
+	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+			-- Create a pointer_motion action sequence.
+		do
+			create Result
+		end
+
+	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
+			-- Tuple containing integer value from first of `args'.
+		do
+			Result := [gtk_value_pointer (args)]
+		end
+
+
+	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
+		local
+			temp_row_ptr: POINTER
+		do
+			temp_row_ptr := C.gtk_ctree_node_nth (list_widget, a_y // (row_height + 1))
+			if temp_row_ptr /= NULL then
+				Result := tree_node_ptr_table.item (temp_row_ptr)
+			end
+		end
+
+	button_press_switch (
+			a_type: INTEGER;
+			a_x, a_y, a_button: INTEGER;
+			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+			a_screen_x, a_screen_y: INTEGER)
+		is
+		local
+			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
+				INTEGER, INTEGER]
+			tree_item_imp: EV_TREE_NODE_IMP
+
+		do
+			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
+				a_screen_x, a_screen_y]
+
+			tree_item_imp := row_from_y_coord (a_y)
+	
+			if a_type = C.GDK_BUTTON_PRESS_ENUM then
+				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
+					pointer_button_press_actions_internal.call (t)
+				end
+				if 
+					tree_item_imp /= Void and then
+					tree_item_imp.pointer_button_press_actions_internal /= Void then
+						tree_item_imp.pointer_button_press_actions_internal.call (t)
+				end
+
+			elseif a_type = C.GDK_2BUTTON_PRESS_ENUM then
+				if pointer_double_press_actions_internal /= Void then
+					pointer_double_press_actions_internal.call (t)
+				end
+				if 
+					tree_item_imp /= Void and then
+					tree_item_imp.pointer_double_press_actions_internal /= Void then
+						tree_item_imp.pointer_double_press_actions_internal.call (t)
+				end
+			end
+        	end
+
+	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
+		local
+			t: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
+			a_row_imp: EV_TREE_NODE_IMP
+		do
+			t := [a_x, a_y, a_a, a_b, a_c, a_d, a_e]
+			if pointer_motion_actions_internal /= Void then
+				pointer_motion_actions_internal.call (t)
+			end
+
+			a_row_imp := row_from_y_coord (a_y)
+			if a_row_imp /= Void then
+				if a_row_imp.pointer_motion_actions_internal /= Void then
+					a_row_imp.pointer_motion_actions_internal.call (t)
+				end
+			end
 		end
 
 feature {EV_TREE_NODE_IMP} -- Implementation
 
+	tree_node_ptr_table: HASH_TABLE [EV_TREE_NODE_IMP, POINTER]
+			-- Hash table linking tree node pointers to eiffel implementation objects.
+
+feature {NONE} -- Implementation
+
+	dummy_tree_node: POINTER
+		-- Added to prevent seg fault on wipeout by adding temporarily
+
+	expand_callback (a_tree_item: POINTER) is
+			-- Expand callback passing expanded `a_tree_item' node pointer.
+		local
+			a_tree_node_imp: EV_TREE_NODE_IMP
+		do
+			--C.gtk_clist_freeze (list_widget)
+			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
+			if a_tree_node_imp /= Void and then a_tree_node_imp.expand_actions_internal /= Void then
+				a_tree_node_imp.expand_callback
+			end
+			--C.gtk_clist_thaw (list_widget)
+		end
+
+	collapse_callback (a_tree_item: POINTER) is
+			-- Collapse callback passing collapsed `a_tree_item' node pointer.
+		local
+			a_tree_node_imp: EV_TREE_NODE_IMP
+		do
+			C.gtk_clist_freeze (list_widget)
+			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
+			if a_tree_node_imp /= Void and then a_tree_node_imp.collapse_actions_internal /= Void then
+				a_tree_node_imp.collapse_callback
+			end
+			C.gtk_clist_thaw (list_widget)
+		end
+
 	select_callback (a_tree_item: POINTER) is
 			-- Called when a tree item is selected
 		local
-			t_item: EV_TREE_NODE_IMP
-		do
-		 	t_item ?= eif_object_from_c (a_tree_item)
+			a_tree_node_imp: EV_TREE_NODE_IMP
 
-			if previous_selected_item /= Void and then
-			previous_selected_item.parent_tree = interface and then
-			previous_selected_item /= t_item.interface then
-				previous_selected_item.deselect_actions.call ([])
+		do
+			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
+			if a_tree_node_imp /= Void then
+				if select_actions_internal /= Void then
+					select_actions_internal.call ([])
+				end
+				if a_tree_node_imp.select_actions_internal /= Void then
+					a_tree_node_imp.select_actions_internal.call ([])
+				end
 			end
+
+			--if previous_selected_item /= Void and then
+			--previous_selected_item.parent_tree = interface and then
+			--previous_selected_item /= t_item.interface then
+			--	p_item ?= previous_selected_item.implementation
+			--	if p_item.deselect_actions_internal /= Void then
+			--		p_item.deselect_actions_internal.call ([])
+			--	end
+			--end
 			
-			if t_item.is_selected then
-				t_item.interface.select_actions.call ([])
-				interface.select_actions.call ([t_item.interface])
-				previous_selected_item := t_item.interface
-			else
-				interface.deselect_actions.call ([t_item.interface])
-				previous_selected_item := Void
-			end		
+			--if t_item.is_selected then
+			--	if t_item.select_actions_internal /= Void then
+			--		t_item.select_actions_internal.call ([])
+			--	end
+			--	if select_actions_internal /= Void then
+			--		select_actions_internal.call ([t_item.interface])
+			--	end
+			--	previous_selected_item := t_item.interface
+			--else
+			--	if deselect_actions_internal /= Void then
+			--		deselect_actions_internal.call ([t_item.interface])
+			--	end
+			--	previous_selected_item := Void
+			--end		
 		end
 
 feature -- Status report
 
 	selected_item: EV_TREE_NODE is
-			-- Item which is currently selected
+			-- Item which is currently selected.
 		local
-			p: POINTER
-			o: EV_ANY_IMP
-		do
-			p := GTK_TREE_SELECTION (list_widget)
-			if p /= NULL then
-				p := C.g_list_nth_data (p, 0)
-				if p /= NULL then
-					o := eif_object_from_c (p)
-					Result ?= o.interface
-					check Result_not_void: Result /= Void end
-				end
+			temp_item_ptr: POINTER
+		do	
+		
+			temp_item_ptr := C.gtk_clist_struct_selection (list_widget)			
+			if temp_item_ptr /= NULL then
+				temp_item_ptr := C.g_list_nth_data (temp_item_ptr, 0)
+				-- This is incase of unwanted items due to wipeout hack.
+				Result := tree_node_ptr_table.item (temp_item_ptr).interface
 			end
 		end
 
 	selected: BOOLEAN is
-			-- Is one item selected ?
-		local
-			list_pointer: POINTER
+			-- Is one item selected?
 		do
-			list_pointer := C.gtk_tree_struct_selection (list_widget)
-			if list_pointer /= NULL then
-				Result := C.g_list_length (list_pointer) > 0
+			Result := selected_item /= Void
+		end
+
+feature -- Implementation
+
+	set_to_drag_and_drop: BOOLEAN is
+		do
+			if pnd_row_imp /= Void then
+				Result := pnd_row_imp.mode_is_drag_and_drop
+			else
+				Result := mode_is_drag_and_drop
 			end
 		end
 
-feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
-
-	gtk_tree_selection (a_tree: POINTER): POINTER is
-			-- Selection of root tree.
-		external
-			" C [macro <gtk/gtktree.h>]"
-		alias
-			"GTK_TREE_SELECTION"
+	able_to_transport (a_button: INTEGER): BOOLEAN is
+			-- Is list or row able to transport PND data using `a_button'.
+		do
+			if pnd_row_imp /= Void then
+				Result := (pnd_row_imp.mode_is_drag_and_drop and a_button = 1) or
+				(pnd_row_imp.mode_is_pick_and_drop and a_button = 3)
+			else
+				Result := (mode_is_drag_and_drop and a_button = 1) or
+				(mode_is_pick_and_drop and a_button = 3)
+			end
 		end
 
+	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN is
+			-- Is list or row able to display PND menu using `a_button'
+		do
+			if pnd_row_imp /= Void then
+				Result := pnd_row_imp.mode_is_target_menu and then a_button = 3
+			else
+				Result := mode_is_target_menu and then a_button = 3
+			end
+		end
+
+	enable_transport is
+		do
+			connect_pnd_callback
+		end
+
+	connect_pnd_callback is
+		do
+
+			check
+				button_release_not_connected: button_release_connection_id = 0
+			end
+			if button_press_connection_id > 0 then
+				signal_disconnect (button_press_connection_id)
+			end
+			signal_connect ("button-press-event", ~start_transport_filter, default_translate)
+			button_press_connection_id := last_signal_connection_id
+			is_transport_enabled := True
+		end
+
+	disable_transport is
+		do
+			Precursor
+			update_pnd_status
+		end
+
+	update_pnd_status is
+			-- Update PND status of list and its children.
+		local
+			a_enable_flag: BOOLEAN
+		do
+			from
+				ev_children.start
+			until
+				ev_children.after or else a_enable_flag
+			loop
+				a_enable_flag := ev_children.item.is_transport_enabled_iterator
+				ev_children.forth
+			end
+
+			if not is_transport_enabled then
+				if a_enable_flag or pebble /= Void then
+					connect_pnd_callback
+				end
+			elseif not a_enable_flag and pebble = Void then
+				disable_transport_signals
+				is_transport_enabled := False
+			end
+		end
+
+	start_transport_filter (
+			a_type: INTEGER
+			a_x, a_y, a_button: INTEGER;
+			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+			a_screen_x, a_screen_y: INTEGER)
+		is
+			-- Initialize a pick and drop transport.
+		do
+			pnd_row_imp := row_from_y_coord (a_y)
+
+			if pnd_row_imp /= Void and then not pnd_row_imp.able_to_transport (a_button) then
+				pnd_row_imp := Void
+			end
+			
+			if pnd_row_imp /= Void or else pebble /= Void then
+				Precursor (
+				a_type,
+				a_x, a_y, a_button,
+				a_x_tilt, a_y_tilt, a_pressure,
+				a_screen_x, a_screen_y)
+			end			
+		end
+
+	pnd_row_imp: EV_TREE_NODE_IMP
+			-- Implementation object of the current row if in PND transport.
+
+	temp_pebble: ANY
+
+	temp_pebble_function: FUNCTION [ANY, TUPLE [], ANY]
+			-- Returns data to be transported by PND mechanism.
+
+	temp_accept_cursor, temp_deny_cursor: EV_CURSOR
+
+	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+			-- Set `pebble' using `pebble_function' if present.
+		do
+			temp_pebble := pebble
+			temp_pebble_function := pebble_function
+			if pnd_row_imp /= Void then
+				pebble := pnd_row_imp.pebble
+				pebble_function := pnd_row_imp.pebble_function
+			end
+
+			if pebble_function /= Void then
+				pebble_function.call ([a_x, a_y]);
+				pebble := pebble_function.last_result
+			end		
+		end
+	
+	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+			-- Steps to perform before transport initiated.
+		local
+			env: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
+		do
+			create env
+			app_imp ?= env.application.implementation
+			check
+				app_imp_not_void: app_imp /= Void
+			end
+
+			temp_accept_cursor := accept_cursor
+			temp_deny_cursor := deny_cursor
+			app_imp.on_pick (pebble)
+
+			if pnd_row_imp /= Void then
+				if pnd_row_imp.pick_actions_internal /= Void then
+					pnd_row_imp.pick_actions_internal.call ([a_x, a_y])
+				end
+				accept_cursor := pnd_row_imp.accept_cursor
+				deny_cursor := pnd_row_imp.deny_cursor
+			else
+				if pick_actions_internal /= Void then
+					pick_actions_internal.call ([a_x, a_y])
+				end
+			end
+
+			if accept_cursor = Void then
+				--| FIXME IEK
+				create accept_cursor--.make_with_code (curs_code.standard)
+			end
+			if deny_cursor = Void then
+				create deny_cursor--.make_with_code (curs_code.no)
+			end
+
+			pointer_x := a_screen_x
+			pointer_y := a_screen_y
+
+			if pnd_row_imp = Void then
+				if (pick_x = 0 and then pick_y = 0) then
+					x_origin := a_screen_x
+					y_origin := a_screen_y
+				else
+					if pick_x > width then
+						pick_x := width
+					end
+					if pick_y > height then
+						pick_y := height
+					end
+					x_origin := pick_x + (a_screen_x - a_x)
+					y_origin := pick_y + (a_screen_y - a_y)
+				end
+			else
+				if (pnd_row_imp.pick_x = 0 and then pnd_row_imp.pick_y = 0) then
+					x_origin := a_screen_x
+					y_origin := a_screen_y
+				else
+					if pick_x > width then
+						pick_x := width
+					end
+					if pick_y > row_height then
+						pick_y := row_height
+					end
+					x_origin := pnd_row_imp.pick_x + (a_screen_x - a_x)
+					y_origin := 
+						pnd_row_imp.pick_y +
+						(a_screen_y - a_y) + 
+						((ev_children.index_of (pnd_row_imp, 1) - 1) * row_height)
+				end
+			end
+		end
+
+	post_drop_steps is
+			-- Steps to perform once an attempted drop has happened.
+		local
+			env: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
+		do
+			if pnd_row_imp /= Void then
+				if pnd_row_imp.mode_is_pick_and_drop then
+					signal_emit_stop (visual_widget, "button-press-event")
+				end
+			elseif mode_is_pick_and_drop then
+					signal_emit_stop (visual_widget, "button-press-event")
+			end
+			create env
+			app_imp ?= env.application.implementation
+			check
+				app_imp_not_void: app_imp /= Void
+			end
+
+			app_imp.on_drop (pebble)
+			x_origin := 0
+			y_origin := 0
+			last_pointed_target := Void	
+
+			if pebble_function /= Void then
+				if pnd_row_imp /= Void then
+					pnd_row_imp.set_pebble_void
+				else
+					temp_pebble := Void
+				end
+			end
+
+			accept_cursor := temp_accept_cursor
+			deny_cursor := temp_deny_cursor
+			pebble := temp_pebble
+			pebble_function := temp_pebble_function
+
+			temp_pebble := Void
+			temp_pebble_function := Void
+			temp_accept_cursor := Void
+			temp_deny_cursor := Void
+
+			pnd_row_imp := Void
+		end
+
+
 feature {NONE} -- Implementation
+
+	spacing: INTEGER is 5
+		-- Spacing between pixmap and text.
+
+	row_height: INTEGER is 15
 
 	previous_selected_item: EV_TREE_NODE
 		-- Item that was selected previously.
 
-	insert_i_th (v: like item; i: INTEGER) is
+	count: INTEGER is
+		do
+			Result := ev_children.count
+		end
+
+	i_th (i: INTEGER): EV_TREE_NODE is
+		do
+			Result := (ev_children @ i).interface
+		end
+
+	add_to_container (v: like item) is
 			-- Add `v' to tree at position `i'.
 		local
 			item_imp: EV_TREE_NODE_IMP
 		do
 			item_imp ?= v.implementation
-			C.gtk_widget_show (item_imp.c_object)
-			C.gtk_widget_ref (item_imp.c_object)
-			C.gtk_tree_insert (list_widget, item_imp.c_object, i - 1)
-			if item_imp.dummy_list_widget /= NULL then
-				C.gtk_widget_ref (item_imp.dummy_list_widget)
-				C.gtk_tree_item_set_subtree (
-					item_imp.c_object,
-					item_imp.dummy_list_widget
-				)
-				item_imp.set_dummy_list_widget (NULL)
-				C.gtk_widget_unref (item_imp.list_widget)
-			end
+			item_imp.set_parent_imp (Current)
+			C.gtk_clist_freeze (list_widget)
+			item_imp.set_item_and_children (NULL)
+			C.gtk_clist_thaw (list_widget)
+			item_imp.insert_pixmap
+			ev_children.force (item_imp)
+			update_pnd_status
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -174,14 +586,60 @@ feature {NONE} -- Implementation
 		local
 			item_imp: EV_TREE_NODE_IMP
 		do
-			item_imp ?= interface.i_th (a_position).implementation
-			item_imp.set_dummy_list_widget (item_imp.list_widget)
+			item_imp := (ev_children @ (a_position))
 
-			if item_imp.list_widget /= NULL then
-				C.gtk_widget_ref (item_imp.list_widget)
+			-- Remove from tree
+			C.gtk_ctree_remove_node (list_widget, item_imp.tree_node_ptr)
+			item_imp.set_item_and_children (NULL)
+			item_imp.set_parent_imp (Void)
+
+			-- remove the row from the `ev_children'
+			ev_children.go_i_th (a_position)
+			ev_children.remove
+
+			update_pnd_status
+		end
+
+	reorder_child (v: like item; a_position: INTEGER) is
+			-- Move `v' to `a_position' in Current.
+		local
+			item_imp: EV_TREE_NODE_IMP
+			temp_list: like ev_children
+			a_counter: INTEGER
+		do
+			item_imp ?= v.implementation
+			C.gtk_clist_row_move (
+				list_widget,
+				item_imp.index - 1,
+				a_position - 1
+			)
+			-- Insert `v' in to ev_children list.	
+
+			create temp_list.make (0)
+			from
+				a_counter := 1
+			until
+				a_counter = a_position
+			loop
+				temp_list.extend (ev_children.i_th (a_counter))
+				a_counter := a_counter + 1
 			end
-			Precursor (a_position)
-				-- Precursor unrefs list widget.
+			
+			-- Insert `v' at a_position
+			temp_list.extend (item_imp)
+
+			from
+				a_counter := a_position
+			until
+				a_counter = count
+				-- The child to be reordered is always at i_th (count)
+				-- Ie: We are reordering and truncating.
+			loop
+				temp_list.extend (ev_children.i_th (a_counter))
+				a_counter := a_counter + 1
+			end
+
+			ev_children := temp_list	
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
@@ -190,12 +648,38 @@ feature {NONE} -- Implementation
 			check  do_not_call: False end
 		end
 
-	colorizable_object: POINTER is
+feature {EV_TREE_NODE_IMP} -- Implementation
+
+	insert_ctree_node (
+			a_item_imp: EV_TREE_NODE_IMP;
+			par_node, a_sibling: POINTER
+			): POINTER is
+		local
+			text_ptr: POINTER
+		do
+			C.gtk_label_get (a_item_imp.text_label, $text_ptr)	
+			Result := C.gtk_ctree_insert_node (
+				list_widget,
+				par_node,
+				a_sibling,
+				$text_ptr,
+				spacing,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				False,
+				False
+			)
+		end
+
+	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
+			-- Container for all root tree items.
+
+	visual_widget: POINTER is
 		do
 			Result := list_widget
 		end
-
-feature {EV_TREE_NODE_IMP} -- Implementation
 
 	list_widget: POINTER
 		-- Pointer to the gtktree widget.
@@ -227,8 +711,64 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.43  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.44  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.17.4.25  2001/06/05 01:37:22  king
+--| Commented out unneeded freeze/thaws, reverted to scrolled window
+--|
+--| Revision 1.17.4.24  2001/05/18 18:19:28  king
+--| Using container_add instead of add_with_viewport
+--|
+--| Revision 1.17.4.23  2001/05/10 22:34:36  king
+--| Total reimplementation of trees
+--|
+--| Revision 1.17.4.22  2001/04/13 23:59:44  king
+--| Changed selection style to that of windows
+--|
+--| Revision 1.17.4.21  2000/10/27 16:54:44  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.17.4.20  2000/09/06 23:18:48  king
+--| Reviewed
+--|
+--| Revision 1.17.4.19  2000/08/28 16:45:05  king
+--| Removed event_widget
+--|
+--| Revision 1.17.4.18  2000/08/08 00:03:16  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.17.4.17  2000/08/02 23:10:03  king
+--| Fixed select_callback to only call AS if not void
+--|
+--| Revision 1.17.4.16  2000/07/24 21:36:10  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.17.4.15  2000/07/06 19:58:13  king
+--| Added view mode comment
+--|
+--| Revision 1.17.4.14  2000/07/06 19:03:01  king
+--| Changed view mode to prevent gdk error output
+--|
+--| Revision 1.17.4.13  2000/07/04 00:50:19  king
+--| Explicitly setting root_tree due to gtk bug
+--|
+--| Revision 1.17.4.12  2000/06/28 00:20:10  king
+--| c_object now scrollable_window from event_box
+--|
+--| Revision 1.17.4.11  2000/06/27 23:51:18  king
+--| Redefined visual_widget
+--|
+--| Revision 1.17.4.10  2000/06/08 00:24:03  king
+--| Implemented select signal handling
 --|
 --| Revision 1.17.4.9  2000/05/18 20:53:29  king
 --| Add result check

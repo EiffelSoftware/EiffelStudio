@@ -10,9 +10,12 @@ deferred class
 	EV_DYNAMIC_LIST [G -> EV_CONTAINABLE]
 
 inherit
-	EV_ANY
+	EV_CONTAINABLE
+		undefine
+			is_equal
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
 		end
 
 	DYNAMIC_LIST [G]
@@ -30,7 +33,8 @@ inherit
 		undefine
 			changeable_comparison_criterion,
 			default_create,
-			move
+			move,
+			copy
 		redefine
 			index_of,
 			i_th,
@@ -39,7 +43,9 @@ inherit
 			dl_put_i_th,
 			merge_left,
 			merge_right,
-			dl_put_left
+			dl_put_left,
+			wipe_out,
+			swap
 		end
 
 	SET [G]
@@ -48,7 +54,7 @@ inherit
 		undefine
 			prune_all,
 			changeable_comparison_criterion,
-			default_create
+			default_create, is_equal, copy
 		select
 			prune,
 			set_extend
@@ -91,7 +97,7 @@ feature -- Access
 		end
 
 	index_of (v: like item; i: INTEGER): INTEGER is
-			-- Index of item `v'.
+			-- Index of `i'th occurence of `v'.
 		do
 			Result := implementation.index_of (v, i)
 		ensure then
@@ -130,7 +136,7 @@ feature -- Cursor movement
 		do
 			implementation.start
 		ensure then
-			empty_implies_after: empty implies after
+			empty_implies_after: is_empty implies after
 		end
 
 	back is
@@ -168,6 +174,7 @@ feature -- Element change
 	extend (v: like item) is
 			-- Add `v' to end. Do not move cursor.
 		require
+			not_destroyed: not is_destroyed
 			extendible: extendible
 			v_not_void: v /= Void
 			v_parent_void: v.parent = Void
@@ -185,6 +192,7 @@ feature -- Element change
 	replace (v: like item) is
 			-- Replace current item by `v'.
 		require
+			not_destroyed: not is_destroyed
 			writable: writable
 			v_not_void: v /= Void
 			v_parent_void: v.parent = Void
@@ -204,6 +212,7 @@ feature -- Element change
 	put_front (v: like item) is
 			-- Add `v' at beginning. Do not move cursor.
 		require
+			not_destroyed: not is_destroyed
 			extendible: extendible
 			v_not_void: v /= Void
 			v_parent_void: v.parent = Void
@@ -222,6 +231,7 @@ feature -- Element change
 	put_right (v: like item) is
 			-- Add `v' to the right of cursor position. Do not move cursor.
 		require
+			not_destroyed: not is_destroyed
 			extendible: extendible
 			not_after: not after
 			v_not_void: v /= Void
@@ -240,6 +250,7 @@ feature -- Element change
 	put_left (v: like item) is
 			-- Add `v' to the left of cursor position. Do not move cursor.
 		require
+			not_destroyed: not is_destroyed
 			extendible: extendible
 			not_before: not before
 			v_not_void: v /= Void
@@ -258,6 +269,7 @@ feature -- Element change
 	put_i_th (v: like item; i: INTEGER) is
 			-- Replace item at `i'-th position by `v'.
 		require
+			not_destroyed: not is_destroyed
 			valid_index: i > 0 and i <= count
 			v_not_void: v /= Void
 			v_parent_void: v.parent = Void
@@ -286,6 +298,32 @@ feature -- Element change
 			-- position. Do not move cursor. Empty `other'.
 		do
 			implementation.merge_right (other)
+		end
+
+	swap (i: INTEGER) is
+			-- Exchange_item at `i'-th position with item
+			-- at cursor position.
+		local
+			old_item, new_item: like item;
+			old_index, old_index_adjustment: INTEGER
+		do
+			if i < index then
+					--| After removing the first item, if `i' < `index'
+					--| Then when we use `old_index' - 1 to make sure
+					--| we still reference the correct item.
+				old_index_adjustment := -1
+			end
+			old_index := index
+			go_i_th (i)
+			new_item := item
+			remove
+			go_i_th (old_index + old_index_adjustment)
+			old_item := item
+			remove
+			put_left (new_item)
+			go_i_th (i)
+			put_left (old_item)
+			go_i_th (old_index)
 		end
 
 feature -- Removal
@@ -337,6 +375,20 @@ feature -- Removal
 			right_neighbor_removed: not has (old i_th (index + 1))
 			parent_void: (old i_th (index + 1)).parent = Void
 			index_same: index = old index
+		end
+
+	wipe_out is
+			-- Remove all items.
+		do
+			implementation.wipe_out
+		end
+
+feature {NONE} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := Precursor {EV_CONTAINABLE} and is_empty and before
 		end
 
 feature -- Contract support
@@ -421,99 +473,3 @@ end -- class EV_DYNAMIC_LIST
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.7  2000/06/07 17:28:08  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.6.2.4  2000/05/15 22:14:09  king
---| Removed redundant contract support features
---|
---| Revision 1.6.2.3  2000/05/13 00:04:17  king
---| Converted to new EV_CONTAINABLE class
---|
---| Revision 1.6.2.2  2000/05/05 22:27:37  king
---| Redefined index_of
---|
---| Revision 1.6.2.1  2000/05/03 19:10:04  oconnor
---| mergred from HEAD
---|
---| Revision 1.6  2000/04/07 23:59:37  brendel
---| Added put_left.
---|
---| Revision 1.5  2000/04/06 00:01:50  brendel
---| Removed action sequences.
---|
---| Revision 1.4  2000/04/05 21:16:13  brendel
---| Merged changes from LIST_REFACTOR_BRANCH.
---|
---| Revision 1.3.4.11  2000/04/05 19:31:59  brendel
---| Changed export status of sequential_index_of to EV_DYNAMIC_LIST_I,
---| because index_of uses go_to and go_to used to use index_of.
---|
---| Revision 1.3.4.10  2000/04/05 19:00:55  brendel
---| redefined put_i_th, merge_left and merge_right because they do not work
---| with our contracts.
---|
---| Revision 1.3.4.9  2000/04/04 23:02:55  brendel
---| Corrected contracts.
---|
---| Revision 1.3.4.8  2000/04/04 22:08:55  brendel
---| Redefined start to have empty convention like LINKED_LIST.
---|
---| Revision 1.3.4.7  2000/04/04 21:38:42  brendel
---| Improved postcondition.
---|
---| Revision 1.3.4.6  2000/04/03 18:10:29  brendel
---| Moved cursor implementation to _I.
---| Changed type on is_parent_recursive.
---|
---| Revision 1.3.4.5  2000/04/01 00:44:40  brendel
---| Added feature `same', because v /= Current is not allowed.
---|
---| Revision 1.3.4.4  2000/03/31 22:44:36  brendel
---| Actions are now called from here.
---|
---| Revision 1.3.4.3  2000/03/31 22:17:38  brendel
---| Minor changes.
---|
---| Revision 1.3.4.2  2000/03/31 18:43:35  brendel
---| Added contracts.
---| Added action sequences.
---| Added contract support features.
---| Redefined `i_th'.
---|
---| Revision 1.3  2000/02/22 18:39:49  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.2  2000/02/14 12:05:13  oconnor
---| added from prerelease_20000214
---|
---| Revision 1.1.2.9  2000/02/08 05:11:02  oconnor
---| added inheritance of EV_ANY, c-ed out invariant, its stuffed, needs to be
---| fixed
---|
---| Revision 1.1.2.8  2000/02/08 01:44:51  king
---| Correctly implemented item_parent and its caller
---|
---| Revision 1.1.2.7  2000/02/08 00:31:21  oconnor
---| Added invariants for uniqueness of items and parnet being set propperly
---| for items.
---|
---| Revision 1.1.2.6  2000/02/08 00:19:38  king
---| Changed inheritence to deal with changes in ev_dynamic_list
---|
---| Revision 1.1.2.5  2000/02/07 23:49:41  oconnor
---| Added postcondition to addition features to ensure removal from old parent.
---|
---| Revision 1.1.2.4  2000/02/07 23:46:24  oconnor
---| Renames item addition features from SET and DYNAMIC_LIST and defined new
---| features with same names and stronger contracts.
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

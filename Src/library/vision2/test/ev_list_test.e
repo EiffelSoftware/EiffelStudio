@@ -119,7 +119,7 @@ feature -- Basic operation
 			list.wipe_out
 			similar_list.wipe_out
 			check
-				testcase_correct: list.empty and then similar_list.empty
+				testcase_correct: list.is_empty and then similar_list.is_empty
 			end
 			test_agent.call ([])
 			append_result (name, "empty")
@@ -268,9 +268,9 @@ feature {NONE} -- Implementation
 		do
 			if list.count /= similar_list.count then
 				Result := "count /= " + similar_list.count.out
-			elseif list.empty /= similar_list.empty then 
-				Result := "empty /= "  + similar_list.empty.out
-			elseif not similar_list.empty and then
+			elseif list.is_empty /= similar_list.is_empty then 
+				Result := "empty /= "  + similar_list.is_empty.out
+			elseif not similar_list.is_empty and then
 					list.first /= similar_list.first then 
 				Result := "first failed"
 			elseif list.has (last_item) /= similar_list.has (last_item) then 
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 			elseif (not similar_list.off)
 					and then list.item /=similar_list.item then 
 				Result := "item failed"
-			elseif not similar_list.empty
+			elseif not similar_list.is_empty
 					and then list.last /= similar_list.last then 
 				Result := "last failed"
 			elseif list.sequential_occurrences (last_item) /=
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			elseif list.occurrences (last_item) /=
 					similar_list.occurrences (last_item) then 
 				Result := "occurrences failed"
-			elseif list.empty /= similar_list.empty then 
+			elseif list.is_empty /= similar_list.is_empty then 
 				Result := "empty failed"
 			elseif list.exhausted /= similar_list.exhausted then 
 				Result := "exhausted failed"
@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 			until
 				n < 1
 			loop
-				if similar_list.prunable and then not similar_list.empty then
+				if similar_list.prunable and then not similar_list.is_empty then
 					if similar_list.readable then
 						existing_item := similar_list.item
 					else
@@ -516,7 +516,7 @@ feature {NONE} -- Implementation
 			until
 				n < 1
 			loop
-				if similar_list.prunable and then not similar_list.empty then
+				if similar_list.prunable and then not similar_list.is_empty then
 					if similar_list.readable then
 						existing_item := similar_list.item
 					else
@@ -711,6 +711,15 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2001/06/07 23:08:57  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.29.2.2  2001/03/01 03:23:44  manus
+--| Removed obsolete calls to `empty', now replaced by `is_equal'.
+--|
+--| Revision 1.29.2.1  2000/05/03 19:10:21  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.29  2000/04/27 21:31:44  brendel
 --| reverted.
 --|

@@ -7,11 +7,9 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-
 	EV_HORIZONTAL_BOX_I
 	
 inherit
-
 	EV_BOX_I
 		redefine
 			interface
@@ -44,6 +42,15 @@ end -- class EV_HORIZONTAL_BOX_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.2  2000/10/06 20:11:48  oconnor
+--| cosmetics
+--|
+--| Revision 1.3.4.1  2000/05/03 19:09:05  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.5  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

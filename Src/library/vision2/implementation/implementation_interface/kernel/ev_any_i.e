@@ -72,7 +72,6 @@ feature {EV_ANY, EV_ANY_I} -- Command
 		deferred
 		ensure
 			is_destroyed_set: is_destroyed
-			destroy_just_called_set: destroy_just_called
 		end
 
 feature {EV_ANY_I, EV_ANY} -- Implementation
@@ -134,36 +133,18 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			not_is_initialized: not is_initialized
 		end
 
-feature {EV_ANY_I, EV_ANY} -- Contract support
-
-	destroy_just_called: BOOLEAN
-			-- Was destroy just called?
-			-- Should only be set in `destroy'.
-			-- Should only be queried in `last_call_was_destroy'.
-
 feature {NONE} -- Contract support
 
-	last_call_was_destroy: BOOLEAN is
-			-- Was `destroy' just called?
-			-- Only returns `True' once.
-			-- Should only be called by the invariant!
-			-- See invariant: no_calls_after_destroy
-		do
-			Result := destroy_just_called		
-			destroy_just_called := False
-		end
-
-	is_useable: BOOLEAN is
-			-- Is `Current' useable?
+	is_usable: BOOLEAN is
+			-- Is `Current' usable?
 		do
 			Result := is_initialized and not is_destroyed
 		end
 
 invariant
-	interface_coupled: is_useable implies
+	interface_coupled: is_usable implies
 		interface /= Void and then interface.implementation = Current
 	base_make_called: base_make_called
-	no_calls_after_destroy: not last_call_was_destroy implies not is_destroyed
 
 end -- class EV_ANY_I
 
@@ -188,6 +169,25 @@ end -- class EV_ANY_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.5  2001/05/18 18:20:51  king
+--| Removed destroy_just_called code
+--|
+--| Revision 1.6.4.4  2001/05/17 22:22:59  king
+--| Removed unworkable no_calls_after_destroy invariant
+--|
+--| Revision 1.6.4.3  2001/02/16 00:21:18  rogers
+--| Replaced is_useable with is_usable.
+--|
+--| Revision 1.6.4.2  2000/10/12 15:18:02  pichery
+--| invariant `no_calls_after_destroy' now takes into account
+--| `is_destroyed'
+--|
+--| Revision 1.6.4.1  2000/05/03 19:08:55  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.11  2000/04/12 01:21:06  pichery
 --| - added feature `disable_initialized'
 --| - renamed feature `set_initialized' to

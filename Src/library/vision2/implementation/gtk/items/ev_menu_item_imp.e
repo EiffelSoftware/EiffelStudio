@@ -27,6 +27,8 @@ inherit
 			text
 		end
 
+	EV_MENU_ITEM_ACTION_SEQUENCES_IMP
+
 create
 	make
 
@@ -74,15 +76,17 @@ feature -- Access
 			Result := clone (real_text)
 		end
 
+	key: INTEGER
+			-- Accelerator for `Current'.
+
 feature -- Element change
 
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		do
 			real_text := clone (a_text)
-			C.gtk_widget_show (text_label)
-			C.gtk_label_set_text (text_label,
-				eiffel_to_c (filter (a_text)))
+			key := C.gtk_label_parse_uline (text_label,
+				eiffel_to_c (u_lined_filter (a_text)))
 		end
 
 	remove_text is
@@ -98,20 +102,30 @@ feature {EV_ANY_I} -- Implementation
 	real_text: STRING
 			-- Internal `text'. (with ampersands)
 
-	filter_ampersand (s: STRING) is
-			-- Remove occurrences of '&' from `s' and
+	filter_ampersand (s: STRING; char: CHARACTER) is
+			-- Replace occurrences of '&' from `s'  by `char' and
 			-- replace occurrences of "&&" with '&'.
 		require
 			s_not_void: s /= Void
 			s_has_at_least_one_ampersand: s.occurrences ('&') > 0
+		local
+			i: INTEGER
 		do
-			s.replace_substring_all ("&&", "!AMP!")
-			s.prune_all ('&')
-			s.replace_substring_all ("!AMP!", "&")
-		ensure
-			only_ampersands_removed:
-				(old clone (s)).count + s.occurrences ('&') =
-				s.count + (old clone (s)).occurrences ('&')
+			from
+				i := 1
+			until
+				i > s.count
+			loop
+				if s.item (i) = '&' then
+					if s.item (i + 1) /= '&' then
+						s.put (char, i)
+					else
+						i := i + 1
+					end
+				end					
+				i := i + 1
+			end
+			s.replace_substring_all ("&&", "&")
 		end
 
 	filter (s: STRING): STRING is
@@ -122,7 +136,25 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if s.has ('&') then
 				Result := clone (s)
-				filter_ampersand (Result)
+				filter_ampersand (Result, ' ')
+			else
+				Result := s
+			end
+		ensure
+			copied_only_if_s_had_ampersand:
+				((old clone (s)).has ('&')) = (s /= Result)
+			s_not_changed: (old clone (s)).is_equal (s) 
+		end
+
+	u_lined_filter (s: STRING): STRING is
+			-- Copy of `s' with underscores instead of ampersands.
+			-- (If `s' does not contain ampersands, return `s'.)
+		require
+			s_not_void: s /= Void
+		do
+			if s.has ('&') then
+				Result := clone (s)
+				filter_ampersand (Result, '_')
 			else
 				Result := s
 			end
@@ -136,10 +168,16 @@ feature {EV_ANY_I} -- Implementation
 		local
 			p_imp: EV_MENU_ITEM_LIST_IMP
 		do
-			interface.select_actions.call ([])
 			p_imp ?= parent_imp
 			if p_imp /= Void then
-				p_imp.interface.item_select_actions.call ([interface])
+				if p_imp.item_select_actions_internal /= Void then
+					p_imp.item_select_actions_internal.call ([interface])
+				end
+				C.gtk_menu_shell_deactivate (p_imp.list_widget)
+			end
+			C.gtk_menu_item_deselect (c_object)
+			if select_actions_internal /= Void then
+				select_actions_internal.call ([])
 			end
 		end
 
@@ -174,8 +212,21 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.47  2000/06/07 17:27:29  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.48  2001/06/07 23:08:01  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.36.4.7  2001/02/23 17:26:08  king
+--| Re-implemented `filter_ampersand'.
+--| Added `u_lined_filter' to be used for underlined accelerators.
+--|
+--| Revision 1.36.4.6  2000/08/10 17:22:25  oconnor
+--| call parent before self on select
+--|
+--| Revision 1.36.4.5  2000/08/02 23:08:16  king
+--| Fixed on_activate to call AS only if not void
+--|
+--| Revision 1.36.4.4  2000/07/24 21:33:39  oconnor
+--| inherit action sequences _IMP class
 --|
 --| Revision 1.36.4.3  2000/06/02 21:00:42  king
 --| Removed previous bug fix, reimplement in radio menu item

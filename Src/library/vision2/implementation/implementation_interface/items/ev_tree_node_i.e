@@ -1,7 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision tree item, implementation interface.";
+		"EiffelVision tree node. Implementation interface.";
+	status: "See notice at end of class."		
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -41,10 +41,12 @@ inherit
 			interface
 		end
 
+	EV_TREE_NODE_ACTION_SEQUENCES_I
+
 feature -- Access
 
 	parent: EV_TREE_NODE_CONTAINER is
-			-- Parent of the tree node.
+			-- Parent of `Current'.
 		do
 			if parent_imp /= Void then
 				Result ?= parent_imp.interface
@@ -55,7 +57,7 @@ feature -- Access
 		end	
 
 	parent_tree: EV_TREE is
-			-- Root tree that parent is held within.
+			-- Root tree that holds `Current'.
 		local
 			parent_item: EV_TREE_NODE_I
 		do
@@ -69,13 +71,13 @@ feature -- Access
 feature -- Status report
 
 	is_selectable: BOOLEAN is
-			-- May the tree item be selected?
+			-- May the `Current' be selected?
 		do
 			Result := parent_tree /= Void
 		end
 
 	is_expanded: BOOLEAN is
-			-- is the item expanded ?
+			-- is `Current' expanded ?
 		require
 			in_tree: parent_tree /= Void
 		deferred
@@ -84,9 +86,10 @@ feature -- Status report
 feature -- Status setting
 
 	set_expand (flag: BOOLEAN) is
-			-- Expand the item if `flag', collapse it otherwise.
+			-- Expand `Current' if `flag', otherwise collapse it.
 		require
 			in_tree: parent_tree /= Void
+			is_expandable: count > 0
 		deferred
 		ensure
 			state_set: is_expanded = flag
@@ -119,8 +122,20 @@ end -- class EV_TREE_NODE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.2  2000/06/07 17:27:41  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.3  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.2.8  2000/08/23 21:34:46  king
+--| Added is_expandable precond to set_expand
+--|
+--| Revision 1.1.2.7  2000/08/17 22:18:21  rogers
+--| parent is once again renamed to old_parent.
+--|
+--| Revision 1.1.2.6  2000/08/17 20:34:11  rogers
+--| Removed fixme not_reviewed. Comments.
+--|
+--| Revision 1.1.2.5  2000/07/24 21:31:44  oconnor
+--| inherit action sequences _I class
 --|
 --| Revision 1.1.2.4  2000/05/18 23:13:51  rogers
 --| formatting.

@@ -47,6 +47,14 @@ void c_ev_gtk_callback_marshal_init (
     // end
 }
 
+void c_ev_gtk_callback_marshal_destroy (Void)
+		// Disconnect marshal from the eiffel system.
+{
+	eif_wean (ev_gtk_callback_marshal_object);
+	ev_gtk_callback_marshal_object = NULL;
+	ev_gtk_callback_marshal = NULL;
+}
+
 void c_ev_gtk_callback_marshal (
     GtkObject* object, EIF_OBJECT agent, guint n_args, GtkArg* args
 )
@@ -70,15 +78,16 @@ void c_ev_gtk_callback_marshal (
             // We do not use `object', so no need for precondition.
             // g_assert (object != NULL);
             g_assert (agent != NULL);
-            g_assert (ev_gtk_callback_marshal_object != NULL);
-            g_assert (ev_gtk_callback_marshal != NULL);
+            g_assert (ev_gtk_callback_marshal_object != NULL || ev_gtk_callback_marshal == NULL);
     // do
-            ev_gtk_callback_marshal (
-                eif_access (ev_gtk_callback_marshal_object),
-                eif_access (agent),
-                (EIF_INTEGER) n_args,
-                (EIF_POINTER) args 
-            );
+			if (ev_gtk_callback_marshal != NULL) {
+				ev_gtk_callback_marshal (
+					eif_access (ev_gtk_callback_marshal_object),
+					eif_access (agent),
+					(EIF_INTEGER) n_args,
+					(EIF_POINTER) args 
+				);
+			}
     // end
 }
 
@@ -137,6 +146,46 @@ guint c_ev_gtk_callback_marshal_signal_connect (
     // end
 	return connection_id;
 }
+
+void c_ev_gtk_callback_marshal_signal_connect_true (
+    GtkObject* c_object,
+    const gchar* signal,
+    EIF_OBJECT agent
+)
+		// Connect an `agent' to a named `signal' emmited by a GTK `c_object'.
+		// Callback always returns true.
+{
+    // debug
+		/*
+        g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
+            "c_ev_gtk_callback_marshal_signal_connect_true (%X (%s), %s, %X)",
+            (int) c_object, 
+            gtk_type_name (GTK_OBJECT_TYPE (c_object)),
+            signal,
+            (int) agent
+        );
+		*/
+    // require
+            g_assert (c_object != NULL);
+            g_assert (signal != NULL);
+            g_assert (agent != NULL);
+            g_assert (ev_gtk_callback_marshal_object != NULL);
+            g_assert (ev_gtk_callback_marshal != NULL);
+    // do
+            gtk_signal_connect_full (
+                c_object,                  // Object which emits the signal.
+                signal,                    // Name of the signal.
+                (GtkSignalFunc) c_ev_gtk_callback_marshal_true_event_callback,  // Function pointer to attach.
+                NULL, // Function marshal.
+                eif_adopt (agent),         // User data for function.
+                (GtkDestroyNotify)
+                eif_wean,                  // To call on hook disconnect.
+                FALSE,                     // This is an object signal.
+                FALSE                      // Invoke handler after the signal.
+            );
+	// end
+}
+
 
 int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT agent)
 		// GtkFunction that passes `agent' to ev_gtk_callback_marshal
@@ -383,6 +432,25 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.11  2001/06/07 23:07:59  rogers
+// Merged DEVEL branch into Main trunc.
+//
+// Revision 1.10.2.5  2000/09/18 23:55:40  oconnor
+// Added c_ev_gtk_callback_marshal_destroy
+// This stops EV_APPLICATION.marshal from being called
+//
+// Revision 1.10.2.4  2000/08/09 19:06:40  king
+// Corrected signal_connect_true to use event_callback
+//
+// Revision 1.10.2.3  2000/08/07 21:53:58  king
+// Corrected debug output for connect_true
+//
+// Revision 1.10.2.2  2000/08/04 19:37:14  king
+// Added c_ev_gtk_callback_marshal_signal_connect_true
+//
+// Revision 1.10.2.1  2000/05/03 19:08:33  oconnor
+// mergred from HEAD
+//
 // Revision 1.10  2000/04/14 18:26:58  oconnor
 // Make sure that idle callback returns TRUE so that GTK dose not
 // disconnect it after it is called.

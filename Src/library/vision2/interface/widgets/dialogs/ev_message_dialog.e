@@ -7,59 +7,30 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EV_MESSAGE_DIALOG
 
 inherit
 	EV_DIALOG
 		redefine
-			initialize
+			initialize,
+			set_background_color,
+			set_foreground_color,
+			foreground_color,
+			background_color
 		end
-
-create
-	default_create,
-	make_with_text
+		
+	EV_DIALOG_CONSTANTS
+		undefine
+			default_create, copy
+		end
 
 feature {NONE} -- Initialization
 
-	initialize is
-			-- Initialize to default state.
-		local
-			hb: EV_HORIZONTAL_BOX
-			vb: EV_VERTICAL_BOX
-		do
-			Precursor
-
-			create buttons.make (5)
-			create vb
-			extend (vb)
-			create hb
-			vb.extend (hb)
-			create pixmap_box
-			hb.extend (pixmap_box)
-			hb.disable_item_expand (pixmap_box)
-			create label
-			label.align_text_center
-			hb.extend (label)
-			hb.set_border_width (10)
-			hb.set_padding (10)
-			create button_box
-			vb.extend (button_box)
-			vb.disable_item_expand (button_box)
-			button_box.set_padding (10)
-			button_box.set_border_width (10)
-			
-			set_title ("EiffelVision2 Generic Message Dialog")
-			set_text ("Your message.")
-			set_pixmap (Default_pixmaps.Information_pixmap)
-			
-			set_buttons (<<"OK", "Cancel">>)
-			set_default_push_button (button ("OK"))
-			set_default_cancel_button (button ("Cancel"))
-		end
-
 	make_with_text (a_text: STRING) is
 			-- Create dialog with `a_text'.
+		require
+			a_text_not_void: a_text /= Void
 		do
 			default_create
 			set_text (a_text)
@@ -72,35 +43,95 @@ feature {NONE} -- Initialization
 			-- Create dialog with `a_text' and `actions'.
 			-- (`actions' are added to `buttons' in order.)
 		require
+			a_text_not_void: a_text /= Void
 			actions_not_void: actions /= Void
 			actions_not_empty: actions.count > 0
 		local
 			i: INTEGER
 			c: CURSOR
+			b: EV_BUTTON
 		do
 			default_create
 			set_text (a_text)
-			c := buttons.cursor
+			c := button_box.cursor
 			from
-				buttons.start
+					--| We loop through `button_box' instead of `buttons', as
+					--| if we were to loop through `buttons', we would not get
+					--|  the buttons in the order they are displayed.
+				button_box.start
 				i := 1
 			until
 				i > actions.count or
-				buttons.after
+				button_box.after
 			loop
-				buttons.item_for_iteration.select_actions.extend (actions @ i)
-				buttons.forth
+				b ?= button_box.item
+				check
+					button_box_contains_only_buttons: b /= Void
+				end
+				b.select_actions.extend (actions @ i)
+				button_box.forth
 				i := i + 1
 			end
-			buttons.go_to (c)
+			button_box.go_to (c)
+		end
+		
+	initialize is
+			-- Initialize to default state.
+		local
+			hb: EV_HORIZONTAL_BOX
+			vb: EV_VERTICAL_BOX
+			hb2: EV_HORIZONTAL_BOX
+			vb2: EV_VERTICAL_BOX
+		do
+			Precursor
+
+			create buttons.make (5)
+			create vb
+			create button_box
+			create hb
+			create pixmap_box
+			create hb2
+			create vb2
+			create label
+
+			vb2.extend (pixmap_box)
+			vb2.disable_item_expand (pixmap_box)
+			vb2.extend (create {EV_CELL})
+	
+			hb.extend (vb2)
+			hb.extend (label)
+			hb.set_padding (10)
+
+			hb2.extend (create {EV_CELL})
+			hb2.extend (button_box)
+			hb2.disable_item_expand (button_box)
+			hb2.extend (create {EV_CELL})
+
+			vb.extend (hb)
+			vb.extend (hb2)
+			vb.disable_item_expand (hb2)
+			vb.set_padding (14)
+			vb.set_border_width (10)
+			
+			label.align_text_left
+
+			button_box.set_padding (10)
+			extend (vb)
+
+			set_text ("Use `set_text' to modify this message.")
+		
+			foreground_color := implementation.foreground_color
+			background_color := implementation.background_color
 		end
 
 feature -- Access
 
 	pixmap: EV_PIXMAP is
 			-- Icon displayed by dialog.
+		require
+			not_destroyed: not is_destroyed
 		do
-			if pixmap_box.item /= Void then
+			if pixmap_box.readable then
 				Result ?= pixmap_box.item
 				check
 					Result_not_void: Result /= Void
@@ -110,28 +141,70 @@ feature -- Access
 
 	text: STRING is
 			-- Message displayed by dialog.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := label.text
 		end
 
+	foreground_color: EV_COLOR
+			-- Foreground color of the dialog.
+
+	background_color: EV_COLOR
+			-- Background color of the dialog.
+
 feature -- Status setting
+
+	set_background_color (a_color: EV_COLOR) is
+			-- Sets background color of the dialog.
+		local
+			dialog_box: EV_CONTAINER
+		do
+			item.set_background_color (a_color)
+			dialog_box ?= item
+			if dialog_box /= Void then
+				dialog_box.propagate_background_color
+			end
+			background_color.copy (a_color)
+		end
+
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Sets foreground color of the dialog.
+		local
+			dialog_box: EV_CONTAINER
+		do
+			item.set_foreground_color (a_color)
+			dialog_box ?= item
+			if dialog_box /= Void then
+				dialog_box.propagate_foreground_color
+			end
+			foreground_color.copy (a_color)
+		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set icon associated with dialog.
 		require
+			not_destroyed: not is_destroyed
 			a_pixmap_not_void: a_pixmap /= Void
-			pixmap_void: pixmap = Void
+		local
+			pixmap_clone: EV_PIXMAP
 		do
-			pixmap_box.extend (a_pixmap)
-			pixmap_box.set_minimum_size (a_pixmap.width, a_pixmap.height)
+			if pixmap /= Void then
+				remove_pixmap
+			end
+			create pixmap_clone
+			pixmap_clone.copy (a_pixmap)
+			pixmap_box.extend (pixmap_clone)
+			pixmap_box.set_minimum_size
+				(pixmap_clone.width, pixmap_clone.height)
 		ensure
-			pixmap_assigned: pixmap = a_pixmap
+			pixmap_assigned: pixmap.is_equal (a_pixmap)
 		end
 
 	remove_pixmap is
 			-- Set `pixmap' `Void'.
 		require
-			has_pixmap: pixmap /= Void
+			not_destroyed: not is_destroyed
 		do
 			pixmap_box.wipe_out
 		ensure
@@ -141,8 +214,9 @@ feature -- Status setting
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		require
+			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.empty
+			a_text_not_empty: not a_text.is_empty
 		do
 			label.set_text (a_text)
 		ensure
@@ -152,7 +226,7 @@ feature -- Status setting
 	remove_text is
 			-- Set `text' `Void'.
 		require
-			text_not_void: text /= Void
+			not_destroyed: not is_destroyed
 		do
 			label.remove_text
 		ensure
@@ -162,38 +236,48 @@ feature -- Status setting
 	set_buttons (button_labels: ARRAY [STRING]) is
 			-- Assign new buttons with `button_labels' to `buttons'.
 		require
+			not_destroyed: not is_destroyed
 			button_labels_not_void: button_labels /= Void
+			all_button_labels_items_not_void:
+				button_labels.occurrences (Void) = 0
 		local
 			i: INTEGER
 		do
 			clean_buttons
-			button_box.extend (create {EV_CELL})
 			from i := 1 until i > button_labels.count loop
 				add_button (button_labels @ i)
 				i := i + 1
 			end
-			button_box.extend (create {EV_CELL})
 			button_box.enable_homogeneous
 		end
 
 	set_buttons_and_actions (
-		button_labels	: ARRAY [STRING]
-		actions			: ARRAY [PROCEDURE [ANY, TUPLE []]]
+		button_labels: ARRAY [STRING]
+		actions: ARRAY [PROCEDURE [ANY, TUPLE []]]
 	) is
 			-- Assign new buttons with `button_labels' to `buttons'.
+		require
+			not_destroyed: not is_destroyed
+			button_labels_not_void: button_labels /= Void
+			actions_not_void: actions /= Void
+			all_button_labels_items_not_void:
+				button_labels.occurrences (Void) = 0
+			enough_actions_for_labels: actions.count >= button_labels.count
 		local
 			i: INTEGER
 		do
 			clean_buttons
-			button_box.extend (create {EV_CELL})
 			from i := 1 until i > button_labels.count loop
-				add_button_with_action (
-					button_labels @ i,
-					actions @ i
-				)
+				if (actions @ i) = Void then
+					add_button (button_labels @ i)
+				else
+					add_button_with_action (
+						button_labels @ i,
+						actions @ i
+					)
+				end
 				i := i + 1
 			end
-			button_box.extend (create {EV_CELL})
 		end
 
 feature -- Status report
@@ -201,6 +285,7 @@ feature -- Status report
 	has_button (a_label: STRING): BOOLEAN is
 			-- Is there a button that has `a_label'?
 		require
+			not_destroyed: not is_destroyed
 			a_label_not_void: a_label /= Void
 		do
 			Result := buttons.has (a_label)
@@ -209,6 +294,7 @@ feature -- Status report
 	button (a_label: STRING): EV_BUTTON is
 			-- Button that has `a_label'.
 		require
+			not_destroyed: not is_destroyed
 			a_label_not_void: a_label /= Void
 			has_button_with_a_label: has_button (a_label)
 		do
@@ -216,6 +302,9 @@ feature -- Status report
 		ensure
 			not_void: Result /= Void
 		end
+		
+	selected_button: STRING
+			-- Label of the last clicked button.
 
 feature {NONE} -- Implementation
 
@@ -234,57 +323,60 @@ feature {NONE} -- Implementation
 
 	clean_buttons is
 			-- Remove all buttons from the dialog
+		require
+			not_destroyed: not is_destroyed
 		do
-			if has_default_push_button then
+			if default_push_button /= Void then
 				remove_default_push_button
 			end
-			if has_default_cancel_button then
+			if default_cancel_button /= Void then
 				remove_default_cancel_button
 			end
 			button_box.wipe_out
 			buttons.clear_all
 		end
 
-	add_button (s: STRING) is
+	add_button (a_text: STRING) is
 			-- An item has been added to `buttons'.
+		require
+			not_destroyed: not is_destroyed
+			a_text_not_void: a_text /= Void
 		local
 			new_button: EV_BUTTON
 		do
-			create new_button.make_with_text (s)
+			create new_button.make_with_text (a_text)
 
 			--| We now put the button in the hash-table to give the
 			--| user access to it.
-			buttons.put (new_button, s)
+			buttons.put (new_button, a_text)
 
-			new_button.select_actions.extend (~on_button_press (s))
+			new_button.select_actions.extend (~on_button_press (a_text))
 			button_box.extend (new_button)
 			button_box.disable_item_expand (new_button)
-			new_button.set_minimum_width (new_button.minimum_width.max(75))
+			new_button.set_minimum_width (new_button.minimum_width.max (75))
 			new_button.align_text_center
 		end
 
-	add_button_with_action (
-		s			: STRING
-		action		: PROCEDURE [ANY, TUPLE []]
-	) is
+	add_button_with_action
+		(a_text: STRING; a_action: PROCEDURE [ANY, TUPLE []]) is
 			-- An item has been added to `buttons'.
+		require
+			not_destroyed: not is_destroyed
+			a_text_not_void: a_text /= Void
+			a_action_not_void: a_action /= Void
 		do
-			add_button (s)
-			button (s).select_actions.extend (action)
+			add_button (a_text)
+			button (a_text).select_actions.extend (a_action)
 		end
 
 	on_button_press (a_button_text: STRING) is
 			-- A button with label `a_button_text' has been pressed.
+		require
+			not_destroyed: not is_destroyed
 		do
 			selected_button := a_button_text
-			hide
-			close_actions.call ([])
+			destroy
 		end
-
-feature -- Status report
-
-	selected_button: STRING
-			-- Label of the last clicked button.
 
 end -- class EV_MESSAGE_DIALOG
 
@@ -303,100 +395,3 @@ end -- class EV_MESSAGE_DIALOG
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.24  2000/06/07 17:28:11  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.11.4.6  2000/05/30 16:12:04  rogers
---| Removed unreferenced variables.
---|
---| Revision 1.11.4.5  2000/05/13 03:30:53  pichery
---| Back to protected controls.
---|
---| Revision 1.11.4.4  2000/05/09 19:25:34  pichery
---| Label is now visible.
---|
---| Revision 1.11.4.3  2000/05/04 17:28:56  brendel
---| Added remove_pixmap, remove_text.
---| Added contracts.
---|
---| Revision 1.11.4.2  2000/05/04 04:15:31  pichery
---| Removed constants Default_pixmaps, now
---| defined in EV_WIDGET
---|
---| Revision 1.11.4.1  2000/05/03 19:10:06  oconnor
---| mergred from HEAD
---|
---| Revision 1.23  2000/04/29 03:37:24  pichery
---| Changed Dialogs. Added default & cancel
---| buttons, Default pixmaps, ...
---|
---| Revision 1.22  2000/04/19 00:45:05  brendel
---| Minor changes.
---|
---| Revision 1.21  2000/03/27 18:29:54  brendel
---| Replaced obsolete call.
---|
---| Revision 1.20  2000/03/09 16:42:20  rogers
---| Replaced all disable_child_expand with disable_item_expand.
---|
---| Revision 1.19  2000/03/08 17:18:26  brendel
---| Replaced `extend' with `put'.
---|
---| Revision 1.18  2000/03/06 19:48:11  oconnor
---| renamed but_texts -> button_labels
---|
---| Revision 1.17  2000/03/06 19:32:02  oconnor
---| removed stray comma
---|
---| Revision 1.16  2000/03/06 19:25:55  oconnor
---| removed make_with_text_and_actions from
---| create clause, it only makes sense for decendants.
---|
---| Revision 1.15  2000/03/06 19:17:42  oconnor
---| Added make_with_text_and_actions,
---| moved make_with_text from decendants to EV_MESSAGE_DIALOG.
---|
---| Revision 1.14  2000/02/22 18:39:50  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.13  2000/02/14 20:38:36  oconnor
---| mergerd from HACK-O-RAMA
---|
---| Revision 1.11.6.8  2000/02/14 20:09:01  brendel
---| Added features `has_button' and `button'.
---| Before, the user did not have access to the buttons created with
---| `set_buttons'.
---|
---| Revision 1.11.6.7  2000/01/28 22:24:23  oconnor
---| released
---|
---| Revision 1.11.6.6  2000/01/27 19:30:50  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.11.6.5  2000/01/27 01:05:11  brendel
---| Buttons are now centered.
---| Text always fits in the label.
---| Can be created using `default_create'.
---|
---| Revision 1.11.6.4  2000/01/26 16:47:00  brendel
---| Finished except for pixmap.
---|
---| Revision 1.11.6.1  1999/11/24 17:30:50  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.11.2.3  1999/11/04 23:10:54  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.11.2.2  1999/11/02 17:20:12  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

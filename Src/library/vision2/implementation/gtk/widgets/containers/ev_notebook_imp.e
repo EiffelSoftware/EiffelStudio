@@ -10,18 +10,27 @@ class
 	
 inherit
 	EV_NOTEBOOK_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
 		redefine
-			interface
+			interface,
+			replace
 		end
 		
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
-			initialize
+			on_new_item,
+			replace,
+			initialize,
 --			set_foreground_color,
 --			set_background_color,
+			remove_i_th
 		end
 	  
+	EV_NOTEBOOK_ACTION_SEQUENCES_IMP
+
 create
 	make
 
@@ -32,18 +41,14 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_notebook_new ())
-		end	
+			real_signal_connect (c_object, "switch-page", ~page_switch, ~page_switch_translate)
+		end
 
 	initialize is
-			-- Set up the action sequence connection.
+			-- Initialize the notebook.
 		do
-			Precursor
-			connect_signal_to_actions (
-				"switch-page",
-				interface.selection_actions,
-				Void
-			)
-			new_item_actions.extend (~set_item_text (?, ""))
+			Precursor {EV_WIDGET_LIST_IMP}
+			selected_item_index := 1
 		end
 
 feature -- Access
@@ -74,10 +79,10 @@ feature -- Status report
 			pn: INTEGER
 			imp: EV_WIDGET_IMP
 		do
-			pn := C.gtk_notebook_get_current_page (c_object)
+			pn := selected_item_index - 1
 			p := C.gtk_notebook_get_nth_page (
 				c_object,
-				C.gtk_notebook_get_current_page (c_object)
+				pn
 			)
 			check
 				p_not_void: p /= NULL
@@ -94,11 +99,9 @@ feature -- Status report
 			end
 		end
 
-	selected_item_index: INTEGER is
-			-- Index `selected_item'.
-		do
-			Result := C.gtk_notebook_get_current_page (c_object) + 1
-		end
+	selected_item_index: INTEGER
+			-- Index `selected_item'
+
 
 	tab_position: INTEGER is
 			-- Position of tabs.
@@ -154,6 +157,25 @@ feature -- Status setting
 		end	
 	
 feature -- Element change
+
+	remove_i_th (i: INTEGER) is
+			-- Remove item at `i'-th position.
+		do
+			Precursor {EV_WIDGET_LIST_IMP} (i)
+			selected_item_index := C.gtk_notebook_get_current_page (c_object) + 1
+		end
+
+	replace (v: like item) is
+			-- Replace current item by `v'.
+		local
+			i: INTEGER
+		do
+			i := C.gtk_notebook_get_current_page (c_object)
+			remove_i_th (index)
+			insert_i_th (v, index)
+			C.gtk_notebook_set_page (c_object, i)
+		end
+
 
 	set_item_text (an_item: like item; a_text: STRING) is
 			-- Assign `a_text' to the label for `an_item'.
@@ -215,6 +237,37 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
+	page_switch (a_page: TUPLE [POINTER]) is
+			-- Called when the page is switched.
+		local
+			temp_ptr_ref: POINTER_REF
+			temp_ptr: POINTER
+		do
+			if not is_destroyed then
+			temp_ptr_ref ?= a_page.item (1)
+			temp_ptr := temp_ptr_ref.item
+			selected_item_index := C.gtk_notebook_page_num (
+				c_object,
+				C.gtk_notebook_page_struct_child (temp_ptr)
+			) + 1
+			if selection_actions_internal /= Void then
+				selection_actions_internal.call ([])
+			end
+			end
+		end
+
+	page_switch_translate (n: INTEGER; p: POINTER): TUPLE is
+			-- Retrieve index of switched page.
+		do
+			Result := [gtk_value_pointer (p)]
+		end
+
+	on_new_item (an_item: EV_WIDGET) is
+			-- Set `an_item's text empty.
+		do
+			set_item_text (an_item, "")
+		end
+
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
@@ -248,8 +301,50 @@ end -- class EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.23  2000/06/07 17:27:38  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.24  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.17.4.13  2001/04/26 19:03:08  king
+--| Put in temporary hack to preventgtk warning on gtk deg fault in Studio
+--|
+--| Revision 1.17.4.12  2000/12/20 00:38:07  etienne
+--| Redefining remove_i_th to correctly set selected_item_index
+--|
+--| Revision 1.17.4.11  2000/10/27 16:54:42  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.17.4.10  2000/10/12 16:22:47  king
+--| Fixed selection_actions
+--|
+--| Revision 1.17.4.9  2000/10/10 22:04:31  king
+--| Made compilable with AS correction
+--|
+--| Revision 1.17.4.8  2000/10/09 17:55:25  king
+--| Made compilable
+--|
+--| Revision 1.17.4.7  2000/09/18 18:06:43  oconnor
+--| reimplemented propogate_[fore|back]ground_color for speeeeed
+--|
+--| Revision 1.17.4.6  2000/08/30 16:19:53  oconnor
+--| fixed replace
+--|
+--| Revision 1.17.4.5  2000/08/08 00:03:14  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.17.4.4  2000/08/04 19:19:28  oconnor
+--| Optimised radio button management by using a polymorphic call
+--| instaed of using agents.
+--|
+--| Revision 1.17.4.3  2000/07/24 21:36:08  oconnor
+--| inherit action sequences _IMP class
 --|
 --| Revision 1.17.4.2  2000/06/01 00:03:35  king
 --| Implemented external in Eiffel

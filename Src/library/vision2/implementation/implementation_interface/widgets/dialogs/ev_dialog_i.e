@@ -23,24 +23,92 @@ feature -- Status Report
 			-- pressing ALT-F4)
 		deferred
 		end
+	
+	default_push_button: EV_BUTTON is
+			-- Default pushed button. This is the button that
+			-- is pushed if the user press the enter key.
+		do
+			Result := internal_default_push_button
+		end
+		
+	default_cancel_button: EV_BUTTON is
+			-- Default cancel button. This is the button that
+			-- is pushed if the user press the escape key or
+			-- close the window using the close icon.
+			-- If there is no default cancel button, the close
+			-- icon is disabled.
+		do
+			Result := internal_default_cancel_button
+		end
 
 feature -- Status Setting
+
+	set_default_push_button (a_button: EV_BUTTON) is
+			-- Set the default push button to `a_button'.
+			-- This is the button that is pushed if the user presses
+			-- the enter key.
+		require
+			a_button_not_void: a_button /= Void
+			has_button: interface.has_recursive (a_button)
+		do
+			if default_push_button /= Void then
+				default_push_button.disable_default_push_button
+			end 
+			a_button.enable_default_push_button
+			internal_default_push_button := a_button
+		ensure
+			default_push_button_set: 
+				default_push_button = a_button
+		end
+		
+	remove_default_push_button is
+			-- Remove the default push button of this dialog.
+		require
+			has_default_push_button: default_push_button /= Void
+		do
+			default_push_button.disable_default_push_button
+			internal_default_push_button := Void
+		ensure
+			not_has_default_push_button: default_push_button = Void
+		end
+		
+	set_default_cancel_button (a_button: EV_BUTTON) is
+			-- Assign `a_button' to default_cancel_button.This is the button
+			-- that is pushed if the user press the escape key or
+			-- close the window using the close icon.
+			-- If there is no default cancel button, the close
+			-- icon is disabled.
+		require
+			a_button_not_void: a_button /= Void
+			has_button: interface.has_recursive (a_button)
+		do
+			internal_default_cancel_button := a_button
+			enable_closeable
+		ensure
+			default_cancel_button_set: 
+				default_cancel_button = a_button
+		end
+		
+	remove_default_cancel_button is
+			-- Remove the default cancel button of this dialog.
+		require
+			has_default_cancel_button: default_cancel_button /= Void
+		do
+			internal_default_cancel_button := Void
+			disable_closeable
+		ensure
+			not_has_default_cancel_button: default_cancel_button = Void
+		end
 	
 	enable_closeable is
-			-- Set the window to be closeable by the user
-			-- (Through a clik on the Window Menu, or by
-			-- pressing ALT-F4)
-		require
-			not_closeable: not is_closeable
+			-- Set the window to be closeable by the user.
 		deferred
 		ensure
 			closeable: is_closeable
 		end
 
 	disable_closeable is
-			-- Set the window not to be closeable by the user
-		require
-			closeable: is_closeable
+			-- Set the window not to be closeable by the user.
 		deferred
 		ensure
 			not_closeable: not is_closeable
@@ -53,11 +121,64 @@ feature -- Basic operations
 		deferred
 		end
 
-	show_modal is
+	show_modal_to_window (a_window: EV_WINDOW) is
 			-- Show and wait until window is closed.
+			-- `Current' is show modal with respect to `a_window'.
 		deferred
 		end
 
+	show_relative_to_window (a_window: EV_WINDOW) is
+			-- Show `Current' with respect to `a_window'.
+		deferred
+		end
+		
+feature {EV_DIALOG} -- Implementation 
+
+	dialog_key_press_action (a_key: EV_KEY) is
+		local
+			a_key_code: INTEGER
+		do
+			-- EV_KEY's may be void.
+			--| If this behaviour is modified, then make sure to update
+			--| the description in EV_DIALOG.
+			if a_key /= Void then
+				a_key_code := a_key.code
+
+				if a_key_code = Key_constants.Key_escape and then
+					default_cancel_button /= Void then
+						-- We now check if `default_cancel_button' is sensitive
+						-- as we only call its select_actions if it is sensitive.
+					if default_cancel_button.is_sensitive then
+							-- Escape key pressed and `default_cancel_button' is
+							-- sensitive so simulate a press.
+						default_cancel_button.select_actions.call ([])
+					end
+	
+				elseif a_key_code = Key_constants.Key_enter and then 
+					default_push_button /= Void then
+					if default_push_button.is_sensitive then
+							-- Enter key pressed and `default_push_button' is
+							-- sensitive so simulate a press.
+						default_push_button.select_actions.call ([])
+					end
+				end
+			end
+		end
+
+feature {EV_DIALOG, EV_DIALOG_I} -- Implementation
+
+	internal_default_push_button: EV_BUTTON
+			-- Default pushed button. This is the button that
+			-- is pushed if the user pushes the enter key.
+
+	internal_default_cancel_button: EV_BUTTON
+			-- The default cancel button is the button pushed 
+			-- when the user press the escape key or close the 
+			-- window using the close icon.
+			--
+			-- If there is no default cancel button, the close
+			-- icon is disabled.
+		
 feature -- Implementation
 
 	interface: EV_DIALOG
@@ -87,6 +208,41 @@ end -- class EV_DIALOG_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.9.4.9  2001/05/18 00:18:28  rogers
+--| Modified behaviour of dialog_key_press_action. If we have a default
+--| cancel button and it has been disabled, then we do nothing when escape
+--| is pressed.
+--|
+--| Revision 1.9.4.8  2001/05/02 22:58:26  rogers
+--| We now always call the default_push_button, even if it does not have teh focus.
+--|
+--| Revision 1.9.4.7  2001/05/01 14:07:40  pichery
+--| Exported `internal_default_[push|cancel]_button' to EV_DIALOG_I to be able
+--| to copy these attributes between 2 implementations of EV_DIALOG_IMP
+--| (modal and modeless for example)
+--|
+--| Revision 1.9.4.6  2001/04/27 22:56:13  king
+--| Changed export clause to suit interface change
+--|
+--| Revision 1.9.4.5  2001/04/27 21:28:31  rogers
+--| Added developer comment/warning in dialog_key_press_action.
+--|
+--| Revision 1.9.4.4  2001/04/27 20:14:54  rogers
+--| Moved features here from ev_dialog to hide details of out implementation
+--| from the user.
+--|
+--| Revision 1.9.4.3  2001/02/03 21:22:41  pichery
+--| Added new feature `show_relative_to_window'
+--|
+--| Revision 1.9.4.2  2000/08/16 19:52:23  king
+--| Added show_modal_to_window
+--|
+--| Revision 1.9.4.1  2000/05/03 19:09:04  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.12  2000/04/29 03:01:48  pichery
 --| Added feature `is_closeable', `enable/disable_closeable'.
 --|

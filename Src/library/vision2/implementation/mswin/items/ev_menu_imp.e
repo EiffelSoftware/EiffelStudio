@@ -16,12 +16,14 @@ inherit
 		end
 
 	EV_MENU_ITEM_IMP
-		undefine
-			destroy
 		redefine
 			interface,
 			make,
-			initialize
+			initialize,
+			has_parent,
+			disable_sensitive,
+			enable_sensitive,
+			wel_set_text
 		end
 
 	EV_MENU_ITEM_LIST_IMP
@@ -40,20 +42,66 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
+			-- Create `Current' with interface `an_interface'.
 		do
-			{EV_MENU_ITEM_IMP} Precursor (an_interface)
+			Precursor {EV_MENU_ITEM_IMP} (an_interface)
 			create ev_children.make (2)
 			make_track
 			make_id
 		end
 
 	initialize is
+			-- Initialize `Current'.
 		do
-			{EV_MENU_ITEM_IMP} Precursor
-			{EV_MENU_ITEM_LIST_IMP} Precursor
+			Precursor {EV_MENU_ITEM_IMP}
+			Precursor {EV_MENU_ITEM_LIST_IMP}
 		end
 
-feature -- Basic operations
+feature {EV_ANY_I} -- Basic operations
+
+	disable_sensitive is
+   			-- Set `Current' insensitive.
+   		local
+   			menu_bar_imp: EV_MENU_BAR_IMP
+		do
+			is_sensitive := False
+			set_insensitive (True)
+			if has_parent then
+				parent_imp.disable_position (parent_imp.index_of (interface, 1) - 1)
+					--| Only disabling the position is not enough if we are parented in
+					--| a menu bar (i.e. always visible on the window). We must call
+					--| `draw_menu' on the window for the visual appearence of `Current' to
+					--| be updated immediately.
+				menu_bar_imp ?= parent_imp
+				if menu_bar_imp /= Void then
+					if menu_bar_imp.parent_imp /= Void then
+						menu_bar_imp.parent_imp.draw_menu
+					end
+				end
+			end
+   		end
+
+	enable_sensitive is
+			-- Set `Current' insensitive.
+		local
+   			menu_bar_imp: EV_MENU_BAR_IMP
+		do
+			is_sensitive := True
+			set_insensitive (False)
+			if has_parent then
+				parent_imp.enable_position (parent_imp.index_of (interface, 1) - 1)
+					--| Only enabling the position is not enough if we are parented in
+					--| a menu bar (i.e. always visible on the window). We must call
+					--| `draw_menu' on the window for the visual appearence of `Current' to
+					--| be updated immediately.
+				menu_bar_imp ?= parent_imp
+				if menu_bar_imp /= Void then
+					if menu_bar_imp.parent_imp /= Void then
+						menu_bar_imp.parent_imp.draw_menu
+					end
+				end
+			end
+		end
 
 	show is
 			-- Pop up on the current pointer position.
@@ -66,6 +114,38 @@ feature -- Basic operations
 				show_track (wel_point.x, wel_point.y,
 					create {EV_POPUP_MENU_HANDLER}.make_with_menu (Current))
 			end
+		end
+
+	set_insensitive (flag: BOOLEAN) is
+			-- If `flag' then make children of `Current' insensitive else
+			-- make children sensitive.
+		local
+			list: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+			child_imp: EV_MENU_ITEM_IMP
+			cur: CURSOR
+		do
+			if not ev_children.is_empty then
+				list := ev_children
+				from
+					cur := list.cursor
+					list.start
+				until
+					list.after
+				loop
+					child_imp := list.item
+					if flag then
+						child_imp.disable_sensitive
+					else
+						if not child_imp.internal_non_sensitive then
+							child_imp.enable_sensitive
+						end
+					end
+					list.forth
+				end
+				list.go_to (cur)
+			end
+		ensure
+			cursor_not_moved: old ev_children.index = ev_children.index
 		end
 
 	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
@@ -91,13 +171,72 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
-		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+	update_parent_size is
+			-- Update size of parent
+		do
+			--| No need to do anything here. Deferred from EV_MENU_ITEM_LIST_IMP.
+		end
+
+	wel_set_text (a_text: STRING) is
+			-- Assign `a_text' to `Current' and refresh `Current'.
+		local
+			wel_string: WEL_STRING
+			pos: INTEGER
+		do
+			real_text := clone (a_text)
+			if has_parent then
+				create wel_string.make (real_text)
+					-- Retrieve the index of `Current'.
+				pos := parent_imp.interface.index_of (interface, 1)
+					-- Modify `Current'.
+				cwin_modify_menu (parent_imp.wel_item, pos - 1, Mf_Byposition +
+					Mf_String + Mf_popup, to_integer, wel_string.item)
+					-- Re-draw the menu bar.
+				cwin_draw_menu_bar (top_level_window_imp.wel_item)
+			end
+		end
+
+	has_parent: BOOLEAN is
+			-- Is `Current' parented?
+		do
+			Result := parent_imp /= Void
+		end
+
+	disable_default_processing is
+			-- Disable default window processing.
 		do
 			--| FIXME To be implemented for pick-and-dropable.
-			check
-				to_be_implemented: False
-			end
+		end
+
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
+			-- event. Called on a pointer press.
+		do
+			--| FIXME To be implemented for pick-and-dropable.
+		end
+
+	internal_propagate_pointer_double_press
+		(keys, x_pos, y_pos, button: INTEGER) is
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+			-- Called on a pointer double press.
+		do
+			--| FIXME To be implemented for pick-and-dropable.
+		end
+
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_MENU_ITEM_IMP is
+			-- `Result' is menu_item at pixel position `x_pos', `y_pos'.
+		do
+			--| FIXME to be implemented for pick-and-dropable.
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset of `Current' relative to screen.
+		do
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset of `Current' relative to screen.
+		do
 		end
 
 	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
@@ -137,6 +276,53 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2001/06/07 23:08:17  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.13.8.13  2001/03/22 00:43:24  rogers
+--| Fixed `enable_sensitive' and `disable_sensitive' in the case where
+--| `Current' is parented in an `EV_MENU_BAR' and therefore always visible in
+--| the window. Previously, the visual appearence of `Current' would not change
+--| until the mouse was clicked on it or the window was re-sized.
+--|
+--| Revision 1.13.8.12  2001/03/21 18:29:25  rogers
+--| Added missing comments to `update_parent_size' and `wel_set_text'.
+--|
+--| Revision 1.13.8.11  2001/02/06 01:57:34  rogers
+--| Added find_item_at_position, screen_x and screen_y.
+--|
+--| Revision 1.13.8.10  2000/12/29 18:22:18  rogers
+--| Added disable_default_processing.
+--|
+--| Revision 1.13.8.9  2000/11/29 00:37:32  rogers
+--| Changed empty to is_empty.
+--|
+--| Revision 1.13.8.8  2000/09/27 16:15:20  rogers
+--| Redefined wel_set_text from EV_MENU_ITEM_IMP. Fixed the bug in
+--| wel_set_text where setting the text would do nothing once `Current'
+--| had been parented.
+--|
+--| Revision 1.13.8.7  2000/09/13 22:07:45  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.13.8.6  2000/08/21 18:08:09  rogers
+--| Removed undefinition of destroy.
+--|
+--| Revision 1.13.8.5  2000/08/18 19:29:46  rogers
+--| Added comments to initialize and default_create.
+--|
+--| Revision 1.13.8.4  2000/08/16 22:08:27  rogers
+--| Redefined enable_sensitive. Added set_insensitive.
+--|
+--| Revision 1.13.8.3  2000/08/16 19:09:17  rogers
+--| Redefined has_parent and disable_sensitive.
+--|
+--| Revision 1.13.8.2  2000/06/09 20:30:09  rogers
+--| Added internal_propagate_pointer_double_press. Comments. Formatting.
+--|
+--| Revision 1.13.8.1  2000/05/03 19:09:52  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.22  2000/04/27 23:12:49  rogers
 --| Undefined check_drag_and_drop_Release from EV_MENU_ITEM_LIST_IMP.
 --|

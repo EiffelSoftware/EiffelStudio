@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"Eiffel Vision tooltipable. GTK+ implementation."
@@ -8,11 +7,9 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_TOOLTIPABLE_IMP
 	
 inherit
-	
 	EV_TOOLTIPABLE_I
 		redefine
 			interface
@@ -26,19 +23,25 @@ inherit
 feature -- Initialization
 
 	tooltip: STRING
-			-- Pixmap that has been set.
+			-- Tooltip that has been set.
 
 feature -- Element change
 
 	set_tooltip (a_text: STRING) is
-			-- Assign `a_text' to `tooltip'.
+			-- Set `tooltip' to `a_text'.
 		local
 			app_imp: EV_APPLICATION_IMP
+			old_ref_count: INTEGER
 	        do
 			tooltip := clone (a_text)
 			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			C.gtk_tooltips_set_tip (app_imp.tooltips, c_object,
-				eiffel_to_c (a_text), NULL)
+			old_ref_count := C.gtk_object_struct_ref_count (c_object)
+			C.gtk_tooltips_set_tip (
+				app_imp.tooltips,
+				c_object,
+				eiffel_to_c (a_text),
+				NULL
+			)
 		end
 
 	remove_tooltip is
@@ -48,8 +51,12 @@ feature -- Element change
 	        do
 			tooltip := Void
 			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			C.gtk_tooltips_set_tip (app_imp.tooltips, c_object,
-				NULL, NULL)
+			C.gtk_tooltips_set_tip (
+				app_imp.tooltips,
+				c_object,
+				NULL,
+				NULL
+			)
 		end
 
 
@@ -80,14 +87,24 @@ end -- EV_TOOLTIPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.4  2000/06/07 17:27:33  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.5  2001/06/07 23:08:04  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.3  2000/05/05 16:39:32  king
---| Added not for release
+--| Revision 1.1.2.7  2001/03/15 00:25:11  gauthier
+--| Does not try any more to remove the reference added by the tooltip, as
+--| it was prematurely destroying the object when removing a tooltip or
+--| setting a new one.
 --|
---| Revision 1.2  2000/05/05 16:36:17  king
---| Corrected set_tooltip
+--| Revision 1.1.2.6  2000/10/09 19:20:25  oconnor
+--| cosmetics
+--|
+--| Revision 1.1.2.5  2000/09/18 18:10:27  oconnor
+--| If adding a tooltip refs the widget, remove the new ref.
+--| The tooltip has no buisness holding a strong reference to the widget.
+--| This is a GTK bug/feature depending to who you listen to on the list.
+--|
+--| Revision 1.1.2.4  2000/06/27 23:42:08  king
+--| Now using visual_widget instead of c_object
 --|
 --| Revision 1.1.2.3  2000/05/10 23:02:56  king
 --| Integrated inital tooltipable changes

@@ -304,8 +304,8 @@ end -- class EV_COLOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.9  2000/06/07 17:27:43  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.10  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
 --| Revision 1.5.4.2  2000/05/16 22:21:58  rogers
 --| Added delta. Assertions and postconditions now ensure that colors are equal

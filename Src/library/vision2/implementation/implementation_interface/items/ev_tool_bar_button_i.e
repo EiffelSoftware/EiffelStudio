@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision Toolbar button, implementation interface."
@@ -12,7 +11,6 @@ deferred class
 inherit
 	EV_ITEM_I
 		redefine
-			parent,
 			interface
 		end
 
@@ -31,19 +29,12 @@ inherit
 			interface
 		end
 
-feature -- Access
-
-	parent: EV_TOOL_BAR is
-			-- The parent of the Current widget
-			-- Can be void.
-		do
-			if Precursor /= Void then
-				Result ?= Precursor
-				check
-					parent_is_toolbar: Result /= Void
-				end
-			end
+	EV_SENSITIVE_I
+		redefine
+			interface
 		end
+
+	EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES_I
 
 feature -- Access
 
@@ -66,30 +57,32 @@ feature -- Element change
 		deferred
 		end
 
-feature -- Status report
-
-	is_sensitive: BOOLEAN is
-			-- Is the current button sensitive?
-		deferred
-		end
-
-feature -- Status setting
+feature {NONE} -- Implementation
 
 	enable_sensitive is
 			-- Enable sensitivity to user input events.
 		deferred
-		ensure
-			is_sensitive: is_sensitive
 		end
 
 	disable_sensitive is
 			-- Disable sensitivity to user input events.
 		deferred
-		ensure
-			not_is_sensitive: not is_sensitive
 		end
 
-feature {EV_ANY_I} -- Implementation
+	is_sensitive: BOOLEAN is
+			-- Is `Current' sensitive?
+		deferred
+		end
+
+	parent_is_sensitive: BOOLEAN is
+			-- Is `parent' sensitive?
+		deferred
+		end
+
+	has_parent: BOOLEAN is
+			-- Is `Current' parented?
+		deferred
+		end
 
 	interface: EV_TOOL_BAR_BUTTON
 
@@ -116,8 +109,21 @@ end -- class EV_TOOL_BAR_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.16  2000/06/07 17:27:41  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.17  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.10.4.6  2000/08/17 20:08:31  rogers
+--| Removed redefinition of parent.
+--|
+--| Revision 1.10.4.5  2000/08/17 00:50:32  rogers
+--| Removed fixme not_reviewed. Comments, formatting.
+--|
+--| Revision 1.10.4.4  2000/08/17 00:43:57  rogers
+--| Now inherits EV_SENSITIVE_I. Implementation now exported to NONE.
+--| Added enable_sensitive, parent_is_sensitive, has_parent and is_sensitive.
+--|
+--| Revision 1.10.4.3  2000/07/24 21:31:44  oconnor
+--| inherit action sequences _I class
 --|
 --| Revision 1.10.4.2  2000/05/10 23:03:00  king
 --| Integrated inital tooltipable changes
@@ -154,13 +160,15 @@ end -- class EV_TOOL_BAR_BUTTON_I
 --| added --| FIXME Not for release
 --|
 --| Revision 1.10.6.4  2000/01/26 23:24:20  king
---| Removed redundant features, changed sensitivity features from set to enable/disable
+--| Removed redundant features, changed sensitivity features from set to
+--| enable/disable
 --|
 --| Revision 1.10.6.3  1999/12/22 18:23:11  rogers
 --| Removed pixmap_size_ok as it is no longer pertinent.
 --|
 --| Revision 1.10.6.2  1999/12/17 19:06:27  rogers
---| redefined interface to be a a more refined type. EV_PICK_AND_DROPABLE_I replaces EV_PND_SOURCE and EV_PND_TARGET.
+--| redefined interface to be a a more refined type. EV_PICK_AND_DROPABLE_I
+--| replaces EV_PND_SOURCE and EV_PND_TARGET.
 --|
 --| Revision 1.10.6.1  1999/11/24 17:30:03  oconnor
 --| merged with DEVEL branch

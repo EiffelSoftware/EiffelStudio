@@ -20,6 +20,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is button depressed?
 		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_selected
 		ensure
@@ -30,13 +31,15 @@ feature -- Status setting
 
 	enable_select is
 			-- Set `is_selected' `True'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.enable_select
 		ensure
 			is_selected: is_selected
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_SELECT_BUTTON_I
 			-- Responsible for interaction with the native graphics toolkit.
@@ -58,27 +61,3 @@ end -- class EV_SELECT_BUTTON
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.4  2000/04/05 17:10:09  king
---| EV_STATE_BUTTON footnote -> EV_SELECT_BUTTON
---|
---| Revision 1.3  2000/03/21 19:10:39  oconnor
---| comments, formatting
---|
---| Revision 1.2  2000/02/25 21:28:16  brendel
---| Formatting.
---|
---| Revision 1.1  2000/02/24 18:16:24  oconnor
---| New inheritance structure for buttons with state.
---| New class EV_SELECT_BUTTON provides `is_selected' and `enable_select'.
---| RADIO_BUTTON inherits this, as does TOGGLE_BUTTON which adds
---| `disable_select' and `toggle'.
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "External C functions for accessing gtk.%
 		% Those are used by widgets.";
@@ -31,6 +30,13 @@ feature
 			"GTK_IS_WIDGET"
 		end
 
+	gtk_is_container (w: POINTER): BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_IS_CONTAINER"
+		end
+
 end -- class EV_GTK_WIDGETS_EXTERNALS
 
 --!-----------------------------------------------------------------------------
@@ -54,6 +60,18 @@ end -- class EV_GTK_WIDGETS_EXTERNALS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.12.4.3  2000/09/18 18:16:05  oconnor
+--| added gtk_is_container
+--|
+--| Revision 1.12.4.2  2000/09/06 23:18:42  king
+--| Reviewed
+--|
+--| Revision 1.12.4.1  2000/05/03 19:08:43  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

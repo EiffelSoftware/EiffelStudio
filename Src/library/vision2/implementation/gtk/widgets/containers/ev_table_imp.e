@@ -1,5 +1,3 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description:
@@ -12,13 +10,17 @@ class
 
 inherit
 	EV_TABLE_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
 		redefine
 			interface
 		end
 
 	EV_CONTAINER_IMP
 		redefine
-			interface
+			interface,
+			container_widget
 		end
 create
 	make
@@ -30,30 +32,44 @@ feature {NONE} -- Implementation
                         -- parent.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_table_new (0, 0, Default_homogeneous))
+			set_c_object (C.gtk_event_box_new)
+			container_widget := C.gtk_table_new (0, 0, Default_homogeneous)
 				-- table created with 0 row and 0 column.
+			C.gtk_widget_show (container_widget)
+			C.gtk_container_add (c_object, container_widget)
 		end
+
+	container_widget: POINTER
+			-- Pointer to the gtktable widget as c_object is event box.
 
 feature -- Status report
 
 	widget_count: INTEGER is
 		do
-			Result := C.g_list_length (C.gtk_container_children (c_object))
+			Result := C.g_list_length (C.gtk_container_children (container_widget))
 		end
 
 	row_spacing: INTEGER is
 		do
-			Result := c_gtk_table_row_spacing (c_object)
+			Result := c_gtk_table_row_spacing (container_widget)
 		end
 
 	column_spacing: INTEGER is
 		do
-			Result := c_gtk_table_column_spacing (c_object)
+			Result := c_gtk_table_column_spacing (container_widget)
+		end
+
+	border_width: INTEGER is
+			-- Width of border around container in pixels.
+		do
+			Result := C.gtk_container_struct_border_width (
+					C.gtk_box_struct_container (container_widget)
+				)
 		end
 
 	resize (a_column, a_row: INTEGER) is
 		do
-			C.gtk_table_resize (c_object, a_row, a_column)
+			C.gtk_table_resize (container_widget, a_row, a_column)
 		end
 
 feature -- Status settings
@@ -62,26 +78,32 @@ feature -- Status settings
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			C.gtk_table_set_homogeneous (c_object, True)
+			C.gtk_table_set_homogeneous (container_widget, True)
 		end
 
 	disable_homogeneous is
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			C.gtk_table_set_homogeneous (c_object, False)
+			C.gtk_table_set_homogeneous (container_widget, False)
+		end
+
+	set_border_width (a_value: INTEGER) is
+			-- Set the tables border width to `a_value' pixels.
+		do
+			C.gtk_container_set_border_width (container_widget, a_value)
 		end
 
 	set_row_spacing (a_value: INTEGER) is
-			-- Spacing between two rows of the table
+			-- Spacing between two rows of the table.
 		do
-			C.gtk_table_set_row_spacings (c_object, a_value)
+			C.gtk_table_set_row_spacings (container_widget, a_value)
 		end
 
 	set_column_spacing (a_value: INTEGER) is
-			-- Spacing between two columns of the table
+			-- Spacing between two columns of the table.
 		do
-			C.gtk_table_set_col_spacings (c_object, a_value)
+			C.gtk_table_set_col_spacings (container_widget, a_value)
 		end
 
 	put (v: EV_WIDGET; a_x, a_y, column_span, row_span: INTEGER) is
@@ -91,7 +113,7 @@ feature -- Status settings
 		do
 			item_imp ?= v.implementation
 			C.gtk_table_attach_defaults (
-					c_object,
+					container_widget,
 					item_imp.c_object,
 					a_x - 1,
 					a_x - 1 + column_span,
@@ -100,21 +122,19 @@ feature -- Status settings
 			)
 		end
 
-feature -- Element change
-
 	remove (v: EV_WIDGET) is
 			-- Remove `v' from the table if present.
 		local
 			item_imp: EV_WIDGET_IMP
 		do
 			item_imp ?= v.implementation
-			C.gtk_container_remove (c_object, item_imp.c_object)
+			C.gtk_container_remove (container_widget, item_imp.c_object)
 		end
 
 feature {NONE} -- Externals
 
 	c_gtk_table_rows (a_table_struct: POINTER): INTEGER is
-			-- Number of rows
+			-- Number of rows.
 		external
 			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
 		alias
@@ -122,7 +142,7 @@ feature {NONE} -- Externals
 		end
 
 	c_gtk_table_columns (a_table_struct: POINTER): INTEGER is
-			-- Number of columns
+			-- Number of columns.
 		external
 			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
 		alias
@@ -130,7 +150,7 @@ feature {NONE} -- Externals
 		end
 
 	c_gtk_table_row_spacing (a_table_struct: POINTER): INTEGER is
-			-- Spacing between two rows
+			-- Spacing between two rows.
 		external
 			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
 		alias
@@ -138,7 +158,7 @@ feature {NONE} -- Externals
 		end
 	
 	c_gtk_table_column_spacing (a_table_struct: POINTER): INTEGER is
-			-- Spacing between two columns
+			-- Spacing between two columns.
 		external
 			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
 		alias
@@ -173,8 +193,37 @@ end -- class EV_TABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.12  2000/06/07 17:27:38  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.13  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.9.4.15  2000/10/27 16:54:42  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.9.4.14  2000/09/18 18:06:43  oconnor
+--| reimplemented propogate_[fore|back]ground_color for speeeeed
+--|
+--| Revision 1.9.4.13  2000/09/06 23:18:46  king
+--| Reviewed
+--|
+--| Revision 1.9.4.12  2000/08/08 00:03:14  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.9.4.11  2000/06/14 00:02:07  king
+--| Converted to new container_widget structure
+--|
+--| Revision 1.9.4.10  2000/06/12 19:12:02  king
+--| Made releaseable
+--|
+--| Revision 1.9.4.9  2000/06/07 17:16:19  king
+--| Implemented border routines
 --|
 --| Revision 1.9.4.8  2000/06/06 00:42:15  king
 --| Added resize

@@ -18,19 +18,19 @@ class
 inherit
 	EV_LIST_ITEM_LIST
 		redefine
-			implementation,
-			make_for_test
+			implementation
 		end
 
 create
 	default_create,
-	make_with_strings,
-	make_for_test
+	make_with_strings
 
 feature -- Access
 
 	selected_items: DYNAMIC_LIST [EV_LIST_ITEM] is
 			-- Currently selected items.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.selected_items
 		ensure
@@ -41,16 +41,50 @@ feature -- Status report
 
 	multiple_selection_enabled: BOOLEAN is
 			-- Can more than one item be selected?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.multiple_selection_enabled
 		ensure
 			bridge_ok: Result = implementation.multiple_selection_enabled
 		end
 
+	pixmaps_width: INTEGER is
+			-- Width of displayed pixmaps in the list.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.pixmaps_width
+		ensure
+			bridge_ok: Result = implementation.pixmaps_width
+		end
+
+	pixmaps_height: INTEGER is
+			-- Height of displayed pixmaps in the list.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.pixmaps_height
+		ensure
+			bridge_ok: Result = implementation.pixmaps_height
+		end
+
 feature -- Status setting
+	
+	ensure_i_th_visible (an_index: INTEGER) is
+			-- Ensure item `an_index' is visible in `Current'.
+		require
+			not_destroyed: not is_destroyed
+			is_displayed: is_displayed
+			an_index_valid: an_index > 0 and an_index <= count
+		do
+			implementation.ensure_i_th_visible (an_index)
+		end
 
 	enable_multiple_selection is
 			-- Allow more than one item to be selected.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.enable_multiple_selection	
 		ensure
@@ -59,10 +93,26 @@ feature -- Status setting
 
 	disable_multiple_selection is
 			-- Allow only one item to be selected.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.disable_multiple_selection
 		ensure
 			not_multiple_selection_enabled: not multiple_selection_enabled
+		end
+
+	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
+			-- Set the size of displayed pixmaps in `Current'.
+			-- Note: The Default value is 16x16
+		require
+			not_destroyed: not is_destroyed
+			valid_width: a_width > 0
+			valid_height: a_height > 0
+		do
+			implementation.set_pixmaps_size (a_width, a_height)
+		ensure
+			width_set: pixmaps_width = a_width
+			height_set: pixmaps_height = a_height
 		end
 
 feature {EV_ANY_I, EV_LIST} -- Implementation
@@ -78,37 +128,17 @@ feature {NONE} -- Implementation
 			create {EV_LIST_IMP} implementation.make (Current)
 		end
 
-feature -- Contract support
-
-	make_for_test is
-			-- Create with items for testing.
-		local
-			list_item: EV_LIST_ITEM
-			counter: INTEGER
-		do
-			{EV_LIST_ITEM_LIST} Precursor
-			from
-			until
-				counter = 10
-			loop
-				counter := counter + 1
-				create list_item.make_with_text ("Test item " + counter.out)
-				extend (list_item)
-				select_item (counter)
-			end
-		end
-
 invariant
-	selected_items_not_void: is_useable implies selected_items /= Void
+	selected_items_not_void: is_usable implies selected_items /= Void
 	selected_items_first_is_selected_item:
-		is_useable and not selected_items.empty implies
+		is_usable and not selected_items.is_empty implies
 		selected_items.first = selected_item
-	selected_items_empty_xor_selected_item_not_void: is_useable implies
-		selected_items.empty xor selected_item /= Void
+	selected_items_empty_xor_selected_item_not_void: is_usable implies
+		selected_items.is_empty xor selected_item /= Void
 	single_selection_implies_at_most_one_selected_item:
-		is_useable and not multiple_selection_enabled implies
+		is_usable and not multiple_selection_enabled implies
 		selected_items.count <= 1
-	selection_size_within_bounds: is_useable implies
+	selection_size_within_bounds: is_usable implies
 		selected_items.count <= count
 
 end -- class EV_LIST
@@ -128,130 +158,3 @@ end -- class EV_LIST
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.45  2000/06/07 17:28:13  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.28.4.2  2000/05/10 18:50:38  king
---| Integrated ev_list_item_list
---|
---| Revision 1.28.4.1  2000/05/03 19:10:10  oconnor
---| mergred from HEAD
---|
---| Revision 1.44  2000/04/19 01:38:16  pichery
---| Modified the type of `selected_items'.
---|
---| Revision 1.43  2000/04/18 02:43:43  pichery
---| Fixed invalid invariant for multiple selection lists.
---|
---| Revision 1.42  2000/04/05 21:16:22  brendel
---| Merged changes from LIST_REFACTOR_BRANCH.
---|
---| Revision 1.41.2.1  2000/04/04 23:02:29  brendel
---| Included EV_ITEM_LIST.create_action_sequences.
---|
---| Revision 1.41  2000/03/30 17:36:27  brendel
---| Added invariant.
---|
---| Revision 1.40  2000/03/21 02:11:50  oconnor
---| comments and formatting
---|
---| Revision 1.39  2000/03/06 20:15:23  king
---| Changed action sequence types
---|
---| Revision 1.38  2000/03/02 17:58:54  rogers
---| Added initial make_for_test. Currently very basic.
---|
---| Revision 1.37  2000/03/02 17:00:20  rogers
---| Added is_useable to assertions.
---|
---| Revision 1.36  2000/03/01 23:44:14  king
---| Moved lists_equal in to item_list
---|
---| Revision 1.35  2000/03/01 19:48:53  king
---| Corrected export clauses for implementation and create_imp/act_seq
---|
---| Revision 1.34  2000/03/01 18:10:36  king
---| Added lists_equal feature, uncommented invariants
---|
---| Revision 1.33  2000/03/01 03:28:59  oconnor
---| added make_for_test
---|
---| Revision 1.32  2000/02/24 19:59:15  rogers
---| Corrected postconditions in select_item and deselect_item, they now
---| reference an_index instead of index.
---|
---| Revision 1.31  2000/02/22 18:39:51  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.30  2000/02/17 01:09:25  oconnor
---| fixed invariant
---|
---| Revision 1.29  2000/02/14 11:40:52  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.28.6.15  2000/02/11 00:56:36  king
---| Redefine action sequences to call both precursors
---|
---| Revision 1.28.6.14  2000/01/28 20:00:20  oconnor
---| released
---|
---| Revision 1.28.6.13  2000/01/28 19:05:29  king
---| Altered to new generic structure of ev_item_list
---|
---| Revision 1.28.6.12  2000/01/27 19:30:55  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.28.6.11  2000/01/26 23:18:18  king
---| Indented comment
---|
---| Revision 1.28.6.10  2000/01/18 23:26:16  rogers
---| The interface of list is now exported to EV_ANY_I instead of EV_LIST_I.
---|
---| Revision 1.28.6.9  2000/01/17 19:15:08  oconnor
---| fixed void call in invariant
---|
---| Revision 1.28.6.8  2000/01/15 01:48:49  oconnor
---| removed feature selected
---|
---| Revision 1.28.6.7  2000/01/15 01:39:32  rogers
---| Modified comments.
---|
---| Revision 1.28.6.6  2000/01/15 00:55:57  oconnor
---| renamed:
---|  is_multiple_selection -> multiple_selection_enabled
---|  set_multiple_selection -> enable_multiple_selection
---|  set_single_selection -> disable_multiple_selection
---| simplified retrieval of selection info
---| added invariants and oher contracts
---|
---| Revision 1.28.6.5  1999/12/17 19:38:06  rogers
---| redefined implementation to be a a more refined type. item is no longer
---| necessary in this class, now inherited.
---|
---| Revision 1.28.6.4  1999/12/02 00:07:43  oconnor
---| redefine item to be of type EV_LIST_ITEM
---|
---| Revision 1.28.6.3  1999/12/01 22:23:36  oconnor
---| moved item to EV_ITEM_LIST
---|
---| Revision 1.28.6.2  1999/11/30 22:37:42  oconnor
---| added inheritance of EV_ITEM_LIST, renamed arguments index -> an_index
---|
---| Revision 1.28.6.1  1999/11/24 17:30:54  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.28.2.3  1999/11/04 23:10:55  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.28.2.2  1999/11/02 17:20:13  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

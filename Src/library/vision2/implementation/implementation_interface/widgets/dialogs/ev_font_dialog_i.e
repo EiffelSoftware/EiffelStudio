@@ -1,5 +1,3 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision font selection dialog, implementation interface."
 	status: "See notice at end of class"
@@ -10,27 +8,22 @@ deferred class
 	EV_FONT_DIALOG_I
 
 inherit
-	EV_SELECTION_DIALOG_I
+	EV_STANDARD_DIALOG_I
 
 feature -- Access
 
 	font: EV_FONT is
-			-- Current selected font.
-		require
-		deferred
-		end
-
-	character_format: EV_CHARACTER_FORMAT is
-			-- Current selected character format.
+			-- Font selected in `Current'.
 		require
 		deferred
 		end
 
 feature -- Element change
 
-	select_font (a_font: EV_FONT) is
-			-- Select `a_font'.
+	set_font (a_font: EV_FONT) is
+			-- Assign `a_font' to `font'.
 		require
+			a_font_not_void: a_font /= Void
 		deferred
 		end
 
@@ -57,6 +50,18 @@ end -- class EV_FONT_DIALOG_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.4.3  2001/01/31 20:35:23  rogers
+--| Removed not for release and not reviewed. Comments.
+--|
+--| Revision 1.5.4.2  2000/07/25 20:25:45  king
+--| Changed to current structure
+--|
+--| Revision 1.5.4.1  2000/05/03 19:09:03  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

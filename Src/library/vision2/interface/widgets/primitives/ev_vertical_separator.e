@@ -22,9 +22,13 @@ inherit
 		end
 
 create
-	default_create,
-	make_for_test
+	default_create
+		
+feature {EV_ANY_I} -- Implementation
 
+	implementation: EV_VERTICAL_SEPARATOR_I
+			-- Responsible for interaction with the native graphics toolkit.
+			
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -32,9 +36,6 @@ feature {NONE} -- Implementation
 		do
 			create {EV_VERTICAL_SEPARATOR_IMP} implementation.make (Current)
 		end
-
-	implementation: EV_VERTICAL_SEPARATOR_I
-			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_VERTICAL_SEPARATOR
 
@@ -53,52 +54,3 @@ end -- class EV_VERTICAL_SEPARATOR
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.10  2000/03/21 19:10:39  oconnor
---| comments, formatting
---|
---| Revision 1.9  2000/03/01 20:07:36  king
---| Corrected export clauses for implementation and create_imp/act_seq
---|
---| Revision 1.8  2000/03/01 03:12:36  oconnor
---| added create make_for_test
---|
---| Revision 1.7  2000/02/29 19:20:23  oconnor
---| removed simicolons from indexing
---|
---| Revision 1.6  2000/02/29 18:09:11  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.5  2000/02/22 18:39:52  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.4  2000/02/14 11:40:53  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.3.6.5  2000/01/28 22:24:26  oconnor
---| released
---|
---| Revision 1.3.6.4  2000/01/27 19:30:58  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.3.6.3  2000/01/15 02:36:59  oconnor
---| formatting
---|
---| Revision 1.3.6.2  2000/01/11 18:41:14  rogers
---| altered to comply with the major Vision2 changes. removed make and added
---| create implementation.
---|
---| Revision 1.3.6.1  1999/11/24 17:30:56  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.3.2.2  1999/11/02 17:20:13  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

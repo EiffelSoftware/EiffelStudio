@@ -1,8 +1,7 @@
 indexing
 	description:
-		"Figure consisting of any number of points. Lines are drawn between%N%
-		%consecutive points and between the first and last point."
-	status: "See notice at end of file"
+		"Filled area's defined by any number of `points'."
+	status: "See notice at end of class"
 	keywords: "figure, polygon"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,37 +11,41 @@ class
 
 inherit
 	EV_CLOSED_FIGURE
-		redefine
-			default_create,
-			list_has_correct_size,
-			set_random_values_for_points
+
+	EV_MULTI_POINTED_FIGURE
+		undefine
+			default_create
 		end
 
 create
 	default_create,
-	make_with_point_list,
-	make_for_test
+	make_with_coordinates
 
-feature {NONE}-- Initialization
+feature {NONE} -- Initialization
 
-	default_create is
-			-- Initialize without points
+	make_with_coordinates (coords: ARRAY [EV_COORDINATES]) is
+			-- Initialize with points in `coords'.
+		require
+			coords_exist: coords /= Void
+		local
+			new_point: EV_RELATIVE_POINT
+			i: INTEGER
 		do
-			Precursor
+			default_create
+			from
+				i := coords.lower
+			until
+				i > coords.upper
+			loop
+				create new_point.make_with_position (
+					coords.item (i).x,
+					coords.item (i).y)
+				extend_point (new_point)
+				i := i + 1
+			end
 		end
 
 feature -- Status report
-
-	point_count: INTEGER is
-			-- Number of points in polyline. Since this is not a fixed number
-			-- it returns the current number of points in the line.
-			--| default_create of EV_FIGURE reads this function to initialize
-			--| The points-list. Solution: If points is Void returns 0.
-		do
-			if points /= Void then
-				Result := points.count
-			end
-		end
 
 	side_count: INTEGER is
 			-- Returns the number of sides this polyline has.
@@ -58,45 +61,12 @@ feature -- Status report
 			Result_not_bigger_than_point_count: Result <= points.count
 		end
 
-feature -- Status setting
-
-	add_point (point: EV_RELATIVE_POINT) is
-			-- Increment the size of the point-list and insert `p'.
-		require
-			point_exists: point /= Void
-			point_relative_to_group_point:
-				group /= Void implies point.valid_group_point (group.point)
-			point_not_in_other_figure: point.figure = Void
-		do
-			points.extend (point)
-		end
-
 feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
 			-- Is the point (`x', `y') contained in this figure?
 		do
 			Result := point_on_polygon (x, y, point_array)
-		end
-
-feature -- Contract support
-
-	list_has_correct_size (list: like points): BOOLEAN is
-			-- Does `list' have the correct number of items?
-			--| Any list has the correct number of points.
-		do
-			Result := True
-		end
-
-feature {NONE} -- Implementation
-
-	set_random_values_for_points is
-			-- Set all points to have random values for testing purposes.
-		do
-			from until point_count = 10 loop
-				add_point (create {EV_RELATIVE_POINT})
-			end
-			Precursor
 		end
 
 end -- class EV_FIGURE_POLYGON
@@ -116,24 +86,3 @@ end -- class EV_FIGURE_POLYGON
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.6  2000/04/27 19:10:50  brendel
---| Centralized testing code.
---|
---| Revision 1.5  2000/04/26 15:56:34  brendel
---| Added CVS Log.
---| Added copyright notice.
---| Improved description.
---| Added keywords.
---| Formatted for 80 columns.
---| Added make_for_test.
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

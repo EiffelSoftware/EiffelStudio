@@ -1,9 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision implentation for retrieving a WEL_BRUSH"
 	status: "See notice at end of class"
-	id: "$Id:"
 	date: "$Date:"
 	revision: "$Revision:"
 
@@ -11,34 +9,28 @@ class
 	EV_GDI_BRUSH
 
 inherit
-	ANY
+	EV_GDI_OBJECT
 		redefine
-			is_equal
+			item
 		end
-
-	HASHABLE
-		undefine
-			is_equal
-		end
-
 
 creation
 	default_create, make_with_values
 
 feature -- Initialization
 
-	make_with_values(a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF) is
+	make_with_values (a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF) is
 			-- Set the pattern of the brush to `a_pattern' (can
 			-- be equal to Void if no pattern is defined), and
 			-- the color to `a_color'.
 		do
-			set_values(a_pattern, a_color)
+			set_values (a_pattern, a_color)
 		end
 
 feature -- Access
 
 	hash_code: INTEGER is
-			-- Hash code value
+			-- Hash code value.
 		local
 			color_hash_value: REAL
 		do
@@ -70,7 +62,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal(other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN is
 			-- Does `Current' look the same as `other'?
 		local
 			equal_color: BOOLEAN -- are colors equal ?
@@ -93,7 +85,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_values(a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF) is
+	set_values (a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF) is
 			-- Set the pattern of the brush to `a_pattern' (can
 			-- be equal to Void if no pattern is defined), and
 			-- the color to `a_color'.
@@ -108,12 +100,6 @@ feature -- Element change
 				color_blue := -1
 				color_green := -1
 			end				
-		end
-
-	set_item(a_brush: WEL_BRUSH) is
-			-- Set the item value to `a_brush'
-		do
-			item := a_brush
 		end
 
 end -- class EV_GDI_BRUSH

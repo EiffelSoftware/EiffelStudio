@@ -11,6 +11,13 @@ class
 inherit
 	EV_TIMEOUT_I
 
+	IDENTIFIED
+		rename
+			object_id as id
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
 
@@ -44,27 +51,13 @@ feature -- Status setting
 			end
 		end
 
-feature {EV_INTERNAL_TIMEOUT_IMP} -- Implementation
-
-	id: INTEGER
-			-- Id needed to destroy the current timeout.
-
-	destroyed: BOOLEAN is
-			-- Is Current object destroyed?
-		do
-			Result := not internal_timeout.timeouts.has (id)
-		end
+feature -- Implementation
 
 	destroy is
 			-- Destroy actual object.
 		do
 			internal_timeout.remove_timeout (id)
-		end
-
-	set_id (value: INTEGER) is
-			-- Make `value' the new id of the timeout.
-		do
-			id := value
+			is_destroyed := True
 		end
 
 feature {NONE} -- Implementation
@@ -92,47 +85,3 @@ end -- class EV_TIMEOUT_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.8  2000/03/06 23:11:11  brendel
---| Implemented new interface.
---|
---| Revision 1.7  2000/02/19 07:34:49  oconnor
---| removed old commandstuff
---|
---| Revision 1.6  2000/02/19 07:03:52  oconnor
---| removed command
---|
---| Revision 1.5  2000/02/19 06:34:12  oconnor
---| removed old command stuff
---|
---| Revision 1.4  2000/02/19 05:44:59  oconnor
---| released
---|
---| Revision 1.3  2000/02/19 04:34:55  oconnor
---| removed command code, implemented deferred features
---|
---| Revision 1.2  2000/02/14 11:40:40  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.1.10.3  2000/02/08 07:21:03  brendel
---| Minor changes to run through compiler.
---| Still needs major revision.
---|
---| Revision 1.1.10.2  2000/01/27 19:30:11  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.1.10.1  1999/11/24 17:30:18  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.1.6.2  1999/11/02 17:20:07  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

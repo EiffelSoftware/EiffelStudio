@@ -20,18 +20,18 @@ inherit
 create
 	default_create
 
-feature {NONE} -- Initialization
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TOOL_BAR_SEPARATOR_I
+			-- Responsible for interaction with the native graphics toolkit.
+
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TOOL_BAR_SEPARATOR_IMP} implementation.make (Current)
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_TOOL_BAR_SEPARATOR_I
-			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_TOOL_BAR_SEPARATOR
 
@@ -50,57 +50,3 @@ end -- class EV_TOOL_BAR_SEPARATOR
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.11  2000/04/12 17:53:50  brendel
---| Cosmetics.
---|
---| Revision 1.10  2000/04/07 22:15:41  brendel
---| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
---|
---| Revision 1.9  2000/03/24 03:10:22  oconnor
---| formatting and comments
---|
---| Revision 1.8  2000/03/01 19:48:53  king
---| Corrected export clauses for implementation and create_imp/act_seq
---|
---| Revision 1.7  2000/02/22 18:39:47  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.6  2000/02/14 11:40:47  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.5.6.8  2000/02/01 20:15:39  king
---| Now inheriting from ev_tool_bar_item, added parent feature
---|
---| Revision 1.5.6.7  2000/01/28 22:24:20  oconnor
---| released
---|
---| Revision 1.5.6.6  2000/01/28 18:59:12  king
---| Changed parent to new generic structure
---|
---| Revision 1.5.6.5  2000/01/27 19:30:37  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.5.6.4  2000/01/21 18:14:23  rogers
---| Removed make amd creation procedure to default_create.
---|
---| Revision 1.5.6.3  2000/01/21 18:04:23  rogers
---| Removed make_with_index from redefinitions, add create implementation.
---|
---| Revision 1.5.6.2  2000/01/21 18:00:02  rogers
---| Removed make_with index, as this is now no longer pertinent.
---|
---| Revision 1.5.6.1  1999/11/24 17:30:43  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.5.2.2  1999/11/02 17:20:11  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

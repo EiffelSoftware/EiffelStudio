@@ -1,37 +1,27 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
-	description:
-		"EiffelVision print dialog."
-	status: "See notice at end of class"
-	date: "$Date$"
-	revision: "$Revision$"
+        description: "EiffelVision print dialog."
+        status: "See notice at end of class"
+        date: "$Date$"
+        revision: "$Revision$"
 
 class
-	EV_PRINT_DIALOG
+		EV_PRINT_DIALOG
 
 inherit
-	EV_STANDARD_DIALOG
-		redefine
-			implementation
-		end
+		EV_STANDARD_DIALOG
+                redefine
+                        implementation
+                end
 
 create
-	make
-
-feature {NONE} -- Initialization
-
-	make (par: EV_CONTAINER) is
-			-- Create a window with a parent.
-		do
-			!EV_PRINT_DIALOG_IMP! implementation.make (par)
-		end
+        default_create
 
 feature -- Access
 
 	from_page: INTEGER is
-			-- Value for the starting page edit control
+			-- Value for the starting page edit control.
 		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.from_page
 		ensure
@@ -39,8 +29,9 @@ feature -- Access
 		end
 
 	to_page: INTEGER is
-			-- Value for the ending page edit control
+			-- Value for the ending page edit control.
 		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.to_page
 		ensure
@@ -48,23 +39,59 @@ feature -- Access
 		end
 
 	copies: INTEGER is
-			-- Number of copies for the Copies edit control
+			-- Number of copies for the Copies edit control.
 		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.copies
 		ensure
 			positive_result: Result >= 0
 		end
 
-	maximum_range: INTEGER is
-			-- Maximum value for the range of pages specified
-			-- in the From and To page edit controls.
+	maximum_to_page: INTEGER is
+			-- Maximum value for the page specified
+			-- in the To page edit controls.
 			-- 1 by default.
 		require
+			not_destroyed: not is_destroyed
 		do
-			Result := implementation.maximum_range
+			Result := implementation.maximum_to_page
 		ensure
 			positive_result: Result >= 0
+		end
+
+	minimum_from_page: INTEGER is
+			-- Minimum value for the page specified
+			-- in the From page edit controls.
+			-- 1 by default.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.minimum_from_page
+		ensure
+			positive_result: Result >= 0
+		end
+
+	output_file_name: STRING is
+			-- String representation of the path to output
+			-- the printed area to.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.output_file_name
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	printer_name: STRING is
+			-- String representation of the printer to output
+			-- the printed area to.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.printer_name
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -72,13 +99,15 @@ feature -- Status report
 	all_pages_selected: BOOLEAN is
 			-- Is the "All pages" radio button selected?
 		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.all_pages_selected
 		end
 
 	page_numbers_selected: BOOLEAN is
-			-- Is the "Page" radio button selected?
+			-- Is the "Range" radio button selected?
 		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.page_numbers_selected
 		end
@@ -86,30 +115,91 @@ feature -- Status report
 	selection_selected: BOOLEAN is
 			-- Is the "Selection" radio button selected?
 		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.selection_selected
 		end
 
-	print_to_file_checked: BOOLEAN is
-			-- Is the "Print to file" check box checked?
+	page_numbers_enabled: BOOLEAN is
+			-- Is the "Range" radio button enabled?
 		require
+			not_destroyed: not is_destroyed
 		do
-			Result := implementation.print_to_file_checked
+			 Result := implementation.page_numbers_enabled
+		end
+
+	selection_enabled: BOOLEAN is
+			-- Is the "Selection" radio button selected?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.selection_enabled
 		end
 
 	collate_checked: BOOLEAN is
 			-- Is the "Collate" check box checked?
 		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.collate_checked
 		end
 
+	print_to_file_enabled: BOOLEAN is
+			-- Is the "File" radio button enabled?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.print_to_file_enabled
+		end
+
+	print_to_file_shown: BOOLEAN is
+			-- Is the "File" radio button visible?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.print_to_file_shown
+		end
+
+	print_to_file_checked: BOOLEAN is
+			-- Is the "File" radio button checked?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.print_to_file_checked
+		end
+
+	landscape_checked: BOOLEAN is
+			-- Is the landscape option selected.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.landscape_checked
+		end
+
+	print_context: EV_PRINT_CONTEXT is
+			-- Return a print context for the dialog box.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.print_context
+		end
+
 feature -- Status setting
+
+	select_all_pages is
+			-- Select the "All pages" radio button.
+			-- Selected by default.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.select_all_pages
+		end
 
 	select_page_numbers is
 			-- Select the "Page numbers" radio button.
 			-- By default, the "All pages" button is selected.
 		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.select_page_numbers
 		end
@@ -118,54 +208,113 @@ feature -- Status setting
 			-- Select the "Selection" radio button.
 			-- By default, the "All pages" button is selected.
 		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.select_selection
 		end
 
-	check_print_to_file is
-			-- Check the "Print to file" check box.
+	enable_page_numbers is
+			-- Enable the "Range" radio button.
 		require
+			not_destroyed: not is_destroyed
 		do
-			implementation.check_print_to_file
-		ensure
-			print_to_file_checked: print_to_file_checked
+			implementation.enable_page_numbers
+		end
+
+	disable_page_numbers is
+			-- Disable the "Range" radio button.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_page_numbers
+		end
+
+	enable_selection is
+			-- Enable the "Selection" radio button.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_selection
+		end
+
+	disable_selection is
+			-- Disable the "Selection" radio button.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_selection
 		end
 
 	check_collate is
 			-- Check the "Collate" check box.
 		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.check_collate
 		ensure
 			collate_checked: collate_checked
 		end
 
-	disable_page_numbers is
-			-- Disable the "Page numbers" radio button.
+	uncheck_collate is
+			-- Uncheck the "Collate" check box.
 		require
+			not_destroyed: not is_destroyed
 		do
-			implementation.disable_page_numbers
+			implementation.uncheck_collate
+		ensure
+			colate_not_checked: not collate_checked
 		end
 
-	disable_selection is
-			-- Disable the "Selection" radio button.
+	enable_print_to_file is
+			-- Enable the "Print to file" check box.
 		require
+			not_destroyed: not is_destroyed
 		do
-			implementation.disable_selection
+			implementation.enable_print_to_file
 		end
 
 	disable_print_to_file is
 			-- Disable the "Print to file" check box.
 		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.disable_print_to_file
+		end
+
+	show_print_to_file is
+			-- Show the "Print to file" check box.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.show_print_to_file
 		end
 
 	hide_print_to_file is
 			-- Hide the "Print to file" check box.
 		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.hide_print_to_file
+		end
+
+	check_print_to_file is
+			-- Check the "Print to file" check box.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.check_print_to_file
+		ensure
+			print_to_file_checked: print_to_file_checked
+		end
+
+	uncheck_print_to_file is
+			-- Check the "Print to file" check box.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.uncheck_print_to_file
+		ensure
+			print_to_file_not_checked: not print_to_file_checked
 		end
 
 feature -- Element change
@@ -173,6 +322,7 @@ feature -- Element change
 	set_from_page (value: INTEGER) is
 			-- Make `value' the new `from_page' number.
 		require
+			not_destroyed: not is_destroyed
 			positive_value: value >= 0
 		do
 			implementation.set_from_page (value)
@@ -183,6 +333,7 @@ feature -- Element change
 	set_to_page (value: INTEGER) is
 			-- Make `value' the new `to_page' number.
 		require
+			not_destroyed: not is_destroyed
 			positive_value: value >= 0
 		do
 			implementation.set_to_page (value)
@@ -193,6 +344,7 @@ feature -- Element change
 	set_copies (value: INTEGER) is
 			-- Make `value' the new `copies' number.
 		require
+			not_destroyed: not is_destroyed
 			positive_value: value >= 0
 		do
 			implementation.set_copies (value)
@@ -200,19 +352,42 @@ feature -- Element change
 			copies_set: copies = value
 		end
 
-	set_maximum_range (value: INTEGER) is
-			-- Make `value' the new maximum_range.
+	set_maximum_to_page (value: INTEGER) is
+			-- Make `value' the new maximum "to_page" value.
 		require
-			positive_value: value >= 0
+			not_destroyed: not is_destroyed
+			positive_value: value > 0
+			not_less_than_minimum: value >= minimum_from_page
 		do
-			implementation.set_maximum_range (value)
+			implementation.set_maximum_to_page (value)
 		ensure
-			maximum_range_set: maximum_range = value
+			maximum_to_page_set: maximum_to_page = value
 		end
+
+	set_minimum_from_page (value: INTEGER) is
+			-- Make `value' the new minimum "from_page" value.
+		require
+			not_destroyed: not is_destroyed
+			positive_value: value > 0
+			not_greater_than_maximum_value: value <= maximum_to_page
+		do
+			implementation.set_minimum_from_page (value)
+		ensure
+			minimum_from_page_set: minimum_from_page = value
+		end
+		
+feature {EV_ANY_I} -- Implementation
+		
+	implementation: EV_PRINT_DIALOG_I
+		-- Responsible for interaction with the native graphics toolkit.
 
 feature {NONE} -- Implementation
 
-	implementation: EV_PRINT_DIALOG_I
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_PRINT_DIALOG_IMP} implementation.make (Current)
+		end
 
 end -- class EV_PRINT_DIALOG
 
@@ -231,34 +406,3 @@ end -- class EV_PRINT_DIALOG
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.8  2000/02/29 18:09:09  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.7  2000/02/22 18:39:50  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.6  2000/02/14 11:40:50  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.5.6.2  2000/01/27 19:30:50  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.5.6.1  1999/11/24 17:30:50  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.5.2.3  1999/11/04 23:10:54  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.5.2.2  1999/11/02 17:20:12  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

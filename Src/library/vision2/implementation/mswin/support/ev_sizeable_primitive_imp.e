@@ -1,8 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"Eiffel Vision sizeable primitive. Mswindows implementation of%N%
-		%of resizing of primitives."
+		"Eiffel Vision sizeable primitive. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$" 
@@ -15,124 +13,65 @@ inherit
 
 feature -- Access
 
-	minimum_width: INTEGER is
-			-- Lower bound on `width' in pixels.
-		do
-			Result := internal_minimum_width
-		end
-
-	minimum_height: INTEGER is
-			-- Lower bound on `height' in pixels.
-		do
-			Result := internal_minimum_height
-		end
-
-	internal_set_minimum_width (value: INTEGER) is
-			-- Make `value' the new `minimum_width'.
+	ev_set_minimum_width (value: INTEGER) is
+			-- Make `value' the new `minimum_width' of `Current'.
 			-- Should check if the user didn't set the minimum width
-			-- before to set the new value.
+			-- before setting a new value.
+		local
+			p_imp: like parent_imp
 		do
-			if not is_minwidth_locked then
-				if internal_minimum_width /= value then
-					internal_minimum_width := value
-					if managed then 
-						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minwidth, Current)
-						end
-					else
-						wel_move_and_resize (x_position, y_position, width.max (value), height, True)
-					end
+			if minimum_width /= value then
+				internal_set_minimum_width (value)
+				p_imp := parent_imp
+				if p_imp /= Void then
+					p_imp.notify_change (Nc_minwidth, Current)
 				end
 			end
 		end
 
-	internal_set_minimum_height (value: INTEGER) is
-			-- Make `value' the new `minimum_height'.
+	ev_set_minimum_height (value: INTEGER) is
+			-- Make `value' the new `minimum_height' of `Current'.
 			-- Should check if the user didn't set the minimum width
-			-- before to set the new value.
+			-- before setting a new value.
+		local
+			p_imp: like parent_imp
 		do
-			if not is_minheight_locked then
-				if internal_minimum_height /= value then
-					internal_minimum_height := value
-					if managed then 
-						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minheight, Current)
-						end
-					else
-						wel_move_and_resize (x_position, y_position, width, height.max (value), True)
-					end
+			if minimum_height /= value then
+				internal_set_minimum_height (value)
+				p_imp := parent_imp
+				if p_imp /= Void then
+					p_imp.notify_change (Nc_minheight, Current)
 				end
 			end
 		end
 
-	internal_set_minimum_size (mw, mh: INTEGER) is
+	ev_set_minimum_size (mw, mh: INTEGER) is
 			-- Make `mw' the new minimum_width and `mh' the new
-			-- minimum_height.
+			-- minimum_height of `Current'.
 			-- Should check if the user didn't set the minimum width
-			-- before to set the new value.
+			-- before setting a new value.
 		local
 			w_cd, h_cd: BOOLEAN
-			w_ok, h_ok: BOOLEAN
+			p_imp: like parent_imp
 		do
- 			w_ok := not is_minwidth_locked
-			h_ok := not is_minheight_locked
- 
-			if w_ok and h_ok then
-				w_cd := internal_minimum_width /= mw
-				h_cd := internal_minimum_height /= mh
-				internal_minimum_width := mw
-				internal_minimum_height := mh
-				if managed then
-					if parent_imp /= Void then
-						if w_cd and h_cd then
-							parent_imp.notify_change (Nc_minsize, Current)
-						elseif w_cd then
-							parent_imp.notify_change (Nc_minwidth, Current)
-						elseif h_cd then
-							parent_imp.notify_change (Nc_minheight, Current)
-						end
-					end
-				else
-					wel_move_and_resize (x_position, y_position, width.max (mw), height.max (mh), True)
-				end
-
-			elseif w_ok then
-				if internal_minimum_width /= mw then
-					internal_minimum_width := mw
-					if managed then
-						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minwidth, Current)
-						end
-					else
-						wel_move_and_resize (x_position, y_position, width.max (mw), height, True)
-					end
-				end
-
-	 		elseif h_ok then
-				if internal_minimum_height /= mh then
-					internal_minimum_height := mh
-					if managed then
-						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minheight, Current)
-						end
-					else
-						wel_move_and_resize (x_position, y_position, width, height.max (mh), True)
-					end
+			w_cd := minimum_width /= mw
+			h_cd := minimum_height /= mh
+			internal_set_minimum_size (mw, mh)
+			p_imp := parent_imp
+			if p_imp /= Void then
+				if w_cd and h_cd then
+					p_imp.notify_change (Nc_minsize, Current)
+				elseif w_cd then
+					p_imp.notify_change (Nc_minwidth, Current)
+				elseif h_cd then
+					p_imp.notify_change (Nc_minheight, Current)
 				end
 			end
-		end
-
-	integrate_changes is
-			-- A fonction that simply recompute the minimum size if
-			-- necessary. It do not resize the widget, only integrate
-			-- the changes.
-		do
-			-- Do nothing here.
 		end
 
 end -- EV_SIZEABLE_PRIMITIVE_IMP
  
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -146,7 +85,7 @@ end -- EV_SIZEABLE_PRIMITIVE_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 
 --|-----------------------------------------------------------------------------
@@ -154,8 +93,20 @@ end -- EV_SIZEABLE_PRIMITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.3  2000/06/07 17:27:57  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.4  2001/06/07 23:08:14  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.4.6  2001/02/19 16:35:38  manus
+--| Speed optimization by avoiding too many calls to `parent_imp' use a local
+--| variable instead.
+--|
+--| Revision 1.2.4.5  2000/08/08 01:49:01  manus
+--| New resizing policy which always do a minimum_size computation when needed, but not
+--| always. See `vision2/implementation/mswin/doc/sizing_how_to.txt' for more details.
+--|
+--| Revision 1.2.4.4  2000/06/19 22:06:12  rogers
+--| Removed integrate_changes as it is no longer deferred from ev_sizeable_imp.
+--| Removed FIXME NOT_REVIEWED. Comments, formatting.
 --|
 --| Revision 1.2.4.3  2000/06/06 00:08:39  manus
 --| `compute_minimum_size' will compute something only if a window is visible, and will just

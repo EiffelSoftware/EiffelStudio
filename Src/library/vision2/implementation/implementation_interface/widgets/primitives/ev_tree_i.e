@@ -1,7 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision Tree. Implemenation interface";
+		"EiffelVision Tree. Implementation interface";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -19,9 +18,12 @@ inherit
 			interface
 		end
 
+	EV_TREE_ACTION_SEQUENCES_I
+
 feature {NONE} -- Initialization
 
 	initialize is
+			-- Initialize `Current'.
 		do
 				-- Set default width & height for the pixmaps
 			pixmaps_width := 16
@@ -31,28 +33,29 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	selected_item: EV_TREE_NODE is
-			-- Tree item which is currently selected
+			-- Currently selcted tree item.
 		deferred
 		end
 
 feature -- Status report
 
 	selected: BOOLEAN is
-			-- Is at least one tree item selected ?
+			-- Is at least one tree item selected?
 		require
 		deferred
 		end
 
 	pixmaps_width: INTEGER
-			-- Width of displayed pixmaps in the Multicolumn list.
+			-- Width of pixmaps displayed in `Current'.
 
 	pixmaps_height: INTEGER
-			-- Height of displayed pixmaps in the Multicolumn list.
+			-- Height of pixmaps displayed in `Current'.
 
 feature -- Status setting
 
 	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
-			-- Set the size of displayed pixmaps in the Multicolumn list.
+			-- Set the size of pixmaps displayed in `Current' to
+			-- `a_width', `a_height' in pixels.
 		do
 			if pixmaps_width /= a_width or pixmaps_height /= a_height then
 				pixmaps_width := a_width
@@ -67,7 +70,7 @@ feature {EV_ANY_I} -- Implementation
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
-			-- Do nothing by default
+			--| Do nothing by default
 		end
 
 feature {EV_ANY_I}
@@ -97,8 +100,14 @@ end -- class EV_TREE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.24  2000/06/07 17:27:50  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.25  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.13.4.4  2000/08/18 16:19:45  rogers
+--| removed fixme not_reviewed. Comments, formatting.
+--|
+--| Revision 1.13.4.3  2000/07/24 21:30:48  oconnor
+--| inherit action sequences _I class
 --|
 --| Revision 1.13.4.2  2000/05/16 16:56:34  oconnor
 --| updated for EV_TREE_NODE

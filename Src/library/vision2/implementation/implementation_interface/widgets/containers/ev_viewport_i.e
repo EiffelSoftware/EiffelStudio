@@ -27,8 +27,6 @@ feature -- Element change
 
 	set_x_offset (an_x: INTEGER) is
 			-- Assign `an_x' to `x_offset'.
-		require
-			an_x_within_bounds: an_x >= 0
 		deferred
 		ensure
 			assigned: x_offset = an_x
@@ -36,8 +34,6 @@ feature -- Element change
 
 	set_y_offset (a_y: INTEGER) is
 			-- Assign `a_y' to `y_offset'.
-		require
-			a_y_within_bounds: a_y >= 0
 		deferred
 		ensure
 			assigned: y_offset = a_y
@@ -46,9 +42,6 @@ feature -- Element change
 	set_offset (an_x, a_y: INTEGER) is
 			-- Assign `an_x' to `x_offset'.
 			-- Assign `a_y' to `y_offset'.
-		require
-			an_x_within_bounds: an_x >= 0
-			a_y_within_bounds: a_y >= 0
 		do
 			set_x_offset (an_x)
 			set_y_offset (a_y)
@@ -80,6 +73,18 @@ end -- class EV_VIEWPORT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.2.2  2000/12/22 19:01:33  rogers
+--| Removed restrictive pre-conditions which ensured that if the item
+--| was smaller than the viewport, the item had to be completely visible. The
+--| vieewport can now be positioned so that the item is partially or
+--| completely obscured.
+--|
+--| Revision 1.5.2.1  2000/05/03 19:09:05  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.5  2000/04/24 16:04:18  brendel
 --| Added set_offset.
 --|

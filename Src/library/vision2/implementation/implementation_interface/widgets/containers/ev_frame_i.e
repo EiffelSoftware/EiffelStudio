@@ -68,6 +68,12 @@ end -- class EV_FRAME_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.1  2000/05/03 19:09:05  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/04/27 17:11:57  brendel
 --| Added `style' and `set_style'.
 --|

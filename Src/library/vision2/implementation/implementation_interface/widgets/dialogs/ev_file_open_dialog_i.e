@@ -33,6 +33,12 @@ end -- class EV_FILE_OPEN_DIALOG_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.1  2000/05/03 19:09:03  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.5  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

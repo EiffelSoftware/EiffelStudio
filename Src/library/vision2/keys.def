@@ -52,8 +52,10 @@ F12, f12, F12, GDK_F12, Vk_f12
 the spacebar, space, Space, GDK_space, Vk_space
 back space, back_space, BackSpace, GDK_BackSpace, Vk_back
 enter, enter, Enter, GDK_Return, Vk_return
+Keypad enter, kp_enter, Enter, GDK_KP_Enter, Vk_return, enter
 escape, escape, Esc, GDK_Escape, Vk_escape
 tab, tab, Tab, GDK_Tab, Vk_tab
+Shift_tab, shift_tab, shift_tab, GDK_ISO_Left_Tab, Vk_tab, tab
 pause (break), pause, Pause, GDK_Pause, Vk_pause
 caps lock, caps_lock, CapsLock, GDK_Caps_Lock, Vk_capital
 scroll lock, scroll_lock, ScrollLock, GDK_F23, Vk_scroll
@@ -69,18 +71,56 @@ scroll lock, scroll_lock, ScrollLock, GDK_F23, Vk_scroll
 "`" (or "~"), backquote, `, GDK_quoteright, 192
 "-" (or "_"), dash, -, GDK_minus, 189
 the up-arrow, up, Up, GDK_Up, Vk_up
+keypad up-arrow, kp_up, Up, GDK_KP_Up, Vk_up, up
 the down-arrow, down, Down, GDK_Down, Vk_down
+keypad down-arror, kp_down, Down, GDK_KP_Down, Vk_down, down
 the left-arrow, left, Left, GDK_Left, Vk_left
+keypad left-arrow, kp_left, Left, GDK_KP_Left, Vk_left, left
 the right-arrow, right, Right, GDK_Right, Vk_right
+keypad right-arrow, kp_right, Right, GDK_KP_Right, Vk_right, right
 page up, page_up, PageUp, GDK_Page_Up, Vk_prior
+keypad page up, kp_page_up, PageUp, GDK_KP_Page_Up, Vk_prior, page_up
 page down, page_down, PageDown, GDK_Page_Down, Vk_next
+keypad page down, kp_page_down, PageDown, GDK_KP_Page_Down, Vk_next, page_down
 home, home, Home, GDK_Home, Vk_home
+keypad home, kp_home, Home, GDK_KP_Home, Vk_home, home
 end, end, End, GDK_End, Vk_end
+keupad end, kp_end, End, GDK_KP_End, Vk_end, end
 insert, insert, Insert, GDK_Insert, Vk_insert
-delete, delete, Delete, GDK_Delete, Vk_delete
+keypad insert, kp_insert, Insert, GDK_KP_Insert, Vk_insert, insert
+delete, delete, Del, GDK_Delete, Vk_delete
+keypad delete, kp_delete, Delete, GDK_KP_Delete, Vk_delete, delete
+
+"A", a_upper, A, GDK_A, 65, a
+"B", b_upper, B, GDK_B, 66, b
+"C", c_upper, C, GDK_C, 67, c
+"D", d_upper, D, GDK_D, 68, d
+"E", e_upper, E, GDK_E, 69, e
+"F", f_upper, F, GDK_F, 70, f
+"G", g_upper, G, GDK_G, 71, g
+"H", h_upper, H, GDK_H, 72, h
+"I", i_upper, I, GDK_I, 73, i
+"J", j_upper, J, GDK_J, 74, j
+"K", k_upper, K, GDK_K, 75, k
+"L", l_upper, L, GDK_L, 76, l
+"M", m_upper, M, GDK_M, 77, m
+"N", n_upper, N, GDK_N, 78, n
+"O", o_upper, O, GDK_O, 79, o
+"P", p_upper, P, GDK_P, 80, p
+"Q", q_upper, Q, GDK_Q, 81, q
+"R", r_upper, R, GDK_R, 82, r
+"S", s_upper, S, GDK_S, 83, s
+"T", t_upper, T, GDK_T, 84, t
+"U", u_upper, U, GDK_U, 85, u
+"V", v_upper, V, GDK_V, 86, v
+"W", w_upper, W, GDK_W, 87, w
+"X", x_upper, X, GDK_X, 88, x
+"Y", y_upper, Y, GDK_Y, 89, y
+"Z", z_upper, Z, GDK_Z, 90, z
+
 "a", a, a, GDK_a, 65
-"b", b, a, GDK_b, 66
-"c", c, b, GDK_c, 67
+"b", b, b, GDK_b, 66
+"c", c, c, GDK_c, 67
 "d", d, d, GDK_d, 68
 "e", e, e, GDK_e, 69
 "f", f, f, GDK_f, 70
@@ -108,7 +148,9 @@ delete, delete, Delete, GDK_Delete, Vk_delete
 # Extra keys that cannot be used as accelerator keys.
 
 shift, shift, Shift, GDK_Shift_L, 16
+right shift, right_shift, Shift, GDK_Shift_R, 16, shift
 control, ctrl, Ctrl, GDK_Control_L, 17
+right control, right_ctrl, Ctrl, GDK_Control_R, 17, ctrl
 left application-key, left_meta, Left Meta, GDK_Meta_L, 91
 right application-key, right_meta, Right Meta, GDK_Meta_R, 92
 
@@ -123,6 +165,42 @@ right application-key, right_meta, Right Meta, GDK_Meta_R, 92
 #-------------------------------------------------------------------------------
 #
 # $Log$
+# Revision 1.13  2001/06/07 23:07:57  rogers
+# Merged DEVEL branch into Main trunc.
+#
+# Revision 1.12.4.11  2001/04/26 22:07:23  king
+# Changed string output for Delete key to Del
+#
+# Revision 1.12.4.10  2000/11/03 22:46:19  king
+# Removed ALT key definition as this isn't pos on win32
+#
+# Revision 1.12.4.9  2000/11/03 20:40:43  king
+# Added alt key, must add GDK_Alt_R
+#
+# Revision 1.12.4.8  2000/10/18 00:21:22  king
+# Altered r_ctrl identifier
+#
+# Revision 1.12.4.7  2000/10/18 00:09:26  king
+# Added support for right ctrl key
+#
+# Revision 1.12.4.6  2000/09/18 19:47:28  king
+# Added shift tab to prevent error output on focus navigation
+#
+# Revision 1.12.4.5  2000/09/08 19:06:23  king
+# Added support for key pad functions
+#
+# Revision 1.12.4.4  2000/08/31 21:29:05  king
+# Added handling for keypad enter and right shift key
+#
+# Revision 1.12.4.3  2000/08/31 18:03:21  oconnor
+# added CAPS keys
+#
+# Revision 1.12.4.2  2000/08/14 23:19:54  king
+# Corrected error in alpha key definitions
+#
+# Revision 1.12.4.1  2000/05/03 19:08:24  oconnor
+# mergred from HEAD
+#
 # Revision 1.12  2000/03/22 01:22:36  brendel
 # The multiple external was a bad idea.
 # Right shift and control are not supported. See comment.

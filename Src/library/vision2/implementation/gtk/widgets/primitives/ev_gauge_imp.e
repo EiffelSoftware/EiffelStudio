@@ -19,6 +19,8 @@ inherit
 			initialize
 		end
 
+	EV_GAUGE_ACTION_SEQUENCES_IMP
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -40,6 +42,8 @@ feature {NONE} -- Initialization
 			--| widgets that inherit twice from EV_WIDGET_IMP,
 			--| so initialize does not have to be called again.
 		do
+			create value_range.make (0, 100)
+			value_range.change_actions.extend (~set_range)
 			real_signal_connect (
 				adjustment,
 				"value-changed",
@@ -72,26 +76,6 @@ feature -- Access
 			).rounded
 		end
 
-	minimum: INTEGER is
-			-- Lowest value of the gauge.
-		do
-			Result := C.gtk_adjustment_struct_lower (adjustment).rounded
-		end
-
-	maximum: INTEGER is
-			-- Highest value of the gauge.
-		do
-			Result := C.gtk_adjustment_struct_upper (
-				adjustment
-			).rounded - page_size
-		end
-
-	range: INTEGER_INTERVAL is
-			-- Get `minimum' and `maximum' as interval.
-		do
-			create Result.make (minimum, maximum)
-		end
-
 	page_size: INTEGER is
 			-- Size of slider.
 			--| We define it here to add to the internal maximum. 
@@ -105,25 +89,25 @@ feature -- Status setting
 	step_forward is
 			-- Increment `value' by `step' if possible.
 		do
-			set_value (maximum.min (value + step))
+			set_value (value_range.upper.min (value + step))
 		end
 
 	step_backward is
 			-- Decrement `value' by `step' if possible.
 		do
-			set_value (minimum.max (value - step))
+			set_value (value_range.lower.max (value - step))
 		end
 
 	leap_forward is
 			-- Increment `value' by `leap' if possible.
 		do
-			set_value (maximum.min (value + leap))
+			set_value (value_range.upper.min (value + leap))
 		end
 
 	leap_backward is
 			-- Decrement `value' by `leap' if possible.
 		do
-			set_value (minimum.max (value - leap))
+			set_value (value_range.lower.max (value - leap))
 		end
 
 feature -- Element change
@@ -137,8 +121,7 @@ feature -- Element change
 		ensure then
 			step_same: step = old step
 			leap_same: leap = old leap
-			maximum_same: maximum = old maximum
-			minimum_same: minimum = old minimum
+			range_same: value_range.is_equal (old value_range)
 		end
 
 	set_step (a_step: INTEGER) is
@@ -151,85 +134,83 @@ feature -- Element change
 		ensure then
 			value_same: value = old value
 			leap_same: leap = old leap
-			maximum_same: maximum = old maximum
-			minimum_same: minimum = old minimum
+			range_same: value_range.is_equal (old value_range)
 		end
 
 	set_leap (a_leap: INTEGER) is
 			-- Set `leap' to `a_leap'.
 		do
 			if leap /= a_leap then
-				C.set_gtk_adjustment_struct_upper (adjustment, maximum + a_leap)
+				C.set_gtk_adjustment_struct_upper (adjustment, value_range.upper + a_leap)
 				C.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
 				C.gtk_adjustment_changed (adjustment)
 			end
 		end
 
-	set_minimum (a_minimum: INTEGER) is
-			-- Set `minimum' to `a_minimum'.
-		do
-			if minimum /= a_minimum then
-				if minimum = maximum then
-					--| VB 02/15/2000 Bug/feature in GTK:
-					--| When lower equals upper, and minimum is decreased
-					--| value is decreased as well. This is evil, but
-					--| can be worked around by temporarily increasing
-					--| the maximum.
-					C.set_gtk_adjustment_struct_upper (
-						adjustment,
-						maximum + page_size + 1
-					)
-					C.gtk_adjustment_changed (adjustment)
-					C.set_gtk_adjustment_struct_upper (
-						adjustment,
-						maximum + page_size - 1
-					)
-				end
-				C.set_gtk_adjustment_struct_lower (adjustment, a_minimum)
-				C.gtk_adjustment_changed (adjustment)
-			end
-		ensure then
-			value_same: value = old value
-			maximum_same: maximum = old maximum
-		end
+--|	set_minimum (a_minimum: INTEGER) is
+--|			-- Set `minimum' to `a_minimum'.
+--|		do
+--|			if minimum /= a_minimum then
+--|				if minimum = maximum then
+--|					--| VB 02/15/2000 Bug/feature in GTK:
+--|					--| When lower equals upper, and minimum is decreased
+--|					--| value is decreased as well. This is evil, but
+--|					--| can be worked around by temporarily increasing
+--|					--| the maximum.
+--|					C.set_gtk_adjustment_struct_upper (
+--|						adjustment,
+--|						maximum + page_size + 1
+--|					)
+--|					C.gtk_adjustment_changed (adjustment)
+--|					C.set_gtk_adjustment_struct_upper (
+--|						adjustment,
+--|						maximum + page_size - 1
+--|					)
+--|				end
+--|				C.set_gtk_adjustment_struct_lower (adjustment, a_minimum)
+--|				C.gtk_adjustment_changed (adjustment)
+--|			end
+--|		ensure then
+--|			value_same: value = old value
+--|			maximum_same: maximum = old maximum
+--|		end
+--|
+--|	set_maximum (a_maximum: INTEGER) is
+--|			-- Set `maximum' to `a_maximum'.
+--|		do
+--|			if maximum /= a_maximum then
+--|				C.set_gtk_adjustment_struct_upper (
+--|					adjustment,
+--|					a_maximum + page_size
+--|				)
+--|				C.gtk_adjustment_changed (adjustment)
+--|			end
+--|		end
 
-	set_maximum (a_maximum: INTEGER) is
-			-- Set `maximum' to `a_maximum'.
+	set_range is
+			-- Update widget range from `value_range'
+			--| FIXME this should be an inline agent.
+		local
+			temp_value: INTEGER
 		do
-			if maximum /= a_maximum then
-				C.set_gtk_adjustment_struct_upper (
-					adjustment,
-					a_maximum + page_size
-				)
-				C.gtk_adjustment_changed (adjustment)
+			temp_value := value
+			if temp_value > value_range.upper then
+				temp_value := value_range.upper
+			elseif temp_value < value_range.lower then
+				temp_value := value_range.lower
 			end
-		end
-
-	set_range (a_range: INTEGER_INTERVAL) is
-			-- Set `range' to `a_range'.
-		do
-			if minimum /= a_range.lower or else maximum /= a_range.upper then
-				C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
-				C.set_gtk_adjustment_struct_upper (
-					adjustment,
-					a_range.upper + page_size
-				)
-				C.gtk_adjustment_changed (adjustment)
-			end
-		end
-
-	reset_with_range (a_range: INTEGER_INTERVAL) is
-			-- Set `range' to `a_range'.
-			-- Set `value' to `a_range.lower'.
-		do
-			C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
+			C.set_gtk_adjustment_struct_lower (adjustment, value_range.lower)
 			C.set_gtk_adjustment_struct_upper (
 				adjustment,
-				a_range.upper + page_size
+				value_range.upper + page_size
 			)
 			C.gtk_adjustment_changed (adjustment)
-			C.gtk_adjustment_set_value (adjustment, a_range.lower)
-			C.gtk_adjustment_value_changed (adjustment)
+			set_value (temp_value)
+		ensure
+			value_range_upper_consistent: value_range.upper =
+				C.gtk_adjustment_struct_upper (adjustment).rounded - page_size
+			value_range_lower_consistent: value_range.lower =
+				C.gtk_adjustment_struct_lower (adjustment).rounded
 		end
 
 feature {NONE} -- Implementation
@@ -249,7 +230,9 @@ feature {NONE} -- Implementation
 			--| value may not have changed.
 		do
 			if value /= old_value then
-				interface.change_actions.call ([])
+				if change_actions_internal /= Void then
+					change_actions_internal.call ([value])
+				end
 				old_value := value
 			end
 		end
@@ -280,8 +263,37 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.15  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.16  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.2.9  2000/11/10 21:37:09  king
+--| Corrected integer interval problems
+--|
+--| Revision 1.5.2.8  2000/10/27 16:54:43  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.5.2.7  2000/09/13 17:18:07  oconnor
+--| updated for modified EV_GAUGE
+--|
+--| Revision 1.5.2.6  2000/08/08 00:03:15  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.5.2.5  2000/08/03 22:07:44  king
+--| Now using internal action sequence
+--|
+--| Revision 1.5.2.4  2000/07/24 21:36:10  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.5.2.3  2000/06/22 20:20:27  king
+--| Passing value to change_actions
 --|
 --| Revision 1.5.2.2  2000/06/06 22:56:23  king
 --| Fixed adjustment signal connection

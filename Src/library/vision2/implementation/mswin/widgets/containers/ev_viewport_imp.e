@@ -21,58 +21,11 @@ inherit
 		redefine
 			interface,
 			make,
-			wel_move_and_resize
-		end
-
-	WEL_CONTROL_WINDOW
-		rename
-			make as wel_make,
-			parent as wel_window_parent,
-			set_parent as wel_set_parent,
-			shown as is_displayed,
-			destroy as wel_destroy,
-			item as wel_item,
-			enabled as is_sensitive,
-			width as wel_width,
-			height as wel_height,
-			x as x_position,
-			y as y_position,
-			move as wel_move,
-			resize as wel_resize,
-			move_and_resize as wel_move_and_resize,
-			text as wel_text,
-			set_text as wel_set_text
-		undefine
-			window_process_message,
-			set_width,
-			set_height,
-			remove_command,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_key_down,
-			on_key_up,
-			on_set_focus,
-			on_kill_focus,
-			on_set_cursor,
-			on_draw_item,
-			background_brush,
-			on_accelerator_command,
-			on_color_control,
- 			on_wm_vscroll,
- 			on_wm_hscroll,
-			show,
-			hide,
-			on_destroy,
-			on_size
-		redefine
-			default_style,
-			default_ex_style,
-			wel_move_and_resize
+			on_size,
+			ev_apply_new_size,
+			compute_minimum_width,
+			compute_minimum_height,
+			compute_minimum_size
 		end
 
 create
@@ -85,7 +38,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (Default_parent, "")
-			set_minimum_size (100, 100)
 		end	
 
 feature -- Access
@@ -112,7 +64,7 @@ feature -- Element change
 			-- Set `x_offset' to `an_x'.
 		do
 			if item /= Void then
-				item_imp.wel_move (- an_x, item.y_position)
+				item_imp.ev_move (- an_x, item.y_position)
 			end
 		end
 
@@ -120,7 +72,7 @@ feature -- Element change
 			-- Set `y_offset' to `a_y'.
 		do
 			if item /= Void then
-				item_imp.wel_move (item.x_position, - a_y)
+				item_imp.ev_move (item.x_position, - a_y)
 			end
 		end
 
@@ -129,8 +81,18 @@ feature -- Element change
 			-- Assign `a_y' to `y_offset'.
 		do
 			if item /= Void then
-				item_imp.wel_move (- an_x, - a_y)
+				item_imp.ev_move (- an_x, - a_y)
 			end
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	compute_minimum_width, compute_minimum_height, compute_minimum_size is
+			-- Recompute both minimum_width and minimum_height of `Current'.
+			-- Does nothing since it does not have a sense to compute it,
+			-- it is only what the user set it to.
+		do
+			ev_set_minimum_size (child_cell.minimum_width, child_cell.minimum_height)
 		end
 
 feature {NONE} -- Implementation
@@ -143,31 +105,45 @@ feature {NONE} -- Implementation
 	default_ex_style: INTEGER is
 			-- The default ex-style of the window.
 		do
-			Result := Ws_ex_controlparent + Ws_ex_clientedge
+			Result := Ws_ex_controlparent
 		end
 
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-				repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
-			-- resize it with `a_width', `a_height'.
-		local
-			ch, cw: INTEGER
+	on_size (size_type, a_width, a_height: INTEGER) is
 		do
-			{WEL_CONTROL_WINDOW} Precursor (
-				a_x, a_y, a_width, a_height, repaint)
+			if size_type /= Wel_window_constants.Size_minimized then
+				interface.resize_actions.call (
+					[screen_x, screen_y, a_width, a_height]
+				)
+				if item /= Void then
+					on_size_requested (True)
+				end
+			end
+		end
+
+	ev_apply_new_size (a_x_position, a_y_position,
+				a_width, a_height: INTEGER; repaint: BOOLEAN) is
+		do
+			ev_move_and_resize
+				(a_x_position, a_y_position, a_width, a_height, repaint)
 			if item_imp /= Void then
-				item_imp.set_move_and_size (item_imp.x_position,
-					item_imp.y_position, client_width, client_height)
+				on_size_requested (False)
+			end
+		end
 
-				cw := item_imp.wel_width - client_width
-				ch := item_imp.wel_height - client_height
-
-				if x_offset > cw then
-					set_x_offset (cw)
-				end
-				if y_offset > ch then
-					set_y_offset (ch)
-				end
+	on_size_requested (originator: BOOLEAN) is
+			-- Size has changed.
+		require
+			item_not_void: item /= Void
+		local
+			imp: like item_imp
+		do
+			imp := item_imp
+			if originator then
+				imp.set_move_and_size (imp.x_position, imp.y_position, 
+					imp.width, imp.height)
+			else
+				imp.ev_apply_new_size (imp.x_position ,imp.y_position,
+					imp.width, imp.height, True)			
 			end
 		end
 
@@ -196,11 +172,58 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.15  2000/06/09 01:30:09  manus
---| Added CVS logs
+--| Revision 1.16  2001/06/07 23:08:16  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.13  2000/05/03 20:13:25  brendel
+--| Revision 1.12.2.13  2001/03/04 01:49:35  manus
+--| `compute_minimum_xxx' only sets the minimum_xxx to the one previously computed
+--| since no once can change this value but the user itself.
+--|
+--| Revision 1.12.2.12  2001/01/30 19:56:04  rogers
+--| Ev_apply_new_size now resizes `Current'. On_size_requested is also only
+--| called if item_imp /= Void.
+--|
+--| Revision 1.12.2.11  2001/01/30 19:26:45  manus
+--| Fixed the non-implemented `ev_apply_new_size' feature so that it calls
+--| `on_size_requested' with a new arguments telling the origin of the call
+--|  (which is either a user resize event or an internal one due to vision2 code).
+--|
+--| Revision 1.12.2.10  2001/01/02 22:13:32  rogers
+--| Removed unused locals from on_size_requested.
+--|
+--| Revision 1.12.2.9  2000/12/27 19:58:24  rogers
+--| Removed redefinition of set_default_minimum_size. Default minimum is now 0,0.
+--|
+--| Revision 1.12.2.8  2000/12/22 19:03:48  rogers
+--| On_size_requested no longer re-sizes `item' if `item' is smaller than
+--| `Current'.
+--|
+--| Revision 1.12.2.7  2000/10/09 05:03:04  manus
+--| Removed `Ws_ex_clientedge' style since if we want a special border we can put it in a frame.
+--|
+--| Revision 1.12.2.6  2000/08/08 16:06:51  manus
+--| New resizing policy by calling `ev_' instead of `internal_', see
+--|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
+--| No need to inherit from WEL_CONTROL_WINDOW.
+--|
+--| Revision 1.12.2.5  2000/07/12 16:23:00  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
+--|
+--| Revision 1.12.2.4  2000/06/09 20:56:02  manus
+--| Cosmetics for CVS
+--|
+--| Revision 1.12.2.3  2000/05/03 22:35:03  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.12.2.2  2000/05/03 22:16:28  pichery
+--| - Cosmetics / Optimization with local variables
+--| - Replaced calls to `width' to calls to `wel_width'
+--|   and same for `height'.
+--|
+--|
+--| Revision 1.12.2.1  2000/05/03 19:09:46  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.12  2000/04/26 21:01:29  brendel
 --| child -> item or item_imp.

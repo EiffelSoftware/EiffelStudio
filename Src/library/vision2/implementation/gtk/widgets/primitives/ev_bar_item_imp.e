@@ -1,6 +1,4 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
 	description: 
 		"EiffelVision bar item, gtk implementation."
 	status: "See notice at end of class"
@@ -9,12 +7,8 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_BAR_ITEM_IMP
 
---inherit
---	EV_PRIMITIVE_IMP
-	
 end
 
 --!-----------------------------------------------------------------------------
@@ -38,6 +32,18 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.8.4.3  2000/10/09 21:08:28  oconnor
+--| cosmetics
+--|
+--| Revision 1.8.4.2  2000/09/06 23:18:47  king
+--| Reviewed
+--|
+--| Revision 1.8.4.1  2000/05/03 19:08:49  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|
@@ -55,7 +61,6 @@ end
 --|
 --| Revision 1.8.2.2  1999/11/02 17:20:04  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

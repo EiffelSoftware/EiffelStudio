@@ -1,9 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-		"EiffelVision text component, implementation interface."
+		"EiffelVision text component. Implementation interface."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -12,38 +10,44 @@ deferred class
 	
 inherit
 	EV_PRIMITIVE_I
-		redefine
-			set_default_colors
-		end
+
+	EV_TEXT_COMPONENT_ACTION_SEQUENCES_I
 
 feature -- Access
 
 	text: STRING is
-			-- Text of current label
+			-- `Result' is text of `Current'.
 		require
 		deferred
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 	text_length: INTEGER is
-			-- Length of the text in the widget
+			-- Length of the text in `Current'.
 		require
 		deferred
 		end
 
 	selected_text: STRING is
-			-- Text which is currently selected
+			-- Text currently selected in `Current'.
 		require
 		do
 			Result := text.substring (selection_start, selection_end)
 		end
 
+	maximum_character_width: INTEGER is
+			-- Maximum width of a single character in `Current'.
+		deferred
+		end
+
+	clipboard_content: STRING is
+			-- `Result' is current clipboard content.
+		deferred
+		end
 
 feature -- Status report
 
 	is_editable: BOOLEAN is
-			-- Is the text editable
+			-- Is the text editable by the user?
 		require
 		deferred
 		end
@@ -55,13 +59,13 @@ feature -- Status report
 		end
 
 	has_selection: BOOLEAN is
-			-- Is something selected?
+			-- Does `Current' have a selection?
 		require
 		deferred
 		end
 
 	selection_start: INTEGER is
-			-- Index of the first character selected
+			-- Index of the first character selected.
 		require
 			has_selection: has_selection
 		deferred
@@ -71,7 +75,7 @@ feature -- Status report
 		end
 
 	selection_end: INTEGER is
-			-- Index of the last character selected
+			-- Index of the last character selected.
 		require
 			has_selection: has_selection
 		deferred
@@ -81,27 +85,17 @@ feature -- Status report
 		end
 
 	valid_caret_position (pos: INTEGER): BOOLEAN is
+			-- Is `pos' a valid position for the caret?
 		require
 		do
-			Result := pos > 0 and pos <= text_length			
+			Result := pos >= 1 and pos <= text_length + 1			
 		end
 
 feature -- Status setting
 	
-	set_default_colors is
-			-- Initialize the colors of the widget
-		local
-			color: EV_COLOR
-		do
-			create color.make_with_rgb (1, 1, 1)
-			set_background_color (color)
-			create color.make_with_rgb (0, 0, 0)
-			set_foreground_color (color)
-		end
-
 	set_editable (flag: BOOLEAN) is
-			-- `flag' true make the component read-write and
-			-- `flag' false make the component read-only.
+			-- if `flag' then make the component read-write.
+			-- if not `flag' then make the component read-only.
 		require
 		deferred
 		end
@@ -111,45 +105,47 @@ feature -- Status setting
 		require
 			position_large_enough: pos >= 1
 			position_small_enough: pos <= text_length + 1
---			is_editable: is_editable
+			is_editable: is_editable
 		deferred
 		end
 	
 feature -- Element change
 
-	set_text (txt: STRING) is
-			-- set text in component to 'txt'
-		require
-			valid_text: txt /= Void
-			text_is_editable: is_editable
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to text of `Current'.
 		deferred
 		ensure
-			text_set: text.is_equal (txt)
+			text_set: a_text /= Void implies text.is_equal (a_text)
+		end
+
+	remove_text is
+			-- Make `text' `Void'.
+		do
+			set_text (Void)
+		ensure
+			text_removed: text = Void
 		end
 
 	insert_text (txt: STRING) is
-			-- Insert `txt' at the current position.
+			-- Insert `txt' at the current caret position.
 		require
 			valid_text: txt /= Void
-			is_editable: is_editable
 		deferred
 		end
 	
 	append_text (txt: STRING) is
-			-- append 'txt' into component
+			-- append 'txt' into `Current'.
 		require
 			valid_text: txt /= Void
-			is_editable: is_editable
 		deferred
 		ensure
 			text_appended:
 		end
 	
 	prepend_text (txt: STRING) is
-			-- prepend 'txt' into component
+			-- prepend 'txt' into `Current'.
 		require
 			valid_text: txt /= Void
-			is_editable: is_editable
 		deferred
 		ensure
 			text_prepended:
@@ -158,7 +154,8 @@ feature -- Element change
 feature -- Resizing
 
 	set_minimum_width_in_characters (nb: INTEGER) is
-			-- Make `nb' characters visible on one line.
+			-- Make a minimum of `nb' of the widest character visible
+			-- on one line.
 		require
 			valid_nb: nb > 0
 		deferred
@@ -181,14 +178,15 @@ feature -- Basic operation
 		end	
 
 	select_all is
-			-- Select all the text.
+			-- Select all the text of `Current'.
 		require
 			positive_length: text_length > 0
-		deferred
+		do
+			select_region (1, text.count)
 		ensure
 			has_selection: has_selection
 			selection_start_set: selection_start = 1
-			selection_end_set: selection_end <= text_length + 2
+			selection_end_set: selection_end = text_length
 		end
 
 	deselect_all is
@@ -210,11 +208,9 @@ feature -- Basic operation
 		end
 
 	cut_selection is
-			-- Cut the `selected_region' by erasing it from
-			-- the text and putting it in the Clipboard 
-			-- to paste it later.
-			-- If the `selectd_region' is empty, it does
-			-- nothing.
+			-- Cut `selected_region' by erasing it from
+			-- the text and putting it in the Clipboard to paste it later.
+			-- If `selectd_region' is empty, it does nothing.
 		require
 			has_selection: has_selection
 			is_editable: is_editable
@@ -222,19 +218,16 @@ feature -- Basic operation
 		end
 
 	copy_selection is
-			-- Copy the `selected_region' in the Clipboard
-			-- to paste it later.
-			-- If the `selected_region' is empty, it does
-			-- nothing.
+			-- Copy `selected_region' into the Clipboard.
+			-- If the `selected_region' is empty, it does nothing.
 		require
 			has_selection: has_selection
 		deferred
 		end
 
 	paste (index: INTEGER) is
-			-- Insert the string which is in the 
-			-- Clipboard at the `index' postion in the
-			-- text.
+			-- Insert the contents of the clipboard 
+			-- at `index' postion of `text'.
 			-- If the Clipboard is empty, it does nothing. 
 		require
 			index_large_enough: index >= 1
@@ -243,26 +236,7 @@ feature -- Basic operation
 		deferred
 		end
 
-feature -- Event - command association
-
---	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---			-- Add 'cmd' to the list of commands to be executed 
---			-- when the text of the widget have changed.
---		require
---			valid_command: cmd /= Void
---		deferred
---		end
-
-feature -- Event -- removing command association
-
---	remove_change_commands is
---			-- Empty the list of commands to be executed
---			-- when the text of the widget have changed.
---		require
---		deferred
---		end
-	
-end --class EV_TEXT_COMPONENT_I
+end -- class EV_TEXT_COMPONENT_I
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -285,6 +259,55 @@ end --class EV_TEXT_COMPONENT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.35.2.14  2000/12/09 00:31:00  etienne
+--| Undid unneeded last commit
+--|
+--| Revision 1.35.2.12  2000/10/27 22:13:19  rogers
+--| Removed post condition on text and pre condition on set_text to fit in
+--| with new behaviour. Modified post condition on set_text.
+--|
+--| Revision 1.35.2.11  2000/10/27 02:28:21  manus
+--| Removed declaration or undefinition of `set_default_colors'. Now it is defined
+--| in a platform dependent manner to improve performance and correctness.
+--|
+--| Revision 1.35.2.10  2000/10/26 22:11:28  rogers
+--| To maintain consistency between EV_TEXTABLE and EV_TEXT_COMPONENT,
+--| set_text now has a pre-condition that the text is not empty and a feature
+--| `remove_text' has been added
+--|
+--| Revision 1.35.2.9  2000/09/07 17:06:06  rogers
+--| Fixed post conditions on select_all. Select_All is now implemented using
+--| select_region and is no longer deferred into the implementation.
+--|
+--| Revision 1.35.2.8  2000/09/07 16:14:10  king
+--| Formatting
+--|
+--| Revision 1.35.2.7  2000/09/06 23:15:50  rogers
+--| Added maximum_character_width and clipboard_content as deferred. These
+--| are required for contract checking in EV_TEXT_COMPONENT.
+--|
+--| Revision 1.35.2.6  2000/09/06 15:18:56  rogers
+--| Corrected valid_caret_position.
+--|
+--| Revision 1.35.2.5  2000/08/22 18:43:33  rogers
+--| Fixed comment on set_minimum_width_in_characters.
+--|
+--| Revision 1.35.2.4  2000/08/17 23:55:17  rogers
+--| removed fixme not_reviewed. Comments, formatting. Replaced commented
+--| pre-condition. Removed commented old command association.
+--|
+--| Revision 1.35.2.3  2000/08/16 19:39:34  king
+--| Removed restrictive is_editable precond from set_text
+--|
+--| Revision 1.35.2.2  2000/07/24 21:30:48  oconnor
+--| inherit action sequences _I class
+--|
+--| Revision 1.35.2.1  2000/05/03 19:09:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.37  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|
@@ -301,7 +324,8 @@ end --class EV_TEXT_COMPONENT_I
 --| added --| FIXME Not for release
 --|
 --| Revision 1.35.4.3  1999/12/30 01:59:25  rogers
---| changed position to caret_position , valid_position to valid_caret_position, set_position to set_caret_position.
+--| changed position to caret_position , valid_position to valid_caret_position,
+--| set_position to set_caret_position.
 --|
 --| Revision 1.35.4.2  1999/12/03 07:47:01  oconnor
 --| make_rgb (int) -> make_with_rgb (real)

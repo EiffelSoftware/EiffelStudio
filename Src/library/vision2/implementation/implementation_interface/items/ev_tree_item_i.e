@@ -1,7 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision tree item, implementation interface.";
+		"EiffelVision tree item. Implementation interface.";
+	status: "See notice at end of class."
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -46,8 +46,11 @@ end -- class EV_TREE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.34  2000/06/07 17:27:41  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.35  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.22.4.5  2000/08/17 20:21:58  rogers
+--| Removed fixme not_reviewed. Description.
 --|
 --| Revision 1.22.4.4  2000/05/16 16:58:09  oconnor
 --| moved bulk to ev_tree_node_i.e

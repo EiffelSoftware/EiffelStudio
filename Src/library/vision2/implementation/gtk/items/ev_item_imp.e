@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision item, gtk implementation";
 	status: "See notice at end of class"
@@ -24,13 +23,23 @@ inherit
 		rename
 			interface as widget_interface,
 			parent as widget_parent,
-			initialize as widget_initialize
+			initialize as widget_initialize,
+			pointer_motion_actions_internal as widget_pointer_motion_actions_internal,
+			pointer_button_press_actions_internal as widget_pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal as widget_pointer_double_press_actions_internal,
+			parent_imp as widget_parent_imp
 		export {NONE}
 			widget_interface,
 			widget_parent,
 			widget_initialize
+		undefine
+			pointer_motion_actions,
+			pointer_button_press_actions,
+			pointer_double_press_actions
 		redefine
-			button_press_switch
+			button_press_switch,
+			create_pointer_button_press_actions,
+			create_pointer_double_press_actions
 		end
 
 	EV_PIXMAPABLE_IMP
@@ -41,25 +50,13 @@ inherit
 feature {NONE} -- Initialization
 
 	initialize is
-			-- FIXME comment
+			-- Sets up `Current' ready for use.
 		do
 			if C.gtk_is_widget (c_object) then
 				C.gtk_widget_show (c_object)
 			end
 
-			-- FIXME this probably should call precursor {EV_WIDGET_IMP}
 			set_default_colors
-				--| "button-press-event" is a special case, see below.
-			interface.pointer_button_press_actions.not_empty_actions.extend (
-				~connect_button_press_switch
-			)
-			interface.pointer_double_press_actions.not_empty_actions.extend (
-				~connect_button_press_switch
-			)
-			if not interface.pointer_button_press_actions.empty or
-				not interface.pointer_double_press_actions.empty then
-				connect_button_press_switch
-			end
 			is_initialized := True
 		end
 
@@ -78,25 +75,21 @@ feature {NONE} -- Initialization
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 			if a_type = C.GDK_BUTTON_PRESS_ENUM then
-				interface.pointer_button_press_actions.call (t)
+				if pointer_button_press_actions_internal /= Void then
+					pointer_button_press_actions_internal.call (t)
+				end
 			else -- a_type = C.GDK_2BUTTON_PRESS_ENUM
-				interface.pointer_double_press_actions.call (t)
+				if pointer_double_press_actions_internal /= Void then
+					pointer_double_press_actions_internal.call (t)
+				end
 			end
         end
 		
 feature -- Access
 
-	parent_widget: EV_WIDGET is
-			-- Parent widget of the current item
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
 	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
 			-- The parent of the Current widget
-			-- Can be void.
+			-- May be void.
 		local
 			c_parent: POINTER
 			Result_imp: EV_ITEM_LIST_IMP [EV_ITEM]
@@ -120,12 +113,18 @@ feature -- Access
 			end
 		end
 
-feature -- Assertion features
+feature {EV_ANY_I} -- Implementation
 
-	has_parent: BOOLEAN is
-			-- True if the widget has a parent, False otherwise
+	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 		do
-			Result := parent_imp /= void
+			create Result
+			Result.not_empty_actions.extend (~connect_button_press_switch)
+		end
+
+	create_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+		do
+			create Result
+			Result.not_empty_actions.extend (~connect_button_press_switch)
 		end
 
 feature {EV_ITEM_IMP, EV_ITEM_LIST_IMP} -- Implementation
@@ -165,11 +164,29 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.31  2000/06/07 20:08:02  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.32  2001/06/07 23:08:01  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.30  2000/06/07 17:27:29  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.17.4.11  2000/11/01 01:07:05  andrew
+--| Renamed wid_imp parent_imp to widget_parent_imp
+--|
+--| Revision 1.17.4.10  2000/09/06 23:18:38  king
+--| Reviewed
+--|
+--| Revision 1.17.4.9  2000/08/03 21:37:31  king
+--| Redefining button action sequences to connect swtich agent
+--|
+--| Revision 1.17.4.8  2000/07/28 21:11:12  king
+--| Corrected log message
+--|
+--| Revision 1.17.4.7  2000/07/28 21:09:33  king
+--| Corrected initialize so no qualified calls are made through interface
+--|
+--| Revision 1.17.4.6  2000/07/24 21:33:39  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.17.4.5  2000/06/12 16:22:56  oconnor
+--| removed references to obsolete features
 --|
 --| Revision 1.17.4.4  2000/06/05 23:47:40  oconnor
 --| support double click

@@ -112,8 +112,8 @@ end -- class EV_BOX_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.18  2000/06/07 17:27:48  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.19  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
 --| Revision 1.15.4.2  2000/05/15 22:53:18  king
 --| set_child_expand->set_item_expand

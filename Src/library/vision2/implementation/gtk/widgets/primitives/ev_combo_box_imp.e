@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description: 
@@ -18,16 +17,26 @@ inherit
 
 	EV_TEXT_FIELD_IMP
 		undefine
-			pointer_over_widget
+			pointer_over_widget,
+			create_focus_in_actions,
+			create_focus_out_actions,
+			has_focus
 		redefine
 			initialize,
 			make,
-			interface
+			interface,
+			set_foreground_color,
+			foreground_color_pointer,
+			visual_widget,
+			set_text,
+			set_focus,
+			has_focus
 		end
 
 	EV_LIST_ITEM_LIST_IMP
 		undefine
-			set_default_colors
+			set_default_colors,
+			visual_widget
 		redefine
 			select_callback,
 			remove_i_th,
@@ -37,7 +46,12 @@ inherit
 			select_item,
 			selected,
 			add_to_container,
-			interface
+			interface,
+			set_foreground_color,
+			foreground_color_pointer,
+			visual_widget,
+			set_focus,
+			has_focus
 		end
 
 create
@@ -50,39 +64,36 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 
+
 			-- create of the gtk object.
-			set_c_object (C.gtk_combo_new)
+			set_c_object (C.gtk_event_box_new)
+			container_widget := C.gtk_combo_new
+			C.gtk_widget_show (container_widget)
+			C.gtk_container_add (c_object, container_widget)
 
 			-- Pointer to the text we see.
-			entry_widget := C.gtk_combo_struct_entry (c_object)
+			entry_widget := C.gtk_combo_struct_entry (container_widget)
 
 			-- Pointer to the list of items.
-			list_widget := C.gtk_combo_struct_list (c_object)
-			C.gtk_combo_disable_activate (c_object)
+			list_widget := C.gtk_combo_struct_list (container_widget)
+			C.gtk_combo_disable_activate (container_widget)
+			C.gtk_combo_set_use_arrows_always (container_widget, 1)
+		--	gtk_widget_set_flags (c_object, C.GTK_CAN_FOCUS_ENUM)
+			real_signal_connect (entry_widget, "key_press_event", ~on_key_event, ~key_event_translate)
+			real_signal_connect (entry_widget, "key_release_event", ~on_key_event, ~key_event_translate)
 		end
+
+	container_widget: POINTER
 
 	initialize is
 			-- Connect action sequences to signals.
 		do
+			initialize_pixmaps
 			{EV_LIST_ITEM_LIST_IMP} Precursor
 
 			--| We don't call EV_TEXT_FIELD_IMP Precursor as this only
 			--| adds two extra ones to what ev_list_imp Precursor calls
-			--| already and the default sequences can only be connected
-			--| once.
-
-			real_connect_signal_to_actions (
-				entry_widget,
-				"activate",
-				interface.return_actions,
-				Void
-			)
-			real_connect_signal_to_actions (
-				entry_widget,
-				"changed",
-				interface.change_actions,
-				Void
-			)
+			--| already.
 		end
 
 	avoid_callback: BOOLEAN
@@ -99,29 +110,33 @@ feature {NONE} -- Initialization
 			end
 		end
 
+	visual_widget: POINTER is
+		do
+			Result := c_object
+		end
+
 feature -- Access
 
 	select_item (an_index: INTEGER) is
-			-- Give the item of the list at the one-base
-			-- index. (Gtk uses 0 based indexs, I think)
+			-- Give the item of the list at the one-base index.
 		do
 			C.gtk_list_select_item (list_widget, an_index - 1)
 		end
 
-feature -- Measurement
-
-	extended_height: INTEGER is
-			-- height of the combo-box when the list is shown
-		do
-			check
-				Not_yet_implemented: False
-			end
-		end
-
 feature -- Status report
 
+	has_focus: BOOLEAN is
+			-- Does widget have the keyboard focus?
+		do
+			--| Shift to put bit in least significant place then take mod 2.
+			Result := ((
+				(C.gtk_object_struct_flags (entry_widget)
+				// C.GTK_HAS_FOCUS_ENUM) \\ 2) 
+			) = 1
+		end
+
 	rows: INTEGER is
-		 	-- Number of lines
+		 	-- Number of lines.
 		do
 			Result := C.g_list_length (
 				C.gtk_list_struct_children (list_widget)
@@ -129,7 +144,7 @@ feature -- Status report
 		end
 
 	selected: BOOLEAN is
-			-- Is at least one item selected ?
+			-- Is at least one item selected?
 		do
 			Result := C.g_list_length (
 				C.gtk_list_struct_selection (list_widget)
@@ -137,17 +152,27 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		do
+			avoid_callback := True
+			Precursor {EV_TEXT_FIELD_IMP} (a_text)
+		end
 	
+	set_focus is
+		do
+			C.gtk_widget_grab_focus (entry_widget)
+		end
+
 	set_maximum_text_length (len: INTEGER) is
 		do
 			C.gtk_entry_set_max_length (entry_widget, len)
 		end
-	
-	set_extended_height (value: INTEGER) is
-			-- Make `value' the new extended-height of the box.
+
+	set_foreground_color (a_color: EV_COLOR) is
 		do
-			--| FIXME IEK Not yet implemented.
-			check to_be_implemented: False end
+			real_set_foreground_color (list_widget, a_color)
 		end
 
 feature {NONE} -- Implementation
@@ -158,7 +183,7 @@ feature {NONE} -- Implementation
 			imp: EV_LIST_ITEM_IMP
 		do	
 			imp ?= v.implementation
-			C.gtk_combo_set_item_string (c_object,
+			C.gtk_combo_set_item_string (container_widget,
 				imp.c_object,
 				eiffel_to_c (imp.text)
 			)
@@ -175,7 +200,7 @@ feature {NONE} -- Implementation
 			Precursor (a_position)
 			imp.set_parent_imp (Void)
 			if count = 0 then
-				set_text ("")
+				set_text (Void)
 			end
 		end
 
@@ -183,9 +208,16 @@ feature {NONE} -- Implementation
 			-- Reorder `a_child' to `an_index' in `c_object'.
 			-- `a_container' is ignored.
 		do
-			C.gtk_box_reorder_child (c_object,
+			C.gtk_box_reorder_child (container_widget,
 				a_child,
 				an_index - 1
+			)
+		end
+
+	foreground_color_pointer: POINTER is
+		do
+			Result := C.gtk_style_struct_fg (
+				C.gtk_widget_struct_style (list_widget)
 			)
 		end
 
@@ -216,8 +248,65 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.36  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.37  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.16.4.21  2001/06/05 22:44:42  king
+--| Using arrow keys at all times
+--|
+--| Revision 1.16.4.20  2001/05/18 18:16:34  king
+--| Integrated updated focus change implementation
+--|
+--| Revision 1.16.4.19  2001/04/26 19:04:30  king
+--| Commented out disable activate
+--|
+--| Revision 1.16.4.18  2001/02/08 02:03:03  andrew
+--| Fixed has_focus. Now checks correct component for focus
+--|
+--| Revision 1.16.4.17  2001/01/15 20:33:51  andrew
+--| Fixed set_focus
+--|
+--| Revision 1.16.4.16  2000/12/09 00:32:38  etienne
+--| Corrected remove_ith to set_text to void on empty
+--|
+--| Revision 1.16.4.15  2000/12/06 23:43:28  etienne
+--| (Etienne committing Ian changes: ) `set_text' modified so that it does not call select actions.
+--|
+--| Revision 1.16.4.14  2000/11/30 19:29:39  king
+--| Connected key events to entry widget
+--|
+--| Revision 1.16.4.13  2000/09/06 23:18:47  king
+--| Reviewed
+--|
+--| Revision 1.16.4.12  2000/08/28 21:49:49  king
+--| Redefining foreground color features
+--|
+--| Revision 1.16.4.11  2000/08/28 18:11:36  king
+--| Undefining visual_widget from list_item_list
+--|
+--| Revision 1.16.4.10  2000/08/28 18:02:01  king
+--| Visual widget now c_object as combo has no direct gdkwindow
+--|
+--| Revision 1.16.4.9  2000/08/28 16:40:53  king
+--| Removed event_widget undefinition
+--|
+--| Revision 1.16.4.8  2000/08/03 20:14:12  king
+--| Removed signal connection
+--|
+--| Revision 1.16.4.7  2000/07/19 20:04:39  king
+--| Removed redundant features
+--|
+--| Revision 1.16.4.6  2000/07/18 22:28:47  rogers
+--| Initialize now calls initialize_pixmaps.
+--|
+--| Revision 1.16.4.5  2000/06/29 02:12:42  king
+--| Redefined visual_widget
+--|
+--| Revision 1.16.4.4  2000/06/28 00:09:03  king
+--| Undefining event_widget from list_item_list
+--|
+--| Revision 1.16.4.3  2000/06/15 00:38:24  king
+--| Made c_object event_box as combo box has not associating gdk window
 --|
 --| Revision 1.16.4.2  2000/05/10 18:50:35  king
 --| Integrated ev_list_item_list

@@ -1,8 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
-	description: "EiffelVision Combo-box. Implementation interface"
+	description: "EiffelVision Combo-box. Implementation interface."
 	status: "See notice at end of class"
-	names: widget
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,29 +14,52 @@ inherit
 		end
 
 	EV_LIST_ITEM_LIST_I
-		undefine
-			set_default_colors
 		redefine
 			interface
 		end
 
-feature -- Access
+feature -- Status report
 
-	extended_height: INTEGER is
-			-- height of the combo-box when the children are
-			-- visible.
-		require
-		deferred
+	pixmaps_width: INTEGER
+			-- Width of displayed pixmaps in `Current'.
+
+	pixmaps_height: INTEGER
+			-- Height of displayed pixmaps in `Current'.
+
+feature -- Status setting
+
+	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
+			-- Set the size of displayed pixmaps in the Multicolumn list
+			-- `a_width' by `a_height'.
+		do
+			if pixmaps_width /= a_width or pixmaps_height /= a_height then
+				pixmaps_width := a_width
+				pixmaps_height := a_height
+				pixmaps_size_changed
+			end
 		end
 
-feature -- Element change
+feature {NONE} -- Implementation
 
-	set_extended_height (value: INTEGER) is
-			-- Make `value' the new extended-height of the box.
-		require
-			valid_value: value >= 0
-		deferred
+	pixmaps_size_changed is
+			-- The size of the displayed pixmaps has just
+			-- changed.
+		do
+			-- Do nothing by default
 		end
+
+	initialize_pixmaps is
+			-- Assign default sizes to pixmaps.
+		do
+			pixmaps_width := default_pixmaps_width
+			pixmaps_height := default_pixmaps_height
+		end
+
+	default_pixmaps_width: INTEGER is 16
+		-- Default width for pixmaps.
+
+	default_pixmaps_height: INTEGER is 16
+		-- Default height for pixmaps.
 
 feature {EV_COMBO_BOX_I} -- Implementation
 
@@ -67,8 +88,28 @@ end -- class EV_COMBO_BOX_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.27  2000/06/07 17:27:50  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.28  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.22.4.8  2000/10/27 02:28:21  manus
+--| Removed declaration or undefinition of `set_default_colors'. Now it is defined
+--| in a platform dependent manner to improve performance and correctness.
+--|
+--| Revision 1.22.4.7  2000/08/17 23:37:51  rogers
+--| removed fixme not_Reviewed. Comments, formatting.
+--|
+--| Revision 1.22.4.6  2000/07/18 22:34:26  rogers
+--| Renamed initialize to initialize_pixmaps. Added defaults for values.
+--|
+--| Revision 1.22.4.5  2000/07/18 17:35:19  rogers
+--| Added initialize, which sets pixmaps_width and pixmaps_height.
+--|
+--| Revision 1.22.4.4  2000/07/18 17:24:34  rogers
+--| Added pixmaps_width, pixmaps_height, set_pixmaps_size and pixmaps_size_changed.
+--|
+--| Revision 1.22.4.3  2000/06/20 01:00:05  manus
+--| No more `extended_height' and `set_extended_height' because we will now display
+--| the combobox the best possible way. Emulated on Windows, native on GTK.
 --|
 --| Revision 1.22.4.2  2000/05/10 18:50:37  king
 --| Integrated ev_list_item_list

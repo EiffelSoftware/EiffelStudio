@@ -36,6 +36,12 @@ end -- class EV_SEPARATOR_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.4.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.5  2000/04/10 16:13:30  brendel
 --| Unreleased.
 --|

@@ -14,40 +14,6 @@ inherit
 
 feature -- Event - command association
 
-	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "OK" button is pressed.
-			-- If there is no "OK" button, the event never occurs.
-		require
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "Cancel" button is pressed.
-			-- If there is no "Cancel" button, the event never occurs.
-		require
-			valid_command: cmd /= Void
-		deferred
-		end
-
-feature -- Event -- removing command association
-
-	remove_ok_commands is
-			-- Empty the list of commands to be executed when
-			-- "OK" button is pressed.
-		require
-		deferred
-		end
-
-	remove_cancel_commands is
-			-- Empty the list of commands to be executed when
-			-- "Cancel" button is pressed.
-		require
-		deferred
-		end
-
 end -- class EV_SELECTION_DIALOG_I
 
 --!-----------------------------------------------------------------------------
@@ -71,6 +37,15 @@ end -- class EV_SELECTION_DIALOG_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.4.2  2000/06/21 19:07:29  rogers
+--| Removed old command association.
+--|
+--| Revision 1.2.4.1  2000/05/03 19:09:03  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.4  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

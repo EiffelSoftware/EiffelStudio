@@ -1,11 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision push button.%
-		% Mswindows implementation."
+	description: "EiffelVision push button. Mswindows implementation."
 	status: "See notice at end of class"
---| FIXME
-	note:
-	"On windows, you can only display a text or a pixmap.%N%
+	note: "On windows, you can only display a text or a pixmap.%N%
 	%if you set both the pixmap and the text, only the%N%
 	%pixmap will be displayed. On gtk, everything works%N%
 	%like it is suppose to be, you have both text and%N%
@@ -33,7 +29,7 @@ inherit
 			interface
 		end
    
-	EV_TEXTABLE_IMP
+	EV_INTERNALLY_PROCESSED_TEXTABLE_IMP
 		redefine
 			set_default_minimum_size,
 			align_text_center,
@@ -83,32 +79,47 @@ inherit
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
 			text as wel_text,
-			set_text as wel_set_text
+			set_text as wel_set_text,
+			background_color as wel_background_color,
+			foreground_color as wel_foreground_color,
+			has_capture as wel_has_capture
 		undefine
-			window_process_message,
-			remove_command,
 			set_width,
 			set_height,
 			on_left_button_down,
+			on_middle_button_down,
 			on_right_button_down,
 			on_left_button_up,
+			on_middle_button_up,
 			on_right_button_up,
 			on_left_button_double_click,
+			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
 			on_set_focus,
+			on_desactivate,
 			on_kill_focus,
 			on_key_down,
 			on_key_up,
+			on_char,
 			on_set_cursor,
 			on_size,
 			show,
-			hide
+			hide,
+			x_position,
+			y_position,
+			wel_background_color,
+			wel_foreground_color,
+			on_sys_key_down,
+			on_sys_key_up,
+			default_process_message
 		redefine
 			default_style,
 			on_bn_clicked,
 			wel_set_text
 		end
+
+	EV_BUTTON_ACTION_SEQUENCES_IMP
 
 creation
 	make
@@ -116,7 +127,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create the button.
+			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
@@ -125,10 +136,10 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
-			-- Initialize button.
+			-- Initialize `Current'.
 		do
-			{EV_PRIMITIVE_IMP} Precursor 
-			set_font (font)
+			Precursor {EV_PRIMITIVE_IMP}
+			set_default_font
 		end
 
 feature -- Access
@@ -143,7 +154,7 @@ feature -- Access
 feature -- Status setting
 
 	set_default_minimum_size is
-		-- Reset the button to its default minimum size.
+		-- Reset `Current' to its default minimum size.
 		local
 			fw: EV_FONT_IMP
 			w,h: INTEGER
@@ -151,24 +162,29 @@ feature -- Status setting
 			if pixmap_imp /= Void then
 				w := pixmap_imp.width + 8
 				h := pixmap_imp.height + 8
-			elseif text /= Void and then not text.empty then
-				fw ?= font.implementation
-				check
-					font_not_void: fw /= Void
+			elseif text /= Void and then not text.is_empty then
+				if private_font /= Void then
+					fw ?= private_font.implementation
+					check
+						font_not_void: fw /= Void
+					end
+					w := extra_width + fw.string_width (wel_text)
+					h := 19 * fw.height // 9
+				else
+					w := extra_width + private_wel_font.string_width (wel_text)
+					h := 19 * private_wel_font.height // 9
 				end
-				w := extra_width + fw.string_width (wel_text)
-				h := 19 * fw.height // 9
 			else
 				w := extra_width
 				h := 7
 			end
 
 				-- Finaly, we set the minimum values.
-			internal_set_minimum_size (w, h)
+			ev_set_minimum_size (w, h)
 		end
 
 	align_text_left is
-			-- Set button `text' to be left aligned.
+			-- Display `text' with alignment to left of `Current'.
 		local
 			new_style: INTEGER
 		do
@@ -182,7 +198,7 @@ feature -- Status setting
 		end
 
 	align_text_right is
-			-- Set button `text' to be right aligned.
+			-- Display `text' with alignment to right of `Current'.
 		local
 			new_style: INTEGER
 		do
@@ -196,7 +212,7 @@ feature -- Status setting
 		end
 
 	align_text_center is
-			-- Set button `text' to be centered.
+			-- -- Display `text' with alignment in center of `Current'.
 		local
 			new_style: INTEGER
 		do
@@ -210,8 +226,7 @@ feature -- Status setting
 		end
 
 	enable_default_push_button is
-			-- Set the style of the button corresponding
-			-- to the default push button.
+			-- Set the default style of `Current'.
 		local
 			new_style: INTEGER
 		do
@@ -223,8 +238,7 @@ feature -- Status setting
 		end
 
 	disable_default_push_button is
-			-- Remove the style of the button corresponding
-			-- to the default push button.
+			-- Remove the style default style of `Current'. 
 		local
 			new_style: INTEGER
 		do
@@ -244,64 +258,61 @@ feature -- Status setting
 feature -- Element change
 
 	set_pixmap (pix: EV_PIXMAP) is
-			-- Make `pix' the pixmap of the button.
+			-- Make `pix' the pixmap of `Current'.
+		local
+			wel_icon: WEL_ICON
+			a_wel_bitmap: WEL_BITMAP
 		do
-			if pix /= pixmap then
-				{EV_PIXMAPABLE_IMP} Precursor (pix)
-				set_bitmap (pixmap_imp.bitmap)
+			if pix /= private_pixmap then
+				Precursor {EV_PIXMAPABLE_IMP} (pix)
+				wel_icon := pixmap_imp.icon
+				if wel_icon /= Void then
+					set_icon (pixmap_imp.icon)
+				else
+					a_wel_bitmap := pixmap_imp.get_bitmap
+					set_bitmap (a_wel_bitmap)
+					a_wel_bitmap.decrement_reference
+				end
 				set_default_minimum_size
 			end
 		end
 
 	remove_pixmap is
-			-- Remove the buttons `pixmap'.
+			-- Remove `pixmap' from `Current'.
 		do
-			{EV_PIXMAPABLE_IMP} Precursor
+			Precursor {EV_PIXMAPABLE_IMP}
 			unset_bitmap
 			set_default_minimum_size
 		end
 
 	wel_set_text (txt: STRING) is
-			-- Set the button `text' to `txt'
+			-- Assign `txt' to `text' of `Current'.
 		do
-			{WEL_BITMAP_BUTTON} Precursor (txt)
+			Precursor {WEL_BITMAP_BUTTON} (txt)
 			set_default_minimum_size
 		end
 
 feature {NONE} -- WEL Implementation
 
-	text_alignment: INTEGER
-			-- Current text alignment. Possible value are
-			--	* Text_alignment_left
-			--	* Text_alignment_right
-			--	* Text_alignment_center
-
-	Text_alignment_left: INTEGER is 0
-			-- Left aligned text.
-
-	Text_alignment_right: INTEGER is 1
-			-- Right aligned text.
-
-	Text_alignment_center: INTEGER is 2
-			-- Centered text.
-
 	default_style: INTEGER is
-			-- Default style used to create the control
+			-- Default style used to create `Current'.
 		do
 			Result := ws_visible + ws_child + ws_group + ws_tabstop
 		end
 
 	on_bn_clicked is
-			-- When the button is pressed
+			-- `Current' has been pressed.
 		do
-			interface.select_actions.call ([])
+			if select_actions_internal /= Void then
+				select_actions_internal.call ([])
+			end
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
-			-- A key has been pressed
+			-- A key has been pressed.
 		do
-			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
+			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -351,40 +362,131 @@ feature {EV_ANY_I}
 
 end -- class EV_BUTTON_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.53  2000/06/09 01:33:27  manus
---| Fixed a typo in log
+--| Revision 1.54  2001/06/07 23:08:16  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.52  2000/06/09 01:32:52  manus
---| Merged version 1.35.8.6 from DEVEL branch to trunc
+--| Revision 1.35.8.33  2001/04/24 16:01:59  rogers
+--| Changed inheritence from ev_textable_imp to
+--| ev_internally_processed_textable.
 --|
---| Revision 1.51  2000/06/07 17:28:01  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.35.8.32  2001/03/04 22:36:52  pichery
+--| - Fixed FIXME
+--| - Renammed `bitmap' into `get_bitmap'
+--|
+--| Revision 1.35.8.31  2001/02/23 23:44:04  pichery
+--| Added tight reference tracking for wel_bitmaps.
+--|
+--| Revision 1.35.8.30  2001/02/02 00:52:17  rogers
+--| On_key_down now calls process_tab_key before Precursor. This ensures that
+--| any tab movement we do in our implementation can be overriden by the user
+--| with key_press_actions.
+--|
+--| Revision 1.35.8.29  2001/01/26 23:24:28  rogers
+--| Undefined on_sys_key_down inherited from WEL.
+--|
+--| Revision 1.35.8.28  2001/01/09 19:32:44  rogers
+--| Undefined default_process_message from WEL.
+--|
+--| Revision 1.35.8.27  2000/11/29 00:39:46  rogers
+--| Changed empty to is_empty.
+--|
+--| Revision 1.35.8.26  2000/11/14 18:33:24  rogers
+--| Renamed has_capture inherited from WEL as wel_has_capture.
+--|
+--| Revision 1.35.8.25  2000/11/09 18:34:10  manus
+--| Not all pixmap are icons, so we need to take that into consideration into `set_pixmap'.
+--|
+--| Revision 1.35.8.24  2000/11/06 18:00:03  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.35.8.23  2000/11/04 01:57:08  manus
+--| Setting a pixmap to a button will now call `set_icon' instead of `set_bitmap' because
+--| on Windows most of the time we will have .ico which handles transparency correctly.
+--|
+--| Revision 1.35.8.22  2000/10/28 01:11:29  manus
+--| Use of `private_font' when it is not Void, otherwise we can use `private_wel_font' for
+--| the same purpose.
+--|
+--| Revision 1.35.8.21  2000/10/27 02:34:59  manus
+--| Removed definition of `wel_background_color' and `wel_foreground_color' and use the one inherited
+--| from EV_WIDGET_IMP.
+--|
+--| Revision 1.35.8.20  2000/10/11 00:00:28  raphaels
+--| Added `on_desactivate' to list of undefined features from WEL_WINDOW.
+--|
+--| Revision 1.35.8.19  2000/10/06 18:48:14  rogers
+--| Formatting to 80 columns.
+--|
+--| Revision 1.35.8.18  2000/09/13 22:10:54  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.35.8.17  2000/09/13 15:51:51  manus
+--| Removed calls to `set_font (font)' in initialize and replace it by the less
+--| resource consuming `set_default_font' which set the font tothe default
+--| GUI one.
+--|
+--| Revision 1.35.8.16  2000/08/24 21:53:19  rogers
+--| Removed text_alignment and corresponding constants as now redundent.
+--|
+--| Revision 1.35.8.15  2000/08/11 16:53:26  rogers
+--| Changed copyright clause to use ! instead of |.
+--|
+--| Revision 1.35.8.14  2000/08/08 02:28:21  manus
+--| Updated inheritance with new WEL messages handling.
+--| Updating sizing with call to `ev_' instead of `internal_'
+--| Added definition of `wel_foreground_color' and `wel_background_color' since
+--| a WEL_BUTTON is now colorizable.
+--|
+--| Revision 1.35.8.13  2000/08/04 20:25:24  rogers
+--| All action sequence calls through the interface have been replaced with
+--| calls to the internal action sequences.
+--|
+--| Revision 1.35.8.12  2000/07/24 23:48:54  rogers
+--| Now inherits EV_BUTTON_ACTION_SEQUENCES_IMP.
+--|
+--| Revision 1.35.8.11  2000/07/13 22:31:25  rogers
+--| Removed FIXME NOT_REVIEWED. Comments, formatting.
+--|
+--| Revision 1.35.8.10  2000/07/12 16:11:32  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
+--|
+--| Revision 1.35.8.9  2000/06/19 21:45:55  manus
+--| Now `pixmap' of `EV_PIXMAPABLE_IMP' returns a copy of the internal pixmap
+--| to satisfy the Vision2 interface behavior.
+--|
+--| Revision 1.35.8.8  2000/06/13 18:37:39  rogers
+--| Removed undefintion of remove_command.
+--|
+--| Revision 1.35.8.7  2000/06/09 20:57:18  manus
+--| Cosmetics for CVS logs
 --|
 --| Revision 1.35.8.6  2000/06/05 20:56:35  manus
---| In `set_default_minimum_size' we have a fixed space of 4 pixels around a pixmap instead
---| of a proportional distance.
---| `set_pixmap' does set the pixmap only if it is different from the previous one.
+--| In `set_default_minimum_size' we have a fixed space of 4 pixels around a
+--| pixmap instead of a proportional distance.
+--| `set_pixmap' does set the pixmap only if it is different from the previous
+--| one.
 --|
 --| Revision 1.35.8.5  2000/05/07 03:41:56  manus
 --| Cosmetics.
@@ -398,9 +500,10 @@ end -- class EV_BUTTON_IMP
 --| Added dummy enable_can_default
 --|
 --| Revision 1.35.8.2  2000/05/03 22:35:04  brendel
---|
---| Revision 1.50  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.35.8.1  2000/05/03 19:09:49  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.49  2000/05/03 00:35:39  pichery
 --| Changed the implementation of some
@@ -408,7 +511,8 @@ end -- class EV_BUTTON_IMP
 --| is safer.
 --|
 --| Revision 1.48  2000/05/01 17:04:44  manus
---| Use of `wel_parent' directly without the hack of renaming into `wel_window_parent'.
+--| Use of `wel_parent' directly without the hack of renaming into
+--| `wel_window_parent'.
 --|
 --| Revision 1.47  2000/04/29 03:32:54  pichery
 --| Improved buttons: new default size,

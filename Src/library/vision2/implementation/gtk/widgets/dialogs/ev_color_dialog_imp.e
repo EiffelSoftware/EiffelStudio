@@ -1,5 +1,3 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision color selection dialog."
 	status: "See notice at end of class"
@@ -11,128 +9,143 @@ class
 
 inherit
 	EV_COLOR_DIALOG_I
-
-	EV_SELECTION_DIALOG_IMP
 		redefine
-			which_event_id
+			interface
 		end
+
+	EV_STANDARD_DIALOG_IMP
+		redefine
+			interface
+		end
+
+	EV_C_UTIL
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (an_interface: like interface) is
 			-- Create a directory selection dialog with `par' as
 			-- parent.
-		local
-			par_imp: EV_CONTAINER_IMP
 		do
-			par_imp ?= par.implementation
+			base_make (an_interface)
 
 			-- Create the gtk object.
-			widget := c_gtk_color_selection_dialog_new (
-				eiffel_to_c ("Color selection dialog")
+			set_c_object (
+				C.gtk_color_selection_dialog_new (
+					eiffel_to_c ("Color selection dialog")
+				)
 			)
+			C.gtk_widget_hide (
+				C.gtk_color_selection_dialog_struct_help_button (c_object)
+			)
+			C.gtk_widget_realize (c_object)	
+		end
 
-			-- Attach the window to `par'.
-			gtk_window_set_transient_for (widget, par_imp.widget)
-			-- Set it as modal (nothing can be done
-			-- until the window is closed).
-			gtk_window_set_modal (widget, True)
-
-			-- Make it appear where the mouse is.
-			gtk_window_set_position (GTK_WINDOW (widget), WINDOW_POSITION_MOUSE)
-
-			-- Connect destroy command to `OK' and `Cancel' buttons.
-			add_dialog_close_command (cancel_widget)		
+	initialize is
+			-- Connect action sequences to button signals.
+		do
+			signal_connect_true ("delete_event", ~on_cancel)
+			real_signal_connect (
+				gtk_color_selection_dialog_struct_ok_button (c_object),
+				"clicked",
+				~on_ok,
+				Void
+			)
+			real_signal_connect (
+				gtk_color_selection_dialog_struct_cancel_button (c_object),
+				"clicked",
+				~on_cancel,
+				Void
+			)
+			enable_closeable
+			is_initialized := True
 		end
 
 feature -- Access
 
 	color: EV_COLOR is
-			-- Current selected color
+			-- Currently selected color.
 		local
-			r, g, b: INTEGER
+			a_colorsel: POINTER
+			a_colors: POINTER
 		do
-			c_gtk_color_selection_get_color (widget, $r, $g, $b)
-			create Result.make_rgb (r, g, b)
-		end
-
-	ok_widget: POINTER is
-			-- Pointer to the gtk_button `OK' of the dialog.
-		do
-			Result := c_gtk_color_selection_get_ok_button (widget)
-		end
-
-	cancel_widget: POINTER is
-			-- Pointer to the gtk_button `Cancel' of the dialog.
-		do
-			Result := c_gtk_color_selection_get_cancel_button (widget)
-		end
-
-	help_widget: POINTER is
-			-- Pointer to the gtk_button `Cancel' of the dialog.
-		do
-			Result := c_gtk_color_selection_get_help_button (widget)
+			a_colorsel := gtk_color_selection_dialog_struct_colorsel (c_object)
+			a_colors := gtk_color_selection_struct_values (a_colorsel)
+			create Result.make_with_rgb (
+				double_array_i_th (a_colors, 3), -- values [3] == RED
+				double_array_i_th (a_colors, 4),
+				double_array_i_th (a_colors, 5)
+			)
 		end
 
 feature -- Element change
 
-	select_color (a_color: EV_COLOR) is
-			-- Select `a_color'.
+	set_color (a_color: EV_COLOR) is
+			-- Set `color' to `a_color'.
+		local
+			a_color_array: ARRAY [DOUBLE]
+			a_array_pointer: ANY
 		do
-			c_gtk_color_selection_set_color (widget, color.red, color.green, color.blue)
+			create a_color_array.make (1, 4)
+			a_color_array.put (a_color.red, 1)
+			a_color_array.put (a_color.green, 2)
+			a_color_array.put (a_color.blue, 3)
+			a_array_pointer := a_color_array.to_c
+			C.gtk_color_selection_set_color (
+				gtk_color_selection_dialog_struct_colorsel (c_object),
+				$a_array_pointer
+			)
 		end
 
-feature -- Event - command association
+feature {NONE} -- Implementation
 
-	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "OK" button is pressed.
-		do
-			add_command (ok_widget, "clicked", cmd, arg, NULL)
+	gtk_color_selection_dialog_struct_colorsel (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
+		alias
+			"colorsel"
 		end
 
-	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "Help" button is pressed.
-		do
-			add_command (help_widget, "clicked", cmd, arg, NULL)
+	gtk_color_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
+		alias
+			"ok_button"
 		end
 
-feature -- Event -- removing command association
-
-	remove_ok_commands is
-			-- Empty the list of commands to be executed when
-			-- "OK" button is pressed.
-		do
-			remove_commands (ok_widget, ok_clicked_id)
+	gtk_color_selection_dialog_struct_cancel_button (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
+		alias
+			"cancel_button"
 		end
 
-	remove_help_commands is
-			-- Empty the list of commands to be executed when
-			-- "Help" button is pressed.
-		do
-			remove_commands (help_widget, help_clicked_id)
+	gtk_color_selection_dialog_struct_help_button (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
+		alias
+			"help_button"
 		end
 
-feature {NONE} -- Implementation - Event handling -
-
-	which_event_id (wid: POINTER; ev_str: STRING; mouse_but: INTEGER; double_clic: BOOLEAN): INTEGER is
-			-- Gives the event_id number corresponding to the `event' string.
-			-- We need to redefine this feature to be able to store commands associated
-			-- to "clicked" event for `ok' and `cancel' button in separate location
-			-- in `event_command_array'.
-		do
-			Result := {EV_SELECTION_DIALOG_IMP} Precursor (wid, ev_str, mouse_but, double_clic)
-			if (ev_str.is_equal ("clicked")) then
-				if (wid = help_widget) then
-					-- "clicked" event for `help' button.
-					Result := help_clicked_id
-				end
-			end
+	gtk_color_selection_struct_use_opacity (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkColorSelection): EIF_INTEGER"
+		alias
+			"use_opacity"
 		end
+
+	gtk_color_selection_struct_values (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkColorSelection): EIF_POINTER"
+		alias
+			"values"
+		end
+	
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_COLOR_DIALOG
 
 end -- class EV_COLOR_DIALOG_IMP
 
@@ -157,6 +170,27 @@ end -- class EV_COLOR_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.6  2000/09/06 23:18:45  king
+--| Reviewed
+--|
+--| Revision 1.6.4.5  2000/08/16 19:41:04  king
+--| Connecting delete_event to on_cancel
+--|
+--| Revision 1.6.4.4  2000/08/14 17:40:49  king
+--| Now releaseable
+--|
+--| Revision 1.6.4.3  2000/07/20 18:56:46  king
+--| select_color->set_color
+--|
+--| Revision 1.6.4.2  2000/07/20 18:38:52  king
+--| Added double_array_i_thimplementation/gtk/Clib/ev_c_util.h
+--|
+--| Revision 1.6.4.1  2000/05/03 19:08:46  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.9  2000/05/02 18:55:27  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

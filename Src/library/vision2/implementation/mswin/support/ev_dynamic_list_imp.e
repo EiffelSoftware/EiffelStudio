@@ -92,8 +92,8 @@ end -- class EV_DYNAMIC_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.4  2000/06/07 17:27:57  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.5  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
 --| Revision 1.3.2.2  2000/05/13 00:51:26  king
 --| Integrated with change to EV_DYNAMIC_LIST

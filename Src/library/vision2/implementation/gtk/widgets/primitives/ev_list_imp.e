@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision list, gtk implementation"
 	status: "See notice at end of class"
@@ -18,28 +17,43 @@ inherit
 
 	EV_LIST_ITEM_LIST_IMP
 		redefine
-			interface
+			interface,
+			visual_widget,
+			initialize
 		end	
 create
 	make
 
 feature -- Status report
 
-	multiple_selection_enabled: BOOLEAN is
-			-- True if the user can choose several items
-			-- False otherwise
+	multiple_selection_enabled: BOOLEAN
+			-- True if the user can choose several items,
+			-- False otherwise.
+
+
+feature -- Initialize
+
+	initialize is
+			-- Initialize the list.
 		do
-			Result := C.gtk_list_struct_selection_mode (list_widget) 
-					= C.GTK_SELECTION_MULTIPLE_ENUM
+			Precursor
+			disable_multiple_selection
 		end
 
 feature -- Status setting
+
+	ensure_i_th_visible (an_index: INTEGER) is
+			-- Ensure item `an_index' is visible in `Current'.
+		do
+			--| FIXME To be implemented.
+		end
 
 	enable_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
+			multiple_selection_enabled := True
 			C.gtk_list_set_selection_mode (
 				list_widget,
 				C.GTK_SELECTION_MULTIPLE_ENUM
@@ -51,6 +65,8 @@ feature -- Status setting
 			-- default status of the list.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
+			multiple_selection_enabled := False
+			C.gtk_list_unselect_all (list_widget)
 			C.gtk_list_set_selection_mode (
 				list_widget,
 				C.GTK_SELECTION_SINGLE_ENUM
@@ -58,6 +74,11 @@ feature -- Status setting
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	visual_widget: POINTER is
+		do
+			Result := list_widget
+		end
 
 	interface: EV_LIST
 
@@ -84,8 +105,35 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.43  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.44  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.21.4.11  2001/06/05 01:35:06  king
+--| Reset to previous selection mode
+--|
+--| Revision 1.21.4.10  2001/05/18 18:17:58  king
+--| Updated focus code
+--|
+--| Revision 1.21.4.9  2001/04/26 19:11:29  king
+--| Removed focus hack
+--|
+--| Revision 1.21.4.8  2001/04/20 18:36:44  king
+--| Implemented unsetting of item focus flag
+--|
+--| Revision 1.21.4.7  2000/12/27 00:38:31  rogers
+--| Added ensure_i_th_visible as to be implemented.
+--|
+--| Revision 1.21.4.6  2000/11/03 23:43:16  king
+--| Corrected incorrect refocusing in item selection
+--|
+--| Revision 1.21.4.5  2000/10/30 20:24:24  king
+--| Implemented focus handling
+--|
+--| Revision 1.21.4.4  2000/09/06 23:18:48  king
+--| Reviewed
+--|
+--| Revision 1.21.4.3  2000/06/29 02:13:19  king
+--| Redefined visual_widget
 --|
 --| Revision 1.21.4.2  2000/05/10 18:50:35  king
 --| Integrated ev_list_item_list

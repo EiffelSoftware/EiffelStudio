@@ -12,8 +12,19 @@ deferred class
 inherit
 	EV_ANY
 		redefine
-			implementation,
-			create_action_sequences
+			implementation
+		end
+
+	EV_POSITIONABLE
+		undefine
+			initialize
+		redefine
+			implementation
+		end
+
+	EV_STANDARD_DIALOG_ACTION_SEQUENCES
+		redefine
+			implementation
 		end
 
 feature {NONE} -- Initialization
@@ -27,28 +38,12 @@ feature {NONE} -- Initialization
 			set_title (a_title)
 		end
 
-feature {NONE} -- Initialization
-
-	create_action_sequences is
-			-- Initialize ok/cancel actions.
-		do
-			Precursor
-			create ok_actions
-			create cancel_actions
-		end
-
-feature -- Events
-
-	ok_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when user clicks OK.
-
-	cancel_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when user cancels.
-
 feature -- Access
 
 	title: STRING is
-			-- Title of dialog shown in title bar.
+			-- Title of `Current' displayed in title bar.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.title
 		ensure
@@ -56,7 +51,9 @@ feature -- Access
 		end
 
 	blocking_window: EV_WINDOW is
-			-- Window this dialog is a transient for.
+			-- Window `Current' is a transient for.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.blocking_window
 		ensure
@@ -66,7 +63,9 @@ feature -- Access
 feature -- Status report
 
 	selected_button: STRING is
-			-- Label of the last clicked button.
+			-- Label of last clicked button.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.selected_button
 		ensure
@@ -76,34 +75,42 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_modal is
-			-- Show the dialog and wait until the user closes it.
+	show_modal_to_window (a_window: EV_WINDOW) is
+			-- Show `Current' modal with respect to `a_window'.
+		require
+			not_destroyed: not is_destroyed
+			a_window_not_void: a_window /= Void
+			dialog_modeless: blocking_window = Void
 		do
-			implementation.show_modal
+			implementation.show_modal_to_window (a_window)
 		end
 
 	set_title (a_title: STRING) is
-			-- Set the title of the dialog.
+			-- Assign `a_title' to `title'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_title (a_title)
 		ensure
 			assigned: title.is_equal (a_title)
 		end
 
-	set_blocking_window (a_window: EV_WINDOW) is
-			-- Set as transient for `a_window'.
-		do
-			implementation.set_blocking_window (a_window)
-		ensure
-			assigned: blocking_window = a_window
-		end
-
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_STANDARD_DIALOG_I
+		-- Responsible for interaction with the native graphics toolkit.
+	
+feature -- Obsolete
+
+	show_modal is
+		obsolete
+			"Use show_modal_to_window instead."
+		do
+			implementation.show_modal_to_window (create {EV_WINDOW})
+		end
 
 invariant
-	title_not_void: is_useable implies title /= Void
+	title_not_void: is_usable implies title /= Void
 
 end -- class EV_STANDARD_DIALOG
 
@@ -122,64 +129,3 @@ end -- class EV_STANDARD_DIALOG
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.12  2000/06/07 17:28:11  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.7.4.2  2000/06/05 23:48:59  oconnor
---| added is useable guard to title_not_void invariant
---|
---| Revision 1.7.4.1  2000/05/03 19:10:06  oconnor
---| mergred from HEAD
---|
---| Revision 1.11  2000/03/21 23:07:28  brendel
---| Added make_with_title for consistency with EV_WINDOW.
---|
---| Revision 1.10  2000/02/29 18:09:09  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.9  2000/02/22 18:39:50  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.8  2000/02/14 11:40:50  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.7.6.7  2000/01/28 22:24:23  oconnor
---| released
---|
---| Revision 1.7.6.6  2000/01/27 23:47:00  brendel
---| Improved contracts.
---| Added feature selected_button.
---|
---| Revision 1.7.6.5  2000/01/27 19:30:50  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.7.6.4  2000/01/27 17:04:48  brendel
---| Added blocking_window and set-blocking_window.
---|
---| Revision 1.7.6.3  2000/01/27 02:38:20  brendel
---| Revised with features: set_title, title, show_modal, ok_actions and
---| cancel_actions.
---|
---| Revision 1.7.6.2  2000/01/26 18:16:48  brendel
---| Cleanup.
---| Fate of this class is uncertain.
---|
---| Revision 1.7.6.1  1999/11/24 17:30:51  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.7.2.3  1999/11/04 23:10:54  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.7.2.2  1999/11/02 17:20:12  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

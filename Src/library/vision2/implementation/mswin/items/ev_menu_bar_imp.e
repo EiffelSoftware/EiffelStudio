@@ -25,7 +25,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create the menu bar.
+			-- Create `Current' with interface `an_interface'.
 		do
 			Precursor (an_interface)
 			wel_make
@@ -33,23 +33,83 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	--|FIXME All these features to be implemented are required by PND.
+	is_sensitive: BOOLEAN is True
+			-- `Current' is always sensitive as it cannot be disabled
+			-- in the interface.
+
+	destroy is
+			-- destroy `Current'.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_menu_bar
+			end
+			is_destroyed := True
+		end
+		
+	update_parent_size is
+			-- Update size of `Parent_imp'.
+		do
+			if parent_imp /= Void then
+				parent_imp.compute_minimum_size	
+			end
+		end
+
+feature {NONE} -- Pick and drop support
+
+	--| FIXME All these features to be implemented are required by PND.
+	-- Due to the way that windows handles messaging with menu's, implementing
+	-- pick and drop may be difficult.
+	-- I think that the pick and drop can be done using WM_MENURBUTTONUP,
+	-- although drag and drop may be a lot more difficult.
+	-- Julian Rogers 08/22/2000
+
+	disable_default_processing is
+			-- Disable default window processing.
+		do
+			check
+				pick_and_drop_not_implemented_for_menus: False
+			end
+		end
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
-		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
+			-- event. Called on pointer press.
 		do
-			--|FIXME Implement
 			check
-				False
+				pick_and_drop_not_implemented_for_menus: False
 			end
+		end
+
+	internal_propagate_pointer_double_press
+		(keys, x_pos, y_pos, button: INTEGER) is
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
+			-- event. Called on pointer double press.
+		do
+			check
+				pick_and_drop_not_implemented_for_menus: False
+			end
+		end
+
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_MENU_IMP is
+			-- `Result' is menu at pixel position `x_pos', `y_pos'.
+		do
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset of `Current' relative to screen.
+		do
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset of `Current' relative to screen.
+		do
 		end
 
 	set_pointer_style (value: EV_CURSOR) is
 			-- Make `value' the new cursor of the widget
 		do
-			--|FIXME Implement
 			check
-				False
+				pick_and_drop_not_implemented_for_menus: False
 			end
 		end
 
@@ -57,56 +117,89 @@ feature {NONE} -- Implementation
 			-- `Result' is absolute screen coordinates in pixels
 			-- of coordinates `a_x', a_y_' on `Current'.
 		do
-			--|FIXME Implement
 			check
-				False
+				pick_and_drop_not_implemented_for_menus: False
 			end
 		end
 
 	cursor_on_widget: CELL [EV_WIDGET_IMP] is
+			-- This cell contains the widget_imp that currently
+			-- has the pointer of the mouse. As it is a once 
+			-- feature, it is a shared data.
+			-- it is used for the `mouse_enter' and `mouse_leave'
+			-- events.
 		do
-			--|FIXME Implement
 			check
-				False
+				pick_and_drop_not_implemented_for_menus: False
 			end
 		end
 
 	set_heavy_capture is
+			-- Grab user input.
+			-- Works on all windows threads.
 		do
-			--|FIXME Implement
 			check
-				False
+				pick_and_drop_not_implemented_for_menus: False
 			end
 		end
 
 	release_heavy_capture is
+			-- Release user input
+			-- Works on all windows threads.
 		do
-			--|FIXME Implement
 			check
-				False
+				pick_and_drop_not_implemented_for_menus: False
 			end
 		end
 
 	set_capture is
+			-- Grab user input.
+			-- Works only on current windows thread.
 		do
-			--|FIXME Implement
 			check
-				False
+				pick_and_drop_not_implemented_for_menus: False
 			end
 		end
 
 	release_capture is
+			-- Release user input.
+			-- Works only on current windows thread.
 		do
-			--|FIXME Implement
 			check
-				False
+				pick_and_drop_not_implemented_for_menus: False
+			end
+		end
+
+feature {EV_ANY_I} -- Status Report 
+		
+	top_level_window_imp: EV_WINDOW_IMP is
+			-- Top level window implementation containing `Current'.
+		do
+			Result := parent_imp
+		end
+
+	set_parent_imp (window: EV_WINDOW_IMP) is
+			-- Assign `window' to `parent_imp'.
+		do
+			if window /= Void then
+				parent_imp := window
+			else
+				parent_imp := Void
 			end
 		end
 		
-	top_level_window_imp: EV_WINDOW_IMP is
+	wel_count_empty: BOOLEAN is
+			-- Is `Current' empty?
+			--| In some places, we wish to externally query if `Current'
+			--| is empty. However, if this is done during a remove_item,
+			--| the interface will still return the count as 1. See 
+			--|`Extra_minimum_height' from EV_TITLED_WINDOW_IMP.
 		do
-			--|FIXME Implement
+			Result := wel_count = 0
 		end
+
+	parent_imp: EV_WINDOW_IMP
+		-- Parent of `Current'.
 
 feature {EV_ANY_I} -- Implementation
 
@@ -114,29 +207,71 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_MENU_BAR_IMP
 
---|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|---------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.10  2000/06/07 17:28:02  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.11  2001/06/07 23:08:17  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.8.15  2001/05/18 00:27:00  rogers
+--| Remoed setting of destroy_just_called to True.
+--|
+--| Revision 1.5.8.14  2001/03/21 22:32:19  rogers
+--| Added `wel_count_empty' for querying state of `Current' within
+--| our implementation of other classes.
+--|
+--| Revision 1.5.8.13  2001/03/21 18:19:01  rogers
+--| Fixed update_parent_size to check that `parent_imp' is not void. Previously
+--| a system would crash if you added an EV_MENU to an EV_MENU_BAR before
+--| the EV_MENU_BAR was parented.
+--|
+--| Revision 1.5.8.12  2001/02/06 01:53:18  rogers
+--| Added find_item_at_position, screen_x and screen_y.
+--|
+--| Revision 1.5.8.11  2000/12/29 18:21:15  rogers
+--| Aded disable_default_processing and commented features with missing
+--| comments.
+--|
+--| Revision 1.5.8.10  2000/10/20 17:18:45  rogers
+--| Implemented destroy.
+--|
+--| Revision 1.5.8.9  2000/09/27 16:10:47  rogers
+--| Implemented parent_imp, set_parent_imp and top_level_window_imp.
+--|
+--| Revision 1.5.8.8  2000/09/12 22:04:42  rogers
+--| Exported loading/Saving features to EV_DEFAULT_PIXMAPS_IMP.
+--|
+--| Revision 1.5.8.6  2000/08/21 18:08:38  rogers
+--| Added destroy.
+--|
+--| Revision 1.5.8.5  2000/08/16 23:10:26  rogers
+--| Added is_sensitive as True. Added as EV_MENU_ITEM_LIST_IMP has had
+--| is_Sensitive added as defferred. Is_sensitive always returns true as the
+--| user can never enable or disable sensitivity on `Current'.
+--|
+--| Revision 1.5.8.4  2000/08/11 23:51:03  rogers
+--| Corrected copyright clause.
+--|
+--| Revision 1.5.8.3  2000/06/09 20:32:31  rogers
+--| Added internal_propagate_pointer_double_press.
 --|
 --| Revision 1.5.8.2  2000/05/15 22:03:54  rogers
 --| Added top_level_window_imp.

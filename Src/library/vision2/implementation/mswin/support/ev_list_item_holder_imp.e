@@ -79,7 +79,7 @@ feature -- Basic operations
 			original_index: INTEGER
 		do
 			original_index := index
-			if not ev_children.empty then
+			if not ev_children.is_empty then
 				from
 					list := ev_children
 					list.start
@@ -247,6 +247,15 @@ end -- class EV_LIST_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.17.4.2  2001/03/01 03:23:44  manus
+--| Removed obsolete calls to `empty', now replaced by `is_equal'.
+--|
+--| Revision 1.17.4.1  2000/05/03 19:09:18  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.24  2000/03/29 02:21:24  brendel
 --| Unreleased.
 --|

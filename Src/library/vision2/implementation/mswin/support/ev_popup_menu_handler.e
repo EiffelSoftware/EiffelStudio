@@ -64,6 +64,12 @@ end -- class EV_POPUP_MENU_HANDLER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.2.1  2000/05/03 19:09:18  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.3  2000/04/07 22:33:27  brendel
 --| Indexing clause.
 --|

@@ -2,11 +2,11 @@ system
 	test
 
 root
-	EV_TEST: make_and_launch
+	EV_TEST: start
 
 default
 
-	assertion (all)
+	assertion (require)
 	--debug("EVENT_TRACE")
 	--debug("EV_GTK_DEBUG")
 cluster

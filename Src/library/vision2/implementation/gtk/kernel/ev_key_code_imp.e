@@ -682,6 +682,12 @@ end -- class EV_KEY_CODE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/07 23:08:03  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.1  2000/05/03 19:08:38  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/03/15 18:53:32  brendel
 --| Unreleased.
 --|

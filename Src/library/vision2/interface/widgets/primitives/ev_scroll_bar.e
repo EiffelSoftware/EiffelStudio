@@ -16,7 +16,7 @@ inherit
 			implementation
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_SCROLL_BAR_I
 			-- Responsible for interaction with the native graphics toolkit.
@@ -38,45 +38,3 @@ end -- class EV_SCROLL_BAR
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.7  2000/03/21 19:10:39  oconnor
---| comments, formatting
---|
---| Revision 1.6  2000/02/29 18:09:10  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.5  2000/02/22 18:39:52  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.4  2000/02/14 11:40:53  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.3.6.5  2000/02/02 00:57:44  brendel
---| Removed leap-functions since they are now defined in EV_GAUGE.
---|
---| Revision 1.3.6.4  2000/01/31 21:30:17  brendel
---| Improved contracts.
---|
---| Revision 1.3.6.3  2000/01/28 22:24:25  oconnor
---| released
---|
---| Revision 1.3.6.2  2000/01/27 19:30:56  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.3.6.1  1999/11/24 17:30:55  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.3.2.3  1999/11/04 23:10:55  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.3.2.2  1999/11/02 17:20:13  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

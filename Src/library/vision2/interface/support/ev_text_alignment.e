@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Enumeration class for text alignment"
+		"Enumeration class for text alignment. Default is left."
 	status: "See notice at end of class"
 	keywords: "text, aligment"
 	date: "$Date$"
@@ -9,12 +9,6 @@ indexing
 class
 	EV_TEXT_ALIGNMENT
 
-inherit
-	ANY
-		redefine
-			default_create
-		end
-
 create
 	default_create,
 	make_with_left_alignment,
@@ -22,11 +16,6 @@ create
 	make_with_right_alignment
 
 feature {NONE} -- Initialization
-
-	default_create is
-		do
-			set_left_alignment
-		end
 
 	make_with_left_alignment is
 		do
@@ -46,6 +35,7 @@ feature {NONE} -- Initialization
 feature -- Status setting
 
 	set_left_alignment is
+			-- Set the horizontal alignment to "left"
 		do
 			alignment_code := left_alignment
 		ensure
@@ -53,6 +43,7 @@ feature -- Status setting
 		end
 
 	set_center_alignment is
+			-- Set the horizontal alignment to "center"
 		do
 			alignment_code := center_alignment
 		ensure
@@ -60,6 +51,7 @@ feature -- Status setting
 		end
 
 	set_right_alignment is
+			-- Set the horizontal alignment to "right"
 		do
 			alignment_code := right_alignment
 		ensure
@@ -88,13 +80,14 @@ feature {EV_ANY_I} -- Implementation
 	alignment_code: INTEGER
 		-- Used internally to represent one of the three alignment states.
 
-	left_alignment: INTEGER is 1
-	center_alignment: INTEGER is 2
-	right_alignment: INTEGER is 3
+	left_alignment: INTEGER is 0 -- Default
+	center_alignment: INTEGER is 1
+	right_alignment: INTEGER is 2
 
 invariant
-	alignment_code_within_range:  alignment_code >= left_alignment 
-					and alignment_code <= right_alignment
+	alignment_code_within_range: 
+		alignment_code >= left_alignment and 
+		alignment_code <= right_alignment
 
 end -- class EV_TEXT_ALIGNMENT
 

@@ -18,12 +18,15 @@ inherit
 		undefine
 			on_scroll
 		redefine
-			interface
+			interface,
+			wel_background_color,
+			set_leap,
+			set_range
 		end
 
 	WEL_SCROLL_BAR
 		rename
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			shown as is_displayed,
 			destroy as wel_destroy,
@@ -44,44 +47,40 @@ inherit
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
 			x as x_position,
-			y as y_position
+			y as y_position,
+			has_capture as wel_has_capture
 		undefine
-			window_process_message,
-			remove_command,
 			set_width,
 			set_height,
 			on_left_button_down,
+			on_middle_button_down,
 			on_right_button_down,
 			on_left_button_up,
+			on_middle_button_up,
 			on_right_button_up,
 			on_left_button_double_click,
+			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
 			on_set_focus,
+			on_desactivate,
 			on_kill_focus,
 			on_key_down,
 			on_key_up,
+			on_char,
 			on_set_cursor,
 			show,
 			hide,
-			on_size
+			on_size,
+			x_position,
+			y_position,
+			wel_foreground_color,
+			wel_background_color,
+			on_sys_key_down,
+			on_sys_key_up,
+			default_process_message
 		redefine
 			default_style
-		end
-
-feature {EV_SCROLL_BAR_IMP} -- Access
-
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
 		end
 
 feature {NONE} -- Implementation
@@ -89,8 +88,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		do
-			Result := Ws_visible + Ws_child + Ws_group
-				+ Ws_tabstop
+			Result := Ws_visible + Ws_childwindow
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -138,35 +136,115 @@ feature {NONE} -- Implementation
 			cwin_show_window (hwnd, cmd_show)
 		end
 
+	wel_background_color: WEL_COLOR_REF is
+		do
+			Result := background_color_imp
+			if Result = Void then
+				create Result.make_system (Color_scrollbar)
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
+
+	set_leap (a_leap: INTEGER) is
+			-- Assign `a_leap' to `leap'.
+		do
+				--| Adjust the range so that the value_range.upper can actually
+				--| be achieved. When scroll bars are proportional in WEL, only
+				--| the maximum value - leap can be acheived. Julian
+			wel_set_range (value_range.lower, value_range.upper + a_leap - 1)
+			Precursor (a_leap)
+		end
+
+	set_range is
+		do
+				--| Adjust the range so that the value_range.upper can actually
+				--| be achieved. When scroll bars are proportional in WEL, only
+				--| the maximum value - leap can be acheived. Julian
+			wel_set_range (value_range.lower, value_range.upper + leap - 1)
+		end
 
 	interface: EV_SCROLL_BAR
 
 end -- class EV_RANGE_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.9  2000/05/03 20:13:27  brendel
+--| Revision 1.10  2001/06/07 23:08:17  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.8.14  2001/01/26 23:20:46  rogers
+--| Undefined on_sys_key_down inherited from WEL.
+--|
+--| Revision 1.3.8.13  2001/01/09 19:12:41  rogers
+--| Undefined default_process_message from WEL.
+--|
+--| Revision 1.3.8.12  2000/12/08 19:09:24  rogers
+--| Redefined set_leap and set_range. This allows the full range of values from
+--| the interface to be acheived by the scroll bar. This is performed by
+--| modifying the actual range within WEL whenever the leap or the range
+--| changes within Vision.
+--|
+--| Revision 1.3.8.11  2000/11/14 18:23:19  rogers
+--| Renamed has_capture inherited from WEL as wel_has_capture.
+--|
+--| Revision 1.3.8.10  2000/11/06 17:56:38  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.3.8.9  2000/10/27 02:43:09  manus
+--| Removed definition of `wel_foreground_color' and use the one inherited.
+--| Defined `wel_background_color' to return by default `Color_scrollbar' but our experience shows
+--| that it is not the correct color. Anyway, it is not a problem at the moment, because it is not
+--| used internally by vision2.
+--|
+--| Revision 1.3.8.8  2000/10/11 00:01:49  raphaels
+--| Added `on_desactivate' to list of undefined features from WEL_WINDOW.
+--|
+--| Revision 1.3.8.7  2000/08/11 18:45:58  rogers
+--| Fixed copyright clauses. Now use ! instead of |. Formatting.
+--|
+--| Revision 1.3.8.6  2000/08/08 02:41:07  manus
+--| Updated inheritance with new WEL messages handling
+--|
+--| Revision 1.3.8.5  2000/07/12 16:08:42  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
+--|
+--| Revision 1.3.8.4  2000/06/13 18:35:34  rogers
+--| Removed undefintion of remove_command.
+--|
+--| Revision 1.3.8.3  2000/06/11 02:34:54  manus
+--| Removed the hack of `wel_parent' that was necessary because of a bug in the compiler.
+--| Redefine `wel_background_color' and `wel_foregroung_color' to return respectively
+--| `background_color_imp' and `foreground_color_imp', otherwise the color setting was not
+--| working as it should.
+--| Changed the default style to remove the `Ws_tabstop' and `Ws_group' because it
+--| does not look nice on Windows to have those style.
+--|
+--| Revision 1.3.8.2  2000/05/03 22:35:04  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.3.8.1  2000/05/03 19:09:50  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.8  2000/03/21 23:39:01  brendel
 --| Modified inheritance clause in compliance with EV_SIZEABLE_IMP.

@@ -47,11 +47,11 @@ feature -- Element change
 			cc: ARRAYED_LIST [EV_MENU]
 		do
 			cc ?= ev_children
-			if not cc.empty then
+			if not cc.is_empty then
 				from
 					cc.start
 				until
-					cc.empty
+					cc.is_empty
 				loop
 					remove_menu (cc.first)
 				end
@@ -116,7 +116,7 @@ feature -- Element change
 			end
 
 			-- The, we chack if there are no more children.
-			if ev_children.empty then
+			if ev_children.is_empty then
 				remove_children
 			end
 		end
@@ -171,6 +171,15 @@ end -- class EV_MENU_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.9.8.2  2001/03/01 03:23:44  manus
+--| Removed obsolete calls to `empty', now replaced by `is_equal'.
+--|
+--| Revision 1.9.8.1  2000/05/03 19:09:18  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/02/14 11:40:41  oconnor
 --| merged changes from prerelease_20000214
 --|

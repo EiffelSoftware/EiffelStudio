@@ -20,6 +20,8 @@ inherit
 			remove_i_th
 		end
 
+	EV_MENU_ITEM_LIST_ACTION_SEQUENCES_IMP
+
 feature {NONE} -- implementation
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
@@ -36,7 +38,7 @@ feature {NONE} -- implementation
 			sep_imp: EV_MENU_SEPARATOR_IMP
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
 			chk_imp: EV_CHECK_MENU_ITEM_IMP
-			rgroup: POINTER
+			--rgroup: POINTER
 			radio_item_pointer: POINTER
 		do
 			an_item_imp ?= v.implementation
@@ -165,7 +167,7 @@ feature {NONE} -- implementation
 			item_imp: EV_ITEM_IMP
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
 			sep_imp: EV_MENU_SEPARATOR_IMP
-			rpos: INTEGER
+			--rpos: INTEGER
 			an_index: INTEGER
 			has_radio_item: BOOLEAN
 			temp_item_pointer: POINTER
@@ -194,7 +196,8 @@ feature {NONE} -- implementation
 				C.gtk_radio_menu_item_set_group (radio_imp.c_object, NULL)
 			else
 				sep_imp ?= item_imp
-				if sep_imp /= Void then
+				if sep_imp /= Void and then a_position <= interface.count then
+						-- We merge subsequent radio menu items with previous ones.
 					sep_imp := separator_imp_by_index (a_position)
 					from
 						an_index := interface.index
@@ -273,6 +276,22 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.22.2.4  2001/04/06 18:04:50  xavier
+--| Wiping out a menu could crash in some circumstances (present in EiffelStudio).
+--| This is now fixed.
+--|
+--| Revision 1.22.2.3  2000/07/31 18:57:28  king
+--| Removed unused local variables
+--|
+--| Revision 1.22.2.2  2000/07/24 21:36:08  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.22.2.1  2000/05/03 19:08:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.22  2000/05/02 18:55:28  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

@@ -75,6 +75,12 @@ c_gdk_window_is_iconified (GdkWindow * window) // is
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.6  2001/06/07 23:07:59  rogers
+// Merged DEVEL branch into Main trunc.
+//
+// Revision 1.5.6.1  2000/05/03 19:08:34  oconnor
+// mergred from HEAD
+//
 // Revision 1.5  2000/03/08 20:10:00  brendel
 // Fixed bug in c_gdk_window_is_iconified.
 //

@@ -1,6 +1,6 @@
 indexing
 	description:
-		"A figure that is a pixel or a dot."
+		"Pixels on `point' with size `line_width'."
 	status: "See notive at end of class"
 	keywords: "figure, dot, point, pixel"
 	date: "$Date$"
@@ -12,74 +12,60 @@ class
 inherit
 	EV_ATOMIC_FIGURE
 		redefine
+			bounding_box
+		end
+
+	EV_SINGLE_POINTED_FIGURE
+		undefine
 			default_create
 		end
 
 create
 	default_create,
-	make_with_point,
-	make_for_test
-
-feature -- Initialization
-
-	default_create is
-			-- Create in (0, 0)
-		do
-			Precursor
-		end
-
-	make_with_point (pos: EV_RELATIVE_POINT) is
-			-- Create with position `pos'.
-		require
-			pos_exists: pos /= Void
-		do
-			default_create
-			set_point (pos)
-		end
-
-feature -- Access
-
-	point_count: INTEGER is
-			-- A dot consists of only one point.
-		once
-			Result := 1
-		end
-
-	point: EV_RELATIVE_POINT is
-			-- The position of this pixel or dot.
-		do
-			Result := get_point_by_index (1)
-		end
-
-feature -- Status setting
-
-	set_point (pos: EV_RELATIVE_POINT) is
-			-- Change the reference of `point' with `pos'.
-		require
-			pos_exists: pos /= Void
-		do
-			set_point_by_index (1, pos)
-		ensure
-			point_assigned: point = pos
-		end
+	make_with_point
 
 feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
 			-- Is the point on (`x', `y') on this figure?
-			--| Kind of brute force right now, but we just want to get it to
-			--| work, first.
 		do
-			Result := distance (x, y, point.x_abs, point.y_abs) < (line_width
-				+ 1) // 2
+			-- To be optimized.
+			Result := point_on_ellipse (x, y, point.x_abs,
+				point.y_abs, line_width // 2, line_width // 2)
 		end
 
-feature {EV_PROJECTION} -- Implementation
+feature {EV_PROJECTOR} -- Implementation
 
 	coordinates: EV_COORDINATES is
-			-- get this dot's point in the form of EV_COORDINATES.
+			-- Absolute center coordinates of `Current'.
 		do
-			create Result.set (point.x_abs, point.y_abs)
+			Result := point.absolute_coordinates
+		end
+
+feature {NONE} -- Implementation
+
+	bounding_box: EV_RECTANGLE is
+			-- Smallest orthogonal rectangular area `Current' fits in.
+		local
+			px, py, lw: INTEGER
+		do
+			px := point.x_abs
+			py := point.y_abs
+			lw := line_width // 2
+			create Result.make (px - lw, py - lw, line_width, line_width)
+		end
+
+feature {EV_FIGURE_DRAWING_ROUTINES} -- Access
+
+	metrics: TUPLE [INTEGER, INTEGER, INTEGER] is
+			-- [`x', `y', `width']
+		local
+			p: EV_RELATIVE_POINT
+			lw: INTEGER
+		do
+			p := point
+			lw := line_width // 2
+			Result := [p.x_abs - lw, p.y_abs - lw, line_width]
 		end
 
 end -- class EV_FIGURE_DOT
@@ -99,24 +85,3 @@ end -- class EV_FIGURE_DOT
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.7  2000/04/27 19:10:50  brendel
---| Centralized testing code.
---|
---| Revision 1.6  2000/04/26 15:56:34  brendel
---| Added CVS Log.
---| Added copyright notice.
---| Improved description.
---| Added keywords.
---| Formatted for 80 columns.
---| Added make_for_test.
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

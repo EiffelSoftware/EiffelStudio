@@ -16,7 +16,7 @@ create
 	make,
 	make_with_item
 
-feature {EV_DYNAMIC_LIST_I} -- Initialization
+feature {NONE}--EV_DYNAMIC_LIST_I} -- Initialization
 
 	make (current_item: G; before_state, after_state: BOOLEAN) is
 			-- Create a cursor pointing to `current_item'.
@@ -33,8 +33,6 @@ feature {EV_DYNAMIC_LIST_I} -- Initialization
 			after_assigned: after = after_state
 			before_assigned: before = before_state
 		end
-
-feature {NONE} -- Initialization
 
 	make_with_item (an_item: G) is
 			-- Create a cursor pointing to `an_item'.
@@ -79,26 +77,3 @@ end -- class EV_DYNAMIC_LIST_CURSOR
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.2  2000/04/05 21:16:13  brendel
---| Merged changes from LIST_REFACTOR_BRANCH.
---|
---| Revision 1.1.2.3  2000/04/05 19:32:26  brendel
---| Added make_with_item.
---|
---| Revision 1.1.2.2  2000/04/04 21:38:14  brendel
---| Improved contracts.
---|
---| Revision 1.1.2.1  2000/04/03 18:42:42  brendel
---| Initial.
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------
-

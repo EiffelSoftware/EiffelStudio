@@ -1,21 +1,20 @@
 indexing
-	description: "Objects that store a list of unique keyboard accelerators."
-	status: "See notice at end of class."
-	keywords: "accelerator, shortcut"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Objects that store a list of unique keyboard accelerators."
+	status		: "See notice at end of class."
+	keywords	: "accelerator, shortcut"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EV_ACCELERATOR_LIST
 
 inherit
-		
 	ACTIVE_LIST [EV_ACCELERATOR]
 		undefine
 			default_create
 		end
 
-feature -- Creation
+feature -- Initialization
 
 	default_create is
 			-- Standard creation procedure.
@@ -25,12 +24,13 @@ feature -- Creation
 			remove_actions.extend (~disable_item_parented (?))
 		end
 
-feature -- Status Setting
+feature {NONE} -- Status Setting
 
 	enable_item_parented (an_item: EV_ACCELERATOR) is
 			-- Assign True to `parented' for `an_item'.
 		require
-			key_combination_unique: not key_combination_exists (an_item)
+			an_item_not_void: an_item /= Void
+			key_combination_unique: occurrences (an_item) = 1 and not key_combination_exists (an_item)
 		local
 			accelerator_imp: EV_ACCELERATOR_IMP
 		do
@@ -40,6 +40,8 @@ feature -- Status Setting
 
 	disable_item_parented (an_item: EV_ACCELERATOR) is
 			-- Assign False to `parented' for `an_item'.
+		require
+			an_item_not_void: an_item /= Void
 		local
 			accelerator_imp: EV_ACCELERATOR_IMP
 		do
@@ -47,7 +49,7 @@ feature -- Status Setting
 			accelerator_imp.disable_parented
 		end
 
-feature -- Assertion checking
+feature {NONE} -- Contract support
 
 	key_combination_exists (new_accelerator: EV_ACCELERATOR): BOOLEAN is
 			-- Does `Current' contain an accelerator with an identical key
@@ -59,13 +61,12 @@ feature -- Assertion checking
 			from
 				start
 			until
-				off or Result
+				Result or else off
 			loop
-				if item.is_equal (new_accelerator) then
-					Result := True
-				end
+				Result := item.is_equal (new_accelerator) and then (item /= new_accelerator)
 				forth
 			end
+			go_to (old_cursor)
 		end
 
 end -- class EV_ACCELERATOR_LIST

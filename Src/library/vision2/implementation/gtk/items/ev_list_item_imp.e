@@ -20,7 +20,6 @@ inherit
 		redefine
 			interface,
 			initialize,
-			has_parent,
 			make
 		end
 
@@ -34,6 +33,8 @@ inherit
 		redefine
 			interface
 		end
+
+	EV_LIST_ITEM_ACTION_SEQUENCES_IMP
 
 create
 	make
@@ -58,6 +59,7 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			
 			item_box := C.gtk_hbox_new (False, 0)
+--gtk_widget_unset_flags (c_object, C.GTK_CAN_FOCUS_ENUM)
 			C.gtk_container_add (c_object, item_box)
 			C.gtk_widget_show (item_box)
 			
@@ -68,13 +70,8 @@ feature {NONE} -- Initialization
 			C.gtk_box_pack_start (item_box, pixmap_box, False, False, 2)
 				-- Padding of 2 pixels used for pixmap
 			C.gtk_box_pack_start (item_box, text_label, True, True, 0)
-			
 
-			C.gtk_widget_hide (pixmap_box)
-			
-			--| FIXME Events called by parent widget, is this OK?
-			--connect_signal_to_actions ("select", interface.select_actions)
-			--connect_signal_to_actions ("deselect", interface.deselect_actions)
+			C.gtk_widget_hide (pixmap_box)	
 			is_initialized := True
 		end
 
@@ -150,16 +147,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Assertion
-
-	has_parent : BOOLEAN is
-			-- Redefinition of has_a_parent, already defined
-			-- in EV_WIDGET_I, because parent_imp has been
-			-- redefined as widget_parent_imp
-		do
-			Result := parent_imp /= void
-		end
-
 feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_LIST_I} -- Implementation
 
 	interface: EV_LIST_ITEM
@@ -187,8 +174,32 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.35  2000/06/07 17:27:29  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.36  2001/06/07 23:08:01  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.23.4.11  2001/05/18 17:51:35  king
+--| Removed unsetting of focus flag
+--|
+--| Revision 1.23.4.10  2001/04/26 19:10:30  king
+--| Removed focus hack
+--|
+--| Revision 1.23.4.9  2001/04/26 18:42:22  king
+--| Reinstated focus flag
+--|
+--| Revision 1.23.4.8  2001/04/20 18:35:39  king
+--| Removed unsetting of focus flag as this is done in EV_LIST_IMP
+--|
+--| Revision 1.23.4.7  2000/11/03 23:05:21  king
+--| Preventing list items from attaining focus
+--|
+--| Revision 1.23.4.6  2000/10/30 17:32:38  king
+--| Formatting
+--|
+--| Revision 1.23.4.5  2000/07/24 21:33:39  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.23.4.4  2000/06/12 16:22:56  oconnor
+--| removed references to obsolete features
 --|
 --| Revision 1.23.4.3  2000/05/10 23:43:42  king
 --| Made tooltipable

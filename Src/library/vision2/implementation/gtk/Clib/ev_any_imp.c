@@ -274,7 +274,13 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
                 (gpointer*) eif_oid
             );
             if (GTK_IS_WINDOW (c_object)) {
-                c_ev_any_imp_set_gtk_controls_object_life (c_object);
+				gtk_object_ref (GTK_OBJECT (c_object));
+				gtk_object_set_data (
+					GTK_OBJECT (c_object),
+					"ref_from_eif",
+					(gpointer*) TRUE
+				);
+				g_assert (GTK_OBJECT (c_object)->ref_count == 2);
             } else {
                 gtk_signal_connect (
                     GTK_OBJECT (c_object),
@@ -282,12 +288,12 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
                     c_ev_any_imp_on_c_object_parent_set,
                     NULL
                 );
+				g_assert (GTK_OBJECT (c_object)->ref_count == 1);
             }
     // ensure
             g_assert (eif_oid ==
                 (int) gtk_object_get_data (GTK_OBJECT (c_object), "eif_oid"));
             g_assert (ev_any_imp_c_object_dispose == c_object_dispose);
-            g_assert (GTK_OBJECT (c_object)->ref_count == 1);
     // end
 }
 
@@ -326,6 +332,15 @@ gboolean c_ev_any_imp_invariant (GtkWidget* c_object)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.7  2001/06/07 23:07:59  rogers
+// Merged DEVEL branch into Main trunc.
+//
+// Revision 1.6.2.2  2000/06/20 21:43:00  oconnor
+// Reference windows apon creation. See ev_any_imp.e and ev_any_imp.fig
+//
+// Revision 1.6.2.1  2000/05/03 19:08:33  oconnor
+// mergred from HEAD
+//
 // Revision 1.6  2000/04/11 23:16:02  king
 // Commented out debug pp definition
 //

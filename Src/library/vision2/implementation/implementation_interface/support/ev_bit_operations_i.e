@@ -1,7 +1,5 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "Some operations to simulate binary operations%
-				% on an integer."
+	description: "Operations to simulate binary operations on an integer."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,6 +52,15 @@ end -- class EV_BIT_OPERATIONS_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.2  2000/08/17 22:03:30  rogers
+--| Removed fixme not reviewed. Description.
+--|
+--| Revision 1.3.4.1  2000/05/03 19:09:00  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.5  2000/02/22 18:39:42  oconnor
 --| updated copyright date and formatting
 --|

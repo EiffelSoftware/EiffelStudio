@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision tree node. GTK+ implementation."
 	status: "See notice at end of class"
@@ -10,42 +9,43 @@ class
 
 inherit
 	EV_TREE_NODE_I
-		redefine
-			interface
 		select
 			interface
 		end
 	
-	EV_ITEM_IMP
-		rename
-			parent as old_parent
-		export
-			{NONE} old_parent
-		redefine
-			interface,
-			initialize,
-			minimum_width,
-			minimum_height
-		end
-	
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
 		rename
-			interface as il_interface
+			interface as item_list_interface
 		redefine
-			insert_i_th,
+			add_to_container,
 			remove_i_th,
+			reorder_child,
+			i_th,
+			count,
 			list_widget
 		end
 
+	EV_ITEM_ACTION_SEQUENCES_IMP
+
+	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
+
+	EV_TREE_NODE_ACTION_SEQUENCES_IMP
+
 	EV_TEXTABLE_IMP
-		redefine
-			interface
+		rename
+			interface as textable_imp_interface
 		end
 
-	EV_TOOLTIPABLE_IMP
+	--EV_TOOLTIPABLE_IMP
+
+	EV_PIXMAPABLE_IMP
+		rename
+			interface as pixmapable_imp_interface
 		redefine
-			interface
+			set_pixmap,
+			remove_pixmap
 		end
+
 
 create
 	make
@@ -54,184 +54,366 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create the tree item.
+		local
+			box: POINTER
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_tree_item_new)
+			textable_imp_initialize
+			pixmapable_imp_initialize
+
+			-- The following is a hack to satisfy implementation invariants.
+			set_c_object (text_label)
+			box := C.gtk_hbox_new (False, 0)
+			C.gtk_box_pack_start (box, text_label, True, True, 0)
+			C.gtk_widget_hide (text_label)
+			C.gtk_box_pack_end (box, pixmap_box, True, False, 0)
+			C.gtk_widget_hide (pixmap_box)
+			create ev_children.make (0)
 		end
 
 	initialize is
 			-- Set up action sequence connection and `Precursor' initialization,
 			-- create item box to hold label and pixmap.
 		do
-			--{EV_PRIMITIVE_IMP} Precursor
-			pixmapable_imp_initialize
-			textable_imp_initialize
-			initialize_item_box
-			connect_signal_to_actions (
-				"collapse",
-				interface.collapse_actions,
-				Void
-			)
-			connect_signal_to_actions (
-				"expand",
-				interface.expand_actions,
-				Void
-			)
 			is_initialized := True
-			align_text_left
-		end
-
-	select_callback (a_tree_item: POINTER) is
-			-- Called when a tree item is selected
-		local
-			par_tree_imp: EV_TREE_IMP
-		do
-		 	par_tree_imp ?= parent_tree.implementation
-			par_tree_imp.select_callback (a_tree_item)
-		end
-
-	initialize_item_box is
-			-- Create and initialize item box.
-		local
-			box: POINTER
-		do
-			box := C.gtk_hbox_new (False, 0)
-			C.gtk_container_add (c_object, box)
-			C.gtk_widget_show (box)
-			C.gtk_box_pack_start (box, pixmap_box, False, False, 0)
-			C.gtk_widget_hide (pixmap_box)
-			C.gtk_box_pack_start (box, text_label, True, True, 2)
-			C.gtk_widget_hide (text_label)
-		ensure
-			item_box /= NULL
 		end
 
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is the item selected ?
-		local
-			list_pointer: POINTER
-			sel_list: LINKED_LIST [POINTER]
+			-- Is the item selected?
 		do
-			list_pointer := GTK_TREE_SELECTION (parent_imp.list_widget)
-			sel_list := gslist_to_eiffel (list_pointer)
-			Result := sel_list.has (c_object)
+			Result := parent_tree_imp.selected_item = interface
 		end
 
-	is_expanded: BOOLEAN is
-			-- is the item expanded ?
-		do
-			Result := C.gtk_tree_item_struct_expanded (c_object).to_boolean
-		end
+	is_expanded: BOOLEAN
+			-- is the item expanded?
+
 
 feature -- Status setting
 
+	enable_select is
+			-- Select `Current' in its parent.
+		do
+			C.gtk_ctree_select (
+				parent_tree_imp.list_widget,
+				tree_node_ptr
+			)
+			
+		end
 
-	--| FIXME IEK Normal selection routine causes
-	--| unwanted buggy behaviour in tree.
-
-	enable_select is do check to_be_implemented: False end end
-
-	disable_select is do check to_be_implemented: False end end
+	disable_select is
+			-- Disable selection of `Current' in its parent.
+		do
+			C.gtk_ctree_unselect (
+				parent_tree_imp.list_widget,
+				tree_node_ptr
+			)
+		end
 	
 	set_expand (a_flag: BOOLEAN) is
 			-- Expand the item if `flag', collapse it otherwise.
 		do
+			is_expanded := a_flag
 			if a_flag then
-				C.gtk_tree_item_expand (c_object)
+				C.gtk_ctree_expand (
+					parent_tree_imp.list_widget,
+					tree_node_ptr
+				)
 			else
-				C.gtk_tree_item_collapse (c_object)
+				C.gtk_ctree_collapse (
+					parent_tree_imp.list_widget,
+					tree_node_ptr
+				)
+			end
+		end
+
+feature -- Tooltipable
+
+	tooltip: STRING
+
+	set_tooltip (a_string: STRING) is do end
+
+	remove_tooltip is do end
+
+feature -- PND
+
+	enable_transport is 
+		do
+			is_transport_enabled := True
+			if parent_imp /= Void then
+				--parent_imp.update_pnd_status
+			end
+		end
+
+	disable_transport is
+		do
+			is_transport_enabled := False
+			if parent_imp /= Void then
+				--parent_imp.update_pnd_status
+			end
+		end
+
+	draw_rubber_band is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	erase_rubber_band is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	enable_capture is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	disable_capture is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	start_transport (
+        	a_x, a_y, a_button: INTEGER;
+        	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+        	a_screen_x, a_screen_y: INTEGER) is 
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	end_transport (a_x, a_y, a_button: INTEGER;
+		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+		a_screen_x, a_screen_y: INTEGER) is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	set_pointer_style, internal_set_pointer_style (curs: EV_CURSOR) is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	is_transport_enabled_iterator: BOOLEAN is
+		do
+			if is_transport_enabled then
+				Result := True
+			else
+				from
+					ev_children.start
+				until
+					ev_children.after or else Result
+				loop
+					Result := ev_children.item.is_transport_enabled_iterator
+					ev_children.forth
+				end
+			end
+		end
+
+feature {EV_TREE_IMP} -- Implementation
+
+	set_pebble_void is
+			-- Resets pebble from Tree_Imp.
+		do
+			pebble := Void
+		end
+
+	able_to_transport (a_button: INTEGER): BOOLEAN is
+			-- Is the row able to transport data with `a_button' click.
+		do
+			Result := is_transport_enabled and
+			((a_button = 1 and mode_is_drag_and_drop) or
+			(a_button = 3 and (mode_is_pick_and_drop or mode_is_target_menu)))
+		end
+
+	real_pointed_target: EV_PICK_AND_DROPABLE is
+		do
+			check do_not_call: False end
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	set_parent_imp (par_imp: like parent_imp) is
+		do
+			parent_imp := par_imp
+		end
+
+	parent_imp: EV_ITEM_LIST_IMP [EV_TREE_NODE]
+
+	parent_tree_imp: EV_TREE_IMP is
+		do
+			if parent_tree /= Void then
+				Result ?= parent_tree.implementation
+			end
+		end
+
+feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
+
+	expand_callback is
+			-- Called when `Current' is expanded.
+		do
+			is_expanded := True
+			expand_actions_internal.call ([])
+		end
+
+	collapse_callback is
+			-- Called when `Current' is collapsed.
+		do
+			is_expanded := False
+			collapse_actions_internal.call ([])
+		end
+
+	tree_node_ptr: POINTER
+
+	set_tree_node (a_tree_node_ptr: POINTER) is
+		do
+			if a_tree_node_ptr /= NULL then
+				parent_tree_imp.tree_node_ptr_table.put (Current, a_tree_node_ptr)
+			end
+			tree_node_ptr := a_tree_node_ptr
+		end
+
+	insert_pixmap is
+		local
+			gdkpix, gdkmask, text_ptr: POINTER
+		do
+			C.gtk_label_get (text_label, $text_ptr)
+			if gtk_pixmap /= NULL then
+				C.gtk_pixmap_get (C.gtk_pixmap_struct_pixmap (gtk_pixmap), $gdkpix, $gdkmask)
+				C.gtk_ctree_node_set_pixtext (
+					parent_tree_imp.list_widget,
+					tree_node_ptr,
+					0,
+					text_ptr,-- text,
+					5, -- spacing
+					gdkpix,
+					gdkmask
+				)
+			end
+		end
+
+	set_item_and_children (parent_node: POINTER) is
+			-- Used for setting items on addition and removal
+		do
+			if tree_node_ptr = NULL then
+				-- Current has been added to tree
+				set_tree_node (
+					parent_tree_imp.insert_ctree_node (
+						Current,
+						parent_node,
+						NULL
+					)
+				)
+			else
+				-- Current is being removed from tree.
+				parent_tree_imp.tree_node_ptr_table.remove (tree_node_ptr)
+				set_tree_node (NULL)
+			end
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				ev_children.item.set_item_and_children (tree_node_ptr)
+				ev_children.forth
+			end
+			if tree_node_ptr = NULL then
+				-- Reset here as descendants access parent_imp in iteration.
+				set_parent_imp (Void)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	sub_tree: POINTER is
+	set_pixmap (a_pixmap: EV_PIXMAP) is
 		do
-			Result := C.gtk_tree_new
-				-- Connect events to items own tree.
-			real_signal_connect (
-				Result,
-				"select_child",
-				~select_callback, default_translate
-			)
-				--| Gtk bug means that select_child signal gets
-				--| fired on button click regardless.
+			Precursor {EV_PIXMAPABLE_IMP} (a_pixmap)
+			if tree_node_ptr /= NULL then
+				insert_pixmap
+			end
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	remove_pixmap is
+		do
+			Precursor {EV_PIXMAPABLE_IMP}
+		end
+
+	count: INTEGER is
+		do
+			Result := ev_children.count
+		end
+
+	i_th (i: INTEGER): EV_TREE_NODE is
+		do
+			Result := (ev_children @ i).interface
+		end
+
+	add_to_container (v: like item) is
 			-- Add `v' to tree items tree at position `i'.
 		local
 			item_imp: EV_TREE_NODE_IMP
-			item_subtree: POINTER
-			p: POINTER
+			par_t_imp: EV_TREE_IMP
 		do
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
-			C.gtk_widget_show (item_imp.c_object)
-			item_subtree := C.gtk_tree_item_struct_subtree (c_object)
+			ev_children.force (item_imp)
 
-			if list_widget = NULL then
-				set_dummy_list_widget (sub_tree)
-			end
-			p := C.gtk_widget_struct_parent (item_imp.c_object)
-			check
-				null_parent: C.gtk_widget_struct_parent (item_imp.c_object) = NULL
-			end
-			if item_subtree /= NULL then
-				C.gtk_tree_insert (
-					item_subtree,
-					item_imp.c_object,
-					i - 1
-				)
-			else
-				C.gtk_tree_insert (
-					dummy_list_widget,
-					item_imp.c_object,
-					i - 1
-				)
-
-				if parent /= Void then
-					C.gtk_tree_item_set_subtree (
-						c_object,
-						dummy_list_widget
-					)
-					set_dummy_list_widget (NULL)
+			-- Using a local prevents recalculation
+			par_t_imp := parent_tree_imp
+			if par_t_imp /= Void then
+				item_imp.set_item_and_children (tree_node_ptr)
+				par_t_imp.update_pnd_status
+				if item_imp.pixmap /= Void then
+					item_imp.insert_pixmap
 				end
 			end
+		end
 
-			if item_imp.dummy_list_widget /= NULL then
-				--| FIXME IEK This function seems to dereference
-				--| the dummy list widget on list widget retrieval.
-				C.gtk_tree_item_set_subtree (
-					item_imp.c_object,
-					item_imp.dummy_list_widget
-				)
-				item_imp.set_dummy_list_widget (NULL)
-			end
+	reorder_child (v: like item; a_position: INTEGER) is
+			-- Move `v' to `a_position' in Current.
+		do
 		end
 
 	remove_i_th (a_position: INTEGER) is
 			-- Remove item at `a_position'
 		local
 			item_imp: EV_TREE_NODE_IMP
-		do	
-			item_imp ?= i_th (a_position).implementation
-			item_imp.set_parent_imp (Void)
-			item_imp.set_dummy_list_widget (item_imp.list_widget)
-			if item_imp.list_widget /= NULL then
-				C.gtk_widget_ref (item_imp.list_widget)
-			end	
-			Precursor (a_position)
-		end
-
-	item_box: POINTER is
-			-- GTKHbox in tree item.
-			-- Holds pixmap and label.
+			par_tree_imp: EV_TREE_IMP
 		do
-			Result := C.gtk_container_children (c_object)
-			Result := C.g_list_nth_data (Result, 0)
+			item_imp := (ev_children @ (a_position))
+
+			-- Remove from tree if present
+			par_tree_imp := parent_tree_imp
+			if par_tree_imp /= Void then
+				if a_position = 1 and then count > 1 then
+					C.gtk_ctree_remove_node (par_tree_imp.list_widget, item_imp.tree_node_ptr)
+				end
+				item_imp.set_item_and_children (NULL)
+				-- This resets item and all children
+				item_imp.set_parent_imp (Void)
+			end
+
+			-- remove the row from the `ev_children'
+			ev_children.go_i_th (a_position)
+			ev_children.remove
+
+			if par_tree_imp /= Void then
+				par_tree_imp.update_pnd_status
+			end
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_pos: INTEGER) is
@@ -240,53 +422,15 @@ feature {NONE} -- Implementation
 			check dont_call: False end
 		end
 
-feature {NONE} -- Implementation
-
-	minimum_width, minimum_height: INTEGER
-		-- Redefined to avoid seg faults from invariant calling
-		-- invalid features for items.
+	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
+			-- Container for all tree items.
 
 feature {EV_ITEM_LIST_IMP} -- Implementation
 
-	set_dummy_list_widget (list_wid: POINTER) is
-		do
-			dummy_list_widget := list_wid
-		end
-
-	dummy_list_widget: POINTER
-			-- Used to temporary store list widget if not in parent.
-
-	list_widget: POINTER is
+	list_widget: POINTER 
 			-- Pointer to the items own gtktree.
-		do
-			Result := C.gtk_tree_item_struct_subtree (c_object)
-			if Result = NULL then
-				Result := dummy_list_widget
-			end
-		end
 
-feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
 
-	gtk_tree_root_tree (a_tree: POINTER): POINTER is
-			-- Root tree of the item.
-		external
-			" C [macro <gtk/gtktree.h>]"
-		alias
-			"GTK_TREE_ROOT_TREE"
-		end
-
-	gtk_tree_selection (a_tree: POINTER): POINTER is
-			-- Selection of root tree.
-		external
-			" C [macro <gtk/gtktree.h>]"
-		alias
-			"GTK_TREE_SELECTION"
-		end
-
-feature {EV_ANY_I} -- Implementation
-
-	interface: EV_TREE_NODE
-	
 end -- class EV_TREE_NODE_IMP
 
 --!-----------------------------------------------------------------------------
@@ -310,8 +454,29 @@ end -- class EV_TREE_NODE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.2  2000/06/07 17:27:29  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.3  2001/06/07 23:08:02  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.2.10  2001/05/10 22:28:41  king
+--| Complete reimplementation of tree nodes
+--|
+--| Revision 1.1.2.9  2001/04/20 00:11:49  king
+--| Implemented temporary hack to prevent seg fault on item disposal
+--|
+--| Revision 1.1.2.8  2000/09/06 23:18:39  king
+--| Reviewed
+--|
+--| Revision 1.1.2.7  2000/07/24 21:33:39  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.1.2.6  2000/07/04 21:28:23  king
+--| Replaced enable_select fixme with comment
+--|
+--| Revision 1.1.2.5  2000/07/04 00:49:24  king
+--| Half fixed enable_select problem, root node with children raises gdk error
+--|
+--| Revision 1.1.2.4  2000/06/08 00:23:31  king
+--| Implemented select signal connection
 --|
 --| Revision 1.1.2.3  2000/05/18 20:49:11  king
 --| Renamed parent->old_parent

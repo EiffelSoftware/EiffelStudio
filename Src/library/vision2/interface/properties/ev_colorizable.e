@@ -11,8 +11,6 @@ deferred class
 
 inherit
 	EV_ANY
-		undefine
-			create_action_sequences
 		redefine
 			implementation
 		end
@@ -21,6 +19,8 @@ feature -- Access
 
 	foreground_color: EV_COLOR is
 			-- Color of foreground features like text.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.foreground_color
 		ensure
@@ -29,6 +29,8 @@ feature -- Access
 
 	background_color: EV_COLOR is
 			-- Color displayed behind foreground features.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.background_color
 		ensure
@@ -40,6 +42,7 @@ feature -- Element change
 	set_foreground_color (a_color: like foreground_color) is
 			-- Assign `a_color' to `foreground_color'.
 		require
+			not_destroyed: not is_destroyed
 			a_color_not_void: a_color /= Void
 		do
 			implementation.set_foreground_color (a_color)
@@ -50,6 +53,7 @@ feature -- Element change
 	set_background_color (a_color: like background_color) is
 			-- Assign `a_color' to `foreground_color'.
 		require
+			not_destroyed: not is_destroyed
 			a_color_not_void: a_color /= Void
 		do
 			implementation.set_background_color (a_color)
@@ -61,6 +65,8 @@ feature -- Status setting
 
 	set_default_colors is
 			-- Set foreground and background color to their default values.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_default_colors
 		end	
@@ -72,8 +78,8 @@ feature {EV_ANY_I} -- Implementation
 
 invariant
 
-	background_color_not_void: is_useable implies background_color /= Void
-	foreground_color_not_void: is_useable implies foreground_color /= Void
+	background_color_not_void: is_usable implies background_color /= Void
+	foreground_color_not_void: is_usable implies foreground_color /= Void
 
 end -- class EV_COLORIZABLE
 
@@ -92,19 +98,3 @@ end -- class EV_COLORIZABLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.2  2000/06/07 17:28:07  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.1.2.1  2000/05/12 17:51:22  king
---| Initial
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

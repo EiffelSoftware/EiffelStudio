@@ -13,15 +13,15 @@ make
 echo -n "."
 rm -rf documentation perlvision.pl test Makefile components extra
 mkdir test
-mkdir figure_test
+#mkdir figure_test
 cp release/test/README test/
 cp release/test/test.e test/
 cp release/test/Ace.ace test/
 cp release/test/Ace.win.ace test/
 cp release/test/test_pixmap test/
 cp release/test/*.png test/
-cp release/figure_test/figure_test.e figure_test/
-cp release/figure_test/Ace.ace figure_test/
+#cp release/figure_test/figure_test.e figure_test/
+#cp release/figure_test/Ace.ace figure_test/
 cp release/make_msc.bat .
 rm -rf release
 echo -n "."
@@ -55,12 +55,8 @@ cd ..
 cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 base
 cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 gel
 cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 wel
-cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 event
 cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 C_library
 mv C_library/* .
-grep -v -- "--|" event/action_sequence.e > vision2/interface/support/action_sequence.e
-grep -v -- "--|" event/active_list.e > vision2/interface/support/active_list.e
-grep -v -- "--|" event/interactive_list.e > vision2/interface/support/interactive_list.e
 echo "See vision2/RELEASE_NOTES" > README
 tar czf $1.tgz make_msc.bat README vision2 base gel wel libpng zlib
 rm -rf base gel event vision2 wel C_library libpng zlib

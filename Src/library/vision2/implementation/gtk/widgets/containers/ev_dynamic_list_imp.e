@@ -48,7 +48,7 @@ feature -- Measurement
 	count: INTEGER is
 			-- Number of items.
 		do
-			if list_widget /= NULL then
+			if list_widget /= NULL and then not is_destroyed then
 				Result := C.g_list_length (C.gtk_container_children (list_widget))
 			end
 		end
@@ -86,13 +86,13 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	new_item_actions: ACTION_SEQUENCE [TUPLE [G]] is
-			-- Actions to be performed after an item is added.
+	on_new_item (an_item: G) is
+			-- Called after `an_item' is added.
 		deferred
 		end
-			
-	remove_item_actions: ACTION_SEQUENCE [TUPLE [G]] is
-			-- Actions to be performed before an item is removed.
+
+	on_removed_item (an_item: G) is
+			-- Called just before `an_item' is removed.
 		deferred
 		end
 
@@ -129,8 +129,15 @@ end -- class EV_DYNAMIC_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.9  2000/06/07 17:27:37  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.10  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.8.2.4  2000/12/20 00:36:35  etienne
+--| Added hack on destroy due to base invariants
+--|
+--| Revision 1.8.2.3  2000/08/04 19:19:28  oconnor
+--| Optimised radio button management by using a polymorphic call
+--| instaed of using agents.
 --|
 --| Revision 1.8.2.2  2000/05/13 00:04:12  king
 --| Converted to new EV_CONTAINABLE class

@@ -15,7 +15,8 @@ inherit
 
 	EV_CONTAINER_IMP
 		redefine
-			interface
+			interface,
+			propagate_syncpaint
 		end
 
 	EV_DYNAMIC_LIST_IMP [EV_WIDGET, EV_WIDGET_IMP]
@@ -50,7 +51,7 @@ feature {NONE} -- Implementation
 			end
 			v_imp.wel_set_parent (wel_win)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
-			notify_change (2 + 1, Current)
+			notify_change (Nc_minsize, Current)
 			new_item_actions.call ([v])
 		end
 
@@ -58,7 +59,6 @@ feature {NONE} -- Implementation
 			-- Remove item at `i'-th position.
 		local
 			v_imp: EV_WIDGET_IMP
-			v_parent_imp: EV_CONTAINER_IMP
 		do
 			v_imp ?= i_th (i).implementation
 			check
@@ -67,11 +67,7 @@ feature {NONE} -- Implementation
 			remove_item_actions.call ([v_imp.interface])
 			ev_children.go_i_th (i)
 			ev_children.remove
-			v_parent_imp ?= v_imp.parent_imp
-			check
-				v_parent_imp_not_void: v_parent_imp /= Void
-			end
-			v_parent_imp.notify_change (2 + 1, Current)
+			notify_change (Nc_minsize, Current)
 
 				-- Unlink the widget from its parent and
 				-- signal it.
@@ -102,7 +98,81 @@ feature {EV_ANY_I} -- WEL Implementation
 				end
 				ev_children.go_to (loc_cursor)
 			end
+		ensure then
+			index_not_changed: old ev_children.index = ev_children.index
 		end
+		
+	propagate_syncpaint is
+			-- Propagate `wm_syncpaint' message recevived by `top_level_window_imp' to
+			-- children. See "WM_SYNCPAINT" in MSDN for more information.
+		local
+			loc_cursor: CURSOR
+		do
+			from
+				loc_cursor := ev_children.cursor
+				ev_children.start
+			until
+				ev_children.off
+			loop
+				ev_children.item.propagate_syncpaint
+				ev_children.forth
+			end
+				-- Restore the original cursor position.
+			ev_children.go_to (loc_cursor)
+		ensure then
+			index_not_changed: old ev_children.index = ev_children.index
+		end
+		
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so notify all children.
+		local
+			loc_cursor: CURSOR
+		do
+			from
+				loc_cursor := ev_children.cursor
+				ev_children.start
+			until
+				ev_children.off
+			loop
+				ev_children.item.update_for_pick_and_drop (starting)
+				ev_children.forth
+			end
+			ev_children.go_to (loc_cursor)
+		ensure then
+			index_not_changed: old ev_children.index = ev_children.index
+		end
+		
+	adjust_tab_ordering (ordered_widgets: ARRAYED_LIST [WEL_WINDOW]; widget_depths: ARRAYED_LIST [INTEGER]; depth: INTEGER) is
+			-- Adjust tab ordering of children in `Current'.
+			-- used when `Current' is a child of an EV_DIALOG_IMP_MODAL
+			-- or an EV_DIALOG_IMP_MODELESS.
+		local
+			child: WEL_WINDOW
+			widget_imp: EV_WIDGET_IMP
+			container: EV_CONTAINER_IMP
+		do
+			from
+				go_i_th (1)
+			until
+				index = count + 1
+			loop
+				container ?= item.implementation
+				if container /= Void then
+					container.adjust_tab_ordering (ordered_widgets, widget_depths, depth + 1)
+				end
+					-- Add `child' to `ordered_widgets'
+				widget_imp ?= item.implementation
+				child ?= widget_imp
+				check
+					child_not_void: child /= Void
+				end
+				ordered_widgets.force (child)
+				widget_depths.force (depth)
+
+				index := index + 1
+			end
+		end
+		
 
 feature {NONE} -- Implementation
 
@@ -131,8 +201,38 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.23  2000/06/07 17:27:59  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.24  2001/06/07 23:08:16  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.22.2.11  2001/03/29 18:45:22  rogers
+--| Simplified and optimized adjust_tab_ordering.
+--|
+--| Revision 1.22.2.10  2001/03/29 18:22:53  rogers
+--| Renamed reverse_tab_order to adjust_tab_ordering.
+--|
+--| Revision 1.22.2.9  2001/03/28 21:39:12  rogers
+--| Changed signature of reverse_tab_order, and implemented depth storage.
+--|
+--| Revision 1.22.2.8  2001/03/28 19:52:49  rogers
+--| Fixed bug in reverse_tab_order. We now add the containers to
+--| `ordered_widgets' for modification of the tab order.
+--|
+--| Revision 1.22.2.7  2001/03/28 19:18:01  rogers
+--| Added reverse_tab_order which reverses the tab order of all the children.
+--|
+--| Revision 1.22.2.6  2001/03/16 19:11:37  rogers
+--| Previous commit should have read : Added update_for_pick_and_drop.
+--| Comment.
+--|
+--| Revision 1.22.2.5  2001/03/16 19:07:19  rogers
+--| Added update_for
+--|
+--| Revision 1.22.2.4  2001/03/14 19:20:14  rogers
+--| Added `propagate_syncpaint' which calls `propagate_syncpaint' on all
+--| children of `Current'. Aded postoncdition to is_control_in_window.
+--|
+--| Revision 1.22.2.3  2000/08/08 15:58:15  manus
+--| New sizing policy
 --|
 --| Revision 1.22.2.2  2000/06/05 21:08:04  manus
 --| Updated call to `notify_parent' because it requires now an extra parameter which is

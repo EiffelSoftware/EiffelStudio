@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision list. Implementation interface."
 	status: "See notice at end of class"
@@ -17,7 +16,7 @@ inherit
 feature -- Access
 
 	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
-			-- Currently selected items.
+			-- `Result is all items currently selected in `Current'.
 		local
 			original_position: INTEGER
 		do
@@ -38,10 +37,21 @@ feature -- Access
 
 feature -- Status report
 
+	ensure_i_th_visible (an_index: INTEGER) is
+			-- Ensure item `an_index' is visible in `Current'.
+		deferred
+		end
+
 	multiple_selection_enabled: BOOLEAN is
 			-- Can more than one item be selected?
 		deferred
 		end
+
+	pixmaps_width: INTEGER
+			-- Width of displayed pixmaps in `Current'.
+
+	pixmaps_height: INTEGER
+			-- Height of displayed pixmaps in `Current'.
 
 feature -- Status setting
 
@@ -55,6 +65,39 @@ feature -- Status setting
 		deferred
 		end
 
+	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
+			-- Set the size of displayed pixmaps in `Current' to
+			-- `a_width' by `a_height'.
+		do
+			if pixmaps_width /= a_width or pixmaps_height /= a_height then
+				pixmaps_width := a_width
+				pixmaps_height := a_height
+				pixmaps_size_changed
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	pixmaps_size_changed is
+			-- The size of the displayed pixmaps has just
+			-- changed.
+		do
+			-- Do nothing by default
+		end
+
+	initialize_pixmaps is
+			-- Initialize `Current'.
+		do
+			pixmaps_width := default_pixmaps_width
+			pixmaps_height := default_pixmaps_height
+		end
+
+	default_pixmaps_width: INTEGER is 16
+		-- Default width for pixmaps
+
+	default_pixmaps_height: INTEGER is 16
+		-- Default height for pixmaps
+	
 feature {EV_LIST_I, EV_LIST_ITEM_IMP} -- Implementation
 
 	interface: EV_LIST
@@ -82,8 +125,32 @@ end -- class EV_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.46  2000/06/07 17:27:50  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.47  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.34.4.11  2000/12/27 00:43:56  rogers
+--| Added ensure_i_th_visible.
+--|
+--| Revision 1.34.4.10  2000/08/17 23:41:04  rogers
+--| removed fixme not_reviewed. Comments, formatting.
+--|
+--| Revision 1.34.4.9  2000/07/18 22:34:14  rogers
+--| Renamed initialize to initialize_pixmaps. Added defaults for values.
+--|
+--| Revision 1.34.4.8  2000/07/18 17:34:49  rogers
+--| Spelling.
+--|
+--| Revision 1.34.4.7  2000/07/18 17:23:45  rogers
+--| Exported pixmaps_size_changed to {NONE}. Changed comment.
+--|
+--| Revision 1.34.4.6  2000/07/17 19:39:17  rogers
+--| Added set_pixmaps_size and pixmaps_size_changed.
+--|
+--| Revision 1.34.4.5  2000/07/14 18:01:37  rogers
+--| Added is_initialized := True in initialize.
+--|
+--| Revision 1.34.4.4  2000/07/13 23:41:40  rogers
+--| Implemented initialize. Added pixmaps_width and pixmaps_height.
 --|
 --| Revision 1.34.4.3  2000/05/30 15:57:09  rogers
 --| Removed unreferenced variables from selected_items.
@@ -110,16 +177,20 @@ end -- class EV_LIST_I
 --| Added lists_equal assertion feature
 --|
 --| Revision 1.41  2000/02/29 23:15:03  rogers
---| Simplified selected_items. Selected item is no longer deferred, but now implemented in this class.
+--| Simplified selected_items. Selected item is no longer deferred, but now
+--| implemented in this class.
 --|
 --| Revision 1.40  2000/02/29 19:39:24  rogers
---| Selected items now checks selected rather than selected_item /= Void before appending the selected item to the Result. Only when multiple selection is disabled.
+--| Selected items now checks selected rather than selected_item /= Void before
+--| appending the selected item to the Result. Only when multiple selection is
+--| disabled.
 --|
 --| Revision 1.39  2000/02/29 19:04:16  rogers
 --| Removed some redundent code in selected_items.
 --|
 --| Revision 1.38  2000/02/29 18:26:05  rogers
---| Removed the deferred status of selected_items and implemented it platform independently.
+--| Removed the deferred status of selected_items and implemented it platform
+--| independently.
 --|
 --| Revision 1.37  2000/02/29 00:02:22  king
 --| Made selected items deferred
@@ -155,10 +226,13 @@ end -- class EV_LIST_I
 --| Instantiated selected_items to satisfy invariant, needs implementing
 --|
 --| Revision 1.34.6.5  2000/01/15 00:53:44  oconnor
---| renamed is_multiple_selection -> multiple_selection_enabled, set_multiple_selection -> enable_multiple_selection & set_single_selection -> disable_multiple_selection
+--| renamed is_multiple_selection -> multiple_selection_enabled,
+--| set_multiple_selection -> enable_multiple_selection &
+--| set_single_selection -> disable_multiple_selection
 --|
 --| Revision 1.34.6.4  1999/12/17 18:09:46  rogers
---| Redefined interface to be of more refined type. Item now comes from EV_ITEM_LIST_I. Commented out selected_items pending re-implementation.
+--| Redefined interface to be of more refined type. Item now comes from
+--| EV_ITEM_LIST_I. Commented out selected_items pending re-implementation.
 --|
 --| Revision 1.34.6.3  1999/12/03 07:47:01  oconnor
 --| make_rgb (int) -> make_with_rgb (real)

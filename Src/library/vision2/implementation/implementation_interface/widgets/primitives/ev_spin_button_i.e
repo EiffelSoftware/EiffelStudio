@@ -14,8 +14,10 @@ inherit
 		end
 
 	EV_TEXT_FIELD_I
-		undefine
-			set_default_colors
+		rename
+			create_change_actions as create_text_change_actions,
+			change_actions as text_change_actions,
+			change_actions_internal as text_change_actions_internal
 		redefine
 			interface
 		end
@@ -47,6 +49,19 @@ end -- class EV_SPIN_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.4.3  2000/10/27 02:28:21  manus
+--| Removed declaration or undefinition of `set_default_colors'. Now it is defined
+--| in a platform dependent manner to improve performance and correctness.
+--|
+--| Revision 1.2.4.2  2000/07/24 21:30:48  oconnor
+--| inherit action sequences _I class
+--|
+--| Revision 1.2.4.1  2000/05/03 19:09:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.4  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

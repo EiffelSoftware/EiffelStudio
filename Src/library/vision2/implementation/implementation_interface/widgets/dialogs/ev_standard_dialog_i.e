@@ -13,6 +13,13 @@ inherit
 			interface
 		end
 
+	EV_POSITIONABLE_I
+		redefine
+			interface
+		end
+		
+	EV_STANDARD_DIALOG_ACTION_SEQUENCES_I
+
 feature -- Access
 
 	title: STRING is
@@ -34,18 +41,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_modal is
-			-- Show the dialog and wait until the user closes it.
+	show_modal_to_window (a_window: EV_WINDOW) is
+			-- Show the dialog modal with respect to `a_window'.
 		deferred
 		end
 
 	set_title (a_title: STRING) is
 			-- Set the title of the dialog.
-		deferred
-		end
-
-	set_blocking_window (a_window: EV_WINDOW) is
-			-- Set as transient for `a_window'.
 		deferred
 		end
 
@@ -76,6 +78,31 @@ end -- class EV_STANDARD_DIALOG_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.4.8  2000/12/15 19:21:49  king
+--| Removed invalid postsconditiondgets/common_dialogs/ev_standard_dialog_i.e
+--|
+--| Revision 1.5.4.7  2000/09/04 18:20:00  oconnor
+--| inherit EV_POSITIONABLE_I
+--|
+--| Revision 1.5.4.6  2000/08/16 19:52:00  king
+--| Implemented show_modal_to_window
+--|
+--| Revision 1.5.4.5  2000/07/24 21:30:46  oconnor
+--| inherit action sequences _I class
+--|
+--| Revision 1.5.4.4  2000/07/20 20:03:00  king
+--| Removed hide/show
+--|
+--| Revision 1.5.4.3  2000/07/20 18:45:27  king
+--| Added hide/show, updated show comment
+--|
+--|
+--| Revision 1.5.4.1  2000/05/03 19:09:03  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

@@ -47,6 +47,12 @@ end -- class WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.2.1  2000/05/03 19:09:05  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/04/05 21:16:10  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

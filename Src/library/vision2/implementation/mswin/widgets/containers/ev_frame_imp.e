@@ -30,7 +30,9 @@ inherit
 			compute_minimum_width,
 			compute_minimum_height,
 			compute_minimum_size,
-			interface
+			interface,
+			enable_sensitive,
+			disable_sensitive
 		end
 
 	EV_TEXTABLE_IMP
@@ -39,7 +41,10 @@ inherit
 		redefine
 			interface,
 			set_text,
-			remove_text
+			remove_text,
+			align_text_center,
+			align_text_right,
+			align_text_left
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -50,7 +55,7 @@ inherit
 		redefine
 			on_paint,
 			top_level_window_imp,
-			wel_move_and_resize
+			on_erase_background
 		end
 
 	WEL_DRAWING_ROUTINES
@@ -67,8 +72,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			ev_wel_control_container_make
 			frame_style := Ev_frame_etched_in
-			create alignment
-			create font
+			wel_font := (create {WEL_SHARED_FONTS}).gui_font
 		end
 
 feature -- Access
@@ -91,7 +95,7 @@ feature -- Access
 	client_width: INTEGER is
 			-- Width of the client area.
 		do
-			Result := (wel_width - client_x - Border_width).max (0)
+			Result := (ev_width - client_x - Border_width).max (0)
 		end
 	
 	client_height: INTEGER is
@@ -101,6 +105,20 @@ feature -- Access
 		end
 
 feature -- Element change
+
+	enable_sensitive is
+			-- Set `item' sensitive to user actions.
+		do
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
+			invalidate
+		end
+
+	disable_sensitive is
+			-- Set `item' insensitive to user actions.
+		do
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
+			invalidate
+		end
 
 	set_frame_style (a_style: INTEGER) is
 			-- Assign `a_style' to `frame_style'.
@@ -112,18 +130,14 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			font_imp: EV_FONT_IMP
 			t: TUPLE [INTEGER, INTEGER]
 		do
-			font_imp ?= font.implementation
-			check
-				font_imp_not_void: font_imp /= Void
-			end
-			t := font_imp.string_width_and_height (" " + a_text + " ")
+			t := wel_font.string_size (" " + a_text + " ")
 			text_width := t.integer_item (1)
 			text_height := t.integer_item (2)
-			Precursor (a_text)
+			Precursor {EV_TEXTABLE_IMP} (a_text)
 			notify_change (2 + 1, Current)
+			invalidate
 		end
 
 	remove_text is
@@ -131,7 +145,7 @@ feature -- Element change
 		do
 			text_width := 0
 			text_height := 0
-			Precursor
+			Precursor {EV_TEXTABLE_IMP}
 			invalidate
 		end
 
@@ -140,27 +154,27 @@ feature -- Status setting
 	set_default_minimum_size is
 			-- Initialize the size of `Current'.
 		do
-			internal_set_minimum_size (2 * Text_padding, 2 * Border_width)
+			ev_set_minimum_size (2 * Text_padding, 2 * Border_width)
 		end
 
 	align_text_center is
 			-- Display `text' centered.
 		do
-			alignment.set_center_alignment
+			Precursor {EV_TEXTABLE_IMP}
 			invalidate
 		end
 
 	align_text_left is
 			-- Display `text' left aligned.
 		do
-			alignment.set_left_alignment
+			Precursor {EV_TEXTABLE_IMP}
 			invalidate
 		end
 
 	align_text_right is
 			-- Display `text' right aligned.
 		do
-			alignment.set_right_alignment
+			Precursor {EV_TEXTABLE_IMP}
 			invalidate
 		end
 
@@ -183,12 +197,12 @@ feature {NONE} -- Implementation for automatic size compute.
 		local
 			minwidth: INTEGER
 		do
-			if item /= Void then
+			if item_imp /= Void and item_imp.is_show_requested then
 				minwidth := item_imp.minimum_width
 			end
 			minwidth := minwidth + client_x + Border_width
 			minwidth := minwidth.max (text_width + 2 * Text_padding)
-			internal_set_minimum_width (minwidth)
+			ev_set_minimum_width (minwidth)
 		end
 
 	compute_minimum_height is
@@ -196,11 +210,11 @@ feature {NONE} -- Implementation for automatic size compute.
 		local
 			minheight: INTEGER
 		do
-			if item /= Void then
+			if item_imp /= Void and item_imp.is_show_requested then
 				minheight := item_imp.minimum_height
 			end
 			minheight := minheight + client_y + Border_width
-			internal_set_minimum_height (minheight)
+			ev_set_minimum_height (minheight)
 		end
 
 	compute_minimum_size is
@@ -209,33 +223,20 @@ feature {NONE} -- Implementation for automatic size compute.
 		local
 			minheight, minwidth: INTEGER
 		do
-			if item /= Void then
+			if item_imp /= Void and then item_imp.is_show_requested then
 				minwidth := item_imp.minimum_width
 				minheight := item_imp.minimum_height
 			end
 			minwidth := minwidth + client_x + Border_width
 			minheight := minheight + client_y + Border_width
 			minwidth := minwidth.max (text_width + 2 * Text_padding)
-			internal_set_minimum_size (minwidth, minheight)
+			ev_set_minimum_size (minwidth, minheight)
 		end
 
 feature {NONE} -- WEL Implementation
 
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
-
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-		repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
-			-- resize it with `a_width', `a_height'.
-		do
-			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width,
-				a_height, repaint)
-			if item_imp /= Void then
-				item_imp.set_move_and_size (client_x, client_y,
-					client_width, client_height)
-			end
-		end
 
 	border_width: INTEGER is
 			-- Number of pixels taken up by border.
@@ -257,25 +258,37 @@ feature {NONE} -- WEL Implementation
 	text_width: INTEGER
 			-- Width of `text' displayed at top.
 
-	alignment: EV_TEXT_ALIGNMENT
-			-- Placement of `text'.
-
-	font: EV_FONT
+	wel_font: WEL_FONT
 			-- Appearance of `text'.
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+		do
+			disable_default_processing
+			set_message_return_value (1)
+		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Redraw `Current' with `frame_style'.
 		local
 			wel_style: INTEGER
 			text_pos: INTEGER
-			font_imp: EV_FONT_IMP
+			half: INTEGER
 			cur_width: INTEGER
 			cur_height: INTEGER
+			r: WEL_RECT
+			bk_brush: WEL_BRUSH
+			pen: WEL_PEN
 		do
-				-- Cache value of `wel_width' and `wel_height' for
+			
+				-- Cache value of `ev_width' and `ev_height' for
 				-- faster access
-			cur_width := wel_width
-			cur_height := wel_height
+			cur_width := ev_width
+			cur_height := ev_height
 
 				-- Determine the Edge style of the frame
 			inspect frame_style
@@ -289,33 +302,10 @@ feature {NONE} -- WEL Implementation
 				end
 			end
 
-				-- Draw the Edge
-			draw_edge (
-				paint_dc, 
-				create {WEL_RECT}.make (
-					0, 
-					text_height // 2, 
-					cur_width, 
-					cur_height
-					),
-				wel_style, 
-				Bf_rect
-				)
+			create r.make (0,0,0,0)
+			bk_brush := background_brush
 
-			if wel_style.bit_and (Bdr_raisedouter) = Bdr_raisedouter then
-				--| FIXME This is to work around a bug where the 3D highlight
-				--| does not seem to appear.
-				paint_dc.select_pen (highlight_pen)
-				paint_dc.line (
-					0,         text_height // 2, 
-					cur_width, text_height // 2
-					)
-				paint_dc.line (
-					0, text_height // 2, 
-					0, cur_height - 1
-					)
-			end
-
+				-- Fill empty space
 			if text /= Void then
 				if alignment.is_left_aligned then
 					text_pos := Text_padding
@@ -324,13 +314,69 @@ feature {NONE} -- WEL Implementation
 				elseif alignment.is_right_aligned then
 					text_pos := cur_width - text_width - Text_padding
 				end
-				font_imp ?= font.implementation
-				check
-					font_imp_not_void: font_imp /= Void
+
+				half := text_height // 2
+
+					-- Paint left part of text
+				create r.make (0, 0, text_pos, half)
+				paint_dc.fill_rect (r, bk_brush)
+				r.set_rect (0, half, text_pos, cur_height)
+				paint_dc.fill_rect (r, bk_brush)
+
+					-- Paint right part of text
+				r.set_rect (text_pos + text_width, 0, cur_width, half)
+				paint_dc.fill_rect (r, bk_brush)
+				r.set_rect (text_pos + text_width, half, cur_width, cur_height)
+				paint_dc.fill_rect (r, bk_brush)
+
+	
+				if item = Void then
+					r.set_rect (1, half + 1, cur_width - 1, cur_height - 1)
+					paint_dc.fill_rect (r, bk_brush)
 				end
-				paint_dc.select_font (font_imp.wel_font)
-				paint_dc.set_text_color (foreground_color_imp)
-				paint_dc.set_background_color (background_color_imp)
+			else
+				if item = Void then
+					r.set_rect (1, half + 1, cur_width - 1, cur_height - 1)
+					paint_dc.fill_rect (r, bk_brush)
+				end
+			end
+
+			r.set_rect (0, text_height // 2, cur_width, cur_height)
+
+			draw_edge (
+				paint_dc, 
+				r,
+				wel_style, 
+				Bf_rect
+				)
+
+			if text /= Void and then not is_sensitive then
+				r.set_rect (text_pos, 0, text_pos + text_width, text_height)
+				paint_dc.fill_rect (r, bk_brush)
+			end
+
+			bk_brush.delete
+
+			if wel_style.bit_and (Bdr_raisedouter) = Bdr_raisedouter then
+					--| This is to work around a bug where the 3D highlight
+					--| does not seem to appear.
+				pen := highlight_pen
+				paint_dc.select_pen (pen)
+				paint_dc.line (
+					0,         text_height // 2, 
+					cur_width, text_height // 2
+					)
+				paint_dc.line (
+					0, text_height // 2, 
+					0, cur_height - 1
+					)
+				pen.delete
+			end
+
+			if text /= Void then
+				paint_dc.select_font (wel_font)
+				paint_dc.set_text_color (wel_foreground_color)
+				paint_dc.set_background_color (wel_background_color)
 				if is_sensitive then
 					paint_dc.text_out (text_pos, 0, " " + wel_text + " ")
 				else
@@ -350,35 +396,92 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_FRAME_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.38  2000/06/09 01:23:20  manus
---| Merged version 1.20.8.7 from DEVEL branch to trunc
+--| Revision 1.39  2001/06/07 23:08:15  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.37  2000/06/08 18:46:48  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.20.8.24  2001/01/26 23:34:25  rogers
+--| Removed undefinition of on_sys_key_down as this is already done in the
+--| ancestor EV_WEL_CONTROL_CONTAINER_IMP.
 --|
---| Revision 1.36  2000/06/07 17:27:59  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.20.8.23  2000/11/06 18:02:52  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.20.8.22  2000/11/03 00:47:16  manus
+--| Fixed a problem when drawing a frame in insenstive mode.
+--| Fixed enable_sensitive and disable sensitive so that they trigger an invalidate message
+--| so that the title is updated.
+--|
+--| Revision 1.20.8.21  2000/11/02 05:02:11  manus
+--| Updated comment on EV_SYSTEM_PEN_IMP to show that after using one of these WEL_PEN
+--| object the Vision2 implementor needs to call `delete' on them to free the allocated
+--| GDI object. Updated code of classes which was not doing it.
+--|
+--| Revision 1.20.8.20  2000/10/31 00:31:38  rogers
+--| Removed unreferenced variable from on_paint.
+--|
+--| Revision 1.20.8.19  2000/10/28 01:07:49  manus
+--| Use `wel_font: WEL_FONT' instead of an EV_FONT object. This reduces the number of GDI objects
+--| since it is not EV_FONTABLE, we can use the shared `wel_font' object from WEL_SHARED_FONTS. This
+--| was not possible before because `string_size' was not defined in WEL_FONT, now it is.
+--|
+--| Revision 1.20.8.18  2000/10/27 02:32:23  manus
+--| Use `wel_background_color' and `wel_foreground_color' to draw frame.
+--|
+--| Revision 1.20.8.17  2000/10/18 16:22:11  rogers
+--| Compute_minimum_width, compute_minimum_size and compute_minimum_height
+--| now all take into account whether the child is visible or not.
+--|
+--| Revision 1.20.8.16  2000/10/16 14:35:34  pichery
+--| replaced `dispose' with `delete'.
+--|
+--| Revision 1.20.8.15  2000/10/12 15:50:25  pichery
+--| Added reference tracking for GDI objects to decrease
+--| the number of GDI objects alive.
+--|
+--| Revision 1.20.8.14  2000/09/13 16:58:50  rogers
+--| Changed fixme to a comment as it is working correctly.
+--|
+--| Revision 1.20.8.13  2000/08/24 21:54:34  rogers
+--| set_left_alignment, set_right_alignment, set_center alignment now all call
+--| precursor. Added alignment.
+--|
+--| Revision 1.20.8.12  2000/08/11 18:56:53  rogers
+--| Fixed copyright clauses. Now use ! instead of |.
+--|
+--| Revision 1.20.8.11  2000/08/08 03:17:18  manus
+--| New resizing policy by calling `ev_' instead of `internal_', see
+--|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
+--| Implemented `on_erase_background' to delete the content of frame if it is empty.
+--|
+--| Revision 1.20.8.10  2000/07/05 01:44:18  brendel
+--| Added invalidate after set_text.
+--|
+--| Revision 1.20.8.9  2000/06/25 18:02:51  brendel
+--| Optimized to use `string_size'.
+--|
+--| Revision 1.20.8.8  2000/06/22 02:07:19  oconnor
+--| Removed in line creations that may have caused 4.5 to choke.
 --|
 --| Revision 1.20.8.7  2000/06/05 21:08:04  manus
 --| Updated call to `notify_parent' because it requires now an extra parameter which is

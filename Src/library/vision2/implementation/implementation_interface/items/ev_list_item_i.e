@@ -31,33 +31,19 @@ inherit
 			interface
 		end
 
+	EV_LIST_ITEM_ACTION_SEQUENCES_I
+
 feature -- Status report
 
 	is_selectable: BOOLEAN is
-			-- May the object be selected.
+			-- May `Current' be selected?
 		do
-			Result := parent /= Void
-		end
-
-feature -- Status setting
-
-	toggle is
-			-- Change `is_selected'.
-		require
-			parent_not_void: parent /= Void
-		do
-			if is_selected then
-				disable_select
-			else
-				enable_select
-			end
-		ensure
-			state_changed: old is_selected = not is_selected
+			Result := parent /= Void and then parent.is_sensitive
 		end
 
 feature -- Access
 
-	parent: EV_LIST is
+	parent: EV_LIST_ITEM_LIST is
 			-- List containing `interface'.
 		do
 			if Precursor /= Void then
@@ -97,8 +83,21 @@ end -- class EV_LIST_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.33  2000/06/07 17:27:41  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.34  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.26.4.7  2001/05/25 20:08:13  rogers
+--| Tightened is_selectable, to ensure that a parent `is_sensitive' before
+--| you can select an item.
+--|
+--| Revision 1.26.4.6  2001/05/14 16:53:41  rogers
+--| Removed toggle.
+--|
+--| Revision 1.26.4.5  2000/07/24 21:31:44  oconnor
+--| inherit action sequences _I class
+--|
+--| Revision 1.26.4.4  2000/06/13 17:58:07  bonnard
+--| `parent' is now an EV_LIST_ITEM_LIST.
 --|
 --| Revision 1.26.4.3  2000/05/10 23:43:43  king
 --| Made tooltipable

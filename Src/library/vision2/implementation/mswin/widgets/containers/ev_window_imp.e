@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision window. Mswindows implementation."
 	status: "See notice at end of class"
@@ -12,24 +11,23 @@ inherit
 	EV_WINDOW_I
 		undefine
 			propagate_foreground_color,
-			propagate_background_color,
-			last_call_was_destroy
+			propagate_background_color
 		redefine
-			interface
+			interface,
+			lock_update,
+			unlock_update
 		end
 
 	EV_SINGLE_CHILD_CONTAINER_IMP
 		export
 			{NONE} set_parent
 		undefine
-			set_default_colors,
-			last_call_was_destroy
+			show,
+			hide,
+			ev_apply_new_size
 		redefine
 			destroy,
 			set_parent,
-			set_width,
-			set_height,
-			set_size,
 			client_height,
 			client_y,
 			parent_ask_resize,
@@ -37,24 +35,17 @@ inherit
 			compute_minimum_width,
 			compute_minimum_height,
 			compute_minimum_size,
-			internal_set_minimum_width,
-			internal_set_minimum_height,
-			internal_set_minimum_size,
 			on_destroy,
-			notebook_parent,
 			interface,
-			notify_change,
 			initialize,
-			window_process_message,
 			on_size,
-			show,
-			hide,
-			insert
+			insert,
+			default_process_message
 		end
 
 	WEL_FRAME_WINDOW
 		rename
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
 			shown as is_displayed,
@@ -70,14 +61,19 @@ inherit
 			y as y_position,
 			move as wel_move,
 			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			move_and_resize as wel_move_and_resize,
+			has_capture as wel_has_capture
+		export {EV_WIDGET_IMP}
+			menu_bar_height
 		undefine
-			remove_command,
 			on_left_button_down,
+			on_middle_button_down,
 			on_right_button_down,
 			on_left_button_up,
+			on_middle_button_up,
 			on_right_button_up,
 			on_left_button_double_click,
+			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
 			on_key_down,
@@ -87,12 +83,20 @@ inherit
 			background_brush,
 			on_draw_item,
 			on_set_cursor,
-			window_process_message,
 			on_color_control,
 			on_wm_vscroll,
 			on_wm_hscroll,
-			on_destroy
+			on_destroy,
+			on_char,
+			on_desactivate,
+			x_position,
+			y_position,
+			on_sys_key_down,
+			on_sys_key_up,
+			on_notify,
+			default_process_message
 		redefine
+			has_focus,
 			default_ex_style,
 			default_style,
 			on_size,
@@ -100,13 +104,13 @@ inherit
 			on_destroy,
 			on_show,
 			on_move,
-			default_process_message,
-			wel_move_and_resize,
 			on_menu_command,
+			window_process_message,
 			on_wm_close,
-			on_accelerator_command,
 			on_wm_window_pos_changing,
-			show, show_with_option,
+			set_y_position,
+			set_x_position,
+			show,
 			hide
 		end
 
@@ -115,44 +119,42 @@ inherit
 			{NONE} all
 		end
 
+	EV_WINDOW_ACTION_SEQUENCES_IMP
+
 create
 	make
 
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a window. Window does not have any
-			-- parents
+			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			make_top ("")
 		end
 
 	initialize is
-			-- Initialize window.
+			-- Initialize `Current'.
 		local
 			app_imp: EV_APPLICATION_IMP
 		do
-			Precursor
-			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			app_imp.add_root_window (interface)
-			destroy_agent := interface~destroy
-			interface.close_actions.extend (destroy_agent)
-			create accel_list.make (10)
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
+			user_can_resize := True
 			init_bars
+			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
+			app_imp.add_root_window (Current)
 			is_initialized := True
 		end	
 
 	init_bars is
 			-- Initialize `lower_bar' and `upper_bar'.
-		require
-			lower_bar_not_void: interface.lower_bar /= Void
-			upper_bar_not_void: interface.upper_bar /= Void
 		local
 			ub_imp, lb_imp: EV_VERTICAL_BOX_IMP
 		do
-			ub_imp ?= interface.upper_bar.implementation
-			lb_imp ?= interface.lower_bar.implementation
+			create upper_bar
+			create lower_bar
+			ub_imp ?= upper_bar.implementation
+			lb_imp ?= lower_bar.implementation
 			check
 				ub_imp_not_void: ub_imp /= Void
 				lb_imp_not_void: lb_imp /= Void
@@ -163,30 +165,15 @@ feature {NONE} -- Initialization
 			lb_imp.wel_set_parent (Current)
 			ub_imp.set_top_level_window_imp (Current)
 			lb_imp.set_top_level_window_imp (Current)
-			--| FIXME Bars are not visible...
-			--| Drawn off-screen?
 		end
 
 feature -- Access
 
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOALATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
-		end
-
 	client_y: INTEGER is
-			-- Top of the client area of container.
+			-- Top of the client area of `Current'.
 		do
-			Result := client_rect.y
-			if not interface.upper_bar.empty then
+			Result := Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
+			if not interface.upper_bar.is_empty then
 					-- Add 1 pixel to separate client area and upper bar.
 				Result := Result + interface.upper_bar.minimum_height + 1
 			end
@@ -194,10 +181,10 @@ feature -- Access
 		end
 
 	client_height: INTEGER is
-			-- Height of the client area of container
+			-- Height of the client area of `Current'.
 		do
-			Result := client_rect.height - client_y
-			if not interface.lower_bar.empty then
+			Result := Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} - client_y
+			if not interface.lower_bar.is_empty then
 					-- Add 1 pixel to separate client area and lower bar.
 				Result := Result - interface.lower_bar.minimum_height - 1
 			end
@@ -206,33 +193,25 @@ feature -- Access
 
 	maximum_height: INTEGER
 			-- Maximum height that application wishes widget
-			-- instance to have
+			-- instance to have.
 
 	maximum_width: INTEGER
 			-- Maximum width that application wishes widget
-			-- instance to have
+			-- instance to have.
 
 	title: STRING is
-			-- Application name to be displayed by
-			-- the window manager
+			-- Window text to be displayed by the application manager.
 		do
-			Result := text
+			if text.count /= 0 then
+				Result := text
+			else
+				Result := Void
+			end
        	end
 
-	widget_group: EV_WIDGET is
-			-- Widget with wich current widget is associated.
-			-- By convention this widget is the "leader" of a group
-			-- widgets. Window manager will treat all widgets in
-			-- a group in some way; for example, it may move or
-			-- iconify them together
-		do
-			check
-				not_yet_implemented: False
-			end
-		end 
-
 	top_level_window_imp: like Current is
-			-- Top level window that contains the current widget.
+			-- Top level window that contains `Current'.
+			-- As `Current' is a window then we return `Current'
 		do
 			Result := Current
 		end
@@ -240,91 +219,94 @@ feature -- Access
 	menu_bar: EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
 
-	notebook_parent: ARRAYED_LIST[EV_NOTEBOOK_IMP] is
-			-- By default all windows are not notebooks.
-			-- Redefined in EV_NOTEBOOK.
-		do
-			Result := Void
-		end
-
 	is_modal: BOOLEAN
 			-- Must the window be closed before application continues?
 
 feature -- Status setting
 
+	lock_update is
+			-- Lock updates for this window on certain platforms until
+			-- `unlock_update' is called.
+		do
+			{EV_WINDOW_I} Precursor
+			lock_window_update
+		end
+
+	unlock_update is
+			-- Unlock updates for this window on certain platforms.
+		do
+			{EV_WINDOW_I} Precursor
+			unlock_window_update
+		end
+
 	insert (v: like item) is
+			-- Insert `v' into `Current'.
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (v)
-			wel_move_and_resize (x_position, y_position, width, height, False)
+			ev_move_and_resize (x_position, y_position, width, height, False)
 		end
 
 	destroy is
-			-- Destroy the widget, but set the parent sensitive
+			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		local
 			app_i: EV_APPLICATION_I
+			app_imp: EV_APPLICATION_IMP
 		do
-			if not on_wm_close_executed then
-				interface.close_actions.prune_all (destroy_agent)
-				interface.close_actions.call ([])
+			if not is_destroyed then
+				app_i := (create {EV_ENVIRONMENT}).application.implementation
+				app_imp ?= app_i
+				check
+					implementation_not_void: app_imp /= Void
+				end
+				app_imp.remove_root_window (Current)
+				if parent_imp /= Void then
+					parent_imp.disable_sensitive
+				end
+	
+					-- Remove parent/children relationship
+				interface.wipe_out
+	
+					-- No one should be referencing Current anymore.
+				is_destroyed := True	
+					
+					--| Instead of calling Precursor {WEL_COMPOSITE_WINDOW},
+					--| We do about the same except we do not quit the application
+					--| if `Current' is application main window, since Vision2
+					--| Does not have such a concept.
+				wel_destroy_window
 			end
-			app_i := (create {EV_ENVIRONMENT}).application.implementation
-			app_i.remove_root_window (interface)
-			if parent_imp /= Void then
-				parent_imp.disable_sensitive
-			end
-
-				-- Remove parent/children relationship
-			interface.wipe_out
-
-				--| Instead of calling Precursor {WEL_COMPOSITE_WINDOW},
-				--| We do about the same except we do not quit the application
-				--| if `Current' is application main window, since Vision2
-				--| Does not have such a concept.
-			cwin_destroy_window (wel_item)
-
-			is_destroyed := True
-			destroy_just_called := True
 		end
 
-	destroy_agent: PROCEDURE [EV_WINDOW, TUPLE []]
-		-- `interface~destroy'.
+	wel_destroy_window is
+			-- Destroy the window-widget
+		do
+			cwin_destroy_window (wel_item)
+		end
 
 	on_wm_close is
 			-- User clicked on "close" ('X').
 		do
-			on_wm_close_executed := True
-			interface.close_actions.call ([])
+			if close_request_actions_internal /= Void then
+				close_request_actions_internal.call ([])
+			end
 				-- Do not actually close the window.
 			set_default_processing (False)
-		ensure then
-			on_wm_close_executed_true: on_wm_close_executed /= False
 		end
 
-	on_wm_close_executed: BOOLEAN
-		-- `interface.close_actions' already called.
-		--| There are two cases for destroying a window.
-		--| #1. The user calls destroy.
-		--| #2. The user clicks on the cross.
-		--| if #1 there is no problem, destroy is called, which calls the
-		--| close actions only once.
-		--| if #2 then destroy is called from within the close actions
-		--| which would then call the close_actions again if we do not have
-		--| this variable which tells us that during case #2, on_wm_close
-		--| has already been called and therefore we know not to call the
-		--| close actions again.
-
 	set_default_minimum_size is
-			-- Initialize the size of the widget.
+			-- Initialize the size of `Current'.
 		do
-			--| FIXME Only for dialogs maybe?
-			internal_set_minimum_size (250, 140)
-			set_maximum_width (maximized_window_width)
-			set_maximum_height (maximized_window_height)
+			ev_set_minimum_size (0, 0)
+				-- Assign arbitarily large values.
+				-- As long as they are bigger than the current screen
+				-- resolution there will be no problems from this.
+			set_maximum_width (32000)
+			set_maximum_height (32000)
 		end
 
 	forbid_resize is
-			-- Forbid the resize of the window.
+			-- Forbid the resize of `Current'.
 		local
 			new_style: INTEGER
 		do
@@ -333,6 +315,7 @@ feature -- Status setting
 			new_style := clear_flag (new_style, Ws_minimizebox)
 			new_style := clear_flag (new_style, Ws_sizebox)
 			set_style (new_style)
+			compute_minimum_size
 			if is_displayed then
 				hide
 				show
@@ -340,7 +323,7 @@ feature -- Status setting
 		end
 
 	allow_resize is
-			-- Allow the resize of the window.
+			-- Allow the resize of `Current'.
 		local
 			new_style: INTEGER
 		do
@@ -349,6 +332,7 @@ feature -- Status setting
 			new_style := set_flag (new_style, Ws_minimizebox)
 			new_style := set_flag (new_style, Ws_sizebox)
 			set_style (new_style)
+			compute_minimum_size
 			if is_displayed then
 				hide
 				show
@@ -357,8 +341,22 @@ feature -- Status setting
 
 feature -- Element change
 
+	set_x_position (a_x: INTEGER) is
+			-- Set `x_position' with `a_x'
+		do
+			child_cell.set_is_positioned
+			ev_move (a_x, y_position)
+		end
+
+	set_y_position (a_y: INTEGER) is
+			-- Set `y_position' with `a_y'
+		do
+			child_cell.set_is_positioned
+			ev_move (x_position, a_y)
+		end
+	
 	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the widget.
+			-- Make `par' the new parent of `Current'.
 			-- `par' can be Void then the parent is the screen.
 		local
 			ww: WEL_WINDOW
@@ -373,87 +371,69 @@ feature -- Element change
 
 	set_maximum_width (value: INTEGER) is
 			-- Make `value' the new maximum width.
-			-- If the Current size is larger, the size
-			-- change.
+			-- If `width' is larger, then it is reduced.
 		do
 			maximum_width := value
-			if value < wel_width then
-				wel_resize (value, wel_height)
+			if value < ev_width then
+				ev_resize (value, ev_height)
 			end
 		end
 
 	set_maximum_height (value: INTEGER) is
 			-- Make `value' the new maximum height.
-			-- If the Current size is larger, the size
-			-- change.
+			-- If `height' is larger, then it is reduced.
 		do
 			maximum_height := value
-			if value < wel_height then
-				wel_resize (wel_width, value)
+			if value < ev_height then
+				ev_resize (ev_width, value)
 			end
 		end
 
 	set_title (txt: STRING) is
-			-- Make `txt' the title of the window.            
+			-- Make `txt' the title of `Current'.            
 		do
 			set_text (txt)
 		end
 
-	set_widget_group (widget: EV_WIDGET) is
-			-- Make Current part of the group of `widget'.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
 	set_menu_bar (a_menu_bar: EV_MENU_BAR) is
-			-- Set `menu_bar' to `a_menu_bar'.
+			-- Assign `a_menu_bar' to `menu_bar'.
 		local
 			mb_imp: WEL_MENU
+			mb: EV_MENU_BAR_IMP
 		do
 			menu_bar := a_menu_bar
 			mb_imp ?= menu_bar.implementation
 			set_menu (mb_imp)
+			mb ?= a_menu_bar.implementation
+			check
+				implementation_not_void: mb /= Void
+			end
+			mb.set_parent_imp (Current)
 			compute_minimum_height
 		end
 
 	remove_menu_bar is
-			-- Set `menu_bar' to `Void'.
-		do
-			menu_bar := Void
-			unset_menu
-			compute_minimum_height
-		end
-
-	show is
-			-- Show the window
+			-- Assign `Void' to `menu_bar'.
 		local
-			app_imp: EV_APPLICATION_IMP
+			mb: EV_MENU_BAR_IMP
 		do
-			compute_minimum_size
-			{WEL_FRAME_WINDOW} Precursor
-			if is_modal then
-				app_imp ?= Environment.application.implementation
-				app_imp.set_blocking_window (Current)
+			if menu_bar /= Void then
+				mb ?= menu_bar.implementation
+				check
+					implementation_not_void: mb /= Void
+				end
+				mb.set_parent_imp (Void)
+				menu_bar := Void
+				unset_menu
+				compute_minimum_height
 			end
 		end
 
-	show_with_option (cmd_show: INTEGER) is
-			-- Set the window's visibility with `cmd_show'.
-			-- See class WEL_SW_CONSTANTS for `cmd_show' value.
-			-- (from WEL_WINDOW)
-		do
-			compute_minimum_size
-			Precursor {WEL_FRAME_WINDOW} (cmd_show)
-		end
-
 	enable_modal is
-			-- Set `is_modal' to `True', set the window to be
-			-- "Top most"
+			-- Assign `True' to `is_modal' to `True' and set `Current' to be
+			-- "Top most".
 		local
 			loc_ex_style: INTEGER
-			app_imp: EV_APPLICATION_IMP
 		do
 			if not is_modal then
 					-- Change the `ex_style' of the window to turn
@@ -465,34 +445,16 @@ feature -- Element change
 				end
 				set_ex_style (default_ex_style + Ws_ex_topmost)
 	
-					-- Set the window to be the blocking window
-				app_imp ?= Environment.application.implementation
-				if is_displayed then
-					app_imp.set_blocking_window (Current)
-				end
 				is_modal := True
 			end
 		end
 
-	hide is
-			-- Hide the window
-		local
-			app_imp: EV_APPLICATION_IMP
-		do
-			if is_modal and exists and then is_displayed then 
-				app_imp ?= Environment.application.implementation
-				app_imp.remove_blocking_window (Current)
-			end
-			{WEL_FRAME_WINDOW} Precursor
-		end
-
 	disable_modal is
-			-- Set `is_modal' to `False', Set the window not 
+			-- Set `is_modal' to `False', Set `Current' not 
 			-- to be "Top most" if it is not part of its 
 			-- default style.
 		local
 			loc_ex_style: INTEGER
-			app_imp: EV_APPLICATION_IMP
 		do
 			if is_modal then
 				if exists then
@@ -505,66 +467,16 @@ feature -- Element change
 						loc_ex_style := clear_flag (loc_ex_style, Ws_ex_topmost)
 						set_ex_style (loc_ex_style)
 					end
-
-						-- Set the window not to be a blocking window anymore
-					app_imp ?= Environment.application.implementation
-					if is_displayed then
-						app_imp.remove_blocking_window (Current)
-					end
 				end
+
 				is_modal := False
-			end
-		end
-
-feature -- Resizing
-
---| " In the implementation of the window, we use internal_changes to know%
---| % if the user changed the size of the window. In this case, we won't%
---| % resize it to the minimum_size. The bit used are the following:%
---| % bit 7 -> The user has set the width of the window while it was hidden%
---| % bit 8 -> The user has set the height of the window shile it was hidden."
-
-	set_size (w, h: INTEGER) is
-			-- Resize the widget when it is not managed.
-			-- We don't redefine it because of the post-conditions.
-		do
-			if is_displayed then
-				wel_resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
-			else
-				internal_changes := set_bit (internal_changes, 64, True)
-				internal_changes := set_bit (internal_changes, 128, True)
-				wel_resize (w, h)
-			end
-		end
-
-	set_width (value:INTEGER) is
-			-- Make `value' the new width of the widget when
-			-- it is not managed.
-		do
-			if is_displayed then
-				wel_set_width (value.max (minimum_width).min (maximum_width))
-			else
-				internal_changes := set_bit (internal_changes, 64, True)
-				wel_set_width (value)
-			end
-		end
-
-	set_height (value: INTEGER) is
-			-- Make `value' the new height of the widget when
-			-- it is not managed.
-		do
-			if is_displayed then
-				wel_set_height (value.max (minimum_height).min (maximum_height))
-			else
-				internal_changes := set_bit (internal_changes, 128, True)
-				wel_set_height (value)
 			end
 		end
 
 feature -- Basic operations
 
 	block is
-			-- Wait until window is closed by the user.
+			-- Wait until `Current' is closed by the user.
 		local
 			app: EV_APPLICATION
 		do
@@ -577,217 +489,172 @@ feature -- Basic operations
 			end
 		end
 
+feature -- Status Report
+
+	has_focus: BOOLEAN is
+			-- Does current window have focus?
+		do
+			Result := foreground_window = Current
+		end
+
 feature {NONE} -- Implementation
+
+	ev_apply_new_size (a_x_position, a_y_position,
+			a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- Move the window to `a_x_position', `a_y_position' position and
+			-- resize it with `a_width', `a_height'.
+			-- This feature must be redefine by the containers to readjust its
+			-- children too.
+		local
+			bar_imp: EV_VERTICAL_BOX_IMP 
+		do
+			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
+			if item /= Void then
+				item_imp.ev_apply_new_size (client_x, client_y,
+					client_width, client_height, True)
+			end
+			if menu_bar /= Void then
+				draw_menu
+			end
+			if not interface.upper_bar.is_empty then
+				bar_imp ?= interface.upper_bar.implementation
+				check
+					bar_imp_not_void: bar_imp /= Void
+				end
+				bar_imp.set_move_and_size (0, 0, client_width, client_y)
+			end
+			if not interface.lower_bar.is_empty then
+				bar_imp ?= interface.lower_bar.implementation
+				check
+					bar_imp_not_void: bar_imp /= Void
+				end
+				bar_imp.set_move_and_size (0,
+					client_y + client_height + 1,
+					client_width, bar_imp.minimum_height)
+			end
+		end
 
 	on_menu_command (menu_id: INTEGER) is
 			-- `menu_id' has been chosen from the menu.
 		local
-			sbi: EV_MENU_BAR_IMP
+			menu_bar_imp: EV_MENU_BAR_IMP
 		do
-			check
-				has_menu_bar: menu_bar /= Void
+			if menu_bar /= Void then
+				menu_bar_imp ?= menu_bar.implementation
+				menu_bar_imp.menu_item_clicked (menu_id)
 			end
-			sbi ?= menu_bar.implementation
-			sbi.menu_item_clicked (menu_id)
 		end
-
-feature {EV_TITLED_WINDOW, EV_APPLICATION_IMP} -- Accelerators
-
-	on_accelerator_command (an_accel_id: INTEGER) is
-			-- Accelerator width `an_accel_id' has just been pressed.
-		do
-			check
-				accel_list_has_an_accel_id: accel_list.has (an_accel_id)
-			end
-			accel_list.item (an_accel_id).actions.call ([])
-		end
-
-	accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER]
-			-- List of accelerators connected to this window indexed by
-			-- their `id'.
-
-	accelerators: WEL_ACCELERATORS
-			-- List of accelerators connected to this window.
-
-	wel_acc_size: INTEGER is
-			-- Used to initialize WEL_ARRAY.
+		
+	on_menu_opened (a_menu: WEL_MENU) is
+			-- `a_menu' has been opened.
 		local
-			wel_acc: WEL_ACCELERATOR
-		once
-			wel_acc ?= (create {EV_ACCELERATOR}).implementation
-			Result := wel_acc.structure_size
-		end
-
-	create_accelerators is
-			-- Recreate the accelerators.
-		local
-			wel_array: WEL_ARRAY [WEL_ACCELERATOR]
-			acc: WEL_ACCELERATOR
-			n: INTEGER
+			menu_bar_imp: EV_MENU_BAR_IMP
 		do
-			if accel_list.empty then
-				accelerators := Void
-			else
-	 			from
-	 				accel_list.start
-		 			create wel_array.make (accel_list.count, wel_acc_size)
-					n := 0
-				until
-					accel_list.after
-				loop
-					acc ?= accel_list.item_for_iteration.implementation
-					wel_array.put (acc, n)
-					accel_list.forth
-					n := n + 1
-	 			end
-	 			create accelerators.make_with_array (wel_array)
+				--| FIXME used to use menu /= Void
+				--| but we cannot query it in WEL. Is this correct?
+			if has_menu then
+				menu_bar_imp ?= menu_bar.implementation
+				menu_bar_imp.menu_opened (a_menu)
 			end
 		end
 
-	connect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Connect key combination `an_accel' to this window.
-		local
-			acc_imp: EV_ACCELERATOR_IMP
+feature {EV_WIDGET_IMP} -- Implementation
+		
+	last_focused_widget: POINTER
+		-- Last focused widget in `Current'.
+	
+	set_last_focused_widget (windows_pointer: POINTER) is
+			-- Assign `windows_pointer' to `last_focused_widget'.
 		do
-			acc_imp ?= an_accel.implementation
-			check
-				acc_imp_not_void: acc_imp /= Void
-			end
-			accel_list.put (an_accel, acc_imp.id)
-			create_accelerators
+			last_focused_widget := windows_pointer
 		end
 
-	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Disconnect key combination `an_accel' from this window.
-		local
-			acc_imp: EV_ACCELERATOR_IMP
-		do
-			acc_imp ?= an_accel.implementation
-			check
-				acc_imp_not_void: acc_imp /= Void
-			end
-			accel_list.remove (acc_imp.id)
-			create_accelerators
-		end
-
-feature {NONE} -- Implementation
-
-	internal_set_minimum_width (value: INTEGER) is
-			-- Make `value' the new `minimum_width'.
-			-- If the Current size is smaller, the size
-			-- change.
-		do
-			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
-			if value > wel_width then
-				wel_resize (value, wel_height)
-			end
-		end
-
-	internal_set_minimum_height (value: INTEGER) is
-			-- Make `value' the new `minimum_height'.
-			-- If the Current size is smaller, the size
-			-- change.
-		do
-			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
-			if value > wel_height then
-				wel_resize (wel_width, value)
-			end
-		end
-
-	internal_set_minimum_size (mw, mh: INTEGER) is
-			-- Make `mw' the new minimum_width and `mh' the new
-			-- minimum_height. If the Current size is smaller,
-			-- the size change.
-		do
-			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (mw, mh)
-			if mw > wel_width or else mh > wel_height then
-				wel_resize (
-					mw.max (wel_width), 
-					mh.max (wel_height)
-				)
-			end
-		end
+feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
 	compute_minimum_width is
-			-- Recompute the minimum width of the object.
+			-- Recompute the minimum width of `Current'.
 		local
 			mw: INTEGER
 		do
-			mw := 2 * window_frame_width
-			if item_imp /= Void then
+			if user_can_resize then
+				mw := 2 * window_frame_width
+			else
+				mw := 2 * dialog_window_frame_width
+			end
+			
+			if item_imp /= Void and item_imp.is_show_requested then
 				mw := mw + item_imp.minimum_width
 			end
-			mw := mw.max (interface.upper_bar.minimum_width).max (interface.lower_bar.minimum_width)
-			internal_set_minimum_width (
-				mw.max (interface.upper_bar.minimum_width).max (interface.lower_bar.minimum_width))
+			mw := mw.max (interface.upper_bar.minimum_width).max
+				(interface.lower_bar.minimum_width)
+			ev_set_minimum_width (
+				mw.max (interface.upper_bar.minimum_width).max
+					(interface.lower_bar.minimum_width))
 		end
 
 	compute_minimum_height is
-			-- Recompute the minimum height of the object.
+			-- Recompute the minimum height of `Current'.
 		local
 			mh: INTEGER
 		do
-			mh := 2 * window_frame_height
+			if user_can_resize then
+				mh := 2 * window_frame_height
+			else
+				mh := 2 * dialog_window_frame_height
+			end
 			if has_menu then
 				mh := mh + menu_bar_height
 			end
-			if not interface.upper_bar.empty then
+			if not interface.upper_bar.is_empty then
 				mh := mh + interface.upper_bar.minimum_height + 1
 			end
-			if item_imp /= Void then
+			if item_imp /= Void and item_imp.is_show_requested then
 				mh := mh + item_imp.minimum_height
 			end
-			if not interface.lower_bar.empty then
+			if not interface.lower_bar.is_empty then
 				mh := mh + interface.lower_bar.minimum_height + 1
 			end
-			internal_set_minimum_height (mh)
+			ev_set_minimum_height (mh)
 		end
 
 	compute_minimum_size is
-			-- Recompute the minimum size of the object.
+			-- Recompute the minimum size of `Current'.
 		local
 			mw, mh: INTEGER
 		do
-			mw := 2 * window_frame_width
-			if item_imp /= Void then
+			if user_can_resize then
+				mw := 2 * window_frame_width
+			else
+				mw := 2 * dialog_window_frame_width
+			end
+			
+			if item_imp /= Void and item_imp.is_show_requested then
 				mw := mw + item_imp.minimum_width
 			end
-			mw := mw.max (interface.upper_bar.minimum_width).max (interface.lower_bar.minimum_width)
+			mw := mw.max (interface.upper_bar.minimum_width).max
+				(interface.lower_bar.minimum_width)
 
-			mh := 2 * window_frame_height
+			if user_can_resize then
+				mh := 2 * window_frame_height
+			else
+				mh := 2 * dialog_window_frame_height
+			end
 			if has_menu then
 				mh := mh + menu_bar_height
 			end
-			if not interface.upper_bar.empty then
+			if not interface.upper_bar.is_empty then
 				mh := mh + interface.upper_bar.minimum_height + 1
 			end
 			if item_imp /= Void then
 				mh := mh + item_imp.minimum_height
 			end
-			if not interface.lower_bar.empty then
+			if not interface.lower_bar.is_empty then
 				mh := mh + interface.lower_bar.minimum_height + 1
 			end
-			internal_set_minimum_size (
-				mw.max (interface.upper_bar.minimum_width).max (interface.lower_bar.minimum_width),
-				mh)
+			ev_set_minimum_size (
+				mw.max (interface.upper_bar.minimum_width).max
+				(interface.lower_bar.minimum_width), mh)
 		end
-
-	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP) is
-		local
-			app_imp: EV_APPLICATION_IMP
-		do
- 			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
- 			if resize_on_idle_agent = Void then
- 				resize_on_idle_agent := ~compute_minimum_size
- 			end
- 			app_imp.do_once_on_idle (resize_on_idle_agent)
- 			check
- 				agent_not_void: resize_on_idle_agent /= Void
- 			end
-		end
-
-	resize_on_idle_agent: PROCEDURE [ANY, TUPLE []]
-			-- `compute_minimum_size'.
 
 feature {NONE} -- Inapplicable
 
@@ -796,6 +663,7 @@ feature {NONE} -- Inapplicable
 			-- necessary to send him back the information
 			-- Can be called but do nothing.
 		do
+			--| This does not need to do anything.
 			check
 				Inapplicable: True
 			end
@@ -803,36 +671,28 @@ feature {NONE} -- Inapplicable
 
 	set_top_level_window_imp (a_window: EV_TITLED_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
-			-- of the `Current'.
+			-- of `Current'.
 		do
+			--| This should never be called for a window.
 			check
 				inapplicable: False
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	default_style: INTEGER is
-				-- Set with the option `Ws_clipchildren' to avoid flashing.
+			-- Default style of `Current'.
+			-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
 			Result := Ws_popup + Ws_overlapped + Ws_dlgframe
 					+ Ws_clipchildren + Ws_clipsiblings
 		end
 
 	default_ex_style: INTEGER is
+			-- Default extended style of `Current.
 		do
 			Result := Ws_ex_controlparent
-		end
-
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-			-- Move the window to `a_x_position', `a_y' position and
-			-- resize it with `a_width', `a_height'.
-		do
-			{WEL_FRAME_WINDOW} Precursor (a_x, a_y, a_width, a_height, repaint)
-			--| FIXME Is this needed?
-			if a_width = wel_width and a_height = wel_height then
-				on_size (wel_window_constants.size_restored, a_width, a_height)
-			end
 		end
 
 	default_process_message (msg, wparam, lparam: INTEGER) is
@@ -841,63 +701,89 @@ feature {NONE} -- Implementation
 		do
 			if msg = Wm_mouseactivate then
 				on_wm_mouseactivate (wparam, lparam)
+			elseif msg= Wm_syncpaint then
+				if item_imp /= Void then
+					item_imp.propagate_syncpaint
+				end
+			else
+				Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (msg, wparam, lparam)
 			end
 		end
+		
+	show is
+			-- Show `Current'.
+		do
+			if not is_displayed then
+				call_show_actions := True
+				Precursor {WEL_FRAME_WINDOW}
+					-- We call show actions
+				if call_show_actions then
+					if show_actions_internal /= Void then
+						show_actions_internal.call ([])
+					end
+					call_show_actions := False
+				end
+			end
+		end
+		
+	hide is
+			-- Hide `Current'.
+		do
+			Precursor {WEL_FRAME_WINDOW}
+			call_show_actions := False
+		end
+		
+	call_show_actions: BOOLEAN
+		-- Should the `show_actions_internal' be called?
+		-- used to ensure they are only called once.
 
 	on_show is
-			-- When the window receive the on_show message,
+			-- When the window receives the on_show message,
 			-- it resizes the window at the size of the child.
-			-- And it send the message to the child because wel
-			-- don't
-		local
-			w, h: INTEGER
+			-- And it sends the message to the child because wel
+			-- does not.
 		do
-			-- The width to give to the window
-			if bit_set (internal_changes, 64) then
-				w := wel_width
-				internal_changes := set_bit (internal_changes, 64, False)
-			else
-				w := 0
-			end
-
-			-- The height to give to the window
-			if bit_set (internal_changes, 128) then
-				h := wel_height
-				internal_changes := set_bit (internal_changes, 128, False)
-			else
-				h := 0
-			end
-
-			-- We check if there is a menu, and if so we draw it.
+				-- We check if there is a menu, and if so we draw it.
 			if has_menu then
 				draw_menu
 			end
 
-			-- We resize everything.
+			if child_cell.is_positioned then
+					-- We need to move window to specified location
+				wel_move (child_cell.x, child_cell.y)
+			end
+
+				-- We resize everything.
 			wel_resize (
-				w.max (minimum_width).min (maximum_width), 
-				h.max (minimum_height).min (maximum_height)
+				width.min (maximum_width), 
+				height.min (maximum_height)
 				)
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
-			-- Called when the window is resized.
+			-- Called when `Current' is resized.
 		local
 			bar_imp: EV_VERTICAL_BOX_IMP
+			w_rect: WEL_RECT
 		do
 			if size_type /= Wel_window_constants.Size_minimized then
-				if not interface.upper_bar.empty then
+				w_rect := window_rect
+				internal_set_size (w_rect.width, w_rect.height)
+
+				if not interface.upper_bar.is_empty then
 					bar_imp ?= interface.upper_bar.implementation
 					check
 						bar_imp_not_void: bar_imp /= Void
 					end
 					bar_imp.set_move_and_size (0, 0, client_width, client_y)
 				end
+
 				if item /= Void then
 					item_imp.set_move_and_size (client_x, client_y,
 						client_width, client_height)
 				end
-				if not interface.lower_bar.empty then
+
+				if not interface.lower_bar.is_empty then
 					bar_imp ?= interface.lower_bar.implementation
 					check
 						bar_imp_not_void: bar_imp /= Void
@@ -906,54 +792,48 @@ feature {NONE} -- Implementation
 						client_y + client_height + 1,
 						client_width, bar_imp.minimum_height)
 				end
-				{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (size_type,
-					a_width, a_height)
+
+					-- Calls user actions if any
+				if resize_actions_internal /= Void then
+					resize_actions_internal.call (
+						[screen_x, screen_y, a_width, a_height])
+				end
 			end
 		end
 
    	on_move (x_pos, y_pos: INTEGER) is
    			-- Wm_move message.
    			-- This message is sent after a window has been moved.
-   			-- `x_position_pos' specifies the x_position-coordinate of the upper-left
-   			-- corner of the client area of the window.
+   			-- `x_position_pos' specifies the x_position-coordinate
+			-- of the upper-left corner of the client area of the window.
    			-- `y_pos' specifies the y-coordinate of the upper-left
    			-- corner of the client area of the window.
    		do
-			interface.move_actions.call ([x_pos, y_pos, wel_width, wel_height])
+			interface.move_actions.call ([x_pos, y_pos, ev_width, ev_height])
  		end
 
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
-			-- Called by WEL to request min/max size of window.
+			-- Called by WEL to request min/max size of `Current'.
 			-- Is called just before move and/or resize.
 		local
 			min_track, max_track: WEL_POINT
-			w, h: BOOLEAN
 		do
-			w := horizontal_resizable
-			h := vertical_resizable
-			if w and h then
-				create min_track.make (internal_minimum_width,
-					internal_minimum_height)
-				create max_track.make (maximum_width, maximum_height)
-			elseif w then
-				create min_track.make (internal_minimum_width, height)
-				create max_track.make (maximum_width, height)
-			elseif h then
-				create min_track.make (wel_width, internal_minimum_height)
-				create max_track.make (wel_width, maximum_height)
-			else
-				create min_track.make (wel_width, wel_height)
-				create max_track.make (wel_width, wel_height)
-			end
+			create min_track.make (minimum_width, minimum_height)
+				-- Use an arbitarily large number to create `max_track'
+				-- This effectively allows the user to resize `Current' as
+				-- large as they wish. The size used to be limited to the
+				-- current screen resolution, but this lead to problems on
+				-- multiple monitors with different screen resolutions.
+			create max_track.make (32000, 32000)
 			min_max_info.set_min_track_size (min_track)
 			min_max_info.set_max_track_size (max_track)
 		end
 
 	on_destroy is
-			-- Called when the window is destroy.
+			-- Called when `Current' is destroyed.
 			-- Set the parent sensitive if it exists.
 		do
-			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
 			if parent_imp /= Void and not parent_imp.destroyed and then not
 				parent_imp.is_sensitive then
 				parent_imp.disable_sensitive
@@ -961,33 +841,132 @@ feature {NONE} -- Implementation
 		end
 
 	on_wm_mouseactivate (wparam, lparam: INTEGER) is
-			-- The window have been activated thanks to the click of a window.
-			-- If it was a right click, we do not raise the window to the front
-			-- of the screen because of the pick-and-drop.
+			-- `Current' has been activated thanks to the click of a window.
 		local
 			msg: INTEGER
+			env: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
+			source: EV_PICK_AND_DROPABLE_IMP
 		do
+			--| FIXME Reformat this code.
+			create env
+			app_imp ?= env.application.implementation
+			check
+				app_not_void: app_imp /= Void
+			end
+			app_imp.clear_override_from_mouse_activate
 			msg := cwin_hi_word (lparam)
-			if msg = Wm_rbuttondown then
-				override_movement := True
-				set_message_return_value (Wel_input_constants.Ma_noactivate)
-				disable_default_processing
+			source := source_at_pointer_position
+				--| We set `override movement' to False. It is easier to then assign `True
+				--| if we find (below) that `Current' must not be raised due to the widget
+				--| at the pointer_position having a drag/pick and drop.
+			override_movement := False
+			if source /= Void then
+					--| We reach here if the mouse click that caused the Wm_mouse_activate message
+					--| to be raised was over a widget that has either pick or drag and drop. 
+				if (msg = Wm_rbuttondown and widget_has_pick (source))
+				or (msg = Wm_lbuttondown and widget_has_drag (source)) or
+				app_imp.pick_and_drop_source /= Void then
+						--| If we have reached here, then we do not want to raise the window, as
+						--| the click is either going to start a drag/pick and drop or there is
+						--| one currently executing (quered on `app_imp').
+					set_message_return_value (Wel_input_constants.Ma_noactivate)
+					disable_default_processing
+					override_movement := True
+					if not has_focus and not widget_has_drag (source) then
+						app_imp.set_override_from_mouse_activate
+					end
+				else
+						--| If we have reached here, then if there is no pick/drag and drop
+						--| executing, so we explicitly call `move_to_foreground' to ensure
+						--| `Current' is raised. If we do not call `move_to_foreground', in some
+						--| cases, on_window_pos_changing may not be called.
+					if app_imp.pick_and_drop_source = Void then
+						move_to_foreground
+					end
+				end
 			else
-				override_movement := False
+					--| We reach here if the mouse click that caused the wm_mouseactivate message
+					--| was over a widget that does not have pick/drag and drop. Clicking on the
+					--| non client area of a window will also cause us to be here.
+				if app_imp.pick_and_drop_source = Void then
+						--| We are here if there is no drag/pick and drop currently executing.
+						--| So we must raise `Current'.
+					move_to_foreground
+				else
+						--| If we are here, then there is a drag/pick and drop executing, so
+						--| we override the movement.
+					set_message_return_value (Wel_input_constants.Ma_noactivate)
+					disable_default_processing
+					override_movement := True
+					if not has_focus then
+						app_imp.set_override_from_mouse_activate
+					end
+				end
+			end
+		end
+	
+	widget_has_pick (pick_and_dropable: EV_PICK_AND_DROPABLE_IMP): BOOLEAN is
+			-- Does `pick_and_dropable' have a pick and drop?
+		do
+			if pick_and_dropable /= Void then
+				Result := pick_and_dropable.mode_is_pick_and_drop
 			end
 		end
 
-	window_process_message (hwnd: POINTER; msg: INTEGER; wparam: INTEGER;
-		lparam: INTEGER): INTEGER is
+	widget_has_drag (pick_and_dropable: EV_PICK_AND_DROPABLE_IMP): BOOLEAN is
+			-- Does `pick_and_dropable' have a drag and drop?
 		do
-			if msg = wel_window_constants.wm_nclbuttondown then
-				move_to_foreground
-			elseif msg = wel_window_constants.wm_activate and
-				wparam /= wel_window_constants.wa_clickactive then
-					move_to_foreground
-			else
-				Result := Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
-					(hwnd, msg, wparam, lparam)
+			if pick_and_dropable /= Void then
+				Result :=  pick_and_dropable.mode_is_drag_and_drop
+			end
+		end
+
+	source_at_pointer_position: EV_PICK_AND_DROPABLE_IMP is
+			-- `Result' is EV_PICK_AND_DROPABLE at current pointer_position.
+		local
+			wel_window: WEL_WINDOW
+			wel_point: WEL_POINT
+			widget_imp: EV_WIDGET_IMP
+			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM]
+			an_item_imp: EV_ITEM_IMP
+			sensitive: EV_SENSITIVE
+			pebble_result: ANY
+		do	
+			create wel_point.make (0, 0)
+			wel_point.set_cursor_position
+			wel_window := wel_point.window_at
+			if wel_window /= Void then
+				widget_imp ?= wel_window
+				if widget_imp /= Void then
+						-- We execute the pebble function
+					pebble_result := widget_imp.query_pebble_function (wel_point.x - widget_imp.screen_x,
+						wel_point.y - widget_imp.screen_y, wel_point.x, wel_point.y)
+					if widget_imp.pebble /= Void or pebble_result /= Void then
+						Result := widget_imp
+					end
+					item_list_imp ?= widget_imp
+					if item_list_imp /= Void then
+						an_item_imp ?= item_list_imp.find_item_at_position (wel_point.x
+							- item_list_imp.screen_x, wel_point.y - item_list_imp.screen_y)
+						if an_item_imp /= Void then
+									--| FIXME we need to pass the relative coordinates to `query_pebble_function'.
+								pebble_result := an_item_imp.query_pebble_function (0, 0, wel_point.x, wel_point.y)
+							if an_item_imp.pebble /= Void or pebble_result /= Void then
+									-- If the cursor is over an item and the item is a
+									-- pick and drop target then we set the target id to that of the
+									-- item, as the items are conceptually 'above' the list and so
+									-- if a list and one of its items are pnd targets then the 
+									-- item should recieve.
+								sensitive ?= an_item_imp.interface
+									-- If an item is not `sensitive' then it cannot be dropped on.
+								if sensitive = Void or (sensitive /= Void and then sensitive.is_sensitive) then
+									Result := an_item_imp
+								end
+							end
+						end
+					end
+				end
 			end
 		end
 
@@ -998,35 +977,142 @@ feature {NONE} -- Implementation
 			flag_cst: WEL_SWP_CONSTANTS
 			cur_flag: INTEGER
 		do
-			if not modify_z_position then
+				-- Do not allow movement if `override_movement'. This stops
+				-- a drag/pick and drop raising `Current'.
+			if override_movement then
+					--We retain the z order of `Current'.
 				create info.make_by_pointer (cwel_integer_to_pointer (lparam))
 				create flag_cst
 				cur_flag := info.flags
 				cur_flag := set_flag (cur_flag, flag_cst.Swp_nozorder)
 				info.set_flags (cur_flag)
-					--We retain the z order of `Current'.
+			end
+			override_movement := False
+		end
+		
+	window_process_message (hwnd: POINTER; msg,
+			wparam, lparam: INTEGER): INTEGER is
+			-- Call the routine `on_*' corresponding to the
+			-- message `msg'.
+		local
+			app: EV_APPLICATION
+			env: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
+			a_menu: WEL_MENU
+			titled_window: EV_TITLED_WINDOW_IMP
+		do
+			create env
+			app := env.application
+			app_imp ?= app.implementation
+				-- The `Wm_ncactive' message is sent by windows when the
+				-- non client area of Current needs to be changed to indicate an
+				-- active or non active state (Blue or Grey as default).
+			if msg = Wm_ncactivate then
+					-- `wparam' is equal to 1 then the non client area of
+					-- `Current' is being changed to indicate active.				
+				if wparam = 1 then
+					if app_imp.pick_and_drop_source /= Void or app_imp.awaiting_movement or
+						app_imp.transport_just_ended or app_imp.override_from_mouse_activate then
+						disable_default_processing
+						override_movement := False
+						app_imp.clear_transport_just_ended
+					end
+				else
+					if app_imp.override_from_mouse_activate then
+						disable_default_processing
+						app_imp.clear_override_from_mouse_activate
+					end
+				end
+			elseif msg = Wm_activate then
+				if wparam /= Wel_window_constants.Wa_inactive then
+						-- We must now restore the focus to `last_focused_widget'
+						-- as the window is now being re-activated.
+					if is_window (last_focused_widget) then
+						window_of_item (last_focused_widget).set_focus
+							-- Calling disable_default_processing is required in order to
+							-- stop the focus being removed from `last_focused_widget' after
+							-- we set it. However, this stops on_set_focus being called, so we
+							-- call the relevent parts by ourself.
+						disable_default_processing
+						titled_window ?= Current
+						if titled_window /= Void then
+							application_imp.set_window_with_focus (titled_window.interface)
+						end
+						if focus_in_actions_internal /= Void then
+							focus_in_actions_internal.call ([])
+						end
+					end
+				end
+			elseif msg = Wm_initmenupopup then
+				create a_menu.make_by_pointer (cwel_integer_to_pointer (wparam))
+				on_menu_opened (a_menu)
+			elseif msg = Wm_enteridle then
+					--| FIXME This message is sent when `Current' has a modal dialog
+					--| as a child. This message is only sent once, and not repeatedly as
+					--| we require for the idle actions.
+				if application_imp.idle_actions /= Void then
+					application_imp.idle_actions.call ([])	
+				end
+				fire_dialog_show_actions (cwel_integer_to_pointer (lparam))
 			else
-				modify_z_position := False
+				Result := Precursor {WEL_FRAME_WINDOW} (hwnd, msg, wparam, lparam)
 			end
 		end
+		
+	fire_dialog_show_actions (dialog: POINTER) is
+			-- Call `show_actions' on a dialog referenced by `dialog'.
+			--| We need to ensure that all widgets in the dialog
+			--| are completely visible, and this was the only message that
+			--| I could find which was called at the correct time.
+			--| If a better method of doing this can be found, then there
+			--| should be no consequences. Just make sure that you can call set_focus
+			--| on a widget within the dialog from the on_show actions. Julian.
+		local
+			windows: LINEAR [EV_WINDOW]
+			dialog_imp_modal: EV_DIALOG_IMP_MODAL
+			found: BOOLEAN		
+		do
+			windows := application_imp.windows
+			from
+				windows.start
+			until
+				windows.off or found
+			loop
+				dialog_imp_modal ?= windows.item.implementation
+				if dialog_imp_modal /= Void and then dialog_imp_modal.wel_item = dialog then
+					if dialog_imp_modal.call_show_actions then
+						dialog_imp_modal.execute_show_actions
+					end
+					found := True
+				end
+				windows.forth
+			end			
+		end
 
-		-- Used to override `Current' becoming topmost during
-		-- on_wm_window_pos_changing.
-	modify_z_position: BOOLEAN
 
-		-- Used to override move_to_foreground
 	override_movement: BOOLEAN
+			-- Used to override on_window_pos_changing.
+			-- If `True', then on_window_pos_changing will not raise
+			-- `Current' to foreground.
 
-feature -- {EV_PICK_AND_DROPABLE_IMP}
+	internal_height, internal_width: INTEGER
+		-- Calling `hide' then `show' would loose the settings of
+		-- `height' and `width'. Therefore we store them internally,
+		-- and restore them in on_show if necessary.
+
+feature -- {EV_PICK_AND_DROPABLE_IMP, EV_SPLIT_AREA_IMP}
+
+	allow_movement is
+		do
+			override_movement := False
+		end
 
 	move_to_foreground is
-			-- Move `Current' to foreground if not `override_movement'.
+			-- Move `Current' to foreground.
 		do
-			if not override_movement then
-				modify_z_position := True
-				cwin_set_window_pos (wel_item, Hwnd_top, 0, 0, 0, 0,
-					Swp_nosize + Swp_nomove)
-			end
+			override_movement := False
+			cwin_set_window_pos (wel_item, Hwnd_top, 0, 0, 0, 0,
+				Swp_nosize + Swp_nomove)
 		end
 
 feature {EV_PND_TRANSPORTER_IMP, EV_WIDGET_IMP}
@@ -1038,21 +1124,32 @@ feature {EV_PND_TRANSPORTER_IMP, EV_WIDGET_IMP}
 		end
 
 	frame_height: INTEGER is
+			-- `Result' is frame height of `Current'.
 		do
-			Result := window_frame_height
+			if user_can_resize then
+				Result := window_frame_height
+			else
+				Result := dialog_window_frame_height
+			end
 		end
 
 	frame_width: INTEGER is
+			-- `Result' is frame width of `Current'.
 		do
-			Result := window_frame_width
+			if user_can_resize then
+				Result := window_frame_width
+			else
+				Result := dialog_window_frame_width
+			end
 		end
 	
 	border_width: INTEGER is
+			-- `Result' is border width of `Current'.
 		do
 			Result := window_border_width
 		end
 
-feature {NONE} -- Feature that should be directly implemented by externals
+feature {NONE} -- Features that should be directly implemented by externals
 
 	mouse_message_x (lparam: INTEGER): INTEGER is
 			-- Encapsulation of the c_mouse_message_x function of
@@ -1117,34 +1214,9 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
 		end
 
-feature -- Contract Support
-
-	last_call_was_destroy: BOOLEAN is
-			--|FIXME This redefinition turns off the
-			--|Invariant from EV_ANY_I, no_calls_after_destroy.
-			--|When destroying a window, windows calls back the window
-			--|which violates no_calls_after_destroy.
-			--|This is a temporary fix, and needs to be corrected.
-			-- Was `destroy' just called?
-			-- Only returns `True' once.
-			-- Should only be called by the invariant!
-			-- See invariant: no_calls_after_destroy
-		do
-				Result := True
-				destroy_just_called := True
-		end
-
 feature -- Implementation
 
 	interface: EV_WINDOW
-
-feature {NONE} -- Constants
-
-	Environment: EV_ENVIRONMENT is
-			-- Global caracteristics of the system.
-		once
-			create Result
-		end
 
 end -- class EV_WINDOW_IMP
 
@@ -1170,8 +1242,341 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.52  2000/06/09 00:54:25  manus
---| Updated trunc with DEVEL branch version 1.17.4.17
+--| Revision 1.53  2001/06/07 23:08:15  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.17.4.101  2001/06/03 21:43:25  pichery
+--| - Now execute `destroy' only when not already destroyed.
+--| - Set the focus to the last_focused_widget on Wm_activate ONLY when
+--|   we receive a Wm_activate message for an activation (Wm_activate is
+--|   sent to both the activated and the deactivate windows)
+--|
+--| Revision 1.17.4.100  2001/05/25 17:15:05  rogers
+--| Fixed window_process_message so that when we receive Wm_activate,
+--| we now call the focus_in_actions_internal, as calling
+--| `disable_default_processing'stops on_set_focus being called.
+--|
+--| Revision 1.17.4.99  2001/05/24 17:44:23  pichery
+--| Fixed `frame_width', `frame_height', `compute_minimum_width' and
+--| `compute_minimum_height'  for non-resizeable dialogs
+--|
+--| Revision 1.17.4.98  2001/05/18 20:56:40  pichery
+--| Fixed bug in `compute_minimum_width' and `compute_minimum_height': the
+--| size of the frame border was added even when the window is not resizeable
+--| (in this case Windows does not display any frame border)
+--|
+--| Revision 1.17.4.97  2001/05/18 00:46:37  rogers
+--| Removed destroy_just_called.
+--|
+--| Revision 1.17.4.96  2001/05/18 00:10:59  rogers
+--| Connected the close_request_actions. Removed all handling of the
+--| close_actions.
+--|
+--| Revision 1.17.4.95  2001/05/17 20:10:30  rogers
+--| Added `last_focused_widget' and `set_last_focused_widget'. We now handle
+--| the `Wm_activate' message in `window_process_message' which allows us to
+--| restore the focus to a previously focused widget when switching windows
+--| using alt-tab.
+--|
+--| Revision 1.17.4.94  2001/05/17 01:20:15  rogers
+--| Connected `show_actions' within `show'.
+--|
+--| Revision 1.17.4.93  2001/05/15 22:41:49  rogers
+--| Removed `last_call_was_destroy'.
+--|
+--| Revision 1.17.4.92  2001/05/11 21:54:21  rogers
+--| Removed unreferenced variable.
+--|
+--| Revision 1.17.4.91  2001/05/02 22:52:49  rogers
+--| Added fire_dialog_actions which is called from window_process_message
+--| when we receive the Wm_enteridle message.
+--|
+--| Revision 1.17.4.90  2001/05/02 17:59:06  rogers
+--| Redefined `on_set_focus' so we can call `show_actions_internal'.
+--| Added `call_show_actions' which is used to ensure the actions are only
+--| called once.
+--|
+--| Revision 1.17.4.89  2001/04/30 23:39:26  rogers
+--| Connected the idle actions from EV_APPLICATION_IMP to the Wm_enteridle
+--| message. This is sent when `Current' has a modal dialog as a child.
+--|
+--| Revision 1.17.4.88  2001/04/23 18:38:21  rogers
+--| Fixed bug in on_menu_opened. Previously, clicking on the icon of a window
+--| would cause a precondition violation.
+--|
+--| Revision 1.17.4.87  2001/04/05 23:24:38  rogers
+--| Removed limitations on re-sizing the screen. A user can now re-size the
+--| screen to as large as they wish.
+--|
+--| Revision 1.17.4.86  2001/04/05 18:25:52  rogers
+--| Destroy now checks that `on_wm_close_executed' has not been called before
+--| calling the close actions. This stops an action in the close_actions
+--| from being called twice, when inserted after a call to destroy of
+--| `Current' in the close actions.
+--|
+--| Revision 1.17.4.85  2001/04/03 17:21:06  rogers
+--| Added on_menu_opened which is called by window_process_message when
+--| a menu is being selected. This fixes a bug with menu select_actions
+--| never being fired.
+--|
+--| Revision 1.17.4.84  2001/03/24 16:29:17  manus
+--| Cosmetics (fixed indentation)
+--| Fixed a bug when calling destroy, because `is_destroyed' was not yet set when
+--| calling `wel_destroy_window' and as a result some calls in a vision2 application
+--| could fail because the `wel_item' pointer was already reset to `Default_pointer'.
+--|
+--| Revision 1.17.4.83  2001/03/22 19:27:42  rogers
+--| Fixed bug in `destroy' we no longer check `destroy_just_called' before
+--| destroying `Current'. Fixed bug in remove_menu_bar, we now only attempt to
+--| remove the menu bar if `Current' has a menu_bar.
+--|
+--| Revision 1.17.4.82  2001/03/21 18:06:45  rogers
+--| Redefined ev_apply_new_size to fix bugs in resizing when `Current' has a
+--| menu, `lower_bar' ot `upper_bar'. The bug would show when setting the
+--| minimum_size of `Current' to be larger than its contents, the menu_bar,
+--| `lower_bar' or `upper_bar' would not be displayed.
+--|
+--| Revision 1.17.4.81  2001/03/14 19:22:23  rogers
+--| Modified default_process_message to handle `Wm_syncpaint' by calling
+--| `propagate_syncpaint'.
+--|
+--| Revision 1.17.4.80  2001/02/17 23:22:08  pichery
+--| Changed the implementation for `lock_update' / `unlock_update'
+--|
+--| Revision 1.17.4.79  2001/02/17 02:13:13  manus
+--| Cosmetics
+--|
+--| Revision 1.17.4.78  2001/02/17 01:28:14  rogers
+--| Added maximum_window_height and maximum_window_width. These are used to
+--| fix a bug with increasing the screen resolution and not being able to
+--| resize `Current' larger than the previous resolution.
+--|
+--| Revision 1.17.4.76  2001/02/13 23:13:45  rogers
+--| Source_at_pointer_position now calls query_pebble_function instead of
+--| call_pebble_function. Stops bug with the pebble being set to `Void' when
+--| ending the transport, but before it should be set to `Void'.
+--|
+--| Revision 1.17.4.75  2001/02/13 19:30:25  rogers
+--| More bug fixes with overriding of windows movement during pick/drag and
+--| drop. We now make use of `override_from_mouse_activate' from
+--| EV_APPLICATION_IMP.
+--|
+--| Revision 1.17.4.74  2001/02/13 03:05:19  rogers
+--| Fixed bug in source_at_pointer_position. We were passing the relative
+--| coordinates of widget instead of the absolute.
+--|
+--| Revision 1.17.4.72  2001/02/12 22:54:59  rogers
+--| Fixed bug in window_process_message. If we receive a Wm_ncactive message,
+--| and `Current' is being modified to indicate non active, then we never
+--| override this behaviour.
+--|
+--| Revision 1.17.4.71  2001/02/10 00:26:08  rogers
+--| Re-implemented window_process_message. This allows us to handle
+--| Wm_ncactivate correctly with regard to the pick/drop and the raising of
+--| the window.
+--|
+--| Revision 1.17.4.70  2001/02/08 22:56:25  pichery
+--| Fixed reentrance bug
+--|
+--| Revision 1.17.4.69  2001/02/08 18:00:27  rogers
+--| Re-wrote the code which handles the raising/overiding of `Current' when
+--| perfroming pick and drop. Now we always assume `Current' can be raised in
+--| on_wm_mouseactivate. If we then find that we are about to execute drag/pick
+--| and drop or are currently executing one, then we stop `Current' coming to
+--| the foreground.
+--| Removed redefinition of window_process_message as it is no longer needed
+--| with this new implementation.
+--| Modify_z_position has also now been removed as this is now redundent.
+--|
+--| Revision 1.17.4.68  2001/02/06 20:25:07  rogers
+--| Override_movement is assigned `True' on initialization.
+--|
+--| Revision 1.17.4.67  2001/02/06 19:33:18  rogers
+--| Added widget_has_pick, widget_has_drag and source_at_pointer_position.
+--| These are used by On_wm_activate to determine when to raise
+--| `Current' to foreground.
+--|
+--| Revision 1.17.4.66  2001/02/04 19:03:47  pichery
+--| Changed implementation export clause due to the use of a state
+--| pattern in EV_DIALOG_IMP.
+--|
+--| Revision 1.17.4.65  2001/02/01 01:50:30  rogers
+--| On_get_min_max_info now uses interface.maximum_width and
+--| interface.maximum_height. This fixes a bug if you set the maximum
+--| height of the window to the current minimum_size and then added a widget.
+--| Attempting to then resize the height of the window would cause its
+--| position to move.
+--|
+--| Revision 1.17.4.64  2001/01/27 23:55:22  manus
+--| Cosmetics
+--| Efficiency of Result assignment
+--|
+--| Revision 1.17.4.63  2001/01/26 23:32:46  rogers
+--| Removed undefinition of on_sys_key_down as this is already done in the
+--| ancestor EV_WEL_CONTROL_CONTAINER_IMP.
+--|
+--| Revision 1.17.4.62  2001/01/21 22:43:23  pichery
+--| Added `lock_update' and `unlock_update' to lock graphical updates.
+--|
+--| Revision 1.17.4.61  2001/01/16 22:33:15  rogers
+--| Modified on_wm_mouseactivate to work correctly with drag and drop. Added
+--| allow movement which assigns `False' to override_movement.
+--|
+--| Revision 1.17.4.60  2001/01/16 16:41:54  rogers
+--| Fixed widget_has_pick. It now takes into account pebble functions.
+--|
+--| Revision 1.17.4.59  2001/01/15 18:00:25  rogers
+--| Added widget_has_pick which returns trus if the widget under the current
+--| pointer_position has pick/drag and drop. On_wm_mouse_activate uses this
+--| new feature when deciding whether to raise the window on a right click.
+--|
+--| Revision 1.17.4.58  2001/01/15 01:39:16  manus
+--| Improved behavior of Windows management when you click on them. Now, a window
+--| is kept in the back only if you do a right click. Otherwise we always bring
+--| it to the front. Doing so fix the famous bug of when you where asking Windows
+--| to bring your window to the front nothing happened.
+--|
+--| Revision 1.17.4.57  2001/01/09 19:03:30  rogers
+--| Modified default_process_message to now call the Precursor from
+--| EV_SINGLE_CHILD_CONTAINER_IMP. This is necessary as default_process_message
+--| is now defined in EV_WIDGET_IMP.e
+--|
+--| Revision 1.17.4.56  2000/12/29 15:49:22  pichery
+--| Removed the WEL_BLOCKING_DISPATCHER. It is now useless
+--| with the new implementation for Dialogs.
+--| As a consequence, `show' and `hide' are no more redefined.
+--| Also Removed the modal_destroy_agent (useless now)
+--|
+--| Revision 1.17.4.55  2000/12/14 17:27:52  rogers
+--| Fixed title so it returns void if the string is empty.
+--|
+--| Revision 1.17.4.54  2000/12/08 03:11:46  manus
+--| Size of window was not stored before applying the new size to its children.
+--| As a result some resizing operations done in children where still using
+--| the old stored size and behavior was incorrect.
+--|
+--| Revision 1.17.4.53  2000/11/29 17:58:06  rogers
+--| Removed destroy_agent as it is no longer put into the close_actions as
+--| default. Added already_destroyed which is used to stop the close_actions
+--| being called recursively when you call destroy through the interface
+--| but also have destroy in the close_actions.
+--|
+--| Revision 1.17.4.52  2000/11/28 21:35:19  manus
+--| Renamed call to `empty' into `is_empty' as now defined in CONTAINER.
+--|
+--| Revision 1.17.4.51  2000/11/27 20:19:15  rogers
+--| Undefined on_notify as we now use the version inherited from
+--| EV_CONTAINER_IMP.
+--|
+--| Revision 1.17.4.48  2000/11/06 18:01:32  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.17.4.47  2000/11/04 00:56:18  manus
+--| New way of setting `is_positioned' from EV_POS_INFO. It is now done when user call
+--| `set_x_position' or `set_y_position' in EV_WINDOW_IMP.
+--| This fixes the bug where all windows were appearing at the top right corner of the screen.
+--|
+--| Revision 1.17.4.46  2000/11/03 18:24:34  rogers
+--| Fixed bug in window_process_message. If you had two titled windows open,
+--| one partially obscuring the other, clicking on the non client area of the
+--| obscured window would correctly bring it to the front, but both title bars
+--| would now be blue, instead of the far one being grayed out.
+--|
+--| Revision 1.17.4.45  2000/11/01 01:35:25  rogers
+--| Removed all code for accelerator handling. It has been moved to
+--| EV_TITLED_WINDOW_IMP as only titled windows recieve accelerator commands.
+--|
+--| Revision 1.17.4.43  2000/10/27 02:33:46  manus
+--| Removed undefinition of `set_default_colors' since the inherited one does what we want.
+--|
+--| Revision 1.17.4.42  2000/10/26 19:46:28  rogers
+--| Removed widget_group and set_widget_group as they are no longer in Vision2.
+--|
+--| Revision 1.17.4.40  2000/10/18 16:21:44  rogers
+--| Compute_minimum_width, compute_minimum_size and compute_minimum_height
+--| now all take into account whether the child is visible or not.
+--|
+--| Revision 1.17.4.39  2000/10/10 23:59:46  raphaels
+--| Redefined `has_focus' to behave correctly (would return false although a widget in the window would have the focus)
+--| Added `on_desactivate' to list of undefined features from WEL_WINDOW.
+--|
+--| Revision 1.17.4.38  2000/10/05 20:28:21  manus
+--| Removed special notebook handling for `Tab' action. Now it will never stop on tab buttons
+--| but this is better than completely loosing the focus.
+--|
+--| Revision 1.17.4.37  2000/10/05 00:40:25  manus
+--| `set_x_position' and `set_y_position' have been redefined to use `ev_move' instead of using
+--| the WEL implementation that just calls `move' and therefore does not update `child_cell' with
+--| the correct information.
+--|
+--| Revision 1.17.4.36  2000/10/03 00:16:22  raphaels
+--| Removed `Environment' which is now inherited from `EV_WIDGET_I'.
+--|
+--| Revision 1.17.4.35  2000/09/27 16:09:27  rogers
+--| Set_menu_bar and remove_menu_bar now set the parent_imp of the menu_bar.
+--|
+--| Revision 1.17.4.34  2000/09/22 00:30:50  rogers
+--| Assigned True to user_can_resize within initialize.
+--|
+--| Revision 1.17.4.33  2000/09/13 22:11:59  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.17.4.32  2000/09/07 02:37:55  manus
+--| Updated creation and desctruction of WEL frame windows with new code of EV_APPLICATION_IMP
+--| that just keep a weak reference on the implementation object and not the interface.
+--|
+--| Revision 1.17.4.31  2000/08/08 17:00:47  manus
+--| No need for compute_minimum_size when showing the window. This will be done automatically
+--| by `on_show' before showing the window.
+--|
+--| Revision 1.17.4.30  2000/08/08 16:03:47  manus
+--| Updated inheritance with new WEL messages handling
+--| New resizing policy by calling `ev_' instead of `internal_', see
+--|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
+--|
+--| Revision 1.17.4.29  2000/08/04 20:22:37  rogers
+--| All action sequence calls through the interface have been replaced with
+--| calls to the internal action sequences.
+--|
+--| Revision 1.17.4.28  2000/07/26 18:06:52  rogers
+--| Initialize now calls close_actions directly instead of interface.close_actions.
+--|
+--| Revision 1.17.4.27  2000/07/24 23:13:00  rogers
+--| Now inherits EV_WINDOW_ACTION_SREQUENCES_IMP.
+--|
+--| Revision 1.17.4.26  2000/07/17 16:51:43  rogers
+--| Added internal_height and internal_width to store values set through
+--| set_width and set_height. On_show will now use these values if necessary.
+--| This fixes bug when calling hide followed by show.
+--|
+--| Revision 1.17.4.25  2000/07/17 15:57:26  rogers
+--| init_bars is now called at very start of initialize.
+--|
+--| Revision 1.17.4.24  2000/07/13 17:46:58  rogers
+--| Exported menu_bar_height to EV_WIDGET_IMP.
+--|
+--| Revision 1.17.4.23  2000/07/12 21:27:40  brendel
+--| Now creates the upper and lower bar before initializing them, since
+--| they are no longer created in the interface class.
+--|
+--| Revision 1.17.4.22  2000/07/12 16:23:38  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
+--|
+--| Revision 1.17.4.21  2000/06/14 22:16:07  rogers
+--| Destroy now calls remove_root_window on the implementation of the
+--| application. Previously, remove_root_window was defined as deferred
+--| in EV_APPLICATION_I upon which it was called.
+--|
+--| Revision 1.17.4.20  2000/06/13 20:11:02  rogers
+--| Removed FIXM NOT_REVIEWED. Comments, formatting.
+--|
+--| Revision 1.17.4.19  2000/06/13 18:38:13  rogers
+--| Removed undefintion of remove_command.
+--|
+--| Revision 1.17.4.18  2000/06/12 20:22:03  pichery
+--| Added agent to remove the blocking dispatcher when
+--| a modal dialog box is closed.
 --|
 --| Revision 1.17.4.17  2000/06/05 20:52:58  manus
 --| Cosmetic on precursor

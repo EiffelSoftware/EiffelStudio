@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_DEFAULT_FONTS
+	EV_STOCK_FONTS
 
 feature -- Access
 
@@ -18,22 +18,22 @@ feature -- Access
 
 	Dialog_font: EV_FONT is
 			-- Font used in dialogs.
-		do
+		once
 			Result := Screen_font
 		end
 
 	Menu_font: EV_FONT is
 			-- Font used in menus.
-		do
+		once
 			Result := Screen_font
 		end
 
 invariant
-	Screen_font_not_void: Screen_font /= void
-	Dialog_font_not_void: Dialog_font /= void
-	Menu_font_not_void:Menu_font /= void
+	Screen_font_not_void: Screen_font /= Void
+	Dialog_font_not_void: Dialog_font /= Void
+	Menu_font_not_void:Menu_font /= Void
 
-end -- class EV_DEFAULT_FONTS
+end -- class EV_STOCK_FONTS
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -50,15 +50,3 @@ end -- class EV_DEFAULT_FONTS
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.2  2000/03/17 01:23:34  oconnor
---| formatting and layout
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

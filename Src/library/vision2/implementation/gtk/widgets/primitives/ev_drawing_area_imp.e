@@ -27,8 +27,20 @@ inherit
 			set_foreground_color,
 			set_background_color
 		redefine
-			initialize,
-			interface
+			interface,
+			visual_widget,
+			has_focus,
+			disconnect_all_signals,
+			default_key_processing_blocked,
+			screen_x,
+			screen_y
+		end
+
+	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
+		redefine
+			interface,
+			visual_widget,
+			disconnect_all_signals
 		end
 
 create
@@ -38,52 +50,120 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create an empty drawing area.
+		local
+			temp_sig_id: INTEGER
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
-
 			drawing_area_widget := C.gtk_drawing_area_new
+			temp_sig_id := c_signal_connect (
+					drawing_area_widget,
+					eiffel_to_c ("button-press-event"),
+					~give_focus
+			)
+			temp_sig_id := c_signal_connect (
+					drawing_area_widget,
+					eiffel_to_c ("focus-in-event"),
+					~attain_focus
+			)
+			temp_sig_id := c_signal_connect (
+					drawing_area_widget,
+					eiffel_to_c ("focus-out-event"),
+					~lose_focus
+			)
 			C.gtk_widget_show (drawing_area_widget)
 			C.gtk_container_add (c_object, drawing_area_widget)
-
-				-- Use special hint mask to prevent mouse motion
-				-- events for every mouse movement.
-			C.gtk_widget_add_events (c_object, C.GDK_POINTER_MOTION_HINT_MASK_ENUM)
-			C.gtk_widget_add_events (drawing_area_widget, C.GDK_POINTER_MOTION_HINT_MASK_ENUM)
-			C.gtk_widget_add_events (c_object, C.GDK_EXPOSURE_MASK_ENUM)
-			C.gtk_widget_add_events (drawing_area_widget, C.GDK_EXPOSURE_MASK_ENUM)
-	
-			gc := C.gdk_gc_new (C.gdk_root_parent)
+			C.gtk_container_set_focus_child (c_object, NULL)
+			gc := C.gdk_gc_new (default_gdk_window)
 			gcvalues := C.c_gdk_gcvalues_struct_allocate
 			c.gdk_gc_get_values (gc, gcvalues)
 			init_default_values
+			gtk_widget_set_flags (visual_widget, C.GTK_CAN_FOCUS_ENUM)
+				-- Needed for focus hack
 		end
 
-	initialize is
-			-- Set up action sequence connections
-			-- and `Precursor' initialization.
+feature -- Access
+
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen.
+		local
+			useless_y: INTEGER 
+			success: BOOLEAN
+			gdk_window: POINTER
 		do
-			Precursor
-			real_connect_signal_to_actions (
-				drawing_area_widget,
-				"expose-event",
-				interface.expose_actions,
-				default_translate
-			)
+				--|FIXME: redefined to quickly solve a problem that appeared in EiffelStudio (screen_x wrong after resizing)			
+			gdk_window := C.gtk_widget_struct_window (c_object)
+			if gdk_window /= NULL then
+				success := C.gdk_window_get_deskrelative_origin (
+					gdk_window,
+					$Result,
+					$useless_y
+					)
+			end
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen. 
+		local
+			useless_x: INTEGER
+			success: BOOLEAN
+			gdk_window: POINTER
+		do
+				--|FIXME: redefined to quickly solve a problem that appeared in EiffelStudio (screen_y wrong after resizing)			
+			gdk_window := C.gtk_widget_struct_window (c_object)
+			if gdk_window /= NULL then
+				success := C.gdk_window_get_deskrelative_origin (
+					gdk_window,
+					$useless_x,
+					$Result
+					)				
+			end
 		end
 
 feature {NONE} -- Implementation
+
+	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
+		do
+			if a_key.is_arrow or else a_key.code = a_key.key_tab then
+				Result := True
+			end
+		end
+
+	give_focus is
+		do
+			if not has_focus then
+				set_focus
+			end
+		end
+
+	attain_focus is
+		do
+			top_level_window_imp.set_focus_widget (Current)
+			has_focus := True
+		end
+
+	lose_focus is
+		do
+			top_level_window_imp.set_focus_widget (Void)
+			has_focus := False
+		end
+
+	has_focus: BOOLEAN
 
 	interface: EV_DRAWING_AREA
 
 	redraw is
 		do
-			interface.expose_actions.call ([0, 0, width, height])
+			if expose_actions_internal /= Void then
+				expose_actions_internal.call ([0, 0, width, height])
+			end
 		end
 
-	redraw_rectangle (x1, y1, x2, y2: INTEGER) is
+	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
 		do
-			interface.expose_actions.call ([x1, y1, x2, y2])
+			if expose_actions_internal /= Void then
+				expose_actions_internal.call ([a_x, a_y, a_width, a_height])
+			end
 		end
 
 	clear_and_redraw is
@@ -92,10 +172,10 @@ feature {NONE} -- Implementation
 			redraw
 		end
 
-	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
+	clear_and_redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
 		do
-			clear_rectangle (x1, y1, x2, y2)
-			redraw_rectangle (x1, y1, x2, y2)
+			clear_rectangle (a_x, a_y, a_width, a_height)
+			redraw_rectangle (a_x, a_y, a_width, a_height)
 		end
 
 	flush is
@@ -104,10 +184,20 @@ feature {NONE} -- Implementation
 			-- do nothing
 		end
 
-	drawing_area_widget: POINTER
-		-- Pointer to gtkdrawingarea as c_object is an event box.
+	disconnect_all_signals is
+			-- Disconnect all gtk signals.
+		do
+			--| FIXME
+		end
 
 feature {EV_DRAWABLE_IMP} -- Implementation
+
+	visual_widget: POINTER is
+		do
+			Result := drawing_area_widget
+		end
+
+	drawing_area_widget: POINTER
 
 	drawable: POINTER is
 		do
@@ -137,8 +227,78 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.13  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.14  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.27  2001/06/01 22:49:17  etienne
+--| Improved fix in `screen_x' and `screen_y'.
+--|
+--| Revision 1.6.4.26  2001/05/31 22:17:38  etienne
+--| Added temporary fix for `screen_x' and `screen_y'.
+--|
+--| Revision 1.6.4.25  2001/05/18 18:17:33  king
+--| Added code that only stops key emission on focus change keys
+--|
+--| Revision 1.6.4.24  2001/05/11 17:09:32  king
+--| Updated rectangle functions to use new semantic
+--|
+--| Revision 1.6.4.23  2001/04/18 18:28:25  king
+--| Redefined disconnect_all_signals to prevent warnings
+--|
+--| Revision 1.6.4.22  2001/02/27 00:14:34  andrew
+--| Reverted to previous version.
+--|
+--| Revision 1.6.4.20  2001/01/25 00:28:51  andrew
+--| Changed redraw_rectangle to send correct values to expose_actions_internal.call ([a_x, a_y, a_width, a_height]).
+--|
+--| Revision 1.6.4.19  2000/11/03 23:42:31  king
+--| Fixed focusing problem
+--|
+--| Revision 1.6.4.18  2000/10/27 16:54:43  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.6.4.17  2000/09/12 23:14:59  king
+--| Moved top_level_window into widget_imp
+--|
+--| Revision 1.6.4.15  2000/09/06 17:48:44  oconnor
+--| Use new default_gdk_window feature instead of gdk_root_parent to try
+--| to get a basis for visuals that will work better on workstations that
+--| have different color depths for diverent windows.
+--|
+--| Revision 1.6.4.14  2000/09/05 23:43:08  king
+--| Implemented key event hack
+--|
+--| Revision 1.6.4.13  2000/08/28 22:10:39  king
+--| Now setting focus on mouse click
+--|
+--| Revision 1.6.4.12  2000/08/28 16:36:13  king
+--| Integrated event_box as c_object
+--|
+--| Revision 1.6.4.11  2000/08/22 18:10:51  king
+--| Removed redundant initialize
+--|
+--| Revision 1.6.4.10  2000/08/08 00:03:15  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.6.4.9  2000/08/03 23:18:11  king
+--| Using internal expose_actions
+--|
+--| Revision 1.6.4.8  2000/07/24 21:36:10  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.6.4.7  2000/06/14 23:16:15  king
+--| Removed event masking code
+--|
+--| Revision 1.6.4.6  2000/06/14 00:08:34  king
+--| Now using event_box for c_object
 --|
 --| Revision 1.6.4.5  2000/06/02 22:49:43  king
 --| Fixed expose actions calling

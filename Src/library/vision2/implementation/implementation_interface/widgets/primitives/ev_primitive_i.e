@@ -7,11 +7,9 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-
 	EV_PRIMITIVE_I 
 
 inherit
-
 	EV_WIDGET_I
 		redefine
 			interface
@@ -49,8 +47,11 @@ end -- class EV_PRIMITIVE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.6  2000/06/07 17:27:50  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.7  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.3  2000/10/06 20:11:49  oconnor
+--| cosmetics
 --|
 --| Revision 1.3.4.2  2000/05/10 23:03:03  king
 --| Integrated inital tooltipable changes

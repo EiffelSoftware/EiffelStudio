@@ -1,6 +1,7 @@
 indexing
 	description:
-		"A figure that is a curve through 3 points."
+		"Curves as defined by two rectangle points, a `start_angle' and%N%
+		%`aperture'."
 	status: "See notice at end of class"
 	keywords: "figure, arc, curve"
 	date: "$Date$"
@@ -9,114 +10,63 @@ indexing
 class
 	EV_FIGURE_ARC
 
-
 inherit
 	EV_ATOMIC_FIGURE
+		export
+			{ANY} Pi
 		redefine
+			default_create
+		end
+
+	EV_DOUBLE_POINTED_FIGURE
+		undefine
 			default_create
 		end
 
 create
 	default_create,
-	make_with_points,
-	make_for_test
+	make_with_points
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	default_create is
-			-- Default situation: pa pb and pc are all (0, 0).
+			-- Create with some `start_angle' and `aperture'.
 		do
-			Precursor
-		end
-
-	make_with_points (pa, pb, pc: EV_RELATIVE_POINT) is
-			-- Create with points `pa', `pb' and `pc'.
-		require
-			pa_exists: pa /= Void
-			pb_exists: pb /= Void
-			pc_exists: pc /= Void
-		do
-			default_create
-			set_point_a (pa)
-			set_point_b (pb)
-			set_point_c (pc)
+			Precursor {EV_ATOMIC_FIGURE}
+			start_angle := 0.2
+			aperture := Pi
 		end
 
 feature -- Access
 
-	point_count: INTEGER is
-			-- An arc consists of 3 points.
-		once
-			Result := 3
-		end
+	start_angle: DOUBLE
+			-- Angle that defines the start of the arc.
 
-	point_a: EV_RELATIVE_POINT is
-			-- The starting coordinate of the arc.
-		do
-			Result := get_point_by_index (1)
-		end
-
-	point_b: EV_RELATIVE_POINT is
-			-- The coordinates on the line of the arc.
-		do
-			Result := get_point_by_index (2)
-		end
-
-	point_c: EV_RELATIVE_POINT is
-			-- The ending coordinate of the arc.
-		do
-			Result := get_point_by_index (3)
-		end
+	aperture: DOUBLE
+			-- Angle that defines the percentage of the arc.
 
 feature -- Status setting
 
-	set_point_a (pa: EV_RELATIVE_POINT) is
-			-- Change the reference of `point_a' with `pa'.
+	set_start_angle (a_start_angle: DOUBLE) is
+			-- Set `start_angle' to `a_start_angle'.
 		require
-			pa_exists: pa /= Void
-			pa_not_in_figure: pa.figure = Void
+			a_start_angle_within_bounds:
+				a_start_angle >= 0 and a_start_angle <= 2 * Pi
 		do
-			set_point_by_index (1, pa)
+			start_angle := a_start_angle
 		ensure
-			point_a_assigned: pa = point_a
+			start_angle_assigned: start_angle = a_start_angle
 		end
 
-	set_point_b (pb: EV_RELATIVE_POINT) is
-			-- Change the reference of `point_b' with `pb'.
+	set_aperture (an_aperture: DOUBLE) is
+			-- Set `aperture' to `an_aperture'.
 		require
-			pb_exists: pb /= Void
-			pb_not_in_figure: pb.figure = Void
+			an_aperture_within_bounds:
+				an_aperture >= 0 and an_aperture <= 2 * Pi
 		do
-			set_point_by_index (2, pb)
+			aperture := an_aperture
 		ensure
-			point_b_assigned: pb = point_b
-		end
-
-	set_point_c (pc: EV_RELATIVE_POINT) is
-			-- Change the reference of `point_c' with `pc'.
-		require
-			pc_exists: pc /= Void
-			pc_not_in_figure: pc.figure = Void
-		do
-			set_point_by_index (3, pc)
-		ensure
-			point_c_assigned: pc = point_c
-		end
-
-	center: EV_COORDINATES is
-			-- Calculate the center of the arc.
-			-- This is the middle of a and c.
-		do
-			create Result.set (
-				(point_a.x_abs + point_c.x_abs) // 2,
-				(point_a.y_abs + point_c.y_abs) // 2)
-		end
-
-	ellipse_angle: REAL is
-			-- Calculate the angle between `center' and `point_b'.
-		do
-			Result := arc_tangent (
-				(center.x - point_b.x_abs) / (center.y - point_b.y_abs))
+			aperture_assigned: aperture = an_aperture
 		end
 
 feature -- Events
@@ -124,8 +74,27 @@ feature -- Events
 	position_on_figure (x, y: INTEGER): BOOLEAN is
 			-- Is the point on (`x', `y') on this figure?
 		do
+			--| FIXME To be implemented
 			Result := False
 		end
+
+feature {EV_FIGURE_DRAWING_ROUTINES} -- Access
+
+	metrics: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- [`center_x', `center_y', `radius1', `radius2']
+		local
+			ay, ax, bx, by: INTEGER
+		do
+			ax := point_a.x_abs
+			ay := point_a.y_abs
+			bx := point_b.x_abs
+			by := point_b.y_abs
+			Result := [ax, ay, (bx - ax).abs, (by - ay).abs]
+		end
+
+invariant
+	start_angle_within_bounds: start_angle >= 0 and then start_angle <= 2 * Pi
+	aperture_within_bounds: aperture >= 0 and then aperture <= 2 * Pi
 
 end -- class EV_FIGURE_ARC
 
@@ -144,27 +113,3 @@ end -- class EV_FIGURE_ARC
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.7  2000/04/27 19:10:50  brendel
---| Centralized testing code.
---|
---| Revision 1.6  2000/04/26 17:27:17  brendel
---| Corrected index for point.
---|
---| Revision 1.5  2000/04/26 15:56:34  brendel
---| Added CVS Log.
---| Added copyright notice.
---| Improved description.
---| Added keywords.
---| Formatted for 80 columns.
---| Added make_for_test.
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

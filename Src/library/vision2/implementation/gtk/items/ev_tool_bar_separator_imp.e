@@ -20,23 +20,34 @@ inherit
 	EV_ITEM_IMP
 		rename
 			interface as sep_item_interface
-		undefine	
+		undefine
 			parent
 		redefine
 			initialize
 		select
 			widget_parent,
-			initialize
+			initialize,
+			create_pointer_double_press_actions,
+			create_pointer_button_press_actions
 		end
 
 	EV_VERTICAL_SEPARATOR_IMP
 		rename
 			initialize as vsep_initialize,
 			interface as vsep_interface,
-			parent as vsep_parent
-		undefine
-			button_press_switch
-		end		
+			parent as vsep_parent,
+			pointer_motion_actions_internal as widget_pointer_motion_actions_internal,
+			pointer_button_press_actions_internal as widget_pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal as widget_pointer_double_press_actions_internal,
+			create_pointer_button_press_actions as widget_create_pointer_button_press_actions,
+			create_pointer_double_press_actions as widget_create_pointer_double_press_actions,
+			parent_imp as widget_parent_imp
+		undefine	
+			button_press_switch,
+			pointer_motion_actions,	
+			pointer_button_press_actions,
+			pointer_double_press_actions
+		end
 
 create
 	make
@@ -92,11 +103,20 @@ end -- class EV_TOOL_BAR_SEPARATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.16  2000/06/07 20:08:03  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.17  2001/06/07 23:08:02  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.15  2000/06/07 17:27:29  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.10.4.7  2000/11/02 01:04:20  etienne
+--| Made compilable with parent_imp change in ev_widget
+--|
+--| Revision 1.10.4.6  2000/08/04 17:26:00  king
+--| Renaming create AS procs
+--|
+--| Revision 1.10.4.5  2000/07/24 21:33:39  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.10.4.4  2000/06/12 17:35:08  king
+--| Accounted for ev_widget_imp obsolete feature removal
 --|
 --| Revision 1.10.4.3  2000/06/06 00:41:55  king
 --| Undefining button_press_switch

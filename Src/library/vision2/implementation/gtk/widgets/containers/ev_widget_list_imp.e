@@ -10,6 +10,9 @@ deferred class
 	
 inherit
 	EV_WIDGET_LIST_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
 		redefine
 			interface
 		end
@@ -22,8 +25,11 @@ inherit
 		end
 
 	EV_DYNAMIC_LIST_IMP [EV_WIDGET]
+		undefine
+			destroy
 		redefine
-			interface
+			interface,
+			list_widget
 		end
 
 feature {NONE} -- Implementation
@@ -41,7 +47,7 @@ feature {NONE} -- Implementation
 			if i < count then
 				gtk_reorder_child (list_widget, v_imp.c_object, i - 1)
 			end
-			new_item_actions.call ([v])
+			on_new_item (v)
 		end
 
 	remove_i_th (i: INTEGER) is
@@ -57,18 +63,42 @@ feature {NONE} -- Implementation
 			check
 				v_imp_not_void: v_imp /= Void
 			end
-			remove_item_actions.call ([v_imp.interface])
+			on_removed_item (v_imp.interface)
 			--| FIXME VB To be checked by Sam.
 			--| ref comes from item list and not in widget list?
 			--| Is it necessary?
 			C.gtk_widget_ref (p)
 			C.gtk_container_remove (list_widget, p)
 			C.set_gtk_widget_struct_parent (p, NULL)
-			--v_imp.set_parent_imp (Void)
 			C.gtk_widget_unref (p)
 		end
+	
+--| FIXME Direct implementation of extend.
+--| This is faster than the cutrrent implementation but propper
+--| benchmarks should be done prior to its inclusion. - Sam
+--|	extend (v: EV_WIDGET) is
+--|			-- Add `v' to end. Do not move cursor.
+--|		local
+--|			v_imp: EV_ANY_IMP
+--|		do
+--|			v_imp ?= v.implementation
+--|			if index > count then
+--|				index := index + 1
+--|			end
+--|			check
+--|				v_imp_not_void: v_imp /= Void
+--|			end
+--|			C.gtk_container_add (list_widget, v_imp.c_object)
+--|			on_new_item (v)
+--|		end
 
 feature {NONE} -- Implementation
+
+	list_widget: POINTER is
+			-- Pointer to the actual widget list container.
+		do
+			Result := container_widget
+		end
 
 	interface: EV_WIDGET_LIST
 			-- Provides a common user interface to platform dependent
@@ -97,8 +127,41 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.18  2000/06/07 17:27:38  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.19  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.17.2.10  2000/10/27 16:54:42  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.17.2.9  2000/09/18 18:06:43  oconnor
+--| reimplemented propogate_[fore|back]ground_color for speeeeed
+--|
+--| Revision 1.17.2.8  2000/08/30 16:21:35  oconnor
+--| Redefined destroy to remove children before destroying.
+--|
+--| Revision 1.17.2.7  2000/08/08 00:03:14  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.17.2.6  2000/08/04 19:19:28  oconnor
+--| Optimised radio button management by using a polymorphic call
+--| instaed of using agents.
+--|
+--| Revision 1.17.2.5  2000/06/22 00:29:44  king
+--| Removed unnecessary calling of reset_minimum_size
+--|
+--| Revision 1.17.2.4  2000/06/21 22:46:47  king
+--| Resetting minimum size, should perhaps be in fixed only, but here saves 1 A.A.
+--|
+--| Revision 1.17.2.3  2000/06/14 00:05:31  king
+--| Redefining list_widget to return container_widget instead of c_object
 --|
 --| Revision 1.17.2.2  2000/05/04 19:00:56  brendel
 --| Correction.

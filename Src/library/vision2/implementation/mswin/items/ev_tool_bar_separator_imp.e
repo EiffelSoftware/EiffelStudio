@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"Eiffel Vision tool bar separator. Mswindows implemenatation."
@@ -11,8 +10,6 @@ class
 
 inherit
 	EV_TOOL_BAR_SEPARATOR_I
-		rename
-			parent_imp as tb_parent_imp
 		undefine
 			parent
 		select
@@ -22,26 +19,10 @@ inherit
 	EV_TOOL_BAR_BUTTON_IMP
 		rename
 			interface as ev_tool_bar_button_interface
-		select
-			parent_imp
 		end
 
 creation
 	make
-
-feature -- Status report
-	
-	tb_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
-				-- The parent of the Current widget
-				-- Can be void.
-			do
-			end
-
-	old_item_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
-				-- The parent of the Current widget
-				-- Can be void.
-			do
-			end
 
 end -- class EV_TOOL_BAR_SEPARATOR_IMP
 
@@ -66,6 +47,16 @@ end -- class EV_TOOL_BAR_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.4.2  2000/06/12 18:25:12  rogers
+--| Reviewed class. Comments, formatting. Removed tb_parent_imp and
+--| old_item_parent_imp.
+--|
+--| Revision 1.5.4.1  2000/05/03 19:09:11  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.12  2000/04/26 22:19:56  rogers
 --| Removed type as now redundent.
 --|
@@ -91,7 +82,9 @@ end -- class EV_TOOL_BAR_SEPARATOR_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.5.6.2  2000/01/21 18:09:01  rogers
---| Renamed interface inherited from ev_tool_bar_button_imp as ev_tool_bar_button_imp_interface. Selected interface inherited from EV_TOOL_BAR_SEPARATOR_I.
+--| Renamed interface inherited from ev_tool_bar_button_imp as
+--| ev_tool_bar_button_imp_interface. Selected interface inherited from
+--| EV_TOOL_BAR_SEPARATOR_I.
 --|
 --| Revision 1.5.6.1  1999/11/24 17:30:17  oconnor
 --| merged with DEVEL branch

@@ -18,9 +18,10 @@ inherit
 		
 creation
 	default_create,
+	make_with_text,
 	make_with_function
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make_with_function (a_subtree_function: like subtree_function) is
 			-- Create with `a_subtree_function'.
@@ -30,9 +31,10 @@ feature -- Initialization
 		end
 
 	initialize is
-			-- Set up expand action.
+			-- Initialize `Current'.
+			-- Set up the expand action.
 		do
-			{EV_TREE_NODE} Precursor
+			Precursor {EV_TREE_NODE}
 			expand_actions.extend (~fill_from_subtree_function)
 			implementation.extend (create {EV_TREE_ITEM})
 			set_subtree_function_timeout (default_subtree_function_timeout)
@@ -85,6 +87,8 @@ feature -- Access
 
 	set_subtree_function (a_subtree_function: like subtree_function) is
 			-- Assign `a_subtree_function' to `subtree_function'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			subtree_function := a_subtree_function
 		end
@@ -92,7 +96,7 @@ feature -- Access
 	subtree_function_timeout: INTEGER
 			-- Time in milliseconds, after `subtree_function'.call, when
 			-- `subtree_function'.last_result is considered to have expired.
-			-- There is no gaurentee that `subtree_function' will be recalled
+			-- There is no guarantee that `subtree_function' will be recalled
 			-- after this timeout, but Vision will not call it twice within
 			-- one timeout period.
 			-- Default is 1 second.
@@ -102,6 +106,8 @@ feature -- Access
 
 	set_subtree_function_timeout (a_timeout: like subtree_function_timeout) is
 			-- Assign `a_timeout' to `subtree_function_timeout'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			subtree_function_timeout := a_timeout
 		end
@@ -109,6 +115,8 @@ feature -- Access
 	subtree_function_call is
 			-- Call `subtree_function' if it has not been called in the last
 			-- `subtree_function_timeout' milliseconds.
+		require
+			not_destroyed: not is_destroyed
 		local
 			now: INTEGER
 		do
@@ -171,14 +179,14 @@ feature -- Status report
 			end
 		end
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is there no element?
 		do
 			Result := True
 			if subtree_function /= Void then
 				subtree_function_call
 				if subtree_function.last_result /= Void then
-					Result := subtree_function.last_result.empty
+					Result := subtree_function.last_result.is_empty
 				end
 			end
 		end
@@ -236,7 +244,26 @@ feature -- Cursor movement
 			index := index + 1
 		end
 
+feature -- Contract support
+
+	is_expandable: BOOLEAN is
+			-- Is `Current' able to expand or collapse.
+		do
+			Result := True
+		end
+
+feature {EV_ANY_I} -- Implementation
+		
+	implementation: EV_TREE_NODE_I
+		-- Responsible for interaction with the native graphics toolkit.
+
 feature {NONE} -- Implementation
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_TREE_NODE_IMP} implementation.make (Current)
+		end
 
 	last_subtree_function_call_time: INTEGER
 			-- Time in milliseconds at which `subtree_function' was last called.
@@ -252,34 +279,31 @@ feature {NONE} -- Implementation
 				implementation.start
 				implementation.remove
 			end
-			subtree_function_call
-			linear := subtree_function.last_result
-			cs ?= linear
-			if cs /= Void then
-				c := cs.cursor
+			if subtree_function /= Void then
+				subtree_function_call
+				linear := subtree_function.last_result
+				cs ?= linear
+				if cs /= Void then
+					c := cs.cursor
+				end
+				from
+					linear.start
+				until
+					linear.after
+				loop
+					implementation.extend (linear.item)
+					linear.forth
+				end
+				if cs /= Void then
+					cs.go_to (c)
+				end
+				implementation.start
+				implementation.remove
+			else
+				implementation.extend (create {EV_TREE_ITEM})
+				implementation.start
+				implementation.remove
 			end
-			from
-				linear.start
-			until
-				linear.after
-			loop
-				implementation.extend (linear.item)
-				linear.forth
-			end
-			if cs /= Void then
-				cs.go_to (c)
-			end
-			implementation.start
-			implementation.remove
-		end
-
-	implementation: EV_TREE_NODE_I
-			-- Responsible for interaction with the native graphics toolkit.
-
-	create_implementation is
-			-- See `{EV_ANY}.create_implementation'.
-		do
-			create {EV_TREE_NODE_IMP} implementation.make (Current)
 		end
 
 	time_msec: INTEGER is
@@ -304,19 +328,3 @@ end -- class EV_DYNAMIC_TREE_ITEM
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.5  2000/06/07 17:28:04  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.4.4.2  2000/05/16 17:02:29  oconnor
---| Revised in line with talks with mark.
---| Now has subtree_function that returns LINEAR [EV_TREE_NODE]
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

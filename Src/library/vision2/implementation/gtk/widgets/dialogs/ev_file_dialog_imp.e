@@ -29,12 +29,14 @@ feature {NONE} -- Initialization
 			C.gtk_object_ref (c_object)
 			C.gtk_window_set_modal (c_object, True)
 			filter := "*.*"
-			start_directory := "."
+			set_start_directory (".")
+			C.gtk_widget_realize (c_object)
 		end
 
 	initialize is
 			-- Setup action sequences.
 		do
+			signal_connect_true ("delete_event", ~on_cancel)
 			real_signal_connect (
 				C.gtk_file_selection_struct_ok_button (c_object),
 				"clicked",
@@ -47,6 +49,7 @@ feature {NONE} -- Initialization
 				~on_cancel,
 				Void
 			)
+			enable_closeable
 			is_initialized := True
 		end
 
@@ -109,9 +112,15 @@ feature -- Element change
 	set_start_directory (a_path: STRING) is
 			-- Make `a_path' the base directory.
 		do
-			check
-				to_be_implemented: False
+			start_directory := a_path
+			if start_directory.item (start_directory.count) /= '/' then
+				-- The path has no trailing / so we add one to internal string.
+				start_directory.append ("/")
 			end
+			C.gtk_file_selection_set_filename (
+				c_object,
+				eiffel_to_c (start_directory)
+			)
 		end
 
 feature {NONE} -- Implementation
@@ -141,6 +150,18 @@ end -- class EV_FILE_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.4.3  2000/08/22 17:21:21  king
+--| Implemented set_start_directory
+--|
+--| Revision 1.5.4.2  2000/08/16 19:42:41  king
+--| Connecting delete_event to on_cancel
+--|
+--| Revision 1.5.4.1  2000/05/03 19:08:46  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.11  2000/04/20 18:07:39  oconnor
 --| Removed default_translate where not needed in sognal connect calls.
 --|

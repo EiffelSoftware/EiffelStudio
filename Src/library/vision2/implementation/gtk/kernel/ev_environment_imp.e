@@ -59,6 +59,12 @@ end -- class EV_ENVIRONMENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2001/06/07 23:08:03  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.6.1  2000/05/03 19:08:38  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.3  2000/02/22 18:39:35  oconnor
 --| updated copyright date and formatting
 --|

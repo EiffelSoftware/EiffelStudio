@@ -1,7 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-		"EiffelVision text area, implementation interface."
+		"EiffelVision text area. Implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -16,7 +15,7 @@ inherit
 feature -- Access
 
 	line (i: INTEGER): STRING is
-			-- Returns the content of the `i'th line.
+			-- `Result' is content of the `i'th line.
 		require
 			valid_line: valid_line_index (i) and then
 				(i = line_count implies last_line_not_empty)
@@ -25,12 +24,10 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-
 feature -- Status report
 
 	current_line_number: INTEGER is
-			-- Returns the number of the line the cursor currently
-			-- is on.
+			-- `Result'is number of line containing cursor.
 		require
 		deferred
 		ensure
@@ -38,7 +35,7 @@ feature -- Status report
 		end
 
 	line_count: INTEGER is
-			-- Number of lines in widget
+			-- Number of lines of text in `Current'.
 		require
 		deferred
 		ensure
@@ -66,7 +63,7 @@ feature -- Status report
 		end
 
 	has_system_frozen_widget: BOOLEAN is
-			-- Is there any widget frozen?
+			-- Are there any frozen widgets?
 			-- If a widget is frozen any updates made to it
 			-- will not be shown until the widget is
 			-- thawn again.
@@ -99,14 +96,6 @@ feature -- Status settings
 			no_widget_is_frozen: not has_system_frozen_widget
 		end
 
-	set_default_options is
-			-- Initialize the options of the widget.
-		do
---			set_expand (True)
---			set_vertical_resize (True)
---			set_horizontal_resize (True)
-		end
-
 feature -- Basic operation
 
 	put_new_line is
@@ -120,6 +109,14 @@ feature -- Basic operation
 			-- 0 if none.
 		require
 			valid_string: str /= Void
+		deferred
+		end
+
+	scroll_to_line (i: INTEGER) is
+			-- Ensure that line `i' is visible in `Current'.
+		require
+			valid_line_index: valid_line_index (i) and then
+				(i = line_count implies last_line_not_empty)
 		deferred
 		end
 
@@ -161,6 +158,19 @@ end -- class EV_TEXT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.12.4.3  2000/12/06 22:48:37  rogers
+--| Implemented scroll_to_line as deferred.
+--|
+--| Revision 1.12.4.2  2000/08/18 00:02:08  rogers
+--| removed fixme not_Reviewed. Comments, formatting. Removed
+--| set_default_options.
+--|
+--| Revision 1.12.4.1  2000/05/03 19:09:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/04/13 23:07:05  brendel
 --| Unreleased.
 --|

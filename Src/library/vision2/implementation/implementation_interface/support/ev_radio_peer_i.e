@@ -68,6 +68,12 @@ end -- class EV_RADIO_PEER_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.6.1  2000/05/03 19:09:00  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.1  2000/02/24 20:27:22  brendel
 --| Initial revision. Needed for rearranged radio-item inheritance structure.
 --|

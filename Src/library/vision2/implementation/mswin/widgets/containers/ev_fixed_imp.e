@@ -19,7 +19,8 @@ inherit
 			interface,
 			compute_minimum_height,
 			compute_minimum_width,
-			compute_minimum_size
+			compute_minimum_size,
+			on_size
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -28,7 +29,12 @@ inherit
 		redefine
 			top_level_window_imp,
 			default_style,
-			wel_move_and_resize
+			on_erase_background
+		end
+	
+	WEL_RGN_CONSTANTS
+		export {NONE}
+			all
 		end
 		
 create
@@ -56,8 +62,7 @@ feature -- Status setting
 			check
 				wel_win_not_void: wel_win /= Void
 			end
-			wel_win.child_cell.move (an_x, a_y)
-			wel_win.wel_move (an_x, a_y)
+			wel_win.ev_move (an_x, a_y)
 			wel_win.invalidate
 			if
 				an_x + wel_win.width > width or else
@@ -137,11 +142,11 @@ feature {NONE} -- Implementation
 				ev_children.after
 			loop
 				v_imp := ev_children.item
-				new_min_width := new_min_width.max (v_imp.x_position + v_imp.wel_width)
+				new_min_width := new_min_width.max (v_imp.x_position + v_imp.width)
 				ev_children.forth
 			end
 			ev_children.go_i_th (cur)
-			internal_set_minimum_width (new_min_width)
+			ev_set_minimum_width (new_min_width)
 		end
 
 	compute_minimum_height is
@@ -158,11 +163,11 @@ feature {NONE} -- Implementation
 				ev_children.after
 			loop
 				v_imp := ev_children.item
-				new_min_height := new_min_height.max (v_imp.y_position + v_imp.wel_height)
+				new_min_height := new_min_height.max (v_imp.y_position + v_imp.height)
 				ev_children.forth
 			end
 			ev_children.go_i_th (cur)
-			internal_set_minimum_height (new_min_height)
+			ev_set_minimum_height (new_min_height)
 		end
 
 	compute_minimum_size is
@@ -179,36 +184,15 @@ feature {NONE} -- Implementation
 				ev_children.after
 			loop
 				v_imp := ev_children.item
-				new_min_width := new_min_width.max (v_imp.x_position + v_imp.wel_width)
-				new_min_height := new_min_height.max (v_imp.y_position + v_imp.wel_height)
+				new_min_width := new_min_width.max (v_imp.x_position + v_imp.width)
+				new_min_height := new_min_height.max (v_imp.y_position + v_imp.height)
 				ev_children.forth
 			end
 			ev_children.go_i_th (cur)
-			internal_set_minimum_size (new_min_width, new_min_height)
+			ev_set_minimum_size (new_min_width, new_min_height)
 		end
 
 feature -- Obsolete
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-		obsolete
-			"Call notify_change."
-		do
-			notify_change (2 + 1, Current)
-		end
-
-	remove_child (child_imp: EV_WIDGET_IMP) is
-		obsolete
-			"Call notify_change."
-		do
-			notify_change (2 + 1, Current)
-		end
-
-	add_child_ok: BOOLEAN is
-		obsolete
-			"Do: item = Void"
-		do
-			Result := item = Void
-		end
 
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
 		obsolete
@@ -219,7 +203,7 @@ feature -- Obsolete
 
 feature {NONE} -- WEL Implementation
 
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	on_size (size_type: INTEGER; a_width, a_height: INTEGER) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 			-- And we reajust size of all children.
@@ -227,7 +211,7 @@ feature {NONE} -- WEL Implementation
 			v_imp: EV_WIDGET_IMP
 			cur: INTEGER
 		do
-			cwin_move_window (wel_item, a_x, a_y, a_width, a_height, repaint)
+			Precursor {EV_WIDGET_LIST_IMP} (size_type, a_width, a_height)
 			cur := ev_children.index
 			from
 				ev_children.start
@@ -235,11 +219,91 @@ feature {NONE} -- WEL Implementation
 				ev_children.after
 			loop
 				v_imp := ev_children.item
-				cwin_move_window (v_imp.wel_item, v_imp.x_position,
+				v_imp.set_move_and_size (v_imp.x_position,
+						v_imp.y_position, v_imp.width, v_imp.height)
+				ev_children.forth
+			end
+			ev_children.go_i_th (cur)
+		end
+
+	ev_apply_new_size (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- Move the window to `a_x', `a_y' position and
+			-- resize it with `a_width', `a_height'.
+			-- And we reajust size of all children.
+		local
+			v_imp: EV_WIDGET_IMP
+			cur: INTEGER
+		do
+			ev_move_and_resize (a_x, a_y, a_width, a_height, repaint)
+			cur := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				v_imp := ev_children.item
+				v_imp.ev_apply_new_size (v_imp.x_position,
 						v_imp.y_position, v_imp.width, v_imp.height, repaint)
 				ev_children.forth
 			end
 			ev_children.go_i_th (cur)
+		end
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+		local
+			main_region: WEL_REGION
+			tmp_region, new_region: WEL_REGION
+			original_index: INTEGER
+			temp_children: ARRAYED_LIST [EV_WIDGET_IMP]
+			current_child: EV_WIDGET_IMP
+			bk_brush: WEL_BRUSH
+		do	
+				-- Disable default windows processing which would re-draw the
+				-- complete background of `Current'. This is not nice behaviour
+				-- as some widgets such as EV_LIST_IMP re-draw themselves as
+				-- required and will be hidden by `Current' if they are inside.
+				-- This will solve that problem.
+			disable_default_processing
+			set_message_return_value (1)
+				-- Quick access to `ev_children'.
+			temp_children := ev_children
+				-- Retrieve original index of `ev_children'.
+			original_index := temp_children.index
+				-- Create the region as the invalid area of `Current' that
+				-- needs to be redrawn.
+			create main_region.make_rect_indirect (invalid_rect)
+				-- We now need to subtract the area of every child held in
+				-- `Current' from the invalid area.
+			from
+				temp_children.start
+			until
+				temp_children.off
+			loop
+				current_child := temp_children.item
+					-- Create a temporary region the size of the current child.
+				create tmp_region.make_rect
+					(current_child.x_position, current_child.y_position,
+					current_child.x_position + current_child.width,
+					current_child.y_position + current_child.height)
+					-- Subtract this temporary region from the `main_region'
+					-- and store in `main_region'.
+				new_region := main_region.combine (tmp_region, Rgn_diff)
+				tmp_region.delete
+				main_region.delete
+				main_region := new_region
+
+					-- Point to the next child if there is one.
+				temp_children.forth
+			end
+				-- Fill the remaining region, `main_region'.
+			bk_brush := background_brush
+			paint_dc.fill_region (main_region, bk_brush)
+				-- Restore our index in the children.
+			temp_children.go_i_th (original_index)
+
+				-- Clean up GDI objects
+			bk_brush.delete
+			main_region.delete
 		end
 
 end -- class EV_FIXED_IMP
@@ -265,8 +329,36 @@ end -- class EV_FIXED_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.18  2000/06/07 17:27:59  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.19  2001/06/07 23:08:15  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.12.8.12  2001/01/26 23:34:40  rogers
+--| Removed undefinition of on_sys_key_down as this is already done in the
+--| ancestor EV_WEL_CONTROL_CONTAINER_IMP.
+--|
+--| Revision 1.12.8.11  2000/11/06 18:03:08  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.12.8.10  2000/08/08 03:15:53  manus
+--| Implementation of `on_size' and `ev_apply_new_size' with
+--| new resizing policy by calling `ev_' instead of `internal_', see
+--|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
+--| Better `on_erase_background' implementation that deletes GDI objects.
+--|
+--| Revision 1.12.8.9  2000/07/21 23:04:54  rogers
+--| Removed add_child and add_child_ok as no longer used in Vision2.
+--|
+--| Revision 1.12.8.8  2000/07/21 18:54:43  rogers
+--| Removed remove_child as it is no longer needed in Vision2.
+--|
+--| Revision 1.12.8.7  2000/06/21 17:45:21  rogers
+--| Fixed on_erase_background. The regions of each item were being calculated
+--| incorrectly and created with the wrong size. This was stopping the
+--| background being erased correctly under certain circumstances.
+--|
+--| Revision 1.12.8.6  2000/06/21 00:46:47  rogers
+--| Now inherits WEL_RGN_CONSTANTS. Redefined on_erase_background, so that
+--| the background area that is covered by any items is never re-drawn.
 --|
 --| Revision 1.12.8.5  2000/06/05 23:57:06  manus
 --| Added redefinition of `wel_move_and_resize' that performs sizing operations on itself

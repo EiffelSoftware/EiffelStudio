@@ -26,11 +26,17 @@ inherit
 			initialize,
 			default_style,
 			default_ex_style,
-			wel_move_and_resize,
 			x_offset,
 			y_offset,
 			set_x_offset,
-			set_y_offset
+			set_y_offset,
+			ev_apply_new_size,
+			on_size_requested
+		end
+
+	WEL_RGN_CONSTANTS
+		export {NONE}
+			all
 		end
 
 create
@@ -47,9 +53,11 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			Precursor
-			create scroller.make (Current, 1, 1, 10, 30)
-			disable_horizontal_scroll_bar
-			disable_vertical_scroll_bar
+			create scroller.make (Current, 50, 50, 10, 30)
+			enable_horizontal_scroll_bar
+			enable_vertical_scroll_bar
+			hide_horizontal_scroll_bar
+			hide_vertical_scroll_bar
 		end
 
 feature -- Access
@@ -91,28 +99,28 @@ feature -- Element change
 	show_horizontal_scroll_bar is
 			-- Display horizontal scroll bar.
 		do
-			Precursor
+			Precursor {EV_VIEWPORT_IMP}
 			is_horizontal_scroll_bar_visible := True
 		end
 
 	hide_horizontal_scroll_bar is
 			-- Do not display horizontal scroll bar.
 		do
-			Precursor
+			Precursor {EV_VIEWPORT_IMP}
 			is_horizontal_scroll_bar_visible := False
 		end
 
 	show_vertical_scroll_bar is
 			-- Display vertical scroll bar.
 		do
-			Precursor
+			Precursor {EV_VIEWPORT_IMP}
 			is_vertical_scroll_bar_visible := True
 		end
 
 	hide_vertical_scroll_bar is
 			-- Do not display vertical scroll bar.
 		do
-			Precursor
+			Precursor {EV_VIEWPORT_IMP}
 			is_vertical_scroll_bar_visible := False
 		end
 
@@ -169,34 +177,179 @@ feature {NONE} -- Implementation
 	default_ex_style: INTEGER is
 			-- The default ex-style of the window.
 		do
-			Result := Ws_ex_controlparent + Ws_ex_clientedge + Ws_ex_rightscrollbar
+			Result := Ws_ex_controlparent + Ws_ex_rightscrollbar
 		end
 
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-				repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
-			-- resize it with `a_width', `a_height'.
+	ev_apply_new_size (a_x_position, a_y_position,
+				a_width, a_height: INTEGER; repaint: BOOLEAN) is
+		do
+			Precursor {EV_VIEWPORT_IMP} (a_x_position, a_y_position,
+				a_width, a_height, repaint)
+			if item_imp = Void then
+				hide_vertical_scroll_bar
+				hide_horizontal_scroll_bar
+			end
+		end
+
+	is_in_size_call: BOOLEAN
+			-- Avoid recursive calls to `on_size_requested' if True.
+
+	on_size_requested (originator: BOOLEAN) is
+			-- Compute position of item in Current
 		local
 			ch, cw: INTEGER
+			imp: like item_imp
+			cl_width, cl_height: INTEGER
+			imp_h, imp_w: INTEGER
+			new_x, new_y: INTEGER
 		do
-			Precursor (a_x, a_y, a_width, a_height, repaint)
-			if item_imp /= Void then
-				cw := item_imp.wel_width - client_width
-				ch := item_imp.wel_height - client_height
+			if not is_in_size_call then
+					-- Avoid recursive call when performing resizing
+				is_in_size_call := True
+
+					-- Local variables for fast access later in computation
+				imp := item_imp
+				imp_w := imp.width
+				imp_h := imp.height
+				cl_width := client_width
+				cl_height := client_height
+				cw := imp_w - cl_width
+				ch := imp_h - cl_height
 
 				if cw > 0 then
-					enable_horizontal_scroll_bar
-					set_horizontal_range (0, cw)
+						-- Item is too big to fit in width.
+					show_horizontal_scroll_bar
+
+						-- Recompute new `ch' that takes into account the new
+						-- client_height which could changed due to the apparition
+						-- of the horizontal scroll bar.
+					cl_height := client_height
+					ch := imp_h - cl_height
+					if ch > 0 then
+							-- Item is too big to fit in height.
+						show_vertical_scroll_bar
+					else
+						hide_vertical_scroll_bar
+					end
+
+						-- Recompute new client_width which could have changed
+						-- due to apparition/removal of vertical scrollbar.
+					cl_width := client_width
+					cw := imp_w - cl_width
 				else
-					disable_horizontal_scroll_bar
+					hide_horizontal_scroll_bar
+
+						-- Recompute new `ch' that takes into account the new
+						-- client_height which could changed due to the removal
+						-- of the horizontal scroll bar.
+					cl_height := client_height
+					ch := imp_h - cl_height
+
+					if ch > 0 then
+						show_vertical_scroll_bar
+					else
+						hide_vertical_scroll_bar
+					end
+
+						-- Recompute new client_width which could have changed
+						-- due to apparition/removal of vertical scrollbar.
+					cl_width := client_width
+					cw := imp_w - cl_width
 				end
 
-				if ch > 0 then
-					enable_vertical_scroll_bar
-					set_vertical_range (0, ch)
+				if cw > 0 then
+						-- Here client_width is too small to contain `item', we
+						-- need to reposition `item' at the correct place. Meaning
+						-- its right part has to touch the right part of scrollable
+						-- area.
+
+						-- Compute old position.
+					new_x := imp.x_position
+					if -new_x + cl_width > imp_w then
+							-- We are bigger so we need to go right a little bit
+						new_x := -cw
+					end
+
+						-- In our current configuration the right of `item' has to be
+						-- at most at the very left of scrollable area, not after.
+					new_x := new_x.min (0)
+
+						-- Set scrolling values to reflect new settings
+					set_horizontal_position (new_x.abs)
+					set_horizontal_range (0, imp_w)
+					scroller.set_horizontal_page (cl_width)
+
+					if ch > 0 then
+							-- Here client_height isn't too small to contain `item', we need
+							-- to move down `item' at the correct place. Meaning that the
+							-- bottom part has to touch the bottom of scrollable area.
+
+							-- Compute old position.
+						new_y := imp.y_position
+						if -new_y + cl_height > imp_h then
+								-- We are bigger so we need to go down a little bit
+							new_y := -ch
+						end
+							-- In our current configuration the top of `item' has to be
+							-- at most at the very top of scrollable area, not below.
+						new_y := new_y.min (0)
+
+							-- Set scrolling values to reflect new settings.
+						set_vertical_range (0, imp_h)
+						set_vertical_position (new_y.abs)
+						scroller.set_vertical_page (cl_height)
+
+						if originator then
+								-- Move item at new position
+							imp.set_move_and_size (new_x,
+								new_y, imp_w, imp_h)
+						else
+								-- Move item at new position
+							imp.ev_apply_new_size (new_x,
+								new_y, imp_w, imp_h, True)
+						end
+					else
+						if originator then
+							imp.set_move_and_size (new_x,
+								(-ch) // 2, imp_w, imp_h)
+						else
+							imp.ev_apply_new_size (new_x,
+								(-ch) // 2, imp_w, imp_h, True)
+						end
+					end
 				else
-					disable_vertical_scroll_bar
+					if ch > 0 then
+							-- See above comments, same implementation, but with
+							-- a different x.
+						new_y := imp.y_position
+						if -new_y + cl_height > imp_h then
+								-- We are bigger so we need to go down a little bit
+							new_y := -ch
+						end
+						new_y := new_y.min (0)
+						set_vertical_range (0, imp_h)
+						set_vertical_position (new_y.abs)
+						scroller.set_vertical_page (cl_height)
+						if originator then
+							imp.set_move_and_size ((-cw) // 2,
+								new_y, imp_w, imp_h)
+						else
+							imp.ev_apply_new_size ((-cw) // 2,
+								new_y, imp_w, imp_h, True)
+						end
+					else
+							-- Scrollable area is bigger than widget, we put it in
+							-- center.
+						if originator then
+							imp.set_move_and_size ((-cw) // 2,
+								(-ch) // 2, imp_w, imp_h)
+						else
+							imp.ev_apply_new_size ((-cw) // 2,
+								(-ch) // 2, imp_w, imp_h, True)
+						end
+					end
 				end
+				is_in_size_call := False
 			end
 		end
 
@@ -225,8 +378,47 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.30  2000/06/09 01:26:45  manus
---| Merged version 1.15.8.2 from DEVEL branch to trunc
+--| Revision 1.31  2001/06/07 23:08:15  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.15.8.9  2001/02/19 21:00:55  manus
+--| By default scrollbars are always enabled and hidden at creation.
+--| During resizing we hide/show them.
+--| Fixed a bug in resizing code because if from time t1 to t2 a scrollbar
+--| had to be added it changes the size of the client area and we did not
+--| take that into account. Now we find out if we hide/show a scrollbar, then
+--| recompute our sizes and then do the positionning and scrollbar update.
+--|
+--| Revision 1.15.8.8  2001/01/30 19:53:22  rogers
+--| Ev_apply_new_size redefined to hide scroll bars if item_imp = Void.
+--|
+--| Revision 1.15.8.7  2001/01/30 19:26:44  manus
+--| Fixed the non-implemented `ev_apply_new_size' feature so that it calls
+--| `on_size_requested' with a new arguments telling the origin of the call
+--|  (which is either a user resize event or an internal one due to vision2 code).
+--|
+--| Revision 1.15.8.6  2000/11/29 00:42:41  rogers
+--| Comment changed.
+--|
+--| Revision 1.15.8.5  2000/10/09 05:03:03  manus
+--| Removed `Ws_ex_clientedge' style since if we want a special border we can put it in a frame.
+--|
+--| Revision 1.15.8.4  2000/09/06 02:29:58  manus
+--| Cosmetics on Precursor
+--|
+--| Revision 1.15.8.3  2000/08/08 16:05:23  manus
+--| New resizing policy by calling `ev_' instead of `internal_', see
+--|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
+--| New behavior of scrolling area, where contents is not resized to fit the scrollable area. It
+--| will be automatically centered.
+--|
+--| Revision 1.15.8.2  2000/05/03 22:16:27  pichery
+--| - Cosmetics / Optimization with local variables
+--| - Replaced calls to `width' to calls to `wel_width'
+--|   and same for `height'.
+--|
+--| Revision 1.15.8.1  2000/05/03 19:09:37  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.29  2000/04/26 21:01:29  brendel
 --| child -> item or item_imp.

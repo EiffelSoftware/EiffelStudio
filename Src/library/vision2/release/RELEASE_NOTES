@@ -1,19 +1,15 @@
-Eiffel Vision prerelease notes. 14-Feb-2000
+Eiffel Vision prerelease notes. 14-Jun-2000
 ===========================================
 
-This document describes the current prerelease of Eiffel Vision and changes
-since the last version of 16-Nov-1999. 
+This document describes the current prerelease of Eiffel Vision.
 
 See test/README for information on building the test program.
 
  Status
  ------
-  A number of design changes are described below, implementation of these
- changes is nearing completion with the GTK+ implementation slightly more
- complete than the Win32. This prerelease is intended to give selected users a
- preview of the library, it should be considered Alpha quality. Some widgets
- from previous releases have been omitted pending their review but will be back
- in coming releases.
+  The library is nearing general Beta release. Almost all functionality is now
+ implemented. A number of known bugs are bing fixed at present.
+
   Bug reports should be sent through the normal channels. If you have comments
  or requests regarding the interface please send mail to Sam O'Connor
  oconnor@eiffel.com
@@ -104,7 +100,6 @@ See test/README for information on building the test program.
 
  Drawing
  -------
-  Drawing code is substantially complete. Drawing primitives are simplified.
  It is now possible to draw primitive figures directly without the need to
  first create a figure object. eg a_drawing_area.draw_segment (x1, y1, x2, y2).
   A new system has been added to manage more complex drawing. It separates the
@@ -128,9 +123,9 @@ See test/README for information on building the test program.
  dependent. Fonts are now specified in terms of family (roman|sans|typewriter|
  modern|screen), weight (thin|regular|bold|black), shape (regular|italic) and
  height in pixels. The actual font displayed will be the closest match available
- on the system at runtime. An exact typeface name may be specified using
- set_preferred_face (a_preferred_face: STRING), the named face will be used if
- it is available, otherwise a best match to the specifications will be used.
+ on the system at runtime. An exact typeface name may be specified in a list
+ of `preferred_faces', the first avalible face in the list will be used,
+ otherwise a best match to the specifications will be used.
 
  Pick and drop
  -------------
@@ -169,18 +164,6 @@ See test/README for information on building the test program.
   - Standard base library names are used wherever applicable.
     (start, forth, after, back, prune, item, has, count, empty, off, etc...)
   
- Internals
- ---------
-   GTK+ memory management has been completely rewritten. The GTK+ reference
-  counting system now cooperates with the eiffel garbage collector. This ensures
-  that neither a GTK+ object or its shadow Eiffel object will be destroyed if
-  either is accessible from Eiffel or C and that both will be destroyed when
-  neither is accessible.
-
-   Contracts have been added and revised throughout the library. Where
-  previously there were few invariants and postconditions now there are many.
-  Preconditions have been added wherever possible.
-
  Keys
  ----
   Instead of taking an INTEGER, the key press/release actions now take EV_KEY.

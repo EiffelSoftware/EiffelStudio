@@ -33,6 +33,8 @@ feature {NONE} -- Initialization
 			set_drawing_mode (Ev_drawing_mode_copy)
 			set_line_width (1)
 			create font
+			internal_font_ascent := font.ascent
+			internal_font_imp ?= font.implementation
 		end
 
 feature {EV_DRAWABLE_IMP} -- Implementation
@@ -41,7 +43,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			-- Pointer to GdkGC struct.
 			-- The graphics context applied to the primitives.
 			-- Line style, width, colors, etc. are defined in here.
-
+	
 	gcvalues: POINTER
 			-- Pointer to GdkGCValues struct.
 			-- Is allocated during creation but has to be updated
@@ -158,8 +160,9 @@ feature -- Element change
 	set_font (a_font: EV_FONT) is
 			-- Set `font' to `a_font'.
 		do
-			create font
-			font.copy (a_font)
+			font := clone (a_font)
+			internal_font_ascent := font.ascent
+			internal_font_imp ?= font.implementation
 		end
 
 	set_background_color (a_color: EV_COLOR) is
@@ -181,7 +184,7 @@ feature -- Element change
 			C.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
 			tempbool := C.gdk_colormap_alloc_color (system_colormap, color_struct, False, True)
 			check
-				color_has_been_allocated: tempbool = True
+				color_has_been_allocated: tempbool
 			end
 			C.gdk_gc_set_foreground (gc, color_struct)
 			C.c_gdk_color_struct_free (color_struct)
@@ -198,7 +201,8 @@ feature -- Element change
 			-- Set drawing mode to `a_mode'.
 		do
 			check valid_drawing_mode (a_mode) end
-			inspect a_mode
+			inspect
+				a_mode
 			when Ev_drawing_mode_copy then
 				C.gdk_gc_set_function (gc, C.Gdk_copy_enum)
 			when Ev_drawing_mode_xor then
@@ -245,8 +249,8 @@ feature -- Element change
 		local
 			tile_imp: EV_PIXMAP_IMP
 		do
-			--| FIXME copy the pixmap not set the reference.
-			tile := a_pixmap
+			create tile
+			tile.copy (a_pixmap)
 			tile_imp ?= tile.implementation
 			C.gdk_gc_set_tile (gc, tile_imp.drawable)
 		end
@@ -281,8 +285,8 @@ feature -- Clearing operations
 			clear_rectangle (0, 0, width, height)
 		end
 
-	clear_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Erase rectangle (`x1, `y1) - (`x2', `y2') with `background_color'.
+	clear_rectangle (x, y, a_width, a_height: INTEGER) is
+			-- Erase rectangle specified with `background_color'.
 		local
 			tmp_fg_color: EV_COLOR
 		do
@@ -290,10 +294,10 @@ feature -- Clearing operations
 			tmp_fg_color.copy (foreground_color)
 			set_foreground_color (background_color)
 			C.gdk_draw_rectangle (drawable, gc, 1,
-				x1.min (x2),
-				y1.min (y2),
-				(x1 - x2).abs,
-				(y1 - y2).abs)
+				x,
+				y,
+				a_width,
+				a_height)
 			set_foreground_color (tmp_fg_color)
 		end
 
@@ -308,13 +312,32 @@ feature -- Drawing operations
 		end
 
 	draw_text (x, y: INTEGER; a_text: STRING) is
-			-- Draw `a_text' at (`x', `y') using `font'.
-		local
-			font_imp: EV_FONT_IMP
+			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
 			if drawable /= NULL then
-				font_imp ?= font.implementation
-				C.gdk_draw_string (drawable, font_imp.c_object, gc, x, y, eiffel_to_c (a_text))
+				C.gdk_draw_string (
+					drawable,
+					internal_font_imp.c_object,
+					gc,
+					x,
+					y,
+					eiffel_to_c (a_text)
+				)
+			end
+		end
+
+	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
+		do
+			if drawable /= NULL then
+				C.gdk_draw_string (
+					drawable,
+					internal_font_imp.c_object,
+					gc,
+					x,
+					y + internal_font_ascent,
+					eiffel_to_c (a_text)
+				)
 			end
 		end
 
@@ -350,22 +373,27 @@ feature -- Drawing operations
 			draw_segment (ax1, ay1, ax2, ay2)
 		end
 
-	draw_arc (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
-			-- Draw a part of an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
+	draw_arc (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Draw a part of an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- Angles are measured in radians.
 		do
 			if drawable /= NULL then
-				C.gdk_draw_arc (drawable, gc, 0, x - a_horizontal_radius,
-					y - a_vertical_radius, a_horizontal_radius * 2,
-					a_vertical_radius * 2, radians_to_gdk (a_start_angle),
-					radians_to_gdk (an_aperture))
+				C.gdk_draw_arc (drawable, gc, 0, x,
+					y, a_width,
+					a_height, (radians_to_gdk_angle * a_start_angle).truncated_to_integer,
+					(radians_to_gdk_angle * an_aperture).truncated_to_integer)
 			end
 		end
 
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
+		do
+			draw_full_pixmap (x, y, a_pixmap, 0, 0, -1, -1)
+		end
+
+	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 		do
@@ -377,12 +405,18 @@ feature -- Drawing operations
 				end
 				C.gdk_draw_pixmap (drawable, gc,
 					pixmap_imp.drawable,
-					0, 0, x, y, -1, -1)
+					x_src, y_src, x, y, src_width, src_height)
 				if pixmap_imp.mask /= NULL then
 					C.gdk_gc_set_clip_mask (gc, NULL)
 					C.gdk_gc_set_clip_origin (gc, 0, 0)
 				end
 			end
+		end
+
+	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
+			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
+		do
+			draw_full_pixmap (x, y, a_pixmap, area.x, area.y, area.width, area.height)	
 		end
 
 	draw_rectangle (x, y, a_width, a_height: INTEGER) is
@@ -394,14 +428,14 @@ feature -- Drawing operations
 			end
 		end
 
-	draw_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
-			-- Draw an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
+	draw_ellipse (x, y, a_width, a_height: INTEGER) is
+			-- Draw an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
 		do
 			if drawable /= NULL then
-				C.gdk_draw_arc (drawable, gc, 0, x - a_horizontal_radius,
-					y - a_vertical_radius, a_horizontal_radius * 2,
-					a_vertical_radius * 2, 0, 360 * 64)
+				C.gdk_draw_arc (drawable, gc, 0, x,
+					y, a_width,
+					a_height, 0, whole_circle)
 			end
 		end
 
@@ -422,22 +456,22 @@ feature -- Drawing operations
 			end
 		end
 
-	draw_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
-			-- Draw a part of an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
+	draw_pie_slice (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Draw a part of an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians
 		local
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
 		do
-			x_start_arc := x + (a_horizontal_radius * cosine (a_start_angle)).rounded
-			y_start_arc := y - (a_vertical_radius * sine (a_start_angle)).rounded
-			x_end_arc := x + (a_horizontal_radius * cosine ((a_start_angle + an_aperture))).rounded
-			y_end_arc := y - (a_vertical_radius * sine ((a_start_angle + an_aperture))).rounded
-			draw_arc (x, y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
-			draw_segment (x, y, x_start_arc, y_start_arc)
-			draw_segment (x, y, x_end_arc, y_end_arc)
+			x_start_arc := x + (a_width // 2) + (a_width // 2 * cosine (a_start_angle)).rounded
+			y_start_arc := y + (a_height // 2) - (a_height // 2 * sine (a_start_angle)).rounded
+			x_end_arc := x + (a_width // 2) + (a_width // 2 * cosine ((a_start_angle + an_aperture))).rounded
+			y_end_arc := y + (a_height // 2) - (a_height // 2 * sine ((a_start_angle + an_aperture))).rounded
+			draw_arc (x, y, a_width, a_height, a_start_angle, an_aperture)
+			draw_segment (x + (a_width // 2), y + (a_height // 2), x_start_arc, y_start_arc)
+			draw_segment (x + (a_width // 2), y + (a_height // 2), x_end_arc, y_end_arc)
 		end
 
 feature -- filling operations
@@ -455,18 +489,18 @@ feature -- filling operations
 			end
 		end
 
-	fill_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
-			-- Draw an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
+	fill_ellipse (x, y, a_width, a_height: INTEGER) is
+			-- Draw an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
 			-- Fill with `background_color'.
 		do
 			if drawable /= NULL then
 				if tile /= Void then
 					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
 				end
-				C.gdk_draw_arc (drawable, gc, 1, x - a_horizontal_radius,
-					y - a_vertical_radius, a_horizontal_radius * 2,
-					a_vertical_radius * 2, 0, 360 * 64)
+				C.gdk_draw_arc (drawable, gc, 1, x,
+					y, a_width,
+					a_height, 0, whole_circle)
 				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
 			end
 		end
@@ -487,9 +521,9 @@ feature -- filling operations
 			end
 		end
 
-	fill_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
-			-- Draw a part of an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
+	fill_pie_slice (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Draw a part of an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians.
@@ -498,10 +532,10 @@ feature -- filling operations
 				if tile /= Void then
 					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
 				end
-				C.gdk_draw_arc (drawable, gc, 1, x - a_horizontal_radius,
-					y - a_vertical_radius, a_horizontal_radius * 2,
-					a_vertical_radius * 2, radians_to_gdk (a_start_angle),
-					radians_to_gdk (an_aperture))
+				C.gdk_draw_arc (drawable, gc, 1, x,
+					y, a_width,
+					a_height, (a_start_angle * radians_to_gdk_angle).rounded,
+					(an_aperture * radians_to_gdk_angle).rounded)
 				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
 			end
 		end
@@ -539,6 +573,16 @@ feature {NONE} -- Implemention
 		end
 
 feature {NONE} -- Implementation
+
+	whole_circle: INTEGER is 23040
+		-- Number of 1/64 th degrees in a full circle (360 * 64)
+		
+	radians_to_gdk_angle: INTEGER is 3667 -- 
+			-- Multiply radian by this to get no of (1/64) degree segments.
+		
+	internal_font_ascent: INTEGER
+
+	internal_font_imp: EV_FONT_IMP
 
 	C: EV_C_EXTERNALS is
 		once
@@ -580,6 +624,91 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2001/06/07 23:08:04  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.7.2.25  2001/06/05 22:42:47  king
+--| Using clone instead of copy
+--|
+--| Revision 1.7.2.24  2001/06/04 17:21:23  rogers
+--| We now use copy instead of ev_clone.
+--|
+--| Revision 1.7.2.23  2001/05/29 21:54:21  andrew
+--| Corrected pie slice drawing routine to reflect the new bounding box implementation.
+--|
+--| Revision 1.7.2.22  2001/05/24 00:31:01  king
+--| Accounted for ellipse changes
+--|
+--| Revision 1.7.2.21  2001/05/10 21:38:05  king
+--| Updated clear_rectangle
+--|
+--| Revision 1.7.2.20  2001/04/23 22:13:23  king
+--| Corrected clear_rectangle
+--|
+--| Revision 1.7.2.19  2001/04/11 17:51:12  xavier
+--| `ev_clone' seems better suited than a simple clone (thanks Arnaud :)
+--|
+--| Revision 1.7.2.18  2001/04/11 16:12:02  xavier
+--| When using descendants of EV_FONT, a precondition was violated in base, because we used to invoke `copy' on objects of different types.
+--|
+--| Revision 1.7.2.17  2000/11/30 19:28:03  king
+--| Removed unused local variable
+--|
+--| Revision 1.7.2.16  2000/11/28 01:05:37  king
+--| Implemented draw_sub_pixmap
+--|
+--| Revision 1.7.2.15  2000/10/27 16:54:39  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.7.2.14  2000/09/12 19:03:55  king
+--| Moved gtk_window up to ev_any_imp
+--|
+--| Revision 1.7.2.13  2000/09/06 18:54:32  oconnor
+--| default_gdk_window:
+--|  Commented out ref of GDK window and destroy of GTK window.
+--|  This seems to destroy both.
+--|  Since this is a once the extra window dosn't matter too much anyway.
+--|
+--| Revision 1.7.2.11  2000/09/06 18:08:37  oconnor
+--| Fixed call to C function that ignored return value.
+--|
+--| Revision 1.7.2.10  2000/09/06 17:48:43  oconnor
+--| Use new default_gdk_window feature instead of gdk_root_parent to try
+--| to get a basis for visuals that will work better on workstations that
+--| have different color depths for diverent windows.
+--|
+--| Revision 1.7.2.9  2000/08/23 00:32:27  king
+--| Removed unused local
+--|
+--| Revision 1.7.2.8  2000/08/18 22:54:35  king
+--| Now incrementing y instead of x, doh
+--|
+--| Revision 1.7.2.7  2000/08/18 19:04:13  king
+--| Optimized draw_text routines
+--|
+--| Revision 1.7.2.6  2000/08/18 17:42:20  king
+--| Corrected draw_text_at_top_left
+--|
+--| Revision 1.7.2.5  2000/08/16 15:10:01  brendel
+--| Corrected error + cosmetic.
+--|
+--| Revision 1.7.2.4  2000/08/15 23:06:46  brendel
+--| Added `draw_text_top_left'.
+--|
+--| Revision 1.7.2.3  2000/08/08 00:03:11  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.7.2.2  2000/05/03 19:08:41  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/05/02 18:55:23  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

@@ -17,13 +17,13 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Initialize interface.
+			-- Initialize `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 		end
 
 	initialize is
-			-- No initialization needed.
+			-- No extra initialization needed.
 		do
 			is_initialized := True
 		end
@@ -63,6 +63,15 @@ end -- class EV_ENVIRONMENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.6.2  2000/08/03 16:33:07  rogers
+--| Comments.
+--|
+--| Revision 1.4.6.1  2000/05/03 19:09:12  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.4  2000/02/22 18:39:45  oconnor
 --| updated copyright date and formatting
 --|

@@ -97,6 +97,12 @@ end -- class EV_MENU_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2001/06/07 23:08:01  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.1  2000/05/03 19:08:35  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.11  2000/04/27 23:36:53  king
 --| Added pointer ref functions for radio grouping
 --|

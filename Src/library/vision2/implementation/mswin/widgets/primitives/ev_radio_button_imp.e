@@ -50,31 +50,47 @@ inherit
 			move_and_resize as wel_move_and_resize,
 			text as wel_text,
 			set_text as wel_set_text,
-			checked as is_selected
+			checked as is_selected,
+			background_color as wel_background_color,
+			foreground_color as wel_foreground_color,
+			has_capture as wel_has_capture
 		undefine
 			make_by_id,
-			window_process_message,
 			remove_command,
 			set_width,
 			set_height,
 			on_bn_clicked,
 			on_left_button_down,
+			on_middle_button_down,
 			on_right_button_down,
 			on_left_button_up,
+			on_middle_button_up,
 			on_right_button_up,
 			on_left_button_double_click,
+			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
 			on_key_up,
 			on_key_down,
+			on_char,
 			on_set_focus,
 			on_kill_focus,
+			on_desactivate,
 			on_set_cursor,
 			on_size,
 			process_notification,
 			wel_set_text,
+			on_show,
+			on_hide,
 			show,
-			hide
+			hide,
+			x_position,
+			y_position,
+			wel_foreground_color,
+			wel_background_color,
+			on_sys_key_down,
+			on_sys_key_up,
+			default_process_message
 		redefine
 			on_key_down,
 			default_style
@@ -114,6 +130,7 @@ feature -- Status setting
 				radio_group.go_to (cur)
 			end
 			set_checked
+			select_actions.call ([])
 		end
 
 feature {NONE} -- Implementation
@@ -121,7 +138,7 @@ feature {NONE} -- Implementation
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed.
 		do
-			{WEL_RADIO_BUTTON} Precursor (virtual_key, key_data)
+			Precursor {WEL_RADIO_BUTTON} (virtual_key, key_data)
 			process_tab_and_arrows_keys (virtual_key)
 		end
 
@@ -129,7 +146,6 @@ feature {NONE} -- Implementation
 			-- Called when `Current' is pressed.
 		do
 			enable_select
-			{EV_BUTTON_IMP} Precursor
 		end
 
 	default_style: INTEGER is
@@ -137,7 +153,6 @@ feature {NONE} -- Implementation
 		once
 			Result := Ws_visible + Ws_child + Ws_tabstop + Bs_radiobutton
 		end
-
 
 feature {EV_ANY_I} -- Implementation
 
@@ -166,14 +181,45 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.35  2000/06/09 01:41:37  manus
---| Merged version 1.17.8.2 from DEVEL branch to trunc
+--| Revision 1.36  2001/06/07 23:08:17  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.34  2000/06/07 17:28:01  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.17.8.13  2001/05/14 23:47:53  rogers
+--| Fixed bug in on_bn_clicked. The select_actions were being called twice
+--| as the call to Precursor called them as well as the call to
+--| `enable_select'. We now no longer call the precursor, and this fixes this.
 --|
---| Revision 1.33  2000/05/03 20:13:27  brendel
---| Fixed resize_actions.
+--| Revision 1.17.8.12  2001/01/26 23:21:41  rogers
+--| Undefined on_sys_key_down inherited from WEL.
+--|
+--| Revision 1.17.8.11  2001/01/09 19:13:40  rogers
+--| Undefined default_process_message from WEL.
+--|
+--| Revision 1.17.8.10  2000/11/14 18:25:58  rogers
+--| Renamed has_capture inherited from WEL as wel_has_capture.
+--|
+--| Revision 1.17.8.9  2000/11/06 17:57:08  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.17.8.8  2000/10/11 00:01:49  raphaels
+--| Added `on_desactivate' to list of undefined features from WEL_WINDOW.
+--|
+--| Revision 1.17.8.7  2000/10/06 18:46:26  rogers
+--| Formatting to 80 columns.
+--|
+--| Revision 1.17.8.6  2000/09/13 22:09:21  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.17.8.5  2000/08/08 02:50:03  manus
+--| Updated inheritance with new WEL messages handling and with the fact that
+--| buttons are now colorizable.
+--|
+--| Revision 1.17.8.4  2000/08/01 17:00:56  rogers
+--| Enable_select now calls the select actions.
+--|
+--| Revision 1.17.8.3  2000/07/12 16:09:21  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
 --|
 --| Revision 1.17.8.2  2000/05/09 20:48:28  king
 --| Implemented to fit in with new selectable abstract classes

@@ -13,14 +13,20 @@ inherit
 
 feature -- Access
 
-	pixmap: EV_PIXMAP
-			-- Pixmap of `Current'.
+	pixmap: EV_PIXMAP is
+			-- Give a copy of pixmap used by `Current'.
+		do
+			if private_pixmap /= Void then
+				create Result
+				Result.copy (private_pixmap)
+			end
+		end
 
 	pixmap_imp: EV_PIXMAP_IMP_STATE is
 			-- Implementation of pixmap in `Current'.
 		do
-			if pixmap /= Void then
-				Result ?= pixmap.implementation
+			if private_pixmap /= Void then
+				Result ?= private_pixmap.implementation
 			end
 		end
 
@@ -29,50 +35,55 @@ feature -- Element change
 	set_pixmap (pix: EV_PIXMAP) is
 			-- Make `pix' the new pixmap of `Current'.
 		do
-			pixmap := pix
+			private_pixmap := pix
 		end
 
 	remove_pixmap is
 			-- Remove the pixmap from `Current'.
 		do
-			pixmap := Void
+			private_pixmap := Void
 		end
 
-feature {NONE} -- deferred features
+feature {NONE} -- Implementation
 
-	invalidate is
-			-- Invalide the entire client area of `Current'.
-			--| This will force the client area to be re-drawn.
-			--| The background of the client area will be cleared before
-			--| the re-draw.
-		deferred
-		end
+	private_pixmap: EV_PIXMAP
+			-- Pixmap of `Current'.
 
 end -- class EV_PIXMAPABLE_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.15  2000/06/07 17:27:56  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.16  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.9.4.6  2000/08/11 19:13:24  rogers
+--| Fixed copyright clause. Now use ! instead of |.
+--|
+--| Revision 1.9.4.5  2000/06/19 21:45:53  manus
+--| Now `pixmap' of `EV_PIXMAPABLE_IMP' returns a copy of the internal pixmap to
+--| satisfy the Vision2 interface behavior.
+--|
+--| Revision 1.9.4.4  2000/06/12 15:49:33  rogers
+--| Removed invalidate as redundent.
 --|
 --| Revision 1.9.4.3  2000/06/05 16:49:19  manus
 --| Now `pixmap_imp' is of type `EV_PIXMAP_IMP_STATE' which is widely accepted instead of the

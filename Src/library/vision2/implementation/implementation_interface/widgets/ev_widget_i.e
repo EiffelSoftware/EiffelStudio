@@ -26,6 +26,19 @@ inherit
 			interface
 		end
 
+	EV_POSITIONED_I
+		redefine
+			interface
+		end
+
+	EV_WIDGET_ACTION_SEQUENCES_I
+	
+	EV_HELP_CONTEXTABLE_I
+		redefine
+			interface,
+			on_help_context_changed
+		end
+
 feature -- Access
 
 	parent: EV_CONTAINER is
@@ -36,13 +49,18 @@ feature -- Access
 
 	pointer_position: EV_COORDINATES is
             -- Position of the screen pointer relative to `Current'.
-        deferred
-        end
+		deferred
+		end
 		
 	pointer_style: EV_CURSOR is
 			-- Cursor displayed when screen pointer is over current widget.
 		deferred
 		end
+
+	actual_drop_target_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE]
+			-- Overrides default drop target on a certain position.
+			-- If `Void', will use the default drop target.
+			-- Always void if `Current' is not a widget.
 
 feature -- Status Report
 
@@ -60,6 +78,11 @@ feature -- Status Report
 
 	has_focus: BOOLEAN is
 			-- Does widget have the keyboard focus?
+		deferred
+		end
+
+	has_capture: BOOLEAN is
+			-- Does widget have capture?
 		deferred
 		end
 
@@ -83,19 +106,22 @@ feature -- Status setting
 			-- Grab keyboard focus.
 		deferred
 		ensure
-			has_focus: has_focus
+			--has_focus: has_focus
+			--| FIXME IEK Does not hold for non focus widgets such as box.
+		end
+
+	set_actual_drop_target_agent (an_agent: like actual_drop_target_agent) is
+			-- Assign `an_agent' to `actual_drop_target_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			actual_drop_target_agent := an_agent;
+			(create {EV_ENVIRONMENT}).application.implementation.pnd_targets.extend (interface.object_id)
+		ensure
+			assigned: actual_drop_target_agent = an_agent
 		end
 
 feature -- Element change
-
---	set_pointer_style (a_cursor: like pointer_style) is
---			-- Assign `a_cursor' to `pointer_style'.
---		require
---			a_cursor_not_void: a_cursor /= Void
---		deferred
---		ensure
---			pointer_style_assigned: pointer_style.is_equal (a_cursor)
---		end
 
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
@@ -103,7 +129,7 @@ feature -- Element change
 			a_minimum_width_positive: a_minimum_width > 0
 		deferred
 		ensure
-			minimum_width_assigned: is_useable implies
+			minimum_width_assigned: is_usable implies
 				interface.minimum_width = a_minimum_width
 		end
 
@@ -113,7 +139,7 @@ feature -- Element change
 			a_minimum_height_positive: a_minimum_height > 0
 		deferred
 		ensure
-			minimum_height_assigned: is_useable implies 
+			minimum_height_assigned: is_usable implies 
 				interface.minimum_height = a_minimum_height
 		end
 
@@ -125,24 +151,14 @@ feature -- Element change
 			a_minimum_height_positive: a_minimum_height > 0
 		deferred
 		ensure
-			minimum_width_assigned: is_useable implies 
+			minimum_width_assigned: is_usable implies 
 				interface.minimum_width = a_minimum_width
-			minimum_height_assigned: is_useable implies 
+			minimum_height_assigned: is_usable implies 
 				interface.minimum_height = a_minimum_height
 		end
 
 feature -- Measurement
 	
-	x_position: INTEGER is
-			-- Horizontal offset relative to parent `x_position' in pixels.
-		deferred
-		end
-	
-	y_position: INTEGER is
-			-- Vertical offset relative to parent `y_position' in pixels.
-		deferred
-		end
-
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
 		deferred
@@ -150,26 +166,6 @@ feature -- Measurement
 
 	screen_y: INTEGER is
 			-- Vertical offset relative to screen.
-		deferred
-		end
-
-	width: INTEGER is
-			-- Horizontal size in pixels.
-		deferred
-		end
-
-	height: INTEGER is
-			-- Vertical size in pixels.
-		deferred
-		end
-	
-	minimum_width: INTEGER is
-			-- Minimum horizontal size in pixels.
-		deferred
-		end
-
-	minimum_height: INTEGER is
-			-- Minimum vertical size in pixels.
 		deferred
 		end
 
@@ -198,21 +194,47 @@ feature {EV_ANY_I} -- Implementation
 			parent_void: parent = Void
 		end
 
+feature {NONE} -- Implementation
+
+	Environment: EV_ENVIRONMENT is
+			-- Hold global data needed in `help_handler'
+		once
+			create Result
+		end
+
+	on_help_context_changed is
+			-- Connect help accelerators if not done already
+		local
+			top_window: EV_TITLED_WINDOW_I
+			a_parent: EV_CONTAINER
+		do
+			from
+				a_parent := parent
+				top_window ?= Current
+			until
+				top_window /= Void or a_parent = Void
+			loop
+				top_window ?= a_parent.implementation
+				a_parent := a_parent.parent
+			end
+			if top_window /= Void and then not top_window.help_enabled then
+				top_window.enable_help
+			end
+		end
+	
 invariant
-	pointer_position_not_void: is_useable implies pointer_position /= Void
+	pointer_position_not_void: is_usable implies pointer_position /= Void
 
 	--| FIXME IEK The minimum dimension size should be greater than 0
 	--| This does not hold for containers though
-	minimum_width_positive_or_zero: is_useable implies minimum_width >= 0
-	minimum_height_positive_or_zero: is_useable implies minimum_height >= 0
 
 	is_displayed_implies_show_requested:
-		is_useable and is_displayed implies is_show_requested
+		is_usable and is_displayed implies is_show_requested
 
 	--| FIXME IEK Not applicable for items that inherit from widget
 	--| only on the implementation side such as T.B. Button
-	--parent_contains_current:
-		--is_useable and parent /= Void implies parent.has (interface)
+	--|parent_contains_current:
+		--|is_usable and parent /= Void implies parent.has (interface)
 
 end -- class EV_WIDGET_I
 
@@ -237,11 +259,51 @@ end -- class EV_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.69  2000/06/07 20:08:05  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.70  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.68  2000/06/07 17:27:47  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.57.4.22  2001/02/16 00:16:09  rogers
+--| Replaced is_useable with is_usable.
+--|
+--| Revision 1.57.4.21  2000/11/13 23:54:41  rogers
+--| Removed set_pointer_style.
+--|
+--| Revision 1.57.4.20  2000/10/13 18:42:07  raphaels
+--| Fixed `on_help_context_changed'.
+--|
+--| Revision 1.57.4.19  2000/10/11 20:49:17  raphaels
+--| Replaced keys by accelerators for help related features.
+--| Moved related features to `EV_WINDOW_I'.
+--|
+--| Revision 1.57.4.18  2000/10/10 23:55:16  raphaels
+--| Removed obsolete invariant `help_handled'.
+--|
+--| Revision 1.57.4.17  2000/10/09 18:31:18  oconnor
+--| added has_capture
+--|
+--| Revision 1.57.4.16  2000/10/06 21:39:22  raphaels
+--| Now inherits from `EV_HELP_CONTEXTABLE_I'. Moved help context interface features up into `EV_HELP_CONTEXTABLE_I'.
+--|
+--| Revision 1.57.4.15  2000/10/06 18:02:49  raphaels
+--| Changed `help_context' into `help_context', an agent that evaluates to an help context.
+--|
+--| Revision 1.57.4.14  2000/10/03 00:04:19  raphaels
+--| Added features `help_context', `set_help_context' and `remove_help_context' to handle contextual help.
+--|
+--| Revision 1.57.4.13  2000/09/04 18:20:43  oconnor
+--| inherit EV_POSITIONED_I
+--|
+--| Revision 1.57.4.12  2000/08/29 16:30:59  king
+--| Commented out post-condition as it does not hold for containers
+--|
+--| Revision 1.57.4.11  2000/08/11 20:47:09  king
+--| Moved actual_drop_target functionality down from EV_PND
+--|
+--| Revision 1.57.4.10  2000/07/24 21:30:44  oconnor
+--| inherit action sequences _I class
+--|
+--| Revision 1.57.4.9  2000/06/09 20:53:47  manus
+--| Removed obsolete function
 --|
 --| Revision 1.57.4.8  2000/05/30 16:17:35  rogers
 --| Removed unreferenced local variables.

@@ -11,13 +11,10 @@ deferred class
 
 inherit
 	EV_ANY
-		undefine
-			create_action_sequences	
-		end
 
 	LINEAR [EV_TREE_NODE]
 		undefine
-			default_create
+			default_create, copy
 		end
 
 end -- class EV_TREE_NODE_CONTAINER

@@ -1,7 +1,7 @@
 indexing
 	description:
-		"Figure representing a text displayed by a font on a given point."
-	status: "See notice at end of file"
+		"`text's in a `font' displayed on `point'."
+	status: "See notice at end of class"
 	keywords: "figure, text, string"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,12 +9,11 @@ indexing
 class
 	EV_FIGURE_TEXT
 
-
 inherit
 	EV_ATOMIC_FIGURE
 		redefine
 			default_create,
-			make_for_test
+			bounding_box
 		end
 
 	EV_FONT_CONSTANTS
@@ -23,39 +22,33 @@ inherit
 			out
 		end
 
+	EV_SINGLE_POINTED_FIGURE
+		undefine
+			default_create
+		end
+
 create
 	default_create,
-	make_with_point_and_text,
-	make_for_test
+	make_with_text
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create in (0, 0)
 		do
-			{EV_ATOMIC_FIGURE} Precursor
-			text := ""
-			create font
+			create text.make (0)
+			font := default_font
+			is_default_font_used := True
+			Precursor {EV_ATOMIC_FIGURE}
 		end
 
-	make_with_point_and_text (p: EV_RELATIVE_POINT; txt: STRING) is
-			-- Create with `txt' on `p'.
+	make_with_text (a_text: STRING) is
+			-- Create with `a_text'.
 		require
-			p_exists: p /= Void
-			p_not_in_figure: p.figure = Void
+			a_text_not_void: a_text /= Void
 		do
 			default_create
-			set_point (p)
-			set_text (txt)
-		end
-
-	make_for_test is
-			-- Create interesting.
-		do
-			Precursor
-			font.set_family (Ev_font_family_roman)
-			font.set_height (24)
-			set_text ("EiffelVision")
+			set_text (a_text)
 		end
 
 feature -- Access
@@ -64,69 +57,44 @@ feature -- Access
 			-- The text that is displayed.
 
 	font: EV_FONT
-			-- The font the text is displayed in.
-
-	point_count: INTEGER is
-			-- A text-figure consists of only one point.
-		once
-			Result := 1
-		end
-
-	point: EV_RELATIVE_POINT is
-			-- The position of this pixel or dot.
-		do
-			Result := get_point_by_index (1)
-		end
+			-- Typeface `text' is displayed in.
 
 feature -- Status report
 
-	width: INTEGER is
-			-- Calculate the width of the text with the specified font.
-		do
-			Result := font.string_width (text)
-		ensure
-			Result_assigned: Result = font.string_width (text)
-		end
+	width: INTEGER
+			-- Horizontal dimension.
 
-	height: INTEGER is
-			-- Calculate the height of the text-figure by taking the height
-			-- of the font.
-		do
-			Result := font.height
-		ensure
-			Result_assigned: Result = font.height
-		end
+	height: INTEGER
+			-- Vertical dimension.
+
+	is_default_font_used: BOOLEAN
+			-- Is `Current' using a default font?
 
 feature -- Status setting
 
-	set_point (pos: EV_RELATIVE_POINT) is
-			-- Change the reference of `point' with `pos'.
+	set_font (a_font: EV_FONT) is
+			-- Assign `a_font' to `font'.
 		require
-			pos_exists: pos /= Void
+			a_font_not_void: a_font /= Void
 		do
-			set_point_by_index (1, pos)
+			font := a_font
+			is_default_font_used := False
+			update_dimensions
+			invalidate
 		ensure
-			point_assigned: point = pos
+			font_assigned: font = a_font
 		end
 
-	set_font (fnt: EV_FONT) is
-			-- Set the font to `fnt'.
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
 		require
-			fnt_exists: fnt /= Void
+			a_text_not_void: a_text /= Void
 		do
-			font := fnt
+			text := a_text
+			update_dimensions
+			invalidate
 		ensure
-			font_assigned: font = fnt
-		end
-
-	set_text (txt: STRING) is
-			-- Set the text to `txt'.
-		require
-			txt_exists: txt /= Void
-		do
-			text := txt
-		ensure
-			text_assigned: text = txt
+			text_assigned: text = a_text
 		end
 
 feature -- Events
@@ -134,9 +102,35 @@ feature -- Events
 	position_on_figure (x, y: INTEGER): BOOLEAN is
 			-- Is the point on (`x', `y') on this figure?
 		do
-			--| FIXME Rotation and scaling!
+				--| FIXME Rotation!
+			update_dimensions
 			Result := point_on_rectangle (x, y, point.x_abs, point.y_abs,
 				point.x_abs + width, point.y_abs + height)
+		end
+		
+feature {NONE} -- Implementation
+
+	update_dimensions is
+			-- Reassign `width' and `height'.
+		local
+			t: TUPLE [INTEGER, INTEGER]
+		do
+			t := font.string_size (text)
+			width := t.integer_item (1)
+			height := t.integer_item (2)
+		end
+
+	bounding_box: EV_RECTANGLE is
+			-- Smallest orthogonal rectangle `Current' fits in.
+		do
+			update_dimensions
+			create Result.make (point.x_abs, point.y_abs, width, height)
+		end
+
+	Default_font: EV_FONT is
+			-- Font set by `default_create'.
+		once
+			create Result
 		end
 
 invariant
@@ -160,24 +154,3 @@ end -- class EV_FIGURE_TEXT
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.7  2000/04/27 19:10:50  brendel
---| Centralized testing code.
---|
---| Revision 1.6  2000/04/26 15:56:34  brendel
---| Added CVS Log.
---| Added copyright notice.
---| Improved description.
---| Added keywords.
---| Formatted for 80 columns.
---| Added make_for_test.
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

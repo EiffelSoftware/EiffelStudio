@@ -21,32 +21,19 @@ inherit
 		redefine
 			implementation,
 			create_implementation,
-			make_for_test
+			is_in_default_state
 		end
 
 create
-	default_create,
-	make_for_test
-
-feature {NONE} -- Initialization
-
-	make_for_test is
-			-- Create and perform tests.
-		local
-			pixmap: EV_PIXMAP
-		do
-			default_create
-			create pixmap.make_for_test
-			extend (pixmap)
-			pixmap.set_minimum_width (pixmap.width)
-			pixmap.set_minimum_height (pixmap.height)
-		end
+	default_create
 
 feature -- Access
 
 	horizontal_step: INTEGER is
 			-- Number of pixels scrolled up or down when user clicks
 			-- an arrow on the horizontal scroll bar.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.horizontal_step
 		ensure
@@ -56,6 +43,8 @@ feature -- Access
 	vertical_step: INTEGER is
 			-- Number of pixels scrolled left or right when user clicks
 			-- an arrow on the vertical scroll bar.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.vertical_step
 		ensure
@@ -64,6 +53,8 @@ feature -- Access
 
 	is_horizontal_scroll_bar_visible: BOOLEAN is
 			-- Should horizontal scroll bar be displayed?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_horizontal_scroll_bar_visible
 		ensure
@@ -72,6 +63,8 @@ feature -- Access
 
 	is_vertical_scroll_bar_visible: BOOLEAN is
 			-- Should vertical scroll bar be displayed?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_vertical_scroll_bar_visible
 		ensure
@@ -83,6 +76,7 @@ feature -- Element change
 	set_horizontal_step (a_step: INTEGER) is
 			-- Assign `a_step' to `horizontal_step'.
 		require
+			not_destroyed: not is_destroyed
 			a_step_positive: a_step > 0
 		do
 			implementation.set_horizontal_step (a_step)
@@ -93,6 +87,7 @@ feature -- Element change
 	set_vertical_step (a_step: INTEGER) is
 			-- Assign `a_step' to `vertical_step'.
 		require
+			not_destroyed: not is_destroyed
 			a_step_positive: a_step > 0
 		do
 			implementation.set_vertical_step (a_step)
@@ -102,6 +97,8 @@ feature -- Element change
 
 	show_horizontal_scroll_bar is
 			-- Display horizontal scroll bar.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.show_horizontal_scroll_bar
 		ensure
@@ -110,6 +107,8 @@ feature -- Element change
 
 	hide_horizontal_scroll_bar is
 			-- Do not display horizontal scroll bar.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.hide_horizontal_scroll_bar
 		ensure
@@ -118,6 +117,8 @@ feature -- Element change
 
 	show_vertical_scroll_bar is
 			-- Display vertical scroll bar.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.show_vertical_scroll_bar
 		ensure
@@ -126,16 +127,29 @@ feature -- Element change
 
 	hide_vertical_scroll_bar is
 			-- Do not display vertical scroll bar.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.hide_vertical_scroll_bar
 		ensure
 			hidden: not is_vertical_scroll_bar_visible
 		end
+		
+feature {NONE} -- Contract support
 
-feature {NONE} -- Implementation
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := Precursor {EV_VIEWPORT} and horizontal_step = 10 and
+				vertical_step = 10
+		end
+
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_SCROLLABLE_AREA_I
 			-- Responsible for interaction with the native graphics toolkit.
+
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
@@ -144,8 +158,8 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	horizontal_step_positive: is_useable implies horizontal_step > 0
-	vertical_step_positive: is_useable implies vertical_step > 0
+	horizontal_step_positive: is_usable implies horizontal_step > 0
+	vertical_step_positive: is_usable implies vertical_step > 0
 
 end -- class EV_SCROLLABLE_AREA
 
@@ -164,71 +178,3 @@ end -- class EV_SCROLLABLE_AREA
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.18  2000/04/24 16:01:02  brendel
---| Redefined make_for_test, since viewport now has a too cool make_for_test.
---|
---| Revision 1.17  2000/04/21 23:07:59  brendel
---| scrollbar -> scroll_bar.
---|
---| Revision 1.16  2000/04/21 00:38:35  brendel
---| removed make_for_test.
---|
---| Revision 1.15  2000/04/20 22:22:38  brendel
---| Now creates pixmap with make_for_test.
---|
---| Revision 1.14  2000/03/18 00:52:23  oconnor
---| formatting, layout and comment tweaks
---|
---| Revision 1.13  2000/03/03 02:56:00  oconnor
---| pux pixmap in area in make_with_test
---|
---| Revision 1.12  2000/03/01 03:30:06  oconnor
---| added make_for_test
---|
---| Revision 1.11  2000/02/29 18:09:10  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.10  2000/02/22 18:39:51  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.9  2000/02/14 11:40:51  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.8.6.7  2000/02/14 11:04:28  oconnor
---| added is_useable to invariants
---|
---| Revision 1.8.6.6  2000/02/12 01:04:32  king
---| Corrected is_vertical_scrollbar_visible due to careless cutting and
---| pasting, doh Vincent
---|
---| Revision 1.8.6.5  2000/01/28 20:00:14  oconnor
---| released
---|
---| Revision 1.8.6.4  2000/01/28 19:30:15  brendel
---| Revision.
---| Now inherits from EV_VIEWPORT and adds the scrollbars to the viewable area.
---|
---| Revision 1.8.6.3  2000/01/27 19:30:52  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.8.6.2  1999/11/24 22:40:59  oconnor
---| added review notes
---|
---| Revision 1.8.6.1  1999/11/24 17:30:52  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.8.2.4  1999/11/04 23:10:55  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.8.2.3  1999/11/02 17:20:13  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

@@ -68,7 +68,6 @@ feature {EV_ANY_I} -- Implementation
 		do 
 			set_interval (0)
 			is_destroyed := True
-			destroy_just_called := True
 		end
 
 feature -- External implementation
@@ -103,6 +102,15 @@ end -- class EV_TIMEOUT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/07 23:08:03  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.2.2  2001/05/18 18:13:16  king
+--| Removed destroy_just_called code
+--|
+--| Revision 1.4.2.1  2000/05/03 19:08:38  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/05/02 15:14:10  brendel
 --| Removed redundent line.
 --|

@@ -9,15 +9,11 @@ class
 
 inherit
 	EV_SPIN_BUTTON_I
-		undefine
-			set_default_colors
 		redefine
 			interface
 		end
 
 	EV_GAUGE_IMP
-		undefine
-			set_default_colors
 		redefine
 			interface,
 			initialize,
@@ -25,10 +21,15 @@ inherit
 		end
 
 	EV_TEXT_FIELD_IMP
+		rename
+			create_change_actions as create_text_change_actions,
+			change_actions as text_change_actions,
+			change_actions_internal as text_change_actions_internal
 		redefine
 			make,
 			interface,
-			initialize
+			initialize,
+			set_text
 		end
 
 create
@@ -50,6 +51,17 @@ feature {NONE} -- Implementation
 		do
 			{EV_TEXT_FIELD_IMP} Precursor
 			ev_gauge_imp_initialize --| {EV_GAUGE} Precursor
+		end
+
+feature {EV_ANY_I} -- Status setting
+
+-- Version from class: EV_TEXT_FIELD_IMP
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		do
+			Precursor (a_text)
+			C.gtk_spin_button_update (entry_widget)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -79,6 +91,29 @@ end -- class EV_SPIN_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.4.4  2000/10/27 16:54:44  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.5.4.3  2000/09/13 17:02:47  oconnor
+--| Redefine set_text to update the integer `value' imediatly.
+--|
+--| Revision 1.5.4.2  2000/07/24 21:36:10  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.5.4.1  2000/05/03 19:08:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/04/14 17:05:47  oconnor
 --| formatting
 --|

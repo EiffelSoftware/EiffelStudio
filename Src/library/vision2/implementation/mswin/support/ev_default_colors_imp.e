@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_DEFAULT_COLORS_IMP 
+	EV_STOCK_COLORS_IMP 
 
 feature -- Access
 
@@ -28,7 +28,8 @@ feature -- Access
 		do
 			create Result
 			color_imp ?= Result.implementation
-			color_imp.set_with_system_id (Wel_color_constants.Color_btnhighlight)
+			color_imp.set_with_system_id
+				(Wel_color_constants.Color_btnhighlight)
 		end
 
 	Color_3d_shadow: EV_COLOR is
@@ -50,7 +51,8 @@ feature -- Access
 		do
 			create Result
 			color_imp ?= Result.implementation
-			color_imp.set_with_system_id (Wel_color_constants.Color_inactiveborder)
+			color_imp.set_with_system_id
+				(Wel_color_constants.Color_inactiveborder)
 		end
 
 	Color_read_write: EV_COLOR is
@@ -78,35 +80,38 @@ feature {NONE} -- Constants
 		once
 			create Result
 		end
-end -- class EV_DEFAULT_COLORS_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+end -- class EV_STOCK_COLORS_IMP
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.9  2000/06/07 17:27:57  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.10  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.8  2000/05/12 19:27:45  pichery
---| Added colors `Color_3d_face', `Color_3d_highlight',
---| `Color_3d_shadow'.
+--| Revision 1.4.8.4  2000/11/06 19:37:08  king
+--| Accounted for default to stock name change
+--|
+--| Revision 1.4.8.3  2000/08/11 19:12:43  rogers
+--| Fixed copyright clause. Now use ! instead of |. Formatting.
 --|
 --| Revision 1.4.8.2  2000/05/13 03:27:24  pichery
 --| Added new colors, refactoring: replaced
@@ -128,10 +133,12 @@ end -- class EV_DEFAULT_COLORS_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.4.10.3  1999/12/17 17:14:54  rogers
---| Altered to fit in with the review branch. Alterations to comply with the new colors.
+--| Altered to fit in with the review branch. Alterations to comply with the
+--| new colors.
 --|
 --| Revision 1.4.10.2  1999/12/17 17:07:14  rogers
---| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP. ev_item_holder_imp.e
+--| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP.
+--| ev_item_holder_imp.e
 --|
 --| Revision 1.4.10.1  1999/11/24 17:30:20  oconnor
 --| merged with DEVEL branch

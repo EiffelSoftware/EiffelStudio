@@ -15,10 +15,15 @@ inherit
 		end
 
 	SINGLE_MATH
-
+		
 	EV_DRAWABLE_CONSTANTS
 
 	EV_COLORIZABLE_I
+		redefine
+			interface
+		end
+
+	EV_FONTABLE_I
 		redefine
 			interface
 		end
@@ -52,11 +57,6 @@ feature -- Access
 		deferred
 		end
 
-	font: EV_FONT is
-			-- Character appearance.
-		deferred
-		end
-
 feature -- Element change
 
 	set_line_width (a_width: INTEGER) is
@@ -65,7 +65,7 @@ feature -- Element change
 			a_width_positive_or_zero: a_width >= 0
 		deferred
 		ensure
-			line_width_assigned: is_useable implies
+			line_width_assigned: is_usable implies
 				interface.line_width = a_width
 		end
 
@@ -75,7 +75,7 @@ feature -- Element change
 			a_mode_valid: valid_drawing_mode (a_mode)
 		deferred
 		ensure
-			drawing_mode_assigned: is_useable implies
+			drawing_mode_assigned: is_usable implies
 				interface.drawing_mode = a_mode
 		end
 
@@ -85,7 +85,7 @@ feature -- Element change
 			an_area_not_void: an_area /= Void
 		deferred
 		ensure
-			clip_area_assigned: is_useable implies
+			clip_area_assigned: is_usable implies
 				interface.clip_area.is_equal (an_area)
 		end
 
@@ -93,7 +93,7 @@ feature -- Element change
 			-- Do not apply any clipping.
 		deferred
 		ensure
-			clip_area_void: is_useable implies interface.clip_area = Void
+			clip_area_void: is_usable implies interface.clip_area = Void
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP) is
@@ -103,21 +103,21 @@ feature -- Element change
 			a_pixmap_not_void: a_pixmap /= Void
 		deferred
 		ensure
-			tile_assigned: is_useable implies interface.tile /= Void
+			tile_assigned: is_usable implies interface.tile /= Void
 		end
 
 	remove_tile is
 			-- Do not apply a tile when filling.
 		deferred
 		ensure
-			tile_void: is_useable implies interface.tile = Void
+			tile_void: is_usable implies interface.tile = Void
 		end
 
 	enable_dashed_line_style is
 			-- Draw lines dashed.
 		deferred
 		ensure
-			dashed_line_style_enabled: is_useable implies
+			dashed_line_style_enabled: is_usable implies
 				interface.dashed_line_style
 		end
 
@@ -125,18 +125,8 @@ feature -- Element change
 			-- Draw lines solid.
 		deferred
 		ensure
-			dashed_line_style_disabled: is_useable implies
+			dashed_line_style_disabled: is_usable implies
 				not interface.dashed_line_style
-		end
-
-	set_font (a_font: EV_FONT) is
-			-- Set `font' to `a_font'.
-		require
-			a_font_not_void: a_font /= Void
-		deferred
-		ensure
-			assigned: is_useable implies
-				interface.font.is_equal (a_font)
 		end
 
 feature -- Clearing and drawing operations
@@ -146,8 +136,9 @@ feature -- Clearing and drawing operations
 		deferred
 		end
 
-	clear_rectangle (x1, y1, x2, y2: INTEGER) is
-		-- Erase rectangle (`x1, `y1) - (`x2', `y2') with `background_color'.
+	clear_rectangle (x1, y1, a_width, a_height: INTEGER) is
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height' in `background_color'.
 		deferred
 		end
 
@@ -159,7 +150,14 @@ feature -- Drawing operations
 		end
 
 	draw_text (x, y: INTEGER; a_text: STRING) is
-			-- Draw `a_text' at (`x', 'y') using `font'.
+			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
+		require
+			a_text_not_void: a_text /= Void
+		deferred
+		end
+
+	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		require
 			a_text_not_void: a_text /= Void
 		deferred
@@ -182,15 +180,24 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_arc (x, y, a_vertical_radius, a_horizontal_radius: INTEGER;
+	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
+			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
+		require
+			a_pixmap_not_void: a_pixmap /= Void
+			area_not_void: area /= Void
+		deferred
+		end
+
+	draw_arc (x, y, a_bounding_width, a_bounding_height: INTEGER;
 		a_start_angle, an_aperture: REAL) is
-			-- Draw a part of an ellipse centered on (`x', 'y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
-		-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Draw a part of an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- Angles are measured in radians.
 		require
-			a_vertical_radius_positive_or_zero: a_vertical_radius >= 0
-			a_horizontal_radius_positive_or_zero: a_horizontal_radius >= 0
+			a_bounding_width_positive_or_zero: a_bounding_width >= 0
+			a_bounding_width_positive_or_zero: a_bounding_height >= 0
 		deferred
 		end
 
@@ -203,12 +210,13 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
-			-- Draw an ellipse centered on (`x', 'y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
+	draw_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
+			-- Draw an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
 		require
-			a_vertical_radius_positive_or_zero: a_vertical_radius >= 0
-			a_horizontal_radius_positive_or_zero: a_horizontal_radius >= 0
+			a_bounding_width_positive_or_zero: a_bounding_width >= 0
+			a_bounding_height_positive_or_zero: a_bounding_height >= 0
 		deferred
 		end
 
@@ -221,16 +229,17 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER;
+	draw_pie_slice (x, y, a_bounding_width, a_bounding_height: INTEGER;
 	a_start_angle, an_aperture: REAL) is
-			-- Draw a part of an ellipse centered on (`x', 'y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
-		-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Draw part of an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- The arc is then closed by two segments through (`x', 'y').
 			-- Angles are measured in radians.
 		require
-			a_vertical_radius_positive_or_zero: a_vertical_radius >= 0
-			a_horizontal_radius_positive_or_zero: a_horizontal_radius >= 0
+			a_bounding_width_positive_or_zero: a_bounding_width >= 0
+			a_bounding_height_positive_or_zero: a_bounding_height >= 0
 		deferred
 		end
 
@@ -245,13 +254,13 @@ feature -- Drawing operations (filled)
 		deferred
 		end
 
-	fill_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
-			-- Draw an ellipse centered on (`x', 'y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Fill with `background_color'.
+	fill_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
+			-- Fill an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
 		require
-			a_vertical_radius_positive_or_zero: a_vertical_radius >= 0
-			a_horizontal_radius_positive_or_zero: a_horizontal_radius >= 0
+			a_bounding_width_positive_or_zero: a_bounding_width >= 0
+			a_bounding_height_positive_or_zero: a_bounding_height >= 0
 		deferred
 		end
 
@@ -263,16 +272,17 @@ feature -- Drawing operations (filled)
 		deferred
 		end
 
-	fill_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER;
+	fill_pie_slice (x, y, a_bounding_width, a_bounding_height: INTEGER;
 	a_start_angle, an_aperture: REAL) is
-			-- Draw a part of an ellipse centered on (`x', 'y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
-		-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Fill part of an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- The arc is then closed by two segments through (`x', 'y').
-			-- Angles are measured in radians. Fill with `background_color'.
+			-- Angles are measured in radians.
 		require
-			a_vertical_radius_positive_or_zero: a_vertical_radius >= 0
-			a_horizontal_radius_positive_or_zero: a_horizontal_radius >= 0
+			a_bounding_width_positive_or_zero: a_bounding_width >= 0
+			a_bounding_height_positive_or_zero: a_bounding_height >= 0
 		deferred
 		end
 
@@ -303,8 +313,28 @@ end -- class EV_DRAWABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.21  2000/06/07 17:27:45  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.22  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.13.2.8  2001/05/23 18:54:09  rogers
+--| Changed arguments to all routines that draw circular shapes, so they are
+--| defined by a bounding rectangle instead of two radius.
+--|
+--| Revision 1.13.2.7  2001/05/07 17:38:09  rogers
+--| Changed arguments to `clear_rectangle', so the size is determined
+--| by width and height, rather than absolute coordinates.
+--|
+--| Revision 1.13.2.6  2001/02/16 00:18:37  rogers
+--| Replaced is_useable with is_usable.
+--|
+--| Revision 1.13.2.5  2000/11/28 00:27:32  gauthier
+--| Added `draw_sub_pixmap'.
+--|
+--| Revision 1.13.2.4  2000/08/18 19:46:10  king
+--| Now FONTABLE
+--|
+--| Revision 1.13.2.3  2000/08/15 22:56:51  brendel
+--| Added `draw_text_top_left'.
 --|
 --| Revision 1.13.2.2  2000/05/12 17:34:57  king
 --| Integrated ev_colorize

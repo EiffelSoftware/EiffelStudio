@@ -307,8 +307,11 @@ feature {NONE} -- Implementation
 				a_culture := retrieved_dependencies.array_item (i + 2)
 				a_public_key := retrieved_dependencies.array_item (i + 3)
 				a_path := retrieved_dependencies.array_item (i + 4)
-				create a_dependency.make_from_info (a_name, a_version, a_culture, a_public_key, a_path)
-				Result.extend (a_dependency)
+				if (a_name /= Void and then a_name.is_empty) and (a_version /= Void and then not a_version.is_empty) and (a_culture /= Void and then not a_culture.is_empty)
+					and (a_public_key /= Void and then not a_public_key.is_empty) and (a_path /= Void and then not a_path.is_empty) then
+					create a_dependency.make_from_info (a_name, a_version, a_culture, a_public_key, a_path)
+					Result.extend (a_dependency)
+				end
 				i := i + 5
 			end
 		end

@@ -10,8 +10,14 @@ class
 
 inherit
 	EV_MENU_SEPARATOR_I
+		select
+			parent_imp
+		end
 
 	EV_SEPARATOR_ITEM_IMP
+		rename
+			parent_imp as old_parent_imp
+		end
 
 create
 	make
@@ -37,15 +43,6 @@ feature -- Access
 		end
 
 feature -- Element change
-
-	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-			check
-				To_be_implemented: False
-			end
-		end
 
 	set_index (pos: INTEGER) is
 			-- Make `pos' the new index of the item in the

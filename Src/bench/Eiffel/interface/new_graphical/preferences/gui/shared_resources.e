@@ -1,5 +1,5 @@
 indexing
-	description: "EiffelBench resources, with access facilities"
+	description: "EiffelStudio resources, with access facilities"
 	author: "Pascal Freund and Christophe Bonnard"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -343,22 +343,83 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 		
 feature {EV_ANY_IMP} -- Intermediary agent routines
 
+	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_tuple: TUPLE [POINTER]) is
+			-- 
+		local
+			a_notebook_imp: EV_NOTEBOOK_IMP
+		do
+			a_notebook_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_notebook_imp.page_switch (a_tuple)
+		end
+
+	on_tool_bar_radio_button_activate (a_c_object: POINTER) is
+			-- Intermediate agent to prevent reference on implementation object from agent.
+		local
+			a_tool_bar_radio_button_imp: EV_TOOL_BAR_RADIO_BUTTON_IMP
+		do
+			a_tool_bar_radio_button_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_tool_bar_radio_button_imp.on_activate
+		end
+		
+
+	on_drawing_area_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER) is
+			-- Intermediate agent to prevent reference on implementation object from agent.
+		local
+			a_drawing_area_imp: EV_DRAWING_AREA_IMP
+		do
+			a_drawing_area_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			inspect
+				a_event_number
+			when 1 then		
+				a_drawing_area_imp.set_focus
+			when 2 then
+				a_drawing_area_imp.lose_focus
+			end
+		end
+
+	on_gauge_value_changed_intermediary (a_c_object: POINTER) is
+			-- Intermediate agent to prevent reference on implementation object from agent.
+		local
+			a_gauge_imp: EV_GAUGE_IMP
+		do
+			a_gauge_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_gauge_imp.value_changed_handler			
+		end
+
 	on_key_event_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Intermediate agent to prevent reference on implementation object from agent.
 		do
 			c_get_eif_reference_from_object_id (a_c_object).on_key_event (a_key, a_key_string, a_key_press)
 		end
 		
+	on_list_item_list_key_pressed_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- Intermediate agent to prevent reference on implementation object from agent.
+		local
+			a_list_item_list: EV_LIST_ITEM_LIST_IMP
+		do
+			a_list_item_list ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_list_item_list.on_key_pressed (a_key, a_key_string, a_key_press)
+		end
+		
+	on_list_item_list_item_clicked_intermediary (a_c_object: POINTER) is
+			-- Intermediate agent to prevent reference on implementation object from agent.
+		local
+			a_list_item_list: EV_LIST_ITEM_LIST_IMP
+		do
+			a_list_item_list ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_list_item_list.on_item_clicked
+		end
+
 	widget_focus_in_intermediary (a_c_object: POINTER) is
 			-- Intermediate agent to prevent reference on implementation object from agent.
 		do
-			c_get_eif_reference_from_object_id (a_c_object).focus_in_actions_internal.call (Empty_tuple)
+			c_get_eif_reference_from_object_id (a_c_object).on_focus_changed (True)
 		end
 		
 	widget_focus_out_intermediary (a_c_object: POINTER) is
 			-- Intermediate agent to prevent reference on implementation object from agent.
 		do
-			c_get_eif_reference_from_object_id (a_c_object).focus_out_actions_internal.call (Empty_tuple)
+			c_get_eif_reference_from_object_id (a_c_object).on_focus_changed (False)
 		end	
 		
 	text_component_change_intermediary (a_c_object: POINTER) is
@@ -404,6 +465,17 @@ feature {EV_ANY_IMP} -- Intermediary agent routines
 				-- 
 		do
 			c_get_eif_reference_from_object_id (a_c_object).button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+		end
+		
+	on_combo_box_button_release (
+			a_c_object: POINTER
+		) is
+				--
+		local
+			a_combo_box_imp: EV_COMBO_BOX_IMP
+		do
+			a_combo_box_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_combo_box_imp.on_button_released
 		end
 			
 	on_size_allocate_intermediate (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
@@ -504,6 +576,12 @@ feature {NONE} -- Implementation
 		end
 	
 feature {EV_ANY_IMP} -- Tuple optimizations.
+
+	page_switch_translate (n: INTEGER; p: POINTER): TUPLE is
+			-- Retrieve index of switched page.
+		do
+			Result := [gtk_value_pointer (p)]
+		end
 		
 	empty_tuple: TUPLE is
 		once

@@ -69,30 +69,37 @@ feature {NONE} -- Initialization
 				c_object,
 				list_widget
 			)
---			C.gtk_container_add (c_object, list_widget)
-			real_signal_connect (
-				list_widget,
-				"unselect_child",
-				agent deselect_callback,
-				Void
-			)
+			C.gtk_container_add (c_object, list_widget)
+--			real_signal_connect (
+--				list_widget,
+--				"unselect_child",
+--				agent deselect_callback,
+--				Void
+--			)
 		end
 
 	initialize is
 		do
 			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
+--			real_signal_connect (
+--				list_widget,
+--				"select_child",
+--				agent select_callback,
+--				Void
+--			)
+--			real_signal_connect (
+--				visual_widget,
+--				"button-press-event",
+--				agent on_list_clicked,
+--				Default_translate
+--			)
+
 			real_signal_connect (
-				list_widget,
-				"select_child",
-				agent select_callback,
-				Void
-			)
-			real_signal_connect (
-				visual_widget,
-				"button-press-event",
-				agent on_list_clicked,
-				Default_translate
+					visual_widget,
+					"button-press-event",
+					agent Gtk_marshal.on_combo_box_button_release (c_object),
+					Default_translate
 			)
 		end
 
@@ -328,34 +335,6 @@ feature {NONE} -- Implementation
 				)
 			v_imp.key_press_actions.extend (agent on_key_pressed)
 		end
-
-	on_key_pressed (ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
-			-- Called when a list item is selected.
-		local
-			f_item: EV_LIST_ITEM
-		do
-			f_item := focused_item
-			if count = 0 or else ev_key = Void or else f_item = Void then
-				arrow_used := False
-			elseif ev_key.code = Key_up then
-				start
-				arrow_used := not item.is_equal (f_item)
-			elseif ev_key.code = Key_down then
-				go_i_th (count)
-				arrow_used := not item.is_equal (f_item)
-			end
-			on_key_event (ev_key, a_key_string, a_key_press)
-		end
-		
-	on_item_clicked is
-			-- One of the item has been clicked.
-		do
-				-- When the user clicks on one of the items of the list
-				-- this routine is called, then `lose_focus', then `attain_focus'
-				-- then `on_list_clicked'. `list_has_been_clicked' will prevent the 
-				-- `focus_out_actions' from being called.
-			list_has_been_clicked := True
-		end
 	
 	on_list_clicked is
 			-- The list was clicked.
@@ -410,7 +389,37 @@ feature {NONE} -- Implementation
 		
 	list_has_been_clicked: BOOLEAN
 		-- Are we between "item_clicked" and "list_clicked" event.
-	
+		
+feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
+		
+	on_key_pressed (ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- Called when a list item is selected.
+		local
+			f_item: EV_LIST_ITEM
+		do
+			f_item := focused_item
+			if count = 0 or else ev_key = Void or else f_item = Void then
+				arrow_used := False
+			elseif ev_key.code = Key_up then
+				start
+				arrow_used := not item.is_equal (f_item)
+			elseif ev_key.code = Key_down then
+				go_i_th (count)
+				arrow_used := not item.is_equal (f_item)
+			end
+			on_key_event (ev_key, a_key_string, a_key_press)
+		end
+		
+	on_item_clicked is
+			-- One of the item has been clicked.
+		do
+				-- When the user clicks on one of the items of the list
+				-- this routine is called, then `lose_focus', then `attain_focus'
+				-- then `on_list_clicked'. `list_has_been_clicked' will prevent the 
+				-- `focus_out_actions' from being called.
+			list_has_been_clicked := True
+		end
+
 end -- class EV_LIST_ITEM_LIST_IMP
 
 --|----------------------------------------------------------------

@@ -34,7 +34,8 @@ inherit
 			destroy,
 			on_key_event,
 			set_focus,
-			default_key_processing_blocked
+			default_key_processing_blocked,
+			on_focus_changed
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -58,7 +59,8 @@ inherit
 			on_item_clicked,
 			on_key_event,
 			set_focus,
-			default_key_processing_blocked
+			default_key_processing_blocked,
+			on_focus_changed
 		end
 
 	EV_KEY_CONSTANTS
@@ -70,6 +72,8 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create a combo-box.
+		local
+			
 		do
 			base_make (an_interface)
 
@@ -86,23 +90,28 @@ feature {NONE} -- Initialization
 			list_widget := C.gtk_combo_struct_list (container_widget)
 			C.gtk_combo_set_use_arrows (container_widget, 0)
 			C.gtk_combo_set_case_sensitive (container_widget, 1)
+			
+			on_key_event_intermediary_agent := agent gtk_marshal.on_key_event_intermediary (c_object, ?, ?, ?)
 
 			real_signal_connect (
 					entry_widget,
 					"key_press_event",
-					agent on_key_event,
+					on_key_event_intermediary_agent,
 					key_event_translate_agent
 				)
 			real_signal_connect (
 					entry_widget,
 					"key_release_event",
-					agent on_key_event,
+					on_key_event_intermediary_agent,
 					key_event_translate_agent)
 			
 			create timer.make_with_interval (0)
 			timer.actions.extend (agent launch_select_actions)
 			activate_id := C.gtk_combo_struct_activate_id (container_widget)
 			C.gtk_signal_handler_block (entry_widget, activate_id)
+			
+			on_key_pressed_intermediary_agent := agent Gtk_marshal.on_list_item_list_key_pressed_intermediary (c_object, ?, ?, ?)
+			on_item_clicked_intermediary_agent := agent Gtk_marshal.on_list_item_list_item_clicked_intermediary (c_object)
 		end
 
 	initialize is
@@ -118,19 +127,16 @@ feature {NONE} -- Initialization
 				list_widget,
 				C.GTK_SELECTION_SINGLE_ENUM
 			)
-			real_signal_connect (entry_widget, "focus-in-event", agent attain_focus, Default_translate)
-			real_signal_connect (entry_widget, "focus-out-event", agent lose_focus, Default_translate)
+			real_signal_connect (entry_widget, "focus-in-event", agent gtk_marshal.widget_focus_in_intermediary (c_object), Void)
+			real_signal_connect (entry_widget, "focus-out-event", agent gtk_marshal.widget_focus_out_intermediary (c_object), Void)
 			real_signal_connect (
 					list_widget,
 					"button-release-event",
-					agent on_button_released,
-					Default_translate
+					agent Gtk_marshal.on_combo_box_button_release (c_object),
+					Void
 			)
-			on_item_clicked_agent := agent on_item_clicked
-			on_key_pressed_agent := agent on_key_pressed
-		end
 		
-	on_item_clicked_agent, on_key_pressed_agent: PROCEDURE [EV_COMBO_BOX_IMP, TUPLE]
+		end
 		
 feature -- Status report
 
@@ -189,6 +195,16 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+
+	on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
+			-- Intermediary key event agent that is reused three times.
+			
+	on_key_pressed_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
+			-- Intermediary key agent that is reused for list items in `add_to_container'.
+			
+	on_item_clicked_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE]
+			-- Intermediary key agent that is reused for list items in `add_to_container'.
+
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
 			-- 
 		do
@@ -197,25 +213,20 @@ feature {NONE} -- Implementation
 				Result := True
 			end
 		end
-
-	attain_focus is
-			-- The list has just grabbed the focus.
+		
+	on_focus_changed (a_has_focus: BOOLEAN) is
+			-- Focus for `Current' has changed'.
 		do
-			top_level_window_imp.set_focus_widget (Current)
-			if focus_in_actions_internal /= Void then
-				focus_in_actions_internal.call (empty_tuple)				
-			end
-		end
-
-	lose_focus is
-			-- The list has just lost the focus.
-		do
-				-- This routine is called when an item loses the focus too.
-				-- The follwing test prevent call to `focus_out_actions' when
-				-- the user has only changed the selected item.
-			top_level_window_imp.set_focus_widget (Void)
-			if focus_out_actions_internal /= Void then
-				focus_out_actions_internal.call (empty_tuple)
+			if a_has_focus then
+				top_level_window_imp.set_focus_widget (Current)
+				if focus_in_actions_internal /= Void then
+					focus_in_actions_internal.call (empty_tuple)				
+				end
+			else
+				top_level_window_imp.set_focus_widget (Void)
+				if focus_out_actions_internal /= Void then
+					focus_out_actions_internal.call (empty_tuple)
+				end			
 			end
 		end
 
@@ -230,8 +241,8 @@ feature {NONE} -- Implementation
 			C.gtk_combo_set_item_string (container_widget, imp.c_object, a_gs.item)
 			C.gtk_container_add (list_widget, imp.c_object)
 			imp.set_item_parent_imp (Current)
-			real_signal_connect (imp.c_object, "button-press-event", on_item_clicked_agent, Default_translate)
-			real_signal_connect (imp.c_object, "key-press-event", on_key_pressed_agent, key_event_translate_agent)
+			real_signal_connect (imp.c_object, "button-press-event", on_item_clicked_intermediary_agent, Void)
+			real_signal_connect (imp.c_object, "key-press-event", on_key_pressed_intermediary_agent, key_event_translate_agent)
 			if count = 1 and is_sensitive then
 				imp.enable_select
 			end
@@ -305,11 +316,6 @@ feature {NONE} -- Implementation
 		do
 			Result := c_object
 		end
-
-	on_button_released is
-		do
-			button_pressed := False
-		end
 		
 	button_pressed: BOOLEAN
 
@@ -351,6 +357,13 @@ feature {NONE} -- Implementation
 			timer := Void
 			triggering_item := Void
 			Precursor {EV_TEXT_FIELD_IMP}
+		end
+		
+feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
+		
+	on_button_released is
+		do
+			button_pressed := False
 		end
 		
 feature {EV_ANY_I} -- Implementation

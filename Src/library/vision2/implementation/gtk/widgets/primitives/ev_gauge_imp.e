@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				adjustment,
 				"value-changed",
-				agent value_changed_handler,
+				agent Gtk_marshal.on_gauge_value_changed_intermediary (c_object),
 				Void
 			)
 		end
@@ -182,6 +182,8 @@ feature {NONE} -- Implementation
 
 	old_value: INTEGER
 			-- Value of `value' when last "value-changed" signal occurred.
+			
+feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
 	value_changed_handler is
 			-- Called when `value' changes.

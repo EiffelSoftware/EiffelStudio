@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_notebook_new ())
-			real_signal_connect (c_object, "switch-page", agent page_switch, agent page_switch_translate)
+			real_signal_connect (c_object, "switch-page", agent Gtk_marshal.on_notebook_page_switch_intermediary (c_object, ?), agent Gtk_marshal.page_switch_translate)
 		end
 
 	initialize is
@@ -194,7 +194,7 @@ feature -- Element change
 			)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
 	page_switch (a_page: TUPLE [POINTER]) is
 			-- Called when the page is switched.
@@ -214,12 +214,8 @@ feature {EV_ANY_I} -- Implementation
 			end
 			end
 		end
-
-	page_switch_translate (n: INTEGER; p: POINTER): TUPLE is
-			-- Retrieve index of switched page.
-		do
-			Result := [gtk_marshal.gtk_value_pointer (p)]
-		end
+		
+feature {EV_ANY_I} -- Implementation
 
 	on_new_item (an_item: EV_WIDGET) is
 			-- Set `an_item's text empty.

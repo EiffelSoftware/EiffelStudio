@@ -90,8 +90,10 @@ feature {NONE} -- Implementation
 	connect_signals is
 			-- Connect on_activate to toggled signal.
 		do
-			signal_connect ("toggled", agent on_activate, Void)
+			real_signal_connect (c_object, "toggled", agent Gtk_marshal.on_tool_bar_radio_button_activate (c_object), Void)
 		end
+		
+feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
 		
 	on_activate is
 			-- The button has been activated by the user (pushed).

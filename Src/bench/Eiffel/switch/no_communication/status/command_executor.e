@@ -46,7 +46,7 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 				prelink_cmd_name.to_c, driver_name.to_c)
 		end
 
-	invoke_finish_freezing (c_code_dir, freeze_command: STRING) is
+	invoke_finish_freezing (c_code_dir, freeze_command: STRING; asynchronous: BOOLEAN) is
 			-- Invoke the `finish_freezing' script.
 		local
 			cwd: STRING
@@ -55,7 +55,11 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 			cwd := Execution_environment.current_working_directory
 			
 			Execution_environment.change_working_directory (c_code_dir)
-			Execution_environment.launch (freeze_command)
+			if asynchronous then
+				Execution_environment.launch (freeze_command)
+			else
+				Execution_environment.system (freeze_command)
+			end
 			Execution_environment.change_working_directory (cwd)
 		end
 

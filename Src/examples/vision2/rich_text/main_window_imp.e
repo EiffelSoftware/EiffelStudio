@@ -30,11 +30,11 @@ feature {NONE}-- Initialization
 			l_ev_menu_bar_1: EV_MENU_BAR
 			l_ev_menu_2: EV_MENU
 			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
-			l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2: EV_TOOL_BAR_SEPARATOR
-			l_ev_horizontal_separator_1, l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
+			l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3: EV_TOOL_BAR_SEPARATOR
+			l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5: EV_LABEL
 			l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5, l_ev_cell_6, 
-			l_ev_cell_7: EV_CELL
-			l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
+			l_ev_cell_7, l_ev_cell_8, l_ev_cell_9: EV_CELL
+			l_ev_horizontal_separator_1, l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
 			l_ev_frame_1, l_ev_frame_2: EV_FRAME
 		do
 			Precursor {EV_TITLED_WINDOW}
@@ -54,39 +54,46 @@ feature {NONE}-- Initialization
 			create size_selection
 			create color_toolbar
 			create color_button
+			create background_color_toolbar
+			create background_color_button
 			create format_toolbar
 			create l_ev_tool_bar_separator_1
 			create bold_button
 			create italic_button
 			create underlined_button
 			create striked_through_button
-			create paragraph_toolbar
 			create l_ev_tool_bar_separator_2
+			create l_ev_label_1
+			create l_ev_cell_1
+			create l_ev_cell_2
+			create vertical_offset
+			create paragraph_toolbar_holder
+			create l_ev_horizontal_separator_1
+			create l_ev_horizontal_box_2
+			create paragraph_toolbar
 			create left_alignment_button
 			create center_alignment_button
 			create right_alignment_button
 			create justified_button
-			create paragraph_toolbar_holder
-			create l_ev_horizontal_separator_1
-			create l_ev_horizontal_box_2
-			create l_ev_cell_1
-			create l_ev_label_1
-			create l_ev_cell_2
-			create left_margin
-			create l_ev_label_2
+			create l_ev_tool_bar_separator_3
 			create l_ev_cell_3
-			create right_margin
-			create l_ev_label_3
+			create l_ev_label_2
 			create l_ev_cell_4
-			create top_spacing
-			create l_ev_label_4
+			create left_margin
+			create l_ev_label_3
 			create l_ev_cell_5
-			create bottom_spacing
+			create right_margin
+			create l_ev_label_4
 			create l_ev_cell_6
+			create top_spacing
+			create l_ev_label_5
+			create l_ev_cell_7
+			create bottom_spacing
+			create l_ev_cell_8
 			create tab_control_holder
 			create l_ev_horizontal_separator_2
 			create rich_text
-			create l_ev_cell_7
+			create l_ev_cell_9
 			create l_ev_horizontal_box_3
 			create l_ev_frame_1
 			create general_label
@@ -107,39 +114,46 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (size_selection)
 			l_ev_horizontal_box_1.extend (color_toolbar)
 			color_toolbar.extend (color_button)
+			l_ev_horizontal_box_1.extend (background_color_toolbar)
+			background_color_toolbar.extend (background_color_button)
 			l_ev_horizontal_box_1.extend (format_toolbar)
 			format_toolbar.extend (l_ev_tool_bar_separator_1)
 			format_toolbar.extend (bold_button)
 			format_toolbar.extend (italic_button)
 			format_toolbar.extend (underlined_button)
 			format_toolbar.extend (striked_through_button)
-			l_ev_horizontal_box_1.extend (paragraph_toolbar)
-			paragraph_toolbar.extend (l_ev_tool_bar_separator_2)
+			format_toolbar.extend (l_ev_tool_bar_separator_2)
+			l_ev_horizontal_box_1.extend (l_ev_label_1)
+			l_ev_horizontal_box_1.extend (l_ev_cell_1)
+			l_ev_horizontal_box_1.extend (l_ev_cell_2)
+			l_ev_cell_2.extend (vertical_offset)
+			main_vertical_box.extend (paragraph_toolbar_holder)
+			paragraph_toolbar_holder.extend (l_ev_horizontal_separator_1)
+			paragraph_toolbar_holder.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (paragraph_toolbar)
 			paragraph_toolbar.extend (left_alignment_button)
 			paragraph_toolbar.extend (center_alignment_button)
 			paragraph_toolbar.extend (right_alignment_button)
 			paragraph_toolbar.extend (justified_button)
-			main_vertical_box.extend (paragraph_toolbar_holder)
-			paragraph_toolbar_holder.extend (l_ev_horizontal_separator_1)
-			paragraph_toolbar_holder.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (l_ev_cell_1)
-			l_ev_horizontal_box_2.extend (l_ev_label_1)
-			l_ev_horizontal_box_2.extend (l_ev_cell_2)
-			l_ev_cell_2.extend (left_margin)
-			l_ev_horizontal_box_2.extend (l_ev_label_2)
+			paragraph_toolbar.extend (l_ev_tool_bar_separator_3)
 			l_ev_horizontal_box_2.extend (l_ev_cell_3)
-			l_ev_cell_3.extend (right_margin)
-			l_ev_horizontal_box_2.extend (l_ev_label_3)
+			l_ev_horizontal_box_2.extend (l_ev_label_2)
 			l_ev_horizontal_box_2.extend (l_ev_cell_4)
-			l_ev_cell_4.extend (top_spacing)
-			l_ev_horizontal_box_2.extend (l_ev_label_4)
+			l_ev_cell_4.extend (left_margin)
+			l_ev_horizontal_box_2.extend (l_ev_label_3)
 			l_ev_horizontal_box_2.extend (l_ev_cell_5)
-			l_ev_cell_5.extend (bottom_spacing)
+			l_ev_cell_5.extend (right_margin)
+			l_ev_horizontal_box_2.extend (l_ev_label_4)
 			l_ev_horizontal_box_2.extend (l_ev_cell_6)
+			l_ev_cell_6.extend (top_spacing)
+			l_ev_horizontal_box_2.extend (l_ev_label_5)
+			l_ev_horizontal_box_2.extend (l_ev_cell_7)
+			l_ev_cell_7.extend (bottom_spacing)
+			l_ev_horizontal_box_2.extend (l_ev_cell_8)
 			main_vertical_box.extend (tab_control_holder)
 			tab_control_holder.extend (l_ev_horizontal_separator_2)
 			main_vertical_box.extend (rich_text)
-			main_vertical_box.extend (l_ev_cell_7)
+			main_vertical_box.extend (l_ev_cell_9)
 			main_vertical_box.extend (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_3.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (general_label)
@@ -160,17 +174,22 @@ feature {NONE}-- Initialization
 			main_vertical_box.disable_item_expand (l_ev_horizontal_box_1)
 			main_vertical_box.disable_item_expand (paragraph_toolbar_holder)
 			main_vertical_box.disable_item_expand (tab_control_holder)
-			main_vertical_box.disable_item_expand (l_ev_cell_7)
+			main_vertical_box.disable_item_expand (l_ev_cell_9)
 			main_vertical_box.disable_item_expand (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_1.disable_item_expand (font_selection)
 			l_ev_horizontal_box_1.disable_item_expand (size_selection)
 			l_ev_horizontal_box_1.disable_item_expand (color_toolbar)
+			l_ev_horizontal_box_1.disable_item_expand (background_color_toolbar)
 			l_ev_horizontal_box_1.disable_item_expand (format_toolbar)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_1)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_2)
 			font_selection.set_tooltip ("Font Family Selection")
 			font_selection.set_minimum_width (font_selection_combo_box_width)
 			size_selection.set_tooltip ("Font Size Selection in Pixels")
 			size_selection.set_minimum_width (font_size_combo_box_width)
 			color_button.set_tooltip ("Font Color Selection")
+			background_color_button.set_tooltip ("Font Background Color Selection")
 			bold_button.enable_select
 			bold_button.set_tooltip ("Bold")
 			bold_button.set_pixmap (bold_png)
@@ -180,6 +199,22 @@ feature {NONE}-- Initialization
 			underlined_button.set_pixmap (underline_png)
 			striked_through_button.set_tooltip ("Striken Through")
 			striked_through_button.set_pixmap (strike_png)
+			l_ev_label_1.set_text ("Offset")
+			l_ev_label_1.set_tooltip ("Vertical Offset of Character from Baseline")
+			l_ev_cell_1.set_minimum_width (small_padding)
+			vertical_offset.set_tooltip ("Vertical Character Offset")
+			vertical_offset.value_range.adapt (create {INTEGER_INTERVAL}.make (-25, 25))
+			l_ev_horizontal_box_2.set_padding_width (small_padding)
+			l_ev_horizontal_box_2.disable_item_expand (paragraph_toolbar)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_3)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_2)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_4)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_3)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_5)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_4)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_6)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_5)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_7)
 			left_alignment_button.set_tooltip ("Align Text Left")
 			left_alignment_button.set_pixmap (left_alignment_png)
 			center_alignment_button.set_tooltip ("Center Text")
@@ -188,29 +223,22 @@ feature {NONE}-- Initialization
 			right_alignment_button.set_pixmap (right_alignment_png)
 			justified_button.set_tooltip ("Justify Text")
 			justified_button.set_pixmap (justified_png)
-			l_ev_horizontal_box_2.set_padding_width (small_padding)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_1)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_1)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_2)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_2)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_3)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_3)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_4)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_4)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_5)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_6)
-			l_ev_cell_1.set_minimum_width (0)
-			l_ev_label_1.set_text ("Left Margin")
+			l_ev_cell_3.set_minimum_width (0)
+			l_ev_label_2.set_text ("Left Margin")
+			left_margin.set_tooltip ("Paragraph Left Margin")
 			left_margin.set_minimum_width (font_size_combo_box_width)
-			l_ev_label_2.set_text ("Right Margin")
+			l_ev_label_3.set_text ("Right Margin")
+			right_margin.set_tooltip ("Paragraph Right Margin")
 			right_margin.set_minimum_width (font_size_combo_box_width)
-			l_ev_label_3.set_text ("Top Spacing")
+			l_ev_label_4.set_text ("Top Spacing")
+			top_spacing.set_tooltip ("Paragraph Top Spacing")
 			top_spacing.set_minimum_width (font_size_combo_box_width)
-			l_ev_label_4.set_text ("Bottom Spacing")
+			l_ev_label_5.set_text ("Bottom Spacing")
+			bottom_spacing.set_tooltip ("Paragraph Bottom Spacing")
 			bottom_spacing.set_minimum_width (font_size_combo_box_width)
 			tab_control_holder.hide
 			rich_text.set_text ("Welcome to the EiffelVision2 rich text example%N%NSome sample text:%N%NLine 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1%NLine  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2%NLine 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 %NLine 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   %N%N%NTab samples:%N%N1st tab		3rd tab		5th tab		7th tab%N%NData		Data		Data		Data%N%NSome more text. %N%NAnd a little more.%N%NFinally all available fonts:%N")
-			l_ev_cell_7.set_minimum_height (tiny_padding)
+			l_ev_cell_9.set_minimum_height (tiny_padding)
 			l_ev_horizontal_box_3.set_padding_width (tiny_padding)
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_frame_2)
 			l_ev_frame_1.set_style (1)
@@ -226,10 +254,12 @@ feature {NONE}-- Initialization
 			size_selection.select_actions.extend (agent font_size_selected)
 			size_selection.return_actions.extend (agent font_size_selected)
 			color_button.select_actions.extend (agent color_selected)
+			background_color_button.select_actions.extend (agent background_color_selected)
 			bold_button.select_actions.extend (agent bold_selected)
 			italic_button.select_actions.extend (agent italic_selected)
 			underlined_button.select_actions.extend (agent underline_selected)
 			striked_through_button.select_actions.extend (agent strike_through_selected)
+			vertical_offset.change_actions.extend (agent offset_changed (?))
 			left_alignment_button.select_actions.extend (agent left_alignment_selected)
 			center_alignment_button.select_actions.extend (agent center_alignment_selected)
 			right_alignment_button.select_actions.extend (agent right_alignment_selected)
@@ -252,11 +282,11 @@ feature -- Access
 	word_wrapping_menu_item, show_tab_control_menu_item, show_paragraph_toolbar: EV_CHECK_MENU_ITEM
 	main_vertical_box, paragraph_toolbar_holder, tab_control_holder: EV_VERTICAL_BOX
 	font_selection, size_selection: EV_COMBO_BOX
-	color_toolbar, format_toolbar, paragraph_toolbar: EV_TOOL_BAR
-	color_button: EV_TOOL_BAR_BUTTON
+	color_toolbar, background_color_toolbar, format_toolbar, paragraph_toolbar: EV_TOOL_BAR
+	color_button, background_color_button: EV_TOOL_BAR_BUTTON
 	bold_button, italic_button, underlined_button, striked_through_button, left_alignment_button, 
 	center_alignment_button, right_alignment_button, justified_button: EV_TOOL_BAR_TOGGLE_BUTTON
-	left_margin, right_margin, top_spacing, bottom_spacing: EV_SPIN_BUTTON
+	vertical_offset, left_margin, right_margin, top_spacing, bottom_spacing: EV_SPIN_BUTTON
 	rich_text: EV_RICH_TEXT
 	general_label, caret_position_label: EV_LABEL
 
@@ -310,6 +340,11 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
+	background_color_selected is
+			-- Called by `select_actions' of `background_color_button'.
+		deferred
+		end
+	
 	bold_selected is
 			-- Called by `select_actions' of `bold_button'.
 		deferred
@@ -327,6 +362,11 @@ feature {NONE} -- Implementation
 	
 	strike_through_selected is
 			-- Called by `select_actions' of `striked_through_button'.
+		deferred
+		end
+	
+	offset_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `vertical_offset'.
 		deferred
 		end
 	

@@ -12,8 +12,19 @@ inherit
 	TEXT_FIELD_I;
 
 	PRIMITIVE_M
+		rename
+			clean_up as primitive_clean_up
 		export
 			{NONE} all
+		end;
+
+	PRIMITIVE_M
+		export
+			{NONE} all
+		redefine
+			clean_up
+		select
+			clean_up
 		end;
 
 	TEXT_FIELD_R_M
@@ -39,9 +50,10 @@ feature -- Creation
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_text_field.identifier.to_c;
 			screen_object := create_text_field ($ext_name,
-					a_text_field.parent.implementation.screen_object);
+					parent_screen_object (a_text_field, widget_index));
 			a_text_field.set_font_imp (Current)
 		end;
 
@@ -52,9 +64,9 @@ feature -- Callbacks
 			-- when an acitvate event occurs
 		do
 			if (activate_actions = Void) then
-                !!activate_actions.make (screen_object, Mactivate, widget_oui)
-            end;
-            activate_actions.add (a_command, argument)
+				!!activate_actions.make (screen_object, Mactivate, widget_oui)
+			end;
+			activate_actions.add (a_command, argument)
 		end;
  
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
@@ -64,9 +76,19 @@ feature -- Callbacks
 			activate_actions.remove (a_command, argument)
 		end;
 
+feature {NONE}
+
 	activate_actions: EVENT_HAND_M;
 			-- An event handler to manage call-backs when
 			-- an activate event occurs
+
+	clean_up is
+		do
+			primitive_clean_up;
+			if activate_actions /= Void then
+				activate_actions.free_cdfd
+			end;
+		end
 
 feature 
 

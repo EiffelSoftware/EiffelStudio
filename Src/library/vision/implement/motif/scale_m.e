@@ -24,7 +24,8 @@ inherit
 			set_width as p_set_width,
 			set_height as p_set_height,
 			height as p_height,
-			width as p_width
+			width as p_width,
+			clean_up as primitive_clean_up
 		export
 			{NONE} all
 		redefine
@@ -39,9 +40,11 @@ inherit
 		redefine
 			set_size, set_width, set_height, action_target,
 			set_foreground, update_foreground, set_background_color,
-			update_background_color, width, height
+			update_background_color, width, height,
+			clean_up
 		select
-			set_size, set_width, set_height, width, height
+			set_size, set_width, set_height, width, height,
+			clean_up
 		end;
 	
 	FONTABLE_M
@@ -58,24 +61,25 @@ creation
 feature -- Creation
 
 	make (a_scale: SCALE) is
-            -- Create a motif scale.
-        local
-            ext_name: ANY
-        do
-            ext_name := a_scale.identifier.to_c;
-            screen_object := create_scale ($ext_name,
-					a_scale.parent.implementation.screen_object);
-            a_scale.set_font_imp (Current);
-            granularity := 10
-        ensure
-            mamimum_set: maximum = 100;
-            minimum_set: minimum = 0;
-            gradularity_set: granularity = 10;
-            value_equal_0: value = 0;
-            --not_horizontal: not is_horizontal;
-            --not_value_shown: not is_value_shown;
-            --not_max_right_bottom: not is_maximum_right_bottom
-        end;
+			-- Create a motif scale.
+		local
+			ext_name: ANY
+		do
+			widget_index := widget_manager.last_inserted_position;
+			ext_name := a_scale.identifier.to_c;
+			screen_object := create_scale ($ext_name,
+					parent_screen_object (a_scale, widget_index));
+			a_scale.set_font_imp (Current);
+			granularity := 10
+		ensure
+			mamimum_set: maximum = 100;
+			minimum_set: minimum = 0;
+			gradularity_set: granularity = 10;
+			value_equal_0: value = 0;
+			--not_horizontal: not is_horizontal;
+			--not_value_shown: not is_value_shown;
+			--not_max_right_bottom: not is_maximum_right_bottom
+		end;
 
 feature 
 
@@ -167,7 +171,18 @@ feature {NONE}
 	move_actions: EVENT_HAND_M;
 			-- An event handler to manage call-backs when slide is moved
 
-    value_changed_actions: EVENT_HAND_M;
+	value_changed_actions: EVENT_HAND_M;
+
+	clean_up is
+		do
+			primitive_clean_up;
+			if move_actions /= Void then
+				move_actions.free_cdfd
+			end;
+			if value_changed_actions /= Void then
+				value_changed_actions.free_cdfd
+			end;
+		end
 
 feature 
 
@@ -203,8 +218,8 @@ feature
 		end;
 
 	set_horizontal (flag: BOOLEAN) is
-            -- Set orientation of the scale to horizontal if `flag',
-            -- to vertical otherwise.
+			-- Set orientation of the scale to horizontal if `flag',
+			-- to vertical otherwise.
 		local
 			old_length: INTEGER;
 		do
@@ -274,17 +289,17 @@ feature
 		end;
 
 	set_output_only (flag: BOOLEAN) is
-            -- Set scale mode to output only if `flag' and to input/output
-            -- otherwise.
-        do
+			-- Set scale mode to output only if `flag' and to input/output
+			-- otherwise.
+		do
 			if flag then
 				xt_set_sensitive (screen_object, False)
 			else
 				xt_set_sensitive (screen_object, True)
 			end
-        ensure then
-            output_only: is_output_only = flag
-        end;
+		ensure then
+			output_only: is_output_only = flag
+		end;
 
 	set_text (a_text: STRING) is
 			-- Set scale text to `a_text'.
@@ -315,16 +330,16 @@ feature
 		end;
 
 	show_value (flag: BOOLEAN) is
-            -- Show scale value on the screen if `flag', hide it otherwise.
-        do
+			-- Show scale value on the screen if `flag', hide it otherwise.
+		do
 			if flag then
 				set_xt_boolean (screen_object, True, MshowValue)
 			else
 				set_xt_boolean (screen_object, False, MshowValue)
 			end
-        ensure then
-            value_is_shown: is_value_shown = flag
-        end;
+		ensure then
+			value_is_shown: is_value_shown = flag
+		end;
 
 	text: STRING is
 			-- Scale text

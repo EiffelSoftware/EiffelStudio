@@ -41,7 +41,20 @@ feature {NONE} -- Initialization
 		ensure then
 			version_set: version /= Void and then version.is_equal (default_version)
 		end
-		
+
+feature -- Initialization
+
+	register_environment_variable is
+			-- If runtime is found, we set the ISE_DOTNET_FRAMEWORK environement variable.
+		local
+			l_exec: EXECUTION_ENVIRONMENT
+		do
+			if is_dotnet_installed then
+				create l_exec
+				l_exec.put (dotnet_framework_path, "ISE_DOTNET_FRAMEWORK")
+			end
+		end
+
 feature -- Access
 
 	default_version: STRING is

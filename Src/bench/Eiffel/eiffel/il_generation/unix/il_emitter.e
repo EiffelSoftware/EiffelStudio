@@ -149,6 +149,14 @@ feature -- Retrieval
 			end
 		end
 
+	unload is
+			-- unload all used resources
+		do
+			check
+				False
+			end
+		end
+
 feature -- XML generation
 
 	consume_assembly_from_path (a_path: STRING) is

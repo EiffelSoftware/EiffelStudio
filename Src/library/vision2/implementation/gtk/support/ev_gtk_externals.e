@@ -397,15 +397,15 @@ feature {NONE} -- code in the glue library
 		end
 	
 	-- message_d
-	c_gtk_create_message_d_buttons (dialog, ok_button,
-					cancel_button, 
-					help_button: POINTER) is
-		external "C | %"gtk_eiffel.h%""
-		end
+--	c_gtk_create_message_d_buttons (dialog, ok_button,
+--					cancel_button, 
+--					help_button: POINTER) is
+--		external "C | %"gtk_eiffel.h%""
+--		end
 	
-	c_gtk_create_message_d_label (dialog, label: POINTER) is
-		external "C | %"gtk_eiffel.h%""
-		end
+--	c_gtk_create_message_d_label (dialog, label: POINTER) is
+--		external "C | %"gtk_eiffel.h%""
+--		end
 	
 	-- push_b
 	c_gtk_get_label_widget (button: POINTER): POINTER is
@@ -423,6 +423,13 @@ feature {NONE} -- code in the glue library
 		external
 			"C | %"gtk_eiffel.h%""
 		end	
+
+feature {NONE} -- GtkStyle functions
+
+	c_gtk_style_default_bg_color (r, g, b: POINTER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
 	
 feature {NONE} -- Implementation
 	

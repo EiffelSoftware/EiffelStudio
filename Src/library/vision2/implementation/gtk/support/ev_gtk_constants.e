@@ -17,9 +17,14 @@ feature
 	GTK_POLICY_ALWAYS: INTEGER is 0
 	GTK_POLICY_AUTOMATIC: INTEGER is 1
 
-	-- GtkPolicyType
+	-- GtkProgressBarStyle
 	GTK_PROGRESS_CONTINUOUS: INTEGER is 0
 	GTK_PROGRESS_DISCRETE: INTEGER is 1
+
+	-- GtkProgressBarOrientation
+	-- We only use these 2 because of windows platform.
+	GTK_PROGRESS_LEFT_TO_RIGHT: INTEGER is 0
+	GTK_PROGRESS_BOTTOM_TO_TOP: INTEGER is 2
 
 	-- Widget flags
 	GTK_VISIBLE: INTEGER is  8

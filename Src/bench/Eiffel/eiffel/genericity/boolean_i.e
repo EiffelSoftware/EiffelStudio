@@ -10,7 +10,7 @@ inherit
 			generate_sk_value, type_a,
 			generate, generate_cast, generate_access_cast,
 			generate_size,
-			c_string
+			c_string, separate_get_macro, separate_send_macro
 		end
 
 feature
@@ -76,6 +76,12 @@ feature
 
 	c_string: STRING is "EIF_BOOLEAN"
 			-- String generated for the type.
+
+	separate_get_macro: STRING is "CURGB"
+			-- String generated to access the argument to a separate call
+
+	separate_send_macro: STRING is "CURSQRB"
+			-- String generated to return the result of a separate call
 
 	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.

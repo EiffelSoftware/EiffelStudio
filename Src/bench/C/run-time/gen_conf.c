@@ -2644,7 +2644,8 @@ rt_shared int eif_typename_len (int16 dftype)
 rt_private int16 eif_gen_seq_len (int16 dftype)
 {
 	EIF_GEN_DER *gdp;
-	int16       i, len;
+	long i;
+	int16 len;
 
 	REQUIRE ("dftype is not a formal generic parameter", dftype != FORMAL_TYPE);
 	REQUIRE ("dftype is not a tuple", dftype != TUPLE_TYPE);

@@ -881,6 +881,9 @@ interface IEiffelClassDescriptor: IDispatch
 	[id (DISPID_EiffelComCompiler_ObsoleteMessage), helpstring ("Obsolete feature message?"), propget]
 	HRESULT ObsoleteMessage ([out, retval] BSTR* pbstrMessage);
 	
+	[id (DISPID_EiffelComCompiler_Assertions), helpstring ("Cluster assertions"), propget]
+	HRESULT Assertions ([out, retval] ULONG* pulAssertions);
+	
 	[id (DISPID_EiffelComCompiler_MemberOf), helpstring ("Retrieve cluster feature is member of"), propget]
 	HRESULT MemberOf([out, retval] IEiffelClusterDescriptor** ppMember);
 };

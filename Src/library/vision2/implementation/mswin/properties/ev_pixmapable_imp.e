@@ -34,7 +34,9 @@ feature -- Element change
 			-- because a bitmap can be linked to only one dc
 			-- at a time.
 		do
-			pixmap := pix
+			remove_pixmap
+			create pixmap
+			pixmap.copy (pix)
 		end
 
 	set_pixmap_by_filename (file_name: FILE_NAME) is
@@ -86,6 +88,9 @@ end -- class EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/07 01:17:01  brendel
+--| Improved implementation of set_pixmap.
+--|
 --| Revision 1.11  2000/02/19 05:44:59  oconnor
 --| released
 --|

@@ -11,6 +11,16 @@ inherit
 	EV_VERTICAL_BOX
 	
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
+	
+	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
+		undefine
+			is_equal, copy, default_create
+		end
 	
 create
 
@@ -91,10 +101,10 @@ feature {NONE} -- Implementation
 	validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
 
-	execute_agent is
+	execute_agent (new_value: INTEGER) is
 			-- call `execution_agent'.
 		do
-			execution_agent.call ([text_field.text.to_integer])
+			execution_agent.call ([new_value])
 		end
 		
 	update_editors is
@@ -114,12 +124,16 @@ feature {NONE} -- Implementation
 	process is
 			-- Validate information in `text_field' and execute `execute_agent'
 			-- if valid. If not valid, then restore previous value to `text_field'.
+		local
+			stripped_text: STRING
 		do
-			if not text_field.text.is_equal (value_on_entry) then
-				if not text_field.text.is_empty and text_field.text.is_integer then
-					validate_agent.call ([text_field.text.to_integer])
+			stripped_text := remove_leading_and_trailing_spaces (text_field.text)
+			if not stripped_text.is_equal (value_on_entry) then
+				if not stripped_text.is_empty and stripped_text.is_integer then
+					validate_agent.call ([stripped_text.to_integer])
 					if validate_agent.last_result then
-						execute_agent
+						text_field.set_text (stripped_text)
+						execute_agent (stripped_text.to_integer)
 						update_editors
 					else
 						text_field.set_text (value_on_entry)

@@ -30,9 +30,20 @@ feature -- Initialization
 
 	set is
 			-- Yacc initialization
+		local
+			free_option: FREE_OPTION_SD;
 		do
 			option ?= yacc_arg (0);
-			value ?= yacc_arg (1)
+			value ?= yacc_arg (1);
+
+			free_option ?= option;
+			if free_option /= Void then
+				io.error.putstring ("%NWarning: unknown option ");
+				io.error.putstring (free_option.option_name);
+				io.error.new_line;
+
+				-- see also ETL p526 (VDOC error message)	
+			end;
 		end;
 
 feature -- Lace compilation
@@ -45,56 +56,72 @@ feature -- Lace compilation
 			debug_tag: DEBUG_TAG_I;
 		do
 			if option.is_debug then
-				if value.is_no then
-					update_debug (No_debug);
-				elseif value.is_yes then
-					update_debug (Yes_debug);
-				elseif value.is_all then
-					update_debug (Yes_debug);
-				elseif value.is_name then
-					!!debug_tag.make;
-					debug_tag.tags.put (value.value);
-					update_debug (debug_tag);
+				if value /= Void then
+					if value.is_no then
+						update_debug (No_debug);
+					elseif value.is_yes then
+						update_debug (Yes_debug);
+					elseif value.is_all then
+						update_debug (Yes_debug);
+					elseif value.is_name then
+						!!debug_tag.make;
+						debug_tag.tags.put (value.value);
+						update_debug (debug_tag);
+					else
+						error := True;
+					end;
 				else
-					error := True;
+					update_debug (No_debug);
 				end;
 			elseif option.is_assertion then
-				if value.is_no then
-					update_assertion (No_level);
-				elseif value.is_require then
-					update_assertion (Require_level);
-				elseif value.is_ensure then
-					update_assertion (Ensure_level);
-				elseif value.is_invariant then
-					update_assertion (Invariant_level);
-				elseif value.is_loop then
-					update_assertion (Loop_level);
-				elseif value.is_check then
-					update_assertion (Check_level);
-				elseif value.is_all then
-					update_assertion (Check_level);
+				if value /= Void then
+					if value.is_no then
+						update_assertion (No_level);
+					elseif value.is_require then
+						update_assertion (Require_level);
+					elseif value.is_ensure then
+						update_assertion (Ensure_level);
+					elseif value.is_invariant then
+						update_assertion (Invariant_level);
+					elseif value.is_loop then
+						update_assertion (Loop_level);
+					elseif value.is_check then
+						update_assertion (Check_level);
+					elseif value.is_all then
+						update_assertion (Check_level);
+					else
+						error := True;
+					end;
 				else
-					error := True;
+					update_assertion (Require_level);
 				end;
 			elseif option.is_trace then
-				if value.is_no then
-					update_trace (No_trace);
-				elseif value.is_yes then
-					update_trace (All_trace);
-				elseif value.is_all then
-					update_trace (All_trace);
+				if value /= Void then
+					if value.is_no then
+						update_trace (No_trace);
+					elseif value.is_yes then
+						update_trace (All_trace);
+					elseif value.is_all then
+						update_trace (All_trace);
+					else
+						error := True;
+					end;
 				else
-					error := True;
+					update_trace (No_trace);
 				end;
 			elseif option.is_optimize then
-				if value.is_no then
-					update_optimize (No_optimize);
-				elseif value.is_yes then
-					update_optimize (Yes_optimize);
-				elseif value.is_all then
-					update_optimize (All_optimize);
+				if value /= Void then
+					if value.is_no then
+						update_optimize (No_optimize);
+					elseif value.is_yes then
+						update_optimize (Yes_optimize);
+					elseif value.is_all then
+						update_optimize (All_optimize);
+					else
+						error := True;
+					end;
 				else
-					error := True;
+					update_optimize (No_optimize);
 				end;
 			end;
 			if error then

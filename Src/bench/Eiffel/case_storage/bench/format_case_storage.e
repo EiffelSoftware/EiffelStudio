@@ -46,9 +46,44 @@ feature -- Access
 
 feature -- Execution
 
-	rescued: BOOLEAN;
+	rescued: BOOLEAN
 
-	execute is
+	check_path ( path : STRING ) is
+			-- check the path + add the system.ecr file ( empty )	
+	local
+		f : PLAIN_TEXT_FILE
+		fn : FILE_NAME
+		dir : DIRECTORY	
+		dirn : DIRECTORY_NAME	
+	do
+		-- check the path and set the correponding variables if correct
+		!! dirn.make
+		dirn.extend(path)
+		!! dir.make ( dirn)
+		if dir.exists then
+			-- we set the variables
+			Case_storage_path.wipe_out
+			Case_storage_path.extend ( path)
+			Case_storage_path.extend_from_array (<<Casegen,	Case_storage>>)
+			Case_gen_path.wipe_out
+			Case_gen_path.extend(path)
+			Case_gen_path.extend(Casegen)
+		end
+
+		-- create if needed the system.ecr file	
+		if dir.exists then
+			!! fn.make_from_string ( path )
+			fn.extend("system")
+			fn.add_extension("ecr")
+			!! f.make(fn)
+			if not f.exists then
+				f.create_read_write
+				f.close
+			end
+		end
+	end
+
+	execute ( path : STRING ) is
 			-- Format storage structures
 			-- so it can be read in from EiffelCase.
 		local
@@ -61,19 +96,20 @@ feature -- Execution
 		do
 			if not rescued then
 				if not Workbench.system_defined then
-					output_window.put_string ("Project has not been compiled.");
-					output_window.new_line;
-					output_window.put_string ("The project must be compiled ");
-					output_window.put_string ("before it can be reverse engineered.");
-					output_window.new_line;
+					output_window.put_string ("Project has not been compiled.")
+					output_window.new_line
+					output_window.put_string ("The project must be compiled ")
+					output_window.put_string ("before it can be reverse engineered.")
+					output_window.new_line
 					output_window.display
 				else
-					prev_class := System.current_class;
-					prev_cluster := Inst_context.cluster;
-					output_window.clear_window;
+					check_path ( path )	
+					prev_class := System.current_class
+					prev_cluster := Inst_context.cluster
+					output_window.clear_window
 					if workbench.successful then
-						Create_case_storage_directory;
-						!! d.make (Case_storage_path);
+						Create_case_storage_directory
+						!! d.make (Case_storage_path)
 						if not d.exists or else not d.is_readable then
 							output_window.put_string ("Directory ");
 							output_window.put_string (case_storage_path);
@@ -81,8 +117,8 @@ feature -- Execution
 							output_window.put_string ("is not readable. Please check permission.")
 							output_window.new_line;
 						else
-							!! fn.make_from_string (Case_storage_path);
-							fn.set_file_name (System_name);	
+							!! fn.make_from_string (Case_storage_path)
+							fn.set_file_name (System_name)	
 							!! f.make (fn);
 							if not f.exists or else need_to_reverse_engineer then;
 								reset_format_booleans;

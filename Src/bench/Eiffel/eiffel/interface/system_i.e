@@ -3496,11 +3496,7 @@ feature -- Conveniences
 
 	set_c_file_names (l: like c_file_names) is
 			-- Assign `l' to `c_file_names'.
-			--| Set `freeze' flag if needed
 		do
-			if not deep_equal (l, c_file_names) then
-				private_freeze := True
-			end
 			c_file_names := l;
 		end;
 

@@ -95,14 +95,16 @@ feature
 	dump (file: FILE) is
 		local
 			i, count, meta_type: INTEGER;
+			s: STRING
 		do
 			from
 				if is_expanded then
 					file.putstring ("expanded ");
 				end;
-				file.putint (base_id);
-				file.putstring (base_class.class_name);
-				file.putstring (" {");
+				s := clone (base_class.class_name);
+				s.to_upper;
+				file.putstring (s);
+				file.putstring (" [");
 				i := 1;
 				count := meta_generic.count;
 			until
@@ -114,7 +116,7 @@ feature
 				end;
 				i := i + 1;
 			end;
-			file.putchar ('}');
+			file.putchar (']');
 		end;
 
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is

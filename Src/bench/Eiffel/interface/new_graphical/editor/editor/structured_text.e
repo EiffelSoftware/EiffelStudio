@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- test features
 
-	current_line: like first_displayed_line
+	current_line, item: like first_displayed_line
 
 	after: BOOLEAN is
 		do

@@ -30,7 +30,7 @@ copy generated\Server\Include Clib
 
 copy generated\Common\Include Clib
 
-rename generated\ISE.tlb cec.tlb
+rename generated\EiffelSoftware.Compiler.tlb cec.tlb
 
 copy generated\cec.tlb ace_file\.
 

@@ -140,10 +140,12 @@ feature -- Element change
 		end
 
 	set_height (a_height: INTEGER) is
-			-- Set `height' with `a_height'.
+			-- Set `height' with `a_height' (height specified in points).
 		do
 			add_mask (Cfm_size)
-			cwel_charformat_set_yheight (item, a_height)
+				-- Set `yHeight' with `a_height * 20' since the expected
+				-- value is expressed in 1/20 of points.
+			cwel_charformat_set_yheight (item, a_height * 20)
 		ensure
 			height_set: height = a_height
 		end

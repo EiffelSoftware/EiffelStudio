@@ -98,7 +98,6 @@ feature -- Formatting
 						bar_and_text_tool.showtext_frmt_holder.execute (stone)
 					end;
 					if e_feature.body_id = Void then
-							--FIXME need specify error message
 						message := Warning_messages.w_Cannot_debug_feature
 					elseif e_feature.is_external then
 						message := Warning_messages.w_Cannot_debug_externals

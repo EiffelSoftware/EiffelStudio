@@ -10,41 +10,19 @@ deferred class
 inherit
 	EV_ITEM_I
 		redefine
-			interface,
-			initialize,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
-		select
-			interface,
-			initialize
+			interface
 		end
 
-	EV_WIDGET_IMP
-			-- Inheriting from widget,
-			-- because items are widget in gtk
-		rename
-			interface as widget_interface,
-			parent as widget_parent,
-			initialize as widget_initialize,
-			parent_imp as widget_parent_imp
-		export {NONE}
-			widget_interface,
-			widget_parent,
-			widget_initialize
-		undefine
-			pointer_motion_actions,
-			pointer_button_press_actions,
-			pointer_double_press_actions,
-			needs_event_box,
-			destroy
+	EV_GTK_WIDGET_IMP
 		redefine
-			button_press_switch,
-			create_pointer_button_press_actions,
-			create_pointer_double_press_actions,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal,
+			interface,
+			initialize,
+			destroy
+		end
+
+	EV_PICK_AND_DROPABLE_IMP
+		redefine
+			interface,
 			destroy
 		end
 
@@ -53,25 +31,13 @@ inherit
 			interface
 		end
 
-	EV_ANY_IMP
-		undefine
-			needs_event_box
+	EV_ITEM_ACTION_SEQUENCES_IMP
 		redefine
-			interface,
-			destroy
+			create_pointer_button_press_actions,
+			create_pointer_double_press_actions
 		end
 
 feature {NONE} -- Initialization
-
-	initialize is
-			-- Sets up `Current' ready for use.
-		do
-			widget_initialize
-			if feature {EV_GTK_EXTERNALS}.gtk_is_widget (c_object) then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
-			end
-			is_initialized := True
-		end
 
 	button_press_switch (
 			a_type: INTEGER;
@@ -129,7 +95,7 @@ feature {EV_ANY_IMP} -- Implementation
 			if parent_imp /= Void then
 					parent_imp.interface.prune_all (interface)
 			end
-			Precursor {EV_ANY_IMP}
+			Precursor {EV_GTK_WIDGET_IMP}
 		end
 
 	item_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]
@@ -145,14 +111,6 @@ feature {EV_ANY_IMP} -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ITEM
-
-feature {NONE} -- Implmentation
-
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-	
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-	
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 end -- class EV_ITEM_IMP
 

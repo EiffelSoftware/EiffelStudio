@@ -39,15 +39,22 @@ feature -- Implementation
 			-- Draw a rubber band from pick position to pointer position.
 		local
 			target: EV_ABSTRACT_PICK_AND_DROPABLE
+			real_target: EV_PICK_AND_DROPABLE
 		do
 			draw_rubber_band
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
 			
 			target := pointed_target
+			real_target ?= target
 			if target /= last_pointed_target then
 				update_pointer_style (target)
 			end
+
+			if App_implementation.pnd_motion_actions_internal /= Void then
+				App_implementation.pnd_motion_actions_internal.call ([a_x, a_y, real_target])
+			end
+			
 			last_pointed_target := target
 		end
 
@@ -491,60 +498,26 @@ feature -- Implementation
 			pnd_wid: EV_PICK_AND_DROPABLE
 			a_wid_imp: EV_WIDGET_IMP
 			a_pnd_deferred_item_parent: EV_PND_DEFERRED_ITEM_PARENT
+			a_row_imp: EV_PND_DEFERRED_ITEM
+			pnd_targets: ARRAYED_LIST [INTEGER] 
 		do
 			a_wid_imp := widget_imp_at_pointer_position
 			if a_wid_imp /= Void and then a_wid_imp.is_sensitive then
 				if App_implementation.pnd_targets.has (a_wid_imp.interface.object_id) then
 					Result := a_wid_imp.interface
-				end
-				
+				end	
 				a_pnd_deferred_item_parent ?= a_wid_imp
 				if a_pnd_deferred_item_parent /= Void then
 						-- We need to explicitly search for PND deferred items
 					gdkwin := feature {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($x, $y)
-					if gdkwin /= NULL then
-							pnd_wid := pnd_deferred_item_from_parent (a_pnd_deferred_item_parent, x, y)
-							if pnd_wid /= Void then
-								Result := pnd_wid
-							end
+					pnd_targets := App_implementation.pnd_targets
+					a_row_imp := a_pnd_deferred_item_parent.row_from_y_coord (y)
+					if a_row_imp /= Void and then pnd_targets.has (a_row_imp.interface.object_id) then
+						Result := a_row_imp.interface
 					end
 				end				
 			end
 		end
-		
-	pnd_deferred_item_from_parent (
-		a_pnd_deferred_item_parent: EV_PND_DEFERRED_ITEM_PARENT;
-		a_x, a_y: INTEGER
-		): EV_PICK_AND_DROPABLE is
-		require
-			a_pnd_deferred_item_parent_not_void: a_pnd_deferred_item_parent /= Void
-		local
-			cur: CURSOR
-			row_imp: EV_PND_DEFERRED_ITEM
-			trg: EV_PICK_AND_DROPABLE
-			pnd_targets: ARRAYED_LIST [INTEGER] 
-		do
-			from
-				pnd_targets := App_implementation.pnd_targets
-				cur := pnd_targets.cursor
-				pnd_targets.start
-			until
-				pnd_targets.after or Result /= Void
-			loop
-				trg ?= id_object (pnd_targets.item)
-				if trg /= Void and then not trg.is_destroyed then
-					row_imp := a_pnd_deferred_item_parent.row_from_y_coord (a_y)
-					if row_imp /= Void and then row_imp.interface = trg then
-						Result := trg
-					end			
-				end
-				pnd_targets.forth
-			end
-			pnd_targets.go_to (cur)
-		end
-		
-	last_gdkwin: POINTER
-		-- Last gdkwindow the mouse was over during PND motion.
 
 	create_drop_actions: EV_PND_ACTION_SEQUENCE is
 		do

@@ -86,6 +86,16 @@ feature -- Access
 			end
 		end
 
+	is_in_gac: BOOLEAN is
+			-- Was assembly consumed in GAC
+		require
+			assembly_found: assembly_found
+		do
+			check
+				False
+			end
+		end
+
 	is_consumed: BOOLEAN is
 			-- Has assembly been consumed
 		require

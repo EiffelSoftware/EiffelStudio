@@ -23,6 +23,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_CONSTANTS
+		undefine
+			default_create
+		end
 	
 
 feature -- Initialization
@@ -150,6 +155,18 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			-- Does nothing by default
 		end
 
+feature {GB_CODE_GENERATOR} -- Status setting
+
+	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+			-- `Result' is string representation of
+			-- settings held in `Current' which is
+			-- in a compilable format.
+			-- `a_name' is the attribute name of the object that will represent `Current' in the generated code.
+			-- `children_names' is a list of all the childrens attribute names.'
+		deferred
+		end
+		
+
 feature {GB_OBJECT} -- Status setting
 
 	set_up_user_events (vision2_object, an_object: like ev_type) is
@@ -174,8 +191,6 @@ feature {NONE} -- Implementation
 
 	for_all_objects (p: Procedure [EV_ANY, TUPLE]) is
 			-- Call `p' on every item in `objects'.
-		local
-			a_type: like ev_type
 		do
 			from
 				objects.start
@@ -226,6 +241,17 @@ feature {NONE} -- Implementation
 			-- Short version for calling everywhere.
 		do
 			update_editors_for_property_change (objects.first, type, parent_editor)			
+		end
+		
+	strip_leading_indent (s: STRING): STRING is
+			-- If `s' starts with `indent' then strip this indent.
+			-- This is used in the code generation routines.
+		do
+			if s.substring (1, indent.count).is_equal (indent) then
+				Result := s.substring (indent.count + 1, s.count)
+			else
+				Result := s
+			end
 		end
 
 invariant

@@ -13,7 +13,7 @@ inherit
 
 	SHARED_WORKBENCH
 		export
-			{NONE} all
+			{NONE} all 
 		end
 
 	COMPILER_EXPORTER
@@ -5053,7 +5053,6 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			l_token: INTEGER
 			l_key_token: MD_PUBLIC_KEY_TOKEN
 			l_major, l_minor, l_build, l_revision: INTEGER
-			l_pos, l_new_pos: INTEGER
 			l_uni_string: UNI_STRING
 			l_external_class: EXTERNAL_CLASS_C
 			l_assembly: ASSEMBLY_I

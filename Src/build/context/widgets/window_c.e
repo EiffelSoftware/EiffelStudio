@@ -91,6 +91,12 @@ feature -- Setting values
 			resize_policy_modified := False
 		end
 
+feature -- File names
+
+	base_file_name_without_dot_e: FILE_NAME is
+		deferred
+		end;
+
 feature {NONE}
 
 	widget_set_title (s: STRING) is
@@ -177,7 +183,6 @@ feature
 		require else
 			no_parent_restrictions: True
 		do
-			widget.set_x_y (new_x, new_y);
 			set_x_y (new_x - x_offset, new_y - y_offset);
 		end;
 
@@ -323,7 +328,9 @@ feature
 				if y_offset = Void then end;
 				remove_popup_action;
 				add_window_geometry_action;	
-			else
+			elseif not widget.destroyed and then not deleted then
+					-- This is just in case that the event
+					-- is still called just after a destruction
 				x := widget.x - x_offset;
 				y := widget.y - y_offset;
 					-- Configure event

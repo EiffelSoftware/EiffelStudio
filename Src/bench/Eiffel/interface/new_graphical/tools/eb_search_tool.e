@@ -74,6 +74,7 @@ feature {NONE} -- Initialization
 			keyword_field.change_actions.extend (agent enable_disable_search_button)
 			keyword_field.key_press_actions.extend (agent key_pressed (?, True))
 			keyword_field.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (100))
+			keyword_field.drop_actions.extend (agent display_stone_signature (keyword_field, ?))
 
 			create search_box
 			search_box.set_padding (3)
@@ -86,7 +87,9 @@ feature {NONE} -- Initialization
 			size := size.max (replace_check_button.minimum_width)
 			create replace_field
 			replace_field.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (100))
+
 			replace_field.key_press_actions.extend (agent key_pressed (?, False))
+			replace_field.drop_actions.extend (agent display_stone_signature (replace_field, ?))
 			create replace_text.make (0)
 
 			create replace_box
@@ -640,5 +643,20 @@ feature {NONE} -- Implementation
 			Result := not for_test.is_empty
 		end
 		
+	display_stone_signature (textable: EV_TEXTABLE; a_stone: FILED_STONE) is
+			-- Display signature name of `a_stone' in `textable'.
+		require
+			textable_not_void: textable /= Void
+			a_stone_not_void: a_stone /= Void
+		do
+			if a_stone.stone_signature /= Void then
+					-- FIXME Protected against Void, as there is no postcondition
+					-- on `stone_signature', although it appears it should never be Void,
+					-- it must be protected for now. Julian 07/22/03
+				textable.set_text (a_stone.stone_signature)
+			end
+		ensure
+			text_set: textable.text.is_equal (a_stone.stone_signature)
+		end
 
 end -- class EB_SEARCH_TOOL

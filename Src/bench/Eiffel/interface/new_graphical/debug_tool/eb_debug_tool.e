@@ -8,6 +8,10 @@ class
 
 inherit
 	EB_EDITOR
+		redefine
+			build_edit_menu,
+			init_commands
+		end
 
 	EB_DEBUG_TOOL_DATA
 		rename
@@ -118,6 +122,27 @@ feature {NONE} -- Initialization
 --
 		end
 
+	init_commands is
+		do
+			Precursor
+			create clear_bp_cmd.make (Current)
+			create stop_points_cmd
+			create stop_points_status_cmd			
+
+			create debug_run_cmd.make (Current)
+			create debug_status_cmd.make (Current)
+			create display_exception_cmd.make (Current)
+			create debug_quit_cmd.make
+			create step_cmd.make (Current)
+			create step_out_cmd.make (Current)
+			create nostop_cmd.make (Current)
+			create run_final_cmd.make (Current)
+		end
+
+feature -- Access
+
+	empty_tool_name: STRING is "Debug Tool"
+
 feature -- Resource Update
 
 	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
@@ -144,13 +169,13 @@ feature -- Resource Update
 --				end
 --			else
 --			if old_res = pr.debugger_show_all_callers then
---				if feature_part /= Void then
---					rout_cli_cmd ?= feature_part.showroutclients_frmt_holder.associated_command
+--				if feature_displayer /= Void then
+--					rout_cli_cmd ?= feature_displayer.showroutclients_frmt_holder.associated_command
 --					rout_cli_cmd.set_show_all_callers (new_res.actual_value)
 --				end
 --			elseif old_res = pr.debugger_do_flat_in_breakpoints then
---				if feature_part /= Void then
---					stop_cmd ?= feature_part.showstop_frmt_holder.associated_command
+--				if feature_displayer /= Void then
+--					stop_cmd ?= feature_displayer.showstop_frmt_holder.associated_command
 --					stop_cmd.set_format_mode (new_res.actual_value)
 --				end
 --			end
@@ -163,34 +188,80 @@ feature -- Resource Update
 --			pr := resources
 --			if new.actual_value >= 0 then
 --				if old_res = pr.debugger_feature_height then
---					feature_part.set_height (new.actual_value)
+--					feature_displayer.set_height (new.actual_value)
 --				elseif old_res = pr.interrupt_every_n_instructions then
 --					Application.set_interrupt_number (new.actual_value)
 --				end
 --			end
 		end
 
+feature -- Access
+
+	kept_objects: LINKED_SET [STRING] is
+			-- Hector addresses of displayed clickable objects
+		do
+			Result := text_window.kept_objects
+		end
+
+	tool_name: STRING is
+			-- Name of the tool.
+		do
+			Result := "Debugger"
+		end
+
+	feature_displayer: EB_FEATURE_TOOL
+
+	object_displayer: EB_OBJECT_TOOL
+
+
+feature -- Update
+
+	process_breakable (a_stone: BREAKABLE_STONE) is
+			-- Process dropped stone `a_stone'.
+		local
+--			stop_points_button: EB_BUTTON_HOLE		
+		do
+--			stop_points_button := stop_points_hole_holder.associated_button
+--			stop_points_button.associated_command.process_breakable (a_stone)
+		end
+
 feature
+
+	synchronize_routine_tool_to_default is
+			-- Synchronize the routine tool to the debug format.
+		do
+			if feature_displayer /= Void and then feature_displayer.shown then	
+				feature_displayer.set_debug_format
+			end
+		end
+
+	clear_object_tool is
+			-- Clear the contents of the object tool if shown.
+		do
+			if object_displayer /= Void and then object_displayer.shown then	
+				object_displayer.reset
+			end
+		end
 
 	resynchronize_debugger is
 		do
---			if feature_part /= Void and then feature_form.managed then
---				feature_part.resynchronize_debugger (Void)
---			end
+			if feature_displayer /= Void and then feature_displayer.shown then
+				feature_displayer.resynchronize_debugger (Void)
+			end
 		end
 
-	show_stoppoint (e_feature: E_FEATURE index: INTEGER) is
---			-- If stone feature is equal to feature `f' and if in debug
---			-- mode then redisplay the sign of the `index'-th breakable point.
---		require
---			valid_feature: e_feature /= Void and then e_feature.body_id /= Void
---		local
---			new_stone: FEATURE_STONE
+	show_stoppoint (e_feature: E_FEATURE; index: INTEGER) is
+			-- If stone feature is equal to feature `f' and if in debug
+			-- mode then redisplay the sign of the `index'-th breakable point.
+		require
+			valid_feature: e_feature /= Void and then e_feature.body_id /= Void
+		local
+			new_stone: FEATURE_STONE
 --			display_cmd: DISPLAY_ROUTINE_PORTION
 		do
 --			display_cmd ?= display_feature_cmd_holder.associated_command
 --			if display_cmd.is_shown and then index > 0 then
---				feature_part.show_stoppoint (e_feature, index)
+				feature_displayer.show_stoppoint (e_feature, index)
 --			end
 		end
 
@@ -198,36 +269,36 @@ feature
 			-- Show breakable mark in the feature part if
 			-- the part is displayed
 		local
---			status: APPLICATION_STATUS
+			status: APPLICATION_STATUS
 --			display_cmd: DISPLAY_ROUTINE_PORTION
---			new_stone: FEATURE_STONE
---			call_stack: CALL_STACK_ELEMENT
---			e_feature: E_FEATURE
---			index: INTEGER
+			new_stone: FEATURE_STONE
+			call_stack: CALL_STACK_ELEMENT
+			e_feature: E_FEATURE
+			index: INTEGER
 		do
---			if Application.is_running and then Application.is_stopped then
+			if Application.is_running and then Application.is_stopped then
 --				display_cmd ?= display_feature_cmd_holder.associated_command
 --				if display_cmd.is_shown then
---					status := Application.status
---					if status.e_feature /= Void then
---						call_stack := status.current_stack_element
---						if Application.current_execution_stack_number = 1 then
---							e_feature := status.e_feature
---							index := status.break_index
---						else
---							e_feature := call_stack.routine
---						end
---						if feature_part.last_format /= feature_part.showstop_frmt_holder then
---							feature_part.set_debug_format
---						end
---						create new_stone.make (e_feature)
---						feature_part.process_feature (new_stone)
---						if index > 0 then
---							feature_part.show_stoppoint (e_feature, index)
---						end
---					end
+					status := Application.status
+					if status.e_feature /= Void then
+						call_stack := status.current_stack_element
+						if Application.current_execution_stack_number = 1 then
+							e_feature := status.e_feature
+							index := status.break_index
+						else
+							e_feature := call_stack.routine
+						end
+						if feature_displayer.last_format /= feature_displayer.format_list.stop_points_format then
+							feature_displayer.set_debug_format
+						end
+						create new_stone.make (e_feature)
+						feature_displayer.process_feature (new_stone)
+						if index > 0 then
+							feature_displayer.show_stoppoint (e_feature, index)
+						end
+					end
 --				end
---			end
+			end
 		end
 
 	show_current_object is
@@ -235,36 +306,36 @@ feature
 			-- stack in object tool portion.
 		local
 --			display_cmd: DISPLAY_OBJECT_PORTION
---			new_stone: OBJECT_STONE
---			call_stack: CALL_STACK_ELEMENT
---			object_address: STRING
---			dynamic_class: CLASS_C
---			status: APPLICATION_STATUS
+			new_stone: OBJECT_STONE
+			call_stack: CALL_STACK_ELEMENT
+			object_address: STRING
+			dynamic_class: CLASS_C
+			status: APPLICATION_STATUS
 		do
---			if Application.is_running and then 
---				Application.is_stopped 
---			then
+			if Application.is_running and then 
+				Application.is_stopped 
+			then
 --				display_cmd ?= display_object_cmd_holder.associated_command
 --				if display_cmd.is_shown then
---					status := Application.status
---					if status.e_feature /= Void then
---						call_stack := status.current_stack_element
---						if Application.current_execution_stack_number = 1 then
---							dynamic_class := status.dynamic_class
---							object_address := status.object_address
---						else
---							dynamic_class := call_stack.dynamic_class
---							object_address := call_stack.object_address
---						end
---						create new_stone.make (object_address, call_stack.routine_name, dynamic_class)
---						if new_stone.same_as (object_part.stone) then
---							object_part.synchronize
---						else
---							object_part.process_object (new_stone)
---						end
---					end
+					status := Application.status
+					if status.e_feature /= Void then
+						call_stack := status.current_stack_element
+						if Application.current_execution_stack_number = 1 then
+							dynamic_class := status.dynamic_class
+							object_address := status.object_address
+						else
+							dynamic_class := call_stack.dynamic_class
+							object_address := call_stack.object_address
+						end
+						create new_stone.make (object_address, call_stack.routine_name, dynamic_class)
+						if new_stone.same_as (object_displayer.stone) then
+							object_displayer.synchronize
+						else
+							object_displayer.process_object (new_stone)
+						end
+					end
 --				end
---			end
+			end
 		end
 
 	display_exception_stack is
@@ -402,5 +473,72 @@ feature -- Information
 		end
 
 close_windows is do end
+
+feature {EB_TOOL_MANAGER} -- Menus Implementation
+
+	build_edit_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		local
+			i: EV_MENU_ITEM
+		do
+			create i.make_with_text (a_menu, Interface_names.m_Showstops)
+			i.add_select_command (stop_points_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Clear_breakpoints)
+			i.add_select_command (clear_bp_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Enable_stop_points)
+			i.add_select_command (stop_points_status_cmd, stop_points_status_cmd.enable_it)
+
+			create i.make_with_text (a_menu, Interface_names.m_Disable_stop_points)
+			i.add_select_command (stop_points_status_cmd, stop_points_status_cmd.disable_it)
+		end	
+
+	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		local
+			i: EV_MENU_ITEM
+		do
+			create i.make_with_text (a_menu, Interface_names.m_Debug_run)
+			i.add_select_command (debug_run_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Debug_status)
+			i.add_select_command (debug_status_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Up_stack)
+			i.add_select_command (display_exception_cmd, display_exception_cmd.go_up)
+
+			create i.make_with_text (a_menu, Interface_names.m_Down_stack)
+			i.add_select_command (display_exception_cmd, display_exception_cmd.go_down)
+
+			create i.make_with_text (a_menu, Interface_names.m_Debug_quit)
+			i.add_select_command (debug_quit_cmd, debug_quit_cmd.kill_it)
+
+			create i.make_with_text (a_menu, Interface_names.m_Exec_step)
+			i.add_select_command (step_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Exec_last)
+			i.add_select_command (step_out_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Exec_nostop)
+			i.add_select_command (nostop_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Run_finalized)
+			i.add_select_command (run_final_cmd, Void)
+		end
+
+feature -- Commands
+
+	clear_bp_cmd: EB_CLEAR_STOP_POINTS_CMD
+	stop_points_cmd: EB_DEBUG_STOPIN_HOLE_CMD
+	stop_points_status_cmd: EB_STOPPOINTS_STATUS_CMD
+
+
+	debug_run_cmd: EB_DEBUG_RUN_CMD
+	step_out_cmd: EB_EXEC_LAST_CMD
+	step_cmd: EB_EXEC_STEP_CMD
+	nostop_cmd: EB_EXEC_NOSTOP_CMD
+	run_final_cmd: EB_EXEC_FINALIZED_CMD
+	debug_quit_cmd: EB_DEBUG_QUIT_CMD
+	debug_status_cmd: EB_DEBUG_STATUS_CMD
+	display_exception_cmd: EB_DISPLAY_CURRENT_STACK_CMD
 
 end -- class EB_DEBUG_TOOL

@@ -37,8 +37,7 @@ feature -- Final mode
 					rout_id := key_for_iteration;
 					new_unit := feature_i.new_poly_unit (rout_id);
 					new_unit.set_id (id);
-					History_control.add_new
-								(new_unit, rout_id, feature_i.pattern_id);
+					History_control.add_new (new_unit, rout_id, feature_i.pattern_id);
 				end;
 				forth;
 			end;
@@ -51,8 +50,7 @@ feature -- Incrementality
 		require
 			good_argument: other /= Void
 		local
-			id: ROUTINE_ID;
-			f1, f2: FEATURE_I;
+			f2: FEATURE_I;
 		do
 			if other.count = count then
 					-- At least the counts should be the same.
@@ -62,16 +60,14 @@ feature -- Incrementality
 				until
 					after or else not Result
 				loop
-					id := key_for_iteration;
-					f2 := other.item (id);
+					f2 := other.item (key_for_iteration);
 					if f2 = Void then
 						Result := False
 					else
-						f1 := item_for_iteration;
 						check
-							f1.feature_name.is_equal (f2.feature_name);
+							item_for_iteration.feature_name.is_equal (f2.feature_name);
 						end;
-						Result := f1.select_table_equiv (f2);					
+						Result := item_for_iteration.select_table_equiv (f2);					
 					end;
 					forth
 				end;
@@ -84,10 +80,11 @@ feature -- Generation
 			-- Descriptors of class types associated
 			-- with class `c'
 		do
-			!! Result.make (c, count);
+			!! Result.make (c, count)
 			if c.has_invariant then
-				Result.put_invariant (c.invariant_feature);
-			end;
+				Result.put_invariant (c.invariant_feature)
+			end
+
 			from
 				start
 			until
@@ -105,8 +102,8 @@ feature -- Generation
 			desc_list: DESC_LIST
 			desc: DESCRIPTOR
 		do
-			desc_list := descriptors (c);
 			from
+				desc_list := descriptors (c);
 				desc_list.start
 			until
 				desc_list.after
@@ -126,11 +123,8 @@ feature -- Melting
 			-- associated with class `c'.
 			--| (The result is put in the melted 
 			--| descriptor server).
-		local
-			desc_list: DESC_LIST
 		do
-			desc_list := descriptors (c);
-			desc_list.melt
-		end;
+			descriptors (c).melt
+		end
 
 end -- class SELECT_TABLE

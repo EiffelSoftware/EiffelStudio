@@ -103,7 +103,7 @@ feature -- Tool Properties
 
 feature -- Access
 
---	resources: RESOURCE_CATEGORY is
+--	resources: EB_PARAMETERS is
 			-- Resources for current tool
 --		deferred
 --		end
@@ -121,7 +121,7 @@ feature -- Access
 --	associated_help_widget: EV_CONTAINER is
 --			-- Associated parent widget for help window
 --		do
---			Result := popup_parent
+--			Result := parent
 --		end
 
 feature -- Status report
@@ -141,22 +141,27 @@ feature -- Status report
 
 feature -- Status setting
 
-	destroy is
-			-- Destroys tool
-		do
-			manager.destroy_tool
-		end
-
 	show is
 			-- makes tool visible
 		do
 			manager.show_tool
 		end
 
+	raise is
+		do
+			manager.raise_tool
+		end
+
 	hide is
 			-- hides tool
 		do
 			manager.hide_tool
+		end
+
+	destroy is
+			-- Destroys tool
+		do
+			manager.destroy_tool
 		end
 
 	set_title (s: STRING) is
@@ -183,6 +188,13 @@ feature -- Pick and Throw Implementation
 --			unregister
 --		ensure
 --			current_unregistered: not registered
+		end
+
+feature -- Resize
+
+	set_minimum_size (min_x, min_y: INTEGER) is
+		do
+			manager.set_minimum_size (min_x, min_y)
 		end
 
 feature -- Element change
@@ -244,18 +256,18 @@ feature {NONE} -- Implementation
 --			if 
 --				last_warner /= Void and then
 --				not last_warner.destroyed and then
---				last_warner.is_popped_up and then
---				last_warner.is_exclusive_grab 
+--				last_warner.shown and then
+--				last_warner.is_modal 
 --			then
 --				last_warner.raise
 --			elseif 
 --				last_confirmer /= Void and then 
---				last_confirmer.is_popped_up 
+--				last_confirmer.shown
 --			then
 --				last_confirmer.raise
 --			elseif
 --				last_name_chooser /= Void and then
---				last_name_chooser.is_popped_up
+--				last_name_chooser.shown
 --			then
 --				last_name_chooser.raise
 --			else

@@ -115,6 +115,7 @@ feature -- Access
 			l_params: ECOM_ARRAY [PARAMETER_ENUMERATOR]
 			l_overloads_count: INTEGER
 		do
+			target.to_lower
 			l_feature := internal_target_feature (target, location_name, file_name, use_overloading)
 			if l_feature /= Void then
 				l_overloads_count := l_feature.overloads_count + 1
@@ -152,6 +153,7 @@ feature -- Access
 			l_entries: ARRAYED_LIST [COMPLETION_ENTRY]
 			l_class_i: CLASS_I
 		do
+			target.to_lower
 			if location_type = feature {ECOM_EIF_COMPLETION_LOCATION_ENUM}.Eif_completion_location_feature then
                 l_lister := lister (file_name)
 				if l_lister.is_initialized then
@@ -408,10 +410,11 @@ feature -- Basic Operations
 		feature_list: ARRAYED_LIST [COMPLETION_FEATURE]
 	do
 		if not retried then
+			a_name.to_lower
 			l_ci := Eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (a_file_name))
 			if l_ci /= Void then
 				if l_ci.compiled_class /= Void and then l_ci.compiled_class.has_feature_table then
-					l_fi := l_ci.compiled_class.feature_table.item (a_name.as_lower)
+					l_fi := l_ci.compiled_class.feature_table.item (a_name)
 				end
 			end
 			if l_fi = Void then

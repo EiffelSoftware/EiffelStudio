@@ -11,7 +11,7 @@ inherit
 
 	EB_COMMAND_FEEDBACK
 		redefine
-			set_menu_item
+			set_menu_item, set_button
 		end
 
 create
@@ -28,12 +28,21 @@ feature -- Access
 
 	f: EB_FORMATTER
 
+	user_warned : BOOLEAN
+		-- has a confirmation dialog been displayed yet?
+
 feature
 
 	set_menu_item (m: like menu_item) is
 		do
 			precursor (m)
 			m.add_select_command (Current, Void)
+		end
+
+	set_button (b: like button) is
+		do
+			precursor (b)
+			b.add_click_command (Current, Void)
 		end
 
 feature -- Execution
@@ -50,11 +59,12 @@ feature -- Execution
 			else
 				s ?= argument.first
 			end
-			if not f.tool.text_window.changed then
+			if not (f.tool.text_window.changed) or else user_warned then
 --				execute_licensed (s)
 				f.format (s)
 			else
 				create csd.make_and_launch (f.tool, Current, argument)
+				user_warned := True
 			end
 		end
 		

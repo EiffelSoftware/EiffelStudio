@@ -215,6 +215,7 @@ feature {NONE} -- Implementation
 		local
 			dial: EV_DIALOG
 			label: EV_LABEL
+			disp_str_size: EV_TEXT_FIELD
 			minf: EV_TEXT_FIELD
 			maxf: EV_TEXT_FIELD
 			okb: EV_BUTTON
@@ -253,6 +254,23 @@ feature {NONE} -- Implementation
 				maincont.extend (vbox)
 				maincont.disable_item_expand (vbox)
 
+				create sep
+				maincont.extend (sep)
+				maincont.disable_item_expand (sep)
+
+				create disp_str_size.make_with_text (application.displayed_string_size.out)
+				-- Labels and text fields.
+				disp_str_size.set_minimum_width (70)
+				disp_str_size.return_actions.extend (agent minf.set_focus)
+	
+				create hbox
+				create label.make_with_text (Interface_names.l_Max_displayed_string_size)
+				label.align_text_left
+				hbox.extend (label)
+				hbox.extend (disp_str_size)
+				hbox.disable_item_expand (disp_str_size)
+				maincont.extend (hbox)
+			
 				create sep
 				maincont.extend (sep)
 				maincont.disable_item_expand (sep)
@@ -310,7 +328,7 @@ feature {NONE} -- Implementation
 			maxf.set_minimum_width (70)
 			minf.return_actions.extend (agent maxf.set_focus)
 			minf.return_actions.extend (agent maxf.select_all)
-			maxf.return_actions.extend (agent get_limits (minf, maxf, dial))
+			maxf.return_actions.extend (agent get_limits (disp_str_size, minf, maxf, dial))
 
 			create vbox
 			create hbox
@@ -334,7 +352,7 @@ feature {NONE} -- Implementation
 
 				-- Buttons.
 			create okb.make_with_text (Interface_names.b_Ok)
-			okb.select_actions.extend (agent get_limits (minf, maxf, dial))
+			okb.select_actions.extend (agent get_limits (disp_str_size, minf, maxf, dial))
 			create cancelb.make_with_text (Interface_names.b_Cancel)
 			cancelb.select_actions.extend (agent dial.destroy)
 
@@ -497,39 +515,48 @@ feature {NONE} -- Implementation
 			get_effective := True
 		end
 
-	get_limits (minf: EV_TEXT_FIELD; maxf: EV_TEXT_FIELD; dial: EV_DIALOG) is
+	get_limits (disp_str_size: EV_TEXT_FIELD; minf: EV_TEXT_FIELD; maxf: EV_TEXT_FIELD; dial: EV_DIALOG) is
 			-- Set `slice_min' and `slice_max' according to the values entered
 			-- in `minf' and `maxf'.
 		require
 			minf_not_void: minf /= Void
 			maxf_not_void: maxf /= Void
 		local
-			str1, str2: STRING
+			str1, str2, str3: STRING
 			errd: EV_WARNING_DIALOG
 			ok: BOOLEAN
 		do
 			ok := True
-			str1 := minf.text
-			if not str1.is_integer then
+			if disp_str_size /= Void then
+				str1 := disp_str_size.text
+				if not str1.is_integer then
+					create errd.make_with_text (Warning_messages.w_Not_an_integer)
+					disp_str_size.select_all
+					errd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					ok := False
+				end
+			end
+			str2 := minf.text
+			if not str2.is_integer then
 				create errd.make_with_text (Warning_messages.w_Not_an_integer)
 				minf.select_all
 				errd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				ok := False
 			end
-			str2 := maxf.text
-			if not str2.is_integer then
+			str3 := maxf.text
+			if not str3.is_integer then
 				create errd.make_with_text (Warning_messages.w_Not_an_integer)
 				maxf.select_all
 				errd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				ok := False
 			end
 			if ok then
-				internal_set_limits (str1.to_integer, str2.to_integer)
+				if str1 /= Void then
+					application.set_displayed_string_size (str1.to_integer)
+				end
+				internal_set_limits (str2.to_integer, str3.to_integer)
 				dial.destroy
 			end
 		end
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class EB_SET_SLICE_SIZE_CMD

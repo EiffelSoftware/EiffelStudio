@@ -168,6 +168,9 @@ feature -- Basic Operation
 		do
 			Result := clone (a_comment)
 			Result.replace_substring_all ("%N", "")
+			Result.prune_all_leading (' ')
+			Result.prune_all_trailing (' ')
+			Result.replace_substring_all ("   ", " ")
 			Result.replace_substring_all ("   ", " ")
 			Result.replace_substring_all ("  ", " ")
 			Result.replace_substring_all (paragraphe_tag, "%N")

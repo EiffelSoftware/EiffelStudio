@@ -74,6 +74,7 @@ feature -- Initialization
 					loop
 						feature_name := creation_feature_list.item.internal_name
 						Result.extend (feat_table.item (feature_name))
+						Result.forth
 						creation_feature_list.forth
 					end
 				end

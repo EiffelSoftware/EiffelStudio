@@ -107,6 +107,7 @@ end;
 				after
 			loop
 				Result.extend (item.supplier);
+				Result.forth
 				forth
 			end
 		end;

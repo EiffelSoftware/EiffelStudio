@@ -133,8 +133,8 @@ end;
 						temp.append (Executable_suffix);
 						application_name.set_file_name (temp);
 
-						!!uf.make (application_name.path);
-						!!make_f.make (makefile_sh_name.path);
+						!!uf.make (application_name);
+						!!make_f.make (makefile_sh_name);
 						if uf.exists then
 							if make_f.exists and then make_f.date > uf.date then
 									-- The Makefile file is more recent than the application
@@ -142,7 +142,7 @@ end;
 										w_Makefile_more_recent (Makefile_SH), 
 										" OK ", Void, "Cancel")
 							else
-								temp := clone (application_name.path);
+								temp := clone (application_name);
 								temp.extend (' ');
 								temp.append (argument_window.argument_list);
 								run_request.set_application_name (temp);

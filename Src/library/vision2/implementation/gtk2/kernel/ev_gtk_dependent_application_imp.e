@@ -271,6 +271,15 @@ feature -- Implementation
 		
 	default_gtk_window: POINTER is deferred end
 
+	gdk_cursor_from_pixmap (a_cursor: EV_CURSOR): POINTER is
+			-- Return a GdkCursor constructed from `a_cursor'
+		local
+			a_cursor_imp: EV_PIXMAP_IMP
+		do
+			a_cursor_imp ?= a_cursor.implementation
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_cursor_new_from_pixbuf (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_display_get_default, a_cursor_imp.pixbuf_from_drawable, a_cursor.x_hotspot, a_cursor.y_hotspot)
+		end
+
 feature {NONE} -- Externals
 
 	retrieve_available_fonts (a_widget: POINTER; name_array: TYPED_POINTER [POINTER]; number_elements: TYPED_POINTER [INTEGER]) is

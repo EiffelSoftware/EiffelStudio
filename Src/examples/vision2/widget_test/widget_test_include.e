@@ -33,6 +33,7 @@ feature {NONE} -- Implementation
 			check_button_select_actions_test: CHECK_BUTTON_SELECT_ACTIONS_TEST
 			combo_box_simple_test: COMBO_BOX_SIMPLE_TEST
 			list_basic_test: LIST_BASIC_TEST
+			list_pixmap_test: LIST_PIXMAP_TEST
 			password_field_basic_test: PASSWORD_FIELD_BASIC_TEST
 			password_field_validate_entry_test: PASSWORD_FIELD_VALIDATE_ENTRY_TEST
 			toggle_button_is_toggled_test: TOGGLE_BUTTON_IS_SELECTED_TEST
@@ -45,6 +46,7 @@ feature {NONE} -- Implementation
 			viewport_small_item_move_test: VIEWPORT_OFFSET_TEST
 			table_single_child: TABLE_SINGLE_CHILD_TEST
 			table_three_children_test: TABLE_THREE_CHILDREN_TEST
+			table_many_children_test: TABLE_MANY_CHILDREN_TEST
 			table_spacing_test: TABLE_SPACING_TEST
 			radio_button_basic_test: RADIO_BUTTON_BASIC_TEST
 			radio_button_multiple_test: RADIO_BUTTON_MULTIPLE_TEST
@@ -52,6 +54,27 @@ feature {NONE} -- Implementation
 			radio_button_selected_test: RADIO_BUTTON_SELECTED_TEST
 			horizontal_separator_basic_test: HORIZONTAL_SEPARATOR_BASIC_TEST
 			vertical_separator_basic_test: VERTICAL_SEPARATOR_BASIC_TEST
+			horizontal_progress_bar_simple_test: HORIZONTAL_PROGRESS_BAR_SIMPLE_TEST
+			vertical_progress_bar_simple_test: VERTICAL_PROGRESS_BAR_SIMPLE_TEST
+			horizontal_progress_bar_adjusting_test: HORIZONTAL_PROGRESS_BAR_ADJUSTING_TEST
+			vertical_progress_bar_adjusting_test: VERTICAL_PROGRESS_BAR_ADJUSTING_TEST
+			horizontal_range_bar_simple_test: HORIZONTAL_RANGE_SIMPLE_TEST
+			vertical_range_bar_simple_test: VERTICAL_RANGE_SIMPLE_TEST
+			horizontal_range_bar_adjusting_test: HORIZONTAL_RANGE_ADJUSTING_TEST
+			vertical_range_bar_adjusting_test: VERTICAL_RANGE_ADJUSTING_TEST
+			horizontal_scroll_bar_bar_simple_test: HORIZONTAL_SCROLL_BAR_SIMPLE_TEST
+			vertical_scroll_bar_bar_simple_test: VERTICAL_SCROLL_BAR_SIMPLE_TEST
+			horizontal_scroll_bar_bar_adjusting_test: HORIZONTAL_SCROLL_BAR_ADJUSTING_TEST
+			vertical_scroll_bar_bar_adjusting_test: VERTICAL_SCROLL_BAR_ADJUSTING_TEST
+			tree_basic_test: TREE_BASIC_TEST
+			tree_expand_test: TREE_EXPAND_TEST
+			tree_dynamic_test: TREE_DYNAMIC_TEST
+			tree_pixmap_test: TREE_PIXMAP_TEST
+			
+			
+			
+			--| FIXME remove
+			--table_testing_test: TABLE_TESTING_TEST
 		do
 		end
 

@@ -81,13 +81,13 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 			s := Arrow_size + line_width
 			if end_arrow /= Void then
 				end_draw_point.set_x (line_width)
-				end_arrow.i_th_point (1).set_position (s, -s // 2)
-				end_arrow.i_th_point (3).set_position (s, s // 2)
+				end_arrow.i_th_point (1).set_position (-s, -s // 2)
+				end_arrow.i_th_point (3).set_position (-s, s // 2)
 			end
 			if start_arrow /= Void then
 				start_draw_point.set_x (-line_width)
-				start_arrow.i_th_point (1).set_position (s, -s // 2)
-				start_arrow.i_th_point (3).set_position (s, s // 2)
+				start_arrow.i_th_point (1).set_position (-s, -s // 2)
+				start_arrow.i_th_point (3).set_position (-s, s // 2)
 			end
 		end
 
@@ -140,14 +140,14 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 	start_angle: DOUBLE is
 			-- Angle that line begins on relative to world.
 		do
-			Result := line_angle (start_point.x_abs, start_point.y_abs,
+			Result := 2 * Pi - line_angle (start_point.x_abs, start_point.y_abs,
 				end_point.x_abs, end_point.y_abs)
 		end
 
 	end_angle: DOUBLE is
 			-- Angle that line ends on relative to world.
 		do
-			Result := Pi + line_angle (start_point.x_abs, start_point.y_abs,
+			Result := Pi - line_angle (start_point.x_abs, start_point.y_abs,
 				end_point.x_abs, end_point.y_abs)
 		end
 

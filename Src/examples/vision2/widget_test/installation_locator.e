@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	location: STRING is
+	installation_location: STRING is
 			-- Location of installation.
 			-- `Void' if environment variables not correctly set.
 		local

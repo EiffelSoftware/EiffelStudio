@@ -47,6 +47,15 @@ feature -- Status report
 
 	empty: BOOLEAN is
 			-- Is Curren tuple empty?
+		obsolete
+			"Please use `is_empty' instead to remain %
+			%consistant with CONTAINER `is_empty' feature."
+		do
+			Result := is_empty
+		end
+
+	is_empty: BOOLEAN is
+			-- Is Curren tuple empty?
 		do
 			if implementation = Void then
 				Result := true	

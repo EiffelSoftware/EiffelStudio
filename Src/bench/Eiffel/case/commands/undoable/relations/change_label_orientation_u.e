@@ -11,9 +11,40 @@ inherit
 
 	UNDOABLE_EFC
 
+	EV_COMMAND
+
 creation
 
 	make
+
+
+feature -- Initialization
+
+	make (a_link: like link; vertical: BOOLEAN; reverse_capability: BOOLEAN) is
+			-- Change the orientation of 'link' label
+		require
+			has_link : a_link /= Void
+		do
+			set_watch_cursor
+			link := a_link
+			reverse := reverse_capability
+			vertical_text := vertical
+			record
+			redo
+			restore_cursor
+		ensure
+			link_correctly_set : link = a_link
+			reverse_correctly_set : reverse = reverse_capability
+			side_correctly_set : vertical_text = vertical
+		end
+
+feature -- Execution
+
+	execute (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Execute Current command.
+		do
+			redo
+		end
 
 feature -- Property
 
@@ -53,21 +84,22 @@ feature -- Update
 	undo is
 		do
 			redo
-		end -- undo
+		end
 
 feature {NONE} -- Implementation
 
 	update is
 			-- Update the relation window corresponding to 'link'
-		local
-			relation_window : EC_RELATION_WINDOW
+		--local
+		--	relation_window : EC_RELATION_WINDOW
 		do
-			relation_window := windows.relation_window (link);
-			if relation_window /= Void then
-				relation_window.update_label_orientation
-			end;
-			workareas.refresh;
-			System.set_is_modified
+		--	relation_window := windows.relation_window (link);
+		--	if relation_window /= Void then
+		--		relation_window.update_label_orientation
+		--	end;
+		--	workareas.refresh;
+		--	System.set_is_modified
+			observer_management.update_observer(link)
 		end -- update
 
 feature {NONE} -- Implementation property
@@ -80,24 +112,6 @@ feature {NONE} -- Implementation property
 
 	reverse: BOOLEAN
 
-feature -- Initialization
-
-	make (a_link: like link; vertical: BOOLEAN; reverse_capability: BOOLEAN) is
-			-- Change the orientation of 'link' label
-		require
-			has_link : a_link /= Void
-		do
-			set_watch_cursor;
-			link := a_link;
-			reverse := reverse_capability;
-			vertical_text := vertical;
-			record;
-			redo;
-			restore_cursor;
-		ensure
-			link_correctly_set : link = a_link;
-			reverse_correctly_set : reverse = reverse_capability;
-			side_correctly_set : vertical_text = vertical
-		end -- make
-
+invariant
+	CHANGE_LABEL_ORIENTATION_U_link_exists: link /= Void
 end -- class CHANGE_LABEL_ORIENTATION_U

@@ -23,18 +23,18 @@ feature -- Initialization
 		require
 			has_link : a_link /= Void
 		do
-			set_watch_cursor;
-			link := a_link;
-			value := a_value;
-			reverse := reverse_capability;
-			history.record (Current);
-			redo;
-			restore_cursor;
+			set_watch_cursor
+			link := a_link
+			value := a_value
+			reverse := reverse_capability
+			history.record (Current)
+			redo
+			restore_cursor
 		ensure
 			link_correctly_set : link = a_link;
 			value_correctly_set : value = a_value;
 			reverse_correctly_set : reverse = reverse_capability
-		end -- make
+		end
 
 feature -- Properties
 
@@ -52,7 +52,7 @@ feature -- Update
 	redo is
 			-- Re-execute command (after it was undone)
 		do
-			unshared;
+			unshared
 			update
 		end; -- redo
 

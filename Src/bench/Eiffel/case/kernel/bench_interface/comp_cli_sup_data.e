@@ -22,7 +22,8 @@ inherit
 			symbol
 		select
 			put_in_system, remove_from_system
-		end;
+		end
+
 	CLI_SUP_DATA
 		rename
 			make_ref as client_make_ref,

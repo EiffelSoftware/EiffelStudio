@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class MOVE_LABEL_U
+class MOVE_LABEL_U 
 
 inherit
 
@@ -25,26 +25,23 @@ feature -- Initialization
 			has_link: a_link /= Void
 			valid_r: r >= 0 and then r <= 1
 		do
-			set_watch_cursor;
+			set_watch_cursor
 			ratio := r
-			link := a_link;
-			reverse := reverse_capability;
-			left_side := on_left_side;
-			from_handle_nbr := from_h_nbr;
-			record;
-			redo;
-			restore_cursor;
-
+			link := a_link
+			reverse := reverse_capability
+			left_side := on_left_side
+			from_handle_nbr := from_h_nbr
+			record
+			redo
+			restore_cursor
+			observer_management.update_observer(a_link)
 		ensure
-			link_correctly_set:      link = a_link;
-			reverse_correctly_set:   reverse = reverse_capability;
-			
+			link_correctly_set:      link = a_link
+			reverse_correctly_set:   reverse = reverse_capability
 			link_side_set:  (not reverse) implies (link.is_left_position = on_left_side) 
 			reverse_link_side_set: reverse implies (link.is_reverse_left_position = on_left_side) 
-
 			link_from_ratio_set: (not reverse) implies (link.label.from_ratio = r) 
 			reverse_link_fom_ratio_set: reverse implies (link.reverse_label.from_ratio = r) 
-
 			link_from_handle_nbr_set: (not reverse) implies (link.label.from_handle_nbr = from_h_nbr)
 			reverse_link_from_handle_nbr_set: reverse implies (link.reverse_label.from_handle_nbr = from_h_nbr)
 		end 
@@ -70,13 +67,13 @@ feature -- Setting
 				move_reverse
 			else
 				move_not_reverse
-			end;
+			end
 			update 
-		end;
+		end
 
 feature {NONE} -- Implementation properties
 
-	from_handle_nbr: INTEGER;
+	from_handle_nbr: INTEGER
 			-- From handle nbr for label
 
 	ratio: REAL
@@ -96,29 +93,29 @@ feature {NONE} -- Implementation setting
 		do
 			-- Save old state of link:
 
-			old_left_side := link.is_left_position;
-			old_ratio := link.label.from_ratio;
-			old_from_handle_nbr := link.label.from_handle_nbr;
+			old_left_side := link.is_left_position
+			old_ratio := link.label.from_ratio
+			old_from_handle_nbr := link.label.from_handle_nbr
 
 			-- Move label:
 
 			if left_side /= link.is_left_position then
 				link.change_label_position
-			end;
+			end
 			link.label.set_from_ratio (ratio)
 			link.label.set_from_handle_nbr (from_handle_nbr)
 
 			-- Retrieve old state of link (for future undos):
 
-			ratio := old_ratio;
-			from_handle_nbr := old_from_handle_nbr;
-			left_side := old_left_side;
+			ratio := old_ratio
+			from_handle_nbr := old_from_handle_nbr
+			left_side := old_left_side
 
 		ensure 
 			side_set: left_side = old link.is_left_position
 			ratio_set: ratio = old link.label.from_ratio
 			from_handle_nbr_set: from_handle_nbr = old link.label.from_handle_nbr
-		end; 
+		end 
 
 	move_reverse is 
 			-- Move reverse label.

@@ -864,11 +864,11 @@ feature -- Removal
 
 	remove_from_system is
 			-- Remove the linkable from system.
-		require
-			is_in_system: is_in_system
+		--require
+		--	is_in_system: is_in_system
 		deferred
-		ensure
-			not_in_system: not is_in_system
+		--ensure
+		--	not_in_system: not is_in_system
 		end -- remove_from_system
 
 

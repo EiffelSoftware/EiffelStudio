@@ -2,7 +2,8 @@ class CHANGE_LABEL_OFFSET_U
 
 inherit
 
-	UNDOABLE_EFC;
+	UNDOABLE_EFC
+
 	EC_COMMAND
 		redefine
 			is_template

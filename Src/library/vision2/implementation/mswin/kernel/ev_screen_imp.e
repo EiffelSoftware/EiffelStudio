@@ -74,6 +74,30 @@ feature -- Basic operation
 			--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
 		end
 
+	fake_pointer_button_press (a_button: INTEGER) is
+			-- Simulate the user pressing a `a_button' on the pointing device.
+		do
+			check fixme:false end
+		end
+
+	fake_pointer_button_release (a_button: INTEGER) is
+			-- Simulate the user releasing a `a_button' on the pointing device.
+		do
+			check fixme:false end
+		end
+
+	fake_key_press (a_key: EV_KEY) is
+			-- Simulate the user pressing a `key'.
+		do
+			check fixme:false end
+		end
+
+	fake_key_release (a_key: EV_KEY) is
+			-- Simulate the user releasing a `key'.
+		do
+			check fixme:false end
+		end
+
 feature -- Measurement
 
 	width: INTEGER is
@@ -125,6 +149,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/11 21:11:22  brendel
+--| IEK -- Added unimplemented pointer manipulation stubs.
+--|
 --| Revision 1.8  2000/04/06 23:26:59  oconnor
 --| added implementation comments and new fake event features
 --|

@@ -31,6 +31,19 @@ void get_argcargv (int *argc, char ***argv)
 	int tl;
 
 	temp = strdup (GetCommandLine());
+
+
+		/* Only for EiffelBench: Do Not Remove
+		 * Add a `\0' just before the string which contains the "pipes" that
+		 * have been uuencoded, so that we are only giving the command line arguments
+		 * that EiffelBench needs 
+		 */
+	tl = strlen (temp);
+	if ((tl > 16) && (temp[tl-1] == '"') && (temp[tl-2] == '?') &&
+			(temp[tl-16] == '"') && (temp[tl-15] == '?') && (temp[tl-17] == ' ')) {
+		temp[tl-17] = '\0';
+	}
+
 	local_argv = shword (temp);
 	*argv = local_argv;
 

@@ -32,7 +32,7 @@ feature -- Access
 			a_row_positive: a_row > 0
 			a_row_not_greater_than_row_count: a_row <= row_count
 		do
-			Result := row_internal (a_row)
+			Result := row_internal (a_row).interface
 		ensure
 			row_not_void: Result /= Void
 		end
@@ -43,7 +43,7 @@ feature -- Access
 			a_column_positive: a_column > 0
 			a_column_not_greater_than_column_count: a_column <= column_count
 		do
-			Result := column_internal (a_column)
+			Result := column_internal (a_column).interface
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -72,7 +72,7 @@ feature -- Access
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
 		local
-			a_grid_row: EV_GRID_ROW
+			a_grid_row: EV_GRID_ROW_I
 			grid_row: SPECIAL [EV_GRID_ITEM_I]
 			a_item: EV_GRID_ITEM
 			a_grid_column_i: EV_GRID_COLUMN_I
@@ -453,7 +453,7 @@ feature -- Element change
 			i_less_than_row_count: i <= row_count
 			j_less_than_row_count: j <= row_count
 		local
-			a_row: EV_GRID_ROW
+			a_row: EV_GRID_ROW_I
 			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 		do
 				--Retrieve row at position `i' and remove from list
@@ -463,7 +463,7 @@ feature -- Element change
 			
 				-- Insert retrieved row at position `j'
 			grid_rows.go_i_th (j)
-			grid_rows.put_left (a_row.implementation)
+			grid_rows.put_left (a_row)
 			
 			internal_row_data.go_i_th (i)
 			a_row_data := internal_row_data.item
@@ -486,7 +486,7 @@ feature -- Element change
 			i_less_than_column_count: i <= column_count
 			j_less_than_column_count: j <= column_count
 		local
-			a_col: EV_GRID_COLUMN
+			a_col: EV_GRID_COLUMN_I
 		do
 				--Retrieve column at position `i' and remove from list
 			a_col := column_internal (i)
@@ -495,7 +495,7 @@ feature -- Element change
 			
 				-- Insert retrieved column at position `j'
 			grid_columns.go_i_th (j)
-			grid_columns.put_left (a_col.implementation)
+			grid_columns.put_left (a_col)
 			
 				-- Remove column from header and insert at the appropriate position
 			fixme ("EV_GRID_I:move_column  add column header removal and redraw")
@@ -517,8 +517,8 @@ feature -- Element change
 			a_item.implementation.set_parent_grid_i (Current)
 			
 				-- Create the corresponding row and column if not already present
-			a_grid_col_i :=  column_internal (a_column).implementation
-			a_grid_row_i := row_internal (a_row).implementation
+			a_grid_col_i :=  column_internal (a_column)
+			a_grid_row_i := row_internal (a_row)
 
 			a_row_data := internal_row_data @ a_row
 			if a_row_data.count < a_grid_col_i.physical_index + 1 then
@@ -540,7 +540,7 @@ feature -- Removal
 			a_col_i: EV_GRID_COLUMN_I
 			a_physical_index: INTEGER
 		do
-			a_col_i := column_internal (a_column).implementation
+			a_col_i := column_internal (a_column)
 			a_physical_index := a_col_i.physical_index
 			
 			grid_columns.go_i_th (a_column)
@@ -565,7 +565,7 @@ feature -- Removal
 			a_row_i: EV_GRID_ROW_I
 		do
 				-- Retrieve row from the grid
-			a_row_i := row_internal (a_row).implementation
+			a_row_i := row_internal (a_row)
 			
 			grid_rows.go_i_th (a_row)
 			grid_rows.remove
@@ -1304,7 +1304,7 @@ feature {NONE} -- Implementation
 			internal_row_data.put_i_th (a_row, a_index)
 		end
 
-	column_internal (a_column: INTEGER): EV_GRID_COLUMN is
+	column_internal (a_column: INTEGER): EV_GRID_COLUMN_I is
 			-- Column number `a_column', returns a new column if it doesn't exist
 		require
 			a_column_positive: a_column > 0
@@ -1319,12 +1319,12 @@ feature {NONE} -- Implementation
 				add_column_at (a_column, True)
 				a_col_i := grid_columns @ a_column
 			end
-			Result := a_col_i.interface
+			Result := a_col_i
 		ensure
 			column_not_void: Result /= Void
 		end
 
-	row_internal (a_row: INTEGER): EV_GRID_ROW is
+	row_internal (a_row: INTEGER): EV_GRID_ROW_I is
 			-- Row `a_row',  creates a new one if it doesn't exist
 		require
 			a_row_positive: a_row > 0
@@ -1338,7 +1338,7 @@ feature {NONE} -- Implementation
 				add_row_at (a_row, True)
 				a_row_i := grid_rows @ a_row
 			end
-			Result := a_row_i.interface
+			Result := a_row_i
 		ensure
 			row_not_void: Result /= Void
 		end

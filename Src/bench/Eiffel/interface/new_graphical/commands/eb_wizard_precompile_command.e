@@ -71,20 +71,4 @@ feature {NONE} -- Implementation
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-feature {NONE} -- Private constants
-
-	precompilation_wizard_command_name: FILE_NAME is
-			-- Command to be executed to launch the precompilation wizard.
-		do
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"bench", "wizards", "precompile", "spec", Eiffel_platform, "bin">>)
-			Result.set_file_name ("wizard")
-		end
-
-	precompilation_wizard_resources_directory: DIRECTORY_NAME is
-		do
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"bench", "wizards", "precompile">>)
-		end
-
 end -- class EB_WIZARD_PRECOMPILE_COMMAND

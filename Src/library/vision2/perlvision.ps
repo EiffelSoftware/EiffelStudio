@@ -3,6 +3,7 @@
 #Use find . -name "*.e" -print | xargs perl testscript.ps 
 
 $num_files = $#ARGV;
+$files_processed = 0;
 
 print ("\nEiffelVision2 Library Cleanser\n");
 $temp = $num_files + 1;
@@ -13,9 +14,10 @@ for ($x = 0; $x <= $num_files; $x++)
 {
 if (-T $ARGV[$x] )
 {
+$files_processed++;
 print ("\nProcessing ");
 print $ARGV[$x];
-print ("\nCleansing :");
+print ("\nCleansing ");
 
 open(DATA, $ARGV[$x]);
 @file_lines = <DATA>;
@@ -58,5 +60,6 @@ $a =~ s/create  /create /;
 $a =~ s/Windows Eiffel Library/EiffelVision2/;
 $a;
 }
-
+print("\nNumber of classes processed: ");
+print $files_processed;
 print ("\n");

@@ -18,8 +18,6 @@ creation
 
 feature {NONE} 
 
-	namer_window: NAMER_WINDOW;
-
 	focus_string: STRING is
 		do
 			Result := Focus_labels.namer_label
@@ -35,9 +33,9 @@ feature {NONE}
 			Result := Pixmaps.namer_pixmap
 		end;
 
-	make (namer:  NAMER_WINDOW; a_parent: COMPOSITE) is
+	make (a_parent: COMPOSITE) is
+			-- Make Current
 		do
-			namer_window := namer;	
 			make_visible (a_parent);
 			initialize_transport
 		end;

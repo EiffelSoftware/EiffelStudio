@@ -7,11 +7,6 @@ inherit
 	
 feature 
 
-	namer_window: NAMER_WINDOW is
-		once
-			!! Result.make (Eb_screen)
-		end;
-
 	execute (arg: ANY) is
 		local
 			stone: STONE;

@@ -18,6 +18,10 @@
 		<Name >constants_dialog_title</Name>
 		<Value >Constants</Value>
 		</Constant>
+	<Constant ><type >INTEGER</type>
+		<Name >default_button_width</Name>
+		<Value >80</Value>
+		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >next_tip_text</Name>
 		<Value >Next tip</Value>
@@ -27,8 +31,16 @@
 		<Value >Project Configuration</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
+		<Name >new_button_add_text</Name>
+		<Value >Add</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
 		<Name >tip_of_day_dialog_title</Name>
 		<Value >Tip of the Day</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >new_button_text</Name>
+		<Value >New...</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >small_padding</Name>
@@ -38,9 +50,9 @@
 		<Name >pixmap_settings_dialog_title</Name>
 		<Value >Pixmap Selection</Value>
 		</Constant>
-	<Constant ><type >INTEGER</type>
-		<Name >default_button_width</Name>
-		<Value >80</Value>
+	<Constant ><type >STRING</type>
+		<Name >modify_button_text</Name>
+		<Value >Modify</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >ok_button_text</Name>
@@ -49,6 +61,10 @@
 	<Constant ><type >INTEGER</type>
 		<Name >large_spacing_width</Name>
 		<Value >12</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >remove_button_text</Name>
+		<Value >Remove</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >cancel_button_text</Name>
@@ -463,24 +479,15 @@
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
 								</item>
-							<item type="EV_CELL"><Internal_properties ><id >34</id>
-									<name >new_button_holder</name>
-									<Expanded >0</Expanded>
-									</Internal_properties>
-								<EV_COLORIZABLE />
-								<EV_SENSITIVE />
-								<EV_WIDGET />
-								<EV_PIXMAPABLE />
-								<EV_CONTAINER />
-								</item>
-							<item type="EV_BUTTON"><Internal_properties ><id >35</id>
-									<name >add_button</name>
+							<item type="EV_BUTTON"><Internal_properties ><id >34</id>
+									<name >new_button</name>
 									<Expanded >0</Expanded>
 									</Internal_properties>
 								<EV_COLORIZABLE />
 								<EV_FONTABLE />
 								<EV_SENSITIVE />
-								<EV_TEXTABLE ><Text >Add</Text>
+								<EV_TEXTABLE ><Text ><Constant >new_button_text</Constant>
+										</Text>
 									</EV_TEXTABLE>
 								<EV_TOOLTIPABLE />
 								<EV_WIDGET ><Minimum_width ><Constant >default_button_width</Constant>
@@ -488,7 +495,26 @@
 									</EV_WIDGET>
 								<EV_TEXT_ALIGNABLE />
 								<EV_PIXMAPABLE />
-								<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES add_constant</Event>
+								<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES new_button_selected</Event>
+									</Events>
+								</item>
+							<item type="EV_BUTTON"><Internal_properties ><id >35</id>
+									<name >modify_button</name>
+									<Expanded >0</Expanded>
+									</Internal_properties>
+								<EV_COLORIZABLE />
+								<EV_FONTABLE />
+								<EV_SENSITIVE />
+								<EV_TEXTABLE ><Text ><Constant >modify_button_text</Constant>
+										</Text>
+									</EV_TEXTABLE>
+								<EV_TOOLTIPABLE />
+								<EV_WIDGET ><Minimum_width ><Constant >default_button_width</Constant>
+										</Minimum_width>
+									</EV_WIDGET>
+								<EV_TEXT_ALIGNABLE />
+								<EV_PIXMAPABLE />
+								<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES modify_button_selected</Event>
 									</Events>
 								</item>
 							<item type="EV_BUTTON"><Internal_properties ><id >36</id>
@@ -499,7 +525,8 @@
 								<EV_FONTABLE />
 								<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
 									</EV_SENSITIVE>
-								<EV_TEXTABLE ><Text >Remove</Text>
+								<EV_TEXTABLE ><Text ><Constant >remove_button_text</Constant>
+										</Text>
 									</EV_TEXTABLE>
 								<EV_TOOLTIPABLE />
 								<EV_WIDGET ><Minimum_width ><Constant >default_button_width</Constant>

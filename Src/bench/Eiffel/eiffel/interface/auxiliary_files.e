@@ -668,7 +668,7 @@ feature -- Plug and Makefile file
 			end
 
 			buffer.putstring ("%N%Tegc_system_name = %"")
-			buffer.putstring (System.system_name)
+			buffer.putstring (System.name)
 			buffer.putstring ("%";%N%Tegc_system_location = %"")
 			if context.final_mode then
 				buffer.putstring ((create {STRING_CONVERTER}).escaped_string (Final_generation_path))

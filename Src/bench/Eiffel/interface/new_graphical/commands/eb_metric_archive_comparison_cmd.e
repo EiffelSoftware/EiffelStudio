@@ -426,7 +426,7 @@ feature -- Action
 						end
 						file.close
 						right_file := (root_name /= Void and then equal (root_name, "ARCHIVE")) and
-									(system_name /= Void and then equal (system_name, tool.System.system_name))
+									(system_name /= Void and then equal (system_name, tool.System.name))
 						if right_file then
 							create confirm_dialog.make_with_text_and_actions (
 											"System name in selected file%N%
@@ -658,7 +658,7 @@ feature -- Action
 				directory.create_dir
 			end
 			file_name.set_subdirectory ("Metrics")
-			file_name.extend (tool.System.system_name + "_transfered_archive")
+			file_name.extend (tool.System.name + "_transfered_archive")
 			file_name.add_extension ("xml")
 			
 			create file.make (file_name)
@@ -720,7 +720,7 @@ feature -- Action
 		do
 			if not retried then
 				create archive_header.make_root ("ARCHIVE")
-				create xml_attribute.make ("System", tool.System.system_name)
+				create xml_attribute.make ("System", tool.System.name)
 				archive_header.attributes.add_attribute (xml_attribute)
 				metric_header := tool.file_manager.metric_header
 				archive_header.put_last (metric_header)

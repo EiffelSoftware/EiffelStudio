@@ -101,7 +101,7 @@ feature -- Generation
 
 				if not class_c.is_external then
 					name := pascal_casing (name, upper_case)
-					full_name := System.system_name + "." + class_c.cluster.cluster_name
+					full_name := System.name + "." + class_c.cluster.cluster_name
 					full_name := namespace_casing (full_name)
 					full_name.append_character ('.')
 				end

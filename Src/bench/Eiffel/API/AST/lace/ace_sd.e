@@ -233,7 +233,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			-- Analysis in order to build the universe
 		do
 
-			System.set_system_name (system_name);
+			System.set_name (system_name);
 
 				-- Initialization
 			Use_properties.clear_all;

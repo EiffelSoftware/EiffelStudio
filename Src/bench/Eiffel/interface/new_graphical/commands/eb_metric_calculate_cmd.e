@@ -269,7 +269,7 @@ feature -- Displayed messages in text form.
 
 			when System_scope then
 				a_scope.set_system_i (sys)
-				Result := sys.system_name
+				Result := sys.name
 			end
 		ensure
 			something_selected: Result /= Void and then not Result.is_empty

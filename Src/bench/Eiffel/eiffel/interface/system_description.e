@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	system_name: STRING;
+	name: STRING;
 			-- System name
 
 	root_cluster: CLUSTER_I;
@@ -79,10 +79,10 @@ feature -- Update
 			extended: debug_clauses.has (st)
 		end
 
-	set_system_name (s: STRING) is
+	set_name (s: STRING) is
 			-- Assign `s' to `system_name'.
 		do
-			system_name := s
+			name := s
 		end
 
 	set_root_cluster (c: CLUSTER_I) is

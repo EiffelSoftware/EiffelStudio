@@ -115,7 +115,7 @@ feature
 	system_name: STRING is
 			-- Name of executable
 		do
-			Result := System.system_name
+			Result := System.name
 		end
 
 feature -- Object basket managment
@@ -350,7 +350,7 @@ feature -- Actual generation
 			create system_baskets.make (1, 0)
 			create object_baskets.make (1, 1)
 			create basket.make
-			basket.extend (System.system_name + ".o")
+			basket.extend (System.name + ".o")
 			object_baskets.put (basket, 1)
 
 			make_file := make_f (system.in_final_mode)

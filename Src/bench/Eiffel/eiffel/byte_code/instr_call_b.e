@@ -42,6 +42,7 @@ feature
 			-- Generate byte code for an intruction call
 		do
 			call.make_byte_code (ba);
+			make_breakable (ba);
 		end;
 
 end

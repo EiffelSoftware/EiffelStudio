@@ -80,16 +80,41 @@ feature -- Access
 
 feature -- IL code generation
 
+	generate_il_put_preparation (array_type: CL_TYPE_I) is
+			-- Generate preparation to `put' calls in case of expanded elements.
+		require
+			has_generics: type.true_generics /= Void
+			good_generic_count: type.true_generics.count = 1
+			array_type_not_void: array_type /= Void
+		local
+			gen_param: TYPE_I
+			cl_type: CL_TYPE_I
+			generic_type_id: INTEGEr
+		do
+			if first_generic.is_true_expanded then
+				gen_param ?= array_type.true_generics.item (1)
+				cl_type ?= gen_param
+				if cl_type /= Void then
+					generic_type_id := cl_type.associated_class_type.static_type_id
+				else
+						-- Most likely it is a formal. We do not handle this
+						-- case correctly yet.
+					generic_type_id := system.system_object_class.compiled_class.
+						types.first.static_type_id	
+				end
+				Il_generator.generate_array_write_preparation (generic_type_id)
+			end
+		end
 	generate_il (name_id: INTEGER; array_type: CL_TYPE_I) is
 			-- Generate call to `name_id' from NATIVE_ARRAY.
 		require
 			valid_name_id: name_id > 0
 			has_generics: type.true_generics /= Void
 			good_generic_count: type.true_generics.count = 1
+			array_type_not_void: array_type /= Void
 		local
 			gen_param: TYPE_I
 			cl_type: CL_TYPE_I
-			ref: REFERENCE_I
 			is_expanded: BOOLEAN
 			type_c: TYPE_C
 			type_kind: INTEGER
@@ -98,6 +123,18 @@ feature -- IL code generation
 			gen_param := first_generic
 			is_expanded := gen_param.is_true_expanded
 			type_c := gen_param.c_type
+
+				-- Find real type of ARRAY.
+			gen_param ?= array_type.true_generics.item (1)
+			cl_type ?= gen_param
+			if cl_type /= Void then
+				generic_type_id := cl_type.associated_class_type.static_type_id
+			else
+					-- Most likely it is a formal. We do not handle this
+					-- case correctly yet.
+				generic_type_id := system.system_object_class.compiled_class.
+					types.first.static_type_id	
+			end
 
 			if not is_expanded then
 				inspect
@@ -125,56 +162,45 @@ feature -- IL code generation
 				else
 					type_kind := il_ref
 				end
+			else
+				type_kind := il_expanded
+			end
 
-				ref ?= gen_param
+			inspect
+				name_id
 
-				inspect
-					name_id
+			when item_name_id, infix_at_name_id then
+				il_generator.generate_array_access (type_kind, generic_type_id)
 
-				when item_name_id, infix_at_name_id then
-					il_generator.generate_array_access (type_kind)
+			when put_name_id then
+				il_generator.generate_array_write (type_kind, generic_type_id)
 
-				when put_name_id then
- 					il_generator.generate_array_write (type_kind)
+			when make_name_id then
+				il_generator.generate_array_creation (generic_type_id)
+				
+			when count_name_id then
+				il_generator.generate_array_count
 
-				when make_name_id then
-						-- Find real type of ARRAY.
-					gen_param ?= array_type.true_generics.item (1)
-					cl_type ?= gen_param
-					if cl_type /= Void then
-						generic_type_id := cl_type.associated_class_type.static_type_id
-					else
-							-- Most likely it is a formal. We do not handle this
-							-- case correctly yet.
-						generic_type_id := system.system_object_class.compiled_class.
-							types.first.static_type_id	
-					end
-					il_generator.generate_array_creation (generic_type_id)
-					
-				when count_name_id then
- 					il_generator.generate_array_count
+			when lower_name_id then
+				il_generator.generate_array_lower
 
-				when lower_name_id then
- 					il_generator.generate_array_lower
+			when upper_name_id then
+				il_generator.generate_array_upper
 
-	 			when upper_name_id then
-	 				il_generator.generate_array_upper
+			when all_default_name_id then
 
-				when all_default_name_id then
+			when clear_all_name_id then
 
-				when clear_all_name_id then
+			when index_of_name_id then
 
-				when index_of_name_id then
+			when resized_area_name_id then
 
-				when resized_area_name_id then
+			when same_items_name_id then
 
-				when same_items_name_id then
-
-				else
+			else
 --					check
 --						False
 --					end
-				end
 			end
 		end
 		

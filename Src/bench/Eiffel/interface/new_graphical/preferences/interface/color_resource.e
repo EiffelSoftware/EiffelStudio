@@ -11,7 +11,7 @@ class
 inherit
 	STRING_RESOURCE
 		redefine
-			set_value, make, get_value, xml_trace, registry_name
+			set_value, make, xml_trace, registry_name
 		end
  
 creation
@@ -20,7 +20,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_value: STRING) is
-			-- Initialize Current
+			-- Initialize Current with `a_name' and value `a_value'.
 		do
 			name := a_name
 			default_value := a_value
@@ -34,15 +34,19 @@ feature -- Access
 	actual_value: EV_COLOR is
 			-- Color value of resource
 		do
-			create Result
-			Result.set_rgb_with_8_bit (r, g, b)
+			if not color_is_void then
+				create Result
+				Result.set_rgb_with_8_bit (r, g, b)
+			end
 		end
 
 	negative_value: EV_COLOR is
 			-- Negative value of resource
 		do
-			create Result
-			Result.set_rgb_with_8_bit (255 - r, 255 - g, 255 - b)
+			if not color_is_void then
+				create Result
+				Result.set_rgb_with_8_bit (255 - r, 255 - g, 255 - b)
+			end
 		end
 
 	valid_actual_value: EV_COLOR is
@@ -62,11 +66,10 @@ feature -- Access
 			create Result.make_with_rgb (0, 0, 0)
 		end
 
-	get_value: EV_COLOR is
-		-- No use
-		do
-			Result := actual_value
-		end
+feature -- Status report
+
+	color_is_void: BOOLEAN
+			-- Is the resource marked as "auto"?
 
 feature -- Status setting
 
@@ -79,6 +82,7 @@ feature -- Status setting
 			r := col.red_8_bit
 			g := col.green_8_bit
 			b := col.blue_8_bit
+			color_is_void := False
 		end
 
 	set_value (new_value: STRING) is
@@ -103,12 +107,25 @@ feature -- Status setting
 					g := 0
 					b := 0
 				end
+				color_is_void := False
 			else
 				r := 0
 				g := 0
 				b := 0
+				s.to_lower
+				color_is_void := s.is_equal ("auto")
 			end
 		end
+
+		set_void is
+				-- Set current on "auto" value.
+			do
+				value := "auto"
+				r := 0
+				g := 0
+				b := 0
+				color_is_void := True
+			end
 
 feature {NONE} -- Implementation
 

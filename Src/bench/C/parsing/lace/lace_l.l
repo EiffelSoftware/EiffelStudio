@@ -166,7 +166,10 @@ static int get_string()
 		return LAC_ERROR4;
 	} else {
 		*s= '\0';
-		return LAC_STRING;
+		if (s == token_str)
+			return LAC_ERROR6;
+		else
+			return LAC_STRING;
 	}
 }
 

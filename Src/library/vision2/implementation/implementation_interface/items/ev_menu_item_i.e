@@ -12,35 +12,29 @@ deferred class
 	EV_MENU_ITEM_I
 	
 inherit
-	EV_PRIMITIVE_I
-
 
 	EV_TEXT_CONTAINER_I
 
 
 feature {NONE} -- Initialization
 	
-	
 	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
 		deferred
 		end
 
-feature -- Element change
-	
-	set_menu (menu_i: EV_MENU_I) is
-			-- Set menu for menu item
-		require
-			valid_menu: menu_i /= Void
-		deferred
-		end
-		
 feature -- Event - command association
 	
 	add_activate_command ( command: EV_COMMAND; 
 			       arguments: EV_ARGUMENTS) is	
 		deferred
 		end
-		
+	
+feature -- Implementation
+
+	destroyed: BOOLEAN is
+		deferred
+		end
+	
 end
 
 --|----------------------------------------------------------------

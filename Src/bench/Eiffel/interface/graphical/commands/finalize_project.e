@@ -10,7 +10,8 @@ inherit
 			finalization_actions, confirm_and_compile,
 			command_name, symbol,
 			compilation_allowed
-		end
+		end;
+	C_COMPILE_ACTIONS
  
 creation
 
@@ -70,7 +71,7 @@ feature {NONE}
 		do
 			-- If the argument is `warner' the user 
 			-- pressed on "Keep assertions"
-			System.finalized_generation (last_warner /= Void and 
+			finalize_system (last_warner /= Void and 
 									argument = last_warner);
 		end;
 

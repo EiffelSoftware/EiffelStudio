@@ -96,6 +96,13 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
 
 feature {NONE} -- Initialization
 
@@ -497,6 +504,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				create error_dialog.make_with_text ("Unable to change as one or more refers may not be set to this value.")
+				error_dialog.set_icon_pixmap (Icon_build_window @ 1)
 				error_dialog.show_modal_to_window (Current)
 			end
 				-- Update system to reflect a change.
@@ -580,6 +588,7 @@ feature {NONE} -- Implementation
 					if directory_constant /= Void and not cross_referers_dialog_already_displayed then
 						if not directory_constant_deletable (directory_constant, all_pixmap_constants) then
 							create cross_referer_dialog.make_with_text ("One or more constants you are deleting are still required by other constants in the system.%NPlease removed any such dependencies before trying to delete these constants.")
+							cross_referer_dialog.set_icon_pixmap (Icon_build_window @ 1)
 							cross_referer_dialog.show_modal_to_window (Current)
 							cross_referers_dialog_already_displayed := True
 							cancelled.set_item (True)
@@ -587,6 +596,7 @@ feature {NONE} -- Implementation
 					end
 					if not constant.referers.is_empty and not referers_dialog_already_displayed and not cross_referers_dialog_already_displayed then
 						create warning_dialog.make_initialized (2, show_constant_manifest_conversion_warning, "One or more constants are still referenced by objects in the system.%NIf you delete then, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.")
+						warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 						warning_dialog.set_ok_action (agent do_nothing)
 						warning_dialog.set_title ("Constant still referenced")
 						warning_dialog.set_cancel_action (agent cancelled.set_item (True))
@@ -621,6 +631,7 @@ feature {NONE} -- Implementation
 					if directory_constant /= Void and not cross_referers_dialog_already_displayed then
 						if not directory_constant_deletable (directory_constant, all_pixmap_constants) then
 							create cross_referer_dialog.make_with_text ("The constant you are deleting is still required by other constants in the system.%NPlease removed any such dependencies before trying to delete this constant.")
+							cross_referer_dialog.set_icon_pixmap (Icon_build_window @ 1)
 							cross_referer_dialog.show_modal_to_window (Current)
 							cross_referers_dialog_already_displayed := True
 							cancelled := True
@@ -628,6 +639,7 @@ feature {NONE} -- Implementation
 					end
 				if not constant.referers.is_empty and not cross_referers_dialog_already_displayed then
 					create warning_dialog.make_initialized (2, show_constant_manifest_conversion_warning, "Constant named `" + constant.name + "' is still referenced by one or more objects in the system.%NIf you delete it, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.")
+					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					warning_dialog.set_ok_action (agent do_nothing)
 					warning_dialog.set_title ("Constant still referenced")
 					warning_dialog.set_cancel_action (agent cancelled.set_item (True))

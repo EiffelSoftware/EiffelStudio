@@ -40,6 +40,15 @@ feature -- Properties
 	error_position: INTEGER
 			-- Position in file where error occurred (during degree 3)?
 
+feature -- Status
+
+	has_error: BOOLEAN is
+			-- Has error handler detected an error so far?
+		do
+			Result := not error_list.is_empty
+		end
+
+
 feature {E_PROJECT, COMPILER_EXPORTER, SHARED_ERROR_HANDLER} -- Element change
 
 	insert_interrupt_error (is_during_comp: BOOLEAN) is
@@ -133,12 +142,6 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 	nb_errors: INTEGER is
 		do
 			Result := error_list.count
-		end
-
-	has_error: BOOLEAN is
-			-- Has error handler detected an error so far?
-		do
-			Result := not error_list.is_empty
 		end
 
 	has_warning: BOOLEAN is

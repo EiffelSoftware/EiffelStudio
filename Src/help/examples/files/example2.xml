@@ -1,0 +1,34 @@
+<EIFFEL_DOCUMENT>
+<TOPIC ID="EiffelCase">
+	<HEAD>EiffelCase</HEAD>
+
+	<TOPIC ID="EiffelCase_drawing_area">
+		<HEAD>Drawing Area</HEAD>
+		<TEXT>The Drawing area.... etc. Go to an article about <A TOPIC_ID="draganddrop">drag and drop</A> if you want.</TEXT>
+	</TOPIC>
+
+	<TOPIC ID="draganddrop">
+		<HEAD>Drag and Drop</HEAD>
+		<TEXT>This topic is about <I>drag and drop</I>.</TEXT>
+	</TOPIC>
+
+	<TOPIC ID="blaat">
+		<HEAD>Each topic should have a head...?</HEAD>
+
+		<TOPIC ID="sub1">
+			<HEAD>Part I</HEAD>
+			<TEXT>A topic may not be empty so here is a sentence.</TEXT>
+			<TEXT>And another</TEXT>
+		</TOPIC>
+
+		<TOPIC ID="sub2">
+			<HEAD>Part II</HEAD>
+			<TEXT>Dit is een <B>voorbeeld</B> van hoe <A TOPIC_ID="sub1">het <I>niet</I> moet</A> wet je wel</TEXT>
+		</TOPIC>
+	</TOPIC>
+
+	<TOPIC LOCATION="d:\help_tool\structure\example3.xml">
+	</TOPIC>
+
+</TOPIC>
+</EIFFEL_DOCUMENT>

@@ -1,0 +1,17 @@
+<?xml version\"1.0"?>
+<!DOCTYPE eiffel SYSTEM "grammar.dtd">
+<EIFFEL_DOCUMENT>
+<TOPIC ID="EiffelCase">
+	<HEAD>EiffelCase, bla</HEAD>
+
+	<TOPIC ID="EiffelCase_drawing_area">
+		<HEAD>Drawing Area</HEAD>
+		<TEXT>
+			The Drawing area.... etc. <A TOPIC_ID="drag_and_drop">drag&drop</A>
+		</TEXT>
+	</TOPIC>
+
+	<TOPIC LOCATION="drag_and_drop.xml">
+	</TOPIC>
+</TOPIC>
+</EIFFEL_DOCUMENT>

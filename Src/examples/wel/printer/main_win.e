@@ -45,6 +45,7 @@ feature {NONE} -- Implementation
 				printer_dc.start_document ("WEL Print Test")
 				!! rect.make (0, 0, x_resolution, y_resolution)
 				draw (printer_dc, rect)
+				printer_dc.new_frame
 				printer_dc.end_document
 			end
 		end

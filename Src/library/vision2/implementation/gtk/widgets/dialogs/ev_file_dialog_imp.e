@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, True)
 			filter := "*.*"
 			set_start_directory (".")
-			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 		end
 
 	initialize is

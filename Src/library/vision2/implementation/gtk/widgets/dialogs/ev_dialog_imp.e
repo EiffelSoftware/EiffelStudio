@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (gtk_window_dialog_enum))
-			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 		end
 		
 	initialize is

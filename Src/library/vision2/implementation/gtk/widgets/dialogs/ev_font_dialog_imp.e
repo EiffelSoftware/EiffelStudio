@@ -40,7 +40,6 @@ feature {NONE} -- Initialization
 			create temp_font
 			temp_font.set_height (14)
 			set_font (temp_font)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 		end
 
 	reset_dialog is

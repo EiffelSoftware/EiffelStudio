@@ -47,7 +47,6 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (
 				feature {EV_GTK_EXTERNALS}.gtk_file_selection_struct_fileop_ren_file (c_object)
 			)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 			create start_directory.make (0)
 			start_directory.from_c (
 				feature {EV_GTK_EXTERNALS}.gtk_file_selection_get_filename (c_object)

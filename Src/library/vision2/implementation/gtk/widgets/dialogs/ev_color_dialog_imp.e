@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (
 				feature {EV_GTK_EXTERNALS}.gtk_color_selection_dialog_struct_help_button (c_object)
 			)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)	
 		end
 
 	initialize is

@@ -87,7 +87,7 @@ feature -- Status setting
 
 	set_with_named_file (file_name: STRING) is
 			-- Attempt to load pixmap data from a file specified by `file_name'.
-			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
+			-- May raise `Ev_unknown_image_format' or `Ev_corrupt_image_data'
 			-- exceptions.
 		require
 			not_destroyed: not is_destroyed

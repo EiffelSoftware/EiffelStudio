@@ -172,6 +172,7 @@ libs='-lsocket -lnsl -lm'
 ln='/bin/ln'
 make='make'
 mkdep='/usr/local/home/manus/56dev/C/mkdep'
+mkdir='mkdir'
 mtldflags="$ldflags"
 mtldsharedflags="$ldsharedflags"
 mtlibs="$libs -lthread"

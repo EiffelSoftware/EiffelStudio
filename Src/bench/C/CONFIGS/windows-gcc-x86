@@ -173,6 +173,7 @@ libs='-lm'
 ln='/usr/bin/ln'
 make='make'
 mkdep='/cygdrive/e/56dev/C/mkdep'
+mkdir='mkdir'
 mtldflags="$ldflags"
 mtldsharedflags="$ldsharedflags"
 mtlibs="$libs -lpthread"

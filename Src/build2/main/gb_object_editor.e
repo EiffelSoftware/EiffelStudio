@@ -429,7 +429,7 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 			name_field.change_actions.block
 				-- If the name exists, we must restore the name of `object' to
 				-- the name before the name change began.
-			if name_in_use (name_field.text) then
+			if name_in_use (name_field.text) or (object.is_top_level_object and name_field.text.is_empty) then
 				object.cancel_edited_name
 				check
 					object_names_now_equal: object.edited_name.is_equal (object.name)

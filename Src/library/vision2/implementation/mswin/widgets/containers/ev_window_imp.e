@@ -963,25 +963,7 @@ feature {EV_ANY_I} -- Implementation
 					end
 				end
 			elseif msg = Wm_activate then
-				if wparam /= Wel_window_constants.Wa_inactive then
-						-- We must now restore the focus to `last_focused_widget'
-						-- as the window is now being re-activated.
-					if is_window (last_focused_widget) then
-						window_of_item (last_focused_widget).set_focus
-							-- Calling disable_default_processing is required in order to
-							-- stop the focus being removed from `last_focused_widget' after
-							-- we set it. However, this stops on_set_focus being called, so we
-							-- call the relevent parts by ourself.
-						disable_default_processing
-						titled_window ?= Current
-						if titled_window /= Void then
-							application_imp.set_window_with_focus (titled_window.interface)
-						end
-						if focus_in_actions_internal /= Void then
-							focus_in_actions_internal.call ([])
-						end
-					end
-				end
+				window_on_wm_activate (wparam, lparam)
 			elseif msg = Wm_initmenupopup then
 				create a_menu.make_by_pointer (cwel_integer_to_pointer (wparam))
 				on_menu_opened (a_menu)
@@ -997,6 +979,33 @@ feature {EV_ANY_I} -- Implementation
 				Result := Precursor {WEL_FRAME_WINDOW} (hwnd, msg, wparam, lparam)
 			end
 		end
+		
+	window_on_wm_activate (wparam, lparam: INTEGER) is
+			-- `Wm_activate' message recieved form Windows by `Current'.
+		local
+			titled_window: EV_TITLED_WINDOW_IMP
+		do
+			if wparam /= Wel_window_constants.Wa_inactive then
+						-- We must now restore the focus to `last_focused_widget'
+						-- as the window is now being re-activated.
+				if is_window (last_focused_widget) then
+					window_of_item (last_focused_widget).set_focus
+						-- Calling disable_default_processing is required in order to
+						-- stop the focus being removed from `last_focused_widget' after
+						-- we set it. However, this stops on_set_focus being called, so we
+						-- call the relevent parts by ourself.
+					disable_default_processing
+					titled_window ?= Current
+					if titled_window /= Void then
+						application_imp.set_window_with_focus (titled_window.interface)
+					end
+					if focus_in_actions_internal /= Void then
+						focus_in_actions_internal.call ([])
+					end
+				end
+			end
+		end
+		
 		
 	fire_dialog_show_actions (dialog: POINTER) is
 			-- Call `show_actions' on a dialog referenced by `dialog'.

@@ -67,5 +67,11 @@ feature -- Access
 		ensure
 			exists: Result /= Void
 		end
+		
+	component_viewer: GB_COMPONENT_VIEWER is
+			-- `Result' is component viewer of system.
+		once
+			create Result
+		end
 
 end -- class GB_ACCESSIBLE

@@ -5,7 +5,7 @@ indexing
 		%for a class. Display output for current command for%
 		%associated class to output_window.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class E_CLASS_CMD
 
@@ -20,14 +20,6 @@ inherit
 			executable, execute
 		end
 
-	EB_SHARED_FORMAT_TABLES
-		rename
-			feature_clause_order as shared_feature_clause_order,
-			show_all_callers as shared_show_all_callers 
-		export
-			{NONE} all 
-		end
-
 feature -- Initialization
 
 	make (a_class: CLASS_C) is
@@ -36,35 +28,18 @@ feature -- Initialization
 		require
 			valid_a_class_c: a_class /= Void
 			compiled_class: a_class.has_feature_table
-		local
-			l_reader: EIFFEL_XML_DESERIALIZER
 		do
 			current_class := a_class;	
 			!! structured_text.make
-			if a_class.is_true_external then
-					-- .NET class.
-				if consumed_types.has (a_class.name) then
-					consumed_type := consumed_types.item (a_class.name)
-				else
-					create l_reader
-					consumed_type ?= l_reader.new_object_from_file (a_class.lace_class.file_name)
-					if consumed_type/= Void then
-						consumed_types.put (consumed_type, a_class.name)	
-					end
-				end
-			end
 		ensure
 			class_set: current_class = a_class;
 			structured_text_not_void: structured_text /= Void
-		end;		
+		end;
 
 feature -- Property
 
 	current_class: CLASS_C
 			-- Class for current action
-
-	consumed_type: CONSUMED_TYPE
-			-- .NET consumed, if any, to whic 'current_class' belongs.
 
 	executable: BOOLEAN is
 			-- Is the Current able to be executed?

@@ -119,5 +119,6 @@ feature {NONE}
 	expr_address_as: INTEGER is 160
 	separate_type_as: INTEGER is 161
 	precursor_as: INTEGER is 164
+	creation_expr_as: INTEGER is 165
 
 end

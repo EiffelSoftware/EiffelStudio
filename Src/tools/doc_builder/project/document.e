@@ -64,7 +64,9 @@ feature -- Creation
 			-- Initialization
 		do		
 			create schema_validator	
-			attach (application_window)
+			if shared_constants.application_constants.is_gui_mode then				
+				attach (application_window)	
+			end
 --			attach (shared_web_browser)
 		end
 

@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 			)
 		end
 
-feature {EV_INTERMEDIARY_ROUTINES} -- Initialization
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Initialization
 
 	select_callback (n_args: INTEGER; args: POINTER) is
 			-- Called when a list item is selected.
@@ -224,7 +224,7 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	list_widget: POINTER
 	
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation	
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation	
 	
 	on_list_clicked is
 			-- The list was clicked.
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 	list_has_been_clicked: BOOLEAN
 		-- Are we between "item_clicked" and "list_clicked" event.
 		
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		
 	on_key_pressed (ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Called when a list item is selected.

@@ -141,7 +141,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LIST
 	
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation	
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation	
 	
 	set_is_out (a_value: BOOLEAN) is
 			-- Assign `a_value' to `is_out'.

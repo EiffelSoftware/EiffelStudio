@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			real_signal_connect (visual_widget, "toggled", agent (App_implementation.gtk_marshal).on_tool_bar_radio_button_activate (c_object), Void)
 		end
 		
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		
 	on_activate is
 			-- The button has been activated by the user (pushed).

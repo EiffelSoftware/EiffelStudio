@@ -310,7 +310,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	select_callback (int: TUPLE [INTEGER]) is
 		local
@@ -741,7 +741,7 @@ feature -- Implementation
 				button_release_not_connected: button_release_connection_id = 0
 			end
 			if button_press_connection_id > 0 then
-				signal_disconnect (button_press_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (c_object, button_press_connection_id)
 			end
 			real_signal_connect (c_object,
 				"button-press-event", 

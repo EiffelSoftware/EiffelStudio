@@ -12,12 +12,13 @@ inherit
 	WINDOWS;
 	EIFFEL_ENV;
 	ISED_X_SLAVE;
+	GRAPHICS;
+	COMMAND;
 	ARGUMENTS
 		rename
 			command_line as arguments_line
 		end
 	SHARED_LICENSE;
-	SHARED_RESCUE_STATUS;
 	SHARED_RESOURCES;
 	SHARED_BATCH_COMPILER
 
@@ -53,6 +54,7 @@ feature -- Initialization
 				then
 					set_batch_mode (False);
 					init_connection;
+					if toolkit = Void then end;
 					if init_licence then
 						init_windowing;
 						iterate
@@ -80,7 +82,7 @@ feature -- Initialization
 				end;
 				io.error.new_line;
 			end;
-			if not Rescue_status.fail_on_rescue then
+			if not resources.get_boolean (r_Fail_on_rescue, False) then
 				retried := True;
 				retry
 			end;

@@ -57,6 +57,12 @@ feature -- reset
 			module_name_valid: a_mod_name /= Void and then not a_mod_name.is_empty
 		do
 			module_name := a_mod_name
+			module_name.to_lower
+			if module_name.substring_index (".dll", 1) = 0 then
+				module_name.append_string (".dll")
+			end
+		ensure
+			module_name_is_lower_case: module_name.as_lower.is_equal (module_name)
 		end
 
 feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
@@ -69,16 +75,6 @@ feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
 			module_filename := a_mod_filename
 		end
 		
---	update_project_path	(a_project_path: STRING) is
---			-- Update module filename according to `a_project_path' value
---		local
---			l_fn: FILE_NAME
---		do
---			create l_fn.make_from_string (a_project_path)
---			l_fn.set_file_name (module_name)
---			update_module_filename (l_fn)
---		end		
-		
 	merge (other: like Current) is
 			-- Merge information from other into Current.
 		do
@@ -87,10 +83,10 @@ feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
 		end		
 
 	set_system_name (s: STRING) is
-			-- 
+			-- Set system name related to Current module
 		do
 			system_name := s
-		end		
+		end
 
 feature -- Properties
 
@@ -99,6 +95,10 @@ feature -- Properties
 			
 	module_name: STRING
 			-- Final module file name without the directory path
+--| Uncomment next 2 lines, when Eiffel will allow assertion on attribute ...
+--		ensure
+--			module_name_is_lower_case: module_name /= Void and then module_name.as_lower.is_equal (module_name)
+		
 			
 	system_name: STRING
 			-- In case this module is a precompiled lib

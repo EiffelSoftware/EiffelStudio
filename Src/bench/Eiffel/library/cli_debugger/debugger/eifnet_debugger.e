@@ -95,6 +95,8 @@ feature -- Initialization
 			Eifnet_debugger_info.set_controller (Current)
 			exit_process_occurred := False
 			
+			il_debug_info_recorder.reset_debugging_live_data
+			
 				-- not required
 			last_stepper := Void
 			last_dbg_call_success := 0

@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 			end
 
 			create wel_column.make
-			wel_column.set_cx (col_width)
+			wel_column.set_width (col_width)
 			wel_column.set_text (col_text)
 			append_column (wel_column)
 		end
@@ -766,6 +766,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.82  2000/04/20 01:21:39  pichery
+--| Fixed call to an obsolete feature
+--|
 --| Revision 1.81  2000/04/19 01:31:02  pichery
 --| Added redefine clause
 --|

@@ -79,6 +79,7 @@ feature {NONE} -- Initial windowing
 			history_window.wipe_out
 			main_panel.unset_project_initialized
 			namer_window.close
+			class_importer.close
 		end
 
 	update_all_windows is

@@ -620,7 +620,7 @@ feature {EV_GTK_CALLBACK_MARSHAL, EV_ANY_IMP} -- Tuple optimizations
 			Result := []
 		end
 
-feature {EV_ANY_IMP} -- Externals
+feature {EV_ANY_I} -- Externals
 
 	frozen c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP is
 			-- Get Eiffel object from `a_c_object'.

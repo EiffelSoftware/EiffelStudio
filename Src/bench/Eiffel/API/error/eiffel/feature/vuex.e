@@ -51,7 +51,7 @@ feature -- Output
 		do
 			w_class := exported_feature.written_class;
 			st.add_string ("Feature: ");
-			exported_feature.append_name (st, w_class);
+			exported_feature.append_name (st);
 			st.add_string (" Class: ");
 			static_class.append_name (st);
 			st.add_string (" Version from: ");

@@ -53,12 +53,12 @@ feature -- Output
 			r_class := redeclaration.written_class;
 			p_class := precursor.written_class;
 			st.add_string ("Redefined feature: ");
-			redeclaration.append_signature (st, r_class);
+			redeclaration.append_signature (st);
 			st.add_string (" From: ");
 			r_class.append_name (st);
 			st.add_new_line;
 			st.add_string ("Precursor: ");
-			precursor.append_signature (st, p_class);
+			precursor.append_signature (st);
 			st.add_string (" From: ");
 			p_class.append_name (st);
 			st.add_new_line;

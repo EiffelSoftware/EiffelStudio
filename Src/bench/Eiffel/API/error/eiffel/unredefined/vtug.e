@@ -48,7 +48,7 @@ feature -- Output
 		do
 			if e_feature /= Void then
 				st.add_string ("In feature: ");
-				e_feature.append_name (st, e_feature.written_class);
+				e_feature.append_name (st);
 			else
 				st.add_string ("In inheritance clause");
 			end;

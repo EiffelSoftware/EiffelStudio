@@ -41,7 +41,7 @@ feature -- Output
 			st.add_string ("Formal argument name: ");
 			st.add_string (other_feature.name);
 			st.add_string (" is defined as a feature: ");
-			other_feature.append_signature (st, other_feature.written_class);
+			other_feature.append_signature (st);
 			st.add_new_line;
 		end;
 

@@ -40,7 +40,7 @@ feature -- Output
 		do
 			a_class := called_feature.written_class;
 			st.add_string ("Called feature: ");
-			called_feature.append_signature (st, a_class);
+			called_feature.append_signature (st);
 			st.add_string (" from ");
 			a_class.append_name (st);
 			st.add_new_line;

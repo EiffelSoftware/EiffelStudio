@@ -47,7 +47,7 @@ feature -- Output
 			-- in `st'.
 		do
 			st.add_string ("Feature: ");
-			a_feature.append_name (st, a_feature.written_class);
+			a_feature.append_name (st);
 			st.add_new_line;
 			if postcondition then
 				if precondition then

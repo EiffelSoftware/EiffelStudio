@@ -45,7 +45,7 @@ feature -- Output
 		do
 			wclass := old_feature.written_class;
 			st.add_string ("Redeclared routine: ");
-			old_feature.append_name (st, wclass);
+			old_feature.append_name (st);
 			st.add_string (" from ");
 			wclass.append_name (st);
 			if old_feature.is_external then

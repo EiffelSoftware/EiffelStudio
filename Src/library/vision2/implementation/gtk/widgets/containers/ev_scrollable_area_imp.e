@@ -22,8 +22,6 @@ inherit
 			vertical_adjustment,
 			interface,
 			make,
-			replace,
-			item,
 			visual_widget
 		end
 	
@@ -31,41 +29,21 @@ create
 	make
 
 feature {NONE} -- Initialization
-	
-        make (an_interface: like interface) is
-                        -- Initialize.
+
+	make (an_interface: like interface) is
+				-- Initialize.
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
-
 			set_scrolling_policy (C.GTK_POLICY_ALWAYS_ENUM, C.GTK_POLICY_ALWAYS_ENUM)
-
 			set_horizontal_step (10)
 			set_vertical_step (10)
-
 			viewport := C.gtk_viewport_new (NULL, NULL)
 			C.gtk_widget_show (viewport)
 			C.gtk_container_add (c_object, viewport)
 		end
 
 feature -- Access
-
-	item: EV_WIDGET is
-			-- Current item
-		local
-			a_child_list, p: POINTER
-			o: EV_ANY_IMP
-		do
-			a_child_list := C.gtk_container_children (viewport)
-			if p /= NULL then
-				p := C.g_list_nth_data (a_child_list, 0)
-				if p /= NULL then
-					o := eif_object_from_c (p)
-					Result ?= o.interface
-				end
-				C.g_list_free (a_child_list)
-			end
-		end
 
 	horizontal_step: INTEGER is
 			-- Number of pixels scrolled up or down when user clicks
@@ -94,25 +72,6 @@ feature -- Access
 		end
 
 feature -- Element change
-
-	replace (v: like item) is
-			-- Replace `item' with `v'.
-		local
-			i: EV_WIDGET
-			imp: EV_WIDGET_IMP
-		do
-			i := item
-			if i /= Void then
-				imp ?= i.implementation
-				C.gtk_object_ref (imp.c_object)
-				C.gtk_container_remove (viewport, imp.c_object)
-				C.gtk_object_unref (imp.c_object)
-			end
-			if v /= Void then
-				imp ?= v.implementation
-				C.gtk_container_add (viewport, imp.c_object)
-			end
-		end
 
 	set_horizontal_step (a_step: INTEGER) is
 			-- Set `horizontal_step' to `a_step'.
@@ -162,7 +121,7 @@ feature {NONE} -- Implementation
 		do
 			Result := viewport
 		end
-
+		
 	horizontal_adjustment: POINTER is
 			-- Pointer to the adjustment struct of the hscrollbar
 		do

@@ -9,7 +9,8 @@ class FILTER_COMMAND
 
 inherit
 
-	PIXMAP_COMMAND;
+	EIFFEL_ENV;
+	TOOL_COMMAND;
 	SHARED_FORMAT_TABLES;
 	SHARED_BENCH_RESOURCES;
 	WARNER_CALLBACKS
@@ -110,11 +111,12 @@ feature {NONE} -- Implementation
 			filename, new_text: STRING;
 			mp: MOUSE_PTR
 		do
-			!! mp.set_watch_cursor;
-			if argument = Void then
-					-- 3rd button pressed
+			if argument = tool then
+					-- Popup filter window
 				if filter_window = Void then
+					!! mp.set_watch_cursor;
 					!! filter_window.make (Current);
+					mp.restore
 				end;
 				filter_window.call 
 			elseif argument = filter_window then
@@ -130,6 +132,7 @@ feature {NONE} -- Implementation
 				if filterable_format = Void then
 					warner (popup_parent).gotcha_call (w_Not_a_filterable_format)
 				else
+					!! mp.set_watch_cursor;
 					if 
 						filterable_format.filtered and
 						equal (filterable_format.filter_name, filter_name) 
@@ -159,9 +162,9 @@ feature {NONE} -- Implementation
 					end;
 					!!shell_request;
 					shell_request.execute (cmd_string);
+					mp.restore
 				end
 			end;
-			mp.restore
 		end;
 	
 	save_to_file (a_text: STRING; a_filename: STRING) is
@@ -202,12 +205,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	symbol: PIXMAP is 
-			-- Pixmap for the button.
-		once 
-			Result := bm_Filter 
-		end;
- 
 	name: STRING is
 			-- Name of the command.
 		do

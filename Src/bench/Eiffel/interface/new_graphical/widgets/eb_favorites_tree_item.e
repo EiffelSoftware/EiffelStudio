@@ -136,7 +136,6 @@ feature -- Status setting
 			-- delete `Current' if the class was removed,...
 		local
 			cl: EB_FAVORITES_CLASS
-			cf: EB_FAVORITES_FEATURE
 			child: EB_FAVORITES_TREE_ITEM
 		do
 			from

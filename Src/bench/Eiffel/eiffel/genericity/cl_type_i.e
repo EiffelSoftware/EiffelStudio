@@ -296,7 +296,7 @@ feature -- Status
 				if not l_class.is_basic then
 						-- External classes, or classes marked `frozen', or that
 						-- inherites from external classes have only one generated type.
-					Result := l_class.is_single or l_class.is_frozen or l_class.is_external
+					Result := l_class.is_single or l_class.is_external
 				end
 			end
 		end

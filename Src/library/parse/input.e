@@ -105,7 +105,7 @@ feature
 					end
 				end;
 				new_token := clone (analyzer.last_token);
-				add_right (new_token)
+				put_right (new_token)
 			end;
 			forth
 		end; -- get_token

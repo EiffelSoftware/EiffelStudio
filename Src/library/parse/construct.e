@@ -143,7 +143,7 @@ feature {NONE}
 	put (c: CONSTRUCT) is
 			-- Add a construct to the production.
 		do  
-			production.add_left (c);
+			production.put_left (c);
 			last_sub_construct := c
 		end; -- put
 
@@ -202,7 +202,7 @@ feature {NONE}
 			-- the tree node in left to right order.
 		do
 			child_finish;
-			child_add_right (new);
+			child_put_right (new);
 			child_forth
 		end -- add_component
 
@@ -324,7 +324,7 @@ feature {NONE}
 			Result := child.no_left_recursion;
 			if not Result then
 				if not structure_list.has (production) then
-					structure_list.add_right (production);
+					structure_list.put_right (production);
 					io.putstring ("Left recursion has been detected ");
 					io.putstring ("in the following constructs:%N");
 					io.putstring (recursion_message);

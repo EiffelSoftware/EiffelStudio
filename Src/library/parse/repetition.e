@@ -160,7 +160,7 @@ feature
 				recursion_message.append ("%N");
 				Result := false;
 			else
-				structure_list.add_right (production);
+				structure_list.put_right (production);
 				child_start;
 				Result := message_construction
 			end;
@@ -183,7 +183,7 @@ feature {CONSTRUCT}
 			-- Check the sequence for left recursion.
 		do
 			if not check_recursion_list.has (production) then
-				check_recursion_list.add_left (production);
+				check_recursion_list.put_left (production);
 				if print_mode.item then
 					print_children
 				end;

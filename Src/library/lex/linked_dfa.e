@@ -45,7 +45,7 @@ feature
 			nb_states := nb_states + 1;
 			!!current_state.make (greatest_input);
 			finish;
-			add_right (current_state);
+			put_right (current_state);
 			finish
 		ensure then
 			current_state_is_last: islast

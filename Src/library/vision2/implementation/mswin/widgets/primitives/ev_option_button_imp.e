@@ -33,7 +33,7 @@ inherit
 	EV_BUTTON_IMP
 		rename
 --			set_text as internal_set_text,
-			add_click_command as add_popup_command
+--			add_click_command as add_popup_command
 --		undefine
 --			align_text_center,
 --			align_text_left,
@@ -293,6 +293,9 @@ end -- class EV_OPTION_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/19 07:31:53  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.20  2000/02/19 05:45:01  oconnor
 --| released
 --|

@@ -38,7 +38,6 @@ feature
 			add_callbacks;
 			temp ?= implementation;
 			c_widget := temp.action_target;
-			hide_horizontal_scrollbar;
 			upper := -1 			-- Init clickable array.
 		end;
 

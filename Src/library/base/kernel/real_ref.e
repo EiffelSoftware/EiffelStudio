@@ -323,17 +323,17 @@ feature {NONE} -- Implementation
 	c_ceiling (r: REAL): REAL is
 			-- Smallest integral value no smaller than `r'
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
 		alias
-			"math_rceil"
+			"ceil"
 		end;
 
 	c_floor (r: REAL): REAL is
 			-- Greatest integral value no greater than `r'
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
 		alias
-			"math_rfloor"
+			"floor"
 		end;
 
 invariant

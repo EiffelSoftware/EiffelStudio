@@ -3890,7 +3890,7 @@ rt_private int generational_collect(void)
 	 */
 
 	EIF_GET_CONTEXT
-	register1 uint32 age;			/* Computed tenure age */
+	register1 int age;			/* Computed tenure age */
 	register2 int overused;		/* Amount of data over watermark */
 	EIF_REFERENCE watermark;			/* Watermark in generation zone */
 

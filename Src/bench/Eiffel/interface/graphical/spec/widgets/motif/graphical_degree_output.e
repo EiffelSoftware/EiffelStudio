@@ -137,7 +137,7 @@ feature -- Start output features
 		end;
 
 	put_end_dead_code_removal_message  is
-			-- Put message indicating the start of dead code removal.
+			-- Put message indicating the end of dead code removal.
 		do
 			put_non_degree_message (finished_removing_dead_code_message);
 		end;

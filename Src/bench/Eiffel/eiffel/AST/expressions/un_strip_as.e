@@ -128,9 +128,7 @@ feature -- Type check, byte code and dead code removal
 				id_list.after
 			loop
 				attribute_i ?= feature_table.item_id (id_list.item)
-				if not attribute_i.feature_name.is_equal ("void") then
-					Result.feature_ids.put (attribute_i.feature_id)
-				end
+				Result.feature_ids.put (attribute_i.feature_id)
 				id_list.forth
 			end
 		end

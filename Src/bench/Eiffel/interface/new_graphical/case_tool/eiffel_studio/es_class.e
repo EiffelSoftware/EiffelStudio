@@ -19,12 +19,12 @@ inherit
 			default_create
 		end
 		
-	SHARED_API_ROUTINES
+	SHARED_WORKBENCH
 		undefine
 			default_create
 		end
 		
-	SHARED_WORKBENCH
+	SHARED_EIFFEL_PROJECT
 		undefine
 			default_create
 		end
@@ -662,6 +662,34 @@ feature {NONE} -- Implementation
 		
 	internal_code_generator: CLASS_TEXT_MODIFIER
 			-- Code generator returned by `code_generator'.
+			
+	class_i_by_name (a_name: STRING): CLASS_I is
+			-- Return class with `a_name'.
+			-- `Void' if not in system.
+		local
+			cl: LIST [CLASS_I]
+			l_nodes: ARRAYED_LIST [EG_NODE]
+			l_item: ES_CLASS
+		do
+			cl := eiffel_universe.classes_with_name (a_name)
+			if cl /= Void and then not cl.is_empty then
+				Result := cl.first
+			end
+			if Result = Void then
+				from
+					l_nodes := graph.flat_nodes
+					l_nodes.start
+				until
+					l_nodes.after or else Result /= Void
+				loop
+					l_item ?= l_nodes.item
+					if l_item.name.is_equal (a_name) then
+						Result := l_item.class_i
+					end
+					l_nodes.forth
+				end
+			end
+		end
 			
 invariant
 	queries_not_void: queries /= Void

@@ -109,8 +109,7 @@ feature -- Actual class type
 				until
 					i > count
 				loop
-					create formal
-					formal.set_position (i)
+					create formal.make (False, False, 1)
 					actual_generic.put (formal, i)
 					i := i + 1
 				end

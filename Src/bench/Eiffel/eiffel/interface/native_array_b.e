@@ -178,8 +178,7 @@ feature {NONE}
 			args.put_i_th (Integer_type, 1)
 			create Result
 			Result.set_arguments (args)
-			create f
-			f.set_position (1)
+			create f.make (False, False, 1)
 			Result.set_type (f)
 			Result.set_feature_name_id (feature {PREDEFINED_NAMES}.item_name_id)
 		ensure
@@ -196,8 +195,7 @@ feature {NONE}
 			args.put_i_th (Integer_type, 1)
 			create Result
 			Result.set_arguments (args)
-			create f
-			f.set_position (1)
+			create f.make (False, False, 1)
 			Result.set_type (f)
 			Result.set_feature_name_id (feature {PREDEFINED_NAMES}.infix_at_name_id)
 		ensure
@@ -210,8 +208,7 @@ feature {NONE}
 			args: FEAT_ARG
 			f: FORMAL_A
 		once
-			create f
-			f.set_position (1)
+			create f.make (False, False, 1)
 			create args.make (2)
 			args.put_i_th (Integer_type, 1)
 			args.put_i_th (f, 2)

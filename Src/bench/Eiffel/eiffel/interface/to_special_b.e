@@ -82,8 +82,7 @@ feature {NONE} -- Implementation
 			f: FORMAL_A
 			gen: ARRAY [TYPE_A]
 		once
-			create f
-			f.set_position (1)
+			create f.make (False, False, 1)
 			create gen.make (1, 1)
 			gen.put (f, 1)
 			create Result.make (System.special_id, gen)

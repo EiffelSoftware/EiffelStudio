@@ -94,6 +94,11 @@ feature {NONE} -- Initialization
 			private_attributes.set_height (100)
 		end
 
+feature -- Access
+
+	working_area: WIDGET
+			-- Working area of window which will be moved using scrollbars
+
 feature -- Status setting
 
 	realize_current is
@@ -113,6 +118,7 @@ feature -- Status setting
 				end
 				realized := True
 				set_scroll_range
+				set_scroll_position
 			end
 		end
 
@@ -120,29 +126,6 @@ feature -- Status report
 
 	realized: BOOLEAN
 			-- Is current widget realized?
-
-	working_area: WIDGET
-			-- Working area of window which will
-			-- be moved using scrollbars
-
-feature -- Status setting
-
-	set_working_area (a_widget: WIDGET) is
-			-- Set working area of window to `a_widget'.
-		do
-			if working_area /= a_widget then
-				if working_area /= Void and then working_area.realized then
-					working_area.hide
-				end
-				working_area := a_widget
-				if working_area.realized and then not working_area.shown then
-					working_area.show
-				end
-			end
-			if exists then
-				set_scroll_range
-			end
-		end
 
 feature -- Element change
 
@@ -162,6 +145,24 @@ feature -- Element change
 			not_a_command_void: a_command /= Void
 		do
 			value_changed_actions.add (Current, a_command, arg)
+		end
+
+	set_working_area (a_widget: WIDGET) is
+			-- Set working area of window to `a_widget'.
+		do
+			if working_area /= a_widget then
+				if working_area /= Void and then working_area.realized then
+					working_area.hide
+				end
+				working_area := a_widget
+				if working_area.realized and then not working_area.shown then
+					working_area.show
+				end
+			end
+			if exists then
+				working_area.set_x_y (0, 0)
+				set_scroll_range
+			end
 		end
 
 feature -- Removal
@@ -197,6 +198,7 @@ feature {NONE} -- Implementation
 			-- Respond to a size message.
 		do
 			set_scroll_range
+			set_scroll_position
 			if scroller /= Void then
 				scroller.set_horizontal_line (client_rect.width // 4)
 				scroller.set_horizontal_page (client_rect.width)
@@ -205,6 +207,7 @@ feature {NONE} -- Implementation
 			end
 			resize_actions.execute (Current, Void)
 		end
+
 	horizontal_update (inc, position: INTEGER) is
 			-- Respond to an horizontal update of the scroller.
 		local
@@ -276,11 +279,29 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	set_scroll_position is
+			-- Set the appropriate scroll_position
+		require
+			working_area_not_void: working_area /= Void
+		do
+			if has_horizontal_scroll_bar then
+				working_area.set_x_y (working_area.x.max (width - working_area.width),
+					working_area.y)
+				wel_set_horizontal_position ( - working_area.x)
+			end
+			if has_vertical_scroll_bar then
+				working_area.set_x_y (x,
+					working_area.y.max (height - working_area.height))
+				wel_set_vertical_position ( - working_area.y)
+			end
+		end
+
 	child_has_resized is
 			-- A child has resized
 		do
 			if exists then
 				set_scroll_range
+				set_scroll_position
 			end
 		end
 

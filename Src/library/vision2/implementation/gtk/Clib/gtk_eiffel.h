@@ -534,6 +534,9 @@ EIF_POINTER c_gtk_file_selection_get_file_name (GtkWidget *file_dialog);
 /* Pointer to the text of the dir of the file selection dialog. */
 EIF_POINTER c_gtk_file_selection_get_dir_name (GtkWidget *file_dialog);
 
+/* Create a new directory selection dialog. */
+EIF_POINTER c_gtk_directory_selection_new (const gchar *name);
+
 /*==============================================================================
  gtk_color_selection functions
 ==============================================================================*/

@@ -1787,16 +1787,18 @@ EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar)
 }
 
 /*==============================================================================
- File selection functions
+ File and directory selection functions
 ==============================================================================*/
 
 /*********************************
  *
  * Function : `c_gtk_file_selection_get_file_name'	(1)
  * 			  `c_gtk_file_selection_get_dir_name'	(2)
+ * 			  `c_gtk_directory_selection_new'		(3)
  *
  * Note : (1) Value in the gtk_entry of the gtk_file_selection.
  * 		  (2) Dir name of the gtk_file_selection.
+ * 		  (3) Create a directory selection (based on the GtkFileSelection).
  *
  * Author : Alex
  *
@@ -1824,6 +1826,28 @@ EIF_POINTER c_gtk_file_selection_get_dir_name (GtkWidget *file_dialog)
   
   return (EIF_POINTER) value; 
 }
+
+EIF_POINTER c_gtk_directory_selection_new (const gchar *name)
+{
+  GtkWidget *directory_selection;
+  GtkWidget *file_list;
+  GtkWidget *scroll;
+
+  directory_selection = gtk_file_selection_new (name);
+  
+  /* Remove the file list */
+  file_list = GTK_FILE_SELECTION (directory_selection)->file_list;
+  scroll = file_list->parent;
+  gtk_widget_hide (file_list);
+  gtk_widget_hide (scroll);
+  
+  /* Remove the "delete file" and "rename file" buttons */
+  gtk_widget_hide (GTK_FILE_SELECTION (directory_selection)->fileop_del_file);
+  gtk_widget_hide (GTK_FILE_SELECTION (directory_selection)->fileop_ren_file);
+
+  return (EIF_POINTER) directory_selection;	
+}
+
 /*==============================================================================
  Color selection functions
 ==============================================================================*/

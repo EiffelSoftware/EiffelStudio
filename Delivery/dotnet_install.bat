@@ -5,7 +5,7 @@ rem Please wait a few seconds for the installation of the components.
 
 @echo off
 
-cd studio/spec/windows/bin
+cd studio\spec\windows\bin
 
 rem Registering ISE runtime for .NET
 

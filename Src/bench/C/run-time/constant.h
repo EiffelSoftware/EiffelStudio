@@ -8,6 +8,8 @@ to indicate indirect(also called Eiffel or protected) address.
 #ifndef _CONCURRENT_CONSTANT_
 #define _CONCURRENT_CONSTANT_
 
+#define DELETE_SEP_OBJ
+
 #define tDISP_LIST
 /* if you want to display some run time information, such as
  * the contents in server list, 
@@ -272,6 +274,36 @@ typedef unsigned char   EIF_BOOLEAN;
 /* The socket is logically openned but physically closed in order 
  * to reduce the number of sockets consumed by the application.
  */
+
+/* Now, we define a SEP_OBJ's data as:
+ *      EIF_INTEGER sep_obj[constant_sep_obj_size]
+ * where
+ *     sep_obj[0] -- Host's IP Address
+ *     sep_obj[1] -- Port Number Corresponding to the Separate Object
+ *     sep_obj[2] -- Network Connection(Socket) to the Separate Object
+ *     sep_obj[3] -- The Separate Object's OID on the corresponding Processor
+ *     sep_obj[4] -- The Separate Object's Proxy's OID on the Local Processor
+ *
+ */
+
+#ifdef DELETE_SEP_OBJ
+#define constant_sep_obj_size   5
+#define constant_sep_obj_dtype  EO_TYPE
+ 
+#define set_host_port(obj, host, port)  \
+            ((EIF_INTEGER *)(obj))[0] = host; \
+            ((EIF_INTEGER *)(obj))[1] = port
+#define set_oid(obj, oid)   ((EIF_INTEGER *)(obj))[3] = oid
+#define set_sock(obj, sock) ((EIF_INTEGER *)(obj))[2] = sock
+#define set_proxy_id(obj, proxy_id) ((EIF_INTEGER *)(obj))[4] = proxy_id
+ 
+#define sep_obj_host(obj)       ((EIF_INTEGER *)(obj))[0]
+#define sep_obj_port(obj)       ((EIF_INTEGER *)(obj))[1]
+#define sep_obj_sock(obj)       ((EIF_INTEGER *)(obj))[2]
+#define sep_obj_oid(obj)        ((EIF_INTEGER *)(obj))[3]
+#define sep_obj_proxy_id(obj)   ((EIF_INTEGER *)(obj))[4]
+#endif
+ 
 
 /*----------------------------------------------------------*/
 /*    The following define STRUCTUREs used by the C-library */
@@ -618,7 +650,7 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 	strcpy(_concur_executable, argv[0]); \
 	if (_concur_root_of_the_application) { \
 		make_server(config); \
-		strcpy(_concur_class_name_of_root_obj, eifname(rcdt)); \
+		strcpy(_concur_class_name_of_root_obj, eifname(Dtype(root_obj))); \
 	} \
 	else { \
 /* #ifdef COMBINE_CREATION_WITH_INIT \

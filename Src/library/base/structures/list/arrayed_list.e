@@ -185,7 +185,9 @@ feature -- Comparison
 		local
 			c1,c2: like cursor;
 		do
-			if (count = other.count) and 
+			if other = Current then
+				Result := True
+			elseif (count = other.count) and 
 			   (object_comparison = other.object_comparison) then
 					--Count and comparison_criterium have to be the same
 				c1 := cursor;

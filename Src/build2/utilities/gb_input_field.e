@@ -75,7 +75,7 @@ feature -- Access
 		deferred
 		end
 		
-	constants_button: EV_TOGGLE_BUTTON
+	constants_button: EV_TOOL_BAR_TOGGLE_BUTTON
 		-- Button to switch between constants or values.
 		
 	object: GB_OBJECT

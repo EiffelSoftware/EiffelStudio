@@ -152,13 +152,6 @@ feature {NONE} -- Externals
 			"help_button"
 		end
 
-	gtk_color_selection_struct_use_opacity (a_c_struct: POINTER): INTEGER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkColorSelection): EIF_INTEGER"
-		alias
-			"use_opacity"
-		end
-
 	gtk_color_selection_struct_values (a_c_struct: POINTER): POINTER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkColorSelection): EIF_POINTER"

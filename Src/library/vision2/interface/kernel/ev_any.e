@@ -116,10 +116,10 @@ feature {EV_ANY} -- Implementation
 
 	create_action_sequences is 
 			-- Create action sequence objects.
-			--| Should only be called from `default_create'
-			--| Must be defined in each descendant to create the
-			--| appropriate objects.
-			--| Each redefinition should call `Precursor'.
+			-- Should only be called from `default_create'
+			-- Must be defined in each descendant to create the
+			-- appropriate objects.
+			-- Each redefinition should call `Precursor'.
 		require
 			implementation_not_already_created: implementation = Void
 		do
@@ -239,7 +239,22 @@ end -- class EV_ANY
 
 --|-----------------------------------------------------------------------------
 --| The "bridge pattern" as used in Vision2
---| FIXME put notes on bridge pattern here. 
+--|
+--| The bridge pattern is described in the Design Patterns book (Gamma et al.).
+--| It provides a way to seperate interface from implementation so that the two
+--| can be structured differently.
+--| The bridge pattern comes at the cost of a high maintenence overhead as any
+--| change to the interface must be duplicated in the implementation interface.
+--| The implementation interface should really be generated from the interface.
+--|
+--| The following features of the bridge patter are not used in Eiffel Vision.
+--| - Subsitiution of different implementations for one interface at runtime.
+--| - Hiding of propritary implementation through delivery of interface source
+--|   but only compiled implementations. (Not applicable in Eiffel)
+--| - Protection of clients from relinking due to implementation changes.
+--|   (Not applicable in Eiffel)
+--| - Sharing an implementation object among interface objects.
+--| - Delaying creation of implementation object.
 --|-----------------------------------------------------------------------------
 
 --!-----------------------------------------------------------------------------
@@ -263,6 +278,9 @@ end -- class EV_ANY
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/16 01:08:34  oconnor
+--| added comments about bridge pattern
+--|
 --| Revision 1.14  2000/03/02 21:04:12  oconnor
 --| Removed second comment about initialize not being needed.
 --|

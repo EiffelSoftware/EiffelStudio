@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			precompile_libraries
 			exec_env.change_working_directory (install_dir)
 			install_dotnet
+			update_registry
 		ensure
 			initialized: initialized
 		end
@@ -128,6 +129,38 @@ feature -- Actions
 			end
 		end
 
+	update_registry is
+			-- Update ISE_EIFFEL in registry so that last `\' character is
+			-- removed.
+		require
+			initialized: initialized
+		local
+			reg: WEL_REGISTRY
+			p: POINTER
+			key: WEL_REGISTRY_KEY_VALUE
+			new_key_val: STRING
+		do
+			new_key_val := clone (install_dir)
+			if new_key_val.item (new_key_val.count) = '\' then
+				new_key_val.remove (new_key_val.count)
+
+				create key.make (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.Reg_sz, new_key_val)
+				create reg
+
+				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\ec", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+				reg.set_key_value (p, "ISE_EIFFEL", key)
+				reg.close_key (p)
+
+				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\finish_freezing", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+				reg.set_key_value (p, "ISE_EIFFEL", key)
+				reg.close_key (p)
+
+				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\wizard", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+				reg.set_key_value (p, "ISE_EIFFEL", key)
+				reg.close_key (p)
+			end
+		end
+		
 feature -- Status report
 
 	initialized: BOOLEAN is

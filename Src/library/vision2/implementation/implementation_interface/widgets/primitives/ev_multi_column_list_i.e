@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			pixmaps_width := 16
 			pixmaps_height := 16
 
-			update_children_agent := ~update_children
+			update_children_agent := agent update_children
 			create column_titles.make
 			create column_widths.make
 			create column_alignments.make
@@ -576,8 +576,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; 
-	a_column: INTEGER) is
+	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
 			-- Set alignment of `a_column' to
 			-- corresponding `alignment_code'.
 			-- Called when an alignment has been changed.

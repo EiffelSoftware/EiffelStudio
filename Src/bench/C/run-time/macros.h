@@ -430,8 +430,6 @@ extern int fcount;
  *  RTWT(x,y,z) fetches the creation type
  *  RTWPT(x,y,z) fetches the creation type of a precompiled feature
  *  RTWPP(x,y) returns the feature address ($ operator)
- *  RTWP(x,y,z) returns the feature address ($ operator) for a specific type
- *  RTPWP(x,y,z) returns the precompiled feature address ($ operator) for a specific type
  *  RTWO(x) stores in a list the body id of the just called once routine
  */
 #define RTWF(x,y,z) wfeat(x,y,z)
@@ -445,8 +443,6 @@ extern int fcount;
 #define RTWT(x,y,z) wtype(x,y,z)
 #define RTWPT(x,y,z) wptype(x,y,z)
 #define RTWPP(x,y) ((eif_address_table[x])[y])
-#define RTWP(x,y,z) wpointer(x,y,z)
-#define RTPWP(x,y,z) wppointer(x,y,z)
 #define RTWO(x) onceadd(x)
 
 #define WDBG(x,y)	is_debug(x,y)				/* Debug option */

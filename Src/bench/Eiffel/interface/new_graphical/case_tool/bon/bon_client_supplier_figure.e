@@ -578,7 +578,7 @@ feature {NONE} -- Implementation
 				name_label.set_text (a_text)
 				name_label.show
 				name_label.enable_sensitive
-				name_label.set_point_position (label_group.point_x, label_group.point_y)
+				name_label.set_point_position (label_group.point_x + 5, label_group.point_y)
 				label_group.extend (name_label)
 				
 				l_features := model.features
@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 					sorted_names.after
 				loop
 					txt := sorted_names.item
-					txt.set_point_position (label_group.point_x, cur_y)
+					txt.set_point_position (label_group.point_x + 5, cur_y)
 					label_group.extend (txt)
 					cur_y := cur_y + txt.height
 					sorted_names.forth

@@ -62,7 +62,7 @@ feature -- Process message event
 						current_window := find_current_window (msg.hwnd, main_w) 
 						hwnd := current_window.item
 						dlg := cwin_get_last_active_popup (hwnd)
-						if dlg /= hwnd or is_dialog then
+						if dlg /= hwnd or is_dialog (hwnd) then
 							msg.process_dialog_message (dlg)
 							if not msg.last_boolean_result then
 								msg.translate

@@ -288,6 +288,7 @@ del run-time\wumain.c
 del run-time\wurgent.c
 del run-time\wurgent.c
 del run-time\wgen_conf.c
+del run-time\wrout_obj.c
 del cleanup.bat
 
 :end

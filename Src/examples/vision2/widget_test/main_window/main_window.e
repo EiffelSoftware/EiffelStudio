@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 		do
 			create generation_dialog
 			generation_dialog.set_message ("You have selected to generate the " + Test_controller.selected_test_name +
-			"%N%NThe following files will be generated:%N" + application_file_name + "%N" + ace_file_name + "%N" +
+			"%N%NThe following files will be generated:%N" + application_file_name + "%N" + ace_file_name + "%N" + Common_test_file_name + "%N" +
 			Test_controller.selected_test_name + ".e%N%NPlease specify a directory and then click %"Ok%" to generate the project:")	
 			generation_dialog.show_modal_to_window (Current)
 		end

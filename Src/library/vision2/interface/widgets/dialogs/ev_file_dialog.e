@@ -93,6 +93,18 @@ feature -- Status report
 			bridge_ok: not Result.is_empty implies
 				Result.is_equal (implementation.file_path)
 		end
+		
+	selected_filter_index: INTEGER is
+			-- One based index of selected filter within `filters', or
+			-- zero if no filters set.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.selected_filter_index
+		ensure
+			result_zero_when_no_filters: filters.is_empty implies result = 0
+			valid_result_when_filters_set: not filters.is_empty implies Result >= 1 and Result <= filters.count
+		end
 
 feature -- Element change
 

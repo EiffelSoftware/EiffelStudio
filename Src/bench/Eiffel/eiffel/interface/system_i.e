@@ -759,6 +759,25 @@ feature -- default_rescue routine
 			end
 		end
 
+feature -- default_create routine
+
+	default_create_id: ROUTINE_ID is
+			-- Routine id of default create from GENERAL.
+			-- Return 0 if GENERAL has not been compiled or
+			-- does not have a feature named `default_create'.
+		local
+			feature_i: FEATURE_I
+		once
+			if general_class /= Void and then
+					general_class.compiled_class /= Void then
+				feature_i := general_class.compiled_class.feature_table.item 
+														("default_create")
+				if feature_i /= Void then
+					Result := feature_i.rout_id_set.first
+				end
+			end
+		end
+
 feature -- Merging
 
 	merge (other: like Current) is
@@ -3658,10 +3677,10 @@ feature -- Pattern table generation
 
 			if license.demo_mode then
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
-				buffer.putstring ("%N%Tegc_type_of_gc = 123150;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123151;%N")
 			else
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
-				buffer.putstring ("%N%Tegc_type_of_gc = 123151;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123152;%N")
 			end
 
 			from

@@ -544,6 +544,13 @@ end
 					generics.forth
 				end
 			end
+
+				-- Now we must check if `creation_feature' is set.
+				-- If not, set it to `default_create_feature'.
+				-- Cannot be done earlier!
+			if creation_feature = Void then
+				creation_feature := default_create_feature
+			end
 		end
 
 feature -- Third pass: byte code production and type check
@@ -596,7 +603,6 @@ feature -- Third pass: byte code production and type check
 			type_checked   : BOOLEAN
 		do
 			def_resc := default_rescue_feature
-
 
 			from
 				system.changed_body_ids.clear_all
@@ -1074,7 +1080,6 @@ end
 					if changed_body_id_info.has_to_update_dependances then
 						depend_server.item (changed_body_id_info.written_in).replace_key (old_body_id, new_body_id)
 					end
-
 					
 					changed_body_ids.forth
 				end
@@ -2485,21 +2490,32 @@ feature -- Supplier checking
 			end
 
 			system_creation := System.creation_name
+
 			if 	system_creation /= Void
 				and then
 				(creators = Void or else not creators.has (system_creation))
 			then
-				!!vd27
-				vd27.set_creation_routine (system_creation)
-				vd27.set_root_class (Current)
-				Error_handler.insert_error (vd27)
+					-- Check default create
+				creation_proc := default_create_feature
+				if (creation_proc = Void) or else
+					not system_creation.is_equal (creation_proc.feature_name) then
+					!!vd27
+					vd27.set_creation_routine (system_creation)
+					vd27.set_root_class (Current)
+					Error_handler.insert_error (vd27)
+				end
 			end
 
-			if (system_creation = Void) and then (creators /= Void) then
-				!!vd27
-				vd27.set_creation_routine ("")
-				vd27.set_root_class (Current)
-				Error_handler.insert_error (vd27)
+			if (system_creation = Void) then
+				if allows_default_creation then
+						-- Set creation_name in System
+					System.set_creation_name (default_create_feature.feature_name)
+				else
+					!!vd27
+					vd27.set_creation_routine ("")
+					vd27.set_root_class (Current)
+					Error_handler.insert_error (vd27)
+				end
 			end
 
 			Error_handler.checksum
@@ -2571,9 +2587,17 @@ feature -- Order relation for inheritance and topological sort
 			-- Is `fn' a valid creation procedure ?
 		require
 			good_argument: fn /= Void
+		local
+			dcr_feat : FEATURE_I
 		do
 			if creators /= Void then
 				Result := creators.has (fn)
+			else
+				dcr_feat := default_create_feature
+
+				if dcr_feat /= Void then
+					Result := fn.is_equal (dcr_feat.feature_name)
+				end
 			end
 		end
 
@@ -3006,6 +3030,57 @@ feature -- default_rescue routine
 			end
 		end
 
+feature -- default_create routine
+
+	default_create_feature : FEATURE_I is
+			-- The version of `default_create' from GENERAL.
+			-- Void if GENERAL has not been compiled yet or
+			-- does not posess the feature or class is deferred.
+		local
+			ftab: FEATURE_TABLE
+			item: FEATURE_I
+			pos : INTEGER
+		do
+			if not is_deferred and then (System.general_class /= Void) then
+				from
+					ftab := feature_table
+					pos  := ftab.iteration_position
+					ftab.start
+				until
+					ftab.after or (Result /= Void)
+				loop
+					item := ftab.item_for_iteration
+
+					if equal (item.rout_id_set.first, System.default_create_id) then
+						Result := item
+					end
+
+					ftab.forth
+				end
+
+				ftab.go (pos)
+			end
+		end
+
+	allows_default_creation : BOOLEAN is
+			-- Can an instance of this class be
+			-- created with 'default_create'?
+		local
+			dcr_feat : FEATURE_I
+		do
+			-- Answer is NO if class is deferred
+			if not is_deferred then
+				dcr_feat := default_create_feature
+				-- Answer is NO if the class has no 
+				-- 'default_create'
+				if dcr_feat /= Void then
+					Result := (creators = Void) or else
+							  (not creators.empty and then
+							   creators.has (dcr_feat.feature_name))
+				end
+			end
+		end
+
 feature -- Dispose routine
 
 	dispose_feature: FEATURE_I is
@@ -3192,9 +3267,11 @@ feature -- Process the creation feature
 			-- Assign the first creation procedure (if any) to
 			-- `creation_feature'.
 		do
-			if creators /= Void and then not creators.empty then
-				creators.start
-				creation_feature := tbl.item (creators.key_for_iteration)
+			if creators /= Void then
+				if not creators.empty then
+					creators.start
+					creation_feature := tbl.item (creators.key_for_iteration)
+				end
 			else
 				creation_feature := Void
 			end

@@ -16,7 +16,8 @@ inherit
 		end
 
 creation
-	make_from_olds
+	make_default,
+	make_with_values
 
 feature {NONE} -- Initialization
 
@@ -25,6 +26,28 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			actual_value := a_value
+		end
+
+	make_default (a_name: STRING; rt: RESOURCE_TABLE; a_color_name: STRING; a_font_name: STRING) is
+			-- Initialize Current
+			-- bad implementation: one can mistake color_name and a_color_name
+		local
+			f: EV_FONT
+			c: EV_COLOR
+		do
+			name := a_name
+
+			create default_value.make
+			create f.make_by_system_name (a_font_name)
+			default_value.set_font (f)
+			c := color_from_table (a_color_name)
+			default_value.set_color (c)
+
+			create actual_value.make
+			create f.make_by_system_name (rt.get_string (font_name, a_font_name))
+			actual_value.set_font (f)
+			c := color_from_table (rt.get_string (color_name, a_color_name))
+			actual_value.set_color (c)
 		end
 
 feature -- Access
@@ -38,13 +61,19 @@ feature -- Access
 			Result := actual_value.out
 		end
 
-	font_name: STRING
+	font_name: STRING is
 			-- Name associated with font value
-			-- to be changed later form an attribute to a feature
+		do
+			Result := clone (name)
+			Result.append (" font")
+		end
 
-	color_name: STRING
+	color_name: STRING is
 			-- Name associated with color value
-			-- to be changed later form an attribute to a feature
+		do
+			Result := clone (name)
+			Result.append (" color")
+		end
 
 	font_resource: EB_FONT_RESOURCE is
 		do
@@ -81,26 +110,6 @@ feature -- Element change
 			-- Set `actual_value' to `a_format' and update `value'.
 		do
 			actual_value := a_format
-		end
-
-feature {NONE} -- Obsolete
-
-	make_from_olds (a_name: STRING; old_f: FONT_RESOURCE; old_c: COLOR_RESOURCE) is
-		local
-			cf: EV_CHARACTER_FORMAT
-			f: EV_FONT
-		do
-			Create cf.make
-			Create f.make_by_system_name (old_f.value)
-			cf.set_font (f)
-			cf.set_color (color_from_table (old_c.value))
-			font_name := old_f.name
-			color_name := old_c.name
-			make_with_values (a_name, cf)
-		end
-
-	make_from_old (old_r: RESOURCE) is
-		do
 		end
 
 end -- class EB_FORMAT_RESOURCE

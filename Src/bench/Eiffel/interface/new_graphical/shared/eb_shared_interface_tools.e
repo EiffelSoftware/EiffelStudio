@@ -80,17 +80,17 @@ feature {NONE} -- Shared tools access
 				(not profile_tool.destroyed)
 		end
 
---	dynamic_lib_tool: EB_DYNAMIC_LIB_TOOL is
---			-- Unique assembly tool
---		do
---			Result := Dynamic_lib_tool_cell.item
---		end
+	dynamic_lib_tool: EB_DYNAMIC_LIB_TOOL is
+			-- Unique assembly tool
+		do
+			Result := Dynamic_lib_tool_cell.item
+		end
 
---	dynamic_lib_tool_is_valid: BOOLEAN is
---		do
---			Result := (dynamic_lib_tool /= Void) and then
---				(not dynamic_lib_tool.destroyed)
---		end
+	dynamic_lib_tool_is_valid: BOOLEAN is
+		do
+			Result := (dynamic_lib_tool /= Void) and then
+				(not dynamic_lib_tool.destroyed)
+		end
 
 feature {NONE} -- Shared tools change
 
@@ -130,11 +130,11 @@ feature {NONE} -- Shared tools change
 			Profile_tool_cell.put (tool)
 		end
 
---	set_dynamic_lib_tool: EB_DYNAMIC_LIB_TOOL is
----			-- Unique assembly tool
---		do
---			Dynamic_lib_tool_cell.put (tool)
---		end
+	set_dynamic_lib_tool (tool: EB_DYNAMIC_LIB_TOOL) is
+			-- Unique assembly tool
+		do
+			Dynamic_lib_tool_cell.put (tool)
+		end
 
 
 feature
@@ -173,16 +173,16 @@ feature
 			!! Result.make
 		end
 
---	Progress_dialog: DEGREE_OUTPUT is
---		do
---			Result := Project_tool.progress_dialog
---		end
+	Progress_dialog: DEGREE_OUTPUT is
+		do
+			Result := Project_tool.progress_dialog
+		end
 
 feature {NONE} -- Implementation
 
 	mode: BOOLEAN_REF is
 		once
-			!! Result
+			create Result
 			Result.set_item (True)
 		end
 
@@ -232,11 +232,11 @@ feature {NONE} -- Implementation
 			create Result.put (Void)
 		end
 
---	Dynamic_lib_tool_cell: CELL [EB_DYNAMIC_LIB_TOOL] is
---			-- Cell for the profile tool
---		once
---			create Result.put (Void)
---		end
+	Dynamic_lib_tool_cell: CELL [EB_DYNAMIC_LIB_TOOL] is
+			-- Cell for the profile tool
+		once
+			create Result.put (Void)
+		end
 
 	Tool_supervisor_cell: CELL [EB_TOOL_SUPERVISOR] is
 			-- Window manager for ebench windows
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 --		do
 --			if not ewb_display.is_valid then
 --				io.error.putstring ("Cannot open display %"")
---				!! exec_env
+--				create exec_env
 --				display_name := exec_env.get ("DISPLAY")
 --				if display_name /= Void then
 --					io.error.putstring (display_name)
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 --				io.error.putstring ("%"%N%
 --					%Check that $DISPLAY is properly set and that you are%N%
 --					%authorized to connect to the corresponding server%N")
---				!! exc
+--				create exc
 --				exc.raise ("Invalid display")
 --			end
 --				--| If we don't put bench mode here,
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 --				--| Also note that `error_window' is a
 --				--| once-function!!
 --			mode.set_item (False)
---			!! new_resources.initialize
+--			create new_resources.initialize
 --			launched_project_tool := Project_tool
 --		end
 

@@ -6,10 +6,27 @@ class
 
 inherit
 	BENCH_WIZARD_ERROR_STATE_WINDOW
+		redefine
+			make
+		end
 
 creation
 	make
 
+feature {NONE} -- Implementation
+
+	make (an_info: like wizard_information) is
+			-- Set `help_filename' with `h_filename'.
+		do
+			set_help_filename (h_filename)
+			Precursor {BENCH_WIZARD_ERROR_STATE_WINDOW} (an_info) 
+		end
+
+feature -- Access
+
+	h_filename: STRING is "index.html"
+			-- Path to HTML help filename
+			
 feature -- basic Operations
 
 	display_state_text is

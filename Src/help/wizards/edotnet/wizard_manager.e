@@ -10,7 +10,8 @@ class
 inherit
 	BENCH_WIZARD_MANAGER
 		redefine
-			Wizard_title
+			Wizard_title,
+			prepare
 		end
 
 create
@@ -18,6 +19,13 @@ create
 
 feature -- Initialization
 
+	prepare is
+			-- Prepare window.
+		do
+			first_window.add_help_button
+			Precursor {BENCH_WIZARD_MANAGER}	
+		end
+		
 	Wizard_title: STRING is 
 			-- Window title for this wizard.
 		once

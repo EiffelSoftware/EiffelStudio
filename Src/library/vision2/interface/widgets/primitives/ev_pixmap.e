@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 		do
 			!EV_PIXMAP_IMP! implementation.make_with_size (w, h)
 			implementation.set_interface (Current)
+			implementation.unlock
 		end
 
 	make_from_file (file_name: STRING) is
@@ -40,6 +41,7 @@ feature {NONE} -- Initialization
 		do
 			!EV_PIXMAP_IMP! implementation.make
 			implementation.set_interface (Current)
+			implementation.unlock
 			read_from_file (file_name)
 		end
 

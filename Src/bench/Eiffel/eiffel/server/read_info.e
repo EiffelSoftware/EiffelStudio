@@ -22,7 +22,7 @@ feature
 			io.error.putstring ("READ_INFO:%NOffset: ");
 			io.error.putint (offset);
 			io.error.putstring ("%NClass_id: ");
-			io.error.putint (class_id.id);
+			class_id.trace;
 			io.error.putstring ("%Nobject_count: ");
 			io.error.putint (object_count);
 			io.error.new_line;

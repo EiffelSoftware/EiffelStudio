@@ -45,6 +45,11 @@ inherit
 			remove_assembly
 		end
 	
+	SHARED_EIFFEL_PROJECT
+		export {NONE}
+			all
+		end
+	
 create
 	make
 	
@@ -52,9 +57,34 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Initialize structure.
+		require
+			initialized: Eiffel_project.initialized
+		local
+			sys_name: STRING
+			f: RAW_FILE
+			retried: BOOLEAN
 		do
 			create_item
 			create ace.make
+			if not retried then
+				if not is_valid then
+					if Eiffel_project.system_defined then
+						sys_name := Eiffel_system.name
+					else
+						sys_name := "sample"
+					end
+					create f.make_open_write (Eiffel_ace.file_name)
+					if f.exists and then f.is_writable then
+						f.putstring (blank_ace_file (sys_name))
+						f.close
+						create ace.make
+						check is_valid end
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
 		end
 	
 feature -- Access
@@ -438,4 +468,10 @@ feature {NONE} -- Implementation
 	ace: ACE_FILE_MODIFIER
 			-- Access to the Ace file.
 
+	blank_ace_file (sys_name: STRING): STRING is
+			-- Minimal ace file generated when a syntax error is detected.
+		do
+			Result := "system%N%T" + sys_name + "%Nroot%N%Tany%N%Ncluster%N%Nend"
+		end
+		
 end -- class PROJECT_PROPERTIES

@@ -21,35 +21,11 @@ feature {NONE} -- Initialization
 	make is
 		do
 			after := True
---			create kept_objects.make
 		end
 
 feature -- Access
 
-	last_line: VIEWER_LINE
-
---	kept_objects: LINKED_SET [STRING]
---			-- Address of objects viewed in this text.
-
-feature -- Status report
-
-	has_breakable_slots: BOOLEAN
-			-- Is there any breakable slots displayed ?
-			-- (and thus a left margin visible)
-
-feature -- Status setting
-
-	enable_has_breakable_slots is
-			-- Set `has_breakable_slots' to `True'.
-		do
-			has_breakable_slots := True
-		end	
-
-	disable_has_breakable_slots is
-			-- Set `has_breakable_slots' to `False'.
-		do
-			has_breakable_slots := False
-		end	
+	last_line: EIFFEL_EDITOR_LINE
 
 feature -- End of file
 
@@ -88,7 +64,6 @@ feature -- Text processing
 			-- generated as output.
 		do
 			Precursor {TEXT_FORMATTER} (a_text)
-			disable_has_breakable_slots
 		end
 
 	process_basic_text (t: BASIC_TEXT) is
@@ -96,7 +71,7 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_TEXT
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image )
 			last_line.append_token (tok)
 		end
 
@@ -105,13 +80,13 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_STRING
 			url: URL_STRING_TEXT
---			stone: URL_STONE
+			stone: URL_STONE
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			url ?= t
 			if url /= Void then
---				create stone.make (url.link)
---				tok.set_pebble (stone)
+				create stone.make (url.link)
+				tok.set_pebble (stone)
 			end
 			last_line.append_token (tok)
 		end
@@ -121,13 +96,13 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_COMMENT
 			url: URL_STRING_TEXT
---			stone: URL_STONE
+			stone: URL_STONE
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			url ?= t
 			if url /= Void then
---				create stone.make (url.link)
---				tok.set_pebble (stone)
+				create stone.make (url.link)
+				tok.set_pebble (stone)
 			end
 			last_line.append_token (tok)
 		end
@@ -137,7 +112,7 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_COMMENT
 		do			
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			last_line.append_token (tok)
 		end
 
@@ -152,7 +127,7 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_TABULATION
 		do
-			create tok.make (t.indent_depth, tab_size_cell)
+			create tok.make (t.indent_depth)
 			last_line.append_token (tok)
 		end
 
@@ -161,7 +136,7 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_OPERATOR
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			last_line.append_token (tok)
 		end
 
@@ -172,7 +147,7 @@ feature -- Text processing
 			pc: PRECURSOR_KEYWORD_TEXT
 			stone: FEATURE_STONE
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			pc ?= t
 			if pc /= Void then
 				create stone.make (pc.e_feature)
@@ -187,7 +162,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_CLUSTER
 			stone: CLUSTER_STONE
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			create stone.make (t.cluster_i)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
@@ -201,7 +176,7 @@ feature -- Text processing
 			e_class: CLASS_C
 			class_i: CLASS_I
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			class_i := t.class_i
 			e_class := class_i.compiled_class
 			if e_class /= Void then
@@ -218,7 +193,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_FEATURE
 			stone: FEATURE_STONE
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			create stone.make (t.e_feature)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
@@ -229,7 +204,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_TEXT
 			stone: BREAKABLE_STONE
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			create stone.make (t.e_feature, t.index)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
@@ -240,7 +215,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_FEATURE
 			stone: FEATURE_NAME_STONE
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			create stone.make (t.image, t.e_class)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
@@ -256,10 +231,6 @@ feature -- Text processing
 			create stone.make (a_bp.e_feature, a_bp.index)
 			tok.set_pebble (stone)
 			last_line.breakpoint_token.set_pebble (stone)
-
-			if not has_breakable_slots then
-				enable_has_breakable_slots
-			end
 		end
 
 	process_padded is
@@ -287,7 +258,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_OPERATOR
 			stone: FEATURE_STONE
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			create stone.make (t.e_feature)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
@@ -299,7 +270,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_OBJECT
 			stone: OBJECT_STONE
 		do
-			create tok.make (t.address, tab_size_cell)
+			create tok.make (t.address)
 			create stone.make (t.address, t.name, t.e_class)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
@@ -314,7 +285,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_ERROR_CODE
 			stone: ERROR_STONE
 		do
-			create tok.make (t.error_text, tab_size_cell)
+			create tok.make (t.error_text)
 			create stone.make (t.error)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
@@ -326,7 +297,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_FEATURE
 			stone: FEATURE_ERROR_STONE
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			create stone.make (t.e_feature, t.position)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
@@ -338,7 +309,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_CLASS
 			stone: CL_SYNTAX_STONE
 		do
-			create tok.make (t.error_text, tab_size_cell)
+			create tok.make (t.error_text)
 			create stone.make (t.syntax_message, t.e_class)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
@@ -350,7 +321,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_STRING
 			stone: ACE_SYNTAX_STONE
 		do
-			create tok.make (t.error_text, tab_size_cell)
+			create tok.make (t.error_text)
 			create stone.make (t.syntax_error)
 --			tok.set_pebble (stone)
 			last_line.append_token (tok)
@@ -361,7 +332,7 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_TAG
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			tok.set_indexing (False)
 			last_line.append_token (tok)
 		end
@@ -371,7 +342,7 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_TAG
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			tok.set_indexing (True)
 			last_line.append_token (tok)
 		end
@@ -381,7 +352,7 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_GENERIC
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			last_line.append_token (tok)
 		end
 
@@ -390,7 +361,7 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_CHARACTER
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			last_line.append_token (tok)
 		end
 
@@ -399,7 +370,7 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_LOCAL
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			last_line.append_token (tok)
 		end
 
@@ -408,7 +379,7 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_NUMBER
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			last_line.append_token (tok)
 		end
 
@@ -417,7 +388,7 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_RESERVED
 		do
-			create tok.make (t.image, tab_size_cell)
+			create tok.make (t.image)
 			last_line.append_token (tok)
 		end
 
@@ -442,7 +413,7 @@ feature -- Obsolete
 		local
 			tok: EDITOR_TOKEN_TEXT
 		do
-			create tok.make (s, tab_size_cell)
+			create tok.make (s)
 			last_line.append_token (tok)
 		end
 
@@ -454,12 +425,6 @@ feature -- Properties
 feature {NONE} -- Initialisations and File status
 
 	eol_reached: BOOLEAN
-
-feature {NONE} -- Implementation
-
-	tab_size_cell: CELL [INTEGER] is
-		deferred
-		end
 
 end -- class STRUCTURED_TEXT_TRANSLATER
 

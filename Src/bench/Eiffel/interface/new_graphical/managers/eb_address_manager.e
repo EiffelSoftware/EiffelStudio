@@ -573,6 +573,7 @@ feature {NONE} -- Execution
 			ctxt: STRING
 			wd: EV_WARNING_DIALOG
 		do
+			output_line.remove_text
 			if class_i = Void then
 				ctxt := class_address.text
 				if
@@ -616,6 +617,7 @@ feature {NONE} -- Execution
 	process_feature_class is
 			-- Analyze the class the user chose, but we are choosing a feature.
 		do
+			output_line.remove_text
 			if current_class = Void then
 				if class_i = Void then
 					if output_line /= Void then
@@ -630,8 +632,8 @@ feature {NONE} -- Execution
 						end
 					end
 				else
-					if output_line /= Void then
-						output_line.remove_text
+					if output_line /= Void and not feature_address.text.is_empty then
+						output_line.set_text (Warning_messages.w_not_a_compiled_class_line (class_i.name_in_upper))
 					end
 					parent.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
 				end

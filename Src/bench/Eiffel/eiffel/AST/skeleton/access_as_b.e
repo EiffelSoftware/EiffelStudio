@@ -24,4 +24,11 @@ feature
 		deferred
 		end
 
+feature -- Convenience
+
+	is_argument: BOOLEAN is
+			-- Is this an access to an argument?
+		do
+		end
+
 end -- class ACCESS_AS_B

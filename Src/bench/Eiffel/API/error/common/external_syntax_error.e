@@ -1,9 +1,8 @@
 indexing
 
-	description: 
-		"Syntax error for invalid external declaration.";
-	date: "$Date$";
-	revision: "$Revision $"
+	description: "Syntax error for invalid external declaration."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EXTERNAL_SYNTAX_ERROR
 
@@ -22,32 +21,32 @@ creation {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS}
 
 feature -- Property
 
-	external_error_message: STRING;
+	external_error_message: STRING
 			-- Specific syntax message
 
 feature {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS} -- Setting
 
 	set_external_error_message (message: STRING) is
 		do
-			external_error_message := clone (message);
-		end;
+			external_error_message := clone (message)
+		end
 
 	set_file_name (s: STRING) is
 			-- Assign `s' to `file_name'.
 		do
-			file_name := s;
-		end;
+			file_name := s
+		end
 
 	set_start_position (i: INTEGER) is
 			-- Assign `i' to `start_position'.
 		do
-			start_position := i;
-		end;
+			start_position := i
+		end
 
 	set_end_position (i: INTEGER) is
 			-- Assign `i' to `end_position'.
 		do
-			end_position := i;
-		end;
+			end_position := i
+		end
 
 end -- class EXTERNAL_SYNTAX_ERROR

@@ -65,7 +65,7 @@ feature -- Code generation
 				until
 					i > nb
 				loop
-					include_file := header_files @ i
+					include_file := header_files.item (i)
 					if not queue.has (include_file) then
 						queue.extend (include_file)
 						if not context.final_mode then

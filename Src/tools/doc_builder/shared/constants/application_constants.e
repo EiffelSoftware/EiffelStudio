@@ -72,7 +72,7 @@ feature -- Directory Paths
 			-- Directory for temporary file generation
 		once
 			create Result.make_from_string ("C:")
-			Result.extend ("doc_temp")
+			Result.extend ("doc")
 		end
 		
 	temporary_html_directory: DIRECTORY_NAME is

@@ -8,7 +8,7 @@ inherit
 		rename
 			make as extend_stack_make
 		export
-			{ACCESS_FEAT_AS_B} i_th
+			{ACCESS_FEAT_AS_B, PRECURSOR_AS_B} i_th
 		end
 	SHARED_SERVER
 		undefine

@@ -36,7 +36,7 @@ feature
 		do
 debug
 	io.error.putstring ("Inserting a new derivation ");
-	io.error.putint (an_id.id);
+	an_id.trace;
 	io.error.new_line;
 	a_type.dump (io.error);
 	io.error.new_line;

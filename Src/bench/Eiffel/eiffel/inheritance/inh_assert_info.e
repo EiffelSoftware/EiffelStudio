@@ -56,7 +56,7 @@ feature
 			io.putstring (System.class_of_id (written_in).class_name);
 			io.new_line;
 			io.putstring ("body_index: ");
-			io.putint (body_index.id);
+			io.putstring (body_index.dump);
 			io.new_line;
 			io.putstring ("has_postcondition: ");
 			io.putbool (has_postcondition);

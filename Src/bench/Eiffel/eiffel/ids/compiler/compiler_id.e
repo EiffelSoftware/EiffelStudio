@@ -71,4 +71,29 @@ feature {COMPILER_SUBCOUNTER} -- Implementation
 			counter_not_void: Result /= Void
 		end;
 
+feature -- Trace
+
+	dump: STRING is
+			--  Dump string
+		do
+			!! Result.make (10);
+			Result.extend ('[');
+			Result.append_integer (compilation_id);
+			Result.append (", ");
+			Result.append_integer (internal_id);
+			Result.extend (']')
+		ensure
+			dump_not_void: Result /= Void
+		end
+
+	trace is
+			-- Dump string on standard error.
+		do
+			io.error.put_character ('[');
+			io.error.put_integer (compilation_id);
+			io.error.put_string (", ");
+			io.error.put_integer (internal_id);
+			io.error.put_character (']')
+		end
+
 end -- class COMPILER_ID

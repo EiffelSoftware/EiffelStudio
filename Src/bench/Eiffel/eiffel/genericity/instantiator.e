@@ -60,7 +60,7 @@ feature -- Attributes
 debug
 	io.error.putstring ("Dispatch : ");
 	io.error.putstring (a_class.class_name);
-	io.error.putint (a_class.id.id);
+	a_class.id.trace;
 	io.error.new_line;
 	io.error.putstring (generic_type.dump);
 	io.error.new_line;

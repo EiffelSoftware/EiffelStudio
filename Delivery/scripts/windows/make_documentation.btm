@@ -11,10 +11,6 @@ iff not exist %DOCUMENT_DIR\document.exe then
 	echo Cannot find document.exe
 	CANCEL
 endiff
-iff not exist %DOCUMENT_DIR\default.css then
-	echo Cannot find default.css
-	CANCEL
-endiff
 iff not isdir %INSTALL_DIR\docs then
 	echo No destination directory for the documentation
 	CANCEL
@@ -35,7 +31,8 @@ else
 endiff
 remtrace Setup files
 cd newdocs
-copy internal\eiffel.hhc .
+copy default.css ..
+fullrf internal\eiffel.hhc
 copy internal\eiffel.hhp .
 copy internal\stop_words.stp .
 copy ..\document.exe .

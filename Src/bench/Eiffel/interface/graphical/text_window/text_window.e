@@ -139,7 +139,11 @@ feature -- Text operations
 			if b <= count and then b > a then
 					-- Does not highlight if `b' is beyond the
 					-- bounds of the text.
-				set_selection (a, b)
+
+					-- Select first the end of the text in order to see
+					-- the top of the text, and then put the text
+				set_selection (b, a)
+				set_top_character_position (a)
 			end
 		end
 

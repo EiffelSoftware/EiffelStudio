@@ -132,6 +132,8 @@ extern int eif_max_mem;				/* Maximum memory that can be allocated */
 extern EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex;	/* GC mutex */
 #endif
 
+#endif
+
 extern EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag);				/* Low level allocation routine */
 extern EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize);				/* Calloc */
 extern void xfree(register EIF_REFERENCE ptr);				/* Free */
@@ -156,9 +158,6 @@ extern void memck(unsigned int max_dt);
 extern void mem_diagnose(int sig);			/* Memory usage dump */
 extern int full_coalesc(int chunk_type);			/* Perform free blocks coalescing */
 extern void sc_stop(void);
-
-#endif /* ISE_GC */
-
 
 #endif /* ISE_GC */
 

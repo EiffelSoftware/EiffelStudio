@@ -72,10 +72,14 @@ feature -- Code generation
 
 	register_acces (id: INTEGER): STRING is
 		do
-			!!Result.make (0);
-			Result.append ("l[");
-			Result.append_integer (context.local_index (reg_name (id)));
-			Result.append_character (']');
+			if context.byte_code.is_once and then id = 0 then
+				Result := "Result"
+			else
+				!!Result.make (0);
+				Result.append ("l[");
+				Result.append_integer (context.local_index (reg_name (id)));
+				Result.append_character (']');
+			end
 		end
 
 	type_c (id: INTEGER): TYPE_C is

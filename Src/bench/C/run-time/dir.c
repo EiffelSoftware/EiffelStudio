@@ -40,8 +40,8 @@
 #include <unistd.h>
 #endif
 
-#include "file.h"
 #include "dir.h"
+#include "file.h" /* %%ss moved from 2 lines above */
 #include "plug.h"
 #include "error.h"
 

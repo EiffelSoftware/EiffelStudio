@@ -1,0 +1,97 @@
+BODY {
+	BACKGROUND-COLOR: white;
+}
+
+A {
+    TEXT-DECORATION: none;
+}
+
+A:hover {
+    TEXT-DECORATION: underline;
+}
+
+.eclass {
+    COLOR: magenta;
+    FONT-STYLE: italic;
+}
+
+.ekeyword {
+    COLOR: blue;
+    FONT-WEIGHT: bold;
+}
+
+.esymbol {
+    COLOR: navy;
+}
+
+.estring {
+    COLOR: indigo;
+    FONT: 91% "Courier New", serif;
+}
+
+.echar {
+    COLOR: indigo;
+    FONT-WEIGHT: bold;
+}
+
+.enumber {
+    COLOR: indigo;
+    FONT-WEIGHT: bold;
+}
+
+.etag {
+    COLOR: sienna;
+}
+
+.efeature {
+    COLOR: green;
+    FONT-STYLE: italic;
+}
+
+.ecomment {
+    COLOR: red;
+    FONT: 91% "Courier New", serif;
+}
+
+.equoted {
+    COLOR: black;
+    FONT-STYLE: italic;
+}
+
+.elocal {
+    COLOR: brown;
+}
+
+.eitag {
+    COLOR: blue;
+}
+
+.ereserved {
+    COLOR: brown;
+    FONT-WEIGHT: bold;
+}
+
+.egeneric {
+	COLOR: dodgerblue;
+}
+
+.ecluster {
+    COLOR: navy;
+    FONT-VARIANT: small-caps;
+    FONT-WEIGHT: bold;
+}
+
+.link1 {
+	BACKGROUND-COLOR: #006633;
+	COLOR: white;
+}
+
+.link2 {
+	BACKGROUND-COLOR: #330066;
+	COLOR: white;
+}
+
+.nolink1, .nolink2 {
+	BACKGROUND-COLOR: #FFCC00;
+	COLOR: #330066;
+}

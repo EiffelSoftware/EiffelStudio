@@ -10,6 +10,9 @@ inherit
 		end;
 
 	POLYNOM
+		undefine
+			copy, is_equal
+		end
 
 create
 

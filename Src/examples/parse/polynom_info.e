@@ -46,7 +46,7 @@ feature
 	print_id_table is
 		do
 			io.putstring ("id_table:%N");
-			if not id_table.empty then
+			if not id_table.is_empty then
 				from
 					id_table.start
 				until
@@ -62,7 +62,7 @@ feature
 
 	set_value is
 		do
-			if not id_table.empty then
+			if not id_table.is_empty then
 				io.putstring ("Enter the integer values (9999 to end):");
 				id_value.wipe_out;
 				id_value.forth
@@ -87,7 +87,7 @@ feature
 			id_table.start;
 			id_table.compare_objects
 			id_table.search (s);
-			if not (id_table.empty or id_table.after) then
+			if not (id_table.is_empty or id_table.after) then
 				id_value.go_i_th (id_table.index);
 				Result := id_value.item
 			else

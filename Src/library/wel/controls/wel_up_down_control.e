@@ -53,23 +53,36 @@ feature -- Access
 
 	position: INTEGER is
 			-- Current position
+		local
+			temp: INTEGER
 		do
-			Result := cwin_lo_word (cwin_send_message_result (item, Udm_getpos,
-				0, 0))
+			temp := cwin_send_message_result (item, Udm_getpos, 0, 0)	
+			Result := cwin_lo_word (temp)
+				-- Because we are use `Udm_getpos' and not `Udm_getpos32',
+				-- we need to apply this conversion to the result in order to
+				-- correctly deal with negative values. At some point, all settings and
+				-- queries should use 32 bit functions.
+			if Result > 32768 then
+				Result := Result - 65536
+			end
 		end
 
 	minimum: INTEGER is
 			-- Minimum position
+		local
+			lower, higher: INTEGER
 		do
-			Result := cwin_hi_word (cwin_send_message_result (item,
-				Udm_getrange, 0, 0))
+			cwin_send_message (item, Udm_getrange32, cwel_pointer_to_integer ($lower), cwel_pointer_to_integer ($higher))
+			Result := lower
 		end
 
 	maximum: INTEGER is
 			-- Maximum position
+		local
+			lower, higher: INTEGER
 		do
-			Result := cwin_lo_word (cwin_send_message_result (item,
-				Udm_getrange, 0, 0))
+			cwin_send_message  (item, Udm_getrange32, cwel_pointer_to_integer ($lower), cwel_pointer_to_integer ($higher))
+			Result := higher
 		end
 
 	buddy_window: WEL_WINDOW is

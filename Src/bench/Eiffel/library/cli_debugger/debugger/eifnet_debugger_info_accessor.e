@@ -33,6 +33,12 @@ feature {EIFNET_EXPORTER}
 			create Result.make
 		end
 
+	Edv_external_formatter: EIFNET_DEBUG_EXTERNAL_FORMATTER	 is
+		once
+			create Result
+			Result.set_debugger_info (Eifnet_debugger_info)
+		end
+
 feature {EIFNET_EXPORTER} -- Data status
 
 	data_changed: BOOLEAN is
@@ -76,11 +82,6 @@ feature -- Queries
 		do
 			Result := eifnet_debugger_info.icor_debug_module (a_mod_name)
 		end
-		
-	icor_debug_module_for_mscorlib: ICOR_DEBUG_MODULE is
-		do
-			Result := eifnet_debugger_info.icor_debug_module_for_mscorlib
-		end		
 		
 feature -- Access
 

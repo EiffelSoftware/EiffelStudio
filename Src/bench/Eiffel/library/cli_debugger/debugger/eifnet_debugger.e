@@ -729,7 +729,7 @@ feature -- Function Evaluation
 				
 				--| l_icd_value represents the `internal_string_builder' value
 			if l_icd_value /= Void then
-				Result := edv_external_formatter.icor_debug_string_value_from_string_builder (l_icd_value)
+				Result := Edv_external_formatter.icor_debug_string_value_from_string_builder (l_icd_value)
 			end
 		end	
 
@@ -935,7 +935,7 @@ feature -- Function Evaluation
 --			l_icd_module := l_icd_class.get_module
 --			l_module_name := l_icd_module.get_name
 
-			l_icd_module := icor_debug_module_for_mscorlib
+			l_icd_module := eifnet_debugger_info.icor_debug_module_for_mscorlib
 			l_feature_token := Edv_external_formatter.token_Exception_get_Message
 
 			l_func := l_icd_module.get_function_from_token (l_feature_token)

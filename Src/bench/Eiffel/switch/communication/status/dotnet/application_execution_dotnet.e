@@ -310,6 +310,7 @@ feature -- Execution
 						-- This means we had issue creating process
 					set_status (Void)
 					eifnet_debugger.terminate_debugger_session
+					eifnet_debugger.destroy_monitoring_of_process_termination_on_exit
 				end
 				
 				if status /= Void then

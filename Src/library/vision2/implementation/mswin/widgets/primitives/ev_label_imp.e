@@ -10,13 +10,10 @@ class
 
 inherit
 	EV_LABEL_I
-		redefine
-			build
-		end
 
 	EV_PRIMITIVE_IMP
 		redefine
-			build
+			plateform_build
 		end
 
 	EV_BAR_ITEM_IMP
@@ -45,8 +42,6 @@ inherit
 			remove_command,
 			set_width,
 			set_height,
---			destroy,
---			set_text,
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
@@ -58,6 +53,8 @@ inherit
 			on_key_up,
 			background_color,
 			foreground_color
+		redefine
+			default_style
 		end
 
 creation
@@ -83,11 +80,11 @@ feature -- Initialization
 			wel_make (par_imp, txt, 0, 0, 0, 0, 0)
 		end
 
-	build is
+	plateform_build (par: EV_CONTAINER_IMP) is
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
-			{EV_PRIMITIVE_IMP} Precursor
+			{EV_PRIMITIVE_IMP} Precursor (par)
 			set_font (font)
 			set_default_size
 		end
@@ -108,6 +105,14 @@ feature -- Basic operation
 		end
 
 	Extra_width: INTEGER is 10
+
+feature {NONE} -- Implementation
+
+   	default_style: INTEGER is
+   			-- Default style used to create the control
+   		once
+ 			Result := ws_visible + ws_child + ws_group +  ss_left
+ 		end
 
 end -- class EV_LABEL_IMP
 

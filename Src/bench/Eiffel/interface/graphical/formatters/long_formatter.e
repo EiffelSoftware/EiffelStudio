@@ -26,19 +26,22 @@ inherit
 
 feature -- Initialization
 
-	init (a_composite: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	init (a_text_window: TEXT_WINDOW) is
 			-- Initialize the format button  with its bitmap.
 			-- Set up the mouse click and control-click actions
 			-- (click requires a confirmation, control-click doesn't).
 		do
-			formatter_init (a_composite, a_text_window);
+			formatter_init (a_text_window);
 			set_action ("!c<Btn1Down>", Current, control_click)
 		end;
 
 feature -- Properties
 
-	control_click: ANY is once !!Result end;
+	control_click: ANY is
 			-- No confirmation required
+		once
+			!! Result
+		end;
 
 feature -- Execution
 

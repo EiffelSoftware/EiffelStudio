@@ -66,7 +66,7 @@ feature -- Update
 			if text_window.changed then
 				showtext_frmt_holder.execute (s);
 			else
-				last_format.execute (s);
+				text_window.last_format_2.execute (s);
 				history.extend (s)
 			end
 		end;
@@ -113,10 +113,10 @@ feature -- Update
 		do
 			if stone /= Void then
 				!! system_stone;
-				old_do_format := last_format.do_format;
-				last_format.set_do_format (true);
-				last_format.execute (system_stone);
-				last_format.set_do_format (old_do_format)
+				old_do_format := text_window.last_format_2.associated_command.do_format;
+				text_window.last_format_2.associated_command.set_do_format (true);
+				text_window.last_format_2.execute (system_stone);
+				text_window.last_format_2.associated_command.set_do_format (old_do_format)
 			end
 		end;
 
@@ -214,7 +214,11 @@ feature {NONE} -- Implementation; Graphical Interface
 			list_cmd: SHOW_CLUSTERS;
 			list_button: EB_BUTTON;
 			showtext_cmd: SHOW_TEXT;
-			showtext_button: EB_BUTTON
+			showtext_button: EB_BUTTON;
+			showclass_cmd: SHOW_CLASS_LIST;
+			showclass_button: EB_BUTTON;
+			showindex_cmd: SHOW_INDEXING;
+			showindex_button: EB_BUTTON
 		do
 			!! showtext_cmd.make (text_window);
 			!! showtext_button.make (showtext_cmd, format_bar);
@@ -228,15 +232,17 @@ feature {NONE} -- Implementation; Graphical Interface
 			format_bar.attach_top (list_button, 0);
 			format_bar.attach_left_widget (showtext_button, list_button, 0);
 
-			!! showclasses_command.make (format_bar, text_window);
-			format_bar.attach_top (showclasses_command, 0);
-			format_bar.attach_left_widget (list_button, showclasses_command, 0);
+			!! showclass_cmd.make (text_window);
+			!! showclass_button.make (showclass_cmd, format_bar);
+			!! showclasses_frmt_holder.make (showclass_cmd, showclass_button);
+			format_bar.attach_top (showclass_button, 0);
+			format_bar.attach_left_widget (list_button, showclass_button, 0);
 
 			!! stat_cmd.make (text_window);
 			!! stat_button.make (stat_cmd, format_bar);
 			!! showstatistics_frmt_holder.make (stat_cmd, stat_button);
 			format_bar.attach_top (stat_button, 0);
-			format_bar.attach_left_widget (showclasses_command, stat_button, 0);
+			format_bar.attach_left_widget (showclass_button, stat_button, 0);
 
 			!! mod_cmd.make (text_window);
 			!! mod_button.make (mod_cmd, format_bar);
@@ -244,9 +250,11 @@ feature {NONE} -- Implementation; Graphical Interface
 			format_bar.attach_top (mod_button, 0);
 			format_bar.attach_left_widget (stat_button, mod_button, 0);
 
-			!! showindexing_command.make (format_bar, text_window);
-			format_bar.attach_top (showindexing_command, 0);
-			format_bar.attach_left_widget (mod_button, showindexing_command, 0);
+			!! showindex_cmd.make (text_window);
+			!! showindex_button.make (showindex_cmd, format_bar);
+			!! showindexing_frmt_holder.make (showindex_cmd, showindex_button);
+			format_bar.attach_top (showindex_button, 0);
+			format_bar.attach_left_widget (mod_button, showindex_button, 0);
 		end;
 
 	build_command_bar is
@@ -289,7 +297,7 @@ feature {NONE} -- Attributes; Forms And Holes
 	command_bar: FORM;
 			-- Bar with the command buttons
 
-	hole: SYSTEM_HOLE;
+	hole: SYSTEM_cmd;
 			-- Hole charaterizing current
 
 feature {NONE} -- Attributes; Commands
@@ -304,11 +312,11 @@ feature {NONE} -- Attributes; Commands
 
 	showlist_frmt_holder: FORMAT_HOLDER;
 
-	showclasses_command: SHOW_CLASS_LIST;
+	showclasses_frmt_holder: FORMAT_HOLDER;
 
 	showmodified_frmt_holder: FORMAT_HOLDER;
 
-	showindexing_command: SHOW_INDEXING;
+	showindexing_frmt_holder: FORMAT_HOLDER;
 
 	showstatistics_frmt_holder: FORMAT_HOLDER;
 

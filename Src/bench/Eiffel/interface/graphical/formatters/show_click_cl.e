@@ -65,7 +65,7 @@ feature -- Formatting
 				root_stone ?= text_window.root_stone;
 				if
 					do_format or else filtered or else
-					(text_window.last_format_2.associated_formatter /= Current or
+					(text_window.last_format_2.associated_command /= Current or
 					not equal (stone, root_stone))
 				then
 					if stone /= Void and then stone.is_valid then
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			if text_window.last_format_2.associated_formatter = Current then
+			if text_window.last_format_2.associated_command = Current then
 				text_window.display_header ("Producing clickable format...")
 			else
 				text_window.display_header ("Switching to clickable format...")

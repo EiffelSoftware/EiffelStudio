@@ -10,14 +10,14 @@ class SHOW_TEXT
 
 inherit
 
-	FORMATTER_2
+	FORMATTER
 		rename
 			display_header as format_display_header,
 			class_name as exception_class_name
 		redefine
 			format, file_name, dark_symbol, display_temp_header
 		end;
-	FORMATTER_2
+	FORMATTER
 		rename
 			class_name as exception_class_name
 		redefine
@@ -101,7 +101,7 @@ feature -- Formatting
 				end;
 				if
 					do_format or filtered or modified_class or else
-					(text_window.last_format_2.associated_formatter /= Current or
+					(text_window.last_format_2.associated_command /= Current or
 					not equal (stone, text_window.root_stone))
 				then
 					if stone /= Void and then stone.is_valid then
@@ -154,7 +154,7 @@ feature -- Formatting
 							class_text /= Void and then (
 							(same_stone and class_text.last_format_2 = 
 										class_text.tool.showclick_frmt_holder) or
-							(do_format and class_text.last_format_2.associated_formatter = Current))
+							(do_format and class_text.last_format_2.associated_command = Current))
 						then
 							last_cursor_position := class_text.cursor_position;
 							last_top_position := 
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			if text_window.last_format_2.associated_formatter = Current then
+			if text_window.last_format_2.associated_command = Current then
 				text_window.display_header ("Producing text format...")
 			else
 				text_window.display_header ("Switching to text format...")

@@ -27,8 +27,8 @@ feature -- Window Properties
 	history: STONE_HISTORY;
 			-- History list for Current.
 
-	last_format: FORMATTER;
-			-- Last format used.
+	--last_format: FORMATTER;
+			---- Last format used.
 
 	stone: STONE;
 			-- Stone in tool
@@ -61,7 +61,7 @@ feature -- Window Properties
 		deferred
 		end;
 
-	hole: EB_BUTTON_HOLE is
+	hole: HOLE_COMMAND is
 			-- Hole associated with Current.
 			-- Void by default
 		do
@@ -174,24 +174,24 @@ feature {TEXT_WINDOW} -- Status setting
 			set: s = stone
 		end;
 
-	set_last_format (f: like last_format) is
-			-- Assign `f' to `last_format'.
-		require
-			format_exists: f /= Void
-		do
-			if last_format /= f then
-				if not history.islast then
-					history.extend (stone)
-				end;
-				if last_format /= Void then
-					last_format.darken (False)
-				end;
-				last_format := f;
-				last_format.darken (True)
-			end
-		ensure
-			last_format = f
-		end;
+	--set_last_format (f: like last_format) is
+			---- Assign `f' to `last_format'.
+		--require
+			--format_exists: f /= Void
+		--do
+			--if last_format /= f then
+				--if not history.islast then
+					--history.extend (stone)
+				--end;
+				--if last_format /= Void then
+					--last_format.darken (False)
+				--end;
+				--last_format := f;
+				--last_format.darken (True)
+			--end
+		--ensure
+			--last_format = f
+		--end;
 
 feature -- Update
 
@@ -218,6 +218,7 @@ feature -- Update
 			-- and the history's stones.
 		local
 			old_do_format: BOOLEAN
+			f: FORMATTER
 		do
 			history.extend (stone);
 			history.synchronize;
@@ -226,10 +227,11 @@ feature -- Update
 				stone.synchronized_stone /= Void
 			then
 					-- The root stone is still valid.
-				old_do_format := last_format.do_format;
-				last_format.set_do_format (true);
-				last_format.execute (history.item);
-				last_format.set_do_format (old_do_format)
+				f ?= text_window.last_format_2.associated_command;
+				old_do_format := f.do_format;
+				f.set_do_format (true);
+				f.execute (history.item);
+				f.set_do_format (old_do_format)
 			else
 					-- The root stone is not valid anymore.
 				history.forth;

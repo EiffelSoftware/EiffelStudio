@@ -20,10 +20,10 @@ creation
 	
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is 
+	make (a_text_window: TEXT_WINDOW) is 
 			-- Initialize the command.
 		do 
-			init (c, a_text_window)
+			init (a_text_window)
 		end; 
 
 feature -- Properties

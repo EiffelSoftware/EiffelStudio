@@ -17,7 +17,7 @@ inherit
 			close_windows as old_close_windows,
 			set_stone as old_set_stone
 		redefine
-			text_window, build_format_bar, hole,
+			text_window, build_format_bar, hole, hole_button,
 			tool_name, open_cmd_holder, save_cmd_holder,
 			save_as_cmd_holder, editable,
 			create_edit_buttons, set_default_size,
@@ -28,7 +28,7 @@ inherit
 		end;
 	BAR_AND_TEXT
 		redefine
-			text_window, build_format_bar, hole,
+			text_window, build_format_bar, hole, hole_button,
 			tool_name, open_cmd_holder, save_cmd_holder,
 			save_as_cmd_holder, editable,
 			build_edit_bar, create_edit_buttons, reset,
@@ -99,7 +99,7 @@ feature -- Stone process
 			if text_window.changed then
 				showtext_frmt_holder.execute (s);
 			else
-				last_format.execute (s);
+				text_window.last_format_2.execute (s);
 				history.extend (s)
 			end
 		end;
@@ -109,7 +109,7 @@ feature -- Stone process
 			if text_window.changed then
 				showtext_frmt_holder.execute (s);
 			else
-				last_format.execute (s);
+				text_window.last_format_2.execute (s);
 				history.extend (s)
 			end
 		end;
@@ -293,9 +293,12 @@ feature {NONE} -- Properties; Window Properties
 			Result := l_Class
 		end;
 
-	hole: CLASS_HOLE;
+	hole: CLASS_CMD;
 			-- Hole caraterizing current
  
+	hole_button: CLASS_HOLE;
+			-- HOle to represent Current.
+
 	format_label: LABEL;
 
 	class_name_tf: TEXT_FIELD;
@@ -557,11 +560,13 @@ feature {NONE} -- Implementation; Graphical Interface
 			-- Build top bar: editing commands
 		do
 			edit_bar.set_fraction_base (21);
-			!! hole.make (edit_bar, Current);
+			!! hole.make (text_window);
+			!! hole_button.make (hole, edit_bar);
+			!! hole_holder.make (hole, hole_button);
 			create_edit_buttons;
 
-			edit_bar.attach_left (hole, 0);
-			edit_bar.attach_top (hole, 0);
+			edit_bar.attach_left (hole_button, 0);
+			edit_bar.attach_top (hole_button, 0);
 
 			change_class_form.attach_left (change_class_command, 0);
 			change_class_form.attach_right (change_class_command, 0);

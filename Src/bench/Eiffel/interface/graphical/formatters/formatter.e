@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class FORMATTER 
+deferred class FORMATTER
 
 inherit
 
@@ -13,12 +13,16 @@ inherit
 		rename
 			work as format
 		redefine
-			execute
+			execute, holder
 		end;
 	SHARED_BENCH_RESOURCES;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_ok as loose_changes
+		end;
+	CURSOR_TYPE
+		rename
+			Dot as Dot_Cursor
 		end
 
 feature -- Properties
@@ -99,19 +103,18 @@ feature -- Formatting
 			-- if it's clickable; do nothing otherwise.
 		local
 			retried: BOOLEAN;
-			tool: BAR_AND_TEXT;
-			mp: MOUSE_PTR
+			tool: BAR_AND_TEXT
 		do
 			if not retried then 
 				if 
 					do_format or else filtered or else
-					(text_window.last_format /= Current or
+					(text_window.last_format_2.associated_command /= Current or
 					not equal (stone, text_window.root_stone))
 				then
 					if stone /= Void and then stone.is_valid then
 						if stone.clickable then
 							display_temp_header (stone);
-							!! mp.set_watch_cursor;
+							set_global_cursor (watch_cursor);
 							text_window.clean;
 							text_window.set_root_stone (stone);
 							text_window.set_file_name (file_name (stone));
@@ -119,10 +122,10 @@ feature -- Formatting
 							text_window.set_editable;
 							text_window.display;
 							text_window.set_read_only;
-							text_window.set_last_format (Current);
+							text_window.set_last_format_2 (holder);
 							filtered := false;
 							display_header (stone);
-							mp.restore
+							restore_cursors
 						else
 							tool ?= text_window.tool;
 							if tool /= Void then
@@ -158,14 +161,18 @@ feature -- Filters; Implementation
 			-- Filter the `Current' format with `filtername'.
 		require
 			filtername_not_void: filtername /= Void;
-			current_format: text_window.last_format = Current
+			current_format: text_window.last_format_2.associated_command = Current
 		do
 			if text_window.root_stone /= Void then
 				warner (text_window).gotcha_call (w_Not_a_filterable_format)
 			end
 		end;
 
-feature {NONE} -- Attributes
+feature {NONE} -- Porperties
+
+	holder: FORMAT_HOLDER
+			-- Holds the format holder in which
+			-- Current is a property.
 
 	post_fix: STRING is
 			-- Postfix name of current format which generated
@@ -235,6 +242,15 @@ feature {NONE} -- Attributes
 			-- Number of blank characters in a tab
 
 feature {NONE} -- Implementation
+
+	watch_cursor: SCREEN_CURSOR is
+			-- Cursor to be used when waiting for the end of an execution.
+		once
+			!! Result.make;
+			Result.set_type (Watch);
+		end;
+
+feature {ROUTINE_WIN_MGR} -- Implementation
 
 	display_header (stone: STONE) is
 			-- Show header for 'stone'.

@@ -96,7 +96,9 @@ feature -- Standard Interface
 			search_cmd: SEARCH_STRING;
 			search_button: EB_BUTTON;
 		do
-			!! hole.make (edit_bar, Current);
+			!! hole.make (text_window);
+			!! hole_button.make (hole, edit_bar);
+			!! hole_holder.make (hole, hole_button);
 			!! search_cmd.make (edit_bar, text_window);
 			!! search_button.make (search_cmd, edit_bar);
 			!! search_cmd_holder.make (search_cmd, search_button);
@@ -109,8 +111,8 @@ feature -- Standard Interface
 			!! quit_cmd.make (text_window);
 			!! quit_button.make (quit_cmd, edit_bar);
 			!! quit.make (quit_cmd, quit_button);
-			edit_bar.attach_left (hole, 0);
-			edit_bar.attach_top (hole, 0);
+			edit_bar.attach_left (hole_button, 0);
+			edit_bar.attach_top (hole_button, 0);
 			edit_bar.attach_top (search_button, 0);
 			edit_bar.attach_top (change_font_button, 0);
 			edit_bar.attach_top (quit_button, 0);
@@ -122,17 +124,19 @@ feature -- Standard Interface
 	build_edit_bar is
 			-- Build top bar (with editing commands).
 		do
-			!! hole.make (edit_bar, Current);
+			!! hole.make (text_window);
+			!! hole_button.make (hole, edit_bar);
+			!! hole_holder.make (hole, hole_button);
 			create_edit_buttons;
-			edit_bar.attach_left (hole, 0);
-			edit_bar.attach_top (hole, 0);
+			edit_bar.attach_left (hole_button, 0);
+			edit_bar.attach_top (hole_button, 0);
 			edit_bar.attach_top (open_cmd_holder.associated_button, 0);
 			edit_bar.attach_top (save_cmd_holder.associated_button, 0);
 			edit_bar.attach_top (save_as_cmd_holder.associated_button, 0);
 			edit_bar.attach_top (search_cmd_holder.associated_button, 0);
 			edit_bar.attach_top (change_font_cmd_holder.associated_button, 0);
 			edit_bar.attach_top (quit.associated_button, 0);
-			edit_bar.attach_left (hole, 0);
+			edit_bar.attach_left (hole_button, 0);
 			edit_bar.attach_right_widget (save_cmd_holder.associated_button, open_cmd_holder.associated_button, 0);
 			edit_bar.attach_right_widget (save_as_cmd_holder.associated_button, save_cmd_holder.associated_button, 0);
 			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_as_cmd_holder.associated_button, 0);
@@ -256,8 +260,14 @@ feature -- Window Properties
 
 	global_form: FORM;
 
-	hole: EB_BUTTON_HOLE;
+	hole: HOLE_COMMAND;
 			-- Hole characterizing Current.
+
+	hole_button: EB_BUTTON_HOLE;
+			-- Button to represent `hole'.
+
+	hole_holder: HOLE_HOLDER;
+			-- Holder for both the button and the hole.
 
 	edit_bar, format_bar: FORM;
 			-- Main and format button bars.

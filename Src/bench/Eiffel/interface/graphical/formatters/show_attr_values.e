@@ -9,7 +9,7 @@ class SHOW_ATTR_VALUES
 
 inherit
 
-	FORMATTER_2
+	FORMATTER
 		redefine
 			dark_symbol, text_window, display_temp_header
 		end;

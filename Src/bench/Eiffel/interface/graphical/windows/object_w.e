@@ -18,7 +18,7 @@ inherit
 		redefine
 			text_window, build_format_bar, hole, build_widgets,
 			tool_name, set_default_format, stone, stone_type, synchronize,
-			process_object
+			process_object, hole_button
 		end;
 	BAR_AND_TEXT
 		rename
@@ -26,7 +26,7 @@ inherit
 		redefine
 			text_window, build_format_bar, hole, close_windows,
 			tool_name, make, build_widgets, attach_all, set_default_format,
-			stone, stone_type, synchronize, process_object
+			stone, stone_type, synchronize, process_object, hole_button
 		select
 			make, attach_all, close_windows
 		end;
@@ -110,7 +110,7 @@ feature -- Window Properties
 			elseif not a_stone.is_valid then
 				warner (Current).gotcha_call (w_Object_not_inspectable)
 			else
-				last_format.execute (a_stone);
+				text_window.last_format_2.execute (a_stone);
 				history.extend (a_stone)
 			end
 		end;
@@ -154,8 +154,11 @@ feature -- Commands
 
 feature {NONE} -- Properties; Forms And Holes
 
-	hole: OBJECT_HOLE;
+	hole: OBJECT_CMD;
 			-- Hole charaterizing Current.
+
+	hole_button: OBJECT_HOLE;
+			-- Hole to represent Current.
 
 	command_bar: FORM;
 			-- Bar with the command buttons

@@ -183,17 +183,17 @@ feature -- Window Properties
 
 feature -- Window Holes
 
-	stop_points_hole: DEBUG_STOPIN;
+	stop_points_hole_holder: HOLE_HOLDER;
 
-	system_hole: SYSTEM_HOLE;
+	system_hole_holder: HOLE_HOLDER;
 
-	class_hole: CLASS_HOLE;
+	class_hole_holder: HOLE_HOLDER;
 
-	routine_hole: ROUTINE_HOLE;
+	routine_hole_holder: HOLE_HOLDER;
 
-	object_hole: OBJECT_HOLE;
+	object_hole_holder: HOLE_HOLDER;
 
-	explain_hole: EXPLAIN_HOLE;
+	explain_hole_holder: HOLE_HOLDER;
 
 feature -- Window Forms
 
@@ -281,7 +281,7 @@ feature -- Graphical Interface
 			build_top;
 			build_icing;
 			build_format_bar;
-			exec_stop.execute (Void);
+			exec_stop_frmt_holder.execute (Void);
 			attach_all
 		end;
 
@@ -291,7 +291,19 @@ feature -- Graphical Interface
 			quit_cmd: QUIT_PROJECT;
 			quit_button: EB_BUTTON
 			change_font_cmd: CHANGE_FONT;
-			change_font_button: EB_BUTTON
+			change_font_button: EB_BUTTON;
+			explain_cmd: EXPLAIN_CMD;
+			explain_button: EXPLAIN_HOLE;
+			system_cmd: SYSTEM_CMD;
+			system_button: SYSTEM_HOLE;
+			class_cmd: CLASS_CMD;
+			class_button: CLASS_HOLE;
+			routine_cmd: ROUTINE_CMD;
+			routine_button: ROUTINE_HOLE;
+			object_cmd: OBJECT_CMD;
+			object_button: OBJECT_HOLE;
+			stop_points_cmd: DEBUG_STOPIN_CMD;
+			stop_points_button: DEBUG_STOPIN
 		do
 			!! open_command.make (text_window);
 			!! classic_bar.make (new_name, form_manager);
@@ -305,31 +317,43 @@ feature -- Graphical Interface
 				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
 			!! change_font_cmd_holder.make (change_font_cmd, change_font_button);
-			!! explain_hole.make (classic_bar, Current);
-			!! system_hole.make (classic_bar, Current);
-			!! class_hole.make (classic_bar, Current);
-			!! routine_hole.make (classic_bar, Current);
-			!! object_hole.make (classic_bar, Current);
-			!! stop_points_hole.make (classic_bar, Current);
+			!! explain_cmd.make (text_window);
+			!! explain_button.make (explain_cmd, classic_bar);
+			!! explain_hole_holder.make (explain_cmd, explain_button);
+			!! system_cmd.make (text_window);
+			!! system_button.make (system_cmd, classic_bar);
+			!! system_hole_holder.make (system_cmd, system_button);
+			!! class_cmd.make (text_window);
+			!! class_button.make (class_cmd, classic_bar);
+			!! class_hole_holder.make (class_cmd, class_button);
+			!! routine_cmd.make (text_window);
+			!! routine_button.make (routine_cmd, classic_bar);
+			!! routine_hole_holder.make (routine_cmd, routine_button);
+			!! object_cmd.make (text_window);
+			!! object_button.make (object_cmd, classic_bar);
+			!! object_hole_holder.make (object_cmd, object_button);
+			!! stop_points_cmd.make (text_window);
+			!! stop_points_button.make (stop_points_cmd, classic_bar);
+			!! stop_points_hole_holder.make (stop_points_cmd, stop_points_button);
 
-			classic_bar.attach_left (explain_hole, 0);
-			classic_bar.attach_top (explain_hole, 0);
-			classic_bar.attach_bottom (explain_hole, 0);
-			classic_bar.attach_left_widget (explain_hole, system_hole,0);
-			classic_bar.attach_top (system_hole, 0);
-			classic_bar.attach_bottom (system_hole, 0);
-			classic_bar.attach_left_widget (system_hole, class_hole,0);
-			classic_bar.attach_top (class_hole, 0);
-			classic_bar.attach_bottom (class_hole, 0);
-			classic_bar.attach_left_widget (class_hole, routine_hole, 0);
-			classic_bar.attach_top (routine_hole, 0);
-			classic_bar.attach_bottom (routine_hole, 0);
-			classic_bar.attach_left_widget (routine_hole, object_hole, 0);
-			classic_bar.attach_top (object_hole, 0);
-			classic_bar.attach_bottom (object_hole, 0);
-			classic_bar.attach_left_widget (object_hole, stop_points_hole, 0);
-			classic_bar.attach_top (stop_points_hole, 0);
-			classic_bar.attach_bottom (stop_points_hole, 0);
+			classic_bar.attach_left (explain_button, 0);
+			classic_bar.attach_top (explain_button, 0);
+			classic_bar.attach_bottom (explain_button, 0);
+			classic_bar.attach_left_widget (explain_button, system_button,0);
+			classic_bar.attach_top (system_button, 0);
+			classic_bar.attach_bottom (system_button, 0);
+			classic_bar.attach_left_widget (system_button, class_button,0);
+			classic_bar.attach_top (class_button, 0);
+			classic_bar.attach_bottom (class_button, 0);
+			classic_bar.attach_left_widget (class_button, routine_button, 0);
+			classic_bar.attach_top (routine_button, 0);
+			classic_bar.attach_bottom (routine_button, 0);
+			classic_bar.attach_left_widget (routine_button, object_button, 0);
+			classic_bar.attach_top (object_button, 0);
+			classic_bar.attach_bottom (object_button, 0);
+			classic_bar.attach_left_widget (object_button, stop_points_button, 0);
+			classic_bar.attach_top (stop_points_button, 0);
+			classic_bar.attach_bottom (stop_points_button, 0);
 			classic_bar.attach_top (change_font_button, 0);
 			classic_bar.attach_bottom (change_font_button, 0);
 			classic_bar.attach_right_widget (quit_button, change_font_button, 0);
@@ -352,25 +376,42 @@ feature -- Graphical Interface
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
+		local
+			last_cmd: EXEC_LAST;
+			last_button: EB_BUTTON;
+			stop_cmd: EXEC_STOP;
+			stop_button: EB_BUTTON;
+			step_cmd: EXEC_STEP;
+			step_button: EB_BUTTON;
+			nostop_cmd: EXEC_NOSTOP;
+			nostop_button: EB_BUTTON
 		do
 			!! format_bar.make (new_name, form_manager);
 
-			!! exec_stop.make (format_bar, text_window);
-			format_bar.attach_left (exec_stop, 0);
-			format_bar.attach_top (exec_stop, 0);
-			format_bar.attach_bottom (exec_stop, 0);
-			!! exec_step.make (format_bar, text_window);
-			format_bar.attach_top (exec_step, 0);
-			format_bar.attach_bottom (exec_step, 0);
-			format_bar.attach_left_widget (exec_stop, exec_step, 0);
-			!! exec_last.make (format_bar, text_window);
-			format_bar.attach_top (exec_last, 0);
-			format_bar.attach_bottom (exec_last, 0);
-			format_bar.attach_left_widget (exec_step, exec_last, 0);
-			!! exec_nostop.make (format_bar, text_window);
-			format_bar.attach_top (exec_nostop, 0);
-			format_bar.attach_bottom (exec_nostop, 0);
-			format_bar.attach_left_widget (exec_last, exec_nostop, 0);
+			!! stop_cmd.make (text_window);
+			!! stop_button.make (stop_cmd, format_bar)
+			!! exec_stop_frmt_holder.make (stop_cmd, stop_button);
+			format_bar.attach_left (stop_button, 0);
+			format_bar.attach_top (stop_button, 0);
+			format_bar.attach_bottom (stop_button, 0);
+			!! step_cmd.make (text_window);
+			!! step_button.make (step_cmd, format_bar);
+			!! exec_step_frmt_holder.make (step_cmd, step_button);
+			format_bar.attach_top (step_button, 0);
+			format_bar.attach_bottom (step_button, 0);
+			format_bar.attach_left_widget (stop_button, step_button, 0);
+			!! last_cmd.make (text_window);
+			!! last_button.make (last_cmd, format_bar);
+			!! exec_last_frmt_holder.make (last_cmd, last_button);
+			format_bar.attach_top (last_button, 0);
+			format_bar.attach_bottom (last_button, 0);
+			format_bar.attach_left_widget (step_button, last_button, 0);
+			!! nostop_cmd. make (text_window);
+			!! nostop_button.make (nostop_cmd, format_bar);
+			!! exec_nostop_frmt_holder.make (nostop_cmd, nostop_button);
+			format_bar.attach_top (nostop_button, 0);
+			format_bar.attach_bottom (nostop_button, 0);
+			format_bar.attach_left_widget (last_button, nostop_button, 0);
 		end;
 
 	build_icing is
@@ -474,19 +515,19 @@ feature -- Graphical Interface
 
 feature -- System Execution Modes
 
-	exec_stop: EXEC_STOP;
+	exec_stop_frmt_holder: FORMAT_HOLDER;
 			-- Set execution format so that user-defined stop
 			-- points will be taken into account
 
-	exec_nostop: EXEC_NOSTOP;
+	exec_nostop_frmt_holder: FORMAT_HOLDER;
 			-- Set execution format so that no stop points will
 			-- be taken into account
 
-	exec_step: EXEC_STEP;
+	exec_step_frmt_holder: FORMAT_HOLDER;
 			-- Set execution format so that each breakable points
 			-- of the current routine will be taken into account
 
-	exec_last: EXEC_LAST;
+	exec_last_frmt_holder: FORMAT_HOLDER;
 			-- Set execution format so that only the last
 			-- breakable point of the current routine will be
 			-- taken into account
@@ -514,7 +555,7 @@ feature -- Commands
 	change_font_cmd_holder: COMMAND_HOLDER;
 
  
-  feature -- Hole access
+feature -- Hole access
  
 	compatible (dropped_stone: STONE): BOOLEAN is
 			-- Is current hole compatible with `dropped_stone'?
@@ -530,7 +571,7 @@ feature -- Commands
 				t = System_type
 		end;
  
-  feature -- Update
+feature -- Update
  
 	process_classi (a_stone: CLASSI_STONE) is
 			-- Process dropped stone `a_stone'.
@@ -565,7 +606,7 @@ feature -- Commands
 	process_breakable (a_stone: BREAKABLE_STONE) is
 			-- Process dropped stone `a_stone'.
 		do
-			stop_points_hole.receive (a_stone)
+			stop_points_hole_holder.associated_command.receive (a_stone)
 		end;
  
 	process_object (a_stone: OBJECT_STONE) is

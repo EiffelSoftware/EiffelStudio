@@ -49,7 +49,7 @@ feature -- Debugging (stop points)
 					then
 							-- Update the title bar of the feature tool.
 							-- "(stop)" if the routine has a stop point set.
-						rout_window.showtext_frmt_holder.associated_formatter.display_header 
+						rout_window.showtext_frmt_holder.associated_command.display_header 
 													(rout_text.root_stone)
 					end
 				end;

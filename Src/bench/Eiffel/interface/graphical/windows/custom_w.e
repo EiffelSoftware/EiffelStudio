@@ -11,8 +11,6 @@ inherit
 
 	COMMAND;
 	TOOL_W
-		rename
-			last_format as old_last_format
 		redefine
 			text_window, tool_name, hole
 		end;
@@ -49,9 +47,9 @@ feature -- Initialization
 			catalog_list.deselect_item;
 			register;
 			realize;
-			if hole.symbol.is_valid then
-				set_icon_pixmap (hole.symbol);
-			end;
+			--if hole.symbol.is_valid then
+				--set_icon_pixmap (hole.symbol);
+			--end;
 			set_icon_name (tool_name)
 		end;
 
@@ -130,15 +128,19 @@ feature -- Window Properties
 
 	text_window: CUSTOM_TEXT;
 
-	hole: CUSTOM_HOLE;
+	hole: CUSTOM_CMD;
+
+	hole_button: CUSTOM_HOLE;
+
+	hole_holder: HOLE_HOLDER;
 	
 	global_form: FORM;
 
 	bitmap_bitmap: PICT_COLOR_B;
 
-	origin_hole: FORCLASS_HOLE;
+	-- origin_hole: FORCLASS_HOLE;
 
-	export_hole: FORCLASS_HOLE;
+	-- export_hole: FORCLASS_HOLE;
 
 	--exit_command: PICT_COLOR_B;
 
@@ -275,7 +277,9 @@ feature -- Graphical Interface
 			separator8.set_horizontal (false);
 
 			!! main_bar.make (new_name, global_form);
-			!! hole.make (main_bar, Current);
+			!! hole.make (text_window);
+			!! hole_button.make (hole, main_bar);
+			!! hole_holder.make (hole, hole_button);
 			--!! exit_command.make (new_name, main_bar);
 			!! bitmap_spec.make (new_name, global_form);
 			!! bitmap_label.make (new_name, bitmap_spec);
@@ -287,8 +291,8 @@ feature -- Graphical Interface
 			!! none_choice.make (new_name, export_choice);
 			!! more_than_choice.make (new_name, export_choice);
 			!! drop_export_choice.make (new_name, export_choice);
-			!! export_hole.special_make (export_spec, Current,
-			export_choice, drop_export_choice);
+			-- !! export_hole.special_make (export_spec, Current,
+			-- export_choice, drop_export_choice);
 			!! type_spec.make (new_name, global_form);
 			!! type_label.make (new_name, type_spec);
 			!! type_box.make (new_name, type_spec);
@@ -311,8 +315,8 @@ feature -- Graphical Interface
 			!! all_choice.make (new_name, origin_choice);
 			!! all_but_choice.make (new_name, origin_choice);
 			!! drop_origin_choice.make (new_name, origin_choice);
-			!! origin_hole.special_make (origin_spec, Current,
-			origin_choice, drop_origin_choice);
+			-- !! origin_hole.special_make (origin_spec, Current,
+			-- origin_choice, drop_origin_choice);
 			!! try_ok.make (new_name, global_form);
 			!! apply_push.make (new_name, try_ok);
 			!! cancel_push.make (new_name, try_ok);
@@ -334,7 +338,7 @@ feature -- Graphical Interface
 			!! remove_push.make (new_name, record_remove);
 
 			global_form.attach_top (main_bar, 0);
-			main_bar.attach_left (hole, 0);
+			--main_bar.attach_left (hole, 0);
 			--main_bar.attach_right (exit_command, 0);
 			global_form.attach_top_widget (main_bar, separator1, 0);
 			global_form.attach_top_widget (separator1, bitmap_spec, 0);
@@ -365,17 +369,17 @@ feature -- Graphical Interface
 			global_form.attach_top_widget (separator2, export_spec, 0);
 			export_spec.attach_top (export_label, 10);
 			export_spec.attach_left (export_label, 3);
-			export_spec.attach_top_widget (export_label, export_hole, 8);
-			export_spec.attach_left (export_hole, 3);
+			-- export_spec.attach_top_widget (export_label, export_hole, 8);
+			-- export_spec.attach_left (export_hole, 3);
 			export_spec.attach_top_widget (export_label, export_choice.option_button, 6);
-			export_spec.attach_left_widget (export_hole, export_choice.option_button, 0);
+			-- export_spec.attach_left_widget (export_hole, export_choice.option_button, 0);
 			global_form.attach_bottom_widget (separator3, origin_spec, 10);
 			origin_spec.attach_top (origin_label, 10);
 			origin_spec.attach_left (origin_label, 3);
-			origin_spec.attach_top_widget (origin_label, origin_hole, 8);
-			origin_spec.attach_left (origin_hole, 3);
+			-- origin_spec.attach_top_widget (origin_label, origin_hole, 8);
+			-- origin_spec.attach_left (origin_hole, 3);
 			origin_spec.attach_top_widget (origin_label, origin_choice.option_button, 6);
-			origin_spec.attach_left_widget (origin_hole, origin_choice.option_button, 0);
+			-- origin_spec.attach_left_widget (origin_hole, origin_choice.option_button, 0);
 			global_form.attach_top (separator3, 240);
 			global_form.attach_bottom_widget (separator3, separator5, 0);
 			global_form.attach_bottom_widget (separator3, implem_spec, 0);
@@ -500,15 +504,15 @@ feature -- Execution Implementation
 	call (a_command: SHOW_CUSTOM) is
 			-- Record calling command `a_command' and popup current.
 		do
-			formatted := a_command.formatted;
-			last_format := a_command.last_format;
-			last_text_format := a_command.text_window.last_format;
-			user_format := last_format;
-			update_display;
-			last_caller := a_command;
-			show
-		ensure
-			last_caller_recorded: last_caller = a_command
+			--formatted := a_command.formatted;
+			--last_format := a_command.last_format;
+			--last_text_format := a_command.text_window.last_format;
+			--user_format := last_format;
+			--update_display;
+			--last_caller := a_command;
+			--show
+		--ensure
+			--last_caller_recorded: last_caller = a_command
 		end;
 
 	execute (argument: ANY) is

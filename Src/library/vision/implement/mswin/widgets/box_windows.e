@@ -43,9 +43,17 @@ inherit
 			item as wel_item,
 			font as wel_font
 		undefine
-			on_right_button_up, on_left_button_down, on_left_button_up,
-			on_right_button_down, on_mouse_move, on_destroy, on_set_cursor,
-			on_key_up, on_key_down
+			on_right_button_up,
+			on_left_button_down,
+			on_left_button_up,
+			on_right_button_down,
+			on_mouse_move,
+			on_destroy,
+			on_set_cursor,
+			on_key_up,
+			on_key_down,
+			on_size,
+			on_move
 		redefine
 			default_style
 		end
@@ -124,8 +132,12 @@ feature {TOGGLE_B_WINDOWS} -- Element change
 
 	add_toggle (a_toggle: TOGGLE_B_WINDOWS) is
 			-- Add a toggle
+		local
+			c: CURSOR
 		do
+			c := toggle_list.cursor
 			toggle_list.extend (a_toggle)
+			toggle_list.go_to (c)
 		end
 
 	remove_toggle (a_toggle: TOGGLE_B_WINDOWS) is
@@ -152,6 +164,20 @@ feature {TOGGLE_B_WINDOWS} -- Element change
 		end
 
 feature {TOGGLE_B_WINDOWS} -- Status setting
+
+	set_index_on_checked_toggle (a_toggle: TOGGLE_B_WINDOWS) is
+		require
+			has_toggles: number_of_toggles > 0
+			toggle_present: toggle_list.has (a_toggle)
+		do
+			if not toggle_list.off then
+				release_actions.execute (toggle_list.item, Void)
+			end
+			toggle_list.start
+			toggle_list.search (a_toggle)
+		ensure
+			found: not toggle_list.off
+		end
 
 	scan_toggles is
 			-- Set the width/height according to the toggles
@@ -216,13 +242,13 @@ feature {TOGGLE_B_WINDOWS} -- Status report
 			Result := toggle_list.count
 		end
 
+	toggle_list: LINKED_LIST [TOGGLE_B_WINDOWS]
+			-- List of the toggles in the box
+
 feature {NONE} -- Implementation
 
 	Minimum_width: INTEGER is 25
 			-- Minimum width of the box
-
-	toggle_list: LINKED_LIST [TOGGLE_B_WINDOWS]
-			-- List of the toggles in the box
 
 	text_height_box: INTEGER is
 			-- Text height of the box title

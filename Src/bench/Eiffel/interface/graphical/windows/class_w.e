@@ -11,7 +11,6 @@ inherit
 
 	BAR_AND_TEXT
 		rename
-			make as normal_create,
 			attach_all as default_attach_all,
 			reset as old_reset, 
 			close_windows as old_close_windows,
@@ -32,13 +31,13 @@ inherit
 			tool_name, open_cmd_holder, save_cmd_holder,
 			save_as_cmd_holder, editable,
 			build_edit_bar, create_edit_buttons, reset,
-			make, set_default_size, build_widgets, attach_all,
+			set_default_size, build_widgets, attach_all,
 			close_windows, resize_action, stone_type,
 			synchronize, set_stone, process_class_syntax,
 			process_feature, process_class, process_classi,
 			compatible
 		select
-			reset, make, attach_all, close_windows, set_stone
+			reset, attach_all, close_windows, set_stone
 		end
 
 creation
@@ -47,11 +46,11 @@ creation
 
 feature -- Initialization
 
-	make (a_screen: SCREEN) is
+	make (a_shell: EB_SHELL) is
 			-- Create a class tool.
 		do
-			normal_create (a_screen);
-			set_composite_attributes (Current)
+			make_shell (a_shell);
+			set_composite_attributes (a_shell)
 		end;
 
 feature -- Properties
@@ -242,11 +241,13 @@ feature -- Grahpical Interface
 
 	build_widgets is
 		do
-			set_default_size;
+			if eb_shell /= Void then
+				set_default_size
+			end;
 			if tabs_disabled then
-				!! text_window.make (new_name, global_form, Current);
+				!! text_window.make (new_name, Current, Current)
 			else
-				!CLASS_TAB_TEXT! text_window.make (new_name, global_form, Current);
+				!CLASS_TAB_TEXT! text_window.make (new_name, Current, Current)
 			end;
 			build_menus;
 			!! edit_bar.make (new_name, global_form);
@@ -310,7 +311,7 @@ feature {NONE} -- Implemetation; Window Settings
 	set_default_size is
 			-- Set the size of Current to its default.
 		do
-			set_size (475, 500)
+			eb_shell.set_size (475, 500)
 		end;
 
 	set_format_label (s: STRING) is
@@ -377,7 +378,8 @@ feature {NONE} -- Implementation; Graphical Interface
 			save_as_cmd: SAVE_AS_FILE;
 			save_as_button: EB_BUTTON;
 			save_as_menu_entry: EB_MENU_ENTRY;
-			sep: SEPARATOR
+			sep: SEPARATOR;
+			history_list_cmd: CLASS_HISTORY
 		do
 			!! change_class_form.make (new_name, edit_bar);
 			!! change_class_command.make (change_class_form, text_window);
@@ -431,7 +433,8 @@ feature {NONE} -- Implementation; Graphical Interface
 			filter_cmd: FILTER_COMMAND;
 			filter_button: EB_BUTTON;
 			filter_menu_entry: EB_MENU_ENTRY;
-			sep: SEPARATOR
+			sep: SEPARATOR;
+			history_list_cmd: CLASS_HISTORY
 		do
 			!! shell_cmd.make (command_bar, text_window);
 			!! shell_button.make (shell_cmd, command_bar);
@@ -457,6 +460,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! previous_target_button.make (previous_target_cmd, command_bar);
 			!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
 			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry);
+
+			!! history_list_cmd.make (text_window);
+			next_target_button.add_button_click_action (3, history_list_cmd, next_target_button);
+			previous_target_button.add_button_click_action (3, history_list_cmd, previous_target_button);
 
 			command_bar.attach_left (shell_button, 0);
 			command_bar.attach_bottom (shell_button, 10);

@@ -15,9 +15,8 @@ inherit
 	
 	EV_CONTAINER_I
 	
-	
 feature {NONE} -- Initialization
-
+	
 	make (par: EV_WINDOW) is
 			-- Create a window with a parent. Current
 			-- window will be closed when the parent is
@@ -120,14 +119,14 @@ feature -- Element change
                         -- application, this feature will exit
                         -- application if `close_command' is not set).
 		local
-			a: EV_ARGUMENT1[EV_WINDOW_I]
+			a: EV_ARGUMENT1[EV_WINDOW]
                 do
                         if close_command = Void then
                                 if application /= Void then
 					application.exit
 				end
                         else
-				!!a.make (Current)
+				!!a.make (interface)
                                 close_command.execute (a)
                         end
                 end
@@ -176,7 +175,17 @@ feature {EV_WINDOW, EV_APPLICATION} -- Implementation
 			application := app
 		end	
 	
-feature -- {NONE} -- Implementation
+
+feature {EV_WINDOW} -- Implementation
+	
+	set_interface (i: EV_WINDOW) is
+		do
+			interface := i
+		end
+		
+feature {NONE} -- Implementation
+	
+	interface: EV_WINDOW
 
         close_command: EV_COMMAND	
 end

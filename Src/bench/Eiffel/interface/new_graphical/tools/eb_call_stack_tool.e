@@ -100,6 +100,7 @@ feature {NONE} -- Initialization
 			thread_id.set_foreground_color (special_label_col)
 			thread_id.set_text ("..Unknown..")
 			thread_id.set_minimum_height (20)
+			thread_id.set_minimum_width (thread_id.font.string_width ("0x00000000") + 10)
 			thread_id.pointer_enter_actions.extend (agent bold_this_label (True, thread_id))
 			thread_id.pointer_leave_actions.extend (agent bold_this_label (False, thread_id))			
 			thread_id.pointer_button_press_actions.extend (agent select_call_stack_thread (thread_id, ?,?,?,?,?,?,?,?))
@@ -265,13 +266,19 @@ feature -- Status setting
 			st: CALL_STACK_STONE
 			new_level: INTEGER
 			count: INTEGER
+			li: EV_MULTI_COLUMN_LIST_ROW
 		do
 			st ?= a_stone
 			if st /= Void then
 				new_level := st.level_number
 				count := stack_list.count  
 				if arrowed_level >= 1 and then count >= arrowed_level then
-					(stack_list @ (arrowed_level)).remove_pixmap
+					li := stack_list @ arrowed_level
+					if st.dynamic_class = Void then
+						li.remove_pixmap
+					else
+						li.set_pixmap (Pixmaps.Icon_arrow_empty)
+					end
 				end
 				if new_level >= 1 and then count >= new_level then
 					(stack_list @ (new_level)).set_pixmap (Pixmaps.Icon_green_arrow)

@@ -9,6 +9,8 @@ deferred class
 
 inherit
 	EG_FIGURE
+		undefine
+			is_equal
 		redefine
 			default_create,
 			recursive_transform,
@@ -20,16 +22,27 @@ inherit
 			recycle
 		end
 		
+	EG_PARTICLE
+		rename
+			x as port_x,
+			y as port_y
+		undefine
+			default_create,
+			port_x,
+			port_y
+		end
+		
 feature {NONE} -- Initialisation
 
 	default_create is
 			-- Create a EG_LINKABLE_FIGURE.
 		do
 			Precursor {EG_FIGURE}
-			create links.make (0)
+			create internal_links.make (0)
 			start_actions.extend (agent on_handle_start)
 			end_actions.extend (agent on_handle_end)
-			set_step (1)
+			set_dt (1)
+			mass := 1.0
 		end
 		
 feature -- Status report
@@ -40,18 +53,18 @@ feature -- Status report
 	has_visible_link: BOOLEAN is
 			-- Has `Current' at least one visible link?
 		local
-			l_links: like links
+			l_internal_links: like internal_links
 			i, nb: INTEGER
 		do
-			l_links := links
-			if not l_links.is_empty then
+			l_internal_links := internal_links
+			if not l_internal_links.is_empty then
 				from
 					i := 1
-					nb := l_links.count
+					nb := l_internal_links.count
 				until
 					i > nb or else Result
 				loop
-					if l_links.i_th (i).is_show_requested then
+					if l_internal_links.i_th (i).is_show_requested then
 						Result := True
 					end
 					i := i + 1
@@ -178,25 +191,31 @@ feature -- Access
 			result_greater_equal_zero: Result >= 0
 		end
 		
+	links: like internal_links is
+			-- Links to other linkables
+		do
+			Result := internal_links.twin
+		end
+		
 feature -- Status settings
 
 	request_update is
 			-- 
 		local
-			l_links: like links
+			l_internal_links: like internal_links
 		do
 			Precursor {EG_FIGURE}
 			if cluster /= Void then
 				cluster.request_update
 			end
 			from
-				l_links := links
-				l_links.start
+				l_internal_links := internal_links
+				l_internal_links.start
 			until
-				l_links.after
+				l_internal_links.after
 			loop
-				l_links.item.request_update
-				l_links.forth
+				l_internal_links.item.request_update
+				l_internal_links.forth
 			end
 		end
 		
@@ -249,8 +268,8 @@ feature {EG_FIGURE_WORLD} -- Element change
 		require
 			a_link_not_void: a_link /= Void
 		do
-			if not links.has (a_link) then
-				links.extend (a_link)
+			if not internal_links.has (a_link) then
+				internal_links.extend (a_link)
 			end
 		ensure
 			links_has_a_link: links.has (a_link)
@@ -261,7 +280,7 @@ feature {EG_FIGURE_WORLD} -- Element change
 		require
 			a_link_not_void: a_link /= Void
 		do
-			links.prune_all (a_link)
+			internal_links.prune_all (a_link)
 		ensure
 			links_not_has_a_link: not links.has (a_link)
 		end
@@ -295,64 +314,10 @@ feature {EV_MODEL_GROUP} -- Figure group
 			Precursor {EG_FIGURE} (a_transformation)
 			request_update
 		end
-		
-feature {EG_LAYOUT} -- Layouter
-
-	dx: DOUBLE
-			-- `Current' can be translated for `dx' when `translate' is called.
-			
-	dy: DOUBLE
-			-- `Current' can be translated for `dy' when `translate' is called.
-	
-	step: DOUBLE
-
-	set_dx_dy (a_dx, a_dy: DOUBLE) is
-			-- Set `dx' to `a_dx' and `dy' to `a_dy'
-		do
-			dx := a_dx
-			dy := a_dy
-		ensure
-			set: dx = a_dx and dy = a_dy
-		end
-	
-	set_step (a_step: DOUBLE) is
-			-- Set `step' to `a_step'
-		do
-			step := a_step.min (1000)
-		ensure
-			set: a_step < 1000 implies step = a_step
-			set: a_step >=1000 implies step = 1000
-		end
-		
-	translate (a_fence: EV_RECTANGLE) is
-			-- Translate `Current' for `dx' * `step' and  `dy' * `step'
-			-- but not out of `a_fence' if not Void.
-			-- Set `dx' and `dy' to 0. 
-		local
-			ax, ay: DOUBLE
-			l_size: like size
-			border_x, border_y: INTEGER
-		do
-			ax := x + step * dx
-			ay := y + step * dy
-			
-			if a_fence /= Void then
-				l_size := size
-				border_x := l_size.width // 2
-				border_y := l_size.height // 2
-				ax := ax.max (a_fence.left + border_x).min (a_fence.right - border_x)
-				ay := ay.max (a_fence.top + border_y).min (a_fence.bottom - border_y)
-			end
-			dx := 0.0
-			dy := 0.0
-			set_x_y (ax.truncated_to_integer, ay.truncated_to_integer)
-		ensure
-			set: dx = 0.0 and dy = 0.0
-		end
 
 feature {EG_LAYOUT, EG_FIGURE} -- Implementation
 
-	links: ARRAYED_LIST [EG_LINK_FIGURE]
+	internal_links: ARRAYED_LIST [EG_LINK_FIGURE]
 			-- links to other figures.
 		
 feature {NONE} -- Implementation

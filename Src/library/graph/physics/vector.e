@@ -1,32 +1,23 @@
 indexing
-	description: "[
-			Common shared routines for XML extraction, saving and deserialization
-		]"
+	description: "Objects that is a vector containing Gs."
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	SHARED_XML_ROUTINES
+deferred class
+	VECTOR [G -> NUMERIC]
 
 inherit
-	ANY
+	NUMERIC
+	
+feature -- Basic operations
 
-	XM_CALLBACKS_FILTER_FACTORY
-		export
-			{NONE} all
+	infix "|*" (other: G): like Current is
+			-- Scalar product between `Current' and other.
+		deferred
 		end
 
-feature {NONE} -- Implementation
-
-	Xml_routines: XML_ROUTINES is
-			-- Access the common xml routines.
-		once
-			create Result.default_create
-		ensure
-			non_void_Xml_routines: Xml_routines /= Void
-		end
-
-end -- Class SHARED_XML_ROUTINES
+end -- class VECTOR
 
 --|----------------------------------------------------------------
 --| EiffelGraph: library of graph components for ISE Eiffel.

@@ -4,8 +4,8 @@ inherit
 	CREATE_PROJ_BUTTON
 		rename
 			make as parent_make
-	redefine
-			symbol, popup_window, app_not_save_qu
+		redefine
+			symbol, popup_window, app_not_save_qu, create_focus_label
 		end;
 	
 creation
@@ -17,13 +17,12 @@ feature {NONE} -- Focusable
     make (a_parent: COMPOSITE) is
         do
             parent_make (a_parent)
-            set_focus_string (Focus_labels.save_project_as_label)
         end
   
--- samik	focus_string: STRING is 
--- samik		do
--- samik			Result := Focus_labels.save_project_as_label
--- samik		end;
+	create_focus_label is 
+		do
+			set_focus_string (Focus_labels.save_project_as_label)
+		end;
 
 	symbol: PIXMAP is
 		do

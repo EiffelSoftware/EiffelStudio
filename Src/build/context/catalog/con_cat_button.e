@@ -32,7 +32,6 @@ feature {NONE}
 		do
 			catalog_page := cat_page;
 			make_visible (a_parent)
-	--samik xxxx		set_focus_string (context_catalog.focus_label)
 		
 --	button_make (Widget_names.pcbutton, a_parent)
 			add_activate_action (Current, Void);
@@ -47,8 +46,15 @@ feature {NONE}
 --			if s.is_valid then
 --				set_pixmap (s);
 --			end
---		end;
-
+	--		end;
+	
+feature {NONE} -- Focus label
+	
+	create_focus_label is
+		do
+			set_focus_string ("CONTEXT_CATALOG")	
+		end
+	
 feature 
 
 	catalog_page: CONTEXT_CAT_PAGE;

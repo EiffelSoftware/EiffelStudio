@@ -19,7 +19,6 @@ feature
     make (a_parent: COMPOSITE; ed: like editor) is
         do
             parent_make (a_parent, ed)
-            set_focus_string (Focus_labels.submenu_label)
         end
 
 	form_number: INTEGER;
@@ -34,10 +33,10 @@ feature
 			Result := Pixmaps.submenu_pixmap
 		end
 
--- samik	focus_string: STRING is 
--- samik		do
--- samik			Result := Focus_labels.submenu_label;
--- samik		end;
+	create_focus_label is 
+		do
+			set_focus_string (Focus_labels.command_type_label)
+		end;
 
 	set_form_number (nbr: INTEGER) is
 		do

@@ -29,10 +29,10 @@ feature {NONE}
 -- samik			Result := associated_editor.focus_label
 -- samik		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.context_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.context_label)
+		end;
 
 	data: CONTEXT is
 		do
@@ -55,9 +55,6 @@ feature {NONE}
 		do
 			associated_editor := ed;
 			make_visible (a_parent);
-			-- added by samik
-			set_focus_string (Focus_labels.context_label)
-			-- end of samik
 			register;
 			initialize_transport
 		end;

@@ -21,26 +21,18 @@ creation
 
 feature {NONE}
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			if data = Void then
--- samik				Result := focus_labels.parent_label
--- samik			else
--- samik				Result := data.label
--- samik			end;
--- samik		end;
-
-	make (ed: CMD_EDITOR; a_parent: COMPOSITE) is
+	create_focus_label is
 		do
-			old_make (ed, a_parent);
-			-- added by samik
 			if data = Void then
 				set_focus_string (Focus_labels.parent_label)
 			else
 				set_focus_string (data.label)
-			end;
-			-- end of samik
-			
+			end
+		end
+
+	make (ed: CMD_EDITOR; a_parent: COMPOSITE) is
+		do
+			old_make (ed, a_parent);
 			initialize_transport;
 		end;
 

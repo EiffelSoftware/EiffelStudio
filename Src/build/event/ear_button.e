@@ -26,22 +26,12 @@ feature {NONE}
 			add_button_press_action (1, Current, Void);
 			add_button_press_action (2, Current, Void);
 			add_button_press_action (3, Current, Void);
-			-- added by samik
-			set_focus_string (Focus_labels.listen_label)
-			-- end of samik
 		end
 	
--- samik	focus_label: LABEL is
--- samik		do
--- samik			Result := editor.focus_label
--- samik		end;
-
-
-
--- samik	focus_string: STRING is 
--- samik		do
--- samik			Result := Focus_labels.listen_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.listen_label)
+		end;
 
 	symbol: PIXMAP is
 		do

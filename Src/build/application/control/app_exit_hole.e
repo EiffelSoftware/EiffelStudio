@@ -16,21 +16,20 @@ creation
 
 feature {NONE}
 
-    make (a_parent: COMPOSITE) is
-        do
-            parent_make (a_parent)
-            set_focus_string (Focus_labels.exit_label)
-        end
+	make (a_parent: COMPOSITE) is
+		do
+			parent_make (a_parent)
+		end
 
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.exit_label_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.exit_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.exit_label)
+		end;
 
 feature {NONE}
 

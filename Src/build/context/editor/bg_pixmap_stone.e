@@ -10,10 +10,10 @@ creation
 
 feature {NONE}
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.bg_pixmap_att_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.bg_pixmap_att_label)
+		end;
 
 	command: BG_P_STONE_CMD is
 		once

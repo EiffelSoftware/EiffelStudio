@@ -24,7 +24,8 @@ inherit
 		end;
 	SHARED_MELT_ONLY;
 	SHARED_RESCUE_STATUS;
-	SHARED_ERROR_HANDLER	
+	SHARED_ERROR_HANDLER;
+	SHARED_APPLICATION_EXECUTION;
 
 feature -- Initialization
 
@@ -141,7 +142,24 @@ feature -- Properties
 			Result := Lace.file_name
 		end;
 
-	lace_click_list: ARRAY [CLICK_STONE] is
+	lace_text: STRING is
+			-- Text of the Lace file.
+			-- Void if unreadable file
+		require
+			valid_file_name: lace_file_name /= Void
+		local
+			a_file: RAW_FILE
+		do
+			!! a_file.make (lace_file_name);
+			if a_file.exists and then a_file.is_readable then
+				a_file.open_read;
+				a_file.readstream (a_file.count);
+				a_file.close;
+				Result := clone (a_file.laststring)
+			end
+		end;
+
+	lace_click_list: CLICK_LIST is
 			-- Click list for the lace file
 		do
 			if
@@ -149,7 +167,7 @@ feature -- Properties
 				Lace.not_first_parsing and then
 				system.root_class_name /= Void
 			then
-				Result := Lace.root_ast.click_list.clickable_stones (Void)
+				Result := Lace.root_ast.click_list
 			end
 		end;
 
@@ -160,6 +178,12 @@ feature -- Properties
 		ensure
 			is_project_dir: Result = Project_directory
 		end;
+
+	error_displayer: ERROR_DISPLAYER is
+			-- Displays error and warning messages
+		do
+			Result := Error_handler.error_displayer
+		end
 
 feature -- Status
 
@@ -192,11 +216,13 @@ feature -- Status
 		do
 			Result := not is_read_only and then
 				initialized and then
-				lace_file_name /= Void
+				lace_file_name /= Void and then
+				error_displayer /= Void
 		ensure
 			yes_if_ok: Result implies not is_read_only and then
 					initialized and then 
-					lace_file_name /= Void
+					lace_file_name /= Void and then
+					error_displayer /= Void
 		end;
 
 	was_saved: BOOLEAN is
@@ -286,6 +312,16 @@ feature -- Setting
 			lace_file_name_set: equal (f_name, lace_file_name)
 		end;
 
+	set_error_displayer (ed: like error_displayer) is
+			-- Set `error_displayer' to `ed'.
+		require
+			non_void_ed: ed /= Void
+		do
+			Error_handler.set_error_displayer (ed)
+		ensure
+			set: error_displayer = Error_handler.error_displayer
+		end;
+
 feature -- Update
 
 	melt is
@@ -296,6 +332,7 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
+			Application.clear_debugging_information;
 			Workbench.recompile
 			if successful then
 				save_project;
@@ -357,8 +394,6 @@ feature -- Update
 			was_saved: successful and then not
 				error_occurred implies was_saved
 			error_implies: error_occurred implies save_error;
-			successful_implies_freezing_occurred: 
-					successful implies freezing_occurred 
 		rescue
 			if Rescue_status.is_error_exception then
 					-- A validity error has been detected during the
@@ -446,7 +481,7 @@ feature -- Output
 			retry
 		end;
 
-feature -- Clearing
+feature {DEBUG_INFO} -- Clearing
 
 	reset_debug_counter is
 			-- Reset debug counters.
@@ -454,6 +489,13 @@ feature -- Clearing
 			if Workbench.system_defined then
 				Comp_system.reset_debug_counter
 			end
+		end;
+
+feature {APPLICATION_EXECUTION}
+
+	compilation_counter: INTEGER is
+		do
+			Result := Workbench.compilation_counter
 		end;
 
 feature {NONE} -- Implementation

@@ -25,7 +25,6 @@ feature -- Execution
 	execute (argument: ANY) is
 			-- Execute the command.
 		do
-			focus_label.popdown
 			if last_warner /= Void then
 				last_warner.popdown
 			end;

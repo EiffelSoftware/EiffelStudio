@@ -207,7 +207,7 @@ feature -- dragging
 			start_line_pos: INTEGER
 		do
 			create file.make (file_name)
-			if file.is_readable then
+			if file.exists and then file.is_readable then
 				file.open_read
 				from
 				until
@@ -217,8 +217,8 @@ feature -- dragging
 					Result := Result + 1
 					file.read_line
 				end
+				file.close
 			end
-			file.close
 		end
 
 	is_valid: BOOLEAN is

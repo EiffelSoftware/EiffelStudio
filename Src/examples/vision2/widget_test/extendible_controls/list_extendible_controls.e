@@ -40,6 +40,7 @@ feature -- Status setting
 			-- call `wipe_out' on `Current_type'.
 		do
 			current_type.wipe_out
+			object_editor.set_type (object_editor.test_widget)
 		end
 
 feature {NONE} -- Implementation

@@ -13,7 +13,7 @@ inherit
 			associated_resource, validate, execute
 		end
 
-creation
+create
 	make
 
 feature -- Validation
@@ -54,8 +54,8 @@ feature {PREFERENCE_CATEGORY} -- User Interface
 		do
 			form_make ("", a_parent);
 
-			!! name_label.make (associated_resource.visual_name, Current);
-			!! text.make ("", Current);
+			create name_label.make (associated_resource.visual_name, Current);
+			create text.make ("", Current);
 			text.add_activate_action (Current, Void);
 			text.add_button_press_action (3, Current, font_action);
 
@@ -120,8 +120,8 @@ feature {PREFERENCE_CATEGORY} -- Access
 		local
 			new_res: like associated_resource
 		do
-			!! new_res.make_with_values (associated_resource.name, text.text);
-			!! Result.make (associated_resource, new_res)
+			create new_res.make_with_values (associated_resource.name, text.text);
+			create Result.make (associated_resource, new_res)
 		end
 
 feature -- Execution
@@ -147,7 +147,7 @@ feature -- Execution
 				font_box.remove_ok_action (Current, fb_ok_action)
 				font_box := Void
 			else
-				{PREFERENCE_RESOURCE} Precursor (arg)
+				Precursor {PREFERENCE_RESOURCE} (arg)
 			end
 		end;
 
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 
 	font_action, fb_ok_action, fb_cancel_action: ANY is
 		once
-			!! Result
+			create Result
 		end
 
 	font_box: FONT_BOX_D
@@ -172,8 +172,8 @@ feature {NONE} -- Implementation
 		local
 			mp: MOUSE_PTR
 		do
-			!! mp.set_watch_cursor;
-			!! font_box.make ("Font Box", text.top);
+			create mp.set_watch_cursor;
+			create font_box.make ("Font Box", text.top);
 			font_box.set_font (associated_resource.actual_value)
 			font_box.hide_apply_button;
 			font_box.add_cancel_action (Current, fb_cancel_action);

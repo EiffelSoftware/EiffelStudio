@@ -32,7 +32,7 @@ inherit
 			execute as launch_ebench
 		end
 
-creation
+create
 	make,
 	make_from_project_file
 
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		do
 			if not project_tool.initialized then
 				if has_project_name then
-					!! file.make (valid_file_name (project_file_name))
+					create file.make (valid_file_name (project_file_name))
 					if not file.exists or else file.is_directory then
 						warner (Project_tool).custom_call (Current,
 								Warning_messages.w_file_not_exist (project_file_name), 
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 				else
 					if argument = project_tool then
 						-- We open the file_selection dialog on the last opened directory.
-						!! environment_variable
+						create environment_variable
 						new_name_chooser := name_chooser (Project_tool)
 						last_directory_opened := environment_variable.get (Studio_Directory_List)
 						if last_directory_opened /= Void then
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 								Warning_messages.w_file_not_exist (file_name), 
 								Interface_names.b_Ok, Void, Void)
 						else
-							!! file.make (valid_file_name (file_name))
+							create file.make (valid_file_name (file_name))
 							if not file.exists or else file.is_directory then
 								choose_again := True
 								warner (Project_tool).custom_call (Current,
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			else
 					-- A project has been opened, we need to open a new one
 				if has_project_name then
-					!! file.make (valid_file_name (project_file_name))
+					create file.make (valid_file_name (project_file_name))
 					if not file.exists or else file.is_directory then
 						warner (Project_tool).custom_call (Current,
 								Warning_messages.w_file_not_exist (project_file_name), 
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 				else
 					if argument = project_tool then
 						-- We open the file_selection dialog on the last opened directory.
-						!! environment_variable
+						create environment_variable
 						new_name_chooser := name_chooser (Project_tool)
 						last_directory_opened := environment_variable.get (Studio_Directory_List)
 						if last_directory_opened /= Void then
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 								Warning_messages.w_file_not_exist (file_name), 
 								Interface_names.b_Ok, Void, Void)
 						else
-							!! file.make (valid_file_name (file_name))
+							create file.make (valid_file_name (file_name))
 							if not file.exists or else file.is_directory then
 								choose_again := True
 								warner (Project_tool).custom_call (Current,
@@ -224,7 +224,7 @@ feature -- Project Initialization
 		local
 			file: RAW_FILE
 		do
-			!! file.make (valid_file_name (project_file_name))
+			create file.make (valid_file_name (project_file_name))
 			if not file.exists or else file.is_directory then
 				warner (Project_tool).custom_call (Current,
 					Warning_messages.w_file_not_exist (project_file_name), 
@@ -250,8 +250,8 @@ feature -- Project Initialization
 			end
 
 				--| Retrieve existing project
-			!! project_file.make (file_name)
-			!! project_dir.make (dir_name, project_file)
+			create project_file.make (file_name)
+			create project_dir.make (dir_name, project_file)
 			Project_directory_name.wipe_out
 			Project_directory_name.set_directory (dir_name)
 
@@ -276,7 +276,7 @@ feature -- Project Initialization
 			project_tool.set_title ("Retrieving project...")
 
 				-- These 2 lines will update effectively the project tool.
-			!! mp.do_nothing
+			create mp.do_nothing
 			mp.restore
 
 				-- Put the cursor in the wait state.
@@ -288,7 +288,7 @@ feature -- Project Initialization
 			if Eiffel_project.retrieval_error then
 				Project_tool.set_title (old_title)
 					-- These 2 lines will update effectively the project tool.
-				!! mp.do_nothing
+				create mp.do_nothing
 				mp.restore
 				
 				if Eiffel_project.is_incompatible then
@@ -311,7 +311,7 @@ feature -- Project Initialization
 			elseif Eiffel_project.incomplete_project then
 				Project_tool.set_title (old_title)
 					-- These 2 lines will update effectively the project tool.
-				!! mp.do_nothing
+				create mp.do_nothing
 				mp.restore
 				
 				msg := Warning_messages.w_Project_directory_not_exist (project_file.name, project_dir.name)
@@ -319,7 +319,7 @@ feature -- Project Initialization
 			elseif Eiffel_project.read_write_error then
 				Project_tool.set_title (old_title)
 					-- These 2 lines will update effectively the project tool.
-				!! mp.do_nothing
+				create mp.do_nothing
 				mp.restore
 				
 				msg := Warning_messages.w_Cannot_open_project
@@ -332,7 +332,7 @@ feature -- Project Initialization
 					-- Retrieve breakpoints list
 				project_tool.set_title ("Retrieving debug information...")
 					-- These 2 lines will update effectively the project tool.
-				!! mp.do_nothing
+				create mp.do_nothing
 				mp.restore
 				if Application /= Void then
 					Application.load_debug_info
@@ -366,11 +366,11 @@ feature -- Project Initialization
 			e_displayer: BENCH_ERROR_DISPLAYER
 			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
 		do
-			!! e_displayer.make (Error_window)
+			create e_displayer.make (Error_window)
 			Eiffel_project.set_error_displayer (e_displayer)
 			Application.set_interrupt_number (Project_resources.interrupt_every_n_instructions.actual_value)
 			if not Project_resources.graphical_output_disabled.actual_value then
-				!! g_degree_output
+				create g_degree_output
 				Project_tool.set_progress_dialog (g_degree_output)
 			end
 		end

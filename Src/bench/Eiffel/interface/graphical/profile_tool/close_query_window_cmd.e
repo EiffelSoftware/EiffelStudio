@@ -10,7 +10,7 @@ class CLOSE_QUERY_WINDOW_CMD
 inherit
 	COMMAND
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

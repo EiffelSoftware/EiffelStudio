@@ -18,7 +18,7 @@ inherit
 		end;
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 
 	make
 
@@ -31,7 +31,7 @@ feature -- Initialization
 			debug_tip_cmd: DEBUG_TOOLTIP_CMD
 		do
 			text_field_make ("", a_parent); 
-			!! debug_tip_cmd.make (implementation)
+			create debug_tip_cmd.make (implementation)
 			add_activate_action (Current, Void);
 			tool := a_tool
 		end;
@@ -135,7 +135,7 @@ feature {NONE} -- Execution
 						create matcher.make_empty
 						matcher.set_pattern (cname);
 						if not matcher.has_wild_cards then
-							!! mp.set_watch_cursor;
+							create mp.set_watch_cursor;
 							at_pos := cname.index_of ('@', 1);
 							if at_pos = 0 then
 								class_list := Eiffel_universe.classes_with_name (cname)
@@ -143,7 +143,7 @@ feature {NONE} -- Execution
 								if class_list.is_empty then
 									class_list := Void;
 									if new_class_win = Void then
-										!! new_class_win.make (tool)
+										create new_class_win.make (tool)
 									end;
 									new_class_win.call (cname, tool.cluster)
 								elseif class_list.count = 1 then
@@ -172,7 +172,7 @@ feature {NONE} -- Execution
 									class_i := cluster.classes.item (cname)
 									if class_i = Void then
 										if new_class_win = Void then
-											!! new_class_win.make (tool)
+											create new_class_win.make (tool)
 										end
 										new_class_win.call (cname, cluster)
 									end
@@ -180,8 +180,8 @@ feature {NONE} -- Execution
 							end
 						else
 							from
-								!! mp.set_watch_cursor
-								!! sorted_classes.make
+								create mp.set_watch_cursor
+								create sorted_classes.make
 								clusters := Eiffel_universe.clusters
 								clusters.start
 							until
@@ -211,10 +211,10 @@ feature {NONE} -- Execution
 				end;
 				if class_i /= Void then
 					if class_i.compiled then
-						!! classc_stone.make (class_i.compiled_class)
+						create classc_stone.make (class_i.compiled_class)
 						tool.process_class (classc_stone);
 					else
-						!! classi_stone.make (class_i)
+						create classi_stone.make (class_i)
 						tool.process_classi (classi_stone);
 					end
 				end
@@ -231,7 +231,7 @@ feature {NONE} -- Execution
 			cname, last_name: STRING
 			first_ambiguous: BOOLEAN
 		do
-			!! class_names.make (class_list.count);
+			create class_names.make (class_list.count);
 			from class_list.start until class_list.after loop
 				class_i := class_list.item;
 				cname := clone (class_i.name);
@@ -257,7 +257,7 @@ feature {NONE} -- Execution
 				class_list.forth
 			end;
 			if choice = Void then
-				!! choice.make_with_widget (parent, Current)
+				create choice.make_with_widget (parent, Current)
 			end;
 			choice.popup (Current, class_names, Interface_names.t_Select_class)
 		end

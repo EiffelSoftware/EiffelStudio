@@ -10,7 +10,7 @@ inherit
 
 	WARNER_CALLBACKS
 
-creation
+create
 	make_flat, 
 	make_flat_short, 
 	make_text,
@@ -70,13 +70,13 @@ feature -- Generation
 			inspect
 				format_type
 			when flat_type then
-				!! cmd.make_flat (filter_name, Project_tool.progress_dialog)
+				create cmd.make_flat (filter_name, Project_tool.progress_dialog)
 			when flat_short_type then
-				!! cmd.make_flat_short (filter_name, Project_tool.progress_dialog)
+				create cmd.make_flat_short (filter_name, Project_tool.progress_dialog)
 			when text_type then
-				!! cmd.make_text (filter_name, Project_tool.progress_dialog)
+				create cmd.make_text (filter_name, Project_tool.progress_dialog)
 			when short_type then
-				!! cmd.make_short (filter_name, Project_tool.progress_dialog)
+				create cmd.make_short (filter_name, Project_tool.progress_dialog)
 			end
 			if do_parents then
 				cmd.set_do_parents
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 	filter_window: FILTER_W is
 			-- Filter window
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 		end;
 
 	filter_name: STRING

@@ -13,7 +13,7 @@ inherit
 			associated_resource
 		end
 
-creation
+create
 	make
 
 feature -- Validation
@@ -43,7 +43,7 @@ feature {PREFERENCE_CATEGORY} -- User Interface
 		do
 			form_make ("", a_parent);
 
-			!! boolean_toggle.make (associated_resource.visual_name, Current);
+			create boolean_toggle.make (associated_resource.visual_name, Current);
 
 			attach_top (boolean_toggle, 1);
 			attach_bottom (boolean_toggle, 1);
@@ -81,8 +81,8 @@ feature {PREFERENCE_CATEGORY} -- Access
 		local
 			new_res: like associated_resource
 		do
-			!! new_res.make_with_values (associated_resource.name, boolean_toggle.state);
-			!! Result.make (associated_resource, new_res)
+			create new_res.make_with_values (associated_resource.name, boolean_toggle.state);
+			create Result.make (associated_resource, new_res)
 		end
 
 feature {NONE} -- Properties

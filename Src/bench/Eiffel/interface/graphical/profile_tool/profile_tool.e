@@ -30,7 +30,7 @@ inherit
 
 	SYSTEM_CONSTANTS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			Profiler_resources.add_user (Current);
 
-			!! open_tools.make 
+			create open_tools.make 
 			command := a_command;
 			
 			if Platform_constants.is_windows then
@@ -54,8 +54,8 @@ feature {NONE} -- Initialization
 			
 			set_title (Interface_names.t_Profile_tool);
 			set_icon_name (Interface_names.t_Profile_tool);
-			!! quit_cmd.make (Current);
-			!! run_prof_query_cmd.make (Current);
+			create quit_cmd.make (Current);
+			create run_prof_query_cmd.make (Current);
 			set_delete_command (quit_cmd);
 			build_widgets
 			set_composite_attributes (Current);	
@@ -104,7 +104,7 @@ feature -- Graphical User Interface
 		local
 			new_window: PROFILE_QUERY_WINDOW
 		do
-			!! new_window.make (Current);
+			create new_window.make (Current);
 			new_window.popup;
 			new_window.update_window (st, pq, po, profinfo);
 			open_tools.extend (new_window)
@@ -177,7 +177,7 @@ feature {RUN_PROFILE_QUERY_CMD} -- Access
 			end;
 
 				--| Copy the filename
-			!! filename.make(0)
+			create filename.make(0)
 			filename := input_text.text
 			filename.prepend(working_directory)
 
@@ -185,7 +185,7 @@ feature {RUN_PROFILE_QUERY_CMD} -- Access
 
 				--| Copy the subqueries
 			if not query_text.text.is_empty then
-				!! parser;
+				create parser;
 				Result := parser.parse (query_text.text, shared_values)
 			else
 				Result := false
@@ -204,67 +204,67 @@ feature {NONE} -- Graphical User Interface
 			language_label: LABEL;
 		do
 				-- User Interface Components
-			!! global_form.make (Interface_names.t_Empty, Current);
+			create global_form.make (Interface_names.t_Empty, Current);
 
-			!! upper_sep.make (Interface_names.t_Empty, global_form);
-			!! switch_label.make (Interface_names.l_Output_switches, global_form);
-			!! switch_form.make (Interface_names.t_Empty, global_form);
-			!! language_label.make (Interface_names.l_Language_type, global_form);
-			!! language_form.make (Interface_names.t_Empty, global_form);
-			!! horizontal_sep.make (Interface_names.t_Empty, global_form);
-			!! text_form.make (Interface_names.t_Empty, global_form);
-			!! text_sep.make (Interface_names.t_Empty, global_form);
-			!! button_form.make (Interface_names.t_Empty, global_form);
+			create upper_sep.make (Interface_names.t_Empty, global_form);
+			create switch_label.make (Interface_names.l_Output_switches, global_form);
+			create switch_form.make (Interface_names.t_Empty, global_form);
+			create language_label.make (Interface_names.l_Language_type, global_form);
+			create language_form.make (Interface_names.t_Empty, global_form);
+			create horizontal_sep.make (Interface_names.t_Empty, global_form);
+			create text_form.make (Interface_names.t_Empty, global_form);
+			create text_sep.make (Interface_names.t_Empty, global_form);
+			create button_form.make (Interface_names.t_Empty, global_form);
 			button_form.set_fraction_base (2);
 
-			!! menu_bar.make (Interface_names.t_Empty, global_form);
-			!! file_menu.make (Interface_names.m_File, menu_bar);
-			!! command_menu.make (Interface_names.m_Commands, menu_bar);
-			!! window_menu.make (Interface_names.m_window, menu_bar);
-			!! help_menu.make (Interface_names.m_Help, menu_bar);
+			create menu_bar.make (Interface_names.t_Empty, global_form);
+			create file_menu.make (Interface_names.m_File, menu_bar);
+			create command_menu.make (Interface_names.m_Commands, menu_bar);
+			create window_menu.make (Interface_names.m_window, menu_bar);
+			create help_menu.make (Interface_names.m_Help, menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
 
 				-- Put entries in the menus.
 			fill_menus;
 
-			!! exit_button.make (Interface_names.b_Exit, button_form);
-			!! run_button.make (Interface_names.b_Run_query, button_form);
+			create exit_button.make (Interface_names.b_Exit, button_form);
+			create run_button.make (Interface_names.b_Run_query, button_form);
 
-			!! name_switch.make (Interface_names.b_Feature_name, switch_form);
+			create name_switch.make (Interface_names.b_Feature_name, switch_form);
 			name_switch.set_toggle_on;
-			!! number_of_calls_switch.make (Interface_names.b_Number_of_calls, switch_form);
+			create number_of_calls_switch.make (Interface_names.b_Number_of_calls, switch_form);
 			number_of_calls_switch.set_toggle_on;
-			!! time_switch.make (Interface_names.b_Function_time, switch_form);
+			create time_switch.make (Interface_names.b_Function_time, switch_form);
 			time_switch.set_toggle_on
-			!! descendant_switch.make (Interface_names.b_Descendant_time, switch_form);
+			create descendant_switch.make (Interface_names.b_Descendant_time, switch_form);
 			descendant_switch.set_toggle_on
-			!! total_time_switch.make (Interface_names.b_Total_time, switch_form);
+			create total_time_switch.make (Interface_names.b_Total_time, switch_form);
 			total_time_switch.set_toggle_on
-			!! percentage_switch.make (Interface_names.b_Percentage, switch_form);
+			create percentage_switch.make (Interface_names.b_Percentage, switch_form);
 			percentage_switch.set_toggle_on
 
-			!! eiffel_switch.make (Interface_names.b_Eiffel_features, language_form);
+			create eiffel_switch.make (Interface_names.b_Eiffel_features, language_form);
 			eiffel_switch.set_toggle_on;
-			!! c_switch.make (Interface_names.b_C_functions, language_form);
+			create c_switch.make (Interface_names.b_C_functions, language_form);
 			c_switch.set_toggle_on;
-			!! recursive_switch.make (Interface_names.b_Recursive_functions, language_form);
+			create recursive_switch.make (Interface_names.b_Recursive_functions, language_form);
 			recursive_switch.set_toggle_on;
 
-			!! input_label.make (Interface_names.l_Input_file, text_form);
-			!! input_text.make (Interface_names.t_Empty, text_form);
+			create input_label.make (Interface_names.l_Input_file, text_form);
+			create input_text.make (Interface_names.t_Empty, text_form);
 			input_text.set_text ("profinfo.pfi");
-			!! query_label.make (Interface_names.l_Query, text_form);
-			!! query_text.make (Interface_names.t_Empty, text_form);
-			!! browse_button.make (Interface_names.b_Browse, text_form);
+			create query_label.make (Interface_names.l_Query, text_form);
+			create query_text.make (Interface_names.t_Empty, text_form);
+			create browse_button.make (Interface_names.b_Browse, text_form);
 			browse_button.add_activate_action (Current, browse_it);
 
 				-- Compilation Mode
-			!! compilation_label.make ("Input file compilation type", text_form)
-			!! compile_box.make (Interface_names.t_Empty, text_form);
+			create compilation_label.make ("Input file compilation type", text_form)
+			create compile_box.make (Interface_names.t_Empty, text_form);
 			compile_box.set_always_one (True);
-			!! workbench_button.make (Interface_names.b_Workbench, compile_box);
+			create workbench_button.make (Interface_names.b_Workbench, compile_box);
 			workbench_button.set_toggle_on;
-			!! final_button.make (Interface_names.b_Final, compile_box);
+			create final_button.make (Interface_names.b_Final, compile_box);
 
 				-- Commands
 			exit_button.add_activate_action (quit_cmd, Void);
@@ -356,23 +356,23 @@ feature {NONE} -- Graphical User Interface
 			raise_tool_cmd: RAISE_TOOL_CMD;
 			sep: SEPARATOR
 		do
-			!! quit_menu_entry.make_default (quit_cmd, file_menu);
-			!! generate_cmd;
-			!! generate_menu_entry.make_default (generate_cmd, command_menu);
-			!! help_cmd;
-			!! help_menu_entry.make_default (help_cmd, help_menu);
+			create quit_menu_entry.make_default (quit_cmd, file_menu);
+			create generate_cmd;
+			create generate_menu_entry.make_default (generate_cmd, command_menu);
+			create help_cmd;
+			create help_menu_entry.make_default (help_cmd, help_menu);
 
-			!! menu_entry.make 
+			create menu_entry.make 
 				(Project_tool.class_hole_holder.associated_command, window_menu);
-			!! menu_entry.make 
+			create menu_entry.make 
 				(Project_tool.routine_hole_holder.associated_command, window_menu);
-			!! menu_entry.make 
+			create menu_entry.make 
 				(Project_tool.object_hole_holder.associated_command, window_menu);
-			!! sep.make (Interface_names.t_Empty, window_menu);
-			!! show_pref_cmd.make (Profiler_resources);
-			!! show_pref_menu_entry.make_default (show_pref_cmd, window_menu);
-			!! raise_tool_cmd.make (Project_tool);
-			!! menu_entry.make (raise_tool_cmd, window_menu);
+			create sep.make (Interface_names.t_Empty, window_menu);
+			create show_pref_cmd.make (Profiler_resources);
+			create show_pref_menu_entry.make_default (show_pref_cmd, window_menu);
+			create raise_tool_cmd.make (Project_tool);
+			create menu_entry.make (raise_tool_cmd, window_menu);
 		end
 
 feature {NONE} -- Attributes
@@ -487,7 +487,7 @@ feature {NONE} -- Execution Arguments
 
 	browse_it: ANY is
 		once
-			!! Result
+			create Result
 		end
 
 feature -- Update
@@ -591,7 +591,7 @@ feature {NONE} -- Implementation
 
 	working_directory : STRING is
 		do
-			!! Result.make(0)
+			create Result.make(0)
 			if input_text.text.has(Operating_environment.Directory_separator) then
 				Result := ""
 			else

@@ -31,7 +31,7 @@ feature -- Access
 			a_file: RAW_FILE
 		do
 			if is_valid then
-				!!a_file.make (file_name);
+				create a_file.make (file_name);
 				if a_file.exists and then a_file.is_readable then
 					a_file.open_read;
 					a_file.readstream (a_file.count);

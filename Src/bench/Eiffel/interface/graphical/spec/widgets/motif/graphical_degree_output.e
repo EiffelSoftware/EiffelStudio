@@ -75,7 +75,7 @@ feature -- Start output features
 
 			popup_window
 			progress_bar.reset_percentage
-			!! i_name.make (0)
+			create i_name.make (0)
 			i_name.append (Interface_names.d_Degree)
 			i_name.append (current_degree.out)
 			set_project_icon_name (i_name)
@@ -124,7 +124,7 @@ feature -- Start output features
 				popup_window
 			end
 			progress_bar.reset_percentage
-			!! tmp.make (0)
+			create tmp.make (0)
 			tmp.append (Interface_names.d_Degree)
 			tmp.append (current_degree.out)
 			set_project_icon_name (tmp)
@@ -474,16 +474,16 @@ feature {NONE} -- Implementation
 			icon_name := Project_tool.icon_name
 			make (Interface_names.d_Compilation_progress, mel_parent)
 			parent.set_title (Interface_names.d_Compilation_progress)
-			!! degree_l.make ("", Current, True)	
-			!! entity_l.make ("", Current, True)	
-			!! nbr_to_go_l.make ("", Current, True)	
-			!! current_degree_l.make ("", Current, True)	
-			!! current_entity_l.make ("", Current, True)	
-			!! current_nbr_to_go_l.make ("", Current, True)	
-			!! frame.make ("", Current, True)	
-			!! progress_bar.make ("", frame)	
-			!! cancel_b.make ("Cancel", Current, True)	
-			!! percentage_l.make ("100%%", Current, True)	
+			create degree_l.make ("", Current, True)	
+			create entity_l.make ("", Current, True)	
+			create nbr_to_go_l.make ("", Current, True)	
+			create current_degree_l.make ("", Current, True)	
+			create current_entity_l.make ("", Current, True)	
+			create current_nbr_to_go_l.make ("", Current, True)	
+			create frame.make ("", Current, True)	
+			create progress_bar.make ("", frame)	
+			create cancel_b.make ("Cancel", Current, True)	
+			create percentage_l.make ("100%%", Current, True)	
 			set_fraction_base (3)
 
 			degree_l.attach_top
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation
 			p: MEL_COMPOSITE
 		do
 			cancel_b.set_sensitive
-			!! mp.do_nothing
+			create mp.do_nothing
 			realize
 			p := parent.parent
 			new_x := p.x + (p.width - width) // 2

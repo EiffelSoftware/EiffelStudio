@@ -34,7 +34,7 @@ inherit
 			freeze_now
 		end;
  
-creation
+create
 
 	make
 

@@ -18,7 +18,7 @@ inherit
 		end;
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 
 	make
 
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 					-- Should never happen.
 				warner (popup_parent).gotcha_call (Warning_messages.w_Unknown_feature)
 			else
-				!! st.make (status.e_feature);
+				create st.make (status.e_feature);
 				tool.process_feature (st);
 				tool.highlight_breakable (status.break_index)
 			end

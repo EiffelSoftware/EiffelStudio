@@ -11,7 +11,7 @@ inherit
 	COMMAND
 	SHARED_QUERY_VALUES
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -37,12 +37,12 @@ feature -- Command Execution
 			txt := tool.subquery
 			if txt /= Void and then not txt.is_empty then 
 				clear_values;
-				!! parser;
+				create parser;
 				if parser.parse (txt, Current) then
 					tool.all_subqueries.append (subqueries)
-					!! string_arg.make(0)
+					create string_arg.make(0)
 					string_arg ?= arg
-					!! operator.make (string_arg)
+					create operator.make (string_arg)
 					tool.all_operators.extend (operator)
 					tool.all_operators.append (subquery_operators)
 					tool.update_query_form

@@ -13,7 +13,7 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 
 	make
 	

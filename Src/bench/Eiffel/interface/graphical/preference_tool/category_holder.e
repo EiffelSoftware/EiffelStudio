@@ -13,7 +13,7 @@ inherit
 			associated_button, associated_menu_entry
 		end
 
-creation
+create
 	make, make_plain
 
 feature {NONE} -- Initialization

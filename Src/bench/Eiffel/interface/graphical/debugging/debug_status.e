@@ -15,7 +15,7 @@ inherit
 		end;
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 
 	make
 
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			st_syst: STRUCTURED_TEXT
 		do
 			if Project_tool.initialized then
-				!! st.make
+				create st.make
 				if Application.is_running then
 					Application.status.display_status (st)
 					Debug_window.clear_window

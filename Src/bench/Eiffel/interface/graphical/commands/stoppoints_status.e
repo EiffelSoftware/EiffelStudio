@@ -14,7 +14,7 @@ inherit
 	SHARED_APPLICATION_EXECUTION;
 	WINDOWS
 
-creation
+create
 	make_enabled, 
 	make_disabled 
 

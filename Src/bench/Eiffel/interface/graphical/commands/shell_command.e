@@ -18,7 +18,7 @@ inherit
 
 	SYSTEM_CONSTANTS
 
-creation
+create
 
 	make
 
@@ -64,7 +64,7 @@ feature -- Update
 
 				replace_target(cmd_string, fs.file_name)
 				cmd_string.replace_substring_all ("$line", fs.line_number.out)
-				!! req;
+				create req;
 				req.execute (cmd_string);
 			end
 		end;
@@ -79,7 +79,7 @@ feature -- Update
 			if not cmd_string.is_empty then
 				replace_target(cmd_string, cs.file_name)
 				cmd_string.replace_substring_all ("$line", "1")
-				!! req;
+				create req;
 				req.execute (cmd_string);
 			end
 		end
@@ -95,7 +95,7 @@ feature -- Update
 			if not cmd_string.is_empty then
 				replace_target(cmd_string, syn.file_name)
 				cmd_string.replace_substring_all ("$line", "1")
-				!! req;
+				create req;
 				req.execute (cmd_string);
 			end
 		end
@@ -115,7 +115,7 @@ feature -- Update
 				--| that it was a relativ pathname and we need to make
 				--| it absolute
 			change_working_directory (Eiffelgen)
-			!! file.make(fn)
+			create file.make(fn)
 			if file.exists then 
 				change_working_directory (cwd)
 				target_string := fn
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			if argument = button_three_action then
 					-- 3rd button pressed
 				if shell_window = Void then
-					!!shell_window.make (popup_parent, Current);
+					create shell_window.make (popup_parent, Current);
 				end;
 				shell_window.call 
 			else
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 						fs ?= tool.stone;
 						replace_target(cmd_string, fs.file_name)
 						cmd_string.replace_substring_all ("$line", line_nb.out)
-						!! req;
+						create req;
 						req.execute (cmd_string);
 					end
 				end;

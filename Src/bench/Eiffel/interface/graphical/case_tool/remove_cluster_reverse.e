@@ -8,7 +8,7 @@ class
 
 inherit
 	CASE_COMMAND
-creation
+create
 	make
 
 feature	

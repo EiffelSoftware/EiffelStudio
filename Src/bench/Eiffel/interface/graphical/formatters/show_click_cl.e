@@ -19,7 +19,7 @@ inherit
 		end;
 	SHARED_FORMAT_TABLES
 
-creation
+create
 
 	make
 	
@@ -61,7 +61,7 @@ feature -- Formatting
 							tool.close_search_window;
 							if c_stone.clickable then
 								display_temp_header (c_stone);
-								!! mp.set_watch_cursor;
+								create mp.set_watch_cursor;
 								cur := text_window.cursor;
 								text_window.clear_window;
 								tool.set_read_only_text;

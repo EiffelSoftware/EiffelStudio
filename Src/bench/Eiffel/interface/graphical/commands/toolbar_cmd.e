@@ -11,7 +11,7 @@ inherit
 	COMMAND;
 	WINDOW_ATTRIBUTES
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -48,10 +48,10 @@ feature -- Execution
 			end;
 			screen := tool.toolbar_parent.screen;
 			if popup = Void then
-				!! popup.make ("", tool.toolbar_parent);
+				create popup.make ("", tool.toolbar_parent);
 				popup.set_action ("<Unmap>", Current, destroy_action);
 				popup.set_title ("Toolbars");
-				!! sep.make ("", popup);
+				create sep.make ("", popup);
 
 				from
 					bars := tool.toolbar_parent.children;
@@ -61,7 +61,7 @@ feature -- Execution
 				loop
 					a_bar ?= bars.item;
 					if a_bar /= Void then
-						!! e_text.make (0);
+						create e_text.make (0);
 						if a_bar.managed then
 							e_text.append ("Hide ");
 							arg := a_bar.arg_hide
@@ -70,7 +70,7 @@ feature -- Execution
 							arg := a_bar.arg_show
 						end;
 						e_text.append (a_bar.identifier);
-						!! entry.make (e_text, popup);
+						create entry.make (e_text, popup);
 						entry.add_activate_action (a_bar, arg)
 					end
 					bars.back
@@ -89,7 +89,7 @@ feature {NONE} -- Properties
 
 	destroy_action: ANY is
 		once
-			!! Result
+			create Result
 		end
 
 end -- class TOOLBAR_CMD

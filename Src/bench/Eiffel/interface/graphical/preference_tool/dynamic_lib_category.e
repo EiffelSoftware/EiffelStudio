@@ -9,7 +9,7 @@ class
 inherit
 	EDITOR_RESOURCE_CATEGORY
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -17,8 +17,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize Current
 		do
-			!! users.make;
-			!! modified_resources.make
+			create users.make;
+			create modified_resources.make
 		end
 
 feature {TTY_RESOURCES} -- Initialization
@@ -26,10 +26,10 @@ feature {TTY_RESOURCES} -- Initialization
 	initialize (rt: RESOURCE_TABLE) is
 			-- Initialize all resources valid for Current.
 		do
-			!! tool_width.make ("system_tool_width", rt, 440)
-			!! tool_height.make ("system_tool_height", rt, 500)
-			!! command_bar.make ("system_tool_command_bar", rt, true)
-			!! format_bar.make ("system_tool_format_bar", rt, true)
+			create tool_width.make ("system_tool_width", rt, 440)
+			create tool_height.make ("system_tool_height", rt, 500)
+			create command_bar.make ("system_tool_command_bar", rt, true)
+			create format_bar.make ("system_tool_format_bar", rt, true)
 --			!! parse_ace_after_saving.make ("parse_ace_after_saving", rt, True)
 		end
 

@@ -17,7 +17,7 @@ inherit
 			work
 		end
 
-creation
+create
 	make
 
 feature -- Properties

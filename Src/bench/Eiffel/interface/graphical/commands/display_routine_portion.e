@@ -11,7 +11,7 @@ class DISPLAY_ROUTINE_PORTION
 inherit
 	DISPLAY_DEBUGGER_PORTION
 
-creation
+create
 	make
 
 feature -- Properties

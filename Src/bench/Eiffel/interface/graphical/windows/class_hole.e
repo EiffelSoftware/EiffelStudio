@@ -18,7 +18,7 @@ inherit
 			compatible, menu_name, accelerator, receive
 		end
 
-creation
+create
 
 	make
 

@@ -14,7 +14,7 @@ inherit
 			transported_stone
 		end
 
-creation
+create
 
 	make
 
@@ -121,13 +121,13 @@ feature {NONE} -- Implementation
 	control_button_three_action: ANY is
 			-- Action to specify that the control third button was pressed
 		once
-			!! Result
+			create Result
 		end;
 
 	shift_button_three_action: ANY is
 			-- Action to specify that the shift third button was pressed
 		once
-			!! Result
+			create Result
 		end;
 
 end -- class DEFAULT_HOLE_COMMAND

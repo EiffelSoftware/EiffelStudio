@@ -43,7 +43,7 @@ feature -- Properties
 		do
 			x1 := source.real_x + source.width // 2;
 			y1 := source.real_y + source.height // 2;
-			!! Result;
+			create Result;
 			Result.set (x1, y1)
 		end;
 
@@ -91,7 +91,7 @@ feature {NONE} -- Transport
 			-- Command which takes care of the 
 			-- the transport.
 		once
-			!!Result
+			create Result
 		end;
 
 end -- class DRAG_SOURCE

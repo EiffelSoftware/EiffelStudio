@@ -23,7 +23,7 @@ inherit
 		end;
 	EB_CONSTANTS
 
-creation
+create
 	make
 
 feature -- Execution
@@ -60,13 +60,13 @@ feature {NONE} -- Initialization
 
 	color_action: ANY is
 		once
-			!! Result
+			create Result
 		end;
 
 	color_box: CHOICE_W is
 			-- Color box dialog
 		once
-			!! Result.make (text.top);
+			create Result.make (text.top);
 		end;
 
 	popup_color_box is
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			c_array: ARRAY [STRING];
 			i: INTEGER
 		do	
-			!! mp.set_watch_cursor;
+			create mp.set_watch_cursor;
 			p := color_box.parent;
 			new_x := p.x + (p.width - color_box.width) // 2;
 			new_y := p.y + (p.height - color_box.height) // 2;
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 			mp.restore;
 			c_array := General_resources.color_list.actual_value;
 			from
-				!! list.make;
+				create list.make;
 				i := 1
 			until
 				i > c_array.count

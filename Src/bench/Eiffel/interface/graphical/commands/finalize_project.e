@@ -21,7 +21,7 @@ inherit
 
 	SHARED_ERROR_HANDLER;
  
-creation
+create
 
 	make
 

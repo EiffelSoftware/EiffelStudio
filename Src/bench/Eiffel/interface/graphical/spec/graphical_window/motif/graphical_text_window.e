@@ -52,7 +52,7 @@ inherit
 			set_background_color, execute
 		end;
 
-creation
+create
 	make,
 	make_from_tool
 
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			set_action ("c<Btn1Down>", Current, Void)
 			highlighted_line := Void;
 			selected_clickable_text := Void;
-			!! text.make (0);
+			create text.make (0);
 			init_graphical_values;
 			old_set_background_color (text_background_color);
 			set_foreground_color (text_foreground_color);
@@ -143,13 +143,13 @@ feature -- Properties
 	cursor: CURSOR is
 			-- Current cursor position in text window
 		do
-			!GRAPHICAL_WINDOW_CURSOR! Result.make (x_offset, y_offset)
+			create {GRAPHICAL_WINDOW_CURSOR} Result.make (x_offset, y_offset)
 		end;
 
 	initial_coord: COORD_XY is
 			-- Initial x position for drag
 		do
-			!! Result
+			create Result
 			if selected_clickable_text /= Void then
 				Result.set (
 				real_x + selected_clickable_text.base_left_x - x_offset,
@@ -282,7 +282,7 @@ feature -- Status setting
 			cur: like cursor
 		do
 			tab_length := i
-			!! tab_spaces.make (0);
+			create tab_spaces.make (0);
 			tab_spaces.extend (' ');
 			tab_spaces.multiply (i);
 			tab_pixel_length := default_text_font.width_of_string (tab_spaces)
@@ -637,7 +637,7 @@ feature {TOOL_W} -- Updating
 			if selected_clickable_text /= Void then
 				b_fig ?= selected_clickable_text;
 				update_breakable_figure (b_fig);
-				!! current_line.make (Current);
+				create current_line.make (Current);
 				b_l_y := selected_clickable_text.base_left_y;
 				if ((b_l_y - maximum_height_per_line) < y_offset) then
 					y_pos := b_l_y - height + maximum_height_per_line
@@ -676,7 +676,7 @@ feature {TOOL_W, OBJECT_W} -- Implementation
 			list: ARRAYED_LIST [OBJECT_TEXT_IMAGE]
 		do
 			list := object_figures;
-			!! Result.make;
+			create Result.make;
 			from
 				list.start
 			until
@@ -742,7 +742,7 @@ feature {NONE} -- Implementation
 			i, c: INTEGER;
 			fig: OBJECT_TEXT_IMAGE;
 		do
-			!! Result.make (10);
+			create Result.make (10);
 			from
 				c := count;
 				a := area;
@@ -762,7 +762,7 @@ feature {NONE} -- Selection implementation
 
 	matcher: KMP_MATCHER is
 		once
-			!! Result.make_empty
+			create Result.make_empty
 		end
 
 	height_offset: INTEGER is

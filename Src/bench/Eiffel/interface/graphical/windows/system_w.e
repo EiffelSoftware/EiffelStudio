@@ -27,7 +27,7 @@ inherit
 
 	SHARED_LACE_PARSER
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -35,7 +35,7 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 		do
 			resources.add_user (Current)
-			{BAR_AND_TEXT} Precursor (a_screen)
+			Precursor {BAR_AND_TEXT} (a_screen)
 			set_default_size
 			set_default_format
 			set_default_position
@@ -147,7 +147,7 @@ feature -- Parsing
 				end
 				
 				error_msg.append (".%NSee highlighted area")
-				!! syntax_stone.make (syntax_error)
+				create syntax_stone.make (syntax_error)
 				process_ace_syntax (syntax_stone)
 				Parser.clear_syntax_error
 				warner (popup_parent).gotcha_call (error_msg)
@@ -219,7 +219,7 @@ feature -- Update
 		do
 			if stone /= Void then
 				last_f := last_format
-				!! system_stone
+				create system_stone
 				old_do_format := last_f.associated_command.do_format
 				last_f.associated_command.set_do_format (true)
 				last_f.execute (system_stone)
@@ -233,7 +233,7 @@ feature -- Update
 		local
 			a_file: PLAIN_TEXT_FILE
 		do
-			!!a_file.make_open_read (a_file_name)
+			create a_file.make_open_read (a_file_name)
 			a_file.readstream (a_file.count)
 			a_file.close
 			text_window.clear_window
@@ -299,8 +299,8 @@ feature {NONE} -- Implementation Graphical Interface
 			save_as_cmd: SAVE_AS_SYSTEM
 			save_as_menu_entry: EB_MENU_ENTRY
 		do
-			!! save_as_cmd.make (Current)
-			!! save_as_menu_entry.make (save_as_cmd, file_menu)
+			create save_as_cmd.make (Current)
+			create save_as_menu_entry.make (save_as_cmd, file_menu)
 		end
 
 	create_toolbar (a_parent: COMPOSITE) is
@@ -308,15 +308,15 @@ feature {NONE} -- Implementation Graphical Interface
 		local
 			sep: THREE_D_SEPARATOR
 		do
-			!! toolbar_parent.make (new_name, a_parent)
-			!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			create toolbar_parent.make (new_name, a_parent)
+			create sep.make (Interface_names.t_Empty, toolbar_parent)
 			toolbar_parent.set_column_layout
 			toolbar_parent.set_free_size	
 			toolbar_parent.set_margin_height (0)
 			toolbar_parent.set_spacing (1)
-			!! system_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
+			create system_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
 			if not Platform_constants.is_windows then
-				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+				create sep.make (Interface_names.t_Empty, toolbar_parent)
 			else
 				system_toolbar.set_height (22)
 			end
@@ -328,8 +328,8 @@ feature {NONE} -- Implementation Graphical Interface
 			sep: SEPARATOR
 			toolbar_t: TOGGLE_B
 		do
-			!! sep.make (Interface_names.t_Empty, special_menu)
-			!! toolbar_t.make (system_toolbar.identifier, special_menu)
+			create sep.make (Interface_names.t_Empty, special_menu)
+			create toolbar_t.make (system_toolbar.identifier, special_menu)
 			system_toolbar.init_toggle (toolbar_t)
 		end
 
@@ -375,88 +375,88 @@ feature {NONE} -- Implementation Graphical Interface
 				-- Should we have a close button?
 			has_close_button := General_resources.close_button.actual_value
 
-			!! hole.make (Current)
-			!! hole_button.make (hole, system_toolbar)
-			!! hole_holder.make_plain (hole)
+			create hole.make (Current)
+			create hole_button.make (hole, system_toolbar)
+			create hole_holder.make_plain (hole)
 			hole_holder.set_button (hole_button)
 
-			!! open_cmd.make (Current)
-			!! open_button.make (open_cmd, system_toolbar)
-			!! open_menu_entry.make (open_cmd, file_menu)
-			!! open_cmd_holder.make (open_cmd, open_button, open_menu_entry)
+			create open_cmd.make (Current)
+			create open_button.make (open_cmd, system_toolbar)
+			create open_menu_entry.make (open_cmd, file_menu)
+			create open_cmd_holder.make (open_cmd, open_button, open_menu_entry)
 
-			!! save_cmd.make (Current)
-			!! save_button.make (save_cmd, system_toolbar)
-			!! save_menu_entry.make (save_cmd, file_menu)
-			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry)
+			create save_cmd.make (Current)
+			create save_button.make (save_cmd, system_toolbar)
+			create save_menu_entry.make (save_cmd, file_menu)
+			create save_cmd_holder.make (save_cmd, save_button, save_menu_entry)
 
 			build_save_as_menu_entry
 			build_print_menu_entry
 			build_edit_menu (system_toolbar)
 
-			!! quit_cmd.make (Current)
-			!! quit_menu_entry.make (quit_cmd, file_menu)
+			create quit_cmd.make (Current)
+			create quit_menu_entry.make (quit_cmd, file_menu)
 			if has_close_button then
-				!! quit_button.make (quit_cmd, system_toolbar)
+				create quit_button.make (quit_cmd, system_toolbar)
 			end
-			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+			create quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
 
-			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
-			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
+			create exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
+			create exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 			exit_cmd_holder.set_menu_entry (exit_menu_entry)
 
-			!! showtext_cmd.make (Current)
-			!! showtext_button.make (showtext_cmd, system_toolbar)
-			!! showtext_menu_entry.make (showtext_cmd, format_menu)
-			!! showtext_frmt_holder.make (showtext_cmd, showtext_button, showtext_menu_entry)
+			create showtext_cmd.make (Current)
+			create showtext_button.make (showtext_cmd, system_toolbar)
+			create showtext_menu_entry.make (showtext_cmd, format_menu)
+			create showtext_frmt_holder.make (showtext_cmd, showtext_button, showtext_menu_entry)
 
-			!! list_cmd.make (Current)
-			!! list_button.make (list_cmd, system_toolbar)
-			!! list_menu_entry.make (list_cmd, format_menu)
-			!! showlist_frmt_holder.make (list_cmd, list_button, list_menu_entry)
+			create list_cmd.make (Current)
+			create list_button.make (list_cmd, system_toolbar)
+			create list_menu_entry.make (list_cmd, format_menu)
+			create showlist_frmt_holder.make (list_cmd, list_button, list_menu_entry)
 
-			!! showclass_cmd.make (Current)
-			!! showclass_button.make (showclass_cmd, system_toolbar)
-			!! showclass_menu_entry.make (showclass_cmd, format_menu)
-			!! showclasses_frmt_holder.make (showclass_cmd, showclass_button, showclass_menu_entry)
+			create showclass_cmd.make (Current)
+			create showclass_button.make (showclass_cmd, system_toolbar)
+			create showclass_menu_entry.make (showclass_cmd, format_menu)
+			create showclasses_frmt_holder.make (showclass_cmd, showclass_button, showclass_menu_entry)
 
-			!! showhier_cmd.make (Current)
-			!! showhier_button.make (showhier_cmd, system_toolbar)
-			!! showhier_menu_entry.make (showhier_cmd, format_menu)
-			!! showhier_frmt_holder.make (showhier_cmd, showhier_button, showhier_menu_entry)
+			create showhier_cmd.make (Current)
+			create showhier_button.make (showhier_cmd, system_toolbar)
+			create showhier_menu_entry.make (showhier_cmd, format_menu)
+			create showhier_frmt_holder.make (showhier_cmd, showhier_button, showhier_menu_entry)
 
-			!! stat_cmd.make (Current)
-			!! stat_button.make (stat_cmd, system_toolbar)
-			!! stat_menu_entry.make (stat_cmd, format_menu)
-			!! showstatistics_frmt_holder.make (stat_cmd, stat_button, stat_menu_entry)
+			create stat_cmd.make (Current)
+			create stat_button.make (stat_cmd, system_toolbar)
+			create stat_menu_entry.make (stat_cmd, format_menu)
+			create showstatistics_frmt_holder.make (stat_cmd, stat_button, stat_menu_entry)
 
-			!! mod_cmd.make (Current)
-			!! mod_button.make (mod_cmd, system_toolbar)
-			!! mod_menu_entry.make (mod_cmd, format_menu)
-			!! showmodified_frmt_holder.make (mod_cmd, mod_button, mod_menu_entry)
+			create mod_cmd.make (Current)
+			create mod_button.make (mod_cmd, system_toolbar)
+			create mod_menu_entry.make (mod_cmd, format_menu)
+			create showmodified_frmt_holder.make (mod_cmd, mod_button, mod_menu_entry)
 
-			!! showindex_cmd.make (Current)
-			!! showindex_button.make (showindex_cmd, system_toolbar)
-			!! showindex_menu_entry.make (showindex_cmd, format_menu)
-			!! showindexing_frmt_holder.make (showindex_cmd, showindex_button, showindex_menu_entry)
+			create showindex_cmd.make (Current)
+			create showindex_button.make (showindex_cmd, system_toolbar)
+			create showindex_menu_entry.make (showindex_cmd, format_menu)
+			create showindexing_frmt_holder.make (showindex_cmd, showindex_button, showindex_menu_entry)
 
-			!! shell_cmd.make (Current)
-			!! shell_button.make (shell_cmd, system_toolbar)
+			create shell_cmd.make (Current)
+			create shell_button.make (shell_cmd, system_toolbar)
 			shell_button.add_button_press_action (3, shell_cmd, Void)
-			!! shell_menu_entry.make (shell_cmd, special_menu)
-			!! shell.make (shell_cmd, shell_button, shell_menu_entry)
+			create shell_menu_entry.make (shell_cmd, special_menu)
+			create shell.make (shell_cmd, shell_button, shell_menu_entry)
 
 			build_filter_menu_entry
 
-			!! sep1.make (interface_names.t_empty, system_toolbar)
+			create sep1.make (interface_names.t_empty, system_toolbar)
 			sep1.set_horizontal (False)
 			sep1.set_height (20)
 
-			!! sep2.make (interface_names.t_empty, system_toolbar)
+			create sep2.make (interface_names.t_empty, system_toolbar)
 			sep2.set_horizontal (False)
 			sep2.set_height (20)
 
-			!! sep3.make (interface_names.t_empty, system_toolbar)
+			create sep3.make (interface_names.t_empty, system_toolbar)
 			sep3.set_horizontal (False)
 			sep3.set_height (20)
 

@@ -10,7 +10,7 @@ class
 inherit
 	CASE_COMMAND2
 		
-creation
+create
 	make
 
 feature -- Attributes
@@ -26,10 +26,10 @@ feature -- execute
 			ok_browse : OK_BROWSE
 			close_file_s : CLOSE_FILE_S
 		do	
-			!! file_s.make ("Casegen path : browsing", case_window)
+			create file_s.make ("Casegen path : browsing", case_window)
 			file_s.set_directory_selection
-			!! ok_browse.make (case_window, file_s )
-			!! close_file_s.make ( file_s )
+			create ok_browse.make (case_window, file_s )
+			create close_file_s.make ( file_s )
 			file_s.add_ok_action ( ok_browse, Void )
 			file_s.add_cancel_action ( close_file_s, Void )
 			file_s.popup

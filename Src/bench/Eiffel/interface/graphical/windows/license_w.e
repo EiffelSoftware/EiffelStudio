@@ -19,7 +19,7 @@ inherit
 		end;
 	SHARED_BENCH_LICENSES
 
-creation
+create
 
 	make
 

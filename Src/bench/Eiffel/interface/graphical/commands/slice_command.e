@@ -16,7 +16,7 @@ inherit
 			tool
 		end;
 
-creation
+create
 
 	make
 
@@ -74,11 +74,11 @@ feature {NONE} -- Implementation
 			old_do_format: BOOLEAN;
 			mp: MOUSE_PTR
 		do
-			!! mp.set_watch_cursor;
+			create mp.set_watch_cursor;
 			if argument = button_three_action then
 					-- 3rd button pressed
 				if slice_window = Void then
-					!! slice_window.make (popup_parent, Current);
+					create slice_window.make (popup_parent, Current);
 				end;
 				slice_window.call 
 			elseif slice_window /= Void and then argument = slice_window then

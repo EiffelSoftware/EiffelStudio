@@ -18,7 +18,7 @@ inherit
 		end;
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 
 	make
 
@@ -30,7 +30,7 @@ feature -- Initialization
 			debug_tip_cmd: DEBUG_TOOLTIP_CMD
 		do
 			text_field_make ("", a_parent);
-			!! debug_tip_cmd.make (implementation)
+			create debug_tip_cmd.make (implementation)
 			add_activate_action (Current, Void);
 			tool := a_tool
 		end;
@@ -43,7 +43,7 @@ feature -- Properties
 			navigate_tab_cmd: NAVIGATE_CMD
 		do
 			if not toolkit.name.is_equal ("MS_WINDOWS") then
-				!! navigate_tab_cmd.make (next_tab)
+				create navigate_tab_cmd.make (next_tab)
 				set_action ("<Key>Tab", navigate_tab_cmd, Void)
 				set_action ("Shift<Key>Tab", navigate_tab_cmd, Void)
 			end
@@ -119,7 +119,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 						-- Ask for a class name first.
 					tool.class_text_field.execute (Void)
 				else
-					!! mp.set_watch_cursor;
+					create mp.set_watch_cursor;
 					rname := clone (text);
 					rname.to_lower;
 					rname.left_adjust;
@@ -132,7 +132,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 								create matcher.make_empty
 								matcher.set_pattern (rname);
 								if matcher.has_wild_cards then
-									!! feat_names.make;
+									create feat_names.make;
 									from
 										f_table.start
 									until
@@ -146,7 +146,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 										f_table.forth
 									end;
 									if choice = Void then
-										!! choice.make_with_widget (parent, Current)
+										create choice.make_with_widget (parent, Current)
 									end;
 									classc_stone := stone;
 									mp.restore;
@@ -158,7 +158,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 										warner (tool.popup_parent).gotcha_call 
 											(Warning_messages.w_Cannot_find_feature (rname, e_class.name))
 									else
-										!! feature_stone.make (e_feature);
+										create feature_stone.make (e_feature);
 										tool.process_feature (feature_stone);
 										mp.restore;
 									end

@@ -18,7 +18,7 @@ inherit
 
 	SHARED_FORMAT_TABLES
 
-creation
+create
 
 	make
 
@@ -35,7 +35,7 @@ feature {ROUTINE_WIN_MGR} -- Displaying
 		local
 			new_title: STRING;
 		do
-			!!new_title.make (0);
+			create new_title.make (0);
 			new_title.append (stone.header);
 			tool.set_title (new_title);
 		end;
@@ -73,7 +73,7 @@ feature -- Formatting
 					if stone /= Void and then stone.is_valid then
 						same_stone := stone.same_as (tool.stone);
 						display_temp_header (stone);
-						!! mp.set_watch_cursor;
+						create mp.set_watch_cursor;
 						stone_text := stone.origin_text;
 						if stone_text = Void then
 							stone_text := "";
@@ -146,7 +146,7 @@ feature -- Formatting
 					filtered := false
 				end
 			else
-				!! mp.do_nothing;
+				create mp.do_nothing;
 				mp.restore
 				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info);
 			end

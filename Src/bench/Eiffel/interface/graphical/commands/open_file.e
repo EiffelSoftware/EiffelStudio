@@ -21,7 +21,7 @@ inherit
 			execute_warner_help as loose_changes
 		end
 
-creation
+create
 
 	make
 	
@@ -68,9 +68,9 @@ feature {NONE} -- Implementation
 			classc_stone: CLASSC_STONE
 		do
 			if argument /= Void and then argument = last_name_chooser then
-				!! fn.make_from_string (last_name_chooser.selected_file);
+				create fn.make_from_string (last_name_chooser.selected_file);
 				if not fn.is_empty then
-					!! f.make (fn);
+					create f.make (fn);
 					if
 						f.exists and then f.is_readable and then f.is_plain
 					then
@@ -86,10 +86,10 @@ feature {NONE} -- Implementation
 							if class_i = Void then
 								tool.show_file (f);
 							elseif class_i.compiled then
-								!! classc_stone.make (class_i.compiled_class)
+								create classc_stone.make (class_i.compiled_class)
 								tool.process_class (classc_stone);
 							else
-								!! classi_stone.make (class_i)
+								create classi_stone.make (class_i)
 								tool.process_classi (classi_stone);
 							end
 						end

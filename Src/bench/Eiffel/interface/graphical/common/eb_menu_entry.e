@@ -19,7 +19,7 @@ inherit
 		end;
 	SYSTEM_CONSTANTS
 
-creation
+create
 	make, 
 	make_default,
 	make_button_only

@@ -15,7 +15,7 @@ inherit
 		end;
 	SHARED_SERVER
 
-creation
+create
 
 	make
 
@@ -54,7 +54,7 @@ feature {NONE} -- Properties
 		local
 			cmd: E_SHOW_ROUTINE_DESCENDANTS;
 		do
-			!! cmd.make (f.e_feature);
+			create cmd.make (f.e_feature);
 			if cmd.has_valid_feature then
 				cmd.execute;
 				Result := cmd.structured_text

@@ -52,7 +52,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make,
 	make_from_tool
 
@@ -74,7 +74,7 @@ feature -- Initialization
 		require else
 			valid_parent: a_parent /= Void 
 		do
-			{SCROLLED_T} Precursor (a_name, a_parent)
+			Precursor {SCROLLED_T} (a_name, a_parent)
 			initialize_transport
 			upper := -1 			-- Init clickable array.
 
@@ -116,13 +116,13 @@ feature -- Access
 	default_font: CELL [FONT] is
 			-- Default font
 		once
-			!! Result.put (font)
+			create Result.put (font)
 		end
 
 	cursor: SCROLLED_WINDOW_CURSOR is
 			-- Current cursor position in scrolled text 
 		do
-			!! Result.make (cursor_position, top_character_position)
+			create Result.make (cursor_position, top_character_position)
 		end
 
 	current_line: INTEGER is
@@ -168,7 +168,7 @@ feature -- Changing
 		do
 			set_editable
 			changed := True
-			{SCROLLED_T} Precursor (a_text)
+			Precursor {SCROLLED_T} (a_text)
 			changed := False
 		ensure then
 			not_changed: not changed	
@@ -177,7 +177,7 @@ feature -- Changing
 	set_background_color (new_color: COLOR) is
 			-- Set `background_color' to `a_color'.
 		do
-			{SCROLLED_T} Precursor (new_color)
+			Precursor {SCROLLED_T} (new_color)
 			set_scrolled_text_background_color (implementation, 
 				Graphical_resources.text_background_color.actual_value)
 		end
@@ -318,7 +318,7 @@ feature -- Update
 			-- is not out of bounds.
 		do
 			if a_position <= count then
-				{SCROLLED_T} Precursor (a_position)
+				Precursor {SCROLLED_T} (a_position)
 			end
 		end
 
@@ -327,7 +327,7 @@ feature -- Update
 			-- is not out of bounds.
 		do
 			if a_position <= count then
-				{SCROLLED_T} Precursor (a_position)
+				Precursor {SCROLLED_T} (a_position)
 			end
 		end
 
@@ -488,7 +488,7 @@ feature {TOOL_W} -- Objects in Current text area
 			i: INTEGER
 			local_copy: like Current
 		do
-			!! Result.make
+			create Result.make
 			from
 				local_copy := Current
 				i := 1

@@ -12,7 +12,7 @@ inherit
 	ISE_COMMAND;
 	EB_CONSTANTS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

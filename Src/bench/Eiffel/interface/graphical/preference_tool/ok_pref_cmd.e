@@ -10,7 +10,7 @@ class OK_PREF_CMD
 inherit
 	PREFERENCE_COMMAND
 
-creation
+create
 	make
 
 feature {NONE} -- Useless
@@ -38,7 +38,7 @@ feature {NONE} -- Execution arguments
 
 	close_it: ANY is
 		once
-			!! Result
+			create Result
 		end
 
 end -- class OK_PREF_CMD

@@ -14,7 +14,7 @@ inherit
 			make as eb_make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

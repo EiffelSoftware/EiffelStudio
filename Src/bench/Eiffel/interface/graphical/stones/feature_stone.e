@@ -33,7 +33,7 @@ inherit
 		end;
 	WINDOWS
 
-creation
+create
 
 	make
 
@@ -75,7 +75,7 @@ feature -- Access
 		local
 			temp: STRING
 		do
-			!!Result.make (0);
+			create Result.make (0);
 			Result.append (e_feature.name);
 			Result.append (" (");
 			temp := clone (e_class.name)
@@ -86,7 +86,7 @@ feature -- Access
 
 	header: STRING is
 		do
-			!!Result.make (0);
+			create Result.make (0);
 			Result.append ("Feature: ");
 			Result.append (e_feature.name);
 			Result.append (" Class: ");
@@ -96,7 +96,7 @@ feature -- Access
 	history_name: STRING is
 			-- Name used in the history list
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.append (e_feature.name);
 			Result.append (" from ");
 			Result.append (e_class.name_in_upper)
@@ -146,19 +146,19 @@ feature -- dragging
 			temp: STRING;
 			classc_stone: CLASSC_STONE
 		do 
-			!! Result.make (1, 2);
+			create Result.make (1, 2);
 			temp := "-- Version from class: ";
 			sp := temp.count;
 			ep := sp + e_feature.written_class.name.count;
 
-			!! classc_stone.make (e_feature.written_class);
-			!! cs.make (classc_stone, sp, ep);
+			create classc_stone.make (e_feature.written_class);
+			create cs.make (classc_stone, sp, ep);
 			Result.put (cs, 1);
 
 			sp := ep + 3;
 			ep := sp + end_position - start_position;
 
-			!! cs.make (Current, sp, ep);
+			create cs.make (Current, sp, ep);
 			Result.put (cs, 2);
 		end;
  
@@ -225,7 +225,7 @@ feature -- dragging
 			file: RAW_FILE;
 			start_line_pos: INTEGER;
 		do
-			!! file.make (file_name);
+			create file.make (file_name);
 			if file.is_readable then
 				file.open_read;
 				from
@@ -282,7 +282,7 @@ feature -- dragging
 			if e_class /= Void and e_feature /= Void then
 				new_e_feature := e_feature.updated_version
 				if new_e_feature /= Void then
-					!! Result.make (new_e_feature)
+					create Result.make (new_e_feature)
 				end
 			end
 		end;

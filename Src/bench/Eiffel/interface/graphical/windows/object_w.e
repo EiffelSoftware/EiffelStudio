@@ -23,7 +23,7 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 	make, form_create
 
 feature {NONE} -- Initialization
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Create an object tool.
 		do
 			is_in_project_tool := False
-			{BAR_AND_TEXT} Precursor (a_screen)
+			Precursor {BAR_AND_TEXT} (a_screen)
 			set_default_sp_bounds
 		end
 
@@ -156,7 +156,7 @@ feature -- Update
 	reset is
 			-- Reset the contents of the object window.
 		do
-			{BAR_AND_TEXT} Precursor
+			Precursor {BAR_AND_TEXT}
 			set_default_sp_bounds
 			init_text_window
 		end
@@ -221,7 +221,7 @@ feature -- Update
 			sc: SLICE_COMMAND
 			sw: SLICE_W
 		do
-			{BAR_AND_TEXT} Precursor
+			Precursor {BAR_AND_TEXT}
 			sc ?= slice_cmd_holder.associated_command
 			sw ?= sc.slice_window
 			if sw /= Void and then sw.is_popped_up then
@@ -280,17 +280,17 @@ feature {NONE} -- Implementation; Graphical Interface
 		local
 			sep: THREE_D_SEPARATOR
 		do
-			!! toolbar_parent.make (new_name, a_parent)
+			create toolbar_parent.make (new_name, a_parent)
 			if not is_in_project_tool then
-				!! sep.make (interface_names.t_empty, toolbar_parent)
+				create sep.make (interface_names.t_empty, toolbar_parent)
 			end
 			toolbar_parent.set_column_layout
 			toolbar_parent.set_free_size	
 			toolbar_parent.set_margin_height (0)
 			toolbar_parent.set_spacing (1)
-			!! object_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
+			create object_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
 			if not Platform_constants.is_windows then
-				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+				create sep.make (Interface_names.t_Empty, toolbar_parent)
 			else
 				object_toolbar.set_height (22)
 			end
@@ -302,8 +302,8 @@ feature {NONE} -- Implementation; Graphical Interface
 			sep: SEPARATOR
 			toolbar_t: TOGGLE_B
 		do
-			!! sep.make (Interface_names.t_Empty, special_menu)
-			!! toolbar_t.make (object_toolbar.identifier, special_menu)
+			create sep.make (Interface_names.t_Empty, special_menu)
+			create toolbar_t.make (object_toolbar.identifier, special_menu)
 			object_toolbar.init_toggle (toolbar_t)
 		end
 
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			do_nothing_cmd: DO_NOTHING_CMD
 		do
 				-- Creation of all the commands, holes, buttons, and menu entries
-			!! hole.make (Current)
+			create hole.make (Current)
 			build_edit_menu (object_toolbar)
 			build_save_as_menu_entry
 			build_print_menu_entry
@@ -348,63 +348,63 @@ feature {NONE} -- Implementation; Graphical Interface
 				-- Should we have a close button?
 			has_close_button := General_resources.close_button.actual_value
 
-			!! quit_cmd.make (Current)
+			create quit_cmd.make (Current)
 			if not is_in_project_tool then
-				!! quit_menu_entry.make (quit_cmd, file_menu)
+				create quit_menu_entry.make (quit_cmd, file_menu)
 				if has_close_button then
-					!! quit_button.make (quit_cmd, object_toolbar)
+					create quit_button.make (quit_cmd, object_toolbar)
 				end
-				!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+				create quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
 
-				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
-				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
+				create exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
+				create exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 				exit_cmd_holder.set_menu_entry (exit_menu_entry)
 			end
 
 				-- First we create all objects.
-			!! once_cmd.make (Current)
-			!! once_button.make (once_cmd, object_toolbar)
-			!! once_menu_entry.make (once_cmd, format_menu)
-			!! showonce_frmt_holder.make (once_cmd, once_button, once_menu_entry)
-			!! attr_cmd.make (Current)
-			!! attr_button.make (attr_cmd, object_toolbar)
-			!! attr_menu_entry.make (attr_cmd, format_menu)
-			!! showattr_frmt_holder.make (attr_cmd, attr_button, attr_menu_entry)
+			create once_cmd.make (Current)
+			create once_button.make (once_cmd, object_toolbar)
+			create once_menu_entry.make (once_cmd, format_menu)
+			create showonce_frmt_holder.make (once_cmd, once_button, once_menu_entry)
+			create attr_cmd.make (Current)
+			create attr_button.make (attr_cmd, object_toolbar)
+			create attr_menu_entry.make (attr_cmd, format_menu)
+			create showattr_frmt_holder.make (attr_cmd, attr_button, attr_menu_entry)
 
 				-- Here we create all objects needed for the attachments.
-			!! slice_cmd.make (Current)
-			!! slice_button.make (slice_cmd, object_toolbar)
+			create slice_cmd.make (Current)
+			create slice_button.make (slice_cmd, object_toolbar)
 			slice_button.add_third_button_action
-			!! slice_menu_entry.make_button_only (slice_cmd, special_menu)
+			create slice_menu_entry.make_button_only (slice_cmd, special_menu)
 			slice_menu_entry.add_activate_action (slice_cmd, slice_cmd.button_three_action)
-			!! slice_cmd_holder.make (slice_cmd, slice_button, slice_menu_entry)
-			!! current_target_cmd.make (Current)
-			!! sep.make (new_name, special_menu)
-			!! current_target_menu_entry.make (current_target_cmd, special_menu)
-			!! current_target_cmd_holder.make_plain (current_target_cmd)
+			create slice_cmd_holder.make (slice_cmd, slice_button, slice_menu_entry)
+			create current_target_cmd.make (Current)
+			create sep.make (new_name, special_menu)
+			create current_target_menu_entry.make (current_target_cmd, special_menu)
+			create current_target_cmd_holder.make_plain (current_target_cmd)
 			current_target_cmd_holder.set_menu_entry (current_target_menu_entry)
-			!! next_target_cmd.make (Current)
-			!! next_target_button.make (next_target_cmd, object_toolbar)
-			!! next_target_menu_entry.make (next_target_cmd, special_menu)
-			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry)
-			!! previous_target_cmd.make (Current)
-			!! previous_target_button.make (previous_target_cmd, object_toolbar)
-			!! previous_target_menu_entry.make (previous_target_cmd, special_menu)
-			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry)
+			create next_target_cmd.make (Current)
+			create next_target_button.make (next_target_cmd, object_toolbar)
+			create next_target_menu_entry.make (next_target_cmd, special_menu)
+			create next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry)
+			create previous_target_cmd.make (Current)
+			create previous_target_button.make (previous_target_cmd, object_toolbar)
+			create previous_target_menu_entry.make (previous_target_cmd, special_menu)
+			create previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry)
 
-			!! history_list_cmd.make (Current)
+			create history_list_cmd.make (Current)
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button)
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button)
 
-			!! sep1.make (interface_names.t_empty, object_toolbar)
+			create sep1.make (interface_names.t_empty, object_toolbar)
 			sep1.set_horizontal (False)
 			sep1.set_height (20)
 
-			!! sep2.make (interface_names.t_empty, object_toolbar)
+			create sep2.make (interface_names.t_empty, object_toolbar)
 			sep2.set_horizontal (False)
 			sep2.set_height (20)
 
-			!! sep3.make (interface_names.t_empty, object_toolbar)
+			create sep3.make (interface_names.t_empty, object_toolbar)
 			sep3.set_horizontal (False)
 			sep3.set_height (20)
 
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			object_toolbar.attach_left_widget (sep3, previous_target_button, 5)
 			object_toolbar.attach_top (next_target_button, 0)
 			object_toolbar.attach_left_widget (previous_target_button, next_target_button, 0)
-			!! do_nothing_cmd
+			create do_nothing_cmd
 			object_toolbar.set_action ("c<BtnDown>", do_nothing_cmd, Void)
 
 			if not is_in_project_tool and then has_close_button then

@@ -13,7 +13,7 @@ inherit
 			init as make
 		end
 
-creation
+create
 	make
 
 feature -- Close window
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 			-- Popup seach window in `tool'.
 		do
 			if search_window = Void then
-				!! search_window.make (tool)
+				create search_window.make (tool)
 			end
 			search_window.call
 		end

@@ -15,7 +15,7 @@ inherit
 		end;
 	SHARED_APPLICATION_EXECUTION
 	
-creation
+create
 
 	make
 	
@@ -73,7 +73,7 @@ feature -- Access
 
 	stone_signature: STRING is
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.append (name);
 			Result.append (": ");
 			Result.append (dynamic_class.name_in_upper)
@@ -94,7 +94,7 @@ feature -- Access
 	history_name: STRING is
 			-- Name used in the history list
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.append (name);
 			Result.append (": ");
 			Result.append (dynamic_class.name_in_upper)

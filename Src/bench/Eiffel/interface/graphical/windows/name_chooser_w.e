@@ -27,7 +27,7 @@ inherit
 	SHARED_BENCH_LICENSES;
 	WINDOW_ATTRIBUTES
 
-creation
+create
 
 	make
 	
@@ -118,7 +118,7 @@ feature {NONE} -- Properties
 	last_directory_viewed: STRING is
 			-- Last directory viewed
 		once
-			!! Result.make (0);
+			create Result.make (0);
 		end
 
 feature 

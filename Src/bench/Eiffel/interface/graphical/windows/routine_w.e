@@ -25,7 +25,7 @@ inherit
 			set_default_format
 		end
 
-creation
+create
 	make, form_create
 
 feature -- Initialization
@@ -36,7 +36,7 @@ feature -- Initialization
  			is_in_project_tool := False
 			last_body_index := -1 -- no feature has been displayed so far.
 			has_double_line_toolbar := resources.double_line_toolbar.actual_value
- 			{BAR_AND_TEXT} Precursor (a_screen)
+ 			Precursor {BAR_AND_TEXT} (a_screen)
 		end
 
 	form_create (a_form: FORM file_m, edit_m, format_m, special_m: MENU_PULL) is
@@ -128,7 +128,7 @@ feature -- Resetting
 	reset is
 			-- Reset the window contents
 		do
-			{BAR_AND_TEXT} Precursor
+			Precursor {BAR_AND_TEXT}
 			-- class_hole.set_empty_symbol
 			class_text_field.clear
 			routine_text_field.clear
@@ -204,7 +204,7 @@ feature -- Update
 	close_windows is
 			-- Pop down the associated windows.
 		do
- 			{BAR_AND_TEXT} Precursor
+ 			Precursor {BAR_AND_TEXT}
  			routine_text_field.close_choice_window
  			class_text_field.close_choice_window
 		end
@@ -338,7 +338,7 @@ feature -- Status setting
 
 	display is
 		do
-			{BAR_AND_TEXT} Precursor
+			Precursor {BAR_AND_TEXT}
 			routine_text_field.set_focus
 		end
 
@@ -419,11 +419,11 @@ feature -- Stone updating
 					i := i + 1
 				end
 				if (fi /= Void) then
-					!! fs.make (fi)
+					create fs.make (fi)
 					process_feature (fs)
 				else
 					error_window.clear_window
-					!! text.make
+					create text.make
 					text.add_string ("No version of feature ")
 					text.add_feature (stone.e_feature, stone.e_feature.name)
 					text.add_new_line
@@ -587,25 +587,25 @@ feature {NONE} -- Implementation Graphical Interface
 		local
 			sep: THREE_D_SEPARATOR
 		do
- 			!! toolbar_parent.make (new_name, a_parent)
+ 			create toolbar_parent.make (new_name, a_parent)
  			if not is_in_project_tool then
- 				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+ 				create sep.make (Interface_names.t_Empty, toolbar_parent)
  			end
  			toolbar_parent.set_column_layout
  			toolbar_parent.set_free_size	
  			toolbar_parent.set_margin_height (0)
  			toolbar_parent.set_spacing (1)
- 			!! routine_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
+ 			create routine_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
 			if not Platform_constants.is_windows or else has_double_line_toolbar then
-				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+				create sep.make (Interface_names.t_Empty, toolbar_parent)
 			end
 			if Platform_constants.is_windows then
 	 			routine_toolbar.set_height (23)
 			end
 			if has_double_line_toolbar then
-				!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent)
+				create format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent)
 				if not Platform_constants.is_windows then
-					!! sep.make (Interface_names.t_Empty, toolbar_parent)
+					create sep.make (Interface_names.t_Empty, toolbar_parent)
 				else
 					format_bar.set_height (23)
 				end
@@ -618,11 +618,11 @@ feature {NONE} -- Implementation Graphical Interface
 			sep: SEPARATOR
 			toolbar_t: TOGGLE_B
 		do
-			!! sep.make (Interface_names.t_Empty, special_menu)
-			!! toolbar_t.make (routine_toolbar.identifier, special_menu)
+			create sep.make (Interface_names.t_Empty, special_menu)
+			create toolbar_t.make (routine_toolbar.identifier, special_menu)
 			routine_toolbar.init_toggle (toolbar_t)
 			if has_double_line_toolbar then
-				!! toolbar_t.make (format_bar.identifier, special_menu)
+				create toolbar_t.make (format_bar.identifier, special_menu)
 				format_bar.init_toggle (toolbar_t)
 			end
 		end
@@ -690,29 +690,29 @@ feature {NONE} -- Implementation Graphical Interface
 			has_close_button := general_resources.close_button.actual_value
 
  				-- First we create the needed objects.
- 			!! hole.make (Current)
- 			!! hole_button.make (hole, current_bar)
- 			!! hole_holder.make_plain (hole)
+ 			create hole.make (Current)
+ 			create hole_button.make (hole, current_bar)
+ 			create hole_holder.make_plain (hole)
  			hole_holder.set_button (hole_button)
  
- 			!! class_hole.make (Current)
- 			!! class_hole_button.make (class_hole, current_bar)
- 			!! class_hole_holder.make_plain (class_hole)
+ 			create class_hole.make (Current)
+ 			create class_hole_button.make (class_hole, current_bar)
+ 			create class_hole_holder.make_plain (class_hole)
  			class_hole_holder.set_button (class_hole_button)
 
 			if not is_in_project_tool then
-				!! stop_hole.make (Current)
-				!! stop_hole_button.make (stop_hole, current_bar)
-				!! stop_hole_holder.make_plain (stop_hole)
+				create stop_hole.make (Current)
+				create stop_hole_button.make (stop_hole, current_bar)
+				create stop_hole_holder.make_plain (stop_hole)
 				stop_hole_holder.set_button (stop_hole_button)
 
-				!! shell_cmd.make (Current)
-				!! shell_button.make (shell_cmd, current_bar)
+				create shell_cmd.make (Current)
+				create shell_button.make (shell_cmd, current_bar)
 				shell_button.add_third_button_action
 
-				!! shell_menu_entry.make (shell_cmd, special_menu)
-				!! shell.make (shell_cmd, shell_button, shell_menu_entry)
-				!! new_class_button.make (Project_tool.class_hole_holder.associated_command, current_bar)
+				create shell_menu_entry.make (shell_cmd, special_menu)
+				create shell.make (shell_cmd, shell_button, shell_menu_entry)
+				create new_class_button.make (Project_tool.class_hole_holder.associated_command, current_bar)
 			end
 
 			build_edit_menu (current_bar)
@@ -721,60 +721,60 @@ feature {NONE} -- Implementation Graphical Interface
 
  			build_filter_menu_entry
 
- 			!! current_target_cmd.make (Current)
-			!! sep.make (new_name, special_menu)
-			!! current_target_menu_entry.make (current_target_cmd, special_menu)
-			!! current_target_cmd_holder.make_plain (current_target_cmd)
+ 			create current_target_cmd.make (Current)
+			create sep.make (new_name, special_menu)
+			create current_target_menu_entry.make (current_target_cmd, special_menu)
+			create current_target_cmd_holder.make_plain (current_target_cmd)
 			current_target_cmd_holder.set_menu_entry (current_target_menu_entry)
 
- 			!! sep1.make (Interface_names.t_empty, current_bar)
+ 			create sep1.make (Interface_names.t_empty, current_bar)
  			sep1.set_horizontal (False)
  			sep1.set_height (20)
 
  				--| We can now compute the search button
 			search_button := search_cmd_holder.associated_button 
 
- 			!! sep2.make (Interface_names.t_empty, current_bar)
+ 			create sep2.make (Interface_names.t_empty, current_bar)
  			sep2.set_horizontal (False)
  			sep2.set_height (20)
 			
- 			!! history_list_cmd.make (Current)
+ 			create history_list_cmd.make (Current)
 
- 			!! next_target_cmd.make (Current)
- 			!! next_target_button.make (next_target_cmd, current_bar)
-			!! next_target_menu_entry.make (next_target_cmd, special_menu)
-			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry)
+ 			create next_target_cmd.make (Current)
+ 			create next_target_button.make (next_target_cmd, current_bar)
+			create next_target_menu_entry.make (next_target_cmd, special_menu)
+			create next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry)
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button)
 
- 			!! previous_target_cmd.make (Current)
- 			!! previous_target_button.make (previous_target_cmd, current_bar)
-			!! previous_target_menu_entry.make (previous_target_cmd, special_menu)
-			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button,
+ 			create previous_target_cmd.make (Current)
+ 			create previous_target_button.make (previous_target_cmd, current_bar)
+			create previous_target_menu_entry.make (previous_target_cmd, special_menu)
+			create previous_target_cmd_holder.make (previous_target_cmd, previous_target_button,
 					previous_target_menu_entry)
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button)
 			
-			!! class_text_field.make (current_bar, Current)
-			!! routine_text_field.make (current_bar, Current)
+			create class_text_field.make (current_bar, Current)
+			create routine_text_field.make (current_bar, Current)
 			routine_text_field.debug_tab (class_text_field)
 			class_text_field.debug_tab (routine_text_field)
 			if class_text_field.toolkit.name.is_equal ("MOTIF") then
 				class_text_field.set_width (class_text_field.width - 10)
 				routine_text_field.set_width (routine_text_field.width - 10)
 			end
-			!! label.make (Interface_names.t_Empty, current_bar)
+			create label.make (Interface_names.t_Empty, current_bar)
  			label.set_text ("from: ")
  			label.set_right_alignment
   
-			!! quit_cmd.make (Current)
+			create quit_cmd.make (Current)
 			if not is_in_project_tool then
-				!! quit_menu_entry.make (quit_cmd, file_menu)
+				create quit_menu_entry.make (quit_cmd, file_menu)
 				if has_close_button then
-					!! quit_button.make (quit_cmd, current_bar)
+					create quit_button.make (quit_cmd, current_bar)
 				end
-				!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+				create quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
 
-				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
-				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
+				create exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
+				create exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 				exit_cmd_holder.set_menu_entry (exit_menu_entry)
 			end
 
@@ -782,56 +782,56 @@ feature {NONE} -- Implementation Graphical Interface
 				current_bar := format_bar
 			end
 
- 			!! text_cmd.make (Current)
- 			!! text_button.make (text_cmd, current_bar)
-			!! text_menu_entry.make (text_cmd, format_menu)
-			!! showtext_frmt_holder.make (text_cmd, text_button, text_menu_entry)
+ 			create text_cmd.make (Current)
+ 			create text_button.make (text_cmd, current_bar)
+			create text_menu_entry.make (text_cmd, format_menu)
+			create showtext_frmt_holder.make (text_cmd, text_button, text_menu_entry)
 
- 			!! rout_flat_cmd.make (Current)
- 			!! rout_flat_button.make (rout_flat_cmd, current_bar)
-			!! rout_flat_menu_entry.make (rout_flat_cmd, format_menu)
-			!! showflat_frmt_holder.make (rout_flat_cmd, rout_flat_button, rout_flat_menu_entry)
+ 			create rout_flat_cmd.make (Current)
+ 			create rout_flat_button.make (rout_flat_cmd, current_bar)
+			create rout_flat_menu_entry.make (rout_flat_cmd, format_menu)
+			create showflat_frmt_holder.make (rout_flat_cmd, rout_flat_button, rout_flat_menu_entry)
 
- 			!! stop_cmd.make (Current)
- 			!! stop_button.make (stop_cmd, current_bar)
-			!! stop_menu_entry.make (stop_cmd, format_menu)
-			!! showstop_frmt_holder.make (stop_cmd, stop_button, stop_menu_entry)
+ 			create stop_cmd.make (Current)
+ 			create stop_button.make (stop_cmd, current_bar)
+			create stop_menu_entry.make (stop_cmd, format_menu)
+			create showstop_frmt_holder.make (stop_cmd, stop_button, stop_menu_entry)
 			stop_button.add_third_button_action
 
- 			!! sep.make (new_name, format_menu)
+ 			create sep.make (new_name, format_menu)
 
- 			!! sep3.make (Interface_names.t_empty, current_bar)
+ 			create sep3.make (Interface_names.t_empty, current_bar)
  			sep3.set_horizontal (False)
  			sep3.set_height (20)
 
-			!! rout_cli_cmd.make (Current)
- 			!! rout_cli_button.make (rout_cli_cmd, current_bar)
-			!! rout_cli_menu_entry.make (rout_cli_cmd, format_menu)
-			!! showroutclients_frmt_holder.make (rout_cli_cmd, rout_cli_button, rout_cli_menu_entry)
+			create rout_cli_cmd.make (Current)
+ 			create rout_cli_button.make (rout_cli_cmd, current_bar)
+			create rout_cli_menu_entry.make (rout_cli_cmd, format_menu)
+			create showroutclients_frmt_holder.make (rout_cli_cmd, rout_cli_button, rout_cli_menu_entry)
 			rout_cli_button.add_third_button_action
   
- 			!! rout_hist_cmd.make (Current)
- 			!! rout_hist_button.make (rout_hist_cmd, current_bar)
-			!! rout_hist_menu_entry.make (rout_hist_cmd, format_menu)
-			!! showhistory_frmt_holder.make (rout_hist_cmd, rout_hist_button, rout_hist_menu_entry)
+ 			create rout_hist_cmd.make (Current)
+ 			create rout_hist_button.make (rout_hist_cmd, current_bar)
+			create rout_hist_menu_entry.make (rout_hist_cmd, format_menu)
+			create showhistory_frmt_holder.make (rout_hist_cmd, rout_hist_button, rout_hist_menu_entry)
 
- 			!! past_cmd.make (Current)
- 			!! past_button.make (past_cmd, current_bar)
-			!! past_menu_entry.make (past_cmd, format_menu)
-			!! showpast_frmt_holder.make (past_cmd, past_button, past_menu_entry)
+ 			create past_cmd.make (Current)
+ 			create past_button.make (past_cmd, current_bar)
+			create past_menu_entry.make (past_cmd, format_menu)
+			create showpast_frmt_holder.make (past_cmd, past_button, past_menu_entry)
 
- 			!! future_cmd.make (Current)
- 			!! future_button.make (future_cmd, current_bar)
-			!! future_menu_entry.make (future_cmd, format_menu)
-			!! showfuture_frmt_holder.make (future_cmd, future_button, future_menu_entry)
+ 			create future_cmd.make (Current)
+ 			create future_button.make (future_cmd, current_bar)
+			create future_menu_entry.make (future_cmd, format_menu)
+			create showfuture_frmt_holder.make (future_cmd, future_button, future_menu_entry)
 
- 			!! homonym_cmd.make (Current)
- 			!! homonym_button.make (homonym_cmd, current_bar)
-			!! homonym_menu_entry.make (homonym_cmd, format_menu)
-			!! showhomonyms_frmt_holder.make (homonym_cmd, homonym_button, homonym_menu_entry)
+ 			create homonym_cmd.make (Current)
+ 			create homonym_button.make (homonym_cmd, current_bar)
+			create homonym_menu_entry.make (homonym_cmd, format_menu)
+			create showhomonyms_frmt_holder.make (homonym_cmd, homonym_button, homonym_menu_entry)
  
 			if not has_double_line_toolbar then
-				!! sep4.make (Interface_names.t_empty, routine_toolbar)
+				create sep4.make (Interface_names.t_empty, routine_toolbar)
 				sep4.set_horizontal (False)
 				sep4.set_height (20)
 			end
@@ -913,7 +913,7 @@ feature {NONE} -- Implementation Graphical Interface
  			current_bar.attach_left_widget (routine_text_field, label, 7)
  			current_bar.attach_top (class_text_field, 0)
  			current_bar.attach_left_widget (label, class_text_field, 0)
-			!! do_nothing_cmd
+			create do_nothing_cmd
 			current_bar.set_action ("c<Btn1Down>", do_nothing_cmd, Void)
 
 			if not is_in_project_tool and then has_close_button then

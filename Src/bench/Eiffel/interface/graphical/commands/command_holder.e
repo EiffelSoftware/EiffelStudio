@@ -10,7 +10,7 @@ class COMMAND_HOLDER
 inherit
 	EB_HOLDER
 
-creation
+create
 	make, make_plain
 
 end -- class COMMAND_HOLDER

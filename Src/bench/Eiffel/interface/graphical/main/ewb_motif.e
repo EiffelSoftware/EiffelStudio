@@ -15,14 +15,14 @@ inherit
 	MEL_COMMAND;
 	EB_CONSTANTS
 	
-creation
+create
 	make
 
 feature {NONE} -- Initialization
 
 	init_toolkit: TOOLKIT_IMP is
 		once
-			!!Result.make (Interface_names.n_X_resource_name)
+			create Result.make (Interface_names.n_X_resource_name)
 		end;
 
 feature -- Communications
@@ -37,7 +37,7 @@ feature -- Communications
                 -- Associate the file descriptor corresponding
                 -- to the pipe on which reading is done
                 -- with `listen_to'.
-            !!listen_to.make ("toto");
+            create listen_to.make ("toto");
             listen_to.fd_open_read (Listen_to_const);
 			app_context := init_toolkit.application_context;
                 -- Add an IO handler which

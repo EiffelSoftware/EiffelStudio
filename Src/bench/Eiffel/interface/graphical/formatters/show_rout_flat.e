@@ -17,7 +17,7 @@ inherit
 	SHARED_SERVER
 	SHARED_FORMAT_TABLES
 
-creation
+create
 
 	make
 

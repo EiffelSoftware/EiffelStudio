@@ -41,7 +41,7 @@ feature -- Callbacks
 			old_do_format: BOOLEAN;
 			mp: MOUSE_PTR
 		do
-			!! mp.set_watch_cursor;
+			create mp.set_watch_cursor;
 			text_window.set_changed (false);
 				-- Because the text in the window has been changed,
 				-- we have to force the new format in order to update
@@ -124,7 +124,7 @@ feature -- Formatting
 						tool.close_search_window;	
 						if stone.clickable then
 							display_temp_header (stone);
-							!! mp.set_watch_cursor;
+							create mp.set_watch_cursor;
 							text_window.clear_window;
 							tool.set_read_only_text;
 							tool.set_stone (stone);
@@ -194,7 +194,7 @@ feature {FORMAT_BUTTON} -- Properties
 			-- so it is very important to name the format as
 			-- SHOW_<type of format>
 		do
-			!!Result.make(0);
+			create Result.make(0);
 			Result.append (generator);
 			Result.to_lower;
 				--| remove the SHOW_
@@ -230,11 +230,11 @@ feature {FORMAT_BUTTON} -- Properties
 					Result.head (i - 1)
 				end;
 
-				!!fname.make_from_string (Result);
+				create fname.make_from_string (Result);
 				fname.add_extension (post_fix);
 				Result := fname
 			else
-				!!Result.make (0)
+				create Result.make (0)
 			end;
 		end;
 
@@ -245,7 +245,7 @@ feature {ROUTINE_W} -- Implementation
 		local
 			new_title: STRING
 		do
-			!!new_title.make (50);
+			create new_title.make (50);
 			new_title.append (title_part);
 			new_title.append (stone.stone_signature);
 			tool.set_title (new_title)
@@ -256,7 +256,7 @@ feature {ROUTINE_W} -- Implementation
 		local
 			new_title: STRING
 		do
-			!!new_title.make (50);
+			create new_title.make (50);
 			new_title.append (title_part);
 			new_title.append (stone.stone_signature);
 			new_title.append (" ...");

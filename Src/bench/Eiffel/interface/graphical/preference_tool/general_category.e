@@ -16,7 +16,7 @@ inherit
 			tmp_directory as env_tmp_directory
 		end
 
-creation
+create
 	make
 
 
@@ -25,8 +25,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize Current
 		do
-			!! users.make;
-			!! modified_resources.make
+			create users.make;
+			create modified_resources.make
 		end
 
 feature {TTY_RESOURCES} -- Initialization
@@ -35,32 +35,32 @@ feature {TTY_RESOURCES} -- Initialization
 			-- Initialize all resources valid for Current.
 		do
 			if Platform_constants.is_windows then
-				!! regular_button.make ("regular_button_in_toolbar", rt, False)
+				create regular_button.make ("regular_button_in_toolbar", rt, False)
 			end
-			!! close_button.make ("close_button_in_every_tool", rt, False)
-			!! acrobat_reader.make ("acrobat_reader", rt, "acrobat");
+			create close_button.make ("close_button_in_every_tool", rt, False)
+			create acrobat_reader.make ("acrobat_reader", rt, "acrobat");
 			if Platform_constants.is_windows then
-				!! tab_step.make ("tab_step", rt, 4);
+				create tab_step.make ("tab_step", rt, 4);
 			end
-			!! editor.make ("editor", rt, "vi");
-			!! filter_path.make ("filter_directory", rt, clone (env_filter_path));
-			!! profile_path.make ("profile_directory", rt, clone (env_profile_path));
-			!! tmp_path.make ("temporary_directory", rt, clone (env_tmp_directory));
-			!! shell_command.make ("shell_command", rt, "xterm -geometry 80x40 -e vi +$line $target");
-			!! filter_name.make ("filter_name", rt, "PostScript");
-			!! filter_command.make ("filter_command", rt, "");
-			!! browsing_facilities.make ("Highlight clickable areas", rt, True);
-			!! history_size.make ("history_size", rt, 10)
-			!! default_window_position.make ("default_window_position", rt, False);
-			!! window_free_list_number.make ("window_free_list_number", rt, 2);
-			!! color_list.make ("color_list", rt, <<"black", "white", "red", "blue", "green", "yellow", "brown", "cyan">>);
+			create editor.make ("editor", rt, "vi");
+			create filter_path.make ("filter_directory", rt, clone (env_filter_path));
+			create profile_path.make ("profile_directory", rt, clone (env_profile_path));
+			create tmp_path.make ("temporary_directory", rt, clone (env_tmp_directory));
+			create shell_command.make ("shell_command", rt, "xterm -geometry 80x40 -e vi +$line $target");
+			create filter_name.make ("filter_name", rt, "PostScript");
+			create filter_command.make ("filter_command", rt, "");
+			create browsing_facilities.make ("Highlight clickable areas", rt, True);
+			create history_size.make ("history_size", rt, 10)
+			create default_window_position.make ("default_window_position", rt, False);
+			create window_free_list_number.make ("window_free_list_number", rt, 2);
+			create color_list.make ("color_list", rt, <<"black", "white", "red", "blue", "green", "yellow", "brown", "cyan">>);
 			if not Platform_constants.is_windows then
-				!! print_shell_command.make ("print_shell_command", rt, "lpr $target");
-				!! text_mode.make ("text_mode", rt, "UNIX")
+				create print_shell_command.make ("print_shell_command", rt, "lpr $target");
+				create text_mode.make ("text_mode", rt, "UNIX")
 			else
-				!! text_mode.make ("text_mode", rt, "DOS")
+				create text_mode.make ("text_mode", rt, "DOS")
 			end;
-			!! motif_1_2.make ("motif_1_2", rt, False)
+			create motif_1_2.make ("motif_1_2", rt, False)
 		end
 
 feature -- Validation

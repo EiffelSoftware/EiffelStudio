@@ -15,7 +15,7 @@ inherit
 			display_additional_info 
 		end
 
-creation
+create
 	make
 
 feature -- Output

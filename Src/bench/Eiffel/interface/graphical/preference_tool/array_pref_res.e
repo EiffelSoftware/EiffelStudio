@@ -23,7 +23,7 @@ inherit
 			init
 		end
 
-creation
+create
 	make
 
 feature -- Validation
@@ -84,8 +84,8 @@ feature -- Access
 		local
 			new_res: like associated_resource
 		do
-			!! new_res.make_with_values (associated_resource.name, array_from_text);
-			!! Result.make (associated_resource, new_res)
+			create new_res.make_with_values (associated_resource.name, array_from_text);
+			create Result.make (associated_resource, new_res)
 		end;
 
 feature {PREFRENCE_CATEGORY} -- Output
@@ -113,7 +113,7 @@ feature {NONE} -- Properties
 			rt: RESOURCE_TABLE ;
 			txt: STRING
 		do
-			!! rt.make (0);
+			create rt.make (0);
 			txt := text.text;
 			txt.replace_substring_all ("%N", "");
 			rt.put (txt, "dummy");

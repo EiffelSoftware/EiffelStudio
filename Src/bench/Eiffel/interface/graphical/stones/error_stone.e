@@ -15,7 +15,7 @@ inherit
 			help_text
 		end
 
-creation
+create
 
 	make
 
@@ -42,7 +42,7 @@ feature -- Access
 		do 
 			Result := code;
 			if Result = Void then
-				!!Result.make (0)
+				create Result.make (0)
 			end;
 		end;
 
@@ -59,9 +59,9 @@ feature -- Access
 			a_file: RAW_FILE;
 			a_line: STRING
 		do
-			!! Result.make;
+			create Result.make;
 			if is_valid then
-				!!a_file.make (file_name);
+				create a_file.make (file_name);
 				if a_file.exists and then a_file.is_readable then
 					from
 						a_file.open_read;
@@ -85,7 +85,7 @@ feature -- Access
 		local
 			fn: FILE_NAME
 		do
-			!! fn.make_from_string (help_path);
+			create fn.make_from_string (help_path);
 			fn.set_file_name (error_i.help_file_name);
 			Result := fn
 		end;
@@ -101,7 +101,7 @@ feature -- Access
 		do
 			Result := code;
 			if Result = Void then
-				!!Result.make (0)
+				create Result.make (0)
 			end;
 		end;
 

@@ -13,7 +13,7 @@ inherit
 		end;
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 
 	make
 
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 				warner (popup_parent).gotcha_call (Warning_messages.w_Unknown_class)
 			else
 					-- Show the current routine in that class.
-				!! st.make (status.e_feature);
+				create st.make (status.e_feature);
 				tool.process_feature (st)
 			end
 		end;

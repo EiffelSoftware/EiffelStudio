@@ -17,7 +17,7 @@ inherit
 		end;
 	WINDOW_ATTRIBUTES
 
-creation
+create
 
 	make
 	
@@ -85,25 +85,25 @@ feature {NONE} -- Properties
 	find_it: ANY is
 			-- Argument for `work' if find button pressed
 		once
-			!! Result
+			create Result
 		end;
 
 	cancel_it: ANY is
 			-- Argument for `work' if cancel button pressed
 		once
-			!! Result
+			create Result
 		end;
 
 	replace_it: ANY is
 			-- Argument for `work' if replace button pressed
 		once
-			!! Result
+			create Result
 		end;
 
 	replace_it_all: ANY is
 			-- Argument for `work' if replace all button pressed
 		once
-			!! Result
+			create Result
 		end;
 
 	tool: TOOL_W

@@ -16,7 +16,7 @@ inherit
 			process, line_number
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -39,7 +39,7 @@ feature -- Access
 			file: RAW_FILE;
 			start_line_pos: INTEGER;
 		do
-			!! file.make (file_name);
+			create file.make (file_name);
 			if file.is_readable then
 				file.open_read;
 				from

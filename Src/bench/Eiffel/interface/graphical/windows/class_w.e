@@ -29,7 +29,7 @@ inherit
 	SHARED_COMPILATION_MODES
 
 
-creation
+create
 	make, form_create
 
 feature -- Initialization
@@ -119,7 +119,7 @@ feature -- Status setting
 	display is
 			-- Show Current
 		do
-			{BAR_AND_TEXT} Precursor
+			Precursor {BAR_AND_TEXT}
 			save_cmd_holder.change_state (True)
 			class_text_field.set_focus
 		end
@@ -138,7 +138,7 @@ feature -- Status setting
 			c: CLASSC_STONE
 			ci: CLASSI_STONE
 		do
-			{BAR_AND_TEXT} Precursor (s)
+			Precursor {BAR_AND_TEXT} (s)
 			c ?= stone
 			ci ?= stone
 			if c /= Void then
@@ -338,7 +338,7 @@ feature -- Update
 	reset is
 			-- Reset the window contents
 		do
-			{BAR_AND_TEXT} Precursor
+			Precursor {BAR_AND_TEXT}
 			reset_format_buttons
 			class_text_field.clear
 		end
@@ -430,7 +430,7 @@ feature -- Window Settings
 	close_windows is
 			-- Close sub-windows.
 		do
-			{BAR_AND_TEXT} Precursor
+			Precursor {BAR_AND_TEXT}
 			class_text_field.close_choice_window
 			version_cmd.close_choice_window
 		end

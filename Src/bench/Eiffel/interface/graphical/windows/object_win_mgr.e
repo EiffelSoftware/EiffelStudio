@@ -11,7 +11,7 @@ inherit
 			editor_type, make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -19,7 +19,7 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 			-- Initialize Current.
 		do
-			{EDITOR_MGR} precursor (a_screen)
+			precursor {EDITOR_MGR} (a_screen)
 			Object_resources.add_user (Current)
 		end
 
@@ -29,7 +29,7 @@ feature -- Properties
 	objects_kept: LINKED_SET [STRING] is
 			-- Hector references to objects clickable from object tools
 		do
-			!! Result.make
+			create Result.make
 			from
 				active_editors.start
 			until
@@ -89,7 +89,7 @@ feature {NONE} -- Properties
 	create_editor: OBJECT_W is
 			-- Create an object tool
 		do
-			!! Result.make (screen)
+			create Result.make (screen)
 		end
 
 end -- class OBJECT_WIN_MGR

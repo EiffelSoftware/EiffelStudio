@@ -10,7 +10,7 @@ class OBJECT_CATEGORY
 inherit
 	EDITOR_RESOURCE_CATEGORY
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -18,8 +18,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize Current
 		do
-			!! users.make;
-			!! modified_resources.make
+			create users.make;
+			create modified_resources.make
 		end
 
 feature {TTY_RESOURCES} -- Initialization
@@ -27,9 +27,9 @@ feature {TTY_RESOURCES} -- Initialization
 	initialize (rt: RESOURCE_TABLE) is
 			-- Initialize all resources valid for Current.
 		do
-			!! tool_width.make ("object_tool_width", rt, 440);
-			!! tool_height.make ("object_tool_height", rt, 500);
-			!! command_bar.make ("object_tool_bar", rt, True);
+			create tool_width.make ("object_tool_width", rt, 440);
+			create tool_height.make ("object_tool_height", rt, 500);
+			create command_bar.make ("object_tool_bar", rt, True);
 		end
 
 feature -- Validation

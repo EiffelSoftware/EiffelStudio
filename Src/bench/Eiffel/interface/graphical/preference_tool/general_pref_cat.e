@@ -20,7 +20,7 @@ inherit
 		end;
 	SYSTEM_CONSTANTS
 
-creation
+create
 	make
 
 feature -- Access
@@ -28,7 +28,7 @@ feature -- Access
 	save_resources (file: PLAIN_TEXT_FILE) is
 		-- Save the resources from Current in `file'.
 		do
-			{PREFERENCE_CATEGORY} Precursor (file)
+			Precursor {PREFERENCE_CATEGORY} (file)
 			if associated_category.motif_1_2.actual_value then
 				file.put_string ("motif_1_2: true%N")
 			else
@@ -43,29 +43,29 @@ feature {NONE} -- Initialization
 			-- Update `resources'.
 		do
 			if Platform_constants.is_windows then
-				!! regular_button.make (associated_category.regular_button);
+				create regular_button.make (associated_category.regular_button);
 			end
-			!! close_button.make (associated_category.close_button)
-			!! acrobat_reader.make (associated_category.acrobat_reader);
-			!! text_mode.make (associated_category.text_mode);
+			create close_button.make (associated_category.close_button)
+			create acrobat_reader.make (associated_category.acrobat_reader);
+			create text_mode.make (associated_category.text_mode);
 			if Platform_constants.is_windows then
-				!! tab_step.make (associated_category.tab_step);
+				create tab_step.make (associated_category.tab_step);
 			end
-			!! editor.make (associated_category.editor);
-			!! filter_path.make (associated_category.filter_path);
-			!! profile_path.make (associated_category.profile_path);
-			!! tmp_path.make (associated_category.tmp_path);
-			!! shell_command.make (associated_category.shell_command);
-			!! filter_name.make (associated_category.filter_name);
-			!! filter_command.make (associated_category.filter_command);
-			!! history_size.make (associated_category.history_size);
-			!! default_window_position.make (associated_category.default_window_position);
-			!! window_free_list_number.make (associated_category.window_free_list_number);
-			!! color_list.make (associated_category.color_list);
+			create editor.make (associated_category.editor);
+			create filter_path.make (associated_category.filter_path);
+			create profile_path.make (associated_category.profile_path);
+			create tmp_path.make (associated_category.tmp_path);
+			create shell_command.make (associated_category.shell_command);
+			create filter_name.make (associated_category.filter_name);
+			create filter_command.make (associated_category.filter_command);
+			create history_size.make (associated_category.history_size);
+			create default_window_position.make (associated_category.default_window_position);
+			create window_free_list_number.make (associated_category.window_free_list_number);
+			create color_list.make (associated_category.color_list);
 			if not Platform_constants.is_windows then
-				!! print_shell_command.make (associated_category.print_shell_command);
+				create print_shell_command.make (associated_category.print_shell_command);
 			else
-				!! browsing_facilities.make (associated_category.browsing_facilities);
+				create browsing_facilities.make (associated_category.browsing_facilities);
 			end
 
 			if Platform_constants.is_windows then
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 		local
 			att: WINDOW_ATTRIBUTES
 		do
-			!! att;
+			create att;
 			att.set_composite_attributes (Current)
 		end
 
@@ -112,9 +112,9 @@ feature {PREFERENCE_TOOL} -- Initialization
 			button: EB_PREFERENCE_BUTTON;
 			menu_entry: PREFERENCE_TICKABLE_MENU_ENTRY
 		do
-			!! button.make (Current, a_button_parent);
-			!! menu_entry.make (Current, a_menu);
-			!! holder.make (button, menu_entry);
+			create button.make (Current, a_button_parent);
+			create menu_entry.make (Current, a_menu);
+			create holder.make (button, menu_entry);
 
 			make_row_column (name, a_parent)
 		end

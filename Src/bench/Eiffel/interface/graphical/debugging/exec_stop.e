@@ -14,7 +14,7 @@ inherit
 			User_stop_points as execution_mode
 		end
 
-creation
+create
 	make
 
 feature -- Properties

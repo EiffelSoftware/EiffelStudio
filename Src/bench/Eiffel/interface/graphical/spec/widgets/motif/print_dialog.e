@@ -32,24 +32,24 @@ feature {NONE} -- Initialization
 			mb: MEL_PUSH_BUTTON
 		do
 			eb_form_make (Interface_names.t_Empty, a_parent);
-			!! rc.make (Interface_names.t_empty, Current);
+			create rc.make (Interface_names.t_empty, Current);
 			attach_left (rc, 0);
 			attach_right (rc, 0);
 			attach_bottom (rc, 0);
 			attach_top (rc, 0);
 			rc.set_margin_height (5);
 			rc.set_margin_width (0);
-			!! p_row.make (Interface_names.t_empty, rc);
+			create p_row.make (Interface_names.t_empty, rc);
 			p_row.set_row_layout;
-			!! p_label.make (Interface_names.t_Shell_command, p_row);
-			!! shell_cmd_field.make (Interface_names.t_Shell_command, p_row);
-			!! t_row.make (Interface_names.t_empty, rc);
-			!! print_to_file_t.make (Interface_names.t_Print_to_file, t_row);
-			!! postscript_t.make (Interface_names.t_Postscript, t_row);
-			!! sep.make (Interface_names.t_empty, rc);
-			!! form.make (Interface_names.t_Empty, rc);
-			!! ok_b.make (Interface_names.b_Ok, form);
-			!! cancel_b.make (Interface_names.b_Cancel, form);
+			create p_label.make (Interface_names.t_Shell_command, p_row);
+			create shell_cmd_field.make (Interface_names.t_Shell_command, p_row);
+			create t_row.make (Interface_names.t_empty, rc);
+			create print_to_file_t.make (Interface_names.t_Print_to_file, t_row);
+			create postscript_t.make (Interface_names.t_Postscript, t_row);
+			create sep.make (Interface_names.t_empty, rc);
+			create form.make (Interface_names.t_Empty, rc);
+			create ok_b.make (Interface_names.b_Ok, form);
+			create cancel_b.make (Interface_names.b_Cancel, form);
 			form.attach_left (ok_b, 15);
 			form.attach_top (ok_b, 0);
 			form.attach_bottom (ok_b, 0);
@@ -134,8 +134,8 @@ feature {NONE} -- Execution
 			file_name: FILE_NAME
 		do
 			if arg = last_name_chooser then
-				!! mp.set_watch_cursor;
-				!! file_name.make_from_string (last_name_chooser.selected_file)
+				create mp.set_watch_cursor;
+				create file_name.make_from_string (last_name_chooser.selected_file)
 				print_file (file_name, False);
 				mp.restore;
 			elseif arg = cancel_b then
@@ -143,14 +143,14 @@ feature {NONE} -- Execution
 			elseif arg = ok_b then
 				General_resources.print_shell_command.set_value 
 					(clone (shell_cmd_field.text));
-				!! mp.set_watch_cursor;
+				create mp.set_watch_cursor;
 				if print_to_file_t.state then
 					chooser := name_chooser (last_command.popup_parent);
 					mp.restore;
 					close;
 					chooser.call (Current)
 				else
-					!! file_name.make_from_string (generate_temp_name)
+					create file_name.make_from_string (generate_temp_name)
 					print_file (file_name, True);
 					mp.restore;
 					close
@@ -185,10 +185,10 @@ feature {NONE} -- Implementation
 			if new_text /= Void then
 				save_to_file (new_text, file_name);
 				if not print_to_file_t.state then
-					!! shell_request
+					create shell_request
 					shell_request.system (cmd_string)
 					if delete_after then
-						!! file.make (file_name)
+						create file.make (file_name)
 						file.delete
 					end
 				end
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			new_file: PLAIN_TEXT_FILE
 		do
 			if not a_filename.empty then
-				!! new_file.make (a_filename);
+				create new_file.make (a_filename);
 				if new_file.exists and then not new_file.is_plain then
 					warner (Current).gotcha_call
 						(Warning_messages.w_Not_a_plain_file (new_file.name))
@@ -244,7 +244,7 @@ feature {NONE} -- Externals
 			a := prefix_name.to_c
 			p := tempnam (default_pointer, $a)
 
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (p)
 		end
 

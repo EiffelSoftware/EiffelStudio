@@ -15,14 +15,14 @@ inherit
 
 	COMMAND
 
-creation
+create
 	make
 
 feature {NONE}
 
 	init_toolkit: EBENCH_MS_WINDOWS is
 		once
-			!!Result.make ("ISE EiffelBench")
+			create Result.make ("ISE EiffelBench")
 		end;
 
 	create_handler is

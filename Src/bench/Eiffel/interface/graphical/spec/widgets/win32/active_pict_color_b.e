@@ -13,7 +13,7 @@ inherit
 			create_ev_widget, implementation
 		end
 
-creation
+create
 	make, make_unmanaged
 
 feature

@@ -25,7 +25,7 @@ inherit
 			popup
 		end;
 
-creation
+create
 	make
 	
 feature -- Initialization

@@ -25,7 +25,7 @@ inherit
 
 	SHARED_PLATFORM_CONSTANTS
 
-creation
+create
 
 	make
 	
@@ -42,22 +42,22 @@ feature -- Initialization
 			form_dialog_create (Interface_names.n_X_resource_name, a_composite);
 			set_title (Interface_names.t_Slice_w);
 
-			!!bounds_form.make (new_name, Current);
+			create bounds_form.make (new_name, Current);
 			bounds_form.set_fraction_base (4);
 			attach_top (bounds_form, 5);
 			attach_left (bounds_form, 5);
 			attach_right (bounds_form, 5);
 
-			!!sep.make (Interface_names.t_Empty, Current);
-			!!from_label.make (new_name, bounds_form);
+			create sep.make (Interface_names.t_Empty, Current);
+			create from_label.make (new_name, bounds_form);
 			from_label.set_text ("From: ");
 			from_label.set_right_alignment;
-			!!to_label.make (new_name, bounds_form);
+			create to_label.make (new_name, bounds_form);
 			to_label.set_text ("To: ");
 			to_label.set_right_alignment;
-			!!from_field.make (new_name, bounds_form);
+			create from_field.make (new_name, bounds_form);
 			from_field.set_width (50);
-			!!to_field.make (new_name, bounds_form);
+			create to_field.make (new_name, bounds_form);
 			to_field.set_width (50);
 
 			if Platform_constants.is_windows then
@@ -84,16 +84,16 @@ feature -- Initialization
 			attach_right (sep, 1);
 			attach_bottom_widget (sep, bounds_form, 0);
 
-			!!button_form.make (new_name, Current);
+			create button_form.make (new_name, Current);
 			button_form.set_fraction_base (17);
 			attach_left (button_form, 5);
 			attach_bottom (button_form, 5);
 			attach_right (button_form, 5);
 			attach_bottom_widget (button_form, sep, 5);
 
-			!!ok_button.make (Interface_names.b_Ok, button_form);
-			!!apply_button.make (Interface_names.b_Apply, button_form);
-			!!cancel_button.make (Interface_names.b_Cancel, button_form);
+			create ok_button.make (Interface_names.b_Ok, button_form);
+			create apply_button.make (Interface_names.b_Apply, button_form);
+			create cancel_button.make (Interface_names.b_Cancel, button_form);
 			button_form.attach_left (ok_button, 0);
 			button_form.attach_top (ok_button, 0);
 			button_form.attach_bottom (ok_button, 0);
@@ -143,19 +143,19 @@ feature {NONE} -- Properties
 	ok_it: ANY is
 			-- Argument for the command
 		once
-			!!Result
+			create Result
 		end;
 
 	apply_it: ANY is
 			-- Argument for the command
 		once
-			!!Result
+			create Result
 		end;
 
 	cancel_it: ANY is
 			-- Argument for the command
 		once
-			!!Result
+			create Result
 		end;
 
 	associated_command: SLICE_COMMAND;

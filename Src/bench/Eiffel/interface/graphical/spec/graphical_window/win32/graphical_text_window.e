@@ -28,7 +28,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make,
 	make_from_tool
 
@@ -44,7 +44,7 @@ feature -- Output
 			-- Clear the contents of the window.
 		do
 			set_changed (True)
-			{SCROLLED_TEXT_WINDOW} Precursor 
+			Precursor {SCROLLED_TEXT_WINDOW} 
 			set_changed (False)
 		end
 
@@ -57,7 +57,7 @@ feature -- Output
 
 	reset is
 		do
-			{SCROLLED_TEXT_WINDOW} Precursor
+			Precursor {SCROLLED_TEXT_WINDOW}
 			wipe_out_graphical_values
 		end
 
@@ -73,7 +73,7 @@ feature -- Output
 		do
 			set_changed (True)
 			init_graphical_values
-			{SCROLLED_TEXT_WINDOW} Precursor 
+			Precursor {SCROLLED_TEXT_WINDOW} 
 			set_changed (False)
 		end
 
@@ -83,7 +83,7 @@ feature -- Output
 		do
 			hide_text_window
 			set_changed (True)
-			{SCROLLED_TEXT_WINDOW} Precursor (texts)
+			Precursor {SCROLLED_TEXT_WINDOW} (texts)
 			set_changed (False)
 			show_text_window
 		end
@@ -94,7 +94,7 @@ feature -- Output
 		do
 			if dummy_text = Void then
 				p ?= top.implementation
-				!! dummy_text.make (p, 
+				create dummy_text.make (p, 
 						"Dummy", implementation.wel_x + 10, 	
 						implementation.wel_y + 10,
 						10, 10, 0)
@@ -128,7 +128,7 @@ feature -- Update
 				implementation.set_character_format_word (text_format)
 				implementation.set_selection (previous_position, previous_position)
 				implementation.show_selection
-				{SCROLLED_TEXT_WINDOW} Precursor
+				Precursor {SCROLLED_TEXT_WINDOW}
 				done := False
 			end
 		end
@@ -150,7 +150,7 @@ feature -- Update
 			else
 				implementation.set_character_format_word (symbol_format)
 			end
-			{SCROLLED_TEXT_WINDOW} Precursor (str, e_feature, is_keyword)
+			Precursor {SCROLLED_TEXT_WINDOW} (str, e_feature, is_keyword)
 		end
 
 	put_string (s: STRING) is
@@ -171,7 +171,7 @@ feature -- Update
 			-- `str' at current position.
 		do
 			implementation.set_character_format_word (class_format)
-			{SCROLLED_TEXT_WINDOW} Precursor (e_class, str)
+			Precursor {SCROLLED_TEXT_WINDOW} (e_class, str)
 		end
 
 	put_cluster (e_cluster: CLUSTER_I str: STRING) is
@@ -187,14 +187,14 @@ feature -- Update
 			-- `str' at current position.
 		do
 			implementation.set_character_format_word (class_format)
-			{SCROLLED_TEXT_WINDOW} Precursor (e_class, str)
+			Precursor {SCROLLED_TEXT_WINDOW} (e_class, str)
 		end
 
 	put_class_syntax (syn: SYNTAX_ERROR e_class: CLASS_C; str: STRING) is
 			-- Put `address' for `e_class'.
 		do
 			implementation.set_character_format_word (class_format)
-			{SCROLLED_TEXT_WINDOW} Precursor (syn, e_class, str)
+			Precursor {SCROLLED_TEXT_WINDOW} (syn, e_class, str)
 		end
 
 	put_error (error: ERROR str: STRING) is
@@ -202,7 +202,7 @@ feature -- Update
 			-- `str' at current position.
 		do
 			implementation.set_character_format_word (error_format)
-			{SCROLLED_TEXT_WINDOW} Precursor (error, str)
+			Precursor {SCROLLED_TEXT_WINDOW} (error, str)
 		end
 
 	put_feature_error (feat: E_FEATURE str: STRING; a_pos: INTEGER) is
@@ -210,7 +210,7 @@ feature -- Update
 			-- representation `str' at current position.
 		do
 			implementation.set_character_format_word (feature_format)
-			{SCROLLED_TEXT_WINDOW} Precursor (feat, str, a_pos)
+			Precursor {SCROLLED_TEXT_WINDOW} (feat, str, a_pos)
 		end
 
 	put_feature (feat: E_FEATURE str: STRING) is
@@ -218,27 +218,27 @@ feature -- Update
 			-- representation `str' at current position.
 		do
 			implementation.set_character_format_word (feature_format)
-			{SCROLLED_TEXT_WINDOW} Precursor (feat, str)
+			Precursor {SCROLLED_TEXT_WINDOW} (feat, str)
 		end
 
 	put_feature_name (f_name: STRING e_class: CLASS_C) is
 			-- Put feature name `f_name' defined in `e_class'.
 		do
 			implementation.set_character_format_word (feature_format)
-			{SCROLLED_TEXT_WINDOW} Precursor (f_name, e_class)
+			Precursor {SCROLLED_TEXT_WINDOW} (f_name, e_class)
 		end
 
 	put_exported_feature_name (f_name: STRING; e_class: CLASS_C; alias_name: STRING) is
 		do
 			implementation.set_character_format_word (feature_format)
-			{SCROLLED_TEXT_WINDOW} Precursor (f_name, e_class, alias_name)
+			Precursor {SCROLLED_TEXT_WINDOW} (f_name, e_class, alias_name)
 		end
 
 	put_address (address: STRING a_name: STRING; e_class: CLASS_C) is
 			-- Put `address' with `a_name' for `e_class'.
 		do
 			implementation.set_character_format_word (object_format)
-			{SCROLLED_TEXT_WINDOW} Precursor (address, a_name, e_class)
+			Precursor {SCROLLED_TEXT_WINDOW} (address, a_name, e_class)
 		end
 
 	put_comment (s: STRING) is
@@ -266,7 +266,7 @@ feature -- Update
 			-- Add quoted text `s'.
 		do
 			implementation.set_character_format_word (comment_format)
-			{SCROLLED_TEXT_WINDOW} Precursor (s)
+			Precursor {SCROLLED_TEXT_WINDOW} (s)
 		end
 
 	put_stone (a_stone: STONE stone_string: STRING) is
@@ -278,7 +278,7 @@ feature -- Update
 		do
 			implementation.replace_selection (stone_string)
 			length := stone_string.count
-			!! p.make (a_stone, text_position, text_position + length)
+			create p.make (a_stone, text_position, text_position + length)
 			add_click_stone (p)
 			text_position := text_position + length
 		end
@@ -298,12 +298,12 @@ feature -- Text formatting
 			breakable_stone: BREAKABLE_STONE
 			click_break: CLICK_BREAKABLE
 		do
-			!! breakable_stone.make (a_bp.e_feature, a_bp.index)
+			create breakable_stone.make (a_bp.e_feature, a_bp.index)
 			if a_bp.display_number then
 				implementation.set_character_format_word (breakable_format)
 				put_stone (breakable_stone, a_bp.index.out)
 			else
-				!! click_break.make (breakable_stone, text_position, text_position + 3)
+				create click_break.make (breakable_stone, text_position, text_position + 3)
 				add_click_stone (click_break)
 				text_position := text_position + 3
 				implementation.set_character_format_word (breakable_format)

@@ -20,7 +20,7 @@ inherit
 			receive, registered, compatible
 		end;
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

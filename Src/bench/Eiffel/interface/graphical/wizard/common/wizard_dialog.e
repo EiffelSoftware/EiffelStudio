@@ -12,7 +12,7 @@ inherit
 		redefine
 			set_default
 		end
-creation
+create
 	make
 
 feature -- Graphical User Interface
@@ -22,10 +22,10 @@ feature -- Graphical User Interface
 			sep: THREE_D_SEPARATOR
 		do
 			set_width (300);
-			!! action_form.make ("action_form", Current);
-			!! sep.make ("", Current);
+			create action_form.make ("action_form", Current);
+			create sep.make ("", Current);
 			sep.set_horizontal (True);
-			!! button_form.make ("button_form", Current);
+			create button_form.make ("button_form", Current);
 
 			button_form.set_fraction_base (3);
 
@@ -43,9 +43,9 @@ feature -- Graphical User Interface
 			attach_bottom_widget (sep, action_form, 5);
 			attach_bottom_widget (button_form, sep, 5);
 
-			!! previous_button.make ("Previous", button_form);
-			!! abort_button.make ("Cancel", button_form);
-			!! next_button.make ("Next", button_form);
+			create previous_button.make ("Previous", button_form);
+			create abort_button.make ("Cancel", button_form);
+			create next_button.make ("Next", button_form);
 			previous_button.set_insensitive;
 			next_button.set_insensitive;
 

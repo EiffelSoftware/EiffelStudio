@@ -28,7 +28,7 @@ inherit
 			execute as launch_ebench
 		end
 
-creation
+create
 	make, make_from_ebench
 
 feature -- Initialization
@@ -163,7 +163,7 @@ feature -- Project initialization
 		local
 			msg: STRING
 		do
-			!! project_dir.make (dir, Void);
+			create project_dir.make (dir, Void);
 			Project_directory_name.wipe_out
 			Project_directory_name.set_directory (dir)
 
@@ -197,11 +197,11 @@ feature -- Project initialization
 				project_tool.set_title (msg)
 				project_tool.set_initialized
 	
-				!! e_displayer.make (Error_window);
+				create e_displayer.make (Error_window);
 				Eiffel_project.set_error_displayer (e_displayer);
 				Application.set_interrupt_number (Project_resources.interrupt_every_n_instructions.actual_value);
 				if not Project_resources.graphical_output_disabled.actual_value then
-					!! g_degree_output
+					create g_degree_output
 					Project_tool.set_progress_dialog (g_degree_output)
 				end
 					-- We erase the content of the Project window

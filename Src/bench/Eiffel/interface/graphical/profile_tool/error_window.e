@@ -15,7 +15,7 @@ inherit
 
 	COMMAND;
 
-creation
+create
 	
 	make
 
@@ -28,7 +28,7 @@ feature -- creation
 			valid_parent: a_name /= Void;
 			parent_not_void: a_parent /= Void
 		do
-			{ERROR_D} Precursor (a_name, a_parent)
+			Precursor {ERROR_D} (a_name, a_parent)
 			add_ok_action (Current, ok);
 			hide_help_button
 			hide_cancel_button
@@ -41,7 +41,7 @@ feature -- Execution argument
 
 	ok: ANY is
 		once
-			!! Result
+			create Result
 		end
 
 feature -- Execute

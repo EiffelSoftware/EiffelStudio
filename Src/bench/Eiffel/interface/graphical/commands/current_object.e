@@ -14,7 +14,7 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 
 	make
 
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 					warner (popup_parent).gotcha_call (Warning_messages.w_Unknown_object)
 				else
 					e_class := status.dynamic_class
-					!! stone.make (address, status.e_feature.name, e_class)
+					create stone.make (address, status.e_feature.name, e_class)
 					tool.process_object (stone)
 				end
 			end

@@ -26,7 +26,7 @@ inherit
 
 	PLATFORM_CONSTANTS
 
-creation
+create
 
 	make
 	
@@ -81,7 +81,7 @@ feature -- Access
 			-- Display class name, class' cluster and class location in 
 			-- window title bar.
 		do
-			!!Result.make (20);
+			create Result.make (20);
 			Result.append (stone_signature);
 			Result.append ("  in cluster ");
 			Result.append (class_i.cluster.cluster_name);
@@ -144,9 +144,9 @@ feature -- Access
 					new_cluster.classes.has_item (class_i)
 				then
 					if class_i.compiled then
-						!CLASSC_STONE! Result.make (class_i.compiled_class)
+						create {CLASSC_STONE} Result.make (class_i.compiled_class)
 					else
-						!CLASSI_STONE! Result.make (class_i)
+						create {CLASSI_STONE} Result.make (class_i)
 					end
 				end
 			end

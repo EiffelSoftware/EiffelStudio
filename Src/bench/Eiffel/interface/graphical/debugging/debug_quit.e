@@ -17,7 +17,7 @@ inherit
 			execute as termination_processing
 		end
 
-creation
+create
 
 	make, 
 	non_gui_make

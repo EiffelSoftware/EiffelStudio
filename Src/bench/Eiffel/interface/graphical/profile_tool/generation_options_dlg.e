@@ -22,7 +22,7 @@ inherit
 
 	WINDOW_ATTRIBUTES
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -80,34 +80,34 @@ feature {NONE} -- User Interface
 	build_widgets is
 			-- Setup the interface.
 		do
-			!! text_form.make (Interface_names.n_X_resource_name, Current);
-			!! text_sep.make (Interface_names.t_Empty, Current);
-			!! compile_form.make (Interface_names.n_X_resource_name, Current);
-			!! compile_sep.make (Interface_names.t_Empty, Current);
-			!! profiler_form.make (Interface_names.n_X_resource_name, Current);
-			!! profiler_sep.make (Interface_names.t_Empty, Current);
-			!! button_form.make (Interface_names.n_X_resource_name, Current);
+			create text_form.make (Interface_names.n_X_resource_name, Current);
+			create text_sep.make (Interface_names.t_Empty, Current);
+			create compile_form.make (Interface_names.n_X_resource_name, Current);
+			create compile_sep.make (Interface_names.t_Empty, Current);
+			create profiler_form.make (Interface_names.n_X_resource_name, Current);
+			create profiler_sep.make (Interface_names.t_Empty, Current);
+			create button_form.make (Interface_names.n_X_resource_name, Current);
 			button_form.set_fraction_base (3);
 
-			!! text_label.make (Interface_names.l_Input_file, text_form);
-			!! text_field.make (Interface_names.t_Empty, text_form);
+			create text_label.make (Interface_names.l_Input_file, text_form);
+			create text_field.make (Interface_names.t_Empty, text_form);
 			text_field.set_text ("profinfo");
 
-			!! compile_label.make (Interface_names.l_Compile_type, compile_form);
-			!! compile_box.make (Interface_names.t_Empty, compile_form);
+			create compile_label.make (Interface_names.l_Compile_type, compile_form);
+			create compile_box.make (Interface_names.t_Empty, compile_form);
 			compile_box.set_always_one (True);
-			!! workbench_button.make (Interface_names.b_Workbench, compile_box);
+			create workbench_button.make (Interface_names.b_Workbench, compile_box);
 			workbench_button.set_toggle_on;
-			!! final_button.make (Interface_names.b_Final, compile_box);
+			create final_button.make (Interface_names.b_Final, compile_box);
 
-			!! profiler_label.make (Interface_names.l_Select_profiler, profiler_form);
-			!! profiler_list.make (Interface_names.t_Empty, profiler_form);
+			create profiler_label.make (Interface_names.l_Select_profiler, profiler_form);
+			create profiler_list.make (Interface_names.t_Empty, profiler_form);
 			profiler_list.add_click_action (Current, click_it);
 			fill_profiler_list;
 
-			!! ok_button.make (Interface_names.b_Ok, button_form);
+			create ok_button.make (Interface_names.b_Ok, button_form);
 			ok_button.add_activate_action (Current, ok_it);
-			!! cancel_button.make (Interface_names.b_Cancel, button_form);
+			create cancel_button.make (Interface_names.b_Cancel, button_form);
 			cancel_button.add_activate_action (Current, cancel_it);
 
 			attach_all;
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			to_be_selected: INTEGER;
 			update: BOOLEAN
 		do
-			!! profdir.make_open_read (profile_path);
+			create profdir.make_open_read (profile_path);
 			from
 				to_be_selected := 1;
 				update := True;
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			until
 				profdir.lastentry = Void
 			loop
-				!! list_string.make (0);
+				create list_string.make (0);
 				if profdir.lastentry.is_equal ("eiffel") then
 					update := False
 				end;
@@ -286,17 +286,17 @@ feature {NONE} -- Execution arguments
 
 	ok_it: ANY is
 		once
-			!! Result
+			create Result
 		end;
 
 	cancel_it: ANY is
 		once
-			!! Result
+			create Result
 		end;
 
 	click_it: ANY is
 		once
-			!! Result
+			create Result
 		end
 
 feature {NONE} -- Execution

@@ -27,7 +27,7 @@ feature -- Initialization
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create the 
 		do
-			{ACTIVE_PICT_COLOR_B} Precursor (a_name, a_parent)
+			Precursor {ACTIVE_PICT_COLOR_B} (a_name, a_parent)
 			if General_resources.regular_button /= Void then
 					-- Not Void implies that we are on Windows where
 					-- the functionality is fully implemented.

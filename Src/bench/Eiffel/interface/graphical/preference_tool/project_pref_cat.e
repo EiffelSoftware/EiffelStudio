@@ -19,7 +19,7 @@ inherit
 			init_colors
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -27,25 +27,25 @@ feature {NONE} -- Initialization
 	update_resources is
 			-- Update `resources'.
 		do
-			!! tool_x.make (associated_category.tool_x);
-			!! tool_y.make (associated_category.tool_y);
-			!! tool_width.make (associated_category.tool_width);
-			!! tool_height.make (associated_category.tool_height);
-			!! debugger_feature_height.make (associated_category.debugger_feature_height);
-			!! debugger_object_height.make (associated_category.debugger_object_height);
-			!! interrupt_every_n_instructions.make 
+			create tool_x.make (associated_category.tool_x);
+			create tool_y.make (associated_category.tool_y);
+			create tool_width.make (associated_category.tool_width);
+			create tool_height.make (associated_category.tool_height);
+			create debugger_feature_height.make (associated_category.debugger_feature_height);
+			create debugger_object_height.make (associated_category.debugger_object_height);
+			create interrupt_every_n_instructions.make 
 					(associated_category.interrupt_every_n_instructions);
-			!! command_bar.make (associated_category.command_bar);
-			!! format_bar.make (associated_category.format_bar);
-  			!! feature_window.make (associated_category.feature_window);
-  			!! object_window.make (associated_category.object_window);
-  			!! selector_window.make (associated_category.selector_window);
-			!! raise_on_error.make (associated_category.raise_on_error);
-			!! debugger_show_all_callers.make (
+			create command_bar.make (associated_category.command_bar);
+			create format_bar.make (associated_category.format_bar);
+  			create feature_window.make (associated_category.feature_window);
+  			create object_window.make (associated_category.object_window);
+  			create selector_window.make (associated_category.selector_window);
+			create raise_on_error.make (associated_category.raise_on_error);
+			create debugger_show_all_callers.make (
 				associated_category.debugger_show_all_callers);
-			!! debugger_do_flat_in_breakpoints.make (
+			create debugger_do_flat_in_breakpoints.make (
 				associated_category.debugger_do_flat_in_breakpoints);
-			!! graphical_output_disabled.make (
+			create graphical_output_disabled.make (
 				associated_category.graphical_output_disabled);
 
 			resources.extend (tool_x);
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 		local
 			att: WINDOW_ATTRIBUTES
 		do
-			!! att;
+			create att;
 			att.set_composite_attributes (Current)
 		end
 
@@ -83,9 +83,9 @@ feature {PREFERENCE_TOOL} -- Initialization
 			button: EB_PREFERENCE_BUTTON;
 			menu_entry: PREFERENCE_TICKABLE_MENU_ENTRY
 		do
-			!! button.make (Current, a_button_parent);
-			!! menu_entry.make (Current, a_menu);
-			!! holder.make (button, menu_entry);
+			create button.make (Current, a_button_parent);
+			create menu_entry.make (Current, a_menu);
+			create holder.make (button, menu_entry);
 			make_row_column (name, a_parent)
 		end
 

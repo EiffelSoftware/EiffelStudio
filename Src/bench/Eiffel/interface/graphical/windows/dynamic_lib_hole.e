@@ -25,7 +25,7 @@ inherit
 			execute_warner_ok as load_chosen
 		end
 
-creation
+create
 	make
 
 feature -- Callbacks
@@ -39,7 +39,7 @@ feature -- Callbacks
 			fc: PLAIN_TEXT_FILE
 		do
 			if Eiffel_dynamic_lib /= Void  and then Eiffel_dynamic_lib.modified then
-				!! fc.make_open_read (eiffel_dynamic_lib.file_name)
+				create fc.make_open_read (eiffel_dynamic_lib.file_name)
 				if eiffel_dynamic_lib.parse_exports_from_file(fc) then
 					dynamic_lib_tool.synchronize
 				end
@@ -50,7 +50,7 @@ feature -- Callbacks
 				Eiffel_project.create_dynamic_lib
 				fn := clone(eiffel_system.name)
 				fn.append_string(".def")
-				!! f.make_create_read_write(fn)
+				create f.make_create_read_write(fn)
 				if 
 					f.exists and then 
 					f.is_readable and then 
@@ -76,7 +76,7 @@ feature -- Callbacks
 				if tool.save_cmd_holder /= Void then
 					tool.save_cmd_holder.associated_command.execute (Void)
 				end
-				!! fc.make_open_read (eiffel_dynamic_lib.file_name)
+				create fc.make_open_read (eiffel_dynamic_lib.file_name)
 				if eiffel_dynamic_lib.parse_exports_from_file(fc) then
 					dynamic_lib_tool.synchronize
 				end
@@ -197,7 +197,7 @@ feature {NONE} -- Execution
 					if argument /= Void and then argument = last_name_chooser then
 						fn := clone (last_name_chooser.selected_file);
 						if not fn.is_empty then
-							!! f.make (fn);
+							create f.make (fn);
 							if 
 								f.exists and then 
 								f.is_readable and then 
@@ -252,7 +252,7 @@ feature {NONE} -- Execution
 							warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed (Void),
 							Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 						else
-							!! f.make_open_read (Eiffel_dynamic_lib.file_name)
+							create f.make_open_read (Eiffel_dynamic_lib.file_name)
 							if Eiffel_dynamic_lib.parse_exports_from_file(f) then
 								dynamic_lib_tool.synchronize
 							end

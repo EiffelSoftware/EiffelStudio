@@ -108,8 +108,8 @@ feature {NONE} -- Implementation
 			msg: STRING;
 			att: WINDOW_ATTRIBUTES;
 		do
-			!! warning_d.make ("Warning", top);
-			!! msg.make (0);
+			create warning_d.make ("Warning", top);
+			create msg.make (0);
 			msg.append ("Resource `");
 			msg.append (associated_resource.name);
 			msg.append ("' must be ");
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			warning_d.hide_help_button;
 			warning_d.hide_cancel_button;
 			warning_d.add_ok_action (Current, warning_d);
-			!! att;
+			create att;
 			att.set_composite_attributes (warning_d);
 			warning_d.popup
 		end;

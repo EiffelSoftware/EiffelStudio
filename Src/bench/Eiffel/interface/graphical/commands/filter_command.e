@@ -20,7 +20,7 @@ inherit
 			execute_warner_ok as modified_warner_ok_press
 		end
 
-creation
+create
 	make
 
 feature -- Callbacks
@@ -51,7 +51,7 @@ feature -- Properties
 		once
 			Result := General_resources.filter_name.value
 				-- Check whether that filter exists or not.
-			!!filter_dir.make (filter_path)
+			create filter_dir.make (filter_path)
 			if filter_dir.exists and then filter_dir.is_readable then
 				from
 					file_name := clone (Result)
@@ -100,8 +100,8 @@ feature {NONE} -- Implementation
 			if argument = tool then
 					-- Popup filter window
 				if filter_window = Void then
-					!! mp.set_watch_cursor
-					!! filter_window.make (Current)
+					create mp.set_watch_cursor
+					create filter_window.make (Current)
 					mp.restore
 				end
 				filter_window.call (Current)
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 				if filterable_format = Void then
 					warner (popup_parent).gotcha_call (Warning_messages.w_Not_a_filterable_format)
 				else
-					!! mp.set_watch_cursor
+					create mp.set_watch_cursor
 					if 
 						filterable_format.filtered and
 						equal (filterable_format.filter_name, filter_name) 
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 					if not cmd_string.is_empty then
 						cmd_string.replace_substring_all ("$target", filename)
 					end
-					!!shell_request
+					create shell_request
 					shell_request.execute (cmd_string)
 					mp.restore
 				end
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			new_file: PLAIN_TEXT_FILE
 		do
 			if not a_filename.is_empty then
-				!!new_file.make (a_filename)
+				create new_file.make (a_filename)
 				if new_file.exists and then not new_file.is_plain then
 					warner (popup_parent).gotcha_call 
 						(Warning_messages.w_Not_a_plain_file (new_file.name))

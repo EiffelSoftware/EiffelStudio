@@ -9,7 +9,7 @@ class
 inherit
 	CASE_COMMAND
 
-creation
+create
 	make
 
 feature	-- Execution
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 					end
 				else 
 						-- form list2 to list1
-						!! e.make (cl.item)
+						create e.make (cl.item)
 						scroll2.extend(e)
 				end
 				if cl.item.sub_clusters /= Void and then 

@@ -13,7 +13,7 @@ inherit
 	WINDOWS
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			classC ?= cl
 			if classC.creators /= Void then
 				list_creators ?= classC.creators.current_keys
-				!! Result.make
+				create Result.make
 				if list_creators /= Void then
 					max:= list_creators.upper
 					from
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			a_list: LINKED_LIST [STRING]
 		do
 			if choices = Void then
-				!! choices.make (Project_tool)
+				create choices.make (Project_tool)
 			end
 			list := valid_creation (d_class)
 
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 				dynamic_lib_tool.process (d_class, list.first, d_routine,
 											d_index, d_alias, d_call_type)
 			elseif list /= Void and then not list.is_empty then
-				!! a_list.make
+				create a_list.make
 				from 
 					list.start
 				until 

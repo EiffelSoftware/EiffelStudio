@@ -14,7 +14,7 @@ inherit
 
 	SHARED_FORMAT_TABLES
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -22,7 +22,7 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 			-- Initialize Current.
 		do
-			{EDITOR_MGR} Precursor (a_screen)
+			Precursor {EDITOR_MGR} (a_screen)
 			Class_resources.add_user (Current)
 		end
 
@@ -58,7 +58,7 @@ feature -- Update
 			if old_res = cr.feature_clause_order then
 				clear_class_tables
 			end
-			{EDITOR_MGR} Precursor (old_res, new_res)
+			Precursor {EDITOR_MGR} (old_res, new_res)
 		end
 
 feature {NONE} -- Properties
@@ -68,7 +68,7 @@ feature {NONE} -- Properties
 	create_editor: CLASS_W is
 			-- Create a new class tool.
 		do
-			!! Result.make (screen)
+			create Result.make (screen)
 		end
 
 end -- class CLASS_WIN_MGR

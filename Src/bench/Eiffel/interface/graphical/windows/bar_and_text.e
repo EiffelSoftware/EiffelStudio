@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		local
 			ts: EB_TOP_SHELL
 		do
-			!! ts.make (icon_id, a_screen)
+			create ts.make (icon_id, a_screen)
 			ts.set_title (tool_name)
 			make_form (ts.associated_form)
 			eb_shell := ts
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 		do
 			eb_shell := Void
 			global_form := a_form
-			!! history.make
+			create history.make
 			build_widgets
 			register
 		end
@@ -88,7 +88,7 @@ feature -- Update resources
 					end
 				end
 			end
-			{RESOURCE_USER} Precursor (old_res, new_res)
+			Precursor {RESOURCE_USER} (old_res, new_res)
 		end
 
 	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is
@@ -108,7 +108,7 @@ feature -- Update resources
 					format_bar.remove
 				end
 			end
-			{RESOURCE_USER} Precursor (old_res, new_res)
+			Precursor {RESOURCE_USER} (old_res, new_res)
 		end
 
 feature -- Standard Interface
@@ -120,8 +120,8 @@ feature -- Standard Interface
 		local
 			filter_menu_entry: EB_MENU_ENTRY
 		do
-			!! filter_command.make (Current)
-			!! filter_menu_entry.make (filter_command, special_menu)
+			create filter_command.make (Current)
+			create filter_menu_entry.make (filter_command, special_menu)
 		end
 
 	build_widgets is
@@ -144,22 +144,22 @@ feature -- Standard Interface
 			sep: SEPARATOR
 			toolbar_t: TOGGLE_B
 		do
-			!! sep.make (Interface_names.t_Empty, special_menu)
-			!! toolbar_t.make (edit_bar.identifier, special_menu)
+			create sep.make (Interface_names.t_Empty, special_menu)
+			create toolbar_t.make (edit_bar.identifier, special_menu)
 			edit_bar.init_toggle (toolbar_t)
-			!! toolbar_t.make (format_bar.identifier, special_menu)
+			create toolbar_t.make (format_bar.identifier, special_menu)
 			format_bar.init_toggle (toolbar_t)
 		end
 
 	build_menus is
 			-- Create the menus.
 		do
-			!! menu_bar.make (new_name, global_form)
-			!! file_menu.make (Interface_names.m_File, menu_bar)
-			!! edit_menu.make (Interface_names.m_Edit, menu_bar)
-			!! format_menu.make (Interface_names.m_Formats, menu_bar)
-			!! special_menu.make (Interface_names.m_Special, menu_bar)
-			!! window_menu.make (Interface_names.m_window, menu_bar)
+			create menu_bar.make (new_name, global_form)
+			create file_menu.make (Interface_names.m_File, menu_bar)
+			create edit_menu.make (Interface_names.m_Edit, menu_bar)
+			create format_menu.make (Interface_names.m_Formats, menu_bar)
+			create special_menu.make (Interface_names.m_Special, menu_bar)
+			create window_menu.make (Interface_names.m_window, menu_bar)
 			build_help_menu
 		end
 
@@ -173,24 +173,24 @@ feature -- Standard Interface
 			exit_menu_entry: EB_MENU_ENTRY
 		do
 				-- Creation of all the commands, holes, buttons, and menu entries
-			!! hole.make (Current)
-			!! hole_button.make (hole, edit_bar)
-			!! hole_holder.make_plain (hole)
+			create hole.make (Current)
+			create hole_button.make (hole, edit_bar)
+			create hole_holder.make_plain (hole)
 			hole_holder.set_button (hole_button)
 			build_edit_menu (edit_bar)
 			build_save_as_menu_entry
 			build_print_menu_entry
-			!! quit_cmd.make (Current)
-			!! quit_menu_entry.make (quit_cmd, file_menu)
+			create quit_cmd.make (Current)
+			create quit_menu_entry.make (quit_cmd, file_menu)
 
 			has_close_button := General_resources.close_button.actual_value
 			if has_close_button then
-				!! quit_button.make (quit_cmd, edit_bar)
+				create quit_button.make (quit_cmd, edit_bar)
 			end
-			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+			create quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
 
-			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
-			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
+			create exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
+			create exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 			exit_cmd_holder.set_menu_entry (exit_menu_entry)
 
 				-- Attachments are done here, because of speed.
@@ -273,14 +273,14 @@ feature -- Window Implementation
 			raise_tool_cmd: RAISE_TOOL_CMD
 			sep: SEPARATOR
 		do
-			!! menu_entry.make (Project_tool.class_hole_holder.associated_command, window_menu)
-			!! menu_entry.make (Project_tool.routine_hole_holder.associated_command, window_menu)
-			!! menu_entry.make (Project_tool.object_hole_holder.associated_command, window_menu)
-			!! sep.make (Interface_names.t_Empty, window_menu)
-			!! show_pref_cmd.make (resources)
-			!! show_pref_menu_entry.make_default (show_pref_cmd, window_menu)
-			!! raise_tool_cmd.make (Project_tool)
-			!! menu_entry.make (raise_tool_cmd, window_menu)
+			create menu_entry.make (Project_tool.class_hole_holder.associated_command, window_menu)
+			create menu_entry.make (Project_tool.routine_hole_holder.associated_command, window_menu)
+			create menu_entry.make (Project_tool.object_hole_holder.associated_command, window_menu)
+			create sep.make (Interface_names.t_Empty, window_menu)
+			create show_pref_cmd.make (resources)
+			create show_pref_menu_entry.make_default (show_pref_cmd, window_menu)
+			create raise_tool_cmd.make (Project_tool)
+			create menu_entry.make (raise_tool_cmd, window_menu)
 		end
 
 	set_x_y (new_x, new_y: INTEGER) is
@@ -433,7 +433,7 @@ feature -- Window Properties
 			if is_a_shell then
 				Result := eb_shell.title
 			else
-				!! Result.make (1)
+				create Result.make (1)
 			end
 		end
 
@@ -511,21 +511,21 @@ feature -- Properties
 			-- Argument used to indicate that Current is being
 			-- popped down. Needed for `execute'.
 		once
-			!! Result
+			create Result
 		end
 
 	remapped: ANY is
 			-- Argument used to indicate that Current is being
 			-- remapped. Needed for `execute'.
 		once
-			!! Result
+			create Result
 		end
 
 	modify: ANY is
 			-- Argument used to indicate that text_window is being
 			-- modified.
 		once
-			!! Result
+			create Result
 		end
 
 end -- class BAR_AND_TEXT

@@ -17,7 +17,7 @@ inherit
 			associated_command
 		end
 
-creation
+create
 	make
 
 feature -- Access

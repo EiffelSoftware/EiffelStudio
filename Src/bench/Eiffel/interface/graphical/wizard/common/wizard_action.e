@@ -99,17 +99,17 @@ feature --- Execute Arguments
 
 	previous: ANY is
 		once
-			!! Result
+			create Result
 		end;
 
 	abort: ANY is
 		once
-			!! Result
+			create Result
 		end;
 
 	next: ANY is
 		once
-			!! Result
+			create Result
 		end;
 
 feature -- Execution

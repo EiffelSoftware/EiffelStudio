@@ -9,7 +9,7 @@ class
 inherit
 	CASE_COMMAND2
 
-creation
+create
 	make
 
 feature
@@ -20,10 +20,10 @@ feature
 			format_case: FORMAT_CASE_STORAGE
 		do
 			case_window.hide
-			!! aa
+			create aa
 			aa.set_parent_window (case_window.Project_tool.implementation)
-			!! bb.make (Project_tool)
-			!! format_case.make (bb, aa, TRUE)
+			create bb.make (Project_tool)
+			create format_case.make (bb, aa, TRUE)
 			format_case.execute (case_window.text_field1.text)
 		end
 

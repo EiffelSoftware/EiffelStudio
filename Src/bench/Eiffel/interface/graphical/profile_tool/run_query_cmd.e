@@ -11,7 +11,7 @@ inherit
 	COMMAND;
 	SHARED_QUERY_VALUES
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -35,12 +35,12 @@ feature -- Command Execution
 			mp: MOUSE_PTR
 		do
 			tool.update_profiler_query
-			!! profiler_query
+			create profiler_query
 			profiler_query.merge (tool.profiler_query)
 			if profiler_query.subqueries.count > 0 then
-				!! mp.set_watch_cursor
-				!! st.make;
-				!! executer.make (st, profiler_query, tool.profiler_options);
+				create mp.set_watch_cursor
+				create st.make;
+				create executer.make (st, profiler_query, tool.profiler_options);
 				executer.set_last_output (tool.profinfo);
 				executer.execute;
 				tool.update_window (st, profiler_query, tool.profiler_options, executer.last_output)

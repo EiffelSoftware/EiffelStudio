@@ -15,7 +15,7 @@ inherit
 			work
 		end;
 
-creation
+create
 
 	make
 	
@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 			if argument /= Void and then argument = last_name_chooser then
 				fn := clone (last_name_chooser.selected_file);
 				if not fn.is_empty then
-					!! f.make (fn);
+					create f.make (fn);
 					if
 						f.exists and then f.is_readable and then f.is_plain
 					then

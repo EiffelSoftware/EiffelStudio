@@ -15,7 +15,7 @@ inherit
 	PROJECT_CONTEXT;
 	EB_CONSTANTS
 
-creation
+create
 	make_workbench, 
 	make_final
 
@@ -74,14 +74,14 @@ feature -- Execution
 			file: PLAIN_TEXT_FILE
 		do
 			if is_workbench then
-				!! makefile_sh_name.make_from_string 
+				create makefile_sh_name.make_from_string 
 						(Workbench_generation_path);
 			else
-				!! makefile_sh_name.make_from_string 
+				create makefile_sh_name.make_from_string 
 						(Final_generation_path);
 			end;
 			makefile_sh_name.set_file_name (Makefile_SH);
-			!! file.make (makefile_sh_name);
+			create file.make (makefile_sh_name);
 			if file.exists then
 				Eiffel_project.call_finish_freezing (is_workbench)
 			else

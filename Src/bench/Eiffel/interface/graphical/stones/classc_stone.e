@@ -32,7 +32,7 @@ inherit
 	
 	PLATFORM_CONSTANTS
 
-creation
+create
 
 	make
 	
@@ -80,7 +80,7 @@ feature -- Access
 			-- Display class name, class' cluster and class location in 
 			-- window title bar.
 		do
-			!!Result.make (20);
+			create Result.make (20);
 			Result.append (stone_signature);
 			Result.append ("  in cluster ");
 			Result.append (e_class.cluster.cluster_name);
@@ -114,7 +114,7 @@ feature -- Access
 		do
 			c_list := e_class.click_list;
 			if c_list /= Void then
-				!! Result.make (c_list, e_class)
+				create Result.make (c_list, e_class)
 			end
 		end;
  
@@ -161,7 +161,7 @@ feature -- Synchronization
 		do
 			if e_class /= Void then
 				if e_class.is_valid then
-					!CLASSC_STONE! Result.make (e_class)
+					create {CLASSC_STONE} Result.make (e_class)
 				else
 					new_cluster := Eiffel_universe.cluster_of_name 
 							(e_class.cluster.cluster_name);
@@ -169,7 +169,7 @@ feature -- Synchronization
 						new_cluster /= Void and then
 						new_cluster.classes.has_item (e_class.lace_class)
 					then
-						!CLASSI_STONE! Result.make (e_class.lace_class)
+						create {CLASSI_STONE} Result.make (e_class.lace_class)
 					end
 				end
 			end

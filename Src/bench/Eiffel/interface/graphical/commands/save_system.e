@@ -18,7 +18,7 @@ inherit
 			work
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation
@@ -36,12 +36,12 @@ feature {NONE} -- Implementation
 			if tool.file_name /= Void then
 				file_name := tool.file_name;
 			else
-				!! default_name.make_from_string (Project_directory_name);
+				create default_name.make_from_string (Project_directory_name);
 				default_name.set_file_name ("Ace");
 				default_name.add_extension ("ace");
 				file_name := default_name
 			end;
-			!!new_file.make (file_name);
+			create new_file.make (file_name);
 			aok := True;
 			if (new_file.exists) and then (not new_file.is_plain) then
 				aok := False;
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 					-- Create a backup of the file in case there will be a problem during the savings.
 				tmp_name := clone (file_name)
 				tmp_name.append (".swp")
-				!! tmp_file.make (tmp_name)
+				create tmp_file.make (tmp_name)
 				create_backup := not tmp_file.exists and then tmp_file.is_creatable
 			end
 

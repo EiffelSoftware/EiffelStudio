@@ -13,7 +13,7 @@ inherit
 			associated_resource, validate
 		end
 
-creation
+create
 	make
 
 feature -- Validation
@@ -55,8 +55,8 @@ feature {PREFERENCE_CATEGORY} -- User Interface
 		do
 			form_make ("", a_parent);
 
-			!! name_label.make (associated_resource.visual_name, Current);
-			!! text.make ("", Current);
+			create name_label.make (associated_resource.visual_name, Current);
+			create text.make ("", Current);
 
 			attach_top (name_label, 1);
 			attach_bottom (name_label, 1);
@@ -139,8 +139,8 @@ feature {PREFERENCE_CATEGORY} -- Access
 		local
 			new_res: like associated_resource
 		do
-			!! new_res.make_with_values (associated_resource.name, text.text);
-			!! Result.make (associated_resource, new_res)
+			create new_res.make_with_values (associated_resource.name, text.text);
+			create Result.make (associated_resource, new_res)
 		end
 
 feature {NONE} -- Properties

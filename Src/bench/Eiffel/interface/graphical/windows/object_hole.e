@@ -15,7 +15,7 @@ inherit
 			stone_type, menu_name, accelerator
 		end
 
-creation
+create
 
 	make
 	

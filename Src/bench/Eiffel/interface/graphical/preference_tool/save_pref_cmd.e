@@ -12,7 +12,7 @@ inherit
 	EXECUTION_ENVIRONMENT;
 	EB_RESOURCES
 
-creation
+create
 	make
 
 feature {PREFERENCE_COMMAND} -- Execution
@@ -26,10 +26,10 @@ feature {PREFERENCE_COMMAND} -- Execution
 			wd: WARNING_D;
 			file_names: RESOURCE_FILES_PARSER
 		do
-			!! file_names.make ((create {PRODUCT_NAMES}).Workbench_name);
-			!! fn.make_from_string (file_names.system_specific)
+			create file_names.make ((create {PRODUCT_NAMES}).Workbench_name);
+			create fn.make_from_string (file_names.system_specific)
 			if fn /= Void then
-				!! file.make (fn)
+				create file.make (fn)
 				if
 					(file.exists and then file.is_writable)
 					or else (not file.exists and then file.is_creatable)
@@ -42,8 +42,8 @@ feature {PREFERENCE_COMMAND} -- Execution
 						tool.close
 					end
 				else
-					!! wd.make ("Warning", tool);
-					!! msg.make (0);
+					create wd.make ("Warning", tool);
+					create msg.make (0);
 					msg.append ("Do not have appropriate permissions to%Nsave to file ");
 					msg.append (fn);
 					wd.set_message (msg);

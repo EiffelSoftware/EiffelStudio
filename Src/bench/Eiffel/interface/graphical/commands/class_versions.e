@@ -22,7 +22,7 @@ inherit
 			execute_warner_ok as read_in_file
 		end
 
-creation
+create
 	make
 
 feature -- Properties
@@ -60,7 +60,7 @@ feature -- Properties
 					-- Didn't record the first entry into `version_list'.
 					-- The first entry is always the Current stone. 
 				file_name := version_list.i_th (pos - 1)
-				!! f.make (file_name)
+				create f.make (file_name)
 				if f.exists and then f.is_readable and then f.is_plain then
 					tool.set_text_from_file (f)
 				else
@@ -143,13 +143,13 @@ feature {NONE} -- Implementation
 		do
 			base_name := classi.base_name
 			cluster_name := classi.cluster.cluster_name
-			!! version_list.make (1)
-			!! output_list.make
-			!! stats.make_compilation_stat
+			create version_list.make (1)
+			create output_list.make
+			create stats.make_compilation_stat
 			comp_nbr := stats.number_of_compilations
-			!! temp.make (0)
+			create temp.make (0)
 			temp.append ("Current: ")
-			!! file.make (classi.file_name)
+			create file.make (classi.file_name)
 			if file.exists then
 				temp.append (date_string (file.date))
 				temp.prune ('%N')
@@ -161,16 +161,16 @@ feature {NONE} -- Implementation
 			until
 				i = 0
 			loop
-				!! fname.make_from_string (Backup_path)
-				!! temp.make (9)
+				create fname.make_from_string (Backup_path)
+				create temp.make (9)
 				temp.append (Comp)
 				temp.append_integer (i)
 				fname.extend (temp)
 				fname.extend (cluster_name)
 				fname.extend (base_name)
-				!! file.make (fname)
+				create file.make (fname)
 				if file.exists then
-					!! temp.make (0)
+					create temp.make (0)
 					temp.append_integer (i)
 					temp.append (": ")
 					temp.append (date_string (file.date))
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 				i := i - 1
 			end
 			if choice = Void then
-				!! choice.make (popup_parent)
+				create choice.make (popup_parent)
 			end
 			stone := tool.stone
 			choice.popup (Current, output_list, Interface_names.t_Select_class_version)

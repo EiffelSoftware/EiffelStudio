@@ -17,7 +17,7 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 	make, do_nothing
 
 feature -- Properties

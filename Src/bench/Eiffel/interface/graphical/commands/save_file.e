@@ -17,7 +17,7 @@ inherit
 			license_checked, unmodified_pixmap
 		end
 
-creation
+create
 	make
 	
 feature -- Properties
@@ -46,10 +46,10 @@ feature {NONE} -- Implementation
 			tmp_name: STRING
 		do
 			if tool.file_name = Void then
-				!! save_as_cmd.make (tool)
+				create save_as_cmd.make (tool)
 				save_as_cmd.execute (tool)
 			else
-				!!new_file.make (tool.file_name)
+				create new_file.make (tool.file_name)
 				aok := True
 				if (new_file.exists) and then (not new_file.is_plain) then
 					aok := False
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 						-- Create a backup of the file in case there will be a problem during the savings.
 					tmp_name := clone (tool.file_name)
 					tmp_name.append (".swp")
-					!! tmp_file.make (tmp_name)
+					create tmp_file.make (tmp_name)
 					create_backup := not tmp_file.exists and then tmp_file.is_creatable
 				end
 

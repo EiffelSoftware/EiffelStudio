@@ -11,7 +11,7 @@ inherit
 
 	STONE
 
-creation
+create
 
 	make
 	

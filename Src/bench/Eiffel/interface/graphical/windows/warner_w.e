@@ -27,7 +27,7 @@ inherit
 		end;
 	WINDOW_ATTRIBUTES
 
-creation
+create
 
 	make
 	
@@ -76,7 +76,7 @@ feature -- Graphical Interface
 				new_y := 0
 			end;
 			set_x_y (new_x, new_y);
-			{WARNING_D} Precursor
+			Precursor {WARNING_D}
 		end;
 
 feature -- Window Settings
@@ -156,12 +156,12 @@ feature {NONE} -- Properties
 
 	popdown_action: ANY is
 		once
-			!!Result
+			create Result
 		end;
 
 	help_it: ANY is
 		once
-			!!Result
+			create Result
 		end;
 
 	last_caller: WARNER_CALLBACKS
@@ -199,7 +199,7 @@ feature {NONE} -- Clickable features
 	error_message: STRING is
 			-- Message that will be displayed as an error message
 		once
-			!!Result.make (20)
+			create Result.make (20)
 		end;
 
 	put_string (s: STRING) is

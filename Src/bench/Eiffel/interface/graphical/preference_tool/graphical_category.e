@@ -11,7 +11,7 @@ inherit
 	RESOURCE_CATEGORY;
 	SYSTEM_CONSTANTS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -19,8 +19,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize Current
 		do
-			!! users.make;
-			!! modified_resources.make
+			create users.make;
+			create modified_resources.make
 		end
 
 feature {TTY_RESOURCES} -- Initialization
@@ -28,45 +28,45 @@ feature {TTY_RESOURCES} -- Initialization
 	initialize (rt: RESOURCE_TABLE) is
 			-- Initialize all rsources valid for Current.
 		do
-			!! font.make ("font", rt, "");
-			!! breakable_font.make ("breakable_font", rt, "-*-courier-medium-r-*-*-12-*");
-			!! class_font.make ("class_font", rt, "-*-times-medium-i-normal-*-12-*");
-			!! cluster_font.make ("cluster_font", rt, "-*-times-medium-i-normal-*-12-*");
-			!! comment_font.make ("comment_font", rt, "-*-courier-medium-r-*-*-12-*");
-			!! default_text_font.make ("default_text_font", rt, "-*-courier-medium-r-*-*-12-*");
-			!! error_font.make ("error_font", rt, "-*-times-medium-r-normal-*-12-*");
-			!! feature_font.make ("feature_font", rt, "-*-times-medium-i-normal-*-12-*");
-			!! keyword_font.make ("keyword_font", rt, "-*-times-bold-r-normal-*-12-*");
-			!! object_font.make ("object_font", rt, "-*-times-medium-i-normal-*-12-*");
-			!! text_font.make ("text_font", rt, "-*-courier-medium-r-*-*-12-*");
-			!! string_text_font.make ("string_text_font", rt, "-*-times-medium-r-normal-*-12-*");
-			!! symbol_font.make ("symbol_font", rt, "-*-times-medium-r-normal-*-12-*");
-			!! html_font.make ("html_font", rt, "-*-courier-medium-r-*-*-12-*");
+			create font.make ("font", rt, "");
+			create breakable_font.make ("breakable_font", rt, "-*-courier-medium-r-*-*-12-*");
+			create class_font.make ("class_font", rt, "-*-times-medium-i-normal-*-12-*");
+			create cluster_font.make ("cluster_font", rt, "-*-times-medium-i-normal-*-12-*");
+			create comment_font.make ("comment_font", rt, "-*-courier-medium-r-*-*-12-*");
+			create default_text_font.make ("default_text_font", rt, "-*-courier-medium-r-*-*-12-*");
+			create error_font.make ("error_font", rt, "-*-times-medium-r-normal-*-12-*");
+			create feature_font.make ("feature_font", rt, "-*-times-medium-i-normal-*-12-*");
+			create keyword_font.make ("keyword_font", rt, "-*-times-bold-r-normal-*-12-*");
+			create object_font.make ("object_font", rt, "-*-times-medium-i-normal-*-12-*");
+			create text_font.make ("text_font", rt, "-*-courier-medium-r-*-*-12-*");
+			create string_text_font.make ("string_text_font", rt, "-*-times-medium-r-normal-*-12-*");
+			create symbol_font.make ("symbol_font", rt, "-*-times-medium-r-normal-*-12-*");
+			create html_font.make ("html_font", rt, "-*-courier-medium-r-*-*-12-*");
 
-			!! background_color.make ("background_color", rt, "");
-			!! foreground_color.make ("foreground_color", rt, "");
+			create background_color.make ("background_color", rt, "");
+			create foreground_color.make ("foreground_color", rt, "");
 
-			!! text_background_color.make ("text_background_color", rt, "white");
-			!! text_foreground_color.make ("text_foreground_color", rt, "black");
-			!! breakable_color.make ("breakable_color", rt, "red");
-			!! class_color.make ("class_color", rt, "magenta");
-			!! cluster_color.make ("cluster_color", rt, "DarkRed");
-			!! comment_color.make ("comment_color", rt, "red");
-			!! default_text_color.make ("default_text_color", rt, "black");
-			!! error_color.make ("error_color", rt, "red");
-			!! feature_color.make ("feature_color", rt, "green4");
-			!! keyword_color.make ("keyword_color", rt, "blue");
-			!! object_color.make ("object_color", rt, "brown");
-			!! stop_color.make ("stop_color", rt, "red");
-			!! string_text_color.make ("string_text_color", rt, "black");
-			!! symbol_color.make ("symbol_color", rt, "black");
-			!! html_color.make ("html_color", rt, "blue");
+			create text_background_color.make ("text_background_color", rt, "white");
+			create text_foreground_color.make ("text_foreground_color", rt, "black");
+			create breakable_color.make ("breakable_color", rt, "red");
+			create class_color.make ("class_color", rt, "magenta");
+			create cluster_color.make ("cluster_color", rt, "DarkRed");
+			create comment_color.make ("comment_color", rt, "red");
+			create default_text_color.make ("default_text_color", rt, "black");
+			create error_color.make ("error_color", rt, "red");
+			create feature_color.make ("feature_color", rt, "green4");
+			create keyword_color.make ("keyword_color", rt, "blue");
+			create object_color.make ("object_color", rt, "brown");
+			create stop_color.make ("stop_color", rt, "red");
+			create string_text_color.make ("string_text_color", rt, "black");
+			create symbol_color.make ("symbol_color", rt, "black");
+			create html_color.make ("html_color", rt, "blue");
 
 			if not Platform_constants.is_windows then
-				!! progress_bar_color.make ("progress_bar_color", rt, "blue");
-				!! focus_label_color.make ("explanation_label", rt, "LightYellow");
-				!! highlight_line_background_color.make ("highlight_background_line_color", rt, "red");
-				!! highlight_line_foreground_color.make ("highlight_foreground_line_color", rt, "white");
+				create progress_bar_color.make ("progress_bar_color", rt, "blue");
+				create focus_label_color.make ("explanation_label", rt, "LightYellow");
+				create highlight_line_background_color.make ("highlight_background_line_color", rt, "red");
+				create highlight_line_foreground_color.make ("highlight_foreground_line_color", rt, "white");
 			end;
 		end
 

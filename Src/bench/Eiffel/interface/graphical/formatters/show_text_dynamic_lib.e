@@ -19,7 +19,7 @@ inherit
 
 	SHARED_FORMAT_TABLES
 
-creation
+create
 
 	make
 
@@ -39,7 +39,7 @@ feature {ROUTINE_WIN_MGR} -- Displaying
 			new_title: STRING;
 			fs: FEATURE_STONE;
 		do
-			!!new_title.make (0);
+			create new_title.make (0);
 			new_title.append (stone.header);
 			fs ?= stone;
 			if
@@ -61,7 +61,7 @@ feature -- Formatting
 			cur: CURSOR;
 		do
 			if not retried then
-				!! mp.set_watch_cursor;
+				create mp.set_watch_cursor;
 				cur := text_window.cursor;
 				
 				display_temp_header (stone);

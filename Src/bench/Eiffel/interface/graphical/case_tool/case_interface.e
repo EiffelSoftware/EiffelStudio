@@ -23,7 +23,7 @@ inherit
 
 	WINDOW_ATTRIBUTES
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -38,32 +38,32 @@ feature -- Initialization
 			eb_make (1, project_tool.screen)
 			set_title ("Reverse engineering tool")
 
-			!! scroll_form.make ("", associated_form)
-			!! scroll_list1.make ("scroll_list1", scroll_form);
+			create scroll_form.make ("", associated_form)
+			create scroll_list1.make ("scroll_list1", scroll_form);
 			scroll_list1.set_multiple_selection
-			!! scroll_list2.make ("scroll_list2", scroll_form);
+			create scroll_list2.make ("scroll_list2", scroll_form);
 			scroll_list2.set_multiple_selection
-			!! arrow_b1.make ("arrow_b1", scroll_form);
-			!! arrow_b2.make ("arrow_b2", scroll_form);
-			!! label5.make ("label5", scroll_form);
-			!! label6.make ("label6", scroll_form)
-			!! sep1.make ("ss", scroll_form)
+			create arrow_b1.make ("arrow_b1", scroll_form);
+			create arrow_b2.make ("arrow_b2", scroll_form);
+			create label5.make ("label5", scroll_form);
+			create label6.make ("label6", scroll_form)
+			create sep1.make ("ss", scroll_form)
 
-			!! nested_form.make ("", associated_form)
-			!! text_field1.make ("text_field1", nested_form);
-			!! label4.make ("label4", nested_form);
-			!! browsw_b.make ("browsw_b", nested_form);
-			!! generate_all_b.make ("generate_all_b", nested_form);
-			!! generate_selec_b.make ("generate_selec_b", nested_form);
-			!! exit_b.make ("exit_b", nested_form)
-			!! sep2.make ("ss", nested_form)
+			create nested_form.make ("", associated_form)
+			create text_field1.make ("text_field1", nested_form);
+			create label4.make ("label4", nested_form);
+			create browsw_b.make ("browsw_b", nested_form);
+			create generate_all_b.make ("generate_all_b", nested_form);
+			create generate_selec_b.make ("generate_selec_b", nested_form);
+			create exit_b.make ("exit_b", nested_form)
+			create sep2.make ("ss", nested_form)
 
 			initialize_lists
 			set_values
 			set_commands
 			display
 			set_composite_attributes (Current)
-			!! exit_com.make (Current)
+			create exit_com.make (Current)
 			set_delete_command (exit_com)
 		end;
 
@@ -118,24 +118,24 @@ feature -- Initialization specific
 			a_command1: ADD_CLUSTER_REVERSE
 			a_command2: CASE_COMMAND2
 		do
-			!! a_command1.make (scroll_list1,scroll_list2,TRUE)
+			create a_command1.make (scroll_list1,scroll_list2,TRUE)
 			arrow_b1.add_activate_action (a_command1, Void)
 			scroll_list1.add_default_action (a_command1, Void)
 
-			!! a_command1.make (scroll_list2,scroll_list1, FALSE)
+			create a_command1.make (scroll_list2,scroll_list1, FALSE)
 			arrow_b2.add_activate_action  (a_command1, Void)
 			scroll_list1.add_default_action (a_command1, Void)
 
-			!BROWSE_COM!a_command2.make (Current)
+			create {BROWSE_COM} a_command2.make (Current)
 			browsw_b.add_activate_action (a_command2, Void)
 
-			!EXIT_REVERSE! a_command2.make (Current)
+			create {EXIT_REVERSE} a_command2.make (Current)
 			exit_b.add_activate_action (a_command2, Void)
 
-			!GENERATE_ALL_REVERSE! a_command2.make (Current)
+			create {GENERATE_ALL_REVERSE} a_command2.make (Current)
 			generate_all_b.add_activate_action (a_command2, Void)
 
-			!GENERATE_SELEC_REVERSE! a_command2.make (Current)
+			create {GENERATE_SELEC_REVERSE} a_command2.make (Current)
 			generate_selec_b.add_activate_action (a_command2, Void)
 		end
 
@@ -149,7 +149,7 @@ feature -- Initialization specific
 			until
 				universe.clusters.after
 			loop
-				!! el.make (universe.clusters.item)
+				create el.make (universe.clusters.item)
 				scroll_list1.extend(el)
 				scroll_list1.forth
 				universe.clusters.forth
@@ -215,7 +215,7 @@ feature -- Initialization specific
 			nested_form.attach_left_widget (label4, text_field1, 5)
 			nested_form.attach_right_widget (browsw_b, text_field1, 10)
 			nested_form.attach_right (browsw_b, 5)
-			!! exec
+			create exec
 			text_field1.set_text(exec.current_working_directory)
 
 			label4.set_text ("Generation path:")

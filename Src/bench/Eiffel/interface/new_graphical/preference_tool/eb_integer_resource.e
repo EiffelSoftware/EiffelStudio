@@ -12,8 +12,7 @@ inherit
 
 creation
 	make,
-	make_with_values,
-	make_from_old
+	make_with_values
 
 feature {NONE} -- Initialization
 
@@ -69,13 +68,6 @@ feature -- Element change
 			-- Set `actual_value' to `an_int' and update `value'.
 		do
 			actual_value := an_int
-		end
-
-feature {NONE} -- Obsolete
-
-	make_from_old (old_r: INTEGER_RESOURCE) is
-		do
-			make_with_values (old_r.name, old_r.actual_value)
 		end
 
 end -- class EB_INTEGER_RESOURCE

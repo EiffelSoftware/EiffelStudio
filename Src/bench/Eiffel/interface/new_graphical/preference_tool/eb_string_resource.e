@@ -12,8 +12,7 @@ inherit
 
 creation
 	make,
-	make_with_values,
-	make_from_old
+	make_with_values
 
 feature {NONE} -- Initialization
 
@@ -90,14 +89,6 @@ feature -- Setting
 			-- Set `actual_value' to `a_value'.
 		do
 			actual_value := a_value
-		end
-
-feature {NONE} -- Obsolete
-
-	make_from_old (old_r: STRING_RESOURCE) is
-			-- used for compatibility
-		do
-			make_with_values (old_r.name, old_r.value)
 		end
 
 end -- class EB_STRING_RESOURCE

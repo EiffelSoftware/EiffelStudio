@@ -27,13 +27,13 @@ Set your ISE_PLATFORM environment variable to specify your platform. For example
 
 Add the following directory to your path: $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin.
 
-If you choose to run Eiffel from the CD-ROM you have to copy the directory Eiffel5x/install to you hard disk and set environment variable ISE_LICENSE to point there.
 
+Setting up the License (Enterprise edition only)
+------------------------------------------------
 
-Setting up the License
-----------------------
+With your version of ISE Eiffel, you should have received a CD key. Before running EiffelStudio you need to run `setup' located in the $ISE_EIFFEL directory (the one where you installed ISE Eiffel). You will get a window which asks you to enter your user name and CD key. Once this is done, you should be able to click on the `Register' button.
 
-With your version of ISE Eiffel, you should have received a license code (either permanent or temporary). The code should be of the form XXXXXXXX:YYYYYYYY where XXXXXXXX is your username and YYYYYYYY is your password. Add this code at the first line in the file $ISE_EIFFEL/install/limand/dhost if $ISE_LICENSE is not defined, otherwise in $ISE_LICENSE/limand/dhost.
+Then you can launch EiffelStudio (See below the instructions on how to do this) and you will be asked to activate it. Simply follow the instructions on the window that will popup.
 
 
 Setting up the examples

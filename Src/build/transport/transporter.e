@@ -7,6 +7,9 @@ inherit
 		rename
 			make as base_create,
 			init_toolkit as base_init_tookit
+
+		redefine
+			realize
 		end;
 	COMMAND	
 	PAINTER
@@ -209,6 +212,13 @@ feature
 			set_action ("<Map>,<Prop>", Current, Sixth);
 			!!holes.make
 		end;
+
+	realize is
+			-- Realize the transporter.
+		do
+			precursor
+			tooltip_realize
+		end
 
 feature -- Initializing window attrbutes
 

@@ -6,7 +6,8 @@ inherit
 		rename
 			set_x_y as old_set_x_y,
 			init_toolkit as top_shell_toolkit,
-            make as top_shell_make
+            make as top_shell_make,
+			realize as tp_realize
 	
 		end
 	TOP_SHELL
@@ -14,9 +15,11 @@ inherit
 			init_toolkit as top_shell_toolkit						
 		redefine
 			set_x_y,
+			realize,
 			make
 		select
 			set_x_y,
+			realize,
 			make
 		end;
 	CONSTANTS
@@ -88,5 +91,15 @@ end;
 			end;
 			old_set_x_y (new_x, new_y);
 		end;
+
+feature -- Display
+
+	realize is
+		do
+			if not realized then
+				tp_realize
+				tooltip_realize
+			end
+		end
 
 end

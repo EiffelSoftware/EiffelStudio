@@ -44,7 +44,7 @@ following.
 #else
 /*#define ITERATIVE_MARKING		/* Select iterative marking */
 /*#define HYBRID_MARKING		/* Select combined marking */
-#define HYBRID_MARKING
+/* No selection means recursive marking */
 #endif
 
 /*

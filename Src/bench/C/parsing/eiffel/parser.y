@@ -1098,9 +1098,9 @@ Creation:					TE_BANG Creation_type TE_BANG Creation_target Creation_call
 	;
 
 Creation_expression:		TE_LCURLY Creation_type TE_RCURLY TE_CREATION Creation_call
-								{$$=NULL;}
+								{$$=create_node2 (CREATION_EXPR_AS,$2,$5);}
 	|						TE_BANG Creation_type TE_BANG Creation_call
-								{$$=NULL;}
+								{$$=create_node2 (CREATION_EXPR_AS,$2,$4);}
 	;
 
 Creation_type:				/* empty */

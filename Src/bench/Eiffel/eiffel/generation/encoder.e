@@ -15,7 +15,7 @@ feature {NONE}
 			Result.append ("e000000");
 		end;
 
-	Buffer: STRING is
+	E_buffer: STRING is
 			-- String buffer
 		once
 			!!Result.make (7);

@@ -156,6 +156,33 @@ feature -- Access: Platform specific
 			Result := feature {MARSHAL}.read_byte (item, pos)
 		end
 
+	read_natural_16 (pos: INTEGER): NATURAL_16 is
+			-- Read NATURAL_16 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_16_bytes) <= count
+		do
+			Result := read_integer_16 (pos).as_natural_16
+		end
+
+	read_natural_32 (pos: INTEGER): NATURAL_32 is
+			-- Read NATURAL_32 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_32_bytes) <= count
+		do
+			Result := read_integer_32 (pos).as_natural_32
+		end
+
+	read_natural_64 (pos: INTEGER): NATURAL_64 is
+			-- Read NATURAL_64 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_64_bytes) <= count
+		do
+			Result := read_integer_64 (pos).as_natural_64
+		end
+
 	read_integer_8 (pos: INTEGER): INTEGER_8 is
 			-- Read INTEGER_8 at position `pos'.
 		require

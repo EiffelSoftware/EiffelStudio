@@ -1,5 +1,5 @@
 indexing
-	description: "Table of contents in XML representation.  Can be filtered and sorted."
+	description: "Table of contents in XML representation."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,16 +35,14 @@ feature -- Creation
 			toc_not_void: a_toc /= Void
 		local
 			l_root: XM_ELEMENT	
+			l_ns: XM_NAMESPACE
 		do
 			make
-			toc := a_toc
-			filename := a_filename
-			create l_root.make_root (Current, "table_of_contents", Void)
+			create l_ns.make_default
+			create l_root.make_root (Current, root_string, l_ns)
 			set_root_element (l_root)
-			build (toc, root_element)
-			save_xml_document (Current, filename)
-		ensure
-			has_toc: toc /= Void
+			build (a_toc, root_element)
+			save_xml_document (Current, a_filename)
 		end
 
 feature {NONE} -- XML
@@ -62,9 +60,11 @@ feature {NONE} -- XML
 			l_heading: BOOLEAN
 			l_node: XM_ELEMENT
 			l_node_attribute: XM_ATTRIBUTE
+			l_ns: XM_NAMESPACE
 		do
 			if a_node.id > 0 then
 					-- Build element from node details
+				create l_ns.make_default
 				l_id := a_node.id
 				l_title := a_node.title
 				l_url := a_node.url
@@ -75,19 +75,19 @@ feature {NONE} -- XML
 				else
 					l_name := Topic_string
 				end
-				create l_node.make_child (a_parent, l_name, create {XM_NAMESPACE}.make_default)			
-				create l_node_attribute.make ("id", Void, l_id.out, l_node)
+				create l_node.make (a_parent, l_name, create {XM_NAMESPACE}.make_default)			
+				create l_node_attribute.make ("id", l_ns, l_id.out, l_node)
 				l_node.put_last (l_node_attribute)
 				if l_title /= Void then
-					create l_node_attribute.make ("title", Void, l_title, l_node)
+					create l_node_attribute.make ("title", l_ns, l_title, l_node)
 					l_node.put_last (l_node_attribute)
 				end
 				if l_url /= Void then
-					create l_node_attribute.make ("url", Void, l_url, l_node)
+					create l_node_attribute.make ("url", l_ns, l_url, l_node)
 					l_node.put_last (l_node_attribute)
 				end
 				if l_icon /= Void then
-					create l_node_attribute.make ("icon", Void, l_icon, l_node)
+					create l_node_attribute.make ("icon", l_ns, l_icon, l_node)
 					l_node.put_last (l_node_attribute)
 				end
 				
@@ -108,13 +108,5 @@ feature {NONE} -- XML
 				end
 			end
 		end		
-		
-feature {NONE} -- Implementation
-
-	toc: TABLE_OF_CONTENTS
-			-- Toc
-
-	filename: STRING
-			-- Filename
 
 end -- class XML_TABLE_OF_CONTENTS

@@ -9,9 +9,8 @@ class
 inherit
 	TABLE_OF_CONTENTS_NODE
 		rename
-			sort as sort_as_node
-		redefine
-			initialize
+			sort as sort_as_node,		
+			flatten_ids as flatten_node_ids
 		end
 		
 	UTILITY_FUNCTIONS
@@ -30,7 +29,8 @@ create
 	make,
 	make_empty,
 	make_from_directory,
-	make_from_tree
+	make_from_tree,
+	make_from_toc
 
 feature -- Creation
 			
@@ -59,20 +59,22 @@ feature -- Creation
 			build_code_toc
 		end
 
+	make_from_toc (a_toc: like Current) is
+			-- Make from existing toc
+		do
+			make_empty
+			build_from_node (a_toc, Current)
+		end		
+
 feature -- Initialization
 
 	initialize is
 			-- Initialize
 		do
-			Precursor
-			unique_id := 1
-			name := manager.next_toc_name
+			unique_id := 1			
 		end
 
-feature -- Access
-	
---	root: TABLE_OF_CONTENTS_NODE
-			-- Root node			
+feature -- Access	
 	
 	name: STRING
 			-- File from which Current was constructed	
@@ -167,7 +169,13 @@ feature -- Commands
 			Move_nodes_list.compare_objects
 			New_indexes.wipe_out
 			Code_nodes.clear_all
-		end		
+		end			
+
+	flatten_ids is
+			-- Flatten ids
+		do			
+			unique_id := flatten_node_ids (1)
+		end
 
 feature -- Storage
 
@@ -254,7 +262,6 @@ feature {NONE} -- Initialization
 				l_widget_node: TABLE_OF_CONTENTS_WIDGET_NODE
 				l_url, l_title: STRING
 				l_id: INTEGER
-				l_include: BOOLEAN
 			do			
 				from
 					a_tree.start
@@ -269,7 +276,6 @@ feature {NONE} -- Initialization
 						if l_widget_node /= Void then
 							l_url := l_widget_node.file_url
 							l_title := l_widget_node.title
-							l_include := l_widget_node.include
 						else
 							l_title := l_item.text
 						end			
@@ -281,7 +287,6 @@ feature {NONE} -- Initialization
 								
 								-- Create new node and append to `a_parent'						
 						create l_node.make (l_id, a_parent, l_url, l_title)
-						l_node.set_include (l_include)
 						a_parent.add_node (l_node)
 						
 								-- Check if new node was a folder and if so process children
@@ -290,6 +295,34 @@ feature {NONE} -- Initialization
 						end
 					end
 					a_tree.forth
+				end								
+			end		
+			
+	build_from_node (a_node, a_parent: TABLE_OF_CONTENTS_NODE) is
+				-- Initialize based on structure of `a_node'
+			local
+				l_node,
+				l_new_node: TABLE_OF_CONTENTS_NODE								
+				l_url, l_title: STRING
+				l_id: INTEGER
+			do			
+				if a_node.has_child then
+					from
+						a_node.children.start
+					until
+						a_node.children.after
+					loop
+						l_node := a_node.children.item.twin
+						l_id := l_node.id
+						l_url := l_node.url.twin
+						l_title := l_node.title.twin
+						create l_new_node.make (l_id, a_parent, l_url, l_title)
+						a_parent.add_node (l_new_node)
+						if l_node.has_child then
+							build_from_node (l_node, l_new_node)
+						end
+						a_node.children.forth
+					end					
 				end								
 			end		
 
@@ -508,7 +541,7 @@ feature {NONE} -- Sorting
 			l_url,
 			l_title: STRING	
 		do
-			if a_node /= Void and then a_node.include then						
+			if a_node /= Void then						
 				if a_node.url_is_file then
 					
 						-- First determine if node needs filterng out
@@ -559,7 +592,7 @@ feature {NONE} -- Sorting
 			l_children_children_clone: ARRAYED_LIST [TABLE_OF_CONTENTS_NODE]
 			l_child: TABLE_OF_CONTENTS_NODE
 		do
-			if a_node /= Void and then a_node.include and then not Sort_excluded.has (a_node.id) then 								
+			if a_node /= Void and then not Sort_excluded.has (a_node.id) then 								
 				if a_node.has_child then
 					create l_children_clone.make (1)
 					from
@@ -730,7 +763,7 @@ feature {NONE} -- Sorting
 			l_doc: DOCUMENT
 			l_filtered_doc: FILTERED_DOCUMENT
 		do
-			if a_node /= Void and then a_node.include and then a_node.has_child and then not Sort_excluded.has (a_node.id) then								
+			if a_node /= Void and then a_node.has_child and then not Sort_excluded.has (a_node.id) then								
 						-- Extract name information from sub-nodes
 				from					 	
 					l_children := a_node.children

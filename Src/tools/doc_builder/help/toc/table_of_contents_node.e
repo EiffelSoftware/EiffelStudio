@@ -34,26 +34,18 @@ feature -- Creation
 			parent_not_void: a_parent /= Void
 			title_not_void: a_title /= Void
 		do
-			id := a_id
+			set_id (a_id)
 			set_parent (a_parent)			
 			set_title (a_title)
 			if a_url /= Void then
 				set_url (a_url)
 			end
-			initialize
 		end	
 
 	make_root is
 			-- Make as root node
 		do
-			initialize
-		end		
-
-	initialize is
-			-- Initialize
-		do
-			set_include (True)
-		end		
+		end			
 
 feature -- Retrieval
 
@@ -87,7 +79,7 @@ feature -- Retrieval
 				end
 			end
 
-			if not l_matches.is_empty then		
+			if l_matches /= Void and then not l_matches.is_empty then		
 				create l_new_titles.make_from_array (a_titles.subarray (a_titles.lower + 1, a_titles.upper))
 						-- Limitation:  currently only take the FIRST match, so won't work
 						-- where nodes have same titles on same level
@@ -203,6 +195,29 @@ feature -- Element change
 			end	
 		end		
 		
+	flatten_ids (a_start_index: INTEGER): INTEGER is
+			-- Flatten ids of all nodes.
+		local
+			l_node: TABLE_OF_CONTENTS_NODE
+		do			
+			if has_child then				
+				from
+					Result := a_start_index
+					children.start
+				until
+					children.after
+				loop
+					l_node := children.item
+					l_node.set_id (Result)
+					Result := Result + 1
+					if l_node.has_child then
+						Result := l_node.flatten_ids (Result)
+					end
+					children.forth
+				end	
+			end
+		end	
+		
 feature -- Query		
 	
 	is_index: BOOLEAN is
@@ -282,6 +297,16 @@ feature -- Query
 
 feature -- Status Setting
 	
+	set_id (a_id: INTEGER) is
+			-- Set `id'
+		require
+			id_valid: a_id > 0
+		do
+			id := a_id
+		ensure
+			id_Set: id = a_id
+		end		
+	
 	set_url (a_url: STRING) is
 			-- Set `url'
 		require
@@ -341,12 +366,6 @@ feature -- Status Setting
 			children.compare_objects
 		ensure
 			children_set: children = a_children
-		end		
-
-	set_include (a_flag: BOOLEAN) is
-			-- Set `include'
-		do
-			include := a_flag	
 		end		
 
 feature -- Access
@@ -467,7 +486,7 @@ feature -- Comparison
 			Result := other.title > title
 		end
 	
-feature {TABLE_OF_CONTENTS} -- Implementation
+feature {TABLE_OF_CONTENTS, TABLE_OF_CONTENTS_NODE} -- Implementation
 
 	url_id,
 	title_id,
@@ -478,6 +497,6 @@ feature {TABLE_OF_CONTENTS} -- Implementation
 			-- Names heap
 		once
 			create Result.make			
-		end	
+		end		
 
 end -- class TABLE_OF_CONTENTS_NODE

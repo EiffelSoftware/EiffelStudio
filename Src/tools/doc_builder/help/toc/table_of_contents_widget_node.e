@@ -8,9 +8,6 @@ class
 	
 inherit
 	EV_DYNAMIC_TREE_ITEM
-		redefine
-			set_pixmap
-		end
 	
 	TABLE_OF_CONTENTS_CONSTANTS
 		undefine
@@ -42,11 +39,19 @@ feature -- Creation
 			id := a_id
 			file_url := a_url
 			is_heading := heading
-			set_included (True)
 			if node /= Void and then node.has_child then
 				set_subtree_function (agent get_children)
 			end			
 			
+			if is_heading then
+				set_collapse_pixmap (folder_closed_icon)
+				set_expand_pixmap (folder_open_icon)
+				set_pixmap (folder_closed_icon)
+				expand_actions.extend (agent toggle_expand (True))
+				collapse_actions.extend (agent toggle_expand (False))				
+			else
+				set_pixmap (file_icon)
+			end
 					-- Display
 			set_text (a_title)			
 			
@@ -76,7 +81,8 @@ feature -- Creation
 			make (node.title, node.url, node.id, l_is_parent)
 			l_icon := a_node.icon
 			if l_icon /= Void then
-				set_pixmap (a_node.icon_pixmap)
+				set_expand_pixmap (a_node.icon_pixmap)
+				set_collapse_pixmap (a_node.icon_pixmap)
 			end
 		end		
 
@@ -99,11 +105,6 @@ feature -- Access
 
 	node: TABLE_OF_CONTENTS_NODE
 			-- Node
-
-feature -- Query
-
-	include: BOOLEAN
-			-- Include node in sorting operations?  Applies to children also.
 
 feature {TABLE_OF_CONTENTS_NODE_AGENT_FACTORY} -- Actions
 
@@ -134,38 +135,17 @@ feature {TABLE_OF_CONTENTS_NODE_AGENT_FACTORY} -- Actions
 
 feature -- Status Setting
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Set pixmap.  Since a custom icon is being used we wipe out
-			-- previous expand and collapse agents.
+	set_expand_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Set pixmap when expanded.
 		do
-			expand_actions.wipe_out
-			collapse_actions.wipe_out
-			Precursor (a_pixmap)
-		ensure then
-			has_no_expand_actions: expand_actions.is_empty
-			has_no_collapse_actions: collapse_actions.is_empty
+			expand_pixmap := a_pixmap	
 		end
-
-	set_included (a_flag: BOOLEAN) is
-			-- Toggle `included'.
+		
+	set_collapse_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Set pixmap when collapsed.
 		do
-			include := a_flag
-			if not include then
-				set_pixmap (Excluded_node_icon)
-			else
-				if is_heading then
-					if is_expanded then
-						set_pixmap (Folder_open_icon)
-					else
-						set_pixmap (Folder_closed_icon)
-					end
-					expand_actions.extend (agent set_pixmap (Folder_open_icon))
-					collapse_actions.extend (agent set_pixmap (Folder_closed_icon))
-				else
-					set_pixmap (File_icon)
-				end								
-			end
-		end		
+			collapse_pixmap := a_pixmap	
+		end
 
 feature {NONE} -- Implementation
 
@@ -197,6 +177,20 @@ feature {NONE} -- Implementation
 				end
 			end
 		end	
+
+	toggle_expand (on: BOOLEAN) is
+			-- Toggle expansion
+		do
+			if on then
+				set_pixmap (expand_pixmap)
+			else
+				set_pixmap (collapse_pixmap)
+			end	
+		end	
+
+	expand_pixmap,
+	collapse_pixmap: like pixmap
+			-- Expand and collapse pixmap
 
 feature {NONE} -- Properties Widget
 

@@ -20,10 +20,11 @@ feature {NONE}
 			-- Initialize a command with the `symbol' icon,
 			-- in the composite `a_composite'.
 			-- `a_text_window' is passed as argument to the activation action
+		require
+			a_text_window_not_void: a_text_window /= Void
 		do
 			pict_create (new_name, a_composite);
 			set_symbol (symbol);
-			!!get_in; !!get_out;
 			add_enter_action (Current, get_in);
 			add_leave_action (Current, get_out);
 			add_activate_action (Current, a_text_window);
@@ -32,17 +33,19 @@ feature {NONE}
 			parent = a_composite
 		end;
 
-	get_in, get_out: ANY;
+	get_in: ANY is once !!Result end;
+	get_out: ANY is once !!Result end;
 			-- To be used as arguments for callbacks on enter and leave actions
-	
+
 feature 
 
 	text_window: TEXT_WINDOW;
-			-- Text window which staus tells if we want to execute or not, and usually
-			-- the target of the command
+			-- Text window which staus tells if we want to execute or not, 
+			-- and usually the target of the command
 
 	execute (argument: ANY) is
-			-- Execute current command but don't change the cursor into watch shape.
+			-- Execute current command but don't change the cursor into
+			-- watch shape.
 		do
 			if argument = get_in then
 				text_window.tool.tell_type (command_name)
@@ -116,4 +119,8 @@ feature
 			end
 		end;
 
-end
+invariant
+
+	text_window_not_void: text_window /= Void
+
+end -- class ICONED_COMMAND

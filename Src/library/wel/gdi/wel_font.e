@@ -50,6 +50,13 @@ feature -- Re-initialisation
 		require
 			a_log_font_not_void: a_log_font /= Void
 		do
+			cwin_delete_object (item)
+			item := Default_pointer
+
+			check
+				c_object_destroyed: not exists
+			end
+
 			item := cwin_create_font_indirect (a_log_font.item)
 		end
 

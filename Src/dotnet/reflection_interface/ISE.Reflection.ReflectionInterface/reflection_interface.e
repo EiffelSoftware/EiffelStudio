@@ -34,6 +34,13 @@ feature -- Access
 			external_name: "LastError"
 		end
 
+	search_result: ISE_REFLECTION_EIFFELASSEMBLY
+			-- Assembly found
+			-- Result of `search'
+		indexing
+			external_name: "SearchResult"
+		end
+		
 	Has_write_lock_code: INTEGER is
 			-- Error code 
 		indexing
@@ -134,10 +141,20 @@ feature -- Status Report
 			external_name: "LastReadSuccessful"
 		end
 	
-	exists (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
-			-- Is assembly corresponding to `a_descriptor' already in the database?
+	found: BOOLEAN
+			-- Has assembly been found? 
+			-- Result of `search'.
 		indexing
-			external_name: "Exists"
+			external_name: "Found"
+		end
+
+feature -- Basic Operations
+
+	search (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+			-- Search for assembly corresponding to `a_descriptor' in the database.
+			-- Make result available in `found.'
+		indexing
+			external_name: "Search"
 		require
 			non_void_descriptor: a_descriptor /= Void
 		local
@@ -151,9 +168,11 @@ feature -- Status Report
 				reflection_support.Make
 				filename := reflection_support.Eiffeldeliverypath
 				filename := filename.concat_string_string (filename, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
-				Result := dir.Exists (filename)
+				found := dir.Exists (filename)
+				search_result := assembly (a_descriptor)
 			else
-				Result := False
+				found := False
+				search_result := Void
 			end
 		rescue
 			retried := True
@@ -278,7 +297,7 @@ feature -- Retrieval
 						read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.ReadLockFilename))	
 						if read_lock = Void then
 							support.createerrorfrominfo (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
-						 	last_error := support.lasterror
+							last_error := support.lasterror
 							last_read_successful := False					
 						else
 							read_lock.Close					
@@ -290,11 +309,8 @@ feature -- Retrieval
 					end
 				end
 			else
-				create Result.make1
-				Result.make
+				Result := Void
 			end
-		ensure
-			eiffel_assembly_created: Result /= Void
 		rescue
 			retried := True
 			support.createerror (error_messages.Assembly_retrieval_failed, error_messages.Assembly_retrieval_failed_message)
@@ -326,42 +342,44 @@ feature -- Retrieval
 			retried: BOOLEAN
 		do
 			if not retried then
-				create formatter.make_formatter
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
 				a_descriptor := assembly_descriptor_from_type (a_type)
-				assembly_path := reflection_support.Eiffeldeliverypath
-				assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
-				if support.HasReadLock (assembly_path) then
-					support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
-					last_error := support.lasterror
-					last_read_successful := False
+				search (a_descriptor)
+				if not found then
+					Result := Void
 				else
-					if support.HasWriteLock (assembly_path) then
-						support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+					create formatter.make_formatter
+					assembly_path := reflection_support.Eiffeldeliverypath
+					assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
+					if support.HasReadLock (assembly_path) then
+						support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
 						last_error := support.lasterror
-						last_read_successful := False		
+						last_read_successful := False
 					else
-						read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.ReadLockFilename))
-						if read_lock = Void then
-							support.createerrorfrominfo (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
-						 	last_error := support.lasterror
-							last_read_successful := False
+						if support.HasWriteLock (assembly_path) then
+							support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+							last_error := support.lasterror
+							last_read_successful := False		
 						else
-							read_lock.Close
-							xml_type_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", formatter.FormatTypeName (a_type.FullName).ToLower, XmlExtension)
-							Result := eiffel_type (xml_type_filename)
-							last_read_successful := True
-							file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.ReadLockFilename))
+							read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.ReadLockFilename))
+							if read_lock = Void then
+								support.createerrorfrominfo (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
+								last_error := support.lasterror
+								last_read_successful := False
+							else
+								read_lock.Close
+								xml_type_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", formatter.FormatTypeName (a_type.FullName).ToLower, XmlExtension)
+								Result := eiffel_type (xml_type_filename)
+								last_read_successful := True
+								file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.ReadLockFilename))
+							end
 						end
-					end
-				end	
+					end	
+				end
 			else
-				create Result.make1
-				Result.make
+				Result := Void
 			end
-		ensure
-			eiffel_class_created: Result /= Void
 		rescue
 			retried := True
 			support.createerror (error_messages.Type_retrieval_failed, error_messages.Type_retrieval_failed_message)
@@ -463,5 +481,9 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-			
+
+invariant
+	found_implies_non_void_search_result: found implies search_result /= Void
+	not_found_implies_void_search_result: not found implies search_result = Void
+
 end -- class REFLECTION_INTERFACE

@@ -2062,10 +2062,6 @@ feature {NONE} -- Once per modules being generated.
 
 			l_meth_token := md_emit.define_member_ref (uni_string, ise_none_type_token, l_sig)
 			internal_constructor_token.put (l_meth_token, l_gen.none_type_id)
-
-			l_meth_token := md_emit.define_member_ref (uni_string,
-				ise_eiffel_type_info_type_token, l_sig)
-			internal_constructor_token.put (l_meth_token, l_gen.eiffel_type_info_type_id)
 		ensure
 			inserted:
 				actual_class_type_token (il_code_generator.runtime_type_id) = ise_type_token and

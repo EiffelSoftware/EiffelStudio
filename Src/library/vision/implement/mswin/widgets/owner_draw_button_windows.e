@@ -42,14 +42,11 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font
 		undefine
-			on_hide,
-			on_show,
-			on_size,
-			on_move,
+			on_hide, on_show, on_size, on_move,
 			on_right_button_up, on_left_button_down,
-			on_left_button_up, on_right_button_down,
-			on_mouse_move, on_destroy, on_set_cursor,
-			on_key_up, on_bn_clicked,
+			on_bn_clicked, on_left_button_up,
+			on_right_button_down, on_mouse_move,
+			on_destroy, on_set_cursor, on_key_up,
 			on_key_down
 		end
 
@@ -168,19 +165,25 @@ feature -- Basic operations
 		require
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
+		local
+			pen: WEL_PEN
+			color: WEL_COLOR_REF
 		do
-			a_dc.select_pen (dark_gray_pen)
+			!! color.make_rgb (255, 255, 255)
+			!! pen.make (Ps_solid, 1, color)
+			a_dc.select_pen (pen)
+			a_dc.line (width - 1, 0, width - 1, height)
+			a_dc.line (0, height - 1, width, height - 1)
+			!! color.make_rgb (0, 0, 0)
+			!! pen.make (Ps_solid, 1, color)
+			a_dc.select_pen (pen)
 			a_dc.line (0, 0, width - 1, 0)
 			a_dc.line (0, 0, 0, height - 1)
-			a_dc.select_pen (black_pen)
-			a_dc.line (1, 1, width, 1)
-			a_dc.line (1, 1, 1, height)
-			a_dc.select_pen (gray_pen)
-			a_dc.line (1, height - 2, width - 1 , height - 2)
-			a_dc.line (width - 2, 1, width - 2, height - 2)
-			a_dc.select_pen (white_pen)
-			a_dc.line (1, height - 1, width, height - 1)
-			a_dc.line (width - 1, 1, width - 1, height - 1)
+			!! color.make_system (Color_btnshadow)
+			!! pen.make (Ps_solid, 1, color)
+			a_dc.select_pen (pen)
+			a_dc.line (1, 1, 1 , height - 2)
+			a_dc.line (1, 1, width - 2, 1)
 		end
 
 	draw_border (a_dc: WEL_DC) is
@@ -188,19 +191,25 @@ feature -- Basic operations
 		require
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
+		local
+			pen: WEL_PEN
+			color: WEL_COLOR_REF
 		do
-			a_dc.select_pen (dark_gray_pen)
-			a_dc.line (1, height - 2, width - 1 , height - 2)
-			a_dc.line (width - 2, 1, width - 2, height - 2)
-			a_dc.select_pen (white_pen)
-			a_dc.line (1, 1, width, 1)
-			a_dc.line (1, 1, 1, height)
-			a_dc.select_pen (black_pen)
-			a_dc.line (1, height - 1, width , height - 1)
-			a_dc.line (width - 1, 1, width - 1, height - 1)
-			a_dc.select_pen (gray_pen)
+			!! color.make_rgb (255, 255, 255)
+			!! pen.make (Ps_solid, 1, color)
+			a_dc.select_pen (pen)
 			a_dc.line (0, 0, width, 0)
-			a_dc.line (0, 0, 0, height)	
+			a_dc.line (0, 0, 0, height)
+			!! color.make_system (Color_btnshadow)
+			!! pen.make (Ps_solid, 1, color)
+			a_dc.select_pen (pen)
+			a_dc.line (1, height - 2, width - 1 , height - 2)
+			a_dc.line (width - 2, 1, width - 2 , height - 1)
+			!! color.make_rgb (0, 0, 0)
+			!! pen.make (Ps_solid, 1, color)
+			a_dc.select_pen (pen)
+			a_dc.line (width - 1, 0, width - 1, height)
+			a_dc.line (0, height - 1, width, height - 1)
 		end
 
 	on_draw (a_draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
@@ -221,7 +230,7 @@ feature -- Basic operations
 				draw_all_selected (dc)	
 			else
 				draw_all_unselected (dc)	
-			end	
+			end
 		end
 
 feature -- Removal
@@ -236,50 +245,6 @@ feature -- Removal
 		end
 
 feature {NONE} -- Implementation
-
-	white_pen: WEL_PEN is
-			-- White pen
-		local
-			color: WEL_COLOR_REF
-		once
-			!! color.make_rgb (255, 255, 255)
-			!! Result.make (Ps_solid, 1, color)
-		ensure
-			result_exists: result /= Void
-		end
-
-	black_pen: WEL_PEN is
-			-- Black pen
-		local
-			color: WEL_COLOR_REF
-		once
-			!! color.make_rgb (0, 0, 0)
-			!! Result.make (Ps_solid, 1, color)
-		ensure
-			result_exists: result /= Void
-		end
-
-	dark_gray_pen: WEL_PEN is
-			-- Dark gray pen
-		local
-			color: WEL_COLOR_REF
-		once
-			!! color.make_system (Color_btnshadow)
-			!! Result.make (Ps_solid, 1, color)
-		ensure
-			result_exists: result /= Void
-		end
-
-	gray_pen: WEL_PEN is
-			-- Gray pen
-		local
-			color: WEL_COLOR_REF
-		once
-			!! color.make_rgb (192, 192, 192)
-			!! Result.make (Ps_solid, 1, color)
-		ensure
-			result_exists: result /= Void
-		end
 
 	wel_foreground_color: WEL_COLOR_REF is
 			-- Foreground color
@@ -316,15 +281,12 @@ feature {NONE} -- Implementation
 		end
 
 	on_bn_clicked is
-		local
-			cd: BUTCLICK_DATA
+			-- Button is clicked, execute activate action.
 		do
-			!! cd.make (owner, 0, 0, 0, 0, id, buttons_state);
-			activate_actions.execute (Current, cd)
-		end;
+			activate_actions.execute (Current, Void)
+		end
 
 end -- class OWNER_DRAW_BUTTON_WINDOWS
-
 
 --|---------------------------------------------------------------- 
 --| EiffelVision: library of reusable components for ISE Eiffel 3. 
@@ -337,4 +299,4 @@ end -- class OWNER_DRAW_BUTTON_WINDOWS
 --| Fax 805-685-6869 
 --| Electronic mail <info@eiffel.com> 
 --| Customer support e-mail <support@eiffel.com> 
---|---------------------------------------------------------------- 
+--|----------------------------------------------------------------

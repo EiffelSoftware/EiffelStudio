@@ -1,0 +1,19 @@
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="root_cluster"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\index.html"></OBJECT>
+	<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TUTORIAL_STEP1"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="accelerators"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_accelerators"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="application"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_application"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="application_main_window"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_application_main_window"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_show_command"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_default_show_command"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="idle_action_enabled"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_idle_action_enabled"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_application_main_window"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_is_application_main_window"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_dialog"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_is_dialog"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="runable"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_runable"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="disable_idle_action"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_disable_idle_action"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="enable_idle_action"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_enable_idle_action"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="idle_action"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_idle_action"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="run"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_run"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="main_window"><param name="Local" value="libraries\wel\samples\tutorial\step1\root_cluster\tutorial_step1.html#f_main_window"></OBJECT>
+		</UL>
+	</UL>

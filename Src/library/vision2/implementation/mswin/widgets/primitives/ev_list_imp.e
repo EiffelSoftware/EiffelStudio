@@ -25,7 +25,7 @@ inherit
 			on_right_button_down, on_left_button_down,
 			on_middle_button_down, on_left_button_up,
 			on_left_button_double_click, on_middle_button_double_click,
-			on_right_button_double_click, pnd_press
+			on_right_button_double_click, pnd_press, escape_pnd
 		redefine
 			make, on_key_down, on_mouse_move, set_default_minimum_size,
 			initialize, interface, on_size, enable_sensitive, disable_sensitive
@@ -862,6 +862,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.83  2001/06/14 00:09:12  rogers
+--| Undefined the version of escape_pnd inherited from EV_PRIMITIVE_IMP.
+--|
 --| Revision 1.82  2001/06/07 23:08:16  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

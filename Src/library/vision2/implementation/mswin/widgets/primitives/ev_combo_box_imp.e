@@ -46,7 +46,8 @@ inherit
 			on_left_button_double_click,
 			on_middle_button_double_click,
 			on_right_button_double_click,
-			pnd_press
+			pnd_press,
+			escape_pnd
 		redefine
 			wel_move_and_resize,
 			set_editable,
@@ -937,6 +938,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.81  2001/06/14 00:09:11  rogers
+--| Undefined the version of escape_pnd inherited from EV_PRIMITIVE_IMP.
+--|
 --| Revision 1.80  2001/06/07 23:08:16  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -51,6 +51,18 @@ feature -- Initialization
 			set_current_char (a_token, pos)
 		end
 
+	make_from_character_pos (x_in_ch,y : INTEGER; a_window: CHILD_WINDOW) is
+		require
+			a_window_valid: a_window /= Void
+			x_valid: x_in_ch >= 1
+			y_valid: y >= 1
+		do
+			associated_window := a_window
+			whole_text := a_window.text_displayed
+			set_y_in_lines (y)
+			set_x_in_characters (x_in_ch)
+		end
+
 feature -- Access
 
 		--| Relative position
@@ -68,9 +80,26 @@ feature -- Access
 
 	x_in_pixels: INTEGER
 			-- Theoric horizontal position of Current, in pixels
+			--| (Caution! Unlike all others, this argument is 0-based.)
 
 	y_in_lines: INTEGER
 			-- Line number of Current in the whole text
+
+	x_in_characters: INTEGER is
+			-- Horizontal position of Current, in characters.
+		local
+			current_token : EDITOR_TOKEN
+		do
+			Result := pos_in_token
+			from
+				current_token := token.previous
+			until
+				current_token = Void
+			loop
+				Result := Result + current_token.length
+				current_token := current_token.previous
+			end
+		end
 
 feature -- Element change
 
@@ -134,7 +163,7 @@ feature -- Element change
 			-- Make `y' be the new value of `y_in_lines'.
 			-- Change `line' accordingly.
 		require
-			y_valid: y >= 0
+			y_valid: y >= 1
 		do
 			y_in_lines := y
 
@@ -142,6 +171,51 @@ feature -- Element change
 			whole_text.go_i_th(y)
 			line := whole_text.item
 			update_current_char
+		end
+
+	set_x_in_characters (x_in_ch: INTEGER) is
+			-- Set attributes so that `x_in_characters' return `x_in_ch'.
+		require
+			x_in_ch_valid: x_in_ch >= 1
+		local
+			current_x: INTEGER
+			current_token: EDITOR_TOKEN
+			remaining_ch: INTEGER
+		do
+				-- Update the current token.
+			from
+				current_token := line.first_token
+				current_x := 0
+				remaining_ch := x_in_ch
+			until
+				current_token = Void or else remaining_ch <= current_token.length
+			loop
+					-- Compute where we are in pixels.
+				current_x := current_x + current_token.width
+
+					-- Compute where we are in characters.
+				remaining_ch := remaining_ch - current_token.length
+
+					-- Prepare next iteration.
+				current_token := current_token.next
+			end
+			check
+				before_goal: remaining_ch > 0
+			end
+			if current_token /= Void then
+					-- We stopped in a token. Now we look in the token. 
+				token := current_token
+				pos_in_token := remaining_ch
+
+					-- Now retrieve position in pixels
+				x_in_pixels := current_x + token.get_substring_width (remaining_ch - 1)
+			else
+					-- The cursor is further than the end of the line, so
+					-- we set the current token to the last of the line.
+				token := line.end_token
+				pos_in_token := 1
+				x_in_pixels := current_x
+			end
 		end
 
 feature -- Cursor movement

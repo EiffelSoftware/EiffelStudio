@@ -1,7 +1,7 @@
 indexing
 	description: "Delegate use to load pixmap"
-	external_name: "ISE.Runtime.EV_PIXMAP_IMP_DELEGATE"
-	assembly: "ISE.Runtime", "5.5.0.0", "neutral", "def26f296efef469"
+	external_name: "EiffelSoftware.Runtime.EV_PIXMAP_IMP_DELEGATE"
+	assembly: "EiffelSoftware.Runtime", "5.5.0.0", "neutral", "def26f296efef469"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_target: SYSTEM_OBJECT; function_ptr: POINTER) is
 			-- Create a new delegate object
 		external
-			"IL creator signature (System.Object, System.IntPtr) use ISE.Runtime.EV_PIXMAP_IMP_DELEGATE"
+			"IL creator signature (System.Object, System.IntPtr) use EiffelSoftware.Runtime.EV_PIXMAP_IMP_DELEGATE"
 		end
 
 --feature -- Delegate implementation

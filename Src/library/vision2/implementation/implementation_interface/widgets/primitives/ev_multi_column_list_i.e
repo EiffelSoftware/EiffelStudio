@@ -32,8 +32,7 @@ feature {NONE} -- Initialization
 		do
 				-- Set default width & height for the pixmaps
 			initialize_pixmaps
-
-			update_children_agent := agent update_children
+			
 			create column_titles.make
 			create column_widths.make
 			create column_alignments.make
@@ -100,7 +99,7 @@ feature -- Status report
 		end
 
 	column_alignment (a_column: INTEGER): EV_TEXT_ALIGNMENT is
-			-- Text alignment of `a_column' in pixels.
+			-- `Result' is alignment of column `a_column'.
 		require
 			a_column_positive: a_column > 0
 		local
@@ -394,97 +393,6 @@ feature {EV_ANY_I} -- Implementation
 		require
 			expandable: a_columns > column_count
 		deferred
-		end
-			
-	update_children is
-			-- Update all children with `update_needed' True.
-			--| We are on an idle action now. At least one item has marked
-			--| itself `update_needed'.
-		local
-			cur: CURSOR
-			new_column_count: INTEGER
-		do
-			cur := ev_children.cursor
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				if ev_children.item.interface.count > column_count then
-					new_column_count := ev_children.item.interface.count
-				end
-				ev_children.forth
-			end
-
-			if new_column_count > column_count then
-				expand_column_count_to (new_column_count)
-			end
-
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				if ev_children.item.update_needed then
-					update_child (ev_children.item, ev_children.index)
-				end
-				ev_children.forth
-			end
-			ev_children.go_to (cur)
-		end
-
-	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
-			-- Update `child'.
-		require
-			child_exists: child /= Void
-			child_dirty: child.update_needed
-			room_for_child: child.interface.count <= column_count
-		local
-			cur: CURSOR
-			txt: STRING
-			list: EV_MULTI_COLUMN_LIST_ROW
-			column_counter: INTEGER
-			list_pixmap: EV_PIXMAP
-		do
-			list := child.interface
-			cur := list.cursor
-			from
-				column_counter := 1
-				list.start
-			until
-				column_counter > column_count
-			loop
-				if column_counter = 1 then
-					-- Handle the pixmap
-					list_pixmap := list.pixmap
-					if list_pixmap /= Void then
-						set_row_pixmap (a_row, list_pixmap)
-					else
-						remove_row_pixmap (a_row)
-					end
-				end
-
-					-- Set the text in the cell
-				if list.after then
-					txt := ""
-				else
-					txt := list.item
-					if txt = Void then
-						txt := ""
-					end
-				end
-				set_text_on_position (column_counter, a_row, txt)
-
-					-- Prepare next iteration
-				if not list.after then
-					list.forth
-				end
-				column_counter := column_counter + 1
-			end
-			list.go_to (cur)
-			child.update_performed
-		ensure
-			child_updated: not child.update_needed
 		end
 
 	update_column_width (a_width: INTEGER; a_column: INTEGER) is

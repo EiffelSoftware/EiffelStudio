@@ -1,123 +1,120 @@
 <html>
-
-<head>
-<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
-<meta name="ProgId" content="FrontPage.Editor.Document">
-<LINK REL=StyleSheet HREF="../../../../default.css">
-</head>
-
-
-
-<body>
-
-<h1>Adding Menus to a Form</h1>
-<p>Windows Forms supports menus and context menus. Main menus are displayed on a 
-menu bar that is located immediately below the title bar of a form. The menu bar 
-contains top-level menu items that are used to group related submenu items. For 
-example, by clicking a <b>File</b> top-level menu item, you can display menu 
-items that are related to file operations. Menu items typically appear as 
-commands for your application (such as <b>New</b> and <b>Open</b>), but they can 
-also appear as separator bars and submenu items. You can display a check mark 
-next to a menu item to display the state of a command or a the state of a 
-feature in your application. In Windows Forms, main menus are represented by the
-<b>MainMenu</b> control.</p>
-<p>Context menus can be displayed for a specific control or area of your form. 
-They are typically accessed by clicking the right mouse button. In Windows 
-Forms, context menus are represented by the <b>ContextMenu</b> control.</p>
-<p><b>ContextMenu</b> and <b>MainMenu</b> derive from <b>Menu</b>. They share 
-many properties, methods, and events.</p>
-<h2>Adding a <b>MainMenu</b> to a Form</h2>
-<p>The following code demonstrates how to add a <b>MainMenu</b> to a form.</p>
-<p>
-<pre>main_menu: <SPAN CLASS="eClass">WINFORMS_MAIN_MENU</span></pre>
-<pre><span class"eKeyword">	<SPAN CLASS="eKeyword">create</span> </span>main_menu.<SPAN CLASS="eFeature">make</span><br>	set_menu (main_menu)</pre>
-&nbsp;
-<h2>Adding a Context Menu to a Control</h2>
-<p>The following code demonstrates how to <SPAN CLASS="eKeyword">create</span> a <b>ContextMenu</b> and assign 
-it to a control.</p>
-<pre><SPAN CLASS="elocal">label_1</span>: <SPAN CLASS="eClass">WINFORMS_LABEL</span>
-<SPAN CLASS="elocal">label_1_context_menu</span>: <SPAN CLASS="eClass">WINFORMS_CONTeXT_MENU</span></pre>
-<pre>	<SPAN CLASS="eKeyword">create</span> label_1.<SPAN CLASS="eFeature">make</span><br>	<SPAN CLASS="eKeyword">create</span> label_1_context_menu.<SPAN CLASS="eFeature">make</span><br>	label_1.set_context_menu (label_1_context_menu)</pre>
-</pre>
-<h2>Adding Menu Items</h2>
-<p>In the following example, a <b>File</b> menu item is added to the <b>MainMenu</b>. 
-The <b>File</b> menu item contains submenu items called <b>Open</b> and <b>Exit</b>.</p>
-<pre><SPAN CLASS="elocal">mi_file</span>: <SPAN CLASS="eClass">WINFORMS_MAIN_MENU</span></pre>
-<pre>mi_file := main_menu.get_menu_items.<SPAN CLASS="eFeature">add</span> ((&quot;&amp;File&quot;).<SPAN CLASS="eFeature">to_cil</span>)
-dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</span> (<SPAN CLASS="eKeyword">create</span> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make</span>_from_text ((&quot;&amp;Open...&quot;).<SPAN CLASS="eFeature">to_cil</span>))
-dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add</span> ((&quot;-&quot;).<SPAN CLASS="eFeature">to_cil</span>) -- Gives us a seperator
-dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</span> (<SPAN CLASS="eKeyword">create</span> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make</span>_from_text((&quot;E&amp;xit&quot;).<SPAN CLASS="eFeature">to_cil</span>)</pre>
-<p><br>
-&nbsp;</p>
-<p>The following code demonstrates how to handle the <b>Click</b> event for both 
-the <b>Open</b> and <b>Exit</b> menu items <SPAN CLASS="eKeyword">create</span>d in the previous code example.</p>
-<pre>mi_file := main_menu.get_menu_items.<SPAN CLASS="eFeature">add</span> ((&quot;&amp;File&quot;).<SPAN CLASS="eFeature">to_cil</span>)
-dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</span> (<SPAN CLASS="eKeyword">create</span> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make_from_text_and_on_click</span>_and_shortcut
-	((&quot;&amp;Open...&quot;).<SPAN CLASS="eFeature">to_cil</span>, <SPAN CLASS="eKeyword">create</span> {<SPAN CLASS="eClass">EVENT_HANDLER</span>}.<SPAN CLASS="eFeature">make</span> (<SPAN CLASS="eKeyword">Current</span>, $FileOpen_Clicked), feature {<span class="eClass">WINFORMS_SHORTCUT</span>}.ctrl_O))
-dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add</span> ((&quot;-&quot;).<SPAN CLASS="eFeature">to_cil</span>) -- Gives us a seperator
-dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</span> (<SPAN CLASS="eKeyword">create</span> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make_from_text_and_on_click</span>_and_shortcut
-	((&quot;E&amp;xit&quot;).<SPAN CLASS="eFeature">to_cil</span>, <SPAN CLASS="eKeyword">create</span> {<SPAN CLASS="eClass">EVENT_HANDLER</span>}.<SPAN CLASS="eFeature">make</span> (<SPAN CLASS="eKeyword">Current</span>, $FileExit_Clicked), feature {<span class="eClass">WINFORMS_SHORTCUT</span>}.ctrl_X))</pre>
-<p><br>
-&nbsp;</p>
-<p>The following example demonstrates how to define shortcut keys for the menu 
-items <SPAN CLASS="eKeyword">create</span>d in the previous example.</p>
-<pre>mi_file := main_menu.get_menu_items.<SPAN CLASS="eFeature">add</span> ((&quot;&amp;File&quot;).<SPAN CLASS="eFeature">to_cil</span>)
-dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</span> (<SPAN CLASS="eKeyword">create</span> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make_from_text_and_on_click</span>_and_shortcut
-	((&quot;&amp;Open...&quot;).<SPAN CLASS="eFeature">to_cil</span>, <SPAN CLASS="eKeyword">create</span> {<SPAN CLASS="eClass">EVENT_HANDLER</span>}.<SPAN CLASS="eFeature">make</span> (<SPAN CLASS="eKeyword">Current</span>, $FileOpen_Clicked), feature {<span class="eClass">WINFORMS_SHORTCUT</span>}.ctrl_O))
-dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add</span> ((&quot;-&quot;).<SPAN CLASS="eFeature">to_cil</span>) -- Gives us a seperator
-dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</span> (<SPAN CLASS="eKeyword">create</span> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make_from_text_and_on_click</span>_and_shortcut
-	((&quot;E&amp;xit&quot;).<SPAN CLASS="eFeature">to_cil</span>, <SPAN CLASS="eKeyword">create</span> {<SPAN CLASS="eClass">EVENT_HANDLER</span>}.<SPAN CLASS="eFeature">make</span> (<SPAN CLASS="eKeyword">Current</span>, $FileExit_Clicked), feature {<span class="eClass">WINFORMS_SHORTCUT</span>}.ctrl_X))</pre>
-<p>&nbsp;</p>
-<h2>Adding Submenus</h2>
-<p>The following example demonstrates how to <SPAN CLASS="eKeyword">create</span> submenus.</p>
-<pre><SPAN CLASS="elocal">mi_format</span>: <SPAN CLASS="eClass">WINFORMS_MAIN_MENU</span></pre>
-<pre>-- Add Format Menu
-mi_format := main_menu.get_menu_items.<SPAN CLASS="eFeature">add</span> ((&quot;F&amp;ormat&quot;).<SPAN CLASS="eFeature">to_cil</span>)
+	<head>
+		<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+		<meta name="ProgId" content="FrontPage.Editor.Document">
+		<LINK REL="StyleSheet" HREF="../../../../default.css">
+	</head>
+	<body>
+		<h1>Using Menus</h1>
+		<p>Windows Forms supports menus and context menus. Main menus are displayed on a 
+			menu bar that is located immediately below the title bar of a form. The menu 
+			bar contains top-level menu items that are used to group related submenu items. 
+			For example, by clicking a <b>File</b> top-level menu item, you can display 
+			menu items that are related to file operations. Menu items typically appear as 
+			commands for your application (such as <b>New</b> and <b>Open</b>), but they 
+			can also appear as separator bars and submenu items. You can display a check 
+			mark next to a menu item to display the state of a command or a the state of a 
+			feature in your application. In Windows Forms, main menus are represented by 
+			the <b>MainMenu</b> control.</p>
+		<p>Context menus can be displayed for a specific control or area of your form. They 
+			are typically accessed by clicking the right mouse button. In Windows Forms, 
+			context menus are represented by the <b>ContextMenu</b> control.</p>
+		<p><b>ContextMenu</b> and <b>MainMenu</b> derive from <b>Menu</b>. They share many 
+			properties, methods, and events.</p>
+		<h2>Adding a <b>MainMenu</b> to a Form</h2>
+		<p>The following code demonstrates how to add a <b>MainMenu</b> to a form.</p>
+		<p></p>
+		<pre>main_menu: <SPAN CLASS="eClass">WINFORMS_MAIN_MENU</SPAN></pre>
+		<pre><span class ? eKeyword?>	<SPAN CLASS="eKeyword">create</SPAN> </span>main_menu.<SPAN CLASS="eFeature">make</SPAN><br>	set_menu (main_menu)</pre>
+		&nbsp;
+		<h2>Adding a Context Menu to a Control</h2>
+		<p>The following code demonstrates how to
+			<SPAN CLASS="eKeyword">create</SPAN>
+			a <b>ContextMenu</b> and assign it to a control.</p>
+		<pre><SPAN CLASS="elocal">label_1</SPAN>: <SPAN CLASS="eClass">WINFORMS_LABEL</SPAN>
+<SPAN CLASS="elocal">label_1_context_menu</SPAN>: <SPAN CLASS="eClass">WINFORMS_CONTeXT_MENU</SPAN></pre>
+		<pre>	<SPAN CLASS="eKeyword">create</SPAN> label_1.<SPAN CLASS="eFeature">make</SPAN><br>	<SPAN CLASS="eKeyword">create</SPAN> label_1_context_menu.<SPAN CLASS="eFeature">make</SPAN><br>	label_1.set_context_menu (label_1_context_menu)</pre>
+		<PRE></PRE>
+		<h2>Adding Menu Items</h2>
+		<p>In the following example, a <b>File</b> menu item is added to the <b>MainMenu</b>. 
+			The <b>File</b> menu item contains submenu items called <b>Open</b> and <b>Exit</b>.</p>
+		<pre><SPAN CLASS="elocal">mi_file</SPAN>: <SPAN CLASS="eClass">WINFORMS_MAIN_MENU</SPAN></pre>
+		<pre>mi_file := main_menu.get_menu_items.<SPAN CLASS="eFeature">add</SPAN> (("&amp;File").<SPAN CLASS="eFeature">to_cil</SPAN>)
+dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</SPAN> (<SPAN CLASS="eKeyword">create</SPAN> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make</SPAN>_from_text (("&amp;Open...").<SPAN CLASS="eFeature">to_cil</SPAN>))
+dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add</SPAN> (("-").<SPAN CLASS="eFeature">to_cil</SPAN>) -- Gives us a seperator
+dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</SPAN> (<SPAN CLASS="eKeyword">create</SPAN> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make</SPAN>_from_text(("E&amp;xit").<SPAN CLASS="eFeature">to_cil</SPAN>)</pre>
+		<p><br>
+			&nbsp;</p>
+		<p>The following code demonstrates how to handle the <b>Click</b> event for both 
+			the <b>Open</b> and <b>Exit</b> menu items
+			<SPAN CLASS="eKeyword">create</SPAN>d in the previous code example.</p>
+		<pre>mi_file := main_menu.get_menu_items.<SPAN CLASS="eFeature">add</SPAN> (("&amp;File").<SPAN CLASS="eFeature">to_cil</SPAN>)
+dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</SPAN> (<SPAN CLASS="eKeyword">create</SPAN> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make_from_text_and_on_click</SPAN>_and_shortcut
+	(("&amp;Open...").<SPAN CLASS="eFeature">to_cil</SPAN>, <SPAN CLASS="eKeyword">create</SPAN> {<SPAN CLASS="eClass">EVENT_HANDLER</SPAN>}.<SPAN CLASS="eFeature">make</SPAN> (<SPAN CLASS="eKeyword">Current</SPAN>, $FileOpen_Clicked), feature {<span class="eClass">WINFORMS_SHORTCUT</span>}.ctrl_O))
+dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add</SPAN> (("-").<SPAN CLASS="eFeature">to_cil</SPAN>) -- Gives us a seperator
+dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</SPAN> (<SPAN CLASS="eKeyword">create</SPAN> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make_from_text_and_on_click</SPAN>_and_shortcut
+	(("E&amp;xit").<SPAN CLASS="eFeature">to_cil</SPAN>, <SPAN CLASS="eKeyword">create</SPAN> {<SPAN CLASS="eClass">EVENT_HANDLER</SPAN>}.<SPAN CLASS="eFeature">make</SPAN> (<SPAN CLASS="eKeyword">Current</SPAN>, $FileExit_Clicked), feature {<span class="eClass">WINFORMS_SHORTCUT</span>}.ctrl_X))</pre>
+		<p><br>
+			&nbsp;</p>
+		<p>The following example demonstrates how to define shortcut keys for the menu 
+			items
+			<SPAN CLASS="eKeyword">create</SPAN>d in the previous example.</p>
+		<pre>mi_file := main_menu.get_menu_items.<SPAN CLASS="eFeature">add</SPAN> (("&amp;File").<SPAN CLASS="eFeature">to_cil</SPAN>)
+dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</SPAN> (<SPAN CLASS="eKeyword">create</SPAN> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make_from_text_and_on_click</SPAN>_and_shortcut
+	(("&amp;Open...").<SPAN CLASS="eFeature">to_cil</SPAN>, <SPAN CLASS="eKeyword">create</SPAN> {<SPAN CLASS="eClass">EVENT_HANDLER</SPAN>}.<SPAN CLASS="eFeature">make</SPAN> (<SPAN CLASS="eKeyword">Current</SPAN>, $FileOpen_Clicked), feature {<span class="eClass">WINFORMS_SHORTCUT</span>}.ctrl_O))
+dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add</SPAN> (("-").<SPAN CLASS="eFeature">to_cil</SPAN>) -- Gives us a seperator
+dummy := mi_file.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</SPAN> (<SPAN CLASS="eKeyword">create</SPAN> {<span class="eClass">WINFORMS_MENU_ITEM</span>}.<SPAN CLASS="eFeature">make_from_text_and_on_click</SPAN>_and_shortcut
+	(("E&amp;xit").<SPAN CLASS="eFeature">to_cil</SPAN>, <SPAN CLASS="eKeyword">create</SPAN> {<SPAN CLASS="eClass">EVENT_HANDLER</SPAN>}.<SPAN CLASS="eFeature">make</SPAN> (<SPAN CLASS="eKeyword">Current</SPAN>, $FileExit_Clicked), feature {<span class="eClass">WINFORMS_SHORTCUT</span>}.ctrl_X))</pre>
+		<p>&nbsp;</p>
+		<h2>Adding Submenus</h2>
+		<p>The following example demonstrates how to
+			<SPAN CLASS="eKeyword">create</SPAN>
+			submenus.</p>
+		<pre><SPAN CLASS="elocal">mi_format</SPAN>: <SPAN CLASS="eClass">WINFORMS_MAIN_MENU</SPAN></pre>
+		<pre>-- Add Format Menu
+mi_format := main_menu.get_menu_items.<SPAN CLASS="eFeature">add</SPAN> (("F&amp;ormat").<SPAN CLASS="eFeature">to_cil</SPAN>)
 
 -- Font Face sub-menu
-<SPAN CLASS="eKeyword">create</span> mmi_sans_serif.<SPAN CLASS="eFeature">make_from_text_and_on_click</span> (((&quot;&quot;).<SPAN CLASS="eFeature">to_cil</span>).<SPAN CLASS="eFeature">concat_string_string</span> ((&quot;&amp;1. &quot;).<SPAN CLASS="eFeature">to_cil,</span>
-	sans_serif_font_family.<SPAN CLASS="eFeature">get_name</span>), <SPAN CLASS="eKeyword">create</span> {<SPAN CLASS="eClass">EVENT_HANDLER</span>}.<SPAN CLASS="eFeature">make</span> (<SPAN CLASS="eKeyword">Current</span>, $FormatFont_Clicked))
-mmi_sans_serif.set_checked (<SPAN CLASS="eKeyword">True</span>)
-mmi_sans_serif.set_default_item (<SPAN CLASS="eKeyword">True</span>)
-<SPAN CLASS="eKeyword">create</span> mmi_serif.<SPAN CLASS="eFeature">make_from_text_and_on_click</span> (((&quot;&quot;).<SPAN CLASS="eFeature">to_cil</span>).<SPAN CLASS="eFeature">concat_string_string</span>((&quot;&amp;2. &quot;).<SPAN CLASS="eFeature">to_cil</span>,
-	serif_font_family.<SPAN CLASS="eFeature">get_name</span>), <SPAN CLASS="eKeyword">create</span> {<SPAN CLASS="eClass">EVENT_HANDLER</span>}.<SPAN CLASS="eFeature">make</span> (<SPAN CLASS="eKeyword">Current</span>, $FormatFont_Clicked))
-<SPAN CLASS="eKeyword">create</span> mmi_mono_space.<SPAN CLASS="eFeature">make_from_text_and_on_click</span> (((&quot;&quot;).<SPAN CLASS="eFeature">to_cil</span>).<SPAN CLASS="eFeature">concat_string_string</span>((&quot;&amp;3. &quot;).<SPAN CLASS="eFeature">to_cil</span>,
-	mono_space_font_family.<SPAN CLASS="eFeature">get_name</span>), <SPAN CLASS="eKeyword">create</span> {<SPAN CLASS="eClass">EVENT_HANDLER</span>}.<SPAN CLASS="eFeature">make</span> (<SPAN CLASS="eKeyword">Current</span>, $FormatFont_Clicked))
+<SPAN CLASS="eKeyword">create</SPAN> mmi_sans_serif.<SPAN CLASS="eFeature">make_from_text_and_on_click</SPAN> ((("").<SPAN CLASS="eFeature">to_cil</SPAN>).<SPAN CLASS="eFeature">concat_string_string</SPAN> (("&amp;1. ").<SPAN CLASS="eFeature">to_cil,</SPAN>
+	sans_serif_font_family.<SPAN CLASS="eFeature">get_name</SPAN>), <SPAN CLASS="eKeyword">create</SPAN> {<SPAN CLASS="eClass">EVENT_HANDLER</SPAN>}.<SPAN CLASS="eFeature">make</SPAN> (<SPAN CLASS="eKeyword">Current</SPAN>, $FormatFont_Clicked))
+mmi_sans_serif.set_checked (<SPAN CLASS="eKeyword">True</SPAN>)
+mmi_sans_serif.set_default_item (<SPAN CLASS="eKeyword">True</SPAN>)
+<SPAN CLASS="eKeyword">create</SPAN> mmi_serif.<SPAN CLASS="eFeature">make_from_text_and_on_click</SPAN> ((("").<SPAN CLASS="eFeature">to_cil</SPAN>).<SPAN CLASS="eFeature">concat_string_string</SPAN>(("&amp;2. ").<SPAN CLASS="eFeature">to_cil</SPAN>,
+	serif_font_family.<SPAN CLASS="eFeature">get_name</SPAN>), <SPAN CLASS="eKeyword">create</SPAN> {<SPAN CLASS="eClass">EVENT_HANDLER</SPAN>}.<SPAN CLASS="eFeature">make</SPAN> (<SPAN CLASS="eKeyword">Current</SPAN>, $FormatFont_Clicked))
+<SPAN CLASS="eKeyword">create</SPAN> mmi_mono_space.<SPAN CLASS="eFeature">make_from_text_and_on_click</SPAN> ((("").<SPAN CLASS="eFeature">to_cil</SPAN>).<SPAN CLASS="eFeature">concat_string_string</SPAN>(("&amp;3. ").<SPAN CLASS="eFeature">to_cil</SPAN>,
+	mono_space_font_family.<SPAN CLASS="eFeature">get_name</SPAN>), <SPAN CLASS="eKeyword">create</SPAN> {<SPAN CLASS="eClass">EVENT_HANDLER</SPAN>}.<SPAN CLASS="eFeature">make</SPAN> (<SPAN CLASS="eKeyword">Current</SPAN>, $FormatFont_Clicked))
 
-<SPAN CLASS="eKeyword">create</span> l_array_menu_item.<SPAN CLASS="eFeature">make</span> (3)
-l_array_menu_item.<SPAN CLASS="eFeature">put</span> (0, mmi_sans_serif)
-l_array_menu_item.<SPAN CLASS="eFeature">put</span> (1, mmi_serif)
-l_array_menu_item.<SPAN CLASS="eFeature">put</span> (2, mmi_mono_space)
-dummy := mi_format.get_menu_items.<SPAN CLASS="eFeature">add_string_menu_item_array</span> ((&quot;Font &amp;Face&quot;).<SPAN CLASS="eFeature">to_cil</span>, l_array_menu_item)
+<SPAN CLASS="eKeyword">create</SPAN> l_array_menu_item.<SPAN CLASS="eFeature">make</SPAN> (3)
+l_array_menu_item.<SPAN CLASS="eFeature">put</SPAN> (0, mmi_sans_serif)
+l_array_menu_item.<SPAN CLASS="eFeature">put</SPAN> (1, mmi_serif)
+l_array_menu_item.<SPAN CLASS="eFeature">put</SPAN> (2, mmi_mono_space)
+dummy := mi_format.get_menu_items.<SPAN CLASS="eFeature">add_string_menu_item_array</SPAN> (("Font &amp;Face").<SPAN CLASS="eFeature">to_cil</SPAN>, l_array_menu_item)
 </pre>
-<p>&nbsp;</p><h2>Adding Default Menu Items</h2>
-<p>The following example demonstrates how to specify a default menu item.</p>
-<pre><SPAN CLASS="elocal">mmi_sans_serif</span>: <SPAN CLASS="eClass">WINFORMS_MAIN_MENU</span></pre>
-<pre><SPAN CLASS="eKeyword">create</span> mmi_sans_serif.<SPAN CLASS="eFeature">make_from_text_and_on_click</span> (((&quot;&quot;).<SPAN CLASS="eFeature">to_cil</span>).<SPAN CLASS="eFeature">concat_string_string</span> ((&quot;&amp;1. &quot;).<SPAN CLASS="eFeature">to_cil</span>,
-		&nbsp;sans_serif_font_family.<SPAN CLASS="eFeature">get_name</span>), <SPAN CLASS="eKeyword">create</span> {<SPAN CLASS="eClass">EVENT_HANDLER</span>}.<SPAN CLASS="eFeature">make</span> (<SPAN CLASS="eKeyword">Current</span>, $format_font_clicked))
-mmi_sans_serif.set_checked (<SPAN CLASS="eKeyword">True</span>) </pre>
-<p>&nbsp;</p><p>&nbsp;</p><h2>Adding Check Marks to Menu Items</h2>
-<p>The following example demonstrates how to display a check mark next to a menu 
-item. The code also demonstrates how to track which item is checked.</p>
-<pre>mi_medium: <SPAN CLASS="eClass">WINFORMS_MAIN_MENU</span></pre>
-<pre><SPAN CLASS="eKeyword">create</span> mi_medium.<SPAN CLASS="eFeature">make_from_text_and_on_click</span> ((&quot;&amp;Medium&quot;).<SPAN CLASS="eFeature">to_cil</span>, <SPAN CLASS="eKeyword">create</span> {<SPAN CLASS="eClass">EVENT_HANDLER</span>}.<SPAN CLASS="eFeature">make</span> (<SPAN CLASS="eKeyword">Current</span>, $format_size_clicked))
-mi_medium.set_checked (<SPAN CLASS="eKeyword">True</span>)</pre>
-<p><br>
-&nbsp;</p>
-<h2>Cloning Menus</h2>
-<p>In many cases, the context menu for a control is a subset of the main menu. 
-You cannot add the same menu items to multiple menus, but you can clone a menu 
-item or set of menu items. The following code demonstrates how to clone the <b>
-Format</b> menu <SPAN CLASS="eKeyword">create</span>d previously and add it to the context menu of a <b>Label</b>.</p>
-<pre>dummy := <SPAN CLASS="elocal">label_1_context_menu</span>.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</span> (mi_format.clone_menu)</pre>
-<p>&nbsp;</p>
-<h2>A Simple menu Application</h2>
-<SPAN CLASS="eText"><p>In order to run this sample, just open
-<root xmlns:d2="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:dt="urn:schemas-microsoft-com:datatypes">
-</root>
-<root xmlns:d2="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:dt="urn:schemas-microsoft-com:datatypes">
-<a href="file:///D:/Eiffel52/examples/dotnet/calculator/Eiffel%20Project.eifp" name="_Running_the_Sample">
-the project</a></root> and run it (debug -&gt; start). </p>
-</body>
-
+		<p>&nbsp;</p>
+		<h2>Adding Default Menu Items</h2>
+		<p>The following example demonstrates how to specify a default menu item.</p>
+		<pre><SPAN CLASS="elocal">mmi_sans_serif</SPAN>: <SPAN CLASS="eClass">WINFORMS_MAIN_MENU</SPAN></pre>
+		<pre><SPAN CLASS="eKeyword">create</SPAN> mmi_sans_serif.<SPAN CLASS="eFeature">make_from_text_and_on_click</SPAN> ((("").<SPAN CLASS="eFeature">to_cil</SPAN>).<SPAN CLASS="eFeature">concat_string_string</SPAN> (("&amp;1. ").<SPAN CLASS="eFeature">to_cil</SPAN>,
+		&nbsp;sans_serif_font_family.<SPAN CLASS="eFeature">get_name</SPAN>), <SPAN CLASS="eKeyword">create</SPAN> {<SPAN CLASS="eClass">EVENT_HANDLER</SPAN>}.<SPAN CLASS="eFeature">make</SPAN> (<SPAN CLASS="eKeyword">Current</SPAN>, $format_font_clicked))
+mmi_sans_serif.set_checked (<SPAN CLASS="eKeyword">True</SPAN>) </pre>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<h2>Adding Check Marks to Menu Items</h2>
+		<p>The following example demonstrates how to display a check mark next to a menu 
+			item. The code also demonstrates how to track which item is checked.</p>
+		<pre>mi_medium: <SPAN CLASS="eClass">WINFORMS_MAIN_MENU</SPAN></pre>
+		<pre><SPAN CLASS="eKeyword">create</SPAN> mi_medium.<SPAN CLASS="eFeature">make_from_text_and_on_click</SPAN> (("&amp;Medium").<SPAN CLASS="eFeature">to_cil</SPAN>, <SPAN CLASS="eKeyword">create</SPAN> {<SPAN CLASS="eClass">EVENT_HANDLER</SPAN>}.<SPAN CLASS="eFeature">make</SPAN> (<SPAN CLASS="eKeyword">Current</SPAN>, $format_size_clicked))
+mi_medium.set_checked (<SPAN CLASS="eKeyword">True</SPAN>)</pre>
+		<p><br>
+			&nbsp;</p>
+		<h2>Cloning Menus</h2>
+		<p>In many cases, the context menu for a control is a subset of the main menu. You 
+			cannot add the same menu items to multiple menus, but you can clone a menu item 
+			or set of menu items. The following code demonstrates how to clone the <b>Format</b>
+			menu
+			<SPAN CLASS="eKeyword">create</SPAN>d previously and add it to the context menu 
+			of a <b>Label</b>.</p>
+		<pre>dummy := <SPAN CLASS="elocal">label_1_context_menu</SPAN>.get_menu_items.<SPAN CLASS="eFeature">add_menu_item</SPAN> (mi_format.clone_menu)</pre>
+		<p>&nbsp;</p>
+	</body>
 </html>

@@ -15,7 +15,7 @@ inherit
 			position as text_position
 		undefine
 			pass_address, copy, setup, 
-			consistent, is_equal, simple_format
+			consistent, is_equal
 		redefine
 			byte_node, type_check,
 			find_breakable, format,
@@ -113,11 +113,11 @@ feature -- Formatter
 			until
 				i > l_count or failure
 			loop
-				ctxt.begin;
 				if not_first then
 					ctxt.put_separator;
 				end;
 				ctxt.new_expression;
+				ctxt.begin;
 				i_th(i).format(ctxt);
 				if not ctxt.last_was_printed then
 					ctxt.rollback;
@@ -153,11 +153,11 @@ feature -- Formatter
 			until
 				i < 1 or failure
 			loop
-				ctxt.begin;
 				if not_first then
 					ctxt.put_separator;
 				end;
 				ctxt.new_expression;
+				ctxt.begin;
 				i_th(i).format(ctxt);
 				if not ctxt.last_was_printed then
 					ctxt.rollback;

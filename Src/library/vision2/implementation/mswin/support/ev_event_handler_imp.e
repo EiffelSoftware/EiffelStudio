@@ -38,7 +38,7 @@ feature {NONE} -- Status report
 			end
 		end
 
-feature {NONE} -- Element change
+feature {EV_PND_SOURCE_IMP} -- Element change
 
 	add_command (event_id: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' and `arg' to the list corresonding to `event_id'
@@ -69,23 +69,6 @@ feature {NONE} -- Element change
 			(command_list @ event_id).extend (com)
 		end
 
-	remove_command (event_id: INTEGER) is
-			-- Remove all the commands associated with
-			-- the event `event_id'. If the array of command
-			-- is then empty, we set it to Void.
-		require
-			valid_id: event_id >= 1 and event_id <= command_count
-		do
-			if command_list /= Void then
-				if (command_list @ event_id) /= Void then
-					command_list.force (Void, event_id)
-				end
-				if command_list.all_cleared then
-					command_list := Void
-				end
-			end
-		end
-
 	remove_single_command (event_id: INTEGER; cmd: EV_COMMAND) is
 			-- Remove `cmd' from the list of commmands associated
 			-- with the event `event_id'.
@@ -110,6 +93,23 @@ feature {NONE} -- Element change
 					if list.item.command = cmd then
 						list.remove
 					end
+				end
+			end
+		end
+
+	remove_command (event_id: INTEGER) is
+			-- Remove all the commands associated with
+			-- the event `event_id'. If the array of command
+			-- is then empty, we set it to Void.
+		require
+			valid_id: event_id >= 1 and event_id <= command_count
+		do
+			if command_list /= Void then
+				if (command_list @ event_id) /= Void then
+					command_list.force (Void, event_id)
+				end
+				if command_list.all_cleared then
+					command_list := Void
 				end
 			end
 		end

@@ -67,6 +67,7 @@ feature -- Access
 			Result.append (
 					"external%N%
 					%	include_path:	%"$ISE_EIFFEL\library\wel\spec\windows\include%",%N%
+					%			%"$ISE_EIFFEL\library\time\Clib%",%N%
 					%			%"$ISE_EIFFEL\library\com\spec\windows\include%",%N")
 		end
 

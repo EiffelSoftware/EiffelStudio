@@ -803,6 +803,23 @@ feature -- Class info
 			end
 		end
 
+	generate_class_attributes (class_type: CLASS_TYPE) is
+			-- Define custom attributes of `class_type'.
+		require
+			class_type_not_void: class_type /= Void
+		local
+			l_ca_factory: CUSTOM_ATTRIBUTE_FACTORY
+		do
+			current_class_type := class_type
+			create l_ca_factory
+			l_ca_factory.set_class_custom_attributes (
+				class_mapping.item (class_type.static_type_id))
+			if class_type.implementation_id /= class_type.static_type_id then
+				l_ca_factory.set_class_custom_attributes (
+					class_mapping.item (class_type.implementation_id))
+			end
+		end
+
 	define_default_constructor (class_type: CLASS_TYPE) is
 			-- Define default constructor for implementation of `class_type'
 		require
@@ -862,6 +879,7 @@ feature -- Class info
 			
 			create l_name_ca.make
 			l_name_ca.put_string (l_class_name)
+			l_name_ca.put_integer_16 (0)
 			define_custom_attribute (l_class_token, ise_eiffel_class_name_attr_ctor_token,
 				l_name_ca)
 		
@@ -1136,6 +1154,7 @@ feature -- Features info
 			i, j: INTEGER
 			l_signature: ARRAY [INTEGER]
 			l_is_c_external: BOOLEAN
+			l_ca_factory: CUSTOM_ATTRIBUTE_FACTORY
 		do
 			if feat.feature_name_id /= Names_heap.void_name_id then
 				l_is_attribute := feat.is_attribute
@@ -1341,6 +1360,8 @@ feature -- Features info
 						last_override_token := l_meth_token
 					end
 				end
+				create l_ca_factory
+				l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
 			end
 		end
 
@@ -1941,7 +1962,9 @@ feature -- IL Generation
 			-- Generate call to `name' with signature `parameters_type' + `return_type'.
 		require
 			base_name_not_void: base_name /= Void
-			base_name_empty: not base_name.is_empty
+			base_name_not_empty: not base_name.is_empty
+			name_not_void: name /= Void
+			name_not_empty: not name.is_empty
 			valid_external_type: valid_type (ext_kind)
 		local
 			l_type_token: INTEGER
@@ -1950,6 +1973,128 @@ feature -- IL Generation
 			internal_generate_external_call (0, l_type_token, Void, name, ext_kind,
 					Names_heap.convert_to_string_array (parameters_type),
 					Names_heap.item (return_type), is_virtual)
+		end
+
+	external_token (base_name: STRING; member_name: STRING; ext_kind: INTEGER;
+			parameters_type: ARRAY [INTEGER]; return_type: INTEGER) : INTEGER
+		is
+			-- Get token for feature specified by `base_name' and `member_name'
+		require
+			base_name_not_void: base_name /= Void
+			base_name_empty: not base_name.is_empty
+			member_name_not_void: member_name /= Void
+			member_name_not_empty: not member_name.is_empty
+			valid_external_type: valid_type (ext_kind)
+		local
+			l_meth_sig: like method_sig
+			l_field_sig: like field_sig
+			l_class_token: INTEGER
+			i, nb: INTEGER
+			l_has_return_type: BOOLEAN
+			l_type: TYPE_I
+			l_real_type: STRING
+			l_is_array: BOOLEAN
+			l_parameters_string: ARRAY [STRING]
+			l_return_type: STRING
+		do
+			l_class_token := external_token_mapping.item (base_name)
+			l_parameters_string := Names_heap.convert_to_string_array (parameters_type)
+			l_return_type := Names_heap.item (return_type)
+			
+			l_has_return_type := l_return_type /= Void
+			if l_has_return_type then
+				if l_return_type.item (l_return_type.count) = ']' then
+					l_real_type := l_return_type.substring (1, l_return_type.count - 2)
+					l_is_array := True
+				else
+					l_real_type := l_return_type
+				end
+				l_type := external_class_mapping.item (l_real_type)
+			end
+			
+			inspect ext_kind
+			when Field_type, Static_field_type, Set_field_type, Set_static_field_type then
+				l_field_sig := field_sig
+				l_field_sig.reset
+				if l_is_array then
+					l_field_sig.set_type (
+						feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+				end
+				if l_type /= Void then
+					set_signature_type (l_field_sig, l_type)
+				else
+					l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+						external_token_mapping.item (l_return_type))
+				end
+				
+				uni_string.set_string (member_name)
+				Result := md_emit.define_member_ref (uni_string, l_class_token, l_field_sig)
+			else
+				l_meth_sig := method_sig
+				l_meth_sig.reset
+				if ext_kind = static_type then
+					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+				else
+					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+				end
+
+				if l_parameters_string /= Void then
+					nb := l_parameters_string.count
+				end
+
+				l_meth_sig.set_parameter_count (nb)
+
+				if l_has_return_type then
+					if l_is_array then
+						l_meth_sig.set_type (
+							feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+					end
+					if l_type /= Void then
+						set_method_return_type (l_meth_sig, l_type)
+					else
+						l_meth_sig.set_return_type (
+							feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+							external_token_mapping.item (l_return_type))
+					end
+				else
+					l_meth_sig.set_return_type (
+						feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				end
+	
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					l_real_type := l_parameters_string.item (i)
+					if l_real_type.item (l_real_type.count) = ']' then
+						l_is_array := True
+						l_real_type := l_real_type.substring (1, l_real_type.count - 2)
+					else
+						l_is_array := False
+					end
+					l_type := external_class_mapping.item (l_real_type)
+					if l_is_array then
+						l_meth_sig.set_type (
+							feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+					end
+					if l_type /= Void then
+						set_signature_type (l_meth_sig, l_type)
+					else
+						l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+							external_token_mapping.item (l_real_type))
+					end
+					i := i + 1
+				end
+		
+				if member_name = Void then
+					uni_string.set_string (".ctor")
+				else
+					uni_string.set_string (member_name)
+				end
+
+				Result := md_emit.define_member_ref (uni_string, l_class_token, l_meth_sig)
+			end
 		end
 
 	internal_generate_external_call (an_assembly_token, a_type_token: INTEGER; base_name: STRING;
@@ -3707,7 +3852,7 @@ feature {IL_CODE_GENERATOR} -- Implementation: convenience
 				feature_table.item_id (feature {PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
 		end
 
-feature {NONE} -- Predefine custom attributes
+feature {IL_CODE_GENERATOR, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute definition
 
 	define_custom_attribute (token: INTEGER; ctor_token: INTEGER; data: MD_CUSTOM_ATTRIBUTE) is
 			-- Define a custom attribute on `token' using constructor `ctor_token' with
@@ -3722,11 +3867,13 @@ feature {NONE} -- Predefine custom attributes
 			end
 		end
 
+feature {NONE} -- Predefined custom attributes
+
 	not_cls_compliant_ca: MD_CUSTOM_ATTRIBUTE is
 			-- Blob for not CLS compliant attribute
 		once
 			create Result.make
-			Result.put_integer_8 (0)
+			Result.put_boolean (False)
 			Result.put_integer_16 (0)
 		end
 
@@ -3734,7 +3881,7 @@ feature {NONE} -- Predefine custom attributes
 			-- Blob for not COM Visible attribute.
 		once
 			create Result.make
-			Result.put_integer_8 (0)
+			Result.put_boolean (False)
 			Result.put_integer_16 (0)
 		end
 

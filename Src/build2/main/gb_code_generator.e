@@ -970,6 +970,7 @@ feature {NONE} -- Implementation
 			generated_info: GB_GENERATED_INFO
 			supported_types, current_settings: ARRAYED_LIST [STRING]
 			temp_set: STRING
+			dot_index: INTEGER
 		do
 			from
 				all_ids.start
@@ -1003,7 +1004,13 @@ feature {NONE} -- Implementation
 							temp_set_not_empty: not temp_set.is_empty
 						end
 						if generated_info.is_root_object then
-							temp_set := temp_set.substring (temp_set.index_of ('.', 1) + 1, temp_set.count)
+								--| FIXME there must be a better way of performing this, but if a pixmap
+								--| is set to a window, we must not strip the name. Otherwise the name
+								--| must always be stripped.
+							dot_index := temp_set.index_of ('.', 1)
+							if not temp_set.substring (1, dot_index - 1).is_equal (pixmap_name) then
+								temp_set := temp_set.substring (dot_index + 1, temp_set.count)
+							end
 							if project_settings.client_of_window and not temp_set.is_empty then
 								temp_set := Client_window_string + "." + temp_set
 							end

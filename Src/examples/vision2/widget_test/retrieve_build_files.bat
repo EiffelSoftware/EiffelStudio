@@ -1,3 +1,18 @@
+if .%1. == .. goto no_command_line
+
+REM Check out Build source.
+cvs co -r %1 Src/build2
+
+REM Check out bitmaps from Build delivery
+cvs co -r %1 Delivery/build/bitmaps
+
+REM Check out files from vision2_tour
+cvs co -r %1 Delivery/vision2_tour
+
+GOTO files_checked_out
+
+:no_command_line
+
 REM Check out Build source.
 cvs co Src/build2
 
@@ -7,6 +22,7 @@ cvs co Delivery/build/bitmaps
 REM Check out files from vision2_tour
 cvs co Delivery/vision2_tour
 
+:files_checked_out
 REM Copy template files
 XCOPY /Y /E /I Delivery\vision2_tour\templates .\templates
 

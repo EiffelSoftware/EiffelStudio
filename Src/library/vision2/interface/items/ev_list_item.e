@@ -72,28 +72,6 @@ feature {NONE} -- Implementation
 			create {EV_LIST_ITEM_IMP} implementation.make (Current)
 		end
 
-feature -- Obsolete
-
-	is_first: BOOLEAN is
-			-- Is `Current' first in list?
-		obsolete
-			"use my_list.first = Current"
-		require
-			parent_not_void: parent /= Void
-		do
-			Result := parent.first = Current
-		end
-
-	is_last: BOOLEAN is
-			-- Is `Current' last in list?
-		obsolete
-			"use my_list.last = Current"
-		require
-			parent_not_void: parent /= Void
-		do
-			Result := parent.last = Current
-		end
-
 end -- class EV_LIST_ITEM
 
 --!-----------------------------------------------------------------------------

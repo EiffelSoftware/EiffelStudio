@@ -29,22 +29,21 @@ feature -- Processing
 	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING is
 			-- Node text
 		local
-			l_url,
-			l_name,
-			l_anchor: STRING
-			l_util: UTILITY_FUNCTIONS				
+			l_url: STRING					
 			l_children: ARRAYED_LIST [like a_node]
 			l_item: like a_node
 		do
 			create Result.make_empty
-			create l_util
+			
+			l_url := friendly_node_url (a_node)
+			l_url.prepend ("../")
 			
 				-- Add parent links
 			if a_node.has_parent then
 				Result.append ("<tr><td>&nbsp;You are in:<br><br></td></tr>")
 				Result.append (parent_hierarchy_text (a_node))
 				Result.append ("<tr><td>" + spacer_html (number_of_parents (a_node)))
-				Result.append ("<a href=%"" + a_node.parent.id.out + ".html" + "%"><img src=%"../folder_open.gif%" align=%"center%"></a>&nbsp;" + a_node.title)			
+				Result.append ("<a href=%"" + a_node.id.out + ".html" + "%"><img src=%"../folder_open.gif%" align=%"center%"></a>&nbsp;<a href=%"" + l_url + "%" target=%"content_frame%">" + a_node.title + "</a>")			
 				Result.append ("<tr><td><br></td></tr>")
 				Result.append ("<tr><td>&nbsp;Topics:<br><br></td></tr>")
 			end
@@ -58,24 +57,7 @@ feature -- Processing
 					l_children.after
 				loop
 					l_item := l_children.item
-					if l_item.url = Void then
-						l_url := l_util.unique_name
-					else
-						l_url := l_util.toc_friendly_url (l_item.url)
-					end
-					
-					if not l_item.url_is_directory then				
-						l_name := l_util.toc_friendly_url (l_url)
-						if l_name.occurrences ('#') > 0 then
-							l_anchor := l_name.substring (l_name.last_index_of ('#', l_name.count), l_name.count)
-						end
-						l_name := l_util.file_no_extension (l_name)
-						l_name.append (".html")				
-						if l_anchor /= void then
-							l_name.append (l_anchor)
-						end
-						l_url := l_name
-					end
+					l_url := friendly_node_url (l_item)
 		
 					Result.append ("<tr><td><a href=%"../" + l_url + "%" target=%"content_frame%"")
 					if l_item.has_child then						
@@ -111,7 +93,8 @@ feature {NONE} -- Implementation
 			node_has_parent: a_node.has_parent
 		local
 			l_parent: like a_node
-			l_title: STRING			
+			l_title,
+			l_url: STRING
 		do
 			create Result.make_empty
 			l_parent := a_node.parent
@@ -125,13 +108,16 @@ feature {NONE} -- Implementation
 			
 				-- Add spacers for tree effect
 			Result.append (spacer_html (number_of_parents (l_parent)))
+
+			l_url := friendly_node_url (l_parent)
+			l_url.prepend ("../")
 			
 				-- Add parent node
 			l_title := l_parent.title.twin
 			if not l_title.is_equal ("table_of_contents") then
-				Result.append ("<a href=%"" + l_parent.id.out + ".html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a>" + l_title)
+				Result.append ("<a href=%"" + l_parent.id.out + ".html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a><a href=%"" + l_url + "%" target=%"content_frame%">" + l_title + "</a>")
 			else
-				Result.append ("<a href=%"" + "0.html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a>Documentation")
+				Result.append ("<a href=%"" + "0.html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a><a href=%"" + l_url + "%" target=%"content_frame%">Documentation Home</a>")
 			end			
 		end		
 
@@ -159,5 +145,35 @@ feature {NONE} -- Implementation
 				Result := Result + number_of_parents (a_node.parent)
 			end
 		end
+		
+	friendly_node_url (a_node: TABLE_OF_CONTENTS_NODE): STRING is
+			-- Friendly node url for toc
+		local
+			l_url,
+			l_name,
+			l_anchor: STRING
+			l_util: UTILITY_FUNCTIONS
+		do
+			create l_util
+			
+			if a_node.url = Void then
+				l_url := "index"
+			else
+				l_url := l_util.toc_friendly_url (a_node.url)
+			end
+			
+			if not a_node.url_is_directory then				
+				l_name := l_util.toc_friendly_url (l_url)
+				if l_name.occurrences ('#') > 0 then
+					l_anchor := l_name.substring (l_name.last_index_of ('#', l_name.count), l_name.count)
+				end
+				l_name := l_util.file_no_extension (l_name)
+				l_name.append (".html")				
+				if l_anchor /= void then
+					l_name.append (l_anchor)
+				end
+				Result := l_name
+			end	
+		end		
 
 end -- class TABLE_OF_CONTENTS_SIMPLE_WEB_HELP_FORMATTER

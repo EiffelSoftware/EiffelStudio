@@ -268,10 +268,14 @@ feature {NONE} -- Processing
            			end
 					create l_xm_link.make (l_xm_parent, "link", create {XM_NAMESPACE}.make_default)
            			create l_xm_label.make (l_xm_link, "label", create {XM_NAMESPACE}.make_default)							
-					l_xm_label.put_first (create {XM_CHARACTER_DATA}.make (l_xm_label, "Online Documentation"))
+					l_xm_label.put_first (create {XM_CHARACTER_DATA}.make (l_xm_label, "Documentation Home"))
         			l_xm_link.put_first (l_xm_label)
         			create l_xm_url.make (l_xm_link, "url", create {XM_NAMESPACE}.make_default)
-					l_xm_url.put_first (create {XM_CHARACTER_DATA}.make (l_xm_url, "/index.html"))
+        			if l_url /= Void then
+        				l_xm_url.put_first (create {XM_CHARACTER_DATA}.make (l_xm_url, "../" + l_url))
+        			else
+        				l_xm_url.put_first (create {XM_CHARACTER_DATA}.make (l_xm_url, "/index.html"))
+        			end					
            			l_xm_link.put_first (l_xm_url)								           			
 					l_xm_parent.put_first (l_xm_link)						
 				end

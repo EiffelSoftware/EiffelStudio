@@ -11,7 +11,8 @@ class
 inherit
 	EV_PRINT_DIALOG_I
 		redefine
-			interface
+			interface,
+			print_context
 		end
 
 	EV_STANDARD_DIALOG_IMP
@@ -51,11 +52,11 @@ feature {NONE} -- Initialization
 	initialize is
 				-- Setup window and action sequences.
 		local
-			printer_frame, range_frame, copies_frame, orientation_frame: EV_FRAME
+			printer_frame, range_frame, copies_frame, orientation_frame, page_type_frame: EV_FRAME
 			main_dialog_container, printer_vbox1, printer_vbox2,
 			range_vbox, copies_vbox: EV_VERTICAL_BOX
 			printer_hbox, frame_container, range_hbox, copies_hbox1,
-			copies_hbox2, orientation_hbox, button_hbox: EV_HORIZONTAL_BOX
+			copies_hbox2, orientation_hbox, button_hbox, page_type_hbox: EV_HORIZONTAL_BOX
 			print_btn_imp, cancel_btn_imp: EV_BUTTON_IMP
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
@@ -151,15 +152,34 @@ feature {NONE} -- Initialization
 			create orientation_frame.make_with_text ("Orientation")
 			orientation_frame.extend (orientation_hbox)
 			main_dialog_container.extend (orientation_frame)
-
+			
+			-- Build the 'Page_type' frame.
+			create page_type_frame.make_with_text ("Page Type")
+			create page_type_hbox
+			page_type_hbox.set_border_width (4)
+			--page_type_hbox.set_padding_width (5)
+			create page_type_combo.make_with_strings (<<Letter, Legal, Executive, Ledger, A4, A5, B5, C5>>)
+			page_type_combo.set_minimum_width (100)
+			page_type_hbox.extend (page_type_combo)
+			page_type_hbox.disable_item_expand (page_type_combo)
+			page_type_combo.disable_edit
+			page_type_frame.extend (page_type_hbox)
+			main_dialog_container.extend (page_type_frame)
+			
+			
 			-- Add separator and buttons
 			main_dialog_container.extend (create {EV_HORIZONTAL_SEPARATOR})
 			create button_hbox
+			button_hbox.set_padding (5)
+			button_hbox.extend (create {EV_CELL})
 			create print_btn.make_with_text ("Print")
+			print_btn.set_minimum_width (100)
 			button_hbox.extend (print_btn)
 			create cancel_btn.make_with_text ("Cancel")
+			cancel_btn.set_minimum_width (100)
 			button_hbox.extend (cancel_btn)
-			button_hbox.enable_homogeneous
+			button_hbox.disable_item_expand (print_btn)
+			button_hbox.disable_item_expand (cancel_btn)
 			main_dialog_container.extend (button_hbox)
 			extend (main_dialog_container)
 			disable_user_resize
@@ -235,6 +255,40 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	print_context: EV_PRINT_CONTEXT is
+			-- Return a print context from the dialog
+		local
+			pspc: EV_POSTSCRIPT_PAGE_CONSTANTS
+			page_constant: INTEGER
+		do
+			Result := Precursor {EV_PRINT_DIALOG_I}
+			
+				-- Set the vertical and horizontal resolutions.
+			create pspc
+			page_constant := pspc.Letter
+
+			if page_type_combo.text.is_equal (Letter) then
+				page_constant := pspc.Letter
+			elseif page_type_combo.text.is_equal (Legal) then
+				page_constant := pspc.Legal
+			elseif page_type_combo.text.is_equal (Executive) then
+				page_constant := pspc.Executive
+			elseif page_type_combo.text.is_equal (Ledger) then
+				page_constant := pspc.Ledger
+			elseif page_type_combo.text.is_equal (A4) then
+				page_constant := pspc.A4
+			elseif page_type_combo.text.is_equal (A5) then
+				page_constant := pspc.A5
+			elseif page_type_combo.text.is_equal (B5) then
+				page_constant := pspc.B5
+			elseif page_type_combo.text.is_equal (C5) then
+				page_constant := pspc.C5envelope
+			end
+
+			Result.set_horizontal_resolution (pspc.page_width (page_constant, landscape_checked))
+			Result.set_vertical_resolution (pspc.page_height (page_constant, landscape_checked))
+		end
 
 	from_page: INTEGER is
 			-- Value for the starting page edit control
@@ -468,6 +522,17 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	page_type_combo: EV_COMBO_BOX
+	
+	Letter: STRING is "Letter"
+	Legal: STRING is "Legal"
+	Executive: STRING is "Executive"
+	Ledger: STRING is "Ledger"
+	A4: STRING is "A4"
+	A5: STRING is "A5"
+	B5: STRING is "B5"
+	C5: STRING is "C5"
 
 	interface: EV_PRINT_DIALOG
 

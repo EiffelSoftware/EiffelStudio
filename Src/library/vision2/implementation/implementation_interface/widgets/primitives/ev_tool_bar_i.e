@@ -13,6 +13,8 @@ inherit
 			set_default_options
 		end
 
+	EV_ITEM_HOLDER_I
+
 feature {NONE} -- Implementation
 
 	make_with_size (w, h: INTEGER) is

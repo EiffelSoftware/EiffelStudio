@@ -3578,6 +3578,24 @@ feature -- DLE
 			visible_level.dle_generate_cecil_table (Current)
 		end;
 
+feature -- Merging
+
+	merge (other: like Current) is
+			-- Merge `other' to `Current'.
+			-- Used when merging precompilations.
+		require
+			other_not_void: other /= Void
+			same_class: equal (id, other.id)
+		do
+			is_used_as_expanded :=
+				is_used_as_expanded or other.is_used_as_expanded;
+			filters.append (other.filters);
+			e_class.merge (other.e_class)
+				--| `syntactical_clients' is used when removing classes.
+				--| Since a precompiled class cannot be removed, it
+				--| doesn't matter if `syntactical_clients' is out-of-date.
+		end
+
 invariant
 
 	lace_class_exists: lace_class /= Void;

@@ -182,21 +182,11 @@ feature -- Basic Operation
 			Precursor
 		end
 
-
-feature {NONE} -- Implementation
-
-	display_state_text is
-		do
-			title.set_text ("Choose Libraries to precompile")
-			subtitle.set_text ("Choose the libraries you want to precompile.%NYou can even add your own library.")
-			message.remove_text
-		end
-
-feature -- Tools
+feature {NONE} -- Tools
 
 	fill_lists is
 			-- Fill the EV_MULTI_COLUMN_LIST for all the compilable libraries
-			-- To determine the compilable libraries, we check the $EIFFEL5 directory
+			-- To determine the compilable libraries, we check the $ISE_EIFFEL directory
 			-- This function fill the library from *scratch*
 			-- If the user has hit Back, then fill_lists_from_previous_state will be
 			-- called
@@ -217,11 +207,13 @@ feature -- Tools
 					list_of_preprecompilable_libraries.after
 				loop
 					current_lib:= list_of_preprecompilable_libraries.item
-					create current_precomp.make_from_string (eiffel_directory.name)
-					current_precomp.extend (current_lib)
-					it:= fill_ev_list_items (current_precomp, "Ace.ace")
-					if it /= Void then
-						precompilable_libraries.extend (it)
+					if not (current_lib.is_equal (".") or current_lib.is_equal ("..")) then
+						create current_precomp.make_from_string (eiffel_directory.name)
+						current_precomp.extend (current_lib)
+						it:= fill_ev_list_items (current_precomp, "ace.ace")
+						if it /= Void then
+							precompilable_libraries.extend (it)
+						end
 					end
 					list_of_preprecompilable_libraries.forth
 				end
@@ -251,7 +243,7 @@ feature -- Tools
 			if int_dir.exists then
 				list_of_file:= int_dir.linear_representation
 				list_of_file.compare_objects
-				if list_of_file.has (ace_name) then
+				if has__case_insensitive_comparison (list_of_file, ace_name) then
 					create fi.make_open_read (path_name)
 					fi.read_stream (fi.count)
 					s:= clone (fi.last_string)
@@ -269,7 +261,9 @@ feature -- Tools
 						create info_lib.make
 						info_lib.put (path_name, 1)
 
-						if list_of_file.has ("EIFGEN") then
+						if has__case_insensitive_comparison (list_of_file, "EIFGEN") and
+						   has__case_insensitive_comparison (list_of_file, "precomp.epr")
+						then
 							info_lib.put (True, 2)
 							it.extend (sys_name)
 							it.extend (Interface_names.l_Yes)
@@ -285,6 +279,28 @@ feature -- Tools
 				end
 			end
 			Result:= it			
+		end
+		
+	has__case_insensitive_comparison (list_of_strings: ARRAYED_LIST [STRING]; a_string: STRING): BOOLEAN is
+			-- Is `a_string' present in `list_of_strings'?
+			-- The comparison is made upon upon object content rather than object references and
+			-- is made using a non case sensitive comparison.
+		local
+			cur_item: STRING
+			ref_item: STRING
+		do
+			ref_item := clone (a_string)
+			ref_item.to_lower
+			from
+				list_of_strings.start
+			until
+				Result or list_of_strings.after
+			loop
+				cur_item := clone (list_of_strings.item)
+				cur_item.to_lower
+				Result := cur_item.is_equal (ref_item)
+				list_of_strings.forth
+			end
 		end
 
 	fill_lists_from_previous_state is
@@ -430,20 +446,73 @@ feature -- Tools
 			if file_path /= Void and then file_title /= Void then
 					-- User has selected "OK"
 				it := fill_ev_list_items (file_path, file_title)
-				if it /= Void then
-					to_precompile_libraries.extend (it)
-						 -- enable and disable select such that the set_updatable_entries will react
-						-- and update_state_information will be call
-					it.enable_select
-					it.disable_select
+				if it /= Void then 
+					if not is_row_already_present (to_precompile_libraries, it) and then
+						not is_row_already_present (precompilable_libraries, it)
+					then
+						to_precompile_libraries.extend (it)
+							 -- enable and disable select such that the set_updatable_entries will react
+							-- and update_state_information will be called
+						it.enable_select
+						it.disable_select
+					else
+						create error_dialog.make_with_text ("The ace file you have selected is already listed.")
+						error_dialog.show_modal_to_window (first_window)
+					end
 				else
 					create error_dialog.make_with_text ("The ace file you have selected is not valid.")
 					error_dialog.show_modal_to_window (first_window)
 				end
 			end
 		end
+		
+	is_row_already_present (a_mc_list: EV_MULTI_COLUMN_LIST; a_row: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN is
+			-- Is the row `a_row' represent the same row as a row found in `a_mc_list'?
+		local
+			cur_row: EV_MULTI_COLUMN_LIST_ROW
+			cur_info_lib: TUPLE [STRING, BOOLEAN]
+			ref_info_lib: TUPLE [STRING, BOOLEAN]
+			ref_ace: STRING
+			cur_ace: STRING
+			retried: BOOLEAN
+		do
+			if not retried then
+				ref_info_lib ?= a_row.data
+				check ref_info_lib_not_void: ref_info_lib /= Void end
+				ref_ace ?= ref_info_lib.item (1)
+				check ref_ace_not_void: ref_ace /= Void end
+				ref_ace.to_lower
+				from
+					a_mc_list.start
+				until
+					Result or a_mc_list.after
+				loop
+					cur_row := a_mc_list.item
+					cur_info_lib ?= cur_row.data
+					check cur_info_lib_not_void: cur_info_lib /= Void end
+					cur_ace ?= cur_info_lib.item (1)
+					check cur_ace_not_void: cur_ace /= Void end
+					cur_ace.to_lower
+					Result := ref_ace.is_equal (cur_ace)
+					
+					a_mc_list.forth
+				end
+			else
+				Result := False
+			end
+		rescue
+			retried := True
+			retry
+		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
+
+	display_state_text is
+		do
+			title.set_text ("Choose Libraries to precompile")
+			subtitle.set_text ("Choose the libraries you want to precompile.%NYou can even add your own library.")
+			message.remove_text
+		end
 
 	error_no_ace: BOOLEAN
 			-- Is there an ace file "ace.ace" in the library directory

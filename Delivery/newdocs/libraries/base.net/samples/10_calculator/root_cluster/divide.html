@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
-		
+
 <TITLE>DIVIDE Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -28,19 +28,19 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../root_cluster/state.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">op</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../root_cluster/linked_stack.html">LINKED_STACK</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="sample/../../reference/kernel/real.html">REAL</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../root_cluster/state.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">op</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../root_cluster/linked_stack.html">LINKED_STACK</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../reference/10_kernel/real.html">REAL</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../root_cluster/state.html">STATE</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../root_cluster/state.html">STATE</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_operation</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">op</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_operation</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">op</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../root_cluster/state.html">STATE</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_operand_stack</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/state.html#f_operand_stack">operand_stack</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_operand_stack</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/state.html#f_operand_stack">operand_stack</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_console</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/state.html#f_io">io</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_console</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/state.html#f_io">io</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><BR>
 
 </A><BR>
 
@@ -54,7 +54,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_next_choice"><A CLASS="efeature" HREF="../root_cluster/state.html#f_next_choice">next_choice</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/string.html">STRING</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_next_choice"><A CLASS="efeature" HREF="../root_cluster/state.html#f_next_choice">next_choice</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/string.html">STRING</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../root_cluster/state.html">STATE</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
@@ -66,7 +66,7 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../root_cluster/io.html">IO</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">console_object_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">console_object_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -100,9 +100,9 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../root_cluster/state.html">STATE</A><BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_operand_stack</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/state.html#f_operand_stack">operand_stack</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_operand_stack</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/state.html#f_operand_stack">operand_stack</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_console</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/state.html#f_io">io</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_console</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/state.html#f_io">io</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><BR>
 
 <BR>
 

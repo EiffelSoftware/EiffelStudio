@@ -2332,6 +2332,7 @@
             <Directory Id="consts" Name="consts">
               <Component Id="wel_swp_constants.e" Guid="AFEB6CFB-3C86-4EFC-9A48-AD1E5720BB87">
                 <File Id="wel_swp_constants.e" Name="WEL_SW~2.E" LongName="wel_swp_constants.e" KeyPath="yes" />
+                <File Id="wel_dlgc_constants.e" Name="WEL_DL~1.E" LongName="wel_dlgc_constants.e" />
                 <File Id="wel_registry_access_mode.e" Name="WEL_RE~1.E" LongName="wel_registry_access_mode.e" />
                 <File Id="wel_rdw_constants.e" Name="WEL_RD~1.E" LongName="wel_rdw_constants.e" />
                 <File Id="wel_ps_constants.e" Name="WEL_PS~1.E" LongName="wel_ps_constants.e" />

@@ -643,8 +643,8 @@ static const int magic = 7652;
 #undef telldir   
 #endif
 
-/* define the local readdir package macros to call the underlying readdir functions.
-#ifdef USE_VMS_JACKETS  /* if using VMS Porting package ("The Jackets") -- see eif_portable.h
+/* define the local readdir package macros to call the underlying readdir functions. */
+/* #ifdef USE_VMS_JACKETS */ /* if using VMS Porting package ("The Jackets") -- see eif_portable.h */
 /* n.b. this depends on the definitions in vms_jackets.h */
 #define DECC_OPENDIR	GENERIC_OPENDIR_JACKET
 #define DECC_CLOSEDIR	GENERIC_CLOSEDIR_JACKET
@@ -659,7 +659,7 @@ static const int magic = 7652;
 #define DECC_REWINDDIR	DECC$REWINDDIR
 #define DECC_SEEKDIR	DECC$SEEKDIR
 #define DECC_TELLDIR	DECC$TELLDIR
-#endif /* VMS_JACKETS
+/* #endif */ /* VMS_JACKETS */
 #endif /* MY_VMS_WRAPPERS */
 
 rt_public DIR* eif_vms_opendir (const char *dir_name)

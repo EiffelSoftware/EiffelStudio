@@ -18,7 +18,7 @@ inherit
 			command_line as arguments_line
 		end
 	SHARED_LICENSE;
-	SHARED_RESOURCES;
+	SHARED_CONFIGURE_RESOURCES;
 	SHARED_BATCH_COMPILER;
 	SHARED_EIFFEL_PROJECT
 
@@ -29,7 +29,7 @@ feature -- Initialization
 		local
 			screen: SCREEN;
 			temp: STRING;
-			new_resources: RESOURCES
+			new_resources: EB_RESOURCES
 		do
 			if not retried then
 					-- Check that environment variables
@@ -48,13 +48,13 @@ feature -- Initialization
 				end;
 
 					-- Read the resource files
-				if resources /= Void then end;
 
 				if argument_count = 1 and then
-					argument (1).is_equal ("-bench")
+					(argument (1).is_equal ("-bench") or
+					else argument (1).is_equal ("-from_bench"))
 				then
 					Eiffel_project.set_batch_mode (False);
-					init_connection;
+					init_connection (argument (1).is_equal ("-bench"));
 					if init_licence then
 						if toolkit = Void then end;
 						init_windowing;
@@ -84,7 +84,7 @@ feature -- Initialization
 				end;
 				io.error.new_line;
 			end;
-			if not resources.get_boolean (r_Fail_on_rescue, False) then
+			if not fail_on_rescue then
 				retried := True;
 				retry
 			end;

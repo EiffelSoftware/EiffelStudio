@@ -1,23 +1,16 @@
 indexing
-
 	description: 
 		"EiffelVision horizontal split area, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
-
 	EV_HORIZONTAL_SPLIT_AREA_I
-	
-inherit
 
+inherit
 	EV_SPLIT_AREA_I
-		undefine
-			add_child1,
-			add_child2
-		end
 
 end -- class EV_HORIZONTAL_SPLIT_AREA_I
 

@@ -16,16 +16,6 @@ inherit
 			add_child_ok
 		end
 
-feature -- Status report
-	
-	add_child_ok: BOOLEAN is
-			-- True, if it is ok to add a child to
-			-- container. With invisible container, it is 
-			-- always ok.
-		do
-			Result := True
-		end
-
 end -- class EV_INVISIBLE_CONTAINER_I
 
 --|----------------------------------------------------------------

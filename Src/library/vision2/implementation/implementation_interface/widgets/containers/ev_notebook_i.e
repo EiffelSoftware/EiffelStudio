@@ -11,9 +11,6 @@ deferred class
 	
 inherit
 	EV_CONTAINER_I	
-		redefine
-			add_child_ok
-		end
 	
 feature -- Constants
 	
@@ -89,16 +86,6 @@ feature -- Event -- removing command association
 			exists: not destroyed
 		deferred
 		end	
-
-feature -- Implementation
-
-	add_child_ok: BOOLEAN is
-			-- True, if it is ok to add a child to
-			-- container. With a notebook, it is 
-			-- always ok.
-		do
-			Result := True
-		end
 
 end -- class EV_NOTEBOOK_I
 

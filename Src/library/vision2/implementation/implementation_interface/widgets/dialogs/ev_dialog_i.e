@@ -10,13 +10,17 @@ deferred class
 
 inherit
 	EV_WINDOW_I
+		export
+			{NONE} set_default_options
+			{NONE} set_default_colors
+			{NONE} set_default_minimum_size
 		redefine
-			build
+			set_default_options
 		end
 
 feature {EV_DIALOG} -- Initialization
 
-	build is
+	set_default_options is
 			-- Put the component inside the dialog
 		local
 			dbox: EV_VERTICAL_BOX
@@ -55,10 +59,6 @@ feature -- Access
 
 	action_area: EV_HORIZONTAL_BOX
 				-- The action area on the bottom of the window
-
-feature {NONE} -- Implementation
-
-	seperator: EV_SEPARATOR
 
 end -- class EV_DIALOG_I
 

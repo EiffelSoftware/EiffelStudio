@@ -89,7 +89,7 @@ struct utimbuf {
 #include <sys/file.h>
 #endif
 
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_plug.h"
 #include "eif_error.h"
 #include "eif_dir.h"

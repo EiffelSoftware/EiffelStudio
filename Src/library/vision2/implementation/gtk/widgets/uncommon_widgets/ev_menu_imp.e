@@ -47,13 +47,13 @@ feature {NONE} -- Initialization
 			C.gtk_menu_item_set_submenu (
 				c_object, list_widget
 			)
-			Precursor
+			{EV_MENU_ITEM_IMP} Precursor
 		end
 		
 	dispose is
 			-- 
 		do
-			Precursor
+			{EV_MENU_ITEM_IMP} Precursor
 		--	print ("Menu is being disposed%N")
 		--	gtk_object_unref (list_widget)
 			list_widget := NULL

@@ -7,9 +7,6 @@ class
 
 inherit
 	EB_TOOL_COMMAND
-		redefine
-			tool
-		end
 
 	EB_SHARED_INTERFACE_TOOLS
 
@@ -124,8 +121,6 @@ feature -- Update
 --		end
 
 feature {NONE} -- Implementation
-
-	tool: EB_PROJECT_TOOL
 
 	create_class_tool (a_stone: STONE) is
 			-- Create a class tool and process `a_stone'.

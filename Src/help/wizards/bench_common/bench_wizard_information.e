@@ -14,8 +14,10 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Assign default values
+		local
+			l_dir: DIRECTORY
+			l_count: INTEGER
 		do
-			project_name := clone (Default_project_name)
 			compile_project := True
 			ace_location := ""
 
@@ -27,6 +29,20 @@ feature {NONE} -- Initialization
 				else
 					project_location := Home
 				end
+			end
+			from
+				l_count := 1
+				project_name := Default_project_name
+				create l_dir.make (project_location + "\" + project_name)
+			until
+				not l_dir.exists or else
+				l_count = 100
+			loop
+				create l_dir.make (project_location + "\" + project_name)
+				if l_dir.exists then
+					project_name := default_project_name + "_" + l_count.out 
+				end
+				l_count := l_count + 1
 			end
 			if project_location @ project_location.count /= Operating_environment.Directory_separator then
 				project_location.append_character (Operating_environment.Directory_separator)

@@ -25,6 +25,7 @@ feature -- Initialization
 			a_menu_item: EV_MENU_ITEM
 			a_menu_separator: EV_MENU_SEPARATOR
 		do
+			io.putstring ("...%N")
 				-- create Menus & menu items
 			create a_menu_bar
 			create a_menu.make_with_text ("Actions")
@@ -55,6 +56,7 @@ feature -- Initialization
 
 			create my_list
 			my_list.disable_multiple_selection
+			my_list.column_click_actions.extend (~test)
 
 			create an_item
 			an_item.extend ("Item "+i.out)
@@ -94,6 +96,7 @@ feature -- Initialization
 feature {NONE} -- Graphical interface
 
 	my_list: EV_MULTI_COLUMN_LIST
+
 	my_label: EV_LABEL
 
 	my_combo: EV_COMBO_BOX
@@ -109,6 +112,11 @@ feature {NONE} -- Implementation
 			-- Quit the program
 		do
 			first_window.destroy
+		end
+
+	test is
+		do
+			io.putstring ("pas de chance%N")
 		end
 
 	toto (a_x, a_y: INTEGER; a_x_tilt, a_y_title, a_pressure: DOUBLE; a_sx, a_sy: INTEGER) is
@@ -153,17 +161,37 @@ feature {NONE} -- Implementation
 			-- Display the selected items
 		local
 			selected_items: LINEAR [EV_MULTI_COLUMN_LIST_ROW]
+			label_string: STRING
+			i: INTEGER
+			messagebox: EV_INFORMATION_DIALOG
 		do
+			create label_string.make (40)
 			selected_items := my_list.selected_items
 			from
 				selected_items.start
+				i := 0
 			until
 				selected_items.after
 			loop
-				io.putstring (selected_items.item.first)
-				io.new_line
+				label_string.append (selected_items.item.first)
+				label_string.append (", ")
+				if (i \\ 8) = 7 then 
+					label_string.append ("%N")
+				end
 				selected_items.forth
+				i := i + 1
 			end
+
+			label_string := label_string.substring (1, label_string.count - 2)
+
+			create messagebox
+			messagebox.set_title ("Selected Items")
+			if label_string.empty then
+				messagebox.set_text ("No selected item")	
+			else
+				messagebox.set_text (label_string)	
+			end
+			messagebox.show_modal
 		end
 
 	select_all_items is
@@ -189,6 +217,11 @@ feature {NONE} -- Implementation
 			-- Disable multiple selection 
 		do
 			my_list.disable_multiple_selection
+		end
+
+	Default_pixmaps: EV_DEFAULT_PIXMAPS is
+		once
+			Create Result
 		end
 
 end -- class EV_LIST_EXAMPLE

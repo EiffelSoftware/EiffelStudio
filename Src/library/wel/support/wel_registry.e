@@ -111,7 +111,7 @@ feature -- Actions
 			loop
 				i := open_key (index_value,node_list.item, Key_read)
 				if i = default_pointer then
-					stop := TRUE
+					stop := True
 				end
 				close_key (index_value)
 				index_value := i

@@ -385,10 +385,10 @@ feature {NONE} -- Implementation
 						-- a constructor. The generation of `parent.target' already
 						-- did any special transformation to perfom call.
 					if il_ext.type /= creator_type then
-						if parent.target.is_predefined then
+						if parent.target.is_predefined or parent.target.is_attribute then
 								-- For same reason we don't do anything for a call to
-								-- a constructor, when `parent.target' is predefined
-								-- any special transformation have already been done.
+								-- a constructor, when `parent.target' is predefined or is
+								-- an attribute any special transformation have already been done.
 							if real_metamorphose then
 									-- Feature is written in an inherited class of current
 									-- expanded class. We need to box.

@@ -11,13 +11,32 @@ deferred class
 	
 inherit
 	
-	EV_WIDGET_I
+	EV_PRIMITIVE_I
+		redefine
+			initialize_colors
+		end
 
+feature {EV_WIDGET} -- Initialization
+
+	initialize_colors is
+			-- Called after the creation of the widget and after
+			-- having stored the parent. It define the default
+			-- colors of a widget which are the same than the
+			-- parent. This feature is redefined by several
+			-- children.
+		local
+			color: EV_COLOR
+		do
+			!! color.make_rgb (255, 255, 255)
+			set_background_color (color)
+			!! color.make_rgb (0, 0, 0)
+			set_foreground_color (color)
+		end
 
 feature -- Access
 
 	get_item (index: INTEGER): EV_LIST_ITEM is
-			-- Give the item of the list at the zero-base
+			-- Give the item of the list at the one-base
 			-- `index'.
 		require
 			exists: not destroyed

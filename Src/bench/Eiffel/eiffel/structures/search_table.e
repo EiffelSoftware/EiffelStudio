@@ -241,7 +241,7 @@ feature {NONE} -- Internal features
 				position := (position + increment) \\ table_size;
 				visited_count := visited_count + 1;
 				old_key := array_item (position);
-				if old_key = Void then
+				if not valid_key (old_key) then
 					if not deleted_marks.item (position) then
 						control := Not_found;
 						stop := true;
@@ -254,16 +254,6 @@ feature {NONE} -- Internal features
 				elseif search_key.is_equal (old_key) then
 					control := Found;
 					stop := true
-				elseif old_key.hash_code = 0 then
-					if not deleted_marks.item (position) then
-						control := Not_found;
-						stop := true;
-						if first_deleted_position >= 0 then
-							position := first_deleted_position
-						end
-					elseif first_deleted_position < 0 then
-						first_deleted_position := position
-					end
 				end
 			end;
 			if not stop then
@@ -314,8 +304,10 @@ feature -- Assertion check
 
 	valid_key (k: H): BOOLEAN is
 			-- Is `k' a valid key?
+		local
+			dead_key: H
 		do
-			Result := k /= Void and then k.hash_code > 0
+			Result := k /= dead_key and then k.is_hashable
 		end;
 
 feature {NONE} -- Status

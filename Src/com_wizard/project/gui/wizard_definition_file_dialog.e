@@ -22,6 +22,13 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		rename
+			free as env_free
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -40,7 +47,8 @@ feature {NONE} -- Initialization
 			create id_cancel.make_by_id (Current, Idcancel)
 			create definition_file_browse_button.make_by_id (Current, Definition_file_browse_button_constant)
 			create destination_folder_browse_button.make_by_id (Current, Destination_folder_browse_button_constant)
-	--		create help_button.make_by_id (Current, Help_button_constant)
+			create help_button.make_by_id (Current, Help_button_constant)
+			help_topic_id := 733
 			create id_back.make_by_id (Current, Id_back_constant)
 			create msg_box.make
 		end
@@ -85,6 +93,8 @@ feature -- Behavior
 			elseif file_name = Void or file_name.empty then
 				msg_box.error_message_box (Current, Empty_definition_file, Initialization_error)
 			else
+				shared_wizard_environment.set_project_name (project_name)
+
 				if folder_name.item (folder_name.count) = Directory_separator then
 					folder_name.head (folder_name.count -1)
 				end
@@ -130,12 +140,12 @@ feature -- Basic Operations
 	browse_for_definition_file is
 			-- Browse for definition file.
 		do
-			File_selection_dialog.set_initial_directory ("c:\")
+			File_selection_dialog.set_initial_directory (browse_directory)
 			File_selection_dialog.activate (Current)
 			if File_selection_dialog.selected then
 				definition_file_edit.set_text (file_selection_dialog.file_name)
-				shared_wizard_environment.set_project_name (file_selection_dialog.file_title)
 			end
+			safe_browse_directory_from_dialog (File_selection_dialog)
 		end
 	
 	browse_for_destination_folder is
@@ -145,6 +155,7 @@ feature -- Basic Operations
 			if folder_selection_dialog.selected then
 				destination_folder_edit.set_text (folder_selection_dialog.folder_name)
 			end
+			set_browse_directory (folder_selection_dialog.folder_name)
 		end
 
 	File_selection_dialog: WEL_OPEN_FILE_DIALOG is
@@ -213,6 +224,16 @@ feature {NONE} -- Implementation
 			if shared_wizard_environment.destination_folder /= Void then
 				destination_folder_edit.set_text (shared_wizard_environment.destination_folder)
 			end
+		end
+
+	project_name: STRING is
+			-- Project name
+		local
+			separator_index: INTEGER
+		do
+			Result := definition_file_edit.text
+			separator_index := Result.last_index_of (Directory_separator, Result.count)
+			Result.tail (Result.count - separator_index)
 		end
 
 end -- class WIZARD_DEFINITION_FILE_DIALOG

@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Make an atom named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+			a_name_not_empty: not a_name.is_empty
 			a_name_not_too_long: a_name.count <= Max_name_length
 		local
 			a_wel_string: WEL_STRING
@@ -50,7 +50,7 @@ feature -- Access
 			Result.head (nb)
 		ensure
 			result_not_void: Result /= Void
-			result_not_empty: not Result.empty
+			result_not_empty: not Result.is_empty
 		end
 
 	Max_name_length: INTEGER is 80

@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 						   (divisor = 1024) or 
 						   (divisor = 1048576)
 			valid_extension: extension /= Void and then 
-							 not extension.empty
+							 not extension.is_empty
 		local
 			integer_part: INTEGER
 			fractional_part: INTEGER -- 1 or 2 digits fractional part
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			Result.append(extension)
 		ensure
 			Result_not_void: Result /= Void
-			Result_not_empty: not Result.empty
+			Result_not_empty: not Result.is_empty
 		end
 
 feature {NONE} -- Internal values

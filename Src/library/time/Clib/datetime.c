@@ -1,8 +1,9 @@
-#include <sys/types.h>
-#include <stdio.h>
-#include <sys/timeb.h>
-#include <time.h>
-#include "eif_eiffel.h"
+#include "datetime.h"
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 
 #ifdef EIF_WIN32
 #ifdef EIF_BORLAND
@@ -166,3 +167,6 @@ void c_set_second (EIF_INTEGER s, EIF_INTEGER *compact_time)
 	*compact_time = *compact_time + ((int) (s));
 }
 
+#ifdef __cplusplus
+	}
+#endif

@@ -9,7 +9,7 @@ inherit
 			make as error_d_create
 		end;
 	COMMAND;
-	CONSTANTS
+	CONSTANTS;
 
 creation
 
@@ -43,16 +43,19 @@ feature
 		end;
 
 	make (a_parent: COMPOSITE) is
+		local
+			set_dialog_att: SET_DIALOG_ATTRIBUTES_COM
 		do
 			error_d_create (Widget_names.error_window, a_parent);
 			set_title (Widget_names.error_window);
 			hide_help_button;
 			hide_cancel_button;
 			set_exclusive_grab;
-			add_ok_action (Current, Void)
+			add_ok_action (Current, Void);
+			!! set_dialog_att;
+			set_dialog_att.execute (Current);
 		end;
 
-	
 feature {NONE}
 
 	execute (argument: ANY) is

@@ -12,26 +12,103 @@ inherit
 	
 feature -- Status report
 
-	is_selected: BOOLEAN is
-			-- Is this radio item checked?
-		do
-		end
-
 	peers: LINKED_LIST [like interface] is
 			-- List of all radio items in the group `Current' is in.
+		local
+			cur: CURSOR
 		do
+			create Result.make
+			if radio_group /= Void then
+				cur := radio_group.cursor
+				from
+					radio_group.start
+				until
+					radio_group.off
+				loop
+					Result.extend (radio_group.item.interface)
+					radio_group.forth
+				end
+				radio_group.go_to (cur)
+			else
+				check
+					-- This item should be selected as enforced by other contracts.
+					is_selected: is_selected
+				end
+				Result.extend (interface)
+			end
 		end
 
 	selected_peer: like interface is
 			-- Radio item that is currently selected.
+		local
+			cur: CURSOR
 		do
+			if radio_group /= Void then
+				cur := radio_group.cursor
+				from
+					radio_group.start
+				until
+					radio_group.off or else Result /= Void
+				loop
+					if radio_group.item.is_selected then
+						Result := radio_group.item.interface
+					end
+					radio_group.forth
+				end
+				radio_group.go_to (cur)
+			else
+				check
+					-- This item should be selected as enforced by other contracts.
+					is_selected: is_selected
+				end
+				Result := interface
+			end
 		end
 
-feature -- Status setting
+feature {EV_ANY_I} -- Implementation
 
-	enable_select is
-			-- Select this radio item.
+	radio_group: LINKED_LIST [like Current]
+			-- List this radio peer is in.
+			-- This reference is shared with the other peers in the group.
+
+	set_radio_group (a_list: like radio_group) is
+			-- Remove `Current' from `radio_group'.
+			-- Set `radio_group' to `a_list'.
+			-- Extend `Current' in `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+			a_list_not_has_current: not a_list.has (Current)
 		do
+			if radio_group /= Void then
+				remove_from_radio_group
+			end
+			radio_group := a_list
+			if radio_group.empty then
+				enable_select
+			end
+			radio_group.extend (Current)
+		ensure
+			assigned: radio_group = a_list
+			in_it: radio_group.has (Current)
+		end
+
+	remove_from_radio_group is
+			-- Remove `Current' from `radio_group'.
+			-- Set `radio_group' to `Void'.
+		require
+			radio_group_not_void: radio_group /= Void
+		do
+			radio_group.start
+			radio_group.prune (Current)
+			check
+				removed: not radio_group.has (Current)
+			end
+			if is_selected and then not radio_group.empty then
+				radio_group.first.enable_select
+			end
+			radio_group := Void
+		ensure
+			void: radio_group = Void
 		end
 
 end -- class EV_RADIO_PEER
@@ -57,6 +134,9 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/02/25 02:18:32  brendel
+--| Implemented.
+--|
 --| Revision 1.1  2000/02/24 20:27:22  brendel
 --| Initial revision. Needed for rearranged radio-item inheritance structure.
 --|

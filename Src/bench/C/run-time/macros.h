@@ -246,7 +246,7 @@ extern int fcount;
 	}
 #define RTXE \
 	loc_set.st_cur = lc; \
-	loc_set.st_end = lc->sk_end; \
+	if (lc) loc_set.st_end = lc->sk_end; \
 	loc_set.st_top = lt
 #define RTXL \
 	char **l = loc_set.st_top; \
@@ -298,6 +298,7 @@ extern int fcount;
  *  RTEU enters in rescue clause
  *  RTEF ends the rescue clause
  *  RTXD declares the variables used to save the run-time stacks context
+ *  RTXSC resynchronizes the run-time stacks in a pseudo rescue clause in C
  *  RTXS(x) resynchronizes the run-time stacks in a rescue clause
  *  RTOK ends a routine with a rescue clause by cleaning the trace stack
  *  RTSO stops the tracing as well as the profiling
@@ -324,8 +325,9 @@ extern int fcount;
 	exvect = exret(exvect); goto start
 #define RTEU exresc(exvect)
 #define RTEF exfail()
-#define RTXS(x) RTXE; RTHS; RTXI(x)
-#define RTXD RTXL; RTXH
+#define RTXS(x) RTXSC; RTXI(x)
+#define RTXSC RTXE; RTHS; RTLS
+#define RTXD RTXL; RTXH; RTXLS
 #define RTOK exok()
 
 /* Accessing of bits in a bit field is done via macros.
@@ -355,8 +357,20 @@ extern int fcount;
 	struct stchunk *hc = hec_stack.st_cur
 #define RTHS \
 	hec_stack.st_cur = hc; \
-	hec_stack.st_end = hc->sk_end; \
+	if (hc) hec_stack.st_end = hc->sk_end; \
 	hec_stack.st_top = ht
+
+/* Loc stack protection:
+ * RTXLS saves loc_stack context in case an exception occurs
+ * RTLS resynchronizes the loc_stack by restoring saved context
+ */
+#define RTXLS \
+	char **lst = loc_stack.st_top; \
+	struct stchunk *lsc = loc_stack.st_cur
+#define RTLS \
+	loc_stack.st_cur = lsc; \
+	if (lsc) loc_stack.st_end = lsc->sk_end; \
+	loc_stack.st_top = lst
 
 /* Other macros used to handle specific needs:
  *  RTMS(s) creates an Eiffel string from a C manifest string s.
@@ -411,10 +425,10 @@ extern int fcount;
  *  RTSA(x) saves assertion level for dynamic type 'x'
  *  RTAL is the access to the saved assertion level variable
  */
-#define RTDA struct eif_opt opt; int current_call_level;\
+#define RTDA struct eif_opt *opt; int current_call_level;\
 	struct profile_stack *old_p_stk
-#define RTSA(x) opt = eoption[x]; check_options(opt, x)
-#define RTAL (~in_assertion & opt.assert_level)
+#define RTSA(x) opt = eoption + x; check_options(opt, x)
+#define RTAL (~in_assertion & opt->assert_level)
 
 /* Macros used for feature call and various accesses to objects.
  *  RTWF(x,y,z) is a feature call

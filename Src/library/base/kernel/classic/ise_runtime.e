@@ -105,7 +105,7 @@ feature -- Feature specific to ISE runtime.
 
  	frozen c_generating_type_of_type (type_id: INTEGER): STRING is
  		external
- 			"C use %"eif_gen_conf.h%""
+ 			"C signature (int16): EIF_REFERENCE use %"eif_gen_conf.h%""
  		alias
  			"eif_gen_typename_of_type"
  		end

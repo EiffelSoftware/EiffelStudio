@@ -2967,7 +2967,7 @@ SCODE * ecom_runtime_ec::ccom_ec_pointed_hresult (SCODE a_hresult)
 
 {
 	SCODE * result = (SCODE *)CoTaskMemAlloc(sizeof(SCODE));
-	result = &a_hresult;
+	*result = a_hresult;
 	return result;
 }
 

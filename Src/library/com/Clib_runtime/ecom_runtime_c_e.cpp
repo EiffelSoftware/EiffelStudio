@@ -452,10 +452,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_currency (CURRENCY * a_currency)
 {
 	EIF_OBJECT result;
 	EIF_TYPE_ID eif_currency_id;
-	EIF_PROC currency_make;
+	EIF_PROCEDURE currency_make;
 
 	eif_currency_id = eif_type_id ("ECOM_CURRENCY");
-	currency_make = eif_proc ("make_by_pointer", eif_currency_id);
+	currency_make = eif_procedure ("make_by_pointer", eif_currency_id);
 	result = eif_create (eif_currency_id);
 	currency_make (eif_access (result), (EIF_POINTER)a_currency);
 	return eif_wean (result);
@@ -468,10 +468,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_decimal (DECIMAL * a_decimal)
 {
 	EIF_OBJECT result;
 	EIF_TYPE_ID eif_decimal_id;
-	EIF_PROC make;
+	EIF_PROCEDURE make;
 
 	eif_decimal_id = eif_type_id ("ECOM_DECIMAL");
-	make = eif_proc ("make_by_pointer", eif_decimal_id);
+	make = eif_procedure ("make_by_pointer", eif_decimal_id);
 	result = eif_create (eif_decimal_id);
 	make (eif_access (result), (EIF_POINTER)a_decimal);
 	return eif_wean (result);

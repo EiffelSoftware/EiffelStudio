@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 	make (a_class: CLASS_I) is
 			-- create instance using `class_i'
 		require
-			non_void_class_i: class_i /= Void
+			non_void_class_i: a_class /= Void
 		local
 			assembly_i: ASSEMBLY_I
 			cluster_i: CLUSTER_I

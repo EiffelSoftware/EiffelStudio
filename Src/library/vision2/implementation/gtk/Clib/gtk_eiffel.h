@@ -326,6 +326,8 @@ GtkWidget* c_gtk_get_label_widget (GtkWidget *widget);
 /* Return a state of a toggle button */
 EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button);
 
+void toggle_button_state_selection_callback(GtkToggleButton *togglebutton,gpointer data);
+
 /*==============================================================================
  Option button functions
 ==============================================================================*/

@@ -1,0 +1,87 @@
+<script src="../instal.js"></script>
+
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Simple Hello world form sample</title>
+<LINK REL=StyleSheet HREF="../../../../default.css">
+</head>
+
+<body>
+
+<h1>Message box sample</h1>
+<center>
+<p>
+<img alt="Hello world form" src="../../images/hello_world.png" width="400" height="144">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img alt="Hello world form" src="../../images/message_box.png" width="203" height="100"></p>
+</center>
+<p><br>
+<br>
+&nbsp;</p>
+<h2>Compiling</h2>
+<script language="JavaScript">
+<!--
+var path_to_ace_file = Eiffel_version + "\\examples\\dotnet\\winforms\\simple_hello_world\\";
+var ace_file_name = "Ace";
+var path_eifp_file = "..\\..\\examples\\winforms\\message_box\\"
+var eifp_name = "Eiffel project.eifp";
+
+if (eiffel_studio) {
+	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
+}
+else {
+	write_envision_compiling_instruction (path_eifp_file, eifp_name)
+}
+-->
+</script>
+<noscript>
+<p>To see compiling instructions, you have to enable javascript.</p></noscript>
+
+<h2>Running</h2>
+<p>After launching the application, you will see a window displayed with a 
+similar appearance to the one above.  </p>
+<p>Click on the <span class="eClass">BUTTON</span> &quot;Click Me!&quot; and a message 
+box will appear with the text that you have entered in the <span class="eClass">TEXT_FIELD</span>.</p>
+<p>&nbsp;</p>
+<h2>Under the Hood</h2>
+<p>The application shows how to use the very useful <span class="eClass">MESSAGE_BOX</span> control.  </p>
+<p>An event (<span class="eClass">EVENT_HANDLER)</span> is associated to a control (here to the 
+<span class="eClass">BUTTON</span>). So the line <span class="eLocal">my_button</span>.<span class="eFeature">add_click</span> (<span class="eKeyword">create</span> {<span class="eClass">EVENT_HANDLER</span>}.make 
+(Current, $<span class="eFeature">my_button_clicked </span>)) associate a click to <span class="eLocal">my_button</span> to the feature 
+ 
+<span class="eFeature">my_button_clicked</span>. So every time the
+<span class="eClass">BUTTON</span> <span class="eLocal">my_button</span> is 
+clicked, the feature 
+ 
+<span class="eFeature">my_button_clicked</span> is executed.</p>
+<p>The feature <span class="eFeature">my_button_clicked</span> displays a <span class="eClass">MESSAGE_BOX</span> 
+(<span class="eKeyword">feature</span> {<span class="eClass">WINFORMS_MESSAGE_BOX</span>}.<span class="eFeature">show</span> (<i>msg</i>)) 
+with the text contained in
+  <span class="eClass">TEXT_FIELD</span> (<i>msg</i> := <span class="eLocal">my_text_field</span>.<span class="eFeature">get_text</span>).</p>
+<p>This sample contains the following class: </p>
+<ul>
+  <li>
+  <span class="eClass">
+  FORM</span> </li>
+  <li>
+<span class="eClass">BUTTON</span></li>
+  <li>
+  <span class="eClass">TEXT_FIELD</span></li>
+  <li>
+  <span class="eClass">EVENT_HANDLER</span> </li>
+</ul>
+
+<h2>Notes</h2>
+<p>This sample is translated from the example located in the <a href="http://localhost/quickstart/winforms/doc/WinFormsMSAA.aspx">QuickStart\winforms\samples\accessible</a>
+ subdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio .NET.</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+</body>
+
+</html>

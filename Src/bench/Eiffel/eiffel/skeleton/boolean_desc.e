@@ -14,7 +14,7 @@ feature
 	level: INTEGER is
 			-- Level comparison
 		once
-			Result := Character_level;
+			Result := Boolean_level;
 		end;
 
 	generate_code (file: INDENT_FILE) is

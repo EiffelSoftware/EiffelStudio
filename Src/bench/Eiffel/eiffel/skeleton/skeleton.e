@@ -57,7 +57,7 @@ feature
 	nb_character: INTEGER is
 			-- Number of character and boolean attributes
 		do
-			Result := nb_level (Character_level);
+			Result := nb_level (Character_level) + nb_level (Boolean_level);
 		end;
 
 	nb_real: INTEGER is
@@ -280,7 +280,7 @@ feature
 				elseif is_in_attr_table then
 					file.putchar ('0')
 				end
-			when Character_level then
+			when Character_level, Boolean_level then
 				nb_ref := nb_reference;
 				file.putstring ("+ @CHROFF(");
 				file.putint (nb_ref + nb_expanded);
@@ -425,7 +425,7 @@ feature
 				level
 			when Reference_level then
 				Result := refacs (index - 1);
-			when Character_level then
+			when Character_level, Boolean_level then
 				nb_ref := nb_reference;
 				Result := 
 					chroff (nb_ref + nb_expanded) +

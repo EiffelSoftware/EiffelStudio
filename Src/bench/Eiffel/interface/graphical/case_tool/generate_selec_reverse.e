@@ -36,6 +36,7 @@ feature
 		loop
 			e ?= case_window.scroll_list2.item
 			l.extend ( e.cluster )
+			l.forth
 			case_window.scroll_list2.forth
 		end
 		format_case.set_list_clusters ( l )

@@ -120,8 +120,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	
-
 	create_and_show_choices  is
 			-- Creates the choice window, fills it,
 			-- and pops it up.
@@ -148,6 +146,7 @@ feature {NONE} -- Implementation
 					list.after
 				loop
 					a_list.extend (list.item.name)
+					a_list.forth
 					list.forth
 				end
 

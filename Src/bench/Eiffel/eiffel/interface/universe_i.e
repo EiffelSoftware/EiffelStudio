@@ -134,6 +134,7 @@ feature -- Access
 				classes := clusters.item.classes
 				if classes.has (cname) then
 					Result.extend (classes.found_item)
+					Result.forth
 				end
 				clusters.forth
 			end
@@ -158,6 +159,7 @@ feature -- Access
 					class_i := classes.found_item
 					if class_i.compiled then
 						Result.extend (class_i)
+						Result.forth
 					end
 				end
 				clusters.forth
@@ -370,6 +372,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			consistency: not has_cluster_of_path (c.path)
 		do
 			clusters.extend (c)
+			clusters.forth
 		end
 
 	copy (other: like Current) is

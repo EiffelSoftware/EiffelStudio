@@ -159,6 +159,7 @@ feature {NONE} -- Implementation
 				temp.prune ('%N')
 			end
 			output_list.extend (temp)
+			output_list.forth
 			from
 				i := comp_nbr
 			until
@@ -180,6 +181,7 @@ feature {NONE} -- Implementation
 					temp.prune ('%N')
 					version_list.extend (fname)
 					output_list.extend (temp)
+					output_list.forth
 				end
 				i := i - 1
 			end

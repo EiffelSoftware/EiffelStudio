@@ -1819,6 +1819,7 @@ feature -- Debugging
 					type_list.after
 				loop
 					Result.extend (debuggable (type_list.item))
+					Result.forth
 					type_list.forth
 				end
 				Inst_context.set_cluster (prev_cluster)

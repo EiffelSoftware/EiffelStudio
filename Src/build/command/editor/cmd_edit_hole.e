@@ -12,6 +12,7 @@ inherit
 		end;
 	DRAG_SOURCE;
 	CMD_STONE;
+	COMMAND;
 	REMOVABLE
 
 creation
@@ -42,7 +43,8 @@ feature {NONE}
 			-- as command_editor.
 		do
 			old_make (cmd_editor, a_parent);
-			initialize_transport
+			initialize_transport;
+			add_activate_action (Current, Void)
 		end -- Create
 
 	symbol: PIXMAP is
@@ -50,13 +52,33 @@ feature {NONE}
 			Result := Pixmaps.command_pixmap
 		end;
 
+	full_symbol: PIXMAP is
+		do
+			Result := Pixmaps.command_dot_pixmap
+		end;
+
 feature
 
 	data: CMD is
 		do
-			Result := 
-				command_editor.current_command.data
+			if command_editor.current_command /= Void then
+				Result := command_editor.current_command.data
+			end
 		end;
+
+	set_empty_symbol is
+		do
+			if pixmap /= symbol then
+				set_symbol (symbol)
+			end
+		end
+
+	set_full_symbol is
+		do
+			if pixmap /= full_symbol then
+				set_symbol (full_symbol)
+			end
+		end
 
 feature {NONE}
 
@@ -84,5 +106,19 @@ feature {NONE}
 				command_editor.set_command (dropped.associated_command)
 			end
 		end 
+
+feature {NONE} -- resync
+
+	execute (arg: ANY) is
+		local
+			mp: MOUSE_PTR
+		do
+			if command_editor.edited_command /= Void then
+				!! mp;
+				mp.set_watch_shape;
+				command_editor.update_user_eiffel_text_from_disk
+				mp.restore;
+			end;
+		end;
 
 end 

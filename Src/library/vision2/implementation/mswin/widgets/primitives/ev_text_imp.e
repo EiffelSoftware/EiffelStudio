@@ -29,7 +29,9 @@ inherit
 			destroy as wel_destroy,
 			clip_cut as cut_selection,
 			clip_copy as copy_selection,
-			unselect as deselect_all
+			unselect as deselect_all,
+			selection_start as wel_selection_start,
+			selection_end as wel_selection_end
 		undefine
 			remove_command,
 			set_width,

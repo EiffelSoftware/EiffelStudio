@@ -146,8 +146,10 @@ void c_gtk_signal_destroy_data (gpointer data)
     pcbd = (callback_data_t *)data;  
 
     printf ("c_gtk_signal_destroy_data= %d object= %d pcbd= %d\n", (int)pcbd->rtn, (int)(pcbd->obj), (int)pcbd); 
-    hfree(pcbd->obj);
-    hfree(pcbd->argument);
+    eif_wean(pcbd->obj);
+    eif_wean(pcbd->argument);
+	eif_wean(pcbd->ev_data);
+	eif_wean(pcbd->ev_data_imp);
 				/* free the memory for callback data */
     c_free_call_back_block (data);
 }
@@ -200,7 +202,7 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 
     /* Deallocation of this block is done when the */
     /* the signal is destroyed (see c_gtk_signal_destroy_data) */
-    pcbd = malloc (sizeof (callback_data_t));
+    pcbd = (callback_data_t*) malloc (sizeof (callback_data_t));
     /* Return the pointer of the allocated block to Eiffel, so it
        can be deallocated later
     */
@@ -216,7 +218,7 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
     /*  printf ("connect rtn= %d object= %d pcbd= %d\n", pcbd->rtn, (pcbd->obj), pcbd); */
 
     /* allow the garbage collection of object and argument, when the signal is destroyed */ 
-    gtk_signal_set_funcs (NULL, (GtkSignalDestroy)c_gtk_signal_destroy_data);
+	gtk_signal_set_funcs (NULL, (GtkSignalDestroy)c_gtk_signal_destroy_data);
 
     /* Look at the signal name to check whether it ends with "*_event" */
     name_len = strlen (name);
@@ -552,7 +554,7 @@ void c_gtk_toolbar_append_item (GtkToolbar *toolbar,
 {
     callback_data_t *cbd;
 
-    cbd = malloc (sizeof (callback_data_t));
+    cbd = (callback_data_t*) malloc (sizeof (callback_data_t));
     *p = cbd;
     eif_freeze (object);
     cbd->rtn = func;
@@ -796,6 +798,21 @@ guint c_gtk_list_selected (GtkWidget *list)
 gint c_gtk_list_selected_item (GtkWidget *list)
 {
 	return gtk_list_child_position (GTK_LIST(list), GTK_LIST(list)->selection->data);
+}
+
+/*********************************
+ *
+ * Function : `c_gtk_notebook_count'
+ *  		            
+ * Note (1) : Number of pages in a notebook.
+ * 
+ * Author : Leila
+ *
+ **********************************/
+
+gint c_gtk_notebook_count (GtkWidget *notebook)
+{
+	return (g_list_length (GTK_NOTEBOOK(notebook)->children));
 }
 
 /*********************************

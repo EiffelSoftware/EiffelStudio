@@ -1453,6 +1453,8 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 						else
 							feature_address.remove_text
 						end
+					else
+						class_address.remove_text
 					end
 				else
 					conv_f ?= c_stone

@@ -22,13 +22,28 @@ inherit
 		end
 
 creation
+	make,
 	make_with_text
 	
 feature {NONE} -- Initialization
+
+	make (par: EV_MENU_ITEM_CONTAINER) is
+			-- Create a menu item and add it to the `par'
+			-- container.
+		require
+			valid_parent: is_valid (par)
+		do
+			!EV_MENU_ITEM_IMP!implementation.make (par)
+			implementation.set_interface (Current)
+			par.implementation.add_item (Current)
+		end	
 	
 	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
 			-- Create a menu item and add it to the `par'
 			-- container.
+		require
+			valid_parent: is_valid (par)
+			valid_string: txt /= Void
 		do
 			!EV_MENU_ITEM_IMP!implementation.make_with_text (par, txt)
 			implementation.set_interface (Current)

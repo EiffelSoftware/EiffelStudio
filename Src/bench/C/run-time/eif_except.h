@@ -137,7 +137,7 @@ RT_LNK void excatch(EIF_CONTEXT char *jmp);			/* Set exception catcher from C to
 RT_LNK void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect);			/* Signals entry in rescue clause */
 
 #ifndef WORKBENCH
-extern struct ex_vect *exft(void);	/* Set execution stack in final mode */
+RT_LNK struct ex_vect *exft(void);	/* Set execution stack in final mode */
 #endif
 RT_LNK struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object);	/* Set execution stack on routine entrance */
 extern struct ex_vect *exnext(EIF_CONTEXT_NOARG);	/* Read next eif_trace item from bottom */

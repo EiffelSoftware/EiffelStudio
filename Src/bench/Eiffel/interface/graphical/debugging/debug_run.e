@@ -46,9 +46,6 @@ feature
 
 	argument_window: ARGUMENT_W;
 
-	specify_args: ANY is once !!Result end;
-	melt_and_run: ANY is once !!Result end;
-
 	close is
 		do
 			argument_window.close;

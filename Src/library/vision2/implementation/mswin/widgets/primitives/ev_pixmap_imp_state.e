@@ -40,6 +40,18 @@ feature -- Access
 		deferred
 		end
 
+feature -- Measurement
+
+	width: INTEGER is
+			-- Width of the pixmap.
+		deferred
+		end
+
+	height: INTEGER is
+			-- Height of the pixmap.
+		deferred
+		end
+
 end -- class EV_PIXMAP_IMP_STATE
 
 --|----------------------------------------------------------------
@@ -63,6 +75,9 @@ end -- class EV_PIXMAP_IMP_STATE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/04/13 18:33:12  pichery
+--| Added access to width & height
+--|
 --| Revision 1.1  2000/04/12 01:34:56  pichery
 --| New pixmap implementation.
 --| Use 3 differents states depending on

@@ -19,6 +19,10 @@ inherit
 
 feature
 
+	is_cpp: BOOLEAN is
+		do
+		end
+
 	is_macro: BOOLEAN is
 		do
 		end
@@ -77,8 +81,32 @@ feature -- Comparison
 		do
 			Result := same_type (other) and then
 				equal (return_type, other.return_type) and then
-				deep_equal (argument_types, other.argument_types) and then
-				deep_equal (header_files, other.header_files)
+				array_is_equal (argument_types, other.argument_types) and then
+				array_is_equal (header_files, other.header_files)
+		end
+
+feature {NONE} -- Comparison
+
+	array_is_equal (a, o_a: ARRAY [STRING]): BOOLEAN is
+		local
+			i, nb: INTEGER
+		do
+			if a = Void then
+				Result := o_a = Void
+			elseif o_a /= Void then
+				nb := a.count
+				if o_a.count = nb then
+					from
+						Result := True
+						i := 1
+					until
+						not Result or else i > nb
+					loop
+						Result := a.item (i).is_equal (o_a.item (i))
+						i := i + 1
+					end
+				end
+			end
 		end
 
 feature -- Code generation

@@ -22,7 +22,8 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_from_existing
 
 feature {NONE} -- Initialization
 
@@ -38,50 +39,65 @@ feature {NONE} -- Initialization
 					xm_create_file_selection_box (p_so,
 						$w_name, auto_unmanage_arg, 1)
 			end;
-			Mel_widgets.put (Current, screen_object);
-			create_file_selection_children
 		end;
-
-	create_file_selection_children is
-			-- Create corresponding MEL children.
-		local
-			ptr: POINTER;
-			so: POINTER;
-			null: POINTER
-		do
-			create_selection_children;
-			so := screen_object;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_DIR_LIST);
-			if ptr /= null then
-				!! dir_list.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_DIR_LIST_LABEL);
-			if ptr /= null then
-				!! dir_list_label.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_FILTER_LABEL);
-			if ptr /= null then
-				!! filter_label.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_FILTER_TEXT);
-			if ptr /= null then
-				!! filter_text.make_from_existing (ptr)
-			end
-		end;	
 
 feature -- Access
 
-	dir_list: MEL_SCROLLED_LIST;
+	dir_list: MEL_SCROLLED_LIST is
 			-- Directory list
+		local
+			w: POINTER
+		do
+			w := xm_file_selection_box_get_child (screen_object, XmDIALOG_DIR_LIST);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	dir_list_label,
+	dir_list_label: MEL_LABEL_GADGET is
 			-- Label of `dir_list'
+		local
+			w: POINTER
+		do
+			w := xm_file_selection_box_get_child (screen_object, XmDIALOG_DIR_LIST_LABEL);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	filter_label: MEL_LABEL_GADGET;
+	filter_label: MEL_LABEL_GADGET is
 			-- Label of `filter_text'
+		local
+			w: POINTER
+		do
+			w := xm_file_selection_box_get_child (screen_object, XmDIALOG_FILTER_LABEL);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	filter_text: MEL_TEXT_FIELD
+	filter_text: MEL_TEXT_FIELD is
 			-- Filter text field
+		local
+			w: POINTER
+		do
+			w := xm_file_selection_box_get_child (screen_object, XmDIALOG_FILTER_TEXT);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
 feature -- Status report
 

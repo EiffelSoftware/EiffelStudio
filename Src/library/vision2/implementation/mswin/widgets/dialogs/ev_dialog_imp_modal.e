@@ -80,7 +80,8 @@ feature {NONE} -- Implementation
 			-- Create the dialog
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
-			tmp_result: INTEGER
+			tmp_res: INTEGER
+			return_value: POINTER
 			err: WEL_ERROR
 		do
 				-- Initialise the common controls
@@ -91,14 +92,15 @@ feature {NONE} -- Implementation
 
 				-- Launch the right dialog box modal
 			result_id := 0
-			tmp_result := cwin_dialog_box_indirect (
+			return_value := cwin_dialog_box_indirect (
 				main_args.current_instance.item,
 				dlg_template.item,
 				a_parent.item,
 				cwel_dialog_procedure_address
 				)
 			debug ("VISION2_WINDOWS")
-				if tmp_result = 0 or tmp_result = -1 then
+				tmp_res := cwel_pointer_to_integer (return_value)
+				if tmp_res = 0 or tmp_res = -1 then
 					create err
 					err.display_last_error
 				end
@@ -107,10 +109,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_dialog_box_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): INTEGER is
+	cwin_dialog_box_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): POINTER is
 				-- SDK DialogBoxIndirect
 			external 
-				"C [macro <wel.h>] (HINSTANCE, LPCDLGTEMPLATE, HWND, DLGPROC): EIF_INTEGER"
+				"C [macro <wel.h>] (HINSTANCE, LPCDLGTEMPLATE, HWND, DLGPROC): EIF_POINTER"
 			alias
 				"DialogBoxIndirect"
 			end

@@ -20,6 +20,7 @@ feature -- Access
 		once
 			create Result.make (0)
 			Result.extend ("gb_ev_colorizable")
+			Result.extend ("gb_ev_fontable")
 			Result.extend ("gb_ev_deselectable")
 			Result.extend ("gb_ev_sensitive")
 			Result.extend ("gb_ev_textable")
@@ -37,7 +38,6 @@ feature -- Access
 			Result.extend ("gb_ev_viewport")
 			Result.extend ("gb_ev_table")
 			Result.extend ("gb_ev_container")
-			Result.extend ("gb_ev_fontable")
 		end
 	
 	--| FIXME This version has been commented, so that we do not need to have

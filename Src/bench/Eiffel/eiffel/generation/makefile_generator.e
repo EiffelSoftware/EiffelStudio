@@ -751,7 +751,7 @@ feature -- Generation (Linking rules)
 			make_file.putstring ("all: $(IL_SYSTEM)")
 			make_file.new_line
 
-			make_file.putstring ("OBJECTS= ")
+			make_file.putstring ("OBJECTS= lib")
 			make_file.putstring (system_name)
 			make_file.putstring (".obj")
 			make_file.new_line

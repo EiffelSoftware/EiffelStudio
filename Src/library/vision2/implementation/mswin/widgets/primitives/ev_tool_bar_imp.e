@@ -329,8 +329,8 @@ feature -- Basic operation
 			item_index: INTEGER
 		do
 			item_index := find_button(x_pos, y_pos)
-			if item_index >= 0 then
-				 Result := ev_children.i_th(item_index + 1)
+			if item_index >= 0 and item_index < ev_children.count then
+				 Result := ev_children.i_th (item_index + 1)
 			end
 		end
 
@@ -345,9 +345,9 @@ feature -- Basic operation
 			pt := client_to_screen (x_pos, y_pos)
 				if it /= Void and it.is_transport_enabled and
 				not parent_is_pnd_source then
-					it.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+					it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				elseif pnd_item_source /= Void then
-					pnd_item_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+					pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				end
 			if it /= Void then
 				it.interface.pointer_button_press_actions.call
@@ -356,22 +356,6 @@ feature -- Basic operation
 				pt.x, pt.y])
 			end
 		end
-
---	internal_propagate_event (
---		event_id: INTEGER;
---		x_pos: INTEGER;
---		y_pos: INTEGER; 
---		ev_data: EV_BUTTON_EVENT_DATA
---	) is
---			-- Propagate the `event_id' to the good child.
---		local
---			tbutton: EV_TOOL_BAR_BUTTON_IMP
---		do
---			tbutton := find_item_at_position (x_pos, y_pos)
---			if tbutton /= Void and then not tbutton.is_insensitive then
---				tbutton.execute_command (event_id, ev_data)
---			end
---		end
 
 feature {NONE} -- Implementation
 
@@ -528,13 +512,22 @@ feature {NONE} -- WEL Implementation
 			-- Executed when the mouse move.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
+		local
+			it: EV_TOOL_BAR_BUTTON_IMP
+			pt: WEL_POINT
 		do
---			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
---			ev_data := get_button_data (2, keys, x_pos, y_pos)
---			internal_propagate_event (
---				Cmd_motion_notify, x_pos, y_pos, ev_data)
+			it := find_item_at_position (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			if it /= Void then
+				it.interface.pointer_motion_actions.call
+				([x_pos - child_x (it.interface),
+				child_y_absolute (it.interface) - y_pos, 0.0, 0.0, 0.0,
+				pt.x, pt.y])
+			end
+			if pnd_item_source /= Void then
+				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			end
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -648,6 +641,10 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/31 19:04:05  rogers
+--| Implemented internal_propagate_pointer_press. Removed some
+--| redundent and commented code.
+--|
 --| Revision 1.37  2000/03/31 17:54:34  rogers
 --| Removed on_*****_button_up.
 --|

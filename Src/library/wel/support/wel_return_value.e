@@ -20,6 +20,9 @@ feature -- Access
 				has_return_value_area.count >= level_count
 			then
 					-- Value has already been set
+				check
+					valid_level_count: level_count > 0
+				end
 				Result := has_return_value_area.item (level_count - 1)
 			else
 					-- Value has not yet been set -> `has_return_value' = False
@@ -38,6 +41,9 @@ feature -- Access
 				good_area: message_return_value_area.count >= level_count
 			end
 
+			check
+				valid_level_count: level_count > 0
+			end
 			Result := message_return_value_area.item (level_count - 1)
 		end
 
@@ -51,13 +57,16 @@ feature -- Access
 				default_processing_area.count >= level_count
 			then
 					-- Value has already been set
+				check
+					valid_level_count: level_count > 0
+				end
 				Result := default_processing_area.item (level_count - 1)
 			else
 					-- Value has not yet been set -> `default_processing' = True
 				Result := True
 			end
 		end
-
+		
 feature -- Element Change
 
 	set_message_return_value (value: INTEGER) is
@@ -84,6 +93,9 @@ feature -- Element Change
 				resize_message_return_value_area (level_count + Area_resize_increment)
 			end
 			
+			check
+				valid_level_count: level_count > 0
+			end
 			message_return_value_area.put (value, level_count - 1)
 			has_return_value_area.put (True, level_count - 1)
 
@@ -111,12 +123,15 @@ feature -- Element Change
 				resize_default_processing_area (level_count + Area_resize_increment)
 			end
 
+			check
+				valid_level_count: level_count > 0
+			end
 			default_processing_area.put (value, level_count - 1)
 		ensure
 			value_set: default_processing = value
 		end
 
-feature {WEL_DISPATCHER}
+feature {WEL_DISPATCHER, WEL_WINDOW}
 
 	increment_level is
 			-- Called from WEL_DISPATCHER when the window-procedure

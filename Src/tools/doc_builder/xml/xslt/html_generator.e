@@ -140,6 +140,10 @@ feature {NONE} -- Generation
 							if not sub_dir.exists then								
 								sub_dir.create_dir	
 							end
+							l_doc := Void
+							bin_file := Void
+							target_bin_file := Void
+							doc_file := Void
 							generate_directory (src_sub_dir, sub_dir)
 						end						
 					end

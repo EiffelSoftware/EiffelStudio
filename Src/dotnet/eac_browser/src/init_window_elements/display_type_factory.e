@@ -347,8 +347,8 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_returned_type: CONSUMED_REFERENCED_TYPE
 			l_array_returned_type: CONSUMED_ARRAY_TYPE
-			functions_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
-			functions: SORTABLE_ARRAY [COMPARABLE_CONSUMED_PROCEDURE]
+			functions_list: LINKED_LIST [COMPARABLE_CONSUMED_FUNCTION]
+			functions: SORTABLE_ARRAY [COMPARABLE_CONSUMED_FUNCTION]
 			output_string: STRING
 			l_entity: ENTITY_LINE
 		do
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 				or else i > array.count
 			loop
 				if not array.item (i).is_property_or_event then
-					functions_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (array.item (i)))
+					functions_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (array.item (i)))
 				end
 
 				i := i + 1
@@ -438,8 +438,8 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_returned_type: CONSUMED_REFERENCED_TYPE
 			l_array_returned_type: CONSUMED_ARRAY_TYPE
-			properties_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
-			properties: SORTABLE_ARRAY [COMPARABLE_CONSUMED_PROCEDURE]
+			properties_list: LINKED_LIST [COMPARABLE_CONSUMED_FUNCTION]
+			properties: SORTABLE_ARRAY [COMPARABLE_CONSUMED_FUNCTION]
 			output_string: STRING
 			l_entity: ENTITY_LINE
 			a_property: CONSUMED_PROPERTY
@@ -460,9 +460,11 @@ feature {NONE} -- Implementation
 				or else i > array.count
 			loop
 				a_property := array.item (i)
-				properties_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (a_property.getter))
+				if a_property.getter /= Void then
+					properties_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (a_property.getter))
+				end
 				if a_property.setter /= Void then
-					properties_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (a_property.setter))
+					properties_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (a_property.setter))
 				end
 
 				i := i + 1
@@ -533,8 +535,8 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_returned_type: CONSUMED_REFERENCED_TYPE
 			l_array_returned_type: CONSUMED_ARRAY_TYPE
-			events_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
-			events: SORTABLE_ARRAY [COMPARABLE_CONSUMED_PROCEDURE]
+			events_list: LINKED_LIST [COMPARABLE_CONSUMED_FUNCTION]
+			events: SORTABLE_ARRAY [COMPARABLE_CONSUMED_FUNCTION]
 			output_string: STRING
 			l_entity: ENTITY_LINE
 			an_event: CONSUMED_EVENT
@@ -556,13 +558,13 @@ feature {NONE} -- Implementation
 			loop
 				an_event := array.item (i)
 				if an_event.adder /= Void then
-					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (an_event.adder))	
+					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.adder))	
 				end
 				if an_event.remover /= Void then
-					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (an_event.remover))	
+					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.remover))	
 				end
 				if an_event.raiser /= Void then
-					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (an_event.raiser))	
+					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.raiser))	
 				end
 				
 				i := i + 1

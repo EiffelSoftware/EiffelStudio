@@ -9,7 +9,7 @@ class
 	CLI_CELL [G -> SYSTEM_OBJECT]
 
 inherit
-	ANY
+	HASHABLE
 		redefine
 			is_equal
 		end
@@ -30,6 +30,16 @@ feature -- Element change
 			item := v
 		ensure
 			item_inserted: item = v
+		end
+
+feature -- Access
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			if item /= Void then
+				Result := item.get_hash_code
+			end
 		end
 
 feature -- Comparison

@@ -29,6 +29,17 @@ creation
 
 feature {NONE} -- Initialization
 
+	make is
+			-- Create the main dialog.
+		do
+			make_by_id (Main_dialog)
+			!! edit.make_by_id (Current, Idc_edit)
+			!! size.make_by_id (Current, Idc_edit_size)
+			!! list_box.make_by_id (Current, Idc_font_list_box)
+		end
+
+feature -- Access
+
 	edit: WEL_MULTIPLE_LINE_EDIT
 			-- Edit box
 
@@ -42,15 +53,9 @@ feature {NONE} -- Initialization
 			-- Last size entered by the user
 
 	current_font: WEL_FONT
+			-- Current font selected
 
-	make is
-			-- Create the main dialog.
-		do
-			make_by_id (Main_dialog)
-			!! edit.make_by_id (Current, Idc_edit)
-			!! size.make_by_id (Current, Idc_edit_size)
-			!! list_box.make_by_id (Current, Idc_font_list_box)
-		end
+feature -- Basic operations
 
 	notify (control: WEL_CONTROL; notify_code: INTEGER) is
 			-- Set the text font with the new font selected

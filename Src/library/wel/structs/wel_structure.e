@@ -38,7 +38,7 @@ feature -- Basic operations
 		local
 			a_default_pointer: POINTER
 		do
-			if shared then
+			if shared or item = a_default_pointer then
 					-- We need to allocate a block of memory as we don't want other
 					-- instances of WEL_STRUCTURE sharing the structure to get the
 					-- copied item from `other'.

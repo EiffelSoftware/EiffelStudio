@@ -92,6 +92,10 @@ feature -- Basic operation
 
 	put_new_line is
 			-- Insert return character at `caret_position'.
+		obsolete
+			"[
+				Use insert_text ("%N") instead
+			]"
 		require
 			not_destroyed: not is_destroyed
 		do

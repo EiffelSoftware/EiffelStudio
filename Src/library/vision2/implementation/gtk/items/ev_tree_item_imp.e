@@ -52,8 +52,6 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Set up action sequence connection and `Precursor' initialization,
 			-- create item box to hold label and pixmap.
-		local
-			temp_c_object: POINTER
 		do
 			--{EV_PRIMITIVE_IMP} Precursor
 			pixmapable_imp_initialize
@@ -65,11 +63,9 @@ feature {NONE} -- Initialization
 			align_text_left
 
 				-- Connect events to items own tree.
-			temp_c_object := c_object
-			c_object := list_widget
-			signal_connect ("select_child", ~select_callback)
-			signal_connect ("unselect_child", ~deselect_callback)
-			c_object := temp_c_object
+			real_signal_connect (list_widget, "select_child", ~select_callback)
+			real_signal_connect (list_widget, "unselect_child", ~deselect_callback)
+
 		end
 
 	select_callback (a_tree_item: POINTER) is
@@ -78,7 +74,7 @@ feature {NONE} -- Initialization
 			t_item: EV_TREE_ITEM
 		do
 		 	t_item ?= eif_object_from_c (a_tree_item).interface
-			interface.select_actions.call ([])
+			t_item.select_actions.call ([])
 		end
 
 	deselect_callback (a_tree_item: POINTER) is
@@ -87,7 +83,7 @@ feature {NONE} -- Initialization
 			t_item: EV_TREE_ITEM
 		do
 		 	t_item ?= eif_object_from_c (a_tree_item).interface
-			interface.deselect_actions.call ([])	
+			t_item.deselect_actions.call ([])	
 		end
 
 	initialize_item_box is
@@ -174,10 +170,6 @@ feature {NONE} -- Implementation
 			item_imp ?= interface.i_th (a_position).implementation
 			item_imp.set_tree_widget_imp (Void)	
 			Precursor (a_position)
-			if count = 0 and subtree_set then
-				C.gtk_tree_item_remove_subtree (c_object)
-				subtree_set := False
-			end
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is
@@ -268,6 +260,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/02/25 17:49:15  king
+--| Corrected calling of action_sequences, using real_signal_connect
+--|
 --| Revision 1.36  2000/02/24 20:52:13  king
 --| Inheriting from pick and dropable
 --|

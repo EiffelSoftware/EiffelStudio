@@ -71,15 +71,6 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
---	make_with_text (txt: STRING) is
---			-- Create a text area with `par' as
---			-- parent and `txt' as text.
---		do
---			check
---				Inapplicable: False
---			end
---		end
-
 feature {EV_COMBO_BOX_I} -- Implementation
 
 	interface: EV_COMBO_BOX
@@ -107,6 +98,9 @@ end -- class EV_COMBO_BOX_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/20 21:05:41  king
+--| Removed redundant make_with_text
+--|
 --| Revision 1.25  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

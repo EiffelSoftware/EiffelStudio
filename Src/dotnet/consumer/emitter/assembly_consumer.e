@@ -74,13 +74,21 @@ feature -- Basic Operations
 			signed_name: aname.get_public_key_token /= Void
 		local
 			ass: ASSEMBLY
+			retried: BOOLEAN
 		do
-			ass := feature {ASSEMBLY}.load_assembly_name (aname)
-			if ass = Void then
-				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (aname.get_name))
-			else
+			if not retried then
+				ass := feature {ASSEMBLY}.load_assembly_name(aname)
+				check
+					assembly_loaded: ass /= Void
+				end
 				consume (ass)
+			else
+					-- An error occured
+				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (aname.get_name))
 			end
+		rescue
+			retried := True
+			retry
 		end
 		
 feature -- Access

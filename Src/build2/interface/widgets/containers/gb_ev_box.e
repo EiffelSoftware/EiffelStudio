@@ -53,7 +53,6 @@ feature -- Access
 			label: EV_LABEL
 			second: like ev_type
 			check_button: EV_CHECK_BUTTON
-			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			create check_buttons.make (0)
 			Result := Precursor {GB_EV_ANY}
@@ -81,18 +80,7 @@ feature -- Access
 				first.off or second.off
 			loop
 				create check_button.make_with_text (class_name (first.item))
-					-- This next section is messy, but is the easiest way to
-					-- retrieve the object associated with each label.
-					-- This allows us to set the pebble for each label.
-				layout_item ?= parent_editor.object.layout_item
-				check
-					layout_item_not_void: layout_item /= Void
-				end
-				layout_item ?= layout_item.i_th (first.index)
-				check
-					layout_item_not_void: layout_item /= Void
-				end
-				check_button.set_pebble (layout_item.object)
+				check_button.set_pebble_function (agent retrieve_pebble (parent_editor.object.layout_item, first.index))
 				check_buttons.force (check_button)
 				check_button.select_actions.extend (agent update_widget_expanded (check_button, first.item))
 				check_button.select_actions.extend (agent update_widget_expanded (check_button, second.item))
@@ -106,6 +94,37 @@ feature -- Access
 
 			disable_all_items (Result)
 			align_labels_left (Result)
+		end
+		
+	retrieve_pebble (a_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM; child_index: INTEGER): ANY is
+			-- Retrieve pebble for transport.
+			-- A convenient was of setting up the drop
+			-- actions for GB_OBJECT.
+		local
+			environment: EV_ENVIRONMENT
+			object: GB_OBJECT
+			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			shared_tools: GB_SHARED_TOOLS
+		do
+			layout_item ?= a_layout_item.i_th (child_index)
+			check
+				layout_item_not_void: layout_item /= Void
+			end
+			object := layout_item.object
+			
+			--| FIXME This is currently identical to version in 
+			--| GB_OBJECT
+			create environment
+				-- If the ctrl key is pressed, then we must
+				-- start a new object editor for `Current', instead
+				-- of beginning the pick and drop.
+			if environment.application.ctrl_pressed then
+				new_object_editor (object)
+			else
+				create shared_tools
+				shared_tools.type_selector.update_drop_actions_for_all_children (object)
+				Result := object
+			end
 		end
 		
 	update_attribute_editor is

@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, an_external_name: STRING; a_file_location: like file_name) is
+	make (an_assembly: like assembly; a_name, an_external_name: STRING; a_file_location: like base_name) is
 			-- Create new instance of Current.
 		require
 			a_name_not_void: a_name /= Void
@@ -33,14 +33,15 @@ feature {NONE} -- Initialization
 		do
 				-- Initialize Current with passed information and
 				-- compute file date on `file_name'.
+			assembly := an_assembly
 			name := a_name
 			external_name := an_external_name
-			file_name := a_file_location
+			base_name := a_file_location
 			set_date
 		ensure
 			name_set: name = a_name
 			external_name_set: external_name = an_external_name
-			file_name_set: file_name = a_file_location
+			base_name_set: base_name = a_file_location
 		end
 
 feature -- Access
@@ -48,11 +49,18 @@ feature -- Access
 	external_name: STRING
 			-- Name of class as known in .NET
 			
-	file_name: FILE_NAME
-			-- File where XML data of current class is stored.
-
 	assembly: ASSEMBLY_I
 			-- Cluster is an assembly.
+
+	file_name: FILE_NAME is
+			-- Full file name of the class
+		do
+			create Result.make_from_string (assembly.path)
+			result.extend (classes_directory)
+			Result.set_file_name (base_name)
+		ensure
+			file_name_not_void: Result /= Void
+		end
 
 feature -- Status Report
 
@@ -111,6 +119,11 @@ feature -- Status Report
 		ensure
 			result_not_void: Result /= Void
 		end
+
+feature {NONE} -- Implementation
+
+	classes_directory: STRING is "classes"
+			-- Directory from Assembly location where classes are located.
 
 invariant
 	name_not_void: name /= Void

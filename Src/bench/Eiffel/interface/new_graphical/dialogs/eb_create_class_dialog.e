@@ -303,27 +303,27 @@ feature {NONE} -- Implementation
 	file_name: FILE_NAME is
 			-- File name of the class chosen by the user.
 		local
-			str, str2: STRING
+			str: STRING
 			dotpos: INTEGER
 		do
-			str2 := file_entry.text
-			str2.right_adjust
-			str2.left_adjust
-				-- str2.count < 3 means there no extension to the file name.
-			if str2.is_empty or else str2.count < 3 then
+			str := file_entry.text
+			str.right_adjust
+			str.left_adjust
+				-- str.count < 3 means there no extension to the file name.
+			if str.is_empty or else str.count < 3 then
 				update_file_entry
 				create Result.make_from_string (file_entry.text)
 			else
 				if
-					str2 @ (str2.count) /= 'e' or else
-					str2 @ (str2.count - 1) /= '.'
+					str @ (str.count) /= 'e' or else
+					str @ (str.count - 1) /= '.'
 				then
-					dotpos := str2.index_of ('.', 1) - 1
-					str2.head (dotpos.max (0))
-					create Result.make_from_string (str2)
+					dotpos := str.index_of ('.', 1) - 1
+					str.head (dotpos.max (0))
+					create Result.make_from_string (str)
 					Result.add_extension ("e")
 				else
-					create Result.make_from_string (str2)
+					create Result.make_from_string (str)
 				end
 			end
 		end
@@ -516,12 +516,12 @@ feature {NONE} -- Implementation
 					output.putstring (in_buf)
 					output.close
 				else
-					create wd.make_with_text (Warning_messages.w_cannot_read_file (Default_class_file))
+					create wd.make_with_text (Warning_messages.w_cannot_read_file (input.name))
 					wd.show_modal_to_window (target.window)
 				end
 			else
 				if not writing then
-					create wd.make_with_text (Warning_messages.w_cannot_read_file (Default_class_file))
+					create wd.make_with_text (Warning_messages.w_cannot_read_file (input.name))
 				else
 					create wd.make_with_text (Warning_messages.w_cannot_create_file (output.name))
 				end

@@ -27,6 +27,8 @@ inherit
 		end
 
 	RECV_VALUE
+		rename
+			error as recv_error
 		export
 			{NONE} all
 		end
@@ -420,6 +422,12 @@ feature -- Status report
 	error_message: STRING
 			-- If `Current' or one of its descendants couldn't be evaluated,
 			-- return an explanatory message.
+
+	error: BOOLEAN is
+			-- Did an error occur during the last evaluation?
+		do
+			Result := error_message /= Void
+		end
 
 	context: STRING is
 			-- Return a string representing `Current's context.
@@ -996,6 +1004,7 @@ feature {NONE} -- Implementation
 			obj: DEBUGGED_OBJECT
 			dv: ABSTRACT_DEBUG_VALUE
 			addr: STRING
+			at: TYPE_A
 		do
 			addr := o_addr
 			if addr = Void then
@@ -1011,7 +1020,7 @@ feature {NONE} -- Implementation
 					create obj.make (addr, 0, 1)
 					lst := obj.attributes
 					dv := find_item_in_list (f.name, lst)
-					result_static_type := f.type.associated_class
+					result_static_type := f.type.actual_type.associated_class
 					if dv = Void then
 						if f.name.is_equal ("Void") then
 							create result_object.make_object (Void, Void)
@@ -1041,9 +1050,10 @@ feature {NONE} -- Implementation
 					until
 						parameters.after or error_message /= Void
 					loop
+						at := f.arguments.i_th (parameters.index).actual_type
 						if
-							not parameters.item.final_result_type.simple_conform_to (
-								f.arguments.i_th (parameters.index).associated_class
+							at.associated_class /= Void and then not parameters.item.final_result_type.simple_conform_to (
+								at.associated_class
 							)
 						then
 							error_message := "Invalid parameter: " + parameters.item.expression +
@@ -1108,9 +1118,20 @@ feature {NONE} -- Implementation
 					if item /= Void then
 						item.set_hector_addr
 						result_object := item.dump_value
-						result_static_type := f.type.associated_class
-						if result_static_type.is_basic and (result_object.address /= Void) then
+						at := f.type.actual_type
+						if at.associated_class /= Void then
+							result_static_type := at.associated_class
+						else
+							result_static_type := Workbench.Eiffel_system.Any_class.compiled_class
+						end
+						if
+							result_static_type /= Void and then
+							result_static_type.is_basic and
+							(result_object.address /= Void)
+						then
 								-- We expected a basic type, but got a reference.
+								-- This happens in "2 + 2" because we convert the first 2
+								-- to a reference and therefore get a reference.
 							result_object := result_object.to_basic
 						end
 					else

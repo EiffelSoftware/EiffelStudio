@@ -60,8 +60,7 @@ feature -- Access
 	string: STRING is
 			-- Eiffel string
 		do
-			create Result.make (capacity)
-			Result.from_c (item)
+			create Result.make_from_c (item)
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -55,8 +55,7 @@ feature -- Access
 	face_name: STRING is
 			-- Font face name
 		do
-			!! Result.make (0)
-			Result.from_c (cwel_charformat_get_szfacename (item))
+			create Result.make_from_c (cwel_charformat_get_szfacename (item))
 		ensure
 			result_not_void: Result /= Void
 		end

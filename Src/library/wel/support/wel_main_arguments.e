@@ -28,8 +28,7 @@ feature -- Access
 	command_line: STRING is
 			-- Command line argument received in WinMain
 		once
-			!! Result.make (0)
-			Result.from_c (cwel_command_line)
+			create Result.make_from_c (cwel_command_line)
 		ensure
 			result_not_void: Result /= Void
 		end

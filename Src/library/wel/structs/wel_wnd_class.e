@@ -53,8 +53,7 @@ feature -- Access
 	class_name: STRING is
 			-- Class name
 		do
-			!! Result.make (0)
-			Result.from_c (cwel_wnd_class_get_class_name (item))
+			create Result.make_from_c (cwel_wnd_class_get_class_name (item))
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.empty
@@ -65,8 +64,7 @@ feature -- Access
 		require
 			menu_name_set: menu_name_set
 		do
-			!! Result.make (0)
-			Result.from_c (cwel_wnd_class_get_menu_name (item))
+			create Result.make_from_c (cwel_wnd_class_get_menu_name (item))
 		ensure
 			result_not_void: Result /= Void
 		end

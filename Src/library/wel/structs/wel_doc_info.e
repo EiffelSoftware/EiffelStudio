@@ -35,8 +35,7 @@ feature -- Access
 	document_name: STRING is
 			-- Name of the document
 		do
-			!! Result.make (0)
-			Result.from_c (cwel_doc_info_get_lpszdocname (item))
+			create Result.make_from_c (cwel_doc_info_get_lpszdocname (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -46,8 +45,7 @@ feature -- Access
 		require
 			default_output_not_set: not default_output_set
 		do
-			!! Result.make (0)
-			Result.from_c (cwel_doc_info_get_lpszoutput (item))
+			create Result.make_from_c (cwel_doc_info_get_lpszoutput (item))
 		ensure
 			result_not_void: Result /= Void
 		end

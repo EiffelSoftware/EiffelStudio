@@ -41,8 +41,7 @@ feature -- Access
 	full_name: STRING is
 			-- Specifies a unique name for the font
 		do
-			!! Result.make (0)
-			Result.from_c (cwel_enumlogfont_get_elffullname (item))
+			create Result.make_from_c (cwel_enumlogfont_get_elffullname (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -50,8 +49,7 @@ feature -- Access
 	style: STRING is
 			-- Specifies the style of the font
 		do
-			!! Result.make (0)
-			Result.from_c (cwel_enumlogfont_get_elfstyle (item))
+			create Result.make_from_c (cwel_enumlogfont_get_elfstyle (item))
 		ensure
 			result_not_void: Result /= Void
 		end

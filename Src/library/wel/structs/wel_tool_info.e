@@ -75,8 +75,7 @@ feature -- Access
 		require
 			text_id_not_set: not text_id_set
 		do
-			!! Result.make (0)
-			Result.from_c (cwel_toolinfo_get_lpsztext (item))
+			create Result.make_from_c (cwel_toolinfo_get_lpsztext (item))
 		ensure
 			result_not_void: Result /= Void
 		end

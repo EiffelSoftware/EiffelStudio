@@ -153,6 +153,36 @@ feature -- C enums
 			"GDK_PROXIMITY_OUT"
 		end
 
+feature -- GdkCursor enums
+
+	frozen Gdk_watch_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_WATCH"
+		end
+
+	frozen Gdk_xterm_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_XTERM"
+		end
+
+	frozen Gdk_crosshair_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_CROSSHAIR"
+		end
+
+	frozen Gdk_question_arrow_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_QUESTION_ARROW"
+		end
+
 end -- class EV_GTK_ENUMS
 
 --|----------------------------------------------------------------

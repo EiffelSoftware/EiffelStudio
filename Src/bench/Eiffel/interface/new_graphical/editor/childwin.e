@@ -478,6 +478,11 @@ feature -- Actions
 			end
 		end
 
+	search_string(searched_string: STRING) is
+			-- Find the string `searched_string')
+		do
+		end
+
 	comment_selection is
 			-- Comment the selected lines.
 		do

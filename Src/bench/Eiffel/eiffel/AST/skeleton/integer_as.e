@@ -30,8 +30,10 @@ feature {AST_FACTORY} -- Initialization
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
 			--s_valid_hexadecimal_integer
-			s_not_too_big: s.count <= 10
+			s_not_too_big: s.count <= 18
 		do
+				-- FIXME: even though we accept 64bits hexadecimal values,
+				-- result will be truncated.
 			value := to_integer_value (s)
 		end
 

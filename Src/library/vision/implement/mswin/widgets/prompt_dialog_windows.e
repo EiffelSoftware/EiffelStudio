@@ -73,7 +73,7 @@ feature -- Status setting
 	 hide_apply_button is
 			-- Hide the `apply_button'.
 		do
-			if exists and then not apply_button_hidden and then shown then
+			if exists and then not apply_button_hidden then
 				apply_button.hide
 				apply_button_hidden:= True
 				adjust_dialog
@@ -88,7 +88,7 @@ feature -- Status setting
 	show_apply_button is
 			-- Show the `apply_button'.
 		do
-			if exists and then apply_button_hidden and then shown then
+			if exists and then apply_button_hidden then
 				apply_button.show
 				apply_button_hidden := False
 				adjust_dialog
@@ -105,7 +105,7 @@ feature -- Element change
 	add_apply_action (c: COMMAND; a: ANY) is
 			-- Add command `c' to `apply_button'
 		do
-			apply_actions.remove (Current, c, a)
+			apply_actions.add (Current, c, a)
 		end
 
 	set_selection_text (s: STRING) is
@@ -159,7 +159,7 @@ feature -- Removal
 	remove_apply_action (c: COMMAND; a: ANY) is
 			-- Remove command `c' from `apply_button'
 		do
-			apply_actions.add (Current, c, a)
+			apply_actions.remove (Current, c, a)
 		end
 
 feature {NONE} -- Implementation
@@ -501,9 +501,7 @@ feature {NONE} -- Implementation
 			if apply_button_hidden then
 				apply_button.hide
 			else
-				if not flag_set (apply_button.style, Ws_visible) then
-					apply_button.set_style (set_flag (apply_button.style, Ws_visible))
-				end
+				apply_button.show
 			end
 		end
 
@@ -535,6 +533,8 @@ feature {NONE} -- Implementation
 				cancel_actions.execute (Current, Void)
 			when help_id then
 				help_actions.execute (Current, Void)
+			when apply_id then
+				apply_actions.execute (Current, Void)
 			else
 			end
 		end

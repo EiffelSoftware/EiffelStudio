@@ -57,7 +57,7 @@ when 3 then
 --|#line 38
 -- Ignore
 when 4 then
---|#line 41
+--|#line 39
 -- Ignore
 when 5 then
 --|#line 42
@@ -72,6 +72,9 @@ when 8 then
 --|#line 45
 -- Ignore
 when 9 then
+--|#line 46
+-- Ignore
+when 10 then
 --|#line 0
 last_token := yyError_token
 fatal_error ("scanner jammed")
@@ -97,19 +100,21 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,   32,    7,   32,    8,    8,    9,   10,   17,   18,
-			   17,   18,   11,   19,   22,   26,   16,   28,   11,    7,
-			   22,    8,    8,    9,   10,   32,   27,   30,   31,   11,
-			   24,   29,   27,   30,   31,   11,   12,    7,   12,    8,
-			    8,    9,   10,   12,   12,   13,   13,   13,   13,   13,
-			   12,   13,   13,   13,   13,   13,   19,   29,    6,    6,
-			    6,    6,    6,    6,    6,    6,   14,   23,   23,   23,
-			   28,   14,   16,   25,   16,   16,   16,   16,   16,   16,
-			   19,   15,   19,   21,   19,   19,   19,   19,   21,   20,
-			   21,   21,   21,   21,   21,   21,   15,   32,    5,   32,
+			    0,    6,    7,    6,    8,    8,    9,   10,    6,    6,
+			   11,   11,   12,   11,   11,    6,   11,   11,   12,   11,
+			   11,   13,    7,   13,    8,    8,    9,   10,   13,   13,
+			   14,   14,   14,   14,   14,   13,   14,   14,   14,   14,
+			   14,   18,   19,   15,   35,   15,   25,   18,   19,   27,
+			   15,   20,   25,   29,   24,   32,   30,   31,   33,   28,
+			   24,   15,   30,   15,   33,   17,   31,   34,   15,   20,
+			   32,   15,   24,   34,   16,   22,   15,   21,   24,   17,
+			   16,   17,   17,   17,   17,   17,   17,   20,   35,   20,
+			   35,   20,   20,   20,   20,   23,   24,   24,   24,   35,
 
-			   32,   32,   32,   32,   32,   32,   32,   32,   32,   32,
-			   32,   32,   32,   32,   32,   32,   32,   32,   32>>)
+			   23,   23,   23,   26,   26,   26,   22,   35,   22,   22,
+			   22,   22,   22,   22,    5,   35,   35,   35,   35,   35,
+			   35,   35,   35,   35,   35,   35,   35,   35,   35,   35,
+			   35,   35,   35,   35,   35>>)
 		end
 
 	yy_chk_template: ANY is
@@ -117,19 +122,21 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    1,    0,    1,    1,    1,    1,    8,    8,
-			   16,   16,    1,   20,   11,   20,   28,   28,    1,    2,
-			   11,    2,    2,    2,    2,   18,   22,   27,   30,    2,
-			   18,   26,   22,   27,   30,    2,    3,    3,    3,    3,
+			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    1,    3,    3,    3,    3,    3,    3,    3,    3,    3,
 			    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-			    3,    3,    3,    3,    3,    3,   29,   29,   33,   33,
-			   33,   33,   33,   33,   33,   33,   34,   37,   37,   37,
-			   24,   34,   35,   19,   35,   35,   35,   35,   35,   35,
-			   36,   15,   36,   10,   36,   36,   36,   36,   38,    9,
-			   38,   38,   38,   38,   38,   38,    7,    5,   32,   32,
+			    3,    8,    8,   11,   19,   11,   12,   17,   17,   19,
+			   11,   21,   12,   21,   11,   29,   25,   27,   30,   20,
+			   11,   23,   25,   23,   30,   31,   31,   33,   23,   32,
+			   32,   36,   23,   33,   16,   10,   36,    9,   23,   37,
+			    7,   37,   37,   37,   37,   37,   37,   38,    5,   38,
+			    0,   38,   38,   38,   38,   39,   40,   40,   40,    0,
 
-			   32,   32,   32,   32,   32,   32,   32,   32,   32,   32,
-			   32,   32,   32,   32,   32,   32,   32,   32,   32>>)
+			   39,   39,   39,   41,   41,   41,   42,    0,   42,   42,
+			   42,   42,   42,   42,   35,   35,   35,   35,   35,   35,
+			   35,   35,   35,   35,   35,   35,   35,   35,   35,   35,
+			   35,   35,   35,   35,   35>>)
 		end
 
 	yy_base_template: ANY is
@@ -137,10 +144,11 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,   17,   35,    0,   97,    0,   94,    4,   84,
-			   76,    1,   98,    0,    0,   79,    6,   98,   22,   67,
-			    7,    0,   16,    0,   61,   98,   22,   13,    8,   48,
-			   14,   98,   98,   57,   65,   71,   79,   61,   87>>)
+			    0,    0,    0,   20,    0,   88,    0,   78,   37,   72,
+			   68,   42,   33,  114,    0,    0,   72,   43,  114,   41,
+			   53,   45,    0,   60,    0,   46,    0,   48,  114,   46,
+			   44,   57,   61,   53,    0,  114,   70,   78,   86,   94,
+			   90,   97,  105>>)
 		end
 
 	yy_def_template: ANY is
@@ -148,10 +156,11 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,   33,   33,   32,    3,   32,   34,   32,   35,   36,
-			   32,   32,   32,   37,   34,   32,   35,   32,   35,   32,
-			   36,   38,   32,   37,   32,   32,   32,   32,   32,   32,
-			   32,   32,    0,   32,   32,   32,   32,   32,   32>>)
+			    0,   35,    1,   35,    3,   35,   36,   35,   37,   38,
+			   35,   39,   40,   35,   41,   36,   35,   37,   35,   37,
+			   35,   38,   42,   39,   40,   40,   41,   35,   35,   35,
+			   40,   35,   35,   40,   40,    0,   35,   35,   35,   35,
+			   35,   35,   35>>)
 		end
 
 	yy_ec_template: ANY is
@@ -204,22 +213,22 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    3,    3,    0,    0,   10,    3,    7,    8,    8,
-			    8,    8,    8,    2,    3,    7,    0,    4,    4,    0,
-			    0,    6,    0,    2,    0,    5,    0,    0,    0,    0,
-			    0,    1,    0>>)
+			    0,    3,    3,    0,    0,   11,    3,    8,    9,    9,
+			    9,    3,    4,    9,    2,    3,    8,    0,    5,    5,
+			    0,    0,    7,    3,    4,    4,    2,    0,    6,    0,
+			    4,    0,    0,    4,    1,    0>>)
 		end
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 98
+	yyJam_base: INTEGER is 114
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 32
+	yyJam_state: INTEGER is 35
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 33
+	yyTemplate_mark: INTEGER is 36
 			-- Mark between normal states and templates
 
 	yyNull_equiv_class: INTEGER is 1
@@ -238,10 +247,10 @@ feature {NONE} -- Constants
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 9
+	yyNb_rules: INTEGER is 10
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 10
+	yyEnd_of_buffer: INTEGER is 11
 			-- End of buffer rule code
 
 	INITIAL: INTEGER is 0

@@ -1,3 +1,20 @@
+/*
+indexing
+	description: "Wrapper around `EiffelReflectionEmit'. Initially made because of 
+		a memory leak due to the generated assembly being loaded in memory and not
+		freed by the .NET runtime. The solution was to create a new AppDomain in
+		which we were doing the generation and at the end we were destroying this
+		AppDomain and thus will collect the non-used memory.
+
+		However this solution turned out to be very slow (57s versus 23) when you
+		are using AppDomain versus using a simple delegation. Because of that we
+		introduced a `ISE_APPDOMAIN' switch. If it is defined the class will use
+		the AppDomain, otherwise it will use the delegation.
+	
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -9,6 +26,7 @@ public class Core : ICore {
 
 	public void StartAssemblyGeneration (string Name, string FName,  string Location) {
 		AssemblyName name = new AssemblyName();
+
 #if ISE_APPDOMAIN
 		Assembly assembly;
 #endif
@@ -179,8 +197,8 @@ public class Core : ICore {
 		core.CreateFeatureDescription ();
 	}
 
-	public void DefineEntryPoint (int TypeID, int FeatureID) {
-		core.DefineEntryPoint (TypeID, FeatureID);
+	public void DefineEntryPoint (int CreationTypeID, int TypeID, int FeatureID) {
+		core.DefineEntryPoint (CreationTypeID, TypeID, FeatureID);
 	}
 
 	public void AddCA (int TargetTypeID, int AttributeTypeID, int ArgCount) {

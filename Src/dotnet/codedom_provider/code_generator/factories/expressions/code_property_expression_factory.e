@@ -22,17 +22,11 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_source: a_source /= Void
 		local
 			l_target_object: SYSTEM_DLL_CODE_EXPRESSION
-			l_getter: CODE_MEMBER_REFERENCE
 		do
 			l_target_object := a_source.target_object
 			if l_target_object /= Void then
 				code_dom_generator.generate_expression_from_dom (l_target_object)
-				l_getter := last_expression.type.member_from_name ("get_" + a_source.property_name)
-				if l_getter /= Void then
-					set_last_expression (create {CODE_PROPERTY_REFERENCE_EXPRESSION}.make (l_getter, last_expression))
-				else
-					set_last_expression (Empty_expression)
-				end
+				set_last_expression (create {CODE_PROPERTY_REFERENCE_EXPRESSION}.make (a_source.property_name, last_expression))
 			else
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_target_object, ["property reference expression"])
 				set_last_expression (Empty_expression)

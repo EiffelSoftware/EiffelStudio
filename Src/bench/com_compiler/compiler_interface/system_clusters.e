@@ -202,7 +202,6 @@ feature -- Basic Operations
 		local
 			removed: BOOLEAN
 			cluster: CLUSTER_PROPERTIES
-			cluster_list: ARRAYED_LIST [CLUSTER_PROPERTIES]
 		do
 			cluster := clusters_table.item (cluster_name)
 			cluster_table_by_id.remove (cluster.cluster_id)

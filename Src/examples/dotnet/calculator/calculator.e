@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			help_state.do_one_state
 			current_state := qst
 		ensure
-			current_state.equals (qst)
+			current_state.is_equal (qst)
 		end
 
 	over: BOOLEAN is
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_current_state: current_state /= Void
 		do
-			Result := current_state /= Void and then current_state.equals (quit_state)
+			Result := current_state /= Void and then current_state.is_equal (quit_state)
 		end
 
 	action is

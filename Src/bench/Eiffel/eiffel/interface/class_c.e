@@ -570,7 +570,7 @@ feature -- Conformance dependencies
 
 			if not loc_tab.item (topid) then
 				loc_list.extend (a_class)
-				loc_list.forth
+				loc_list.finish
 				loc_tab.put (True, topid)
 			end
 		ensure

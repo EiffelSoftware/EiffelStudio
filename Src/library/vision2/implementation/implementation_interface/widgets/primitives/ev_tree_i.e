@@ -14,6 +14,15 @@ inherit
 
 feature -- Access
 
+	total_count: INTEGER is
+			-- Total number of items in the tree.
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			positive_result: Result >= 0
+		end
+
 	selected_item: EV_TREE_ITEM is
 			-- Item which is currently selected.
 		require

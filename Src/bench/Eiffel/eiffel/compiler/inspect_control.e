@@ -74,7 +74,7 @@ feature
 	set_type (expression_type: like type) is
 			-- Set `type' to `expression_type'.
 		require
-			valid_type: expression_type.is_integer or else expression_type.is_character
+			valid_type: expression_type.is_character or expression_type.is_integer or expression_type.is_natural
 		do
 			type := expression_type
 		ensure
@@ -113,8 +113,8 @@ feature
 			else
 				upper_bound := inspect_value (upper)
 			end
-			Result := lower_bound.inspect_interval (upper_bound)
-			if Result.is_good_range then
+			if lower_bound <= upper_bound then
+				Result := lower_bound.inspect_interval (upper_bound)
 				from
 					i := intervals
 					i.start
@@ -131,8 +131,6 @@ feature
 					i.forth
 				end
 				i.extend (Result)
-			else
-				Result := Void
 			end
 		end
 

@@ -335,6 +335,8 @@ FILE *fp;
 	struct stat buf;
 #ifdef __VMS
 	int fd,current_pos;
+#else
+	int current_pos;
 #endif
 
 	errno = 0;
@@ -347,8 +349,16 @@ FILE *fp;
 		esys();
 	lseek(fd,current_pos,SEEK_SET);	
 #else
-	if (0 != fflush (fp))   /* Without a flush the information */
-		esys();			/* is not up to date */
+	/* Because of some "standard" ANSI C implementations don't
+	 * protect the internal file pointer during `fflush'-ing
+	 * we have to do it ourselves. -- GLJ
+	 */
+
+	current_pos = file_tell(fp);
+	if (0 != fflush (fp))   	/* Without a flush the information */
+		esys();			/* is not up to date, but it _may_ */
+					/* cause file pointer movement!    */
+	file_go(fp, current_pos);
 #endif
 
 	if (fstat (fileno (fp), &buf) == -1)

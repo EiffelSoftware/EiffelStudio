@@ -13,11 +13,10 @@ inherit
 
 	EB_GRAPHICAL_DATA
 
-	EB_RESOURCE_USER
-		redefine
-			dispatch_modified_resource,
-			finish_update
-		end
+--	EB_RESOURCE_USER
+--		redefine
+--			update
+--		end
 
 creation
 
@@ -33,7 +32,7 @@ feature {NONE} -- Initialization
 			create class_tool_mgr.make
 			create object_tool_mgr.make
 			create explain_tool_mgr.make
-			Graphical_resources.add_user (Current)	
+--			Graphical_resources.add_user (Current)	
 		end
 
 feature {NONE} -- Implementation
@@ -283,10 +282,6 @@ feature -- Graphical Interface
 
 feature -- Update
 
-
-	dispatch_modified_resource (mod_res: EB_MODIFIED_RESOURCE) is
-		do
-		end
 
 --	update_string_resource (old_res, new_res: EB_STRING_RESOURCE) is
 --			-- Update Current to reflect changes in `a_modified_resource'.

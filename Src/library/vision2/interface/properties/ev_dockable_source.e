@@ -119,7 +119,7 @@ feature -- Status setting
 		do
 			implementation.enable_external_docking
 		ensure
-			is_externally_dockable: not is_external_docking_enabled
+			is_externally_dockable: is_external_docking_enabled
 		end
 		
 	disable_external_docking is

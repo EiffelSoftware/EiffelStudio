@@ -165,7 +165,7 @@ feature -- Status setting
 		do
 			not_external_docking_enabled := False
 		ensure
-			is_externally_dockable: not is_external_docking_enabled
+			is_externally_dockable: is_external_docking_enabled
 		end
 		
 	disable_external_docking is

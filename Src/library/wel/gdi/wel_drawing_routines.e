@@ -56,8 +56,8 @@ feature -- Basic operations
 		do
 			create wel_string.make (txt)
 			cwin_draw_state (dc.item, default_pointer, default_pointer,
-					wel_string.to_integer, txt.count, x, y, 50, 20,
-					Dst_text + Dss_disabled)
+					wel_string.to_integer, txt.count, x, y, dc.tabbed_text_width (txt),
+					dc.tabbed_text_height (txt), Dst_text + Dss_disabled)
 		end
 
 	draw_insensitive_bitmap (dc: WEL_DC; bitmap: WEL_BITMAP; x, y: INTEGER) is

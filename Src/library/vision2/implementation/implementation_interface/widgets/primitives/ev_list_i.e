@@ -49,10 +49,11 @@ feature -- Access
 		end
 
 	selected_item: EV_LIST_ITEM is
-			-- Item which is currently selected, for a multiple
-			-- selection, it gives the last selected item.
+			-- Item which is currently selected
+			-- It needs to be in single selection mode
 		require
 			exists: not destroyed
+			single_selection: not is_multiple_selection
 		deferred
 		end
 

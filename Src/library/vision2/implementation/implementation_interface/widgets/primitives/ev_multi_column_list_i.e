@@ -52,6 +52,7 @@ feature -- Access
 			-- selection, it gives the last selected item.
 		require
 			exists: not destroyed
+			single_selection: not is_multiple_selection
 		deferred
 		end
 

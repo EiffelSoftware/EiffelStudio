@@ -21,6 +21,9 @@ inherit
 	EV_BAR_ITEM_IMP
         
 	EV_TEXTABLE_IMP
+		redefine
+			set_text
+		end
 
 	EV_PIXMAPABLE_IMP
 		undefine
@@ -48,11 +51,11 @@ feature {NONE} -- Initialization
 			-- Create the `box'.
 			initialize
 
-			-- Create a gtk label with a text set to ""
-			create_text_label ("")
-
-			-- We left-align and vertical_center-position the text.
-			gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
+--			-- Create a gtk label with a text set to ""
+--			create_text_label ("")
+--
+--			-- We left-align and vertical_center-position the text.
+--			gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
 		end	
 		
 	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
@@ -74,15 +77,40 @@ feature {NONE} -- Initialization
 			-- show the pixmap now that it has a parent.
 			gtk_widget_show (pixmap_widget)
 
-			-- We right-align and vertical_center-position the pixmap.
-			gtk_misc_set_alignment (gtk_misc (pixmap_widget), 1.0, 0.5)
+			-- If there is a text,
+			If label_widget /= default_pointer then
+				-- We right-align and vertical_center-position the pixmap.
+				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 1.0, 0.5)
 
-			-- We left-align and vertical_center-position the text.
-			gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
+				-- We left-align and vertical_center-position the text
+				gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
+			end
 		end					
 
 feature -- Element change
 
+	set_text (txt: STRING) is
+			-- Set current button text to `txt'.
+			-- Redefined because we want the text to be:
+			-- 	- middle-aligned if there is no pixmap
+			-- 	- left-aligned if there is a pixmap
+		do
+			{EV_TEXTABLE_IMP} Precursor (txt)
+
+			-- Is there a pixmap?
+			if pixmap_widget /= default_pointer then
+				-- Yes, there is a pixmap:
+				-- We right-align and vertical_center-position the pixmap.
+				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 1.0, 0.5)
+				-- We left-align and vertical_center-position the text
+				gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
+			else
+				-- No, there is no pixmap:
+				-- We center and vertical_center-position the text
+				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
+			end				
+		end
+	
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'.
 			-- Redefined because the text is in a gtk_label.

@@ -56,16 +56,41 @@ feature -- Element change
 	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
+		local
+			par_imp: EV_CONTAINER_IMP
+			ww: WEL_WINDOW
 		do
-			{EV_WIDGET_IMP} Precursor (par)
-			if parent_imp /= Void then
-				if not already_displayed and parent_imp.already_displayed then
+			if par /= Void then
+				if parent_imp /= Void then
+					parent_imp.remove_child (Current)
+				end
+				ww ?= par.implementation
+				wel_set_parent (ww)
+				par_imp ?= par.implementation
+				check
+					parent_not_void: par_imp /= Void
+				end
+				set_top_level_window_imp (par_imp.top_level_window_imp)
+				par_imp.add_child (Current)
+				if par_imp.already_displayed then
 					on_first_display
 				else
-					already_displayed := parent_imp.already_displayed
+					already_displayed := False
 				end
+			elseif parent_imp /= Void then
+				parent_imp.remove_child (Current)
+				wel_set_parent (default_parent.item)
 			end
 		end
+
+--			{EV_WIDGET_IMP} Precursor (par)
+--				if not already_displayed and parent_imp.already_displayed then
+--					on_first_display
+--				else
+--					already_displayed := parent_imp.already_displayed
+--				end
+--			end
+--		end
 
 feature -- Assertion test
 

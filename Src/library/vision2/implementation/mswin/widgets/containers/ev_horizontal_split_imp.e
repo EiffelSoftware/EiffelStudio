@@ -55,7 +55,7 @@ feature {EV_WEL_SPLIT_WINDOW} -- Access
 			-- Depends of the second child minimum size
 		do
 			if child2 = Void then
-				Result := width
+				Result := width - wel_window.size
 			else
 				Result := width - child2.minimum_width - wel_window.size
 			end

@@ -16,26 +16,15 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		local
 			table_size: INTEGER
-			io: SYSTEM_CONSOLE
-			lg: ARRAY [G]
-			lh: ARRAY [H]
-			lb: ARRAY [BOOLEAN]
 		do
 			table_size := n * 2
 			if table_size < Minimum_size then
 				table_size := Minimum_size
 			end
 
-			create lg.make (table_size - 1);
-			content := lg
-
-			create lh.make (table_size - 1);
-			keys := lh
-			keys := lh
-
-			create lb.make (table_size - 1);
-			deleted_marks := lb
-
+			create content.make (table_size - 1);
+			create keys.make (table_size - 1);
+			create deleted_marks.make (table_size - 1);
 			iteration_position := table_size
 		end
 

@@ -131,27 +131,18 @@ feature {NONE} -- Implementation
 		indexing
 			description: "Build operator states."
 			external_name: "Initialize"
-		local
-			q: QUESTION
-			quit: QUIT
-			help: HELP
-			j: LINKED_STACK [REAL]
 		do 
-			create j.make
-			operator_stack := j
-			create q.make (operator_stack)
-			qst := q
+			create operator_stack.make
+			create qst.make (operator_stack)
 			enter_operator ("a", "Enter operand onto stack.", qst)
 			enter_operator ("+", "Add top two numbers on the stack", create {PLUS}.make (operator_stack))
 			enter_operator ("-", "Subtract top two numbers on the stack.", create {MINUS}.make (operator_stack))
 			enter_operator ("*", "Multiply top two numbers on the stack.", create {MULTIPLY}.make (operator_stack))
 			enter_operator ("/", "Divide top two numbers on the stack.", create {DIVIDE}.make (operator_stack))
 			enter_operator ("0", "Empty the stack.", create {EMPTY}.make (operator_stack))
-			create quit.make (operator_stack)
-			quit_state := quit
+			create quit_state.make (operator_stack)
 			enter_operator ("q", "Quit.", quit_state)
-			create help.make (operator_stack)
-			help_state := help
+			create help_state.make (operator_stack)
 			help_state.set_operator (associated_operator)
 			enter_operator ("?", "Help.", help_state)
 		end

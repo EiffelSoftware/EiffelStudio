@@ -1081,40 +1081,6 @@ feature {NONE} -- Transformation
 			swapped_from_item: i_th (i) = old ll_item
 		end
 	
-feature -- Duplication
-
--- 	duplicate (n: INTEGER): like Current is
---		indexing
---			description: "[New stack containing the `n' latest items inserted in current stack.%
--- 						% If `n' is greater than `count', identical to current stack.]"
--- 			external_name: "Duplicate"
--- 		require
--- 			not_off_unless_after: off implies after
--- 			valid_subchain: n >= 0
--- 			positive_argument: n > 0
--- 		local
--- 			counter: INTEGER
--- 			old_cursor: LINKED_LIST_CURSOR [G]
--- 			list: LINKED_STACK [G]
--- 		do
--- 			if not empty then
--- 				old_cursor := cursor
--- 				from
--- 					create Result.make
--- 					list := Result
--- 					start
--- 				until
--- 					after or counter = n
--- 				loop
--- 					list.finish
--- 					list.put_right (ll_item)
--- 					counter := counter + 1
--- 					forth
--- 				end
--- 				go_to (old_cursor)
--- 			end
--- 		end
-	
 feature {NONE} -- Inapplicable
 
 	bag_put (v: G) is
@@ -1177,11 +1143,8 @@ feature {LINKED_STACK} -- Implementation
 						%This feature may be redefined in descendants so as to%
 						%produce an adequately allocated and initialized object.]"
 			external_name: "NewCell"
-		local
-			i: LINKABLE [G]
 		do
-			create i
-			Result := i
+			create Result
 			Result.put (v)
 		ensure 
 			result_exists: Result /= Void

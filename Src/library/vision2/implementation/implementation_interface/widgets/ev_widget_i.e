@@ -258,12 +258,10 @@ feature {EV_ANY_I} -- Implementation
 	on_orphaned is
 			-- `Current' has just been removed from its container.
 		require
-			--| FIXME Make this work:
-			--| parent_void: parent = Void
+			parent_void: parent = Void
 		do
 		ensure
-			--| FIXME Make this work:
-			--| parent_void: parent = Void
+			parent_void: parent = Void
 		end
 
 feature -- Obsolete
@@ -399,6 +397,9 @@ end -- class EV_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.66  2000/05/01 19:31:05  pichery
+--| Removed precondition. It should work now.
+--|
 --| Revision 1.65  2000/04/14 20:50:57  brendel
 --| on_parented and on_orphaned defined here.
 --|

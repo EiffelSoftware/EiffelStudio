@@ -310,7 +310,8 @@ feature -- Class info
 		end
 
 	generate_class_header
-			(is_interface, is_deferred, is_frozen, is_expanded, is_external: BOOLEAN; type_id: INTEGER)
+			(is_interface, is_deferred, is_frozen, is_expanded,
+			is_external: BOOLEAN; type_id: INTEGER)
 		is
 			-- Generate class name and its specifier.
  		require
@@ -1651,13 +1652,37 @@ feature -- Constants generation
 			when 64 then implementation.put_integer64_constant (i)
 			end
 		end
-		
+
+	put_integer_8_constant (i: INTEGER) is
+			-- Put `i' on IL stack.
+		require
+			il_generation_started: il_generation_started
+		do
+			implementation.put_integer8_constant (i)
+		end
+
+	put_integer_16_constant (i: INTEGER) is
+			-- Put `i' on IL stack.
+		require
+			il_generation_started: il_generation_started
+		do
+			implementation.put_integer16_constant (i)
+		end
+
 	put_integer_32_constant (i: INTEGER) is
 			-- Put `i' on IL stack.
 		require
 			il_generation_started: il_generation_started
 		do
 			implementation.put_integer32_constant (i)
+		end
+		
+	put_integer_64_constant (i: INTEGER) is
+			-- Put `i' on IL stack.
+		require
+			il_generation_started: il_generation_started
+		do
+			implementation.put_integer64_constant (i)
 		end
 
 	put_double_constant (d: DOUBLE) is

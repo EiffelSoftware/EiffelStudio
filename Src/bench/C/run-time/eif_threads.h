@@ -25,10 +25,11 @@
 extern "C" {
 #endif
 
-#include "cecil.h"		/* Needed for EIF_OBJ,... definitions */
+#include "eif_cecil.h"		/* Needed for EIF_OBJ,... definitions */
 
 extern void eif_thr_panic(char *);
-extern void eif_thr_freeze(EIF_OBJ object);
+extern EIF_POINTER eif_thr_freeze(EIF_OBJ object);
+extern void eif_thr_unfreeze(EIF_OBJ object);
 extern EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE);
 extern EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER);
 extern void eif_thr_proxy_dispose(EIF_POINTER);
@@ -41,6 +42,7 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 
 /* Tuning for FSU POSIX Threads */
 #ifdef EIF_FSUTHREADS
+#define HASNT_SCHED_H
 #define EIF_POSIX_THREADS
 #define EIF_NONPOSIX_TSD
 #define HASNT_SCHEDPARAM
@@ -53,11 +55,11 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 /* Tuning for POSIX LinuxThreads */
 #ifdef EIF_LINUXTHREADS
 #define EIF_POSIX_THREADS
-#include <sched.h>
 #endif
 
 /* Tuning for POSIX PCThreads */
 #ifdef EIF_PCTHREADS
+#define HASNT_SCHED_H
 #define EIF_POSIX_THREADS
 #define EIF_NONPOSIX_TSD
 #define EIF_SCHEDPARAM_EXTRA param.sched_quantum = 2; /* bug in PCThreads */
@@ -66,34 +68,37 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 
 /* Tuning for Solaris Threads */
 #ifdef SOLARIS_THREADS
-/* #define EIF_NO_JOIN_ALL paulv */
 #endif
 
 /* Tuning for VxWorks */
 #ifdef VXWORKS
 #define EIF_NO_CONDVAR
+#define EIF_NO_POSIX_SEM
+	/* This can change if VxWorks compiled with option POSIX_SEM */
 #endif
 
 /* Tuning for Windows */
 #ifdef EIF_WIN32
 #define EIF_NO_CONDVAR
+#define EIF_NO_POSIX_SEM
 #endif
 
 /* Exported functions */
 extern void eif_thr_init_root(void);
 extern void eif_thr_register(void);
 extern unsigned int eif_thr_is_initialized(void);
-extern void eif_thr_create(EIF_OBJ, EIF_PROC, EIF_BOOLEAN *);
+extern EIF_BOOLEAN eif_thr_is_root(void);
+extern void eif_thr_create(EIF_OBJ, EIF_POINTER);
 extern void eif_thr_exit(void);
 extern void eif_thr_yield(void);
 extern void eif_thr_join_all(void);
 extern void eif_thr_join(EIF_POINTER);
 extern void eif_thr_wait(EIF_BOOLEAN *);
-extern void eif_thr_create_with_args(EIF_OBJ, EIF_PROC, EIF_BOOLEAN *, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
+extern void eif_thr_create_with_args(EIF_OBJ, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
 extern EIF_INTEGER eif_thr_default_priority(void);
 extern EIF_INTEGER eif_thr_min_priority(void);
 extern EIF_INTEGER eif_thr_max_priority(void);
-extern EIF_POINTER eif_thr_task_id(void);
+extern EIF_POINTER eif_thr_thread_id(void);
 extern EIF_POINTER eif_thr_last_thread(void);
 
 /* Mutex functions at end of file */
@@ -106,14 +111,56 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_SCHED_FIFO    2  /* FIFO scheduling        */
 #define EIF_SCHED_RR      3  /* Round-robin scheduling */
 
+/* Defaults for condition variables */
 #ifdef EIF_NO_CONDVAR
 #define EIF_COND_INIT(cond, msg)
+#define EIF_COND_CREATE(cond, msg)
 #define EIF_COND_WAIT(cond, mutex, msg)
 #define EIF_COND_BROADCAST(cond, msg)
+#define EIF_COND_SIGNAL(cond, msg)
 #define EIF_COND_DESTROY(cond, msg)
-#define EIF_COND_TYPE		undefined
-#define EIF_COND_ATTR_TYPE	undefined
+#define EIF_COND_TYPE		unsigned char
+#define EIF_COND_ATTR_TYPE	unsigned char
+#else /* EIF_NO_CONDVAR */
+#define EIF_COND_TYPE			pthread_cond_t
+#define EIF_COND_ATTR_TYPE		pthread_condattr_t
+#define EIF_COND_CREATE(pcond, msg) \
+	pcond = (EIF_COND_TYPE *) malloc (sizeof(EIF_COND_TYPE)); \
+	if (!(pcond)) eif_thr_panic("cannot allocate memory for cond. variable"); \
+	EIF_COND_INIT(pcond,msg)
+#define EIF_COND_INIT(pcond, msg) \
+	if (pthread_cond_init (pcond, NULL)) eif_thr_panic (msg)
+#define EIF_COND_WAIT(pcond, pmutex, msg) \
+	if (pthread_cond_wait (pcond, pmutex)) eif_thr_panic (msg)
+#define EIF_COND_BROADCAST(pcond, msg) \
+	if (pthread_cond_broadcast (pcond)) eif_thr_panic (msg)
+#define EIF_COND_SIGNAL(pcond, msg) \
+	if (pthread_cond_signal (pcond)) eif_thr_panic (msg)
+#define EIF_COND_DESTROY(pcond, msg) \
+	if (pthread_cond_destroy (pcond)) eif_thr_panic (msg)
 #endif /* EIF_NO_CONDVAR */
+
+/* Defaults for semaphores */
+#ifndef EIF_NO_POSIX_SEM
+#include <semaphore.h>
+#define EIF_SEM_TYPE	sem_t
+#define EIF_SEM_INIT(sem,count,msg) \
+	if (sem_init (sem, 0, (unsigned int) count)) eif_thr_panic (msg)
+#define EIF_SEM_CREATE(sem,count,msg) \
+	sem = (EIF_SEM_TYPE *) malloc (sizeof(EIF_SEM_TYPE)); \
+	if (!sem) eif_thr_panic ("Can't allocate memory for semaphore"); \
+	EIF_SEM_INIT(sem,count,msg)
+#define EIF_SEM_POST(sem,msg) \
+	if (sem_post (sem)) eif_thr_panic (msg)
+#define EIF_SEM_WAIT(sem,msg) \
+	if (sem_wait (sem)) eif_thr_panic (msg)
+#define EIF_SEM_TRYWAIT(sem,r,msg) \
+	r = sem_trywait (sem)
+#define EIF_SEM_DESTROY(sem,msg) \
+	EIF_SEM_DESTROY0(sem,msg); free(sem)
+#define EIF_SEM_DESTROY0(sem,msg) \
+	if (sem_destroy(sem)) eif_thr_panic(msg)
+#endif
 
 /* --------------------------------------- */
 
@@ -124,6 +171,9 @@ extern EIF_POINTER eif_thr_last_thread(void);
 
 /* Includes */
 #include <pthread.h>
+#ifndef HASNT_SCHED_H
+#include <sched.h>
+#endif
 
 /* Types */
 #define EIF_THR_ENTRY_TYPE		void *
@@ -133,10 +183,6 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_TYPE			pthread_mutex_t
 #define EIF_TSD_TYPE			pthread_key_t
 #define EIF_TSD_VAL_TYPE		void *
-#ifndef EIF_NO_CONDVAR
-#define EIF_COND_TYPE			pthread_cond_t
-#define EIF_COND_ATTR_TYPE		pthread_condattr_t
-#endif /* EIF_NO_CONDVAR */
 
 /* Constants */
 #ifndef EIF_DEFAULT_PRIORITY
@@ -198,18 +244,25 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_THR_EXIT(arg)			pthread_exit(NULL)
 #define EIF_THR_JOIN(which)			pthread_join(which,NULL)
 #define EIF_THR_JOIN_ALL
-#define EIF_THR_YIELD				pthread_yield(0)
+#define EIF_THR_YIELD
 
 #define EIF_THR_SET_PRIORITY(tid,prio)
 #define EIF_THR_GET_PRIORITY(tid,prio)
 
 /* Mutex management */
+#ifdef _CRAY
+#define EIF_MUTEX_INIT(m,msg) \
+    { pthread_mutexattr_t mattr = PTHREAD_MUTEX_INITIALIZER; \
+    if (pthread_mutex_init(m,&mattr)) eif_thr_panic(msg);}
+#else /* _CRAY */
+#define EIF_MUTEX_INIT(m,msg) \
+	if (pthread_mutex_init(m,NULL)) eif_thr_panic(msg)
+#endif /* _CRAY */
+
 #define EIF_MUTEX_CREATE(m,msg) \
 	m = (EIF_MUTEX_TYPE *) malloc(sizeof(EIF_MUTEX_TYPE)); \
 	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"); \
 	EIF_MUTEX_INIT(m,msg)
-#define EIF_MUTEX_INIT(m,msg) \
-	if (pthread_mutex_init(m,NULL)) eif_thr_panic(msg)
 #define EIF_MUTEX_LOCK(m,msg) if (pthread_mutex_lock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)	\
 	r = pthread_mutex_trylock(m);	\
@@ -240,16 +293,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_TSD_DESTROY(key,msg) if (pthread_key_delete(key) eif_thr_panic(msg)
 
 /* Condition variables management */
-#ifndef EIF_NO_CONDVAR
-#define EIF_COND_INIT(pcond, msg) \
-	if (pthread_cond_init (pcond, NULL)) eif_thr_panic (msg)
-#define EIF_COND_WAIT(pcond, pmutex, msg) \
-	if (pthread_cond_wait (pcond, pmutex)) eif_thr_panic (msg)
-#define EIF_COND_BROADCAST(pcond, msg) \
-	if (pthread_cond_broadcast (pcond)) eif_thr_panic (msg)
-#define EIF_COND_DESTROY(pcond, msg) \
-	if (pthread_cond_destroy (pcond)) eif_thr_panic (msg)
-#endif
+/* --> defined above */
 
 #elif defined EIF_WIN32
 
@@ -268,6 +312,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_TYPE			CRITICAL_SECTION
 #define EIF_TSD_TYPE			DWORD
 #define EIF_TSD_VAL_TYPE		LPVOID
+#define EIF_SEM_TYPE			unsigned char /* FIXME - not used */
 
 /* Constants */
 #define EIF_MIN_PRIORITY 0			/* FIXME - not used */
@@ -297,11 +342,20 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_CREATE(m,msg)		\
 	m = (EIF_MUTEX_TYPE *) malloc(sizeof(EIF_MUTEX_TYPE)); \
 	if (!(m)) eif_thr_panic("Not enough memory to create mutex\n"); \
-	InitializeCriticalSection(m)
-#define EIF_MUTEX_LOCK(m,msg)				EnterCriticalSection(m)
+	EIF_MUTEX_INIT(m,msg)
+#define EIF_MUTEX_INIT(m,msg)			InitializeCriticalSection(m)
+#define EIF_MUTEX_LOCK(m,msg)			EnterCriticalSection(m)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)
-#define EIF_MUTEX_UNLOCK(m,msg)				LeaveCriticalSection(m)
-#define EIF_MUTEX_DESTROY(m,msg)			DeleteCriticalSection(m); free(m)
+#define EIF_MUTEX_UNLOCK(m,msg)			LeaveCriticalSection(m)
+#define EIF_MUTEX_DESTROY0(m,msg)		DeleteCriticalSection(m)
+#define EIF_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY0(m,msg); free(m)
+
+/* Semaphore management -- not implemented */
+#define EIF_SEM_CREATE(sem,count,msg)
+#define EIF_SEM_POST(sem,msg)
+#define EIF_SEM_WAIT(sem,msg)
+#define EIF_SEM_TRYWAIT(sem,msg)
+#define EIF_SEM_DESTROY(sem,msg)
 
 /* Thread Specific Data management */
 #define EIF_TSD_CREATE(key,msg) \
@@ -333,6 +387,7 @@ typedef struct {
   int pol;
 } eif_thr_attr_t;
 
+/* Types */
 #define EIF_THR_ENTRY_TYPE		void
 #define EIF_THR_ENTRY_ARG_TYPE	void *
 #define EIF_THR_TYPE			thread_t
@@ -340,10 +395,25 @@ typedef struct {
 #define EIF_MUTEX_TYPE			mutex_t
 #define EIF_TSD_TYPE			thread_key_t
 #define EIF_TSD_VAL_TYPE		void *
-#ifndef EIF_NO_CONDVAR
-#define EIF_COND_TYPE			cond_t
-#define EIF_COND_ATTR_TYPE		condattr_t
-#endif /* EIF_NO_CONDVAR */
+
+/* Tuning for condition variables */
+#define pthread_cond_t			cond_t
+#define pthread_condattr_t		condattr_t
+#define pthread_cond_destroy	cond_destroy
+#define pthread_cond_init(a,b)	cond_init(a,USYNC_THREAD,b)
+#define pthread_cond_wait		cond_wait
+#define pthread_cond_signal		cond_signal
+#define pthread_cond_broadcast	cond_broadcast
+
+/* Tuning for semaphores */
+#ifndef EIF_NO_SOLARIS_SEM
+#define sem_t					sema_t
+#define sem_init(sem,shr,count)	sema_init(sem,count,USYNC_THREAD,0)
+#define sem_post				sema_post
+#define sem_wait				sema_wait
+#define sem_trywait				sema_trywait
+#define sem_destroy				sema_destroy
+#endif
 
 /* Constants */
 #define EIF_THR_CREATION_FLAGS THR_NEW_LWP | THR_DETACHED
@@ -383,10 +453,12 @@ typedef struct {
 #define EIF_THR_GET_PRIORITY(tid,prio) thr_setprio(tid,&(prio))
 
 /* Mutex management */
-#define EIF_MUTEX_CREATE(m,msg)		\
+#define EIF_MUTEX_INIT(m,msg) \
+	if (mutex_init((m),USYNC_THREAD,NULL)) eif_thr_panic(msg)
+#define EIF_MUTEX_CREATE(m,msg) \
 	m = (EIF_MUTEX_TYPE *) malloc (sizeof(EIF_MUTEX_TYPE)); \
 	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"); \
-	if (mutex_init((m),USYNC_THREAD,NULL)) eif_thr_panic(msg)
+	EIF_MUTEX_INIT(m,msg)
 #define EIF_MUTEX_LOCK(m,msg)		if (mutex_lock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)	\
 		r = mutex_trylock(m); \
@@ -410,17 +482,6 @@ typedef struct {
 
 #define EIF_TSD_DESTROY(key,msg)
 
-/* Condition variables management */
-#ifndef EIF_NO_CONDVAR
-#define EIF_COND_INIT(pcond, msg) \
-	if (cond_init (pcond, USYNC_THREAD, NULL)) eif_thr_panic (msg)
-#define EIF_COND_WAIT(pcond, pmutex, msg) \
-	if (cond_wait (pcond, pmutex)) eif_thr_panic (msg)
-#define EIF_COND_BROADCAST(pcond, msg) \
-	if (cond_broadcast (pcond)) eif_thr_panic (msg)
-#define EIF_COND_DESTROY(pcond, msg) \
-	if (cond_destroy (pcond)) eif_thr_panic (msg)
-#endif
 
 #elif defined VXWORKS
 
@@ -445,6 +506,9 @@ typedef struct {
 #define EIF_MUTEX_TYPE			struct semaphore
 #define EIF_TSD_TYPE			eif_global_context_t *
 #define EIF_TSD_VAL_TYPE		eif_global_context_t *
+#ifdef EIF_NO_POSIX_SEM
+#define EIF_SEM_TYPE			struct semaphore
+#endif
 
 /* Constants */
 #define EIF_MIN_PRIORITY 0
@@ -502,6 +566,20 @@ typedef struct {
 #define EIF_MUTEX_DESTROY(m,msg)	\
 	if (semDelete(m)!=OK) eif_thr_panic(msg)
 
+#ifdef EIF_NO_POSIX_SEM
+#define EIF_SEM_CREATE(sem,count,msg) \
+	if (!(sem = semCCreate (SEM_Q_FIFO, count))) eif_thr_panic (msg)
+#define EIF_SEM_INIT(sem,count,msg)
+#define EIF_SEM_POST(sem,msg) \
+	if (semGive (sem) != OK) eif_thr_panic (msg)
+#define EIF_SEM_WAIT(sem,msg) \
+	if (semTake (sem, WAIT_FOREVER) != OK) eif_thr_panic (msg)
+#define EIF_SEM_TRYWAIT(sem,r,msg) \
+	r = semTake (sem, NO_WAIT) == OK ? 0 : 1;
+#define EIF_SEM_DESTROY(sem,msg) \
+	if (semDelete (sem) != OK) eif_thr_panic (msg)
+#endif
+
 /* Thread Specific Data management */
 #define EIF_TSD_CREATE(key,msg)
 #define EIF_TSD_SET(key,val,msg)		\
@@ -520,15 +598,24 @@ typedef struct {
 
 /* --------------------------------------- */
 
+/*
+ * Structure that describes a list of thread objects to unfreeze
+ */
+
+typedef struct thr_list_struct {
+	EIF_OBJ thread;
+	struct thr_list_struct *next;
+} thr_list_t;
+
 /* 
  * Structure used to give arguments to a new thread
  */
  
 typedef struct {
 	EIF_OBJ current;
-	EIF_PROC routine;
+	EIF_POINTER routine;
 	EIF_MUTEX_TYPE *children_mutex;
-	EIF_BOOLEAN *terminated;
+	thr_list_t **addr_thr_list;
 	int *addr_n_children;
 #ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *children_cond;
@@ -536,19 +623,37 @@ typedef struct {
 	EIF_THR_TYPE *tid;
 } start_routine_ctxt_t;
 
-
 /*--------------------------*/
 /*---  Mutex operations  ---*/
 /*--------------------------*/
 
 extern EIF_MUTEX_TYPE *eif_rmark_mutex;
 
-extern EIF_MUTEX_TYPE *eif_thr_mutex_create(void);
-extern void eif_thr_mutex_lock(EIF_MUTEX_TYPE *a_mutex_pointer);
-extern void eif_thr_mutex_unlock(EIF_MUTEX_TYPE *a_mutex_pointer);
-extern EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE *a_mutex_pointer);
-extern void eif_thr_mutex_destroy(EIF_MUTEX_TYPE *a_mutex_pointer);
+extern EIF_POINTER eif_thr_mutex_create(void);
+extern void eif_thr_mutex_lock(EIF_POINTER mutex_pointer);
+extern void eif_thr_mutex_unlock(EIF_POINTER mutex_pointer);
+extern EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER mutex_pointer);
+extern void eif_thr_mutex_destroy(EIF_POINTER mutex_pointer);
 
+/*------------------------------*/
+/*---  Semaphore operations  ---*/
+/*------------------------------*/
+
+extern EIF_POINTER eif_thr_sem_create (EIF_INTEGER count);
+extern void eif_thr_sem_wait (EIF_POINTER sem);
+extern void eif_thr_sem_post (EIF_POINTER sem);
+extern EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem);
+extern void eif_thr_sem_destroy (EIF_POINTER sem);
+
+/*---------------------------------------*/
+/*---  Condition variable operations  ---*/
+/*---------------------------------------*/
+
+extern EIF_POINTER eif_thr_cond_create (void);
+extern void eif_thr_cond_broadcast (EIF_POINTER cond);
+extern void eif_thr_cond_signal (EIF_POINTER cond);
+extern void eif_thr_cond_wait (EIF_POINTER cond, EIF_POINTER mutex);
+extern void eif_thr_cond_destroy (EIF_POINTER cond);
 
 #else
 

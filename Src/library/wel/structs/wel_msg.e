@@ -117,6 +117,13 @@ feature -- Basic operations
 				default_pointer, 0, 0, Pm_remove)
 		end
 
+	peek_all_noremove is
+			-- Peek all messages.
+		do
+			last_boolean_result := cwin_peek_message (item,
+				default_pointer, 0, 0, Pm_noremove)
+		end
+
 	dispatch is
 			-- Dispatch the message to a window procedure
 		do

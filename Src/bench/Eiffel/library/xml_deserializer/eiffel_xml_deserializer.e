@@ -54,28 +54,90 @@ feature -- Query
 			l_file: KL_TEXT_INPUT_FILE
 			l_bool: BOOLEAN
 		do
-			create l_file.make (a_file_name)
-
-			if l_file.exists and l_file.is_readable then
-				l_xml_parser := Xml_parser
-				l_file.open_read
-				debug ("disable_assertions")
-					l_bool := feature {ISE_RUNTIME}.check_assert (False)
+			Result := retrieve_binary_file (a_file_name)
+			
+			if Result = Void then
+				create l_file.make (a_file_name)
+				if l_file.exists and l_file.is_readable then
+					l_xml_parser := Xml_parser
+					l_file.open_read
+					debug ("disable_assertions")
+						l_bool := feature {ISE_RUNTIME}.check_assert (False)
+					end
+					l_xml_parser.parse_from_stream (l_file)
+					debug ("disable_assertions")
+						l_bool := feature {ISE_RUNTIME}.check_assert (l_bool)
+					end
+					l_file.close
+	
+					if l_xml_parser.is_correct then
+						Result := reference_from_xml (Pipe_callback.document.root_element)
+						store_binary_file (a_file_name, Result)
+					end			
 				end
-				l_xml_parser.parse_from_stream (l_file)
-				debug ("disable_assertions")
-					l_bool := feature {ISE_RUNTIME}.check_assert (l_bool)
-				end
-				l_file.close
-
-				if l_xml_parser.is_correct then
-					Result := reference_from_xml (Pipe_callback.document.root_element)
-				end			
 			end
 		end
 
 feature {NONE} -- Object retrieval from node.
 
+	retrieve_binary_file (a_file_name: STRING): ANY is
+			-- Given XML file located at `a_file_name', tries to read its binary
+			-- counterpart and create a corresponding Eiffel object.
+		require
+			a_file_name_not_void: a_file_name /= Void
+		local
+			retried, l_is_open: BOOLEAN
+			l_raw_file: RAW_FILE
+			l_file_name: STRING
+		do
+			if not retried then
+				create l_file_name.make (a_file_name.count + 1)
+				l_file_name.append (a_file_name)
+				l_file_name.append_character ('b')
+				create l_raw_file.make (l_file_name)
+				if l_raw_file.exists and l_raw_file.is_readable then
+					l_raw_file.open_read
+					l_is_open := True
+					Result := l_raw_file.retrieved
+					l_raw_file.close
+				end
+			else
+				if l_is_open then
+					l_raw_file.close
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
+	store_binary_file (a_file_name: STRING; an_obj: ANY) is
+			-- Store binary file associated to XML file `a_file_name'.
+		require
+			a_file_name_not_void: a_file_name /= Void
+		local
+			retried, l_is_open: BOOLEAN
+			l_raw_file: RAW_FILE
+			l_file_name: STRING
+		do
+			if not retried then
+				create l_file_name.make (a_file_name.count + 1)
+				l_file_name.append (a_file_name)
+				l_file_name.append_character ('b')
+				create l_raw_file.make_open_write (l_file_name)
+				l_is_open := True
+				l_raw_file.basic_store (an_obj)
+				l_raw_file.close
+			else
+				if l_is_open then
+					l_raw_file.close
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
 	reference_from_xml (a_xml_element: like xml_element): ANY is
 			-- Instantiate object described in `a_xml_element'.
 		require

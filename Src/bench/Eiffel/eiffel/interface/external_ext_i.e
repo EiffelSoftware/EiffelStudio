@@ -4,7 +4,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
  
-class EXTERNAL_EXT_I
+deferred class EXTERNAL_EXT_I
 
 inherit
 	SHARED_INCLUDE
@@ -24,6 +24,7 @@ inherit
 	SHARED_BYTE_CONTEXT
 		export
 			{NONE} all
+			{ANY} context
 		redefine
 			is_equal
 		end
@@ -34,6 +35,13 @@ inherit
 		redefine
 			is_equal
 		end
+		
+	SHARED_GENERATION
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end		
 
 feature -- Status report
 
@@ -62,7 +70,7 @@ feature -- Status report
 			-- Is current external an inlined one?
 		do
 		end
-		
+
 	has_signature: BOOLEAN is
 		do
 			Result := has_arg_list or has_return_type
@@ -83,6 +91,12 @@ feature -- Status report
 			Result := header_files /= Void
 		end
 
+	need_encapsulation: BOOLEAN is
+			-- Does current external need to be accessed through its encapsulation.
+		do
+			Result := is_blocking_call and System.has_multithreaded
+		end
+		
 feature -- Properties
 
 	argument_types: ARRAY [INTEGER]
@@ -96,6 +110,11 @@ feature -- Properties
 
 	alias_name_id: INTEGER
 			-- Real name index in NAMES_HEAP of external feature
+
+	is_blocking_call: BOOLEAN
+			-- May current external call block execution? If so, in multithreaded
+			-- mode we need to ensure that GC will not be blocked waiting for the
+			-- blocking call to resume.
 
 feature -- Convenience
 
@@ -141,6 +160,14 @@ feature -- Settings
 			alias_name_id_set: alias_name_id = name_id
 		end
 
+	set_is_blocking_call (v: like is_blocking_call) is
+			-- Assign `v' to `is_blocking_call'.
+		do
+			is_blocking_call := v
+		ensure
+			is_blocking_call_set: is_blocking_call = v
+		end
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
@@ -154,6 +181,7 @@ feature -- Comparison
 feature {NONE} -- Comparison
 
 	array_is_equal (a, o_a: ARRAY [INTEGER]): BOOLEAN is
+			-- Is `o_a' considered equal to `a'?
 		local
 			i, nb: INTEGER
 		do
@@ -168,7 +196,7 @@ feature {NONE} -- Comparison
 					until
 						not Result or else i > nb
 					loop
-						Result := a.item (i).is_equal (o_a.item (i))
+						Result := a.item (i) =  o_a.item (i)
 						i := i + 1
 					end
 				end
@@ -197,107 +225,70 @@ feature -- Code generation
 			end
 		end
 
-	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING; ret_type: TYPE_C) is
-			-- Generate the C name associated with the extension
+	generate_body (a_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+			-- Generate body of current externals with assignement to `a_result'.
 		require
-			buffer_not_void: buffer /= Void
-			external_name_not_void: external_name /= Void
-			ret_type_not_void: ret_type /= Void
+			a_byte_code_not_void: a_byte_code /= Void
+			a_result_valid: not a_byte_code.result_type.is_void implies a_result /= Void
+		deferred
+		end
+
+	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]; nb: INTEGER) is
+			-- Generate parameters for C extension call. Does not include opening
+			-- and closing paranthesis.
+		require
+			parameters_valid: parameters /= Void implies parameters.count = nb
+		local
+			i, j: INTEGER
+			has_cast: BOOLEAN
+			arg_types: like argument_types
+			buffer: GENERATION_BUFFER
+			l_names_heap: like Names_heap
 		do
-			buffer.putstring (external_name)
-			if has_standard_prototype then
-				Extern_declarations.add_routine_with_signature (ret_type,
-								external_name, Names_heap.convert_to_string_array (argument_types))
+			if parameters /= Void or nb > 0 then
+				from
+					buffer := Context.buffer
+					if has_arg_list then
+						has_cast := True
+						arg_types := argument_types
+						l_names_heap := Names_heap
+						j := arg_types.lower
+					end
+					i := 1
+				until
+					i > nb
+				loop
+					if has_cast then
+						buffer.putchar ('(')
+						buffer.putstring (l_names_heap.item (arg_types.item (j)))
+						buffer.putchar (')')
+						buffer.putchar (' ')
+						j := j + 1
+					end
+					generate_i_th_parameter (parameters, i)
+					i := i + 1
+					if i <= nb then
+						buffer.putstring (gc_comma)
+					end
+				end
 			end
 		end
 
-	has_standard_prototype: BOOLEAN is
-			-- Does the extension need the standard prototype?
-		do
-				-- If an include list is provided, the prototype is assumed to
-				-- be declared there
-			Result := has_signature and not has_include_list
-		end
-
-	generate_parameter_cast: BOOLEAN is
-			-- Should cast be generated for arguments?
-		do
-			Result := has_arg_list
-		end
-
-	generate_parameter_signature_list is
-			-- Generate parameter signature for C polymorphic calls.
+	generate_i_th_parameter (parameters: BYTE_LIST [EXPR_B]; i: INTEGER) is
+			-- Print associated register to `i'-th parameter of `parameters' if not Void,
+			-- otherwise print `arg' appended by value of `i'.
 		require
-			has_signature: has_arg_list
+			i_positive: i > 0
 		local
-			i, count: INTEGER;
-			arg_types: like argument_types
-			buffer: GENERATION_BUFFER
-			l_names_heap: like Names_heap
-			sep: STRING
-		do
-			buffer := Context.buffer
-			from
-				arg_types := argument_types
-				i := arg_types.lower
-				count := arg_types.upper
-				l_names_heap := Names_heap
-				sep := ", "
-			until
-				i > count	
-			loop
-				buffer.putstring (l_names_heap.item (arg_types.item (i)));
-				if i /= count then
-					buffer.putstring (sep);
-				end;
-				i := i + 1;
-			end;
-		end
-
-	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]) is
-			-- Generate parameters for C extension
-		local
-			expr: EXPR_B;
-			i: INTEGER;
-			generate_cast: BOOLEAN
-			arg_types: like argument_types
-			buffer: GENERATION_BUFFER
-			sep: STRING
-			l_names_heap: like Names_heap
+			l_buffer: GENERATION_BUFFER
 		do
 			if parameters /= Void then
-				buffer := Context.buffer
-				sep := ", "
-
-				generate_cast := generate_parameter_cast
- 
-				if generate_cast then
-					arg_types := argument_types
-					l_names_heap := Names_heap
-					i := arg_types.lower
-				end
- 
-				from
-					parameters.start;
-				until
-					parameters.after
-				loop
-					expr := parameters.item;
-						-- add cast before parameter
-					if generate_cast then
-						buffer.putchar ('(');
-						buffer.putstring (l_names_heap.item (arg_types.item (i)))
-						buffer.putchar (')')
-						buffer.putchar (' ')
-					end;
-					expr.print_register;
-					if not parameters.islast then
-						buffer.putstring (sep)
-					end;
-					parameters.forth;
-					i := i + 1;
-				end;
-			end;
+				parameters.i_th (i).print_register
+			else
+				l_buffer := Context.buffer
+				l_buffer.putstring ("arg")
+				l_buffer.putint (i)
+			end
 		end
 
 end -- class EXTERNAL_EXT_I

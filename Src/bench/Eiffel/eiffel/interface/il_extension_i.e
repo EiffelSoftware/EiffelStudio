@@ -95,4 +95,10 @@ feature -- Call generation
 				creator_call_type, argument_types, return_type, False)
 		end
 
+	generate_body (il_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+			-- Generate C code.
+		do
+			-- Do nothing here since IL code does not generate into C code.
+		end
+		
 end -- class IL_EXTENSION_I

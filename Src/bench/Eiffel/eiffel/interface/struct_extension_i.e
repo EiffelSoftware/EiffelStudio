@@ -8,9 +8,7 @@ class STRUCT_EXTENSION_I
 inherit
 	EXTERNAL_EXT_I
 		redefine
-			is_struct, is_equal, is_cpp,
-			has_standard_prototype, 
-			generate_external_name
+			is_struct, is_equal, is_cpp
 		end
 
 create
@@ -18,12 +16,15 @@ create
 
 feature -- Initialization
 
-	make (is_cpp_struct: BOOLEAN) is
+	make (a_fn: INTEGER; is_cpp_struct: BOOLEAN) is
 			-- Create Current object
 			-- Set `is_cpp' to `is_cpp_struct.
+			-- Set `field_name_id' to `a_fn'.
 		do
+			field_name_id := a_fn
 			is_cpp := is_cpp_struct
 		ensure
+			field_name_id_set: field_name_id = a_fn
 			is_cpp_set: is_cpp = is_cpp_struct
 		end
 
@@ -49,44 +50,63 @@ feature -- Comparison
 				field_name_id = other.field_name_id
 		end
 
-feature -- Settings
-
-	set_field_name_id (id: INTEGER) is
-			-- Assign `id' to `field_name_id'.
-		do
-			field_name_id := id
-		ensure
-			field_name_id_set: field_name_id = id
-		end
-
 feature -- Code generation
 
-	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING; ret_type: TYPE_C) is
-			-- Generate the C name associated with the extension
+	generate_body (struct_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+			-- Generate encapsulation to C/C++ struct external `struct_byte_code'.
+		local
+			l_buffer: GENERATION_BUFFER
+			l_ret_type: TYPE_I
 		do
-			if is_cpp then
-				context.set_has_cpp_externals_calls (True)
+			l_buffer := Context.buffer
+			l_ret_type := struct_byte_code.result_type
+			if not l_ret_type.is_void then
+				a_result.print_register
+				l_buffer.putstring (" = ")
+				l_ret_type.c_type.generate_cast (l_buffer)
 			end
-			check
-				final_mode: Context.final_mode
-			end
+			internal_generate (struct_byte_code.external_name, Void, l_ret_type)
+			l_buffer.putchar (';')
+			l_buffer.new_line
 		end
-	
-	generate_struct_access (buffer: GENERATION_BUFFER; external_name: STRING;
-						parameters: BYTE_LIST [EXPR_B]) is
-			-- Generate access to C structure
+
+	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
+			-- Generate inline C/C++ struct external.
+		require
+			external_name_not_void: external_name /= Void
+			external_name_not_empty: not external_name.is_empty
+			parameters_not_void: parameters /= Void
+			a_ret_type_not_void: a_ret_type /= Void
+		do
+			internal_generate (external_name, parameters, a_ret_type)
+		end
+
+feature {NONE} -- Code generation helper
+
+	internal_generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
+			-- Generate access to C/C++ struct external.
+		require
+			external_name_not_void: external_name /= Void
+			external_name_not_empty: not external_name.is_empty
+			a_ret_type_not_void: a_ret_type /= Void
 		local
 			arg_types: like argument_types
 			special_access: BOOLEAN
 			name: STRING
 			setter: BOOLEAN
 			new_syntax: BOOLEAN
+			l_names_heap: like Names_heap
+			l_buffer: GENERATION_BUFFER
 		do
+			l_buffer := Context.buffer
 			if is_cpp then
 				context.set_has_cpp_externals_calls (True)
 			end
 
-			name := Names_heap.item (field_name_id)
+			generate_header_files
+
+			l_names_heap := Names_heap
+			name := l_names_heap.item (field_name_id)
 			if name = Void then
 				name := external_name
 			else
@@ -98,39 +118,44 @@ feature -- Code generation
 
 			arg_types := argument_types
 			if not setter then
-				if name.item (1) = '&' and then name.count > 1 then
-					buffer.putchar ('&')
+				if a_ret_type.is_boolean then
+					l_buffer.putstring ("EIF_TEST")
+				elseif name.item (1) = '&' and then name.count > 1 then
+						-- It cannot be of type `BOOLEAN' and be retrieving the
+						-- address of a struct.
+					l_buffer.putchar ('&')
 					special_access := True
 				end
-				buffer.putstring ("(((")
-				buffer.putstring (Names_heap.item (arg_types.item (1)))
-				buffer.putstring (" *)")
-				parameters.first.print_register
-				buffer.putstring (")->")
+					--| External structure access will be generated as:
+					--| (type_2) (((type_1 *) arg1)->alias_name);
+				l_buffer.putstring ("(((")
+				l_buffer.putstring (l_names_heap.item (arg_types.item (1)))
+				l_buffer.putstring (" *)")
+				generate_i_th_parameter (parameters, 1)
+				l_buffer.putstring (")->")
 				if not special_access then
-					buffer.putstring (name)
+					l_buffer.putstring (name)
 				else
-					buffer.putstring (name.substring (2, name.count))
+					l_buffer.putstring (name.substring (2, name.count))
 				end
+				l_buffer.putchar (')')
 			else
-				parameters.start
-				buffer.putstring ("(((")
-				buffer.putstring (Names_heap.item (arg_types.item (1)))
-				buffer.putstring (" *)")
-				parameters.item.print_register
-				parameters.forth
-				buffer.putstring (")->")
-				buffer.putstring (name)
-				buffer.putstring (" = (")
-				buffer.putstring (Names_heap.item (arg_types.item (2)))
-				buffer.putstring (")(")
-				parameters.item.print_register
-				buffer.putchar (')')
+					--| External structure setting will be generated as:
+					--| ((type_1 *) arg1)->alias_name = (type_2) (arg2);
+				l_buffer.putstring ("(((")
+				l_buffer.putstring (l_names_heap.item (arg_types.item (1)))
+				l_buffer.putstring (" *)")
+				generate_i_th_parameter (parameters, 1)
+				l_buffer.putstring (")->")
+				l_buffer.putstring (name)
+				l_buffer.putstring (" = (")
+				l_buffer.putstring (l_names_heap.item (arg_types.item (2)))
+				l_buffer.putstring (")(")
+				generate_i_th_parameter (parameters, 2)
+				l_buffer.putchar (')')
+				l_buffer.putchar (')')
 			end
-			buffer.putchar (')')
 		end
-
-	has_standard_prototype: BOOLEAN is False
 
 end -- class STRUCT_EXTENSION_I
 

@@ -88,7 +88,10 @@ feature {NONE} -- Implementation
 			objects.extend (an_object)
 			objects.extend (vision2_object)
 			widget.pointer_button_release_actions.force_extend (agent start_timer)
-		end	
+		end
+		
+	has_user_events: BOOLEAN is True
+		-- Does `Current' have user events which must be set?
 		
 	start_timer is
 			-- Start a timer, which is used as a delay between an event begin

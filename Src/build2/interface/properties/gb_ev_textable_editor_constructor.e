@@ -85,7 +85,10 @@ feature {NONE} -- Implementation
 				objects.extend (vision2_object)
 				user_event_widget.change_actions.force_extend (agent start_timer)
 			end
-		end	
+		end
+
+	has_user_events: BOOLEAN is True
+		-- Does `Current' have user events which must be set?
 	
 	start_timer is
 			-- Start a timer, which is used as a delay between an event begin

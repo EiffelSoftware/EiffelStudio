@@ -8,16 +8,25 @@ class
 
 inherit
 	SHARED_ERROR_HANDLER
+		export {NONE} all end
 
 	SHARED_WORKBENCH
+		export
+			{NONE} all
+			{ANY} compilation_modes
+		end
 
 	SHARED_EIFFEL_PROJECT
+		export {NONE} all end
 
 	SHARED_ENV
+		export {NONE} all end
 
 	SHARED_RESCUE_STATUS
+		export {NONE} all end
 
 	PROJECT_CONTEXT
+		export {NONE} all end
 
 	COMPARABLE
 		undefine
@@ -25,12 +34,16 @@ inherit
 		end
 
 	COMPILER_EXPORTER
+		export {NONE} all end
 
 	SHARED_TEXT_ITEMS
+		export {NONE} all end
 
 	SHARED_CONFIGURE_RESOURCES
+		export {NONE} all end
 
 	SHARED_LACE_PARSER
+		export {NONE} all end
 
 create
 	make_with_parent, 
@@ -87,8 +100,7 @@ feature {CLUSTER_I} -- Internal initialization
 			dollar_path := p
 			update_path
 			create classes.make (30)
-			create renamings.make
-			create ignore.make
+			create overriden_classes.make (5)
 			create sub_clusters.make (3)
 		end
 
@@ -109,15 +121,13 @@ feature -- Attributes
 	classes: HASH_TABLE [CLASS_I, STRING]
 			-- Classes available in the cluster: key is the declared
 			-- name and entry is the class
-
-	renamings: LINKED_LIST [RENAME_I]
-			-- Renamings for the cluster
+			
+	overriden_classes: like classes
+			-- Classes available in cluster, but not to system since overriden.
+			-- Key is declared name, entry is class instance
 
 	ignore: LINKED_LIST [CLUSTER_I]
 			-- Cluster to ignore
-
-	old_cluster: CLUSTER_I
-			-- Old version of the cluster
 
 	is_precompiled: BOOLEAN
 			-- Is the cluster precompiled
@@ -128,29 +138,11 @@ feature -- Attributes
 			-- Is current an instance of ASSEMBY_I?
 		do
 		end
-		
-	precomp_id: INTEGER
-			-- Id of the precompiled library to which the
-			-- cluster belongs
 
-	precomp_ids: ARRAY [INTEGER]
-			-- Ids of libraries used for precompilation
-			-- of current cluster; Void if not precompiled
-
-	exclude_list: ARRAYED_LIST [STRING];
-			-- List of files to exclude
-
-	include_list: ARRAYED_LIST [STRING];
-			-- List of files to include
-
-	is_override_cluster: BOOLEAN;
+	is_override_cluster: BOOLEAN
 			-- Does this cluster override the other clusters?
 
-	hide_implementation: BOOLEAN;
-			-- Hide the implementation code of
-			-- precompiled classes?
-
-	parent_cluster: CLUSTER_I;
+	parent_cluster: CLUSTER_I
 			-- Parent cluster of Current cluster
 			-- (Void implies it is a top level cluster)
 
@@ -175,15 +167,42 @@ feature -- Attributes
 			Result := build_indexes
 		end
 
+feature {CLUSTER_I}
+
+	old_cluster: CLUSTER_I
+			-- Old version of the cluster
+
+	renamings: LINKED_LIST [RENAME_I]
+			-- Renamings for the cluster
+
+	precomp_id: INTEGER
+			-- Id of the precompiled library to which the
+			-- cluster belongs
+
+	precomp_ids: ARRAY [INTEGER]
+			-- Ids of libraries used for precompilation
+			-- of current cluster; Void if not precompiled
+
+	exclude_list: ARRAYED_LIST [STRING]
+			-- List of files to exclude
+
+	include_list: ARRAYED_LIST [STRING]
+			-- List of files to include
+
+	hide_implementation: BOOLEAN
+			-- Hide the implementation code of
+			-- precompiled classes?
+
 feature -- Access
 
-	short_cluster_name: STRING is
+	display_name: STRING is
 			-- Name of cluster without preceeding parents.
 		do
 			if belongs_to_all then
-				Result := clone (cluster_name.substring (cluster_name.last_index_of ('.', cluster_name.count) + 1, cluster_name.count))
+				Result := cluster_name.substring (
+					cluster_name.last_index_of ('.', cluster_name.count) + 1, cluster_name.count)
 			else
-				Result := clone (cluster_name)
+				Result := cluster_name
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -199,10 +218,10 @@ feature -- Access
 			until
 				classes.after or else Result
 			loop
-				Result := b_name.is_equal (classes.item_for_iteration.base_name);
+				Result := b_name.is_equal (classes.item_for_iteration.base_name)
 				classes.forth
 			end
-		end;
+		end
 
 	class_with_base_name (b_name: STRING): CLASS_I is
 			-- Class with base name `b_name' if any.
@@ -219,7 +238,7 @@ feature -- Access
 				end
 				classes.forth
 			end
-		end;
+		end
 
 	class_with_name (b_name: STRING): CLASS_I is
 			-- Class with name `b_name' if any.
@@ -236,14 +255,14 @@ feature -- Access
 				end
 				classes.forth
 			end
-		end;
+		end
 
 	name_in_upper: STRING is
 			-- Cluster name in upper case
 		do
-			Result := clone (cluster_name);
+			Result := clone (cluster_name)
 			Result.to_upper
-		end;
+		end
 		
 	top_of_recursive_cluster: CLUSTER_I is
 			-- Top most cluster when Current is a subcluster that belongs
@@ -266,31 +285,31 @@ feature -- Element change
 
 	add_new_classs (class_i: CLASS_I) is
 		require
-			non_void_class_i: class_i /= Void;
-			name_set: class_i.name /= Void;
-			base_name_set: class_i.base_name /= Void;
+			non_void_class_i: class_i /= Void
+			name_set: class_i.name /= Void
+			base_name_set: class_i.base_name /= Void
 			not_in_cluster: not classes.has (class_i.name)
 		do
-			class_i.set_cluster (Current);
-			class_i.set_date;
+			class_i.set_cluster (Current)
+			class_i.set_date
 			classes.put (class_i, class_i.name);	
 		ensure
 			in_cluster: classes.has (class_i.name)
-		end;
+		end
 
 	add_sub_cluster (c: CLUSTER_I) is
 			-- Add cluster `c' to `sub_clusters.
 		require
-			valid_c: c /= Void;
-			not_added: sub_clusters /= Void;
+			valid_c: c /= Void
+			not_added: sub_clusters /= Void
 			parent_not_set: c.parent_cluster = Void
 		do
-			sub_clusters.extend (c);
+			sub_clusters.extend (c)
 			c.set_parent_cluster (Current)
 		ensure
-			has_c: sub_clusters.has (c);
+			has_c: sub_clusters.has (c)
 			parent_cluster_set: c.parent_cluster = Current
-		end;
+		end
 
 feature {COMPILER_EXPORTER} -- Conveniences
 
@@ -301,55 +320,55 @@ feature {COMPILER_EXPORTER} -- Conveniences
 --			valid_c: c /= Void
 		do
 			parent_cluster := c
-		end;
+		end
 
 	set_date (i: INTEGER) is
 			-- Assign `i' to `date'.
 		do
-			date := i;
-		end;
+			date := i
+		end
 
 	set_cluster_name (s: STRING) is
 			-- Assign `s' to `cluster_name'.
 		do
-			cluster_name := s;
-		end;
+			cluster_name := s
+		end
 
 	set_old_cluster (c: CLUSTER_I) is
 			-- Assign `c' to `old_cluster'.
 		do
-			old_cluster := c;
-		end;
+			old_cluster := c
+		end
 
 	set_is_precompiled (ids: ARRAY [INTEGER]) is
 			-- Assign `True' to `is_precompiled'
 		do
 			if not is_precompiled then
-				is_precompiled := True;
-				precomp_id := System.compilation_id;
+				is_precompiled := True
+				precomp_id := System.compilation_id
 				precomp_ids := ids
 			end
-		end;
+		end
 
 	set_dollar_path (s: STRING) is
 			-- Assign `s' to `path'.
 		do
-			dollar_path := s;
+			dollar_path := s
 			update_path
-		end;
+		end
 
 	update_path is
 		do
 			if dollar_path /= Void then
 				path := Environ.interpreted_string (dollar_path)
-			end;
-		end;
+			end
+		end
 
 	set_is_override_cluster (flag: BOOLEAN) is
 			-- Set `is_override_cluster' to `flag'.
 		do
 			is_override_cluster := flag
-		end;
+		end
 
 	set_is_recursive (is_rec: BOOLEAN) is
 			-- Set `is_recursive' to `is_rec'.
@@ -375,82 +394,64 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			set: belongs_to_all = flag
 		end
 
-	set_path (p: STRING) is
-			-- Set `path' to `p'.
-		require
-			path_exists: p /= Void
-		do
-			path := p
-		ensure
-			set: (path /= Void) and then path.is_equal (p)
-		end
-
-feature {COMPILER_EXPORTER}
-
-	clear is
-			-- Empty the structure
-		do
-			classes.clear_all;
-		end;
-
-	wipe_out_cluster_info is
-			-- Remove current cluster from parent_cluster `sub_cluster'
-			-- (if it exists) and reset parent_cluster to Void.
-		local
-			s_clusters: ARRAYED_LIST [CLUSTER_I]
-		do
-			if parent_cluster = Void then
-				s_clusters := Eiffel_system.sub_clusters;
-			else
-				s_clusters := parent_cluster.sub_clusters;
-			end;
-			parent_cluster := Void;
-			s_clusters.start;
-			s_clusters.prune (Current);
-		end;
+feature {COMPILER_EXPORTER} -- Element change
 
 	copy_old_cluster (old_cluster_i: like Current) is
 			-- Copy all the information except the ignore
 			-- and renaming clauses
 		local
-			cl: like classes;
-			c: CLASS_I;
+			cl: like classes
+			c: CLASS_I
 		do
-debug ("REMOVE_CLASS")
-	io.error.putstring ("Copy old_cluster ");
-	io.error.putstring (old_cluster_i.cluster_name);
-	io.error.putstring (" path ");
-	io.error.putstring (old_cluster_i.path);
-	io.error.new_line;
-end;
-			old_cluster := old_cluster_i;
-			parent_cluster := old_cluster.parent_cluster;
-			is_precompiled := old_cluster_i.is_precompiled;
-			precomp_id := old_cluster_i.precomp_id;
-			precomp_ids := old_cluster_i.precomp_ids;
-			set_date (old_cluster_i.date);
+			debug ("REMOVE_CLASS")
+				io.error.putstring ("Copy old_cluster ")
+				io.error.putstring (old_cluster_i.cluster_name)
+				io.error.putstring (" path ")
+				io.error.putstring (old_cluster_i.path)
+				io.error.new_line
+			end
+			old_cluster := old_cluster_i
+			parent_cluster := old_cluster.parent_cluster
+			is_precompiled := old_cluster_i.is_precompiled
+			precomp_id := old_cluster_i.precomp_id
+			precomp_ids := old_cluster_i.precomp_ids
+			set_date (old_cluster_i.date)
 			set_is_recursive (old_cluster_i.is_recursive)
 			set_is_library (old_cluster_i.is_library)
 			set_belongs_to_all (old_cluster_i.belongs_to_all)
-			exclude_list := old_cluster_i.exclude_list;
-			include_list := old_cluster_i.include_list;
+			exclude_list := old_cluster_i.exclude_list
+			include_list := old_cluster_i.include_list
+			renamings := old_cluster.renamings
+			hide_implementation := old_cluster.hide_implementation
 			from
-				cl := old_cluster.classes;
-				cl.start;
+				cl := old_cluster.classes
+				cl.start
 			until
 				cl.after
 			loop
-				c := cl.item_for_iteration;
-				classes.put (c, cl.key_for_iteration);
-				c.set_cluster (Current);
+				c := cl.item_for_iteration
+				classes.put (c, cl.key_for_iteration)
+				c.set_cluster (Current)
 				cl.forth
-			end;
+			end
+			
+			from
+				cl := old_cluster.overriden_classes
+				cl.start
+			until
+				cl.after
+			loop
+				c := cl.item_for_iteration
+				overriden_classes.put (c, cl.key_for_iteration)
+				c.set_cluster (Current)
+				cl.forth
+			end
 				-- No need to keep a reference to `old_cluster' in `old_cluster_i'
 				-- as first it will not be used since now only `old_cluster_i' will be 
 				-- used as `old_cluster' in Current. Second because it is causing a huge
 				-- memory leak when using a precompiled library.
 			old_cluster_i.set_old_cluster (Void)
-		end;
+		end
 
 	reset_cluster is
 			-- Reset the attribute `cluster' of all the CLASS_I
@@ -462,50 +463,55 @@ end;
 			until
 				classes.after
 			loop
-				classes.item_for_iteration.set_cluster (Current);
+				classes.item_for_iteration.set_cluster (Current)
 				classes.forth
-			end;
-		end;
+			end
+		end
 
 	insert_renaming (cl: CLUSTER_I; old_name, new_name: STRING) is
 			-- Insert renaming of a class of `cl' named `old_name' 
 			-- into `new_name'.
 		require
-			cl /= Void;
-			old_name /= Void;
-			new_name /= Void;
-			consistency: cl.classes.has (old_name);
+			cl /= Void
+			old_name /= Void
+			new_name /= Void
+			consistency: cl.classes.has (old_name)
 		local
-			rename_clause: RENAME_I;
+			rename_clause: RENAME_I
 		do
-			rename_clause := rename_clause_for (cl);
+			rename_clause := rename_clause_for (cl)
 			if rename_clause = Void then
-				create rename_clause.make;
-				rename_clause.set_cluster (cl);
-				renamings.put_front (rename_clause);
-			end;
-			rename_clause.renamings.put (old_name, new_name);
-		end;
+				create rename_clause.make
+				rename_clause.set_cluster (cl)
+				if renamings = Void then
+					create renamings.make
+				end
+				renamings.put_front (rename_clause)
+			end
+			rename_clause.renamings.put (old_name, new_name)
+		end
 
 	rename_clause_for (cl: CLUSTER_I): RENAME_I is
 			-- Rename clause of classes from cluster `cl'
 		require
-			good_argument: cl /= Void;
+			good_argument: cl /= Void
 		local
-			rename_clause: RENAME_I;
+			rename_clause: RENAME_I
 		do
-			from   
-				renamings.start;   
-			until  
-				renamings.after or else Result /= Void
-			loop
-				rename_clause := renamings.item;
-				if rename_clause.cluster = cl then
-					Result := rename_clause;
-				end;
-				renamings.forth;
-			end;
-		end;
+			if renamings /= Void then
+				from   
+					renamings.start;   
+				until  
+					renamings.after or else Result /= Void
+				loop
+					rename_clause := renamings.item
+					if rename_clause.cluster = cl then
+						Result := rename_clause
+					end
+					renamings.forth
+				end
+			end
+		end
 
 	open_directory_error (cluster_file: DIRECTORY): BOOLEAN is
 			-- Does the opening of the directory file `cluster_file'
@@ -514,14 +520,14 @@ end;
 			good_argument: cluster_file /= Void
 		do
 			if not Result then
-				cluster_file.open_read;
-			end;
+				cluster_file.open_read
+			end
 		rescue
 			if Rescue_status.is_unexpected_exception then
-				Result := True;
-				retry;
+				Result := True
+				retry
 			end
-		end;
+		end
 
 	duplicate: CLUSTER_I is
 			-- Duplicate content of Current.
@@ -529,9 +535,9 @@ end;
 			create Result.make (dollar_path)
 			Result.copy_old_cluster (Current)
 			Result.set_cluster_name (cluster_name)
-		end;
+		end
 
-	new_cluster (name: STRING; ex_l, inc_l: LACE_LIST [FILE_NAME_SD];
+	new_cluster (name: STRING; ex_l, inc_l: LACE_LIST [FILE_NAME_SD]
 				 process_subclusters, is_lib: BOOLEAN; par_clus: like Current): CLUSTER_I is
 		local
 			l_is_override: BOOLEAN
@@ -546,29 +552,29 @@ end;
 				(changed (ex_l, inc_l) or else
 				process_subclusters /= is_recursive)
 			then
-				create Result.make_with_parent (dollar_path, par_clus);
-				Result.set_cluster_name (name);
-				Universe.insert_cluster (Result);
+				create Result.make_with_parent (dollar_path, par_clus)
+				Result.set_cluster_name (name)
+				Universe.insert_cluster (Result)
 
-				Result.set_old_cluster (duplicate);
-debug ("REMOVE_CLASS")
-	io.error.putstring ("New cluster calling fill%N");
-end;
+				Result.set_old_cluster (duplicate)
+				debug ("REMOVE_CLASS")
+					io.error.putstring ("New cluster calling fill%N")
+				end
 				Result.set_is_recursive (process_subclusters)
 				Result.set_belongs_to_all (belongs_to_all)
-				Result.fill (ex_l, inc_l);
+				Result.fill (ex_l, inc_l)
 			else
 				create Result.make_from_old_cluster (Current, par_clus)
-				Result.set_cluster_name (name);
-				Universe.insert_cluster (Result);
-			end;
+				Result.set_cluster_name (name)
+				Universe.insert_cluster (Result)
+			end
 			Result.set_is_override_cluster (l_is_override)
-		end;
+		end
 
 	fill (ex_l, inc_l: LACE_LIST [FILE_NAME_SD]) is
 			-- Fill the cluster name table with what is found in the path.
 		require
-			table_is_empty: classes.is_empty;
+			table_is_empty: classes.is_empty
 		local
 			file_name, cl_id: STRING
 			i: INTEGER
@@ -761,8 +767,8 @@ end;
 						end
 						if not found then
 							-- If file exists insert it.
-							create class_path.make_from_string (cl_path);
-							class_path.set_file_name (file_name);
+							create class_path.make_from_string (cl_path)
+							class_path.set_file_name (file_name)
 							create class_file.make (class_path)
 							if class_file.exists then
 								if is_recursive then
@@ -831,73 +837,76 @@ end;
 
 	insert_class_from_file (file_name: STRING) is
 		local
-			class_path: FILE_NAME;
-			a_class: CLASS_I;
-			class_name: STRING;
-			vd11: VD11;
-			str: ANY;
+			class_path: FILE_NAME
+			a_class: CLASS_I
+			class_name: STRING
+			vscn: VSCN
+			str: ANY
 		do
-			create class_path.make_from_string (path);
-			class_path.set_file_name (file_name);
-			class_name := read_class_name_in_file (class_path);
+			create class_path.make_from_string (path)
+			class_path.set_file_name (file_name)
+			class_name := read_class_name_in_file (class_path)
 			if class_name /= Void then
-debug ("REMOVE_CLASS")
-	io.error.putstring ("Insert class from file ");
-	io.error.putstring (class_name);
-	io.error.new_line;
-end;
-				a_class := classes.item (class_name);
+				debug ("REMOVE_CLASS")
+					io.error.putstring ("Insert class from file ")
+					io.error.putstring (class_name)
+					io.error.new_line
+				end
+				a_class := classes.item (class_name)
 				if a_class /= Void then
 					-- Error
-					create vd11;
-					vd11.set_a_class (a_class);
-					vd11.set_file_name (file_name);
-					vd11.set_cluster (Current);
-					Error_handler.insert_error (vd11);
-					Error_handler.raise_error;
-				end;
+					create vscn
+					vscn.set_cluster (Current)
+					vscn.set_first (a_class)
+					create a_class.make (class_name)
+					a_class.set_base_name (file_name)
+					a_class.set_cluster (Current)
+					vscn.set_second (a_class)
+					Error_handler.insert_error (vscn)
+					Error_handler.raise_error
+				end
 					-- Valid eiffel class in file
 				if old_cluster /= Void then
-debug ("REMOVE_CLASS")
-	io.error.putstring ("Old cluster not Void%N");
-end;
-					a_class := old_cluster.classes.item (class_name);
+					debug ("REMOVE_CLASS")
+						io.error.putstring ("Old cluster not Void%N")
+					end
+					a_class := old_cluster.classes.item (class_name)
 					if a_class /= Void then
 							-- The file name may have changed even
 							-- if the class was already in this cluster
-debug ("REMOVE_CLASS")
-	io.error.putstring ("Old cluster has the class%N");
-end;
-						a_class.set_base_name (file_name);
-						a_class.set_cluster (Current);
+						debug ("REMOVE_CLASS")
+							io.error.putstring ("Old cluster has the class%N")
+						end
+						a_class.set_base_name (file_name)
+						a_class.set_cluster (Current)
 						a_class.set_read_only (is_library)
-						str := class_path.to_c;
+						str := class_path.to_c
 						if eif_file_has_changed ($str, a_class.date) then
 							if a_class.is_compiled then
 									-- The class has changed
-								Workbench.change_class (a_class);
-							end;
-							a_class.set_date;
-						end;
-					end;
-				end;
+								Workbench.change_class (a_class)
+							end
+							a_class.set_date
+						end
+					end
+				end
 				if a_class = Void then
-debug ("REMOVE_CLASS")
-	io.error.putstring ("new class!!!%N");
-end;
-					create a_class.make (class_name);
-					a_class.set_base_name (file_name);
-					a_class.set_cluster (Current);
-					a_class.set_date;
+					debug ("REMOVE_CLASS")
+						io.error.putstring ("new class!!!%N")
+					end
+					create a_class.make (class_name)
+					a_class.set_base_name (file_name)
+					a_class.set_cluster (Current)
+					a_class.set_date
 					a_class.set_read_only (is_library)
-				end;
+				end
 				if Workbench.automatic_backup then
 					record_class (class_name)
 				end
 
-				classes.put (a_class, class_name);
-			end;
-		end;
+				classes.put (a_class, class_name)
+			end
+		end
 
 	read_class_name_in_file (file_name: STRING): STRING is
 			-- Read the name of a class in a file
@@ -933,46 +942,47 @@ end;
 			end
 		end
 
+	restore_compiled_class (new_class, old_class: CLASS_I) is
+			-- Store `old_class' compiled info into `new_class' and force
+			-- a syntactical recompilation of `new_class' just to be sure
+			-- we will compiled it even if it did not change since last time
+			-- as it might have a completely different content than `old_class'.
+		require
+			new_class_not_void: new_class /= Void
+			old_class_not_void: old_class /= Void
+		do
+			new_class.reset_class_c_information (old_class.compiled_class)
+			workbench.change_class (new_class)
+			if workbench.automatic_backup then
+				record_moved_class (old_class.name, old_class.file_name, new_class.file_name)
+			end
+		end
+
 	remove_class (a_class: CLASS_I) is
 			-- Remove a class from the cluster (Exclude clause)
 			-- Remove the CLASS_C if the class was compiled before
 			-- and propagate recompilation of the clients.
 			-- Can only be called by compiler tools, not by compiler itself.
 		do
-debug ("REMOVE_CLASS")
-	io.error.putstring ("Removing class ");
-	io.error.putstring (a_class.name);
-	io.error.new_line;
-end;
-			classes.remove (a_class.name);
+			debug ("REMOVE_CLASS")
+				io.error.putstring ("Removing class ")
+				io.error.putstring (a_class.name)
+				io.error.new_line
+			end
+			classes.remove (a_class.name)
 
 				-- If a_class has already be compiled,
 				-- all its clients must recheck their suppliers
-			remove_class_from_system (a_class);
+			remove_class_from_system (a_class)
 
 				-- Remove it from unreferenced classes of system
 				-- if it was only referenced from there.
 			System.remove_unref_class (a_class)
-		end;
 
-	remove_class_from_system (a_class: CLASS_I) is
-			-- Remove a class_c that is not present in system any more
-		local
-			class_c: CLASS_C;
-		do
-debug ("REMOVE_CLASS")
-	io.error.putstring ("Removing class from system ");
-	io.error.putstring (a_class.name);
-	io.error.new_line;
-end;
-			class_c := a_class.compiled_class;
-			if class_c /= Void then
-					-- Recompile all the clients
-				class_c.recompile_syntactical_clients;
-					-- remove class_c from the system
-				System.remove_class (class_c);
-			end;
-		end;
+			if Workbench.automatic_backup then
+				record_removed_class (a_class.name)
+			end
+		end
 
 	reset_options is
 			-- Reset the default options for all the classes
@@ -984,13 +994,13 @@ end;
 				classes.after
 			loop
 					-- reset_options on CLASS_I reset the default options
-				classes.item_for_iteration.reset_options;
+				classes.item_for_iteration.reset_options
 				classes.forth
-			end;
+			end
 			if not is_precompiled then
 				private_document_path := Void
 			end
-		end;
+		end
 
 	update_cluster is
 			-- Update the clusters: remove the classes removed
@@ -998,93 +1008,14 @@ end;
 			-- ignore and rename clauses
 		do
 			if old_cluster /= Void then
-				process_removed_classes;
+				process_removed_classes
 
 					-- Remove the reference to `old_cluster'
-				old_cluster := Void;
-			end;
+				old_cluster := Void
+			end
 		ensure
 			old_cluster_void: old_cluster = Void
-		end;
-
-	process_removed_classes is
-			-- Check if some classes have disapeared since last compilation
-			-- and remove them from the system
-		require
-			old_cluster_not_void: old_cluster /= Void
-		local
-			old_classes: like classes
-			old_class, new_class: CLASS_I
-			l_new_cluster: like Current
-			ov_classes: like classes
-		do
-			if is_override_cluster then
-					-- Process removed classes
-				from
-					old_classes := old_cluster.classes
-					old_classes.start
-				until
-					old_classes.after
-				loop
-					old_class := old_classes.item_for_iteration
-					if not classes.has (old_class.name) then
-							-- Old class from override cluster has been either moved back
-							-- to its original location or completely removed from system.
-						if old_class.old_cluster_name /= Void then
-								-- Retrieve previous cluster location of class and reset
-								-- `class_i' object so that it can be put back to its
-								-- old location.
-							l_new_cluster := Universe.cluster_of_name (old_class.old_cluster_name)
-							if
-								l_new_cluster /= Void and then
-								l_new_cluster.classes.has (old_class.name)
-							then
-								new_class := l_new_cluster.classes.item (old_class.name)
-								new_class.reset_class_c_information (old_class.compiled_class)
-								Workbench.change_class (new_class)
-							else
-									-- Looks like `old_class' does not exist where it is supposed
-									-- to be, we simply remove it.
-								old_cluster.remove_class (old_class)
-								if Workbench.automatic_backup then
-									record_removed_class (old_class.name)
-								end
-							end
-						else
-								-- Was only in override cluster, we need to remove it from system.
-							old_cluster.remove_class (old_class)
-							if Workbench.automatic_backup then
-								record_removed_class (old_class.name)
-							end
-						end
-					end
-					old_classes.forth
-				end
-			else
-				if universe.has_override_cluster then
-					ov_classes := universe.override_cluster.classes
-				end
-				from
-					old_classes := old_cluster.classes;
-					old_classes.start
-				until
-					old_classes.after
-				loop
-					old_class := old_classes.item_for_iteration;
-					if
-						not classes.has (old_class.name) and then
-						(ov_classes = Void or else not ov_classes.has (old_class.name))
-					then
-							-- the class has been really removed
-						old_cluster.remove_class (old_class);
-						if Workbench.automatic_backup then
-							record_removed_class (old_class.name)
-						end
-					end;
-					old_classes.forth;
-				end;
-			end
-		end;
+		end
 
 	rebuild_override is
 			-- Rebuild override cluster without going through a full recompilation.
@@ -1119,14 +1050,15 @@ end;
 			end
 		end
 
-	process_overrides (ovc : CLUSTER_I) is
+	process_overrides (ovc: CLUSTER_I) is
 			-- Check if some classes have been overriden
 			-- and remove them from the system
 		require
-			override_cluster_exists : ovc /= Void
-			not_same                : Current /= ovc
+			ovc_not_void: ovc /= Void
+			ovc_is_override: ovc.is_override_cluster
+			not_current: ovc /= Current
 		local
-			a_class, ov_class: CLASS_I;
+			a_class, ov_class: CLASS_I
 			ovcc: like classes
 		do
 			if ovc.classes /= Void then
@@ -1136,16 +1068,18 @@ end;
 				until
 					ovcc.after
 				loop
-					ov_class := ovcc.item_for_iteration;
+					ov_class := ovcc.item_for_iteration
 					if classes.has (ov_class.name) then
 							-- Class is overridden; remove it and keep track of
 							-- its previous location
 						a_class := classes.found_item
 							-- We only process precompiled clusters only if they contain
 							-- a non-compiled class.
-						if not is_precompiled or else not a_class.is_compiled then
-							classes.remove (a_class.name);
-							ov_class.set_old_location_info (Current, a_class.base_name)
+						if
+							(not is_precompiled or else not a_class.is_compiled)
+						then
+							classes.remove (a_class.name)
+							overriden_classes.put (a_class, a_class.name)
 							ov_class.reset_class_c_information (a_class.compiled_class)
 							if a_class.is_compiled then
 									-- Add class to system only if it was already part
@@ -1154,206 +1088,97 @@ end;
 							end
 						end
 					end
-					ovcc.forth;
-				end;
-			end;
-		end;
-
-	cluster_of_path (list: like ignore; pathname: STRING): CLUSTER_I is
-		local
-			found: BOOLEAN;
-		do
-			from
-				list.start
-			until
-				found or else list.after
-			loop
-				if pathname.is_equal (list.item.path) then
-					Result := list.item;
-					found := True;
-				end;
-				list.forth;
-			end;
-		end;
-
-	ignore_clauses_changed: BOOLEAN is
-			--- Check the new ignore clauses and the deleted ones
-		require
-			old_cluster_not_void: old_cluster /= Void
-		local
-			old_list: like ignore;
-			cluster: CLUSTER_I;
-		do
-			old_list := old_cluster.ignore;
-				-- First the deleted clauses
-			from
-				old_list.start
-			until
-				old_list.after or else Result
-			loop
-				cluster := cluster_of_path (ignore, old_list.item.path);
-				if cluster = Void then
-					-- The ignore clause has been removed
-					-- check the possible name conflicts
-
-					cluster := Universe.cluster_of_path (old_list.item.path);
-					if cluster /= Void then
-							-- The cluster is in the universe
-						Result := True;
-					end;
-				end;
-				old_list.forth;
-			end;
-
-				-- Check the added clauses
-			from
-				ignore.start
-			until
-				ignore.after or else Result
-			loop
-				cluster := cluster_of_path (old_list, ignore.item.path);
-				if cluster = Void then
-					-- The clause has been added
-					-- Check all the compiled classes of the cluster
-					-- to see if they have clients in the ignored cluster
-					Result := True;
-			end;
-				ignore.forth
-			end;			
-		end;
-
-	renaming_clauses_changed: BOOLEAN is
-			--- Check the new rename clauses and the deleted ones
-		require
-			old_cluster_not_void: old_cluster /= Void
-		do
-			if renamings.is_empty and old_cluster.renamings.is_empty then
-				Result := False
-			else
-				Result := True
-			end;
-		end;
+					ovcc.forth
+				end
+			end
+		end
 
 	remove_cluster is
 			-- Remove all the classes from the current cluster
 			-- i.e. the cluster has been removed from the system
 		local
-			vd40: VD40;
+			vd40: VD40
 		do
 			if classes.has ("any") then
 					-- It means that it is the kernel cluster.
-				create vd40;
-				vd40.set_cluster (Current);
-				Error_handler.insert_error (vd40);
-				Error_handler.raise_error;
-			end;
-debug ("REMOVE_CLASS")
-	io.error.putstring ("Removing cluster ");
-	io.error.putstring (cluster_name);
-	io.error.putstring (" path ");
-	io.error.putstring (path);
-	io.error.new_line;
-end;
+				create vd40
+				vd40.set_cluster (Current)
+				Error_handler.insert_error (vd40)
+				Error_handler.raise_error
+			end
+			debug ("REMOVE_CLASS")
+				io.error.putstring ("Removing cluster ")
+				io.error.putstring (cluster_name)
+				io.error.putstring (" path ")
+				io.error.putstring (path)
+				io.error.new_line
+			end
 			from
 				classes.start
 			until
 				classes.after
 			loop
-				remove_class_from_system (classes.item_for_iteration);
+				remove_class_from_system (classes.item_for_iteration)
 				classes.forth
-			end;
-		end;
+			end
+		end
 
 	insert_cluster_to_ignore (c: CLUSTER_I) is
 			-- Insert `c' in `ignore'.
 		require
-			good_argument: c /= Void;
+			good_argument: c /= Void
 		do
-			ignore.put_front (c);
-		end;
-
-	compute_last_class (class_name: STRING) is
-			-- Class which intrinsic name is renamed into `class_name' is
-			-- assigned to attribute `last_class' of the universe
-		require
-			good_argument: class_name /= Void;
-		local
-			a_cluster: CLUSTER_I;
-			rename_clause: RENAME_I;
-			table: HASH_TABLE [STRING, STRING];
-			found: BOOLEAN;
-			vscn: VSCN;
-		do
-			Universe.set_last_class (Void);
-			from
-				renamings.start
-			until
-				renamings.after
-			loop
-				rename_clause := renamings.item;
-				a_cluster := rename_clause.cluster;
-				table := rename_clause.renamings;
-				if table.has (class_name) then
-					if not found then
-						Universe.set_last_class (a_cluster.classes.item (table.found_item));
-						found := True;
-					else
-							-- Name clash
-						create vscn;
-						vscn.set_first (Universe.last_class);
-						vscn.set_second  
-						(a_cluster.classes.item (table.found_item));
-						vscn.set_cluster (Current);
-						Error_handler.insert_error (vscn);
-					end
-				end;
-				renamings.forth;
-			end;
-		end;
+			if ignore = Void then
+				create ignore.make
+			end
+			ignore.put_front (c)
+		end
 
 	renamed_class (class_name: STRING): CLASS_I is
 			-- Class which intrinsic name is renamed into `class_name'
 		require
-			good_argument: class_name /= Void;
+			good_argument: class_name /= Void
 		local
-			old_cursor: CURSOR;
-			a_cluster: CLUSTER_I;
-			rename_clause: RENAME_I;
-			table: HASH_TABLE [STRING, STRING];
+			old_cursor: CURSOR
+			a_cluster: CLUSTER_I
+			rename_clause: RENAME_I
+			table: HASH_TABLE [STRING, STRING]
 		do
-			old_cursor := renamings.cursor;
-			from
-				renamings.start
-			until
-				renamings.after or else Result /= Void
-			loop
-				rename_clause := renamings.item;
-				a_cluster := rename_clause.cluster;
-				table := rename_clause.renamings;
-				if table.has (class_name) then
-					Result := a_cluster.classes.item (table.found_item)
-				end;
-				renamings.forth;
-			end;
-			renamings.go_to (old_cursor);
-		end;
+			if renamings /= Void then
+				old_cursor := renamings.cursor
+				from
+					renamings.start
+				until
+					renamings.after or else Result /= Void
+				loop
+					rename_clause := renamings.item
+					a_cluster := rename_clause.cluster
+					table := rename_clause.renamings
+					if table.has (class_name) then
+						Result := a_cluster.classes.item (table.found_item)
+					end
+					renamings.forth
+				end
+				renamings.go_to (old_cursor)
+			end
+		end
 
 	new_date: INTEGER is
 			-- Current date of the cluster directory
 		local
 			ptr: ANY
 		do
-			ptr := path.to_c;
+			ptr := path.to_c
 			Result := eif_date ($ptr)
-		end;
+		end
 
 	changed (ex_l, inc_l: LACE_LIST [FILE_NAME_SD]): BOOLEAN is
 			-- Has the cluster directory changed?
 		local
-			i: INTEGER;
+			i: INTEGER
 			ptr: ANY
 		do
-			ptr := path.to_c;
+			ptr := path.to_c
 			Result := eif_file_has_changed ($ptr, date) or else Lace.need_directory_lookup
 			
 --			if not Result and then not Has_smart_file_system then
@@ -1396,18 +1221,18 @@ end;
 						Result := True
 					else
 						from
-							i := 1;
+							i := 1
 						until
 							i > inc_l.count or else Result
 						loop
-							include_list.start;
+							include_list.start
 							include_list.compare_objects
-							include_list.search (inc_l.i_th (i).file__name);
+							include_list.search (inc_l.i_th (i).file__name)
 							Result := include_list.after
-							i := i + 1;
+							i := i + 1
 						end
-					end;
-				end;
+					end
+				end
 				if not Result then
 					if ex_l = Void then
 						Result := exclude_list /= Void
@@ -1417,7 +1242,7 @@ end;
 						Result := True
 					else
 						from
-							i := 1;
+							i := 1
 						until
 							i > ex_l.count or else Result
 						loop
@@ -1427,19 +1252,8 @@ end;
 							Result := exclude_list.after
 							i := i + 1
 						end
-					end;
-				end;
-			end;
-		end;
-
-	ignored (a_cluster: CLUSTER_I): BOOLEAN is
-			-- Are classes from `a_cluster' ignored in current cluster?
-		require
-			a_cluster_not_void: a_cluster /= Void
-		do
-			Result := not ignore.is_empty and then ignore.has (a_cluster);
-			if not Result and precomp_ids /= Void then
-				Result := not precomp_ids.has (a_cluster.precomp_id)
+					end
+				end
 			end
 		end
 
@@ -1497,7 +1311,7 @@ feature {COMPILER_EXPORTER}
 	infix "<" (other: like Current): BOOLEAN is
 		do
 			Result := path < other.path
-		end;
+		end
 
 feature {COMPILER_EXPORTER} -- Automatic backup
 
@@ -1522,9 +1336,9 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 				loop
 					cluster := cluster.parent_cluster
 				end
-				Result.extend (cluster.backup_subdirectory)
+				Result.extend (cluster.cluster_name)
 			else
-				Result.extend (backup_subdirectory)
+				Result.extend (cluster_name)
 			end
 
 			create d.make (Result)
@@ -1533,10 +1347,7 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 			end
 		end
 
-	backup_subdirectory: STRING is
-		do
-			Result := cluster_name
-		end
+feature {NONE} -- Automatic backup
 
 	backup_log_file: PLAIN_TEXT_FILE is
 			-- Log file for cluster in current compilation
@@ -1548,8 +1359,30 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 			create Result.make_open_append (file_name)
 		end
 
+	record_moved_class (class_name, orig, dest: STRING) is
+			-- Record the classes removed since last compilation
+		require
+			class_name_not_void: class_name /= Void
+			orig_not_void: orig /= Void
+			dest_not_void: dest /= Void
+		local
+			file: PLAIN_TEXT_FILE
+		do
+			file := backup_log_file
+			file.put_string ("Moved: ")
+			file.put_string (class_name)
+			file.put_string (" from ")
+			file.put_string (orig)
+			file.put_string (" to ")
+			file.put_string (dest)
+			file.new_line
+			file.close
+		end
+
 	record_removed_class (class_name: STRING) is
 			-- Record the classes removed since last compilation
+		require
+			class_name_not_void: class_name /= Void
 		local
 			file: PLAIN_TEXT_FILE
 		do
@@ -1562,6 +1395,8 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 
 	record_class (class_name: STRING) is
 			-- Record the classes in the directory
+		require
+			class_name_not_void: class_name /= Void
 		local
 			file: PLAIN_TEXT_FILE
 		do
@@ -1572,64 +1407,7 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 			file.close
 		end
 
-feature -- Output
-
-	generate_class_list (st: STRUCTURED_TEXT) is
-			-- Generate the class list for cluster to `st'.
-		require
-			valid_st: st /= Void
-		local
-			c: CLASS_C;
-			list: SORTED_TWO_WAY_LIST [CLASS_I]
-		do
-			st.add (ti_Before_cluster_declaration);
-			st.add_cluster (Current, name_in_upper);
-			st.add_new_line
-			st.add_new_line;
-			create list.make;
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				c := classes.item_for_iteration.compiled_class;
-				if c /= Void then
-					list.put_front (c.lace_class)
-				end;
-				classes.forth
-			end
-			list.sort;
-			from
-				list.start
-			until
-				list.after
-			loop
-				c := list.item.compiled_class;
-				st.add_indent;
-				st.add_classi (c.lace_class, c.name_in_upper);
-				st.add_new_line
-				list.forth
-			end;
-			st.add (ti_after_cluster_declaration);
-		end;
-
 feature -- Document processing
-
-	document_file_name: FILE_NAME is
-			-- File name specified for the cluster text generation
-			-- Void result implies no document generation
-		local
-			tmp: STRING;
-			c_name: STRING
-		do
-			tmp := document_path;
-			if tmp /= Void then
-				create Result.make_from_string (tmp);
-				c_name := "_cluster_";
-				c_name.append (cluster_name);
-				Result.set_file_name (c_name)
-			end	
-		end;
 
 	document_path: DIRECTORY_NAME is
 			-- Path specified for the documents directory.
@@ -1637,14 +1415,14 @@ feature -- Document processing
 		local
 			tmp: STRING
 		do
-			tmp := private_document_path;
+			tmp := private_document_path
 			if tmp = Void then
-				create Result.make_from_string (System.document_path);
+				create Result.make_from_string (System.document_path)
 				Result.extend (cluster_name)
 			elseif not tmp.is_equal (No_word) then
 				create Result.make_from_string (tmp)
-			end;
-		end;
+			end
+		end
 
 	set_document_path (a_path: like document_path) is
 			-- Set `document_path' to `a_path'
@@ -1652,12 +1430,12 @@ feature -- Document processing
 			private_document_path := a_path
 			debug ("DOCUMENT")
 				io.error.putstring ("Set document path to: ")
-				print (a_path);
+				print (a_path)
 				io.error.new_line
 			end
 		ensure
 			set: document_path = a_path
-		end;
+		end
 
 	update_document_path is
 			-- Update the `document_path' to the default value
@@ -1667,14 +1445,14 @@ feature -- Document processing
 		local
 			a_path: like private_document_path
 		do
-			a_path := document_path;
+			a_path := document_path
 			if a_path = Void then
 				a_path := No_word
 			end
 			private_document_path := a_path
 		ensure
 			document_path_not_void: document_path /= Void
-		end;
+		end
 
 feature {DOCUMENTATION, TEXT_FILTER, CLASS_I, CLUSTER_I} -- Status report
 
@@ -1728,12 +1506,113 @@ feature {DOCUMENTATION, TEXT_FILTER, CLASS_I, CLUSTER_I} -- Status report
 
 feature {NONE} -- Document processing
 
-	No_word: STRING is "no";
+	No_word: STRING is "no"
 
 	private_document_path: STRING
 			-- Path specified in Ace for the documents directory
 
 feature {NONE} -- Implementation
+
+	process_removed_classes is
+			-- Check if some classes have disapeared since last compilation
+			-- and remove them from the system
+		require
+			old_cluster_not_void: old_cluster /= Void
+		local
+			old_classes: like classes
+			old_class, new_class: CLASS_I
+			l_classes: LIST [CLASS_I]
+		do
+			if is_override_cluster then
+				from
+					old_classes := old_cluster.classes
+					old_classes.start
+				until
+					old_classes.after
+				loop
+					old_class := old_classes.item_for_iteration
+					if not classes.has (old_class.name) then
+							-- Class has been moved or removed
+						l_classes := universe.overriden_classes_with_name (old_class.name)
+						if not l_classes.is_empty then
+								-- Class has only been moved. We restore the CLASS_C
+								-- information only for the first one found.
+							restore_compiled_class (l_classes.first, old_class)
+								-- Now remove all overriden classes of universe.
+							from
+								l_classes.start
+							until
+								l_classes.after
+							loop
+								new_class := l_classes.item
+								new_class.cluster.overriden_classes.remove (new_class.name)
+								new_class.cluster.classes.put (new_class, new_class.name)
+								l_classes.forth
+							end
+						else
+								-- Looks like this class from the override cluster was not in any
+								-- other clusters. So let's try to find it in another cluster,
+								-- before really removing it from system.
+							l_classes := universe.classes_with_name (old_class.name)
+							if not l_classes.is_empty then
+									-- Class has only been moved.
+								restore_compiled_class (l_classes.first, old_class)
+							else
+									-- Class has been removed.
+								old_cluster.remove_class (old_class)
+							end
+						end
+					end
+					old_classes.forth
+				end
+			else
+				from
+					old_classes := old_cluster.classes
+					old_classes.start
+				until
+					old_classes.after
+				loop
+					old_class := old_classes.item_for_iteration
+					if
+						not classes.has (old_class.name) and
+						not overriden_classes.has (old_class.name)
+					then
+							-- Class has been moved or removed
+						l_classes := universe.classes_with_name (old_class.name)
+						if not l_classes.is_empty then
+								-- Class has only been moved. We restore the CLASS_C
+								-- information only for the first one found.
+							restore_compiled_class (l_classes.first, old_class)
+						else
+								-- Class has been removed.
+							old_cluster.remove_class (old_class)
+						end
+					end
+					old_classes.forth
+				end
+			end
+		end
+
+	remove_class_from_system (a_class: CLASS_I) is
+			-- Remove a class_c that is not present in system any more
+		require
+			a_class_not_void: a_class /= Void
+		local
+			class_c: CLASS_C
+		do
+			debug ("REMOVE_CLASS")
+				io.error.putstring ("Removing class from system ")
+				io.error.putstring (a_class.name)
+				io.error.new_line
+			end
+			class_c := a_class.compiled_class
+			if class_c /= Void then
+					-- Recompile all the clients
+				class_c.recompile_syntactical_clients
+					-- remove class_c from the system
+				System.remove_class (class_c)
+			end
+		end
 
 	valid_class_file_extension (c: CHARACTER): BOOLEAN is
 			-- Is `c' a valid class file extension?
@@ -1818,20 +1697,19 @@ feature {NONE} -- Externals
 			-- Date of file of name `str'.
 		external
 			"C"
-		end;
+		end
 
 	eif_file_has_changed (cluster_path: POINTER; old_date: INTEGER): BOOLEAN is
 			-- Does the directory have new entries?
 		external
 			"C"
-		end;
+		end
 
 invariant
-
-	path_not_void: path /= Void;
-	classes_not_void: classes /= Void;
+	path_not_void: path /= Void
+	classes_not_void: classes /= Void
 	sub_clusters_not_void: sub_clusters /= Void
-	ignore_not_void: ignore /= Void
-	renamings_not_void: renamings /= Void
+	ignore_valid: ignore = Void or else not ignore.is_empty
+	renamings_valid: renamings = Void or else not renamings.is_empty
 
 end

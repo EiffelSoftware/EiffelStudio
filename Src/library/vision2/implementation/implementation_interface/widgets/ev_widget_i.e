@@ -12,6 +12,10 @@ inherit
 
 	EV_PND_TARGET_I
 
+feature -- Temp
+
+
+
 feature {NONE} -- Initialization
 
 	make is
@@ -32,6 +36,13 @@ feature {EV_WIDGET} -- Initialization
 
 	parent_imp: EV_CONTAINER_IMP is
 			-- Parent container implementation of this widget.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	cursor: EV_CURSOR is
+			-- Cursor used currently on the widget.
 		require
 			exists: not destroyed
 		deferred
@@ -208,6 +219,14 @@ feature -- Element change
 		deferred
 		ensure
 			parent_set: parent_set (par)
+		end
+
+	set_cursor (cur: EV_CURSOR) is
+			-- Make `value' the new cursor of the widget
+		require
+			exists: not destroyed
+			valid_cursor: is_valid (cur)
+		deferred
 		end
 
 	set_background_color (color: EV_COLOR) is

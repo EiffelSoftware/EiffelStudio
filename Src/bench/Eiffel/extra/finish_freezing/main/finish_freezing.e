@@ -7,13 +7,13 @@ feature -- Initialization
 
 	make is
 		local
-			error: BOOLEAN -- did an error occur?
+			retried: BOOLEAN -- did an error occur?
 			c_error: BOOLEAN -- did an error occur during C compilation?
 			platform: STRING -- the platform we are on
 			make_util: STRING -- the C make utility for this platform
 			status_box: STATUS_BOX -- the status box displayed at the end of execution
 		do
-			if not error then
+			if not retried then
 				!!translator.make
 
 				translator.read_options
@@ -24,10 +24,10 @@ feature -- Initialization
 			end
 
 			make_util := translator.options.get_string ("make", "make utility")
-			!! status_box.make (make_util, error, c_error)
+			!! status_box.make (make_util, retried, c_error)
 
 		rescue
-			error := true
+			retried := true
 			retry
 		end
 

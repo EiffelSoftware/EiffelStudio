@@ -86,7 +86,7 @@ feature -- Execution
 			filename: FILE_NAME -- the filename for the config.eif file
 		do
 			!! filename.make_from_string (config_eif_fn)
-			!!reader
+			!! reader
 			reader.parse_file (filename, options)
 		end
 

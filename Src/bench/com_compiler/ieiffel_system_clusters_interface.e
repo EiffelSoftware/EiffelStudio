@@ -52,6 +52,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	change_cluster_name_user_precondition (a_name: STRING; a_new_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `change_cluster_name'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	cluster_tree: IENUM_CLUSTER_PROP_INTERFACE is
@@ -104,6 +111,16 @@ feature -- Basic Operations
 			-- `cluster_id' [in].  
 		require
 			cluster_properties_by_id_user_precondition: cluster_properties_by_id_user_precondition (cluster_id)
+		deferred
+
+		end
+
+	change_cluster_name (a_name: STRING; a_new_name: STRING) is
+			-- Change cluster name.
+			-- `a_name' [in].  
+			-- `a_new_name' [in].  
+		require
+			change_cluster_name_user_precondition: change_cluster_name_user_precondition (a_name, a_new_name)
 		deferred
 
 		end

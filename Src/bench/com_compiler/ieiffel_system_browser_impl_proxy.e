@@ -25,7 +25,7 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	system_classes: IENUM_CLASS_INTERFACE is
+	system_classes: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of classes in system.
 		do
 			Result := ccom_system_classes (initializer)
@@ -73,7 +73,7 @@ feature -- Basic Operations
 			Result := ccom_feature_descriptor (initializer, class_name1, feature_name)
 		end
 
-	search_classes (a_string: STRING; is_substring: BOOLEAN): IENUM_CLASS_INTERFACE is
+	search_classes (a_string: STRING; is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
 			-- `a_string' [in].  
 			-- `is_substring' [in].  
@@ -99,7 +99,7 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_system_classes (cpp_obj: POINTER): IENUM_CLASS_INTERFACE is
+	ccom_system_classes (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of classes in system.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -141,7 +141,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end
 
-	ccom_search_classes (cpp_obj: POINTER; a_string: STRING; is_substring: BOOLEAN): IENUM_CLASS_INTERFACE is
+	ccom_search_classes (cpp_obj: POINTER; a_string: STRING; is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_BOOLEAN): EIF_REFERENCE"

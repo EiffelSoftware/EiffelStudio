@@ -43,7 +43,7 @@ feature -- Access
 			Result := ccom_tool_tip (initializer)
 		end
 
-	classes: IENUM_CLASS_INTERFACE is
+	classes: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of classes in cluster.
 		do
 			Result := ccom_classes (initializer)
@@ -119,7 +119,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_classes (cpp_obj: POINTER): IENUM_CLASS_INTERFACE is
+	ccom_classes (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of classes in cluster.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"

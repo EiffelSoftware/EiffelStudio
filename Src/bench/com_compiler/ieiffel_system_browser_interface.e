@@ -75,7 +75,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	system_classes: IENUM_CLASS_INTERFACE is
+	system_classes: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of classes in system.
 		require
 			system_classes_user_precondition: system_classes_user_precondition
@@ -135,7 +135,7 @@ feature -- Basic Operations
 
 		end
 
-	search_classes (a_string: STRING; is_substring: BOOLEAN): IENUM_CLASS_INTERFACE is
+	search_classes (a_string: STRING; is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
 			-- `a_string' [in].  
 			-- `is_substring' [in].  

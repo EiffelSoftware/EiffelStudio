@@ -191,6 +191,12 @@ public:
 	virtual STDMETHODIMP is_generic(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
 
 
+	/*-----------------------------------------------------------
+	Is class part of a library?
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP is_library(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+
+
 
 protected:
 

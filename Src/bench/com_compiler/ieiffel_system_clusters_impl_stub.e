@@ -56,6 +56,14 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	change_cluster_name (a_name: STRING; a_new_name: STRING) is
+			-- Change cluster name.
+			-- `a_name' [in].  
+			-- `a_new_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	create_item is
 			-- Initialize `item'
 		do

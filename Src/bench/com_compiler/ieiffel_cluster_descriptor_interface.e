@@ -113,7 +113,7 @@ feature -- Basic Operations
 
 		end
 
-	classes: IENUM_CLASS_INTERFACE is
+	classes: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of classes in cluster.
 		require
 			classes_user_precondition: classes_user_precondition

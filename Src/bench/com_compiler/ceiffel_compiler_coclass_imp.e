@@ -35,8 +35,26 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	freezing_occurred: BOOLEAN is
+			-- Did last compile warrant a call to finish_freezing?
+		do
+			-- Put Implementation here.
+		end
+
 	compiler_version: STRING is
 			-- Compiler version.
+		do
+			-- Put Implementation here.
+		end
+
+	freeze_command_name: STRING is
+			-- Eiffel Freeze command name
+		do
+			-- Put Implementation here.
+		end
+
+	freeze_command_arguments: STRING is
+			-- Eiffel Freeze command arguments
 		do
 			-- Put Implementation here.
 		end
@@ -51,6 +69,12 @@ feature -- Basic Operations
 
 	compile is
 			-- Compile.
+		do
+			-- Put Implementation here.
+		end
+
+	finalize is
+			-- Finalize.
 		do
 			-- Put Implementation here.
 		end

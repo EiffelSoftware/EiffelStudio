@@ -91,7 +91,7 @@ feature -- Access
 			Result := ccom_evaluate_invariant_by_default (initializer)
 		end
 
-	excluded: ECOM_ARRAY [STRING] is
+	excluded: IENUM_CLUSTER_EXCLUDES_INTERFACE is
 			-- List of excluded directories.
 		do
 			Result := ccom_excluded (initializer)
@@ -154,13 +154,6 @@ feature -- Status Report
 		end
 
 feature -- Basic Operations
-
-	set_name (return_value: STRING) is
-			-- Cluster name.
-			-- `return_value' [in].  
-		do
-			ccom_set_name (initializer, return_value)
-		end
 
 	set_cluster_path (path: STRING) is
 			-- Full path to cluster.
@@ -243,12 +236,6 @@ feature {NONE}  -- Externals
 			-- Cluster name.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_set_name (cpp_obj: POINTER; return_value: STRING) is
-			-- Cluster name.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_cluster_path (cpp_obj: POINTER): STRING is
@@ -347,7 +334,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN)"
 		end
 
-	ccom_excluded (cpp_obj: POINTER): ECOM_ARRAY [STRING] is
+	ccom_excluded (cpp_obj: POINTER): IENUM_CLUSTER_EXCLUDES_INTERFACE is
 			-- List of excluded directories.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_REFERENCE"

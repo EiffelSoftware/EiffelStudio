@@ -84,8 +84,20 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	assemblies: ECOM_ARRAY [STRING] is
+	assemblies: IENUM_IMPORTED_ASSEMBLIES_INTERFACE is
 			-- Imported assemblies.
+		do
+			-- Put Implementation here.
+		end
+
+	include_paths: IENUM_INCLUDE_PATHS_INTERFACE is
+			-- Included Paths.
+		do
+			-- Put Implementation here.
+		end
+
+	object_files: IENUM_OBJECT_FILES_INTERFACE is
+			-- Object Files.
 		do
 			-- Put Implementation here.
 		end
@@ -179,6 +191,34 @@ feature -- Basic Operations
 	remove_assembly (assembly_path: STRING) is
 			-- Remove an assembly from the project.
 			-- `assembly_path' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	add_include_path (include_path: STRING) is
+			-- Add an include path to the project.
+			-- `include_path' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	remove_include_path (include_path: STRING) is
+			-- Remove an include path from the project.
+			-- `include_path' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	add_object_file (object_file: STRING) is
+			-- Add an object file to the project.
+			-- `object_file' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	remove_object_file (object_file: STRING) is
+			-- Remove an object file from the project.
+			-- `object_file' [in].  
 		do
 			-- Put Implementation here.
 		end

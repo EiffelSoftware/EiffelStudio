@@ -10,184 +10,184 @@ class
 
 feature -- Event types
 
-	NoEventMask: POINTER is
+	NoEventMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"NoEventMask"
 		end;
 
-	KeyPressMask: POINTER is
+	KeyPressMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"KeyPressMask"
 		end;
 
-	KeyReleaseMask: POINTER is
+	KeyReleaseMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"KeyReleaseMask"
 		end;
 
-	ButtonPressMask: POINTER is
+	ButtonPressMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ButtonPressMask"
 		end;
 
-	ButtonReleaseMask: POINTER is
+	ButtonReleaseMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ButtonReleaseMask"
 		end;
 
-	EnterWindowMask: POINTER is
+	EnterWindowMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"EnterWindowMask"
 		end;
 
-	LeaveWindowMask: POINTER is
+	LeaveWindowMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"LeaveWindowMask"
 		end;
 
-	PointerMotionMask: POINTER is
+	PointerMotionMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"PointerMotionMask"
 		end;
 
-	PointerMotionHintMask: POINTER is
+	PointerMotionHintMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"PointerMotionHintMask"
 		end;
 
-	Button1MotionMask: POINTER is
+	Button1MotionMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Button1MotionMask"
 		end;
 
-	Button2MotionMask: POINTER is
+	Button2MotionMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Button2MotionMask"
 		end;
 
-	Button3MotionMask: POINTER is
+	Button3MotionMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Button3MotionMask"
 		end;
 
-	Button4MotionMask: POINTER is
+	Button4MotionMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Button4MotionMask"
 		end;
 
-	Button5MotionMask: POINTER is
+	Button5MotionMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Button5MotionMask"
 		end;
 
-	ButtonMotionMask: POINTER is
+	ButtonMotionMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ButtonMotionMask"
 		end;
 
-	KeymapStateMask: POINTER is
+	KeymapStateMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"KeymapStateMask"
 		end;
 
-	ExposureMask: POINTER is
+	ExposureMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ExposureMask"
 		end;
 
-	VisibilityChangeMask: POINTER is
+	VisibilityChangeMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"VisibilityChangeMask"
 		end;
 
-	StructureNotifyMask: POINTER is
+	StructureNotifyMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"StructureNotifyMask"
 		end;
 
-	ResizeRedirectMask: POINTER is
+	ResizeRedirectMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ResizeRedirectMask"
 		end;
 
-	SubstructureNotifyMask: POINTER is
+	SubstructureNotifyMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"SubstructureNotifyMask"
 		end;
 
-	SubstructureRedirectMask: POINTER is
+	SubstructureRedirectMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"SubstructureRedirectMask"
 		end;
 
-	FocusChangeMask: POINTER is
+	FocusChangeMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"FocusChangeMask"
 		end;
 
-	PropertyChangeMask: POINTER is
+	PropertyChangeMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"PropertyChangeMask"
 		end;
 
-	ColormapChangeMask: POINTER is
+	ColormapChangeMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ColormapChangeMask"
 		end;
 
-	OwnerGrabButtonMask: POINTER is
+	OwnerGrabButtonMask: INTEGER is
 		external
-			"C [macro <X11/X.h>]: EIF_POINTER"
+			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"OwnerGrabButtonMask"
 		end;

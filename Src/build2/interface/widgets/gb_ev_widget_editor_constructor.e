@@ -208,8 +208,6 @@ feature {NONE} -- Implementation
 	
 			actual_reset_height (object)
 			for_all_instance_referers (object, agent actual_reset_height)
-				-- Reset the object referenced by `Current'
-			minimum_width_entry.update_constant_display (first.height.out)
 			parent_editor.set_object (object_handler.object_from_id (original_id))
 				-- Update `parent_editor' to reflect the change.
 		end

@@ -505,7 +505,7 @@ invariant
 	window_oids_not_void: is_usable implies window_oids /= void
 	c_externals_object_not_void: C /= Void
 	tooltips_not_void: tooltips /= NULL
-	idle_actions_agent_not_void: idle_actions_agent /= void
+	idle_actions_agent_not_void: is_usable implies idle_actions_agent /= void
 
 end -- class EV_APPLICATION_IMP
 

@@ -348,7 +348,7 @@ feature -- Access
 			-- Has the feature been compiled?
 			-- (Has been compiled if passed degree 4)
 		do
-			Result := body_index /= 0
+			Result := body_index /= 0 or else written_class.is_true_external
 		end;
 
 	is_exported_to (client: CLASS_C): BOOLEAN is

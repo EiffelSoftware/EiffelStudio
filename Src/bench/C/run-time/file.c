@@ -64,7 +64,7 @@ extern int eio();				/* Raise 'I/O error' exception */
  * Opening a file.
  */
 
-public char	*file_open(name, how)
+public fnptr file_open(name, how)
 char *name;
 int how;
 {
@@ -82,10 +82,10 @@ int how;
 	default: type = "r";
 	}
 
-	return file_fopen(name, type);
+	return (fnptr) file_fopen(name, type);
 }
 
-public char	*file_dopen(fd, how)
+public fnptr file_dopen(fd, how)
 int fd;
 int how;
 {
@@ -103,10 +103,10 @@ int how;
 	default: type = "r";
 	}
 
-	return file_fdopen(fd, type);
+	return (fnptr) file_fdopen(fd, type);
 }
 
-public char	*file_reopen(name, how, old)
+public fnptr file_reopen(name, how, old)
 char *name;
 int how;
 FILE *old;
@@ -128,7 +128,7 @@ FILE *old;
 	default: type = "r";
 	}
 
-	return file_freopen(name, type, old);
+	return (fnptr) file_freopen(name, type, old);
 }
 
 private char *file_fopen(name, type)

@@ -12,6 +12,7 @@
 
 #ifndef _dir_h_
 #define _dir_h_
+#include "macros.h"
 
 #ifdef I_DIRENT
 #include <dirent.h>
@@ -30,7 +31,7 @@
 #endif
 #endif
 
-extern char *dir_open();
+extern fnptr dir_open();
 extern void dir_rewind();
 extern char *dir_search();
 extern char *dir_next();

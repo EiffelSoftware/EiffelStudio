@@ -27,7 +27,7 @@
 #include "sig.h"
 #include "bits.h"
 
-#define DEBUG 6	/**/
+/*#define DEBUG 6	/**/
 #define TEST
 #ifdef TEST
 #include <stdio.h>

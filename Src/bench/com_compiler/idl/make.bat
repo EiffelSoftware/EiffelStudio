@@ -14,7 +14,7 @@ IF EXIST *.pch DEL *.pch
 IF EXIST *.lib DEL *.lib
 IF EXIST *.exp DEL *.exp
 
-CALL midl /h EiffelSoftware.CompilerPS.h /dlldata EiffelSoftware.CompilerPS_data.c /iid EiffelSoftware.CompilerPS_iid.c /proxy EiffelSoftware.CompilerPS_proxy.c EiffelSoftware.Compiler.idl
+CALL midl /h EiffelSoftware.CompilerPS.h /dlldata EiffelSoftware.CompilerPS_data.c /iid EiffelSoftware.CompilerPS_iid.c /proxy EiffelSoftware.CompilerPS_proxy.c EiffelSoftwareCompiler.idl
 CALL nmake make_proxystub.msc
 
 regsvr32 -s EiffelSoftware.CompilerPS.dll

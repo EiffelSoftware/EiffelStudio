@@ -43,16 +43,24 @@ feature {NONE}
 				name_chooser.set_title (l_Select_a_directory)
 				if argument = name_chooser then
 					dir_name := clone (name_chooser.selected_file);
-					last_char := dir_name.item (dir_name.count); 
-					if last_char = Directory_separator then
-						dir_name.remove (dir_name.count)
-					end;
-					!!project_dir.make (dir_name);
-					make_project (project_dir);
-					name_chooser.set_file_selection;
-					name_chooser.set_title (l_Select_a_file);
-					name_chooser.show_file_selection_list;
-					name_chooser.show_file_selection_label;
+					if dir_name.empty then
+						warner (text_window).custom_call (Current,
+							w_Directory_not_exist (dir_name), 
+							" OK ", Void, Void);
+					else
+						if dir_name.count > 1 then
+							last_char := dir_name.item (dir_name.count); 
+							if last_char = Directory_separator then
+								dir_name.remove (dir_name.count)
+							end
+						end;
+						!!project_dir.make (dir_name);
+						make_project (project_dir);
+						name_chooser.set_file_selection;
+						name_chooser.set_title (l_Select_a_file);
+						name_chooser.show_file_selection_list;
+						name_chooser.show_file_selection_label;
+					end
 				elseif argument = void then
 					-- No Help
 				else
@@ -86,18 +94,18 @@ feature
 					fn.extend (Eiffelgen);
 					fn.set_file_name (Dot_workbench);
 				!!workbench_file.make (fn);
-				if 
+				if not project_dir.exists then
+					temp := w_Directory_not_exist (project_dir.name);
+					ok := False;
+				elseif 
 					project_dir.is_new or else
 					(not workbench_file.exists)
 				then
 						-- Create new project
-					if not project_dir.exists then
-						temp := w_Directory_not_exist (project_dir.name);
-						ok := False;
-					elseif 
-						not (project_dir.is_readable and then
-							project_dir.is_writable and then
-							project_dir.is_executable)
+					if 
+						not project_dir.is_readable or else
+						not project_dir.is_writable or else
+						not project_dir.is_executable
 					then
 						temp := w_Directory_wrong_permissions (project_dir.name);
 						ok := False;
@@ -161,7 +169,8 @@ feature
 			init_work: INIT_WORKBENCH;
 			precomp_r: PRECOMP_R;
 			workb: WORKBENCH_I;
-			temp: STRING
+			temp: STRING;
+			execution_table: EXECUTION_TABLE
 		do
 			if not retried then
 				init_project_directory := project_dir;
@@ -181,9 +190,13 @@ feature
 				Workbench.init;
 				if System.uses_precompiled then
 					!!precomp_r;
-					precomp_r.set_precomp_dir;
+					precomp_r.set_precomp_dir
 				end;
 				System.server_controler.init;
+				execution_table := System.execution_table;
+				if execution_table /= Void then
+					execution_table.reset_debug_counter
+				end;
 				Universe.update_cluster_paths;
 				project_tool.set_icon_name (System.system_name);
 				if is_project_writable then

@@ -52,19 +52,15 @@ feature {NONE}
 
 	call_back is
 			-- Call the command.
-		local
-			context_data_void: CONTEXT_DATA;
 		do
-			if not empty then
-				from
-					start
-				until
-					off
-				loop
-					item.execute (context_data_void);
-					if not off then
-						forth;
-					end;
+			from
+				start
+			until
+				after
+			loop
+				item.execute (Void);
+				if not after then
+					forth;
 				end;
 			end;
 		end;

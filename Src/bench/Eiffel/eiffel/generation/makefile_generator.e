@@ -720,92 +720,67 @@ feature -- Generation (Linking rules)
 
 	generate_objects_macros is
 			-- Generate the object macros (dependencies for final executable)
-		local
-			i, baskets_count: INTEGER;
-			not_first: BOOLEAN
 		do
 				-- Feature table object files.
-			from
-				baskets_count := feat_table_baskets.count;
-				i := 1
-			until
-				i > baskets_count
-			loop
-				if not feat_table_baskets.item (i).empty then
-					if not_first then
-						Make_file.putchar (' ')
-					else
-						not_first := true
-					end;
-					Make_file.putstring (Feature_table_suffix);
-					Make_file.putint (i);
-					Make_file.putchar ('/');
-					Make_file.putstring (Feature_table_suffix);
-					Make_file.putstring ("obj");
-					Make_file.putint (i);
-					Make_file.putstring (".o");
-				end;
-				i := i + 1
-			end;
-
-			if not_first then
-				Make_file.putchar (' ');
-				not_first := false
-			end;
-
+			generate_F_object_macros;
+			Make_file.putchar (' ');
 				-- Descriptor object files.
-			from
-				baskets_count := descriptor_baskets.count;
-				i := 1
-			until
-				i > baskets_count
-			loop
-				if not descriptor_baskets.item (i).empty then
-					if not_first then
-						Make_file.putchar (' ')
-					else
-						not_first := true
-					end;
-					Make_file.putstring (Descriptor_suffix);
-					Make_file.putint (i);
-					Make_file.putchar ('/');
-					Make_file.putstring (Descriptor_suffix);
-					Make_file.putstring ("obj");
-					Make_file.putint (i);
-					Make_file.putstring (".o");
-				end;
-				i := i + 1
-			end;
-
-			if not_first then
-				Make_file.putchar (' ');
-				not_first := false
-			end;
-
+			generate_D_object_macros;
+			Make_file.putchar (' ');
 				-- Class object files.
+			generate_C_object_macros
+		end;
+
+	generate_C_object_macros is
+			-- Generate the C object macros (dependencies for final executable)
+		do
+			generate_basket_objects (object_baskets, Class_suffix)
+		end
+
+	generate_D_object_macros is
+			-- Generate the D object macros (dependencies for final executable)
+		do
+			generate_basket_objects (descriptor_baskets, Descriptor_suffix)
+		end
+
+	generate_F_object_macros is
+			-- Generate the F object macros (dependencies for final executable)
+		do
+			generate_basket_objects (feat_table_baskets, Feature_table_suffix)
+		end
+
+	generate_basket_objects (baskets: ARRAY [LINKED_LIST [STRING]]; suffix: STRING) is
+			-- Generate the object macros in `baskets'.
+		require
+			baskets_not_void: baskets /= Void;
+			suffix_not_void: suffix /= Void
+		local
+			i, baskets_count: INTEGER
+			not_first: BOOLEAN
+		do
 			from
-				baskets_count := object_baskets.count;
+				baskets_count := baskets.count;
 				i := 1
 			until
 				i > baskets_count
 			loop
-				if not object_baskets.item (i).empty then
+				if not baskets.item (i).empty then
 					if not_first then
 						Make_file.putchar (' ')
 					else
 						not_first := true
 					end;
-					Make_file.putstring (Class_suffix);
+					Make_file.putstring (suffix);
 					Make_file.putint (i);
 					Make_file.putchar ('/');
-					Make_file.putstring (Class_suffix);
+					Make_file.putstring (suffix);
 					Make_file.putstring ("obj");
 					Make_file.putint (i);
 					Make_file.putstring (".o");
 				end;
 				i := i + 1
 			end
-		end;
+		end
 
 	generate_subdir_names is
 			-- Generate the subdirectories' names.

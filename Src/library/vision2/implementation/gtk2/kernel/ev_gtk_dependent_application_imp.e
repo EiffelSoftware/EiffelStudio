@@ -221,22 +221,37 @@ feature -- Implementation
 			a_settings: STRING
 		do
 			a_settings := default_font_description
-			Result := not a_settings.is_equal (previous_font_description)
+			if previous_font_description /= Void then
+				Result := previous_font_description.hash_code /= a_settings.hash_code
+			else
+				Result := True
+			end
 			previous_font_description := a_settings
 		end
 
 	default_font_description: STRING is
 			-- Description string of the current font used
 		local
-			gtk_settings, font_name_ptr: POINTER
+			font_name_ptr: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			gtk_settings := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_get_default
-			a_cs := "gtk-font-name"
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_string (gtk_settings, a_cs.item, $font_name_ptr)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			create a_cs.make_from_pointer (font_name_ptr)
 			Result := a_cs.string
 		end
+
+	gtk_font_name_setting: EV_GTK_C_STRING is
+			-- String optimization for gtk-font-name property string
+		once
+			Result := "gtk-font-name"
+		end	
+
+	default_gtk_settings: POINTER is
+			-- Default GtkSettings
+		once
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_get_default
+		end
+		
 		
 	font_names_on_system: ARRAYED_LIST [STRING] is
 			-- Retrieve a list of all the font names available on the system

@@ -10,7 +10,7 @@
 		"OptimizeCode" = "0"
 		"RequiresCleanCompile" = "0"
 		"UseGeneratedCryptographicKey" = "0"
-		"CompileOnLoad" = "0"
+		"CompileOnLoad" = "1"
 	}
 	"Release|.NET"
 	{

@@ -134,14 +134,17 @@ feature {NONE}
 	Bc_passign:			CHARACTER is '%/126/';
 	Bc_preverse:		CHARACTER is '%/127/';
 	Bc_pclike:			CHARACTER is '%/128/';
-	Bc_object_expr_addr:	CHARACTER is '%/129/';
+	Bc_object_expr_addr:CHARACTER is '%/129/';
 	Bc_reserve:			CHARACTER is '%/130/';
 	Bc_pop:				CHARACTER is '%/131/';
 	Bc_ref_to_ptr:		CHARACTER is '%/132/';
-	Bc_rcreate:		CHARACTER is '%/133/';
-	Bc_gen_param_create:	CHARACTER is '%/134/';
-	Bc_create_exp:	CHARACTER is '%/135/';
+	Bc_rcreate:			CHARACTER is '%/133/';
+	Bc_gen_param_create:CHARACTER is '%/134/';
+	Bc_create_exp:		CHARACTER is '%/135/';
 	Bc_null_pointer:	CHARACTER is '%/136/';
+	Bc_max:				CHARACTER is '%/137/'
+	Bc_min:				CHARACTER is '%/138/'
+	Bc_generator:		CHARACTER is '%/139/'
 
 		-- Instructions for Concurrent Eiffel
 

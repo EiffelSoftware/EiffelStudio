@@ -52,7 +52,7 @@ feature -- Code generation
 		do
 		end;
 
-	is_feature_special: BOOLEAN is
+	is_feature_special (compilation_type: BOOLEAN): BOOLEAN is
 		do
 		end;
 

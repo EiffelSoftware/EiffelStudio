@@ -115,22 +115,17 @@ io.error.new_line
 end
 		end
 
-	generate_special_feature (reg: REGISTRABLE) is
+	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_I) is
 			-- Generate code for special routines (is_equal, copy ...).
-		require else
-			Valid_parameters: (parameters /= Void)
-			One_parameter: parameters.count = 1
 		local
 			expr: EXPR_B
 			buf: GENERATION_BUFFER
 		do
-			reg.print_register
-			buf := buffer
-			buf.putchar (' ')
-			buf.putstring (special_routines.c_operation)
-			buf.putchar (' ')
-			expr := parameters.first; -- Cannot fail
-			expr.print_register
+			if parameters /= Void then
+				special_routines.generate (buffer, basic_type, reg, parameters.first)
+			else
+				special_routines.generate (buffer, basic_type, reg, Void)
+			end
 		end
 
 	generate_access is

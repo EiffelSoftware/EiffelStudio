@@ -86,13 +86,13 @@ feature
 			!!Result
 		end;
 
-	is_feature_special: BOOLEAN is
+	is_feature_special (compilation_type: BOOLEAN): BOOLEAN is
 			-- Search for feature_name in special_routines.
 			-- This is used for simple types only.
 			-- If found return True (and keep reference position).
 			-- Otherwize, return false;
 		do
-			Result := special_routines.has (feature_name);
+			Result := special_routines.has (feature_name, compilation_type);
 		end;
 
 	init (f: FEATURE_I) is
@@ -229,10 +229,10 @@ feature -- Byte code generation
 			end
 		end
 
-	make_special_byte_code (ba: BYTE_ARRAY) is
+	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_I) is
 			-- Make byte code for special calls.
 		do
-			ba.append (special_routines.bc_code);
+			special_routines.make_byte_code (ba, basic_type)
 		end;
 
 	make_precursor_byte_code (ba: BYTE_ARRAY) is

@@ -10,7 +10,7 @@ class
 
 inherit
 	
-	ECOM_INTERFACE
+	ECOM_WRAPPER
 	
 	ECOM_STAT_FLAGS
 	
@@ -239,11 +239,11 @@ feature -- Basic Operations
 			-- `destination'.
 		require
 			valid_destination: destination /= Void 
-					and then destination.interface /= Default_pointer
+					and then destination.item /= Default_pointer
 			valid_bytes_number: bytes /= Void and then
 					bytes.item /= Default_pointer
 		do
-			ccom_copy_to (initializer, destination.interface, bytes.item)
+			ccom_copy_to (initializer, destination.item, bytes.item)
 		end
 	
 	lock_region (offset, count: ECOM_ULARGE_INTEGER; lock: INTEGER) is
@@ -275,7 +275,7 @@ feature -- Basic Operations
 		do
 			!!Result.make_from_pointer(ccom_clone(initializer))
 		ensure
-			clone_created: Result /= Void and then Result.interface /= Default_pointer
+			clone_created: Result /= Void and then Result.item /= Default_pointer
 		end
 
 feature -- Access
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			Result := ccom_create_c_istream (a_pointer)
 		end
 
-	release_interface is
+	delete_wrapper is
 			-- Close root compound file
 		do
 			ccom_delete_c_stream (initializer);

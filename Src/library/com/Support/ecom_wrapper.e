@@ -15,6 +15,11 @@ inherit
 			dispose
 		end
 
+	ECOM_EXCEPTION_CODES
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make_from_pointer (a_pointer: POINTER) is

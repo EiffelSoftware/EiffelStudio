@@ -9,7 +9,7 @@ class
 	ECOM_TYPE_INFO
 
 inherit
-	ECOM_INTERFACE
+	ECOM_WRAPPER
 		redefine
 			dispose
 		end
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			Result := ccom_create_c_type_info_from_pointer (a_pointer)
 		end
 
-	release_interface is
+	delete_wrapper is
 			-- Delete structure
 		do
 			ccom_delete_c_type_info (initializer);

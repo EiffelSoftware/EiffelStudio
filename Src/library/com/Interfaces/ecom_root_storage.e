@@ -9,7 +9,7 @@ class
 
 inherit
 
-	ECOM_INTERFACE
+	ECOM_WRAPPER
 
 creation
 	make_from_pointer
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 			Result := ccom_create_c_iroot_storage(a_pointer)
 		end
 
-	release_interface is
+	delete_wrapper is
 			-- delete structure
 		do
 			ccom_delete_c_iroot_storage (initializer);

@@ -9,7 +9,7 @@ class
 	ECOM_TYPE_LIB
 
 inherit
-	ECOM_INTERFACE
+	ECOM_WRAPPER
 		redefine
 			dispose
 		end
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 		do
 			create wide_string.make_from_string (file_name)
 			initializer := ccom_create_c_type_lib_from_name (wide_string.item)
-			interface := ccom_item (initializer)
+			item := ccom_item (initializer)
 		ensure
 			interface_exist: initializer /= default_pointer and then
-					interface /= default_pointer
+					item /= default_pointer
 		end
 
 feature -- Access
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			Result := ccom_create_c_type_lib_from_pointer (a_pointer)
 		end
 
-	release_interface is
+	delete_wrapper is
 			-- Delete structure
 		do
 			ccom_delete_c_type_lib (initializer);

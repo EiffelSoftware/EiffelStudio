@@ -164,12 +164,6 @@ feature -- Screen access
 
 feature -- Access
 
-	io_handler (an_io_handler: IO_HANDLER): IO_HANDLER_X is
-			-- Motif implementation of `an_io_handler'
-		do
-			!! Result
-		end;
-
 	task (a_task: TASK): TASK_X is
 			-- Motif implementation of `a_task'
 		do

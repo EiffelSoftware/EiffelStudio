@@ -33,8 +33,10 @@ feature {NONE} -- Initialization
 		do
 			internal_constructor := cons
 			arguments := solved_arguments (cons)
+			is_public := cons.get_is_public
 		ensure
 			internal_constructor_set: internal_constructor = cons
+			is_public_set: is_public = cons.get_is_public
 		end
 
 feature -- Access
@@ -45,12 +47,15 @@ feature -- Access
 	arguments: ARRAY [CONSUMED_ARGUMENT]
 			-- Creation routine arguments
 
+	is_public: BOOLEAN
+			-- Is constructor public?
+
 	consumed_constructor: CONSUMED_CONSTRUCTOR is
 			-- Generate consumed constructor from `name' and `internal_constructor'.
 		require
 			name_set: name /= Void
 		do
-			create Result.make (name, arguments)
+			create Result.make (name, arguments, is_public)
 		ensure
 			non_void_constructor: Result /= Void
 		end

@@ -106,12 +106,13 @@ feature -- Access
 			name_set: eiffel_name /= Void
 		do
 			create Result.make (
-								eiffel_name,
-								create {STRING}.make_from_cil (internal_method.get_name),
-								arguments,
-								internal_method.get_is_final,
-								internal_method.get_is_static,
-								internal_method.get_is_abstract)		
+				eiffel_name,
+				create {STRING}.make_from_cil (internal_method.get_name),
+				arguments,
+				internal_method.get_is_final,
+				internal_method.get_is_static,
+				internal_method.get_is_abstract,
+				internal_method.get_is_public)		
 		end
 	
 	consumed_function: CONSUMED_FUNCTION is
@@ -121,15 +122,16 @@ feature -- Access
 			name_set: eiffel_name /= Void
 		do
 			create Result.make (
-								eiffel_name,
-								create {STRING}.make_from_cil (internal_method.get_name),
-								arguments,
-								referenced_type_from_type (internal_method.get_return_type),
-								internal_method.get_is_final,
-								internal_method.get_is_static,
-								internal_method.get_is_abstract,
-								is_infix,
-								is_prefix)			
+				eiffel_name,
+				create {STRING}.make_from_cil (internal_method.get_name),
+				arguments,
+				referenced_type_from_type (internal_method.get_return_type),
+				internal_method.get_is_final,
+				internal_method.get_is_static,
+				internal_method.get_is_abstract,
+				is_infix,
+				is_prefix,
+				internal_method.get_is_public)			
 		end
 		
 feature -- Element Settings

@@ -175,11 +175,22 @@ feature {NONE} -- Implementation
 			dotnet_name: STRING
 		do
 			create dotnet_name.make_from_cil (info.get_name)
-			create Result.make (
-								unique_feature_name (dotnet_name),
-								dotnet_name,
-								referenced_type_from_type (info.get_field_type),
-								info.get_is_static)
+			if info.get_is_literal then
+				create {CONSUMED_LITERAL_FIELD} Result.make (
+					unique_feature_name (dotnet_name),
+					dotnet_name,
+					referenced_type_from_type (info.get_field_type),
+					info.get_is_static,
+					info.get_is_public,
+					info.get_value (Void))
+			else
+				create Result.make (
+					unique_feature_name (dotnet_name),
+					dotnet_name,
+					referenced_type_from_type (info.get_field_type),
+					info.get_is_static,
+					info.get_is_public)
+			end
 		end
 
 	solved_constructors (tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]): ARRAY [CONSUMED_CONSTRUCTOR] is

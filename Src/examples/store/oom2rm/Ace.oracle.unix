@@ -5,12 +5,12 @@ root
 	sample (root_cluster): "make"
 
 default
-
 	assertion (all);
-	multithreaded (yes)
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+
 cluster
 
-	root_cluster:		"$EIFFEL4/examples/store/insert";
+	root_cluster:		"$EIFFEL4/examples/store/oom2rm";
 	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
 	oracle_handle:		"$EIFFEL4/examples/store/Utilities/oracle";
 
@@ -44,12 +44,12 @@ cluster
 	english_format(time_format):	"$/english";
  
 external
+	include_path: "$(EIFFEL4)/library/store/dbms/rdbms/oracle/Clib",
+		"$(ORACLE_HOME)/rdbms/public"
 
-	object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
-		"-lsupport";
-		"-loracle";
-		"-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
-		"-ldatetime";
-		"libora803.a";	-- Specify the path
+	object: "$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/libsupport.a",
+		"$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/liboracle.a",
+		"$(EIFFEL4)/library/time/spec/$(PLATFORM)/lib/libdatetime.a",
+		"-L$(ORACLE_HOME)/lib -lclntsh"
 
 end

@@ -32,7 +32,7 @@ cluster
 -- EiffelStore
 	estore_support:		"$EIFFEL4\library\store\support";
 	estore_interface:	"$EIFFEL4\library\store\interface";
-	estore_convert:		"$EIFFEL4/library/store/converter";
+	estore_convert:		"$EIFFEL4\library\store\converter";
 	estore_db_support:	"$EIFFEL4\library\store\dbms\support";
 	estore_oracle:		"$EIFFEL4\library\store\dbms\rdbms\oracle";
 
@@ -45,11 +45,13 @@ cluster
 	lexical:			"$EIFFEL4\library\lex";
 
 external
+	include_path: "$(EIFFEL4)\library\store\dbms\rdbms\oracle\Clib",
+		"$(ORACLE_HOME)\OCI80\include"
 
 	object:
-		"$EIFFEL4\library\store\spec\$(COMPILER)\lib\support.lib",
+		"$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\support.lib",
 		"$(EIFFEL4)\library\time\spec\$(COMPILER)\lib\datetime.lib",
-		"$EIFFEL4\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
+		"$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
 		"$(ORACLE_HOME)\OCI80\lib\msvc\oci.lib"
 
 end

@@ -45,6 +45,8 @@ cluster
 	lexical:			"$EIFFEL4/library/lex";
 
 external
+	include_path: "$(EIFFEL4)/library/store/dbms/rdbms/oracle/Clib",
+		"$(ORACLE_HOME)/rdbms/public"
 
 	object: "$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/libsupport.a",
 		"$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/liboracle.a",

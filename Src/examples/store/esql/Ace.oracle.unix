@@ -1,13 +1,11 @@
 system esql
 
 root
-	
 	esql (root_cluster): "make"
 
 default
-
 	assertion (all);
-	multithreaded (yes)
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
 
@@ -20,7 +18,7 @@ cluster
 	support:		"$EIFFEL4/library/base/support";
 	access: 		"$EIFFEL4/library/base/structures/access";
 	cursors:		"$EIFFEL4/library/base/structures/cursors";
-	cursor_tree:	"$EIFFEL4/library/base/structures/cursor_tree";
+	cursor_tree:		"$EIFFEL4/library/base/structures/cursor_tree";
 	dispenser:		"$EIFFEL4/library/base/structures/dispenser";
 	iteration:		"$EIFFEL4/library/base/structures/iteration";
 	list:			"$EIFFEL4/library/base/structures/list";
@@ -32,25 +30,23 @@ cluster
 	tree:			"$EIFFEL4/library/base/structures/tree";	
 
 -- EiffelStore
-
 	estore_support:		"$EIFFEL4/library/store/support";
 	estore_interface:	"$EIFFEL4/library/store/interface";
 	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
 	estore_oracle:		"$EIFFEL4/library/store/dbms/rdbms/oracle";
 
 -- EiffelTime
-
 	time:				"$EIFFEL4/library/time";
-	time_format(time):	"$/format";
+	time_format(time):		"$/format";
 	english_format(time_format):	"$/english";
  
 external
+	include_path: "$(EIFFEL4)/library/store/dbms/rdbms/oracle/Clib",
+		"$(ORACLE_HOME)/rdbms/public"
 
-	object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
-		"-lsupport";
-		"-loracle";
-		"-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
-		"-ldatetime";
-		"libora803.a";	-- Specify the path
+	object: "$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/libsupport.a",
+		"$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/liboracle.a",
+		"$(EIFFEL4)/library/time/spec/$(PLATFORM)/lib/libdatetime.a",
+		"-L$(ORACLE_HOME)/lib -lclntsh"
 
 end

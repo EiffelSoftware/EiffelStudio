@@ -171,7 +171,7 @@ feature -- Basic operation
 			file_name_not_void: a_file_name /= Void
 			file_handler_not_void: file_handler /= Void
 		local
-			data: ARRAYED_LIST [TUPLE [STRING, STRING]]
+			data: HASH_TABLE [STRING, STRING]--ARRAYED_LIST [TUPLE [STRING, STRING]]
 			dialog: GB_TWO_BUTTON_ERROR_DIALOG
 		do
 			load_cancelled := False
@@ -184,23 +184,23 @@ feature -- Basic operation
 					data_not_void: data /= Void
 				end
 				if data.count > 10 and data.count < 14 then
-					set_integer_attribute (data @ 1, agent set_project_type (?))
-					set_string_attribute (data @ 2, agent set_project_name (?))
-					set_string_attribute (data @ 3, agent set_project_location (?))
-					set_string_attribute (data @ 4, agent set_main_window_class_name (?))
-					set_string_attribute (data @ 5, agent set_application_class_name (?))
-					set_boolean_attribute (data @ 6, agent enable_complete_project, agent disable_complete_project)
-					set_boolean_attribute (data @ 7, agent enable_grouped_locals, agent disable_grouped_locals)
-					set_boolean_attribute (data @ 8, agent enable_debugging_output, agent disable_debugging_output)
-					set_string_attribute (data @ 9, agent set_attributes_locality (?))
-					set_boolean_attribute (data @ 10, agent enable_client_of_window, agent disable_client_of_window)
-					set_boolean_attribute (data @ 11, agent enable_rebuild_ace_file, agent disable_rebuild_ace_file)
+					set_integer_attribute (data @ project_type_string, agent set_project_type (?))
+					set_string_attribute (data @ project_name_string, agent set_project_name (?))
+					set_string_attribute (data @ project_location_string, agent set_project_location (?))
+					set_string_attribute (data @ main_window_class_name_string, agent set_main_window_class_name (?))
+					set_string_attribute (data @ application_class_name_string, agent set_application_class_name (?))
+					set_boolean_attribute (data @ complete_project_string, agent enable_complete_project, agent disable_complete_project)
+					set_boolean_attribute (data @ grouped_locals_string, agent enable_grouped_locals, agent disable_grouped_locals)
+					set_boolean_attribute (data @ debugging_output_string, agent enable_debugging_output, agent disable_debugging_output)
+					set_string_attribute (data @ attributes_local_string, agent set_attributes_locality (?))
+					set_boolean_attribute (data @ client_of_window_string, agent enable_client_of_window, agent disable_client_of_window)
+					set_boolean_attribute (data @ rebuild_ace_file_string, agent enable_rebuild_ace_file, agent disable_rebuild_ace_file)
 				end
-				if data.count > 11 then
-					set_boolean_attribute (data @ 12, agent enable_constant_loading, agent disable_constant_loading)
+				if data.has (load_constants_string) then
+					set_boolean_attribute (data @ load_constants_string, agent enable_constant_loading, agent disable_constant_loading)
 				end
-				if data.count > 12 then
-					set_string_attribute (data @ 13, agent set_constants_class_name (?))
+				if data.has (constants_class_name_string) then
+					set_string_attribute (data @ constants_class_name_string, agent set_constants_class_name (?))
 				else
 					set_constants_class_name ("CONSTANTS")
 				end
@@ -404,35 +404,35 @@ feature {NONE} --Implementation
 		-- in the save file, so we know what sort of processing to perform
 		-- when we double click on the .bpr file.
 		
-	set_integer_attribute (temp_tuple: TUPLE [STRING, STRING]; an_agent: PROCEDURE [ANY, TUPLE [INTEGER]]) is
-			-- Call `an_agent' with `temp_tuple' @ 2 string converted to an INTEGER.
-		local
-			temp_string: STRING
+	set_integer_attribute (a_string: STRING; an_agent: PROCEDURE [ANY, TUPLE [INTEGER]]) is
+			-- Call `an_agent' with `a_string' converted to an INTEGER.
+		require
+			a_string_not_void: a_string /= Void
+			an_agent_not_void: an_agent /= Void
+			a_string_is_integer: a_string.is_integer
 		do
-			temp_string ?= temp_tuple @ 2
-			check
-				data_was_string: temp_string /= Void and temp_string.is_integer
-			end
-			an_agent.call ([temp_string.to_integer])
+			an_agent.call ([a_string.to_integer])
 		end
 		
 	
-	set_string_attribute (temp_tuple: TUPLE [STRING, STRING]; an_agent: PROCEDURE [ANY, TUPLE [STRING]]) is
-			-- Call `an_agent' with `temp_tuple' @ 2 string.
+	set_string_attribute (a_string: STRING; an_agent: PROCEDURE [ANY, TUPLE [STRING]]) is
+			-- Call `an_agent' with `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			an_agent_not_void: an_agent /= Void
 		do
-			an_agent.call ([(temp_tuple @ 2).out])
+			an_agent.call ([a_string])
 		end
 		
-	set_boolean_attribute (temp_tuple: TUPLE [STRING, STRING]; true_agent, false_agent: PROCEDURE [ANY, TUPLE]) is
-			-- If `temp_tuple' @ 2 is `True_string' then call `true_agent', else call `false_agent'.
-		local
-			temp_string: STRING
+	set_boolean_attribute (a_string: STRING; true_agent, false_agent: PROCEDURE [ANY, TUPLE]) is
+			-- If `a_string' is `True_string' then call `true_agent', else call `false_agent'.
+		require
+			a_string_not_void: a_string /= Void
+			a_string_valid: a_string.is_equal (true_string) or a_string.is_equal (false_string)
+			true_agent_not_void: true_agent /= Void
+			false_agent_not_void: false_agent /= Void
 		do
-			temp_string ?= temp_tuple @ 2
-			check
-				data_was_string: temp_string /= Void
-			end
-			if temp_string. is_equal (True_string) then
+			if a_string. is_equal (True_string) then
 				true_agent.call ([])
 			else
 				false_agent.call ([])

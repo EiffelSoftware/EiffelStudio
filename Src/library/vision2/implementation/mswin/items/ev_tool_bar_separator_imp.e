@@ -48,6 +48,18 @@ feature -- Status report
 		do
 			Result := 5
 		end
+	
+	tb_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
+				-- The parent of the Current widget
+				-- Can be void.
+			do
+			end
+
+	old_item_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
+				-- The parent of the Current widget
+				-- Can be void.
+			do
+			end
 
 end -- class EV_TOOL_BAR_SEPARATOR_IMP
 
@@ -72,6 +84,9 @@ end -- class EV_TOOL_BAR_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/19 04:35:44  oconnor
+--| added deferred features
+--|
 --| Revision 1.6  2000/02/14 11:40:39  oconnor
 --| merged changes from prerelease_20000214
 --|

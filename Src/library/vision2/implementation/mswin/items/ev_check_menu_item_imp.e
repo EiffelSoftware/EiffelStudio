@@ -14,11 +14,13 @@ class
 inherit
 	EV_CHECK_MENU_ITEM_I
 		redefine
+			interface,
 			parent_imp
 		end
 
 	EV_MENU_ITEM_IMP
 		redefine
+			interface,
 			on_activate,
 			is_selected,
 			set_selected,
@@ -38,15 +40,25 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is current menu-item selected?
 		do
-			Result := parent_imp.internal_selected (Current)	
+--			Result := parent_imp.internal_selected (Current)	
 		end
 	
 feature -- Status setting
 
+	enable_select is
+		do
+--			parent_imp.internal_set_selected (Current, True)
+		end
+
+	disable_select is
+		do
+--			parent_imp.internal_set_selected (Current, False)
+		end
+
 	set_selected (flag: BOOLEAN) is
 			-- Make `flag' the new state of the menu-item.
 		do
-			parent_imp.internal_set_selected (Current, flag)
+--			parent_imp.internal_set_selected (Current, flag)
 		end
 
 	toggle is
@@ -80,8 +92,10 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 			-- Is called by the menu when th item is activate.
 		do
 			toggle
-			execute_command (Cmd_item_activate, Void)
+--			execute_command (Cmd_item_activate, Void)
 		end
+	
+	interface: EV_CHECK_MENU_ITEM
 
 end -- class EV_CHECK_MENU_ITEM_IMP
 
@@ -106,6 +120,9 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/19 04:35:44  oconnor
+--| added deferred features
+--|
 --| Revision 1.9  2000/02/14 11:40:39  oconnor
 --| merged changes from prerelease_20000214
 --|

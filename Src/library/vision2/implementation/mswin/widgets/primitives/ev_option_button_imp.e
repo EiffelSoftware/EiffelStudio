@@ -17,12 +17,17 @@ inherit
 --			set_text
 		end
 
-	EV_MENU_HOLDER_IMP
+	EV_MENU_ITEM_LIST_IMP
+		rename
+			wel_make as wel_menu_make,
+			make_by_id as wel_menu_make_by_id
 		undefine
-			add_menu_ok
+			exists,
+			destroy_item,
+			initialize,
+			main_args,
+			destroy
 		redefine
-			add_menu,
-			remove_menu,
 			interface
 		end
 
@@ -289,6 +294,9 @@ end -- class EV_OPTION_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/19 04:33:40  oconnor
+--| added deferred features
+--|
 --| Revision 1.18  2000/02/14 11:40:44  oconnor
 --| merged changes from prerelease_20000214
 --|

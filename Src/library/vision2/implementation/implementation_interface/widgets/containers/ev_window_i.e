@@ -46,10 +46,10 @@ feature {EV_WINDOW} -- Initialization
 			color: EV_COLOR
 		do
 			if parent_imp /= Void then
-				set_background_color (parent_imp.background_color.interface)
-				set_foreground_color (parent_imp.foreground_color.interface)
+				--set_background_color (parent_imp.background_color.interface)
+				--set_foreground_color (parent_imp.foreground_color.interface)
 			else
-				set_background_color (Color_dialog)
+				--set_background_color (Color_dialog)
 				!! color.make_rgb (0, 0, 0)
 				set_foreground_color (color)
 			end

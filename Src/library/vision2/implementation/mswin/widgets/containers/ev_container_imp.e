@@ -37,12 +37,25 @@ inherit
 			minimum_height
 		redefine
 			move_and_resize,
-			interface
+			interface,
+			initialize
 		end
 
 	WEL_SB_CONSTANTS
 		export
 			{NONE} all
+		end
+
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Precusor and create new_item_actions.
+		do
+			Precursor
+			create new_item_actions.make ("new_item", <<"widget">>)
+			new_item_actions.extend (~add_radio_button)
+			create remove_item_actions.make ("remove_item", <<"widget">>)
+			remove_item_actions.extend (~remove_radio_button)
 		end
 
 feature -- Access
@@ -335,6 +348,58 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+feature {NONE} -- Implementation
+
+	radio_group: LINKED_LIST [EV_RADIO_BUTTON_IMP]
+
+	add_radio_button (w: EV_WIDGET) is
+			-- Called every time a widget is added to the container.
+		require
+			w_not_void: w /= Void
+		local
+			r: EV_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				if radio_group = Void then
+					create radio_group.make
+					r.set_radio_group (radio_group)
+				else
+					r.set_radio_group (radio_group)
+					r.set_unchecked
+				end
+			end
+		end
+
+	remove_radio_button (w: EV_WIDGET) is
+			-- Called every time a widget is removed from the container.
+		require
+			w_not_void: w /= Void
+		local
+			r: EV_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				r.remove_from_radio_group
+				r.set_checked
+				if radio_group.empty then
+					radio_group := Void
+				end
+			end
+		end
+
+feature -- Event handling
+
+	new_item_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
+			-- Actions to be performed after an item is added.
+
+	remove_item_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
+			-- Actions to be performed before an item is removed.
+
+invariant
+	new_item_actions_not_void: is_useable implies new_item_actions /= Void
+	remove_item_actions_not_void: is_useable implies remove_item_actions /= Void
+
 end -- class EV_CONTAINER_IMP
 
 --|----------------------------------------------------------------
@@ -358,6 +423,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/02/28 16:29:17  brendel
+--| Added functionality that groups radio buttons.
+--|
 --| Revision 1.37  2000/02/19 05:45:00  oconnor
 --| released
 --|

@@ -8,9 +8,6 @@ class
 
 inherit
 	ARITHMETIC_AS
-		redefine
-			balanced
-		end
 
 	PREFIX_INFIX_NAMES
 
@@ -23,9 +20,6 @@ feature -- Visitor
 		end
 
 feature -- Properties
-
-	balanced: BOOLEAN is False
-			-- Is the operation balanced ?
 
 	byte_anchor: BIN_POWER_B is
 			-- Byte code type

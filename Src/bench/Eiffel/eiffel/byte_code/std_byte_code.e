@@ -54,7 +54,7 @@ feature
 								inh_assert.has_precondition) and then
 					(workbench_mode or else context.assertion_level.check_precond);
 			end;
-			if 	have_assert then
+			if have_assert then
 				if workbench_mode then
 					context.add_dt_current;
 				end;
@@ -69,7 +69,7 @@ feature
 							inh_assert.has_postcondition) and then
 				(workbench_mode or else context.assertion_level.check_postcond);
 				-- Analyze postconditions
-			if 	have_assert then
+			if have_assert then
 				if workbench_mode then
 					context.add_dt_current;
 				end;
@@ -111,7 +111,7 @@ feature
 				compound.analyze;
 			end;
 				-- Analyze postconditions
-			if 	have_assert then
+			if have_assert then
 				if workbench_mode then
 					context.add_dt_current;
 				end;
@@ -129,6 +129,14 @@ feature
 					-- For RTEA call
 				context.mark_current_used;
 			end;
+			if trace_enabled then
+					-- For RTTR and RTXT
+				context.add_to_dt_current (2);
+			end;
+			if profile_enabled then
+					-- For RTPR and RTXP
+				context.add_to_dt_current (2);
+			end
 		end;
 
 	add_in_log (encoded_name: STRING) is
@@ -173,7 +181,7 @@ feature
 			generate_locals;
 				-- If necessary, generate the once stuff (i.e. checks for
 				-- the internal done flag). That way we do not enter the body
-				-- of the once it it has already been done. Preconditions,
+				-- of the once if it has already been done. Preconditions,
 				-- if any, are only tested on the very first call.
 			generate_once;
 				-- Before entering in the code generate GC hooks, i.e. pass
@@ -184,6 +192,10 @@ feature
 			generate_expanded_cloning;
 				-- Generate execution trace information
 			generate_execution_trace;
+				-- Generate trace macro (start)
+			generate_trace_start;
+				-- Generate profile macro (start)
+			generate_profile_start;
 				-- Generate the saving of the workbench mode assertion level
 			if context.workbench_mode then
 				generate_save_assertion_level;
@@ -831,6 +843,11 @@ feature
 			if exception_stack_managed or rescue_clause /= Void then
 				generated_file.putstring ("RTEX;");
 				generated_file.new_line;
+				if not context.workbench_mode then
+						-- We only need this for finalized mode...
+					generated_file.putstring ("RTLT;");
+					generated_file.new_line;
+				end;
 			end;
 		end;
 
@@ -838,14 +855,7 @@ feature
 			-- Generate the execution trace stack handling
 		do
 			if exception_stack_managed then
-				generated_file.putstring ("RTEA(%"");
-				generated_file.putstring (feature_name);
-				generated_file.putstring ("%", ");
-				generated_file.putint (feature_origin);
-				generated_file.putstring (gc_comma);
-				context.Current_register.print_register_by_name;
-				generated_file.putstring (gc_rparan_comma);
-				generated_file.new_line;
+				generate_stack_macro ("RTEA")
 			elseif rescue_clause /= Void then
 				generated_file.putstring ("RTEV;");
 				generated_file.new_line;
@@ -863,6 +873,87 @@ feature
 			end;
 		end;
 
+	trace_enabled: BOOLEAN is
+			-- Is the trace enabled for the associated class
+			-- in final mode?
+		do
+			Result := not context.workbench_mode and
+				Context.associated_class.trace_level.is_yes
+		end
+
+	profile_enabled: BOOLEAN is
+			-- Is the profile enabled for the associated class
+			-- in final mode?
+		do
+			Result := not context.workbench_mode and
+				Context.associated_class.profile_level.is_yes
+		end
+
+	generate_profile_start is
+			-- Generate the "start of profile" macro
+		do
+			if profile_enabled then
+				generate_option_macro ("RTPR");
+			end
+		end
+
+	generate_profile_stop is
+			-- Generate the "stop of progile" macro
+		do
+			if profile_enabled then
+				generated_file.putstring ("RTXP;");
+				generated_file.new_line;
+			end
+		end
+
+	generate_trace_stop is
+			-- Generate the "end of trace" macro
+		do
+			if trace_enabled then
+				generate_option_macro ("RTXT");
+			end
+		end
+
+	generate_trace_start is
+			-- Generate the "start of trace" macro
+		do
+			if trace_enabled then
+				generate_option_macro ("RTTR");
+			end
+		end
+
+	generate_option_macro (macro_name: STRING) is
+			-- Generate an option macro call will the feature name, the feature origin
+			-- and the "dynamic type" of `Current' as arguments
+		require
+			dtype_added: context.dt_current > 1
+		do
+			generated_file.putstring (macro_name);
+			generated_file.putstring ("(%"");
+			generated_file.putstring (feature_name);
+			generated_file.putstring ("%", ");
+			generated_file.putint (feature_origin);
+			generated_file.putstring (gc_comma);
+			generated_file.putstring (" dtype");
+			generated_file.putstring (gc_rparan_comma);
+			generated_file.new_line;
+		end;
+
+	generate_stack_macro (macro_name: STRING) is
+			-- Generate a macro call will the feature name, the feature origin
+			-- and `Current' as arguments
+		do
+			generated_file.putstring (macro_name);
+			generated_file.putstring ("(%"");
+			generated_file.putstring (feature_name);
+			generated_file.putstring ("%", ");
+			generated_file.putint (feature_origin);
+			generated_file.putstring (gc_comma);
+			context.Current_register.print_register_by_name;
+			generated_file.putstring (gc_rparan_comma);
+			generated_file.new_line;
+		end
+
 	finish_compound is
 			-- Generate the end of the compound routine
 		do
@@ -871,6 +962,10 @@ feature
 				-- Generate the update of the trace stack before quitting
 				-- the routine
 			generate_pop_execution_trace;
+				-- Generate profile macro (stop)
+			generate_profile_stop;
+				-- Generate trace macro (stop)
+			generate_trace_stop;
 			if rescue_clause /= Void then
 				generated_file.putstring ("RTOK;");
 				generated_file.new_line;
@@ -937,7 +1032,7 @@ feature -- Byte code generation
 			end;
 				-- Make byte code for inherited old expressions
 			have_assert := postcondition /= Void or else inh_assert.has_postcondition;
-			if 	have_assert then
+			if have_assert then
 				if inh_assert.has_postcondition then
 					inh_assert.make_old_exp_byte_code (ba);
 				end;

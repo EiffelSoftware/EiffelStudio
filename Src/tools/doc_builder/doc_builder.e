@@ -120,6 +120,7 @@ feature {NONE} -- Initialization
 		do
 			create l_exceptions
 			create l_dialog
+			l_dialog.set_summary (l_exceptions.recipient_name + " in class " + l_exceptions.original_class_name)
 			l_dialog.set_exception_type (l_exceptions.meaning (l_exceptions.exception))
 			l_dialog.set_exception_trace (l_exceptions.exception_trace)
 			l_dialog.show_modal_to_window (interface)

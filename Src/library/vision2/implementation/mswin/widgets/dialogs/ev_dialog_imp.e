@@ -409,6 +409,7 @@ feature {NONE} -- Implementation
 			rubber_band_is_drawn := other_imp.rubber_band_is_drawn
 			scroller := other_imp.scroller
 			shared := other_imp.shared
+			show_actions_internal := other_imp.show_actions_internal
 			upper_bar := other_imp.upper_bar
 			user_can_resize := other_imp.user_can_resize
 			user_interface_mode := other_imp.user_interface_mode

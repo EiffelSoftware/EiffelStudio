@@ -40,20 +40,6 @@ feature -- Access
 			Result := focus_string /= Void	
 		end;
 
-feature -- Setting
-
-	popdown is
-			-- Pop down `fcous_label'.
-		do
-			focus_label.popdown
-		end;
-
-	popup is
-			-- Pop up `focus_label'.
-		do
-			focus_label.popup
-		end;
-
 feature {NONE} -- Implementation
 
 	focus_label: FOCUS_LABEL_I is

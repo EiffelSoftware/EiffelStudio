@@ -922,9 +922,6 @@ feature -- Concrete evaluation
 			at: TYPE_A
 			par: INTEGER
 			rout_info: ROUT_INFO
-
-			l_ref_type: CL_TYPE_I
---			l_icd_value: ICOR_DEBUG_VALUE
 		do
 			debug ("debugger_trace_eval")
 				print (generating_type + ".evaluate_function :%N")
@@ -946,10 +943,7 @@ feature -- Concrete evaluation
 				l_dynclass := tmp_target.dynamic_class
 			end
 			if l_dynclass /= Void and then l_dynclass.is_basic then
-					-- FIXME JFIAT: basic types ..
-				create l_ref_type.make (l_dynclass.class_id)
-				l_dyntype := l_ref_type.associated_class_type
---				l_dyntype := l_dynclass.types.first
+				l_dyntype := associated_reference_class_type (l_dynclass)
 			elseif l_dynclass = Void or else l_dynclass.types.count > 1 then
 				if a_addr /= Void then
 						-- The type has generic derivations: we need to find the precise type.
@@ -1051,7 +1045,7 @@ feature -- Concrete evaluation
 					tmp_result_value := dbg_evaluator.dotnet_evaluate_function (a_addr, a_target, realf.associated_feature_i, l_dyntype, l_params)
 					if tmp_result_value = Void then
 						error_message := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name
-						if on_object then
+						if on_object and a_addr /= Void then
 							error_message.append_string (" on <" + a_addr + ">")
 						end
 --| FIXME JFIAT 2004/06/04 : this is not the reason, check how to get more information
@@ -1446,5 +1440,20 @@ feature {NONE} -- Dump value helpers
 		do
 			create Result.make_double (v, system.double_class.compiled_class)						
 		end		
+
+feature {NONE} -- compiler helpers
+
+	associated_reference_class_type (cl: CLASS_C): CLASS_TYPE is
+			-- Associated _REF classtype for type `cl'
+			--| for instance return INTEGER_REF for INTEGER
+		local
+			l_ref_type: CL_TYPE_I
+			l_class_c: CLASS_C
+		do
+				-- FIXME JFIAT: find better way to handle _REF basic types ..
+			l_class_c := cl.parents_classes.first
+			create l_ref_type.make (l_class_c.class_id)
+			Result := l_ref_type.associated_class_type
+		end
 
 end -- class DBG_EXPRESSION_EVALUATOR_B

@@ -191,4 +191,36 @@ feature -- Basic operations
 			a_dialog.prune_all (button)
 		end
 
+	expand_tree_recursive (tree: EV_TREE) is
+			-- Ensure that every node of `tree' is expanded.
+		do
+			tree.recursive_do_all (agent expand_node)
+		end
+		
+	collapse_tree_recursive (tree: EV_TREE) is
+			-- Ensure that every node of `tree' is not epanded.
+		do
+			tree.recursive_do_all (agent collapse_node)
+		end
+
+feature {NONE} -- Implementation
+
+	expand_node (node: EV_TREE_NODE) is
+			-- Expand `node' if permitted.
+		do
+			if node.is_expandable and not node.is_expanded then
+				node.expand
+			end
+		ensure
+			node_expanded: node.is_expandable implies node.is_expanded
+		end
+		
+	collapse_node (node: EV_TREE_NODE) is
+			-- Collapse `node' if not empty.
+		do
+			if node.is_expanded then
+				node.collapse
+			end
+		end
+
 end -- class GB_UTILITIES

@@ -8,16 +8,16 @@ iff "%@SEARCH[WfWI.exe]" == "" then
 endiff
 
 remtrace Compile the installation executable
-WfWI "D:\Installations\Eiffel52\base_libraries.wsm" /c
-WfWI "D:\Installations\Eiffel52\borland.wsm" /c
-WfWI "D:\Installations\Eiffel52\build.wsm" /c
-WfWI "D:\Installations\Eiffel52\c_library.wsm" /c
-WfWI "D:\Installations\Eiffel52\dotnet.wsm" /c
-WfWI "D:\Installations\Eiffel52\eiffelcom.wsm" /c
-WfWI "D:\Installations\Eiffel52\enterprise_studio.wsm" /c
-WfWI "D:\Installations\Eiffel52\free_studio.wsm" /c
-WfWI "D:\Installations\Eiffel52\graphical_libraries.wsm" /c
-WfWI "D:\Installations\Eiffel52\studio_core.wsm" /c
+WfWI "D:\Installations\Eiffel53\base_libraries.wsm" /c
+WfWI "D:\Installations\Eiffel53\borland.wsm" /c
+WfWI "D:\Installations\Eiffel53\build.wsm" /c
+WfWI "D:\Installations\Eiffel53\c_library.wsm" /c
+WfWI "D:\Installations\Eiffel53\dotnet.wsm" /c
+WfWI "D:\Installations\Eiffel53\eiffelcom.wsm" /c
+WfWI "D:\Installations\Eiffel53\enterprise_studio.wsm" /c
+WfWI "D:\Installations\Eiffel53\free_studio.wsm" /c
+WfWI "D:\Installations\Eiffel53\graphical_libraries.wsm" /c
+WfWI "D:\Installations\Eiffel53\studio_core.wsm" /c
 
 cdd %INSTALL_DIR
 mkdir setups
@@ -27,19 +27,19 @@ mkdir setups\Free
 mkdir setups\Free\setup
 
 remtrace Preparing Enterprise edition
-WfWI "D:\Installations\Eiffel52\Eiffel5.wsi" /c /p FREEVERSION="FALSE"
+WfWI "D:\Installations\Eiffel53\Eiffel5.wsi" /c /p FREEVERSION="FALSE"
 move setup.exe setups\Enterprise
-copy D:\Installations\Eiffel52\Eiffel52_enterprise.exe setups\Enterprise\setup\install.exe
-copy D:\Installations\Eiffel52\Eiffel52_enterprise.ini setups\Enterprise\setup\install.ini
-copy D:\Installations\Eiffel52\Eiffel52_enterprise.msi setups\Enterprise\setup\
+copy D:\Installations\Eiffel53\Eiffel53.exe setups\Enterprise\setup\install.exe
+copy D:\Installations\Eiffel53\Eiffel53.ini setups\Enterprise\setup\install.ini
+copy D:\Installations\Eiffel53\Eiffel53.msi setups\Enterprise\setup\
 copy %INSTALL_DIR\studio\bitmaps\png\logo.png %INSTALL_DIR\setups\Enterprise\setup\install_logo.png
 copy %INSTALL_DIR\studio\bitmaps\png\activation.png %INSTALL_DIR\setups\Enterprise\setup\install_left.png
 
 remtrace Preparing Free edition
-WfWI "D:\Installations\Eiffel52\Eiffel5.wsi" /c /p FREEVERSION="TRUE"
-copy D:\Installations\Eiffel52\Eiffel52_single.exe setups\Free\setup\
-copy D:\Installations\Eiffel52\Eiffel52.exe setups\Free\setup\
-copy D:\Installations\Eiffel52\Eiffel52.ini setups\Free\setup\
-copy D:\Installations\Eiffel52\Eiffel52.msi setups\Free\setup\
+WfWI "D:\Installations\Eiffel53\Eiffel5.wsi" /c /p FREEVERSION="TRUE"
+copy D:\Installations\Eiffel53\Eiffel53.exe setups\Free\setup\
+copy D:\Installations\Eiffel53\Eiffel53.exe setups\Free\setup\
+copy D:\Installations\Eiffel53\Eiffel53.ini setups\Free\setup\
+copy D:\Installations\Eiffel53\Eiffel53.msi setups\Free\setup\
 
 remtrace Your deliveries are now ready

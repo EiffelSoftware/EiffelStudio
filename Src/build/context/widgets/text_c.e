@@ -3,21 +3,10 @@ class TEXT_C
 inherit
 
 	PRIMITIVE_C
-		rename
-			copy_attributes as old_copy_attributes,
-			reset_modified_flags as old_reset_modified_flags
-		redefine
-			stored_node, is_fontable, context_initialization,
-			widget, eiffel_creation
-		end;
-
-	PRIMITIVE_C
 		redefine
 			stored_node, reset_modified_flags, copy_attributes, 
 			is_fontable, context_initialization, widget,
-			eiffel_creation
-		select
-			copy_attributes, reset_modified_flags
+			eiffel_creation, display_resize_squares
 		end
 	
 feature 
@@ -54,6 +43,25 @@ feature -- Default event
 	default_event: TEXT_MODIFIED_EV is
 		do
 			Result := text_modify_ev
+		end
+
+feature {SELECTION_MANAGER}
+
+	display_resize_squares (logical_mode: INTEGER) is
+			-- Draw squares in the corners of the context, used to resize it.
+		local
+			x_position, y_position, corner_side: INTEGER
+			previous_logical_mode: INTEGER
+		do
+			set_drawing (eb_screen)
+			previous_logical_mode := drawing_i.logical_mode
+			set_logical_mode (logical_mode)
+			set_subwindow_mode (1)
+			corner_side := Eb_selection_mgr.corner_side // 2
+			x_position := real_x + corner_side // 2
+			y_position := real_y + corner_side // 2
+			draw_squares (x_position, y_position)
+			set_logical_mode (previous_logical_mode)
 		end
 
 feature {NONE}
@@ -217,7 +225,7 @@ feature
 
 	reset_modified_flags is
 		do
-			old_reset_modified_flags;
+			Precursor
 			max_size_modified := False;
 			read_only_modified := False;
 			word_wrap_modified := False;
@@ -250,7 +258,7 @@ feature {NONE, TEXT_C}
 			if width_resizable_modified then
 				other_context.enable_resize_width (is_width_resizable);
 			end;
-			old_copy_attributes (other_context);
+			Precursor (other_context);
 		end;
 
 	

@@ -33,7 +33,7 @@ feature -- Initialization
 			create tst.make_with_item ("EV_TREE_ITEM", create {EV_TREE_ITEM},
 				create {EV_TREE})
 			tests.extend (tst)
-			create tst.make_with_item ("EV_STATUS_BAR_ITEM",
+			create tst.make_with_widget ("EV_STATUS_BAR_ITEM",
 				create {EV_STATUS_BAR_ITEM},
 				create {EV_STATUS_BAR})
 			tests.extend (tst)

@@ -59,7 +59,9 @@
 #define FS_END		2			/* End of file for `fseek' */
 #define ST_MODE		0x0fff		/* Keep only permission mode */
 #define NAME_MAX	10			/* Maximum length for user/group name */
+#ifndef PATH_MAX
 #define PATH_MAX	512			/* Maximum length of full path name */
+#endif
 
 private char *file_fopen();		/* Open file */
 private char *file_fdopen();	/* Open file descriptor (UNIX specific) */

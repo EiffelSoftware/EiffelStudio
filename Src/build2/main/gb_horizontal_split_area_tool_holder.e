@@ -39,6 +39,10 @@ feature -- Basic operation
 	minimize_tool (tool_holder: GB_TOOL_HOLDER) is
 			-- Minimize `tool_holder'.
 		do
+			if tool_holder.maximized then
+				tool_holder.disable_maximized
+				tool_holder.reset_maximize_button
+			end
 			if tool_holder.minimized then
 				set_split_position (restore_position.min (maximum_split_position))
 			else
@@ -51,6 +55,10 @@ feature -- Basic operation
 	maximize_tool (tool_holder: GB_TOOL_HOLDER) is
 			-- Maximize `tool_holder'.
 		do
+			if tool_holder.minimized then
+				tool_holder.disable_minimized
+				tool_holder.reset_minimize_button
+			end
 			if tool_holder.maximized then
 				set_split_position (restore_position.min (maximum_split_position))
 			else

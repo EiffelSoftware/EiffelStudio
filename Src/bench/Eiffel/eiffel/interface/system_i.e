@@ -2247,6 +2247,8 @@ feature -- Final mode generation
 					j > nb
 				loop
 					a_class := class_array.item (j)
+						-- Since a class can be removed, test if `a_class'
+						-- is not Void.
 					if a_class /= Void then
 						deg_output.put_degree_minus_4 (a_class, i)
 						a_class.process_polymorphism
@@ -2293,6 +2295,8 @@ feature -- Final mode generation
 					i > nb
 				loop
 					a_class := class_array.item (i)
+						-- Since a class can be removed, test if `a_class´
+						-- is not Void.
 					if a_class /= Void then
 						deg_output.put_degree_minus_5 (a_class, j)
 						current_class := a_class
@@ -2741,10 +2745,30 @@ end
 				-- as `class_types'
 			cltype_array: ARRAY [CLASS_TYPE]
 			local_classes: CLASS_C_SERVER
-	--		skeleton_file: INDENT_FILE
+			header_file: INDENT_FILE
 		do
 			nb := Type_id_counter.value
 			final_mode := byte_context.final_mode
+
+			if final_mode then
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					if class_types.item (i) /= Void then
+						-- FIXME
+						class_types.item (i).skeleton.make_extern_declarations
+					end
+					i := i + 1
+				end
+
+				!! header_file.make_open_write (final_file_name (Eskelet, Dot_h))
+				Extern_declarations.generate_header (header_file)
+				Extern_declarations.generate (header_file)
+				header_file.close
+				Extern_declarations.wipe_out
+			end
 
 				-- Open skeleton file
 			Skeleton_file := Skeleton_f (final_mode)
@@ -2752,27 +2776,12 @@ end
 
 			Skeleton_file.putstring ("#include %"eif_project.h%"%N%
 									 %#include %"eif_struct.h%"%N")
+
 			if final_mode then
 				Skeleton_file.putstring ("#include %"")
 				Skeleton_file.putstring (Eskelet)
 				Skeleton_file.putstring (Dot_h)
 				Skeleton_file.putstring ("%"%N%N")
-				from
-					i := 1
-				until
-					i > nb
-				loop
-
-					if class_types.item (i) /= Void then
-						-- FIXME
-						class_types.item (i).skeleton.make_extern_declarations
-					end
-
-					i := i + 1
-				end
-				Extern_declarations.generate_header (final_file_name (Eskelet, Dot_h))
-				Extern_declarations.generate (final_file_name (Eskelet, Dot_h))
-				Extern_declarations.wipe_out
 			else
 					-- Hash table extern declaration in workbench mode
 				Skeleton_file.putstring ("#include %"eif_macros.h%"%N")
@@ -2951,6 +2960,7 @@ end
 			f_name: FILE_NAME
 			dir_name: DIRECTORY_NAME
 			local_classes: CLASS_C_SERVER
+			header_file: INDENT_FILE
 		do
 			final_mode := byte_context.final_mode
 
@@ -2995,8 +3005,10 @@ end
 				end
 				!!f_name.make_from_string (dir_name)
 				f_name.set_file_name ("ececil.h")
-				Extern_declarations.generate_header (f_name)
-				Extern_declarations.generate (f_name)
+				!! header_file.make_open_write (f_name)
+				Extern_declarations.generate_header (header_file)
+				Extern_declarations.generate (header_file)
+				header_file.close
 				Extern_declarations.wipe_out
 				Cecil_file.putstring ("%Nstruct ctable egc_ce_rname_init[] = {%N")
 				from

@@ -686,12 +686,12 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		local
-			log_font: WEL_LOG_FONT
+			l_font: WEL_FONT
 		do
-			log_font := wel_font.log_font
+			l_font := (create {WEL_SHARED_FONTS}).gui_font
 			ev_set_minimum_size (
-				log_font.width.abs * 20 + 7, -- 20 characters wide
-				log_font.height.abs	* 5 + 7	 -- 5 characters tall
+				l_font.width.abs * 20 + 7, -- 20 characters wide
+				l_font.height.abs	* 5 + 7	 -- 5 characters tall
 				)
 		end
 

@@ -505,12 +505,12 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		local
-			log_font: WEL_LOG_FONT
+			l_font: WEL_FONT
 		do
-			log_font := wel_font.log_font
+			l_font := (create {WEL_SHARED_FONTS}).gui_font
 			ev_set_minimum_size (
-				log_font.width.abs * 15 + 7, -- 15 characters wide
-				log_font.height.abs	* 3 + 7	 -- 3 characters tall
+				l_font.width.abs * 15 + 7, -- 15 characters wide
+				l_font.height.abs	* 3 + 7	 -- 3 characters tall
 				)
 		end
 

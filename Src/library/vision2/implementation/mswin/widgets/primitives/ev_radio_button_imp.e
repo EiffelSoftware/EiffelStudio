@@ -125,9 +125,13 @@ feature -- Status setting
 				-- This extra width only needs to be added if
 				-- we are using a large font, hence we do nothing
 				-- with the system font.
-			if not has_system_font and not text.is_empty then
-				extra_width := 20 + wel_font.height // 2
-			end
+ 			if not has_system_font and not text.is_empty then
+ 				if private_font /= Void then
+ 					extra_width := 20 + private_font.implementation.height // 2
+ 				else
+ 					extra_width := 20 + private_wel_font.height // 2
+ 				end
+ 			end
 			Precursor {EV_BUTTON_IMP}
 		end
 

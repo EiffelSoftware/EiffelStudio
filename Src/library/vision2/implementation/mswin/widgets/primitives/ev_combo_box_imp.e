@@ -209,7 +209,11 @@ feature -- Status report
 	item_height: INTEGER is
 			-- height required by an item.
 		do
-			Result := wel_font.log_font.height
+			if private_font /= Void then
+				Result := private_font.implementation.height
+			else
+				Result := private_wel_font.height
+			end
 		end
 
 	is_selected (an_id: INTEGER): BOOLEAN is

@@ -31,19 +31,19 @@ feature {NONE}
 
 	call_back is
 			-- Call the command.
+		require	
+			valid_command: command /= Void
 		local
 			command_clone: COMMAND;
 			context_data: CONTEXT_DATA
 		do
-			if not (command = Void) then
-				if command.is_template then
-					command_clone := clone (command)
-				else
-					command_clone := command
-				end;
-				command_clone.set_context_data (context_data);
-				command_clone.execute (argument)
+			if command.is_template then
+				command_clone := clone (command)
+			else
+				command_clone := command
 			end;
+			command_clone.set_context_data (context_data);
+			command_clone.execute (argument)
 		end;
 
 	command: COMMAND;
@@ -59,7 +59,9 @@ feature
 		
 		do
 			c_data := c_timer_create (an_application_context, Current, $call_back);
-			call_back
+			if false then
+				call_back
+			end
 		end; 
 
 	is_call_back_set: BOOLEAN is
@@ -73,7 +75,6 @@ feature
 			-- Is the call back set a regular one ?
 		require else
 			is_call_back_set
-		
 		do
 			Result := c_tmr_is_rglr_call_back (c_data)
 		end; 
@@ -119,9 +120,37 @@ feature
 			argument := an_argument
 		ensure then
 			is_call_back_set and is_regular_call_back
+		end;
+
+	destroy is
+			-- Free `c_data' C structure.
+		local
+			null_pointer: POINTER
+		do
+			check
+				not_freed: c_data /= null_pointer
+			end;
+			c_free_timer (c_data);
+			c_data := null_pointer;
+		ensure then
+			is_data_freed: is_data_freed
 		end
+		
+	is_data_freed: BOOLEAN is
+			-- Is `c_data' freed ?
+		local
+			null_pointer: POINTER
+		do
+			Result := null_pointer = c_data
+		end;
+	
 
 feature {NONE} -- External features
+
+	c_free_timer (data: POINTER) is
+		external
+			"C"
+		end;
 
 	c_timer_create (contxt: POINTER; obj: TIMER_X; cb: POINTER): POINTER is
 		external

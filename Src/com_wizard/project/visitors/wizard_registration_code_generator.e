@@ -18,7 +18,9 @@ feature  -- Initialization
 			c_writer := Void
 			type_library_name := Void
 			coclass_guid := Void
+			type_library_guid := Void
 		ensure
+			type_library_guid = Void
 			void_writer: c_writer = Void
 			void_coclass_guid: coclass_guid = Void
 			void_type_library_name: type_library_name = Void
@@ -38,6 +40,8 @@ feature -- Basic operations
 			coclass_guid := clone (coclass_descriptor.guid.to_string)
 
 			type_library_name := coclass_descriptor.type_library_descriptor.name
+
+			type_library_guid := coclass_descriptor.type_library_descriptor.guid.to_string
 
 			create c_writer.make
 
@@ -143,6 +147,9 @@ feature {NONE} -- Access
 
 	type_library_name: STRING
 			-- Name of type library the coclass is in
+
+	type_library_guid: STRING
+			-- Type library's guid
 
 feature {NONE} -- Implementation
 
@@ -1066,10 +1073,185 @@ feature {NONE} -- Implementation
 			string_two.append (One)
 
 			Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
-			Result.append (Comma)
-			Result.append (New_line)
+
+			if shared_wizard_environment.use_universal_marshaller then
+				Result.append (universal_marshaling_registration_code)
+			else
+				Result.append (standard_marshaling_registration_code)
+			end
+
 			Result.append (Close_curly_brace)
 			Result.append (Semicolon)
+		end
+
+	universal_marshaling_registration_code: STRING is
+		require
+			non_void_descriptor: coclass_descriptor /= Void
+		do
+			create Result.make (0)
+			from
+				coclass_descriptor.interface_descriptors.start
+			until
+				coclass_descriptor.interface_descriptors.off
+			loop
+				Result.append (universal_marshaling_interface_registration_code (coclass_descriptor.interface_descriptors.item))
+				coclass_descriptor.interface_descriptors.forth
+			end
+		end
+
+	universal_marshaling_interface_registration_code (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+		require
+			non_void_descriptor: interface_descriptor /= Void
+		local
+			string_one, string_two, tmp_guid: STRING
+		do
+			tmp_guid := clone (interface_descriptor.guid.to_string)
+
+			string_one := clone (Interface)
+			string_one.append (Registry_field_seperator)
+			string_one.append (tmp_guid)
+
+			Result := clone (Comma)
+			Result.append (New_line_tab)
+			Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (interface_descriptor.c_type_name), C_true))
+
+			string_one.append (Registry_field_seperator)
+
+			string_two := clone (string_one)
+			string_two.append (Proxy_stub_clsid_32)
+
+			Result.append (Comma)
+			Result.append (New_line_tab)
+			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (Automation_marshaler_guid), C_true))
+
+			string_two := clone (string_one)
+			string_two.append (Type_library)
+
+			Result.append (Comma)
+			Result.append (New_line_tab)
+			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (type_library_guid), C_true))
+
+			string_two := clone (string_one)
+			string_two.append (Num_methods)
+
+			Result.append (Comma)
+			Result.append (New_line_tab)
+			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (interface_descriptor.functions.count.out), C_true))
+
+			if not interface_descriptor.inherited_interface.c_type_name.is_equal (Iunknown_type) and 
+					not interface_descriptor.inherited_interface.c_type_name.is_equal (Idispatch_type) then
+				Result.append (universal_marshaling_interface_registration_code (interface_descriptor.inherited_interface))
+			end
+		end
+
+	standard_marshaling_registration_code: STRING is
+			-- Registration code for standard marshalling
+		require
+			non_void_descriptor: coclass_descriptor /= Void
+		local
+			string_one, string_two, tmp_file_name: STRING
+			new_guid: ECOM_GUID
+			counter: INTEGER
+		do
+			create Result.make (0)
+
+			-- Register interfaces
+			from
+				coclass_descriptor.interface_descriptors.start
+			until
+				coclass_descriptor.interface_descriptors.off
+			loop
+				Result.append (standard_marshaling_interface_registration_code (coclass_descriptor.interface_descriptors.item))
+				coclass_descriptor.interface_descriptors.forth
+			end
+
+			-- Register proxy and stub dll
+			create new_guid.make
+			new_guid.generate
+
+			string_one := clone (Clsid_type)
+			string_one.append (Registry_field_seperator)
+			string_one.append (new_guid.to_string)
+
+			Result.append (Comma)
+			Result.append (New_line_tab)
+			Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator ("Proxy/Stub "), C_true))
+
+			string_one.append (Registry_field_seperator)
+			string_one.append (Inproc_server32)
+
+			tmp_file_name := shared_wizard_environment.proxy_stub_file_name
+			create string_two.make (0)
+			from
+				counter := 1
+			until
+				counter > tmp_file_name.count
+			loop
+				if tmp_file_name.item (counter).is_equal ('\') then
+					string_two.append (Registry_field_seperator)
+				else
+					string_two.append_character (tmp_file_name.item (counter))
+				end
+
+				counter := counter + 1
+			end
+				
+
+			Result.append (Comma)
+			Result.append (New_line_tab)
+			Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
+
+			Result.append (Comma)
+			Result.append (New_line_tab)
+			Result.append (struct_creator (tchar_creator (string_one), tchar_creator ("ThreadingModel"), tchar_creator ("Both"), C_true))
+		end
+
+	standard_marshaling_interface_registration_code (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+			-- Registration code for interface
+		require
+			non_void_descriptor: interface_descriptor /= Void
+		local
+			tmp_guid, string_one, string_two: STRING
+		do
+			tmp_guid := clone (interface_descriptor.guid.to_string)
+
+			string_one := clone (Interface)
+			string_one.append (Registry_field_seperator)
+			string_one.append (tmp_guid)
+
+			Result := clone (Comma)
+			Result.append (New_line_tab)
+			Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (interface_descriptor.c_type_name), C_true))
+
+			string_one.append (Registry_field_seperator)
+
+			string_two := clone (string_one)
+			string_two.append (Proxy_stub_clsid_32)
+
+			Result.append (Comma)
+			Result.append (New_line_tab)
+			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (tmp_guid), C_true))
+
+			string_two := clone (string_one)
+			string_two.append (Type_library)
+
+			Result.append (Comma)
+			Result.append (New_line_tab)
+			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (type_library_guid), C_true))
+
+			string_two := clone (string_one)
+			string_two.append (Num_methods)
+
+			Result.append (Comma)
+			Result.append (New_line_tab)
+			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (interface_descriptor.functions.count.out), C_true))
+
+			if not interface_descriptor.inherited_interface.c_type_name.is_equal (Iunknown_type) and 
+					not interface_descriptor.inherited_interface.c_type_name.is_equal (Idispatch_type) then
+				Result.append (standard_marshaling_interface_registration_code (interface_descriptor.inherited_interface))
+			end
+
+
 		end
 
 	struct_creator (first_field, second_field, third_field, forth_field: STRING): STRING is

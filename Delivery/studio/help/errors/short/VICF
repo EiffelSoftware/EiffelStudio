@@ -1,0 +1,3 @@
+Warning: Could not copy file.
+What to do: Ensure that the source file exists and that it can be copied to
+    to its destination, and then copy the file manually or recompile.

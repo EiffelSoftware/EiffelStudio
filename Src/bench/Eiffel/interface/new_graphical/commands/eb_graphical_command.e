@@ -8,6 +8,11 @@ deferred class
 
 inherit
 	EB_COMMAND
+	
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
 
 feature -- Status report
 

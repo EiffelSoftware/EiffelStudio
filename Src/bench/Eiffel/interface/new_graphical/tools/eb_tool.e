@@ -26,6 +26,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 

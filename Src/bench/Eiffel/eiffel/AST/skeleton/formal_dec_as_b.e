@@ -8,7 +8,7 @@ inherit
 
 	FORMAL_AS
 		redefine
-			set, format
+			set, format, is_deep_equal
 		end
 
 feature -- Attributes
@@ -30,6 +30,26 @@ feature -- Initialization
 		ensure then
 			formal_name_exists: formal_name /= Void
 		end; 
+
+	is_deep_equal (other: TYPE): BOOLEAN is
+		local
+			o: FORMAL_DEC_AS;
+			o_c: TYPE;
+		do
+			o ?= other;
+			Result := o /= Void and then
+				formal_name.is_equal (o.formal_name) and then
+				position = o.position;
+			if Result then
+				o_c := o.constraint;
+				if constraint = Void then
+					Result := o_c = Void
+				else
+					Result := o_c /= Void and then
+						constraint.is_deep_equal (o_c)
+				end;
+			end;
+		end;
 
 	constraint_type: TYPE_A is
 			-- Actual type of the constraint.

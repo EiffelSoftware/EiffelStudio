@@ -23,4 +23,13 @@ feature
 			id := i
 		end;
 
+	trace is
+		do
+			io.error.putstring ("SERVER_INFO%Nposition: ");
+			io.error.putint (position);
+			io.error.putstring ("%Nid: ");
+			io.error.putint (id);
+			io.error.new_line;
+		end;
+
 end

@@ -8,7 +8,7 @@ inherit
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
 			is_basic, instantiated_in, same_as, is_like_current,
-			meta_type
+			meta_type, is_deep_equal
 		end
 
 feature -- Attributes
@@ -122,6 +122,17 @@ feature -- Primitives
 			Result := other.is_like_current
 		end;
 
+	is_deep_equal (other: TYPE): BOOLEAN is
+		local
+			like_c: LIKE_CURRENT
+		do
+			like_c ?= other;
+			Result := like_c /= Void and then
+				like_c.base_type = base_type and then
+				like_c.actual_type.is_deep_equal (actual_type);
+		end;
+
+			
 	create_info: CREATE_CURRENT is
 			-- Byte code information for entity type creation
 		once

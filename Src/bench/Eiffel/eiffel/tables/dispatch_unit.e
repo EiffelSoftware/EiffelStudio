@@ -60,4 +60,16 @@ feature
 			Result := real_body_id <= System.frozen_level;
 		end;
 
+feature -- debug
+
+	trace is
+		do
+			io.error.putstring (generator);
+			io.error.putstring ("%NBody_index: ");
+			io.error.putint (body_index);
+			io.error.putstring ("%Nreal_body_index: ");
+			io.error.putint (real_body_index);
+			io.error.new_line;
+		end;
+
 end

@@ -34,6 +34,14 @@ feature
 		do
 				-- First write the count of the byte code table
 			write_int (file.file_pointer, counter - frozen_level);
+debug
+	io.error.putstring ("Updating execution_table%NCount: ");
+	io.error.putint (counter-frozen_level);
+	io.error.new_line;
+	io.error.putstring ("Frozen level: ");
+	io.error.putint (frozen_level);
+	io.error.new_line;
+end;
 
 			from
 				melted_list.start
@@ -57,6 +65,9 @@ feature
 					write_int (file.file_pointer, e.real_pattern_id);
 						-- Write the byte code
 					melted_feature.store (file);
+debug
+	io.error.putstring ("Item written%N");
+end;
 
 					melted_list.forth;
 				else

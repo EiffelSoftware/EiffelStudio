@@ -466,7 +466,11 @@ feature -- Third pass: byte code production and type check
 			invar_byte: INVARIANT_B;
 			invariant_changed: BOOLEAN;
 			inv_melted_info: INV_MELTED_INFO;
+
 			new_body_id: INTEGER;
+			old_body_id: INTEGER;
+			changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, INTEGER];
+			changed_body_id_info: CHANGED_BODY_ID_INFO
 		do
 				-- Verbose
 			io.error.putstring ("Degree 3: class ");
@@ -476,9 +480,11 @@ feature -- Third pass: byte code production and type check
 			io.error.new_line;
 
 			from
+				system.changed_body_ids.clear_all
+
 					-- Initialization for actual types evaluation
 				Inst_context.set_cluster (cluster);
-
+				
 					-- For a changed class, the supplier list has
 					-- to be updated
 				if Tmp_depend_server.has (id) then
@@ -885,6 +891,30 @@ end;
 			if Rescue_status.is_error_exception then
 					-- Clean context if error
 				ast_context.clear2;
+					-- Undo the `change_body_id' calls
+				from
+					changed_body_ids := system.changed_body_ids;
+					changed_body_ids.start
+				until
+					changed_body_ids.after
+				loop
+					changed_body_id_info := changed_body_ids.item_for_iteration;
+					old_body_id := changed_body_ids.key_for_iteration;
+					new_body_id := changed_body_id_info.new_body_id;
+						-- Undo
+					if not changed_body_id_info.is_code_replicated then
+						Body_server.change_id (old_body_id, new_body_id);
+					else
+						Rep_feat_server.change_id (old_body_id, new_body_id);
+					end;
+					Byte_server.change_id (old_body_id, new_body_id);
+					System.Body_index_table.force (old_body_id, changed_body_id_info.body_index);
+					System.onbidt.undo_put (old_body_id, new_body_id);
+
+					
+					changed_body_ids.forth;
+				end;
+
 					-- Clean the caches if error
 -- FIXME
 -- can we loose some of the information in the cache ?????
@@ -2204,7 +2234,7 @@ feature -- Supplier checking
 						error := False;
 					when 1 then
 						arg_type ?= creation_proc.arguments.first;
-						error := not deep_equal (arg_type, Array_of_string);
+						error := not arg_type.is_deep_equal (Array_of_string);
 					else
 						error := True;
 					end;

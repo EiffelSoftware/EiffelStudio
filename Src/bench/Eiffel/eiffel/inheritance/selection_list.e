@@ -173,7 +173,7 @@ end;
 				end;
 				written_type := written_type.instantiation_in
 													(instantiator, written_id);
-				Result := deep_equal (to_compair, written_type);
+				Result := written_type.is_deep_equal (to_compair);
 				forth;
 			end;
 			go_i_th (pos);

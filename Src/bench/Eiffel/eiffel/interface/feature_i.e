@@ -277,7 +277,7 @@ end;
 						and then
 						body_index = other.body_index
 						and then
-						deep_equal (type, other.type);
+						type.is_deep_equal (other.type);
 		end;
 
 	is_valid: BOOLEAN is
@@ -773,6 +773,7 @@ feature -- Byte code computation
 			--| cnaged even if not syntactically changed.
 		local
 			new_body_id, old_body_id: INTEGER;
+			changed_body_id_info: CHANGED_BODY_ID_INFO
 		do
 			old_body_id := body_id;
 			new_body_id := System.body_id_counter.next;
@@ -797,6 +798,8 @@ end;
 				-- Update the body index table
 			Body_index_table.force (new_body_id, body_index);
 			System.onbidt.put (new_body_id, old_body_id);
+			!!changed_body_id_info.make (is_code_replicated, body_index, new_body_id);
+			System.changed_body_ids.force (changed_body_id_info, old_body_id)
 		end;
 	
 feature -- Polymorphism
@@ -1272,7 +1275,7 @@ end;
 				-- `new_type' is the actual type of the join already
 				-- instantiated
 			new_type ?= type;
-			if not deep_equal (new_type, old_type) then
+			if not new_type.is_deep_equal (old_type) then
 				!!vdjr1;
 				vdjr1.init (old_feature, Current);
 				vdjr1.set_type (new_type);
@@ -1297,7 +1300,7 @@ end;
 				loop
 					old_type ?= old_arguments.i_th (i);
 					new_type ?= arguments.i_th (i);
-					if not deep_equal (new_type, old_type) then
+					if not new_type.is_deep_equal (old_type) then
 						!!vdjr2;
 						vdjr2.init (old_feature, Current);
 						vdjr2.set_type (new_type);
@@ -1329,7 +1332,7 @@ end;
 		local
 			i, nb: INTEGER;
 		do
-			Result := deep_equal (type, other.type);
+			Result := type.is_deep_equal (other.type);
 			from
 				nb := argument_count;
 				Result := Result and then nb = other.argument_count;
@@ -1338,8 +1341,7 @@ end;
 			until
 				i > nb or else not Result
 			loop
-				Result := deep_equal (arguments.i_th (i),
-											other.arguments.i_th (i));
+				Result := arguments.i_th (i).is_deep_equal (other.arguments.i_th (i));
 				i := i + 1;
 			end;
 		end;

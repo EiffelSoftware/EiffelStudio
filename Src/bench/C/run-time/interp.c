@@ -29,7 +29,7 @@
 #include <math.h>
 
 /*#define DEBUG 1	/**/
-#define TEST
+/*#define TEST /**/
 #ifdef TEST
 #include <stdio.h>
 #endif

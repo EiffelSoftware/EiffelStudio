@@ -86,7 +86,7 @@ feature
 					-- register (which can't be a pointer, otherwise it would
 					-- have been handled by the first "if").
 				if not is_in_register and parameters /= Void then
-					pos := parameters.position;
+					pos := parameters.index;
 					from
 						parameters.start;
 					until
@@ -96,7 +96,7 @@ feature
 						Result := expr_b.has_gcable_variable;
 						parameters.forth;
 					end;
-					parameters.go (pos);
+					parameters.go_i_th (pos);
 				end;
 			end;
 		end;
@@ -108,7 +108,7 @@ feature
 			pos: INTEGER;
 		do
 			if parameters /= Void then
-				pos := parameters.position;
+				pos := parameters.index;
 				from
 					parameters.start;
 				until
@@ -118,7 +118,7 @@ feature
 					Result := expr.used(r);
 					parameters.forth;
 				end;
-				parameters.go (pos);
+				parameters.go_i_th (pos);
 			end;
 		end;
 	
@@ -135,7 +135,7 @@ feature
 					-- It is not predefined. If it has parameters, then none
 					-- of them may have a call.
 				if parameters /= Void then
-					pos := parameters.position;
+					pos := parameters.index;
 					from
 						parameters.start;
 					until
@@ -145,7 +145,7 @@ feature
 						Result := not expr_b.has_call;
 						parameters.forth;
 					end;
-					parameters.go (pos);
+					parameters.go_i_th (pos);
 				end;
 			end;
 		end;

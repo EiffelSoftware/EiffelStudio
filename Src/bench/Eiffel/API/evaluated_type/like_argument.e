@@ -11,7 +11,7 @@ inherit
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
 			is_basic, instantiated_in, same_as, conformance_type, meta_type,
-			is_like_argument
+			is_like_argument, is_deep_equal
 		end;
 	SHARED_LIKE_CONTROLER;
 	SHARED_ARG_TYPES;
@@ -155,6 +155,16 @@ feature -- Primitives
 			Result := 	other_like_arg /= Void
 						and then
 						other_like_arg.position = position
+		end;
+
+	is_deep_equal (other: TYPE): BOOLEAN is
+		local
+			other_like_arg: LIKE_ARGUMENT;
+		do
+			other_like_arg ?= other;
+			Result := other_like_arg /= Void and then
+				other_like_arg.position = position and then
+				other_like_arg.actual_type.is_deep_equal (actual_type)
 		end;
 
 	create_info: CREATE_ARG is

@@ -9,13 +9,17 @@ inherit
 			actual_type as basic_actual_type,
 			solved_type as basic_solved_type,
 			dump as basic_dump,
-			set as basic_set
+			set as basic_set,
+			format as basic_format,
+			is_deep_equal as basic_is_deep_equal
 		end;
 	CLASS_TYPE_AS
 		redefine
-			actual_type, solved_type, dump, set
+			actual_type, solved_type, dump, set, format,
+			is_deep_equal
 		select
-			actual_type, solved_type, dump, set
+			actual_type, solved_type, dump, set, format,
+			is_deep_equal
 		end;
 
 feature
@@ -51,12 +55,27 @@ feature
 			record_exp_dependance (Result.associated_class);
 		end;
 
+	is_deep_equal (other: TYPE): BOOLEAN is
+		local
+			o: EXP_TYPE_AS
+		do
+			o ?= other;
+			Result := o /= Void and then basic_is_deep_equal (other)
+		end;
+
 	dump: STRING is
 			-- Dumped trace
 		do
 			!!Result.make (class_name.count + 9);
 			Result.append ("expanded ");
 			Result.append (basic_dump);
+		end;
+
+	format (ctxt: FORMAT_CONTEXT) is 
+		do
+			ctxt.put_keyword ("expanded");
+			ctxt.put_string (" ");
+			basic_format (ctxt);
 		end;
 
 end

@@ -7,7 +7,7 @@ inherit
 	UN_OLD_B
 		redefine
 			register, set_register,
-			generate, unanalyze,
+			generate, unanalyze, analyze,
 			print_register, free_register
 		end;
 	
@@ -57,6 +57,11 @@ feature
 		do
 			expr.unanalyze;
 			set_register (void_reg);
+		end;
+
+	analyze is
+			-- Do nothing
+		do
 		end;
 
 	generate is

@@ -4,7 +4,8 @@ inherit
 
 	BASIC_TYPE
 		redefine
-			set, append_clickable_signature, format
+			set, append_clickable_signature, format,
+			is_deep_equal
 		end
 
 feature -- Attributes
@@ -20,6 +21,15 @@ feature -- Initialization
 			bits_symbol ?= yacc_arg (0);
 		ensure then
 			bits_symbol_exists: bits_symbol /= Void
+		end;
+
+	is_deep_equal (other: TYPE): BOOLEAN is
+		local
+			o: BITS_SYMBOL_AS
+		do
+			o ?= other;
+			Result := o /= Void and then
+				bits_symbol.is_equal (o.bits_symbol)
 		end;
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): BITS_SYMBOL_A is

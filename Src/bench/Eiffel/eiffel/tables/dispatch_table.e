@@ -76,6 +76,9 @@ end;
 				if u.is_valid then
 					write_int (file.file_pointer, u.real_body_index - 1);
 					write_int (file.file_pointer, u.real_body_id - 1);
+debug
+	io.error.putstring ("Item written%N");
+end;
 					melted_list.forth;
 				else
 					melted_list.remove;

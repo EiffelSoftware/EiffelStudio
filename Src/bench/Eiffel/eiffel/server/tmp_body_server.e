@@ -13,11 +13,11 @@ inherit
 		export
 			{BODY_SERVER} tbl_item
 		redefine
-			ontable, updated_id
+			ontable, updated_id, trace
 		end;
 	READ_SERVER [FEATURE_AS]
 		redefine
-			clear, make, ontable, updated_id, has
+			clear, make, ontable, updated_id, has, trace
 		select
 			clear, make, has
 		end
@@ -91,6 +91,11 @@ feature
 		local
 			nb: INTEGER;
 		do
+debug
+	io.error.putstring ("TMP_BODY_SERVER.desactivate ");
+	io.error.putint (body_id);
+	io.error.new_line;
+end;
 				-- Check if resizing is needed.
 			nb_useless := nb_useless + 1;
 			nb := useless_body_ids.count;
@@ -106,6 +111,11 @@ feature
 			i: INTEGER;
 			real_id, ubi: INTEGER
 		do
+debug
+	io.error.putstring ("TMP_BODY_SERVER.reactivate ");
+	io.error.putint (body_id);
+	io.error.new_line;
+end;
 			real_id := updated_id (body_id);
 			from
 				i := 1
@@ -126,19 +136,28 @@ feature
 	finalize is
 			-- Finalization after a successfull recompilation.
 		local
-			i, body_id: INTEGER;
+			i, body_id, useless_body_id: INTEGER;
 			read_info: READ_INFO;
 		do
+debug
+	io.error.putstring ("TMP_BODY_SERVER.finalize%N");
+end;
 				-- Desactive useless ids
 			from
 				i := 1;
 			until
 				i > nb_useless
 			loop
-				if (useless_body_ids.item (i) /= -1) then
+				useless_body_id := useless_body_ids.item (i);
+				if (useless_body_id /= -1) then
 						-- Note: `remove' will get the updated id
 						-- before performing the removal.
-					Body_server.remove (useless_body_ids.item (i));
+debug
+	io.error.putstring ("Useless body_id: ");
+	io.error.putint (useless_body_id);
+	io.error.new_line;
+end;
+					Body_server.remove (useless_body_id);
 				end;
 				i := i + 1;
 			end;

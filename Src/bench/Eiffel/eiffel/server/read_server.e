@@ -53,16 +53,16 @@ feature
 			temp: T;
 			real_id: INTEGER
 		do
-            real_id := updated_id (old_value);
+			real_id := updated_id (old_value);
  
-            temp := cache.item_id (real_id);
-            if temp /= Void then
-                temp.set_id (new_value);
-            end;
+			temp := cache.item_id (real_id);
+			if temp /= Void then
+				temp.set_id (new_value);
+			end;
  
-            rf := tbl_item (real_id);
-            tbl_remove (real_id);
-            tbl_put (rf, new_value);
+			rf := tbl_item (real_id);
+			tbl_remove (real_id);
+			tbl_put (rf, new_value);
 		end;
 
 	make is
@@ -138,6 +138,8 @@ feature
 			cache.wipe_out;
 			clear_all;
 		end;
+
+	trace is do end;
 
 feature {NONE}
 

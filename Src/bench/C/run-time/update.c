@@ -176,7 +176,6 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 		enomem();
 
 	while ((body_id = wlong()) != -1) {
-if (body_id < 0 ) {printf (""); }
 		bsize = wlong();
 		pattern_id = wlong();
 if (body_id >= 0)

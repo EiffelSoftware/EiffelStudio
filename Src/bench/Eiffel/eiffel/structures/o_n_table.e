@@ -23,7 +23,13 @@ feature
 			temp: INTEGER;
 			latest_old: INTEGER
 		do
+debug
+	io.error.putstring ("OLD/NEW TABLE put ");
+end;
 			if not has (new_value) then
+debug
+	io.error.putstring ("insert new value%N");
+end;
 				latest_old := item (old_value);
 				force (new_value, latest_old);
 				from
@@ -38,7 +44,50 @@ feature
 					forth
 				end;
 			end;
+debug
+	trace;
+end;
 		end;
+
+	undo_put (old_value, new_value: INTEGER) is
+			-- Undo the cahnges
+			--| We cannot use `put' again because of the
+			--| protection `has'
+		require
+			item (old_value) = new_value
+		local
+			latest_new: INTEGER
+		do
+			latest_new := item (new_value);
+debug
+	io.error.putstring ("Calling undo_put old: ");
+	io.error.putint (old_value);
+	io.error.putstring (" new: ");
+	io.error.putint (new_value);
+	io.error.new_line;
+end;
+			force (latest_new, old_value);
+			from
+				start
+			until
+				after
+			loop
+				if item_for_iteration = latest_new then
+debug
+	io.error.putstring ("FOUND ");
+	io.error.putint (position_for_iteration);
+	io.error.new_line;
+end;
+					content.put (old_value, position_for_iteration);
+					control := Changed_constant;
+				end;
+				forth
+			end;
+debug
+	trace;
+end;
+		end;
+
 
 	item (i: INTEGER): INTEGER is
 		do

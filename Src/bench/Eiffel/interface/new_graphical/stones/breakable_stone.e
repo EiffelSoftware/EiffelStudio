@@ -281,7 +281,7 @@ feature -- Basic operations
 			expr: EB_EXPRESSION
 		do
 			create expr.make_for_context (tf.text)
-			if not expr.syntax_error then
+			if not expr.syntax_error_occurred then
 				if expr.is_condition (f) then
 					if not Application.is_breakpoint_set (f, pos) then
 						Application.enable_breakpoint (f, pos)

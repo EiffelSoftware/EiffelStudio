@@ -252,7 +252,7 @@ feature -- Status setting
 				Application.status.set_max_depth (nb)
 				if Application.is_stopped then
 					pos := Application.current_execution_stack_number
-					Application.status.reload_call_stack
+					Application.status.reload_current_call_stack
 					if pos > Application.status.current_call_stack.count then
 							-- We reloaded less elements than there were.
 						pos := 1

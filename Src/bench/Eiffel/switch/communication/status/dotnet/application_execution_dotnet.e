@@ -81,13 +81,18 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 	estudio_callback_notify is
 			-- Once the callback is done, when ec is back to life
 			-- it will process this notification.
+		require
+			not_alread_inside_notify: not callback_notification_processing
 		local
 			l_status: APPLICATION_STATUS_DOTNET
 		do
 			debug ("debugger_trace_callback_notify")
-				print ("  - eStudio Notify: START :: " + Eifnet_debugger_info.last_managed_callback_name + "%N")
+				print ("** ->START::NotifyEstudio ** [" + Eifnet_debugger_info.last_managed_callback_name + "].%N")
+				if callback_notification_processing then
+					print ("** WARNING ** there is already an Estudio notification running%N")
+				end
 			end
-			callback_notification_processed := False
+			callback_notification_processing := True
 			if 
 				eifnet_debugger /= Void 
 				and then eifnet_debugger.data_changed
@@ -115,16 +120,16 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 					--| do_nothing
 				end
 			end
-			callback_notification_processed := True
+			callback_notification_processing := False
 			debug ("debugger_trace_callback_notify")
-				print ("  - eStudio Notify: END%N")
+				print ("** ->END::NotifyEstudio ** [" + Eifnet_debugger_info.last_managed_callback_name + "].%N")
 			end
 		end
 
 feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR_TOOL}  -- Trigger eStudio status
 
-	callback_notification_processed: BOOLEAN
-			-- Is callback notification processed and done ?
+	callback_notification_processing: BOOLEAN
+			-- Is inside callback notification processing ?
 		
 feature {APPLICATION_EXECUTION} -- load and save
 
@@ -964,7 +969,8 @@ feature {NONE} -- Events on notification
 --			Application_notification_controller.notify_on_before_stopped	
 
 				--| on top of the stack = current stack/feature
-			application.set_current_execution_stack_number (1)			
+			application.set_current_execution_stack_number (1)
+			-- FIXME jfiat: we should point to the first Eiffel Call Stack ...
 
 				--| We need to stop
 				--| Already "stopped" but let's be sure ..
@@ -973,7 +979,7 @@ feature {NONE} -- Events on notification
 			l_status.set_top_level
 
 				--| CallStack
-			l_status.reload_call_stack --| since we stop, let's reload the whole callstack
+			l_status.reload_current_call_stack --| since we stop, let's reload the whole callstack
 			
 			debug ("debugger_trace_callstack")
 				io.put_new_line
@@ -1002,7 +1008,7 @@ feature {NONE} -- Events on notification
 
 			if need_to_continue then
 				l_status.set_is_stopped (False)
-				eifnet_debugger_info.set_data_changed (False)
+				reset_data_changed
 				eifnet_debugger.do_continue
 			else
 				Application_notification_controller.notify_on_after_stopped				
@@ -1031,10 +1037,10 @@ feature {NONE} -- Events on notification
 					if expr /= Void then
 						expr.evaluate
 						evaluator := expr.expression_evaluator
-						if evaluator.error_message = Void then
-							Result := evaluator.final_result_is_true_boolean_value
+						if evaluator.error_occurred then
+							Result := True
 						else
-							Result := False
+							Result := evaluator.final_result_is_true_boolean_value
 						end
 					else
 						Result := True						

@@ -155,7 +155,7 @@ feature -- Status setting
 		do
 			cst ?= a_stone
 			if cst /= Void and then application.is_stopped then
-				if not application.is_dotnet or else application.imp_dotnet.callback_notification_processed then
+				if not application.is_dotnet or else not application.imp_dotnet.callback_notification_processing then
 					refresh_context_expressions
 				end
 			end
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 			typ: STRING
 			evaluator: DBG_EXPRESSION_EVALUATOR
 			l_tooltip: STRING
-			l_error_message: STRING
+			l_error_tag, l_error_message: STRING
 		do
 				-- Recycle Row ..
 			Result := recycle_row_item (a_item)
@@ -514,10 +514,33 @@ feature {NONE} -- Implementation
 			l_tooltip.append_string ("--< CONTEXT >--%N  " + expr.context + "%N")
 			Result.extend (expr.expression)
 			l_tooltip.append_string ("--< EXPRESSION >--%N  " + expr.expression + "%N%N")
-			
-			l_error_message := expr.error_message
-			if l_error_message = Void then
-				evaluator := expr.expression_evaluator
+
+				-- FIXME: at this point, no syntax error should have been raised
+				-- so we don't check for it. The expression dialog took care of that
+			evaluator := expr.expression_evaluator
+			if evaluator.error_occurred then
+				l_error_message := evaluator.error_message
+				l_error_tag := evaluator.error_tag
+				l_tooltip.prepend_string ("Error occurred : %N" + l_error_message + "%N%N")
+				
+				if l_error_tag /= Void then
+					l_error_tag := "[" + l_error_tag + "] "
+				else
+					l_error_tag := ""
+				end
+				Result.extend (l_error_tag + "Error occurred (double click to see details)" ) --| Removed for better display: l_error_message)
+				
+				Result.pointer_double_press_actions.extend (agent show_text_in_popup (l_error_message, ?,?,?,?,?,?,?,?))
+				if evaluator.is_error_exception then
+					Result.set_pixmap (Icon_exception)
+				elseif evaluator.is_error_expression then
+					Result.set_pixmap (icon_compilation_failed)
+				elseif evaluator.is_error_evaluation then
+					Result.set_pixmap (Icon_exception)
+				elseif evaluator.is_error_not_implemented then
+					Result.set_pixmap (icon_compilation_failed)									
+				end
+			else
 				dmp := evaluator.final_result_value
 				if dmp /= Void then
 					res := dmp.full_output
@@ -536,12 +559,6 @@ feature {NONE} -- Implementation
 					Result.set_accept_cursor (ost.stone_cursor)
 					Result.set_deny_cursor (ost.X_stone_cursor)
 				end
-			else
-				l_tooltip.prepend_string ("[!] Error occurred : %N" + l_error_message + "%N%N")
-				
-				Result.extend ("Error occurred (double click to see details)" ) --| Removed for better display: l_error_message)
-				Result.pointer_double_press_actions.extend (agent show_text_in_popup (l_error_message, ?,?,?,?,?,?,?,?))			
-				Result.set_pixmap (Icon_exception)
 			end
 			Result.set_tooltip (l_tooltip)			
 			Result.set_data (expr)

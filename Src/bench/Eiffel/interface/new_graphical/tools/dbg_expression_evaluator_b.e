@@ -87,7 +87,7 @@ feature -- Evaluation
 		local
 			obj: DEBUGGED_OBJECT
 		do
-			error_message := Void
+			reset_error
 			
 				--| prepare context
 				--| this may trigger the reset of `expression_byte_node' value
@@ -100,15 +100,15 @@ feature -- Evaluation
 				else
 					create {DEBUGGED_OBJECT_CLASSIC} obj.make (context_address, 0, 1)					
 				end
-				set_context_data (Void, obj.dtype)
+				set_context_data (Void, obj.dtype, obj.class_type)
 			elseif on_class then
-				set_context_data (Void, context_class)
+				set_context_data (Void, context_class, Void)
 			end
 
 				--| Compute and get `expression_byte_node'
 			get_expression_byte_node
 
-			if error_message = Void then
+			if not error_occurred then
 					--| prepare target's context
 				if on_context then
 					context_address := application.status.current_call_stack_element.object_address
@@ -130,7 +130,7 @@ feature -- Evaluation
 					final_result_type := Void
 					final_result_static_type := Void
 					check
-						error_message /= Void
+						error_occurred
 					end
 				end
 					--| Clean temporary data
@@ -159,7 +159,7 @@ feature -- EXPR_B evaluation
 			if not retried then
 				evaluate_expr_b (a_expr_b)
 			else
-				error_message := "Evaluation failed with an exception"
+				set_error_exception ("Evaluation failed with an exception")
 			end
 		rescue
 			retried := True
@@ -273,7 +273,7 @@ feature -- EXPR_B evaluation
 				tmp_result_value := string_to_dump_value (l_string_b.value)
 			else
 					--| NotYetReady |--
-				error_message := a_expr_b.generator + " : sorry not yet ready"				
+				set_error_not_implemented (a_expr_b.generator + " : sorry not yet ready")
 			end
 		end		
 
@@ -308,7 +308,7 @@ feature -- EXPR_B evaluation
 				tmp_result_value := double_to_dump_value (l_real.double_value)				
 --			elseif a_value_i.is_bit			then
 			else
-				error_message := a_value_i.generator + " : sorry not yet ready"
+				set_error_not_implemented (a_value_i.generator + " : sorry not yet ready")
 			end
 		end
 
@@ -324,7 +324,7 @@ feature -- EXPR_B evaluation
 				l_nested_b := a_binary_b.nested_b
 				evaluate_nested_b (l_nested_b)
 			else
-				error_message := a_binary_b.generator + "/BINARY_B : sorry not available"				
+				set_error_not_implemented (a_binary_b.generator + "/BINARY_B : sorry not available")
 			end
 		end
 
@@ -358,7 +358,7 @@ feature -- EXPR_B evaluation
 				end
 			end
 			if not error_occurred and tmp_result_value = Void then
-				error_message := a_bin_equal_b.generator + "/BINARY_B : sorry not available"				
+				set_error_not_implemented (a_bin_equal_b.generator + "/BINARY_B : sorry not available")
 			end
 		end
 
@@ -381,7 +381,7 @@ feature -- EXPR_B evaluation
 					if l_un_plus_b /= Void then
 						evaluate_nested_b (l_un_plus_b.nested_b)				
 					else
-						error_message := a_unary_b.generator + " = UNARY_B : sorry not yet ready"	
+						set_error_not_implemented (a_unary_b.generator + " = UNARY_B : sorry not yet ready")
 					end
 				end				
 			end
@@ -433,7 +433,7 @@ feature -- EXPR_B evaluation
 	--									if l_constant_b /= Void then
 	--					--					l_constant_b.evaluate
 	--									else
-											error_message := a_access_b.generator + " = ACCESS_B : sorry not yet ready"				
+											set_error_not_implemented (a_access_b.generator + " = ACCESS_B : sorry not yet ready")
 	--									end	
 									end
 								end		
@@ -471,12 +471,9 @@ feature -- EXPR_B evaluation
 		
 	evaluate_creation_expr_b (a_creation_expr_b: CREATION_EXPR_B) is
 		local
---			l_tmp_target_backup: like tmp_target
 			retried: BOOLEAN
 
 			l_type_to_create: CL_TYPE_I
---			l_create_info_type: CREATE_TYPE
---			l_basic_type_to_create: BASIC_I
 			l_f_b: FEATURE_B
 			l_p_b: PARAMETER_B
 			l_e_b: EXPR_B
@@ -485,13 +482,6 @@ feature -- EXPR_B evaluation
 		do
 			if not retried then
 				-- FIXME JFIAT: 2004/03/18 for now just process basic type ...
-				
---				l_tmp_target_backup := tmp_target
---
---				l_create_info_type ?= a_creation_expr_b.info
---				l_type_to_create ?= l_create_info_type.type
---				l_basic_type_to_create ?= l_type_to_create
-
 				l_f_b ?= a_creation_expr_b.call
 				if l_f_b /= Void and then l_f_b.parameters /= Void then
 					l_p_b ?= l_f_b.parameters.first
@@ -507,13 +497,11 @@ feature -- EXPR_B evaluation
 				else
 					l_has_error := True
 				end
---				tmp_target := l_tmp_target_backup
 			else
 				l_has_error := True
 			end
 			if l_has_error then
-				error_message := a_creation_expr_b.generator + " = CREATION_EXPR_B : sorry not yet ready"
-				
+				set_error_not_implemented (a_creation_expr_b.generator + " = CREATION_EXPR_B : sorry not yet ready")
 				l_type_to_create := a_creation_expr_b.info.type_to_create
 				if l_type_to_create /= Void then
 					error_message.append_string (" for " + l_type_to_create.name )					
@@ -540,7 +528,7 @@ feature -- EXPR_B evaluation
 				l_external_b ?= a_call_access_b
 				evaluate_external_b (l_external_b)				
 			else
-				error_message := a_call_access_b.generator + " = CALL_ACCESS_B : sorry not yet ready"					
+				set_error_not_implemented (a_call_access_b.generator + " = CALL_ACCESS_B : sorry not yet ready")
 			end
 		end
 	
@@ -560,7 +548,7 @@ feature -- EXPR_B evaluation
 			end
 			
 			if cl = Void then
-				error_message := "Error: Call on void target " + a_feature_b.feature_name
+				set_error_evaluation ("Error: Call on void target " + a_feature_b.feature_name)
 			else
 				ef := cl.feature_with_name (a_feature_b.feature_name)
 				if ef /= Void then
@@ -579,10 +567,10 @@ feature -- EXPR_B evaluation
 							evaluate_function (context_address, tmp_target, ef, params)
 						end
 					else
-						error_message := a_feature_b.generator +  " => ERROR : other than function, constant and once : not available"
+						set_error_not_implemented (a_feature_b.generator +  " => ERROR : other than function, constant and once : not available")
 					end
 				else
-					error_message := a_feature_b.generator +  " => ERROR : please report to support"					
+					set_error_evaluation (a_feature_b.generator +  " => ERROR : please report to support")
 				end
 			end
 		end
@@ -603,7 +591,7 @@ feature -- EXPR_B evaluation
 			end
 			
 			if cl = Void then
-				error_message := "Error: Call on void target " + a_external_b.feature_name
+				set_error_evaluation ("Error: Call on void target " + a_external_b.feature_name)
 			else
 				ef := cl.feature_with_name (a_external_b.feature_name)
 				fi := ef.associated_feature_i
@@ -619,10 +607,9 @@ feature -- EXPR_B evaluation
 						evaluate_static_function (ef, params)
 					end
 				else
-					error_message := a_external_b.generator +  " => ERROR during evaluation of external call " + a_external_b.feature_name
+					set_error_expression (a_external_b.generator +  " => ERROR during evaluation of external call " + a_external_b.feature_name)
 				end	
 			end
---			error_message := a_external_b.generator + " = EXTERNAL_B : sorry not yet ready"		
 		end		
 
 	parameter_values_from_parameters_b (a_params: BYTE_LIST [EXPR_B]): ARRAYED_LIST [DUMP_VALUE] is
@@ -636,7 +623,7 @@ feature -- EXPR_B evaluation
 					create Result.make (l_parameters_b.count)
 					l_parameters_b.start
 				until
-					l_parameters_b.after or error_message /= Void
+					l_parameters_b.after or error_occurred
 				loop
 					l_dmp := parameter_evaluation (l_parameters_b.item)
 					if not error_occurred then
@@ -661,7 +648,7 @@ feature -- EXPR_B evaluation
 			end
 
 			if cl = Void then
-				error_message := "Error: Call on void target"
+				set_error_evaluation ("Error: Call on void target")
 			else
 				ef := cl.feature_with_name (a_attribute_b.attribute_name)
 	
@@ -696,7 +683,7 @@ feature -- EXPR_B evaluation
 			tmp_target := l_tmp_target_backup			
 
 			if Result = Void then
-				error_message := a_expr_b.generator +  " => error evaluating parameter"				
+				set_error_evaluation (a_expr_b.generator +  " => error evaluating parameter")
 			end
 		end		
 
@@ -824,7 +811,7 @@ feature -- Concrete evaluation
 			else
 			end
 			if tmp_result_value = Void then
-				error_message := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name
+				set_error_evaluation ("Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name)
 			end
 		end
 
@@ -841,7 +828,7 @@ feature -- Concrete evaluation
 				f_is_once: f.associated_feature_i.is_once
 			end
 			if f.written_class.types.count > 1 then
-				error_message := "Once evaluation on generic classes not available"		
+				set_error_evaluation ("Once evaluation on generic classes not available")
 			else
 				if application.is_dotnet then
 					tmp_result_value := dbg_evaluator.dotnet_evaluate_once_function (f)
@@ -854,7 +841,7 @@ feature -- Concrete evaluation
 					end				
 				end
 				if tmp_result_value = Void then
-					error_message := "Once feature " + f.name + " not called yet"		
+					set_error_evaluation ("Once feature " + f.name + " not called yet")
 				end		
 			end			
 		end	
@@ -888,10 +875,10 @@ feature -- Concrete evaluation
 					elseif tmp_result_static_type.conform_to (system.character_class.compiled_class) then
 						 create tmp_result_value.make_character (val.item (1), tmp_result_static_type);			
 					else				
-						error_message := "Unknown constant type for " + cv_cst.name
+						set_error_evaluation ("Unknown constant type for " + cv_cst.name)
 					end
 				else
-					error_message := "Unknown constant type for " + f.name
+					set_error_evaluation ("Unknown constant type for " + f.name)
 				end				
 			end
 		end
@@ -928,7 +915,7 @@ feature -- Concrete evaluation
 					if f.name.is_equal ("Void") then
 						create tmp_result_value.make_object (Void, Void)
 					else
-						error_message := "Could not find attribute value for " + f.name
+						set_error_evaluation ("Could not find attribute value for " + f.name)
 					end
 				else
 					tmp_result_value := dv.dump_value
@@ -937,8 +924,7 @@ feature -- Concrete evaluation
 --				result_object := a_target
 --				result_static_type := a_target.dynamic_class
 			else
-
-				error_message := "Cannot evaluate an attribute ["+ f.name+"] of a manifest value"
+				set_error_evaluation ("Cannot evaluate an attribute ["+ f.name+"] of a manifest value")
 			end
 		end
 
@@ -1069,13 +1055,13 @@ feature -- Concrete evaluation
 					end
 					l_dyntype := dobj.class_type
 					if l_dyntype = Void then
-						error_message := "Error occurred: unable to find the context object <" + a_addr + ">"
+						set_error_evaluation ("Error occurred: unable to find the context object <" + a_addr + ">")
 					elseif l_dynclass = Void then
 						l_dynclass := l_dyntype.associated_class						
 					end
 				else
 						--| Shouldn't happen: basic types are not generic.
-					error_message := "Cannot find complete dynamic type of a basic type"
+					set_error_evaluation ("Cannot find complete dynamic type of a basic type")
 				end
 			else
 				l_dyntype := l_dynclass.types.first
@@ -1104,15 +1090,10 @@ feature -- Concrete evaluation
 					end
 					tmp_result_value := dbg_evaluator.dotnet_evaluate_function (a_addr, a_target, realf.associated_feature_i, l_dyntype, l_params)
 					if tmp_result_value = Void then
-						error_message := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name
+						set_error_evaluation ("Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name)
 						if on_object and a_addr /= Void then
 							error_message.append_string (" on <" + a_addr + ">")
 						end
---| FIXME JFIAT 2004/06/04 : this is not the reason, check how to get more information
---						l_icd_value := dbg_evaluator.icd_value_by_address (a_addr)
---						if not l_icd_value.is_valid_object then
---							error_message.append_string (" : object collected ... ")
---						end
 					end
 				else -- Classic case
 					if params /= Void and then not params.is_empty then
@@ -1147,7 +1128,7 @@ feature -- Concrete evaluation
 						item.set_hector_addr
 						tmp_result_value := item.dump_value
 					else
-						error_message := "Function " + f.name + " raised an exception"
+						set_error_exception ("Function " + f.name + " raised an exception")
 					end
 				end -- evaluation
 				if not error_occurred and then tmp_result_value /= Void then
@@ -1168,7 +1149,6 @@ feature -- Concrete evaluation
 					end
 				end
 			end			
---			error_message := "ERROR : function evaluation not yet ready"
 		end
 
 feature {DBG_EXPRESSION_EVALUATOR} -- Evaluation data
@@ -1199,11 +1179,11 @@ feature -- Change Context
 				end
 			else
 				cf := cse.routine
-				set_context_data (cf, cse.dynamic_class)
+				set_context_data (cf, cse.dynamic_class, cse.dynamic_type)
 			end
 		end
 		
-	set_context_data (f: like context_feature; c: like context_class) is
+	set_context_data (f: like context_feature; c: like context_class; ct: like context_class_type) is
 		require
 --			f_not_void: f /= Void
 --			c_not_void: c /= Void
@@ -1230,6 +1210,10 @@ feature -- Change Context
 					context_class := c
 					l_reset_byte_node := True
 				end			
+				if context_class_type = Void or else not ct.is_equal (context_class_type) then
+					context_class_type := ct
+					l_reset_byte_node := True
+				end				
 				if l_reset_byte_node then
 						--| this means we will recompute the EXPR_B value according to the new context				
 					reset_expression_byte_node
@@ -1254,16 +1238,18 @@ feature -- Access
 		local
 			old_context_feature: like context_feature
 			old_context_class: like context_class
-			old_int_expression_byte_note: like internal_expression_byte_node
+			old_context_class_type: like context_class_type
+			old_int_expression_byte_note: like internal_expression_byte_node			
 		do
 				--| Backup current context and values
 			old_context_feature := context_feature
 			old_context_class := context_class
+			old_context_class_type := context_class_type			
 			old_int_expression_byte_note := internal_expression_byte_node
 			
 				--| prepare context
 				--| this may reset the `expression_byte_node' value
-			set_context_data (f, f.associated_class)
+			set_context_data (f, f.associated_class, Void)
 
 				--| Get expression_byte_node
 			get_expression_byte_node
@@ -1275,6 +1261,7 @@ feature -- Access
 				--| to see if it is pertinent to save.restore data ...			
 			if 
 				old_context_class = Void 
+				and old_context_class_type = Void 
 				and old_context_feature = Void
 				and old_int_expression_byte_note = Void
 			then
@@ -1286,9 +1273,9 @@ feature -- Access
 				if old_context_class = Void then
 						--| FIXME JFIAT: check this ... how to have a context_class .. not void
 						--| and pertinent ...
-					old_context_class := context_class				
+					old_context_class := context_class
 				end
-				set_context_data (old_context_feature, old_context_class)
+				set_context_data (old_context_feature, old_context_class, old_context_class_type)
 				internal_expression_byte_node := old_int_expression_byte_note				
 			end
 		end
@@ -1328,15 +1315,15 @@ feature {NONE} -- Implementation
 					end
 						--| If we want to recompute the `expression_byte_node', 
 						--| we need to call `reset_expression_byte_nod' 
-						
+
 						--| Prepare AST context
-					prepare_ast_context (context_feature, context_class)
+					prepare_ast_context (context_feature, context_class, context_class_type)
 					
 						--| Compute and get `expression_byte_node'
 					internal_expression_byte_node := expression_byte_node_from_ast (dbg_expression.expression_ast)				
 				end
 			else
-				error_message := "Error during expression analyse"
+				set_error_expression ("Error during expression analyse")
 			end
 		rescue
 			retried := True
@@ -1352,41 +1339,42 @@ feature {NONE} -- Implementation
 			type_check_succeed: BOOLEAN
 			l_error: ERROR
 		do
-			error_message := Void
+			reset_error
 			if not retried then
 				error_handler.wipe_out
 				exp.type_check
 				if error_handler.has_error then
 					type_check_succeed := True
 					l_error := error_handler.error_list.first
-					error_message := "Error " + l_error.code + " :" + error_to_string (l_error)					
+					set_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
 					Result := Void
 				else
 					ast_context.start_lines
 					Result := exp.byte_node
 				end
-				ast_context.clear1
+				reset_ast_context
 			else
 				if not type_check_succeed then
-					error_message := "Type checking failed"
+					set_error_expression ("Type checking failed")
 				end
 				if error_handler.has_error then
 					l_error := error_handler.error_list.first
-					error_message := "Error " + l_error.code + " :" + error_to_string (l_error)
+					set_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
 					error_handler.wipe_out
 				else
-					if error_message = Void then
-						error_message := "Error!"
+					if not error_occurred then
+						set_error_expression ("Error!")
 					end
 				end
 				Result := Void
+				reset_ast_context
 			end
 		rescue
 			retried := True
 			retry
 		end		
 		
-	prepare_ast_context (f: like context_feature; c: like context_class) is
+	prepare_ast_context (f: like context_feature; c: like context_class; ct: like context_class_type) is
 			-- Preparing AST Context for evaluation
 		require
 			f_not_void: on_context implies context_feature /= Void
@@ -1395,8 +1383,15 @@ feature {NONE} -- Implementation
 			l_ct_locals: HASH_TABLE [LOCAL_INFO, STRING]
 			f_as: FEATURE_AS
 			l_fi: FEATURE_I
+			
+			l_byte_code: BYTE_CODE
+			l_ta: CL_TYPE_A
 		do
 			Ast_context.set_current_class (c)
+			if ct /= Void then
+				l_ta := ct.type.type_a
+			end
+			Ast_context.set_current_class_with_actual_type (c, l_ta)
 			Inst_context.set_cluster (ast_context.current_class.cluster)
 
 			if on_context and then f /= Void then
@@ -1405,6 +1400,11 @@ feature {NONE} -- Implementation
 					--| Locals
 				f_as := f.ast
 				l_fi := f.associated_feature_i
+
+					--| FIXME jfiat [2004/10/16] : Seems pretty heavy computing ..
+				l_byte_code := l_fi.byte_server.item (f.body_index)
+				Byte_context.set_byte_code (l_byte_code)
+				
 				if l_fi /= Void then
 					l_ct_locals := f_as.local_table (l_fi)
 					ast_context.set_locals (l_ct_locals)
@@ -1414,7 +1414,7 @@ feature {NONE} -- Implementation
 		
 	reset_ast_context is
 			-- Reset AST Context
-			-- useful especially when error occured on expression
+			-- useful especially when error occurred on expression
 		do
 			Ast_context.clear1
 		end

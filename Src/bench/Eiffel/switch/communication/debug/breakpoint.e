@@ -266,8 +266,11 @@ feature -- Setting
 							-- we update it as well in case of)
 						real_body_id := routine.real_body_id -- update the real_body_id as well
 						body_index := routine.body_index -- update the body_index as well
-						if condition /= Void and then not condition.is_condition (routine) then
-							condition := Void
+						if condition /= Void then
+							condition.recycle
+							if not condition.is_condition (routine) then
+								condition := Void
+							end
 						end
 					else
 							-- set the breakpoint to be removed: the line does no longer exist
@@ -297,7 +300,7 @@ feature -- Setting
 	set_condition (expr: EB_EXPRESSION) is
 			-- Set `Current's condition.
 		require
-			valid_expression: expr /= Void and then not expr.syntax_error and then expr.is_condition (routine)
+			valid_expression: expr /= Void and then not expr.syntax_error_occurred and then expr.is_condition (routine)
 		do
 			condition := expr
 		end
@@ -326,7 +329,7 @@ feature {DEBUG_INFO} -- Saving protocol.
 		do
 			if expression /= Void then
 				create condition.make_for_context (expression)
-				if condition.syntax_error or else not condition.is_condition (routine) then
+				if condition.syntax_error_occurred or else not condition.is_condition (routine) then
 					condition := Void
 				end
 				expression := Void

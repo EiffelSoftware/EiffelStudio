@@ -12,8 +12,6 @@ deferred class
 	
 inherit
 	GB_CONSTANTS
-		export
-			{NONE} all
 		end
 		
 	GB_XML_UTILITIES
@@ -22,6 +20,11 @@ inherit
 		end
 		
 	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		end
+		
+	INTERNAL
 		export
 			{NONE} all
 		end
@@ -96,6 +99,36 @@ feature -- Miscellaneous
 			add_element_containing_string (element, type_string, type)
 			add_element_containing_string (element, constant_name_string, name)
 			add_element_containing_string (element, Constant_value_string, value_as_string)
+		end
+		
+feature {NONE} -- Implementation
+
+	new_gb_ev_any (constant_context: GB_CONSTANT_CONTEXT): GB_EV_ANY is
+			-- `Result' is new instance of GB_EV_ANY representing object properties
+			-- referenced by `constant_context'.
+		require
+			constant_context_not_void: constant_context /= Void
+		local
+			display_object: GB_DISPLAY_OBJECT
+		do
+			Result ?= new_instance_of (dynamic_type_from_string ("GB_" + constant_context.property))
+			Result.default_create
+			Result.set_object (constant_context.object)
+			check
+				Result_exists: Result /= Void
+			end
+			Result.add_object (constant_context.object.object)
+					
+				-- We need to check that the display_object is not of type `GB_DISPLAY_OBJECT'.
+				-- If it is, we must add its child, as this is the object that must be modified.
+			display_object ?= constant_context.object.display_object
+			if display_object /= Void then
+				Result.add_object (display_object.child)	
+			else
+				Result.add_object (constant_context.object.display_object)
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 		
 invariant

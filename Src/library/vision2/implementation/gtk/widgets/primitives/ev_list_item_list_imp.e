@@ -354,11 +354,7 @@ feature {NONE} -- Implementation
 				index > count
 			loop
 				item_imp ?= item.implementation
-				if 
-					item_imp /= Void 
-						and then
-					gtk_widget_has_focus (item_imp.c_object)
-				then
+				if item_imp /= Void and then gtk_widget_has_focus (item_imp.c_object) then
 					Result := item
 				end
 				forth

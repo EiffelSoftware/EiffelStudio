@@ -404,6 +404,30 @@ feature {WIDGET_WINDOWS, TRANSLATION_COMMAND, WIDGET_ACTIONS}
 	other_action: BOOLEAN 
 			-- Is this action independent of the mouse and keyboard
 
+	configure_action: BOOLEAN is
+			-- Is this action a `Configure' action?
+		do
+			Result := special_translation_number = 4
+		end
+
+	visible_action: BOOLEAN is
+			-- Is this action a `Configure' action?
+		do
+			Result := special_translation_number = 3
+		end
+
+	map_action: BOOLEAN is
+			-- Is this action a `map' action?
+		do
+			Result := special_translation_number = 2
+		end
+
+	unmap_action: BOOLEAN is
+			-- Is this action an `unmap' action?
+		do
+			Result := special_translation_number = 1
+		end
+
 	translation : STRING
 			-- Text of translation
 
@@ -413,10 +437,11 @@ feature {WIDGET_WINDOWS, TRANSLATION_COMMAND, WIDGET_ACTIONS}
 	special_translations : ARRAY [STRING] is
 			-- Translations we will specifically allow and deal with
 		once
-			!! Result.make (1, 3)
+			!! Result.make (1, 4)
 			Result.put ("<Unmap>,<Prop>", 1)
 			Result.put ("<Prop>,<Map>", 2)
 			Result.put ("<Visible>", 3)
+			Result.put ("<Configure>", 4)
 --			Result := << 
 --				"<Unmap>,<Prop>",       -- Popdown of a shell
 --				"<Prop>,<Map>",         -- Popup of a shell

@@ -37,6 +37,13 @@ inherit
 			default_create, copy
 		end
 
+	SHARED_BENCH_LICENSES
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 creation
 	make
 
@@ -52,6 +59,7 @@ feature -- Initialization
 			hbox: EV_HORIZONTAL_BOX
 			version_label: EV_LABEL
 			copyright_label: EV_LABEL
+			registration_label: EV_LABEL
 			info_label: EV_LABEL
 			hsep: EV_HORIZONTAL_SEPARATOR
 			ok_button: EV_BUTTON
@@ -78,6 +86,9 @@ feature -- Initialization
 			create copyright_label.make_with_text (t_Copyright_info)
 			copyright_label.align_text_left
 			copyright_label.set_background_color (White)
+			create registration_label.make_with_text (registration_info)
+			registration_label.align_text_left
+			registration_label.set_background_color (White)
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent destroy)
 			Layout_constants.set_default_size_for_button (ok_button)
 
@@ -89,6 +100,7 @@ feature -- Initialization
 			eiffel_text_box.extend (version_label)
 			eiffel_text_box.extend (copyright_label)
 			eiffel_text_box.extend (info_label)
+			eiffel_text_box.extend (registration_label)
 
 				-- Box with image + text + Borland logo
 			if has_borland then
@@ -150,7 +162,24 @@ feature -- Initialization
 			set_default_cancel_button (ok_button)
 		end
 
-feature -- Constant strings
+feature {NONE} -- Implementation
+
+	registration_info: STRING is
+			-- Clause in the about dialog concerning the license.
+		local
+			un: STRING
+		do
+			create Result.make (50)
+			un := license.username
+			if un /= Void and then not un.is_empty then
+				Result := l_Registered + un + "%R%N%R%N"
+			else
+				Result := l_Unregistered_version
+			end
+			
+		end
+
+feature {NONE} -- Constant strings
 
 	t_Version_info: STRING is
 		once
@@ -167,7 +196,7 @@ feature -- Constant strings
 		once
 			Result := 
 				"Copyright (C) 1985-2000 Interactive Software Engineering Inc.%N%
-				%All right reserved"
+				%All rights reserved"
 		end
 
 	t_info: STRING is
@@ -195,5 +224,11 @@ feature -- Constant strings
 				%Visit http://www.borland.com/bcppbuilder")
 
 		end
+
+	l_Unregistered_version: STRING is "Unregistered version.%NPlease contact ISE on http://eiffel.com/forms/secure.html."
+			-- User has not registered his version.
+
+	l_Registered: STRING is "Version registered to "
+			-- Introductory text for the name of the user.
 
 end -- class EB_ABOUT_DIALOG

@@ -3,19 +3,10 @@
 deferred class CENTRAL_TABLE [T->CALL_UNIT] 
 
 inherit
-
-	SEARCH_TABLE [T]
-		rename
-			make as search_table_make,
-			put as search_table_put
-		end;
-
 	SEARCH_TABLE [T]
 		rename
 			make as search_table_make
 		redefine
-			put
-		select
 			put
 		end
 
@@ -45,7 +36,7 @@ feature
 		do
 			last_unit := item (t);
 			if (last_unit = Void) then
-				search_table_put (t);
+				{SEARCH_TABLE} Precursor (t);
 				t.set_index (counter.next_id);
 				last_unit := t;
 debug ("REFREEZING")

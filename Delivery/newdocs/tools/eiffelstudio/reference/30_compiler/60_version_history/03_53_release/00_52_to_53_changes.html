@@ -12,7 +12,7 @@
 
 
 
-<H1>Major changes between ISE Eiffel 5.2 and ISE Eiffel 5.3:</H1>
+<H1>Changes between ISE Eiffel 5.2 and ISE Eiffel 5.3:</H1>
 
 
 
@@ -23,6 +23,11 @@
         <H2>What's new</H2>
         
         <H2>Improvements</H2>
+        
+        
+        <ul>
+          <li>Enabled support for Borland C compiler in .NET.</li>
+</ul>
         
         
         <h2>Changes</h2>
@@ -50,14 +55,11 @@
           complex object which contains expanded objects that have expanded 
           objects.</li>
           <li>Fixed random crash issue in finalized applications due to incorrect memory management when 
-          you have code similar to the following code:</li>
-</ul>
+          you have code similar to:</li>
         <pre>	<span class="efeature">f</span> (g: <span class="eclass">STRING</span>): <span class="eclass">ANY</span> <span class="ekeyword">is</span>
 		<span class="ekeyword">do</span>
 			Result := <span class="ekeyword">create</span> {<span class="eclass">STRING</span>}.<span class="efeature">make_from_string</span> (g)
 		<span class="ekeyword">end</span></pre>
-        
-        <ul>
           <li>Fixed issue with <span class="efeature">deep_equal</span> on <span class="eclass">ARRAY</span> of expanded types which was 
           returning <span class="ekeyword">False</span> where it should have returned <span class="ekeyword">True</span>.</li>
           <li>Fixed issue in melted code where computation such as <span class="eclass">INTEGER_X</span> // 
@@ -75,6 +77,20 @@
 		<span class="ekeyword">do</span>
 		<span class="ekeyword">end</span></pre>
           Then you could neither load nor execute the generated code.</li>
+          <li>Fixed issue with incorrect C code generation of inspect 
+          instruction based on character values above 128.</li>
+          <li>Fixed incorrect C file naming when generating a .NET system that 
+          uses a C++ external (it should be .cpp, not just .c).</li>
+          <li>Fixed incorrect .NET code generation with following assignment 
+          attempts whose source is expanded:
+          <pre>	<span class="ekeyword">local</span>
+		a: <span class="eclass">ANY</span>
+		o: <span class="eclass">SYSTEM_OBJECT</span>
+	<span class="ekeyword">do</span>
+		a ?= 12
+		o ?= 12
+	<span class="ekeyword">end</span>          </pre></li>
+          <li>&nbsp;</li>
 </ul>
         
         

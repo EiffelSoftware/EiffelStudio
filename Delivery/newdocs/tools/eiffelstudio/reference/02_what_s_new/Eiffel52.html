@@ -98,7 +98,58 @@
           <li>Fixed a GDI memory leak when creating/releasing instances of 
           descendant of <span  class="eclass">WEL_CONTROL</span>.</li>
         </ul>
-        <p>&nbsp;</p>
+        <h2>Patch releases</h2>
+        <h3>Version 5.2.1313:</h3>
+        <ul>
+          <li>
+          Fixed resource leak on Windows 98 and Windows Me.<li>
+          Fixed incorrect implementation of <span class="efeature">area</span> and <span class="efeature">substring</span> for 
+          <span class="eclass">STRING</span> in dotnet mode.<li>Fixed issue with setting of arguments. After restarting 
+          EiffelStudio the command line argument contains an extra `]' 
+          character.</li>
+          <li>Fixed issue with working directories where only the first one ever 
+          set was used even if new ones have been set afterwards.</li>
+          <li>Fixed issue in IL code generation where having a class that 
+          inherits from a non-Eiffel .NET class. And the class has the following 
+          features:<br>
+          <pre>	<span class="efeature">a</span>: <span class="eclass">ARRAY</span> [<span class="ekeyword">like</span> <span class="efeature">f</span>]
+          <span class="efeature">f</span>: <span class="eclass">STRING</span>  <span class="ekeyword">is</span>
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span></pre>
+          <p>Then you could neither load nor execute the generated code.</li>
+          <li>Fixed issue with incorrect C code generation of inspect 
+          instruction based on character values above 128.</li><li>
+          Fixed bug in <span class="efeature">copy</span> from <span class="eclass">STRING</span> where following code was violating `valid_count' 
+          invariant from <span class="eclass">STRING</span>:
+          <pre><span class="ekeyword">local</span>
+	s, t: <span class="eclass">STRING</span>
+<span class="ekeyword">do</span>
+	<span class="ekeyword">create</span> s.<span class="efeature">make</span> (9)
+	<span class="ekeyword">create</span> t.<span class="efeature">make</span> (10)
+	t.<span class="efeature">append</span> (&quot;1234567890&quot;)
+	s.<span class="efeature">copy</span> (t)
+<span class="ekeyword">end</span></pre>
+          <li>Fixed incorrect C file naming when generating a .NET system that 
+          uses a C++ external (it should be .cpp, not just .c).</li>
+          <li>Enabled support for Borland C compiler in .NET.</li>
+          <li>Fixed issue where generating documentation for all/library cluster 
+          would stop during generation without completing.</li>
+        </ul>
+        <h3>Version 5.2.1123:</h3>
+        <ul>
+          <li>Fixed issue when inheriting a .NET class that has some static 
+          constants defined.</li>
+        </ul>
+        <h3>Version 5.2.1122:</h3>
+        <ul>
+          <li>Fixed issue when opening the about dialog of EiffelStudio.</li>
+          <li>Enabled EiffelStudio for all users on a machine, not just for the 
+          one installing EiffelStudio.</li>
+        </ul>
+        <h3>Version 5.2.1118:</h3>
+        <ul>
+          <li>First initial release of EiffelStudio 5.2</li>
+        </ul>
         <p><a href="Eiffel51.html">Click here to check out what was new in 
         Eiffel 5.1</a></p>
         <p><a href="Eiffel50.html">Click here to check out what was new in 

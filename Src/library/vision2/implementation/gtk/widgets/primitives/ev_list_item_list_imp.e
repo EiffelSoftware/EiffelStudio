@@ -12,7 +12,8 @@ deferred class
 inherit
 	EV_LIST_ITEM_LIST_I
 		redefine
-			interface
+			interface,
+			wipe_out
 		end
 
 	EV_PRIMITIVE_IMP
@@ -30,7 +31,8 @@ inherit
 			interface,
 			list_widget,
 			add_to_container,
-			remove_i_th
+			remove_i_th,
+			wipe_out
 		end
 	
 	EV_LIST_ITEM_LIST_ACTION_SEQUENCES_IMP
@@ -170,6 +172,30 @@ feature -- Status setting
 			C.gtk_list_unselect_all (list_widget)
 		end
 
+feature -- Removal
+
+	wipe_out is
+			-- Remove all items.
+		local
+			item_imp: EV_LIST_ITEM_IMP
+			a_child_list: POINTER
+		do
+			a_child_list := C.gtk_container_children (list_widget)
+			C.gtk_list_remove_items_no_unref (list_widget, a_child_list)
+			C.g_list_free (a_child_list)
+			from
+				start
+			until
+				index > count
+			loop
+				item_imp ?= item.implementation
+				item_imp.set_item_parent_imp (Void)
+				forth
+			end
+
+			index := 0
+		end
+
 feature {EV_APPLICATION_IMP} -- Implementation
 
 	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
@@ -278,7 +304,8 @@ feature {NONE} -- Implementation
 				v_imp_not_void: v_imp /= void
 			end
 			C.gtk_container_add (list_widget, v_imp.c_object)
---			gtk_widget_unset_flags (v_imp.c_object, C.GTK_CAN_FOCUS_ENUM)
+
+
 			temp_string := ("button-press-event").to_c
 			temp_sig_id := c_signal_connect (
 				v_imp.c_object,

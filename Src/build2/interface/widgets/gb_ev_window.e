@@ -40,6 +40,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_CONSTANTS
+		undefine
+			default_create
+		end
 
 feature -- Access
 
@@ -71,15 +76,8 @@ feature -- Access
 			create maximum_height_input.make (Current, Result, Maximum_height_string, gb_ev_window_maximum_height,gb_ev_window_maximum_height_tooltip,
 				agent set_maximum_height (?), agent valid_maximum_height (?))
 			
-				-- Set up title.
-			create title_label.make_with_text (gb_ev_window_title)
-			title_label.set_tooltip (gb_ev_window_title_tooltip)
-			Result.extend (title_label)
-			create title
-			title.set_tooltip (gb_ev_window_title_tooltip)
-			Result.extend (title)
-			title.change_actions.extend (agent set_title)
-			title.change_actions.extend (agent update_editors)
+			create title_entry.make (Current, Result, title_string, Gb_ev_window_title, Gb_ev_window_title_tooltip,
+				agent set_title (?), agent validate_true (?), Single_line_entry)	
 			
 			update_attribute_editor
 			
@@ -92,7 +90,6 @@ feature -- Access
 			-- from `objects.first'.
 		do
 			user_can_resize.select_actions.block
-			title.change_actions.block
 			
 			if first.user_can_resize then
 				user_can_resize.enable_select
@@ -101,10 +98,9 @@ feature -- Access
 			end
 			maximum_width_input.set_text (first.maximum_width.out)
 			maximum_height_input.set_text (first.maximum_height.out)
-			title.set_text (first.title)
+			title_entry.set_text (first.title)
 			
 			user_can_resize.select_actions.resume
-			title.change_actions.resume
 		end
 		
 feature {GB_XML_STORE} -- Output
@@ -119,14 +115,14 @@ feature {GB_XML_STORE} -- Output
 			if window.user_can_resize /= first.user_can_resize then
 				add_element_containing_boolean (element, User_can_resize_string, first.user_can_resize)
 			end
-			if window.maximum_width /= first.maximum_width then
-				add_element_containing_integer (element, Maximum_width_string, first.maximum_width)
+			if window.maximum_width /= first.maximum_width or uses_constant (Maximum_width_string) then
+				add_integer_element (element, Maximum_width_string, first.maximum_width)
 			end
-			if window.maximum_height /= first.maximum_height then
-				add_element_containing_integer (element, Maximum_height_string, first.maximum_height)
+			if window.maximum_height /= first.maximum_height or uses_constant (Maximum_height_string) then
+				add_integer_element (element, Maximum_height_string, first.maximum_height)
 			end
-			if window.title /= first.title and not objects.first.title.is_empty then
-				add_element_containing_string (element, Title_string, enclose_in_cdata (first.title))
+			if (window.title /= first.title and not objects.first.title.is_empty) or uses_constant (Title_string) then
+				add_string_element (element, Title_string, enclose_in_cdata (first.title))
 			end
 		end
 		
@@ -147,20 +143,16 @@ feature {GB_XML_STORE} -- Output
 				end
 			end
 			
-			element_info := full_information @ (Maximum_width_string)
-			if element_info /= Void then
-				for_first_object (agent {EV_WINDOW}.set_maximum_width(element_info.data.to_integer))
+			if full_information @ (Maximum_width_string) /= Void then
+				for_first_object (agent {EV_WINDOW}.set_maximum_width(retrieve_and_set_integer_value (Maximum_width_string)))
 			end
 			
-			element_info := full_information @ (Maximum_height_string)
-			if element_info /= Void then
-				for_first_object (agent {EV_WINDOW}.set_maximum_height(element_info.data.to_integer))
+			if full_information @ (Maximum_height_string) /= Void then
+				for_first_object (agent {EV_WINDOW}.set_maximum_height(retrieve_and_set_integer_value (Maximum_height_string)))
 			end
 			
-			element_info := full_information @ (title_string)
-			if element_info /= Void and then element_info.data /= Void and then element_info.data.count /= 0 then
-				stripped_text := strip_cdata (element_info.data)
-				for_first_object (agent {EV_WINDOW}.set_title (stripped_text))
+			if full_information @ (title_string) /= Void then
+				for_first_object (agent {EV_WINDOW}.set_title (strip_cdata (retrieve_and_set_string_value (title_string))))
 			end
 		end
 		
@@ -209,10 +201,9 @@ feature {NONE} -- Implementation
 	
 	maximum_width_input, maximum_height_input: GB_INTEGER_INPUT_FIELD
 		-- Input widgets for `maximum_width' and `maximum_height'.
-
-	title: EV_TEXT_FIELD
-		-- Entry fields for `attribute_editor'.
 		
+	title_entry: GB_STRING_INPUT_FIELD
+
 	maximum_width_label, maximum_height_label, title_label: EV_LABEL
 		-- Labels for `attribute_editor'.
 
@@ -256,23 +247,19 @@ feature {NONE} -- Implementation
 				value <= first.Maximum_dimension
 		end
 		
-	set_title is
+	set_title (a_title: STRING) is
 			-- Update property `title' on all items in `objects'.
 		do
-			if title.text /= Void then
-				for_first_object (agent {EV_WINDOW}.set_title (title.text))
-			end
+			for_first_object (agent {EV_WINDOW}.set_title (a_title))
 		end
 
-
-	integer_constant_selected (constant: GB_CONSTANT; name: STRING) is
-			--
+	validate_true (s: STRING): BOOLEAN is
+			-- Always return `True', no matter what the contents of `s'
+			-- are. Used when no validation is required on a string.
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := True
 		end
-		
+
 	User_can_resize_string: STRING is "User_can_resize"
 	Maximum_width_string: STRING is "Maximum_width"
 	Maximum_height_string: STRING is "Maximum_height"

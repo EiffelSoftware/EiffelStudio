@@ -32,6 +32,11 @@ feature {NONE}
 
 	Default_Class_filename: STRING is "default.cls";
 
+	Descobj: STRING is
+		once
+			Result := Platform_constants.Descobj
+		end;
+
 	Descriptor_file_suffix: CHARACTER is 'd'
 
 	Descriptor_suffix: STRING is "D"
@@ -73,6 +78,8 @@ feature {NONE}
 	Ececil: STRING is "ececil"
 
 	Econform: STRING is "econform"
+
+	Edescriptor: STRING is "edesc"
 
 	Edispatch: STRING is "edisptch"
 
@@ -123,6 +130,8 @@ feature {NONE}
 	Makefile_SH: STRING is "Makefile.SH"
 
 	Melted_dle: STRING is "melted.dle";
+
+	Precomp_eif: STRING is "precomp.eif"
 
 	Prelink_script: STRING is "prelink"
 

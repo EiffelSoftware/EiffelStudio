@@ -42,7 +42,8 @@ inherit
 			on_key_up,
 			on_draw_item,
 			default_style,
-			background_brush
+			background_brush,
+			on_menu_command
 		end
 
 creation

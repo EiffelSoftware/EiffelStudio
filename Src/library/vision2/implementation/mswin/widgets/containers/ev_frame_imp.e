@@ -40,7 +40,8 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
-			on_draw_item
+			on_draw_item,
+			on_menu_command
 		redefine
 			default_style,
 			default_ex_style,

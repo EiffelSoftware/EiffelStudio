@@ -22,14 +22,16 @@ create
 
 feature {NONE} -- Implementation
 
-	implementation: EV_HORIZONTAL_PROGRESS_BAR_I
-
 	create_implementation is
 			-- Create implementation of horizontal progress bar.
 		do
 			create {EV_HORIZONTAL_PROGRESS_BAR_IMP}
 				implementation.make (Current)
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_HORIZONTAL_PROGRESS_BAR_I
 
 end -- class EV_HORIZONTAL_PROGRESS_BAR
 
@@ -54,6 +56,9 @@ end -- class EV_HORIZONTAL_PROGRESS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.6  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

@@ -90,10 +90,7 @@ feature -- Event handling
 	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 		-- Actions performed when a tree item is deselected.
 
-feature -- Implementation
-	
-	implementation: EV_TREE_I	
-			-- Platform dependent access.
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of tree
@@ -109,6 +106,11 @@ feature -- Implementation
 			create select_actions
 			create deselect_actions
 		end
+
+feature {EV_ANY_I} -- Implementation
+	
+	implementation: EV_TREE_I	
+			-- Platform dependent access.
 
 end -- class EV_TREE
 
@@ -133,6 +135,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/01 19:48:54  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.22  2000/03/01 18:09:03  oconnor
 --| released
 --|

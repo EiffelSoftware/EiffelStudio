@@ -156,11 +156,7 @@ feature {NONE}-- Assertion
 			end
 		end
 
-feature {EV_LIST, EV_ANY_I} -- Implementation
-
-	implementation: EV_LIST_I	
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of list widget.
@@ -175,6 +171,12 @@ feature {EV_LIST, EV_ANY_I} -- Implementation
 			create select_actions
 			create deselect_actions
 		end
+
+feature {EV_ANY_I, EV_LIST} -- Implementation
+
+	implementation: EV_LIST_I	
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
 invariant
 	selected_items_not_void: selected_items /= Void
@@ -211,6 +213,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.34  2000/03/01 18:10:36  king
 --| Added lists_equal feature, uncommented invariants
 --|

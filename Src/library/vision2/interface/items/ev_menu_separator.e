@@ -21,15 +21,17 @@ inherit
 create
 	default_create
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_MENU_SEPARATOR_I
-			-- Platform dependent access
+feature {NONE} -- Implementation
 
 	create_implementation is
 		do
 			create {EV_MENU_SEPARATOR_IMP} implementation.make (Current)
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_MENU_SEPARATOR_I
+			-- Platform dependent access.
 
 end -- class EV_MENU_SEPARATOR
 
@@ -54,6 +56,9 @@ end -- class EV_MENU_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.6  2000/02/29 18:09:07  oconnor
 --| reformatted indexing cluase
 --|

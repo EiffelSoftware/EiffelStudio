@@ -23,6 +23,8 @@ feature {EV_ANY_I} -- Implementation
  	
 	implementation: EV_HORIZONTAL_BOX_I
 
+feature {NONE} -- Implementation
+
 	create_implementation is
 			-- Create implementation of horizontal box.
 		do
@@ -52,6 +54,9 @@ end -- class EV_HORIZONTAL_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.10  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

@@ -18,10 +18,12 @@ inherit
 create
 	default_create
 
-feature -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_SEPARATOR_I
 			-- Platform dependent access
+
+feature {NONE}
 
 	create_implementation is
 			-- Create implementation of tool bar separator.
@@ -52,6 +54,9 @@ end -- class EV_TOOL_BAR_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.7  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

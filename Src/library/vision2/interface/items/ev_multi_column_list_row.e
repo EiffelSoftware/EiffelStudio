@@ -70,10 +70,7 @@ feature -- Event handling
 	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions performed when item is deselected.
 
-feature -- Implementation
-
-	implementation: EV_MULTI_COLUMN_LIST_ROW_I
-			-- Platform dependent access.
+feature {NONE} -- Implementation
 
 	create_implementation is 
 			-- Create `implementation'.
@@ -87,6 +84,11 @@ feature -- Implementation
 			create select_actions
 			create deselect_actions
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_MULTI_COLUMN_LIST_ROW_I
+			-- Platform dependent access.
 
 end -- class EV_MULTI_COLUMN_LIST_ROW
 
@@ -111,6 +113,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.26  2000/02/29 19:20:22  oconnor
 --| removed simicolons from indexing
 --|

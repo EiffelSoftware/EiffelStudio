@@ -152,11 +152,7 @@ feature -- Event handling
 	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions performed when `selected_item' changes.
 
-feature {EV_ANY, EV_ANY_I} -- Implementation
-
-	implementation: EV_NOTEBOOK_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+feature {NONE} -- Implementation
 
 	create_action_sequences is
 			-- Create action sequences for button.
@@ -170,6 +166,12 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		do
 			create {EV_NOTEBOOK_IMP} implementation.make (Current)
 		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	implementation: EV_NOTEBOOK_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
 invariant
 	tab_position_within_range: is_useable implies
@@ -210,6 +212,9 @@ end -- class EV_NOTEBOOK
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.17  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

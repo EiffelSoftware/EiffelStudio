@@ -58,9 +58,7 @@ feature -- Element change
 			implementation.set_extended_height (value)
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_COMBO_BOX_I
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of combo box.
@@ -74,6 +72,10 @@ feature {EV_ANY_I} -- Implementation
 			{EV_LIST} Precursor
 			{EV_TEXT_FIELD} Precursor
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_COMBO_BOX_I
 
 end -- class EV_COMBO_BOX
 
@@ -98,6 +100,9 @@ end -- class EV_COMBO_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.28  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

@@ -59,16 +59,19 @@ feature -- Status setting
 			toggled: is_selected /= old is_selected
 		end
 
-feature {EV_ANY_I} -- Implementation
 
-	implementation: EV_TOOL_BAR_TOGGLE_BUTTON_I
-			-- Platform dependent access.
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of tool bar toggle button.
 		do
 			create {EV_TOOL_BAR_TOGGLE_BUTTON_IMP} implementation.make (Current)
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TOOL_BAR_TOGGLE_BUTTON_I
+			-- Platform dependent access.
 
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON
 
@@ -93,6 +96,9 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.6  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

@@ -245,11 +245,6 @@ feature -- Event handling
 	column_click_actions: EV_NOTIFY_ACTION_SEQUENCE
 		-- Actions performed when a column is clicked.
 
-feature -- Implementation
-	
-	implementation: EV_MULTI_COLUMN_LIST_I
-			-- Platform specific access.
-
 feature {NONE} -- Inapplicable
 
 	make (par: EV_CONTAINER) is
@@ -259,6 +254,8 @@ feature {NONE} -- Inapplicable
 				inapplicable: False
 			end
 		end
+
+feature {NONE} -- Implementation
 
 	create_implementation is
 		do
@@ -272,6 +269,11 @@ feature {NONE} -- Inapplicable
 			create deselect_actions
 			create column_click_actions
 		end
+
+feature {EV_ANY_I} -- Implementation
+	
+	implementation: EV_MULTI_COLUMN_LIST_I
+			-- Platform specific access.
 
 end -- class EV_MULTI_COLUMN_LIST
 
@@ -296,6 +298,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.30  2000/03/01 03:28:43  oconnor
 --| added make_for_test
 --|

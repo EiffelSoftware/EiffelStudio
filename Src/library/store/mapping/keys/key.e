@@ -7,7 +7,14 @@ indexing
 deferred class
 	KEY
 
---inherit 
---	HASHABLE
+inherit
+
+	HASHABLE
+
+feature -- Access
+
+	is_basic : BOOLEAN is
+		deferred
+		end
 
 end -- class KEY

@@ -152,6 +152,55 @@ feature -- Element change
 			append (s)
 		end
 
+	escape_string (s: STRING) is
+			-- Append the escaped version of `s'
+		require
+			valid_arguments: s /= Void
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := 1
+				nb := s.count
+			variant
+				i
+			until
+				i > nb
+			loop
+				escape_char(s.item (i))
+				i := i + 1
+			end
+		end
+
+	escape_char (c: CHARACTER) is
+			-- Write char `c' with C escape sequences
+		do
+			inspect c
+			 	when '"' then
+					append_character ('\')
+					append_character ('"')
+			 	when '\' then
+					append_character ('\')
+					append_character ('\')
+				when '%'' then
+					append_character ('\')
+					append_character (''')
+				when '?' then
+					append_character ('\')
+					append_character ('?')
+				else
+					if c < ' ' or c > '%/127/' then
+						-- Assume ASCII set, sorry--RAM.
+						append_character ('\')
+						putoctal (c.code)
+					else
+						append_character (c)
+					end
+			end
+		end
+
+feature {NONE} -- Implementations
+
 	putoctal (i: INTEGER) is
 			-- Print octal representation of `i'
 			--| always generate 3 digits
@@ -169,7 +218,7 @@ feature -- Element change
 					append_character ('0')
 				end
 				
-				!! s.make (3)
+				create s.make (3)
 				from
 					val := i
 				variant
@@ -183,52 +232,6 @@ feature -- Element change
 					s.prepend (t)
 				end
 				append (s)
-			end
-		end
-
-	escape_char (c: CHARACTER) is
-			-- Write char `c' with C escape sequences
-		do
-				-- Assume ASCII set, sorry--RAM.
-			if c < ' ' or c > '%/127/' then
-				append_character ('\')
-				putoctal (c.code)
-			elseif c = '\' then
-				append ("\\")
-			elseif c = '%'' then
-				append ("\'")
-			else
-				append_character (c)
-			end
-		end
-
-	escape_string (s: STRING) is
-			-- Write string `s' with escape quotes
-		require
-			good_argument: s /= Void
-		local
-			i, nb: INTEGER
-			c: CHARACTER
-		do
-			from
-				i := 1
-				nb := s.count
-			until
-				i > nb
-			loop
-				c := s.item (i)
-				if c = '"' then
-					append ("\%"")
-				elseif c = '\' then
-					append ("\\")
-				elseif c < ' ' or c > '%/127/' then
-						-- Assume ASCII set, sorry--RAM.
-					append_character ('\')
-					putoctal (c.code)
-				else
-					append_character (c)
-				end
-				i := i + 1
 			end
 		end
 

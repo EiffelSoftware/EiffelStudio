@@ -124,7 +124,7 @@ feature -- Basic operations
 			is_ok: is_ok
 			name_exists: new_name /= Void
 		do
-			repository_name := clone (new_name)
+			repository_name := new_name.twin
 			implementation.change_name (new_name)
 			loaded := false
 		ensure
@@ -157,8 +157,7 @@ feature {DB_STORE} -- Implementation
 		local
 			tmp_string: STRING
 		do
-			tmp_string := clone (new_name)
-			tmp_string.to_lower
+			tmp_string := new_name.as_lower
 			Result := repository_name.is_equal (tmp_string)
 			tmp_string.to_upper
 			Result := Result or repository_name.is_equal (tmp_string)

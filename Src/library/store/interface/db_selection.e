@@ -262,7 +262,7 @@ feature -- Basic operations
 			loop
 				if container /= Void then
 					container.extend (cursor)
-					cursor := deep_clone (cursor)
+					cursor := cursor.deep_twin
 				end
 				if stop_condition /= Void then
 					stop_condition.execute

@@ -25,7 +25,7 @@ feature -- Routines out
 
 	out: STRING is
 		do
-			Result := clone (Form_start)
+			Result := Form_start.twin
 			Result.append (attributes_out)
 			Result.append (Tag_end)
 			Result.append (NewLine)
@@ -70,7 +70,7 @@ feature -- Routines out
     attribute_out (an_attribute, its_value: STRING): STRING is
             -- String representation for the pair 'an_attribute' and 'its_value'
         do
-            Result := clone (an_attribute)
+            Result := an_attribute.twin
             Result.append ("%"")
             Result.append (its_value)
             Result.append ("%"")
@@ -101,7 +101,7 @@ feature -- Add new options
 		require
 			an_option /= Void
 		do
-			options.extend (clone (an_option))
+			options.extend (an_option.twin)
 		end
 
 feature -- Set attributes
@@ -110,28 +110,28 @@ feature -- Set attributes
 		require
 			s /= Void
 		do
-			name_value := clone (s)
+			name_value := s.twin
 		end
 
 	set_action (s: STRING) is
 		require
 			s /= Void
 		do
-			action_value := clone (s)
+			action_value := s.twin
 		end
 
 	set_method (s: STRING) is
 		require
 			s /= Void
 		do
-			method_value := clone (s)
+			method_value := s.twin
 		end
 
 	set_enctype (s: STRING) is
 		require
 			s /= Void
 		do
-			enctype_value := clone (s)
+			enctype_value := s.twin
 		end
 
 feature {NONE}

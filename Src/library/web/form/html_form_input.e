@@ -24,7 +24,7 @@ feature -- Routines out
 
 	out: STRING is
 		do
-			Result := clone (Input_start)
+			Result := Input_start.twin
 			Result.append (attributes_out)
 			Result.append (Tag_end)
 			Result.append (NewLine)
@@ -62,7 +62,7 @@ feature -- Routines out
     attribute_out (an_attribute, its_value: STRING): STRING is
             -- String representation for the pair 'an_attribute' and 'its_value'
         do
-            Result := clone (an_attribute)
+            Result := an_attribute.twin
 			Result.append ("%"")
             Result.append (its_value)
 			Result.append ("%"")
@@ -107,28 +107,28 @@ feature -- Set attributes
 		require
 			s /= Void
 		do
-			type_value := clone (s)
+			type_value := s.twin
 		end
 
 	set_name (s: STRING) is
 		require
 			s /= Void
 		do
-			name_value := clone (s)
+			name_value := s.twin
 		end
 
 	set_value (s: STRING) is
 		require
 			s /= Void
 		do
-			value_value := clone (s)
+			value_value := s.twin
 		end
 
 	set_file_src, set_image_src (s: STRING) is
 		require
 			s /= Void
 		do
-			src_value := clone (s)
+			src_value := s.twin
 		end
 
 	set_size (s: INTEGER) is
@@ -145,7 +145,7 @@ feature -- Set attributes
 		require
 			s /= Void
 		do
-			align_value := clone (s)
+			align_value := s.twin
 		end
 
 feature {NONE}

@@ -37,7 +37,7 @@ feature -- Initialization
 			if not retried then
 				create fi.make_open_read (fi_n)
 				fi.read_stream (fi.count)
-				image := clone (fi.last_string)
+				image := fi.last_string.twin
 				fi.close
 			else
 				image := "<HTML>Could not read file " + fi_n + ".</HTML>"
@@ -107,7 +107,9 @@ feature -- Access
 	out: STRING is
 			-- Usable copy of the output.
 		do
-			Result := clone(image)
+			if image /= Void then
+				Result := image.twin
+			end
 		end
 
 feature {NONE} -- Implementation

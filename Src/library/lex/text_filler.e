@@ -80,7 +80,7 @@ feature -- Status setting
 			if buf >= buffer_size then
 				previous_buffer_size := buffer_size;
 				buffer_size := buf;
-				previous_buffer := clone (buffer);
+				previous_buffer := buffer.twin
 				buffer.resize (buffer_size);
 				buffer.append (previous_buffer);
 				line_nb_array.conservative_resize (1, buffer_size);

@@ -121,26 +121,26 @@ feature -- Status setting
 
 -- For ODBC
 			if qualifier /= Void then
-				table_qualifier := clone(qualifier)
+				table_qualifier := qualifier.twin
 			end
 --
 			if own /= Void then
-				table_owner := clone(own)
+				table_owner := own.twin
 			end
 			if tab_name /= Void then
-				table_name := clone (tab_name)
+				table_name := tab_name.twin
 			end
 			if tab_type /= Void then
-				table_type := clone (tab_type)
+				table_type := tab_type.twin
 			end
 			if col_nulls /= Void then
-				column_nulls := clone(col_nulls)
+				column_nulls := col_nulls.twin
 			end
 			if col_typename /= Void then
-				column_typename := clone(col_typename)
+				column_typename := col_typename.twin
 			end
 			if col_name /= Void then
-				column_name := clone (col_name)
+				column_name := col_name.twin
 			end
 			data_type := dat_type	
 			column_id := col_id
@@ -153,7 +153,7 @@ feature -- Status setting
 --
 -- For Oracle
 			if dat_def /= Void then
-				data_default := clone (dat_def)
+				data_default := dat_def.twin
 			end
 			default_length := def_len
 			num_distinct := num_dist
@@ -166,7 +166,7 @@ feature -- Status setting
 			owner_id :=  own_id
 			table_id := tb_id
 			if creat_date /= Void then
-				creation_date := clone (creat_date)
+				creation_date := creat_date.twin
 			end
 --
 		end

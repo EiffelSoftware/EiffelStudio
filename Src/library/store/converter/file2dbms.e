@@ -9,7 +9,7 @@ class FILE2DBMS
 
 inherit
 
-	converter
+	CONVERTER
 		rename
 			make as converter_make
 		export
@@ -65,7 +65,10 @@ feature {NONE} -- Basic operations
 			store.put(parse.ecp_reference);
 			if not control.is_ok then
 				conv_error := true;
-				conv_message := clone (control.error_message)
+				conv_message := control.error_message
+				if conv_message /= Void then
+					conv_message := conv_message.twin
+				end
 			end	
 		end
 

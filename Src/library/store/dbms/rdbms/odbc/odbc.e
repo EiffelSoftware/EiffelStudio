@@ -89,9 +89,9 @@ feature -- For DATABASE_FORMAT
 	string_format (object: STRING): STRING is
 			-- String representation in SQL of `object'.
 		do
-			Result := clone (object)
-			if Result /= Void and then not Result.is_empty then
+			if object /= Void and then not object.is_empty then
 				if not is_binary (object) then
+					Result := object.twin
 					Result.replace_substring_all ("'", "''")
 					Result.precede ('%'')
 					Result.extend ('%'')

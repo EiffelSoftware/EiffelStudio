@@ -150,7 +150,7 @@ feature -- Status setting
 					("('t''r''u''e') | ('f''a''l''s''e')",Boolean_ttype);
 				tmpsl.wipe_out;
 				tmpsl.append (char2string(descriptor.field_separator));
-				put_expression(clone (tmpsl), Field_sep_ttype, "FieldSepT");
+				put_expression(tmpsl.twin, Field_sep_ttype, "FieldSepT");
 				tmpsl.wipe_out;
 				from 
 					i := 1
@@ -177,10 +177,10 @@ feature -- Status setting
 					i := i + 1
 				end;
 				if not tmpsl.is_empty then 
-					put_nameless_expression(clone (tmpsl), Left_del_ttype);
-					put_nameless_expression(clone (tmpsr), Right_del_ttype)
+					put_nameless_expression(tmpsl.twin, Left_del_ttype);
+					put_nameless_expression(tmpsr.twin, Right_del_ttype)
 				end;
-				put_nameless_expression(clone(tmpss), Label_sep_ttype);
+				put_nameless_expression(tmpss.twin, Label_sep_ttype);
 				make_analyzer;
 				store_analyzer(file_name);
 				error_list.display_message

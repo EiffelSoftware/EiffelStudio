@@ -40,7 +40,7 @@ feature -- Actions
 			-- selected item in the container.
 		do
 			selection.cursor_to_object
-			list.extend (deep_clone (item))
+			list.extend (item.deep_twin)
 		end
 
 feature -- Access

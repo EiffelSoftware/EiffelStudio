@@ -56,9 +56,8 @@ feature -- Basic operations
 			class_name: STRING
 		do
 			Precursor
-			class_name := clone (table_description.repository_name)
+			class_name := table_description.repository_name.as_upper
 			class_name.replace_substring_all (" ", "_")
-			class_name.to_upper
 			gfc.replace_substring_all (tags.upper_class_name, class_name)
 			class_name.to_lower
 			gfn := class_name + Class_file_extension
@@ -85,9 +84,8 @@ feature {NONE} -- Implementation
 			column := table_description.column_i_th (column_number)
 			manage_type (column)
 			if type_correspond then		
-				mapped_item := clone (attribute_block)
-				attribute_name := clone (column.column_name)
-				attribute_name.to_lower
+				mapped_item := attribute_block.twin
+				attribute_name := column.column_name.as_lower
 				mapped_item.replace_substring_all (tags.Lower_attribute_name, attribute_name)
 				to_initcap (attribute_name)
 				mapped_item.replace_substring_all (tags.Initcap_attribute_name, attribute_name)
@@ -98,7 +96,7 @@ feature {NONE} -- Implementation
 					-- The value `column_id' is not properly set for Oracle.
 		--		mapped_item.replace_substring_all (tags.Iterator, column.column_id.out)
 		
-				tn := clone (type_name)
+				tn := type_name.twin
 				mapped_item.replace_substring_all (tags.Upper_type_name, tn)
 				tn.to_lower
 				mapped_item.replace_substring_all (tags.Lower_type_name, tn)

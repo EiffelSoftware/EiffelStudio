@@ -171,7 +171,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {NONE} -- Implementation
 
-	valid_file_name (a_name: STRING): BOOLEAN is
+	valid_file_name, valid_file_title (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid file_name on the current platform?
 		do
 			Result := True

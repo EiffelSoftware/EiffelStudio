@@ -5,12 +5,24 @@
 	<paragraph>
 		<heading><size>2</size>Graphical environment</heading>
 			<heading><size>3</size>Improvements</heading>
+			<list ordered="false">
+				<item>Added full configuration of colors used in editor</item>
+			</list>
 		<heading><size>2</size>Debugger</heading>
+			<list ordered="false">
+				<item>Enabled conditional breakpoing and expression evaluation for .NET</item>
+				<item>Improved expression evaluation abilities (full range of Eiffel expressions are now supported).</item>
+				<item>Improved object viewer window</item>
+			</list>
 		<heading><size>2</size>EiffelBuild</heading>
 		<heading><size>2</size>Compiler</heading>
 		<list ordered="false">
-			<item>Click <link><url>../30_compiler/60_version_history/05_55_release/00_54_to_55_changes.xml</url><label>here</label></link> for the compiler release notes.</item>
+			<item>Click <link><url>../30_compiler/60_version_history/05_55_release/index.xml</url><label>here</label></link> for the compiler release notes.</item>
 		</list>
 		<heading><size>2</size>Libraries</heading>
+		<heading><size>3</size>EiffelBase</heading>
+		<list ordered="false">
+			<item>Removed <code><feature_name>consistent</feature_name></code> and <code><feature_name>setup</feature_name></code> from <code><class_name>ANY</class_name></code></item>
+		</list>
 	</paragraph>
 </document>

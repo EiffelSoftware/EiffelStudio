@@ -59,7 +59,7 @@ feature -- Status setting
 
 feature -- Command execution
 
-	execute (arg: EV_ARGUMENTS; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Executed when we press the first button
 		do
 			button2.set_x_y (button2.x + 10, button2.y + 10)

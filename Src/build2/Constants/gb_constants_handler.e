@@ -222,6 +222,9 @@ feature -- Element change
 			-- is performed.
 		require
 			a_constant_not_void: a_constant /= Void
+		local
+			pixmap_constant: GB_PIXMAP_CONSTANT
+			directory_constant: GB_DIRECTORY_CONSTANT
 		do
 			if a_constant.type.is_equal (String_constant_type) then
 				string_constants.prune_all (a_constant)
@@ -231,6 +234,17 @@ feature -- Element change
 				directory_constants.prune_all (a_constant)
 			elseif a_constant.type.is_equal (Pixmap_constant_type) then
 				pixmap_constants.prune_all (a_constant)
+				pixmap_constant ?= a_constant
+					-- Update cross referers.
+				if pixmap_constant /= Void then
+					if not pixmap_constant.is_absolute then
+						directory_constant ?= directory_constant_by_name (pixmap_constant.directory)
+						check
+							directory_constant_not_void: directory_constant /= Void
+						end
+						directory_constant.remove_cross_referer (pixmap_constant)
+					end
+				end
 			end
 			all_constants.remove (a_constant.name)
 			all_constant_names.prune_all (a_constant.name)
@@ -302,6 +316,11 @@ feature -- Element change
 			end
 			Constants_dialog.update_for_addition (pixmap_constant)
 			all_constants.put (pixmap_constant, pixmap_constant.name)
+			
+				-- Now update cross referers if any.
+			if not pixmap_constant.is_absolute then
+				directory_constant_by_name (pixmap_constant.directory).add_cross_referer (pixmap_constant)
+			end
 		ensure
 			contained: pixmap_constants.has (pixmap_constant)
 			count_increased: pixmap_constants.count = old pixmap_constants.count + 1

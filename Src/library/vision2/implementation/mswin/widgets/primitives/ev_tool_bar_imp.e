@@ -334,6 +334,9 @@ feature -- Element change
 			id1 := ev_children.index_of (button, 1)
 			delete_button (internal_get_index (button))
 			notify_change (2 + 1, Current)
+				-- Now restore `private_pixmap' and
+				-- `private_grey_pixmap' if necessary.
+			button.restore_private_pixmaps	
 		end
 
 feature -- Basic operation

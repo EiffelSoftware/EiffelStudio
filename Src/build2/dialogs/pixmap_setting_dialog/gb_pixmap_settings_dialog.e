@@ -89,33 +89,18 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
-		local
-			obejct_and_event_names: ARRAYED_LIST [STRING]
 		do
 			set_default_cancel_button (cancel_button)
 			absolute_constant_radio_button.enable_select
 			pixmap_list.set_pixmaps_size (32, 32)
 			
 			all_object_and_event_names := object_handler.all_object_and_event_names
---				-- Create a hash table of all names in system.
---			object_and_event_names := object_handler.all_object_and_event_names
---			from
---				object_and_event_names.start
---			until
---				
---			loop
---				
---			end
 		end
 
 feature {NONE} -- Implementation
 
 	all_object_and_event_names: ARRAYED_LIST [STRING]
-	
-
---	all_names: HASH_TABLE [STRING, STRING]
---		-- All names in system, including reserved words.
-
+		-- All object and event names currently in system.
 	
 	select_pixmap_pressed is
 			-- Called by `select_actions' of `select_pixmap_button'.
@@ -130,36 +115,19 @@ feature {NONE} -- Implementation
 		end
 
 	absolute_radio_button_selected is
-			--
+			-- respond to `absolute_constant_radio_button' selection by
+			-- enabling/disabling relevent parts of interface.
 		do
 			relative_constant_box.disable_sensitive
 			absolute_constant_box1.enable_sensitive
 		end
 		
 	relative_radio_button_selected is
-			--
+			-- respond to `relative_constant_radio_button' selection by
+			-- enabling/disabling relevent parts of interface.
 		do
 			relative_constant_box.enable_sensitive
 			absolute_constant_box1.disable_sensitive
-		end
-		
-
-	absolute_new_button_pressed is
-			-- Called by `select_actions' of `absolute_new_button'.
-		do
-			
-		end
-
-
-	relative_directory_new_button_selected is
-			-- Called by `select_actions' of `relative_directory_new_button'.
-		do
-		end
-
-
-	relative_file_name_button_pressed is
-			-- Called by `select_actions' of `relative_file_name_button'.
-		do
 		end
 		
 	ok_button_pressed is
@@ -237,6 +205,8 @@ feature {NONE} -- Implementation
 						end
 					end
 					pixmap_list.forth
+		--| FIXME These warning have been turned off for the time being.
+		--| When turning them on, they must be implemented correctly. Just uncommenting the code may not be enough.
 		--				if absolute_constant_radio_button.is_selected then
 		--					constant_matching_absolute := constants.matching_absolute_pixmap_constant (last_pixmap_name.as_lower)
 		--					if constant_matching_absolute /= Void then
@@ -262,61 +232,63 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-		add_absolute_constant (pixmap_constant: GB_PIXMAP_CONSTANT) is
-			--
-			local
-				add_constant_command: GB_COMMAND_ADD_CONSTANT
-			do
-				--create pixmap_constant.make_with_name_and_value (absolute_text.text, last_pixmap_name, "", "", True)
-				pixmap_constant.convert_to_full
-				create add_constant_command.make (pixmap_constant)
-				add_constant_command.execute	
-					-- Update project to reflect change.
-				system_status.enable_project_modified
-				command_handler.update
-			
-					-- Now hide `Current'.
-				hide
-			end
-			
-		add_relative_directory_and_constant (pixmap_constant: GB_PIXMAP_CONSTANT; directory_name: STRING) is
-				--
-			require
-				pixmap_constant_not_void: pixmap_constant /= Void
-				directory_name_not_void: directory_name  /= void
-				directory_name_not_exists: Constants.directory_constant_by_name (directory_name) = Void
-			local
-				directory_constant: GB_DIRECTORY_CONSTANT
-				add_constant_command: GB_COMMAND_ADD_CONSTANT
-			do
-				create directory_constant.make_with_name_and_value (directory_name, file_path)
-				create add_constant_command.make (directory_constant)
-				add_constant_command.execute
-			--	check
-			--		pixmap_constant.directory.is_equal (directory_constant.value)
-			--	end
-				pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, directory_name, pixmap_constant.filename, pixmap_constant.is_absolute)
-				add_relative_constant (pixmap_constant)
-			end
-			
-			
-		add_relative_constant (pixmap_constant: GB_PIXMAP_CONSTANT) is
-				--
-			local
-			--	pixmap_constant: GB_PIXMAP_CONSTANT
-				add_constant_command: GB_COMMAND_ADD_CONSTANT
-			do
-			--	create pixmap_constant.make_with_name_and_value (relative_text.text, last_pixmap_name, relative_directory_combo.text, file_title, False)
-				pixmap_constant.convert_to_full
-				create add_constant_command.make (pixmap_constant)
-				add_constant_command.execute	
-					-- Update project to reflect change.
-				system_status.enable_project_modified
-				command_handler.update
-			
-					-- Now hide `Current'.
-				hide
-			end
+	add_absolute_constant (pixmap_constant: GB_PIXMAP_CONSTANT) is
+			-- Add an absolute pixmap constant `pixmap_constant' to system.
+		require
+			pixmap_constant_not_void: pixmap_constant /= Void
+		local
+			add_constant_command: GB_COMMAND_ADD_CONSTANT
+		do
+			pixmap_constant.convert_to_full
+			create add_constant_command.make (pixmap_constant)
+			add_constant_command.execute	
+				-- Update project to reflect change.
+			system_status.enable_project_modified
+			command_handler.update
+		
+				-- Now hide `Current'.
+			hide
+		end
+		
+	add_relative_directory_and_constant (pixmap_constant: GB_PIXMAP_CONSTANT; directory_name: STRING) is
+			-- Add a new directory constant named `directory_name' with value `directory' of `pixmap_constant',
+			-- and a new pixmap constant `pixmap_constant' to system.
+		require
+			pixmap_constant_not_void: pixmap_constant /= Void
+			directory_name_not_void: directory_name  /= void
+			directory_name_not_exists: Constants.directory_constant_by_name (directory_name) = Void
+		local
+			directory_constant: GB_DIRECTORY_CONSTANT
+			add_constant_command: GB_COMMAND_ADD_CONSTANT
+		do
+			create directory_constant.make_with_name_and_value (directory_name, file_path)
+			create add_constant_command.make (directory_constant)
+			add_constant_command.execute
+			pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, directory_name, pixmap_constant.filename, pixmap_constant.is_absolute)
+			add_relative_constant (pixmap_constant)
+			check
+				cross_referer_set: directory_constant.cross_referers.has (pixmap_constant)	
+			end			
+		end
+		
+		
+	add_relative_constant (pixmap_constant: GB_PIXMAP_CONSTANT) is
+			-- Add a relative pixmap constant `pixmap_constant' to system.
+		require
+			pixmap_constant_not_void: pixmap_constant /= Void
+		local
+			add_constant_command: GB_COMMAND_ADD_CONSTANT
+		do
+			pixmap_constant.convert_to_full
+			create add_constant_command.make (pixmap_constant)
+			add_constant_command.execute	
+				-- Update project to reflect change.
+			system_status.enable_project_modified
+			command_handler.update
+		
+				-- Now hide `Current'.
+			hide
+		end
 			
 	check_all_button_selected is
 			-- Called by `select_actions' of `check_all_button'.
@@ -349,9 +321,8 @@ feature {NONE} -- Implementation
 		end
 	
 	update_ok_button is
-			--
+			-- Update status of `ok_button'.
 		do
-			io.putstring ("Update ok")
 			if not pixmap_list.checked_items.is_empty then
 				ok_button.enable_sensitive
 			else
@@ -367,7 +338,9 @@ feature {NONE} -- Implementation
 		end
 		
 	basic_valid_name (a_name:STRING): BOOLEAN is
-			--
+			-- Is `a_name' a valid pixmap name?
+		require
+			a_name_not_void: a_name /= Void
 		do
 			Result :=  valid_class_name (a_name) and not Reserved_words.has (a_name) and
 			not object_handler.string_used_globally_as_object_or_feature_name (a_name)
@@ -628,10 +601,6 @@ feature {NONE} -- Implementation
 			Result := unique_name (Object_handler.all_object_and_event_names, Result)
 			Result := unique_name (Constants.all_constant_names, Result)
 		end
-		
-	--		Result :=  valid_class_name (a_name) and not Reserved_words.has (a_name) and
-	--		not object_handler.string_used_globally_as_object_or_feature_name (a_name)
-	--	end
 	
 	new_pixmap: EV_PIXMAP
 

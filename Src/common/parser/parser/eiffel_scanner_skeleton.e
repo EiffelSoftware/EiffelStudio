@@ -90,6 +90,12 @@ feature -- Access
 	has_syntax_warning: BOOLEAN
 			-- Do we create SYNTAX_WARNING instances for obsolte syntactical constructs?
 
+	has_old_verbatim_strings: BOOLEAN
+			-- Is old semantics of verbatim strings used?
+
+	has_old_verbatim_strings_warning: BOOLEAN
+			-- Are warnings produces for old semantics of verbatim strings?
+
 feature -- Osolete
 
 	error_code: INTEGER is 0
@@ -105,7 +111,23 @@ feature -- Settings
 		ensure
 			has_syntax_warning_set: has_syntax_warning = b
 		end
-
+		
+	set_has_old_verbatim_strings (b: BOOLEAN) is
+			-- Set `has_old_verbatim_strings' to `b'
+		do
+			has_old_verbatim_strings := b
+		ensure
+			has_old_verbatim_strings_set: has_old_verbatim_strings = b
+		end
+		
+	set_has_old_verbatim_strings_warning (b: BOOLEAN) is
+			-- Set `has_old_verbatim_strings_warning' to `b'.
+		do
+			has_old_verbatim_strings_warning := b
+		ensure
+			has_old_verbatim_strings_warning_set: has_old_verbatim_strings_warning = b
+		end
+	
 feature -- Error handling
 
 	fatal_error (a_message: STRING) is
@@ -235,12 +257,14 @@ feature {NONE} -- Implementation
 		do
 				-- Look for first character ].
 				-- (Note that `text' matches the following
-				-- regexp:   [ \t\r]*\][^%\n"]*\"  .)
-			from j := 1 until found loop
-				if text_item (j) = ']' then
-					found := True
-				end
+				-- regexp:   [ \t\r]*[\]\}][^%\n"]*\"  .)
+			from j := 0 until found loop
 				j := j + 1
+				inspect text_item (j)
+				when ']', '}' then
+					found := True
+				else
+				end
 			end
 			nb := verbatim_marker.count
 			if nb = (text_count - j) then
@@ -257,6 +281,59 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	align_left (s: STRING) is
+			-- Align multiline string `s' to the left so that 
+			-- the same white space in front of every line is removed.
+		require
+			s_not_void: s /= Void
+		local
+			done: BOOLEAN
+			c: CHARACTER
+			i: INTEGER
+		do
+			from
+				done := false
+			until
+				done
+			loop
+				c := s.item (1)
+				inspect c
+				when ' ', '%T', '%V' then
+						-- Check that all other lines start with `c'.
+					from
+						i := s.index_of ('%N', 1)
+					until
+						i <= 0 or else
+						i >= s.count or else
+						s.item (i + 1) /= c
+					loop
+						i := s.index_of ('%N', i + 1)
+					end
+					if i <= 0 then
+							-- Remove leading `c'.
+						s.remove (1)
+						from
+							i := s.index_of ('%N', 1)
+						until
+							i <= 0
+						loop
+							i := i + 1
+							check
+								i <= s.count
+							end
+							s.remove (i)
+							i := s.index_of ('%N', i)
+						end
+						done := s.count = 0
+					else
+						done := true
+					end
+				else
+					done := true
+				end
+			end
+		end
+		
 	process_character_code (code: INTEGER) is
 			-- Check whether `code' is a valid character code
 			-- and set `last_token' accordingly.

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			p := feature {EV_GTK_EXTERNALS}.gtk_vseparator_new
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (p)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, p)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 3, -1)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 1, -1)
 		end
 
 feature {EV_ANY_I} -- Implementation

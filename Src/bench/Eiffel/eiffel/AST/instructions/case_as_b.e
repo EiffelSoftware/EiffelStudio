@@ -17,9 +17,7 @@ inherit
 
 	AST_EIFFEL_B
 		redefine
-			type_check, byte_node,
-			find_breakable, 
-			fill_calls_list, replicate
+			type_check, byte_node, find_breakable, fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -30,7 +28,7 @@ feature -- Attributes
 	compound: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Compound
 
-feature -- Type check, byte code production, dead code removal
+feature {NONE} -- Type check, byte code production, dead code removal
 
 	type_check is
 			-- Type check a multi-branch alternative

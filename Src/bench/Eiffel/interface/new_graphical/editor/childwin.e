@@ -342,22 +342,19 @@ feature -- Basic operations
 				invalidate
 				update
 
-			elseif virtual_key = 88 then
-				if ctrled_key then
+			elseif ctrled_key then
+				--------------------
+				-- CTRLed key handle
+				--------------------
+				if virtual_key = Vk_x then
 						-- Ctrl-X (cut)
 					cut_selection
 					invalidate
 					update
-				end
-
-			elseif virtual_key = 67 then
-				if ctrled_key then
+				elseif virtual_key = Vk_c then
 						-- Ctrl-C (copy)
 					copy_selection
-				end
-
-			elseif virtual_key = 86 then
-				if ctrled_key then
+				elseif virtual_key = Vk_v then
 						-- Ctrl-V (paste)
 					paste_selection
 					invalidate

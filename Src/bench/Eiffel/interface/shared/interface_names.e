@@ -189,7 +189,7 @@ feature -- Accelerator, focus label and menu name
 	f_diagram_crop: STRING is			"Crop diagram"
 	m_diagram_crop: STRING is			"&Crop Diagram"
 	f_diagram_zoom_out: STRING is		"Zoom out"
-	f_diagram_put_right_angles: STRING is		"Put right angles"
+	f_diagram_put_right_angles: STRING is		"Force right angles"
 	f_diagram_remove_right_angles: STRING is	"Remove right angles"
 	m_diagram_link_tool: STRING is		"&Put right angles"
 	f_diagram_to_png: STRING is			"Export diagram to PNG"

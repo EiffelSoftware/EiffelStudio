@@ -473,7 +473,9 @@ feature -- Implementation
 				else
 					rcw ?= form_child_list.item.widget
 					if rcw /= Void then
-						rcw.map_widgets
+						if not rcw.mapping then
+							rcw.map_widgets
+						end
 					end
 				end
 				form_child_list.forth

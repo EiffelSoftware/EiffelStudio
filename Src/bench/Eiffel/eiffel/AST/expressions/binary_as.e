@@ -95,7 +95,7 @@ feature -- Type check, byte code and dead code removal
 			if l_infix = Void then
 				create l_vwoe
 				context.init_error (l_vwoe)
-				l_vwoe.set_other_class (a_left_type.associated_class)
+				l_vwoe.set_other_class (l_class)
 				l_vwoe.set_op_name (a_name)
 				last_error := l_vwoe
 			else

@@ -83,6 +83,23 @@ feature
 			Result := base_class /= Void and then meta_generic.is_valid
 		end
 
+	is_basic_uniform: BOOLEAN is
+			-- Are all types in Current basic?
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := true_generics.lower
+				nb := true_generics.upper
+				Result := True
+			until
+				i > nb or not Result
+			loop
+				Result := true_generics.item (i).is_basic
+				i := i + 1
+			end
+		end
+
 feature -- Generic conformance
 
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is

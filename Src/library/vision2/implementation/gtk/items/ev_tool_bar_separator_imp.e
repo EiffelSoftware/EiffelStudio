@@ -25,19 +25,17 @@ inherit
 		redefine
 			initialize
 		select
-			widget_parent_set,
 			widget_parent,
 			initialize
 		end
 
 	EV_VERTICAL_SEPARATOR_IMP
 		rename
-			parent_set as vsep_parent_set,
 			initialize as vsep_initialize,
 			interface as vsep_interface,
 			parent as vsep_parent
 		undefine
-			has_parent, button_press_switch
+			button_press_switch
 		end		
 
 create
@@ -94,6 +92,9 @@ end -- class EV_TOOL_BAR_SEPARATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/06/07 20:08:03  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.15  2000/06/07 17:27:29  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

@@ -33,16 +33,14 @@ inherit
 	EV_BUTTON_IMP
 		rename
 			interface as button_interface,
-			parent_set as button_parent_set,
 			parent as button_parent
 		undefine
-			has_parent, button_press_switch
+			button_press_switch
 		redefine
 			make,
 			initialize,
 			initialize_button_box
 		select
-			button_parent_set,
 			button_parent
 		end
 
@@ -163,6 +161,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/06/07 20:08:03  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.25  2000/06/07 17:27:29  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

@@ -115,27 +115,6 @@ feature -- Status Setting
 			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_DEFAULT_ENUM)
 		end
 
-	gtk_widget_can_default (a_widget: POINTER): BOOLEAN is
-		external
-			"C [macro <gtk/gtk.h>]: EIF_BOOLEAN"
-		alias
-			"GTK_WIDGET_CAN_DEFAULT"
-		end
-
-	gtk_widget_set_flags (a_widget: POINTER; a_flag: INTEGER) is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_WIDGET_SET_FLAGS"
-		end
-
-	gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER) is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_WIDGET_UNSET_FLAGS"
-		end
-
 feature -- Element change
 
 	set_text (a_text: STRING) is
@@ -286,6 +265,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/06/07 20:08:04  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.36  2000/06/07 17:27:39  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

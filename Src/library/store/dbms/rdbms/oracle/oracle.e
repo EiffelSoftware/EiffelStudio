@@ -16,6 +16,8 @@ inherit
 			convert_string_type
 		end
 
+	STRING_HANDLER
+
 feature
 
 	database_handle_name: STRING is "ORACLE"
@@ -102,17 +104,17 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING) is
 		local
 			i: INTEGER
-			tmp_c2, tmp_c, c_temp: ANY
+			tmp_c2, tmp_c, c_temp: C_STRING
 		do
-			c_temp := sql.to_c
+			create c_temp.make (sql)
 			from
 				i:=1
 			until
 				value.count<i
 			loop
-				tmp_c := (value.item (i).out).to_c
-				tmp_c2 := (parameters.item (i).out).to_c
-				ora_set_parameter (descriptor, $c_temp, $tmp_c2, $tmp_c)
+				create tmp_c.make (value.item (i).out)
+				create tmp_c2.make(parameters.item (i).out)
+				ora_set_parameter (descriptor, c_temp.item, tmp_c2.item, tmp_c.item)
 				i := i + 1
 			end
 			is_error_updated := False
@@ -123,17 +125,17 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			-- Map variables are used for set input arguments.
 			-- `uht' can be empty (for stored procedures).
 		local 
-			tmp_c, tmp_c2, c_temp: ANY
+			tmp_c, tmp_c2, c_temp: C_STRING
 		do
-			c_temp := sql.to_c
+			create c_temp.make (sql)
 			from
 				uht.start
 			until
 				uht.off
 			loop
-				tmp_c := (uht.item (uht.key_for_iteration).out).to_c
-				tmp_c2 := (uht.key_for_iteration).out.to_c
-				ora_set_parameter (descriptor, $c_temp, $tmp_c2, $tmp_c)
+				create tmp_c.make (uht.item_for_iteration.out)
+				create tmp_c2.make (uht.key_for_iteration)
+				ora_set_parameter (descriptor, c_temp.item, tmp_c2.item, tmp_c.item)
 				uht.forth
 			end
 			is_error_updated := False
@@ -315,10 +317,10 @@ feature -- External features
 
 	init_order (no_descriptor: INTEGER; command: STRING) is
 		local
-			c_temp: ANY
+			c_temp: C_STRING
 		do
-			c_temp := command.to_c
-			ora_init_order ($c_temp, no_descriptor)
+			create c_temp.make (command)
+			ora_init_order (c_temp.item, no_descriptor)
 			is_error_updated := False
 		end
 
@@ -347,21 +349,61 @@ feature -- External features
 
 	exec_immediate (no_descriptor: INTEGER; command: STRING) is
 		local
-			c_temp: ANY
+			c_temp: C_STRING
 		do
-			c_temp := command.to_c
-			ora_exec_immediate (no_descriptor, $c_temp)
+			create c_temp.make (command)
+			ora_exec_immediate (no_descriptor, c_temp.item)
 			is_error_updated := False
 		end
 
-	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL[CHARACTER]; max_len:INTEGER): INTEGER is
+	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+		local
+			l_area: MANAGED_POINTER
+			i: INTEGER
 		do
-			Result := ora_put_select_name (no_descriptor, index, $ar)
+			create l_area.make (max_len)
+
+			Result := ora_put_select_name (no_descriptor, index, l_area.item)
+
+			check
+				Result <= max_len
+			end
+
+			ar.set_count (Result)
+
+			from
+				i := 1
+			until
+				i > Result
+			loop
+				ar.put (l_area.read_integer_8 (i - 1).to_character, i)
+				i := i + 1
+			end
 		end
 
-	put_data (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL[CHARACTER]; max_len:INTEGER): INTEGER is
+	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+		local
+			l_area: MANAGED_POINTER
+			i: INTEGER
 		do
-			Result := ora_put_data (no_descriptor, index, $ar)
+			create l_area.make (max_len)
+
+			Result := ora_put_data (no_descriptor, index, l_area.item)
+
+			check
+				Result <= max_len
+			end
+
+			ar.set_count (Result)
+
+			from
+				i := 1
+			until
+				i > Result
+			loop
+				ar.put (l_area.read_integer_8 (i - 1).to_character, i)
+				i := i + 1
+			end
 		end
 
 	conv_type (indicator: INTEGER; index: INTEGER): INTEGER is 
@@ -516,11 +558,11 @@ feature -- External features
 
 	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING) is
         local
-			c_temp1, c_temp2: ANY
+			c_temp1, c_temp2: C_STRING
 		do      
-			c_temp1 := user_name.to_c
-			c_temp2 := user_passwd.to_c
-			ora_connect ($c_temp1, $c_temp2)
+			create c_temp1.make (user_name)
+			create c_temp2.make (user_passwd)
+			ora_connect (c_temp1.item, c_temp2.item)
 			is_error_updated := False
        	end
 

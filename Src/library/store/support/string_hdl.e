@@ -12,6 +12,8 @@ feature -- Status setting
 
 	clear_all is
 			-- Remove all mapped keys.
+		require
+			ht_not_void: ht /= Void
 		do
 			ht.clear_all
 		end
@@ -20,6 +22,7 @@ feature -- Status setting
 			-- Store item `n' with key `key'.
 			-- `n' can be `Void'.
 		require
+			ht_not_void: ht /= Void
 			key_exists: key /= Void
 			not_key_in_table: not is_mapped (key)
 		do
@@ -31,6 +34,7 @@ feature -- Status setting
 	unset_map_name (key: STRING) is
 			-- Remove item associated with key `key'.
 		require
+			ht_not_void: ht /= Void
 			key_exists: key /= Void
 			item_exists: is_mapped (key)
 		do
@@ -44,6 +48,7 @@ feature -- Status report
 	is_mapped (key: STRING): BOOLEAN is
 			-- Is `key' mapped to an Eiffel entity?
 		require
+			ht_not_void: ht /= Void
 			keys_exists: key /= Void
 		do
 			Result := ht.has (key)
@@ -52,6 +57,7 @@ feature -- Status report
 	mapped_value (key: STRING): ANY is
 			-- Value mapped with `key'
 		require
+			ht_not_void: ht /= Void
 			key_exists: key /= Void
 			key_mapped: is_mapped (key)
 		do
@@ -60,7 +66,7 @@ feature -- Status report
 			result_exists: Result /= Void
 		end
 
-feature {DATABASE_PROC} -- Status report
+feature -- Status report
 
 	ht: HASH_TABLE [ANY, STRING]
 		-- Correspondence table between object references

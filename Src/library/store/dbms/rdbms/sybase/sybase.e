@@ -18,6 +18,8 @@ inherit
 			proc_args
 		end
 
+	STRING_HANDLER
+
 feature -- Access
 
 	database_handle_name: STRING is "SYBASE"
@@ -264,10 +266,10 @@ feature -- External	features
 
 	init_order (no_descriptor: INTEGER; command: STRING) is
 		local
-			c_temp: ANY
+			c_temp: C_STRING
 		do
-			c_temp := command.to_c
-			last_error_code := syb_init_order (no_descriptor, $c_temp)
+			create c_temp.make (command)
+			last_error_code := syb_init_order (no_descriptor, c_temp.item)
 		end
 
 	start_order (no_descriptor: INTEGER) is
@@ -292,20 +294,60 @@ feature -- External	features
 
 	exec_immediate (no_descriptor: INTEGER; command: STRING) is
 		local
-			c_temp: ANY
+			c_temp: C_STRING
 		do
-			c_temp := command.to_c
-			last_error_code := syb_exec_immediate($c_temp)
+			create c_temp.make (command)
+			last_error_code := syb_exec_immediate(c_temp.item)
 		end
 
-	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
+	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+		local
+			l_area: MANAGED_POINTER
+			i: INTEGER
 		do
-			Result := syb_put_col_name(no_descriptor, index, $ar)
+			create l_area.make (max_len)
+
+			Result := syb_put_col_name(no_descriptor, index, l_area.item)
+
+			check
+				Result <= max_len
+			end
+
+			ar.set_count (Result)
+
+			from
+				i := 1
+			until
+				i > Result
+			loop
+				ar.put (l_area.read_integer_8 (i - 1).to_character, i)
+				i := i + 1
+			end
 		end
 
-	put_data (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
+	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+		local
+			l_area: MANAGED_POINTER
+			i: INTEGER
 		do
-			Result := syb_put_data (no_descriptor, index, $ar)
+			create l_area.make (max_len)
+			
+			Result := syb_put_data (no_descriptor, index, l_area.item)
+
+			check
+				Result <= max_len
+			end
+
+			ar.set_count (Result)
+
+			from
+				i := 1
+			until
+				i > Result
+			loop
+				ar.put (l_area.read_integer_8 (i - 1).to_character, i)
+				i := i + 1
+			end
 		end
 
 	conv_type (indicator: INTEGER; index: INTEGER): INTEGER is
@@ -435,14 +477,14 @@ feature -- External	features
 
 	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING) is
 		local
-			c_temp1, c_temp2, c_temp3, c_temp4: ANY
+			c_temp1, c_temp2, c_temp3, c_temp4: C_STRING
 		do
-			c_temp1 := user_name.to_c
-			c_temp2 := user_passwd.to_c
-			c_temp3 := application.to_c
-			c_temp4 := hostname.to_c
+			create c_temp1.make (user_name)
+			create c_temp2.make (user_passwd)
+			create c_temp3.make (application)
+			create c_temp4.make (hostname)
 
-			last_error_code := syb_connect ($c_temp1, $c_temp2, $c_temp3, $c_temp4)
+			last_error_code := syb_connect (c_temp1.item, c_temp2.item, c_temp3.item, c_temp4.item)
 		end
 
 	disconnect is

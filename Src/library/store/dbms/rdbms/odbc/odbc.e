@@ -30,6 +30,8 @@ inherit
 			unset_catalog_flag
 		end
 
+	STRING_HANDLER
+
 feature 
 
 	database_handle_name: STRING is "ODBC"
@@ -61,10 +63,10 @@ feature -- For DATABASE_CHANGE
 
 	hide_qualifier (tmp_strg: STRING): POINTER is
 		local
-			c_temp: ANY
+			c_temp: C_STRING
 		do
-			c_temp := tmp_strg.to_c
-			Result := odbc_hide_qualifier ($c_temp)
+			create c_temp.make (tmp_strg)
+			Result := odbc_hide_qualifier (c_temp.item)
 		end
 
 	pre_immediate (descriptor, i: INTEGER) is
@@ -110,18 +112,18 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
 		local
 			tmp_str: STRING
-			c_temp: ANY
+			c_temp: C_STRING
 		do
-			c_temp := sql.to_c
+			create c_temp.make (sql)
 			create tmp_str.make (1)
-			tmp_str.from_c (odbc_hide_qualifier ($c_temp))
+			tmp_str.from_c (odbc_hide_qualifier (c_temp.item))
 			tmp_str.left_adjust
 			if tmp_str.count > 1 and then (tmp_str.substring (1, 1)).is_equal ("{") then
 				if uht.count > 0 then
 					if uhandle.execution_type.immediate_execution then
 						odbc_pre_immediate (descriptor, uht.count)
 					else
-						odbc_init_order (descriptor, $c_temp, uht.count)
+						odbc_init_order (descriptor, c_temp.item, uht.count)
 					end
 					is_error_updated := False
 					if para /= Void then
@@ -147,7 +149,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			i: INTEGER
 			object : ANY
 			tmp_str: STRING
-			tmp_c: ANY
+			tmp_c: C_STRING
 			tmp_date: DATE_TIME
 			type: INTEGER
 			ptr : POINTER_REF
@@ -192,8 +194,8 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 					else
 						tmp_str.append ( (object).out)
 						para.set (default_pointer, i)
-						tmp_c := tmp_str.to_c
-						para.set (odbc_str_from_str ($tmp_c), i)
+						create tmp_c.make (tmp_str)
+						para.set (odbc_str_from_str (tmp_c.item), i)
 					end
 				end -- Null value
 				odbc_set_parameter (descriptor, i, 1, type, para.get (i))
@@ -443,12 +445,12 @@ feature -- For DATABASE_REPOSITORY
 
 	selection_string (rep_qualifier, rep_owner, repository_name: STRING): STRING is
 		local
-			c_tmp: ANY
+			c_tmp: C_STRING
 		do
-			c_tmp := rep_qualifier.to_c
-			odbc_set_qualifier ($c_tmp)
-			c_tmp := rep_owner.to_c
-			odbc_set_owner ($c_tmp)
+			create c_tmp.make (rep_qualifier)
+			odbc_set_qualifier (c_tmp.item)
+			create c_tmp.make (rep_owner)
+			odbc_set_owner (c_tmp.item)
 			create Result.make (1)
 			Result.append ("SQLColumns (")
 			Result.append (repository_name)
@@ -489,10 +491,10 @@ feature -- External
 
 	init_order (no_descriptor: INTEGER; command: STRING) is
 		local
-			c_temp: ANY
+			c_temp: C_STRING
 		do
-			c_temp := command.to_c
-			odbc_init_order (no_descriptor, $c_temp, 0)
+			create c_temp.make (command)
+			odbc_init_order (no_descriptor, c_temp.item, 0)
 			is_error_updated := False
 		end
 
@@ -524,21 +526,61 @@ feature -- External
 
 	exec_immediate (no_descriptor: INTEGER; command: STRING) is
 		local
-			c_temp: ANY
+			c_temp: C_STRING
 		do
-			c_temp := command.to_c
-			odbc_exec_immediate (no_descriptor, $c_temp)
+			create c_temp.make (command)
+			odbc_exec_immediate (no_descriptor, c_temp.item)
 			is_error_updated := False
 		end
 
-	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
+	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+		local
+			l_area: MANAGED_POINTER
+			i: INTEGER
 		do
-			Result := odbc_put_col_name (no_descriptor, index, $ar)
+			create l_area.make (max_len)
+			
+			Result := odbc_put_col_name (no_descriptor, index, l_area.item)
+
+			check
+				Result <= max_len
+			end
+
+			ar.set_count (Result)
+		
+			from
+				i := 1
+			until
+				i > Result
+			loop
+				ar.put (l_area.read_integer_8 (i - 1).to_character, i)
+				i := i + 1
+			end
 		end
 
-	put_data (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
+	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+		local
+			l_area: MANAGED_POINTER
+			i: INTEGER
 		do
-			Result := odbc_put_data (no_descriptor, index, $ar)
+			create l_area.make (max_len)
+
+			Result := odbc_put_data (no_descriptor, index, l_area.item)
+			
+			check
+				Result <= max_len
+			end
+
+			ar.set_count (Result)
+
+			from
+				i := 1
+			until
+				i > Result
+			loop
+				ar.put (l_area.read_integer_8 (i - 1).to_character, i)
+				i := i + 1
+			end
 		end
 
 	sensitive_mixed: BOOLEAN is
@@ -688,12 +730,12 @@ feature -- External
 		require else
 			data_source_set: data_source /= Void
 		local
-			c_temp1, c_temp2, c_temp3: ANY	
+			c_temp1, c_temp2, c_temp3: C_STRING
 		do
-			c_temp1 := user_name.to_c
-			c_temp2 := user_passwd.to_c
-			c_temp3 := data_source.to_c
-			odbc_connect ($c_temp1, $c_temp2, $c_temp3)
+			create c_temp1.make (user_name)
+			create c_temp2.make (user_passwd)
+			create c_temp3.make (data_source)
+			odbc_connect (c_temp1.item, c_temp2.item, c_temp3.item)
 			is_error_updated := False
 		end
 
@@ -1044,7 +1086,7 @@ feature {NONE} -- External features
 		local 
 			i: INTEGER
 			tmp_str: STRING
-			tmp_c: ANY
+			tmp_c: C_STRING
 			tmp_date: DATE_TIME
 			type: INTEGER
 		do
@@ -1077,8 +1119,8 @@ feature {NONE} -- External features
 					para.set (odbc_stru_of_date (tmp_date.year, tmp_date.month, tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, 2), i)
 				else
 					tmp_str.append ( (uht.item (uht.key_for_iteration)).out)
-				        tmp_c := tmp_str.to_c
-					para.set (odbc_str_from_str ($tmp_c), i)
+					create tmp_c.make (tmp_str)
+					para.set (odbc_str_from_str (tmp_c.item), i)
 				end
 			--	odbc_set_parameter (descriptor, i, 1, type, para.get (i))
 				odbc_set_parameter (descriptor, uht.key_for_iteration.to_integer, 1, type, para.get (i))

@@ -31,12 +31,13 @@ feature -- Execution
 
 	execute is
 		local
-			ctxt: ROUTINE_TEXT_FORMATTER
+			ctxt: ROUTINE_TEXT_FORMATTER;
+			text_filter: TEXT_FILTER
 		do
 			!! ctxt;
 			ctxt.format (current_feature, current_class);
-			output_window.put_string (ctxt.text.image);
-			output_window.new_line;
+			structured_text.add_string (ctxt.text.image);
+			structured_text.add_new_line
 		end;
 
 end -- class E_SHOW_ROUTINE_FLAT

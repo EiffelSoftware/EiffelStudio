@@ -21,9 +21,9 @@ feature -- Execution
 	execute is
 		do
 			!! displayed.make;
-			current_class.append_signature (output_window);
-			output_window.new_line;
-			rec_display (1, current_class);
+			current_class.append_signature (structured_text);
+			structured_text.add_new_line;
+			rec_display (1, current_class, structured_text);
 			displayed := Void;
 		end;
 
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	rec_display (i: INTEGER; c: E_CLASS) is
+	rec_display (i: INTEGER; c: E_CLASS; st: STRUCTURED_TEXT) is
 			-- Display parents of `c' in tree form.
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
@@ -79,14 +79,14 @@ feature {NONE} -- Implementation
 						parents.after
 					loop
 						parent_class := parents.item.associated_eclass;
-						output_window.put_string (tabs (i));
-						parent_class.append_signature (output_window);
+						st.add_string (tabs (i));
+						parent_class.append_signature (st);
 						if already_processed (parents.item) then
-							output_window.put_string ("...%N")
+							st.add_string ("...%N")
 						else	
-							output_window.new_line;
+							st.add_new_line;
 							displayed.extend (parents.item);
-							rec_display (i+1, parent_class);
+							rec_display (i+1, parent_class, st);
 						end;			
 						parents.forth
 					end

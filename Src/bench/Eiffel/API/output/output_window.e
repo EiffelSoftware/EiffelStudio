@@ -7,6 +7,9 @@ indexing
 
 deferred class OUTPUT_WINDOW
 
+inherit
+	TEXT_FORMATTER
+
 feature -- Ouput
 	
 	display is 

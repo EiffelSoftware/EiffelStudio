@@ -21,10 +21,10 @@ feature -- Output
 			-- Execute Current command.	
 		do
 			!! displayed.make;
-			current_class.append_signature (output_window);
-			output_window.new_line;
-			rec_display (1, current_class);
-			displayed := Void;	
+			current_class.append_signature (structured_text);
+			structured_text.add_new_line;
+			rec_display (1, current_class, structured_text);
+			displayed := Void
 		end;
 
 feature {NONE} -- Implementation
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	rec_display (i: INTEGER; c: E_CLASS) is
+	rec_display (i: INTEGER; c: E_CLASS; st: STRUCTURED_TEXT) is
 			-- Display parents of `c' in tree form.
 		local
 			descendants: LINKED_LIST [E_CLASS]
@@ -60,17 +60,17 @@ feature {NONE} -- Implementation
 					descendants.after
 				loop
 					descendant_class := descendants.item;
-					output_window.put_string (tabs (i));
-					descendant_class.append_signature (output_window);
+					st.add_string (tabs (i));
+					descendant_class.append_signature (st);
 					if displayed.has (descendant_class) then
 						if not descendant_class.descendants.empty then
-							output_window.put_string ("...")
+							st.add_string ("...")
 						end;
-						output_window.new_line;
+						st.add_new_line;
 					else	
-						output_window.new_line;
+						st.add_new_line;
 						displayed.extend (descendant_class);
-						rec_display (i+1, descendant_class);
+						rec_display (i+1, descendant_class, st);
 					end;			
 					descendants.forth
 				end

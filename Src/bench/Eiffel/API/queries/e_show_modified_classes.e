@@ -70,30 +70,30 @@ feature {NONE} -- Implementation
 			end;
 			if not sorted_class_names.empty then
 				sorted_class_names.sort;
-				output_window.put_string ("Cluster: ");
-				output_window.put_string (cluster.cluster_name);
+				structured_text.add_string ("Cluster: ");
+				structured_text.add_string (cluster.cluster_name);
 				if cluster.is_precompiled then
-					output_window.put_string (" (Precompiled)")
+					structured_text.add_string (" (Precompiled)")
 				end;
-				output_window.new_line;
+				structured_text.add_new_line;
 				from
 					sorted_class_names.start
 				until
 					sorted_class_names.after
 				loop
-					output_window.put_string ("%T");
+					structured_text.add_string ("%T");
 					a_classi := classes.item (sorted_class_names.item);
 					a_classe := a_classi.compiled_eclass;
 					if a_classe /= Void then
-						a_classe.append_signature (output_window)
+						a_classe.append_signature (structured_text)
 					else
-						a_classi.append_name (output_window);
-						output_window.put_string ("  (not in system)")
+						a_classi.append_name (structured_text);
+						structured_text.add_string ("  (not in system)")
 					end;
-					output_window.new_line;
+					structured_text.add_new_line;
 					sorted_class_names.forth
 				end
-			end
+			end;
 		end;
 
 end -- class E_SHOW_MODIFIED_CLASSES

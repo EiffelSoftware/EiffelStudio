@@ -25,36 +25,36 @@ feature -- Execution
 			cursor: CURSOR;
 			nb_of_classes: INTEGER;
 			nb_of_clusters: INTEGER;
-			root_cluster: CLUSTER_I
+			root_cluster: CLUSTER_I;
 		do
 			clusters := Eiffel_universe.clusters;
 			if not clusters.empty then
 			
 				nb_of_clusters := clusters.count;
-				output_window.put_int (nb_of_clusters);
+				structured_text.add_int (nb_of_clusters);
 				if nb_of_clusters > 1 then
-					output_window.put_string (" clusters containing ")
+					structured_text.add_string (" clusters containing ")
 				else
-					output_window.put_string (" cluster containing ")
+					structured_text.add_string (" cluster containing ")
 				end;
 				from clusters.start until clusters.after loop
 					nb_of_classes := nb_of_classes + clusters.item.classes.count;
 					clusters.forth
 				end;
-				output_window.put_int (nb_of_classes);
+				structured_text.add_int (nb_of_classes);
 				if nb_of_classes > 1 then
-					output_window.put_string (" classes");
+					structured_text.add_string (" classes");
 				else
-					output_window.put_string (" class");
+					structured_text.add_string (" class");
 				end;
-				output_window.new_line;
-				output_window.put_string ("root: ");
-				Eiffel_system.root_class.compiled_eclass.append_signature (output_window);
-				output_window.put_string (" (cluster: ");
-				output_window.put_string (Eiffel_system.root_cluster.cluster_name);
-				output_window.put_string (")");
-				output_window.new_line;
-				output_window.new_line;
+				structured_text.add_new_line;
+				structured_text.add_string ("root: ");
+				Eiffel_system.root_class.compiled_eclass.append_signature (structured_text);
+				structured_text.add_string (" (cluster: ");
+				structured_text.add_string (Eiffel_system.root_cluster.cluster_name);
+				structured_text.add_string (")");
+				structured_text.add_new_line;
+				structured_text.add_new_line;
 
 					--| Skip precompile clusters for now
 				from
@@ -94,26 +94,26 @@ feature -- Execution
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
 			a_classi: CLASS_I;
 			a_classe: E_CLASS;
-			nb_of_classes: INTEGER
+			nb_of_classes: INTEGER;
 		do
-			!!sorted_class_names.make;
+			!! sorted_class_names.make;
 			classes := cluster.classes;
 
-			output_window.put_string ("Cluster: ");
-			output_window.put_string (cluster.cluster_name);
+			structured_text.add_string ("Cluster: ");
+			structured_text.add_string (cluster.cluster_name);
 			if cluster.is_precompiled then
-				output_window.put_string (" (Precompiled, ")
+				structured_text.add_string (" (Precompiled, ")
 			else
-				output_window.put_string (" (")
+				structured_text.add_string (" (")
 			end;
 			nb_of_classes := classes.count;
-			output_window.put_int (nb_of_classes);
+			structured_text.add_int (nb_of_classes);
 			if nb_of_classes > 1 then
-				output_window.put_string (" classes)")
+				structured_text.add_string (" classes)")
 			else
-				output_window.put_string (" class)")
+				structured_text.add_string (" class)")
 			end;
-			output_window.new_line;
+			structured_text.add_new_line;
 
 			from
 				classes.start
@@ -129,16 +129,16 @@ feature -- Execution
 			until
 				sorted_class_names.after
 			loop
-				output_window.put_char ('%T');
+				structured_text.add_char ('%T');
 				a_classi := classes.item (sorted_class_names.item);
 				a_classe := a_classi.compiled_eclass;
 				if a_classe /= Void then
-					a_classe.append_signature (output_window);
+					a_classe.append_signature (structured_text);
 				else
-					a_classi.append_name (output_window);
-					output_window.put_string ("  (not in system)");
+					a_classi.append_name (structured_text);
+					structured_text.add_string ("  (not in system)");
 				end;
-				output_window.new_line;
+				structured_text.add_new_line;
 				sorted_class_names.forth
 			end;
 		end

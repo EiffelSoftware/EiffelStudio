@@ -22,11 +22,11 @@ feature -- Output
 			-- Execute Current command.
 		local
 			suppliers: SUPPLIER_LIST;
-			a_supplier: E_CLASS
+			a_supplier: E_CLASS;
 		do
-			output_window.put_string ("Suppliers of class ");
-			current_class.append_signature (output_window);
-			output_window.put_string (":%N%N");
+			structured_text.add_string ("Suppliers of class ");
+			current_class.append_signature (structured_text);
+			structured_text.add_string (":%N%N");
 			from	
 				suppliers := current_class.suppliers;
 				suppliers.start;
@@ -35,9 +35,9 @@ feature -- Output
 			loop
 				a_supplier := suppliers.item.supplier;
 				if (current_class /= a_supplier) then
-					output_window.put_char ('%T');
-					a_supplier.append_signature (output_window);
-					output_window.new_line;
+					structured_text.add_char ('%T');
+					a_supplier.append_signature (structured_text);
+					structured_text.add_new_line;
 				end;
 				suppliers.forth
 			end

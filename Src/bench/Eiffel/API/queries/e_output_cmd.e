@@ -2,7 +2,7 @@ indexing
 
 	description: 
 		"General notion of an eiffel command with output%
-		%redirected to an OUTPUT_WINDOW.";
+		%appended to `structured_text'.";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -17,23 +17,23 @@ inherit
 
 feature -- Properties
 
-	output_window: OUTPUT_WINDOW;
-			-- Output window for command
+	structured_text: STRUCTURED_TEXT;
+			-- Structured text for command.
 
 feature -- Access
 
 	executable: BOOLEAN is
 			-- Is Current command executable?
 		do
-			Result := output_window /= Void 
+			Result := structured_text /= Void 
 		end
 
 feature -- Setting
 
-	make, set_output_window (display: like output_window) is
-			-- Set output_window to `display'.
+	make, set_structured_text (st: like structured_text) is
+			-- Set `structured_text' to `st'.
 		do
-			output_window := display
+			structured_text := st
 		end;
 
 end -- class E_OUTPUT_CMD

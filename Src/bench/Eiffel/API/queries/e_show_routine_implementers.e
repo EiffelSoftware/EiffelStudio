@@ -28,19 +28,19 @@ feature -- Execution
 			written_in: INTEGER;
 			feat: E_FEATURE;
 			c: E_CLASS;
-			written_cl: E_CLASS
-            precursors: LIST [E_CLASS];
+			written_cl: E_CLASS;
+			precursors: LIST [E_CLASS]
         do
 			written_cl := current_feature.written_class;
-            precursors := current_feature.precursors;
+			precursors := current_feature.precursors;
 			!! classes.make;
 			record_descendants (classes, current_class);
 			if not classes.has (current_class) then
 				classes.extend (current_class)
 			end;
-            if precursors /= Void then
-                classes.append (precursors)
-            end;
+			if precursors /= Void then
+				classes.append (precursors)
+			end;
 			rout_id_set := current_feature.rout_id_set;
 			from
 				i := 1
@@ -48,9 +48,9 @@ feature -- Execution
 				i > rout_id_set.count
 			loop
 				rout_id := rout_id_set.item (i);
-				output_window.put_string ("%NClass history branch #");
-				output_window.put_int (i);
-				output_window.put_string ("%N-----------------------%N");
+				structured_text.add_string ("%NClass history branch #");
+				structured_text.add_int (i);
+				structured_text.add_string ("%N-----------------------%N");
 				from
 					classes.start;
 				until
@@ -62,13 +62,13 @@ feature -- Execution
 					if feat /= Void and then 
 						feat.written_in = written_in 
 					then
-						c.append_name (output_window);
-						output_window.put_string (" ");
-						feat.append_name (output_window, c);
+						c.append_name (structured_text);
+						structured_text.add_string (" ");
+						feat.append_name (structured_text, c);
 						if c = written_cl then
-							output_window.put_string (" (version from)");
+							structured_text.add_string (" (version from)");
 						end;
-						output_window.new_line;
+						structured_text.add_new_line;
 					end
 					classes.forth
 				end;

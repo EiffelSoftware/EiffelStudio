@@ -59,14 +59,14 @@ feature -- Execution
 					a_classi := sorted_classes.item;
 					a_classe := a_classi.compiled_eclass;
 					if a_classe /= Void then
-						a_classe.append_signature (output_window)
+						a_classe.append_signature (structured_text)
 					else
-						a_classi.append_name (output_window)
+						a_classi.append_name (structured_text)
 					end;
-					output_window.new_line;
-					output_window.put_string ("%T-- Cluster: ");
-					output_window.put_string (a_classi.cluster.cluster_name);
-					output_window.new_line;
+					structured_text.add_new_line;
+					structured_text.add_string ("%T-- Cluster: ");
+					structured_text.add_string (a_classi.cluster.cluster_name);
+					structured_text.add_new_line;
 					sorted_classes.forth
 				end
 			end

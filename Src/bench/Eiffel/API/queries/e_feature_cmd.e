@@ -23,15 +23,15 @@ inherit
 feature -- Initialization
 
 	set, make (a_feature: E_FEATURE; a_class: E_CLASS;
-				display: like output_window) is
+				st: like structured_text) is
 			-- Make current command with current_feature as
 			-- `a_feature' defined in current_class `a_class_c'.
 		require
 			non_void_a_feature: a_feature /= Void;
 			non_void_a_class_c: a_class /= Void;
-			non_void_display: display /= Void;
+			non_void_st: st /= Void;
 		do
-			class_make (a_class, display);
+			class_make (a_class, st);
 			current_feature := a_feature
 		ensure
 			current_feature_set: current_feature = a_feature
@@ -44,7 +44,7 @@ feature -- Properties
 		do
 			Result := current_class /= Void and then
 				current_feature /= Void and then
-				output_window /= Void and then
+				structured_text /= Void and then
 				has_valid_feature
 		ensure then
 			good_result: Result implies current_feature /= Void and then

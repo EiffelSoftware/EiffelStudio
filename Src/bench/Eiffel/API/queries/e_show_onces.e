@@ -29,15 +29,15 @@ feature -- Access
 
 feature -- Output
 
-	display_feature (f: E_FEATURE; c: E_CLASS) is
+	display_feature (f: E_FEATURE; c: E_CLASS; st: STRUCTURED_TEXT) is
 		local
 			const: E_CONSTANT;
 			ec: E_CLASS;
 			str: STRING
 		do
-			f.append_signature (output_window, c);
+			f.append_signature (st, c);
 			if f.is_constant then
-				output_window.put_string (" is ");
+				st.add_string (" is ");
 				const ?= f;	--| Cannot fail
 				ec := const.type.associated_eclass;
 				if equal (ec.name, "character") then
@@ -48,15 +48,15 @@ feature -- Output
 					str := ""
 				end;
 				if const.is_unique then
-					output_window.put_string ("unique (");
-					output_window.put_string (str);
-					output_window.put_string (const.value);
-					output_window.put_string (str);
-					output_window.put_char (')')
+					st.add_string ("unique (");
+					st.add_string (str);
+					st.add_string (const.value);
+					st.add_string (str);
+					st.add_char (')')
 				else
-					output_window.put_string (str);
-					output_window.put_string (const.value);
-					output_window.put_string (str);
+					st.add_string (str);
+					st.add_string (const.value);
+					st.add_string (str);
 				end
 			end
 		end;

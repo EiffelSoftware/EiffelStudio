@@ -30,7 +30,6 @@ feature {NONE}
 			other_body_id: BODY_ID;
 			descendant_class: CLASS_C;
 			descendant_feature: FEATURE_I;
-			des_feat_table: FEATURE_TABLE;
 			des_orig_table: SELECT_TABLE;
 			table: ROUT_TABLE;
 			old_position: INTEGER;
@@ -98,18 +97,16 @@ feature {NONE}
 						other_body_id := body_table.item (unit.body_index);
 						if not bid_rid_is_marked (other_body_id, rout_id_val) then
 							descendant_class := System.class_of_id (unit.id);
-							des_feat_table := descendant_class.feature_table;
-							des_orig_table := des_feat_table.origin_table;
+							des_orig_table := descendant_class.feature_table.origin_table
 							descendant_feature := des_orig_table.item(rout_id_val);
-							if not  (descendant_feature.is_none_attribute
-									or else
-									descendant_class.is_basic)
+							if
+								not (descendant_feature.is_none_attribute
+									or else descendant_class.is_basic)
 							then
 								if descendant_feature.is_attribute then
 									mark_alive (descendant_feature, rout_id_val);
 								else
-									mark
-										(descendant_feature, descendant_class, rout_id_val);
+									mark (descendant_feature, descendant_class, rout_id_val);
 								end;
 							end;
 						end;

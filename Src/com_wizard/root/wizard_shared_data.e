@@ -46,6 +46,8 @@ feature -- Access
 			Result.append_character (')')
 		end
 
+	concurrency_model: STRING is "COINIT_APARTMENTTHREADED"
+
 feature -- Element Change
 
 	set_shared_wizard_environment (an_environment: WIZARD_ENVIRONMENT) is

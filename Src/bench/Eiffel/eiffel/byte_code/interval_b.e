@@ -28,7 +28,21 @@ inherit
 			is_equal
 		end
 	
-feature 
+feature {INTERVAL_B} -- Creation
+
+	make (i: like lower; j: like upper) is
+			-- Create a new interval with lower `i' and upper `j'.
+			-- If `i' >= `j', then we reverse the order.
+		require
+			i_not_void: i /= Void
+			j_not_void: j /= Void
+			compatible_type: i.conforms_to (j) or j.conforms_to (i)
+		do
+			lower := i
+			upper := j
+		end
+
+feature  -- Access
 
 	lower: INTERVAL_VAL_B
 			-- Lower bound
@@ -40,39 +54,40 @@ feature
 			-- Position of corresponding When_part in inspect instruction
 
 	intersection (other: like Current): like Current is
-			-- Instersection of `other' and Current.
+			-- Instersection of `other' and Current
 		require
 			good_argument: other /= Void
+			same_type: same_type (other)
 			not_disjunction: not disjunction (other)
-		deferred
-		end
-
-	is_good_range: BOOLEAN is
-			-- Is Current lower <= upper?
+		local
+			new_lower, new_upper: like lower
 		do
-			Result := (lower <= upper)
-		end
-
-	make (i: like lower; j: like upper) is
-			-- Create a new interval with lower `i' and upper `j'.
-			-- If `i' >= `j', then we reverse the order.
-		require
-			i_not_void: i /= Void
-			j_not_void: j /= Void
-		do
-			lower := i
-			upper := j
+			if lower < other.lower then
+				new_lower := other.lower
+			else
+				new_lower := lower
+			end
+			if upper < other.upper then
+				new_upper := upper
+			else
+				new_upper := other.upper
+			end
+			Result := twin
+			Result.make (new_lower, new_upper)
 		end
 
 	disjunction (other: like Current): BOOLEAN is
-			-- Is the intersection of Current and `other' null ?
+			-- Is the intersection of Current and `other' null?
 		require
 			good_argument: other /= Void
+			same_type: same_type (other)
 		do
 			Result := 	lower > other.upper
 						or else
 						upper < other.lower 
 		end
+
+feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is `other' greater than Current?
@@ -88,14 +103,13 @@ feature
 			Result := lower.is_equal (other.lower) and then upper.is_equal (other.upper)
 		end
 
-	display (st: STRUCTURED_TEXT) is
-		do
-			lower.display (st)
-			st.add_string ("..")
-			upper.display (st)
-		end
+feature -- Status report
 
-feature -- Access
+	is_good_range: BOOLEAN is
+			-- Is Current lower <= upper?
+		do
+			Result := lower <= upper
+		end
 
 	is_lower_included: BOOLEAN is true
 			-- Is `lower' included in an interval?
@@ -108,19 +122,6 @@ feature -- Measurement
 	count: DOUBLE is 1.0
 			-- Number of intervals and gaps in current span
 
-feature -- Byte code generation
-
-	make_range (ba: BYTE_ARRAY) is
-			-- Generate byte code for interval range.
-		require
-			not (lower = Void or else upper = Void)
-			is_good_range: is_good_range
-		do
-			lower.make_byte_code (ba)
-			upper.make_byte_code (ba)
-			ba.append (Bc_range)
-		end
-
 feature -- Modification
 
 	set_upper (new_upper: like upper) is
@@ -128,6 +129,7 @@ feature -- Modification
 		require
 			new_upper_not_void: new_upper /= Void
 			new_upper_greater_than_upper: new_upper > upper
+			compatible_type: lower.conforms_to (new_upper) or new_upper.conforms_to (lower)
 		do
 			upper := new_upper
 		ensure
@@ -144,6 +146,28 @@ feature -- Modification
 			case_index_set: case_index = i
 		end
 		
+feature -- Output
+
+	display (st: STRUCTURED_TEXT) is
+		do
+			lower.display (st)
+			st.add_string ("..")
+			upper.display (st)
+		end
+
+feature -- Byte code generation
+
+	make_range (ba: BYTE_ARRAY) is
+			-- Generate byte code for interval range.
+		require
+			ba_not_void: ba /= Void
+			is_good_range: is_good_range
+		do
+			lower.make_byte_code (ba)
+			upper.make_byte_code (ba)
+			ba.append (Bc_range)
+		end
+
 invariant
 	lower_not_void: lower /= Void
 	upper_not_void: upper /= Void

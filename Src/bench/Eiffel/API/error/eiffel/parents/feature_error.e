@@ -64,7 +64,7 @@ feature -- Output
 				elseif feature_name /= Void then
 					st.add_feature_error (e_feature, e_feature.name, error_position)
 				else
-					st.add_feature_error (Void, "invariant", error_position)
+					st.add_string ("invariant")
 				end;
 			elseif e_feature /= Void then
 				e_feature.append_name (st);

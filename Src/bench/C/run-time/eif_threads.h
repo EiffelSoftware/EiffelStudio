@@ -280,22 +280,6 @@ RT_LNK void eif_thr_rwl_wrlock (EIF_POINTER rwlp);
 RT_LNK void eif_thr_rwl_unlock (EIF_POINTER rwlp);
 RT_LNK void eif_thr_rwl_destroy (EIF_POINTER rwlp);
 
-
-/* 
- * Structure used to give arguments to a new thread
- */
- 
-typedef struct {
-    EIF_OBJECT current;				/* Root object of Thread creator. */
-    EIF_POINTER routine;			/* routine `execute' of thread. */
-    EIF_MUTEX_TYPE *children_mutex;	/* Mutex for `join_all' */
-    int *addr_n_children;			/* Number of thread children. */
-#ifndef EIF_NO_CONDVAR
-    EIF_COND_TYPE *children_cond;	/* For `join_all'.*/
-#endif  
-    EIF_THR_TYPE *tid;				/* Thread id of new thread. */
-} start_routine_ctxt_t;
-
 #ifdef __cplusplus
 }
 #endif

@@ -35,33 +35,12 @@ inherit
 	GB_SHARED_OBJECT_EDITORS
 		
 	GB_CONSTANTS
-
+	
 create
 	{GB_OBJECT_HANDLER, GB_OBJECT} make
 
 create
 	make_root
-	
-feature {GB_RADIO_GROUP_LINK} -- Access
-
-	is_animated: BOOLEAN
-		-- Is `Current' presently being animated?
-
-feature {GB_RADIO_GROUP_LINK}-- Status setting
-
-	enable_animation is
-			-- Assign `True' to `is_animated'.
-		do
-			is_animated := True
-		end
-		
-	disable_animation is
-			-- Assign `False' to `is_animated'.
-		do
-			is_animated := False
-		end
-		
-		
 
 feature {NONE} -- Initialization
 
@@ -78,7 +57,7 @@ feature {NONE} -- Initialization
 			object_assigned: object = an_object
 			text_assigned: text.is_equal (object.type.substring (4, object.type.count))
 		end
-
+		
 	make_root is
 			-- Create `Current' as a root object.
 		local
@@ -101,6 +80,25 @@ feature {NONE} -- Initialization
 				-- tansport.
 			set_pebble_function (agent retrieve_pebble)
 			select_actions.extend (agent update_docked_object_editor)
+		end
+		
+feature {GB_RADIO_GROUP_LINK} -- Access
+
+	is_animated: BOOLEAN
+		-- Is `Current' presently being animated?
+
+feature {GB_RADIO_GROUP_LINK}-- Status setting
+
+	enable_animation is
+			-- Assign `True' to `is_animated'.
+		do
+			is_animated := True
+		end
+		
+	disable_animation is
+			-- Assign `False' to `is_animated'.
+		do
+			is_animated := False
 		end
 
 feature {GB_OBJECT} -- Implementation

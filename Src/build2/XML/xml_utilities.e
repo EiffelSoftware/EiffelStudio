@@ -26,7 +26,7 @@ feature -- Access
 			parent_not_void: a_parent /= Void
 			name_not_void: a_name /= Void
 		do
-			create Result.make_child (a_parent, a_name, create {XM_NAMESPACE}.make (a_ns_prefix, ""))
+			create Result.make (a_parent, a_name, create {XM_NAMESPACE}.make (a_ns_prefix, ""))
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -255,11 +255,60 @@ feature -- Access
 			end
 		end
 		
+	invalid_characters (xml_string: STRING): HASH_TABLE [CHARACTER, CHARACTER] is
+			-- `Result' is all invalid characters found in `xml_string'.
+			-- Currently EiffelBuild only supports ascii characters up to 127
+			-- as limited by the XM_EIFFE_PARSER
+		require
+			xml_string_not_void: xml_string /= Void
+		local
+			counter: INTEGER
+			invalid_char: CHARACTER
+		do
+			create Result.make (20)
+			from
+				counter := 1
+			until
+				counter > xml_string.count
+			loop
+				if (xml_string @ counter).code > maximum_supported_ascii_value then
+					invalid_char := xml_string @ counter
+					if not Result.has (invalid_char) then
+						Result.put (invalid_char, invalid_char)
+					end
+				end
+				counter := counter + 1
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	replace_invalid_characters (a_string: STRING) is
+			-- Do replace all unsupported ascii characters by "*".
+		require
+			a_string_not_void: a_string /= Void
+		local
+			counter: INTEGER
+		do
+			from
+				counter := 1
+			until
+				counter > a_string.count
+			loop
+				if (a_string @ counter).code > maximum_supported_ascii_value then
+					a_string.put ('*', counter)
+				end
+				counter := counter + 1
+			end
+		end
+	
 	process_xml_string (xml_string: STRING) is
 			-- Format `xml_string' so that it includes indents and new lines, so that it
 			-- will appear nicely in editors that do not automatically format XML.
 			-- Note that this algorithm is far from perfect, but is good enough for the
 			-- moment. There is definitely the possibility for improvement. Julian 02/03/03
+		require
+			xml_string_not_void: xml_string /= Void
 		local
 			depth: INTEGER
 			counter: INTEGER

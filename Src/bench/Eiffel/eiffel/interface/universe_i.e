@@ -796,10 +796,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			a_class: CLASS_C
 			ovc    : CLUSTER_I
 		do
-			if override_cluster_name /= Void then
-				cluster_of_name (override_cluster_name).set_is_override_cluster (True)
-			end
-
 			if has_override_cluster then
 					-- Remove classes which are overridden
 				ovc := override_cluster
@@ -817,7 +813,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			end
 
 			old_universe := lace.old_universe
-			if old_universe.has_override_cluster then
+			if old_universe /= Void and then old_universe.has_override_cluster then
 				old_tag := old_universe.override_cluster_name
 				if not equal (old_tag, override_cluster_name) then
 					if has_cluster_of_name (old_tag) then

@@ -319,6 +319,10 @@ feature -- Commands
 			-- Perform an incremental recompilation without performing a degree 6.
 		do
 			forbid_degree_6 := True
+			if universe.has_override_cluster then
+					-- We also process classes being changed outside EiffelStudio here.
+				universe.override_cluster.rebuild_override
+			end
 			recompile
 			forbid_degree_6 := False
 		rescue

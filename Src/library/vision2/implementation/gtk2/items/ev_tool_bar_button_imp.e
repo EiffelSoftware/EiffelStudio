@@ -46,12 +46,6 @@ inherit
 			tooltip
 		end
 
-	EV_TEXTABLE_IMP
-		redefine
-			interface,
-			set_text
-		end
-
 create
 	make
 
@@ -71,17 +65,13 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_ITEM_IMP}
 			pixmapable_imp_initialize
-			textable_imp_initialize
 			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
 			
-			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_label_widget (visual_widget, text_label)
-				-- Add padding for text label
-			feature {EV_GTK_EXTERNALS}.gtk_misc_set_padding (text_label, 2, 0)
 			Precursor {EV_ITEM_IMP}
 			initialize_events
 
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_is_important (visual_widget, True)
-			align_text_center
+
 			create tooltip.make (0)
 			is_initialized := True
 		end
@@ -93,6 +83,21 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	text: STRING is
+			--
+		local
+			a_txt: POINTER
+			a_cs: EV_GTK_C_STRING
+		do
+			a_txt := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_button_get_label (visual_widget)
+			if a_txt /= Default_pointer then
+				create a_cs.make_from_pointer (a_txt)
+				Result := a_cs.string				
+			else
+				Result := ""
+			end
+		end
 
 	gray_pixmap: EV_PIXMAP
 			-- Image displayed on `Current'.
@@ -106,8 +111,10 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		local
 			a_parent_imp: EV_TOOL_BAR_IMP
+			a_cs: EV_GTK_C_STRING
 		do
-			Precursor {EV_TEXTABLE_IMP} (a_text)
+			a_cs := a_text
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_button_set_label (visual_widget, a_cs.item)
 			a_parent_imp ?= parent_imp
 			if a_parent_imp /= Void and then a_parent_imp.parent_imp /= Void then
 				a_parent_imp.update_toolbar_style

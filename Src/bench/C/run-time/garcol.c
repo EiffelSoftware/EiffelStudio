@@ -296,8 +296,8 @@ rt_private int reset(register1 struct stack *);				/* Reset stack to its initial
 
 /* Marking algorithm */
 #ifdef RECURSIVE_MARKING
-rt_private char *recursive_mark();	/* Recursively mark reachable objects */
-rt_private char *generation_mark();	/* A recursive mark with on-the-fly copy */
+rt_private char *recursive_mark(char *root);	/* Recursively mark reachable objects */
+rt_private char *generation_mark(char *root);	/* A recursive mark with on-the-fly copy */
 #endif
 
 #ifdef HYBRID_MARKING
@@ -306,10 +306,10 @@ rt_private char *hybrid_gen_mark(char *root);	/* hybrid_mark with on-the-fly cop
 #endif
 
 #ifdef ITERATIVE_MARKING
-rt_private char *iterative_mark();	/* Iteratively mark reachable objects */
-rt_private char *it_gen_mark();		/* Iterative mark with on-the-fly copy */
-rt_private char *ntop();			/* Returns the top element of a stack */
-rt_private char *nget();			/* Pops the top element of a stack */
+rt_private char *iterative_mark(char *root);	/* Iteratively mark reachable objects */
+rt_private char *it_gen_mark(char *root);		/* Iterative mark with on-the-fly copy */
+rt_private char *ntop(register1 struct stack *stk);	/* Returns the top element of a stack */
+rt_private char *nget(register1 struct stack *stk);	/* Pops the top element of a stack */
 #endif
 
 #ifdef TEST
@@ -2359,7 +2359,7 @@ char *nget(register1 struct stack *stk)
 	EIF_END_GET_CONTEXT
 }
 
-char *ntop( register1 struct stack *stk)
+char *ntop (register1 struct stack *stk)
 {
 	/* Return the top item of *stk */
 	register1 char **top = stk->st_top;		/* The top of the stack */

@@ -3,6 +3,8 @@
 
 copy /Y ..\build\ISE.Base\ISE.Base.eifp base.eifp
 
+copy /Y ..\build\ISE.EiffelVision2\ISE.EiffelVision2.eifp vision2.eifp
+
 copy /Y ..\build\ISE.CacheBrowser\ISE.CacheBrowser.eifp cache_browser.eifp
 
 copy /Y ..\build\ISE.EiffelCodeDomProvider\ISE.EiffelCodeDomProvider.eifp codedom_provider.eifp

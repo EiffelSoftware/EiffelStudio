@@ -131,7 +131,9 @@ debug ("ACTIVITY")
 	io.error.putstring (feature_name);
 	io.error.putstring (" is not in the table.%N");
 end;
-					if f1.is_external then
+						-- This is temporary according to the comments in EXTERNAL_I
+						-- If this is removed, add a test at the beginning on Void for `other'
+					if equal (f1.written_in, feat_tbl_id) and then f1.is_external then
 						ext_i ?= f1;
 						if ext_i.encapsulated then
 							System.set_freeze (True)

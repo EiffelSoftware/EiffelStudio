@@ -35,21 +35,26 @@ create
 
 feature {NONE} -- Initialization
 
-	make (c: HASH_TABLE [DATE_TIME_CODE, INTEGER]; m, d: ARRAY [STRING]) is
-			-- Create parser with date/time code `c', months array `m', and
-			-- days array `d'.
+	make (c: HASH_TABLE [DATE_TIME_CODE, INTEGER]; 
+			m, d: ARRAY [STRING];
+			b: INTEGER) is
+			-- Create parser with date/time code `c', months array `m',
+			-- days array `d', and base century `b'.
 		require
 			code_exists: c /= Void
 			months_exist: m /= Void
 			days_exist: d /= Void
+			base_century_valid: b > 0 and (b \\ 100 = 0)
 		do
 			code := c
 			months := m
 			days := d
+			base_century := b
 		ensure
 			code_set: code = c
 			months_set: months = m
 			days_set: days = d
+			base_century_set: base_century = b
 		end
 		
 feature -- Access
@@ -215,7 +220,7 @@ feature -- Basic operations
 						when 4 then
 							year_val := substrg.to_integer
 						when 5 then 
-							year_val := substrg.to_integer + 1900
+							year_val := substrg.to_integer + base_century
 						when 6, 7 then
 							month_val := substrg.to_integer
 						when 8 then
@@ -294,6 +299,11 @@ feature {NONE} -- Implementation
 			
 	days: ARRAY [STRING]
 			-- Names of days	
+
+	base_century: INTEGER
+			-- Base century, used when interpreting 2-digit year
+			-- specifications.
+			
 invariant
 
 	valid_value_definition: is_value_valid =

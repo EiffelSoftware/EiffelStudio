@@ -5,44 +5,53 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+class 
 	
 	EV_DIALOG_I
 
 inherit
 
-	EV_WINDOW_I
+	EV_WINDOW_IMP
+		export
+			{EV_DIALOG} make 
 		redefine
 			build
 		end
 
+creation
+
+	make
 
 feature {EV_DIALOG} -- Initialization
 
 	build is
 			-- Put the component inside the dialog
 		local
-			vbox: EV_VERTICAL_BOX
+			dbox: EV_VERTICAL_BOX
 			container_interface: EV_CONTAINER
 		do
 			container_interface ?= interface
 			check
 				container_not_void: container_interface /= Void
 			end
-			{EV_WINDOW_I} Precursor
+			{EV_WINDOW_IMP} Precursor
 
-			!! vbox.make (container_interface)
-			vbox.set_homogeneous (False)
-			vbox.set_spacing (10)
+			!! dbox.make (container_interface)
+			dbox.set_homogeneous (False)
+			dbox.set_border_width (12)
+			dbox.set_spacing (4)
 
-			!! display_area.make (vbox)
+			!! display_area.make (dbox)
+			display_area.set_spacing (3)
 			display_area.set_minimum_height (100)
-			display_area.set_minimum_width (100)
+			display_area.set_minimum_width (250)
 
-			!! action_area.make (vbox)
+			!! action_area.make (dbox)
+			--action_area.set_border_width (3)
+			action_area.set_spacing (4)
 			action_area.set_expand (False)
-			action_area.set_minimum_height (20)
-			action_area.set_minimum_width (100)
+			action_area.set_minimum_height (30)
+			action_area.set_minimum_width (250)
 		end
 
 feature -- Access
@@ -52,6 +61,10 @@ feature -- Access
 
 	action_area: EV_HORIZONTAL_BOX
 				-- The action area on the bottom of the window
+
+feature {NONE} -- Implementation
+
+	seperator: EV_SEPARATOR
 
 end -- class EV_DIALOG_I
 

@@ -63,10 +63,10 @@ feature -- Implementation
 				button_release_not_connected: button_release_connection_id = 0
 			end
 			if button_press_connection_id > 0 then
-				signal_disconnect (button_press_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
 			end
 			real_signal_connect (
-				c_object,
+				visual_widget,
 				"button-press-event",
 				agent (App_implementation.gtk_marshal).start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
 				App_implementation.default_translate
@@ -91,11 +91,11 @@ feature -- Implementation
 	disable_transport_signals is
 		do
 			if button_press_connection_id > 0 then
-				signal_disconnect (button_press_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
 				button_press_connection_id := 0
 			end
 			if button_release_connection_id > 0 then
-				signal_disconnect (button_release_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_release_connection_id)
 				button_release_connection_id := 0
 			end
 		end
@@ -193,7 +193,7 @@ feature -- Implementation
 					interface.pointer_motion_actions.block
 					pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
 					real_signal_connect (
-						c_object,
+						visual_widget,
 						"motion-notify-event",
 						agent (App_implementation.gtk_marshal).add_grab_cb_intermediary (c_object),
 						App_implementation.default_translate
@@ -218,9 +218,9 @@ feature -- Implementation
 						end
 					end
 
-					signal_disconnect (button_press_connection_id)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
 					real_signal_connect (
-						c_object,
+						visual_widget,
 						"button-press-event",
 						agent (App_implementation.gtk_marshal).end_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
 						App_implementation.default_translate
@@ -231,7 +231,7 @@ feature -- Implementation
 							release_not_connected: button_release_connection_id = 0
 						end
 						real_signal_connect (
-							c_object,
+							visual_widget,
 							"button-release-event",
 							agent (App_implementation.gtk_marshal).end_transport_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
 							App_implementation.default_translate
@@ -240,23 +240,23 @@ feature -- Implementation
 					end
 
 					real_signal_connect (
-						c_object,
+						visual_widget,
 						"motion-notify-event",
 						agent (App_implementation.gtk_marshal).temp_execute_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
 						App_implementation.default_translate
 					)
 					motion_notify_connection_id := last_signal_connection_id
 					real_signal_connect (
-						c_object,
+						visual_widget,
 						"enter_notify_event",
-						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (c_object, "enter_notify_event"),
+						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, visual_widget, "enter_notify_event"),
 						App_implementation.default_translate
 					)
 					enter_notify_connection_id := last_signal_connection_id
 					real_signal_connect (
-						c_object,
+						visual_widget,
 						"leave_notify_event",
-						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (c_object, "leave_notify_event"),
+						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, visual_widget, "leave_notify_event"),
 						App_implementation.default_translate
 					)
 					leave_notify_connection_id := last_signal_connection_id
@@ -268,7 +268,7 @@ feature -- Implementation
 							mode_is_drag_and_drop implies
 							button_release_connection_id > 0
 					end
-					(App_implementation.gtk_marshal).signal_emit_stop_intermediary (c_object, "button-press-event")
+					(App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, visual_widget, "button-press-event")
 
 				elseif ready_for_pnd_menu (a_button) then
 					app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
@@ -318,23 +318,23 @@ feature -- Implementation
 			erase_rubber_band
 			disable_capture
 			if button_release_connection_id > 0 then
-				signal_disconnect (button_release_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_release_connection_id)
 				button_release_connection_id := 0
 			end
 			if motion_notify_connection_id > 0 then
-				signal_disconnect (motion_notify_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, motion_notify_connection_id)
 				motion_notify_connection_id := 0
 			end
 			if enter_notify_connection_id > 0 then
-				signal_disconnect (enter_notify_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, enter_notify_connection_id)
 				enter_notify_connection_id := 0
 			end
 			if leave_notify_connection_id > 0 then
-				signal_disconnect (leave_notify_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, leave_notify_connection_id)
 				leave_notify_connection_id := 0
 			end
 			if grab_callback_connection_id > 0 then
-				signal_disconnect (grab_callback_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, grab_callback_connection_id)
 				grab_callback_connection_id := 0
 			end
 			if not is_destroyed then
@@ -413,7 +413,7 @@ feature -- Implementation
 			-- Steps to perform once an attempted drop has happened.
 		do
 			if mode_is_pick_and_drop and not is_destroyed then
-				signal_emit_stop (c_object, "button-press-event")
+				signal_emit_stop (visual_widget, "button-press-event")
 			end
 			App_implementation.on_drop (pebble)
 			x_origin := 0
@@ -430,7 +430,7 @@ feature -- Implementation
 			check
 				grab_callback_connected: grab_callback_connection_id > 0
 			end
-			signal_disconnect (grab_callback_connection_id)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, grab_callback_connection_id)
 			grab_callback_connection_id := 0
 			enable_capture
 		end

@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			-- Deactivate drag mechanism
 		do
 			if drag_button_press_connection_id > 0 then
-				signal_disconnect (drag_button_press_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, drag_button_press_connection_id)
 				drag_button_press_connection_id := 0
 			end
 		end
@@ -166,11 +166,11 @@ feature {NONE} -- Implementation
 			disable_capture
 			set_composite_widget_pointer_style (NULL)
 			if drag_button_release_connection_id > 0 then
-				signal_disconnect (drag_button_release_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, drag_button_release_connection_id)
 				drag_button_release_connection_id := 0
 			end
 			if drag_motion_notify_connection_id > 0 then
-				signal_disconnect (drag_motion_notify_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, drag_motion_notify_connection_id)
 				drag_motion_notify_connection_id := 0
 			end
 			if not dawaiting_movement then

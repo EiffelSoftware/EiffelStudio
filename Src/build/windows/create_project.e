@@ -20,6 +20,13 @@ feature
 	overwrite_project: BOOLEAN;
 			-- Overwrite existing build project?
 
+	clear_current_project is
+		do
+			if main_panel.project_initialized then
+				clear_project
+			end;
+		end;
+
 	execute (argument: STRING) is
 		local
 			dir: PLAIN_TEXT_FILE;
@@ -27,6 +34,7 @@ feature
 			proj_dir: STRING;
 			storage_file_name: FILE_NAME
 		do
+			clear_current_project;
 			overwrite_project := False;
 			proj_dir := Environment.project_directory;
 			proj_dir.wipe_out;

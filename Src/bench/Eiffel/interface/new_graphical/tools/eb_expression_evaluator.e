@@ -39,11 +39,6 @@ inherit
 			{NONE} all
 		end
 
-	EIFNET_EXPORTER		
-		export
-			{NONE} all
-		end
-		
 create
 	make
 

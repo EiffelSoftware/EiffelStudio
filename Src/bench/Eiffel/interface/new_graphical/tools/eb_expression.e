@@ -74,11 +74,6 @@ inherit
 			{NONE} all
 		end
 
-	EIFNET_EXPORTER
-		export
-			{NONE} all
-		end
-
 create
 	make_with_class,
 	make_with_object,

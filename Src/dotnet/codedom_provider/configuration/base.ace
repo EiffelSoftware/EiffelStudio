@@ -5,6 +5,7 @@ root
 	ANY
 
 default
+	multithreaded (yes)
  	assertion (no)
  	msil_generation (yes)
  	il_verifiable (yes)

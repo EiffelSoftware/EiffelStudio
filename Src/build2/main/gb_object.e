@@ -212,6 +212,32 @@ feature -- Access
 			end
 		end
 		
+	children: ARRAYED_LIST [GB_OBJECT] is
+			-- `Result' is all children of `Current'.
+			--| FIXME, this should no longer be a query, allowing the
+			-- display in the layout constructor to be decoupled from the
+			-- actual widget structure.
+		local
+			current_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+		do
+			create Result.make (1)
+			from
+				layout_item.start
+			until
+				layout_item.off
+			loop
+				current_item ?= layout_item.item
+				check
+					current_item_not_void: current_item /= Void
+				end
+				Result.extend (current_item.object)
+				layout_item.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+		
 feature {GB_EV_BOX_EDITOR_CONSTRUCTOR} -- Basic operation
 
 	enable_expanded_in_box is

@@ -21,10 +21,10 @@ feature -- Initialization
 			button_container: EV_HORIZONTAL_BOX
 		do
 			create my_icon
-			my_icon.set_with_named_file ("c:\eiffel.ico")
+			my_icon.set_with_named_file ("eiffel.ico")
 
 			create my_icon2
-			my_icon2.set_with_named_file ("c:\eiffel2.ico")
+			my_icon2.set_with_named_file ("eiffeldoc.ico")
 
 
 				-- Create the container

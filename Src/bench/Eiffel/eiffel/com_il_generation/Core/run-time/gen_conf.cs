@@ -50,15 +50,16 @@ public class GENERIC_CONFORMANCE {
 		CLASS_TYPE type_to_create;
 		GENERIC_TYPE computed_type;
 		EIFFEL_DERIVATION derivation;
-		ConstructorInfo constructor;
 		EIFFEL_TYPE_INFO Result;
 
 			// Evaluate type in context of Current object.
 		type_to_create = (CLASS_TYPE) a_type.evaluated_type (a_current);
 
 			// Create new object of type `type_to_create'.
-		constructor = Type.GetTypeFromHandle (type_to_create.type).GetConstructor (Type.EmptyTypes);
-		Result = (EIFFEL_TYPE_INFO) constructor.Invoke (null);
+			// Note: We use the `Activator' class because it is much faster than
+			// creating an instance by getting the associated `ConstructorInfo'.
+		Result = (EIFFEL_TYPE_INFO) Activator.
+			CreateInstance (Type.GetTypeFromHandle (type_to_create.type));
 
 			// Properly initializes `Result'.
 		if (type_to_create is GENERIC_TYPE) {
@@ -75,12 +76,11 @@ public class GENERIC_CONFORMANCE {
 	{
 		EIFFEL_DERIVATION der;
 		EIFFEL_TYPE_INFO Result;
-		ConstructorInfo constructor;
 
-			// Get the constructor of the type of `an_obj' and create a new
-			// instance.
-		constructor = an_obj.GetType ().GetConstructor (Type.EmptyTypes);
-		Result = (EIFFEL_TYPE_INFO) constructor.Invoke (null);
+			// Create a new instance of the same type of `an_obj'
+			// Note: We use the `Activator' class because it is much faster than
+			// creating an instance by getting the associated `ConstructorInfo'.
+		Result = (EIFFEL_TYPE_INFO) Activator.CreateInstance (an_obj.GetType ());
 
 			// If it is a generic type, we also need to set its type.
 		der = an_obj.____type ();

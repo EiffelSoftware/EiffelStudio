@@ -32,8 +32,10 @@ feature -- Access
 		local
 			fake_object: EV_GDI_PEN
 		do
-io.putstring("getting a pen...")
-total_cache := total_cache + 1
+			debug("GDIObjectsCreation")
+				io.putstring("getting a pen...")
+				total_cache := total_cache + 1
+			end
 
 				-- Create a fake pen with the same hash code as the one we
 				-- want to retrieve.
@@ -43,9 +45,10 @@ total_cache := total_cache + 1
 					-- Requested pen has been already allocated. We return the
 					-- item found in our table.
 				Result := allocated_objects.item(fake_object).item
-successful_cache := successful_cache + 1
-io.putstring("retrieved cached version ("+successful_cache.out+"/"+total_cache.out+")%N")
-
+				debug("GDIObjectsCreation")
+					successful_cache := successful_cache + 1
+					io.putstring("retrieved cached version ("+successful_cache.out+"/"+total_cache.out+")%N")
+				end
 			else
 					-- New pen, not already in our table. So we create it...
 				create Result.make(a_dashed_mode, a_width, a_color)
@@ -53,13 +56,12 @@ io.putstring("retrieved cached version ("+successful_cache.out+"/"+total_cache.o
 					-- ..and we add it in our table.
 				fake_object.set_item(Result)
 				allocated_objects.extend(fake_object, fake_object)
-io.putstring("created ("+successful_cache.out+"/"+total_cache.out+")%N")
+				debug("GDIObjectsCreation")
+					io.putstring("created ("+successful_cache.out+"/"+total_cache.out+")%N")
+				end
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
-
-total_cache: INTEGER
-successful_cache: INTEGER
 
 end -- class EV_GDI_ALLOCATED_PENS

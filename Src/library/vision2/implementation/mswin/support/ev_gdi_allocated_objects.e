@@ -35,4 +35,10 @@ feature {NONE} -- Implementation
 
 	allocated_objects: HASH_TABLE[G,G]
 
+	total_cache: INTEGER
+			-- debugging purpose
+
+	successful_cache: INTEGER
+			-- debugging purpose
+
 end -- class EV_GDI_ALLOCATED_OBJECTS

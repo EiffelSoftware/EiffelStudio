@@ -272,8 +272,17 @@ feature {NONE} -- Implementation
 			-- Open project named `project_name', which must include full path.
 		require
 			project_name_not_void: project_name /= Void
+		local
+			warning_dialog: EV_WARNING_DIALOG
+			raw_file: RAW_FILE
 		do
-			command_handler.Open_project_command.execute_with_name (project_name)
+			create raw_file.make (project_name)
+			if raw_file.exists then
+				command_handler.Open_project_command.execute_with_name (project_name)
+			else
+				create warning_dialog.make_with_text ("Unable to load the project, as the project file is missing.%N%NPlease restore the project file, before attempting to open this project again.")
+				warning_dialog.show_modal_to_window (Current)
+			end
 		ensure
 			project_open: System_status.project_open
 		end

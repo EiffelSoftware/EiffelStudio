@@ -118,7 +118,7 @@ feature -- Initialization
 		end
 
 	test_figures is
-				-- Calls all figure drawing routines.
+			-- Calls all figure drawing routines.
 		local
 			p1, p2, p3: EV_RELATIVE_POINT
 		do
@@ -211,26 +211,25 @@ feature -- Initialization
 			first_window.extend (my_device)
 			my_device.set_minimum_size (300, 300)
 			my_device.expose_actions.extend (~on_repaint_test)
-			create fd.make_with_drawable (my_device)
 		end
 
 	on_repaint_test (x, y, w, h: INTEGER) is
 			-- Do the projection
 		do
-			my_device.set_fill_color (create {EV_COLOR}.make_with_rgb (1, 0, 0))
+			my_device.set_background_color (create {EV_COLOR}.make_with_rgb (1, 0, 0))
 			my_device.clear
 
 			--my_device.enable_dashed_line_style
 
-			my_device.set_line_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
-			my_device.set_fill_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
+			my_device.set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
+			my_device.set_background_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
 
-			my_device.fill_rectangle (110, 210, 110, 115)
-			my_device.fill_ellipse (150, 210, 110, 115)
+			--my_device.fill_rectangle (110, 210, 110, 115)
+			--my_device.fill_ellipse (150, 210, 50, 50)
 			my_device.fill_polygon (<<create {EV_COORDINATES}.set (180, 210),
 				create {EV_COORDINATES}.set (190, 220),
 				create {EV_COORDINATES}.set (190, 230)>>)
-			my_device.fill_pie_slice (200, 200, 120, 120,  0.1, 0.25 * 3.14)
+			--my_device.fill_pie_slice (200, 200, 120, 120,  0.1, 0.25 * 3.14)
 
 			my_device.draw_point (10, 10)
 			my_device.draw_text (10, 200, "Text-primitive")
@@ -350,7 +349,7 @@ feature -- Initialization
 			first_window.extend (my_device)
 			my_device.set_minimum_size (300, 300)
 			--my_device.set_fill_color (create {EV_COLOR}.make_with_rgb (0,0,0))
-			--my_device.set_line_color (create {EV_COLOR}.make_with_rgb (1,1,1))
+			--my_device.set_foreground_color (create {EV_COLOR}.make_with_rgb (1,1,1))
 		--	my_device.set_background_color (create {EV_COLOR}.make_with_rgb (0,0,0))
 		--	my_device.set_foreground_color (create {EV_COLOR}.make_with_rgb (1,1,1))
 
@@ -361,7 +360,7 @@ feature -- Initialization
 			my_device.pointer_button_press_actions.extend (~on_click)
 
 			create fd.make_with_drawable (my_device)
-			create projector.make (my_world, fd)
+			create projector.make (my_world, my_device)
 		end
 
 	first_window: EV_TITLED_WINDOW is

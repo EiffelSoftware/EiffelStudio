@@ -8,14 +8,21 @@ indexing
 class
 	WEL_WINDOW_MANAGER
 
+inherit
+	WEL_GWL_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
-	windows: HASH_TABLE [WEL_WINDOW, POINTER] is
-			-- Contains all the windows created by the application.
-		once
-			!! Result.make (Table_size)
-		ensure
-			result_not_void: Result /= Void
+	window_of_item (hwnd: POINTER): WEL_WINDOW is
+			-- Retrieve Eiffel object associated with `hwnd' pointer.
+		local
+			object_id: INTEGER
+		do
+			object_id := cwin_get_window_long (hwnd, Gwl_userdata)
+			Result := eif_id_object (object_id)
 		end
 
 feature -- Basic operations
@@ -26,20 +33,9 @@ feature -- Basic operations
 			window_not_void: window /= Void
 			unregistered: not registered (window)
 		do
-			windows.put (window, window.item)
+			window.register_current_window
 		ensure
 			registered: registered (window)
-		end
-
-	unregister_window (window: WEL_WINDOW) is
-			-- Unregister `window' from the window manager.
-		require
-			window_not_void: window /= Void
-			registered: registered (window)
-		do
-			windows.remove (window.item)
-		ensure
-			unregistered: not registered (window)
 		end
 
 feature -- Status report
@@ -49,13 +45,58 @@ feature -- Status report
 		require
 			window_not_void: window /= Void
 		do
-			Result := windows.has_item (window)
+			Result := eif_id_object (window.internal_data) /= Void
+		end
+
+feature {WEL_DISPATCHER} -- Dialog creation
+
+	new_dialog: WEL_DIALOG is
+			-- Dialog which will be created after receiving WM_INITDIALOG message.
+		do
+			Result := new_dialog_cell.item
 		end
 
 feature {NONE} -- Implementation
 
-	Table_size: INTEGER is 100
-			-- Initial hash table size
+	new_dialog_cell: CELL [WEL_DIALOG] is
+			-- Save dialog that is going to be created
+		once
+			create Result.put (Void)
+		end
+
+	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is
+			-- SDK GetWindowLong
+		external
+			"C [macro %"wel.h%"] (HWND, int): EIF_INTEGER"
+		alias
+			"GetWindowLong"
+		end
+
+	cwin_set_window_long (hwnd: POINTER; offset, value: INTEGER) is
+			-- SDK SetWindowLong
+		external
+			"C [macro %"wel.h%"] (HWND, int, LONG)"
+		alias
+			"SetWindowLong"
+		end
+
+	eif_id_object (an_id: INTEGER): WEL_WINDOW is
+			-- Object associated with `an_id'
+		external
+			"C | %"eif_object_id.h%""
+		end
+
+	eif_object_id (an_object: ANY): INTEGER is
+			-- New identifier for `an_object'
+		external
+			"C | %"eif_object_id.h%""
+		end
+
+	eif_object_id_free (an_id: INTEGER) is
+			-- Free the entry `an_id'
+		external
+			"C | %"eif_object_id.h%""
+		end
 
 end -- class WEL_WINDOW_MANAGER
 

@@ -25,7 +25,7 @@ feature -- Output
 				st.add_string (entity_name)
 				st.add_new_line
 			end
-			{VTCG} Precursor (st)
+			Precursor {VTCG} (st)
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

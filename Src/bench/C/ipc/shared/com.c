@@ -25,6 +25,7 @@
 #include "stream.h"
 #include "eif_logfile.h"
 #include <string.h>
+#include "rt_assert.h"
 
 #ifndef EIF_WIN32
 #include <unistd.h>
@@ -111,7 +112,7 @@ rt_public int send_str(STREAM *sp, char *buffer)
 	 */
 
 	Request pack;			/* The request */
-	int size;				/* Size of the string (without final null) */
+	size_t size;				/* Size of the string (without final null) */
 
 	/* Here is the protocol used to send the string: the size of the string
 	 * is sent as an opaque data structure (field op_size). If the length
@@ -124,7 +125,8 @@ rt_public int send_str(STREAM *sp, char *buffer)
 	Request_Clean (pack);
 	size = strlen(buffer);			/* Length of string */
 	pack.rq_type = EIF_OPAQUE;
-	pack.rq_opaque.op_size = size;	/* Send length without final null */
+	CHECK("valid size", size <= INT32_MAX);
+	pack.rq_opaque.op_size = (int) size;	/* Send length without final null */
 
 
 #ifdef USE_ADD_LOG
@@ -181,7 +183,7 @@ rt_public int send_str(STREAM *sp, char *buffer)
 	return 0;		/* Ok, string was sent */
 }
 
-rt_public char *recv_str(STREAM *sp, int *sizeptr)
+rt_public char *recv_str(STREAM *sp, size_t *sizeptr)
            		/* The STREAM pointer */
              	/* Set to the size of the string if non null pointer */
 {
@@ -192,7 +194,7 @@ rt_public char *recv_str(STREAM *sp, int *sizeptr)
 	 */
 
 	Request pack;			/* The XDR request structure */
-	int size;				/* Size of the string without final null byte */
+	size_t size;				/* Size of the string without final null byte */
 	char *buffer;			/* Where string is allocated */
 
 	/* The protocol used here is the symetric of the one used by send_str() */
@@ -207,11 +209,11 @@ rt_public char *recv_str(STREAM *sp, int *sizeptr)
 #endif
 
 	size = pack.rq_opaque.op_size;			/* Fetch string's length */
-	if (sizeptr != (int *) 0)				/* Fill in size pointer */
+	if (sizeptr)				/* Fill in size pointer */
 		*sizeptr = size;
 
 	if (size == 0) {						/* Nothing to be received */
-		if (sizeptr != (int *) 0)			/* Fill in size with 0 */
+		if (sizeptr)			/* Fill in size with 0 */
 			*sizeptr = 0;
 		return (char *) 0;
 	}

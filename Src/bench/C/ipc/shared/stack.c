@@ -85,7 +85,7 @@ extern struct item 	*c_oitem(uint32 n); /* from debug.c - Returns a pointer to t
 	save_stacks();				/* Initialize processing */
 	dp = get_next_execution_vector();
 	while (dp && (sent < elem_nb)) {	/* While still some data to send */
-		if ((int) dp != EIF_IGNORE)
+		if (dp != (struct dump *) EIF_IGNORE)
 		{
 			send_dump(s, dp);
 			sent++;
@@ -123,7 +123,7 @@ rt_public void send_stack_variables(eif_stream s, int where)
 	if (start != EIF_NO_ITEM) {
 		dp = get_next_variable (start);
 		while (dp) {	/* While still some data to send */
-			if ((int) dp != EIF_IGNORE)
+			if (dp != (struct dump *) EIF_IGNORE)
 				send_dump(s, dp);
 			dp = get_next_variable (start);
 		}

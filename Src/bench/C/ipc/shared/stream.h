@@ -57,13 +57,13 @@ typedef struct stream {
 
 #ifdef EIF_WIN32
 extern STREAM *new_stream(HANDLE read_fd, HANDLE write_fd, HANDLE er, HANDLE ew);
-extern int net_recv(STREAM *, char *, int, BOOL);
-extern int net_send(STREAM *, char *, int);
+extern int net_recv(STREAM *, char *, size_t, BOOL);
+extern int net_send(STREAM *, char *, size_t);
 #else
 extern STREAM *new_stream(int read_fd, int write_fd);		/* Asks for a new STREAM structure */
 extern STREAM *stream_by_fd[];		/* Maps a fd to a STREAM */
-rt_public int net_send(int cs, char *buf, int size) ;
-rt_public int net_recv(int cs, char *buf, int size) ;
+rt_public int net_send(int cs, char *buf, size_t size) ;
+rt_public int net_recv(int cs, char *buf, size_t size) ;
 #endif
 
 extern void close_stream(STREAM *sp);			/* Close stream connection */

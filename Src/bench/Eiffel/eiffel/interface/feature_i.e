@@ -706,15 +706,22 @@ feature -- Conveniences
 			if System.il_generation then
 				ext ?= Current
 				if ext /= Void then
-					extension ?= ext.extension
+					Result := not ext.extension.is_il
+					if not Result then
+							-- Not a C external, let's check the IL external
+						extension ?= ext.extension
+					end
 				else
 					att ?= Current
 					if att /= Void then
 						extension ?= att.extension
 					end
 				end
-				Result := (extension /= Void and then not extension.need_current (extension.type)) or
-					(is_constant and then not is_once)
+				if not Result then
+					Result :=  (extension /= Void and then
+						not extension.need_current (extension.type)) or
+						is_constant and then not is_once
+				end
 			else
 				Result := is_external or (is_constant and then not is_once)
 			end			

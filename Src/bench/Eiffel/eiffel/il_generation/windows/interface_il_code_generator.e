@@ -72,7 +72,7 @@ feature -- IL Generation
 			set_current_class (class_c)
 			set_current_class_type (class_type)
 			set_current_type_id (class_type.implementation_id)
-			current_class_token := class_mapping.item (current_type_id)
+			current_class_token := class_type_token (current_type_id)
 
 				-- Define all features used by ISE runtime.
 			define_runtime_features (class_type)
@@ -96,6 +96,9 @@ feature -- IL Generation
 			end
 				-- Generate `ToString' from System.Object.
 			generate_to_string_feature (current_select_tbl.item (internal_to_string_rout_id))
+
+				-- Generate invariant routine.
+			generate_invariant_feature (class_c.invariant_feature)
 
 			
 				-- Reset global variable for collection.

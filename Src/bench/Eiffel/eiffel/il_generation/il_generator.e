@@ -52,6 +52,9 @@ feature -- Access
 	compiled_classes_count: INTEGER
 			-- Number of classes generated in IL.
 
+	assembly_info: ASSEMBLY_INFO
+			-- Info about currently generated assembly.
+
 feature -- Generation
 
 	generate is
@@ -93,6 +96,9 @@ feature -- Generation
 				end
 				il_generator.start_assembly_generation (System.name, file_name,
 					l_key_file_name, location)
+				
+					-- Create data of current assembly
+				create assembly_info.make (System.name)
 				
 				create output_file_name.make_from_string (location)
 				output_file_name.set_file_name (file_name)
@@ -187,17 +193,15 @@ feature {NONE} -- Type description
 			classes_not_void: classes /= Void
 		local
 			class_c: CLASS_C
-			i, j, nb: INTEGER
+			i, nb: INTEGER
 			types: TYPE_LIST
 			cl_type: CLASS_TYPE
-			not_is_external: BOOLEAN
+			l_class_counted: BOOLEAN
 		do
 			from
 				i := classes.lower
 				nb := classes.upper
 				compiled_classes_count := 0
-				j := classes_count
-				degree_output.put_start_degree (1, j)
 
 					-- We add `8' because they are 8 types from ISE.Runtime
 					-- we want to reuse.
@@ -222,22 +226,15 @@ feature {NONE} -- Type description
 			loop
 				class_c := classes.item (i)
 				if class_c /= Void then
-					degree_output.put_degree_1 (class_c, j)
-					System.set_current_class (class_c)
-					j := j - 1
-
-					if (j \\ 500) = 0 then
-						feature {MEMORY}.full_collect
-						feature {MEMORY}.full_coalesce
-					end
-
+-- 					if (j \\ 500) = 0 then
+-- 						feature {MEMORY}.full_collect
+-- 						feature {MEMORY}.full_coalesce
+-- 					end
+-- 
 					from
-						not_is_external := not class_c.is_external
-						if not_is_external then
-							compiled_classes_count := compiled_classes_count + 1
-						end
 						types := class_c.types
 						types.start
+						l_class_counted := False
 					until
 						types.after
 					loop
@@ -245,13 +242,16 @@ feature {NONE} -- Type description
 							-- Generate correspondance between Eiffel IDs and
 							-- CIL information.
 						Il_generator.generate_class_mappings (cl_type)
+						if cl_type.is_generated and not l_class_counted then
+							compiled_classes_count := compiled_classes_count + 1
+							l_class_counted := True
+						end
 
 						types.forth
 					end
 				end
 				i := i + 1
 			end
-			degree_output.put_end_degree
 		end
 
 	generate_class_attributes (classes: ARRAY [CLASS_C]) is
@@ -261,29 +261,38 @@ feature {NONE} -- Type description
 			classes_not_void: classes /= Void
 		local
 			class_c: CLASS_C
-			i, nb: INTEGER
+			i, j, nb: INTEGER
 			types: TYPE_LIST
+			l_class_processed: BOOLEAN
 		do
 			from
 				i := classes.lower
 				nb := classes.upper
+				j := compiled_classes_count				
 			variant
 				nb - i + 1
 			until
-				i > nb
+				i > nb or j = 0
 			loop
 				class_c := classes.item (i)
-				if class_c /= Void and then not class_c.is_external then
+				if class_c /= Void and not class_c.is_external then
 					System.set_current_class (class_c)
 					from
 						types := class_c.types
 						types.start
+						l_class_processed := False
 					until
 						types.after
 					loop
 							-- Generate correspondance between Eiffel IDs and
 							-- CIL information.
-						Il_generator.generate_class_attributes (types.item)
+						if types.item.is_generated then
+							Il_generator.generate_class_attributes (types.item)
+							if not l_class_processed then
+								j := j - 1
+								l_class_processed := True
+							end
+						end
 
 						types.forth
 					end
@@ -302,39 +311,47 @@ feature {NONE} -- Type description
 			i, j, nb: INTEGER
 			types: TYPE_LIST
 			cl_type: CLASS_TYPE
+			l_class_processed: BOOLEAN
 		do
 			from
 				i := classes.lower
 				nb := classes.upper
 				j := compiled_classes_count
-				degree_output.put_start_degree (-1, j)
+				degree_output.put_start_degree (1, j)
 			variant
 				nb - i + 1
 			until
-				i > nb
+				i > nb or j = 0
 			loop
 				class_c := classes.item (i)
-				if class_c /= Void and then not class_c.is_external then
-					degree_output.put_degree_minus_1 (class_c, j)
-					System.set_current_class (class_c)
-
+				if class_c /= Void and not class_c.is_external then
 					if (j \\ 500) = 0 then
 						feature {MEMORY}.full_collect
 						feature {MEMORY}.full_coalesce
 					end
 
-					j := j - 1
 					from
 						types := class_c.types
 						types.start
+						l_class_processed := False
 					until
 						types.after
 					loop
 						cl_type := types.item
-						context.init (cl_type)
 
-							-- Generate entity to represent current Eiffel interface class
-						il_generator.generate_il_features_description (class_c, cl_type)
+						if cl_type.is_generated then
+							context.init (cl_type)
+
+							if not l_class_processed then
+								degree_output.put_degree_1 (class_c, j)
+								System.set_current_class (class_c)
+								l_class_processed := True
+								j := j - 1
+							end
+
+								-- Generate entity to represent current Eiffel interface class
+							il_generator.generate_il_features_description (class_c, cl_type)
+						end
 
 						types.forth
 					end
@@ -353,37 +370,48 @@ feature {NONE} -- Type description
 			class_c: CLASS_C
 			i, j, nb: INTEGER
 			types: TYPE_LIST
+			l_class_processed: BOOLEAN
+			cl_type: CLASS_TYPE
 		do
 			from
 				i := classes.lower
 				nb := classes.upper
 				j := compiled_classes_count
-				degree_output.put_start_degree (-2, j)
+				degree_output.put_start_degree ((-1).to_integer_8, j)
 			variant
 				nb - i + 1
 			until
-				i > nb
+				i > nb or j = 0
 			loop
 				class_c := classes.item (i)
-				if class_c /= Void and then not class_c.is_external then
-					degree_output.put_degree_minus_2 (class_c, j)
-					System.set_current_class (class_c)
-
+				if class_c /= Void and not class_c.is_external then
 					if (j \\ 500) = 0 then
 						feature {MEMORY}.full_collect
 						feature {MEMORY}.full_coalesce
 					end
 
-					j := j - 1
 					from
 						types := class_c.types
 						types.start
+						l_class_processed := False
 					until
 						types.after
 					loop
-						context.init (types.item)
-							-- Generate entity to represent current Eiffel implementation class
-						il_generator.generate_il_implementation (class_c, types.item)
+						cl_type := types.item
+						if cl_type.is_generated then
+							context.init (cl_type)
+
+							if not l_class_processed then
+								degree_output.put_degree_minus_1 (class_c, j)
+								System.set_current_class (class_c)
+								class_c.set_assembly_info (assembly_info)
+								l_class_processed := True
+								j := j - 1
+							end
+
+								-- Generate entity to represent current Eiffel implementation class
+							il_generator.generate_il_implementation (class_c, cl_type)
+						end
 
 						types.forth
 					end

@@ -18,9 +18,7 @@ cluster
 		end
 
 external
-		-- Comment the proper line acoording to your platform
-	object: "../../fext.obj"; -- on Windows
---	object: "../../fext.o";	-- on Unix
+	object: "../../fext.obj";
 	include_path: "../../.."
 
 end

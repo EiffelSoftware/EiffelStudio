@@ -19,6 +19,7 @@ DELDIR = $rm -rf
 LN = $ln
 RM = $rm -f
 CP = $cp
+MV = $mv
 SHELL = /bin/sh
 FINISH_FREEZING = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/finish_freezing
 CFLAGS = $ccflags $large
@@ -31,7 +32,12 @@ OBJECT = fext.o
 $spitshell >>Makefile <<'!NO!SUBS!'
 
 
-all: $(OBJECT) compile_eiffel compile_c mklink 
+all: prepare $(OBJECT) compile_eiffel compile_c mklink 
+
+prepare:
+	sed -e s/"fext.obj"/"fext.o"/ Ace.ace > tmp
+	$(RM) Ace.ace
+	$(MV) tmp Ace.ace
 
 compile_eiffel:
 	$(EC) -freeze; 
@@ -55,4 +61,7 @@ clean:
 	$(RM) cecil.epr
 	$(RM) Makefile
 	$(DELDIR) EIFGEN
-	
+	sed -e s/"fext.o"/"fext.obj"/ Ace.ace > tmp
+	$(RM) Ace.ace
+	$(MV) tmp Ace.ace
+

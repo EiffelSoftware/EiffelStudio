@@ -5,24 +5,11 @@ class EXTERNAL_I
 inherit
 
 	PROCEDURE_I
-		rename
-			transfer_to as procedure_transfer_to,
-			equiv as procedure_equiv,
-			update_api as old_update_api
 		redefine
+			transfer_to, equiv, update_api,
 			melt, execution_unit, generate,
 			access, is_external, new_rout_unit, valid_body_id,
 			can_be_inlined
-		end;
-
-	PROCEDURE_I
-		redefine
-			transfer_to, equiv,
-			melt, execution_unit, generate,
-			access, is_external, new_rout_unit, valid_body_id,
-			can_be_inlined, update_api
-		select
-			transfer_to, equiv, update_api
 		end;
 	
 feature -- Attributes for externals
@@ -33,9 +20,9 @@ feature -- Attributes for externals
 feature -- Routines for externals
 
 	is_special: BOOLEAN is
-			-- Does the external declaration include a macro
+			-- Does the external declaration include a macro or a Dll --JOCE--
 		do
-			Result := extension /= Void and then extension.is_macro
+			Result := extension /= Void and then (extension.is_macro or extension.is_dll)
 		end;
 
 	has_signature: BOOLEAN is
@@ -104,7 +91,7 @@ feature -- Incrementality
 		local
 			other_ext: EXTERNAL_I
 		do
-			Result := procedure_equiv (other) and then freezing_equiv (other)
+			Result := {PROCEDURE_I} precursor (other) and then freezing_equiv (other)
 		end
 
 feature 
@@ -176,7 +163,7 @@ feature
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
 		do
-			procedure_transfer_to (other);
+			{PROCEDURE_I} precursor (other);
 			other.set_alias_name (alias_name);
 			other.set_encapsulated (encapsulated);
 			other.set_extension (extension);
@@ -283,7 +270,7 @@ feature {NONE} -- Api
 	update_api (f: E_ROUTINE) is
 			-- Update the attributes of api feature `f'.
 		do
-			old_update_api (f)
+			{PROCEDURE_I} precursor (f)
 			f.set_external (True)
 		end
 

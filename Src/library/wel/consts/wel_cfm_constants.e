@@ -13,7 +13,7 @@ feature -- Access
 	Cfm_bold: INTEGER is
 			-- The CFE_BOLD value of the dwEffects member is valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFM_BOLD"
 		end
@@ -22,7 +22,7 @@ feature -- Access
 			-- The crTextColor member and the CFE_AUTOCOLOR value
 			-- of the dwEffects member are valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFM_COLOR"
 		end
@@ -30,7 +30,7 @@ feature -- Access
 	Cfm_face: INTEGER is
 			-- The szFaceName member is valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFM_FACE"
 		end
@@ -39,7 +39,7 @@ feature -- Access
 			-- The CFE_ITALIC value of the dwEffects member is
 			-- valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFM_ITALIC"
 		end
@@ -47,7 +47,7 @@ feature -- Access
 	Cfm_offset: INTEGER is
 			-- The yOffset member is valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFM_OFFSET"
 		end
@@ -56,7 +56,7 @@ feature -- Access
 			-- The CFE_PROTECTED value of the dwEffects member is
 			-- valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFM_PROTECTED"
 		end
@@ -64,7 +64,7 @@ feature -- Access
 	Cfm_size: INTEGER is
 			-- The yHeight member is valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFM_SIZE"
 		end
@@ -73,7 +73,7 @@ feature -- Access
 			-- The CFE_STRIKEOUT value of the dwEffects member is
 			-- valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFM_STRIKEOUT"
 		end
@@ -82,7 +82,7 @@ feature -- Access
 			-- The CFE_UNDERLINE value of the dwEffects member is
 			-- valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFM_UNDERLINE"
 		end
@@ -90,7 +90,7 @@ feature -- Access
 	Cfm_charset: INTEGER is
 			-- The bCharSet member is valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFM_CHARSET"
 		end

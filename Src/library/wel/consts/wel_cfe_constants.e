@@ -14,7 +14,7 @@ feature -- Access
 			-- The text color is the return value of
 			-- GetSysColor (COLOR_WINDOWTEXT).
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFE_AUTOCOLOR"
 		end
@@ -22,7 +22,7 @@ feature -- Access
 	Cfe_bold: INTEGER is
 			-- Characters are bold.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFE_BOLD"
 		end
@@ -30,7 +30,7 @@ feature -- Access
 	Cfe_italic: INTEGER is
 			-- Characters are italic.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFE_ITALIC"
 		end
@@ -38,7 +38,7 @@ feature -- Access
 	Cfe_strikeout: INTEGER is
 			-- Characters are struck out.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFE_STRIKEOUT"
 		end
@@ -46,7 +46,7 @@ feature -- Access
 	Cfe_underline: INTEGER is
 			-- Characters are underlined.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFE_UNDERLINE"
 		end
@@ -55,7 +55,7 @@ feature -- Access
 			-- Characters are protected; an attempt to modify them
 			-- will cause an EN_PROTECTED notification message.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"CFE_PROTECTED"
 		end

@@ -11,14 +11,14 @@ feature -- Access
 
 	Dib_rgb_colors: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DIB_RGB_COLORS"
 		end
 
 	Dib_pal_colors: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DIB_PAL_COLORS"
 		end

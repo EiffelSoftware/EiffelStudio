@@ -12,7 +12,7 @@ feature -- Access
 	Cc_none: INTEGER is
 			-- Supports curves
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CC_NONE"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Cc_circles: INTEGER is
 			-- Supports circles
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CC_CIRCLES"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Cc_pie: INTEGER is
 			-- Supports pie wedges
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CC_PIE"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Cc_chord: INTEGER is
 			-- Supports chords
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CC_CHORD"
 		end
@@ -44,7 +44,7 @@ feature -- Access
 	Cc_ellipses: INTEGER is
 			-- Supports ellipses
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CC_ELLIPSES"
 		end
@@ -52,7 +52,7 @@ feature -- Access
 	Cc_wide: INTEGER is
 			-- Supports wide borders
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CC_WIDE"
 		end
@@ -60,7 +60,7 @@ feature -- Access
 	Cc_styled: INTEGER is
 			-- Supports styled borders
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CC_STYLED"
 		end
@@ -68,7 +68,7 @@ feature -- Access
 	Cc_wide_styled: INTEGER is
 			-- Supports wide, styled borders
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CC_WIDESTYLED"
 		end
@@ -76,7 +76,7 @@ feature -- Access
 	Cc_interiors: INTEGER is
 			-- Supports interiors
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CC_INTERIORS"
 		end
@@ -84,7 +84,7 @@ feature -- Access
 	Cc_round_rect: INTEGER is
 			-- Supports rectangles with rounded corners
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CC_ROUNDRECT"
 		end

@@ -11,77 +11,77 @@ feature -- Access
 
 	Cbs_simple: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBS_SIMPLE"
 		end
 
 	Cbs_dropdown: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBS_DROPDOWN"
 		end
 
 	Cbs_dropdownlist: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBS_DROPDOWNLIST"
 		end
 
 	Cbs_ownerdrawfixed: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBS_OWNERDRAWFIXED"
 		end
 
 	Cbs_ownerdrawvariable: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBS_OWNERDRAWVARIABLE"
 		end
 
 	Cbs_autohscroll: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBS_AUTOHSCROLL"
 		end
 
 	Cbs_oemconvert: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBS_OEMCONVERT"
 		end
 
 	Cbs_sort: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBS_SORT"
 		end
 
 	Cbs_hasstrings: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBS_HASSTRINGS"
 		end
 
 	Cbs_nointegralheight: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBS_NOINTEGRALHEIGHT"
 		end
 
 	Cbs_disablenoscroll: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBS_DISABLENOSCROLL"
 		end

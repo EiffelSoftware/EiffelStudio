@@ -18,7 +18,7 @@ feature -- Access
 			-- box, allowing the user to add, delete, and
 			-- rearrange toolbar buttons.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"CCS_ADJUSTABLE"
 		end
@@ -29,7 +29,7 @@ feature -- Access
 			-- width to be the same as the parent window's width.
 			-- Status windows have this style by default.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"CCS_BOTTOM"
 		end
@@ -38,7 +38,7 @@ feature -- Access
 			-- Prevents a two-pixel highlight from being drawn at
 			-- the top of the control.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"CCS_NODIVIDER"
 		end
@@ -48,7 +48,7 @@ feature -- Access
 			-- Prevents a one-pixel highlight from being drawn at
 			-- the top of the control.
 		--external
-			--"C [macro <cctrl.h>]"
+			--"C [macro %"cctrl.h%"]"
 		--alias
 			--"CCS_NOHILITE"
 		--end
@@ -60,7 +60,7 @@ feature -- Access
 			-- style does not apply. Header windows have this style
 			-- by default.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"CCS_NOMOVEY"
 		end
@@ -74,7 +74,7 @@ feature -- Access
 			-- adjusted to the default, but the position and width
 			-- remain unchanged.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"CCS_NOPARENTALIGN"
 		end
@@ -86,7 +86,7 @@ feature -- Access
 			-- height specified in the request for creation or
 			-- sizing.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"CCS_NORESIZE"
 		end
@@ -97,7 +97,7 @@ feature -- Access
 			-- to be the same as the parent window's width.
 			-- Toolbars have this style by default.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"CCS_TOP"
 		end

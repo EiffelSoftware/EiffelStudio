@@ -11,49 +11,49 @@ feature -- Access
 
 	Clip_default_precis: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CLIP_DEFAULT_PRECIS"
 		end
 
 	Clip_character_precis: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CLIP_CHARACTER_PRECIS"
 		end
 
 	Clip_stroke_precis: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CLIP_STROKE_PRECIS"
 		end
 
 	Clip_mask: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CLIP_MASK"
 		end
 
 	Clip_lh_angles: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CLIP_LH_ANGLES"
 		end
 
 	Clip_tt_always: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CLIP_TT_ALWAYS"
 		end
 
 	Clip_embedded: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CLIP_EMBEDDED"
 		end

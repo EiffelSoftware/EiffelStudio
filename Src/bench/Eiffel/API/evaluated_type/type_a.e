@@ -146,9 +146,9 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
-
-	is_hector: BOOLEAN is
-			-- Is the current type an hector type ?
+		
+	is_typed_pointer: BOOLEAN is
+			-- Is current type a typed pointer type ?
 		do
 			-- Do nothing
 		end

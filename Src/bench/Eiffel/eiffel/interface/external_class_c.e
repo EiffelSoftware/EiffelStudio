@@ -1001,23 +1001,12 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
--- FIXME: Manu 05/29/2003: Keep code below commented until we implement BYREF correctly.
---			if c.is_by_ref then
---					-- We need to create an instance of TYPED_POINTER here.
---				Result := new_typed_pointer (Result)
---			end
+			if c.is_by_ref then
+					-- We need to create an instance of TYPED_POINTER here.
+				create {TYPED_POINTER_A} Result.make_typed (Result)
+			end
 		ensure
 			result_not_void: force_compilation implies Result /= Void
-		end
-
-	new_typed_pointer (a_type: TYPE_A): GEN_TYPE_A is
-			-- New instance of a TYPED_POINTER.
-		local
-			l_generics: ARRAY [TYPE_A]
-		do
-			create l_generics.make (1, 1)
-			l_generics.put (a_type, 1)
-			create Result.make (System.typed_pointer_class.compiled_class.class_id, l_generics)
 		end
 	
 	basic_type_mapping: HASH_TABLE [CLASS_I, STRING] is

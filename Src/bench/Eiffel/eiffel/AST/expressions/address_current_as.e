@@ -43,16 +43,13 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type check an adress access on Current
 		do
-			context.put (pointer_type)
+			context.put (create {TYPED_POINTER_A}.make_typed (context.actual_class_type))
 		end
 
 	byte_node: HECTOR_B is
 			-- Byte code for current node.
-		local
-			current_access: CURRENT_B
 		do
-			create current_access
-			create Result.make (current_access)
+			create Result.make (create {CURRENT_B})
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -20,13 +20,15 @@ feature {NONE}
 	Double_code:		INTEGER is 9
 
 	Pointer_code:		INTEGER is 10
+	
+	Typed_pointer_code: INTEGER is 11
 
-	Void_code:			INTEGER is 11
+	Void_code:			INTEGER is 12
 
-	Reference_code:		INTEGER is 12
+	Reference_code:		INTEGER is 13
 
-	None_code:			INTEGER is 13
+	None_code:			INTEGER is 14
 
-	Other_code:			INTEGER is 14
+	Other_code:			INTEGER is 15
 
 end

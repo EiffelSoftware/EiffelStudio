@@ -364,6 +364,7 @@ feature -- Properties
 			local_workbench.change_class (routine_class)
 			local_workbench.change_class (procedure_class)
 			local_workbench.change_class (function_class)
+			local_workbench.change_class (typed_pointer_class)
 
 			if not il_generation then
 				local_workbench.change_class (wide_char_class)
@@ -413,6 +414,7 @@ feature -- Properties
 			routine_class.compiled_class.record_precompiled_class_in_system
 			procedure_class.compiled_class.record_precompiled_class_in_system
 			function_class.compiled_class.record_precompiled_class_in_system
+			typed_pointer_class.compiled_class.record_precompiled_class_in_system
 
 			if not il_generation then
 				wide_char_class.compiled_class.record_precompiled_class_in_system
@@ -1048,6 +1050,7 @@ end
 			routine_class.compiled_class.mark_class (marked_classes)
 			procedure_class.compiled_class.mark_class (marked_classes)
 			function_class.compiled_class.mark_class (marked_classes)
+			typed_pointer_class.compiled_class.mark_class (marked_classes)
 
 			if not il_generation then
 				wide_char_class.compiled_class.mark_class (marked_classes)

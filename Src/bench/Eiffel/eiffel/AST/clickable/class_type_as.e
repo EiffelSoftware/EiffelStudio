@@ -92,6 +92,12 @@ feature {NONE} -- Status report
 		do
 			Result := System.native_array_class = a_class_i
 		end
+		
+	is_typed_pointer (a_class_i: CLASS_I): BOOLEAN is
+			-- Is it a TYPED_POINTER type?
+		do
+			Result := System.typed_pointer_class = a_class_i
+		end
 
 feature -- Conveniences
 
@@ -116,7 +122,10 @@ feature -- Conveniences
 						if is_tuple (l_class_i) then
 							create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
 						elseif is_native_array (l_class_i) then
-							create {NATIVE_ARRAY_TYPE_A} Result.make (l_class.class_id, actual_generic)
+							create {NATIVE_ARRAY_TYPE_A} Result.make (l_class.class_id,
+								actual_generic)
+						elseif is_typed_pointer (l_class_i) then
+							create {TYPED_POINTER_A} Result.make (l_class.class_id, actual_generic)
 						else
 							create {GEN_TYPE_A} Result.make (l_class.class_id, actual_generic)
 						end
@@ -172,6 +181,8 @@ feature -- Conveniences
 						create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
 					elseif is_native_array (l_class.lace_class) then
 						create {NATIVE_ARRAY_TYPE_A} Result.make (l_class.class_id, actual_generic)
+					elseif is_typed_pointer (l_class.lace_class) then
+						create {TYPED_POINTER_A} Result.make (l_class.class_id, actual_generic)
 					else
 						create {GEN_TYPE_A} Result.make (l_class.class_id, actual_generic)
 					end
@@ -234,7 +245,10 @@ feature -- Conveniences
 						if is_tuple (l_class_i) then
 							create {TUPLE_TYPE_A} Result.make  (l_class.class_id, actual_generic)
 						elseif is_native_array (l_class_i) then
-							create {NATIVE_ARRAY_TYPE_A} Result.make (l_class.class_id, actual_generic)
+							create {NATIVE_ARRAY_TYPE_A} Result.make (l_class.class_id,
+								actual_generic)
+						elseif is_typed_pointer (l_class_i) then
+							create {TYPED_POINTER_A} Result.make (l_class.class_id, actual_generic)
 						else
 							create {GEN_TYPE_A} Result.make (l_class.class_id, actual_generic)
 						end

@@ -73,7 +73,7 @@ feature {COMPILER_EXPORTER}
 -- FIXME: This test needs to be done, but since it's causing to much trouble for now
 -- we just desactivated it and we are back to the previous implementation
 --			Result := not (other.is_basic or else other.is_expanded)
-			Result := not other.is_void
+			Result := not other.is_void and not other.is_typed_pointer
 		end
 
 end -- class NONE_A

@@ -59,7 +59,7 @@ feature -- Basic Operation
 				-- Call `update_for_delete' which does any processing
 				-- necessary before objects are deleted.
 				-- i.e. unmerge radio button groups.
-			child_layout_item.object.update_for_delete
+			update_for_delete
 				-- Note that unparenting an object does not update parent representations
 				-- in objects editors, so we must do it ourselves by calling
 				-- `update_object_editors_for_delete'.
@@ -166,5 +166,26 @@ feature {NONE} -- Implementation
 				editors.forth
 			end
 		end
+		
+	update_for_delete is
+				-- Perfrom any necessary processing on `Current'
+				-- and all children contained within for a deletion
+				-- event.
+			local
+				all_objects: ARRAYED_LIST [GB_OBJECT]
+				counter: INTEGER
+			do
+				create all_objects.make (10)
+				child_layout_item.object.all_children_recursive (all_objects)
+				all_objects.extend (child_layout_item.object)
+				from
+					counter := 1
+				until
+					counter > all_objects.count
+				loop
+					(all_objects @ counter).delete
+					counter := counter + 1
+				end
+			end
 
 end -- class GB_COMMAND_DELETE_OBJECT

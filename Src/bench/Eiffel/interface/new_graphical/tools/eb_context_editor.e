@@ -1242,15 +1242,25 @@ feature {EG_FIGURE, EIFFEL_WORLD} -- Force directed.
 	on_time_out is
 			-- `timer' has a timeout.
 		local
-			l_cpu: INTEGER
+			time: C_DATE
+			l_ticks: INTEGER
 		do
 			if world.is_statistics then
-				l_cpu := cpu_ticks
+				create time
+				l_ticks := time.millisecond_now
+				
 				projector.full_project
-				world.set_last_physics_time (cpu_ticks - l_cpu)
-				l_cpu := cpu_ticks
+				
+				time.update
+				world.set_last_physics_time (time.millisecond_now - l_ticks)
+				
+				time.update
+				l_ticks := time.millisecond_now
+				
 				force_directed_layout.layout
-				world.set_last_draw_time (cpu_ticks - l_cpu)				
+				
+				time.update
+				world.set_last_draw_time (time.millisecond_now - l_ticks)				
 			else
 				projector.full_project
 				force_directed_layout.layout
@@ -1262,11 +1272,6 @@ feature {EG_FIGURE, EIFFEL_WORLD} -- Force directed.
 
 feature {NONE} -- Events
 
-	cpu_ticks: INTEGER is
-			-- 
-		do
-		end
-		
 	timer: EV_TIMEOUT
 			-- Timer used to force direct the graph.
 			

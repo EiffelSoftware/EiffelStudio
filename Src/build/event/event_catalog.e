@@ -50,6 +50,7 @@ feature
 		do
 			!! button_rc.make (Widget_names.row_column, Current)
 			button_rc.set_column_layout
+			button_rc.set_same_size
 			!! first_separator.make ("", Current)
 			!! second_separator.make ("", Current)
 			!! general_events.make (Current)

@@ -164,11 +164,20 @@ feature -- Cecil
 		local
 			libname: STRING;
 		do
+			!! libname.make (0);
+			libname.append ("lib");
+			libname.append (system_name);
+			libname.append (".a");
+
 				-- Cecil run-time macro
 			generate_macro ("RCECIL", cecil_rt_basket);
 
 				-- Cecil library prodcution rule
 			Make_file.putstring ("cecil: ");
+			Make_file.putstring (libname);
+			Make_file.new_line;
+			Make_file.putstring (libname);
+			Make_file.putstring (": ");
 			generate_objects_macros;
 			Make_file.putchar (' ');
 			generate_system_objects_macros;
@@ -176,10 +185,6 @@ feature -- Cecil
 			Make_file.putstring (run_time);
 			Make_file.new_line;
 			Make_file.putstring ("%Tar cr ");
-				!! libname.make (0);
-				libname.append ("lib");
-				libname.append (system_name);
-				libname.append (".a");
 			Make_file.putstring (libname);
 			Make_file.putchar (' ');
 			generate_objects_macros;
@@ -194,7 +199,10 @@ feature -- Cecil
 			Make_file.putstring ("%T$(RANLIB) ");
 			Make_file.putstring (libname);
 			Make_file.new_line;
-			Make_file.putstring ("%T$(RM) $(RCECIL)");
+			Make_file.putstring ("%T$(RM) $(RCECIL) ");
+			generate_objects_macros;
+			Make_file.putchar (' ');
+			generate_system_objects_macros;
 			Make_file.new_line;
 			Make_file.new_line
 		end;
@@ -468,11 +476,49 @@ feature -- Generation, Object list(s)
 				!!macro_name.make (4);
 				macro_name.append ("EOBJ");
 				macro_name.append_integer (i);
-				generate_macro (macro_name, system_basket);
+				generate_system_macro (macro_name);
 				i := i + 1;
 			end;
 		end;
-	
+
+	generate_system_macro (mname: STRING) is
+			-- Generate a bunch of objects to be put in macro `mname'
+			--| Remove elements from the `system_basket' during
+			--| generation
+		local
+			size: INTEGER;
+			file_name: STRING;
+			basket: LINKED_LIST [STRING]
+			i: INTEGER
+		do
+			basket := system_basket;
+			Make_file.putstring (mname);
+			Make_file.putstring (" = ");
+			from
+				basket.start;
+				size := mname.count + 3;
+			until
+				i = Packet_number or else basket.after
+			loop
+				file_name := basket.item;
+				size := size + file_name.count + 1;
+				if size > 78 then
+					Make_file.putchar (Continuation);
+					Make_file.new_line;
+					Make_file.putchar ('%T');
+					size := 8 + file_name.count + 1;
+					Make_file.putstring (file_name);
+				else
+					Make_file.putstring (file_name);
+				end;
+				Make_file.putchar (' ');
+				i := i + 1;
+				basket.remove
+			end;
+			Make_file.new_line;
+			Make_file.new_line;
+		end;
+
 	generate_macro (mname: STRING; basket: LINKED_LIST [STRING]) is
 			-- Generate a bunch of objects to be put in macro `mname'
 		local

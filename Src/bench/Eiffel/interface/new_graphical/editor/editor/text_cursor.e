@@ -193,6 +193,7 @@ feature {NONE} -- Implementation
 		local
 			current_x: INTEGER
 			current_token: EDITOR_TOKEN
+			x_in_token: INTEGER
 		do
 				-- Update the current token.
 			from
@@ -219,6 +220,10 @@ feature {NONE} -- Implementation
 				token := current_tokem.previous
 					-- rewind our pixel position
 				current_x := current_x - token.
+				x_in_token := x_in_pixels - current_x
+
+					-- Now retrieve the position inside the token.
+				pos_in_token := token.retrieve_position_by_width(x_in_token)
 			end
 		end
 

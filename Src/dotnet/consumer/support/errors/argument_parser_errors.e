@@ -40,6 +40,9 @@ feature -- Access
 
 	Eac_not_initialized: INTEGER is 0x03000008
 			-- EAC not initialized
+			
+	Cannot_force_local_and_eac: INTEGER is 0x03000009
+			-- Cannot force local and put in EAC
 
 feature {NONE} -- Implementation
 
@@ -56,6 +59,7 @@ feature {NONE} -- Implementation
 			Result.put ("Cannot put unsigned assemblies in cache", Non_signed_assembly)
 			Result.put ("Specified file is not a valid .NET assembly", Invalid_assembly)
 			Result.put ("EAC not initialized, run 'emitter /init' first", Eac_not_initialized)
+			Result.put ("Cannot put in EAC and force GAC assemblies to be generated locally", Cannot_force_local_and_eac)
 		end
 
 end -- class ARGUMENT_PARSER_ERRORS

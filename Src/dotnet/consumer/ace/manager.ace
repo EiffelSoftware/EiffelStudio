@@ -2,23 +2,25 @@ system
 	"ISE.Cache.Manager"
 
 root
-	EMITTER: make
+	ISE_COM_MANAGER: make
 
 default
-	namespace ("ISE.Cache")
 	assertion (no)
 	msil_generation (yes)
-	arguments (" ")
 	disabled_debug (yes)
 	debug (no)
-	line_generation (no)
+	line_generation (yes)
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (no)
 	msil_generation_type ("dll")
+	namespace ("ISE.Cache")
+	version ("5.2.812.0")
+	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (yes)
-	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+
 
 cluster
 	all base:		"$EIFFEL_SRC\library\base"
@@ -28,12 +30,15 @@ cluster
 
 	all base_net:		"$EIFFEL_SRC\library.net\base"
 		exclude
-			"CVS";
+			"CVS"; 
 		end
 
 	all emitter:		"$EIFFEL_SRC\dotnet\consumer"
 		exclude
-			"CVS"; "EIFGEN"
+			"CVS"; "EIFGEN"; 
+		visible
+			ISE_COM_CACHE_MANAGER
+			end
 		end
 
 	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
@@ -47,16 +52,15 @@ cluster
 		end
 
 assembly
-	mscorlib: "mscorlib", "1.0.3300.0", "neutral", "b77a5c561934e089"
+	mscorlib:	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
 
-	system_: "System", "1.0.3300.0", "neutral", "b77a5c561934e089"
+	system_:	"System","1.0.3300.0","neutral","b77a5c561934e089"
 		prefix
 			"SYSTEM_DLL_"
 		end
 
-	system_xml: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
+	system_xml:	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
 		prefix
 			"XML_"
 		end
-
 end

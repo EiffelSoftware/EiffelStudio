@@ -43,9 +43,6 @@ feature -- Basic Operations
 			i, count: INTEGER
 			ca: CONSUMED_ASSEMBLY
 		do
-			if destination_path.item (destination_path.count) /= '\' then
-				set_destination_path (destination_path + "\")
-			end
 			referenced_assemblies := ass.get_referenced_assemblies
 			reset_assembly_mapping
 			count := referenced_assemblies.count
@@ -64,7 +61,7 @@ feature -- Basic Operations
 				assembly_mapping.put (i, ca.out)
 			end
 			prepare_consumed_types (ass)
-			serialize_consumed_types
+			serialize_consumed_types				
 		end
 
 	consume_from_name (aname: ASSEMBLY_NAME) is

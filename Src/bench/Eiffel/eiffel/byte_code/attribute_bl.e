@@ -240,7 +240,7 @@ end
 	fill_from (a: ATTRIBUTE_B) is
 			-- Fill in node with attribute `a'
 		do
-			attribute_name := a.attribute_name
+			attribute_name_id := a.attribute_name_id
 			attribute_id := a.attribute_id
 			type := a.type
 			routine_id := a.routine_id

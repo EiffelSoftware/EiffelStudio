@@ -25,12 +25,6 @@ inherit
 
 feature 
 
-	feature_name: STRING;
-			-- Name of the feature called
-
-	feature_id: INTEGER;
-			-- Feature id: this is the key for the call in workbench mode
-
 	type: TYPE_I;
 			-- Type of the call
 
@@ -42,8 +36,19 @@ feature -- Attributes for externals
 	extension: EXTERNAL_EXT_I
 			-- Encapsulation of external extensions
 
-	external_name: STRING;
-			-- Name of the C external
+	external_name_id: INTEGER
+			-- Name ID of C external.
+
+	external_name: STRING is
+			-- Name of C external.
+		require
+			external_name_id_set: external_name_id > 0
+		do
+			Result := Names_heap.item (external_name_id)
+		ensure
+			result_not_void: Result /= Void
+			result_not_empty: not Result.is_empty
+		end
 
 	encapsulated: BOOLEAN;
 			-- Has the feature some assertion declared ?
@@ -79,7 +84,7 @@ feature -- Routines for externals
 			is_valid_feature_for_il_generation:
 				System.il_generation implies (f.is_external or f.is_attribute)
 		do
-			feature_name := f.feature_name
+			feature_name_id := f.feature_name_id
 			feature_id := f.feature_id
 			routine_id := f.rout_id_set.first
 			written_in := f.written_in
@@ -87,9 +92,18 @@ feature -- Routines for externals
 
 	set_external_name (s: STRING) is
 			-- Assign `s' to `external_name'.
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
+		local
+			l_names_heap: like Names_heap
 		do
-			external_name := s;
-		end;
+			l_names_heap := Names_heap
+			l_names_heap.put (s)
+			external_name_id := l_names_heap.found_item
+		ensure
+			external_name_set: equal (external_name, s)
+		end
 
 	set_encapsulated (b: BOOLEAN) is
 			-- Assign `b' to `encapsulated'
@@ -104,7 +118,7 @@ feature -- Routines for externals
 		do
 			external_b ?= other;
 			if external_b /= Void then
-				Result := external_name.is_equal (external_b.external_name);
+				Result := external_name_id = external_b.external_name_id;
 			end;
 		end;
 

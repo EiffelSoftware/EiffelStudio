@@ -92,8 +92,7 @@ feature
 				else
 					buf.putstring ("RTWPF(");
 				end;
-				r_id := base_class.feature_table.item
-					(feature_name).rout_id_set.first;
+				r_id := base_class.feature_table.item_id (feature_name_id).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
 				buf.generate_class_id (rout_info.origin)
 				buf.putstring (gc_comma);

@@ -364,7 +364,7 @@ end
 	fill_from (f: FEATURE_B) is
 			-- Fill in node with feature `f'
 		do
-			feature_name := f.feature_name
+			feature_name_id := f.feature_name_id
 			feature_id := f.feature_id
 			type := f.type
 			parameters := f.parameters

@@ -135,11 +135,8 @@ feature -- Status report
 			-- Has a current selection?
 		local
 			temp: WEL_CHARACTER_RANGE
-			a, b: INTEGER
 		do
 			temp := selection_cache
-			a := temp.minimum
-			b := temp.maximum
 			Result := temp.minimum /= temp.maximum
 		end
 

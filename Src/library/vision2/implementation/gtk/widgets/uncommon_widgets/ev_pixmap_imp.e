@@ -30,14 +30,30 @@ create
 
 feature {NONE} -- Initialization
 
+	create_mask (a_width, a_height: INTEGER): POINTER is
+		local
+			fg: POINTER
+			maskgc: POINTER
+		do
+			Result := C.gdk_pixmap_new (C.gdk_root_parent, a_width, a_height, -1)
+			maskgc := C.gdk_gc_new (Result)
+			fg := C.c_gdk_color_struct_allocate
+			C.gdk_gc_set_foreground (maskgc, $fg)
+			C.gdk_draw_rectangle (Result, maskgc, 1, 0, 0, -1, -1)
+			
+			C.c_gdk_color_struct_free (fg)
+			C.gdk_gc_destroy (maskgc)
+		end
+
 	make (an_interface: like interface) is
                         -- Create a gtk pixmap of size (1 * 1).
 		local
-			gdkpix: POINTER
+			gdkpix, gdkmask: POINTER
 		do
 			base_make (an_interface)
 			gdkpix := C.gdk_pixmap_new (C.gdk_root_parent, 1, 1, -1)
-			set_c_object (C.gtk_pixmap_new (gdkpix, default_pointer))
+			gdkmask := create_mask (1, 1)
+			set_c_object (C.gtk_pixmap_new (gdkpix, gdkmask))
 			C.gtk_widget_show (c_object)
 
 				-- Initialize the GC
@@ -52,11 +68,12 @@ feature {NONE} -- Initialization
 	reset_to_size (a_x, a_y: INTEGER) is
 			-- Create new pixmap data of size `a_x' by `a_y'.
 		local
-			gdkpix: POINTER
+			gdkpix, gdkmask: POINTER
 		do
 			unref_data
 			gdkpix := C.gdk_pixmap_new (C.gdk_root_parent, a_x, a_y, -1)
-			set_pixmap (gdkpix, default_pointer)
+			gdkmask := create_mask (a_x, a_y)
+			set_pixmap (gdkpix, gdkmask)
 		end
 
 feature -- Measurement
@@ -112,7 +129,7 @@ feature -- Element change
 	set_with_buffer (a_buffer: STRING) is
 			-- Load pixmap data from `a_buffer' in memory.
 		local
-			fg, bg, gdkpix: POINTER
+			fg, bg, gdkpix, gdkmask: POINTER
 			a: ANY
 		do
 			unref_data
@@ -130,9 +147,11 @@ feature -- Element change
 				C.gdk_root_parent,
 				$a, 32, 32, -1, $fg, $bg)
 
+			gdkmask := create_mask (32, 32)
+
 			C.c_gdk_color_struct_free (fg)
 			C.c_gdk_color_struct_free (bg)
-			set_pixmap (gdkpix, default_pointer)
+			set_pixmap (gdkpix, gdkmask)
 		end	
 
 	stretch, stretch_image (a_x, a_y: INTEGER) is
@@ -143,14 +162,15 @@ feature -- Element change
 	set_size (a_x, a_y: INTEGER) is
 			-- Set the size of the pixmap to `a_x' by `a_y'.
 		local
-			tempgdkpix: POINTER
+			tempgdkpix, gdkmask: POINTER
 			wid, hgt: INTEGER
 		do
 			tempgdkpix := C.gdk_pixmap_new (C.gdk_root_parent,
 								a_x, a_y, -1)
 			C.gdk_draw_pixmap (tempgdkpix, gc, drawable, 0, 0, 0, 0, width, height)
-			unref_data	
-			set_pixmap (tempgdkpix, default_pointer)
+			unref_data
+			gdkmask := create_mask (a_x, a_y)	
+			set_pixmap (tempgdkpix, gdkmask)
 		end
 
 	destroy is
@@ -244,6 +264,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/18 00:55:32  king
+--| Added creation of mask, need to implement transparency for cursor compatibility
+--|
 --| Revision 1.18  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

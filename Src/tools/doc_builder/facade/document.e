@@ -102,7 +102,11 @@ feature -- XML
 			Result := internal_xml
 			if Result = Void or is_modified then				
 				create Result.make_from_document (Current)
-				internal_xml := Result
+				if Result.valid then					
+					internal_xml := Result
+				else
+					Result := Void
+				end
 			end
 		end
 			

@@ -43,7 +43,10 @@ feature {NONE} -- Implementation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create Result.make (1000)
-			if func_desc.arguments.empty and func_desc.return_type.name.is_equal (Void_c_keyword) then
+			if 
+				func_desc.arguments.empty and 
+				not does_routine_have_result (func_desc) 
+			then
 				Result.append (Void_c_keyword)					
 			else
 				from
@@ -79,7 +82,10 @@ feature {NONE} -- Implementation
 					func_desc.arguments.forth
 				end
 
-				if not does_routine_have_result (func_desc) then
+				if 
+					not does_routine_have_result (func_desc) and
+					not func_desc.arguments.empty
+				then
 					Result.remove (Result.count)
 				else
 					visitor := func_desc.return_type.visitor

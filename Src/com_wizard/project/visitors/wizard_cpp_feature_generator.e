@@ -428,8 +428,9 @@ feature {NONE} -- Implementation
 			create Result.make (1000)
  
 			if 
-				visitor.is_enumeration or visitor.is_basic_type and 
-				not is_boolean (type) and not (type = Vt_void) 
+				visitor.is_enumeration or 
+				visitor.is_basic_type and 
+				type /= Vt_void 
 			then
 				Result.append (visitor.cecil_type)
 				Result.append (Space)
@@ -441,7 +442,7 @@ feature {NONE} -- Implementation
 				Result.append (retval_value_set_up (vartype_namer.variant_field_name (visitor)))
 				Result.append (Semicolon)
 
-			elseif is_boolean (type) then
+			elseif type = Vt_bool then
 				Result.append (Eif_boolean)
 				Result.append (Space)
 				Result.append ("result")

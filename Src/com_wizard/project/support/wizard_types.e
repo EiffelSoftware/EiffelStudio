@@ -137,8 +137,6 @@ feature -- COM/C types
 
 	Ularge_integer: STRING is "ULARGE_INTEGER"
 
-	Iunknown_pointer: STRING is "IUnknown *"
-
 	Safearray: STRING is "SAFEARRAY"
 
 	Com_safearray_type: STRING is "SAFEARRAY *"

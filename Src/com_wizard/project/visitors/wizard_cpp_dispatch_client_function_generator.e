@@ -10,6 +10,8 @@ class
 inherit
 	WIZARD_CPP_FUNCTION_GENERATOR
 
+	WIZARD_DISPATCH_FUNCTION_HELPER
+
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
 
 	WIZARD_VARIABLE_NAME_MAPPER
@@ -45,17 +47,20 @@ feature -- Basic operations
 
 			result_type_visitor := a_descriptor.return_type.visitor
 
-			if result_type_visitor.is_basic_type or result_type_visitor.is_enumeration then
+			if 
+				result_type_visitor.is_basic_type or 
+				result_type_visitor.is_enumeration or
+				result_type_visitor.vt_type = Vt_bool
+			then
 				if result_type_visitor.cecil_type = Void or result_type_visitor.cecil_type.empty then
 					ccom_feature_writer.set_result_type (Void_c_keyword)
 				else
 					ccom_feature_writer.set_result_type (result_type_visitor.cecil_type)
 				end
 
-			elseif is_boolean (result_type_visitor.vt_type) then
-				ccom_feature_writer.set_result_type (Eif_boolean)
-
-			elseif is_hresult (result_type_visitor.vt_type) or is_error (result_type_visitor.vt_type) then
+			elseif 
+				not does_routine_have_result (a_descriptor) 
+			then
 				ccom_feature_writer.set_result_type (Void_c_keyword)
 
 			else
@@ -66,9 +71,7 @@ feature -- Basic operations
 				c_header_files.extend (result_type_visitor.c_header_file)
 			end
 
-			-- Set arguments and precondition for eiffel code
 			if func_desc.argument_count > 0 then
-				-- Argument for ccom feature
 				set_signature
 			end
 
@@ -119,8 +122,18 @@ feature {NONE} -- Implementation
 							c_header_files.extend (visitor.c_header_file)
 						end
 
-						if visitor.is_basic_type or visitor.is_enumeration then
+						if 
+							visitor.is_basic_type or 
+							visitor.is_enumeration 
+						then
 							tmp_string.append (visitor.c_type)
+							tmp_string.append (Space)
+							tmp_string.append (arguments.item.name)
+
+						elseif
+							visitor.vt_type = Vt_bool
+						then
+							tmp_string.append (visitor.cecil_type)
 							tmp_string.append (Space)
 							tmp_string.append (arguments.item.name)
 
@@ -158,11 +171,12 @@ feature {NONE} -- Implementation
 						tmp_string.append (Beginning_comment_paramflag)
 						tmp_string.append ("in")
 						tmp_string.append (End_comment_paramflag)
-						if visitor.is_basic_type or visitor.is_enumeration then
+						if 
+							visitor.is_basic_type or 
+							visitor.is_enumeration or 
+							visitor.vt_type = Vt_bool
+						then
 							tmp_string.append (visitor.cecil_type)
-
-						elseif is_boolean (visitor.vt_type) then
-							tmp_string.append (Eif_boolean)
 
 						elseif 
 							visitor.is_interface_pointer or 
@@ -171,13 +185,15 @@ feature {NONE} -- Implementation
 						then
 							tmp_string.append (visitor.c_type)
 	
-						elseif visitor.is_array_basic_type or visitor.is_interface or visitor.is_structure then
+						elseif 
+							visitor.is_array_basic_type or 
+							visitor.is_interface or 
+							visitor.is_structure 
+						then
 							tmp_string.append (visitor.c_type)
 							tmp_string.append (Space)
 							tmp_string.append (Asterisk)
 
-						elseif is_hresult (visitor.vt_type) or is_error (visitor.vt_type) then
-							tmp_string.append (visitor.c_type)
 						else
 							tmp_string.append (Eif_object)
 						end
@@ -293,6 +309,9 @@ feature {NONE} -- Implementation
 					flag := arguments.item.flags
 					visitor := arguments.item.type.visitor
 					
+					-- Since VARIANT is treated as VARIANT *,
+					-- we need to check what it was originally,
+					-- to find out whether if [in] or [in, out] parameter.
 					if is_variant (arguments.item.type.type) then
 						a_type := arguments.item.type.type
 					else
@@ -410,6 +429,7 @@ feature {NONE} -- Implementation
 				Result.append ("(short *)")
 			elseif is_unsigned_char (type) then
 				Result.append ("(char *)")
+	--		elseif 
 			else
 				Result.append (Open_parenthesis)
 				Result.append (visitor.c_type)
@@ -439,7 +459,10 @@ feature {NONE} -- Implementation
 			create Result.make (10000)
 			
 			
-			if visitor.is_basic_type or visitor.is_enumeration then
+			if 
+				visitor.is_basic_type or 
+				visitor.is_enumeration 
+			then
 				create tmp_string.make (200)
 				tmp_string.append (name)
 				Result.append (New_line_tab)
@@ -576,7 +599,8 @@ feature {NONE} -- Implementation
 
 			elseif 
 				visitor.is_array_basic_type or 
-				visitor.is_structure_pointer
+				visitor.is_structure_pointer or
+				(is_variant (type) and visitor.is_structure)
 			then
 				Result.append (New_line_tab)
 				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), name, visitor))
@@ -588,10 +612,6 @@ feature {NONE} -- Implementation
 				Result.append (New_line_tab)
 				Result.append (add_ref_in_interface_pointer (name))
 				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), name, visitor))
-
-			elseif is_variant (type) then
-				Result.append (New_line_tab)
-				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), name, visitor))
 
 			elseif visitor.is_structure then
 				Result.append (New_line_tab)
@@ -721,24 +741,33 @@ feature {NONE} -- Implementation
 			Result.append (Space_equal_space)
 			Result.append (Open_parenthesis)
 
-			if visitor.is_coclass then
-				Result.append (Iunknown_type)
-			elseif 
+			if 
 				(visitor.is_coclass_pointer or 
-				visitor.is_interface_pointer) and 
-				not is_dispatch (visitor.vt_type)
+				visitor.is_interface_pointer)
 			then
-				Result.append (IUnknown_pointer)
+				if 
+					is_unknown (visitor.vt_type)
+				then
+					Result.append (IUnknown)
+				else
+					Result.append (Idispatch)
+				end
 
 			elseif 
 				(visitor.is_coclass_pointer_pointer or 
-				visitor.is_interface_pointer_pointer) and 
-				not is_dispatch (visitor.vt_type)
+				visitor.is_interface_pointer_pointer) 
 			then
-				Result.append (Iunknown_pointer)
+				if is_unknown (visitor.vt_type) then
+					Result.append (Iunknown)
+				else
+					Result.append (Idispatch)
+				end
 				Result.append (Asterisk)
 			else
-				if is_variant (visitor.vt_type) then
+				if 
+					is_variant (visitor.vt_type) and
+					visitor.is_structure
+				then
 					Result.append ("VARIANT")
 					Result.append (Space)
 					Result.append (Asterisk)

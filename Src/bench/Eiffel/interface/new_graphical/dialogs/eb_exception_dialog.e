@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			restart_button: EV_BUTTON
 			exception_frame: EV_FRAME
 			pixmap_box: EV_VERTICAL_BOX
-			exception_text: TEXT_PANEL
+			exception_text: EB_EDITOR
 			save_button: EV_BUTTON
 		do
 			trace := a_trace

@@ -52,7 +52,6 @@ feature {NONE} -- Implementation
 			last_char: CHARACTER;
 			dir_name: STRING;
 			expiration: INTEGER;
-			msg: STRING;
 			new_name_chooser: NAME_CHOOSER_W
 		do
 			if not project_tool.initialized then
@@ -62,19 +61,12 @@ feature {NONE} -- Implementation
 					new_name_chooser.hide_file_selection_list;
 					new_name_chooser.hide_file_selection_label;
 					new_name_chooser.set_title (Interface_names.t_Select_a_directory)
-					if not license.is_unlimited then
-						expiration := license.time_left
-						if expiration < 30 then
-							msg := "Your license will expire in ";
-							msg.append_integer (expiration);
-							msg.append (" days")
-						end
-					end;
-					if msg = Void then
+
+					if not has_limited_license then
 						open_project (argument)
 					else
 						warner (Project_tool).custom_call (Current,
-							msg, Interface_names.b_Ok, Void, Void);
+							expiration_message, Interface_names.b_Ok, Void, Void);
 					end
 				else
 					dir_name := clone (last_name_chooser.selected_file);

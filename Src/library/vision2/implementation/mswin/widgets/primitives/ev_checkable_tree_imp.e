@@ -49,7 +49,6 @@ feature -- Status report
 			-- is `tree_item' checked?
 		local
 			item_imp: EV_TREE_ITEM_IMP
-			state: INTEGER
 			original_mask: INTEGER
 			original_state_mask: INTEGER
 		do
@@ -82,6 +81,10 @@ feature -- Status setting
 			set_tree_item (item_imp)		
 			item_imp.set_mask (original_mask)
 			item_imp.set_statemask (original_state_mask)
+				-- Call the check actions if connected.
+			if check_actions_internal /= Void then
+				check_actions_internal.call ([tree_item])
+			end
 		end
 
 	uncheck_item (tree_item: EV_TREE_NODE) is
@@ -101,6 +104,10 @@ feature -- Status setting
 			set_tree_item (item_imp)
 			item_imp.set_mask (original_mask)
 			item_imp.set_statemask (original_state_mask)
+				-- Call the uncheck actions if connected.
+			if uncheck_actions_internal /= Void then
+				uncheck_actions_internal.call ([tree_item])
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation

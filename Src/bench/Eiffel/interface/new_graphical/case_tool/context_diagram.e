@@ -57,6 +57,13 @@ inherit
 			default_create
 		end
 
+	XM_CALLBACKS_FILTER_FACTORY
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	make (a_tool: like context_editor) is
@@ -858,20 +865,28 @@ feature -- View management
 			ptf_is_readable: ptf.is_open_read
 			a_name_exists: a_name /= Void
 		local
-			s: STRING
-			diagram_output, node: XML_ELEMENT
-			parser: XML_TREE_PARSER
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
+			diagram_output, node: XM_ELEMENT
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_file: KL_BINARY_INPUT_FILE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
-				-- Remove any previous save of `current_view'.
-			create parser.make
-			ptf.read_stream (ptf.count)
-			s := ptf.last_string
-			parser.parse_string (s)
-			parser.set_end_of_file
-			if parser.is_correct then
-				if parser.root_element.name.is_equal ("CONTEXT_DIAGRAM") then
-					diagram_output := parser.root_element
+			create l_parser.make
+			create l_file.make (ptf.name)
+			l_file.open_read
+			if l_file.is_open_read then
+				create l_tree_pipe.make
+				create l_xm_concatenator.make_null
+				l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+				l_parser.parse_from_stream (l_file)
+				check
+					ok_parsing: l_parser.is_correct
+				end
+				l_file.close
+
+				if l_tree_pipe.document.root_element.name.is_equal ("CONTEXT_DIAGRAM") then
+					diagram_output := l_tree_pipe.document.root_element
 					a_cursor := diagram_output.new_cursor
 					from
 						a_cursor.start
@@ -881,7 +896,7 @@ feature -- View management
 						node ?= a_cursor.item
 						if node /= Void then
 							if node.name.is_equal ("VIEW") then
-								if node.attributes.item ("NAME").value.is_equal (a_name) then
+								if node.attribute_by_name ("NAME").value.is_equal (a_name) then
 									diagram_output.remove_at_cursor (a_cursor)
 								end
 							end
@@ -1626,24 +1641,34 @@ feature {EB_CONTEXT_EDITOR} -- Saving
 			file_not_void: ptf /= Void
 			file_exists: ptf /= Void
 		local
-			s: STRING
-			diagram_output, view_output, node: XML_ELEMENT
-			parser: XML_TREE_PARSER
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
+			diagram_output: XM_DOCUMENT
+			view_output, node: XM_ELEMENT
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_file: KL_BINARY_INPUT_FILE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			l_namespace: XM_NAMESPACE
 			rescued: BOOLEAN
 		do
 			if not rescued then
 				if ptf.is_open_read then
 						-- Remove any previous save of `current_view'.
-					create parser.make
-					ptf.read_stream (ptf.count)
-					s := ptf.last_string
-					parser.parse_string (s)
-					parser.set_end_of_file
-					if parser.is_correct then
-						if parser.root_element.name.is_equal ("CONTEXT_DIAGRAM") then
-							diagram_output := parser.root_element
-							a_cursor := diagram_output.new_cursor
+					create l_parser.make
+					create l_file.make (ptf.name)
+					l_file.open_read
+					if l_file.is_open_read then
+						create l_tree_pipe.make
+						create l_xm_concatenator.make_null
+						l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+						l_parser.parse_from_stream (l_file)
+						l_file.close
+						if l_parser.is_correct then
+							check
+								valid_doc: l_tree_pipe.document.root_element.name.is_equal ("CONTEXT_DIAGRAM")
+							end
+							diagram_output := l_tree_pipe.document
+							a_cursor := diagram_output.root_element.new_cursor
 							from
 								a_cursor.start
 							until
@@ -1652,32 +1677,39 @@ feature {EB_CONTEXT_EDITOR} -- Saving
 								node ?= a_cursor.item
 								if node /= Void then
 									if node.name.is_equal ("VIEW") then
-										if node.attributes.item ("NAME").value.is_equal (current_view) then
-											diagram_output.remove_at_cursor (a_cursor)
+										check
+											valid_xml: node.attributes.item (1).value.is_equal (current_view)
 										end
+										diagram_output.root_element.remove_at_cursor (a_cursor)
 									end
 								end
 								if not a_cursor.after then
 									a_cursor.forth
 								end
 							end
+							view_output := xml_element
+							view_output.set_parent (diagram_output)
+							diagram_output.root_element.force_first (view_output)
+							save_xml_document (ptf, diagram_output)
+						else
+							check
+								not_ok_parsing: l_parser.is_correct
+							end
 						end
-						ptf.close
-						ptf.open_write
 					end
 				else
-					create diagram_output.make_root ("CONTEXT_DIAGRAM")
+					create l_namespace.make ("", "")
+					create node.make_root ("CONTEXT_DIAGRAM", l_namespace)
+					create diagram_output.make
+					diagram_output.force_first (node)
+					save_xml_document (ptf, diagram_output)
 				end
-				view_output := xml_element
-				view_output.set_parent (diagram_output)
-				diagram_output.put_last (view_output)
-				ptf.put_string (diagram_output.out)
 			end
 		rescue
 			rescued := True
 			Error_handler.error_list.wipe_out
 			create error_window
-			error_window.set_text ("Unable to write file:" + center_class.name + ".ead")
+			error_window.set_text ("File " + center_class.name + ".ead is corrupted.")
 			error_window.show
 			retry
 		end
@@ -1737,22 +1769,29 @@ feature {EB_CONTEXT_EDITOR} -- Saving
 			file_not_void: f /= Void
 			file_exists: f.exists
 		local
-			s: STRING
-			parser: XML_TREE_PARSER
-			diagram_input, view_input, node: XML_ELEMENT
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_file: KL_BINARY_INPUT_FILE
+			diagram_input, view_input, node: XM_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
 			rescued: BOOLEAN
 		do
 			if not cancelled then
 				if not rescued then
-					create parser.make
-					f.read_stream (f.count)
-					s := f.last_string
-					parser.parse_string (s)
-					parser.set_end_of_file
-					f.close
-					if parser.is_correct then
-						diagram_input := parser.root_element
+					create l_parser.make
+					create l_file.make (f.name)
+					l_file.open_read
+					if l_file.is_open_read then
+						create l_tree_pipe.make
+						create l_xm_concatenator.make_null
+						l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+						l_parser.parse_from_stream (l_file)
+						check
+							ok_parsing: l_parser.is_correct
+						end
+						l_file.close
+						diagram_input := l_tree_pipe.document.root_element
 						if diagram_input.name.is_equal ("CONTEXT_DIAGRAM") then
 							available_views.wipe_out
 							a_cursor := diagram_input.new_cursor
@@ -1764,8 +1803,11 @@ feature {EB_CONTEXT_EDITOR} -- Saving
 								node ?= a_cursor.item
 								if node /= Void then
 									if node.name.is_equal ("VIEW") then
-										available_views.extend (node.attributes.item ("NAME").value)
-										if node.attributes.item ("NAME").value.is_equal (current_view) then
+										check
+											attribute_name_exist: node.has_attribute_by_name ("NAME")
+										end
+										available_views.extend (node.attribute_by_name ("NAME").value)
+										if node.attribute_by_name ("NAME").value.is_equal (current_view) then
 											view_input := node
 										end
 									end
@@ -1814,17 +1856,20 @@ feature {EB_CONTEXT_EDITOR} -- Saving
 
 feature {NONE} -- XML
 
-	xml_element: XML_ELEMENT is
+	xml_element: XM_ELEMENT is
 			-- XML representation.
 		local
+			xml_elt_node: XM_ELEMENT
 			cf: CLASS_FIGURE
 			hf: BON_INHERITANCE_FIGURE
 			csf: BON_CLIENT_SUPPLIER_FIGURE
-			include_xe, exclude_xe, xe: XML_ELEMENT
-			include_element, exclude_element: XML_ELEMENT
+			include_xe, exclude_xe, xe: XM_ELEMENT
+			include_element, exclude_element: XM_ELEMENT
+			l_namespace: XM_NAMESPACE
 		do
-			create Result.make_root ("VIEW")
-			Result.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", current_view))
+			create l_namespace.make ("", "")
+			create Result.make_root ("VIEW", l_namespace)
+			Result.add_attribute ("NAME", l_namespace, current_view)
 			Result.put_last (xml_node (Result, "ANCESTOR_DEPTH", ancestor_depth.out))
 			Result.put_last (xml_node (Result, "DESCENDANT_DEPTH", descendant_depth.out))
 			Result.put_last (xml_node (Result, "CLIENT_DEPTH", client_depth.out))
@@ -1836,7 +1881,7 @@ feature {NONE} -- XML
 			Result.put_last (xml_node (Result, "LABELS_SHOWN", labels_shown.out))
 			Result.put_last (xml_node (Result, "X_POS", ((point.x / scale_x)).rounded.out))
 			Result.put_last (xml_node (Result, "Y_POS", ((point.y / scale_y)).rounded.out))
-			create include_element.make (Result, "INCLUDED_FIGURES")
+			create include_element.make_child (Result, "INCLUDED_FIGURES", l_namespace)
 			from
 				included_figures.start
 			until
@@ -1844,14 +1889,14 @@ feature {NONE} -- XML
 			loop
 				cf ?= included_figures.item
 				if cf /= Void then
-					create include_xe.make (include_element, "CLASS")
-					include_xe.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", cf.name))
+					create include_xe.make_child (include_element, "CLASS", l_namespace)
+					include_xe.add_attribute ("NAME", l_namespace, cf.name)
 				end
 				include_element.put_last (include_xe)
 				included_figures.forth
 			end
 			Result.put_last (include_element)
-			create exclude_element.make (Result, "EXCLUDED_FIGURES")
+			create exclude_element.make_child (Result, "EXCLUDED_FIGURES", l_namespace)
 			from
 				excluded_figures.start
 			until
@@ -1859,8 +1904,8 @@ feature {NONE} -- XML
 			loop
 				cf ?= excluded_figures.item
 				if cf /= Void then
-					create  exclude_xe.make (exclude_element, "CLASS")
-					exclude_xe.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", cf.name))
+					create  exclude_xe.make_child (exclude_element, "CLASS", l_namespace)
+					exclude_xe.add_attribute ("NAME", l_namespace, cf.name)
 				end
 				exclude_element.put_last (exclude_xe)
 				excluded_figures.forth
@@ -1903,13 +1948,13 @@ feature {NONE} -- XML
 			end
 		end
 
-	set_with_xml_element (an_element: XML_ELEMENT) is
+	set_with_xml_element (an_element: XM_ELEMENT) is
 			-- Set attributes from XML element.
 		require
 			an_element_not_void: an_element /= Void
 		local
-			a_cursor, include_cursor, exclude_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
-			node, child_node: XML_ELEMENT
+			a_cursor, include_cursor, exclude_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			node, child_node: XM_ELEMENT
 			cf, cf2: CLASS_FIGURE
 			hf: INHERITANCE_FIGURE
 			csf: CLIENT_SUPPLIER_FIGURE
@@ -1975,11 +2020,14 @@ feature {NONE} -- XML
 							error_window.show
 						end
 					elseif node.name.is_equal ("INHERITANCE_FIGURE") then
-						if not node.attributes.is_empty then
-							a_source_name := clone (node.attributes.item ("SRC").value)
+						if 
+							node.has_attribute_by_name ("SRC") and
+							node.has_attribute_by_name ("TRG")
+						then
+							a_source_name := node.attribute_by_name ("SRC").value
 							a_source_name.to_upper
 							cf := class_figure_by_class_name (a_source_name)
-							a_target_name := clone (node.attributes.item ("TRG").value)
+							a_target_name := node.attribute_by_name ("TRG").value
 							a_target_name.to_upper
 							cf2 := class_figure_by_class_name (a_target_name)
 							hf ?= inherit_link (cf, cf2)
@@ -1992,11 +2040,14 @@ feature {NONE} -- XML
 							error_window.show
 						end	
 					elseif node.name.is_equal ("CLIENT_SUPPLIER_FIGURE") then
-						if not node.attributes.is_empty then
-							a_source_name := clone (node.attributes.item ("SRC").value)
+						if 
+							node.has_attribute_by_name ("SRC") and
+							node.has_attribute_by_name ("TRG")
+						then
+							a_source_name := node.attribute_by_name ("SRC").value
 							a_source_name.to_upper
 							cf := class_figure_by_class_name (a_source_name)
-							a_target_name := clone (node.attributes.item ("TRG").value)
+							a_target_name := node.attribute_by_name ("TRG").value
 							a_target_name.to_upper
 							cf2 := class_figure_by_class_name (a_target_name)
 							csf ?= client_link (cf, cf2)
@@ -2018,8 +2069,11 @@ feature {NONE} -- XML
 							child_node ?= include_cursor.item
 							if child_node /= Void then
 								if child_node.name.is_equal ("CLASS") then
-									if not child_node.attributes.is_empty then
-										class_name := clone (child_node.attributes.item ("NAME").value)
+									if child_node.has_attribute_by_name ("NAME") then
+										class_name := child_node.attribute_by_name ("NAME").value
+										check
+											non_void_class_name: class_name /= Void
+										end
 										class_name.to_upper
 										cf := class_figure_by_class_name (class_name)
 										if cf = Void then
@@ -2057,8 +2111,8 @@ feature {NONE} -- XML
 							child_node ?= exclude_cursor.item
 							if child_node /= Void then
 								if child_node.name.is_equal ("CLASS") then
-									if not child_node.attributes.is_empty then
-										class_name := clone (child_node.attributes.item ("NAME").value)
+									if child_node.has_attribute_by_name ("NAME") then
+										class_name := child_node.attribute_by_name ("NAME").value
 										class_name.to_upper
 										cf := class_figure_by_class_name (class_name)
 										if cf /= Void then
@@ -2078,15 +2132,31 @@ feature {NONE} -- XML
 							exclude_cursor.forth
 						end			
 					else
-						create error_window
-						error_window.set_text ("File " + center_class.name + ".ead: Tag " + node.name + " unknown")
-						error_window.show
+						debug
+							if
+								node.name.is_equal ("ANCESTOR_DEPTH") and then
+								node.name.is_equal ("DESCENDANT_DEPTH") and then
+								node.name.is_equal ("CLIENT_DEPTH") and then
+								node.name.is_equal ("SUPPLIER_DEPTH") and then
+								node.name.is_equal ("ALL_CLASSES_IN_CLUSTER") and then
+								node.name.is_equal ("ONLY_CLASSES_IN_CLUSTER") and then
+								node.name.is_equal ("LABELS_SHOWN") and then
+								node.name.is_equal ("INHERITANCE_LINKS_DISPLAYED") and then
+								node.name.is_equal ("CLIENT_LINKS_DISPLAYED") and then
+								node.name.is_equal ("X_POS") and then
+								node.name.is_equal ("Y_POS")
+							then
+								create error_window
+								error_window.set_text ("File " + center_class.name + ".ead: Tag " + node.name + " unknown")
+								error_window.show
+							end
+						end
 					end
 				end
 				a_cursor.forth
 			end
 		end
-		
+
 feature {DIAGRAM_COMPONENT, CLASS_TEXT_MODIFIER} -- Implementation
 
 	include_class (a_class: CLASS_I) is
@@ -2288,7 +2358,7 @@ feature {DIAGRAM_COMPONENT, CLASS_TEXT_MODIFIER} -- Implementation
 			half_grid := grid // 2
 			Result := ((a_y + half_grid - offset) // grid) * grid + offset
 		end
-		
+
 feature {NONE} -- Implementation
 
 	feature_name_number: INTEGER
@@ -2668,4 +2738,3 @@ feature {NONE} -- Events
 		end
 
 end -- class CONTEXT_DIAGRAM
-

@@ -758,11 +758,14 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 
 feature {LINKABLE_FIGURE_GROUP} -- XML
 
-	xml_element (a_parent: XML_ELEMENT): XML_ELEMENT is
+	xml_element (a_parent: XM_ELEMENT): XM_ELEMENT is
 			-- XML representation.
+		local
+			l_namespace: XM_NAMESPACE
 		do
-			create Result.make (a_parent, "CLUSTER_FIGURE")
-			Result.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", cluster_i.cluster_name))
+			create l_namespace.make ("", "")
+			create Result.make_child (a_parent, "CLUSTER_FIGURE", l_namespace)
+			Result.add_attribute ("NAME", l_namespace, cluster_i.cluster_name)
 			Result.put_last (xml_node (Result, "ICONIFIED", iconified.out))
 			Result.put_last (xml_node (Result, "X_POS", point.x.out))
 			Result.put_last (xml_node (Result, "Y_POS", point.y.out))
@@ -775,13 +778,12 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 			end
 		end
 
-	set_with_xml_element (an_element: XML_ELEMENT) is
+	set_with_xml_element (an_element: XM_ELEMENT) is
 			-- Set attributes from XML element.
 		require else
 			an_element_is_cluster_figure: an_element.name.is_equal ("CLUSTER_FIGURE")
-			an_element_has_name_attribute: an_element.attributes.has ("NAME")
-			an_element_name_is_cluster_name:
-				an_element.attributes.item ("NAME").value.is_equal (cluster_i.cluster_name)
+			an_element_has_name_attribute: an_element.has_attribute_by_name ("NAME")
+			an_element_name_is_cluster_name: an_element.attribute_by_name ("NAME").value.is_equal (cluster_i.cluster_name)
 		local
 			x_pos, y_pos, w, h: INTEGER
 			was_iconified: BOOLEAN

@@ -845,17 +845,17 @@ rt_public void reclaim(void)
 	int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
 #endif
 
-#ifdef RECLAIM_DEBUG
-	fprintf(stderr, "reclaim: collecting all objects...\n");
-#endif
 
 #if ! defined CUSTOM || defined NEED_OPTION_H
 	if (egc_prof_enabled)
 		exitprf();			/* Store profile information */
 #endif
 
-	if (eif_no_reclaim)	/* Does user want no reclaim? */
+	if (eif_no_reclaim || (g_data.status & GC_STOP))	/* Does user want no reclaim? */
 		return;	
+#ifdef RECLAIM_DEBUG
+	fprintf(stderr, "reclaim: collecting all objects...\n");
+#endif
 	/* Reset GC status otherwise full_sweep() might skip some memory blocks
 	 * (those previously used as partial scavenging areas).
 	 */

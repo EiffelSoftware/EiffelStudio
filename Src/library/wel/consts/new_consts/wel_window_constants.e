@@ -7,9 +7,6 @@ indexing
 class
 	WEL_WINDOW_CONSTANTS
 
-create
-	default_create
-
 feature -- Window Messages
 
 	Wm_null: INTEGER is 0

@@ -8,10 +8,12 @@
 #		 -I$(EIFFEL_SRC)\C\run-time
 
 CFLAGS = -nologo -Ox -W4 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
+#CFLAGS = -nologo -W4 -Zi -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 
 OPT_CFLAGS =
 #OPT_CFLAGS = -DASSERTIONS 
 #OPT_CFLAGS = -DASSERTIONS -DDBGTRACE_ENABLED
+#OPT_CFLAGS = -DDBGTRACE_ENABLED
 #OPT_CFLAGS = 
 
 .cpp.obj:
@@ -62,5 +64,6 @@ clean_debugger:
 clean_writer:
 	del $(OBJ_WRITER)
 
+clean: clean_all
 clean_all: clean_writer clean_debugger
 

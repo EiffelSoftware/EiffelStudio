@@ -104,7 +104,7 @@ feature -- Optional initialization
 		require
 			a_suffix_not_void: a_suffix /= Void
 		do
-			class_suffix := clone (a_suffix)
+			class_suffix := a_suffix.twin
 			class_suffix.append (".")
 			class_suffix.append (file_suffix)
 		end
@@ -213,8 +213,7 @@ feature -- Status report
 		local
 			s: STRING
 		do
-			s := clone (file_suffix)
-			s.to_lower
+			s := file_suffix.as_lower
 			Result := file_suffix.is_equal ("html")
 		end
 
@@ -249,8 +248,7 @@ feature {NONE} -- Text processing
 			format: CELL2 [STRING, STRING];
 			text_image: STRING
 		do
-			text_image := clone (text.image)
-			text_image.to_lower;
+			text_image := text.image.as_lower
 			if format_table.has (text_image) then
 				format := format_table.found_item
 			elseif format_table.has (f_Symbol) then
@@ -274,8 +272,7 @@ feature {NONE} -- Text processing
 			text_image: STRING
 			prec: PRECURSOR_KEYWORD_TEXT
 		do
-			text_image := clone (text.image)
-			text_image.to_lower
+			text_image := text.image.as_lower
 			prec ?= text
 			if format_table.has (text_image) then
 				format := format_table.found_item
@@ -315,8 +312,7 @@ feature {NONE} -- Text processing
 			operator_generated: BOOLEAN
 		do
 			operator_generated := doc_universe.is_feature_generated (text.e_feature)
-			text_image := clone (text.image)
-			text_image.to_lower
+			text_image := text.image.as_lower
 			if format_table.has (text_image) then
 				format := format_table.found_item
 			elseif text.is_keyword then
@@ -941,7 +937,7 @@ feature {NONE} -- Text processing
 			format_item: STRING
 		do
 			cmi ?= text
-			format_item := clone (f_Menu_item)
+			format_item := f_Menu_item.twin
 			if cmi /= Void then
 				format_item.prepend ("class_")
 			end

@@ -14,14 +14,16 @@ feature
 	make is
 			-- Create
 		do
-			create output_string.make_empty
 			clear
 		end		
 
 feature -- Access
 
-	output_string: STRING
+	output_string: STRING is
 			-- Output string after filter processing
+		once
+			create Result.make (100000)
+		end
 			
 	description: STRING
 			-- Textual description of this filter

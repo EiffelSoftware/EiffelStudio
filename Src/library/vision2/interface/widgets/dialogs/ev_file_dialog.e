@@ -31,12 +31,26 @@ feature -- Access
 
 	filter: STRING is
 			-- Filter currently applied to file list.
+		obsolete "Use `filters' instead"
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.filter
 		ensure
 			bridge_ok: Result.is_equal (implementation.filter)
+		end
+		
+	filters: ARRAYED_LIST [TUPLE [STRING, STRING]] is
+			-- All filters currently applied to file list.
+			-- First STRING represents the filter e.g "*.txt".
+			-- Second STRING represents the displayed text
+			-- e.g. "Text files (*.txt)".
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.filters
+		ensure
+			bridge_ok: Result = implementation.filters
 		end
 
 	start_directory: STRING is
@@ -81,6 +95,7 @@ feature -- Element change
 
 	set_filter (a_filter: STRING) is
 			-- Set `a_filter' as new filter.
+		obsolete "Use `filters.extend ([%"*.`a_filter'%", %"Files of type ('a_filter')%"])' instead."
 		require
 			not_destroyed: not is_destroyed
 			a_filter_not_void: a_filter /= Void
@@ -147,6 +162,7 @@ feature {EV_ANY_I} -- implementation
 
 invariant
 	filter_not_void: filter /= Void
+	filters_not_void: filters /= Void
 	start_directory_not_void: start_directory /= Void
 	file_name_not_void_implies_path_and_title_not_void: file_name /= Void
 		implies (file_title /= Void and then file_path /= Void)

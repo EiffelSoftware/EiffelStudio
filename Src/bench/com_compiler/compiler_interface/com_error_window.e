@@ -20,23 +20,25 @@ feature {NONE} -- Initialization
 			com_interface_exists: com_interface /= Void
 		do
 			interface := com_interface
+			create output_string.make (0)
 		end
 		
 feature -- Output
 
 	put_string (s: STRING) is 
 		do 
-			interface.event_output_string (s) 
+			output_string.append (s) 
 		end
 
 	new_line is 
 		do 
-			interface.event_output_string ("%N") 
+			interface.event_output_string (output_string) 
+			output_string.wipe_out
 		end
 
 	put_char (c: CHARACTER) is 
 		do 
-			interface.event_output_string (c.out) 
+			output_string.append_character (c) 
 		end
 				
 feature {NONE} -- Implementation
@@ -44,4 +46,7 @@ feature {NONE} -- Implementation
 	interface: CEIFFEL_COMPILER_COCLASS
 			-- Entity that handles messages.
 
+	output_string: STRING
+			-- Holds output string.
+	
 end -- class COM_ERROR_WINDOW

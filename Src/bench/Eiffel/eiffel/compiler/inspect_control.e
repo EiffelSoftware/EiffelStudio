@@ -7,6 +7,10 @@ inherit
 	SHARED_ERROR_HANDLER;
 	SHARED_AST_CONTEXT;
 	COMPILER_EXPORTER
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
 
 creation
 
@@ -183,12 +187,11 @@ feature
 			good_argument: bound /= Void
 			consistency: bound.good_integer
 		local
-			int_const_val: INT_CONST_VAL_B
-			int_bound: INTEGER_AS
+			int_bound: INTEGER_CONSTANT
 			id: ID_AS
 			static: STATIC_ACCESS_AS
 			constant_i: CONSTANT_I
-			integer_value: INT_VALUE_I
+			integer_value: INTEGER_CONSTANT
 			constant_name: STRING
 			written_class: CLASS_C
 			int_value: INTEGER
@@ -200,7 +203,7 @@ feature
 			if bound.is_integer then
 				int_bound ?= bound;
 				int_value := int_bound.value;
-				!!Result.make (int_value);
+				Result := int_bound.make_integer
 				if int_value > 0 then
 					positive_value_found := True;
 					positive_value := int_value;
@@ -215,9 +218,8 @@ feature
 					constant_i := static.associated_constant
 				end
 				integer_value ?= constant_i.value;
-				int_value := integer_value.int_val;
-				!!int_const_val.make (int_value, constant_i);
-				Result := int_const_val;
+				int_value := integer_value.value;
+				Result := bound.make_integer;
 				constant_name := constant_i.feature_name;
 				if constant_i.is_unique then
 					unique_found := True;

@@ -278,7 +278,7 @@ rt_public void set_breakpoint_number (int num)
 
 rt_public void dnext(void)
 {
-	if (breakpoint_number >= recorded_breakpoint_number) {
+	if (recorder_breakpoint_number >= breakpoint_number) {
 		recorded_breakpoint_number = 1;
 		dinterrupt();				/* Ask daemon whether application */
 	}						/* should be interrupted here. */

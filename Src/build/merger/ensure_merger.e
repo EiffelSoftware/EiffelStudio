@@ -26,7 +26,7 @@ feature
 			else
 				-- Otherwise the result will be the same
 				-- as the previous merge result.
-				merge_result := Void
+				merge_result := u
 			end
 		end;
 

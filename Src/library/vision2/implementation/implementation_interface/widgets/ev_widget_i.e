@@ -92,10 +92,11 @@ feature -- Status Report
 			wid: EV_WIDGET
 		do
 			wid ?= interface
-			check
-				valid_cast: wid /= Void
+			if wid = Void then
+				Result := False
+			else
+				Result := wid.managed
 			end
-			Result := wid.managed
 		end
 
 	shown: BOOLEAN is
@@ -126,7 +127,7 @@ feature -- Status Report
 feature -- Status setting
 
 	hide is
-			-- Make widget invisible on the screen.
+		 	-- Make widget invisible in his parent.
 		require
 			exists: not destroyed
 		deferred
@@ -135,10 +136,9 @@ feature -- Status setting
 		end
 	
 	show is
-			-- Make widget visible on the screen.
+		 	-- Make widget visible in his parent.
 		require
 			exist: not destroyed
-			has_parent: has_parent
 		deferred
 		ensure
 			shown: shown		
@@ -413,7 +413,7 @@ feature -- Resizing
 		end
 
 feature -- Assertions
-	
+
 	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
 		-- Check if the dimensions of the widget are set to 
 		-- the values given or the minimum values possible 

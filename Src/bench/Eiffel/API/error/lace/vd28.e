@@ -6,7 +6,7 @@ inherit
 
 	CLUSTER_ERROR
 		redefine
-			trace
+			build_explain
 		end
 
 feature
@@ -21,16 +21,15 @@ feature
 			second_cluster_name := s;
 		end;
 
-	trace is
-			-- Debug purpose
+	build_explain (a_clickable: CLICK_WINDOW) is
 		do
-			io.error.putstring ("code VD28: cluster ");
-			io.error.putstring (cluster.cluster_name);
-			io.error.putstring (" and cluster ");
-			io.error.putstring (second_cluster_name);
-			io.error.putstring (" have the same path ");
-			io.error.putstring (cluster.path);
-			io.error.new_line;
+			a_clickable.put_string ("%Tcluster ");
+			a_clickable.put_string (cluster.cluster_name);
+			a_clickable.put_string (" and cluster ");
+			a_clickable.put_string (second_cluster_name);
+			a_clickable.put_string (" have the same path ");
+			a_clickable.put_string (cluster.path);
+			a_clickable.new_line;
 		end;
 
 end

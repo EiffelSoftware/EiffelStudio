@@ -40,6 +40,7 @@ feature -- Initialization
 			-- Generate analysis
 		local
 			is_yes: BOOLEAN;
+			vd33: VD33;
 		do
 			is_yes := (generate_value = Void) or else
 					generate_value.is_yes;
@@ -57,10 +58,9 @@ feature -- Initialization
 					System.set_object_directory (file__name);
 				end;
 			else
-				-- Is it an error ?
-				io.error.putstring ("%NWARNING: undefined name in Generate clause ");
-				io.error.putstring (language_name.language_name);
-				io.error.new_line;
+				!!vd33;
+				vd33.set_language_name (language_name.language_name);
+				Error_handler.insert_error (vd33);
 			end;
 		end;
 

@@ -13,4 +13,6 @@ feature
 
 	put_clickable_string (a: ANY; s: STRING) is do io.error.putstring (s) end;
 
+	new_line is do io.error.new_line end;
+
 end

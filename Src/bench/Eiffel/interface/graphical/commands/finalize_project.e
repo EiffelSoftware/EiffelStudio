@@ -41,7 +41,7 @@ feature {NONE}
 						file.open_write;
 						workbench.basic_store (file);
 						file.close;
-						System.pass4;
+						System.finalized_generation;
 						finish_freezing;
 					end;
 					restore_cursors;

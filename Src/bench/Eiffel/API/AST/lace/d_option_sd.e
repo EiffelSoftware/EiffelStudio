@@ -32,16 +32,17 @@ feature -- Initialization
 			-- Yacc initialization
 		local
 			free_option: FREE_OPTION_SD;
+			vd32: VD32;
 		do
 			option ?= yacc_arg (0);
 			value ?= yacc_arg (1);
 
 			free_option ?= option;
 			if free_option /= Void then
-				io.error.putstring ("%NWarning: unknown option ");
-				io.error.putstring (free_option.option_name);
-				io.error.new_line;
-
+				!!vd32;
+				vd32.set_node (Current);
+				vd32.set_option_name (free_option.option_name);
+				Error_handler.insert_warning (vd32);
 				-- see also ETL p526 (VDOC error message)	
 			end;
 		end;

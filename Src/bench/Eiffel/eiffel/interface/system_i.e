@@ -386,11 +386,11 @@ end;
 			 good_argument: a_class /= Void;
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
+			compiled_root_class: CLASS_C;
 			descendants, suppliers, clients: LINKED_LIST [CLASS_C];
 			void_class, supplier: CLASS_C;
 			supplier_clients: LINKED_LIST [CLASS_C];
-			class_i: CLASS_I;
-			id, pos: INTEGER;
+			id: INTEGER;
 			types: TYPE_LIST;
 			Void_class_type: CLASS_TYPE;
 			local_cursor: LINKABLE [SUPPLIER_CLASS];
@@ -431,21 +431,11 @@ end;
 				-- Remove if from the servers
 			id := a_class.id;
 
--- FIXME
-
--- Problem if ctrl C after a class has been removed
--- Sometimes the E... file can be removed from disk
-
--- Solution: Put the id in a tmp structure and remove the objects
--- during the synchronization tmp_servers <==> servers
-
---			ast_server.remove (id);
---			feat_tbl_server.remove (id);
---			class_info_server.remove (id);
---			inv_ast_server.remove (id);
---			depend_server.remove (id);
---			m_rout_id_server.remove (id);
-
+debug ("ACTIVITY");
+	io.error.putstring ("%TRemoving id from servers: ");
+	io.error.putint (id);
+	io.error.new_line;
+end;
 			Tmp_ast_server.remove (id);
 			Tmp_feat_tbl_server.remove (id);
 			Tmp_class_info_server.remove (id);
@@ -461,7 +451,10 @@ end;
 				-- Remove client/supplier syntactical relations
 				-- and remove classes recursively
 			from
-				local_cursor := a_class.syntactical_suppliers.first_element
+				local_cursor := a_class.syntactical_suppliers.first_element;
+				if root_class /= Void then
+					compiled_root_class := root_class.compiled_class
+				end;
 			until
 				local_cursor = Void
 			loop
@@ -478,7 +471,7 @@ end;
 						-- The root class is not removed
 						-- true only if the root class has changed and
 						-- was a client for a removed class
-					supplier /= root_class.compiled_class and then
+					supplier /= compiled_root_class and then
 						-- Cannot propagate for a protected class
 					supplier.id > protected_classes and then
 						-- A recursion may occur when removing a cluster
@@ -789,10 +782,8 @@ end;
 		end;
 
 	update_freeze_list (a_class_id: INTEGER) is
-			-- Update the freeze list for changed hash tables (after pass2)
+		obsolete "Empty routine"
 		do
-			freeze_set2.put (a_class_id);
-			melted_set.put (a_class_id);
 		end;
 
 	process_type_system is
@@ -2805,7 +2796,6 @@ feature -- Conveniences
 		require
 			root_cluster /= Void;
 			root_class_name /= Void;
-			root_cluster.classes.has (root_class_name);
 		do
 			Result := root_cluster.classes.item (root_class_name);
 		end;

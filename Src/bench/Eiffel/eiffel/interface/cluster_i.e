@@ -161,10 +161,7 @@ feature -- Creation feature
 			i: INTEGER;
 			a_class: CLASS_I;
 			class_path, class_name: STRING;
-			class_file: EXTEND_FILE;
 			vd11: VD11;
-			vd10: VD10;
-			vd21: VD21;
 			vd22: VD22;
 		do
 				-- Set date first
@@ -195,58 +192,31 @@ feature -- Creation feature
 							class_path.append (path);
 							class_path.append ("/");
 							class_path.append (file_name);
-							!!class_file.make (class_path);
-							if class_file.is_readable then
-								if class_file.open_read_error then
-										-- Error when opening file
-									!!vd22;
-									vd22.set_file_name (class_path);
-									Error_handler.insert_error (vd22);
-								else
-									class_name := c_clname
-													(class_file.file_pointer);
-									class_file.close;
-									if class_name /= Void then
-											-- Eiffel class in file
-										class_name.to_lower;
-										a_class := classes.item (class_name);
-										if a_class = Void then
-											if old_cluster /= Void then
-												a_class :=
-													old_cluster.classes.item (class_name);
-											end;
-											if a_class = Void then
-												!!a_class.make;
-												a_class.set_class_name (class_name);
-											end;
-												-- The file name may have changed even
-												-- if the class was already in this cluster
-											a_class.set_file_name (class_path);
-											a_class.set_cluster (Current);
-											classes.put (a_class, class_name);
-										else
-											-- Error
-											!!vd11;
-											vd11.set_a_class (a_class);
-											vd11.set_file_name (file_name);
-											vd11.set_cluster (Current);
-											Error_handler.insert_error (vd11);
-											Error_handler.raise_error;
-										end;
-									else
-											-- No class in file
-										!!vd10;
-										vd10.set_cluster (Current);
-										vd10.set_file_name (class_path);
-										Error_handler.insert_error (vd10);
-									end;
+							class_name := read_class_name_in_file (class_path);
+							if class_name /= Void then
+								a_class := classes.item (class_name);
+								if a_class /= Void then
+									-- Error
+									!!vd11;
+									vd11.set_a_class (a_class);
+									vd11.set_file_name (file_name);
+									vd11.set_cluster (Current);
+									Error_handler.insert_error (vd11);
+									Error_handler.raise_error;
 								end;
-							else
-									-- Unreadable file
-								!!vd21;
-								vd21.set_cluster (Current);
-								vd21.set_file_name (class_path);
-								Error_handler.insert_error (vd21);
+									-- Valid eiffel class in file
+								if old_cluster /= Void then
+									a_class := old_cluster.classes.item (class_name);
+								end;
+								if a_class = Void then
+									!!a_class.make;
+									a_class.set_class_name (class_name);
+								end;
+									-- The file name may have changed even
+									-- if the class was already in this cluster
+								a_class.set_file_name (class_path);
+								a_class.set_cluster (Current);
+								classes.put (a_class, class_name);
 							end;
 						end;
 					end;
@@ -257,6 +227,46 @@ feature -- Creation feature
 				cluster_file.close;
 			end;
 			Error_handler.checksum;
+		end;
+
+	read_class_name_in_file (file_name: STRING): STRING is
+			-- Read the name of a class in a file
+			-- Check if there is already a class with this name
+			-- in the cluster
+		local
+			class_file: EXTEND_FILE;
+			vd10: VD10;
+			vd21: VD21;
+			vd22: VD22;
+		do
+			!!class_file.make (file_name);
+			if class_file.is_readable then
+				if class_file.open_read_error then
+						-- Error when opening file
+					!!vd22;
+					vd22.set_file_name (file_name);
+					Error_handler.insert_error (vd22);
+				else
+					Result := c_clname (class_file.file_pointer);
+					class_file.close;
+					if Result /= Void then
+							-- Eiffel class in file
+						Result.to_lower;
+					else
+							-- No class in file
+						!!vd10;
+						vd10.set_cluster (Current);
+						vd10.set_file_name (file_name);
+						Error_handler.insert_error (vd10);
+					end;
+				end;
+			else
+					-- Unreadable file
+				!!vd21;
+				vd21.set_cluster (Current);
+				vd21.set_file_name (file_name);
+				Error_handler.insert_error (vd21);
+			end;
 		end;
 
 	remove_class (a_class: CLASS_I) is
@@ -279,7 +289,7 @@ feature -- Creation feature
 		do
 			class_c := a_class.compiled_class;
 			if class_c /= Void then
-				clients := class_c.clients;
+				clients := class_c.syntactical_clients;
 				from
 					clients.start
 				until
@@ -290,9 +300,6 @@ feature -- Creation feature
 					clients.forth;
 				end;
 
-io.error.putstring ("CLUSTER_I remove class from system: ");
-io.error.putstring (class_c.class_name);
-io.error.new_line;
 					-- remove class_c from the system
 				System.remove_class (class_c);
 			end;

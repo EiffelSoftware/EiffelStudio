@@ -18,12 +18,16 @@ feature -- Attributes
 	error_list: LINKED_LIST [ERROR];
 			-- Error list
 
+	warning_list: LINKED_LIST [ERROR];
+			-- Warning list
+
 feature -- Creation feature
 
 	make is
 			-- Initialization
 		do
 			!!error_list.make;
+			!!warning_list.make;
 		end;
 
 feature	-- Error handling primitives
@@ -40,6 +44,19 @@ end;
 			new_error := True;
 			error_list.start;	
 			error_list.put_right (e);
+		end;
+
+	insert_warning (w: ERROR) is
+			-- Insert `w' in `warning_list'.
+		require
+			good_argument: w /= Void
+		do
+debug
+io.error.putstring ("Inserting warning object:%N");
+w.trace;
+end;
+			warning_list.start;	
+			warning_list.put_right (w);
 		end;
 
 	mark is
@@ -67,6 +84,9 @@ end;
 			-- Check if there are errors in `error_list' and raise
 			-- an error if needed.
 		do
+			if not warning_list.empty then
+				trace_warnings;
+			end;
 			if not error_list.empty then
 				raise_error;
 			end;
@@ -152,6 +172,7 @@ feature -- Syntax errors
 			-- Empty `error_list'.
 		do
 			error_list.wipe_out;
+			warning_list.wipe_out;
 		end;
 
 feature -- Debug purpose
@@ -166,6 +187,19 @@ feature -- Debug purpose
 				error_list.item.trace;
 				io.error.putstring ("------------------------------%N");
 				error_list.forth;
+			end;
+		end;
+
+	trace_warnings is
+		do
+			from
+				warning_list.start
+			until
+				warning_list.offright
+			loop
+				warning_list.item.trace;
+				io.error.putstring ("------------------------------%N");
+				warning_list.forth;
 			end;
 		end;
 

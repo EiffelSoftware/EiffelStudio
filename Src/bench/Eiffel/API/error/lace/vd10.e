@@ -6,7 +6,7 @@ inherit
 
 	CLUSTER_ERROR
 		redefine
-			trace
+			build_explain
 		end
 
 feature
@@ -21,22 +21,16 @@ feature
 		end;
 
 	code: STRING is
-			-- error cide
+			-- error code
 		do
 			Result := "VD10";
 		end;
 
-	trace is
-			-- Debug purpose
-		local
-			dummy_reference: CLASS_C
+	build_explain (a_clickable: CLICK_WINDOW) is
 		do
-			error_window.put_string ("Error ");
-			error_window.put_clickable_string (stone (dummy_reference), code);
-			error_window.put_string (":%N");
-			error_window.put_string ("%Tfile: ");
-			error_window.put_string (file_name);
-			error_window.put_string ("%N");
+			a_clickable.put_string ("%Tfile: ");
+			a_clickable.put_string (file_name);
+			a_clickable.put_string ("%N");
 		end;
 
 end

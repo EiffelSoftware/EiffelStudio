@@ -35,8 +35,13 @@ feature
 
 	associated_class: CLASS_C is
 			-- Associated class
+		local
+			ct: CLASS_TYPE;
 		do
-			Result := System.class_type_of_id (type_id).associated_class;
+			ct := System.class_type_of_id (type_id);
+			if ct /= Void then
+				Result := ct.associated_class;
+			end;
 		end;
 
 end

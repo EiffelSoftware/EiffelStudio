@@ -23,7 +23,7 @@ feature -- Debug pupose
 		local
 			dummy_reference: CLASS_C
 		do
-			error_window.put_string ("Error ");
+			error_window.put_string (Error_string);
 			error_window.put_clickable_string (stone (dummy_reference), code);
 			error_window.put_string (":%N");
 			build_explain (error_window)
@@ -34,6 +34,11 @@ feature -- Debug pupose
 			-- in `a_clickable'.
 		do
 			-- Do nothing
+		end;
+
+	Error_string: STRING is
+		do
+			Result := "Error ";
 		end;
 
 feature -- stoning

@@ -36,6 +36,8 @@ feature -- Lace compilation
 
 	adapt is
 			-- External analysis
+		local
+			vd34: VD34;
 		do
 			if language_name.is_make then
 				System.set_makefile_names (file_names);
@@ -44,10 +46,9 @@ feature -- Lace compilation
 			elseif language_name.is_object then
 				System.set_object_file_names (file_names);
 			else
-					-- Is it an error ?
-				io.error.putstring ("%NWARNING: undefined name in Externals clause ");
-				io.error.putstring (language_name.language_name);
-				io.error.new_line;
+				!!vd34;
+				vd34.set_language_name (language_name.language_name);
+				Error_handler.insert_error (vd34);
 			end;
 		end;
 

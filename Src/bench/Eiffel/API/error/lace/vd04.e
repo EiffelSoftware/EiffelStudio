@@ -7,7 +7,7 @@ inherit
 
 	ERROR
 		redefine
-			trace
+			build_explain
 		end
 
 feature
@@ -33,15 +33,14 @@ feature
 	code: STRING is "VD04";
 			-- Error code
 
-	trace is
+	build_explain (a_clickable: CLICK_WINDOW) is
 			-- Debug purpose
 		do
-			io.error.putstring (code);
-			io.error.putstring (": cluster of path ");
-			io.error.putstring (cluster.path);
-			io.error.putstring (" has to class named ");
-			io.error.putstring (old_name);
-			io.error.new_line;
+			a_clickable.put_string ("%Tcluster of path ");
+			a_clickable.put_string (cluster.path);
+			a_clickable.put_string (" has no class named ");
+			a_clickable.put_string (old_name);
+			a_clickable.new_line;
 		end;
 
 end

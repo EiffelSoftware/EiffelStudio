@@ -270,13 +270,13 @@ feature -- Status setting
 		
 	expand_recursive is
 			-- Expand `Current'.
-		require
-			tree_item /= Void implies tree_item.is_expandable
 		do
-			expand
-			recursive_do_all (agent internal_expand_recursive)
+			if tree_item.is_expandable then
+				expand
+				recursive_do_all (agent internal_expand_recursive)
+			end
 		ensure
-			tree_item /= Void implies tree_item.is_expanded
+			(tree_item /= Void and then tree_item.is_expandable) implies tree_item.is_expanded
 		end
 		
 	set_pixmap (a_pixmap: EV_PIXMAP) is

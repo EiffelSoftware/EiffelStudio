@@ -25,7 +25,7 @@ else
 fi
 
 if [ ! -f config.sh ]; then
-	cp $ISE_EIFFEL/bench/spec/$ISE_PLATFORM/include/config.sh .
+	cp $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include/config.sh .
 fi
 sh Makefile.SH
 

@@ -44,12 +44,12 @@ feature
 			Result.compare_objects;
 		end;
 
-	subqueries: LINKED_LIST [EWB_SUBQUERY] is
+	subqueries: LINKED_LIST [SUBQUERY] is
 		once
 			!! Result.make;
 		end;
 
-	subquery_operators: LINKED_LIST [EWB_SUBQUERY_OPERATOR] is
+	subquery_operators: LINKED_LIST [SUBQUERY_OPERATOR] is
 		once
 			!! Result.make;
 		end;

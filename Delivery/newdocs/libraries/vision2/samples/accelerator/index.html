@@ -23,10 +23,14 @@
 			<LI>Click <B>OK</B>.
 		</UL>
 		<H2>Running</H2>
-		After launching the application, you will see a window displayed with a similar appearance to the one above.
+		After launching the application, you will see a window displayed with a similar appearance to the one above. When the window has the focus, the key combination
+		Ctrl + Q will exit the application.
 		<P>
 		</P>
 		<H2>Under the Hood</H2>
+		An <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html">EV_ACCELERATOR</A> is created and associated with the
+		<A CLAS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window_chart.html">EV_TITLED_WINDOW</A> used as the main window of the application.
+		The association is made by adding the accelerator to the <A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window.html#f_accelerators">accelerators</A> list of the window.
 			
 		<P>This sample contains the following class:
 			<UL>
@@ -34,5 +38,6 @@
 				
 			</UL>
 		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/vision2/content/kernel/ev_accelerator.html">EV_ACCELERATOR</A><BR><A HREF="/libraries/vision2/content/kernel/ev_key.html">EV_KEY</A><BR></P>
 	</BODY>
 </HTML>

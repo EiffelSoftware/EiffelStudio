@@ -75,6 +75,7 @@ feature -- Behavior
 	on_wm_destroy is
 			-- Open project if needed
 		do
+			Precursor {WEL_MODAL_DIALOG}
 			if ok_pushed then
 				if new_project then
 					parent.on_menu_command (Launch_string_constant)
@@ -82,7 +83,6 @@ feature -- Behavior
 					parent.on_menu_command (Open_string_constant)
 				end
 			end
-			Precursor {WEL_MODAL_DIALOG}
 		end
 
 feature -- Access

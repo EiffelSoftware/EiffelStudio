@@ -7,26 +7,25 @@ root
 
 default
 
-	assertion (all);
-	console_application (yes);
+	assertion (require);
 	-- Uncomment the next line on Windows, with ISE Compiler 4.3
 	-- console_application (yes);
 	-- Comment the next line if you do not want to use
 	-- a precompiled EiffelBase library
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
+--	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
 
 cluster
 
-	ROOT_CLUSTER: 		"$EIFFEL4/examples/cecil/C2Eiffel/array";
+	ROOT_CLUSTER: 		"$EIFFEL4/examples/cecil/C2Eiffel/array"
 				-- If you intend to modify any part of the example,
 				-- copy all the files of $EIFFEL4/examples/cecil/C2Eiffel/array
 				-- into one of your directories, and replace
 				-- $EIFFEL4/examples/bench/debuggin by the name of
 				-- that directory on the above line.
 		visible
-			MY_ARRAY
+			MY_ARRAY;
 		end
-	end;
+
 
 
 -- EiffelBase

@@ -12,7 +12,8 @@ inherit
 	EV_CHECKABLE_LIST_I
 		undefine
 			wipe_out,
-			selected_items
+			selected_items,
+			call_pebble_function
 		redefine
 			interface
 		end

@@ -30,7 +30,7 @@ feature -- Basic Operations
 			l_features: SORTABLE_ARRAY [FEATURE_DESCRIPTOR]
 			l_old_count, l_features_count, i, j, renames_count: INTEGER
 			l_targets: LIST [STRING]
-			l_target_type: TYPE
+			l_target_type: TYPE_AS
 			l_feature_table: FEATURE_TABLE
 			l_desc: FEATURE_DESCRIPTOR
 		do

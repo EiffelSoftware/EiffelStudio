@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 		local
 			feature_list: LIST [COMPLETION_FEATURE]
 			i: INTEGER
-			variables: HASH_TABLE [TYPE, STRING]
+			variables: HASH_TABLE [TYPE_AS, STRING]
 		do
 			variables := feature_variables (locals, arguments, feature_i, feature_table)
 			create Result.make (1, variables.count + completion_features.count * 10)
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	target_type (a_target: STRING): TYPE is
+	target_type (a_target: STRING): TYPE_AS is
 			-- Type of `a_target' in current context
 			-- Set `call_type' accordingly
 		require
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 			lower_case: a_target.as_lower.is_equal (a_target)
 		local
 			cf: COMPLETION_FEATURE
-			variables: HASH_TABLE [TYPE, STRING]
+			variables: HASH_TABLE [TYPE_AS, STRING]
 		do
 			variables := feature_variables (locals, arguments, feature_i, feature_table)
 			variables.search (a_target)

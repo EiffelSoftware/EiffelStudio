@@ -375,7 +375,10 @@ cluster
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
-	all assembly_info:		"$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations"
+	all assembly_info:		"$EIFFEL_SRC\dotnet\eac_browser\src"
+		exclude
+			"cache.e"
+		end
 
 assembly
 external

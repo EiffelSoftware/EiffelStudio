@@ -15,7 +15,7 @@ inherit
 feature {NONE} -- Initialization
 
 	user_initialization is
-			-- called by `initialize'.
+			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)

@@ -8,44 +8,44 @@ interface,,,,,,,
 ,3,Send bug report automatically in case of crash,Xavier,INT0004,,,
 ,3,Save workspace altogether,Xavier,INT0005,,,
 ,3,"Improve output (separate compilation errors, runtime messages, breakpoint info and system info)",Xavier,INT0006,,,
-,3,"Give current interface status (Compiling, running, editing)",Xavier,INT0007,,,
+,3,"Give current interface status (Compiling, running, editing)",Xavier,INT0007,Xavier,2,Done
 ,3,Tip of the day,Xavier,INT0008,,,
-,3,Feature tree: clicking a feature clause should center the editor onto it,Xavier,INT0009,,,
+,3,Feature tree: clicking a feature clause should center the editor onto it,Xavier,INT0009,Xavier,1,Done
 ,3,"Feature tree: give different icons for the various types of feature (once, deferred, do, external, attribute)",Xavier,INT0010,,,
 ,2,"When minimizing tools, let them keep their place instead of putting them at the bottom",Xavier,INT0011,,,
 ,3,Optimize useless computations for tools that are not displayed,Xavier,INT0012,,,
-,4,Give a warning when no match is found in the address manager,Xavier,INT0013,Xavier,1
-,4,Add a status bar,Xavier,INT0014,,
-,4,Improve the default handling of tool sizes,Xavier,INT0015,Xavier,3
-,4,Make it easier to import libraries (XML description file for each) + make it possible to generate such XML files,Xavier,INT0016,Xavier,5
-,3,Unify the event handling in trees (feature/cluster/favorites),Xavier,INT0017,,
-,3,Support CVS from within EiffelStudio,Xavier,INT0018,,
-,2,Make it possible to drop onto the context tool labels,Julian,INT0019,,
-,4,"Improve new class command (deferred, parents,…)",Xavier,INT0020,Xavier,2
-,3,"Improve new cluster command (import existing cluster, create top-level cluster)",Xavier,INT0021,,
-,4,New blank project: let the user choose the root class name and root feature name,Xavier,INT0022,,
-,4,Give support for the feature tree even if the project is half-compiled,Xavier,INT0023,Xavier,1
-,2,"When opening an existing Ace, if a .epr file exists, propose to open it",Julian,INT0024,,
-,3,"At start-up, propose to create a library instead of an executable",Xavier,INT0025,,
-,4,Add a recompile from scratch command,Arnaud,INT0026,,
-,3,Make it easier to precompile several libraries,Arnaud,INT0027,,
-,3,Light development window = old class tool,Arnaud,INT0028,,
-,3,Save preferences for several types of development windows,Arnaud,INT0029,,
-,3,"When manually editing the Ace file, the project settings dialog should vanish automatically",Xavier,INT0030,,
-,3,Add cluster too complex in the project settings dialog,Arnaud,INT0031,,
-,3,"Need for a standard tools menu, where external executables can be launched",Arnaud,INT0032,,
-,3,Add a cell separator in toolbars,R. Osmond,INT0033,Xavier,1
-,2,Clean up the history of the history managers now and then,Xavier,INT0034,,
-,2,"Add a close menu in the file menu, to close the current file",Julian,INT0034,,
-,3,Add a central dictionary of ordered classes somewhere to optimize some things,Xavier,INT0035,,
-,3,"Add a class with queries relative to the validity of names (for classes, features, system,…)",Xavier,INT0036,,
-,4,"Save all backed up files in a file, and propose to reopen these back-ups at next start-up",Julian,INT0037,,
-,3,Add a way to pick the current stone from the address,Xavier,INT0038,,
-,3,Give a different icon in the cluster tree to deferred/effective classes,Xavier,INT0039,,
-,2,Give a way to choose among the last 'star-list' in the address (such as not closing the choice dialog when ctrl is pressed at selection time),Julian,INT0040,,
-,3,"Support Ctrl-right click everywhere + add a preference telling what to do (open a new window, a new editor window, a new context window, send to current editor, send to current context, send to external editor...)",Xavier,INT0041,,
-,2,"Gray out raise all, minimize all, raise all unsaved, step out, run finalized, recent projects when they do not make sense",Julian,INT0042,,
-,2,What about `send file to external editor' when there is no file?,Julian,INT0043,,
+,4,Give a warning when no match is found in the address manager,Xavier,INT0013,Xavier,1,
+,4,Add a status bar,Xavier,INT0014,Xavier,3,Done
+,4,Improve the default handling of tool sizes,Xavier,INT0015,Xavier,3,
+,4,Make it easier to import libraries (XML description file for each) + make it possible to generate such XML files,Xavier,INT0016,Xavier,5,
+,3,Unify the event handling in trees (feature/cluster/favorites),Xavier,INT0017,,,
+,3,Support CVS from within EiffelStudio,Xavier,INT0018,,,
+,2,Make it possible to drop onto the context tool labels,Julian,INT0019,,,
+,4,"Improve new class command (deferred, parents,…)",Xavier,INT0020,Xavier,2,Done
+,3,"Improve new cluster command (import existing cluster, create top-level cluster)",Xavier,INT0021,Xavier,2,Done
+,4,New blank project: let the user choose the root class name and root feature name,Xavier,INT0022,,,
+,4,Give support for the feature tree even if the project is half-compiled,Xavier,INT0023,Xavier,1,Done
+,2,"When opening an existing Ace, if a .epr file exists, propose to open it",Julian,INT0024,,,
+,3,"At start-up, propose to create a library instead of an executable",Xavier,INT0025,,,
+,4,Add a recompile from scratch command,Arnaud,INT0026,,,
+,3,Make it easier to precompile several libraries,Arnaud,INT0027,,,
+,3,Light development window = old class tool,Arnaud,INT0028,,,
+,3,Save preferences for several types of development windows,Arnaud,INT0029,,,
+,3,"When manually editing the Ace file, the project settings dialog should vanish automatically",Xavier,INT0030,Emmanuel,1,Done
+,3,Add cluster too complex in the project settings dialog,Arnaud,INT0031,,,
+,3,"Need for a standard tools menu, where external executables can be launched",Arnaud,INT0032,,,
+,3,Add a cell separator in toolbars,R. Osmond,INT0033,Xavier,1,
+,2,Clean up the history of the history managers now and then,Xavier,INT0034,,,
+,2,"Add a close menu in the file menu, to close the current file",Julian,INT0034,,,
+,3,Add a central dictionary of ordered classes somewhere to optimize some things,Xavier,INT0035,,,
+,3,"Add a class with queries relative to the validity of names (for classes, features, system,…)",Xavier,INT0036,Xavier,2,Done
+,4,"Save all backed up files in a file, and propose to reopen these back-ups at next start-up",Julian,INT0037,,,
+,3,Add a way to pick the current stone from the address,Xavier,INT0038,,,
+,3,Give a different icon in the cluster tree to deferred/effective classes,Xavier,INT0039,,,
+,2,Give a way to choose among the last 'star-list' in the address (such as not closing the choice dialog when ctrl is pressed at selection time),Julian,INT0040,,,
+,3,"Support Ctrl-right click everywhere + add a preference telling what to do (open a new window, a new editor window, a new context window, send to current editor, send to current context, send to external editor...)",Xavier,INT0041,,,
+,2,"Gray out raise all, minimize all, raise all unsaved, run finalized, recent projects when they do not make sense",Julian,INT0042,,,
+,2,What about `send file to external editor' when there is no file?,Julian,INT0043,,,
 ,3,Precompilations done should be Precompilations completed,Julian,INT0044
 ,3,"In the new class dialog, warn the user against invalid file names?",Julian,INT0045
 ,3,Make it possible to drop a feature into a feature clause in the feature tree to change the location of the feature,Julian,INT0046
@@ -92,29 +92,29 @@ Formats,,,,,,
 
 
 
-debugger,,,,
-,5,Feature evaluation,Arnaud,DBG0001
-,4,debug_output feature used to display objects in the debugger,Xavier,DBG0002,,
-,4,STRING viewer in the object tool,Xavier,DBG0003,Xavier,2
-,4,Stack overflow detection,Xavier,DBG0004,,
-,2,Allow to choose on which exceptions the program should stop,Xavier,DBG0005,,
-,2,Support debugging of processes not launched from EiffelStudio (like VC++),Xavier,DBG0006,,
-,3,Give the ability to override violated assertions and continue anyway,Xavier,DBG0007,,
-,3,Edit and Continue: Modifications are taken into account without killing and restarting the application,Xavier,DBG0008,,
-,3,Object/local edition,Xavier,DBG0009,,
-,4,"Conditional breakpoints, feature-triggered breakpoints, counter breakpoint",Xavier,DBG0010,,
-,4,Do not collapse the object tree at each step,Xavier,DBG0011,Xavier,2
-,3,Know the static type of Void objects,Manus,DBG0012,,
-,3,Breakpoints in editor mode,Arnaud,DBG0013,,
-,4,"Improve invariant support (know which class the invariant comes from, have the invariant in the call stack)",Xavier,DBG0014,,
-,4,When the debugged application stops we should raise the debugging window (preference),Xavier,DBG0015,,
-,4,Exception text field is too short,Xavier,DBG0016,Xavier,1
-,2,"Add a ""Remove all breakpoints except this one"" in the breakpoint context menu",Julian,DBG0017,,
-,1,Gray out the step into command when it is not possible to step into,Julian,DBG0018
-,3,Improve step by step/step out relatively to dot calls,Xavier,DBG0019
-,3,"In the call stack tool, let the user choose the columns that should be displayed",Xavier,DBG0020
-,2,"Let the user set breakpoints in features of SPECIAL, only not in put and item",Xavier,DBG0021
-,4,Show full dynamic type in debugger (I.e. LIST [TOTO] instead of just LIST),Manus,DBG0022
+debugger,,,,,,,
+,5,Feature evaluation,Arnaud,DBG0001,Xavier,10,Done
+,4,debug_output feature used to display objects in the debugger,Xavier,DBG0002,,,
+,4,STRING viewer in the object tool,Xavier,DBG0003,Xavier,2,
+,4,Stack overflow detection,Xavier,DBG0004,,,
+,2,Allow to choose on which exceptions the program should stop,Xavier,DBG0005,,,
+,2,Support debugging of processes not launched from EiffelStudio (like VC++),Xavier,DBG0006,,,
+,3,Give the ability to override violated assertions and continue anyway,Xavier,DBG0007,,,
+,3,Edit and Continue: Modifications are taken into account without killing and restarting the application,Xavier,DBG0008,,,
+,3,Object/local edition,Xavier,DBG0009,,,
+,4,"Conditional breakpoints, feature-triggered breakpoints, counter breakpoint",Xavier,DBG0010,Xavier,2,Done
+,4,Do not collapse the object tree at each step,Xavier,DBG0011,Xavier,2,
+,3,Know the static type of Void objects,Manus,DBG0012,,,
+,3,Breakpoints in editor mode,Arnaud,DBG0013,,,
+,4,"Improve invariant support (know which class the invariant comes from, have the invariant in the call stack)",Xavier,DBG0014,,,
+,4,When the debugged application stops we should raise the debugging window (preference),Xavier,DBG0015,Xavier,1,Done
+,4,Exception text field is too short,Xavier,DBG0016,Xavier,,Done (status)
+,2,"Add a ""Remove all breakpoints except this one"" in the breakpoint context menu",Julian,DBG0017,,,
+,1,Gray out the step into command when it is not possible to step into,Julian,DBG0018,,,
+,3,Improve step by step/step out relatively to dot calls,Xavier,DBG0019,,,
+,3,"In the call stack tool, let the user choose the columns that should be displayed",Xavier,DBG0020,,,
+,2,"Let the user set breakpoints in features of SPECIAL, only not in put and item",Xavier,DBG0021,,,
+,4,Show full dynamic type in debugger (I.e. LIST [TOTO] instead of just LIST),Manus,DBG0022,,,
 
 
 
@@ -124,22 +124,22 @@ debugger,,,,
 
 
 
-editor,,,,
-,3,"Improve pick in inheritance clauses (redefine, rename)",Xavier,EDT0001
-,4,Make it possible to drag the selection (copy/paste),Xavier,EDT0002
-,4,Improve auto-completion in new lines,Xavier,EDT0003
-,2,"Emacs integration with COM on Windows, Netscape on Linux",Arnaud,EDT0004
-,3,"Add ""Add setter feature""",Arnaud,EDT0005
-,2,Add an option to search outside the comments/indexing clauses,Xavier,EDT0006
-,3,"When a class that does not belong to the universe is typed, put it in red",Manus,EDT0006
-,4,"Auto-complete when user presses ;,.) …, not only return",Xavier,EDT0008
-,2,When the text in the editor shrinks horizontally the scroll bar should reflect the change,Julian,EDT0009
-,2,Add a reload command to discard all unsaved changes,Xavier,EDT0010
-,2,Use a different highlight for found/picked words and for the selection,Xavier,EDT0011
-,3,Shift F3 should be able to search the selection backwards for symmetry with F3,Raphael,EDT0012
-,3,Only display syntax errors once per class instead of once per editor,Julian,EDT0013
-,5,Give a warning when loading a class that is already being edited elsewhere,Julian,EDT0014
-,5,Completion of features should show complete signature (i.e. return type too),Manus,EDT0015
+editor,,,,,,,
+,3,"Improve pick in inheritance clauses (redefine, rename)",Xavier,EDT0001,Etienne,,Done
+,4,Make it possible to drag the selection (copy/paste),Xavier,EDT0002,Etienne,,Done
+,4,Improve auto-completion in new lines,Xavier,EDT0003,,,
+,2,"Emacs integration with COM on Windows, Netscape on Linux",Arnaud,EDT0004,,,
+,3,"Add ""Add setter feature""",Arnaud,EDT0005,,,
+,2,Add an option to search outside the comments/indexing clauses,Xavier,EDT0006,,,
+,3,"When a class that does not belong to the universe is typed, put it in red",Manus,EDT0006,,,
+,4,"Auto-complete when user presses ;,.) …, not only return",Xavier,EDT0008,,,
+,2,When the text in the editor shrinks horizontally the scroll bar should reflect the change,Julian,EDT0009,,,
+,2,Add a reload command to discard all unsaved changes,Xavier,EDT0010,,,
+,2,Use a different highlight for found/picked words and for the selection,Xavier,EDT0011,,,
+,3,Shift F3 should be able to search the selection backwards for symmetry with F3,Raphael,EDT0012,,,
+,3,Only display syntax errors once per class instead of once per editor,Julian,EDT0013,,,
+,5,Give a warning when loading a class that is already being edited elsewhere,Julian,EDT0014,,,
+,5,Completion of features should show complete signature (i.e. return type too),Manus,EDT0015,Xavier,1,Done
 
 
 

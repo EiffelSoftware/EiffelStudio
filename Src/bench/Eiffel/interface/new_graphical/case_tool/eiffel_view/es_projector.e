@@ -17,7 +17,7 @@ inherit
 			full_project,
 			make_with_buffer,
 			project,
-			change_current,
+			default_cursor,
 			world
 		end
 	
@@ -137,57 +137,11 @@ feature {NONE} -- Implementation
 				Precursor {EV_MODEL_BUFFER_PROJECTOR}
 			end
 		end
-		
-	change_current (new_current_figure: EV_MODEL) is
-			-- Change current to `new_focused_figure'.
-			--| Generate leave and/or enter events accordingly.
-		local
-			old_figure: EV_MODEL
-			event_fig: EV_MODEL
-			same_fig: EV_MODEL
-			p: BOOLEAN
+
+	default_cursor: EV_CURSOR is
+			-- Default cursor on eiffel world.
 		do
-			if current_figure /= new_current_figure then
-				if
-					new_current_figure /= Void and
-					new_current_figure.pointer_style /= Void and
-					new_current_figure.is_sensitive
-				then
-					widget.set_pointer_style (new_current_figure.pointer_style)
-				else
-					widget.set_pointer_style (cursors.open_hand_cursor)
-				end
-				old_figure := current_figure
-				current_figure := new_current_figure
-				if old_figure /= Void then
-					from
-						event_fig := old_figure
-					until
-						event_fig = Void or else has_focus (event_fig)
-					loop
-						call_actions (event_fig, 
-							event_fig.internal_pointer_leave_actions, Void)
-						p := True
-						event_fig := event_fig.group
-					end
-				end
-				same_fig := event_fig
-				if current_figure /= Void then
-					from
-						event_fig := current_figure
-					until
-						event_fig = same_fig
-					loop
-						call_actions (event_fig, 
-							event_fig.internal_pointer_enter_actions, Void)
-						p := True
-						event_fig := event_fig.group
-					end
-				end
-			end
-			if p then
-				project
-			end
+			Result := cursors.open_hand_cursor
 		end
 		
 	draw_bon_class (a_class: BON_CLASS_FIGURE) is

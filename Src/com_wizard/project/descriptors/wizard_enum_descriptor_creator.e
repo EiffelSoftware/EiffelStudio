@@ -59,6 +59,13 @@ feature -- Basic operations
 			eiffel_class_name.to_upper
 			create_element_descriptors (a_type_info)
 
+			if is_forbidden_c_word (name) then
+				name.prepend ("a_")
+			end
+			create c_type_name.make (0)
+			c_type_name.append (name)
+			system_descriptor.add_c_type (name)
+
 			create Result.make (Current)
 		ensure then
 			non_void_elements: elements /= Void

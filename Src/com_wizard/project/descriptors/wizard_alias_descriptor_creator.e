@@ -55,12 +55,17 @@ feature -- Basic operations
 				name.prepend (tmp_lib_descriptor.name)
 			end
 
+
 			create eiffel_class_name.make (0)
 			eiffel_class_name.append (name_for_class (name, type_kind, False))
 			eiffel_class_name.to_upper
 
+			if is_forbidden_c_word (name) then
+				name.prepend ("a_")
+			end
 			create c_type_name.make (0)
 			c_type_name.append (name)
+			system_descriptor.add_c_type (name)
 			
 			create c_header_file_name.make (0)
 			if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then

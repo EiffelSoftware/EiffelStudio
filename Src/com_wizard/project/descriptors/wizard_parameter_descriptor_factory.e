@@ -45,6 +45,9 @@ feature -- Basic operations
 			tmp_string: STRING
 		do
 			name := clone (a_name)
+			if is_forbidden_c_word (name)  then
+				name.prepend ("a_")
+			end
 			tmp_string := clone (name)
 			tmp_string.to_lower
 			if eiffel_key_words.has (tmp_string) then

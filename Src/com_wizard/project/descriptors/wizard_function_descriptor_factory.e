@@ -97,7 +97,7 @@ feature -- Basic operations
 				name.append (One)
 			end
 			eiffel_name := name_for_feature (name)
-			if c_keywords.has (name) then
+			if is_forbidden_c_word (name) then
 				name.prepend ("a_")
 			end
 			arguments := create_arguments (tmp_names, a_count, a_func_desc.parameters, 

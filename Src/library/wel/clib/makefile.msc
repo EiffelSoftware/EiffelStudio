@@ -1,0 +1,16 @@
+# wel.lib - Makefile for Microsoft C
+
+CC = cl
+CFLAGS = -c -O2 -I$(EIFFEL3)\library\wel\include -I$(EIFFEL3)\bench\spec\w32msc\include
+
+.c.obj:
+	$(CC) $(CFLAGS) $<
+
+OBJ = disptchr.obj
+
+wel.lib: $(OBJ)
+	if exist $@ del $@
+	lib /OUT:$@ $(OBJ)
+	copy $@ $(EIFFEL3)\library\wel\spec\w32msc\lib
+	del $@
+	del $(OBJ)

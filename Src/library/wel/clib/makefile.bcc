@@ -1,0 +1,16 @@
+# wel.lib - Makefile for Borland C
+
+CC = bcc32
+CFLAGS = -c -O2 -X -I$(EIFFEL3)\library\wel\include -I$(EIFFEL3)\bench\spec\w32bcc\include
+
+.c.obj:
+	$(CC) $(CFLAGS) $<
+
+OBJ = disptchr.obj
+
+wel.lib: $(OBJ)
+	if exist $@ del $@
+	tlib $@ +$(OBJ)
+	copy $@ $(EIFFEL3)\library\wel\spec\w32bcc\lib
+	del $@
+	del $(OBJ)

@@ -1,0 +1,89 @@
+Windows Eiffel Library (WEL)
+ISE, Inc.
+----------------------------
+
+1. What is WEL?
+---------------
+
+The new Windows Eiffel Library (WEL), which has been designed to 
+make Windows programming easier, more reliable, more convenient, 
+and more powerful.  
+
+The most obvious definition of WEL is that it is an encapsulation of 
+Windows primitives, making it possible for users of Graphical Eiffel 
+for Windows to have direct access to the Windows graphical API. 
+
+But this is only part of the truth. WEL provides considerable benefits 
+of its own: the ability to work in a much simpler, move convenient and 
+safer way than if you were using the Windows primitives directly, for
+example from C. 
+
+This advantage comes from the abstraction facilities of Eiffel, which 
+make it possible to encapsulate many low-level details so that 
+developers can concentrate on the functionality, not implementation 
+requirements. 
+
+So even for specific and OS-dependent tasks such as using a particular 
+graphical API, the benefits of the Eiffel method and of reusable Eiffel 
+components will show up quickly.
+
+
+2. What WEL does not include yet?
+---------------------------------
+
+o New Windows 95 common controls.
+
+o Common dialog boxes (Print, Page setup, Choose font, Choose color,
+  Find and replace). However, the File open and File save dialog boxes 
+  are available. They will be available in future release.
+
+
+3. Documentation
+----------------
+
+The documentation is not yet available but the shipped examples should
+be a good start to understand how to use WEL.
+
+
+4. Examples
+-----------
+
+WEL includes a few examples (Eiffel classes and an executable) which are:
+
+o Minimal: The minimal WEL program (in term of lines of code able to
+  create a windows application).
+
+o Hello: The famous ``Hello, World!'' program in WEL.
+
+o XY: A simple program that shows the coordinates of the mouse
+  when the button is pressed.
+
+o Menus: This example illustrates dynamic creation of menus and
+  track popup menus.
+
+o MDI: A basic Muliple Document Interface application.
+
+o Controls: This example demontrates several Windows controls.
+
+o Fun: Some funny stuff using the GDI classes of WEL.
+
+o Pizza: Order your pizza with WEL.
+
+o Brushes: A nice example to illustrate the brushes.
+
+o Windows: Shows the different kind of windows.
+
+o Printer: A simple example to print a page.
+
+o Xcell: A pretty nice card game (Compatible only with Windows 95/NT
+  since Win32s has some DC limitations).
+
+All the examples (except Xcell) are compatible with Windows 95, Windows NT and 
+Windows 3.1 with Win32s 1.25 and above.
+
+
+Enjoy!
+
+--
+The WEL team 
+<wel@eiffel.com>

@@ -17,10 +17,16 @@ inherit
 			interface
 		end
 		
+	EV_FONTABLE_IMP
+		redefine
+			interface
+		end
+		
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			append_text,
-			interface
+			interface,
+			initialize
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -122,6 +128,13 @@ feature -- Initialization
 				-- Remove the standard upper limit on characters in
 				-- `Current'. Default is 32,767.
 			cwin_send_message (wel_item, Em_limittext, 0, 0)
+		end
+		
+	initialize is
+			-- Initialize `Current'.
+		do
+			set_default_font
+			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
 feature -- Access

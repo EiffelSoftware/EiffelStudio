@@ -18,7 +18,14 @@ inherit
 		redefine
 			on_key_down,
 			on_char,
-			interface
+			interface,
+			initialize
+		end
+		
+	EV_FONTABLE_IMP
+		redefine
+			interface,
+			initialize
 		end
 
 	WEL_SINGLE_LINE_EDIT
@@ -101,6 +108,14 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
+		end
+		
+	initialize is
+			-- Initialize `Current'.
+			-- (export status {NONE})
+		do
+			set_default_font
+			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
 feature {EV_ANY_I} -- Status report

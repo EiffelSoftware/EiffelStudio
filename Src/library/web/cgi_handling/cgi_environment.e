@@ -128,30 +128,33 @@ feature -- Request specific environment variables
 
 feature -- Cookies
 
-	Cookies: HASH_TABLE[STRING,STRING] is
-			-- Cookie Information relative to data
+	Cookies: HASH_TABLE [STRING,STRING] is
+			-- Cookie Information relative to data.
 		local
 			i,j: INTEGER
 			s: STRING
 		once
 			Create Result.make(20)
 			s := get_env_variable ("HTTP_COOKIE")
+			s.append_character (';')
 			from
 				i := 1
 			until
-				i<1 
+				i < 1 
 			loop
 				i := s.index_of ('=', 1)
 				if i > 0 then
-					j:= s.index_of (';', i)
+					j := s.index_of (';', i)
 					if j > i then
-						Result.put (s.substring (1, i-1), s.substring (i+1, j-1))
+						Result.put (s.substring (i + 1, j - 1), s.substring (1, i - 1))
 						if j < s.count - 1 then
 							s.remove_head (j + 1)
 						else
+								-- Force termination.
 							i := 0
 						end
 					else
+							-- Force termination.
 						i := 0
 					end
 				end

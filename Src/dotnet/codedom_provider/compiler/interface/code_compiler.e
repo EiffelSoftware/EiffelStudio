@@ -59,6 +59,20 @@ inherit
 			default_rescue
 		end
 
+	CODE_REFERENCED_ASSEMBLIES
+		export
+			{NONE} all
+		redefine
+			default_rescue
+		end
+
+	CODE_SHARED_GENERATION_HELPERS
+		export
+			{NONE} all
+		redefine
+			default_rescue
+		end
+
 create
 	default_create
 
@@ -208,7 +222,7 @@ feature -- Basic Operations
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromDom"])
 			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
-			l_path := temp_files.add_extension (".es")
+			l_path := temp_files.add_extension ("es")
 			create l_stream.make (l_path, feature {FILE_MODE}.Create_, feature {FILE_ACCESS}.Write, feature {FILE_SHARE}.Write)
 			create l_writer.make (l_stream)
 			(create {CODE_GENERATOR}).generate_code_from_compile_unit (a_compilation_unit, l_writer, Code_generator_options)
@@ -283,97 +297,173 @@ feature {NONE} -- Implementation
 		require
 			non_void_options: a_options /= Void
 		local
-			l_temp_dir: SYSTEM_STRING
-			l_root_class, l_system_name, l_resource_file: STRING
+			l_temp_dir, l_root_class, l_system_name, l_resource_file, l_ace_file_name, l_path, l_assembly_file_name: STRING
 			l_res: DIRECTORY_INFO
 			l_project: CEIFFEL_PROJECT_CLASS
 			l_properties: IEIFFEL_PROJECT_PROPERTIES
 			l_sep_char: CHARACTER
+			l_ace_file: RAW_FILE
+			l_retried: BOOLEAN
+			l_cluster_properties: IEIFFEL_CLUSTER_PROPERTIES
+			l_assemblies: SYSTEM_DLL_STRING_COLLECTION
+			i, l_count: INTEGER
+			l_assembly: CODE_REFERENCED_ASSEMBLY
 		do
-			-- First create temporary directory if needed
-			if a_options.temp_files = Void or else a_options.temp_files.temp_dir = Void or else a_options.temp_files.temp_dir.length = 0 then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_temporary_files, [])
-				set_temp_files (create {SYSTEM_DLL_TEMP_FILE_COLLECTION}.make_from_temp_dir (feature {PATH}.get_temp_path))
-			else
-				set_temp_files (a_options.temp_files)
-			end
-			l_temp_dir := temp_files.temp_dir
-			if not feature {SYSTEM_DIRECTORY}.exists (l_temp_dir) then
-				l_res := feature {SYSTEM_DIRECTORY}.create_directory (l_temp_dir)
-			end
-			
-			-- Initialize `compilation_directory' and `source_generator'
-			compilation_directory := l_temp_dir
-			create source_generator.make (compilation_directory)
-			
-			-- Finally initialize compiler
-			l_project := project_class
-			if l_project /= Void then
-				l_project.create_in_memory_eiffel_project (compilation_directory)
-				l_properties := l_project.project_properties
-				
-				system_path := a_options.output_assembly
-				if system_path = Void or else system_path.is_empty then
-					if a_options.generate_executable then
-						system_path := temp_files.add_extension (".exe")
-					else
-						system_path := temp_files.add_extension (".dll")
-					end
+			if not l_retried then
+				-- First create temporary directory if needed
+				if a_options.temp_files = Void or else a_options.temp_files.temp_dir = Void or else a_options.temp_files.temp_dir.length = 0 then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_temporary_files, [])
+					set_temp_files (create {SYSTEM_DLL_TEMP_FILE_COLLECTION}.make_from_temp_dir (feature {PATH}.get_temp_path))
+				else
+					set_temp_files (a_options.temp_files)
 				end
+				l_temp_dir := temp_files.temp_dir
 				l_sep_char := (create {OPERATING_ENVIRONMENT}).Directory_separator
-				l_system_name := system_path.substring (system_path.last_index_of (l_sep_char, system_path.count) + 1, system_path.count)
-				if l_system_name.substring_index (".dll", 1) = l_system_name.count - 3 or l_system_name.substring_index (".exe", 1) = l_system_name.count - 3 then
-					l_system_name.keep_head (l_system_name.count - 4)
+				if l_temp_dir.item (l_temp_dir.count) = l_sep_char then
+					l_temp_dir.keep_head (l_temp_dir.count - 1)
 				end
-				l_properties.set_system_name (l_system_name)
+				if not feature {SYSTEM_DIRECTORY}.exists (l_temp_dir) then
+					l_res := feature {SYSTEM_DIRECTORY}.create_directory (l_temp_dir)
+				end
 				
-				l_root_class := Compilation_context.root_class_name
-				if l_root_class = Void or else l_root_class.is_empty then
-					l_root_class := a_options.main_class
+				-- Initialize `compilation_directory' and `source_generator'
+				compilation_directory := l_temp_dir
+				create source_generator.make (compilation_directory)
+				
+				-- Finally initialize compiler
+				l_project := project_class
+				if l_project /= Void then
+					l_ace_file_name := temp_files.add_extension ("ace")
+					create l_ace_file.make_open_write (l_ace_file_name)
+					l_ace_file.close
+					l_project.create_eiffel_project (l_ace_file_name, compilation_directory)
+					l_properties := l_project.project_properties
+					
+					system_path := a_options.output_assembly
+					if system_path = Void or else system_path.is_empty then
+						if a_options.generate_executable then
+							system_path := temp_files.add_extension ("exe")
+						else
+							system_path := temp_files.add_extension ("dll")
+						end
+					end
+					l_system_name := system_path.substring (system_path.last_index_of (l_sep_char, system_path.count) + 1, system_path.count)
+					if l_system_name.substring_index (".dll", 1) = l_system_name.count - 3 or l_system_name.substring_index (".exe", 1) = l_system_name.count - 3 then
+						l_system_name.keep_head (l_system_name.count - 4)
+					end
+					l_properties.set_system_name (l_system_name)
+					
+					l_properties.clusters.add_cluster ("root_cluster", "", compilation_directory)
+					l_properties.clusters.add_cluster ("base", "", "$ISE_EIFFEL\library\base")
+					l_cluster_properties := l_properties.clusters.get_cluster_properties ("base")
+					l_cluster_properties.set_cluster_namespace ("EiffelSoftware.Library.Base")
+					l_cluster_properties.add_exclude ("table_eiffel3")
+					l_cluster_properties.add_exclude ("desc")
+					l_cluster_properties.add_exclude ("classic")
+					l_cluster_properties.set_is_library (True)
+					l_properties.clusters.add_cluster ("base_net", "", "$ISE_EIFFEL\library.net\base")
+					l_cluster_properties := l_properties.clusters.get_cluster_properties ("base_net")
+					l_cluster_properties.set_cluster_namespace ("EiffelSoftware.Library.BaseNet")
+					l_cluster_properties.set_is_library (True)
+					
+					l_root_class := Compilation_context.root_class_name
 					if l_root_class = Void or else l_root_class.is_empty then
-						l_root_class := default_root_class
+						l_root_class := a_options.main_class
+						if l_root_class = Void or else l_root_class.is_empty then
+							if not Resolver.generated_types.is_empty then
+								l_cluster_properties := l_properties.clusters.get_cluster_properties ("root_cluster")
+								from
+									Resolver.generated_types.start
+									l_root_class := Resolver.generated_types.item_for_iteration.eiffel_name
+									Resolver.generated_types.forth
+								until
+									Resolver.generated_types.after
+								loop
+									l_cluster_properties.add_visible (Resolver.generated_types.item_for_iteration.eiffel_name)
+									Resolver.generated_types.forth
+								end
+							else
+								l_root_class := default_root_class
+							end
+						end
 					end
-				end
-				l_properties.set_root_class_name (l_root_class)
-	
-				if not l_root_class.is_equal ("ANY") and not l_root_class.is_equal ("NONE") then
-					if Compilation_context.root_creation_routine_name /= Void then
-						l_properties.set_creation_routine (Compilation_context.root_creation_routine_name)
-					else
-						l_properties.set_creation_routine ("make")
+					l_properties.set_root_class_name (l_root_class)
+		
+					if not l_root_class.is_equal ("ANY") and not l_root_class.is_equal ("NONE") then
+						if Compilation_context.root_creation_routine_name /= Void then
+							l_properties.set_creation_routine (Compilation_context.root_creation_routine_name)
+						end
 					end
-				end
-	
-				if a_options.generate_executable then
-					l_properties.set_project_type (feature {EIF_PROJECT_TYPES}.eif_project_types_console_application)
-				else			
-					l_properties.set_project_type (feature {EIF_PROJECT_TYPES}.eif_project_types_class_library)
-				end
-	
-				l_properties.set_target_clr_version (Clr_version)
-				l_properties.clusters.add_cluster ("root_cluster", "", compilation_directory)
-				
-				if a_options.win_32_resource /= Void then
-					l_resource_file := compilation_directory + l_sep_char.out + l_system_name + ".rc"
-					copy_file (a_options.win_32_resource, l_resource_file)
-					if last_copy_successful then
-						temp_files.add_file (l_resource_file, False)
+		
+					if a_options.generate_executable then
+						l_properties.set_project_type (feature {EIF_PROJECT_TYPES}.eif_project_types_console_application)
+					else			
+						l_properties.set_project_type (feature {EIF_PROJECT_TYPES}.eif_project_types_class_library)
 					end
+		
+					l_properties.set_target_clr_version (Clr_version)
+
+					l_assemblies := a_options.referenced_assemblies
+					if l_assemblies /= Void then
+						from
+							l_count := l_assemblies.count
+						until
+							i = l_count
+						loop
+							l_assembly_file_name := l_assemblies.item (i)
+							if not has (l_assembly_file_name) then
+								if feature {SYSTEM_FILE}.exists (l_assembly_file_name) then
+									l_path := l_assembly_file_name
+								else
+									l_path := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
+									l_path.append (l_assembly_file_name)
+								end
+								if feature {SYSTEM_FILE}.exists (l_path) then
+									add_referenced_assembly (l_path)
+								else
+									Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_assembly, [l_assembly_file_name])
+								end
+							end
+							i := i + 1		
+						end
+					end
+					complete
+					from
+						Referenced_assemblies.start
+					until
+						Referenced_assemblies.after
+					loop
+						l_assembly := Referenced_assemblies.item
+						l_properties.assemblies.add_assembly (l_assembly.assembly_prefix, l_assembly.cluster_name, l_assembly.assembly.location, False)
+						Referenced_assemblies.forth
+					end
+					
+					if a_options.win_32_resource /= Void then
+						l_resource_file := compilation_directory + l_sep_char.out + l_system_name + ".rc"
+						copy_file (a_options.win_32_resource, l_resource_file)
+						if last_copy_successful then
+							temp_files.add_file (l_resource_file, False)
+						end
+					end
+					
+					if precompile /= Void then
+						l_properties.set_precompiled_library (precompile)
+					end
+		
+					if metadata_cache /= Void then
+						l_properties.set_metadata_cache_path (metadata_cache)
+					end
+		
+					l_properties.set_generate_debug_info (a_options.include_debug_information)
+					
+					l_properties.apply
+					load_result_in_memory := a_options.generate_in_memory
+					evidence := a_options.evidence
+					compiler := l_project.compiler
+					is_initialized := True
 				end
-				
-				if precompile /= Void then
-					l_properties.set_precompiled_library (precompile)
-				end
-	
-				if metadata_cache /= Void then
-					l_properties.set_metadata_cache_path (metadata_cache)
-				end
-	
-				l_properties.set_generate_debug_info (a_options.include_debug_information)
-				load_result_in_memory := a_options.generate_in_memory
-				evidence := a_options.evidence
-				compiler := l_project.compiler
-				is_initialized := True
+			else
+				Event_manager.process_exception
 			end
 		ensure
 			non_void_temp_files: is_initialized implies temp_files /= Void
@@ -382,6 +472,9 @@ feature {NONE} -- Implementation
 			non_void_compiler: is_initialized implies compiler /= Void
 			non_void_system_path: is_initialized implies system_path /= Void
 			valid_system_path: is_initialized implies not system_path.is_empty
+		rescue
+			l_retried := True
+			retry
 		end
 	
 	compile is
@@ -395,65 +488,75 @@ feature {NONE} -- Implementation
 			l_ass: RAW_FILE
 			l_array: NATIVE_ARRAY [INTEGER_8]
 			l_file_stream: FILE_STREAM
+			l_retried: BOOLEAN
+			l_res: SYSTEM_OBJECT
 		do
---			compiler.add_output_error ((create {IEIFFEL_COMPILER_EVENTS_OUTPUT_ERROR_EVENT_HANDLER}.make (Current, $on_error)))
---			compiler.add_output_string ((create {IEIFFEL_COMPILER_EVENTS_OUTPUT_STRING_EVENT_HANDLER}.make (Current, $on_output)))
-			compiler.compile (feature {EIF_COMPILATION_MODE}.eif_compilation_mode_finalize)
-			create last_compilation_results.make (temp_files)
-			(create {SECURITY_PERMISSION}.make_from_flag (feature {SECURITY_PERMISSION_FLAG}.Control_evidence)).assert
-			last_compilation_results.set_evidence (evidence)
-			last_compilation_results.set_native_compiler_return_value (1)
-			if compiler.was_compilation_successful then
-				l_sep_char := (create {OPERATING_ENVIRONMENT}).Directory_separator
-				create l_dir_name.make (compilation_directory.count + 14)
-				l_dir_name.append (compilation_directory)
-				l_dir_name.append_character (l_sep_char)
-				l_dir_name.append ("EIFGEN")
-				l_dir_name.append_character (l_sep_char)
-				l_dir_name.append ("F_Code")
-				create l_dir.make (l_dir_name)
-				if l_dir.exists then
-					l_system_dir := system_path.substring (1, system_path.last_index_of (l_sep_char, system_path.count) - 1)
-					if l_system_dir.is_empty then
-						l_system_dir := (create {EXECUTION_ENVIRONMENT}).Current_working_directory
-					end
-					if not l_system_dir.is_equal (l_dir_name) then
-						l_files := l_dir.linear_representation
-						from
-							l_files.start
-						until
-							l_files.after
-						loop
-							l_file := l_files.item
-							if has_extension (l_file, "dll") or has_extension (l_file, "exe") or has_extension (l_file, "pdb") then
-								copy_file (l_dir_name + l_sep_char.out + l_file, l_system_dir + l_sep_char.out + l_file)									
-							end
-							l_files.forth
+			if not l_retried then
+	--			compiler.add_output_error ((create {IEIFFEL_COMPILER_EVENTS_OUTPUT_ERROR_EVENT_HANDLER}.make (Current, $on_error)))
+	--			compiler.add_output_string ((create {IEIFFEL_COMPILER_EVENTS_OUTPUT_STRING_EVENT_HANDLER}.make (Current, $on_output)))
+				compiler.compile (feature {EIF_COMPILATION_MODE}.eif_compilation_mode_finalize)
+				create last_compilation_results.make (temp_files)
+				(create {SECURITY_PERMISSION}.make_from_flag (feature {SECURITY_PERMISSION_FLAG}.Control_evidence)).assert
+				last_compilation_results.set_evidence (evidence)
+				last_compilation_results.set_native_compiler_return_value (1)
+				if compiler.was_compilation_successful then
+					l_sep_char := (create {OPERATING_ENVIRONMENT}).Directory_separator
+					create l_dir_name.make (compilation_directory.count + 14)
+					l_dir_name.append (compilation_directory)
+					l_dir_name.append_character (l_sep_char)
+					l_dir_name.append ("EIFGEN")
+					l_dir_name.append_character (l_sep_char)
+					l_dir_name.append ("F_Code")
+					create l_dir.make (l_dir_name)
+					if l_dir.exists then
+						l_system_dir := system_path.substring (1, system_path.last_index_of (l_sep_char, system_path.count) - 1)
+						if l_system_dir.is_empty then
+							l_system_dir := (create {EXECUTION_ENVIRONMENT}).Current_working_directory
 						end
-						create l_ass.make (system_path)
-						if l_ass.exists then
-							last_compilation_results.set_path_to_assembly (system_path)
-							last_compilation_results.set_native_compiler_return_value (0)
-							if load_result_in_memory then
-								create l_file_stream.make (system_path, feature {FILE_MODE}.Open, feature {FILE_ACCESS}.Read, feature {FILE_SHARE}.Read)
-								create l_array.make (l_file_stream.length.to_integer)
-								(create {SECURITY_PERMISSION}.make_from_flag (feature {SECURITY_PERMISSION_FLAG}.Control_evidence)).assert
-								last_compilation_results.set_compiled_assembly (feature {ASSEMBLY}.load (l_array, Void, evidence))
-								l_file_stream.close
+						if not l_system_dir.is_equal (l_dir_name) then
+							l_files := l_dir.linear_representation
+							from
+								l_files.start
+							until
+								l_files.after
+							loop
+								l_file := l_files.item
+								if has_extension (l_file, "dll") or has_extension (l_file, "exe") or has_extension (l_file, "pdb") then
+									copy_file (l_dir_name + l_sep_char.out + l_file, l_system_dir + l_sep_char.out + l_file)									
+								end
+								l_files.forth
+							end
+							create l_ass.make (system_path)
+							if l_ass.exists then
+								last_compilation_results.set_path_to_assembly (system_path)
+								last_compilation_results.set_native_compiler_return_value (0)
+								if load_result_in_memory then
+									create l_file_stream.make (system_path, feature {FILE_MODE}.Open, feature {FILE_ACCESS}.Read, feature {FILE_SHARE}.Read)
+									create l_array.make (l_file_stream.length.to_integer)
+									(create {SECURITY_PERMISSION}.make_from_flag (feature {SECURITY_PERMISSION_FLAG}.Control_evidence)).assert
+									last_compilation_results.set_compiled_assembly (feature {ASSEMBLY}.load (l_array, Void, evidence))
+									l_file_stream.close
+								end
 							end
 						end
+					else
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_directory, [compilation_directory + l_sep_char.out + "EIFGEN" + l_sep_char.out + "F_Code"])
 					end
-				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_directory, [compilation_directory + l_sep_char.out + "EIFGEN" + l_sep_char.out + "F_Code"])
 				end
+				cleanup
+				reset_temp_files
+				compiler := Void
+				source_generator := Void
+				compilation_directory := Void
+			else
+				create last_compilation_results.make (temp_files)
+				l_res := last_compilation_results.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "1", "Compiler threw an exception"))
 			end
-			cleanup
-			reset_temp_files
-			compiler := Void
-			source_generator := Void
-			compilation_directory := Void
 		ensure
 			non_void_results: last_compilation_results /= Void
+		rescue
+			l_retried := True
+			retry
 		end
 		
 	cleanup is
@@ -471,7 +574,7 @@ feature {NONE} -- Implementation
 				create l_dir.make (l_dir_name)
 				l_dir.recursive_delete
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.File_lock, [l_dir_name, "compiler temporary files cleanup"])
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.File_lock, ["compiler temporary files cleanup", l_dir_name])
 			end
 		rescue
 			l_retried := True

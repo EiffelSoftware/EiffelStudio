@@ -177,7 +177,7 @@ feature {NONE} -- Externals
 
 	xpm_attributes_size: INTEGER is
 		external
-			"C : EIF_INTEGER | %"xpm.h%""
+			"C"
 		alias
 			"XpmAttributesSize"
 		end;

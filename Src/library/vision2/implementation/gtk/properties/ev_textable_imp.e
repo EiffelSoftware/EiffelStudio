@@ -64,25 +64,19 @@ feature -- Status setting
         set_center_alignment is
                         -- Set text alignment of current label to center.
                 do
-                        check
-                                not_yet_implemented: False
-                        end
-                end
+			gtk_misc_set_alignment (label_widget, 0.5, 0.5)
+ 		end
 
         set_right_alignment is
                 -- Set text alignment of current label to right.
                 do
-			check
-                                not_yet_implemented: False
-                        end
+			gtk_misc_set_alignment (label_widget, 1, 0.5)
 		end
 
         set_left_alignment is
                         -- Set text alignment of current label to left.
                 do
-		        check
-                                not_yet_implemented: False
-                        end
+			gtk_misc_set_alignment (label_widget, 0, 0.5)
                 end
 	
 feature -- Element change	

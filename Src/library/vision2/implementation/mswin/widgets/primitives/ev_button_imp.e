@@ -269,10 +269,6 @@ feature -- Element change
 			font_imp: EV_FONT_IMP
 			size_difference: INTEGER
 		do
-			if internal_icon /= Void or internal_bitmap /= Void then
-				unset_bitmap
-			end
-		
 			private_pixmap := clone (pix)
 			if not text.is_empty then
 				if private_font /= Void then
@@ -288,13 +284,8 @@ feature -- Element change
 			end
 
 			internal_pixmap_state ?= private_pixmap.implementation
-			wel_icon := internal_pixmap_state.icon
-			if wel_icon /= Void then
-				set_icon (internal_pixmap_state.icon)
-			else
-				internal_bitmap := internal_pixmap_state.get_bitmap
-				internal_bitmap.decrement_reference
-			end
+			internal_bitmap := internal_pixmap_state.get_bitmap
+			internal_bitmap.decrement_reference
 			set_default_minimum_size
 			invalidate
 		end
@@ -310,7 +301,6 @@ feature -- Element change
 			-- Remove `pixmap' from `Current'.
 		do
 			Precursor {EV_PIXMAPABLE_IMP}
-			unset_bitmap
 			set_default_minimum_size
 			invalidate
 		end

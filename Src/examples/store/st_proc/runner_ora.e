@@ -1,4 +1,4 @@
-class RUNNER_ING
+class RUNNER_ORA
 
 inherit
 
@@ -29,9 +29,6 @@ feature
 			tmp_string: STRING
 		do
 			io.putstring ("Database user authentication:%N")
-			io.putstring ("Database name: ")
-			io.readline
-			set_data_source (io.laststring)
 			io.putstring ("Name: ")
 			io.readline
 			tmp_string := clone (io.laststring)
@@ -77,8 +74,8 @@ feature {NONE}
 
 			!! proc.make (Proc_name)
 			proc.load
-				proc.set_arguments (<<"author", "price", "pub_date">>,
-							<<author, price, pub_date >>)
+			proc.set_arguments (<<"author", "price", "pub_date">>,
+						<<author, price, pub_date >>)
 
 			if proc.exists then
 				io.putstring ("Stored procedure text: ")
@@ -121,15 +118,15 @@ feature {NONE}
 feature {NONE}
 
 	Select_text: STRING is
-		"update db_book set %
-		%author = author, price = :price, year = :pub_date where author = :author"
+		"update DB_BOOK set %
+		%author = author, price = price, year = pub_date where author = author"
 
 	Table_name: STRING is
-		"db_book"
+		"DB_BOOK"
 
-	Proc_name: STRING is "db_book_proc"
+	Proc_name: STRING is "DB_BOOK_PROC"
 
-end -- class RUNNER_ING
+end -- class RUNNER_ORA
 
 
 --|----------------------------------------------------------------

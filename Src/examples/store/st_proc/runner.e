@@ -79,14 +79,14 @@ feature {NONE}
 			!! pub_date.make (1984, 01, 01, 00, 00, 00)
 			!! proc.make (Proc_name)
 			proc.load
+			proc.set_arguments (<<"author", "price", "pub_date">>,
+						<<author, price, pub_date >>)
 
 			if proc.exists then
 				io.putstring ("Stored procedure text: ")
 				io.putstring (proc.text)
 				io.new_line
 			else
-				proc.set_arguments (<<"author", "price", "pub_date">>,
-							<<author, price, pub_date >>)
 				proc.store (Select_text)
 				io.putstring ("Procedure created.%N")
 				proc.load

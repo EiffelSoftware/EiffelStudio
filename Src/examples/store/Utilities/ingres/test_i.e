@@ -10,7 +10,7 @@ indexing
 
 class TEST_I inherit
 
-	TEST
+	TEST_ODBC
 
 creation
 

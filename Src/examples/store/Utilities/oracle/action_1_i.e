@@ -38,6 +38,7 @@ feature
 				new_selection.query (select_string)
 				new_selection.load_result
 				new_selection.unset_map_name ("table_name")
+				new_selection.terminate
 			end
 		end
 

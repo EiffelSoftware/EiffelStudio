@@ -1,6 +1,6 @@
 class RDB_HANDLE inherit
 
-	ORACLE_APPL
+	DATABASE_APPL [ORACLE]
 
 feature
 

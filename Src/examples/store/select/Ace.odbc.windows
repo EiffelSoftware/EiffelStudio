@@ -1,41 +1,56 @@
-system parser
+system selector_odbc
 
 root
 	
-	parser (root_cluster): "make"
+	selector_odbc (root_cluster): "make"
 
 default
 
 	assertion (all);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
+	multithreaded(yes);
 
 cluster
 
-	root_cluster:		"$EIFFEL4/examples/store/convert";
+	root_cluster:		"$EIFFEL4/examples/store/select";
 	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
+	odbc_handle:		"$EIFFEL4/examples/store/Utilities/odbc";
 
+-- EiffelBase
+	kernel: 		"$EIFFEL4/library/base/kernel";
+	support:		"$EIFFEL4/library/base/support";
+	access: 		"$EIFFEL4/library/base/structures/access";
+	cursors:		"$EIFFEL4/library/base/structures/cursors";
+	cursor_tree:	"$EIFFEL4/library/base/structures/cursor_tree";
+	dispenser:		"$EIFFEL4/library/base/structures/dispenser";
+	iteration:		"$EIFFEL4/library/base/structures/iteration";
+	list:			"$EIFFEL4/library/base/structures/list";
+	set:			"$EIFFEL4/library/base/structures/set";
+	sort:			"$EIFFEL4/library/base/structures/sort";
+	storage:		"$EIFFEL4/library/base/structures/storage";
+	table:			"$EIFFEL4/library/base/structures/table";
+	traversing:		"$EIFFEL4/library/base/structures/traversing";
+	tree:			"$EIFFEL4/library/base/structures/tree";
 
 -- EiffelStore
 
-	estore_support:		"$EIFFEL4/library/store/support";
-	estore_interface:	"$EIFFEL4/library/store/interface";
-	estore_odbc:		"$EIFFEL4/library/store/dbms/rdbms/odbc";
-	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
-	estore_converter:	"$EIFFEL4/library/store/converter";
+	estore_support:		"d:/NewStore/store/support";
+	estore_interface:	"d:/NewStore/store/interface";
+	estore_db_support:	"d:/NewStore/store/dbms/support";
+	estore_odbc:		"d:/NewStore/store/dbms/rdbms/odbc";
 
 -- EiffelTime
 	
-	time:				"$EIFFEL4/library/time/time";
-	
--- EiffelLex
+	time:				"$EIFFEL4/library/time";
+	time_format(time):	"$/format";
+	english_format(time_format):	"$/english";
 
-	lexical:			"$EIFFEL4/library/lex";
 
 external
 
 	object:
-		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/support.lib",
+		"$EIFFEL4/library/store/spec/$(COMPILER)/lib/support.lib",
 		"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib",
-		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/odbc_store.lib",
-		"odbc32.lib" -- Specify the correct path
+		"$EIFFEL4/library/store/spec/$(COMPILER)/lib/odbc_store.lib",
+		"odbc32.lib" -- Specify the path
+
 end

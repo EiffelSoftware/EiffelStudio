@@ -58,7 +58,7 @@ cluster
 
 	-- EiffelTime
 	
-	time : "$EIFFEL4/library/time/time";
+	time : "$EIFFEL4/library/time";
 	
 	-- Matisse
 
@@ -76,6 +76,6 @@ external
 		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/matisse_store.lib",
 		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/matisse.lib",	
 		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/special.lib",	
-		"e:\jacques\matisse\lib\matisse.lib"
+		"matisse.lib"
 
 end

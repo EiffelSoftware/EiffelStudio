@@ -1,40 +1,55 @@
-system parser
+system nesting
 
 root
 	
-	parser (root_cluster): "make"
+	test_i (root_cluster): "make"
 
 default
 
 	assertion (all);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
-
+	multithreaded (yes)
 cluster
 
-	root_cluster:		"$EIFFEL4/examples/store/convert";
-
+	root_cluster:		"$EIFFEL4/examples/store/insert";
 	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
 	oracle_handle:		"$EIFFEL4/examples/store/Utilities/oracle";
+
+-- EiffelBase
+	kernel: 		"$EIFFEL4/library/base/kernel";
+	support:		"$EIFFEL4/library/base/support";
+	access: 		"$EIFFEL4/library/base/structures/access";
+	cursors:		"$EIFFEL4/library/base/structures/cursors";
+	cursor_tree:	"$EIFFEL4/library/base/structures/cursor_tree";
+	dispenser:		"$EIFFEL4/library/base/structures/dispenser";
+	iteration:		"$EIFFEL4/library/base/structures/iteration";
+	list:			"$EIFFEL4/library/base/structures/list";
+	set:			"$EIFFEL4/library/base/structures/set";
+	sort:			"$EIFFEL4/library/base/structures/sort";
+	storage:		"$EIFFEL4/library/base/structures/storage";
+	table:			"$EIFFEL4/library/base/structures/table";
+	traversing:		"$EIFFEL4/library/base/structures/traversing";
+	tree:			"$EIFFEL4/library/base/structures/tree";	
 
 -- EiffelStore
 
 	estore_support:		"$EIFFEL4/library/store/support";
 	estore_interface:	"$EIFFEL4/library/store/interface";
-	estore_date:		"$EIFFEL4/library/store/date_and_time";
 	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
 	estore_oracle:		"$EIFFEL4/library/store/dbms/rdbms/oracle";
 
+-- EiffelTime
+
+	time:				"$EIFFEL4/library/time";
+	time_format(time):	"$/format";
+	english_format(time_format):	"$/english";
+ 
 external
 
 	object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
 		"-lsupport";
 		"-loracle";
-		"-lsys_time";
-		"$(ORACLE_HOME)/rdbms/lib/osntab.o";
-		"$(ORACLE_HOME)/rdbms/lib/libpro.a";
-		"$(ORACLE_HOME)/rdbms/lib/libsql.a";
-		"$(ORACLE_HOME)/rdbms/lib/libocic.a";
-		"$(ORACLE_HOME)/rdbms/lib/libsqlnet.a";
-		"$(ORACLE_HOME)/rdbms/lib/libora.a"
+		"-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
+		"-ldatetime";
+		"libora803.a";	-- Specify the path
 
 end

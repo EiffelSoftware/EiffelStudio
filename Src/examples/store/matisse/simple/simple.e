@@ -15,7 +15,7 @@ feature {NONE}
 		-- Prints various information
 	do
 		-- 1/ Choose host name and database name. Adjust wait and priority so that it suits your needs.
-		!!appl.login("venus","COMPANY",0,0)
+		!!appl.login("TOKYO","testdb",0,0)
 
 		-- 2/ Choose working mode. See documentation for that.
 		appl.set_mode(OPENED_TRANSACTION,Void)

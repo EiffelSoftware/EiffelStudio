@@ -1,44 +1,58 @@
-system parser
+system inserter
 
 root
 	
-	parser (root_cluster): "make"
+	inserter (root_cluster): "make"
 
 default
 
 	assertion (all);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	multithreaded(yes);
+
 
 cluster
 
-	root_cluster:		"$EIFFEL4/examples/store/convert";
-
+	root_cluster:		"$EIFFEL4/examples/store/insert";
 	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
-	sybase_handle:		"$EIFFEL4/examples/storeUtilities/sybase";
+	sybase_handle:		"$EIFFEL4/examples/store/Utilities/sybase";
+
+-- EiffelBase
+	kernel: 		"$EIFFEL4/library/base/kernel";
+	support:		"$EIFFEL4/library/base/support";
+	access: 		"$EIFFEL4/library/base/structures/access";
+	cursors:		"$EIFFEL4/library/base/structures/cursors";
+	cursor_tree:	"$EIFFEL4/library/base/structures/cursor_tree";
+	dispenser:		"$EIFFEL4/library/base/structures/dispenser";
+	iteration:		"$EIFFEL4/library/base/structures/iteration";
+	list:			"$EIFFEL4/library/base/structures/list";
+	set:			"$EIFFEL4/library/base/structures/set";
+	sort:			"$EIFFEL4/library/base/structures/sort";
+	storage:		"$EIFFEL4/library/base/structures/storage";
+	table:			"$EIFFEL4/library/base/structures/table";
+	traversing:		"$EIFFEL4/library/base/structures/traversing";
+	tree:			"$EIFFEL4/library/base/structures/tree";
 
 -- EiffelStore
 
 	estore_support:		"$EIFFEL4/library/store/support";
 	estore_interface:	"$EIFFEL4/library/store/interface";
-	estore_odbc:		"$EIFFEL4/library/store/dbms/rdbms/odbc";
+	estore_sybase:		"$EIFFEL4/library/store/dbms/rdbms/sybase";
 	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
 	estore_converter:	"$EIFFEL4/library/store/converter";
 
 -- EiffelTime
 	
 	time:				"$EIFFEL4/library/time";
-	
--- EiffelLex
-
-	lexical:			"$EIFFEL4/library/lex";
-
+	time_format:		"$EIFFEL4/library/time/format";
+	time_english:		"$EIFFEL4/library/time/format/english";		
 
 external
 
-	object:
-		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/support.lib",
-		"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib",
-		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/sybase_store.lib",
-		"libsybdb.lib" -- Specify the correct path
+	object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
+		"-lsupport";
+		"-lsybase_store";
+		"-L$(EIFFEL4)/library/time/spec/$(PLATFORM)/lib";
+		"-ldatetime";
+		"$(SYBASE)/lib/libsybdb.a" 
 
 end

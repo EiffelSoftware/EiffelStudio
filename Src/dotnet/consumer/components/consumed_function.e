@@ -19,7 +19,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; args: like arguments; ret: like return_type; froz, static, defer, inf, pref, pub: BOOLEAN) is
+	make (en, dn: STRING; args: like arguments; ret: like return_type;
+			froz, static, defer, inf, pref, pub: BOOLEAN;
+			a_type: CONSUMED_REFERENCED_TYPE)
+		is
 			-- Initialize consumed method.
 		require
 			non_void_eiffel_name: en /= Void
@@ -28,8 +31,9 @@ feature {NONE} -- Initialization
 			valid_dotnet_name: not dn.is_empty
 			non_void_arguments: args /= Void
 			non_void_return_type: ret /= Void
+			a_type_not_void: a_type /= Void
 		do
-			method_make (en, dn, args, froz, static, defer, pub)
+			method_make (en, dn, args, froz, static, defer, pub, a_type)
 			return_type := ret
 			if inf then
 				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_infix
@@ -48,6 +52,7 @@ feature {NONE} -- Initialization
 			is_infix_set: is_infix = inf
 			is_prefix_set: is_prefix = pref
 			is_public_set: is_public = pub
+			declared_type_set: declared_type = a_type
 		end
 
 feature -- Access

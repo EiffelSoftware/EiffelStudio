@@ -11,7 +11,9 @@ inherit
 		rename
 			make as entity_make
 		redefine
-			has_arguments, arguments, is_public, set_is_public
+			dotnet_name,
+			has_arguments, arguments, is_public,
+			set_is_public
 		end
 
 create
@@ -19,19 +21,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en: STRING; args: like arguments; pub: BOOLEAN) is
+	make (en: STRING; args: like arguments; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE) is
 			-- Initialize consumed constructor.
 		require
 			non_void_eiffel_name: en /= Void
 			valid_eiffel_name: not en.is_empty
 			non_void_arguments: arguments /= Void
+			a_type_not_void: a_type /= Void
 		do
-			entity_make (en, pub)
+			entity_make (en, pub, a_type)
 			arguments := args
 		ensure
 			eiffel_name_set: eiffel_name = en
 			arguments_set: arguments = args
 			is_public_set: is_public = pub
+			declared_type_set: declared_type = a_type
 		end
 
 feature -- Access
@@ -41,6 +45,9 @@ feature -- Access
 
 	is_public: BOOLEAN
 			-- Is constructor public?
+
+	dotnet_name: STRING is ".ctor"
+			-- Name of a .NET constructor.
 
 feature -- Status report
 

@@ -19,7 +19,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; rt: CONSUMED_REFERENCED_TYPE; static, pub: BOOLEAN) is
+	make (en, dn: STRING; rt: CONSUMED_REFERENCED_TYPE; static, pub: BOOLEAN;
+			a_type: CONSUMED_REFERENCED_TYPE)
+		is
 			-- Initialize field.
 		require
 			non_void_eiffel_name: en /= Void
@@ -27,8 +29,9 @@ feature {NONE} -- Initialization
 			non_void_dotnet_name: dn /= Void
 			valid_dotnet_name: not dn.is_empty
 			non_void_return_type: return_type /= Void
+			a_type_not_void: a_type /= Void
 		do
-			member_make (en, dn, pub)
+			member_make (en, dn, pub, a_type)
 			if static then
 				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_static
 			end
@@ -39,6 +42,7 @@ feature {NONE} -- Initialization
 			return_type_set: return_type = rt
 			is_static_set: is_static = static
 			is_public_set: is_public = pub
+			declared_type_set: declared_type = a_type
 		end
 
 feature -- Access

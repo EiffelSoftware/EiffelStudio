@@ -727,6 +727,30 @@ feature -- Object editor properties
 	
 	object_editor_padding_width: INTEGER is 3
 	
+feature -- Tooltips
+
+	include_directory_button_tooltip: STRING is "Include all sub-directories"
+		-- Tooltip for window selector include directory button.
+		
+	show_hide_empty_directories_tooltip: STRING is "Show/Hide all empty directories"
+		-- Tooltip for window selector show hide empty directories button.
+		
+	new_directory_button_tooltip: STRING is "New directory"
+		-- Tooltip for window selector new directory button.
+	
+	expand_all_button_tooltip: STRING is "Expand all"
+		-- Tooltip for window selector expand all button.
+		
+feature -- Status texts
+
+	directories_included_text: STRING is "All sub-directories included in project."
+	
+	all_empty_directories_shown_text: STRING is "All empty directories shown."
+	
+	all_empty_directories_hidden_text: STRING is "All empty directories hidden."
+	
+	all_expanded_text: STRING is "All nodes expanded."
+	
 feature -- Booleans
 
 	multiple_line_entry: BOOLEAN is True

@@ -9,551 +9,239 @@ class
 
 feature -- Access
 
-	Vk_lbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_LBUTTON"
-		end
-
-	Vk_rbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_RBUTTON"
-		end
-
-	Vk_cancel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_CANCEL"
-		end
-
-	Vk_mbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_MBUTTON"
-		end
-
-	Vk_back: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_BACK"
-		end
-
-	Vk_tab: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_TAB"
-		end
-
-	Vk_clear: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_CLEAR"
-		end
-
-	Vk_return: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_RETURN"
-		end
-
-	Vk_shift: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_SHIFT"
-		end
-
-	Vk_control: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_CONTROL"
-		end
-
-	Vk_menu: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_MENU"
-		end
-
-	Vk_pause: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_PAUSE"
-		end
-
-	Vk_capital: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_CAPITAL"
-		end
-
-	Vk_escape: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_ESCAPE"
-		end
-
-	Vk_space: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_SPACE"
-		end
-
-	Vk_prior: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_PRIOR"
-		end
-
-	Vk_next: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NEXT"
-		end
-
-	Vk_end: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_END"
-		end
-
-	Vk_home: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_HOME"
-		end
-
-	Vk_left: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_LEFT"
-		end
-
-	Vk_up: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_UP"
-		end
-
-	Vk_right: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_RIGHT"
-		end
-
-	Vk_down: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_DOWN"
-		end
-
-	Vk_select: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_SELECT"
-		end
-
-	Vk_print: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_PRINT"
-		end
-
-	Vk_execute: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_EXECUTE"
-		end
-
-	Vk_snapshot: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_SNAPSHOT"
-		end
-
-	Vk_insert: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_INSERT"
-		end
-
-	Vk_delete: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_DELETE"
-		end
-
-	Vk_help: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_HELP"
-		end
-
-	Vk_numpad0: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NUMPAD0"
-		end
-
-	Vk_numpad1: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NUMPAD1"
-		end
-
-	Vk_numpad2: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NUMPAD2"
-		end
-
-	Vk_numpad3: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NUMPAD3"
-		end
-
-	Vk_numpad4: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NUMPAD4"
-		end
-
-	Vk_numpad5: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NUMPAD5"
-		end
-
-	Vk_numpad6: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NUMPAD6"
-		end
-
-	Vk_numpad7: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NUMPAD7"
-		end
-
-	Vk_numpad8: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NUMPAD8"
-		end
-
-	Vk_numpad9: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NUMPAD9"
-		end
-
-	Vk_multiply: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_MULTIPLY"
-		end
-
-	Vk_add: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_ADD"
-		end
-
-	Vk_separator: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_SEPARATOR"
-		end
-
-	Vk_subtract: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_SUBTRACT"
-		end
-
-	Vk_decimal: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_DECIMAL"
-		end
-
-	Vk_divide: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_DIVIDE"
-		end
-
-	Vk_f1: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F1"
-		end
-
-	Vk_f2: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F2"
-		end
-
-	Vk_f3: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F3"
-		end
-
-	Vk_f4: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F4"
-		end
-
-	Vk_f5: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F5"
-		end
-
-	Vk_f6: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F6"
-		end
-
-	Vk_f7: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F7"
-		end
-
-	Vk_f8: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F8"
-		end
-
-	Vk_f9: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F9"
-		end
-
-	Vk_f10: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F10"
-		end
-
-	Vk_f11: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F11"
-		end
-
-	Vk_f12: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F12"
-		end
-
-	Vk_f13: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F13"
-		end
-
-	Vk_f14: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F14"
-		end
-
-	Vk_f15: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F15"
-		end
-
-	Vk_f16: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F16"
-		end
-
-	Vk_f17: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F17"
-		end
-
-	Vk_f18: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F18"
-		end
-
-	Vk_f19: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F19"
-		end
-
-	Vk_f20: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F20"
-		end
-
-	Vk_f21: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F21"
-		end
-
-	Vk_f22: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F22"
-		end
-
-	Vk_f23: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F23"
-		end
-
-	Vk_f24: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_F24"
-		end
-
-	Vk_numlock: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_NUMLOCK"
-		end
-
-	Vk_scroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_SCROLL"
-		end
-
-	Vk_lshift: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_LSHIFT"
-		end
-
-	Vk_rshift: INTEGER is 
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_RSHIFT"
-		end
-
-	Vk_lcontrol: INTEGER is 
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_LCONTROL"
-		end
-
-	Vk_rcontrol: INTEGER is 
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_RCONTROL"
-		end
-
-	Vk_lmenu: INTEGER is 
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_LMENU"
-		end
-
-	Vk_rmenu: INTEGER is 
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VK_RMENU"
-		end
+	Vk_lbutton: INTEGER is 1
+			-- Declared in Windows as VK_LBUTTON
+
+	Vk_rbutton: INTEGER is 2
+			-- Declared in Windows as VK_RBUTTON
+
+	Vk_cancel: INTEGER is 3
+			-- Declared in Windows as VK_CANCEL
+
+	Vk_mbutton: INTEGER is 4
+			-- Declared in Windows as VK_MBUTTON
+
+	Vk_back: INTEGER is 8
+			-- Declared in Windows as VK_BACK
+
+	Vk_tab: INTEGER is 9
+			-- Declared in Windows as VK_TAB
+
+	Vk_clear: INTEGER is 12
+			-- Declared in Windows as VK_CLEAR
+
+	Vk_return: INTEGER is 13
+			-- Declared in Windows as VK_RETURN
+
+	Vk_shift: INTEGER is 16
+			-- Declared in Windows as VK_SHIFT
+
+	Vk_control: INTEGER is 17
+			-- Declared in Windows as VK_CONTROL
+
+	Vk_menu: INTEGER is 18
+			-- Declared in Windows as VK_MENU
+
+	Vk_pause: INTEGER is 19
+			-- Declared in Windows as VK_PAUSE
+
+	Vk_capital: INTEGER is 20
+			-- Declared in Windows as VK_CAPITAL
+
+	Vk_escape: INTEGER is 27
+			-- Declared in Windows as VK_ESCAPE
+
+	Vk_space: INTEGER is 32
+			-- Declared in Windows as VK_SPACE
+
+	Vk_prior: INTEGER is 33
+			-- Declared in Windows as VK_PRIOR
+
+	Vk_next: INTEGER is 34
+			-- Declared in Windows as VK_NEXT
+
+	Vk_end: INTEGER is 35
+			-- Declared in Windows as VK_END
+
+	Vk_home: INTEGER is 36
+			-- Declared in Windows as VK_HOME
+
+	Vk_left: INTEGER is 37
+			-- Declared in Windows as VK_LEFT
+
+	Vk_up: INTEGER is 38
+			-- Declared in Windows as VK_UP
+
+	Vk_right: INTEGER is 39
+			-- Declared in Windows as VK_RIGHT
+
+	Vk_down: INTEGER is 40
+			-- Declared in Windows as VK_DOWN
+
+	Vk_select: INTEGER is 41
+			-- Declared in Windows as VK_SELECT
+
+	Vk_print: INTEGER is 42
+			-- Declared in Windows as VK_PRINT
+
+	Vk_execute: INTEGER is 43
+			-- Declared in Windows as VK_EXECUTE
+
+	Vk_snapshot: INTEGER is 44
+			-- Declared in Windows as VK_SNAPSHOT
+
+	Vk_insert: INTEGER is 45
+			-- Declared in Windows as VK_INSERT
+
+	Vk_delete: INTEGER is 46
+			-- Declared in Windows as VK_DELETE
+
+	Vk_help: INTEGER is 47
+			-- Declared in Windows as VK_HELP
+
+	Vk_numpad0: INTEGER is 96
+			-- Declared in Windows as VK_NUMPAD0
+
+	Vk_numpad1: INTEGER is 97
+			-- Declared in Windows as VK_NUMPAD1
+
+	Vk_numpad2: INTEGER is 98
+			-- Declared in Windows as VK_NUMPAD2
+
+	Vk_numpad3: INTEGER is 99
+			-- Declared in Windows as VK_NUMPAD3
+
+	Vk_numpad4: INTEGER is 100
+			-- Declared in Windows as VK_NUMPAD4
+
+	Vk_numpad5: INTEGER is 101
+			-- Declared in Windows as VK_NUMPAD5
+
+	Vk_numpad6: INTEGER is 102
+			-- Declared in Windows as VK_NUMPAD6
+
+	Vk_numpad7: INTEGER is 103
+			-- Declared in Windows as VK_NUMPAD7
+
+	Vk_numpad8: INTEGER is 104
+			-- Declared in Windows as VK_NUMPAD8
+
+	Vk_numpad9: INTEGER is 105
+			-- Declared in Windows as VK_NUMPAD9
+
+	Vk_multiply: INTEGER is 106
+			-- Declared in Windows as VK_MULTIPLY
+
+	Vk_add: INTEGER is 107
+			-- Declared in Windows as VK_ADD
+
+	Vk_separator: INTEGER is 108
+			-- Declared in Windows as VK_SEPARATOR
+
+	Vk_subtract: INTEGER is 109
+			-- Declared in Windows as VK_SUBTRACT
+
+	Vk_decimal: INTEGER is 110
+			-- Declared in Windows as VK_DECIMAL
+
+	Vk_divide: INTEGER is 111
+			-- Declared in Windows as VK_DIVIDE
+
+	Vk_f1: INTEGER is 112
+			-- Declared in Windows as VK_F1
+
+	Vk_f2: INTEGER is 113
+			-- Declared in Windows as VK_F2
+
+	Vk_f3: INTEGER is 114
+			-- Declared in Windows as VK_F3
+
+	Vk_f4: INTEGER is 115
+			-- Declared in Windows as VK_F4
+
+	Vk_f5: INTEGER is 116
+			-- Declared in Windows as VK_F5
+
+	Vk_f6: INTEGER is 117
+			-- Declared in Windows as VK_F6
+
+	Vk_f7: INTEGER is 118
+			-- Declared in Windows as VK_F7
+
+	Vk_f8: INTEGER is 119
+			-- Declared in Windows as VK_F8
+
+	Vk_f9: INTEGER is 120
+			-- Declared in Windows as VK_F9
+
+	Vk_f10: INTEGER is 121
+			-- Declared in Windows as VK_F10
+
+	Vk_f11: INTEGER is 122
+			-- Declared in Windows as VK_F11
+
+	Vk_f12: INTEGER is 123
+			-- Declared in Windows as VK_F12
+
+	Vk_f13: INTEGER is 124
+			-- Declared in Windows as VK_F13
+
+	Vk_f14: INTEGER is 125
+			-- Declared in Windows as VK_F14
+
+	Vk_f15: INTEGER is 126
+			-- Declared in Windows as VK_F15
+
+	Vk_f16: INTEGER is 127
+			-- Declared in Windows as VK_F16
+
+	Vk_f17: INTEGER is 128
+			-- Declared in Windows as VK_F17
+
+	Vk_f18: INTEGER is 129
+			-- Declared in Windows as VK_F18
+
+	Vk_f19: INTEGER is 130
+			-- Declared in Windows as VK_F19
+
+	Vk_f20: INTEGER is 131
+			-- Declared in Windows as VK_F20
+
+	Vk_f21: INTEGER is 132
+			-- Declared in Windows as VK_F21
+
+	Vk_f22: INTEGER is 133
+			-- Declared in Windows as VK_F22
+
+	Vk_f23: INTEGER is 134
+			-- Declared in Windows as VK_F23
+
+	Vk_f24: INTEGER is 135
+			-- Declared in Windows as VK_F24
+
+	Vk_numlock: INTEGER is 144
+			-- Declared in Windows as VK_NUMLOCK
+
+	Vk_scroll: INTEGER is 145
+			-- Declared in Windows as VK_SCROLL
+
+	Vk_lshift: INTEGER is 160
+			-- Declared in Windows as VK_LSHIFT
+
+	Vk_rshift: INTEGER is 161
+			-- Declared in Windows as VK_RSHIFT
+
+	Vk_lcontrol: INTEGER is 162
+			-- Declared in Windows as VK_LCONTROL
+
+	Vk_rcontrol: INTEGER is 163
+			-- Declared in Windows as VK_RCONTROL
+
+	Vk_lmenu: INTEGER is 164
+			-- Declared in Windows as VK_LMENU
+
+	Vk_rmenu: INTEGER is 165
+			-- Declared in Windows as VK_RMENU
 
 	-- Vk_0 thru Vk_9 are the same as their ASCII equivalents: '0' thru '9'.
 	Vk_0: INTEGER is 48

@@ -10,13 +10,6 @@ inherit
 
 feature -- Status Report
 
-	apply_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `apply'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	system_name_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `system_name'.
 			-- Redefine in descendants if needed.
@@ -157,34 +150,6 @@ feature -- Status Report
 			Result := True
 		end
 
-	working_directory_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `working_directory'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_working_directory_user_precondition (return_value: STRING): BOOLEAN is
-			-- User-defined preconditions for `set_working_directory'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	arguments_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `arguments'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_arguments_user_precondition (return_value: STRING): BOOLEAN is
-			-- User-defined preconditions for `set_arguments'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	debug_info_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `debug_info'.
 			-- Redefine in descendants if needed.
@@ -201,27 +166,6 @@ feature -- Status Report
 
 	clusters_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `clusters'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	add_cluster_user_precondition (cluster_name: STRING; parent_name: STRING; cluster_path: STRING): BOOLEAN is
-			-- User-defined preconditions for `add_cluster'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	remove_cluster_user_precondition (cluster_name: STRING): BOOLEAN is
-			-- User-defined preconditions for `remove_cluster'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	cluster_properties_user_precondition (cluster_name: STRING): BOOLEAN is
-			-- User-defined preconditions for `cluster_properties'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -248,15 +192,28 @@ feature -- Status Report
 			Result := True
 		end
 
-feature -- Basic Operations
-
-	apply is
-			-- Apply changes
-		require
-			apply_user_precondition: apply_user_precondition
-		deferred
-
+	update_project_ace_file_user_precondition (project_ace_file_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `update_project_ace_file'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
 		end
+
+	synchronize_with_project_ace_file_user_precondition (project_ace_file_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `synchronize_with_project_ace_file'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	apply_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `apply'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+feature -- Basic Operations
 
 	system_name: STRING is
 			-- System name.
@@ -429,40 +386,6 @@ feature -- Basic Operations
 
 		end
 
-	working_directory: STRING is
-			-- Working directory.
-		require
-			working_directory_user_precondition: working_directory_user_precondition
-		deferred
-
-		end
-
-	set_working_directory (return_value: STRING) is
-			-- Working directory.
-			-- `return_value' [in].  
-		require
-			set_working_directory_user_precondition: set_working_directory_user_precondition (return_value)
-		deferred
-
-		end
-
-	arguments: STRING is
-			-- Program arguments.
-		require
-			arguments_user_precondition: arguments_user_precondition
-		deferred
-
-		end
-
-	set_arguments (return_value: STRING) is
-			-- Program arguments.
-			-- `return_value' [in].  
-		require
-			set_arguments_user_precondition: set_arguments_user_precondition (return_value)
-		deferred
-
-		end
-
 	debug_info: BOOLEAN is
 			-- Generate debug info?
 		require
@@ -480,41 +403,10 @@ feature -- Basic Operations
 
 		end
 
-	clusters: ECOM_VARIANT is
-			-- List of clusters in current project (list of IEiffelClusterProperties*).
+	clusters: IEIFFEL_SYSTEM_CLUSTERS_INTERFACE is
+			-- Project Clusters.
 		require
 			clusters_user_precondition: clusters_user_precondition
-		deferred
-
-		ensure
-			valid_clusters: Result.item /= default_pointer
-		end
-
-	add_cluster (cluster_name: STRING; parent_name: STRING; cluster_path: STRING) is
-			-- Add a cluster to the project.
-			-- `cluster_name' [in].  
-			-- `parent_name' [in].  
-			-- `cluster_path' [in].  
-		require
-			add_cluster_user_precondition: add_cluster_user_precondition (cluster_name, parent_name, cluster_path)
-		deferred
-
-		end
-
-	remove_cluster (cluster_name: STRING) is
-			-- Remove a cluster from the project.
-			-- `cluster_name' [in].  
-		require
-			remove_cluster_user_precondition: remove_cluster_user_precondition (cluster_name)
-		deferred
-
-		end
-
-	cluster_properties (cluster_name: STRING): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-			-- `cluster_name' [in].  
-		require
-			cluster_properties_user_precondition: cluster_properties_user_precondition (cluster_name)
 		deferred
 
 		end
@@ -541,6 +433,32 @@ feature -- Basic Operations
 			-- `assembly_path' [in].  
 		require
 			remove_assembly_user_precondition: remove_assembly_user_precondition (assembly_path)
+		deferred
+
+		end
+
+	update_project_ace_file (project_ace_file_name: STRING) is
+			-- Update the project Ace file according to the current settings.
+			-- `project_ace_file_name' [in].  
+		require
+			update_project_ace_file_user_precondition: update_project_ace_file_user_precondition (project_ace_file_name)
+		deferred
+
+		end
+
+	synchronize_with_project_ace_file (project_ace_file_name: STRING) is
+			-- Synchronize the current settings with the project Ace file.
+			-- `project_ace_file_name' [in].  
+		require
+			synchronize_with_project_ace_file_user_precondition: synchronize_with_project_ace_file_user_precondition (project_ace_file_name)
+		deferred
+
+		end
+
+	apply is
+			-- Apply changes
+		require
+			apply_user_precondition: apply_user_precondition
 		deferred
 
 		end

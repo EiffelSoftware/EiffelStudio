@@ -101,22 +101,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_evaluate_require_by_default_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_evaluate_require_by_default'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	evaluate_ensure_by_default_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `evaluate_ensure_by_default'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_evaluate_ensure_by_default_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_evaluate_ensure_by_default'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -129,22 +115,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_evaluate_check_by_default_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_evaluate_check_by_default'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	evaluate_loop_by_default_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `evaluate_loop_by_default'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_evaluate_loop_by_default_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_evaluate_loop_by_default'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -157,8 +129,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_evaluate_invariant_by_default_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_evaluate_invariant_by_default'.
+	set_assertions_user_precondition (evaluate_check: BOOLEAN; evaluate_require: BOOLEAN; evaluate_ensure: BOOLEAN; evaluate_loop: BOOLEAN; evaluate_invariant: BOOLEAN): BOOLEAN is
+			-- User-defined preconditions for `set_assertions'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -180,6 +152,48 @@ feature -- Status Report
 
 	remove_exclude_user_precondition (dir_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `remove_exclude'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	parent_name_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `parent_name'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_parent_name_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_parent_name'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	has_parent_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `has_parent'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	subclusters_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `subclusters'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	has_children_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `has_children'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	cluster_id_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `cluster_id'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -297,28 +311,10 @@ feature -- Basic Operations
 
 		end
 
-	set_evaluate_require_by_default (return_value: BOOLEAN) is
-			-- Should preconditions be evaluated by default?
-			-- `return_value' [in].  
-		require
-			set_evaluate_require_by_default_user_precondition: set_evaluate_require_by_default_user_precondition (return_value)
-		deferred
-
-		end
-
 	evaluate_ensure_by_default: BOOLEAN is
 			-- Should postconditions be evaluated by default?
 		require
 			evaluate_ensure_by_default_user_precondition: evaluate_ensure_by_default_user_precondition
-		deferred
-
-		end
-
-	set_evaluate_ensure_by_default (return_value: BOOLEAN) is
-			-- Should postconditions be evaluated by default?
-			-- `return_value' [in].  
-		require
-			set_evaluate_ensure_by_default_user_precondition: set_evaluate_ensure_by_default_user_precondition (return_value)
 		deferred
 
 		end
@@ -331,28 +327,10 @@ feature -- Basic Operations
 
 		end
 
-	set_evaluate_check_by_default (return_value: BOOLEAN) is
-			-- Should check assertions be evaluated by default?
-			-- `return_value' [in].  
-		require
-			set_evaluate_check_by_default_user_precondition: set_evaluate_check_by_default_user_precondition (return_value)
-		deferred
-
-		end
-
 	evaluate_loop_by_default: BOOLEAN is
 			-- Should loop assertions be evaluated by default?
 		require
 			evaluate_loop_by_default_user_precondition: evaluate_loop_by_default_user_precondition
-		deferred
-
-		end
-
-	set_evaluate_loop_by_default (return_value: BOOLEAN) is
-			-- Should loop assertions be evaluated by default?
-			-- `return_value' [in].  
-		require
-			set_evaluate_loop_by_default_user_precondition: set_evaluate_loop_by_default_user_precondition (return_value)
 		deferred
 
 		end
@@ -365,11 +343,15 @@ feature -- Basic Operations
 
 		end
 
-	set_evaluate_invariant_by_default (return_value: BOOLEAN) is
-			-- Should class invariants be evaluated by default?
-			-- `return_value' [in].  
+	set_assertions (evaluate_check: BOOLEAN; evaluate_require: BOOLEAN; evaluate_ensure: BOOLEAN; evaluate_loop: BOOLEAN; evaluate_invariant: BOOLEAN) is
+			-- Set assertions for cluster.
+			-- `evaluate_check' [in].  
+			-- `evaluate_require' [in].  
+			-- `evaluate_ensure' [in].  
+			-- `evaluate_loop' [in].  
+			-- `evaluate_invariant' [in].  
 		require
-			set_evaluate_invariant_by_default_user_precondition: set_evaluate_invariant_by_default_user_precondition (return_value)
+			set_assertions_user_precondition: set_assertions_user_precondition (evaluate_check, evaluate_require, evaluate_ensure, evaluate_loop, evaluate_invariant)
 		deferred
 
 		end
@@ -396,6 +378,55 @@ feature -- Basic Operations
 			-- `dir_name' [in].  
 		require
 			remove_exclude_user_precondition: remove_exclude_user_precondition (dir_name)
+		deferred
+
+		end
+
+	parent_name: STRING is
+			-- Name of the parent cluster.
+		require
+			parent_name_user_precondition: parent_name_user_precondition
+		deferred
+
+		end
+
+	set_parent_name (return_value: STRING) is
+			-- Name of the parent cluster.
+			-- `return_value' [in].  
+		require
+			set_parent_name_user_precondition: set_parent_name_user_precondition (return_value)
+		deferred
+
+		end
+
+	has_parent: BOOLEAN is
+			-- Does the current cluster have a parent cluster?
+		require
+			has_parent_user_precondition: has_parent_user_precondition
+		deferred
+
+		end
+
+	subclusters: IENUM_CLUSTER_PROP_INTERFACE is
+			-- List of subclusters (list of IEiffelClusterProperties*).
+		require
+			subclusters_user_precondition: subclusters_user_precondition
+		deferred
+
+		end
+
+	has_children: BOOLEAN is
+			-- Does the current cluster have children?
+		require
+			has_children_user_precondition: has_children_user_precondition
+		deferred
+
+		end
+
+	cluster_id: INTEGER is
+			-- Cluster identifier.
+		require
+			cluster_id_user_precondition: cluster_id_user_precondition
 		deferred
 
 		end

@@ -126,27 +126,15 @@ feature -- Implementation
 		require
 			object_pebble_not_void: object_pebble /= Void
 		do
-			add_object (object_pebble.object)
+			window_selector.handle_object_drop (object_pebble, Current)
 		end
 
-	add_object (an_object: GB_OBJECT) is
-			-- Add representation of `an_object' to `Current'.
-		require
-			an_object_not_void: an_object /= Void
-		do
-			window_selector.add_new_object (an_object, Current)
-			(create {GB_GLOBAL_STATUS}).mark_as_dirty
-		end
-		
 	veto_object_drop (object_stone: GB_OBJECT_STONE): BOOLEAN is
-			-- Return `True' if `object_stone' is a top level object.
+			-- Is `object_stone' permitted to be dropped?
 		require
 			object_stone_not_void: object_stone /= Void
 		do
-			Result := not object_stone.is_instance_of_top_level_object
-		ensure
-		-- | FIXME Crashes transport. No idea why.
-		--	Result = (an_object.object /= Void) implies an_object.is_top_level_object
+			Result := True
 		end
 		
 	path: ARRAYED_LIST [STRING] is

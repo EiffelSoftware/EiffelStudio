@@ -27,6 +27,11 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_INCLUDE
+		undefine
+			copy, is_equal
+		end
+
 creation
 	make
 
@@ -132,6 +137,7 @@ feature
 			-- Generation of the routine table in buffer "erout*.c".
 		local
 			entry: ROUT_ENTRY;
+			extern_entry: EXTERN_ENTRY
 			i, nb, index: INTEGER;
 			routine_name: STRING;
 			empty_function_ptr_string: STRING
@@ -158,8 +164,13 @@ feature
 						buffer.putstring (routine_name);
 						buffer.putstring (",%N");
 			
-							-- Remember external routine declaration
-						Extern_declarations.add_routine (entry.type.c_type, clone (routine_name));
+						extern_entry ?= entry
+						if extern_entry = Void then
+								-- Remember external routine declaration
+							Extern_declarations.add_routine (entry.type.c_type, clone (routine_name));
+						else
+							add_header_files (extern_entry.include_list)
+						end
 					else
 						buffer.putstring (empty_function_ptr_string);
 					end;
@@ -242,5 +253,29 @@ feature
 
 	workbench_c_type: STRING is "struct ca_info";
 			-- Associated C item structure name
+
+feature {NONE} -- Implementation
+
+	add_header_files (include_list: ARRAY [STRING]) is
+			-- Add `include_list' in header files of the `erout' files.
+		local
+			queue: like shared_include_queue
+			i, nb: INTEGER
+		do
+			if include_list /= Void then
+				from
+					i := include_list.lower
+					nb := include_list.upper
+					queue := shared_include_queue
+				until
+					i > nb
+				loop
+					if not queue.has (include_list.item (i)) then
+						queue.extend (include_list.item (i))
+					end
+					i := i + 1
+				end
+			end
+		end
 
 end

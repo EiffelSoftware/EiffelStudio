@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Resource table hashed on resource name.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class RESOURCE_TABLE
 
 inherit

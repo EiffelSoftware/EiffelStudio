@@ -1,40 +1,36 @@
-class SHARED_ASSERTION_LEVEL
+class
+	SHARED_ASSERTION_LEVEL
 	
 feature {NONE}
 
 	No_level: NO_I is
 		once
-			!!Result;
-		end;
+			!!Result
+		end
 
-	Require_level: REQUIRE_I is
+	Default_level, Require_level: REQUIRE_I is
 		once
-			!!Result;
-		end;
+			!!Result
+		end
 
 	Ensure_level: ENSURE_I is
 		once
-			!!Result;
-		end;
+			!!Result
+		end
 
 	Invariant_level: INVARIANT_I is
 		once
-			!!Result;
-		end;
+			!!Result
+		end
 
 	Loop_level: LOOP_I is
 		once
-			!!Result;
-		end;
+			!!Result
+		end
 
 	Check_level: CHECK_I is
 		once
-			!!Result;
-		end
-
-	Default_level: D_ASSERT_I is
-		once
-			!!Result;
+			!!Result
 		end
 
 end

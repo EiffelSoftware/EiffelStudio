@@ -21,7 +21,7 @@ feature -- Disposal
 
 	dispose is
 		external
-			"C | %"pstore.h%""
+			"C use %"pstore.h%""
 		alias
 			"parsing_store_dispose"
 		end
@@ -30,14 +30,14 @@ feature {NONE} -- Externals
 
 	store_init is
 		external
-			"C | %"pstore.h%""
+			"C use %"pstore.h%""
 		alias
 			"parsing_store_initialize"
 		end
 
 	retrieve_init is
 		external
-			"C | %"pretrieve.h%""
+			"C use %"pretrieve.h%""
 		alias
 			"parsing_retrieve_initialize"
 		end

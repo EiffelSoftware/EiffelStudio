@@ -245,6 +245,18 @@ feature -- Obsolete
 
 feature -- Removal
 
+	delete is
+			-- Free allocated C memory and GDI objects.
+		require
+			not_shared: not shared			
+		do
+			if exists then
+				destroy_item
+			end
+		end
+
+feature {NONE} -- Removal
+
 	destroy_item is
 			-- Free allocated C memory and GDI objects.
 		local

@@ -1,5 +1,5 @@
 indexing
-	description : "Objects that ..."
+	description : "Objects that help computing file name for IL debug info"
 	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"
@@ -19,7 +19,7 @@ inherit
 			{NONE} all 
 		end
 		
-feature -- Query
+feature {NONE} -- Query
 
 	is_entry_point (a_feat: FEATURE_I): BOOLEAN is
 			-- Is `a_feat' the entry point ?
@@ -34,13 +34,15 @@ feature -- Query
 					and then a_feat.written_class.is_equal (System.root_class.compiled_class)
 		end
 
-
-feature -- IL info file names 
+feature {NONE} -- IL info file names 
 
 	Il_info_file_name: FILE_NAME is
-			-- Filename for IL info storage
+			-- Filename for IL info storage used to load data
+			-- in the context, we load workbench information
+			-- in finalized we generate each time all IL code
+			-- so we generate each time all the IL debug info
 		do
-			if system.is_precompile_finalized then
+			if system.is_precompiled and system.is_precompile_finalized then
 				Result := Final_il_info_file_name
 			else
 				Result := Workbench_il_info_file_name
@@ -62,91 +64,51 @@ feature -- IL info file names
 			Result.set_file_name (Il_info_name)
 			Result.add_extension (Il_info_extension)
 		end
+		
+feature {NONE} -- File name data From compiler world
 
-feature -- File name data From compiler world
-
-	module_directory_name: STRING is
+	workbench_module_directory_path_name: STRING is
 			-- Directory path where module are located
 		do
-				-- MEGA BIG FIX HERE !!!! how can one know if we are in wb or final ?
-				-- FOR NOW WE ASSUME WE DEBUG ONLY WORKBENCH PROGR		
 			Result := Workbench_generation_path
 		end
 		
-	assembly_directory_name: STRING is
+	finalized_module_directory_path_name: STRING is
+			-- Directory path where module are located
+		do
+			Result := Final_generation_path
+		end
+		
+	workbench_assembly_directory_path_name: STRING is
 			-- Directory path where assemblies are located
 			-- that is also valid for precompilation assemblies
 		do
-				-- MEGA BIG FIX HERE !!!! how can one know if we are in wb or final ?
-				-- FOR NOW WE ASSUME WE DEBUG ONLY WORKBENCH PROGR			
 			Result := Workbench_bin_generation_path
-		end		
-		
-	precompilation_module_filename (a_system_name: STRING): FILE_NAME is
-		do
-			create Result.make_from_string (assembly_directory_name)
-			Result.set_file_name (precompilation_module_name (a_system_name))
 		end
 
+	finalized_assembly_directory_path_name: STRING is
+			-- Directory path where assemblies are located
+			-- that is also valid for precompilation assemblies
+		do
+			Result := Final_bin_generation_path
+		end		
+		
 	precompilation_module_name (a_system_name: STRING): STRING is
 		do
 			Result := a_system_name + ".dll"
-		end		
-		
-	module_file_name_for_class (a_class_type: CLASS_TYPE): STRING is
-			-- Computed module file name for `a_class_type'
-			--| we use CLASS_TYPE for the precompiled case .
-		require
-			class_type_not_void: a_class_type /= Void
-			a_class_type_is_not_external: not a_class_type.is_external
-		local
-			l_location_path: STRING
-			l_output: FILE_NAME
-			l_module_filename: STRING
+		end
+
+	workbench_precompilation_module_filename (a_system_name: STRING): FILE_NAME is
 		do
-				--| Please make sure this computing is similar to 
-				--| the one inside IL_CODE_GENERATOR.il_module
-			if a_class_type.is_precompiled then
-				l_output := precompilation_module_filename (a_class_type.assembly_info.assembly_name)
-			else
-				l_location_path := module_directory_name
-				create l_output.make_from_string (l_location_path)
-				l_module_filename := module_name_for_class (a_class_type)
-				l_output.set_file_name (l_module_filename)
-			end
-			Result := l_output
+			create Result.make_from_string (workbench_assembly_directory_path_name)
+			Result.set_file_name (precompilation_module_name (a_system_name))
 		end
 		
-	module_name_for_class (a_class_type: CLASS_TYPE): STRING is
-			-- Computed module name for `a_class_type'
-			--| we use CLASS_TYPE for the precompiled case .
-		require
-			class_type_not_void: a_class_type /= Void
-		local
-			l_type_id: INTEGER
-			l_assembly_name: STRING
-			l_module_name: STRING
-			l_is_single_module: BOOLEAN
+	finalized_precompilation_module_filename (a_system_name: STRING): FILE_NAME is
+			-- Finalized precompilation module file name for `a_system_name'.
 		do
-				--| Please make sure this computing is similar to 
-				--| the one inside IL_CODE_GENERATOR.il_module
-
---			l_is_single_module := System.in_final_mode or else Compilation_modes.is_precompiling
--- We assume, we are debugging only Workbench application for now.
-			
-			if a_class_type.is_precompiled then
-				l_is_single_module := True
-				l_module_name := precompilation_module_name (a_class_type.assembly_info.assembly_name)
-			else
-				if l_is_single_module then
-					l_type_id := 1
-				else
-					l_type_id := a_class_type.associated_class.class_id // System.msil_classes_per_module + 1
-				end
-				l_module_name := "module_" + l_type_id.out + ".dll"
-			end
-
-			Result := l_module_name
+			create Result.make_from_string (finalized_assembly_directory_path_name)
+			Result.set_file_name (precompilation_module_name (a_system_name))			
 		end		
 
 end -- class IL_DEBUG_INFO_HELPERS

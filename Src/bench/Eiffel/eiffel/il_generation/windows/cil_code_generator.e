@@ -484,7 +484,7 @@ feature -- Generation Structure
 			l_host: CLR_HOST
 		do
 				--| Initialize recording of IL Information used for eStudio .NET debugger			
-			Il_debug_info_recorder.init_recording_session (debug_mode)
+			Il_debug_info_recorder.start_recording_session (debug_mode)
 			
 				--| beginning of assembly generation
 			location_path := location
@@ -666,8 +666,8 @@ feature -- Generation Structure
 		
 			main_module.save_to_disk
 			
-			--| Save IL Information used for eStudio .NET debugger
-			Il_debug_info_recorder.save			
+			--| End recording session, (then Save IL Information used for eStudio .NET debugger)
+			Il_debug_info_recorder.end_recording_session			
 		end
 
 	generate_resources (a_resources: LIST [STRING]) is

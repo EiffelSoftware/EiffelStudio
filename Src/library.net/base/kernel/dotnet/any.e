@@ -1,6 +1,14 @@
 indexing
-	generator: "Eiffel Emitter 2.8b2"
-	assembly: "mscorlib", "1.0.2411.0", "neutral", "b77a5c561934e089"
+	description: "[
+		Project-wide universal properties.
+		This class is an ancestor to all developer-written classes.
+		ANY may be customized for individual projects or teams.
+		]"
+
+	status: "See notice at end of class"
+	date: "$Date$"
+	revision: "$Revision$"
+
 
 class
 	ANY
@@ -13,6 +21,8 @@ inherit
 		redefine
 			finalize, equals, get_hash_code, to_string
 		end
+
+feature -- Customization
 	
 feature -- Access
 

@@ -84,7 +84,7 @@ feature -- Merging
 			-- Append  `other' to `Current'.
 			-- Used when merging precompilations.
 		do
-			{CENTRAL_TABLE} precursor (other)
+			{CENTRAL_TABLE} Precursor (other)
 			frozen_level := counter.total_count
 		end
 
@@ -147,11 +147,10 @@ end
 			write_int (file.file_pointer, counter.total_count)
 		end
 
-	generate (file: INDENT_FILE) is
-			-- Generate the dispatch table in `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate the dispatch table in `buffer'.
 		require
-			good_argument: file /= Void
-			is_open: file.is_open_write
+			good_argument: buffer /= Void
 		local
 			values: ARRAY [INTEGER]
 			unit: DISPATCH_UNIT
@@ -172,18 +171,18 @@ end
 			end
 			from
 				i := 1
-				file.putstring ("#include %"eif_portable.h%"%N%N")
-				file.putstring ("uint32 egc_fdispatch_init[] = {%N")
+				buffer.putstring ("#include %"eif_portable.h%"%N%N")
+				buffer.putstring ("uint32 egc_fdispatch_init[] = {%N")
 			until
 				i > nb
 			loop
-				file.putstring ("(uint32) ")
-				file.putint (values.item (i))
-				file.putchar (',')
-				file.new_line
+				buffer.putstring ("(uint32) ")
+				buffer.putint (values.item (i))
+				buffer.putchar (',')
+				buffer.new_line
 				i := i + 1
 			end
-			file.putstring ("};%N")
+			buffer.putstring ("};%N")
 		end
 
 feature {NONE} -- External features

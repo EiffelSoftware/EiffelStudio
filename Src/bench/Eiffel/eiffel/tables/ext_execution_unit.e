@@ -49,7 +49,7 @@ feature
 	return_type: STRING
 			-- Return type of C external routine.
 
-	generate_declaration (file: INDENT_FILE) is
+	generate_declaration (buffer: GENERATION_BUFFER) is
 			-- Generate external declaration for the compound routine
 			--| In this case, there is no header file.
 			--| If there is no C signature, we use `generate_declaration' from
@@ -61,46 +61,46 @@ feature
 			i, nb: INTEGER
 		do
 			if argument_types /= Void then
-				file.putstring ("extern ")
+				buffer.putstring ("extern ")
 
 					--| If the return type is not specified we are taking the standard
 					--| one.
 				if return_type /= Void then
-					file.putstring (return_type)
+					buffer.putstring (return_type)
 				else
-					type.generate (file)
+					type.generate (buffer)
 				end
 
-				file.putstring (" ")
-				file.putstring (external_name)
+				buffer.putstring (" ")
+				buffer.putstring (external_name)
 
 					--| We generate each argument separated by a coma.
 				from
-					file.putstring (" (")
+					buffer.putstring (" (")
 					args := argument_types
 					i := args.lower
 					nb := args.upper
-					file.putstring (args.item (i))
+					buffer.putstring (args.item (i))
 					i := i + 1
 				until
 					i > nb
 				loop
-					file.putstring (", ")
-					file.putstring (args.item (i))
+					buffer.putstring (", ")
+					buffer.putstring (args.item (i))
 					i := i + 1
 				end
-				file.putstring (");%N")
+				buffer.putstring (");%N")
 			else
 					-- If there is a return type, we need to declare it
 					-- Otherwise we use the `Precursor' version of `generate_declaration'
 				if return_type /= Void then
-					file.putstring ("extern ")
-					file.putstring (return_type)
-					file.putstring (" ")
-					file.putstring (external_name);
-					file.putstring ("();%N");
+					buffer.putstring ("extern ")
+					buffer.putstring (return_type)
+					buffer.putstring (" ")
+					buffer.putstring (external_name);
+					buffer.putstring ("();%N");
 				else
-					{EXECUTION_UNIT} Precursor (file)
+					{EXECUTION_UNIT} Precursor (buffer)
 				end
 			end
 		end;

@@ -15,7 +15,7 @@ inherit
 			linear_representation as old_linear_representation,
 			wipe_out as split_area_wipe_out
 		export
-			{MULTIPLE_SPLIT_AREA_TOOL_HOLDER} all
+			{MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} all
 		redefine
 			initialize
 		end
@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 			create minimized_states.make (4)
 			all_split_areas.extend (Current)
 		end
-
 
 feature -- Access
 
@@ -76,9 +75,8 @@ feature -- Access
 		do
 			Result := external_representation.has (a_widget)
 		ensure
-			
+			Result_consistent: Result implies external_representation.has (a_widget)
 		end
-		
 
 	top_widget_resizing: BOOLEAN
 		-- Does the top widget displayed in `Current' resize vertically as `Current' is resized?
@@ -156,39 +154,51 @@ feature -- Status setting
 		end
 
 	set_maximize_pixmap (pixmap: EV_PIXMAP) is
-			--
+			-- Use `pixmap' as image on maximize buttons.
+		require
+			pixmap_not_void: pixmap /= Void
 		do
 			maximize_pixmap := clone (pixmap)
 		end
 		
 	set_minimize_pixmap (pixmap: EV_PIXMAP) is
-			--
+			-- Use `pixmap' as image on minimize buttons.
+		require
+			pixmap_not_void: pixmap /= Void
 		do
 			minimize_pixmap := clone (pixmap)
 		end
 		
 	set_close_pixmap (pixmap: EV_PIXMAP) is
-			--
+			-- Use `pixmap' as image on close buttons.
+		require
+			pixmap_not_void: pixmap /= Void
 		do
 			close_pixmap := clone (pixmap)
 		end
 
 	set_restore_pixmap (pixmap: EV_PIXMAP) is
-			--
+			-- Use `pixmap' as image on restore buttons.
+		require
+			pixmap_not_void: pixmap /= Void
 		do
 			restore_pixmap := clone (pixmap)
 		end
 
 	extend (widget: EV_WIDGET; name: STRING) is
-			-- Add `widget' to end.
+			-- Add `widget' to end with default height of 150 pixels.
+		require
+			widget_not_void: widget /= Void
+			name_not_void: name /= Void
 		do
-			insert_widget (widget, name, count + 1)
+			insert_widget (widget, name, count + 1, 150)
 		ensure
 			has_widget: linear_representation.has (widget)
+			count_increased: linear_representation.count = old linear_representation.count + 1
 		end
 
-	insert_widget (widget: EV_WIDGET; name: STRING; position: INTEGER) is
-			-- Insert `widget' into `Current' at position `position'.
+	insert_widget (widget: EV_WIDGET; name: STRING; position, desired_height: INTEGER) is
+			-- Insert `widget' into `Current' at position `position' with height `desired_height'.
 		require
 			widget_not_void: widget /= Void
 			position_valid: position >= 1 and position <= count + 1
@@ -197,6 +207,8 @@ feature -- Status setting
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
+			store_heights_pre_insertion
+			
 			create holder.make_with_tool (widget, name, Current)
 			linear_representation.go_i_th (position)
 			linear_representation.put_left (widget)
@@ -215,14 +227,14 @@ feature -- Status setting
 					minimized_states.put_left (False)
 				end
 			end
-			store_positions
-			rebuild
-			restore_stored_positions
+			
+			rebuild	
+			restore_heights_post_insertion (holder, desired_height)
 		ensure
 			contained: linear_representation.has (widget)
 			count_increased: linear_representation.count = old linear_representation.count + 1
 		end
-		
+
 	add_external (widget: EV_WIDGET; name: STRING; position, an_x, a_y, a_width, a_height: INTEGER) is
 			-- Add `widget' to `Current' as an external tool with name `name', a restore position of `position'
 			-- for when it is returned back to `Current', and a dialog screen size and position of `an_x', `a_y',
@@ -288,7 +300,6 @@ feature -- Status setting
 			loop
 				index := linear_representation.index
 				remove_implementation (linear_representation.item)
-				update_maximized_minimized_post_removal (all_holders.i_th (index))
 			end
 			from
 				external_representation.start
@@ -369,6 +380,8 @@ feature -- Status setting
 		
 	set_item_restore_height (a_widget: EV_WIDGET; a_height: INTEGER) is
 			-- Associate a restore height with item `a_widget'.
+			-- This height will be used when `a_widget' is restored from
+			-- a minimized of maximized state.
 		require
 			has_widget: linear_representation.has (a_widget)
 			widget_maximized_or_minimized: is_item_maximized (a_widget) or
@@ -412,7 +425,9 @@ feature -- Status setting
 				parent_window (Current).unlock_update
 			end
 		ensure
-		--	widget_normal_state: not is_item_maximized (a_widget) and not is_item_minimized (a_widget)
+			--	widget_normal_state: not is_item_maximized (a_widget) and not is_item_minimized (a_widget)
+			-- Does not hold in all situations, as a widget may be maximized while minimized, and in this
+			-- situation, must go back to minimized state.
 		end
 		
 		
@@ -420,7 +435,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 
 	rebuilding_locked: BOOLEAN
 		-- Will calls to `rebuild' have no effect?
-		
 		
 	rebuild_without_holder (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			-- Rebuild `Current' without `a_holder'.
@@ -510,7 +524,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		end
 		
 	reverse_split_areas is
-			--
+			-- Reverse disable item expand state of all split areas,
+			-- so that the direction of `Current' is reversed.
+			-- Only required in `top_resizing_mode'.
 		require
 			in_top_resizing_mode: top_widget_resizing
 		local
@@ -529,7 +545,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		end
 		
 	split_area_index (holder_index: INTEGER): INTEGER is
-			--
+			-- Index of split area containing `holder_index'.
+		require
+			holder_index_valid: holder_index >= 1 and holder_index <= linear_representation.count
 		do
 			if top_widget_resizing then
 				Result := all_split_areas.count - holder_index + 2
@@ -541,19 +559,27 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	
 	all_split_areas: ARRAYED_LIST [EV_SPLIT_AREA]
+		-- All split areas constituting `Current'.
 
 	all_holders: ARRAYED_LIST [MULTIPLE_SPLIT_AREA_TOOL_HOLDER]
+		-- All holders within `Current', includes externally docked holders.
 
 	maximize_pixmap: EV_PIXMAP
+		-- Pixmap associated with maximize buttons.
 	
 	minimize_pixmap: EV_PIXMAP
+		-- Pixmap associated with minimize buttons.
 	
 	close_pixmap: EV_PIXMAP
+		-- Pixmap associated with close buttons.
 	
 	restore_pixmap: EV_PIXMAP
+		-- Pixmap associated with restore buttons.
 	
 	initialize_docking_areas (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
-			--
+			-- Set up docking areas to allow the docking of `a_holder'.
+		require
+			a_holder_not_void: a_holder /= Void
 		local
 			index_of_tool: INTEGER
 			vertical_box: EV_VERTICAL_BOX
@@ -568,9 +594,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				if all_holders.index < index_of_tool - 1 or
 					all_holders.index > index_of_tool + 1 then
 					vertical_box := all_holders.item.upper_box
-					
-					
-					
+	
 					create cell
 					cell.set_data (all_holders.index)
 					vertical_box.extend (cell)
@@ -583,7 +607,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		end
 		
 	remove_docking_areas is
-			--
+			-- Remove all docking areas added as result of last call to
+			-- `initialize_docking_areas'.
 		do
 			from
 				all_holders.start
@@ -603,6 +628,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	
 	maximize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			-- Maximize `a_tool'.
+		require
+			a_tool_not_void: a_tool /= Void
 		do
 			if maximized_tool /= Void then
 				maximized_tool.silent_set_minimized
@@ -642,6 +669,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 			maximized_tool := a_tool
 			rebuild
+		ensure
+			tool_maximized: maximized_tool = a_tool
 		end
 		
 	restore_maximized_tool (tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
@@ -730,17 +759,15 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		end
 	
 	stored_splitter_widths: ARRAYED_LIST [INTEGER]
+		-- All splitter widths stored when 
 	
 	minimized_states: ARRAYED_LIST [BOOLEAN]
 		-- List of all minimized states while a tool is maximized.
-	
-	heights: ARRAYED_LIST [INTEGER]
-	
-	maximized_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-		
-	
+
 	minimize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			-- Ensure that `a_tool' is displayed minimized in `Current'.
+		require
+			a_tool_not_void: a_tool /= Void
 		local
 			lower_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			position_of_tool: INTEGER
@@ -844,6 +871,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		
 	transfer_box_contents (original_box, new_box: EV_BOX) is
 			-- Transfer all contents of `original_box' to `new_box'.
+		require
+			original_box_not_void: original_box /= Void
+			new_box_not_void: new_box /= Void
 		local
 			widget: EV_WIDGET
 		do
@@ -861,7 +891,10 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		end
 	
 	remove_tool_from_parent (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
-			--
+			-- Remove `a_tool' from its `parent', and if the parent is a 
+			-- split area, remove empty split areas.
+		require
+			tool_not_void: a_tool /= Void
 		local
 			split_area: EV_SPLIT_AREA
 		do
@@ -872,10 +905,15 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			if split_area /= Void then
 				remove_parent_split_areas_bottom (split_area)	
 			end
+		ensure
+			tool_not_parented: a_tool.parent = Void
 		end
 	
 	remove_parent_split_areas_bottom (split_area: EV_SPLIT_AREA) is
-			--
+			-- Remove all split areas in `all_split_areas', from `split_area'
+			-- to first, if empty.
+		require
+			split_area_not_void: split_area /= Void
 		local
 			counter: INTEGER
 			current_split_area, parent_split_area: EV_SPLIT_AREA
@@ -897,7 +935,10 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		end
 		
 	remove_parent_split_areas_top (split_area: EV_SPLIT_AREA) is
-			--
+			-- Remove all split areas in `all_split_areas', from `split_area'
+			-- to last, if empty.
+		require
+			split_area_not_void: split_area /= Void
 		local
 			counter: INTEGER
 			current_split_area, parent_split_area: EV_SPLIT_AREA
@@ -925,7 +966,10 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		
 		
 	restore_parent_split_areas (split_area: EV_SPLIT_AREA) is
-			--
+			-- Restore all unparented split areas from `split_area',
+			-- until the parent split area is not Void.
+		require
+			split_area_not_void: split_area /= Void
 		local
 			parent_split_area: EV_SPLIT_AREA
 			new_parent_split_area: EV_SPLIT_AREA
@@ -949,6 +993,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	next_non_minimized_down (current_position: INTEGER): INTEGER is
 			-- `Result' is next index of tool in `Current' from index `current_position'
 			-- that is not minimized or not external.
+		require
+			valid_position: current_position >= 1 and current_position <= count
 		do
 			from
 				all_holders.go_i_th (current_position)
@@ -960,6 +1006,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				end
 				all_holders.forth
 			end
+		ensure
+			index_valid: Result >= 1 and Result <= count
 		end
 		
 		
@@ -997,7 +1045,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			minimized_count: INTEGER
 			maximized_holder, non_minimized_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			cursor: CURSOR
-			
 		do
 			cursor := all_holders.cursor
 			maximized_holder := maximized_tool
@@ -1141,7 +1188,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		end
 		
 	update_for_holder_position_change (original_position, new_position: INTEGER) is
-			--
+			-- Update `linear_representation' and `all_holders' to reflect a change of
+			-- position from `original_position' to `new_position'.
 		require
 			positions_different: original_position /= new_position
 		local
@@ -1166,16 +1214,11 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			all_holders.put_left (holder)
 		end
 		
-	update_maximized_minimized_post_removal (holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
-			-- Updated maximized/minimized states of widgets based on removal
-			-- of `holder'.
-		do
-			
-		end
-		
 	parent_window (widget: EV_WIDGET): EV_WINDOW is
 			-- `Result' is window parent of `widget'.
 			-- `Void' if none.
+		require
+			widget_not_void: widget /= Void
 		local
 			window: EV_WINDOW
 		do
@@ -1186,10 +1229,22 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				end	
 			else
 				Result := window
-			end	
+			end
+		ensure
+			shown_implies_result_not_void: widget.is_displayed implies Result /= Void
 		end
 		
 feature {NONE} -- Implementation
+
+	pre_insertion_heights: ARRAYED_LIST [INTEGER]
+		-- All positions stored by last call to `store_heights_pre_insertion', used to
+		-- restore by subsequent call to `restore_heights_post_insertion'.
+		
+	pre_insertion_holders: ARRAYED_LIST [MULTIPLE_SPLIT_AREA_TOOL_HOLDER]
+		-- All holders of `Current'. One for each widget.
+	
+	maximized_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+		-- Holder currently maximized in `Current', or `Void' if none.
 
 	box_contents (box: EV_BOX): ARRAYED_LIST [EV_WIDGET] is
 			-- `Result' is contents of `box' as an ARRAYED_LIST.
@@ -1263,11 +1318,181 @@ feature {NONE} -- Implementation
 			remove: not linear_representation.has (a_widget)
 			count_decreased: linear_representation.count = old linear_representation.count - 1
 		end
+		
+	store_heights_pre_insertion is
+			-- Store all heights of non external holders before insertion
+			-- of a new widget.
+		local
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			cursor: CURSOR
+		do
+			cursor := linear_representation.cursor
+			create pre_insertion_heights.make (count)
+			create pre_insertion_holders.make (count)
+			from
+				linear_representation.start
+			until
+				linear_representation.off
+			loop
+				holder := holder_of_widget (linear_representation.item)
+				pre_insertion_heights.extend (holder.height)
+				pre_insertion_holders.extend (holder)
+				linear_representation.forth
+			end
+			linear_representation.go_to (cursor)
+		ensure
+			index_not_changed: linear_representation.index = old linear_representation.index
+		end	
+		
+	restore_heights_post_insertion (holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; a_height: INTEGER) is
+			-- Restore `holder' into `Current' at height `a_height'. This will perform a
+			-- "best fit" and attempt to leave other holds at same size, with minimal
+			-- adjustment.
+		require
+			holder_not_void: holder /= Void
+			height_valid: a_height > 0
+		local
+			local_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			an_index: INTEGER
+			stored_height: INTEGER
+			total_space_less_insertion: INTEGER
+			total_restore_heights: INTEGER
+			holder_restored: BOOLEAN
+			space_to_share: INTEGER
+			diff_from_min: INTEGER
+			cursor: CURSOR
+		do
+			cursor := linear_representation.cursor
+				-- Firstly, reduce all split areas to their minimums. This permits us to call
+				-- `simulate_minimum_height' which will restore the widget back to its proper height.
+				-- If we did not make all split areas as small as possible, then the hieght simulation
+				-- would not be able to reduce the height of an item as necessary.
+			if top_widget_resizing then
+				from
+					all_split_areas.start
+				until
+					all_split_areas.off
+				loop
+					if all_split_areas.item.full then
+						all_split_areas.item.set_split_position (all_split_areas.item.maximum_split_position)						
+					end
+					all_split_areas.forth
+				end
+			else
+				from
+					all_split_areas.finish
+				until
+					all_split_areas.off
+				loop
+					if all_split_areas.item.full then
+						all_split_areas.item.set_split_position (all_split_areas.item.minimum_split_position)						
+					end
+					all_split_areas.back
+				end
+			end
+
+			total_space_less_insertion := height - a_height
+				-- Calculate the space that must be freed to insert `holder'.
+				
+			from
+				pre_insertion_heights.start
+			until
+				pre_insertion_heights.off
+			loop
+				total_restore_heights := total_restore_heights + pre_insertion_heights.item
+				pre_insertion_heights.forth
+			end
+
+			space_to_share := total_restore_heights - total_space_less_insertion
+				-- Calculate the space that must be shared.
+			
+			
+			if space_to_share > 0 then
+				-- If space must be shared, share between all holders, starting with "lowest priority" which is
+				-- the holder that may be resized, based on `top_widget_resizing' and then work down each holder in turn
+				-- until there is no more space to share.
+				if top_widget_resizing then
+					from
+						pre_insertion_holders.start
+						pre_insertion_heights.start
+					until
+						pre_insertion_holders.off or space_to_share <= 0
+					loop
+						diff_from_min := (pre_insertion_heights.item - pre_insertion_holders.item.minimum_height).min (space_to_share)
+						space_to_share := space_to_share - diff_from_min
+						pre_insertion_heights.replace (pre_insertion_heights.item - diff_from_min)
+						pre_insertion_holders.forth
+						pre_insertion_heights.forth
+					end
+				else
+					from
+						pre_insertion_holders.finish
+						pre_insertion_heights.finish
+					until
+						pre_insertion_holders.off or space_to_share <= 0
+					loop
+						diff_from_min := (pre_insertion_heights.item - pre_insertion_holders.item.minimum_height).min (space_to_share)
+						space_to_share := space_to_share - diff_from_min
+						pre_insertion_heights.replace (pre_insertion_heights.item - diff_from_min)
+						pre_insertion_holders.back
+						pre_insertion_heights.back
+					end
+				end
+			end
+			
+				-- Now iterate through all `positions' and restore. We must handle the iteration in reverse, depending on
+				-- the state of `top_resizing'. This ensures that no matter which way `Current' resizes, it will
+				-- always reduce the holder that resizes first.
+			if top_widget_resizing then
+				from
+					linear_representation.finish
+				until
+					linear_representation.index < 2 and holder_restored
+				loop
+					if holder_of_widget (linear_representation.item) = holder then
+						holder.simulate_minimum_height (a_height)
+						holder.remove_simulated_height
+						holder_restored := True
+					else
+						an_index := pre_insertion_holders.index_of (holder_of_widget (linear_representation.item), 1)
+						local_holder := pre_insertion_holders.i_th (an_index)
+						stored_height := pre_insertion_heights.i_th (an_index)
+						local_holder.simulate_minimum_height (stored_height)
+						local_holder.remove_simulated_height
+					end
+					linear_representation.back
+				end
+			else
+				from
+					linear_representation.start
+				until
+					linear_representation.index > linear_representation.count - 1 and holder_restored
+				loop
+					if holder_of_widget (linear_representation.item) = holder then
+						holder.simulate_minimum_height (a_height)
+						holder.remove_simulated_height
+						holder_restored := True
+					else
+						an_index := pre_insertion_holders.index_of (holder_of_widget (linear_representation.item), 1)
+						local_holder := pre_insertion_holders.i_th (an_index)
+						stored_height := pre_insertion_heights.i_th (an_index)
+						local_holder.simulate_minimum_height (stored_height)
+						local_holder.remove_simulated_height
+					end
+					linear_representation.forth
+				end
+			end
+			linear_representation.go_to (cursor)
+		ensure
+			index_not_changed: linear_representation.index = old linear_representation.index
+		end
 
 invariant
 	linear_representation_not_void: linear_representation /= Void
 	all_holders_not_void: all_holders /= Void
 	all_split_areas_not_void: all_split_areas /= Void
 	stored_splitter_widths_not_void: stored_splitter_widths /= Void
+	external_representation_not_void: external_representation /= Void
+	minimized_states_not_void: minimized_states /= Void
 
 end -- class MULTIPLE_SPLIT_AREA

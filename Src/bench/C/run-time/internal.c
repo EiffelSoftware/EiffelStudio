@@ -166,11 +166,11 @@ rt_public float ei_float_field(long i, char *object)
 	return *(float *) ei_oref(i, object);
 }
 
-rt_public fnptr ei_ptr_field(long i, char *object)
+rt_public EIF_POINTER ei_ptr_field(long i, char *object)
 {
 	/* Returns pointer value of i-th value */
 
-	return *(fnptr *) ei_oref(i,object);
+	return *(EIF_POINTER *) ei_oref(i,object);
 }
 
 rt_public double ei_double_field(long i, char *object)

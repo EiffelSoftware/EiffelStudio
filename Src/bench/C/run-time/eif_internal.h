@@ -28,7 +28,7 @@ extern char ei_char_field(long i, char *object);
 extern char ei_bool_field(long i, char *object);
 extern long ei_int_field(long i, char *object);
 extern float ei_float_field(long i, char *object);
-extern fnptr ei_ptr_field(long i, char *object);
+extern EIF_POINTER ei_ptr_field(long i, char *object);
 extern double ei_double_field(long i, char *object);
 extern char *ei_exp_type(long i, char *object);
 extern long ei_bit_size(long i, char *object);

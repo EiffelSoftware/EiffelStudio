@@ -14,18 +14,18 @@
  * -- PK.
  */
 
-#ifndef __WEL_DISPATCHER__
-#	include <disptchr.h>
+#include "wel_globals.h"
+
+#ifndef EIF_THREADS
+	EIF_WNDPROC wel_wndproc = NULL;
+	/* Address of the Eiffel routine `window_procedure' (class WEL_DISPATCHER) */
+	
+	EIF_DLGPROC wel_dlgproc = NULL;
+	/* Address of the Eiffel routine `dialog_procedure' (class WEL_DISPATCHER) */
+	
+	EIF_OBJ dispatcher = NULL;
+	/* Address of the Eiffel object WEL_DISPATCHER created for each application */
 #endif
-
-EIF_WNDPROC wel_wndproc = NULL;
-/* Address of the Eiffel routine `window_procedure' (class WEL_DISPATCHER) */
-
-EIF_DLGPROC wel_dlgproc = NULL;
-/* Address of the Eiffel routine `dialog_procedure' (class WEL_DISPATCHER) */
-
-EIF_OBJ dispatcher = NULL;
-/* Address of the Eiffel object WEL_DISPATCHER created for each application */
 
 LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -34,7 +34,7 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 	 * of the `dispatcher' Eiffel object. Since `dispatcher' is an adopted
 	 * object we need to call `eif_access' to use it.
 	 */
-
+	WGTCX
 	if (dispatcher)
 		return (LRESULT) ((wel_wndproc) (
 			(EIF_OBJ) eif_access (dispatcher),
@@ -54,6 +54,7 @@ BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 	 * object we need to call `eif_access' to use it.
 	 */
 
+	WGTCX
 	if (dispatcher)
 		return (BOOL) ((wel_dlgproc) (
 			(EIF_OBJ) eif_access (dispatcher),
@@ -63,7 +64,34 @@ BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 			(EIF_INTEGER) lparam));
 	else
 		return FALSE;
+
 }
+
+#ifdef EIF_THREADS
+void cwel_set_window_procedure_address( EIF_POINTER _addr_)
+{
+	WGTCX
+	wel_wndproc = (EIF_WNDPROC) _addr_ 	;
+}
+
+void cwel_set_dialog_procedure_address( EIF_POINTER _addr_)
+{
+	WGTCX
+	wel_dlgproc = (EIF_DLGPROC) _addr_;
+}
+
+void cwel_set_dispatcher_object(EIF_OBJ _addr_)
+{
+	WGTCX
+	dispatcher = (EIF_OBJ) eif_adopt (_addr_);	
+}
+
+void cwel_release_dispatcher_object()
+{
+	WGTCX
+	eif_wean (dispatcher);
+}
+#endif
 
 /*
 --|-------------------------------------------------------------------------

@@ -5,28 +5,24 @@
  *
  */
 
-#ifndef __WEL__
-#	include <wel.h>
+#include "wel_globals.h"
+
+#ifndef EIF_THREADS
+	EIF_EDITSTREAM_PROCEDURE wel_editstream_procedure = NULL;
+	/* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM) */
+	
+	EIF_OBJ wel_editstream_object = NULL;
+	/* Address of the Eiffel object WEL_EDIT_STREAM created */
+	
+	EIF_POINTER wel_editstream_buffer = NULL;
+	/* Address of the buffer */
+	
+	EIF_INTEGER wel_editstream_buffer_size = 0;
+	/* Size of `wel_editstream_buffer' */
+	
+	EIF_BOOLEAN wel_editstream_in;
+	/* Is the operation stream_in? */
 #endif
-
-#ifndef __WEL_EDITSTREAM__
-#	include <estream.h>
-#endif
-
-EIF_EDITSTREAM_PROCEDURE wel_editstream_procedure = NULL;
-/* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM) */
-
-EIF_OBJ wel_editstream_object = NULL;
-/* Address of the Eiffel object WEL_EDIT_STREAM created */
-
-EIF_POINTER wel_editstream_buffer = NULL;
-/* Address of the buffer */
-
-EIF_INTEGER wel_editstream_buffer_size = 0;
-/* Size of `wel_editstream_buffer' */
-
-EIF_BOOLEAN wel_editstream_in;
-/* Is the operation stream_in? */
 
 DWORD CALLBACK cwel_editstream_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG FAR * pcb)
 {
@@ -36,6 +32,7 @@ DWORD CALLBACK cwel_editstream_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb,
 	 * -- PK.
 	 */
 
+	WGTCX
 	dwCookie = dwCookie;
 
 	if (wel_editstream_object)
@@ -67,6 +64,8 @@ DWORD CALLBACK cwel_editstream_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb,
 	{
 		return (DWORD) 0;
 	}
+
+	WEDCX
 }
 
 /*

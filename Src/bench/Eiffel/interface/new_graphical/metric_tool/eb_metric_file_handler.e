@@ -98,7 +98,7 @@ feature -- Loading files
 
 feature -- Metrics loading
 
-	retrieve_metric (f: PLAIN_TEXT_FILE; metric_list: LINKED_LIST [EB_METRIC]; xml_list: LINKED_LIST [XM_ELEMENT]) is
+	retrieve_metric (f: PLAIN_TEXT_FILE; metric_list: ARRAYED_LIST [EB_METRIC]; xml_list: ARRAYED_LIST [XM_ELEMENT]) is
 			-- Retrieve recorded metric definitions from `file_manager.metric_file'.
 			-- Store metric objects in `metric_list' and their XML definition in `xml_list'.
 		local
@@ -128,13 +128,15 @@ feature -- Metrics loading
 						a_cursor.after
 					loop
 						node ?= a_cursor.item
+						a_cursor.forth
 						if node /= Void then
-							info_missing := (not node.has_attribute_by_name ("Name") or else node.attribute_by_name ("Name").value.is_empty) or
-											(not node.has_attribute_by_name ("Unit") or else node.attribute_by_name ("Unit").value.is_empty) or
-											(not node.has_attribute_by_name ("Type") or else node.attribute_by_name ("Type").value.is_empty) or
-											(not node.has_attribute_by_name ("Min_scope") or else node.attribute_by_name ("Min_scope").value.is_empty) or
-											(not node.has (Xml_routines.element_by_name (node, "DEFINITION"))
-											or else (Xml_routines.element_by_name (node, "DEFINITION")).is_empty)
+							info_missing :=
+								(not node.has_attribute_by_name ("Name") or else node.attribute_by_name ("Name").value.is_empty) or
+								(not node.has_attribute_by_name ("Unit") or else node.attribute_by_name ("Unit").value.is_empty) or
+								(not node.has_attribute_by_name ("Type") or else node.attribute_by_name ("Type").value.is_empty) or
+								(not node.has_attribute_by_name ("Min_scope") or else node.attribute_by_name ("Min_scope").value.is_empty) or
+								(not node.has (Xml_routines.element_by_name (node, "DEFINITION"))
+								or else (Xml_routines.element_by_name (node, "DEFINITION")).is_empty)
 
 							if not info_missing then
 								metric_name := node.attribute_by_name ("Name").value
@@ -197,7 +199,6 @@ feature -- Metrics loading
 								end
 							end
 						end
-						a_cursor.forth
 					end
 				elseif info_missing or tree = Void then
 					parser_problems := info_missing or tree = Void

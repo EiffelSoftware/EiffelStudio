@@ -12,6 +12,8 @@ inherit
 		rename
 			make as wel_make,
 			item as wel_item
+		undefine
+			is_equal, copy
 		select
 			destroy_item,
 			exists,

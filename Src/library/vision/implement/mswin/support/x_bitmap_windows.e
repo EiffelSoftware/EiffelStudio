@@ -14,6 +14,9 @@ inherit
 		end
 
 	BASIC_ROUTINES
+		undefine
+			is_equal, copy
+		end
 
 create
 	read_from_xbm_file

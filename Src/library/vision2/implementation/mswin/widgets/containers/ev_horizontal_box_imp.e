@@ -115,7 +115,7 @@ feature {NONE} -- Basic operation
 				cheight := client_height
 				bwidth := border_width
 				space := padding
-				children_size := width - 2 * bwidth - total_spacing
+				children_size := wel_width - 2 * bwidth - total_spacing
 
 				-- Homogeneous state : only the visible children are
 				-- importante.
@@ -367,6 +367,9 @@ end -- class EV_HORIZONTAL_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/06/09 01:25:40  manus
+--| Merged version 1.30.2.4 from DEVEL branch to trunc.
+--|
 --| Revision 1.34  2000/06/07 17:27:59  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

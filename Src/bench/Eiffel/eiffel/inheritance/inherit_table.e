@@ -72,13 +72,6 @@ inherit
 			copy, is_equal
 		end
 
-	SHARED_EXTERNALS
-		export
-			{NONE} all
-		undefine
-			copy, is_equal
-		end
-
 create
 	make
 
@@ -949,11 +942,10 @@ debug ("ACTIVITY")
 	io.error.new_line;
 end;
 			elseif Result.is_c_external then
-					-- Track new externals introduced in the class
+					-- Track new externals introduced in the class. Freeze is taken care by
+					-- EXTERNALS.is_equivalent queried by SYSTEM_I.
 				external_i ?= Result
-				if not external_i.encapsulated or System.il_generation then
-					pass2_control.add_external (external_i)
-				end;
+				pass2_control.add_external (external_i)
 			end
 
 			read_info := class_info.index.item (yacc_feature.id);
@@ -1065,12 +1057,6 @@ end;
 					-- Insert the changed feature in the table of changed
 					-- features of `a_class'.
 				changed_features.extend (feature_name_id);
-
-					-- If new external feature, we need to force a freeze if it
-					-- is encapsulated in order to force the generation of encapsulation.
-				if external_i /= Void and then external_i.encapsulated then
-					System.set_freeze
-				end
 			end;
 
 				-- Check incompatibily between `frozen' and `deferred'

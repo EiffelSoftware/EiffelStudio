@@ -33,7 +33,8 @@ creation
 %type <SIGNATURE_AS>			Signature_opt Signature
 %type <EXTERNAL_TYPE_AS>		Return_opt Type_identifier Type_access_opt
 %type <ID_AS>					Identifier File_identifier
-%type <BOOLEAN>					Pointer_opt Address_opt
+%type <BOOLEAN>					Address_opt
+%type <INTEGER>					Pointer_opt	
 %type <USE_LIST_AS>				Use_opt, Use, Use_list
 %type <INTEGER>					Il_language
 
@@ -260,9 +261,9 @@ Type_access_opt:	-- Empty
 	;
 
 Pointer_opt:	-- Empty
-		{$$ := False}
-	|	TE_STAR
-		{$$ := True}
+		{$$ := 0}
+	|	Pointer_opt TE_STAR
+		{$$ := $1 + 1}
 	;
 
 Address_opt:	-- Empty

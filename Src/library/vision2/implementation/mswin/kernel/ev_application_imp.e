@@ -218,6 +218,9 @@ feature {NONE} -- Message loop, we redefine it because the user
 			from
 				create msg.make
 				main_win ?= main_window
+				check
+					main_win /= Void
+				end
 			until
 				done
 			loop
@@ -234,16 +237,18 @@ feature {NONE} -- Message loop, we redefine it because the user
 								msg.dispatch
 							end
 						else
-						--	if main_win.accel /= Void then
-						--		msg.translate_accelerator (main_win, main_win.accel)
-						--		if not msg.last_boolean_result then
-						--			msg.translate
-						--			msg.dispatch
-						--		end
-						--	else
+							if main_win.accelerators /= Void then
+								msg.translate_accelerator (
+									main_win,
+									main_win.accelerators)
+								if not msg.last_boolean_result then
+									msg.translate
+									msg.dispatch
+								end
+							else
 								msg.translate
 								msg.dispatch
-						--	end
+							end
 						end
 					end
 				else
@@ -339,6 +344,10 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/21 02:23:11  brendel
+--| First implementation of accelerators. Takes only `first_window'. The
+--| rest is to be implemented.
+--|
 --| Revision 1.22  2000/03/16 23:26:10  brendel
 --| Formatting.
 --| Tried something with accelerators.

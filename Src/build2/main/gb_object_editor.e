@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 				if object.output_name.is_empty then
 					parent_window (Current).set_title (object.short_type)
 				else
-					parent_window (Current).set_title (object.output_name + ": " + object.short_type)
+					parent_window (Current).set_title (object.output_name)
 				end
 			end
 		end

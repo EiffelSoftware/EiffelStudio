@@ -161,7 +161,7 @@ feature -- Status setting
 				wel_file_dialog.set_title (title)
 				wel_file_dialog.set_file_name (pattern)
 				wel_file_dialog.set_filter (<<filter>>, <<"">>)
-				if directory = Void then
+				if directory.is_equal ("") then
 					wel_file_dialog.set_initial_directory_as_current
 				else
 					wel_file_dialog.set_initial_directory (directory)

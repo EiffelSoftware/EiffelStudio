@@ -988,6 +988,7 @@ feature {NONE} -- Translation
 			elseif lastline.count>14 and then lastline.substring (1,14).is_equal ("STATIC_CECIL =") then
 				translate_cecil_and_dll
 			elseif
+				is_il_code and then
 				lastline.count >= 28 and then
 				lastline.substring (1, 28).is_equal ("clean: sub_clean local_clean")
 			then

@@ -45,8 +45,27 @@ feature -- C code generation
 	
 	generate is
 			-- Generate creation type.
+		local
+			l_buffer: GENERATION_BUFFER
+			l_final_mode: BOOLEAN
+			l_cl_type: CL_TYPE_I
 		do
-			generate_cid (context.buffer, not context.workbench_mode)
+			l_buffer := context.buffer
+			l_final_mode := not context.workbench_mode
+			
+			if l_final_mode then
+				l_buffer.putstring ("RTLNS(")
+				generate_cid (l_buffer, l_final_mode)
+				l_buffer.putstring (", ")
+				l_cl_type ?= context.creation_type (type)
+				l_buffer.putint (l_cl_type.type_id - 1)
+				l_buffer.putstring (", ")
+				l_cl_type.associated_class_type.skeleton.generate_size (l_buffer)
+			else
+				l_buffer.putstring ("RTLN(")
+				generate_cid (l_buffer, l_final_mode)
+			end
+			l_buffer.putchar (')')
 		end
 
 feature -- IL code generation

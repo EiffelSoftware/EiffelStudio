@@ -87,6 +87,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Is assembly prefix read only.
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_prefix_read_only(  /* [out, retval] */ VARIANT_BOOL * a_is_prefix_read_only );
+
+
+	/*-----------------------------------------------------------
 	Get type info
 	-----------------------------------------------------------*/
 	STDMETHODIMP GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo );

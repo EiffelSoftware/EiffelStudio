@@ -55,7 +55,7 @@ rt_private uint32		go_ith_stack_level(int level);				/* Go to the i-th level dow
 rt_private struct dump 	*variable_item(int variable_type, int n, uint32 start); /* Dump a local or an argument of active feature */
 
 /* Public Routines declarations */
-rt_public void 			send_stack(eif_stream s);					/* Dump the application */
+rt_public void 			send_stack(eif_stream s, uint32 elem_nb);					/* Dump the application */
 rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, 
                                      uint32 loc_number, struct item *new_value); /* modify a local value */
 rt_public void			send_stack_variables(eif_stream s, int where);	/* Dump the locals and arguments of a feature */
@@ -73,20 +73,22 @@ extern struct item 	*c_oitem(uint32 n); /* from debug.c - Returns a pointer to t
  * NAME: send_stack                                                       * 
  * ARGS: s   : the connected socket                                       * 
  *------------------------------------------------------------------------* 
- * This is the main routine. It send a whole stack dump to the remote     *
+ * This is the main routine. It send at most elem_nb elements to the remote*
  * process through the connected socket and via XDR. The end of the dump  *
  * is indicated by a positive acknowledgment.                             *
  **************************************************************************/
- rt_public void send_stack(eif_stream s)
+ rt_public void send_stack(eif_stream s, uint32 elem_nb)
 	{
 	struct dump *dp;			/* Pointer to static data where dump is */
+	uint32 sent = 0;
 	
 	save_stacks();				/* Initialize processing */
 	dp = get_next_execution_vector();
-	while (dp) {	/* While still some data to send */
+	while (dp && (sent < elem_nb)) {	/* While still some data to send */
 		if ((int) dp != EIF_IGNORE)
 			send_dump(s, dp);
 		dp = get_next_execution_vector();
+		sent++;
 	}
 	restore_stacks();
 	send_ack(s, AK_OK);			/* End of list -- you got everything */

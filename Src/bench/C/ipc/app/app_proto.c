@@ -178,9 +178,9 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case DUMP:						/* General stack dump request */
 #ifdef EIF_WIN32
-		send_stack(sp);
+		send_stack(sp, (uint32) arg_1); /* Since we convert int -> uint32, passing -1 will inspect the whole stack. */
 #else
-		send_stack(writefd (sp));
+		send_stack(writefd (sp), (uint32) arg_1);
 #endif
 		break;
 	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=is_external / arg4=is_precompiled / arg5=is_basic_type*/

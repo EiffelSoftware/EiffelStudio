@@ -122,8 +122,6 @@ feature
 				end;
 				generated_file.putstring ("))");
 			end
-
-			restore_current;
 		end;
 
 feature -- Concurrent Eiffel
@@ -132,7 +130,8 @@ feature -- Concurrent Eiffel
 		local
 			expr: PARAMETER_B;
 			para_type: TYPE_I;
-			i: INTEGER
+			i: INTEGER;
+			loc_idx: INTEGER
 		do
 			if parameters /= Void then
 				from
@@ -193,7 +192,20 @@ feature -- Concurrent Eiffel
 					end
 					if para_type.is_separate then
 						generated_file.putstring ("CURPSO(");
-						expr.print_register;
+--						expr.print_register;
+						if expr.stored_register.register_name /= Void then
+							loc_idx := context.local_index (expr.stored_register.register_name);
+						else
+							loc_idx := -1;
+						end;
+						if loc_idx /= -1 then
+							generated_file.putstring ("l[");
+							generated_file.putint (context.ref_var_used + loc_idx);
+							generated_file.putstring ("]");
+						else
+							-- It'll be the case when the value is "Void"
+							expr.print_register;
+						end;
 						generated_file.putstring (", ");
 						generated_file.putint (i);
 						generated_file.putstring (");");
@@ -357,5 +369,5 @@ feature -- Concurrent Eiffel
 			generated_file.putstring ("}");
 			generated_file.new_line
 		end
-	
+
 end

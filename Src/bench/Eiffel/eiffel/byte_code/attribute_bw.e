@@ -119,7 +119,6 @@ feature -- Concurrent Eiffel
 			cl_type: CL_TYPE_I;
 			evaluated_type: TYPE_I
 		do
-			generated_file.new_line
 			generated_file.putstring ("if (on_local_processor(")
 			reg.print_register;
 			generated_file.putstring (")) {")
@@ -158,8 +157,9 @@ feature -- Concurrent Eiffel
                     -- ...followed by the appropriate access cast
                 type_c.generate_access_cast (generated_file);
             end;
-            generated_file.putchar ('(');
+            generated_file.putstring ("(CURPROXY_OBJ(");
             reg.print_register;
+            generated_file.putstring (")");
             if reg.is_predefined or reg.register /= No_register then
                 generated_file.putstring (gc_plus);
             else

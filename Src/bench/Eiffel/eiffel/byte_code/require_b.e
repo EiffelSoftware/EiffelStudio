@@ -43,7 +43,11 @@ feature
 			generated_file.putstring ("RTTE(");
 			expr.print_register;
 			generated_file.putstring (gc_comma);
-			context.print_current_label;
+			if System.has_separate and then expr.has_separate_call then
+				context.print_concurrent_label;
+			else
+				context.print_current_label;
+			end;
 			generated_file.putstring (gc_rparan_comma);
 			generated_file.new_line;
 			if Context.is_prec_first_block then

@@ -326,6 +326,7 @@ feature
 				generate_access;
 				generated_file.putchar (';');
 				generated_file.new_line;
+				if System.Concurrent_Eiffel then reset_added_gc_hooks end;
 			end;
 		end;
 
@@ -591,4 +592,10 @@ feature -- concurrent Eiffel
 			Result := context_type.is_separate;
 		end
 	
+feature -- Concurrent Eiffel
+
+    reset_added_gc_hooks is
+        do
+        end
+
 end

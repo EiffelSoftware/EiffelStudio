@@ -308,6 +308,14 @@ feature -- Inherited precondition
 			file.putstring ("RTJB;");
 			file.new_line;
 			file.exdent;
+			if has_separate_call_in_precondition then
+				context.print_concurrent_label;
+				file.putchar (':');
+				file.indent;
+				file.putstring (" CURSSFC;");
+				file.new_line;
+				file.exdent;
+			end;
 			context.print_current_label;
 			file.putchar (':');
 			file.new_line;
@@ -673,5 +681,25 @@ feature -- inherited postcondition
 				end;
 			end;
 		end;
+
+feature -- Concurrent Eiffel
+
+	std_obj: STD_BYTE_CODE
+		-- the corresponding STD_BYTE_CODE object which call the 
+		-- "generate_precondition" feature of the class.
+
+	has_separate_call_in_precondition: BOOLEAN
+		-- is there separate feature call in the prtecondition of 
+		-- object "std_obj"?
+
+	set_std_obj (obj: STD_BYTE_CODE) is
+		do
+			std_obj := obj;
+		end
+
+	set_has_separate_call_in_precondition (v: BOOLEAN) is
+		do
+			has_separate_call_in_precondition := v;
+		end
 
 end

@@ -37,6 +37,8 @@ feature -- Type check, byte code and dead code removal
 			curr_feat: FEATURE_I;
 			vape_check: BOOLEAN
 			t: TYPE_A
+			not_supported: NOT_SUPPORTED
+			arg_name: ID_AS_B
 		do
 			vape_check := context.check_for_vape;
 				-- Type check the target
@@ -48,8 +50,17 @@ feature -- Type check, byte code and dead code removal
 			t := context.item
 			if t.is_separate then
 				if not target.is_argument then
-					Error_handler.make_separate_syntax_error
+					!! not_supported
+					context.init_error (not_supported)
+					not_supported.set_message ("Invalid separate call")
+					Error_handler.insert_error (not_supported)
+					Error_handler.raise_error
 				else
+						-- Record that argument is used in a separate call
+
+						-- Assignment attempt cannot fail
+					arg_name ?= target.access_name
+					context.set_separate_call_on_argument (arg_name)
 				end
 			end
 

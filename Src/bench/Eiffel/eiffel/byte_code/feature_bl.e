@@ -270,18 +270,48 @@ end;
 			-- Generate the parameters list for C function call
 		local
 			expr: EXPR_B;
+			para: PARAMETER_B;
+			para_type: TYPE_I;
+			loc_idx: INTEGER;
 		do
 			if parameters /= Void then
-				from
-					parameters.start;
-				until
-					parameters.after
-				loop
-					expr ?= parameters.item;	-- Cannot fail
-					generated_file.putstring (gc_comma);
-					expr.print_register;
-					parameters.forth;
+				if system.has_separate then
+					from
+						parameters.start;
+					until
+						parameters.after
+					loop
+						expr ?= parameters.item;	-- Cannot fail
+						para ?= expr;
+						generated_file.putstring (gc_comma);
+						if para /= void and then para.stored_register.register_name /= Void then
+							loc_idx := context.local_index (para.stored_register.register_name);
+							para_type := real_type(para.attachment_type);
+							if para_type /= Void and then para_type.is_separate then
+								generated_file.putstring ("l[");
+								generated_file.putint (context.ref_var_used + loc_idx);
+								generated_file.putstring ("]");
+							else
+								expr.print_register;
+							end;
+						else
+							expr.print_register;
+						end;
+						parameters.forth;
+					end;
+				else
+					from
+						parameters.start;
+					until
+						parameters.after
+					loop
+						expr ?= parameters.item;	-- Cannot fail
+						generated_file.putstring (gc_comma);
+						expr.print_register;
+						parameters.forth;
+					end;
 				end;
+				
 			end;
 		end;
 

@@ -35,6 +35,7 @@ feature -- Type check, byte code and dead code removal
 			-- Type check the call
 		local
 			t: TYPE_A;
+			not_supported: NOT_SUPPORTED
 		do
 				-- Type check the target
 			target.type_check;
@@ -46,7 +47,12 @@ feature -- Type check, byte code and dead code removal
 			if t.is_separate then
 					-- The target of a separate call must be an argument
 					-- FIXME: the expression can be an argument access only
-				Error_handler.make_separate_syntax_error
+
+				!! not_supported
+				context.init_error (not_supported)
+				not_supported.set_message ("Invalid separate call")
+				Error_handler.insert_error (not_supported)
+				Error_handler.raise_error
 			end
 
 				-- Type check the message

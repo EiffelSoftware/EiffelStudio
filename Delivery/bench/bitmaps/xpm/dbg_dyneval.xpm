@@ -1,0 +1,43 @@
+/* XPM */
+static char *dbg_dyneval[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16       20            1",
+/* colors */
+". c #000000",
+"# c #0000ff",
+"a c #06061a",
+"b c #180e09",
+"c c #282829",
+"d c #312f31",
+"e c #828283",
+"f c #928d92",
+"g c #98958f",
+"h c #989899",
+"i c #afacaf",
+"j c #b4b4ff",
+"k c #c0c0c0",
+"l c #dadada",
+"m c #e8e8e8",
+"n c #ededf2",
+"o c #fbfbfb",
+"p c #fefe00",
+"q c #ffff00",
+"r c #ffffff",
+/* pixels */
+"kkkkkkkkkkkk..kk",
+"kkkkkkkkkkk.qqak",
+"kkkkkkkkkk.qa.kk",
+"fhhhhhhhhiaq.kkk",
+"hrrrrrrronaq..kk",
+"hr######j.qqqqak",
+"hrrrrrrrrn.qa.kk",
+"hr#######n.q.kkk",
+"hrrrrrrrrnbp.kkk",
+"hr######jn.pakkk",
+"hrrrrrrre.aq.kkk",
+"ho#####jaqq.kkkk",
+"gnnnnnnne.akkkkk",
+"fm######jlekkkkk",
+"flllllllllckkkkk",
+"cddcccccccckkkkk"
+};

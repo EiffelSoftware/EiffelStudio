@@ -2,6 +2,9 @@ indexing
 	description: "[
 		Callback "COM Object" used to manage the dotnet debugger's callbacks
 		]"
+	author		: "$Author$"
+	date		: "$Date$"
+	revision	: "$Revision$"		
 
 class
 	ICOR_DEBUG_MANAGED_CALLBACK

@@ -59,40 +59,19 @@ extern EIF_REFERENCE cr_exp(uint32 type);				/* Creation of expanded objects */
 extern void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent);				/* Composite objects initialization */
 #endif
 
-/*
- * Run time declarations (tables produced by the compiler).
+/* Array of class node (indexed by dynamic type). It is statically allocated
+ * in production mode and dynamically in workbench mode.
  */
-
-#ifndef WORKBENCH
-extern long *esize;		/* Size of object given DType */
-extern long *nbref;		/* Gives # of references given DT */
-#endif
-
+RT_LNK struct cnode *esystem;	/* Describes a full Eiffel system */
 #define System(type)		esystem[type]	/* Object description */
 
 #ifndef WORKBENCH
-#define References(type)	nbref[type] 	/* # of references */
+extern long *esize;		/* Size of object given DType */
 #define EIF_Size(type)		esize[type] 	/* Object's size */
-#define Dispose(type)		egc_edispose[type]	/* Dispose routine */
-#define Disp_rout(type)		(egc_edispose && egc_edispose[type])	/* Does type have disp routine */
-#define XCreate(type)		egc_ecreate[type]	/* Initialization routine */
 #else
-#define References(type)	esystem[type].nb_ref
-#define EIF_Size(type)		esystem[type].size
-#define Disp_rout(type)		esystem[type].cn_disposed
-								/* Does type have disp routine ? */
-#define Dispose(type) ((void (*)()) wdisp(type));
-										/* Dispose routine */
-#define XCreate(type)	     \
-	(esystem[type].cn_composite ? (char *(*)()) wstdinit : (char *(*)()) 0)
+#define EIF_Size(type)		esystem[type].cn_size
 #endif
 
-/* Type used in the "dynamic type" field of special objects holding an array
- * of simple type, e.g. ARRAY[REAL]. They are used by all the object "viewing"
- * routines.
- */
-
-extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
 
 #ifdef CONCURRENT_EIFFEL
 #define _concur_sep_obj_dtype scount

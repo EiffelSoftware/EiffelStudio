@@ -35,6 +35,14 @@ feature -- Basic operations
 			-- Import header file
 			cpp_class_writer.add_import (Ecom_server_rt_globals_h)
 
+			if shared_wizard_environment.out_of_process_server then
+				tmp_string := clone (a_descriptor.c_type_name)
+				tmp_string.append (Underscore)
+				tmp_string.append (Factory)
+				tmp_string.append (Header_file_extension)
+				cpp_class_writer.add_import (tmp_string)
+			end
+
 			-- Add clsid of the coclass
 			-- const CLSID CLSID_'coclass_name'
 			cpp_class_writer.add_other (clsid_declaration (a_descriptor.c_type_name))
@@ -167,6 +175,10 @@ feature {NONE} -- Implementation
 			tmp_body.append (Eiffel_object)
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (Semicolon)
+			if shared_wizard_environment.out_of_process_server then
+				tmp_body.append (New_line_tab)
+				tmp_body.append ("UnlockModule ();")
+			end
 			cpp_class_writer.set_destructor (tmp_body)
 		end
 
@@ -196,6 +208,11 @@ feature {NONE} -- Implementation
 			tmp_string.append (Type_id)
 			tmp_string.append (Close_parenthesis)
 			tmp_string.append (Semicolon)
+
+			if shared_wizard_environment.out_of_process_server then
+				tmp_string.append (New_line_tab)
+				tmp_string.append ("LockModule ();")
+			end
 
 			constructor_writer.set_body (tmp_string)
 		

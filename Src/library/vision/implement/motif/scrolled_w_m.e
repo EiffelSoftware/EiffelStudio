@@ -14,28 +14,27 @@ inherit
 	SCROLLED_W_I;
 
 	MANAGER_M
-        rename
-            is_shown as shown
+		rename
+			is_shown as shown
 		undefine
 			create_callback_struct
 		redefine
-			set_background_color,
-			update_background_color
+			set_background_color_from_imp
 		end;
 
-    MEL_SCROLLED_WINDOW
-        rename
-            make as mel_scrolled_w_make,
-            foreground_color as mel_foreground_color,
-            set_foreground_color as mel_set_foreground_color,
-            background_color as mel_background_color,
-            background_pixmap as mel_background_pixmap,
-            set_background_color as mel_set_background_color,
-            set_background_pixmap as mel_set_background_pixmap,
-            destroy as mel_destroy,
-            screen as mel_screen,
-            is_shown as shown
-        end
+	MEL_SCROLLED_WINDOW
+		rename
+			make as mel_scrolled_w_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			is_shown as shown
+		end
 
 creation
 
@@ -43,14 +42,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_scrolled_window: SCROLLED_W; man: BOOLEAN; oui_parent:
-COMPOSITE) is
+	make (a_scrolled_window: SCROLLED_W; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif scrolled window.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-            make_with_automatic_scrolling (a_scrolled_window.identifier,
-                    mel_parent (a_scrolled_window, widget_index),
-                    man);
+			make_with_automatic_scrolling (a_scrolled_window.identifier, mc, man)
 	   end;
 
 feature -- Status report
@@ -76,50 +75,27 @@ feature -- Status setting
 			set_work_window (mo)
 		end;
 
-	set_background_color (a_color: COLOR) is
-			-- Set background_color to `a_color'.
+    set_background_color_from_imp (color_imp: COLOR_X) is
+            -- Set the background color from implementation `color_imp'.
 		local
-			pixmap_implementation: PIXMAP_X;
-			color_implementation: COLOR_X;
-			ext_name: ANY;
-			pix: POINTER
+			w: MEL_WIDGET
+			g: MEL_GADGET
 		do
-			if private_background_pixmap /= Void then
-				pixmap_implementation ?= private_background_pixmap.implementation;
-				pixmap_implementation.remove_object (Current);
-				private_background_pixmap := Void
+			mel_set_background_color (color_imp);
+			w := vertical_scroll_bar;
+			if w /= Void then
+				w.set_background_color (color_imp);
+				w.update_colors
 			end;
-			if private_background_color /= Void then
-				color_implementation ?= private_background_color.implementation;
-				color_implementation.remove_object (Current)
+			w := horizontal_scroll_bar;
+			if w /= Void then
+				w.set_background_color (color_imp);
+				w.update_colors
 			end;
-			private_background_color := a_color;
-			color_implementation ?= a_color.implementation;
-			color_implementation.put_object (Current);
-			pix := color_implementation.pixel (screen);
-			--xm_change_bg_color (screen_object, pix);
-			--xm_change_bg_color (vertical_widget, pix);
-			--xm_change_bg_color (horizontal_widget, pix);
-			--xm_change_bg_color (clip_window, pix);
-			if private_foreground_color /= Void then
-				update_foreground_color
-			end
-		end;
-
-feature {COLOR_X}
-
-	update_background_color is
-			-- Update the X color after a change inside the Eiffel color.
-		local
-			color_implementation: COLOR_X;
-			pix: POINTER
-		do
-			color_implementation ?= background_color.implementation;
-			pix := color_implementation.pixel (screen);
-			--xm_change_bg_color (screen_object, pix);
-			--xm_change_bg_color (horizontal_widget, pix);
-			--xm_change_bg_color (vertical_widget, pix);
-			--xm_change_bg_color (clip_window, pix);
+			w := clip_window;
+			if w /= Void then
+				w.set_background_color (color_imp)
+			end;
 			if private_foreground_color /= Void then
 				update_foreground_color
 			end

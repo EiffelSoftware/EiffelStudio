@@ -1,0 +1,42 @@
+system 
+	"ISE.Reflection.CodeGenerator"
+
+root
+	GENERATOR (root_cluster): "make"
+
+default
+	assertion (all)
+	line_generation (no)
+	msil_generation (yes)
+	msil_generation_type ("dll")
+
+cluster
+	root_cluster: "$EIFFEL_DIR_SRC\dotnet\reflection_interface\ISE.Reflection.CodeGenerator"
+		exclude
+			"CVS";
+		end
+		
+	all dot_net_base: "$ISE_EIFFEL\library.net\base"	
+		exclude
+			"CVS";"base_old";
+		end
+		
+	all base: "$ISE_EIFFEL\library\base"
+		exclude
+			"CVS";"kernel";"table_eiffel3";"support";
+		end
+		
+	all generated: "..\..\generated"
+		exclude
+			"CVS";"ISE.Reflection.CodeGenerator";
+		end
+		
+external
+	assembly: 	"C:\winnt\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
+			"C:\winnt\Microsoft.NET\Framework\v1.0.2914\System.dll",
+			"..\..\bin\ISE.Reflection.EiffelComponents.dll",
+			"..\..\bin\ISE.Reflection.Support.dll",
+			"..\..\bin\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
+			"..\..\bin\ISE.Reflection.Formatter.dll"	 		
+	
+end

@@ -183,9 +183,9 @@ feature -- Element change
 	dispose is
 			-- 
 		do
---			if gc /= NULL then
---				C.gdk_gc_unref (gc)
---			end
+			if gc /= NULL then
+				C.gdk_gc_unref (gc)
+			end
 			Precursor
 		end
 		

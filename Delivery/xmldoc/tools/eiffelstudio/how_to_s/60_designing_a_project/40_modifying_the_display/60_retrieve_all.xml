@@ -14,7 +14,7 @@
 	<paragraph>
 		<paragraph/>
 		<list ordered="false">
-			<item>If you have a cluster in your view that is incomplete and you want to show all classes in it, drop the cluster into the
+			<item>If you have a cluster in your view that is incomplete and you want to show all classes in it, drop the cluster into the 
 				<bold>Include all classes of cluster</bold> hole.
 				<image>
 					<url>/images/eiffelstudio/icons/icon_fill_cluster_color.gif</url>

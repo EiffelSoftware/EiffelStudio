@@ -10,22 +10,22 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>The inheritance mechanism includes one more major notion: deferred features and classes.</paragraph>
-		<paragraph>Declaring a feature
+		<paragraph>Declaring a feature 
 			<code>
 				<feature_name>f</feature_name>
-			</code> as deferred in a class
+			</code> as deferred in a class 
 			<code>
 				<class_name>C</class_name>
-			</code> expresses that there is no default implementation of
+			</code> expresses that there is no default implementation of 
 			<code>
 				<feature_name>f</feature_name>
-			</code> in
+			</code> in 
 			<code>
 				<class_name>C</class_name>
-			</code>; such implementations will appear in eventual descendants of
+			</code>; such implementations will appear in eventual descendants of 
 			<code>
 				<class_name>C</class_name>
-			</code>. A class that has one or more deferred routines is itself said to be deferred. A non-deferred routine or class -- like all those seen until now -- is said to be
+			</code>. A class that has one or more deferred routines is itself said to be deferred. A non-deferred routine or class -- like all those seen until now -- is said to be 
 			<bold>effective</bold>.
 		</paragraph>
 		<paragraph>For example, a system used by a Department of Motor Vehicles to register vehicles might include a class of the form</paragraph>
@@ -53,7 +53,7 @@
 
 <keyword>end</keyword> <comment>-- VEHICLE</comment>
 </code_block>
-		<paragraph>This example assumes that no single registration algorithm applies to all kinds of vehicle; passenger cars, motorcycles, trucks etc. are all registered differently. But the same precondition and postcondition apply in all cases. The solution is to treat register as a deferred routine, making VEHICLE a deferred class. Descendants of class VEHICLE, such as CAR or TRUCK,effect this routine, that is to say, give effective versions. An effecting is similar to a redefinition; only here there is no effective definition in the original class, just a specification in the form of a deferred routine. The term
+		<paragraph>This example assumes that no single registration algorithm applies to all kinds of vehicle; passenger cars, motorcycles, trucks etc. are all registered differently. But the same precondition and postcondition apply in all cases. The solution is to treat register as a deferred routine, making VEHICLE a deferred class. Descendants of class VEHICLE, such as CAR or TRUCK,effect this routine, that is to say, give effective versions. An effecting is similar to a redefinition; only here there is no effective definition in the original class, just a specification in the form of a deferred routine. The term 
 			<bold>redeclaration</bold> covers both redefinition and effecting.
 		</paragraph>
 		<image>

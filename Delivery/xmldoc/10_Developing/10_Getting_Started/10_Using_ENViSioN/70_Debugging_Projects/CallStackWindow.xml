@@ -17,15 +17,15 @@
 							<url>CallStackDebuggingWindow.png</url>
 						</image>
 					</paragraph>
-					<paragraph>  This screenshot corresponds to system that has stopped in the creation
+					<paragraph>  This screenshot corresponds to system that has stopped in the creation 
 						<link>
 							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
 							<label>feature</label>
-						</link> of the
+						</link> of the 
 						<link>
 							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#root class</url>
 							<label>Root Class</label>
-						</link>  as the Result of a
+						</link>  as the Result of a 
 						<link>
 							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints.htm</url>
 							<label>Break point</label>

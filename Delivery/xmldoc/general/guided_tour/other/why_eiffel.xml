@@ -9,11 +9,11 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>(After an article in the special Eiffel issue of the
+		<paragraph>(After an article in the special Eiffel issue of the 
 			<italic>Journal of Object-Oriented Programming</italic>, May 1996.  )
 			<line_break/>
 		</paragraph>
-		<paragraph>Over its ten-year life Eiffel has evolved into one of the most usable software development environments available today.  Other articles discuss its theoretical contributions.  This one addresses a more mundane subject: how practical software projects can benefit, today, from the power of Eiffel.  In so doing it will largely rely on published assessments from both Eiffel users and book authors.  In fact a quotation from one of the best-known books in the object-oriented field --
+		<paragraph>Over its ten-year life Eiffel has evolved into one of the most usable software development environments available today.  Other articles discuss its theoretical contributions.  This one addresses a more mundane subject: how practical software projects can benefit, today, from the power of Eiffel.  In so doing it will largely rely on published assessments from both Eiffel users and book authors.  In fact a quotation from one of the best-known books in the object-oriented field -- 
 			<italic>Object-Oriented Modeling and Design</italic> by James Rumbaugh and his colleagues, the text that introduced the OMT O-O analysis method -- provides a good start:
 		</paragraph>
 		<paragraph>
@@ -70,7 +70,7 @@
 		<heading>
 			<size>2</size>The criteria
 		</heading>
-		<paragraph>Eiffel - the method, the language, the environment - is based on a small set of goals, addressing the crucial needs of software quality and productivity.  Quoting from an article in
+		<paragraph>Eiffel - the method, the language, the environment - is based on a small set of goals, addressing the crucial needs of software quality and productivity.  Quoting from an article in 
 			<italic>Byte</italic> magazine:
 		</paragraph>
 		<paragraph>
@@ -82,11 +82,11 @@
 		<heading>
 			<size>2</size>Reliability
 		</heading>
-		<paragraph>The first goal is reliability.  No other approach available today has made the effort to give developers all the tools that they need to produce bug-free software - software that will run without bugs the first time around.  Crucial in this effort is the presence of static typing (
-			<italic>real</italic> static typing, not "a little bit typed" as in those languages that still keep C-like type conversions); assertions and the whole mechanism of Design by Contract, on which more than one Eiffel developer has said "this has changed my life" by enabling him or her to specify precisely what the software should do, and to track at run time that it does it; disciplined exception handling; automatic garbage collection, which eliminates a source of horrendous bugs in C++-based environments (and a large part of the code, tedious and error-prone); a clean approach to inheritance; the use of dynamic binding as the default policy, meaning the guarantee that all calls will use the right version of each operation; and the simplicity of the language design, which enables Eiffel developers to know
+		<paragraph>The first goal is reliability.  No other approach available today has made the effort to give developers all the tools that they need to produce bug-free software - software that will run without bugs the first time around.  Crucial in this effort is the presence of static typing ( 
+			<italic>real</italic> static typing, not "a little bit typed" as in those languages that still keep C-like type conversions); assertions and the whole mechanism of Design by Contract, on which more than one Eiffel developer has said "this has changed my life" by enabling him or her to specify precisely what the software should do, and to track at run time that it does it; disciplined exception handling; automatic garbage collection, which eliminates a source of horrendous bugs in C++-based environments (and a large part of the code, tedious and error-prone); a clean approach to inheritance; the use of dynamic binding as the default policy, meaning the guarantee that all calls will use the right version of each operation; and the simplicity of the language design, which enables Eiffel developers to know 
 			<bold>all</bold> of Eiffel and feel in control.
 		</paragraph>
-		<paragraph>The role of assertions and Design by Contract is particularly important here.  According to the
+		<paragraph>The role of assertions and Design by Contract is particularly important here.  According to the 
 			<italic>Journal of Object-Oriented Programming</italic>:
 		</paragraph>
 		<paragraph>
@@ -99,10 +99,10 @@
 		<paragraph>
 			<italic>Everything about [Eiffel] is single-mindedly, unambiguously, gloriously focused on reusability - right down to the choice of reserved words and punctuation and right up to the compile time environment.         [Roland Racko in Software Development, December 1994, In praise of Eiffel.   ] </italic>
 		</paragraph>
-		<paragraph>Eiffel benefits here from being a simple ("but not simplistic", writes Racko) and consistent design, not a transposition from older, unrelated technology.  Beyond the language and the environment facilities (such as precompilation), the crucial help to reusability is of course the presence of thousands of high-quality library
+		<paragraph>Eiffel benefits here from being a simple ("but not simplistic", writes Racko) and consistent design, not a transposition from older, unrelated technology.  Beyond the language and the environment facilities (such as precompilation), the crucial help to reusability is of course the presence of thousands of high-quality library 
 			<italic>classes</italic>, such as, in ISE Eiffel: EiffelBase (a "Linnaean approach to the reconstruction of software fundamentals"), EiffelNet for client-server communication, EiffelStore for relational and O-O database manipulations, EiffelLex and EiffelParse for lexical analysis and parsing, EiffelMath for object-oriented numerical computation, EiffelVision for portable graphics, WEL (the Windows Eiffel Library) for Windows-specific graphics, EiffelWeb to process forms from the Web, and many others.  Not even mentioning quality, the result is probably the biggest repository of object-oriented components available elsewhere.  The care that has been applied to the production of these libraries also has considerable pedagogical benefits: the way people learn Eiffel is by learning the libraries - first to use them, then to adapt them if necessary, then to write their own software.
 		</paragraph>
-		<paragraph>Part of the single-mindedness mentioned by acko is the emphasis on abstraction.  In contrast with, say, Smalltalk, you do not read the source code of a class when you want to use it.  This may be fine for a couple dozen classes, but not for a large, powerful library.  Eiffel introduces the notion of
+		<paragraph>Part of the single-mindedness mentioned by acko is the emphasis on abstraction.  In contrast with, say, Smalltalk, you do not read the source code of a class when you want to use it.  This may be fine for a couple dozen classes, but not for a large, powerful library.  Eiffel introduces the notion of 
 			<bold>short form</bold>: an abstract version of the class, keeping only the interface information including assertions.  This is an ideal tool for documenting classes but also for discussing designs and presenting them to outsiders - managers or customers - who  need to know what is going on without getting bogged down in the details.
 		</paragraph>
 		<paragraph>Let me mention just one of the unique reusability-supporting features of Eiffel, without which it is, in my experience, impossible to have a long-term reuse effort.  Racko again:</paragraph>
@@ -121,8 +121,8 @@
 		<paragraph>
 			<italic>Most object-oriented languages do not attempt multiple-inheritance.   The literature is full of elaborate explanations why.   This is sad.   Eiffel demonstrates that multiple inheritance need not be difficult or complex, and it can also yield some quite practical results.   </italic>
 		</paragraph>
-		<paragraph>The approach also enforces a strict form of information hiding, which means that a module (a
-			<bold>client</bold> in Eiffel Design by Contract terminology) that uses another's facilities (its
+		<paragraph>The approach also enforces a strict form of information hiding, which means that a module (a 
+			<bold>client</bold> in Eiffel Design by Contract terminology) that uses another's facilities (its 
 			<bold>supplier</bold>) is protected against many of the changes that can be made later on to these facilities.  This is essential in preserving the coherent evolution of a large system - and the sanity of its developers.
 		</paragraph>
 		<heading>
@@ -143,7 +143,7 @@
 		<heading>
 			<size>2</size>With us, everything's the face
 		</heading>
-		<paragraph>A good way to think about Eiffel - the seamlessness of it, the insistency on getting everything right, the conviction that software should be beautiful in and out, specification and implementation - is this little anecdote stolen from Roman Jakobson's Essays on
+		<paragraph>A good way to think about Eiffel - the seamlessness of it, the insistency on getting everything right, the conviction that software should be beautiful in and out, specification and implementation - is this little anecdote stolen from Roman Jakobson's Essays on 
 			<italic>General Linguistics</italic>:
 		</paragraph>
 		<paragraph>

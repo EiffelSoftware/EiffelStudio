@@ -13,17 +13,17 @@
 		<heading>
 			<size>2</size>Eiffel Creation Procedures
 		</heading>
-		<paragraph>Eiffel
+		<paragraph>Eiffel 
 			<link>
 				<url/>
 				<label>creation procedures</label>
-			</link> are features of a class which can be used to initialize instances. Classes can have more than one creation procedure available. However, each creation procedure must ensure that the
+			</link> are features of a class which can be used to initialize instances. Classes can have more than one creation procedure available. However, each creation procedure must ensure that the 
 			<link>
 				<url/>
 				<label>class invariant</label>
 			</link> holds when the procedure completes execution. In other words, the creation procedure is there to initialize a newly created instance, and the class invariant guarantees that a newly initialized instance is actually valid.
 		</paragraph>
-		<paragraph>There is nothing special about creation procedures themselves, they are just ordinary procedures (although by convention their names usually begin with the word "
+		<paragraph>There is nothing special about creation procedures themselves, they are just ordinary procedures (although by convention their names usually begin with the word " 
 			<code>
 				<feature_name>make</feature_name>
 			</code>"). What makes them creation procedures is the fact that their names are listed as creation procedures in the class text.
@@ -32,10 +32,10 @@
 		<heading>
 			<size>2</size>Constructors in .NET
 		</heading>
-		<paragraph>Like creation procedures in Eiffel, .NET constructors are used to initialize new instances of types. Constructors manifest themselves differently depending upon which .NET language you use. In C#, constructors always appear as a method having the same name as the class on which they are implemented. In Visual Basic .NET, they always appear as a Sub with the name
+		<paragraph>Like creation procedures in Eiffel, .NET constructors are used to initialize new instances of types. Constructors manifest themselves differently depending upon which .NET language you use. In C#, constructors always appear as a method having the same name as the class on which they are implemented. In Visual Basic .NET, they always appear as a Sub with the name 
 			<code>
 				<feature_name>New</feature_name>
-			</code>. Once compiled into an assembly, the metadata labels constructors as
+			</code>. Once compiled into an assembly, the metadata labels constructors as 
 			<code>
 				<feature_name>. ctor</feature_name>
 			</code>.
@@ -45,26 +45,26 @@
 		<heading>
 			<size>3</size>Constructors as Eiffel Creation Procedures
 		</heading>
-		<paragraph>When types from .NET assemblies are made available to Eiffel systems, the constructors are presented as creation procedures. Just as constructors show up in the C# and VB.NET environments with names appropriate to those languages, so it is with Eiffel for .NET. Always, constructors will have feature names which begin with the word "
+		<paragraph>When types from .NET assemblies are made available to Eiffel systems, the constructors are presented as creation procedures. Just as constructors show up in the C# and VB.NET environments with names appropriate to those languages, so it is with Eiffel for .NET. Always, constructors will have feature names which begin with the word " 
 			<code>
 				<feature_name>make</feature_name>
 			</code>", the convention for creation procedure naming in Eiffel.
 		</paragraph>
-		<paragraph>If there is only one version of the constructor, that version will be mapped to a single feature named
+		<paragraph>If there is only one version of the constructor, that version will be mapped to a single feature named 
 			<code>
 				<feature_name>make</feature_name>
-			</code>. However, if there are overloaded versions of the constructor, then these versions given names starting with "
+			</code>. However, if there are overloaded versions of the constructor, then these versions given names starting with " 
 			<code>
 				<feature_name>make_from_</feature_name>
-			</code>" and then followed with the argument names from the assembly metadata separated with the conjunction "
+			</code>" and then followed with the argument names from the assembly metadata separated with the conjunction " 
 			<code>
 				<feature_name>_and_</feature_name>
 			</code>". Let's look at an example.
 		</paragraph>
-		<paragraph>The .NET type
+		<paragraph>The .NET type 
 			<code>
 				<class_name>System.Drawing.Size</class_name>
-			</code> has an overloaded constructor with two versions. In the
+			</code> has an overloaded constructor with two versions. In the 
 			<code>
 				<cluster_name>System.Drawing</cluster_name>
 			</code> assembly metadata, these two constructor versions look like this:
@@ -73,13 +73,13 @@
 void .ctor(int32 width, int32 height)
 void .ctor(System.Drawing.Point pt)
 </code_block>
-		<paragraph>So the argument names for the first version are
+		<paragraph>So the argument names for the first version are 
 			<code>
 				<indexing_tag>width</indexing_tag>
-			</code> and
+			</code> and 
 			<code>
 				<indexing_tag>height</indexing_tag>
-			</code>. For the second version there is only one argument named
+			</code>. For the second version there is only one argument named 
 			<code>
 				<indexing_tag>pt</indexing_tag>
 			</code>. The constructor versions as presented to Eiffel programmers as creation procedures look like this:
@@ -92,10 +92,10 @@ make_from_pt (pt: DRAWING_POINT)
 		<heading>
 			<size>3</size>Eiffel Creation Procedures as Constructors?
 		</heading>
-		<paragraph>Eiffel creation procedures do not map to constructors when Eiffel classes are compiled into assemblies. Rather, they are actually manifested as functions on a factory class in the namespace
+		<paragraph>Eiffel creation procedures do not map to constructors when Eiffel classes are compiled into assemblies. Rather, they are actually manifested as functions on a factory class in the namespace 
 			<code>
 				<class_name>Create</class_name>
-			</code> in the assembly. These functions return an initialized instance. In the section
+			</code> in the assembly. These functions return an initialized instance. In the section 
 			<link>
 				<url/>
 				<label>Type Organization</label>

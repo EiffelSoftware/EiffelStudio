@@ -8,11 +8,11 @@
 			</link>
 		</paragraph>
 		<paragraph>This appendix provides reference information, not needed in simple uses of EiffelStudio.  </paragraph>
-		<paragraph>We saw in the
+		<paragraph>We saw in the 
 			<link>
 				<label>section on documentation</label>
 				<url>index-09.xml</url>
-			</link> that you can output documentation about your system in many different formats.  A number of predefined formats are available, from Postscript to Microsoft's Rich Text Format, FrameMaker, HTML with and without style sheets, TEX and others.  There's nothing special about these formats: they just make their conventions known to EiffelStudio through a
+			</link> that you can output documentation about your system in many different formats.  A number of predefined formats are available, from Postscript to Microsoft's Rich Text Format, FrameMaker, HTML with and without style sheets, TEX and others.  There's nothing special about these formats: they just make their conventions known to EiffelStudio through a 
 			<bold>filter</bold> expressed in a simple notation called EFF, or Eiffel Filter Format.  If you have a favorite format that you'd like EiffelStudio to use for producing documentation, you can define your own filter in EFF.  Applications include:
 		</paragraph>
 		<list ordered="false">
@@ -26,21 +26,23 @@
 				<size>2</size>
 				<content>Where to put filters</content>
 			</heading>
-			<paragraph>When you choose to generate documentation, EiffelStudio will ask you to select a filter from a list it obtains by looking up the files of extension
+			<paragraph>When you choose to generate documentation, EiffelStudio will ask you to select a filter from a list it obtains by looking up the files of extension 
 				<span>.  </span>
 				<code>
 					<keyword>fil</keyword>
 				</code> in the directory
 			</paragraph>
-			<code_block>	<keyword>$ISE_EIFFEL/examples/studio/filters</keyword></code_block>
-			<paragraph>To make a new filter available to yourself and other users of this installation, just add the corresponding file
+			<code_block>	
+	<keyword>$ISE_EIFFEL/examples/studio/filters</keyword>
+			</code_block>
+			<paragraph>To make a new filter available to yourself and other users of this installation, just add the corresponding file 
 				<code>
 					<string>name</string>
 				</code>
 				<span>.  </span>
 				<code>
 					<keyword>fil</keyword>
-				</code> to this directory.  Make sure to choose the appropriate
+				</code> to this directory.  Make sure to choose the appropriate 
 				<code>
 					<string>name</string>
 				</code>, since this is what the menu of available filters will display.
@@ -51,40 +53,42 @@
 				<size>2</size>
 				<content>Filter basics</content>
 			</heading>
-			<paragraph>An EFF filter follows a very simple structure.  As with all other Eiffel-related notations (such as Eiffel itself and Lace, the control language for Eiffel systems), any line or part of a line beginning with two consecutive dashes
+			<paragraph>An EFF filter follows a very simple structure.  As with all other Eiffel-related notations (such as Eiffel itself and Lace, the control language for Eiffel systems), any line or part of a line beginning with two consecutive dashes 
 				<code>
 					<keyword>--</keyword>
-				</code> is a comment, except if it immediately follows a percent sign since, as will be seen below,
+				</code> is a comment, except if it immediately follows a percent sign since, as will be seen below, 
 				<code>
 					<keyword>- %-</keyword>
 				</code> is used to denote an Eiffel comment in the class text.  Blank lines are also permitted.  Comments and blank lines carry no semantic value.
 			</paragraph>
 			<paragraph>Except for comments and blank lines, a filter is a sequence of entries, all of the form</paragraph>
-			<code_block>	Construct | Replacement</code_block>
-			<paragraph>where:
+			<code_block>	
+	Construct | Replacement
+			</code_block>
+			<paragraph>where: 
 				<code>
 					<string>Construct</string>
-				</code> is one of a set of possible strings, most of which correspond to Eiffel constructs such as
+				</code> is one of a set of possible strings, most of which correspond to Eiffel constructs such as 
 				<code>
 					<keyword>Class_declaration</keyword>
-				</code> or Eiffel keywords such as
+				</code> or Eiffel keywords such as 
 				<code>
 					<keyword>class</keyword>
-				</code> ; and
+				</code> ; and 
 				<code>
 					<string>Replacement</string>
-				</code> is a string indicating how to format specimens of the
+				</code> is a string indicating how to format specimens of the 
 				<code>
 					<string>Construct</string>
 				</code> that appear in a class text.
 			</paragraph>
-			<paragraph>For readability, there may be any number of blanks or tabs between the
+			<paragraph>For readability, there may be any number of blanks or tabs between the 
 				<code>
 					<string>Construct</string>
-				</code> and the vertical bar
+				</code> and the vertical bar 
 				<code>
 					<keyword>|</keyword>
-				</code>, so that you can align all the bars if you wish.  On the right of the bar, however, all characters including blanks and tabs are significant, since they are part of the replacement for the
+				</code>, so that you can align all the bars if you wish.  On the right of the bar, however, all characters including blanks and tabs are significant, since they are part of the replacement for the 
 				<code>
 					<string>Construct</string>
 				</code> .
@@ -95,45 +99,47 @@
 				<size>2</size>
 				<content>The asterisk</content>
 			</heading>
-			<paragraph>In the
+			<paragraph>In the 
 				<code>
 					<string>Replacement</string>
-				</code> part, you may use the symbol
+				</code> part, you may use the symbol 
 				<code>
 					<symbol>*</symbol>
 				</code> (asterisk) to denote the construct specimen itself.  So for example the entry
 			</paragraph>
-			<code_block>	<keyword>Feature_clause | %N%N*%N%N</keyword></code_block>
-			<paragraph>specifies the following formatting for any
+			<code_block>	
+	<keyword>Feature_clause | %N%N*%N%N</keyword>
+			</code_block>
+			<paragraph>specifies the following formatting for any 
 				<code>
 					<keyword>Feature_clause</keyword>
-				</code> : two successive blank lines (expressed as
+				</code> : two successive blank lines (expressed as 
 				<code>
 					<keyword>%N</keyword>
 				</code>, New Line, a convention taken from Eiffel); the feature clause itself; two blank lines.
 			</paragraph>
 			<paragraph>Similarly, in an HTML format, the entry</paragraph>
 			<code_block>
-				<keyword>External |&lt;B&gt; * &lt;/B&gt;</keyword>
+	<keyword>External |&lt;B&gt; * &lt;/B&gt;</keyword>
 			</code_block>
-			<paragraph>means that the Eiffel keyword
+			<paragraph>means that the Eiffel keyword 
 				<code>
 					<keyword>external</keyword>
-				</code> must appear in the filtered form immediately preceded by
+				</code> must appear in the filtered form immediately preceded by 
 				<code>
 					<keyword>&lt;B&gt;</keyword>
-				</code>, the HTML code for switching to boldface, and immediately followed by
+				</code>, the HTML code for switching to boldface, and immediately followed by 
 				<code>
 					<keyword>&lt;/B&gt;</keyword>
-				</code>, the code for reverting to the previous setup.  Here you can also write the right-hand side without the asterisks, as
+				</code>, the code for reverting to the previous setup.  Here you can also write the right-hand side without the asterisks, as 
 				<code>
 					<keyword>&lt;B&gt;external&lt;/B&gt;</keyword>
 				</code> .  If, however, all keywords are to use boldface, it is preferable to write a single entry
 			</paragraph>
 			<code_block>
-				<keyword>Keyword |&lt;B&gt; * &lt;/B&gt;</keyword>
+	<keyword>Keyword |&lt;B&gt; * &lt;/B&gt;</keyword>
 			</code_block>
-			<paragraph>which, thanks to the asterisk, will govern all construct specimens of the
+			<paragraph>which, thanks to the asterisk, will govern all construct specimens of the 
 				<code>
 					<keyword>Keyword</keyword>
 				</code> category.  You can still override this specification for an individual keyword by including a specific entry for it.
@@ -144,52 +150,52 @@
 				<size>2</size>
 				<content>Constructs</content>
 			</heading>
-			<paragraph>The following general syntactic constructs may appear as the left-hand side,
+			<paragraph>The following general syntactic constructs may appear as the left-hand side, 
 				<code>
 					<string>Construct</string>
 				</code>, of an entry:
 			</paragraph>
 			<code_block>
-Class_declaration
-Class_end
-Class_header
-Class_name
-Comment
-Creators
-Escape
-Feature_clause
-Feature_declaration
-Features
-Formal_generics
-Indexing_clause
-Inheritance
-Invariant_clause
-Keyword
-New_line
-Obsolete_clause
-Suffix
-Symbol
-Tab
-</code_block>
-			<paragraph>Most of these denote Eiffel constructs as they appear in the official language reference, the book
+	Class_declaration
+	Class_end
+	Class_header
+	Class_name
+	Comment
+	Creators
+	Escape
+	Feature_clause
+	Feature_declaration
+	Features
+	Formal_generics
+	Indexing_clause
+	Inheritance
+	Invariant_clause
+	Keyword
+	New_line
+	Obsolete_clause
+	Suffix
+	Symbol
+	Tab
+			</code_block>
+			<paragraph>Most of these denote Eiffel constructs as they appear in the official language reference, the book 
 				<span>
 					<link>
 						<url>http://www.eiffel.com/doc/#etl</url>
 						<label>Eiffel: The Language</label>
 					</link>
-				</span> .  Since the Eiffel construct names
+				</span> .  Since the Eiffel construct names 
 				<code>
 					<keyword>Feature</keyword>
-				</code>,
+				</code>, 
 				<code>
 					<keyword>Invariant</keyword>
-				</code> and
+				</code> and 
 				<code>
 					<keyword>Obsolete</keyword>
-				</code> are also keywords and EFF, like Eiffel, is case-insensitive, the EFF construct names use the suffix
+				</code> are also keywords and EFF, like Eiffel, is case-insensitive, the EFF construct names use the suffix 
 				<code>
 					<keyword>_clause</keyword>
-				</code>, for example
+				</code>, for example 
 				<code>
 					<keyword>Feature_clause</keyword>
 				</code> .
@@ -204,7 +210,7 @@ Tab
 				<item>
 					<code>
 						<keyword>Keyword</keyword>
-					</code>, denoting any Eiffel keyword among those listed in boldface in the corresponding appendix in
+					</code>, denoting any Eiffel keyword among those listed in boldface in the corresponding appendix in 
 					<span>
 						<link>
 							<url>http://www.eiffel.com/doc/#etl</url>
@@ -225,7 +231,7 @@ Tab
 				<item>
 					<code>
 						<keyword>Symbol</keyword>
-					</code>, denoting any of the Eiffel symbols listed in the corresponding appendix of
+					</code>, denoting any of the Eiffel symbols listed in the corresponding appendix of 
 					<span>
 						<link>
 							<url>http://www.eiffel.com/doc/#etl</url>
@@ -249,27 +255,27 @@ Tab
 					<size>2</size>
 					<content>Keywords</content>
 				</heading>
-				<paragraph>A
+				<paragraph>A 
 					<code>
 						<string>Construct</string>
-					</code> part may consist of the name of an Eiffel keyword.  To see the complete list of possible keywords, look at the
+					</code> part may consist of the name of an Eiffel keyword.  To see the complete list of possible keywords, look at the 
 					<code>
 						<keyword>template</keyword>
-					</code> filter, file
+					</code> filter, file 
 					<code>
-						<keyword>format.  fil-template</keyword>
-					</code> in the default filter directory
+						<keyword>format.fil-template</keyword>
+					</code> in the default filter directory 
 					<code>
 						<keyword>$ISE_EIFFEL/studio/filters</keyword>
-					</code>, which includes all of them with a single asterisk
+					</code>, which includes all of them with a single asterisk 
 					<code>
 						<symbol>*</symbol>
-					</code> as the
+					</code> as the 
 					<code>
 						<string>Replacement</string>
 					</code> part.
 				</paragraph>
-				<paragraph>If entries are present for both the
+				<paragraph>If entries are present for both the 
 					<code>
 						<keyword>Keyword</keyword>
 					</code> construct and individual keywords, the individual keyword entries will override the general entry for the keywords listed; the general entry will apply to all other keywords.  This makes it possible to have both a general convention for keywords and a special convention for some of them.
@@ -279,18 +285,18 @@ Tab
 				<size>2</size>
 				<content>Symbol</content>
 			</heading>
-			<paragraph>A
+			<paragraph>A 
 				<code>
 					<string>Construct</string>
-				</code> part may consist of an Eiffel symbol, such as
+				</code> part may consist of an Eiffel symbol, such as 
 				<code>
 					<keyword>:=</keyword>
-				</code>,
+				</code>, 
 				<code>
 					<keyword>/=</keyword>
-				</code>and many others.  Again, you may see the complete list by looking at
+				</code> and many others.  Again, you may see the complete list by looking at 
 				<code>
-					<keyword>format.  fil-template</keyword>
+					<keyword>format.fil-template</keyword>
 				</code> .  Note the following conventions:
 			</paragraph>
 			<list ordered="false">
@@ -300,24 +306,24 @@ Tab
 					</code>
 					<code>
 						<symbol>*</symbol>
-					</code>  represents an asterisk.  for example as a multiplication operator; the
+					</code>  represents an asterisk.  for example as a multiplication operator; the 
 					<code>
 						<keyword>%</keyword>
 					</code> avoids the confusion with the special meaning of the asterisk for EFF.  You can find examples of this convention in the EFF filters for troff and gtroff.
 				</item>
-				<item>Similarly, the Eiffel comment symbol appears as
+				<item>Similarly, the Eiffel comment symbol appears as 
 					<code>
 						<keyword>- %-</keyword>
-					</code>, since just writing
+					</code>, since just writing 
 					<code>
 						<keyword>- -</keyword>
 					</code> would introduce a comment in the EFF filter itself.
 				</item>
 			</list>
-			<paragraph>As with keywords, you may specify a general convention for symbols, defined by an entry for the construct
+			<paragraph>As with keywords, you may specify a general convention for symbols, defined by an entry for the construct 
 				<code>
 					<keyword>Symbol</keyword>
-				</code>, and special conventions for certain individual symbols.  Specific symbol entries will override the general
+				</code>, and special conventions for certain individual symbols.  Specific symbol entries will override the general 
 				<code>
 					<keyword>Symbol</keyword>
 				</code> convention.
@@ -327,27 +333,27 @@ Tab
 			<size>2</size>
 			<content>Escape characters</content>
 		</heading>
-		<paragraph>A text processing system or other external tool may attach a special role to characters that may normally appear in Eiffel texts.  For example, the braces
+		<paragraph>A text processing system or other external tool may attach a special role to characters that may normally appear in Eiffel texts.  For example, the braces 
 			<code>
 				<keyword>{</keyword>
-			</code> and
+			</code> and 
 			<code>
 				<keyword>}</keyword>
-			</code>, used in Eiffel's Export clauses, have a special meaning for TEX.  Including them without precaution in TEX input will cause trouble.  Similarly, many text processing formats attach a special meaning to the backslash character
+			</code>, used in Eiffel's Export clauses, have a special meaning for TEX.  Including them without precaution in TEX input will cause trouble.  Similarly, many text processing formats attach a special meaning to the backslash character 
 			<code>
 				<keyword>\</keyword>
 			</code> which, although not special for Eiffel, may appear in an Eiffel string.
 		</paragraph>
-		<paragraph>In such cases the filter must "
-			<span>escape</span> " the special character, that is to say, protect it by other characters.  For example troff and other text processing tools treat two successive backslash characters
+		<paragraph>In such cases the filter must " 
+			<span>escape</span> " the special character, that is to say, protect it by other characters.  For example troff and other text processing tools treat two successive backslash characters 
 			<code>
 				<keyword>\\</keyword>
 			</code> as denoting a single backslash in the text to be output.  The first backslash is the escape character, protecting the second one.
 		</paragraph>
-		<paragraph>The
+		<paragraph>The 
 			<code>
 				<keyword>Escape</keyword>
-			</code> construct addresses such cases.  The first character that follows
+			</code> construct addresses such cases.  The first character that follows 
 			<code>
 				<keyword>Escape</keyword>
 			</code> (after one or more blanks or tabs) is the character to be escaped.  The string after the vertical bar is the replacement for that character.
@@ -357,14 +363,14 @@ Tab
 			<size>2</size>
 			<content>Special characters and strings</content>
 		</heading>
-		<paragraph>EFF uses Eiffel-like conventions, based on the percent sign, for control characters appearing in
-			<span>Replacement</span> parts of entries.  Two of these conventions have just been noted:
+		<paragraph>EFF uses Eiffel-like conventions, based on the percent sign, for control characters appearing in 
+			<span>Replacement</span> parts of entries.  Two of these conventions have just been noted: 
 			<code>
 				<keyword>%</keyword>
 			</code>
 			<code>
 				<symbol>*</symbol>
-			</code> to represent an asterisk and
+			</code> to represent an asterisk and 
 			<code>
 				<keyword>%-</keyword>
 			</code> to represent a dash that does not introduce an Eiffel comment.  In addition:
@@ -373,17 +379,17 @@ Tab
 			<item>
 				<code>
 					<keyword>%|</keyword>
-				</code> denotes a vertical bar.  (This is necessary since EFF uses
+				</code> denotes a vertical bar.  (This is necessary since EFF uses 
 				<code>
 					<keyword>|</keyword>
-				</code> by itself in each entry to separate the
-				<span>Construct</span> from the corresponding
+				</code> by itself in each entry to separate the 
+				<span>Construct</span> from the corresponding 
 				<span>Replacement</span> .  )
 			</item>
 			<item>
 				<code>
 					<keyword>%N</keyword>
-				</code> (recommended form) or
+				</code> (recommended form) or 
 				<code>
 					<keyword>%n</keyword>
 				</code> denotes a new line.
@@ -391,7 +397,7 @@ Tab
 			<item>
 				<code>
 					<keyword>%T</keyword>
-				</code> (recommended form) or
+				</code> (recommended form) or 
 				<code>
 					<keyword>%t</keyword>
 				</code> denotes a tab.
@@ -407,27 +413,27 @@ Tab
 				</code> (percent followed by a space) denotes a space.  This is equivalent to just a space, but more visible.
 			</item>
 		</list>
-		<paragraph>If
+		<paragraph>If 
 			<code>
 				<string>c</string>
-			</code>  is not one of the characters for which special conventions have been listed,
+			</code>  is not one of the characters for which special conventions have been listed, 
 			<code>
 				<keyword>%</keyword>
 			</code>
 			<code>
 				<string>c</string>
-			</code> denotes the character
+			</code> denotes the character 
 			<code>
 				<string>c</string>
 			</code> itself.
 		</paragraph>
-		<paragraph>A multi-line entry uses the Eiffel convention for string continuations:
+		<paragraph>A multi-line entry uses the Eiffel convention for string continuations: 
 			<code>
 				<keyword>%</keyword>
-			</code> at the end of a line to signal that there is a continuation; a continuation line begins with zero or more spaces and tabs followed by a
+			</code> at the end of a line to signal that there is a continuation; a continuation line begins with zero or more spaces and tabs followed by a 
 			<code>
 				<keyword>%</keyword>
-			</code> ; the characters after the
+			</code> ; the characters after the 
 			<code>
 				<keyword>%</keyword>
 			</code> are the continuation of the string.

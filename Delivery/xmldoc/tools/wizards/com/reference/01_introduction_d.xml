@@ -12,19 +12,19 @@ Start-&gt;Programs-&gt;EiffelXX-&gt;EiffelCOMWizard
 		<image>
 			<url>../images/com_image2.gif</url>
 		</image>
-		<paragraph> The introduction dialog lets you choose between opening an existing project or creating a new one either from a COM definition or from an Eiffel project. Creating a new project will open the
+		<paragraph> The introduction dialog lets you choose between opening an existing project or creating a new one either from a COM definition or from an Eiffel project. Creating a new project will open the 
 			<link>
 				<url>02_generated_code_type_d.xml</url>
 			</link>Generated Code Type Dialog. Opening an existing project will display an Open File Dialog from which you can select a previously saved EiffelCOM project.
 		</paragraph>
-		<paragraph>The four buttons at the bottom of the dialog
-			<italic>Back</italic>,
-			<italic>Next</italic>,
-			<italic>Cancel</italic> and
-			<italic>Help</italic> are common to alldialogs displayed throughout the execution of the wizard.
-			<italic>Next</italic> validates all the values entered in the current dialogand activates the next one.
-			<italic>Back</italic> discards all the valuesentered in current dialog and displays the previous one.
-			<italic>Cancel</italic> exits the dialog and discards all the values entered.Finally,
+		<paragraph>The four buttons at the bottom of the dialog 
+			<italic>Back</italic>, 
+			<italic>Next</italic>, 
+			<italic>Cancel</italic> and 
+			<italic>Help</italic> are common to alldialogs displayed throughout the execution of the wizard. 
+			<italic>Next</italic> validates all the values entered in the current dialogand activates the next one. 
+			<italic>Back</italic> discards all the valuesentered in current dialog and displays the previous one. 
+			<italic>Cancel</italic> exits the dialog and discards all the values entered.Finally, 
 			<italic>Help</italic> brings up this manual.
 		</paragraph>
 		<heading>
@@ -35,11 +35,11 @@ Start-&gt;Programs-&gt;EiffelXX-&gt;EiffelCOMWizard
 		</image>
 		<paragraph> The main window includes a toolbar and a menu. The first three buttons on the toolbar correspond to the first three entries in the File menu: New, Open and Save. New resets all the information previously entered in the wizard. Open brings up an Open File Dialog that can be used to retrieve a previously saved EiffelCOM project. Save isused to save the current project. A project is defined by all the values entered in the wizard. A project can be saved only after the wizard has been run. The file extension for an EiffelCOM project ise wz.</paragraph>
 		<paragraph> The second menu, Build, includes the entries Launch Wizard and Generate (no wizard) corresponding respectively to the last two toolbar buttons. The former activates the Generated Code Type Dialog. while the later launches the generation with the current settings and by passes the dialogs. This last button can be used only when a project has been loaded or when the wizard has been run once.</paragraph>
-		<paragraph> The third menu,
-			<italic>Help</italic>, includes
-			<italic>Help</italic> and
-			<italic>About EiffelCOM</italic>.
-			<italic>Help</italic> brings up this manual.
+		<paragraph> The third menu, 
+			<italic>Help</italic>, includes 
+			<italic>Help</italic> and 
+			<italic>About EiffelCOM</italic>. 
+			<italic>Help</italic> brings up this manual. 
 			<italic>About EiffelCOM</italic> brings
 			<italic/>About EiffelCOM Dialog that gives the version number.
 		</paragraph>

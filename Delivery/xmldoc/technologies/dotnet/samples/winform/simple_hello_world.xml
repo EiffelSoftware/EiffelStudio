@@ -28,9 +28,9 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>The application shows how to display a Windows Form under the windows environment. The application inherits the
-			<span>FORM</span> class, and just set the title with
-			<span>"Hello world"</span> with the inherited feature
+		<paragraph>The application shows how to display a Windows Form under the windows environment. The application inherits the 
+			<span>FORM</span> class, and just set the title with 
+			<span>"Hello world"</span> with the inherited feature 
 			<span>set_title</span>.
 		</paragraph>
 		<code>set_title (("Hello world"). to_cil)</code>

@@ -1,7 +1,7 @@
 <document title="Precondition" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Enter a precondition in the
+		<paragraph>Enter a precondition in the 
 			<code>
 				<keyword>require</keyword>
 			</code> field. A precondition clause will be added to the feature:

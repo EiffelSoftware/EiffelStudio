@@ -43,7 +43,7 @@
    		<keyword>require</keyword>
        			applicable<symbol>:</symbol> is_developer_exception 
 		</code_block>
-		<paragraph>Every call to the COM layer should be wrapped    into the
+		<paragraph>Every call to the COM layer should be wrapped    into the 
 			<code>
 				<keyword>rescue</keyword>
 			</code>-clause as following:

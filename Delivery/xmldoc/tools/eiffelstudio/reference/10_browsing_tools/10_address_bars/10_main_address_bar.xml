@@ -12,7 +12,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>The main address bar is located in the top part of windows, between the two
+		<paragraph>The main address bar is located in the top part of windows, between the two 
 			<link>
 				<url>../../05_general_interface_description/30_main_toolbars.xml</url>
 				<label>main toolbars</label>
@@ -71,7 +71,7 @@
 			<bold>Tip</bold>: Wildcards (* and ?) are available in these fields.
 		</tip>
 		<tip>
-			<bold>Tip</bold>: The history is also accessible in the
+			<bold>Tip</bold>: The history is also accessible in the 
 			<bold>View/Go to</bold> menu.
 		</tip>
 	</paragraph></document>

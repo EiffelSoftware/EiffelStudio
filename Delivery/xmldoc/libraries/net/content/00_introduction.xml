@@ -9,7 +9,7 @@
 		<paragraph>Writing client-server applications, especially their communication aspects, is an arduous task; developers must master many tricky details of socket programming and other low-level mechanisms. EiffelNet hides this complexity by providing ready-made classes addressing the most common cases, so that developers only have to describe what is specific to their application, letting EiffelNet handle the whole process of communication and synchronization between clients and servers. This part of EiffelNet is known as the 
 			<italic>predefined level</italic> and for many uses this is the only one that you will need to learn about. For developments requiring a finer degree of control, all the major mechanisms of socket programming are still accessible in a convenient form through more specialized classes.
 		</paragraph>
-		<paragraph>In offering these varying levels of abstraction and control, EiffelNet follows the principles set by other libraries of the ISE Eiffel environment (see for example the discussion of EiffelLex in reference [
+		<paragraph>In offering these varying levels of abstraction and control, EiffelNet follows the principles set by other libraries of the ISE Eiffel environment (see for example the discussion of EiffelLex in reference [ 
 			<link>
 				<url>95_bibliography.html</url>
 				<label>2</label>
@@ -22,21 +22,21 @@
 		<paragraph>EiffelNet is a component of the ISE Eiffel 5 development environment. Please contact your Eiffel Software to find out how to acquire EiffelNet if it is not already part of your delivery.</paragraph>
 		<paragraph>This manual assumes the following prerequisites:</paragraph>
 		<list ordered="false">
-			<item>Familiarity with the basic Eiffel concepts: classes, inheritance, features, assertions, exception handling (see reference [
+			<item>Familiarity with the basic Eiffel concepts: classes, inheritance, features, assertions, exception handling (see reference [ 
 				<link>
 					<url>95_bibliography.html</url>
 					<label>1</label>
 				</link>]).
 			</item>
 			<item>Experience of writing software with Eiffel.</item>
-			<item>Basic knowledge of the EiffelBase libraries, as described in reference [
+			<item>Basic knowledge of the EiffelBase libraries, as described in reference [ 
 				<link>
 					<url>95_bibliography.html</url>
 					<label>2</label>
 				</link>].
 			</item>
 		</list>
-		<paragraph>Familiarity with the basic concepts of client-server computing will also be helpful (see for example reference [
+		<paragraph>Familiarity with the basic concepts of client-server computing will also be helpful (see for example reference [ 
 			<link>
 				<url>95_bibliography.html</url>
 				<label>3</label>

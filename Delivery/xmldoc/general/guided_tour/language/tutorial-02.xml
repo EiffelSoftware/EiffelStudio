@@ -30,7 +30,7 @@
 				<italic>Documentation</italic>, where Eiffel permits automatic generation of documentation, textual and graphical, from the software itself, as a partial substitute for separately developed and maintained software documentation.
 			</item>
 		</list>
-		<paragraph>Although the language is the most visible part, Eiffel is best viewed as a
+		<paragraph>Although the language is the most visible part, Eiffel is best viewed as a 
 			<bold>method</bold>, which guides system analysts and developers through the process of software construction.  The Eiffel method is focused on both productivity (the ability to produce systems on time and within budget) and quality, with particular emphasis on the following quality factors:
 		</paragraph>
 		<list ordered="false">

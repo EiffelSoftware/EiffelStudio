@@ -11,7 +11,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>Our last mechanism, agents, adds one final level of expressive power to the framework describe so far.  Agents apply object-oriented concepts to the modeling of
+		<paragraph>Our last mechanism, agents, adds one final level of expressive power to the framework describe so far.  Agents apply object-oriented concepts to the modeling of 
 			<span>operations</span>.
 		</paragraph>
 		<heading>
@@ -19,7 +19,7 @@
 			<content>Objects for operations</content>
 		</heading>
 		<paragraph>Operations are not objects; in fact, object technology starts from the decision to separate these two aspects, and to choose object types, rather than the operations, as the basis for modular organization of a system, attaching each operation to the resulting modules -- the classes.  </paragraph>
-		<paragraph>In a number of applications, however, we may need objects that
+		<paragraph>In a number of applications, however, we may need objects that 
 			<span>represent</span> operations, so that we can include them in object structures that some other piece of the software will later traverse to uncover the operations and, usually, execute them.  Such "operation wrapper" objects, called agents, are useful in a number of application areas such as:
 		</paragraph>
 		<list ordered="false">
@@ -27,8 +27,8 @@
 			<item> Iteration on data structures, where we may define a general-purpose routine that can apply an arbitrary operation to all the elements of a structure such as a list; to specify a particular operation to iterate, we will pass to the iteration mechanism an agent representing that operation.  </item>
 			<item> Numerical computation, where we may define a routine that computes the integral of any applicable function on any applicable interval; to represent that function and pass its representation to the integration routine, we will use an agent.  </item>
 		</list>
-		<paragraph>Operations in Eiffel are expressed as routines, and indeed every agent will have an associated routine.  Remember, however, that the fundamental distinction between objects and operations remains: an agent is an object, and it is not a routine; it
-			<span>represents</span> a routine.  As further evidence that this is a proper data abstraction, note that the procedure
+		<paragraph>Operations in Eiffel are expressed as routines, and indeed every agent will have an associated routine.  Remember, however, that the fundamental distinction between objects and operations remains: an agent is an object, and it is not a routine; it 
+			<span>represents</span> a routine.  As further evidence that this is a proper data abstraction, note that the procedure 
 			<code>
 				<string>call</string>
 			</code>, available on all agents to call the associated routine, is only one of the features of agents.  Other features may denote properties such as the class to which the routine belongs, its precondition and postcondition, the result of the last call for a function, the number of arguments.
@@ -41,7 +41,7 @@
 		<code_block>
 	<keyword>agent</keyword> <feature_name>r</feature_name>
 </code_block>
-		<paragraph>where
+		<paragraph>where 
 			<code>
 				<string>r</string>
 			</code> is the name of a routine of the enclosing class.  This is an expression, which you may assign to a writable entity, or pass as argument to aroutine.  Here for example is how you will specify event handling in the style of the EiffelVision 2 GUI library:
@@ -49,27 +49,27 @@
 		<code_block>
 	<feature_name>your_icon</feature_name>.<feature_name>click_actions</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol><keyword>agent</keyword> your_routine<symbol>)</symbol>
 </code_block>
-		<paragraph>This adds to the end of my_icon
+		<paragraph>This adds to the end of my_icon 
 			<code>
 				<keyword>.  </keyword>
-			</code> click_actions -- the list of agents associated with the "click" event for
+			</code> click_actions -- the list of agents associated with the "click" event for 
 			<code>
 				<string>my_icon</string>
-			</code>, denoting an icon in the application's user interface -- an agent representing
+			</code>, denoting an icon in the application's user interface -- an agent representing 
 			<code>
 				<string>your_routine</string>
-			</code> .  Then when a user clicks on the associated icon at execution, the EiffelVision 2 mechanisms will call the procedure
+			</code> .  Then when a user clicks on the associated icon at execution, the EiffelVision 2 mechanisms will call the procedure 
 			<code>
 				<string>call</string>
-			</code> on every agent of the list, which for this agent will execute
+			</code> on every agent of the list, which for this agent will execute 
 			<code>
 				<string>your_routine</string>
 			</code> .  This is a simple way to associate elements of your application, more precisely its "business model" (the processing that you have defined, directly connected to the application's business domain), with elements of its GUI.
 		</paragraph>
-		<paragraph>Similarly although in a completely different area, you may request the integration of a function
+		<paragraph>Similarly although in a completely different area, you may request the integration of a function 
 			<code>
 				<string>your_function</string>
-			</code> over the interval
+			</code> over the interval 
 			<code>
 				<comment>0</comment>
 			</code>
@@ -85,10 +85,10 @@
 		<code_block>
 	<feature_name>your_list</feature_name>.<feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> your_proc<symbol>)</symbol>
 </code_block>
-		<paragraph>with
+		<paragraph>with 
 			<code>
 				<string>your_list</string>
-			</code> of a type such as
+			</code> of a type such as 
 			<code>
 				<string>LIST</string>
 			</code>
@@ -100,15 +100,15 @@
 			</code>
 			<code>
 				<comment>]</comment>
-			</code> .  This will apply
+			</code> .  This will apply 
 			<code>
 				<string>your_proc</string>
 			</code> to every element of the list in turn.
 		</paragraph>
-		<paragraph>The agent mechanism is type-checked like the rest of Eiffel; so the last example is valid if and only if
+		<paragraph>The agent mechanism is type-checked like the rest of Eiffel; so the last example is valid if and only if 
 			<code>
 				<string>your_proc</string>
-			</code> is a procedure with one argument of type
+			</code> is a procedure with one argument of type 
 			<code>
 				<string>YOUR_TYPE</string>
 			</code> .
@@ -117,16 +117,16 @@
 			<size>2</size>
 			<content>Operations on agents</content>
 		</heading>
-		<paragraph>An agent
+		<paragraph>An agent 
 			<code>
 				<keyword>agent</keyword>
 			</code>
 			<code>
 				<string>r</string>
-			</code> built from a procedure
+			</code> built from a procedure 
 			<code>
 				<string>r</string>
-			</code> is of type
+			</code> is of type 
 			<code>
 				<string>PROCEDURE</string>
 			</code>
@@ -138,22 +138,22 @@
 			</code>
 			<code>
 				<comment>]</comment>
-			</code> where
+			</code> where 
 			<code>
 				<string>T</string>
-			</code> represents the class to which
+			</code> represents the class to which 
 			<code>
 				<string>r</string>
-			</code> belongs and
+			</code> belongs and 
 			<code>
 				<string>ARGS</string>
-			</code> the type of its arguments.  If
+			</code> the type of its arguments.  If 
 			<code>
 				<string>r</string>
-			</code> is a function of result type
+			</code> is a function of result type 
 			<code>
 				<string>RES</string>
-			</code>, the type is
+			</code>, the type is 
 			<code>
 				<string>FUNCTION</string>
 			</code>
@@ -171,13 +171,13 @@
 			</code>
 			<code>
 				<comment>]</comment>
-			</code> .  Classes
+			</code> .  Classes 
 			<code>
 				<string>PROCEDURE</string>
-			</code> and
+			</code> and 
 			<code>
 				<string>FUNCTION</string>
-			</code> are from the Kernel Library of EiffelBase, both inheriting from
+			</code> are from the Kernel Library of EiffelBase, both inheriting from 
 			<code>
 				<string>ROUTINE</string>
 			</code>
@@ -191,36 +191,36 @@
 				<comment>]</comment>
 			</code> .
 		</paragraph>
-		<paragraph>Among the features of
+		<paragraph>Among the features of 
 			<code>
 				<string>ROUTINE</string>
-			</code> and its descendants the most important are
+			</code> and its descendants the most important are 
 			<code>
 				<string>call</string>
-			</code>, already noted, which calls the associated routine, and
+			</code>, already noted, which calls the associated routine, and 
 			<code>
 				<string>item</string>
-			</code>, appearing only in
+			</code>, appearing only in 
 			<code>
 				<string>FUNCTION</string>
-			</code> and yielding the result of the associated function, which it obtains by calling
+			</code> and yielding the result of the associated function, which it obtains by calling 
 			<code>
 				<string>call</string>
 			</code>.
 		</paragraph>
-		<paragraph>As an example of using these mechanisms, here is how the function
+		<paragraph>As an example of using these mechanisms, here is how the function 
 			<code>
 				<string>integral</string>
-			</code> could look like in our
+			</code> could look like in our 
 			<code>
 				<string>INTEGRATOR</string>
-			</code> example class.  The details of the integration algorithm (straightforward, and making no claims to numerical sophistication) do not matter, but you see, in the highlighted line, the place were we evaluate the mathematical function associated with
+			</code> example class.  The details of the integration algorithm (straightforward, and making no claims to numerical sophistication) do not matter, but you see, in the highlighted line, the place were we evaluate the mathematical function associated with 
 			<code>
 				<string>f</string>
-			</code>, by calling
+			</code>, by calling 
 			<code>
 				<string>item</string>
-			</code> on
+			</code> on 
 			<code>
 				<string>f</string>
 			</code> :
@@ -247,13 +247,13 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
         <keyword>end</keyword>
     <keyword>end</keyword>
 </code_block>
-		<paragraph>Function
+		<paragraph>Function 
 			<code>
 				<string>integral</string>
-			</code> takes three arguments: the agent
+			</code> takes three arguments: the agent 
 			<code>
 				<string>f</string>
-			</code> representing the function to be integrated, and the two interval bounds.  When we need to evaluate that function for the value
+			</code> representing the function to be integrated, and the two interval bounds.  When we need to evaluate that function for the value 
 			<code>
 				<string>x</string>
 			</code>, in the line
@@ -261,13 +261,13 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 		<code_block>
 	Result := Result + step *
 </code_block>
-		<paragraph>we don't directly pass
+		<paragraph>we don't directly pass 
 			<code>
 				<string>x</string>
-			</code> to
+			</code> to 
 			<code>
 				<string>item</string>
-			</code> ; instead, we pass a one-element tuple
+			</code> ; instead, we pass a one-element tuple 
 			<code>
 				<comment>[</comment>
 			</code>
@@ -276,26 +276,26 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 			</code>
 			<code>
 				<comment>]</comment>
-			</code>, using the syntax for manifest tuples introduced in
+			</code>, using the syntax for manifest tuples introduced in 
 			<link>
 				<url>tutorial-11.html#36752</url>
-			</link> .  You will always use tuples for the argument to
+			</link> .  You will always use tuples for the argument to 
 			<code>
 				<string>call</string>
-			</code> and
+			</code> and 
 			<code>
 				<string>item</string>
-			</code>, because these features must be applicable to
-			<span>any</span> routine, and so cannot rely on a fixed number of arguments.  Instead they take a single tuple intended to contain all the arguments.  This property is reflected in the type of the second actual generic parameter to
+			</code>, because these features must be applicable to 
+			<span>any</span> routine, and so cannot rely on a fixed number of arguments.  Instead they take a single tuple intended to contain all the arguments.  This property is reflected in the type of the second actual generic parameter to 
 			<code>
 				<string>f</string>
-			</code>, corresponding to
+			</code>, corresponding to 
 			<code>
 				<string>ARGS</string>
-			</code> (the formal generic parameter of
+			</code> (the formal generic parameter of 
 			<code>
 				<string>FUNCTION</string>
-			</code> ): here it's TUPLE [REAL] to require an argument such as
+			</code> ): here it's TUPLE [REAL] to require an argument such as 
 			<code>
 				<comment>[</comment>
 			</code>
@@ -304,10 +304,10 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 			</code>
 			<code>
 				<comment>]</comment>
-			</code>, where
+			</code>, where 
 			<code>
 				<string>x</string>
-			</code> is of type
+			</code> is of type 
 			<code>
 				<string>REAL</string>
 			</code> .
@@ -316,10 +316,10 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 		<code_block>
 	<feature_name>your_icon</feature_name>.<feature_name>click_actions</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol><keyword>agent</keyword> your_routine<symbol>)</symbol>
 </code_block>
-		<paragraph>added to an EiffelVision list.  When the EiffelVision mechanism detects a mouse click event, it will apply to each element
+		<paragraph>added to an EiffelVision list.  When the EiffelVision mechanism detects a mouse click event, it will apply to each element 
 			<code>
 				<string>item</string>
-			</code> of the list of agents, your_icon
+			</code> of the list of agents, your_icon 
 			<code>
 				<keyword>.  </keyword>
 			</code> click_actions, an instruction such as
@@ -327,19 +327,19 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 		<code_block>
 	<feature_name>item</feature_name>.<feature_name>call</feature_name> <symbol>(</symbol><symbol>[</symbol>x, y<symbol>]</symbol><symbol>)</symbol>
 </code_block>
-		<paragraph>where
+		<paragraph>where 
 			<code>
 				<string>x</string>
-			</code> and
+			</code> and 
 			<code>
 				<string>y</string>
-			</code> are the coordinates of the mouse clicking position.  If
+			</code> are the coordinates of the mouse clicking position.  If 
 			<code>
 				<string>item</string>
-			</code> denotes the list element
+			</code> denotes the list element 
 			<code>
 				<keyword>agent</keyword>
-			</code> your_routine, inserted by the above call to
+			</code> your_routine, inserted by the above call to 
 			<code>
 				<string>extend</string>
 			</code>, the effect will be the same as that of calling
@@ -347,13 +347,13 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 		<code_block>
 	<feature_name>your_routine</feature_name> (x, y)
 </code_block>
-		<paragraph>assuming that
+		<paragraph>assuming that 
 			<code>
 				<string>your_routine</string>
-			</code> indeed takes arguments of the appropriate type, here
+			</code> indeed takes arguments of the appropriate type, here 
 			<code>
 				<string>INTEGER</string>
-			</code> representing a coordinate in pixels.  (Otherwise type checking would have rejected the call to
+			</code> representing a coordinate in pixels.  (Otherwise type checking would have rejected the call to 
 			<code>
 				<string>extend</string>
 			</code>.  )
@@ -362,10 +362,10 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 			<size>2</size>
 			<content>Open and closed arguments</content>
 		</heading>
-		<paragraph>In the examples so far, execution of the agent's associated routine, through
+		<paragraph>In the examples so far, execution of the agent's associated routine, through 
 			<code>
 				<string>item</string>
-			</code> or
+			</code> or 
 			<code>
 				<string>call</string>
 			</code>, passed exactly the arguments that a direct call to the routine would expect.  You can have more flexibility.  In particular, you may build an agent from a routine with more arguments than expected in the final call, and you may set the values of some arguments at the time you define the agent.
@@ -380,33 +380,33 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 		<code_block>
 	<feature_name>map</feature_name>.<feature_name>click_actions</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol><keyword>agent</keyword> record_city <symbol>(</symbol>name, population, ?, ?<symbol>)</symbol><symbol>)</symbol>
 </code_block>
-		<paragraph>assuming that the information on the
+		<paragraph>assuming that the information on the 
 			<code>
 				<string>name</string>
-			</code> and the
+			</code> and the 
 			<code>
 				<string>population</string>
-			</code> has already been determined.  What the agent denotes is the same as
+			</code> has already been determined.  What the agent denotes is the same as 
 			<code>
 				<keyword>agent</keyword>
 			</code>
 			<code>
 				<string>your_routine</string>
-			</code> as given before, where
+			</code> as given before, where 
 			<code>
 				<string>your_routine</string>
-			</code> would be a fictitious two-argument routine obtained from record_city -- a four-argument routine -- by setting the first two arguments once and for all to the values given,
+			</code> would be a fictitious two-argument routine obtained from record_city -- a four-argument routine -- by setting the first two arguments once and for all to the values given, 
 			<code>
 				<string>name</string>
-			</code> and
+			</code> and 
 			<code>
 				<string>population</string>
 			</code> .
 		</paragraph>
-		<paragraph>In the agent
+		<paragraph>In the agent 
 			<code>
 				<keyword>agent</keyword>
-			</code> record_city
+			</code> record_city 
 			<code>
 				<comment>(</comment>
 			</code>
@@ -433,15 +433,15 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 			</code>
 			<code>
 				<comment>)</comment>
-			</code>, we say that these first two arguments, with their set values, are
-			<bold>closed</bold> ; the last two are
-			<bold>open</bold> .  The question mark syntax introduced by this example may only appear in agent expressions; it denotes open arguments.  This means, by the way, that you may view the basic form used in the preceding examples,
+			</code>, we say that these first two arguments, with their set values, are 
+			<bold>closed</bold> ; the last two are 
+			<bold>open</bold> .  The question mark syntax introduced by this example may only appear in agent expressions; it denotes open arguments.  This means, by the way, that you may view the basic form used in the preceding examples, 
 			<code>
 				<keyword>agent</keyword>
-			</code> your_routine, as an abbreviation -- assuming your_routine has two arguments -- for
+			</code> your_routine, as an abbreviation -- assuming your_routine has two arguments -- for 
 			<code>
 				<keyword>agent</keyword>
-			</code> your_routine
+			</code> your_routine 
 			<code>
 				<comment>(</comment>
 			</code>
@@ -458,10 +458,10 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 				<comment>)</comment>
 			</code> .  It is indeed permitted, to define an agent with all arguments open, to omit the argument list altogether; no ambiguity may result.
 		</paragraph>
-		<paragraph>For type checking,
+		<paragraph>For type checking, 
 			<code>
 				<keyword>agent</keyword>
-			</code> record_city
+			</code> record_city 
 			<code>
 				<comment>(</comment>
 			</code>
@@ -488,7 +488,7 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 			</code>
 			<code>
 				<comment>)</comment>
-			</code> and
+			</code> and 
 			<code>
 				<keyword>agent</keyword>
 			</code> your_routine are acceptable in exactly the same situations, since both represent routines with two arguments.  The type of both is
@@ -497,10 +497,10 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 	<class_name>PROCEDURE</class_name> <symbol>[</symbol> <class_name>ANY</class_name>, <class_name>TUPLE</class_name> <symbol>[</symbol> <class_name>INTEGER</class_name>, <class_name>INTEGER</class_name> <symbol>]</symbol><symbol>]</symbol>
 </code_block>
 		<paragraph>where the tuple type specifies the open operands.  </paragraph>
-		<paragraph>A completely closed agent, such as
+		<paragraph>A completely closed agent, such as 
 			<code>
 				<keyword>agent</keyword>
-			</code> your_routine
+			</code> your_routine 
 			<code>
 				<comment>(</comment>
 			</code>
@@ -515,10 +515,10 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 			</code>
 			<code>
 				<comment>)</comment>
-			</code> or
+			</code> or 
 			<code>
 				<keyword>agent</keyword>
-			</code> record_city
+			</code> record_city 
 			<code>
 				<comment>(</comment>
 			</code>
@@ -545,10 +545,10 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 			</code>
 			<code>
 				<comment>)</comment>
-			</code>, has the type
+			</code>, has the type 
 			<code>
 				<string>TUPLE</string>
-			</code>, with no parameters; you will call it with
+			</code>, with no parameters; you will call it with 
 			<code>
 				<string>call</string>
 			</code>
@@ -556,27 +556,27 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 				<comment>)] ([</comment>
 			</code>, using an empty tuple as argument.
 		</paragraph>
-		<paragraph>The freedom to start from a routine with an arbitrary number of arguments, and choose which ones you want to close and which ones to leave open, provides a good part of the attraction of the agent mechanism.  It means in particular that in GUI applications you can limit to the strict minimum the "glue" code (sometimes called the
-			<span>controller</span> in the so-called MVC, Model-View Controller, scheme of GUI design) between the user interface and "business model" parts of a system.  A routine such as
+		<paragraph>The freedom to start from a routine with an arbitrary number of arguments, and choose which ones you want to close and which ones to leave open, provides a good part of the attraction of the agent mechanism.  It means in particular that in GUI applications you can limit to the strict minimum the "glue" code (sometimes called the 
+			<span>controller</span> in the so-called MVC, Model-View Controller, scheme of GUI design) between the user interface and "business model" parts of a system.  A routine such as 
 			<code>
 				<string>record_city</string>
-			</code> is a typical example of an element of the business model, uninfluenced -- as it should be -- by considerations of user interface design.  Yet by passing it in the form of an agent with partially open and partially closed arguments, you may be able to use it
+			</code> is a typical example of an element of the business model, uninfluenced -- as it should be -- by considerations of user interface design.  Yet by passing it in the form of an agent with partially open and partially closed arguments, you may be able to use it 
 			<span>directly</span> in the GUI, as shown above, without any "controller" code.
 		</paragraph>
 		<paragraph>As another example of the mechanism's versatility, we saw above an integral function that could integrate a function of one variable over an interval, as in</paragraph>
 		<code_block>
 	<feature_name>your_integrator</feature_name>.<feature_name>integral</feature_name> <symbol>(</symbol><keyword>agent</keyword> your_function <symbol>(</symbol>0, 1<symbol>)</symbol><symbol>)</symbol>
 </code_block>
-		<paragraph>Now assume that
+		<paragraph>Now assume that 
 			<code>
 				<string>function3</string>
-			</code> takes three arguments.  To integrate
+			</code> takes three arguments.  To integrate 
 			<code>
 				<string>function3</string>
-			</code> with two arguments fixed, you don't need a new
+			</code> with two arguments fixed, you don't need a new 
 			<code>
 				<string>integral</string>
-			</code> function; just use the same
+			</code> function; just use the same 
 			<code>
 				<string>integral</string>
 			</code> as before, judiciously selecting what to close and what to leave open:
@@ -588,7 +588,7 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 			<size>2</size>
 			<content>Open targets</content>
 		</heading>
-		<paragraph>All the agent examples seen so far were based on routines of the enclosing class.  This is not required.  Feature calls, as you remember, were either unqualified, as in
+		<paragraph>All the agent examples seen so far were based on routines of the enclosing class.  This is not required.  Feature calls, as you remember, were either unqualified, as in 
 			<code>
 				<string>f</string>
 			</code>
@@ -600,7 +600,7 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 			</code>
 			<code>
 				<comment>)</comment>
-			</code>, or qualified, as in
+			</code>, or qualified, as in 
 			<code>
 				<string>a</string>
 			</code>
@@ -621,10 +621,10 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 		<code_block>
 	<keyword>agent</keyword> <feature_name>a</feature_name>.<feature_name>g</feature_name>
 </code_block>
-		<paragraph>which is closed on its target
+		<paragraph>which is closed on its target 
 			<code>
 				<string>a</string>
-			</code> and open on the arguments.  Variants such as
+			</code> and open on the arguments.  Variants such as 
 			<code>
 				<keyword>agent</keyword>
 			</code>
@@ -643,7 +643,7 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 			</code>
 			<code>
 				<comment>)</comment>
-			</code>, all closed, and
+			</code>, all closed, and 
 			<code>
 				<keyword>agent</keyword>
 			</code>
@@ -667,11 +667,11 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 				<comment>)</comment>
 			</code>, open on one argument, are all valid.
 		</paragraph>
-		<paragraph>You may also want to make the
-			<span>target</span> open.  The question mark syntax could not work here, since it wouldn't tell us the class to which feature
+		<paragraph>You may also want to make the 
+			<span>target</span> open.  The question mark syntax could not work here, since it wouldn't tell us the class to which feature 
 			<code>
 				<string>g</string>
-			</code> belongs, known in the preceding examples from the type of
+			</code> belongs, known in the preceding examples from the type of 
 			<code>
 				<string>a</string>
 			</code>.  As in creation expressions, we must list the type explicitly; the convention is the same: write the types in braces, as in
@@ -696,7 +696,7 @@ integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name>
 
 	<feature_name>your_integer_list</feature_name>.<feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> add_to_n<symbol>)</symbol>
 </code_block>
-		<paragraph>even though the two procedures used in the agents have quite different forms.  We are assuming here that the first one, in class
+		<paragraph>even though the two procedures used in the agents have quite different forms.  We are assuming here that the first one, in class 
 			<code>
 				<string>ACCOUNT</string>
 			</code>, issomething like
@@ -708,7 +708,7 @@ deposit_one_gr<keyword>and</keyword> <keyword>is</keyword>
 	balance <symbol>:</symbol><symbol>=</symbol> balance <symbol>+</symbol> 1000 
      <keyword>end</keyword>
 </code_block>
-		<paragraph>so that it doesn't take an argument: it is normally called on its target, as in
+		<paragraph>so that it doesn't take an argument: it is normally called on its target, as in 
 			<code>
 				<string>my_account</string>
 			</code>
@@ -717,13 +717,13 @@ deposit_one_gr<keyword>and</keyword> <keyword>is</keyword>
 		<code_block>
 
 </code_block>
-		<paragraph>where
+		<paragraph>where 
 			<code>
 				<string>total</string>
-			</code> is an integer attribute of the enclosing class.  Without the versatility of playing with open and closed arguments for both the original arguments and target, you would have to write separate iteration mechanisms for these two cases.  Here you can use a single iteration routine of
+			</code> is an integer attribute of the enclosing class.  Without the versatility of playing with open and closed arguments for both the original arguments and target, you would have to write separate iteration mechanisms for these two cases.  Here you can use a single iteration routine of 
 			<code>
 				<string>LIST</string>
-			</code> and similar classes of EiffelBase,
+			</code> and similar classes of EiffelBase, 
 			<code>
 				<string>do_all</string>
 			</code>, for both purposes:

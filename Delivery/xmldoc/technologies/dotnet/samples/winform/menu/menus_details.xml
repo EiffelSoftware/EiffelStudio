@@ -9,18 +9,18 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>Windows Forms supports menus and context menus. Main menus are displayed on a menu bar that is located immediately below the title bar of a form. The menu bar contains top-level menu items that are used to group related submenu items. For example, by clicking a
-			<bold>File</bold> top-level menu item, you can display menu items that are related to file operations. Menu items typically appear as commands for your application (such as
-			<bold>New</bold> and
-			<bold>Open</bold>),but they can also appear as separator bars and submenu items. You  can display a check mark next to a menu item to display the state of a command or a the state of a feature in your application. In Windows Forms, main menus are represented by the
+		<paragraph>Windows Forms supports menus and context menus. Main menus are displayed on a menu bar that is located immediately below the title bar of a form. The menu bar contains top-level menu items that are used to group related submenu items. For example, by clicking a 
+			<bold>File</bold> top-level menu item, you can display menu items that are related to file operations. Menu items typically appear as commands for your application (such as 
+			<bold>New</bold> and 
+			<bold>Open</bold>),but they can also appear as separator bars and submenu items. You  can display a check mark next to a menu item to display the state of a command or a the state of a feature in your application. In Windows Forms, main menus are represented by the 
 			<bold>MainMenu</bold> control.
 		</paragraph>
-		<paragraph>Context menus can be displayed for a specific control or area of your form. They are typically accessed by clicking the right mouse button. In Windows Forms, context menus are represented by the
+		<paragraph>Context menus can be displayed for a specific control or area of your form. They are typically accessed by clicking the right mouse button. In Windows Forms, context menus are represented by the 
 			<bold>ContextMenu</bold> control.
 		</paragraph>
 		<paragraph>
-			<bold>ContextMenu</bold> and
-			<bold>MainMenu</bold> derive from
+			<bold>ContextMenu</bold> and 
+			<bold>MainMenu</bold> derive from 
 			<bold>Menu</bold>. They share many properties, methods, and events.
 		</paragraph>
 		<heading>
@@ -29,7 +29,7 @@
 				<bold>MainMenu</bold> to a Form
 			</content>
 		</heading>
-		<paragraph>The following code demonstrates how to add a
+		<paragraph>The following code demonstrates how to add a 
 			<bold>MainMenu</bold> to a form.
 		</paragraph>
 		<code_block>
@@ -42,8 +42,8 @@
 		<heading>
 			<size>2</size>Adding a Context Menu to a Control
 		</heading>
-		<paragraph>The following code demonstrates how to
-			<span>create</span> a
+		<paragraph>The following code demonstrates how to 
+			<span>create</span> a 
 			<bold>ContextMenu</bold> and assign it to a control.
 		</paragraph>
 		<code_block>
@@ -58,11 +58,11 @@
 		<heading>
 			<size>2</size>Adding Menu Items
 		</heading>
-		<paragraph>In the following example, a
-			<bold>File</bold> menu item is added to the
-			<bold>MainMenu</bold>. The
-			<bold>File</bold> menu item contains submenu items called
-			<bold>Open</bold> and
+		<paragraph>In the following example, a 
+			<bold>File</bold> menu item is added to the 
+			<bold>MainMenu</bold>. The 
+			<bold>File</bold> menu item contains submenu items called 
+			<bold>Open</bold> and 
 			<bold>Exit</bold>.
 		</paragraph>
 		<code_block>
@@ -77,10 +77,10 @@
 		<paragraph>
 			<line_break/>
 		</paragraph>
-		<paragraph>The following code demonstrates how to handle the
-			<bold>Click</bold> event for both the
-			<bold>Open</bold> and
-			<bold>Exit</bold> menu items
+		<paragraph>The following code demonstrates how to handle the 
+			<bold>Click</bold> event for both the 
+			<bold>Open</bold> and 
+			<bold>Exit</bold> menu items 
 			<span>create</span>d in the previous code example.
 		</paragraph>
 		<code_block>
@@ -94,7 +94,7 @@
 		<paragraph>
 			<line_break/>
 		</paragraph>
-		<paragraph>The following example demonstrates how to define shortcut keys for the menu items
+		<paragraph>The following example demonstrates how to define shortcut keys for the menu items 
 			<span>create</span>d in the previous example.
 		</paragraph>
 		<code_block>
@@ -109,7 +109,7 @@
 		<heading>
 			<size>2</size>Adding Submenus
 		</heading>
-		<paragraph>The following example demonstrates how to
+		<paragraph>The following example demonstrates how to 
 			<span>create</span> submenus.
 		</paragraph>
 		<code_block>
@@ -167,9 +167,9 @@
 		<heading>
 			<size>2</size>Cloning Menus
 		</heading>
-		<paragraph>In many cases, the context menu for a control is a subset of the main menu. You cannot add the same menu items to multiple menus, but you can clone a menu item or set of menu items. The following code demonstrates how to clone the
-			<bold>Format</bold> menu
-			<span>create</span>d previously and add it to the context menu of a
+		<paragraph>In many cases, the context menu for a control is a subset of the main menu. You cannot add the same menu items to multiple menus, but you can clone a menu item or set of menu items. The following code demonstrates how to clone the 
+			<bold>Format</bold> menu 
+			<span>create</span>d previously and add it to the context menu of a 
 			<bold>Label</bold>.
 		</paragraph>
 		<code_block>	mmy := label_1_context_menu.get_menu_items.add_menu_item (mi_format.clone_menu)

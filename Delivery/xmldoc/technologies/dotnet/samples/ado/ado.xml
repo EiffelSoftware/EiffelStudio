@@ -17,8 +17,8 @@
 			<output output="studio">
 				<list ordered="false">
 					<item>Launch EiffelStudio.</item>
-					<item>Select
-						<bold>Use existing Ace (control file)</bold> and click
+					<item>Select 
+						<bold>Use existing Ace (control file)</bold> and click 
 						<bold>OK</bold>
 					</item>
 					<item>Browse to
@@ -28,7 +28,7 @@
 						<italic/>.ace
 					</item>
 					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
-					<item>Click
+					<item>Click 
 						<bold>OK</bold>.
 					</item>
 				</list>
@@ -68,21 +68,21 @@ WOLZA    Wolski  Zajazd
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>This application shows how to interact with a database. First the connection to the database is open (
+		<paragraph>This application shows how to interact with a database. First the connection to the database is open ( 
 			<code>
 				<keyword>create</keyword>
 			</code>
 			<code>
 				<local_variable>my_sql_connection</local_variable>
-			</code>.
+			</code>. 
 			<code>
 				<feature_name>make_from_connection_string </feature_name>
-			</code> (
-			<italic>my_database</italic>)), then a request to the database is made (create my_sql_command.
+			</code> ( 
+			<italic>my_database</italic>)), then a request to the database is made (create my_sql_command. 
 			<code>
 				<feature_name>make_from_cmd_text_and_connection </feature_name>
-			</code>(
-			<italic>my_command</italic>,
+			</code>( 
+			<italic>my_command</italic>, 
 			<code>
 				<local_variable>my_sql_connection</local_variable>
 			</code>)). Finally,  the result of the request is displayed.

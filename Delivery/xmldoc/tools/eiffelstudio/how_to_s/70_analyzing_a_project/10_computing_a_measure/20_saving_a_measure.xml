@@ -16,13 +16,13 @@
 					<label>Evaluate a metric</label>
 				</link> over a scope.
 			</item>
-			<item>You can enter a name in the
+			<item>You can enter a name in the 
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#name</url>
 					<label>name field</label>
 				</link>, otherwise, the metric tool generates automatically a name for the saved measure.
 			</item>
-			<item>Click the
+			<item>Click the 
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#add</url>
 					<label>add</label>
@@ -61,7 +61,7 @@
 				<width>16</width>
 				<url>/images/eiffelstudio/icons/icon_red_cross.gif</url>
 				<border>0</border>
-			</image> to inform that measures could have changed since project has been recompiled. You can
+			</image> to inform that measures could have changed since project has been recompiled. You can 
 			<link>
 				<url>50_updating_recorded_measures.xml</url>
 				<label>update</label>

@@ -12,7 +12,7 @@
 		<heading>
 			<size>2</size>Motivation: Concerning Robustness
 		</heading>
-		<paragraph>The notion of software correctness that we saw in
+		<paragraph>The notion of software correctness that we saw in 
 			<link>
 				<url>../../eiffel_dotnet_language/20_language/50_design_by_contract.xml</url>
 				<label>Design by Contract and Assertions</label>
@@ -46,27 +46,27 @@
 		<heading>
 			<size>3</size>The Rescue Clause
 		</heading>
-		<paragraph>The
+		<paragraph>The 
 			<code>
 				<keyword>rescue</keyword>
-			</code> clause is part of the routine structure we saw in
+			</code> clause is part of the routine structure we saw in 
 			<link>
 				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features.xml</url>
 				<label>Adding Class Features</label>
-			</link>. The rescue clause is a sequence of instructions introduced by the keyword "
+			</link>. The rescue clause is a sequence of instructions introduced by the keyword " 
 			<code>
 				<keyword>rescue</keyword>
 			</code>". At the point that an exception occurs, the processing of the normal instructions in the routine body will cease, and the instructions in the rescue clause will be executed instead.
 		</paragraph>
-		<paragraph>If the instructions in the rescue clause can set things up so that it mightprove fruitful to attempt to retry the routine, it can do so by issuing a
+		<paragraph>If the instructions in the rescue clause can set things up so that it mightprove fruitful to attempt to retry the routine, it can do so by issuing a 
 			<code>
 				<keyword>retry</keyword>
-			</code> instruction. When the
+			</code> instruction. When the 
 			<code>
 				<keyword>retry</keyword>
 			</code> instruction is executed, the routine is restarted from its beginning, although local entities are not re-initialized. You will see why inthe example below.
 		</paragraph>
-		<paragraph>If the rescue clause exits without issuing a
+		<paragraph>If the rescue clause exits without issuing a 
 			<code>
 				<keyword>retry</keyword>
 			</code> instruction, then the routine fails.
@@ -91,10 +91,10 @@ transmit: (p: PACKET)
             end
         end
 </code_block>
-		<paragraph>In the example above,
+		<paragraph>In the example above, 
 			<code>
 				<keyword>rescue</keyword>
-			</code> is used to recover from a situation in which an exception occurs in trying to send a packet. When the exception occurs the rescue clause will, if the maximum number of retries has not been reached, wait for some random length of time. Then, after having updated the number of retries, it will issue the
+			</code> is used to recover from a situation in which an exception occurs in trying to send a packet. When the exception occurs the rescue clause will, if the maximum number of retries has not been reached, wait for some random length of time. Then, after having updated the number of retries, it will issue the 
 			<code>
 				<keyword>retry</keyword>
 			</code> instruction. If the maximum number of retries is reached, the rescue clause will exit without executing the retry, constituting a failure.

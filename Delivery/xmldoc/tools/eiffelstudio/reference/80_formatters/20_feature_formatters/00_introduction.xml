@@ -13,8 +13,8 @@
 				<url>/images/eiffelstudio/feature_format_bar.png</url>
 			</image>
 		</paragraph>
-		<paragraph>Feature views are all available through the
-			<bold>Feature</bold> tab of the
+		<paragraph>Feature views are all available through the 
+			<bold>Feature</bold> tab of the 
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/20_eiffelstudio_window_overview.xml</url>
 				<label>context tool</label>

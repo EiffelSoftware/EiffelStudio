@@ -290,3 +290,10 @@ A.feature:hover{
 	BORDER-COLOR: #999999;
 	PADDING: 4px 8px;
 }
+
+.navigation
+{
+	text-decoration:none;
+	text-align: right;
+	COLOR: #0000AA;
+}

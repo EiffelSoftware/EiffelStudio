@@ -15,7 +15,7 @@
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 
-		<bold>eif_access()</bold> macro accesses the Eiffel object
+		<bold>eif_access()</bold> macro accesses the Eiffel object 
 		<italic>obj</italic>. 
 		<heading>
 			<size>2</size>RETURN VALUE

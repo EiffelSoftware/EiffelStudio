@@ -7,7 +7,7 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>At the top of a development window, two toolbars are displayed by default. They are separated by
+	<paragraph>At the top of a development window, two toolbars are displayed by default. They are separated by 
 		<link>
 			<url>../10_browsing_tools/10_address_bars/10_main_address_bar.xml</url>
 			<label>the address bar</label>
@@ -17,17 +17,17 @@
 				<url>/images/eiffelstudio/browsing_tools/main_toolbars.png</url>
 			</image>
 		</paragraph>
-		<paragraph>You can hide toolbars (or the address bar) by unselecting them in the
-			<bold>Toolbars</bold> sub-menu of the
-			<bold>View</bold> menu or in the context menu that you can get by right-clicking in the empty space on the right of the bars. If you want them to be displayed again, just select them in the
-			<bold>Toolbars</bold> sub-menu of the
+		<paragraph>You can hide toolbars (or the address bar) by unselecting them in the 
+			<bold>Toolbars</bold> sub-menu of the 
+			<bold>View</bold> menu or in the context menu that you can get by right-clicking in the empty space on the right of the bars. If you want them to be displayed again, just select them in the 
+			<bold>Toolbars</bold> sub-menu of the 
 			<bold>View</bold> menu.
 		</paragraph>
-		<paragraph>In the standard toolbar, you will find buttons to manage
+		<paragraph>In the standard toolbar, you will find buttons to manage 
 			<link>
 				<url>../10_browsing_tools/00_introduction.xml</url>
 				<label>tools</label>
-			</link> and windows or that are related to the
+			</link> and windows or that are related to the 
 			<link>
 				<url>../20_editor/00_introduction.xml</url>
 				<label>editor</label>
@@ -37,11 +37,11 @@
 		<div>
 			<paragraph>Standard toolbar icons.</paragraph>
 		</div>
-		<paragraph>The project toolbars gathers the buttons for commands related to
+		<paragraph>The project toolbars gathers the buttons for commands related to 
 			<link>
 				<url>../30_compiler/index.xml</url>
 				<label>compilation</label>
-			</link>,
+			</link>, 
 			<link>
 				<url>/tools/eiffelstudio/reference/40_debugger/00_introduction.xml</url>
 				<label>debugging and running</label>
@@ -55,7 +55,7 @@
 			<line_break/>
 		</paragraph>
 		<note>
-			<bold>Note</bold>: For both toolbars, it is possible to choose which buttons are displayed and which ones are not. See the
+			<bold>Note</bold>: For both toolbars, it is possible to choose which buttons are displayed and which ones are not. See the 
 			<link>
 				<url>10_general_interface_mechanisms/30_toolbars_customization.xml</url>
 				<label>Toolbars customization page</label>

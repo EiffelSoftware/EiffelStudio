@@ -8,12 +8,12 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>The syntax is pretty simple when you understand what you need to export a feature: you need the name of the
-			<bold>feature</bold>, the name of the concerned
-			<bold>class</bold>, and the name of a
-			<bold>creation procedure</bold>. What is optional is to specify an
-			<bold>alias</bold>, an
-			<bold>index</bold> and a
+		<paragraph>The syntax is pretty simple when you understand what you need to export a feature: you need the name of the 
+			<bold>feature</bold>, the name of the concerned 
+			<bold>class</bold>, and the name of a 
+			<bold>creation procedure</bold>. What is optional is to specify an 
+			<bold>alias</bold>, an 
+			<bold>index</bold> and a 
 			<bold>calling convention</bold>. The index and calling convention are mainly used to create a DLL for windows, and the alias to export the feature under a different name.
 		</paragraph>
 		<heading>
@@ -93,13 +93,13 @@
 					<div>It must be a valid call type for the targeted platform (useful for Windows only). For Visual C++, the valid calling conventions are __stdcall, __cdecl and __fastcall.</div>
 				</item>
 			</list>
-			<paragraph>  For each feature the required fields are the
-				<bold>class</bold>, the
-				<bold>creation procedure</bold>, and of course the
+			<paragraph>  For each feature the required fields are the 
+				<bold>class</bold>, the 
+				<bold>creation procedure</bold>, and of course the 
 				<bold>feature</bold> itself.
 			</paragraph>
 			<list ordered="false">
-				<item>If the feature is a creation procedure then do not specify any creation, it will use the feature as creation. For example
+				<item>If the feature is a creation procedure then do not specify any creation, it will use the feature as creation. For example 
 					<bold>ROOT_CLASS: make</bold>.
 				</item>
 				<item>If the class has no creation procedure, do not specify any creation. default_create will be automatically used.</item>

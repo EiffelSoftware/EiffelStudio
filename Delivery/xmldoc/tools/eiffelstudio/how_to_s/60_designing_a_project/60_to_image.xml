@@ -13,7 +13,7 @@
 	</meta_data>
 	<paragraph>
 		<list ordered="false">
-			<item>To save the current diagram to an image file, click
+			<item>To save the current diagram to an image file, click 
 				<bold>Export diagram to PNG</bold>.
 				<image>
 					<url>/images/eiffelstudio/icons/icon_export_to_png_color.gif</url>

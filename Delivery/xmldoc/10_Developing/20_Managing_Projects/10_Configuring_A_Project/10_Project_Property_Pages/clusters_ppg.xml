@@ -10,7 +10,7 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>  The Clusters Property Page allows you to add, edit and remove clusters to and  from your projects the configuration(s).To learn more about what a  cluster is an how they are an essential part of the Eiffel environment please  refer to the
+					<paragraph>  The Clusters Property Page allows you to add, edit and remove clusters to and  from your projects the configuration(s).To learn more about what a  cluster is an how they are an essential part of the Eiffel environment please  refer to the 
 						<link>
 							<url>/general\guided_tour\language\tutorial-04.html</url>
 							<label>guided tour</label>
@@ -28,20 +28,20 @@
 					<heading>
 						<size>2</size>Cluster Hierarchy
 					</heading>
-					<paragraph>The Cluster Hierarchy shows all of the explicitly added clusters to the current  selected project configuration. To add or remove clusters from the hierarchy,  use the
-						<bold>Add</bold> and
+					<paragraph>The Cluster Hierarchy shows all of the explicitly added clusters to the current  selected project configuration. To add or remove clusters from the hierarchy,  use the 
+						<bold>Add</bold> and 
 						<bold>Remove</bold> buttons located to the  right on the it.
 						<line_break/>
 					</paragraph>
 					<paragraph>
 						<bold>Adding a Cluster</bold>
 					</paragraph>
-					<paragraph>Clusters are based on a hierarchical system where a single cluster may have zero  or more child clusters and those clusters, if any, it turn may also have child  clusters of their own. This means there are two ways to add a cluster. Add a  cluster with a parent or without. To add a cluster to the root of the project  (without a parent) simply click the root tree view node (this will displayed  asthe System Name set in the General page) and then click the
-						<bold>Add</bold>  button. To add a child cluster simply highlight the corresponding parent  cluster node in the tree view, then click the
+					<paragraph>Clusters are based on a hierarchical system where a single cluster may have zero  or more child clusters and those clusters, if any, it turn may also have child  clusters of their own. This means there are two ways to add a cluster. Add a  cluster with a parent or without. To add a cluster to the root of the project  (without a parent) simply click the root tree view node (this will displayed  asthe System Name set in the General page) and then click the 
+						<bold>Add</bold>  button. To add a child cluster simply highlight the corresponding parent  cluster node in the tree view, then click the 
 						<bold>Add</bold> button.
 					</paragraph>
-					<paragraph>You should now be presented with the option to edit the cluster name (by default  the cluster name will be new_cluster(
-						<italic>nth</italic>) where (
+					<paragraph>You should now be presented with the option to edit the cluster name (by default  the cluster name will be new_cluster( 
+						<italic>nth</italic>) where ( 
 						<italic>nth</italic>) is the  index if new_cluster already existing in any one of the projects  configurations). You must enter a valid cluster name governed by the following  rules
 					</paragraph>
 					<list ordered="false">
@@ -55,9 +55,9 @@
 					<bold>Note</bold>: Removing a cluster  from the project is irreversible unless you click
 					<italic>'Cancel</italic>' on the  Property Page Dialog.
 					<paragraph>
-						<line_break/>  To remove a clustersimplyselect the cluster to be removed from the  project configuration and then click the
-						<bold>Remove</bold> button, right  of the Cluster Hierarchy. Once clicked you will need to confirm the removal of  the selected cluster. Clicking
-						<bold>OK</bold> on the confirmation dialog  removes the cluster,
+						<line_break/>  To remove a clustersimplyselect the cluster to be removed from the  project configuration and then click the 
+						<bold>Remove</bold> button, right  of the Cluster Hierarchy. Once clicked you will need to confirm the removal of  the selected cluster. Clicking 
+						<bold>OK</bold> on the confirmation dialog  removes the cluster, 
 						<bold>Cancel</bold> leaves the cluster in the current  configuration.
 					</paragraph>
 					<bold>Note</bold>: If the selected  cluster has one or more children clusters, if you choose to remove the cluster  all child clusters will also be removed from the current configuration.
@@ -94,7 +94,7 @@
 					<paragraph>
 						<bold>Override</bold>
 					</paragraph>
-					<paragraph>The override option can only be applied to one cluster in each configuration.  This property is to resolve any class name clashes between the selected cluster  and anycluster in the configuration without the need to
+					<paragraph>The override option can only be applied to one cluster in each configuration.  This property is to resolve any class name clashes between the selected cluster  and anycluster in the configuration without the need to 
 						<link>
 							<url>#cluster_excludes</url>
 							<label>  exclude</label>
@@ -109,35 +109,35 @@
 					<heading>
 						<size>2</size>Cluster Excludes
 					</heading>
-					<paragraph>Ifeither the
+					<paragraph>Ifeither the 
 						<link>
 							<url>#include_subdirectories</url>
 							<label>Include Subcdirectories</label>
-						</link>  or
+						</link>  or 
 						<link>
 							<url>#LibraryAndAll</url>
 							<label>Library</label>
 						</link> property for the selected cluster have  been checked then the compile will recursively look in all of the  clusterssub-directories for classes. This maylead to class name  conficts as different libraries may use the same name for classes.In this  situationyou can choose to exclude any subdirectoryfrom being  searched or any file being include by the compiler at compile time.
 					</paragraph>
-					<paragraph>The current cluster excluded items list is located underneath the
+					<paragraph>The current cluster excluded items list is located underneath the 
 						<link>
 							<url>#namespace</url>
 							<label>  Namespace</label>
-						</link> property, accompanied by an
-						<bold>Add</bold> and a
+						</link> property, accompanied by an 
+						<bold>Add</bold> and a 
 						<bold>Remove</bold>  button.
 						<line_break/>
 					</paragraph>
 					<paragraph>
 						<bold>Adding an Item to Exclude</bold>
 					</paragraph>
-					<paragraph>To add a newitem to the list of excluded item, click
+					<paragraph>To add a newitem to the list of excluded item, click 
 						<bold>Add </bold>next  to the Excludes list. An edit box will appear at the end of the Excludes list  allowing you to enter the name of a file or directory to exclude.
 					</paragraph>
 					<paragraph>
 						<bold>Remove ExcludedItems</bold>
 					</paragraph>
-					<paragraph>To remove one or more items, select the items you would like to have removed  from the list and click
+					<paragraph>To remove one or more items, select the items you would like to have removed  from the list and click 
 						<bold>Remove</bold> button next the the Excludes  list.
 					</paragraph>
 					<paragraph>

@@ -8,26 +8,26 @@
 		</help>
 	</meta_data>
 	<paragraph>Renaming a class can sometimes be tedious. It is necessary to update clients and ancestors of the renamed class, and they may be numerous. EiffelStudio offers a simpler way to remedy this problem.
-		<paragraph>The solution is provided by the
+		<paragraph>The solution is provided by the 
 			<link>
 				<url>../../reference/50_diagram_tool/00_introduction.xml</url>
 				<label>Diagram tool</label>
-			</link>: to rename a class,
+			</link>: to rename a class, 
 			<link>
 				<url>../20_browsing/20_viewing_information_about_a_component/10_centering_tools_on_a_component.xml</url>
 				<label>center the context tool</label>
-			</link> on it and display the diagram. Then
+			</link> on it and display the diagram. Then 
 			<link>
 				<url>../../reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
 				<label>pick</label>
 			</link> the class (from anywhere in EiffelStudio) and drop the pebble on
 			<image>
 				<url>/images/eiffelstudio/icons/icon_class_header_color.gif</url>
-			</image>. A dialog window will then appear. It will allow you to set the new name. It will also propose three options :
-			<bold>Change name locally</bold>,
-			<bold>Global search/replace of name in compiled classes</bold> and
+			</image>. A dialog window will then appear. It will allow you to set the new name. It will also propose three options : 
+			<bold>Change name locally</bold>, 
+			<bold>Global search/replace of name in compiled classes</bold> and 
 			<bold>Global search/replace of name in entire universe</bold>. The first option is equivalent to modifying manually the class name in its text. The second option will rename the class and update its clients and ancestors. The third option will do the same as the second and will also update classes that are in the universe but not in the system.
-			<line_break/>Changes are actually made when you press
+			<line_break/>Changes are actually made when you press 
 			<bold>OK</bold>.
 		</paragraph>
 	</paragraph></document>

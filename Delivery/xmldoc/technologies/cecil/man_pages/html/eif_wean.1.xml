@@ -13,8 +13,8 @@
 		</code>
 		<heading>
 			<size>2</size>DESCRIPTION
-		</heading>The
-		<bold>eif_wean()</bold> function releases the protection of the Eiffel reference, which is protected by the Eiffel object
+		</heading>The 
+		<bold>eif_wean()</bold> function releases the protection of the Eiffel reference, which is protected by the Eiffel object 
 		<italic>obj</italic>.
 		<heading>
 			<size>2</size>RETURN VALUE
@@ -25,7 +25,7 @@
 		<heading>
 			<size>2</size>SEE ALSO
 		</heading>
-		<bold>eif_access</bold>(1) ,
-		<bold>eif_adopt</bold>(1),
+		<bold>eif_access</bold>(1) , 
+		<bold>eif_adopt</bold>(1), 
 		<bold>eif_protect</bold>(1).  Markup created by  1. 0, November 15, 1999.
 	</paragraph></document>

@@ -24,7 +24,7 @@
 				<local_variable>your_lib_name</local_variable>
 			</code> is the name of the file containing the library.
 		</paragraph>
-		<paragraph>  After this call has been executed, the boolean value
+		<paragraph>  After this call has been executed, the boolean value 
 			<code>
 				<local_variable>your_dll.meaningful</local_variable>
 			</code> will be true if and only if the creation has been successful, that is to say, the  given name did correspond to an available library, and it was possible to load it.
@@ -32,7 +32,7 @@
 		<paragraph>  If 
 			<code>
 				<local_variable>your_dll.meaningful</local_variable>
-			</code> is false, you can have more details about the error  by comparing the value of
+			</code> is false, you can have more details about the error  by comparing the value of 
 			<code>
 				<local_variable>your_dll.error_code</local_variable>
 			</code>, an integer, to those of  constant attributes defined in class 
@@ -43,11 +43,11 @@
 			<link>
 				<url>../../reference/desc/spec/win32/dll_32_routine_chart.html</url>
 				<label>DLL_32_ROUTINE</label>
-			</link>  , supported by an auxiliary class
+			</link>  , supported by an auxiliary class 
 			<link>
 				<url>../../reference/desc/general/shared_library_constants_chart.html</url>
 				<label>  SHARED_LIBRARY_CONSTANTS</label>
-			</link>. As expressed by an invariant of class
+			</link>. As expressed by an invariant of class 
 			<link>
 				<url>../../reference/desc/spec/win32/dll_32_chart.html</url>
 				<label>DLL_32</label>

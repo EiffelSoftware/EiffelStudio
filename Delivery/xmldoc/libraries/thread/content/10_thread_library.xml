@@ -8,12 +8,7 @@
 			</link>. The reference of this library should give all its content.
 		</paragraph>
 		<heading>
-			<size>2</size>
-			<content>Creating and launching threads: the class 
-				<code>
-					<class_name>THREAD</class_name>
-				</code> (deferred)
-			</content>
+			<size>2</size>Creating and launching threads: the class THREAD (deferred)
 		</heading>
 		<paragraph>The class of the thread object you want to create should inherit the 
 			<code>
@@ -54,12 +49,7 @@
 							<feature_name>join_all</feature_name>
 						</code> and the end of the exceution of the parent thread if you do not want it to die before its child, otherwise they may prematurily terminate.
 						<heading>
-							<size>2</size>
-							<content>The class 
-								<code>
-									<class_name>MUTEX</class_name>
-								</code>
-							</content>
+							<size>2</size>The class MUTEX
 						</heading>
 						<paragraph>The implementation of the class 
 							<code>
@@ -103,12 +93,7 @@
 									<bold>Caution</bold>: be sure that a mutex is unlocked when it is disposed.
 								</warning>
 								<heading>
-									<size>2</size>
-									<content>The class 
-										<code>
-											<class_name>SEMAPHORE</class_name>
-										</code>
-									</content>
+									<size>2</size>The class SEMAPHORE
 								</heading>
 								<paragraph>Like 
 									<code>
@@ -158,14 +143,9 @@
 										<bold>Caution</bold>: be sure that a semaphore does not wait for a token when it is disposed
 									</warning>
 									<heading>
-										<size>2</size>
-										<content>The class 
-											<code>
-												<class_name>CONDITION_VARIABLE</class_name>
-											</code>
-										</content>
+										<size>2</size>The class CONDITION_VARIABLE
 									</heading>
-									<paragraph>This class allows to use condition variables in Eiffel. An instance of class
+									<paragraph>This class allows to use condition variables in Eiffel. An instance of class 
 										<code>
 											<class_name>CONDITION_VARIABLE</class_name>
 										</code> can be shared between threads.
@@ -187,19 +167,19 @@
 													</code> must be locked by the calling thread so as 
 													<code>
 														<feature_name>wait</feature_name>
-													</code> can be called.
+													</code> can be called. 
 													<code>
 														<feature_name>wait</feature_name>
 													</code> atomically unlocks 
 													<code>
 														<local_variable>my_mutex</local_variable>
-													</code> and waits for the condition variable
+													</code> and waits for the condition variable 
 													<code>
 														<local_variable>my_mutex</local_variable>
 													</code> to receive a signal. As soon as it received a signal, 
 													<code>
 														<local_variable>my_cond</local_variable>
-													</code> locks
+													</code> locks 
 													<code>
 														<local_variable>my_mutex</local_variable>
 													</code>;
@@ -226,12 +206,7 @@
 												<class_name>THREAD_ATTRIBUTES</class_name>
 											</code>: defines theattributes of an Eiffel Thread regarding the thread scheduling policy andpriority.
 											<heading>
-												<size>2</size>
-												<content>Controlling execution: 
-													<code>
-														<class_name>THREAD_CONTROL</class_name>
-													</code>
-												</content>
+												<size>2</size>Controlling execution: THREAD_CONTROL
 											</heading>
 											<list ordered="false">
 												<item>

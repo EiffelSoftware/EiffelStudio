@@ -22,10 +22,10 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-generictyperec.png</url>
 			</image>
 		</div>
-		<paragraph>You can also select the type
+		<paragraph>You can also select the type 
 			<code>
 				<class_name>TUPLE</class_name>
-			</code>,which is a special class that can have zero or more generic parameters. When you select it, it has no parameters, but you can add one by clicking on the
+			</code>,which is a special class that can have zero or more generic parameters. When you select it, it has no parameters, but you can add one by clicking on the 
 			<bold>Add parameter</bold> button. Click it as often as the number of generic parameters that you need.
 		</paragraph>
 		<div>

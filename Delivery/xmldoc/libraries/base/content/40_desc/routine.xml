@@ -40,7 +40,7 @@
 				<label>previously</label>
 			</link>.
 		</paragraph>
-		<paragraph>  After either call has been executed, the boolean value
+		<paragraph>  After either call has been executed, the boolean value 
 			<code>
 				<local_variable>your_routine.meaningful</local_variable>
 			</code> will be true if and only if the creation has been successful, that is to say, the given  name or index did correspond to a routine of the library, and it was possible to  open it. If the value is false, you can have more details about the error by  comparing the value of 

@@ -8,7 +8,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>The metric interface allows users to analyze their projects. It provides a set of metrics that could be evaluated over various scopes
+		<paragraph>The metric interface allows users to analyze their projects. It provides a set of metrics that could be evaluated over various scopes 
 			<span>to obtain quantitative information about systems.</span>
 		</paragraph>
 		<paragraph>Thanks to the metric interface, users can evaluate metrics over different scopes, get some detailed information when possible, save the pertinent measures, delete the useless ones, and update the values of previously recorded metrics.</paragraph>

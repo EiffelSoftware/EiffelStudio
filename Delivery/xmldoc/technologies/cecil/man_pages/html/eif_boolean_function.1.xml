@@ -49,7 +49,7 @@
 		</code>
 		<heading>
 			<size>2</size>DESCRIPTION
-		</heading>These functions return the address of the Eiffel function of name
+		</heading>These functions return the address of the Eiffel function of name 
 		<italic>name</italic> from the class, which type identifier is 
 		<italic>tid</italic>.  
 		<line_break/>Use 
@@ -86,7 +86,7 @@
 			<size>2</size>COMPATIBILITY
 		</heading>
 		<line_break/>
-		<bold>eif_reference_function()</bold> is equivalent to
+		<bold>eif_reference_function()</bold> is equivalent to 
 		<bold>eif_fn_ref()</bold>, which is deprecated.  
 		<line_break/>
 		<bold>eif_integer_function()</bold> is equivalent to 
@@ -95,24 +95,24 @@
 		<bold>eif_real_function()</bold> is equivalent to 
 		<bold>eif_fn_float()</bold>,which is deprecated.  
 		<line_break/>
-		<bold>eif_double_function()</bold> is equivalent to
+		<bold>eif_double_function()</bold> is equivalent to 
 		<bold>eif_fn_double()</bold>, which is deprecated.  
 		<line_break/>
-		<bold>eif_character_function()</bold> is equivalent to
+		<bold>eif_character_function()</bold> is equivalent to 
 		<bold>eif_fn_char()</bold>, which is deprecated.  
 		<line_break/>
 		<bold>eif_bit_function()</bold> is equivalent to 
 		<bold>eif_fn_bit()</bold>,which is deprecated.  
 		<line_break/>
-		<bold>eif_boolean_function()</bold> is equivalent to
+		<bold>eif_boolean_function()</bold> is equivalent to 
 		<bold>eif_fn_bool()</bold>, which is deprecated.  
 		<line_break/>
-		<bold>eif_pointer_function()</bold> is equivalent to
+		<bold>eif_pointer_function()</bold> is equivalent to 
 		<bold>eif_fn_pointer()</bold>, which is deprecated.  
 		<heading>
 			<size>2</size>SEE ALSO
 		</heading>
 		<bold>eif_type_id</bold>(1), 
-		<bold>eif_protect</bold>(1),
+		<bold>eif_protect</bold>(1), 
 		<bold>eif_procedure</bold>(1).  Markup created by  1. 0, November 15, 1999. 
 	</paragraph></document>

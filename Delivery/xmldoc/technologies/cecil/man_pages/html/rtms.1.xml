@@ -13,15 +13,15 @@
 		</code>
 		<heading>
 			<size>2</size>DESCRIPTION
-		</heading>The
-		<bold>eif_string()</bold> macro returns the corresponding Eiffel string corresponding to the C string
+		</heading>The 
+		<bold>eif_string()</bold> macro returns the corresponding Eiffel string corresponding to the C string 
 		<italic>string</italic>.
-		<paragraph>The return value does not reference
+		<paragraph>The return value does not reference 
 			<italic>string</italic>.
 		</paragraph>
 		<heading>
 			<size>2</size>NOTES
-		</heading>This function return an Eiffel reference, which must be protected with
+		</heading>This function return an Eiffel reference, which must be protected with 
 		<bold>eif_protect()</bold>.
 		<heading>
 			<size>2</size>CONFORMANCE
@@ -29,11 +29,11 @@
 		<heading>
 			<size>2</size>COMPATIBILITY
 		</heading>
-		<bold>eif_string()</bold> is equivalent to
+		<bold>eif_string()</bold> is equivalent to 
 		<bold>RTMS()</bold>, which is deprecated.
 		<heading>
 			<size>2</size>SEE ALSO
 		</heading>
-		<bold>eif_protect</bold>(1) ,
+		<bold>eif_protect</bold>(1) , 
 		<bold>eif_create</bold>(1).  Markup created by  1. 0, November 15, 1999.
 	</paragraph></document>

@@ -4,7 +4,7 @@
 		<paragraph>What goes into the feature body field is dependent on what kind of feature you wish to generate.</paragraph>
 		<list ordered="false">
 			<item>
-				<bold>do</bold>: this is the normal procedure type. Enter in the field below
+				<bold>do</bold>: this is the normal procedure type. Enter in the field below 
 				<bold>do</bold> a body for your feature.
 				<code_block>
 	do_something is

@@ -23,13 +23,13 @@
 		<heading>
 			<size>2</size>RETURN VALUE
 		</heading>Upon failure, it returns EIF_NO_TYPE.  Otherwise, the return value can be one of the following: 
-		<bold>EIF_INTEGER_TYPE</bold>,
+		<bold>EIF_INTEGER_TYPE</bold>, 
 		<bold>EIF_CHARACTER_TYPE</bold>, 
-		<bold>EIF_BOOLEAN_TYPE</bold>,
+		<bold>EIF_BOOLEAN_TYPE</bold>, 
 		<bold>EIF_DOUBLE_TYPE</bold>, 
-		<bold>EIF_REAL_TYPE</bold>,
+		<bold>EIF_REAL_TYPE</bold>, 
 		<bold>EIF_REFERENCE_TYPE</bold>, 
-		<bold>EIF_EXPANDED_TYPE</bold>,
+		<bold>EIF_EXPANDED_TYPE</bold>, 
 		<bold>EIF_BIT_TYPE</bold>. 
 		<heading>
 			<size>2</size>CONFORMANCE
@@ -38,7 +38,7 @@
 			<size>2</size>SEE ALSO
 		</heading>
 		<bold>eif_protect</bold>(1) , 
-		<bold>attribute_exists</bold>(1) ,
+		<bold>attribute_exists</bold>(1) , 
 		<bold>eif_procedure</bold>(1) , 
 		<bold>eif_reference_function</bold>(1). Markup created by  1. 0, November 15, 1999. 
 	</paragraph></document>

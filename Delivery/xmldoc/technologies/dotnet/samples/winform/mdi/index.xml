@@ -36,7 +36,7 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>This application demonstrates how to create a multiple document interface. More information regarding the use of a MDI, is available
+		<paragraph>This application demonstrates how to create a multiple document interface. More information regarding the use of a MDI, is available 
 			<link>
 				<url>mdi_detail.xml</url>
 				<label>here</label>

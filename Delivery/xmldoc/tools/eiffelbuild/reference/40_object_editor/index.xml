@@ -8,17 +8,17 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>An object editor is a tool which allows you to edit the properties of a selected
+		<paragraph>An object editor is a tool which allows you to edit the properties of a selected 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
 			</link>. Common properties include minimum width and height, color, text etc.
 		</paragraph>
-		<paragraph>An object editor can only reference one
+		<paragraph>An object editor can only reference one 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> at once, and when not empty, it is considered to be "targeted" to the
+			</link> at once, and when not empty, it is considered to be "targeted" to the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
@@ -33,19 +33,19 @@
 		<heading>
 			<size>2</size>Docked object editor
 		</heading>
-		<paragraph>The docked object editor is displayed to the right hand side of the EiffelBuild main window. This editor is always displayed and is permanently linked to the
+		<paragraph>The docked object editor is displayed to the right hand side of the EiffelBuild main window. This editor is always displayed and is permanently linked to the 
 			<link>
 				<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
 				<label> layout constructor</label>
-			</link>. This means that whenever the selected
+			</link>. This means that whenever the selected 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> changes in the
+			</link> changes in the 
 			<link>
 				<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
 				<label> layout constructor</label>
-			</link>, the docked object editor becomes targeted to this
+			</link>, the docked object editor becomes targeted to this 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
@@ -55,47 +55,47 @@
 			<size>2</size>Floating object editors
 		</heading>
 		<paragraph>These object editors appear in their own window, and you may open as many of these as you wish.</paragraph>
-		<paragraph>To open a new floating object editor,
+		<paragraph>To open a new floating object editor, 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>drop</label>
-			</link> an
+			</link> an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
 			</link> on
 			<image>
 				<url>/images/eiffelbuild/icons/icon_object_editor_color.png</url>
-			</image>, displayed in the
+			</image>, displayed in the 
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label> main toolbar</label>
-			</link> and also in each existing object editor. The new object editor will then be targeted to the
+			</link> and also in each existing object editor. The new object editor will then be targeted to the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> that was
+			</link> that was 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>dropped</label>
 			</link>.
 		</paragraph>
 		<note>
-			<bold>Note</bold>: If the
+			<bold>Note</bold>: If the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
 			</link> targeted to floating object editor is deleted, then the editor will be destroyed. This helps stop the screen becoming cluttered with empty editors.
 		</note>
-		<paragraph>As a shortcut to a complete
+		<paragraph>As a shortcut to a complete 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>pick and drop</label>
-			</link> transport, you may hold down the Ctrl key while starting the
+			</link> transport, you may hold down the Ctrl key while starting the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>pick</label>
-			</link>, which will immediately open a new floating object editor targeted to the
+			</link>, which will immediately open a new floating object editor targeted to the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
@@ -104,15 +104,15 @@
 		<heading>
 			<size>2</size>General use
 		</heading>
-		<paragraph>When an object editor is targeted to an
+		<paragraph>When an object editor is targeted to an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link>, you will see that controls are available within the editor to customize that
+			</link>, you will see that controls are available within the editor to customize that 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link>. Although every different type of
+			</link>. Although every different type of 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
@@ -122,47 +122,47 @@
 			<item>String properties inputted via a text field are updated within the object every time a key is pressed</item>
 			<item>Integer properties inputted via a text field are only updated within the object when return is pressed, or the input box looses the focus.</item>
 			<item>Almost without exception, a push button which controls a property, will open up a dialog, allowing the property to be edited. Examples are colors, pixmaps and events.</item>
-			<item>If when you attempt to modify a property, it returns back to its original value, it means that the value you attempted to enter was invalid. For example, looking at the screen show above, if you enter -50 into the minimum_height text field and press return, it will revert back to 23. This is because the minimum_height of an EV_BUTTON may not be set to less than 0. To find allowable values for properties of an
+			<item>If when you attempt to modify a property, it returns back to its original value, it means that the value you attempted to enter was invalid. For example, looking at the screen show above, if you enter -50 into the minimum_height text field and press return, it will revert back to 23. This is because the minimum_height of an EV_BUTTON may not be set to less than 0. To find allowable values for properties of an 
 				<link>
 					<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 					<label>object</label>
-				</link>, consult the
+				</link>, consult the 
 				<link>
 					<url>/libraries/vision2/00_introduction.xml</url>
 					<label>EiffelVision2</label>
 				</link> documentation.
 			</item>
 		</list>
-		<paragraph>All properties that may be manipulated in an object editor correspond directly to a property of the
+		<paragraph>All properties that may be manipulated in an object editor correspond directly to a property of the 
 			<link>
 				<url>/libraries/vision2/00_introduction.xml</url>
 				<label>EiffelVision2</label>
-			</link> control that is represented by the
+			</link> control that is represented by the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> (Displayed in an object editor as
-			<bold>type</bold>). There is one exception to that rule though, and that is the
-			<bold>Name</bold> field which is specific to EiffelBuild. This field is used for your identification of the
+			</link> (Displayed in an object editor as 
+			<bold>type</bold>). There is one exception to that rule though, and that is the 
+			<bold>Name</bold> field which is specific to EiffelBuild. This field is used for your identification of the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> and as the attribute name in the generated code. For example, when EiffelBuild generates code corresponding to the
+			</link> and as the attribute name in the generated code. For example, when EiffelBuild generates code corresponding to the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
 			</link>targeted in the editor shown above, it would declare the vision2 component as - button1: EV_BUTTON
 		</paragraph>
 		<note>
-			<bold>Note</bold>: You may have as many object editors targeted to the same
+			<bold>Note</bold>: You may have as many object editors targeted to the same 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> as you wish. Whenever a change is made to the
+			</link> as you wish. Whenever a change is made to the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> through one of the editors, all other editors targeted to that
+			</link> through one of the editors, all other editors targeted to that 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
@@ -171,11 +171,11 @@
 		<heading>
 			<size>2</size>Advanced property manipulation
 		</heading>
-		<paragraph>Although many of the properties of
+		<paragraph>Although many of the properties of 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
-			</link> are relatively simple, and can be manipulated with STRING or INTEGER values, there are others that require more complicated control mechanisms. The following
+			</link> are relatively simple, and can be manipulated with STRING or INTEGER values, there are others that require more complicated control mechanisms. The following 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
@@ -204,20 +204,20 @@
 		<heading>
 			<size>2</size>Event connection
 		</heading>
-		<paragraph>As well as being able to manipulate the standard properties of an
+		<paragraph>As well as being able to manipulate the standard properties of an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link>, facilities are provided for connecting to the events of an
+			</link>, facilities are provided for connecting to the events of an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link>. Looking at the object editor screenshot above, you will see that there is a button marked
+			</link>. Looking at the object editor screenshot above, you will see that there is a button marked 
 			<bold>Select events</bold> which is also available in all targeted editors.
 		</paragraph>
 		<note>
-			<bold>Note</bold>: The button will be marked
-			<bold>Modify events</bold> when one or more events are already selected for the current
+			<bold>Note</bold>: The button will be marked 
+			<bold>Modify events</bold> when one or more events are already selected for the current 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
@@ -230,7 +230,7 @@
 			</image>
 		</paragraph>
 		<paragraph>Looking at the screenshot above, you will see that this dialog contains all the action_sequences available for the EV_BUTTON to which the object editor is targeted.</paragraph>
-		<paragraph>If you check a button connected with one of the action sequences, you will be then able to enter the name of a feature that you wish to connect to the action sequence. The screenshot above shows the user has connected a feature named `button_pressed' to the `select_actions'. When
+		<paragraph>If you check a button connected with one of the action sequences, you will be then able to enter the name of a feature that you wish to connect to the action sequence. The screenshot above shows the user has connected a feature named `button_pressed' to the `select_actions'. When 
 			<link>
 				<url>/tools/eiffelbuild/reference/90_code_generation/index.xml</url>
 				<label>code is generated</label>

@@ -107,7 +107,7 @@
 					<width>16</width>
 					<url>/images/eiffelstudio/icons/icon_view_measure_plus_color.gif</url>
 					<border>0</border>
-				</image> show
+				</image> show 
 				<link>
 					<url/>
 					<label>details</label>

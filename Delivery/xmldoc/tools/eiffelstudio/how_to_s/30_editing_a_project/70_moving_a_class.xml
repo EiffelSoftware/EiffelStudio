@@ -7,23 +7,23 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>To move a class from a cluster to another one, you have to use the
+	<paragraph>To move a class from a cluster to another one, you have to use the 
 		<link>
 			<url>../../reference/50_diagram_tool/00_introduction.xml</url>
 			<label>Diagram tool</label>
-		</link>. First,
+		</link>. First, 
 		<link>
 			<url>../20_browsing/20_viewing_information_about_a_component/10_centering_tools_on_a_component.xml</url>
 			<label>center the tool</label>
-		</link> on the cluster that contains the class you want to move. Then, if the destination cluster is not shown on the diagram,
+		</link> on the cluster that contains the class you want to move. Then, if the destination cluster is not shown on the diagram, 
 		<link>
 			<url>../../reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
 			<label>pick</label>
-		</link> it in the
+		</link> it in the 
 		<link>
 			<url>../../reference/10_browsing_tools/20_cluster_tool/00_introduction.xml</url>
 			<label>cluster tool</label>
-		</link> and drop it in the
+		</link> and drop it in the 
 		<link>
 			<url>../../reference/50_diagram_tool/00_introduction.xml</url>
 			<label>diagram</label>

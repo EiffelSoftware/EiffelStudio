@@ -7,12 +7,12 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>Once
+	<paragraph>Once 
 		<link>
 			<url>10_opening_the_new_feature_dialog.xml</url>
 			<label>the new feature dialog</label>
-		</link> is displayed and
-		<bold>procedure</bold> selected in
+		</link> is displayed and 
+		<bold>procedure</bold> selected in 
 		<bold>feature type</bold>, follow the following steps:
 		<list ordered="true">
 			<item>
@@ -39,19 +39,19 @@
 					<label>Type a header comment</label>
 				</link>
 			</item>
-			<item>Enter
+			<item>Enter 
 				<link>
 					<url>../../../reference/70_wizards_and_dialogs/30_dialogs/10_new_feature_dialog/50_feature_properties_modification/40_precondition.xml</url>
 					<label>precondition</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../reference/70_wizards_and_dialogs/30_dialogs/10_new_feature_dialog/50_feature_properties_modification/50_local_field.xml</url>
 					<label>local variable</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../reference/70_wizards_and_dialogs/30_dialogs/10_new_feature_dialog/50_feature_properties_modification/60_feature_body.xml</url>
 					<label>body</label>
-				</link> and
+				</link> and 
 				<link>
 					<url>../../../reference/70_wizards_and_dialogs/30_dialogs/10_new_feature_dialog/50_feature_properties_modification/70_postcondition.xml</url>
 					<label>postcondition</label>

@@ -43,7 +43,7 @@
 				<link>
 					<url>30_events/index.html</url>
 					<label> Events</label>
-				</link> cluster containing classes that allow for user initiated  events, such as the clicking of a button to be dealt with via the  use of a linked list of agents (
+				</link> cluster containing classes that allow for user initiated  events, such as the clicking of a button to be dealt with via the  use of a linked list of agents ( 
 				<link>
 					<url>../reference/interface/events/ev_action_sequence_chart.html</url>
 					<label>EV_ACTION_SEQUENCE</label>
@@ -75,11 +75,11 @@
 				<link>
 					<url>50_support/index.html</url>
 					<label> Support</label>
-				</link> cluster includes classes that provide more  professional touches to an application, whether these are  keyboard shortcuts (
+				</link> cluster includes classes that provide more  professional touches to an application, whether these are  keyboard shortcuts ( 
 				<link>
 					<url>../reference/interface/support/ev_accelerator_list_chart.html</url>
 					<label>EV_ACCELERATOR_LIST</label>
-				</link>)  or graphical output (
+				</link>)  or graphical output ( 
 				<link>
 					<url>../reference/interface/support/ev_graphical_format_chart.html</url>
 					<label>EV_GRAPHICAL_FORMAT</label>

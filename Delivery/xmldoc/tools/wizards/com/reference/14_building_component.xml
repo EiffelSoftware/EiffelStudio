@@ -9,7 +9,7 @@
 		<paragraph>TheFacade class should satisfy the following requirements:</paragraph>
 		<list ordered="false">
 			<item>It should have acreation routine "make" without arguments. The wizard does not enforce the rule, but breaking it causes a runtime error.</item>
-			<item>Features of the class may only have arguments and return values of the following types:
+			<item>Features of the class may only have arguments and return values of the following types: 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/character.xml</url>
 					<label>
@@ -17,7 +17,7 @@
 							<class_name>CHARACTER</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/integer.xml</url>
 					<label>
@@ -25,7 +25,7 @@
 							<class_name>INTEGER</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/real.xml</url>
 					<label>
@@ -33,7 +33,7 @@
 							<class_name>REAL</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/double.xml</url>
 					<label>
@@ -41,7 +41,7 @@
 							<class_name>DOUBLE</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/boolean.xml</url>
 					<label>
@@ -49,7 +49,7 @@
 							<class_name>BOOLEAN</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/integer_ref.xml</url>
 					<label>
@@ -57,7 +57,7 @@
 							<class_name>INTEGER_REF</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/boolean_ref.xml</url>
 					<label>
@@ -65,7 +65,7 @@
 							<class_name>BOOLEAN_REF</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/real_ref.xml</url>
 					<label>
@@ -73,7 +73,7 @@
 							<class_name>REAL_REF</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/character_ref.xml</url>
 					<label>
@@ -81,7 +81,7 @@
 							<class_name>CHARACTER_REF</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/double_ref.xml</url>
 					<label>
@@ -89,7 +89,7 @@
 							<class_name>DOUBLE_REF</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/string.xml</url>
 					<label>
@@ -97,7 +97,7 @@
 							<class_name>STRING</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/com/reference/structures/ecom_currency.xml</url>
 					<label>
@@ -105,7 +105,7 @@
 							<class_name>ECOM_CURRENCY</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/com/reference/structures/ecom_decimal.xml</url>
 					<label>
@@ -113,11 +113,11 @@
 							<class_name>ECOM_DECIMAL</class_name>
 						</code>
 					</label>
-				</link>,
+				</link>, 
 				<link>
 					<url>../../../../libraries/com/reference/interfaces/ecom_interface.xml</url>
 					<label>ECOM_INTERFACE</label>
-				</link>, and
+				</link>, and 
 				<link>
 					<url>../../../../libraries/base/reference/structures/list/cell.xml</url>
 					<label>
@@ -125,7 +125,7 @@
 							<class_name>CELL</class_name>
 						</code>
 					</label>
-				</link> and
+				</link> and 
 				<link>
 					<url>../../../../libraries/com/reference/structures/ecom_array.xml</url>
 					<label>ECOM_ARRAY</label>
@@ -139,21 +139,21 @@
 			<size>2</size> Using the Generated Code
 		</heading>
 		<paragraph>If you start from an Eiffel project, the wizard produces a ready-to-use component, and you do not need to modify or to implement any generated code.</paragraph>
-		<paragraph>If you start from a COM definition file, you are able to design a more flexible component that has more than one interface and/or coclass and user defined types, but you have to implement features of the generated coclass. The generated Eiffel coclass features are empty. You should redefine them in heir to implement the intended behavior. Unlike client generated code, the server generated code will differ whether you have chosen to implement an in-process or an out-of-process component.The difference lies in the component activation code in the class
+		<paragraph>If you start from a COM definition file, you are able to design a more flexible component that has more than one interface and/or coclass and user defined types, but you have to implement features of the generated coclass. The generated Eiffel coclass features are empty. You should redefine them in heir to implement the intended behavior. Unlike client generated code, the server generated code will differ whether you have chosen to implement an in-process or an out-of-process component.The difference lies in the component activation code in the class 
 			<code>
 				<class_name>ECOM_&lt;Name_of_system&gt;_REGISTRATION</class_name>
-			</code>. If the component is in-process then this classincludes the four functions that need to be exported from an in-process COM component (
-			<italic>DllRegisterServer</italic>,
-			<italic>DllUnregisterServer</italic>,
-			<italic>DllGetClassObject</italic>, and
+			</code>. If the component is in-process then this classincludes the four functions that need to be exported from an in-process COM component ( 
+			<italic>DllRegisterServer</italic>, 
+			<italic>DllUnregisterServer</italic>, 
+			<italic>DllGetClassObject</italic>, and 
 			<italic>DllCanUnloadNow</italic>). If the component is out-of-process then the registration class includes a feature initializing the component and its graphical user interface.
 		</paragraph>
 		<paragraph>The architecture of generated code for the server is similar to the one for the client: the generated Eiffel coclass should be inherited from and the contract features redefined. The default feature implementation of the generated Eiffel coclass is empty. Features should be redefined to implement the intended behavior. These features will be called by the EiffelCOM runtime whenever a client accesses an interface.</paragraph>
 		<paragraph> The architecture remains the same as when accessing a component: the generated Eiffel coclass should be inherited from and the contract features redefined. The default implementation for features from the generated Eiffel coclass are empty. They should also be redefined to implement the intended behavior. These features will be called by the EiffelCOM runtime whenever a client access an interface.</paragraph>
-		<note>Note: For this first release, the name of the user defined coclass has to be
+		<note>Note: For this first release, the name of the user defined coclass has to be 
 			<code>
 				<class_name>&lt;Name_of_generated_coclass&gt;_IMP</class_name>
-			</code>. So if the generated coclass name is
+			</code>. So if the generated coclass name is 
 			<code>
 				<class_name>MY_COCLASS</class_name>
 			</code> then the user defined coclassname must be MY_COCLASS_IMP.
@@ -206,10 +206,10 @@ feature {NONE} -- Implspanentation
         end
 end -- class ECOM_SERVER_COCLASS_IMP
 
-</code_block> This class inherits from the generated Eiffel coclass and from
+</code_block> This class inherits from the generated Eiffel coclass and from 
 			<code>
 				<class_name>ECOM_EXCEPTION</class_name>
-			</code>. It redefines the feature coclass_feature from the generated coclass. This feature is part of the interface functions that can be called by clients of the component. Its implementation uses the feature trigger from
+			</code>. It redefines the feature coclass_feature from the generated coclass. This feature is part of the interface functions that can be called by clients of the component. Its implementation uses the feature trigger from 
 			<code>
 				<class_name>ECOM_EXCEPTION</class_name>
 			</code> to raise exceptions in case the feature cannot be executed normally (invalid argument e.g.).The EiffelCOM runtime catches the exception and maps it into an HRESULT that is sent back to the client.

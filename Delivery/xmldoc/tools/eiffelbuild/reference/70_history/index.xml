@@ -8,33 +8,33 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>EiffelBuild has an limitless undo/redo mechanism built in. However, this mechanism only applies to the structure of the
+		<paragraph>EiffelBuild has an limitless undo/redo mechanism built in. However, this mechanism only applies to the structure of the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
 			</link> you are developing in your project.
 		</paragraph>
-		<paragraph>For example, every time you
+		<paragraph>For example, every time you 
 			<link>
 				<url>/tools/eiffelbuild/how_to_s/20_create_an_object/index.xml</url>
 				<label>create</label>
-			</link>,
+			</link>, 
 			<link>
 				<url>/tools/eiffelbuild/how_to_s/50_reparent_an_object/index.xml</url>
 				<label> reparent</label>
-			</link> or
+			</link> or 
 			<link>
 				<url>/tools/eiffelbuild/how_to_s/30_delete_an_object/index.xml</url>
 				<label>delete</label>
-			</link> an
+			</link> an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> in your project, this will be recorded in the history. If you modify properties of an
+			</link> in your project, this will be recorded in the history. If you modify properties of an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> (Using an
+			</link> (Using an 
 			<link>
 				<url>/tools/eiffelbuild/reference/40_object_editor/index.xml</url>
 				<label>object editor</label>
@@ -46,7 +46,7 @@
 		<paragraph>To undo a change, click
 			<image>
 				<url>/images/eiffelbuild/icons/icon_undo_color.png</url>
-			</image> on the
+			</image> on the 
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label> main toolbar</label>
@@ -58,7 +58,7 @@
 		<paragraph>To redo a change (only applicable after one ore more undo's), click
 			<image>
 				<url>/images/eiffelbuild/icons/icon_redo_color.png</url>
-			</image> on the
+			</image> on the 
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label> main toolbar</label>
@@ -76,16 +76,16 @@
 		<paragraph>This visibility of the window may be toggled by clicking
 			<image>
 				<url>/images/eiffelbuild/icons/icon_cmd_history_color.png</url>
-			</image> on the
+			</image> on the 
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label> main toolbar</label>
-			</link>. You may also select
-			<bold>History</bold> from the
-			<bold>View</bold> menu to show the history window, and click the
+			</link>. You may also select 
+			<bold>History</bold> from the 
+			<bold>View</bold> menu to show the history window, and click the 
 			<bold>Close</bold> button to close the window manually.
 		</paragraph>
-		<paragraph>Looking at the screenshot above, you will see that the the last action in the history list is selected. This is always the case while working, until you start undoing your changes. To go back three steps, so that (in this case), there is just the one BUTTON added to the HORIZONTAL_BOX, you could click the undo button on the
+		<paragraph>Looking at the screenshot above, you will see that the the last action in the history list is selected. This is always the case while working, until you start undoing your changes. To go back three steps, so that (in this case), there is just the one BUTTON added to the HORIZONTAL_BOX, you could click the undo button on the 
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label> main toolbar</label>

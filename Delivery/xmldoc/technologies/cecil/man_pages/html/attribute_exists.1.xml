@@ -17,7 +17,7 @@
 			<size>2</size>DESCRIPTION
 		</heading>The 
 		<bold>attribute_exists()</bold> macro returns 
-		<bold>EIF_TRUE</bold> or
+		<bold>EIF_TRUE</bold> or 
 		<bold>EIF_FALSE</bold> when the attribute of name 
 		<italic>name</italic> exists in the Eiffel object (reference) 
 		<italic>ref</italic>

@@ -24,7 +24,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>A few commands give the possibility to manage the development windows globally. They are located both in the
+		<paragraph>A few commands give the possibility to manage the development windows globally. They are located both in the 
 			<link>
 				<url>20_window_menu.xml</url>
 			</link> and in the main toolbar.
@@ -34,7 +34,7 @@
 				<bold>New window</bold>: this command (
 				<image>
 					<url>/images/eiffelstudio/icons/icon_new_development_tool_color.gif</url>
-				</image> ) creates a new empty development window. Note that it is also possible to
+				</image> ) creates a new empty development window. Note that it is also possible to 
 				<link>
 					<url>/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
 					<label>drop</label>
@@ -53,7 +53,7 @@
 				</image> )raises all minimized development windows.
 			</item>
 			<item>
-				<bold>Raise unsaved windows</bold>: this command raises all the development windows that have not been saved. It may be combined with the
+				<bold>Raise unsaved windows</bold>: this command raises all the development windows that have not been saved. It may be combined with the 
 				<bold>Minimize all</bold> command to find easily which development windows need to be saved.
 			</item>
 		</list>

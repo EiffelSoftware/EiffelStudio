@@ -13,10 +13,10 @@ HRESULT InterfaceFunction ([in] int a, [out, retval] MyStruct * b)
 		<code_block>
 interface_function (a: INTEGER): MY_STRUCT_RECORD
 </code_block>
-		<paragraph>where
+		<paragraph>where 
 			<code>
 				<class_name>MY_STRUCT_RECORD</class_name>
-			</code> is a generated Eiffel class wrapping
+			</code> is a generated Eiffel class wrapping 
 			<italic>MyStruct</italic>.
 		</paragraph>
 		<paragraph>Here is a more difficult example:</paragraph>
@@ -27,10 +27,10 @@ HRESULT a_function ([in] IsomeInterface * p_interface)
 		<code_block>
 a_function (p_interface: ISOME_INTERFACE_INTERFACE)
 </code_block>
-		<paragraph>where
+		<paragraph>where 
 			<code>
 				<class_name>ISOME_INTERFACE_INTERFACE</class_name>
-			</code>is a generated deferred class. Where can you obtain an instance of the class? First, you may receive from other function. Second, you can create an implemented server interface
+			</code>is a generated deferred class. Where can you obtain an instance of the class? First, you may receive from other function. Second, you can create an implemented server interface 
 			<code>
 				<class_name>ISOME_INTERFACE_IMPL_STUB</class_name>
 			</code>. In the later case you should provide your own implementation.
@@ -38,7 +38,7 @@ a_function (p_interface: ISOME_INTERFACE_INTERFACE)
 		<heading>
 			<size>2</size> Contracts
 		</heading>
-		<paragraph>The wizard cannot generate fully specified contracts. Indeed, the tool has no domain specific knowledge and can only generate contracts that are domain independent. Such contracts, although useful, are not enough to describe entirely the behavior of the component. Generated contracts include void Eiffel objects as well as C pointer validity (for wrappers) checking. There might be other conditions to allow calls to an Eiffel coclass feature. Invariants and postconditions can be enforced in an heir of the generated Eiffel coclass. Preconditions, however, cannot be strengthened. A workaround provided by the wizard is to generate a precondition function for each feature in the interface. The default implementation of these functions always returns
+		<paragraph>The wizard cannot generate fully specified contracts. Indeed, the tool has no domain specific knowledge and can only generate contracts that are domain independent. Such contracts, although useful, are not enough to describe entirely the behavior of the component. Generated contracts include void Eiffel objects as well as C pointer validity (for wrappers) checking. There might be other conditions to allow calls to an Eiffel coclass feature. Invariants and postconditions can be enforced in an heir of the generated Eiffel coclass. Preconditions, however, cannot be strengthened. A workaround provided by the wizard is to generate a precondition function for each feature in the interface. The default implementation of these functions always returns 
 			<italic>True</italic>. They should be redefined to implement the correct behavior:
 		</paragraph>
 		<code_block>
@@ -74,13 +74,13 @@ interface_function (a: INTEGER): MY_STRUCT is
 				<url>../images/wizard-13.gif</url>
 			</image>
 		</paragraph>
-		<paragraph>As a result, any feature in the co class client making calls to the user defined Eiffel coclass should include a rescue clause. The processing donein this clause might depend on the nature of the exception. All the standard COM exceptions can be found in the library class
+		<paragraph>As a result, any feature in the co class client making calls to the user defined Eiffel coclass should include a rescue clause. The processing donein this clause might depend on the nature of the exception. All the standard COM exceptions can be found in the library class 
 			<code>
 				<class_name>ECOM_EXCEPTION_CODES,</class_name>
-			</code> which is inherited from by
+			</code> which is inherited from by 
 			<code>
 				<class_name>ECOM_EXCEPTION</class_name>
-			</code>. The later also inherits from the kernel class
+			</code>. The later also inherits from the kernel class 
 			<code>
 				<class_name>EXCEPTIONS</class_name>
 			</code> and can consequently be used by the coclass client to catch the exceptions.

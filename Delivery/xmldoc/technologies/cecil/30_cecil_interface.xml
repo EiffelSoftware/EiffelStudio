@@ -79,7 +79,7 @@ c_foo (arg1: POINTER; c: CHARACTER; file: POINTER): INTEGER is
 		<paragraph>Not doing this would generally produce warnings during the C compilation, and it could crash with some C compilers. </paragraph>
 		<paragraph>To perform the conversion, here is the actual Eiffel types mapping to C types:</paragraph>
 		<div>
-			<italic>POINTER</italic> is compatible with any C pointer (
+			<italic>POINTER</italic> is compatible with any C pointer ( 
 			<italic>char *</italic>). 
 			<line_break/> 
 			<italic>INTEGER</italic> is a long. 
@@ -200,8 +200,8 @@ c_foo (arg1: POINTER; c: CHARACTER; file: POINTER): INTEGER is
 			</code> or an Eiffel object which is an argument of a C external. 
 		</paragraph>
 		<paragraph>Use 
-			<italic>eif_access</italic> to pass an Eiffel object to an Eiffel routine or to return the value of a C external. It is also unsafe to pass a direct Eiffel reference (
-			<italic>EIF_REFERENCE</italic>) to a C function which is not an Eiffel routine. Pass a protected indirection instead (
+			<italic>eif_access</italic> to pass an Eiffel object to an Eiffel routine or to return the value of a C external. It is also unsafe to pass a direct Eiffel reference ( 
+			<italic>EIF_REFERENCE</italic>) to a C function which is not an Eiffel routine. Pass a protected indirection instead ( 
 			<italic>EIF_OBJECT</italic>). However, if you still intend to pass a direct reference, be very careful and make sure that you do not perform any Eiffel call after passing the reference to the C function and before reading it. 
 		</paragraph>
 		<paragraph/>
@@ -238,7 +238,7 @@ EIF_INTEGER foo (EIF_POINTER ptr, EIF_OBJECT obj);
 		<note>
 			<bold>Note</bold>: The first argument of 
 			<italic>(ep)</italic> is the target of the function (the eiffel object to which you want to apply the Eiffel feature 
-			<italic>(ep)</italic>) and the second argument corresponds to the first argument of `
+			<italic>(ep)</italic>) and the second argument corresponds to the first argument of ` 
 			<italic>print</italic>'. Any Eiffel object could have been the 1st argument of 
 			<italic>(ep)</italic> since all of them inherit 
 			<italic>GENERAL</italic>. 
@@ -310,7 +310,7 @@ ep) (eif_access (a), eif_string ("Hello world"));
 		<paragraph>When passing Eiffel objects to C, you may need to keep a reference to them after the C external is called. Since the Eiffel run-time automatically will unprotect the Eiffel object references passed to a C external after execution, if one of the Eiffel objects is not referenced any longer from Eiffel, then the garbage collector will collect it because it is not aware that you may still need to reference this object from the C side. </paragraph>
 		<paragraph>Called within a C external, the function 
 			<italic>eif_adopt</italic> creates a user protection for the Eiffel object 
-			<italic>object</italic> passed to C (
+			<italic>object</italic> passed to C ( 
 			<italic>object</italic> is a C external argument). This way, the GC cannot collect the Eiffel reference returned by 
 			<italic>eif_access(object)</italic> when the C external returned. It tells the GC to keep artificially a reference to this Eiffel reference from C. It returns the new indirection pointer (say 
 			<italic>returned_value</italic>) that must be used afterwards to access this direct Eiffel reference with 
@@ -368,12 +368,12 @@ void display_and_release_obj (void)
 </code_block>
 			</paragraph>
 		</div>
-		<paragraph>Between the call of `
-			<italic>c_foo</italic>' and `
+		<paragraph>Between the call of ` 
+			<italic>c_foo</italic>' and ` 
 			<italic>c_display_obj'</italic>, the global object 
-			<italic>(eif_access (my_obj))</italic> may not be referenced from Eiffel any longer. To prevent the GC from collecting it before the call to `
-			<italic>c_display_and_release_obj'</italic>, you must protect it with `
-			<italic>eif_adopt</italic>' in the C function `
+			<italic>(eif_access (my_obj))</italic> may not be referenced from Eiffel any longer. To prevent the GC from collecting it before the call to ` 
+			<italic>c_display_and_release_obj'</italic>, you must protect it with ` 
+			<italic>eif_adopt</italic>' in the C function ` 
 			<italic>foo'. </italic>
 		</paragraph>
 		<heading>

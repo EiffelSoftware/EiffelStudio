@@ -19,7 +19,7 @@
 			<link>
 				<url>../../reference/desc/spec/win32/dll_32_routine_chart.html</url>
 				<label>DLL_32_ROUTINE</label>
-			</link>  , supported by an auxiliary class
+			</link>  , supported by an auxiliary class 
 			<link>
 				<url>../../reference/desc/general/shared_library_constants_chart.html</url>
 				<label>  SHARED_LIBRARY_CONSTANTS</label>
@@ -30,7 +30,7 @@
 				<link>
 					<url>../../reference/desc/spec/win32/dll_32_chart.html</url>
 					<label>DLL_32</label>
-				</link> describes  a 32-bit Dynamically Linked Library. This class is a descendant of the deferred  class
+				</link> describes  a 32-bit Dynamically Linked Library. This class is a descendant of the deferred  class 
 				<link>
 					<url>../../reference/desc/general/shared_library_chart.html</url>
 					<label>  SHARED_LIBRARY</label>

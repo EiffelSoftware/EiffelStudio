@@ -12,24 +12,24 @@
 			<size>2</size>Settings
 		</heading>
 		<list ordered="false">
-			<item>Add the option multithreaded by clicking on
+			<item>Add the option multithreaded by clicking on 
 				<link>
 					<url>../../tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
 					<label>the advanced tab of the project setting window</label>
 				</link>.
 			</item>
 			<item>Do not use a non-multithreaded precompiled library. The corresponding multithreaded libraries of base and WEL should be located in $ISE_EIFFEL/precomp/spec/$PLATFORM/ with the mt prefix. </item>
-			<item>You must include the thread cluster (located at "$ISE_EIFFEL/library/thread") in the clusters your project is including. This setting can be done in
+			<item>You must include the thread cluster (located at "$ISE_EIFFEL/library/thread") in the clusters your project is including. This setting can be done in 
 				<link>
 					<url>../../tools/eiffelstudio/reference/25_project_settings/30_clusters.xml</url>
 					<label> the clusters tab of the project settings window</label>
 				</link>.
 			</item>
-			<item>When using external C libraries, be sure that they are MT-safe: on the platforms where the Eiffel Threads are available. For example
+			<item>When using external C libraries, be sure that they are MT-safe: on the platforms where the Eiffel Threads are available. For example 
 				<link>
 					<url>/libraries/wel/index.xml</url>
 					<label>Wel</label>
-				</link> and
+				</link> and 
 				<link>
 					<url>/libraries/net/index.xml</url>
 					<label>Net</label>

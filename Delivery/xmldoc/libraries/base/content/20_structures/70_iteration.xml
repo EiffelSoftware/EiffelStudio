@@ -155,7 +155,7 @@
 			<code>
 				<keyword>False</keyword>
 			</code>; descendant classes will redefine it so as to describe the desired test. Similarly, action is declared in class ITERATOR as a call to item_action. Descendants will redefine item_action, which as initially declared in ITERATOR is a procedure with a null body.
-			<line_break/> Going through item_action and item_test provides an extra degree of flexibility. Normally the action and test performed at each step apply to target
+			<line_break/> Going through item_action and item_test provides an extra degree of flexibility. Normally the action and test performed at each step apply to target 
 			<code>
 				<symbol>.</symbol>
 			</code>itemitem, so that it suffices to redefine the item_features. This is the case will all examples studied in this chapter. In a more general setting, however, you might need to redefine action and test themselves.
@@ -309,16 +309,16 @@
 			<line_break/>  Both the iterator classes and the traversal classes are generic, with a formal generic  parameter G. The actual generic parameters will be matched through the choice of  iteration target: for a generic derivation of the form  
 			<code>
 				<class_name>SOME_ITERATOR</class_name>
-			</code> [
+			</code> [ 
 			<code>
 				<class_name>ACTUAL_TYPE</class_name>
 			</code>]  the target can only be of type  
 			<code>
 				<class_name>SOME_TRAVERSABLE</class_name>
-			</code> [
+			</code> [ 
 			<code>
 				<class_name>ACTUAL_TYPE</class_name>
-			</code>]  for the same
+			</code>]  for the same 
 			<code>
 				<class_name>ACTUAL_TYPE</class_name>
 			</code>, where  
@@ -431,7 +431,7 @@
 			<line_break/>  In addition to effecting the general iteration features from  ITERATOR,  class  LINEAR_ITERATOR  introduces iteration features that apply to the specific case of linear structures:
 		</paragraph>
 		<list ordered="false">
-			<item>search
+			<item>search 
 				<code>
 					<symbol>(</symbol>
 					<local_variable>b</local_variable>
@@ -440,7 +440,7 @@
 					<local_variable>b</local_variable>
 				</code> is false. This use of a boolean argument to  switch between two opposite semantics is not part of the recommended style, and  you will find few if any other examples in the Base libraries. Here, however, it  was deemed preferable to the alternative, which would have involved four  separate procedures (if together with  search  we consider  continue_search  discussed next).
 			</item>
-			<item>With a linear structure we can implement an iteration corresponding to the 'for'  loop of traditional programming languages, defined by three integers: the starting  position, the number of items to be traversed, and the step between consecutive  items. This is provided by procedure  do_for
+			<item>With a linear structure we can implement an iteration corresponding to the 'for'  loop of traditional programming languages, defined by three integers: the starting  position, the number of items to be traversed, and the step between consecutive  items. This is provided by procedure  do_for 
 				<code>
 					<symbol>(</symbol>
 					<local_variable>starting</local_variable>
@@ -565,7 +565,7 @@
 				</code>  and so on.
 			</item>
 		</list>
-		<paragraph>  All it needs to do then is to redefine the type of target to be  CURSOR_TREE
+		<paragraph>  All it needs to do then is to redefine the type of target to be  CURSOR_TREE 
 			<code>
 				<symbol>[</symbol>
 			</code>
@@ -574,10 +574,10 @@
 			</code>
 			<code>
 				<symbol>]</symbol>
-			</code>,  and to redefine six features: the three renamed  start  (
+			</code>,  and to redefine six features: the three renamed  start  ( 
 			<code>
 				<feature_name>pre_start</feature_name>
-			</code>  etc.) and the three  forth  (
+			</code>  etc.) and the three  forth  ( 
 			<code>
 				<feature_name>pre_ forth</feature_name>
 			</code>  and so on). These seven redefinitions give us a full-fledged battery of tree  iteration mechanisms.
@@ -603,7 +603,7 @@
 			</code>, may iterate a certain action over a data structure, subject to a certain test.  First, class 
 			<code>
 				<class_name>PROCESSOR</class_name>
-			</code> must specify the action by redefining  item_action and  item_test  (or, in the most general case,  action and  test).  Then routine iterate must specify the target data structure through a call of the form  set
+			</code> must specify the action by redefining  item_action and  item_test  (or, in the most general case,  action and  test).  Then routine iterate must specify the target data structure through a call of the form  set 
 			<code>
 				<symbol>(</symbol>
 			</code>
@@ -705,7 +705,7 @@
 			<line_break/>  The following example illustrates the technique. Consider a deferred class  
 			<code>
 				<class_name>FIGURE</class_name>
-			</code> describing the notion of graphical figure,  with many effective descendants (
+			</code> describing the notion of graphical figure,  with many effective descendants ( 
 			<code>
 				<class_name>POLYGON</class_name>
 			</code>,  

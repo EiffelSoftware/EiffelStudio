@@ -23,7 +23,7 @@
 			<size>2</size>Compiler and .NET
 		</heading>
 		<list ordered="false">
-			<item>Click
+			<item>Click 
 				<link>
 					<url>../30_compiler/60_version_history/01_51_release/00_50_to_51_changes.xml</url>
 					<label>here</label>
@@ -37,45 +37,45 @@
 			<size>3</size>EiffelBase
 		</heading>
 		<list ordered="false">
-			<item>It is now forbidden to create a
+			<item>It is now forbidden to create a 
 				<code>
 					<class_name>BIT_REF</class_name>
-				</code> or a
+				</code> or a 
 				<code>
 					<class_name>XBIT</class_name>
 				</code> object using its creation procedure (before it was accepted but did not work)
 			</item>
-			<item>Added
+			<item>Added 
 				<code>
 					<feature_name>make_temporary_name</feature_name>
-				</code> in
+				</code> in 
 				<code>
 					<class_name>FILE_NAME</class_name>
 				</code>
 			</item>
-			<item>Made
+			<item>Made 
 				<code>
 					<feature_name>to_c</feature_name>
-				</code> obsolete from class
+				</code> obsolete from class 
 				<code>
 					<class_name>INTEGER_INTERVAL</class_name>
 				</code>
 			</item>
-			<item>Changed semantic of
+			<item>Changed semantic of 
 				<code>
 					<feature_name>split</feature_name>
-				</code> from class
+				</code> from class 
 				<code>
 					<class_name>STRING</class_name>
 				</code>
 			</item>
-			<item>Fixed a bug in
+			<item>Fixed a bug in 
 				<code>
 					<feature_name>clear_all</feature_name>
-				</code> from
+				</code> from 
 				<code>
 					<class_name>HASH_TABLE</class_name>
-				</code> that kept a reference to the last found item. Now it does not keep the reference after a call to
+				</code> that kept a reference to the last found item. Now it does not keep the reference after a call to 
 				<code>
 					<feature_name>clear_all</feature_name>
 				</code>.
@@ -86,7 +86,7 @@
 		</heading>
 		<list ordered="false">
 			<item>Support for Vision2 applications on GTK platforms.</item>
-			<item>Some changes in the Vision2 library have been made,
+			<item>Some changes in the Vision2 library have been made, 
 				<link>
 					<url>../../../../libraries/vision2/content/0-_revisions/index.xml</url>
 					<label>check here on how to update your code</label>

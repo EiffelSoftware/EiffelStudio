@@ -28,15 +28,15 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left of the form you have the
-			<span>TREE_VIEW</span> control, and on the right you have some controls to configure the
+		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left of the form you have the 
+			<span>TREE_VIEW</span> control, and on the right you have some controls to configure the 
 			<span>TREE_VIEW</span>.
 		</paragraph>
 		<paragraph/>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>The application shows how to use a
+		<paragraph>The application shows how to use a 
 			<span>TREE_VIEW</span> and what are all its different configurations.
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>

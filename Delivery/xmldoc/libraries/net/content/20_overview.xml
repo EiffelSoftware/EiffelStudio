@@ -53,7 +53,7 @@
 				<italic/>classes are heirs) and 
 				<code>
 					<class_name>DATAGRAM</class_name>
-				</code>for    multiple inheritance
+				</code> for multiple inheritance 
 				<italic>. </italic>Only the classes below the dotted line are    part of EiffelNet; the others are part of EiffelBase, the fundamental    data structure and algorithm library of ISE Eiffel [2].
 			</paragraph>
 			<paragraph>The most important property of this inheritance hierarchy is that it    shows how sockets fit within the overall structure. Thanks to the common    ancestor IO_MEDIUM,    socket classes have most of their features in common with files.</paragraph>
@@ -68,13 +68,13 @@
 					<item>For systems that run on different machines, you must use one of      the 
 						<code>
 							<class_name>NETWORK_</class_name>
-						</code>classes. This will also work if the systems are      on the same machine, but less efficiently since communication may go      through the network.
+						</code> classes. This will also work if the systems are      on the same machine, but less efficiently since communication may go      through the network.
 					</item>
 				</list>
 				<paragraph>The use of the word 
 					<code>
 						<class_name>UNIX_</class_name>
-					</code>does not mean that the machine must    be running the Unix operating system; rather, it denotes a certain style    of client-server communication, the Unix style. (This is comparable to    the use of the name 
+					</code> does not mean that the machine must    be running the Unix operating system; rather, it denotes a certain style    of client-server communication, the Unix style. (This is comparable to    the use of the name 
 					<code>
 						<class_name>UNIX_FILE</class_name>
 					</code> in EiffelBase, for a class describing    files that behave in the Unix style even though they may be implemented    on non-Unix machines.)
@@ -111,7 +111,7 @@
 							<url>../../base/reference/kernel/file_chart.html</url>
 							<label>FILE</label>
 						</link>    or one of the _SOCKET classes, and that the type of 
-						<italic>struct1</italic>    conforms to STORABLE
+						<italic>struct1</italic>    conforms to STORABLE 
 						<italic>.</italic>Note that reference [2] in its original version does not include 
 						<italic>independent_store</italic>,    and requires 
 						<italic>iom</italic> to be of type FILE    rather than the more general IO_MEDIUM.    The current version of EiffelBase, however, supports the more general    properties described here.

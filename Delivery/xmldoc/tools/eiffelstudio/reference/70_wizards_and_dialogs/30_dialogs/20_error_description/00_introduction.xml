@@ -13,7 +13,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>More often than wanted, Eiffel compilations are not successful. The good point is that when an error is detected by the compiler, it will not be a problem at run-time. The bad point is that you have to fix compilation errors before being able to launch and debug your system.</paragraph>
-		<paragraph>When an error occurs during an Eiffel compilation in EiffelStudio, the
+		<paragraph>When an error occurs during an Eiffel compilation in EiffelStudio, the 
 			<bold>Output</bold> tab of the context tool displays a description of the error and its location, which looks more or less like this:
 		</paragraph>
 		<paragraph>

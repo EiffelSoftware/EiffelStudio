@@ -13,19 +13,19 @@
 				<url>/images/eiffelstudio/browsing_tools/cluster_tool.png</url>
 			</image>
 		</paragraph>
-		<paragraph>It gives a
+		<paragraph>It gives a 
 			<link>
 				<url>10_cluster_tree.xml</url>
 				<label>tree representation</label>
-			</link> of all clusters and classes of the project. The toolbar contains a
+			</link> of all clusters and classes of the project. The toolbar contains a 
 			<link>
 				<url>20_new_cluster_command.xml</url>
 				<label>new cluster command</label>
-			</link>, a
+			</link>, a 
 			<link>
 				<url>30_new_class_command.xml</url>
 				<label>new class command</label>
-			</link>, and the
+			</link>, and the 
 			<link>
 				<url>40_locate_command.xml</url>
 				<label>locate command</label>

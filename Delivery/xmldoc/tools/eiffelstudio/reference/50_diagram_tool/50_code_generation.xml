@@ -9,10 +9,10 @@
 			</item>
 			<item>When you delete a class, the class file is removed from the disk.</item>
 			<item>When you add a parent to a class, the parent is inserted in the existing inheritance clause, 
-				<italic>without</italic> any additional (
+				<italic>without</italic> any additional ( 
 				<code>
 					<keyword>undefine</keyword>
-				</code>/
+				</code>/ 
 				<code>
 					<keyword>select</keyword>
 				</code>/etc.) clauses to solve possible conflicts.
@@ -22,7 +22,7 @@
 			<item>When removing an inheritance link, the entire parent clause is removed, i.e. including any 
 				<code>
 					<keyword>redefine</keyword>
-				</code>/
+				</code>/ 
 				<code>
 					<keyword>undefine</keyword>
 				</code>/etc. until the matching 

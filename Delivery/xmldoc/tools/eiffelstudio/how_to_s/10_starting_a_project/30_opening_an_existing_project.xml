@@ -15,8 +15,8 @@
 		<paragraph>Whenever a project has been compiled successfully, files are created in the project directory. These files include the .epr file and the EIFGEN directory. They contain all the information produced by the compiler. After exiting EiffelStudio, it is possible to open again a project that has been compiled by indicating the location of the .epr file to the system.</paragraph>
 		<paragraph>To do this:</paragraph>
 		<list ordered="false">
-			<item>In the startup dialog, select
-				<bold>Open compiled project</bold>. If the .epr file you want to open is not in the list, click
+			<item>In the startup dialog, select 
+				<bold>Open compiled project</bold>. If the .epr file you want to open is not in the list, click 
 				<bold>Browse</bold> and indicate the location of the .epr file.
 			</item>
 		</list>
@@ -26,8 +26,8 @@
 			</image>
 		</paragraph>
 		<list ordered="false">
-			<item>Or, click the
-				<bold>File</bold>/
+			<item>Or, click the 
+				<bold>File</bold>/ 
 				<bold>Open Project...</bold> menu and indicate the location of the .epr file.
 			</item>
 		</list>

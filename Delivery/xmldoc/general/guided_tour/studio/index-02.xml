@@ -7,7 +7,7 @@
 				<label>Help reading this manual</label>
 			</link>
 		</paragraph>
-		<paragraph>EiffelStudio is the central tool of ISE Eiffel, letting you design, develop, debug, document, measure, maintain, revise and expand systems using the full power of object technology and Design by Contract
+		<paragraph>EiffelStudio is the central tool of ISE Eiffel, letting you design, develop, debug, document, measure, maintain, revise and expand systems using the full power of object technology and Design by Contract 
 			<span>TM</span>.  
 		</paragraph>
 		<paragraph>This presentation introduces the essential properties of EiffelStudio.  It will take you through a tour of the environment, using a pre-existing example system.  </paragraph>
@@ -20,7 +20,7 @@
 			<item>Starting a project and retrieving an existing project.  </item>
 			<item>Entering new software elements -- clusters, classes and features.  </item>
 			<item>Compiling your software.  </item>
-			<item>Making changes and having them immediately recompiled using the Melting Ice Technology
+			<item>Making changes and having them immediately recompiled using the Melting Ice Technology 
 				<span>TM</span>.  
 			</item>
 			<item>Displaying a graphical representation of your software elements, and modifying the software through the graphical views (as well as through its text).  </item>
@@ -65,10 +65,10 @@
 			<size>2</size>What should I already know?
 		</heading>
 		<paragraph>This Tour assumes very little about what you know and what you don't.  </paragraph>
-		<paragraph>It does assume that you can do simple manipulations on your platform of choice, such as: on Windows, finding and drag-and-dropping folders and files in the Windows Explorer; on Unix, changing to a certain directory (
+		<paragraph>It does assume that you can do simple manipulations on your platform of choice, such as: on Windows, finding and drag-and-dropping folders and files in the Windows Explorer; on Unix, changing to a certain directory ( 
 			<code>
 				<keyword>cd</keyword>
-			</code> ) and listing the files of a directory (
+			</code> ) and listing the files of a directory ( 
 			<code>
 				<keyword>ls</keyword>
 			</code> ).  

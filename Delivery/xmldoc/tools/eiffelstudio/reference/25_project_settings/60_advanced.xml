@@ -52,10 +52,10 @@
 		</note>
 		<list ordered="false">
 			<item>Multithreaded runtime: generates a multithreaded application. This option cannot be changed during the development of your project and has to be set correctly at the first compilation of your system.</item>
-			<item>Address expression: lets you pass `
+			<item>Address expression: lets you pass ` 
 				<bold>$(s.to_c)</bold>' to a feature instead of declaring `a' of type 
-				<bold>ANY</bold>, and then assigning `
-				<bold>s.to_c</bold>' to `a' and passing `
+				<bold>ANY</bold>, and then assigning ` 
+				<bold>s.to_c</bold>' to `a' and passing ` 
 				<bold>$a</bold>'. Turn this option on only if you have advanced knowledge of the garbage collector insides, since using this syntax illegally can lead to bugs very hard to trace.
 			</item>
 			<item>Shared library definition: lets you specify a `file_name.def'as the file where the Eiffel compiler will look when it tries to generate the exported functions of the shared library you a redeveloping. To have more information concerning definition files, see the 

@@ -47,7 +47,7 @@
 		</paragraph>
 		<list ordered="false">
 			<item>class_name (obj):  the name of the generator class for O.</item>
-			<item>dynamic_type
+			<item>dynamic_type 
 				<code>
 					<symbol>(</symbol>
 					<local_variable>obj</local_variable>
@@ -57,7 +57,7 @@
 					<local_variable>O</local_variable>
 				</code>,  where each type in a system is identified by a unique code.
 			</item>
-			<item>field_count
+			<item>field_count 
 				<code>
 					<symbol>(</symbol>
 					<local_variable>obj</local_variable>
@@ -67,7 +67,7 @@
 					<local_variable>O</local_variable>
 				</code>.
 			</item>
-			<item>physical_size
+			<item>physical_size 
 				<code>
 					<symbol>(</symbol>
 					<local_variable>obj</local_variable>
@@ -96,7 +96,7 @@
 					<local_variable>O</local_variable>
 				</code>.
 			</item>
-			<item>field
+			<item>field 
 				<code>
 					<symbol>(</symbol>
 					<local_variable>i</local_variable>
@@ -125,7 +125,7 @@
 					<local_variable>O</local_variable>
 				</code>, if of the corresponding type; each declared of the  appropriate type in the class.
 			</item>
-			<item>is_special
+			<item>is_special 
 				<code>
 					<symbol>(</symbol>
 					<local_variable>obj</local_variable>

@@ -4,7 +4,7 @@
 		<heading>
 			<size>2</size>CGI Applications
 		</heading>
-		<paragraph>The way a CGI application communicates with the Web browser is simple: when the user presses a button on an HTML form, with an associated action (such as
+		<paragraph>The way a CGI application communicates with the Web browser is simple: when the user presses a button on an HTML form, with an associated action (such as 
 			<italic>Submit</italic>), the browser starts the application whose path is indicated inside    the HTML form declaration. It sends data corresponding to the HTTP request and to the input form information in the usual file descriptor 
 			<italic>In</italic>, stores within environment variables the transaction environment of the request, and waits for the application message, expected in its 
 			<italic>Out</italic> canal. The 

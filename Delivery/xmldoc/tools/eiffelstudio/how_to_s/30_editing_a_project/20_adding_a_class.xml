@@ -20,27 +20,27 @@
 			<item>Click
 				<image>
 					<url>/images/eiffelstudio/icons/icon_new_class_color.gif</url>
-				</image> in the
+				</image> in the 
 				<link>
 					<url>../../reference/05_general_interface_description/30_main_toolbars.xml</url>
 					<label>standard toolbar</label>
 				</link>.
 			</item>
-			<item>Select
-				<bold>New class</bold> in the
+			<item>Select 
+				<bold>New class</bold> in the 
 				<bold>Tools</bold> menu.
 			</item>
-			<item>Type the name of the new class in the class field of the
+			<item>Type the name of the new class in the class field of the 
 				<link>
 					<url>../../reference/10_browsing_tools/10_address_bars/10_main_address_bar.xml</url>
 					<label>main address bar</label>
-				</link> or the
+				</link> or the 
 				<link>
 					<url>../../reference/10_browsing_tools/10_address_bars/20_context_tool_address_bar.xml</url>
 					<label>context tool address bar</label>
 				</link>. The current cluster will then be preselected.
 			</item>
-			<item>Use the
+			<item>Use the 
 				<link>
 					<url>../../reference/50_diagram_tool/00_introduction.xml</url>
 					<label>diagram tool</label>

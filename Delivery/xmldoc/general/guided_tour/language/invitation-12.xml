@@ -9,7 +9,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>Inheritance is not just a module combination and enrichment mechanism.  It also enables the definition of flexible entities that may become attached to objects of various forms at run time, a property known as polymorphism.  </paragraph>
-		<paragraph>This remarkable facility must be reconciled with static typing.  The language convention is simple: an assignment of the form
+		<paragraph>This remarkable facility must be reconciled with static typing.  The language convention is simple: an assignment of the form 
 			<code>
 				<string>a</string>
 			</code>
@@ -18,49 +18,49 @@
 			</code>
 			<code>
 				<string>b</string>
-			</code> is permitted not only if
+			</code> is permitted not only if 
 			<code>
 				<string>a</string>
-			</code> and
+			</code> and 
 			<code>
 				<string>b</string>
-			</code> are of the same type, but more generally if
+			</code> are of the same type, but more generally if 
 			<code>
 				<string>a</string>
-			</code> and
+			</code> and 
 			<code>
 				<string>b</string>
-			</code> are of reference types
+			</code> are of reference types 
 			<code>
 				<string>A</string>
-			</code> and
+			</code> and 
 			<code>
 				<string>B</string>
-			</code>, based on classes
+			</code>, based on classes 
 			<code>
 				<string>A</string>
-			</code> and
+			</code> and 
 			<code>
 				<string>B</string>
-			</code> such that
+			</code> such that 
 			<code>
 				<string>B</string>
-			</code> is a descendant of
+			</code> is a descendant of 
 			<code>
 				<string>A</string>
 			</code> .
 		</paragraph>
 		<paragraph>This corresponds to the intuitive idea that a value of a more specialized type may be assigned to an entity of a less specialized type -- but not the reverse.  (As an analogy, consider that if you request vegetables, getting green vegetables is fine, but if you ask for green vegetables, receiving a dish labeled just "vegetables" is not acceptable, as it could include, say, carrots.  )</paragraph>
-		<paragraph>What makes this possibility particularly powerful is the complementary facility:
+		<paragraph>What makes this possibility particularly powerful is the complementary facility: 
 			<bold>feature redefinition</bold> .  A class may redefine some or all of the features which it inherits from its parents.  For an attribute or function, the redefinition may affect the type, replacing the original by a descendant; for a routine it may also affect the implementation, replacing the original's routine body by a new one.
 		</paragraph>
-		<paragraph>Assume for example a class
+		<paragraph>Assume for example a class 
 			<code>
 				<string>POLYGON</string>
-			</code>, describing polygons, whose features include an array of points representing the vertices and a function
+			</code>, describing polygons, whose features include an array of points representing the vertices and a function 
 			<code>
 				<string>perimeter</string>
-			</code> which computes a polygon's perimeter by summing the successive distances between adjacent vertices.  An heir of
+			</code> which computes a polygon's perimeter by summing the successive distances between adjacent vertices.  An heir of 
 			<code>
 				<string>POLYGON</string>
 			</code> may begin as:
@@ -86,21 +86,21 @@
 
 ... Other RECTANGLE features ...
 </code_block>
-		<paragraph>Here it is appropriate to redefine
+		<paragraph>Here it is appropriate to redefine 
 			<code>
 				<string>perimeter</string>
-			</code> for rectangles as there is a simpler and more efficient algorithm.  Note the explicit
+			</code> for rectangles as there is a simpler and more efficient algorithm.  Note the explicit 
 			<code>
 				<keyword>redefine</keyword>
-			</code> subclause (which would come after the
+			</code> subclause (which would come after the 
 			<code>
 				<keyword>rename</keyword>
 			</code> if present).
 		</paragraph>
-		<paragraph>Other descendants of
+		<paragraph>Other descendants of 
 			<code>
 				<string>POLYGON</string>
-			</code> may also have their own redefinitions of
+			</code> may also have their own redefinitions of 
 			<code>
 				<string>perimeter</string>
 			</code> .  The version to use in any call is determined by the run-time form of the target.  Consider the following class fragment:
@@ -118,45 +118,45 @@
 
 	<feature_name>print</feature_name> <symbol>(</symbol><local_variable>p</local_variable>.<feature_name>perimeter</feature_name><symbol>)</symbol>
 </code_block>
-		<paragraph>The polymorphic assignment
+		<paragraph>The polymorphic assignment 
 			<code>
 				<string>p</string>
-			</code> :=
+			</code> := 
 			<code>
 				<string>r</string>
-			</code> is valid because of the above rule.  If condition
+			</code> is valid because of the above rule.  If condition 
 			<code>
 				<string>c</string>
-			</code> is false,
+			</code> is false, 
 			<code>
 				<string>p</string>
-			</code> will be attached to an object of type
+			</code> will be attached to an object of type 
 			<code>
 				<string>POLYGON</string>
-			</code> for the computation of
+			</code> for the computation of 
 			<code>
 				<string>p</string>
 			</code>
 			<span>.  </span>
 			<code>
 				<string>perimeter</string>
-			</code>, which will thus use the polygon algorithm.  In the opposite case, however,
+			</code>, which will thus use the polygon algorithm.  In the opposite case, however, 
 			<code>
 				<string>p</string>
-			</code> will be attached to a rectangle; then the computation will use the version redefined for
+			</code> will be attached to a rectangle; then the computation will use the version redefined for 
 			<code>
 				<string>RECTANGLE</string>
-			</code> .  This is known as
+			</code> .  This is known as 
 			<bold>dynamic binding</bold> .
 		</paragraph>
 		<paragraph>Dynamic binding provides a high degree of flexibility.  The advantage for clients is the ability to request an operation (such as perimeter computation) without explicitly selecting one of its variants; the choice only occurs at run-time.  This is essential in large systems, where many variants may be available; dynamic binding protects each component against changes in other components.  </paragraph>
-		<paragraph>This technique is particularly attractive when compared to its closest equivalent in traditional approaches, where you would need records with variant components, or union types (C), together with
+		<paragraph>This technique is particularly attractive when compared to its closest equivalent in traditional approaches, where you would need records with variant components, or union types (C), together with 
 			<code>
 				<keyword>case</keyword>
 			</code> (switch) instructions to discriminate between variants.  This means that every client must know about every possible case, and that any extension may invalidate a large body of existing software.
 		</paragraph>
 		<paragraph>The combination of inheritance, feature redefinition, polymorphism and dynamic binding supports a development mode in which every module is open and incremental.  When you want to reuse an existing class but need to adapt it to a new context, you can define a new descendant of that class (with new features, redefined ones, or both) without any change to the original.  This facility is of great importance in software development, an activity that -- by design or circumstance -- is invariably incremental.  </paragraph>
-		<paragraph>The power of these techniques demands adequate controls.  First, feature redefinition, as seen above, is explicit.  Second, because the language is typed, a compiler can check statically whether a feature application
+		<paragraph>The power of these techniques demands adequate controls.  First, feature redefinition, as seen above, is explicit.  Second, because the language is typed, a compiler can check statically whether a feature application 
 			<code>
 				<string>a</string>
 			</code>
@@ -165,14 +165,14 @@
 				<string>f</string>
 			</code> is correct.  In contrast, dynamically typed object-oriented languages defer checks until run-time and hope for the best: if an object "sends a message" to another (that is to say, calls one of its routines) one just expects that the corresponding class, or one of its ancestors, will happen to include an appropriate routine; if not, a run-time error will occur.  Such errors will not happen during the execution of a type-checked Eiffel system.
 		</paragraph>
-		<paragraph>In other words, the language reconciles dynamic
-			<span>binding</span> with static
-			<span>typing</span> .  Dynamic binding guarantees that whenever more than one version of a routine is applicable the
-			<span>right</span> version (the one most directly adapted to the target object) will be selected.  Static typing means that the compiler makes sure there is
+		<paragraph>In other words, the language reconciles dynamic 
+			<span>binding</span> with static 
+			<span>typing</span> .  Dynamic binding guarantees that whenever more than one version of a routine is applicable the 
+			<span>right</span> version (the one most directly adapted to the target object) will be selected.  Static typing means that the compiler makes sure there is 
 			<span>at least one</span> such version.
 		</paragraph>
 		<paragraph>This policy also yields an important performance benefit: in contrast with the costly run-time searches that may be needed with dynamic typing (since a requested routine may not be defined in the class of the target object but inherited from a possibly remote ancestor), the EiffelStudio implementation always finds the appropriate routine in constant-bounded time.  </paragraph>
-		<paragraph>Assertions provide a further mechanism for controlling the power of redefinition.  In the absence of specific precautions, redefinition may be dangerous: how can a client be sure that evaluation of
+		<paragraph>Assertions provide a further mechanism for controlling the power of redefinition.  In the absence of specific precautions, redefinition may be dangerous: how can a client be sure that evaluation of 
 			<code>
 				<string>p</string>
 			</code>
@@ -181,11 +181,11 @@
 				<string>perimeter</string>
 			</code> will not in some cases return, say, the area? Preconditions and postconditions provide the answer by limiting the amount of freedom granted to eventual redefiners.  The rule is that any redefined version must satisfy a weaker or equal precondition and ensure a stronger or equal postcondition than in the original.  This means that it must stay within the semantic boundaries set by the original assertions.
 		</paragraph>
-		<paragraph>The rules on redefinition and assertions are part of the Design by Contract theory, where redefinition and dynamic binding introduce
-			<span>subcontracting</span>.
+		<paragraph>The rules on redefinition and assertions are part of the Design by Contract theory, where redefinition and dynamic binding introduce 
+			<span>subcontracting</span>. 
 			<code>
 				<string>POLYGON</string>
-			</code>, for example, subcontracts the implementation of perimeter to
+			</code>, for example, subcontracts the implementation of perimeter to 
 			<code>
 				<string>RECTANGLE</string>
 			</code> when applied to any entity that is attached at run-time to a rectangle object.  An honest subcontractor is bound to honor the contract accepted by the prime contractor.  This means that it may not impose stronger requirements on the clients, but may accept more general requests: weaker precondition; and that it must achieve at least as much as promised by the prime contractor, but may achieve more: stronger postcondition.

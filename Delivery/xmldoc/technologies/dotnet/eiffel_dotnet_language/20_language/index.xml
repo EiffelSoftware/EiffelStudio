@@ -18,7 +18,7 @@
 			<item>
 				<link>
 					<url>20_adding_class_features.xml</url>
-					<label>Adding ClassFeatures</label>
+					<label>Adding Class Features</label>
 				</link>
 			</item>
 			<item>
@@ -36,13 +36,13 @@
 			<item>
 				<link>
 					<url>50_design_by_contract.xml</url>
-					<label>Design byContract</label>
+					<label>Design by Contract</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>60_exception_mechanism.xml</url>
-					<label>ExceptionMechanism</label>
+					<label>Exception Mechanism</label>
 				</link>
 			</item>
 			<item>
@@ -54,7 +54,7 @@
 			<item>
 				<link>
 					<url>80_assemblies.xml</url>
-					<label>Using ReferencedAssemblies</label>
+					<label>Using Referenced Assemblies</label>
 				</link>
 			</item>
 		</list>

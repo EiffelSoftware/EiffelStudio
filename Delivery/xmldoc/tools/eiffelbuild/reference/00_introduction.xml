@@ -1,10 +1,10 @@
 <document title="EiffelBuild Introduction" output="studio">
 	<meta_data/>
-	<paragraph>        
+	<paragraph>
 		<paragraph>EiffelBuild is the new graphical builder by 
 			<link>
-				<url>http://www.eiffel</url>
-				<label>Interactive Software Engineering</label>
+				<url>http://www.eiffel.com</url>
+				<label>Eiffel Software</label>
 			</link> which allows you to simply and quickly develop a 
 			<link>
 				<url>/libraries/vision2/00_introduction</url>

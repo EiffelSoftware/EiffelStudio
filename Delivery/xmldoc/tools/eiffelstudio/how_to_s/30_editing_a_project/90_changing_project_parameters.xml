@@ -12,18 +12,18 @@
 			<item>Click
 				<image>
 					<url>/images/eiffelstudio/icons/icon_system_color.gif</url>
-				</image> in the
+				</image> in the 
 				<link>
 					<url>../../reference/05_general_interface_description/30_main_toolbars.xml</url>
 					<label>standard toolbar</label>
 				</link>.
 			</item>
-			<item>Select
-				<bold>Project settings...</bold> in the
+			<item>Select 
+				<bold>Project settings...</bold> in the 
 				<bold>Project</bold> menu.
 			</item>
 		</list>This tool will allow you, for instance, to add or remove clusters, set the assertion level or activate debug clauses.
-		<paragraph>For more complete information, please refer to the
+		<paragraph>For more complete information, please refer to the 
 			<link>
 				<url>/tools/eiffelstudio/reference/25_project_settings/index.xml</url>
 				<label>Project configuration tool help</label>

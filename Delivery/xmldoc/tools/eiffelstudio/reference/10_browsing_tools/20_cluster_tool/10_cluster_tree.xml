@@ -43,7 +43,7 @@
 			<item>Classes and clusters that are part of a library are shown with a  brighter icon than normal (they cannot be modified)</item>
 		</list>
 		<paragraph>Recursive clusters (i.e. clusters that have a `all' or `library' tag in the Ace) have a short name in the tree, but the full name is available as a tool tip.</paragraph>
-		<paragraph>Left-clicking on any item will send it to the editor. It is also possible to
+		<paragraph>Left-clicking on any item will send it to the editor. It is also possible to 
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
 				<label>pick</label>

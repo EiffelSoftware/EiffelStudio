@@ -13,14 +13,14 @@
 	</meta_data>
 	<paragraph>
 		<list ordered="false">
-			<item>To enlarge the diagram, click
+			<item>To enlarge the diagram, click 
 				<bold>Zoom in</bold>.
 				<image>
 					<url>/images/eiffelstudio/icons/icon_zoom_in_color.gif</url>
 				</image>
 				<line_break/>
 			</item>
-			<item>To shrink the diagram, click
+			<item>To shrink the diagram, click 
 				<bold>Zoom out</bold>.
 				<image>
 					<url>/images/eiffelstudio/icons/icon_zoom_out_color.gif</url>

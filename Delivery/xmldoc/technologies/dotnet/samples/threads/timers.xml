@@ -8,13 +8,13 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>This sample consist in a command line demonstrating the use of the
+		<paragraph>This sample consist in a command line demonstrating the use of the 
 			<code>
 				<class_name>TIMER</class_name>
-			</code> (Timer) class to generate a periodic callback to a method. The sample creates a
+			</code> (Timer) class to generate a periodic callback to a method. The sample creates a 
 			<code>
 				<class_name>TIMER</class_name>
-			</code> object and passes to it a delegate object. When the
+			</code> object and passes to it a delegate object. When the 
 			<code>
 				<class_name>TIMER</class_name>
 			</code> fires, the delegate is invoked, and a static method is called asynchronously by a worker thread in the thread pool.
@@ -41,34 +41,34 @@ Checking Status.
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>This application shows how to use the thread
+		<paragraph>This application shows how to use the thread 
 			<code>
 				<class_name>TIMER</class_name>
-			</code>. The timer is launched (
+			</code>. The timer is launched ( 
 			<code>
 				<keyword>create</keyword>
 			</code>
 			<code>
 				<local_variable>my_timer</local_variable>
-			</code>.
+			</code>. 
 			<code>
 				<feature_name>make_with_callback</feature_name>
-			</code> (
+			</code> ( 
 			<code>
 				<keyword>create</keyword>
-			</code> {
+			</code> { 
 			<code>
 				<class_name>TIMER_CALLBACK</class_name>
-			</code>}.
+			</code>}. 
 			<code>
 				<feature_name>make</feature_name>
-			</code> (Current, $
+			</code> (Current, $ 
 			<code>
 				<feature_name>check_status</feature_name>
-			</code>), Void, 0, 2000)) and call the feature
+			</code>), Void, 0, 2000)) and call the feature 
 			<code>
 				<feature_name>check_status</feature_name>
-			</code> that displays the message
+			</code> that displays the message 
 			<code>
 				<string>"Checking Status."</string>
 			</code> every two seconds.

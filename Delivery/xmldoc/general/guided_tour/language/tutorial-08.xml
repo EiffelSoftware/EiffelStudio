@@ -59,7 +59,7 @@
 first<symbol>:</symbol> <class_name>G</class_name>    
 	<comment>-- Value of first list item</comment>
 
-ext<keyword>end</keyword> <symbol>(</symbol>val<symbol>:</symbol> <class_name>G</class_name><symbol>)</symbol> <keyword>is</keyword>    
+extend <symbol>(</symbol>val<symbol>:</symbol> <class_name>G</class_name><symbol>)</symbol> <keyword>is</keyword>    
 	<comment>-- Add a new item of value val at end of list  </comment>  
 ...
 </code_block>
@@ -114,7 +114,7 @@ ext<keyword>end</keyword> <symbol>(</symbol>val<symbol>:</symbol> <class_name>G<
 				</code>, 
 				<code>
 					<string>equal </string>
-				</code>and
+				</code>and 
 				<code>
 					<string> copy</string>
 				</code>.  
@@ -162,7 +162,7 @@ ext<keyword>end</keyword> <symbol>(</symbol>val<symbol>:</symbol> <class_name>G<
 			<paragraph>Genericity reconciles extendibility and reusability with the static type checking demanded by reliability.  A typical error, such as confusing an account and a deposit, will be detected immediately at compile time, since the call 
 				<code>
 					<string>all_accounts</string>
-				</code>.
+				</code>. 
 				<code>
 					<string>extend </string>
 				</code> 
@@ -183,7 +183,7 @@ ext<keyword>end</keyword> <symbol>(</symbol>val<symbol>:</symbol> <class_name>G<
 				</code> .  What is valid is something like 
 				<code>
 					<string>all_accounts</string>
-				</code>.
+				</code>. 
 				<code>
 					<string>extend </string>
 				</code> 
@@ -237,7 +237,7 @@ ext<keyword>end</keyword> <symbol>(</symbol>val<symbol>:</symbol> <class_name>G<
 					</code> to replace an element's value, as in 
 					<code>
 						<string>my_array</string>
-					</code>.
+					</code>. 
 					<code>
 						<string>put </string>
 					</code> 
@@ -246,7 +246,7 @@ ext<keyword>end</keyword> <symbol>(</symbol>val<symbol>:</symbol> <class_name>G<
 					</code>
 					<code>
 						<string>val</string>
-					</code>,
+					</code>, 
 					<code>
 						<string> 25</string>
 					</code>
@@ -263,7 +263,7 @@ ext<keyword>end</keyword> <symbol>(</symbol>val<symbol>:</symbol> <class_name>G<
 					</code> to access an entry, as in 
 					<code>
 						<string>my_array</string>
-					</code>.
+					</code>. 
 					<code>
 						<string>item </string>
 					</code> 
@@ -312,7 +312,7 @@ ext<keyword>end</keyword> <symbol>(</symbol>val<symbol>:</symbol> <class_name>G<
 					</code> 
 					<code>
 						<string>my_array</string>
-					</code>.
+					</code>. 
 					<code>
 						<string>make </string>
 					</code>
@@ -339,7 +339,7 @@ ext<keyword>end</keyword> <symbol>(</symbol>val<symbol>:</symbol> <class_name>G<
 				</code> too: Eiffel compilers know about this class, and will be able to process expressions of the form 
 				<code>
 					<string>my_array</string>
-				</code>.
+				</code>. 
 				<code>
 					<string>put </string>
 				</code> 
@@ -348,7 +348,7 @@ ext<keyword>end</keyword> <symbol>(</symbol>val<symbol>:</symbol> <class_name>G<
 				</code>
 				<code>
 					<string>val</string>
-				</code>,
+				</code>, 
 				<code>
 					<string> 25</string>
 				</code>

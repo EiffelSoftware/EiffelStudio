@@ -226,7 +226,7 @@
 			<link>
 				<url>../../reference/structures/tree/dynamic_tree.html#f_fill_from_binary</url>
 				<label>fill_ from_binary</label>
-			</link>, in
+			</link>, in 
 			<link>
 				<url>../../reference/structures/tree/dynamic_tree_chart.html</url>
 				<label>DYNAMIC_TREE</label>
@@ -382,7 +382,7 @@
 			<link>
 				<url>../../reference/structures/cursor_tree/cursor_tree.html#f_off</url>
 				<label>off</label>
-			</link> (
+			</link> ( 
 			<link>
 				<url>../../reference/structures/cursor_tree/cursor_tree.html#f_above</url>
 				<label>above</label>
@@ -483,7 +483,7 @@
 				<italic>D</italic>. The resulting order is: 
 				<italic>A B E F C D G H I</italic>.
 			</item>
-			<item>Postorder first traverses (recursively) the subtrees, then visits the root. On the  example this gives:
+			<item>Postorder first traverses (recursively) the subtrees, then visits the root. On the  example this gives: 
 				<italic> E F B C G H I D A</italic>.
 			</item>
 			<item>Breadth-first visits the nodes level by level, starting with the root: first the root,  then all its children, then all their children and so on. Here the resulting order is:  

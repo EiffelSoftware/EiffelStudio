@@ -97,7 +97,7 @@
 			<item>You also notice two files with an 
 				<code>
 					<keyword>ace</keyword>
-				</code> extension.  These are the compilation control files.  The reason there are two is that this example has a Windows version and a Unix/Linux version.  As you remember, the Ace files for this example were available as part of the delivery; we used them to compile the project.  In most practical cases, however, you won't need to build an Ace; if you use the "
+				</code> extension.  These are the compilation control files.  The reason there are two is that this example has a Windows version and a Unix/Linux version.  As you remember, the Ace files for this example were available as part of the delivery; we used them to compile the project.  In most practical cases, however, you won't need to build an Ace; if you use the " 
 				<code>
 					<keyword>Create a new project</keyword>
 				</code> " option of EiffelStudio (remember the first screen on page 
@@ -118,7 +118,7 @@
 				</code> 
 				<code>
 					<keyword>.epr</keyword>
-				</code> .  To open an existing project when you start EiffelStudio (this was the option "
+				</code> .  To open an existing project when you start EiffelStudio (this was the option " 
 				<code>
 					<keyword>Open compiled project</keyword>
 				</code> " in the initial screen on page 
@@ -132,7 +132,7 @@
 			<item>Finally you will notice a subdirectory called 
 				<code>
 					<keyword>EIFGEN</keyword>
-				</code>, for "
+				</code>, for " 
 				<code>
 					<keyword>EIF</keyword>
 				</code> fel 
@@ -191,7 +191,7 @@
 			</code> has been created, itself with some subdirectories, including 
 			<code>
 				<keyword>W_Code</keyword>
-			</code> which contains the generated code (
+			</code> which contains the generated code ( 
 			<code>
 				<keyword>W</keyword>
 			</code> for "Workbench" -- we'll see the reason later).  Feel free to browse through it if you like, but don't change anything.  

@@ -15,12 +15,12 @@
 		</paragraph>The feature tool (
 		<image>
 			<url>/images/eiffelstudio/icons/icon_features_color.gif</url>
-		</image> ) gives a summary of all written-in features of the currently edited class. They are listed in a
+		</image> ) gives a summary of all written-in features of the currently edited class. They are listed in a 
 		<link>
 			<url>10_feature_tree.xml</url>
 			<label>tree representation</label>
 		</link>, where the nodes are the feature clauses, and the leaves are the features.
-		<paragraph>In the tool mini-toolbar, a
+		<paragraph>In the tool mini-toolbar, a 
 			<link>
 				<url>20_new_feature_command.xml</url>
 				<label>new feature command</label>

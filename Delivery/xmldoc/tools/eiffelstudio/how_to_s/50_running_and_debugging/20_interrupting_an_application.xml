@@ -27,7 +27,7 @@
 		<paragraph>There are two ways a debugged application can be interrupted: its execution can be paused, or it can be killed.</paragraph>
 		<paragraph>Two methods can be used to pause a debugged application:</paragraph>
 		<list ordered="false">
-			<item>The
+			<item>The 
 				<link>
 					<url>/tools/eiffelstudio/reference/40_debugger/10_execution/70_pause_execution.xml</url>
 					<label> command</label>
@@ -35,7 +35,7 @@
 			</item>
 			<item>Breakpoints, which make it easy to stop the application at a precise point.</item>
 		</list>
-		<paragraph>To kill a debugged application, use the
+		<paragraph>To kill a debugged application, use the 
 			<link>
 				<url>/tools/eiffelstudio/reference/40_debugger/10_execution/80_kill_application.xml</url>
 				<label> command</label>

@@ -8,7 +8,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>To delete a set of measures, you must have
+		<paragraph>To delete a set of measures, you must have 
 			<link>
 				<url>20_saving_a_measure.xml</url>
 				<label>saved</label>
@@ -24,7 +24,7 @@
 		</paragraph>
 		<list ordered="true">
 			<item>Select a row (or a set of rows using SHIFT or CTRL keys) from the multi column list.</item>
-			<item>Click on the
+			<item>Click on the 
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#delete</url>
 					<label>delete</label>

@@ -21,9 +21,9 @@
 			<bold>Reusability</bold> is the ability to produce components that may serve in many different applications.  Central to the Eiffel approach is the presence of predefined libraries such as EiffelBase, and the language's support for the production of new libraries.  
 		</paragraph>
 		<paragraph>
-			<bold>Extendibility</bold>is the ability to produce easily modifiable software.  "Soft" as software is supposed to be, it is notoriously hard to modify software systems, especially large ones.  
+			<bold>Extendibility</bold> is the ability to produce easily modifiable software.  "Soft" as software is supposed to be, it is notoriously hard to modify software systems, especially large ones.  
 		</paragraph>
-		<paragraph>Among quality factors, reusability and extendibility play a special role: satisfying them means having
+		<paragraph>Among quality factors, reusability and extendibility play a special role: satisfying them means having 
 			<span> less</span> software to write -- and hence more time to devote to other important goals such as efficiency, ease of use or integrity.  
 		</paragraph>
 		<paragraph>The third fundamental factor is 

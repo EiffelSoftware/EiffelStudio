@@ -11,7 +11,7 @@
 			<link>
 				<url>routine.html</url>
 				<label>created</label>
-			</link> the object  representing the external routine and attachedit to entity
+			</link> the object  representing the external routine and attachedit to entity 
 			<code>
 				<local_variable>your_routine</local_variable>
 			</code>, you may now call the routine with  arbitrary actual arguments through the procedure,  a feature of class 

@@ -12,15 +12,15 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>A debugger is a tool that allows you to
+		<paragraph>A debugger is a tool that allows you to 
 			<link>
 				<url>10_execution/00_introduction.xml</url>
 				<label>run</label>
-			</link> an application and view its state at any moment. This includes having information concerning the current
+			</link> an application and view its state at any moment. This includes having information concerning the current 
 			<link>
 				<url>30_call_stack_tool/00_introduction.xml</url>
 				<label>call stack</label>
-			</link> and the
+			</link> and the 
 			<link>
 				<url>40_object_tool/00_introduction.xml</url>
 				<label>state of objects</label>
@@ -33,17 +33,17 @@
 				<link>
 					<url>10_execution/40_step_into_a_feature.xml</url>
 					<label>Stepping into</label>
-				</link> features,
+				</link> features, 
 				<link>
 					<url>10_execution/50_step_by_step.xml</url>
 					<label>executing them one line at a time</label>
-				</link>, or
+				</link>, or 
 				<link>
 					<url>10_execution/60_step_out.xml</url>
 					<label>stepping out</label>
 				</link> of them
 			</item>
-			<item>Setting
+			<item>Setting 
 				<link>
 					<url>20_breakpoints/00_introduction.xml</url>
 					<label>breakpoints</label>
@@ -70,7 +70,7 @@
 					<label>Stack overflow prevention</label>
 				</link>
 			</item>
-			<item>Classes can implement the
+			<item>Classes can implement the 
 				<link>
 					<url>40_object_tool/17_debug_output.xml</url>
 					<label>debug_output interface</label>

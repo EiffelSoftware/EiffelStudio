@@ -9,7 +9,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>In EiffelStudio editor, you can select text by using either the mouse or the keyboard.</paragraph>
-		<paragraph>To select a text zone with the keyboard,
+		<paragraph>To select a text zone with the keyboard, 
 			<link>
 				<url>./10_cursor_moves.xml</url>
 				<label>move the cursor</label>
@@ -19,7 +19,7 @@
 			<bold>Tip</bold>: You can combine "Ctrl" and "Shift" when using Left and Right arrows to select text word by word
 			<line_break/>
 		</tip>
-		<paragraph>If you choose to use the mouse, first
+		<paragraph>If you choose to use the mouse, first 
 			<link>
 				<url>./10_cursor_moves.xml</url>
 				<label>position the cursor</label>
@@ -29,7 +29,7 @@
 		<list ordered="false">
 			<item>You can select a word by double-clicking on it. If you do not release the mouse button after the second click, then you will be able to select a text zone but the bound of the zone will move one word at a time.</item>
 			<item>If you triple click in the edition area, then the pointed line will be selected. If you do not release the mouse button after the third click, you will be able to select text line by line.</item>
-			<item>A quadruple click will select the entire text (this is an option that you can
+			<item>A quadruple click will select the entire text (this is an option that you can 
 				<link>
 					<url>../85_preferences/20_preferences_reference/20_tools/30_editor/10_general_editor_preferences.xml</url>
 					<label>modify</label>

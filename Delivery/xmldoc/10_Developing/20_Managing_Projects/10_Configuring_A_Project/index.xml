@@ -11,7 +11,7 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>  The ability to configure a Project avoids the need for multiple Projects for  different situations. For example, you may configure debug and release  properties for a single Project, one designed to facilitate ease of  development, and the other to facilitate speed and correctness. Project  Properties for an Eiffel ENViSioN! Project are performed through the
+					<paragraph>  The ability to configure a Project avoids the need for multiple Projects for  different situations. For example, you may configure debug and release  properties for a single Project, one designed to facilitate ease of  development, and the other to facilitate speed and correctness. Project  Properties for an Eiffel ENViSioN! Project are performed through the 
 						<link>
 							<url>./10_Project_Property_Pages/project_configuration.htm</url>
 							<label>  Project Property Pages</label>

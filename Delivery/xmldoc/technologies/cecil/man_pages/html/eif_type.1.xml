@@ -12,13 +12,13 @@
 		</code>
 		<heading>
 			<size>2</size>DESCRIPTION
-		</heading>The
-		<bold>eif_type()</bold> function returns the type identifier corresponding to
+		</heading>The 
+		<bold>eif_type()</bold> function returns the type identifier corresponding to 
 		<italic>object</italic>.
 		<heading>
 			<size>2</size>RETURN VALUE
-		</heading>Type identifier of
-		<italic>object</italic>. The behavior is unknown if
+		</heading>Type identifier of 
+		<italic>object</italic>. The behavior is unknown if 
 		<italic>object</italic> is not a valid Eiffel object.
 		<heading>
 			<size>2</size>CONFORMANCE
@@ -26,11 +26,11 @@
 		<heading>
 			<size>2</size>COMPATIBILITY
 		</heading>
-		<bold>eif_type()</bold> is equivalent to
+		<bold>eif_type()</bold> is equivalent to 
 		<bold>eif_type_by_reference(eif_access (object))</bold>.
 		<heading>
 			<size>2</size>SEE ALSO
 		</heading>
-		<bold>eif_type_by_reference</bold>(1) ,
+		<bold>eif_type_by_reference</bold>(1) , 
 		<bold>eif_type_id</bold>(1).  Markup created by  1. 0, November 15, 1999.
 	</paragraph></document>

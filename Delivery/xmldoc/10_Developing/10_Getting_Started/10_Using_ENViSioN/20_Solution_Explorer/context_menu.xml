@@ -21,19 +21,19 @@
 					</paragraph>
 					<paragraph>  In the image above we can see the context menu for the Eiffel project 'My Eiffel  Project'. The entries available on the context menu perform the following  actions: </paragraph>
 					<list ordered="false">
-						<item>  Build - Builds the Eiffel project (
+						<item>  Build - Builds the Eiffel project ( 
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/index.htm</url>
 								<label>Compiling</label>
 							</link>).  
 						</item>
-						<item>  Rebuild - Rebuilds the Eiffel project (
+						<item>  Rebuild - Rebuilds the Eiffel project ( 
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/index.htm</url>
 								<label>Compiles</label>
 							</link> completely from scratch).  
 						</item>
-						<item>  Add - This allows you to
+						<item>  Add - This allows you to 
 							<link>
 								<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.htm</url>
 								<label> Add a New or Existing Item</label>

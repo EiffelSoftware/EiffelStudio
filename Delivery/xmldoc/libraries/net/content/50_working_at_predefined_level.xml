@@ -74,7 +74,7 @@
 						</item>
 					</list>
 					<paragraph>Of course, in a typical object-oriented design, the class and those    which appear in the rest of this set of examples may "do" more    than one thing and so may have more routines than the ones shown in this    document.</paragraph>
-					<paragraph>This example shows how to write a client class in the most common    cases: inherit from UNIX_CLIENTor    NETWORK_CLIENT;    use 
+					<paragraph>This example shows how to write a client class in the most common    cases: inherit from UNIX_CLIENT or    NETWORK_CLIENT;    use 
 						<italic>make</italic> to specify the socket address, 
 						<italic>send</italic> to send an    object structure, 
 						<italic>receive </italic>to receive an object structure, 
@@ -94,7 +94,7 @@
 						<paragraph>Now, the server class:    
 							<code_block>Missing code</code_block>
 							<paragraph>The developer's task is even easier here than on the client side. The    last instruction in the creation procedure is 
-								<italic>execute</italic>, inherited    from the chosen _SERVER
+								<italic>execute</italic>, inherited    from the chosen _SERVER 
 								<italic/>class, which executes a loop that will    repeatedly call 
 								<italic>receive</italic>, 
 								<italic>process_message</italic>, 

@@ -64,11 +64,11 @@
 				</image>for normal Eiffel routines
 			</item>
 		</list>
-		<paragraph>Clicking a feature or a feature clause in the tree centers the editor on it. Key navigation is also available. All features can be
+		<paragraph>Clicking a feature or a feature clause in the tree centers the editor on it. Key navigation is also available. All features can be 
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
 				<label>picked</label>
-			</link>, to
+			</link>, to 
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
 				<label>drop</label>

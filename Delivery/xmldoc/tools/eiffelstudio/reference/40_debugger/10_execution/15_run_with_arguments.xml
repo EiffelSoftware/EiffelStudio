@@ -35,7 +35,7 @@
 		<paragraph>While working on a project, you may want to launch it with one or more arguments.</paragraph>
 		<paragraph>There are two ways to specify arguments for a program from EiffelStudio:</paragraph>
 		<list ordered="false">
-			<item>From the
+			<item>From the 
 				<link>
 					<url>../../25_project_settings/20_debug.xml</url>
 					<label>Debug tab</label>

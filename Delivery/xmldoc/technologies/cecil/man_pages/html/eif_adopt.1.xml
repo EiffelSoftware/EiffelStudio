@@ -30,7 +30,7 @@
 		<heading>
 			<size>2</size>SEE ALSO
 		</heading>
-		<bold>eif_access</bold> (1),
-		<bold>eif_protect</bold> (1),
+		<bold>eif_access</bold> (1), 
+		<bold>eif_protect</bold> (1), 
 		<bold>eif_wean</bold> (1). Markup created by  1. 0, November 15, 1999. 
 	</paragraph></document>

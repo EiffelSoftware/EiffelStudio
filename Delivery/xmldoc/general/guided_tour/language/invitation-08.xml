@@ -84,7 +84,7 @@
 			</code>  
 			<code>
 				<string>False</string>
-			</code>depending on the outcome.  Here is the text of the routine:
+			</code> depending on the outcome.  Here is the text of the routine:
 		</paragraph>
 		<code_block>
 <feature_name>attempt_transmission</feature_name> <symbol>(</symbol><local_variable>message</local_variable><symbol>:</symbol> <class_name>STRING</class_name><symbol>)</symbol> <keyword>is</keyword> 

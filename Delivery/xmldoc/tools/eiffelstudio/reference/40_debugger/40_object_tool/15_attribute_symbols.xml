@@ -8,7 +8,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>In both trees of the
+		<paragraph>In both trees of the 
 			<link>
 				<url>00_introduction.xml</url>
 				<label>object tool</label>
@@ -31,13 +31,13 @@
 					<height>16</height>
 					<width>16</width>
 					<url>../../../../../images/eiffelstudio/icons/icon_immediate_value.gif</url>
-				</image> An attribute of a basic type, such as
+				</image> An attribute of a basic type, such as 
 				<code>
 					<class_name>
 						<label>INTEGER</label>
 						<url>/libraries/base/reference/kernel/integer.html</url>
 					</class_name>
-				</code>,
+				</code>, 
 				<code>
 					<class_name>
 						<label>DOUBLE</label>

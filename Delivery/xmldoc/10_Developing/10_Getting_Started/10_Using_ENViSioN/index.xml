@@ -17,7 +17,7 @@
 					<paragraph>Of course Eiffel for .NET is different from C# and VB.NET with capabilities not  present in other .NET languages. If it were not different in some sigificant  way, then there would be no reason for it to exist. So depending upon your  experience, you may have two things to learn.
 						<list ordered="false">
 							<item>  The  mechanics of using Eiffel ENViSioN! to support the creation of Eiffel for .NET  software, documented in the topics referenced below.</item>
-							<item>  The Eiffel method and language and how they work with Microsoft .NET, found in
+							<item>  The Eiffel method and language and how they work with Microsoft .NET, found in 
 								<link>
 									<url>\20_Language\index.html</url>
 									<label>  Eiffel, The Language</label>

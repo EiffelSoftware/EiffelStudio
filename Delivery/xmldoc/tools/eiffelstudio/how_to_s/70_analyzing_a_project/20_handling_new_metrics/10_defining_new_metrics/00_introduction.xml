@@ -40,11 +40,11 @@
 				</link>
 			</item>
 		</list>
-		<paragraph>New metrics are increasingly added to the
+		<paragraph>New metrics are increasingly added to the 
 			<link>
 				<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#new metric</url>
 				<label>metric menu</label>
-			</link>, and are available for
+			</link>, and are available for 
 			<link>
 				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/10_computing_a_measure/10_calculating_a_measure.xml</url>
 				<label>calculation</label>

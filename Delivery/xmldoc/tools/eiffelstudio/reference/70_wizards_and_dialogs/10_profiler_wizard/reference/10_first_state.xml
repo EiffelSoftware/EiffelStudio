@@ -23,7 +23,7 @@
 			<link>
 				<url>30_third_state.xml</url>
 				<label>Third state</label>
-			</link> depending on whether an
+			</link> depending on whether an 
 			<italic>Execution Profile</italic> has already been generated for this compilation mode or not. If no 
 			<italic>Execution Profile</italic> has been generated so far (which happens the first time you execute this wizard for a specified project in a given compilation mode) youwill go to the 
 			<link>

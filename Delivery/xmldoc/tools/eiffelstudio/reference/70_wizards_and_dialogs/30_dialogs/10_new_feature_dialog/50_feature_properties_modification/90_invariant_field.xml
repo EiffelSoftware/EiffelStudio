@@ -7,7 +7,7 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-invariant.png</url>
 			</image>
 		</div>
-		<paragraph>If the attribute is of a reference type, you may select the invariant that the attribute may never be void. If it is of a basic expanded type, some other standard options may be chosen. For example, for
+		<paragraph>If the attribute is of a reference type, you may select the invariant that the attribute may never be void. If it is of a basic expanded type, some other standard options may be chosen. For example, for 
 			<code>
 				<class_name>INTEGER</class_name>
 			</code> you may select that it should always be positive.

@@ -7,7 +7,7 @@
 		<heading>
 			<size>2</size>Select the information you need
 		</heading>
-		<paragraph>Check or uncheck any of the check buttons in
+		<paragraph>Check or uncheck any of the check buttons in 
 			<bold>Output switches</bold> to select the columns you want to be displayed. Each switch turns on or off the corresponding column output. You should toggle columns on or off depending on what you would like to see in the result of the computation. Here are the explanations of each switch:
 		</paragraph>
 		<list ordered="false">
@@ -24,15 +24,15 @@
 				<bold>Descendant time</bold>: Display the time spent in all features called during the execution of the current feature.
 			</item>
 			<item>
-				<bold>Total time</bold>: Display the total time spent in the feature. This value is equal to
+				<bold>Total time</bold>: Display the total time spent in the feature. This value is equal to 
 				<italic>Function time + Descendant time</italic>.
 			</item>
 			<item>
-				<bold>Percentage</bold>: Display the percentage of time spent in the current feature. This value is equal to
+				<bold>Percentage</bold>: Display the percentage of time spent in the current feature. This value is equal to 
 				<italic>Total time / Execution time</italic>.
 			</item>
 		</list>
-		<paragraph>Check or uncheck any of the check buttons in the
+		<paragraph>Check or uncheck any of the check buttons in the 
 			<bold>Language type</bold> to select the type of features you want to be displayed. If you select only one language, the query result will not contain any information about routines written in the other language. The default is Eiffel only.
 		</paragraph>
 		<list ordered="false">
@@ -43,7 +43,7 @@
 		<heading>
 			<size>2</size>Formulate your query
 		</heading>
-		<paragraph>When running a query, you are able to type a complete query. After pressing the
+		<paragraph>When running a query, you are able to type a complete query. After pressing the 
 			<bold>Next</bold> button, a new window will be displayed to show the result of the query. The total query can be either a single one or a set of sub-queries separated by one of the two operators 'or' or 'and'.
 			<line_break/>
 			<line_break/>Each sub-query must have the following syntax 'attribute operator value' where:
@@ -80,8 +80,8 @@
 			<line_break/>
 			<line_break/>
 		</paragraph>
-		<paragraph>Clicking
-			<bold>Next</bold> will open the
+		<paragraph>Clicking 
+			<bold>Next</bold> will open the 
 			<link>
 				<url>50_profile_query_window.xml</url>
 				<label>Profile query window</label>

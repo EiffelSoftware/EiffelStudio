@@ -14,7 +14,7 @@
 				<url>../../../../../images/eiffelstudio/debugger/expression_evaluation_tool.png</url>
 			</image>
 		</paragraph>
-		<paragraph>Its first column gives the context in which the
+		<paragraph>Its first column gives the context in which the 
 			<link>
 				<url>20_new_expression_dialog.xml</url>
 				<label>expression</label>
@@ -30,7 +30,7 @@
 					<height>8</height>
 					<width>8</width>
 					<url>../../../../../images/eiffelstudio/icons/icon_new_expression_color.gif</url>
-				</image> pops up the
+				</image> pops up the 
 				<link>
 					<url>20_new_expression_dialog.xml</url>
 					<label>expression definition dialog</label>

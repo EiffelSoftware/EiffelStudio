@@ -13,7 +13,7 @@
 	<paragraph>
 		<paragraph>Here is an overview of the facilities supported by Eiffel:</paragraph>
 		<list ordered="false">
-			<item> Completely
+			<item> Completely 
 				<italic>object-oriented</italic> approach.  Eiffel is a full-fledged application of object technology, not a "hybrid" of O-O and traditional concepts.
 			</item>
 			<item>
@@ -77,7 +77,7 @@
 				<italic>Feature renaming</italic> .  To remove name clashes under multiple inheritance, or to give locally better names, a class can give a new name to an inherited feature.
 			</item>
 			<item>
-				<italic>Repeated inheritance</italic> :
+				<italic>Repeated inheritance</italic> : 
 				<italic>sharing and replication</italic> .  If, as a result of multiple inheritance, a class inherits from another through two or more paths, the class author can specify, for each repeatedly inherited feature, that it yields either one feature (sharing) or two (replication).
 			</item>
 			<item>
@@ -105,7 +105,7 @@
 				<italic>Other libraries</italic> .  Eiffel development is largely based on high-quality libraries covering many common needs of software development, from general algorithms and data structures to networking and databases.
 			</item>
 		</list>
-		<paragraph>It is also useful, as in any design, to list some of what is
+		<paragraph>It is also useful, as in any design, to list some of what is 
 			<bold>not</bold> present in Eiffel.  The approach is indeed based on a small number of coherent concepts so as to remain easy to master.  Eiffel typically takes a few hours to a few days to learn, and users seldom need to return to the reference manual once they have understood the basic concepts.  Part of this simplicity results from the explicit decision to exclude a number of possible facilities:
 		</paragraph>
 		<list ordered="false">
@@ -128,7 +128,7 @@
 				<italic>No side-effect expression operators</italic> confusing computation and modification.
 			</item>
 			<item>
-				<italic>No low-level pointers, no pointer arithmetic</italic>, a well-known source of bugs.  (There is however a type
+				<italic>No low-level pointers, no pointer arithmetic</italic>, a well-known source of bugs.  (There is however a type 
 				<italic>POINTER</italic>, used for interfacing Eiffel with C and other languages.  )
 			</item>
 		</list>

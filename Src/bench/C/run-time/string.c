@@ -585,7 +585,7 @@ rt_public EIF_BOOLEAN str_isi (EIF_CHARACTER *str, EIF_INTEGER length)
         c = *str++;
         switch (state) {
             case 0:
-                if (c == '\0' || c == '\t' || c == '\n' || c == '\r')
+                if (c == '\0' || isspace (c))
                     break;
                 else if (c == '+' || c == '-')
                     state = 1;
@@ -600,7 +600,7 @@ rt_public EIF_BOOLEAN str_isi (EIF_CHARACTER *str, EIF_INTEGER length)
                 break;
 
             case 1:
-                if (c == '\0' || c == '\t' || c == '\n' || c == '\r')
+                if (c == '\0' || isspace (c))
                     break;
                 else if (isdigit(c)) {
                     state = 2;
@@ -613,7 +613,7 @@ rt_public EIF_BOOLEAN str_isi (EIF_CHARACTER *str, EIF_INTEGER length)
             case 2:
                 if (isdigit (c) || c == '\0')
                     break;
-                else if (c == '\t' || c == '\n' || c == '\r')
+                else if (isspace (c))
                     state = 3;
                 else {
                     state = 4;
@@ -622,7 +622,7 @@ rt_public EIF_BOOLEAN str_isi (EIF_CHARACTER *str, EIF_INTEGER length)
                 break;
 
             case 3:
-                if (c == '\0' || c == '\t' || c == '\n' || c == '\r')
+                if (c == '\0' || isspace (c))
                     break;
                 else
                     state = 4;

@@ -9,7 +9,8 @@ class
 inherit
 	CACHE_READER
 		redefine
-			absolute_assembly_path_from_consumed_assembly
+			absolute_assembly_path_from_consumed_assembly,
+			consumed_type
 		end
 		
 create
@@ -129,6 +130,18 @@ feature {NONE}
 				Result.compare_objects
 			end
 
+feature -- Conversion
+
+	consumed_type (t: TYPE): CONSUMED_TYPE is
+			-- Consumed type corresponding to `t'.
+		local
+			des: EIFFEL_XML_DESERIALIZER
+		do
+			create des
+			des.deserialize (local_cache_path + "\" + relative_type_path (t))
+			Result ?= des.deserialized_object
+		end
+		
 invariant
 	local_cache_path_not_void: local_cache_path /= Void
 

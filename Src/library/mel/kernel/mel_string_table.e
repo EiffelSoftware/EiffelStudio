@@ -18,9 +18,8 @@ feature {NONE} -- Initialization
 	make_from_existing (a_table: POINTER; a_count: INTEGER) is
 			-- Create the XmString Table.
 		require
-			a_table_not_null: a_table /= default_pointer;
-			a_count_large_enough: a_count > 0
-		local
+			table_not_null: a_table /= default_pointer;
+			count_large_enough: a_count > 0
 		do
 			handle := a_table;
 			count := a_count
@@ -33,7 +32,8 @@ feature {NONE} -- Initialization
 		require
 			positive_size: size > 0
 		do
-			handle := create_xm_string_table (size)
+			handle := create_xm_string_table (size);
+			count := size
 		ensure
 			count_set: count = size
 		end;
@@ -71,9 +71,10 @@ feature -- Access
 
 feature -- Element change
 
-	put (ms: MEL_STRING; i: INTEGER) is
+	put (ms: MEL_SHARED_STRING; i: INTEGER) is
 			-- Put a motif string `ms' at position `i'
 			-- in current table.
+			--| `ms' will not be collected automatically.
 		require
 			i_large_enough: i > 0
 			i_small_enough: i <= count;
@@ -85,6 +86,7 @@ feature -- Element change
 	put_string (str: STRING; i: INTEGER) is
 			-- Put an eiffel string `str' at position `i'
 			-- in current table.
+			--| A MEL_SHARED_STRING is created.
 		require
 			valid_str: str /= Void 
 			i_large_enough: i > 0
@@ -94,7 +96,6 @@ feature -- Element change
 		do
 			!! ms.make_localized (str);
 			xm_list_put (handle, ms.handle, i);
-			ms.free
 		end;
 
 feature -- Status report

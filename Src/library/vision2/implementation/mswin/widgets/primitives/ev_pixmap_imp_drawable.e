@@ -147,17 +147,17 @@ feature {NONE} -- Initialization
 			adapt_from_simple(simple_pixmap)
 		end
 
-	set_with_default (pixmap_name: STRING) is
+	set_with_default is
 			-- Initialize the pixmap with the default
-			-- image named `pixmap_name'.
+			-- pixmap (Vision2 logo)
 			--
-			-- Exceptions "Unable to retrieve icon information", 
+			-- Exceptions "Unable to retrieve icon information"
 		local
 			simple_pixmap: EV_PIXMAP_IMP
 		do
 				-- Create a simple pixmap
 			simple_pixmap := create_simple_pixmap
-			simple_pixmap.set_with_default (pixmap_name)
+			simple_pixmap.set_with_default
 			
 				-- Adapt the current object to the simple
 				-- pixmap just created
@@ -831,6 +831,9 @@ end -- class EV_PIXMAP_IMP_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/05/03 04:36:40  pichery
+--| Removed parameter in feature `set_with_default'.
+--|
 --| Revision 1.5  2000/04/28 16:32:43  pichery
 --| Added feature `set_with_default' To load a default
 --| pixmap.

@@ -140,8 +140,10 @@ feature -- Creation
 		do
 			include_button.add_activate_action (Current, First)
 			include_all_button.add_activate_action (Current, Second)
+			included_list.add_default_action (Current, Third)
 			exclude_button.add_activate_action (Current, Third)
 			exclude_all_button.add_activate_action (Current, Fourth)
+			excluded_list.add_default_action (Current, First)
 			!! generate_cmd.make
 			generate_button.add_activate_action (generate_cmd, Void)
 			!! del_com.make (Current)
@@ -348,8 +350,7 @@ feature -- Closeable
 	close is
 			-- Close object tool generator.
 		do
-			exclude_all_queries
-			--properties_rc.hide
+			--exclude_all_queries
 			hide
 		end
 
@@ -385,6 +386,7 @@ feature {NONE} -- Implementation
 			temp_title.append ("Object tool generator: ")
 			temp_title.append (edited_class.class_name)
 			set_title (temp_title)
+			exclude_all_queries
 			excluded_list.wipe_out
 			included_list.wipe_out
 			query_list := edited_class.query_list

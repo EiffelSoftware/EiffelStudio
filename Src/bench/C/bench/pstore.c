@@ -12,7 +12,7 @@
 
 #include "eif_config.h"
 #include "eif_portable.h"
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "eif_traverse.h"
 #include "eif_garcol.h"
 #include "eif_except.h"
@@ -113,7 +113,7 @@ rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr n
 
 rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 {
-	char gc_stopped;
+	int gc_stopped;
 
 	make_index = mid;
 	need_index = nid;
@@ -199,19 +199,23 @@ rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 	if (flags & EO_SPEC) {					/* Special object */
 		if (!(flags & EO_REF)) {			/* Special of simple types */
 		} else {
-			long count, elem_size;
-			char *ref;
+			EIF_INTEGER count, elem_size;
+			EIF_REFERENCE ref;
 
-			o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
-			count = *(long *) o_ptr;
+			o_ptr = RT_SPECIAL_INFO_WITH_ZONE (object, zone);
+			count = RT_SPECIAL_COUNT_WITH_INFO (o_ptr);
 			if (!(flags & EO_COMP)) {		/* Special of references */
-				for (ref = object; count > 0; count--, ref = (char *) ((char **) ref + 1)) {
-					o_ref = *(char **) ref;
-					if (o_ref != (char *) 0)
+				for (
+					ref = object;
+					count > 0;
+					count--, ref = (EIF_REFERENCE) ((EIF_REFERENCE *) ref + 1))
+				{
+					o_ref = *(EIF_REFERENCE *) ref;
+					if (o_ref != (EIF_REFERENCE) 0)
 						object_count = pst_store(o_ref,object_count);
 				}
 			} else {						/* Special of composites */
-				elem_size = *(long *) (o_ptr + sizeof(long));
+				elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (o_ptr);
 				for (ref = object + OVERHEAD; count > 0;
 					count --, ref += elem_size) {
 					object_count = pst_store(ref,object_count);
@@ -225,10 +229,10 @@ rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 		for (
 			o_ptr = object; 
 			nb_references > 0;
-			nb_references--, o_ptr = (char *) (((char **) o_ptr) +1)
+			nb_references--, o_ptr = (EIF_REFERENCE) (((EIF_REFERENCE *) o_ptr) +1)
 		) {
-			o_ref = *(char **)o_ptr;
-			if (o_ref != (char *) 0)
+			o_ref = *(EIF_REFERENCE *)o_ptr;
+			if (o_ref != (EIF_REFERENCE) 0)
 				object_count = pst_store(o_ref,object_count);
 		}
 	}
@@ -259,7 +263,8 @@ static HEAP_ALLOC(wrkmem,LZO1X_1_MEM_COMPRESS);
 rt_private void parsing_store_write(void)
 {
 	char* cmps_out_ptr = cmps_general_buffer;
-	int cmps_out_size = cmp_buffer_size;
+	unsigned int cmps_out_size = cmp_buffer_size;
+	int signed_cmps_out_size;
 	
 	lzo1x_1_compress (
 					(unsigned char *) general_buffer,		/* Current buffer location */
@@ -268,12 +273,14 @@ rt_private void parsing_store_write(void)
 					&cmps_out_size,		/* Size of output buffer and then size of compressed data */
 					wrkmem);			/* Memory allocator */
 
+	signed_cmps_out_size = cmps_out_size;
+
 		/* Write size of compressed data */
-	if (parsing_char_write ((char *) &cmps_out_size, sizeof(int)) <= 0)
+	if (parsing_char_write ((char *) &signed_cmps_out_size, sizeof(int)) <= 0)
 		eraise ("Unable to write compressed data size", EN_IO);
 
 		/* Write compressed data */
-	if (parsing_char_write (cmps_out_ptr, cmps_out_size) <= 0)
+	if (parsing_char_write (cmps_out_ptr, signed_cmps_out_size) <= 0)
 		eraise ("Unable to write on specified device", EN_IO);
 
 	current_position = 0;
@@ -294,7 +301,8 @@ rt_private int parsing_char_write (char *pointer, int size)
 rt_private void parsing_compiler_write(void)
 {
 	char* cmps_out_ptr = cmps_general_buffer;
-	int cmps_out_size = cmp_buffer_size;
+	unsigned int cmps_out_size = cmp_buffer_size;
+	int signed_cmps_out_size;
 	int number_written;
 	
 	lzo1x_1_compress (
@@ -304,16 +312,18 @@ rt_private void parsing_compiler_write(void)
 					&cmps_out_size,		/* Size of output buffer and then size of compressed data */
 					wrkmem);			/* Memory allocator */
 
+	signed_cmps_out_size = cmps_out_size;
+
 		/* Write size of compressed data */
-	if (write (file_descriptor, (char *) &cmps_out_size, sizeof(int)) <= 0)
+	if (write (file_descriptor, (char *) &signed_cmps_out_size, sizeof(int)) <= 0)
 		eraise ("Unable to write compressed data size", EN_IO);
 
 		/* Write compressed data */
-	while (cmps_out_size > 0) {
-		number_written = write (file_descriptor, cmps_out_ptr, cmps_out_size);
+	while (signed_cmps_out_size > 0) {
+		number_written = write (file_descriptor, cmps_out_ptr, signed_cmps_out_size);
 		if (number_written <= 0)
 			eio();
-		cmps_out_size -= number_written;
+		signed_cmps_out_size -= number_written;
 		cmps_out_ptr += number_written;
 	}
 

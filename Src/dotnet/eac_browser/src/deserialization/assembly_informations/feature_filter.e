@@ -54,8 +54,6 @@ feature
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- called whenever the parser findes a start element
 		local
-			l_name: STRING
-			l_attribute: STRING
 			retried: BOOLEAN
 		do
 			if not retried then

@@ -187,7 +187,8 @@ feature -- Update
 			-- Put `e_cluster' with string representation
 			-- `str' at current position.
 		do
-			st_put_cluster (e_cluster, str)
+			implementation.set_character_format_word (cluster_format);
+			put_normal_string (str)
 		end;
 
 	put_class (e_class: E_CLASS; str: STRING) is

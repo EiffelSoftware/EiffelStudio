@@ -17,12 +17,12 @@
 #include "garcol.h"
 #include "except.h"
 #include "sig.h"
-#include "err_msg.h"
 #ifdef WORKBENCH
 #include "interp.h"
 #include "update.h"
 #endif
 #include <stdio.h>
+#include "err_msg.h"
 #ifdef __WATCOMC__
 #include <stdlib.h>
 #include <fcntl.h>

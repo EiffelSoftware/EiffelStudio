@@ -15,13 +15,14 @@
 #include "portable.h"
 #include "except.h"
 #include "plug.h"
-#include "err_msg.h"
 
 #include <stdio.h>
 #include <errno.h>
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#include "err_msg.h"
 #ifdef I_PWD
 #include <pwd.h>
 #endif

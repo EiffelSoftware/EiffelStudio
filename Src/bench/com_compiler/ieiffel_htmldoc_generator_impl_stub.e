@@ -10,7 +10,41 @@ inherit
 
 	ECOM_STUB
 
+feature -- Access
+
+	is_loaded: BOOLEAN is
+			-- Is the project loaded?
+		do
+			-- Put Implementation here.
+		end
+
+	is_corrupted: BOOLEAN is
+			-- Is the project oorrupted?
+		do
+			-- Put Implementation here.
+		end
+
+	is_incompatible: BOOLEAN is
+			-- Is the project incompatible with the current version of the compiled?
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
+
+	add_status_callback (new_callback: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+			-- Add a callback interface.
+			-- `new_callback' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	remove_status_callback (old_callback: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+			-- Remove a callback interface.
+			-- `old_callback' [in].  
+		do
+			-- Put Implementation here.
+		end
 
 	add_excluded_cluster (cluster_full_name: STRING) is
 			-- Exclude a cluster from being generated.
@@ -20,14 +54,14 @@ feature -- Basic Operations
 		end
 
 	remove_excluded_cluster (cluster_full_name: STRING) is
-			-- Exclude a cluster from being generated.
+			-- Include a cluster to be generated.
 			-- `cluster_full_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
 	generate (path: STRING) is
-			-- Exclude a cluster from being generated.
+			-- Generate the HTML documents into path.
 			-- `path' [in].  
 		do
 			-- Put Implementation here.

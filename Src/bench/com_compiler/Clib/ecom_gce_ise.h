@@ -65,6 +65,8 @@ class ecom_gce_ISE;
 
 #include "ecom_eiffel_compiler_IEiffelCompletionEntry_s.h"
 
+#include "ecom_eiffel_compiler_IEiffelHTMLDocEvents_s.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -1779,6 +1781,30 @@ public:
 	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
 	void ccom_free_memory_pointed_226( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_227( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_228( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert ecom_eiffel_compiler::IEiffelHTMLDocEvents *  to IEIFFEL_HTMLDOC_EVENTS_INTERFACE.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_interface_230( ecom_eiffel_compiler::IEiffelHTMLDocEvents * a_interface_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_231( VARIANT_BOOL * a_pointer );
 
 
 

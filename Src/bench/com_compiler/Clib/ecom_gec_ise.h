@@ -65,6 +65,8 @@ class ecom_gec_ISE;
 
 #include "ecom_eiffel_compiler_IEiffelCompletionEntry_s.h"
 
+#include "ecom_eiffel_compiler_IEiffelHTMLDocEvents_s.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -711,6 +713,12 @@ public:
 	Convert CELL [IEIFFEL_COMPLETION_ENTRY_INTERFACE] to ecom_eiffel_compiler::IEiffelCompletionEntry * *.
 	-----------------------------------------------------------*/
 	ecom_eiffel_compiler::IEiffelCompletionEntry * * ccom_ec_pointed_cell_223( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelCompletionEntry * * old );
+
+
+	/*-----------------------------------------------------------
+	Convert IEIFFEL_HTMLDOC_EVENTS_INTERFACE to ecom_eiffel_compiler::IEiffelHTMLDocEvents *.
+	-----------------------------------------------------------*/
+	ecom_eiffel_compiler::IEiffelHTMLDocEvents * ccom_ec_pointed_interface_230( EIF_REFERENCE eif_ref );
 
 
 

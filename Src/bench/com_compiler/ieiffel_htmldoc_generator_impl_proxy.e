@@ -23,7 +23,65 @@ feature {NONE}  -- Initialization
 			item := ccom_item (initializer)
 		end
 
+feature -- Access
+
+	is_loaded: BOOLEAN is
+			-- Is the project loaded?
+		do
+			Result := ccom_is_loaded (initializer)
+		end
+
+	is_corrupted: BOOLEAN is
+			-- Is the project oorrupted?
+		do
+			Result := ccom_is_corrupted (initializer)
+		end
+
+	is_incompatible: BOOLEAN is
+			-- Is the project incompatible with the current version of the compiled?
+		do
+			Result := ccom_is_incompatible (initializer)
+		end
+
 feature -- Basic Operations
+
+	add_status_callback (new_callback: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+			-- Add a callback interface.
+			-- `new_callback' [in].  
+		local
+			new_callback_item: POINTER
+			a_stub: ECOM_STUB
+		do
+			if new_callback /= Void then
+				if (new_callback.item = default_pointer) then
+					a_stub ?= new_callback
+					if a_stub /= Void then
+						a_stub.create_item
+					end
+				end
+				new_callback_item := new_callback.item
+			end
+			ccom_add_status_callback (initializer, new_callback_item)
+		end
+
+	remove_status_callback (old_callback: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+			-- Remove a callback interface.
+			-- `old_callback' [in].  
+		local
+			old_callback_item: POINTER
+			a_stub: ECOM_STUB
+		do
+			if old_callback /= Void then
+				if (old_callback.item = default_pointer) then
+					a_stub ?= old_callback
+					if a_stub /= Void then
+						a_stub.create_item
+					end
+				end
+				old_callback_item := old_callback.item
+			end
+			ccom_remove_status_callback (initializer, old_callback_item)
+		end
 
 	add_excluded_cluster (cluster_full_name: STRING) is
 			-- Exclude a cluster from being generated.
@@ -33,14 +91,14 @@ feature -- Basic Operations
 		end
 
 	remove_excluded_cluster (cluster_full_name: STRING) is
-			-- Exclude a cluster from being generated.
+			-- Include a cluster to be generated.
 			-- `cluster_full_name' [in].  
 		do
 			ccom_remove_excluded_cluster (initializer, cluster_full_name)
 		end
 
 	generate (path: STRING) is
-			-- Exclude a cluster from being generated.
+			-- Generate the HTML documents into path.
 			-- `path' [in].  
 		do
 			ccom_generate (initializer, path)
@@ -56,6 +114,36 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
+	ccom_is_loaded (cpp_obj: POINTER): BOOLEAN is
+			-- Is the project loaded?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_is_corrupted (cpp_obj: POINTER): BOOLEAN is
+			-- Is the project oorrupted?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_is_incompatible (cpp_obj: POINTER): BOOLEAN is
+			-- Is the project incompatible with the current version of the compiled?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_add_status_callback (cpp_obj: POINTER; new_callback: POINTER) is
+			-- Add a callback interface.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](ecom_eiffel_compiler::IEiffelHTMLDocEvents *)"
+		end
+
+	ccom_remove_status_callback (cpp_obj: POINTER; old_callback: POINTER) is
+			-- Remove a callback interface.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](ecom_eiffel_compiler::IEiffelHTMLDocEvents *)"
+		end
+
 	ccom_add_excluded_cluster (cpp_obj: POINTER; cluster_full_name: STRING) is
 			-- Exclude a cluster from being generated.
 		external
@@ -63,13 +151,13 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_remove_excluded_cluster (cpp_obj: POINTER; cluster_full_name: STRING) is
-			-- Exclude a cluster from being generated.
+			-- Include a cluster to be generated.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_generate (cpp_obj: POINTER; path: STRING) is
-			-- Exclude a cluster from being generated.
+			-- Generate the HTML documents into path.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT)"
 		end

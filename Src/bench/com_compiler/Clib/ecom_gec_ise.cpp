@@ -2868,6 +2868,34 @@ ecom_eiffel_compiler::IEiffelCompletionEntry * * ecom_gec_ISE::ccom_ec_pointed_c
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+ecom_eiffel_compiler::IEiffelHTMLDocEvents * ecom_gec_ISE::ccom_ec_pointed_interface_230( EIF_REFERENCE eif_ref )
+
+/*-----------------------------------------------------------
+	Convert IEIFFEL_HTMLDOC_EVENTS_INTERFACE to ecom_eiffel_compiler::IEiffelHTMLDocEvents *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	EIF_POINTER a_pointer = 0;
+
+	if (eif_ref != NULL)
+	{
+		eif_object = eif_protect (eif_ref);
+		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
+		if (a_pointer  == NULL)
+		{
+		EIF_PROCEDURE create_item = 0;
+			EIF_TYPE_ID type_id = eif_type (eif_object);
+			create_item = eif_procedure ("create_item", type_id);
+			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
+		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
+		}
+		((ecom_eiffel_compiler::IEiffelHTMLDocEvents *) a_pointer)->AddRef ();
+		eif_wean (eif_object);
+	}
+	return  (ecom_eiffel_compiler::IEiffelHTMLDocEvents * ) a_pointer;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 
 #ifdef __cplusplus
 }

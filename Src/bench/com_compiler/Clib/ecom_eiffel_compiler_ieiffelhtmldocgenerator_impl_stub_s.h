@@ -41,19 +41,49 @@ public:
 	virtual ~IEiffelHTMLDocGenerator_impl_stub ();
 
 	/*-----------------------------------------------------------
+	Is the project loaded?
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_loaded(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
+	Is the project oorrupted?
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_corrupted(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
+	Is the project incompatible with the current version of the compiled?
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_incompatible(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
+	Add a callback interface.
+	-----------------------------------------------------------*/
+	STDMETHODIMP add_status_callback(  /* [in] */ ecom_eiffel_compiler::IEiffelHTMLDocEvents * new_callback );
+
+
+	/*-----------------------------------------------------------
+	Remove a callback interface.
+	-----------------------------------------------------------*/
+	STDMETHODIMP remove_status_callback(  /* [in] */ ecom_eiffel_compiler::IEiffelHTMLDocEvents * old_callback );
+
+
+	/*-----------------------------------------------------------
 	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
 	STDMETHODIMP add_excluded_cluster(  /* [in] */ BSTR cluster_full_name );
 
 
 	/*-----------------------------------------------------------
-	Exclude a cluster from being generated.
+	Include a cluster to be generated.
 	-----------------------------------------------------------*/
 	STDMETHODIMP remove_excluded_cluster(  /* [in] */ BSTR cluster_full_name );
 
 
 	/*-----------------------------------------------------------
-	Exclude a cluster from being generated.
+	Generate the HTML documents into path.
 	-----------------------------------------------------------*/
 	STDMETHODIMP generate(  /* [in] */ BSTR path );
 

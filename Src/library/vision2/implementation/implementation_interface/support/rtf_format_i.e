@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			-- Create `Current'
 		do
 			alignment := alignment_left
+			reset_internals
 		end
 
 feature -- Access
@@ -61,24 +62,43 @@ feature -- Access
 
 	character_format: INTEGER
 			-- Current character format index.
+
+	boolean_out (a_boolean: BOOLEAN): STRING is
+			-- 
+		do
+			if a_boolean then
+				Result := true_constant
+			else
+				Result := false_constant
+			end
+		end
+		
+	true_constant: STRING is "T"
+	false_constant: STRING is "F"
+		
 			
 	character_format_out: STRING is
 			-- Result is representation of character format attributes of `Current'.
 			-- Paragraph and formats need to be buffered independently, hence a
 			-- seperate out fetaure for each of these set of attributes.
 		do
-			Result := ""
-			Result.append (highlight_color.out)
-			Result.append (is_bold.out)
-			Result.append (character_format.out)
-			Result.append (is_italic.out)
-			Result.append (font_height.out)
-			Result.append (is_striked_out.out)
-			Result.append (text_color.out)
-			Result.append (is_underlined.out)
-			Result.append (vertical_offset.out)
-			Result.append (highlight_set.out)
-			Result.append (color_set.out)
+			if internal_character_format_out = Void then
+				create Result.make (30)
+				Result.append_integer (highlight_color)
+				Result.append (boolean_out (is_bold))
+				Result.append_integer (character_format)
+				Result.append (boolean_out (is_italic))
+				Result.append_integer (font_height)
+				Result.append (boolean_out (is_striked_out))
+				Result.append_integer (text_color)
+				Result.append (boolean_out (is_underlined))
+				Result.append_integer (vertical_offset)
+				Result.append (boolean_out (highlight_set))
+				Result.append (boolean_out (color_set))
+				internal_character_format_out := Result
+			else
+				Result := internal_character_format_out
+			end
 		end
 		
 feature -- Access
@@ -107,6 +127,7 @@ feature -- Access
 			right_margin := 0
 			top_spacing := 0
 			bottom_spacing := 0
+			reset_internals
 		ensure
 			alignment = alignment_left
 			left_margin = 0
@@ -120,12 +141,17 @@ feature -- Access
 			-- Paragraph and formats need to be buffered independently, hence a
 			-- seperate out fetaure for each of these set of attributes.
 		do
-			Result := ""
-			Result.append (alignment.out)
-			Result.append (bottom_spacing.out)
-			Result.append (top_spacing.out)
-			Result.append (right_margin.out)
-			Result.append (left_margin.out)
+				if internal_paragraph_format_out = Void then
+					create Result.make (16)
+					Result.append_integer (alignment)
+					Result.append_integer (bottom_spacing)
+					Result.append_integer (top_spacing)
+					Result.append_integer (right_margin)
+					Result.append_integer (left_margin)
+					internal_paragraph_format_out := Result
+				else
+					Result := internal_paragraph_format_out
+				end
 		end
 	
 feature -- Element change
@@ -136,6 +162,7 @@ feature -- Element change
 			a_bottom_spacing_non_negative: a_bottom_spacing >= 0
 		do
 			bottom_spacing := a_bottom_spacing
+			reset_internals
 		ensure
 			bottom_spacing_assigned: bottom_spacing = a_bottom_spacing
 		end
@@ -146,6 +173,7 @@ feature -- Element change
 			a_top_spacing_non_negative: a_top_spacing >= 0
 		do
 			top_spacing := a_top_spacing
+			reset_internals
 		ensure
 			top_spacing_assigned: top_spacing = a_top_spacing
 		end
@@ -156,6 +184,7 @@ feature -- Element change
 			a_right_margin_non_negative: a_right_margin >= 0
 		do
 			right_margin := a_right_margin
+			reset_internals
 		ensure
 			right_margin_assigned: right_margin = a_right_margin
 		end
@@ -166,6 +195,7 @@ feature -- Element change
 			a_left_margin_non_negative: a_left_margin >= 0
 		do
 			left_margin := a_left_margin
+			reset_internals
 		ensure
 			left_margin_assigned: left_margin = a_left_margin
 		end
@@ -177,6 +207,7 @@ feature -- Element change
 		do
 			highlight_color := a_highlight_color
 			highlight_set := True
+			reset_internals
 		ensure
 			highlight_color_assigned: highlight_color = a_highlight_color
 		end
@@ -188,6 +219,7 @@ feature -- Element change
 		do
 			text_color := a_text_color
 			color_set := True
+			reset_internals
 		ensure
 			text_color_assigned: text_color = a_text_color
 		end
@@ -196,6 +228,7 @@ feature -- Element change
 			-- Set `is_bold' to `a_is_bold'.
 		do
 			is_bold := a_is_bold
+			reset_internals
 		ensure
 			is_bold_assigned: is_bold = a_is_bold
 		end
@@ -204,6 +237,7 @@ feature -- Element change
 			-- Set `is_italic' to `an_is_italic'.
 		do
 			is_italic := an_is_italic
+			reset_internals
 		ensure
 			is_italic_assigned: is_italic = an_is_italic
 		end
@@ -212,6 +246,7 @@ feature -- Element change
 			-- Set `is_striked_out' to `an_is_striked_out'.
 		do
 			is_striked_out := an_is_striked_out
+			reset_internals
 		ensure
 			is_striked_out_assigned: is_striked_out = an_is_striked_out
 		end
@@ -220,6 +255,7 @@ feature -- Element change
 			-- Set `is_underlined' to `an_is_underlined'.
 		do
 			is_underlined := an_is_underlined
+			reset_internals
 		ensure
 			is_underlined: is_underlined = an_is_underlined
 		end
@@ -228,6 +264,7 @@ feature -- Element change
 			-- Set `vertical_offset' to `an_offset'.
 		do
 			vertical_offset := an_offset
+			reset_internals
 		ensure
 			offset_set: vertical_offset = an_offset
 		end
@@ -238,6 +275,7 @@ feature -- Element change
 			a_font_height_positive: a_font_height > 0
 		do
 			font_height := a_font_height
+			reset_internals
 		ensure
 			font_height_assigned: font_height = a_font_height
 		end
@@ -248,6 +286,7 @@ feature -- Element change
 			a_character_format_non_negative: a_character_format >= 0
 		do
 			character_format := a_character_format
+			reset_internals
 		ensure
 			character_format_assigned: character_format = a_character_format
 		end
@@ -258,10 +297,28 @@ feature -- Element change
 			valid_alignment: valid_alignment (an_alignment)
 		do
 			alignment := an_alignment
+			reset_internals
 		ensure
 			alignment_set: alignment = an_alignment
 		end
 
+feature {NONE} -- Implementation
+
+	internal_character_format_out: STRING
+			-- Once per object for `character_format_out'.
+			
+	internal_paragraph_format_out: STRING
+			-- Once per object for `paragraph_format_out'.
+
+	reset_internals is
+			-- Reset `internal_character_format_out'.
+		do
+				internal_character_format_out := Void
+				internal_paragraph_format_out := Void
+		ensure
+			internal_character_format_out_reset: internal_character_format_out = Void
+		end
+		
 invariant
 	character_format_non_negative: character_format >= 0
 	font_height_non_negative: font_height >= 0

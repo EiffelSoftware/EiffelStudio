@@ -23,13 +23,15 @@ feature {NONE} -- Initialization
 			-- Create empty dialog box.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_window_new (C.Gtk_window_popup_enum))
+			set_c_object (C.gtk_window_new (C.Gtk_window_dialog_enum))
 			C.gtk_widget_realize (c_object)
+			C.gdk_window_set_decorations (C.gtk_widget_struct_window (c_object), 0)
+			C.gdk_window_set_functions (c.gtk_widget_struct_window (c_object), 0)
+			C.gtk_window_set_policy (c_object, 0, 0, 1)
 			C.gtk_window_set_position (
 				c_object,
 				C.Gtk_win_pos_center_enum
 			)
-			C.gtk_window_set_policy (c_object, 0, 0, 1) -- False, False, True
 			enable_closeable
 		end
 

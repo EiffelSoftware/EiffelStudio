@@ -69,6 +69,12 @@ feature -- Access
 			end
 		end
 
+	is_tuple : BOOLEAN is
+			-- Is it a TUPLE type?
+		do
+			Result := class_name.string_value.is_equal ("tuple")
+		end
+
 feature -- Conveniences
 
 	solved_type_for_format (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
@@ -83,7 +89,7 @@ feature -- Conveniences
 			type_a: TYPE_A
 			abort: BOOLEAN
 		do
-			if class_name.string_value.is_equal ("tuple") then
+			if is_tuple then
 				!!tuple_type
 				Result := tuple_type
 			end
@@ -147,7 +153,7 @@ feature -- Conveniences
 			actual_generic: ARRAY [TYPE_A]
 			i, count: INTEGER
 		do
-			if class_name.string_value.is_equal ("tuple") then
+			if is_tuple then
 				!!tuple_type
 				Result := tuple_type
 			end
@@ -249,7 +255,7 @@ feature -- Conveniences
 				-- Bug fix: `append_signature' can be called on invalid
 				-- types by the error mechanism
 			if a_class_i /= Void then
-				if class_name.string_value.is_equal ("tuple") then
+				if is_tuple then
 					!!tuple_type
 					Result := tuple_type
 				end
@@ -307,6 +313,7 @@ feature -- Conveniences
 			nb_errors: INTEGER
 			t1, t2: TYPE
 			pos: INTEGER
+			is_tuple_type : BOOLEAN
 		do
 			if has_like then
 				!!vcfg3
@@ -322,16 +329,20 @@ feature -- Conveniences
 					vtct.set_class_name (class_name)
 					Error_handler.insert_error (vtct)
 				else
+					is_tuple_type := is_tuple
 					associated_class := class_i.compiled_class
 					cl_generics := associated_class.generics
-					if generics /= Void then
-						if (cl_generics = Void or else
-							cl_generics.count /= generics.count)
-						then
+						-- TUPLEs can have any number of generics
+					if not is_tuple_type then
+						if generics /= Void then
+							if (cl_generics = Void) then
+								!VTUG1!vtug
+							elseif (cl_generics.count /= generics.count) then
+								!VTUG2!vtug
+							end
+						elseif cl_generics /= Void then
 							!VTUG2!vtug
 						end
-					elseif cl_generics /= Void then
-						!VTUG1!vtug
 					end
 					if vtug /= Void then
 						vtug.set_class (a_class)
@@ -355,7 +366,13 @@ feature -- Conveniences
 							generics.start
 							cl_generics.start
 						until
-							generics.after or else error
+							-- Take care of variable num. of
+							-- generics in TUPLEs.
+							generics.after 
+								or else 
+							cl_generics.after
+								or else
+								 error
 						loop
 							nb_errors := Error_handler.nb_errors
 							t1 := generics.item

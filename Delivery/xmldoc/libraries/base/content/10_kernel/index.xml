@@ -93,7 +93,7 @@
 			<line_break/>  Feature <code><feature_name>io</feature_name></code>, of type <link><url>/libraries/base/reference/kernel/STD_FILES_chart.xml</url><label>STD_FILES</label></link>, gives access to standard input and output facilities. For example, <code><feature_name>io</feature_name></code>
 			<code>
 				<symbol>.</symbol>
-			</code><code><feature_name>input</feature_name></code> is the standard input file and <feature_name>io</feature_name>.<feature_name>new_line</feature_name> will print a line feed on the standard output. Feature <code><feature_name>io</feature_name></code> is declared as a once function which, when first called, returns the value of an instance of <link><url>/libraries/base/reference/kernel/STD_FILES_chart.xml</url><label>STD_FILES</label></link> that provides access to the standard input, the standard output and the error output. As a result, <code><feature_name>io</feature_name></code> is never void, so that operations such as <code><feature_name>io</feature_name></code>
+			</code><code><feature_name>input</feature_name></code> is the standard input file and <code><feature_name>io</feature_name></code>.<code><feature_name>new_line</feature_name></code> will print a line feed on the standard output. Feature <code><feature_name>io</feature_name></code> is declared as a once function which, when first called, returns the value of an instance of <link><url>/libraries/base/reference/kernel/STD_FILES_chart.xml</url><label>STD_FILES</label></link> that provides access to the standard input, the standard output and the error output. As a result, <code><feature_name>io</feature_name></code> is never void, so that operations such as <code><feature_name>io</feature_name></code>
 			<code>
 				<symbol>.</symbol>
 			</code><code><feature_name>new_line</feature_name></code> are always possible.
@@ -1106,7 +1106,7 @@ s, s1, s2, s3<symbol>:</symbol> <class_name><url>/libraries/base/reference/kerne
 		</paragraph>
 		<list ordered="false">
 			<item><code><feature_name>argument_count</feature_name></code>, a non-negative integer, is the number of command arguments.   </item>
-			<item><code><feature_name>argument</feature_name></code> <symbol>(</symbol>i<symbol>)</symbol>, a string, is the i-th command argument. Here
+			<item><code><feature_name>argument</feature_name></code> <code><symbol>(</symbol></code>i<code><symbol>)</symbol></code>, a string, is the i-th command argument. Here
 				<code>
 					<local_variable>i</local_variable>
 				</code> must be between 0 and <code><feature_name>argument_count</feature_name></code>; the convention is that for 

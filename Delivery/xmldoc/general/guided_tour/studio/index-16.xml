@@ -22,6 +22,7 @@
 			</heading>
 			<paragraph>We are going to play with the root cluster.  Make sure the Cluster tree and the Context Tool are up.  Also make sure that the Context tool is in Isolate rather than Linked behavior ( 
 				<link>
+					<label>click here</label>
 					<url>index-11.xml</url><anchor_name>89659</anchor_name>
 				</link> ); you can see this by going to the 
 				<code>
@@ -309,6 +310,7 @@
 					<keyword>Client</keyword>
 				</code> as the next relation to make links (the link creation buttons were shown on page 
 				<link>
+					<label>click here</label>
 					<url>index.xml</url><anchor_name>LINK CREATION</anchor_name>
 				</link> ).  Pick-and-drop from the 
 				<code>
@@ -361,7 +363,7 @@
 				</code> clause, enter
 			</paragraph>
 			<code_block>
-	<feature_name>my_heir</feature_name> <symbol>/<symbol>=</symbol></symbol> Void
+	<feature_name>my_heir</feature_name> <symbol>/</symbol><symbol>=</symbol> Void
 </code_block>
 			<paragraph>to specify the invariant property that this attribute should never be void.  Finally, to see how EiffelStudio can generate the full accompaniment to an attribute, check the box 
 				<code>
@@ -777,6 +779,7 @@
 			</paragraph>
 			<paragraph>You may remember that when we generated HTML documentation, the dialog (page 
 				<link>
+					<label>click here</label>
 					<url>index.xml</url><anchor_name>DOCUMENTATION VIEW</anchor_name>
 				</link> ) asked you to select a view among the available ones.  You can choose a different view for each cluster.
 			</paragraph>

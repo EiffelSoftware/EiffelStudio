@@ -185,9 +185,9 @@
 					<cell>[type]</cell>
 				</row>
 			</table>The signature for a Java class has the following form "Lfully-qualified-class". For example, class String:
-			<line_break/><tab_indent/>Ljava/lang/String;
+			<line_break/>Ljava/lang/String;
 			<line_break/>The signature for a method has the following form "(arguments-types) returned-types". For example, the signature of a method that takes as arguments an integer and a string and return void is:
-			<line_break/><tab_indent/>(ILjava/lang/String;)V
+			<line_break/>(ILjava/lang/String;)V
 		</paragraph>
 		<heading>
 			<size>2</size>An example

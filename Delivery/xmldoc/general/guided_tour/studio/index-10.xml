@@ -14,8 +14,9 @@
 			</code>, from the last view, 
 			<code>
 				<keyword>Routines</keyword>
-			</code>, that you displayed on it (page 
+			</code>, that you displayed on it (
 			<link>
+				<label>here</label>
 				<url>index.xml</url>
 			</link> ).  If you've lost it, just retarget a Development Window to this class.  
 		</paragraph>

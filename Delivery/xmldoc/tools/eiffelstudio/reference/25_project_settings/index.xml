@@ -34,7 +34,7 @@
 				</link>
 			</item>
 			<item>.NET:
-				<list orderer="false">
+				<list ordered="false">
 					<item>
 						<link>
 							<url>40_dotnet.xml</url>

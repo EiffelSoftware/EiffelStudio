@@ -25,16 +25,16 @@
 		<italic>ReplaceSubstring</italic>and 
 		<italic>PruneAll</italic> corresponding respectively to the features 
 		<code>
-			<feature_name>
+			<link>
 				<url>../../../../libraries/base/reference/kernel/classic/STRING_chart.xml</url><anchor_name>f_replace_substring</anchor_name>
 				<label>replace_substring</label>
-			</feature_name>
+			</link>
 		</code> and 
 		<code>
-			<feature_name>
+			<link>
 				<url>../../../../libraries/base/reference/kernel/classic/STRING_chart.xml</url><anchor_name>f_prune_all</anchor_name>
 				<label>prune_all</label>
-			</feature_name>
+			</link>
 		</code> of the EiffelBase 
 		<code>
 			<link>

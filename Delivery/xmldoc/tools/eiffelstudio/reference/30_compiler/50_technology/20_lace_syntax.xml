@@ -207,7 +207,7 @@
 				</link>.
 			</item>
 			<item>
-				<italic><italic>precompiled </italic>("precompiled_library_path"): </italic>enables you to specify a precompiled library. Most examples given in the EiffelStudio delivery are using a precompiled library. It makes the development of small application incredibly fast.
+				<italic>precompiled ("precompiled_library_path"): </italic>enables you to specify a precompiled library. Most examples given in the EiffelStudio delivery are using a precompiled library. It makes the development of small application incredibly fast.
 			</item>
 			<item><italic>syntax_warning</italic> (yes | <bold>no</bold>): displays warning each time an obsolete syntactical construct is used in your code. This is needed if you want to upgrade your source code to the most recent version of the Eiffel specification</item>
 		</list>

@@ -20,9 +20,6 @@
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml</url><anchor_name>details</anchor_name>
 					<label>details<image><url>/images/eiffelstudio/icons/icon_view_measure_plus_color.gif</url></image></label>
-				</link>
-				<link>
-					<url>40_viewing_measure_details.xml</url>
 				</link> button becomes sensitive, click it to display details.
 			</item>
 			<item>If not, sorry, no details are available for this measure.</item>

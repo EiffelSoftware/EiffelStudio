@@ -91,29 +91,29 @@ extern size_t one_param_return(FILE *f);</code_block>
 #define i_th(a,i)((a) + (i)*sizeof(EIF_INTEGER))</code_block>
 		<paragraph>Then, the corresponding Eiffel code will look like:</paragraph>
 		<code_block>
-	<code><feature_name>menu_id</feature_name></code>: <code><class_name>INTEGER</class_name></code> <code><keyword>is</keyword></code>
+	<feature_name>menu_id</feature_name>: <class_name>INTEGER</class_name> <keyword>is</keyword>
 			<comment>-- `ID_MENU' C encapsulation.</comment>
-		<code><keyword>external</keyword></code>
+		<keyword>external</keyword>
 			"C [macro %"my_header.h%"] : EIF_INTEGER"
-		<code><keyword>alias</keyword></code>
+		<keyword>alias</keyword>
 			"ID_MENU"
-		<code><keyword>end</keyword></code>
+		<keyword>end</keyword>
 			
-	<code><feature_name>menu_id_character</feature_name></code>: <code><class_name>CHARACTER</class_name></code> <code><keyword>is</keyword></code>
+	<feature_name>menu_id_character</feature_name>: <class_name>CHARACTER</class_name> <keyword>is</keyword>
 			<comment>-- `ID_MENU_CHARACTER' C encapsulation.</comment>
-		<code><keyword>external</keyword></code>
+		<keyword>external</keyword>
 			"C [macro %"my_header.h%"] : EIF_CHARACTER"
-		<code><keyword>alias</keyword></code>
+		<keyword>alias</keyword>
 			"ID_MENU_CHARACTER"
-		<code><keyword>end</keyword></code>
+		<keyword>end</keyword>
 		
-	<code><feature_name>i_th</feature_name></code> (p: <code><class_name>POINTER</class_name></code>; i: <code><class_name>INTEGER</class_name></code>): <code><class_name>INTEGER</class_name></code> <code><keyword>is</keyword></code>
+	<feature_name>i_th</feature_name> (p: <class_name>POINTER</class_name>; i: <class_name>INTEGER</class_name>): <class_name>INTEGER</class_name> <keyword>is</keyword>
 			<comment>-- Access the `i'-th element of `p', array of C EIF_INTEGER.</comment>
-		<code><keyword>external</keyword></code>
+		<keyword>external</keyword>
 			"C [macro %"my_header.h%"] (EIF_INTEGER *, EIF_INTEGER): EIF_INTEGER"
-		<code><keyword>alias</keyword></code>
+		<keyword>alias</keyword>
 			"i_th"
-		<code><keyword>end</keyword></code></code_block>
+		<keyword>end</keyword></code_block>
 		<heading>
 			<size>2</size>Structs
 		</heading>
@@ -127,37 +127,37 @@ typdef struct point {
 } Point;</code_block>
 		<paragraph>Then, the corresponding Eiffel code will look like:</paragraph>
 		<code_block>
-	<code><feature_name>x</feature_name></code> (p: <code><class_name>POINTER</class_name></code>): <code><class_name>INTEGER</class_name></code> <code><keyword>is</keyword></code>
+	<feature_name>x</feature_name> (p: <class_name>POINTER</class_name>): <class_name>INTEGER</class_name> <keyword>is</keyword>
 			<comment>-- Access field x of struct pointed by `p'.</comment>
-		<code><keyword>external</keyword></code>
+		<keyword>external</keyword>
 			"C [struct %"my_header.h%"] (Point): EIF_INTEGER"
-		<code><keyword>alias</keyword></code>
+		<keyword>alias</keyword>
 			"x"
-		<code><keyword>end</keyword></code>
+		<keyword>end</keyword>
 		
-	<code><feature_name>y</feature_name></code> (p: <code><class_name>POINTER</class_name></code>): <code><class_name>INTEGER</class_name></code> <code><keyword>is</keyword></code>
+	<feature_name>y</feature_name> (p: <class_name>POINTER</class_name>): <class_name>INTEGER</class_name> <keyword>is</keyword>
 			<comment>-- Access field y of struct pointed by `p'.</comment>
-		<code><keyword>external</keyword></code>
+		<keyword>external</keyword>
 			"C [struct %"my_header.h%"] (Point): EIF_INTEGER"
-		<code><keyword>alias</keyword></code>
+		<keyword>alias</keyword>
 			"y"
-		<code><keyword>end</keyword></code>
+		<keyword>end</keyword>
 
-	<code><feature_name>set_x</feature_name></code> (p: <code><class_name>POINTER</class_name></code>; v:<code><class_name> INTEGER</class_name></code>) <code><keyword>is</keyword></code>
+	<feature_name>set_x</feature_name> (p: <class_name>POINTER</class_name>; v:<class_name> INTEGER</class_name>) <keyword>is</keyword>
 			<comment>-- Set field x of struct pointed by `p'.</comment>
-		<code><keyword>external</keyword></code>
+		<keyword>external</keyword>
 			"C [struct %"my_header.h%"] (Point, int)"
-		<code><keyword>alias</keyword></code>
+		<keyword>alias</keyword>
 			"x"
-		<code><keyword>end</keyword></code>
+		<keyword>end</keyword>
 
-	<code><feature_name>set_y</feature_name></code> (p: <code><class_name>POINTER</class_name></code>: v:<code><class_name> INTEGER</class_name></code>) <code><keyword>is</keyword></code>
+	<feature_name>set_y</feature_name> (p: <class_name>POINTER</class_name>: v:<class_name> INTEGER</class_name>) <keyword>is</keyword>
 			<comment>-- Set field y of struct pointed by `p' with `v'.</comment>
-		<code><keyword>external</keyword></code>
+		<keyword>external</keyword>
 			"C [struct %"my_header.h%"] (Point, int)"
-		<code><keyword>alias</keyword></code>
+		<keyword>alias</keyword>
 			"y"
-		<code><keyword>end</keyword></code></code_block>
+		<keyword>end</keyword></code_block>
 		<heading>
 			<size>2</size>Windows externals
 		</heading>
@@ -173,17 +173,17 @@ typdef struct point {
 			sub-language option. For `__stdcall' you need to use the <bold>dllwin32</bold> sub-language option. Here is an example:
 		</paragraph>
 		<code_block>
-	<code><feature_name>my_cdecl_routine</feature_name></code> (a: <code><class_name>INTEGER</class_name></code>): <code><class_name>POINTER</class_name></code> <code><keyword>is</keyword></code>
+	<feature_name>my_cdecl_routine</feature_name> (a: <class_name>INTEGER</class_name>): <class_name>POINTER</class_name> <keyword>is</keyword>
 			<comment>-- Encapsulation of a dll function with the `_cdecl' call mechanism.</comment>
-		<code><keyword>external</keyword></code>
+		<keyword>external</keyword>
 			"C [dll32 %"my_dll.dll%"] (int): EIF_POINTER"
-		<code><keyword>end</keyword></code>
+		<keyword>end</keyword>
 		
-	<code><feature_name>my_stdcall_routine</feature_name></code> (a: <code><class_name>INTEGER</class_name></code>): <code><class_name>POINTER</class_name></code> <code><keyword>is</keyword></code>
+	<feature_name>my_stdcall_routine</feature_name> (a: <class_name>INTEGER</class_name>): <class_name>POINTER</class_name> <keyword>is</keyword>
 			<comment>-- Encapsulation of a dll function with the `_stdcall' call mechanism.</comment>
-		<code><keyword>external</keyword></code>
+		<keyword>external</keyword>
 			"C [dllwin32 %"my_dll.dll%"] (int): EIF_POINTER"
-		<code><keyword>end</keyword></code></code_block>
+		<keyword>end</keyword></code_block>
 		<warning>
 			<bold>Caution</bold>: Using wrongly 
 			<bold>dll32</bold> instead of 
@@ -205,13 +205,13 @@ typdef struct point {
 );</code_block>
 In WEL, the encapsulation is written as:
 		<code_block>
-	<code><feature_name>cwin_send_message</feature_name></code> (hwnd: <code><class_name>POINTER</class_name></code>; msg, wparam, param: <code><class_name>INTEGER</class_name></code>) <code><keyword>is</keyword></code>
+	<feature_name>cwin_send_message</feature_name> (hwnd: <class_name>POINTER</class_name>; msg, wparam, param: <class_name>INTEGER</class_name>) <keyword>is</keyword>
 			<comment>-- SDK SendMessage (without the result)</comment>
-		<code><keyword>external</keyword></code>
+		<keyword>external</keyword>
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
-		<code><keyword>alias</keyword></code>
+		<keyword>alias</keyword>
 			"SendMessage"
-		<code><keyword>end</keyword></code></code_block>
+		<keyword>end</keyword></code_block>
 		<seealso>
 			<bold>See also</bold>
 			<line_break/>

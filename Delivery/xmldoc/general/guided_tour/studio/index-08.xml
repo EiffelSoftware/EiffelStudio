@@ -326,10 +326,11 @@
 		<paragraph>As you will know, particularly if you have read the book 
 			<span>
 				<link>
+					<label>Object-Oriented Software Construction</label>
 					<url>http://eiffel.com/doc/oosc/</url>
 				</link>
 			</span>
-			<span>Object-Oriented Software Construction</span>, the contract form is the preferred way of documenting software elements, especially reusable components, as it provides clients with just the right level of abstraction: precise enough thanks to the type signature and the contracts; clear enough thanks to the header comments; and general enough since it omits implementation details that are irrelevant to client programmers (and might lead them to write client code that won't work any more if the implementation changes).
+			, the contract form is the preferred way of documenting software elements, especially reusable components, as it provides clients with just the right level of abstraction: precise enough thanks to the type signature and the contracts; clear enough thanks to the header comments; and general enough since it omits implementation details that are irrelevant to client programmers (and might lead them to write client code that won't work any more if the implementation changes).
 		</paragraph>
 		<paragraph>In practice you will often want to use, instead of the 
 			<code>

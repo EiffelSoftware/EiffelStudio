@@ -100,8 +100,9 @@
 				</code> extension.  These are the compilation control files.  The reason there are two is that this example has a Windows version and a Unix/Linux version.  As you remember, the Ace files for this example were available as part of the delivery; we used them to compile the project.  In most practical cases, however, you won't need to build an Ace; if you use the "
 				<code>
 					<keyword>Create a new project</keyword>
-				</code>" option of EiffelStudio (remember the first screen on page 
+				</code>" option of EiffelStudio (remember the first screen 
 				<link>
+					<label>here</label>
 					<url>index.xml</url><anchor_name>PROJECT START SCREEN</anchor_name>
 				</link> ), EiffelStudio will build the Ace for you; if you change the Preferences during a session, EiffelStudio will update the Ace.  When you become an experienced Eiffel developer you can also edit the Ace file directly; Aces are written in a simple Eiffel-like notation called 
 				<bold>Lace</bold> (Language for Assembling Classes in Eiffel).  If you like you can take a peek at Lace by opening the relevant 
@@ -121,8 +122,9 @@
 				</code> .  To open an existing project when you start EiffelStudio (this was the option " 
 				<code>
 					<keyword>Open compiled project</keyword>
-				</code> " in the initial screen on page 
+				</code> " in the initial screen  
 				<link>
+					<label>here</label>
 					<url>index.xml</url><anchor_name>PROJECT START SCREEN</anchor_name>
 				</link> ), you will just select the corresponding 
 				<code>

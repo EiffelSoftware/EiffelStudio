@@ -88,7 +88,7 @@
 						<code>
 							<class_name>DOUBLE</class_name>
 						</code>), you will now get a 
-						<compiler_error>VGCC(6)</compiler_error> error. Instead directly assign to it, or create an instance of its corresponding _REF class.
+						<code><compiler_error>VGCC(6)</compiler_error></code> error. Instead directly assign to it, or create an instance of its corresponding _REF class.
 					</item>
 				</list>
 				<heading>
@@ -106,7 +106,7 @@
 						</code> constants whose values were incorrectly interpreted.
 					</item>
 					<item>          Fixed <code><compiler_error>VAPE</compiler_error></code> errors that were not previously reported in 5.1. Now 
-						<compiler_error>VAPE</compiler_error> errors are checked against call to infix and prefix features.
+						<code><compiler_error>VAPE</compiler_error></code> errors are checked against call to infix and prefix features.
 					</item>
 				</list>
 	</paragraph></document>

@@ -8,9 +8,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>  Deployment of an Eiffel ENViSioN! project is made simply through use of  the existing integrated Setup and Deployment Project available through the new  project dialog. All Setup and Deployment Projects can be  used with all Eiffel ENViSioN! project types with the exception  to the HTML Report Project (Enterprise Edition only), which does not create an  Eiffel ENViSioN! project. </paragraph>
 					<heading>
 						<size>2</size>Deployment Types
@@ -24,7 +21,5 @@
 						<size>2</size>Deployment Merge Modules
 					</heading>
 					<paragraph>  If your project is using one of the provided ebcl precompiled libraries  thereare merge module available foruse, if desired. These merge  modules will automatically be referenced when deploying a project using one of  the provided precompiled libraries. </paragraph>
-				</cell>
-			</row>
-		</table>
+				
 	</paragraph></document>

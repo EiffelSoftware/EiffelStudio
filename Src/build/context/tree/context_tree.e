@@ -14,7 +14,7 @@ inherit
 		redefine
 			show, hide, shown, realize
 		end;
-	DRAWING_BOX [TREE_ELEMENT]
+	EB_DRAWING_BOX [TREE_ELEMENT]
 		rename
 			make as drawing_box_create,
 			append as drawing_box_append
@@ -25,7 +25,7 @@ inherit
 		redefine
 			execute
 		end;
-	DRAWING_BOX [TREE_ELEMENT]
+	EB_DRAWING_BOX [TREE_ELEMENT]
 		rename
 			make as drawing_box_create
 		redefine
@@ -96,15 +96,18 @@ feature
 			a_parent: CONTEXT;
 		do
 			display_elt := True;
-			from
-				a_parent := elt.data.parent
-			until
-				(a_parent = Void) or not display_elt
-			loop
-				if not a_parent.tree_element.show_children then
-					display_elt := False
+			if not elt.data.is_window then
+					-- If it is not a window
+				from
+					a_parent := elt.data.parent
+				until
+					(a_parent = Void) or else not display_elt
+				loop
+					if not a_parent.tree_element.show_children then
+						display_elt := False
+					end;
+					a_parent := a_parent.parent
 				end;
-				a_parent := a_parent.parent
 			end;
 			if display_elt then
 				drawing_box_append (elt);
@@ -136,6 +139,7 @@ feature
 
 	realize is
 		do
+			main_panel.cont_tree_t.set_toggle_on;
 			top_shell.realize;
 		end;
 

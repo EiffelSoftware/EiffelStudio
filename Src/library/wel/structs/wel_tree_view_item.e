@@ -146,6 +146,12 @@ feature {WEL_TREE_VIEW} -- Implementation
 			cwel_tv_item_set_cchtextmax (item, value)
 		end
 
+	set_statemask (value: INTEGER) is
+			-- Set the valid bits of the state attribute.
+		do
+			cwel_tv_item_set_statemask (item, value)
+		end
+
 feature {NONE} -- Externals
 
 	c_size_of_tv_item: INTEGER is

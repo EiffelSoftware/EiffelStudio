@@ -134,7 +134,7 @@ feature -- Initialization
 					-- Position `capacity' ignored by hash sequences,
 					-- used to store value for default key.
 
-			create l_deleted_marks.make (0, capacity - 1)
+			create l_deleted_marks.make (0, capacity)
 			deleted_marks := l_deleted_marks.area
 			iteration_position := capacity + 1
 		ensure
@@ -993,7 +993,7 @@ feature {NONE} -- Implementation
 	deleted (i: INTEGER): BOOLEAN is
 			-- Is position `i' that of a deleted item?
 		require
-			in_bounds: i >= 0 and i < capacity
+			in_bounds: i >= 0 and i <= capacity
 		do
 			Result := deleted_marks.item (i)
 		end	
@@ -1001,7 +1001,7 @@ feature {NONE} -- Implementation
 	set_not_deleted (i: INTEGER) is
 			-- Mark position `i' as not deleted.
 		require
-			in_bounds: i >= 0 and i < capacity
+			in_bounds: i >= 0 and i <= capacity
 		do
 			deleted_marks.put (False, i)
 		end	
@@ -1009,7 +1009,7 @@ feature {NONE} -- Implementation
 	set_deleted (i: INTEGER) is
 			-- Mark position `i' as deleted.
 		require
-			in_bounds: i >= 0 and i < capacity
+			in_bounds: i >= 0 and i <= capacity
 		do
 			deleted_marks.put (True, i)
 		ensure
@@ -1345,7 +1345,7 @@ invariant
 	deleted_marks_not_void: deleted_marks /= Void
 	keys_same_capacity_plus_one: keys.count = capacity + 1
 	content_same_capacity_plus_one: content.count = capacity + 1
-	deleted_same_capacity: deleted_marks.count = capacity
+	deleted_same_capacity: deleted_marks.count = capacity + 1
 	valid_iteration_position: off or truly_occupied (iteration_position)
 	control_non_negative: control >= 0
 	special_status: special_status =

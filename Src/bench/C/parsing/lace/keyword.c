@@ -12,10 +12,10 @@ struct token {
 #define MIN_WORD_LENGTH 1
 #define MAX_WORD_LENGTH 12
 #define MIN_HASH_VALUE 1
-#define MAX_HASH_VALUE 80
+#define MAX_HASH_VALUE 92
 /*
-   35 keywords
-   80 is the maximum key range
+   36 keywords
+   92 is the maximum key range
 */
 
 static int
@@ -25,19 +25,19 @@ hash (str, len)
 {
   static unsigned char hash_table[] =
     {
-     80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
-     80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
-     80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
-     80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
-     80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
-     80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
-     80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
-     80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
-     80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
-     80, 80, 80, 80, 80, 80, 80,  0, 80,  0,
-     25,  0, 80, 15,  0, 10, 80, 10,  0, 20,
-     45,  0, 20, 80, 30,  0,  0, 35, 10, 80,
-     80, 10, 80, 80, 80, 80, 80, 80,
+     92, 92, 92, 92, 92, 92, 92, 92, 92, 92,
+     92, 92, 92, 92, 92, 92, 92, 92, 92, 92,
+     92, 92, 92, 92, 92, 92, 92, 92, 92, 92,
+     92, 92, 92, 92, 92, 92, 92, 92, 92, 92,
+     92, 92, 92, 92, 92, 92, 92, 92, 92, 92,
+     92, 92, 92, 92, 92, 92, 92, 92, 92, 92,
+     92, 92, 92, 92, 92, 92, 92, 92, 92, 92,
+     92, 92, 92, 92, 92, 92, 92, 92, 92, 92,
+     92, 92, 92, 92, 92, 92, 92, 92, 92, 92,
+     92, 92, 92, 92, 92, 92, 92,  0, 92,  0,
+     25,  0, 92, 15,  0, 10, 92, 10,  0, 20,
+     25,  0, 25, 92, 40,  0,  0, 45, 20, 92,
+     92, 10, 92, 92, 92, 92, 92, 92,
     };
   register int hval = len ;
 
@@ -80,23 +80,24 @@ in_word_set2 (str, len)
       {"include_path", 	LAC_INCLUDE_PATH},
       {"generate", 		LAC_GENERATE},
       {"make", 			LAC_MAKE},
-      {"adapt", 			LAC_ADAPT},
       {"system", 			LAC_SYSTEM},
-      {"visible", 		LAC_VISIBLE},
+      {"no", 				LAC_NO},
       {"end", 			LAC_END},
+      {"adapt", 			LAC_ADAPT},
       {"default", 		LAC_DEFAULT},
+      {"creation", 		LAC_CREATION},
+      {"assertion", 		LAC_ASSERTION},
+      {"visible", 		LAC_VISIBLE},
+      {"option", 			LAC_OPTION},
       {"root", 			LAC_ROOT},
       {"rename", 			LAC_RENAME},
       {"cluster", 		LAC_CLUSTER},
       {"use", 			LAC_USE},
       {"ensure", 			LAC_ENSURE},
       {"loop", 			LAC_LOOP},
-      {"no", 				LAC_NO},
-      {"creation", 		LAC_CREATION},
-      {"assertion", 		LAC_ASSERTION},
-      {"option", 			LAC_OPTION},
-      {"require", 		LAC_REQUIRE},
+      {"precompiled", 	LAC_PRECOMPILED},
       {"debug", 			LAC_DEBUG},
+      {"require", 		LAC_REQUIRE},
     };
 
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
@@ -147,40 +148,42 @@ in_word_set2 (str, len)
               resword = &wordlist[16]; break;
             case  24:
               resword = &wordlist[17]; break;
-            case  25:
-              resword = &wordlist[18]; break;
             case  26:
-              resword = &wordlist[19]; break;
+              resword = &wordlist[18]; break;
             case  27:
-              resword = &wordlist[20]; break;
+              resword = &wordlist[19]; break;
             case  28:
+              resword = &wordlist[20]; break;
+            case  30:
               resword = &wordlist[21]; break;
             case  32:
               resword = &wordlist[22]; break;
-            case  34:
+            case  33:
               resword = &wordlist[23]; break;
-            case  36:
+            case  34:
               resword = &wordlist[24]; break;
             case  37:
               resword = &wordlist[25]; break;
-            case  38:
-              resword = &wordlist[26]; break;
             case  41:
-              resword = &wordlist[27]; break;
+              resword = &wordlist[26]; break;
             case  44:
+              resword = &wordlist[27]; break;
+            case  46:
               resword = &wordlist[28]; break;
             case  47:
               resword = &wordlist[29]; break;
-            case  53:
+            case  48:
               resword = &wordlist[30]; break;
-            case  54:
+            case  51:
               resword = &wordlist[31]; break;
-            case  61:
+            case  54:
               resword = &wordlist[32]; break;
-            case  72:
+            case  61:
               resword = &wordlist[33]; break;
-            case  80:
+            case  90:
               resword = &wordlist[34]; break;
+            case  92:
+              resword = &wordlist[35]; break;
             default: return 0;
             }
           if (*str == *resword->name && !strcmp (str + 1, resword->name + 1))

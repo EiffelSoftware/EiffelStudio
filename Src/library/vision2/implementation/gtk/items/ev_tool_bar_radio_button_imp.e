@@ -21,8 +21,7 @@ inherit
 			parent_imp,
 			make,
 			interface,
-			connect_signals,
-			enable_select
+			connect_signals
 		end
 
 	EV_RADIO_PEER_IMP
@@ -60,10 +59,10 @@ feature {NONE} -- Implementation
 		local
 			a_peers: like peers
 			radio_imp: like Current
-			gdk_event_mask: INTEGER
+			a: ANY
+			a_signal: STRING
 		do
-			if is_selected and not just_selected then
-				just_selected := True
+			if is_selected and then not avoid_reselection then
 				a_peers := peers
 				from
 					a_peers.start
@@ -71,47 +70,38 @@ feature {NONE} -- Implementation
 					a_peers.after
 				loop
 					radio_imp ?= a_peers.item.implementation
-					if radio_imp /= Current and radio_imp.is_selected then
+					if radio_imp.is_selected and radio_imp /= Current then
 						radio_imp.disable_select
 					end
 					a_peers.forth
 				end
 				interface.press_actions.call ([])
-			else
-				if just_selected then
-					gdk_event_mask := C.gdk_window_get_events (
-						C.gtk_widget_struct_window (c_object)
-					)
-					C.gdk_window_set_events (
-						C.gtk_widget_struct_window (c_object), 0
-					)
-					enable_select
-					C.gdk_window_set_events (
-						C.gtk_widget_struct_window (c_object),
-						gdk_event_mask
-					)
-				end
-			end			
-		end
+			end
 
-	just_selected: BOOLEAN
-		-- Has the radio button just been selected by the user.
+
+			if not avoid_reselection then
+				avoid_reselection := True
+				C.gtk_toggle_button_set_active (c_object, True)
+				-- Calls on_activate callback immediately
+				avoid_reselection := False
+			end				
+		end
 
 feature {EV_ANY_I} -- Implementation
 
-	enable_select is
-			-- Select the radio button.
-		do
-			just_selected := True
-			Precursor
-		end
 
 	disable_select is
 			-- Unselect the radio button.
 		do
-			just_selected := False
-			C.gtk_toggle_button_set_active (c_object, False)
+			if is_selected then
+				avoid_reselection := True
+				C.gtk_toggle_button_set_active (c_object, False)
+				-- Calls on_activate callback immediately
+				avoid_reselection := False
+			end
 		end
+
+	avoid_reselection: BOOLEAN
 
 	gslist: POINTER is
 		do
@@ -145,6 +135,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/17 23:07:41  king
+--| Implemented radio grouping with the use of a flag
+--|
 --| Revision 1.18  2000/04/13 22:01:06  king
 --| Implemented radio grouping functionality
 --|

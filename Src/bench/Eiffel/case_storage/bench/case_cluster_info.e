@@ -93,29 +93,26 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			end
 		end;
 
-	storage_info: S_CLUSTER_DATA is
+	storage_info (view_id_info: VIEW_ID_INFO): S_CLUSTER_DATA is
 		local
 			clust_l: FIXED_LIST [S_CLUSTER_DATA];
 			classes_i: EXTEND_TABLE [CLASS_I, STRING];
 			classes: LINKED_LIST [CLASS_C];
 			class_c: CLASS_C;
-			cluster_name: STRING;
-			s_cluster_data: S_CLUSTER_DATA
+			s_cluster_data: S_CLUSTER_DATA;
+			old_clusters: HASH_TABLE [INTEGER, STRING];
+			view_id: INTEGER
 		do
 				-- Need to covert to a string since
 				-- the dynamic type of cluster name
 				-- in cluster_i is ID_SD.
-			if cluster_i = Void then
-				!! cluster_name.make (0);
-				cluster_name.append (name);
-			else
-				!! cluster_name.make (0);
-				cluster_name.append (cluster_i.cluster_name);
+			if cluster_i /= Void then
+				!! name.make (0);
+				name.append (cluster_i.cluster_name);
 			end;
-			cluster_name.to_upper;
-			!! Result.make (cluster_name);
+			name.to_upper;
+			!! Result.make (name);
 			Result.set_file_name (file_name);
-			Result.set_icon_details (True, 0, 0);
 			if cluster_i /= Void then
 				classes_i := cluster_i.classes;
 				!! classes.make;
@@ -133,13 +130,15 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 				classes_i := Void;
 				if not classes.empty then
 io.error.putstring ("Analyzing cluster: ");
-io.error.putstring (cluster_name);
+io.error.putstring (name);
 io.error.new_line;
-					Result.set_classes (class_storage_information (classes))
+					Result.set_classes (class_storage_information (classes, view_id_info))
 				end;
 				classes := Void;
 			end
 			if not clusters.empty then
+					-- Keep view ids of cluster if it has the same parent
+				old_clusters := view_id_info.old_clusters_with_cluster_name (name);
 				!! clust_l.make (clusters.count);
 				from
 					clusters.start;
@@ -147,7 +146,20 @@ io.error.new_line;
 				until
 					clusters.after
 				loop
-					s_cluster_data := clusters.item.storage_info;
+					s_cluster_data := clusters.item.storage_info (view_id_info);
+					if old_clusters /= Void then
+						view_id := old_clusters.item (s_cluster_data.name);
+						if view_id = 0 then
+								-- Class never existed so give it a
+								-- new id count
+							view_id_info.increment_cluster_view_number;
+							view_id := view_id_info.cluster_view_number;
+						end
+					else
+						view_id_info.increment_cluster_view_number;
+						view_id := view_id_info.cluster_view_number;
+					end;
+					s_cluster_data.set_view_id (view_id);
 					clust_l.replace (s_cluster_data);
 					clust_l.forth;
 					clusters.forth
@@ -265,10 +277,11 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO} -- Debug
 
 feature {NONE} -- Class information
 
-	class_storage_information
-			 (classes: LINKED_LIST [CLASS_C]): FIXED_LIST [STRING] is
+	class_storage_information (classes: LINKED_LIST [CLASS_C];
+				view_id_info: VIEW_ID_INFO): FIXED_LIST [S_CLASS_DATA] is
 			-- Storage information for `classes'
 		require
+			valid_view: view_id_info /= Void
 			valid_classes: classes /= Void and then not classes.empty;
 		local
 			classc: CLASS_C;
@@ -277,8 +290,11 @@ feature {NONE} -- Class information
 			i: INTEGER;
 			s_class_data: S_CLASS_DATA;
 			class_path: STRING;
-			class_info: CASE_CLASS_INFO
+			old_classes: HASH_TABLE [INTEGER, STRING];
+			class_info: CASE_CLASS_INFO;
+			view_id: INTEGER
 		do
+			old_classes := view_id_info.old_classes_with_cluster_name (name);
 			!! Result.make (classes.count);
 			!! flat_struct.initialize;
 			from
@@ -296,19 +312,24 @@ feature {NONE} -- Class information
 				class_info.formulate_class_data (flat_struct);
 				flat_struct.wipe_out;
 				s_class_data := class_info.s_class_data;
+				if old_classes /= Void then
+					view_id := old_classes.item (s_class_data.name);
+					if view_id = 0 then
+							-- Class never existed so give it a
+							-- new view_id count
+						view_id_info.increment_class_view_number;
+						view_id := view_id_info.class_view_number;
+					else
+						 old_classes.remove (s_class_data.name)
+					end
+				else
+					view_id_info.increment_class_view_number;
+					view_id := view_id_info.class_view_number;
+				end;
+				s_class_data.set_view_id (view_id);
 					-- Record parent cluster
-				store_class_to_disk (classc, s_class_data);
-				!! class_path.make (0);
-				class_path.append_integer (directory_number (classc.id));
-					-- NOTE: Store unix specific directory
-					-- to disk by default. Upon retrieval, if the
-					-- directory separator is not '/' then
-					-- replace '/' with platform specific
-					-- directory separator (look at ecase class
-					-- STORAGE_INFO).
-				class_path.extend('/');
-				class_path.append_integer (classc.id);
-				Result.replace (class_path);
+				store_class_to_disk (s_class_data);
+				Result.replace (s_class_data);
 				Result.forth;
 				classes.forth;
 				i := i + 1
@@ -318,10 +339,10 @@ feature {NONE} -- Class information
 			same_count_as_classes: classes.count = Result.count
 		end;
 
-	store_class_to_disk (classc: CLASS_C; s_class_data: S_CLASS_DATA) is
+	store_class_to_disk (s_class_data: S_CLASS_DATA) is
 			-- Store `class_data' to disk.
 		require
-			valid_class_info: classc /= Void and then s_class_data /= Void;
+			valid_class_info: s_class_data /= Void;
 		local
 			path: STRING;
 			dir: DIRECTORY;
@@ -329,14 +350,7 @@ feature {NONE} -- Class information
 			if not had_io_problems then
 				path := clone (Case_storage_path);
 				path.extend (Directory_separator);
-				path.append_integer (directory_number (classc.id));
-				!! dir.make (path);
-				if not dir.exists then
-					dir.create
-				end;
-				path.extend (Directory_separator);
-				path.append_integer (classc.id);
-				s_class_data.store_to_disk (path);
+				s_class_data.store_to_disk (Case_storage_path);
 			end
 		rescue
 			if Rescue_status.is_unexpected_exception then

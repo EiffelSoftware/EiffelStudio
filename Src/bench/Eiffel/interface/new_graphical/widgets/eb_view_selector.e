@@ -30,6 +30,7 @@ feature {NONE} -- Events
 		local
 			tmp: LINKED_LIST [STRING]
 		do
+			select_actions.block
 			tmp := strings
 			tmp.compare_objects
 			if not is_trivial (text) then
@@ -39,6 +40,8 @@ feature {NONE} -- Events
 				tmp.put_front (text)
 				set_strings (tmp)
 			end
+			select_actions.resume
+			select_actions.call (Void)
 		end
 
 feature {NONE} -- Implementation

@@ -40,6 +40,8 @@ feature -- Status setting
 
 	update_map_table (object: ANY) is
 			-- Update map table according to field names of `object'.
+		require else
+			object_not_void: object /= Void
 		deferred
 		end
 

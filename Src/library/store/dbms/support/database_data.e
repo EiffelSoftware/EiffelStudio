@@ -55,8 +55,6 @@ feature -- Element change
 	update_map_table (object: ANY) is
 			-- Update map table according to field names of `object'
 			-- and `Current' metadata.
-		require else
-			object_exists: object /= Void
 		local
 			g: INTEGER
 			ind, index: INTEGER

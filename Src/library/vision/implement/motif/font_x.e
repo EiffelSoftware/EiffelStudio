@@ -28,18 +28,7 @@ inherit
 		undefine
 			has_valid_display
 		redefine
-			display
-		end;
-
-	MEMORY
-		rename
-			free as gc_free
-		export
-			{NONE} all
-		undefine
-			is_equal
-		redefine	
-			dispose
+			display, dispose
 		end;
 
 creation
@@ -251,7 +240,7 @@ feature -- Removal
 		do
 			if is_allocated then
 				if not is_default_font then	
-					free
+					destroy
 				end
 				is_allocated := False;
 				is_default_font := False
@@ -272,12 +261,14 @@ feature {FONTABLE_M} -- Implementation
 			f_context := a_font_list.font_context;	
 			an_entry := f_context.next_entry;
 			if an_entry /= Void then		
+				an_entry.set_shared;
 				a_font_struct := an_entry.font_struct;
 				handle := a_font_struct.handle;
+				a_font_struct.set_shared;
 				-- DO NOT free the font entry for the 	
 				-- default font --> will cause problems later on
 			end;
-			f_context.free;
+			f_context.destroy;
 			is_specified := True;
 			is_allocated := True;
 			is_default_font := True;

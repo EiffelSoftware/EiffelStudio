@@ -268,6 +268,7 @@ feature {NONE} -- Implementation: access
 			put ("from_integer") check found_item = from_integer_name_id end
 			put ("finalize") check found_item = finalize_name_id end
 			put ("%"eif_helpers.h%"") check found_item = eif_helpers_header_name_id end
+			put ("native_array") check found_item = native_array_name_id end
 		end
 		
 invariant

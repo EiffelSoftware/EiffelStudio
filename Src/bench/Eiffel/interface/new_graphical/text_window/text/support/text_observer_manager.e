@@ -36,11 +36,11 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_changed (value: BOOLEAN) is
+	set_changed (value: BOOLEAN; directly_edited: BOOLEAN) is
 			-- Assign `value' to `changed'
 		do
 			if value and not changed then
-				on_text_edited (True)
+				on_text_edited (directly_edited)
 			end
 			changed := value
 		end

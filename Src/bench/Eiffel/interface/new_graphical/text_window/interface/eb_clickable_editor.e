@@ -653,7 +653,7 @@ feature {EB_EDITOR_TOOL} -- Update
 			backup_file: RAW_FILE
 			file: RAW_FILE
 		do
-			text_displayed.set_changed (False)
+			text_displayed.set_changed (False, True)
 			if open_backup then
 				fn := clone (file_name)
 				create backup_file.make (file_name)

@@ -13,6 +13,7 @@ inherit
 			is_feature_special, make_special_byte_code,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, is_special_feature,
+			is_il_feature_special,
 			size, pre_inlined_code, inlined_byte_code,
 			has_separate_call, reset_added_gc_hooks,
 			make_precursor_byte_code
@@ -56,6 +57,18 @@ feature -- Access
 			create Result
 		end
 
+	il_special_routines: IL_SPECIAL_FEATURES is
+			-- Array containing special routines.
+		once
+			create Result
+		end
+
+	is_il_feature_special (cl_type: CL_TYPE_I): BOOLEAN is
+			-- Is feature optimized for IL generation?
+		do
+			Result := il_special_routines.has (Current, cl_type)
+		end
+
 	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
 			-- Search for feature_name in special_routines.
 			-- This is used for simple types only.
@@ -75,7 +88,14 @@ feature -- Access
 			body_index := f.body_index
 			routine_id := f.rout_id_set.first
 			is_once := f.is_once
-			written_in := f.written_in
+			if System.il_generation then
+				written_in := f.implemented_in
+				if written_in = 0 then
+--					print ("Feature not implemented!%N")
+				end
+			else
+				written_in := f.written_in
+			end
 		end
 
 	is_feature: BOOLEAN is True
@@ -130,13 +150,15 @@ feature -- IL code generation
 			cl_type: CL_TYPE_I
 			return_type: TYPE_I
 			class_type: CLASS_TYPE
-			special_class_type: SPECIAL_CLASS_TYPE
+			native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
 			invariant_checked: BOOLEAN
 			class_c: CLASS_C
 			local_number: INTEGER
 			real_metamorphose: BOOLEAN
-			is_call_optimized: BOOLEAN
-			basic_type: BASIC_I
+			feat_tbl: FEATURE_TABLE
+			feat: FEATURE_I
+			need_generation: BOOLEAN
+			target_type: TYPE_I
 		do
 				-- Get type on which call will be performed.
 			cl_type ?= context_type
@@ -147,79 +169,109 @@ feature -- IL code generation
 				-- Let's find out if we are performing a call on a basic type
 				-- or on an enum type. This happens only when we are calling
 				-- magically added feature on basic types.
-			basic_type ?= cl_type
-			is_call_optimized := (cl_type.is_basic or cl_type.is_enum)
-				and then is_feature_special (False, basic_type)
-
-			class_type := cl_type.associated_class_type
-			class_c := class_type.associated_class
-
-			invariant_checked := class_c.assertion_level.check_invariant
-					and then class_c.has_invariant
-					and then (not is_first or invariant_checked)
-			
-			if cl_type.is_expanded and then not is_call_optimized then
-					-- Current type is expanded. We need to find out if
-					-- we need to generate a box operation, meaning that
-					-- the feature is inherited from a non-expanded class.
-				real_metamorphose := need_real_metamorphose (cl_type)
-			end
-
-			if is_first then
-					-- First call in dot expression, we need to generate Current
-					-- only when we do not call a static feature.
-				if cl_type.is_reference then
-						-- Normal call, we simply push current object.
-					il_generator.generate_current
-				else
-					if real_metamorphose and then not is_call_optimized then
-							-- Feature is written in an inherited class of current
-							-- expanded class. We need to box.
-						il_generator.generate_metamorphose (cl_type)
-					end
+			if is_il_feature_special (cl_type) then
+				if il_special_routines.not_need_target.has (feature_name_id) then
+					il_generator.pop
 				end
-			elseif cl_type.is_expanded and then not is_call_optimized then
-					-- A metamorphose is required to perform call.
-				generate_il_metamorphose (cl_type, real_metamorphose)
-			end
-
-			if invariant_checked then
-					-- Need a copy of top to perform invariant checking.
-				il_generator.duplicate_top
-			end
-
-			if parameters /= Void then
-					-- Generate parameters if any.
-				parameters.generate_il
-			end
-
-			return_type := real_type (type)
-
-			if cl_type.base_class.is_special then
-				special_class_type ?= class_type
-				special_class_type.generate_il (feature_name_id)
-				if System.il_verifiable then
-					if 
-						not return_type.is_expanded and then
-						not return_type.is_none and then
-						not return_type.is_void
-					then
-						il_generator.generate_check_cast (return_type, return_type)
-					end
-				end
+				il_special_routines.generate_il (cl_type, parameters)
 			else
-					-- Perform call to feature
-				if is_call_optimized then
-					special_routines.generate_il (cl_type)
-				else
+				if written_in > 0 then
+					-- Find location of feature.
 					if precursor_type /= Void then
-							-- In IL, if you can call Precursor, it means that parent is
-							-- not expanded and therefore we can safely generate a static
-							-- call to Precursor feature.
-						il_generator.generate_feature_access (cl_type, feature_id, False)
+						feat_tbl := System.class_of_id (written_in).feature_table
+						feat := feat_tbl.item_id (feature_name_id)
+						feat_tbl := System.class_of_id (feat.written_in).feature_table
+						feat := feat_tbl.origin_table.item (feat.rout_id_set.first)
+						target_type := il_generator.implemented_type (feat.written_in, cl_type)
 					else
-						il_generator.generate_feature_access (cl_type, feature_id,
-							cl_type.is_reference or else real_metamorphose)
+						feat_tbl := System.class_of_id (written_in).feature_table
+						feat := feat_tbl.item_id (feature_name_id)
+						target_type := il_generator.implemented_type (written_in, cl_type)
+					end
+				end
+
+				class_type := cl_type.associated_class_type
+				class_c := class_type.associated_class
+
+				invariant_checked := class_c.assertion_level.check_invariant
+						and then class_c.has_invariant
+						and then (not is_first or invariant_checked)
+				
+				if cl_type.is_expanded then
+						-- Current type is expanded. We need to find out if
+						-- we need to generate a box operation, meaning that
+						-- the feature is inherited from a non-expanded class.
+					real_metamorphose := need_real_metamorphose (cl_type)
+				end
+
+				if is_first then
+						-- First call in dot expression, we need to generate Current
+						-- only when we do not call a static feature.
+					if cl_type.is_reference then
+							-- Normal call, we simply push current object.
+						il_generator.generate_current
+					else
+						if real_metamorphose then
+								-- Feature is written in an inherited class of current
+								-- expanded class. We need to box.
+							generate_il_metamorphose (cl_type, target_type, real_metamorphose)
+						end
+					end
+				elseif cl_type.is_expanded then
+						-- A metamorphose is required to perform call.
+					generate_il_metamorphose (cl_type, target_type, real_metamorphose)
+				end
+
+				if invariant_checked then
+						-- Need a copy of top to perform invariant checking.
+					il_generator.duplicate_top
+				end
+
+				if parameters /= Void then
+						-- Generate parameters if any.
+					parameters.generate_il
+				end
+
+				return_type := real_type (type)
+
+				need_generation := True
+
+				if cl_type.base_class.is_native_array then
+					native_array_class_type ?= class_type
+					if native_array_class_type /= Void then
+						need_generation := False
+						native_array_class_type.generate_il (feature_name_id)
+						if System.il_verifiable then
+							if 
+								not return_type.is_expanded and then
+								not return_type.is_none and then
+								not return_type.is_void
+							then
+								il_generator.generate_check_cast (return_type, return_type)
+							end
+						end
+					end
+				end
+				
+				if need_generation then
+						-- Perform call to feature
+						-- FIXME: performance problem here since we are retrieving the
+						-- FEATURE_TABLE. This could be avoided if at creation of FEATURE_B
+						-- node we add the feature_id in the parent class.
+					if written_in > 0 then
+						if precursor_type /= Void then
+								-- In IL, if you can call Precursor, it means that parent is
+								-- not expanded and therefore we can safely generate a static
+								-- call to Precursor feature.
+							il_generator.generate_precursor_feature_access (
+								target_type, feat.feature_id)
+						else
+							il_generator.generate_feature_access (
+								target_type, feat.feature_id,
+								cl_type.is_reference or else real_metamorphose)
+						end
+					else
+						print ("")
 					end
 					if System.il_verifiable then
 						if 
@@ -230,19 +282,19 @@ feature -- IL code generation
 							il_generator.generate_check_cast (return_type, return_type)
 						end
 					end
-				end
-				if invariant_checked then
-					if type.is_void then
-						il_generator.generate_invariant_checking (cl_type)
-					else
-							-- It is a function and we need to save the result onto
-							-- a local variable.
-						context.add_local (return_type)
-						local_number := context.local_list.count
-						il_generator.put_dummy_local_info (return_type, local_number)
-						il_generator.generate_local_assignment (local_number)
-						il_generator.generate_invariant_checking (cl_type)
-						il_generator.generate_local (local_number)
+					if invariant_checked then
+						if type.is_void then
+							il_generator.generate_invariant_checking (cl_type)
+						else
+								-- It is a function and we need to save the result onto
+								-- a local variable.
+							context.add_local (return_type)
+							local_number := context.local_list.count
+							il_generator.put_dummy_local_info (return_type, local_number)
+							il_generator.generate_local_assignment (local_number)
+							il_generator.generate_invariant_checking (cl_type)
+							il_generator.generate_local (local_number)
+						end
 					end
 				end
 			end
@@ -255,7 +307,7 @@ feature -- IL code generation
 			parameters_count: parameters.count = 1
 		local
 			cl_type: CL_TYPE_I
-			class_type: SPECIAL_CLASS_TYPE
+			class_type: NATIVE_ARRAY_CLASS_TYPE
 		do
 			cl_type ?= context_type
 			check

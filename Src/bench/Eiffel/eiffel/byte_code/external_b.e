@@ -107,12 +107,19 @@ feature -- Routines for externals
 			good_argument: f /= Void
 			is_valid_feature_for_normal_generation: not System.il_generation implies f.is_external
 			is_valid_feature_for_il_generation:
-				System.il_generation implies (f.is_external or f.is_attribute)
+				System.il_generation implies (f.is_external or f.is_attribute or f.is_deferred)
 		do
 			feature_name_id := f.feature_name_id
 			feature_id := f.feature_id
 			routine_id := f.rout_id_set.first
-			written_in := f.written_in
+			if System.il_generation then
+				written_in := f.implemented_in
+				if written_in = 0 then
+--					print ("External not implemented!%N")
+				end
+			else
+				written_in := f.written_in
+			end
 		end;
 
 	set_external_name_id (id: INTEGER) is
@@ -194,17 +201,124 @@ feature -- IL code generation
 			il_ext: IL_EXTENSION_I
 			real_metamorphose: BOOLEAN
 		do
-				-- Type of external.
-			il_ext ?= extension
+			if not extension.is_il then
+					-- Generate call to C external.
+				generate_il_c_call (invariant_checked)
+			else
+				il_ext ?= extension
+					-- Type of object on which we are performing call to Current.
+				cl_type ?= context_type
 
-				-- Type of object on which we are performing call to Current.
+				check
+					il_ext_not_void: il_ext /= Void
+					cl_type_not_void: cl_type /= Void
+				end
+
+				if cl_type.is_expanded then
+						-- Current type is expanded. We need to find out if
+						-- we need to generate a box operation, meaning that
+						-- the feature is inherited from a non-expanded class.
+					real_metamorphose := need_real_metamorphose (cl_type)
+				end
+
+				if is_first and then need_current (il_ext.type) then
+						-- First call in dot expression, we need to generate Current
+						-- only when we do not call a static feature.
+					if cl_type.is_reference then
+							-- Normal call, we simply push current object.
+						il_generator.generate_current
+					else
+						if real_metamorphose then
+								-- Feature is written in an inherited class of current
+								-- expanded class. We need to box.
+							il_generator.generate_metamorphose (cl_type)
+						end
+					end
+				elseif cl_type.is_expanded then
+						-- No need to do anything special in case of a call to
+						-- a constructor. The generation of `parent.target' already
+						-- did any special transformation to perfom call.
+					if il_ext.type /= creator_type then
+						if parent.target.is_predefined then
+								-- For same reason we don't do anything for a call to
+								-- a constructor, when `parent.target' is predefined
+								-- any special transformation have already been done.
+							if real_metamorphose then
+									-- Feature is written in an inherited class of current
+									-- expanded class. We need to box.
+								il_generator.generate_metamorphose (cl_type)
+							end
+						else
+								-- In all other cases we will generate the metamorphose.
+							generate_il_metamorphose (cl_type, Void, real_metamorphose)
+						end
+					end
+				end
+				
+				if parameters /= Void then
+						-- Generate parameters if any.
+					parameters.generate_il
+				end
+
+				if context.il_external_creation or else il_ext.type /= creator_type then
+						-- We are not performing a creation call, neither a call
+						-- to a constructor.
+					if is_static_call or else precursor_type /= Void then
+							-- A call to precursor or a static call is never polymorphic.
+						il_ext.generate_call (external_name, cl_type, feature_id, False)
+					else
+							-- Standard call to an external feature.
+							-- Call will be polymorphic if it target of call is a reference
+							-- or if target has been boxed, or if type of external
+							-- forces a static binding (eg static features).
+						il_ext.generate_call (external_name, cl_type, feature_id,
+							cl_type.is_reference or else real_metamorphose)
+					end
+				else
+						-- Current external is a creation, we perform a slightly different
+						-- call to constructor, but basically it is very close to `generate_call'
+						-- but doing a static binding.
+					il_ext.generate_creation_call (external_name, cl_type, feature_id)
+				end
+			end
+		end
+
+	generate_il_c_call (inv_checked: BOOLEAN) is
+			-- Generate IL code for feature call.
+			-- If `invariant_checked' generates invariant check
+			-- before call.
+		local
+			cl_type: CL_TYPE_I
+			return_type: TYPE_I
+			class_type: CLASS_TYPE
+			native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
+			invariant_checked: BOOLEAN
+			class_c: CLASS_C
+			local_number: INTEGER
+			real_metamorphose: BOOLEAN
+			basic_type: BASIC_I
+			feat_tbl: FEATURE_TABLE
+			feat: FEATURE_I
+			need_generation: BOOLEAN
+		do
+				-- Get type on which call will be performed.
 			cl_type ?= context_type
-
 			check
-				il_ext_not_void: il_ext /= Void
-				cl_type_not_void: cl_type /= Void
+				valid_type: cl_type /= Void
 			end
 
+				-- Let's find out if we are performing a call on a basic type
+				-- or on an enum type. This happens only when we are calling
+				-- magically added feature on basic types.
+			basic_type ?= cl_type
+
+			class_type := cl_type.associated_class_type
+			class_c := class_type.associated_class
+
+			invariant_checked := class_c.assertion_level.check_invariant
+					and then class_c.has_invariant
+					and then (not is_first or invariant_checked)
+			
 			if cl_type.is_expanded then
 					-- Current type is expanded. We need to find out if
 					-- we need to generate a box operation, meaning that
@@ -212,7 +326,7 @@ feature -- IL code generation
 				real_metamorphose := need_real_metamorphose (cl_type)
 			end
 
-			if is_first and then need_current (il_ext.type) then
+			if is_first then
 					-- First call in dot expression, we need to generate Current
 					-- only when we do not call a static feature.
 				if cl_type.is_reference then
@@ -226,49 +340,88 @@ feature -- IL code generation
 					end
 				end
 			elseif cl_type.is_expanded then
-					-- No need to do anything special in case of a call to
-					-- a constructor. The generation of `parent.target' already
-					-- did any special transformation to perfom call.
-				if il_ext.type /= creator_type then
-					if parent.target.is_predefined then
-							-- For same reason we don't do anything for a call to
-							-- a constructor, when `parent.target' is predefined
-							-- any special transformation have already been done.
-						if real_metamorphose then
-								-- Feature is written in an inherited class of current
-								-- expanded class. We need to box.
-							il_generator.generate_metamorphose (cl_type)
-						end
-					else
-							-- In all other cases we will generate the metamorphose.
-						generate_il_metamorphose (cl_type, real_metamorphose)
-					end
-				end
+					-- A metamorphose is required to perform call.
+				generate_il_metamorphose (cl_type, Void, real_metamorphose)
 			end
-			
+
+			if invariant_checked then
+					-- Need a copy of top to perform invariant checking.
+				il_generator.duplicate_top
+			end
+
 			if parameters /= Void then
 					-- Generate parameters if any.
 				parameters.generate_il
 			end
 
-			if context.il_external_creation or else il_ext.type /= creator_type then
-					-- We are not performing a creation call, neither a call
-					-- to a constructor.
-				if precursor_type /= Void then
-						-- A call to precursor is never polymorphic.
-					il_ext.generate_call (external_name, cl_type, feature_id, False)
-				else
-						-- Standard call to an external feature.
-						-- Call will be polymorphic if it target of call is a reference
-						-- or if target has been boxed, or if type of external
-						-- forces a static bindinf (eg static features).
-					il_ext.generate_call (external_name, cl_type, feature_id, cl_type.is_reference or else real_metamorphose)
+			return_type := real_type (type)
+
+			need_generation := True
+
+			if cl_type.base_class.is_native_array then
+				native_array_class_type ?= class_type
+				if native_array_class_type /= Void then
+					need_generation := False
+					native_array_class_type.generate_il (feature_name_id)
+					if System.il_verifiable then
+						if 
+							not return_type.is_expanded and then
+							not return_type.is_none and then
+							not return_type.is_void
+						then
+							il_generator.generate_check_cast (return_type, return_type)
+						end
+					end
 				end
-			else
-					-- Current external is a creation, we perform a slightly different
-					-- call to constructor, but basically it is very close to `generate_call'
-					-- but doing a static binding.
-				il_ext.generate_creation_call (external_name, cl_type, feature_id)
+			end
+				
+			if need_generation then
+					-- Perform call to feature
+					-- FIXME: performance problem here since we are retrieving the
+					-- FEATURE_TABLE. This could be avoided if at creation of FEATURE_B
+					-- node we add the feature_id in the parent class.
+				if written_in > 0 then
+					feat_tbl := System.class_of_id (written_in).feature_table
+					feat := feat_tbl.item_id (feature_name_id)
+					if precursor_type /= Void then
+							-- In IL, if you can call Precursor, it means that parent is
+							-- not expanded and therefore we can safely generate a static
+							-- call to Precursor feature.
+						il_generator.generate_feature_access (
+							il_generator.implemented_type (written_in, cl_type),
+							feat.feature_id, False)
+					else
+						il_generator.generate_feature_access (
+							il_generator.implemented_type (written_in, cl_type),
+							feat.feature_id,
+							cl_type.is_reference or else real_metamorphose)
+					end
+				else
+					print ("")
+				end
+				if System.il_verifiable then
+					if 
+						not return_type.is_expanded and then
+						not return_type.is_none and then
+						not return_type.is_void
+					then
+						il_generator.generate_check_cast (return_type, return_type)
+					end
+				end
+				if invariant_checked then
+					if type.is_void then
+						il_generator.generate_invariant_checking (cl_type)
+					else
+							-- It is a function and we need to save the result onto
+							-- a local variable.
+						context.add_local (return_type)
+						local_number := context.local_list.count
+						il_generator.put_dummy_local_info (return_type, local_number)
+						il_generator.generate_local_assignment (local_number)
+						il_generator.generate_invariant_checking (cl_type)
+						il_generator.generate_local (local_number)
+					end
+				end
 			end
 		end
 

@@ -108,7 +108,7 @@ feature -- IL code generation
 				if source_type.is_expanded then
 						-- Source is an expanded type and target is a reference:
 						-- metamorphose with boxing.
-					generate_il_metamorphose (source_type, True)
+					generate_il_metamorphose (source_type, target_type, True)
 				end
 			end
 		end

@@ -61,11 +61,11 @@ feature {NONE} -- GUI
 			field_toggle_b.set_toggle_on
 			menu_choice_sc_l.set_visible_item_count (4)
 			deactivate_menu_fields
---			if object_tool_generator.precondition_test.state then
+			if object_tool_generator.precondition_test.state then
 				test_toggle_b.arm
---			else	
---				test_text_field.set_insensitive
---			end
+			else	
+				test_text_field.set_insensitive
+			end
 		end
 
 	attach_all is
@@ -215,47 +215,19 @@ feature {NONE} -- Heuristic
 			current_application_class_not_void: current_application_class /= Void
 		local
 			menu_entry: APPLICATION_METHOD_PUSH_B
-			possible_command_list: LINKED_LIST [APPLICATION_COMMAND]
 		do
-			possible_command_list := sort_possible_commands (current_application_class.command_list)
-			if not possible_command_list.empty then
+			if not query.possible_commands.empty then
 				from 
-					possible_command_list.start
+					query.possible_commands.start
 				until
-					possible_command_list.after
+					query.possible_commands.after
 				loop
-					!! menu_entry.make (possible_command_list.item, procedure_opt_pull)
-					possible_command_list.forth
+					!! menu_entry.make (query.possible_commands.item, procedure_opt_pull)
+					query.possible_commands.forth
 				end
---			if not possible_command_list.empty then
 				procedure_opt_pull.set_selected_button (menu_entry)
 			end
 		end
-
-
-	sort_possible_commands (cmd_list: LINKED_LIST [APPLICATION_COMMAND]): LINKED_LIST [APPLICATION_COMMAND] is
-			-- Sort `cmd_list' and return the list of compatible commands
-			-- beginning with that containing the name of the query.
-		local
-			command: APPLICATION_COMMAND
-		do
-			!! Result.make
-			from 
-				cmd_list.start
-			until
-				cmd_list.after
-			loop
-				command := cmd_list.item 
-				if command.argument_type.is_equal (query.query_type) then
-					if command.command_name.substring_index (query.query_name, 1) > 0 then
-					Result.extend (command)
-					else
-					Result.put_front (command)
-					end
-				end
-				cmd_list.forth
-			end
-		end	
 
 feature -- Execution
 
@@ -369,19 +341,19 @@ feature -- Interface generation
 			new_label_c := new_label_c.create_context (a_perm_wind_c)
 			new_label_c.set_visual_name (query.query_name)
 			new_label_c.set_x_y (base_x, base_y)
-			new_label_c.set_size (100, new_label_c.height)
+			new_label_c.set_size (130, new_label_c.height)
 			if field_toggle_b.state then
 				!! new_text_field_c
 				new_text_field_c := new_text_field_c.create_context (a_perm_wind_c)
-				new_text_field_c.set_x_y (base_x + 100, base_y)
-				new_text_field_c.set_size (100, new_text_field_c.height)
+				new_text_field_c.set_x_y (base_x + 130, base_y)
+				new_text_field_c.set_size (130, new_text_field_c.height)
 				display_new_context (new_text_field_c)
 				text_field_name := new_text_field_c.entity_name
 			elseif menu_toggle_b.state then
 				!! new_opt_pull_c
 				new_opt_pull_c := new_opt_pull_c.create_context (a_perm_wind_c)
-				new_opt_pull_c.set_x_y (base_x + 100, base_y)
-				new_opt_pull_c.set_size (100, new_opt_pull_c.height)
+				new_opt_pull_c.set_x_y (base_x + 130, base_y)
+				new_opt_pull_c.set_size (130, new_opt_pull_c.height)
 				fill_menu (new_opt_pull_c)
 				display_new_context (new_opt_pull_c)
 				opt_pull_name := new_opt_pull_c.entity_name
@@ -390,9 +362,9 @@ feature -- Interface generation
 				!! new_opt_pull_c
 				new_text_field_c := new_text_field_c.create_context (a_perm_wind_c)
 				new_opt_pull_c := new_opt_pull_c.create_context (a_perm_wind_c)
-				new_text_field_c.set_x_y (base_x + 100, base_y)
+				new_text_field_c.set_x_y (base_x + 130, base_y)
 				new_text_field_c.set_size (45, new_text_field_c.height)
-				new_opt_pull_c.set_x_y (base_x + 150, base_y)
+				new_opt_pull_c.set_x_y (base_x + 180, base_y)
 				new_opt_pull_c.set_size (50, new_opt_pull_c.height)
 				fill_menu (new_opt_pull_c)
 				display_new_context (new_text_field_c)

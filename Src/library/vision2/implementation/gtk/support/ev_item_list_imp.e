@@ -54,12 +54,14 @@ feature {NONE} -- Implementation
 			-- Remove item at `i'-th position.
 		local
 			p: POINTER
+			a_child_list: POINTER
 			--w_imp: EV_WIDGET_IMP
 		do
+			a_child_list := C.gtk_container_children (list_widget)
 			p := C.g_list_nth_data (
-				C.gtk_container_children (list_widget),
+				a_child_list,
 				i - 1)
-
+			C.g_list_free (a_child_list)
 		--	w_imp ?= eif_object_from_c (p)
 		--	check
 		--		w_imp_not_void: w_imp /= Void

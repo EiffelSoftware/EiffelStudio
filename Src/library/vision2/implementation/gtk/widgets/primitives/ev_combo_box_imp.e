@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a combo-box with `par' as parent.
 		do
-			!!ev_children.make
+			!! ev_children.make (1)
 			widget := gtk_combo_new
 			gtk_object_ref (widget)
 			entry_widget := c_gtk_combo_entry (widget)

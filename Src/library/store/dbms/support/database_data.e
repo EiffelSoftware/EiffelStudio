@@ -53,7 +53,8 @@ feature -- Status report
 feature -- Element change
 
 	update_map_table (object: ANY) is
-			-- Update map table according to field names of `object'.
+			-- Update map table according to field names of `object'
+			-- and `Current' metadata.
 		require else
 			object_exists: object /= Void
 		local
@@ -114,7 +115,9 @@ feature -- Element change
 				create value_type.make (1, count)
 				create select_name.make (1, count)
 				get_metadata := True --PGC
-			elseif metadata_to_update or else value.count /= count then
+				
+					-- `metadata_to_update' is True at the beginning of every new selection.
+			elseif metadata_to_update then
 				value.resize (1, count)
 				value_size.resize (1, count)
 				value_max_size.resize (1, count)

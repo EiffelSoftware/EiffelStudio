@@ -171,10 +171,10 @@ feature {EV_ANY_I} -- Implementation
 			a_toolbar_button_imp ?= eif_id_object (a_object_id)
 			a_radio_button_imp ?= a_toolbar_button_imp
 			if a_radio_button_imp /= Void then
-				if a_radio_button_imp.is_selected then
+				if a_radio_button_imp.is_selected and then a_toolbar_button_imp.select_actions_internal /= Void then
 					a_toolbar_button_imp.select_actions_internal.call (Void)
 				end
-			elseif a_toolbar_button_imp /= Void then	
+			elseif a_toolbar_button_imp /= Void and then a_toolbar_button_imp.select_actions_internal /= Void then	
 				a_toolbar_button_imp.select_actions_internal.call (Void)
 			end
 		end

@@ -608,7 +608,7 @@ feature -- Type queries
 			inspect tcode
 			when
 				integer_8_code, integer_16_code, integer_32_code,
-				integer_64_code, real_code, double_code
+				integer_64_code, real_32_code, real_64_code
 			then
 				Result := True
 			else
@@ -765,7 +765,7 @@ feature -- Type conversion queries
 				inspect tcode
 				when
 					integer_8_code, integer_16_code, integer_32_code,
-					integer_64_code, real_code, double_code
+					integer_64_code, real_32_code, real_64_code
 				then
 					Result := True
 				else
@@ -796,7 +796,7 @@ feature -- Type conversion queries
 				inspect tcode
 				when
 					integer_8_code, integer_16_code, integer_32_code,
-					integer_64_code, real_code
+					integer_64_code, real_32_code
 				then
 					Result := True
 				else

@@ -961,7 +961,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 					end
 					funct_result := local_parent_object.accepts_child (new_type)
 						-- We now display information in status bar regarding full status.
-					display_invalid_drop_message (local_parent_object, new_type, funct_result)
+					display_invalid_drop_message (local_parent_object, new_short_type, funct_result)
 					Result := Result and funct_result
 				else
 					Result := False

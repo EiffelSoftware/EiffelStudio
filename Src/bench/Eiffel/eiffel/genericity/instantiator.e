@@ -353,10 +353,9 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
 				-- Should never happen!
 				true_gen.put (ref, 1);
 			end;
-			!!Result;
+			create Result.make (System.array_id)
 			Result.set_meta_generic (meta_gen);
 			Result.set_true_generics (true_gen);
-			Result.set_base_id (System.array_id);
 		end;
 
 	Tuple_type: TUPLE_TYPE_I is

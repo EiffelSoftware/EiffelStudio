@@ -50,6 +50,7 @@ feature -- Output
 			selected_feature.append_name (st, s_class);
 			st.add_string (" from class: ");
 			s_class.append_name (st);
+			st.add_new_line;
 			st.add_string ("Second version: ");
 			invalid_feature.append_name (st, u_class);
 			st.add_string (" from class: ");

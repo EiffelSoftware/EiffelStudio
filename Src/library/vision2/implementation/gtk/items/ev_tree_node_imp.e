@@ -315,7 +315,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 					parent_tree_imp.list_widget,
 					tree_node_ptr,
 					text_ptr,-- text,
-					5, -- spacing
+					3, -- spacing
 					gdkpix,
 					gdkmask,
 					gdkpix,

@@ -49,6 +49,21 @@ feature -- Access
 					i := i + 1
 				end
 			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	to_array: ARRAY [EV_WIDGET] is
+			-- A representation of `Current' as ARRAY. Included to
+			-- ease transition from inheritance of ARRAY to
+			-- inheritance of CHAIN. Contains contents of all cells
+			-- from left to right, and top to bottom. You should only
+			-- use this if you relied on the inheritence of ARRAY, and
+			-- is only temporary to ease this change.
+		do
+			Result := clone (internal_array)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	has (v: EV_WIDGET): BOOLEAN is

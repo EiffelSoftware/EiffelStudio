@@ -146,6 +146,7 @@ feature -- Status setting
 			if not display_view_enabled then
 				display_view_enabled := True
 				if component /= Void then
+					(create {GB_GLOBAL_STATUS}).block
 					lock_update
 					component_holder.wipe_out
 					if display_widget = Void then
@@ -154,6 +155,7 @@ feature -- Status setting
 						component_holder.extend (display_widget)
 					end
 					unlock_update
+					;(create {GB_GLOBAL_STATUS}).resume
 				end
 			end
 		ensure then
@@ -167,6 +169,7 @@ feature -- Status setting
 			if display_view_enabled then
 				display_view_enabled := False
 				if component /= Void then
+					(create {GB_GLOBAL_STATUS}).block
 					lock_update
 					component_holder.wipe_out
 					if builder_widget = Void then
@@ -175,7 +178,9 @@ feature -- Status setting
 						component_holder.extend (builder_widget)
 					end
 					unlock_update
+					;(create {GB_GLOBAL_STATUS}).resume
 				end
+				
 			end
 		ensure then
 			build_view_set: not display_view_enabled
@@ -358,8 +363,6 @@ feature {NONE} -- Implementation
 		do
 			set_component (component_stone.component)
 		end
-		
-		
-		
+
 end -- class GB_COMPONENT_VIEWER
 

@@ -149,7 +149,6 @@ feature -- Initialization
 			dle_eiffel_table := static.dle_eiffel_table;
 			dle_remover := static.dle_remover;
 			dle_frozen_nobid_table := static.dle_frozen_nobid_table;
-			dle_finalize := static.dle_finalize;
 			dle_static_calls := static.dle_static_calls;
 			dle_system_name := static.system_name;
 			!! sorter.make;
@@ -1385,8 +1384,7 @@ end;
 		local
 			v9fm: V9FM
 		do
-			if dle_finalize then
-				dle_finalize := false;
+			if Compilation_modes.is_finalizing then
 				if dle_poly_server = Void then
 						-- The static system has not been finalized.
 					!! v9fm;

@@ -48,6 +48,7 @@ feature -- Access
 			Result := implementation.title
 		ensure
 			bridge_ok: Result.is_equal (implementation.title)
+			cloned: Result /= implementation.title
 		end
 
 	blocking_window: EV_WINDOW is
@@ -93,6 +94,7 @@ feature -- Status setting
 			implementation.set_title (a_title)
 		ensure
 			assigned: title.is_equal (a_title)
+			cloned: title /= a_title
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			Precursor
-			C.gtk_progress_bar_set_orientation (gtk_progress_bar, C.Gtk_progress_top_to_bottom_enum)
+			C.gtk_progress_bar_set_orientation (gtk_progress_bar, C.Gtk_progress_bottom_to_top_enum)
 		end
 			
 feature {EV_ANY_I} -- Implementation
@@ -57,6 +57,9 @@ end -- class EV_VERTICAL_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/03 21:47:30  brendel
+--| Changed orientation to "bottom to top".
+--|
 --| Revision 1.6  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

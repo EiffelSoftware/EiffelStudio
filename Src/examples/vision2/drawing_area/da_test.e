@@ -91,18 +91,18 @@ feature {NONE} -- Implementation
 	
 	on_paint(x, y, width, height: INTEGER) is
 		do
-			draw (da_paint)
+			draw (da_paint, Dominant_blue)
 		end
 
 	on_idle_action is
 		do
-			draw (da_direct)
+			draw (da_direct, Dominant_red)
 
 			da_paint.redraw
 			da_paint.flush
 		end
 
-	draw (da: EV_DRAWING_AREA) is
+	draw (da: EV_DRAWING_AREA; dominant_color: INTEGER) is
 		local
 			random_int: INTEGER
 			drawing_primitive: PROCEDURE[DA_TEST,TUPLE]
@@ -110,7 +110,9 @@ feature {NONE} -- Implementation
 			random_int := (get_random_real * Number_drawing_operations).floor
 			drawing_primitive := drawing_operations @ random_int
 
-			da.set_foreground_color (get_random_color)
+			da.set_foreground_color (get_random_color(dominant_color))
+			da.set_line_width (get_random_int(10)+1)
+
 			drawing_primitive.call([da])
 		end
 
@@ -283,17 +285,46 @@ feature {NONE} -- Random Drawing
 			drawing_operations.put (~draw_pixmap, 6)
 		end
 
-	Number_drawing_operations: INTEGER is 7
-
 feature {NONE} -- Random Implementation
 
-	get_random_color: EV_COLOR is
+	get_random_color(dominant_color: INTEGER): EV_COLOR is
+		local
+			random_real: REAL
+			dark: BOOLEAN
 		do
-			create Result.make_with_rgb (
-				get_random_real,
-				get_random_real,
-				get_random_real
-				)
+			dark := (get_random_int(2) = 1)
+			random_real := get_random_real
+			create Result.make_with_rgb (0, 0, 0)
+
+			inspect dominant_color
+			when Dominant_red then
+				if dark then
+					Result.set_red (random_real)
+				else
+					Result.set_red (1.0)
+					Result.set_green (random_real)
+					Result.set_blue (random_real)
+				end
+
+			when Dominant_blue then
+				if dark then
+					Result.set_blue (random_real)
+				else
+					Result.set_red (random_real)
+					Result.set_green (random_real)
+					Result.set_blue (1.0)
+				end
+
+			when Dominant_green then
+				if dark then
+					Result.set_green (random_real)
+				else
+					Result.set_red (random_real)
+					Result.set_green (1.0)
+					Result.set_blue (random_real)
+				end
+
+			end
 		end
 
 	get_random_x (da: EV_DRAWING_AREA): INTEGER is
@@ -323,5 +354,11 @@ feature {NONE} -- Random Implementation
 		do
 			Result := (get_random_real * max_int).floor
 		end
+
+feature {NONE} -- Constants
+
+	Number_drawing_operations: INTEGER is 7
+	
+	Dominant_red, Dominant_blue, Dominant_green: INTEGER is unique
 
 end -- class DRAWING_AREA_TEST

@@ -533,8 +533,7 @@ feature -- Status settings.
 	enable_force_directed is
 			-- Enable use of force directed physics.
 		local
-			wbbox, min_box: EV_RECTANGLE
-			w, h: INTEGER
+			min_box: EV_RECTANGLE
 			fig: EG_LINKABLE_FIGURE
 		do
 			if timer = Void then
@@ -543,14 +542,6 @@ feature -- Status settings.
 				timer.actions.wipe_out
 			end
 			timer.actions.extend (agent on_time_out)
-			wbbox := world.bounding_box
-			w := wbbox.width.max (area.width)
-			h := wbbox.height.max (area.height)
-			wbbox.grow_left (w * 5)
-			wbbox.grow_right (w * 5)
-			wbbox.grow_top (h * 5)
-			wbbox.grow_bottom (h * 5)
-			force_directed_layout.set_fence (wbbox)
 			is_force_directed_used := True
 			if class_graph = Void then
 				fig ?= world.figure_from_model (cluster_graph.center_cluster)
@@ -1312,7 +1303,7 @@ feature {EG_FIGURE, EIFFEL_WORLD} -- Force directed.
 			end
 		end
 		
-	force_directed_layout: EIFFEL_FORCE_LAYOUT
+	force_directed_layout: EG_FORCE_DIRECTED_LAYOUT
 			-- Layout used to force direct the graph.
 
 feature {NONE} -- Events

@@ -1942,13 +1942,13 @@ rt_private void widr_type_generics (int16 dtype)
 
 		widr_multi_int16 (&nb_gen, 1);
 		for (i = 0 ;; i++) {
-			if (info->dynamic_types[i] == dtype) {
+			if (dynamic_types[i] == dtype) {
 				patterns = info->patterns + (i * nb_gen);
 #ifdef RECOVERABLE_DEBUG
 				{
 					rt_shared void print_generic_names (struct cecil_info *info, int type);
 					printf (" ");
-					print_generic_names (info, info->dynamic_types[i]);
+					print_generic_names (info, dynamic_types[i]);
 				}
 #endif
 				widr_multi_int32 (patterns, nb_gen);

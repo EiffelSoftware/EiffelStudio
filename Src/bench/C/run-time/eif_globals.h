@@ -41,13 +41,6 @@ extern "C" {
  *                                      *
  ****************************************/
 
-
-#define MTC_NOARG			/* eif_globals */
-#define MTC					/* MTC_NOARG, */
-#define EIF_CONTEXT_NOARG	void /* eif_global_context_t	*MTC_NOARG */
-#define EIF_CONTEXT			/* EIF_CONTEXT_NOARG, */
-#define EIF_STATIC_OPT
-
 	/*
 	 * Definition of the macros EIF_GET_CONTEXT and EIF_END_GET_CONTEXT
 	 *
@@ -371,12 +364,6 @@ extern EIF_TSD_TYPE eif_global_key;
  *                                        *
  ******************************************/
 
-
-#define MTC_NOARG
-#define MTC
-#define EIF_CONTEXT_NOARG void
-#define EIF_CONTEXT
-#define EIF_STATIC_OPT static
 
 #define EIF_GET_CONTEXT
 #define EIF_END_GET_CONTEXT

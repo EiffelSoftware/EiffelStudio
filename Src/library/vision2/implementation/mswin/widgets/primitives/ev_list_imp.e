@@ -329,47 +329,91 @@ feature {NONE} -- Implementation
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
+	index_of_item_imp (li_imp: EV_LIST_ITEM_IMP): INTEGER is
+			-- Index of `li_imp' in `ev_children'.
+		require
+			li_imp_not_void: li_imp /= Void
+			ev_children_has_li_imp: ev_children.has (li_imp)
+		do
+			Result := ev_children.index_of (li_imp, 1)
+		ensure
+			Result_within_bounds:
+				Result > 0 and then Result <= ev_children.count
+			correct_index:
+				(ev_children @ Result) = li_imp
+		end
+
 	is_item_imp_selected (li_imp: EV_LIST_ITEM_IMP): BOOLEAN is
 			-- Is `li_imp' selected?
+		require
+			li_imp_not_void: li_imp /= Void
+			ev_children_has_li_imp: ev_children.has (li_imp)
 		local
-			child_id: INTEGER
+			pos: INTEGER
 		do
-			child_id := ev_children.index_of (li_imp, 1) - 1
+			pos := index_of_item_imp (li_imp)
 			if multiple_selection_enabled then
 				if ms_selected then
-					Result := ms_selected_items.has (child_id)
+					Result := ms_selected_items.has (pos - 1)
 				end
 			else
 				if ss_selected then
-					Result := ss_selected_item = child_id
+					Result := ss_selected_item = (pos - 1)
 				end
 			end
 		end
 
 	select_item_imp (li_imp: EV_LIST_ITEM_IMP) is
 			-- Set `li_imp' selected.
+		require
+			li_imp_not_void: li_imp /= Void
+			ev_children_has_li_imp: ev_children.has (li_imp)
 		local
-			child_id: INTEGER
+			pos: INTEGER
 		do
-			child_id := ev_children.index_of (li_imp, 1) - 1
+			pos := index_of_item_imp (li_imp)
 			if multiple_selection_enabled then
-				ms_select_item (child_id)
+				ms_select_item (pos - 1)
 			else
-				ss_select_item (child_id)
+				ss_select_item (pos - 1)
 			end
+		ensure
+			li_imp_selected: li_imp.is_selected
 		end
 
 	deselect_item_imp (li_imp: EV_LIST_ITEM_IMP) is
 			-- Set `li_imp' deselected.
+		require
+			li_imp_not_void: li_imp /= Void
+			ev_children_has_li_imp: ev_children.has (li_imp)
 		local
-			child_id: INTEGER
+			pos: INTEGER
 		do
-			child_id := ev_children.index_of (li_imp, 1) - 1
+			pos := index_of_item_imp (li_imp)
 			if multiple_selection_enabled then
-				ms_unselect_items (child_id, child_id)
+				ms_unselect_items (pos - 1, pos - 1)
 			else
 				ss_unselect
 			end
+		ensure
+			li_imp_deselected: not li_imp.is_selected
+		end
+
+	set_item_imp_text (li_imp: EV_LIST_ITEM_IMP; a_text: STRING) is
+			-- Set `li_imp'.`text' to `a_text'.
+		require
+			li_imp_not_void: li_imp /= Void
+			ev_children_has_li_imp: ev_children.has (li_imp)
+			a_text_not_void: a_text /= Void
+		local
+			pos: INTEGER
+		do
+			pos := index_of_item_imp (li_imp)
+			delete_string (pos - 1)
+			insert_string_at (a_text, pos - 1)
+		ensure
+			a_text_set:
+				a_text.is_equal (i_th_text (index_of_item_imp (li_imp) - 1))
 		end
 
 --| FIXME Indentation, names, comments, contracts.
@@ -697,6 +741,10 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/03/29 22:12:11  brendel
+--| Added `set_item_imp_text'.
+--| Improved contracts.
+--|
 --| Revision 1.54  2000/03/29 20:31:03  brendel
 --| Added is_item_imp_selected, select_item_imp and deselect_item_imp.
 --|

@@ -38,7 +38,7 @@ inherit
 
 creation
 	make
-
+	
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -382,6 +382,23 @@ feature -- Element change
 			end
 		end
 		
+feature {EV_TOOL_BAR_IMP} -- Implementation
+
+	restore_private_pixmaps is
+			-- When `Current' is parented, `private_pixmap' and
+			-- `private_gray_pixmap' are assigned Void. This is to stop
+			-- us keeping to many references to GDI objects. When
+			-- `Current' is removed from its parent, we must then
+			-- restore them. 
+		do
+			if has_pixmap then
+				private_pixmap := pixmap
+			end
+			if has_gray_pixmap then
+				private_gray_pixmap := gray_pixmap
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	private_gray_pixmap: EV_PIXMAP

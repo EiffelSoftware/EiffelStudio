@@ -215,6 +215,10 @@ feature -- Access
 	dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic' or `is_content_completely_dynamic.
+			
+	subrow_indent: INTEGER
+			-- Number of pixels horizontally by which each subrow is indented
+			-- from its `parent_row'.
 
 feature -- Status setting
 
@@ -590,6 +594,17 @@ feature -- Status setting
 			dynamic_content_function := a_function
 		ensure
 			dynamic_content_function_set: dynamic_content_function = a_function
+		end
+		
+	set_subrow_indent (a_subrow_indent: INTEGER) is
+			-- Set `subrow_indent' to `a_subrow_indent'.
+		require
+			a_subrow_indent_non_negtive: a_subrow_indent >= 0
+		do
+			subrow_indent := a_subrow_indent
+			redraw_client_area
+		ensure
+			subrow_indent_set: subrow_indent = a_subrow_indent
 		end
 
 feature -- Status report
@@ -1001,7 +1016,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			drawable.redraw
 		end
 
-feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITEM_I} -- Implementation
+feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITEM_I, EV_GRID} -- Implementation
 
 	column_offsets: ARRAYED_LIST [INTEGER]
 		-- Cumulative offset of each column in pixels.
@@ -1048,6 +1063,63 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITE
 			hidden_node_count := hidden_node_count + adjustment
 		ensure
 			hidden_node_count_set: hidden_node_count = old hidden_node_count + adjustment
+		end
+		
+	tree_node_spacing: INTEGER is 3
+			-- Spacing value used around the expand/collapse node of a 
+			-- subrow. For example, to determine the height available for the node image
+			-- within a subrow, subtract 2 * tree_node_spacing from the `row_height'.
+			
+	expand_pixmap: EV_PIXMAP is
+			-- A pixmap representing the image used for the expand pixmap.
+		local
+			start_offset, end_offset, middle_offset: INTEGER
+		once
+			start_offset := 2
+			end_offset := tree_node_button_dimension - start_offset - 1
+			middle_offset := tree_node_button_dimension // 2
+			create Result
+			Result.set_size (tree_node_button_dimension, tree_node_button_dimension)
+			Result.set_foreground_color (white)
+			Result.clear
+			Result.set_foreground_color (black)
+			Result.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
+			Result.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
+			Result.draw_segment (middle_offset, start_offset, middle_offset, end_offset)
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	collapse_pixmap: EV_PIXMAP is
+			-- A pixmap representing the image used for the collapse pixmap.
+		local
+			start_offset, end_offset, middle_offset: INTEGER
+		once
+			start_offset := 2
+			end_offset := tree_node_button_dimension - start_offset - 1
+			middle_offset := tree_node_button_dimension // 2
+			create Result
+			Result.set_size (tree_node_button_dimension, tree_node_button_dimension)
+			Result.set_foreground_color (white)
+			Result.clear
+			Result.set_foreground_color (black)
+			Result.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
+			Result.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
+		end
+		
+	tree_node_button_dimension: INTEGER is 9	
+		-- Dimension of the expand/collapse node used in the tree.
+		
+	white: EV_COLOR is
+			-- Once access to the color white.
+		do
+			Result := (create {EV_STOCK_COLORS}).white
+		end
+		
+	black: EV_COLOR is
+			-- Once acces to the color black.
+		do
+			Result := (create {EV_STOCK_COLORS}).black
 		end
 
 feature {EV_GRID_ITEM_I} -- Implementation
@@ -1219,6 +1291,7 @@ feature {NONE} -- Drawing implementation
 			is_header_displayed := True
 			row_height := 16
 			is_row_height_fixed := True
+			subrow_indent := 0
 			
 			create internal_row_data.make
 			create columns.make
@@ -1765,7 +1838,7 @@ feature {EV_GRID_ROW_I} -- Implementation
 	internal_selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 		-- List of selected items, only used when in item selection modes
 
-feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
+feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- Implementation
 
 	update_row_selection_status (a_row_i: EV_GRID_ROW_I) is
 			-- Update the selection status for `a_row' in `Current'

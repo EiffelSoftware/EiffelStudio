@@ -236,46 +236,6 @@ rt_public EIF_OBJECT eifcreate(EIF_TYPE_ID cid)
  * Function pointers handling
  */
 
-rt_public EIF_PROCEDURE eifproc(char *routine, EIF_TYPE_ID cid)
-{
-	return (EIF_PROCEDURE) eifref(routine, cid);		/* Eiffel procedure */
-}
-
-rt_public EIF_INTEGER_FUNCTION eiflong(char *routine, EIF_TYPE_ID cid)
-{
-	return (EIF_INTEGER_FUNCTION) eifref(routine, cid);	/* Function returning INTEGER */
-}
-
-rt_public EIF_CHARACTER_FUNCTION eifchar(char *routine, EIF_TYPE_ID cid)
-{
-	return (EIF_CHARACTER_FUNCTION) eifref(routine, cid);	/* Function returning CHAR */
-}
-
-rt_public EIF_REAL_FUNCTION eifreal(char *routine, EIF_TYPE_ID cid)
-{
-	return (EIF_REAL_FUNCTION) eifref(routine, cid);	/* Function returning REAL */
-}
-
-rt_public EIF_DOUBLE_FUNCTION eifdouble(char *routine, EIF_TYPE_ID cid)
-{
-	return (EIF_DOUBLE_FUNCTION) eifref(routine, cid);	/* Returning DOUBLE */
-}
-
-rt_public EIF_BIT_FUNCTION eifbit(char *routine, EIF_TYPE_ID cid)
-{
-	return (EIF_BIT_FUNCTION) eifref(routine, cid);	/* Function returning BIT */
-}
-
-rt_public EIF_BOOLEAN_FUNCTION eifbool(char *routine, EIF_TYPE_ID cid)
-{
-	return (EIF_BOOLEAN_FUNCTION) eifref(routine, cid);	/* Function returning BOOLEAN */
-}
-
-rt_public EIF_POINTER_FUNCTION eifptr(char *routine, EIF_TYPE_ID cid)
-{
-	return (EIF_POINTER_FUNCTION) eifref(routine, cid);	/* Returning POINTER */
-}
-
 rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 {
 	/* Look for the routine named 'routine' in the type 'cid' (there is no

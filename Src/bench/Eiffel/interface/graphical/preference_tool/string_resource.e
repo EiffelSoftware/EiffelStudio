@@ -70,7 +70,7 @@ feature -- Access
 					str.extend ('%"');
 					str.append (a_value)
 				else
-					str := clone (value)
+					str := value.twin
 				end
 				if str @ str.count /= '%"' then
 					str.extend ('%"')

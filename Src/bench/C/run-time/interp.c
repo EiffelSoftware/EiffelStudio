@@ -2653,11 +2653,11 @@ int where;					/* Invariant after or before */
 	/* Invariant check */
 	{
 		uint32 body_id;
-		int16 body_index;
+		uint16 body_index;
 		struct item *last;
 
 		CBodyIdx(body_index,INVARIANT_ID,dtype);	
-		if (body_index != -1) {
+		if (body_index != INVALID_INDEX) {
 			body_id = dispatch[body_index];
 			if (body_id < zeroc) { 				/* Frozen invariant */
 				unsigned long stagval = tagval;	/* Tag value backup */
@@ -3334,7 +3334,7 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 	int result = 0;					/* A priori, no need for sync_registers */
 	uint32 pid;						/* Pattern id of the frozen feature */
 	int32 rout_id;
-	int16 body_index;
+	uint16 body_index;
 
 	rout_id = Routids(stype)[fid];
 	CBodyIdx(body_index,rout_id,Dtype(otop()->it_ref));

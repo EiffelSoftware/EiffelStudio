@@ -47,7 +47,7 @@ int32 feature_id;
 	 */
 
 	int32 rout_id;
-	int16 body_index;
+	uint16 body_index;
 	uint32 body_id;
 
 	nstcall = 0;								/* No invariant check */
@@ -128,7 +128,7 @@ char *name;
 
 	int dyn_type;
 	int32 rout_id;
-	int16 body_index;
+	uint16 body_index;
 	uint32 body_id;
 
 	if (object == (char *) 0)			/* Void reference check */
@@ -229,7 +229,7 @@ char *object;
 	 */
 
 	int32 rout_id;
-	int16 body_index;
+	uint16 body_index;
 	uint32 body_id;
 	char *OLD_IC;
 
@@ -474,7 +474,7 @@ int dyn_type;
 	 * Return a function pointer.
 	 */
 
-	int16 body_index;
+	uint16 body_index;
 	uint32 body_id;
 
 	nstcall = 0;								/* No invariant check */

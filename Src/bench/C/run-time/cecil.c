@@ -311,7 +311,7 @@ EIF_TYPE_ID cid;
 	int32 *feature_ptr;
 	int32 rout_id;
 	uint32 body_id;
-	int16 body_index;
+	uint16 body_index;
 #endif
 
 	if (dtype < 0)						/* Invalid type (not a reference) */

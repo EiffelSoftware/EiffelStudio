@@ -9,7 +9,7 @@ class
 inherit
 	BINARY_AS
 		redefine
-			type_check, byte_node, replicate,
+			type_check, byte_node,
 			operator_is_keyword, operator_is_special
 		end
 
@@ -80,16 +80,6 @@ feature -- Type check, byte code and dead code removal
 			-- Byte code type
 		do
 			!BIN_EQ_B! Result
-		end
-
-feature -- Replication
-
-	replicate (ctxt: REP_CONTEXT): BINARY_AS is
-			-- Adapt to replication.
-		do
-			Result := clone (Current)
-			Result.set_left (left.replicate (ctxt))
-			Result.set_right (right.replicate (ctxt.new_ctxt))
 		end
  
 end -- class BIN_EQ_AS

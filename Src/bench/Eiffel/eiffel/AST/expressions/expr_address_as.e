@@ -11,8 +11,7 @@ class
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node, format,
-			fill_calls_list, replicate
+			type_check, byte_node, format
 		end
 
 	SHARED_TYPES
@@ -72,26 +71,6 @@ feature -- Type check, byte code and dead code removal
 			else
 				ctxt.rollback
 			end
-		end
-
-feature	-- Replication
-
-	set_expr (e: like expr) is
-		require
-			valid_arg: e /= Void
-		do
-			expr := e
-		end
-
-	fill_calls_list (l: CALLS_LIST) is
-		do
-			expr.fill_calls_list (l)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-		do
-			Result := clone (Current)
-			Result.set_expr (expr.replicate (ctxt))
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -11,8 +11,7 @@ class
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node, format,
-			fill_calls_list, replicate
+			type_check, byte_node, format
 		end
 
 	SHARED_TYPES
@@ -115,20 +114,6 @@ feature -- Type check, byte code and dead code removal
 			else
 				ctxt.rollback
 			end
-		end
-
-feature	-- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-		do
-			l.add (feature_name.internal_name)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-		do
-			Result := clone (Current)
-			ctxt.adapt_name (feature_name.internal_name)
-			Result.feature_name.set_name (ctxt.adapted_name)
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -141,9 +141,12 @@ EIF_REFERENCE c_tread ()
 
 	int size;
 	char *str;
+	EIF_REFERENCE e_str;
 
 	str = tread (&size);
-	return (EIF_REFERENCE) makestr (str, size);
+	e_str = (EIF_REFERENCE) makestr (str, size);
+	free (str);
+	return e_str;
 }
 
 public void send_simple_request(code)

@@ -392,7 +392,7 @@ feature -- Action
 		do
 			if not is_in_system then
 				set_is_in_system (True)
-				if not is_external then
+				if has_ast then
 					ast_b := Ast_server.item (class_id)
 					supplier_list := ast_b.suppliers.supplier_ids
 					if not supplier_list.is_empty then
@@ -1832,30 +1832,11 @@ feature -- Class initialization
 			set_is_expanded (is_exp)
 
 			if is_exp then
-					-- Record the fact that an expanded is in the system
-					-- Extra check must be done after pass2
-				if
-					Current /= System.boolean_class.compiled_class and then
-					Current /= System.character_class.compiled_class and then
-					Current /= System.real_64_class.compiled_class and then
-					Current /= System.integer_8_class.compiled_class and then
-					Current /= System.integer_16_class.compiled_class and then
-					Current /= System.integer_32_class.compiled_class and then
-					Current /= System.integer_64_class.compiled_class and then
-					Current /= System.real_32_class.compiled_class and then
-					Current /= System.pointer_class.compiled_class and then
-					Current /= System.typed_pointer_class.compiled_class
-				then
-						-- Because `WIDE_CHARACTER' is not part of IL system
-						-- we only do the check for non IL system that current
-						-- class is different from `WIDE_CHARACTER'.
-					if not System.il_generation then
-						if Current /= System.wide_char_class.compiled_class then
-							System.set_has_expanded
-						end
-					else
-						System.set_has_expanded
-					end
+					-- Record the fact that an expanded is in the system, but only
+					-- if it is not a known basic type. This is necessary as some
+					-- extra checks must be done after pass2.
+				if not is_basic then
+					System.set_has_expanded
 				end
 			end
 
@@ -1868,15 +1849,16 @@ feature -- Class initialization
 			end
 
 				-- Class status
-			is_external := is_basic or else ast_b.is_external
+			if System.il_generation then
+				is_external := is_basic or ast_b.is_external
+			else
+				is_external := ast_b.is_external
+			end
 			has_externals := ast_b.has_externals
 			old_is_frozen := is_frozen
 			is_frozen := ast_b.is_frozen
 
-			if
-				System.il_generation and then
-				(old_parents /= Void and then old_is_frozen /= is_frozen)
-			then
+			if (old_parents /= Void and then old_is_frozen /= is_frozen) then
 				changed_status := True
 				changed_frozen := True
 			end
@@ -2621,9 +2603,6 @@ feature -- Parent checking
 					-- Error we are trying to do multiple inheritance of classes
 					-- that inherit from external classes or that are external classes.
 					-- Error which occurs only during IL generation.
-				check
-					il_generation: System.il_generation
-				end
 				create vifi2.make (Current)
 				vifi2.set_parent_classes (l_single_classes)
 				Error_handler.insert_error (vifi2)

@@ -33,7 +33,7 @@ feature -- Access
 				i >= count
 			loop
 				p := params.item (i)
-				create dn.make_from_cil (p.name)
+				dn := p.name
 				en := formatted_argument_name (dn, i + 1)
 				if dn = Void or dn.is_empty then
 					dn := en.clone (en)
@@ -41,7 +41,7 @@ feature -- Access
 				t := p.parameter_type
 				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en,
 					referenced_type_from_type (t),
-					p.is_out or t.is_by_ref), i + 1)
+					t.is_by_ref), i + 1)
 				i := i + 1
 			end
 		ensure

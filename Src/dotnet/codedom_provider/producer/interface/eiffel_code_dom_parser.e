@@ -46,13 +46,10 @@ feature -- Implementation
 				create l_support
 				Result ?= l_support.last_element_created;
 				last_compile_unit_generated := Result
-	
-				(create {ECDP_MEMBERS_MAPPING}).set_code_parsed (True)
 			end
 		rescue
 			(create {ECDP_EVENT_MANAGER}).raise_event (feature {ECDP_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
 			l_retried := True
-			(create {ECDP_MEMBERS_MAPPING}).set_code_parsed (False)
 			Result := last_compile_unit_generated
 			retry
 		end

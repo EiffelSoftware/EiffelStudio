@@ -107,10 +107,13 @@
 					- No longer crashes if your `subtree_function' returns Void. In this situation, 
 					it will now behave as if the `Result' was empty.
 					<li>
-						<B>EV_BOX</B> - Attempting to dock from an EV_DOCKABLE_SOURCE while the box was 
-						empty would not work. This has now been fixed.
-					</li>
-					<li><B>EV_TEXT_COMPONENT</B> - Calling `append_text', `prepend_text' or `insert_text' while `is_editable' is False caused a precondition failure in the implementation which is now fixed.</li>
+						<B>EV_BOX</B>
+					- Attempting to dock from an EV_DOCKABLE_SOURCE while the box was empty would 
+					not work. This has now been fixed.
+					<li>
+						<B>EV_TEXT_COMPONENT</B> - Calling `append_text', `prepend_text' or 
+						`insert_text' while `is_editable' is False caused a precondition failure in the 
+						implementation which is now fixed.</li>
 				</ul>
 			<li>
 				<b>Windows</b>
@@ -187,9 +190,13 @@
 					modally.
 					<LI>
 						<STRONG>EV_WINDOW</STRONG> - Now sizing invariants are fulfilled when widget is 
-						destroyed, preventing segmentation violation. <STRONG>EV_COMBO_BOX</STRONG>
-					- Fixed bug where reselecting an item within the combo box list was in fact 
-					deselecting it.
+						destroyed, preventing segmentation violation. <STRONG>EV_COMBO_BOX</STRONG></LI>
+					<UL>
+						<LI>
+						Fixed bug where reselecting an item within the combo box list was in fact 
+						deselecting it.
+						<LI>
+							Now first item remains selected when items are added.</LI></UL>
 					<LI>
 						<STRONG>EV_WINDOW</STRONG>
 					- Fixed querying of positioning which never changes if previously&nbsp;set by 
@@ -207,6 +214,11 @@
 					- Fixed bug where if both drag and drop and docking were enabled, both would be 
 					executed, now docking overrides drag and drop if both are enabled.
 					<LI>
+						<STRONG>EV_TIMEOUT </STRONG>
+					- Now timeouts correctly unregister themselves on dispose preventing 
+					segmentation violation.
+					<LI>
+						<STRONG>EV_PIXMAP </STRONG>- Pixmap stretching now works as expected.</LI>
 				</UL>
 			</li>
 		</UL>

@@ -4,7 +4,6 @@
 #include <stdio.h>
 
 long ca_ssiz();			/* Short integer size */
-long ca_lsiz();			/* Long integer size */
 
 void ca_put(area, c, i)
 char *area;
@@ -158,13 +157,6 @@ long index, blength;
 	for (j=BIT_UNIT-1; j>= (int)(BIT_UNIT-blength); j--) 
 		val += (1 << j) * ((*bit++ == '1') ? 1 : 0);
 	ca_wuint32(area,val,index + (nb_packs-1)*sizeof(uint32));
-}
-
-long ca_lsiz()
-{
-	/* Long size. */
-
-	return (long) sizeof(long);
 }
 
 long ca_ssiz()

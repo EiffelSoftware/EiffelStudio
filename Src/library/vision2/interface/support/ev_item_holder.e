@@ -26,6 +26,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
+--	get_item (index: INTEGER): G is
 	get_item (index: INTEGER): EV_ITEM is
 			-- Give the item of the list at the zero-base
 			-- `index'.
@@ -50,6 +51,7 @@ feature -- Element change
 
 feature -- Basic operations
 
+--	find_item_by_data (data: ANY): G is
 	find_item_by_data (data: ANY): EV_ITEM is
 			-- Find a child with data equal to `data'.
 		require

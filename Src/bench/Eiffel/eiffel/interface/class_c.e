@@ -104,6 +104,9 @@ feature -- Access
 			Result := not is_precompiled
 		end
 
+	is_in_system: BOOLEAN
+			-- Is current class part of system (i.e. precompiled and used)?
+
 	is_modifiable: BOOLEAN is
 			-- Is current class not part of a precompiled library?
 		do
@@ -290,26 +293,28 @@ feature -- Action
 					l_types.forth
 				end
 
-				!! c_file_name.make_from_string (generation_dir)
-				object_name := clone (Feature_table_suffix)
-				object_name.append_integer (packet_number)
-				c_file_name.extend (object_name)
-				finished_file_name := clone (c_file_name)
-				object_name := base_file_name
-				object_name.append_integer (id.id)
-				object_name.append_character (Feature_table_file_suffix)
-				object_name.append (Dot_c)
-				c_file_name.set_file_name (object_name)
-				!! file.make (c_file_name)
-				file_exists := file.exists
-				if file_exists and then file.is_writable then
-					file.delete
-				end
-				if file_exists then
-					finished_file_name.set_file_name ("finished")
-					!! finished_file.make (finished_file_name)
-					if finished_file.exists and then finished_file.is_writable then
-						finished_file.delete
+				if not is_precompiled then
+					!! c_file_name.make_from_string (generation_dir)
+					object_name := clone (Feature_table_suffix)
+					object_name.append_integer (packet_number)
+					c_file_name.extend (object_name)
+					finished_file_name := clone (c_file_name)
+					object_name := base_file_name
+					object_name.append_integer (id.id)
+					object_name.append_character (Feature_table_file_suffix)
+					object_name.append (Dot_c)
+					c_file_name.set_file_name (object_name)
+					!! file.make (c_file_name)
+					file_exists := file.exists
+					if file_exists and then file.is_writable then
+						file.delete
+					end
+					if file_exists then
+						finished_file_name.set_file_name ("finished")
+						!! finished_file.make (finished_file_name)
+						if finished_file.exists and then finished_file.is_writable then
+							finished_file.delete
+						end
 					end
 				end
 			end
@@ -387,7 +392,27 @@ feature -- Action
 				end
 			end
 		end
-	
+
+	record_precompiled_class_in_system is
+		local
+			ast_b: CLASS_AS
+			supplier_list: LINKED_LIST [ID_AS]
+			parent_list: EIFFEL_LIST [PARENT_AS]
+		do
+			if not is_in_system then
+				set_is_in_system (True)
+				ast_b := Ast_server.item (id)
+				supplier_list := ast_b.suppliers.supplier_ids
+				if not supplier_list.empty then
+					check_suppliers (supplier_list)
+				end
+				parent_list := ast_b.parents
+				if parent_list /= Void then
+					check_parent_classes (parent_list)
+				end
+			end
+		end
+
 	end_of_pass1 (ast_b: CLASS_AS) is
 				-- End of the first pass after syntax analysis
 		local
@@ -2533,6 +2558,14 @@ feature -- Supplier checking
 					Workbench.change_class (supplier_class)
 						-- Insertion the new compiler class (instance of
 						-- CLASS_C) in the system.
+				else
+					if
+						supplier_class.compiled_class.is_precompiled and then
+						not Compilation_modes.is_precompiling
+					then
+							-- Mark precompiled class as part of system.
+						supplier_class.compiled_class.record_precompiled_class_in_system
+					end
 				end
 				comp_class := supplier_class.compiled_class
 				if comp_class /= Current then
@@ -2794,6 +2827,16 @@ feature -- Convenience features
 			-- Set `has_expanded' to True
 		do
 			has_expanded := True
+		end
+
+	set_is_in_system (v: BOOLEAN) is
+			-- Set `is_in_system' to `v'.
+		require
+			not_precompiling: not Compilation_modes.is_precompiling
+		do
+			is_in_system := v
+		ensure
+			is_in_system_set: TRUE
 		end
 
 	set_is_used_as_expanded is

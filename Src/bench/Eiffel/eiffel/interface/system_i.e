@@ -387,6 +387,31 @@ feature -- Properties
 			add_visible_classes
 		end
 
+	mark_only_used_precompiled_classes is
+			-- Mark `is_in_system' flag of all 18 basic classes which
+			-- are part of a precompiled library of EiffelBase.
+		require
+			not_is_precompiling: not Compilation_modes.is_precompiling
+		do
+			general_class.compiled_class.record_precompiled_class_in_system
+			any_class.compiled_class.record_precompiled_class_in_system
+			double_class.compiled_class.record_precompiled_class_in_system
+			real_class.compiled_class.record_precompiled_class_in_system
+			integer_class.compiled_class.record_precompiled_class_in_system
+			boolean_class.compiled_class.record_precompiled_class_in_system
+			character_class.compiled_class.record_precompiled_class_in_system
+			special_class.compiled_class.record_precompiled_class_in_system
+			to_special_class.compiled_class.record_precompiled_class_in_system
+			array_class.compiled_class.record_precompiled_class_in_system
+			bit_class.compiled_class.record_precompiled_class_in_system
+			pointer_class.compiled_class.record_precompiled_class_in_system
+			string_class.compiled_class.record_precompiled_class_in_system
+			tuple_class.compiled_class.record_precompiled_class_in_system
+			routine_class.compiled_class.record_precompiled_class_in_system
+			procedure_class.compiled_class.record_precompiled_class_in_system
+			function_class.compiled_class.record_precompiled_class_in_system
+		end
+
 	add_visible_classes is
 			-- Force visible classes into System
 		local
@@ -727,14 +752,19 @@ end
 			if not general_class.compiled then
 					-- First compilation.
 				init
-			elseif root_class.compiled_class = Void then
-				-- If root_class is not compiled (i.e. root class has
-				-- changed since last compilaton), insert it in the
-				-- changed_classes.
-				Workbench.change_class (root_class)
-				add_visible_classes
 			else
-				add_visible_classes
+				if not Compilation_modes.is_precompiling then
+					mark_only_used_precompiled_classes
+				end
+				if root_class.compiled_class = Void then
+					-- If root_class is not compiled (i.e. root class has
+					-- changed since last compilaton), insert it in the
+					-- changed_classes.
+					Workbench.change_class (root_class)
+					add_visible_classes
+				else
+					add_visible_classes
+				end
 			end
 			if Lace.compile_all_classes then
 					-- `None' is specified as the root class
@@ -2361,10 +2391,12 @@ feature -- Final mode generation
 						-- Since a class can be removed, test if `a_class'
 						-- is not Void.
 					if a_class /= Void then
-						deg_output.put_degree_minus_2 (a_class, i)
+						if not a_class.is_precompiled or else a_class.is_in_system then
+							deg_output.put_degree_minus_2 (a_class, i)
+							a_class.process_polymorphism
+							History_control.check_overload
+						end
 						i := i - 1
-						a_class.process_polymorphism
-						History_control.check_overload
 					end
 					j := j + 1
 				end
@@ -2411,9 +2443,11 @@ feature -- Final mode generation
 						-- Since a class can be removed, test if `a_class´
 						-- is not Void.
 					if a_class /= Void then
-						deg_output.put_degree_minus_3 (a_class, j)
-						current_class := a_class
-						a_class.pass4
+						if not a_class.is_precompiled or else a_class.is_in_system then
+							deg_output.put_degree_minus_3 (a_class, j)
+							current_class := a_class
+							a_class.pass4
+						end
 						j := j - 1
 					end
 					i := i + 1
@@ -2460,7 +2494,10 @@ feature -- Dead code removal
 				nb := class_counter.item (local_classes.key_for_iteration).count
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
-					if a_class /= Void then
+					if
+						a_class /= Void and then
+						(not a_class.is_precompiled or else a_class.is_in_system)
+					then
 						if a_class.visible_level.has_visible then
 							a_class.mark_visible (remover)
 						end
@@ -3664,9 +3701,10 @@ feature -- Pattern table generation
 				cl_type := class_types.item (i)
 
 				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.id) then
-					buffer.generate_extern_declaration (
-									"void", cl_type.id.module_init_name, <<"void">>
-																	)
+					if not final_mode or else (cl_type.is_precompiled and then cl_type.associated_class.is_in_system) then
+						buffer.generate_extern_declaration (
+									"void", cl_type.id.module_init_name, <<"void">>)
+					end
 				end
 				i := i + 1
 			end
@@ -3679,10 +3717,10 @@ feature -- Pattern table generation
 
 			if license.demo_mode then
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
-				buffer.putstring ("%N%Tegc_type_of_gc = 123158;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123159;%N")
 			else
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
-				buffer.putstring ("%N%Tegc_type_of_gc = 123159;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123160;%N")
 			end
 
 			from
@@ -3694,9 +3732,11 @@ feature -- Pattern table generation
 				cl_type := class_types.item (i)
 
 				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.id) then
-					buffer.putstring ("%T")
-					buffer.putstring (cl_type.id.module_init_name)
-					buffer.putstring ("();%N")
+					if not final_mode or else (cl_type.is_precompiled and then cl_type.associated_class.is_in_system) then
+						buffer.putstring ("%T")
+						buffer.putstring (cl_type.id.module_init_name)
+						buffer.putstring ("();%N")
+					end
 				end
 				i := i + 1
 			end

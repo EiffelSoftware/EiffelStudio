@@ -157,7 +157,7 @@ end;
 			if prof_options.output_names.item (1).is_equal ("all") then
 				prof_options.output_names.force ("percentage", 1);
 				prof_options.output_names.force ("self", 2);
-				prof_options.output_names.force ("descendents", 3);
+				prof_options.output_names.force ("descendants", 3);
 				prof_options.output_names.force ("total", 4);
 				prof_options.output_names.force ("calls", 5);
 				prof_options.output_names.force ("featurename", 6)
@@ -168,7 +168,7 @@ end;
 			-- Expands wildcarded filenames to non-wildcarded filenames
 		local
 			i: INTEGER;
-			dir_name, wc_name, name: STRING;
+			dir_name, wc_name, name, entries_name: STRING;
 			directory: DIRECTORY;
 			wildcard_matcher: KMP_WILD;
 			entries: ARRAYED_LIST [STRING];
@@ -187,22 +187,24 @@ end;
 			until
 				i > prof_options.filenames.count
 			loop
-				name := prof_options.filenames @ i;
+				name := prof_options.filenames.item (i);
 				if has_wildcards(name) then
-					dir_name := extract_directory_name(name);
+					dir_name := extract_directory_name (name)
 					if dir_name.count = 0 then
 						dir_name := "."
 					end;
 					wc_name := extract_filename(name);
+					wc_name.to_lower
 					!! directory.make (dir_name);
 					if directory.exists then;
 						from
-							!! wildcard_matcher.make_empty;
-							wildcard_matcher.set_text (wc_name);
 							entries := directory.linear_representation;
 							entries.start;
 							entries.forth;
 							entries.forth
+							entries_name := entries.item
+							entries_name.to_lower
+							!! wildcard_matcher.make (wc_name, entries_name);
 						until
 							entries.after
 						loop
@@ -214,7 +216,9 @@ debug("SHOW_PROF_QUERY")
 	io.error.putstring (wc_name);
 	io.error.new_line;
 end;
-							wildcard_matcher.set_pattern (entries.item);
+							entries_name := entries.item
+							entries_name.to_lower
+							wildcard_matcher.set_text (entries_name);
 							wildcard_matcher.search_for_pattern;
 debug("SHOW_PROF_QUERY")
 	io.error.putstring ("Did it match: ");
@@ -222,7 +226,10 @@ debug("SHOW_PROF_QUERY")
 	io.error.new_line;
 end;
 							if wildcard_matcher.found then
-								expanded_filenames.extend (entries.item)
+								entries_name := clone (dir_name)
+								entries_name.append_character (Operating_environment.Directory_separator)
+								entries_name.append (entries.item)
+								expanded_filenames.extend (entries_name)
 							end;
 							entries.forth
 						end					
@@ -416,8 +423,8 @@ end;
 			elseif col_name.is_equal ("self") then
 				!SELF_FILTER! Result.make;
 				Result := set_filter_value (Result, false, i)
-			elseif col_name.is_equal ("descendents") then
-				!DESCENDENTS_FILTER! Result.make;
+			elseif col_name.is_equal ("descendants") then
+				!DESCENDANTS_FILTER! Result.make;
 				Result := set_filter_value (Result, false, i)
 			elseif col_name.is_equal ("total") then
 				!TOTAL_FILTER! Result.make;
@@ -539,30 +546,30 @@ end;
 					else
 						real_ref.set_item (val.to_real)
 					end
-				elseif prof_query.subquery_at (i).column.is_equal ("descendents") then
+				elseif prof_query.subquery_at (i).column.is_equal ("descendants") then
 					if val.is_equal ("min") then
 						if prof_options.language_names.item (1).is_equal ("eiffel") then
-							real_ref.set_item (profile_information.profile_data.descendents_min_eiffel)
+							real_ref.set_item (profile_information.profile_data.descendants_min_eiffel)
 						elseif prof_options.language_names.item (1).is_equal ("c") then
-							real_ref.set_item (profile_information.profile_data.descendents_min_c)
+							real_ref.set_item (profile_information.profile_data.descendants_min_c)
 						elseif prof_options.language_names.item (1).is_equal ("cycle") then
-							real_ref.set_item (profile_information.profile_data.descendents_min_cycle)
+							real_ref.set_item (profile_information.profile_data.descendants_min_cycle)
 						end
 					elseif val.is_equal ("max") then
 						if prof_options.language_names.item (1).is_equal ("eiffel") then
-							real_ref.set_item (profile_information.profile_data.descendents_max_eiffel)
+							real_ref.set_item (profile_information.profile_data.descendants_max_eiffel)
 						elseif prof_options.language_names.item (1).is_equal ("c") then
-							real_ref.set_item (profile_information.profile_data.descendents_max_c)
+							real_ref.set_item (profile_information.profile_data.descendants_max_c)
 						elseif prof_options.language_names.item (1).is_equal ("cycle") then
-							real_ref.set_item (profile_information.profile_data.descendents_max_cycle)
+							real_ref.set_item (profile_information.profile_data.descendants_max_cycle)
 						end
 					elseif val.is_equal ("avg") then
 						if prof_options.language_names.item (1).is_equal ("eiffel") then
-							real_ref.set_item (profile_information.profile_data.descendents_avg_eiffel)
+							real_ref.set_item (profile_information.profile_data.descendants_avg_eiffel)
 						elseif prof_options.language_names.item (1).is_equal ("c") then
-							real_ref.set_item (profile_information.profile_data.descendents_avg_c)
+							real_ref.set_item (profile_information.profile_data.descendants_avg_c)
 						elseif prof_options.language_names.item (1).is_equal ("cycle") then
-							real_ref.set_item (profile_information.profile_data.descendents_avg_cycle)
+							real_ref.set_item (profile_information.profile_data.descendants_avg_cycle)
 						end
 					else
 						real_ref.set_item (val.to_real)
@@ -692,8 +699,8 @@ end;
 					structured_text.add_string (item.number_of_calls.out)
 				elseif prof_options.output_names.item (i).is_equal ("self") then
 					structured_text.add_string (item.self_sec.out)
-				elseif prof_options.output_names.item (i).is_equal ("descendents") then
-					structured_text.add_string (item.descendents_sec.out);
+				elseif prof_options.output_names.item (i).is_equal ("descendants") then
+					structured_text.add_string (item.descendants_sec.out);
 					structured_text.add_indent
 				elseif prof_options.output_names.item (i).is_equal ("total") then
 					structured_text.add_string (item.total_sec.out)

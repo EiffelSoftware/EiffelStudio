@@ -74,5 +74,5 @@ feature -- Comparison
 		do
 			Result := (- view_id) < (- other.view_id)
 		end;
- 
+
 end -- class S_CLUSTER_DATA

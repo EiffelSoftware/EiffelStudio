@@ -44,13 +44,13 @@ feature -- Setting values
 		do
 			feature_clause_list := l
 		end;
- 
+
 	set_invariants (l: like invariants) is
 			-- Set invariants to `l'.
 		do
 			invariants := l
 		end;
- 
+
 	set_chart (ch: like chart) is
 			-- Set chart to `ch'.
 		do

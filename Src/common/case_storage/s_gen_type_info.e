@@ -65,19 +65,19 @@ feature -- Output
 			-- String value of Current generic
 		do
 			Result := clone (free_text_name);
-            Result.append (" [");
-            from
-                generics.start
-            until
-                generics.after
-            loop
-                Result.append (generics.item.string_value);
-                if not generics.after then
-                    Result.append (", ")
-                end
-                generics.forth
-            end;
-            Result.append ("]");
+			Result.append (" [");
+			from
+				generics.start
+			until
+				generics.after
+			loop
+				Result.append (generics.item.string_value);
+				if not generics.after then
+					Result.append (", ")
+				end
+				generics.forth
+			end;
+			Result.append ("]");
 		end;
 
 	string_value_minus_id (id: INTEGER): STRING is

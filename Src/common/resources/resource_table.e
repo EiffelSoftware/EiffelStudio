@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Resource table hashed on resource name.";
 	date: "$Date$";
 	revision: "$Revision $"

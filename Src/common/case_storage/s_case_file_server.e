@@ -35,9 +35,9 @@ feature -- Properties
 			-- Table of class content saved to disk hashed
 			-- on view_id
 
-    path: STRING;
-            -- Path to store case format
- 
+	path: STRING;
+			-- Path to store case format
+
 	is_saving: BOOLEAN;
 			-- Is the saved_classes being saved to disk?
 	
@@ -80,7 +80,7 @@ feature -- Output
 			-- `s_system_data' to disk.
 		require
 			valid_data: s_system_data /= Void;
-            valid_path: path /= Void
+			valid_path: path /= Void
 		do
 			saved_system := s_system_data;
 			saved_system.tmp_store_to_disk (path);

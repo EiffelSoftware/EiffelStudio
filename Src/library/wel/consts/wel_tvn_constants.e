@@ -93,6 +93,13 @@ feature -- Access
 			"TVN_SETDISPINFO"
 		end
 
+	Tvn_getinfotip: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TVN_GETINFOTIP"
+		end
+
 end -- class WEL_TVN_CONSTANTS
 
 --|----------------------------------------------------------------

@@ -24,15 +24,30 @@ class LEX_BUILDER inherit
 
 creation
 
-	make
+	make, make_extended
 
 feature  -- Initialization
 
 	make is
 			-- Set up the analyzer.
 		do
+			last_character_code := Last_ascii;
 			!! tool_list.make;
 			!! tool_names.make
+		ensure
+			last_character_set: last_character_code = Last_ascii
+		end;
+
+	make_extended (char_code: INTEGER) is
+			-- Set up the analyzer with `char_code' as 'last_character_code'.
+		require
+			valid_char_code: char_code > 0
+		do
+			last_character_code := char_code
+			!! tool_list.make;
+			!! tool_names.make
+		ensure
+			last_character_set: last_character_code = char_code
 		end;
 
 	initialize is
@@ -49,6 +64,9 @@ feature  -- Initialization
 		end;
 
 feature -- Access
+
+	last_character_code: INTEGER;
+			-- Last character code recognized by the language
 
 	tool_list: LINKED_LIST [PDFA];
 			-- Regular expressions used as auxiliary tools
@@ -142,7 +160,7 @@ feature -- Element change
 			-- Create regular expression `b'..`e', or `b' if `b' = `e'.
 		require
 			not_built: not lexical_frozen;
-			e_code_small_enough: charcode (e) <= Last_ascii;
+			e_code_small_enough: charcode (e) <= last_character_code;
 			b_code_large_enough: charcode (b) >= 0;
 			b_before_e: charcode (b) <= charcode (e)
 		local
@@ -151,7 +169,7 @@ feature -- Element change
 			c_name: STRING;
 			list: LINKED_LIST [INTEGER]
 		do
-			!! fa.make (2, Last_ascii);
+			!! fa.make (2, last_character_code);
 			bb := charcode (b);
 			ee := charcode (e);
 			from
@@ -199,11 +217,11 @@ feature -- Element change
 			i: INTEGER;
 			new_tool: PDFA
 		do
-			!! new_tool.make (2, Last_ascii);
+			!! new_tool.make (2, last_character_code);
 			from
 				i := -1
 			until
-				i = Last_ascii
+				i = last_character_code
 			loop
 				i := i + 1;
 				new_tool.set_transition (1, i, 2)
@@ -228,7 +246,7 @@ feature -- Element change
 			i: INTEGER;
 			new_tool: PDFA
 		do
-			!! new_tool.make (2, Last_ascii);
+			!! new_tool.make (2, last_character_code);
 			from
 				i := First_printable - 1
 			until
@@ -264,7 +282,7 @@ feature -- Element change
 			c_name: STRING
 		do
 			tool_list.go_i_th (r);
-			!! new.make (tool_list.item.nb_states, Last_ascii);
+			!! new.make (tool_list.item.nb_states, last_character_code);
 			new.include (tool_list.item, 0);
 			cc := charcode (c);
 			new.delete_transition (1, cc, 2);
@@ -302,7 +320,7 @@ feature -- Element change
 			tool_list.go_i_th (s);
 			s_length := tool_list.item.nb_states;
 			length := p_length + s_length;
-			!! new.make (length, Last_ascii);
+			!! new.make (length, last_character_code);
 			new.include (tool_list.item, p_length);
 			tool_list.go_i_th (p);
 			new.include (tool_list.item, 0);
@@ -340,7 +358,7 @@ feature -- Element change
 			tool_list.go_i_th (s);
 			s_length := tool_list.item.nb_states;
 			length := p_length + s_length;
-			!! new.make (length, Last_ascii);
+			!! new.make (length, last_character_code);
 			new.include (tool_list.item, p_length);
 			tool_list.go_i_th (p);
 			new.include (tool_list.item, 0);
@@ -381,7 +399,7 @@ feature -- Element change
 			tool_list.go_i_th (s);
 			s_length := tool_list.item.nb_states;
 			length := p_length + s_length;
-			!! new.make (length, Last_ascii);
+			!! new.make (length, last_character_code);
 			new.include (tool_list.item, p_length);
 			tool_list.go_i_th (p);
 			new.include (tool_list.item, 0);
@@ -410,7 +428,7 @@ feature -- Element change
 			-- like `c', but case-insensitive.
 		require
 			not_frozen: not lexical_frozen;
-			z_possible: Last_ascii >= Lower_z;
+			z_possible: last_character_code >= Lower_z;
 			c_in_tool: c >= 1 and c <= last_created_tool
 		local
 			new: PDFA;
@@ -418,7 +436,7 @@ feature -- Element change
 			in_put: INTEGER
 		do
 			tool_list.go_i_th (c);
-			!! new.make (tool_list.item.nb_states, Last_ascii);
+			!! new.make (tool_list.item.nb_states, last_character_code);
 			new.include (tool_list.item, 0);
 			new.remove_case_sensitiveness;
 			last_created_tool := last_created_tool + 1;
@@ -447,7 +465,7 @@ feature -- Element change
 		do
 			tool_list.go_i_th (c);
 			length := tool_list.item.nb_states;
-			!! new.make (length, Last_ascii);
+			!! new.make (length, last_character_code);
 			new.include (tool_list.item, 0);
 			new.set_e_transition (1, length);
 			if not case_sensitive then
@@ -478,7 +496,7 @@ feature -- Element change
 		do
 			tool_list.go_i_th (c);
 			length := tool_list.item.nb_states;
-			!! new.make (length, Last_ascii);
+			!! new.make (length, last_character_code);
 			new.include (tool_list.item, 0);
 			new.set_e_transition (length, 1);
 			if not case_sensitive then
@@ -510,7 +528,7 @@ feature -- Element change
 		do
 			tool_list.go_i_th (c);
 			length := tool_list.item.nb_states;
-			!! new.make (length, Last_ascii);
+			!! new.make (length, last_character_code);
 			new.include (tool_list.item, 0);
 			new.set_e_transition (length, 1);
 			new.set_e_transition (1, length);
@@ -545,7 +563,7 @@ feature -- Element change
 			tool_list.go_i_th (c);
 			new := tool_list.item;
 			o_length := new.nb_states;
-			!! a_prefix.make (o_length * n, Last_ascii);
+			!! a_prefix.make (o_length * n, last_character_code);
 			a_prefix.include (new, 0);
 			from
 				index := 1
@@ -602,7 +620,7 @@ feature -- Element change
 					io.put_string ("Union2, length = 6");
 					io.new_line;
 				end;
-				!! new.make (2, Last_ascii);
+				!! new.make (2, last_character_code);
 				new.include (tool_list.item, 0);
 				tool_list.go_i_th (a);
 				new.include (tool_list.item, 0)
@@ -611,7 +629,7 @@ feature -- Element change
 					io.put_string ("Union2, length /= 6");
 					io.new_line;
 				end;
-				!! new.make (length, Last_ascii);
+				!! new.make (length, last_character_code);
 				new.include (tool_list.item, a_length + 1);
 				tool_list.go_i_th (a);
 				new.include (tool_list.item, 1);
@@ -668,7 +686,7 @@ feature -- Element change
 				tool_list.forth
 			end;
 			if not cat_set.empty then
-				!! cat.make (2, Last_ascii);
+				!! cat.make (2, last_character_code);
 				from
 					tool_p := cat_set.smallest
 				until
@@ -683,11 +701,11 @@ feature -- Element change
 				new := cat
 			else
 				if cat_set.empty then
-					!! new.make (length, Last_ascii);
+					!! new.make (length, last_character_code);
 					index := 2
 				else
 					length := length + 2;
-					!! new.make (length, Last_ascii);
+					!! new.make (length, last_character_code);
 					new.include (cat, 1);
 					new.set_e_transition (1, 2);
 					new.set_e_transition (3, length);
@@ -738,7 +756,7 @@ feature -- Element change
 			tool_name: STRING
 		do
 			length := word.count;
-			!! new_tool.make (length + 1, Last_ascii);
+			!! new_tool.make (length + 1, last_character_code);
 			from
 			until
 				i = length
@@ -784,7 +802,7 @@ feature -- Element change
 			r_name: STRING
 		do
 			length := word.count;
-			!! new_tool.make ((6 * length) + 1, Last_ascii);
+			!! new_tool.make ((6 * length) + 1, last_character_code);
 			from
 			until
 				i = length
@@ -795,9 +813,9 @@ feature -- Element change
 				new_tool.set_e_transition ((6 * i) + 3, 1);
 				new_tool.set_e_transition ((6 * i) + 5, 7);
 				from
-					j := First_printable - 1
+					j := -1
 				until
-					j = Last_printable
+					j = last_character_code
 				loop
 					j := j + 1;
 					new_tool.set_transition ((6 * i) + 2, j, (6 * i) + 3)
@@ -1032,7 +1050,7 @@ feature {NONE} -- Implementation
 			fa: PDFA
 		do
 			nb_states := nb_states + 1;
-			pdfa_make (nb_states, Last_ascii);
+			pdfa_make (nb_states, last_character_code);
 			from
 				selected_tools.start;
 				token_type_list.start;
@@ -1078,12 +1096,12 @@ feature {NONE} -- Implementation
 			set, old_set: FIXED_INTEGER_SET
 		do
 			!! set_tree.make (nb_states, 0);
-			!! categories_table.make (-1, Last_ascii);
+			!! categories_table.make (-1, last_character_code);
 			!! old_set.make (nb_states);
 			from
 				in_put := - 1
 			until
-				in_put = Last_ascii
+				in_put = last_character_code
 			loop
 				in_put := in_put + 1;
 				set := input_array.item (in_put);
@@ -1117,7 +1135,7 @@ feature {NONE} -- Implementation
 			from
 				in_put := -1
 			until
-				in_put = Last_ascii
+				in_put = last_character_code
 			loop
 				in_put := in_put + 1;
 				category := categories_table.item (in_put);

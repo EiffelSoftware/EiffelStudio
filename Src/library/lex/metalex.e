@@ -18,7 +18,7 @@ class METALEX inherit
 
 creation
 
-	make
+	make, make_extended
 
 feature -- Initialization
 

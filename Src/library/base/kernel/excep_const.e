@@ -80,11 +80,14 @@ feature -- Access
 end -- class EXCEP_CONST
 
 --|----------------------------------------------------------------
---| EiffelBase: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
+--| EiffelBase: Library of reusable components for Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
+--| For ISE customers the original versions are an ISE product
+--| covered by the ISE Eiffel license and support agreements.
+--| EiffelBase may now be used by anyone as FREE SOFTWARE to
+--| develop any product, public-domain or commercial, without
+--| payment to ISE, under the terms of the ISE Free Eiffel Library
+--| License (IFELL) at http://eiffel.com/products/base/license.html.
 --|
 --| Interactive Software Engineering Inc.
 --| ISE Building, 2nd floor
@@ -92,6 +95,6 @@ end -- class EXCEP_CONST
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
+--| For latest info see award-winning pages: http://eiffel.com
 --|----------------------------------------------------------------
 

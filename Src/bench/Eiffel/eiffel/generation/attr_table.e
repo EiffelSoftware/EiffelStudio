@@ -42,6 +42,7 @@ feature
 			current_type_id: INTEGER;
 			entry: ATTR_ENTRY;
 			cl_type: CLASS_TYPE;
+			first_class: CLASS_C;
 			first_class_topo_id: INTEGER;
 			i, nb, old_position: INTEGER
 			local_copy: ATTR_TABLE
@@ -51,26 +52,52 @@ feature
 			old_position := position
 			system_i := System
 
-			goto_used (type_id);
-			i := position
-			if i <= max_position then
-				local_copy := Current
+				-- If it is not a poofter finalization
+				-- we have a quicker algorithm handy.
+			if not system_i.poofter_finalization then	
+				goto_used (type_id);
+				i := position
+				if i <= max_position then
+					local_copy := Current
+					from
+						cl_type := system_i.class_type_of_id (type_id);
+						first_class_topo_id := cl_type.associated_class.topological_id
+						offset := cl_type.skeleton.offset (local_copy.array_item (i).feature_id)
+						i := i + 1
+						nb := max_position
+					until
+						Result or else i > nb
+					loop
+						entry := local_copy.array_item (i)
+						cl_type := system_i.class_type_of_id (entry.type_id);
+						Result := cl_type.associated_class.conformance_table.item (first_class_topo_id)
+								and then not (cl_type.skeleton.offset (entry.feature_id) = offset)
+						i := i + 1
+					end;
+				end
+			else
 				from
-					cl_type := system_i.class_type_of_id (type_id);
-					first_class_topo_id := cl_type.associated_class.topological_id
-					offset := cl_type.skeleton.offset (local_copy.array_item (i).feature_id)
-					i := i + 1
+					goto_used (type_id)
+					local_copy := Current
+					i := lower
 					nb := max_position
+					cl_type := system_i.class_type_of_id (type_id);
+					first_class := cl_type.associated_class;
+					offset := cl_type.skeleton.offset (local_copy.array_item (position).feature_id)
 				until
 					Result or else i > nb
 				loop
 					entry := local_copy.array_item (i)
-					cl_type := system_i.class_type_of_id (entry.type_id);
-					Result := cl_type.associated_class.conformance_table.item (first_class_topo_id)
-							and then not (cl_type.skeleton.offset (entry.feature_id) = offset)
+					current_type_id := entry.type_id;
+					if current_type_id /= type_id then
+						cl_type := system_i.class_type_of_id (current_type_id);
+						Result := cl_type.associated_class.simple_conform_to (first_class)
+								and then not (cl_type.skeleton.offset (entry.feature_id) = offset) 
+					end;
 					i := i + 1
 				end;
 			end
+
 			position := old_position
 		end;
 

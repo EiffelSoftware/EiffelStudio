@@ -10,6 +10,9 @@ indexing
 class PROXY_INFORMATION inherit
 
 	HOST_VALIDITY_CHECKER
+		rename
+			host_ok as proxy_host_ok
+		end
 
 create
 

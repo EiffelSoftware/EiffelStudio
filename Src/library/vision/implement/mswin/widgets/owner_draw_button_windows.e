@@ -10,7 +10,9 @@ deferred class
 inherit
 	BUTTON_WINDOWS
 		redefine
-			realize
+			realize,
+			realized,
+			unrealize
 		end
 
 	WEL_OWNER_DRAW_BUTTON
@@ -81,21 +83,44 @@ inherit
 			{NONE} all
 		end
 
+feature -- Status report
+
+	realized: BOOLEAN
+			-- Is the button realized?
+
 feature -- Status setting
 
 	realize is
 			-- Realize current widget.
 		local
+			menu: MENU_WINDOWS
 			wc: WEL_COMPOSITE_WINDOW
+			mp: MENU_PULL_WINDOWS
+			op: OPTION_PULL_WINDOWS
 		do
-			if not exists then
-				if width = 0 then set_width (20) end
-				if height = 0 then set_height (20) end
-				resize_for_shell
-				wc ?= parent
-				wel_make (wc, "", x, y, width, height, id_default)
+			if not realized then
+				realized := true
+				if is_parent_menu_pull then
+					mp ?= parent
+					if mp.realized then
+						mp.add_a_child (Current)
+					end
+				elseif is_parent_option_pull then
+					op ?= parent
+					if op.realized then
+						op.add_a_child (Current)
+					end
+				else
+					if not exists then
+						if width = 0 then set_width (20) end
+						if height = 0 then set_height (20) end
+						resize_for_shell
+						wc ?= parent
+						wel_make (wc, "", x, y, width, height, id_default)
+					end
+				end
+				shown := true
 			end
-			shown := true
 		end
 
 feature -- Basic operations
@@ -107,8 +132,8 @@ feature -- Basic operations
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 		do
-			draw_selected_border (a_dc)
 			draw_selected (a_dc)
+			draw_selected_border (a_dc)
 		end
 
 	draw_all_unselected (a_dc: WEL_DC) is
@@ -118,8 +143,8 @@ feature -- Basic operations
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 		do
-			draw_border (a_dc)
 			draw_unselected (a_dc)
+			draw_border (a_dc)
 		end
 
 	draw_unselected (a_dc: WEL_DC) is
@@ -197,6 +222,17 @@ feature -- Basic operations
 			else
 				draw_all_unselected (dc)	
 			end	
+		end
+
+feature -- Removal
+
+	unrealize is
+			-- Destroy current primitive.
+		do
+			if exists then
+				wel_destroy
+			end
+			realized := False
 		end
 
 feature {NONE} -- Implementation

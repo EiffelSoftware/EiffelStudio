@@ -121,7 +121,7 @@ feature -- Basic Operation
 							if creation_routine_name.text /= Void and then not creation_routine_name.text.is_empty then
 								if is_valid_identifier (creation_routine_name.text) then
 									Precursor
-									create {WIZARD_THIRD_STATE} next_window.make (wizard_information)
+									create {WIZARD_FINAL_STATE} next_window.make (wizard_information)
 								else
 										-- Ask for a valid creation routine name (in the sense of an Eiffel valid identifier).
 									create {WIZARD_ERROR_VALID_CREATION_ROUTINE_NAME} next_window.make (wizard_information)

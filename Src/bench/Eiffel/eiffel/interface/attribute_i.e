@@ -10,14 +10,15 @@ inherit
 			new_rout_unit, melt, access, generate, new_rout_id,
 			in_pass3, is_none_attribute, set_type, type, is_attribute,
 			unselected, has_poly_unit, undefinable, to_generate_in,
-			generation_class_id
+			generation_class_id, to_melt_in
 		end;
 	FEATURE_I
 		redefine
 			transfer_to, process_pattern, unselected,
 			new_rout_unit, melt, access, generate, new_rout_id,
 			in_pass3, is_none_attribute, set_type, type, is_attribute,
-			has_poly_unit, undefinable, to_generate_in, generation_class_id
+			has_poly_unit, undefinable, to_generate_in, generation_class_id,
+			to_melt_in
 		select
 			transfer_to, process_pattern
 		end;
@@ -103,6 +104,12 @@ feature
 			-- New routine id for attribute
 		do
 			Result := - Routine_id_counter.next;
+		end;
+
+	to_melt_in (a_class: CLASS_C): BOOLEAN is
+			-- Has the current feature in class `a_class" ?
+		do
+			Result := to_generate_in (a_class);
 		end;
 
 	to_generate_in (a_class: CLASS_C): BOOLEAN is

@@ -13,7 +13,7 @@ inherit
 
 feature {NONE}
 
-	associated_cmd: E_CMD is
+	associated_cmd: E_OUTPUT_CMD is
 			-- Associated system command to be executed
 		deferred
 		ensure

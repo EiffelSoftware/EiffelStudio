@@ -16,8 +16,9 @@ cluster
 
 		-- EiffelTime
 
-	eiffel_time:	"$EIFFEL4/library/time/time";
-	localizer:		"$EIFFEL4/library/time/time/format";
+	eiffel_time:	"$EIFFEL4/library/time";
+	localizer:		"$EIFFEL4/library/time/format";
+	language:		"$EIFFEL4/library/time/format/english";
 
 		-- EiffelBase
 

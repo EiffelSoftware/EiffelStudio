@@ -39,12 +39,15 @@ feature -- Execution
 				show_all_callers
 			else
 				tabs := -1;
-				show_current_callers
+				show_current_callers (current_class, current_feature)
 			end
 		end;
 
-	show_current_callers is
-			-- Show the callers of `current_feature'.
+	show_current_callers (l_class: like current_class; l_feat: like current_feature) is
+			-- Show the callers of `l_feat' in `l_class'.
+		require
+			l_class_not_void: l_class /= Void
+			l_feat_not_void: l_feat /= Void
 		local
 			clients: ARRAYED_LIST [CLASS_C];
 			cfeat: STRING;
@@ -57,7 +60,7 @@ feature -- Execution
 		do
 			invariant_name := "_invariant";
 			st := structured_text;
-			clients := current_class.clients;
+			clients := l_class.clients;
 			create table.make (20);
 			create classes.make;
 			from
@@ -66,13 +69,21 @@ feature -- Execution
 				clients.after
 			loop
 				client := clients.item;
-				list := current_feature.callers (client)
+				list := l_feat.callers (client)
 				if list /= Void then
 					table.put (list, client.class_id);
 					classes.put_front (client.lace_class)
 				end;
 				clients.forth;
 			end;
+
+			if not classes.is_empty then
+				l_feat.append_name (st);
+				st.add_string (" from ");
+				l_class.append_name (st);
+				st.add_new_line;
+				tabs := 0;
+			end
 
 			from
 				classes.sort;
@@ -148,15 +159,8 @@ feature {NONE} -- Implementation
 			until
 				a_list.after
 			loop
-				cell := a_list.item;
-				current_class := cell.item1;
-				current_feature := cell.item2;
-				current_feature.append_name (st);
-				st.add_string (" from ");
-				current_class.append_name (st);
-				st.add_new_line;
-				tabs := 0;
-				show_current_callers;
+				cell := a_list.item
+				show_current_callers (cell.item1, cell.item2)
 				a_list.forth
 			end
 		end;

@@ -48,7 +48,7 @@
 			</item>
 			<item>
 				<bold>EV_SCREEN</bold> - Added `horizontal_resolution' and `vertical_resolution' which return the number of pixels per inch.
-			</item><item><bold>EV_FILE_DIALOG</bold> - Added support for multiple file extensions through the addition of `filters' which provides support for setting both a filter and an associated comment. The existing features `filter' and `set_filter' have been made obsolete.</item>
+			</item><item><bold>EV_FILE_DIALOG</bold> - Added support for multiple file extensions through the addition of `filters' which provides support for setting both a filter and an associated comment. The existing features `filter' and `set_filter' have been made obsolete.</item><item><bold>EV_FONT</bold> - Modified return type of `string_size' from TUPLE [INTEGER, INTEGER] to TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]. This does not break any existing code, but provides additional `left_offset' and `right_offset' queries (items 3, 4). Items 1, 2 still return the width and height of the string, but this is only the dimensions to be used when placing multiple strings next to each other. Some characters on more exotic fonts may still extend past this boundary, and the rectangle that fully encloses the string is given by adding the left and right offsets to the width.</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>
@@ -71,6 +71,7 @@
 					</item>
 <item><bold>EV_MULTI_COLUMN_LIST</bold> - Fixed bug in `set_column_alignments' which crashed if you called it with an empty list after having previously called it with a non empty list.
 					</item>
+					<item><bold>EV_FIGURE_TEXT</bold> - Fixed bounding size issues which would cause the `width' and `height' to be returned incorrectly, causing them to be not correctly cleared when moved in a figure world.</item>
 				</list>
 			</item>
 			<item>

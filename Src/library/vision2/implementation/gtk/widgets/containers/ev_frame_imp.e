@@ -40,7 +40,12 @@ feature -- Status report
 
 	text: STRING is
 			-- Text of the frame
+		local
+			p: POINTER
 		do
+			p := c_gtk_frame_text (widget)
+			create Result.make (0)
+			Result.from_c (p)
 		end
 
 feature -- Status setting

@@ -51,10 +51,8 @@ feature {NONE} -- Implementation
 			window := windows.item (hwnd)
 			debug ("win_dispatcher")
 				if window /= Void then
-					io.print ("in win_proc ")
-					io.print (hwnd)
-					io.print (' ')
-					io.print (msg)
+					io.print (" after look at windows table ")
+					io.print (window)
 					io.new_line
 				end
 			end

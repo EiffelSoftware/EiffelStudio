@@ -1,0 +1,30 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="MS-HKWD" content="Renaming a class">
+   <title>Renaming a class</title>
+<link REL="stylesheet" HREF="/default.css" TYPE="text/css">
+</head>
+<body>
+
+<h1>
+Renaming a class</h1>
+Renaming a class can sometimes be tedious. It is necessary to update clients
+and ancestors of the renamed class, and they may be numerous. EiffelStudio
+offers a simpler way to remedy this problem.
+<p>The solution is provided by the <a href="../../reference/50_diagram_tool/00_introduction.html">Diagram
+tool</a>: To rename a class, <a href="../20_browsing/20_viewing_information_about_a_component/10_centering_tools_on_a_component.html">center
+the context tool</a> on it and display the diagram. Then <a href="../../reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">pick
+</a>the class figure and drop the pebble on&nbsp;<img SRC="/images/eiffelstudio/icon_class_header_color.gif" >.
+A dialog window will then appear. It will allow you to set the new name.
+It will also propose three options : <b>Change name locally</b>, <b>Global
+search/replace of name in compiled classes</b> and <b>Global search/replace
+of name in entire universe</b>. The first option is equivalent to modifying
+manually the class name in its text. The second option will rename the
+class and update its clients and ancestors. The third option will do the
+same as the second and will also update classes that are in the universe
+but not in the system.
+<br>Changes are actually made when you press <b>OK</b>.
+</body>
+</html>

@@ -13,7 +13,8 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color
 		redefine
-			interface
+			interface,
+			current_push_button
 		end
 
 	EV_TITLED_WINDOW_IMP
@@ -43,8 +44,6 @@ feature -- Status Report
 
 	is_closeable: BOOLEAN is
 			-- Is the window closeable by the user?
-			-- (Through a clik on the Window Menu, or by
-			-- pressing ALT-F4)
 		do
 			Result := is_dialog_closeable
 		end
@@ -117,6 +116,22 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	current_push_button: EV_BUTTON is
+			-- Currently focused push button.
+			-- This is the button that is pushed when the user
+			-- presses the enter key when a push button is focused.
+		do
+			if internal_default_cancel_button /= Void then
+				if internal_default_cancel_button.has_focus then
+					Result := internal_default_cancel_button
+				else
+					Result := default_push_button
+				end
+			else
+				Result := default_push_button
+			end
+		end
 
 	set_closeable (new_status: BOOLEAN) is
 			-- Set `is_closeable' to `new_status'

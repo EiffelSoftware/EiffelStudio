@@ -17,27 +17,22 @@ feature -- Constants
 	
 	Default_homogeneous: BOOLEAN is True
 	Default_spacing: INTEGER is 0
-	Default_expand: BOOLEAN is True
-	Default_fill: BOOLEAN is True
-	Default_padding: INTEGER is 0
-
 		
-feature -- Element change (box specific)
+feature -- Status settings
 	
-	set_homogeneous (homogeneous: BOOLEAN) is
+	set_homogeneous (flag: BOOLEAN) is
 			-- Homogenous controls whether each object in
-			-- the box has the same size. If homogenous =
-			-- True, expand argument for each child is
-			-- automatically True
+			-- the box has the same size.
 		require
 			exist: not destroyed
 		deferred
 		end
 	
-	set_spacing (spacing: INTEGER) is
+	set_spacing (value: INTEGER) is
 			-- Spacing between the objects in the box
 		require
 			exist: not destroyed
+			positive_value: value >= 0
 		deferred
 		end	
 	

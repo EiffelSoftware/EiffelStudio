@@ -3456,6 +3456,12 @@ end
 		do
 			-- Do nothing
 		end
+		
+	is_tuple: BOOLEAN is
+			-- Is class TUPLE?
+		do
+			
+		end
 
 	is_special_array: BOOLEAN is
 			-- Is class SPECIAL?

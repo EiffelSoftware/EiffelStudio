@@ -163,7 +163,7 @@ feature -- Access
 			-- Is the font valid in `a_widget''s display ?
 		do
 			allocate_font;
-			Result := mel_is_valid
+			Result := is_allocated
 		end;
 
 	pixel_size: INTEGER is
@@ -228,7 +228,7 @@ feature -- Element change
 		do
 			if not is_allocated then
 				mel_make (display, name);
-				is_allocated := True
+				is_allocated := mel_is_valid 
 			end
 		end;
 

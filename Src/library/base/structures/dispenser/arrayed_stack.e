@@ -16,7 +16,7 @@ class ARRAYED_STACK [G] inherit
 
 	STACK [G]
 		undefine
-			copy, is_equal, consistent, setup, prune_all, replace
+			copy, is_equal, prune_all, replace
 		redefine
 			linear_representation
 		select

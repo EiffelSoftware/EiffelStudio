@@ -14,7 +14,7 @@ class LINKED_PRIORITY_QUEUE [G -> COMPARABLE]
 inherit
 	PRIORITY_QUEUE [G]
 		undefine
-			consistent, copy, is_equal, setup,
+			copy, is_equal,
 			prune_all, append, readable, writable
 		select
 			put, remove, item

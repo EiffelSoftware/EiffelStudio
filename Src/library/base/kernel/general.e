@@ -49,13 +49,13 @@ feature -- Status report
 										other.conforms_to (Current))
 		end;
 
-	consistent (other: like Current): BOOLEAN is
-			-- Is current object in a consistent state so that `other'
-			-- may be copied onto it? (Default answer: yes).
-		obsolete
-			"Not used anymore, please remove it from your inheritance clauses if it appears."
-		do
-		end;
+ 	consistent (other: like Current): BOOLEAN is
+ 			-- Is current object in a consistent state so that `other'
+ 			-- may be copied onto it? (Default answer: yes).
+ 		obsolete
+ 			"Not used anymore, please remove it from your inheritance clauses if it appears."
+ 		do
+ 		end;
 
 feature -- Comparison
 
@@ -170,7 +170,7 @@ feature -- Duplication
 		do
 			if other /= Void then
 				temp := c_check_assert (False);
-				Result := other.c_standard_clone ($other);
+				Result := c_standard_clone ($other);
 				Result.copy (other);
 				temp := c_check_assert (temp);
 			end
@@ -187,7 +187,7 @@ feature -- Duplication
 		do
 			if other /= Void then
 				temp := c_check_assert (False);
-				Result := other.c_standard_clone ($other);
+				Result := c_standard_clone ($other);
 				Result.standard_copy (other)
 				temp := c_check_assert (temp);
 			end
@@ -221,15 +221,15 @@ feature -- Duplication
 			deep_equal: deep_equal (Current, other)
 		end;
 
-	setup (other: like Current) is
-			-- Assuming current object has just been created, perform
-			-- actions necessary to ensure that contents of `other'
-			-- can be safely copied onto it.
-		obsolete
-			"Not used anymore by `clone', please remove it from your inheritance clauses%N%
-			%if it appears."
-		do
-		end;
+ 	setup (other: like Current) is
+ 			-- Assuming current object has just been created, perform
+ 			-- actions necessary to ensure that contents of `other'
+ 			-- can be safely copied onto it.
+ 		obsolete
+ 			"Not used anymore by `clone', please remove it from your inheritance clauses%N%
+ 			%if it appears."
+ 		do
+ 		end;
 
 feature -- Output
 
@@ -292,17 +292,15 @@ feature -- Basic operations
 	frozen Void: NONE;
 			-- Void reference
 
-feature {GENERAL} -- Implementation
+feature {NONE} -- Implementation
 
-	c_standard_clone (other: POINTER): GENERAL is
+	frozen c_standard_clone (other: POINTER): GENERAL is
 			-- New object of same dynamic type as `other'
 		external
 			"C | %"eif_copy.h%""
 		alias
 			"eclone"
 		end;
-
-feature {NONE} -- Implementation
 
 	frozen c_conforms_to (obj1, obj2: POINTER): BOOLEAN is
 			-- Does dynamic type of object attached to `obj1' conform to
@@ -322,7 +320,7 @@ feature {NONE} -- Implementation
 			"estypeg"
 		end;
 
-	c_standard_is_equal (target, source: POINTER): BOOLEAN is
+	frozen c_standard_is_equal (target, source: POINTER): BOOLEAN is
 			-- C external performing standard equality
 		external
 			"C | %"eif_equal.h%""
@@ -330,7 +328,7 @@ feature {NONE} -- Implementation
 			"eequal"
 		end;
 
-	c_standard_copy (source, target: POINTER) is
+	frozen c_standard_copy (source, target: POINTER) is
 			-- C external performing standard copy
 		external
 			"C | %"eif_copy.h%""
@@ -373,7 +371,7 @@ feature {NONE} -- Implementation
 			"C | %"eif_copy.h%""
 		end;
 
- 	c_generating_type (obj: POINTER): STRING is
+ 	frozen c_generating_type (obj: POINTER): STRING is
  		external
  			"C | %"eif_gen_conf.h%""
  		alias

@@ -22,7 +22,7 @@ class BOUNDED_STACK [G] inherit
 
 	BOUNDED [G]
 		undefine
-			consistent, copy, setup, is_equal
+			copy, is_equal
 		end;
 
 creation

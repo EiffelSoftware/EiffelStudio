@@ -14,11 +14,6 @@ indexing
 
 class ARRAY2 [G] inherit
 
-	ANY
-		undefine
-			consistent, setup, is_equal, copy
-		end;
-
 	ARRAY [G]
 		rename
 			make as array_make,

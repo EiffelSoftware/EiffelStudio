@@ -15,7 +15,7 @@ class ARRAYED_TREE [G] inherit
 
 	CELL [G]
 		undefine
-			copy, is_equal, setup, consistent
+			copy, is_equal
 		end;
 
 	DYNAMIC_TREE [G]
@@ -84,7 +84,6 @@ class ARRAYED_TREE [G] inherit
 		undefine
 			copy, is_equal, is_leaf, child_isfirst,
 			child_islast, valid_cursor_index,
-			consistent, setup,
 			changeable_comparison_criterion,
 			compare_objects, compare_references
 		select

@@ -160,15 +160,9 @@ feature -- Control
 			loop
 				feat := feat_tbl.item_for_iteration
 
-					-- Only in the case it is not an IL external feature,
-					-- we might be able to make sure the feature is
-					-- part of the Current class interface.
-				if
--- FIXME: Manu 1/21/2001: following code has been commented out to enable basic
--- inheritance to external classes.
---					not (feat.is_external and then not feat.is_c_external) and then
-					(feat.feature_name_id /= feature {PREDEFINED_NAMES}.Void_name_id)
-				then
+					-- FIXME: Manu 08/16/2002: We should check routine IDs rather 
+					-- than checking by feature name for `Void'.
+				if (feat.feature_name_id /= feature {PREDEFINED_NAMES}.Void_name_id) then
 					compare_with_parent (feat, par_feats)
 				end
 
@@ -308,7 +302,7 @@ feature {NONE} -- Implementation
 								when insert_origin_only_type then
 
 								when insert_renaming_type then
-									if feat.feature_name_id /= l_old_feat.feature_name_id then
+									if is_good_for_renaming_insertion (feat, l_old_feat) then
 										add_feature (feat)
 									end
 								when insert_explicit_covariance_type then
@@ -330,6 +324,28 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	is_good_for_renaming_insertion (new_feat, inh_feat: FEATURE_I): BOOLEAN is
+			-- Does `new_feat' needs to be inserted in Current if we are handling
+			-- renaming? Not always, e.g. an inherited constructor, a field,
+			-- a static routine or a static field of an external class should
+			-- not be added.
+		local
+			l_ext: IL_EXTENSION_I
+			l_type: INTEGER
+		do
+			Result := new_feat.feature_name_id /= inh_feat.feature_name_id
+			if Result then
+				l_ext ?= new_feat.extension
+				if l_ext /= Void then
+					l_type := l_ext.type
+					Result := l_type /= feature {SHARED_IL_CONSTANTS}.Creator_type and
+						l_type /= feature {SHARED_IL_CONSTANTS}.Static_type and
+						l_type /= feature {SHARED_IL_CONSTANTS}.Static_field_type and
+						l_type /= feature {SHARED_IL_CONSTANTS}.Field_type
+				end
+			end
+		end
+		
 feature {NONE} -- Implementation: constants
 
 	Chunk: INTEGER is 50

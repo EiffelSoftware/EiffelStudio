@@ -3402,10 +3402,6 @@ feature -- Pattern table generation
 			rout_id: ROUTINE_ID
 			rout_table: ROUT_TABLE
 
-			rout_info: ROUT_INFO
-			rcorigin: INTEGER
-			rcoffset: INTEGER
-
 			a_class: CLASS_C
 			class_array: ARRAY [CLASS_C]
 		do
@@ -3421,15 +3417,8 @@ feature -- Pattern table generation
 
 			if not Compilation_modes.is_precompiling and then creation_name /= Void then
 				root_feat := root_cl.feature_table.item (creation_name)
-				if root_feat.has_arguments then
-					has_argument := True
-				end
+				has_argument := root_feat.has_arguments
 				rout_id := root_feat.rout_id_set.first
-				rout_info := rout_info_table.item (rout_id)
-				rcorigin := rout_info.origin.id
-				rcoffset := rout_info.offset
-			else
-				rcorigin := -1
 			end
 
 			buffer.open_write_c
@@ -3470,21 +3459,7 @@ feature -- Pattern table generation
 			buffer.putstring ("#ifndef EIF_THREADS%N%
 											%%Textern char *root_obj;%N%
 											%#endif%N")
-			if not final_mode then
-				buffer.putstring ("%Tegc_rcorigin = ")
-				buffer.putint (rcorigin)
-				buffer.putstring (";%N%Tegc_rcdt = ")
-				buffer.putint (dtype)
-				buffer.putstring (";%N%Tegc_rcoffset = ")
-				buffer.putint (rcoffset)
-				buffer.putstring (";%N%Tegc_rcarg = ")
-				if has_argument then
-					buffer.putstring ("1")
-				else
-					buffer.putstring ("0")
-				end
-				buffer.putstring (";%N%N")
-			end
+
 
 			if final_mode then
 					-- Set C variable `scount'.
@@ -3638,14 +3613,7 @@ feature -- Pattern table generation
 					-- Set the frozen level
 				buffer.putstring (";%N%Tzeroc = ")
 				buffer.putint (frozen_level)
-
-				if license.demo_mode then
-						-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
-					buffer.putstring (";%N%Tegc_type_of_gc = 123150;%N}%N%N")
-				else
-						-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
-					buffer.putstring (";%N%Tegc_type_of_gc = 123151;%N}%N%N")
-				end
+				buffer.putstring (";%N}%N%N")
 			end
 
 			-- Module initialization routine 'egc_system_mod_init_init'
@@ -3674,8 +3642,16 @@ feature -- Pattern table generation
 
 			-- Module initialization
 			buffer.generate_function_signature (
-				"void", "egc_system_mod_init_init", True, buffer, <<"">>, <<"void">>
-															)
+				"void", "egc_system_mod_init_init", True, buffer, <<"">>, <<"void">>)
+
+			if license.demo_mode then
+					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
+				buffer.putstring ("%N%Tegc_type_of_gc = 123150;%N")
+			else
+					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
+				buffer.putstring ("%N%Tegc_type_of_gc = 123151;%N")
+			end
+
 			from
 				i := 1
 				nb := type_id_counter.value

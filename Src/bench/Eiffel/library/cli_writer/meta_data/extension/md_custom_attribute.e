@@ -31,6 +31,44 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
+	put_boolean (v: BOOLEAN) is
+			-- Insert `v' at `current_position'.
+		do
+			if v then
+				put_integer_8 (1)
+			else
+				put_integer_8 (0)
+			end
+		end
+
+	put_character (c: CHARACTER) is
+			-- Insert `c' at `current_position'.
+		do
+			put_integer_16 (c.code.to_integer_16)
+		end
+
+	put_real (r: REAL) is
+			-- Insert `r' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 4)
+			item.put_real (r, l_pos)
+			current_position := l_pos + 4
+		end
+
+	put_double (d: DOUBLE) is
+			-- Insert `d' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 8)
+			item.put_double (d, l_pos)
+			current_position := l_pos + 8
+		end
+		
 	put_integer_8 (i: INTEGER_8) is
 			-- Insert `i' at `current_position'.
 		local

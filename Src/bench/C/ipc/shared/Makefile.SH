@@ -112,126 +112,41 @@ libmtipc.a: $(MT_LOBJ)
 	$(RANLIB) $@
 
 
-MTcom.c: com.c
-	$(RM) MTcom.c
-	$(LN) com.c MTcom.c
-remove::
-	$(RM) MTcom.c
+MTcom.o: com.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
-MTidentify.c: identify.c
-	$(RM) MTidentify.c
-	$(LN) identify.c MTidentify.c
-remove::
-	$(RM) MTidentify.c
+MTidentify.o: identify.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
-MTlock.c: lock.c
-	$(RM) MTlock.c
-	$(LN) lock.c MTlock.c
-remove::
-	$(RM) MTlock.c
+MTlogfile.o: logfile.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
-MTlogfile.c: logfile.c
-	$(RM) MTlogfile.c
-	$(LN) logfile.c MTlogfile.c
-remove::
-	$(RM) MTlogfile.c
+MTnetwork.o: network.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
-MTnetwork.c: network.c
-	$(RM) MTnetwork.c
-	$(LN) network.c MTnetwork.c
-remove::
-	$(RM) MTnetwork.c
+MTselect.o: select.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
-MTselect.c: select.c
-	$(RM) MTselect.c
-	$(LN) select.c MTselect.c
-remove::
-	$(RM) MTselect.c
+MTshword.o: shword.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
-MTshword.c: shword.c
-	$(RM) MTshword.c
-	$(LN) shword.c MTshword.c
-remove::
-	$(RM) MTshword.c
+MTstream.o: stream.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
-MTstream.c: stream.c
-	$(RM) MTstream.c
-	$(LN) stream.c MTstream.c
-remove::
-	$(RM) MTstream.c
+MTsystem.o: system.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
-MTstack.c: stack.c
-	$(RM) MTstack.c
-	$(LN) stack.c MTstack.c
-remove::
-	$(RM) MTstack.c
+MTstack.o: stack.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
-MTsystem.c: system.c
-	$(RM) MTsystem.c
-	$(LN) system.c MTsystem.c
-remove::
-	$(RM) MTsystem.c
+MTtransfer.o: transfer.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
-MTtransfer.c: transfer.c
-	$(RM) MTtransfer.c
-	$(LN) transfer.c MTtransfer.c
-remove::
-	$(RM) MTtransfer.c
+MTrqst_idrs.o: rqst_idrs.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
-MTrqst_idrs.c: rqst_idrs.c
-	$(RM) MTrqst_idrs.c
-	$(LN) rqst_idrs.c MTrqst_idrs.c
-remove::
-	$(RM) MTrqst_idrs.c
-
-
-MTcom.o: MTcom.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
-
-MTidentify.o: MTidentify.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
-
-MTlogfile.o: MTlogfile.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
-
-MTnetwork.o: MTnetwork.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
-
-MTselect.o: MTselect.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
-
-MTshword.o: MTshword.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
-
-MTstream.o: MTstream.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
-
-MTsystem.o: MTsystem.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
-
-MTstack.o: MTstack.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
-
-MTtransfer.o: MTtransfer.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
-
-MTrqst_idrs.o: MTrqst_idrs.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
-
-MTlock.o: MTlock.c
-	$(CC) -c $(JMTCFLAGS) $*.c
-	$(RM) $*.c
+MTlock.o: lock.c
+	$(CC) -c $(JMTCFLAGS) $< -o $@
 
 LOBJ = \
 	com.o \

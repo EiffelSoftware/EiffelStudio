@@ -33,7 +33,7 @@ feature
 		do
 				-- We don't have to generate the declaration
 				-- extern toto(); but we need to include all
-				-- the include files needed by the curretn feature
+				-- the include files needed by the current feature
 			from
 				include_set := Execution_table.include_set;
 				i := include_list.lower

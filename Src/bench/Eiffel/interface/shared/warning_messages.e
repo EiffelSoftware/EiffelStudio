@@ -1290,12 +1290,13 @@ feature -- Warning messages
 	w_Internal_error: STRING is
 		"An internal error occurred.%N%N%
 		%1 - Check that you have enough space to compile.%N%
-		%2 - Check that you are not using specific Eiffel%N%
-		%     construct not supported by EiffelSharp%N%
-		%3 - If this happens even after relaunching the environment%N%
+		%2 - If this happens even after relaunching the environment%N%
 		%     delete your EIFGEN and recompile from scratch.%N%N%
 		%Follow the instructions at http://support.eiffel.com/submit.html in%N%
 		%order to submit a bug report at http://support.eiffel.com"
 		
-		
+	w_Class_already_edited: STRING is "This class is already being edited%N%
+										%in another editor.%N%
+										%Editing a class in several editors%N%
+										%may cause loss of data."
 end -- class WARNING_MESSAGES

@@ -42,7 +42,8 @@ inherit
 			set_caret_position,
 			select_region,
 			selection_start,
-			selection_end
+			selection_end,
+			on_erase_background
 		select
 			wel_line_index,
 			wel_item,
@@ -138,7 +139,8 @@ inherit
 			text_stream_in,
 			insert_rtf_stream_in,
 			rtf_stream_in,
-			default_process_notification
+			default_process_notification,
+			on_erase_background
 		end
 		
 	WEL_CFM_CONSTANTS
@@ -1217,6 +1219,14 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (0)
 			Result := (create {WEL_STRING}.make_by_pointer (class_name_pointer)).string
+		end
+		
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+		do
+			-- Do nothing here. Redefined version from WEL_WINDOW as
+			-- it redrew the background, causing flicker. We should do
+			-- nothing, as Windows does this for us.
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -181,13 +181,14 @@ feature -- Basic Operations
 					end
 				else
 					matching_classes := Eiffel_universe.compiled_classes_with_name (a_string)
+					create res.make (matching_classes.count)
 					from
 						matching_classes.start
 					until
 						matching_classes.after
 					loop
-						create res.make (matching_classes.count)
 						create class_desc.make_with_class_i (matching_classes.item)
+						res.extend (class_desc)
 						matching_classes.forth
 					end
 				end
@@ -195,12 +196,57 @@ feature -- Basic Operations
 			end
 		end
 
-	search_features (a_string: STRING; is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
+	search_features (a_string: STRING; is_substring: BOOLEAN): FEATURE_ENUMERATOR is
 			-- Search feature with names matching `a_string'.
 			-- `a_string' [in].  
 			-- `is_substring' [in].  
+		local
+			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
+			classes: ARRAY [CLASS_C]
+			feature_table: FEATURE_TABLE
+			feature_i: FEATURE_I
+			count, i: INTEGER
+			matcher: KMP_MATCHER
+			feature_desc: FEATURE_DESCRIPTOR
 		do
-			-- Put Implementation here.
+			if Eiffel_project.initialized and then a_string /= Void then
+				classes := Eiffel_system.Workbench.system.classes.sorted_classes
+				count := Eiffel_system.Workbench.system.classes.count
+				create res.make (count * 5)
+				create matcher.make_empty
+				matcher.disable_case_sensitive
+				matcher.set_pattern (a_string)
+				from
+					i := 1
+				until
+					i > count
+				loop
+					feature_table := classes.item (i).feature_table
+					if is_substring then
+						from
+							feature_table.start
+						until
+							feature_table.after
+						loop
+							feature_i := feature_table.item_for_iteration
+							matcher.set_text (feature_i.feature_name)
+							if matcher.search_for_pattern then
+								create feature_desc.make_with_class_i_and_feature_i (classes.item (i).lace_class, feature_i)
+								res.extend (feature_desc)
+							end
+							feature_table.forth
+						end
+					else
+						feature_table.search (a_string)
+						if feature_table.found_item /= Void then
+							create feature_desc.make_with_class_i_and_feature_i (classes.item (i).lace_class, feature_table.found_item)
+							res.extend (feature_desc)
+						end
+					end
+					i := i + 1
+				end
+				create Result.make (res)
+			end
 		end
 		
 end -- class SYSTEM_BROWSER

@@ -15,6 +15,9 @@ inherit
 			on_proc_select
 		end
 
+create
+	make
+
 feature {NONE} -- Initialization
 
 	set_default_editor is

@@ -48,9 +48,44 @@ feature -- Access
 	last_error_message: STRING
 			-- Last error message.
 			
+	is_compiled: BOOLEAN is
+			-- Has system been compiled?
+		do
+			Result := compiler.is_successful
+		end
+
+	project_file_name: STRING is
+			-- Full path to .epr file.
+		local
+			f: FILE_NAME
+		do
+			if valid_project then
+				create f.make_from_string (Eiffel_project.project_directory.name)
+				f.set_file_name (Eiffel_system.name)
+				f.add_extension ("epr")
+				Result := f
+			end
+		end
+
+	ace_file_name: STRING is
+			-- Full path to Ace file.
+		do
+			Result := Eiffel_ace.file_name
+		end
+
+	project_directory: STRING is
+			-- Project directory.
+		do
+			Result := Eiffel_project.project_directory.name
+		end
+		
+	project_properties: IEIFFEL_PROJECT_PROPERTIES_INTERFACE
+			-- Project Properties.
+			-- Void until a project is opened.
+
 feature -- Basic Operations
 
-	retrieve_project (project_file_name: STRING) is
+	retrieve_project (file_name: STRING) is
 			-- Retrieve project.
 		local
 			rescued: BOOLEAN
@@ -58,13 +93,14 @@ feature -- Basic Operations
 		do
 			valid_project := False
 			if not rescued then
-				if project_file_name /= Void then
-					create file.make (valid_file_name (project_file_name))
+				if file_name /= Void then
+					create file.make (valid_file_name (file_name))
 					if not file.exists or else file.is_directory then
 						last_error_message := "File does not exist"
 					else
 						if not Eiffel_project.initialized then
-							open_project_file (project_file_name)
+							open_project_file (file_name)
+							create {PROJECT_PROPERTIES} project_properties.make
 							valid_project := True
 						else
 							last_error_message := "Project has already been initialized"
@@ -80,20 +116,20 @@ feature -- Basic Operations
 			retry
 		end
 
-	create_project (ace_file_name: STRING; project_directory_path: STRING) is
+	create_project (ace_name: STRING; project_directory_path: STRING) is
 			-- Create new project.
 		do
 			valid_project := False
-			if ace_file_name /= Void and project_directory_path /= Void then
-				check_ace_file (ace_file_name)
+			if ace_name /= Void and project_directory_path /= Void then
+				check_ace_file (ace_name)
 				if valid_ace_file then
 					Project_directory_name.wipe_out
 					Project_directory_name.set_directory (project_directory_path)
 					create project_dir.make (project_directory_path, Void)
 					Eiffel_project.make_new (project_dir, True, Void, Void)
 					if Eiffel_project.initialized then
-						Eiffel_ace.set_file_name (ace_file_name)
-						valid_project := True
+						Eiffel_ace.set_file_name (ace_name)
+						create {PROJECT_PROPERTIES} project_properties.make
 					else
 						last_error_message := "Project could not be initialized"
 					end

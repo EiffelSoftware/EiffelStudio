@@ -110,7 +110,7 @@ feature -- Other
 		do
 			create b
 			b.set_item (True)
-			interface.event_continue (b)
+			interface.event_should_continue (b)
 			if b.item then
 				total_number := total
 				interface.event_output_string (percentage_output (to_go))

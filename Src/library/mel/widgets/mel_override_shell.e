@@ -14,25 +14,28 @@ inherit
 	MEL_SHELL
 
 creation
-	make
+	make,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
 			-- Create a override shell widget.
 		require
-			a_name_exists: a_name /= Void;
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xt_create_override_shell ($widget_name, a_parent.screen_object);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add_popup_shell (Current);
 			set_default
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 feature {NONE} -- Implementation

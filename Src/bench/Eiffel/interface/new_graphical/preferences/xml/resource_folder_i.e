@@ -8,7 +8,8 @@ deferred class
 feature -- Initialization
 
 	make_default (doc: XML_ELEMENT; struct: like structure) is
-			-- Initialization
+			-- Initialization of Current, belonging to `struct',
+			-- according to `doc'.
 		local
 			s: STRING
 			att: XML_ATTRIBUTE
@@ -39,10 +40,14 @@ feature -- Initialization
 		end
 
 	make_root (location: STRING; struct: RESOURCE_STRUCTURE) is
+			-- Create Current (as a root folder of `struct')
+			-- taking data from `location'.
 		deferred
 		end
 
 	make_default_root (file_name: FILE_NAME; struct: like structure) is
+			-- Create Current (as a root folder of `struct')
+			-- taking data from `file_name'.
 		local
 			file: RAW_FILE
 			s: STRING
@@ -78,6 +83,7 @@ feature -- Initialization
 		end
 
 	load_default_attributes (xml_elem: XML_ELEMENT) is
+			-- effective load of data from `xml_elem'.
 		local
 			res_xml: XML_RESOURCE
 			resource: RESOURCE
@@ -128,6 +134,7 @@ feature -- Initialization
 feature -- Update
 
 	update_root (location: STRING) is
+			-- Update information with data from `location'.
 		deferred
 		end
 
@@ -180,17 +187,22 @@ feature -- Access
 
 	description: STRING
 		-- Description of Current.
+		-- Meant for providing a help message.
 
 	resource_list: LINKED_LIST [RESOURCE]
 		-- List of resources.
 
 	structure: RESOURCE_STRUCTURE
+		-- Structure Current is part of.
 
 	child_list: LINKED_LIST [like Current]
+		-- List of child folders.
 
 feature -- Save
 
 	root_save (location: STRING) is
+			-- Save folder in `location' as a root folder.
+			-- Used as a part of `save' from RESOURCE_STRUCTURE_I
 		deferred
 		end
 
@@ -208,6 +220,7 @@ feature -- Interface creation
 feature -- Implementation
 
 	interface: RESOURCE_FOLDER
+		-- Interface of Current.
 
 feature {NONE} -- Implementation
 

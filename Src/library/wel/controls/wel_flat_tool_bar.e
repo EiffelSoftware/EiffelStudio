@@ -16,7 +16,6 @@ inherit
 			make,
 			default_style,
 			set_bitmap_size,
-			set_button_size,
 			add_bitmaps	
 		end
 
@@ -37,8 +36,8 @@ feature {NONE} -- Initialization
 			-- `an_id' as id.
 		do
 			{WEL_TOOL_BAR} Precursor(a_parent, an_id)
-			bitmaps_width := 16 -- Default value
-			bitmaps_height := 15 -- Default value
+			bitmaps_width := 16		-- Default value
+			bitmaps_height := 15	-- Default value
 			if use_image_list_supported then
 				use_image_list := True -- Default state
 			end
@@ -52,11 +51,27 @@ feature -- Access
 	bitmaps_height: INTEGER
 			-- 15 by default
 
-	button_width: INTEGER
-			-- 24 by default
-	
-	button_height: INTEGER
-			-- 22 by default
+	buttons_width: INTEGER is
+			-- Width of the buttons in the toolbar.
+		do
+			if comctl32_version >= version_470 then
+				Result := get_button_width
+			else
+					-- No API available, so we guess...
+				Result := bitmaps_width + 8
+			end
+		end
+
+	buttons_height: INTEGER is
+			-- Height of the buttons in the toolbar.
+		do
+			if comctl32_version >= version_470 then
+				Result := get_button_height
+			else
+					-- No API available, so we guess...
+				Result := bitmaps_height + 7
+			end
+		end
 
 	use_image_list: BOOLEAN
 			-- Are we using ImageList for the toolbar?
@@ -97,6 +112,21 @@ feature -- Status report
 			-- version of Windows?
 		once
 			Result := comctl32_version >= version_470
+		end
+
+	find_button (a_x, a_y: INTEGER): INTEGER is
+			-- Determines where a point lies in a toolbar control. 
+			--
+			-- Returns an integer value. If the return value is zero or a positive value,
+			-- it is the zero-based index of the nonseparator item in which the point lies. 
+			-- If the return value is negative, the point does not lie within a button.
+			-- The absolute value of the return value is the index of a separator item 
+			-- or the nearest nonseparator item. 
+		local
+			coordinates: WEL_POINT
+		do
+			create coordinates.make(a_x, a_y)
+			Result := cwin_send_message_result (item, Tb_hittest, 0, cwel_pointer_to_integer(coordinates.item))
 		end
 
 feature -- Status setting
@@ -366,6 +396,8 @@ feature -- Resizing
 			--
 			-- If an application does not explicitly set the bitmap
 			-- size, the default size is 16 by 15 pixels.
+		local
+			button_size: INTEGER
 		do
 			bitmaps_width := a_width
 			bitmaps_height := a_height
@@ -381,18 +413,20 @@ feature -- Resizing
 			end
 		end
 
-	set_button_size (a_width, a_height: INTEGER) is
-			-- Set the size of the buttons to be added to the
-			-- toolbar.
-			-- The size can be set only before adding any buttons
-			-- to the toolbar. If an application does not
-			-- explicitly set the button size, the size defaults
-			-- to 24 by 22 pixels.
+	get_button_width: INTEGER  is
+			-- Get the width of the buttons.
+		require
+			function_supported: comctl32_version >= version_470
 		do
-			cwin_send_message (item, Tb_setbuttonsize, 0,
-				cwin_make_long (a_width, a_height))
-			button_width := a_width
-			button_height := a_height
+			Result := cwin_lo_word(cwin_send_message_result (item, Tb_getbuttonsize, 0, 0))
+		end
+
+	get_button_height: INTEGER  is
+			-- Get the height of the buttons.
+		require
+			function_supported: comctl32_version >= version_470
+		do
+			Result := cwin_hi_word(cwin_send_message_result (item, Tb_getbuttonsize, 0, 0))
 		end
 
 feature -- Obsolete

@@ -1,8 +1,6 @@
-
 -- General list implementation.
 
 indexing
-
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -15,105 +13,123 @@ feature
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with browse selection mode in current scroll list.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
-		end; -- add_browse_action
+		end;
 
 	add_click_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with click selection mode in current scroll list.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
-		end; -- add_click_action
+		end;
 
 	add_extended_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with extended selection mode in current scroll list.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
-		end; -- add_extended_action
+		end;
 
 	add_left (an_item: STRING) is
 			-- Put `an_item' to the left of cursor position.
 			-- Do not move cursor.
+		obsolete
+			"Use `put_left' instead."
+		do
+			put_left (an_item)
+		end;
+
+	put_left (an_item: STRING) is
+			-- Add `an_item' to the left of cursor position.
+			-- Do not move cursor.
 		require
-			not_before_unless_empty: before implies empty
+			not_before: not before
 		deferred
-		ensure
---			count = old count+1;
---			(not (position = 2)) implies (position = old position+1)
-		end; -- add_left
+		end;
 
 	add_multiple_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with multiple selection mode in current scroll list.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
-		end; -- add_multiple_action
+		end;
 
 	add_right (an_item: STRING) is
-			-- Put item `v' to the right of cursor position.
+			-- Add `an_item' to the right of cursor position.
+			-- Do not move cursor.
+		obsolete
+			"Use `put_right' instead."
+		do
+			put_right (an_item)
+		end
+
+	put_right (an_item: STRING) is
+			-- Add `an_item' to the right of cursor position.
 			-- Do not move cursor.
 		require
-			not_after_unless_empty: after implies empty
+			not_after: not after
 		deferred
 		ensure
---			count = old count+1;
---			index = old index
-		end; -- add_right
+			new_count: count = old count+1;
+			same_index: index = old index
+		end;
 
 	add_single_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with single selection mode in current scroll list.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
-		end; -- add_single_action
+		end;
 
 	back is
 			-- Move cursor backward one index.
 		require
-			not_before: index > 0
+			not_before: not before
 		deferred
 		ensure
---			index = old index - 1
-		end; -- back
+			moved_back: index = old index - 1
+		end;
 
 	count: INTEGER is
 			-- Number of items in the chain
 		deferred
-		end;  -- count
+		ensure
+		end;
 
 	deselect_all is
 			-- Deselect all selected items.
 		deferred
 		ensure
 			selected_list_is_empty: selected_count = 0
-		end; -- deselect_all
+		end;
 
 	duplicate (n: INTEGER): LINKED_LIST [STRING] is
 			-- Copy of the sub-list beginning at cursor index
 			-- and comprising min (`n', count-index+1) items
 		require
-			not_off: not off;
+			not_off: off implies after
 			valid_sublist: n >= 0
 		deferred
-		end; -- duplicate
+		end;
 
 	empty: BOOLEAN is
 			-- Is the chain empty?
 		deferred
-		end; -- empty
+		end;
 
 	finish is
 			-- Move cursor to last index
 			-- (no effect if chain is empty).
+		require
+			empty_convention: empty implies before
 		deferred
 		ensure
-			empty or islast
+			at_last: not empty implies islast
 		end; -- finish
 
 	first: STRING is
@@ -121,85 +137,89 @@ feature
 		require
 			not_empty: not empty
 		deferred
-		end; -- first
+		end;
 
 	first_visible_item_position: INTEGER is
 			-- Position of the first visible item in the list
 		deferred
 		ensure
-			Result <= count;
-			empty = (Result = 0)
-		end; -- first_visible_item_position
+			non_negative: Result >= 0
+			in_list: Result <= count;
+			empty_convention: empty implies (Result = 0)
+		end;
 
 	forth is
 			-- Move cursor forward one position.
 		require
-			not empty and then index <= count
+			not_after: not after
 		deferred
 		ensure
-			index >= 1 and index <= count + 1
-		end; -- forth
+			moved_forth: index = old index + 1
+		end;
 
 	go_i_th (i: INTEGER) is
-			-- Move cursor to index `i'.
+			-- Move cursor to `i'-th position.
 		require
 			index_large_enough: i >= 0;
 			index_small_enough: i <= count + 1;
 			not_empty_unless_zero: empty implies i=0;
 		deferred
 		ensure
-			index = i
-		end; -- go
+			position_expected: index = i
+		end;
 
 	has (v: STRING): BOOLEAN is
 			-- Does `v' appear in the chain ?
 		deferred
-		end; -- has
+		ensure
+			not_found_in_empty: Result implies not empty
+		end;
 
 	i_th (i: INTEGER): STRING is
-			-- Item at `i'_th index
+			-- Item at `i'_th position
 		require
 			index_large_enough: i >= 1;
 			index_small_enough: i <= count;
 		deferred
-		end; -- i_th
+		end;
 
 	index_of (v: STRING; i: INTEGER): INTEGER is
-			-- Index of `i'-th item `v'; 0 if none
+			-- Index of `i'-th occurrence of item identical to `v'
+			-- 0 if none
 		require
 			positive_occurrence: i > 0
 		deferred
 		ensure
-			Result >= 0
-		end; -- index_of
+			non_negative_result: Result >= 0
+		end;
 
 	isfirst: BOOLEAN is
 			-- Is cursor at first index in the chain?
 		deferred
 		ensure
-			Result implies (not empty)
-		end; -- isfirst
+			valid_position: Result implies (not empty)
+		end;
 
 	islast: BOOLEAN is
 			-- Is cursor at last index in the chain?
 		deferred
 		ensure
-			Result implies (not empty)
-		end; -- islast
+			valid_position: Result implies (not empty)
+		end;
 
 	item: STRING is
 			-- Item at cursor index
 		require
 			not_off: not off
 		deferred
-		end; -- item
+		end;
 
 	last: STRING is
 			-- Item at last index
 		require
 			not_empty: not empty
 		deferred
-		end; -- last
+		end;
 
 	merge_left (other: LIST [STRING]) is
 			-- Merge `other' into the current list before
@@ -207,13 +227,13 @@ feature
 			-- Do not move cursor.
 			-- Empty other.
 		require
-			empty_or_not_before: empty or not before;
-			other_exists: not (other = Void)
+			not_before: not before;
+			other_exists: other /= Void
 		deferred
 		ensure
---			count = old count + old other.count;
+			count = old count + old other.count;
 			other.empty
-		end; -- merge_left
+		end;
 
 	merge_right (other: LIST [STRING]) is
 			-- Merge `other' into the current list after
@@ -221,13 +241,13 @@ feature
 			-- Do not move cursor.
 			-- Empties other.
 		require
-			not_after_unless_empty: empty or not after;
-			other_exists: not (other = Void)
+			not_after: not after;
+			other_exists: other /= Void
 		deferred
 		ensure
---			count = old count+old other.count;
+			count = old count+old other.count;
 			other.empty
-		end; -- merge_right
+		end;
 
 	move (i: INTEGER) is
 			-- Move cursor `i' positions.
@@ -237,35 +257,37 @@ feature
 			not_empty_unless_zero: empty implies i=0;
 		deferred
 		ensure
---			index = old index + i
-		end; -- move
+			expected_index: index = old index + i
+		end;
 
 	off: BOOLEAN is
 			-- Is cursor off?
 		deferred
-		end; -- off
+		end;
 
 	before: BOOLEAN is
 			-- Is cursor off left edge?
 		deferred
-		end; -- before
+		end;
 
 	after: BOOLEAN is
 			-- Is cursor off right edge?
 		deferred
-		end; -- after
+		end;
 
 	index: INTEGER is
 			-- Current cursor index, 0 if empty
 		deferred
-		end; -- index
+		end;
 
 	put (an_item: STRING) is
 			-- Put `an_item' at cursor position.
 		require
 			not_off: not off;
 		deferred
-		end; -- put
+		ensure
+			same_count: count = old count
+		end;
 
 	put_i_th (an_item: STRING; i: INTEGER) is
 			-- Put `an_item' at `i'-th position.
@@ -274,51 +296,62 @@ feature
 			index_small_enough: i <= count
 		deferred
 		ensure
-			not empty
-		end; -- put_i_th
+			insertion_done: i_th (i) = an_item
+		end;
 
 	remove is
 			-- Remove item at cursor position
 			-- and move cursor to its right neighbor
-			-- (or after if no right neighbor).
+			-- (or `after' if no right neighbor).
 		require
+			not_empty: not empty
 		deferred
 		ensure
---			count = old count-1;
-			not empty implies index = old index
-		end; -- remove
+			count_changed: count = old count-1;
+			after_when_empty: empty implies after
+		end;
 
 	remove_all_occurrences (an_item: STRING) is
 			-- Remove all items `an_item' from list.
 			-- Put cursor after.
+		obsolete
+			"Use `prune_all' instead."
+		do
+			prune_all (an_item)
+		end;
+
+	prune_all (an_item: STRING) is
+			-- Remove all items `an_item'.
+			-- Put cursor after.
 		deferred
 		ensure
-			after
-		end; -- remove_all_occurrences
+			no_more_occurrences: not has (an_item)
+			is_after: after
+		end;
 
 	remove_browse_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with browse selection mode in current scroll list.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
-		end; -- remove_browse_action
+		end;
 
 	remove_click_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with click selection mode in current scroll list.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
-		end; -- remove_click_action
+		end;
 
 	remove_extended_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with extended selection mode in current scroll list.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
-		end; -- remove_extended_action
+		end;
 
 	remove_left (n: INTEGER) is
 			-- Remove min (`n', index - 1) items
@@ -335,9 +368,9 @@ feature
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with multiple selection mode in current scroll list.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
-		end; -- remove_multiple_action
+		end;
 
 	remove_right (n: INTEGER) is
 			-- Remove min (`n', count - position) items
@@ -348,16 +381,16 @@ feature
 			non_negative_argument: n >= 0
 		deferred
 		ensure
---			index = old index
-		end; -- remove_right
+			unmoved: index = old index
+		end;
 
 	remove_single_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with single selection mode in current scroll list.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
-		end; -- remove_single_action
+		end;
 
 	scroll_to_current is
 			-- Make `item' the first visible item in the list if
@@ -368,7 +401,7 @@ feature
 		require
 			not_off: not off
 		deferred
-		end; -- scroll_to_current
+		end;
 
 	search_equal (v: STRING) is
 			-- Move cursor to first position
@@ -376,18 +409,18 @@ feature
 			-- where item is equal to `v' (shallow equality);
 			-- go off right if none.
 		require
-			search_element_exists: not (v = Void)
+			search_element_exists: v /= Void
 		deferred
 		ensure
 			(not off) implies (v.is_equal (item))
-		end; -- search_equal
+		end;
 
 	select_item is
 			-- Select item at current position.
 		require
 			not_off: not off
 		deferred
-		end; -- select
+		end;
 
 	select_i_th (i: INTEGER) is
 			-- Select item at `i'-th position.
@@ -395,35 +428,35 @@ feature
 			index_large_enough: i >= 1;
 			index_small_enough: i <= count
 		deferred
-		end; -- select_i_th
+		end;
 
 	selected_count: INTEGER is
 			-- Number of selected items in current list
 		deferred
-		end; -- selected_count
+		end;
 
 	selected_item: STRING is
 			-- Selected item if single or browse selection mode is selected
 			-- Void if nothing is selected
 		deferred
-		end; -- selected_item
+		end;
 
 	selected_items: LINKED_LIST [STRING] is
 			-- Selected items
 		deferred
-		end; -- current_select
+		end;
 
 	selected_position: INTEGER is
 			-- Position of selected item if single or browse selection mode is
 			-- selected
 			-- Null if nothing is selected
 		deferred
-		end; -- selected_position
+		end;
 
 	selected_positions: LINKED_LIST [INTEGER] is
 			-- Positions of the selected items
 		deferred
-		end; -- selected_positions
+		end;
 
 	set_browse_selection is
 			-- Set selection mode of current list to
@@ -431,7 +464,7 @@ feature
 			-- at a time but dragging select button moves
 			-- the selection along with the cursor.
 		deferred
-		end; -- set_browse_selection
+		end;
 
 	set_extended_selection is
 			-- Set selection mode of current list to
@@ -440,40 +473,40 @@ feature
 			-- pressing an item selects it but deselect any
 			-- other selected items.
 		deferred
-		end; -- set_extended_selection
+		end;
 
 	set_multiple_selection is
 			-- Set selection mode of current list to
 			-- multiple. Any item can be selected at any
 			-- time in this mode.
 		deferred
-		end; -- set_multiple_selection
+		end;
 
 	set_single_selection is
 			-- Set selection mode of current list to
 			-- single. At most only one item can be selected
 			-- at a time.
 		deferred
-		end; -- set_single_selection
+		end;
 
 	set_visible_item_count (a_count: INTEGER) is
 			-- Set the number of visible items to `a_count'.
 		require
-			a_count_large_enough: a_count >0
+			a_count_large_enough: a_count > 0
 		deferred
-		end; -- set_visible_item_count
+		end; 
 
 	show_current is
 			-- Make item at current position visible.
 		require
 			not_off: not off
 		deferred
-		end; -- show_current
+		end;
 
 	show_first is
 			-- Make first item visible.
 		deferred
-		end; -- show_first
+		end;
 
 	show_i_th (i: INTEGER) is
 			-- Make item at `i'-th position visible.
@@ -481,19 +514,19 @@ feature
 			index_large_enough: i >= 1;
 			index_small_enough: i <= count
 		deferred
-		end; -- show_i_th
+		end;
 
 	show_last is
 			-- Make last item visible.
 		deferred
-		end; -- show_last
+		end;
 
 	start is
 			-- Move cursor to first position.
 		deferred
 		ensure
 			empty or isfirst
-		end; -- start
+		end;
 
 	swap (i: INTEGER) is
 			-- Exchange item at `i'-th position with item
@@ -503,20 +536,27 @@ feature
 			index_large_enough: i >= 1;
 			index_small_enough: i <= count
 		deferred
-		end; -- swap
+		end;
 
 	visible_item_count: INTEGER is
 			-- Number of visible item of list
 		deferred
 		ensure
-			count_large_enough: Result >0
-		end; -- visible_item_count
+		end;
 
 	wipe_out is
 			-- Make list empty
 		deferred
-		end -- wipe_out
+		end 
 
+invariant
+
+	non_negative_selected_item_count: selected_count >= 0	
+	positive_visible_item_count: visible_item_count > 0
+	non_negative_index: index >= 0	
+	index_small_enough: index <= count + 1
+	non_negative_count: count >= 0	
+	empty_definition: empty = (count = 0)
 end
 
 

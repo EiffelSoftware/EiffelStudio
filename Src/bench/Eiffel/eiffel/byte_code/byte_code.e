@@ -3,7 +3,6 @@
 deferred class BYTE_CODE 
 
 inherit
-
 	IDABLE
 		rename
 			id as byte_id,
@@ -11,12 +10,16 @@ inherit
 		export
 			{NONE} all
 		end
+
 	BYTE_NODE
 		redefine
 			make_byte_code, enlarge_tree
 		end
+
 	SHARED_C_LEVEL
+
 	SHARED_PATTERN_TABLE
+
 	ASSERT_TYPE
 
 feature 

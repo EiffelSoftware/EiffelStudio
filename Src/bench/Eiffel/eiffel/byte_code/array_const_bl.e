@@ -259,16 +259,14 @@ feature {NONE} -- C code generation
 			internal_name, table_name: STRING;
 			rout_id: ROUTINE_ID;
 		do
-			rout_id := real_ty.base_class.feature_table.item 
-							("make").rout_id_set.first;
+			rout_id := real_ty.base_class.feature_table.item ("make").rout_id_set.first;
 			entry := Eiffel_table.poly_table (rout_id);
 			rout_table ?= entry;
-			internal_name := clone (rout_table.feature_name (real_ty.type_id));
+			internal_name := clone (rout_table.feature_name (real_ty.type_id))
 			generated_file.putstring (internal_name);
 			generate_array_make_arguments;
 				-- Remember extern routine declaration
-			Extern_declarations.add_routine
-				(real_ty.c_type, internal_name)
+			Extern_declarations.add_routine (real_ty.c_type, internal_name)
 		end;
 
 	generate_wk_array_make (real_ty: GEN_TYPE_I)	is

@@ -275,23 +275,25 @@ feature -- Access
 		end
 		
 	virtual_x_position: INTEGER is
-			-- Horizontal offset of virtual area in pixels, relative to left edge of `Current'.
+			-- Horizontal offset of viewable area in relation to the left edge of
+			-- the virtual area in pixels.
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.virtual_x_position
 		ensure
-			result_not_positive: Result <= 0
+			valid_result: Result >= 0 and Result <= virtual_width - viewable_width
 		end
 		
 	virtual_y_position: INTEGER is
-			-- Vertical offset of virtual area in pixels, relative to top edge of `Current'.
+			-- Vertical offset of viewable area in relation to the top edge of
+			-- the virtual area in pixels.
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.virtual_y_position
 		ensure
-			result_not_positive: Result <= 0
+			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
 		end
 		
 	virtual_width: INTEGER is
@@ -301,7 +303,7 @@ feature -- Access
 		do
 			Result := implementation.virtual_width
 		ensure
-			result_greater_or_equal_to_width: Result >= width
+			result_greater_or_equal_to_viewable_width: Result >= viewable_width
 		end
 		
 	virtual_height: INTEGER is
@@ -311,9 +313,31 @@ feature -- Access
 		do
 			Result := implementation.virtual_height
 		ensure
-			result_greater_or_equal_to_height: Result >= height
+			result_greater_or_equal_to_viewable_height: Result >= viewable_height
 		end
 		
+	viewable_width: INTEGER is
+			-- Width of `Current' available to view displayed items. Does
+			-- not include width of any displayed scroll bars.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.viewable_width
+		ensure
+			viewable_width_valid: viewable_width >= 0 and viewable_width <= width
+		end
+		
+	viewable_height: INTEGER is
+			-- Height of `Current' available to view displayed items. Does
+			-- not include width of any displayed scroll bars and/or header if shown.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.viewable_height
+		ensure
+			viewable_height_valid: viewable_height >= 0 and viewable_height <= height
+		end
+	
 feature -- Status setting
 
 	enable_tree is
@@ -707,6 +731,18 @@ feature -- Status setting
 			implementation.hide_tree_node_connectors
 		ensure
 			tree_node_connectors_hidden: not are_tree_node_connectors_shown
+		end
+		
+	set_virtual_position (virtual_x, virtual_y: INTEGER) is
+			-- Move viewable area of `Current' to virtual position `virtual_x', `virtual_y'.
+		require
+			not_destroyed: not is_destroyed
+			virtual_x_valid: virtual_x >= 0 and virtual_x <= virtual_width - viewable_width
+			virtual_y_valid: virtual_y >= 0 and virtual_y <= virtual_height - viewable_height
+		do
+			implementation.set_virtual_position (virtual_x, virtual_y)
+		ensure
+			virtual_position_set: virtual_x_position = virtual_x and virtual_y_position = virtual_y
 		end
 
 feature -- Status report

@@ -8,7 +8,7 @@ inherit
 			is_numeric,
 			same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			byte_code_cast, generated_id
+			byte_code_cast, generated_id, heaviest
 		end
 
 	BYTE_CONST
@@ -32,6 +32,12 @@ feature
 
 	is_numeric: BOOLEAN is True
 			-- Is the type a numeric one ?
+
+	heaviest (other : TYPE_I) : TYPE_I is
+
+		do
+			Result := other
+		end
 
 	dump (buffer: GENERATION_BUFFER) is
 			-- Debug purpose
@@ -59,6 +65,8 @@ feature
 
 	c_string: STRING is "EIF_INTEGER"
 			-- String generated for the type.
+
+	union_tag: STRING is "iarg"
 
 	separate_get_macro: STRING is "CURGI"
 			-- String generated to access the argument to a separate call

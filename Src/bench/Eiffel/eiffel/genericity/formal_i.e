@@ -39,16 +39,12 @@ feature
 
 	instantiation_in (other: GEN_TYPE_I): TYPE_I is
 			-- Instantiation of Current in context of `other'
-		require else
-			good_context: position <= other.meta_generic.count
 		do
 			Result := other.meta_generic.item (position)
 		end
 
 	complete_instantiation_in (other: GEN_TYPE_I): TYPE_I is
 
-		require else
-			good_context: position <= other.true_generics.count;
 		local
 			btype : BASIC_I
 		do

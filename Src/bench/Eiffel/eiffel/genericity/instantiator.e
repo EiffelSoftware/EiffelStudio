@@ -106,10 +106,16 @@ end;
 			i, nb: INTEGER
 		do
 				-- Check array class
-			check_array_class;
+			check_array_class
 
 				-- Check tuple class
-			check_tuple_class;
+			check_tuple_class
+
+				-- Check function class
+			check_function_class
+
+				-- Check procedure class
+			check_procedure_class
 
 				-- Remove the obsolete types
 			clean;
@@ -175,6 +181,9 @@ feature {NONE}
 
 	check_array_class is
 			-- Force an array type in the system
+		require
+			any_compiled: System.any_class.compiled;
+			array_compiled: System.array_class.compiled;
 		local
 			array_cl: CLASS_C;
 			array_t: GEN_TYPE_I;
@@ -187,6 +196,8 @@ feature {NONE}
 
 	check_tuple_class is
 			-- Force a tuple type in the system
+		require
+			tuple_compiled: System.tuple_class.compiled
 		local
 			tuple_cl: CLASS_C;
 			tuple_t: GEN_TYPE_I;
@@ -194,6 +205,34 @@ feature {NONE}
 			tuple_cl := System.tuple_class.compiled_class;
 			dispatch (Tuple_type_a, tuple_cl);
 			tuple_t := Tuple_type;
+		end;
+
+	check_function_class is
+			-- Force a function type in the system
+		require
+			function_compiled: System.function_class.compiled
+			any_compiled: System.any_class.compiled
+			array_compiled: System.array_class.compiled
+			tuple_compiled: System.tuple_class.compiled
+		local
+			funct_cl: CLASS_C;
+		do
+			funct_cl := System.function_class.compiled_class;
+			dispatch (Function_type_a, funct_cl);
+		end;
+
+	check_procedure_class is
+			-- Force a procedure type in the system
+		require
+			procedure_compiled: System.procedure_class.compiled
+			any_compiled: System.any_class.compiled
+			array_compiled: System.array_class.compiled
+			tuple_compiled: System.tuple_class.compiled
+		local
+			proc_cl: CLASS_C;
+		do
+			proc_cl := System.procedure_class.compiled_class;
+			dispatch (Procedure_type_a, proc_cl);
 		end;
 
 feature
@@ -219,20 +258,63 @@ feature
 		end;
 
 	Tuple_type_a: TUPLE_TYPE_A is
-			-- Default tuple type
+			-- Default tuple type: TUPLE
 		require
 			tuple_compiled: System.tuple_class.compiled
-		local
-			generics: ARRAY [TYPE_A]
 		do
 				-- Not once because tuple_id can change
 			!!Result
 			Result.set_base_class_id (System.tuple_id)
-				-- No generics
-			!!generics.make (1, 0)
-			Result.set_generics (generics)
+			Result.set_generics (Void)
 			Result.set_is_expanded (False)
 		end;
+
+	Function_type_a: GEN_TYPE_A is
+			-- Default function type: FUNCTION [ANY, TUPLE, ANY]
+		require
+			function_compiled: System.function_class.compiled
+			any_compiled: System.any_class.compiled
+			array_compiled: System.array_class.compiled
+			tuple_compiled: System.tuple_class.compiled
+		local
+			any_type: CL_TYPE_A
+			generics: ARRAY [TYPE_A]
+		do
+				-- Not once because function_id can change
+			!!Result
+			Result.set_base_class_id (System.function_class_id)
+			!!generics.make (1, 3)
+			!!any_type
+			any_type.set_base_class_id (System.any_id)
+			generics.put (any_type, 1)
+			generics.put (Tuple_type_a, 2)
+			generics.put (any_type, 3)
+			Result.set_generics (generics)
+			Result.set_is_expanded (False)
+		end
+
+	Procedure_type_a: GEN_TYPE_A is
+			-- Default procedure type: PROCEDURE [ANY, TUPLE]
+		require
+			procedure_compiled: System.procedure_class.compiled
+			any_compiled: System.any_class.compiled
+			array_compiled: System.array_class.compiled
+			tuple_compiled: System.tuple_class.compiled
+		local
+			any_type: CL_TYPE_A
+			generics: ARRAY [TYPE_A]
+		do
+				-- Not once because procedure_id can change
+			!!Result
+			Result.set_base_class_id (System.procedure_class_id)
+			!!generics.make (1, 2)
+			!!any_type
+			any_type.set_base_class_id (System.any_id)
+			generics.put (any_type, 1)
+			generics.put (Tuple_type_a, 2)
+			Result.set_generics (generics)
+			Result.set_is_expanded (False)
+		end
 
 feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
 
@@ -270,18 +352,8 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
 
 	Tuple_type: TUPLE_TYPE_I is
 			-- Default tuple type
-		local
-			meta_gen: META_GENERIC
-			true_gen: ARRAY [TYPE_I]
 		do
-				--- Not once because tuple_id can change
-			!!meta_gen.make (0)
-			!!true_gen.make (1, 0)
-
-			!!Result;
-			Result.set_meta_generic (meta_gen)
-			Result.set_true_generics (true_gen)
-			Result.set_base_id (System.tuple_id)
+			Result := Tuple_type_a.type_i
 		end;
 
 feature -- Debug

@@ -69,6 +69,8 @@ feature
 	c_string: STRING is "char *"
 			-- String generated for the type.
 
+	union_tag: STRING is "rarg"
+
 	separate_get_macro: STRING is "not_implemented"
 			-- String generated to access the argument to a separate call
 

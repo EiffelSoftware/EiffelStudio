@@ -34,14 +34,14 @@ feature
 		end
 
 	is_identical (other: TYPE_I): BOOLEAN is
-			-- Is `other' identical to Current
-			-- Takes `true_generics' into account.
+			-- Is `other' identical with Current ?
+			-- Takes true generics into account.
 		require
 			good_argument: other /= Void
 		do
 			Result := same_as (other)
 		end
-		
+
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
 		require
@@ -215,6 +215,13 @@ feature -- Array optimization
 		do
 		end
 
+feature -- Numeric types
+
+	heaviest (other : TYPE_I) : TYPE_I is
+			-- Heaviest of two numeric types
+		do
+			Result := Current
+		end
 
 feature -- Generic conformance
 

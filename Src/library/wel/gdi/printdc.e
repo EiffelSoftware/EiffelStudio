@@ -16,34 +16,69 @@ creation
 feature -- Basic operations
 
 	start_document (title: STRING) is
-			-- Start the job `title' on the printer
+			-- Start the job `title' on the printer.
 		require
 			exists: exists
 			title_not_void: title /= Void
 		local
-			a: ANY
+			doc_info: WEL_DOC_INFO
 		do
-			a := title.to_c
-			cwin_escape (item, Startdoc, title.count, $a,
-				default_pointer)
+			!! doc_info.make (title)
+			cwin_start_doc (item, doc_info.item)
 		end
 
-	new_frame is
-			-- Send a new frame to the printer
+	start_document_info (doc_info: WEL_DOC_INFO) is
+			-- Start the job using information from `doc_info'.
+		require
+			exists: exists
+			doc_info_not_void: doc_info /= Void
+		do
+			cwin_start_doc (item, doc_info.item)
+		end
+
+	start_page is
+			-- Prepare the printer driver to accept data.
 		require
 			exists: exists
 		do
-			cwin_escape (item, Newframe, 0, default_pointer,
-				default_pointer)
+			cwin_start_page (item)
+		end
+
+	end_page is
+			-- Informs the device that the application has
+			-- finished writing to a page. This procedure is
+			-- typically used to direct the device driver to
+			-- advance to a new page.
+		require
+			exists: exists
+		do
+			cwin_end_page (item)
 		end
 
 	end_document is
-			-- End the job on the printer
+			-- End the job on the printer.
 		require
 			exists: exists
 		do
-			cwin_escape (item, Enddoc, 0, default_pointer,
-				default_pointer)
+			cwin_end_doc (item)
+		end
+
+	abort_document is
+			-- Stops the current print job and erases everything
+			-- drawn since the last call to `start_doc'.
+		require
+			exists: exists
+		do
+			cwin_abort_doc (item)
+		end
+
+feature -- Obsolete
+
+	new_frame is obsolete "Use ``end_page''"
+		require
+			exists: exists
+		do
+			end_page
 		end
 
 feature {NONE} -- Removal
@@ -56,35 +91,44 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Externals
 
-	cwin_escape (dc: POINTER; escape_code, size: INTEGER; 
-			input_struct, output_struct: POINTER) is
-			-- SDK Escape
+	cwin_start_doc (dc: POINTER; docinfo: POINTER) is
+			-- SDK StartDoc
 		external
-			"C [macro <wel.h>] (HDC, int, int, LPCSTR, %
-				%void *)"
+			"C [macro <wel.h>] (HDC, DOCINFO *)"
 		alias
-			"Escape"
+			"StartDoc"
 		end
 
-	Startdoc: INTEGER is
+	cwin_end_doc (dc: POINTER) is
+			-- SDK EndDoc
 		external
-			"C [macro <wel.h>]"
+			"C [macro <wel.h>] (HDC)"
 		alias
-			"STARTDOC"
+			"EndDoc"
 		end
 
-	Enddoc: INTEGER is
+	cwin_abort_doc (dc: POINTER) is
+			-- SDK AbortDoc
 		external
-			"C [macro <wel.h>]"
+			"C [macro <wel.h>] (HDC)"
 		alias
-			"ENDDOC"
+			"AbortDoc"
 		end
 
-	Newframe: INTEGER is
+	cwin_start_page (dc: POINTER) is
+			-- SDK StartPage
 		external
-			"C [macro <wel.h>]"
+			"C [macro <wel.h>] (HDC)"
 		alias
-			"NEWFRAME"
+			"StartPage"
+		end
+
+	cwin_end_page (dc: POINTER) is
+			-- SDK EndPage
+		external
+			"C [macro <wel.h>] (HDC)"
+		alias
+			"EndPage"
 		end
 
 end -- class WEL_PRINTER_DC

@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 	source_size: INTEGER;
 			-- Character number in file or string source
 
-	file: UNIX_FILE;
+	file: PLAIN_TEXT_FILE
 			-- File to be buffered
 
 	string: STRING;

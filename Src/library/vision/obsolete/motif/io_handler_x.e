@@ -53,7 +53,7 @@ feature {NONE}
 feature 
 
 	make (an_io_handler: IO_HANDLER; an_application_context: POINTER) is
-					-- Create a openlook io_handler.
+					-- Create an X io_handler.
 			require
 					an_io_handler_exists: not (an_io_handler = Void)
 		
@@ -67,7 +67,7 @@ feature
 		
 			do
 					Result := c_io_is_call_back_set (c_data)
-		end; 
+			end; 
 
 	set_error_call_back (a_file: UNIX_FILE; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when an operation

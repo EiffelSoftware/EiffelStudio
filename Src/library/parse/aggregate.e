@@ -103,6 +103,17 @@ feature {NONE} -- Implementation
 				end
 			end;
 			complete := not wrong
+			from
+				child_start
+			until
+				no_components or child_after
+			loop
+				if child.is_optional and then child.parsed and then not child.complete then
+					remove_child
+				else
+					child_forth
+				end
+			end
 		end;
 
 	in_action is

@@ -115,6 +115,20 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
+		
+	GB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			copy, is_equal, default_create
+		end
+		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		undefine
+			copy, is_equal, default_create
+		end
 
 feature -- Initialization
 
@@ -616,6 +630,38 @@ feature {NONE} -- Implementation
 		
 	update_client_setting is
 			-- Update client setting of `object'.
+		require
+			object_is_top_level: object.is_top_level_object
+		local
+			warning_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+		do
+				-- Warn user if the file already exists.
+			if Preferences.boolean_resource_value (preferences.show_changing_client_type_warning, True) then
+				if object.window_selector_item.file_exists then
+					create warning_dialog.make_initialized (2, preferences.show_changing_client_type_warning, changing_client_warning, "Do not show again")
+					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
+					warning_dialog.set_cancel_action (agent undo_client_change)
+					warning_dialog.set_ok_action (agent internal_update_client_setting)
+					warning_dialog.show_modal_to_window (parent_window (Current))
+				end
+			else
+				internal_update_client_setting
+			end
+		end
+		
+	undo_client_change is
+			-- Restore `client_check_button' to original state before it was
+			-- selected by a user.
+		do
+			client_check_button.select_actions.block
+			client_check_button.toggle
+			client_check_button.select_actions.resume
+		end
+		
+		
+	internal_update_client_setting is
+			-- Actually perform the client setting of `object' in response
+			-- to a change.
 		require
 			object_is_top_level: object.is_top_level_object
 		do

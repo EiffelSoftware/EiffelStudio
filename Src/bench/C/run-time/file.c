@@ -425,15 +425,18 @@ long start;		/* Amount of characters already held in buffer */
 
 	long amount;	/* Amount of bytes to be read */
 	int c;			/* Last char read */
+	int read;		/* Number of characters read */
 
 	amount = bound - start;		/* Characters to be read */
 	s += start;					/* Where read characters are written */
 	errno = 0;					/* No error, a priori */
+	read = 0;
 
 	while (amount-- > 0) {
 		if ((c = getc(f)) == '\n' || c == EOF)
 			break;
 		*s++ = c;
+		read++;
 	}
 	
 	if (c == EOF && ferror(f))	/* An I/O error occurred */
@@ -443,9 +446,11 @@ long start;		/* Amount of characters already held in buffer */
 	 * read. Otherwise, return (bound - start + 1) to indicate an error
 	 * condition.
 	 */
-	
-	if (++amount == 0 || c == EOF || c == '\n')
-		return bound - start - amount;	/* Number of characters read */
+
+	if (c == EOF || c == '\n')
+		return read;
+	if (amount == -1)
+		return (read + 1);
 
 	return bound - start + 1;			/* Error condition */
 }

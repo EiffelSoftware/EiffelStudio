@@ -136,7 +136,7 @@ extern struct opstack op_stack;		/* Operational stack */
 #define BC_CHAR				45
 #define BC_BOOL				46
 #define BC_INT				47
-#define BC_FLOAT			48
+#define BC_DOUBLE			48
 #define BC_RESULT			49
 #define BC_LOCAL			50
 #define BC_ARG				51
@@ -188,7 +188,7 @@ extern struct opstack op_stack;		/* Operational stack */
 #define BC_BIT				97
 #define BC_ARRAY			98
 #define BC_RETRIEVE_OLD		99
-#define BC_YYYYYYYYYY		100	
+#define BC_FLOAT			100	
 #define BC_OLD				101
 #define BC_ADD_STRIP		102
 #define BC_END_STRIP		103
@@ -203,5 +203,7 @@ extern struct opstack op_stack;		/* Operational stack */
 #define BC_CAST_DOUBLE  	112
 #define BC_INV_NULL  		113
 #define BC_CREAT_INV		114
+#define BC_END_EVAL_OLD		115
+#define BC_START_EVAL_OLD	116
 
 #endif

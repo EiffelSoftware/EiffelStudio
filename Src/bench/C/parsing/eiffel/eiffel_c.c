@@ -508,14 +508,36 @@ char *s;
 {
 	/* Is `s' a valid infix operator ? */
 
+	char *str;
+	char c;
+	int i, length;
 	extern char *std_infix();	/* Hash table query */
+
+	/*
+	 * Convert s to lower before comparing it to the standard
+	 * infix operators
+	 */
+	length = strlen(s);
+	str = (char *) malloc ((length + 1) * sizeof(char));
+	strncpy(str,s,length);
+	str[length] = '\0';
+	for (i=0; i<length; i++) {
+		c = s[i];
+		if (isupper(c))
+			str[i] = tolower(c);
+	}
 
 	/*
 	 * gperf cannot generate hash table with backslashs as keys: so we have to
 	 * perform the extra test with `strcmp' 
 	 */
-	return ((std_infix(s,strlen(s)) != (char *) 0) || (0 == strcmp(s,"\\\\")))
-				? 1 : is_free(s);
+	if ((std_infix(str,length) != (char *) 0) || (0 == strcmp(s,"\\\\"))) {
+		free (str);
+		return (1);
+	} else {
+		free(str);
+		return (is_free(s));
+	}
 }
 
 public int is_prefix(s)
@@ -523,16 +545,47 @@ char *s;
 {
 	/* Is `s' a valid prefix operator ? */
 
+	char *str;
+	char c;
+	int i, length;
 	extern char *std_prefix();	/* Hash table query */
 
-	return (std_prefix(s,strlen(s)) != (char *) 0) ? 1 : is_free(s);
+	/*
+	 * Convert s to lower before comparing it to the standard
+	 * infix operators
+	 */
+	length = strlen(s);
+	str = (char *) malloc ((length + 1) * sizeof(char));
+	strncpy(str,s,length);
+	str[length] = '\0';
+	for (i=0; i<length; i++) {
+		c = s[i];
+		if (isupper(c))
+			str[i] = tolower(c);
+	}
+
+	/*
+	 * gperf cannot generate hash table with backslashs as keys: so we have to
+	 * perform the extra test with `strcmp' 
+	 */
+	if ((std_prefix(str,length) != (char *) 0) || (0 == strcmp(s,"\\\\"))) {
+		free (str);
+		return (1);
+	} else {
+		free(str);
+		return (is_free(s));
+	}
 }
 
 
 private int is_free(s)
 char *s;
 {
-	/* Is `s' a free operator ? */
+	/* Is `s' a free operator ?
+	 * The first character needs to be one of: @, #, |, &
+	 * The following characters must be printable, and exlude
+	 * new-line, space and tab
+	 */
 
 	switch (s[0]) {
 	case '@':
@@ -540,9 +593,12 @@ char *s;
 	case '|':
 	case '&':
 		s++;
-		while (*s)
-			if (*s++ == '%')
+		while (*s) {
+			if (((*s) == '%') || ((*s) <= 32) || ((*s) >= 127))
 				return 0;
+			else
+				*s++;
+		}
 		return 1;
 	default:
 		return 0;

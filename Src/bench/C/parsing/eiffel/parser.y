@@ -326,7 +326,7 @@ ASemi:	TE_SEMICOLON
 Feature_declaration:
 	{list_init();} New_feature_list {$$ = list_new(CONSTRUCT_LIST_AS);} Declaration_body ASemi
 		{
-		$$ = create_feature_as($<node>3,$4,click_list_start($<value>2),end_position);
+		$$ = create_feature_as($<node>3,$4,click_list_start($<value>2),start_position);
 		click_list_set ($$, $<value>2);
 		}
 	;
@@ -547,11 +547,6 @@ New_export_item: Client_list Feature_set
 		{	$$ = create_node1(CLIENT_AS,$1);
 			$$ = create_node2(EXPORT_ITEM_AS,$$,$2);
 		}
-	| Client_list
-		{
-			$$ = create_node1(CLIENT_AS,$1);
-			$$ = create_node2(EXPORT_ITEM_AS,$$,NULL);
-		}
 	;
 
 Feature_set:
@@ -598,6 +593,8 @@ Select:
 
 Formal_arguments:		/* empty */
 							{$$ = NULL;}
+	|					TE_LPARAN TE_RPARAN
+							{yyerror((char *)0);}
 	|					TE_LPARAN {list_init();} Entity_declaration_list TE_RPARAN
 							{$$ = list_new(CONSTRUCT_LIST_AS);}
 	;

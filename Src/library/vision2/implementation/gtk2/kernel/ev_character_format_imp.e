@@ -67,8 +67,8 @@ feature -- Access
 		do
 			a_color := fcolor
 			create Result
-			Result.set_red_with_8_bit ((a_color |<< 24) |>> 24)
-			Result.set_green_with_8_bit ((a_color |<< 16) |>> 24)
+			Result.set_red_with_8_bit (a_color & 0x000000FF)
+			Result.set_green_with_8_bit ((a_color & 0x0000FF00) |>> 8)
 			Result.set_blue_with_8_bit (a_color |>> 16)
 		end
 
@@ -79,8 +79,8 @@ feature -- Access
 		do
 			a_color := bcolor
 			create Result
-			Result.set_red_with_8_bit ((a_color |<< 24) |>> 24)
-			Result.set_green_with_8_bit ((a_color |<< 16) |>> 24)
+			Result.set_red_with_8_bit (a_color & 0x000000FF)
+			Result.set_green_with_8_bit ((a_color & 0x0000FF00) |>> 8)
 			Result.set_blue_with_8_bit (a_color |>> 16)
 		end
 		
@@ -256,9 +256,6 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				if applicable_attributes.effects_underlined and then is_underlined then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_single_enum)
 				end
---				if applicable_attributes.effects_double_underlined and then a_effects.is_double_underlined then
---					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_double_enum)
---				end
 				if applicable_attributes.effects_vertical_offset then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, rise_string, vertical_offset)
 				end

@@ -71,6 +71,21 @@ feature -- Access
 			non_void_consumed_type: Result /= Void
 		end
 
+	referenced_assembly (an_assembly: CONSUMED_ASSEMBLY; assembly_id: INTEGER): CONSUMED_ASSEMBLY is
+			-- Consumed type corresponding to `a_file_name'.
+		require
+			non_void_an_assembly: an_assembly /= Void
+			positive_assembly_id: assembly_id >= 0
+		local
+			l_cam: CONSUMED_ASSEMBLY_MAPPING
+			des: EIFFEL_XML_DESERIALIZER
+			a_file_name: STRING
+		do
+			l_cam ?= referenced_assemblies (an_assembly)
+			
+			Result := l_cam.assemblies.item (assembly_id)
+		end
+
 	info: CACHE_INFO is
 			-- Assembly information from EAC
 		local

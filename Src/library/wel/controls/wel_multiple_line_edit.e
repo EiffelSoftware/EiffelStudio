@@ -177,17 +177,9 @@ feature -- Status report
 		do
 			Result := cwin_send_message_result (item, Em_linelength,
  				line_index (i), 0)
- 				
- 			if
- 				i >= line_count - 2 and then Result > 0
- 			then
- 					-- The last line has not got a newline character.
- 				Result := Result - 1
- 			end
- 			
 		ensure
 			positive_result: Result >= 0
-			-- result_ok: Result = line (i).count
+			result_ok: Result = line (i).count
 		end
 
 	line (i: INTEGER): STRING is
@@ -200,17 +192,17 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			!! Result.make (line_length (i) + 2)
-					-- We add 2 characters to the line_length because
-					-- our line length does not include newline characters,
-					-- Windows line lenghts do include %R%N.
-			Result.fill_blank
-			!! a_wel_string.make (Result)
-			a_wel_string.set_size_in_string (a_wel_string.capacity)
-			nb := cwin_send_message_result (item, Em_getline, i, a_wel_string.to_integer)
-			a_wel_string.set_null_character (nb)
-			Result := a_wel_string.string
-			Result.head (nb)
+			nb := line_length (i)
+			if nb > 0 then
+				create a_wel_string.make_empty (nb)
+				a_wel_string.set_size_in_string (nb)
+				nb := cwin_send_message_result (item, Em_getline, i, a_wel_string.to_integer)
+				a_wel_string.set_null_character (nb)
+				Result := a_wel_string.string
+				Result.head (nb)
+			else
+				create Result.make (0)
+			end
 		ensure
 			result_exists: Result /= Void
 			--count_ok: Result.count = line_length (i)

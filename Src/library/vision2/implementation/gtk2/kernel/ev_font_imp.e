@@ -183,7 +183,7 @@ feature -- Status report
 			Result := substring_dash (full_name, Ev_gdk_font_string_index_spacing).is_equal ("p")
 		end
  
-feature {NONE} -- Implementation
+feature {EV_FONT_IMP} -- Implementation
 
 	preloaded: HASH_TABLE [EV_GDK_FONT, STRING] is
 			-- Previously cached font structures.

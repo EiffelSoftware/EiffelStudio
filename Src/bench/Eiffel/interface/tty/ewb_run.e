@@ -18,8 +18,7 @@ inherit
 			loop_action
 		end;
 	SHARED_EXEC_ENVIRONMENT;
-	PROJECT_CONTEXT;
-	SHARED_MELT_ONLY
+	PROJECT_CONTEXT
 
 feature {NONE} -- Implementation
 
@@ -38,30 +37,20 @@ feature {NONE} -- Implementation
 			if system_name = Void then
 				io.putstring ("You must compile a project first.%N");
 			else
-				if melt_only then
-					-- The application executed is the `driver'
-					appl_name := clone (Precompilation_driver)
-				else
-					system_name.append (Executable_suffix);
-					!!f_name.make_from_string (Workbench_generation_path);
-					f_name.set_file_name (system_name);
-					appl_name := f_name
-				end;
-				!!f.make (appl_name);
+				appl_name := Eiffel_system.application_name (True);
+				!! f.make (appl_name);
 				if not f.exists then
 					io.putstring ("The system ");
 					io.putstring (appl_name);
 					io.putstring (" does not exist.%N");
 				else
-					if not melt_only then
-						!!f_name.make_from_string (Workbench_generation_path);
-						f_name.set_file_name (Makefile_SH);
-						!!make_f.make (f_name);
-						if make_f.exists and then make_f.date > f.date then
-							io.putstring (Makefile_SH);
-							io.putstring (" is more recent than the system%N");
-							error := True
-						end;
+					!! f_name.make_from_string (Workbench_generation_path);
+					f_name.set_file_name (Makefile_SH);
+					!! make_f.make (f_name);
+					if make_f.exists and then make_f.date > f.date then
+						io.putstring (Makefile_SH);
+						io.putstring (" is more recent than the system%N");
+						error := True
 					end;
 					if not error then
 							-- Get the arguments

@@ -9,6 +9,9 @@ indexing
 class
 	EV_ANGLE
 
+obsolete
+	"Will be removed. Do not use anymore."
+
 inherit
 	EV_ANGLE_ROUTINES
 		rename
@@ -176,6 +179,9 @@ end -- class EV_ANGLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/18 23:16:50  brendel
+--| Added obsolete clause.
+--|
 --| Revision 1.10  2000/02/18 17:28:12  brendel
 --| Unreleased.
 --| May still be in system. Use REAL anywhere you find this class.

@@ -6,7 +6,8 @@ inherit
 
 	COMPILER_ID
 		export
-			{BODY_ID} internal_id
+			{BODY_ID} internal_id;
+			{BODY_ID_SUBCOUNTER} compilation_id
 		end;
 	ENCODER
 		export
@@ -38,7 +39,7 @@ feature -- Access
 			buff: STRING
 		do
 			Result := clone (prefix_name);
-			buff := Buffer;
+			buff := Address_table_buffer;
 			eif000 ($buff, internal_id, feature_id);
 			Result.append (buff)
 		end

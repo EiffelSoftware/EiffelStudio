@@ -33,6 +33,9 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
+				-- Get the positive value of `item' and then do
+				-- a modulo on the maximum INTEGER_32 value.
+			Result := (item & 0x000000007FFFFFFF).to_integer_32
 		end
 
 	sign: INTEGER is

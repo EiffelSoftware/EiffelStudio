@@ -216,6 +216,10 @@ feature -- Basic operations
 			end
 			progress_report.step
 			l_type_lib.release
+		rescue
+			if l_type_lib /= Void then
+				l_type_lib.release
+			end
 		end
 
 	add_library_descriptor (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is

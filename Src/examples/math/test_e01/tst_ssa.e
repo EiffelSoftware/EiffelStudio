@@ -12,7 +12,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 
 	make 
 
@@ -28,14 +28,14 @@ feature -- Initialization
 			i, j: INTEGER;
 		
 		do
-			!! form.make(12, 3);
+			create form.make(12, 3);
 			print_nl ("Test of SURFACE_SPLINE_APPROXIMATOR");
-			!! x.make_real_from_array (
+			create x.make_real_from_array (
 				<<0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0>>);
-			!! y.make_real_from_array (
+			create y.make_real_from_array (
 				<<0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0>>);
 			
-			!! f.make_real_from_array (
+			create f.make_real_from_array (
 				<<   1.0000E+00,  8.8758E-01,  5.4030E-01,  7.0737E-02, 	
 					-4.1515E-01, -8.0114E-01, -9.7999E-01, -9.3446E-01, -6.5664E-01,
 					 1.5000E+00,  1.3564E+00,  8.2045E-01,  1.0611E-01, 
@@ -63,7 +63,7 @@ feature -- Initialization
 		
 			print_nl ("Making object SURFACE_SPLINE_APPROXIMATOR - NAG e02dcc ");
 			print_nl ("with assumed smoothness = 0.1 ");
-			!! approximator.make (x, y, f, 0.1, 15, 13);
+			create approximator.make (x, y, f, 0.1, 15, 13);
 			printv (" Closeness (sum of squared residuals) = ", approximator.closeness);
 
 			print_nl ("Distinct knots_x - see e02dcc test results");
@@ -85,9 +85,9 @@ feature -- Initialization
 			printv (" B-spline coefficients - see e02dcc test results",
 					approximator.coefficients);
 
-			!! x1.make_real_from_array (
+			create x1.make_real_from_array (
 				<<0.0, 1.0, 2.0, 3.0, 4.0, 5.0>>);
-			!! y1.make_real_from_array (
+			create y1.make_real_from_array (
 				<<0.0, 1.0, 2.0, 3.0, 4.0>>);
 			printv ("Values on grid (e01dcc)", approximator.values_on_grid(x1, y1));
 			print_nl (" End of tests for SURFACE_SPLINE_APPROXIMATOR class ");

@@ -31,7 +31,7 @@ feature -- Basic operations
 			y1 := y @ 1;
 			y2 := y @ 2;
 			y3 := y @ 3;
-			!! Result.make (1, 3);
+			create Result.make (1, 3);
 			Result.put (-0.04 * y1 + c1 * y2 * y3, 1);
 			Result.put (
 				0.04 * y1 - c1 * y2 * y3 - c2 * y2 * y2,
@@ -51,7 +51,7 @@ feature -- Basic operations
 			y1 := y @ 1;
 			y2 := y @ 2;
 			y3 := y @ 3;
-			!! Result.make_real (3,3);
+			create Result.make_real (3,3);
 			Result.put_grid_real (-0.04,1,1);
 			Result.put_grid_real (y3 * c1,1,2);
 			Result.put_grid_real (y2 * c1,1,3);

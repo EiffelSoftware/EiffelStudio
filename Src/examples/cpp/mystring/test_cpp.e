@@ -1,14 +1,14 @@
 class
 	TEST_CPP
 
-creation
+create
 	make
 
 feature
 
 	make is
 		do
-			!! s.make ("Hello World!")
+			create s.make ("Hello World!")
 			io.print ("The string is: ")
 			io.print (s.value)
 			io.print ("%NThe length is: ")

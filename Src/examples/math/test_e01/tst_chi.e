@@ -12,7 +12,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 
 	make 
 
@@ -25,15 +25,15 @@ feature -- Initialization
 			x, f, d, a, b: BASIC_VECTOR;
 			i: INTEGER;		
 		do
-			!! form.make(13, 4);
-			!! x.make_real_from_array(
+			create form.make(13, 4);
+			create x.make_real_from_array(
 				<<7.99, 8.09, 8.19, 8.70, 9.20, 10.0, 12.0, 15.0, 20.0>>);
-			!! f.make_real_from_array(
+			create f.make_real_from_array(
 				<<0.0, 0.27643e-4, 0.43750e-1, 0.16918,
 					0.46943, 0.94374, 0.99864, 0.99992, 0.99999>>);
 
 			print_nl ("Testing CURVE_HERMITE_INTERPOLATOR ");
-			!! hermite.make (x, f);
+			create hermite.make (x, f);
 			print_nl ("Here are stored abscissas, ordinates and computed derivatives: ");
 			print_nl ("(Compare with derivatives given as input in NAG test e01bgc) ");
 			printv ("Derivatives",hermite.derivatives);
@@ -41,8 +41,8 @@ feature -- Initialization
 			printv ("Ordinates",hermite.ordinates);
 
 			print_nl (" Testing 'integral' for four limits <a, b> - see NAG e01bhc ");
-			!! a.make_real_from_array (<<7.99, 10.0, 12.0, 15.0>>);
-			!! b.make_real_from_array (<<20.0, 12.0, 10.0, 15.0>>);
+			create a.make_real_from_array (<<7.99, 10.0, 12.0, 15.0>>);
+			create b.make_real_from_array (<<20.0, 12.0, 10.0, 15.0>>);
 			from 
 				i := 1
 			until
@@ -57,7 +57,7 @@ feature -- Initialization
 					a.real_item (i), b.real_item (i))));
 				i := i + 1;
 			end;
-			!! a.make_real_from_array (<<7.99, 9.191, 10.392, 11.593, 12.794, 13.995, 
+			create a.make_real_from_array (<<7.99, 9.191, 10.392, 11.593, 12.794, 13.995, 
 					15.196, 16.397, 17.598, 18.799, 20.0>>);
 			hermite.set_interposed_abscissas (a); 
 				

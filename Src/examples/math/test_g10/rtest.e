@@ -11,7 +11,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 
 	make
 
@@ -52,7 +52,7 @@ feature -- Basic operations
 			416., 403., 422., 459., 467.,
 			512., 534., 552., 545.
 			>>;
-			!! a.make (x);
+			create a.make (x);
 			expect(426.0, a.item (1));
 			expect(153.0, a.residual(1));
 			print("Compare with tables at end of g10cac%N");
@@ -69,7 +69,7 @@ feature -- Basic operations
 				i := i + 1
 			end;
 			print("Result of make_for_comparison.%N");
-			!! a.make_for_comparison (x);
+			create a.make_for_comparison (x);
 			from i := 1 until i > a.count loop
 				print(i-1);
 				print("%T");

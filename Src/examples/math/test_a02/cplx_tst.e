@@ -16,7 +16,7 @@ inherit
 			print
 		end
 
-creation
+create
 
 	make
 
@@ -29,8 +29,8 @@ feature -- Initialization
 			toto := g05cac
 
 			print("test of COMPLEX %N")
-			!! x
-			!! y
+			create x
+			create y
 			x.set (1, 0)
 			y.set (0, 1)
 			test

@@ -23,7 +23,7 @@ feature -- Access
 			y: DOUBLE;
 			j: INTEGER;
 		do
-			!! Result.make(1, 9);
+			create Result.make(1, 9);
 			y := (3. - 2. * (x @ 1)) * (x @ 1) - 2. * (x @ 2) + 1.;
 			Result.put (y, 1);
 			from j := 2 until j > 8 loop
@@ -41,7 +41,7 @@ feature -- Access
 		local
 			i: INTEGER;
 		do
-			!! Result.make_real (9,9);
+			create Result.make_real (9,9);
 			from i := 1 until i > 9 loop
 				Result.put_grid_real (3.0 - (x @ i) * 4.0, i, i);
 				if i > 1 then

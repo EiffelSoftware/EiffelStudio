@@ -22,7 +22,7 @@ feature -- Basic operations
 
 	rhs (x: DOUBLE; y: ARRAY [DOUBLE]): ARRAY [DOUBLE] is
 		do
-			!! Result.make(1, 3);
+			create Result.make(1, 3);
 			Result.put (tangent (y @ 3), 
 				1);
 			Result.put (

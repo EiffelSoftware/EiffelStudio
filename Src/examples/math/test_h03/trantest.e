@@ -12,7 +12,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -29,12 +29,12 @@ feature -- Initialization
 		do
 			avail := <<1.0, 5.0, 6.0>>;
 			req := <<4.0, 4.0, 4.0>>;
-			!! cost.make_real_from_array (
+			create cost.make_real_from_array (
 				<< 8.0, 8.0, 11.0,
 				   5.0, 8.0, 14.0,
 				   4.0, 3.0, 10.0 >>,
 				3, 3);
-			!! tested.make;
+			create tested.make;
 			tested.set_maximum_iterations (200);
 			tested.set_available (avail);
 			tested.set_required (req);

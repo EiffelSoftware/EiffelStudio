@@ -17,7 +17,7 @@ inherit
 			print
 		end
 
-creation
+create
 	make
 
 feature -- The main program
@@ -76,7 +76,7 @@ feature -- The main program
 
 	nag_error: FAKE_NAG_ERROR is
 		once
-			!! Result;
+			create Result;
 			Result.enable_error_recovery;
 			Result.disable_error_printing
 		end;

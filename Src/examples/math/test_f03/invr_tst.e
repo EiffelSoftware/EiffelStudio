@@ -11,7 +11,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 	make 
 
 
@@ -55,15 +55,15 @@ feature -- Basic operations
 	test_real_general is
 			-- NAG tests f03afc and f04ajc
 		do
-			!! matrix.make_real_from_array (
+			create matrix.make_real_from_array (
 				<< 33.0, 16.0, 72.0,
 				  -24.0,-10.0,-57.0,
 				   -8.0, -4.0,-17.0>>, 3, 3);
 
-			!! right_hand.make_real_from_array (
+			create right_hand.make_real_from_array (
 				<<-359.0, 281.0, 85.0>>, 3, 1);
 		
-			!! inverter.make (matrix);
+			create inverter.make (matrix);
  			print ("%N ---------------- %N");
 			print ("%N NAG tests f03afc %N");
 			
@@ -102,13 +102,13 @@ feature -- Basic operations
 	test_real_symmetric is
 			--f04aec
 		do
-			!! matrix.make_real_from_array (
+			create matrix.make_real_from_array (
 				<< 6.0, 7.0, 6.0, 5.0,
 				   7.0,11.0, 8.0, 7.0,
 				   6.0, 8.0,11.0, 9.0,
 				   5.0, 7.0, 9.0,11.0>>, 4, 4);
 			matrix.set_symmetricity (True);
-			!! inverter.make (matrix);
+			create inverter.make (matrix);
  			print ("%N ---------------- %N");
 			print ("%N NAG tests f03aec %N");
 			
@@ -127,15 +127,15 @@ feature -- Basic operations
 			print (inverter.power_det);
 			print_nl ("");
 
-			!! matrix.make_real_from_array (
+			create matrix.make_real_from_array (
 				<<5.0,  7.0,  6.0,  5.0,
 				  7.0, 10.0,  8.0,  7.0,
 				  6.0,  8.0, 10.0,  9.0,
 				  5.0,  7.0,  9.0, 10.0>>, 4, 4);
 
-			!! inverter.make (matrix);
+			create inverter.make (matrix);
 
-			!! right_hand.make_real_from_array (
+			create right_hand.make_real_from_array (
 				<<23.0, 32.0, 33.0, 31.0>>, 4, 1);
 		
 			print ("%N ---------------- %N");
@@ -179,13 +179,13 @@ feature -- Basic operations
  			print ("%N ---------------- %N");
 			print ("%N NAG tests f03ahc %N");
 
-			!! matrix.make_complex_from_arrays ( 
+			create matrix.make_complex_from_arrays ( 
 				<<2.0, 1.0, 2.0, 1.0, 1.0, -5.0, 1.0, 0.0, -7.0>>,
 				<<0.0, 2.0, 10.0, 1.0, 3.0, 14.0, 1.0, 5.0, 20.0>>,
 				3, 3);
 			matrix.as_blended_complex;	
 		
-			!! inverter.make (matrix);
+			create inverter.make (matrix);
 
 			print ("%N System matrix before LU factorization %N");
 			print (matrix);
@@ -205,17 +205,17 @@ feature -- Basic operations
 			print ("%N ---------------- %N");
 			print ("NAG test f04akc (with f03ahc extra) %N");
 
-			!! matrix.make_complex_from_arrays (
+			create matrix.make_complex_from_arrays (
 				<<1.0, 1.0, 2.0, 1.0, 0.0, -5.0, 1.0, 0.0, -8.0>>,
 				<<0.0, 2.0, 10.0,1.0, 3.0, 14.0, 1.0, 5.0, 20.0>>,
 				3,3);
 			matrix.as_blended_complex;
 
-			!! right_hand.make_real_from_array (
+			create right_hand.make_real_from_array (
 				<<1.0, 0.0, 0.0>>, 3, 1);
 			right_hand.as_blended_complex;
 		
-			!! inverter.make (matrix);
+			create inverter.make (matrix);
 
 			print ("%N System matrix before LU factorization %N");
 			print (matrix);
@@ -251,7 +251,7 @@ feature -- Basic operations
  			print ("%N ---------------- %N");
 			print ("%N NAG test f01bnc %N");
 
-			!! matrix.make_complex_from_arrays (
+			create matrix.make_complex_from_arrays (
 				<< 15.0,  1.0,  2.0, -4.0, 
 					1.0, 20.0, -2.0,  3.0,
 					2.0, -2.0, 18.0, -1.0,
@@ -263,7 +263,7 @@ feature -- Basic operations
 			matrix.as_blended_complex;
 			matrix.set_symmetricity (True);
 
-			!! inverter.make (matrix);
+			create inverter.make (matrix);
 
 			print ("%N System matrix before U (H) * U factorization %N");
 			print (matrix);
@@ -281,7 +281,7 @@ feature -- Basic operations
 			print ("%N ---------------- %N");
 			print ("NAG test f04awc %N");
 
-			!! right_hand.make_complex_from_arrays (
+			create right_hand.make_complex_from_arrays (
 				<< 25.0, 21.0, 12.0, 21.0>>,
 				<< 34.0, 19.0,-21.0,-27.0>>, 4, 1);
 			right_hand.as_blended_complex;

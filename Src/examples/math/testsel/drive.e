@@ -12,7 +12,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 
 	make
 
@@ -33,7 +33,7 @@ feature -- Initialization
 			i, j: INTEGER
 			c: BASIC_MATRIX;
 		do
-			!! tested.make(number_of_observations, number_of_variables);
+			create tested.make(number_of_observations, number_of_variables);
 			from i := 1 until i > number_of_observations loop
 				from j := 1 until j > number_of_variables loop
 					tested.put (i + j/100., i, j);
@@ -66,7 +66,7 @@ feature -- Initialization
 			print_nl ("Test printing as matrix...");
 			print_nl (tested.data)
 			print_nl ("Test complex relative...");
-			!! c.make_dual_complex (number_of_observations, number_of_variables);
+			create c.make_dual_complex (number_of_observations, number_of_variables);
 			from i := 1 until i > number_of_observations loop
 				from j := 1 until j > number_of_variables loop
 					c.put_grid_real (i + j/100., i, j);

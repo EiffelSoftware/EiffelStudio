@@ -12,7 +12,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
  
-creation 
+create 
  
 	make 
  
@@ -22,14 +22,14 @@ feature -- Initialization
 	make is
 			-- Test curve spline approximator routines
 		do
-			!! form.make (13, 4);
-			!! x.make_real_from_array ( 
+			create form.make (13, 4);
+			create x.make_real_from_array ( 
 				<<0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 
 				4.5, 5.0, 5.5, 6.0, 7.0, 7.5, 8.0>>); 
-			!! f.make_real_from_array ( 
+			create f.make_real_from_array ( 
 				<<-1.1, -0.372, 0.431, 1.69, 2.11, 3.1, 4.23, 
 				4.35, 4.81, 4.61, 4.79, 5.23, 6.35, 7.19, 7.97>>); 
-			!! w.make_real_from_array ( 
+			create w.make_real_from_array ( 
 				<<1.0, 2.0, 1.5, 1.0, 3.0, 1.0, 0.5, 1.0, 2.0, 
 				2.5, 1.0, 3.0, 1.0, 2.0, 1.0>>);
 			test_curve_spline_approximator;
@@ -48,7 +48,7 @@ feature -- Initialization
 		do 
 			print_nl ("Testing CURVE_SPLINE_APPROXIMATOR - NAG e02bec"); 
 			s := <<1.0, 0.5, 0.1, 0.0 >>; 
-			!! x1.make_real ((x.count) * 2 - 1); 
+			create x1.make_real ((x.count) * 2 - 1); 
 			from 
 				i := 1 
 			until 
@@ -59,7 +59,7 @@ feature -- Initialization
 				i := i + 1; 
 			end; 
 			x1.put_real (x.real_item (x.count), x1.count); 
-			!! eval.make_real (4, x1.count); 
+			create eval.make_real (4, x1.count); 
 			from 
 				j := 1 
 			until 
@@ -67,7 +67,7 @@ feature -- Initialization
 			loop 
 				smooth := s.item (j)
 				if j = 1 then
-					!! approximator.make (x, f, w, smooth, 54);
+					create approximator.make (x, f, w, smooth, 54);
 				else
 					approximator.set_smoothness (smooth);
 				end; 
@@ -122,10 +122,10 @@ feature -- Initialization
 			i, n: INTEGER;
 		do 
 			-- Use the (interior) knots from the other approximator.
-			!! approximator.make (x, f, w, s, 54);
+			create approximator.make (x, f, w, s, 54);
 			kold := approximator.knots;
 			n := kold.count - 8;
-			!! knew.make_real (n);
+			create knew.make_real (n);
 			from i := 1 until i > n loop
 				knew.put_real (kold.real_item (4 + i), i)
 				i := i + 1;
@@ -133,7 +133,7 @@ feature -- Initialization
 			print_nl ("Making object KNOTTED_CURVE_SPLINE_APPROXIMATOR - NAG e02bac");
 			printv ("Knots input", knew)
 
-			!! knotted_approximator.make (x, f, w, knew);
+			create knotted_approximator.make (x, f, w, knew);
 
 			printv ("Coefficients", knotted_approximator.coefficients)
 			printv ("Knots used", knotted_approximator.knots)

@@ -13,7 +13,7 @@ inherit
 			print
 		end
 
-creation
+create
 
 	make
 
@@ -87,9 +87,9 @@ feature
 			d, d1: DOUBLE;
 		do
 			print("Gamma tail/generator comparison. Please wait.%N");
-			!! nd.make(4.0, 2.0);
+			create nd.make(4.0, 2.0);
 			d1 := nd.lower_tail_deviate(.20);
-			!! ng.make_non_repeatable(4.0, 2.0);
+			create ng.make_non_repeatable(4.0, 2.0);
 			from 
 				i := 1
 			until 
@@ -116,9 +116,9 @@ feature
 			d, d1: DOUBLE;
 		do
 			print("Chi-squared tail/generator comparison. Please wait.%N");
-			!! nd.make(7.5);
+			create nd.make(7.5);
 			d1 := nd.lower_tail_deviate(.20);
-			!! ng.make_non_repeatable(7.5);
+			create ng.make_non_repeatable(7.5);
 			from 
 				i := 1
 			until 
@@ -145,9 +145,9 @@ feature
 			d, d1: DOUBLE;
 		do
 			print("Student's t tail/generator comparison. Please wait.%N");
-			!! nd.make(7.5);
+			create nd.make(7.5);
 			d1 := nd.lower_tail_deviate(.20);
-			!! ng.make_non_repeatable(7.5);
+			create ng.make_non_repeatable(7.5);
 			from 
 				i := 1
 			until 
@@ -174,9 +174,9 @@ feature
 			d, d1: DOUBLE;
 		do
 			print("Normal tail/generator comparison. Please wait.%N");
-			!! nd.make(2., 1.);
+			create nd.make(2., 1.);
 			d1 := nd.lower_tail_deviate(.20);
-			!! ng.make_non_repeatable(2., 1.);
+			create ng.make_non_repeatable(2., 1.);
 			from 
 				i := 1
 			until 
@@ -207,7 +207,7 @@ feature
 		do
 			print("Testing Student's T Distribution nu=20.%N");
 
-			!!t.make (20.0);
+			create t.make (20.0);
 
 			print("Expect .7973 .4054 .5946 .2027%N");
 			print(t.lower_tail_probability(0.85)); print(" ");
@@ -224,7 +224,7 @@ feature
 			print(t.upper_tail_deviate(0.2027)); print("%N");
 
 			print("Testing normal distribution (3., 2.)%N");
-			!! n.make(3., 2.);
+			create n.make(3., 2.);
 			print ("Standard deviate at x=.95:");
 			print (standard_normal_lower_tail_deviate (.95));
 			print_nl ("");
@@ -233,7 +233,7 @@ feature
 			print_nl ("");
 
 			print("Testing chi-squared distribution (7.5)%N");
-			!! c.make(7.5);
+			create c.make(7.5);
 			print ("Expect .4279: ");
 			print (c.lower_tail_probability (6.2));
 			print_nl ("");
@@ -243,7 +243,7 @@ feature
 
 
 			print("Testing F distribution (10.0, 25.5)%N");
-			!! f.make(10.0, 25.5);
+			create f.make(10.0, 25.5);
 			print ("Expect .984: ");
 			print (f.lower_tail_probability (2.837));
 			print_nl ("");
@@ -252,7 +252,7 @@ feature
 			print_nl ("");
 
 			print("Testing Beta distribution (1., 2.)%N");
-			!! b.make(1., 2.);
+			create b.make(1., 2.);
 			print ("Expect .4375: ");
 			print (b.lower_tail_probability (0.25));
 			print_nl ("");
@@ -261,7 +261,7 @@ feature
 			print_nl ("");
 
 			print("Testing Gamma distribution (7.5, .1)%N");
-			!! g.make(7.5, .1);
+			create g.make(7.5, .1);
 			print ("Expect .428: ");
 			print (g.lower_tail_probability (.670));
 			print_nl ("");
@@ -270,7 +270,7 @@ feature
 			print_nl ("");
 
 			print("Testing Bivariate Normal distribution (.540)%N");
-			!! v.make(.540);
+			create v.make(.540);
 			print ("Expect .9995: ");
 			print (v.lower_tail_probability (3.3, 11.1));
 			print_nl ("");
@@ -294,7 +294,7 @@ feature
 			d12: BINOMIAL_GENERATOR;
 		do
 			print ("From a CUD%N");
-			!! d1.make_non_repeatable;
+			create d1.make_non_repeatable;
 			d1.set_next_sample_size (4);
 			d1.get_sample;
 			next(d1);
@@ -305,7 +305,7 @@ feature
 			next(d1);
 
 			print ("From a CUD_AB (2, 5)%N");
-			!! d2.make_repeatable (2., 5., 0);
+			create d2.make_repeatable (2., 5., 0);
 			d2.set_next_sample_size (4);
 			d2.get_sample;
 			next(d2);
@@ -316,7 +316,7 @@ feature
 			next(d2);
 			
 			print ("From an EXPONENTIAL (2.0)%N");
-			!! d3.make_repeatable (2., 0);
+			create d3.make_repeatable (2., 0);
 			d3.set_next_sample_size (4);
 			d3.get_sample;
 			next(d3);
@@ -327,7 +327,7 @@ feature
 			next(d3);
 			
 			print ("From a Beta (2.0, 2.0)%N");
-			!! d4.make_repeatable (2., 2., 0);
+			create d4.make_repeatable (2., 2., 0);
 			d4.set_next_sample_size (4);
 			d4.get_sample;
 			next(d4);
@@ -338,7 +338,7 @@ feature
 			next(d4);
 			
 			print ("From a normal distribution mean 3., sigma 2.%N");
-			!! d5.make_repeatable(3., 2., -1);
+			create d5.make_repeatable(3., 2., -1);
 			d5.set_next_sample_size (4);
 			d5.get_sample;
 			next(d5);
@@ -348,12 +348,12 @@ feature
 			next(d5);
 			next(d5);
 			print ("The next sample only is from normal(0.,1.)%N");
-			!! d6.make_non_repeatable(0., 1.);
+			create d6.make_non_repeatable(0., 1.);
 			next(d6);
 			next(d5);
 
 			print ("From a GAMMA (5.0, 1.0)%N");
-			!! d7.make_repeatable (5., 1., 0);
+			create d7.make_repeatable (5., 1., 0);
 			d7.set_next_sample_size (4);
 			d7.get_sample;
 			next(d7);
@@ -364,7 +364,7 @@ feature
 			next(d7);
 	
 			print ("From a Chi-square (4.0)%N");
-			!! d8.make_repeatable (4.0, 0);
+			create d8.make_repeatable (4.0, 0);
 			d8.set_next_sample_size (4);
 			d8.get_sample;
 			next(d8);
@@ -375,7 +375,7 @@ feature
 			next(d8);
 	
 			print ("From a Student's t (4.0)%N");
-			!! d9.make_repeatable (4.0, 0);
+			create d9.make_repeatable (4.0, 0);
 			d9.set_next_sample_size (4);
 			d9.get_sample;
 			next(d9);
@@ -386,7 +386,7 @@ feature
 			next(d9);
 	
 			print ("From a Discrete (2, 6)%N");
-			!! d10.make_repeatable (2, 6, 0);
+			create d10.make_repeatable (2, 6, 0);
 			d10.set_next_sample_size (4);
 			d10.get_sample;
 			nexti(d10);
@@ -397,7 +397,7 @@ feature
 			nexti(d10);
 
 			print ("From a Poisson (2.7)%N");
-			!! d11.make_repeatable (2.7, 0);
+			create d11.make_repeatable (2.7, 0);
 			d11.set_next_sample_size (2);
 			d11.get_sample;
 			nexti(d11);
@@ -408,7 +408,7 @@ feature
 			nexti(d11);
 
 			print ("From a Binomial (100, 0.5)%N");
-			!! d12.make_repeatable (100, 0.5, 0);
+			create d12.make_repeatable (100, 0.5, 0);
 			d12.set_next_sample_size (2);
 			d12.get_sample;
 			nexti(d12);
@@ -447,16 +447,16 @@ feature
 			y: BASIC_MATRIX;
 			z: VECTOR_NORMAL_GENERATOR;
 		do
-			!! x.make (1, 2);
+			create x.make (1, 2);
 			x.put (1., 1);
 			x.put (2., 2);
-			!! y.make_real_from_array ( <<
+			create y.make_real_from_array ( <<
 				2.0, 1.0,
 				1.0, 3.0
 				>>, 2, 2);
 			y.set_symmetricity (True);
 			print("Testing vector normal generator.%N");
-			!! z.make_repeatable (x, y, .01, 0);
+			create z.make_repeatable (x, y, .01, 0);
 			nextv (z);
 			nextv (z);
 			nextv (z);
@@ -471,14 +471,14 @@ feature
 		do
 			print("Testing deal of subsets from 2, 4, 6, 8, 9%N");
 			j := <<2, 4, 6, 8, 9>>;
-			!! d.make_repeatable(j, 3, 193);
+			create d.make_repeatable(j, 3, 193);
 			print(d.tagged_out);
 			d.deal (3);
 			print(d.dealt.tagged_out);
 			d.deal (2);
 			print(d.dealt.tagged_out);
 			print("Should repeat the same experience now...%N");
-			!! d.make_repeatable(j, 3, 193);
+			create d.make_repeatable(j, 3, 193);
 			print(d.tagged_out);
 			d.deal (3);
 			print(d.dealt.tagged_out);
@@ -493,7 +493,7 @@ feature
 		do
 			print("Testing permuting 1, ..., 5%N");
 			j := <<1, 2, 3, 4, 5>>;
-			!! d.make_non_repeatable(j);
+			create d.make_non_repeatable(j);
 			print(d.permuted.tagged_out);
 			d.permute;
 			print(d.permuted.tagged_out);
@@ -506,12 +506,12 @@ feature
 			w: ARRAY [DOUBLE];
 			i: INTEGER;
 		do
-			!! phi.make (1, 2);
+			create phi.make (1, 2);
 			phi.put (0.4, 1);
 			phi.put (0.2, 2);
 
-			!! x.make_repeatable (	0.0, 2.0, phi, Void, 0)
-			!! w.make (1, 10);
+			create x.make_repeatable (	0.0, 2.0, phi, Void, 0)
+			create w.make (1, 10);
 			from i := 1 until i > 10 loop
 				w.put (x.item, i);
 				x.forth;

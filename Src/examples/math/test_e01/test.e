@@ -8,7 +8,7 @@ class
 
 	INTERPOLATION_TEST 
 	
-creation
+create
 	make 
 
 
@@ -25,13 +25,13 @@ feature -- Initialization
 			s_scat_interpol: SCATTERED_SURFACE_INTERPOLATOR_TEST;
 			s_scat_approxim: SCATTERED_SURFACE_SPLINE_APPROXIMATOR_TEST;
 		do
-			!! c_hermite.make;
-			!! c_interpol.make;
-			!! c_approxim.make;
-			!! s_interpol.make;
-			!! s_approxim.make;
-			!! s_scat_interpol.make
-			!! s_scat_approxim.make
+			create c_hermite.make;
+			create c_interpol.make;
+			create c_approxim.make;
+			create s_interpol.make;
+			create s_approxim.make;
+			create s_scat_interpol.make
+			create s_scat_approxim.make
 		end;
 		
 end -- class INTERPOLATION_TEST

@@ -12,7 +12,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 
 	make 
 
@@ -28,14 +28,14 @@ feature -- Initialization
 			input: PLAIN_TEXT_FILE;
 			title: STRING;
 		do
-			!! input.make_open_read("e01sace.d")
+			create input.make_open_read("e01sace.d")
 			input.readline;
 			title := deep_clone(input.last_string)
 			input.read_integer;
 			m := input.last_integer;
-			!! x.make_real (m);
-			!! y.make_real (m);
-			!! f.make_real (m);
+			create x.make_real (m);
+			create y.make_real (m);
+			create f.make_real (m);
 			from i := 1 until i > m loop
 				input.read_real
 				x.put_real (input.last_real, i);
@@ -50,14 +50,14 @@ feature -- Initialization
 			printv ("x", x);
 			printv ("y", y);
 			printv ("f", f);
-			!! method;
-			!! x1.make_real_from_array (
+			create method;
+			create x1.make_real_from_array (
 				<<3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0>>);
-			!! y1.make_real_from_array (
+			create y1.make_real_from_array (
 				<<2.0, 5.0, 8.0, 11.0, 14.0, 17.0>>);
 		
 			print_nl (method.method_name);
-			!! interpolator.make (x, y, f, method);
+			create interpolator.make (x, y, f, method);
 			printv("values_on_grid", interpolator.values_on_grid(x1, y1));
 	
 			method.set_radii_estimators (12, 24);

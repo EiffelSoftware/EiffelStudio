@@ -60,13 +60,13 @@ feature {NONE} -- Initialization
 			disable_multiple_selection
 			C.gtk_widget_show (list_widget)
 			C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
+			real_signal_connect (list_widget, "unselect_child", ~deselect_callback)
 		end
 
 	initialize is
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			real_signal_connect (list_widget, "select_child", ~select_callback)
-			real_signal_connect (list_widget, "unselect_child", ~deselect_callback)
 		end
 
 	select_callback (a_list_item: POINTER) is
@@ -82,11 +82,12 @@ feature {NONE} -- Initialization
 				previous_selected_item.deselect_actions.call ([])
 			end
 			
-			if l_item.is_selected then
+			if l_item.has_parent and then l_item.is_selected then
+					-- Parent check due to bug in combo box.
 				l_item.interface.select_actions.call ([])
 				interface.select_actions.call ([l_item.interface])
 				previous_selected_item := l_item.interface
-			else
+			elseif l_item.has_parent then
 				interface.deselect_actions.call ([l_item.interface])
 				previous_selected_item := Void
 			end		
@@ -212,6 +213,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/08 21:39:04  king
+--| Reimplemented to be compatible with combo box
+--|
 --| Revision 1.30  2000/03/07 01:27:23  king
 --| Added event handling
 --|

@@ -38,6 +38,18 @@ feature {NONE} -- Initialization
 			create list_feature_info.make (100)
 		end
 
+feature -- reset
+
+	reset (a_module_name: like module_name) is
+			-- Reset data for `module_name'.
+		do
+			check
+				module_name.is_equal (a_module_name)
+			end
+			list_class_type_id.wipe_out
+			list_feature_info.wipe_out
+		end
+
 feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
 
 	update_module_name (a_mod_name: STRING) is

@@ -21,7 +21,7 @@ inherit
 		end;
 	PIXMAP_COMMAND
 		redefine
-			tool
+			tool, button_three_action
 		end;
 	SHARED_APPLICATION_EXECUTION;
 	WARNER_CALLBACKS
@@ -65,6 +65,12 @@ feature -- Properties
 
 	parent: COMPOSITE
 			-- Parent for the argument window
+
+	button_three_action: ANY is
+			-- Third button action
+		do
+			Result := specify_args
+		end
 
 feature -- Close window
 
@@ -135,7 +141,7 @@ end;
 							-- application
 						warner (popup_parent).custom_call (Current, 
 							w_Makefile_more_recent (Makefile_SH), 
-							" OK ", Void, "Cancel")
+							l_Ok, Void, l_Cancel)
 					else
 						mp.restore;
 						debug_window.clear_window;
@@ -161,7 +167,7 @@ end;
 				elseif make_f.exists then
 						-- There is no application
 					warner (popup_parent).custom_call (Current, 
-						w_No_system_generated, " OK ", Void, "Cancel");
+						w_No_system_generated, l_Ok, Void, l_Cancel);
 				else
 					warner (popup_parent).gotcha_call 
 						(w_Must_compile_first)

@@ -332,7 +332,7 @@ feature -- Basic operations
 			if c > oc then
 				n := c
 				m := oc
-				tmp_values := clone (values)
+				tmp_values := values.twin
 			else
 				n := oc
 				m := c
@@ -372,11 +372,11 @@ feature -- Basic operations
 			if c > oc then
 				n := c
 				m := oc
-				tmp_values := clone (values)
+				tmp_values := values.twin
 			else
 				n := oc
 				m := c
-				tmp_values := clone (other.values)
+				tmp_values := other.values.twin
 			end
 			from
 				
@@ -404,11 +404,11 @@ feature -- Basic operations
 			if c > oc then
 				n := c
 				m := oc
-				tmp_values := clone (values)
+				tmp_values := values.twin
 			else
 				n := oc
 				m := c
-				tmp_values := clone (other.values)
+				tmp_values := other.values.twin
 			end
 			from
 				

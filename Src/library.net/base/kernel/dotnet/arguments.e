@@ -233,7 +233,7 @@ feature -- Status report
 		do
 			p := index_of_character_option (o)
 			if p /= 0 then
-				l := clone (argument_array.item (p))
+				l := argument_array.item (p).twin
 				if option_sign.item /= '%U' then
 					l.remove (1)
 				end
@@ -263,7 +263,7 @@ feature -- Status report
 		do
 			p := index_of_beginning_with_word_option (opt)
 			if p /= 0 then
-				l := clone (argument_array.item (p))
+				l := argument_array.item (p).twin
 				if option_sign.item /= '%U' then
 					l.remove (1)
 				end

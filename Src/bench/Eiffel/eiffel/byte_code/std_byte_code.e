@@ -369,8 +369,9 @@ feature
 							if context.workbench_mode then
 									-- RTLX is a macro used to create
 									-- expanded types
-								generated_file.putstring (" = RTLX(");
-								generated_file.putint (exp_type_id);
+								generated_file.putstring (" = RTLX(RTUD(");
+								generated_file.putstring (cl_type_i.associated_expanded_class_type.id.generated_id);
+								generated_file.putchar (')')
 							else
 								generated_file.putstring (" = RTLN(");
 								generated_file.putint (exp_type_id);
@@ -415,8 +416,9 @@ feature
 					if context.workbench_mode then
 							-- RTLX is a macro used to create
 							-- expanded types
-						generated_file.putstring (" = RTLX(");
-						generated_file.putint (exp_type_id);
+						generated_file.putstring (" = RTLX(RTUD(");
+						generated_file.putstring (cl_type_i.associated_expanded_class_type.id.generated_id);
+						generated_file.putchar (')')
 					else
 						generated_file.putstring (" = RTLN(");
 						generated_file.putint (exp_type_id);
@@ -945,7 +947,7 @@ feature
 			generated_file.putstring ("(%"");
 			generated_file.putstring (feature_name);
 			generated_file.putstring ("%", ");
-			generated_file.putint (feature_origin);
+			generated_file.putstring (feature_origin);
 			generated_file.putstring (gc_comma);
 			generated_file.putstring (" dtype");
 			generated_file.putstring (gc_rparan_comma);
@@ -960,7 +962,7 @@ feature
 			generated_file.putstring ("(%"");
 			generated_file.putstring (feature_name);
 			generated_file.putstring ("%", ");
-			generated_file.putint (feature_origin);
+			generated_file.putstring (feature_origin);
 			generated_file.putstring (gc_comma);
 			context.Current_register.print_register_by_name;
 			generated_file.putstring (gc_rparan_comma);

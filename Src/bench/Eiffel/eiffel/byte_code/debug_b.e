@@ -73,7 +73,7 @@ feature
 	generate is
 			-- Generation of debug compound
 		local
-			static_type: INTEGER;
+			static_type: STRING;
 		do
 			if compound /= Void then
 				if context.final_mode then
@@ -83,24 +83,24 @@ feature
 				else
 						-- Generation of the debug compound in workbench
 						-- mode
-					static_type := context.current_type.type_id - 1;
+					static_type := context.current_type.associated_class_type.id.generated_id;
 					generated_file.putstring (gc_if_l_paran);
 					generated_file.new_line;
 					generated_file.indent;
 					if keys = Void then
 							-- No keys
-						generated_file.putstring ("WDBG(");
-						generated_file.putint (static_type);
-						generated_file.putstring (", (char *) 0)");
+						generated_file.putstring ("WDBG(RTUD(");
+						generated_file.putstring (static_type);
+						generated_file.putstring ("), (char *) 0)");
 					else
 						from
 							keys.start
 						until
 							keys.after
 						loop
-							generated_file.putstring ("WDBG(");
-							generated_file.putint (static_type);
-							generated_file.putstring (",%"");
+							generated_file.putstring ("WDBG(RTUD(");
+							generated_file.putstring (static_type);
+							generated_file.putstring ("),%"");
 							generated_file.putstring (keys.item);
 							generated_file.putstring ("%")");
 							keys.forth;

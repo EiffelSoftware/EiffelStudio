@@ -12,18 +12,11 @@ inherit
 		redefine
 			minimal_width,
 			minimal_height,
-			maximal_width,
-			maximal_height,
 			move_and_resize,
 			move,
 			process_message,
 			on_wm_destroy,
 			destroy
-		end
-
-	WEL_SYSTEM_METRICS
-		export
-			{NONE} all
 		end
 
 	WEL_GW_CONSTANTS
@@ -113,28 +106,16 @@ feature -- Status report
 			Result := window_minimum_width
 		end
 
-	maximal_width: INTEGER is
-			-- Maximal width allowed for the window
-		do
-			Result := screen_width
-		end
-
 	minimal_height: INTEGER is
 			-- Minimal height allowed for the window
 		do
 			Result := window_minimum_height
 		end
 
-	maximal_height: INTEGER is
-			-- Maximal height allowed for the window
-		do
-			Result := screen_height
-		end
-
 feature -- Status setting
 
 	set_menu (a_menu: WEL_MENU) is
-			-- Set a `menu' for the window.
+			-- Set `menu' with `a_menu'.
 		require
 			exists: exists
 			a_menu_not_void: a_menu /= Void
@@ -406,15 +387,14 @@ feature {NONE} -- Implementation
 				a_bar)
 		end
 
-	on_wm_close: INTEGER is
+	on_wm_close: BOOLEAN is
 			-- Wm_close message.
+			-- If True further processing is halted
+			-- (False by default)
 		require
 			exists: exists
 		do
-			if not closeable then
-				-- We have to stop the default process
-				Result := -1
-			end
+			Result := not closeable
 		end
 
 	on_wm_destroy is
@@ -457,7 +437,9 @@ feature {WEL_DISPATCHER}
 			elseif msg = Wm_hscroll then
 				on_wm_hscroll (wparam, lparam)
 			elseif msg = Wm_close then
-				Result := on_wm_close
+				if on_wm_close then
+					Result := -1
+				end
 			end
 		end
 

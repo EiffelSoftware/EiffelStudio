@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
+	
 	ev_children: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 			-- List of the children
 
@@ -254,7 +254,9 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Never_called: False
+				never_called : False
+					-- This should never be called as the status
+					-- bar should not have focus.
 			end
 		end
 
@@ -264,7 +266,9 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Never_called: False
+				never_called : False
+					-- This should never be called as the status
+					-- bar should not have focus.
 			end
 		end
 

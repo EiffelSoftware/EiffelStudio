@@ -297,6 +297,7 @@ feature {NONE} -- Implementation
 				end
 				l_index := l_index + 1
 			end
+			right_list.resize_column_to_content (1)
 		end
 
 	should_display_preference (a_pref_name, b_pref_name: STRING): BOOLEAN is
@@ -345,7 +346,7 @@ feature {NONE} -- Implementation
 			l_resource_widget: PREFERENCE_WIDGET
 			l_timeout: EV_TIMEOUT
 		do
-			l_resource_widget := preferences.resource_widget (a_resource)
+			l_resource_widget := resource_widget (a_resource)
 			resource_cell.wipe_out
 			resource_cell.put (l_resource_widget.change_item_widget)			
 			resource_cell.set_data (l_resource_widget)

@@ -96,6 +96,8 @@ feature -- Basic operations
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
+		require
+			event_data_not_void: event_data /= Void
 		do
 			debug ("EVENT_TRACE") print (call_log (event_data)) end
 			inspect
@@ -270,12 +272,15 @@ feature  -- Element Change
 			is_initialized
 		end
 
-	set_source_connection_agent (a_source_connection_agent: PROCEDURE [ANY, TUPLE []]) is
-			-- Set `a_connecting_agent' that will connect sequence to an actual event source.
-			-- The agent will be called when the first action is added to the sequence.
-			-- If there are already actions in the sequence the agent is called imediatly.
+	set_source_connection_agent
+				(a_source_connection_agent: PROCEDURE [ANY, TUPLE []]) is
+			-- Set `a_connecting_agent' that will connect sequence to an actual
+			-- event source. The agent will be called when the first action is
+			-- added to the sequence. If there are already actions in the
+			-- sequence the agent is called immediately.
 		require
-			source_connection_agent_not_set: not set_source_connection_agent_called
+			source_connection_agent_not_set:
+				not set_source_connection_agent_called
 			source_connection_agent_not_void: a_source_connection_agent /= Void
 		do
 			if is_initialized then
@@ -285,8 +290,10 @@ feature  -- Element Change
 			end 
 			set_source_connection_agent_called := True
 		ensure
-			source_connection_agent_assigned: not is_initialized implies source_connection_agent = a_source_connection_agent
-			set_source_connection_agent_called_set: set_source_connection_agent_called
+			source_connection_agent_assigned: not is_initialized implies
+				source_connection_agent = a_source_connection_agent
+			set_source_connection_agent_called_set:
+				set_source_connection_agent_called
 		end
 
 	set_source_connection_agent_called: BOOLEAN
@@ -337,22 +344,23 @@ feature {NONE} -- Debug
 		local
 			i, j: INTEGER
 		do
-			Result := "action_sequence ("+ cursor_stack.count.out + " nests) " + name_internal + ".call ("
-				from
-					i := event_data.lower
-					j := event_data_names_internal.lower
-				until
-					i > event_data.upper
-				loop
-					Result.append (event_data_names_internal.entry (j))
-					Result.append (" = ")
-					Result.append (event_data.entry (i).out)
-					if i /=  event_data.upper then
-							Result.append (", ")
-					end
-					i := i + 1
-					j := j + 1
+			Result := "action_sequence ("+ cursor_stack.count.out + " nests) "
+				 + name_internal + ".call ("
+			from
+				i := event_data.lower
+				j := event_data_names_internal.lower
+			until
+				i > event_data.upper
+			loop
+				Result.append (event_data_names_internal.entry (j))
+				Result.append (" = ")
+				Result.append (event_data.entry (i).out)
+				if i /=  event_data.upper then
+						Result.append (", ")
 				end
+				i := i + 1
+				j := j + 1
+			end
 			Result.append (")")
 		end
 
@@ -363,13 +371,14 @@ invariant
 	name_not_void: name_internal /= Void
 	name_not_empty: not name_internal.empty
 	event_data_names_not_void: event_data_names_internal /= Void
-	event_data_names_count_ok: event_data_names_internal.count = dummy_event_data.count
-
-	valid_state: state = Normal_state or state = Paused_state or state = Blocked_state
+	event_data_names_count_ok:
+		event_data_names_internal.count = dummy_event_data.count
+	not_has_void: not has (Void)
+	valid_state:
+		state = Normal_state or state = Paused_state or state = Blocked_state
 	call_buffer_consistent: state = Normal_state implies call_buffer.empty
-
-	source_connection_agent_disgarded_after_call: is_initialized implies source_connection_agent = Void
-
+	source_connection_agent_disgarded_after_call:
+		is_initialized implies source_connection_agent = Void
 	first_addition_caught: not empty implies is_initialized
 		--| We redefine new_cell, merge_left and merge_right from LINKED_LIST
 		--| to call initialize if it has not been called before. This should
@@ -402,8 +411,12 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.13  2000/01/20 22:24:44  oconnor
+--| formatting
+--|
 --| Revision 1.12  1999/11/29 18:17:00  oconnor
---| added set_source_connection_agent feature, removed make_with_connecting_agent
+--| added set_source_connection_agent feature,
+--| removed make_with_connecting_agent
 --|
 --| Revision 1.11  1999/11/29 17:04:08  brendel
 --| Added comma in create-clause and fixed precondition.
@@ -440,7 +453,6 @@ end
 --| Revision 1.1.1.1  1999/10/26 21:02:09  oconnor
 --| initail import of proposed event classes
 --|
---| 
 --|-----------------------------------------------------------------------------
 --| End of CVS log
 --|-----------------------------------------------------------------------------

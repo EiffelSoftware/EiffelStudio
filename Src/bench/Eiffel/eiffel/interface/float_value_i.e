@@ -50,14 +50,19 @@ feature -- Code generation
 
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `buffer'.
+		local
+			l_buf: like buffer
 		do
-			buffer.putstring (real_value.out)
+			l_buf := buffer
+			l_buf.putstring (real_value.out)
+			l_buf.putchar ('f')
 		end
 
 	generate_il is
 			-- Generate IL code for real constant value.
 		do
 			il_generator.put_double_constant (real_value)
+			Il_generator.convert_to_real
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -77,5 +82,5 @@ feature -- Output
 		do
 			Result := real_value.out
 		end
-	
+
 end

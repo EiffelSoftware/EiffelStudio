@@ -498,8 +498,6 @@ feature -- Graphical Interface
 	
 	build_widgets is
 			-- Build the widgets for this window.
-		local
-			sep: SEPARATOR
 		do
 			build_text_windows;
 			if not is_in_project_tool then

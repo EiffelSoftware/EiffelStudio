@@ -325,11 +325,6 @@ feature -- Window Properties
 	is_profile_tool_hidden: BOOLEAN;
 			-- Is the profile tool hidden?
 
-	eiffel_symbol: PIXMAP is
-		do
-			Result := Pixmaps.bm_Project
-		end;
-
 	tool_name: STRING is
 		do
 			Result := Interface_names.t_Project
@@ -705,7 +700,6 @@ feature -- Graphical Interface
 			-- Build widget.
 		local
 			default_width, default_height: INTEGER;
-			sep: SEPARATOR
 		do
 			shown_portions := 1;
 

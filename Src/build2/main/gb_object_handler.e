@@ -414,14 +414,17 @@ feature -- Basic operation
 			window_object.events.wipe_out
 		end
 		
-	named_object_exists (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
+	name_in_use (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
 			-- Is a GB_OBJECT with name matching `object_name' contained
-			-- in `objects'. Case insensitive search. Ignore `an_object'
-			-- if not `Void'. Returns `False' if `object_name' is empty.
-			-- This is because you are allowed to have as many "unnamed" objects
-			-- as you wish.
+			-- in `objects' or `events' of all objects in `obejcts.
+			-- Case insensitive search. Ignore `an_object' name
+			-- if not `Void', but still check the events for `an_object'.
+			-- Returns `False' if `object_name' is empty. This is because you are
+			-- allowed to have as many "unnamed" objects as you wish.
 		local
 			current_name_lower, name_lower: STRING
+			current_object: GB_OBJECT
+			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 		do
 				-- Do nothing if `object_name' is empty.
 			if not object_name.is_empty then
@@ -432,14 +435,33 @@ feature -- Basic operation
 				until
 					objects.off or Result
 				loop
+					current_object := objects.item
 						-- If `an_object' /= `Void' then do not check against `an_object' when found.
-					if (an_object /= Void and then objects.item /= an_object) or (an_object = Void) then
-						current_name_lower := objects.item.name
+					if (an_object /= Void and then current_object /= an_object) or (an_object = Void) then
+						current_name_lower := current_object.name
 						current_name_lower.to_lower
 						if current_name_lower.is_equal (name_lower) then
 							Result := True
 						end
 					end
+						-- Access events of `current_object' locally, for speed
+					object_events := current_object.events
+						-- No need to check further if `object_events' is empty.
+						-- Note that we always check the events, even if `an_object' /= `Void'.
+					if not object_events.is_empty then
+						from
+							object_events.start
+						until
+								-- No need to loop if already found.
+							object_events.off or Result
+						loop
+							if name_lower.is_equal (object_events.item.feature_name) then
+								Result := True
+							end
+							object_events.forth
+						end
+					end
+
 					objects.forth
 				end
 			end

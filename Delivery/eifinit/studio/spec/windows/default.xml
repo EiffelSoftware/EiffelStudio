@@ -12,13 +12,13 @@
 		<TEXT DESCRIPTION="Use an external command to print?">use_external_editor<BOOLEAN>False</BOOLEAN></TEXT>
 		<TEXT DESCRIPTION="Command invoked to print a text">print_shell_command<STRING>notepad /p $target</STRING></TEXT>
 		<TEXT DESCRIPTION="Send a postscript file to this command?">use_postscript<BOOLEAN>False</BOOLEAN></TEXT>
-		<TEXT DESCRIPTION="Number of projects kept in the recent projects">recent_projects_number<INTEGER>10</INTEGER></TEXT>
+		<TEXT DESCRIPTION="Number of projects kept in the recent projects list">recent_projects_number<INTEGER>10</INTEGER></TEXT>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Tools" ICON="icon_preferences_folder">
 		<HEAD>Tools</HEAD>
 		<TOPIC TOPIC_ID="Browsing_tools" ICON="icon_preferences_folder">
 			<HEAD>Browsing tools</HEAD>
-			<TEXT DESCRIPTION="maximum number of items displayed in the history combo boxes">history_size<INTEGER>10</INTEGER></TEXT>
+			<TEXT DESCRIPTION="Maximum number of items displayed in the history combo boxes">history_size<INTEGER>10</INTEGER></TEXT>
 			<TEXT DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time">development_window__left_panel_use_explorer_style<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Automatically expand the feature tree">expand_feature_tree<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
@@ -119,7 +119,7 @@
 			</TOPIC>
 			<TOPIC TOPIC_ID="Automatic completion" ICON="icon_preferences_folder">
 				<HEAD>Autocomplete</HEAD>
-				<TEXT DESCRIPTION="Brackets and parenthesis are closed automatically">autocomplete_brackets_and_parenthesis<BOOLEAN>False</BOOLEAN></TEXT>
+				<TEXT DESCRIPTION="Brackets and parentheses are closed automatically">autocomplete_brackets_and_parenthesis<BOOLEAN>False</BOOLEAN></TEXT>
 				<TEXT DESCRIPTION="Quotes are closed automatically">autocomplete_quotes<BOOLEAN>False</BOOLEAN></TEXT>
 				<TEXT DESCRIPTION="Enable syntax autocomplete">syntax_autocomplete<BOOLEAN>True</BOOLEAN></TEXT>
 				<TEXT DESCRIPTION="ANY features appear in the feature call complete window">call_complete_with_any_features<BOOLEAN>False</BOOLEAN></TEXT>
@@ -516,16 +516,16 @@
 			<TEXT DESCRIPTION="Background color used to display comments">comments_background_color<COLOR>auto</COLOR></TEXT>
 			<TEXT DESCRIPTION="Color used to display numbers">number_text_color<COLOR>0;0;0</COLOR></TEXT>
 			<TEXT DESCRIPTION="Background color used to display numbers">number_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display operator">operator_text_color<COLOR>0;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display operator">operator_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display indexing tag">indexing_tag_text_color<COLOR>64;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display indexing tag">indexing_tag_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display assertion tag">assertion_tag_text_color<COLOR>64;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display assertion tag">assertion_tag_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display reserved">reserved_text_color<COLOR>64;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display reserved">reserved_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display local">local_text_color<COLOR>64;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display local">local_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display operators">operator_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display operators">operator_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display indexing tags">indexing_tag_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display indexing tags">indexing_tag_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display assertion tags">assertion_tag_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display assertion tags">assertion_tag_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display reserved words">reserved_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display reserved words">reserved_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display locals">local_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display locals">local_background_color<COLOR>auto</COLOR></TEXT>
 			<TEXT DESCRIPTION="Background color used to display breakable marks and breakpoints">breakpoint_background_color<COLOR>212;208;200</COLOR></TEXT>
 			<TEXT>class_color<COLOR>0;0;255</COLOR></TEXT>
 			<TEXT>cluster_color<COLOR>128;0;0</COLOR></TEXT>
@@ -548,6 +548,7 @@
 			<TEXT DESCRIPTION="Display confirmation dialog before converting an old project">confirm_convert_project<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable.">acknowledge_not_loaded<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display dialog that warns that homonym format can take a long time.">generate_homonyms<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display dialog when an application is running and a compilation is launched">stop_execution_when_compiling<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display dialog before killing a debugged application">confirm_kill<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>

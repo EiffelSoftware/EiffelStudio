@@ -425,7 +425,12 @@ feature {NONE} -- Implementation
 			end
 			
 				-- Now disable the new button as you may not add the same constant twice.
-			new_button.disable_sensitive
+				-- For pixmaps or directories, the new button must not be disabled,
+				-- as a dialog is popped up instead of using the current settings.
+			if not type_combo_box.selected_item.text.is_equal (Directory_string) and
+				not type_combo_box.selected_item.text.is_equal (Pixmap_constant_type)then
+				new_button.disable_sensitive	
+			end
 			
 				-- Update system to reflect a change.
 			system_status.enable_project_modified

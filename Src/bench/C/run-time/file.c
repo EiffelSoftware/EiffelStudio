@@ -311,22 +311,21 @@ rt_public void file_flush(FILE *fp)
 		esys();				/* Flush failed, raise exception */
 }
 
-rt_public  EIF_INTEGER file_size (FILE *fp)
+rt_public  EIF_INTEGER file_size (fp)
+FILE *fp;
 {
 	struct stat buf;
-#ifdef __VMS
-	int fd,current_pos;
-#else
 	int current_pos;
-#endif
+	int fd;
 
 	errno = 0;
-#ifdef __VMS
 	fd = fileno(fp);
+
+#ifdef __VMS
 	/* handle vms bug by positioning to end before fsync-ing --mark howard*/
 	current_pos = lseek(fd,0,SEEK_CUR);
 	lseek(fd,0,SEEK_END);
-	if (0 != fsync (fileno(fp)))	/* have to flush all the way! */
+	if (0 != fsync (fd))	/* have to flush all the way! */
 		esys();
 	lseek(fd,current_pos,SEEK_SET);	
 #else
@@ -335,19 +334,24 @@ rt_public  EIF_INTEGER file_size (FILE *fp)
 	 * we have to do it ourselves. -- GLJ
 	 */
 
+	/* Using fsync as there are problems storing from Linux to other platforms
+	 * using NFS (reproduceable by precompiling EiffelBase from a Linux box
+	 * to a distant machine. Xavier
+	 */
 	current_pos = file_tell(fp);
-	if (0 != fflush (fp))   	/* Without a flush the information */
-		esys();			/* is not up to date, but it _may_ */
-					/* cause file pointer movement!    */
+	if (0 != fsync (fd))   	/* Without a flush the information */
+		esys();						/* is not up to date, but it _may_ */
+									/* cause file pointer movement!    */
 	file_go(fp, current_pos);
 #endif
 
-	if (fstat (fileno (fp), &buf) == -1)
+	if (fstat (fd, &buf) == -1)
 		esys();		/* An error occurred: raise exception */
 	return (EIF_INTEGER) buf.st_size;
 }
 
-rt_public EIF_BOOLEAN file_feof(FILE *fp)
+rt_public EIF_BOOLEAN file_feof(fp)
+FILE *fp;      
 {
 	return (EIF_BOOLEAN) (feof(fp) != 0);	/* End of file? */
 }

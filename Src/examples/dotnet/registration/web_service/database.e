@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Duplication
 
-	items: ARRAY [G] is
+	items: ARRAYED_LIST [G] is
 			-- Array of items in database
 		do
 			Result := table.linear_representation

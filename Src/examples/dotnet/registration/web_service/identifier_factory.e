@@ -20,17 +20,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	next_registrant_identifier: INTEGER is
+	next_registrant_identifier: STRING is
 			-- New registrant identifier
+		local
+			converter: SYSTEM_CONVERT
 		do
-			Result := registrant_id
+			Result := converter.to_string_int32 (registrant_id)
 			registrant_id := registrant_id + 1
 		end
 
-	next_registration_identifier: INTEGER is
+	next_registration_identifier: STRING is
 			-- New registration identifier
+		local
+			converter: SYSTEM_CONVERT
 		do
-			Result := registration_id
+			Result := converter.to_string_int32 (registration_id)
 			registration_id := registration_id + 1
 		end
 

@@ -2,25 +2,40 @@ system
 	registration_service
 
 root
-	REGISTRAR: "start"
+	registrar: start
 
 default
-	il_generation ("dll")
+	assertion (require)
+	assertion (ensure)
+	assertion (check)
+	assertion (loop)
+	assertion (invariant)
+	msil_generation (yes)
+	il_verifiable (no)
+	msil_generation_type ("exe")
+	console_application (no)
 	line_generation (yes)
-	assertion (all)
-	verifiable (no)
 
-cluster	
-	root_cluster:	"d:\examples\eiffelsharp\registration\web_service";
-	base:		"d:\elight\emitted\Base";
-	all base_net:	"d:\library\base.net";
-	web:			"d:\elight\emitted\Web";
-	web_Services:	"d:\elight\emitted\WebServices";
-	system_:		"d:\elight\emitted\System";
+
+cluster
+	root_cluster:		"$EIFFEL_SRC\examples\dotnet\registration\web_service"
+
+	all base_net:		"$ISE_EIFFEL\library.net\base"
+
+	web:		"$ISE_EIFFEL\library.net\system.web"
+
+	web_services:		"$ISE_EIFFEL\library.net\system.web.services"
+
+	system_:		"$ISE_EIFFEL\library.net\system"
+
+	enterprise_services:		"$ISE_EIFFEL\library.net\system.enterpriseservices"
 
 external
-	assembly: 	"System.dll",
-				"System.Web.dll",
-				"System.Web.Services.dll"
+
+	assembly:
+		"C:\windows\Microsoft.NET\Framework\v1.0.3401\System.dll",
+		"C:\windows\Microsoft.NET\Framework\v1.0.3401\System.Web.dll",
+		"C:\windows\Microsoft.NET\Framework\v1.0.3401\System.Web.Services.dll",
+		"C:\windows\Microsoft.NET\Framework\v1.0.3401\System.EnterpriseServices.dll"
 
 end

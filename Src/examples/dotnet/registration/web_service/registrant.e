@@ -8,6 +8,9 @@ alias
 
 inherit
 	DATABASE_ITEM
+		redefine
+			to_string
+		end
 
 create
 	make
@@ -23,15 +26,15 @@ feature {NONE} -- Initialization
 			non_void_company_name: a_company_name /= Void
 			non_void_address: a_address /= Void
 			valid_address_form:
-								a_address_form.equals ("Mr.")
+								a_address_form.is_equal ("Mr.")
 									or
-								a_address_form.equals ("Mrs.")
+								a_address_form.is_equal ("Mrs.")
 									or
-								a_address_form.equals ("Miss")
+								a_address_form.is_equal ("Miss")
 									or
-								a_address_form.equals ("Ms.")
+								a_address_form.is_equal ("Ms.")
 									or
-								a_address_form.equals ("Dr.")
+								a_address_form.is_equal ("Dr.")
 			valid_first_name: a_first_name.count /= 0
 			valid_last_name: a_last_name.count /= 0
 			valid_address: a_address.count /= 0
@@ -44,11 +47,11 @@ feature {NONE} -- Initialization
 			address := a_address
 			initialized := true
 		ensure
-			address_form_set: initialized implies address_form.equals (a_address_form)
-			first_name_set: initialized implies first_name.equals (a_first_name)
-			last_name_set: initialized implies last_name.equals (a_last_name)
-			company_name_set: initialized implies company_name.equals (a_company_name)
-			address_set: initialized implies address.equals (a_address)
+			address_form_set: initialized implies address_form.is_equal (a_address_form)
+			first_name_set: initialized implies first_name.is_equal (a_first_name)
+			last_name_set: initialized implies last_name.is_equal (a_last_name)
+			company_name_set: initialized implies company_name.is_equal (a_company_name)
+			address_set: initialized implies address.is_equal (a_address)
 		end
 
 feature -- Access
@@ -71,15 +74,15 @@ feature -- Access
 	to_string: STRING is
 			-- String representation
 		do
-			create Result.make (address_form)
-			Result := string.concat (Result, " ")
-			Result := string.concat (Result, first_name)
-			Result := string.concat (Result, " ")
-			Result := string.concat (Result, last_name)
-			Result := string.concat (Result, ", ")
-			Result := string.concat (Result, company_name)
-			Result := string.concat (Result, ", ")
-			Result := string.concat (Result, address)
+			Result := address_form
+			Result := string.concat_string_string (Result, " ")
+			Result := string.concat_string_string (Result, first_name)
+			Result := string.concat_string_string (Result, " ")
+			Result := string.concat_string_string (Result, last_name)
+			Result := string.concat_string_string (Result, ", ")
+			Result := string.concat_string_string (Result, company_name)
+			Result := string.concat_string_string (Result, ", ")
+			Result := string.concat_string_string (Result, address)
 		end
 
 feature {NONE} -- Implementation
@@ -96,15 +99,15 @@ invariant
 	valid_address_form:
 						initialized
 							implies
-						(address_form.equals ("Mr.")
+						(address_form.is_equal ("Mr.")
 							or
-						address_form.equals ("Ms.")
+						address_form.is_equal ("Ms.")
 							or
-						address_form.equals ("Mrs.")
+						address_form.is_equal ("Mrs.")
 							or
-						address_form.equals ("Miss")
+						address_form.is_equal ("Miss")
 							or
-						address_form.equals ("Dr."))
+						address_form.is_equal ("Dr."))
 
 end -- class REGISTRANT
 --|----------------------------------------------------------------

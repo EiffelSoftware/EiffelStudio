@@ -434,11 +434,14 @@ feature -- Assertions
 
 	parent_set (par: EV_CONTAINER): BOOLEAN is
 		local
-			wid: EV_CONTAINER
+--			wid: EV_CONTAINER
+			wid_imp: EV_CONTAINER_I
 		do
 			if parent_imp /= Void then
-				wid ?= parent_imp.interface
-				Result := wid = par
+--				wid ?= parent_imp.interface
+--				Result := wid = par
+				wid_imp := par.implementation
+				Result := wid_imp = parent_imp
 			else
 				Result := par = Void
 			end

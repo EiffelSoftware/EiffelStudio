@@ -110,62 +110,86 @@ feature {NONE} -- Implementation
 
 	math_rcos (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"cos"
 		end;
 
 	math_racos (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"acos"
 		end;
 
 	math_rfabs (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"fabs"
 		end;
 
 	math_rceil (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"ceil"
 		end;
 
 	math_rfloor (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"floor"
 		end;
 
 	math_rlog10 (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"log10"
 		end;
 
 	math_rlog (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"log"
 		end;
 
 	math_rsqrt (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"sqrt"
 		end;
 
 	math_rtan (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"tan"
 		end;
 
 	math_ratan (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"atan"
 		end;
 
 	math_rsin (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"sin"
 		end;
 
 	math_rasin (v: REAL): REAL is
 		external
-			"C | %"eif_eiffel.h%""
+			"C (double): EIF_REAL | <math.h>"
+		alias
+			"asin"
 		end;
 
 end -- class SINGLE_MATH

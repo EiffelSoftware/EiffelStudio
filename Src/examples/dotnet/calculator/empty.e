@@ -1,11 +1,15 @@
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --
 --|        Interactive Software Engineering Building            --
---|            270 Storke Road, California 93117                --
+--|            360 Storke Road, Goleta CA 93117                --
 --|                   (805) 685-1006                            --
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+indexing
+	description: "Empty operand stack"
+	external_name: "ISE.Examples.Calculator.Empty"
+	
 class 
 	EMPTY
 
@@ -18,7 +22,9 @@ create
 feature 
 
 	operation is 
-			-- Empty the stack and set accumulator and register to 0.
+		indexing
+			description: "Empty the stack and set accumulator and register to 0."
+			external_name: "Operation"
 		do 
 			from
 				register := 0.0
@@ -29,9 +35,9 @@ feature
 			end
 			operand_stack.replace (0.0)
 		ensure then
-			register = 0.0;
-			operand_stack.count = 1
-			operand_stack.item = 0.0
+			register_equals_zero: register = 0.0;
+			one_item_in_operand_stack: operand_stack.count = 1
+			operand_stack_item_equals_zero: operand_stack.item = 0.0
 		end
 	
 end -- class EMPTY 

@@ -1,10 +1,14 @@
 --|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
+--|   Copyright (C) Interactive Software Engineering, Inc.  --
 --|        Interactive Software Engineering Building            --
---|            270 Storke Road, California 93117                --
---|                   (805) 685-1006                            --
+--|            360 Storke Road, Goleta, CA 93117                --
+--|                   (805) 685-1006                            	--
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
+
+indexing
+	description: "Calcultator state"
+	external_name: "ISE.Examples.Calculator.State"
 
 deferred class 
 	STATE
@@ -12,66 +16,100 @@ deferred class
 inherit
 	IO
 
-feature {NONE}
-	
-	register: REAL
-			-- Temporary register used in classes
-
-	operand_stack: LINKED_STACK [REAL]
-			-- Stack of operands.
-
-feature 
+feature {NONE} -- Initialization
 
 	make (op: LINKED_STACK [REAL]) is
+		indexing
+			description: "Set `operand_stack' with `op' and initialize `io'."
+			external_name: "Make"
+		require
+			non_void_operation: op /= Void
 		local
-			to: CONSOLE
+			console: CONSOLE
 		do
 			operand_stack := op
-			create to
-			io := to
-		end
-
-	io: CONSOLE
-
-	next_choice: STRING is
-			-- Last user's choice.
-		do
-			Result := io.laststring
+			create console
+			io := console
+		ensure
+			non_void_operand_stack: operand_stack /= Void
+			non_void_console: io /= Void
 		end
 	
+feature -- Access
+
+	io: CONSOLE
+		indexing
+			description: "Console"
+			external_name: "Io"
+		end
+
+	operation is
+		indexing
+			description: "Effective register operation"
+			external_name: "Operation"
+		deferred
+		end
+		
+	next_choice: STRING is
+		indexing
+			description: "Last user's choice"
+			external_name: "NextChoice"
+		do
+			Result := io.last_string
+		end
+
+feature -- Basic Operations
+
 	do_one_state is 
-			-- Perform operation associated with the current state 
-			-- and display result.
+		indexing
+			description: "Perform operation associated with the current state and display result."
+			external_name: "DoOneState"
 		do 
 			process
 			display
 		end
 
-feature {NONE}
-	
-	display is 
-			-- Display the content of the accumulator.
-		do 
-			io.new_line
-			io.putstring ("Accumulator = ")
-			io.putreal (operand_stack.item)
-			io.new_line
-		end; 
-
-feature 	
-
 	read is 
-			-- Read next operation. 
+		indexing
+			description: "Read next operation."
+			external_name: "Read"
 		do 
 			io.new_line
-			io.putstring ("Next operation? ")
-			io.readline
+			io.put_string ("Next operation? ")
+			io.read_line
 		end
  
-feature {NONE}	
+feature {NONE} -- Implementation
+	
+	register: REAL
+		indexing
+			description: "Temporary register used in classes"
+			external_name: "Register"
+		end
+
+	operand_stack: LINKED_STACK [REAL]
+		indexing
+			description: "Stack of operands"
+			external_name: "OperandStack"
+		end
+
+	display is 
+		indexing
+			description: "Display the content of the accumulator."
+			external_name: "Display"
+		do 
+			io.new_line
+			io.put_string ("Accumulator = ")
+			io.put_real (operand_stack.item)
+			io.new_line
+		end
 
 	process is 
-			-- Process user's answer.
+		indexing
+			description: "Process user's answer."
+			external_name: "Process"
+		require
+			non_void_operand_stack: operand_stack /= Void
 		do 
 			if operand_stack.count > 1 then
 				register := operand_stack.item
@@ -80,15 +118,12 @@ feature {NONE}
 				operand_stack.remove
 				operand_stack.put (register)
 			else
-				io.putstring ("Only one element on the stack%N")
+				io.put_string ("Only one element on the stack%N")
 			end
 		end
 
-feature 
-	
-	operation is
-			-- Effective register operation.
-		deferred
-		end
+invariant
+	non_void_operand_stack: operand_stack /= Void
+	non_void_console: io /= Void
 
 end -- class STATE 

@@ -1,16 +1,31 @@
 system
-	calculator
+	"ISE.Examples.Calculator"
 
 root
-	CALCULATOR: make
+	CALCULATOR (root_cluster): make
 
 default
-	il_generation ("exe")
+	assertion (no)
+	msil_generation ("exe")
+	address_expression (no)
+	array_optimization (no)
+	console_application (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+	check_vape (yes)
+	arguments (" ")
+	disabled_debug (yes)
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
 
 cluster
 	root_cluster:		"."
 
-		-- EiffelBase
-	all base:		"$ISE_EIFFEL\library\base.net"
+	all base:		"$ISE_EIFFEL\library.net\base.net"
 
 end

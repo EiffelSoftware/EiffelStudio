@@ -1,29 +1,32 @@
 indexing
+	description: "Linkable cells containing a reference to their right neighbor"
+	external_name: "ISE.Examples.Calculator.Linkable"
 
-	description:
-		"Linkable cells containing a reference to their right neighbor"
-
-	status: "See notice at end of class"
-	names: linkable, cell
-	representation: linked
-	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
-
-class LINKABLE [G]
+class 
+	LINKABLE [G]
 
 feature -- Access
 
 	right: like Current
-			-- Right neighbor
+		indexing
+			description: "Right neighbor"
+			external_name: "Right"
+		end
 
 	item: G
-			-- Object store in current cell.
+		indexing
+			description: "Object stored in current cell"
+			external_name: "Item"
+		end
 
 feature -- Element change
 
 	replace (v: like item) is
-			-- Make `v' the cell's `item'.
+		indexing
+			description: "Make `v' the cell's `item'."
+			external_name: "Replace"
+		require
+			non_void_item: v /= Void
 		do
 			item := v
 		ensure
@@ -33,7 +36,11 @@ feature -- Element change
 feature {LINKED_STACK} -- Element change
 
 	put (v: like item) is
-			-- Make `v' the cell's `item'.
+		indexing
+			description: "Make `v' the cell's `item'."
+			external_name: "Put"
+		require
+			non_void_item: v /= Void
 		do
 			item := v
 		ensure
@@ -43,7 +50,11 @@ feature {LINKED_STACK} -- Element change
 feature {LINKED_STACK} -- Implementation
 
 	put_right (other: like Current) is
-			-- Put `other' to the right of current cell.
+		indexing
+			description: "Put `other' to the right of current cell."
+			external_name: "PutRight"
+		require
+			non_void_item: other /= Void
 		do
 			right := other
 		ensure
@@ -51,13 +62,14 @@ feature {LINKED_STACK} -- Implementation
 		end
 
 	forget_right is
-			-- Remove right link.
+		indexing
+			description: "Remove right link."
+			external_name: "ForgetRight"
 		do
 			right := Void
 		ensure
 			not_chained: right = Void
 		end
-
 
 end -- class LINKABLE
 
@@ -74,7 +86,7 @@ end -- class LINKABLE
 --|
 --| Interactive Software Engineering Inc.
 --| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>

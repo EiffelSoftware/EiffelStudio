@@ -172,28 +172,41 @@ feature -- Pngs
 			file: RAW_FILE
 		do
 			create Result
-			if Eiffel_platform.as_lower.is_equal ("windows") then
-				create full_path.make_from_string (Icon_path)
-				full_path.set_file_name (a_name)
-				full_path.add_extension ("ico")
+				-- We first attempt to retrieve the pixmap
+				-- from `pixmaps_by_name'. If it is contained
+				-- then this means that the pixmap has already been loaded.
+				-- This stops us form having to load the pixmap every time.
+			if pixmaps_by_name.has (a_name) then
+				Result := pixmaps_by_name @ (a_name)
 			else
-				create full_path.make_from_string (Bitmap_path)
-				full_path.set_file_name (a_name)
-				full_path.add_extension (Pixmap_suffix)
-			end
-			create file.make (full_path)
-			--| FIXME This is a temporary hack to display
-			--| a not found pixmap if the pixmap does not exist.
-			--| Replace with a check when all pixmaps have been implemented.
-			if file.exists then
-				Result.set_with_named_file (full_path)
-			else
-				Result := icon_delete_small @ 1
+				if Eiffel_platform.as_lower.is_equal ("windows") then
+					create full_path.make_from_string (Icon_path)
+					full_path.set_file_name (a_name)
+					full_path.add_extension ("ico")
+				else
+					create full_path.make_from_string (Bitmap_path)
+					full_path.set_file_name (a_name)
+					full_path.add_extension (Pixmap_suffix)
+				end
+				create file.make (full_path)
+				--| FIXME This is a temporary hack to display
+				--| a not found pixmap if the pixmap does not exist.
+				--| Replace with a check when all pixmaps have been implemented.
+				if file.exists then
+					Result.set_with_named_file (full_path)
+					check
+						pixmap_not_contained: not pixmaps_by_name.has (a_name)
+					end
+						-- Store `Result' in `pixmaps_by_name'
+						-- For quick retrieval.
+					pixmaps_by_name.put (Result, a_name)
+				else
+					Result := icon_delete_small @ 1
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
-		
 
 feature -- Reading
 
@@ -231,6 +244,13 @@ feature -- Reading
 		end
 
 feature {NONE} -- Update
+
+	pixmaps_by_name: HASH_TABLE [EV_PIXMAP, STRING] is
+			-- All pixmaps returned from `pixmap_by_name'.
+			-- Key is name used as argument.
+		once
+			create Result.make (50)
+		end
 
 	Pixmap_suffix: STRING is "png"
 			-- Suffix for pixmaps.

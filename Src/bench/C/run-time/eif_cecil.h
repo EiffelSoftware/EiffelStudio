@@ -39,6 +39,27 @@ typedef EIF_REFERENCE	EIF_OBJECT;			/* Eiffel object: safe indirection to an Eif
 typedef struct bit *	EIF_BIT;			/* Structure used for bits */
 typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
 
+/* Types defined for easier reference when dealing with function pointers.
+ * Their use is not compulsory it's only a matter of "convenience".
+ * They do not guarantee the type checking of the parameters
+ * passed as arguments.	
+ */
+
+typedef void	(*EIF_PROCEDURE)(EIF_REFERENCE, ...);		/* Returns void */
+typedef EIF_INTEGER_8	(*EIF_INTEGER_8_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Integer 8 bits */
+typedef EIF_INTEGER_16	(*EIF_INTEGER_16_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Integer 16 bits */
+typedef EIF_INTEGER_32	(*EIF_INTEGER_32_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Integer 32 bits */
+#define EIF_INTEGER_FUNCTION EIF_INTEGER_32_FUNCTION
+typedef EIF_INTEGER_64	(*EIF_INTEGER_64_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Integer 64 bits */
+typedef EIF_BOOLEAN	(*EIF_BOOLEAN_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Boolean */
+typedef EIF_CHARACTER	(*EIF_CHARACTER_FUNCTION)(EIF_REFERENCE, ...);		/* Returns char */
+typedef EIF_REAL	(*EIF_REAL_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Real */
+typedef EIF_DOUBLE	(*EIF_DOUBLE_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Double */
+typedef EIF_REFERENCE (*EIF_REFERENCE_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Reference */
+typedef EIF_POINTER (*EIF_POINTER_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Pointer */
+typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bits */
+
+
 #define eif_create			eifcreate		/* Object creation */
 #define eif_expand			eifexp			/* Force expanded class ID */
 
@@ -48,15 +69,18 @@ typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
  * enabled
  */
 
-#define eif_procedure	eifproc			/* Get an Eiffel procedure */
-#define eif_integer_function	eiflong			/* Get an Eiffel function */
-#define eif_character_function	eifchar	/* Get an Eiffel function returning an Eiffel Character */
-#define eif_real_function	eifreal	/* Get an Eiffel function returning an Eiffel Real */
-#define eif_double_function	eifdouble	/* Get an Eiffel function returning an Eiffel Double */
-#define eif_reference_function	eifref	/* Get an Eiffel function returning an Eiffel Reference */
-#define eif_boolean_function	eifbool	/* Get an Eiffel function returning an Eiffel Boolean */
-#define eif_bit_function	eifbit	/* Get an Eiffel function returning an Eiffel Bit */
-#define eif_pointer_function	eifptr	/* Get an Eiffel function returning an Eiffel Pointer */
+#define eif_procedure(rout,cid)				(EIF_PROCEDURE) eifref(rout,cid)
+#define eif_integer_8_function(rout,cid)	(EIF_INTEGER_8_FUNCTION) eifref(rout,cid)
+#define eif_integer_16_function(rout,cid)	(EIF_INTEGER_16_FUNCTION) eifref(rout,cid)
+#define eif_integer_32_function(rout,cid)	(EIF_INTEGER_32_FUNCTION) eifref(rout,cid)
+#define eif_integer_64_function(rout,cid)	(EIF_INTEGER_64_FUNCTION) eifref(rout,cid)
+#define eif_character_function(rout,cid)	(EIF_CHARACTER_FUNCTION) eifref(rout,cid)
+#define eif_real_function(rout,cid)			(EIF_REAL_FUNCTION) eifref(rout,cid)
+#define eif_double_function(rout,cid)		(EIF_DOUBLE_FUNCTION) eifref(rout,cid)
+#define eif_reference_function(rout,cid)	(EIF_REFERENCE_FUNCTION) eifref(rout,cid)
+#define eif_boolean_function(rout,cid)		(EIF_BOOLEAN_FUNCTION) eifref(rout,cid)
+#define eif_bit_function(rout,cid)			(EIF_BIT_FUNCTION) eifref(rout,cid)
+#define eif_pointer_function(rout,cid)		(EIF_POINTER_FUNCTION) eifref(rout,cid)
 
 /*
  * Miscellaneous Macros
@@ -81,22 +105,6 @@ typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
 
 #define eif_enable_visible_exception   eifvisex /* When a class or a feature is not visible, raise an exception */
 #define eif_disable_visible_exception eifuvisex /* Disable the visible exception */
-
-/* Types defined for easier reference when dealing with function pointers.
- * Their use is not compulsory it's only a matter of "convenience".
- * They do not guarantee the type checking of the parameters
- * passed as arguments.	
- */
-
-typedef void	(*EIF_PROCEDURE)(EIF_REFERENCE, ...);		/* Returns void */
-typedef EIF_INTEGER	(*EIF_INTEGER_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Integer */
-typedef EIF_BOOLEAN	(*EIF_BOOLEAN_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Boolean */
-typedef EIF_CHARACTER	(*EIF_CHARACTER_FUNCTION)(EIF_REFERENCE, ...);		/* Returns char */
-typedef EIF_REAL	(*EIF_REAL_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Real */
-typedef EIF_DOUBLE	(*EIF_DOUBLE_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Double */
-typedef EIF_REFERENCE (*EIF_REFERENCE_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Reference */
-typedef EIF_POINTER (*EIF_POINTER_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Pointer */
-typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bits */
 
 /* 
  * Convention for attribute types
@@ -217,20 +225,19 @@ struct gt_info {
  * 	Obsolete Macros  
  */
 
-#define eif_proc			eifproc			/* Get an Eiffel procedure (Obsolete) use `eif_procedure' instead */
-#define eif_fn_int			eiflong			/* Use `eif_integer_function' instead */
-#define eif_fn_char		eifchar	/* Use `eif_character_function' instead */
-#define eif_fn_float	eifreal	/* Use `eif_real_function' instead */
-#define eif_fn_double	eifdouble	/* Use `eif_double_function' instead */
-#define eif_fn_ref			eifref	/* Use `eif_reference_function' instead */
-#define eif_fn_bool			eifbool	/* Use `eif_boolean_function' instead */
-#define eif_fn_bit			eifbit	/* Use `eif_bit_function' instead */
-#define eif_fn_pointer		eifptr	/* Use `eif_pointer_function' instead */
-
+#define eif_proc		eif_procedure			/* Use `eif_procedure' instead */
+#define eif_fn_int		eif_integer_32_function			/* Use `eif_integer_32_function' instead */
+#define eif_fn_char		eif_character_function	/* Use `eif_character_function' instead */
+#define eif_fn_float	eif_real_function	/* Use `eif_real_function' instead */
+#define eif_fn_double	eif_double_function	/* Use `eif_double_function' instead */
+#define eif_fn_ref		eif_reference_function	/* Use `eif_reference_function' instead */
+#define eif_fn_bool		eif_boolean_function	/* Use `eif_boolean_function' instead */
+#define eif_fn_bit		eif_bit_function	/* Use `eif_bit_function' instead */
+#define eif_fn_pointer	eif_pointer_function	/* Use `eif_pointer_function' instead */
 
 
 #define EIF_PROC EIF_PROCEDURE		/* Use EIF_PROCEDURE instead */
-#define EIF_FN_INT EIF_INTEGER_FUNCTION		/* Use EIF_INTEGER_FUNCTION instead */
+#define EIF_FN_INT EIF_INTEGER_32_FUNCTION		/* Use EIF_INTEGER_32_FUNCTION instead */
 #define EIF_FN_BOOL EIF_BOOLEAN_FUNCTION		/* Use EIF_BOOLEAN_FUNCTION instead*/
 #define EIF_FN_CHAR EIF_CHARACTER_FUNCTION		/* Use EIF_CHARACTER_FUNCTION instead  */
 #define EIF_FN_FLOAT EIF_REAL_FUNCTION	/* Use EIF_REAL_FUNCTION instead */
@@ -267,17 +274,9 @@ RT_LNK EIF_TYPE_ID eifexp(EIF_TYPE_ID id);			/* Force expansion */
 
 RT_LNK EIF_OBJECT eifcreate(EIF_TYPE_ID cid);				/* Object creation */
 
-RT_LNK EIF_PROCEDURE eifproc(char *routine, EIF_TYPE_ID cid);				/* Pointer to Eiffel procedure */
-RT_LNK EIF_INTEGER_FUNCTION eiflong(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning INTEGER */
-RT_LNK EIF_CHARACTER_FUNCTION eifchar(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning CHAR */
-RT_LNK EIF_REAL_FUNCTION eifreal(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning REAL */
-RT_LNK EIF_DOUBLE_FUNCTION eifdouble(char *routine, EIF_TYPE_ID cid);		/* Eiffel function returning DOUBLE */
-RT_LNK EIF_BIT_FUNCTION eifbit(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning BIT */
-RT_LNK EIF_BOOLEAN_FUNCTION eifbool(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning BOOLEAN */
-RT_LNK EIF_POINTER_FUNCTION eifptr(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning POINTER */
 RT_LNK EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning ANY */
 
-RT_LNK EIF_TYPE_ID eiftype(EIF_OBJECT object);					/* Give dynamic type of EIF_OBJECT. Obsoletem, use "eif_type_by_object". */
+RT_LNK EIF_TYPE_ID eiftype(EIF_OBJECT object);					/* Give dynamic type of EIF_OBJECT. Obsolete, use "eif_type_by_object". */
 RT_LNK EIF_TYPE_ID eif_type_by_object (EIF_REFERENCE object);					/* Give dynamic type of EIF_OBJECT */
 RT_LNK char *eifname(EIF_TYPE_ID cid);					/* Give class name from class ID */
 RT_LNK void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret);					/* Safely Compute address of attribute, checking type validityi. Must be preceded by *(EIF_TYPE*). */

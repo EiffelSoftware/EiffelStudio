@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 		-- A pointer on the text field
 		
 	visual_widget: POINTER is
-			-- 
+			-- Pointer to the widget shown on screen.
 		do
 			Result := entry_widget
 		end

@@ -7,16 +7,10 @@ class BIN_MOD_AS
 
 inherit
 	ARITHMETIC_AS
-		redefine
-			balanced
-		end
 
 	PREFIX_INFIX_NAMES
 
 feature -- Properties
-
-	balanced: BOOLEAN is False
-			-- Is the binary operation balanced ?
 
 	byte_anchor: BIN_MOD_B is
 			-- Byte code type

@@ -14,7 +14,7 @@ feature -- Access
 	Assembly_types_file_name: STRING is "types.xml"
 			-- File which lists all types in assembly
 
-	Assembly_mapping_file_name: STRING is "mapping.xml"
+	Assembly_mapping_file_name: STRING is "referenced_assemblies.xml"
 			-- File which lists referenced assemblies with corresponding ids
 
 end -- class COMMON_PATH

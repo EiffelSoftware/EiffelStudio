@@ -1,0 +1,347 @@
+<HTML>
+
+<HEAD>
+<META HTTP-EQUIV="Content-Language" CONTENT="en-us">
+<META NAME="GENERATOR" CONTENT="Microsoft FrontPage 5.0">
+<META NAME="ProgId" CONTENT="FrontPage.Editor.Document">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<LINK REL="StyleSheet" HREF="../../default.css">
+<TITLE>Eiffel ASP. NET pages</TITLE>
+</HEAD>
+
+<BODY>
+
+<H1>Eiffel ASP. NET Web pages</H1>
+<P>&nbsp;</P>
+<P>This chapter covers enough information on ASP. NET for Eiffel developers to be able to write ASP
+pages using the Eiffel language. </P>
+<P>However, this chapter will not explain how to write sophisticated ASP web pages, because it would
+require an entire book! We will mostly explain the specificities of a page written in Eiffel, going
+through simple examples.</P>
+<P>&nbsp;</P>
+<P><A HREF="#Getting started">Getting started</A></P>
+<P><A HREF="#Using % % render blocks in an Eiffel ASP. NET Web page">Render blocs &lt;% %&gt;</A></P>
+<P><A HREF="#Inheritance">Inheritance</A></P>
+<P><A HREF="#Web services and Eiffel">Web services</A></P>
+<P><A HREF="#Cast and Data binding">Data binding</A></P>
+<P><A HREF="#Eiffel limitations">Limitations</A></P>
+<P><A HREF="#ASP. NET Eiffel samples">Examples</A></P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<A NAME="Getting started">
+<H1>Getting started</H1>
+</A>
+<P>To write an ASP. NET page in the Eiffel language, you do not have any particular installation or
+configuration operation to do. You simply have to specify in the header of your ASP page that you
+use Eiffel language.</P>
+<BLOCKQUOTE>
+	<PRE><B>&lt;%@ Page Language=&quot;Eiffel&quot; %&gt;</B></PRE>
+</BLOCKQUOTE>
+<P>That is all you need to do!</P>
+<P>&nbsp;</P>
+<P>However, to be able to navigate into your Eiffel ASP pages, as all other any .NET language
+require, you need to place your ASP files in directory shared as a Web Application through the IIS
+Manager snap-in.</P>
+<P>&nbsp;</P>
+<A NAME="Using % % render blocks in an Eiffel ASP. NET Web page">
+<H1>Using &lt;% %&gt; render blocks in an Eiffel ASP. NET Web page</H1>
+</A>
+<P>
+</DIV>
+ASP. NET supports the syntax &lt;% %&gt; code render blocks that can be intermixed with HTML content
+within an .aspx file. These code blocks execute in a top-down manner at page render time. So you can
+insert inline expression in your html code.</P>
+<BLOCKQUOTE>
+	<PRE>	&lt;% <SPAN CLASS="eFeature">response</SPAN>.<SPAN CLASS="eFeature">write_object</SPAN> (3 + 2) %&gt;
+	&lt;% <SPAN CLASS="eFeature">response</SPAN>.<SPAN CLASS="eFeature">write_string</SPAN> ((<SPAN CLASS="eString">&quot;Hello world!&quot;</SPAN>).<SPAN CLASS="eFeature">to_cil</SPAN>) %&gt;</PRE>
+</BLOCKQUOTE>
+<P>Here, in the html code, we call an inline expression to write the integer &quot;3&quot; and to write the
+string <SPAN CLASS="eString">&quot;Hello world!&quot;. </SPAN><SPAN CLASS="eFeature">response </SPAN>is an
+attribute of the inherited class <SPAN CLASS="eclass">WEB_WEB_PAGE </SPAN>that allows to write
+dynamically text in the page. But a more common use of this attribute is implicit, using the
+following shortcut syntax:</P>
+<BLOCKQUOTE>
+	<PRE>	&lt;%=3 + 2 %&gt;
+	&lt;%=<SPAN CLASS="eString">&quot;Hello world!&quot; </SPAN>%&gt;</PRE>
+</BLOCKQUOTE>
+<P>The result of both syntaxes is the same.</P>
+<P>You have probably noticed the call to the feature <SPAN CLASS="eFeature">to_cil</SPAN> to display
+a string. This feature converts the Eiffel string (STRING) <SPAN CLASS="eString">&quot;Hello world!&quot;
+</SPAN>into a .NET string (SYSTEM_STRING) that ASP. NET uses. </P>
+<P CLASS="warning"><B>Caution</B>: Do not forget to add the feature <SPAN CLASS="eFeature">to_cil</SPAN>
+when you need to write a string, otherwise you will have a compilation error.</P>
+<P>&nbsp;</P>
+<P>The render blocks are pretty useless to dynamism a Web page without the use of some variables. So
+you will probably need to declare some variables in your code, either to make some loop or to have
+an temporary value.</P>
+<P>&nbsp;</P>
+<P>To declare a variable to be used in a render bloc, you need to create a separated render bloc
+started with the keyword <SPAN CLASS="ekeyword">local.</SPAN> The variables declaration follows the
+usual Eiffel declarations syntax rules.</P>
+<P></P>
+<BLOCKQUOTE>
+	<PRE><SPAN CLASS="ekeyword">&lt;% local</SPAN>
+	<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">j</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">INTEGER</SPAN><SPAN CLASS="esymbol">;</SPAN>
+<SPAN CLASS="esymbol">	</SPAN><SPAN CLASS="elocal">array</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">ARRAY </SPAN><SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">STRING</SPAN><SPAN CLASS="esymbol">]</SPAN> %&gt;</PRE>
+</BLOCKQUOTE>
+<P></P>
+<P>You may then use the variables in the following render blocks:</P>
+<BLOCKQUOTE>
+	<PRE>&lt;% <SPAN CLASS="elocal">array</SPAN> := &lt;&lt;&quot;Hello world&quot;, &quot;This is an eiffel ASP.NET example&quot;, &quot;using local variables&quot;&gt;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">from</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> 1
+    <SPAN CLASS="ekeyword">until</SPAN>&nbsp;<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">=</SPAN> 4<SPAN CLASS="ekeyword">
+    loop</SPAN> %&gt;
+	&lt;% <SPAN CLASS="elocal">j</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">*</SPAN> <SPAN CLASS="elocal">i %&gt;</SPAN>
+<SPAN CLASS="elocal">	</SPAN>&lt;font size=&quot;&lt;%= <SPAN CLASS="elocal">j</SPAN> %&gt;&quot;&gt; &lt;%=(<SPAN CLASS="elocal">array</SPAN>.<SPAN CLASS="eFeature">item </SPAN>(<SPAN CLASS="elocal">i</SPAN>)).<SPAN CLASS="eFeature">to_cil</SPAN>%&gt; &lt;/font&gt;
+&lt;%   <SPAN CLASS="elocal">i</SPAN> := <SPAN CLASS="elocal">i</SPAN> + 1
+     <SPAN CLASS="ekeyword">end</SPAN>  %&gt;</PRE>
+</BLOCKQUOTE>
+<P></P>
+<P CLASS="warning"><B>Caution</B>: Be aware that local or global variables must have a name that is
+unique throughout the Web page. For example you may not have a local variable called
+<SPAN CLASS="elocal"><SPAN STYLE="font-style: normal">on_load</SPAN></SPAN>, because this is already
+the name of a feature inherited from <SPAN CLASS="eclass">WEB_WEB_PAGE</SPAN>! It will result a
+compilation error.</P>
+<P>&nbsp;</P>
+<A NAME="Inheritance">
+<H1>Inheritance</H1>
+</A></A>
+<P>All ASP. NET pages inherit the external class <SPAN CLASS="eclass">WEB_PAGE</SPAN>. All of your
+controls, presentation information, and logic are used to extend this class to provide you with an
+object that supports the functionality of the page you created. As you can use all the features
+contained in the class <SPAN CLASS="eclass">WEB_PAGE</SPAN>, you can also add inheritance clauses in
+your ASP. NET page to modify the properties of these inherited features. You can
+<SPAN CLASS="eKeyword">rename</SPAN>, <SPAN CLASS="eKeyword">undefine </SPAN>and
+<SPAN CLASS="eKeyword">redefine </SPAN>inherited features using the same syntax than in an Eiffel
+class.</P>
+<P>To do this, you have to include in your ASP. NET page a <B>separate script</B> where you will
+only specify witch feature you want to <SPAN CLASS="eKeyword">rename</SPAN>, <SPAN CLASS="eKeyword">
+undefine </SPAN>or <SPAN CLASS="eKeyword">redefine</SPAN>.</P>
+<P>Here is an example:</P>
+<P></P>
+<BLOCKQUOTE>
+	<PRE>	&lt;script runat=&quot;server&quot;&gt;
+	    <SPAN CLASS="eKeyword">inherit</SPAN>
+ 	       <SPAN CLASS="eKeyword">WEB_PAGE</SPAN>
+	            <SPAN CLASS="eKeyword">rename</SPAN>
+	                <SPAN CLASS="eFeature">on_load</SPAN> <SPAN CLASS="eKeyword">as</SPAN> <SPAN CLASS="eFeature">my_on_load</SPAN>
+	            <SPAN CLASS="eKeyword">undefine</SPAN>
+	                <SPAN CLASS="eFeature">to_string</SPAN>
+	            <SPAN CLASS="eKeyword">redefine</SPAN>
+	                <SPAN CLASS="eFeature">my_on_load</SPAN>
+	            <SPAN CLASS="eKeyword">end</SPAN>
+	&lt;/script&gt;
+</PRE>
+</BLOCKQUOTE>
+<P>Here, like in all ASP. NET pages, all features of class <SPAN CLASS="eclass">WEB_PAGE </SPAN>are
+inherited; but the feature <SPAN CLASS="efeature">on_load</SPAN> is renamed as
+<SPAN CLASS="efeature">my_on_load</SPAN>, the feature <SPAN CLASS="eFeature">to_string </SPAN>is
+undefined and finally the feature <SPAN CLASS="efeature">my_on_load</SPAN> is redefined. This means
+that in your ASP. NET page, if you want to make an explicit call to the feature
+<SPAN CLASS="efeature">on_load</SPAN> you must do it with its new name <SPAN CLASS="efeature">
+my_on_load</SPAN>. In addition, you cannot call the feature <SPAN CLASS="eFeature">to_string </SPAN>
+anymore because it is undefined.</P>
+<P>&nbsp;</P>
+<A NAME="Code behind">
+<H1>Code behind</H1>
+</A>
+<P>The code behind mechanism allow the developer to separate the code from the actual content of the
+page.&nbsp; </P>
+<P>The principle of code is that you create a class for your code, and inherit this class from the
+ASP. NET Page object. This gives your class access to the page intrinsic, and allows it to interact
+with the postback architecture. You then create the ASP. NET page and use a page directive to
+inherit from the created class.</P>
+<P>Your code behind class has to inherit <SPAN CLASS="eclass">WEB_PAGE </SPAN>(System.UI.Web.Page)
+and <SPAN CLASS="eclass">ANY</SPAN>. Then, within your class, you should declare public instances
+(export {ANY}) of ASP. NET server controls that are on the web page, using the same name for the
+variables that the Web Control has.</P>
+<P CLASS="warning"><B>Warning</B>: You cannot use code behind written in Eiffel within an ASP. NET
+Eiffel page. See the Eiffel <A HREF="#Eiffel limitations">restrictions</A>.</P>
+<P>&nbsp;</P>
+<A NAME="Web services and Eiffel">
+<H1>Web services and Eiffel</H1>
+</A>
+<P>ASP. NET provides support for Web Services with the .asmx file. An .asmx file is a text file that
+is similar to an .aspx file. These files can be part of an ASP. NET application that includes .aspx
+files. These files are then URI-addressable, just as .aspx files are.</P>
+<P>Here is a very simple Eiffel Web Service:</P>
+<BLOCKQUOTE>
+	<PRE>&lt;%@ WebService class=&quot;<SPAN CLASS="eClass"><SPAN STYLE="background-position: 0 0">HELLO_WORLD</SPAN></SPAN>&quot; <B>Language=&quot;Eiffel&quot;</B> %&gt;
+
+<SPAN CLASS="eReserved">class</SPAN>
+    <SPAN CLASS="eClass"><SPAN STYLE="background-position: 0 0">HELLO_WORLD</SPAN></SPAN>
+
+<SPAN CLASS="eReserved">inherit</SPAN>
+    <SPAN CLASS="eClass">WEB_WEB_SERVICE</SPAN>
+	<SPAN CLASS="eReserved">undefine</SPAN>
+	    <SPAN CLASS="eFeature">finalize, get_hash_code, equals, to_string</SPAN>
+	<SPAN CLASS="eReserved">end</SPAN>
+    <SPAN CLASS="eClass">ANY</SPAN>
+
+<SPAN CLASS="eReserved">feature</SPAN> <SPAN CLASS="eComment">-- Basic operation</SPAN>
+
+    <SPAN CLASS="eFeature">say_hello_world</SPAN>: <SPAN CLASS="eClass">SYSTEM_STRING</SPAN> <SPAN CLASS="eReserved">is</SPAN>
+	    <SPAN CLASS="eComment">-- Return the &quot;Hello world!&quot; string.</SPAN>
+	<SPAN CLASS="eReserved">indexing</SPAN>
+	    <SPAN CLASS="eReserved">attribute</SPAN>: <SPAN CLASS="eReserved">create</SPAN> {<SPAN CLASS="eClass">WEB_WEB_METHOD_ATTRIBUTE</SPAN>}.<SPAN CLASS="eFeature">make</SPAN> [[<SPAN CLASS="eString">&quot;description&quot;</SPAN>, (<SPAN CLASS="eString">&quot;Returns the %&quot;Hello world!%&quot; string.&quot;</SPAN>).to_cil]] <SPAN CLASS="eReserved">end</SPAN>
+	<SPAN CLASS="eReserved">do</SPAN>
+	    <SPAN CLASS="eReserved">Result</SPAN> := (<SPAN CLASS="eString">&quot;Hello world!&quot;</SPAN>).<SPAN CLASS="eFeature">to_cil</SPAN>
+	<SPAN CLASS="eReserved">end</SPAN>
+
+<SPAN CLASS="eReserved">end</SPAN> <SPAN CLASS="eComment">-- class </SPAN><SPAN CLASS="eClass"><SPAN STYLE="background-position: 0 0">HELLO_WORLD</SPAN></SPAN></PRE>
+</BLOCKQUOTE>
+<P></P>
+<P>This .asmx file declares the class <SPAN CLASS="eClass"><SPAN STYLE="background-position: 0 0">
+HELLO_WORLD</SPAN></SPAN> that inherits the classes <SPAN CLASS="eClass">WEB_WEB_SERVICE</SPAN> and
+<SPAN CLASS="eClass">ANY.</SPAN> Note that you must inherit the class <SPAN CLASS="eClass">ANY</SPAN>,
+while the inheritance of <SPAN CLASS="eClass">WEB_SERVICE</SPAN> is optional but strongly
+recommended as it gives access to some really useful features. Finally, any methods that will be
+accessible as part of the service have the custom attribute <SPAN CLASS="eReserved">create</SPAN> {<SPAN CLASS="eClass">WEB_WEB_METHOD_ATTRIBUTE</SPAN>}.<SPAN CLASS="eFeature">make</SPAN>
+in their indexing clause.</P>
+<P CLASS="warning"><B>Caution</B>: Your web service accessible methods can not return an Eiffel
+string (<SPAN CLASS="eClass">STRING</SPAN>). You must use the .NET string version (<SPAN CLASS="eClass">SYSTEM_STRING</SPAN>).</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<A NAME="Cast and Data binding">
+<H1>Cast and Data binding</H1>
+</A>
+<P>ASP. NET introduces a new declarative data binding syntax. This extremely flexible syntax permits
+the developer to bind not only to data sources, but also to simple properties, collections,
+expressions, and even results returned from methods calls.</P>
+<P>However, this syntax allows to bind data only by writing an expression. The problem we can
+encounter in Eiffel, is when we want to bind a data that need to be cast in order to be bind. The
+solution to this problem is to use a function that will operate the &quot;cast&quot; and return its result.
+Here is an example:</P>
+<BLOCKQUOTE>
+	<PRE>&lt;html&gt;
+&lt;script <B>language=&quot;Eiffel&quot;</B> runat=&quot;server&quot;&gt;
+	...
+    <SPAN CLASS="eFeature">data_item</SPAN> (<SPAN CLASS="elocal">container</SPAN>: <SPAN CLASS="eClass">WEB_DATA_LIST_ITEM</SPAN>): <SPAN CLASS="eClass">DICTIONARY_ENTRY</SPAN> is
+	    <SPAN CLASS="eComment">-- Retrieve container.data_item.</SPAN>
+	<SPAN CLASS="eReserved">require</SPAN>
+	    non_void_container: <SPAN CLASS="elocal">container</SPAN> /= Void
+	<SPAN CLASS="eReserved">do</SPAN>
+	    <SPAN CLASS="eReserved">Result</SPAN> ?= <SPAN CLASS="elocal">container</SPAN>.<SPAN CLASS="eFeature">data_item</SPAN>
+	<SPAN CLASS="eReserved">ensure</SPAN>
+	    non_void_result: <SPAN CLASS="eReserved">Result</SPAN> /= <SPAN CLASS="eReserved">Void</SPAN>
+	<SPAN CLASS="eReserved">end</SPAN>
+&lt;/script&gt;
+
+&lt;body&gt;
+   &lt;form runat=server&gt;
+	&lt;asp:DataList id=&quot;my_data_list&quot; runat=&quot;server&quot;&gt;
+	    &lt;ItemTemplate&gt;
+		&lt;%# (<SPAN CLASS="eFeature">data_item</SPAN> (<SPAN CLASS="elocal">container</SPAN>)).<SPAN CLASS="eFeature">key</SPAN> %&gt; :
+		&lt;%# (<SPAN CLASS="eFeature">data_item</SPAN> (<SPAN CLASS="elocal">container</SPAN>)).<SPAN CLASS="eFeature">value</SPAN> %&gt;
+	    &lt;/ItemTemplate&gt;
+
+	&lt;/asp:DataList&gt;
+    &lt;/form&gt;
+
+&lt;/body&gt;
+&lt;html&gt;</PRE>
+</BLOCKQUOTE>
+<P>The problem previously highlighted is, in this example, that in order to bind the key and the
+value associated to the DataList, we need to cast <SPAN CLASS="elocal">container</SPAN>.<SPAN CLASS="eFeature">data_item</SPAN>.
+To realize this operation, we simply added the function <SPAN CLASS="eFeature">data_item</SPAN>,
+that take a <SPAN CLASS="eClass">WEB_DATA_LIST_ITEM </SPAN>(corresponding to the .NET type DataList)
+and that return a <SPAN CLASS="eClass">DICTIONARY_ENTRY</SPAN>. From this result, we can retrieve
+the key and the value, that we can bind.</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<A NAME="Eiffel limitations">
+<H1>Eiffel limitations</H1>
+</A>
+<P>The Eiffel ASP. NET enabler is only compatible with the <B>.NET framework version 1.0</B>.</P>
+<P>&nbsp;</P>
+<P>Within an ASP. NET page written in Eiffel, it is not possible to write any code behind also
+written in Eiffel.</P>
+<P>However, <B>you can use the code behind mechanism using Eiffel code</B> as long as the Eiffel
+code is referenced from a page <B>not</B> written in Eiffel.</P>
+<P>You can also use some code behind within an ASP. NET page written in Eiffel as long as the code
+behind is <B>not</B> written in Eiffel.</P>
+<P></P>
+<BLOCKQUOTE>
+	<PRE>&lt;%@ Page <B>Language=&quot;C#&quot;</B> inherits=&quot;CLASS_NAME&quot; Src=&quot;<B>Eiffel class path</B>&quot; %&gt;			&lt;!-- supported --&gt;
+&lt;%@ Page <B>Language=&quot;Eiffel&quot;</B> inherits=&quot;CLASS_NAME&quot; Src=&quot;<B>.NET class path</B>&quot; %&gt;			&lt;!-- supported --&gt;
+&lt;%@ Page <B>Language=&quot;Eiffel&quot;</B> inherits=&quot;CLASS_NAME&quot; Src=&quot;<B>Eiffel class path</B>&quot; %&gt;		&lt;!-- not supported --&gt;</PRE>
+</BLOCKQUOTE>
+<P CLASS="warning"><B>Note</B>: If you want to write your code in Eiffel using an Eiffel page, you
+have to write your entire Eiffel code inside your Eiffel page.</P>
+<P>&nbsp;</P>
+<P>A predefine list of referenced assemblies is passed to the compiler for all Eiffel page
+compilation. You cannot change it, or redefine their prefix. For example the .NET class
+System.UI.Web.Page is the class <SPAN CLASS="eClass">PAGE </SPAN>prefixed with <SPAN CLASS="eClass">
+WEB_</SPAN>, ie <SPAN CLASS="eClass">WEB_PAGE</SPAN>. Here is the complete list of referenced
+assemblies:</P>
+<BLOCKQUOTE>
+	<TABLE BORDER="1" ID="AutoNumber1" HEIGHT="0" STYLE="width: 500" CELLPADDING="2" CELLSPACING="1">
+		<TR>
+			<TD WIDTH="237" ALIGN="center">Assembly</TD>
+			<TD WIDTH="250" ALIGN="center">Prefix</TD>
+		</TR>
+		<TR>
+			<TD WIDTH="237" ALIGN="left">mscorlib.dll</TD>
+			<TD WIDTH="250" ALIGN="center">&nbsp;</TD>
+		</TR>
+		<TR>
+			<TD WIDTH="237" ALIGN="left">System.dll</TD>
+			<TD WIDTH="250" ALIGN="center">SYSTEM_DLL_</TD>
+		</TR>
+		<TR>
+			<TD WIDTH="237" ALIGN="left">System.Xml</TD>
+			<TD WIDTH="250" ALIGN="center">XML_</TD>
+		</TR>
+		<TR>
+			<TD WIDTH="237" ALIGN="left">System.Data.dll</TD>
+			<TD WIDTH="250" ALIGN="center">DATA_</TD>
+		</TR>
+		<TR>
+			<TD WIDTH="237" ALIGN="left">System.Web.dll</TD>
+			<TD WIDTH="250" ALIGN="center">WEB_</TD>
+		</TR>
+		<TR>
+			<TD WIDTH="237" ALIGN="left">System.Web.Services.dll</TD>
+			<TD WIDTH="250" ALIGN="center">WEB_</TD>
+		</TR>
+		<TR>
+			<TD WIDTH="237" ALIGN="left">System.Drawing.dll</TD>
+			<TD WIDTH="250" ALIGN="center">DRAWING_</TD>
+		</TR>
+		<TR>
+			<TD WIDTH="237" ALIGN="left">System.EnterpriseServices.dll</TD>
+			<TD WIDTH="250" ALIGN="center">&nbsp;</TD>
+		</TR>
+	</TABLE>
+</BLOCKQUOTE>
+<P>You cannot refer an Eiffel assembly from a page written in Eiffel:</P>
+<P></P>
+<BLOCKQUOTE>
+	<PRE>&lt;%@ Assembly Name=&quot;my_non_eiffel_assembly&quot; %&gt;		&lt;!-- supported --&gt;
+&lt;%@ Assembly Name=&quot;my_eiffel_assembly&quot; %&gt; 		&lt;!-- not supported --&gt;</PRE>
+</BLOCKQUOTE>
+<P>&nbsp;</P>
+<A NAME="ASP. NET Eiffel samples">
+<H1>ASP. NET Eiffel samples</H1>
+</A>
+<P>This set of examples shows you all the possibilities you can exploit using Eiffel in an ASP. NET
+application.</P>
+<UL>
+	<LI><A HREF="samples/hello_world.html">Hello world example</A></LI>
+	<LI><A HREF="samples/loop.html">Loop example</A></LI>
+	<LI><A HREF="samples/inheritance.html">Inheritance example</A></LI>
+	<LI><A HREF="samples/click_event.html">Event click example</A></LI>
+	<LI><A HREF="samples/code_behind.html">Code behind example</A></LI>
+	<LI><A HREF="samples/calendar.html">Calendar example</A></LI>
+	<LI><A HREF="samples/calendar_config.htm">Calendar configuration examples</A></LI>
+	<LI><A HREF="samples/data_binding.htm">Data binding example</A></LI>
+	<LI><A HREF="samples/web_services.html">Web Services example</A></LI>
+</UL>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,43 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<LINK REL=StyleSheet HREF="../../../default.css">
+
+<META NAME="MS-HKWD" CONTENT="Example,loop,variable">
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Loop example</title>
+</head>
+
+<body>
+
+<h1>Loop example</h1>
+<p>This example shows you how to use local variables. There is a loop displaying
+the content of an array of strings. At each passage in the loop the font size of
+the string displayed is increased.</p>
+<pre>&lt;%@ Page <b>Language=&quot;eiffel&quot;</b> Description=&quot;Eiffel ASP.NET example&quot; %&gt;
+&lt;html&gt;
+    &lt;body&gt;
+	&lt;%<span class="eKeyword">local</span> <span class="eLocal">i</span>, <span class="eLocal">j</span>: <span class="eClass">INTEGER</span>; <span class="eLocal">array</span>: <span class="eClass">ARRAY</span> [<span class="eClass">STRING</span>] %&gt;
+	&lt;%   <span class="eLocal">array</span> := &lt;&lt;<span class="eString">&quot;Hello world&quot;</span>, <span class="eString">&quot;This is an eiffel ASP.NET example&quot;</span>, <span class="eString">&quot;using local variables&quot;</span>&gt;&gt;
+	     <span class="eKeyword">from</span> <span class="eLocal">i</span> := 1
+	     <span class="eKeyword">until</span> <span class="eLocal">i</span> &gt; <span class="eLocal">array</span>.<span class="eFeature">count</span>
+    	     <span class="eKeyword">loop</span> %&gt;
+		&lt;% <span class="eLocal">j</span> := <span class="eLocal">i</span> * <span class="eLocal">i</span> %&gt;
+		&lt;font size=&quot;&lt;%= <span class="eLocal">j</span> %&gt;&quot;&gt; &lt;%=(<span class="eLocal">array</span>.<span class="eFeature">item</span>(i)).<span class="eFeature">to_cil</span>%&gt; &lt;/font&gt;
+	&lt;%   <span class="eLocal">i</span> := <span class="eLocal">i</span> + 1
+	     <span class="eKeyword">end</span> %&gt;
+    &lt;/body&gt;
+&lt;html&gt;</pre>
+          <p>&nbsp;</p>
+          <p>Here is the output:</p>
+          <p>&nbsp;</p>
+<p align="center">
+<img border="0" src="../../../images/asp.net/loop_example_output.png" width="516" height="247"></p>
+<p align="center"><a href="http://localhost/eiffel_samples/loop_example.aspx">[run the
+example]</a></p>
+</body>
+
+</html>

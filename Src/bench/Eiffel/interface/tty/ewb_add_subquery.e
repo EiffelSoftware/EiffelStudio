@@ -38,7 +38,7 @@ feature {NONE} -- Execute
 
 	execute is
 		local
-			sq_op: EWB_SUBQUERY_OPERATOR
+			sq_op: SUBQUERY_OPERATOR
 		do
 			subqueries.extend (subquery);
 			if subqueries.count > 1 then
@@ -103,6 +103,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	subquery: EWB_SUBQUERY
+	subquery: SUBQUERY
 
 end -- class EWB_ADD_SUBQUERY

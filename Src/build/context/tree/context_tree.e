@@ -82,10 +82,10 @@ feature -- Creation
 			set_action ("Ctrl<Btn1Down>", Current, Fourth)
 
 				-- Callbacks for arrow keys
-			set_action ("<Key>osfLeft", Current, Fifth)
-			set_action ("<Key>osfRight", Current, Sixth)
-			set_action ("<Key>osfUp", Current, Seventh)
-			set_action ("<Key>osfDown", Current, Eighth)
+			set_action ("<Key>LEFT", Current, Fifth)
+			set_action ("<Key>RIGHT", Current, Sixth)
+			set_action ("<Key>UP", Current, Seventh)
+			set_action ("<Key>DOWN", Current, Eighth)
 
 				-- Used to resize the drawing area whenever the
 				-- configuration (size, ...) of the parent scrolled

@@ -115,7 +115,10 @@ feature {NONE} -- debugger behavior
 		do
 			notify_start_of_callback (cb_id)
 			eifnet_debugger_info.set_last_managed_callback (cb_id)
-			Eifnet_debugger_info.reset_current_callstack
+			
+			if not eifnet_debugger_info.is_inside_function_evaluation then
+				Eifnet_debugger_info.reset_current_callstack
+			end			
 
 			debug ("DEBUGGER_TRACE_CALLBACK_DATA")
 				l_msg := "[EIFFEL/DEB/CALL] ###"
@@ -128,12 +131,16 @@ feature {NONE} -- debugger behavior
 	end_of_managed_callback (cb_id: INTEGER) is
 			-- called at each ending of callback
 		local
-			process_callback: BOOLEAN
+			may_stop_on_callback: BOOLEAN
 			execution_stopped: BOOLEAN
 		do			
-			process_callback := eifnet_debugger_info.callback_enabled (eifnet_debugger_info.last_managed_callback)
-
-			if process_callback then
+			if eifnet_debugger_info.is_inside_function_evaluation then
+				may_stop_on_callback := eifnet_debugger_info.last_managed_callback_is_an_end_of_eval
+			else
+				may_stop_on_callback := eifnet_debugger_info.callback_enabled (eifnet_debugger_info.last_managed_callback)				
+			end
+				
+			if may_stop_on_callback then
 				execution_stopped := stop (cb_id)
 			else
 				execution_stopped := continue (cb_id)
@@ -188,7 +195,7 @@ feature {NONE} -- debugger behavior
 			if Eifnet_debugger_info.last_managed_callback_is_breakpoint then
 				execution_stopped := execution_stopped_on_end_of_breakpoint_callback
 			elseif Eifnet_debugger_info.last_managed_callback_is_step_complete then
-				if Eifnet_debugger_info.application.imp_dotnet.status.is_evaluating	then
+				if Eifnet_debugger_info.is_inside_function_evaluation then
 					execution_stopped := False
 				else
 					execution_stopped := execution_stopped_on_end_of_step_complete_callback

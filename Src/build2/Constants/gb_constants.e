@@ -461,6 +461,9 @@ feature -- XML constants
 	Name_string: STRING is "name"
 		-- String constant representing "name".
 		
+	client_string: STRING is "generate_as_client"
+		-- String constant reflecting client generation option.
+		
 	Id_String: STRING is "id"
 		-- String constant representing "id".
 	

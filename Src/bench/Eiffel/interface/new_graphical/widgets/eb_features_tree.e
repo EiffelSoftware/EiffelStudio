@@ -1,5 +1,6 @@
 indexing
 	description: "Tree representing the features of the class currently opened"
+	author:"$author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -317,6 +318,9 @@ feature {NONE} -- Implementation
 			tree_item: EV_TREE_ITEM
 			ef: E_FEATURE
 			st: FEATURE_STONE
+			fa: FEATURE_AS
+			f_names: EIFFEL_LIST [FEATURE_NAME]
+			f_item_name: STRING
 		do
 			create Result
 			if
@@ -332,46 +336,56 @@ feature {NONE} -- Implementation
 			until
 				fl.after
 			loop
-				if fl.item = Void then
+				fa := fl.item
+				if fa = Void then
 					raise ("Void feature")
 				end
-				create tree_item
-				tree_item.set_text (fl.item.feature_name)
-				if is_clickable then
-					if
-						features_tool.current_compiled_class /= Void and then
-						features_tool.current_compiled_class.has_feature_table
-					then
-						ef := features_tool.current_compiled_class.feature_with_name (
-							fl.item.feature_name)
-						if ef /= Void then
-							tree_item.set_data (ef)
-							tree_item.pointer_button_press_actions.extend (
-								agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))	
+				from
+					f_names := fa.feature_names
+					f_names.start
+				until
+					f_names.after
+				loop
+					f_item_name := f_names.item.internal_name
+					create tree_item
+					tree_item.set_text (f_item_name)
+					if is_clickable then
+						if
+							features_tool.current_compiled_class /= Void and then
+							features_tool.current_compiled_class.has_feature_table
+						then
+							ef := features_tool.current_compiled_class.feature_with_name (
+								f_item_name)
+							if ef /= Void then
+								tree_item.set_data (ef)
+								tree_item.pointer_button_press_actions.extend (
+									agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))	
+							end
 						end
 					end
-				end
-				ef := features_tool.current_compiled_class.feature_with_name (fl.item.feature_name)
-				if ef = Void then
-					raise ("Void feature")
-				end
-				
-				if ef.is_deferred then
-					tree_item.set_pixmap (Pixmaps.Icon_deferred_feature)
-				elseif ef.is_once or ef.is_constant then
-					tree_item.set_pixmap (Pixmaps.Icon_once_objects)
-				elseif ef.is_attribute then
-					tree_item.set_pixmap (Pixmaps.Icon_attributes)
-				elseif ef.is_external then
-					tree_item.set_pixmap (Pixmaps.Icon_external_feature)
-				else
-					tree_item.set_pixmap (Pixmaps.Icon_feature @ 1)
-				end
-				create st.make (ef)
-				tree_item.set_pebble (st)
-				tree_item.set_accept_cursor (st.stone_cursor)
-				tree_item.set_deny_cursor (st.X_stone_cursor)
-				Result.extend (tree_item)
+					ef := features_tool.current_compiled_class.feature_with_name (f_item_name)
+					if ef = Void then
+						raise ("Void feature")
+					end
+					
+					if ef.is_deferred then
+						tree_item.set_pixmap (Pixmaps.Icon_deferred_feature)
+					elseif ef.is_once or ef.is_constant then
+						tree_item.set_pixmap (Pixmaps.Icon_once_objects)
+					elseif ef.is_attribute then
+						tree_item.set_pixmap (Pixmaps.Icon_attributes)
+					elseif ef.is_external then
+						tree_item.set_pixmap (Pixmaps.Icon_external_feature)
+					else
+						tree_item.set_pixmap (Pixmaps.Icon_feature @ 1)
+					end
+					create st.make (ef)
+					tree_item.set_pebble (st)
+					tree_item.set_accept_cursor (st.stone_cursor)
+					tree_item.set_deny_cursor (st.X_stone_cursor)
+					Result.extend (tree_item)
+					f_names.forth
+				end					
 				fl.forth
 			end			
 		end
@@ -450,6 +464,5 @@ feature {NONE} -- Implementation
 			end			
 		end
 
-end -- class EB_FEATURES_TREE
-
+end
 

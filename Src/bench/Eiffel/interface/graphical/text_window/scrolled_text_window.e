@@ -1,39 +1,77 @@
 indexing
 
 	description:	
-		"Notion of a text of some tool.";
+		"Notion of a text of some tool. Widget that is able %
+			%to edit text.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TEXT_WINDOW 
+class SCROLLED_TEXT_WINDOW 
 
 inherit
 
 	SCROLLED_T
 		rename
-			count as st_size,
+			set_text as st_set_text,
 			make as text_create,
+			cursor as widget_cursor,
 			lower as lower_window,
-			set_cursor_position as st_set_cursor_position
+			set_cursor_position as st_set_cursor_position,
+			set_background_color as old_set_background_color,
+			set_font as old_set_font
 		export
-			{NONE} st_size, st_set_cursor_position
+			{NONE} st_set_cursor_position
 		undefine
 			copy, setup, consistent, is_equal
 		end;
+	SCROLLED_T
+		rename
+			set_text as st_set_text,
+			make as text_create,
+			cursor as widget_cursor,
+			lower as lower_window,
+			set_cursor_position as st_set_cursor_position
+		export
+			{NONE} st_set_cursor_position
+		undefine
+			copy, setup, consistent, is_equal
+		redefine
+			set_background_color, set_font
+		select
+			set_background_color, set_font
+		end;
 	CLICK_WINDOW
+		rename
+			hole_target as source,
+			count as array_count,
+			widget as source
 		redefine
 			clear_window, display, 
 			update_before_transport, initial_x, initial_y,
-			update_after_transport
+			update_after_transport, tab_length
 		end;
 	SHARED_ACCELERATOR
 		undefine
 			copy, setup, consistent, is_equal
 		end;
-	SHARED_TABS
+	SHARED_APPLICATION_EXECUTION
 		undefine
 			copy, setup, consistent, is_equal
 		end;
+	COMMAND
+		undefine
+			copy, setup, consistent, is_equal
+		redefine
+			context_data_useful
+		end;
+	GRAPHICAL_CONSTANTS
+		undefine
+			copy, setup, consistent, is_equal
+		end;
+	WIDGET_ROUTINES
+		undefine
+			copy, setup, consistent, is_equal
+		end
 
 creation
 
@@ -41,40 +79,20 @@ creation
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: TOOL_W; a_tool: TOOL_W) is
+	make (a_name: STRING; a_tool: TOOL_W) is
 			-- Initialize text window with name `a_name', parent `a_parent',
 			-- and tool window `a_tool'.
+		require
+			valid_tool: a_tool /= Void and then a_tool.global_form /= Void
 		do
-			text_create (a_name, a_parent.global_form);
+			text_create (a_name, a_tool.global_form);
 			tool := a_tool;
-			set_mode_for_editing;
 			initialize_transport;
 			upper := -1 			-- Init clickable array.
 			add_default_callbacks;
 			set_accelerators;
 			!! matcher.make_empty;
-		end;
-
-feature -- Fonts
-
-	default_font: CELL [FONT] is
-			-- Default font
-		once
-			!! Result.put (font)
-		end;
-
-	set_default_font (new_font: FONT) is
-			-- Assign `new_font' to `default_font'.
-		do
-			default_font.put (new_font)
-		end;
-
-	set_font_to_default is
-			-- Set `font' to the default font.
-		do
-			--if default_font.item /= Void then
-				--set_font (default_font.item)
-			--end
+			old_set_font (g_Text_font)
 		end;
 
 feature -- Drag source/Hole properties
@@ -85,120 +103,147 @@ feature -- Drag source/Hole properties
 			Result := Current
 		end;
 
-feature -- Formats
-
-	history: STONE_HISTORY is
-			-- History list for Current.
-		do
-			Result := tool.history
-		end;
-
-	set_mode_for_editing is
-			-- Set edit mode for text modification (set to read only)
-		do
-			set_read_only	
-		end;
-
 feature -- Properties
 
 	found: BOOLEAN;
 			-- Has last search been successful?
 
-feature -- Changing
+feature -- Access
 
-	changed: BOOLEAN;
-			-- Has the text been edited since last display?
+	cursor: SCROLLED_WINDOW_CURSOR is
+			-- Current cursor position in scrolled text 
+		do
+			!! Result.make (cursor_position, top_character_position)
+		end;
+
+
+	current_line: INTEGER is
+			-- Current line in text
+		local
+			text_value: STRING;
+			text_count, pos, i: INTEGER
+		do
+			from
+				text_value := text;
+				pos := cursor_position;
+				text_count := text_value.count;
+				Result := 1;
+				i := 1
+			until
+				i >= pos or i > text_count
+			loop
+				if text_value.item (i) = '%N' then
+					Result := Result + 1
+				end;
+				i := i + 1
+			end;
+		end;
+
+feature -- Changing
 
 	set_changed (b: BOOLEAN) is
 			-- Set `changed' to b.
 		do
-			changed := b
+			if changed /= b then
+				changed := b
+			end;
+			tool.update_save_symbol
 		ensure then
 			set: changed = b
 		end;
 
-	display_header (s: STRING) is
-			-- Set the heder of tool to `s'.
+	set_text (a_text: STRING) is
+			-- Set `text' to `a_text'.
 		do
-			tool.set_title (s);
+			set_editable;
+			changed := true;
+			st_set_text (a_text)
+			changed := false;
+			tool.set_mode_for_editing
+		ensure then
+			not_changed: not changed	
 		end;
 
-	file_name: STRING;
-			-- Name of the file being displayed
-
-	set_file_name (f: STRING) is
-			-- Assign `f' to file_name.
+	set_background_color (a_color: COLOR) is
+			-- Set `background_color' to `a_color'.
 		do
-			file_name := f;
+			old_set_background_color (a_color)
+			set_scrolled_text_background_color (implementation, g_Bg_color)
 		end;
 
-feature -- Stones
-
-	root_stone: like focus is
-			-- Root of the clickable ast node being displayed.
+	set_font (a_font: FONT) is
+			-- Set `font' to `a_font'
+			-- Do nothing in this case
 		do
-			Result := tool.stone
-		end;
-
-	set_root_stone (r: like root_stone) is
-				-- Assign `r' to `root_stone'.
-		do
-			tool.set_stone (r)
 		end;
 
 feature -- Displaying
 
 	display is
-			-- Display the `image' to the text window.
+			-- Display the `image' to the text window
+			-- and set the mode to read_only.
 		do
-			set_changed (true);
+			set_editable;
+			changed := true;
 			set_text (image);
-			set_changed (false);
-			tool.update_save_symbol
+			changed := false;
+			tool.update_save_symbol;
+			image.wipe_out;
+			set_read_only
 		ensure then
 			up_to_date: not changed
 		end;
 
-	show_file (a_file_name: STRING) is
-			-- Display content of file named `a_file_name' and its name as the title
-			-- of the ancestor tool. Forget about clicking and stones.
-		require
-			name_not_void: not (a_file_name = Void)
+feature -- Search
+
+	search_stone (a_stone: STONE) is
+			-- Search for `stone' in the click list and
+			-- highlight it if found.
 		local
-			a_file: PLAIN_TEXT_FILE;
+			click_stone: CLICK_STONE
+			i: INTEGER;
+			stone_found: BOOLEAN
 		do
-			!!a_file.make_open_read (a_file_name);
-			a_file.readstream (a_file.count);
-			a_file.close;
---			if a_file.error = 0 then
-				clean;
-				set_changed (true);
-				set_text (a_file.laststring);
-				set_changed (false);
-				tool.update_save_symbol;
-				file_name := a_file_name;
---			else
---				changed := true;
---				set_text (a_file.last_error_message);
---				set_changed (false);
---			end;
-			tool.set_default_format;
-			tool.reset_stone;
-		ensure
-			up_to_date: not changed;
-			no_stone: root_stone = Void
+			from
+				i := 1
+			until
+				stone_found or i > clickable_count
+			loop
+				click_stone := item (i);
+				if a_stone.same_as (click_stone.node) then
+					set_bounds (click_stone.start_focus, 
+						click_stone.end_focus);
+					highlight_focus;
+					stone_found := true
+				end;
+				i := i + 1
+			end
 		end;
+
+feature -- Cursor movement
+
+	go_to (a_cursor: CURSOR) is
+			-- Go to `a_cursor) position
+		local
+			cur: SCROLLED_WINDOW_CURSOR;
+			c: INTEGER;
+			last_cursor_position, last_top_position: INTEGER
+		do
+			cur ?= a_cursor;
+			last_cursor_position := cur.cursor_position;
+			last_top_position := cur.top_character_position;
+			c := count;
+			if last_cursor_position > c then
+				last_cursor_position := c
+			end;
+			if last_top_position > c then
+				last_top_position := c
+			end;
+			set_cursor_position (last_cursor_position);
+			set_top_character_position (last_top_position)
+		end
 
 feature -- Text selection
-
-	highlight_focus is
-			-- Highlight focus (using reverse video) on the screen 
-			-- from `focus_start' to `focus_end'.
-			-- Put cursor on the focus if not already done.
-		do
-			highlight_selected (focus_start, focus_end);
-			set_cursor_position (focus_start);
-		end;
 
 	deselect_all is
 		do
@@ -209,22 +254,23 @@ feature -- Text selection
 
 feature -- Text manipulation
 
-	clean is
-			-- Erase internal structures of current
+	clear_window is
+			-- Erase internal structures of Current.
 		do
+			set_cursor_position (0);
 			image.wipe_out;
-			clear_clickable;
+			disable_clicking;
 			position := 0;
 			text_position := 0;
 			focus_start := 0;
 			focus_end := 0;
 			tool.set_icon_name (tool.tool_name);
-			tool.set_stone (Void)
-			file_name := Void;
+			tool.set_stone (Void);
+			tool.set_file_name (Void);
+			clear;
+			tool.set_mode_for_editing;
 			set_changed (false);
-			tool.update_save_symbol;
-			set_mode_for_editing
-		ensure
+		ensure then
 			image.empty;
 			position = 0;
 			clickable_count = 0;
@@ -234,84 +280,52 @@ feature -- Text manipulation
 		end;
 
 	clear_text is
-			-- Clear the text of Current.
+			-- Clear the text structures.
 		do
 			image.wipe_out;
-			clear_clickable;
+			disable_clicking;
 			position := 0;
 			text_position := 0;
 			focus_start := 0;
 			focus_end := 0;
 			set_changed (false);
-			tool.update_save_symbol
-		end;
-
-	clear_window is
-			-- Clear the window. Including history.
-		do
-			history.wipe_out;
-			set_cursor_position (0);
-			clean;
-			clear;
-			display;
-			set_changed (False);
-			tool.update_save_symbol
 		end;
 
 feature -- Tabulations
 
-	tab_length: INTEGER;
+	tab_length: INTEGER is
 			-- Number of blank characters in a tabulation
+		do
+			Result := 8
+		end;
 
 	set_tab_length (new_length: INTEGER) is
 			-- Assign `new_length' to `tab_length'.
-		require
-			valid_length: valid_tab_step (new_length)
 		do
-			tab_length := new_length
-		ensure
-			assigned: tab_length = new_length;
+		ensure then
 			cursor_not_moved: cursor_position = old cursor_position
 		end;
 
-	set_tab_length_to_default is
-			-- Set `tab_length' to the default tab length.
-		do
-			if tab_length /= default_tab_length.item then
-				set_tab_length (default_tab_length.item)
-			end
-		end;
-
-feature 
+feature -- Update
 
 	highlight_selected (a, b: INTEGER) is
 			-- Highlight between `a' and `b' using reverse video.
-		require
-			first_fewer_than_last: a <= b
 		do
-			if b <= size then
+			if b <= count then
 					-- Does not highlight if `b' is beyond the
 					-- bounds of the text.
 				set_selection (a,b)
 			end
 		end;
 
-	size: INTEGER is
-			-- Number of character in the text
-			-- (1 tab = 1 character)
-		do
-			Result := st_size
-		end;
-
 	set_cursor_position (a_position: INTEGER) is
 			-- Set `cursor_position' to `a_position' if the new position
 			-- is not out of bounds.
 		do
-			if a_position <= st_size then
+			if a_position <= count then
 				st_set_cursor_position (a_position)
 			end
 		end;
-
 
 	search (s: STRING) is
 			-- Highlight and show next occurence of `s'.
@@ -386,7 +400,6 @@ feature -- Update
 	update_before_transport (but_data: BUTTON_DATA) is
 			-- Update Current stone and related information
 			-- before transport using button data `but_data'.
-			-- Do nothing by default.
 		local
 			cur_pos: INTEGER
 		do
@@ -399,6 +412,72 @@ feature -- Update
 							but_data.absolute_y - real_y);
 				update_focus (cur_pos);
 				highlight_focus;
+			end
+		end;
+
+	redisplay_breakable_mark (f: E_FEATURE; index: INTEGER) is
+			-- Redisplay the sign of the `index'-th breakable point.
+		local
+			start_pos, end_pos: INTEGER;
+			was_selection_active: BOOLEAN;
+			status: APPLICATION_STATUS;
+			cb: CLICK_BREAKABLE;
+			bid: BODY_ID;
+			bs: BREAKABLE_STONE
+		do
+			cb := breakable_for (f, index)
+			if cb /= Void then
+				changed := True;
+				bs := cb.breakable;
+				if is_selection_active then
+					was_selection_active := True;
+					start_pos := begin_of_selection;
+					end_pos := end_of_selection;
+					clear_selection
+				end;
+				replace (cb.start_position, cb.end_position, bs.sign);
+				changed := False;
+				status := Application.status;
+				if
+					status /= Void and status.is_stopped and
+					status.is_at (bs.routine, bs.index)
+				then
+						-- Execution stopped at that breakpoint.
+						-- Show the point on the screen (scroll if
+						-- necessary)
+					set_cursor_position (cb.end_position);
+				elseif was_selection_active then
+					set_selection (start_pos, end_pos)
+				end
+			end
+		end
+
+feature -- Execution
+
+	context_data_useful: BOOLEAN is
+		do
+			Result := True
+		end;
+
+	execute (argument: ANY) is
+			-- Execute the command for Current.
+		local
+			but_data: BUTTON_DATA;
+			st: like focus
+		do
+			if not changed then
+				if argument = modify_event then
+					disable_clicking;
+					set_changed (true);
+				elseif argument = new_tooler then
+					but_data ?= context_data;
+					update_before_transport (but_data);
+					st := focus;
+					if st /= Void then
+						Project_tool.receive (st);
+						deselect_all
+					end
+				end
 			end
 		end;
 
@@ -465,9 +544,4 @@ feature {OBJECT_W} -- Settings
 			clickable_count := last_pos
 		end;
 
-invariant
-
-	history_exists: history /= Void;
-	valid_tab_length: valid_tab_step (tab_length)
-
-end -- class TEXT_WINDOW
+end -- class SCROLLED_TEXT_WINDOW

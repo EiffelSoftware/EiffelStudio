@@ -14,6 +14,10 @@ inherit
 			set_count as set_columns
 		end
 
+	EV_PND_SOURCE_I
+
+	EV_PND_TARGET_I
+
 feature -- Initialization
 
 	make is

@@ -312,8 +312,7 @@ feature -- Type check, byte code and dead code removal
 				until
 					open_positions.after
 				loop
-					create int.make_default
-					int.set_lower (open_positions.item)
+					create int.make_with_value (open_positions.item)
 					new_list.put (int)
 					new_list.forth
 					open_positions.forth

@@ -30,7 +30,7 @@ clean:
 
 mtnet.lib: $(OBJS)
 	$(RM) $@
-	$(AR) $@ /c +networkr.obj +network.obj +hostname.obj +syncpoll.obj +storable.obj
+	$(AR) $@ /c +network_r.obj +network.obj +hostname.obj +syncpoll.obj +storable.obj
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\bcc mkdir ..\spec\bcc

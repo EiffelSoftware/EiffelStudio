@@ -271,10 +271,12 @@ EIF_POINTER cwin_reg_enum_value(
 	(LPTSTR)name,
 	(LPDWORD)&size,
 	NULL,
-	(LPDWORD) &(RK->type),
+	//(LPDWORD) &(RK->type),
+	NULL,
 	//(LPBYTE) &(RK->data),
 	NULL,
-	(LPDWORD) &(RK->length));
+	//(LPDWORD) &(RK->length));
+	NULL);
 
 	if (result == ERROR_SUCCESS) 
 		return (EIF_POINTER) name;
@@ -319,31 +321,63 @@ EIF_POINTER cwin_reg_query_value(
         EIF_POINTER key, EIF_POINTER value_name )
 {
     LONG result;
-    LONG charCount;
+    LONG bufferSize = 256;
 	DWORD type;
     char* buffer;
 	REG_VALUE* RV;
 
-	buffer = (char *)malloc (256);	
+	buffer = (char *)malloc (bufferSize);	
     buffer[0] = 0;
-    charCount = 255;
 	
     result = RegQueryValueEx( (HKEY)key ,
         (LPTSTR)value_name,
 		NULL,
 		&type,
         (LPTSTR)buffer,
-        &charCount );
+        &bufferSize );
 		
 	if (result == ERROR_SUCCESS) {
 		RV = (REG_VALUE*)malloc (sizeof (REG_VALUE));
+		if (!RV)
+			goto error_rv;
 		RV->type = type;
 		RV->data = buffer;
-		RV->length = charCount;
+		RV->length = bufferSize -1;	//do not forget the \0 character!
 		return (EIF_POINTER) RV;	
 	} else {
-		return NULL;	
+		if (result == ERROR_MORE_DATA)	{
+			if (buffer)
+				free (buffer);
+			buffer = (char *)malloc (bufferSize); // bufferSize was set by RegQueryValueEx
+			if (! buffer)
+				goto error;
+			result = RegQueryValueEx	((HKEY) key,
+					(LPTSTR)value_name,
+					NULL,
+					&type,
+					(LPTSTR)buffer,
+					&bufferSize );
+			if (result == ERROR_SUCCESS)	{
+				RV = (REG_VALUE*)malloc (sizeof (REG_VALUE));
+				if (!RV)
+					goto error_rv;
+				RV->type = type;
+				RV->data = buffer;
+				RV->length = bufferSize -1;	//do not forget the \0 character!
+				return (EIF_POINTER) RV;
+			} else {
+				return NULL;
+			}
+		} else {
+			return NULL;
+		}
 	}
+// "Out of memory" errors handling.
+error_rv:
+	free (buffer);
+error:
+	enomem();
+	return NULL;
 }
 
 //////////////////////////////////////////////////////////////

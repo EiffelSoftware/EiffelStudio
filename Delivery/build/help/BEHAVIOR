@@ -1,8 +1,0 @@
-Behavior
---------
-
-A behavior is the semantics attached to a certain context. It
-is an association of commands to events. The behavior attached
-to a context will define what (what command) must be executed
-for any possible situation (any event) occurring in the given
-graphcial object (the given context).

@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 		local
 			a: ANY
 		do
+			cwel_set_string_length (a_string.count)
 			item := c_calloc (1, a_string.count + 1)
 			if item = default_pointer then
 				-- Memory allocation problem
@@ -67,7 +68,7 @@ feature -- Access
 	length: INTEGER is
 			-- String length
 		do
-			Result := cwel_string_length (item)
+			Result := cwel_string_length
 		end
 		
 feature -- Element change
@@ -76,10 +77,11 @@ feature -- Element change
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
-			count_ok: a_string.count < length
+			valid_count: a_string.count < length
 		local
 			a: ANY
 		do
+			cwel_set_string_length (a_string.count)
 			a := a_string.to_c
 			memory_copy ($a, a_string.count + 1)
 		ensure
@@ -96,11 +98,16 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	cwel_string_length (ptr: POINTER): INTEGER is
+	cwel_string_length: INTEGER is
 		external
 			"C [macro %"wel_string.h%"]"
 		end
-		
+	
+	cwel_set_string_length (len: INTEGER) is
+		external
+			"C [macro %"wel_string.h%"]"
+		end
+
 end -- class WEL_STRING
 
 --|-------------------------------------------------------------------------

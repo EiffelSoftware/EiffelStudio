@@ -35,7 +35,10 @@ inherit
 		undefine
 			copy, is_equal
 		end;
-
+	COMPILER_EXPORTER
+		undefine
+			copy, is_equal
+		end;
 
 creation
 

@@ -45,7 +45,7 @@ feature -- Access
 		do
 			if minimum /= a_range.lower or else maximum /= a_range.upper then
 				C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
-				C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper)
+				C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper + leap)
 				C.gtk_adjustment_changed (adjustment)
 			end
 		end
@@ -55,7 +55,7 @@ feature -- Access
 			-- Set `value' to `a_range.lower'.
 		do
 			C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
-			C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper)
+			C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper + leap)
 			C.gtk_adjustment_set_value (adjustment, a_range.lower)
 			C.gtk_adjustment_value_changed (adjustment)
 		end
@@ -87,6 +87,9 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/14 22:53:27  brendel
+--| Corrected small errors occured while copying & pasting.
+--|
 --| Revision 1.6  2000/02/14 22:19:51  brendel
 --| Changed range instead of taking two integers to take an INTEGER_INTERVAL.
 --| This is to take advantage of the newly introduced operator |..|.

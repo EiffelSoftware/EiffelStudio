@@ -144,6 +144,11 @@ feature -- Status report
 			Result := (resize_type = 2) or (resize_type = 3)	
 		end
 
+	has_focus: BOOLEAN is
+			-- Does the Current widget has the focus.
+		do
+		end
+
 feature -- Status setting
 
 	destroy is

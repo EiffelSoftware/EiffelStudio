@@ -14,7 +14,7 @@ class
 inherit
 	EV_CHARACTER_FORMAT_I
 	
-	WEL_CHARACTER_FORMAT
+	WEL_CHARACTER_FORMAT2
 		rename
 			make as wel_make,
 			initialize as wel_initialize,
@@ -27,7 +27,9 @@ inherit
 			unset_underline as disable_underlined,
 			unset_strike_out as disable_striked_out,
 			effects as wel_effects,
-			set_effects as wel_set_effects
+			set_effects as wel_set_effects,
+			set_background_color as wel_set_background_color,
+			background_color as wel_background_color
 		undefine
 			default_create, copy, is_equal
 		end
@@ -85,6 +87,16 @@ feature -- Access
 			end
 		end
 		
+	background_color: EV_COLOR is
+			-- Background color of the current format.
+		do
+			if background_color_imp /= Void then
+				Result ?= background_color_imp.interface
+			else
+				Result := (create {EV_STOCK_COLORS}).white
+			end
+		end
+		
 	font: EV_FONT is
 			-- Font of the current format.
 		local
@@ -114,6 +126,9 @@ feature -- Access
 		
 	color_imp: EV_COLOR_IMP
 		-- Color applied to characters. Void if None.
+		
+	background_color_imp: EV_COLOR_IMP
+		-- Background color applied to characters. Void if None.
 		
 	internal_effects: EV_CHARACTER_FORMAT_EFFECTS
 		-- Internal effects applicable to `Current'.
@@ -147,6 +162,15 @@ feature -- Status setting
 		do
 			color_imp ?= a_color.implementation
 			set_text_color (color_imp)
+		end
+		
+	set_background_color (a_color: EV_COLOR) is
+			-- Make `value' the new background color.
+		do
+			background_color_imp ?= a_color.implementation
+			remove_mask (cfe_autocolor)
+			wel_set_background_color (background_color_imp)
+			
 		end
 		
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is

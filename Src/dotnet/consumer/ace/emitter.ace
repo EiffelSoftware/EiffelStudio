@@ -21,6 +21,7 @@ default
 	version ("5.4.000.0")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
 	msil_assembly_compatibility ("None")
+	msil_clr_version ("v1.0.3705")
 	check_vape (yes)
 	console_application (yes)
 	address_expression (no)

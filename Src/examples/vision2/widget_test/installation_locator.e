@@ -57,29 +57,35 @@ feature {NONE} -- Implementation
 			-- considered to be valid.
 		local
 			filename: FILE_NAME
-			file: RAW_FILE
+			directory: DIRECTORY
 		do
 			Result := True
 			create filename.make_from_string (root_location)
-			filename.extend ("flatshort")
-			filename.extend ("ev_list_flatshort.txt")
-			create file.make (filename.out)
-			if not file.exists then
-				Result := False
-			end
-			create filename.make_from_string (root_location)
-			filename.extend ("templates")
-			filename.extend ("common_test.e")
-			create file.make (filename.out)
-			if not file.exists then
-				Result := False
-			end
-			create filename.make_from_string (root_location)
 			filename.extend ("bitmaps")
 			filename.extend ("png")
-			filename.extend ("image1.png")
-			create file.make (filename.out)
-			if not file.exists then
+			create directory.make (filename)
+			if not directory.exists then
+				Result := False
+			end
+			
+			create filename.make_from_string (root_location)
+			filename.extend ("flatshort")
+			create directory.make (filename)
+			if not directory.exists then
+				Result := False
+			end
+			
+			create filename.make_from_string (root_location)
+			filename.extend ("templates")
+			create directory.make (filename)
+			if not directory.exists then
+				Result := False
+			end
+			
+			create filename.make_from_string (root_location)
+			filename.extend ("tests")
+			create directory.make (filename)
+			if not directory.exists then
 				Result := False
 			end
 		end

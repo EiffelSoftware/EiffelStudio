@@ -258,11 +258,15 @@ feature -- Misc
 
 	Behaviour_state_label: STRING is "behavior for state:";
 	Behaviour_label: STRING is "Behavior";
+	Commands_label: STRING is "Commands";
 	Context_label: STRING is "Context";
+	Entire_application_label: STRING is "Entire application";
 	Event_label: STRING is "Event";
+	Groups_label: STRING is "Groups";
 	Page_label: STRING is "Page";
 	Redo_label: STRING is "Redo";
 	Rows_label: STRING is "row(s)";
+	Translations_label: STRING is "Translations"
 	Undo_label: STRING is "Undo";
 	Visual_name_label: STRING is "Name: ";
 
@@ -280,6 +284,7 @@ feature -- Names for Widget Windows
 	Event_Catalog: STRING is "Event Catalog"
 	Help_window: STRING is "Help Window";
 	History_window: STRING is "History Window";
+	Import_window: STRING is "Import Project";
 	Load_project_window: STRING is "Load Project";
 	Main_panel: STRING is "EiffelBuild";
 	Namer_window: STRING is "Namer Window";
@@ -293,8 +298,8 @@ feature -- Names for Main Panel
 
 	Editors_toggle: STRING is "Editors";
 	Create_project_label: STRING is "Creating new project...";
-	Interface_toggle: STRING is "Interface";
-	Interface_only_toggle: STRING is "Interface only";
+	Interface_label: STRING is "Interface";
+	Interface_only_label: STRING is "Interface only";
 	Retrieving_project_label: STRING is "Retrieving project...";
 	Visibility_label:STRING is "Visibility"
 

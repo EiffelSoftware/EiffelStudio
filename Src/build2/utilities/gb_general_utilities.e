@@ -67,5 +67,31 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 		
+	escape_special_characters (string: STRING): STRING is
+			-- Replace all occurances of '"' amd '%' in `string' with
+			-- an escaped version (%N prepended for each).
+		require
+			string_not_void: string /= Void
+		local
+			counter: INTEGER
+		do
+			from
+				counter := 1
+				Result := ""
+			until
+				counter > string.count
+			loop
+				if string.item (counter) = '%%' or string.item (counter) = '"' then
+					Result.append_string ("%%" + string.item (counter).out)
+				else
+					Result.append_character (string.item (counter))
+				end
+				counter := counter + 1
+			end
+		ensure
+			Adjusted_size_correct: Result.count = string.count + string.occurrences ('%%') + string.occurrences ('"')
+		end
+		
+		
 		
 end -- class GB_GENERAL_UTILITIES

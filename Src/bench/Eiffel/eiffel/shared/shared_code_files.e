@@ -142,6 +142,21 @@ feature {NONE}
 			!!Result.make (file_name);
 		end;
 
+	Init_f (final_mode: BOOLEAN): UNIX_FILE is
+			-- File where the C routine `c_main' is generated
+		local
+			file_name: STRING;
+		do
+			!!file_name.make (Final_generation_path.count + 10);
+			if final_mode then
+				file_name.append (Final_generation_path);
+			else
+				file_name.append (Workbench_generation_path);
+			end;
+			file_name.append ("/Einit.c");
+			!!Result.make (file_name);
+		end;
+
 	Main_f (final_mode: BOOLEAN): UNIX_FILE is
 			-- File where the C routine `c_main' is generated
 		local

@@ -1,7 +1,14 @@
-class EWB_SUBQUERY_OPERATOR
+indexing
+
+	description:
+		"Operator between two sub queries.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class SUBQUERY_OPERATOR
 
 inherit
-	EWB_ACTIVATABLE
+	ACTIVATABLE
 
 creation
 	make
@@ -41,4 +48,4 @@ feature {NONE} -- Attributes
 
 	int_operator: STRING
 
-end -- class EWB_SUBQUERY_OPERATOR
+end -- class SUBQUERY_OPERATOR

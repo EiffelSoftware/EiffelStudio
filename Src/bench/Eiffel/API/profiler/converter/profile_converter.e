@@ -1,3 +1,10 @@
+indexing
+
+	description:
+		"Converts ASCII output of profiler into the internal representation.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class PROFILE_CONVERTER
 
 inherit

@@ -1,4 +1,12 @@
-class EWB_ACTIVATABLE
+indexing
+
+	description:
+		"Notion of an activatable / inactivatable part of the total %
+		%query.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class ACTIVATABLE
 
 feature -- Properties
 
@@ -29,4 +37,4 @@ feature {NONE} -- Attributes
 
 	int_active: BOOLEAN;
 
-end -- class EWB_ACTIVATABLE
+end -- class ACTIVATABLE

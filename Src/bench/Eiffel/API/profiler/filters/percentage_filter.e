@@ -1,3 +1,11 @@
+indexing
+
+	description:
+		"Profile filter used to check whether the percentage of time spent in a function %
+		%is equal to the value specified by the user.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class PERCENTAGE_FILTER
 
 inherit

@@ -1,5 +1,9 @@
 indexing
-	description:	"Information about profiling"
+
+	description:
+		"General information about a profiled run.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class PROFILE_INFORMATION
 

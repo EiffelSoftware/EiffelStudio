@@ -1,9 +1,9 @@
 indexing
 
-	description:	"Holds the values from the profiler specific %
-					% configuration file.";
-	date:		   "Date: ";
-	revision:	   "Revision: "
+	description:
+		"Holds the values from the profiler specific configuration file.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHARED_PROF_CONFIG
 

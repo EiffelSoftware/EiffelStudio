@@ -1,10 +1,11 @@
 indexing
 
-	description:	"Invokes the profiler for the steps between the %
-					% system's run and the real convertion of the %
-					% output file.";
-	date:		   "Date: ";
-	revision:	   "Revision: "
+	description:
+		"Invokes the profiler for the steps between the %
+		% system's run and the real convertion of the %
+		% output file.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class PROFILER_INVOKER
 

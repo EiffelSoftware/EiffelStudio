@@ -262,7 +262,6 @@ feature {NONE} -- Implementation
 				object_editor_window.show
 				object_editor_window.restore_icon
 			end
-			object_editor_window.set_maximum_width (object_editor_window.width)
 		end
 		
 feature {NONE} -- Implementation

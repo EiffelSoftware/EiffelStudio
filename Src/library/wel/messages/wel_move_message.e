@@ -20,26 +20,14 @@ feature -- Access
 			-- x-coordinate of the upper-left corner of the client
 			-- area of the window
 		do
-			Result := c_mouse_message_x (l_param)
+			Result := x_position_from_lparam (l_param)
 		end
 
 	y: INTEGER is
 			-- y-coordinate of the upper-left corner of the client
 			-- area of the window
 		do
-			Result := c_mouse_message_y (l_param)
-		end
-
-feature {NONE} -- Externals
-
-	c_mouse_message_x (lparam: POINTER): INTEGER is
-		external
-			"C [macro <wel.h>]"
-		end
-
-	c_mouse_message_y (lparam: POINTER): INTEGER is
-		external
-			"C [macro <wel.h>]"
+			Result := y_position_from_lparam (l_param)
 		end
 
 end -- class WEL_MOVE_MESSAGE

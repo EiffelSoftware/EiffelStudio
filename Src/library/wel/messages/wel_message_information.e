@@ -52,6 +52,22 @@ feature -- Access
 			-- Additional information about `message'. The exact
 			-- meaning depends on the value of `message'.
 
+feature {NONE} -- Externals
+
+	x_position_from_lparam (lparam: POINTER): INTEGER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"((int)(short)LOWORD($lparam))"
+		end
+
+	y_position_from_lparam (lparam: POINTER): INTEGER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"((int)(short)HIWORD($lparam))"
+		end
+
 end -- class WEL_MESSAGE_INFORMATION
 
 --|----------------------------------------------------------------

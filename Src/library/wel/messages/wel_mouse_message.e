@@ -38,13 +38,13 @@ feature -- Access
 	x: INTEGER is
 			-- Horizontal position of cursor
 		do
-			Result := c_mouse_message_x (l_param)
+			Result := x_position_from_lparam (l_param)
 		end
 
 	y: INTEGER is
 			-- Vertical position of cursor
 		do
-			Result := c_mouse_message_y (l_param)
+			Result := y_position_from_lparam (l_param)
 		end
 
 feature -- Status report
@@ -77,18 +77,6 @@ feature -- Status report
 			-- Is the middle mouse button down?
 		do
 			Result := flag_set (keys, Mk_mbutton)
-		end
-
-feature {NONE} -- Externals
-
-	c_mouse_message_x (lparam: POINTER): INTEGER is
-		external
-			"C [macro <wel.h>]"
-		end
-
-	c_mouse_message_y (lparam: POINTER): INTEGER is
-		external
-			"C [macro <wel.h>]"
 		end
 
 end -- class WEL_MOUSE_MESSAGE

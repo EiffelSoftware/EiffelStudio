@@ -181,72 +181,56 @@ feature {NONE} -- Basic operations
 			header_from:= memory_resource.header (H_from)
 			header_cc:= memory_resource.header (H_cc)
 			header_bcc:= memory_resource.header (H_bcc)
-			header_subject:= memory_resource.header (H_subject)
+			mail_subject:= memory_resource.mail_subject
 			mail_message:= memory_resource.mail_message
 			mail_signature:= memory_resource.mail_signature
 		ensure
 			valid_email: mail_to /= Void and then mail_message /= Void
 		end
 
-	decompose (addresses: STRING): LINKED_LIST [STRING] is
-			-- Create a linked list of addresses from 'addresses'
-		do
-			create Result.make
-			if addresses /= Void then
-				Result.extend (addresses)
-			end
-		end
+--	decompose (addresses: STRING): LINKED_LIST [STRING] is
+--			-- Create a linked list of addresses from 'addresses'
+--		do
+--			create Result.make
+--			if addresses /= Void then
+--				Result.extend (addresses)
+--			end
+--		end
 
 	set_from is
 		do
-			if not transfer_error then
-				send_command (Mail_from + header_from, Ok)
+			if not header_from.multiple_entries then
+				send_command (Mail_from + header_from.first_entry, Ok)
 			end
 		end
 
 	set_to is
 		do
-			list_of_addresses:= decompose (header_to)
-			from
-				list_of_addresses.start
-			until
-				list_of_addresses.after
-			loop
-				send_command (Mail_to + list_of_addresses.item, Ok)
-				list_of_addresses.forth
+			if not transfer_error then
+				if not header_to.multiple_entries then
+					send_command (Mail_to + header_to.first_entry, Ok)
+				end
 			end
 		end
 
 	set_cc is
 		do
-			if not transfer_error then
-				list_of_addresses:= decompose (header_cc)
-				if list_of_addresses /= Void then
-					from
-						list_of_addresses.start
-					until
-						list_of_addresses.after
-					loop
-						send_command (Mail_cc + list_of_addresses.item, Ok)
-						list_of_addresses.forth
-					end
+			if header_cc /= Void then
+				if not transfer_error then
+					if not header_cc.multiple_entries then
+						send_command (Mail_cc + header_cc.first_entry, Ok)
+					end	
 				end
 			end
 		end
 
 	set_bcc is
 		do
-			if not transfer_error then
-				list_of_addresses:= decompose (header_bcc)
-				if list_of_addresses /= Void then
-					from
-						list_of_addresses.start
-					until
-						list_of_addresses.after
-					loop
-						send_command (Mail_bcc + list_of_addresses.item, Ok)
-						list_of_addresses.forth
-					end
+			if header_bcc /= Void then
+				if not transfer_error then
+					if not header_bcc.multiple_entries then
+						send_command (Mail_bcc + header_bcc.first_entry, Ok)
+					end	
 				end
 			end
 		end
@@ -254,7 +238,7 @@ feature {NONE} -- Basic operations
 	set_subject is
 		do
 			if not transfer_error then
-				mail_message.prepend (Mail_subject + header_subject + "%N")
+				mail_message.prepend (Subject + mail_subject + "%N")
 			end
 		end
 
@@ -285,19 +269,19 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Access
 
-	header_to: STRING
+	header_to: HEADER
 		-- To.
 
-	header_from: STRING
+	header_from: HEADER
 		-- From.
 
-	header_cc: STRING
+	header_cc: HEADER
 		-- Cc.
 
-	header_bcc: STRING
+	header_bcc: HEADER
 		-- Bcc.
 
-	header_subject: STRING
+	mail_subject: STRING
 		-- Subject.
 
 	mail_message: STRING

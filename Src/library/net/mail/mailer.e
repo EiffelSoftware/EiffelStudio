@@ -32,7 +32,7 @@ feature -- Settings
 			-- Set 'resource' to from_resource.
 		require
 			resource_exists: resource /= Void
-			valid_from_resource: resource.can_be_sent
+			valid_from_resource: resource.can_be_sent or resource.can_receive
 		do
 			from_resource:= resource
 		end
@@ -41,7 +41,7 @@ feature -- Settings
 			-- Set 'resource' to to_resource.
 		require
 			resource_exists: resource /= Void
-			valid_to_resource: resource.can_receive
+			valid_to_resource: resource.can_send or resource.can_be_received
 		do
 			to_resource:= resource
 		end

@@ -297,10 +297,12 @@ feature -- Setting
 				create escaped.make (current_feature.feature_name.count + 5)
 				(create {STRING_CONVERTER}).escape_string (escaped, current_feature.feature_name)
 				Names_heap.put (escaped)
-				byte_code.set_feature_name_id (Names_heap.found_item)
+				byte_code.set_escaped_feature_name_id (Names_heap.found_item)
 			else
-				byte_code.set_feature_name_id (feature_name_id)
+				byte_code.set_escaped_feature_name_id (feature_name_id)
 			end
+			byte_code.set_feature_name_id (feature_name_id)
+
 				-- Feature id
 			byte_code.set_body_index (current_feature.body_index)
 				-- Result type if any

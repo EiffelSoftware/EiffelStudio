@@ -1,0 +1,159 @@
+<document output="studio" title="Selector Sample">
+	<meta_data/>
+	<paragraph>
+		<paragraph> This sample creates a DB_BOOK table in your database, enters sample            data in it and lets you select rows from this table with author's            name. </paragraph>
+		<paragraph>
+			<heading>
+				<size>2</size>Compiling
+			</heading>
+			<paragraph> To compile the example: </paragraph>
+			<list ordered="false">
+				<item>Launch EiffelStudio. </item>
+				<item>Select 
+					<bold>Use existing Ace (control file)</bold> and click 
+					<bold>OK</bold>. 
+				</item>
+				<item>Browse to 
+					<italic>Eiffel52\examples\store\select\</italic>. 
+				</item>
+				<item>Choose the file that fits your platform and the DBMS you want to              use:              
+					<list ordered="false">
+						<item>
+							<italic>Ace.odbc.windows.ace</italic> on Windows platforms for ODBC                  DBMS drivers
+						</item>
+						<item>
+							<italic>Ace.oracle.windows.ace</italic> on Window platforms for Oracle                  DBMS
+						</item>
+						<item>
+							<italic>Ace.oracle.unix.ace</italic> on Unix platforms for Oracle DBMS
+						</item>
+					</list>
+				</item>
+				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+				<item>Click 
+					<bold>OK</bold>.
+				</item>
+			</list>
+			<paragraph>
+				<heading>
+					<size>2</size>Running
+				</heading>
+				<paragraph>Before running this sample, one must do link a specific file to data.sql as follows: </paragraph>
+				<paragraph>With Oracle: </paragraph>
+				<paragraph>
+					<italic>ln data.sql.oracle data.sql</italic>
+				</paragraph>
+				<paragraph>With ODBC: </paragraph>
+				<paragraph>
+					<italic>ln data.sql.odbc data.sql</italic>
+				</paragraph>
+				<warning>
+					<bold>Caution:</bold> the 
+					<italic>data.sql</italic> file must be        available in the sample application current directory. If you run the        sample from EiffelStudio, this directory should be the 
+					<italic>EIFGEN/W_CODE/</italic>        directory of your project. 
+				</warning>
+				<paragraph>This sample lets you interact with your database through a console. </paragraph>
+				<paragraph>            First you have to enter the database            connection information: </paragraph>
+				<list ordered="false">
+					<item>For ODBC:
+					<code_block>
+Database user authentication:
+Data Source Name: handson
+Name: smith
+Password: mypass
+					</code_block>
+					<note>
+						<bold>Note:</bold>
+						<italic>Name</italic> and 
+						<italic>Password</italic> are no required with          ODBC. If you don't need 
+						<italic>Name</italic> and 
+						<italic>Password</italic>,
+						<italic/>you          can simply hit 
+						<bold>Return</bold> when prompted
+						<italic>.</italic>
+					</note></item>
+				</list>
+				<list ordered="false">
+					<item>For Oracle:
+					<code_block>
+Database user authentication:
+Name: smith@HANDSON
+Password: mypass
+					</code_block>
+					<note>
+						<bold>Note:</bold>   you have to specify the Oracle User Name and Net          Service Name with the syntax 
+						<italic>&lt;user&gt;@&lt;service&gt; </italic>where          
+						<italic>&lt;user&gt;</italic> stands for the User Name and 
+						<italic>&lt;service&gt;</italic>          stands for the Net Service Name. 
+					</note></item>
+				</list>
+				<paragraph>Then you can select rows from this table with author's name, for        instance: </paragraph>
+				<code_block>
+Author? ('exit' to terminate):Bertrand Meyer
+Seeking for books whose author's name match: Bertrand Meyer
+
+Author:Bertrand Meyer
+Title:Eiffel The Libraries
+Quantity:11
+Price:20
+double_value:435.60000610351562
+First publication:07/01/1994 12:00:00.0 AM
+
+
+Author:Bertrand Meyer
+Title:Eiffel The Language
+Quantity:9
+Price:51
+double_value:775.22998046875
+First publication:07/01/1992 12:00:00.0 AM
+
+
+
+Author? ('exit' to terminate):
+				</code_block>
+				<note>
+					<bold>Note:</bold>   enter 
+					<italic>exit</italic> to quit the application. 
+				</note>
+				<heading>
+					<size>2</size>Under the Hood
+				</heading>
+				<paragraph>            This sample showcases the use of the 
+					<link>
+						<url>../../reference/interface/db_selection_chart.html</url>
+						<label>DB_SELECTION</label>
+					</link>            class to perform smart 
+					<italic>select</italic> queries, using: 
+				</paragraph>
+				<list ordered="false">
+					<item>
+						<link>
+							<url>../../content/10_interface_layer/50_data_object_coupling/index.html</url>
+							<label>Database            data and Eiffel objects Coupling</label>
+						</link>.
+					</item>
+					<item>
+						<link>
+							<url>../../content/10_interface_layer/60_query_variables/index.html</url>
+							<label>Variables            Binding</label>
+						</link>.
+					</item>
+				</list>
+				<paragraph>The whole sample code is contained in the root class:</paragraph>
+				<list ordered="false">
+					<item>
+						<link>
+							<url>root_cluster/selector_chart.html</url>
+							<label>SELECTOR</label>
+						</link> for Oracle.
+					</item>
+					<item>
+						<link>
+							<url>root_cluster/selector_odbc_chart.html</url>
+							<label>SELECTOR_ODBC</label>
+						</link> for ODBC.
+					</item>
+				</list>
+			</paragraph>
+		</paragraph>
+	</paragraph></document>

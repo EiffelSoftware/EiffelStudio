@@ -16,20 +16,37 @@ inherit
 	EV_ITEM_LIST_IMP [EV_MENU_ITEM]
 		redefine
 			interface,
-			add_to_container
+			add_to_container,
+			remove_item_from_position
 		end
 
 feature {NONE} -- implementation
 
 	add_to_container (v: like item) is
 			-- Add `v' to container.
-			--| We redefine this to use `gtk_menu_append' instead of
-			--| `gtk_container_add' so that empty menu items are
-			--| treated as separators by GTK.
 		local
 			imp: EV_WIDGET_IMP
+			rmi: EV_RADIO_MENU_ITEM
+			sep: EV_MENU_SEPARATOR_IMP
 		do
 			imp ?= v.implementation
+			rmi ?= v
+			if rmi /= Void then
+				sep := last_separator_imp
+				if sep /= Void then
+					if sep.radio_group /= Default_pointer then
+						C.gtk_radio_menu_item_set_group (imp.c_object, sep.radio_group)
+					end
+					sep.set_radio_group (C.gtk_radio_menu_item_group (imp.c_object))
+					C.gtk_check_menu_item_set_active (imp.c_object, False)
+				else
+					if radio_group /= Default_pointer then
+						C.gtk_radio_menu_item_set_group (imp.c_object, radio_group)
+					end
+					radio_group := C.gtk_radio_menu_item_group (imp.c_object)
+					C.gtk_check_menu_item_set_active (imp.c_object, False)
+				end
+			end
 			C.gtk_menu_append (list_widget, imp.c_object)
 		end
 
@@ -37,11 +54,53 @@ feature {NONE} -- implementation
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
 			C.gtk_menu_reorder_child (a_container, a_child, a_position)
+			reset_radio_groups
+		end
+
+	remove_item_from_position (a_position: INTEGER) is
+			-- Remove item at `a_position'
+		
+		do
+			Precursor (a_position)
+			reset_radio_groups
+		end
+
+	reset_radio_groups is
+			-- Update radio grouping after reorder or removal of separator.
+		do
+			--| FIXME To be implemented
 		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_ITEM_LIST
+
+	radio_group: POINTER
+			-- Pointer to GSList.
+
+	last_separator_imp: EV_MENU_SEPARATOR_IMP is
+			-- Get the impl. of last separator or `Void'.
+			--| Used to retreive the radio group of the radio menu
+			--| item that has just been added to the end.
+		local
+			cur: CURSOR
+			cur_item: INTEGER
+			sep: EV_MENU_SEPARATOR
+		do
+			cur := interface.cursor
+			from
+				interface.start
+			until
+				interface.off
+			loop
+				sep ?= interface.item
+				if sep /= Void then
+					Result ?= sep.implementation
+				end
+				interface.forth
+			end
+			interface.go_to (cur)
+		end
 	
 end -- class EV_MENU_ITEM_LIST_IMP
 
@@ -66,6 +125,10 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/22 19:58:17  brendel
+--| Added functionality that groups radio-menu-items together between
+--| separators.
+--|
 --| Revision 1.3  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

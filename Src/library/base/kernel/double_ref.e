@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 	c_ceiling (d: DOUBLE): DOUBLE is
 			-- Smallest integral value no smaller than `d'
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		alias
 			"ceil"
 		end;
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 	c_floor (d: DOUBLE): DOUBLE is
 			-- Greatest integral value no greater than `d'
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		alias
 			"floor"
 		end;

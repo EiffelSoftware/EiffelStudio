@@ -296,22 +296,6 @@ feature -- Implementation
 
 	implementation: EV_WINDOW_I
 			-- Implementation of window
-
-feature {EV_APPLICATION, EV_APPLICATION_IMP} -- Implementation
-	
-	application: EV_APPLICATION
-			-- EiffelVision application associated to the
-			-- window.
-	
-	set_application (app: EV_APPLICATION) is
-			-- Associate the window with 'app'. Is this 
-			-- is done, exiting the window will exit the 
-			-- application, unless delete_command is set.
-		require
-			exists: not destroyed
-		do
-			implementation.set_application (app)
-		end
 		
 invariant
 --        Depth_is_zero: depth = 0

@@ -112,7 +112,7 @@ feature -- Status setting
 			-- As size of `text' is dependent on `font' of `parent', `Current'
 			-- must be parented.
 		do
-			--| FIXME implement
+			parent_imp.resize_item_to_content (Current)
 		end
 		
 	set_pixmap (pix: EV_PIXMAP) is

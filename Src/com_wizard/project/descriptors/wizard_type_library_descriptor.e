@@ -94,6 +94,10 @@ feature -- Initialization
 			minor_version_number := a_type_lib.library_attributes.minor_version_number
 			lcid := a_type_lib.library_attributes.lcid
 			name := a_type_lib.documentation (-1).name
+			doc_string := a_type_lib.documentation (-1).doc_string
+			context_id := a_type_lib.documentation (-1).context_id
+			help_file := a_type_lib.documentation (-1).help_file
+			create_description
 			type_lib := a_type_lib
 		ensure
 			valid_descriptors: descriptors /= Void
@@ -111,25 +115,37 @@ feature -- Access
 			-- index corresponds to descriptor with same index.
 
 	guid: ECOM_GUID
-			-- GUID of Type Library
+			-- GUID of Type Library.
 
 	name: STRING
-			-- Library name
+			-- Library name.
+
+	description: STRING 
+			-- Type Library description.
+
+	doc_string: STRING
+			-- Documentation string.
+
+	context_id: INTEGER 
+			-- Context identifier for library help topic in help file.
+
+	help_file: STRING
+			-- Full path of help file.
 
 	major_version_number: INTEGER
-			-- Major version number
+			-- Major version number.
 
 	minor_version_number: INTEGER 
-			-- Minor version number
+			-- Minor version number.
 
 	lcid: INTEGER
-			-- Library locale
+			-- Library locale.
 
 	type_lib: ECOM_TYPE_LIB
-			-- Type Library
+			-- Type Library.
 	
 	Generation_title: STRING is "Parsing Type Library"
-			-- Generation title
+			-- Generation title.
 
 	complete: BOOLEAN
 			-- Is generation of library descriptor comlete?
@@ -143,6 +159,24 @@ feature -- Status report
 		end
 
 feature -- Basic operations
+
+	create_description is
+			-- Create Type Libarary description.
+		do
+			create description.make (100)
+			if doc_string /= Void then
+				description.append (doc_string)
+			end
+			if not description.empty and then not (description.item (description.count) = '.') then
+				description.append_character ('.')
+			end
+			if help_file /= Void then
+				description.append (" Help file: ")
+				description.append (help_file)
+			end
+		ensure
+			non_void_description: description /= Void
+		end
 
 	set_complete is
 			-- Set `complete' to True

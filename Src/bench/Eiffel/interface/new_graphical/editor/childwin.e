@@ -401,17 +401,19 @@ feature -- Selection Handling
 			-- delete text being in selection.
 		local
 			begin: TEXT_CURSOR
+			aux: STRING
 		do
 			if (cursor < selection_start) then
 				begin := cursor
-				history.record_delete_selection (text_displayed.string_selected (cursor, selection_start))
+				aux := text_displayed.string_selected (cursor, selection_start)
 				text_displayed.delete_selection (cursor, selection_start)
 			else
 				begin := selection_start
-				history.record_delete_selection (text_displayed.string_selected (selection_start, cursor))
+				aux := text_displayed.string_selected (selection_start, cursor)
 				text_displayed.delete_selection (selection_start, cursor)
 			end
 			cursor.make_from_absolute_pos (begin.x_in_pixels, begin.y_in_lines, Current)
+			history.record_delete_selection (aux)
 			has_selection := False
 		end
 
@@ -568,7 +570,6 @@ feature {NONE} -- Handle keystokes
 				if has_selection then
 					delete_selection
 				else
-					history.wipe_out
 					cursor.delete_previous
 				end
 				invalidate
@@ -610,12 +611,18 @@ feature {NONE} -- Handle keystokes
 			end
 		end
 
- 	handle_character(c: CHARACTER) is
+ 	handle_character (c: CHARACTER) is
  			-- Process the push on a character key.
  		do
 			if has_selection then
 				delete_selection
-				history.record_insert (c)
+				if insert_mode then
+					history.record_replace ('%N', c)
+						--| This is a trick to consider
+						--| the insertion as a replace.
+				else
+					history.record_insert (c)
+				end
 				cursor.insert_char (c)
 				invalidate
 				update
@@ -623,7 +630,7 @@ feature {NONE} -- Handle keystokes
 				invalidate_cursor_rect (False)
 
 				if insert_mode then
-					history.wipe_out
+					history.record_replace (cursor.item, c)
 					cursor.replace_char (c)
 				else
 					history.record_insert (c)

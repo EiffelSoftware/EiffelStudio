@@ -300,6 +300,10 @@ feature -- Analyzis
 				-- Generate profile macro (start)
 			generate_profile_start
 
+				-- Generate GC synchronization macro
+			buf.putstring ("RTGC;")
+			buf.new_line
+
 				-- Generate the saving of the workbench mode assertion level
 			if context.workbench_mode then
 				generate_save_assertion_level

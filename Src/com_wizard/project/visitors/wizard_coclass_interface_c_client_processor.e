@@ -36,6 +36,10 @@ feature -- Basic operations
 
 			-- Variable type
 			create a_variable_type.make (100)
+			if an_interface.namespace /= Void and then not an_interface.namespace.empty then
+				a_variable_type.append (an_interface.namespace)
+				a_variable_type.append ("::")
+			end
 			a_variable_type.append (an_interface.c_type_name)
 			a_variable_type.append (Space)
 			a_variable_type.append (Asterisk)

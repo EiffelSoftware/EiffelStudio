@@ -92,6 +92,10 @@ feature {NONE} -- Implementation
 			feature_body.append (Cpp_clause)
 			feature_body.append (New)
 			feature_body.append (Space)
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+				feature_body.append (a_component_descriptor.namespace)
+				feature_body.append ("::")
+			end
 			feature_body.append (a_component_descriptor.c_type_name)
 			feature_body.append (Space)
 			feature_body.append (Percent_double_quote)
@@ -156,6 +160,10 @@ feature {NONE} -- Implementation
 			feature_body.append (Cpp_clause)
 			feature_body.append (Delete)
 			feature_body.append (Space)
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+				feature_body.append (a_component_descriptor.namespace)
+				feature_body.append ("::")
+			end
 			feature_body.append (a_component_descriptor.c_type_name)
 			feature_body.append (Space)
 			feature_body.append (Percent_double_quote)
@@ -194,6 +202,10 @@ feature {NONE} -- Implementation
 			feature_body.append (Cpp_clause)
 			feature_body.append (New)
 			feature_body.append (Space)
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+				feature_body.append (a_component_descriptor.namespace)
+				feature_body.append ("::")
+			end
 			feature_body.append (a_component_descriptor.c_type_name)
 			feature_body.append (Space)
 			feature_body.append (Percent_double_quote)
@@ -229,6 +241,10 @@ feature {NONE} -- Implementation
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+				feature_body.append (a_component_descriptor.namespace)
+				feature_body.append ("::")
+			end
 			feature_body.append (a_component_descriptor.c_type_name)
 			feature_body.append (Space)
 			feature_body.append (Percent_double_quote)
@@ -386,6 +402,10 @@ feature {NONE} -- Implementation
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+				feature_body.append (a_component_descriptor.namespace)
+				feature_body.append ("::")
+			end
 			feature_body.append (a_component_descriptor.c_type_name)
 			feature_body.append (Space)
 			feature_body.append (Percent_double_quote)
@@ -423,6 +443,10 @@ feature {NONE} -- Implementation
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+				feature_body.append (a_component_descriptor.namespace)
+				feature_body.append ("::")
+			end
 			feature_body.append (a_component_descriptor.c_type_name)
 			feature_body.append (Space)
 			feature_body.append (Percent_double_quote)
@@ -460,6 +484,10 @@ feature {NONE} -- Implementation
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+				feature_body.append (a_component_descriptor.namespace)
+				feature_body.append ("::")
+			end
 			feature_body.append (a_component_descriptor.c_type_name)
 			feature_body.append (Space)
 			feature_body.append (Percent_double_quote)
@@ -497,6 +525,10 @@ feature {NONE} -- Implementation
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+				feature_body.append (a_component_descriptor.namespace)
+				feature_body.append ("::")
+			end
 			feature_body.append (a_component_descriptor.c_type_name)
 			feature_body.append (Space)
 			feature_body.append (Percent_double_quote)

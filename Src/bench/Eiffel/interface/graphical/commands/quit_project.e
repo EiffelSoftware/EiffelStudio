@@ -41,7 +41,6 @@ feature -- Callbacks
 			mp: MOUSE_PTR
 		do
 			!! mp.set_watch_cursor;
-			project_tool.set_changed (false);
 			mp.restore
 			if Application.is_running then
 				Application.kill;
@@ -85,11 +84,11 @@ feature {NONE} -- Implementation
 					system_tool.text_window.changed)
 				then
 					do_exit := true;
-					warner (text_window).custom_call (Current,
+					warner (popup_parent).custom_call (Current,
 						"Some files have not been saved.",
 						"Don't exit", "Exit anyway", Void)
 				else
-					confirmer (text_window).call (Current, 
+					confirmer (popup_parent).call (Current, 
 						"Do you really want to exit?", "Exit");
 				end
 			else

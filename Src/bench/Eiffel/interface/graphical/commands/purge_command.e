@@ -53,15 +53,15 @@ feature {NONE} -- Execution
 			-- lengthy confirmation needed
 		do
 			if last_warner /= Void and argument = last_warner then
-				confirmer (project_tool.text_window).call (Current, 
+				confirmer (Project_tool).call (Current, 
 					"Think again%NAre you really sure ?", "OK");
 			elseif last_confirmer /= Void and argument = last_confirmer then
 				system.purge
 			elseif workbench.successfull then
-				warner (project_tool.text_window).call (Current,
+				warner (popup_parent).call (Current,
 					"Compress system%NIt could take quite a long%NGo on ?");
 			else
-				warner (project_tool.text_window).custom_call (Void,
+				warner (popup_parent).custom_call (Void,
 						"A compilation must complete%N%
 						%successfully before compressing", Void, Void, "OK");
 			end;

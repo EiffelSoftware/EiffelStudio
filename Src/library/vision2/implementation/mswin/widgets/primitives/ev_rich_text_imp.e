@@ -43,7 +43,8 @@ inherit
 			set_background_color,
 			set_position,
 			append_text,
-			prepend_text
+			prepend_text,
+			make_with_text
 		end
 
 	WEL_RICH_EDIT
@@ -88,6 +89,14 @@ inherit
 creation
 	make,
 	make_with_text
+
+feature {NONE} -- Initialization
+
+	make_with_text (txt: STRING) is
+		do
+			{EV_TEXT_IMP} Precursor (txt)
+			enable_all_notifications
+		end
 
 feature -- Access
 

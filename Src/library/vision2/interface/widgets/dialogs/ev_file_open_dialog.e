@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_FILE_DIALOG
+		rename
+			ok_actions as open_actions
 		redefine
 			implementation
 		end
@@ -17,6 +19,18 @@ inherit
 create
 	default_create
 	
+
+feature -- Event handling
+
+	ok_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when user clicks Open.
+		obsolete
+			"This has been replaced by open_actions"
+		do
+			Result := open_actions
+		ensure
+			not_void: Result /= Void
+		end
 
 feature {EV_ANY_I} -- Implementation
 

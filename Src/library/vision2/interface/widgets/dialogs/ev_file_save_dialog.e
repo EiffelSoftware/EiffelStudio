@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_FILE_DIALOG
+		rename
+			ok_actions as save_actions
 		redefine
 			implementation
 		end
@@ -17,7 +19,18 @@ inherit
 create
 	default_create
 	
-	
+feature -- Event handling
+
+	ok_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when user clicks Save.
+		obsolete
+			"This has been replaced by save_actions"
+		do
+			Result := save_actions
+		ensure
+			not_void: Result /= Void
+		end
+
 feature {EV_ANY_I} -- Implementation
 	
 	implementation: EV_FILE_SAVE_DIALOG_I

@@ -9,12 +9,26 @@ class
 
 inherit
 	EV_STANDARD_DIALOG
+		rename
+			ok_actions as print_actions
 		redefine
 			implementation
 		end
 
 create
         default_create
+        
+feature -- Event handling
+
+	ok_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when user clicks Print.
+		obsolete
+			"This has been replaced by print_actions"
+		do
+			Result := print_actions
+		ensure
+			not_void: Result /= Void
+		end
 
 feature -- Access
 

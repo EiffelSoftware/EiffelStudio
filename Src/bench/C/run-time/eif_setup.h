@@ -84,6 +84,9 @@ extern void egc_init_plug ();		/* Defined in E1/eplug.c, and
  * Skip this section if you don't want to know what
  * is called to initialize Eiffel run-time.
  */
+
+extern void egc_init_plug ();	/* defined in E1/eplug.c. */
+
 #define EIF_RT_BASIC_SETUP(fail_func) \
 	GTCX \
 	struct ex_vect *exvect; \

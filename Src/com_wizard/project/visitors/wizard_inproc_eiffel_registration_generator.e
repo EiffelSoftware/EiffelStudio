@@ -55,7 +55,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	description_message: STRING is 
-		"Set the registry keys necessary for COM to activate the component%%%N%T%T%T%T  %
+		"Set the registry keys necessary for COM to activate the component%%%R%N%T%T%T%T  %
 		% %%Do not modify this class."
 
 	Local_string_var: STRING is "local_string"

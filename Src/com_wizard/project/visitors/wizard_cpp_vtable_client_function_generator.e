@@ -59,24 +59,18 @@ feature {NONE} -- Implementation
 			non_void_ccom_feature_writer: ccom_feature_writer /= Void
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
+			l_type: INTEGER
+			l_return_type: WIZARD_DATA_TYPE_DESCRIPTOR
 		do
 			if func_desc.arguments /= Void and not func_desc.arguments.is_empty then
-				ccom_feature_writer.set_signature 
-						(cecil_signature (func_desc))
+				ccom_feature_writer.set_signature (cecil_signature (func_desc))
 			end
-
-			if does_return_application_data then
-				visitor := func_desc.return_type.visitor
-
+			l_return_type := func_desc.return_type
+			l_type := l_return_type.type
+			if l_type /= Vt_hresult and l_type /= Vt_void then
+				visitor := l_return_type.visitor
 				set_return_type (visitor)
 			end
-		end
-
-	does_return_application_data: BOOLEAN is
-			-- Does function return application data?
-		do
-			Result := func_desc.return_type.type /= Vt_hresult and 
-						func_desc.return_type.type /= Vt_void
 		end
 
 	feature_body (interface_name: STRING): STRING is
@@ -136,7 +130,7 @@ feature {NONE} -- Implementation
 							variables.append (visitor.c_type)
 							variables.append (" ret_value")
 							variables.append (visitor.c_post_type)
-							variables.append (" = 0;%N%T")
+							variables.append (" = 0;%R%N%T")
 							return_value.append (return_value_setup (visitor, "ret_value"))
 						end
 					else 
@@ -163,13 +157,13 @@ feature {NONE} -- Implementation
 							if not visitor.is_array_type then
 								variables.append (visitor.c_post_type)
 							end
-							variables.append (" = 0;%N%T")
+							variables.append (" = 0;%R%N%T")
 							
 							signature.append ("tmp_")
 							signature.append (arguments.item.name)
 	
 							variables.append (in_out_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
-							variables.append ("%N%T")
+							variables.append ("%R%N%T")
 							if is_paramflag_fout (arguments.item.flags) then
 								out_value.append ( out_set_up (arguments.item.name, arguments.item.type.type, visitor))
 							else
@@ -192,11 +186,11 @@ feature {NONE} -- Implementation
 				if not signature.is_empty then
 					signature.remove (signature.count)
 				end
-				signature.append (");%N")
+				signature.append (");%R%N")
 
 				-- Set up body
 				Result.append (variables)
-				Result.append ("%N%T")
+				Result.append ("%R%N%T")
 				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append ("hr = ")
 				elseif not (func_desc.return_type.type = Vt_void) then
@@ -216,11 +210,11 @@ feature {NONE} -- Implementation
 				Result.append (out_value)
 				Result.append (free_memory)
 				if not return_value.is_empty then
-					Result.append ("%N")
+					Result.append ("%R%N")
 					Result.append (return_value)
 				end
 			else
-				Result.append ("%N%T")
+				Result.append ("%R%N%T")
 				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append ("hr = ")
 				elseif not (func_desc.return_type.type = Vt_void) then
@@ -233,7 +227,7 @@ feature {NONE} -- Implementation
 				Result.append (interface_name)
 				Result.append ("->")
 				Result.append (func_desc.name)
-				Result.append (" ();%N")
+				Result.append (" ();%R%N")
 				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append (examine_hresult ("hr"))
 				end
@@ -342,10 +336,10 @@ feature {NONE} -- Implementation
 			end
 			if a_visitor.is_structure or a_visitor.is_structure_pointer then
 				Result.append (New_line_tab)
-				Result.append ("EIF_PROCEDURE eiffel_procedure = 0;%N%T")
-				Result.append ("EIF_TYPE_ID type_id = eif_type_id (%"" + a_visitor.eiffel_type + "%");%N%T")
-				Result.append ("eiffel_procedure = eif_procedure (%"set_unshared%", type_id);%N%T")
-				Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_result));%N%T")
+				Result.append ("EIF_PROCEDURE eiffel_procedure = 0;%R%N%T")
+				Result.append ("EIF_TYPE_ID type_id = eif_type_id (%"" + a_visitor.eiffel_type + "%");%R%N%T")
+				Result.append ("eiffel_procedure = eif_procedure (%"set_unshared%", type_id);%R%N%T")
+				Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_result));%R%N%T")
 			end
 			Result.append (New_line_tab)
 			Result.append ("return ")

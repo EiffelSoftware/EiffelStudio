@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 				until
 					l_descriptors.after
 				loop
-					Result.append ("%N%T" + 
+					Result.append ("%R%N%T" + 
 							connection_point_attrubute_name 
 								(l_descriptors.item, cpp_class_writer) + 
 							" = new " + connection_point_inner_class_name 
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 				until
 					l_descriptors.after
 				loop
-					Result.append ("%N%Tdelete ")
+					Result.append ("%R%N%Tdelete ")
 					Result.append (connection_point_attrubute_name (l_descriptors.item, cpp_class_writer))
 					Result.append (";")
 					l_descriptors.forth
@@ -276,15 +276,9 @@ feature {NONE} -- Implementation
 				l_body.append (" ")
 				l_body.append (case_body_in_query_interface ("IConnectionPointContainer", Void, iid_name ("IConnectionPointContainer")))
 			end
-
-		l_body.append ("[
-
-	return (*ppv = 0), E_NOINTERFACE;
-		
-	reinterpret_cast<IUnknown *>(*ppv)->AddRef ();
-	return S_OK;
-	]")
-
+			l_body.append ("%R%N%Treturn (*ppv = 0), E_NOINTERFACE;%R%N%R%N%T")
+			l_body.append ("reinterpret_cast<IUnknown *>(*ppv)->AddRef ();%R%N%T")
+			l_body.append ("return S_OK;")
 			l_writer.set_body (l_body)
 			cpp_class_writer.add_function (l_writer, Public)
 		end
@@ -344,8 +338,8 @@ feature {NONE} -- Implementation
 				l_body.append (case_body_in_find_connection_point (l_descriptors.item, iid_name (l_descriptors.item.c_type_name)))
 				l_descriptors.forth
 			end
-			l_body.append ("%N%T{%N%T%T*ppCP = NULL;%N%T%Treturn CONNECT_E_NOCONNECTION;%N%T}%N%T")
-			l_body.append ("(*ppCP)->AddRef ();%N%T")
+			l_body.append ("%R%N%T{%R%N%T%T*ppCP = NULL;%R%N%T%Treturn CONNECT_E_NOCONNECTION;%R%N%T}%R%N%T")
+			l_body.append ("(*ppCP)->AddRef ();%R%N%T")
 			l_body.append ("return S_OK;")
 			Result.set_body (l_body)
 		ensure
@@ -363,9 +357,9 @@ feature {NONE} -- Implementation
 			create Result.make (200)
 			Result.append ("if (riid == ")
 			Result.append (interface_id)
-			Result.append (")%N%T%T* ppCP = ")
+			Result.append (")%R%N%T%T* ppCP = ")
 			Result.append (connection_point_attrubute_name (an_interface, cpp_class_writer))
-			Result.append (";%N%Telse ")
+			Result.append (";%R%N%Telse ")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty
@@ -383,17 +377,17 @@ feature {NONE} -- Implementation
 			Result.set_result_type ("STDMETHODIMP")
 			Result.set_signature ("ITypeInfo ** ppti")
 			create l_body.make (1000)
-			l_body.append ("%Tif (ppti == NULL)%N%T%T%
-								%return E_POINTER;%N%T%
-							%ITypeLib * ptl = NULL;%N%T%
+			l_body.append ("%Tif (ppti == NULL)%R%N%T%T%
+								%return E_POINTER;%R%N%T%
+							%ITypeLib * ptl = NULL;%R%N%T%
 							%HRESULT hr = LoadRegTypeLib (")
 			l_body.append (libid_name (a_coclass.type_library_descriptor.name))
-			l_body.append (", 1, 0, 0, &ptl);%N%T%
-							%if (SUCCEEDED (hr))%N%T%
-							%{%N%T%T%
-								%hr = ptl->GetTypeInfoOfGuid (" + clsid_name (a_coclass.name) + ", ppti);%N%T%T%
-								%ptl->Release ();%N%T%
-							%}%N%T%
+			l_body.append (", 1, 0, 0, &ptl);%R%N%T%
+							%if (SUCCEEDED (hr))%R%N%T%
+							%{%R%N%T%T%
+								%hr = ptl->GetTypeInfoOfGuid (" + clsid_name (a_coclass.name) + ", ppti);%R%N%T%T%
+								%ptl->Release ();%R%N%T%
+							%}%R%N%T%
 							%return hr;")
 			Result.set_body (l_body)
 		ensure
@@ -415,8 +409,8 @@ feature {NONE} -- Implementation
 			Result.set_signature ("DWORD dwKind, GUID * pguid")
 			
 			create body.make (200)
-			body.append ("%Tif ((dwKind != GUIDKIND_DEFAULT_SOURCE_DISP_IID) ||(!pguid))%N%T%T%
-									%return E_INVALIDARG;%N%T")
+			body.append ("%Tif ((dwKind != GUIDKIND_DEFAULT_SOURCE_DISP_IID) ||(!pguid))%R%N%T%T%
+									%return E_INVALIDARG;%R%N%T")
 			body.append ("*pguid = ")
 			source_name := default_source_dispinterface_name (a_coclass)
 			if
@@ -428,7 +422,7 @@ feature {NONE} -- Implementation
 				body.append ("IID_NULL")
 			end
 								
-			body.append (";%N%Treturn S_OK;")
+			body.append (";%R%N%Treturn S_OK;")
 			Result.set_body (body)
 		ensure
 			non_void: Result /= Void

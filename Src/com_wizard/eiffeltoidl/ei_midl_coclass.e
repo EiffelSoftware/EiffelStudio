@@ -61,17 +61,17 @@ feature -- Output
 			guid_str.remove (guid_str.count)
 
 			Result.append (guid_str)
-			Result.append ("),%N%T%T")
+			Result.append ("),%R%N%T%T")
 
 			-- helpstring ('description')
 			Result.append ("helpstring (%"")
 			Result.append (description)
-			Result.append ("%"),%N%T%T")
+			Result.append ("%"),%R%N%T%T")
 
 			-- version ('version')
 			Result.append ("version (")
 			Result.append_real (version)
-			Result.append ("),%N%T%)%N%T")
+			Result.append ("),%R%N%T%)%R%N%T")
 
 			-- coclass 'name
 			l_name := name.twin
@@ -80,10 +80,10 @@ feature -- Output
 			Result.append (l_name)
 
 			-- interface I'name';
-			Result.append ("%N%T{%N%T%T")
+			Result.append ("%R%N%T{%R%N%T%T")
 			Result.append ("interface I")
 			Result.append (l_name)
-			Result.append (";%N%T}%N")
+			Result.append (";%R%N%T}%R%N")
 		ensure
 			output_generated: code /= Void
 		end

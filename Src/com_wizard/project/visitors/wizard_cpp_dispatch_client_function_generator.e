@@ -97,23 +97,23 @@ feature {NONE} -- Implementation
 			create Result.make (10000)
 			
 			Result.append (check_interface_pointer (interface_name))
-			Result.append ("%N%TDISPID disp = (DISPID) ")
+			Result.append ("%R%N%TDISPID disp = (DISPID) ")
 			Result.append_integer (func_desc.member_id)
-			Result.append (";%N%TLCID lcid = (LCID) ")
+			Result.append (";%R%N%TLCID lcid = (LCID) ")
 			Result.append_integer (lcid)
-			Result.append (";%N%TDISPPARAMS args = {NULL, NULL, 0, 0};%N%TVARIANT pResult; %N%TVariantInit (&pResult);%N%T%N")
+			Result.append (";%R%N%TDISPPARAMS args = {NULL, NULL, 0, 0};%R%N%TVARIANT pResult; %R%N%TVariantInit (&pResult);%R%N%T%R%N")
 			Result.append (initialize_excepinfo)
-			Result.append ("%N%Tunsigned int nArgErr;%N%T")
+			Result.append ("%R%N%Tunsigned int nArgErr;%R%N%T")
 
 			-- Set up arguments
 			if (func_desc.argument_count > 0) then
 				Result.append ("args.cArgs = ")
 				Result.append_integer (func_desc.argument_count)
-				Result.append (";%N%TVARIANTARG *arguments;%N%T")
+				Result.append (";%R%N%TVARIANTARG *arguments;%R%N%T")
 				free_arguments.put_front ("arguments")
 				Result.append ("arguments = (VARIANTARG *)CoTaskMemAlloc (")
 				Result.append_integer (func_desc.argument_count)
-				Result.append (" * sizeof (VARIANTARG));%N%T")
+				Result.append (" * sizeof (VARIANTARG));%R%N%T")
 
 				l_arguments := func_desc.arguments
 				from
@@ -152,10 +152,10 @@ feature {NONE} -- Implementation
 					l_counter := l_counter - 1			
 				end
 
-				Result.append ("%N%Targs.rgvarg = arguments;")
+				Result.append ("%R%N%Targs.rgvarg = arguments;")
 			end
 
-			Result.append ("%N%N%Thr = p_")
+			Result.append ("%R%N%R%N%Thr = p_")
 			Result.append (interface_name)
 			if a_invoke_kind = invoke_func then
 				l_invoke_flag := "DISPATCH_METHOD"
@@ -172,15 +172,15 @@ feature {NONE} -- Implementation
 			end
 			Result.append ("->Invoke (disp, IID_NULL, lcid, ")
 			Result.append (l_invoke_flag)
-			Result.append (", &args, &pResult, excepinfo, &nArgErr);%N%T")
+			Result.append (", &args, &pResult, excepinfo, &nArgErr);%R%N%T")
 
 			-- if argument error
 			Result.append (examine_parameter_error ("hr"))
-			Result.append ("%N")
+			Result.append ("%R%N")
 			Result.append (examine_hresult_with_pointer ("hr", free_arguments))
 
 			if l_is_out then
-				Result.append ("%N%T")
+				Result.append ("%R%N%T")
 				Result.append (l_return_value)
 			end
 
@@ -190,14 +190,14 @@ feature {NONE} -- Implementation
 				until
 					free_arguments.off
 				loop
-					Result.append ("%N%TCoTaskMemFree ((void *)")
+					Result.append ("%R%N%TCoTaskMemFree ((void *)")
 					Result.append (free_arguments.item)
 					Result.append (");")
 					free_arguments.forth
 				end
 			end
 
-			Result.append ("%N%T")
+			Result.append ("%R%N%T")
 			Result.append (retval_return_value_set_up (result_type_visitor))
 		end
 
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			type := visitor.vt_type
 			create Result.make (1000)
 
-			Result.append ("%N%T")
+			Result.append ("%R%N%T")
 			if not visitor.is_basic_type and not visitor.is_enumeration then
 				if visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
@@ -261,11 +261,11 @@ feature {NONE} -- Implementation
 			if visitor.is_basic_type or visitor.is_enumeration then
 				create l_string.make (200)
 				l_string.append (name)
-				Result.append ("%N%T")
+				Result.append ("%R%N%T")
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), l_string, visitor))
 
 			else
-				Result.append ("%N%T")
+				Result.append ("%R%N%T")
 				Result.append (argument_type_set_up (position, l_type))
 
 				if visitor.is_array_basic_type or visitor.is_structure_pointer or visitor.is_interface_pointer or visitor.is_coclass_pointer then
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 					Result.remove (Result.count)
 					Result.append ("tmp_")
 					Result.append (name)
-					Result.append (" = 0;%N%T")
+					Result.append (" = 0;%R%N%T")
 
 					create l_string.make (100)
 					l_string.append ("&tmp_")

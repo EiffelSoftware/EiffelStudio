@@ -1047,7 +1047,7 @@ feature -- Features info
 				if not in_interface and is_static and l_is_attribute then
 					l_field_sig := field_sig
 					l_field_sig.reset
-					set_attribute_type (l_field_sig, l_return_type)
+					set_signature_type (l_field_sig, l_return_type)
 					l_signature.put (l_return_type.static_type_id, 0)
 				else
 					l_meth_sig := method_sig
@@ -1076,7 +1076,7 @@ feature -- Features info
 					end
 					
 					if is_static and not l_is_c_external then
-						set_method_arg_type (l_meth_sig, current_class_type.type)
+						set_signature_type (l_meth_sig, current_class_type.type)
 					end
 					
 					if feat.has_arguments then
@@ -1089,7 +1089,7 @@ feature -- Features info
 							l_feat_arg.after
 						loop
 							l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
-							set_method_arg_type (l_meth_sig, l_type_i)
+							set_signature_type (l_meth_sig, l_type_i)
 							l_signature.put (l_type_i.static_type_id, i + 1)
 							i := i + 1
 							l_feat_arg.forth
@@ -1176,7 +1176,7 @@ feature -- Features info
 						l_meth_sig.set_parameter_count (1)
 						l_meth_sig.set_return_type (
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-						set_method_arg_type (l_meth_sig, l_return_type)
+						set_signature_type (l_meth_sig, l_return_type)
 						uni_string.set_string (setter_prefix + l_name)
 						l_setter_token := md_emit.define_method (uni_string, current_class_token,
 							l_meth_attr, l_meth_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
@@ -1246,62 +1246,77 @@ feature -- Features info
 			valid_result: Result /= Void
 		end
 
-	set_method_return_type (a_meth_sig: MD_METHOD_SIGNATURE; a_type: TYPE_I) is
-			-- Set `a_type' to return type of `a_meth_sig'.
+	set_method_return_type (a_sig: MD_METHOD_SIGNATURE; a_type: TYPE_I) is
+			-- Set `a_type' to return type of `a_sig'.
 		require
-			valid_sig: a_meth_sig /= Void
+			valid_sig: a_sig /= Void
 			valid_type: a_type /= Void
+		local
+			l_gen_type: GEN_TYPE_I
+			l_type: TYPE_I
+			l_ref: REFERENCE_I
 		do
 			if a_type.is_basic then
-				a_meth_sig.set_return_type (a_type.element_type, 0)
+				a_sig.set_return_type (a_type.element_type, 0)
 			else
-				a_meth_sig.set_return_type (a_type.element_type,
-					class_mapping.item (a_type.static_type_id))
+				l_gen_type ?= a_type
+				if l_gen_type /= Void and then l_gen_type.base_class.is_native_array then
+					check
+						l_gen_type_has_generics: l_gen_type.true_generics /= Void
+						l_gen_type_valid_count: l_gen_type.true_generics.valid_index (1)
+					end
+					a_sig.set_return_type (
+						feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+					l_type := l_gen_type.meta_generic.item (1)
+					l_ref ?= l_type
+					if l_ref /= Void and then not l_type.is_true_expanded then
+						a_sig.set_type (
+							feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+					else
+						set_signature_type (a_sig, l_gen_type.true_generics.item (1))
+					end
+				else
+					a_sig.set_return_type (a_type.element_type,
+						class_mapping.item (a_type.static_type_id))
+				end
 			end
 		end
 
-	set_method_arg_type (a_meth_sig: MD_METHOD_SIGNATURE; a_type: TYPE_I) is
-			-- Set `a_type' to return type of `a_meth_sig'.
+	set_signature_type (a_sig: MD_SIGNATURE; a_type: TYPE_I) is
+			-- Set `a_type' to return type of `a_sig'.
 		require
-			valid_sig: a_meth_sig /= Void
+			valid_sig: a_sig /= Void
 			valid_type: a_type /= Void
+		local
+			l_gen_type: GEN_TYPE_I
+			l_type: TYPE_I
+			l_ref: REFERENCE_I
 		do
 			if a_type.is_basic then
-				a_meth_sig.set_type (a_type.element_type, 0)
+				a_sig.set_type (a_type.element_type, 0)
 			else
-				a_meth_sig.set_type (a_type.element_type,
-					class_mapping.item (a_type.static_type_id))
+				l_gen_type ?= a_type
+				if l_gen_type /= Void and then l_gen_type.base_class.is_native_array then
+					check
+						l_gen_type_has_generics: l_gen_type.true_generics /= Void
+						l_gen_type_valid_count: l_gen_type.true_generics.valid_index (1)
+					end
+					a_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+					l_type := l_gen_type.meta_generic.item (1)
+					l_ref ?= l_type
+					if l_ref /= Void and then not l_type.is_true_expanded then
+						a_sig.set_type (
+							feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+					else
+						set_signature_type (a_sig, l_gen_type.true_generics.item (1))
+					end
+				else
+					a_sig.set_type (a_type.element_type,
+						class_mapping.item (a_type.static_type_id))
+				end
 			end
 		end
 
-	set_attribute_type (a_field_sig: MD_FIELD_SIGNATURE; a_type: TYPE_I) is
-			-- Set `a_type' to return type of `a_field_sig'.
-		require
-			valid_sig: a_field_sig /= Void
-			valid_type: a_type /= Void
-		do
-			if a_type.is_basic then
-				a_field_sig.set_type (a_type.element_type, 0)
-			else
-				a_field_sig.set_type (a_type.element_type,
-					class_mapping.item (a_type.static_type_id))
-			end
-		end
-
-	set_local_type (a_local_sig: MD_LOCAL_SIGNATURE; a_type: TYPE_I) is
-			-- Set `a_type' to return type of `a_field_sig'.
-		require
-			valid_sig: a_local_sig /= Void
-			valid_type: a_type /= Void
-		do
-			if a_type.is_basic then
-				a_local_sig.add_local_type (a_type.element_type, 0)
-			else
-				a_local_sig.add_local_type (a_type.element_type,
-					class_mapping.item (a_type.static_type_id))
-			end
-		end
-	
 	generate_type_features (feats: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; class_id: INTEGER) is
 			-- Generate all TYPE_FEATURE_I that must be generated in
 			-- interface corresponding to class ID `class_id'.
@@ -1726,7 +1741,7 @@ feature -- IL Generation
 					l_meth_sig.set_return_type (
 						feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-					set_method_arg_type (l_meth_sig, l_return_type)
+					set_signature_type (l_meth_sig, l_return_type)
 
 					uni_string.set_string (Override_prefix + setter_prefix + l_name +
 						override_counter.next.out)
@@ -1819,7 +1834,7 @@ feature -- IL Generation
 						feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
 				end
 				if l_type /= Void then
-					set_attribute_type (l_field_sig, l_type)
+					set_signature_type (l_field_sig, l_type)
 				else
 					l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
 						external_token_mapping.item (return_type))
@@ -1887,7 +1902,7 @@ feature -- IL Generation
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
 					end
 					if l_type /= Void then
-						set_method_arg_type (l_meth_sig, l_type)
+						set_signature_type (l_meth_sig, l_type)
 					else
 						l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
 							external_token_mapping.item (l_real_type))
@@ -1994,7 +2009,7 @@ feature {IL_CODE_GENERATOR} -- Local saving
 				until
 					l_locals.after
 				loop
-					set_local_type (l_sig, l_locals.item.first)
+					set_signature_type (l_sig, l_locals.item.first)
 					l_locals.forth
 				end
 				
@@ -2571,7 +2586,7 @@ feature -- Once management
 		do
 			l_sig := field_sig
 			l_sig.reset
-			set_attribute_type (l_sig, type_i)	
+			set_signature_type (l_sig, type_i)	
 				
 			result_token := md_emit.define_field (create {UNI_STRING}.make (name + "_result"),
 				current_class_token,
@@ -3088,8 +3103,8 @@ feature -- Basic feature
 			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_sig.set_parameter_count (2)
 			set_method_return_type (l_sig, type)
-			set_method_arg_type (l_sig, type)
-			set_method_arg_type (l_sig, type)
+			set_signature_type (l_sig, type)
+			set_signature_type (l_sig, type)
 
 			l_min_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("Min"), math_type_token, l_sig)
@@ -3112,8 +3127,8 @@ feature -- Basic feature
 			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_sig.set_parameter_count (2)
 			set_method_return_type (l_sig, type)
-			set_method_arg_type (l_sig, type)
-			set_method_arg_type (l_sig, type)
+			set_signature_type (l_sig, type)
+			set_signature_type (l_sig, type)
 
 			l_max_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("Max"), math_type_token, l_sig)
@@ -3138,7 +3153,7 @@ feature -- Basic feature
 			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_sig.set_parameter_count (1)
 			set_method_return_type (l_sig, type)
-			set_method_arg_type (l_sig, type)
+			set_signature_type (l_sig, type)
 			l_abs_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("Abs"), math_type_token, l_sig)
 				

@@ -5,14 +5,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_POINT
-	
-inherit
-	ANY
-				
+	EV_COORDINATES
+
 creation
-	make,
-	set
+	make, set
 
 feature {NONE} -- Initialization
 
@@ -20,7 +16,7 @@ feature {NONE} -- Initialization
 			-- A feature to be consistant, but nothing to do.
 		do
 		end
-	
+
 feature -- Access
 
 	x: INTEGER
@@ -37,12 +33,12 @@ feature -- Element change
 			x := new_x
 			y := new_y
 		ensure
-			x_set: x = new_x 
+			x_set: x = new_x
 			y_set: y = new_y
 		end
-	
+
 feature -- Debug
-	
+
 	print_contents is
 		do
 			io.put_string ("(X: ")
@@ -51,9 +47,8 @@ feature -- Debug
 			print (y)
 			io.put_string (")%N")
 		end
-	
 
-end -- class EV_POINT
+end -- class EV_COORDINATES
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

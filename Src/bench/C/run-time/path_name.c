@@ -9,8 +9,9 @@
 #include "portable.h"
 #include "macros.h"
 #include "plug.h"
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 #include "eiffel.h"
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
 
@@ -31,7 +32,7 @@
 #undef TRUE
 #define TRUE ((EIF_BOOLEAN) '\01')
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 EIF_BOOLEAN c_is_file_valid (EIF_POINTER);
 EIF_BOOLEAN c_is_directory_name_valid (EIF_POINTER);
 EIF_BOOLEAN c_is_volume_name_valid (EIF_POINTER);
@@ -43,7 +44,7 @@ EIF_BOOLEAN c_is_directory_valid(p)
 EIF_POINTER p;
 {
 		/* Test to see if `p' is a well constructed directory path */
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	char *s, *c;
 	int i, len, last_bslash;
 
@@ -116,8 +117,20 @@ EIF_POINTER p;
 			{
 			drive = toupper(* (char *) p) - 'A';
 			if ((drive >= 0) && (drive <= 26))
-				return (GetDriveType (drive) != 0);
+				return (EIF_BOOLEAN) (GetDriveType (drive) != 0);
 			}			
+	return FALSE;
+#elif defined(EIF_WIN32)
+	char rootpath[4];
+		/* Test to see if `p' is a valid volume name */
+	if (p)
+		if ((strlen (p) == 2) && (*(p+1) == ':'))
+			{
+			strcpy (rootpath, p);
+			rootpath[2] = '\\';
+			rootpath [3] = '\0';
+			return (EIF_BOOLEAN) (GetDriveType (rootpath) != 1);
+			}
 	return FALSE;
 #else
 	return FALSE;
@@ -127,14 +140,21 @@ EIF_POINTER p;
 EIF_BOOLEAN c_is_file_name_valid (p)
 EIF_POINTER p;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
+#ifdef EIF_WIN_3_1
+#define MAX_FILE_LEN 12
+#else
+#define MAX_FILE_LEN 256
+#endif
+
 		/* Test to see if `p' is a valid file name (no directory part) */
 	int dot, len, i;
 	char * s, valid [] = "_^$~!#%&-{}@'`()";
 
-	if ((p == NULL) || ((len = strlen (p)) == 0) || (len > 12) )
-		return FALSE;	
+	if ((p == NULL) || ((len = strlen (p)) == 0) || (len > MAX_FILE_LEN) )
+		return FALSE;
 
+#ifdef EIF_WIN_3_1
 	dot = 0;
 	for (i = 0, s = p; i < len; i++, s++)
 		if (*s == '.')
@@ -156,6 +176,13 @@ EIF_POINTER p;
 
 	if ((dot == 0) && (len > 8))
 		return FALSE;
+#else
+	for (s = p; *s; s++)
+		if ((*s == '\\') ||
+			(*s == '*') ||
+			(*s == '?'))
+				return FALSE;
+#endif
 				
 	return TRUE;
 #else
@@ -167,9 +194,14 @@ EIF_BOOLEAN c_is_extension_valid (p)
 EIF_POINTER p;
 {
 		/* Test to see if `p' is a valid extension */
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
+#ifdef EIF_WIN_3_1
 	if ((p == NULL) || (strlen(p) > 3) || (strchr (p, '.') != 0) )
 		return FALSE;
+#else
+	if ((p == NULL) || (strlen (p) > 254))
+		return FALSE;
+#endif
 
 	return c_is_file_name_valid (p);
 #else
@@ -181,7 +213,7 @@ EIF_BOOLEAN c_is_file_valid (p)
 EIF_POINTER p;
 {
 		/* Test to see if `p' is a well constructed file name (with directory part) */
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	char *s, *c;
 	int i, len;
 
@@ -207,7 +239,7 @@ EIF_BOOLEAN c_is_directory_name_valid (p)
 EIF_POINTER p;
 {
 		/* Test to see if `p' is a valid directory name (no parent directory part) */
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return c_is_file_name_valid (p);
 #elif defined (__VMS)
 	/* For VMS, allow  "subdir" or  "[.subdir]" or "dev:[sub.subdir]" */
@@ -255,7 +287,7 @@ EIF_POINTER v;
         (eif_strset)(string, strlen ((char *)p));
 #else	/* not vms */
 	if (*((char *)p) != '\0')
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 		strcat ((char *)p, "\\");
 #else
 		strcat ((char *)p, "/");
@@ -278,7 +310,7 @@ EIF_POINTER v;
 	strcat ((char *)p,"]");
 	(eif_strset)(string, strlen ((char *)p));
 #else
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	strcat ((char *)p, "\\");
 #else
 	strcat ((char *)p, "/");
@@ -297,7 +329,7 @@ EIF_POINTER v;
 	if (*((char *)p) == '\0'){
 		strcat ((char *)p, (char *)v);
 	} else {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 		strcat ((char *)p, "\\");
 #elif !defined (__VMS)		/* no separator for vms */
 		strcat ((char *)p, "/");
@@ -311,7 +343,7 @@ EIF_POINTER v;
 EIF_BOOLEAN eif_case_sensitive_path_names()
 {
 		/* Are path names case sensitive? */
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return FALSE;
 #elif defined (__VMS)
 	return FALSE;
@@ -333,7 +365,7 @@ EIF_REFERENCE eif_current_dir_representation()
 EIF_BOOLEAN eif_home_dir_supported()
 {
 		/* Is the notion of $HOME supported */
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 	return FALSE;
 #else
 	return TRUE;
@@ -349,7 +381,7 @@ EIF_BOOLEAN eif_root_dir_supported()
 EIF_REFERENCE eif_home_directory_name()
 {
 		/* String representation of $HOME */
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 	return NULL;
 #elif defined (__VMS)
 	return RTMS(getenv("SYS$LOGIN"));
@@ -361,7 +393,7 @@ EIF_REFERENCE eif_home_directory_name()
 EIF_REFERENCE eif_root_directory_name()
 {
 		/* String representation of the root directory */
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return RTMS("\\");
 #elif defined (__VMS)
 	return RTMS("[000000]");

@@ -10,8 +10,7 @@ class
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node,
-			fill_calls_list, replicate
+			type_check, byte_node
 		end
 
 	SHARED_TYPES
@@ -107,47 +106,6 @@ feature -- Type check, byte code and dead code removal
 					!OPERAND_B!Result
 				end
 			end
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		do
-			if target /= Void then
-				l.add (target)
-			else
-				if expression /= Void then
-					expression.fill_calls_list (l)
-				end
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := Clone (Current)
-
-			if target /= Void then
-				ctxt.adapt_name (target)
-				Result.set_target (ctxt.adapted_name)
-			end
-
-			if expression /= Void then
-				Result.set_expression (expression.replicate (ctxt.new_ctxt))
-			end
-		end
-
-	set_target (t : like target) is
-			-- Set `target' to `t'.
-		do
-			target := t
-		end
-
-	set_expression (e : like expression) is
-			-- Set `expression' to `e'.
-		do
-			expression := e
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -257,8 +215,7 @@ feature {NONE}  -- Type
 				if formal_dec.has_constraint then
 					ttype := formal_dec.constraint_type
 				else
-					!!any_type
-					any_type.set_base_class_id (System.any_id)
+					create any_type.make (System.any_id)
 					ttype := any_type
 				end
 			end

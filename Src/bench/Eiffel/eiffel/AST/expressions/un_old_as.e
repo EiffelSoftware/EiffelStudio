@@ -10,7 +10,7 @@ inherit
 		redefine
 			operator_is_keyword, simple_format,
 			type_check, byte_node, format,
-			replicate, fill_calls_list, prefix_feature_name
+			prefix_feature_name
 		end
 
 	SHARED_TYPES
@@ -92,21 +92,6 @@ feature -- Type check, byte code and dead code removal
 			else
 				ctxt.rollback
 			end
-		end; 
-			
-feature	-- Replication
-	
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		do
-			expr.fill_calls_list (l)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current)
-			Result.set_expr (expr.replicate (ctxt))
 		end
 
 feature {AST_EIFFEL} -- Output

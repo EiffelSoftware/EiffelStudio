@@ -11,7 +11,6 @@ inherit
 	EXPR_AS
 		redefine
 			type_check, byte_node, format,
-			fill_calls_list, replicate,
 			number_of_breakpoint_slots, line_number
 		end
 
@@ -108,25 +107,6 @@ feature -- Type check, byte code and dead code removal
 			-- Reconstitute text without creating the breakable marks
 		do
 			internal_format (ctxt, True)
-		end
-
-feature	-- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		local
-			new_list: like l
-		do
-			create new_list.make
-			expr.fill_calls_list (new_list)
-			l.merge (new_list)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- adapt to replication
-		do
-			Result := clone (Current)
-			Result.set_expr (expr.replicate (ctxt))
 		end
 
 feature {AST_EIFFEL} -- Output

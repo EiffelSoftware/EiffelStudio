@@ -8,6 +8,7 @@ indexing
 class EWB_WINDOWS
 
 inherit
+	SHARED_CONFIGURE_RESOURCES;
 	EWB
 		redefine
 			init_toolkit
@@ -26,8 +27,16 @@ feature {NONE}
 		end;
 
 	create_handler is
+		local
+			delay: INTEGER
 		do
-			win_ioh_make_client ($call_back, Current)
+			delay := Configure_resources.get_pos_integer 
+						(r_Windows_timer_delay, 10)
+			if delay < 5 or else delay > 200 then	
+				delay := 10
+			end;
+				-- FIXME need to pass delay as a extra argument
+			win_ioh_make_client ($call_back, Current) 
 		end;
 
 	call_back is

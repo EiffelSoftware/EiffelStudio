@@ -16,14 +16,14 @@ feature -- Directory Paths
 		local
 			l_path: STRING
 		once
-			l_path := get ("EIFFEL_SRC")
-			if l_path /= Void then
-				create Result.make_from_string (l_path)		
-				Result.extend ("tools")
-				Result.extend ("doc_builder")						
-			else
+--			l_path := get ("EIFFEL_SRC")
+-- 			if l_path /= Void then
+--          		create Result.make_from_string (l_path)		
+--           		Result.extend ("tools")
+--             	Result.extend ("doc_builder")						
+--          	else
 				create Result.make_from_string ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
-			end
+--			end
 		end
 
 	resources_directory: DIRECTORY_NAME is
@@ -38,6 +38,13 @@ feature -- Directory Paths
 		once
 			create Result.make_from_string (resources_directory)
 			Result.extend ("bin")
+		end
+
+	syntax_files_directory: DIRECTORY_NAME is
+			-- Directory holding syntax files
+		once
+			create Result.make_from_string (resources_directory)
+			Result.extend ("syntax_definitions")
 		end
 
 	documentation_directory: DIRECTORY_NAME is
@@ -292,8 +299,6 @@ feature -- Status Setting
 
 	set_auto_validation (flag: BOOLEAN) is
 			-- Should documents be auto validated?
-		require
-			flag_not_void: flag /= Void
 		do
 			auto_validation := flag
 		ensure
@@ -302,8 +307,6 @@ feature -- Status Setting
 
 	set_tags_uppercase (flag: BOOLEAN) is
 			-- Should XML tags be in uppercase?
-		require
-			flag_not_void: flag /= Void
 		do
 			tags_uppercase := flag
 		ensure

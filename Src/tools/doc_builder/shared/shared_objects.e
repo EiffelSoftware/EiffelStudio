@@ -91,6 +91,12 @@ feature -- Shared
 			create Result
 		end
 
+	Shared_preferences: SHARED_PREFERENCES is
+			-- System dialogs
+		once
+			create Result
+		end
+
 feature {NONE} -- Status Setting
 
 	set_root_window (window: DOC_BUILDER_WINDOW) is

@@ -4,7 +4,7 @@ class SYSTEM_HOLE
 
 inherit
 
-	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
 	HOLE
 		redefine
@@ -45,7 +45,7 @@ feature {NONE}
 			if tool = system_tool then
 				tool.synchronize
 			elseif project_tool.initialized then
-				if lace.file_name = void then
+				if Eiffel_project.lace_file_name = void then
 					if argument = void then
 						system_tool.display;
 						load_default_ace;
@@ -61,7 +61,7 @@ feature {NONE}
 								f.is_readable and then 
 								f.is_plain
 							then
-								Lace.set_file_name (fn);
+								Eiffel_project.set_lace_file_name (fn);
 								work (Current);
 							elseif f.exists and then not f.is_plain then
 								warner (project_tool.text_window).custom_call 

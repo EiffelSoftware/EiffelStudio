@@ -11,8 +11,13 @@ class
 
 inherit
 	EV_TOOL_BAR_RADIO_BUTTON_I
+		select
+			parent_imp
+		end
 
 	EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+		rename
+			parent_imp as old_toggle_button_parent_imp
 		redefine
 			type,
 			set_selected,

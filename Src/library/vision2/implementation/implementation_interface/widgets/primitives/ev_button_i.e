@@ -17,16 +17,11 @@ inherit
 
 	EV_TEXT_CONTAINER_I
 
---	EV_PIXMAP_CONTAINER_I
+	EV_PIXMAP_CONTAINER_I
 
 	EV_FONTABLE_I
 
 feature {NONE} -- Initialization
-
-	make (par: EV_CONTAINER) is
- 			-- Empty button
-		deferred
-		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Create a push button implementation.

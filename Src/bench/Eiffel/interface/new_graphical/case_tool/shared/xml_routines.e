@@ -141,7 +141,6 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			-- Find in sub-elememt of `elem' color item with tag `a_name'.
 		local
 			e: XM_ELEMENT
-			cd: XM_CHARACTER_DATA
 			s: STRING
 			sc1, sc2: INTEGER
 			r, g, b: INTEGER
@@ -201,14 +200,13 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			Result.put_last (xml_string_node (Result, content))
 		end
 
-feature {SHARED_XML_ROUTINES} -- Saving
+feature -- Saving
 
-	save_xml_document (ptf: FILE; a_doc: XM_DOCUMENT) is
+	save_xml_document (a_file_name: STRING; a_doc: XM_DOCUMENT) is
 			-- Save `a_doc' in `ptf'
 		require
-			file_not_void: ptf /= Void
-			file_exists: ptf /= Void
-			valid_document: a_doc /= Void and then a_doc.root_element.name.is_equal ("CLUSTER_DIAGRAM")
+			file_not_void: a_file_name /= Void
+			file_exists: not a_file_name.is_empty
 		local
 			retried: BOOLEAN
 			l_formatter: XM_FORMATTER
@@ -218,27 +216,23 @@ feature {SHARED_XML_ROUTINES} -- Saving
 					-- Write document
 				create l_formatter.make
 				l_formatter.process_document (a_doc)
-				create l_output_file.make (ptf.name)
+				create l_output_file.make (a_file_name)
 				l_output_file.open_write
 				if l_output_file.is_open_write then
 					l_output_file.put_string (l_formatter.last_string)
 					l_output_file.flush
 					l_output_file.close
 				else
-					display_error_message ("Unable to write file: " + ptf.name)
+					display_error_message ("Unable to write file: " + a_file_name)
 				end
 			end
 		rescue
 			retried := True
-			if ptf /= Void then
-				display_error_message ("Unable to write file: " + ptf.name)
-			else
-				display_error_message ("Unable to write file.")
-			end
+			display_error_message ("Unable to write file: " + a_file_name)
 			retry
 		end
 
-feature {SHARED_XML_ROUTINES} -- Deserialization
+feature -- Deserialization
 
 	deserialize_document (a_file_path: STRING): XM_DOCUMENT is
 			-- Retrieve xml document associated to file

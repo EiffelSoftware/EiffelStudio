@@ -264,9 +264,14 @@ feature {NONE} -- Implementation
 	ewb_display: SCREEN is
 			-- Display of EiffelBench.
 		local
-			s: STRING
+			p: PLATFORM_CONSTANTS
 		once
-			!! Result.make (s)
+			!! p
+			if p.is_vms then
+				!! Result.make ("")
+			else
+				!! Result.make (Void)
+			end
 		end
 
 end -- class WINDOWS

@@ -1,22 +1,25 @@
+indexing
+	description: "Boolean description"
+	date: "$Date$"
+	revision: "$Revision$"
+	
 class BOOLEAN_DESC 
 
 inherit
 	ATTR_DESC
 		rename
-			Boolean_level as level
-		redefine
-			is_boolean
+			Boolean_level as level,
+			Boolean_c_type as type_i
 		end
 	
-feature 
-
-	is_boolean: BOOLEAN is True
-			-- Is the attribute a boolean one ?
+feature -- Access
 
 	sk_value: INTEGER is
 		do
 			Result := Sk_bool
 		end
+
+feature -- Code generation
 
 	generate_code (buffer: GENERATION_BUFFER) is
 			-- Generate type code for current attribute description in
@@ -24,6 +27,8 @@ feature
 		do
 			buffer.putstring ("SK_BOOL");
 		end;
+
+feature -- Debug
 
 	trace is
 		do

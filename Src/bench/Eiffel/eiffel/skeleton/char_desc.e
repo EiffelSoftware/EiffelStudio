@@ -1,10 +1,13 @@
-class CHAR_DESC 
+indexing
+	description: "Character description."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	CHAR_DESC
 
 inherit
 	ATTR_DESC
-		redefine
-			is_character
-		end
 
 create
 	make
@@ -20,13 +23,10 @@ feature -- Initialization
 			is_wide_set: is_wide = w
 		end
 
-feature -- Property
+feature -- Access
 
 	is_wide: BOOLEAN
 			-- Is current character a wide one?
-
-	is_character: BOOLEAN is True
-			-- Is the attribute a character one ?
 
 	level: INTEGER is
 			-- Comparison criteria
@@ -47,25 +47,40 @@ feature -- Property
 			end
 		end
 
+	type_i: TYPE_I is
+			-- Corresponding TYPE_I instance.
+		do
+			if is_wide then
+				Result := Wide_char_c_type
+			else
+				Result := Char_c_type
+			end
+		end
+			
+		
+feature -- Code generation
+
 	generate_code (buffer: GENERATION_BUFFER) is
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
 			if is_wide then
-				buffer.putstring ("SK_WCHAR");
+				buffer.putstring ("SK_WCHAR")
 			else
-				buffer.putstring ("SK_CHAR");
+				buffer.putstring ("SK_CHAR")
 			end
-		end;
+		end
+
+feature -- Debug
 
 	trace is
 		do
-			io.error.putstring (attribute_name);
+			io.error.putstring (attribute_name)
 			io.error.putstring ("[")
 			if is_wide then
 				io.error.putstring ("WIDE_")
 			end
-			io.error.putstring ("CHARACTER]");
-		end;
+			io.error.putstring ("CHARACTER]")
+		end
 
 end

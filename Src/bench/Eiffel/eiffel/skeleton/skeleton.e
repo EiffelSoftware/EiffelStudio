@@ -894,7 +894,6 @@ feature -- Skeleton byte code
 		local
 			current_area: SPECIAL [ATTR_DESC]
 			i, nb: INTEGER
-			edesc: EXPANDED_DESC
 		do
 			from
 				current_area := area
@@ -903,13 +902,10 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				edesc ?= current_area.item (i)
-				if edesc /= Void then
-					ba.append_short_integer (1)
-					edesc.make_gen_type_byte_code (ba)
-				else
-					ba.append_short_integer (0)
-				end
+				ba.append_short_integer (1)
+				ba.append_short_integer (0)
+				current_area.item (i).type_i.make_gen_type_byte_code (ba, False)
+				ba.append_short_integer (- 1)
 				i := i + 1
 			end;
 		end;
@@ -1007,10 +1003,7 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				edesc ?= current_area.item (i)
-				if edesc /= Void then
-					edesc.generate_generic_code (buffer, code, i);
-				end
+				current_area.item (i).generate_generic_code (buffer, Context.final_mode, code, i)
 				i := i + 1;
 			end;
 			buffer.new_line;
@@ -1025,14 +1018,10 @@ feature -- Skeleton byte code
 				i > nb
 			loop
 				edesc ?= current_area.item (i)
-				if edesc /= Void then
-					buffer.putstring ("g_atype")
-					buffer.putint (code)
-					buffer.putchar ('_')
-					buffer.putint (i)
-				else
-					buffer.putstring ("(int16*)0")
-				end
+				buffer.putstring ("g_atype")
+				buffer.putint (code)
+				buffer.putchar ('_')
+				buffer.putint (i)
 				buffer.putstring (",%N")
 				i := i + 1;
 			end;

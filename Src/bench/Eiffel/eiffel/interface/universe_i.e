@@ -393,6 +393,49 @@ feature -- Access
 				Result := cluster_list.item
 			end
 		end
+		
+	assembly_of_specification (a_name, a_culture, a_key, a_version: STRING): ASSEMBLY_I is
+			-- Find an assembly matching `a_name', `a_culture', `a_key' and `a_version'.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			l_key: like a_key
+			l_culture: like a_culture
+			l_result_key: like a_key
+			l_done: BOOLEAN
+			l_list: like clusters
+		do
+			if equal (a_key, "null") then
+				l_key := Void
+			else
+				l_key := a_key.as_lower
+			end
+			l_culture := a_culture.as_lower
+			
+			from
+				l_list := clusters
+				l_list.start
+			until
+				l_list.after or l_done
+			loop
+				Result ?= l_list.item
+				if Result /= Void then
+					if Result.public_key_token /= Void then
+						l_result_key := Result.public_key_token.as_lower
+					else
+						l_result_key := Void
+					end
+					l_done := Result.assembly_name.is_equal (a_name) and
+							equal (Result.culture.as_lower, l_culture) and
+							equal (l_result_key, l_key) and
+							equal (Result.version, a_version)
+				end
+				l_list.forth
+			end
+			if not l_done then
+				Result := Void
+			end
+		end
 
 	has_cluster_of_path (cluster_path: STRING): BOOLEAN is
 			-- Does `clusters' have a cluster whose path is `cluster_path' ?

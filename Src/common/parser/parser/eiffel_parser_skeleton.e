@@ -1081,9 +1081,7 @@ invariant
 	no_void_formal_parameter: not formal_parameters.has (Void)
 	valid_id_level: (id_level = Normal_level) or
 		(id_level = Assert_level) or (id_level = Invariant_level)
-	is_frozen_class_not_set: not il_parser implies not is_frozen_class
 	is_external_class_not_set: not il_parser implies not is_external_class
-	
 
 end -- class EIFFEL_PARSER_SKELETON
 

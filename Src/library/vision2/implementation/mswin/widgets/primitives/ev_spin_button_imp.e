@@ -25,9 +25,11 @@ inherit
 			destroy
 		redefine
 			on_key_down,
+			on_scroll,
 			interface,
 			set_range,
-			set_value
+			set_value,
+			initialize
 		end
 
 	EV_TEXT_FIELD_IMP
@@ -40,7 +42,8 @@ inherit
 			destroy,
 			on_key_down,
 			on_char,
-			interface
+			interface,
+			initialize
 		end
 
 	WEL_UDS_CONSTANTS
@@ -66,7 +69,16 @@ feature {NONE} -- Initialization
 			wel_make (Default_parent, "", 0, 0, 0, 0, 0)
 		end
 
+	initialize is
+			--|FIXME
+		do
+			{EV_GAUGE_IMP} Precursor
+			{EV_TEXT_FIELD_IMP} Precursor
+		end
+
 feature -- Access
+
+	leap: INTEGER
 
 	container: EV_INTERNAL_SILLY_CONTAINER_IMP
 			-- A WEL control window to get both children. If we don't use
@@ -103,6 +115,12 @@ feature -- Access
 
 feature -- Status setting
 
+	wel_set_leap (i :INTEGER) is do end
+	wel_set_step (i :INTEGER) is do end
+	wel_set_value (i :INTEGER) is do end
+	wel_set_range (i, j: INTEGER) is do end
+
+
 	destroy is
 			-- Destroy the widget, but set the parent sensitive
 			-- in case it was set insensitive by the child.
@@ -121,7 +139,7 @@ feature -- Element change
 			up_down.set_position (val)
 		end
 
-	set_range (min, max: INTEGER) is
+	set_range (a_range: INTEGER_INTERVAL) is
 			-- Make `min' the new minimum and `max' the new maximum.
 		do
 			up_down.set_range (min, max)
@@ -251,6 +269,9 @@ end -- class EV_SPIN_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/19 04:33:56  oconnor
+--| added deferred features
+--|
 --| Revision 1.4  2000/02/14 11:40:45  oconnor
 --| merged changes from prerelease_20000214
 --|

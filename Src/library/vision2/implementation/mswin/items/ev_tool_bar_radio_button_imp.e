@@ -56,6 +56,8 @@ feature -- Status report
 			end
 		end
 
+	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]
+
 feature {NONE} -- Implementation
 
 	on_activate is
@@ -97,6 +99,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/19 04:35:44  oconnor
+--| added deferred features
+--|
 --| Revision 1.3  2000/02/14 11:40:39  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -53,6 +53,16 @@ feature -- Status report
 
 feature -- Status setting
 
+	enable_select is
+		do
+			parent_imp.check_button (id)
+		end
+
+	disable_select is
+		do
+			parent_imp.uncheck_button (id)
+		end
+
 	set_selected (flag: BOOLEAN) is
 			-- Select the current button if `flag', deselect it
 			-- otherwise.
@@ -133,6 +143,9 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/19 04:35:44  oconnor
+--| added deferred features
+--|
 --| Revision 1.6  2000/02/14 11:40:39  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -1,3 +1,3 @@
 Error: feature is not available for static access.
-What to do: make sure that feature is either a C external routine,
-    a .NET static external or a constant.
+What to do: make sure that feature is either a C frozen external routine
+    without assertions, a .NET static external or a constant.

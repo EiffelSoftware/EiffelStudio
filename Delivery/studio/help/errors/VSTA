@@ -7,5 +7,5 @@ VSTA, not defined in ETL
 
         1 `C' is a class name, not a type.
 
-        2 `f' is a  C  external  routine, a .NET static
-           external or a constant.
+        2 `f' is a  C  a frozen external  routine without
+		   assertions, a .NET static external or a constant.

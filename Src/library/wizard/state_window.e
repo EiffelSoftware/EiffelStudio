@@ -46,6 +46,18 @@ feature -- Basic Operations
 			at_least_one_entry_asked_to_the_user: main_box.count>0
 		end
 
+	display_pixmap is
+			-- Draw pixmap
+		local
+			fi: FILE_NAME
+		do
+			Create fi.make_from_string(wizard_bmp_path)
+			fi.extend(pixmap_location)
+			pixmap.set_with_named_file(fi)
+			pixmap.set_minimum_width(pixmap.width)
+			pixmap.redraw
+		end
+
 	proceed_with_current_info is
 			-- Process user entries, and 
 			-- perform actions accordingly.
@@ -118,5 +130,13 @@ feature -- Access
 	entries_changed: BOOLEAN
 		-- Did the user entries changed since last time ?
 		-- This boolean is used in order to do a smart "next".
+
+	pixmap_location: STRING is
+			-- Path in which can be found the pixmap associated with
+			-- the current state.
+		deferred
+		ensure
+			exists: Result /= Void
+		end
 
 end -- class STATE_WINDOW

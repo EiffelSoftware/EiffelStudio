@@ -29,31 +29,28 @@ feature -- Initialization
 			sep2: EV_HORIZONTAL_SEPARATOR
 			pix: EV_PIXMAP
 		do
-			default_create
-			set_size(300,300)
-			Create v1
-			extend(v1)
-			Create h1
-			v1.extend(h1)
-			Create wizard_page
-			Create pix	
-			pix.set_with_named_file(wizard_bmp_path+"\essai.bmp")
-			pix.set_minimum_width(pix.width)	
-			Create sep
-			Create v2
-			h1.extend(pix)
-			h1.extend(sep)
-			h1.disable_child_expand(sep)
-			h1.disable_child_expand(pix)
-			h1.extend(v2)
-			v2.extend(wizard_page)
-			Create sep2
-			v2.extend(sep2)
-			v2.disable_child_expand(sep2)
-			build_navigation_bar(v2)
-			pix.redraw	
-			load_first_state
-			Create state_information.make
+				default_create
+				set_size(300,300)
+				Create v1
+				extend(v1)
+				Create h1
+				v1.extend(h1)
+				Create wizard_page
+				Create main_pixmap	
+				Create sep
+				Create v2
+				h1.extend(pixmap)
+				h1.extend(sep)
+				h1.disable_child_expand(sep)
+				h1.disable_child_expand(pixmap)
+				h1.extend(v2)
+				v2.extend(wizard_page)
+				Create sep2
+				v2.extend(sep2)
+				v2.disable_child_expand(sep2)
+				build_navigation_bar(v2)
+				load_first_state
+				Create state_information.make
 		end
 
 	build_navigation_bar(a_box: EV_BOX) is
@@ -92,6 +89,8 @@ feature -- Implementation
 		-- needed to be completed by the user in order
 		-- to be performed.
 
+	main_pixmap: EV_PIXMAP
+
 feature -- Basic Operations	
 
 	set_final_state is
@@ -100,6 +99,7 @@ feature -- Basic Operations
 		do
 			previous_b.parent.prune(previous_b)
 			next_b.set_text("Exit")
+			next_b.press_actions.extend(~destroy)
 			cancel_b.parent.prune(cancel_b)
 		end
 

@@ -342,4 +342,7 @@ feature -- Implementation
 
 	total,iteration: INTEGER
 
+	pixmap_location: STRING is "essai.bmp"
+		-- Pixmap location
+
 end -- class DB_FINISH

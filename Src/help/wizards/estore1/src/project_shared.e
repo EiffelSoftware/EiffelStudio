@@ -7,9 +7,6 @@ indexing
 class
 	PROJECT_SHARED
 
-inherit
-	ARGUMENTS
-
 feature -- Access
 
 	odbc: STRING is "odbc"

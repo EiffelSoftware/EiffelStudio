@@ -87,5 +87,8 @@ feature -- Implementation
 
 	table_list: LINKED_LIST[CLASS_NAME]
 		-- List of all the system tables.
+
+	pixmap_location: STRING is "essai2.bmp"
+			-- Pixmap location
 	
 end -- class DB_GENERATION

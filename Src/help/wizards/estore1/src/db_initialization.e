@@ -130,4 +130,7 @@ feature -- Implementation
 	oracle_b,odbc_b: EV_RADIO_BUTTON
 		-- Database Type selection thanks to radio buttons.
 
+	pixmap_location: STRING is "essai.bmp"
+			-- Pixmap location
+
 end -- class DB_INITIALIZATION

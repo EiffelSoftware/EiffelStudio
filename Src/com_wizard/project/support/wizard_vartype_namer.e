@@ -98,8 +98,6 @@ feature {NONE} -- Initialization
 			eiffel_names.put (String_type, Vt_bstr)
 			eiffel_names.put (String_type, Vt_lpstr)
 			eiffel_names.put (String_type, Vt_lpwstr)
-			eiffel_names.put (Ecom_large_integer, Vt_i8)
-			eiffel_names.put (Ecom_ularge_integer, Vt_ui8)
 			eiffel_names.put (Cell_type, Vt_ptr)
 			eiffel_names.put (Array_type, Vt_safearray)
 			eiffel_names.put (Array_type, Vt_carray)
@@ -107,6 +105,8 @@ feature {NONE} -- Initialization
 			eiffel_names.put (Ecom_hresult, Vt_error)
 			eiffel_names.put (Character_type, Vt_i1)
 			eiffel_names.put (Character_type, Vt_ui1)
+			eiffel_names.put ("INTEGER_64", Vt_i8)
+			eiffel_names.put ("INTEGER_64", Vt_ui8)
 
 
 			create variant_field_names.make (60)
@@ -155,6 +155,10 @@ feature {NONE} -- Initialization
 			variant_field_names.put (Variant_brecval, Vt_record)
 			variant_field_names.put (Variant_brecval, binary_or (Vt_byref, Vt_record))
 			variant_field_names.put (Variant_byref, binary_or (Vt_byref, Vt_void))
+			variant_field_names.put (Variant_llval, Vt_i8)
+			variant_field_names.put (Variant_llval, Vt_ui8)
+			variant_field_names.put (Variant_llval, binary_or (Vt_byref, Vt_i8))
+			variant_field_names.put (Variant_llval, binary_or (Vt_byref, Vt_ui8))
 
 			create ce_array_function_names.make (30)
 

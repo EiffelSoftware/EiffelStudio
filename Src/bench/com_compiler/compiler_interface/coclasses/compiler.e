@@ -245,7 +245,7 @@ feature -- Basic Operations
 		do
 			output_pipe_name := Eiffel_ace.file_name
 			is_output_piped := True
-			main_window.process_compile
+			main_window.process_compile (mode)
 		ensure then
 			output_is_piped: is_output_piped
 		end

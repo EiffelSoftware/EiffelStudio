@@ -137,7 +137,7 @@ feature -- Execution
 			if is_valid then
 				prev_class := System.current_class
 				prev_cluster := Inst_context.cluster
-				execution_error := false
+				execution_error := False
 				ast.format (Current)				
 				System.set_current_class (prev_class)
 				Inst_context.set_cluster (prev_cluster)
@@ -186,6 +186,62 @@ feature -- Element change
 			set_separator (ti_comma)
 			text.add_new_line
 			text.add_indent
+
+				-- Put either `frozen, deferred, infix or prefix'.
+			put_feature_qualification
+
+			l_is_str := current_feature.is_infix or current_feature.is_prefix
+			if class_c /= Void and then class_c.feature_table.has (name_of_current_feature) then
+				-- Feature should be clickable
+				l_feature ?= class_c.feature_table.item (name_of_current_feature).
+					api_feature (class_c.class_id)
+			end		
+			if l_is_str then
+				text.add_string ("%"")
+			end
+			if l_feature /= Void then
+				text.add_feature (l_feature, dotnet_name_of_current_feature)
+				if l_is_str then
+					text.add_string ("%"")
+				end
+				if
+					not use_dotnet_name_only and
+					not dotnet_name_of_current_feature.is_equal (name_of_current_feature)
+				then				
+					text.add_char (',')
+					text.add_new_line
+					text.add_indent
+					put_feature_qualification
+					text.add_feature (l_feature, name_of_current_feature)
+				end
+			else
+				create {LOCAL_TEXT} l_txt.make (dotnet_name_of_current_feature)
+				text.add (l_txt)
+				if l_is_str then
+					text.add_string ("%"")
+				end
+				if
+					not use_dotnet_name_only and
+					not dotnet_name_of_current_feature.is_equal (name_of_current_feature)
+				then				
+					text.add_char (',')
+					text.add_new_line
+					text.add_indent
+					put_feature_qualification
+					text.add (create {LOCAL_TEXT}.make (name_of_current_feature))
+				end
+			end
+			put_signature
+			put_comments
+		end
+
+feature {NONE} -- Element Change
+
+	put_feature_qualification is
+			-- Put current feature qualification: frozen, deferred, infix or prefix.
+		require
+			text_not_void: text /= Void
+		do
 			if current_feature.is_frozen then
 					-- Check if feature is frozen.
 				text.add (Ti_frozen_keyword)
@@ -200,46 +256,12 @@ feature -- Element change
 					-- Check if feature is infix.
 				text.add (Ti_infix_keyword)
 				text.add_space
-				text.add_string ("%"")
-				l_is_str := True
 			elseif current_feature.is_prefix then
 					-- Check if feature is prefix.
 				text.add (Ti_prefix_keyword)
 				text.add_space
-				text.add_string ("%"")
-				l_is_str := True
 			end
-			if class_c /= Void and then class_c.feature_table.has (name_of_current_feature) then
-				-- Feature should be clickable
-				l_feature ?= class_c.feature_table.item (name_of_current_feature).api_feature (class_c.class_id)
-			end		
-			if l_feature /= Void then
-				text.add_feature (l_feature, dotnet_name_of_current_feature)
-				if not use_dotnet_name_only and not dotnet_name_of_current_feature.is_equal (name_of_current_feature) then				
-					text.add_char (',')
-					text.add_new_line
-					text.add_indent
-					text.add_feature (l_feature, name_of_current_feature)
-				end
-			else
-				create {LOCAL_TEXT} l_txt.make (dotnet_name_of_current_feature)
-				text.add (l_txt)
-				if not use_dotnet_name_only and not dotnet_name_of_current_feature.is_equal (name_of_current_feature) then				
-					text.add_char (',')
-					text.add_new_line
-					text.add_indent
-					text.add (create {LOCAL_TEXT}.make (name_of_current_feature))
-				end
-			end
-			if l_is_str then
-				text.add_string ("%"")
-			end
-			
-			put_signature
-			put_comments
 		end
-
-feature {NONE} -- Element Change
 
 	put_signature is
 			-- Feature signature
@@ -289,7 +311,8 @@ feature {NONE} -- Element Change
 						text.add_space
 					end
 					
-					l_char_count := l_char_count + l_c_arg.eiffel_name.count + 2 + l_c_class.name.count
+					l_char_count := l_char_count + l_c_arg.eiffel_name.count + 2 +
+						l_c_class.name.count
 					l_ext := Void
 					l_cnt := l_cnt + 1
 				end
@@ -362,7 +385,7 @@ feature {NONE} -- Element Change
 				l_namespace_name := consumed_t.dotnet_name
 			end
 			
-			if l_constructor /= void then
+			if l_constructor /= Void then
 					-- Return constructor member type information.
 				l_member_info := assembly_info.find_feature (assembly_name, l_namespace_name, l_parsed_arguments)
 			else
@@ -454,8 +477,8 @@ feature {NONE} -- Element Change
 						text.add_comment (l_return_info.item)
 						l_return_info.forth
 					end
-					new_line
 				end
+				new_line
 			else
 				text.add_new_line
 				text.add_indents (3)

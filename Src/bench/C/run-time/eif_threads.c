@@ -348,9 +348,11 @@ rt_public void eif_thr_exit(void)
 	EIF_MUTEX_TYPE *chld_mutex = eif_thr_context->children_mutex;
 
 	thr_list_t *ptr, **thr_list = eif_thr_context->addr_thr_list;
+	int ret;	/* Return Status of "eifaddr". */
 	char *terminated = 
-		eifaddr (eif_access (eif_thr_context->current), "terminated");
-	
+		eifaddr (eif_access (eif_thr_context->current), "terminated", &ret);
+	if (ret != EIF_CECIL_OK) 
+		eraise ("eif_thr_exit", EN_EXT);
 
 	EIF_MUTEX_LOCK(chld_mutex, "Lock parent mutex");
 

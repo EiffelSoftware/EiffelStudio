@@ -816,10 +816,10 @@ feature -- changing a specified breakpoint
 			end
 		end
 
-feature -- getting the status of a specified breakpoint
+feature -- getting the status of a specified breakpoint	
 
 	condition (f: E_FEATURE; i: INTEGER): EB_EXPRESSION is
-			-- Does breakpoint located at (`f', `i') have a condition?
+			-- Condition of breakpoint located at (`f', `i').
 		require
 			valid_breakpoint: is_breakpoint_set (f, i)
 		local

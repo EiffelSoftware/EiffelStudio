@@ -1,5 +1,5 @@
 indexing
-	description: "This class is a heir of EV_WIDGET_IMP, EV_ITEM_IMP%
+	description: "This class is an ancestor of EV_WIDGET_IMP, EV_ITEM_IMP%
 				% and EV_MESSAGE_DIALOG_IMP"
 	status: "See notice at end of class."
 	date: "$Date$"

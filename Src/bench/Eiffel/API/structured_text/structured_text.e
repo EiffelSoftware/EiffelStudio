@@ -14,8 +14,9 @@ inherit
 			{NONE}
 				all;
 			{ANY}
-				cursor, start, forth, after, item, empty,
-				finish, wipe_out, islast, first_element, last
+				cursor, start, forth, back, after, off, item, empty,
+				finish, wipe_out, islast, first_element, last,
+				index, put_right, put_left, put_front, go_to
 		end;
 	SHARED_RESCUE_STATUS;
 	SHARED_TEXT_ITEMS

@@ -70,6 +70,7 @@ feature -- Basic operations
 	escape_special_characters (string: STRING): STRING is
 			-- Replace all occurances of '"' amd '%' in `string' with
 			-- an escaped version (%N prepended for each).
+			-- Also replace all '%N' characters with '%''N'
 		require
 			string_not_void: string /= Void
 		local
@@ -83,13 +84,15 @@ feature -- Basic operations
 			loop
 				if string.item (counter) = '%%' or string.item (counter) = '"' then
 					Result.append_string ("%%" + string.item (counter).out)
+				elseif string.item (counter) = '%N' then
+					Result.append_string ("%%N")
 				else
 					Result.append_character (string.item (counter))
 				end
 				counter := counter + 1
 			end
 		ensure
-			Adjusted_size_correct: Result.count = string.count + string.occurrences ('%%') + string.occurrences ('"')
+			Adjusted_size_correct: Result.count = string.count + string.occurrences ('%%') + string.occurrences ('"') + string.occurrences ('%N')
 		end
 		
 	directory_of_file (file_name: STRING): STRING is

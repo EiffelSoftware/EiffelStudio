@@ -143,6 +143,17 @@ feature -- Messages
 				%lost.  Do you wish to continue anyway?"
 		end
 
+	empty_html_document: STRING is
+			-- Empty HTML document
+		once
+			Result := "Error: After filtering the document the content is empty.%N%
+					%Possible reason for this are:%
+					%<ul><li>The document does not contain any content associated with the output filter selected </li>%
+					%<li>The originating document is not saved to disk yet</li>%
+					%<li>The originating document is not valid XML</li>%
+					%</list>"
+		end		
+
 feature -- Command prompt messages
 
 	invalid_project_file: STRING is

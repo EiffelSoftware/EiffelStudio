@@ -1,0 +1,29 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Invariant field</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Invariant field</H1>
+
+		<P>When creating an attribute, you can optionally enter or select an invariant for that feature. That invariant will be added to the end of the existing invariant clause. If the invariant clause did not exist before, it is now created.
+
+		<CENTER>
+		<IMG SRC="../../../../images/EiffelBench/feature-wizard-invariant.png">
+		</CENTER>
+
+		<P>If the attribute is of a reference type, you may select the invariant that the attribute may never be void. If it is of a basic expanded type, some other standard options may be chosen. For example, for <SPAN CLASS="eclass">INTEGER</SPAN> you may select that it should always be positive.</P>
+
+		<CENTER>
+		<IMG SRC="../../../../images/EiffelBench/feature-wizard-invariant-selected.png">
+		</CENTER>
+
+		<P>The example above will generate the code:</P>
+		<CODE><PRE>invariant
+    count_positive: count > 0</PRE></CODE>
+
+	</BODY>
+</HTML>

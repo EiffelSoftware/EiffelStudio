@@ -101,12 +101,16 @@ feature -- Initialization
 
 				if is_horizontal_scrollbar then
 					show_horizontal_scrollbar
+				else
+					hide_horizontal_scrollbar
 				end
 
 				if is_multi_line_mode then
 					set_top_character_position (private_top_character_position)
 					if is_vertical_scrollbar then
 						show_vertical_scrollbar
+					else
+						hide_vertical_scrollbar
 					end
 				end
 
@@ -248,7 +252,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style for creation.
 		do
-			Result := {TEXT_IMP} Precursor - Ws_hscroll - Ws_vscroll
+			Result := {TEXT_IMP} Precursor
 
 			if is_read_only then
 				Result := Result + Es_readonly

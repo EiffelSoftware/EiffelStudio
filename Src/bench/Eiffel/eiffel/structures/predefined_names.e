@@ -110,6 +110,7 @@ feature -- Constants
 	is_digit_name_id: INTEGER is 100
 	internal_correct_mismatch_name_id: INTEGER is 101
 	memory_calloc_name_id: INTEGER is 102
+	internal_hash_code_name_id: INTEGER is 103
 	
 			-- Predefined name IDs constants
 

@@ -274,6 +274,7 @@ feature {NONE} -- Implementation: access
 			put ("is_digit") check found_item = is_digit_name_id end
 			put ("internal_correct_mismatch") check found_item = internal_correct_mismatch_name_id end
 			put ("memory_calloc") check found_item = memory_calloc_name_id end
+			put ("internal_hash_code") check found_item = internal_hash_code_name_id end
 		end
 		
 invariant

@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that test EV_LIST."
-	author: ""
+	pixmaps_required: "1, 2"
 	date: "$Date$"
 	revision: "$Revision$"
 

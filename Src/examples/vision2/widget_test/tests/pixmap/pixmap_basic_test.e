@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that demonstrate EV_PIXMAP."
-	author: ""
+	pixmaps_required: "2"
 	date: "$Date$"
 	revision: "$Revision$"
 

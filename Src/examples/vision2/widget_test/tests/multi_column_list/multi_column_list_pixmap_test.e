@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that test EV_MULTI_COLUMN_LIST."
-	author: ""
+	pixmaps_required: "1"
 	date: "$Date$"
 	revision: "$Revision$"
 

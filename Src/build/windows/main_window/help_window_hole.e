@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 	associated_window: HELP_WINDOW
 
-	make (hw: HELP_WINDOW; par: EV_CONTAINER) is
+	make (hw: HELP_WINDOW; par: EV_TOOL_BAR) is
 		require
 			valid_hw: hw /= Void
 			valid_a_parent: par /= Void

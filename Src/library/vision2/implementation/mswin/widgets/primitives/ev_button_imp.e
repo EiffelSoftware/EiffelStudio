@@ -17,15 +17,13 @@ inherit
  
 	EV_PRIMITIVE_IMP
 		redefine
-			wel_window,
 			build
 		end
        
 	EV_BAR_ITEM_IMP
 		redefine
-			wel_window,
-			set_insensitive,
-			build
+--			set_insensitive,
+--			build
 		end
         
 	EV_TEXT_CONTAINER_IMP
@@ -33,43 +31,89 @@ inherit
 			set_default_size
 		end
 	
+--	EV_PIXMAP_CONTAINER_IMP
+
 	EV_FONTABLE_IMP
 
+	WEL_BN_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_PUSH_BUTTON
+		rename
+			make as wel_make,
+			parent as wel_parent,
+			font as wel_font,
+			set_font as wel_set_font
+		undefine
+			-- We undefine the features redefined by EV_WIDGET_IMP,
+			-- EV_PRIMITIVE_IMP and EV_TEXT_CONTAINER_IMP.
+			remove_command,
+			set_width,
+			set_height,
+			destroy,
+			set_text,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
+		redefine
+			on_bn_clicked
+		end
+
 creation
-        make, make_with_text
+        make,
+		make_with_text
 
 feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
+			-- Create the label with an empty label.
 		do
-			test_and_set_parent (par)
-			!WEL_PUSH_BUTTON!wel_window.make (parent_imp.wel_window, "", 0, 0, 0, 0, 0)
+			make_with_text (par, "")
 		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
-        		-- Create a wel push button.
+			-- Create the label with `txt' as label.
+		local
+			par_imp: EV_CONTAINER_IMP
 		do
-			test_and_set_parent (par)
-			!WEL_PUSH_BUTTON!wel_window.make (parent_imp.wel_window, txt, 0, 0, 0, 0, 0)
+			par_imp ?= par.implementation
+			check
+				par_imp /= Void
+			end
+			wel_make (par_imp, txt, 0, 0, 0, 0, 0)
+			extra_width := 10
 		end
 
 	build is
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
-			Precursor
+			{EV_PRIMITIVE_IMP} Precursor
 			set_font (font)
 			set_default_size
 		end
 
 feature -- Event - command association
-	
-	add_click_command ( command: EV_COMMAND; 
-			    arguments: EV_ARGUMENTS) is	
+
+	add_click_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
 		do
-			add_button_press_command (1, command, arguments)
+			add_command (Cmd_click, a_command, arguments)
 		end
-		
+
+	on_bn_clicked is
+			-- When the button is pressed
+		do
+			execute_command (Cmd_click, Void)
+		end
+
 feature {NONE} -- Implementation	
 	
 	set_default_size is
@@ -83,18 +127,27 @@ feature {NONE} -- Implementation
 			end
 			set_minimum_width (fw.string_width (Current, text) + Extra_width)
 			set_minimum_height (7 * fw.string_height (Current, text) // 4 - 2)
-			set_size (minimum_width, minimum_height)
 		end
 
-	Extra_width: INTEGER is 10
+	extra_width: INTEGER
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation of EV_PIXMAP_CONTAINER_IMP
 
-	wel_window: WEL_BUTTON
-			-- Current wel_window
-			-- We can't use directly a wel_push_button here,
-			-- because of the descendants classes that use 
-			-- other kind of wel_button
+--	add_pixmap (pixmap: EV_PIXMAP) is
+			-- Add `pixmap' to the button.
+--		local
+--			dc: WEL_CLIENT_DC
+--			pixmap_imp: EV_PIXMAP_IMP
+--		do
+--			pixmap_imp ?= pixmap.implementation
+--			check
+--				pixmap_not_void: pixmap_imp /= Void
+--			end
+--			!! dc.make (Current)
+--			dc.get
+--			dc.copy_dc (pixmap_imp, client_rect)
+--			dc.release
+--		end
 
 end -- class EV_BUTTON_IMP
 

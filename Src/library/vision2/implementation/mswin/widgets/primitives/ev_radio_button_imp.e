@@ -15,17 +15,38 @@ inherit
 		end
 		
 	EV_CHECK_BUTTON_IMP
-		redefine
-			wel_window
+		undefine
+			default_style
+		end
+
+	WEL_RADIO_BUTTON
+		rename
+			make as wel_make,
+			parent as wel_parent,
+			font as wel_font,
+			set_font as wel_set_font
+		undefine
+			-- We undefine the features redefined by EV_WIDGET_IMP,
+			-- and EV_PRIMITIVE_IMP
+			remove_command,
+			set_width,
+			set_height,
+			destroy,
+			set_text,
+			on_bn_clicked,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
 		end
 		
 creation
-	make_with_text
-
-
-feature -- Implementation
-
-	wel_window: WEL_RADIO_BUTTON
+	make, make_with_text
 
 end -- class EV_RADIO_BUTTON_IMP
 

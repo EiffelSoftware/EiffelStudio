@@ -15,40 +15,46 @@ inherit
 		end
 
 	EV_BUTTON_IMP
-		redefine
-			wel_window,
-			make,
-			make_with_text
+		undefine
+			default_style
 		end
+
+	WEL_SELECTABLE_BUTTON
+		rename
+			make as wel_make,
+			parent as wel_parent,
+			font as wel_font,
+			set_font as wel_set_font
+		undefine
+			-- We undefine the features redefined by EV_WIDGET_IMP,
+			-- and EV_PRIMITIVE_IMP
+			remove_command,
+			set_width,
+			set_height,
+			destroy,
+			set_text,
+			on_bn_clicked,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
+		end	
 
 creation
 	make, make_with_text
-
-
-feature -- Initialization
-
-	make (par: EV_CONTAINER) is
-			-- Create a wel toggle button with an empty text.
-		do
-			test_and_set_parent (par)
-			!WEL_SELECTABLE_BUTTON!wel_window.make (parent_imp.wel_window, "", 0, 0, 10, 10, 0)
-		end
-
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-        		-- Create a wel toggle button.
-		do
-			test_and_set_parent (par)
-			!WEL_SELECTABLE_BUTTON!wel_window.make (parent_imp.wel_window, txt, 0, 0, 10, 10, 0)
-		end
 
 feature -- Status report
 	
 	pressed: BOOLEAN is
 			-- Is toggle pressed
 		do
-			Result := wel_window.checked
+			Result := checked
 		end 
-	
 
 feature -- Status setting
 
@@ -57,9 +63,9 @@ feature -- Status setting
 			-- pressed to True.
 		do
 			if button_pressed then
-				wel_window.set_checked
+				set_checked
 			else
-				wel_window.set_unchecked
+				set_unchecked
 			end
 		end
 
@@ -72,19 +78,11 @@ feature -- Status setting
 
 feature -- Event - command association
 	
-	add_toggle_command ( command: EV_COMMAND; 
+	add_toggle_command (a_command: EV_COMMAND; 
 			    arguments: EV_ARGUMENTS) is	
 		do
 			
 		end	
-
-feature -- Implementation
-
-	wel_window: WEL_CHECK_BOX
-			-- Current wel_window. 
-			-- It's not possible to define directly a 
-			-- WEL_SELECTABLE_BUTTON because of the hierarchy
-			-- of EiffelVision buttons.
 
 end -- class EV_TOGGLE_BUTTON_IMP
 

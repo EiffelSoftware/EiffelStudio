@@ -2,7 +2,7 @@ indexing
 	description: "EiffelVision list. Mswindows implementation."
 	note: "In the wel_list, the index starts with the element %
 		% number zero although in the linked_list, it starts  %
-		% with number one. That is the reason for the grap in %
+		% with number one. That is the reason for the graps in %
 		% the list calls."
 	status: "See notice at end of class"
 	id: "$$"
@@ -16,15 +16,84 @@ class
 inherit
 
 	EV_LIST_I
+
+	EV_ITEM_EVENTS_CONSTANTS_IMP
 	
 	EV_ITEM_CONTAINER_IMP
-		export
-			{EV_LIST_ITEM_IMP} set_name
 		redefine
-			children
+			ev_children
 		end
 
-	EV_WIDGET_IMP
+	EV_PRIMITIVE_IMP
+		redefine
+			make
+		select
+			destroy
+		end
+
+	WEL_SINGLE_SELECTION_LIST_BOX
+		rename
+			make as wel_make,
+			destroy as wel_desroy,
+			parent as wel_parent,
+			font as wel_font,
+			set_font as wel_set_font,
+			-- The signatures are differents in WEL and Vision.
+			selected_item as single_selected_item
+		undefine
+			-- We undefine the features redefined by EV_WIDGET_IMP,
+			-- and EV_PRIMITIVE_IMP
+			remove_command,
+			set_width,
+			set_height,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
+		redefine
+			selected,
+			select_item,
+			on_lbn_dblclk,
+			on_lbn_selchange,
+			default_style
+		end
+
+	WEL_MULTIPLE_SELECTION_LIST_BOX
+		rename
+			make as wel_make,
+			destroy as wel_destroy,
+			parent as wel_parent,
+			font as wel_font,
+			set_font as wel_set_font,
+			-- The signatures are differents in WEL and Vision.
+			selected_items as multiple_selected_items
+		undefine
+			-- We undefine the features redefined by EV_WIDGET_IMP,
+			-- and EV_PRIMITIVE_IMP
+			remove_command,
+			set_width,
+			set_height,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
+		redefine
+			selected,
+			select_item,
+			on_lbn_dblclk,
+			on_lbn_selchange,
+			default_style
+		end
 
 creation
 	
@@ -37,24 +106,45 @@ feature {NONE} -- Initialization
 			-- By default, it is a single selection list,
 			-- use set_selection to change it into a multiple
 			-- selection list.
+		local
+			par_imp: EV_CONTAINER_IMP
 		do
-			test_and_set_parent (par)
+			par_imp ?= par.implementation
+			check
+				parent_not_void: par_imp /= Void
+			end
+			wel_make (par_imp, 0, 0, 0, 0, 0)
 			initialize
-			!EV_WEL_MULTIPLE_SELECTION_LIST_BOX! wel_window.make (parent_imp.wel_window, Current)
+			is_multiple_selection := False
 		end	
+
+feature -- Access
+
+	get_item (index: INTEGER): EV_LIST_ITEM is
+			-- Give the item of the list at the zero-base
+			-- `index'.
+		local
+			the_item: EV_LIST_ITEM
+		do
+			the_item ?= (ev_children.i_th (index)).interface
+		end
 
 feature -- Status report
 
-	count: INTEGER is
+--	count: INTEGER is
 			-- Number of lines
-		do
-			Result := wel_window.count
-		end
+--		do
+--			Result := wel_window.count
+--		end
 
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
 		do
-			Result := wel_window.selected
+			if is_multiple_selection then
+				Result := {WEL_MULTIPLE_SELECTION_LIST_BOX}	Precursor
+			else
+				Result := {WEL_SINGLE_SELECTION_LIST_BOX} Precursor
+			end
 		end
 
 	is_multiple_selection: BOOLEAN
@@ -65,7 +155,11 @@ feature -- Status report
 			-- Item which is currently selected, for a multiple
 			-- selection, it gives the item which has the focus.
 		do
-			Result := children.i_th (wel_window.caret_index + 1)
+			if is_multiple_selection then
+				Result := ev_children.i_th (caret_index + 1)
+			else
+				Result := ev_children.i_th (single_selected_item + 1)
+			end
 		end
 
 	selected_items: LINKED_LIST [EV_LIST_ITEM_IMP] is
@@ -75,18 +169,16 @@ feature -- Status report
 			-- should use `selected_item' rather than 
 			-- `selected_items' for a single selection list
 		local
-			ml: EV_WEL_MULTIPLE_SELECTION_LIST_BOX
 			index: INTEGER
 		do
 			!! Result.make
 			if is_multiple_selection then
-				ml ?= wel_window
 				from
-					index := ml.selected_items.lower
+					index := multiple_selected_items.lower
 				until
-					index > ml.selected_items.upper
+					index > multiple_selected_items.upper
 				loop
-					Result.extend (children.i_th(ml.selected_items.item (index)))
+					Result.extend (ev_children.i_th(multiple_selected_items.item (index)))
 					index := index + 1
 				end
 			else
@@ -96,46 +188,50 @@ feature -- Status report
 
 feature -- Status setting
 
+	select_item (index: INTEGER) is
+			   -- Select item at the zero-based `index'.
+		do
+			if is_multiple_selection then
+				{WEL_MULTIPLE_SELECTION_LIST_BOX} Precursor (index)
+			else
+				{WEL_SINGLE_SELECTION_LIST_BOX} Precursor (index)
+			end
+		end
+
 	set_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
-		local
-			new_list: EV_WEL_MULTIPLE_SELECTION_LIST_BOX
 		do
 			is_multiple_selection := True
-			!! new_list.make (parent_imp.wel_window, Current)
-			copy_list (new_list)
-			wel_window.destroy
-			wel_window := new_list
+			wel_destroy
+			wel_make (parent_imp, 0, 0, 0, 0, 0)
+			copy_list (Current)
 		end
 
 	set_single_selection is
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list
-		local
-			new_list: EV_WEL_SINGLE_SELECTION_LIST_BOX
 		do
 			is_multiple_selection := False
-			!! new_list.make (parent_imp.wel_window, Current)
-			copy_list (new_list)
-			wel_window.destroy
-			wel_window := new_list
+			wel_destroy
+			wel_make (parent_imp, 0, 0, 0, 0, 0)
+			copy_list (Current)
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
-	copy_list (a_list: WEL_LIST_BOX) is
+	copy_list (a_list: EV_LIST_IMP) is
 			-- Take an empty list and initialize all the children with
-			-- the contents of `children'.
+			-- the contents of `ev_children'.
 		do
-			if not children.empty then
+			if not ev_children.empty then
 				from
-					children.start
+					ev_children.start
 				until
-					children.after
+					ev_children.after
 				loop
-					a_list.add_string (children.item.text)
-					children.forth
+					a_list.add_string (ev_children.item.text)
+					ev_children.forth
 				end
 			end
 		end
@@ -149,47 +245,60 @@ feature -- Implementation
 			check
 				valid_item: item_imp /= Void
 			end
-			children.extend (item_imp)
-			wel_window.add_string (name_item)
-			item_imp.set_id (children.count - 1)
+			ev_children.extend (item_imp)
+			add_string (name_item)
+			item_imp.set_id (ev_children.count - 1)
 		end
 
-	remove_item (id: INTEGER) is
+feature {EV_LIST_ITEM_IMP} -- Implementation
+
+	remove_item (an_id: INTEGER) is
 			-- Remove the child whose id is `id'.
 		do
-			wel_window.delete_string (id)
-			children.go_i_th (id + 1)
-			children.remove
+			delete_string (an_id)
+			ev_children.go_i_th (an_id + 1)
+			ev_children.remove
 			from
 			until
-				children.after
+				ev_children.after
 			loop
-				children.item.set_id (children.index - 1)
-				children.forth
+				ev_children.item.set_id (ev_children.index - 1)
+				ev_children.forth
 			end
 		end
+
+feature {NONE} -- Implementation
 
 	on_lbn_selchange is
 			-- The selection is about to change
 		do
-			if selected_item.command /= Void then
-				selected_item.command.execute (selected_item.arguments)
-			end
+			selected_item.execute_command (Cmd_item_activate, Void)
 		end
 
 	on_lbn_dblclk is
 			-- Double click on a string
 		do
-			if selected_item.dc_command /= Void then
-				selected_item.dc_command.execute (selected_item.dc_arguments)
-			end
+			selected_item.execute_command (Cmd_item_dblclk, Void)
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
-	children: LINKED_LIST [EV_LIST_ITEM_IMP]
+	ev_children: LINKED_LIST [EV_LIST_ITEM_IMP]
 
-	wel_window: EV_WEL_LIST_BOX
+feature {NONE} -- Implementation : WEL features
+
+	default_style : INTEGER is
+		do
+			if is_multiple_selection then
+				Result := Ws_visible + Ws_child + Ws_group +
+				Ws_tabstop + Ws_border + Ws_vscroll +
+				Lbs_notify + Lbs_multiplesel
+			else
+				Result := Ws_visible + Ws_child + Ws_group +
+				Ws_tabstop + Ws_border + Ws_vscroll +
+				Lbs_notify
+			end
+		end
 	
 end -- class EV_LIST_IMP
 

@@ -74,6 +74,7 @@ feature -- Element change
 			extendible: extendible
 			not_before: not before
 			other_exists: other /= Void
+			not_current: other /= Current
 		deferred
 		ensure
 	 		new_count: count = old count + old other.count
@@ -88,6 +89,7 @@ feature -- Element change
 			extendible: extendible
 			not_after: not after
 			other_exists: other /= Void
+			not_current: other /= Current
 		deferred
 		ensure
 	 		new_count: count = old count + old other.count

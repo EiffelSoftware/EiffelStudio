@@ -444,6 +444,13 @@ feature -- Events
 					Result.include (points.item.x_abs, points.item.y_abs)
 					points.forth
 				end
+					-- We must increase the rectangle size by one pixel
+					 -- as an EV_RECTANGLE does not include the last pixel to the
+					 -- right and bottom.
+					 --| FIXME Find a standard for EV_RECTANGLE so this does not have to
+					 --| be performed.
+				Result.set_width (Result.width + 1)
+				Result.set_height (Result.height + 1)
 			end
 		ensure
 			not_void: Result /= Void

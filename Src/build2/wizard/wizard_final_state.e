@@ -71,8 +71,6 @@ feature {NONE} -- Implementation
 			-- Process the wizard information
 		local
 			code_generator: GB_CODE_GENERATOR
-			output_file_name: FILE_NAME
-			output_file: PLAIN_TEXT_FILE
 			window_selector_item: GB_WINDOW_SELECTOR_ITEM
 			window_selector_layout: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			eifp_document: EIFP_DOCUMENT

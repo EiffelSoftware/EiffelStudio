@@ -130,8 +130,11 @@ feature -- Element change
 				set_top_level_window_imp (par_imp.top_level_window_imp)
 				ww ?= par.implementation
 				wel_set_parent (ww)
-			elseif parent_imp /= Void then
-				wel_set_parent (default_parent)
+			else
+				set_top_level_window_imp (Void)
+				if parent_imp /= Void then
+					wel_set_parent (default_parent)
+				end
 			end
 		end
 

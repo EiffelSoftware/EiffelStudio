@@ -43,6 +43,8 @@ feature -- Access
 	recent_projects_string: STRING is "recent_projects"
 	
 	number_of_recent_projects: STRING is "number_of_recent_projects"
+	
+	show_deleting_keyboard_warning: STRING is "show_deleting_keyboard_warning"
 			
 feature -- Basic operations
 

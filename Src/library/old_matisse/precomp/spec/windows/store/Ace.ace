@@ -1,0 +1,50 @@
+system EiffelStore_EiffelBase
+
+root
+
+	ANY
+
+default
+
+	assertion (require)
+
+cluster
+
+    -- EiffelBase
+	access:             "$EIFFEL4/library/base/structures/access";
+	cursors:            "$EIFFEL4/library/base/structures/cursors";
+	cursor_tree:        "$EIFFEL4/library/base/structures/cursor_tree";
+	dispenser:          "$EIFFEL4/library/base/structures/dispenser";
+	iteration:          "$EIFFEL4/library/base/structures/iteration";
+	kernel:             "$EIFFEL4/library/base/kernel";
+	list:               "$EIFFEL4/library/base/structures/list";
+	obsolete:           "$EIFFEL4/library/base/structures/obsolete";
+	set:                "$EIFFEL4/library/base/structures/set";
+	sort:               "$EIFFEL4/library/base/structures/sort";
+	storage:            "$EIFFEL4/library/base/structures/storage";
+	support:            "$EIFFEL4/library/base/support";
+	table:              "$EIFFEL4/library/base/structures/table";
+	traversing:         "$EIFFEL4/library/base/structures/traversing";
+	tree:               "$EIFFEL4/library/base/structures/tree";
+ 
+	-- EiffelStore
+
+	estore_support:		"$EIFFEL4/library/store/support";
+	estore_interface:	"$EIFFEL4/library/store/interface";
+	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
+
+	-- EiffelTime
+
+	time:				"$EIFFEL4/library/time";
+
+	-- Matisse for EiffelStore
+
+	matisse_interface : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_interface";
+	matisse_entities : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_entities";
+	matisse_entities_externals : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_entities/externals";
+	matisse_entities_streams : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_entities/streams";
+	matisse_sr : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_sr";
+
+	oracle : "$EIFFEL4/library/store/dbms/rdbms/oracle";
+
+end

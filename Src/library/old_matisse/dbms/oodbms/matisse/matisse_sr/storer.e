@@ -8,40 +8,27 @@ inherit
 
 feature  -- Actions
 
-	store (one_object : ANY;media: ANY) is
-		-- Produce on media an external representation of the
-		-- entire object structure reachable from current object.
-		-- Retrievable within current system only.
+	store_closure (es:EXT_STORABLE) is
+			-- Produce on current repository an external 
+			-- representation of the entire object structure reachable from current object.
+		require
+			Es_exists: es /= Void
 		deferred
-		end -- store
+		end
 
-	store_one_object(object : ANY;is_exp : BOOLEAN)   is
-		-- Write object and its dependences on the media
-		-- Unmarked means written on media.
-        	deferred
-        	end -- store_one_object
-
-	putobject,put_object( o : ANY ) is
-		-- Append object o
+	putobject, put_object(obj:ANY) is
+			-- Append obj to store. Called for each instance in a composition
 		deferred
-		end -- putobject, put_object
+		end
 
+	delete_closure (es:EXT_STORABLE) is
+			-- Delete closure starting at es from database
+		deferred
+		end
 
-end -- class STORER
+	delete_sub_closure(es:EXT_STORABLE) is
+			-- Delete sub closure starting at es, as part of a delete_closure operation
+		deferred
+		end
 
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
-
+end

@@ -6,7 +6,7 @@ inherit
 
 feature {NONE} -- Implementation DB_CONTROL_MAT
 
-    c_connect(host_name,database_name : POINTER) is 
+    c_db_connect(host_name,database_name : POINTER) is 
         -- Use MtConnect
     external
         "C"
@@ -65,22 +65,74 @@ feature {NONE} -- Implementation DB_CONTROL_MAT
         "C"
     end -- c_transaction_count
 
+    c_set_transaction_count(trans_count:INTEGER) is
+    external
+        "C"
+    end
 
-end -- class MT_DB_CONTROL_MAT_EXTERNAL
+    c_database:POINTER is
+    external
+        "C"
+    end
 
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+    c_set_database(db:POINTER) is
+    external
+        "C"
+    end
 
+feature -- admin functions
+    c_admin_connect(host_name, database_name:POINTER) is 
+        -- Use mts_rpc_connect
+    external
+        "C"
+    end
+
+    c_admin_disconnect is
+        -- Use mts_rpc_disconnect
+    external
+        "C"
+    end
+
+    c_admin_handle:POINTER is
+    external
+        "C"
+    end
+
+    c_set_admin_handle(hdl:POINTER) is
+    external
+        "C"
+    end
+
+-- FIXME: the following functions probably belong somewhere like DB_STATUS_MAT or similar,
+-- but ISE should decide that
+	c_admin_collect_and_wait is
+			-- use mts_collect, mts_wait_for_adm (synchronous operation)
+		external
+			"C"
+		end
+
+	c_admin_sts_success:BOOLEAN is
+			-- get result of last admin function, e.g. collect
+		external
+ 			"C"
+		end
+
+	c_admin_sts:INTEGER is
+			-- get result of last admin function, e.g. collect
+		external
+ 			"C"
+		end
+
+	admin_sts_msg:STRING is
+		do
+ 			!!Result.make(0)
+			Result.from_c(c_admin_sts_msg)
+		end
+
+	c_admin_sts_msg:POINTER is
+			-- get result of last admin function, e.g. collect
+		external
+ 			"C"
+		end
+
+end

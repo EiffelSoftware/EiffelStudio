@@ -32,6 +32,8 @@ feature -- Element change
 	
 	put_oid(id : INTEGER) is
 		-- Put oid at current oids_index position
+		require
+		    Valid_id: id > 0
 		do
 			c_put_oid(id)
 		end -- put_oid
@@ -96,14 +98,16 @@ feature -- Status Report
 			Result := c_is_ith_special(i)
 		end -- is_ith_special
    
-feature  {NONE} -- Implementation
-
+feature {NONE, MATISSE_STORER, PROXY_IDF_TABLE} -- Implementation
+	-- available to MATISSE_STORER to enable deterministic cleanup!!
 	dispose is
 		-- Free C arrays when current object is no more used
 		do
 			c_free_flags
 			c_free_oids
 		end -- dispose
+
+feature  {NONE} -- Implementation
 
 	oids : POINTER -- Oids array
 
@@ -182,20 +186,3 @@ feature {NONE} -- Externals
 		end -- c_flags_index
 
 end -- class MATISSE_IDF_TABLE
-
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
-

@@ -60,6 +60,7 @@ feature -- Element change
 			one_ep_stream : MT_ENTRYPOINT_STREAM
 			one_direction : INTEGER_REF
 			one_i_stream : MT_INDEX_STREAM
+crit_start_array, crit_end_array:ARRAY[ANY]
 			one_r_stream : MT_RELATIONSHIP_STREAM
 			one_object : MT_OBJECT
 			one_relationship : MT_RELATIONSHIP
@@ -89,7 +90,13 @@ feature -- Element change
 					one_direction ?= destination.mapped_value(direction_map)
 					one_class ?= destination.mapped_value(class_map)
 					check one_class/= Void and (one_direction /= Void ) and (one_name /= Void and then not one_name.empty)end
-					!!one_i_stream.make(one_name, one_class, one_direction.item)
+crit_start_array ?= destination.mapped_value(Index_crit_start_map)
+crit_end_array ?= destination.mapped_value(Index_crit_end_map)
+check crit_start_array /= Void and crit_end_array /= Void end
+check Equal_counts: crit_start_array.count = crit_end_array.count end
+
+					!!one_i_stream.make(one_name, one_class, one_direction.item,
+crit_start_array, crit_end_array)
 					Last_stream.put(one_i_stream)
 				elseif name.is_equal(Ors) then
 					-- Open Relationship Stream : In one object, get all object in one relationship
@@ -150,20 +157,3 @@ feature {NONE} -- Implementation
 	name : STRING
 
 end -- class DB_PROC_MAT
-
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
-

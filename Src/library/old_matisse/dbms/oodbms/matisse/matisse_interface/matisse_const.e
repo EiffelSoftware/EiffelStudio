@@ -40,10 +40,15 @@ feature -- Implementation - see Matisse.h
 	Mtstring_list : INTEGER is once Result := c_mtstring_list end
 	Mtasciistring_list : INTEGER is once Result := c_mtasciistring_list end
 	Mts32_array : INTEGER is once Result := c_mts32_array end
+Mtu8_array : INTEGER is once Result := c_mtu8_array end
 	Mtdouble_array : INTEGER is once Result := c_mtdouble_array end
 	Mtfloat_array : INTEGER is once Result := c_mtfloat_array end
 	Mtstring_array : INTEGER is once Result := c_mtstring_array end
 	Mtasciistring_array : INTEGER is once Result := c_mtasciistring_array end
+
+-- FIXME: remove following when GENERAL.same_type fixed
+Mtrelationship_type:INTEGER is -100
+
 	-- Types not supported : MTU8_ARRAY, MTU16_ARRAY, MTS16_ARRAY 
 
 	Matisse_success : INTEGER is once Result := c_matisse_success end
@@ -67,24 +72,14 @@ feature -- Implementation Queries
 	Name_map : STRING is "6"
 	Direction_map : STRING is "7"
 	Relationship_map : STRING is "8"
+Index_crit_start_map:STRING is "9"
+Index_crit_end_map:STRING is "10"
 
 	root_class : MT_CLASS is once !!Result.make("Mt Class") end
 
+feature -- Schema
+	Relative_schema_name_seperator: STRING is "::"
+			-- separator between class and attribute or relation name in 
+			-- relative form of schema
+
 end -- class MATISSE_CONST
-
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
-

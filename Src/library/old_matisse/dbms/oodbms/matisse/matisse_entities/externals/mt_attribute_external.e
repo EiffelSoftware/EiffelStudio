@@ -61,6 +61,11 @@ feature {NONE} -- Implementation MT_ATTRIBUTE
         "C"
     end -- c_free_value
     
+c_ith_list_character(i:INTEGER) : CHARACTER is
+external
+    "C"
+end -- c_ith_list_character
+
     c_ith_list_integer(i:INTEGER) : INTEGER is
     external
         "C"
@@ -119,20 +124,3 @@ feature {NONE} -- Implementation MT_ATTRIBUTE
 	end -- c_type_value
 
 end -- class MT_ATTRIBUTE_EXTERNAL
-
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
-

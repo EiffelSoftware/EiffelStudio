@@ -9,7 +9,7 @@ inherit
 
 	DB_STATUS_I
 		redefine
-			error_message, warning_message, is_ok
+			error_message, warning_message, is_ok_mat
 		end
 
 	MATISSE_CONST
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_ok : BOOLEAN is
+	is_ok_mat : BOOLEAN is
 		-- Has last operation succeeded ?
 		do
 			Result := (c_result = Matisse_success)
@@ -83,11 +83,10 @@ end -- class DB_STATUS_MAT
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
+--| 270 Storke Road, ISE Building, second floor, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com> 
 --|----------------------------------------------------------------
 

@@ -2,151 +2,170 @@ deferred class DATABASE_STORER
 
 inherit
 
-	DB_STATUS_USE
-		export {NONE} all
-	end
+	STORE_SHIFTER
+		export 
+			{NONE} all
+		end
 
 	DB_STATUS_USE
-		export {ANY} is_connected 
-	end
+		export 
+			{NONE} all;
+			{ANY} is_connected 
+		end
 
 	STORER
-		export {NONE} all
-		undefine is_integer, is_real , is_double, is_character, is_string
-	end
+		export 
+			{NONE} all;
+			{TRAVERSAL_ACTION} put_object, delete_sub_closure
+		undefine 
+			is_integer, is_real , is_double, is_character, is_string
+		end
 
 	MEMORY
-        export {NONE} all
-		undefine dispose
-	end
+		export 
+			{NONE} all
+		undefine 
+			dispose
+		end
 
-	TYPES
-        	export {NONE} all
-	end 
+	ES_ACTIONS
 
-feature
+	SHARED_ODB_ACCESS
+		export
+			{NONE} all
+		end
 
-	store(one_object : ANY;medium : any) is
-		-- Prepare storage and store objects reachable from 'one_object'
+feature {EXT_STORABLE} -- services
+
+	store_closure(es:EXT_STORABLE) is
+			-- Prepare storage and store closure reachable from 'es'; type of closure depends
+			-- on whether es is EXT_STORABLE, COMPOSED_OBJECT etc
 		local
-			objects_count : INTEGER
-				-- count objects while traversing
 			was_collecting : BOOLEAN
-				-- Was the garbage collector on ?
-			es : EXT_STORABLE
 		do
-            		-- Stop garbage collector
-            		was_collecting := collecting full_collect collection_off
+debug("matisse-sr") 
+    io.put_string(shifter.out)
+    io.put_string("DATABASE_STORER.store_closure: ")
+    io.put_string(class_name(es))
+    io.new_line
+end
+			-- Stop garbage collector
+			was_collecting := collecting full_collect collection_off
 
-            		--  Do the traversal : mark and count the objects to store
- 			es ?= one_object check es /= Void end 
-			objects_count := es.new_deep_traversal(one_object,0);
-			!!ct.make(objects_count)
-			make_idf_table(objects_count,0)
-			--  Write objects to be stored in buffer
-			store_one_object(one_object,dynamic_type(one_object)=Expanded_type);
-			-- Save idf_table
-			save_idf_table
-            		--  Set the garbage collector            
-            		if was_collecting then collection_on end
-		end -- store
+			-- unmark the total closure
+			deep_unmark(es)
 
-	store_one_object(object : ANY;is_exp : BOOLEAN)   is
-		-- Write 'object' and its dependencies in database
-		local 
-			a_special : SPECIAL[ANY]
-			number_of_fields,i : INTEGER
-			a_linked_list :LINKED_LIST[ANY] 
-			an_array_integer : ARRAY[INTEGER] 
-			area : SPECIAL[ANY]
-			current_field : ANY
-			b_array_integer,b_array_double,b_array_real,b_array_string,b_linked_list_integer,
-			b_linked_list_double ,b_linked_list_real,b_linked_list_string : BOOLEAN
+			-- wipe_out the proxy idf table stack
+			idf_proxy_stack.wipe_out
+
+			-- wipe_out the closures in progress stack
+			sub_closures_in_progress.wipe_out
+
+			--  set up reverse reference tables
+			!!ref_tables.make(0)
+
+			--  set the action to Store, then execute
+			es.set_action_type(Es_store)
+			es.closure_execute(Void)
+
+			--  Set the garbage collector            
+			if was_collecting then collection_on end
+		end
+
+	delete_closure(es:EXT_STORABLE) is
+		local
+			was_collecting : BOOLEAN
 		do
-			-- if already unmarked then do not store
-			if object/=Void and then (is_exp or else (is_marked(object)))  then
-				-- unmark the object
-				unmark(object) 
-				-- Special object
-				if is_special(object) then
-					if not(is_special_simple($object)) then
-					-- Special of references or Special of composites i.e objects with sub-objects
-					a_special ?= object
-					check a_special /= Void end
-					from
-						number_of_fields := a_special.count
-						i := 0
-					until
-						i = number_of_fields
-					loop
-						if a_special.item(i) /= Void then 
-							store_one_object(a_special.item(i),dynamic_type(a_special.item(i))=Expanded_type)
-						end
-						i := i+1
-					end -- loop
-				end -- if
-			else
-                    		from
-					number_of_fields := field_count (object)
-					i := 1
-				until
-		                        i > number_of_fields
-				loop
-					current_field := field(i,object)
-					a_linked_list ?= field(i,object) 
-					an_array_integer:= Void an_array_integer ?= field(i,object)
-					if an_array_integer /= Void then area ?= an_array_integer.area else area := Void end                 
-						if  not( is_array_integer(field(i,object)) or 
-							is_array_double(field(i,object)) or 
-							is_array_real(field(i,object))  or
-							is_linked_list_integer(field(i,object))  or 
-							is_linked_list_double(field(i,object)) or 
-							is_linked_list_real(field(i,object)) or
-							is_linked_list_string(field(i,object)) or is_string(field(i,object))  ) then 
-							store_one_object(field (i, object),field_type(i, object)=Expanded_type) 
-						end -- if
- 					i := i+1
-				end -- loop
-			end -- if
-			if not(is_exp) and then not(is_special_simple($object)) then putobject(object) end 
-		else
-			-- Object is already marked, do nothing
-		end -- if    
-	end -- store_one_object
+debug("matisse-sr") 
+    io.put_string(shifter.out)
+    io.put_string("DATABASE_STORER.delete_closure: ")
+    io.put_string(class_name(es))
+    io.new_line
+end
+			-- Stop garbage collector
+			was_collecting := collecting full_collect collection_off
 
+			-- unmark the total closure
+			deep_unmark(es)
 
-feature {NONE} -- Implementation
+			-- wipe_out the closures in progress stack
+			sub_closures_in_progress.wipe_out
 
-	ct : HASH_TABLE[ARRAYED_LIST[CT_ELEMENT],POINTER]
+			-- delete the object composition (all instances in its IDF_TABLE,
+			-- as well as the IDF_TABLE itself)
+			es.set_action_type(Es_delete)
+			es.closure_execute(Void)
+
+			--  Set the garbage collector            
+			if was_collecting then collection_on end
+		end
+
+feature {TRAVERSAL_ACTION} -- Implementation
+	ref_tables:STORE_REF_TABLES
 
 	dispose is
-		-- Do nothing
+			-- Do nothing
 		do
 		end
 
-	make_idf_table(arg1 : INTEGER;arg2 : ANY) is deferred end -- make idf_table
+	idf_proxy:PROXY_IDF_TABLE is
+			-- IDF_PROXY of closure currently being processed
+		do
+			Result := idf_proxy_stack.item
+		end
 
-	save_idf_table is deferred end -- save_id_table
+	idf_proxy_stack:LINKED_STACK [PROXY_IDF_TABLE] is
+			-- stack corresponding to recursion of store traversals so far
+		once
+			!!Result.make
+		end
+
+feature {TRAVERSAL} -- Traversal
+	update_ref_tables(es:EXT_STORABLE) is
+			-- add an entry in rev ref tables for a forward reference to an object that is
+			-- not going to be stored (due to being not marked, or in another composition);
+			-- it must have already been stored in the past!
+		require
+			Objects_exist: es /= Void
+		local
+			reverse_refs : STORE_REF_TABLE
+			ptr_ref:POINTER_REF
+		do
+			if es.retrieved_id /= 0 then
+				-- Is object referenced in reverse reference table yet?
+				reverse_refs := ref_tables.item($es)
+				if reverse_refs = Void then 
+debug("matisse-sr") 
+    io.put_string(shifter.out)
+    io.put_string("update_ref_tables - added new table for: ")
+    io.put_string(class_name(es))
+    io.put_string(" - OID=") io.put_integer(es.retrieved_id)
+!!ptr_ref
+ptr_ref.set_item($es)
+    io.put_string("; PTR=") io.put_string(ptr_ref.out)
+    io.new_line
+end
+					-- create reverse reference table for object
+					!!reverse_refs.make_target(es.retrieved_id, $es)
+					ref_tables.add_table(reverse_refs)
+				end
+			end
+		end
+
+	sub_closure_in_progress:EXT_STORABLE is
+			-- current sub-closure in processing of a closure
+		do
+			Result := sub_closures_in_progress.item
+		end
+
+	sub_closures_in_progress:LINKED_STACK [EXT_STORABLE] is
+			-- all unfinished sub-closures so far in current closure processing
+		once
+			!!Result.make
+		end
 
 invariant
 
-	always_connected : is_connected
+    always_connected : is_connected
 
-end -- class DATABASE_STORER
-
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
-
+end

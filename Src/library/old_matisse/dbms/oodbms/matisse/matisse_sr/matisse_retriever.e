@@ -3,228 +3,365 @@ class MATISSE_RETRIEVER
 inherit
 
 	DATABASE_RETRIEVER
-		export {NONE} all
-		redefine anchor
-	end
+		export 
+			{NONE} all
+		redefine 
+			anchor, is_valid_key
+		end
 
 	MATISSE_TABLES
-		export {NONE} all
-	end
+		export 
+			{NONE} all
+		end
 
 	MEMORY
-		export {NONE} all
-	end
+		export 
+			{NONE} all
+		end
+
+	SHARED_ODB_ACCESS
+		export
+			{NONE} all
+		end
 
 feature -- Retrieval
 
-	retrieve(key: like anchor) : EXT_STORABLE is
+	retrieve(key:like anchor):EXT_STORABLE is
+			-- Use IDF key to retrieve objects in repository
+		local
+			is_collecting : BOOLEAN
+		do
+debug("matisse-sr")
+    io.put_string("RETRIEVE; key = ")
+    io.put_integer(key.item)
+    io.new_line
+end
+			is_collecting := collecting 
+			collection_off
+
+			ref_tables.clear_all
+			idf_proxy_stack.wipe_out
+			closures_in_progress.wipe_out
+
+			Result ?= retrieve_closure(key)
+
+			if is_collecting then collection_on end
+		end
+
+
+	retrieve_closure(key: like anchor) : EXT_STORABLE is
 		-- Use key ( INTEGER ) to retrieve objects in database
 		require else 
-			key_positive : key.item > 0
+			key_positive: key /= Void and then key.item > 0
 		local
-			one_table : MATISSE_IDF_TABLE
+			one_table : PROXY_IDF_TABLE
 			i : INTEGER
-			f : PLAIN_TEXT_FILE
 			retrieved_object : ANY
-			is_collecting : BOOLEAN
 			a_special : TO_SPECIAL[ANY]
 		do
-			is_collecting := collecting collection_off
+debug("matisse-sr")
+	shifter.increase
+	io.put_string(shifter.out)
+    io.put_string("RETRIEVE_CLOSURE; key = ")
+    io.put_integer(key.item)
+    io.new_line
+end
 			if key.item > 0 then 
-				--oid_ct.clear_all -- fct.clear_all 
-				ct.clear_all 
-				!!one_table.make(0,key.item) idf_table.put(one_table)
+				!!one_table.make(0,key.item) 
 				one_table.load
+				idf_proxy_stack.extend(one_table)
+				closures_in_progress.extend(idf_proxy.ith_oid(idf_proxy.flags_index - 1))
+
 				from
 					i := 0
 				until
-					i>= one_table.flags_index
+					i >= idf_proxy.flags_index
 				loop
-					--fct.put(True,one_table.ith_oid(i)) 
-					if one_table.is_ith_special(i) then
-						retrieved_object ?= one_table.ith_special(i) 
-						--oid_ct.put($retrieved_object,one_table.ith_oid(i))
+					if idf_proxy.is_ith_special(i) then
+						retrieved_object ?= idf_proxy.ith_special(i)
 						update_table(i,retrieved_object)
 						update_references_in_special(i,retrieved_object,False)
 					else
-						retrieved_object ?= one_table.ith_normal(i) 
-						--oid_ct.put($retrieved_object,one_table.ith_oid(i))
+						retrieved_object ?= idf_proxy.ith_normal(i) 
 						update_table(i,retrieved_object)
 						update_references_in_normal(i,retrieved_object,False)
-					end -- if
+					end
 					i:=i+1
-				end -- loop
+				end
 				Result ?= retrieved_object
-				if is_collecting then collection_on end
-			end -- if
-		end --  retrieve
 
-	update_table(i : INTEGER;object : ANY) is
-		-- Insert object in table
+-- store oid of root object in the object for later use in storing
+Result.set_retrieved_id(idf_proxy.ith_oid(idf_proxy.flags_index - 1))
+
+				idf_proxy_stack.remove
+			end
+debug("matisse-sr")
+	shifter.decrease
+end
+		end
+
+	update_table(i:INTEGER; object:ANY) is
+			-- Insert object in table
+		require
+			Object_exists: object /= Void
 		local
-			one_element : CT_ELEMENT
-			object_list : ARRAYED_LIST[CT_ELEMENT]
-			rtu : POINTER
+			reverse_refs : RETRIEVE_REF_TABLE
         	do
+debug("matisse-sr")
+	io.put_string(shifter.out)
+    io.put_string("RETRIEVE - UPDATE_TABLE ")
+    io.put_string(object.generator)
+    io.new_line
+end
 			-- Is object referenced in table ?
-			object_list := ct.item(idf_table.item.ith_oid(i))
-			if object_list = Void then 
-				-- Put element in list
-				!!one_element.make one_element.put_second($object) one_element.put_first(idf_table.item.ith_oid(i).out)
-				!!object_list.make(0) object_list.start object_list.put_left(one_element)
-				ct.put(object_list,(idf_table.item.ith_oid(i)))
-			else
-				!!one_element.make one_element.put_second($object) one_element.put_first(idf_table.item.ith_oid(i).out)
-				object_list.start object_list.put(one_element)
-				from
-					object_list.start object_list.forth
-				until        
-					object_list.off
-				loop
-					rtu := object_list.item.second_item
-					change_inside_field($object,rtu)
-					object_list.forth
-				end -- loop            
-			end -- if 
-	end -- update_table
+			reverse_refs := ref_tables.item(idf_proxy.ith_oid(i))
 
-	update_references_in_special(i:INTEGER;object : ANY;is_exp : BOOLEAN)  is
-		-- Special case
+			if reverse_refs = Void then 
+				-- create list and put element in
+				!!reverse_refs.make_target(idf_proxy.ith_oid(i),$object)
+				ref_tables.add_table(reverse_refs)
+debug("matisse-sr")
+	io.put_string(shifter.out)
+	io.put_string("CREATE table for object, oid=")
+	io.put_integer(idf_proxy.ith_oid(i))
+	io.new_line
+end
+			else
+				-- need to set OID as well? - idf_proxy.ith_oid(i)
+				reverse_refs.set_target_object_ptr($object)
+
+				from
+					reverse_refs.start 
+				until        
+					reverse_refs.off
+				loop
+					-- write my address into the object fields pointing to me
+					change_inside_field($object, reverse_refs.item_object_ptr)
+					reverse_refs.forth
+				end           
+			end 
+		end
+
+	update_references_in_special(i:INTEGER; object:ANY; is_exp:BOOLEAN)  is
+			-- Special case
+		require
+			Object_exists: object /= Void
 		local
 			one_object : MT_OBJECT
 			one_rel  : MT_RELATIONSHIP
 			successors : ARRAY[MT_OBJECT]
-			j : INTEGER one_element : CT_ELEMENT field_list : ARRAYED_LIST[CT_ELEMENT] sobject : SPECIAL[ANY]
+			j : INTEGER
+			reverse_refs:RETRIEVE_REF_TABLE 
+			sobject:SPECIAL[ANY]
+			other_oid : INTEGER
+			dummy_obj : ANY
+			an_attribute:MT_ATTRIBUTE
+			mt_obj:MT_OBJECT
+			idf_table_oid:like anchor
+			class_desc:ODB_CLASS_DESCRIPTOR
 		do
+debug("matisse-sr")
+	io.put_string(shifter.out)
+    io.put_string("RETRIEVE - UPDATE_REFS IN SPECIAL%N")
+end
 			sobject ?= object
-			!!one_object.make(idf_table.item.ith_oid(i))
-			!!one_rel.make("area")
+			!!one_object.make(idf_proxy.ith_oid(i))
+			class_desc := odb_schema.class_descriptor(object)
+			!!one_rel.make(class_desc.db_field_name("area"))
 			successors := one_object.successors(one_rel)
+
 			from
-				j:= successors.lower
+				j := successors.lower
 			until 
-				j>successors.upper
+				j > successors.upper
 			loop
-				if ct.item(successors.item(j).oid) /= Void and then  ct.item(successors.item(j).oid).first.first_item/=Void then 
-					change_inside_field(ct.item(successors.item(j).oid).first.second_item,pointer_on_special_item(j-1,$object))
+				other_oid := successors.item(j).oid
+
+				-- if successor object oid is not known in the ref tables, then have to go and do a retrieve on it...
+				if not idf_proxy.has_oid(other_oid) and then not closures_in_progress.has(other_oid) then
+					!!mt_obj.make(other_oid)
+					class_desc := odb_schema.class_descriptor_by_name(mt_obj.mt_generator.name)
+					!!an_attribute.make(class_desc.db_field_name("stored_table_id")) 	-- to get IDF table of obj
+					idf_table_oid ?= an_attribute.value(mt_obj)
+					check Idf_oid_exists: idf_table_oid /= Void end
+					dummy_obj := retrieve_closure(idf_table_oid)
+				end
+
+				reverse_refs := ref_tables.item(other_oid)
+				if reverse_refs /= Void and then reverse_refs.is_target_retrieved then 
+					change_inside_field(reverse_refs.target_object_ptr, pointer_on_special_item(j-1,$object))
 				else    
-					if ct.item(successors.item(j).oid)/=Void then
-						!!one_element.make one_element.put_first(j.out)  one_element.put_second(pointer_on_special_item(j-1,$object))
-						field_list := ct.item(successors.item(j).oid) field_list.finish field_list.put_right(one_element)
+					if reverse_refs /= Void then
+						reverse_refs.add_reverse_ref(j,$object)
 					else
 						-- We want an object never seen before --> create its list
-						!!one_element.make
-						!!field_list.make(0) field_list.start field_list.put_left(one_element) 
-						!!one_element.make one_element.put_first(j.out)  one_element.put_second(pointer_on_special_item(j-1,$object))
-						field_list.put_left(one_element)
-						ct.put(field_list,successors.item(j).oid)
-					end -- if
-				end -- if
+						!!reverse_refs.make_target_from_oid(other_oid)
+						reverse_refs.add_reverse_ref(j,$object)
+						ref_tables.add_table(reverse_refs)
+					end
+				end
 				j:=j+1
-			end -- loop
-		end -- update_references_in_special
+			end
+		end
 
-	update_references_in_normal(i:INTEGER;object : ANY;is_exp : BOOLEAN)  is
-		-- Normal case
+	update_references_in_normal(i:INTEGER; object:ANY; is_exp:BOOLEAN)  is
+			-- Normal case
+		require
+			Object_exists: object /= Void
 		local
-			nb_field,j,ftype,mtype : INTEGER
+			nb_field,j,ftype : INTEGER
+			fname:STRING
 			object_field : ANY
 			one_integer_value : INTEGER_REF 
 			one_double_value : DOUBLE_REF 
 			one_real_value : REAL_REF 
 			one_char_value : CHARACTER_REF 
 			one_reference_value : ANY
-			one_attribute : MT_ATTRIBUTE
+			one_attribute, an_attribute: MT_ATTRIBUTE
 			one_object : MT_OBJECT
-			field_list : ARRAYED_LIST[CT_ELEMENT]
-			one_element : CT_ELEMENT
-			fpointer : POINTER successors : ARRAY[MT_OBJECT] one_rel : MT_RELATIONSHIP
+			reverse_refs : RETRIEVE_REF_TABLE
+			fpointer : POINTER 
+			successors : ARRAY[MT_OBJECT] 
+			one_rel : MT_RELATIONSHIP
+			other_oid : INTEGER
+			dummy_obj : ANY
+			mt_obj:MT_OBJECT
+			idf_table_oid:like anchor
+			class_desc, other_class_desc:ODB_CLASS_DESCRIPTOR
+			feat_desc:ODB_FEATURE_DESCRIPTOR
+			eif_fld_idx:INTEGER
+			class_desc_cursor:CURSOR
 		do
-			from
-				nb_field := field_count (object)
-				j := 1
+debug("matisse-sr")
+	io.put_string(shifter.out)
+    io.put_string("RETRIEVE - UPDATE_REFS IN NORMAL ")
+    io.put_string(object.generator)
+    io.new_line
+end
+			class_desc := odb_schema.class_descriptor(object)
+			from 
+				class_desc.features_by_field_index.start
 			until
-				j > nb_field
-			loop 
-				ftype := field_type(j,object)
-				!!one_attribute.make(field_name(j,object))
-				!!one_object.make(idf_table.item.ith_oid(i))
+				class_desc.features_by_field_index.off
+			loop
+				feat_desc := class_desc.features_by_field_index.item_for_iteration
+				eif_fld_idx := class_desc.features_by_field_index.key_for_iteration
+				fname := field_name(eif_fld_idx, object)
+
+				!!one_attribute.make(feat_desc.db_name)
+				!!one_object.make(idf_proxy.ith_oid(i))
+
+				ftype := field_type(eif_fld_idx ,object)
 				inspect ftype
 				when Reference_type then -- LIST or ARRAY [INTEGER,REAL,DOUBLE,STRING,CHARACTER]
 					if one_attribute.aid /= 0 then
-						mtype := one_attribute.type
 						one_reference_value ?= one_attribute.value(one_object)
-						if one_reference_value /= Void then set_reference_field(j,object,one_reference_value) end
+						if one_reference_value /= Void then set_reference_field(eif_fld_idx ,object ,one_reference_value) end
+
 					else -- REFERENCE 
-						!!one_rel.make(field_name(j,object))
+						!!one_rel.make(feat_desc.db_name)
 						successors := one_object.successors(one_rel)
-						if ct.item(successors.item(successors.lower).oid) /= Void and then  ct.item(successors.item(successors.lower).oid).first.first_item/=Void then 
-							change_inside_field(ct.item(successors.item(successors.lower).oid).first.second_item,pointer_on_field(j-1,$object))
+
+if not successors.empty then	-- no successors on db (i.e. a Void)
+
+						other_oid := successors.item(successors.lower).oid
+
+						-- successor object oid is not in the current closure, do a retrieve on it; this
+						-- will add its entries to the ref_tables. Don't retrieve:
+						-- 		- objects already retrieved
+						--		- objects partially retrieved (on the stack)
+						--		- objects which are successors of "agg_parent" relationship, due to that relationship
+						if not idf_proxy.has_oid(other_oid) and then not closures_in_progress.has(other_oid) and then not fname.is_equal("agg_parent")then
+							!!mt_obj.make(other_oid)
+							other_class_desc := odb_schema.class_descriptor_by_name(mt_obj.mt_generator.name)
+							!!an_attribute.make(other_class_desc.db_field_name("stored_table_id")) 	-- to get IDF table of obj
+							idf_table_oid ?= an_attribute.value(mt_obj)
+							check Idf_oid_exists: idf_table_oid /= Void end
+							class_desc_cursor := class_desc.features_by_field_index.cursor		-- save current firld iteration position
+							dummy_obj := retrieve_closure(idf_table_oid)
+							class_desc.features_by_field_index.go_to(class_desc_cursor)		-- return to field iteration position
+						end
+
+						reverse_refs := ref_tables.item(other_oid) -- have to look again, since table might now exist
+						if reverse_refs /= Void and then reverse_refs.is_target_retrieved then 
+							change_inside_field(reverse_refs.target_object_ptr, pointer_on_field(eif_fld_idx-1,$object))
 						else 
-							if ct.item(successors.item(successors.lower).oid)/=Void then
-								!!one_element.make one_element.put_first(field_name(j,object))  
-								one_element.put_second(pointer_on_field(j-1,$object))
-								field_list := ct.item(successors.item(successors.lower).oid) 
-								field_list.finish 
-								field_list.put_right(one_element)
+							if reverse_refs /= Void then
+								reverse_refs.add_reverse_ref(eif_fld_idx, $object)
 							else
-								!!one_element.make
-								!!field_list.make(0)
-								field_list.start
-								field_list.put_left(one_element) 
-								!!one_element.make
-								one_element.put_first(field_name(j,object))
-								one_element.put_second(pointer_on_field(j-1,$object))
-								field_list.put_left(one_element)
-								ct.put(field_list,successors.item(successors.lower).oid)
-							end -- if
-						end -- if
-					end -- if  
+								-- We want an object never seen before --> create its list
+								!!reverse_refs.make_target_from_oid(other_oid)
+								reverse_refs.add_reverse_ref(eif_fld_idx, $object)
+								ref_tables.add_table(reverse_refs)
+							end
+						end
+end
+					end  
 				when Integer_type then -- INTEGER
 					one_integer_value ?= one_attribute.value(one_object)
-					if one_integer_value /= Void then set_integer_field (j,object,one_integer_value.item) end -- if
+					if one_integer_value /= Void then set_integer_field (eif_fld_idx,object,one_integer_value.item) end
+
 				when Real_type then -- REAL
 					one_real_value ?= one_attribute.value(one_object)
-					if one_real_value /= Void then set_real_field (j,object,one_real_value.item) end -- if
+					if one_real_value /= Void then set_real_field (eif_fld_idx,object,one_real_value.item) end
+
 				when Double_type then -- DOUBLE
 					one_double_value ?= one_attribute.value(one_object)
-					if one_double_value /= Void then set_double_field (j,object,one_double_value.item) end -- if
+					if one_double_value /= Void then set_double_field (eif_fld_idx,object,one_double_value.item) end
+
 				when Character_type then -- CHARACTER
 					one_char_value ?= one_attribute.value(one_object)
-					if one_char_value /= Void then set_character_field (j,object,one_char_value.item) end -- if
+					if one_char_value /= Void then set_character_field (eif_fld_idx,object,one_char_value.item) end
+
 				when Boolean_type then -- BOOLEAN
 					one_integer_value ?= one_attribute.value(one_object)
-					if one_integer_value /= Void and one_integer_value.item = 1 then set_boolean_field (j,object,True) end -- if
+					if one_integer_value /= Void and one_integer_value.item = 1 then set_boolean_field (eif_fld_idx,object,True) end
+
 				else
 					-- Do not know how to store this type  (POINTER, BIT N) 
-				end -- inspect
-				j :=j + 1
-			end -- loop
-		end -- update_references_in_normal
+				end
 
-	--oid_ct : HASH_TABLE[POINTER,INTEGER] is once !!Result.make(0) end -- oid_ct
+				class_desc.features_by_field_index.forth
+			end
+		end
+
+feature -- Status
+	is_valid_key(key: like anchor):BOOLEAN is
+		do
+			Result := key /= Void and then key.item > 0
+		end
 
 feature {NONE} -- Implementation
 
-	ct : HASH_TABLE[ARRAYED_LIST[CT_ELEMENT],INTEGER]is once !!Result.make(0) end -- ct
+	idf_proxy:PROXY_IDF_TABLE is
+			-- IDF_PROXY of closure currently being processed
+		do
+			Result := idf_proxy_stack.item
+		end
+
+	idf_proxy_stack:LINKED_STACK [PROXY_IDF_TABLE] is
+			-- stack corresponding to recursion of store traversals so far
+		once
+			!!Result.make
+		end
+
+	closures_in_progress:LINKED_STACK [INTEGER] is
+			-- stack of closures represented by root object OID
+		once
+			!!Result.make
+		end
+
+	ref_tables:RETRIEVE_REF_TABLES is
+		once
+			!!Result.make(0)
+		end
 
 	anchor : INTEGER_REF
 
-end -- class MATISSE_RETRIEVER
+	shifter : SHIFTER is
+			-- a string displayed before each field information. Contains only tab chars
+		once
+			!!Result.make
+		end
 
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
-
+end

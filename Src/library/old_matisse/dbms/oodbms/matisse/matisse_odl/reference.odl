@@ -1,51 +1,19 @@
-/****************************************************************/
-/*								*/
-/*	Schema to use store and retrieve with matisse		*/
-/*								*/
-/****************************************************************/
-
-#include "default.odl"
-
-/* ---------- */
-/* Attributes */
-/* ---------- */
-
-mt_attribute MtS32 a=0;
-mt_attribute MtString one_string;
-mt_attribute Sequence<Double> lld;
-mt_attribute Sequence<Long> lli;
-mt_attribute Sequence<Float> llr;
-mt_attribute Sequence<String> lls;
-mt_attribute Array<Long> one_integer_array[0];
-mt_attribute Array<Double> one_double_array[0];
-mt_attribute Array<Float> one_real_array[0];
-
-/* -------------- */
-/* Relationships  */
-/* -------------- */
-mt_relationship REFERENCE a_ref inverse a_ref_of;
-mt_relationship REFERENCE a_ref_of inverse a_ref;
-mt_relationship ARRAY one_array inverse one_array_of;
-mt_relationship ANY one_array_of inverse one_array;
+//                         -*-c++-*-
+//
+// Generated schema description
+//    in MT_ODL (c) from ADB MATISSE
+//
+// Generation date: Fri May 29 09:10:05 1998
+// Generated from database testdb on host TOKYO
+//
 
 
 
-/* -------- */
-/* Classes  */
-/* -------- */
 
-interface REFERENCE:ANY ():persistent
-{
-mt_attribute a;  
-mt_attribute lld;  
-mt_attribute lli;  
-mt_attribute one_integer_array;  
-mt_attribute llr;  
-mt_attribute lls;  
-mt_attribute one_double_array;  
-mt_attribute one_real_array;
-mt_attribute one_string;  
+// Interface Definitions
+//----------------------
 
-mt_relationship a_ref;
-mt_relationship one_array;
+interface Person : persistent {
+  mt_attribute MtString FirstName;
+  mt_attribute MtString LastName;
 };

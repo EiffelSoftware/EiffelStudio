@@ -66,6 +66,7 @@ feature -- Element change
 			found : BOOLEAN
 			one_value : ANY
 			c_attributes : ARRAY[MT_ATTRIBUTE]
+			tmp_strg: STRING
 		do
 			one_mat_object := repository.implementation.new_instance
 			c_attributes:= repository.implementation.attributes
@@ -81,7 +82,9 @@ feature -- Element change
 				until
 					j>field_count (one_object) or found
 				loop
-					found := field_name(j,one_object).is_equal(one_attribute.name) 						
+					tmp_strg := one_attribute.name
+					tmp_strg.to_lower
+					found := field_name(j,one_object).is_equal(tmp_strg) 						
 					j:=j+1
 				end
 				check found end
@@ -101,21 +104,4 @@ feature -- Element change
 		end -- force
 
 end -- class DB_STORE_MAT
-
-
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
 

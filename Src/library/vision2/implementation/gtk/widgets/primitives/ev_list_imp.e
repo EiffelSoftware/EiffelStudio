@@ -134,14 +134,6 @@ feature -- Event : command association
 			-- add_command ("select_child", a_command, arguments)
 		end
 
--- useless
---	add_double_click_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---			-- Make `command' executed when an item is
---			-- selected.
---		do
---			check False end
---		end
-
 feature -- Event -- removing command association
 
 	remove_selection_commands is	
@@ -151,14 +143,6 @@ feature -- Event -- removing command association
 			remove_commands (selection_changed_id)
 		end
 
--- useless
---	remove_double_click_selection_commands is	
---			-- Empty the list of commands to be executed
---			-- when the selection has changed.
---		do
---			check False end
---		end
-
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
 	add_item (item_imp: EV_LIST_ITEM_IMP) is
@@ -166,6 +150,12 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 		do
 			ev_children.extend (item_imp)
 			gtk_container_add (widget, item_imp.widget)
+		end
+
+	insert_item (item_imp: EV_LIST_ITEM_IMP; value: INTEGER) is
+			-- insert `item_imp' at the position
+			-- `value' of list.
+		do
 		end
 
 	remove_item (item_imp: EV_LIST_ITEM_IMP) is

@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Status report
 
-	ensure_item_visible (an_item: EV_TREE_ITEM) is
+	ensure_item_visible (an_item: EV_TREE_NODE) is
 			-- Ensure `an_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		require
@@ -109,7 +109,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.pixmaps_height
 		end
 		
-	has_recursively (an_item: EV_TREE_ITEM): BOOLEAN is
+	has_recursively (an_item: EV_TREE_NODE): BOOLEAN is
 			-- Is `an_item' contained in `Current' at any level?
 		do
 			Result := implementation.has_recursively (an_item)

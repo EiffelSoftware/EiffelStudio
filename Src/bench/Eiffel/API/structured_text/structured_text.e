@@ -7,8 +7,8 @@ inherit
 			{NONE}
 				all;
 			{ANY}
-				cursor, start, forth, after, item, last,
-				finish, off, go_i_th, index, extend
+				cursor, start, forth, after, item, last, empty,
+				finish, off, go_i_th, index, extend, wipe_out
 		end;
 	SHARED_RESCUE_STATUS
 
@@ -20,8 +20,9 @@ feature
 
 	add (v: like item) is
 		do
-			extend (v);
 			finish;
+			put_right (v);
+			forth;
 		end;
 
 	insert (pos: CURSOR; v: like item) is
@@ -31,8 +32,6 @@ feature
 			finish;
 		end; 
 
-	
-	
 	head (pos: CURSOR) is
 		local
 			cursor_out: BOOLEAN;	

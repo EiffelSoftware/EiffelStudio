@@ -111,6 +111,19 @@ feature {NONE} -- Implementation
 		do
 		end
 
+	add_ref_in_interface_pointer (a_name: STRING): STRING is
+			-- Add reference to interface pointer before passing it.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
+		do
+			create Result.make (100)
+			Result.append (a_name)
+			Result.append (Add_reference_function)
+		ensure
+			non_void_add_ref: Result /= Void
+			valid_add_ref: not Result.empty
+		end
 
 end -- class WIZARD_CPP_FUNCTION_GENERATOR
 --|----------------------------------------------------------------

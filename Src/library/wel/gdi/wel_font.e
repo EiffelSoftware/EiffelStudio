@@ -220,47 +220,36 @@ feature {NONE} -- Implementation
 	pixel_to_logical (hdc: WEL_DC; pi: INTEGER): INTEGER is
 			-- Convert `pi' expressed in pixel unit into logical unit.
 		local
-			arr: ARRAY [POINTER]
-			a: ANY
+			arr: WEL_ARRAY [WEL_POINT]
 			p1, p2: WEL_POINT
-			o1, o2: WEL_POINT
 		do
-			create p1.make (0, 0)
-			create p2.make (0, pi)
+			create arr.make (2, (create {WEL_POINT}.make (0, 0)).structure_size)
+			arr.put (create {WEL_POINT}.make (0, 0), 0)
+			arr.put (create {WEL_POINT}.make (0, pi), 1)
 
-			create arr.make (1, 2)
-			arr.put (p1.item, 1)
-			arr.put (p2.item, 2)
+			cwin_dp_to_lp (hdc.item, arr.item, 2)
 
-			a := arr.to_c
-			cwin_dp_to_lp (hdc.item, $a, 2);
-			create o1.make_by_pointer (arr.item (1))
-			create o2.make_by_pointer (arr.item (2))
+			create p1.make_by_pointer (arr.i_th_item (0))
+			create p2.make_by_pointer (arr.i_th_item (1))
 
-			Result := (o2.y - o1.y).abs
+			Result := (p2.y - p1.y).abs
 		end
 
 	logical_to_pixel (hdc: WEL_DC; lo: INTEGER): INTEGER is
 			-- Convert `lo' expressed in logical unit into pixel unit.
 		local
-			arr: ARRAY [POINTER]
-			a: ANY
+			arr: WEL_ARRAY [WEL_POINT]
 			p1, p2: WEL_POINT
-			o1, o2: WEL_POINT
 		do
-			create p1.make (0, 0)
-			create p2.make (0, lo)
+			create arr.make (2, (create {WEL_POINT}.make (0, 0)).structure_size)
+			arr.put (create {WEL_POINT}.make (0, 0), 0)
+			arr.put (create {WEL_POINT}.make (0, lo), 1)
 
-			create arr.make (1, 2)
-			arr.put (p1.item, 1)
-			arr.put (p2.item, 2)
+			cwin_lp_to_dp (hdc.item, arr.item, 2);
+			create p1.make_by_pointer (arr.i_th_item (0))
+			create p2.make_by_pointer (arr.i_th_item (1))
 
-			a := arr.to_c
-			cwin_lp_to_dp (hdc.item, $a, 2);
-			create o1.make_by_pointer (arr.item (1))
-			create o2.make_by_pointer (arr.item (2))
-
-			Result := (o2.y - o1.y).abs
+			Result := (p2.y - p1.y).abs
 		end
 
 	cwin_dp_to_lp (dc, p: POINTER; i: INTEGER) is

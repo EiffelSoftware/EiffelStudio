@@ -133,9 +133,9 @@ feature -- Access
             cluster ?= clusters_table.item (cluster_name)
             if cluster /= Void then
             	if cluster.cluster_namespace /= Void and not cluster.cluster_namespace.is_empty then
-	                Result := cluster.cluster_namespace	
+	                Result := clone (cluster.cluster_namespace)
 	            else
-	                Result := cluster.name
+	                Result := clone (cluster.name)
             	end
                 if cluster.has_parent then
                     Result.prepend_character('.')

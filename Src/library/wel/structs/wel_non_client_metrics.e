@@ -76,7 +76,7 @@ feature -- Access
 		do
 			create Result.make_with_pointer (cwel_nonclientmetrics_get_caption_font (item))
 		ensure
-			result_not_void: Result /= Void
+			valid_result: Result /= Void and then Result.exists
 		end
 
 	small_caption_width: INTEGER is
@@ -100,7 +100,7 @@ feature -- Access
 		do
 			create Result.make_with_pointer (cwel_nonclientmetrics_get_small_caption_font (item))
 		ensure
-			result_not_void: Result /= Void
+			valid_result: Result /= Void and then Result.exists
 		end
 
 	menu_width: INTEGER is
@@ -124,7 +124,7 @@ feature -- Access
 		do
 			create Result.make_with_pointer (cwel_nonclientmetrics_get_menu_font (item))
 		ensure
-			result_not_void: Result /= Void
+			valid_result: Result /= Void and then Result.exists
 		end
 
 	status_font: WEL_LOG_FONT is
@@ -132,7 +132,7 @@ feature -- Access
 		do
 			create Result.make_with_pointer (cwel_nonclientmetrics_get_status_font (item))
 		ensure
-			result_not_void: Result /= Void
+			valid_result: Result /= Void and then Result.exists
 		end
 
 	message_font: WEL_LOG_FONT is
@@ -140,7 +140,7 @@ feature -- Access
 		do
 			create Result.make_with_pointer (cwel_nonclientmetrics_get_message_font (item))
 		ensure
-			result_not_void: Result /= Void
+			valid_result: Result /= Void and then Result.exists
 		end
 
 feature -- Element change

@@ -258,14 +258,10 @@ feature -- Status setting
 		
 	expand is
 			-- Expand `Current'.
-		require
-			tree_item /= Void implies tree_item.is_expandable
 		do
-			if tree_item /= Void then
+			if tree_item /= Void and then tree_item.is_expandable then
 				tree_item.expand
 			end
-		ensure
-			tree_item /= Void implies tree_item.is_expanded
 		end
 		
 	expand_recursive is

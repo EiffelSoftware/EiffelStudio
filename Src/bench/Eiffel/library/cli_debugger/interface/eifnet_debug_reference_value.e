@@ -280,12 +280,12 @@ feature -- Once request
 			l_icd_module: ICOR_DEBUG_MODULE
 
 			l_origin_class_c: CLASS_C
-			l_origin_class_token_list: LIST [INTEGER]
 			l_origin_class_token: INTEGER
 			l_origin_class_module_name: STRING
 
 			l_once_already_called: BOOLEAN
 
+			l_cl_type_a: CL_TYPE_A
 			l_adapted_class_type: CLASS_TYPE
 			l_class_type_list: LIST [CLASS_TYPE]
 		do
@@ -297,76 +297,71 @@ feature -- Once request
 				l_icd_class := object_value.get_class
 				l_adapted_class_type := dynamic_class_type
 			else
-				--| The Once is inherited
-
-				--| let's search and find the correct CLASS_TYPE among the parents
-				--| this will solve the problem of inherited once and generic class
-				--| the level on inheritance is represented by the CLASS_C
-				--| then the derivation of the GENERIC by the CLASS_TYPE
-				--| among the parent we know the right CLASS_TYPE
-				--| so first we localite the CLASS_C then we keep the CLASS_TYPE
-				l_class_type_list := dynamic_class_type.parent_types
-				l_class_type_list.extend (Eiffel_system.System.any_class.compiled_class.types.first)
-				from
-					l_class_type_list.start
-				until
-					l_class_type_list.after
-					or else (
-						l_adapted_class_type /= Void 
-						and l_adapted_class_type.associated_class = l_origin_class_c 
-					)
-				loop
-					l_adapted_class_type := l_class_type_list.item
-					l_class_type_list.forth
+				if l_origin_class_c.types.count = 1 then
+					l_adapted_class_type := l_origin_class_c.types.first
+				else
+					--| The Once is inherited
+	
+					--| let's search and find the correct CLASS_TYPE among the parents
+					--| this will solve the problem of inherited once and generic class
+					--| the level on inheritance is represented by the CLASS_C
+					--| then the derivation of the GENERIC by the CLASS_TYPE
+					--| among the parent we know the right CLASS_TYPE
+					--| so first we localite the CLASS_C then we keep the CLASS_TYPE					
+					l_cl_type_a := dynamic_class_type.type.type_a
+					l_adapted_class_type := l_cl_type_a.find_class_type (l_origin_class_c).type_i.associated_class_type
 				end
+
 				check
 					found_item_is_correct: l_adapted_class_type /= Void 
 							and then l_adapted_class_type.associated_class = l_origin_class_c
 				end
 
-				l_origin_class_token := l_adapted_class_type.last_implementation_type_token
-
 				l_origin_class_module_name := Il_debug_info_recorder.module_file_name_for_class (l_adapted_class_type)
-				l_origin_class_token_list := Il_debug_info_recorder.class_tokens_for_class (l_origin_class_c)
-
 				l_icd_module := Application.imp_dotnet.eifnet_debugger.Eifnet_debugger_info.icor_module (l_origin_class_module_name)
-				l_icd_class := l_icd_module.get_class_from_token (l_origin_class_token)
-			end
-			
-			--| now we have the correct ICOR_DEBUG_CLASS as l_icd_class
-			--| and we know the good CLASS_TYPE as 
-			l_once_info_tokens := Il_debug_info_recorder.once_feature_tokens_for_feat_and_class_type (a_feat.associated_feature_i, l_adapted_class_type)
-			l_done_token := l_once_info_tokens.integer_item (1)
-			l_result_token := l_once_info_tokens.integer_item (2)	
-			
-			--| Check if already called (_done)
-			if l_done_token /= 0 and then l_icd_class /= Void then
-				l_icd_debug_value := l_icd_class.get_static_field_value (l_done_token, icd_frame)
-				if l_icd_debug_value /= Void then
-					l_icd_debug_value := Debug_value_formatter.prepared_debug_value (l_icd_debug_value)
-					l_once_already_called := Debug_value_formatter.prepared_icor_debug_value_as_boolean (l_icd_debug_value)
+				if l_icd_module /= Void then
+						--| It may occurs the ICorDebugModule is not yet loaded
+					l_origin_class_token := Il_debug_info_recorder.class_token (l_origin_class_module_name, l_adapted_class_type)
+					l_icd_class := l_icd_module.get_class_from_token (l_origin_class_token)
 				end
 			end
 
-			--| if already called then get the value (_result)
-			if l_once_already_called then
-				if l_result_token /= 0 then
-					l_icd_debug_value := l_icd_class.get_static_field_value (l_result_token, icd_frame)
+			if l_icd_class /= Void then
+					--| now we have the correct ICOR_DEBUG_CLASS as l_icd_class
+					--| and we know the good CLASS_TYPE as 
+				l_once_info_tokens := Il_debug_info_recorder.once_feature_tokens_for_feat_and_class_type (a_feat.associated_feature_i, l_adapted_class_type)
+				l_done_token := l_once_info_tokens.integer_item (1)
+				l_result_token := l_once_info_tokens.integer_item (2)	
+				
+					--| Check if already called (_done)
+				if l_done_token /= 0 then
+					l_icd_debug_value := l_icd_class.get_static_field_value (l_done_token, icd_frame)
 					if l_icd_debug_value /= Void then
-						Result := Eifnet_debug_value_factory.debug_value_from (l_icd_debug_value, icd_frame)
-						Result.set_name (a_feat.name)
+						l_icd_debug_value := Debug_value_formatter.prepared_debug_value (l_icd_debug_value)
+						l_once_already_called := Debug_value_formatter.prepared_icor_debug_value_as_boolean (l_icd_debug_value)
 					end
 				end
-			end
 
-			debug ("DEBUGGER_TRACE")
-				print ("- " + l_origin_class_c.name_in_upper + " ")
-				print (">>" + a_feat.name 
-						+ " done[0x"+l_done_token.to_hex_string+"] result[0x"+l_result_token.to_hex_string+"] "
-						+ "%N%T -> " + l_once_already_called.out
-						+ " Result /= Void =? " + (Result /= Void).out
-						+ "%N"
-				) 
+					--| if already called then get the value (_result)
+				if l_once_already_called then
+					if l_result_token /= 0 then
+						l_icd_debug_value := l_icd_class.get_static_field_value (l_result_token, icd_frame)
+						if l_icd_debug_value /= Void then
+							Result := Eifnet_debug_value_factory.debug_value_from (l_icd_debug_value, icd_frame)
+							Result.set_name (a_feat.name)
+						end
+					end
+				end
+
+				debug ("DEBUGGER_TRACE")
+					print ("- " + l_origin_class_c.name_in_upper + " ")
+					print (">>" + a_feat.name 
+							+ " done[0x"+l_done_token.to_hex_string+"] result[0x"+l_result_token.to_hex_string+"] "
+							+ "%N%T -> " + l_once_already_called.out
+							+ " Result /= Void =? " + (Result /= Void).out
+							+ "%N"
+					) 
+				end
 			end
 		end
 

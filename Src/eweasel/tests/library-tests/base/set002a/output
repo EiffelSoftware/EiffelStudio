@@ -1,0 +1,121 @@
+Create comparable object set configuration #1
+reference comparison set
+Filling comparable object set
+Set 1: 1, 3, 2, 4, 
+Set 2: 2, 4, 5, 
+Create comparable object set configuration #1
+object comparison set
+Filling comparable object set
+Set 1: 1, 3, 2, 4, 
+Set 2: 2, 4, 5, 
+Create string set configuration #1
+reference comparison set
+Filling string set
+Set 1: foo, bar, baz, bla, 
+Set 2: baz, bla, boo, 
+Create string set configuration #1
+object comparison set
+Filling string set
+Set 1: baz, bar, bla, foo, 
+Set 2: baz, bla, boo, 
+Create comparable object set configuration #2
+reference comparison set
+Filling comparable object set
+Set 1: 1, 3, 2, 4, 
+Set 2: 2, 4, 5, 
+Create comparable object set configuration #2
+object comparison set
+Filling comparable object set
+Set 1: 1, 3, 2, 4, 
+Set 2: 2, 4, 5, 
+Create string set configuration #2
+reference comparison set
+Filling string set
+Set 1: foo, bar, baz, bla, 
+Set 2: baz, bla, boo, 
+Create string set configuration #2
+object comparison set
+Filling string set
+Set 1: baz, bar, bla, foo, 
+Set 2: baz, bla, boo, 
+Create comparable object set configuration #3
+reference comparison set
+Filling comparable object set
+Set 1: 1, 2, 3, 4, 
+Set 2: 5, 2, 4, 
+Create comparable object set configuration #3
+object comparison set
+Filling comparable object set
+Set 1: 1, 2, 3, 4, 
+Set 2: 5, 2, 4, 
+Create string set configuration #3
+reference comparison set
+Filling string set
+Set 1: bar, baz, bla, foo, 
+Set 2: boo, bla, baz, 
+Create string set configuration #3
+object comparison set
+Filling string set
+Set 1: bar, baz, bla, foo, 
+Set 2: boo, bla, baz, 
+Create comparable object set configuration #4
+reference comparison set
+Filling comparable object set
+Set 1: 1, 2, 3, 4, 
+Set 2: 2, 4, 5, 
+Create comparable object set configuration #4
+object comparison set
+Filling comparable object set
+Set 1: 1, 2, 3, 4, 
+Set 2: 2, 4, 5, 
+Create string set configuration #4
+reference comparison set
+Filling string set
+Set 1: bar, baz, bla, foo, 
+Set 2: baz, bla, boo, 
+Create string set configuration #4
+object comparison set
+Filling string set
+Set 1: bar, baz, bla, foo, 
+Set 2: baz, bla, boo, 
+Create comparable object set configuration #5
+reference comparison set
+Filling comparable object set
+Set 1: 1, 2, 3, 4, 
+Set 2: 5, 2, 4, 
+Create comparable object set configuration #5
+object comparison set
+Filling comparable object set
+Set 1: 1, 2, 3, 4, 
+Set 2: 5, 2, 4, 
+Create string set configuration #5
+reference comparison set
+Filling string set
+Set 1: bar, baz, bla, foo, 
+Set 2: boo, bla, baz, 
+Create string set configuration #5
+object comparison set
+Filling string set
+Set 1: bar, baz, bla, foo, 
+Set 2: boo, bla, baz, 
+Create comparable object set configuration #6
+reference comparison set
+Filling comparable object set
+Set 1: 1, 2, 3, 4, 
+Set 2: 2, 4, 5, 
+Create comparable object set configuration #6
+object comparison set
+Filling comparable object set
+Set 1: 1, 2, 3, 4, 
+Set 2: 2, 4, 5, 
+Create string set configuration #6
+reference comparison set
+Filling string set
+Set 1: bar, baz, bla, foo, 
+Set 2: baz, bla, boo, 
+Create string set configuration #6
+object comparison set
+Filling string set
+Set 1: bar, baz, bla, foo, 
+Set 2: baz, bla, boo, 
+Execution completed

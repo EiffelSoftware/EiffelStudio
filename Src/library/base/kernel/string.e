@@ -339,7 +339,7 @@ feature -- Element change
 			new_exists: new /= Void
 			original_not_empty: not original.empty
 		local
-			change_pos, i :INTEGER
+			change_pos :INTEGER
 		do
 			from
 				change_pos := substring_index (original, 1)
@@ -347,7 +347,11 @@ feature -- Element change
 				change_pos = 0
 			loop
 				replace_substring (new, change_pos, change_pos + original.count - 1)
-				change_pos := substring_index (original, change_pos + new.count - 1)
+				if change_pos + new.count <= count then
+					change_pos := substring_index (original, change_pos + new.count)	
+				else
+					change_pos := 0
+				end
 			end
 		end; 
 
@@ -685,8 +689,21 @@ feature -- Conversion
 
 	linear_representation: LINEAR [CHARACTER] is
 			-- Representation as a linear structure
-		do
-		end;
+        local
+            temp: ARRAYED_LIST [CHARACTER];
+            i: INTEGER;
+        do
+            !! temp.make (capacity);
+            from
+                i := 1;
+            until
+                i > count
+            loop
+                temp.extend (item (i));
+                i := i + 1;
+            end;
+            Result := temp;
+        end;
 
 	to_c: ANY is
 			-- An integer which a C function may cast into a pointer

@@ -11,6 +11,9 @@ indexing
 class
 	STORABLE
 
+inherit
+	EXCEPTIONS
+
 feature -- Access
 
 	retrieved (file: IO_MEDIUM): STORABLE is
@@ -31,7 +34,30 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
-
+	retrieve_by_name (file_name: STRING): STORABLE is
+			-- Retrieve object structure, from external
+			-- representation previously stored in a file
+			-- called `file_name'.
+            -- To access resulting object under correct type,
+            -- use assignment attempt.
+            -- Will raise an exception (code `Retrieve_exception')
+            -- if file content is not a `STORABLE' structure.
+			-- Will return Void if the file does not exist or
+			-- is not readable.
+		require
+			file_name_exists: file_name /= Void
+			file_name_meaningful: not file_name.empty
+		local
+			file: RAW_FILE
+		do
+			!!file.make (file_name)
+			if file.exists and then file.is_readable then
+				file.open_read
+				Result := c_retrieved (file.descriptor)
+				file.close
+			end
+		end
+	
 feature -- Element change
 
 	basic_store (file: IO_MEDIUM) is
@@ -62,6 +88,31 @@ feature -- Element change
 			file_is_binary: file.is_plain_text
 		do
 			c_general_store (file.handle, $Current)
+		end
+
+	store_by_name (file_name: STRING) is
+			-- Produce on file called `file_name' an external
+			-- representation of the entire object structure 
+			-- reachable from current object.
+            -- Retrievable from other systems for same platform
+            -- (machine architecture).
+		require
+			file_name_not_void: file_name /= Void
+			file_name_meaningful: not file_name.empty
+		local
+			file: RAW_FILE
+			a: ANY
+		do
+			!!file.make (file_name)
+			if (file.exists and then file.is_writable) or else
+			   (file.is_creatable) then
+				file.open_write 
+				c_general_store (file.descriptor, $Current)
+				file.close
+			else
+				a := ("write permission failure").to_c
+				eraise ($a, Io_exception)
+			end
 		end
 
 feature {NONE} -- Implementation

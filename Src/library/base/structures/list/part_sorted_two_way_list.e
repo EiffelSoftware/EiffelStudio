@@ -70,28 +70,75 @@ feature -- Status report
 	sorted: BOOLEAN is
 			-- is the structures topologically sorted
 			-- i.e i < j implies not i_th (i) > i_th (j)
+		local
+			c: CURSOR;
+			prev: like item
 		do
-			Result := true -- FIX ME: not implemented
-		end;	
-	
-		
+			Result := true;
+			if count > 1 then
+				from
+					c := cursor;
+					start;
+					check not off end;
+					prev := item;
+					forth
+				until
+					after or not Result
+				loop
+					Result := (prev <= item);
+					prev := item;
+					forth
+				end;
+				go_to (c)
+			end
+		end
+
 feature -- Transformation
 
 	sort is
 			-- sort the list
-			-- | Dumb implementation: copy in other structure and insert again
+			-- Has O(`count' * log (`count')) complexity.
+			--| Uses comb-sort (BYTE February '91)
 		local
-			seq: LINEAR [G]		
+			no_change: BOOLEAN;
+			gap: INTEGER;
+			left_cell, cell: like first_element;
+			left_cell_item, cell_item: like item
 		do
-			seq := linear_representation;
-			wipe_out;
-			from
-				seq.start
-			until
-				seq.off
-			loop
-				extend (seq.item)
-			end;
+			if not empty then
+				from
+					gap := count * 10 // 13
+				until
+					gap = 0
+				loop
+					from
+						no_change := false;
+						go_i_th (1 + gap)
+					until
+						no_change
+					loop
+						no_change := true;
+						from
+							left_cell := first_element;
+							cell := active; -- position of first_element + gap
+						until
+							cell = Void
+						loop
+							left_cell_item := left_cell.item;
+							cell_item := cell.item;
+							if cell_item < left_cell_item then
+									-- Swap `left_cell_item' with `cell_item'
+								no_change := false;
+								cell.put (left_cell_item);
+								left_cell.put (cell_item)
+							end;
+							left_cell := left_cell.right;
+							cell := cell.right
+						end
+					end;
+					gap := gap * 10 // 13
+				end
+			end
 		end;
 
 feature {PART_SORTED_TWO_WAY_LIST} -- Implementation

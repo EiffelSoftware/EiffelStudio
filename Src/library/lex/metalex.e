@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			keyword_h_table := d
 		end; 
 
-	token_file: UNIX_FILE;
+	token_file: PLAIN_TEXT_FILE;
 
 	record_atomics is
 			-- Record the regular expressions with their names and

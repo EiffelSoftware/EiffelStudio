@@ -19,7 +19,7 @@ class LINKED_QUEUE [G] inherit
 		redefine
 			linear_representation, prune_all, extend
 		select
-			item
+			item, put
 		end;
 
 	LINKED_LIST [G]
@@ -27,7 +27,8 @@ class LINKED_QUEUE [G] inherit
 			item as ll_item,
 			remove as ll_remove,
 			make as ll_make,
-			remove_left as remove
+			remove_left as remove,
+			put as ll_put
 		export
 			{NONE} 
 				all;
@@ -35,7 +36,7 @@ class LINKED_QUEUE [G] inherit
 				writable, extendible, wipe_out,
 				readable
 		undefine
-			put, fill, append, prune,
+			fill, append, prune,
 			readable, writable, prune_all, extend,
 			force
 		redefine

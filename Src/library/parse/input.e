@@ -109,12 +109,12 @@ feature  -- Input
 		require
 			name_not_void: filename /= Void
 		local
-			retrieved_file: UNIX_FILE
+			retrieved_file: RAW_FILE
 		do
 			if analyzer = Void then
 				!! analyzer.make
 			end;
-			!! retrieved_file.make_open_binary_read (filename);
+			!! retrieved_file.make_open_read (filename);
 			analyzer ?= analyzer.retrieved (retrieved_file);
 			retrieved_file.close
 		end;

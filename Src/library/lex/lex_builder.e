@@ -947,12 +947,12 @@ feature -- Input
 	retrieve_analyzer (file_name: STRING) is
 			-- Retrieve `analyzer' from file named `file_name'.
 		local
-			retrieved_file: UNIX_FILE
+			retrieved_file: RAW_FILE
 		do
 			if analyzer = Void then
 				!! analyzer.make
 			end;
-			!! retrieved_file.make_open_binary_read (file_name);
+			!! retrieved_file.make_open_read (file_name);
 			analyzer ?= analyzer.retrieved (retrieved_file);
 			retrieved_file.close
 		end;
@@ -964,12 +964,12 @@ feature -- Output
 		require
 			initialized: initialized
 		local
-			store_file: UNIX_FILE
+			store_file: RAW_FILE
 		do
 			if analyzer = Void then
 				!! analyzer.make
 			end;
-			!! store_file.make_open_binary_write (file_name);
+			!! store_file.make_open_write (file_name);
 			analyzer.basic_store (store_file);
 			store_file.close
 		end;

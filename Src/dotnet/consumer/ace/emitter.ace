@@ -8,9 +8,16 @@ default
 	assertion (check)
 	assertion (require)
 	msil_generation (yes)
-	line_generation (yes)
+	disabled_debug (yes)
+	disabled_debug ("assemblies_are_never_stale")
+	disabled_debug ("log_illegal_non_cls_compliancy")
+	disabled_debug ("press_enter_to_exit")
+	disabled_debug ("press_enter_to_finish")
+	disabled_debug ("refactor_fixme")
+	debug (no)
+	line_generation (no)
 	profile (no)
-	trace (yes)
+	trace (no)
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (no)
@@ -20,6 +27,7 @@ default
 	namespace ("EiffelSoftware.MetadataConsumer")
 	version ("5.6.0718")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+	msil_clr_version ("v1.0.3705")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (yes)
@@ -50,12 +58,12 @@ cluster
 
 	all emitter:		"$EIFFEL_SRC\dotnet\consumer"
 		exclude
-			"CVS"; "EIFGEN"; "interop"
+			"CVS"; "EIFGEN"; "interop"; 
 		end
 
 	all interop:		"$EIFFEL_SRC\dotnet\consumer\support\interop"
 		exclude
-			"CVS"; "EIFGEN"; "interop"
+			"CVS"; "EIFGEN"; "interop"; 
 		default
 			namespace ("Interop")
 		visible
@@ -80,4 +88,5 @@ assembly
 		prefix
 			"XML_"
 		end
+
 end

@@ -169,13 +169,23 @@ feature
 	Current_register: CURRENT_B is
 			-- An instance of Current register for local var index computation
 		once
-			!!Result;
+			!! Result;
 		end;
 	
 	Result_register: RESULT_B is
 			-- An instace of Result register for local var index computation
+		local
+			dummy: NONE_I;
 		once
-			!!Result;
+				-- This hack is needed because of the special treatment of
+				-- the Result register in once functions. The Result is always
+				-- recorded in the GC by RTOC, so there is no need to get an
+				-- l[] variable from the GC hooks. Here we are going to call
+				-- the print_register_by_name function on Result_register,
+				-- and this has been carefully patched in RESULT_BL to handle
+				-- the once cases.
+			!! dummy;
+			!RESULT_BL! Result.make (dummy);
 		end;
 
 	register_server: REGISTER_SERVER;
@@ -360,10 +370,12 @@ feature
 	mark_result_used is
 			-- Signals that an assignment in Result is made
 			-- As a side effect, compute an index for Result in the local
-			-- variable array, if the type is a pointer one.
+			-- variable array, if the type is a pointer one and we are not
+			-- inside a once function.
 		do
 			if not result_used and
-				real_type (byte_code.result_type).c_type.is_pointer
+				real_type (byte_code.result_type).c_type.is_pointer and
+				not byte_code.is_once
 			then
 				set_local_index ("Result", Result_register);
 			end;

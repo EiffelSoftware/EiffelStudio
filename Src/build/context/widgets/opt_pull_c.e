@@ -10,13 +10,15 @@ inherit
 		redefine
 			stored_node, real_y, real_x,  
 			set_size, set_x_y, height, width, y, x, widget, 
-			add_widget_callbacks, remove_widget_callbacks
+			add_widget_callbacks, remove_widget_callbacks,
+			is_resizable
 		end;
 	PULLDOWN_C
 		redefine
 			stored_node, real_y, real_x, context_initialization,
 			set_size, set_x_y, height, width, y, x, widget, 
-			add_widget_callbacks, remove_widget_callbacks
+			add_widget_callbacks, remove_widget_callbacks,
+			is_resizable
 		select
 			context_initialization
 		end;
@@ -63,6 +65,18 @@ feature
 			end
 		end;
 
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+						Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.pulldown_sm_form_nbr,
+						Context_const.Submenu_format_nbr);
+		end;
+
+	is_resizable: BOOLEAN is
+		do
+			Result := False
+		end
 
 feature 
 

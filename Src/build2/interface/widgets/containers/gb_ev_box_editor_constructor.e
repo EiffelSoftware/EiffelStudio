@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			-- Change the expanded status of `index' item based on status of `check_button'.
 		require
 			check_button_not_void: check_button /= Void
-			index_valid: index >= 1 and index <= object.children.count
+			index_valid: object.children /= Void implies index >= 1 and index <= object.children.count
 		do
 			actual_update_widget_expanded (object, check_button.is_selected, index)
 			for_all_instance_referers (object, agent actual_update_widget_expanded (?, check_button.is_selected, index))

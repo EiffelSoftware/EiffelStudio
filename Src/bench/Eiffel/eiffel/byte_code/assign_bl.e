@@ -190,11 +190,7 @@ feature
 							-- or metamorphosed value as aging tests might have
 							-- to be performed.
 						source.propagate (No_register);
-						if not target.is_predefined then
-							get_register;
-						else
-							register := target;
-						end;
+						register := target;
 						register_for_metamorphosis := true;
 					elseif target_type.is_bit and then source_type.is_bit then
 						is_bit_assignment := true

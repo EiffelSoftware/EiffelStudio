@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 	body: STRING is
 			-- Feature body
 		local
-			cecil_call, arguments, variables, out_value, free_object: STRING
+			out_value: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create Result.make (100000)
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 
 			if func_desc.argument_count = 0 and func_desc.return_type.name.is_equal (Void_c_keyword) then
 				Result.append (New_line_tab)
-				Result.append (empty_argument_body)
+				Result.append (empty_argument_procedure_body)
 			else
 				create arguments.make (500)
 				arguments.append (Space_open_parenthesis)
@@ -149,20 +149,18 @@ feature {NONE} -- Implementation
 					else
 						variables.append (variable_set_up (func_desc.arguments.item.name, visitor))
 						variables.append (New_line_tab)
-						if visitor.is_basic_type or visitor.is_enumeration then
+						if 
+							visitor.is_basic_type or 
+							visitor.is_enumeration or
+							visitor.vt_type = Vt_bool
+						then
 							arguments.append (Comma_space)
 							arguments.append (Open_parenthesis)
 							arguments.append (visitor.cecil_type)
 							arguments.append (Close_parenthesis)
 							arguments.append (Tmp_clause)
 							arguments.append (func_desc.arguments.item.name)
-						elseif  (visitor.vt_type = Vt_bool)  then
-							arguments.append (Comma_space)
-							arguments.append (Open_parenthesis)
-							arguments.append (Eif_boolean)
-							arguments.append (Close_parenthesis)
-							arguments.append (Tmp_clause)
-							arguments.append (func_desc.arguments.item.name)
+						
 						else
 							arguments.append (Comma)
 							arguments.append (Eif_access)
@@ -190,16 +188,18 @@ feature {NONE} -- Implementation
 					func_desc.arguments.forth
 				end
 
-				visitor := func_desc.return_type.visitor
-				if visitor.c_type.is_equal (Void_c_keyword) then
-					cecil_call := cecil_procedure_set_up
-				else
-					cecil_call := cecil_function_set_up (visitor)
-				end
-	
 				arguments.append (Close_parenthesis)
 				arguments.append (Semicolon)
 
+				visitor := func_desc.return_type.visitor
+				if visitor.c_type.is_equal (Void_c_keyword) then
+					cecil_call := cecil_procedure_set_up
+					cecil_call.append (arguments)
+				else
+					cecil_call := cecil_function_declaration (visitor)
+					cecil_call.append (cecil_function_call)
+				end
+				
 				Result.append (New_line_tab)
 				if variables.count > 0 then
 					Result.append (variables)
@@ -207,7 +207,6 @@ feature {NONE} -- Implementation
 				end
 
 				Result.append (cecil_call)
-				Result.append (arguments)
 				Result.append (New_line_tab)
 
 				if not visitor.c_type.is_equal (Void_c_keyword) then

@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 		local
 			timeout: EV_TIMEOUT_IMP
 		do
-			timeout ?= eif_id_object (id)
+			timeout ?= eif_id_any_object (id)
 			if timeout /= Void then
 				timeout.on_timeout
 			else

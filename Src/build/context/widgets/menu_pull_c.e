@@ -11,7 +11,7 @@ inherit
 		redefine
 			stored_node, is_selectionable, widget,
 			add_widget_callbacks, is_valid_parent,
-			is_able_to_be_grouped, 
+			is_able_to_be_grouped,
 			is_movable, remove_widget_callbacks
 		end;
 	PULLDOWN_C
@@ -102,7 +102,7 @@ feature
 
 	create_oui_widget (a_parent: MENU) is
 		do
-			!!widget.make_unmanaged (entity_name, a_parent);
+			!! widget.make (entity_name, a_parent);
 		end;
 
 	widget: MENU_PULL;
@@ -166,8 +166,6 @@ feature {NONE}
 
 	
 feature 
-
-
 
 	forbid_recompute_size is
 		do

@@ -79,25 +79,27 @@ feature -- Access
 			"CS_NOCLOSE"
 		end
 
-	Cs_keycvtwindow: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"CS_KEYCVTWINDOW"
-		end
-
-	Cs_nokeycvt: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"CS_NOKEYCVT"
-		end
-
 	Cs_globalclass: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias
 			"CS_GLOBALCLASS"
+		end
+
+	Cs_nokeycvt: INTEGER is
+		obsolete
+			"Not defined any more for some %
+			%C compilers, returns old defined value"
+		do
+			Result := 256
+		end
+	
+	Cs_keycvtwindow: INTEGER is
+		obsolete
+			"Not defined any more for some %
+			%C compilers, returns old defined value"
+		do
+			Result := 4
 		end
 
 end -- class WEL_CS_CONSTANTS

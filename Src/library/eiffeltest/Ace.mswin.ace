@@ -6,33 +6,25 @@ root
 
 default
 	assertion (all)
-	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base")
 
 cluster
 
-	all library:	"library"
+	all eiffeltest:	"library"
 		exclude
 			"CVS"
 		end
 
-
-	-- EiffelBase
-	
-	all base:		"$EIFFEL4\library\base"
+		-- EiffelBase
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
 			"desc"; "table_eiffel3"
 		end
 
-	
-	-- EiffelTime
-
-	all time:	"$EIFFEL4\library\time"
+		-- EiffelTime
+	all time:	"$ISE_EIFFEL\library\time"
 		exclude
 			"french"; "german"
 		end
 
-external
-	object: 
-		"$(EIFFEL4)\library\time\Clib\datetime.lib"
-		
 end -- system eiffeltest

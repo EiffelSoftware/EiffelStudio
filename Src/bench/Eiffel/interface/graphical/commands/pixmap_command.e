@@ -12,7 +12,11 @@ inherit
 			make as pict_create
 		end;
 	SHARED_PIXMAPS;
-	LICENCED_COMMAND;
+	LICENCED_COMMAND
+		rename
+			raise as raise_exception,
+			parent_window as Project_tool
+		end;
 	SHARED_ACCELERATOR
 
 feature {NONE}
@@ -59,20 +63,6 @@ feature
 				execute_licenced (argument)
 			end
 		end;
-
-feature -- Licence managment
-
-	license_window: LICENSE_W is
-		once
-			!!Result.make;
-		end;
-
-	lost_licence_warning is
-		do
-			warner (text_window).custom_call (Current, w_License_lost, 
-				"Close", "Info...", Void);
-		end;
-
 
 feature {TEXT_WINDOW}
 

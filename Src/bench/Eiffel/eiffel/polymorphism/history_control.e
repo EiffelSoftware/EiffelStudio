@@ -155,6 +155,6 @@ end
 			end;
 		end;
 
-	Overload: INTEGER is 20000;
+	Overload: INTEGER is 10000;
 
 end

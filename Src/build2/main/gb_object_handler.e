@@ -1018,6 +1018,16 @@ feature {GB_TITLED_WINDOW_OBJECT} -- Basic operations
 		ensure
 			window_set: root_window_object = a_window
 		end
+		
+feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operations		
+
+	remove_root_window is
+			-- Ensure `rot_window' is Void.
+		do
+			root_window_object := Void
+		ensure
+			root_window_void: root_window_object = Void
+		end
 
 feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 

@@ -478,18 +478,30 @@ feature -- Access
 				 	item_height_is_integer: item_height.is_integer
 				 end
 				 a_height := item_height.to_integer
-				if item_state.is_equal ("minimized") and not has_maximized_tool then
-					minimized_count := minimized_count + 1
-					check
-						not_all_items_minimized: minimized_count < count
-					end
-					if minimized_count < count then
-						if not curr_item.is_minimized then
-								curr_item.minimize
+				 
+				 	-- The protection here is for the case where we have switched from
+				 	-- show multiple tools to show a single tool mode. We must ignore minimization
+				 	-- and maximization for any tools that are not actually contained in `Current'.
+				 	-- There may be a better way to perform this, such as preprocessing the data
+				 	-- and removing invalid entries. Julian.
+				if linear_representation.has (curr_item.widget) then
+					if item_state.is_equal ("minimized") and not has_maximized_tool then
+						minimized_count := minimized_count + 1
+						
+							--| FIXME this is not true in the case where we are only showing a single tool.
+							--| Should we pre-prune all of the data so there is only a single item?
+							--| I think it only occurs in the case where you switch from regular mode to single and restart. Julian.
+						--check
+						--		not_all_items_minimized: minimized_count < count
+						--end
+						if minimized_count < count then
+							if not curr_item.is_minimized then
+									curr_item.minimize
+							end
 						end
+					elseif item_state.is_equal ("maximized") then
+						curr_item.maximize
 					end
-				elseif item_state.is_equal ("maximized") then
-					curr_item.maximize
 				end
 				i := i + 6
 			end

@@ -28,7 +28,7 @@ feature -- Access
 	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
 			-- Generate c client for record.
 		local
-			struct_def, forward_def: STRING
+			struct_def: STRING
 			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
 			header: STRING
 		do
@@ -43,31 +43,8 @@ feature -- Access
 			if not a_descriptor.is_union then 
 				a_descriptor.fields.sort
 			end
-
-			create forward_def.make (100)
 			
-			forward_def.append ("namespace ")
-			forward_def.append (a_descriptor.namespace)
-			forward_def.append (New_line)
-			forward_def.append (Open_curly_brace)
-			forward_def.append (New_line)
-			
-			forward_def.append (typedef)
-			forward_def.append (Space)
-			if a_descriptor.is_union then
-				forward_def.append (Union)
-			else
-				forward_def.append (Struct)
-			end
-			forward_def.append (Space)
-			forward_def.append ("tag")
-			forward_def.append (a_descriptor.c_type_name)
-			forward_def.append (Space)
-			forward_def.append (a_descriptor.c_type_name)
-			forward_def.append (Semicolon)
-			forward_def.append (New_line)
-			forward_def.append (Close_curly_brace)
-			c_writer.add_other_forward (forward_def)
+			c_writer.add_other_forward (forward_definition (a_descriptor))
 
 			create struct_def.make (1000)
 			
@@ -101,8 +78,13 @@ feature -- Access
 				struct_def.append (Semicolon)
 				struct_def.append (New_line)
 
-				if not (a_data_visitor.c_header_file = Void or else a_data_visitor.c_header_file.empty) then
-					if not c_writer.import_files.has (a_data_visitor.c_header_file) then
+				if 
+					a_data_visitor.c_header_file /= Void and then 
+					not a_data_visitor.c_header_file.empty
+				then
+					if a_data_visitor.is_structure_pointer then
+						add_pointed_structure_include (a_descriptor.fields.item.data_type)
+					elseif not c_writer.import_files.has (a_data_visitor.c_header_file) then
 						c_writer.add_import (a_data_visitor.c_header_file)
 					end
 				end
@@ -139,6 +121,102 @@ feature -- Access
 
 
 feature {NONE} -- Implementation
+
+	add_pointed_structure_include (data_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR) is
+			-- Add include file for pointed structure.
+		require
+			non_void_descriptor: data_descriptor /= Void
+			pointed_structure: data_descriptor.visitor.is_structure_pointer
+		local
+			pointed_data_type: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			user_defined_data_type : WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
+			a_type_descriptor: WIZARD_TYPE_DESCRIPTOR
+			an_index: INTEGER
+			record_descriptor: WIZARD_RECORD_DESCRIPTOR
+		do
+			pointed_data_type ?= data_descriptor
+			if pointed_data_type /= Void then
+				user_defined_data_type ?= pointed_data_type.pointed_data_type_descriptor
+				if user_defined_data_type /= Void then
+					an_index := user_defined_data_type.type_descriptor_index
+					a_type_descriptor := user_defined_data_type.library_descriptor.descriptors.item (an_index)
+					record_descriptor ?= a_type_descriptor
+					if record_descriptor /= Void then
+						c_writer.add_other_forward (forward_definition (record_descriptor))
+						if 
+							not c_writer.import_files.has (data_descriptor.visitor.c_header_file) and
+							not c_writer.import_files_after.has (data_descriptor.visitor.c_header_file) and
+							not c_writer_impl.import_files.has (data_descriptor.visitor.c_header_file)
+						then
+							c_writer_impl.add_import (data_descriptor.visitor.c_header_file)
+						end
+
+					end
+				end
+			end
+		end
+		
+	forward_definition (a_descriptor: WIZARD_RECORD_DESCRIPTOR): STRING is
+			-- Forward definition.
+		require
+			non_void_descriptor: a_descriptor /= Void
+		do
+			create Result.make (100)
+			
+			if 
+				a_descriptor.namespace /= Void and then
+				not a_descriptor.namespace.empty
+			then
+				Result.append ("namespace ")
+				Result.append (a_descriptor.namespace)
+				Result.append (New_line)
+				Result.append (Open_curly_brace)
+				Result.append (New_line)
+			end
+
+			if a_descriptor.is_union then
+				Result.append (Union)
+			else
+				Result.append (Struct)
+			end
+			Result.append (Space)
+			Result.append ("tag")
+			Result.append (a_descriptor.c_type_name)
+			Result.append (Semicolon)
+			Result.append (New_line)
+			
+			Result.append (typedef)
+			Result.append (Space)
+			if a_descriptor.is_union then
+				Result.append (Union)
+			else
+				Result.append (Struct)
+			end
+			Result.append (Space)
+			if 
+				a_descriptor.namespace /= Void and then 
+				not a_descriptor.namespace.empty 
+			then
+				Result.append (a_descriptor.namespace)
+				Result.append ("::")
+			end
+			Result.append ("tag")
+			Result.append (a_descriptor.c_type_name)
+			Result.append (Space)
+			Result.append (a_descriptor.c_type_name)
+			Result.append (Semicolon)
+			
+			if 
+				a_descriptor.namespace /= Void and then
+				not a_descriptor.namespace.empty
+			then
+				Result.append (New_line)
+				Result.append (Close_curly_brace)
+			end
+		ensure
+			non_void_forward_definition: Result /= Void
+			valid_forward_definition: not Result.empty
+		end
 
 	access_macro (a_record_descriptor: WIZARD_RECORD_DESCRIPTOR;
 				a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): STRING is
@@ -343,7 +421,7 @@ feature {NONE} -- Implementation
 					Result.append ("_field_")
 					Result.append (Close_parenthesis)
 					Result.append (Comma_space)
-					Result.append (Ampersand)
+					Result.append (Open_parenthesis)
 					Result.append (Open_parenthesis)
 					Result.append (c_type)
 					Result.append (Space)

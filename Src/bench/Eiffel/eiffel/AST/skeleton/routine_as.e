@@ -255,8 +255,7 @@ feature -- default rescue
 				def_resc_id.load (def_resc_name)
 				create def_resc_call
 				def_resc_call.set_feature_name (def_resc_id)
-				create def_resc_instr
-				def_resc_instr.set_call (def_resc_call)
+				create def_resc_instr.initialize (def_resc_call, end_location)
 				create rescue_clause.make (1)
 				rescue_clause.extend (def_resc_instr)
 			end
@@ -400,7 +399,6 @@ feature -- Type check, byte code and dead code removal
 			local_name: STRING
 			solved_type: TYPE_A
 			context_class: CLASS_C
-			gen_type: GEN_TYPE_A
 			track_local: BOOLEAN
 			counter: INTEGER
 			local_info: LOCAL_INFO
@@ -531,10 +529,7 @@ feature -- Type check, byte code and dead code removal
 
 							-- Update instantiator for changed class
 						if track_local then
-							gen_type ?= solved_type.actual_type
-							if gen_type /= Void then
-								Instantiator.dispatch (gen_type, context_class)
-							end
+							Instantiator.dispatch (solved_type.actual_type, context_class)
 						end
 						id_list.forth
 					end

@@ -79,8 +79,11 @@ feature -- Status report
 			Result := (Read_mode_id <= n) and (n <= Write_mode_id)
 		end
 	 
+	is_binary_mode: BOOLEAN
+			-- Is binary transfer mode selected?
+			
 	Supports_multiple_transactions: BOOLEAN is True
-			-- Does resource support multiple tranactions per connection?
+			-- Does resource support multiple transactions per connection?
 			-- (Answer: yes)
 
 feature -- Status setting
@@ -163,6 +166,22 @@ feature -- Status setting
 			mode := Write_mode_id
 		end
 	
+	set_text_mode is
+			-- Set ASCII text transfer mode.
+		do
+			is_binary_mode := False
+		ensure
+			text_mode_set: not is_binary_mode
+		end
+
+	set_binary_mode is
+			-- Set binary transfer mode.
+		do
+			is_binary_mode := True
+		ensure
+			binary_mode_set: is_binary_mode
+		end
+		
 	reuse_connection (other: RESOURCE) is
 			-- Reuse connection of `other'.
 		local
@@ -332,7 +351,6 @@ feature {NONE} -- Implementation
 			-- A comma-separated representation of the `num' lowest bytes of
 			-- `n'
 		require
-			non_negative_integer: n >= 0
 			positive_number_of_bytes: num > 0
 		local
 			divisor: INTEGER
@@ -457,7 +475,7 @@ feature {NONE} -- Implementation
 			opened: is_open
 		do
 			if send_username and then send_password and then
-				set_binary_mode then
+				send_transfer_mode_command then
 				bytes_transferred := 0
 				transfer_initiated := False
 				is_count_valid := False
@@ -499,8 +517,18 @@ feature {NONE} -- Implementation
 			end	
 		end
 
-	set_binary_mode: BOOLEAN is
-			-- Set binary file mode. Did it work?
+	send_text_mode_command: BOOLEAN is
+			-- Send ASCII text transfer mode command. Did it work?
+		do
+			send (main_socket, Ftp_text_mode_command)
+			Result := reply_code_ok (<<200>>)
+			if not Result then
+				error_code := Wrong_command
+			end
+		end
+
+	send_binary_mode_command: BOOLEAN is
+			-- Send binary transfer mode command. Did it work?
 		do
 			send (main_socket, Ftp_binary_mode_command)
 			Result := reply_code_ok (<<200>>)
@@ -509,6 +537,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	send_transfer_mode_command: BOOLEAN is
+			-- Send transfer mode command. Did it work?
+		do
+			if is_binary_mode then
+				Result := send_binary_mode_command
+			else
+				Result := send_text_mode_command
+			end
+		end
+		
 	send_port_command: BOOLEAN is
 			-- Send PORT command. Did it work?
 		require

@@ -19,7 +19,7 @@ inherit
 			process_classi, compatible, process_feature,
 			process_class_syntax, process_ace_syntax, display,
 			process_call_stack, force_raise, resources,
-			update_graphical_resources
+			update_graphical_resources, help_index, icon_id
 		end;
 	COMMAND;
 	BASE
@@ -49,7 +49,7 @@ feature -- Initialization
 		do
 			General_resources.add_user (Current);
 			Project_resources.add_user (Current);
-			base_make (tool_name, a_screen);
+			base_make (Icon_id.out, a_screen);
 			!! history.make;
 			register;
 			forbid_resize;
@@ -236,7 +236,15 @@ feature -- Access
 	global_form: FORM is
 		do
 			Result := std_form
-		end
+		end;
+
+	help_index: INTEGER is 2
+
+	icon_id: INTEGER is
+			-- Icon id of Current window (for windows)
+		do
+			Result := Interface_names.i_Project_id
+		end;
 
 feature -- Access
 
@@ -835,8 +843,8 @@ feature -- Graphical Interface
 			stop_points_status_menu_entry: EB_MENU_ENTRY;
 			show_pref_cmd: SHOW_PREFERENCE_TOOL;
 			show_pref_menu_entry: EB_MENU_ENTRY;
-			show_prof_cmd: SHOW_PROFILE_TOOL;
-			show_prof_menu_entry: EB_MENU_ENTRY;
+			-- FIXME profile tool will be impl in 4.1 show_prof_cmd: SHOW_PROFILE_TOOL;
+			-- FIXME profile tool will be impl in 4.1 show_prof_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR;
 			display_feature_cmd: DISPLAY_ROUTINE_PORTION;
 			display_feature_button: EB_BUTTON;
@@ -915,8 +923,8 @@ feature -- Graphical Interface
 			!! stop_points_status_menu_entry.make_default (stop_points_status_cmd, debug_menu);
 			!! sep.make (Interface_names.t_Empty, debug_menu);
 
-			!! show_prof_cmd;
-			!! show_prof_menu_entry.make_default (show_prof_cmd, window_menu);
+			-- FIXME !! show_prof_cmd;
+			-- FIXME !! show_prof_menu_entry.make_default (show_prof_cmd, window_menu);
 
 			!! sep.make (Interface_names.t_Empty, window_menu);
 			!! show_pref_cmd.make (Project_resources);

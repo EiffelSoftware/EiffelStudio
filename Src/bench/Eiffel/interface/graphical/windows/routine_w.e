@@ -27,7 +27,7 @@ inherit
 			update_boolean_resource,
 			update_integer_resource,
 			set_title, set_mode_for_editing, parse_file, resources,
-			history_window_title, has_editable_text
+			history_window_title, has_editable_text, help_index, icon_id
 		end
 
 	BAR_AND_TEXT
@@ -44,7 +44,7 @@ inherit
 			update_boolean_resource,
 			update_integer_resource,
 			set_title, set_mode_for_editing, parse_file, resources,
-			history_window_title, has_editable_text
+			history_window_title, has_editable_text, help_index, icon_id
 		select
 			reset, make_shell, close_windows
 		end;
@@ -56,11 +56,11 @@ creation
 
 feature -- Initialization
 
-	make_shell (a_shell: EB_SHELL) is
-			-- Create a feature tool
+	make_shell (a_screen: SCREEN) is
+			-- Create a feature tool.
 		do
 			is_in_project_tool := False;
-			bar_and_text_make_shell (a_shell);
+			bar_and_text_make_shell (a_screen);
 		end;
 
 	form_create (a_form: FORM; file_m, edit_m, format_m, special_m: MENU_PULL) is
@@ -175,6 +175,14 @@ feature -- Window Properties
 			Result := True
 		end;
 
+	help_index: INTEGER is 3
+
+	icon_id: INTEGER is
+			-- Icon id of Current window (only for windows)
+		do
+			Result := Interface_names.i_Feature_id
+		end;
+ 
 feature -- Resetting
 
 	reset is

@@ -52,10 +52,13 @@ feature {NONE} -- Initialization
 		do
 			set_title (private_title)
 			fill_recently_used
-			if search_directory /= void then
-				directory := search_directory
-			else
-				directory := current_working_directory
+			directory := get ("Directory0")
+			if directory = Void then
+				if search_directory /= void then
+					directory := search_directory
+				else
+					directory := current_working_directory
+				end
 			end
 			update_directories
 			selection_made := True
@@ -249,27 +252,44 @@ feature {NONE} -- Implementation
 			string_exists: s /= Void
 		local
 			i: INTEGER
+			a_item : STRING
 		do
-			if remembered_array = Void then
-				!! remembered_array.make (1,1)
-			end
-			from 
-				i := remembered_array.upper - 1
-			until
-				i <= 2
-			loop
-				if remembered_array.item (i-1) /= Void and then remembered_array.item (i-1).is_equal (s) then
-					remembered_array.put (Void, i)
-				else
-					remembered_array.put (remembered_array.item (i-1), i)
+			if remembered_list = Void then
+				!! remembered_list.make
+				remembered_list.compare_objects
+				remembered_list.extend (s)
+			else
+				if remembered_list.has (s) then
+					remembered_list.start
+					remembered_list.prune (s)
+					remembered_list.extend (Void)
 				end
-				i := i - 1
+				if not remembered_list.empty then
+					from
+						remembered_list.finish
+					until
+						remembered_list.before
+					loop
+						remembered_list.back
+						if remembered_list.before then
+							a_item := Void
+						else
+							a_item := remembered_list.item
+						end
+						remembered_list.forth
+						remembered_list.replace (a_item)
+						remembered_list.back
+					end
+					remembered_list.forth
+					remembered_list.replace (s)
+				else
+					remembered_list.extend (s)
+				end
 			end
-			remembered_array.put (s, 1)
 		end
 
 	fill_recently_used is
-			-- Fill array of most recently used values
+			-- Fill list of most recently used values
 		local
 			mru_max_string, s, mru_dir: STRING
 			mru_count, mru_max: INTEGER
@@ -283,7 +303,8 @@ feature {NONE} -- Implementation
 				end
 			end
 			if mru_max > 0 then
-				!! remembered_array.make (1, mru_max)
+				!! remembered_list.make
+				remembered_list.compare_objects
 				from
 					i := 0
 				until
@@ -294,18 +315,18 @@ feature {NONE} -- Implementation
 					mru_dir := get (s)
 					if mru_dir /= Void then
 						mru_count := mru_count + 1
-						remembered_array.put (mru_dir, mru_count)
+						remembered_list.extend (mru_dir)
 					end
 					i := i + 1
 				end
 			end
 			from
-				i := 1
+				remembered_list.start
 			until
-				i > mru_count
+				remembered_list.after
 			loop
-				combo_box.add_string (remembered_array.item (i))
-				i := i + 1
+				combo_box.add_string (remembered_list.item)
+				remembered_list.forth
 			end
 		end
 
@@ -332,16 +353,19 @@ feature {NONE} -- Implementation
 					Result.remove (Result.count)
 				end
 			else
+				if Result.item (Result.count) /= '\' then
+					Result.append_character ('\')
+				end
 				Result.append (ls)
 				Result.append_character ('\')
 			end
 		end
 
-	remembered_array: ARRAY [STRING]
-			-- Array of most recently used directories
+	remembered_list: LINKED_LIST [STRING]
+			-- List of most recently used directories
 
 	save_recently_used is
-			-- Save array of most recently used directories
+			-- Save list of most recently used directories
 		local
 			mru_max_string, s, mru_dir: STRING
 			mru_max: INTEGER
@@ -356,15 +380,19 @@ feature {NONE} -- Implementation
 			end
 			from
 				i := 0
+				remembered_list.start
 			until
-				i >= mru_max or i >= remembered_array.upper
+				i >= mru_max or remembered_list.after
 			loop
 				s := "Directory"
 				s.append_integer (i)
-				if remembered_array.item (i+1) /= Void then
-					put (remembered_array.item (i+1), s)	
+				if remembered_list.item /= Void then
+					put (remembered_list.item, s)
+				else
+					put ("C:\", s)
 				end
 				i := i + 1
+				remembered_list.forth
 			end
 		end
 

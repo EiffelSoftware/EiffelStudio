@@ -8,6 +8,9 @@ class
 
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+		redefine
+			tooltext
+		end
 
 	PROJECT_CONTEXT
 		export
@@ -121,6 +124,12 @@ feature -- Properties
 			-- Short description of Current.
 		do
 			Result := Interface_names.f_Run_finalized
+		end
+
+	tooltext: STRING is
+			-- Short description of Current.
+		do
+			Result := Interface_names.b_Run_finalized
 		end
 
 	name: STRING is "Run_final"

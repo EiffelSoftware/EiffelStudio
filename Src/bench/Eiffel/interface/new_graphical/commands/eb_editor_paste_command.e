@@ -9,7 +9,8 @@ class
 inherit
 	EB_CLIPBOARD_COMMAND
 		redefine
-			executable
+			executable,
+			tooltext
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
@@ -57,6 +58,12 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Paste
+		end
+
+	tooltext: STRING is
+			-- Text for the toolbar button.
+		do
+			Result := Interface_names.b_Paste
 		end
 
 	editor: EB_EDITOR is

@@ -11,6 +11,9 @@ class
 
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+		redefine
+			tooltext
+		end
 
 	EB_CONSTANTS
 
@@ -56,6 +59,12 @@ feature {NONE} -- Attributes
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Exec_kill
+		end
+
+	tooltext: STRING is
+			-- Text displayed on `Current's buttons.
+		do
+			Result := Interface_names.b_Exec_kill
 		end
 
 	name: STRING is "Exec_quit"

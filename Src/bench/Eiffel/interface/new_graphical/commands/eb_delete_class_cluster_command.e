@@ -14,7 +14,8 @@ inherit
 		redefine
 			mini_pixmap,
 			new_toolbar_item,
-			new_mini_toolbar_item
+			new_mini_toolbar_item,
+			tooltext
 		end
 
 	EB_CLUSTER_MANAGER_OBSERVER
@@ -62,18 +63,6 @@ feature -- Access
 			Result.drop_actions.extend (agent drop_cluster)
 		end
 
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
 feature -- Properties
 
 	description: STRING is
@@ -109,11 +98,11 @@ feature -- Properties
 			Result := description
 		end
 
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
+	tooltext: STRING is
+			-- Text that appears on toolbar button
+		once
+			Result := Interface_names.B_remove_class_cluster
+		end
 
 feature -- Events
 
@@ -161,10 +150,6 @@ feature -- Basic operations
 				end
 			end
 		end
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Implementation
 

@@ -77,8 +77,13 @@ feature -- Basic operations
 			if ww /= Void then
 				tb ?= ww
 				if tb /= Void then
-					tb.set_toggle_on
+					if tb.state then
+						tb.set_toggle_off
+					else
+						tb.set_toggle_on
+					end
 					toggle_value_changed_actions.execute (tb, Void)
+					activate_actions.execute (tb, Void)
 				else
 					activate_actions.execute (ww, Void)
 				end

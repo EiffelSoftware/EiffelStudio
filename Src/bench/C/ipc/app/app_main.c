@@ -23,8 +23,6 @@
 #include "stream.h"
 #include "ewbio.h"
 
-rt_public void dexit(int i);
-
 extern char *rindex(const char *s, int c);
 extern unsigned TIMEOUT;
 
@@ -63,9 +61,4 @@ rt_public void main(int argc, char **argv)
 	exit(0);
 }
 
-rt_public void dexit(int status)
-{
-	add_log(12, "exiting with status %d", status);
-	exit(status);
-}
 

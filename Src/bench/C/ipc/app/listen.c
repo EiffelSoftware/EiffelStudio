@@ -21,6 +21,7 @@
 #include "ewbio.h"
 #include "stream.h"
 #include "listen.h"
+#include "eif_logfile.h"
 
 #ifdef EIF_WIN32
 extern STREAM *sp;

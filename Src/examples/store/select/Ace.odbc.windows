@@ -33,10 +33,10 @@ cluster
 
 -- EiffelStore
 
-	estore_support:		"d:/NewStore/store/support";
-	estore_interface:	"d:/NewStore/store/interface";
-	estore_db_support:	"d:/NewStore/store/dbms/support";
-	estore_odbc:		"d:/NewStore/store/dbms/rdbms/odbc";
+	estore_support:		"$EIFFEL4/library/store/support";
+	estore_interface:	"$EIFFEL4/library/store/interface";
+	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
+	estore_odbc:		"$EIFFEL4/library/store/dbms/rdbms/odbc";
 
 -- EiffelTime
 	

@@ -285,17 +285,20 @@ feature {NONE} -- Processing
 			-- a page load event handler is required for all page so that
 			-- it can filter out unwanted content at loading time.
 		local
-			l_script_text: STRING
+			l_script_text,
+			l_toc_name: STRING
 			l_parent,
 			l_script_tag: XM_ELEMENT
 		do
 			if not shared_constants.help_constants.is_tree_web_help then				
-				l_script_text := "//empty"
+				l_toc_name := "simple_toc.js"
 			else				
-				l_script_text := "doc = window.location.href;if (parent.toc_frame){parent.toc_frame.documentLoaded(doc);}%
-				%else{var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);%
-				%setCookie ('redirecturl', doc, expdate);window.location.replace ('/index.html');}"
+				l_toc_name := "toc.js"
 			end
+			l_script_text := "doc = window.location.href;if (parent.toc_frame){parent.toc_frame.documentLoaded(doc);}%
+				%else{var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);%
+				%setCookie ('redirecturl', doc, expdate);window.location.replace ('" + relative_path_to_help_project (internal_xml.name) + 
+				shared_constants.help_constants.help_project_name + ".html');}"
 			l_parent := internal_xml.element_by_name ("document")
 			if l_parent /= Void then
 					-- Insert script in header
@@ -305,7 +308,7 @@ feature {NONE} -- Processing
 					create l_script_tag.make (l_parent, "script", create {XM_NAMESPACE}.make_default)
 					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("Language", create {XM_NAMESPACE}.make_default, "JavaScript", l_script_tag))
 					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("type", create {XM_NAMESPACE}.make_default, "text/javascript", l_script_tag))
-					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("src", create {XM_NAMESPACE}.make_default, "/toc.js", l_script_tag))
+					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("src", create {XM_NAMESPACE}.make_default, relative_path_to_help_project (internal_xml.name) + l_toc_name, l_script_tag))
 					l_parent.put_last (l_script_tag)
 					
 						-- Page Load event handler
@@ -337,6 +340,20 @@ feature {NONE} -- Implementation
 	header_inserted,
 	footer_inserted: BOOLEAN	
 			-- Was header/footer inserted?
+		
+	relative_path_to_help_project (a_file: STRING): STRING is
+			-- 
+		local
+			l_link: DOCUMENT_LINK
+			l_path: STRING
+		do
+			l_path := temporary_html_location (a_file, True)			
+			create l_link.make (l_path, shared_constants.application_constants.temporary_html_directory.string)
+			Result := l_link.relative_url
+			if Result.last_index_of ('/', Result.count) > 0 then				
+				Result := Result.substring (1, Result.last_index_of ('/', Result.count))
+			end
+		end		
 		
 invariant
 	has_content: internal_xml /= Void

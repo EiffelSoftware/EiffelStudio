@@ -506,7 +506,7 @@ feature -- Access
 					set_heights_no_resize (all_heights)
 				end
 			else
-				explorer_bar_manager.close_all_bars_except (Current)
+				explorer_bar_manager.close_bar (Current)
 			end
 		end
 		

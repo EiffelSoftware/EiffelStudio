@@ -12,49 +12,49 @@ feature -- Access
 
 	Hkey_classes_root: INTEGER is
 		external
-			"C"
+			"C [macro %"winreg.h%"]"
 		alias
 			"HKEY_CLASSES_ROOT"
 		end
 
 	Hkey_current_user: INTEGER is
 		external
-			"C"
+			"C [macro %"winreg.h%"]"
 		alias
 			"HKEY_CURRENT_USER"
 		end
 
 	Hkey_local_machine: INTEGER is
 		external
-			"C"
+			"C [macro %"winreg.h%"]"
 		alias
 			"HKEY_LOCAL_MACHINE"
 		end
 
 	Hkey_users: INTEGER is
 		external
-			"C"
+			"C [macro %"winreg.h%"]"
 		alias
 			"HKEY_USERS"
 		end
 
 	Hkey_performance_data: INTEGER is
 		external
-			"C"
+			"C [macro %"winreg.h%"]"
 		alias
 			"HKEY_PERFORMANCE_DATA"
 		end
 
 	Hkey_current_config: INTEGER is
 		external
-			"C"
+			"C [macro %"winreg.h%"]"
 		alias
 			"HKEY_CURRENT_CONFIG"
 		end
 
 	Hkey_dyn_data: INTEGER is
 		external
-			"C"
+			"C [macro %"winreg.h%"]"
 		alias
 			"HKEY_DYN_DATA"
 		end

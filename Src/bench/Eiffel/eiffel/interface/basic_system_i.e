@@ -102,6 +102,9 @@ feature -- Access
 	typed_pointer_class: CLASS_I
 			-- Class TYPED_POINTER
 
+	arguments_class: CLASS_I
+			-- Class ARGUMENTS
+
 	ancestor_class_to_all_classes_id: INTEGER is
 		do
 			if il_generation then
@@ -634,6 +637,16 @@ feature -- Settings
 			function_class := c
 		ensure
 			function_class_set: function_class = c
+		end
+
+	set_arguments_class (c: CLASS_I) is
+			-- Assign `c' to `arguments_class'.
+		require
+			c_not_void: c /= Void
+		do
+			arguments_class := c
+		ensure
+			arguments_class: arguments_class = c
 		end
 
 end -- class BASIC_SYSTEM_I

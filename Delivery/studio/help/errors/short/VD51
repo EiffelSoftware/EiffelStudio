@@ -1,0 +1,3 @@
+Lace error: cannot find parent cluster name in current list of specified clusters.
+What to do: make sure that the parent cluster name is a valid cluster name specified
+            before its use as a parent qualifier.

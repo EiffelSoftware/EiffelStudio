@@ -16,6 +16,11 @@ inherit
 			interface
 		end
 
+	EV_PICK_AND_DROPABLE_I
+		redefine
+			interface
+		end
+
 	EV_PIXMAPABLE_I
 		redefine
 			interface
@@ -71,6 +76,9 @@ end -- class EV_SIMPLE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/09 21:36:24  king
+--| Now inheriting from PND
+--|
 --| Revision 1.22  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

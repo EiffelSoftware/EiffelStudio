@@ -4,24 +4,15 @@
 class CLICK_LIST
 
 inherit
-
 	CONSTRUCT_LIST [CLICK_AST]
-		rename
-			make as construct_list_make
 		export
 			{ANY} area, lower, upper
 		end
 
 creation
-
 	make
 	
 feature 
-
-	make (n: INTEGER) is
-		do
-			construct_list_make (n)
-		end;
 
 	trace is
 		local

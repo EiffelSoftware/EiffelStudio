@@ -133,6 +133,7 @@ extern void exfail(EIF_CONTEXT_NOARG);			/* Signals: reached end of a rescue cla
 extern void panic(EIF_CONTEXT char *msg);			/* Run-time raised panic */
 extern void fatal_error(EIF_CONTEXT char *msg);			/* Run-time raised fatal errors */
 extern void exok(EIF_CONTEXT_NOARG);				/* Resumption has been successful */
+extern void exclear(EIF_CONTEXT_NOARG);				/* Clears the exception stack */
 extern void esfail(EIF_CONTEXT_NOARG);			/* Eiffel system failure */
 extern void ereturn(EIF_CONTEXT_NOARG);			/* Return to lastly recorded rescue entry */
 extern struct ex_vect *exget(register2 struct xstack *stk);	/* Get a new vector on stack */

@@ -23,7 +23,7 @@ creation
 	make,
 	make_with_text
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- radio button with `par' as parent.

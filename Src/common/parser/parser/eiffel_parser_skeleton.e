@@ -375,7 +375,7 @@ feature {NONE} -- Actions
 			selecting_set: Result.selecting = s
 		end
 
-	new_precursor (n: PAIR [ID_AS, CLICK_AST]; args: EIFFEL_LIST [EXPR_AS]): PRECURSOR_AS is
+	new_precursor (n: PAIR [ID_AS, CLICK_AST]; args: EIFFEL_LIST [EXPR_AS]; old_syntax_location: TOKEN_LOCATION): PRECURSOR_AS is
 			-- New precursor AST node;
 			-- Update the clickable list.
 		require
@@ -385,6 +385,12 @@ feature {NONE} -- Actions
 		do
 			Result := new_precursor_as (n.first, args)
 			n.second.set_node (Result)
+			if old_syntax_location /= Void then
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make (old_syntax_location.start_position,
+					old_syntax_location.end_position, filename, 0,
+					"Put type specification after `Precursor' keyword"))
+			end
 		ensure
 			precursor_not_void: Result /= Void
 			parent_name_set: Result.parent_name = n.first

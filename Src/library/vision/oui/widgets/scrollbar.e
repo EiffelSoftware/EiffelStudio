@@ -242,6 +242,28 @@ feature -- Orientation
 			value_correctly_set: is_horizontal = flag
 		end;
 
+feature -- Slider size
+
+	set_slider_size (new_size: INTEGER) is
+			-- Set size of slider to 'new_size'.
+		require
+			new_size_small_enough: new_size <= (maximum - minimum);
+			new_size_large_enough: new_size >= 0
+		do
+			implementation.set_slider_size (new_size)
+		ensure
+			slider_size = new_size
+		end;
+
+	slider_size: INTEGER is
+			-- Size of slider.
+		do
+			Result := implementation.slider_size
+		ensure
+			slider_size_small_enough: Result <= (maximum - minimum);
+			slider_size_large_enough: Result >= 0
+		end
+
 feature -- Slider value 
 
 	value: INTEGER is

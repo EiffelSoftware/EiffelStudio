@@ -46,6 +46,12 @@ feature -- Access
 			"esdouble_size"
 		end;
 
+	Context: OPERATING_ENVIRONMENT is
+			-- Objects available from the operating system
+		once
+			!!Result
+		end;
+
 end -- class PLATFORM
 
 

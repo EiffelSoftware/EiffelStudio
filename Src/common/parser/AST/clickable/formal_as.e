@@ -11,11 +11,6 @@ inherit
 			format
 		end;
 	STONABLE;
-	BASIC_ROUTINES
-		export
-			{NONE}
-				all
-		end;
 
 feature
 

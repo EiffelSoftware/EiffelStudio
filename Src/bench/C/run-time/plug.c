@@ -233,6 +233,17 @@ register2 int len;
  * Conformance query
  */
 
+public char estypeg(obj1,obj2)
+char *obj1, *obj2;
+{
+	/* Are dynamic types of `obj1' and `obj2' identical? */
+
+	if ((char *) 0 == obj1 || (char *) 0 == obj2)
+		return (char) 0;
+
+	return (Dtype(obj1) == Dtype(obj2));
+}
+
 public char econfg(obj1,obj2)
 char *obj1, *obj2;
 {

@@ -41,10 +41,10 @@ feature {NONE}
 	display_info (c: CLASSC_STONE) is
 			-- Display clients of `c' in tree form.
 		local
-			ewb_clients: E_SHOW_CLIENTS
+			cmd: E_SHOW_CLIENTS
 		do
-			!! ewb_clients.make (c.class_c, text_window);
-			ewb_clients.execute
+			!! cmd.make (c.e_class, text_window);
+			cmd.execute
 		end
 
 	display_temp_header (stone: STONE) is

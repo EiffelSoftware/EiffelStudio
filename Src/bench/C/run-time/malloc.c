@@ -13,8 +13,8 @@
 	executable.
 */
 
-/*#define MEMCHK /**/
-/*#define MEM_STAT /**/
+/*#define MEMCHK */
+/*#define MEM_STAT */
 
 #include "eif_config.h"
 #include "eif_project.h"
@@ -58,10 +58,10 @@
 #undef HAS_SBRK
 #endif
 
-/*#define MEMCHK		/* Define for memory checker */
-/*#define EMCHK		/* Define for calls to memck */
-/*#define MEMPANIC		/* Panic if memck reports a trouble */
-/*#define DEBUG 63		/* Activate debugging code */
+/*#define MEMCHK */		/* Define for memory checker */
+/*#define EMCHK */		/* Define for calls to memck */
+/*#define MEMPANIC */		/* Panic if memck reports a trouble */
+/*#define DEBUG 63 */		/* Activate debugging code */
 
 #ifdef MEMPANIC
 #define mempanic	eif_panic("memory inconsistency")

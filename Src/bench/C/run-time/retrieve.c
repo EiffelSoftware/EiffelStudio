@@ -46,9 +46,9 @@
 #include <winsock.h>
 #endif
 
-/*#define DEBUG_GENERAL_STORE	/**/
+/*#define DEBUG_GENERAL_STORE */	/**/
 
-/*#define DEBUG 1 /**/
+/*#define DEBUG 1 */ /**/
 
 /* Size of the buffer to retrieve an object */
 #define RETRIEVE_BUFFER_SIZE 262144L
@@ -2218,7 +2218,7 @@ int stream_read(char *pointer, int size)
 
 	if (stream_buffer_size - stream_buffer_position < size) {
 		stream_buffer_size += buffer_size;
-		stream_buffer = realloc (stream_buffer, stream_buffer_size);
+		stream_buffer = (char *) realloc (stream_buffer, stream_buffer_size);
 	}	
 
 	memcpy (pointer, (stream_buffer + stream_buffer_position), size);

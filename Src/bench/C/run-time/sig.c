@@ -31,7 +31,7 @@
 #endif
 
 /* For debugging */
-/*#define DEBUG 1		/**/
+/*#define DEBUG 1 */		/**/
 #define dprintf(n)		if (DEBUG & (n)) printf
 
 #define DESC_LEN	29		/* Maximum length for signal description */

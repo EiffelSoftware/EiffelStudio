@@ -57,7 +57,7 @@ static FILE *fil;						/* melted.eif file */
 
 /* For debugging */
 #define dprintf(n)	  if (DEBUG & (n)) printf
-/*#define DEBUG 3		/**/
+/*#define DEBUG 3 */		/**/
 
 
 rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)

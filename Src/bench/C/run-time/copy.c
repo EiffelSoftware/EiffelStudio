@@ -29,7 +29,7 @@
 #define SHALLOW		1		/* Copy first level only */
 #define DEEP		2		/* Recursive copy */
 
-/*#define DEBUG 	/**/
+/*#define DEBUG 	*/
 
 /* The following hash table is used to keep the maping between cloned objects,
  * so that we know for instance where we put the clone for object X. It takes

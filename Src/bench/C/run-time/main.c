@@ -103,7 +103,7 @@ rt_public long *nbref;						/* Gives # of references (updated by DLE) */
 rt_public struct eif_par_types **eif_par_table;	/*Parent table */
 rt_public int eif_par_table_size;			/* size of parent table */
 
-/*#define exvec() exft()					/* No stack dump in final mode */
+/*#define exvec() exft()		*/			/* No stack dump in final mode */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #endif
 

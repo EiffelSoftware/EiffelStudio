@@ -13,7 +13,7 @@
 #include "eif_object_id.h"
 
 
-/*#define DEBUG 2		/* Debug level */
+/*#define DEBUG 2 */		/* Debug level */
 
 #define dprintf(n)	if (DEBUG & (n)) printf
 

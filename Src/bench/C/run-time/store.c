@@ -40,9 +40,9 @@
 #include <strings.h>
 #endif
 
-/*#define DEBUG_GENERAL_STORE	/**/
+/*#define DEBUG_GENERAL_STORE */	/**/
 
-/*#define DEBUG 1	/**/
+/*#define DEBUG 1 */	/**/
 
 /* compression */
 #define EIF_BUFFER_SIZE EIF_CMPS_IN_SIZE
@@ -119,7 +119,7 @@ rt_private int stream_buffer_position;
 rt_private long stream_buffer_size;
 
 /* Functions to write on the specified IO_MEDIUM */
-rt_private int (char_write) (char *, int);
+rt_private int (char_wrie) (char *, int);
 rt_private int (stream_write) (char *, int);
 
 
@@ -366,7 +366,7 @@ rt_public char **stream_malloc (int stream_size)	/*08/04/98*/
 	char *buffer;
 	char **real_buffer;
 
-	buffer = malloc(stream_size);
+	buffer = (char *) malloc(stream_size);
 	if (buffer == (char *) 0) 
 		enomem ();
 	else {
@@ -1442,7 +1442,7 @@ rt_public void flush_st_buffer (void)
 		store_write_func();
 }
 
-rt_private int char_write(char *pointer, int size)
+rt_public int char_write(char *pointer, int size)
 {
 	EIF_GET_CONTEXT
     return write(s_fides, pointer, size);
@@ -1453,7 +1453,7 @@ rt_private int stream_write (char *pointer, int size)
 {
 	if (stream_buffer_size - stream_buffer_position < size) {
 		stream_buffer_size += buffer_size;
-		stream_buffer = realloc (stream_buffer, stream_buffer_size);
+		stream_buffer = (char *) realloc (stream_buffer, stream_buffer_size);
 	}
 
 	memcpy ((stream_buffer + stream_buffer_position), pointer, size);

@@ -955,7 +955,7 @@ rt_private EIF_CONF_TAB *eif_new_gen_conf(int16 min_low, int16 max_low, int16 mi
 		{
 			tab = (unsigned char *) cmalloc (size);
 
-			if (tab == (char *) 0)
+			if (tab == (unsigned char *) 0)
 				enomem ();
 
 			result->low_tab = tab;
@@ -976,7 +976,7 @@ rt_private EIF_CONF_TAB *eif_new_gen_conf(int16 min_low, int16 max_low, int16 mi
 		{
 			tab = (unsigned char *) cmalloc (size);
 
-			if (tab == (char *) 0)
+			if (tab == (unsigned char *) 0)
 				enomem ();
 
 			result->high_tab = tab;

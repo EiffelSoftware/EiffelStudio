@@ -98,13 +98,7 @@ feature {NONE} -- GUI building
 			
 			extend (list)
 			
-			create hbox
-			create label.make_with_text ("Entry: ")
-			hbox.extend (label)
-			hbox.disable_item_expand (label)
-			hbox.extend (text_field)
-			extend (hbox)
-			disable_item_expand (hbox)
+			build_text_field ("Entry: ")
 			
 			create hbox
 			hbox.set_border_width (5)
@@ -130,6 +124,21 @@ feature {NONE} -- GUI building
 			hbox.disable_item_expand (button)
 			hbox.extend (create {EV_CELL})
 		
+			extend (hbox)
+			disable_item_expand (hbox)
+		end
+
+	build_text_field (t: STRING) is
+			-- Create text field part.
+		local
+			hbox: EV_HORIZONTAL_BOX
+			label: EV_LABEL
+		do
+			create hbox
+			create label.make_with_text (t)
+			hbox.extend (label)
+			hbox.disable_item_expand (label)
+			hbox.extend (text_field)
 			extend (hbox)
 			disable_item_expand (hbox)
 		end

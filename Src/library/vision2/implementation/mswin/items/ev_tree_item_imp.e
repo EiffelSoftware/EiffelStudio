@@ -79,9 +79,10 @@ feature {NONE} -- Initialization
 			-- Create the item.
 		do
 			base_make (an_interface)
+			create ev_children.make (1)
+			create real_text.make (0)
 			wel_make
 			set_mask (Tvif_text + Tvif_state + Tvif_handle)
-			create real_text.make (0)
 		end
 
 	initialize is
@@ -89,7 +90,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create internal_children.make (1)
-			create ev_children.make (1)
 			is_initialized := True
 		end
 
@@ -601,6 +601,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.58  2000/04/10 18:28:09  brendel
+--| Modified creation sequence.
+--|
 --| Revision 1.57  2000/04/07 22:31:51  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

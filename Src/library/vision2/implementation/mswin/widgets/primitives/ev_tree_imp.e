@@ -114,6 +114,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
+			create ev_children.make (1)
 		end
 
 	initialize is
@@ -122,7 +123,6 @@ feature {NONE} -- Initialization
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_ARRAYED_LIST_ITEM_HOLDER_IMP} Precursor
 			!! all_ev_children.make (1)
-			create ev_children.make (1)
 			create image_list.make (16, 16, Ilc_color24, True)
 				-- Create image list with all images 16 by 16 pixels
 			set_image_list(image_list)
@@ -540,6 +540,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.62  2000/04/10 18:31:59  brendel
+--| Modified creation sequence.
+--|
 --| Revision 1.61  2000/04/05 21:16:13  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

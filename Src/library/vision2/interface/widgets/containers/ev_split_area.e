@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			create first_cell
 			split_box.extend (first_cell)
 			split_box.extend (sep)
-			split_box.disable_child_expand (sep)
+			split_box.disable_item_expand (sep)
 			create second_cell
 			split_box.extend (second_cell)
 			implementation.box.extend (split_box)
@@ -542,6 +542,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/09 16:12:24  brendel
+--| Replaced obsolete call width disable_item_expand.
+--|
 --| Revision 1.24  2000/03/06 20:39:10  brendel
 --| Modified implementation of set_split_position to calculate the new sizes
 --| before setting any of them.

@@ -5,12 +5,13 @@ root
 	emitter: make
 
 default
-	arguments (" ")
 	assertion (no)
 	msil_generation (yes)
 	disabled_debug (yes)
 	debug (no)
 	line_generation (no)
+	profile (no)
+	trace (no)
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (no)
@@ -20,10 +21,18 @@ default
 	namespace ("ISE.Cache")
 	version ("5.4.808.0")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+	msil_clr_version ("v1.1.4322")
 	msil_assembly_compatibility ("None")
-	msil_clr_version ("v1.0.3705")
 	check_vape (yes)
 	console_application (yes)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
 
 
 cluster
@@ -60,14 +69,14 @@ cluster
 		end
 
 assembly
-	"mscorlib":	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+	"mscorlib":	"mscorlib","1.0.5000.0","neutral","b77a5c561934e089"
 
-	"system_":	"System","1.0.3300.0","neutral","b77a5c561934e089"
+	"system_":	"System","1.0.5000.0","neutral","b77a5c561934e089"
 		prefix
 			system_dll_
 		end
 
-	"system_xml":	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+	"system_xml":	"System.Xml","1.0.5000.0","neutral","b77a5c561934e089"
 		prefix
 			xml_
 		end

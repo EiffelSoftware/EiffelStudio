@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			-- Initialize Current with type name `n' defined in assembly `id'
 			-- where elements are of type `e'.
 		require
-			name_not_void: n /= void
+			name_not_void: n /= Void
 			name_not_empty: not n.is_empty
 			id_positive: id > 0
 			e_not_void: e /= Void
@@ -38,5 +38,8 @@ feature -- Access
 
 	element_type: CONSUMED_REFERENCED_TYPE
 			-- Type of array element.
+
+invariant
+	element_type_not_void: element_type /= Void
 
 end -- class CONSUMED_ARRAY_TYPE

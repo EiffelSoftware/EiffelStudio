@@ -111,11 +111,4 @@ feature -- Formatting
 			ctxt.put_current_feature;
 		end;
 
-	put_index (ctxt: FORMAT_CONTEXT) is
-		do
-			ctxt.prepare_for_feature (internal_name, void);
-			ctxt.index_feature;	
-		end;
-
-
 end

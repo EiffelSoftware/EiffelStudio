@@ -47,7 +47,7 @@ feature
 			from
 				lines.start;
 			until
-				lines.offright
+				lines.after
 			loop
 				if  line.empty then
 					lines.remove;
@@ -84,7 +84,7 @@ feature
 				position_in_line := 1;
 				between_lines := true;
 			until
-				lines.offright 
+				lines.after
 					or else line.position + position_in_line - 1 >= pos
 			loop
 				if line.text.count + line.position - 1 >= pos then
@@ -95,7 +95,7 @@ feature
 				end;
 			end;
 		ensure
-			lines.offright or else position >= pos;
+			lines.after or else position >= pos;
 			between_lines or position = pos	
 		end;
 
@@ -139,14 +139,14 @@ feature
 				seeker.go (position_in_line);
 				found :=  false;
 			until
-				lines.offright or position > stop or found
+				lines.after or position > stop or found
 			loop
 				seeker.find_next;
 				found := not seeker.offright;
 				if not found then
 					lines.forth;
 					position_in_line := 1;
-					if not lines.offright and then position <= stop then
+					if not lines.after and then position <= stop then
 						seeker.make (line.text, pattern, context);
 					end;
 				else
@@ -172,7 +172,7 @@ feature
                 				seeker.go (position_in_line);
                 				found :=  false;
             			until
-                				lines.offright or position > stop or found
+                				lines.after or position > stop or found
             			loop
                 				seeker.find_previous;
                 				found := not seeker.offleft;
@@ -196,7 +196,7 @@ feature
 		do
 			if lines.offleft then 
 				Result := 0
-			elseif lines.offright then
+			elseif lines.after then
 				Result := lines.last.position + lines.last.text.count;
 			else
 				Result := line.position + position_in_line - 1;
@@ -258,7 +258,7 @@ feature
 				if not comments.off then
 					comment_position := comments.item.position
 				end;
-				if not lines.offright then
+				if not lines.after then
 					lines.forth
 				end;
 				if 

@@ -6,7 +6,7 @@ inherit
 
 	FEATURE_NAME
 		redefine
-			is_infix, is_valid, format, put_index
+			is_infix, is_valid, format
 		end
 
 feature -- Attributes
@@ -152,15 +152,6 @@ feature
 			ctxt.commit;
 		end;
 
-	put_index (ctxt: FORMAT_CONTEXT) is
-		do
-			if is_infix then	
-				ctxt.prepare_for_infix (internal_name, void);
-			else
-				ctxt.prepare_for_prefix (internal_name)
-			end;
-			ctxt.index_feature;
-		end;
 	
 	
 end

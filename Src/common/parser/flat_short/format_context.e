@@ -17,7 +17,6 @@ feature -- commit / rollback system
 			ast: CLASS_AS;
 			name: STRING;
 		do
-			io.putstring ("FORMATTING A CLASS %N");
 			class_c := c;
 			!!previous.make;
 			!!text.make;
@@ -26,17 +25,18 @@ feature -- commit / rollback system
 			upper_name.to_upper;
 			previous.add (first_format);
 			if is_short then
-				!FLAT_SHORT_TROFF_DEF!definition.make;
-			else
-				!FLAT_DEF!definition.make;
+				no_internals := true;
+				client := system.any_class.compiled_class;
 			end;
-			!!flat_struct.make (c, definition.client);
+			!!flat_struct.make (c, client);
 			flat_struct.fill;
 			if flat_struct.ast /= void then
-				prepare_class_text (upper_name);
+				prepare_class_text;
 				flat_struct.ast.format (Current);
+				end_class_text;
 			end;
 	end;
+
 
 	class_c: CLASS_C;
 	
@@ -57,7 +57,7 @@ feature -- commit / rollback system
 			new_format: LOCAL_FORMAT;
 		do
 			new_format := format.twin;
-			new_format.set_position(text.count);
+			new_format.set_position(text.cursor);
 			previous.add(new_format);
 		end;
 
@@ -98,19 +98,12 @@ feature -- commit / rollback system
 	is_in_first_pass: BOOLEAN;
 
 
-	is_reconstitution: BOOLEAN;
-
 
 feature -- text construction
 
-	definition : FORMAT_DEFINITION;
-		-- pretty printer options
+	no_internals: BOOLEAN;
 
-	no_internals: BOOLEAN is
-			-- short or flat /short form
-		do	
-			Result := definition.no_internals;
-		end;
+	client: CLASS_C;
 
 	no_inherited: BOOLEAN;
 		-- immediate feature only;
@@ -123,35 +116,41 @@ feature -- text construction
 			first_assertion := b;
 		end;
 
-	text : CLICK_STRUCT;
+	text : STRUCTURED_TEXT;
 		-- formatted text
 
-	put_string(s : STRING) is
+	put_string, put_identifier (s : STRING) is
 			-- append s to 'text'
+		local
+			item: BASIC_TEXT;	
 		do
-			text.put_string (s);
+			if s /= void then
+				!!item.make (s);
+				text.add (item);
+			end
 		end;
 
 
 	put_keyword(k : STRING) is
-			-- append k to 'text', including keyword formatting command.
-
+			-- append k to 'text', known as a keyword
+		local
+			item: BASIC_TEXT;
 		do
-			text.put_string (definition.before_keyword);
-			text.put_string (k);
-			text.put_string (definition.after_keyword);
+			!!item.make (k);
+			item.set_is_keyword;
+			text.add (item);	
 		end;
 
 	
 	put_special(s : STRING) is
-		-- append s to 'text', including special symbol formatting command.
+		-- append s to 'text', known as a comment
+		local
+			item: BASIC_TEXT;
 		do
-			text.put_string(definition.before_special);
-			text.put_string(s);
-			text.put_string(definition.after_special);
+			!!item.make (s);
+			item.set_is_special;
+			text.add (item);	
 		end;
-
-
 
 
 	put_class_name(c : CLASS_C) is
@@ -159,20 +158,13 @@ feature -- text construction
 		local
 			p : CLASSC_STONE;
 			s: STRING;
+			item: CLICKABLE_TEXT
 		do
 			!!p.make(c);
 			s := c.class_name.duplicate;
 			s.to_upper;
-			text.put_clickable_string(p, s);
-		end;
-
-
-
-
-	put_identifier(s : STRING) is
-			--append s to text
-		do
-			text.put_string(s);
+			!!item.make (s, p);
+			text.add (item);
 		end;
 
 
@@ -180,109 +172,81 @@ feature -- text construction
 	put_separator is
 			-- append the separator
 		local
-			s: STRING;
+			sep_item: BASIC_TEXT;
+			line_item: NEW_LINE_TEXT;
 		do
-			s := format.separator;
-			if s /= void then
+			if format.new_line_before_separator then
+				next_line;
+			end;
+			if format.separator /= void then
+				!!sep_item.make (format.separator);
 				if format.is_separator_special then
-					put_special(format.separator)
-				else
-					put_string(format.separator)
-				end
+					sep_item.set_is_special
+				elseif format.is_separator_keyword then
+					sep_item.set_is_keyword
+				end;
+				text.add (sep_item);
 			end;
 			if format.indent_between_tokens then
 				next_line;
-			else
-				put_string (" ");
 			end;
 		end;
 
-	trace is
-		local
-			i: INTEGER;
-			s: STRING;
-		do
-			!!s.make (20);
-			i := previous.count;
-			s.append("|");
-			s.append_integer(i);
-			s.append ("|");
-			s.append_integer (format.indent_depth);
-			s.append ("|");
-			put_string (s);
-		end;
-
-			
 
 	next_line is
 			--	 go to next line, indent as necessary
 		local
-			i : INTEGER;
-			s: STRING;
+			item: NEW_LINE_TEXT;
 		do
-			new_line;
-			from
-				i := 1;
-			until 
-				i > format.indent_depth
-			loop
-				indent;	
-				i := i + 1
-			end;
+			!!item.make (format.indent_depth);
+			text.add (item)
 		end;
 
-	new_line is
-			-- append new_line character to text
-			--|might change according to definition in future release
-		do
-			put_string("%N");
-		end;
 
-	indent is
-			-- add one tab or equivalent, as specified in definition
+	prepare_class_text is
+			-- append standard text before class 
 		local
-			i : INTEGER;
+			item: BEFORE_CLASS;
 		do
-			if definition.use_blank_as_tab then
-				from 
-					i := 1
-				until
-					i > definition.tab_length 
-				loop
-					put_string(" ");
-				    i := i + 1
-				end
-			else
-				put_string("%T")
-			end
+			!!item.make (upper_name);
+			text.add (item);
 		end;
 
-	
-
-	prepare_class_text (class_name: STRING) is
-			-- append standard text before class according to definition
+	end_class_text is
+			-- append standard text after class
+		local
+			item: AFTER_CLASS
 		do
-			put_string(definition.before_class (class_name));
+			!!item.make (upper_name);
+			text.add (item);
 		end;
 
-	end_class_text (class_name: STRING) is
-			-- append standard text after class according to definition
+	prepare_feature (feature_names: EIFFEL_LIST [FEATURE_NAME]) is
+			-- append standard text before feature declaration 
+		local
+			item: BEFORE_FEATURE;
 		do
-			put_string(definition.after_class (class_name));
+			!!item.make(upper_name, feature_names);
+			text.add (item);
 		end;
 
-	prepare_feature (class_name, feature_name: STRING) is
-			-- append standard text before feature declaration according to definition
+	end_feature (feature_names: EIFFEL_LIST [FEATURE_NAME]) is
+			-- append standard text after feature declaration
+		local
+			item: AFTER_FEATURE;
 		do
-			put_string(definition.before_feature (class_name, feature_name));
+			!!item.make (upper_name, feature_names);
+			text.add (item);
 		end;
 
-	end_feature (class_name, feature_name: STRING) is
-			-- append standard text after feature declaration according to definition
+	put_breakable is
+		local
+			mark: BREAKABLE_MARK;
 		do
-			put_string(definition.after_feature (class_name, feature_name));
+			!!mark;
+			text.add (mark);
 		end;
-
+			
 
 feature -- local_control
 
@@ -293,12 +257,12 @@ feature -- local_control
 
 	separator_is_special is
 		do
-			format.set_is_special(false);
+			format.set_is_special(true);
 		end;
 
 	separator_is_normal is
 		do
-			format.set_is_special(true);
+			format.set_is_special(false);
 		end;
 
 	abort_on_failure is
@@ -338,11 +302,6 @@ feature -- local_control
 			Result := format.must_abort_on_failure
 		end;
 
-	set_call_level is
-			-- set call level to true
-		do
-			format.set_call_level;
-		end;
 	
 	set_illegal_operator is
 			-- set illegal operator to true
@@ -371,12 +330,6 @@ feature -- type control
 	
 	arguments: AST_EIFFEL;
 
-	call_level: BOOLEAN is 
-			-- should feature name be written as identifier
-			-- (vs  complete declaration)
-		do
-			Result := format.call_level;
-		end;		
 
 	illegal_operator: BOOLEAN is
 			-- are operator illegal, while other feature name are
@@ -384,6 +337,12 @@ feature -- type control
 		do
 			Result := format.illegal_operator;
 		end;
+
+	put_name_of_class is
+		do
+			put_class_name (class_c);
+		end;
+			
 
 	prepare_for_feature (name: STRING; arg: EIFFEL_LIST [EXPR_AS]) is
 		do
@@ -426,24 +385,11 @@ feature -- type control
 			end;
 		end;
 
+
 	index_feature is
 		local
 			name: STRING;
 		do
-			!!name.make (50);
-			if format.local_types.is_prefix then
-				name.append (definition.before_keyword);
-				name.append ("prefix");
-				name.append (definition.after_keyword);
-				name.append (" ");
-			elseif format.local_types.is_infix then
-				name.append (definition.before_keyword);
-				name.append ("prefix");
-				name.append (definition.after_keyword);
-				name.append (" ");
-			end;
-			name.append (format.local_types.final_name);
-			prepare_feature (upper_name, name);
 		end;
 			
 
@@ -456,6 +402,7 @@ feature -- type control
 			stone: FEATURE_STONE;
 			feature_as: FEATURE_AS;
 			arg: EIFFEL_LIST [EXPR_AS];
+			item: BASIC_TEXT;
 		do
 			feature_i := format.local_types.target_feature;
 			if dot_needed then
@@ -465,11 +412,11 @@ feature -- type control
 				feature_as := body_server.item (feature_i.body_id);
 				!!stone.make (feature_i, feature_as.start_position,
 						feature_as.end_position);
-				text.put_clickable_string (stone,
-						format.local_types.final_name)
-			else
-				text.put_string (format.local_types.final_name)
+				!CLICKABLE_TEXT!item.make (format.local_types.final_name, stone);
+			else			
+				!!item.make (format.local_types.final_name)
 			end;
+			text.add (item);
 			arg ?= arguments;
 			if arg /= void then
 				begin;
@@ -494,12 +441,17 @@ feature -- type control
 	put_prefix is
 		local
 			feature_i: FEATURE_I; 
+			item: BASIC_TEXT;
 		do
 			if illegal_operator then
 				put_special ("(");
 				put_keyword ("prefix");
 				put_string (" ");		
-				put_string (format.local_types.final_name);
+				!!item.make (format.local_types.final_name);
+				if item.image.item (1) >= 'a' and item.image.item (1) <= 'z' then
+					item.set_is_keyword
+				end;
+				text.add (item);	
 				put_special ("%")");
 			else
 				feature_i := format.local_types.target_feature;
@@ -561,14 +513,16 @@ feature -- type control
 	is_feature_visible: BOOLEAN  is
 			-- should the feature be visible
 		do
-			Result := definition.client = void
-				or else format.local_types.is_visible (definition.client)
+			Result := client = void
+				or else format.local_types.is_visible (client)
 		end;
 
 	new_types: FEAT_ADAPTATION;
 	new_priority: INTEGER;
 	
 	set_source_class (c: CLASS_C) is
+		require
+			good_class: c /= void
 		do
 			format.set_classes (c, format.global_types.target_class);
 		end;
@@ -608,31 +562,28 @@ feature -- infix and prefix control
 	set_insertion_point is
 			-- Remember text position for parantheses and prefix operator
 		do
-			format.set_insertion_point(text.count);
+			format.set_insertion_point(text.cursor);
 		end;
 
     insert (s: STRING) is
+		local
+			item: BASIC_TEXT;	
         do
 			if 
 				s /= void 
-			--	and format.insertion_point < text.count
 			then
-				text.insert_string (s, format.insertion_point + 1);
+				!!item.make (s);
+				text.insert (format.insertion_point, item)
 			end;	
         end;
 
     insert_special (s: STRING) is
 		local
-			printed: STRING;
+			item: BASIC_TEXT;
         do
-			printed := s.duplicate;
-			if definition.before_special /= void then
-				printed.prepend(definition.before_special);
-			end;
-			if definition.after_special /= void then
-				printed.append (definition.after_special);
-			end;	
-			insert (printed);	
+			!!item.make (s);
+			item.set_is_special;
+		 	text.insert (format.insertion_point, item);	
         end;
 	
 	need_dot is
@@ -683,7 +634,6 @@ feature -- comments
 			begin;
 			if comment /= void then
 				if comment.count > 0 then
-					put_string (definition.before_comment);
 					put_string ("-- ");
 					put_string (comment.text.item (0));
 				end;
@@ -701,7 +651,6 @@ feature -- comments
 					end;
 				end;
 			end;
-			put_string (definition.after_comment);
 			commit;
 		end;
 			

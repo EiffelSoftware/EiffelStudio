@@ -89,9 +89,6 @@ feature {NONE}
 					position := position + 1
 				end
 			end;
-io.putstring ("After search by index, we have:%N");
-io.putstring (item (position).tagged_out);
-io.putstring ("N");
 		end;
 
 	position: INTEGER

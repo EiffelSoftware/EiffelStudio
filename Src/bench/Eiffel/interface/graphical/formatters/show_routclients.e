@@ -13,7 +13,7 @@ creation
 	
 feature 
 
-	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
+	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
 			init (c, a_text_window)
 		end;

@@ -162,11 +162,7 @@ feature -- formatting
 				ctxt.put_keyword ("interface");
 				ctxt.put_string (" ");
 			end;
-		--	ctxt.put_class_name (Universe.class_named (class_name,
-		--			reference_class.cluster).compiled_class);
-			s := class_name.duplicate;
-			s.to_upper;
-			ctxt.put_string (s);
+			ctxt.put_name_of_class;	
 
 			if generics /= void then
 				ctxt.put_string (" ");

@@ -35,8 +35,7 @@ feature {NONE}
 			ctxt: FORMAT_CONTEXT;
 		do
 			!!ctxt.make (c.class_c, true);
-			ctxt.text.write_in (text_window);
---		  text_window.share (flat_class.click_list)
+			text_window.process_text (ctxt.text);	
 		end
 
 end

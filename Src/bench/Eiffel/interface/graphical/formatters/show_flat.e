@@ -50,7 +50,7 @@ feature {NONE}
 			ctxt: FORMAT_CONTEXT;
 		do
 			!!ctxt.make (c.class_c, false);
-			ctxt.text.write_in (text_window);
+			text_window.process_text (ctxt.text );	
 		end;
  
 end

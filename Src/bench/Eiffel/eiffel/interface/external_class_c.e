@@ -142,6 +142,9 @@ feature -- Initialization
 				-- To store overloaded features.
 			create overloaded_names.make (10)
 
+				-- Add features from ANY
+			add_features_of_any (l_feat_tbl)
+
 				-- Initializes feature table.
 			process_features (l_feat_tbl, l_fields)
 			process_features (l_feat_tbl, l_constructors)
@@ -439,6 +442,88 @@ feature {NONE} -- Initialization
 			end
 		end
 
+	add_features_of_any (a_feat_tbl: like feature_table) is
+			-- Get all features of ANY and add them in `a_feat_tbl'.
+		require
+			a_feat_tbl_not_void: a_feat_tbl /= Void
+		local
+			l_any_tbl: like feature_table
+			l_orig_tbl: SELECT_TABLE
+			l_feat: FEATURE_I
+		do
+			l_any_tbl := feat_tbl_server.item (system.any_id)
+			check
+				l_any_tbl_not_void: l_any_tbl /= Void
+			end
+			from
+				l_orig_tbl := a_feat_tbl.origin_table
+				l_any_tbl.start
+			until
+				l_any_tbl.after
+			loop
+				l_feat := l_any_tbl.item_for_iteration.duplicate
+					-- Update `l_feat' in context of current class.
+				l_feat.instantiate (any_type)
+				l_feat.check_types (a_feat_tbl)
+				l_feat.set_feature_id (feature_id_counter.next)
+				l_feat.set_is_origin (False)
+				l_feat.set_rout_id_set (l_feat.rout_id_set.twin)
+
+					-- Insert modified `l_feat' in current feature table.
+				a_feat_tbl.put (l_feat, l_feat.feature_name_id)
+				l_orig_tbl.put (l_feat, l_feat.rout_id_set.first)
+				l_any_tbl.forth
+			end
+		end
+
+	insert_feature (a_feat: FEATURE_I; a_feat_tbl: like feature_table) is
+			-- Insert `a_feat' into `a_feat_tbl'. If there is a name conflict with
+			-- a routine already there, we rename the version from ANY.
+		require
+			a_feat_not_void: a_feat /= Void
+			a_feat_tbl_not_void: a_feat_tbl /= Void
+			has_select_table: a_feat_tbl.origin_table /= Void
+		local
+			l_orig_tbl: SELECT_TABLE
+			l_feat: FEATURE_I
+			i: INTEGER
+			l_base_name: STRING
+			l_new_name: STRING
+		do
+			l_orig_tbl := a_feat_tbl.origin_table
+
+				-- In case we have a conflict (mostly due to a routine of ANY)
+				-- we will rename the feature coming from ANY into `any_xxx'
+				-- and preserve the .NET name.
+			if a_feat_tbl.has_id (a_feat.feature_name_id) then
+				l_feat := a_feat_tbl.found_item
+				check
+					feature_of_any: l_feat.written_in = system.any_id
+				end
+				a_feat_tbl.remove (l_feat.feature_name_id)
+				l_base_name := l_feat.feature_name.twin
+				l_base_name.prepend ("any_")
+				l_feat.set_feature_name (l_base_name)
+				from
+					i := 1
+				until
+					not a_feat_tbl.has_id (l_feat.feature_name_id)
+				loop
+					l_new_name := l_base_name.twin
+					l_new_name.append_character ('_')
+					l_new_name.append_integer (i)
+					l_feat.set_feature_name (l_new_name)
+				end
+					-- Insert back routine we just removed above.
+					-- No need to update `l_orig_tbl' since this table
+					-- does not depend on the name of `l_feat'.
+				a_feat_tbl.put (l_feat, l_feat.feature_name_id)
+			end
+
+			a_feat_tbl.put (a_feat, a_feat.feature_name_id)
+			l_orig_tbl.put (a_feat, a_feat.rout_id_set.first)
+		end
+
 	process_features (a_feat_tbl: like feature_table; a_features: ARRAY [CONSUMED_ENTITY]) is
 			-- Get all features and make sure all referenced types are in system.
 		require
@@ -453,7 +538,6 @@ feature {NONE} -- Initialization
 			l_arg: CONSUMED_ARGUMENT
 			l_arg_ids: ARRAY [INTEGER]
 			i, j, k, l, m, nb, l_record_pos, l_id: INTEGER
-			l_orig_tbl: SELECT_TABLE
 			l_creators: like creators
 			l_external_type, l_written_type: CL_TYPE_A
 			l_feat: FEATURE_I
@@ -474,7 +558,6 @@ feature {NONE} -- Initialization
 			from
 				i := a_features.lower
 				nb := a_features.upper
-				l_orig_tbl := a_feat_tbl.origin_table
 				l_creators := creators
 				l_names_heap := Names_heap
 				create l_all_export
@@ -688,11 +771,8 @@ feature {NONE} -- Initialization
 					-- Let's update `l_feat' with info from parent classes.
 				update_feature_with_parents (a_feat_tbl, l_feat, l_member)
 
-				check
-					not_already_inserted: not a_feat_tbl.has_id (l_feat.feature_name_id)
-				end
-				a_feat_tbl.put (l_feat, l_feat.feature_name_id)
-				l_orig_tbl.put (l_feat, l_feat.rout_id_set.first)
+					-- Insert `l_feat' in feature tables
+				insert_feature (l_feat, a_feat_tbl)
 
 				l_name := l_member.dotnet_eiffel_name
 				l_names_heap.put (l_name)

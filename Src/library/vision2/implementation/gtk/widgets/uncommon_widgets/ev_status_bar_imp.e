@@ -47,7 +47,7 @@ feature {NONE}-- Initialization
 			parent_imp.add_status_bar (Current)
 				-- add the status bar to the parent, which is a EV_WINDOW
 
-			create ev_children.make
+			create ev_children.make (0)
 				-- create the array, where the status_bar_items will be listed
 		end
 
@@ -55,7 +55,7 @@ feature -- Access
 
 	parent_imp: EV_WINDOW_IMP
 
-	ev_children: LINKED_LIST [EV_STATUS_BAR_ITEM_IMP]
+	ev_children: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 		-- list of status bar contained in the horizontal box
 
 	count: INTEGER is
@@ -104,7 +104,7 @@ feature -- Element change
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		local
-			array: LINKED_LIST [EV_STATUS_BAR_ITEM_IMP]
+			array: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 			child: EV_STATUS_BAR_ITEM_IMP
 		do
 			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
@@ -124,7 +124,7 @@ feature -- Element change
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		local
-			array: LINKED_LIST [EV_STATUS_BAR_ITEM_IMP]
+			array: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 			child: EV_STATUS_BAR_ITEM_IMP
 		do
 			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)

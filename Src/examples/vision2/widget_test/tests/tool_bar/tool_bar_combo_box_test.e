@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that simulate an EV_COMBO_BOX in an EV_TOOL_BAR"
-	author: ""
+	pixmaps_required: "1, 2"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that demonstrate EV_COMBO_BOX"
-	author: ""
+	pixmaps_required: "1, 2"
 	date: "$Date$"
 	revision: "$Revision$"
 

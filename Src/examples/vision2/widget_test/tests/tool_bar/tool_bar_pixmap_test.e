@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that demonstrate EV_TOOL_BAR"
-	author: ""
+	pixmaps_required: "1, 2"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -4,7 +4,7 @@ inherit
 
 	VALUE_I
 		redefine
-			generate, is_character, is_propagation_equivalent,
+			generate, is_character,
 			append_signature, string_value
 		end
 	CHARACTER_ROUTINES
@@ -30,11 +30,6 @@ feature
 
 	is_character: BOOLEAN is True
 			-- Is the current constant a character one ?
-
-	is_propagation_equivalent (other: CHAR_VALUE_I): BOOLEAN is
-		do
-			Result := same_type (other) and then char_val = other.char_val
-		end;
 
 	valid_type (t: TYPE_A): BOOLEAN is
 			-- Is the current value compatible with `t' ?

@@ -11,7 +11,7 @@ inherit
 		rename
 			string_value as internal_string_value
 		redefine
-			is_string, append_signature,
+			is_string, append_signature, is_propagation_equivalent,
 			internal_string_value, set_real_type
 		end
 
@@ -31,6 +31,12 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := string_value.is_equal (other.string_value)
+		end
+
+	is_propagation_equivalent (other: like Current): BOOLEAN is
+			-- Is `Current' equivalent for propagation of pass2/pass3?
+		do
+			Result := True
 		end
 
 feature -- Access

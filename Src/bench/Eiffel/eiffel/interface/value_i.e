@@ -86,7 +86,7 @@ feature -- Status report
 	is_propagation_equivalent (other: like Current): BOOLEAN is
 			-- Is `Current' equivalent for propagation of pass2/pass3?
 		do
-			Result := True
+			Result := same_type (other) and then is_equivalent (other)
 		end
 
 feature -- Settings

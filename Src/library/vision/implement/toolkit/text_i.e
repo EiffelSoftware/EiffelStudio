@@ -90,6 +90,11 @@ feature
 		deferred
 		end; -- disable_resize_width
 
+	disable_verify_bell is
+			-- Disable the bell when an action is forbidden
+		deferred
+		end
+
 	disable_word_wrap is
 			-- Specify that lines are free to go off the right edge
 			-- of the window.
@@ -113,6 +118,11 @@ feature
 			-- accommodate all the text contained.
 		deferred
 		end; -- enable_resize_width
+
+	enable_verify_bell is
+			-- Enable the bell when an action is forbidden
+		deferred
+		end;
 
 	enable_word_wrap is
 			-- Specify that lines are to be broken at word breaks.
@@ -143,6 +153,11 @@ feature
 		ensure
 			Result implies is_width_resizable and is_height_resizable
 		end; -- is_any_resizable
+
+	is_bell_enabled: BOOLEAN is
+			-- Is the bell enabled when an action is forbidden
+		deferred
+		end;
 
 	is_height_resizable: BOOLEAN is
 			-- Is height of current text resizable?
@@ -247,6 +262,33 @@ feature
 			begin_of_selection = first;
 			end_of_selection = last
 		end -- set_selection
+
+	x_coordinate (char_pos: INTEGER): INTEGER is
+            -- X coordinate relative to the upper left corner
+            -- of Current text widget at character position `char_pos'.
+		deferred
+        end;
+
+    y_coordinate (char_pos: INTEGER): INTEGER is
+            -- Y coordinate relative to the upper left corner
+            -- of Current text widget at character position `char_pos'.
+		deferred
+        end;
+
+    character_position (x_pos, y_pos: INTEGER): INTEGER is
+            -- Character position at cursor position `x' and `y'
+		deferred
+        end;
+
+    top_character_position: INTEGER is
+            -- Character position of first character displayed
+		deferred
+        end;
+
+    set_top_character_position (char_pos: INTEGER) is
+            -- Set first character displayed to `char_pos'.
+		deferred
+        end;
 
 end -- class TEXT_I
 

@@ -289,7 +289,10 @@ feature -- Element change
 		local
 			l_fav_class: EB_FAVORITES_CLASS
 		do
-			l_fav_class ?= favorite_by_name (a_stone.class_name)
+			l_fav_class ?= Current
+			if l_fav_class = Void then
+				l_fav_class ?= favorite_by_name (a_stone.class_name)
+			end
 			if l_fav_class = Void then
 				create l_fav_class.make (a_stone.class_name, Current)
 				extend (l_fav_class)

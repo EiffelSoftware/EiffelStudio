@@ -60,7 +60,6 @@ void wel_init_context(wel_global_context_t *wel_globals)
 	 */
 
 /* disptchr.c */
-
 	wel_wndproc=NULL;
 	wel_dlgproc=NULL;
 	dispatcher=NULL;

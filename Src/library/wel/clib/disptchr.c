@@ -16,6 +16,7 @@
 
 #include "wel_globals.h"
 
+
 #ifndef EIF_THREADS
 	EIF_WNDPROC wel_wndproc = NULL;
 	/* Address of the Eiffel routine `window_procedure' (class WEL_DISPATCHER) */
@@ -68,29 +69,30 @@ BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 }
 
 #ifdef EIF_THREADS
-void cwel_set_window_procedure_address( EIF_POINTER _addr_)
+void wel_set_window_procedure_address( EIF_POINTER _addr_)
 {
 	WGTCX
 	wel_wndproc = (EIF_WNDPROC) _addr_ 	;
 }
 
-void cwel_set_dialog_procedure_address( EIF_POINTER _addr_)
+void wel_set_dialog_procedure_address( EIF_POINTER _addr_)
 {
 	WGTCX
 	wel_dlgproc = (EIF_DLGPROC) _addr_;
 }
 
-void cwel_set_dispatcher_object(EIF_OBJ _addr_)
+void wel_set_dispatcher_object(EIF_OBJ _addr_)
 {
 	WGTCX
 	dispatcher = (EIF_OBJ) eif_adopt (_addr_);	
 }
 
-void cwel_release_dispatcher_object()
+void wel_release_dispatcher_object()
 {
 	WGTCX
 	eif_wean (dispatcher);
 }
+
 #endif
 
 /*

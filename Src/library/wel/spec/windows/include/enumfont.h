@@ -24,14 +24,32 @@ typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
 
 int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT *, NEWTEXTMETRIC *, int, LPARAM);
 
-#define cwel_set_enum_font_fam_procedure_address(_addr_) (wel_enum_font_fam_procedure = (EIF_ENUM_FONT_FAMILY_PROCEDURE) _addr_)
-/* Set `wel_enum_font_fam_procedure' with `addr' */
+#ifdef EIF_THREADS
 
-#define cwel_set_font_family_enumerator_object(_addr_) (font_family_enumerator = eif_adopt ((EIF_OBJ) _addr_))
-/* Set `font_family_enumerator' with `addr' */
+	extern void wel_set_enum_font_fam_procedure_address(EIF_POINTER _addr_);
+#	define cwel_set_enum_font_fam_procedure_address(_addr_)  (wel_set_enum_font_fam_procedure_address(_addr_))
+		/* Set `wel_enum_font_fam_procedure' with `addr' */
+	
+		extern void wel_set_font_family_enumerator_object(EIF_POINTER _addr_);
+#	define cwel_set_font_family_enumerator_object(_addr_)  (wel_set_font_family_enumerator_object(_addr_))
+		/* Set `font_family_enumerator' with `addr' */
+		
+			extern EIF_OBJ wel_release_font_family_enumerator_object() ;
+#	define cwel_release_font_family_enumerator_object (eif_wean (font_family_enumerator)) (wel_release_font_family_enumerator_object (eif_wean (font_family_enumerator)))
+		/* Release `font_family_enumerator' with `addr' */
+		
+#else
 
-#define cwel_release_font_family_enumerator_object (eif_wean (font_family_enumerator))
-/* Release `font_family_enumerator' with `addr' */
+#	define cwel_set_enum_font_fam_procedure_address(_addr_) (wel_enum_font_fam_procedure = (EIF_ENUM_FONT_FAMILY_PROCEDURE) _addr_)
+		/* Set `wel_enum_font_fam_procedure' with `addr' */
+
+#	define cwel_set_font_family_enumerator_object(_addr_) (font_family_enumerator = eif_adopt ((EIF_OBJ) _addr_))
+		/* Set `font_family_enumerator' with `addr' */
+
+#	define cwel_release_font_family_enumerator_object (eif_wean (font_family_enumerator))
+		/* Release `font_family_enumerator' with `addr' */
+
+#endif
 
 #endif /* __WEL_ENUMFONT__ */
 

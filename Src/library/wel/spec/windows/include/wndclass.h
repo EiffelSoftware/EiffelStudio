@@ -31,6 +31,7 @@
 #define cwel_wnd_class_get_menu_name(_ptr_) ((EIF_POINTER) (((WNDCLASS *) _ptr_)->lpszMenuName))
 #define cwel_wnd_class_get_class_name(_ptr_) ((EIF_POINTER) (((WNDCLASS *) _ptr_)->lpszClassName))
 
+
 #endif /* __WEL_WNDCLASS__ */
 
 /*

@@ -13,7 +13,6 @@
 #	include "wel.h"
 #endif
 
-
 typedef EIF_INTEGER (* EIF_WNDPROC)
 	(EIF_OBJ,     /* WEL_DISPATCHER Eiffel object */
 	 EIF_POINTER, /* hwnd */
@@ -42,14 +41,22 @@ BOOL CALLBACK cwel_dialog_procedure (HWND, UINT, WPARAM, LPARAM);
 /* Address of `cwel_dialog_procedure' */
 
 #ifdef EIF_THREADS
-	extern void cwel_set_window_procedure_address( EIF_POINTER );
+	extern void wel_set_window_procedure_address( EIF_POINTER );
+#	define cwel_set_window_procedure_address(_addr_) wel_set_window_procedure_address(_addr_)
 		/* Set `wel_wndproc' with `addr' */
-	extern void cwel_set_dialog_procedure_address( EIF_POINTER );
+
+	extern void wel_set_dialog_procedure_address( EIF_POINTER );
+#	define cwel_set_dialog_procedure_address(_addr_) wel_set_dialog_procedure_address(_addr_) 
 		/* Set `wel_dlgproc' with `addr' */
-	extern void cwel_set_dispatcher_object(EIF_OBJ _addr_);
+
+	extern void wel_set_dispatcher_object(EIF_OBJ _addr_);
+#	define cwel_set_dispatcher_object(_addr_) wel_set_dispatcher_object(_addr_) 
 		/* Set `dispather' with `addr' */
-	extern void cwel_release_dispatcher_object();
+
+	extern void wel_release_dispatcher_object();
+#	define cwel_release_dispatcher_object wel_release_dispatcher_object()  
 		/* Set `dispather' with `addr' */
+
 #else
 
 #	define cwel_set_window_procedure_address(_addr_) (wel_wndproc = (EIF_WNDPROC) _addr_) 

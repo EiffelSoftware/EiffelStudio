@@ -27,12 +27,6 @@ feature -- Access
 		do
 			Result := implementation.last_error_message
 		end
-		
-	assembly_resolver: ASSEMBLY_RESOLVER is
-			-- assembly resolver used to resolve references that cannot be resolved by default implementation
-		do
-			Result := implementation.assembly_resolver
-		end
 
 feature -- Basic Exportations
 
@@ -43,7 +37,7 @@ feature -- Basic Exportations
 			not_void_clr_version: a_clr_version /= Void
 			valid_clr_version: a_clr_version.length > 0
 		do
-			create implementation.make (a_clr_version)
+			create implementation.make
 			is_initialized := True
 		ensure
 			current_initialized: is_initialized
@@ -61,10 +55,10 @@ feature -- Basic Exportations
 		local
 			cr: CACHE_READER
 		do
-			create implementation.make_with_path (a_path, a_clr_version)
-			create cr.make (a_clr_version)
+			create implementation.make_with_path (a_path)
+			create cr
 			if not cr.is_initialized then
-				(create {EIFFEL_XML_SERIALIZER}).serialize (create {CACHE_INFO}.make (a_clr_version), cr.absolute_info_path)
+				(create {EIFFEL_XML_SERIALIZER}).serialize (create {CACHE_INFO}.make, cr.absolute_info_path)
 			end
 			is_initialized := True
 		ensure

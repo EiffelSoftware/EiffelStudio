@@ -174,7 +174,7 @@ feature -- Code generation
 	generate_parameter_signature_list is
 			-- Generate parameter signature for C polymorphic calls.
 		require
-			has_signature: has_signature
+			has_signature: has_arg_list
 		local
 			i, count: INTEGER;
 			arg_types: ARRAY [STRING]

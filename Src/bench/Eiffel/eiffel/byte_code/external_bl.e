@@ -166,8 +166,9 @@ feature
 				else
 					buf.putchar ('(');
 				end;
-				if extension /= Void and then extension.has_signature then
+				if extension /= Void and then extension.has_arg_list then
 					type_c.generate_external_function_cast (buf, extension)
+					extension.generate_header_files
 				else
 					type_c.generate_function_cast (buf, argument_types)
 				end

@@ -78,7 +78,9 @@ feature
 			else
 				buf.putchar ('(');
 			end;
-			if not encapsulated and then extension /= Void and then extension.has_signature then
+				-- Generate a function cast only for plain C functions, not for others
+				-- since a cast is done in their body.
+			if not encapsulated and then extension /= Void and then extension.has_arg_list then
 				real_type (type).c_type.generate_external_function_cast (buf, extension);
 				extension.generate_header_files
 			else

@@ -337,15 +337,13 @@ feature -- Status report
 	selection_start: INTEGER is
 			-- Index of first character selected.
 		do
-			Result := wel_selection_start + 1
+			Result := (wel_selection_start + 1).min (text_length)
 		end
 
 	selection_end: INTEGER is
 			-- Index of last character selected.
-		local
-			new_lines_to_end: INTEGER
 		do
-			Result := wel_selection_end
+			Result := wel_selection_end.min (text_length)
 		end
 
 feature -- Status setting

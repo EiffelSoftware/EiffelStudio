@@ -1,6 +1,6 @@
 AR = tlib 
 CC = bcc32
-CFLAGS = -O2 -tWM -DEIF_THREADS -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
+CFLAGS = -O2 -tWM -DEIF_THREADS -I$(EIFFEL5)\bench\spec\$(PLATFORM)\include
 LN = copy
 MAKE = make
 RANLIB = echo

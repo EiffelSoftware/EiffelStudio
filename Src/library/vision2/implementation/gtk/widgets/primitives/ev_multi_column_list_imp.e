@@ -16,7 +16,11 @@ inherit
 		export
 			{EV_MULTI_COLUMN_LIST_ROW_IMP} widget
 		redefine
-			destroy
+			destroy,
+			set_foreground_color,
+			set_background_color,
+			foreground_color,
+			background_color
 		end
 
 creation
@@ -89,6 +93,37 @@ feature -- Access
 				row ?= (ev_children @ (index + 1)).interface
 				Result.extend (row)
 				i := i + 1
+			end
+		end
+
+	background_color: EV_COLOR is
+			-- Color used for the background of the widget.
+			-- This feature might change if we give the
+			-- possibility to set colors on the rows.
+		local
+			one_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+		do
+			if (rows > 0) then
+				one_row := (ev_children @ (1))
+				Result := one_row.background_color
+			else	
+				Result := {EV_PRIMITIVE_IMP} Precursor
+			end
+		end
+
+	foreground_color: EV_COLOR is
+			-- Color used for the foreground of the widget,
+			-- usually the text.
+			-- This feature might change if we give the
+			-- possibility to set colors on the rows.
+		local
+			one_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+		do
+			if (rows > 0) then
+				one_row := (ev_children @ (1))
+				Result := one_row.foreground_color
+			else	
+				Result := {EV_PRIMITIVE_IMP} Precursor
 			end
 		end
 
@@ -216,6 +251,50 @@ feature -- Element change
 			gtk_clist_clear (widget)
 		end
 
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color' of every rows.
+		local
+			children_array: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
+			row: EV_MULTI_COLUMN_LIST_ROW_IMP
+		do
+			if (rows > 0) then
+				from
+					children_array := ev_children
+					children_array.start
+				until
+					children_array.after
+				loop
+					row := children_array.item
+					row.set_background_color (color)
+					children_array.forth
+				end
+			else
+				 {EV_PRIMITIVE_IMP} Precursor (color)
+			end
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color' of every rows.
+		local
+			children_array: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
+			row: EV_MULTI_COLUMN_LIST_ROW_IMP
+		do
+			if (rows > 0) then
+				from
+					children_array := ev_children
+					children_array.start
+				until
+					children_array.after
+				loop
+					row := children_array.item
+					row.set_foreground_color (color)
+					children_array.forth
+				end
+			else
+				{EV_PRIMITIVE_IMP} Precursor (color)
+			end
+		end
+
 feature -- Event : command association
 
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
@@ -266,34 +345,32 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 	add_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Add `item' to the list
 		local
-			index: INTEGER
+			local_index: INTEGER
 			column_i: INTEGER
 		do
+			-- update the list of rows of the column list:
+			ev_children.force (item_imp)
+
 			-- add an empty row to the gtk column list:
-			index := c_gtk_clist_append_row (widget)
+			local_index := c_gtk_clist_append_row (widget)
 
 			-- add text in the gtk column list row:
-			item_imp.set_index (index)
 			from
-				item_imp.text.start
+				item_imp.internal_text.start
 				column_i := 1
 			until
 				column_i > columns
 			loop
-				item_imp.set_cell_text ( column_i, item_imp.text.item)
-				item_imp.text.forth
+				item_imp.set_cell_text ( column_i, item_imp.internal_text.item)
+				item_imp.internal_text.forth
 				column_i := column_i + 1
 			end
-				
-			-- update the list of rows of the column list:
-			ev_children.force (item_imp)
-
 		end
 
 	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 		do
 			-- Remove the gtk clist row from the gtk clist
-			gtk_clist_remove (widget, item_imp.index)
+			gtk_clist_remove (widget, item_imp.index - 1)
 
 			-- remove the row from the `ev_children'
 			ev_children.search (item_imp)

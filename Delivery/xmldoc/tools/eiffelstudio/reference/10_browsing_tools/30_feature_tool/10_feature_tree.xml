@@ -41,7 +41,7 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_attribute_symbol.gif</url>
-				</image> forattributes
+				</image>for attributes
 			</item>
 			<item>
 				<image>
@@ -51,12 +51,12 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_deferred_feature.gif</url>
-				</image> for deferred features
+				</image>for deferred features
 			</item>
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_external_feature.gif</url>
-				</image> for external features
+				</image>for external features
 			</item>
 			<item>
 				<image>
@@ -71,7 +71,7 @@
 			</link>, to 
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
-				<label>drop</label>
+				<label>be dropped</label>
 			</link> them into any component of the interface that accepts features.
 		</paragraph>
 	</paragraph></document>

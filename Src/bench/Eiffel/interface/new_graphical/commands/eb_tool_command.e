@@ -30,4 +30,7 @@ feature -- Properties
 	tool: EB_TOOL
 			-- The tool
 
+invariant
+	tool_exists: tool /= Void
+
 end -- class EB_TOOL_COMMAND

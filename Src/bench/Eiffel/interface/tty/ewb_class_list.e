@@ -56,7 +56,7 @@ feature
 						a_classi.append_clickable_name (output_window)
 					end;
 					output_window.new_line;
-					output_window.put_string ("%T-- cluster: ");
+					output_window.put_string ("%T-- Cluster: ");
 					output_window.put_string (a_classi.cluster.cluster_name);
 					output_window.new_line;
 					sorted_classes.forth

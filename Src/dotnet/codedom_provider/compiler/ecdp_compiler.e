@@ -29,112 +29,112 @@ create
 
 feature -- Basic Operations
 
-	compile_assembly_from_source (options: SYSTEM_DLL_COMPILER_PARAMETERS; source: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
-			-- Creates an assembly based on the specified `options' and `source'.
+	compile_assembly_from_source (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_source: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
+			-- Creates an assembly based on the specified `a_options' and `source'.
 		require else
-			non_void_options: options /= Void
-			non_void_source: source /= Void
+			non_void_options: a_options /= Void
+			non_void_source: a_source /= Void
 		do
-			Result := from_source (options, source)
-			options.temp_files.delete
+			Result := from_source (a_options, a_source)
+			a_options.temp_files.delete
 		ensure then
 			non_void_results: Result /= Void
 		end
 
-	compile_assembly_from_file (options: SYSTEM_DLL_COMPILER_PARAMETERS; file_name: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
-			-- Creates an assembly based on the specified `options' and `file_name'.
+	compile_assembly_from_file (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_file_name: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
+			-- Creates an assembly based on the specified `a_options' and `a_file_name'.
 		require else
-			non_void_options: options /= Void
-			non_void_file_name: file_name /= Void
+			non_void_options: a_options /= Void
+			non_void_file_name: a_file_name /= Void
 		do
-			Result := from_file (options, file_name)
-			options.temp_files.delete
+			Result := from_file (a_options, a_file_name)
+			a_options.temp_files.delete
 		ensure then
 			non_void_results: Result /= Void
 		end
 
-	compile_assembly_from_file_batch (options: SYSTEM_DLL_COMPILER_PARAMETERS; file_names: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
-			-- Compiles an assembly based on the specified `options' and `file_names'.
+	compile_assembly_from_file_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_file_names: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
+			-- Compiles an assembly based on the specified `a_options' and `file_names'.
 		require else
-			non_void_options: options /= Void
-			non_void_file_names: file_names /= Void
+			non_void_options: a_options /= Void
+			non_void_file_names: a_file_names /= Void
 		do
-			Result := from_file_batch (options)
-			options.temp_files.delete
+			Result := from_file_batch (a_options)
+			a_options.temp_files.delete
 		ensure then
 			non_void_results: Result /= Void
 		end
 
-	compile_assembly_from_dom (options: SYSTEM_DLL_COMPILER_PARAMETERS; compilation_unit: SYSTEM_DLL_CODE_COMPILE_UNIT): SYSTEM_DLL_COMPILER_RESULTS is
-			-- Creates an assembly based on the specified `options' and `compilation_unit' (the text to compile).
+	compile_assembly_from_dom (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compilation_unit: SYSTEM_DLL_CODE_COMPILE_UNIT): SYSTEM_DLL_COMPILER_RESULTS is
+			-- Creates an assembly based on the specified `a_options' and `a_compilation_unit' (the text to compile).
 		require else
-			non_void_options: options /= Void
-			non_void_compilation_unit: compilation_unit /= Void
+			non_void_options: a_options /= Void
+			non_void_compilation_unit: a_compilation_unit /= Void
 		do
-			Result := from_dom (options, compilation_unit)
-			options.temp_files.delete
+			Result := from_dom (a_options, a_compilation_unit)
+			a_options.temp_files.delete
 		ensure then
 			non_void_results: Result /= Void
 		end
 
-	compile_assembly_from_source_batch (options: SYSTEM_DLL_COMPILER_PARAMETERS; sources: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
-			-- Compiles an assembly based on the specified `options' and `sources'.
+	compile_assembly_from_source_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_sources: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
+			-- Compiles an assembly based on the specified `a_options' and `sources'.
 		require else
-			non_void_options: options /= Void
-			non_void_sources: sources /= Void
+			non_void_options: a_options /= Void
+			non_void_sources: a_sources /= Void
 		do
-			Result := from_source_batch (options, sources)
-			options.temp_files.delete
+			Result := from_source_batch (a_options, a_sources)
+			a_options.temp_files.delete
 		ensure then
 			non_void_results: Result /= Void
 		end
 
-	compile_assembly_from_dom_batch (options: SYSTEM_DLL_COMPILER_PARAMETERS; compilation_units: NATIVE_ARRAY [SYSTEM_DLL_CODE_COMPILE_UNIT]): SYSTEM_DLL_COMPILER_RESULTS is
-			-- Compiles an assembly based on the specified options.
+	compile_assembly_from_dom_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compilation_units: NATIVE_ARRAY [SYSTEM_DLL_CODE_COMPILE_UNIT]): SYSTEM_DLL_COMPILER_RESULTS is
+			-- Compiles an assembly based on the specified a_options.
 		require else
-			non_void_options: options /= Void
-			non_void_compilation_units: compilation_units /= Void
+			non_void_options: a_options /= Void
+			non_void_compilation_units: a_compilation_units /= Void
 		do
-			Result := from_dom_batch (options, compilation_units)
-			options.temp_files.delete
+			Result := from_dom_batch (a_options, a_compilation_units)
+			a_options.temp_files.delete
 		ensure then
 			non_void_results: Result /= Void
 		end
 
 feature {NONE} -- Private Implementation
 
-	from_source (options: SYSTEM_DLL_COMPILER_PARAMETERS; source:SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
+	from_source (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_source:SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
 		require
-			non_void_options: options /= Void
-			non_void_source: source /= Void
+			non_void_options: a_options /= Void
+			non_void_source: a_source /= Void
 		local
-			sources: NATIVE_ARRAY [SYSTEM_STRING]
+			l_sources: NATIVE_ARRAY [SYSTEM_STRING]
 		do
-			create sources.make (1)
-			sources.put (1, source)
-			Result := from_source_batch (options, sources)
+			create l_sources.make (1)
+			l_sources.put (1, a_source)
+			Result := from_source_batch (a_options, l_sources)
 		ensure
 			non_void_results: Result /= Void
 		end
 
-	from_dom (options: SYSTEM_DLL_COMPILER_PARAMETERS; compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT): SYSTEM_DLL_COMPILER_RESULTS is
+	from_dom (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT): SYSTEM_DLL_COMPILER_RESULTS is
 		require
-			non_void_options: options /= Void
-			non_void_compile_unit: compile_unit /= Void
+			non_void_options: a_options /= Void
+			non_void_compile_unit: a_compile_unit /= Void
 		local
-			compile_units: NATIVE_ARRAY [SYSTEM_DLL_CODE_COMPILE_UNIT]
+			l_compile_units: NATIVE_ARRAY [SYSTEM_DLL_CODE_COMPILE_UNIT]
 		do
-			create compile_units.make (1)
-			compile_units.put (0, compile_unit)
-			Result := from_dom_batch (options, compile_units)
+			create l_compile_units.make (1)
+			l_compile_units.put (0, a_compile_unit)
+			Result := from_dom_batch (a_options, l_compile_units)
 		ensure
 			non_void_results: Result /= Void
 		end
 
-	from_file (options: SYSTEM_DLL_COMPILER_PARAMETERS; file_name: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
+	from_file (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_file_name: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
 		require
-			non_void_options: options /= Void
-			non_void_file_name: file_name /= Void
+			non_void_options: a_options /= Void
+			non_void_file_name: a_file_name /= Void
 		local
 			l_text_writer: STREAM_WRITER
 			l_directory: SYSTEM_STRING
@@ -143,17 +143,17 @@ feature {NONE} -- Private Implementation
 			l_class_name, l_path: STRING
 		do
 				-- Create temporary directory
-			l_directory := options.temp_files.base_path
+			l_directory := a_options.temp_files.base_path
 			if not feature {SYSTEM_DIRECTORY}.exists (l_directory) then
 				l_res := feature {SYSTEM_DIRECTORY}.create_directory (l_directory)
 			end
 
 			Ace_file.reset
-				-- create ace file to compile file associated to `file_name'.
-			set_temporary_files (options.temp_files)
-			Ace_file.set_include_debug_info (options.include_debug_information)
+				-- create ace file to compile file associated to `a_file_name'.
+			set_temporary_files (a_options.temp_files)
+			Ace_file.set_include_debug_info (a_options.include_debug_information)
 			Ace_file.set_extension (assembly_extension)
-			create l_class_name.make_from_cil (file_name)
+			create l_class_name.make_from_cil (a_file_name)
 			l_index := l_class_name.last_index_of ('\', l_class_name.count)
 			l_class_name.remove_head (l_index)
 			l_class_name.remove_tail (2)
@@ -162,21 +162,21 @@ feature {NONE} -- Private Implementation
 			Ace_file.set_system_name (system_name)
 			create l_text_writer.make_from_path (ace_file_path)
 			Ace_file.set_text_writer (l_text_writer)
-			create l_path.make_from_cil (file_name)
+			create l_path.make_from_cil (a_file_name)
 			l_path.keep_head (l_path.last_index_of ('\', l_path.count) - 1)
 			Ace_file.set_path_to_generated_src (l_path)
-			initialize_referenced_assemblies (options.referenced_assemblies)
+			initialize_referenced_assemblies (a_options.referenced_assemblies)
 			Ace_file.out_code
-			Result := from_file_batch (options)
+			Result := from_file_batch (a_options)
 			l_text_writer.close
 		ensure
 			non_void_results: Result /= Void
 		end
 
-	from_source_batch (options: SYSTEM_DLL_COMPILER_PARAMETERS; sources: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
+	from_source_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_sources: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
 		require
-			non_void_options: options /= Void
-			non_void_sources: sources /= Void
+			non_void_options: a_options /= Void
+			non_void_sources: a_sources /= Void
 		local
 			i: INTEGER
 			l_file_name: SYSTEM_STRING
@@ -185,22 +185,22 @@ feature {NONE} -- Private Implementation
 			l_rescued: BOOLEAN
 		do
 			if not l_rescued then
-				l_res := feature {SYSTEM_DIRECTORY}.create_directory (options.temp_files.temp_dir)
+				l_res := feature {SYSTEM_DIRECTORY}.create_directory (a_options.temp_files.temp_dir)
 				Ace_file.reset
 				from
 				until
-					i = sources.count
+					i = a_sources.count
 				loop
-					l_file_name := options.temp_files.add_extension (Eiffel_file_extension)
-					create l_sw.make_from_path (feature {SYSTEM_STRING}.concat (options.temp_files.temp_dir, l_file_name))
-					l_sw.write_string (sources.item (i))
+					l_file_name := a_options.temp_files.add_extension (Eiffel_file_extension)
+					create l_sw.make_from_path (feature {SYSTEM_STRING}.concat (a_options.temp_files.temp_dir, l_file_name))
+					l_sw.write_string (a_sources.item (i))
 					l_sw.close
 					i := i + 1
 				end
 
-				Result := from_file_batch (options)
+				Result := from_file_batch (a_options)
 			else
-				Result := Error_compilation_results (options.temp_files)
+				Result := Error_compilation_results (a_options.temp_files)
 			end
 		ensure
 			non_void_results: Result /= Void
@@ -210,9 +210,9 @@ feature {NONE} -- Private Implementation
 			retry
 		end
 
-	from_dom_batch (options: SYSTEM_DLL_COMPILER_PARAMETERS; compile_units: NATIVE_ARRAY [SYSTEM_DLL_CODE_COMPILE_UNIT]): SYSTEM_DLL_COMPILER_RESULTS is
+	from_dom_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compile_units: NATIVE_ARRAY [SYSTEM_DLL_CODE_COMPILE_UNIT]): SYSTEM_DLL_COMPILER_RESULTS is
 		require
-			non_void_options: options /= Void
+			non_void_options: a_options /= Void
 			non_void_compile_units: compile_units /= Void
 		local
 			i: INTEGER
@@ -228,30 +228,30 @@ feature {NONE} -- Private Implementation
 			if not l_rescued then
 				from
 				until
-					i = compile_units.count
+					i = a_compile_units.count
 				loop
-					l_directory := options.temp_files.base_path
+					l_directory := a_options.temp_files.base_path
 					if not feature {SYSTEM_DIRECTORY}.exists (l_directory) then
 						l_res := feature {SYSTEM_DIRECTORY}.create_directory (l_directory)
 					end
 
-					set_temporary_files (options.temp_files)
+					set_temporary_files (a_options.temp_files)
 
 					create l_generator
 					create l_options.make
 					Ace_file.reset
 					Ace_file.set_extension (Assembly_extension)
-					Ace_file.set_include_debug_info (options.include_debug_information)
+					Ace_file.set_include_debug_info (a_options.include_debug_information)
 					Ace_file.set_system_name (system_name)
-					Ace_file.set_path_to_generated_src (options.temp_files.base_path)
+					Ace_file.set_path_to_generated_src (a_options.temp_files.base_path)
 
-					initialize_referenced_assemblies (options.referenced_assemblies)
+					initialize_referenced_assemblies (a_options.referenced_assemblies)
 
-					create l_output_file_path.make_from_cil (options.temp_files.base_path)
+					create l_output_file_path.make_from_cil (a_options.temp_files.base_path)
 					l_output_file_path.append ("\generated_code.e")
 					create l_output_file.make_from_path (l_output_file_path)
 
-					l_generator.generate_code_from_compile_unit (compile_units.item (i), l_output_file, l_options)
+					l_generator.generate_code_from_compile_unit (a_compile_units.item (i), l_output_file, l_options)
 
 					create l_writer.make (ace_file_path)
 					Ace_file.set_text_writer (l_writer)
@@ -262,9 +262,9 @@ feature {NONE} -- Private Implementation
 					i := i + 1
 				end
 				
-				Result := from_file_batch (options)
+				Result := from_file_batch (a_options)
 			else
-				Result := Error_compilation_results (options.temp_files)
+				Result := Error_compilation_results (a_options.temp_files)
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -274,17 +274,17 @@ feature {NONE} -- Private Implementation
 			retry
 		end
 
-	from_file_batch (options: SYSTEM_DLL_COMPILER_PARAMETERS): SYSTEM_DLL_COMPILER_RESULTS is
+	from_file_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS): SYSTEM_DLL_COMPILER_RESULTS is
 			-- Launch compilation.
 		require
-			non_void_options: options /= Void
+			non_void_options: a_options /= Void
 		local
 			rescued: BOOLEAN
     	do
 			if not rescued then
-				Result := compile (options)
+				Result := compile (a_options)
 			else
-				Result := Error_compilation_results (options.temp_files)
+				Result := error_compilation_results (a_options.temp_files)
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -294,11 +294,11 @@ feature {NONE} -- Private Implementation
 			retry
     	end
 
-	compile (options: SYSTEM_DLL_COMPILER_PARAMETERS): SYSTEM_DLL_COMPILER_RESULTS is
+	compile (a_options: SYSTEM_DLL_COMPILER_PARAMETERS): SYSTEM_DLL_COMPILER_RESULTS is
 			-- Open file with full name: raise an exception if compiler do not exist else
 			-- execute launch compiler
 		require
-			non_void_options: options /= Void
+			non_void_options: a_options /= Void
 		local
 			l_exec: EXECUTION_ENVIRONMENT
 			l_output_file, l_ace_file_path, l_current_dir, l_dir, l_system: STRING
@@ -313,9 +313,9 @@ feature {NONE} -- Private Implementation
 			set_environment_variable ("ISE_PLATFORM", "windows")
 			set_environment_variable ("ISE_C_COMPILER", "msc")
 			create l_exec
-			create Result.make (options.temp_files)
+			create Result.make (a_options.temp_files)
 
-			create l_output_file.make_from_cil (options.temp_files.base_path)
+			create l_output_file.make_from_cil (a_options.temp_files.base_path)
 
 				-- Launch ec.exe
 			create l_dir.make (l_output_file.count + 14) -- "\EIFGEN\W_code".count = 14
@@ -366,7 +366,7 @@ feature {NONE} -- Private Implementation
 						feature {SYSTEM_FILE}.copy (l_assembly_path, l_assembly_final_path)
 
 							-- Copy PDB
-						if options.include_debug_information then
+						if a_options.include_debug_information then
 							l_pdb_path := l_dir + "\" + l_system + ".pdb"
 							l_pdb_final_path := l_output_file + "\" + l_system + ".pdb"
 							feature {SYSTEM_FILE}.copy (l_pdb_path, l_pdb_final_path)
@@ -375,7 +375,7 @@ feature {NONE} -- Private Implementation
 
 						Result.set_compiled_assembly (feature {ASSEMBLY}.load_from (l_assembly_final_path))
 						Result.set_path_to_assembly (l_assembly_final_path)
-						options.set_output_assembly (l_assembly_final_path)
+						a_options.set_output_assembly (l_assembly_final_path)
 
 						delete_compilation_temporary_files (l_output_file, l_system)
 					end
@@ -422,45 +422,43 @@ feature {NONE} -- Private Implementation
 		
 feature -- Basic Operations
 
-	initialize_referenced_assemblies (referenced_assemblies: SYSTEM_DLL_STRING_COLLECTION) is
+	initialize_referenced_assemblies (a_referenced_assemblies: SYSTEM_DLL_STRING_COLLECTION) is
 			-- initialize referenced assemblies.
 		require
-			non_void_referenced_assemblies: referenced_assemblies /= Void
+			non_void_referenced_assemblies: a_referenced_assemblies /= Void
 		do
 		end
 
-	parse_compiler_output (a_compiler_output: SYSTEM_STRING; options: SYSTEM_DLL_COMPILER_RESULTS) is
-			-- Parse `a_compiler_output' and set options with result of parsing.
+	parse_compiler_output (a_compiler_output: SYSTEM_STRING; a_options: SYSTEM_DLL_COMPILER_RESULTS) is
+			-- Parse `a_compiler_output' and set a_options with result of parsing.
 		require
 			non_void_a_compiler_output: a_compiler_output /= Void
 			not_empty_a_compiler_output: a_compiler_output.length > 0
-			non_void_options: options /= Void
+			non_void_options: a_options /= Void
 		local
-			ce: SYSTEM_DLL_COMPILER_ERROR			
-			l_compiler_returned_message: STRING
-			dummy: SYSTEM_OBJECT
-			output_compiler_parser: ECDP_COMPILER_OUTPUT_PARSER
+			l_ce: SYSTEM_DLL_COMPILER_ERROR			
+			l_res: SYSTEM_OBJECT
+			l_output_compiler_parser: ECDP_COMPILER_OUTPUT_PARSER
 		do
-			create l_compiler_returned_message.make_from_cil (a_compiler_output)
-			create output_compiler_parser.make
-			output_compiler_parser.parse (l_compiler_returned_message)
-			if not output_compiler_parser.successfull_compilation then
-				create ce.make
-				ce.set_error_text (output_compiler_parser.error_text.to_cil)
-				ce.set_line (output_compiler_parser.error_line)
-				ce.set_column (0)
-				ce.set_error_number (output_compiler_parser.error_code.to_cil)
-				ce.set_is_warning (False)
-				ce.set_file_name (("Unknown").to_cil)
-				dummy := options.errors.add (ce)
-				dummy := options.output.add (a_compiler_output)
-				options.set_native_compiler_return_value (1)
+			create l_output_compiler_parser.make
+			l_output_compiler_parser.parse (a_compiler_output)
+			if not l_output_compiler_parser.successfull_compilation then
+				create l_ce.make
+				l_ce.set_error_text (output_compiler_parser.error_text.to_cil)
+				l_ce.set_line (output_compiler_parser.error_line)
+				l_ce.set_column (0)
+				l_ce.set_error_number (output_compiler_parser.error_code.to_cil)
+				l_ce.set_is_warning (False)
+				l_ce.set_file_name ("Unknown")
+				l_res := a_options.errors.add (l_ce)
+				l_res := a_options.output.add (a_compiler_output)
+				a_options.set_native_compiler_return_value (1)
 			else
-				options.set_native_compiler_return_value (0)
+				a_options.set_native_compiler_return_value (0)
 			end
 		end
 
-	Error_compilation_results (a_temp_files: SYSTEM_DLL_TEMP_FILE_COLLECTION): SYSTEM_DLL_COMPILER_RESULTS is
+	error_compilation_results (a_temp_files: SYSTEM_DLL_TEMP_FILE_COLLECTION): SYSTEM_DLL_COMPILER_RESULTS is
 			-- Set compiler exception error in `a_results'.
 		local
 			l_ce: SYSTEM_DLL_COMPILER_ERROR
@@ -486,24 +484,24 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	set_environment_variable (name, value: STRING) is
-			-- Set environment variable `name' with `value'
+	set_environment_variable (a_name, a_value: STRING) is
+			-- Set environment variable `a_name' with `a_value'
 		local
 			l_name, l_value: C_STRING
 			l_success: BOOLEAN
 		do
-			create l_name.make (name)
-			create l_value.make (value)
+			create l_name.make (a_name)
+			create l_value.make (a_value)
 			l_success := c_set_environment_variable (l_name.item, l_value.item)
 			check
-				environment_variable_set: feature {ENVIRONMENT}.expand_environment_variables (("%%name%%").to_cil).compare_to_string (value.to_cil) = 0
+				environment_variable_set: feature {ENVIRONMENT}.expand_environment_variables ("%%" + a_name + "%%").compare_to_string (a_value) = 0
 			end
 		end
 
 feature {NONE} -- External
 
-	c_set_environment_variable (name, value: POINTER): BOOLEAN is
-			-- Set environment variable `name' with value `value'.
+	c_set_environment_variable (a_name, a_value: POINTER): BOOLEAN is
+			-- Set environment variable `a_name' with value `a_value'.
 			-- Return True if successful.
 		external
 			"C macro signature (LPCTSTR, LPCTSTR): EIF_BOOLEAN use <windows.h>"

@@ -13,7 +13,7 @@
 		<TEXT DESCRIPTION="Command invoked to print a text">print_shell_command<STRING>notepad /p $target</STRING></TEXT>
 		<TEXT DESCRIPTION="Send a postscript file to this command?">use_postscript<BOOLEAN>False</BOOLEAN></TEXT>
 		<TEXT DESCRIPTION="Number of projects kept in the recent projects list">recent_projects_number<INTEGER>10</INTEGER></TEXT>
-		<TEXT DESCRIPTION="Launch debugger for debugging .NET projects">dotnet_debugger<LIST_SELECTED_STRING>No debugger;cordbg;DbgCLR;</LIST_SELECTED_STRING></TEXT>
+		<TEXT DESCRIPTION="Launch debugger for debugging .NET projects">dotnet_debugger<LIST_SELECTED_STRING>EiffelStudio Dbg;cordbg;DbgCLR;</LIST_SELECTED_STRING></TEXT>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Tools" ICON="icon_preferences_folder">
 		<HEAD>Tools</HEAD>

@@ -26,6 +26,8 @@ inherit
 			call_close_request_actions,
 			initialize
 		end
+
+	EV_GTK_DEPENDENT_ROUTINES
 		
 create
 	make
@@ -36,7 +38,7 @@ feature {NONE} -- Initialization
 			-- Create empty dialog box.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (gtk_window_dialog_enum))
+			set_c_object (create_gtk_dialog)
 		end
 		
 	initialize is
@@ -121,13 +123,6 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
-
-	frozen gtk_window_dialog_enum: INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"GTK_WINDOW_DIALOG"
-		end
 
 	dialog_key_press_action (a_key: EV_KEY) is
 		local

@@ -40,24 +40,6 @@ feature -- Access
 			Result := implementation.parent
 		end
 	
-feature -- Status report
-
-	destroyed: BOOLEAN is
-			-- Is the current menu destroyed ?
-		do
-			Result := implementation.destroyed
-		end
-
-feature -- Status setting
-
-	destroy is
-			-- Destroy the actual static menu-bar.
-		require
-			exists: not destroyed
-		do
-			implementation.destroy
-		end
-
 feature {NONE} -- Implementation
 	
 	implementation: EV_STATIC_MENU_BAR_I	

@@ -52,6 +52,25 @@ feature -- Status
 			end
 		end
 
+	get_non_client_metrics: WEL_NON_CLIENT_METRICS is
+			-- Retrieves the metrics associated with the nonclient area of
+			-- nonminimized windows. 
+			--
+			-- Void if an error occurred.
+		local
+			success: BOOLEAN
+		do
+			create Result.make
+			success := c_system_parameters_info (
+				Spi_getnonclientmetrics, 
+				Result.structure_size, 
+				Result.item, 
+				0)
+			if not success then
+				Result := Void
+			end
+		end
+
 feature {NONE} -- Externals
 
 	c_system_parameters_info (action, param: INTEGER; p_param: POINTER; win_ini: INTEGER): BOOLEAN is

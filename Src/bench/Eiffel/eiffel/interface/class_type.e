@@ -648,11 +648,6 @@ feature -- Generation
 			Result := not skeleton.after
 		end
 
-	dispose_feature: FEATURE_I is
-		do
-			Result := associated_class.dispose_feature
-		end
-
 	generate_creation_routine (buffer, header_buffer: GENERATION_BUFFER) is
 			-- Creation routine, if necessary (i.e. if the object is
 			-- composite and has expanded we must initialize, as well

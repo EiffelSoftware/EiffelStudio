@@ -3271,31 +3271,6 @@ feature -- default_create routine
 			end
 		end
 
-feature -- Dispose routine
-
-	dispose_feature: FEATURE_I is
-			-- Feature for dispose routine
-			-- Void if dispose routine does not exist.
-		local
-			ftab: FEATURE_TABLE
-			item: FEATURE_I
-		do
-			if (System.memory_class /= Void) then
-				from
-					ftab := feature_table
-					ftab.start
-				until
-					ftab.after or (Result /= Void)
-				loop
-					item := ftab.item_for_iteration
-					if item.rout_id_set.first = System.memory_dispose_id then
-						Result := item
-					end
-					ftab.forth
-				end
-			end
-		end
-
 feature -- Dead code removal
 
 	mark_visible (remover: REMOVER) is

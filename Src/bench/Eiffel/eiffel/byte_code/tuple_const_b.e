@@ -63,13 +63,64 @@ feature -- IL generation
 	generate_il is
 			-- Generate IL code for manifest tuple.
 		local
-			real_ty: CL_TYPE_I
+			real_ty: GEN_TYPE_I
+			actual_type: CL_TYPE_I
+			basic_i: BASIC_I
+			expr: EXPR_B
+			base_class: CLASS_C
+			local_tuple: INTEGER
+			i: INTEGER
+			feat_tbl: FEATURE_TABLE
+			make_feat, put_feat: FEATURE_I
 		do
-				-- FIXME: Manu 10/24/2001. Tuples are not yet implemented
-				-- and therefore we need them first before implementing
-				-- manifest tuples.
 			real_ty ?= context.real_type (type)
+			base_class := real_ty.base_class
+			feat_tbl := base_class.feature_table
+			make_feat := feat_tbl.item_id (make_name_id)
+			put_feat := feat_tbl.item_id (put_value_at_name_id)
+			
+				-- Creation of Array
+ 			context.add_local (real_ty)
+ 			local_tuple := context.local_list.count
+ 			il_generator.put_dummy_local_info (real_ty, local_tuple)
 			il_generator.create_object (real_ty)
+ 			il_generator.generate_local_assignment (local_tuple)
+
+				-- Call creation procedure of TUPLE
+			il_generator.generate_local (local_tuple)
+ 			il_generator.generate_feature_access (real_ty, make_feat.feature_id, True)
+
+ 			from
+ 				expressions.start
+ 				i := 1
+ 			until
+ 				expressions.after
+ 			loop
+ 				expr ?= expressions.item
+ 				actual_type ?= context.real_type (expr.type)
+ 
+ 					-- Prepare call to `put'.
+ 				il_generator.generate_local (local_tuple)
+
+ 					-- Generate expression
+ 				expr.generate_il
+ 				if actual_type /= Void and then actual_type.is_basic then 
+ 						-- We generate a metamorphosed version of type.
+ 					expr.generate_il_eiffel_metamorphose (actual_type)
+ 					basic_i ?= actual_type
+					il_generator.put_integer_8_constant (basic_i.typecode)
+				else
+					il_generator.put_integer_8_constant (0)
+ 				end
+
+ 				il_generator.put_integer_32_constant (i)
+ 
+ 				il_generator.generate_feature_access (real_ty, put_feat.feature_id, True)
+ 				i := i + 1
+ 				expressions.forth
+ 			end
+ 
+ 			il_generator.generate_local (local_tuple)
 		end
 
 feature -- Byte code generation

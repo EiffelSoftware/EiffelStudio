@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that ..."
-	author: ""
+	author: "Christophe Bonnard"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,24 +8,19 @@ class
 	UNDO_REPLACE_COMMAND
 
 inherit
-	ANY
-		rename
-		export
-		undefine
-		redefine
-		select
-		end
+	UNDO_COMMAND
 
 create
 	make_from_strings
 
 feature -- Initialization
 
-	make_from_string (c: CURSOR, s1,s2: STRING; w: CHILD_WINDOW) is
+	make_from_strings (c: TEXT_CURSOR; s1,s2: STRING; w: CHILD_WINDOW) is
 		do
 			y_start := c.y_in_lines
 			x_start := c.x_in_characters
-			message := s
+			old_message := s1
+			new_message := s2
 			chwin := w
 		end
 
@@ -61,7 +56,13 @@ feature -- Element change
 
 	prepend_old  (c: CHARACTER) is
 		do
-			old_message.prepend_char (c)
+			old_message.precede (c)
+		end
+
+	extend_both (c1, c2: CHARACTER) is
+		do
+			old_message.extend (c1)
+			new_message.extend (c2)
 		end
 
 feature -- Removal
@@ -79,17 +80,23 @@ feature -- Miscellaneous
 feature -- Basic operations
 
 	undo is
+		local
+			cur: TEXT_CURSOR
 		do
+			cur := chwin.cursor
 			create cur.make_from_character_pos (x_start, y_start, chwin)
 			cur.delete_n_chars (new_message.count)
-			cur.insert (old_message)
+			cur.insert_string (old_message)
 		end
 
 	redo is
+		local
+			cur: TEXT_CURSOR
 		do
+			cur := chwin.cursor
 			create cur.make_from_character_pos (x_start, y_start, chwin)
 			cur.delete_n_chars (old_message.count)
-			cur.insert (new_message)
+			cur.insert_string (new_message)
 		end
 
 feature -- Obsolete

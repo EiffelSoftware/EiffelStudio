@@ -22,8 +22,6 @@ inherit
 			{NONE} all
 		end
 
-	COMPILER_TESTER
-
 creation
 	make, make_test
 
@@ -52,20 +50,39 @@ feature {NONE}  -- Initialization
 				cleanup_com
 			end
 		end
-
+		
 	make_test is
-			-- Instantiate compiler and test completion information features.
+			-- Instantiate compiler tester
 		local
-			pm: PROJECT_MANAGER
+			l_loaded: BOOLEAN
+			l_tester: COMPILER_TESTS
 		do
-			if argument_count > 0 then
-				create pm.make
-				pm.retrieve_project (argument (1))
-				if pm.valid_project then
-					run_tests (pm)
-				end
+			create l_tester.make
+			
+			if Argument_count > 0 then
+				l_loaded := l_tester.load_project (argument (1))
+			else
+				l_loaded := l_tester.load_project (Void)
+			end
+			if l_loaded then
+				l_tester.show_menu
 			end
 		end
+		
+
+--	make_test is
+--			-- Instantiate compiler and test completion information features.
+--		local
+--			pm: PROJECT_MANAGER
+--		do
+--			if argument_count > 0 then
+--				create pm.make
+--				pm.retrieve_project (argument (1))
+--				if pm.valid_project then
+--					run_tests (pm)
+--				end
+--			end
+--		end
 		
 feature -- Access
 

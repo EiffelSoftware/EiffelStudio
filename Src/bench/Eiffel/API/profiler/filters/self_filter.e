@@ -1,3 +1,11 @@
+indexing
+
+	description:
+		"Profile filter used to check whether the time spent in the function itself %
+		%is equal to the specified value.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class SELF_FILTER
 
 inherit

@@ -1,3 +1,10 @@
+indexing
+
+	description:
+		"Profile information about a profiled C function.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class C_PROFILE_DATA
 
 inherit

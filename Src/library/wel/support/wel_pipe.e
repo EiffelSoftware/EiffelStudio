@@ -1,3 +1,6 @@
+indexing
+	description: "Windows pipe, used in WEL_PROCESS_LAUNCHER"
+
 class
 	WEL_PIPE
 
@@ -58,6 +61,9 @@ feature -- Status setting
 
 	close is
 			-- Close pipe.
+		require
+			output_open: not output_closed
+			input_open: not input_closed
 		do
 			output_closed := cwin_close_handle (output_handle)
 			input_closed := cwin_close_handle (input_handle)
@@ -65,12 +71,16 @@ feature -- Status setting
 
 	close_output is
 			-- Close pipe output.
+		require
+			output_open: not output_closed
 		do
 			output_closed := cwin_close_handle (output_handle)
 		end
 
 	close_input is
 			-- Close pipe input.
+		require
+			input_open: not input_closed
 		do
 			input_closed := cwin_close_handle (input_handle)
 		end
@@ -79,6 +89,10 @@ feature -- Input
 
 	put_string (a_string: STRING) is
 			-- Write `a_string' to pipe.
+			-- Put number of written bytes in `last_written_bytes'.
+		require
+			non_void_string: a_string /= Void
+			input_open: not input_closed
 		local
 			a_wel_string: WEL_STRING
 		do
@@ -91,7 +105,11 @@ feature -- Output
 	read_stream (count: INTEGER) is
 			-- Read a string of at most `count' bound characters
 			-- or until end of pipe is encountered.
+			-- Put number of read bytes in `last_read_bytes'.
 			-- Make result available in `last_string'.
+		require
+			valid_count: count > 0
+			output_open: not output_closed
 		local
 			str_area: ANY
 		do

@@ -381,7 +381,7 @@ int where;			/* Are we checking invariant before or after compound? */
 					case SK_INT:	last->it_long = get_long(); break;
 					case SK_FLOAT:	last->it_float = get_float(); break;
 					case SK_DOUBLE:	last->it_double = get_double(); break;
-					case SK_POINTER:last->it_ptr = get_fnptr(); break;
+					case SK_POINTER:last->it_ptr = (char *) get_fnptr(); break;
 					case SK_BIT:
 					case SK_EXP:
 					case SK_REF:
@@ -758,7 +758,7 @@ end:
 			case SK_INT:	write_long(rvar, last->it_long); break;
 			case SK_FLOAT:	write_float(rvar, last->it_float); break;
 			case SK_DOUBLE:	write_double(rvar, last->it_double); break;
-			case SK_POINTER:write_fnptr(rvar, last->it_ptr); break;
+			case SK_POINTER:write_fnptr(rvar, (fnptr) last->it_ptr); break;
 			case SK_BIT:
 			case SK_EXP:
 			case SK_REF:	/* See below */ 
@@ -2995,7 +2995,7 @@ int stype;				/* Static type (entity where feature is applied) */
 
 	last = iget();
 	last->type = SK_POINTER;
-	last->it_ptr = frozen[body];
+	last->it_ptr = (char *) frozen[body];
 }
 
 

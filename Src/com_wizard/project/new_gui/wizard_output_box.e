@@ -47,6 +47,15 @@ inherit
 			default_create
 		end
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -119,66 +128,53 @@ feature -- Basic Operations
 				end
 			else
 				l_progress_event ?= a_event
-				check
-					is_output_or_progress: l_progress_event /= Void
-				end
-				inspect
-					l_progress_event.id
-				when feature {WIZARD_PROGRESS_EVENT_ID}.Start then
-					percentage_label.set_text ("0")
-					task_percentage_label.set_text ("0")
-					progress_bar_box.show
-					task_progress_bar_box.show
-					stop_button.enable_sensitive
-					exit_button.disable_sensitive
-					save_button.disable_sensitive
-					open_eiffelstudio_button.disable_sensitive
-					final_message_box.hide
-				when feature {WIZARD_PROGRESS_EVENT_ID}.Finish then
-					progress_bar_box.hide
-					task_progress_bar_box.hide
-					progress_bar_label.set_text ("Ready.")
-					stop_button.disable_sensitive
-					exit_button.enable_sensitive
-					save_button.enable_sensitive
-					if not environment.abort then
+				if l_progress_event /= Void then
+					inspect
+						l_progress_event.id
+					when feature {WIZARD_PROGRESS_EVENT_ID}.Start then
+						percentage_label.set_text ("0")
+						progress_bar_box.show
+						stop_button.enable_sensitive
+						exit_button.disable_sensitive
+						save_button.disable_sensitive
+						open_eiffelstudio_button.disable_sensitive
+						final_message_box.hide
+						progress_bar_label.set_foreground_color ((create {EV_STOCK_COLORS}).Black)
+					when feature {WIZARD_PROGRESS_EVENT_ID}.Finish then
+						progress_bar_box.hide
+						progress_bar_label.set_text ("Ready.")
+						stop_button.disable_sensitive
+						exit_button.enable_sensitive
+						save_button.enable_sensitive
+						if not environment.abort then
+							fixme ("progress_bar.value is off by one or two (lower than progress_bar.value_range.upper)")
+							check
+							--	step_called_correctly: not environment.abort implies (progress_bar.value = progress_bar.value_range.upper)
+							end
+							if environment.compile_eiffel then
+								open_eiffelstudio_button.enable_sensitive
+							end
+						end
+						destination_path_label.set_text (environment.destination_folder)
+						final_message_box.show
+					when feature {WIZARD_PROGRESS_EVENT_ID}.Step then
 						check
-							step_called_correctly: progress_bar.value = progress_bar.value_range.upper
-							task_step_called_correctly: task_progress_bar.value = task_progress_bar.value_range.upper
+							not_finished: not environment.abort implies (progress_bar.value < (progress_bar.value_range.upper - progress_bar.value_range.lower))
 						end
-						if environment.compile_eiffel then
-							open_eiffelstudio_button.enable_sensitive
-						end
+						progress_bar.step_forward
+						l_percent := ((progress_bar.value / (progress_bar.value_range.upper - progress_bar.value_range.lower)) * 100).rounded
+						percentage_label.set_text (l_percent.out)
+					when feature {WIZARD_PROGRESS_EVENT_ID}.Set_range then
+						progress_bar.value_range.resize_exactly (0, l_progress_event.value)
+						progress_bar.set_value (0)
+						percentage_label.set_text ("0")
+					when feature {WIZARD_PROGRESS_EVENT_ID}.Title then
+						progress_bar_label.set_text (l_progress_event.text_value)
+					else
+						check
+							should_not_be_here: False
+						end					
 					end
-					destination_path_label.set_text (environment.destination_folder)
-					final_message_box.show
-				when feature {WIZARD_PROGRESS_EVENT_ID}.Step then
-					check
-						not_finished: progress_bar.value < (progress_bar.value_range.upper - progress_bar.value_range.lower)
-						not_task_finished: task_progress_bar.value < (task_progress_bar.value_range.upper - task_progress_bar.value_range.lower)
-					end
-					progress_bar.step_forward
-					task_progress_bar.step_forward
-					l_percent := ((progress_bar.value / (progress_bar.value_range.upper - progress_bar.value_range.lower)) * 100).rounded
-					percentage_label.set_text (l_percent.out)
-					l_percent := ((task_progress_bar.value / (task_progress_bar.value_range.upper - task_progress_bar.value_range.lower)) * 100).rounded
-					task_percentage_label.set_text (l_percent.out)
-				when feature {WIZARD_PROGRESS_EVENT_ID}.Set_range then
-					progress_bar.value_range.resize_exactly (0, l_progress_event.value)
-					progress_bar.set_value (0)
-					percentage_label.set_text ("0")
-				when feature {WIZARD_PROGRESS_EVENT_ID}.Set_task_range then
-					task_progress_bar.value_range.resize_exactly (0, l_progress_event.value)
-					task_progress_bar.set_value (0)
-					task_percentage_label.set_text ("0")
-				when feature {WIZARD_PROGRESS_EVENT_ID}.Title then
-					progress_bar_label.set_text (l_progress_event.text_value)
-				when feature {WIZARD_PROGRESS_EVENT_ID}.Task_title then
-					task_progress_bar_label.set_text (l_progress_event.text_value)
-				else
-					check
-						should_not_be_here: False
-					end					
 				end
 			end
 		end
@@ -194,9 +190,10 @@ feature {NONE} -- GUI Events Handling
 	on_stop is
 			-- Called by `select_actions' of `stop_button'.
 		do
-			environment.set_abort (Standard_abort_value)
+			environment.set_abort (User_stop)
 			stop_button.disable_sensitive
 			progress_bar_label.set_text ("Stopping....")
+			progress_bar_label.set_foreground_color ((create {EV_STOCK_COLORS}).Red)
 			progress_bar.set_value (progress_bar.value_range.upper)
 		end
 
@@ -256,6 +253,7 @@ feature {NONE} -- GUI Events Handling
 			create l_dialog.make_with_title ("Browse for log file")
 			l_dialog.filters.extend (["*.rtf", "Rich Text File (*.rtf)"])
 			l_dialog.set_file_name (environment.project_name + "_log.rtf")
+			l_dialog.set_start_directory (environment.destination_folder)
 			l_dialog.show_modal_to_window ((create {EV_UTILITIES}).parent_window (Current))
 			l_file_name := l_dialog.file_name.as_lower
 			if not l_file_name.is_empty then

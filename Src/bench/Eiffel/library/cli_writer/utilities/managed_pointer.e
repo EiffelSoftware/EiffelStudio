@@ -42,7 +42,41 @@ feature -- Access
 	size: INTEGER
 			-- Allocated size area.
 
-feature -- Settings
+feature -- Update
+
+	put_integer_8 (i: INTEGER_8; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			valid_pos: (pos + 1) < size
+		do
+			(item + pos).memory_copy ($i, 1)
+		end
+
+	put_integer_16 (i: INTEGER_16; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			valid_pos: (pos + 2) < size
+		do
+			(item + pos).memory_copy ($i, 2)
+		end
+
+	put_integer_32 (i: INTEGER; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			valid_pos: (pos + 4) < size
+		do
+			(item + pos).memory_copy ($i, 4)
+		end
+
+	put_integer_64 (i: INTEGER_64; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			valid_pos: (pos + 8) < size
+		do
+			(item + pos).memory_copy ($i, 8)
+		end
+		
+feature -- Resizing
 
 	resize (n: INTEGER) is
 			-- Reallocate `item' to hold `n' bytes.

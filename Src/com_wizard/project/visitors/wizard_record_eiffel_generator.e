@@ -182,23 +182,37 @@ feature {NONE} -- Implementation
 			body: STRING
 			a_name: STRING
 			a_comment: STRING
+			a_local_var: STRING
 			an_argument_name, an_argument: STRING
 		do
 			create Result.make
+			create body.make (0)
 
 			create a_name.make (0)
 			a_name.append ("set_")
 			a_name.append (name_for_feature (a_field_descriptor.name))
+
+			create an_argument_name.make (0)
+			an_argument_name.append ("a_")
+			an_argument_name.append (name_for_feature (a_field_descriptor.name))
 
 			Result.set_name (a_name)
 
 			create a_data_type_visitor
 			a_data_type_visitor.visit (a_field_descriptor.data_type)
 
-			create an_argument_name.make (0)
-			an_argument_name.append ("a_")
-			an_argument_name.append (name_for_feature (a_field_descriptor.name))
-		
+			if a_data_type_visitor.is_array_basic_type then
+				create a_local_var.make (0)
+				a_local_var.append ("any: ANY")
+				body.append (tab_tab_tab)
+				body.append ("any := ")
+				body.append (an_argument_name)
+				body.append (Dot)
+				body.append (To_c_function)
+				body.append (New_line)
+				Result.add_local_variable (a_local_var)
+			end
+
 			create an_argument.make (0)
 			an_argument.append (an_argument_name)
 			an_argument.append (Colon)
@@ -227,7 +241,6 @@ feature {NONE} -- Implementation
 
 			Result.set_effective
 
-			create body.make (0)
 
 			-- `a_macro_setter_name' (item, `an_argument_name')
 
@@ -243,9 +256,7 @@ feature {NONE} -- Implementation
 
 			elseif a_data_type_visitor.is_array_basic_type then
 				body.append (Dollar)
-				body.append (an_argument_name)
-				body.append (Dot)
-				body.append (To_c_function)
+				body.append ("any")
 
 			elseif 
 				a_data_type_visitor.is_interface_pointer or
@@ -306,7 +317,7 @@ feature {NONE} -- Implementation
 			create body.make (0)
 			body.append (tab_tab_tab)
 			body.append (Double_quote)
-			body.append ("C")
+			body.append ("C++")
 			body.append (Space)
 			body.append (Open_bracket)
 			body.append ("macro")
@@ -366,7 +377,7 @@ feature {NONE} -- Implementation
 			create body.make (0)
 			body.append (tab_tab_tab)
 			body.append (Double_quote)
-			body.append ("C")
+			body.append ("C++")
 			body.append (Space)
 			body.append (Open_bracket)
 			body.append ("macro")

@@ -20,24 +20,82 @@ feature -- Access
 			struct_def, forward_def: STRING
 			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
 			header: STRING
+			a_windows_structure: WIZARD_WINDOWS_STRUCTURE
 		do
 			create c_writer.make
 
-			a_descriptor.fields.sort
+			if not a_descriptor.is_union then 
+				a_descriptor.fields.sort
+			end
 
 			create forward_def.make (0)
+			if windows_structures.has (a_descriptor.c_type_name) then
+				a_windows_structure := windows_structures.item (a_descriptor.c_type_name)
+				forward_def.append (Hash_if_ndef)
+				forward_def.append (Space)
+				forward_def.append (a_windows_structure.file_protector)
+				forward_def.append (New_line)
+				if 
+					a_windows_structure.structure_protector /= Void and then 
+					not a_windows_structure.structure_protector.empty
+				then
+					forward_def.append (Hash_if_ndef)
+					forward_def.append (Space)
+					forward_def.append (a_windows_structure.structure_protector)
+					forward_def.append (New_line)
+				end
+			end
 			forward_def.append (typedef)
 			forward_def.append (Space)
-			forward_def.append (Struct)
+			if a_descriptor.is_union then
+				forward_def.append (Union)
+			else
+				forward_def.append (Struct)
+			end
 			forward_def.append (Space)
 			forward_def.append (a_descriptor.c_type_name)
 			forward_def.append (Semicolon)
+			if a_windows_structure /= Void then
+				forward_def.append (New_line)
+				forward_def.append (Hash_end_if)
+				if 
+					a_windows_structure.structure_protector /= Void and then 
+					not a_windows_structure.structure_protector.empty
+				then
+					forward_def.append (New_line)
+					forward_def.append (Hash_end_if)
+				end
+			end
 			c_writer.add_other_forward (forward_def)
 
 			create struct_def.make (0)
+			if a_windows_structure /= Void then
+				struct_def.append (Hash_if_ndef)
+				struct_def.append (Space)
+				struct_def.append (a_windows_structure.file_protector)
+				struct_def.append (New_line)
+				if 
+					a_windows_structure.structure_protector /= Void and then 
+					not a_windows_structure.structure_protector.empty
+				then
+					struct_def.append (Hash_if_ndef)
+					struct_def.append (Space)
+					struct_def.append (a_windows_structure.structure_protector)
+					struct_def.append (New_line)
+					struct_def.append (Hash_define)
+					struct_def.append (Space)
+					struct_def.append (a_windows_structure.structure_protector)
+					struct_def.append (New_line)
+				end
+			end
+
 			struct_def.append (typedef)
 			struct_def.append (Space)
-			struct_def.append (Struct)
+			if a_descriptor.is_union then
+				struct_def.append (Union)
+			else
+				struct_def.append (Struct)
+			end
 			struct_def.append (Space)
 			struct_def.append (a_descriptor.c_type_name)
 			struct_def.append (New_line)
@@ -68,6 +126,17 @@ feature -- Access
 			struct_def.append (Space)
 			struct_def.append (a_descriptor.c_type_name)
 			struct_def.append (Semicolon)
+			if windows_structures.has (a_descriptor.c_type_name) then
+				struct_def.append (New_line)
+				struct_def.append (Hash_end_if)
+				if 
+					a_windows_structure.structure_protector /= Void and then 
+					not a_windows_structure.structure_protector.empty
+				then
+					struct_def.append (New_line)
+					struct_def.append (Hash_end_if)
+				end
+			end
 
 			c_writer.add_other (struct_def)
 
@@ -183,6 +252,10 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append (Struct_selection_operator)
 				Result.append (a_field_descriptor.name)
+				if a_data_visitor.writable then
+					Result.append (Comma_space)
+					Result.append (Null)
+				end
 				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 				if a_data_visitor.is_interface then
@@ -203,7 +276,8 @@ feature {NONE} -- Implementation
 		local
 			macro_name: STRING
 			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
-
+			array_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR
+			i, array_count: INTEGER
 		do
 			macro_name := macro_setter_name (a_record_descriptor.name, a_field_descriptor)
 			create a_data_visitor
@@ -223,67 +297,147 @@ feature {NONE} -- Implementation
 			Result.append (Space)
 
 			Result.append (Open_parenthesis)
-			Result.append (Open_parenthesis)
-			Result.append (Open_parenthesis)
-			Result.append (Open_parenthesis)
-			Result.append (a_record_descriptor.c_type_name)
-			Result.append (Space)
-			Result.append (Asterisk)
-			Result.append (Close_parenthesis)
-			Result.append ("_ptr_")
-			Result.append (Close_parenthesis)
-			Result.append (Struct_selection_operator)
-			Result.append (a_field_descriptor.name)
-			Result.append (Close_parenthesis)
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			if a_data_visitor.is_basic_type or a_data_visitor.is_enumeration or 
-					a_data_visitor.is_array_basic_type then
-				Result.append (Open_parenthesis)
-				Result.append (a_data_visitor.c_type)
-				Result.append (Close_parenthesis)
-				Result.append ("_field_")
-
-			elseif 
-				a_data_visitor.is_structure_pointer or 
-				a_data_visitor.is_interface_pointer or
-				a_data_visitor.is_coclass_pointer 
-			then
-				Result.append (Open_parenthesis)
-				Result.append (a_data_visitor.c_type)
-				Result.append (Close_parenthesis)
-				Result.append ("_field_")
-
-			elseif a_data_visitor.is_structure or a_data_visitor.is_interface then
-				Result.append (Asterisk)
-				Result.append (Open_parenthesis)
-				Result.append (Open_parenthesis)
-				Result.append (a_data_visitor.c_type)
-				Result.append (Space)
-				Result.append (Asterisk)
-				Result.append (Close_parenthesis)
-				Result.append ("_field_")
-				Result.append (Close_parenthesis)
+			if a_data_visitor.is_array_type then
+				if a_data_visitor.is_array_basic_type then
+					array_descriptor ?= a_field_descriptor.data_type
+					array_count := 1
+					if array_descriptor /= Void then
+						from
+							i := 1
+						variant
+							array_descriptor.dimension_count - i + 1
+						until
+							i > array_descriptor.dimension_count
+						loop
+							array_count := array_count * array_descriptor.array_size.item (i)
+							i := i + 1
+						end
+					end
+					Result.append (Memcpy)
+					Result.append (Space_open_parenthesis)
+					Result.append (Ampersand)
+					Result.append (Open_parenthesis)
+					Result.append (Open_parenthesis)
+					Result.append (Open_parenthesis)
+					Result.append (a_record_descriptor.c_type_name)
+					Result.append (Space)
+					Result.append (Asterisk)
+					Result.append (Close_parenthesis)
+					Result.append ("_ptr_")
+					Result.append (Close_parenthesis)
+					Result.append (Struct_selection_operator)
+					Result.append (a_field_descriptor.name)
+					Result.append (Close_parenthesis)
+					Result.append (Comma_space)
+					Result.append (Open_parenthesis)
+					Result.append (a_data_visitor.c_type)
+					Result.append (Space)
+					Result.append (Asterisk)
+					Result.append (Close_parenthesis)
+					Result.append ("_field_")
+					Result.append (Comma_space)
+					Result.append_integer (array_count)
+					Result.append (Space)
+					Result.append (Asterisk)
+					Result.append (Space)
+					Result.append (Sizeof)
+					Result.append (Space_open_parenthesis)
+					Result.append (a_data_visitor.c_type)
+					Result.append (Close_parenthesis)
+					Result.append (Close_parenthesis)
+				else
+					if a_data_visitor.need_generate_ec then
+						Result.append (Generated_ec_mapper)
+					else
+						Result.append (Ec_mapper)
+					end
+					Result.append (Dot)
+					Result.append (a_data_visitor.ec_function_name)
+					Result.append (Space)
+					Result.append (Open_parenthesis)
+					Result.append (Eif_access)
+					Result.append (Space)
+					Result.append (Open_parenthesis)
+					Result.append ("_field_")
+					Result.append (Close_parenthesis)
+					Result.append (Comma_space)
+					Result.append (Ampersand)
+					Result.append (Open_parenthesis)
+					Result.append (a_record_descriptor.c_type_name)
+					Result.append (Space)
+					Result.append (Asterisk)
+					Result.append (Close_parenthesis)
+					Result.append ("_ptr_")
+					Result.append (Close_parenthesis)
+					Result.append (Struct_selection_operator)
+					Result.append (a_field_descriptor.name)
+					Result.append (Close_parenthesis)	
+				
+				end
 
 			else
-				if a_data_visitor.need_generate_ec then
-					Result.append (Generated_ec_mapper)
-				else
-					Result.append (Ec_mapper)
-				end
-				Result.append (Dot)
-				Result.append (a_data_visitor.ec_function_name)
-				Result.append (Space)
 				Result.append (Open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space)
 				Result.append (Open_parenthesis)
-				Result.append ("_field_")
+				Result.append (Open_parenthesis)
+				Result.append (a_record_descriptor.c_type_name)
+				Result.append (Space)
+				Result.append (Asterisk)
 				Result.append (Close_parenthesis)
+				Result.append ("_ptr_")
 				Result.append (Close_parenthesis)
+				Result.append (Struct_selection_operator)
+				Result.append (a_field_descriptor.name)
+				Result.append (Close_parenthesis)
+				Result.append (Space)
+				Result.append (Equal_sign)
+				Result.append (Space)
+				if a_data_visitor.is_basic_type or a_data_visitor.is_enumeration or 
+						a_data_visitor.is_array_basic_type then
+					Result.append (Open_parenthesis)
+					Result.append (a_data_visitor.c_type)
+					Result.append (Close_parenthesis)
+					Result.append ("_field_")
 
-			end	
+				elseif 
+					a_data_visitor.is_structure_pointer or 
+					a_data_visitor.is_interface_pointer or
+					a_data_visitor.is_coclass_pointer 
+				then
+					Result.append (Open_parenthesis)
+					Result.append (a_data_visitor.c_type)
+					Result.append (Close_parenthesis)
+					Result.append ("_field_")
+
+				elseif a_data_visitor.is_structure or a_data_visitor.is_interface then
+					Result.append (Asterisk)
+					Result.append (Open_parenthesis)
+					Result.append (Open_parenthesis)
+					Result.append (a_data_visitor.c_type)
+					Result.append (Space)
+					Result.append (Asterisk)
+					Result.append (Close_parenthesis)
+					Result.append ("_field_")
+					Result.append (Close_parenthesis)
+
+				else
+					if a_data_visitor.need_generate_ec then
+						Result.append (Generated_ec_mapper)
+					else
+						Result.append (Ec_mapper)
+					end
+					Result.append (Dot)
+					Result.append (a_data_visitor.ec_function_name)
+					Result.append (Space)
+					Result.append (Open_parenthesis)
+					Result.append (Eif_access)
+					Result.append (Space)
+					Result.append (Open_parenthesis)
+					Result.append ("_field_")
+					Result.append (Close_parenthesis)
+					Result.append (Close_parenthesis)
+
+				end	
+			end
 			Result.append (Close_parenthesis)
 
 		ensure

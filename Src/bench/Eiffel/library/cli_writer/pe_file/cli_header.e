@@ -54,6 +54,14 @@ feature -- Access
 		ensure
 			meta_data_directory_not_void: Result /= Void
 		end
+
+	resources_directory: CLI_DIRECTORY is
+			-- Directory for resources.
+		do
+			create Result.make_by_pointer (c_resources (item))
+		ensure
+			resources_directory_not_void: Result /= Void
+		end
 		
 	strong_name_directory: CLI_DIRECTORY is
 			-- Directory for strong name signature.

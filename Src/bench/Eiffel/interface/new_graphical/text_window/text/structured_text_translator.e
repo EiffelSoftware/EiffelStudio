@@ -350,7 +350,7 @@ feature -- Text processing
 			stone: CL_SYNTAX_STONE
 		do
 			create tok.make (t.error_text, tab_size_cell)
-			create stone.make (t.syntax_error, t.e_class)
+			create stone.make (t.syntax_message, t.e_class)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
 		end

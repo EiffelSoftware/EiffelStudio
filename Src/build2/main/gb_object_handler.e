@@ -423,6 +423,7 @@ feature -- Basic operation
 		local
 			current_name_lower, name_lower: STRING
 		do
+				-- Do nothing if `object_name' is empty.
 			if not object_name.is_empty then
 				name_lower := object_name
 				name_lower.to_lower
@@ -431,13 +432,8 @@ feature -- Basic operation
 				until
 					objects.off or Result
 				loop
-					if an_object /= Void and then objects.item /= an_object then
-						current_name_lower := objects.item.name
-						current_name_lower.to_lower
-						if current_name_lower.is_equal (name_lower) then
-							Result := True
-						end
-					elseif an_object = Void then
+						-- If `an_object' /= `Void' then do not check against `an_object' when found.
+					if (an_object /= Void and then objects.item /= an_object) or (an_object = Void) then
 						current_name_lower := objects.item.name
 						current_name_lower.to_lower
 						if current_name_lower.is_equal (name_lower) then

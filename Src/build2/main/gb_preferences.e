@@ -11,13 +11,28 @@ inherit
 	RESOURCES_STRING_CONSTANTS
 		export
 			{NONE} all
+		redefine
+			default_create
 		end
 	
 	SHARED_RESOURCES
+		undefine
+			default_create
+		end
 	
 	EIFFEL_ENV
 		export
 			{NONE} all
+		undefine
+			default_create
+		end
+		
+feature {NONE} -- Initialization
+
+	default_create is 
+			-- Create `Current' initialized.
+		do
+			initialize_preferences
 		end
 
 feature -- Access

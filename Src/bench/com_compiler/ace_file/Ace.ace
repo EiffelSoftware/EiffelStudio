@@ -16,58 +16,21 @@ default
 	inlining (no)
 	inlining_size ("4")
 cluster
-	all com_generated: "$EIFFEL_SRC\bench\com_compiler"
+	all com_generated: "$EIFFEL_SRC\com_compiler"
 		exclude
 			"EIFGEN"; 
 			"to_replace";
 			"generated";
 		visible
 			IEIFFEL_COMPILER_EVENTS_IMPL_PROXY
-				export
-					"make_from_other",
-					"make_from_pointer"
-				end;
 			IEIFFEL_PROJECT_IMPL_PROXY
-				export
-					"make_from_other",
-					"make_from_pointer"
-				end;
 			IEIFFEL_COMPILER_IMPL_PROXY
-				export
-					"make_from_other",
-					"make_from_pointer"
-				end;
 			IEIFFEL_SYSTEM_BROWSER_IMPL_PROXY
-				export
-					"make_from_other",
-					"make_from_pointer"
-				end;
 			IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_PROXY
-				export
-					"make_from_other",
-					"make_from_pointer"
-				end;
 			IEIFFEL_CLASS_DESCRIPTOR_IMPL_PROXY
-				export
-					"make_from_other",
-					"make_from_pointer"
-				end;
 			IEIFFEL_FEATURE_DESCRIPTOR_IMPL_PROXY
-				export
-					"make_from_other",
-					"make_from_pointer"
-				end;
 			IEIFFEL_PROJECT_PROPERTIES_IMPL_PROXY
-				export
-					"make_from_other",
-					"make_from_pointer"
-				end;
 			IEIFFEL_CLUSTER_PROPERTIES_IMPL_PROXY
-				export
-					"make_from_other",
-					"make_from_pointer"
-				end;
-
 			ECOM_EIF_COMPILER_REGISTRATION;
 			CEIFFEL_PROJECT_COCLASS_IMP;
 			CEIFFEL_COMPILER_COCLASS_IMP;
@@ -79,8 +42,17 @@ cluster
 			IEIFFEL_FEATURE_DESCRIPTOR_IMPL_STUB;
 			IEIFFEL_PROJECT_PROPERTIES_IMPL_STUB;
 			IEIFFEL_CLUSTER_PROPERTIES_IMPL_STUB;
+			CLASS_DESCRIPTOR;
+			CLUSTER_DESCRIPTOR;
+			CLUSTER_PROPERTIES;
+			COMPILER;
+			COM_DEGREE_OUTPUT;
+			COM_ERROR_WINDOW;
+			FEATURE_DESCRIPTOR;
+			INTERFACE_KERNEL;
+			PROJECT_PROPERTIES;
+			SYSTEM_BROWSER;
 		end
-
 
 	-- BASE
 	all base:		"$EIFFEL_SRC\library\base"
@@ -220,7 +192,7 @@ external
 	include_path:	"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 			"$(EIFFEL_SRC)\library\time\Clib",
 			"$(EIFFEL_SRC)\library\com\spec\windows\include",
-			"$(EIFFEL_SRC)\bench\com_compiler\Clib",
+			"$(EIFFEL_SRC)\com_compiler\Clib",
 			"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
 			"$(EIFFEL_SRC)\library\encryption\Clib",
 			"$(EIFFEL_SRC)\C\bench",
@@ -241,5 +213,5 @@ external
 			"$(EIFFEL_SRC)\C\platform\platform.lib",
 			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
 			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\$(ISE_C_COMPILER)\ecom.lib",
-			"$(EIFFEL_SRC)\bench\com_compiler\Clib\$(ISE_C_COMPILER)\ecom.lib"
+			"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom.lib"
 end

@@ -378,6 +378,14 @@ feature -- Access
 			widget_exists: Result /= Void
 		end
 
+	password (a_password: PASSWORD; managed: BOOLEAN; oui_parent: COMPOSITE): PASSWORD_WINDOWS is
+			-- MS-Windows implementation of `a_password'
+		do
+			!! Result.make (a_password, managed, oui_parent)
+		ensure
+			widget_exists: Result /= Void
+		end
+
 	toggle_b (a_toggle_b: TOGGLE_B; managed: BOOLEAN; oui_parent: COMPOSITE): TOGGLE_B_WINDOWS is
 			-- MS-Windows implementation of `a_toggle_b'
 		do

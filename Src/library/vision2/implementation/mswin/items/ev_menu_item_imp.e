@@ -1,9 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: 
-		"EiffelVision menu item. Mswindows implementation."
+	description: "Eiffel Vision menu item. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -17,10 +14,7 @@ inherit
 		end
 		
 	EV_SIMPLE_ITEM_IMP
-		undefine
-			parent
 		redefine
-			set_text,
 			interface
 		end
 
@@ -32,10 +26,9 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create the widget with `par' as parent.
+			-- Create the menu item.
 		do
 			base_make (an_interface)
-			--set_text ("")
 			make_id
 		end
 
@@ -46,39 +39,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	menu: WEL_MENU
-			-- Wel menu used when the item is a sub-menu.
+	text: STRING
+			-- Caption of the menu item.
 
 feature -- Status report
 
 	is_sensitive: BOOLEAN is
 		do
-			--Result := not parent_imp.internal_insensitive (Current)
-		end
-
-	is_insensitive: BOOLEAN is
-			-- Is current menu_item insensitive ?
-		do
-		--	Result := parent_imp.internal_insensitive (Current)
-		end
-
-	is_selected: BOOLEAN is
-			-- True if the current item is selected.
-			-- False otherwise.
-			-- We use it only when the grand parent is an option button.
-		local
-			menu_imp: EV_MENU_IMP
-			option: EV_OPTION_BUTTON
-			mitem: EV_MENU_ITEM
-		do
-			menu_imp ?= parent_imp
-			if menu_imp /= Void then
-				option ?= menu_imp.parent_imp
-				if option /= Void then
-					mitem ?= interface
-					Result := mitem.is_equal (option.selected_item)
-				end
-			end
+			Result := parent_imp.item_enabled (id)
 		end
 
 feature -- Status setting
@@ -86,93 +54,30 @@ feature -- Status setting
 	enable_sensitive is
    			-- Set current item sensitive.
 		do
-			--parent_imp.internal_set_insensitive (Current, False)
+			parent_imp.enable_item (id)
    		end
 
 	disable_sensitive is
    			-- Set current item insensitive.
 		do
-			--parent_imp.internal_set_insensitive (Current, True)
-   		end
-
-	set_selected (flag: BOOLEAN) is
-   			-- Set current item as the selected one.
-			-- We use it only when the grand parent is an option button.
-   		do
-			--parent_imp.on_selection_changed (Current)
+			parent_imp.disable_item (id)
    		end
 
 feature -- Element change
 
-	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
+	set_parent (a_parent: like parent) is
+			-- Make `a_parent' the parent of the menu-item.
 		do
-				if par /= Void then
-					parent_imp ?= par.implementation
-				else
-					parent_imp := Void
-				end
-               end
+			if a_parent /= Void then
+				parent_imp ?= a_parent.implementation
+			end
+		end
 
 	set_text (txt: STRING) is
 			-- Set `text' to `txt'.
 		do
 			text := clone (txt)
-		--	{EV_SIMPLE_ITEM_IMP} Precursor (txt)
-		--	if parent_imp /= Void then
-		--		parent_imp.menu.modify_string (txt, id)
-		--		item_handler.update_menu
-		--	end
-		end
-
-	add_item (an_item: EV_MENU_ITEM_IMP) is
-			-- Add `an_item' into container.
-		do
-			-- First, we transform the item into a menu.
-		--	if menu = Void then
-		--		!! menu.make
-		--		if parent_imp /= Void then
-		--			parent_imp.internal_delete_item (Current)
-		--			parent_imp.internal_insert_menu (Current)
-		--		end
-		--	end
-
-			-- Then we normaly add the item.
-		--	extend (an_item.interface)
--- FIXME was like this:	{EV_MENU_ITEM_HOLDER_IMP} Precursor (an_item)
-		end
-
-	remove_separator (sep_imp: EV_MENU_SEPARATOR_IMP) is
-			-- Remove `sep_imp' from the menu.
-		do
-			-- First, we call the precursor
-		--	{EV_MENU_ITEM_HOLDER_IMP} Precursor (sep_imp)
-
-			-- If there is no more children, it becomes a normal item.
-		--	if ev_children = Void then
-		--		if parent_imp /= Void then
-		--			parent_imp.internal_delete_item (Current)
-		--			parent_imp.internal_insert_item (Current)
-		--		end
-		--		menu := Void
-		--	end
-		end
-
-feature {EV_MENU_ITEM_HANDLER_IMP} -- WEL Implementation
-
-	on_activate is
-			-- Is called by the menu when the item is activated.
-		do
-			interface.press_actions.call ([])
-			--| FIXME execute_command (Cmd_item_activate, Void)
-		--	parent_imp.on_selection_changed (Current)
-		end
-
-	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
-			-- `sitem' has been selected'.
-		do
-		--	parent_imp.on_selection_changed (sitem)
+			--| FIXME Change text.
 		end
 
 feature {NONE} -- Implementation
@@ -180,6 +85,11 @@ feature {NONE} -- Implementation
 	parent_imp: EV_MENU_ITEM_LIST_IMP
 
 feature {EV_ANY_I} -- Implementation
+
+	on_activate is
+		do
+			interface.press_actions.call ([])
+		end
 
 	interface: EV_MENU_ITEM
 
@@ -206,6 +116,9 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/02/23 02:14:35  brendel
+--| Revised. Implemented.
+--|
 --| Revision 1.27  2000/02/22 19:16:21  brendel
 --| Added callback to interface.press_actions.
 --|

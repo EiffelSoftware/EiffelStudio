@@ -83,7 +83,17 @@ feature -- Conversion
 		ensure
 			non_void_representation: Result /= Void
 		end
-					
+
+	to_definition_string: STRING is
+			-- String representation needed for code generation.
+		require
+			valid_item: item /= default_pointer
+		do
+			Result := ccom_guid_to_defstring (item)
+		ensure
+			non_void_representation: Result /= Void
+		end
+	
 feature {NONE} -- Externals
 
 	c_size_of_guid: INTEGER is
@@ -106,6 +116,11 @@ feature {NONE} -- Externals
 	ccom_is_equal_guid (giud1, guid2: POINTER): BOOLEAN is
 		external
 			"C [macro %"E_guid.h%"]"
+		end
+
+	ccom_guid_to_defstring (a_guid: POINTER): STRING is
+		external
+			"C (GUID *): EIF_REFERENCE | %"E_guid.h%""
 		end
 
 end -- class ECOM_GUID

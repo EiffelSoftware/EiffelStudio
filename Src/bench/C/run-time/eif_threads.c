@@ -42,6 +42,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_memory.h"
 #include "rt_option.h"
 #include "rt_rw_lock.h"
+#include "rt_traverse.h"
 
 #include <string.h>
 
@@ -163,11 +164,13 @@ rt_public void eif_thr_init_root(void)
 	EIF_LW_MUTEX_CREATE(eif_free_list_mutex, 4000, "Couldn't create free list mutex");
 	EIF_LW_MUTEX_CREATE(eiffel_usage_mutex, 4000, "Couldn't create eiffel_usage mutex");
 	EIF_LW_MUTEX_CREATE(trigger_gc_mutex, 4000, "Couldn't create trigger gc mutex");
+	EIF_LW_MUTEX_CREATE(eif_g_data_mutex, 100, "Couln't create g_data mutex");
 #endif
 	EIF_LW_MUTEX_CREATE(eif_thread_launch_mutex, -1, "Cannot create mutex for thread launcher\n");
 	EIF_LW_MUTEX_CREATE(eif_except_lock, -1, "Couldn't create exception lock");
 	EIF_LW_MUTEX_CREATE(eif_memory_mutex, -1, "Couldn't create memory mutex");
 	EIF_LW_MUTEX_CREATE(eif_trace_mutex, -1, "Couldn't create tracemutex");
+	EIF_LW_MUTEX_CREATE(eif_eo_store_mutex, -1, "Couldn't create EO_STORE mutex");
 	EIF_MUTEX_CREATE(eif_global_once_mutex, "Couldn't create global once mutex");
 	eif_thr_register();
 #ifdef ISE_GC
@@ -198,10 +201,12 @@ rt_shared void eif_thread_cleanup (void)
 	EIF_LW_MUTEX_DESTROY(eif_free_list_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eiffel_usage_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(trigger_gc_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eif_g_data_mutex, "Could not destroy mutex");
 #endif
 	EIF_LW_MUTEX_DESTROY(eif_thread_launch_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_except_lock, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_memory_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eif_eo_store_mutex, "Could not destroy mutex");
 	EIF_MUTEX_DESTROY(eif_global_once_mutex, "Could not destroy mutex");
 
 	EIF_TSD_DESTROY(eif_global_key, "Could not free key");
@@ -328,6 +333,12 @@ rt_private rt_global_context_t *eif_new_context (void)
 
 		/* store.c */
 	eif_store_thread_init ();
+
+		/* eif_threads.c */
+#ifdef ISE_GC
+		/* By default current thread is allowed to launch a GC cycle */
+	thread_can_launch_gc = 1;
+#endif
 
 	eif_init_gc_stacks(rt_globals);
 
@@ -760,14 +771,22 @@ rt_public void eif_enter_eiffel_code()
 	/* Synchronize current thread as we enter some Eiffel code */
 {
 	RT_GET_CONTEXT
-	gc_thread_status = EIF_THREAD_RUNNING;
+		/* Do not change current thread status if we are currently running a
+		 * GC cycle, the status will be reset in `eif_unsynchronize_gc'. */
+	if (gc_thread_status != EIF_THREAD_GC_RUNNING) {
+		gc_thread_status = EIF_THREAD_RUNNING;
+	}
 }
 
 rt_public void eif_exit_eiffel_code()
 	/* Synchronize current thread as we exit some Eiffel code */
 {
 	RT_GET_CONTEXT
-	gc_thread_status = EIF_THREAD_BLOCKED;
+		/* Do not change current thread status if we are currently running a
+		 * GC cycle, the status will be reset in `eif_unsynchronize_gc'. */
+	if (gc_thread_status != EIF_THREAD_GC_RUNNING) {
+		gc_thread_status = EIF_THREAD_BLOCKED;
+	}
 }
 
 #ifdef DEBUG

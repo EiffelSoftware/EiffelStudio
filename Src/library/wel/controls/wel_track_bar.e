@@ -155,8 +155,10 @@ feature -- Element change
 			-- Set `minimum' and `maximum' with
 			-- `a_minimum' and `a_maximum'
 		do
-			cwin_send_message (item, Tbm_setrange, 1,
-				cwin_make_long (a_minimum, a_maximum))
+				-- We do not use `Tbm_setrange' message as this limits
+				-- our values to 2^16, instead of the full 32 bit INTEGER.
+			cwin_send_message (item, Tbm_setrangemin, 1, a_minimum)
+			cwin_send_message (item, Tbm_setrangemax, 1, a_maximum)
 		end
 
 	set_tick_mark (pos: INTEGER) is

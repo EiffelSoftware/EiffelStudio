@@ -48,8 +48,8 @@ feature -- Access
 	array_class: CLASS_I
 			-- Class ARRAY
 
-	special_class, to_special_class, native_array_class: CLASS_I
-			-- Class SPECIAL, TO_SPECIAL and NATIVE_ARRAY
+	special_class, native_array_class: CLASS_I
+			-- Class SPECIAL and NATIVE_ARRAY
 
 	bit_class: CLASS_I
 			-- Class BIT_REF
@@ -148,17 +148,6 @@ feature -- Access
 			compiled: special_class.is_compiled
 		do
 			Result := special_class.compiled_class.class_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	to_special_id: INTEGER is
-			-- Id of class TO_SPECIAL
-		require
-			to_special_class_exists: to_special_class /= Void
-			compiled: to_special_class.is_compiled
-		do
-			Result := to_special_class.compiled_class.class_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -371,16 +360,6 @@ feature -- Settings
 			special_class := c
 		ensure
 			special_class_set: special_class = c
-		end
-
-	set_to_special_class (c: CLASS_I) is
-			-- Assign `c' to `to_special_class'.
-		require
-			c_not_void: c /= Void
-		do
-			to_special_class := c
-		ensure
-			to_special_class_set: to_special_class = c
 		end
 
 	set_native_array_class (c: CLASS_I) is

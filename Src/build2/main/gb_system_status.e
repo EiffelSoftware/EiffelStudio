@@ -34,6 +34,8 @@ feature -- Access
 	loading_project: BOOLEAN
 		-- Is the loading of a project currently underway?
 		
+	pick_and_drop_pebble: ANY
+		
 feature -- Status setting
 
 	enable_loading_project is
@@ -129,13 +131,31 @@ feature -- Status setting
 		-- Is `EiffelBuild' currently enabled for debugging?
 		
 	enable_debug_mode is
-			--
+			-- Ensure `is_in_debug_mode' is `True'.
 		do
 			is_in_debug_mode := True
 		ensure
 			is_in_debug_mode: is_in_debug_mode
 		end
 		
+	set_pick_and_drop_pebble (a_pebble: ANY) is
+			-- Assign `a_pebble' to `pick_and_drop_pebble'.
+		require
+			a_pebble_not_void: a_pebble /= Void
+		do
+			pick_and_drop_pebble := a_pebble
+		ensure
+			pebble_set: pick_and_drop_pebble = a_pebble
+		end
+		
+	remove_pick_and_drop_pebble is
+			-- Ensure `pick_and_drop_pebble' = Void
+		do
+			pick_and_drop_pebble := Void
+		ensure
+			pebble_void: pick_and_drop_pebble = Void
+		end
+
 feature {NONE} -- Implementation
 
 	is_object_structure_changing_cell: CELL [BOOLEAN] is

@@ -180,29 +180,34 @@ feature
 		local
 			type_button: CMD_CAT_ED_H;
 			create_inst_b: CMD_CAT_CREATE_INST_H;
-			close_b: CLOSE_WINDOW_BUTTON
+			close_b: CLOSE_WINDOW_BUTTON;
+			top_form: FORM
 		do
+			!!top_form.make (Widget_names.form1, Current);
 			!!button_rc.make (Widget_names.row_column, Current);
 			button_rc.set_preferred_count (1);
 			button_rc.set_row_layout;
-			!!focus_label.make (Current);
+			!!focus_label.make (top_form);
+			!!type_button.make (top_form); 
+			!!create_inst_b.make (top_form);
+			!!close_b.make (Current, top_form, focus_label);
 			!!page_sw.make (Widget_names.scroll, Current);
-			!!type_button.make (Current); 
-			!!create_inst_b.make (Current);
-			!!close_b.make (Current, Current, focus_label);
-			attach_left (type_button, 0);
-			attach_left_widget (type_button, create_inst_b, 0);
-			attach_left_widget (create_inst_b, focus_label, 0);
-			attach_right_widget (close_b, focus_label, 0);
-			attach_right (close_b, 0);
-			attach_top (type_button, 0);
-			attach_top (create_inst_b, 0);
-			attach_top (close_b, 0);
-			attach_top (focus_label, 5);
-			attach_top_widget (focus_label, page_sw, 0);
-			attach_top_widget (create_inst_b, page_sw, 2);
-			attach_top_widget (type_button, page_sw, 2);
-			attach_top_widget (close_b, page_sw, 2);
+			top_form.attach_left (type_button, 0);
+			top_form.attach_left_widget (type_button, create_inst_b, 0);
+			top_form.attach_left_widget (create_inst_b, focus_label, 0);
+			top_form.attach_right_widget (close_b, focus_label, 0);
+			top_form.attach_right (close_b, 0);
+			top_form.attach_top (type_button, 0);
+			top_form.attach_top (create_inst_b, 0);
+			top_form.attach_top (close_b, 0);
+			top_form.attach_top (focus_label, 0);
+			top_form.attach_bottom (focus_label, 0);
+			top_form.attach_bottom (create_inst_b, 0);
+			top_form.attach_bottom (type_button, 0);
+			top_form.attach_bottom (close_b, 0);
+			attach_left (top_form, 0);
+			attach_right (top_form, 0);
+			attach_top_widget (top_form, page_sw, 2);
 			attach_left (page_sw, 2);
 			attach_right (page_sw, 2);
 			attach_bottom_widget (button_rc, page_sw, 2);

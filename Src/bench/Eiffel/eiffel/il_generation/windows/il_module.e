@@ -49,6 +49,8 @@ inherit
 			hash_code as module_id
 		end
 
+	SHARED_ERROR_HANDLER
+
 create {IL_CODE_GENERATOR}
 	make
 	
@@ -403,6 +405,9 @@ feature -- Cleanup
 			-- Clean up external data structures.
 		do
 			internal_dbg_documents := Void
+			if dbg_writer /= Void and then not dbg_writer.is_closed then
+				dbg_writer.close
+			end
 			dbg_writer := Void
 		end
 		
@@ -472,6 +477,10 @@ feature -- Code generation
 			if is_debug_info_enabled then
 				uni_string.set_string (module_file_name)
 				create dbg_writer.make (md_emit, uni_string, True)
+				if not dbg_writer.is_successful then
+					Error_handler.insert_error (create {VIGE}.make_pdb_in_use (module_file_name))
+					error_handler.raise_error
+				end
 			end
 		ensure
 			is_generated_set: is_generated

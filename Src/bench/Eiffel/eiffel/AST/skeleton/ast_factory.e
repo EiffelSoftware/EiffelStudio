@@ -1642,7 +1642,7 @@ feature -- Access
 			expressions_set: Result.expressions = exp
 		end
 
-	new_type_dec_as (i: EIFFEL_LIST [ID_AS]; t: TYPE): TYPE_DEC_AS is
+	new_type_dec_as (i: ARRAYED_LIST [INTEGER]; t: TYPE): TYPE_DEC_AS is
 			-- New TYPE_DEC AST node
 		require
 			i_not_void: i /= Void
@@ -1718,7 +1718,7 @@ feature -- Access
 			expr_set: Result.expr = e
 		end
 
-	new_un_strip_as (i: EIFFEL_LIST [ID_AS]): UN_STRIP_AS is
+	new_un_strip_as (i: ARRAYED_LIST [INTEGER]): UN_STRIP_AS is
 			-- New UN_STRIP AST node
 		require
 			i_not_void: i /= Void

@@ -186,7 +186,7 @@ feature -- Generation Structure
 		string SourceFileName, string ElementTypeName)
 	{
 		#if DEBUG
-			Log ("Class " + TypeID + ": " + ClassName);
+			Log ("Class " + TypeID + ": " + eiffel_name);
 		#endif
 		try
 		{
@@ -231,43 +231,43 @@ feature -- Generation Structure
 	public void generate_type_class_mapping (int type_id)
 		// Generate mapping between `ISE.Runtime.TYPE and `type_id'.
 	{
-		internal_generate_type_class_mapping (Ise_type, type_id);
+		internal_generate_type_class_mapping (RUNTIME.Ise_type, type_id);
 	}
 
 	public void generate_class_type_class_mapping (int type_id)
 		// Generate mapping between `ISE.Runtime.CLASS_TYPE' and `type_id'.
 	{
-		internal_generate_type_class_mapping (Ise_class_type, type_id);
+		internal_generate_type_class_mapping (RUNTIME.Ise_class_type, type_id);
 	}
 
 	public void generate_generic_type_class_mapping (int type_id)
 		// Generate mapping between `ISE.Runtime.GENERIC_TYPE and `type_id'.
 	{
-		internal_generate_type_class_mapping (Ise_generic_type, type_id);
+		internal_generate_type_class_mapping (RUNTIME.Ise_generic_type, type_id);
 	}
 
 	public void generate_formal_type_class_mapping (int type_id)
 		// Generate mapping between `ISE.Runtime.FORMAL_TYPE and `type_id'.
 	{
-		internal_generate_type_class_mapping (Ise_formal_type, type_id);
+		internal_generate_type_class_mapping (RUNTIME.Ise_formal_type, type_id);
 	}
 
 	public void generate_none_type_class_mapping (int type_id)
 		// Generate mapping between `ISE.Runtime.NONE_TYPE and `type_id'.
 	{
-		internal_generate_type_class_mapping (Ise_none_type, type_id);
+		internal_generate_type_class_mapping (RUNTIME.Ise_none_type, type_id);
 	}
 
 	public void generate_eiffel_type_info_type_class_mapping (int type_id)
 		// Generate mapping between `ISE.Runtime.EIFFEL_TYPE_INFO and `type_id'.
 	{
-		internal_generate_type_class_mapping (Ise_eiffel_type_info_type, type_id);
+		internal_generate_type_class_mapping (RUNTIME.Ise_eiffel_type_info_type, type_id);
 	}
 
 	public void generate_basic_type_class_mapping (int type_id)
 		// Generate mapping between `ISE.Runtime.BASIC_TYPE and `type_id'.
 	{
-		internal_generate_type_class_mapping (Ise_basic_type, type_id);
+		internal_generate_type_class_mapping (RUNTIME.Ise_basic_type, type_id);
 	}
 
 	// Generate class name and its specifier.
@@ -330,7 +330,7 @@ feature -- Generation Structure
 				Log ("Declaring type: " +
 					 ((TypeBuilder)Classes [CurrentTypeID].Builder).DeclaringType);
 				Log ("Name: " +
-					 ((TypeBuilder)Classes [CurrentTypeID].Builder).name);
+					 ((TypeBuilder)Classes [CurrentTypeID].Builder).Name);
 				Log ("Reflected type: " +
 					 ((TypeBuilder)Classes [CurrentTypeID].Builder).ReflectedType);
 				Log ("Size: " +
@@ -1411,22 +1411,22 @@ feature -- Generation Structure
 /* Assertions */
 
 	// Check if assertions are already being checked,
-	// in that case we need to skip the assertion block.
+	// in that case we need to skip the Assertion block.
 	public void GenerateInAssertionTest (int EndOfAssertLabel) {
-		MethodIL.Emit (OpCodes.Ldsfld, in_assertion);
+		MethodIL.Emit (OpCodes.Ldsfld, RUNTIME.In_assertion);
 		BranchOnTrue (EndOfAssertLabel);
 	}
 
 	// Set `in_assertion' flag to True.
 	public void GenerateSetAssertionStatus() {
 		PutBooleanConstant (true);
-		MethodIL.Emit (OpCodes.Stsfld, in_assertion);
+		MethodIL.Emit (OpCodes.Stsfld, RUNTIME.In_assertion);
 	}
 
 	// Set `in_assertion' flag to False.
 	public void GenerateRestoreAssertionStatus() {
 		PutBooleanConstant (false);
-		MethodIL.Emit (OpCodes.Stsfld, in_assertion);
+		MethodIL.Emit (OpCodes.Stsfld, RUNTIME.In_assertion);
 	}
 
 	// Raise an assertion violation with `Tag' name when evaluation of
@@ -1449,7 +1449,7 @@ feature -- Generation Structure
 	// at the end of preconditions evaluations.
 	public void GeneratePreconditionCheck (string Tag, int LabelID) {
 		MethodIL.Emit (OpCodes.Ldstr, Tag);
-		MethodIL.Emit (OpCodes.Stsfld, assertion_tag);
+		MethodIL.Emit (OpCodes.Stsfld, RUNTIME.Assertion_tag);
 		BranchOnFalse (LabelID);
 	}
 
@@ -1458,7 +1458,7 @@ feature -- Generation Structure
 		Type [] ArrayType = new Type [1] {typeof (string)};
 
 		GenerateRestoreAssertionStatus();
-		MethodIL.Emit (OpCodes.Ldsfld, assertion_tag);
+		MethodIL.Emit (OpCodes.Ldsfld, RUNTIME.Assertion_tag);
 		MethodIL.Emit (OpCodes.Newobj, ExceptionType.GetConstructor (ArrayType));
 		MethodIL.Emit (OpCodes.Throw);
 	}
@@ -1481,7 +1481,7 @@ feature -- Generation Structure
 	// Start rescue clause and store last exception
 	public void GenerateStartRescue(){
 		MethodIL.BeginCatchBlock (Classes [Exception_id].Builder);
-		MethodIL.Emit (OpCodes.Stsfld, last_exception);
+		MethodIL.Emit (OpCodes.Stsfld, RUNTIME.Last_exception);
 	}
 
 	// End of rescue clause
@@ -1969,32 +1969,8 @@ feature -- Generation Structure
 /* Generate the ISE run-time class */
 
 	private void PrepareISERuntime() {
-		Type ISE_class;
-		AssemblyName name = new AssemblyName();
-		Assembly ise_runtime_assembly;
-
-		name.Name = "ise_runtime";
-		name.Version = new Version (5,2,0,0);
-		name.SetPublicKeyToken (new byte[8] {0xde, 0xf2, 0x6f, 0x29, 0x6e, 0xfe, 0xf4, 0x69});
-		name.CultureInfo = new System.Globalization.CultureInfo ("");
-		ise_runtime_assembly = Assembly.Load (name);
-		ExternalAssemblies.Add (ise_runtime_assembly);
-
-		ISE_class = ise_runtime_assembly.GetType ("ISE.Runtime.RUN_TIME");
-		assertion_tag = ISE_class.GetField ("assertion_tag");
-		in_assertion = ISE_class.GetField ("in_assertion");
-
-		ISE_class = ise_runtime_assembly.GetType ("ISE.Runtime.EXCEPTION_MANAGER");
-		last_exception = ISE_class.GetField ("last_exception");
-
-		Ise_eiffel_type_info_type = ise_runtime_assembly.GetType ("ISE.Runtime.EIFFEL_TYPE_INFO");
-		Ise_type = ise_runtime_assembly.GetType ("ISE.Runtime.TYPE");
-		Ise_class_type = ise_runtime_assembly.GetType ("ISE.Runtime.CLASS_TYPE");
-		Ise_generic_type = ise_runtime_assembly.GetType ("ISE.Runtime.GENERIC_TYPE");
-		Ise_formal_type = ise_runtime_assembly.GetType ("ISE.Runtime.FORMAL_TYPE");
-		Ise_none_type = ise_runtime_assembly.GetType ("ISE.Runtime.NONE_TYPE");
-		Ise_basic_type = ise_runtime_assembly.GetType ("ISE.Runtime.BASIC_TYPE");
-		Ise_eiffel_derivation_type = ise_runtime_assembly.GetType ("ISE.Runtime.EIFFEL_DERIVATION");
+		RUNTIME.prepare ();
+		ExternalAssemblies.Add (RUNTIME.Ise_runtime_assembly);
 	}
 
 /* Perform Type lookup */
@@ -2125,11 +2101,6 @@ feature -- Private
 	// FileName for generated exe
 	private string FileName;
 	
-	// ISE Runtime class
-	private FieldInfo assertion_tag;
-	private FieldInfo in_assertion;
-	private FieldInfo last_exception;
-
 	// ISE Once function management
 	private FieldInfo DoneBuilder;
 	private FieldInfo ResultBuilder;
@@ -2243,16 +2214,6 @@ feature -- Statics
 
 	// Internal counter for MethodImpl
 	private static int counter = 0;
-
-	// Interface to which all Eiffel implementation classes inherits from.
-	public static Type Ise_eiffel_type_info_type = null;
-	public static Type Ise_type = null;
-	public static Type Ise_class_type = null;
-	public static Type Ise_generic_type = null;
-	public static Type Ise_formal_type = null;
-	public static Type Ise_none_type = null;
-	public static Type Ise_basic_type = null;
-	public static Type Ise_eiffel_derivation_type = null;
 
 	// Last created Eiffel type
 	private static CLASS LastCreatedClass = null;

@@ -48,6 +48,10 @@ feature -- Byte code special generation
 				ba.append (Bc_min)
 			when generator_type then
 				ba.append (Bc_generator)
+			when zero_type then
+				ba.append (Bc_zero)
+			when one_type then
+				ba.append (Bc_one)
 			when default_type then
 				inspect type_of (basic_type)
 				when boolean_type then
@@ -82,6 +86,10 @@ feature -- C special code generation
 				buffer.putstring ("==")
 				buffer.putchar (' ')
 				parameter.print_register
+			when zero_type then
+				generate_zero (buffer, type_of (basic_type))
+			when one_type then
+				generate_one (buffer, type_of (basic_type))
 			when to_integer_type then
 				buffer.putstring ("(EIF_INTEGER) ")
 				target.print_register
@@ -238,6 +246,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (max_type, "max")
 			Result.put (min_type, "min")
 			Result.put (abs_type, "abs")
+			Result.put (zero_type, "zero")
+			Result.put (one_type, "one")
 			Result.put (generator_type, "generator")
 			Result.put (generator_type, "generating_type")
 			Result.put (to_integer_type, "truncated_to_integer")
@@ -255,6 +265,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (equal_type, "standard_deep_equal")
 			Result.put (max_type, "max")
 			Result.put (min_type, "min")
+			Result.put (zero_type, "zero")
+			Result.put (one_type, "one")
 			Result.put (generator_type, "generator")
 			Result.put (generator_type, "generating_type")
 			Result.put (default_type, "default")
@@ -275,6 +287,8 @@ feature {NONE} -- Fast access to feature name
 	to_integer_type: INTEGER is 9
 	offset_type: INTEGER is 10
 	default_type: INTEGER is 11
+	zero_type: INTEGER is 12
+	one_type: INTEGER is 13
 
 feature {NONE} -- Type information
 
@@ -330,4 +344,41 @@ feature {NONE} -- Type information
 						Result = real_type or else Result = double_type
 		end
 
+feature {NONE} -- C code generation
+
+	generate_zero (buffer: GENERATION_BUFFER; type_of_basic: INTEGER) is
+			-- Generate fast wrapper for call on `zero' for INTEGER,
+			-- REAL and DOUBLE.
+		require
+			buffer_not_void: buffer /= Void
+			valid_type_of_basic: type_of_basic = integer_type or else
+								 type_of_basic = real_type or else
+								 type_of_basic = double_type
+		do
+			inspect
+				type_of_basic
+			when integer_type then
+				buffer.putstring ("0")
+			when real_type, double_type then
+				buffer.putstring ("0.0")
+			end
+		end
+
+	generate_one (buffer: GENERATION_BUFFER; type_of_basic: INTEGER) is
+			-- Generate fast wrapper for call on `one' for INTEGER,
+			-- REAL and DOUBLE.
+		require
+			buffer_not_void: buffer /= Void
+			valid_type_of_basic: type_of_basic = integer_type or else
+								 type_of_basic = real_type or else
+								 type_of_basic = double_type
+		do
+			inspect
+				type_of_basic
+			when integer_type then
+				buffer.putstring ("1")
+			when real_type, double_type then
+				buffer.putstring ("1.0")
+			end
+		end
 end

@@ -145,6 +145,8 @@ feature {NONE}
 	Bc_max:				CHARACTER is '%/137/'
 	Bc_min:				CHARACTER is '%/138/'
 	Bc_generator:		CHARACTER is '%/139/'
+	Bc_zero:			CHARACTER is '%/140/'
+	Bc_one:				CHARACTER is '%/141/'
 
 		-- Instructions for Concurrent Eiffel
 

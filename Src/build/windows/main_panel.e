@@ -98,8 +98,10 @@ feature
 	app_edit_t: APP_EDITOR_B
 	interface_t: INTERFACE_B
 	interface_only_t: INTERFACE_ONLY_B
-
 feature 
+
+	hide_show_windows: HIDE_SHOW_WINDOWS
+			-- Hide/show windows for Main panel iconization
 
 	make (a_screen: SCREEN) is
 		local
@@ -117,6 +119,8 @@ feature
 			set_title (Widget_names.main_panel)
 			!! vseparator.make (Widget_names.separator, form)
 			vseparator.set_horizontal (False)
+
+			!! hide_show_windows;
 
 			-- icon form
 			!! top_form.make (Widget_names.form1, form)
@@ -293,68 +297,12 @@ feature -- Popup and popdown actions
 
 	popup is
 		do
-			if was_popped_down and then project_initialized then
-				if cont_cat_t.armed then
-					Context_catalog.show
-				end;
-				if cont_tree_t.armed then
-					Tree.show
-				end
-				if history_t.armed then
-					History_window.show
-				end;
-				if editor_t.armed then
-					Window_mgr.show_all_editors
-				end;
-				if cmd_cat_t.armed then
-					Command_catalog.show
-				end;
-				if app_edit_t.armed then
-					App_editor.show
-				end;
-				if interface_t.armed then
-					show_interface
-				end;
-			end;	
-			was_popped_down := False
+			hide_show_windows.show
 		end;
 
 	popdown is
 		do
-			was_popped_down := True;
-			if cont_cat_t.armed and then
-				Context_catalog.realized 
-			then
-				Context_catalog.hide
-			end
-			if cont_tree_t.armed and then
-				Tree.realized 
-			then
-				Tree.hide
-			end
-			if history_t.armed then
-				History_window.hide
-			end;
-			if editor_t.armed then
-				Window_mgr.hide_all_editors
-			end;
-			if cmd_cat_t.armed and then 
-				Command_catalog.realized
-			then
-				Command_catalog.hide
-			end;
-			if app_edit_t.armed then
-				App_editor.hide
-			end;
-			if interface_t.armed then
-				hide_interface
-			end;
-			if question_box.is_popped_up then
-				question_box.popdown;
-			end
-			if error_box.is_popped_up then
-				error_box.popdown;
-			end
+			hide_show_windows.hide
 		end;
 
 feature -- Interface
@@ -370,7 +318,6 @@ feature -- Interface
 			loop
 				window_c := Shared_window_list.item;
 				window_c.hide;
-				window_c.set_x_y (window_c.x, window_c.y);
 				Shared_window_list.forth
 			end
 		end
@@ -386,7 +333,6 @@ feature -- Interface
 			loop
 				window_c := Shared_window_list.item;
 				window_c.show;
-				window_c.set_x_y (window_c.x, window_c.y);
 				Shared_window_list.forth
 			end;
 		end;

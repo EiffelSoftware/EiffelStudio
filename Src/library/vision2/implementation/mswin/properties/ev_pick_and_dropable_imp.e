@@ -120,6 +120,7 @@ feature -- Implementation
 	
 				press_action := Ev_pnd_end_transport
 				motion_action := Ev_pnd_execute
+				pnd_stored_cursor_imp := cursor_imp
 			end
 		end
 
@@ -128,6 +129,9 @@ feature -- Implementation
 		local
 			env: EV_ENVIRONMENT
 			target: EV_PICK_AND_DROPABLE
+			list: EV_LIST
+			list_imp: EV_LIST_IMP
+			list_item: EV_LIST_ITEM_IMP
 		do
 			print ("End transport%N")
 			release_action := Ev_pnd_disabled
@@ -140,12 +144,11 @@ feature -- Implementation
 			then
 				target := pointed_target
 				if target /= Void then
-					target.drop_actions.call ([pebble])
+						target.drop_actions.call ([pebble])
 				end
 			end
 			enable_transport
 			interface.pointer_motion_actions.resume
-
 			create env
 			env.application.drop_actions.call ([pebble])
 			is_dnd_in_transport := False
@@ -156,49 +159,74 @@ feature -- Implementation
 			--| 	last_pointed_target_is_void: last_pointed_target = Void
 			--|Is this correct?
 			last_pointed_target := Void
+			if cursor_imp /= Void then
+				set_pointer_style (pnd_stored_cursor_imp.interface)
+				-- Set the pointer style back to state before PND.
+			end
 		end
 
 	pointed_target: EV_PICK_AND_DROPABLE is
 			-- Hole at mouse position
 		local
 			wel_point: WEL_POINT
-			toolbar: EV_TOOL_BAR_IMP
-			tbutton: EV_TOOL_BAR_BUTTON_IMP
-			mc_list: EV_MULTI_COLUMN_LIST_IMP
-			--FIXME when tree is released tree: EV_TREE_IMP
-			tg: EV_PICK_AND_DROPABLE
-			widget_pointed: EV_WIDGET_IMP
+			current_target: EV_PICK_AND_DROPABLE
+			widget_imp_at_cursor_position: EV_WIDGET_IMP
+			wel_window_at_cursor_position: WEL_WINDOW
+			list: EV_LIST
+			list_imp: EV_LIST_IMP
+			list_item: EV_LIST_ITEM_IMP
+			current_target_object_id: INTEGER
 		do
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
-			widget_pointed ?= wel_point.window_at
-			if widget_pointed /= Void then
-				toolbar ?= widget_pointed
-				if toolbar /= Void then
-					wel_point.screen_to_client (toolbar)
-					tbutton := toolbar.find_item_at_position (wel_point.x, wel_point.y)
-					if tbutton /= Void and then tbutton.is_sensitive then
-						tg := tbutton.interface
+			wel_window_at_cursor_position := wel_point.window_at
+				-- Retrieve WEL_WINDOW at cursor position
+
+			if wel_window_at_cursor_position /= Void then
+					-- If the cursor is currently over a WEL_WINDOW
+
+				widget_imp_at_cursor_position ?= wel_window_at_cursor_position
+					-- Retrieve the implementation of the Vision2 Widget at
+					-- Cursor position and check it is not Void.
+				check 
+					widget_imp_at_cursor_position /= Void
+				end
+	
+				current_target := widget_imp_at_cursor_position.interface
+					-- Current pick and drop target is the interface of 
+
+				current_target_object_id := current_target.object_id
+						-- The current_target_object_id is set to the widget.
+						-- If a widget holds items, we now need to check that
+						-- the correct target is in fact one of its children.
+					
+				list ?= current_target
+				if list /= Void then
+					list_imp ?= list.implementation
+							-- Retrieve implementation of list.
+					check	
+						list_imp /= Void
 					end
-				else
-					mc_list ?= widget_pointed
-					if mc_list /= Void then
-						wel_point.screen_to_client (mc_list)
-					--| FIXME	tg := mc_list.find_item_at_position (wel_point.x, wel_point.y).interface
-					else
-			--FIXME when tree is released tree ?= widget_pointed
-			--			if tree /= Void then
-			--				wel_point.screen_to_client (tree)
-			--				tg := tree.find_item_at_position (wel_point.x, wel_point.y).interface
-			--			end
+					list_item := list_imp.find_item_at_position (
+					wel_point.x - list.screen_x, wel_point.y - list.screen_y)
+							-- Return list item at cursor position.
+					if list_item /= Void then
+						if not list_item.interface.drop_actions.empty then
+								-- If the cursor is over an item and the item is a
+								-- pick and drop target then we set the target id to that of the
+								-- item, as the items are conceptually 'above' the list and so
+								-- if a list and one of its items are pnd targets then the 
+								-- item should recieve.
+							current_target_object_id := list_item.interface.object_id
+						end
 					end
 				end
-				if tg = Void then
-					tg := widget_pointed.interface
-				end
+					
 				global_pnd_targets.start
-				global_pnd_targets.search (tg.object_id)
+				global_pnd_targets.search (current_target_object_id)
 				if not global_pnd_targets.exhausted then
+					-- If the target is valid then return the target.
+					-- Otherwise the target will be void.
 					Result ?= interface.id_object (global_pnd_targets.item)
 				end
 			end
@@ -220,6 +248,29 @@ feature {EV_ANY_I} -- Implementation
 
 	old_pointer_x,
 	old_pointer_y: INTEGER
+
+	cursor_imp: EV_CURSOR_IMP
+			-- Cursor used on the widget.
+
+	pnd_stored_cursor_imp: EV_CURSOR_IMP
+			-- Cursor used on the widget before PND started.
+
+	set_pointer_style (value: EV_CURSOR) is
+			-- Make `value' the new cursor of the widget
+		do
+			if value /= Void then
+				cursor_imp ?= value.implementation
+				if cursor_on_widget.item = Current then
+					cursor_imp.set
+				end
+			else
+				cursor_imp := Void
+			end
+		end
+
+	cursor_on_widget: CELL [EV_WIDGET_IMP] is
+		deferred
+		end
 
 	draw_rubber_band  is
 			-- Erase previously drawn rubber band.
@@ -300,6 +351,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/17 23:36:06  rogers
+--| Fixed pointed_target, and implemented ability for a list_item to be a target. Added the following features : curosr_imp, pnd_stored_cursor_imp, set_pointer_style and cursor_on_widget.
+--|
 --| Revision 1.16  2000/03/16 17:19:43  brendel
 --| Fixed creation of EV_CURSOR_CODE.
 --|

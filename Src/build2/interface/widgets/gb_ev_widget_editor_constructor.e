@@ -68,6 +68,8 @@ feature -- Access
 			Result.disable_item_expand (label)
 			create horizontal_box
 			create actual_minimum_width
+			actual_minimum_width.disable_edit
+			actual_minimum_width.set_background_color ((create {EV_STOCK_COLORS}).white)
 			actual_minimum_width.set_minimum_width (30)
 			horizontal_box.extend (actual_minimum_width)
 			horizontal_box.disable_item_expand (actual_minimum_width)
@@ -83,6 +85,8 @@ feature -- Access
 			Result.disable_item_expand (label)
 			create horizontal_box
 			create actual_minimum_height
+			actual_minimum_height.disable_edit
+			actual_minimum_height.set_background_color ((create {EV_STOCK_COLORS}).white)
 			actual_minimum_height.set_minimum_width (30)
 			horizontal_box.extend (actual_minimum_height)
 			horizontal_box.disable_item_expand (actual_minimum_height)

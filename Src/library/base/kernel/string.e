@@ -168,7 +168,6 @@ feature -- Access
 			Result := (other /= Void) and then (area = other.area)
 		end;
 
-
 	has (c: CHARACTER): BOOLEAN is
 			-- Does string include `c'?
 		local
@@ -1017,38 +1016,6 @@ feature -- Output
 			-- Printable representation
 		do
 			Result := clone (Current);
-		end;
-
-feature -- Obsolete
-
-	clear is obsolete "Use ``wipe_out''"
-		do
-			wipe_out
-		end;
-
-	duplicate: like Current is obsolete "Use ``clone (string)''"
-		do
-			Result := clone (Current)
-		end;
-
-	max_size: INTEGER is obsolete "Use ``capacity''"
-		do
-			Result := capacity
-		end;
-
-	to_external: ANY is obsolete "Use ``to_c''"
-		do
-			Result := to_c
-		end;
-
-feature {NONE} -- Inapplicable
-
-	search_substring (other: STRING; start: INTEGER): INTEGER is
-			-- Position of first occurrence of `other' at or after `start';
-			-- 0 if none.
-		obsolete "Use ``substring_index'' instead"
-		do
-			Result := substring_index (other, start);
 		end;
 
 feature {STRING, IO_MEDIUM} -- Implementation

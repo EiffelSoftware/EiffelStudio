@@ -2,7 +2,7 @@
 
 <HTML>
 	<HEAD>
-		<TITLE>EiffelCOM Wizard Guided Tour Introduction</TITLE>
+		<TITLE>Accessing a COM component</TITLE>
 		<LINK REL=StyleSheet HREF="../../../../default.css">
 		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM">
 		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard">
@@ -112,7 +112,8 @@ includes the following commented line:
 Un-comment this line by removing the preceding `<span CLASS="ecomment">
 --</span>
 ' and comment out the rest of the feature. Now the contract of the <span CLASS="efeature">
-replace_substring</span>
+<a href="../../../../libraries/base/reference/kernel/string.html#f_replace_substring">
+replace_substring</a></span>
  feature is wrong and erroneous calls can be made. Quick melt the changes and run the client. Enter some invalid numbers in the fields used to call this feature. After you click Replace you will see an error message box warning you that a precondition was violated on the server side. This is how you can use contracts `over the wire'. The preconditions was violated in the server, this exception was caught by the EiffelCOM runtime and sent back to the client.
 </DIV>
 

@@ -17,11 +17,11 @@ inherit
 
 feature {NONE} -- Implementation
 
-	ev_children: LINKED_LIST [EV_ITEM_IMP] is
-			-- List of all the children of the container
-			-- In most case, the index of the child is its id.
-		deferred
-		end
+--	ev_children: LINKED_LIST [EV_ITEM_IMP] is
+--			-- List of all the children of the container
+--			-- In most case, the index of the child is its id.
+--		deferred
+--		end
 
 	name_item: STRING
 			-- Name of the item that is going to be add

@@ -86,7 +86,7 @@ short ora_tranNumber=0; /* number of transaction opened at present */
 /* and database error code ( >= 1) else */
 
 /*****************************************************************/
-/* initialise ora   c-module                                                                    */
+/* initialise ora   c-module                                     */
 /*****************************************************************/
 
 void c_ora_make (int m_size)
@@ -215,15 +215,15 @@ int ora_max_descriptor (void)
 /* and finally return error number.                              */
 /*                                                               */
 /*****************************************************************/
-int ora_exec_immediate (int no_desc, text order[1024])
+void ora_exec_immediate (int no_desc, text order[1024])
 {
 	ora_tranNumber = 1;
 	ora_clear_error ();
 	if (oparse(cda[no_desc], (text *) order, (sb4) -1, (sword) PARSE_NO_DEFER, (ub4) PARSE_V7_LNG)) {
 		ora_error_handler(cda[no_desc]);
-		if (error_number) {
+		/*if (error_number) {
 			return error_number;
-		}
+		}*/
 	}
 	//if (ora_init_order (order, no_desc))
 	//	error_number=1;
@@ -231,23 +231,23 @@ int ora_exec_immediate (int no_desc, text order[1024])
 	//	error_number=1;
 	if (oexec(cda[no_desc])){
 		ora_error_handler(cda[no_desc]);
-		if (error_number) {
+		/*if (error_number) {
 				return error_number;
-		}
+		}*/
 	}
 	//if (ora_terminate_order (no_desc))
 	//	error_number=1;
 	if (oclose(cda[no_desc])){
 		ora_error_handler(cda[no_desc]);
-		if (error_number) {
+		/*if (error_number) {
 			return error_number;
-		}
+		}*/
 	// Change by David S : Need to free the descriptor after the ora_exec_immediate
 	// but to do now in Eiffel file
 //	free (cda [no_des]);
 //	cda [no_des] = NULL;
 	}
-	return error_number;
+	/*return error_number;*/
 }
 
 /*****************************************************************/
@@ -268,18 +268,18 @@ int ora_exec_immediate (int no_desc, text order[1024])
 /*   3. return error number.                                     */
 /*                                                               */
 /*****************************************************************/
-int ora_init_order (text order[1024], int no_desc)
+void ora_init_order (text order[1024], int no_desc)
 {
 	/* Process general ora SQL statements    */
 		strcpy((char *) sql_statement, (char *) order);
 		if (oparse(cda[no_desc], (text *) sql_statement, (sb4) -1, (sword) PARSE_NO_DEFER, (ub4) PARSE_V7_LNG)) {
 			ora_error_handler(cda[no_desc]);
-			if (error_number) {
+			/*if (error_number) {
 				return error_number;
-			}
+			}*/
 		}
 	sql_function = cda[no_desc]->ft;
-	return error_number;
+	/*return error_number;*/
 }
 
  /* Describe select–list items. */
@@ -463,7 +463,7 @@ int ora_put_select_name (int no_des, int i, char *result) {
 /*                                                               */
 /*****************************************************************/
 
-int ora_start_order (int no_desc) {
+void ora_start_order (int no_desc) {
 	/* Process user’s SQL statements. */
 	//for (;;)
 	//{
@@ -472,10 +472,9 @@ int ora_start_order (int no_desc) {
 
 /* If the statement is a query, describe and define
 all select–list items before doing the oexec. */
-	fprintf(stdout, "Hi\n");
 	if (sql_function == FT_SELECT) {
 		if ((ncol [no_desc] = describe_define(cda[no_desc], no_desc)) == -1) {
-			ora_error_handler(cda[no_desc]);
+			(cda[no_desc]);
 			//continue;
 		}
 	}
@@ -501,8 +500,7 @@ all select–list items before doing the oexec. */
 	  else
 	  printf("\nStatement processed.\n");*/
 	//	} /* end for (;;) */
-
-	return 0;
+	/*return 0;*/
 }
 
 /*****************************************************************/
@@ -521,7 +519,7 @@ all select–list items before doing the oexec. */
 /*   2. return error number.                                     */
 /*                                                               */
 /*****************************************************************/
-int ora_terminate_order (int no_des)
+void ora_terminate_order (int no_des)
 {
 	if (cda [no_des]) {
 		if (oclose(cda[no_des]))
@@ -529,7 +527,7 @@ int ora_terminate_order (int no_des)
 		free (cda [no_des]);
 		cda [no_des] = NULL;
 	}
-	return 0;
+	/*return 0;*/
 }
 
 /*****************************************************************/
@@ -560,11 +558,12 @@ disregard null fetch ”error”. */
 		{
 			if (dap->rc == NO_DATA_FOUND)
 				return 1;
-			if (dap->rc != NULL_VALUE_RETURNED)
-				//ora_error_handler(dap);
-				return 1;
+			if (dap->rc != NULL_VALUE_RETURNED)  {
+				ora_error_handler(dap);
+				return 1;  }
 			else
 				return 0;
+
 		} else {
 			return 0;
 		}
@@ -590,7 +589,7 @@ disregard null fetch ”error”. */
 /*****************************************************************/
 
 
-int ora_set_parameter(int no_desc, text *stmt_buf, text *ph, char *value) {
+void ora_set_parameter(int no_desc, text *stmt_buf, text *ph, char *value) {
 
 	//text bind_values[MAX_BINDS][MAX_ITEM_BUFFER_SIZE];
 
@@ -618,19 +617,19 @@ auto on the do_binds stack. */
 						VARCHAR2_TYPE, -1, descrip_indp, descrip_len, descrip_rc, (ub4) MAX_SELECT_LIST_SIZE, &descrip_cs, (text *) 0, -1, -1))
 				{
 					ora_error_handler(cda[no_desc]);
-					return 1;
+					/*return 1;*/
 				}
 			}
 			if (obndrv(cda[no_desc], ph, -1, (ub1 *) value, -1,
 			VARCHAR2_TYPE, -1, (sb2 *) 0, (text *) 0, -1, -1))
 			{
 				ora_error_handler(cda[no_desc]);
-				return 1;
+				/*return 1;*/
 			}
 		//	i++;
 	//	} /* end if (*cp == ...) */
 //	} /* end for () */
-return 0;
+/*return 0;*/
 }
 
 
@@ -652,7 +651,7 @@ return 0;
 /* NOTE: Only the name is mandatory.                             */
 /*                                                               */
 /*****************************************************************/
-int ora_connect (text *name, text *passwd)
+void ora_connect (text *name, text *passwd)
 {
 		Cda_Def cursor;
 		char *sql_stat = "ALTER SESSION SET NLS_DATE_FORMAT = 'MM/DD/YYYY HH24:MI:SS'";
@@ -660,13 +659,14 @@ int ora_connect (text *name, text *passwd)
 		if (olog (&lda, (ub1 *)hda, name, -1, passwd, -1,
 				(text *) 0, -1, OCI_LM_DEF))
 		{
-			return 1;
+			ora_error_handler(&lda);
+			/*return 1;*/
 		}
 		//connections++
 		oopen (&cursor, &lda, (text *) 0, -1, -1, (text *) 0, -1);
 		oparse (&cursor, (text *) sql_stat, -1, 1, 2);
 		oexec(&cursor);
-		return 0;
+		/*return 0;*/
 }
 
 /*****************************************************************/
@@ -678,7 +678,7 @@ int ora_connect (text *name, text *passwd)
 /*   Disconnect the current connection with an  ora  database.  */
 /*                                                               */
 /*****************************************************************/
-int ora_disconnect (void)
+void ora_disconnect (void)
 {
   int count;
 
@@ -690,7 +690,7 @@ int ora_disconnect (void)
 	}
 
   ora_tranNumber = 0;
-  return error_number;
+  /*return error_number;*/
 }
 
 /*****************************************************************/
@@ -702,7 +702,7 @@ int ora_disconnect (void)
 /*   Roll back the current transaction .                         */
 /*                                                               */
 /*****************************************************************/
-int ora_rollback (void)
+void ora_rollback (void)
 {
   int count;
 
@@ -714,7 +714,7 @@ int ora_rollback (void)
   for (count = 0; count < MAX_DESCRIPTOR; count++)
       ora_terminate_order (count);
   ora_tranNumber = 0;
-  return error_number;
+  /*return error_number;*/
 }
 
 /*****************************************************************/
@@ -726,7 +726,7 @@ int ora_rollback (void)
 /*   Commit the current transaction.                             */
 /*                                                               */
 /*****************************************************************/
-int ora_commit (void)
+void ora_commit (void)
 {
   int count;
 
@@ -739,7 +739,7 @@ int ora_commit (void)
   for (count = 0; count < MAX_DESCRIPTOR; count++)
       ora_terminate_order (count);
   ora_tranNumber = 0;
-  return error_number;
+  /*return error_number;*/
 }
 
 /*****************************************************************/
@@ -801,8 +801,10 @@ int ora_get_date_data (int no_des, int i)
 	{
 		size = desc [no_des] [i-1].buflen;
 		if (*(def [no_des] [i-1].buf) == '\0')
-			memcpy (&date, default_date, sizeof(date));
-			//return 0; could be added
+		{
+			//memcpy (&date, default_date, sizeof(date));
+			return 0;
+		}
 		else
 			memcpy (&date, def [no_des] [i-1].buf, sizeof(date));
 		return 1;
@@ -946,6 +948,10 @@ char *ora_get_error_message (void)
   return (char *) error_message;
 }
 
+int ora_get_error_code (void)
+{
+  return error_number;
+}
 
 void ora_c_free(char *ptr) {
 	free(ptr);
@@ -967,6 +973,7 @@ void ora_error_handler(Cda_Def *cursor)
 	printf("\n");
 	n = oerhms (&lda, cursor->rc, error_message, (sword) sizeof (error_message));
 	fprintf(stderr, "%.*s", n, error_message);
+	error_number = cursor->rc;
 	if (cursor->fc > 0)
 		fprintf(stderr, "Processing OCI function %s",
 			oci_func_tab[cursor->fc]);

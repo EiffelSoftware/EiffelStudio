@@ -128,13 +128,17 @@ feature -- Status setting
 				set_face_name (font_imp.internal_face_name)
 			end
 			set_pitch_and_family (font_imp.wel_log_font.pitch_and_family)
-			set_height (font_imp.height)
+			set_height_in_pixels (font_imp.height)
 			set_char_set (font_imp.wel_log_font.char_set)			
 			if font_imp.wel_font.log_font.weight >= 700 then
 				enable_bold
+			else
+				disable_bold
 			end
 			if font_imp.shape = shape_italic then
 				enable_italic
+			else
+				disable_italic
 			end
 		end
 

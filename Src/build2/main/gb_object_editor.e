@@ -492,6 +492,7 @@ feature {NONE} -- Implementation
 			-- range of the scroll bar as needed.
 		local
 			interval: INTEGER_INTERVAL
+			timeout: EV_TIMEOUT
 		do
 			if viewport.height < control_holder.minimum_height then
 				if not scroll_bar.is_show_requested then	
@@ -513,7 +514,10 @@ feature {NONE} -- Implementation
 					control_holder.set_minimum_width (Minimum_width_of_object_editor)
 					viewport.set_minimum_width (Minimum_width_of_object_editor)
 					control_holder.resize_actions.force_extend (agent update_scroll_bar)
-					
+						-- Create a timeout and set up the action to fix a Windows
+						-- Vision2 bug. See comment in `show_scroll_bar_again'.
+					create timeout.make_with_interval (5)
+					timeout.actions.extend (agent show_scroll_bar_again (timeout))
 					scroll_bar.show	
 					
 					viewport.resize_actions.resume
@@ -537,6 +541,19 @@ feature {NONE} -- Implementation
 				scroll_bar_changed (scroll_bar.value)
 			end
 		end
+		
+	show_scroll_bar_again (a_timeout: EV_TIMEOUT)is
+			-- Call show on `scroll_bar' and destroy `a_timeout'.
+			-- This is needed, as there is a Vision2 resizing bug on Windows
+			-- which stops teh scroll bar being displayed when it is first shown, as you
+			-- resize the main window smaller. Therefore,
+			-- we call show on it after the resizing has occured to combat this problem.
+			-- There should be no ill effects on either platform.
+		do
+			scroll_bar.show
+			a_timeout.destroy			
+		end
+		
 		
 	scroll_bar_changed (value: INTEGER) is
 			-- Set the offset of the controls to `Value'

@@ -1,0 +1,123 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Compiler</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Compiler">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+<H1>The Definition File</H1> 
+<P>The syntax is pretty simple when you understand what you need to export a 
+feature: you need the name of the <B>feature</B>, the name of the concerned 
+<B>class</B>, and the name of a <B>creation procedure</B>. What is optional is 
+to specify an <B>alias</B>, an <B>index</B> and a <b>calling convention</b>. The index
+and calling convention are mainly used to create a 
+DLL for windows, and the alias to export the feature under a different name.</P>
+<H3>Syntax</H3>
+    <ul>
+      <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0 width="70%">
+    <TBODY>
+    <TR>
+      <TD width="25%"><B>Export_feature</B></TD>
+      <TD bgColor=#ffffe8 width="561%">Class_name [Creation_part] "<B>:</B>" Feature 
+        [Optional_part]</TD></TR>
+    <TR>
+      <TD width="25%"><B>Creation_part</B></TD>
+      <TD bgColor=#ffffe8 width="561%">"<B>(</B>" feature_name "<B>)</B>"</TD></TR>
+    <TR>
+      <TD width="25%"><B>Optional_part</B></TD>
+      <TD bgColor=#ffffe8 width="561%">[Index_part] [Alias_part]</TD></TR>
+    <TR>
+      <TD width="25%"><B>Index_part</B></TD>
+      <TD bgColor=#ffffe8 width="561%">"<B>@</B>" <I>integer</I></TD></TR>
+    <TR>
+      <TD width="25%"><B>Alias_part</B></TD>
+      <TD bgColor=#ffffe8 width="561%">"<B>Alias</B>" 
+<I>alias_name</I></TD></TR>
+    <TR>
+      <TD width="25%"><b>Call_type_part</b></TD>
+      <TD bgColor=#ffffe8 width="561%">"<b>call_type</b>" <i>call_type_name</i></TD></TR></TBODY></TABLE>
+    </ul>
+<H3>Example</H3>
+    <ul>
+      <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0>
+    <TBODY>
+    <TR>
+      <TD><FONT color=purple>ROOT_CLASS <FONT 
+        color=green>(make): foo <FONT color=black><B>@</B><FONT color=blue> 4 
+        <FONT color=black>Alias <FONT color=blue>my_foo 
+        </FONT></FONT></FONT></FONT></FONT></FONT><font color="blue"> </font>call_type<font color="blue">
+        __stdcall</font></TD></TR></TBODY></TABLE>
+    </ul>
+<H3>Constraint</H3>
+    <ul>
+      <ul>
+        <li><U>on the class:</U> 
+          <ul>
+            The class cannot be deferred or generic.
+          </ul>
+        <li><U>on the feature:</U> 
+          <ul>
+            It could be any feature except an attribute, an external feature or a deferred feature.
+          </ul>
+        <li><U>on the creation procedure:</U> 
+          <ul>
+            It must have zero argument, and no return type.
+          </ul>
+        <li><U>on the alias name:</U> 
+          <ul>
+            It must be a valid name for a C function.
+          </ul>
+        <li><U>on the index:</U> 
+          <ul>
+            It must be strictly positive.
+          </ul>
+        <li><U>on the call type:</U> 
+          <ul>
+            It must be a valid call type for the targeted platform (useful for
+      Windows only). For Visual C++, the valid calling conventions are __stdcall,
+            __cdecl and __fastcall.
+          </ul>
+        </li>
+      </ul>
+  <P>
+  &nbsp; For each feature the required fields are the <B>class</B>, the <B>creation 
+  procedure</B>, and of course the <B>feature</B> itself.
+        <ul>
+          <li>If the feature is a creation procedure then do not specify any creation, 
+    it will use the feature as creation. For example <B>ROOT_CLASS: make</B>.
+          <li>If the class has no creation procedure, do not specify any creation.
+            default_create will be automatically used.</li>
+        </ul>
+<H3>A definition file</H3>
+        <ul>
+          <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0 width=500>
+    <TBODY>
+    <TR>
+      <TD width=300><PRE>-- EXPORTED FEATURE(s) OF THE SHARED LIBRARY
+-- SYSTEM : demo
+
+-- CLASS [BAR]
+BAR (make_b) : get_string
+BAR (make_a) : print_bar
+
+-- CLASS [ROOT_CLASS]
+ROOT_CLASS : make
+ROOT_CLASS (make) : foo
+ROOT_CLASS (make) : test_bar </PRE></TD>
+      <TD bgColor=#ffffe8><PRE>-
+-Name of the Eiffel system
+-
+-Class BAR
+-here get_string uses make_b as creation
+-here print_bar uses make_a as creation
+-
+-
+-here the feature is also a creation
+-
+- </PRE></TD></TR></TBODY></TABLE>
+        </ul>
+
+</BODY>
+</HTML>

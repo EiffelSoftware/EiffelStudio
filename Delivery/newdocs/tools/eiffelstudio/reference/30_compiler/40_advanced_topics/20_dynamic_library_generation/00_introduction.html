@@ -1,0 +1,27 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Introduction</TITLE>
+		<META NAME="MS-HKWD" CONTENT="DLL">
+		<META NAME="MS-HKWD" CONTENT="dynamic library">
+		<META NAME="MS-HKWD" CONTENT="shared library">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Introduction</H1>
+        <P>The ISE Eiffel compiler offers now the possibility to generate a <B>dynamic 
+		shared library</B> based on the system.</P>
+		<P>Thanks to this dynamic library, it is possible to call Eiffel 
+		features from a C program, by using the real names of the features.</P>
+        <P>In other words, the user can generate a DLL <I>(*.dll)</I>  using
+        features of the system on windows, and a shared library <I>(*.so)</I> on Unix.</P>
+        <P>For that, the user has first to describe what he wants to export in
+        his dynamic library. This is done via a definition file <I>(*.def)</I>,
+        which specifies what features should be exported. A <A HREF="10_dynamic_library_builder.html">wizard</A> helps build
+        the definition file, which makes this step very intuitive. The second
+        step is to alter the HYPERLINK(Project settings, DLL definition file field)project settings to take this definition file into
+        account. This done, the next compilation of the system will yield
+        <A HREF="30_output_files.html">C files</A> that can be used to create the shared library.</P>
+	</BODY>
+</HTML>

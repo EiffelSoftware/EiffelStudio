@@ -1,0 +1,55 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Dynamic library builder</TITLE>
+		<META NAME="MS-HKWD" CONTENT="dynamic library builder">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Dynamic library builder</H1>
+        <p>In order to facilitate the creation of C dynamic libraries using
+        EiffelStudio, a wizard helps generate the definition files used to
+        define the contents of the shared library. If for some reason you need
+        to override the wizard, the <A HREF="20_definition_file_syntax.html">syntactic rules</A> of the definition files are
+        available, but they are not necessary to know to make a standard use of
+        the dynamic library generation in EiffelStudio.</p>
+        <p>The wizard is accessible in the <b>Tools</b>/<b>Dynamic library
+        builder</b> menu.</p>
+        <p>The dynamic library window that appears when selecting this menu is
+        mainly composed of a list which contains all features that should be
+        exported. This list is course empty at first.</p>
+        <p>SCREENSHOT(DLL window)</p>
+        <p class="note"><b>Note</b>: The layout of this wizard is slightly different on
+        Windows and on Unix systems, because the index and calling convention
+        fields never appear on Unix systems.</p>
+        <p>To add a new feature to the definition file, you can either:</p>
+        <UL>
+        	<LI>
+        Pick the feature from any place in EiffelStudio and drop it into the
+        list. If several creation procedures exists in the container class, a
+        dialog is popped up to give the choice between all possible creation
+        procedures.
+        	<LI>
+        Or, use the Add command <IMG SRC="/images/eiffelstudio/icon_add_exported_feature_color.gif"> in the <b>Edit</b>/<b>Add</b> menu.
+        This pops up a dialog where it is possible to enter manually all parameters
+        for the exported feature. SCREENSHOT(Add exported feature dialog)
+        </UL>
+        <p>Other commands of the <b>Edit</b> menu allow you to remove 
+        <IMG SRC="/images/eiffelstudio/icon_remove_exported_feature_color.gif"> exported
+        features or to modify their export parameters <IMG SRC="/images/eiffelstudio/icon_edit_exported_feature_color.gif">.</p>
+        <p>It is also possible to check the validity of the definition file.
+        This command <IMG SRC="/images/eiffelstudio/icon_check_exports_color.gif"> performs
+        both a global check, to ensure that for example two features do not have
+        the same name or same index in the library, and also local checks, that
+        check for each feature that the parameters are valid.</p>
+        <p>Other commands, located in the <b>File</b> menu, give standard file
+        operations, such as opening  <IMG SRC="/images/eiffelstudio/icon_open_file_color.gif">
+        a definition file, creating a new definition
+        file  <IMG SRC="/images/eiffelstudio/icon_new_dynamic_lib_color.gif">,
+        or saving the current definition file  <IMG SRC="/images/eiffelstudio/icon_save_color.gif">.</p>
+        <p class="tip"><b>Tip</b>: Although the wizard can handle several files during the
+        same EiffelStudio session, remember that only one file can be used in
+        the project settings to effectively generate a shared library.</p>
+	</BODY>
+</HTML>

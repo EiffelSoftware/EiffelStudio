@@ -29,6 +29,9 @@ feature -- Status Report
 		deferred
 		end
 	
+	references_count: INTEGER
+			-- Number of object referring this object.
+
 feature -- Status Setting
 
 	object_id: INTEGER is
@@ -49,9 +52,9 @@ feature -- Status Setting
 		do
 			reference_tracked := True
 			if not shared then
-				references_number := 1
+				references_count := 1
 			else
-				references_number := -1 -- Shared
+				references_count := -1 -- Shared
 			end
 
 				-- Give a unique number to this object, to follow it.
@@ -68,9 +71,9 @@ feature -- Status Setting
 			exists: exists
 			tracking_references_started: reference_tracked
 		do
-			if references_number > 0 then
-				references_number := references_number - 1
-				if references_number = 0 then
+			if references_count > 0 then
+				references_count := references_count - 1
+				if references_count = 0 then
 					destroy_item
 				end
 			end
@@ -82,8 +85,8 @@ feature -- Status Setting
 			exists: exists
 			tracking_references_started: reference_tracked
 		do
-			if references_number > 0 then
-				references_number := references_number + 1
+			if references_count > 0 then
+				references_count := references_count + 1
 			end
 		end
 
@@ -98,7 +101,7 @@ feature {NONE} -- Removal
 		do
 			if exists and then not shared then
 				debug ("WEL")
-					if reference_tracked and references_number > 0 then
+					if reference_tracked and references_count > 0 then
 						io.putstring ("----------------------------------------------------------------%N")
 						io.putstring ("Warning, reference tracking was enabled for the following object%N")
 						io.putstring ("but `reference_number' was not equal to zero at dispose time%N")
@@ -149,9 +152,6 @@ feature {NONE} -- Removal
 			-- Object ID of Current if recorded.
 
 feature {ANY} -- Implementation
-
-	references_number: INTEGER
-			-- Number of object referring to this object.
 
 	internal_number_id: INTEGER
 			-- Debugging purpose

@@ -29,9 +29,9 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		local 
 			l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
-			l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+			l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
 			l_ev_frame_1, l_ev_frame_2: EV_FRAME
-			l_ev_cell_1: EV_CELL
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
@@ -44,13 +44,17 @@ feature {NONE}-- Initialization
 			create drawing_area
 			create l_ev_vertical_box_2
 			create list
+			create l_ev_cell_1
+			create l_ev_horizontal_box_2
+			create l_ev_cell_2
 			create l_ev_frame_1
 			create l_ev_vertical_box_3
 			create snap_button
 			create grid_visible_control
-			create l_ev_cell_1
+			create l_ev_cell_3
 			create grid_size_control
-			create l_ev_horizontal_box_2
+			create l_ev_cell_4
+			create l_ev_horizontal_box_3
 			create l_ev_frame_2
 			create prompt_label
 			create ok_button
@@ -63,33 +67,43 @@ feature {NONE}-- Initialization
 			scrollable_area.extend (drawing_area)
 			split_area.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.extend (list)
-			l_ev_vertical_box_2.extend (l_ev_frame_1)
+			l_ev_vertical_box_2.extend (l_ev_cell_1)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (l_ev_cell_2)
+			l_ev_horizontal_box_2.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (l_ev_vertical_box_3)
 			l_ev_vertical_box_3.extend (snap_button)
 			l_ev_vertical_box_3.extend (grid_visible_control)
-			l_ev_vertical_box_3.extend (l_ev_cell_1)
-			l_ev_cell_1.extend (grid_size_control)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (l_ev_frame_2)
+			l_ev_vertical_box_3.extend (l_ev_cell_3)
+			l_ev_cell_3.extend (grid_size_control)
+			l_ev_vertical_box_2.extend (l_ev_cell_4)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (l_ev_frame_2)
 			l_ev_frame_2.extend (prompt_label)
-			l_ev_horizontal_box_2.extend (ok_button)
+			l_ev_horizontal_box_3.extend (ok_button)
 			
 			set_minimum_width (300)
 			set_minimum_height (250)
 			set_title ("EV_FIXED child positioner")
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
 			scrollable_area.set_minimum_width (100)
 			scrollable_area.set_minimum_height (100)
 			scrollable_area.set_item_width (0)
 			scrollable_area.set_item_height (0)
-			l_ev_vertical_box_2.disable_item_expand (l_ev_frame_1)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_cell_1)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_cell_4)
+			l_ev_cell_1.set_minimum_height (small_padding)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_2)
+			l_ev_cell_2.set_minimum_width (small_padding)
 			l_ev_frame_1.set_text ("Grid properties")
 			l_ev_vertical_box_3.disable_item_expand (snap_button)
 			l_ev_vertical_box_3.disable_item_expand (grid_visible_control)
-			l_ev_vertical_box_3.disable_item_expand (l_ev_cell_1)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_cell_3)
 			snap_button.set_text ("Snap to grid")
 			grid_visible_control.set_text ("Visible")
-			l_ev_horizontal_box_2.disable_item_expand (ok_button)
+			l_ev_cell_4.set_minimum_height (small_padding)
+			l_ev_horizontal_box_3.set_padding_width (small_padding)
+			l_ev_horizontal_box_3.disable_item_expand (ok_button)
 			l_ev_frame_2.set_style (1)
 			ok_button.set_text ("Done")
 			

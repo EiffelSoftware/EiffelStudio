@@ -3031,8 +3031,8 @@ case 361:
 case 362:
 # line 1314 "parser.y"
 {
-								yyval.node = create_node2(PRECURSOR_AS,click_list_elem (yypvt[-3].value),yypvt[-0].node);
-								click_list_set (yyval.node, yypvt[-3].value);
+								yyval.node = create_node2(PRECURSOR_AS,click_list_elem (yypvt[-2].value),yypvt[-0].node);
+								click_list_set (yyval.node, yypvt[-2].value);
 								yacc_error_code=341;} break;
 case 363:
 # line 1321 "parser.y"

@@ -1312,8 +1312,8 @@ A_precursor:				TE_PRECURSOR Parameters
 								yacc_error_code=342;}
 	|						TE_PRECURSOR TE_LCURLY Pushing_id TE_RCURLY Parameters
 								{
-								$$ = create_node2(PRECURSOR_AS,click_list_elem ($<value>2),$5);
-								click_list_set ($$, $<value>2);
+								$$ = create_node2(PRECURSOR_AS,click_list_elem ($<value>3),$5);
+								click_list_set ($$, $<value>3);
 								yacc_error_code=341;}
 	;
 

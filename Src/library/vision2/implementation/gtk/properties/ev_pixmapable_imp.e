@@ -34,7 +34,7 @@ feature -- Initialization
 feature -- Access
 
 	pixmap: EV_PIXMAP is
-			-- 
+			-- Pixmap shown in `Current'
 		do
 			if internal_pixmap /= Void then
 				Result := internal_pixmap.interface.twin

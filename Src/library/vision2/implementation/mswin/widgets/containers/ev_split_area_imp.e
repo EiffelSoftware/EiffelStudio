@@ -30,9 +30,10 @@ inherit
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
-			parent as wel_parent
+			parent as wel_parent,
+			destroy as wel_destroy
 		undefine
-			destroy,
+--			destroy,
 			set_width,
 			set_height,
 			remove_command,
@@ -86,7 +87,7 @@ feature -- Initialise
 	make (par: EV_CONTAINER) is
 			-- Create the control window.
 		local
-			par_imp: EV_CONTAINER_IMP
+			par_imp: WEL_COMPOSITE_WINDOW
 		do
 			par_imp ?= par.implementation
 			check

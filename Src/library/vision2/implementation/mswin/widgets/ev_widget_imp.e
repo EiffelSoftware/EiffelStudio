@@ -5,9 +5,11 @@ indexing
 		%  window. Therefore, each feature that call the parent %
 		%  here need to be redefine by EV_WINDOW to check if    %
 		%  parent is `Void'"
-	note: "We undefine all the features of WEL_WINDOW because all%
-		% the Eiffel Vision objects will inherit from a final    %
-		% wel_object, this will implement all the deferred features."
+	note: "The current class would be the equivalent of a wel_window%
+		% Yet, it doesn't inherit from wel_window. Then, all the%
+		% feature we used are defined as deferred. They will be%
+		% implemented directly by the heirs thanks to inheritance%
+		% from a heir of wel_window."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -25,50 +27,14 @@ inherit
 
 	WEL_WM_CONSTANTS        
 
-	WEL_WINDOW
-		rename
-				-- We rename the features that have different signature in
-				-- Vision and in WEL.
-			parent as wel_parent
-		undefine
-				-- We undefine all the features the are redefine later by
-				-- Wel or Vision objects.
-			destroy,
-			destroy_item,
-			width,
-			height,
-			minimal_width,
-			minimal_height,
-			maximal_width,
-			maximal_height,
-			move_and_resize,
-			move,
-			set_text,
-			text_length,
-			default_ex_style,
-			set_default_window_procedure,
-			call_default_window_procedure,
-			process_message,
-			remove_command,
-			main_args,
-			on_show,
-			on_size,
-			on_destroy,
-			on_wm_destroy,
-			on_set_cursor,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_char,
-			on_key_up
-		redefine
-			set_width,
-			set_height
-		end
+feature -- Access
+
+	background_color: EV_COLOR_IMP
+			-- Color used for the background of the widget
+
+	foreground_color: EV_COLOR_IMP
+			-- Color used for the foreground of the widget,
+			-- usually the text.
 
 feature -- Status report
 	
@@ -84,34 +50,8 @@ feature -- Status report
       		Result := not enabled
 		end
 
---	shown: BOOLEAN is
---		do
---			Result := shown
---		end
-
 feature -- Status setting
 
---	destroy is
-			-- Destroy the widget, but set the parent sensitive
-			-- in case it was set insensitive by the child.
---		deferred
---			if parent_imp /= Void then
---				parent_imp.set_insensitive (False)
---			end
---			{WEL_WINDOW} Precursor
---		end
-	
---	hide is
---			-- Make widget invisible on the screen.
---		do
---			hide
---		end
-	
---	show is
---		do
---			wel_window.show
---		end
-	
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
 			-- `flag'. This means that any events with an
@@ -129,32 +69,20 @@ feature -- Status setting
 			end
 		end
 
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		do
+			background_color ?= color.implementation
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			foreground_color ?= color.implementation
+		end
+
 feature -- Measurement
 	
---	x: INTEGER is
-			-- Horizontal position relative to parent
---		do
---			Result := wel_window.x
---		end
-	
---	y: INTEGER is
-			-- Vertical position relative to parent
---		do
---			Result := wel_window.y
---		end
-	
---	width: INTEGER is
-			-- Width of the widget
---		do
---			Result := wel_window.width
---		end
-	
---	height: INTEGER is 
-			-- Height of the widget
---		do
---			Result := wel_window.height
---		end
-
 	minimum_width: INTEGER 
 			-- Minimum width of widget, `0' by default
 	
@@ -174,67 +102,52 @@ feature -- Resizing
 --			notify_size_to_parent
 		end
 	
-	set_width (new_width :INTEGER) is
-			-- Make `new_width' the new width and notify the parent
+	set_width (value:INTEGER) is
+			-- Make `value' the new width and notify the parent
 			-- of the change.
 		do
-			{WEL_WINDOW} Precursor (new_width.max (minimum_width))
+			resize (value.max (minimum_width), height)
 			parent_imp.child_width_changed (width, Current)
 		end
 		
-	set_height (new_height: INTEGER) is
-			-- Make `new_height' the new `height' and notify the
+	set_height (value: INTEGER) is
+			-- Make `value' the new `height' and notify the
 			-- parent of the change.
 		do
-			{WEL_WINDOW} Precursor (new_height.max (minimum_height))
-			parent_imp.child_height_changed (new_height, Current)
+			resize (width, value.max (minimum_height))
+			parent_imp.child_height_changed (value, Current)
 		end
 	
-    set_minimum_height (min_height: INTEGER) is
-			-- Make `min_height' the new `minimum__height' and
+    set_minimum_height (value: INTEGER) is
+			-- Make `value' the new `minimum__height' and
 			-- notify the parent of the change. If this new minimum is
 			-- bigger than the Current `height', the widget is resized.
 		do
-			minimum_height := min_height
-			parent_imp.child_minheight_changed (min_height)
-			if min_height > height then
-				parent_ask_resize (width, min_height)
+			minimum_height := value
+			parent_imp.child_minheight_changed (value)
+			if value > height then
+				parent_ask_resize (width, value)
 			end
 		end
 
-    set_minimum_width (min_width: INTEGER) is
-			-- Make `min_width' the new `minimum_width' and
+    set_minimum_width (value: INTEGER) is
+			-- Make `value' the new `minimum_width' and
 			-- notify the parent of the change. If this new minimum is
 			-- bigger than the Current `width', the widget is resized.
 		do
-			minimum_width := min_width
-			parent_imp.child_minwidth_changed (min_width)
-			if min_width > width then
-				parent_ask_resize (min_width, height)
+			minimum_width := value
+			parent_imp.child_minwidth_changed (value)
+			if value > width then
+				parent_ask_resize (value, height)
 			end
 		end
 
---	set_x (new_x: INTEGER) is
-			-- Put at horizontal position `new_x' relative
-			-- to parent.
---		do
---			wel_window.set_x (new_x)
---		end
-		
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
 			-- Put at horizontal position `new_x' and at
 			-- vertical position `new_y' relative to parent.
 		do
 			move (new_x, new_y)
 		end
-	
---	set_y (new_y: INTEGER) is
-			-- Put at vertical position `new_y' relative
-			-- to parent.
---		do
---			wel_window.set_y (new_y)
---		end
-	
 
 feature -- Event - command association
 
@@ -359,7 +272,7 @@ feature -- Implementation
 		do 
 			Result ?= wel_parent
 		ensure then
-			parent_set: parent /= Void implies Result /= Void
+			parent_set: wel_parent /= Void implies Result /= Void
 		end
 
 	test_and_set_parent (par: EV_CONTAINER) is
@@ -545,6 +458,50 @@ feature {NONE} -- Implementation, key events
 			!! data.make
 			data.set_keyval (key_data)
 			execute_command (Cmd_key_release, data)
+		end
+
+feature -- Implementation : deferred features of WEL_WINDOW that are used
+		-- here but not defined
+
+	exists: BOOLEAN is
+			-- Does the window exist?
+		deferred
+		end
+
+	enabled: BOOLEAN is
+			-- Is the window enabled for mouse and keyboard input?
+		deferred
+		end
+
+	disable is
+			-- Disable mouse and keyboard input
+		deferred
+		end
+
+	enable is
+			-- Enable mouse and keyboard input.
+		deferred
+		end
+
+	move (a_x, a_y: INTEGER) is
+			-- Move the window to `a_x', `a_y'.
+		deferred
+		end
+
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+			repaint: BOOLEAN) is
+			-- Move the window to `a_x', `a_y' position and
+			-- resize it with `a_width', `a_height'.
+		deferred
+		end
+
+	resize (a_width, a_height: INTEGER) is
+			-- Resize the window with `a_width', `a_height'.
+		deferred
+		end
+
+	wel_parent: WEL_WINDOW is
+		deferred
 		end
 
 end -- class EV_WIDGET_IMP

@@ -24,15 +24,17 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			font as wel_font,
-			set_font as wel_set_font
+			set_font as wel_set_font,
+			set_text as wel_set_text,
+			destroy as wel_destroy
 		undefine
 			-- We undefine the features redefined by EV_WIDGET_IMP,
 			-- and EV_PRIMITIVE_IMP
 			remove_command,
 			set_width,
 			set_height,
-			destroy,
-			set_text,
+--			destroy,
+--			set_text,
 			on_bn_clicked,
 			on_left_button_down,
 			on_right_button_down,
@@ -50,7 +52,7 @@ creation
 
 feature -- Status report
 	
-	pressed: BOOLEAN is
+	state: BOOLEAN is
 			-- Is toggle pressed
 		do
 			Result := checked
@@ -58,11 +60,11 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_pressed (button_pressed: BOOLEAN) is
+	set_state (flag: BOOLEAN) is
 			-- Set Current toggle on and set
 			-- pressed to True.
 		do
-			if button_pressed then
+			if flag then
 				set_checked
 			else
 				set_unchecked
@@ -73,7 +75,7 @@ feature -- Status setting
 			-- Change the state of the toggle button to
 			-- opposite
 		do
-			set_pressed (not pressed)
+			set_state (not state)
 		end
 
 feature -- Event - command association

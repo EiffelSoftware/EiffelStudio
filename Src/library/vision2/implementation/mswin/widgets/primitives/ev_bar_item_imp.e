@@ -12,8 +12,7 @@ deferred class
 	
 inherit
 	
-	EV_PRIMITIVE_IMP
-
+--	EV_PRIMITIVE_IMP
 
 end
 

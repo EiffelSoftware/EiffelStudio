@@ -9,17 +9,7 @@ indexing
 
 class DB_SELECTION
 
--- Maybe do 2 separate classes, one using `container' and the other
--- `action', as it is redundant (usually, one of them are Void but
--- this is not nice.)
--- Class remains anyway strange: `load_result' vs use of `next'?
--- Possibility to navigate in `container' from this class??
--- I (cedric) think `container' should be removed and user should
--- choose to use an object (with attributes matching query result
--- column names) or DB_RESULT (or something equivalent).
-
 inherit
-
 	DB_STATUS_USE
 		export
 			{ANY} is_ok, is_connected
@@ -263,10 +253,6 @@ feature -- Basic operations
 			loop
 				if container /= Void then
 					container.extend (cursor)
-							-- Metadata is taken for each row in this case. (Cedric)
-				--	create cursor.make
-				--	cursor.set_descriptor (active_selection_number)
-							--
 					cursor := deep_clone (cursor)
 				end
 				if stop_condition /= Void then

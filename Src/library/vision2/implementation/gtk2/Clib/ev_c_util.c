@@ -17,6 +17,7 @@ EIF_REAL double_array_i_th (double *double_array, int index)
 
 GValue* gtk_args_array_i_th (GValue** value_array, int index)
 {
+//	printf ("Calling gtk_args_array_i_th to retrieve a GValue of %s\n", G_VALUE_TYPE_NAME ((GValue*)value_array + index));
 	return (GValue*)value_array + index;
 }
 
@@ -1106,6 +1107,9 @@ char **wait_cursor_xpm (void) {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.3  2003/04/16 17:13:10  king
+// Initial gtk2 default marshaller implementation
+//
 // Revision 1.2  2003/04/15 01:32:31  king
 // Now new marshal proxy is correctly executed, updated arg function to gtk2
 //

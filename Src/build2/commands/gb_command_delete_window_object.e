@@ -88,8 +88,8 @@ feature -- Basic Operation
 			check
 				object_was_window: window_object /= Void
 			end
-			update_for_delete
-			update_object_editors_for_delete (window_object, Void)
+			object_handler.update_for_delete (original_id)
+			object_handler.update_object_editors_for_delete (window_object, Void)
 			window_object.layout_item.unparent
 			window_object.window_selector_item.unparent
 			object_handler.mark_as_deleted (window_object)
@@ -215,73 +215,6 @@ feature {NONE} -- Implementation
 		
 	implementation_file_contents: STRING
 		-- Contents of IMP file after deletion
-	
-	update_object_editors_for_delete (deleted_object, parent_object: GB_OBJECT) is
-			-- For every item in `editors', update to reflect removal of `deleted_object' from `parent_object'.
-		local
-			editor: GB_OBJECT_EDITOR
-			window_parent: EV_WINDOW
-			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
-		do
-			editors := all_editors
-			from
-				editors.start
-			until
-				editors.off
-			loop
-				editor := editors.item
-					-- Update the editor if `Current' or a child of `Current'
-					-- is contained.
-				if object_handler.object_contained_in_object (deleted_object, editor.object) or
-					deleted_object = editor.object then
-						-- If we are the doced object editor, then just empty it.
-						-- If not, we destroy the editor and the containing window.
-					if editor = docked_object_editor then
-						editor.make_empty
-					else
-						window_parent := parent_window (editor)
-						check
-							floating_editor_is_in_window: window_parent /= Void
-						end
-						editor.destroy
-						window_parent.destroy
-						floating_object_editors.prune (editor)
-					end
-				end
-
-					-- We only update any editors that reference containers.
-					-- Note that we could check to see which attributes of which objects
-					-- really were affected, thus minimizing, rebuilding. Not done
-					-- and probably not necessary.
-				
-				if not editor.is_destroyed and then editor.object /= Void and then
-					type_conforms_to (dynamic_type_from_string (editor.object.type), dynamic_type_from_string (Ev_container_string)) then
-					editor.update_current_object
-				end	
-				editors.forth
-			end
-		end
-		
-	update_for_delete is
-				-- Perfrom any necessary processing on `Current'
-				-- and all children contained within for a deletion
-				-- event.
-			local
-				all_objects: ARRAYED_LIST [GB_OBJECT]
-				counter: INTEGER
-			do
-				create all_objects.make (10)
-				object_handler.deep_object_from_id (original_id).all_children_recursive (all_objects)
-				all_objects.extend (object_handler.deep_object_from_id (original_id))
-				from
-					counter := 1
-				until
-					counter > all_objects.count
-				loop
-					(all_objects @ counter).delete
-					counter := counter + 1
-				end
-			end
 			
 	generated_path: FILE_NAME is
 			-- `Result' is generated directory for current project.

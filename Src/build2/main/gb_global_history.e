@@ -137,7 +137,12 @@ feature -- Basic operation
 			-- Remove all items from the history from
 			-- `current_position' onwards.
 		do
-			if current_position < command_list.count then
+				-- We need to handle the case where we are at the very start
+				-- of the history specially.
+			if current_position = -1 then
+				command_list.wipe_out
+				dialog.remove_all_items
+			elseif current_position < command_list.count then
 				from
 					command_list.go_i_th (current_position + 1)
 				until

@@ -79,7 +79,7 @@ feature -- Basic operations
 			last_selected_item = history_list.count
 		end
 		
-feature {GLOBAL_HISTORY} -- Implementation
+feature {GB_GLOBAL_HISTORY} -- Implementation
 
 	select_item (position: INTEGER) is
 			-- Select item `position' in `history_list'.

@@ -59,7 +59,13 @@ feature -- Creation
 		end
 
 	set_values is
+		local
+			bg_color: COLOR
 		do
+			!! bg_color.make
+			bg_color.set_rgb (background_color.red - 65 * 256, background_color.green - 65 * 256, background_color.blue - 65 * 256)	
+			scrolled_w.set_background_color (bg_color)
+			
 			first_separator.set_horizontal (true)
 			rc.set_row_layout
 			primitive_page.unmanage

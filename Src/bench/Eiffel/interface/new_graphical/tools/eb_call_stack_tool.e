@@ -46,14 +46,15 @@ inherit
 			{NONE} all
 		end
 		
-	EV_SHARED_APPLICATION
-		export
-			{NONE} all
-		end
-		
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
+		end
+
+	DEBUGGING_UPDATE_ON_IDLE
+		redefine
+			update,
+			real_update
 		end
 
 create
@@ -151,7 +152,7 @@ feature {NONE} -- Initialization
 			box.extend (box2)
 			box.disable_item_expand (box2)
 			if Application.status /= Void then
-				display_stop_cause
+				display_stop_cause (False)
 			end
 			exception.remove_text
 				-- We set a minimum width to prevent the label from resizing the call stack.
@@ -167,7 +168,7 @@ feature {NONE} -- Initialization
 			stack_list.set_column_widths (<<100, 100, 100>>)
 			stack_list.drop_actions.extend (agent on_element_drop)
 			stack_list.key_press_actions.extend (agent key_pressed)
-			update_agent := agent real_update
+			create_update_on_idle_agent
 			widget := box
 		end
 
@@ -300,30 +301,14 @@ feature -- Status setting
 			stack_list.wipe_out
 			l_status := application.status
 			if l_status /= Void then
-				display_stop_cause
+				display_stop_cause (l_status.is_stopped)
 				refresh_threads_info
 				process_real_update_on_idle (l_status.is_stopped)
 			else
-				display_stop_cause
+				display_stop_cause (False)
 				display_box_thread (False)
 			end
 		end
-
-	update_agent_call_on_stopped_state: BOOLEAN
-	
-	process_real_update_on_idle (a_dbg_stopped: BOOLEAN) is
-			-- Call `real_update' on idle action
-		do
-			update_agent_call_on_stopped_state := a_dbg_stopped
-			ev_application.idle_actions.extend (update_agent)			
-		end
-	
-	cancel_process_real_update_on_idle is
-			-- cancel any calls to `real_update' on idle action	
-		do
-			update_agent_call_on_stopped_state := False
-			ev_application.idle_actions.prune_all (update_agent)			
-		end		
 
 	change_manager (a_manager: EB_TOOL_MANAGER; an_explorer_bar: like explorer_bar) is
 			-- Change the window and explorer bar `Current' is in.
@@ -362,11 +347,9 @@ feature {NONE} -- Implementation
 	set_stack_depth_cmd: EB_STANDARD_CMD
 			-- Command that alters the displayed depth of the call stack.
 
-	update_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent that is put in the idle_actions to update the call stack after a while.
-
-	real_update is
+	real_update (dbg_was_stopped: BOOLEAN) is
 			-- Display current execution status.
+			-- dbg_was_stopped is ignore if Application/Debugger is not running			
 		local
 			i: INTEGER
 			stack: EIFFEL_CALL_STACK
@@ -374,15 +357,16 @@ feature {NONE} -- Implementation
 			l_tooltipable_row: EB_MULTI_COLUMN_LIST_ROW
 			l_status: APPLICATION_STATUS
 		do
-			ev_application.idle_actions.prune_all (update_agent)
-			l_status := application.status
-			if l_status /= Void then
-				l_status.update
-				display_stop_cause
+			if Application.is_running then
+				l_status := application.status
+				if dbg_was_stopped then
+					l_status.update_on_stopped_state					
+				end
+				display_stop_cause (dbg_was_stopped)
 				refresh_threads_info
 				stack_list.wipe_out
 				if
-					l_status.is_stopped
+					dbg_was_stopped and l_status.is_stopped
 				then
 					stack := l_status.current_call_stack					
 					if stack /= Void then
@@ -415,24 +399,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_stop_cause is
+	display_stop_cause (arg_is_stopped: BOOLEAN) is
 			-- Fill in the `stop_cause' label with a message describing the application status.
+			-- arg_is_stopped is ignore if Application/Debugger is not running
 		local
 			m: STRING
-			l_status: APPLICATION_STATUS
 		do
-			l_status := Application.status
-			if l_status = Void then
+			if not Application.is_running then
 				stop_cause.remove_text
 				exception.remove_text
 				exception.remove_tooltip
-			elseif not l_status.is_stopped then
+			elseif not arg_is_stopped then
 				stop_cause.set_text (Interface_names.l_System_running)
 				exception.remove_text
 				exception.remove_tooltip
 			else -- Application is stopped.
 				create m.make (100)
-				inspect l_status.reason
+				inspect application.status.reason
 				when Pg_step then
 					stop_cause.set_text (Interface_names.l_Stepped)
 					m.append (Interface_names.l_Stepped)

@@ -43,7 +43,6 @@ feature {NONE}
 			new_context: CONTEXT
 		do
 			new_context := context_catalog.submenu_type.create_context (context);
-			new_context.realize;
 			tree.display (new_context)
 		end;
 

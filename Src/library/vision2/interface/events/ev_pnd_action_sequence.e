@@ -140,86 +140,19 @@ invariant
 
 end
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license.
+--| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.12  2001/07/14 12:46:25  manus
---| Replace --! by --|
---|
---| Revision 1.11  2001/07/14 12:16:30  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.10  2001/06/07 23:08:18  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.1.2.11  2001/02/22 00:03:22  manus
---| Since LINKED_LIST now defines `copy' and `is_equal' correctly we need to
---| undefine those coming from ANY.
---|
---| Revision 1.1.2.10  2000/10/02 19:13:48  oconnor
---| updated for feature_create in ACTION_SEQUENCE
---|
---| Revision 1.1.2.9  2000/09/08 19:02:41  xavier
---| The veto function is now called only if pebble matches a drop action.
---|
---| Revision 1.1.2.8  2000/08/31 16:14:19  manus
---| Removed the change with precondition test since it is not working and as a consequence everything
---| that relies on the previous behavior does not work at all.
---|
---| We should look into it in a year from now when we really have `precondition' in ROUTINE.
---|
---| Revision 1.1.2.6  2000/08/10 16:55:56  xavier
---| Put away some parenthesis.
---|
---| Revision 1.1.2.5  2000/08/10 00:22:09  xavier
---| Added a boolean function agent to forbid drops on user-defined places.
---|
---| Revision 1.1.2.4  2000/07/24 22:46:58  oconnor
---| removed calls to call_log
---|
---| Revision 1.1.2.3  2000/07/23 21:13:58  oconnor
---| removed textual names from action sequence creation
---|
---| Revision 1.1.2.2  2000/05/03 19:09:54  oconnor
---| mergred from HEAD
---|
---| Revision 1.9  2000/04/05 17:09:14  king
---| Added pebble_not_void precondition to set_pebble
---|
---| Revision 1.8  2000/02/29 18:09:06  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.7  2000/02/26 05:05:10  oconnor
---| fixed item.vail_operands to snapshot.item.valid_operands in call
---|
---| Revision 1.6  2000/02/25 20:31:06  oconnor
---| changed to match new action sequence implementation. See ACTION_SEQUENCE 1.14
---|
---| Revision 1.5  2000/02/22 18:39:46  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.4  2000/02/15 18:43:45  oconnor
---| added copyright notice
---|
---|----------------------------------------------------------------

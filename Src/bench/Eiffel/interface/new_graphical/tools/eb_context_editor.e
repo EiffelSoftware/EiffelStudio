@@ -81,7 +81,8 @@ feature {NONE} -- Initialization
 			horizontal_box.disable_item_expand (vertical_scrollbar)
 			area.resize_actions.extend (~on_resizing)
 			create empty_world
-			empty_world.drop_actions.extend (agent tool.launch_stone)
+			empty_world.drop_actions.extend (agent default_drop_class_stone)
+			empty_world.drop_actions.extend (agent default_drop_cluster_stone)
 			create projector.make_with_buffer (empty_world, area)
 			update_size (Void)
 			create border_frame
@@ -551,7 +552,11 @@ feature -- Status setting
 		require
 			focusable: widget.is_displayed and widget.is_sensitive
 		do
-			area.set_focus
+			if area /= Void then
+				area.set_focus
+			else
+				widget.set_focus
+			end
 		end
 
 feature -- Memory management
@@ -1051,7 +1056,8 @@ feature {CONTEXT_DIAGRAM, EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			horizontal_box.extend (vertical_scrollbar)
 			horizontal_box.disable_item_expand (vertical_scrollbar)
 			create empty_world
-			empty_world.drop_actions.extend (agent tool.launch_stone)
+			empty_world.drop_actions.extend (agent default_drop_class_stone)
+			empty_world.drop_actions.extend (agent default_drop_cluster_stone)
 			create {ES_PROJECTOR} projector.make_with_buffer (empty_world, area)
 			update_size (Void)
 			projector.full_project
@@ -1212,6 +1218,18 @@ feature {NONE} -- Events
 			if a_item = development_window then
 				store
 			end
+		end
+
+	default_drop_class_stone (cst: CLASSI_STONE) is
+			-- Send `cst' to `tool'.
+		do
+			tool.launch_stone (cst)
+		end
+
+	default_drop_cluster_stone (cst: CLUSTER_STONE) is
+			-- Send `cst' to `tool'.
+		do
+			tool.launch_stone (cst)
 		end
 
 feature {DIAGRAM_COMPONENT} -- Events

@@ -23,6 +23,11 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ECOM_INVOKE_KIND
+		export
+			{NONE} all
+		end
 	
 feature -- Basic operations
 
@@ -57,27 +62,30 @@ feature -- Basic operations
 				until
 					a_desc.functions.off
 				loop
-					if a_desc.functions.item.func_kind =  Func_dispatch then
+					if not is_propertyputref (a_desc.functions.item.invoke_kind) then
 
-						create disp_func_generator
-						disp_func_generator.generate (a_desc.name, a_desc.guid.to_string, a_desc.lcid, a_desc.functions.item)
-						cpp_class_writer.add_function (disp_func_generator.ccom_feature_writer, Public)
+						if a_desc.functions.item.func_kind =  Func_dispatch then
+	
+							create disp_func_generator
+							disp_func_generator.generate (a_desc.name, a_desc.guid.to_string, a_desc.lcid, a_desc.functions.item)
+							cpp_class_writer.add_function (disp_func_generator.ccom_feature_writer, Public)
 
-					else
-						create function_generator
-						function_generator.generate (a_desc.name, a_desc.functions.item)
-						cpp_class_writer.add_function (function_generator.ccom_feature_writer, Public)
-						from
-							function_generator.c_header_files.start
-						until
-							function_generator.c_header_files.after
-						loop
-							if not cpp_class_writer.import_files.has (function_generator.c_header_files.item) then
-								cpp_class_writer.add_import (function_generator.c_header_files.item)
+						else
+							create function_generator
+							function_generator.generate (a_desc.name, a_desc.functions.item)
+							cpp_class_writer.add_function (function_generator.ccom_feature_writer, Public)
+							from
+								function_generator.c_header_files.start
+							until
+								function_generator.c_header_files.after
+							loop
+								if not cpp_class_writer.import_files.has (function_generator.c_header_files.item) then
+									cpp_class_writer.add_import (function_generator.c_header_files.item)
+								end
+								function_generator.c_header_files.forth
 							end
-							function_generator.c_header_files.forth
-						end
 
+						end
 					end
 
 					a_desc.functions.forth

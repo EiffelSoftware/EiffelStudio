@@ -907,6 +907,7 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_code: CHARACTER
 		do
+			Result := True
 			if count > 0 then
 				from
 					nb := count
@@ -925,8 +926,6 @@ feature {NONE} -- Implementation
 					Result := l_code = eif_item_type ($Current, i)
 					i := i + 1
 				end
-			else
-				Result := True
 			end
 		end
 

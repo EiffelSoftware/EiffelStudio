@@ -680,8 +680,8 @@ feature -- Conveniences
 			-- Do nothing
 		end
 
-	is_formal_attribute: BOOLEAN is
-			-- Is current feature a formal attribute?
+	is_type_feature: BOOLEAN is
+			-- Is current an instance of TYPE_FEATURE_I?
 		do
 			-- Do nothing
 		end

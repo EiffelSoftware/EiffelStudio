@@ -30,6 +30,18 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
+	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+		require
+			valid_character_index: start_index >= 1 and end_index <= text_length + 1 and
+				start_index <= end_index
+		deferred
+		ensure
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
+		end
+		
 	buffer_locked_in_format_mode: BOOLEAN
 			-- Is buffered formatting underway?
 		

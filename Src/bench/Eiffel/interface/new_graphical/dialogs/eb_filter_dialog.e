@@ -37,7 +37,7 @@ feature -- Initialization
 			create list.make (display_area)
 --			list.compare_objects
 --			list.set_visible_item_count (9)
-			list.add_selection_command (Current, list_it)
+			list.add_select_command (Current, list_it)
 
 			filter_command ?= cmd
 			if filter_command /= Void then
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 	popdown is
 		-- destroy the dialog without calling a "selection changed" event
 		do
-			list.remove_selection_commands
+			list.remove_select_commands
 			destroy
 		end
 

@@ -52,7 +52,7 @@ feature --Initialization
 			create container.make (parent)
 
 			create list.make (container)
- 			list.add_selection_command (Current, Void)
+ 			list.add_select_command (Current, Void)
 		end
 
 feature -- Access

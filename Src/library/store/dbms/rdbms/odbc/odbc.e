@@ -38,6 +38,20 @@ feature -- For DATABASE_STATUS
 
 	is_ok_mat: BOOLEAN
 
+	is_error_updated: BOOLEAN
+			-- Has an ODBC function been called since last update which may have
+			-- updated error code, error message or warning message?
+
+	found: BOOLEAN
+			-- Is there any record matching the last
+			-- selection condition used ?
+
+	clear_error is
+			-- Reset database error status.
+		do
+			odbc_clear_error
+		end
+
 feature -- For DATABASE_CHANGE 
 
 
@@ -47,7 +61,7 @@ feature -- For DATABASE_CHANGE
 		end
 
 
-	hide_qualifier(tmp_strg: STRING): POINTER is
+	hide_qualifier (tmp_strg: STRING): POINTER is
 		local
 			c_temp: ANY
 		do
@@ -66,7 +80,7 @@ feature -- For DATABASE_FORMAT
 			-- String representation in SQL of `object'
 		do
 			!! Result.make (1)
-			Result.from_c(odbc_date_to_str(object.year, object.month, object.day, object.hour, object.minute, object.second, 2))
+			Result.from_c (odbc_date_to_str (object.year, object.month, object.day, object.hour, object.minute, object.second, 2))
 			Result.prepend ("{ts %'")
 			Result.append ("%'}")
 		end
@@ -95,22 +109,22 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			c_temp: ANY
 		do
 			c_temp := sql.to_c
-			!! tmp_str.make(1)
-			tmp_str.from_c(odbc_hide_qualifier($c_temp))
+			!! tmp_str.make (1)
+			tmp_str.from_c (odbc_hide_qualifier ($c_temp))
 			tmp_str.left_adjust
-			if tmp_str.count > 1 and then (tmp_str.substring(1, 1)).is_equal("{") then
+			if tmp_str.count > 1 and then (tmp_str.substring (1, 1)).is_equal ("{") then
 				if uht.count > 0 then
-					if uhandle.execution_type.immediate_execution then
-						uhandle.status.set (odbc_pre_immediate (descriptor, uht.count))
-					else
-						uhandle.status.set (odbc_init_order (descriptor, $c_temp, uht.count))
-					end
+			--FIXME:must be droppable...		if uhandle.execution_type.immediate_execution then
+			--			uhandle.status.set (odbc_pre_immediate (descriptor, uht.count))
+			--		else
+			--			uhandle.status.set (odbc_init_order (descriptor, $c_temp, uht.count))
+			--		end
 					if para /= Void then
 -- ADDED PGC
 						para.release
-						para.resize(uht.count)
+						para.resize (uht.count)
 					else
-						!! para.make(uht.count)
+						!! para.make (uht.count)
 					end
 					bind_args_value (descriptor, uht, uhandle) -- PGC: Pourquoi ???
 				end
@@ -123,7 +137,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; uhandle: HANDLE; sql: STRING) is
+	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING) is
 		local
 			i: INTEGER
 			object : ANY
@@ -136,11 +150,11 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		do
 			if para /= Void then
 				para.release
-				para.resize(table.count)
+				para.resize (table.count)
 			else
-				!! para.make(table.count)
+				!! para.make (table.count)
 			end
-			!! tmp_str.make(1)
+			!! tmp_str.make (1)
 			from 
 				i := table.lower
 			until 
@@ -152,33 +166,33 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 				if ptr /= Void then -- NULL value
 					para.set (default_pointer, i)
 				else
-					if obj_is_string(object) then
+					if obj_is_string (object) then
 						type := c_string_type
-					elseif obj_is_integer(object) then
+					elseif obj_is_integer (object) then
 						type := c_integer_type
-					elseif obj_is_date(object) then
+					elseif obj_is_date (object) then
 						type := c_date_type
 						tmp_date ?= object
-					elseif obj_is_double(object) then
+					elseif obj_is_double (object) then
 						type := c_float_type
-					elseif obj_is_real(object) then
+					elseif obj_is_real (object) then
 						type := c_real_type
-					elseif obj_is_character(object) then
+					elseif obj_is_character (object) then
 						type := c_character_type
-					elseif obj_is_boolean(object) then
+					elseif obj_is_boolean (object) then
 						type := c_boolean_type
 					end
 					tmp_str.wipe_out
 					if type = c_date_type  then
-						para.set(odbc_stru_of_date(tmp_date.year, tmp_date.month, tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, 2), i)
+						para.set (odbc_stru_of_date (tmp_date.year, tmp_date.month, tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, 2), i)
 					else
-						tmp_str.append((object).out)
+						tmp_str.append ( (object).out)
 						para.set (default_pointer, i)
 						tmp_c := tmp_str.to_c
-						para.set(odbc_str_from_str($tmp_c), i)
+						para.set (odbc_str_from_str ($tmp_c), i)
 					end
 				end -- Null value
-				uhandle.status.set (odbc_set_parameter(descriptor, i, 1, type, para.get(i)))
+		--		uhandle.status.set (odbc_set_parameter (descriptor, i, 1, type, para.get (i)))
 				i := i + 1
 			end
 		end
@@ -190,25 +204,25 @@ feature -- For DATABASE_STORE
 		local
 			i, j: INTEGER
 		do
-			!! Result.make(1)
-			Result.append("(")
+			!! Result.make (1)
+			Result.append (" (")
 			i := 0
 			from 
 				j := 1
 			until
 				j > repository.dimension
 			loop
-				if (map_table.item(j) > 0) then
+				if (map_table.item (j) > 0) then
 					if (i > 0) then
-						Result.append(", ")
+						Result.append (", ")
 					else
 						i := 1
 					end
-					Result.append(repository.column_name (j))
+					Result.append (repository.column_name (j))
 				end
 				j := j + 1
  			end
-			Result.append(") ")
+			Result.append (") ")
 		end
 
 	update_map_table_error (uhandle: HANDLE; map_table: ARRAY [INTEGER]; ind: INTEGER) is 
@@ -220,9 +234,9 @@ feature -- DATABASE_STRING
 
 	sql_name_string: STRING is
 		once
-			Result := "char("
+			Result := "char ("
 		ensure then
-			Result.is_equal ("char(")
+			Result.is_equal ("char (")
 		end
 
 feature -- DATABASE_REAL
@@ -241,8 +255,8 @@ feature -- DATABASE_DATETIME
 			sep: STRING
 		once
 			!! sep.make (1)
-			sep.from_c(odbc_driver_name)
-			if sep.substring_index("Oracle", 1) /= 0 or sep.substring_index ("INGRES", 1) /= 0 then
+			sep.from_c (odbc_driver_name)
+			if sep.substring_index ("Oracle", 1) /= 0 or sep.substring_index ("INGRES", 1) /= 0 then
 				Result := " date"
 			else
 				Result := " timestamp"
@@ -262,9 +276,9 @@ feature -- DATABASE_CHARACTER
 
 	sql_name_character: STRING is
 		once
-			Result := "char(1)"
+			Result := "char (1)"
 		ensure then
-			Result.is_equal ("char(1)")
+			Result.is_equal ("char (1)")
 		end
 
 feature -- DATABASE_INTEGER
@@ -312,15 +326,15 @@ feature -- For DATABASE_PROC
 		do
 			!! driver_name.make (1)
 			driver_name.from_c (odbc_driver_name)
-			!! Result.make(1)
+			!! Result.make (1)
 			io.new_line
-			io.put_string("== Try to Get Text of Stored Procedure through EiffelStore on ODBC ==")
+			io.put_string ("== Try to Get Text of Stored Procedure through EiffelStore on ODBC ==")
 			io.new_line
-			io.put_string("Sorry, the ")
-			io.put_string(driver_name)
-			io.put_string(" driver does not support such function at present.")
+			io.put_string ("Sorry, the ")
+			io.put_string (driver_name)
+			io.put_string (" driver does not support such function at present.")
 			io.new_line
-			io.put_string("=====================================================================")
+			io.put_string ("=====================================================================")
 			io.new_line
 		end
 
@@ -342,13 +356,13 @@ feature -- For DATABASE_PROC
 			!! driver_name.make (1)
 			driver_name.from_c (odbc_driver_name)
 			io.new_line
-			io.put_string("===== Try to Create Stored Procedure through EiffelStore on ODBC =====")
+			io.put_string ("===== Try to Create Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
-			io.put_string("Sorry, the ")
-			io.put_string(driver_name)
-			io.put_string(" driver does not support such function at present.")
+			io.put_string ("Sorry, the ")
+			io.put_string (driver_name)
+			io.put_string (" driver does not support such function at present.")
 			io.new_line
-			io.put_string("======================================================================")
+			io.put_string ("======================================================================")
 			io.new_line
 		end
  
@@ -369,9 +383,9 @@ feature -- For DATABASE_PROC
 			!! driver_name.make (1)
 			driver_name.from_c (odbc_driver_name)
 			io.new_line
-			io.put_string("Sorry, the ")
-			io.put_string(driver_name)
-			io.put_string(" driver does not support such function at present.")
+			io.put_string ("Sorry, the ")
+			io.put_string (driver_name)
+			io.put_string (" driver does not support such function at present.")
 			io.new_line
 		end
 
@@ -387,13 +401,13 @@ feature -- For DATABASE_PROC
 			!! driver_name.make (1)
 			driver_name.from_c (odbc_driver_name)
 			io.new_line
-			io.put_string("===== Try to Drop Stored Procedure through EiffelStore on ODBC =====")
+			io.put_string ("===== Try to Drop Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
-			io.put_string("Sorry, the ")
-			io.put_string(driver_name)
-			io.put_string(" driver does not support such function at present.")
+			io.put_string ("Sorry, the ")
+			io.put_string (driver_name)
+			io.put_string (" driver does not support such function at present.")
 			io.new_line
-			io.put_string("====================================================================")
+			io.put_string ("====================================================================")
 			io.new_line
 		end
 
@@ -405,21 +419,21 @@ feature -- For DATABASE_PROC
 
 	Select_exists (name: STRING): STRING is
 		do
-			!! Result.make(10)
-			Result.append("SQLProcedures(")
-			Result.append(name)
-			Result.extend(')')
+			!! Result.make (10)
+			Result.append ("SQLProcedures (")
+			Result.append (name)
+			Result.extend (')')
 		end
 
 feature -- For DATABASE_REPOSITORY
 
-	sql_string: STRING is "char("
+	sql_string: STRING is "char ("
 
 	sql_string2 (int: INTEGER): STRING is
 		do
-			Result := "char("
-			Result.append(int.out)
-			Result.append(")")
+			Result := "char ("
+			Result.append (int.out)
+			Result.append (")")
 		end
 
 	selection_string (rep_qualifier, rep_owner, repository_name: STRING): STRING is
@@ -427,13 +441,13 @@ feature -- For DATABASE_REPOSITORY
 			c_tmp: ANY
 		do
 			c_tmp := rep_qualifier.to_c
-			odbc_set_qualifier($c_tmp)
+			odbc_set_qualifier ($c_tmp)
 			c_tmp := rep_owner.to_c
-			odbc_set_owner($c_tmp)
-			!!Result.make(1)
-			Result.append("SQLColumns(")
-			Result.append(repository_name)
-			Result.extend(')')
+			odbc_set_owner ($c_tmp)
+			!!Result.make (1)
+			Result.append ("SQLColumns (")
+			Result.append (repository_name)
+			Result.extend (')')
 		end
 
 	Max_char_size: INTEGER is 254
@@ -452,6 +466,12 @@ feature -- External
 			Result := odbc_get_error_message
 		end
 
+	get_error_code: INTEGER is
+		do
+			Result := odbc_get_error_code
+			is_error_updated := True
+		end
+
 	get_warn_message: POINTER is
 		do
 			Result := odbc_get_warn_message
@@ -462,22 +482,25 @@ feature -- External
 			Result := odbc_new_descriptor
 		end
 
-	init_order (no_descriptor: INTEGER; command: STRING): INTEGER is
+	init_order (no_descriptor: INTEGER; command: STRING) is
 		local
 			c_temp: ANY
 		do
 			c_temp := command.to_c
-			Result := odbc_init_order (no_descriptor, $c_temp, 0)
+			odbc_init_order (no_descriptor, $c_temp, 0)
+			is_error_updated := False
 		end
 
-	start_order (no_descriptor: INTEGER): INTEGER is
+	start_order (no_descriptor: INTEGER) is
 		do
-			Result := odbc_start_order(no_descriptor)
+			odbc_start_order (no_descriptor)
+			is_error_updated := False
 		end
 
-	next_row (no_descriptor: INTEGER): INTEGER is
+	next_row (no_descriptor: INTEGER) is
 		do
-			Result := odbc_next_row(no_descriptor)
+			found := odbc_next_row (no_descriptor) = 0
+			is_error_updated := False
 		end
 
 	close_cursor (no_descriptor: INTEGER): INTEGER is
@@ -485,25 +508,27 @@ feature -- External
 			Result := odbc_close_cursor (no_descriptor)
 		end
 
-	terminate_order (no_descriptor: INTEGER): INTEGER is
+	terminate_order (no_descriptor: INTEGER) is
 		do
 			if para /= Void then
 				para.release
 			end
-			Result := odbc_terminate_order(no_descriptor)
+			odbc_terminate_order (no_descriptor)
+			is_error_updated := False
 		end
 
-	exec_immediate (no_descriptor: INTEGER; command: STRING): INTEGER is
+	exec_immediate (no_descriptor: INTEGER; command: STRING) is
 		local
 			c_temp: ANY
 		do
 			c_temp := command.to_c
-			Result := odbc_exec_immediate(no_descriptor, $c_temp)
+			odbc_exec_immediate (no_descriptor, $c_temp)
+			is_error_updated := False
 		end
 
 	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
 		do
-			Result := odbc_put_col_name(no_descriptor, index, $ar)
+			Result := odbc_put_col_name (no_descriptor, index, $ar)
 		end
 
 	put_data (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
@@ -535,7 +560,7 @@ feature -- External
 
 	get_count (no_descriptor: INTEGER): INTEGER is
 		do
-			Result := odbc_get_count(no_descriptor)
+			Result := odbc_get_count (no_descriptor)
 		end
 
 	get_data_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
@@ -654,38 +679,36 @@ feature -- External
 			c_odbc_make (i)
 		end
 
-	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING): INTEGER is
+	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING) is
+		require else
+			data_source_set: data_source /= Void
 		local
 			c_temp1, c_temp2, c_temp3: ANY	
 		do
-			if (data_source /= VOID) then
-				c_temp1 := user_name.to_c
-				c_temp2 := user_passwd.to_c
-				c_temp3 := data_source.to_c
-				Result := odbc_connect ($c_temp1, $c_temp2, $c_temp3)
-			else
-				io.new_line
-				io.putstring("ERROR in CONNECTING to ODBC: ")
-				io.new_line
-				io.putstring("      You have not set Data Source Name!")
-				io.new_line
-				Result := 1
-			end
+			c_temp1 := user_name.to_c
+			c_temp2 := user_passwd.to_c
+			c_temp3 := data_source.to_c
+			odbc_connect ($c_temp1, $c_temp2, $c_temp3)
+			is_error_updated := False
 		end
 
-	disconnect: INTEGER is
+	disconnect is
 		do
-			Result := odbc_disconnect
+			odbc_disconnect
+			is_error_updated := False
+			found := False
 		end
 
-	commit: INTEGER is
+	commit is
 		do
-			Result := odbc_commit
+			odbc_commit
+			is_error_updated := False
 		end
 
-	rollback: INTEGER is
+	rollback is
 		do
-			Result := odbc_rollback
+			odbc_rollback
+			is_error_updated := False
 		end
 
 	trancount: INTEGER is
@@ -711,11 +734,19 @@ feature -- External
 feature {NONE} -- External features
 
 	odbc_get_error_message: POINTER is
-			-- C buffer which contains the error_message
+			-- C buffer which contains the error_message.
 		external
 			"C [macro %"odbc.h%"]"
 		alias
 			"error_message"
+		end
+
+	odbc_get_error_code: INTEGER is
+			-- C buffer which contains the error code.
+		external
+			"C [macro %"odbc.h%"]"
+		alias
+			"error_number"
 		end
 
 	odbc_get_warn_message: POINTER is
@@ -730,12 +761,12 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	odbc_init_order (no_descriptor: INTEGER; command: POINTER; argnum: INTEGER): INTEGER is
+	odbc_init_order (no_descriptor: INTEGER; command: POINTER; argnum: INTEGER) is
 		external
 			"C"
 		end
 
-	odbc_start_order (no_descriptor: INTEGER): INTEGER is
+	odbc_start_order (no_descriptor: INTEGER) is
 		external
 			"C"
 		end
@@ -745,7 +776,7 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	odbc_terminate_order (no_descriptor: INTEGER): INTEGER is
+	odbc_terminate_order (no_descriptor: INTEGER) is
 		external
 			"C"
 		end
@@ -757,7 +788,7 @@ feature {NONE} -- External features
 		end
 
 
-	odbc_exec_immediate (no_descriptor: INTEGER; command: POINTER): INTEGER is
+	odbc_exec_immediate (no_descriptor: INTEGER; command: POINTER) is
 		external
 			"C"
 		end
@@ -926,17 +957,17 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	odbc_disconnect: INTEGER is
+	odbc_disconnect is
 		external
 			"C"
 		end
 
-	odbc_commit: INTEGER is
+	odbc_commit is
 		external
 			"C"
 		end
 
-	odbc_rollback: INTEGER is
+	odbc_rollback is
 		external
 			"C"
 		alias
@@ -962,13 +993,13 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	odbc_connect (user_name, user_passwd, dbName: POINTER): INTEGER is
+	odbc_connect (user_name, user_passwd, dbName: POINTER) is
 		external
 			"C"
 		end
 
-	odbc_date_to_str(year, month, day, hour, minute, second, type: INTEGER): POINTER is
-		-- Get string format of the TIME(type=0), DATE(type=1) or TIMESTAMP(type=2)
+	odbc_date_to_str (year, month, day, hour, minute, second, type: INTEGER): POINTER is
+		-- Get string format of the TIME (type=0), DATE (type=1) or TIMESTAMP (type=2)
 		external
 			"C"
 		end
@@ -988,12 +1019,12 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	odbc_hide_qualifier(command: POINTER): POINTER is
+	odbc_hide_qualifier (command: POINTER): POINTER is
 		external
 			"C"
 		end
 
-	odbc_pre_immediate(desc, argNum: INTEGER): INTEGER is
+	odbc_pre_immediate (desc, argNum: INTEGER): INTEGER is
 		external
 		    "C"
 		end
@@ -1024,7 +1055,7 @@ feature {NONE} -- External features
 			tmp_date: DATE_TIME
 			type: INTEGER
 		do
-			!! tmp_str.make(1)
+			!! tmp_str.make (1)
 			i := 1
 			from
 				uht.start
@@ -1032,32 +1063,32 @@ feature {NONE} -- External features
 				uht.off
 			loop
 				type := -1
-				if obj_is_string(uht.item(uht.key_for_iteration)) then
+				if obj_is_string (uht.item (uht.key_for_iteration)) then
 					type := c_string_type
-				elseif obj_is_integer(uht.item(uht.key_for_iteration)) then
+				elseif obj_is_integer (uht.item (uht.key_for_iteration)) then
 					type := c_integer_type
-				elseif obj_is_date(uht.item(uht.key_for_iteration)) then
+				elseif obj_is_date (uht.item (uht.key_for_iteration)) then
 					type := c_date_type
-					tmp_date ?= uht.item(uht.key_for_iteration)
-				elseif obj_is_double(uht.item(uht.key_for_iteration)) then
+					tmp_date ?= uht.item (uht.key_for_iteration)
+				elseif obj_is_double (uht.item (uht.key_for_iteration)) then
 					type := c_float_type
-				elseif obj_is_real(uht.item(uht.key_for_iteration)) then
+				elseif obj_is_real (uht.item (uht.key_for_iteration)) then
 					type := c_real_type
-				elseif obj_is_character(uht.item(uht.key_for_iteration)) then
+				elseif obj_is_character (uht.item (uht.key_for_iteration)) then
 					type := c_character_type
-				elseif obj_is_boolean(uht.item(uht.key_for_iteration)) then
+				elseif obj_is_boolean (uht.item (uht.key_for_iteration)) then
 					type := c_boolean_type
 				end
 				tmp_str.wipe_out
 				if type = c_date_type  then
-					para.set(odbc_stru_of_date(tmp_date.year, tmp_date.month, tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, 2), i)
+					para.set (odbc_stru_of_date (tmp_date.year, tmp_date.month, tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, 2), i)
 				else
-					tmp_str.append((uht.item(uht.key_for_iteration)).out)
+					tmp_str.append ( (uht.item (uht.key_for_iteration)).out)
 				        tmp_c := tmp_str.to_c
-					para.set(odbc_str_from_str($tmp_c), i)
+					para.set (odbc_str_from_str ($tmp_c), i)
 				end
-			--	uhandle.status.set (odbc_set_parameter(descriptor, i, 1, type, para.get(i)))
-				uhandle.status.set (odbc_set_parameter(descriptor, uht.key_for_iteration.to_integer, 1, type, para.get(i)))
+			--	uhandle.status.set (odbc_set_parameter (descriptor, i, 1, type, para.get (i)))
+				uhandle.status.set (odbc_set_parameter (descriptor, uht.key_for_iteration.to_integer, 1, type, para.get (i)))
 				i := i + 1
 				uht.forth
 			end
@@ -1065,32 +1096,32 @@ feature {NONE} -- External features
 
 feature {NONE} -- External features
 
-   	odbc_set_parameter(no_desc, seri, direction, type: INTEGER; value: POINTER): INTEGER is
+   	odbc_set_parameter (no_desc, seri, direction, type: INTEGER; value: POINTER): INTEGER is
 		external
 		    "C"
 		end
 
-	odbc_stru_of_date(year, mon, day, hour, minute, sec, mode: INTEGER): POINTER is
+	odbc_stru_of_date (year, mon, day, hour, minute, sec, mode: INTEGER): POINTER is
 		external
 		    "C"
 		end
 
-	odbc_str_from_str(ptr: POINTER): POINTER is
+	odbc_str_from_str (ptr: POINTER): POINTER is
 		external
 		    "C"
 		end
 
-	odbc_str_len(val: POINTER): INTEGER is
+	odbc_str_len (val: POINTER): INTEGER is
 		external
 		    "C"
 		end
 
-	odbc_str_value(val: POINTER): POINTER is
+	odbc_str_value (val: POINTER): POINTER is
 		external
 		    "C"
 		end
 
-	obj_is_integer(obj: ANY): BOOLEAN is
+	obj_is_integer (obj: ANY): BOOLEAN is
 		require
 			argument_not_null: obj /= Void
 		local
@@ -1100,7 +1131,7 @@ feature {NONE} -- External features
 			Result := test /= Void
 		end
 
-	obj_is_real(obj: ANY): BOOLEAN is
+	obj_is_real (obj: ANY): BOOLEAN is
 		require
 			argument_not_null: obj /= Void
 		local
@@ -1110,7 +1141,7 @@ feature {NONE} -- External features
 			Result := test /= Void
 		end
 
-	obj_is_double(obj: ANY): BOOLEAN is
+	obj_is_double (obj: ANY): BOOLEAN is
 		require
 			argument_not_null: obj /= Void
 		local
@@ -1120,7 +1151,7 @@ feature {NONE} -- External features
 			Result := test /= Void
 		end
 
-	obj_is_string(obj: ANY): BOOLEAN is
+	obj_is_string (obj: ANY): BOOLEAN is
 		require
 			argument_not_null: obj /= Void
 		local
@@ -1130,7 +1161,7 @@ feature {NONE} -- External features
 			Result := test /= Void
 		end
 
-	obj_is_character(obj: ANY): BOOLEAN is
+	obj_is_character (obj: ANY): BOOLEAN is
 		require
 			argument_not_null: obj /= Void
 		local
@@ -1140,7 +1171,7 @@ feature {NONE} -- External features
 			Result := test /= Void
 		end
 
-	obj_is_boolean(obj: ANY): BOOLEAN is
+	obj_is_boolean (obj: ANY): BOOLEAN is
 		require
 			argument_not_null: obj /= Void
 		local
@@ -1150,7 +1181,7 @@ feature {NONE} -- External features
 			Result := test /= Void
 		end
 
-	obj_is_date(obj: ANY): BOOLEAN is
+	obj_is_date (obj: ANY): BOOLEAN is
 		require
 			argument_not_null: obj /= Void
 		local
@@ -1170,18 +1201,23 @@ feature {NONE} -- External features
 --			Result := test /= Void
 --		end
 
-	odbc_set_qualifier(qlf: POINTER) is
+	odbc_set_qualifier (qlf: POINTER) is
 		external
 			"C"
 		end
 
-	odbc_set_owner(owner: POINTER) is
+	odbc_set_owner (owner: POINTER) is
 		external
 			"C"
 		end
 
 
 	odbc_available_descriptor : INTEGER is
+		external
+			"C"
+		end
+
+	odbc_clear_error is
 		external
 			"C"
 		end

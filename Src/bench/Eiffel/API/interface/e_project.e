@@ -603,13 +603,16 @@ feature -- Update
 			-- Wait until C compilation is done.
 		local
 			path: STRING
+			l_cmd: STRING
 		do
 			if workbench_mode then
 				path := Workbench_generation_path
 			else
 				path := Final_generation_path
 			end
-			invoke_finish_freezing (path, freeze_command_name, False)
+			create l_cmd.make_from_string (Freeze_command_name)
+			l_cmd.append (" -silent")
+			invoke_finish_freezing (path, l_cmd, False)
 		end
 
 	precompile (licensed: BOOLEAN) is

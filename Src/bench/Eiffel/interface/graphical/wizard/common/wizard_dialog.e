@@ -19,7 +19,7 @@ feature -- Graphical User Interface
 
 	set_default is
 		local	
-			sep: SEPARATOR
+			sep: THREE_D_SEPARATOR
 		do
 			set_width (300);
 			!! action_form.make ("action_form", Current);
@@ -29,8 +29,8 @@ feature -- Graphical User Interface
 
 			button_form.set_fraction_base (3);
 
-			attach_left (sep, 5);
-			attach_right (sep, 5);
+			attach_left (sep, 2);
+			attach_right (sep, 2);
 
 			attach_bottom (button_form, 0);
 			attach_left (button_form, 0);

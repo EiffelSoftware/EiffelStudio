@@ -1,9 +1,6 @@
 #!/bin/sh
 # Configured by: manuelt
 # Target system: Linux + LinuxThreads (kernel threads)
-# In MT mode,gcc 2.7.2.3 thread lib. are incompatible with previous lib.
-# You should use the  run-time mt-libraries in 
-# $EIFFEL4/bench/spec/linux/lib/glibc/.
 
 d_bsdsig='undef'
 ar='ar'
@@ -12,7 +9,7 @@ eiflib='finalized'
 ld='ld'
 mt_prefix='mt'
 
-mtccflags='-D_REENTRANT -DEIF_THREADS -DEIF_LINUXTHREADS'
+mtccflags='-DEIF_THREADS -DEIF_LINUXTHREADS'
 mtlibs='-lm -lpthread'
 mtsharedlibs='-lm -lpthread'
 

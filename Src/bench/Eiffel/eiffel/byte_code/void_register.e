@@ -1,5 +1,5 @@
 -- A void register is a special entity which can be propagated to
--- avoid an expression of being put in a register. This is mainly
+-- avoid an expression from being put in a register. This is mainly
 -- used to avoid assignments in Result at the end of a function.
 
 class VOID_REGISTER 

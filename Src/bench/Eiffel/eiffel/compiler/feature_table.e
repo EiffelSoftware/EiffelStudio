@@ -1,6 +1,6 @@
 -- Class for a feature table: it is basically a hash table of entries
--- the real feature name avaible in the correponding classes, and of items
--- the feature id correponding to the names (id of instance of FEATURE_I).
+-- the real feature name available in the corresponding classes, and of items
+-- the feature id corresponding to the names (id of instance of FEATURE_I).
 
 class FEATURE_TABLE 
 

@@ -163,7 +163,7 @@ feature
 		end;
 
 	propagate (r: REGISTRABLE) is
-			-- Propagate register accross access
+			-- Propagate register across access
 		do
 			if (register = Void) and not context_type.is_basic then
 				if 	(real_type (type).c_type.same_type (r.c_type)

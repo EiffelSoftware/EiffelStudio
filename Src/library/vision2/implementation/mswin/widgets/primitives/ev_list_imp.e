@@ -392,9 +392,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			litem: WEL_LIST_VIEW_ITEM
 		do
 			create litem.make
-			if item_imp.text /= Void then
-				litem.set_text (item_imp.text)
-			end
+			litem.set_text (item_imp.text)
 			litem.set_iitem (an_index - 1)
 			litem.set_image (0)
 

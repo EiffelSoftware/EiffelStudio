@@ -4863,10 +4863,6 @@ feature -- Anchored types
 					l_anchored_features.put (l_anchor, l_rout_id)
 				end
 				l_select.forth
-
-				if not l_anchored_features.is_empty then
-					anchored_features := l_anchored_features
-				end
 			end
 		
  			debug ("ANCHORED_FEATURES")
@@ -4875,6 +4871,8 @@ feature -- Anchored types
 					print (" local + inherited generic parameters%N")
 				end
  			end
+
+			anchored_features := l_anchored_features
 		end
 
 	extend_type_set (r_id: INTEGER) is

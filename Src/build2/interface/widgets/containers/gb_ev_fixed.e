@@ -115,10 +115,10 @@ feature {GB_XML_STORE} -- Output
 			until
 				first.off
 			loop
-				temp_x_position_string := temp_x_position_string + add_leading_zeros (first.item.x_position.out)
-				temp_y_position_string := temp_y_position_string + add_leading_zeros (first.item.y_position.out)
-				temp_width_string := temp_width_string + add_leading_zeros (first.item.width.out)
-				temp_height_string := temp_height_string + add_leading_zeros (first.item.height.out)
+				temp_x_position_string := temp_x_position_string + add_leading_zeros (first.item.x_position.out, 4)
+				temp_y_position_string := temp_y_position_string + add_leading_zeros (first.item.y_position.out, 4)
+				temp_width_string := temp_width_string + add_leading_zeros (first.item.width.out, 4)
+				temp_height_string := temp_height_string + add_leading_zeros (first.item.height.out, 4)
 				first.forth
 			end
 			if not temp_x_position_string.is_empty then
@@ -134,25 +134,6 @@ feature {GB_XML_STORE} -- Output
 				add_element_containing_string (element, height_string, temp_height_string)
 			end
 		end
-		
-	add_leading_zeros (original_string: STRING): STRING is
-			-- Add leading zeros to `original_string',
-			-- so it is a valid 4 character, Integer representation.
-		require
-			original_string_length_ok: original_string.count >= 1 and original_string.count < 5
-		do
-			if original_string.count = 1 then
-				Result := "000" + original_string
-			elseif original_string.count = 2 then
-				Result := "00" + original_string
-			elseif original_string.count = 3 then
-				Result := "0" + original_string
-			end
-		ensure
-			Result_correct_length: Result.count = 4
-			Result_is_integer: Result.is_integer
-		end
-		
 		
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.

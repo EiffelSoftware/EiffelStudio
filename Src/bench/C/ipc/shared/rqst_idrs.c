@@ -169,6 +169,8 @@ struct item *exi;
 		return idr_Item (idrs, exi);
 	case DMP_OBJ:
 		return 1;
+	case DMP_VOID:
+		return 1;
 	}
 	return 0; /* not a proper dumped */
 }

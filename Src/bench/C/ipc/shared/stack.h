@@ -55,6 +55,7 @@ struct dump {
 #define DMP_OBJ		2			/* Object address */
 #define DMP_MELTED	3			/* Exception vector (same as DMP_VECT).
 									The routine is melted */
+#define DMP_VOID	4			/* No more arguments or locals to be sent. */
 
 /* Visible routine */
 extern void send_stack();		/* Send a stack dump to ewb */

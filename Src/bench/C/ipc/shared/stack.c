@@ -230,6 +230,7 @@ private struct dump *execution()
 	static struct dump dumped;			/* Item returned */
 	static int last_melted = 0;			/* True when last was melted */
 	static int arg_done = 0;			/* True when arguments processed */
+	static int loc_done = 0;			/* True when locals processed */
 	static int argn = 0;				/* Argument number */
 	static int locn = 0;				/* Local number */
 	long hack;							/* Temporary solution: 2 integers sent in one */
@@ -248,13 +249,18 @@ private struct dump *execution()
 			}
 			arg_done = 1;					/* No more arguments */
 			argn = 0;						/* Reset number for next vector */
+			dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */
+			return &dumped;					/* arguments to be sent. */
 		}
-		if (dump_mode == ST_FULL) {			/* But we need locals */
+		if (dump_mode == ST_FULL && !loc_done) {	/* But we need locals */
 			dp = local(locn++);				/* Get next local */
 			if (dp != (struct dump *) 0){	/* Got one */
 				return dp;					/* A local variable dump */
 			}
+			loc_done = 1;
 			locn = 0;						/* Reset for next vector */
+			dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */
+			return &dumped;					/* locals to be sent. */
 		}
 		dpop();							/* Remove calling context now */
 		last_melted = 0;				/* A priori, next vector not melted */
@@ -290,6 +296,7 @@ private struct dump *execution()
 		if (dc->dc_exec == top) {	/* We've reached a melted feature */
 			last_melted = 1;		/* Calling context will be popped later */
 			arg_done = 0;
+			loc_done = 0;
 			init_var_dump(dc);		/* Make this feature "active" */
 		}
 	}

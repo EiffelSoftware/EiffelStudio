@@ -21,21 +21,56 @@ namespace ISE.Compiler {
 [ClassInterfaceAttribute (ClassInterfaceType.None)]
 internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 
-	// Set console application generation
-	public void SetConsoleApplication() {
-		ApplicationKind = PEFileKinds.ConsoleApplication;
+/*
+feature -- Access
+*/
+	public bool is_verifiable;
+		// Is current code generation verifiable?
+
+/*
+feature -- Settings
+*/
+	public void set_console_application()
+		// Set console application generation
+	{
+		application_kind = PEFileKinds.ConsoleApplication;
 	}
 
-	// Set window application generation
-	public void SetWindowApplication() {
-		ApplicationKind = PEFileKinds.WindowApplication;
+	public void set_window_application()
+		// Set window application generation
+	{
+		application_kind = PEFileKinds.WindowApplication;
 	}
 
-	// Set dll generation
-	public void SetDll() {
-		ApplicationKind = PEFileKinds.Dll;
+	public void set_dll()
+		// Set dll generation
+	{
+		application_kind = PEFileKinds.Dll;
 	}
 
+	public void set_version (int build, int major, int minor, int revision)
+		// Set assembly version.
+	{
+		Version ver;
+
+		if (assembly_name == null) {
+			assembly_name = new AssemblyName();
+		}
+
+		ver = new Version (build, major, minor, revision);
+		assembly_name.Version = ver;
+	}
+
+	public void set_verifiability (bool v)
+		// Set verifiability of code generation. If `v' is True, generate
+		// verifiable code, otherwise code is not verifiable.
+	{
+		is_verifiable = v;
+	}
+
+/*
+feature -- Generation Structure
+*/
 	// Create Assembly with name `Name'.
 	public void StartAssemblyGeneration (string Name, string FName, string Location) {
 		#if DEBUG
@@ -47,18 +82,21 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 			AppDomain curAppDomain = AppDomain.CurrentDomain;
 			if (curAppDomain == null)
 				throw new ApplicationException ("Null current application domain");
-			AssemblyName assemblyName = new AssemblyName();
-			assemblyName.Name = Name;
+
+			if (assembly_name == null) {
+				assembly_name = new AssemblyName();
+			}
+			assembly_name.Name = Name;
 
 			dll_name = "lib" + Name + ".dll";
 			dll_prefix = Name;
 
 			FileStream fs = new FileStream (Location + "\\" + Name +
 											Key_filename_extension, FileMode.Open);
-//			assemblyName.KeyPair = new StrongNameKeyPair (fs);
+//			assembly_name.KeyPair = new StrongNameKeyPair (fs);
 			fs.Close();
 			FileName = FName ;
-			assembly = curAppDomain.DefineDynamicAssembly (assemblyName,
+			assembly = curAppDomain.DefineDynamicAssembly (assembly_name,
 					AssemblyBuilderAccess.Save, Location);
 			assembly.SetCustomAttribute (new CustomAttributeBuilder (
 					typeof (System.CLSCompliantAttribute).GetConstructor
@@ -489,7 +527,7 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 			Generator.Emit (OpCodes.Call, RealEntryPoint.method_builder);
 			Generator.Emit (OpCodes.Ret);
 			EntryType.CreateType();
-			assembly.SetEntryPoint (EntryPoint, ApplicationKind);
+			assembly.SetEntryPoint (EntryPoint, application_kind);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -1039,8 +1077,8 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 			{
 				NewType = TypeFromName (ParameterTypes [i]);
 				if (NewType == null)
-					throw new ApplicationException ("GenerateExternalCall: Unknown argument type: " +
-													ParameterTypes [i]);
+					throw new ApplicationException (
+						"GenerateExternalCall: Unknown argument type: " + ParameterTypes [i]);
 				Parameters [i] = NewType;
 			}
 			NewType = TypeFromName (ExternalTypeName);
@@ -1048,8 +1086,8 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 				throw new ApplicationException ("Type " + ExternalTypeName + " not found.");
 			switch (ExternalKind)
 			{
-				case 1:
-				case 10:
+				case Normal_type:
+				case Deferred_type:
 					if (IsVirtual)
 						MethodIL.Emit (OpCodes.Callvirt, NewType.GetMethod (Name,
 							BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |
@@ -1059,27 +1097,27 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 							BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |
 							BindingFlags.NonPublic, null, Parameters, null));
 					break;
-				case 2:
+				case Creator_type:
 					MethodIL.Emit (OpCodes.Newobj, NewType.GetConstructor (Parameters));
 					break;
-				case 3:
+				case Field_type:
 					MethodIL.Emit (OpCodes.Ldfld, NewType.GetField (Name));
 					break;
-				case 4:
+				case Static_field_type:
 					MethodIL.Emit (OpCodes.Ldsfld, NewType.GetField (Name));
 					break;
-				case 5:
+				case Set_field_type:
 					MethodIL.Emit (OpCodes.Stfld, NewType.GetField (Name));
 					break;
-				case 6:
+				case Set_static_field_type:
 					MethodIL.Emit (OpCodes.Stsfld, NewType.GetField (Name));
 					break;
-				case 7:
+				case Static_type:
 					MethodIL.Emit (OpCodes.Call, NewType.GetMethod (Name,
 						BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |
 						BindingFlags.NonPublic, null, Parameters, null));
 					break;
-				case 12:
+				case Creator_call_type:
 					MethodIL.Emit (OpCodes.Call, NewType.GetConstructor (Parameters));
 					break;
 				default:
@@ -1879,7 +1917,7 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 		Assembly ise_runtime_assembly;
 
 		name.Name = "ise_runtime";
-		name.Version = new Version (5,1,5,1);
+		name.Version = new Version (5,2,0,0);
 		name.SetPublicKeyToken (new byte[8] {0xde, 0xf2, 0x6f, 0x29, 0x6e, 0xfe, 0xf4, 0x69});
 		name.CultureInfo = new System.Globalization.CultureInfo ("");
 		ise_runtime_assembly = Assembly.Load (name);
@@ -1955,7 +1993,38 @@ feature {NONE} -- Implementation
 		eiffel_class.SetTypeBuilder (type);
 	}
 
-/* Private */
+	internal const int Il_i1 = 30;
+	internal const int Il_i2 = 31;
+	internal const int Il_i4 = 32;
+	internal const int Il_i8 = 33;
+	internal const int Il_r4 = 34;
+	internal const int Il_r8 = 35;
+	internal const int Il_ref = 36;
+	internal const int Il_i = 37;
+	internal const int Il_u1 = 38;
+	internal const int Il_u2 = 39;
+	internal const int Il_u4 = 40;
+	internal const int Il_u8 = 41;
+		// Constants used to generate proper opcode for Array access.
+
+	internal const int Normal_type = 1;
+	internal const int Creator_type = 2;
+	internal const int Field_type = 3;
+	internal const int Static_field_type = 4;
+	internal const int Set_field_type = 5;
+	internal const int Set_static_field_type = 6;
+	internal const int Static_type = 7;
+	internal const int Get_property_type = 8;
+	internal const int Set_property_type = 9;
+	internal const int Deferred_type = 10;
+	internal const int Operator_type = 11;
+	internal const int Creator_call_type = 12;
+	internal const int Enum_field_type = 13;
+		// Constants used to find type of .NET feature being called.
+
+/*
+feature -- Private
+*/
 	
 	// Custom attributes factory
 	private CustomAttributesFactory CAFactory;
@@ -2008,8 +2077,12 @@ feature {NONE} -- Implementation
 	private FieldInfo ResultBuilder;
 
 	// Is generated application a console application, a window application or a dll?
-	private PEFileKinds ApplicationKind;
+	private PEFileKinds application_kind;
+	private AssemblyName assembly_name;
 
+/*
+feature -- Statics
+*/
 	// Current mapped class
 	internal static int CurrentTypeID;
 
@@ -2038,57 +2111,8 @@ feature {NONE} -- Implementation
 	// Void Type
 	internal static Type VoidType = Type.GetType( "void" );
 
-	// Standard Method kind
-	internal static int MethodKind = 1;
-
-	// Standard Field Access kind
-	internal static int FieldAccessKind = 3;
-
-	// Standard Field Setting kind
-	internal static int FieldSettingKind = 5;
-
-	// Standard Constructor kind
-	internal static int CreatorKind = 2;
-
-	// Static Method kind
-	internal static int StaticMethodKind = 7;
-
-	// Static Field Access kind
-	internal static int StaticFieldAccessKind = 4;
-
-	// Static Field Setting kind
-	internal static int StaticFieldSettingKind = 6;
-
-	// Get Property kind
-	internal static int GetPropertyKind = 8;
-
-	// Set Property kind
-	internal static int SetPropertyKind = 9;
-
-	// Operator kind
-	internal static int DeferredMethodKind = 10;
-
-	// Operator kind
-	internal static int OperatorKind = 11;
-
-	// Enum kind
-	internal static int EnumFieldKind = 13;
-
 	// Eiffel `Result' keyword
 	internal static String ResultName = "Result";
-
-	internal const int Il_i1 = 30;
-	internal const int Il_i2 = 31;
-	internal const int Il_i4 = 32;
-	internal const int Il_i8 = 33;
-	internal const int Il_r4 = 34;
-	internal const int Il_r8 = 35;
-	internal const int Il_ref = 36;
-	internal const int Il_i = 37;
-	internal const int Il_u1 = 38;
-	internal const int Il_u2 = 39;
-	internal const int Il_u4 = 40;
-	internal const int Il_u8 = 41;
 
 	// Log debug information
 	internal static void Log( String text )

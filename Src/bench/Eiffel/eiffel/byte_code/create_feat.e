@@ -1,7 +1,7 @@
 indexing
 	description: "Creation of an object bounded to type of a feature during execution."
 	date: "$Date$"
-	revision: "$Revsion: $"
+	revision: "$Revision$"
 
 class CREATE_FEAT 
 
@@ -37,17 +37,25 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (f_id, f_name_id: INTEGER) is
+	make (f_id, f_rout_id: INTEGER) is
 			-- Initialize Current with `f_id' and `f_name_id'.
 		require
 			valid_f_id: f_id > 0
-			valid_f_name_id: f_name_id > 0
+			valid_f_rout_id: f_rout_id > 0
+		local
+			type_set: SEARCH_TABLE [INTEGER]
 		do
 			feature_id := f_id
-			feature_name_id := f_name_id
+			routine_id := f_rout_id
+
+			type_set := System.type_set
+			if not type_set.has (f_rout_id) then
+					-- Found a new routine id having a type table
+				type_set.force (f_rout_id)
+			end
 		ensure
 			feature_id_set: feature_id = f_id
-			feature_name_id_set: feature_name_id = f_name_id
+			routine_id_set: routine_id = f_rout_id
 		end
 		
 feature -- Access
@@ -55,17 +63,10 @@ feature -- Access
 	feature_id: INTEGER
 			-- Feature ID to create.
 
-	feature_name_id: INTEGER
-			-- Feature name index in NAMES_HEAP.
+	routine_id: INTEGER
+			-- Routine ID of feature.
 
-	rout_id: INTEGER is
-			-- Routine ID of the feature to be created
-		do
-			Result := context.current_type.base_class.feature_table.
-						item_id (feature_name_id).rout_id_set.first
-		ensure
-			routine_id_not_void: Result > 0
-		end
+feature -- C code generation
 
 	analyze is
 			-- We need Dtype(Current).
@@ -73,7 +74,7 @@ feature -- Access
 			entry: POLY_TABLE [ENTRY]
 		do
 			if context.final_mode then
-				entry := Eiffel_table.poly_table (rout_id)
+				entry := Eiffel_table.poly_table (routine_id)
 				if entry /= Void and then (not entry.has_one_type or else is_generic) then
 					context.mark_current_used
 					context.add_dt_current
@@ -92,12 +93,11 @@ feature -- Access
 			rout_info: ROUT_INFO
 			gen_type: GEN_TYPE_I
 			buffer: GENERATION_BUFFER
-			type_set: ROUT_ID_SET
 		do
 			buffer := context.buffer
 
 			if context.final_mode then
-				table := Eiffel_table.poly_table (rout_id)
+				table := Eiffel_table.poly_table (routine_id)
 
 				if table = Void then
 					-- Creation with `like feature' where
@@ -118,7 +118,7 @@ feature -- Access
 						end
 					else
 							-- Attribute is polymorphic
-						table_name := Encoder.type_table_name (rout_id)
+						table_name := Encoder.type_table_name (routine_id)
 
 						buffer.putstring ("RTFCID(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
@@ -139,19 +139,9 @@ feature -- Access
 							-- Side effect. This is not nice but
 							-- unavoidable.
 							-- Mark routine id used
-						Eiffel_table.mark_used (rout_id)
+						Eiffel_table.mark_used (routine_id)
 							-- Remember extern declaration
 						Extern_declarations.add_type_table (table_name)
-
-						-- Make sure that `rout_id' is in type_set
-
-						type_set := System.type_set
-
-						if not type_set.has (rout_id) then
-							-- We found a new routine id which was not in the
-							-- table before, we have to insert it into `type_set'
-							type_set.force (rout_id)
-						end
 					end
 				end
 			else
@@ -162,7 +152,7 @@ feature -- Access
 					buffer.putstring ("RTWPCT(")
 					buffer.generate_type_id (context.class_type.static_type_id)
 					buffer.putstring (gc_comma)
-					rout_info := System.rout_info_table.item (rout_id)
+					rout_info := System.rout_info_table.item (routine_id)
 					buffer.generate_class_id (rout_info.origin)
 					buffer.putstring (gc_comma)
 					buffer.putint (rout_info.offset)
@@ -184,29 +174,19 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for an anchored creation type.
 		local
-			feat_tbl: FEATURE_TABLE
-			feat: FEATURE_I
 			l_decl_type: CL_TYPE_I
-			l_gen_type_i: GEN_TYPE_I
+			l_type_feature: TYPE_FEATURE_I
 		do
-				-- FIXME: Manu 10/24/2001. Code is not efficient at all and could be
-				-- improved if more data were stored in Current. But this is not possible
-				-- as the data we need is not present when Current is created.
-			feat_tbl := Context.class_type.associated_class.feature_table
-			feat := feat_tbl.item_id (feature_name_id)
-			l_decl_type := il_generator.implemented_type (feat.origin_class_id,
+				-- Generate call to feature that will give the type we want to create.
+			l_type_feature := context.class_type.associated_class.anchored_features.item (routine_id)
+			il_generator.generate_current
+			l_decl_type := il_generator.implemented_type (l_type_feature.origin_class_id,
 				context.current_type)
-			il_generator.create_attribute_object (l_decl_type, feat.origin_feature_id)
-			
-				-- Fixme: Manu 1/7/2002. Should create an instance of ANCHORED_TYPE. But
-				-- for the moment we do like before we create only the instance known
-				-- at compile time.
-			l_gen_type_i ?= feat.type.actual_type.type_i
-			if l_gen_type_i /= Void then
-				il_generator.duplicate_top
-				l_gen_type_i.generate_gen_type_il (il_generator, True)
-				il_generator.assign_computed_type
-			end
+			il_generator.generate_feature_access (l_decl_type, l_type_feature.origin_feature_id, True)
+
+				-- Evaluate the computed type and create a corresponding object type.
+			il_generator.generate_current
+			il_generator.create_type
 		end
 
 feature -- Byte code generation
@@ -219,7 +199,7 @@ feature -- Byte code generation
 			if context.current_type.base_class.is_precompiled then
 				ba.append (Bc_pclike)
 				ba.append_short_integer (context.class_type.static_type_id-1)
-				rout_info := System.rout_info_table.item (rout_id)
+				rout_info := System.rout_info_table.item (routine_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
@@ -251,12 +231,11 @@ feature -- Genericity
 			table_name: STRING
 			rout_info: ROUT_INFO
 			gen_type: GEN_TYPE_I
-			type_set: ROUT_ID_SET
 		do
 			buffer.putint (Like_pfeature_type)
 			buffer.putstring (", ")
 			if context.final_mode then
-				table := Eiffel_table.poly_table (rout_id)
+				table := Eiffel_table.poly_table (routine_id)
 
 				if table = Void then
 						-- Creation with `like feature' where feature is
@@ -282,7 +261,7 @@ feature -- Genericity
 						end
 					else
 							-- Attribute is polymorphic
-						table_name := Encoder.type_table_name (rout_id)
+						table_name := Encoder.type_table_name (routine_id)
 
 						buffer.putstring ("RTFCID(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
@@ -303,19 +282,9 @@ feature -- Genericity
 							-- Side effect. This is not nice but
 							-- unavoidable.
 							-- Mark routine id used
-						Eiffel_table.mark_used (rout_id)
+						Eiffel_table.mark_used (routine_id)
 							-- Remember extern declaration
 						Extern_declarations.add_type_table (table_name)
-
-						-- Make sure that `rout_id' is in type_set
-
-						type_set := System.type_set
-
-						if not type_set.has (rout_id) then
-							-- We found a new routine id which was not in the
-							-- table before, we have to insert it into `type_set'
-							type_set.force (rout_id)
-						end
 					end
 				end
 			else
@@ -326,7 +295,7 @@ feature -- Genericity
 					buffer.putstring ("RTWPCT(")
 					buffer.generate_type_id (context.class_type.static_type_id)
 					buffer.putstring (gc_comma)
-					rout_info := System.rout_info_table.item (rout_id)
+					rout_info := System.rout_info_table.item (routine_id)
 					buffer.generate_class_id (rout_info.origin)
 					buffer.putstring (gc_comma)
 					buffer.putint (rout_info.offset)
@@ -350,13 +319,12 @@ feature -- Genericity
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
 			gen_type: GEN_TYPE_I
-			type_set: ROUT_ID_SET
 		do
 			buffer.putint (Like_pfeature_type)
 			buffer.putstring (", ")
 			dummy := idx_cnt.next
 			if context.final_mode then
-				table := Eiffel_table.poly_table (rout_id)
+				table := Eiffel_table.poly_table (routine_id)
 
 				if table = Void then
 						-- Creation with `like feature' where feature is
@@ -387,7 +355,7 @@ feature -- Genericity
 						end
 					else
 							-- Attribute is polymorphic
-						table_name := Encoder.type_table_name (rout_id)
+						table_name := Encoder.type_table_name (routine_id)
 
 						buffer.putstring ("0, ")
 						dummy := idx_cnt.next
@@ -395,19 +363,9 @@ feature -- Genericity
 							-- Side effect. This is not nice but
 							-- unavoidable.
 							-- Mark routine id used
-						Eiffel_table.mark_used (rout_id)
+						Eiffel_table.mark_used (routine_id)
 							-- Remember extern declaration
 						Extern_declarations.add_type_table (table_name)
-
-						-- Make sure that `rout_id' is in type_set
-
-						type_set := System.type_set
-
-						if not type_set.has (rout_id) then
-							-- We found a new routine id which was not in the
-							-- table before, we have to insert it into `type_set'
-							type_set.force (rout_id)
-						end
 					end
 				end
 			else
@@ -427,7 +385,7 @@ feature -- Genericity
 		do
 			dummy := idx_cnt.next
 			if context.final_mode then
-				table := Eiffel_table.poly_table (rout_id)
+				table := Eiffel_table.poly_table (routine_id)
 
 				if table = Void then
 						-- Creation with `like feature' where feature is
@@ -449,7 +407,7 @@ feature -- Genericity
 						end
 					else
 							-- Attribute is polymorphic
-						table_name := Encoder.type_table_name (rout_id)
+						table_name := Encoder.type_table_name (routine_id)
 
 						buffer.putstring ("typarr[")
 						buffer.putint (idx_cnt.value)
@@ -482,7 +440,7 @@ feature -- Genericity
 					buffer.putstring ("] = RTWPCT(")
 					buffer.generate_type_id (context.class_type.static_type_id)
 					buffer.putstring (gc_comma)
-					rout_info := System.rout_info_table.item (rout_id)
+					rout_info := System.rout_info_table.item (routine_id)
 					buffer.generate_class_id (rout_info.origin)
 					buffer.putstring (gc_comma)
 					buffer.putint (rout_info.offset)
@@ -511,7 +469,7 @@ feature -- Genericity
 			if context.current_type.base_class.is_precompiled then
 				ba.append_short_integer (Like_pfeature_type)
 				ba.append_short_integer (context.class_type.static_type_id-1)
-				rout_info := System.rout_info_table.item (rout_id)
+				rout_info := System.rout_info_table.item (routine_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
@@ -528,7 +486,7 @@ feature -- Genericity
 			table : POLY_TABLE [ENTRY]
 		do
 			if context.final_mode then
-				table := Eiffel_table.poly_table (rout_id)
+				table := Eiffel_table.poly_table (routine_id)
 
 				if table /= Void and then table.has_one_type then
 					Result ?= table.first.type
@@ -542,10 +500,9 @@ feature -- Genericity
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
 			rout_info: ROUT_INFO
-			type_set: ROUT_ID_SET
 		do
 			if context.final_mode then
-				table := Eiffel_table.poly_table (rout_id)
+				table := Eiffel_table.poly_table (routine_id)
 
 				if table = Void then
 					-- Creation with `like feature' where
@@ -562,7 +519,7 @@ feature -- Genericity
 						buffer.putint (table.first.feature_type_id - 1)
 					else
 							-- Attribute is polymorphic
-						table_name := Encoder.type_table_name (rout_id)
+						table_name := Encoder.type_table_name (routine_id)
 
 						buffer.putstring ("RTFCID(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
@@ -583,19 +540,9 @@ feature -- Genericity
 							-- Side effect. This is not nice but
 							-- unavoidable.
 							-- Mark routine id used
-						Eiffel_table.mark_used (rout_id)
+						Eiffel_table.mark_used (routine_id)
 							-- Remember extern declaration
 						Extern_declarations.add_type_table (table_name)
-
-							-- Make sure that `rout_id' is in type_set
-
-						type_set := System.type_set
-
-						if not type_set.has (rout_id) then
-								-- We found a new routine id which was not in the
-								-- table before, we have to insert it into `type_set'
-							type_set.force (rout_id)
-						end
 					end
 				end
 			else
@@ -606,7 +553,7 @@ feature -- Genericity
 					buffer.putstring ("RTWPCT(")
 					buffer.generate_type_id (context.class_type.static_type_id)
 					buffer.putstring (gc_comma)
-					rout_info := System.rout_info_table.item (rout_id)
+					rout_info := System.rout_info_table.item (routine_id)
 					buffer.generate_class_id (rout_info.origin)
 					buffer.putstring (gc_comma)
 					buffer.putint (rout_info.offset)
@@ -623,14 +570,7 @@ feature -- Genericity
 			end
 		end
 
-feature -- Debug
-
-	trace is
-		do
-			io.error.putstring (generator)
-			io.error.putstring ("  ")
-			io.error.putstring (System.names.item (feature_name_id))
-			io.error.new_line
-		end
-		
+invariant
+	inserted_in_type_set: System.type_set.has (routine_id)
+	
 end -- class CREATE_FEAT

@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			-- Connect interface.
 		do
 			base_make (an_interface)
-			-- dummy c_object
 			set_c_object (C.gtk_label_new (NULL))
 			create key
 		end

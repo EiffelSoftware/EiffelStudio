@@ -8,40 +8,34 @@ class
 
 feature -- Access
 
-	eiffel_dir: STRING			
-			-- EIFFEL installation environment variable
+	Max_path_length: INTEGER is 1024
+			-- Maximum path length (in characters)
+			--| Windows limit.
 
-feature -- Query
-
-	short_path: STRING is
-			--Short path name corresponding to eiffel_dir.
-			require
-				eiffel_dir_initialized: eiffel_dir /= Void
-			local
-				p: POINTER
-				a1, a2: ANY
-				buf, l_short_path: STRING
-				ret: INTEGER
-			once
-				create buf.make (1024)
-				a1 := eiffel_dir.to_c
-				a2 := buf.to_c
-				p := $a2
-				ret := convert_path ($a1, p, 1024)
-				if ret > 0 and ret <= 1024 then
-					create l_short_path.make_from_c (p)
-				else
-					l_short_path := eiffel_dir
-				end
-				Result := l_short_path
+	short_path (long_path: STRING): STRING is
+			-- Short path name corresponding to `long_path'.
+		require
+			non_void_long_path: long_path /= Void
+			valid_long_path: not long_path.is_empty
+		local
+			p: POINTER
+			a1, a2: ANY
+			buf: STRING
+			ret: INTEGER
+		do
+			create buf.make (Max_path_length)
+			a1 := long_path.to_c
+			a2 := buf.to_c
+			p := $a2
+			ret := convert_path ($a1, p, Max_path_length)
+			if ret > 0 and ret <= Max_path_length then
+				create Result.make_from_c (p)
+			else
+				Result := long_path
 			end
-
-feature {NONE} -- Implementation
-
-	env: EXECUTION_ENVIRONMENT is
-			-- Environment variables.
-		once
-			create Result
+		ensure
+			non_void_short_path: Result /= Void
+			valid_short_path: not Result.is_empty
 		end
 
 feature {NONE} -- Externals

@@ -200,6 +200,7 @@ feature {NONE} -- Implementation
 			code_generator.generate
 			compiler.set_ace_file_generated (code_generator.ace_file_generated)
 			compiler.set_resource_file_generated (code_generator.resource_file_generated)
+			compiler.set_makefile_generated (code_generator.makefile_generated)
 			code_generator := Void
 		end
 
@@ -216,24 +217,30 @@ feature {NONE} -- Implementation
 				Clib_folder_name.append_character (Directory_separator)
 				Clib_folder_name.append (Clib)
 				progress_report.set_title (C_client_compilation_title)
+				progress_report.set_range (1)
+				progress_report.start
 				compiler.compile_folder (Clib_folder_name)
-				compiler.link_all (Clib_folder_name, CLib_name)
+				progress_report.step
 			end
 			if not shared_wizard_environment.abort then
 				Clib_folder_name := clone (Server)
 				Clib_folder_name.append_character (Directory_separator)
 				Clib_folder_name.append (Clib)
 				progress_report.set_title (C_server_compilation_title)
+				progress_report.set_range (1)
+				progress_report.start
 				compiler.compile_folder (Clib_folder_name)
-				compiler.link_all (Clib_folder_name, CLib_name)
+				progress_report.step
 			end
 			if not shared_wizard_environment.abort then
 				Clib_folder_name := clone (Common)
 				Clib_folder_name.append_character (Directory_separator)
 				Clib_folder_name.append (Clib)
 				progress_report.set_title (C_common_compilation_title)
+				progress_report.set_range (1)
+				progress_report.start
 				compiler.compile_folder (Clib_folder_name)
-				compiler.link_all (Clib_folder_name, CLib_name)
+				progress_report.step
 			end
 
 			-- Compiling Eiffel
@@ -304,8 +311,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.empty
-		local
-			a_path2: STRING
 		do
 			initialize_subdirectory (a_path, Clib)
 			initialize_subdirectory (a_path, Include)

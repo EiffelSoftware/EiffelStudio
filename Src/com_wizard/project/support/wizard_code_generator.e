@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 
+	OPERATING_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -57,12 +62,18 @@ feature -- Access
 	Ace_file_generation: STRING is "Generating Ace and resource file"
 			-- Ace and resource file genration.
 
+	Makefile_generation: STRING is "Generating Makefiles"
+			-- Makefiles genration.
+
 	ace_file_generated: BOOLEAN
 			-- Was generated project ace file generated?
 
 	resource_file_generated: BOOLEAN
 			-- Was generated project resource file generated?
 
+	makefile_generated: BOOLEAN
+			-- Were Makefiles generated?
+			
 feature -- Basic operations
 
 	generate is
@@ -90,6 +101,10 @@ feature -- Basic operations
 			full_collect
 			if not Shared_wizard_environment.abort then
 				generate_ace_and_resource 
+			end
+			full_collect
+			if not Shared_wizard_environment.abort then
+				generate_makefiles 
 			end
 			full_collect
 			if not Shared_wizard_environment.abort then
@@ -303,6 +318,51 @@ feature -- Basic operations
 			resource_file_generated := True
 		end
 	
+	generate_makefiles is
+			-- Generate Makefiles.
+		local
+			makefile_generator: WIZARD_MAKEFILE_GENERATOR
+			Clib_folder_name: STRING
+		do
+			create makefile_generator
+			if Shared_wizard_environment.abort then
+				message_output.add_message (Current, Generation_Aborted)
+			else
+				message_output.add_message (Current, Makefile_generation)
+				progress_report.set_title (Makefile_generation)
+				execution_environment.change_working_directory (shared_wizard_environment.destination_folder)
+				progress_report.start
+				progress_report.set_range (3)
+
+				if not shared_wizard_environment.abort then
+					Clib_folder_name := clone (Client)
+					Clib_folder_name.append_character (Directory_separator)
+					Clib_folder_name.append (Clib)
+					
+					makefile_generator.generate (Clib_folder_name, CLib_name)
+					progress_report.step
+				end
+				if not shared_wizard_environment.abort then
+					Clib_folder_name := clone (Server)
+					Clib_folder_name.append_character (Directory_separator)
+					Clib_folder_name.append (Clib)
+					
+					makefile_generator.generate (Clib_folder_name, CLib_name)
+					progress_report.step
+				end
+				if not shared_wizard_environment.abort then
+					Clib_folder_name := clone (Common)
+					Clib_folder_name.append_character (Directory_separator)
+					Clib_folder_name.append (Clib)
+					
+					makefile_generator.generate (Clib_folder_name, CLib_name)
+					progress_report.step
+				end
+				
+			end
+			makefile_generated := True
+		end
+		
 end -- class WIZARD_CODE_GENERATOR
 
 --|----------------------------------------------------------------

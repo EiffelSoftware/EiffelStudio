@@ -144,7 +144,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 
 	Major_version_number: INTEGER is 5
 	Minor_version_number: INTEGER is 1
-	Build_version_number: INTEGER is 8
+	Build_version_number: INTEGER is 9
 			-- Version number
 
 	Version_number: STRING is

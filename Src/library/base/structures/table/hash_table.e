@@ -180,8 +180,10 @@ feature -- Access
 			old_control, old_position: INTEGER
 		do
 			old_control := control; old_position := position
-			search (key)
-			Result := found_item
+			internal_search (key)
+			if found then
+				Result := content.item (position)
+			end
 			control := old_control; position := old_position
 		ensure then
 			default_value_if_not_present:
@@ -194,7 +196,7 @@ feature -- Access
 			old_control, old_position: INTEGER
 		do
 			old_control := control; old_position := position
-			search (key)
+			internal_search (key)
 			Result := found
 			control := old_control; position := old_position
 		ensure then
@@ -594,7 +596,7 @@ feature -- Element change
 				not_found implies (found_item = computed_default_value) 
 					-- The reverse is not true, as we can always insert
 					-- an item with the default value, for any key.
-			
+
 			default_property:
 				has_default =
 					((key = computed_default_key) or

@@ -89,7 +89,7 @@ feature -- Status report
 
 feature -- Search
 
-	search_for_pattern is
+	search_for_pattern: BOOLEAN is
 			-- Search in the text to find the very next
 			-- occurrence of `pattern'.
 		require

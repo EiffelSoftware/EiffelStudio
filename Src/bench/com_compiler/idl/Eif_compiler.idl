@@ -98,8 +98,11 @@ interface IEiffelCompiler: IUnknown
   [helpstring ("Compiler version.")]
   HRESULT compiler_version ([out, retval] BSTR * return_value);
 
-  [helpstring ("Eiffel Installation Directory")]
+  [helpstring ("Eiffel Freeze command name")]
   HRESULT freeze_command_name ([out, retval] BSTR * return_value);
+
+  [helpstring ("Eiffel Freeze command arguments")]
+  HRESULT freeze_command_arguments ([out, retval] BSTR * return_value);
 };
 //---------------------------------------------------------------------
 

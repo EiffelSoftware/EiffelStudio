@@ -55,10 +55,10 @@ feature -- Properties
 feature -- Access
 
 	contains (p: COORD_XY): BOOLEAN is
-			-- Does line contain point `p'?
+			-- Does line contain point `p' between the
+			-- the top and bottom of line?
 		do
-			Result := p.x >= 0 and p.x <= 0 + width
-				and p.y <= bottom_left_y and p.y >= bottom_left_y - height
+			Result := p.y <= bottom_left_y and p.y >= bottom_left_y - height
 		end;
 
 feature -- Setting
@@ -72,13 +72,15 @@ feature -- Setting
 feature -- Access
 
 	clickable_figure (p: COORD_XY): TEXT_FIGURE is
-			-- Text figure that contain point `p'
+			-- Text figure that contain point `p'.
+			-- If cannot find text figure at `p' then get the
+			-- last clickable figure in line
 		require
-			valid_p: p /= Void
+			valid_point: p /= Void
 		local
 			a: like area;
 			i, c: INTEGER;
-			fig: TEXT_FIGURE
+			last_fig, fig: TEXT_FIGURE
 		do
 			from
 				c := count;
@@ -88,11 +90,22 @@ feature -- Access
 				Result /= Void or else i >= c 
 			loop
 				fig := a.item (i);
-				if fig.is_clickable and then fig.contains (p) then
-					Result ?= fig
+				if fig.contains (p) then
+					if fig.is_clickable then
+						Result ?= fig
+					else
+						i := c;
+					end
+				elseif fig.base_left_x > p.x then
+					i := c
+				elseif fig.is_clickable then 
+					last_fig := fig;
 				end;
 				i := i + 1
 			end;
+			if Result = Void then
+				Result := last_fig
+			end
 		end;
 
 	breakable_for (f: E_FEATURE; f_index: INTEGER): BREAKABLE_FIGURE is
@@ -172,8 +185,8 @@ feature -- Access
 		end;
 
 	clickable_from_end: TEXT_FIGURE is
-			-- Get first clickable searching from end of
-			-- line to start of line. Return void if not found
+			-- Get first clickable searching from point `p'
+			-- start of line. Return void if not found
 		local
 			a: like area;
 			i, c: INTEGER;
@@ -182,15 +195,14 @@ feature -- Access
 			c := count;
 			if c > 0 then
 				from
-					c := count;
 					a := area;
-					i := count - 1
+					i := c - 1
 				until
-					Result /= Void or else i = 0 
+					Result /= Void or else i < 0 
 				loop
 					fig := a.item (i);
 					if fig.is_clickable then
-						Result ?= fig
+						Result := fig
 					end;
 					i := i - 1
 				end

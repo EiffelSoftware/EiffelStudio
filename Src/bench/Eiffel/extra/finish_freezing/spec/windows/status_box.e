@@ -26,14 +26,14 @@ feature -- Initialization
 			has_error: error implies c_error or else config_error
 			valid_error: error implies not (c_error and then config_error)
 		local
-			message: ANY
+			message: WEL_STRING
 			msg_string: STRING
-			title: ANY
+			title: WEL_STRING
 			box_style: INTEGER
 			message_box_result: INTEGER
 			comspec: STRING
 		do
-			title := ("Finish Freezing Status").to_c
+			create title.make ("Finish Freezing Status")
 			
 			if error then
 				box_style := Mb_iconexclamation
@@ -61,8 +61,8 @@ feature -- Initialization
 			
 			box_style := box_style | Mb_topmost
 			
-			message := msg_string.to_c
-			message_box_result := cwin_message_box(default_pointer, $message, $title, box_style)
+			create message.make (msg_string)
+			message_box_result := cwin_message_box(default_pointer, message.item, title.item, box_style)
 			
 				-- Display Command Line Console if asked
 			if c_error and then message_box_result = Idcancel then

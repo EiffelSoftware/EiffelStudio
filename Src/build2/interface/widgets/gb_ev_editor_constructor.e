@@ -16,6 +16,19 @@ inherit
 	
 feature {NONE} -- Implementation
 
+	validate_agents: HASH_TABLE [FUNCTION [ANY, TUPLE, BOOLEAN], STRING] is
+			-- Agents to query if a property modification is permitted, accessible
+			-- via their associated name.
+		deferred
+		end
+		
+	
+	execution_agents: HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING] is
+			-- Agents to execute a property modification, accessible
+			-- via their associated name.
+		deferred
+		end
+
 	initialize_attribute_editor (editor: GB_OBJECT_EDITOR_ITEM) is
 			-- Perform common initialization on `editor'.
 		deferred

@@ -15,6 +15,17 @@ inherit
 
 feature -- Basic operations
 
+	output_debug_string (s: STRING) is
+			-- Send a string `s' to the system debugger.
+		require
+			s_not_void: s /= Void
+		local
+			a: ANY
+		do
+			a := s.to_c
+			cwin_output_debug_string ($a)
+		end
+
 	message_beep_asterisk is
 			-- Play the system asterisk waveform sound.
 		do
@@ -160,6 +171,13 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (int): EIF_BOOLEAN"
 		alias
 			"GetKeyState"
+		end
+
+	cwin_output_debug_string (s: POINTER) is
+		external
+			"C [macro <wel.h>] (LPCSTR)"
+		alias
+			"OutputDebugString"
 		end
 
 	cwel_is_win32: BOOLEAN is

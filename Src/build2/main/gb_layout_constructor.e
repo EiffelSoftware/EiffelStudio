@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			titled_window_object ?= an_object
-			Result := titled_window_object = Void
+			Result := titled_window_object = Void and an_object.layout_item /= Void
 		end
 
 	expand_layout_item (an_object: GB_OBJECT) is

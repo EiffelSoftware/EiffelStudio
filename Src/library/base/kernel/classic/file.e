@@ -255,7 +255,7 @@ feature -- Access
 			-- Will raise an exception (code `Retrieve_exception')
 			-- if content is not a stored Eiffel structure.
 		do
-			mismatch_information.do_nothing
+			(create {MISMATCH_CORRECTOR}).mismatch_information.do_nothing
 			Result := c_retrieved (descriptor)
 		end
 

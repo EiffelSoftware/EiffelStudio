@@ -31,7 +31,8 @@ feature {NONE} -- Initialization
 			tab_positioner: EV_RICH_TEXT_TAB_POSITIONER
 		do
 				-- Initialize color display to black.
-			update_color ((create {EV_STOCK_COLORS}).black)
+			last_displayed_color := (create {EV_STOCK_COLORS}).red
+			last_displayed_background_color := (create {EV_STOCK_COLORS}).red
 
 				-- Update toolbar button display.
 			format_toolbar.disable_vertical_button_style
@@ -107,7 +108,7 @@ feature {NONE} -- Initialization
 			accelerators.extend (accelerator)
 			accelerator.actions.extend (agent random_test)
 			
-				-- Initialize a test that checks teh contents of each line.
+				-- Initialize a test that checks the contents of each line.
 			create timer.make_with_interval (2000)
 			timer.actions.extend (agent check_line_positions)
 			show_actions.extend (agent window_shown)
@@ -137,7 +138,7 @@ feature {NONE} -- Event handling
 					font.set_weight ((create {EV_FONT_CONSTANTS}).weight_regular)
 				end	
 				format.set_font (font)
-				create char_info.make_with_values (False, True, False, False, False, False, False)
+				create char_info.make_with_values (False, True, False, False, False, False, False, False, False)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -165,7 +166,7 @@ feature {NONE} -- Event handling
 				font.preferred_families.wipe_out
 				font.preferred_families.extend (font_selection.selected_item.text)
 				format.set_font (font)
-				create char_info.make_with_values (True, False, False, False, False, False, False)
+				create char_info.make_with_values (True, False, False, False, False, False, False, False, False)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -196,7 +197,7 @@ feature {NONE} -- Event handling
 						font := format.font
 						font.set_height (size)
 						format.set_font (font)
-						create char_info.make_with_values (False, False, False, True, False, False, False)
+						create char_info.make_with_values (False, False, False, True, False, False, False, False, False)
 						rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 					end
 				end
@@ -233,7 +234,7 @@ feature {NONE} -- Event handling
 					font.set_shape (feature {EV_FONT_CONSTANTS}.shape_regular)
 				end
 				format.set_font (font)
-				create char_info.make_with_values (False, False, True, False, False, False, False)
+				create char_info.make_with_values (False, False, True, False, False, False, False, False, False)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -244,11 +245,11 @@ feature {NONE} -- Event handling
 					font.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
 				end
 				format.set_font (font)
+				format.set_background_color ((create {EV_STOCK_COLORS}).green)
 				rich_text.set_current_format (format)
 			end
 		end
-		
-		
+
 	color_selected is
 			-- `color_button' has been selected.
 		local
@@ -265,7 +266,7 @@ feature {NONE} -- Event handling
 				format := rich_text.character_format (rich_text.selection_start)
 				if color_dialog.selected_button.is_equal ("OK") then
 					format.set_color (color_dialog.color)
-					create char_info.make_with_values (False, False, False, False, True, False, False)
+					create char_info.make_with_values (False, False, False, False, True, False, False, False, False)
 					rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 				end
 			else
@@ -277,6 +278,34 @@ feature {NONE} -- Event handling
 			end
 		end
 		
+	background_color_selected is
+			-- Called by `select_actions' of `background_color_button'.
+		local
+			color_dialog: EV_COLOR_DIALOG
+			format: EV_CHARACTER_FORMAT
+			char_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
+		do
+			create color_dialog
+			color_dialog.show_modal_to_window (Current)
+			if color_dialog.color /= Void then
+				update_background_color (color_dialog.color)
+			end
+			if rich_text.has_selection then
+				format := rich_text.character_format (rich_text.selection_start)
+				if color_dialog.selected_button.is_equal ("OK") then
+					format.set_background_color (color_dialog.color)
+					create char_info.make_with_values (False, False, False, False, False, True, False, False, False)
+					rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
+				end
+			else
+				format := rich_text.character_format (rich_text.caret_position)
+				if color_dialog.selected_button.is_equal ("OK") then
+					format.set_background_color (color_dialog.color)
+					rich_text.set_current_format (format)
+				end
+			end
+		end	
+	
 	underline_selected is
 			-- Called by `select_actions' of `underlined_button'.
 		local
@@ -295,7 +324,7 @@ feature {NONE} -- Event handling
 					effects.disable_underlined
 				end
 				format.set_effects (effects)
-				create char_info.make_with_values (False, False, False, False, False, False, True)
+				create char_info.make_with_values (False, False, False, False, False, False, False, True, False)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -328,7 +357,7 @@ feature {NONE} -- Event handling
 					effects.disable_striked_out
 				end
 				format.set_effects (effects)
-				create char_info.make_with_values (False, False, False, False, False, True, False)
+				create char_info.make_with_values (False, False, False, False, False, False, True, False, False)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -548,6 +577,10 @@ feature {NONE} -- Implementation
 				end
 				striked_through_button.select_actions.resume
 				
+					-- Update displayed vertical character offset
+				vertical_offset.change_actions.block
+				vertical_offset.set_value (effects.vertical_offset)
+				vertical_offset.change_actions.resume
 				
 					-- Udpate displayed font size.
 				size_selection.set_text (font.height.out)
@@ -565,9 +598,13 @@ feature {NONE} -- Implementation
 					font_selection.forth
 				end
 				
-					-- Updated displayed font color.
+					-- Update displayed font color.
 				if not last_displayed_color.is_equal (format.color) then
 					update_color (format.color)
+				end
+					-- Update displayed font background color
+				if not last_displayed_background_color.is_equal (format.background_color) then
+					update_background_color (format.background_color)
 				end
 			end
 			
@@ -691,6 +728,16 @@ feature {NONE} -- Implementation
 							-- Color is not consistent throughout complete selection so display color as 
 						update_color_as_undefined
 					end
+					if formatting.background_color then
+							-- Background color is consistent throughout selection so update color display if not
+							-- already equivalent to the color.
+						if not format.background_color.is_equal (last_displayed_background_color) or background_color_undefined then
+							update_background_color (format.background_color)
+						end
+					elseif not background_color_undefined then
+							-- Color is not consistent throughout complete selection so display color as 
+						update_background_color_as_undefined
+					end
 					
 						-- Update bold display so that it is only displayed as bold if the formatting is
 						-- consistently bold.
@@ -711,6 +758,14 @@ feature {NONE} -- Implementation
 						italic_button.disable_select						
 					end
 					italic_button.select_actions.resume
+					
+					vertical_offset.change_actions.block
+					if formatting.effects_vertical_offset then
+						vertical_offset.set_value (format.effects.vertical_offset)
+					else
+						vertical_offset.remove_text
+					end
+					vertical_offset.change_actions.resume
 					
 						-- Now handle information regarding paragraphs.
 					paragraph := rich_text.selected_paragraph_format
@@ -782,21 +837,51 @@ feature {NONE} -- Implementation
 			text_size: TUPLE [INTEGER, INTEGER]
 			text_width, text_height: INTEGER
 		do
+			redraw_button (color_button, a_color, False, "Color")
+			last_displayed_color := a_color
+			color_undefined := False
+		end
+		
+	update_background_color (a_color: EV_COLOR) is
+			-- Update color displayed in background color tool bar button based on `a_color'.
+		require
+			color_not_void: a_color /= Void
+		local
+			pixmap: EV_PIXMAP
+			text_size: TUPLE [INTEGER, INTEGER]
+			text_width, text_height: INTEGER
+		do
+			redraw_button (background_color_button, a_color, False, "B Color")
+			last_displayed_background_color := a_color
+			background_color_undefined := False
+		end
+		
+	redraw_button (button: EV_TOOL_BAR_BUTTON; a_color: EV_COLOR; undefined: BOOLEAN; text: STRING) is
+			--
+		local
+			pixmap: EV_PIXMAP
+			text_size: TUPLE [INTEGER, INTEGER]
+			text_width, text_height: INTEGER
+		do
 			create pixmap
-			text_size := pixmap.font.string_size ("Color")
+			text_size := pixmap.font.string_size (text)
 			text_width := text_size.integer_32_item (1)
 			text_height := text_size.integer_32_item (2)
 			pixmap.set_size (text_width + text_height + 2, 16)
 			pixmap.set_background_color (format_toolbar.background_color)
 			pixmap.clear
-			pixmap.draw_text_top_left (text_height + 2, ((16 - text_height) // 2), "Color")
-			pixmap.set_foreground_color (a_color)
-			pixmap.fill_rectangle (1, 1 + ((16 - text_height) // 2), text_height - 2, text_height - 2)
-			color_button.set_pixmap (pixmap)
-			last_displayed_color := a_color
-			color_undefined := False
+			pixmap.draw_text_top_left (text_height + 2, ((16 - text_height) // 2), text)
+			
+			if undefined then
+				pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+				pixmap.draw_rectangle (1, 1 + ((16 - text_height) // 2), text_height - 2, text_height - 2)
+			else
+				pixmap.set_foreground_color (a_color)
+				pixmap.fill_rectangle (1, 1 + ((16 - text_height) // 2), text_height - 2, text_height - 2)
+			end
+			button.set_pixmap (pixmap)
 		end
-		
+
 	update_color_as_undefined is
 			-- Update color to display in color tool bar button as undefined
 		local
@@ -804,18 +889,19 @@ feature {NONE} -- Implementation
 			text_size: TUPLE [INTEGER, INTEGER]
 			text_width, text_height: INTEGER
 		do
-			create pixmap
-			text_size := pixmap.font.string_size ("Color")
-			text_width := text_size.integer_32_item (1)
-			text_height := text_size.integer_32_item (2)
-			pixmap.set_size (text_width + text_height + 2, 16)
-			pixmap.set_background_color (format_toolbar.background_color)
-			pixmap.clear
-			pixmap.draw_text_top_left (text_height + 2, ((16 - text_height) // 2), "Color")
-			pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-			pixmap.draw_rectangle (1, 1 + ((16 - text_height) // 2), text_height - 2, text_height - 2)
-			color_button.set_pixmap (pixmap)
+			redraw_button (color_button, Void, True, "Color")
 			color_undefined := True
+		end
+		
+	update_background_color_as_undefined is
+			-- Update color to display in background color tool bar button as undefined.
+		local
+			pixmap: EV_PIXMAP
+			text_size: TUPLE [INTEGER, INTEGER]
+			text_width, text_height: INTEGER
+		do
+			redraw_button (background_color_button, Void, True, "B Color")
+			background_color_undefined := True
 		end
 		
 	unselect_all_buttons_except (a_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
@@ -992,6 +1078,30 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	offset_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `offset'.
+		local
+			format: EV_CHARACTER_FORMAT
+			char_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
+			effects: EV_CHARACTER_FORMAT_EFFECTS
+		do
+			if rich_text.has_selection then
+				format := rich_text.character_format (rich_text.selection_start)
+				effects := format.effects
+				effects.set_vertical_offset (a_value)
+				format.set_effects (effects)
+				create char_info.make_with_values (False, False, False, False, False, False, False, False, True)
+				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
+			else
+				format := rich_text.character_format (rich_text.caret_position)
+				effects := format.effects
+				effects.set_vertical_offset (a_value)
+				format.set_effects (effects)
+				rich_text.set_current_format (format)
+			end
+			rich_text.set_focus
+		end
+		
 feature {NONE} -- Implementation
 
 	exit is
@@ -1002,9 +1112,15 @@ feature {NONE} -- Implementation
 
 	last_displayed_color: EV_COLOR
 			-- Last color displayed, stored to prevent unecessary updating of displayed color.
+
+	last_displayed_background_color: EV_COLOR
+			-- Last displayed background color, stored to prevent unecessary updating of displayed color.
 			
 	color_undefined: BOOLEAN
 			-- Is the color currently displayed undefined?
+			
+	background_color_undefined: BOOLEAN
+			-- Is the background color currently displayed undefined?
 			
 feature {NONE} -- To be removed
 

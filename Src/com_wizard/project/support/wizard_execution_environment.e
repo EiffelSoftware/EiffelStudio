@@ -12,11 +12,17 @@ feature -- Access
 	Eiffel4_location: STRING is
 			-- Location of Eiffel compiler.
 		once
-			Result := execution_environment.get (Eiffel4)
-			if Result /= Void then
-				Eiffel4_defined_cell.set_item (True)
-			else
-				Result := execution_environment.get (Eiffel5)
+			Result := execution_environment.get (Ise_eiffel)
+			if Result = Void then
+				Result := execution_environment.get (Eiffel4)
+				if Result /= Void then				
+					Eiffel4_defined_cell.set_item (True)
+				else
+					Result := execution_environment.get (Eiffel5)
+					if Result /= Void then
+						Eiffel5_defined_cell.set_item (True)
+					end
+				end
 			end
 		ensure
 			non_void_location: Result /= Void
@@ -47,10 +53,21 @@ feature -- Access
 		do
 			Result := Eiffel4_defined_cell.item
 		end
+
+	Eiffel5_defined: BOOLEAN is
+			-- Is EIFFEL5 environment variable defined?
+		do
+			Result := Eiffel5_defined_cell.item
+		end
 			
 feature {NONE} -- Implementation
 
 	Eiffel4_defined_cell: BOOLEAN_REF is
+		once
+			create Result
+		end
+
+	Eiffel5_defined_cell: BOOLEAN_REF is
 		once
 			create Result
 		end
@@ -62,10 +79,13 @@ feature {NONE} -- Implementation
 		end
 
 	Eiffel4: STRING is "EIFFEL4"
-			-- Eiffel4 environmnent variable
+			-- Eiffel4 environmnent variable.
 
 	Eiffel5: STRING is "EIFFEL5"
-			-- Eiffel5 environmnent variable
+			-- Eiffel5 environmnent variable.
+
+	Ise_eiffel: STRING is "ISE_EIFFEL"
+			-- Ise_eiffel environmnent variable.
 
 end -- class WIZARD_EXECUTION_ENVIRONMENT
 

@@ -85,6 +85,8 @@ feature {NONE} -- Implementation
 
 	process_feature (fs: FEATURE_STONE) is
 			-- Process feature stone.
+		require
+			fs_not_void: fs /= Void
 		local
 			req: COMMAND_EXECUTOR
 			cmd_string: STRING
@@ -101,6 +103,8 @@ feature {NONE} -- Implementation
 
 	process_class (cs: CLASSI_STONE) is
 			-- Process class stone.
+		require
+			cs_not_void: cs /= Void
 		local
 			req: COMMAND_EXECUTOR
 			cmd_string: STRING
@@ -120,7 +124,8 @@ feature {NONE} -- Implementation
 
 	process_class_syntax (syn: CL_SYNTAX_STONE) is
 			-- Process class syntax stone.
-			-- (from HOLE)
+		require
+			syn_not_void: syn /= Void
 		local
 			req: COMMAND_EXECUTOR
 			cmd_string: STRING
@@ -136,6 +141,8 @@ feature {NONE} -- Implementation
 
 	process_cluster (a_cluster: CLUSTER_STONE) is
 			-- Process cluster stone.
+		require
+			a_cluster_not_void: a_cluster /= Void
 		local
 			cmd_string: STRING
 			req: COMMAND_EXECUTOR
@@ -153,6 +160,8 @@ feature {NONE} -- Implementation
 			-- Find out if `fn' is a relativ path or not and if it is
 			-- one, complete it to make it absolute, so that the shell
 			-- editor will be able to load the file
+		require
+			cmd_not_void: cmd /= Void
 		local
 			target_string: STRING
 		do

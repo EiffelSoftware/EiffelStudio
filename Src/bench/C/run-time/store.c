@@ -368,24 +368,24 @@ rt_public void independent_free_store (char *object)
 rt_public EIF_POINTER *stream_malloc (EIF_INTEGER stream_size)	/*08/04/98*/
 {
 	char *buffer;
-	char **real_buffer;
+	EIF_POINTER *real_buffer = NULL;
 
 	buffer = (char *) eif_malloc(stream_size);
 	if (buffer == (char *) 0) 
 		enomem ();
 	else {
-		real_buffer = (char **) eif_malloc (sizeof (char *));
-		if (real_buffer == (char **) 0)
+		real_buffer = (EIF_POINTER *) eif_malloc (sizeof (char *));
+		if (!real_buffer) {
 			enomem ();
-		else
+		} else {
 			*real_buffer = buffer;
-			return real_buffer;
+		}
 	}
-	return (char **) 0;		/* NOTREACHED */
+	return real_buffer;
 }
 
 /* Stream deallocation */
-rt_public void stream_free (char **real_buffer)	/*08/04/98*/
+rt_public void stream_free (EIF_POINTER *real_buffer)	/*08/04/98*/
 {
 	eif_free(*real_buffer);
 	eif_free(real_buffer);

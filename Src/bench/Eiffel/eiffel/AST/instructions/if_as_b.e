@@ -17,12 +17,10 @@ inherit
 		end;	
 
 	INSTRUCTION_AS_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node,
-			find_breakable, format,
-			fill_calls_list, replicate
+			find_breakable, fill_calls_list, 
+			replicate
 		end
 
 feature -- Attributes
@@ -110,48 +108,6 @@ feature -- Debugger
 				else_part.find_breakable;
 				record_break_node;
 			end;
-		end;
-
-feature -- Formatter
-		
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute	text
-		do
-			ctxt.begin;
-			ctxt.put_breakable;
-			ctxt.put_text_item (ti_If_keyword);
-			ctxt.put_space;
-			ctxt.new_expression;
-			condition.format (ctxt);
-			ctxt.put_space;
-			ctxt.put_text_item (ti_Then_keyword);
-			if compound /= Void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
-				compound.format (ctxt);
-				ctxt.indent_one_less;
-			end;
-			ctxt.next_line;
-			ctxt.put_breakable;
-			if elsif_list /= void then	
-				ctxt.set_separator	(Void);
-				elsif_list.format (ctxt);
-				ctxt.set_separator (ti_Semi_colon);
-				ctxt.next_line;
-			end;
-			if else_part /= void then
-				ctxt.put_text_item (ti_Else_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				else_part.format (ctxt);
-				ctxt.indent_one_less;
-				ctxt.next_line;
-				ctxt.put_breakable;
-			end;
-			ctxt.put_text_item (ti_End_keyword);
-			ctxt.commit;
 		end;
 
 feature	-- Replication

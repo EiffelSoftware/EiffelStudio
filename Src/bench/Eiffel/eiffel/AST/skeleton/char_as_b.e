@@ -12,11 +12,10 @@ inherit
 		
 	ATOMIC_AS_B
 		undefine
-			good_character, simple_format, string_value,
-			is_character
+			good_character, is_character
 		redefine
 			is_character, type_check, byte_node, value_i,
-			good_character, make_character, format
+			good_character, make_character
 		end;
 
 	CHARACTER_ROUTINES
@@ -47,14 +46,6 @@ feature -- Conveniences
 			-- Character value
 		do
 		   !!Result.make (value);
-		end;
-
-	format (ctxt : FORMAT_CONTEXT_B) is
-		do
-			ctxt.always_succeed;
-			ctxt.put_text_item (ti_Quote);
-			ctxt.put_string (char_text (value));
-			ctxt.put_text_item (ti_Quote)
 		end;
 
 end -- class CHAR_AS_B

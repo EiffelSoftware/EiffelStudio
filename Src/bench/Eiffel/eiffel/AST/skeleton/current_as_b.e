@@ -13,10 +13,8 @@ inherit
 	CURRENT_AS;
 
 	ACCESS_AS_B
-		undefine
-			simple_format
 		redefine
-			type_check, byte_node, format, replicate
+			type_check, byte_node, replicate
 		end
 
 feature -- Type check and byte code
@@ -43,15 +41,6 @@ feature -- Type check and byte code
 			end;
 			Result ?= access_line.access;
 			access_line.forth;
-		end;
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-		do
-			ctxt.begin;
-			ctxt.prepare_for_current;
-			ctxt.put_string (ctxt.new_types.final_name);
-			ctxt.commit;
-			--ctxt.set_types_back_to_global;
 		end;
 
 feature -- Replication

@@ -8,11 +8,9 @@ inherit
 		end;
 
 	ATOMIC_AS_B
-		undefine
-			simple_format, string_value
 		redefine
-			type_check, byte_node, format,
-			fill_calls_list, replicate, string_value
+			type_check, byte_node, 
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -64,20 +62,6 @@ feature -- Type check, byte code, dead code removal and formatter
 		once
 			Result := context.multi_line;
 		end;
-
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			ctxt.put_text_item (ti_L_array);
-			ctxt.set_separator (ti_Comma);
-			ctxt.abort_on_failure;
-			ctxt.space_between_tokens;
-			expressions.format (ctxt);
-			ctxt.put_text_item (ti_R_array);
-			ctxt.commit
-		end;	
 
 feature	-- Replication
 

@@ -14,10 +14,8 @@ inherit
 		end;
 
 	INSTRUCTION_AS_B
-		undefine
-			simple_format
 		redefine
-			type_check, byte_node, format,
+			type_check, byte_node, 
 			fill_calls_list, replicate
 		end
 
@@ -43,23 +41,6 @@ feature -- Type check, byte code and dead code removal
 			if check_list /= Void then
 				Result.set_check_list (check_list.byte_node);
 			end;
-		end;
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute Text
-		do
-			ctxt.begin;
-			ctxt.put_breakable;
-			ctxt.put_text_item (ti_check_keyword);
-			if check_list /= void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				check_list.format (ctxt);
-				ctxt.indent_one_less;
-				ctxt.next_line;
-			end;
-			ctxt.put_text_item (ti_End_keyword);
-			ctxt.commit;
 		end;
 
 feature -- Replication

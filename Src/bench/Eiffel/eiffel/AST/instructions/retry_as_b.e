@@ -13,11 +13,8 @@ inherit
 	RETRY_AS;
 
 	INSTRUCTION_AS_B
-		undefine
-			simple_format
 		redefine
-			type_check, byte_node,
-			format
+			type_check, byte_node
 		end
 
 feature -- Type check and byte code
@@ -39,16 +36,6 @@ feature -- Type check and byte code
 				context.init_error (vxrt);
 				Error_handler.insert_error (vxrt);
 			end;
-		end;
-
-feature -- Debugger
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.put_breakable;
-			ctxt.put_text_item (ti_Retry_keyword);
-			ctxt.always_succeed;
 		end;
 
 end -- class RETRY_AS_B

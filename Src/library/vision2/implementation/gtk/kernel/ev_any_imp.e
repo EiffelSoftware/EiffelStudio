@@ -395,6 +395,11 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
+		
+	empty_tuple: TUPLE is
+		once
+			Result := []
+		end
 
 feature {NONE} -- External implementation
 

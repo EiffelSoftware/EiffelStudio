@@ -267,7 +267,7 @@ feature {NONE} -- Initialization
 
 			an_item := (ev_children @ a_position)
 			if an_item.select_actions_internal /= Void then
-				an_item.select_actions_internal.call ([])
+				an_item.select_actions_internal.call (empty_tuple)
 			end
 			if select_actions_internal /= Void then
 				select_actions_internal.call ([an_item.interface])
@@ -285,7 +285,7 @@ feature {NONE} -- Initialization
 			a_position := temp_int.item + 1
 			an_item := (ev_children @ a_position)
 			if an_item.deselect_actions_internal /= Void then
-				an_item.deselect_actions_internal.call ([])
+				an_item.deselect_actions_internal.call (empty_tuple)
 			end
 			if deselect_actions_internal /= Void then
 				deselect_actions_internal.call ([an_item.interface])
@@ -965,7 +965,8 @@ feature {NONE} -- Implementation
 	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			Result := [gtk_marshal.gtk_value_int (args)]
+			gtk_marshal.integer_tuple.put (gtk_marshal.gtk_value_int (args), 1)
+			Result := gtk_marshal.integer_tuple
 		end
 
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is

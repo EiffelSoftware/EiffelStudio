@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 				gtk_marshal.gtk_value_pointer (args)
 			)
 			if l_item.deselect_actions_internal /= Void then
-				l_item.deselect_actions_internal.call ([])
+				l_item.deselect_actions_internal.call (empty_tuple)
 			end
 
 			if deselect_actions_internal /= Void then
@@ -242,14 +242,14 @@ feature {NONE} -- Implementation
 				previous_selected_item_imp.parent = interface and then
 				previous_selected_item_imp /= selected_item_imp then
 				if previous_selected_item_imp.deselect_actions_internal /= Void then
-					previous_selected_item_imp.deselect_actions_internal.call ([])
+					previous_selected_item_imp.deselect_actions_internal.call (empty_tuple)
 				end
 			end
 			
 			if selected_item_imp.parent /= Void and then selected_item_imp.is_selected then
 					-- Parent check due to bug in combo box.
 				if selected_item_imp.select_actions_internal /= Void then
-					selected_item_imp.select_actions_internal.call ([])
+					selected_item_imp.select_actions_internal.call (empty_tuple)
 				end
 				if select_actions_internal /= Void then
 					select_actions_internal.call ([selected_item_imp.interface])

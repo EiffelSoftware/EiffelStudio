@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 		do
 			top_level_window_imp.set_focus_widget (Current)
 			if focus_in_actions_internal /= Void then
-				focus_in_actions_internal.call ([])				
+				focus_in_actions_internal.call (empty_tuple)				
 			end
 		end
 
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 				-- the user has only changed the selected item.
 			top_level_window_imp.set_focus_widget (Void)
 			if focus_out_actions_internal /= Void then
-				focus_out_actions_internal.call ([])
+				focus_out_actions_internal.call (empty_tuple)
 			end
 		end
 

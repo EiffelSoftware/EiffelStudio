@@ -133,7 +133,9 @@ feature {NONE} -- Initialization
 	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			Result := [gtk_marshal.gtk_value_pointer (args)]
+			gtk_marshal.pointer_tuple.put (gtk_marshal.gtk_value_pointer (args), 1)
+			Result := gtk_marshal.pointer_tuple
+			--	Result := [gtk_marshal.gtk_value_pointer (args)]
 		end
 
 	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
@@ -256,10 +258,10 @@ feature {NONE} -- Implementation
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
 			if a_tree_node_imp /= Void and then a_tree_node_imp /= selected_node then
 				if select_actions_internal /= Void then
-					select_actions_internal.call ([])
+					select_actions_internal.call (empty_tuple)
 				end
 				if a_tree_node_imp.select_actions_internal /= Void then
-					a_tree_node_imp.select_actions_internal.call ([])
+					a_tree_node_imp.select_actions_internal.call (empty_tuple)
 				end
 			end
 			selected_node := a_tree_node_imp
@@ -273,10 +275,10 @@ feature {NONE} -- Implementation
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
 			if a_tree_node_imp /= Void then
 				if deselect_actions_internal /= Void then
-					deselect_actions_internal.call ([])
+					deselect_actions_internal.call (empty_tuple)
 				end
 				if a_tree_node_imp.deselect_actions_internal /= Void then
-					a_tree_node_imp.deselect_actions_internal.call ([])
+					a_tree_node_imp.deselect_actions_internal.call (empty_tuple)
 				end
 			end
 		end

@@ -49,7 +49,7 @@ rt_public void mem_free(EIF_REFERENCE object)
 	uint32 flags = zone->ov_flags;
 	unsigned int nbytes = Size(Dtype(object));
 
-	if (0 == flags & (EO_OLD | EO_NEW))	/* Neither old nor new */
+	if (0 == (flags & (EO_OLD | EO_NEW)))	/* Neither old nor new */
 		return;							/* Object in scavenge zone */
 
 	gfree(zone);		/* Free object, eventually calling dispose */

@@ -372,7 +372,7 @@ feature {NONE} -- Contract support
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST}
 		end
 
-feature -- Contract support
+feature {NONE} -- Contract support
 
 	column_widths_assigned (widths: ARRAY [INTEGER]): BOOLEAN is
 			-- Are widths of columns equal to `widths'?
@@ -432,6 +432,14 @@ feature -- Contract support
 				end
 				i := i + 1
 			end
+		end
+		
+	is_parent_recursive (a_row: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN is
+			-- Is `a_row' a parent of `Current'?
+		do
+				-- As we cannot insert an EV_MULTI_COLUMN list into
+				-- an EV_MULTI_COLUMN_LIST_ROW, it must be False.
+			Result := False
 		end
 
 feature {EV_ANY_I} -- Implementation

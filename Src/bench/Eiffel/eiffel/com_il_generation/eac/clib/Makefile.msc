@@ -3,7 +3,7 @@
 MV = copy
 CC = cl
 OUTPUT_CMD = -Fo
-CFLAGS = -W0 -Ox -D_WIN32_DCOM -c -I. -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+CFLAGS = -W0 -Ox -D_WIN32_DCOM -c -I. -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include 
 
 OBJ = ecom_gce_ise_c.obj \
 ecom_gec_ise_c.obj \
@@ -105,7 +105,7 @@ ecom.lib: $(OBJ)
 	lib -OUT:$@ $(OBJ)
 	del *.obj
 
-.cpp.obj:
+.cpp.obj::
 	$(CC) $(CFLAGS) $<
 
 wecom_gce_ise_c.obj: ecom_gce_ise_c.cpp

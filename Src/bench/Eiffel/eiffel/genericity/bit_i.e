@@ -98,9 +98,7 @@ feature
 	generate_size (file: INDENT_FILE) is
 			-- Generate size of C type
 		do
-			file.putstring ("BITOFF(");
-			file.putint (size);
-			file.putstring (")");
+			file.putstring ("sizeof(EIF_REFERENCE)")
 		end;
 
 	hash_code: INTEGER is

@@ -57,6 +57,7 @@ feature -- Removal
 		do
 			go_i_th (count)
 			sl_remove
+			go_i_th (count)
 		end;
 
 feature -- Element change

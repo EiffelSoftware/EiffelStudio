@@ -1,19 +1,133 @@
 indexing
 
 	description:
-
+		"Any medium that can perform input and/or output";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class IO_MEDIUM inherit
+deferred class IO_MEDIUM 
+
+inherit
+	MEMORY
+		export
+		 {NONE} all
+		redefine
+			dispose
+		end
 
 
 feature -- Access
 
-	name: STRING
-			-- medium name
+	name: STRING is
+			-- Medium name
 		deferred
+		end;
+
+feature -- Status report
+
+	handle: INTEGER is
+			-- Handle to medium
+		require
+			valid_handle: handle_available
+		deferred
+		end;
+
+	handle_available: BOOLEAN is
+			-- Is the handle available after class has been
+			-- created?
+		deferred
+		end;
+
+	is_plain_text: BOOLEAN is
+			-- Is this file plain ASCII text?
+		do
+		end
+
+	lastchar: CHARACTER;
+			-- Last character read by `readchar'
+
+	laststring: STRING;
+			-- Last string read
+
+	lastint: INTEGER;
+			-- Last integer read by `readint'
+
+	lastreal: REAL;
+			-- Last real read by `readreal'
+
+	lastdouble: DOUBLE;
+			-- Last double read by `readdouble'
+
+	exists: BOOLEAN is
+			-- Does medium exist?
+		deferred
+		end;
+
+	is_open_read: BOOLEAN is
+			-- Is this medium opened for input
+		deferred
+		end
+
+	is_open_write: BOOLEAN is
+			-- Is this medium opened for output
+		deferred
+		end
+
+	is_readable: BOOLEAN is
+			-- Is medium readable?
+		require
+			handle_exists: exists
+		deferred
+		end;
+
+	is_executable: BOOLEAN is
+			-- Is medium executable?
+		require
+			handle_exists: exists
+		deferred
+		end;
+
+	is_writable: BOOLEAN is
+			-- Is medium writable?
+		require
+			handle_exists: exists
+		deferred
+		end;
+
+	readable: BOOLEAN is
+		require
+			handle_exists: exists
+		deferred
+		end;
+
+	extendible: BOOLEAN is
+			-- May new items be added?
+		deferred
+		end;
+
+	is_closed: BOOLEAN is
+			-- Is the I/O medium open
+		deferred
+		end;
+
+feature -- Status setting
+
+	close is
+			-- Close medium.
+		require
+			medium_is_open: not is_closed;
+		deferred
+		end;
+
+feature -- Removal
+
+	dispose is
+			-- Ensure this medium is closed when garbage collected.
+		do
+			if not is_closed then
+				close;
+			end;
 		end;
 
 feature -- Output 
@@ -40,97 +154,35 @@ feature -- Output
 		end;
 
 	putreal (r: REAL) is
-			-- Write ASCII value of `r' to medium
+			-- Write `r' to medium
 		require
 			extendible: extendible
 		deferred
 		end;
 
 	putint (i: INTEGER) is
-			-- Write ASCII value of `i' to medium.
+			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
 		end;
 	
 	putbool (b: BOOLEAN) is
-			-- Write ASCII value of `b' to medium.
+			-- Write `b' to medium.
 		require
 			extendible: extendible
 		deferred
 		end;
 	
 	putdouble (d: DOUBLE) is
-			-- Write ASCII value of `d' to medium.
+			-- Write `d' to medium.
 		require
 			extendible: extendible
 		deferred
 		end;
+
+feature -- Input 
 	
-feature -- Status report
-
-	lastchar: CHARACTER;
-			-- Last character read
-
-	laststring: STRING;
-			-- Last string read
-
-	lastint: INTEGER;
-			-- Last integer read by `readint'
-
-	lastreal: REAL;
-			-- Last real read by `readreal'
-
-	lastdouble: DOUBLE;
-			-- Last double read by `readdouble'
-
-
-	exists: BOOLEAN is
-			-- Does medium exist?
-		deferred
-		end;
-
-	is_readable: BOOLEAN is
-			-- Is medium readable?
-		require
-			handle_exists: exists
-		deferred
-		end;
-
-	is_executable: BOOLEAN is
-			-- Is medium executable?
-		require
-			handle_exists: exists
-		deferred
-		end;
-
-	is_writable: BOOLEAN is
-			-- Is medium writable?
-		require
-			descriptor_exists: exists
-		deferred
-		end;
-
-	readable: BOOLEAN is
-		require
-			descriptor_exists: exists
-		deferred
-		end;
-
-	extendible: BOOLEAN is
-			-- May new items be added?
-		deferred
-		end;
-
-
-	close is
-			-- Close medium.
-		deferred
-		end;
-
-
-feature -- Input
-
 	readreal is
 			-- Read a new real.
 			-- Make result available in `lastreal'.
@@ -165,7 +217,7 @@ feature -- Input
 
 	readstream (nb_char: INTEGER) is
 			-- Read a string of at most `nb_char' bound characters
-			-- or until end of file is encountered.
+			-- or until end of medium is encountered.
 			-- Make result available in `laststring'.
 		require
 			is_readable: readable;
@@ -173,23 +225,15 @@ feature -- Input
 		end;
 
 	readline is
-			-- read a line of characters until a new line or
-			-- end of medium
+			-- Read characters until a new line or
+			-- end of medium.
+			-- Make result available in `laststring'.
 		require
 			is_readable: readable;
 		deferred
 		end;
 			
-
-feature -- handle to medium
-
-	handle: INTEGER is
-		deferred
-		end;
-
-
 end -- class IO_MEDIUM
-
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.

@@ -128,7 +128,7 @@ feature -- Status report
 					prev := item;
 					forth
 				until
-					after
+					after or not Result
 				loop
 					Result := (prev <= item);
 					prev := item;

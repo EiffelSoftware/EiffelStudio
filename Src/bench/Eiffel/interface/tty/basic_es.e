@@ -176,6 +176,9 @@ feature -- Setting
 			else
 				output_window.open_file;
 				if not output_window.exists then
+					io.error.putstring ("Cannot create file: ");
+					io.error.putstring (filename);
+					io.error.new_line;
 					file_error := True;
 				end;
 			end;

@@ -295,6 +295,10 @@ feature -- Update
 								file_w.put_string (s);
 								file_w.close;
 								done := True
+							else
+								io.error.putstring ("Cannot create file: ");
+								io.error.putstring (file_w.name);
+								io.error.new_line;
 							end;
 						end;
 					else

@@ -30,7 +30,7 @@ feature {NONE}
 			if text_window.file_name /= Void then
 				file_name := text_window.file_name;
 			else
-				!! default_name.make_from_string (Project_directory.name);
+				!! default_name.make_from_string (Project_directory);
 				default_name.set_file_name ("Ace");
 				default_name.add_extension ("ace");
 				file_name := default_name

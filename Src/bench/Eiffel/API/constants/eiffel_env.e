@@ -340,6 +340,14 @@ feature -- Access: command name
 			Result.set_file_name (Prelink_script)
 		end
 
+	ec_command_name: FILE_NAME is
+			-- Complete path to `estudio'.
+		once
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
+			Result.set_file_name ("ec")
+		end
+
 	Estudio_command_name: FILE_NAME is
 			-- Complete path to `estudio'.
 		once

@@ -408,14 +408,14 @@ feature {NONE} -- Implementation
 
 	xt_map_widget (scr_obj: POINTER) is
 		external
-			"C (Widget) | <X11/Intrinsic.h>"
+			"C [macro <X11/Intrinsic.h>] (Widget)"
 		alias
 			"XtMapWidget"
 		end;
 
 	xt_unmap_widget (scr_obj: POINTER) is
 		external
-			"C (Widget) | <X11/Intrinsic.h>"
+			"C [macro <X11/Intrinsic.h>] (Widget)"
 		alias
 			"XtUnmapWidget"
 		end;

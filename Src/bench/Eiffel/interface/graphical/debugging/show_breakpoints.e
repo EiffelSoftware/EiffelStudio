@@ -83,6 +83,9 @@ feature -- Formatting
 
 feature -- Properties
 
+	do_simple_format: BOOLEAN
+			-- If True, only do the simple format (no clickables)
+
 	symbol: PIXMAP is
 			-- Pixmap for the button.
 		once
@@ -95,12 +98,27 @@ feature -- Properties
 			Result := bm_Dark_breakpoint
 		end;
 
+feature -- Status setting
+
+	set_format_mode (b: like do_simple_format) is
+			-- Set `do_simple_format' to `b'.
+		do	
+			do_simple_format := b
+		ensure	
+			set: do_simple_format = b
+		end
+
 feature {NONE} -- Implementation
 
 	display_info (s: FEATURE_STONE) is
 			-- Display debug format of `stone'.
 		do
-			text_window.process_text (debug_context_text (s))
+			--if do_simple_format then
+				text_window.process_text (simple_debug_context_text (s))
+			--else
+				--text_window.process_text (debug_context_text (s))
+			--end
+			-- **** FIXME make it configurable
 		end;
 	
 	display_temp_header (stone: STONE) is

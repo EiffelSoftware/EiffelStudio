@@ -24,8 +24,8 @@ cluster
 -- ES3 SPECIFIC CLUSTERS
 
 
-		--liman_common:		"$BENCH/Eiffel/limand/common";
-		--liman_bench:		"$BENCH/Eiffel/limand/bench";
+		liman_client:		"$BENCH/Eiffel/limand/client";
+		liman_shared:		"$BENCH/Eiffel/limand/shared";
 		beurk:				"$BENCH/Eiffel/beurk";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
 
@@ -117,6 +117,7 @@ cluster
 	
 		dle_switch:			"$BENCH/Eiffel/switch/dle/no_dle";
 		generation_switch:	"$BENCH/Eiffel/switch/generation/professional";
+		license_switch:		"$BENCH/Eiffel/switch/license/license";
 
 	-- Communications
 

@@ -23,7 +23,8 @@ cluster
 
 -- ES3 SPECIFIC CLUSTERS
 
-		limand:				"$BENCH/Eiffel/limand";
+		liman_client:		"$BENCH/Eiffel/limand/client";
+		liman_shared:		"$BENCH/Eiffel/limand/shared";
 		beurk:				"$BENCH/Eiffel/beurk";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
 		debugclas:			"$BENCH/Eiffel/debug";
@@ -113,6 +114,7 @@ cluster
 			end;
 		melt_only: 			"$BENCH/Eiffel/batch_bench/melt_only";
 		dle:				"$BENCH/Eiffel/dle/no_dle";
+		license_switch:		"$BENCH/Eiffel/license/no_license";
 
 	-- graphical interface (bench):
 	-- NEEDED ?

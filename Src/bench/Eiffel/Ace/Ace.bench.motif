@@ -26,7 +26,6 @@ cluster
 
 		liman_shared:		"$BENCH/Eiffel/limand/shared";
 		liman_client:		"$BENCH/Eiffel/limand/client";
-		liman_bench:		"$BENCH/Eiffel/limand/bench";
 		beurk:				"$BENCH/Eiffel/beurk";
 		compiler_support:	"$BENCH/Eiffel/support";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
@@ -120,6 +119,7 @@ cluster
 		dle_switch:			"$BENCH/Eiffel/switch/dle/dle";
 		generation_switch:	"$BENCH/Eiffel/switch/generation/professional";
 		interface_switch:	"$BENCH/Eiffel/switch/interface/graphical";
+		license_switch:		"$BENCH/Eiffel/switch/license/license";
 		tty_switch: 		"$BENCH/Eiffel/switch/tty/professional";
 
 -- INTERFACE CLUSTERS

@@ -35,7 +35,6 @@ cluster
 
 -- ES3 SPECIFIC CLUSTERS
 
-		liman_bench:		"$BENCH/Eiffel/limand/bench";
 		liman_client:		"$BENCH/Eiffel/limand/client";
 		liman_shared:		"$BENCH/Eiffel/limand/shared";
 		beurk:				"$BENCH/Eiffel/beurk";
@@ -131,6 +130,7 @@ cluster
 		dle_switch:			"$BENCH/Eiffel/switch/dle/dle";
 		generation_switch:	"$BENCH/Eiffel/switch/generation/professional";
 		interface_switch:	"$BENCH/Eiffel/switch/interface/batch_only";
+		license_switch:		"$BENCH/Eiffel/switch/license/license";
 
 -- INTERFACE CLUSTERS
 

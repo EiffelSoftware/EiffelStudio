@@ -242,11 +242,11 @@ end
 				table_name := Encoder.table_name (routine_id)
 				buf.putchar ('(')
 				real_type (type).c_type.generate_function_cast (buf, argument_types)
-				buf.putchar ('(')
+				
+					-- Generate following dispatch:
+					-- table [Actual_offset - base_offset]
 				buf.putstring (table_name)
-				buf.putchar ('-')
-				buf.putint (array_index)
-				buf.putstring (")[")
+				buf.putchar ('[')
 				if reg.is_current then
 					context.generate_current_dtype
 				else
@@ -254,7 +254,10 @@ end
 					reg.print_register
 					buf.putchar (')')
 				end
+				buf.putchar ('-')
+				buf.putint (array_index)
 				buf.putstring ("])")
+
 					-- Mark routine id used
 				Eiffel_table.mark_used (routine_id)
 					-- Remember extern declaration

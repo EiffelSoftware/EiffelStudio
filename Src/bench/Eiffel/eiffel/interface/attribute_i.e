@@ -211,11 +211,15 @@ feature -- Element Change
 				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False)
 				if array_index >= 0 then
 					table_name := Encoder.table_name (rout_id)
-					buffer.putstring ("+ (")
+					
+						-- Generate following dispatch:
+						-- table [Actual_offset - base_offset]
+					buffer.putstring (" + ")
 					buffer.putstring (table_name)
-					buffer.putchar ('-')
+					buffer.putstring ("[Dtype(Current) - ")
 					buffer.putint (array_index)
-					buffer.putstring (")[Dtype(Current)]")
+					buffer.putchar (']')
+					
 						-- Mark attribute offset table used.
 					Eiffel_table.mark_used (rout_id)
 						-- Remember external attribute offset declaration

@@ -43,7 +43,7 @@ feature
 			register := r;
 		end;
 
-	current_needed_for_access: BOOLEAN is false;
+	current_needed_for_access: BOOLEAN is False;
 			-- Current is not needed to call an external
 
 	free_register is
@@ -178,11 +178,9 @@ feature
 				else
 					type_c.generate_function_cast (buf, argument_types)
 				end
-				buf.putchar ('(');
+					-- Generate following dispatch:
+					-- table [Actual_offset - base_offset]
 				buf.putstring (table_name);
-				buf.putchar ('-');
-				buf.putint (array_index);
-				buf.putchar (')');
 				buf.putchar ('[');
 				if reg.is_current then
 					context.generate_current_dtype;
@@ -191,7 +189,10 @@ feature
 					reg.print_register;
 					buf.putchar (')');
 				end;
+				buf.putchar ('-');
+				buf.putint (array_index);
 				buf.putchar (']');
+				
 				buf.putchar (')');
 					-- Mark routine table used.
 				Eiffel_table.mark_used (routine_id);

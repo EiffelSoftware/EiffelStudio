@@ -176,6 +176,9 @@ feature -- Access
 			-- on CREATION_EXPR_AS will report a not sufficiently
 			-- exported creation routine.
 			
+	is_in_creation_call: BOOLEAN
+			-- Are we type checking the call to the creation routine?
+
 	last_conversion_info: CONVERSION_INFO
 			-- Information about last conversion
 
@@ -271,6 +274,14 @@ feature -- Setting
 			is_in_creation_expression := b
 		ensure
 			is_in_creation_expression_set: is_in_creation_expression = b
+		end
+
+	set_is_in_creation_call (b: BOOLEAN) is
+			-- Assign `b' to `is_in_creation_call'.
+		do
+			is_in_creation_call := b
+		ensure
+			is_in_creation_call_set: is_in_creation_call = b
 		end
 
 	set_is_checking_precondition (b: BOOLEAN) is

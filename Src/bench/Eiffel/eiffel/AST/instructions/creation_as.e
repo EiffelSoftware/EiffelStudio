@@ -283,6 +283,11 @@ feature -- Type check, byte code and dead code removal
 				creators := creation_class.creators
 
 				if the_call /= Void then
+						-- Set flag so that depend_unit knows it is used as a creation routine
+						-- not just a normal feature call. Flag is reset in `type_check'
+						-- of `the_call'.
+					context.set_is_in_creation_call (True)
+
 						-- Type check the call: note that the creation
 						-- type is on the type stack
 					the_call.type_check

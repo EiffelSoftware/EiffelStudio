@@ -130,7 +130,7 @@ feature -- Type check, byte code and dead code removal
 			formal_type: FORMAL_A
 			operand: OPERAND_AS
 			open_type: OPEN_TYPE_A
-			is_in_creation_expression: BOOLEAN
+			is_in_creation_expression, is_in_creation_call: BOOLEAN
 			multi: MULTI_TYPE_A
 			was_overloaded: BOOLEAN
 			l_feature_name: like feature_name
@@ -143,7 +143,9 @@ feature -- Type check, byte code and dead code removal
 				-- of the creation routine is also a creation expression we perform
 				-- a correct type checking of the VAPE errors.
 			is_in_creation_expression := context.is_in_creation_expression
+			is_in_creation_call := context.is_in_creation_call
 			context.set_is_in_creation_expression (False)
+			context.set_is_in_creation_call (False)
 
 			if last_type.is_multi_type then
 				multi ?= last_type
@@ -411,7 +413,12 @@ feature -- Type check, byte code and dead code removal
 				end
 
 					-- Supplier dependances update
-				create depend_unit.make_with_level (last_id, a_feature, context.depend_unit_level)
+				if is_in_creation_call then
+					create depend_unit.make_with_level (last_id, a_feature,
+						feature {DEPEND_UNIT}.is_in_creation_flag | context.depend_unit_level)
+				else
+					create depend_unit.make_with_level (last_id, a_feature, context.depend_unit_level)
+				end
 				context.supplier_ids.extend (depend_unit)
 	
 					-- Access managment

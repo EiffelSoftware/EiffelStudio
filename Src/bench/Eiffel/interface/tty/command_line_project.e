@@ -114,7 +114,6 @@ feature -- Update
 			project_dir: PROJECT_DIRECTORY;
 		do
 			!! project_dir.make (project_name);
-			print (project_dir.name)
 			Eiffel_project.retrieve (project_dir);
 			if Eiffel_project.retrieval_error then
 				!! temp.make (0);
@@ -128,9 +127,7 @@ feature -- Update
 					temp.append ("%Nwas interrupted. ");
 				else 
 					if Eiffel_project.incompatible_version_number.empty then
-						temp.append
-							("File `project.txt' does not exist in project directory:%N"
-)
+						temp.append ("File `project.txt' does not exist in project directory:%N")
 						temp.append (Project_directory);
 						temp.append ("%NThis file must exist. ");
 					else

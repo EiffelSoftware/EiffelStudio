@@ -118,7 +118,7 @@ remtrace precomp
 safe_md %INSTALL_DIR\precomp
 safe_md %INSTALL_DIR\precomp\spec
 cd %INSTALL_DIR\precomp\spec
-exprt -r %DEFAULT_CVS_TAG -d windows Delivery/precomp/spec/windows
+exprt -r %DEFAULT_CVS_TAG -d %ISE_PLATFORM Delivery/precomp/spec/windows
 exprt -r %DEFAULT_CVS_TAG -d dotnet Delivery/precomp/spec/dotnet
 cdd %INSTALL_DIR
 remtrace wizards

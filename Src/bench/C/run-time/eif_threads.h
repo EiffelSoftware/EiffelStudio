@@ -227,7 +227,7 @@ RT_LNK void eif_thr_exit(void);
 RT_LNK void eif_thr_yield(void);
 RT_LNK void eif_thr_join_all(void);
 RT_LNK void eif_thr_join(EIF_POINTER);
-RT_LNK void eif_thr_wait(EIF_BOOLEAN *);
+RT_LNK void eif_thr_wait(EIF_OBJECT);
 RT_LNK void eif_thr_create_with_args(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
 RT_LNK EIF_INTEGER eif_thr_default_priority(void);
 RT_LNK EIF_INTEGER eif_thr_min_priority(void);

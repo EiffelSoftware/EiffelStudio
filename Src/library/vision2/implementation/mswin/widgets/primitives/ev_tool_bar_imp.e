@@ -429,9 +429,9 @@ feature -- Basic operation
 			pre_drop_it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			
-			if pre_drop_it /= Void and then pre_drop_it.is_dragable and button = 1 and not is_dragging then
+			if pre_drop_it /= Void and then pre_drop_it.is_dockable and button = 1 and not is_dock_executing then
 				item_is_dockable_source := True
-				start_dragable (x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y, pre_drop_it.interface)
+				start_docking (x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y, pre_drop_it.interface)
 			end
 
 			if pre_drop_it /= Void and not transport_executing

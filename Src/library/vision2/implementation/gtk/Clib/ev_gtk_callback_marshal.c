@@ -55,7 +55,8 @@ void c_ev_gtk_callback_marshal (
 guint c_ev_gtk_callback_marshal_signal_connect (
     GtkObject* c_object,
     const gchar* signal,
-    EIF_OBJECT agent
+    EIF_OBJECT agent,
+    gboolean invoke_after_handler
 )
 		// Connect an `agent' to a named `signal' emmited by a GTK `c_object'.
 		// Return connection id.
@@ -72,7 +73,7 @@ guint c_ev_gtk_callback_marshal_signal_connect (
                 (GtkDestroyNotify)
                 eif_wean,                  // To call on hook disconnect.
                 FALSE,                     // This is an object signal.
-                FALSE                      // Invoke handler after the signal.
+                invoke_after_handler                      // Invoke handler after the signal.
             );
 	    return connection_id;
 }
@@ -222,6 +223,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.17  2004/06/24 17:08:24  king
+// Added extra parameter for invoking signals after default handler
+//
 // Revision 1.16  2004/03/19 23:09:27  king
 // Removed gtk_value_pointer and gtk_value_int as these are implemented inline
 //

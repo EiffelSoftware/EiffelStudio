@@ -291,14 +291,6 @@ feature -- Assertion features
 						or (str = "proportional")
 		end
 
-feature {EV_FONT_IMP} -- Implementation
-
-	c_string: ANY is
-			-- C string that represents the full system name
-		do
-			Result := system_name.to_c
-		end
-
 end -- class EV_FONT_NAME_IMP
 
 --|----------------------------------------------------------------

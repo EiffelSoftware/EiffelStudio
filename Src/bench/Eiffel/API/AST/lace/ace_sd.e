@@ -505,6 +505,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		local
 			old_clusters: ARRAYED_LIST [CLUSTER_I];
 			old_cluster, cluster: CLUSTER_I;
+			l_assembly: ASSEMBLY_I
 		do
 			from
 				old_clusters := Lace.old_universe.clusters;
@@ -514,7 +515,12 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			loop
 				old_cluster := old_clusters.item;
 				if old_cluster.is_precompiled then
-					create cluster.make_from_precompiled_cluster (old_cluster);
+					l_assembly ?= old_cluster
+					if l_assembly /= Void then
+						create {ASSEMBLY_I} cluster.make_from_precompiled_cluster (l_assembly)
+					else
+						create cluster.make_from_precompiled_cluster (old_cluster);
+					end
 					Universe.insert_cluster (cluster);
 					update_sub_clusters (cluster, old_cluster);
 				end;

@@ -85,14 +85,6 @@ feature -- Access
 
 feature -- Access
 
-	Any_id: INTEGER is
-			-- Identification for class ANY
-		require
-			compiled: Any_class.compiled
-		once
-			Result := System.any_id
-		end;
-
 	Any_class: CLASS_I is
 			-- class ANY
 		once

@@ -124,16 +124,6 @@ feature -- Basic operations
 			window.set_focus
 		end
 
-feature {WEL_DIALOG} -- Status setting
-
-	set_exists (new_value: BOOLEAN) is
-			-- Set `exists' with `new_value'.
-		do
-			exists := new_value
-		ensure
-			exists = new_value
-		end
-
 feature {WEL_COMPOSITE_WINDOW}
 
 	process_notification (notification_code: INTEGER) is
@@ -158,11 +148,10 @@ feature {WEL_DIALOG} -- Implementation
 			-- previous window procedure and set the
 			-- new one with `cwel_window_procedure_address'
 		do
-			-- Keep the previous one
+				-- Keep the previous one
 			default_window_procedure := cwel_integer_to_pointer (
-				cwin_get_window_long (item,
-				Gwl_wndproc))
-			-- Set the new one
+				cwin_get_window_long (item, Gwl_wndproc))
+				-- Set the new one
 			cwin_set_window_long (item, Gwl_wndproc,
 				cwel_pointer_to_integer (cwel_window_procedure_address))
 		end
@@ -171,6 +160,12 @@ feature {WEL_DIALOG} -- Implementation
 		do
 			Result := cwin_call_window_proc (default_window_procedure,
 				item, msg, wparam, lparam)
+		end
+
+	destroy_from_dialog is
+			-- Destroy item and removes it from WEL_WINDOW_MANAGER.
+		do
+			destroy_item
 		end
 
 feature {NONE} -- Externals

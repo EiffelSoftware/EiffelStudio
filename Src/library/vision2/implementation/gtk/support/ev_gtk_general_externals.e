@@ -85,6 +85,11 @@ feature {NONE} -- code in the glue library
 			"C (GtkObject *, const gchar *) | <gtk/gtk.h>"
 		end
 
+	gtk_signal_lookup (signal_name: POINTER; object_type: INTEGER): BOOLEAN is
+		external
+			"C (const gchar *, GtkType): EIF_BOOLEAN | <gtk/gtk.h>"
+		end
+
 	c_free_call_back_block (p: POINTER) is
 		external
 			"C | %"gtk_eiffel.h%""

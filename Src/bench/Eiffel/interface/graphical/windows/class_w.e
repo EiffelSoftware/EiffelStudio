@@ -11,7 +11,6 @@ inherit
 
 	BAR_AND_TEXT
 		rename
-			attach_all as default_attach_all,
 			reset as old_reset, 
 			close_windows as old_close_windows,
 			set_stone as old_set_stone
@@ -34,7 +33,7 @@ inherit
 			tool_name, open_cmd_holder, save_cmd_holder,
 			save_as_cmd_holder, editable,
 			build_edit_bar, create_edit_buttons, reset,
-			set_default_size, build_widgets, attach_all,
+			set_default_size, build_widgets,
 			close_windows, resize_action, stone_type,
 			synchronize, set_stone, process_class_syntax,
 			process_feature, process_class, process_classi,
@@ -42,7 +41,7 @@ inherit
 			set_editable_text_window, has_editable_text, read_only_text_window,
 			set_read_only_text_window
 		select
-			reset, attach_all, close_windows, set_stone
+			reset, close_windows, set_stone
 		end
 
 creation
@@ -271,8 +270,6 @@ feature -- Formats
 
 	showexported_frmt_holder: FORMAT_HOLDER;
 
-	showcustom_frmt_holder: FORMAT_HOLDER;
-
 feature -- Grahpical Interface
 
 	build_widgets is
@@ -286,26 +283,10 @@ feature -- Grahpical Interface
 			build_bar;
 			!! format_bar.make (new_name, global_form);
 			build_format_bar;
-			!! command_bar.make (new_name, global_form);
 			build_command_bar;
 			fill_menus;
 			set_last_format (default_format);
 			attach_all 
-		end;
-
-	attach_all is
-		do
-			default_attach_all;
-			global_form.detach_right (editable_text_window.widget);
-			global_form.attach_right_widget (command_bar, editable_text_window.widget, 0);
-			if editable_text_window /= read_only_text_window then
-				global_form.detach_right (read_only_text_window.widget);
-				global_form.attach_right_widget (command_bar, read_only_text_window.widget, 0);
-			end;
-			global_form.attach_right (command_bar, 0);
-			global_form.attach_bottom_widget (format_bar, command_bar, 0);
-			global_form.attach_top_widget (edit_bar, command_bar, 0);
-			global_form.attach_right (format_bar, 0);
 		end;
 
 	raise_shell_popup is
@@ -386,11 +367,6 @@ feature {NONE} -- Commands
 
 	filter_cmd_holder: COMMAND_HOLDER
 
-feature {NONE} -- Forms And Holes
-
-	command_bar: FORM;
-			-- Bar with the command buttons
-
 feature {NONE} -- Implementation; Graphical Interface
 
 	create_edit_buttons is
@@ -400,7 +376,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			quit_menu_entry: EB_MENU_ENTRY;
 			exit_menu_entry: EB_MENU_ENTRY;
 			change_font_cmd: CHANGE_FONT;
-			change_font_button: EB_BUTTON;
 			change_font_menu_entry: EB_MENU_ENTRY;
 			search_cmd: SEARCH_STRING;
 			search_button: EB_BUTTON;
@@ -412,7 +387,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			save_button: EB_BUTTON;
 			save_menu_entry: EB_MENU_ENTRY;
 			save_as_cmd: SAVE_AS_FILE;
-			save_as_button: EB_BUTTON;
 			save_as_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR;
 			history_list_cmd: LIST_HISTORY
@@ -427,9 +401,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! save_menu_entry.make (save_cmd, file_menu);
 			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry);
 			!! save_as_cmd.make (text_window);
-			!! save_as_button.make (save_as_cmd, edit_bar);
 			!! save_as_menu_entry.make (save_as_cmd, file_menu);
-			!! save_as_cmd_holder.make (save_as_cmd, save_as_button, save_as_menu_entry);
+			!! save_as_cmd_holder.make_plain (save_as_cmd);
+			save_as_cmd_holder.set_menu_entry (save_as_menu_entry);
 			!! quit_cmd.make (text_window);
 			!! quit_button.make (quit_cmd, edit_bar);
 			!! sep.make (new_name, file_menu);
@@ -439,12 +413,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
 			exit_cmd_holder.set_menu_entry (exit_menu_entry);
 			!! change_font_cmd.make (text_window);
-			!! change_font_button.make (change_font_cmd, edit_bar);
-			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
-			end;
 			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
-			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
+			!! change_font_cmd_holder.make_plain (change_font_cmd);
+			change_font_cmd_holder.set_menu_entry (change_font_menu_entry);
 			!! search_cmd.make (Current);
 			!! search_button.make (search_cmd, edit_bar);
 			!! search_menu_entry.make (search_cmd, edit_menu);
@@ -471,28 +442,32 @@ feature {NONE} -- Implementation; Graphical Interface
 			sep: SEPARATOR;
 			history_list_cmd: LIST_HISTORY
 		do
-			!! shell_cmd.make (command_bar, text_window);
-			!! shell_button.make (shell_cmd, command_bar);
+			!! shell_cmd.make (edit_bar, text_window);
+			!! shell_button.make (shell_cmd, edit_bar);
 			shell_button.add_button_press_action (3, shell_cmd, Void);
 			!! shell_menu_entry.make (shell_cmd, special_menu);
 			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
 			!! filter_cmd.make (Current);
-			!! filter_button.make (filter_cmd, command_bar);
-			filter_button.add_button_press_action (3, filter_cmd, Void);
+
+				--| filter_button.add_button_press_action (3, filter_cmd, Void);
+				--| Keep this comment! (I need it, Guus)
+
 			!! sep.make (new_name, special_menu);
 			!! filter_menu_entry.make (filter_cmd, special_menu);
-			!! filter_cmd_holder.make (filter_cmd, filter_button, filter_menu_entry);
+			!! filter_cmd_holder.make_plain (filter_cmd);
+			filter_cmd_holder.set_menu_entry (filter_menu_entry);
+
 			!! current_target_cmd.make (text_window);
-			!! current_target_button.make (current_target_cmd, command_bar);
 			!! sep.make (new_name, special_menu);
 			!! current_target_menu_entry.make (current_target_cmd, special_menu);
-			!! current_target_cmd_holder.make (current_target_cmd, current_target_button, current_target_menu_entry);
+			!! current_target_cmd_holder.make_plain (current_target_cmd);
+			current_target_cmd_holder.set_menu_entry (current_target_menu_entry);
 			!! next_target_cmd.make (text_window);
-			!! next_target_button.make (next_target_cmd, command_bar);
+			!! next_target_button.make (next_target_cmd, edit_bar);
 			!! next_target_menu_entry.make (next_target_cmd, special_menu);
 			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry);
 			!! previous_target_cmd.make (text_window);
-			!! previous_target_button.make (previous_target_cmd, command_bar);
+			!! previous_target_button.make (previous_target_cmd, edit_bar);
 			!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
 			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry);
 
@@ -500,74 +475,62 @@ feature {NONE} -- Implementation; Graphical Interface
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
-			command_bar.attach_left (shell_button, 0);
-			command_bar.attach_bottom (shell_button, 10);
-			command_bar.attach_left (filter_button, 0);
-			command_bar.attach_right (filter_button, 0);
-			command_bar.attach_bottom_widget (shell_button, filter_button, 0);
-			command_bar.attach_left (current_target_button, 0);
-			command_bar.attach_bottom_widget (filter_button, current_target_button, 10);
-			command_bar.attach_left (next_target_button, 0);
-			command_bar.attach_bottom_widget (current_target_button, next_target_button, 0);
-			command_bar.attach_left (previous_target_button, 0);
-			command_bar.attach_bottom_widget (next_target_button, previous_target_button, 0)
+			edit_bar.attach_left_widget (hole_button, shell_button, 0);
+			edit_bar.attach_top (shell_button, 0);
+
+			edit_bar.attach_top (next_target_button, 0);
+			edit_bar.attach_top (previous_target_button, 0);
+			edit_bar.attach_right_widget (class_text_field, previous_target_button, 2);
+			edit_bar.attach_right_widget (previous_target_button, next_target_button, 0)
 		end;
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		local
 			anc_cmd: SHOW_ANCESTORS;
-			anc_button: EB_BUTTON;
+			anc_button: FORMAT_BUTTON;
 			anc_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			des_cmd: SHOW_DESCENDANTS;
-			des_button: EB_BUTTON;
+			des_button: FORMAT_BUTTON;
 			des_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			cli_cmd: SHOW_CLIENTS;
-			cli_button: EB_BUTTON;
+			cli_button: FORMAT_BUTTON;
 			cli_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			sup_cmd: SHOW_SUPPLIERS;
-			sup_button: EB_BUTTON;
+			sup_button: FORMAT_BUTTON;
 			sup_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			att_cmd: SHOW_ATTRIBUTES;
-			att_button: EB_BUTTON;
+			att_button: FORMAT_BUTTON;
 			att_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			rou_cmd: SHOW_ROUTINES;
-			rou_button: EB_BUTTON;
+			rou_button: FORMAT_BUTTON;
 			rou_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			def_cmd: SHOW_DEFERREDS;
-			def_button: EB_BUTTON;
+			def_button: FORMAT_BUTTON;
 			def_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			ext_cmd: SHOW_EXTERNALS;
-			ext_button: EB_BUTTON;
+			ext_button: FORMAT_BUTTON;
 			ext_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			onc_cmd: SHOW_ONCES;
-			onc_button: EB_BUTTON;
+			onc_button: FORMAT_BUTTON;
 			onc_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			exp_cmd: SHOW_EXPORTED;
-			exp_button: EB_BUTTON;
+			exp_button: FORMAT_BUTTON;
 			exp_menu_entry: EB_TICKABLE_MENU_ENTRY;
-			cus_cmd: DUMMY_CMD;
-			--cus_cmd: SHOW_CUSTOM;
-			-- FIXME: ************************
-			-- Problems with CUSTOM_W
-			-- a) not implemented
-			-- b) Isn't redesigned yet.
-			cus_button: EB_BUTTON;
-			cus_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			tex_cmd: SHOW_TEXT;
-			tex_button: EB_BUTTON;
+			tex_button: FORMAT_BUTTON;
 			tex_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			fla_cmd: SHOW_FLAT;
-			fla_button: EB_BUTTON;
+			fla_button: FORMAT_BUTTON;
 			fla_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			fs_cmd: SHOW_FS;
-			fs_button: EB_BUTTON;
+			fs_button: FORMAT_BUTTON;
 			fs_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			sho_cmd: SHOW_SHORT;
-			sho_button: EB_BUTTON;
+			sho_button: FORMAT_BUTTON;
 			sho_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			click_cmd: SHOW_CLICK_CL;
-			click_button: EB_BUTTON;
+			click_button: FORMAT_BUTTON;
 			click_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			sep: SEPARATOR
 		do
@@ -634,11 +597,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! onc_button.make (onc_cmd, format_bar);
 			!! onc_menu_entry.make (onc_cmd, format_menu);
 			!! showonces_frmt_holder.make (onc_cmd, onc_button, onc_menu_entry);
-			!! cus_cmd.make (text_window);
-			!! cus_button.make (cus_cmd, format_bar);
-			cus_button.add_button_press_action (3, cus_cmd, cus_cmd);
-			!! cus_menu_entry.make (cus_cmd, format_menu);
-			!! showcustom_frmt_holder.make (cus_cmd, cus_button, cus_menu_entry);
 
 				-- And now we attach everything (this is done this way
 				-- because of speed)
@@ -670,9 +628,8 @@ feature {NONE} -- Implementation; Graphical Interface
 			format_bar.attach_right_widget (ext_button, onc_button, 0);
 			format_bar.attach_top (ext_button, 0);
 			format_bar.attach_right_widget (exp_button, ext_button, 0);
-			format_bar.attach_right_widget (cus_button, exp_button, 0);
-			format_bar.attach_top (cus_button, 0);
-			format_bar.attach_right (cus_button, 0);
+			format_bar.attach_top (exp_button, 0);
+			format_bar.attach_right (exp_button, 0);
 		end;
 
 	build_edit_bar is
@@ -693,14 +650,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			edit_bar.attach_right_widget (open_cmd_holder.associated_button, class_text_field, 2);
 			edit_bar.attach_right (quit.associated_button, 0);
 			edit_bar.attach_top (quit.associated_button, 0);
-			edit_bar.attach_top (change_font_cmd_holder.associated_button, 0);
-			edit_bar.attach_right_widget (quit.associated_button, change_font_cmd_holder.associated_button, 5);
 			edit_bar.attach_top (search_cmd_holder.associated_button, 0);
-			edit_bar.attach_right_widget (change_font_cmd_holder.associated_button, search_cmd_holder.associated_button, 0);
-			edit_bar.attach_top (save_as_cmd_holder.associated_button, 0);
-			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_as_cmd_holder.associated_button, 0);
+			edit_bar.attach_right_widget (quit.associated_button, search_cmd_holder.associated_button, 5);
 			edit_bar.attach_top (save_cmd_holder.associated_button, 0);
-			edit_bar.attach_right_widget (save_as_cmd_holder.associated_button, save_cmd_holder.associated_button, 0);
+			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_cmd_holder.associated_button, 0);
 			edit_bar.attach_top (open_cmd_holder.associated_button, 0);
 			edit_bar.attach_right_widget (save_cmd_holder.associated_button, open_cmd_holder.associated_button, 0)
 		end;

@@ -269,16 +269,12 @@ feature {NONE} -- Implementation; Graphical Interface
 				search_cmd_holder.set_button (search_button)
 			end;
 			!! change_font_cmd.make (text_window);
-			!! change_font_button.make (change_font_cmd, edit_bar);
-			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
-			end;
 			if show_menus then
 				!! change_font_menu_entry.make (change_font_cmd, preference_menu);
-				!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry)
+				!! change_font_cmd_holder.make_plain (change_font_cmd);
+				change_font_cmd_holder.set_menu_entry (change_font_menu_entry)
 			else
 				!! change_font_cmd_holder.make_plain (change_font_cmd);
-				change_font_cmd_holder.set_button (change_font_button)
 			end;
 			!! quit_cmd.make (text_window);
 			!! quit_button.make (quit_cmd, edit_bar);
@@ -298,21 +294,21 @@ feature {NONE} -- Implementation; Graphical Interface
 			edit_bar.attach_left (hole_button, 0);
 			edit_bar.attach_top (hole_button, 0);
 			edit_bar.attach_top (search_button, 0);
-			edit_bar.attach_top (change_font_button, 0);
 			edit_bar.attach_top (quit_button, 0);
-			edit_bar.attach_right_widget (change_font_button, search_button, 0);
-			edit_bar.attach_right_widget (quit_button, change_font_button, 5);
 			edit_bar.attach_right (quit_button, 0);
+			edit_bar.detach_left (quit_button);
+			edit_bar.attach_right_widget (quit_button, search_button, 5);
+			edit_bar.detach_left (search_button)
 		end;
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		local
 			once_cmd: SHOW_ONCE_RESULTS;
-			once_button: EB_BUTTON;
+			once_button: FORMAT_BUTTON;
 			once_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			attr_cmd: SHOW_ATTR_VALUES;
-			attr_button: EB_BUTTON;
+			attr_button: FORMAT_BUTTON;
 			attr_menu_entry: EB_TICKABLE_MENU_ENTRY;
 		do
 				-- First we create all objects.
@@ -339,6 +335,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			format_bar.attach_top (attr_button, 0);
 			format_bar.attach_left (attr_button, 0);
 			format_bar.attach_top (once_button, 0);
+			format_bar.detach_right (attr_button);
 			format_bar.attach_left_widget (attr_button, once_button,0)
 		end;
 
@@ -355,7 +352,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			build_bar;
 			!! format_bar.make (new_name, global_form);
 			build_format_bar;
-			!! command_bar.make (new_name, global_form);
 			build_command_bar;
 			if show_menus then
 				fill_menus
@@ -365,6 +361,8 @@ feature {NONE} -- Implementation; Graphical Interface
 		end;
 
 	attach_all is
+		local
+			separator: SEPARATOR
 		do
 			if show_menus then
 				global_form.attach_left (menu_bar, 0);
@@ -382,19 +380,17 @@ feature {NONE} -- Implementation; Graphical Interface
 
 			global_form.attach_left (text_window.widget, 0);
 			global_form.attach_right (text_window.widget, 0);
-			global_form.attach_bottom_widget (format_bar, text_window.widget, 0);
-			global_form.attach_top_widget (edit_bar, text_window.widget, 0);
+			global_form.attach_bottom (text_window.widget, 0);
+			global_form.attach_top_widget (format_bar, text_window.widget, 0);
+
+			!! separator.make ("", global_form);
+			global_form.attach_left (separator, 0);
+			global_form.attach_right (separator, 0);
+			global_form.attach_top_widget (edit_bar, separator, 1);
 
 			global_form.attach_left (format_bar, 0);
 			global_form.attach_right (format_bar, 0);
-			global_form.attach_bottom (format_bar, 0);
-
-			global_form.detach_right (text_window.widget);
-			global_form.attach_right (command_bar, 0);
-			global_form.attach_bottom (command_bar, 0);
-			global_form.attach_right_widget (command_bar, text_window.widget, 0);
-			global_form.attach_top_widget (edit_bar, command_bar, 0);
-			global_form.attach_right_widget (command_bar, format_bar, 0);
+			global_form.attach_top_widget (separator, format_bar, 1)
 		end;
 
 	build_command_bar is
@@ -406,7 +402,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			next_target_button: EB_BUTTON;
 			next_target_menu_entry: EB_MENU_ENTRY;
 			current_target_cmd: CURRENT_OBJECT;
-			current_target_button: EB_BUTTON;
 			current_target_menu_entry: EB_MENU_ENTRY;
 			slice_cmd: SLICE_COMMAND;
 			slice_button: EB_BUTTON;
@@ -415,8 +410,8 @@ feature {NONE} -- Implementation; Graphical Interface
 			history_list_cmd: LIST_HISTORY
 		do
 				-- Here we create all objects needed for the attachments.
-			!! slice_cmd.make (command_bar, Current);
-			!! slice_button.make (slice_cmd, command_bar);
+			!! slice_cmd.make (format_bar, Current);
+			!! slice_button.make (slice_cmd, format_bar);
 			slice_button.add_button_press_action (3, slice_cmd, Void);
 			if show_menus then
 				!! slice_menu_entry.make_button_only (slice_cmd, special_menu);
@@ -427,17 +422,16 @@ feature {NONE} -- Implementation; Graphical Interface
 				slice_cmd_holder.set_button (slice_button)
 			end;
 			!! current_target_cmd.make (text_window);
-			!! current_target_button.make (current_target_cmd, command_bar);
 			if show_menus then
 				!! sep.make (new_name, special_menu);
 				!! current_target_menu_entry.make (current_target_cmd, special_menu);
-				!! current_target_cmd_holder.make (current_target_cmd, current_target_button, current_target_menu_entry);
-			else
 				!! current_target_cmd_holder.make_plain (current_target_cmd);
-				current_target_cmd_holder.set_button (current_target_button)
+				current_target_cmd_holder.set_menu_entry (current_target_menu_entry)
+			else
+				!! current_target_cmd_holder.make_plain (current_target_cmd)
 			end;
 			!! next_target_cmd.make (text_window);
-			!! next_target_button.make (next_target_cmd, command_bar);
+			!! next_target_button.make (next_target_cmd, edit_bar);
 			if show_menus then
 				!! next_target_menu_entry.make (next_target_cmd, special_menu);
 				!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry);
@@ -446,7 +440,7 @@ feature {NONE} -- Implementation; Graphical Interface
 				next_target_cmd_holder.set_button (next_target_button)
 			end;
 			!! previous_target_cmd.make (text_window);
-			!! previous_target_button.make (previous_target_cmd, command_bar);
+			!! previous_target_button.make (previous_target_cmd, edit_bar);
 			if show_menus then
 				!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
 				!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry);
@@ -460,18 +454,14 @@ feature {NONE} -- Implementation; Graphical Interface
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
 				-- Here we do the attachments (for reasons of speed).
-			command_bar.attach_left (slice_button, 0);
-			command_bar.attach_right (slice_button, 0);
-			command_bar.attach_bottom (slice_button, 0)
-			command_bar.attach_left (current_target_button, 0);
-			command_bar.attach_right (current_target_button, 0);
-			command_bar.attach_bottom_widget (slice_button, current_target_button, 10)
-			command_bar.attach_left (next_target_button, 0);
-			command_bar.attach_right (next_target_button, 0);
-			command_bar.attach_bottom_widget (current_target_button, next_target_button, 0);
-			command_bar.attach_left (previous_target_button, 0);
-			command_bar.attach_right (previous_target_button, 0);
-			command_bar.attach_bottom_widget (next_target_button, previous_target_button, 0);
+			format_bar.attach_right (slice_button, 1);
+			format_bar.attach_top (slice_button, 0);
+			format_bar.detach_left (slice_button);
+
+			edit_bar.attach_left_widget (hole_button, previous_target_button, 10);
+			edit_bar.attach_top (next_target_button, 0);
+			edit_bar.attach_left_widget (previous_target_button, next_target_button, 0);
+			edit_bar.attach_top (previous_target_button, 0)
 		end;
 
 feature {NONE} -- Properties

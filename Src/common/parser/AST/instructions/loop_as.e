@@ -84,7 +84,7 @@ feature {AST_EIFFEL} -- Output
 			ctxt.put_text_item (ti_From_keyword);
 			ctxt.set_separator (ti_Semi_colon);
 			ctxt.set_new_line_between_tokens;
-			if from_part /= void then
+			if from_part /= Void then
 				ctxt.indent;
 				ctxt.new_line;
 				ctxt.format_ast (from_part);
@@ -102,7 +102,7 @@ feature {AST_EIFFEL} -- Output
 				ctxt.new_line;
 				ctxt.exdent;
 			end;
-			if variant_part /= void then
+			if variant_part /= Void then
 				ctxt.put_text_item (ti_Variant_keyword);
 				ctxt.indent;
 				ctxt.new_line;
@@ -113,11 +113,13 @@ feature {AST_EIFFEL} -- Output
 			ctxt.put_text_item (ti_Until_keyword);
 			ctxt.indent;
 			ctxt.new_line;
+			ctxt.new_expression
+			ctxt.begin
 			ctxt.format_ast (stop);
 			ctxt.exdent;
 			ctxt.new_line;
 			ctxt.put_text_item (ti_Loop_keyword);
-			if compound /= void then
+			if compound /= Void then
 				ctxt.indent;
 				ctxt.new_line;
 				ctxt.format_ast (compound);

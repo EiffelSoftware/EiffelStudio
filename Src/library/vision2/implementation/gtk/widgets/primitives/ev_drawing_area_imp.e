@@ -146,7 +146,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				feature {EV_GTK_EXTERNALS}.GTK_WIDGET_UNSET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 				if focus_in_actions_internal /= Void then
 					focus_in_actions_internal.resume
-					focus_in_actions_internal.call (App_implementation.Empty_tuple)
+					focus_in_actions_internal.call (Void)
 				end
 			end
 		end

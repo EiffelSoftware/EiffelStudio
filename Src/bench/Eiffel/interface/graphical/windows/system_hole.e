@@ -96,7 +96,7 @@ feature {NONE} -- Execution
 			if is_system_tool_created and then tool = System_tool then
 				tool.synchronize
 			elseif Project_tool.initialized then
-				if Eiffel_ace.file_name = void then
+				if Eiffel_ace.file_name = Void then
 					if argument /= Void and then argument = last_name_chooser then
 						fn := clone (last_name_chooser.selected_file);
 						if not fn.empty then
@@ -129,6 +129,7 @@ feature {NONE} -- Execution
 					end;	
 				else
 					!! system_stone;
+					system_tool.force_raise
 					system_tool.display;
 					system_tool.process_system (system_stone);
 				end;

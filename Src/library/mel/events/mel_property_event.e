@@ -13,7 +13,7 @@ inherit
 
 	MEL_EVENT
 
-creation
+create
 	make
 
 feature -- Access
@@ -27,7 +27,7 @@ feature -- Access
 	atom: MEL_ATOM is
 			-- Name of property involved
         do
-			!! Result.make_from_existing (c_event_atom (handle));
+			create Result.make_from_existing (c_event_atom (handle));
 		ensure
 			result_not_void: Result /= Void
         end;

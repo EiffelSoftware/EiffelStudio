@@ -11,7 +11,7 @@ inherit
 
 	MT_CLASS_STREAM_EXTERNAL
 	
-creation {MT_CLASS, DB_PROC_MAT} 
+create {MT_CLASS, DB_PROC_MAT} 
 	make
 
 feature {NONE} -- Implementation

@@ -16,7 +16,7 @@ inherit
 			occupied
 		end
 
-creation
+create
 	make
 
 
@@ -33,7 +33,7 @@ feature
 		do
 				-- (Could also use iteration facilities.)
 			from
-				!! other.make (count.max (n))
+				create other.make (count.max (n))
 			until
 				i = capacity
 			loop

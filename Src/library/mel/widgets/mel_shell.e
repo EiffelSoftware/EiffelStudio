@@ -57,7 +57,7 @@ feature -- Access
 		do
 			cb := callbacks;
 			if cb /= Void then
-				!! a_key.make_wm_protocol (an_atom.identifier);
+				create a_key.make_wm_protocol (an_atom.identifier);
 				Result := cb.item (a_key)
 			end
 		end;
@@ -163,7 +163,7 @@ feature -- Status setting
 		local
 			geo: STRING
 		do
-			!! geo.make (8);
+			create geo.make (8);
 			if new_x >= 0 then
 				geo.extend ('+')
 			end;
@@ -288,8 +288,8 @@ feature -- Element change
 			a_command_exec: MEL_COMMAND_EXEC;
 			a_key: MEL_CALLBACK_KEY
 		do
-			!! a_key.make_wm_protocol (an_atom.identifier);
-			!! a_command_exec.make (a_command, an_argument);
+			create a_key.make_wm_protocol (an_atom.identifier);
+			create a_command_exec.make (a_command, an_argument);
 			if add_to_callbacks (a_command_exec, a_key) then
 				c_add_wm_protocol_callback (screen_object, an_atom.identifier)
 			end
@@ -331,7 +331,7 @@ feature -- Removal
 		local
 			a_key: MEL_CALLBACK_KEY
 		do
-			!! a_key.make_wm_protocol (an_atom.identifier);
+			create a_key.make_wm_protocol (an_atom.identifier);
 			if remove_from_callbacks (a_key) then
 				c_remove_wm_protocol_callback (screen_object, an_atom.identifier)
 			end;

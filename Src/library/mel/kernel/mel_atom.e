@@ -8,7 +8,7 @@ indexing
 
 class MEL_ATOM
 
-creation
+create
 	make,
 	make_from_existing,
 	make_primary,
@@ -73,7 +73,7 @@ feature -- Access
 			p: POINTER
 		do
 			p := xm_get_atom_name (a_display.handle, identifier);
-			!! Result.make (0);
+			create Result.make (0);
 			if p /= default_pointer then
 				Result.from_c (p);
 				xt_free (p);

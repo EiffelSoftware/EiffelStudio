@@ -16,14 +16,14 @@ inherit
 			dispose
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
 
 	make is
 		do
-			!! session_database.make
+			create session_database.make
 			allocate_connection
 			session_database.set_mt_connection (mt_connection)
 		end
@@ -58,8 +58,8 @@ feature -- Basic operations
 				session_database.connected
 			else
 				--Raise an exception
-				!! an_exception
-				!! err_message.make (100)
+				create an_exception
+				create err_message.make (100)
 				err_message.from_c (c_error)
 				an_exception.trigger_dev_exception (c_result, err_message)
 			end

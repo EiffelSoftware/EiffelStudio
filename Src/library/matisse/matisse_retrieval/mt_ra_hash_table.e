@@ -18,7 +18,7 @@ inherit
 			replace, replace_key
 		end
 
-creation
+create
 	make
 	
 feature -- Redefinition of HASH_TABLE API
@@ -138,9 +138,9 @@ feature
 			mt_keys_type := mt_property_type_of_keys
 			mt_values_type := mt_property_type_of_values
 						
-			!! all_keys.make (1, count)
-			!! all_values.make (1, count)
-			!! indexes.make (1, count)
+			create all_keys.make (1, count)
+			create all_values.make (1, count)
+			create indexes.make (1, count)
 			values_count := 0
 			from 
 				i := keys.lower
@@ -167,7 +167,7 @@ feature
 				i := i + 1
 			end
 			
-			!! has_default_att.make_from_names ("has_default", "HASH_TABLE")
+			create has_default_att.make_from_names ("has_default", "HASH_TABLE")
 			if has_default then
 				has_default_att.set_boolean_value (Current, True)
 				all_keys.put (default_key, count)
@@ -187,15 +187,15 @@ feature
 				has_default_att.set_boolean_value (Current, False)
 			end
 			
-			!! index_att.make_from_names ("value_index", "HASH_TABLE")
+			create index_att.make_from_names ("value_index", "HASH_TABLE")
 			index_att.set_integer_array_value (Current, indexes)
 			
-			!! key_att.make_from_names ("att_keys", "HASH_TABLE")
+			create key_att.make_from_names ("att_keys", "HASH_TABLE")
 			key_att.set_dynamic_value (Current, all_keys)
 			
-			!! value_rs.make_from_names ("obj_values", "HASH_TABLE")
+			create value_rs.make_from_names ("obj_values", "HASH_TABLE")
 			if values_count = 0 then
-				!! all_values.make (1, 0)
+				create all_values.make (1, 0)
 				a_linear ?= all_values.linear_representation
 			else
 				a_linear ?= all_values.subarray (1, values_count).linear_representation
@@ -211,7 +211,7 @@ feature {NONE}
 		local
 			att: MT_ATTRIBUTE
 		do
-			!! att.make_from_names ("att_keys", "HASH_TABLE")
+			create att.make_from_names ("att_keys", "HASH_TABLE")
 			Result ?= att.get_value (Current)
 		end
 	
@@ -219,7 +219,7 @@ feature {NONE}
 		local
 			rel: MT_MULTI_RELATIONSHIP
 		do
-			!! rel.make_from_names ("obj_values", "HASH_TABLE")
+			create rel.make_from_names ("obj_values", "HASH_TABLE")
 			Result ?= successors (rel)
 		end
 end -- class MT_RA_HASH_TABLE

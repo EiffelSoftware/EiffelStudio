@@ -16,7 +16,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make_from_file,
 	write_to_file
 
@@ -48,9 +48,9 @@ feature {NONE} -- Initialization
 					a_drawable.identifier, $path_ptr, 
 					$id, $mask, att_ptr);
 			if error = XpmSuccess then
-				!! pixmap.make_from_existing (disp, id, a_drawable.depth)
+				create pixmap.make_from_existing (disp, id, a_drawable.depth)
 				if mask /= default_pointer then
-					!! shape_mask.make_from_existing (disp, mask, 
+					create shape_mask.make_from_existing (disp, mask, 
 							a_drawable.depth);
 				end;
 			elseif attr /= Void and then error = XpmOpenFailed then

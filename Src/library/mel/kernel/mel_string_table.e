@@ -16,7 +16,7 @@ inherit
 			make_from_existing as mem_make_from_existing
 		end
 
-creation
+create
 	make,
 	make_from_existing
 
@@ -56,7 +56,7 @@ feature -- Access
 		require
 			valid_range: i > 0 and then i <= count;	
 		do
-			!! Result.make_from_existing (get_i_th_table (handle, i))
+			create Result.make_from_existing (get_i_th_table (handle, i))
 		ensure
 			non_void_result: Result /= Void and then Result.is_shared
 		end;
@@ -69,7 +69,7 @@ feature -- Access
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_from_existing (get_i_th_table (handle, i));
+			create ms.make_from_existing (get_i_th_table (handle, i));
 			ms.set_shared;
 			Result := ms.to_eiffel_string
 		ensure
@@ -102,7 +102,7 @@ feature -- Element change
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (str);
+			create ms.make_localized (str);
 			ms.set_shared;
 			xm_list_put (handle, ms.handle, i);
 		end;

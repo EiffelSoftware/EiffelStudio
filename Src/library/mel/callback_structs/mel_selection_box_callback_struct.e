@@ -17,7 +17,7 @@ inherit
 			reasons_list
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -34,7 +34,7 @@ feature -- Access
 			-- String that was either chosen from the list
 			-- of typed in
 		do
-			!! Result.make_from_existing (c_value (handle));
+			create Result.make_from_existing (c_value (handle));
 			Result.set_shared
         ensure
             Result_not_void: Result /= Void;

@@ -11,7 +11,7 @@ inherit
 	
 	MT_SQL_EXTERNAL
 	
-creation
+create
 	make
 
 feature -- Initialization

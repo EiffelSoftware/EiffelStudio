@@ -9,7 +9,7 @@ indexing
 class
 	MEL_TEXT_SOURCE
 
-creation
+create
 	make_from_existing
 
 feature {NONE} -- Initialization

@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 		do
 			p := c_get_xmstring (a_target, a_resource_name);
 			if p /= default_pointer then
-				!! Result.make_from_existing (p)
+				create Result.make_from_existing (p)
 			end
 		end;
 
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			target_not_null: a_target /= default_pointer;
 			resource_name_not_null: a_resource_name /= default_pointer
 		do
-			!! Result.make_from_existing (
+			create Result.make_from_existing (
 				c_get_font_list (a_target, a_resource_name));
 			Result.set_shared
 		end;

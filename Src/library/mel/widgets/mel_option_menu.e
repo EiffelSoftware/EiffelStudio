@@ -24,7 +24,7 @@ inherit
 			make
 		end
 
-creation 
+create 
 	make, 
 	make_with_label
 
@@ -39,9 +39,9 @@ feature -- Initialization
 			widget_name := a_name.to_c;
 			screen_object := xm_create_option_menu (a_parent.screen_object, $widget_name, default_pointer, 0);
 			Mel_widgets.add (Current);
-			!! label_gadget.make_from_existing (
+			create label_gadget.make_from_existing (
 				xm_option_label_gadget (screen_object), Current);
-			!! button_gadget.make_from_existing (
+			create button_gadget.make_from_existing (
 				xm_option_button_gadget (screen_object), Current);
 			set_default;
 			if do_manage then
@@ -62,8 +62,8 @@ feature -- Initialization
 			widget_name := a_name.to_c;
 			screen_object := xm_create_option_menu_with_label (a_parent.screen_object, $widget_name, a_ms.handle);
 			Mel_widgets.add (Current);
-			!! label_gadget.make_from_existing (xm_option_label_gadget (screen_object), Current);
-			!! button_gadget.make_from_existing (xm_option_button_gadget (screen_object), Current);
+			create label_gadget.make_from_existing (xm_option_label_gadget (screen_object), Current);
+			create button_gadget.make_from_existing (xm_option_button_gadget (screen_object), Current);
 			set_default;
 			if do_manage then
 				manage

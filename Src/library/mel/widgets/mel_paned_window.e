@@ -21,7 +21,7 @@ inherit
 			is_paned_window
 		end
 
-creation 
+create 
 	make,
 	make_from_existing
 

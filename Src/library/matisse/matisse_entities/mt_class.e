@@ -45,7 +45,7 @@ inherit
 			{NONE} all
 		end
 		
-creation 
+create 
 	make_from_object, make_from_name, make_from_oid
 
 feature {NONE} -- Initialization
@@ -103,13 +103,13 @@ feature  -- Access
 		do
 			c_get_all_attributes (oid)
 			keys_count := c_keys_count
-			!! Result.make (1, keys_count)
+			create Result.make (1, keys_count)
 			from
 				i := 1
 			until 
 				i= keys_count + 1
 			loop
-				!! one_attribute.make_from_id (c_ith_key (i))
+				create one_attribute.make_from_id (c_ith_key (i))
 				Result.force (one_attribute, i)
 				i := i + 1
 			end -- loop
@@ -190,13 +190,13 @@ feature  -- Access
 		do
 			c_get_all_relationships (oid)
 			keys_count := c_keys_count
-			!! Result.make (1, keys_count)
+			create Result.make (1, keys_count)
 			from
 				i := 1
 			until 
 				i= keys_count + 1
 			loop
-				!! one_relationship.make_from_id (c_ith_key (i))
+				create one_relationship.make_from_id (c_ith_key (i))
 				Result.force (one_relationship, i)
 				i := i + 1
 			 end -- loop
@@ -265,13 +265,13 @@ feature  -- Access
 		do
 			c_get_all_inverse_relationships (oid)
 			keys_count := c_keys_count
-			!! Result.make (1, keys_count)
+			create Result.make (1, keys_count)
 			from
 				i := 1
 			until 
 				i= keys_count + 1
 			loop
-				!! one_object.make_from_id (c_ith_key (i))
+				create one_object.make_from_id (c_ith_key (i))
 				Result.force (one_object, i)
 				i := i + 1
 			end
@@ -286,13 +286,13 @@ feature  -- Access
 		do
 			c_get_all_subclasses (oid)
 			keys_count := c_keys_count
-			!! Result.make (1, keys_count)
+			create Result.make (1, keys_count)
 			from
 				i := 1
 			until 
  				i = keys_count + 1
 			loop
-				!! one_object.make_from_oid (c_ith_key (i))
+				create one_object.make_from_oid (c_ith_key (i))
  				Result.force (one_object, i)
 				i := i + 1
 			end
@@ -307,13 +307,13 @@ feature  -- Access
 		do
 			c_get_all_superclasses (oid)
 			keys_count := c_keys_count
-			!! Result.make (1, keys_count)
+			create Result.make (1, keys_count)
 			from
 				i := 1
 			until 
 				i= keys_count + 1
 			loop
-				!! one_object.make_from_oid (c_ith_key (i))
+				create one_object.make_from_oid (c_ith_key (i))
 				Result.force (one_object, i)
 				i := i + 1
 			end
@@ -327,8 +327,8 @@ feature  -- Access
 			a_class: MT_CLASS
 			i: INTEGER
 		do
-			!! a_stream.make_from_name (Current, "Mt Superclasses")
-			!! Result.make (0, 1)
+			create a_stream.make_from_name (Current, "Mt Superclasses")
+			create Result.make (0, 1)
 			from
 				a_stream.start
 				i := 0
@@ -350,8 +350,8 @@ feature  -- Access
 			a_stream: MT_CLASS_STREAM
 			i: INTEGER
 		do
-			!! Result.make (0, instances_count - 1)
-			!! a_stream.make (oid)
+			create Result.make (0, instances_count - 1)
+			create a_stream.make (oid)
 			from
 				a_stream.start
 				i := 0
@@ -376,8 +376,8 @@ feature  -- Access
 			if n >= instances_count then
 				Result := all_instances
 			else
-				!! Result.make (0, n - 1)
-				!! a_stream.make (oid)
+				create Result.make (0, n - 1)
+				create a_stream.make (oid)
 				from
 					a_stream.start
 					i := 0
@@ -405,9 +405,9 @@ feature  -- Access
 			str: STRING
 			supers: ARRAY [MT_CLASS]
 		do
-			!! Result.make (0)
-			!! rel.make ("Mt Indexes")
-			!! an_att.make ("Mt Name")
+			create Result.make (0)
+			create rel.make ("Mt Indexes")
+			create an_att.make ("Mt Name")
 			
 			supers := superclasses
 			supers.force (Current, supers.upper + 1)
@@ -416,7 +416,7 @@ feature  -- Access
 			until 
 				i > supers.upper 
 			loop
-				!! an_obj.make (supers.item (i).oid)
+				create an_obj.make (supers.item (i).oid)
 				objs := an_obj.successors (rel)
 				from 
 					j := objs.lower 
@@ -574,13 +574,13 @@ feature {MATISSE} -- Meta-schema
 			if not properties_initialized then
 				c_get_all_attributes (oid)
 				keys_count := c_keys_count
-				!! attribute_table.make (keys_count)
+				create attribute_table.make (keys_count)
 				from
 					i := 1
 				until 
 					i = keys_count + 1
 				loop
-					!! an_attribute.make_from_id (c_ith_key (i))
+					create an_attribute.make_from_id (c_ith_key (i))
 					attribute_table.put (an_attribute, an_attribute.eiffel_name)
 					i := i + 1
 				end 
@@ -588,7 +588,7 @@ feature {MATISSE} -- Meta-schema
 
 				c_get_all_relationships (oid)
 				keys_count := c_keys_count
-				!! rel_table.make (keys_count)
+				create rel_table.make (keys_count)
 				from
 					i := 1
 				until 
@@ -602,8 +602,8 @@ feature {MATISSE} -- Meta-schema
 				c_free_keys
 
 				a_count := field_count (sample_obj)
-				!! saved_attributes.make (1, a_count)
-				!! saved_relationships.make (1, a_count)
+				create saved_attributes.make (1, a_count)
+				create saved_relationships.make (1, a_count)
 				from 
 					i := 1
 				until 
@@ -670,24 +670,24 @@ feature {NONE} -- Meta-schema
 		do
 			if c_get_object_class (rid) = Mt_Relationship_oid then
 				if c_get_max_cardinality (rid) = 1 then
-					!! single_rs.make_from_id (rid)
+					create single_rs.make_from_id (rid)
 					Result := single_rs
 				else
-					!! multi_rs.make_from_id (rid)
+					create multi_rs.make_from_id (rid)
 					Result := multi_rs
 				end
 			else
-				!! rs_class_name.make (0)
+				create rs_class_name.make (0)
 				rs_class_name.from_c (c_get_relationship_class_name (rid))
 				if rs_class_name.is_equal (HashTableRelationship) then
-					!! ht_rs.make_from_id (rid)
+					create ht_rs.make_from_id (rid)
 					Result := ht_rs
 				elseif rs_class_name.is_equal (CompositeRelationship) then
 					if c_get_max_cardinality (rid) = 1 then
-						!! s_co_rs.make_from_oid (rid)
+						create s_co_rs.make_from_oid (rid)
 						Result := s_co_rs
 					else
-						!! m_co_rs.make_from_oid (rid)
+						create m_co_rs.make_from_oid (rid)
 						Result := m_co_rs
 					end
 				end
@@ -703,7 +703,7 @@ feature -- Streaming
 
 	open_stream: MT_CLASS_STREAM is
 		do
-			!! Result.make (oid)
+			create Result.make (oid)
 		end
 		
 feature {NONE} -- Implementation

@@ -24,7 +24,7 @@ inherit
 
 	MEL_APPLICATION_CONTEXT_RESOURCES
 
-creation
+create
 	make, 
 	make_from_existing
 
@@ -94,7 +94,7 @@ feature -- Status report
 			ms: MEL_CALLBACK_STRUCT
 		do
 			xt_app_next_event (handle, global_xevent_ptr);
-			!! ms.make_event_only (global_xevent_ptr);
+			create ms.make_event_only (global_xevent_ptr);
 			Result := ms.event
 		ensure
 			event_returned: Result /= Void
@@ -146,7 +146,7 @@ feature -- Element change
 			counter, number: INTEGER
 		do
 			if a_list /= Void then
-				!! out_list.make (a_list.lower, a_list.upper);
+				create out_list.make (a_list.lower, a_list.upper);
 				from
 					counter := a_list.lower
 				until
@@ -174,7 +174,7 @@ feature -- Element change
 		local
 			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_command_exec.make (a_command, an_argument);
+			create a_command_exec.make (a_command, an_argument);
 			Mel_dispatcher.set_input_callback
 					(Current, a_file, XtInputReadMask, a_command_exec);
 		ensure
@@ -194,7 +194,7 @@ feature -- Element change
 		local
 			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_command_exec.make (a_command, an_argument);
+			create a_command_exec.make (a_command, an_argument);
 			Mel_dispatcher.set_input_callback
 					(Current, a_file, XtInputWriteMask, a_command_exec);
 		ensure
@@ -214,7 +214,7 @@ feature -- Element change
 		local
 			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_command_exec.make (a_command, an_argument);
+			create a_command_exec.make (a_command, an_argument);
 			Mel_dispatcher.set_input_callback
 					(Current, a_file, XtInputExceptMask, a_command_exec);
 		ensure
@@ -234,7 +234,7 @@ feature -- Element change
 		local
 			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_command_exec.make (a_command, an_argument);
+			create a_command_exec.make (a_command, an_argument);
 			Mel_dispatcher.set_input_callback
 					(Current, a_file, XtInputNoneMask, a_command_exec);
 		ensure
@@ -256,7 +256,7 @@ feature -- Element change
 		local
 			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_command_exec.make (a_command, an_argument);
+			create a_command_exec.make (a_command, an_argument);
 			Mel_dispatcher.set_time_out_callback
 					(Current, a_delay, a_command_exec);
 		ensure
@@ -274,7 +274,7 @@ feature -- Element change
 		local
 			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_command_exec.make (a_command, an_argument);
+			create a_command_exec.make (a_command, an_argument);
 			Mel_dispatcher.set_work_proc_callback
 					(Current, a_command_exec);
 		ensure
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 	last_id_ref: CELL [MEL_IDENTIFIER] is
 			-- Last id saved
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end;
 
 feature {NONE} -- Implementation

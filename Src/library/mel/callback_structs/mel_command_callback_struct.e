@@ -17,7 +17,7 @@ inherit
 			reasons_list
 		end
 
-creation
+create
 
 	make
 
@@ -34,7 +34,7 @@ feature -- Access
 	value: MEL_STRING is
 			-- String in command area (value is `shared')
 		do
-			!! Result.make_from_existing (c_value (handle));
+			create Result.make_from_existing (c_value (handle));
 			Result.set_shared
 		ensure
 			Result_not_void: Result /= Void;

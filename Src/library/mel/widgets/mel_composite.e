@@ -33,11 +33,11 @@ inherit
 			object_clean_up, destroy
 		end
 
-creation
+create
 
 	make_from_existing
 
-creation {MEL_COMPOSITE}
+create {MEL_COMPOSITE}
 
 	make_for_descendants
 
@@ -77,7 +77,7 @@ feature -- Access
 		do
 			c_list := c_get_children (screen_object, XmNchildren);
 			c_count := children_count;
-			!! Result.make_filled (c_count);
+			create Result.make_filled (c_count);
 			from
 				i := 1
 			until
@@ -105,7 +105,7 @@ feature -- Access
 		do
 			c_list := children;
 			temp := c_list.count;
-			!! Result.make (temp);
+			create Result.make (temp);
 			if temp > 0 then
 				from
 					c_list.start
@@ -128,7 +128,7 @@ feature -- Access
 			-- List of all descendants of current composite
 			-- (Does not include popup children)
 		do
-			!! Result.make (20);
+			create Result.make (20);
 			descendants_of (Current, Result)
 		end;
 
@@ -147,7 +147,7 @@ feature -- Access
 		do
 			c_list := descendants;
 			temp := c_list.count;
-			!! Result.make (temp);
+			create Result.make (temp);
 			if temp > 0 then
 				from
 					c_list.start
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 				w := c_list.item;
 				list.extend (w);
 				if xt_is_composite (w) then
-					!! mel_comp.make_for_descendants (w)
+					create mel_comp.make_for_descendants (w)
 					descendants_of (mel_comp, list)
 				end
 				c_list.forth
@@ -341,7 +341,7 @@ feature {MEL_WIDGET_MANAGER, MEL_SHELL}
 					not mel_popup_children.has (a_popup)
 		do
 			if mel_popup_children = Void then
-				!! mel_popup_children.make (1);
+				create mel_popup_children.make (1);
 			end;
 			mel_popup_children.extend (a_popup)
 		ensure

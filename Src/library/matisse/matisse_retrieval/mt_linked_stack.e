@@ -21,7 +21,7 @@ inherit
 			copy, is_equal
 		end
 	
-creation
+create
 	make
 
 feature
@@ -44,7 +44,7 @@ feature
 		do
 			old_cursor := cursor;
 			from
-				!! Result.make (count);
+				create Result.make (count);
 				start
 			until
 				after

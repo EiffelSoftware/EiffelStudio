@@ -14,7 +14,7 @@ feature {NONE} -- Access
 	Mel_dispatcher: MEL_DISPATCHER is
 			-- MEL dispatcher manager
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			valid_result: Result /= void
 		end;

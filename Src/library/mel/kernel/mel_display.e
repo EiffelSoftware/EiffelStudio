@@ -16,7 +16,7 @@ inherit
 			is_equal
 		end
 
-creation 
+create 
 	make,
 	make_from_existing
 
@@ -74,13 +74,13 @@ feature {NONE} -- Initialization
 			check
 				nb_screens >= 0
 			end;
-			!! screens.make (0, nb_screens -1);
+			create screens.make (0, nb_screens -1);
 			from
 				i := 0
 			until
 				i = nb_screens
 			loop
-				!! a_screen.make (screen_of_display (a_display, i), Current);
+				create a_screen.make (screen_of_display (a_display, i), Current);
 				screens.put (a_screen, i);
 				i := i +1
 			end
@@ -127,7 +127,7 @@ feature -- Access
 		require
 			is_valid: is_valid
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.from_c (display_string (handle))
 		end;
 

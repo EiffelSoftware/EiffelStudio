@@ -13,7 +13,7 @@ inherit
 
 	MEL_MEMORY
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -37,7 +37,7 @@ feature -- Access
 		do
 			p := xm_font_list_next_entry (handle);
 			if p /= default_pointer then	
-				!! Result.make_from_existing (p)
+				create Result.make_from_existing (p)
 			end
 		ensure
 			valid_result: Result /= Void implies Result.is_valid

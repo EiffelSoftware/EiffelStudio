@@ -17,7 +17,7 @@ inherit
 			reasons_list
 		end;
 
-creation
+create
 	make
 
 feature -- Access
@@ -39,7 +39,7 @@ feature -- Access
 		do
 			ptr := c_item (handle);
 			if ptr /= default_pointer then
-				!! Result.make_from_existing (ptr);
+				create Result.make_from_existing (ptr);
 				Result.set_shared
 			end
         ensure
@@ -61,7 +61,7 @@ feature -- Access
 	selected_items: MEL_STRING_TABLE is
 			-- Selected items
 		do
-			!! Result.make_from_existing (c_selected_items (handle), selected_item_count)
+			create Result.make_from_existing (c_selected_items (handle), selected_item_count)
 		ensure
 			valid_result: Result /= Void 
 		end;

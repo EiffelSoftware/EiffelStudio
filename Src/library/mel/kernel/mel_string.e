@@ -17,7 +17,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 	make,
 	make_localized,
 	make_default_l_to_r,
@@ -231,7 +231,7 @@ feature -- Duplication
 		require else
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing (xm_string_copy (handle))
+			create Result.make_from_existing (xm_string_copy (handle))
 		ensure
 			copy_exists: Result /= Void and then
 						 not Result.is_destroyed

@@ -19,7 +19,7 @@ inherit
 
 	MT_CLASS_EXTERNAL
 
-Creation
+create
 	make, make_from_name
 
 feature {NONE} -- Initialization
@@ -69,12 +69,12 @@ feature -- Retrieval
 				else
 					c_class_name := ep_class_name.to_c
 					cid := c_get_class_from_name ($c_class_name)
-					!! ep_class.make_from_oid (cid)
+					create ep_class.make_from_oid (cid)
 					c_get_objects_from_entry_point (ep_attribute.oid, cid, $c_ep_name)
 				end
 			end
 			keys_count := c_keys_count
-			!! matched_keys.make (1, keys_count)
+			create matched_keys.make (1, keys_count)
 			from
  				i := matched_keys.lower
 			until 
@@ -84,7 +84,7 @@ feature -- Retrieval
 				i := i + 1
 			end 
 			
-			!! Result.make (1, keys_count)
+			create Result.make (1, keys_count)
 			from
  				i := matched_keys.lower
 			until 
@@ -119,12 +119,12 @@ feature -- Retrieval
 				else
 					c_class_name := ep_class_name.to_c
 					cid := c_get_class_from_name ($c_class_name)
-					!! ep_class.make_from_oid (cid)
+					create ep_class.make_from_oid (cid)
 					c_get_objects_from_entry_point (ep_attribute.oid, cid, $c_ep_name)
 				end
 			end
 			keys_count := c_keys_count
-			!! matched_keys.make (1, keys_count)
+			create matched_keys.make (1, keys_count)
 			from
  				i := matched_keys.lower
 			until 
@@ -134,7 +134,7 @@ feature -- Retrieval
 				i := i + 1
 			end 
 			
-			!! Result.make (1, keys_count)
+			create Result.make (1, keys_count)
 			from
  				i := matched_keys.lower
 			until 
@@ -169,7 +169,7 @@ feature -- Retrieval
 			if ep_class = Void then
 				ep_class := current_db.get_mt_class_from_name (ep_class_name)
 			end
-			!! Result.make (ep_string, ep_attribute, ep_class)
+			create Result.make (ep_string, ep_attribute, ep_class)
 		end
 
 feature -- Element Change

@@ -13,7 +13,7 @@ inherit
 
 	MEL_RESOURCE
 
-creation
+create
 	make, 
 	make_from_existing_handle
 
@@ -80,8 +80,8 @@ feature -- Access
 		local
 			an_entry: MEL_FONT_LIST_ENTRY
 		do
-			!! an_entry.make_default_from_font_struct (Current);
-			!! Result.append_entry (an_entry);
+			create an_entry.make_default_from_font_struct (Current);
+			create Result.append_entry (an_entry);
 			an_entry.destroy
 		end;
 

@@ -17,7 +17,7 @@ inherit
 			put, force, extend, replace, replace_key
 		end
 
-creation
+create
 	make
 
 feature -- Redefinition of HASH_TABLE API
@@ -136,32 +136,32 @@ feature
 					end
 
 
-					!! has_default_att.make_from_names ("has_default", "HASH_TABLE")
+					create has_default_att.make_from_names ("has_default", "HASH_TABLE")
 					if has_default_att.get_boolean (Current) then
-						!! att.make_from_names ("void_key_att_value", "HASH_TABLE")
+						create att.make_from_names ("void_key_att_value", "HASH_TABLE")
 						att_type := att.dynamic_att_type (Current)
 						if att_type /= Mt_nil then
 							inspect att_type
 							when Mt_s32 then
-								!! int_cell.put (att.get_integer (Current))
+								create int_cell.put (att.get_integer (Current))
 								a_cell ?= int_cell
 							when Mt_u32 then
-								!! int_cell.put (att.get_unsigned_int (Current))
+								create int_cell.put (att.get_unsigned_int (Current))
 								a_cell ?= int_cell
 							when Mt_s16 then
-								!! int_cell.put (att.get_short (Current))
+								create int_cell.put (att.get_short (Current))
 								a_cell ?= int_cell
 							when Mt_u16 then
-								!! int_cell.put (att.get_unsigned_short (Current))
+								create int_cell.put (att.get_unsigned_short (Current))
 								a_cell ?= int_cell
 							when Mt_float then
-								!! float_cell.put (att.get_real (Current))
+								create float_cell.put (att.get_real (Current))
 								a_cell ?= float_cell
 							when Mt_double then
-								!! double_cell.put (att.get_double (Current))
+								create double_cell.put (att.get_double (Current))
 								a_cell ?= double_cell
 							else
-								!! any_cell.put (att.get_value (Current))
+								create any_cell.put (att.get_value (Current))
 								a_cell ?= any_cell
 							end
 							ht_force (a_cell.item, default_key)
@@ -187,9 +187,9 @@ feature
 			mt_keys_type := mt_property_type_of_keys
 			mt_values_type := mt_property_type_of_values
 			
-			!! all_keys.make (1, count)
-			!! all_values.make (1, count)
-			!! indexes.make (1, count)
+			create all_keys.make (1, count)
+			create all_values.make (1, count)
+			create indexes.make (1, count)
 			from 
 				values_count := 0
 				i := keys.lower
@@ -215,10 +215,10 @@ feature
 				i := i + 1
 			end
 			
-			!! has_default_att.make_from_names ("has_default", "HASH_TABLE")
+			create has_default_att.make_from_names ("has_default", "HASH_TABLE")
 			if has_default then
 				has_default_att.set_boolean_value (Current, True)
-				!! att.make_from_names ("void_key_att_value", "HASH_TABLE")
+				create att.make_from_names ("void_key_att_value", "HASH_TABLE")
 				if default_key_value = Void then
 					-- this attribute should be string
 					att.set_string_value (Current, Mt_string, Void)
@@ -229,10 +229,10 @@ feature
 				has_default_att.set_boolean_value (Current, False)
 			end
 			
-			!! index_att.make_from_names ("value_index", "HASH_TABLE")
+			create index_att.make_from_names ("value_index", "HASH_TABLE")
 			index_att.set_integer_array_value (Current, indexes)
 			
-			!! key_rs.make_from_names ("obj_keys", "HASH_TABLE")
+			create key_rs.make_from_names ("obj_keys", "HASH_TABLE")
 			a_linear ?= all_keys.linear_representation
 			if has_default then
 				a_linear.finish
@@ -242,9 +242,9 @@ feature
 				key_rs.set_successors (Current, a_linear)
 			end
 			
-			!! value_att.make_from_names ("att_values", "HASH_TABLE")
+			create value_att.make_from_names ("att_values", "HASH_TABLE")
 			if values_count = 0 then
-				!! all_values.make (1, 0)
+				create all_values.make (1, 0)
 				value_att.set_dynamic_value (Current, all_values)
 			else
 				value_att.set_dynamic_value (Current, all_values.subarray (1, values_count))
@@ -257,7 +257,7 @@ feature {NONE}
 		local
 			rel: MT_MULTI_RELATIONSHIP
 		do
-			!! rel.make_from_names ("obj_keys", "HASH_TABLE")
+			create rel.make_from_names ("obj_keys", "HASH_TABLE")
 			Result ?= successors (rel)
 		end
 	
@@ -265,7 +265,7 @@ feature {NONE}
 		local
 			att: MT_ATTRIBUTE
 		do
-			!! att.make_from_names ("att_values", "HASH_TABLE")
+			create att.make_from_names ("att_values", "HASH_TABLE")
 			Result ?= att.get_value (Current)
 		end
 

@@ -20,7 +20,7 @@ inherit
 
 	MEL_GADGET
 
-creation 
+create 
 	make, 
 	make_from_existing
 
@@ -268,7 +268,7 @@ feature -- Status setting
 		local
 			compound_string: MEL_STRING
 		do
-			!! compound_string.make_default_l_to_r (a_text);
+			create compound_string.make_default_l_to_r (a_text);
 			set_xm_string (screen_object, XmNlabelString, compound_string);
 			compound_string.destroy
 		ensure

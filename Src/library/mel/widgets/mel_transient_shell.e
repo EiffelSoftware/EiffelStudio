@@ -18,7 +18,7 @@ inherit
 
 	MEL_VENDOR_SHELL
 
-creation
+create
 	make
 
 feature -- Initialization

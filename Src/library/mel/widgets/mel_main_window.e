@@ -22,7 +22,7 @@ inherit
 			margin_height, margin_width, set_margin_height, set_margin_width
 		end
 
-creation
+create
 	make, 
 	make_detailed,
 	make_from_existing

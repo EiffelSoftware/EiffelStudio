@@ -21,7 +21,7 @@ inherit
 			create_callback_struct, create_widget
 		end
 
-creation
+create
 	make,
 	make_no_auto_unmanage,
 	make_from_existing
@@ -59,7 +59,7 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing 
+			create Result.make_from_existing 
 				(get_xm_string_table (screen_object, XmNhistoryItems),
 						history_item_count);
 			Result.set_shared
@@ -244,16 +244,16 @@ feature {MEL_DISPATCHER} -- Basic operations
 		do
 			if resource_name = XmNcommandEnteredCallback or else
 				resource_name = XmNcommandChangedCallback then
-				!MEL_COMMAND_CALLBACK_STRUCT! Result.make (Current, a_callback_struct_ptr)
+				create {MEL_COMMAND_CALLBACK_STRUCT} Result.make (Current, a_callback_struct_ptr)
 			elseif resource_name = XmNokCallback or else
 				resource_name = XmNcancelCallback or else
 				resource_name = XmNnoMatchCallback or else
 				resource_name = XmNapplyCallback
 			then
-				!MEL_SELECTION_BOX_CALLBACK_STRUCT! Result.make 
+				create {MEL_SELECTION_BOX_CALLBACK_STRUCT} Result.make 
 						(Current, a_callback_struct_ptr)
 			else
-				!MEL_ANY_CALLBACK_STRUCT! Result.make 
+				create {MEL_ANY_CALLBACK_STRUCT} Result.make 
 						(Current, a_callback_struct_ptr)
 			end
 		end

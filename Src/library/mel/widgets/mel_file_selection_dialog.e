@@ -23,7 +23,7 @@ inherit
 			parent, created_dialog_automatically
 		end;
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -38,7 +38,7 @@ feature -- Initialization
 		do
 			widget_name := a_name.to_c;
 			screen_object := xm_create_file_selection_dialog (a_parent.screen_object, $widget_name, default_pointer, 0);
-			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			create parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
 			set_default
 		ensure

@@ -14,7 +14,7 @@ inherit
 	--		{NONE} all 
 	--	end
 	
-creation
+create
 	make
 
 feature -- Initialization
@@ -40,7 +40,7 @@ feature -- Status Report
 
 	attribute_name: STRING is
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (c_object_mt_name (attr_oid))
 		end
 

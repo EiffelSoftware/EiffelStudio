@@ -13,7 +13,7 @@ inherit
 
 	MEL_EVENT
 
-creation
+create
 	make
 
 feature -- Pointer access

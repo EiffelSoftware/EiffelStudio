@@ -9,7 +9,7 @@ indexing
 class
 	MEL_WIDGET_RESOURCE
 
-creation 
+create 
 	make
 
 feature  -- Initalization
@@ -17,8 +17,8 @@ feature  -- Initalization
 	make is
 			-- Initialize object.
 		do
-			!! widget_name.make (0);
-			!! resource_value.make (0)
+			create widget_name.make (0);
+			create resource_value.make (0)
 		end;
 
 feature -- Status report
@@ -38,7 +38,7 @@ feature -- Status report
 			-- The joining of widget name, resource name and resource value
 			-- to form the resource string;
 		do
-			!! Result.make (20);
+			create Result.make (20);
 			if widget_name.is_empty then
 				Result.append ("*")
 			else

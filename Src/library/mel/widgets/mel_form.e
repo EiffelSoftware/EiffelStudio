@@ -21,7 +21,7 @@ inherit
 			create_widget, is_form
 		end
 
-creation 
+create 
 	make, 
 	make_no_auto_unmanage,
 	make_from_existing

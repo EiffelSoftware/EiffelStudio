@@ -17,7 +17,7 @@ inherit
 
     LINKED_LIST [MEL_COMMAND_EXEC]
 
-creation
+create
     make
 
 feature -- Element change
@@ -29,7 +29,7 @@ feature -- Element change
         local
             exec: MEL_COMMAND_EXEC
         do
-            !! exec.make (command, argument)
+            create exec.make (command, argument)
             extend (exec)
         end
 

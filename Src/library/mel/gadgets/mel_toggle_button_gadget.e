@@ -21,7 +21,7 @@ inherit
 			make, create_callback_struct
 		end
 
-creation 
+create 
 	make,
 	make_from_existing
 
@@ -414,7 +414,7 @@ feature {MEL_DISPATCHER} -- Basic operations
 			-- Create the callback structure specific to this widget
 			-- according to the `a_callback_struct_ptr' pointer.
 		do
-			!! Result.make (Current, a_callback_struct_ptr)
+			create Result.make (Current, a_callback_struct_ptr)
 		end;
 
 feature {NONE} -- Implementation

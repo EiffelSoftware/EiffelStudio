@@ -24,7 +24,7 @@ inherit
 			identifier as window
 		end
 
-creation
+create
 	make_from_existing
 
 feature -- Access
@@ -51,7 +51,7 @@ feature -- Access
 		do
 			cb := callbacks;
 			if cb /= Void then
-				!! a_key.make_xt_event (a_mask);
+				create a_key.make_xt_event (a_mask);
 				Result := cb.item (a_key)
 			end
 		end;
@@ -66,7 +66,7 @@ feature -- Access
 		do
 			cb := callbacks;
 			if cb /= Void then
-				!! a_key.make_no_adopted (a_translation);
+				create a_key.make_no_adopted (a_translation);
 				Result := cb.item (a_key)
 			end
 		end;
@@ -226,8 +226,8 @@ feature -- Element change
 			a_command_exec: MEL_COMMAND_EXEC;
 			a_key: MEL_CALLBACK_KEY
 		do
-			!! a_key.make_xt_event (a_mask);
-			!! a_command_exec.make (a_command, an_argument);
+			create a_key.make_xt_event (a_mask);
+			create a_command_exec.make (a_command, an_argument);
 			if add_to_callbacks (a_command_exec, a_key) then
 				c_add_event_handler (screen_object, a_mask)
 			end
@@ -251,11 +251,11 @@ feature -- Element change
             cb: like callbacks
 			ext_string: ANY
 		do
-			!! a_key.make (a_translation);
-			!! a_command_exec.make (a_command, an_argument);
+			create a_key.make (a_translation);
+			create a_command_exec.make (a_command, an_argument);
             cb := callbacks;
             if cb = Void then
-                !! cb.make (1);
+                create cb.make (1);
                 callbacks := cb;
                 cb.put (a_command_exec, a_key);
 				ext_string := a_key.xt_translation_string.to_c;
@@ -322,7 +322,7 @@ feature -- Element change
 			if x_check_window_event (display.handle, window,
 				a_mask, global_xevent_ptr)  then
 				if global_xevent_ptr /= default_pointer then
-					!! ms.make_event_only (global_xevent_ptr);
+					create ms.make_event_only (global_xevent_ptr);
 					Result := ms.event
 				end
 			end
@@ -340,7 +340,7 @@ feature -- Removal
 			a_key: MEL_CALLBACK_KEY;
 			ext_string: ANY
 		do
-			!! a_key.make_xt_event (a_mask);
+			create a_key.make_xt_event (a_mask);
 			if remove_from_callbacks (a_key) then
 				c_remove_event_handler (screen_object, a_mask)
 			end;
@@ -357,7 +357,7 @@ feature -- Removal
 			a_key: MEL_TRANSLATION;
 			ext_string: ANY
 		do
-			!! a_key.make_no_adopted (a_translation);
+			create a_key.make_no_adopted (a_translation);
 			if remove_from_callbacks (a_key) then
 				ext_string := a_key.xt_translation_null_string.to_c;
 				c_set_override_translations (screen_object, $ext_string)

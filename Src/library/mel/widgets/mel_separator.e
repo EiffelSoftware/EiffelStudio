@@ -18,7 +18,7 @@ inherit
 
 	MEL_PRIMITIVE
 
-creation 
+create 
 	make,
 	make_from_existing
 

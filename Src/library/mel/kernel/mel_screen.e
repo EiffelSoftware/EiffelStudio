@@ -22,7 +22,7 @@ inherit
 			depth as default_depth
 		end
 
-creation 
+create 
 	make
 
 feature {NONE} -- Initialization
@@ -68,7 +68,7 @@ feature -- Access
 		require
 			is_valid: is_valid
 		do
-			!! Result.make_from_existing
+			create Result.make_from_existing
 					(display, default_gc_of_screen (handle))
 		end;
 
@@ -77,7 +77,7 @@ feature -- Access
 		require
 			is_valid: is_valid
 		do
-			!! Result.make_from_existing
+			create Result.make_from_existing
 					(display, white_pixel_of_screen (handle));
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
@@ -90,7 +90,7 @@ feature -- Access
 		require
 			is_valid: is_valid
 		do
-			!! Result.make_from_existing
+			create Result.make_from_existing
 					(display, black_pixel_of_screen (handle))
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
@@ -103,7 +103,7 @@ feature -- Access
 		require
 			is_valid: is_valid
 		do
-			!! Result.make_default (Current)
+			create Result.make_default (Current)
 		end;
 
 	default_depth: INTEGER is
@@ -123,7 +123,7 @@ feature -- Access
 			void_pointer: POINTER;
 		do
 			dp := display.handle;
-		 	!! Result.make;
+		 	create Result.make;
 			from
 				widget_c := x_query_window_pointer (dp, root_window)
 			until
@@ -146,7 +146,7 @@ feature -- Access
 			mel_w: MEL_OBJECT
 		do
 			l := widgets_pointed;
-			!TWO_WAY_LIST [MEL_OBJECT]! Result.make;
+			create {TWO_WAY_LIST [MEL_OBJECT]} Result.make;
 			from
 				l.start
 			until

@@ -58,7 +58,7 @@ feature -- Access
 			-- Mel display on which resource was allocated
 		do
 			if display_handle /= default_pointer then
-				!! Result.make_from_existing (display_handle)
+				create Result.make_from_existing (display_handle)
 			end
 		end;
 

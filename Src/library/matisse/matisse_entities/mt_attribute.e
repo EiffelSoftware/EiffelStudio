@@ -27,7 +27,7 @@ inherit
 			is_equal
 		end
 	
-creation
+create
 	make, make_from_names, make_from_id
 
 feature {NONE} -- Initialization
@@ -583,7 +583,7 @@ feature -- Element Change
 				if a_byte_list.count = 0 then
 					c_set_value_void (an_object.oid, oid, Mt_U8_List, $Void, 0)
 				else
-					!! a_byte_array.make (1, a_byte_list.count)
+					create a_byte_array.make (1, a_byte_list.count)
 					from 
 						a_byte_list.start  
 						i := 1
@@ -660,7 +660,7 @@ feature -- Element Change
 				if a_short_list.count = 0 then
 					c_set_value_void (an_object.oid, oid, Mt_S16_List, $Void, 0)
 				else
-					!! a_short_array.make (1, a_short_list.count)
+					create a_short_array.make (1, a_short_list.count)
 					from 
 						a_short_list.start  
 						i := 1
@@ -718,7 +718,7 @@ feature -- Element Change
 				if an_integer_list.count = 0 then
 					c_set_value_void (an_object.oid, oid, Mt_U16_List, $Void, 0)
 				else
-					!! an_integer_array.make (1, an_integer_list.count)
+					create an_integer_array.make (1, an_integer_list.count)
 					from 
 						an_integer_list.start 
 						i := 1
@@ -789,7 +789,7 @@ feature -- Element Change
 				if value.count = 0 then
 					c_set_value_void (an_object.oid, oid, Mt_S32_List, $Void, 0)
 				else
-					!! an_integer_array.make (1, value.count)
+					create an_integer_array.make (1, value.count)
 					from 
 						value.start  
 						i := 1
@@ -846,7 +846,7 @@ feature -- Element Change
 				if an_integer_list.count = 0 then
 					c_set_value_void (an_object.oid, oid, Mt_u32_list, $Void, 0)
 				else
-					!! an_integer_array.make (1, an_integer_list.count)
+					create an_integer_array.make (1, an_integer_list.count)
 					from 
 						an_integer_list.start  
 						i := 1
@@ -915,7 +915,7 @@ feature -- Element Change
 				if a_string_array.count = 0 then
 					c_set_value_void (an_object.oid, oid, a_mt_type, $Void, 0)
 				else
-					!! an_array_pointer.make (1, a_string_array.count)  
+					create an_array_pointer.make (1, a_string_array.count)  
 					from 
 						i := a_string_array.lower
 					until 
@@ -963,7 +963,7 @@ feature -- Element Change
 				if a_string_list.count = 0 then
 					c_set_value_void (an_object.oid, oid, a_mt_type, $Void, 0)
 				else
-					!! an_array_pointer.make (1, a_string_list.count)  
+					create an_array_pointer.make (1, a_string_list.count)  
 					from 
 						a_string_list.start  
 						i := 1
@@ -1039,7 +1039,7 @@ feature -- Element Change
 				if a_double_list.count = 0 then
 					c_set_value_void (an_object.oid, oid, Mt_Double_List, $Void, 0)
 				else
-					!! a_double_array.make (1, a_double_list.count)
+					create a_double_array.make (1, a_double_list.count)
 					from 
 						a_double_list.start  
 						i := 1
@@ -1111,7 +1111,7 @@ feature -- Element Change
 				if a_real_list.count = 0 then
 					c_set_value_void (an_object.oid, oid, Mt_Float_List, $Void, 0)
 				else
-					!! a_real_array.make (1, a_real_list.count)
+					create a_real_array.make (1, a_real_list.count)
 					from 
 						a_real_list.start  
 						i := 1
@@ -1193,7 +1193,7 @@ feature {MT_CLASS, MATISSE}-- Schema
 				-- This should be changed so that it consider Eiffel class field type
 			end
 			if not type_matched then
-				!! excp
+				create excp
 				message := clone ("Eiffel field '")
 				message.append (eiffel_name)
 				message.append ("' of class '")
@@ -1268,7 +1268,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				array_size := dimension (an_object, 0)
-				!! Result.make (1, array_size)
+				create Result.make (1, array_size)
 				from 
 					count := 1
 				until 
@@ -1288,7 +1288,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				list_count := dimension (an_object, 0)
-				!! Result.make
+				create Result.make
 				from 
 					count := 1
 				until 
@@ -1327,7 +1327,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				list_count := dimension (an_object, 0)
-				!! Result.make
+				create Result.make
 				from 
 					count := 1
 				until 
@@ -1347,7 +1347,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				array_size:= dimension (an_object, 0)
-				!! Result.make (1, array_size)
+				create Result.make (1, array_size)
 				from 
 					count := 1
 				until 
@@ -1377,7 +1377,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				list_count := dimension (an_object, 0)
-				!! Result.make
+				create Result.make
 				from 
 					count := 1
 				until 
@@ -1397,7 +1397,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				array_size := dimension (an_object, 0)
-				!! Result.make (1, array_size)
+				create Result.make (1, array_size)
 				from 
 					count := 1
 				until 
@@ -1427,7 +1427,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				list_count := dimension (an_object, 0)
-				!! Result.make
+				create Result.make
 				from 
 					count := 1
 				until 
@@ -1447,7 +1447,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				array_size := dimension (an_object, 0)
-				!! Result.make (1, array_size)
+				create Result.make (1, array_size)
 				from 
 					count := 1
 				until 
@@ -1477,7 +1477,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				list_count := dimension (an_object, 0)
-				!! Result.make
+				create Result.make
 				from 
 					count := 1
 				until 
@@ -1497,7 +1497,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				array_size := dimension (an_object, 0)
-				!! Result.make (1, array_size)
+				create Result.make (1, array_size)
 				from 
 					count := 1
 				until 
@@ -1545,7 +1545,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				list_count := dimension (an_object, 0)
-				!! Result.make
+				create Result.make
 				from 
 					count := 1
 				until 
@@ -1565,7 +1565,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				array_size := dimension (an_object, 0)
-				!! Result.make (1, array_size)
+				create Result.make (1, array_size)
 				from 
 					count := 1
 				until 
@@ -1595,7 +1595,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				list_count := dimension (an_object, 0)
-				!! Result.make
+				create Result.make
 				from 
 					count := 1
 				until 
@@ -1615,7 +1615,7 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid);
 			if c_value_type /= Mt_Nil then
 				list_count := dimension (an_object, 0)
-				!! Result.make (1, list_count)
+				create Result.make (1, list_count)
 				from 
 					count := 1
 				until 
@@ -1646,7 +1646,7 @@ feature -- Value by type
 			if c_value_type /= Mt_Nil then
 				a_pointer := c_get_string_value
 				if a_pointer /= default_pointer then
-					!! Result.make (0);
+					create Result.make (0);
 					Result.from_c (a_pointer);
 				end
 			end
@@ -1661,14 +1661,14 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid)
 			if c_value_type /= Mt_Nil then
 				list_size := dimension (an_object, 0)
-				!! Result.make
+				create Result.make
 				from 
 					count := 1
 				until 
 					count = list_size + 1
 				loop 
 					if c_ith_list_string (count) /= default_pointer then
-						!! a_string.make (0)
+						create a_string.make (0)
 						a_string.from_c (c_ith_list_string (count))
 						Result.extend (a_string)
 					else
@@ -1689,14 +1689,14 @@ feature -- Value by type
 			c_get_value (an_object.oid, oid)
 			if c_value_type /= Mt_Nil then
 				array_size := dimension (an_object, 0) 
-				!! Result.make (1, array_size)
+				create Result.make (1, array_size)
 				from 
 					count := 1  
 				until 
 					count = array_size + 1 
 				loop 
 					if c_ith_list_string (count) /= default_pointer then
-						!! a_string.make (0)
+						create a_string.make (0)
 						a_string.from_c (c_ith_list_string (count))
 						Result.put (a_string, count)
 					else
@@ -1727,7 +1727,7 @@ feature -- Value by type
 				yr := c_get_date_year
 				mh := c_get_date_month
 				dy := c_get_date_day
-				!! Result.make (yr, mh, dy)	
+				create Result.make (yr, mh, dy)	
 				c_free_value
 			end
 		end
@@ -1755,7 +1755,7 @@ feature -- Value by type
 			msd := c_get_timestamp_microsecs
 			c_free_value
 			fine_sec := sd + (msd / 1000000)
-			!! Result.make_fine (yr, mh, dy, hr, me, fine_sec)
+			create Result.make_fine (yr, mh, dy, hr, me, fine_sec)
 		end
 		
 	-- MT_TIME_INTERVAL --
@@ -1766,9 +1766,9 @@ feature -- Value by type
 			time: TIME_DURATION
 		do
 			c_get_value (an_object.oid, oid)
-			!! date.make_by_days (c_get_time_interval_days)
-			!! time.make_by_fine_seconds (c_get_time_interval_fine_seconds)
-			!! Result.make_by_date_time (date, time)
+			create date.make_by_days (c_get_time_interval_days)
+			create time.make_by_fine_seconds (c_get_time_interval_fine_seconds)
+			create Result.make_by_date_time (date, time)
 		end
 	
 feature {MATISSE} -- Object life cycle

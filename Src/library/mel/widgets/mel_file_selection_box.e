@@ -21,7 +21,7 @@ inherit
 			create_callback_struct, create_widget
 		end
 
-creation
+create
 	make,
 	make_from_existing
 
@@ -52,7 +52,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -66,7 +66,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -80,7 +80,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -94,7 +94,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -125,7 +125,7 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing (get_xm_string_table 
+			create Result.make_from_existing (get_xm_string_table 
 						(screen_object, XmNdirListItems), dir_list_item_count)
 		ensure
 			dir_list_items_not_void: Result /= Void
@@ -185,7 +185,7 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing (get_xm_string_table 
+			create Result.make_from_existing (get_xm_string_table 
 						(screen_object, XmNfileListItems), file_list_item_count)
 		ensure
 			file_list_items_not_void: Result /= Void
@@ -513,9 +513,9 @@ feature {MEL_DISPATCHER} -- Basic operations
 				resource_name = XmNnoMatchCallback or else
 				resource_name = XmNapplyCallback
 			then
-				!MEL_FILE_SELECTION_BOX_CALLBACK_STRUCT! Result.make (Current, a_callback_struct_ptr);
+				create {MEL_FILE_SELECTION_BOX_CALLBACK_STRUCT} Result.make (Current, a_callback_struct_ptr);
 			else
-				!! Result.make (Current, a_callback_struct_ptr);
+				create Result.make (Current, a_callback_struct_ptr);
 			end
 		end;
 

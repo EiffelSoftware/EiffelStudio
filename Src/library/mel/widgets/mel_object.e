@@ -24,7 +24,7 @@ inherit
 
 	MEL_EVENT_MASK_CONSTANTS
 
-creation
+create
 
 feature -- Access
 
@@ -49,7 +49,7 @@ feature -- Access
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.from_c (xt_name (screen_object))
 		ensure
 			name_not_void: Result /= Void
@@ -60,7 +60,7 @@ feature -- Access
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing 
+			create Result.make_from_existing 
 					(xt_widget_to_application_context (screen_object))
 		ensure
 			application_context_is_valid: Result /= Void and Result.is_valid
@@ -286,8 +286,8 @@ feature -- Element change
 			a_command_exec: MEL_COMMAND_EXEC;
 			a_key: MEL_CALLBACK_KEY
 		do
-			!! a_key.make_motif (a_callback_resource);
-			!! a_command_exec.make (a_command, an_argument);
+			create a_key.make_motif (a_callback_resource);
+			create a_command_exec.make (a_command, an_argument);
 			if add_to_callbacks (a_command_exec, a_key) then
 				c_add_callback (screen_object, a_callback_resource)
 			end
@@ -315,7 +315,7 @@ feature -- Removal
 		local
 			a_key: MEL_CALLBACK_KEY
 		do
-			!! a_key.make_motif (a_callback_resource);
+			create a_key.make_motif (a_callback_resource);
 			if remove_from_callbacks (a_key) then
 				c_remove_callback (screen_object, a_callback_resource)
 			end;
@@ -348,9 +348,9 @@ end;
 			end
 			dc := destroy_command;
 			if dc /= Void then
-				!! list.make;
+				create list.make;
 				list.add_command (dc.command, dc.argument);
-				!! clean_up_callback;
+				create clean_up_callback;
 				list.add_command (clean_up_callback, Void);
 				set_destroy_callback (list, Void);
 				xt_destroy_widget (screen_object)
@@ -439,7 +439,7 @@ feature {NONE} -- Implementation
 			cb := callbacks;
 			if cb = Void then
 				Result := True;
-				!! cb.make (1);
+				create cb.make (1);
 				callbacks := cb
 				cb.put (a_command, a_key)
 			elseif cb.has (a_key) then
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 		do
 			cb := callbacks;
 			if cb /= Void then
-				!! a_key.make_motif (a_callback_resource);
+				create a_key.make_motif (a_callback_resource);
 				Result := cb.item (a_key)
 			end
 		end;

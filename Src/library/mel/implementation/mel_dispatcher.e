@@ -26,7 +26,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -34,9 +34,9 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize the C variables
 		do
-			!! xt_input_callbacks.make (1);
-			!! xt_timer_callbacks.make (1)
-			!! xt_work_proc_callbacks.make (1)
+			create xt_input_callbacks.make (1);
+			create xt_timer_callbacks.make (1)
+			create xt_work_proc_callbacks.make (1)
 			set_procedures ($handle_callback, $handle_event, 
 					$handle_translation, $handle_wm_protocol,
 					$handle_input, $handle_timer,
@@ -128,7 +128,7 @@ feature {MEL_APPLICATION_CONTEXT} -- Implementation
 			id: POINTER
 		do	
 			id := c_add_input (app_context.handle, file.handle, a_mask);
-			!! last_id.make_input (id);
+			create last_id.make_input (id);
 			xt_input_callbacks.put (a_command_exec, id)
 		end;
 
@@ -144,7 +144,7 @@ feature {MEL_APPLICATION_CONTEXT} -- Implementation
 			id: POINTER
 		do	
 			id := c_add_timer (app_context.handle, time);
-			!! last_id.make_timer (id);
+			create last_id.make_timer (id);
 			xt_timer_callbacks.put (a_command_exec, id)
 		end;
 
@@ -158,7 +158,7 @@ feature {MEL_APPLICATION_CONTEXT} -- Implementation
 			id: POINTER
 		do	
 			id := c_add_work_proc (app_context.handle);
-			!! last_id.make_work_proc (id);
+			create last_id.make_work_proc (id);
 			xt_work_proc_callbacks.put (a_command_exec, id)
 		end;
 
@@ -234,9 +234,9 @@ feature {NONE} -- External features passed out to C
 			a_key: MEL_CALLBACK_KEY
 		do
 			a_widget := Mel_widgets.item (a_screen_object);
-			!! a_callback_struct.make (a_widget, 
+			create a_callback_struct.make (a_widget, 
 						c_event (a_callback_struct_ptr)); 
-			!! a_key.make_wm_protocol (atom);
+			create a_key.make_wm_protocol (atom);
 			a_widget.execute_callback (a_key, a_callback_struct)
 		end;
 
@@ -255,7 +255,7 @@ feature {NONE} -- External features passed out to C
 			a_widget: MEL_OBJECT
 		do
 			a_widget := Mel_widgets.item (a_screen_object);
-			!! a_key.make_motif (resource_name);
+			create a_key.make_motif (resource_name);
 			a_callback_struct := create_callback_struct (a_widget, 
 									a_callback_struct_ptr, resource_name);
 			a_widget.execute_callback (a_key, a_callback_struct)
@@ -277,8 +277,8 @@ feature {NONE} -- External features passed out to C
 			a_widget: MEL_OBJECT
 		do
 			a_widget := Mel_widgets.item (a_screen_object);
-			!! a_callback_struct.make (a_widget, event_ptr);
-			!! a_key.make_xt_event (mask);
+			create a_callback_struct.make (a_widget, event_ptr);
+			create a_key.make_xt_event (mask);
 			a_widget.execute_callback (a_key, a_callback_struct)
 		end;
 
@@ -300,8 +300,8 @@ feature {NONE} -- External features passed out to C
 			str: STRING
 		do
 			a_widget := Mel_widgets.item (a_screen_object);
-			!! a_key.make_no_adopted (a_translation);
-			!! a_callback_struct.make (a_widget, event_ptr);
+			create a_key.make_no_adopted (a_translation);
+			create a_callback_struct.make (a_widget, event_ptr);
 			a_widget.execute_callback (a_key, a_callback_struct)
 		end;
 
@@ -315,8 +315,8 @@ feature {NONE} -- External features passed out to C
 			mel_struct: MEL_ID_CALLBACK_STRUCT;
 			mel_id: MEL_IDENTIFIER
 		do
-			!! mel_id.make_input (id);
-			!! mel_struct.make (mel_id);
+			create mel_id.make_input (id);
+			create mel_struct.make (mel_id);
 			mel_exec := xt_input_callbacks.item (id);
 			mel_exec.execute (mel_struct)
 		end;
@@ -333,8 +333,8 @@ feature {NONE} -- External features passed out to C
 			mel_struct: MEL_ID_CALLBACK_STRUCT;
 			mel_id: MEL_IDENTIFIER
 		do
-			!! mel_id.make_timer (id);
-			!! mel_struct.make (mel_id);
+			create mel_id.make_timer (id);
+			create mel_struct.make (mel_id);
 			mel_exec := xt_timer_callbacks.item (id);
 			mel_exec.execute (mel_struct);
 			xt_timer_callbacks.remove (id)
@@ -352,8 +352,8 @@ feature {NONE} -- External features passed out to C
 			mel_id: MEL_IDENTIFIER
 		do
 			if  xt_work_proc_callbacks.has (id) then
-				!! mel_id.make_work_proc (id);
-				!! mel_struct.make (mel_id);
+				create mel_id.make_work_proc (id);
+				create mel_struct.make (mel_id);
 				mel_exec := xt_work_proc_callbacks.item (id);
 				mel_exec.execute (mel_struct)
 			end
@@ -368,7 +368,7 @@ feature {NONE} -- External features passed out to C
 			str: STRING
 		do
 			if requestor_command /= Void then
-				!! str.make (len);
+				create str.make (len);
 				str.from_c_substring (c_string, 1, len);
 				requestor_command.command.execute (str)
 			end
@@ -408,13 +408,13 @@ feature {NONE} -- Implementation
 			reason: INTEGER
 		do
 			if a_callback_struct_ptr = default_pointer then
-				!! Result.make_no_event (a_widget)
+				create Result.make_no_event (a_widget)
 			else
 				reason := c_reason (a_callback_struct_ptr);
 				if reason = XmCR_NONE then
-					!! Result.make_no_event (a_widget)
+					create Result.make_no_event (a_widget)
 				elseif reason = XmCR_HELP then
-					!MEL_ANY_CALLBACK_STRUCT! Result.make
+					create {MEL_ANY_CALLBACK_STRUCT} Result.make
 							(a_widget, a_callback_struct_ptr)
 				else
 					Result := a_widget.create_callback_struct 

@@ -9,7 +9,7 @@ indexing
 class
 	MEL_COMMAND_EXEC 
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

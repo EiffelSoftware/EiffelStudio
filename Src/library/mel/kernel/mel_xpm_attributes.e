@@ -13,7 +13,7 @@ inherit
 
 	MEL_MEMORY
 
-creation
+create
 	make,
 	make_from_existing
 
@@ -37,7 +37,7 @@ feature -- Access
 	colormap: MEL_COLORMAP is
 			-- Colormap used for allocation of color pixels
 		do
-			!! Result.make_from_existing (xpm_attributes_colormap (handle))
+			create Result.make_from_existing (xpm_attributes_colormap (handle))
 		end;
 
 	number_of_colors: INTEGER is

@@ -21,7 +21,7 @@ inherit
 			handle as identifier
 		end
 
-creation
+create
 
 	make_from_type,
 	make_from_pixmap,

@@ -9,10 +9,10 @@ indexing
 class
 	MEL_COLORMAP
 
-creation
+create
 	make_from_existing
 
-creation {MEL_SCREEN} 
+create {MEL_SCREEN} 
 
 	make_default
 

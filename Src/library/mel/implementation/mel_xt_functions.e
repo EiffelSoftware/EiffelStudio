@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 		require
 			not_a_resource_name_null: a_resource_name /= default_pointer
 		do
-			!! Result.make_from_existing (a_target.display,
+			create Result.make_from_existing (a_target.display,
 				c_get_pixel (a_target.screen_object, a_resource_name))
 		end;
 
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 			else
 				a_depth := mel_widget.depth
 			end
-			!! Result.make_from_existing (a_target.display, 
+			create Result.make_from_existing (a_target.display, 
 					c_get_pixmap (a_target.screen_object, a_resource_name), a_depth)
 		end;
 

@@ -18,7 +18,7 @@ inherit
 
 	MEL_GADGET
 
-creation 
+create 
 	make, 
 	make_from_existing
 

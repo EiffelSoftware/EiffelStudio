@@ -85,7 +85,7 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: ARRAY [INTEGER]
 		once 
-			!! a.make (0, 0) 
+			create a.make (0, 0) 
 			Result := dynamic_type (a) 
 		end
 
@@ -93,7 +93,7 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: ARRAY [REAL]
 		once 
-			!! a.make (0, 0) 
+			create a.make (0, 0) 
 			Result := dynamic_type (a) 
 		end
 
@@ -101,7 +101,7 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: ARRAY [DOUBLE]
 		once 
-			!! a.make (0, 0) 
+			create a.make (0, 0) 
 			Result := dynamic_type (a) 
 		end
 
@@ -109,7 +109,7 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: ARRAY [STRING]
 		once 
-			!! a.make (0, 0) 
+			create a.make (0, 0) 
 			Result := dynamic_type (a) 
 		end
 
@@ -117,7 +117,7 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: ARRAY [CHARACTER]
 		once 
-			!! a.make (0, 0) 
+			create a.make (0, 0) 
 			Result := dynamic_type (a) 
 		end
 
@@ -125,7 +125,7 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: LINKED_LIST [INTEGER]
 		once 
-			!! a.make 
+			create a.make 
 			Result := dynamic_type (a) 
 		end
 
@@ -133,7 +133,7 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: LINKED_LIST [REAL]
 		once 
-			!! a.make 
+			create a.make 
 			Result := dynamic_type (a) 
 		end
 
@@ -141,7 +141,7 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: LINKED_LIST [DOUBLE]
 		once 
-			!! a.make 
+			create a.make 
 			Result := dynamic_type (a) 
 		end
 
@@ -149,7 +149,7 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: LINKED_LIST [STRING]
 		once 
-			!! a.make 
+			create a.make 
 			Result := dynamic_type (a) 
 		end
 
@@ -157,7 +157,7 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: LINKED_LIST [CHARACTER]
 		once 
-			!! a.make 
+			create a.make 
 			Result := dynamic_type (a) 
 		end
 	
@@ -165,14 +165,14 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: DATE
 		once 
-			!! a.make (1, 1, 1) 
+			create a.make (1, 1, 1) 
 			Result := dynamic_type (a) 
 		end
 	Eif_date_time_type: INTEGER is
 		local 
 			a: DATE_TIME
 		once 
-			!! a.make (1, 1, 1, 1, 1, 1) 
+			create a.make (1, 1, 1, 1, 1, 1) 
 			Result := dynamic_type (a) 
 		end
 
@@ -180,7 +180,7 @@ feature {NONE} -- Eiffel class types
 		local 
 			a: DATE_TIME_DURATION
 		once 
-			!! a.make (1, 1, 1, 1, 1, 1) 
+			create a.make (1, 1, 1, 1, 1, 1) 
 			Result := dynamic_type (a) 
 		end
 
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation context
 
 	current_db_item: CELL [MATISSE] is
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 	put_current_db (a_db: MATISSE) is

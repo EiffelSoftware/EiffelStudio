@@ -41,7 +41,7 @@ inherit
 
 	MT_CONTAINER_OBJECT
 	
-creation
+create
 	make
 
 feature -- Redefinition of HASH_TABLE API
@@ -215,10 +215,10 @@ feature {NONE} -- Loading & storing successors
 			rel: MT_RELATIONSHIP
 			a_default_key: H
 		do
-			!! att.make ("att_keys")
+			create att.make ("att_keys")
 			Result ?= att.get_value (Current)
 			if Result = Void then
-				!! rel.make ("obj_keys")
+				create rel.make ("obj_keys")
 				Result ?= successors (rel)
 			end
 		end
@@ -237,14 +237,14 @@ feature {NONE} -- Loading & storing successors
 			float_cell: CELL [REAL]
 			double_cell: CELL [DOUBLE]
 		do
-			!! has_default_att.make ("has_default")
-			!! att.make ("att_values")
+			create has_default_att.make ("has_default")
+			create att.make ("att_values")
 			Result ?= att.get_value (Current)
 			if Result = Void then
-				!! rel.make ("obj_values")
+				create rel.make ("obj_values")
 				Result ?= successors (rel)
 				if has_default_att.get_boolean (Current) then
-					!! rel.make ("void_key_obj_value")
+					create rel.make ("void_key_obj_value")
 					succ ?= successors (rel)
 					if succ.is_empty then
 						ht_put (default_value, default_key)
@@ -254,31 +254,31 @@ feature {NONE} -- Loading & storing successors
 				end
 			else
 				if has_default_att.get_boolean (Current) then
-					!! att.make ("void_key_att_value")
+					create att.make ("void_key_att_value")
 					att_type := att.dynamic_att_type (Current)
 					if att_type /= Mt_nil then
 						inspect att_type
 						when mt_s32 then 
-							!!  int_cell.put (att.get_integer (Current));
+							create  int_cell.put (att.get_integer (Current));
 							a_cell ?= int_cell
 						when mt_u32 then 
-							!!  int_cell.put (att.get_unsigned_int (Current));
+							create  int_cell.put (att.get_unsigned_int (Current));
 							a_cell ?= int_cell
 						when mt_s16 then 
-							!!  int_cell.put (att.get_short (Current));
+							create  int_cell.put (att.get_short (Current));
 							a_cell ?= int_cell
 						when mt_u16 then 
-							!!  int_cell.put (att.get_unsigned_short (Current));
+							create  int_cell.put (att.get_unsigned_short (Current));
 							a_cell ?= int_cell
 						when mt_float then 
-							!!  float_cell.put (att.get_real (Current));
+							create  float_cell.put (att.get_real (Current));
 							a_cell ?= float_cell
 						when mt_double then 
-							!!  double_cell.put (att.get_double (Current));
+							create  double_cell.put (att.get_double (Current));
 							a_cell ?= double_cell
 						else
 							a_cell ?= any_cell;
-							!!  any_cell.put (att.get_value (Current))
+							create  any_cell.put (att.get_value (Current))
 						end;
 						ht_put (a_cell.item, default_key)
 					end
@@ -290,7 +290,7 @@ feature {NONE} -- Loading & storing successors
 		local
 			att: MT_ATTRIBUTE
 		do
-			!! att.make ("value_index")
+			create att.make ("value_index")
 			Result ?= att.get_value (Current)
 		end
 
@@ -314,9 +314,9 @@ feature {MT_HASH_TABLE} -- Loading & storing successors
 			mt_keys_type := mt_property_type_of_keys
 			mt_values_type := mt_property_type_of_values
 			
-			!! all_keys.make (1, count)
-			!! all_values.make (1, count)
-			!! indexes.make (1, count)
+			create all_keys.make (1, count)
+			create all_values.make (1, count)
+			create indexes.make (1, count)
 			from 
 				values_count := 0
 				i := keys.lower
@@ -342,7 +342,7 @@ feature {MT_HASH_TABLE} -- Loading & storing successors
 				i := i + 1
 			end
 			
-			!! has_default_att.make ("has_default")
+			create has_default_att.make ("has_default")
 			if has_default then
 				has_default_att.set_boolean_value (Current, True)
 				if is_attribute (mt_keys_type) then
@@ -361,15 +361,15 @@ feature {MT_HASH_TABLE} -- Loading & storing successors
 					end
 				else -- keys are relationship
 					if is_attribute (mt_values_type) then 
-						!! att.make ("void_key_att_value")
+						create att.make ("void_key_att_value")
 						if default_key_value = Void then
 							att.set_string_value (Current, Mt_string, Void)
 						else
 							att.set_dynamic_value (Current, default_key_value)
 						end
 					else
-						!! rs.make ("void_key_obj_value")
-						!! a_linear.make (1)
+						create rs.make ("void_key_obj_value")
+						create a_linear.make (1)
 						if default_key_value /= default_value then
 							mt_obj ?= default_key_value
 							if mt_obj /= Void then
@@ -383,14 +383,14 @@ feature {MT_HASH_TABLE} -- Loading & storing successors
 				has_default_att.set_boolean_value (Current, False)
 			end
 			
-			!! index_att.make ("value_index")
+			create index_att.make ("value_index")
 			index_att.set_integer_array_value (Current, indexes)
 			
 			if is_attribute (mt_keys_type) then
-				!! key_att.make ("att_keys")
+				create key_att.make ("att_keys")
 				key_att.set_dynamic_value (Current, all_keys)
 			else
-				!! key_rs.make ("obj_keys")
+				create key_rs.make ("obj_keys")
 				a_linear ?= all_keys.linear_representation
 				if has_default then
 					a_linear.finish
@@ -402,17 +402,17 @@ feature {MT_HASH_TABLE} -- Loading & storing successors
 			end
 			
 			if is_attribute (mt_values_type) then
-				!! value_att.make ("att_values")
+				create value_att.make ("att_values")
 				if values_count = 0 then
-					!! all_values.make (1, 0)
+					create all_values.make (1, 0)
 					value_att.set_dynamic_value (Current, all_values)
 				else
 					value_att.set_dynamic_value (Current, all_values.subarray (1, values_count))
 				end
 			else
-				!! value_rs.make ("obj_values")
+				create value_rs.make ("obj_values")
 				if values_count = 0 then
-					!! all_values.make (1, 0)
+					create all_values.make (1, 0)
 					a_linear ?= all_values.linear_representation
 				else
 					a_linear ?= all_values.subarray (1, values_count).linear_representation

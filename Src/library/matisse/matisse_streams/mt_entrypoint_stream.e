@@ -11,7 +11,7 @@ inherit
 
 	MT_ENTRYPOINT_STREAM_EXTERNAL
 
-Creation 
+create 
 	make
 
 feature {MT_ENTRYPOINT} -- Implementation

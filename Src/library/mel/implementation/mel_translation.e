@@ -27,7 +27,7 @@ inherit
 			dispose, out, is_equal
 		end
 
-creation
+create
 	make,
 	make_no_adopted
 
@@ -90,7 +90,7 @@ feature {MEL_WIDGET} -- Access
 			-- to XtOverrideTranslations that will execute
 			-- the callback with arguments
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.append (translation_string);
 			Result.append (": ");
 			Result.append (external_routine_name);
@@ -104,7 +104,7 @@ feature {MEL_WIDGET} -- Access
 			-- to XtOverrideTranslations that will execute
 			-- the callback with no arguments
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.append (translation_string)
 			Result.append (": ");
 			Result.append (external_routine_name);
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			-- External routine name for handling
 			-- translations
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.from_c (c_trans_name)
 		end;
 

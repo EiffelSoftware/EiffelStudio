@@ -13,7 +13,7 @@ inherit
 
 	MEL_EVENT
 
-creation
+create
 	make
 
 feature -- Access
@@ -33,7 +33,7 @@ feature -- Access
 	selection: MEL_ATOM is
 			-- Name of selection
 		do
-			!! Result.make_from_existing (c_event_selection (handle))	
+			create Result.make_from_existing (c_event_selection (handle))	
 		ensure
 			result_non_void: Result /= Void
 		end;
@@ -45,7 +45,7 @@ feature -- Access
 		do
 			p := c_event_target (handle);
 			if p /= Void then
-				!! Result.make_from_existing (p)
+				create Result.make_from_existing (p)
 			end
 		end;
 
@@ -56,7 +56,7 @@ feature -- Access
 		do
 			p := c_event_property (handle);
 			if p /= Void then
-				!! Result.make_from_existing (p)
+				create Result.make_from_existing (p)
 			end
 		end;
 

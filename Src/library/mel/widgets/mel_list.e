@@ -28,7 +28,7 @@ inherit
 			create_callback_struct
 		end;
 
-creation
+create
 	make, 
 	make_from_existing
 
@@ -162,7 +162,7 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing (get_xm_string_table 
+			create Result.make_from_existing (get_xm_string_table 
 						(screen_object, XmNitems), item_count);
 			Result.set_shared
 		ensure
@@ -216,7 +216,7 @@ feature -- Status report
 			int_table: POINTER;
 			i, c: INTEGER
 		do
-			!! Result.make;
+			create Result.make;
 			c := selected_item_count;
 			if c > 0 then
 				from
@@ -239,7 +239,7 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing (get_xm_string_table 
+			create Result.make_from_existing (get_xm_string_table 
 				(screen_object, XmNselectedItems), selected_item_count);
 			Result.set_shared
 		ensure
@@ -834,7 +834,7 @@ feature {MEL_DISPATCHER} -- Basic operations
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
-			!! Result.make (Current, a_callback_struct_ptr)
+			create Result.make (Current, a_callback_struct_ptr)
 		end
 
 feature {NONE} -- Implementation

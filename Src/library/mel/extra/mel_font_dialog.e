@@ -33,7 +33,7 @@ inherit
 			form_make_no_auto_unmanage, form_make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -47,9 +47,9 @@ feature -- Initialization
 			handle := font_box_create ($widget_name,
 						a_parent.screen_object, True);
 			screen_object := font_box_form (handle)
-			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			create parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
-			!! button_form.make_from_existing (xt_parent 
+			create button_form.make_from_existing (xt_parent 
 					(font_box_ok_button (handle)), Current);
 			set_default
 		end;

@@ -21,7 +21,7 @@ inherit
 			create_callback_struct
 		end
 
-creation
+create
 	make, 
 	make_with_automatic_scrolling, 
 	make_from_existing
@@ -44,7 +44,7 @@ feature -- Initialization
 			Mel_widgets.add (Current);
 			w := c_get_widget (screen_object, XmNclipWindow);
 			if w /= default_pointer then	
-				!! clip_window.make_from_existing (w, Current)
+				create clip_window.make_from_existing (w, Current)
 			end;
 			set_default;
 			if do_manage then
@@ -72,7 +72,7 @@ feature -- Initialization
 			Mel_widgets.add (Current);
 			w := c_get_widget (screen_object, XmNclipWindow);
 			if w /= default_pointer then	
-				!! clip_window.make_from_existing (w, Current)
+				create clip_window.make_from_existing (w, Current)
 			end;
 			set_default;
 			if do_manage then
@@ -109,7 +109,7 @@ feature -- Status report
 			if w /= default_pointer then	
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -125,7 +125,7 @@ feature -- Status report
 			if w /= default_pointer then	
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -402,7 +402,7 @@ feature {MEL_DISPATCHER} -- Basic operations
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
-			!! Result.make (Current, a_callback_struct_ptr)
+			create Result.make (Current, a_callback_struct_ptr)
 		end;
 
 feature {NONE} -- Implementation

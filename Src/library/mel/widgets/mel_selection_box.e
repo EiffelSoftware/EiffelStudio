@@ -22,7 +22,7 @@ inherit
 			default_button, create_widget
 		end
 
-creation
+create
 	make,
 	make_no_auto_unmanage,
 	make_from_existing
@@ -50,7 +50,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -64,7 +64,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -78,7 +78,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -92,7 +92,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -106,7 +106,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -120,7 +120,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -134,7 +134,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -148,7 +148,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -162,7 +162,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -176,7 +176,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -190,7 +190,7 @@ feature -- Access
 			if ptr /= default_pointer then
 				Result ?= Mel_widgets.item (ptr)
 				if Result = Void then
-					!! Result.make_from_existing (ptr, Current)
+					create Result.make_from_existing (ptr, Current)
 				end
 			end;
 		end;
@@ -332,7 +332,7 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing 
+			create Result.make_from_existing 
 				(get_xm_string_table (screen_object, XmNlistItems), 
 				list_item_count);
 			Result.set_shared
@@ -725,9 +725,9 @@ feature {MEL_DISPATCHER} -- Basic operations
 				resource_name = XmNnoMatchCallback or else
 				resource_name = XmNapplyCallback
 			then
-				!MEL_SELECTION_BOX_CALLBACK_STRUCT! Result.make (Current, a_callback_struct_ptr)
+				create {MEL_SELECTION_BOX_CALLBACK_STRUCT} Result.make (Current, a_callback_struct_ptr)
 			else
-				!! Result.make (Current, a_callback_struct_ptr)
+				create Result.make (Current, a_callback_struct_ptr)
 			end
 		end;
 

@@ -29,7 +29,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 
 	make, 
 	make_from_existing
@@ -70,7 +70,7 @@ feature -- Access
 			-- Mel display on which resource was allocated
 		do
 			if display_handle /= default_pointer then
-				!! Result.make_from_existing (display_handle)
+				create Result.make_from_existing (display_handle)
 			end
 		end;
 
@@ -144,7 +144,7 @@ feature -- Status setting
 			an_array_of_char: STRING;
 			ext_name: ANY
 		do
-			!! an_array_of_char.make (a_dash_list.count);
+			create an_array_of_char.make (a_dash_list.count);
 			from
 				a_dash_list.start
 			until

@@ -17,7 +17,7 @@ inherit
 			replace, replace_key
 		end
 
-creation
+create
 	make
 	
 feature -- Redefinition of HASH_TABLE API
@@ -97,12 +97,12 @@ feature
 			i, j: INTEGER
 			indexes: ARRAY [INTEGER]
 		do
-			!! all_keys.make (1, count)
-			!! all_values.make (1, count)
-			!! indexes.make (1, count)
-			!! key_att.make_from_names ("att_keys", "HASH_TABLE")
-			!! value_att.make_from_names ("att_values", "HASH_TABLE")
-			!! index_att.make_from_names ("value_index", "HASH_TABLE")
+			create all_keys.make (1, count)
+			create all_values.make (1, count)
+			create indexes.make (1, count)
+			create key_att.make_from_names ("att_keys", "HASH_TABLE")
+			create value_att.make_from_names ("att_values", "HASH_TABLE")
+			create index_att.make_from_names ("value_index", "HASH_TABLE")
 			from 
 				j := 1
 				i := keys.lower
@@ -117,7 +117,7 @@ feature
 				end
 				i := i + 1
 			end
-			!! has_default_att.make ("HASH_TABLE__has_default")
+			create has_default_att.make ("HASH_TABLE__has_default")
 			if has_default then
 				check 
 					i = keys.upper  
@@ -142,7 +142,7 @@ feature {NONE}
 		local
 			att: MT_ATTRIBUTE
 		do
-			!! att.make_from_names ("att_keys", "HASH_TABLE")
+			create att.make_from_names ("att_keys", "HASH_TABLE")
 			Result ?= att.get_value (Current)
 		end
 	
@@ -150,7 +150,7 @@ feature {NONE}
 		local
 			att: MT_ATTRIBUTE
 		do
-			!! att.make_from_names ("att_values", "HASH_TABLE")
+			create att.make_from_names ("att_values", "HASH_TABLE")
 			Result ?= att.get_value (Current)
 		end
 	

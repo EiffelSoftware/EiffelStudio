@@ -22,11 +22,10 @@ default
 	array_optimization (no)
 	inlining (no)
 	inlining_size ("4")
-	working_directory ("E:\projects\rich_text_example")
 
 cluster 
 		-- The application
-	all root_cluster: "E:\projects\rich_text_example"
+	all root_cluster: "."
 
 		-- EiffelBase
 	all base: "$ISE_EIFFEL/library/base"

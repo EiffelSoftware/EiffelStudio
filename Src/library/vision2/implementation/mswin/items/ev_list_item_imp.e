@@ -1,8 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision list item. Mswindows implementation."
+	description: "Eiffel Vision list item. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -31,7 +30,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -83,20 +82,18 @@ feature -- Access
 	parent_imp: EV_LIST_IMP
 		-- Parent of `Current'
 	
-	set_parent (par: like parent) is
-                      -- Make `par' the new parent of the widget.
-                      -- `par' can be Void then the parent is the screen.
+	set_parent (a_parent: like parent) is
+			-- Assign `a_parent' to `parent'.
 		do
-			if par /= Void then
-				parent_imp ?= par.implementation
+			if a_parent /= Void then
+				parent_imp ?= a_parent.implementation
 			else
 				parent_imp := Void
 			end
 		end
 
---|FIXME implement as now pick and dropable
-
-pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+	--|FIXME implement as now pick and dropable
+	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 		local
 			list_imp: EV_LIST_IMP
 		do
@@ -133,7 +130,7 @@ pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 			end
 		end
 
-feature -- Status report
+feature {NONE} -- Implementation
 
 	wel_text: STRING is
 			-- Text of `Current'
@@ -142,53 +139,14 @@ feature -- Status report
 		end
 
 	real_text: STRING
-			-- Internal `text'. Not to be returned directly. Use clone.
+			-- Internal `text'.
 
---	is_selected: BOOLEAN is
---			-- Is the item selected
---		do
---			--Result := parent_imp.internal_is_selected (Current)
---		end
-
-	is_first: BOOLEAN is
-			-- Is the item first in the list ?
+	wel_set_text (a_text: STRING) is
+			-- Make `a_text' the new label of the item.
 		do
-			Result := (index = 1)
-		end
-
-	is_last: BOOLEAN is
-			-- Is the item last in the list ?
-		do
-			Result := (index = parent_imp.count)
-		end
-	
-feature -- Status setting
-
-	set_selected (flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
-		do
-			if flag then
-			--	parent_imp.internal_select_item (Current)
-			else
-			--	parent_imp.internal_deselect_item (Current)
-			end
-		end
-
---	toggle is
---			-- Change the state of the toggle button to
---			-- opposit status.
---		do
---			set_selected (not is_selected)
---		end
-
-feature -- Element change
-
-	wel_set_text (txt: STRING) is
-			-- Make `txt' the new label of the item.
-		do
-			real_text := clone (txt)
+			real_text := clone (a_text)
 			if parent_imp /= Void then
-			--	parent_imp.internal_set_text (Current.interface, real_text)
+				parent_imp.set_item_imp_text (Current, a_text)
 			end
 		end
 
@@ -283,6 +241,10 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/29 22:13:09  brendel
+--| Implemented `set_text'.
+--| Clean-up.
+--|
 --| Revision 1.41  2000/03/29 20:25:17  brendel
 --| Implemented using new _I.
 --| To be cleaned up.

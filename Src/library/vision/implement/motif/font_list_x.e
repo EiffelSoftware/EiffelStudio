@@ -28,7 +28,6 @@ inherit
 			has as list_has,
 			put as list_put,
 			put_i_th as list_put_i_th,
-			wipe_out as list_wipe_out,
 			search as list_search
 		export
 			{NONE} all
@@ -66,7 +65,15 @@ feature
 		do
 			x_free_font_names (fonts_ptr);
 			fonts_ptr := void_pointer;
-			list_wipe_out
+			from
+				start
+			until
+				after
+			loop
+					-- Replace current item with Void
+				replace (Void);
+				forth
+			end
 		end; 
 
 	first: FONT is

@@ -568,6 +568,32 @@
 <Events><Event>select_actions EV_LIST_ITEM_ACTION_SEQUENCES pixmap_item_selected</Event>
 	</Events>
 </item>
+<item type="EV_LIST_ITEM"><Internal_properties>
+	<id>264</id>
+	<name>color_item</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_DESELECTABLE></EV_DESELECTABLE>
+<EV_TEXTABLE><Text><![CDATA[COLOR]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_LIST_ITEM_ACTION_SEQUENCES color_item_selected</Event>
+	</Events>
+</item>
+<item type="EV_LIST_ITEM"><Internal_properties>
+	<id>265</id>
+	<name>font_item</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_DESELECTABLE></EV_DESELECTABLE>
+<EV_TEXTABLE><Text><![CDATA[FONT]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_LIST_ITEM_ACTION_SEQUENCES font_item_selected</Event>
+	</Events>
+</item>
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>

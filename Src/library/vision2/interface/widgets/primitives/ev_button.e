@@ -21,7 +21,7 @@ inherit
 			is_in_default_state
 		end
 
-	EV_TEXTABLE
+	EV_TEXT_ALIGNABLE
 		redefine
 			implementation,
 			is_in_default_state
@@ -101,7 +101,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_TEXTABLE} and
+			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_TEXT_ALIGNABLE} and
 				Precursor {EV_PIXMAPABLE}
 		end
 

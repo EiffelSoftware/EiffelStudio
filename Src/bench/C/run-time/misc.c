@@ -435,10 +435,8 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	dftype = Dftype(ref);					/* Gcc won't let me expand that!! */
 	dtype = Dtype(ref);					/* Gcc won't let me expand that!! */
 
-	RT_GC_PROTECT(new_area);
-
 		/* Initialize expanded objects from 0 to (j - 1) */
-	sp_init(new_area, dftype, 0, j - 1);
+	new_area = sp_init(new_area, dftype, 0, j - 1);
 
 		/* Update expanded offsets for k objects starting at j */
 	for (
@@ -450,9 +448,8 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	}
 	
 		/* Intialize remaining objects from (j + k) to (i - 1) */
-	sp_init(new_area, dftype, j + k, i - 1);
+	new_area = sp_init(new_area, dftype, j + k, i - 1);
 
-	RT_GC_WEAN(new_area);
 	return new_area;
 }
 

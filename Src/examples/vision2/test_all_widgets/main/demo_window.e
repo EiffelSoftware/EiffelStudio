@@ -66,7 +66,7 @@ feature -- Command executing
 			!!actions_window.make_with_main_widget (Current, main_widget)
 			actions_window.show
 			argument.first.set_insensitive (True)
-			set_delete_command (argument.first)
+			set_close_command (argument.first)
 		end
 end
 --|----------------------------------------------------------------

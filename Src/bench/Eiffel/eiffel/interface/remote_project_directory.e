@@ -11,10 +11,15 @@ class REMOTE_PROJECT_DIRECTORY
 
 inherit
 
+	EIFFEL_ENV
+		rename
+			precomp_eif as shared_precomp_eif
+		end;
 	PROJECT_CONTEXT
 		rename
 			compilation_path as shared_compilation_path,
-			precomp_eif as shared_precomp_eif
+			precomp_eif as shared_precomp_eif,
+			project_txt_name as shared_project_txt_name
 		export
 			{NONE} all
 		end;
@@ -70,7 +75,15 @@ feature -- Access
 		do
 			!! Result.make_from_string (name);
 			Result.extend_from_array (<<Eiffelgen, Comp>>)
-		end
+		end;
+	
+	project_txt_name: FILE_NAME is
+			-- Full name of the project.txt file
+		do
+			!! Result.make_from_string (name);
+			Result.extend (Eiffelgen);
+			Result.set_file_name (Project_txt);
+		end;
 
 	project_eif: FILE_NAME is
 			-- Full name of the file where the
@@ -78,7 +91,13 @@ feature -- Access
 		do
 			!! Result.make_from_string (name);
 			Result.extend (Eiffelgen);
-			Result.set_file_name (Dot_workbench)
+			Result.set_file_name (Dot_workbench);
+		end
+
+	project_eif_file: PROJECT_EIFFEL_FILE is
+			-- File where the workbench is stored
+		do
+			!! Result.make (project_eif, Project_txt_name)
 		end
 
 	precomp_eif: FILE_NAME is
@@ -88,6 +107,12 @@ feature -- Access
 			!! Result.make_from_string (name);
 			Result.extend (Eiffelgen);
 			Result.set_file_name (Shared_precomp_eif)
+		end
+
+	precomp_eif_file: PROJECT_EIFFEL_FILE is
+			-- File where the precompilation information is stored
+		do
+			!! Result.make (precomp_eif, Project_txt_name)
 		end
 
 	precompiled_preobj: FILE_NAME is
@@ -110,6 +135,40 @@ feature -- Access
 		end
 
 feature -- Check
+
+	check_version_number (precomp_id: INTEGER)is
+			-- Check the version number of current directory.
+		require	
+			for_precompilation: precomp_id > 0
+		local
+			vd52: VD52;
+			vd53: VD53;
+			file: PROJECT_EIFFEL_FILE
+		do
+			file := project_eif_file;
+			file.check_version_number (precomp_id);
+			if file.is_incompatible then
+				!! vd52;
+				vd52.set_path (compilation_path);
+				vd52.set_precompiled_version 
+					(file.project_version_number);
+				vd52.set_compiler_version (version_number);
+				Error_handler.insert_error (vd52);
+				Error_handler.raise_error
+			elseif file.is_invalid_precompilation then
+				!! vd53;
+				vd53.set_path (compilation_path);
+				if file.precompilation_id = 0 then
+					vd53.set_precompiled_date ("unknown")
+				else
+					vd53.set_precompiled_date 
+						(date_string (file.precompilation_id));
+				end
+				vd53.set_expected_date (date_string (precomp_id));
+				Error_handler.insert_error (vd53);
+				Error_handler.raise_error
+			end
+		end;
 
 	check_precompiled is
 			-- Check that `Current' is a valid precompiled

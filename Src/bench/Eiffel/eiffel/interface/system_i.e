@@ -883,8 +883,15 @@ feature -- Recompilation
 			-- Incremetal recompilation of the system.
 		require
 			no_error: not Error_handler.has_error;
+		local
+			precomp_r: PRECOMP_R
 		do
 			freezing_occurred := False;
+			If System.uses_precompiled then
+					-- Validate the precompilation.
+				!! precomp_r;
+				precomp_r.check_version_number
+			end;
 			do_recompilation;
 			successfull := True;
 		rescue

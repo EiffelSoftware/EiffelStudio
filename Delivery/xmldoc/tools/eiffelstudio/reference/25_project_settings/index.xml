@@ -33,17 +33,27 @@
 					<label>Clusters</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>40_dotnet.xml</url>
-					<label>.NET</label>
-				</link>
-			</item>
-			<item>
-				<link>
-					<url>45_dotnet_assemblies.xml</url>
-					<label>.NET assemblies</label>
-				</link>
+			<item>.NET:
+				<list orderer="false">
+					<item>
+						<link>
+							<url>40_dotnet.xml</url>
+							<label>General</label>
+						</link>
+					</item>
+					<item>
+						<link>
+							<url>45_dotnet_assemblies.xml</url>
+							<label>Assemblies</label>
+						</link>
+					</item>
+					<item>
+						<link>
+							<url>46_dotnet_resources.xml</url>
+							<label>Resources</label>
+						</link>
+					</item>
+				</list>
 			</item>
 			<item>
 				<link>
@@ -58,8 +68,7 @@
 				</link>
 			</item>
 		</list>
-		<paragraph>The .NET tabs is only enabled on the Windows platform.</paragraph>
-		<paragraph> </paragraph>
+		<paragraph>The .NET tabs is only enabled on platform supporting .NET.</paragraph>
 		<paragraph>Most of the changes that can be made here are taken into account when you next recompile your project. Instead of automatically performing the compilation each time you click Ok or Apply we decided to save the modifications and let the user decide when to recompile. At the moment, only the specification of the command line arguments and of the current working directory for debugging do not require a recompilation of your system.</paragraph>
 		<paragraph> </paragraph>
 	</paragraph></document>

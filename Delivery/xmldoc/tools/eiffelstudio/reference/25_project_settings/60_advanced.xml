@@ -41,9 +41,10 @@
 		</paragraph>
 		<paragraph> </paragraph>
 		<list ordered="false">
-			<item>console application: has no effect on Unix systems. It lets Windows users choose between creating a console application or a GUI application (in which case a console will be created if needed, instead of using the console the program was launched from).</item>
-			<item>Enforce VAPE validity constraint: lets you disable type checking for 
-				<bold>VAPE</bold> errors in preconditions, which correspond to insufficiently exported features used in preconditions (ETL 2ndedition page 122).
+			<item>Console application: has no effect on Unix systems. It lets Windows users choose between creating a console application or a GUI application (in which case a console will be created if needed, instead of using the console the program was launched from).</item>
+			<item>Detect obsolete syntactical constructs: generate a warning for all syntactical elements that will be obsoleted by new version of the Eiffel specification (See ECMA standard). It includes elements such as: !!, ~, creation,...</item>
+			<item>Enforce <code><compiler_error>VAPE</compiler_error></code> validity constraint: lets you disable type checking for 
+				<code><compiler_error>VAPE</compiler_error></code> errors in preconditions, which correspond to insufficiently exported features used in preconditions (ETL 2nd edition page 122).
 			</item>
 			<item>Dynamic runtime: makes the generated executable use a shared library version of the runtime on both Windows (DLL) and Unix platforms (.so) that supports shared libraries.</item>
 		</list>
@@ -58,14 +59,14 @@
 				<bold>s.to_c</bold>' to `a' and passing ` 
 				<bold>$a</bold>'. Turn this option on only if you have advanced knowledge of the garbage collector insides, since using this syntax illegally can lead to bugs very hard to trace.
 			</item>
-			<item>Shared library definition: lets you specify a `file_name.def'as the file where the Eiffel compiler will look when it tries to generate the exported functions of the shared library you a redeveloping. To have more information concerning definition files, see the 
+			<item>Shared library definition: lets you specify a `file_name.def' as the file where the Eiffel compiler will look when it tries to generate the exported functions of the shared library you a redeveloping. To have more information concerning definition files, see the 
 				<link>
 					<url>../30_compiler/40_dynamic_library_generation/00_introduction.xml</url>
 					<label>Dynamic library builder reference</label>
 				</link>.
 			</item>
 		</list>
-		<paragraph>For a dotnet system, only the first two are available, and thus you get:</paragraph>
+		<paragraph>For a dotnet system, only a subset is available, and thus you get:</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../images/eiffelstudio/project_settings/advanced_tab_standard_options_dotnet.png</url>
@@ -84,10 +85,10 @@
 			</image>
 		</paragraph>
 		<list ordered="false">
-			<item>array optimization: enables array optimization which increases performance of array computation in loops. It is enabled only if arrays are used as local variables or arguments of an Eiffel feature.</item>
-			<item>dead code removal: avoids generating the C code for Eiffel routines that are not called in your code, and thus reduces the size of the generated application.</item>
-			<item>exception trace: makes it possible to see a complete exception trace when your finalized application is crashing. Because it is adding some code to remember where the application was during the crash it can slow down the performance of your application by a factor of 5% to 30% depending of your platform.</item>
-			<item>inlining: enables inlining on Eiffel features that can be inlined, i.e. whose size is less or equal to the specified size in the combo box. The size value given in parameter corresponds to the number of instructions as the Eiffel compiler sees them (for example a := b.f corresponds to 2 instructions for the Eiffel compiler). The ISE Eiffel inlining is very powerful since it can inline a function in all your Eiffel code, without scope limitation as in C or C++ compilers.</item>
+			<item>Array optimization: enables array optimization which increases performance of array computation in loops. It is enabled only if arrays are used as local variables or arguments of an Eiffel feature.</item>
+			<item>Dead code removal: avoids generating C code for Eiffel routines that are not called in your code, and thus reduces the size of the generated application.</item>
+			<item>Exception trace: makes it possible to see a complete exception trace in a finalized application. Because it is adding some code to remember where the application was during the crash it can slow down the performance of your application by a factor of 5% to 30% depending of your platform.</item>
+			<item>Inlining: enables inlining on Eiffel features that can be inlined, i.e. whose size is less or equal to the specified size in the combo box. The size value given in parameter corresponds to the number of instructions as seen by the Eiffel compiler (for example a := b.f corresponds to 2 instructions). The inlining is very powerful since it can inline a function in all your Eiffel code, without scope limitation as found in C or C++ compilers.</item>
 		</list>
 		<paragraph> </paragraph>
 	</paragraph></document>

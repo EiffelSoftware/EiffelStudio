@@ -1,0 +1,16 @@
+<document title=".NET Resources Tab" output="studio">
+	<meta_data/>
+	<paragraph>
+		In order to add .NET resources to your .NET system you can use the resources tab, presented below:
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/dotnet_resources_tab.png</url>
+			</image>
+		</paragraph>
+		You can include either .resx or .txt resource files:
+		<list ordered="false">
+			<item>The .resx resource file format is a XML based format to include objects (such as images and other binary formats) and strings.</item>
+			<item>The .txt resource file format can only contains strings.</item>
+		</list>
+	</paragraph>
+</document>

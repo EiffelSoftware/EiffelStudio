@@ -6,7 +6,6 @@
 		<paragraph>
 			<image>
 				<url>../../../../images/eiffelstudio/project_settings/dotnet_tab.png</url>
-				<border>0</border>
 			</image>
 		</paragraph>
 		<paragraph> </paragraph>
@@ -25,14 +24,12 @@
 			<item>Copyright</item>
 		</list>
 		<paragraph>You can also specify a cryptographic key for your application so that the compiled assembly can be added to the Global Assembly Cache (GAC). Alternatively, if you wish to create a new cryptographic key for your assembly then the 'Generate' key will automatically generate one.</paragraph>
-		<paragraph> </paragraph>
 		<heading>
 			<size>2</size>Options
 		</heading>
-		<paragraph> </paragraph>
 		<list ordered="false">
-			<item>verifiable: in the .NET world, verifiability is important. This is the only way to ensure that an application is not going to crash or to crash your system by accessing not authorized memory locations. Due to some semantic differences between Eiffel and.NET, our code generation is not always verifiable for performance reasons. If you want your code to be verifiable, you need to select this option. The compiler will then generate a code that will be slightly slower.</item>
-			<item>generate DLL: instead of generating an EXE it will generate a DLL.</item>
+			<item>Verifiable: in the .NET world, verifiability is important. This is the only way to ensure that an application is not going to crash or to crash your system by accessing not authorized memory locations. Due to some semantic differences between Eiffel and.NET, our code generation is not always verifiable for performance reasons. If you want your code to be verifiable, you need to select this option. The compiler will then generate a code that will be slightly slower.</item>
+			<item>Generate DLL: instead of generating an EXE it will generate a DLL.</item>
 		</list>
 		<paragraph> </paragraph>
 		<heading>
@@ -52,7 +49,7 @@
 		<paragraph>The CURSOR class is located at '$ISE_EIFFEL\library\base\structures\cursors'.  </paragraph>
 		<paragraph> </paragraph>
 		<list ordered="false">
-			<item>Follow .NET naming guidelines: this option determines whether the generated .NET code uses the Eiffel or .NET naming convention.  Using Ildasm, the IL disassemble tool provided with the .NET Framework, we can see the difference between them.  The Eiffel naming convention uses uppercase characters for all classes whereas the .NET nomenclature uses the Camel Case style.  Note that this option is only available in a non-compiled system.  Once the system has been compiled the naming standard is thus fixed for the project.</item>
+			<item>Follow .NET naming guidelines: this option determines whether the generated .NET code uses the Eiffel or .NET naming convention.  Using Ildasm, the IL disassembler tool provided with the .NET Framework, we can see the difference between them.  The Eiffel naming convention uses uppercase characters for all classes whereas the .NET nomenclature uses the Camel Case style.  Note that this option is only available in a non-compiled system.  Once the system has been compiled the naming standard is fixed for the project.</item>
 		</list>
 		<paragraph>
 			<image>
@@ -116,5 +113,24 @@
 			<size>2</size>Naming Scenarios
 		</heading>
 		<paragraph>This table shows how the class name generation is affected by the naming options using the CURSOR class found in '$ISE_EIFFEL\library\base\structures\cursors' as an example.</paragraph>
-		<paragraph> </paragraph>
-	</paragraph></document>
+		<table>
+			<row><cell>Use .NET naming guidelines</cell><cell>Use cluster names</cell><cell>Use full cluster names</cell><cell>Namespace Name</cell><cell>Generated Name</cell></row>
+			<row><cell>no</cell><cell>no</cell><cell>no</cell><cell>(empty)</cell><cell>CURSOR</cell></row>
+			<row><cell>yes</cell><cell>no</cell><cell>no</cell><cell>(empty)</cell><cell>Cursor</cell></row>
+			<row><cell>no</cell><cell>yes</cell><cell>no</cell><cell>(empty)</cell><cell>base.CURSOR</cell></row>
+			<row><cell>yes</cell><cell>yes</cell><cell>no</cell><cell>(empty)</cell><cell>Base.Cursor</cell></row>
+			<row><cell>no</cell><cell>no</cell><cell>yes</cell><cell>(empty)</cell><cell>structures.cursors.CURSOR</cell></row>
+			<row><cell>yes</cell><cell>no</cell><cell>yes</cell><cell>(empty)</cell><cell>Structures.Cursors.Cursor</cell></row>
+			<row><cell>no</cell><cell>yes</cell><cell>yes</cell><cell>(empty)</cell><cell>base.structures.cursors.CURSOR</cell></row>
+			<row><cell>yes</cell><cell>yes</cell><cell>yes</cell><cell>(empty)</cell><cell>Base.Structures.Cursors.Cursor</cell></row>
+			<row><cell>no</cell><cell>no</cell><cell>no</cell><cell>MyNameSpace</cell><cell>MyNameSpace.CURSOR</cell></row>
+			<row><cell>yes</cell><cell>no</cell><cell>no</cell><cell>MyNameSpace</cell><cell>MyNameSpace.Cursor</cell></row>
+			<row><cell>no</cell><cell>yes</cell><cell>no</cell><cell>MyNameSpace</cell><cell>MyNameSpace.CURSOR</cell></row>
+			<row><cell>yes</cell><cell>yes</cell><cell>no</cell><cell>MyNameSpace</cell><cell>MyNameSpace.Cursor</cell></row>
+			<row><cell>no</cell><cell>no</cell><cell>yes</cell><cell>MyNameSpace</cell><cell>MyNameSpace.structures.cursors.CURSOR</cell></row>
+			<row><cell>yes</cell><cell>no</cell><cell>yes</cell><cell>MyNameSpace</cell><cell>MyNameSpace.structures.cursors.Cursor</cell></row>
+			<row><cell>no</cell><cell>yes</cell><cell>yes</cell><cell>MyNameSpace</cell><cell>MyNameSpace.structures.cursors.CURSOR</cell></row>
+			<row><cell>yes</cell><cell>yes</cell><cell>yes</cell><cell>MyNameSpace</cell><cell>MyNameSpace.Structures.Cursors.Cursor</cell></row>
+		</table>
+	</paragraph>
+</document>

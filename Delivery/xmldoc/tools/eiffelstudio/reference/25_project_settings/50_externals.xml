@@ -2,11 +2,8 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph> </paragraph>
-		<paragraph>This tab is only active when standard C generation is selected in the 
-			<link>
-				<url>10_general.xml</url>
-				<label>General Tab</label>
-			</link>. Even when it is selected, you will find that most Eiffel projects do not include C external libraries and therefore the tab is not filled. In the case of the calculator example, here is what you will get:
+		<paragraph>This tab needs to be filled when compiling projects that use some C/C++ references/libraries. Most Eiffel projects do not include C/C++ externals and therefore the tab is usually not filled. 
+		In the case of the calculator example, here is what you will get:
 		</paragraph>
 		<paragraph> </paragraph>
 		<paragraph>
@@ -16,7 +13,7 @@
 			</image>
 		</paragraph>
 		<paragraph> </paragraph>
-		<paragraph>This tab needs to be filled when compiling projects that use some C libraries. In the case of the ISE Eiffel libraries, here is a non-exhaustive list that needs some entries in this tab:</paragraph>
+		<paragraph>In the case of the ISE Eiffel libraries, here is a non-exhaustive list that needs some entries in this tab:</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
@@ -48,13 +45,12 @@
 					<label>WEL</label>
 				</link>
 			</item>
-			<item>MEL</item>
 		</list>
 		<paragraph> </paragraph>
 		<heading>
 			<size>2</size>Include path
 		</heading>
-		<paragraph>This is where you can enter the location of the directories where the C compiler will look for the header files that are required. The header files which the C compiler will look for are the ones that appear in an encapsulation of a C external in an Eiffel class. Click 
+		<paragraph>This is where you can enter the location of the directories where the C/C++ compiler will look for the header files that are required. The header files which the C/C++ compiler will look for are the ones that appear in an encapsulation of a C/C++ external in an Eiffel class. Click 
 			<link>
 				<url>../30_compiler/30_external_features/00_introduction.xml</url>
 				<label>here</label>
@@ -69,7 +65,7 @@
 		<heading>
 			<size>2</size>An example
 		</heading>
-		<paragraph>Here is what you will need to have if you are creating a project that is using WEL:</paragraph>
+		<paragraph>Here is what you will need to have if you are creating a project using WEL:</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../images/eiffelstudio/project_settings/externals_tab_wel.png</url>

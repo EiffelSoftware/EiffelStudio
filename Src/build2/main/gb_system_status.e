@@ -18,12 +18,7 @@ feature -- Access
 		do
 			Result := not (current_project_settings = Void)
 		end
-		
-		--|FIXME, maybe this could go somewhere nicer.
-		-- Need to look into the *accessible* files and
-		-- sort them out.
-	main_window: GB_MAIN_WINDOW--EV_WINDOW
-	
+
 	project_modified: BOOLEAN
 		-- Has `Current' been modified?
 		-- Used to enable/disable the save button and other
@@ -45,17 +40,6 @@ feature -- Status setting
 			project_open: project_open
 		do
 			current_project_settings := Void
-		end
-		
-		
-	set_main_window (window: GB_MAIN_WINDOW) is
-			-- Assign `window' to `main_window'.
-		require
-			window_not_void: window /= Void
-		do
-			main_window := window
-		ensure
-			main_window = window
 		end
 		
 	enable_project_modified is

@@ -64,6 +64,7 @@ feature -- Generation
 			classes: ARRAY [CLASS_C]
 			output_file: RAW_FILE
 			l_last_error_msg: STRING
+			l_key_file_name: STRING
 		do
 			if not retried then
 					-- At this point the COM component should be properly instantiated.
@@ -86,8 +87,12 @@ feature -- Generation
 					location := (create {PROJECT_CONTEXT}).Workbench_generation_path
 				end
 				
+				l_key_file_name := System.msil_key_file_name
+				if l_key_file_name /= Void then
+					l_key_file_name := (create {ENV_INTERP}).interpreted_string (l_key_file_name)
+				end
 				il_generator.start_assembly_generation (System.name, file_name,
-					System.msil_key_file_name, location)
+					l_key_file_name, location)
 				
 				create output_file_name.make_from_string (location)
 				output_file_name.set_file_name (file_name)

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 	initialize_menu_sep_box is
 			-- Create and initialize menu item box.
-			--| This is just to satisfy pixmapable and textable contacts.
+			--| This is just to satisfy pixmapable and textable contracts.
 		local
 			box: POINTER
 		do
@@ -59,7 +59,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 	radio_group: POINTER
 			-- Pointer to GSList.
 			--| Defines a new radio group since menu separators also
-			--| sematically separate radio groups.
+			--| semantically separate radio groups.
 
 	set_radio_group (a_group: POINTER) is
 		do
@@ -92,6 +92,9 @@ end -- class EV_MENU_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/11 23:18:04  brendel
+--| Speling.
+--|
 --| Revision 1.9  2000/02/22 19:59:38  brendel
 --| Added features `radio_group' and `set_radio_group' to save the need for
 --| a list in EV_MENU_ITEM_LIST_IMP.

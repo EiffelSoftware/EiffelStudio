@@ -54,6 +54,18 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := dyn_lib_window_height_preference.value
 		end
 	
+	preference_window_width: INTEGER is
+			-- Initial width for the dialog.
+		do
+			Result := preference_window_width_preference.value
+		end
+
+	preference_window_height: INTEGER is
+			-- Initial width for the dialog.
+		do
+			Result := preference_window_height_preference.value
+		end
+	
 	acrobat_reader: STRING is
 		do
 			Result := acrobat_reader_preference.value
@@ -175,6 +187,11 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := editor_left_side_preference.value
 		end	
 
+	show_hidden_preferences: BOOLEAN is
+		do
+			Result := show_hidden_preferences_preference.value	
+		end		
+
 	default_displayed_string_size: INTEGER is
 			-- Default size of string to be retrieved from the application
 			-- when debugging (for instance size of `string_value' in ABSTRACT_REFERENCE_VALUE)
@@ -221,9 +238,12 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	browsing_facilities_preference: BOOLEAN_PREFERENCE
 	ctrl_right_click_receiver_preference: ARRAY_PREFERENCE	
 	dyn_lib_window_width_preference: INTEGER_PREFERENCE	
-	dyn_lib_window_height_preference: INTEGER_PREFERENCE	
+	dyn_lib_window_height_preference: INTEGER_PREFERENCE
+	preference_window_width_preference: INTEGER_PREFERENCE	
+	preference_window_height_preference: INTEGER_PREFERENCE	
 	editor_left_side_preference: BOOLEAN_PREFERENCE
 	default_displayed_string_size_preference: INTEGER_PREFERENCE
+	show_hidden_preferences_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -249,10 +269,13 @@ feature {NONE} -- Preference Strings
 	general_tmp_path_string: STRING is "misc.temporary_directory"
 	browsing_facilities_string: STRING is "misc.highlight clickable areas"
 	editor_left_side_string: STRING is "misc.editor_left_side"
-	dyn_lib_window_width_string: STRING is "misc.dyn_lib_window_width"
-	dyn_lib_window_height_string: STRING is "misc.dyn_lib_window_height"
+	dyn_lib_window_width_string: STRING is "misc.dynamic_library_window_width"
+	dyn_lib_window_height_string: STRING is "misc.dynamic_library_window_height"
+	preference_window_width_string: STRING is "misc.preference_window_width"
+	preference_window_height_string: STRING is "misc.preference_window_height"
 	ctrl_right_click_receiver_string: STRING is "misc.ctrl_right_click_receiver"
-	default_displayed_string_size_string: STRING is "misc.debug_tool.default_displayed_string_size"	
+	default_displayed_string_size_string: STRING is "misc.default_displayed_string_size"
+	show_hidden_preferences_string: STRING is "misc.show_hidden_preferences"
 
 feature {NONE} -- Implementation
 
@@ -298,8 +321,11 @@ feature {NONE} -- Implementation
 			editor_left_side_preference := l_manager.new_boolean_resource_value (l_manager, editor_left_side_string, False)
 			dyn_lib_window_height_preference := l_manager.new_integer_resource_value (l_manager, dyn_lib_window_height_string, 200)
 			dyn_lib_window_width_preference := l_manager.new_integer_resource_value (l_manager, dyn_lib_window_width_string, 400)	
+			preference_window_height_preference := l_manager.new_integer_resource_value (l_manager, preference_window_height_string, 200)
+			preference_window_width_preference := l_manager.new_integer_resource_value (l_manager, preference_window_width_string, 400)	
 			ctrl_right_click_receiver_preference := l_manager.new_array_resource_value (l_manager, ctrl_right_click_receiver_string, <<"new_window">>)	
 			default_displayed_string_size_preference := l_manager.new_integer_resource_value (l_manager, default_displayed_string_size_string, 50)
+			show_hidden_preferences_preference := l_manager.new_boolean_resource_value (l_manager, show_hidden_preferences_string, False)
 		end
 	
 	preferences: PREFERENCES
@@ -330,6 +356,8 @@ invariant
 	ctrl_right_click_receiver_preference_not_void: ctrl_right_click_receiver_preference /= Void
 	dyn_lib_window_width_preference_not_void: dyn_lib_window_width_preference /= Void
 	dyn_lib_window_height_preference_not_void: dyn_lib_window_height_preference /= Void
+	preference_window_width_preference_not_void: preference_window_width_preference /= Void
+	preference_window_height_preference_not_void: preference_window_height_preference /= Void
 	editor_left_side_preference_not_void: editor_left_side_preference /= Void
 	default_displayed_string_size_preference_not_void: default_displayed_string_size_preference /= Void
 

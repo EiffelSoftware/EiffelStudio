@@ -165,8 +165,40 @@ feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for routine creation.
+		local
+			set_rout_disp_feat: FEATURE_I
+			real_ty: GEN_TYPE_I
 		do
-			check False end
+			real_ty ?= context.real_type (type)
+			il_generator.create_object (real_ty)
+			il_generator.duplicate_top
+
+			set_rout_disp_feat := real_ty.base_class.feature_table.
+				item_id (feature {PREDEFINED_NAMES}.set_rout_disp_name_id)
+			il_generator.put_method_token (class_type, feature_id)
+
+				-- Arguments
+			if arguments /= Void then
+				arguments.generate_il
+			else
+				il_generator.put_void
+			end
+
+				-- Open map
+			if open_map /= Void then
+				open_map.generate_il
+			else
+				il_generator.put_void
+			end
+
+				-- Closed map
+			if closed_map /= Void then
+				closed_map.generate_il
+			else
+				il_generator.put_void
+			end
+
+			il_generator.generate_feature_access (real_ty, set_rout_disp_feat.feature_id, True)
 		end
 
 feature -- Byte code generation

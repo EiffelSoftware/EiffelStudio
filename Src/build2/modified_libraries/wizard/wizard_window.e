@@ -11,6 +11,8 @@ inherit
 	EV_DIALOG
 		rename
 			copy as copy_titled_window
+		export
+			{ANY} close_request_actions
 		redefine
 			destroy,
 			initialize,

@@ -1137,20 +1137,36 @@ feature -- Generation (Linking rules)
 				emain_file := "emain.separate_template"
 			end
 
+				-- Generate the dependence rule for E1/Makefile
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("/emain.o: Makefile $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
-			make_file.putstring (emain_file)
-			make_file.putstring ("%N%T cp $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
-			make_file.putstring (emain_file)
-
-			make_file.putstring (" E1/emain.c")
-
+			make_file.putstring ("/Makefile: ")
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("/Makefile.SH")
 			make_file.putstring ("%N%Tcd ")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
-			make_file.putstring ("$(MAKE) emain.o ; $(RM) emain.c%N%N")
+			make_file.putstring (" ; $(SHELL) Makefile.SH%N%N")
+
+				-- Generate the dependence rule for E1/emain.o
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("/emain.o: Makefile ")
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("/Makefile $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
+			make_file.putstring (emain_file)
+			make_file.putstring ("%N%Tcp $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
+			make_file.putstring (emain_file)
+			make_file.putchar (' ')
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("/emain.c")
+			make_file.putstring ("%N%Tcd ")
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring (" ; $(MAKE) emain.o ; $(RM) emain.c%N%N")
 
 			from i := 1 until i > partial_system_objects loop
 				make_file.putstring (System_object_prefix)
@@ -1159,10 +1175,21 @@ feature -- Generation (Linking rules)
 				make_file.putstring (System_object_prefix)
 				make_file.putstring ("obj")
 				make_file.putint (i)
-				make_file.putstring (".o: Makefile%N%Tcd ")
+				if i = 1 then
+					make_file.putstring (".o: Makefile ")
+					make_file.putstring (System_object_prefix)
+					make_file.putint (i)
+					make_file.putstring ("/Makefile%N%Tcd ")
+				else
+					make_file.putstring (".o: Makefile%N%Tcd ")
+				end
 				make_file.putstring (System_object_prefix)
-				make_file.putint (1)
-				make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) ")
+				make_file.putint (i)
+				if i = 1 then
+					make_file.putstring (" ; $(START_TEST) $(MAKE) ")
+				else
+					make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) ")
+				end
 				make_file.putstring (System_object_prefix)
 				make_file.putstring ("obj")
 				make_file.putint (i)
@@ -1261,7 +1288,7 @@ feature -- Cleaning rules
 			make_file.putstring ("clean: sub_clean local_clean%N")
 			make_file.putstring ("clobber: sub_clobber local_clobber%N%N")
 			make_file.putstring ("local_clean::%N")
-			make_file.putstring ("%T$(RM) core *.o%N%N")
+			make_file.putstring ("%T$(RM) core finished *.o%N%N")
 			make_file.putstring ("local_clobber:: local_clean%N%T")
 			make_file.putstring ("$(RM) Makefile config.sh finish_freezing%N")
 			make_file.putstring ("%Nsub_clean::%N")
@@ -1286,7 +1313,7 @@ feature -- Cleaning rules
 			make_file.putstring ("clean: local_clean%N")
 			make_file.putstring ("clobber: local_clobber%N%N")
 			make_file.putstring ("local_clean::%N")
-			make_file.putstring ("%T$(RM) core *.o%N%N")
+			make_file.putstring ("%T$(RM) core finished *.o%N%N")
 			make_file.putstring ("local_clobber:: local_clean%N")
 			make_file.putstring ("%T$(RM) Makefile%N%N")
 		end

@@ -126,7 +126,7 @@ feature {NONE} -- implementation
 			until
 				(index = count + 1) or else an_index = cur_item
 			loop
-				sep_imp ?= interface.item.implementation
+				sep_imp ?= i_th (index).implementation
 				if sep_imp /= Void then
 					Result := sep_imp
 				end

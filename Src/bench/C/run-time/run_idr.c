@@ -30,8 +30,12 @@
 
 private IDRF idrf;
 
-shared char *idr_temp_buf; /* This is shared so it can be freed if an exception */
-				/* occurs */
+shared char *idr_temp_buf;	/* This is shared so it can be freed
+							 * if an exception occurs.
+							 */
+
+private int amount_read = 0;	/* Amount read into buffer (see check_capacity) */
+
 extern int fides;
 extern int r_fides;
 
@@ -113,6 +117,9 @@ public void run_idr_init ()
 {
 	if (-1 == run_idrf_create (IDRF_SIZE))
 		eraise ("cannot allocate idrf", EN_MEM);
+
+		/* Reset amount_read */
+	amount_read = 0;
 }
 
 public void run_idr_destroy ()
@@ -176,7 +183,6 @@ public void check_capacity (bu, size)
 IDR *bu;
 int size;
 {
-	static amount_read;
 
 	if (idrs_op (bu)) {
 		if ((bu->i_ptr + size) > (bu->i_buf + amount_read)) {

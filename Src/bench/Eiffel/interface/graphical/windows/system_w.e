@@ -16,18 +16,23 @@ inherit
 		redefine
 			hole, build_format_bar, build_widgets,
 			open_cmd_holder, save_as_cmd_holder, save_cmd_holder,
-			text_window, tool_name, editable, create_edit_buttons,
+			tool_name, editable, create_edit_buttons,
 			display, stone, stone_type, synchronise_stone, process_system,
-			process_class, process_classi, process_ace_syntax, compatible
+			process_class, process_classi, process_ace_syntax, compatible,
+			set_mode_for_editing, hide, editable_text_window,
+			set_editable_text_window, has_editable_text, read_only_text_window,
+			set_read_only_text_window
 		end;
 	BAR_AND_TEXT
 		redefine
 			hole, build_format_bar, attach_all, build_widgets,
 			open_cmd_holder, save_as_cmd_holder, save_cmd_holder,
-			text_window, tool_name, editable, create_edit_buttons,
+			tool_name, editable, create_edit_buttons,
 			display, stone, stone_type, synchronise_stone, process_system,
 			process_class, process_classi, process_ace_syntax,
-			compatible
+			compatible, set_mode_for_editing, hide, editable_text_window,
+			set_editable_text_window, has_editable_text, read_only_text_window,
+			set_read_only_text_window
 		select
 			attach_all
 		end
@@ -38,8 +43,6 @@ creation
 
 feature -- Properties
 
-	text_window: SYSTEM_TEXT;
-
 	stone: SYSTEM_STONE
 
 	stone_type: INTEGER is
@@ -47,6 +50,15 @@ feature -- Properties
 		do
 			Result := system_type
 		end
+
+	in_use: BOOLEAN;
+			-- Is the system tool used (not hidden)?
+
+	editable_text_window: TEXT_WINDOW
+			-- Text window that can be edited
+
+	read_only_text_window: TEXT_WINDOW
+			-- Text window that only reads text
 
 feature -- Access
 
@@ -58,6 +70,38 @@ feature -- Access
 				a_stone.stone_type = Class_type 
 		end;
 
+	has_editable_text: BOOLEAN is
+			-- Does Current tool have an editable text window?
+		do
+			Result := True
+		end;
+
+feature -- Status setting
+
+	set_in_use (b: BOOLEAN) is
+			-- Assign `b' to `in_use'.
+		do
+			in_use := b
+		end;
+
+	set_mode_for_editing is
+			-- Set edit mode on.
+		do
+			text_window.set_editable
+		end;
+
+	set_editable_text_window (ed: like editable_text_window) is
+			-- Set `editable_text_window' to `ed'.
+		do
+			editable_text_window := ed
+		end;
+
+	set_read_only_text_window (ed: like read_only_text_window) is
+			-- Set `read_only_text_window' to `ed'.
+		do
+			read_only_text_window := ed
+		end;
+
 feature -- Update
 
 	process_system (s: SYSTEM_STONE) is
@@ -66,7 +110,7 @@ feature -- Update
 			if text_window.changed then
 				showtext_frmt_holder.execute (s);
 			else
-				text_window.last_format.execute (s);
+				last_format.execute (s);
 				history.extend (s)
 			end
 		end;
@@ -82,7 +126,6 @@ feature -- Update
 				text_window.set_cursor_position (syn.start_position);
 				text_window.highlight_selected (syn.start_position,
 							syn.end_position);
-				text_window.set_changed (false);
 				update_save_symbol
 			end
 		end;
@@ -109,15 +152,37 @@ feature -- Update
 			-- Synchronize the root stone of the window.
 		local
 			system_stone: SYSTEM_STONE;
-			old_do_format: BOOLEAN
+			old_do_format: BOOLEAN;
+			last_f: FORMAT_HOLDER
 		do
 			if stone /= Void then
+				last_f := last_format;
 				!! system_stone;
-				old_do_format := text_window.last_format.associated_command.do_format;
-				text_window.last_format.associated_command.set_do_format (true);
-				text_window.last_format.execute (system_stone);
-				text_window.last_format.associated_command.set_do_format (old_do_format)
+				old_do_format := last_f.associated_command.do_format;
+				last_f.associated_command.set_do_format (true);
+				last_f.execute (system_stone);
+				last_f.associated_command.set_do_format (old_do_format)
 			end
+		end;
+
+	show_file_content (a_file_name: STRING) is
+			-- Display content of file named `a_file_name'
+			-- do not change title, nor file_name
+		local
+			a_file: PLAIN_TEXT_FILE;
+		do
+			!!a_file.make_open_read (a_file_name);
+			a_file.readstream (a_file.count);
+			a_file.close;
+			text_window.clear_window;
+			set_editable_text;
+			show_editable_text;
+			text_window.set_text (a_file.laststring);
+			update_save_symbol;
+			reset_stone
+		ensure
+			up_to_date: not text_window.changed;
+			no_stone: stone = Void
 		end;
 
 feature -- Graphical Interface
@@ -126,13 +191,23 @@ feature -- Graphical Interface
 		do
 			if not realized then
 				set_default_format;
-				realize
+				set_default_position;
+				eb_shell.realize;
+				init_text_window;
 			elseif not shown then
 				set_default_format;
+				init_text_window;
 				set_default_position;
-				show
+				show;
 			end;
 			raise;
+			set_in_use (true);
+		end;
+
+	hide is
+		do
+			eb_shell.hide;
+			set_in_use (false)
 		end;
 	
 feature {NONE} -- Implementation; Graphical Interface
@@ -183,11 +258,11 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! change_font_cmd.make (text_window);
 			!! change_font_button.make (change_font_cmd, edit_bar);
 			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
 			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
 			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
-			!! search_cmd.make (edit_bar, text_window);
+			!! search_cmd.make (Current);
 			!! search_button.make (search_cmd, edit_bar);
 			!! search_menu_entry.make (search_cmd, edit_menu);
 			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
@@ -198,11 +273,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			if eb_shell /= Void then
 				set_default_size
 			end;
-			if tabs_disabled then
-				!! text_window.make (new_name, Current, Current);
-			else
-				!SYSTEM_TAB_TEXT! text_window.make (new_name, Current, Current);
-			end;
+			build_text_windows;
 			build_menus;
 			!! edit_bar.make (new_name, global_form);
 			build_bar;
@@ -211,17 +282,21 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! command_bar.make (new_name, global_form);
 			build_command_bar;
 			fill_menus;
-			text_window.set_last_format (default_format);
+			set_last_format (default_format);
 			attach_all
 		end;
 
 	attach_all is
 		do
 			default_attach_all;
-			global_form.detach_right (text_window);
+			global_form.detach_right (editable_text_window.widget);
+			global_form.attach_right_widget (command_bar, editable_text_window.widget, 0);
+			if editable_text_window /= read_only_text_window then
+				global_form.detach_right (read_only_text_window.widget);
+				global_form.attach_right_widget (command_bar, read_only_text_window.widget, 0);
+			end;
 			global_form.attach_right (command_bar, 0);
 			global_form.attach_right_widget (command_bar, format_bar, 0);
-			global_form.attach_right_widget (command_bar, text_window, 0);
 			global_form.attach_top_widget (edit_bar, command_bar, 0);
 			global_form.attach_bottom (command_bar, 0);
 		end;
@@ -301,7 +376,7 @@ feature {NONE} -- Implementation; Graphical Interface
 		do
 			!! shell_cmd.make (command_bar, text_window);
 			!! shell_button.make (shell_cmd, command_bar);
-			shell_button.add_button_click_action (3, shell_cmd, Void);
+			shell_button.add_button_press_action (3, shell_cmd, Void);
 			!! shell_menu_entry.make (shell_cmd, special_menu);
 			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
 			!! case_storage_cmd.make (text_window);

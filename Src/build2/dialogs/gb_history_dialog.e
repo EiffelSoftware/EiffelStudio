@@ -73,6 +73,9 @@ feature -- Access
 			Result := ((create {GB_SHARED_PIXMAPS}).Icon_cmd_history_title @ 1)
 		end
 		
+	history_list: EV_LIST
+		-- List containing all history entires.
+		
 feature -- Basic operation
 
 	add_command_representation (output: STRING) is
@@ -179,8 +182,6 @@ feature {NONE} -- Implementation
 				-- We must now update
 			command_handler.update
 		end
-
-	history_list: EV_LIST
 	
 	close_button: EV_BUTTON
 	

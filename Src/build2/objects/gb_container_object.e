@@ -9,6 +9,9 @@ class
 
 inherit
 	GB_OBJECT
+		export
+			{ANY} dynamic_type, dynamic_type_from_string,
+				type_conforms_to
 		redefine
 			object, display_object, is_full,
 			build_display_object, delete,

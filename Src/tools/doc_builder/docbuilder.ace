@@ -111,9 +111,14 @@ cluster
 			"french"; "german"; 
 		end
 
-	all gobo:		"D:\gobo3.1\library"
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "ve"; "se"; "expat"; "EiffelBase"; "EiffelTime"; 
+			"hact"; "ve"; "se"; "expat"; "EiffelBase"; "xm_formatter.e"; "xm_named_node.e"; "xm_content_concatenator.e";
+		end
+		
+	all preferences:		"$EIFFEL_SRC\library\preferences"
+		exclude
+			"CVS"; 
 		end
 
 assembly

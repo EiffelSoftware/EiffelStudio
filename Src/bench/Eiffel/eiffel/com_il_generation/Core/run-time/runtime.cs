@@ -187,6 +187,31 @@ feature -- Status report
 
 		return Result;
 	}
+
+/*
+feature -- Equality
+*/
+	public static Boolean deep_equal (EIFFEL_TYPE_INFO o1, EIFFEL_TYPE_INFO o2) 
+		// Is `o1' recursively equal to `o2'?
+	{
+		Hashtable traversed_objects;
+		Boolean Result;
+
+			// `traversed_objects' is a correspondance between processed
+			// objects reachable from `obj' and newly created one that
+			// are reachable from `target'.
+		traversed_objects = new Hashtable (100);
+		
+			// Add `o2' and associates it with `o1' to
+			// resolve future references to `o2' into `o1'.
+		traversed_objects.Add (o2, o1);
+
+			// Performs deep traversal.
+		Result = internal_deep_equal (o1, o2, traversed_objects);
+
+		return Result;
+	}
+
 /*
 feature -- Duplication
 */
@@ -234,6 +259,109 @@ feature -- Duplication
 /*
 feature {NONE} -- Implementation
 */
+
+	private static Boolean internal_deep_equal (Object target, Object source, Hashtable traversed_objects)
+		// Is `source' recursively equal to `target'?
+		// WARNING: It uses `return' in the middle of the loop to exit.
+	{
+		FieldInfo [] attributes;
+		Object target_attribute, source_attribute;
+		Array target_array, source_array;
+		int i;
+		Boolean Result = true;
+
+		if (target.GetType ().Equals (source.GetType ())) {
+			if (source is Array) {
+				source_array = (Array) source;
+				target_array = (Array) target;
+
+				if 
+					((source_array.Rank == 1) && 
+					(source_array.Rank == target_array.Rank) &&
+					(source_array.GetLowerBound (0) == target_array.GetLowerBound (0)) &&
+					(source_array.GetUpperBound (0) == target_array.GetUpperBound (0)))
+				{
+					for
+						(i = source_array.GetLowerBound (0);
+						i > source_array.GetUpperBound (0);
+						i++)
+					{
+						source_attribute = source_array.GetValue (i);
+						target_attribute = target_array.GetValue (i);
+
+						Result = sub_internal_deep_equal (
+							source_attribute, target_attribute, traversed_objects);
+
+						if (!Result) {
+								// Force exit from loop as objects are not identical.
+							return Result;
+						}
+					}
+				} else {
+					Result = source_array.Equals (target_array);
+				}
+			} else if (source is EIFFEL_TYPE_INFO) {
+				attributes = source.GetType().GetFields (
+					BindingFlags.Instance | BindingFlags.Public |
+					BindingFlags.NonPublic);
+
+				foreach (FieldInfo attribute in attributes) {
+					source_attribute = attribute.GetValue (source);
+					target_attribute = attribute.GetValue (target);
+
+					Result = sub_internal_deep_equal (
+						source_attribute, target_attribute, traversed_objects);
+
+					if (!Result) {
+							// Force exit from loop as objects are not identical.
+						return Result;
+					}
+				}
+			} else {
+				Result = source.Equals (target);
+			}
+		} else {
+			Result = false;
+		}
+		return Result;
+	}
+
+	private static Boolean sub_internal_deep_equal (
+		Object source_attribute,
+		Object target_attribute,
+		Hashtable traversed_objects
+	)
+		// Compare `source_attribute' and `target_attribute' and 
+		// performs or not a recursion to compare them recursively.
+		// True if they match recursively, False otherwise.
+	{
+		Boolean Result;
+
+		if (source_attribute == null) {
+			Result = target_attribute == null;
+		} else {
+			if (target_attribute == null) {
+				Result = false;
+			} else {
+				if (traversed_objects.Contains (source_attribute)) {
+					if (source_attribute.GetType().IsValueType) {
+						Result = 
+							target_attribute.Equals (source_attribute);
+					} else {
+						Result =
+							target_attribute == traversed_objects [source_attribute];
+					}
+				} else {
+					traversed_objects.Add (source_attribute, target_attribute);
+					Result = internal_deep_equal (target_attribute,
+						source_attribute, traversed_objects);
+				}
+			}
+		}
+
+		return Result;
+	}
+
 	private static void internal_deep_clone (Object target, Object source, Hashtable traversed_objects)
 		// Given a target and a source, copy content of source into
 	{

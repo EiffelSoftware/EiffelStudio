@@ -172,7 +172,7 @@ feature -- Status setting
 		do
 			cwin_send_message (item, Em_setsel, start_position, end_position)
 		ensure
-			has_selection: has_selection
+			has_selection: (start_position /= end_position) implies has_selection
 			selection_start_set: selection_start = start_position
 			selection_end_set: selection_end = end_position
 		end

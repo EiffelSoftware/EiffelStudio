@@ -204,22 +204,12 @@ feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, CMD_UPDATE_PARENT}
 feature -- Editable
 
 	create_editor is
-		local
-			ed: COMMAND_TOOL_TOP_SHELL
 		do
 			if not edited then
-				ed := window_mgr.command_tool
-				ed.set_instance (Current)
-				command_tool := ed
-				window_mgr.display (ed)
-			else
-				ed ?= command_tool
-				if ed = Void then
-					main_panel.raise
-				else
-					window_mgr.display (ed)
-				end
-			end
+				command_tool := window_mgr.command_tool
+				command_tool.set_instance (Current)
+			end		
+			command_tool.display
 		end
 
 	help_file_name: STRING is
@@ -250,10 +240,10 @@ feature -- Editing
 			end
 		end
 
-	edited: BOOLEAN is False
---		do
---			Result := (command_tool /= Void)
---		end
+	edited: BOOLEAN is 
+		do
+			Result := (command_tool /= Void)
+		end
 
 	save_arguments is
 		local
@@ -377,7 +367,24 @@ feature -- Associated command
 
 feature -- Observers
 
-	observers: EB_LINKED_LIST [like Current] 
+	is_observer (inst: like Current): BOOLEAN is
+			-- Is Current an observer of `inst' ?
+		do
+			if not observed_commands.empty then
+				Result := observed_commands.has (inst)
+				from
+					observed_commands.start
+				until
+					observed_commands.after or Result
+				loop
+					Result := observed_commands.item.is_observer (inst)
+					observed_commands.forth
+				end
+			end
+		end
+					
+	
+	observers: EB_LINKED_LIST [like Current]
 			-- List of observers
 
 	observed_commands: EB_LINKED_LIST [CMD_INSTANCE]
@@ -403,6 +410,7 @@ feature -- Observers
 		require
 			command_not_void: a_command /= Void
 		do
+			observed_commands.start
 			observed_commands.prune (a_command)
 		end
 
@@ -414,11 +422,10 @@ feature -- Observers
 			observer_inst: BUILD_CMD
 		do
 			observers.extend (inst)
-			if instance /= Void then
-				observer_inst := inst.instantiated_command
-				instance.add_observer (observer_inst)
-				instantiated_observers.extend (observer_inst)
-			end
+			observer_inst := inst.instantiated_command
+			instance.add_observer (observer_inst)
+			instantiated_observers.extend (observer_inst)
+			inst.add_observed_command (Current)
 			if command_tool /= Void and then command_tool.realized then
 				command_tool.add_observer (inst)
 			end
@@ -450,14 +457,13 @@ feature -- Observers
 				end
 			end
 			if found then
-				if instance /= Void then
-					instance.remove_observer (instantiated_observers.item, observers.index)
-					instantiated_observers.remove
+				instance.remove_observer (instantiated_observers.item, observers.index)
+				instantiated_observers.remove
+				inst.remove_observed_command (Current)
+				if command_tool /= Void and then command_tool.realized then
+					command_tool.remove_observer (inst)
 				end
 				observers.remove
-			end
-			if command_tool /= Void and then command_tool.realized then
-				command_tool.remove_observer (inst)
 			end
 		ensure
 			observer_count_decreased: found implies (old (instance.observer_count) = instance.observer_count + 1)
@@ -477,7 +483,7 @@ feature -- Observers
 			observers := obs_list
 		end
 
-feature {NONE} -- Observers
+feature {OBSERVER_HOLE} -- Observers
 
 	instance: BUILD_CMD	
 			-- Command instance

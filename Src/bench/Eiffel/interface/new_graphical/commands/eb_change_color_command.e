@@ -12,10 +12,7 @@ inherit
 			new_toolbar_item
 		end
 
-	EB_CONTEXT_TOOL_DATA
-		export
-			{NONE} all
-		end
+	BON_CONSTANTS
 
 create
 	make
@@ -31,7 +28,7 @@ feature -- Basic operations
 			bcf: BON_CLASS_FIGURE
 		do
 			create change_color_dialog
-			change_color_dialog.set_color (tool.Bon_class_fill_color)
+			change_color_dialog.set_color (bon_class_fill_color)
 			change_color_dialog.show_modal_to_window (tool.development_window.window)
 			
 			create class_list.make (20)

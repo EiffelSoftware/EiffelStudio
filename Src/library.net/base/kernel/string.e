@@ -13,9 +13,14 @@ inherit
 			is_equal,
 			to_string
 		end
-	SYSTEM_ICOMPARABLE
+	ICOMPARABLE
 		rename
 			compare_to as compare_to_object
+		redefine
+			finalize,
+			get_hash_code,
+			is_equal,
+			to_string
 		end
 	SYSTEM_ICLONEABLE
 	SYSTEM_COLLECTIONS_IENUMERABLE

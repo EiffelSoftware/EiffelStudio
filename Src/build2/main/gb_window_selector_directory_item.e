@@ -113,11 +113,12 @@ feature {NONE} -- Implementation
 		local
 			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
-			directory ?= an_object.window_selector_item.parent
-				-- Note that directory may well be Void if the window is currently not in a directory.
-			window_selector.update_class_files_location (an_object.window_selector_item, directory, current)
 			
-			if an_object.window_selector_item = Void then
+			if an_object.window_selector_item /= Void then
+				directory ?= an_object.window_selector_item.parent
+					-- Note that directory may well be Void if the window is currently not in a directory.
+				window_selector.update_class_files_location (an_object.window_selector_item, directory, current)
+			else
 				window_selector.add_new_object (an_object)
 			end
 			add_selector_item (an_object.window_selector_item)

@@ -17,36 +17,11 @@ feature -- Initialization
 				-- named `default_file'.
 		local
 			file_name: FILE_NAME
-			file: RAW_FILE
-			s: STRING
-			p: XML_TREE_PARSER
-			error_message: STRING
 		do
 			create file_name.make_from_string (default_file)
 			create table.make (100)
-			create p.make
-			create file.make (file_name)
-			if file.exists then
-				file.open_read
-				file.read_stream (file.count)
-				s := file.last_string
-				p.parse_string (s)
-				p.set_end_of_file
-				file.close
-				parser := p
-				if not p.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
-					error_message := "EIFFEL_DOCUMENT TAG missing%N"
-				else
-					create {RESOURCE_FOLDER_IMP} root_folder_i.make_default_root (parser.root_element, interface)
-					root_folder_i.create_interface
-				end
-			else
-				error_message := "does not exist%N"
-				error_message.prepend (file_name)
-			end
-			if error_message /= Void then
-				io.put_string (error_message)
-			end
+			create {RESOURCE_FOLDER_IMP} root_folder_i.make_default_root (file_name, interface)
+			root_folder_i.create_interface
 		end
 
 feature -- Access
@@ -143,9 +118,6 @@ feature -- Status report
 		end
 
 feature -- Implementation
-
-	parser: XML_TREE_PARSER
-		-- XML_PARSER
 
 	interface: RESOURCE_STRUCTURE
 

@@ -53,6 +53,7 @@ feature -- Basic operations
 				name.prepend (Underscore)
 				name.prepend (tmp_lib_descriptor.name)
 			end
+			add_c_type
 
 			create eiffel_class_name.make (100)
 			eiffel_class_name.append ("ECOM_")
@@ -60,12 +61,9 @@ feature -- Basic operations
 			eiffel_class_name.to_upper
 			create_element_descriptors (a_type_info)
 
-			if is_forbidden_c_word (name) then
-				name.prepend ("a_")
-			end
 			create c_type_name.make (100)
 			c_type_name.append (name)
-			system_descriptor.add_c_type (name)
+
 			size_of_instance := a_type_info.type_attr.size_instance
 
 			create Result.make (Current)

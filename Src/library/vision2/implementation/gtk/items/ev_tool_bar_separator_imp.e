@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			-- 
 		do
 			base_make (interface)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vseparator_new)
 		end
 	
 	initialize is

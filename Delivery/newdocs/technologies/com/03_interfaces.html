@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML EXPERIMENTAL 970324//EN">
+<HTML>
+<HEAD>
+<META NAME="GENERATOR" CONTENT="Microsoft FrontPage 4.0">
+		<LINK REL=StyleSheet HREF="../../default.css">
+
+<TITLE>COM Interfaces</TITLE><meta name="Microsoft Border" content="t, default">
+</HEAD>
+<BODY >
+<h1>
+<A NAME="pgfId=374107">
+ </A>
+ Interfaces </h1>
+
+<A NAME="pgfId=374134">
+ </A>
+Interfaces are at the heart of any COM component. Interfaces are described in the 
+definition file of a component. They consist of a group of semantically related 
+functions that can be accessed by the clients of the component. Although they 
+are a specification, they also have a physical representation. A client can 
+request a pointer on an interface and access the component functions through 
+that pointer. Interfaces are the only possible way to access functions from 
+a component. They enforce information hiding by providing only the public 
+functions to the client.
+  <p>
+<A NAME="pgfId=374215">
+ </A>
+Interfaces also define the type of a component. Each interface corresponds 
+to a specific view of the component. It can be compared to polymorphism in 
+the Object Oriented world. Whenever an interface from a component is 
+requested, only the functions defined on that interface are accessible as 
+if the component was polymorphically cast into an object of the type of 
+that interface.
+  <p>
+<A NAME="pgfId=374559">
+ </A>
+The COM specification requires that any interface provides access to all 
+interfaces on the same component. All the interface should include a 
+specific function called QueryInterface that will provide a pointer on 
+any other interface of the component. Interfaces are identified with a 
+globally unique identifier (GUID) guaranteed to be unique in time and 
+space. Since this function has to be on every interface, it has been 
+abstracted into a specific interface called IUnknown which all other 
+interfaces must inherit from. 
+<p>
+The two other functions exposed by IUnknown 
+are AddRef and Release. These functions should be called respectively when 
+a client gets a reference on an interface or when it discards that reference. 
+These two functions define the lifetime of the component: each interface keeps 
+track of clients keeping a reference on them and when no clients have 
+references anymore, the component can be unloaded from memory. You might 
+start to worry thinking that this business of reference counting will 
+imply lots of headaches, memory leaks, etc. and you would be right should 
+you choose a low-level language to implement your components. Fortunately, 
+you will never have to implement or use these functions in Eiffel: all the 
+processing related to IUnknown is provided by the EiffelCOM runtime. Calls 
+to QueryInterface are done &quot;behind the scene&quot; and only when needed. 
+The lifetime of the component is also taken care of by the EiffelCOM runtime.
+
+
+<p class="seealso">See Also: <a href="../../tools/wizards/com/index.html">EiffelCOM
+wizard</a>, <a href="../../libraries/com/index.html">EiffelCOM library</a>,
+<a href="01_introduction.html">Introduction</a>,
+<a href="02_Generalities.html">Generalities</a>,
+<a href="04_coclass.html">Coclasses</a>,
+<a href="05_component_location.html">Component Location</a>,
+<a href="06_Access_Type.html">Access Type</a>,
+<a href="07_Deeper_into_COM.html">Deeper into COM</a>
+
+</p>
+<p>&nbsp;</p>
+</BODY>

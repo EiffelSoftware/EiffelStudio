@@ -24,8 +24,6 @@ feature -- Access
 	origin_text: STRING is
 			-- Content of the file named `file_name'
 			-- Void if unreadable file.
-		require else
-			true
 		local
 			a_file: RAW_FILE
 		do

@@ -21,6 +21,9 @@ feature -- Access
 			-- Flag for a signature description of all locals in
 			-- a method body.
 
+	ca_prolog: INTEGER_16 is 0x0001
+			-- Prolog for Custom Attribute blob.
+
 feature -- Types
 
 	element_type_end: INTEGER_8 is 0x0

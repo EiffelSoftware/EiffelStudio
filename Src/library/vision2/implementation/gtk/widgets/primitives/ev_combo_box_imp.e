@@ -89,21 +89,7 @@ feature {NONE} -- Initialization
 			list_widget := C.gtk_combo_struct_list (container_widget)
 			C.gtk_combo_set_use_arrows (container_widget, 0)
 			C.gtk_combo_set_case_sensitive (container_widget, 1)
-			
-			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
-
-			real_signal_connect (
-					entry_widget,
-					"key_press_event",
-					on_key_event_intermediary_agent,
-					key_event_translate_agent
-				)
-			real_signal_connect (
-					entry_widget,
-					"key_release_event",
-					on_key_event_intermediary_agent,
-					key_event_translate_agent)
-			
+	
 			create timer.make_with_interval (0)
 			timer.actions.extend (agent launch_select_actions)
 			timer_imp ?= timer.implementation
@@ -200,10 +186,6 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			-- Gtk combo struct
 
 feature {NONE} -- Implementation
-
-
-	on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
-			-- Intermediary key event agent that is reused three times.
 			
 	on_key_pressed_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 			-- Intermediary key agent that is reused for list items in `add_to_container'.
@@ -219,7 +201,7 @@ feature {NONE} -- Implementation
 				Result := True
 			end
 		end
-		
+
 	on_focus_changed (a_has_focus: BOOLEAN) is
 			-- Focus for `Current' has changed'.
 		do

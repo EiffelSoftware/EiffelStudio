@@ -10,8 +10,7 @@ inherit
 	EG_LAYOUT
 		redefine
 			default_create,
-			world,
-			layout
+			world
 		end
 		
 create
@@ -50,20 +49,6 @@ feature -- Element change
 		ensure
 			set: vertical_spacing = vertical and horizontal_spacing = horizontal
 		end
-		
-	layout is
-			-- Arrange the elements in `graph'.
-		local
-			ew: EIFFEL_WORLD
-		do
-			ew := world
-			vertical_scaled_spacing := (ew.scale_factor * vertical_spacing).truncated_to_integer
-			horizontal_scaled_spacing := (ew.scale_factor * vertical_spacing).truncated_to_integer
-			Precursor {EG_LAYOUT}
-			if world.is_right_angles then
-				world.apply_right_angles
-			end
-		end
 
 feature {NONE} -- Implementation
 
@@ -83,7 +68,12 @@ feature {NONE} -- Implementation
 			-- arrange `linkables' that are elements of `clusters' at `level'.
 		local
 			bcf: EIFFEL_CLUSTER_FIGURE
+			ew: EIFFEL_WORLD
 		do
+			ew := world
+			vertical_scaled_spacing := (ew.scale_factor * vertical_spacing).truncated_to_integer
+			horizontal_scaled_spacing := (ew.scale_factor * vertical_spacing).truncated_to_integer
+
 			table.wipe_out
 			set_clusters_and_classes (linkables)
 			if not has_cluster then
@@ -96,8 +86,11 @@ feature {NONE} -- Implementation
 			bcf ?= cluster
 			if bcf /= Void then
 				--Speeeeeeeeed Up
-				world.update
+				ew.update
 				bcf.set_to_minimum_size
+			end
+			if ew.is_right_angles then
+				ew.apply_right_angles
 			end
 		end
 		

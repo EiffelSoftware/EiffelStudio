@@ -163,10 +163,8 @@ feature -- Resizing
 			valid_new_count: n > count
 		local
 			i, nb: INTEGER
-			to: TO_SPECIAL [T]
 		do
-			create to.make_area (n)
-			Result := to.area
+			create Result.make (n)
 			from
 				nb := count
 			invariant

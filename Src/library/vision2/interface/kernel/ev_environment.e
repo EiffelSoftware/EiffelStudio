@@ -15,6 +15,11 @@ inherit
 			implementation
 		end
 
+	EV_TESTABLE_NON_WIDGET
+		undefine
+			default_create
+		end
+
 create
 	default_create
 
@@ -82,6 +87,21 @@ feature {NONE} -- Implementation
 			create {EV_ENVIRONMENT_IMP} implementation.make (Current)
 		end
 
+feature -- Miscellaneous
+
+	test_widget: EV_WIDGET is
+			-- label displaying platform.
+		do
+			inspect implementation.platform
+			when Ev_platform_gtk then
+				create {EV_LABEL} Result.make_with_text (
+					"Platform is: GTK+ (Unix/Linux)")
+			when Ev_platform_win32 then
+				create {EV_LABEL} Result.make_with_text (
+					"Platform is: Windows")
+			end
+		end
+
 end -- class EV_ENVIRONMENT
 
 --!-----------------------------------------------------------------------------
@@ -105,6 +125,9 @@ end -- class EV_ENVIRONMENT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/26 00:50:44  brendel
+--| Added test_widget.
+--|
 --| Revision 1.4  2000/03/16 01:13:43  oconnor
 --| comments
 --|

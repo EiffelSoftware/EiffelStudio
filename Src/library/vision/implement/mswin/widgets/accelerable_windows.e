@@ -48,13 +48,13 @@ feature -- Status setting
 			if translation.key_string.count = 1 then
 				key := (translation.key_string @ 1).code
 			else
-				io.error.putstring ("Key string is not one character...virtual key?")
+				--io.error.putstring ("Key string is not one character...virtual key?")
 				-- Add Fvirtkey to flags
 			end
 			!! accelerator.make (key, 0, flags)
 				-- We have no id for the callback yet...
 				-- We have to wait for the realize.
-			accelerators.add (accelerator)
+			--accelerators.add (accelerator)
 		ensure
 			accelerator_not_void: accelerator /= Void
 		end

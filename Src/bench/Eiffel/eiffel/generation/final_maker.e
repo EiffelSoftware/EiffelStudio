@@ -3,35 +3,13 @@
 class FINAL_MAKER
 
 inherit
-
 	MAKEFILE_GENERATOR
-		redefine
-			init_objects_baskets
-		end;
 
 creation
 
 	make
 
 feature
-
-	init_objects_baskets is
-			-- Create objects baskets.
-		local
-			basket_nb, i: INTEGER;
-			basket: LINKED_LIST [STRING]
-		do
-			basket_nb := 1 + 
-					System.static_type_id_counter.total_count // Packet_number;
-			!!object_baskets.make (1, basket_nb);
-			from i := 1 until i > basket_nb loop
-				!!basket.make;
-				object_baskets.put (basket, i);
-				i := i + 1
-			end;
-			!!descriptor_baskets.make (1, 0);
-			!!feat_table_baskets.make (1, 0)
-		end;
 
 	generate_compilation_rule is
 			-- Generates the .c -> .o compilation rule

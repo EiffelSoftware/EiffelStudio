@@ -30,6 +30,36 @@ creation {SOCKET}
 
 	create_from_descriptor
 
+feature -- Initialization
+
+	create_from_descriptor (fd: INTEGER) is
+			-- Create socket from the socket descriptor `fd'.
+		local
+			ext: ANY
+			retried: BOOLEAN
+		do
+			if not retried then
+				descriptor := fd;
+				create address.make;
+				ext := address.socket_address;
+				c_sock_name (descriptor, $ext, address.count);
+				family := address.family;
+				descriptor_available := True;
+				is_open_read := True;
+				is_open_write := True
+			end
+		ensure
+			family_valid: family = address.family;
+			opened_all: is_open_write and is_open_read
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				is_open_write := False
+				retried := True
+				retry
+			end
+		end;
+
 feature -- Access
  
 	retrieved: ANY is
@@ -97,34 +127,6 @@ feature -- Element change
 		end
 
 feature -- Basic commands
-
-	create_from_descriptor (fd: INTEGER) is
-			-- Create socket from the socket descriptor `fd'.
-		local
-			ext: ANY
-			retried: BOOLEAN
-		do
-			if not retried then
-				descriptor := fd;
-				create address.make;
-				ext := address.socket_address;
-				c_sock_name (descriptor, $ext, address.count);
-				family := address.family;
-				descriptor_available := True;
-				is_open_read := True;
-				is_open_write := True
-			end
-		ensure
-			family_valid: family = address.family;
-			opened_all: is_open_write and is_open_read
-		rescue
-			if not assertion_violation then
-				is_open_read := False
-				is_open_write := False
-				retried := True
-				retry
-			end
-		end;
 
 	bind is 
 			-- Bind socket to local address in `address'.

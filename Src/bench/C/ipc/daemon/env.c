@@ -48,7 +48,7 @@ char *win_eif_getenv (char *k, char *app)
 		strcpy (lower_k, k);
 		CharLowerBuff (lower_k, key_len);
 	
-		strcpy (key, "Software\\ISE\\Eiffel51\\");
+		strcpy (key, "Software\\ISE\\Eiffel52\\");
 		if (app == NULL)
 			strncat (key, strrchr(modulename, '\\')+1, appl_len);
 		else

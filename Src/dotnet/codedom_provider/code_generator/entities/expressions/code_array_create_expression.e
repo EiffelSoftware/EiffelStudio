@@ -89,7 +89,7 @@ feature -- Code Generation
 					Result.append (conversion_feature_name)
 					Result.append (" (")
 				end
-				Result.append ("[")
+				Result.append ("<<")
 				from
 					initializers.start
 					if not initializers.after then
@@ -101,8 +101,9 @@ feature -- Code Generation
 				loop
 					Result.append (", ")
 					Result.append (initializers.item.code)
+					initializers.forth
 				end
-				Result.append ("]")
+				Result.append (">>")
 				if conversion_feature_name /= Void then
 					Result.append (")")
 				end

@@ -30,14 +30,12 @@ feature {NONE} -- Implementation
 			f: RAW_FILE;
 			make_f: INDENT_FILE;
 			error: BOOLEAN;
-			system_name: STRING;
 			cmd_exec: COMMAND_EXECUTOR
 		do
 			if Eiffel_system = Void or else Eiffel_system.name = Void then
 				output_window.put_string (Warning_messages.W_must_compile_first)
 				output_window.new_line
 			else
-				system_name := clone (Eiffel_system.name);
 				appl_name := Eiffel_system.application_name (True);
 				create f.make (appl_name);
 				if not f.exists then

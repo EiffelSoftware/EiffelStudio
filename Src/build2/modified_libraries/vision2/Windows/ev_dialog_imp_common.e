@@ -28,7 +28,8 @@ inherit
 			wel_move_and_resize,
 			wel_destroy_window,
 			on_wm_destroy, on_wm_command,
-			forbid_resize, allow_resize
+			forbid_resize, allow_resize,
+			window_on_wm_activate
 		select
 			x_position,
 			y_position,
@@ -576,6 +577,27 @@ feature {NONE} -- Implementation
 					-- the dialog box)
 				cwin_invalidate_rect (wel_item, default_pointer, False)
 				cwin_update_window (wel_item)
+			end
+		end
+		
+	window_on_wm_activate (wparam, lparam: INTEGER) is
+			-- `Wm_activate' message recieved form Windows by `Current'.
+		local
+			titled_window: EV_TITLED_WINDOW_IMP
+		do
+			Precursor {EV_TITLED_WINDOW_IMP} (wparam, lparam)
+			if wparam = Wel_window_constants.Wa_inactive then
+					-- The Wm_killfocus message is sent correctly when a
+					-- dialog is empty but not otherwise. I think that this is
+					-- because when a dialog has a child, one of the children automatically
+					-- has the focus. Anyway, in the case where we have a child,
+					-- we need to connect the focus out actions to `on_wm_activate'.
+					-- Julian 07/11/02
+				if not interface.is_empty then
+					if focus_out_actions_internal /= Void then
+						focus_out_actions_internal.call ([])
+					end
+				end
 			end
 		end
 

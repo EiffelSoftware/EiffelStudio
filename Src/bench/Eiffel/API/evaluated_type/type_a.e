@@ -211,13 +211,6 @@ feature -- Access
 			Result := Current
 		end
 		
-	reference_actual_type: TYPE_A is
-			-- `actual_type' if not `is_expanded'.
-			-- Otherwise associated reference of `actual type'
-		do
-			Result := Current
-		end
-
 	deep_actual_type: TYPE_A is
 			-- Actual type; recursive on generic types
 			-- NOTE by M.S: Needed for ROUTINEs - perhaps
@@ -328,6 +321,16 @@ feature {COMPILER_EXPORTER} -- Access
 		require
 			other_not_void: other /= Void
 		deferred
+		end
+		
+	is_conformant_to (other: TYPE_A): BOOLEAN is
+			-- Does Current inherit from other?
+			-- Most of the time, it is equivalent to `conform_to' except
+			-- when current is an expanded type.
+		require
+			other_not_void: other /= Void
+		do
+			Result := conform_to (other)
 		end
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is
@@ -540,15 +543,13 @@ feature {NONE} -- Implementation
 			to_check_is_expanded: to_check.is_expanded
 			constraint_type_is_reference: not constraint_type.is_expanded
 		local
-			l_ref: TYPE_A
 			l_vtcg7: VTCG7
 		do
 			reset_constraint_error_list
 			if context_class.is_valid and to_check.is_valid then
-				l_ref := to_check.reference_actual_type
 				if
-					not (to_check.convert_to (context_class, l_ref) and
-					l_ref.conform_to (constraint_type))
+					not (to_check.convert_to (context_class, constraint_type) and
+					to_check.is_conformant_to (constraint_type))
 				then
 					generate_constraint_error (gen_type, to_check, constraint_type, i)
 						-- The feature listed in the creation constraint have

@@ -14,7 +14,7 @@ inherit
 			feature_type, instantiation_in, instantiation_of,
 			meta_type, is_basic,
 			good_generics, is_valid, error_generics,
-			is_equivalent, reference_actual_type
+			is_equivalent
 		end
 
 feature -- Comparison
@@ -32,13 +32,6 @@ feature -- Access
 
 	is_valid: BOOLEAN is True
 			-- The associated class is still in the system
-
-	reference_actual_type: CL_TYPE_A is
-			-- `actual_type' if not `is_expanded'.
-			-- Otherwise associated reference of `actual type'
-		do
-			create Result.make (class_id)
-		end
 
 feature {COMPILER_EXPORTER}
 

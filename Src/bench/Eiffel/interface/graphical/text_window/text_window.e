@@ -23,6 +23,10 @@ inherit
 			execute
 		select
 			execute
+		end;
+	SHARED_ACCELERATOR
+		undefine
+			copy, setup, consistent, is_equal
 		end
 
 creation
@@ -39,7 +43,8 @@ feature
 			set_read_only;
 			add_callbacks;
 			upper := -1 			-- Init clickable array.
-			set_font_to_default
+			set_font_to_default;
+			set_accelerators
 		end;
 
 feature -- Fonts
@@ -348,17 +353,11 @@ feature {NONE}
 	add_callbacks is
 		do
 			set_action ("<Btn3Down>", Current, grabber);
-			set_action ("!c<Btn3Down>", Current, new_tooler);
-			set_action ("Alt<Key>p", Current, raise_proj_window);
-			set_action ("Alt<Key>c", Current, raise_class_w);
-			set_action ("Alt<Key>f", Current, raise_routine_w);
-			set_action ("Alt<Key>o", Current, raise_object_w);
-			set_action ("Alt<Key>e", Current, raise_explain_w);
+			set_action ("!c<Btn3Down>", Current, new_tooler)
 		end;
 
 	highlight_selected (a, b: INTEGER) is
 			-- Highlight between `a' and `b' using reverse video.
-			
 		do
 			set_selection (a,b)
 		end;
@@ -452,7 +451,7 @@ feature {NONE}
 			tab_execute (argument);
 			if not changed then
 				if argument = modify_event then
-					if history.islast then
+					if not history.islast then
 						history.extend (root_stone);
 					end;
 					set_changed (true)
@@ -471,16 +470,6 @@ feature {NONE}
 						project_tool.receive (focus);
 						deselect_all
 					end
-				elseif argument = raise_proj_window then
-					project_tool.raise
-				elseif argument = raise_class_w then
-					window_manager.raise_class_windows
-				elseif argument = raise_routine_w then
-					window_manager.raise_routine_windows
-				elseif argument = raise_object_w then
-					window_manager.raise_object_windows
-				elseif argument = raise_explain_w then
-					window_manager.raise_explain_windows
 				end
 			end
 		end;
@@ -494,26 +483,6 @@ feature {NONE} -- Callback values
 			!! Result
 		end;
 	new_tooler: ANY is
-		once
-			!! Result
-		end;
-	raise_proj_window: ANY is
-		once
-			!! Result
-		end;
-	raise_class_w: ANY is
-		once
-			!! Result
-		end;
-	raise_routine_w: ANY is
-		once
-			!! Result
-		end;
-	raise_object_w: ANY is
-		once
-			!! Result
-		end;
-	raise_explain_w: ANY is
 		once
 			!! Result
 		end;

@@ -12,7 +12,8 @@ inherit
 			make as pict_create
 		end;
 	SHARED_PIXMAPS;
-	LICENCED_COMMAND
+	LICENCED_COMMAND;
+	SHARED_ACCELERATOR
 
 feature {NONE}
 
@@ -28,6 +29,7 @@ feature {NONE}
 			add_enter_action (Current, get_in);
 			add_leave_action (Current, get_out);
 			add_activate_action (Current, a_text_window);
+			set_accelerators;
 			text_window := a_text_window
 		ensure
 			parent = a_composite

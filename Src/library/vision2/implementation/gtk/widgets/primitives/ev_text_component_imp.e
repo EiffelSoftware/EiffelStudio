@@ -29,6 +29,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_editable: BOOLEAN is
+			-- Is the text editable
+		do
+			Result := c_gtk_editable_editable (widget) /= 0
+		end
+
 	position: INTEGER is
 			-- Current position of the caret.
 		do
@@ -38,7 +44,7 @@ feature -- Status report
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		do
-			Result := c_gtk_editable_has_selection (widget)
+			Result := c_gtk_editable_has_selection (widget) /= 0
 		end
 
 	selection_start: INTEGER is
@@ -127,8 +133,13 @@ feature -- Basic operation
 			-- Clipboard at the `index' postion in the
 			-- text.
 			-- If the Clipboard is empty, it does nothing. 
+		local
+			pos: INTEGER
 		do
+			pos := position
+			set_position (index)
 			gtk_editable_paste_clipboard (widget)
+			set_position (pos)
 		end
 
 feature -- Event - command association

@@ -108,8 +108,10 @@ feature -- Execution
 			elseif argument = button_three_action then
 				if argument_window.destroyed then
 					argument_window.initialize (popup_parent, Current)
+					argument_window.call
+				else
+					argument_window.destroy
 				end
-				argument_window.call
 			elseif not need_to_wait then
 				launch_application (argument)
 			end

@@ -24,6 +24,27 @@
 		<heading>
 			<size>2</size>Compiling
 		</heading>
+		<paragraph>To compile the example:
+			<list ordered="false">
+				<item>Launch EiffelStudio.</item>
+				<item>Select 
+					<bold>Use existing Ace (control file)</bold> and click 
+					<bold>OK</bold>
+				</item>
+				<item>Browse to 
+					<output output="envision">ENViSioN! root directory</output>
+					<output output="studio">Eiffel54</output>\examples\dotnet\winforms\control_reference\?????????.
+					<italic/>
+				</item>
+				<item>Choose
+					<italic/>.ace
+				</item>
+				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
+				<item>Click 
+					<bold>OK</bold>.
+				</item>
+			</list>
+		</paragraph>
 		<heading>
 			<size>2</size>Running
 		</heading>
@@ -41,7 +62,7 @@
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<span>FORM</span>
+				<span><code><class_name>FORM</class_name></code></span>
 			</item>
 		</list>
 		<heading>

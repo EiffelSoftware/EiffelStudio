@@ -108,8 +108,7 @@ feature {RESOURCE_STRUCTURE} -- Resource Management
 	save_resource (a_resource: RESOURCE) is
 			-- Save `a_resource' to registry
 		local
-			l_parent_key,
-			l_child_key: POINTER
+			l_parent_key: POINTER
 			l_new_value: WEL_REGISTRY_KEY_VALUE
 			l_registry_resource_name: STRING
 		do

@@ -56,7 +56,6 @@ feature -- Query
 			-- An valid string takes the form "faces-shape-weight-height-family".
 		local
 			s: STRING
-			i: INTEGER
 		do
 			s := a_string.twin
 			Result := s.occurrences ('-') = 4			

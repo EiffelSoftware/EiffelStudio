@@ -4,10 +4,10 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			position, simple_format
+			position
 		end;
 
-feature -- Attributes
+feature -- Propertoes
 
 	clients: CLIENT_AS;
 			-- Client list
@@ -15,7 +15,14 @@ feature -- Attributes
 	features: EIFFEL_LIST [FEATURE_AS];
 			-- Features
 
-	comment: EIFFEL_COMMENTS;
+	comment: EIFFEL_COMMENTS is
+			-- Feature clause comments
+		do	
+		end;
+
+	position: INTEGER;
+		-- Position after feature [{clients}]: 
+		-- expected comment
 
 feature -- Initialization
 
@@ -70,57 +77,19 @@ feature
 	has_equiv_declaration (other: like Current): BOOLEAN is
 		-- Has this feature clause a declaration equivalent to `other' feature clause?
 		-- i.e. `feature {CLIENTS} -- Comment'
-	do
-		if other = Void then
+		do
+			if other = Void then
 				Result := False
-		else
-			if clients = Void and other.clients = Void and then
-				equal (comment, other.comment) then
-					Result := True
-			elseif clients /= Void and then other.clients /= Void  then
+			else
+				if clients = Void and other.clients = Void and then
+					equal (comment, other.comment) then
+						Result := True
+				elseif clients /= Void and then other.clients /= Void  then
 					Result := clients.is_equiv (other.clients) and then
 						equal (comment, other.comment)
+				end
 			end
-		end
-	end;
-
-feature 
-
-	position: INTEGER;
-		-- position after feature [{clients}]: expected comment
-
-feature -- Replication
-
-	set_features (f: like features) is
-		do
-			features := f
 		end;
-
-	set_clients (c: like clients) is
-		do
-			clients := c
-		end;
-
-	set_comments (c: EIFFEL_FILE) is
-			-- Set comments for clause AND features.
-		do
-		end;
-
-	--set_comment (c: like comment) is
-	set_comment (c: EIFFEL_COMMENTS) is
-			-- Set comment for clause.
-		do
-		end;
-
-	is_equiv (other: like Current): BOOLEAN is
-			-- Is `other' feature clause equivalent to Current?
-		require
-			valid_other: other /= Void
-		do
-			Result := 
-				deep_equal (clients, other.clients) and then
-				features_deep_equal (other.features)	
-		end
 
 	features_deep_equal (other: like features): BOOLEAN is
 		do
@@ -144,36 +113,66 @@ feature -- Replication
 			end
 		end
 
+	is_equiv (other: like Current): BOOLEAN is
+			-- Is `other' feature clause equivalent to Current?
+		require
+			valid_other: other /= Void
+		do
+			Result := 
+				deep_equal (clients, other.clients) and then
+				features_deep_equal (other.features)	
+		end
+
+feature -- Setting
+
+	set_features (f: like features) is
+		do
+			features := f
+		end;
+
+	set_clients (c: like clients) is
+		do
+			clients := c
+		end;
+
+	set_comment (c: EIFFEL_COMMENTS) is
+			-- Set comment for clause.
+		do
+		end;
+
 feature -- Simple formatting
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.put_text_item (ti_Feature_keyword)
 			ctxt.put_space
-
-			if  clients /= Void then
+			if clients /= Void then
 				ctxt.set_separator (ti_Comma);
-				ctxt.space_between_tokens;
+				ctxt.set_space_between_tokens;
 				clients.simple_format (ctxt);
 			end;
-
-			format_comment (ctxt);
-
-			ctxt.next_line;
-			ctxt.indent_one_more;
-			ctxt.next_line;
-			ctxt.new_line_between_tokens;
+			if comment = Void then
+				ctxt.new_line
+			else
+				if comment.count > 1 then
+					ctxt.indent
+					ctxt.indent
+					ctxt.new_line
+					ctxt.put_comment (comment)
+					ctxt.exdent
+					ctxt.exdent
+				else
+					ctxt.put_space;
+					ctxt.put_comment (comment)
+				end
+			end
+			ctxt.new_line;
+			ctxt.indent;
+			ctxt.set_new_line_between_tokens;
 			ctxt.set_separator (Void);
 			features.simple_format (ctxt);
-			ctxt.indent_one_less;
-			ctxt.commit;
-		end;
-
-	format_comment (ctxt: FORMAT_CONTEXT) is
-			-- Format comment of this feature clause.
-		do
+			ctxt.exdent;
 		end;
 
 end -- class FEATURE_CLAUSE_AS

@@ -158,46 +158,57 @@ feature -- Type check, byte code and dead code removal
 						Error_handler.raise_error
 					end
 					new_creation_type := type.actual_type
-					if not new_creation_type.good_generics then
-						vtug := new_creation_type.error_generics
-						vtug.set_class (context.a_class)
-						vtug.set_feature (context.a_feature)
-						Error_handler.insert_error (vtug)
-						Error_handler.raise_error
-					elseif 	new_creation_type.is_none
-						or else
-						new_creation_type.is_expanded
-						or else
-						not new_creation_type.type_i.is_reference
-					then
-							-- Cannot create instance of NONE
-						!!vgcc3
+					if new_creation_type /= Void then
+						if not new_creation_type.good_generics then
+							vtug := new_creation_type.error_generics
+							vtug.set_class (context.a_class)
+							vtug.set_feature (context.a_feature)
+							Error_handler.insert_error (vtug)
+							Error_handler.raise_error
+						elseif 	new_creation_type.is_none
+							or else
+							new_creation_type.is_expanded
+							or else
+							not new_creation_type.type_i.is_reference
+						then
+								-- Cannot create instance of NONE
+							!!vgcc3
+							context.init_error (vgcc3)
+							vgcc3.set_target_name (target.access_name)
+							vgcc3.set_type (creation_type)
+							Error_handler.insert_error (vgcc3)
+						elseif
+							not new_creation_type.conform_to (creation_type)
+						then
+								-- Specified creation type must conform to
+								-- the entity type
+							!!vgcc31
+							context.init_error (vgcc31)
+							vgcc31.set_target_name (target.access_name)
+							vgcc31.set_type (creation_type)
+							Error_handler.insert_error (vgcc31)
+						else
+							creation_type := new_creation_type
+							gen_type ?= creation_type
+							if gen_type /= Void then
+								Instantiator.dispatch (gen_type, context.a_class)
+							end
+	
+								-- Update type stack
+							context.replace (creation_type)
+								-- Update the access line
+							access := access.creation_access (creation_type.type_i)
+							context.access_line.change_item (access)
+						end
+					else
+							-- Cannot create instance of `type'.
+							--| Most probably a BITS_SYMBOLS_AS
+						!! vgcc3
 						context.init_error (vgcc3)
 						vgcc3.set_target_name (target.access_name)
-						vgcc3.set_type (creation_type)
+						vgcc3.set_is_symbol
+						vgcc3.set_symbol_name (type.dump)
 						Error_handler.insert_error (vgcc3)
-					elseif
-						not new_creation_type.conform_to (creation_type)
-					then
-							-- Specified creation type must conform to
-							-- the entity type
-						!!vgcc31
-						context.init_error (vgcc31)
-						vgcc31.set_target_name (target.access_name)
-						vgcc31.set_type (creation_type)
-						Error_handler.insert_error (vgcc31)
-					else
-						creation_type := new_creation_type
-						gen_type ?= creation_type
-						if gen_type /= Void then
-							Instantiator.dispatch (gen_type, context.a_class)
-						end
-
-							-- Update type stack
-						context.replace (creation_type)
-							-- Update the access line
-						access := access.creation_access (creation_type.type_i)
-						context.access_line.change_item (access)
 					end
 				end
 				Error_handler.checksum

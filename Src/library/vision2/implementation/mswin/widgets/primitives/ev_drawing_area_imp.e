@@ -84,7 +84,8 @@ inherit
 			on_erase_background,
 			class_background,
 			default_style,
-			class_style
+			class_style,
+			on_size
 		end
 
 	WEL_CS_CONSTANTS
@@ -194,6 +195,12 @@ feature {NONE} -- Implementation
 				-- Switch back the dc fron paint_dc to screen_dc.
 			internal_paint_dc := screen_dc
 			in_paint := False
+		end
+
+	on_size (size_type, a_width, a_height: INTEGER)is
+			-- Wm_size message.
+		do
+			interface.resize_actions.call ([x_position, y_position, a_width, a_height])
 		end
 
 	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
@@ -552,6 +559,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/02/25 01:08:20  pichery
+--| Added support for resize_actions to Drawing areas.
+--|
 --| Revision 1.34  2000/02/24 05:02:34  pichery
 --| Fixed a bug: The Cs_owndc was set in the Windows Style instead of in the
 --| Class Style....basically it was previously not taken into account by windows!

@@ -14,7 +14,8 @@ inherit
 			reverse_code, expanded_assign_code, assign_code,
 			make_end_assignment, make_end_reverse_assignment,
 			creation_access, enlarged, is_creatable, is_attribute, read_only,
-			assigns_to, pre_inlined_code, generate_il_call_access
+			assigns_to, pre_inlined_code, generate_il_call_access,
+			need_target
 		end
 
 feature 
@@ -36,17 +37,29 @@ feature
 		require
 			good_argument: a /= Void
 			is_attribute: a.is_attribute
+		local
+			l_attr: ATTRIBUTE_I
 		do
-			attribute_name_id := a.feature_name_id
-			routine_id := a.rout_id_set.first
+			l_attr ?= a
+			attribute_name_id := l_attr.feature_name_id
+			routine_id := l_attr.rout_id_set.first
 			if System.il_generation then
-				attribute_id := a.origin_feature_id
-				written_in := a.origin_class_id
+				attribute_id := l_attr.origin_feature_id
+				written_in := l_attr.origin_class_id
 			else
-				attribute_id := a.feature_id
-				written_in := a.written_in
+				attribute_id := l_attr.feature_id
+				written_in := l_attr.written_in
+			end
+			if l_attr.extension /= Void then
+				need_target := l_attr.extension.need_current (l_attr.extension.type)
+			else
+				need_target := True
 			end
 		end
+
+	need_target: BOOLEAN
+			-- Does current call really need a target to be performed?
+			-- E.g. not a static external field
 
 	is_attribute: BOOLEAN is True
 			-- Is Current an access to an attribute ?
@@ -132,7 +145,7 @@ feature -- IL code generation
 					valid_type: cl_type /= Void
 				end
 
-				if is_first then
+				if is_first and need_target then
 						-- Accessing attribute written in current analyzed class.
 					if cl_type.is_reference then
 							-- Normal access we simply push current
@@ -184,8 +197,8 @@ feature -- IL code generation
 						il_generator.generate_attribute_address (target_type,
 							r_type, attribute_id)
 					else
-						if class_c.is_frozen or class_c.is_single then
-							il_generator.generate_attribute (target_type, attribute_id)
+						if class_c.is_frozen or class_c.is_single or class_c.is_external then
+							il_generator.generate_attribute (need_target, target_type, attribute_id)
 						else
 							il_generator.generate_feature_access (target_type,
 								attribute_id, 0, True, True)

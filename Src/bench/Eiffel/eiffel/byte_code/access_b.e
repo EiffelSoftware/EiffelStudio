@@ -648,7 +648,7 @@ feature {NONE} -- Il code generation
 			if is_attribute then
 				attr ?= Current
 				cl_type ?= attr.context_type
-				il_generator.generate_attribute_assignment (
+				il_generator.generate_attribute_assignment (attr.need_target,
 					il_generator.implemented_type (attr.written_in, cl_type), attr.attribute_id)
 			elseif is_local then
 				loc ?= Current

@@ -279,6 +279,18 @@ feature -- Removal
 			new_count: count = old count - 1
 		end
 
+	remove_position (position: INTEGER) is
+			-- Remove the item at zero-based `position'.
+		require
+			exists: exists
+			position_large_enough: position >= 0
+			position_small_enough: position < count
+		do
+			cwin_remove_menu (item, position, Mf_byposition)
+		ensure
+			new_count: count = old count - 1
+		end
+
 feature -- Basic operations
 
 	hilite_menu_item (window: WEL_COMPOSITE_WINDOW; an_id: INTEGER) is
@@ -638,6 +650,14 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HMENU, UINT, UINT)"
 		alias
 			"DeleteMenu"
+		end
+
+	cwin_remove_menu (hmenu: POINTER; id, flags: INTEGER) is
+			-- SDK RemoveMenu
+		external
+			"C [macro <wel.h>] (HMENU, UINT, UINT)"
+		alias
+			"RemoveMenu"
 		end
 
 	cwin_enable_menu_item (hmenu: POINTER; id, flags: INTEGER) is

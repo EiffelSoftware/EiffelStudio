@@ -6,6 +6,7 @@ root
 
 default
 	assertion (require)
+	console_application (yes)
 
 cluster
 	fast_compile : "."

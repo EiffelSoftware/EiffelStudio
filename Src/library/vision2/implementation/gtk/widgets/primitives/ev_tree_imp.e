@@ -20,7 +20,6 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			destroy,
 			initialize,
 			button_press_switch,
 			create_pointer_motion_actions,
@@ -37,6 +36,8 @@ inherit
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
+		undefine
+			destroy
 		redefine
 			interface,
 			insert_i_th,

@@ -22,7 +22,8 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
 		undefine
-			item_by_data
+			item_by_data,
+			destroy
 		redefine
 			interface,
 			add_to_container,

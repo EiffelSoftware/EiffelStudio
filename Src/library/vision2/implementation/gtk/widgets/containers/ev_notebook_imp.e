@@ -29,8 +29,6 @@ inherit
 		end
 		
 	EV_FONTABLE_IMP
-		undefine
-			destroy
 		redefine
 			interface
 		end

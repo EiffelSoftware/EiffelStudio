@@ -61,8 +61,9 @@ feature -- Status setting
 			-- Associate current formatter with `a_class'.
 		do
 			associated_class := a_class
-			if a_class = Void then
+			if a_class = Void or else not a_class.has_feature_table then
 				class_cmd := Void
+				associated_class := Void
 			else
 				create_class_cmd
 			end
@@ -75,8 +76,8 @@ feature -- Status setting
 				display_header
 			end
 		ensure
-			class_set: a_class = associated_class
-			cmd_created_if_possible: (a_class = Void) = (class_cmd = Void)
+			class_set: (a_class /= Void and then a_class.has_feature_table) implies (a_class = associated_class)
+			cmd_created_if_possible: (a_class = Void or else not a_class.has_feature_table) = (class_cmd = Void)
 		end
 
 feature -- Formatting
@@ -112,6 +113,7 @@ feature {NONE} -- Implementation
 			-- Create `class_cmd' depending on its actual type.
 		require
 			associated_class_non_void: associated_class /= Void
+			associated_class_is_compiled: associated_class.has_feature_table
 		deferred
 		ensure
 			class_cmd /= Void

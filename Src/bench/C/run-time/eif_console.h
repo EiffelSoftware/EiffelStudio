@@ -18,16 +18,8 @@
 
 #include "eif_file.h"
 
-#ifdef EIF_WIN32
-#include "eif_econsole.h"
-#endif
-
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#ifndef EIF_WIN32
-extern void eif_console_next_line(void);
 #endif
 
 RT_LNK EIF_POINTER console_def (EIF_INTEGER file);

@@ -46,6 +46,7 @@
 #include "rt_assert.h"
 #include "rt_macros.h"
 #include "rt_gen_types.h"
+#include "rt_struct.h"
 
 #ifndef WORKBENCH
 This module should not be compiled in non-workbench mode

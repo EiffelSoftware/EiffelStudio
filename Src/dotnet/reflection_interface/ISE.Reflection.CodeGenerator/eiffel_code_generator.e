@@ -1008,7 +1008,7 @@ feature {NONE} -- Implementation
 			not_empty_code: Result.get_length > 0
 		end
 	
-	Bit_or_infix_signature: STRING is "infix %"|%" (o: like Current): like Current is"
+	Bit_or_infix_signature: STRING is "infix %"|%" (infix_arg: like Current): like Current is"
 		indexing	
 			description: "Bit or infix signature"
 			external_name: "BitOrInfixSignature"

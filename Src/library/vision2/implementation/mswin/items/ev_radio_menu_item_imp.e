@@ -19,6 +19,7 @@ inherit
 		end
 
 creation
+	make,
 	make_with_text
 
 feature -- Status report
@@ -87,7 +88,7 @@ feature {NONE} -- Implementation
 			-- Destroy the current item.
 		do
 			group.remove_item (Current)
-			parent.remove_item (id)
+			parent_imp.remove_item (id)
 		end
 
 end -- class EV_RADIO_MENU_ITEM_IMP

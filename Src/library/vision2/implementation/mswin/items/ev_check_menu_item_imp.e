@@ -18,12 +18,13 @@ inherit
 		end
 	
 creation
+	make,
 	make_with_text
 
 feature -- Status report
 	
 	state: BOOLEAN is
-			-- Is current menu-item checked ?.
+			-- Is current menu-item checked ?
 		do
 			Result := parent_menu.item_checked (id)	
 		end

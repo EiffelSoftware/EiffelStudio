@@ -5,17 +5,19 @@ class EIFFEL_HISTORY
 
 inherit
 
-	CACHE [POLY_TABLE [ENTRY]]
+	CACHE [POLY_TABLE [ENTRY], ROUTINE_ID]
 		rename
 			item_id as cache_item_id,
 			wipe_out as cache_wipe_out,
 			make as cache_make
 		end;
-	CACHE [POLY_TABLE [ENTRY]]
+	CACHE [POLY_TABLE [ENTRY], ROUTINE_ID]
+		rename
+			item_id as poly_table
 		redefine
-			item_id, wipe_out, make
+			poly_table, wipe_out, make
 		select
-			item_id, wipe_out, make
+			poly_table, wipe_out, make
 		end;
 	SHARED_SERVER
 		undefine
@@ -43,20 +45,12 @@ feature
 
 	poly_table (rout_id: ROUTINE_ID): POLY_TABLE [ENTRY] is
 			-- Routine table of id `rout_id'
-		require
-			rout_id_not_void: rout_id /= Void
 		do
-			Result := item_id (rout_id.id)
-		end;
-		
-	item_id (r_id: INTEGER): POLY_TABLE [ENTRY] is
-			-- Routine table of id `r_id'
-		do
-			Result := cache_item_id (r_id);
-			if Result = Void and then Tmp_poly_server.has (r_id) then
+			Result := cache_item_id (rout_id);
+			if Result = Void and then Tmp_poly_server.has (rout_id) then
 					-- Not in cache and the routine id is not associated
 					-- to a routine table of deferred features only.
-				Result := Tmp_poly_server.item (r_id).poly_table;
+				Result := Tmp_poly_server.item (rout_id).poly_table;
 				if full then
 					remove;
 				end;

@@ -29,29 +29,8 @@ inherit
 			update_display
 		end
 
-	WEL_CONTROL_WINDOW
-		rename
-			make as wel_make,
-			set_parent as wel_set_parent,
-			destroy as wel_destroy
-		undefine
-			set_width,
-			set_height,
-			remove_command,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_char,
-			on_key_up,
-			on_draw_item,
-			background_brush,
-			on_menu_command
+	EV_WEL_CONTROL_CONTAINER_IMP
 		redefine
-			default_style,
 			move_and_resize
 		end
 
@@ -794,14 +773,6 @@ feature {NONE} -- EiffelVision implementation
 				initialize_at_minimum
 				parent_ask_resize (child_cell.width, child_cell.height)
 			end
-		end
-
-feature {NONE} -- WEL Implementation
-
-	default_style: INTEGER is
-		once
-			Result := Ws_child + Ws_visible + Ws_clipchildren 
-					+ Ws_clipsiblings
 		end
 
 invariant

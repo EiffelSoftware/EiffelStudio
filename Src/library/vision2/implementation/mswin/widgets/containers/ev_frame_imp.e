@@ -25,30 +25,8 @@ inherit
 
 	EV_SYSTEM_PEN_IMP
 
-	WEL_CONTROL_WINDOW
-		rename
-			make as wel_make,
-			set_parent as wel_set_parent,
-			destroy as wel_destroy
-		undefine
-			set_width,
-			set_height,
-			remove_command,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_char,
-			on_key_up,
-			on_draw_item,
-			background_brush,
-			on_menu_command
+	EV_WEL_CONTROL_CONTAINER_IMP
 		redefine
-			default_style,
-			default_ex_style,
 			on_paint,
 			move_and_resize
 		end
@@ -125,7 +103,7 @@ feature {NONE} -- Implementation for automatic size compute.
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
-			{WEL_CONTROL_WINDOW} Precursor (a_x, a_y, a_width, a_height, True)
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, True)
 			if child /= Void then
 				child.set_move_and_size (box_width, box_text_height + box_width, 
 										client_width, client_height)
@@ -133,17 +111,6 @@ feature {NONE} -- Implementation for automatic size compute.
 		end
 
 feature {NONE} -- WEL Implementation
-
-	default_style: INTEGER is
-		do
-			Result := {WEL_CONTROL_WINDOW} Precursor + Ws_clipchildren
-					+ Ws_clipsiblings --+ Ws_group + Ws_tabstop
-		end
-
-	default_ex_style: INTEGER is
-		do
-			Result := Ws_ex_controlparent
-		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 		local

@@ -27,31 +27,13 @@ inherit
 
 	EV_SYSTEM_PEN_IMP
 
-	WEL_CONTROL_WINDOW
-		rename
-			make as wel_make,
-			set_parent as wel_set_parent,
-			destroy as wel_destroy
+	EV_WEL_CONTROL_CONTAINER_IMP
 		undefine
-			set_width,
-			set_height,
-			remove_command,
-			on_set_cursor,
-			on_left_button_down,
-			on_mouse_move,
-			on_left_button_up,
-			on_right_button_down,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_char,
-			on_key_up,
-			on_draw_item,
-			background_brush,
-			on_menu_command
+			on_set_cursor
 		redefine
 			on_paint,
 			on_wm_erase_background,
+			default_style,
 			move_and_resize
 		end
 
@@ -168,7 +150,7 @@ feature {NONE} -- Implementation for automatic size compute
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
-			{WEL_CONTROL_WINDOW} Precursor (a_x, a_y, a_width, a_height, repaint)
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
 			resize_children (level)
 		end
 
@@ -281,6 +263,11 @@ feature {NONE} -- WEL Implementation
 			-- Wm_paint message
 		do
 			refresh
+		end
+
+	default_style: INTEGER is
+		do
+			Result := ws_child + ws_visible
 		end
 
 Invariant

@@ -22,32 +22,7 @@ inherit
 			on_first_display
 		end
 
-	WEL_CONTROL_WINDOW
-		rename
-			make as wel_make,
-			set_parent as wel_set_parent,
-			-- Make `flag' the new expand option.
-			destroy as wel_destroy
-		undefine
-			set_width,
-			set_height,
-			remove_command,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_char,
-			on_key_up,
-			on_draw_item,
-			background_brush,
-			on_menu_command
-		redefine
-			default_style,
-			default_ex_style
-		end
+	EV_WEL_CONTROL_CONTAINER_IMP
 
 feature {NONE} -- Initialization
 
@@ -107,20 +82,6 @@ feature {EV_WIDGET_IMP} -- Implementation
 				end
 			end
 			parent_ask_resize (minimum_width, minimum_height)
-		end
-
-
-feature {NONE} -- WEL Implementation
-
-	default_style: INTEGER is
-		once
-			Result := Ws_child + Ws_visible + Ws_clipchildren
-					+ Ws_clipsiblings
-		end
-
-	default_ex_style: INTEGER is
-		once
-			Result := Ws_ex_controlparent
 		end
 
 end -- class EV_INVISIBLE_CONTAINER_IMP

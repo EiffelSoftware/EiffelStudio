@@ -1,7 +1,7 @@
 indexing
 	description: "EiffelVision scrollable area. %
 				% Mswindows implementation"
-	author: ""
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,30 +18,9 @@ inherit
 			update_display
 		end
 
-	WEL_CONTROL_WINDOW
-		rename
-			make as wel_make,
-			set_parent as wel_set_parent,
-			destroy as wel_destroy
-		undefine
-				-- We undefine the features refined by EV_CONTAINER_IMP
-			set_width,
-			set_height,
-			remove_command,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_char,
-			on_key_up,
-			on_draw_item,
-			background_brush,
-			on_menu_command
+	EV_WEL_CONTROL_CONTAINER_IMP
 		redefine
-			default_style,
+			default_ex_style,
 			move_and_resize
 		end
 
@@ -100,7 +79,7 @@ feature {NONE} -- Implementation for automatic size compute.
 		local
 			step: INTEGER
 		do
-			{WEL_CONTROL_WINDOW} Precursor (a_x, a_y, a_width, a_height, repaint)
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
 			if child /= Void and then not child.destroyed then
 				if client_width > child.width + child.x and child.x < 0 then
 					step :=(client_width - child.width - child.x).min (-child.x)	
@@ -137,14 +116,11 @@ feature {NONE} -- Implementation for automatic size compute.
 		do
 		end
 
-feature {NONE} -- WEL implementation
+feature {NONE} -- WEL Implementation
 
-	default_style: INTEGER is
-			-- Default style used to create the window.
-			-- See class WEL_WS_CONSTANTS.
+	default_ex_style: INTEGER is
 		do
-			Result := {WEL_CONTROL_WINDOW} Precursor 
-					+ Ws_clipchildren + Ws_clipsiblings
+			Result := {EV_WEL_CONTROL_CONTAINER_IMP} Precursor + Ws_ex_clientedge
 		end
 
 end -- class EV_SCROLLABLE_AREA_IMP

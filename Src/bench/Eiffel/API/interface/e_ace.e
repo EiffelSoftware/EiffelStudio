@@ -58,7 +58,7 @@ feature -- Access
 				a_file.open_read
 				a_file.readstream (a_file.count)
 				a_file.close
-				Result := clone (a_file.laststring)
+				Result := a_file.laststring.twin
 			end
 		end
 

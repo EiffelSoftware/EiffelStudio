@@ -97,7 +97,7 @@ feature -- Initialization
 		do
 			create d.make (Eiffel_gen_path)
 			if d.exists then
-				new_name := clone (Eiffel_gen_path)
+				new_name := Eiffel_gen_path.twin
 				if new_name.item (new_name.count) = ']' then
 						-- VMS specification. We need to append `_old' before the `]'.
 					new_name.insert_string ("_old", new_name.count - 1)
@@ -435,8 +435,8 @@ feature -- Status setting
 			valid_arg: f_path /= Void 
 		do
 			if not f_path.is_equal (filter_path) then
-				filter_path.make_from_string (clone 
-						(environ.interpreted_string (f_path)))
+				filter_path.make_from_string ( 
+					environ.interpreted_string (f_path).twin)
 			end
 		end
 
@@ -446,8 +446,8 @@ feature -- Status setting
 			valid_arg: p_path /= Void 
 		do
 			if not p_path.is_equal (profile_path) then
-				profile_path.make_from_string (clone 
-					(environ.interpreted_string (p_path)))
+				profile_path.make_from_string (
+					environ.interpreted_string (p_path).twin)
 			end
 		end
 

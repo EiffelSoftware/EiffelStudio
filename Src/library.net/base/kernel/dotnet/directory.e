@@ -54,7 +54,8 @@ feature -- Initialization
 		do
 			create di.make (name.to_cil)
 			create l_full_path.make_from_cil (di.full_name)
-			l_sep_index := l_full_path.last_index_of (feature {PATH}.directory_separator_char, l_full_path.count)
+			l_sep_index := l_full_path.last_index_of (feature {PATH}.directory_separator_char,
+				(1).min (l_full_path.count - 1))
 			if l_sep_index = 0 then
 				di := feature {SYSTEM_DIRECTORY}.create_directory (l_full_path.to_cil)
 			else

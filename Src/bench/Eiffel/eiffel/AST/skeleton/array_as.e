@@ -3,8 +3,7 @@ class ARRAY_AS
 inherit
 	ATOMIC_AS
 		redefine
-			type_check, byte_node, fill_calls_list,
-			replicate, is_equivalent
+			type_check, byte_node, is_equivalent
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -61,8 +60,7 @@ feature -- Type check, byte code, dead code removal and formatter
 				else
 						-- Case of an array with no elements in it.
 						-- The type is by default ARRAY [ANY].
-					create cl_type_a
-					cl_type_a.set_base_class_id (System.any_id)
+					create cl_type_a.make (System.any_id)
 					lowest_type := cl_type_a
 				end
 			until
@@ -80,8 +78,7 @@ feature -- Type check, byte code, dead code removal and formatter
 					elseif element_type.conform_to (lowest_type) then
 					else
 						done := True
-						create cl_type_a
-						cl_type_a.set_base_class_id (System.any_id)
+						create cl_type_a.make (System.any_id)
 						lowest_type := cl_type_a
 					end
 				end
@@ -92,8 +89,7 @@ feature -- Type check, byte code, dead code removal and formatter
 				-- Create valid ARRAY type
 			create generics.make (1, 1)
 			generics.put (lowest_type, 1)
-			create array_type.make (generics)
-			array_type.set_base_class_id (System.array_id)
+			create array_type.make (System.array_id, generics)
 
 			multi_type.set_last_type (array_type)
 
@@ -116,19 +112,6 @@ feature -- Type check, byte code, dead code removal and formatter
 			
 				-- Update the array-line stack
 			array_line.forth
-		end
-
-feature	-- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-		do
-			expressions.fill_calls_list (l)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-		do
-			Result := clone (Current)
-			Result.set_expressions (expressions.replicate (ctxt))
 		end
 
 feature {AST_EIFFEL} -- Output

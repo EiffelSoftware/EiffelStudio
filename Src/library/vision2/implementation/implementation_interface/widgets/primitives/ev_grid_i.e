@@ -892,7 +892,7 @@ feature -- Status report
 			-- Is tree functionality enabled?
 		
 	column_displayed (a_column: INTEGER): BOOLEAN is
-			-- Is column `a_column' displayed in `Current'?
+			-- Is column `a_column' displayable in `Current'?
 		require
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
 		local
@@ -1173,8 +1173,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			-- used to query the value returned from `row_list' @ i
 			-- (`row_list' @ (i - 1)) @ (visible_physical_column_indexes @ (j - 1)) returns the 'j'-th visible column value for the `i'-th row in the grid.
 		local
-			i: INTEGER
+			i, j: INTEGER
 			a_col: EV_GRID_COLUMN_I
+			a_visible_count: INTEGER
 		do
 			create Result.make (visible_column_count)
 			from
@@ -1184,9 +1185,14 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			loop
 				a_col := column_internal (i)
 				if a_col.is_visible then
-					Result.put (i - 1, a_col.physical_index)
+					Result.put (j, a_col.physical_index)
+						-- SPECIAL is zero based so `j' starts at zero
+					j := j + 1
 				end
 				i := i + 1
+			end
+			check
+				visible_column_count_correct: visible_column_count = j
 			end
 		end
 
@@ -1214,10 +1220,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		end
 
 	rows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
-		-- Arrayed list returning the appropriate EV_GRID_ROW from a given logical index
+		-- Arrayed list returning the appropriate EV_GRID_ROW
 		
 	columns: EV_GRID_ARRAYED_LIST [EV_GRID_COLUMN_I]
-		-- Arrayed list returning the appropriate EV_GRID_COLUMN from a given logical index
+		-- Arrayed list returning the appropriate EV_GRID_COLUMN
 
 	physical_column_count: INTEGER
 		-- Number of physical columns stored in `row_list'
@@ -2057,11 +2063,7 @@ feature {NONE} -- Event handling
 							pointed_row_i.expand
 						end
 					elseif is_selection_on_click_enabled then
-						if not (create {EV_ENVIRONMENT}).application.ctrl_pressed then
-								-- If the ctrl key is not pressed then we remove selection
-							remove_selection
-						end
-						pointed_item.enable_select
+						handle_newly_selected_item (pointed_item.interface)
 					end
 				end
 			end
@@ -2121,12 +2123,14 @@ feature {NONE} -- Event handling
 				a_sel_item := sel_items.last
 				a_sel_row := a_sel_item.row
 				sel_offset := 1
-				if a_key.code = {EV_KEY_CONSTANTS}.Key_down then
+				inspect
+					a_key.code
+				when {EV_KEY_CONSTANTS}.Key_down then
 					if not a_sel_row.is_expanded then
 						sel_offset := sel_offset + a_sel_row.implementation.subnode_count_recursive
 					end
-					a_sel_item := a_sel_item.column.item ((a_sel_item.row.index + sel_offset).min (row_count))
-				elseif a_key.code = {EV_KEY_CONSTANTS}.Key_up then
+					a_sel_item := a_sel_item.column.item ((a_sel_item.row.index + sel_offset).min (row_count))					
+				when {EV_KEY_CONSTANTS}.Key_up then
 						-- Find the next visible node above currently selected item by looping up through parent rows if any
 					from
 						a_sel_item := a_sel_item.column.item ((a_sel_item.row.index - sel_offset).max (1))
@@ -2139,13 +2143,56 @@ feature {NONE} -- Event handling
 						end
 						parent_row := parent_row.parent_row
 					end
-				elseif a_key.code = {EV_KEY_CONSTANTS}.Key_right then
+				when {EV_KEY_CONSTANTS}.Key_right then
 					a_sel_item := a_sel_item.row.item ((a_sel_item.column.index + 1).min (column_count))
-				elseif a_key.code = {EV_KEY_CONSTANTS}.Key_left then
+				when {EV_KEY_CONSTANTS}.Key_left then
 					a_sel_item := a_sel_item.row.item ((a_sel_item.column.index - 1).max (1))
+				else
+					a_sel_item := Void
 				end
-				a_sel_item.enable_select
+				if a_sel_item /= Void then
+					handle_newly_selected_item (a_sel_item)
+				end	
 			end
+		end
+
+	handle_newly_selected_item (a_item: EV_GRID_ITEM) is
+			-- Handle selection for newly selected `a_item'
+		local
+			start_item: EV_GRID_ITEM
+			start_row_index, end_row_index, start_column_index, end_column_index: INTEGER
+			col_counter, row_counter: INTEGER
+		do
+			if (create {EV_ENVIRONMENT}).application.shift_pressed and then is_multiple_item_selection_enabled then
+				start_item := selected_items.last
+				if start_item /= Void and then start_item /= a_item then
+					start_row_index := start_item.row.index
+					end_row_index := a_item.row.index
+					start_column_index := start_item.column.index
+					end_column_index := a_item.column.index
+					from
+						col_counter := start_column_index.min (end_column_index)
+					until
+						col_counter > start_column_index.max (end_column_index)
+					loop
+						from
+							row_counter := start_row_index.min (end_row_index)
+						until
+							row_counter > start_row_index.max (end_row_index)
+						loop
+							item (col_counter, row_counter).enable_select
+							row_counter := row_counter + 1
+						end
+						col_counter := col_counter + 1
+					end
+				internal_selected_items.prune_all (start_item)
+				internal_selected_items.extend (start_item)
+				end
+			elseif not (create {EV_ENVIRONMENT}).application.ctrl_pressed then
+					-- If the ctrl key is not pressed then we remove selection
+				remove_selection
+			end
+			a_item.enable_select
 		end
 
 	key_press_string_received (a_keystring: STRING) is
@@ -2375,41 +2422,49 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 
 	update_row_selection_status (a_row_i: EV_GRID_ROW_I) is
 			-- Update the selection status for `a_row' in `Current'
+		local
+			row_has_selection: BOOLEAN
+			row_interface: EV_GRID_ROW
 		do
+			row_interface := a_row_i.interface
+			if internal_selected_rows.has (row_interface) then
+				internal_selected_rows.prune_all (row_interface)
+				row_has_selection := True
+			end
 			if is_single_row_selection_enabled then
 					-- Deselect existing rows and then remove from list
 				remove_selection			
 			end
-			if a_row_i.is_selected then
-					-- Add to grid's selected rows
-					if not internal_selected_rows.has (a_row_i.interface) then
-						internal_selected_rows.extend (a_row_i.interface)
-						if row_select_actions_internal /= Void then
-							row_select_actions_internal.call ([a_row_i.interface])
-						end
-					end
-			else
-				internal_selected_rows.prune_all (a_row_i.interface)
+				-- Add to last position in grid's selected rows
+			internal_selected_rows.extend (row_interface)
+
+			if row_select_actions_internal /= Void and then not row_has_selection then
+				row_select_actions_internal.call ([row_interface])
 			end
 		end
 
 	update_item_selection_status (a_item_i: EV_GRID_ITEM_I) is
 			-- Update the selection status for `a_item_i' in `Current'
+		require
+			a_item_i_not_void: a_item_i /= Void
+		local
+			item_has_selection: BOOLEAN
+			item_interface: EV_GRID_ITEM
 		do
+			item_interface := a_item_i.interface
+			if internal_selected_items.has (item_interface) then
+				internal_selected_items.prune_all (item_interface)
+				item_has_selection := True
+			end
 			if is_single_item_selection_enabled then
 					-- Deselect existing items and then remove from list
 				remove_selection			
 			end
-			if a_item_i.is_selected then
-					-- Add to grid's selected rows
-					if not internal_selected_items.has (a_item_i.interface) then
-						internal_selected_items.extend (a_item_i.interface)
-						if item_select_actions_internal /= Void then
-							item_select_actions_internal.call ([a_item_i.interface])
-						end
-					end
-			else
-				internal_selected_items.prune_all (a_item_i.interface)
+				-- Add to last position in grid's selected items
+			internal_selected_items.extend (item_interface)
+
+			if item_select_actions_internal /= Void and then not item_has_selection then
+				item_select_actions_internal.call ([item_interface])
 			end
 		end
 

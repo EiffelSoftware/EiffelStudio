@@ -81,5 +81,20 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-function-example.png</url>
 			</image>
 		</div>
-		<code_block>class    PRODUCTfeature -- Status report    order_price (quantity: INTEGER): DOUBLE is            -- Total price when ordering `quantity'.        require            quantity_non_negative: quantity &amp;gt;= 0        do            Result := quantity * price        ensure            correct: Result = quantity * price        endend -- class PRODUCT</code_block>
+		<code_block><keyword>class</keyword>
+	<class_name>PRODUCT</class_name>
+
+<keyword>feature</keyword> <comment>-- Status report</comment>
+
+	<feature_name>order_price</feature_name> <symbol>(</symbol>quantity<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>DOUBLE</class_name> <keyword>is</keyword>
+			<comment>-- Total price when ordering `quantity'.</comment>
+		<keyword>require</keyword>
+			<indexing_tag>quantity_non_negative</indexing_tag><symbol>:</symbol> quantity ><symbol>=</symbol> 0
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> quantity * <feature_name>price</feature_name>
+		<keyword>ensure</keyword>
+			<indexing_tag>correct</indexing_tag><symbol>:</symbol> Result <symbol>=</symbol> quantity * <feature_name>price</feature_name>
+		<keyword>end</keyword>
+
+<keyword>end</keyword> -- <keyword>class</keyword> <class_name>PRODUCT</class_name></code_block>
 	</paragraph></document>

@@ -20,8 +20,6 @@
 		<line_break/> When clicking 
 		<bold>OK</bold> this code is generated:
 		<line_break/>
-		<code_block>
-	count: INTEGER
-		-- Number of students in course
-</code_block>
+		<code_block><feature_name>count</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
+	<comment>-- Number of students in course</comment></code_block>
 	</paragraph></document>

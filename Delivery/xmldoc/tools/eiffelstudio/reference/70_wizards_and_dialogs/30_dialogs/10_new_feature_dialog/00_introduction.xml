@@ -7,16 +7,16 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>The new feature dialog window lets you create simple Eiffel features using the coding standards described in 
+	<paragraph>
+		<paragraph>
+		The new feature dialog window lets you create simple Eiffel features using the coding standards described in 
 		<link>
 			<url>http://www.eiffel.com/doc/oosc/</url>
 			<label>Object-Oriented Software Construction, Second Edition</label>
-		</link>. It takes away the drag of writing set-procedures for attributes and finding the right feature clause in your class text. The feature wizard can be invoked whenever you have a class open in a development window. It is also used by the diagram tool when creating a client-supplier link.
-		<div>
+		</link>. It takes away the drag of writing set-procedures for attributes and finding the right feature clause in your class text. The feature wizard can be invoked whenever you have a class open in a development window. It is also used by the diagram tool when creating a client-supplier link.</paragraph>
 			<image>
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard.png</url>
 			</image>
-		</div>
 		<heading>
 			<size>2</size>Use it when...
 		</heading>

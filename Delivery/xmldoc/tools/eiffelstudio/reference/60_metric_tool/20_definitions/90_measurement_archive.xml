@@ -8,7 +8,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>If you want to perform measurements on a system that you are building, the scopes of interest are the first four listed: Feature, Class, Cluster and System. Information on either of these scopes will be provided by the development environment (as with ISE Eiffel 5); alternatively, you could get it simply by parsing the source of your system. But what if you also need quantitative data on other systems, if only for purposes of seeing how your results compare to the quantitative properties of other people's work?</paragraph>
+		<paragraph>If you want to perform measurements on a system that you are building, the scopes of interest are the first four listed: Feature, Class, Cluster and System. Information on either of these scopes will be provided by the development environment (as with Eiffel Software Eiffel 5.x); alternatively, you could get it simply by parsing the source of your system. But what if you also need quantitative data on other systems, if only for purposes of seeing how your results compare to the quantitative properties of other people's work?</paragraph>
 		<paragraph>It would be impractical in this case to require tools that have access to as much information on external systems as on your own. All we really need is a record of previous measurements on these systems. This explains the fifth scope type, Archive: beyond the scope of the current system, all we require to define a scope is a 
 			<bold>measurement archive</bold>, or just "archive" for short. This is simply a file (or part of a file) that retains, in a suitable format (XML-based), the results of measurements made earlier on one system. The file can be local or accessible as a URL on the Internet.
 		</paragraph>
@@ -20,12 +20,12 @@
 			<item>
 				<paragraph>A department or company may set up a measurement archive for all projects on which it keeps metric information.</paragraph>
 			</item>
-			<item>The provider of the development environment, such as ISE, may publish a set of measurement archives giving metric information for reference projects, such as the EiffelBase library (designed in part as a showcase of Eiffel technology). ISE indeed intends to include a 
-				<bold>metrics</bold> directory, with a set of measurement archives for reference tools and libraries, in forthcoming releases of ISE Eiffel and at 
+			<item>The provider of the development environment, such as Eiffel Software, may publish a set of measurement archives giving metric information for reference projects, such as the EiffelBase library (designed in part as a showcase of Eiffel technology). Eiffle Software indeed intends to include a 
+				<bold>metrics</bold> directory, with a set of measurement archives for reference tools and libraries, in forthcoming releases of Eiffel Software Eiffel and at 
 				<link>
+					<label>http://www.eiffel.com/</label>
 					<url>http://www.eiffel.com/</url>
-				</link>
-				<span>.</span>
+				</link>.
 			</item>
 		</list>
 		<paragraph>

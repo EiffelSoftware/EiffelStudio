@@ -1,10 +1,10 @@
 <document title="Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>One of the innovations of the new ISE Eiffel 5 environment is a set of metric facilities enabling developers and managers to obtain quantitative information about software systems and the process of producing them.</paragraph>
+		<paragraph>One of the innovations of the new Eiffel Software Eiffel 5.x environment is a set of metric facilities enabling developers and managers to obtain quantitative information about software systems and the process of producing them.</paragraph>
 		<list ordered="false">
 			<item> Find out basic quantitative properties of a system, such as the number of classes, the number of features, how many times the system has been compiled and many others</item>
-			<item> Define new properties as mathematical combinations of the basic ones, and compute the resulting values, to get the answers to such questions as what percentage of my system?s routines have precondition clauses? or what is the average number of features, lines, or invariant clauses per class?</item>
+			<item> Define new properties as mathematical combinations of the basic ones, and compute the resulting values, to get the answers to such questions as what percentage of my system's routines have precondition clauses' or what is the average number of features, lines, or invariant clauses per class?</item>
 			<item> Vary the scope of such measurements, so that the measured result may cover a single feature, a class, a cluster, an entire system or an archive of another system to make comparisons with other projects.</item>
 			<item> Compare the result of the same metric over several of these scopes, to see for example how a project differs from those on record, or whether some parts of a project depart from the norms applied in others.</item>
 		</list>

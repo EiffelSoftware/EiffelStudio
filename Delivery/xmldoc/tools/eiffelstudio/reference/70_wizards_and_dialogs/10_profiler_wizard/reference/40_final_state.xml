@@ -51,7 +51,7 @@
 		<list ordered="false">
 			<item>'attribute' is one of:
 				<list ordered="false">
-					<item>featurename</item>
+					<item>feature name</item>
 					<item>calls</item>
 					<item>total</item>
 					<item>self</item>
@@ -63,7 +63,7 @@
 			<item>'value' is one of:
 				<list ordered="false">
 					<item>An integer (for calls)</item>
-					<item>A string (for feature name). The string may contain wild card characters: ?,standing for arbitrary characters, and *,standing for arbitrary sub-strings.</item>
+					<item>A string (for feature name). The string may contain wild card characters: ?, standing for arbitrary characters, and *, standing for arbitrary sub-strings.</item>
 					<item>A real value (for other attributes)</item>
 					<item>An interval, of the form a-b for two values a and b.</item>
 					<item>max</item>

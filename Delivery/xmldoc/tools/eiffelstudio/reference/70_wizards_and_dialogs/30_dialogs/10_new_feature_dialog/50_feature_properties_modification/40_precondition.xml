@@ -7,9 +7,8 @@
 			</code> field. A precondition clause will be added to the feature:
 		</paragraph>
 		<code_block>
-	...
-	require
-		n &gt;= 0
-	...
-</code_block>
+...
+<keyword>require</keyword>
+	n &gt;= 0
+...</code_block>
 	</paragraph></document>

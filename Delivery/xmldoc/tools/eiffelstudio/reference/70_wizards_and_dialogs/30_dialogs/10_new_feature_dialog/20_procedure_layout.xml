@@ -75,5 +75,20 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-procedure-example.png</url>
 			</image>
 		</div>
-		<code_block>class    PRODUCTfeature {PERSON} -- Element change    place_order (person: PERSON; quantity: INTEGER) is            -- Mail `quantity' to `person'.        require            person /= Void and quantity &amp;gt; 0        do            person.mail_order (Current, quantity)        ensure            person.has_ordered (Current)        endend -- class PRODUCT</code_block>
+		<code_block><keyword>class</keyword>
+	<class_name>PRODUCT</class_name>
+
+<keyword>feature</keyword> <symbol>{</symbol><class_name>PERSON</class_name><symbol>}</symbol> <comment>-- Element change</comment>
+
+	<feature_name>place_order</feature_name> <symbol>(</symbol>person<symbol>:</symbol> <class_name>PERSON</class_name>; quantity<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Mail `quantity' to `person'.</comment>
+        		<keyword>require</keyword>
+  			person /<symbol>=</symbol> Void <keyword>and</keyword> quantity > 0
+        		<keyword>do</keyword>
+			<feature_name>person</feature_name>.<feature_name>mail_order</feature_name> <symbol>(</symbol>Current, quantity<symbol>)</symbol>
+        		<keyword>ensure</keyword>
+			<feature_name>person</feature_name>.<feature_name>has_ordered</feature_name> <symbol>(</symbol>Current<symbol>)</symbol>
+		<keyword>end</keyword>
+
+<keyword>end</keyword> -- <keyword>class</keyword> <class_name>PRODUCT</class_name></code_block>
 	</paragraph></document>

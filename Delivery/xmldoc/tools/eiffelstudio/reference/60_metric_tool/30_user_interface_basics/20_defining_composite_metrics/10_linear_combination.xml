@@ -1,10 +1,10 @@
 <document title="Linear combinations of metrics" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Notation: ki.mi (where the i are real values)</paragraph>
-		<paragraph>Applicability: all the mi are metrics with the same unit u other than RATIO</paragraph>
+		<paragraph>Notation: E k<sub_script>i</sub_script>.m<sub_script>i</sub_script> (where the i are real values)</paragraph>
+		<paragraph>Applicability: all the m<sub_script>i</sub_script> are metrics with the same unit <italic>u</italic> other than RATIO</paragraph>
 		<paragraph>Semantics: weighted sum</paragraph>
-		<paragraph>Resulting unit: u</paragraph>
+		<paragraph>Resulting unit: <italic>u</italic></paragraph>
 		<paragraph>The metric tool provides a command for defining linear metrics. Button 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>

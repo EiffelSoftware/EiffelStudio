@@ -5,7 +5,7 @@
 			<bold>New argument</bold> button as many times as you need arguments.
 		</paragraph>
 		<note>
-			<bold>Note</bold>: even though this dialog always shows parentheses, they are not generated if the list is empty (Eiffel's command-query separation (CQS) principle).
+			<bold>Note</bold>: Even though this dialog always shows parentheses, they are not generated if the list is empty (Eiffel's command-query separation (CQS) principle).
 		</note>
 		<div>
 			<image>
@@ -13,7 +13,7 @@
 			</image>
 		</div>
 		<note>
-			<bold>Note</bold>: if you add arguments to a routine, It is not possible anymore to select routine type 
+			<bold>Note</bold>: If you add arguments to a routine, it is not possible anymore to select routine type 
 			<bold>once</bold>.
 		</note>
 		<paragraph>For every attribute you selected, enter a name in the textbox and a type using the 
@@ -28,9 +28,7 @@
 			</image>
 		</div>
 		<paragraph>The code that is generated:</paragraph>
-		<code_block>
-	set_name (s: STRING) is
-		do
-		end
-</code_block>
+		<code_block><feature_name>set_name</feature_name> <symbol>(</symbol>s<symbol>:</symbol> <class_name>STRING</class_name><symbol>)</symbol> <keyword>is</keyword>
+	<keyword>do</keyword>
+	<keyword>end</keyword></code_block>
 	</paragraph></document>

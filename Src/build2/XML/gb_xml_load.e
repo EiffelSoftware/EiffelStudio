@@ -85,6 +85,16 @@ feature {NONE} -- Implementation
 			window_object: GB_OBJECT
 			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
+				-- We construct the window immediately, as we know there will be
+				-- one.
+			layout_constructor_item ?= layout_constructor.first
+			check
+				layout_item_not_void: layout_constructor_item /= Void
+			end
+			window_object ?= layout_constructor_item.object
+			check
+				window_object_not_void: window_object /= Void
+			end
 				--| FIXME we must now look at the current type of `window'
 				--| which must be an EV_TITLED_WINDOW, and then add any attributes that
 				--| are specific to EV_TITLED_WINDOW
@@ -98,15 +108,6 @@ feature {NONE} -- Implementation
 					current_name := current_element.name.to_utf8
 					if current_name.is_equal (Item_string) then
 						-- The element represents an item, so we must add new objects.
-									
-						layout_constructor_item ?= layout_constructor.first
-						check
-							layout_item_not_void: layout_constructor_item /= Void
-						end
-						window_object ?= layout_constructor_item.object
-						check
-							window_object_not_void: window_object /= Void
-						end
 						build_new_object (current_element, window_object)
 					else
 							-- We must check for internal properties, else set the properties of the component
@@ -120,6 +121,10 @@ feature {NONE} -- Implementation
 								window_object_not_void: window_object /= Void
 							end
 							window_object.modify_from_xml (current_element)
+						elseif current_name.is_equal (Events_string) then
+								-- We now add the event information from `current_element'
+								-- into `window_object'.
+							extract_event_information (current_element, window_object)						
 						else						
 							-- Create the class.
 						gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))

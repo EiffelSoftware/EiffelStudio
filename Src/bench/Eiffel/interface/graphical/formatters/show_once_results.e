@@ -53,7 +53,13 @@ feature {NONE}
 			feature_i: FEATURE_I;
 			type_name: STRING
 		do
-			if Run_info.is_running and then Run_info.is_stopped then
+			if not Run_info.is_running then
+				warner.set_window (text_window);
+				warner.gotcha_call ("Application is not running")
+			elseif not Run_info.is_stopped then
+				warner.set_window (text_window);
+				warner.gotcha_call ("Application is not stopped")
+			else
 				dynamic_class := object.dynamic_class;
 				feature_table := dynamic_class.feature_table;
 				!! once_func_list.make;
@@ -108,7 +114,7 @@ feature {NONE}
 						once_request.once_result (feature_i).append_value (text_window)
 					else
 						feature_i.type.append_clickable_signature (text_window);
-						text_window.put_string (" Not yet called")
+						text_window.put_string ("%TNot yet called")
 					end;
 					text_window.new_line;
 					once_func_list.forth

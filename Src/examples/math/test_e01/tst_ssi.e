@@ -22,9 +22,8 @@ feature -- Initialization
 	make is
 			-- Test of SURFACE_SPLINE_INTERPOLATOR		
 		local
-					x, y, x1, y1, x2, y2, g: BASIC_VECTOR;
-			f, f1: BASIC_MATRIX;
-			i, j: INTEGER;		
+			x, y, x1, y1: BASIC_VECTOR;
+			f: BASIC_MATRIX;
 		do
 			print_nl ("Testing SURFACE_SPLINE_INTERPOLATOR (e01dac)");
 			create x.make_real_from_array (

@@ -21,7 +21,6 @@ feature -- Initialization
 			-- Test Fourier Transformer class
 		local
 			test_nr: INTEGER;
-			i, j, k: INTEGER;
 		do
 			test_nr := 0;
 			print ("TESTING FOURIER_TRANSFORMER%N");

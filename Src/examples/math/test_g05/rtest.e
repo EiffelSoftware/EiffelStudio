@@ -280,7 +280,6 @@ feature
 	test_simple_generators is
 			-- Test the random number generators.
 		local
-			x1, x2: DOUBLE;
 			d1: CONTINUOUS_UNIFORM_GENERATOR;
 			d2: CONTINUOUS_UNIFORM_GENERATOR_AB;
 			d3: EXPONENTIAL_GENERATOR;
@@ -502,7 +501,7 @@ feature
 	test_arma is
 		local
 			x: ARMA_TIME_SERIES_GENERATOR;
-			phi, theta: ARRAY [DOUBLE];
+			phi: ARRAY [DOUBLE];
 			w: ARRAY [DOUBLE];
 			i: INTEGER;
 		do

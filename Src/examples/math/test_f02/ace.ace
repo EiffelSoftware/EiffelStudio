@@ -27,7 +27,7 @@ cluster
 
 External
 	Include_path: "$(NAGCL04_32)\include", "$(ISE_EIFFEL)\library\math\clib";
-	Object: "$(ISE_EIFFEL)\library\math\clib\eifmathc.lib", "$(NAGCL04_32)\dll\nagcl04.lib";
+	Object: "$(ISE_EIFFEL)\library\math\clib\eifmathc.lib", "$(NAGCL04_32)\dll\nagc.lib";
 		
 end
 

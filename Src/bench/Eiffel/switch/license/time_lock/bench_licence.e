@@ -83,7 +83,7 @@ feature -- Registration
 					shareware_prompt.activate
 				else
 					if Is_beta then
-						demo_mode := True
+						licensed := True
 						username := "Beta user"
 					else
 						if username /= Void and then password /= Void then

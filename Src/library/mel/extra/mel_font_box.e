@@ -377,7 +377,7 @@ feature {NONE} -- External features
 
 	free_data (p: POINTER) is
 		external
-			"C"
+			"C (EIF_REFERENCE) | %"eif_malloc.h%""
 		alias
 			"xfree"
 		end

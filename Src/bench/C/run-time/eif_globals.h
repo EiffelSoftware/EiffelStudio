@@ -63,6 +63,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct dbinfo d_data;			/* Global debugger information */
 	struct pgcontext d_cxt;			/* Main program context */
 
+		/* eif_threads.c */
+	start_routine_ctxt_t *eif_thr_context;
 
 		/* except.c */
 	struct xstack eif_stack;		/* Calling stack (rt_public) */
@@ -188,6 +190,9 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define db_stack		(eif_globals->db_stack)		/* rt_shared */
 #define d_data			(eif_globals->d_data)		/* rt_shared */
 #define d_cxt			(eif_globals->d_cxt)		/* rt_shared */
+
+	/* eif_threads.c */
+#define eif_thr_context	(eif_globals->eif_thr_context)	/* rt_public */
 
 	/* except.c */
 /* Exported data structures (used by the generated C code) */

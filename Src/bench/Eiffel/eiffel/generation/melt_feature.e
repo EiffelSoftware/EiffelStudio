@@ -1,6 +1,10 @@
--- Byte code description of melted feature
+indexing
+	description: "Byte code description of melted feature."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class MELT_FEATURE 
+class
+	MELT_FEATURE 
 
 inherit
 	CHARACTER_ARRAY
@@ -14,4 +18,4 @@ inherit
 creation
 	make
 	
-end
+end -- class MELT_FEATURE

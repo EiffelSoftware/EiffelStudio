@@ -196,13 +196,13 @@ feature {NONE} -- File names
 
 	system_general: FILE_NAME is
 			-- General system level resource specification file
-			-- ($EIFFEL4/eifinit/application_name/general)
+			-- ($EIFFEL5/eifinit/application_name/general)
 		local
-			Eiffel4: STRING
+			Eiffel5: STRING
 		do
-			Eiffel4 := Exec_environment.get ("EIFFEL4")
-			if Eiffel4 /= Void then
-				create Result.make_from_string (Eiffel4)
+			Eiffel5 := Exec_environment.get ("EIFFEL5")
+			if Eiffel5 /= Void then
+				create Result.make_from_string (Eiffel5)
 				if Platform_constants.is_windows then
 					Result.extend_from_array (<<"eifinit", "bench", "spec", "windows">>)
 				else

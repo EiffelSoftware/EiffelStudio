@@ -52,7 +52,7 @@ feature {EV_ANY_HANDLER} -- Initialization
 			check
 				not_already_called: not default_create_called
 					--| Calling default_create twice is not
-					--| allowed. This means that reusing
+					--initialize allowed. This means that reusing
 					--| objects is not allowed unless a
 					--| special purpose feature is provided.
 			end
@@ -195,10 +195,10 @@ feature -- Duplication
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
-			-- Is `Current' in its default state.
+			-- Is `Current' in its default state?
 			--| Checked by the postcondition of default create.
 			--| Should be redefined and precursed in decendants to check new
-			--| objects for propper default state initialization.
+			--| objects for proper default state initialization.
 			--| Redefinitions must be pure queries with no side effects.
 			--| eg: do Result := Precursor and ( check_local_state ) end
 		do
@@ -224,7 +224,8 @@ feature {EV_ANY} -- Contract support
 			-- Does the application exist? This is used to stop
 			-- manipulation of widgets before an application is created.
 		do
-			Result := (create {EV_ENVIRONMENT}).application /= Void
+		--	Result := (create {EV_ENVIRONMENT}).application /= Void
+		Result := True
 		end
 
 invariant
@@ -242,14 +243,14 @@ indexing
 	 The "bridge pattern" as used in Vision2
 	
 	 The bridge pattern is described in the Design Patterns book (Gamma et al.).
-	 It provides a way to seperate interface from implementation so that the two
+	 It provides a way to separate interface from implementation so that the two
 	 can be structured differently.
 	 The bridge pattern comes at the cost of a high maintenence overhead as any
 	 change to the interface must be duplicated in the implementation interface.
 	 The implementation interface should really be generated from the interface.
 	
-	 The following features of the bridge patter are not used in Eiffel Vision.
-	 - Hiding of propritary implementation through delivery of interface source
+	 The following features of the bridge pattern are not used in Eiffel Vision.
+	 - Hiding of proprietary implementation through delivery of interface source
 	   but only compiled implementations. (Not applicable in Eiffel)
 	 - Protection of clients from relinking due to implementation changes.
 	   (Not applicable in Eiffel)

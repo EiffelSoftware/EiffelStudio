@@ -15,7 +15,7 @@ inherit
 
 feature
 
-	execute (argument: EV_ARGUMENT1[EV_WIDGET]) is
+	execute (argument: EV_ARGUMENT1[EV_WIDGET]; data: EV_EVENT_DATA) is
 		do
 			argument.first.show
 		end

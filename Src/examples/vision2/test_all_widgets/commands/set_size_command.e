@@ -15,7 +15,7 @@ inherit
 
 feature
 
-	execute (argument: EV_ARGUMENT3[EV_WIDGET, EV_TEXT_FIELD, EV_TEXT_FIELD]) is
+	execute (argument: EV_ARGUMENT3[EV_WIDGET, EV_TEXT_FIELD, EV_TEXT_FIELD]; data: EV_EVENT_DATA) is
 		do
 			argument.first.set_size (argument.second.text.to_integer, 
 						 argument.third.text.to_integer)

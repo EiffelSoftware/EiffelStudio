@@ -245,6 +245,23 @@ feature {NONE} -- Implementation
 			non_void_function_body: Result.body /= Void
 		end
 
+	co_initialize_ex_function: STRING is
+			-- CoInitialize function call
+		do
+			create Result.make (1000)
+			Result.append (Tab)
+			Result.append ("hr = CoInitializeEx (")
+			Result.append (Null)
+			Result.append (Comma_space)
+			Result.append (concurrency_model)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line)
+		ensure
+			non_void_co_initialize: Result /= Void
+			valid_co_initialize: not Result.empty
+		end
+
 end -- class WIZARD_COMPONENT_C_CLIENT_GENERATOR
 
 --|----------------------------------------------------------------

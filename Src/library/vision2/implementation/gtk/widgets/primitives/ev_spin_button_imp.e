@@ -18,7 +18,8 @@ inherit
 			visual_widget,
 			set_composite_widget_pointer_style,
 			on_key_event,
-			default_key_processing_blocked
+			default_key_processing_blocked,
+			on_focus_changed
 		redefine
 			interface,
 			initialize,

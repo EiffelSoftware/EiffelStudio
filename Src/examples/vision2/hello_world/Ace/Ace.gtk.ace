@@ -17,7 +17,7 @@ default
 cluster
 
 	ROOT_CLUSTER: 		"../main";
-	
+	commands:		"../commands";	
 
 -- EiffelBase:
 
@@ -45,7 +45,8 @@ cluster
 
 	-- Interface
         -- Vision:                 	"$EIFFEL4/library/vision";
-        vision:                 	"/boston/samik/src/vision_new";
+        vision:                 	"/boston/samik/src/vision2";
+	vision_kernel (vision):         "$/interface/kernel";
 	vision_support (vision):        "$/interface/support";
 	vision_widgets (vision):        "$/interface/widgets";
 	vision_primitives (vision_widgets):        "$/primitives";
@@ -61,7 +62,7 @@ cluster
 
 	-- Implementation Interface
 	vision_ii (vision_imp):		"$/implementation_interface";
---	vision_ii_kernel (vision_ii):	"$/kernel";
+	vision_ii_kernel (vision_ii):	"$/kernel";
 	vision_ii_support (vision_ii):	"$/support";
 	vision_ii_widgets (vision_ii):	"$/widgets";
 	vision_ii_primitives (vision_ii_widgets):	"$/primitives";
@@ -70,7 +71,7 @@ cluster
 
 	-- Implementation clusters for x/GTK
 	vision_gtk (vision_imp):          	"$/gtk";
---	vision_gtk_kernel (vision_gtk):         "$/kernel";
+	vision_gtk_kernel (vision_gtk):         "$/kernel";
 	vision_gtk_support (vision_gtk):        "$/support";
 	vision_gtk_widgets (vision_gtk):        "$/widgets";
 	vision_gtk_primitives (vision_gtk_widgets):	"$/primitives";
@@ -81,11 +82,11 @@ external
 
         include_path:
                 " `gtk-config --cflags`",		
- 		"/boston/samik/src/vision_new/implementation/gtk/Clib";
--- 		"$(EIFFEL4)/library/vision_new/implementation/gtk/Clib";
+ 		"/boston/samik/src/vision2/implementation/gtk/Clib";
+-- 		"$(EIFFEL4)/library/vision/implementation/gtk/Clib";
 
         object:
- 		"/boston/samik/src/vision_new/implementation/gtk/Clib/gtk_eiffel.o",
+ 		"/boston/samik/src/vision2/implementation/gtk/Clib/gtk_eiffel.o",
 --		"$(EIFFEL4)/library/vision/implementation/gtk/Clib/gtk_eiffel.o",
                "`gtk-config --libs`"
 

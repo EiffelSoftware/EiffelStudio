@@ -57,6 +57,13 @@ feature -- Callbacks
 			if Eiffel_ace.file_name = Void then
 				update_project_warner_ok (argument)
 			elseif not assert_confirmed then
+				if argument = Void then
+						-- Called from `discard_assertions' after help button
+						-- was pressed (Finalize_no_c request)
+					start_c_compilation := False
+				else
+					start_c_compilation := True
+				end;
 				assert_confirmed := True;
 				warner (popup_parent).custom_call (Current, 
 					Warning_messages.w_Assertion_warning, Interface_names.b_Keep_assertions, 
@@ -127,13 +134,16 @@ feature {NONE} -- Implementation
 			-- finalize thereafter.
 		do
 			if 
-				argument = tool or
+				argument = tool or else
+				argument = Current or else
 				(argument /= Void and 
 				argument = last_confirmer and not end_run_confirmed)
 			then
 				assert_confirmed := False;
-				warner (popup_parent).custom_call (Current, Warning_messages.w_Finalize_warning,
-					Interface_names.b_Finalize_now, Void, Interface_names.b_Cancel);
+				warner (popup_parent).custom_call (Current, 
+					Warning_messages.w_Finalize_warning,
+					Interface_names.b_Finalize_now, 
+					Interface_names.b_Finalize_now_but_no_C, Interface_names.b_Cancel);
 			elseif 
 				(argument = Current) or else
 				(argument = last_confirmer)

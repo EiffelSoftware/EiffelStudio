@@ -9,14 +9,10 @@ class CASE_STORAGE
 
 inherit
 
-	PIXMAP_COMMAND
-		rename
-			init as make
-		end;
+	EB_CONSTANTS;
+	ISE_COMMAND;
+	WINDOWS
 
-creation
-	make
-	
 feature -- Properties
 
 	control_click: ANY is

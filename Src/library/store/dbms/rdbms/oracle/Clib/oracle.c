@@ -23,15 +23,13 @@
 #include "oracle.h"
 
 #define MAX_BINDS 12
-
+/*
 #define MAX_ITEM_BUFFER_SIZE 255
 #define MAX_SELECT_LIST_SIZE 255
+*/
 
-
-/*
 #define MAX_ITEM_BUFFER_SIZE 500
 #define MAX_SELECT_LIST_SIZE 255
-*/
 
 #define MAX_SQL_IDENTIFIER 31
 #define PARSE_NO_DEFER 0

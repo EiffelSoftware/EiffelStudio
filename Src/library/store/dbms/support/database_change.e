@@ -48,7 +48,7 @@ feature -- Element change
 			connected: is_connected
 			descriptor_is_available: db_spec.descriptor_is_available
 		local
-			tmp_string: STRING
+			tmp_string, tmp_str: STRING
 			temp_descriptor: INTEGER
 			parsed: BOOLEAN
 		do

@@ -48,7 +48,7 @@ feature -- Basic operations
 			prepare_execute: not immediate_execution
 			descriptor_is_available: db_spec.descriptor_is_available
 		local
-			parsed_s: STRING
+			parsed_s, tmp_str: STRING
 			parsed: BOOLEAN
 		do
 			descriptor := db_spec.new_descriptor
@@ -74,6 +74,8 @@ feature -- Basic operations
 
 		require else
 			connected: is_connected
+		local
+			id_row: INTEGER
 		do
 			if is_ok then
 				handle.status.set_found (db_spec.next_row (descriptor))
@@ -157,18 +159,6 @@ feature -- Status report
         do
             Result := db_spec.descriptor_is_available
         end
-
-feature -- Error handling
-
---	code_error: INTEGER is
---		do
---			handle.status.error_code
---		end
-
---	message_error: STRING is
---		do
---			handle.status.message_error
---		end
 
 end -- class DATABASE_SELECTION
 

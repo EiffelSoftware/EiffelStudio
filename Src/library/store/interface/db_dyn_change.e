@@ -50,7 +50,7 @@ feature -- Element change
 			is_allocatable: is_allocatable
 		do
 			implementation.prepare (s)
-			set_prepared (True)
+			set_prepared (TRUE)
 			if not is_ok and then is_tracing then
 				trace_output.putstring (error_message)
 				trace_output.new_line

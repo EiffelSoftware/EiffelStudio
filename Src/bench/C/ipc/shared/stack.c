@@ -287,7 +287,7 @@ private struct dcall *safe_dtop()
 	 * there is nothing on the stack. Here, we only return a null pointer.
 	 */
 
-	if (db_stack.st_top == db_stack.st_hd->sk_arena)
+	if (db_stack.st_top && db_stack.st_top == db_stack.st_hd->sk_arena)
 		return (struct dcall *) 0;
 	
 	return dtop();		/* Stack is not empty */

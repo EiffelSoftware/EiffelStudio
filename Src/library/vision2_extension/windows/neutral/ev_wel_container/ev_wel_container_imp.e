@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_message (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Process messages sent by Windows to `Current'.
 		local
 			called: BOOLEAN
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			when Wm_command then
 				on_wm_command (wparam, lparam)
 			when Wm_syscommand then
-				on_sys_command (wparam, cwin_lo_word (lparam), cwin_hi_word (lparam))
+				on_sys_command (wparam.to_integer_32, cwin_lo_word (lparam), cwin_hi_word (lparam))
 			when Wm_menuselect then
 				on_wm_menu_select (wparam, lparam)
 			when Wm_vscroll then
@@ -138,9 +138,9 @@ feature {NONE} -- Implementation
 			when Wm_windowposchanging then
 				on_wm_window_pos_changing (lparam)
 			when Wm_paletteischanging then
-				on_palette_is_changing (window_of_item (cwel_integer_to_pointer (wparam)))
+				on_palette_is_changing (window_of_item (wparam))
 			when Wm_palettechanged then
-				on_palette_changed (window_of_item (cwel_integer_to_pointer (wparam)))
+				on_palette_changed (window_of_item (wparam))
 			when Wm_querynewpalette then
 				on_query_new_palette
 			when Wm_settingchange then

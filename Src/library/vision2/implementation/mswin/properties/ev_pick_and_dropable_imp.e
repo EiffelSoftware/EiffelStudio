@@ -330,7 +330,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			env: EV_ENVIRONMENT
 			target: EV_ABSTRACT_PICK_AND_DROPABLE
-			pick_and_dropable: EV_PICK_AND_DROPABLE
+			abstract_pick_and_dropable: EV_ABSTRACT_PICK_AND_DROPABLE
 			text_component: EV_TEXT_COMPONENT_IMP
 		do
 			modify_widget_appearance (False)
@@ -396,11 +396,11 @@ feature {EV_ANY_I} -- Implementation
 			else
 				env.application.cancel_actions.call ([pebble])
 			end
-			pick_and_dropable ?= target
+			abstract_pick_and_dropable ?= target
 			check
-			 pick_and_dropable_correct: target /= Void implies pick_and_dropable /= Void
+				abstract_pick_and_dropable_correct: target /= Void implies abstract_pick_and_dropable /= Void
 			end
-			pick_ended_actions.call ([pick_and_dropable])
+			pick_ended_actions.call ([abstract_pick_and_dropable])
 			enable_transport
 				-- Return state ready for next drag/pick and drop.
 			

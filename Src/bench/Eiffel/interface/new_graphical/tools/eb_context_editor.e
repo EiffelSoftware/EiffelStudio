@@ -1060,7 +1060,7 @@ feature {NONE} -- Events
 	on_vertical_scroll (new_value: INTEGER) is
 			-- `vertical_scrollbar' has been moved by the user.
 		do
-			if projector /= Void then
+			if projector /= Void and then new_value /= projector.area_y then
 				projector.change_area_position (projector.area_x, new_value)
 			end
 		end
@@ -1068,7 +1068,7 @@ feature {NONE} -- Events
 	on_horizontal_scroll (new_value: INTEGER) is
 			-- `horizontal_scrollbar' has been moved by the user.
 		do
-			if projector /= Void then
+			if projector /= Void and then new_value /= projector.area_x then
 				projector.change_area_position (new_value, projector.area_y)
 			end
 		end
@@ -1108,13 +1108,17 @@ feature {NONE} -- Events
 				max := (visible_width - 1 - area.width.max (1)).max (1)
 				horizontal_scrollbar.value_range.resize_exactly (0, max)
 				horizontal_scrollbar.set_leap (area.width.max (1))
-				horizontal_scrollbar.set_value (old_value.min (max).max (0))
+				old_value := old_value.min (max).max (0)
+				horizontal_scrollbar.set_value (old_value)
+				on_horizontal_scroll (old_value)
 				
 				old_value := vertical_scrollbar.value
 				max := (visible_height - 1 - area.height.max (1)).max (1)
 				vertical_scrollbar.value_range.resize_exactly (0, max)
 				vertical_scrollbar.set_leap (area.height.max (1))
-				vertical_scrollbar.set_value (old_value.min (max).max (0))
+				old_value := old_value.min (max).max (0)
+				vertical_scrollbar.set_value (old_value)
+				on_vertical_scroll (old_value)
 --				if projector /= Void then
 --					projector.update_rectangle (create {EV_RECTANGLE}.make (0, 0, area.width, area.height), 0, 0)
 --				end

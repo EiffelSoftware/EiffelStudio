@@ -57,10 +57,21 @@ feature -- Drawing
 			end
 		end
 
+feature -- Settings
+
+	set_style(a_style: INTEGER) is
+		do
+
+		end
+
 feature -- Implementation
 	
 	points: ARRAY[TUPLE[INTEGER,INTEGER]]
-		-- points which constitue the polyline figure.
+		-- points which constitute the polyline figure.
+
+	style: INTEGER
+		-- Style Current is going to be drawn.
+		-- Please refer to class 'GD_STYLES'
 
 feature {NONE} -- Externals
 

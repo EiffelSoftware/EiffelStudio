@@ -1,5 +1,5 @@
 indexing
-	description: "Gif Image"
+	description: "GD Image"
 	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,6 +52,20 @@ feature -- Initialization
 			list_make
 		end
 
+feature -- Settings
+
+	set_interlaced(b: BOOLEAN) is
+		-- If 'b', then set Current as interlaced image,
+		-- else make it linear ( default ).
+	local
+		i: INTEGER
+	do
+		if b then
+			i := 1
+		end
+		gdImageInterlace(image, i)
+	end
+
 feature -- Basic Operations
 
 	save_to_file (file_name: FILE_NAME) is
@@ -83,7 +97,7 @@ feature -- Access
 			Result := c_get_height ( image )
 		end
 
-feature -- Validity of use for Current Image.
+feature -- Validity status.
 
 	coordinates_within_the_image(x,y: INTEGER): BOOLEAN is
 			-- Does a point (x,y ) within the boundaries ?
@@ -154,11 +168,11 @@ feature {NONE} -- Externals
 			"gdImagePng"
 		end
 
-	c_pixel_color_index(p: POINTER; x,y: INTEGER):INTEGER is
+	gdImageInterlace(p: POINTER; i: INTEGER) is
 		external
 			"c"
 		alias
-			"gdImageGetPixel"
+			"gdImageInterlace"
 		end
 
 	gdImageBoundsSafe(p: POINTER; x,y: INTEGER):INTEGER is
@@ -176,13 +190,6 @@ feature {NONE} -- Externals
 	c_get_width (p: POINTER ): INTEGER is
 		external
 			"c[macro <eiffel_png.h>]"
-		end
-
-	c_image_string (p,f: POINTER; i1,i2: INTEGER; s: POINTER; color_index: INTEGER) is
-		external
-			"c"
-		alias
-			"gdImageString"
 		end
 
 invariant

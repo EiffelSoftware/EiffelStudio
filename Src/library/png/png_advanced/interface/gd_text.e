@@ -47,7 +47,19 @@ feature -- Drawing
 		do
 			a := text.to_c
 			p := font(gd_font)
-			c_image_string(image.image, p,x,y, $a , color_index)	
+			if is_vertical then
+		 	    gdImageStringUp(image.image, p,x,y, $a , color_index)
+			else
+				c_image_string(image.image, p,x,y, $a , color_index)	
+			end
+		end
+
+feature -- Settings
+
+	set_vertical(b: BOOLEAN) is
+		-- Is current text to be displayed vertically ?
+		do
+			is_vertical := b
 		end
 
 feature -- Implementation
@@ -64,6 +76,13 @@ feature {NONE} -- Externals
 	c_image_string (p,f: POINTER; i1,i2: INTEGER; s: POINTER; a_color_index: INTEGER) is
 		external
 			"c"
+		alias
+			"gdImageString"
+		end
+
+	gdImageStringUp(p,f: POINTER; i1,i2: INTEGER; s: POINTER; a_color_index: INTEGER) is
+		external
+			"C"
 		alias
 			"gdImageString"
 		end

@@ -29,11 +29,11 @@ feature {NONE} -- Initialization
 		do
 			parent := Void
 			resource_id := an_id
-			!! dialog_child.make
+			!! dialog_children.make
 		ensure
 			no_parent: parent = Void
 			resource_id_set: resource_id = an_id
-			dialog_child_not_void: dialog_child /= Void
+			dialog_children_not_void: dialog_children /= Void
 		end
 
 	make_by_name (a_name: STRING) is
@@ -45,11 +45,11 @@ feature {NONE} -- Initialization
 		do
 			parent := Void
 			resource_name := clone (a_name)
-			!! dialog_child.make
+			!! dialog_children.make
 		ensure
 			no_parent: parent = Void
 			resource_name_set: resource_name.is_equal (a_name)
-			dialog_child_not_void: dialog_child /= Void
+			dialog_children_not_void: dialog_children /= Void
 		end
 
 feature -- Basic operations

@@ -13,6 +13,14 @@ deferred class
 
 inherit
 	EV_ITEM_I
+		redefine
+			interface
+		end
+
+	EV_PICK_AND_DROPABLE_I
+		redefine
+			interface
+		end
 
 feature -- Access
 
@@ -215,6 +223,10 @@ feature -- Assertion features
 			end
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_COMPOSED_ITEM
+
 end -- class EV_COMPOSED_ITEM_I
 
 --!-----------------------------------------------------------------------------
@@ -238,6 +250,9 @@ end -- class EV_COMPOSED_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/10 01:25:23  king
+--| Inheriting from PND
+--|
 --| Revision 1.12  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

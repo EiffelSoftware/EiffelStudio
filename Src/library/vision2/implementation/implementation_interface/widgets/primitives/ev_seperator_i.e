@@ -9,17 +9,6 @@ deferred class
 
 inherit
 	EV_PRIMITIVE_I
-		redefine
-			set_default_options
-		end
-
-feature {NONE} -- Initialization
-
-	set_default_options is
-			-- Common initializations for Gtk and Windows.
-		do
-			set_expand (False)
-		end
 
 end -- class EV_SEPARATOR_I
 

@@ -19,7 +19,6 @@ feature {NONE} -- Initialization
 	set_default_options is
 			-- Common initializations for Gtk and Windows.
 		do
-			{EV_SCROLL_BAR_I} Precursor
 			set_horizontal_resize (False)
 			set_vertical_resize (True)
 		end

@@ -106,4 +106,18 @@ feature -- Status setting
 			Result := command_list.after
 		end
 
+	remove_all_items is
+			-- remove all the items.
+		do
+			from
+				command_list.start
+				connexion_id_list.start
+			until
+				command_list.empty
+			loop
+				command_list.remove
+				connexion_id_list.remove
+			end
+		end
+
 end -- class EV_GTK_COMMAND_LIST

@@ -22,7 +22,10 @@ inherit
 
 	EV_TEXTABLE_IMP
 		redefine
-			set_default_size
+			set_default_size,
+			set_center_alignment,
+			set_right_alignment,
+			set_left_alignment
 		end
 
 	EV_FONTABLE_IMP
@@ -61,10 +64,10 @@ inherit
 creation
 	make_with_text
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
-			-- Create an empty label
+			-- Create an empty label.
 		do
 			make_with_text (par, "")
 		end
@@ -90,7 +93,27 @@ feature -- Initialization
 			set_default_size
 		end
 
-feature -- Basic operation
+feature -- Status setting
+
+	set_center_alignment is
+			-- Set text alignment of current label to center.
+		do
+			set_style (basic_style + Ss_center)
+		end
+
+	set_right_alignment is
+			-- Set text alignment of current label to right.
+		do
+			set_style (basic_style + Ss_right)
+		end
+
+	set_left_alignment is
+			-- Set text alignment of current label to left.
+		do
+			set_Style (basic_style + Ss_left)
+		end
+
+feature {NONE} -- Basic operation
 
 	set_default_size is
 		-- Resize to a default size.
@@ -109,10 +132,16 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
+	basic_style: INTEGER is
+			-- Basic style without any option
+		do
+			Result := Ws_visible + Ws_child + Ws_group
+		end
+
    	default_style: INTEGER is
    			-- Default style used to create the control
-   		once
- 			Result := ws_visible + ws_child + ws_group +  ss_left
+   		do
+ 			Result := basic_style + Ss_left
  		end
 
 	wel_background_color: WEL_COLOR_REF is

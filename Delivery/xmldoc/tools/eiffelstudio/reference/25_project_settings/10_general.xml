@@ -5,7 +5,7 @@
 		<paragraph>Here is what you will see when opening for the first time in a session the project settings window when using the ace file of the calculator example located at $ISE_EIFFEL|examples|base|calculator:</paragraph>
 		<paragraph>
 			<image>
-				<url>../../../../images/eiffelstudio/project_settings/general_tab_first.png"</url>
+				<url>/images/eiffelstudio/project_settings/general_tab_first.png</url>
 			</image>
 		</paragraph>
 		<paragraph>As you can see, you can specify the application name which will also be the executable name. With the root class along with the creation procedure name entries you can select which feature is going to be the root of your execution, in this case the 
@@ -24,17 +24,18 @@
 			<link>
 				<url>30_clusters.xml</url>
 				<label>clusters tab</label>
-			</link>. Contrary to ISE Eiffel4.5, levels are independent, meaning that one can check the invariants without checking the preconditions.
+			</link>. Assertion levels are independent, meaning that one can check the invariants without checking the preconditions.
 		</paragraph>
 		<paragraph/>
 		<paragraph>Once your project is compiled, here is what your general tab looks like:</paragraph>
 		<paragraph>
 			<image>
-				<url>../../../../images/eiffelstudio/project_settings/general_tab.png</url>
+				<url>/images/eiffelstudio/project_settings/general_tab.png</url>
 			</image>
 		</paragraph>
 		<paragraph/>
-		<paragraph>You will notice that some options cannot be changed any longer. They are disabled on purpose. If you want to change these options again you will need to recompile your project from scratch. To do this, close all EiffelStudio sessions relative to the project(including the EiffelStudio session you are working in), open a new EiffelStudio and select 
+		<paragraph>You will notice that some options cannot be changed any longer. They are disabled on purpose. If you want to change these options again you will need to recompile your project from scratch. To do this, close all EiffelStudio sessions relative to the project (including the EiffelStudio session you are working in), open a new EiffelStudio and select 
 			<bold>Open existing Ace</bold> in the start-up dialog. Select the Ace file of the current project and follow the steps.
 		</paragraph>
-	</paragraph></document>
+	</paragraph>
+</document>

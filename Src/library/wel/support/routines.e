@@ -87,6 +87,12 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 		end
 
+	is_win32: BOOLEAN is
+			-- Is the current operating system Windows 95/NT?
+		once
+			Result := cwel_is_win32
+		end
+
 feature {NONE} -- Implementation
 
 	wr_main_args: WEL_MAIN_ARGUMENTS is
@@ -138,6 +144,11 @@ feature {NONE} -- Externals
 				%int): EIF_INTEGER"
 		alias
 			"LoadString"
+		end
+
+	cwel_is_win32: BOOLEAN is
+		external
+			"C [macro <wel.h>]"
 		end
 
 end -- class WEL_WINDOWS_ROUTINES

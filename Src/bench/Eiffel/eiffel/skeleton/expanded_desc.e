@@ -5,14 +5,6 @@ inherit
 	ATTR_DESC
 		redefine
 			is_expanded, same_as
-		select
-			same_as
-		end
-	ATTR_DESC
-		rename
-			same_as as basic_same_as
-		redefine
-			is_expanded
 		end
 	
 feature 
@@ -58,7 +50,7 @@ feature
 		local
 			other_exp: EXPANDED_DESC;
 		do
-			if basic_same_as (other) then
+			if {ATTR_DESC} Precursor (other) then
 				other_exp ?= other;
 				Result := other_exp.type_id = type_id
 			end;

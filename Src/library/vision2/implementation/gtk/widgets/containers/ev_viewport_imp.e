@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_viewport_new (NULL, NULL))
 			viewport := c_object
-			C.gtk_viewport_set_shadow_type (c_object, Gtk_shadow_none_enum)
+			C.gtk_viewport_set_shadow_type (c_object, gtk_marshal.Gtk_shadow_none_enum)
 			C.gtk_widget_set_usize (c_object, 1, 1) -- Hack needed to prevent viewport resize on item resize.
 		end	
 

@@ -69,7 +69,7 @@ feature -- Status Report
 				internal_is_prefix := internal_method.get_name.get_length > 3 and then
 						internal_method.get_is_special_name and then
 						internal_method.get_name.starts_with (Operator_name_prefix.to_cil) and then
-						internal_method.get_parameters.get_length = 1
+						internal_method.get_parameters.count = 1
 				internal_is_prefix_set := True
 			end
 			Result := internal_is_prefix
@@ -112,7 +112,8 @@ feature -- Access
 				internal_method.get_is_final,
 				internal_method.get_is_static,
 				internal_method.get_is_abstract,
-				internal_method.get_is_public)		
+				internal_method.get_is_public,
+				referenced_type_from_type (internal_method.get_declaring_type))		
 		end
 	
 	consumed_function: CONSUMED_FUNCTION is
@@ -131,7 +132,8 @@ feature -- Access
 				internal_method.get_is_abstract,
 				is_infix,
 				is_prefix,
-				internal_method.get_is_public)			
+				internal_method.get_is_public,
+				referenced_type_from_type (internal_method.get_declaring_type))			
 		end
 		
 feature -- Element Settings
@@ -151,7 +153,7 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
-			Result := internal_method.get_parameters.count < other.internal_method.get_parameters.count
+			Result := arguments.count < other.arguments.count
 		end
 		
 feature {METHOD_SOLVER} -- Implementation

@@ -29,7 +29,6 @@ feature -- Access
 			eiffel_writer.set_class_name (a_descriptor.eiffel_class_name)
 			eiffel_writer.set_description (a_descriptor.description)
 			eiffel_writer.set_effective
-			eiffel_writer.set_empty_creation_routines
 
 			from
 				a_descriptor.elements.start

@@ -25,7 +25,7 @@ create {BIT_REF}
 	make, make_initialized
 
 convert
-	to_reference: {BIT_REF}
+	to_reference: {BIT_REF, ANY}
 	
 feature {NONE} -- Initialization
 

@@ -134,7 +134,28 @@ feature -- Status report
 			Result := item /= 0.0
 		end
 
+feature {NONE} -- Initialization
+
+	make_from_reference (v: REAL_REF) is
+			-- Initialize `Current' with `v.item'.
+		require
+			v_not_void: v /= Void
+		do
+			item := v.item
+		ensure
+			item_set: item = v.item	
+		end
+
 feature -- Conversion
+
+	to_reference: REAL_REF is
+			-- Associated reference of Current
+		do
+			create Result
+			Result.set_item (item)
+		ensure
+			to_reference_not_void: Result /= Void
+		end
 
 	truncated_to_integer: INTEGER is
 			-- Integer part (same sign, largest absolute

@@ -1,19 +1,43 @@
 indexing
 	description: "Representation of an export clause"
 	external_name: "ISE.Reflection.ExportClause"
-	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	EXPORT_CLAUSE
 	
 inherit
  	INHERITANCE_CLAUSE
+ 		rename 
+ 			make as make_inheritance_clause
+ 		redefine
+ 			equals
+ 		end
  
 create
  	make
- 
+
+feature {NONE} -- Initialization
+
+	make is
+		indexing
+			description: "Initialize `feature_names'."
+			external_name: "Make"
+		do
+			create feature_names.make
+		ensure 
+			non_void_feature_names: feature_names /= Void
+		end
+		
 feature -- Access
 
+	feature_names: SYSTEM_COLLECTIONS_ARRAYLIST
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+		indexing
+			description: "List of exported features names"
+			external_name: "FeatureNames"
+		end
+		
 	exportation_list: SYSTEM_COLLECTIONS_ARRAYLIST
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
 		indexing
@@ -58,9 +82,56 @@ feature -- Access
 			description: "Space"
 			external_name: "Space"
 		end
+
+	Empty_string: STRING is ""
+		indexing
+			description: "Empty string"
+			external_name: "EmptyString"
+		end
+	
+	All_keyword: STRING is "all"
+		indexing
+			description: "all keyword"
+			external_name: "AllKeyword"
+		end
 		
+feature -- Status Report
+
+	all_features_exported: BOOLEAN
+		indexing
+			description: "Are all features from parent exported?"
+			external_name: "AllFeaturesExported"
+		end
+
+	equals (obj: EXPORT_CLAUSE): BOOLEAN is
+		indexing
+			description: "Is Current equals to `obj'?"
+			external_name: "Equals"			
+		do
+			if exportation_list /= Void and obj.exportation_list = Void then
+				Result := False
+			elseif exportation_list /= Void and obj.exportation_list /= Void then
+				Result := exportation_list.equals (obj.exportation_list) and feature_names.equals (obj.feature_names) and (all_features_exported = obj.all_features_exported)
+			elseif exportation_list = Void and obj.exportation_list = Void then
+				Result := feature_names.equals (obj.feature_names) and (all_features_exported = obj.all_features_exported)
+			end
+		end
+	
 feature -- Status Setting
 
+	set_feature_names (a_list: like feature_names) is
+		indexing
+			description: "Set `feature_names' with `a_list'."
+			external_name: "SetFeatureNames"
+		require
+			non_void_list: a_list /= Void
+			not_empty_list: a_list.get_count > 0
+		do
+			feature_names := a_list
+		ensure
+			feature_names_set: feature_names = a_list
+		end
+		
 	set_exportation_list (a_list: like exportation_list) is
 		indexing
 			description: "Set `exportation_list' with `a_list'."
@@ -74,8 +145,38 @@ feature -- Status Setting
 			exportation_list_set: exportation_list = a_list
 		end
  
+ 	set_all is
+ 		indexing
+ 			description: "Set `all_features_exported' with `True'."
+ 			external_name: "SetAll"
+ 		require
+ 			no_feature_name: feature_names.get_count = 0
+ 		do
+ 			all_features_exported := True
+ 		ensure
+ 			all_features_exported: all_features_exported
+ 		end
+ 		
 feature -- Basic Operations
 
+	add_feature_name (a_feature_name: STRING) is
+		indexing
+			description: "Add `a_feature_name' to `feature_names'."
+			external_name: "AddFeatureName"
+		require
+			not_all: not all_features_exported
+			non_void_feature_name: a_feature_name /= Void
+			not_empty_feature_name: a_feature_name.get_length > 0
+		local
+			added: INTEGER
+		do
+			if not feature_names.contains (a_feature_name) then
+				added := feature_names.add (a_feature_name)
+			end
+		ensure
+			feature_name_added: feature_names.contains (a_feature_name)
+		end
+		
 	add_exportation (a_class_name: STRING) is
 		indexing
 			description: "Add `a_class_name' to `exportation_list'."
@@ -89,9 +190,11 @@ feature -- Basic Operations
 			if exportation_list = Void then
 				create exportation_list.make
 			end
-			added := exportation_list.extend (a_class_name)
+			if not exportation_list.contains (a_class_name) then
+				added := exportation_list.add (a_class_name)
+			end
 		ensure
-			exportation_added: exportation_list.has (a_class_name)
+			exportation_added: exportation_list.contains (a_class_name)
 		end
 		
 	string_representation: STRING is
@@ -117,11 +220,49 @@ feature -- Basic Operations
 					end
 					i := i + 1
 				end
-				Result := Result.concat_string_string_string_string (Result, Closing_curl_bracket, Space, source_name)
+				Result := Result.concat_string_string_string_string (Result, Closing_curl_bracket, Space, intern_string_representation)
 			else
-				Result := source_name
+				Result := Result.concat_string_string (Result, intern_string_representation)
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	intern_string_representation: STRING is
+		indexing
+			description: "String representation of `feature_names'"
+			external_name: "InternStringRepresentation"
+		require
+			non_void_feature_names: feature_names /= Void
+		local
+			i: INTEGER
+			a_feature_name: STRING
+		do			
+			if feature_names.get_count > 0 then
+				from	
+					Result := Empty_string
+					i := 0
+				until 
+					i = feature_names.get_count
+				loop
+					a_feature_name ?= feature_names.get_item (i)
+					if a_feature_name /= Void and then a_feature_name.get_length > 0 then
+						Result := Result.concat_string_string (Result, a_feature_name)
+						if i < feature_names.get_count - 1 then
+							Result := Result.concat_string_string_string (Result, Comma, Space)
+						end
+					end
+					i := i + 1
+				end	
+			else
+				Result := All_keyword
+			end
+		ensure
+			non_void_result: Result /= Void
+		end
 	
- end -- class EXPORT_CLAUSE
+invariant
+	non_void_feature_names: feature_names /= Void
+	
+end -- class EXPORT_CLAUSE
  

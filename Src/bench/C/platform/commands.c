@@ -319,7 +319,7 @@ EIF_REFERENCE eif_date_string (EIF_INTEGER a_date)
 
 #ifdef EIF_WIN32
 
-/* C routines for the communications of bench */
+/* C routines for the communications of debugged application and debugger. */
 
 extern STREAM *sp;
 

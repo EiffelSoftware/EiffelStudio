@@ -17,26 +17,27 @@ default
 cluster
 
 	root_cluster:				"."
-	devel:					"/home/brendel/local"
-	all base (devel):			"$/bbase/base"
+	devel:					"/home/brendel/local/library"
+	all base (devel):			"$/base"
 		exclude
 			"table_eiffel3"
 		end
 
-	all gel (devel):			"$/gel_remote"
+	all gel:				"/home/brendel/local/gel_remote"
+
 	new_event (devel):			"$/event"
 
-	all vision2 (devel):			"/home/brendel/hack-fig/vision2"
+	all vision2 (devel):			"$/vision2"
 		exclude 
-			"mswin"
+			"mswin";"release";"test"
 		end
 
 external
 	include_path:
-		"/home/brendel/hack-fig/vision2/implementation/gtk/Clib",
+		"/home/brendel/local/library/vision2/implementation/gtk/Clib",
 		"`gtk-config --cflags`";
 	object:
-		"/home/brendel/hack-fig/vision2/implementation/gtk/Clib/gtk_eiffel.o",
+		"/home/brendel/local/library/vision2/implementation/gtk/Clib/gtk_eiffel.o",
 		"`gtk-config --libs`"
 
 end

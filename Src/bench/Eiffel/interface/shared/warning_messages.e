@@ -173,6 +173,16 @@ feature -- File warnings
 			Result.append (".")
 		end
 
+	w_Cannot_create_directory (file_name: STRING): STRING is
+		require
+			file_name_not_void: file_name /= Void
+		do
+			create Result.make (30)
+			Result.append ("Cannot create directory:%N")
+			Result.append (file_name)
+			Result.append (".")
+		end
+
 	w_Cannot_read_directory (dir_name: STRING): STRING is
 		require
 			dir_name_not_void: dir_name /= Void
@@ -245,6 +255,17 @@ feature -- File warnings
 			Result.append ("Directory ")
 			Result.append (dir_name)
 			Result.append ("%Ndoes not exist.")
+		end
+			
+	w_Directory_already_exists (dir_name: STRING): STRING is
+			-- Error message when a directory already exists.
+		require
+			dir_name_not_void: dir_name /= Void
+		do
+			create Result.make (128)
+			Result.append ("Directory ")
+			Result.append (dir_name)
+			Result.append ("%Nalready exists.")
 		end
 			
 	w_Directory_wrong_permissions (dir_name: STRING): STRING is
@@ -387,6 +408,12 @@ feature -- Debug warnings
 		%Running the last compiled application in these conditions%N%
 		%may lead to inconsistent information, or to an unexpected behavior."
 
+	w_Removed_class_debug: STRING is
+			-- The user tries to launch an application from which classes were removed.
+		"Classes were manually removed since last compilation.%N%
+		%Running the last compiled application in these conditions%N%
+		%may lead to inconsistent information, or to an unexpected behavior."
+
 	w_Disable_breakpoints: STRING is "Do you wish to disable all breakpoints?"
 
 	w_Invalid_working_directory (wd: STRING): STRING is
@@ -430,6 +457,21 @@ feature -- Cluster tree warnings
 		do
 			create Result.make (100)
 			Result.append ("Cannot delete cluster ")
+			upper_name := clone (cluster_name)
+			upper_name.to_upper
+			Result.append (upper_name)
+			Result.append ("%Nbecause it is either a precompiled%N%
+							%or a library cluster.")
+		end
+
+	w_Cannot_add_to_library_cluster (cluster_name: STRING): STRING is
+		require
+			cluster_name_not_void: cluster_name /= Void
+		local
+			upper_name: STRING
+		do
+			create Result.make (100)
+			Result.append ("Cannot add a cluster to cluster%N")
 			upper_name := clone (cluster_name)
 			upper_name.to_upper
 			Result.append (upper_name)
@@ -516,6 +558,8 @@ feature -- Cluster tree warnings
 			Result.append ("' already exists.%NPlease select a different class name.")
 		end
 
+	w_Enter_path: STRING is "Please enter a folder%Nto receive the new cluster."
+
 	w_Invalid_class_name (class_name: STRING): STRING is
 		require
 			class_name_not_void: class_name /= Void
@@ -562,18 +606,32 @@ feature -- Cluster tree warnings
 
 	w_Clear_breakpoints: STRING is "Forget all breakpoints?"
 
-	w_Cluster_already_exists (base_name: STRING): STRING is
+	w_Cluster_path_already_exists (path: STRING): STRING is
 		require
-			base_name_not_void: base_name /= Void
+			path_not_void: path /= Void
 		local
 			upper_name: STRING
 		do	
-			!!Result.make (30);
-			Result.append ("Cluster with name ");
-			upper_name := clone (base_name);
+			!!Result.make (70);
+			Result.append ("Cluster with path ");
+			upper_name := clone (path);
 			upper_name.to_upper;
 			Result.append (upper_name);
-			Result.append (" already exists in the system.")
+			Result.append (" already exists in the universe.")
+		end;
+
+	w_Cluster_name_already_exists (name: STRING): STRING is
+		require
+			name_not_void: name /= Void
+		local
+			upper_name: STRING
+		do	
+			!!Result.make (70);
+			Result.append ("Cluster with name ");
+			upper_name := clone (name);
+			upper_name.to_upper;
+			Result.append (upper_name);
+			Result.append (" already exists in the universe.")
 		end;
 
 	w_Directory_already_in_cluster (base_name: STRING): STRING is
@@ -587,7 +645,8 @@ feature -- Cluster tree warnings
 			upper_name := clone (base_name)
 			upper_name.to_lower
 			Result.append (upper_name)
-			Result.append (" already exists in cluster.")
+			Result.append (" already exists.%N%
+				%Do you want to use it for the new cluster?")
 		end
 
 	w_Confirm_delete_class (class_name: STRING): STRING is
@@ -657,6 +716,11 @@ feature -- Cluster tree warnings
 			Result := "Command cannot be executed until degree " + n.out + " completed.%N%
 						%Please wait until then before calling this command."
 		end
+
+	w_Select_parent_cluster: STRING is
+			-- User needs to select a cluster in the new cluster dialog.
+		"Please select a cluster from the list.%N%
+		%A parent cluster is needed."
 
 feature -- Backup warnings
 
@@ -921,6 +985,8 @@ feature -- Warning messages
 		%is not possible."
 
 	w_Class_not_modifiable: STRING is "The text of this class cannot be modified."
+
+	w_Continue: STRING is "%N%NDo you want to continue anyway?"
 
 	w_Unknown_error: STRING is "This command failed."
 

@@ -70,8 +70,7 @@ feature -- Basic operations
 				
 				-- Now create descriptors table, use `id_table' to replace resolved names
 				-- with overloaded ones if necessary.
-				i := table.count
-				create descriptors.make (i)
+				create descriptors.make (table.count)
 				from
 					table.start
 				until
@@ -100,11 +99,10 @@ feature -- Basic operations
 				end
 				
 				-- Now create result from descriptors table
-				create Result.make (1, i)
+				create Result.make (1, descriptors.count)
 				from
 					i := 1
 					descriptors.start
-					create Result.make (1, descriptors.count)
 				until
 					descriptors.after
 				loop

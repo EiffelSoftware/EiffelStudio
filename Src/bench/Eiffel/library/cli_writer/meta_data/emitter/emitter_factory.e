@@ -17,7 +17,7 @@ inherit
 feature -- Initialization
 
 	new_emitter (runtime_version: STRING): COM_ISE_CACHE_MANAGER is
-			-- Create a new instance of FUSION_SUPPORT.
+			-- Create a new instance of COM_ISE_CACHE_MANAGER.
 		local
 			p: POINTER
 			l_host: CLR_HOST

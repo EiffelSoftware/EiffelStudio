@@ -41,9 +41,9 @@ feature -- Basic operations
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
 		local
-			snapshot: LINKED_LIST [PROCEDURE [ANY, TUPLE [ANY]]]
+			snapshot: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [ANY]]]
 		do
-			create snapshot.make
+			create snapshot.make (Current.count)
 			snapshot.fill (Current)
 			inspect
 				state
@@ -56,7 +56,7 @@ feature -- Basic operations
 				variant
 					snapshot.count + 1 - snapshot.index
 				until
-					snapshot.off
+					snapshot.index > snapshot.count
 					or is_aborted_stack.item
 				loop
 					if snapshot.item.valid_operands (a_pebble_tuple) then

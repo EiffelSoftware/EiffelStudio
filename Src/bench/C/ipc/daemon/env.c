@@ -2,7 +2,7 @@
 	ENV.C - environment processing functions.
 		This accesses the registry in key
 
-		HKEY_CURRENT_USE\Software\ISE Inc\Eiffel\app
+		HKEY_LOCAL_MACHINE\Software\ISE Inc\Eiffel\app
 
 		where app is the name of the started application.
 
@@ -34,36 +34,33 @@ char *win_eif_getenv (char *k, char *app)
 	if ((key = (char *) calloc (appl_len + 57+key_len, 1)) == NULL)
 		return (char *) 0;
 
-	if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL)
-		{
+	if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL) {
 		free (key);
 		return (char *) 0;
-		}
+	}
 
 	strcpy (lower_k, k);
 	CharLowerBuff (lower_k, key_len);
 
-	strcpy (key, "Software\\ISE Inc\\Eiffel\\");
+	strcpy (key, "Software\\ISE\\Eiffel4\\");
 	if (app == NULL)
 		strncat (key, strrchr(modulename, '\\')+1, appl_len);
 	else
 		strcat (key, app);
 
-	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS)
-		{
+	if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
 		free (key);
 		free (lower_k);
 		return (char *) 0;
-		}
+	}
 
 	bsize = 1024;
-	if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS)
-		{
+	if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS) {
 		free (key);
 		free (lower_k);
 		RegCloseKey (hkey);
 		return (char *) 0;
-		}
+	}
 
 	free (key);
 	free (lower_k);
@@ -100,34 +97,31 @@ int win_eif_putenv ( char *v, char *k,  char *app)
 	if ((key = (char *) calloc (appl_len + 57+key_len, 1)) == NULL)
 		return -1;
 
-	if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL)
-		{
+	if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL) {
 		free (key);
 		return -1;
-		}
+	}
 
 	strcpy (lower_k, k);
 	CharLowerBuff (lower_k, key_len);
 
-	strcpy (key, "Software\\ISE Inc\\Eiffel\\");
+	strcpy (key, "Software\\ISE\\Eiffel4\\");
 	if (app == NULL)
 		strncat (key, strrchr(modulename, '\\')+1, appl_len);
 	else
 		strcat (key, app);
 
-	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS)
-		{
+	if (RegCreateKeyEx (HKEY_LOCAL_MACHINE, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS) {
 		free (key);
 		free (lower_k);
 		return -1;
-		}
-	if (RegSetValueEx (hkey, lower_k, 0, REG_SZ, k, strlen(k)+1) != ERROR_SUCCESS)
-		{
+	}
+	if (RegSetValueEx (hkey, lower_k, 0, REG_SZ, k, strlen(k)+1) != ERROR_SUCCESS) {
 		free (key);
 		free (lower_k);
 		RegCloseKey (hkey);
 		return -1;
-		}
+	}
 
 	free (key);
 	free (lower_k);

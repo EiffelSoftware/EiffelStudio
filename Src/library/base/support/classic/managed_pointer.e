@@ -105,6 +105,15 @@ feature -- Duplication
 		
 feature -- Format independant
 
+	read_pointer (pos: INTEGER): POINTER is
+			-- Read POINTER at position `pos'.
+		require
+			valid_position: (pos + 1) <= count
+		do
+			($Result).memory_copy (item + pos * feature {PLATFORM}.pointer_bytes, 
+												feature {PLATFORM}.pointer_bytes)
+		end
+
 	read_integer_8 (pos: INTEGER): INTEGER_8 is
 			-- Read INTEGER_8 at position `pos'.
 		require

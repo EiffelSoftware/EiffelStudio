@@ -7,7 +7,7 @@ RM = del
 CP = copy
 FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\windows\bin\finish_freezing -silent
 EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
-EIFLIB = EIFGEN\W_code\libtst.lib 
+EIFLIB = EIFGEN\W_code\libcecil.lib 
 LIBS = 
 OBJECT = main.obj
 
@@ -25,14 +25,14 @@ compile_c:
 main.obj: main.c
 	$(CC) -I$(INCLUDE_PATH) -c main.c 
 
-cecil.exe: main.obj EIFGEN\W_code\libtst.lib
-	$(LN) EIFGEN\W_code\tst.melted tst.melted
+cecil.exe: main.obj EIFGEN\W_code\libcecil.lib
+	$(LN) EIFGEN\W_code\cecil.melted cecil.melted
 	ilink32 -ap -c -Tpe main.obj c0w32.obj, $@,,\
-		EIFGEN\W_code\libtst.lib CW32 IMPORT32 OLE2w32,,
+		EIFGEN\W_code\libcecil.lib CW32 IMPORT32 OLE2w32,,
 
 clean:
 	$(RM) main.obj 
 	$(RM) core 
-	$(RM) tst.epr
+	$(RM) cecil.epr
 	$(DELDIR) EIFGEN
 	

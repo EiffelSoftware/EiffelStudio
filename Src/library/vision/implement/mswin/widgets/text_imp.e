@@ -72,7 +72,6 @@ inherit
 			clear_selection as wel_clear_selection,
 			set_read_only as wel_set_read_only,
 			set_read_write as wel_set_read_write,
-			table_size as wel_table_size,
 			style as wel_style
 		undefine
 			on_show,

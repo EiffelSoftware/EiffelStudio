@@ -25,12 +25,26 @@ rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *st,
 rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct stack *st, EIF_INTEGER *max_value_ptr, EIF_BOOLEAN reuse_free);
 rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value);
 rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value);
-/* Class IDENTIFIED_CONTROLLER */
-rt_private EIF_INTEGER eif_private_object_id_stack_size (struct stack *st);
-rt_private void eif_private_extend_object_id (EIF_INTEGER nb_chunks, struct stack *st);
 #ifdef EIF_ASSERTIONS
-rt_public EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object);
+rt_private EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object);
 #endif
+
+#ifdef EIF_THREADS
+/*
+doc:	<attribute name="eif_object_id_stack_mutex" return_type="EIF_LW_MUTEX_TYPE" export="private">
+doc:		<summary>When modifying the content of `object_id_stack' we need to make sure that only one thread is doing that.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+
+rt_shared EIF_LW_MUTEX_TYPE *eif_object_id_stack_mutex = NULL;
+#define EIF_OBJECT_ID_LOCK	EIF_LW_MUTEX_LOCK(eif_object_id_stack_mutex, "Cannot lock Object ID mutex.")
+#define EIF_OBJECT_ID_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_object_id_stack_mutex, "Cannot lock Object ID mutex.");
+#else
+#define EIF_OBJECT_ID_LOCK
+#define EIF_OBJECT_ID_UNLOCK
+#endif
+
 
 /*
 doc:	<attribute name="object_id_stack" return_type="struct stack" export="shared">
@@ -55,39 +69,50 @@ rt_shared struct stack object_id_stack = {
 doc:	<attribute name="max_object_id" return_type="EIF_INTEGER" export="private">
 doc:		<summary>Max object_id allocated. This needs to be done as the chunks of memory are not cleared after allocation and we do not want to consider some garbage as a valid descendant of IDENTIFIED and then call `object_id' on it.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Need a mutex (most likely same as the one for object_id_stack).</fixme>
+doc:		<thread_safety>safe</thread_safety>
+doc:		<synchronization>eif_object_id_stack_mutex</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_INTEGER max_object_id = 0;
 
 rt_public EIF_INTEGER eif_object_id (EIF_OBJECT object)
 {
+	EIF_INTEGER id;
+
   		/* Make sure object is not already in Object ID stack,
 		 * because otherwise when the object is disposed only
 		 * one entry will be deleted, not the other one
 		 * and therefore corrupting GC memory */
   	REQUIRE ("Not in Object ID stack", !has_object(&object_id_stack, eif_access (object)));
 
-	return private_object_id(eif_access(object), &object_id_stack, &max_object_id);
+	EIF_OBJECT_ID_LOCK;
+	id = private_object_id(eif_access(object), &object_id_stack, &max_object_id);
+	EIF_OBJECT_ID_UNLOCK;
+
+	return id;
 }
  
 rt_public EIF_INTEGER eif_general_object_id(EIF_OBJECT object)
 {
-	return private_general_object_id(eif_access(object), &object_id_stack, &max_object_id, EIF_FALSE);
+	EIF_INTEGER id;
+	EIF_OBJECT_ID_LOCK;
+	id = private_general_object_id(eif_access(object), &object_id_stack, &max_object_id, EIF_FALSE);
+	EIF_OBJECT_ID_UNLOCK;
+	return id;
 }
  
 rt_public EIF_REFERENCE eif_id_object(EIF_INTEGER id)
+	/* Returns the object associated with `id' */
 {
-#ifdef EIF_ASSERTIONS
-	EIF_REFERENCE ref = private_id_object (id, &object_id_stack, max_object_id);
+	EIF_REFERENCE ref;
+	
+	EIF_OBJECT_ID_LOCK;
+	ref = private_id_object (id, &object_id_stack, max_object_id);
+	EIF_OBJECT_ID_UNLOCK;
+
   	ENSURE ("Object found", (!ref) || (ref && has_object(&object_id_stack, ref)));
+
 	return ref;
-#else
-		/* Returns the object associated with `id' */
-	return private_id_object (id, &object_id_stack, max_object_id);
-#endif
 }
  
 rt_public void eif_object_id_free(EIF_INTEGER id)
@@ -97,7 +122,9 @@ rt_public void eif_object_id_free(EIF_INTEGER id)
 	REQUIRE ("Not null", ref);
 #endif
 
+	EIF_OBJECT_ID_LOCK;
 	private_object_id_free(id, &object_id_stack, max_object_id);
+	EIF_OBJECT_ID_UNLOCK;
 
 	ENSURE ("Object of id must be free", eif_id_object(id) == NULL);
 	ENSURE ("Object of id is not in Object ID stack", !has_object(&object_id_stack, ref));
@@ -109,113 +136,57 @@ rt_public void eif_object_id_free(EIF_INTEGER id)
 rt_public EIF_INTEGER eif_object_id_stack_size (void)
 	/* returns the number of chunks allocated in `object_id_stack' */
 {
-	return eif_private_object_id_stack_size (&object_id_stack);
-}
-
-rt_private EIF_INTEGER eif_private_object_id_stack_size (struct stack *st)
-	/* returns the number of chunks allocated in `object_id_stack' */
-{
 	EIF_INTEGER result = 0;
+	struct stack *st = &object_id_stack;
 	struct stchunk *c, *cn;
+
+	EIF_OBJECT_ID_LOCK;
 	for (c = st->st_hd; c != (struct stchunk *) 0; c = cn) {
-		/* count the number of chunks in stack */
+			/* count the number of chunks in stack */
 		cn = c->sk_next;
 		result++;
-		}
+	}
+	EIF_OBJECT_ID_UNLOCK;
 	return result;
-} /* eif_private_object_id_stack_size */
-
-
-rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
-{
-	eif_private_extend_object_id (nb_chunks, &object_id_stack);
 }
 
-rt_private void eif_private_extend_object_id (EIF_INTEGER nb_chunks, struct stack *st)
+rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 	/* extends of `nb_chunks the size of `object_id_stack' */
 {
-	
 	RT_GET_CONTEXT
-
+	struct stack *st = &object_id_stack;
 	register3 char **top;
-	
+	register4 struct stchunk * current;
+	register3 char **end;
 
+	EIF_OBJECT_ID_LOCK;
 	if (st->st_top == (char **) 0) {
 		top = st_alloc(st, STACK_CHUNK);	/* Create stack */
-		if (top == (char **) 0)
+		if (top == (char **) 0) {
+			EIF_OBJECT_ID_UNLOCK;
 			eraise ("Couldn't allocate object id stack", EN_MEM);
+		}
 				/* No memory */
 		st->st_top = top; /* Update new top */
 	} 
-	 /* extend an existing stack */
-	{
-		register4 struct stchunk * current;
-		register3 char **end;
-		current = st->st_cur;	/* save previous current stchunk */
-		top = st->st_top;		/* save previous top of stack */
-		end = st->st_end;		/*save previous st_end of stack */ 
-		SIGBLOCK;		/* Critical section */
-			while (--nb_chunks) {
-			if (-1 == st_extend(st, STACK_CHUNK))
+	current = st->st_cur;	/* save previous current stchunk */
+	top = st->st_top;		/* save previous top of stack */
+	end = st->st_end;		/*save previous st_end of stack */ 
+	SIGBLOCK;		/* Critical section */
+	while (--nb_chunks) {
+		if (-1 == st_extend(st, STACK_CHUNK)) {
+			EIF_OBJECT_ID_UNLOCK;
 			eraise ("Couldn't allocate object id stack", EN_MEM);
-					/* No memory */
-			}	
-		st->st_cur = current;	/* keep previous Current */
-		st->st_top = top;		/* keep previous top */
-		st->st_end = end;
-		
-		SIGRESUME;		/* End of critical section */
+		}
+	}	
+	st->st_cur = current;	/* keep previous Current */
+	st->st_top = top;		/* keep previous top */
+	st->st_end = end;
 	
-	}
-} /* eif_private_extend_object_id */
+	SIGRESUME;		/* End of critical section */
 
-#ifdef CONCURRENT_EIFFEL
-
-/*
-doc:	<attribute name="separate_object_id_set" return_type="struct stack" export="shared">
-doc:		<summary>`separate_object_id_set' keeps track of objects referenced from other processors Objects in the set are alive (the GC considers them as roots). Free locations are reused.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>To fix only when we will do SCOOP.</fixme>
-doc:	</attribute>
-*/
-rt_shared struct stack separate_object_id_set = {
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(char **) 0,			/* st_top */
-	(char **) 0,			/* st_end */
-};
-
-/*
-doc:	<attribute name="max_separate_object_id" return_type="EIF_INTEGER" export="private">
-doc:		<summary>Max separate object_id (same as `max_object_id' for non-SCOOP application)</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>To fix only when we will do SCOOP.</fixme>
-doc:	</attribute>
-*/
-rt_private EIF_INTEGER max_separate_object_id = 0;
-
-rt_public EIF_INTEGER eif_separate_object_id(EIF_OBJECT object)
-{
-	return private_general_object_id(eif_access(object), &separate_object_id_set, &max_separate_object_id, EIF_TRUE);
+	EIF_OBJECT_ID_UNLOCK;
 }
-
-rt_public EIF_REFERENCE eif_separate_id_object(EIF_INTEGER id)
-{
-	return private_id_object (id, &separate_object_id_set, max_separate_object_id);
-}
-
-rt_public void eif_separate_object_id_free(EIF_INTEGER id)
-{
-	private_object_id_free(id, &separate_object_id_set, max_separate_object_id);
-}
-
-#endif /* CONCURRENT_EIFFEL */
-
 
 #define STACK_SIZE (STACK_CHUNK-(sizeof(struct stchunk)/sizeof(char*)))
 
@@ -377,7 +348,9 @@ rt_public EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object)
 	struct stchunk *ck;
 	unsigned int i = 0;
 	EIF_REFERENCE *address;
+	EIF_BOOLEAN Result = EIF_FALSE;
 
+	EIF_OBJECT_ID_LOCK;
 		/* Loop through all the chunks */
 	for (ck = st->st_hd; ck != NULL; i++, ck = ck->sk_next){
 			/* Starting address is end of chunk for full chunks and
@@ -390,11 +363,11 @@ rt_public EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object)
 		for (; address >= ck->sk_arena; address--) {
 			if (*address == object)
 					/* Object is in the stack */
-				return EIF_TRUE;
+				Result = EIF_TRUE;
 		}
 	}
-
-	return EIF_FALSE;
+	EIF_OBJECT_ID_UNLOCK;
+	return Result;
 }
 #endif
 

@@ -15,8 +15,8 @@ extern "C" {
 extern struct stack object_id_stack;	/* Stack where objects referenced through `object_id' are stored
 										 * See class IDENTIFIED */	
 
-#ifdef CONCURRENT_EIFFEL
-extern struct stack separate_object_id_set; /* keeps track of objects referenced in other processors */
+#ifdef EIF_THREADS
+extern EIF_LW_MUTEX_TYPE *eif_object_id_stack_mutex;
 #endif
 
 #ifdef __cplusplus

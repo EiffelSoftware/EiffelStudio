@@ -6,44 +6,44 @@ root
 default
 
 	assertion (all);
-	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base")
 
 cluster
 
-	root_cluster:		"$ISE_EIFFEL/examples/store/st_proc";
-	estore_examples:	"$ISE_EIFFEL/examples/store/Utilities";
-	rdbms_handle:		"$ISE_EIFFEL/examples/store/Utilities/odbc";
+	root_cluster:		"$ISE_EIFFEL\examples\store\st_proc";
+	estore_examples:	"$ISE_EIFFEL\examples\store\Utilities";
+	rdbms_handle:		"$ISE_EIFFEL\examples\store\Utilities\odbc";
 
 -- EiffelBase
 
-	all base:			"$ISE_EIFFEL/library/base"
+	all base:			"$ISE_EIFFEL\library\base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 	
 -- EiffelStore
 
-	estore_support:		"$ISE_EIFFEL/library/store/support";
-	estore_interface:	"$ISE_EIFFEL/library/store/interface";
-	estore_odbc:		"$ISE_EIFFEL/library/store/dbms/rdbms/odbc";
-	estore_db_support:	"$ISE_EIFFEL/library/store/dbms/support";
+	estore_support:		"$ISE_EIFFEL\library\store\support";
+	estore_interface:	"$ISE_EIFFEL\library\store\interface";
+	estore_odbc:		"$ISE_EIFFEL\library\store\dbms\rdbms\odbc";
+	estore_db_support:	"$ISE_EIFFEL\library\store\dbms\support";
 
 -- EiffelTime
 	
-	time:				"$ISE_EIFFEL/library/time";
-	time_format:		"$ISE_EIFFEL/library/time/format";
-	time_english:		"$ISE_EIFFEL/library/time/format/english";
+	time:				"$ISE_EIFFEL\library\time";
+	time_format:		"$ISE_EIFFEL\library\time\format";
+	time_english:		"$ISE_EIFFEL\library\time\format\english";
 		
 external
 
 	include_path:
-		"$ISE_EIFFEL\library\store\dbms\rdbms\odbc\Clib",
-		"$ISE_EIFFEL\library\time\Clib"
+		"$(ISE_EIFFEL)\library\store\dbms\rdbms\odbc\Clib",
+		"$(ISE_EIFFEL)\library\time\Clib"
 
 
 	object:
-		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/support.lib",
-		"$(ISE_EIFFEL)/library/time/spec/$(ISE_C_COMPILER)/lib/datetime.lib",
-		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/odbc_store.lib",
+		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",
+		"$(ISE_EIFFEL)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
+		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\odbc_store.lib",
 		"odbc32.lib" -- Specify the correct path
 end

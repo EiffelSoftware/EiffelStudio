@@ -37,12 +37,14 @@ cluster
 	time_english:		"$ISE_EIFFEL/library/time/format/english";		
 
 external
+	include_path:
+		"\$(ISE_EIFFEL)/library/time/Clib"
 
-	object: "-L$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib";
-		"-lsupport";
-		"-lsybase_store";
-		"-L$(ISE_EIFFEL)/library/time/spec/$(ISE_PLATFORM)/lib";
-		"-ldatetime";
+	object: "-L$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib",
+		"-lsupport",
+		"-lsybase_store",
+		"-L$(ISE_EIFFEL)/library/time/spec/$(ISE_PLATFORM)/lib",
+		"-ldatetime",
 		"$(SYBASE)/lib/libsybdb.a" 
 
 end -- system

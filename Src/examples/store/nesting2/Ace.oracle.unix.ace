@@ -37,8 +37,9 @@ cluster
 	english_format(time_format):	"$/english";
  
 external
-	include_path: "$(ISE_EIFFEL)/library/store/dbms/rdbms/oracle/Clib",
-		"$(ORACLE_HOME)/rdbms/public"
+	include_path: "\$(ISE_EIFFEL)/library/store/dbms/rdbms/oracle/Clib",
+		"\$(ISE_EIFFEL)/library/time/Clib",
+		"\$(ORACLE_HOME)/rdbms/public"
 
 	object: "$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib/libsupport.a",
 		"$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib/liboracle.a",

@@ -15,7 +15,7 @@ cluster
 
 -- EiffelBase
 
-	all base:			"$ISE_EIFFEL/library/base"
+	all base:			"$ISE_EIFFEL\library\base"
 		exclude
 			"desc";"table_eiffel3"
 		end
@@ -34,9 +34,10 @@ cluster
 	english_format(time_format):	"$\english";
  
 external
-	include_path: "$(ISE_EIFFEL)\library\store\dbms\rdbms\oracle\Clib",
-		"$(ORACLE_HOME)\OCI\include",
-				"$ISE_EIFFEL\library\time\Clib"
+	include_path:
+		"$(ISE_EIFFEL)\library\store\dbms\rdbms\oracle\Clib",
+		"$(ISE_EIFFEL)\library\time\Clib",
+		"$(ORACLE_HOME)\OCI\include"
 
 	object:
 		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",

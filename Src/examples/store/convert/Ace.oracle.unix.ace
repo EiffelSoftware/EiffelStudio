@@ -35,9 +35,10 @@ cluster
 	lexical:			"$ISE_EIFFEL/library/lex";
 
 external
-	include_path: "$(ISE_EIFFEL)/library/store/dbms/rdbms/oracle/Clib",
+	include_path: "\$(ISE_EIFFEL)/library/store/dbms/rdbms/oracle/Clib",
+		"\$(ISE_EIFFEL)/library/time/Clib",
 --Specify the path
-		"$(ORACLE_HOME)/rdbms/public"
+		"\$(ORACLE_HOME)/rdbms/public"
 
 	object: "$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib/libsupport.a",
 		"$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib/liboracle.a",

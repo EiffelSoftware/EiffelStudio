@@ -29,27 +29,33 @@ void c_gtk_init_toolkit ()
 }
 
 /* This function is actually called when the event occurs */
-/* an it in turn calls Eiffel.                            */
+/* and it in turn calls Eiffel.                            */
 void c_signal_callback (GtkObject *w, gpointer data) 
 {
     callback_data_t *pcbd;
     pcbd = (callback_data_t *)data;
     
-    /* Call Eiffel */
-    /*  printf ("callback= %d object= %d pcbd= %d\n", pcbd->rtn, (pcbd->obj), pcbd); */
+    /* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
     (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));
 }
 
 /* This function is actually called when the event occurs */
-/* an it in turn calls Eiffel.                            */
+/* and it in turn calls Eiffel.                            */
 /* This function is called for signals named "*_event".  XXXX */
 void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data) 
 {
     callback_data_t *pcbd;
     pcbd = (callback_data_t *)data;
-    /* Call Eiffel */
-    /*  printf ("callback= %d object= %d pcbd= %d\n", pcbd->rtn, (pcbd->obj), pcbd); */
-    (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));  (pcbd->rtn)(pcbd->obj);
+
+    /* Call Eiffel routine 'set_event_data' to transfer the event data
+       to Eiffel */
+    (pcbd->set_event_data)(eif_access(pcbd->argument), ev); 
+
+    /* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument'
+
+       (routine execute of EV_COMMAND object with EV_ARGUMENTS */
+    (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));
+
 }
 
 
@@ -72,7 +78,8 @@ gint c_gtk_signal_connect (GtkObject *widget,
 			   gchar *name, 
 			   EIF_PROC func,
 			   EIF_POINTER object,
-			   EIF_POINTER argument)
+			   EIF_POINTER argument,
+			   EIF_PROC event_data_rtn)
 {
     callback_data_t *pcbd;
     int name_len;
@@ -86,16 +93,14 @@ gint c_gtk_signal_connect (GtkObject *widget,
     /* do not allow the garbage collection of  object and argument */
     pcbd->rtn = func;
     pcbd->obj = henter (object);
-    pcbd->argument = henter (argument);  
+    pcbd->argument = henter (argument);
+    pcbd->set_event_data = event_data_rtn;  
     /*  printf ("connect rtn= %d object= %d pcbd= %d\n", pcbd->rtn, (pcbd->obj), pcbd); */
-
 
     /* allow the garbage collection of object and argument, when the signal is destroyed */ 
     gtk_signal_set_funcs (NULL, (GtkSignalDestroy)c_gtk_signal_destroy_data);
 
-    /* TODO: This code is little hokey. The callback routine is little different */
-    /* for signals whose name end with "*_event". For now just look at the */
-    /* string. Later maybe I'll come up with a better way of handling this */
+    /* Look at the signal name to check whether it ends with "*_event" */
     name_len = strlen (name);
     if (name_len > 6)
     {
@@ -108,6 +113,7 @@ gint c_gtk_signal_connect (GtkObject *widget,
 				GTK_SIGNAL_FUNC(c_signal_callback), 
 				(gpointer)pcbd));
 }
+
 
 /* Disconnect a call back of a widget/event pair */
 void c_gtk_signal_disconnect (GtkObject *widget, 
@@ -382,8 +388,6 @@ EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button)
 {
     return (GTK_TOGGLE_BUTTON(button)->active);
 }
-
-
 
 				/* static functions */
 static void

@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			i: INTEGER
 			a: ANY
 			s: string
+			arg: EV_ARGUMENTS
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 			
@@ -38,8 +39,9 @@ feature {NONE} -- Initialization
 			s := "destroy"
 			a ?= s.to_c
 			interface := interf
+			!!arg -- just to have an access to routine set_event data
 			i := c_gtk_signal_connect (widget, $a, routine_address ($delete_window_action), 
-						   $Current, Default_pointer)
+						   $Current, $arg, arg.set_event_data_address)
 			s := "delete"
 			a ?= s.to_c
 --			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)

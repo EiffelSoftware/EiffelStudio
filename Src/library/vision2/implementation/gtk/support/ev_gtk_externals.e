@@ -16,6 +16,14 @@ feature {NONE} -- GTK macros for casting types
 			"GTK_EDITABLE"
 		end
 	
+	-- GDK
+	c_gdk_event_type (event: POINTER): INTEGER is
+		external 
+			"C [macro %"gtk_eiffel.h%"]"
+		alias
+			"GDK_EVENT_TYPE"
+		end
+	
 	
 feature {NONE} -- GTK C functions
 
@@ -399,8 +407,9 @@ feature {NONE} -- code in the glue library
 		end
 	
 	c_gtk_signal_connect (widget: POINTER; event: POINTER; 
-			      function: POINTER; object: POINTER; 
-			      arguments: POINTER): INTEGER is
+			      routine: POINTER; object: POINTER; 
+			      arguments: POINTER; 
+			      set_event_data_rtn: POINTER): INTEGER is
 		external "C | %"gtk_eiffel.h%""
 		end
 

@@ -28,28 +28,21 @@ feature -- Parsing
 		local
 			file: KL_BINARY_INPUT_FILE
 			vd21: VD21
-			vd22: VD22
 		do
 			create file.make (file_name)
-			if not file.is_readable then
+			file.open_read
+
+			if not file.is_open_read then
 				create vd21
 				vd21.set_file_name (file_name)
 				Error_handler.insert_error (vd21)
 				Error_handler.raise_error
 			else
-				if not open_file (file) then
-						-- Error when opening file
-					create vd22
-					vd22.set_file_name (file_name)
-					Error_handler.insert_error (vd22)
-					Error_handler.raise_error
-				else
-					parse_lace (file)
-					if Workbench.automatic_backup then
-						save_ace_in_backup (file)
-					end
-					file.close
+				parse_lace (file)
+				if Workbench.automatic_backup then
+					save_ace_in_backup (file)
 				end
+				file.close
 			end
 		rescue
 			if Rescue_status.is_error_exception then
@@ -112,24 +105,6 @@ feature -- Removal
 		end
 
 feature {NONE} -- Implementation
-
-	open_file (file: RAW_FILE): BOOLEAN is
-			-- Open file `file' and catch possible exception
-		require
-			good_argument: file /= Void
-		local
-			error_happened: BOOLEAN
-		do
-			if not error_happened then
-				file.open_read
-				Result := True
-			end
-		rescue
-			if Rescue_status.is_unexpected_exception then
-				error_happened := True
-				retry
-			end
-		end
 
 	last_syntax_cell: CELL [SYNTAX_ERROR] is
 			-- Stored value of last generated syntax error generated calling

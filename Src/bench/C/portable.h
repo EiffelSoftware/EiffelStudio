@@ -14,6 +14,9 @@
 #ifndef _portable_h_
 #define _portable_h_
 
+#ifndef _config_h_
+#include "config.h"
+#endif
 /*
  * Standard types
  */

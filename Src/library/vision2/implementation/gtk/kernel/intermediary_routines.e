@@ -252,13 +252,13 @@ feature {EV_ANY_IMP} -- List and list item intermediary agent routines
 
 feature {EV_ANY_IMP} -- Widget intermediary agent routines
 
-	on_size_allocate_intermediate (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
+	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER) is
 			-- Size allocate happened on widget
 		local
 			a_widget: EV_WIDGET_IMP
 		do
-			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_widget /= Void then
+			a_widget ?= eif_id_object (a_object_id)
+			if a_widget /= Void and then not a_widget.is_destroyed then
 				a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
 			end	
 		end

@@ -92,6 +92,8 @@ feature -- Status settings
 			exist: not destroyed
 			has_child: -- To do
 		deferred
+		ensure
+			flag_set: is_child_expandable (child) = flag
 		end	
 	
 end -- class EV_BOX_I

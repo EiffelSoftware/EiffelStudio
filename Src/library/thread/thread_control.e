@@ -30,7 +30,7 @@ feature -- Basic operations
 			-- The calling thread waits for the current child thread to
 			-- terminate.
 		do
-			thread_wait ($terminated)
+			thread_wait (Current)
 		end
 
 	native_join (term: POINTER) is
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	thread_wait (term: POINTER) is
+	thread_wait (term: like Current) is
 			-- The calling C thread waits for the current Eiffel thread to
 			-- terminate.
 		external

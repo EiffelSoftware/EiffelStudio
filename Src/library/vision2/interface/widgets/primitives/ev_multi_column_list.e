@@ -29,9 +29,17 @@ inherit
 
 create
 	default_create,
+	make_with_columns,
 	make_for_test
 
 feature {NONE} -- Initialization
+
+	make_with_columns (i: INTEGER) is
+			-- Create list and assign `i' to `columns'.
+		do
+			default_create
+			set_columns (i)
+		end
 
 feature -- Access
 
@@ -104,6 +112,16 @@ feature -- Status report
 		end
 
 feature -- Status setting
+	
+	set_columns (i: INTEGER) is
+			-- Assign `i' to `columns'.
+		require
+			empty: empty
+		do
+			implementation.set_columns (i)
+		ensure
+			columns_assigned: columns = i					
+		end
 
 	select_item (index_to_select: INTEGER) is
 			-- Select an item at the one-based `index' the list.
@@ -295,6 +313,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/03 17:05:29  rogers
+--| Added set_columns and make_with_columns.
+--|
 --| Revision 1.34  2000/03/02 22:07:03  king
 --| Made cvs log to be 80 cols or less
 --|

@@ -24,6 +24,10 @@ inherit
 		end
 
 	EV_ITEM_HOLDER_IMP
+		redefine
+			add_item,
+			remove_item
+		end
 
 	EV_GTK_ITEMS_EXTERNALS
 
@@ -31,6 +35,18 @@ feature -- Access
  
  	ev_children: ARRAYED_LIST [EV_MENU_ITEM_IMP]
  			-- List of the children.
+
+feature -- Element change
+	
+	add_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Add `item_imp' into container.
+		deferred
+		end
+
+	remove_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Add `item_imp' into container.
+		deferred
+		end
 
 end -- class EV_MENU_ITEM_HOLDER_IMP
 

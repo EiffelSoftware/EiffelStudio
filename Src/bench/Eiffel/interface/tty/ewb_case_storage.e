@@ -1,27 +1,27 @@
+indexing
+
+	description: 
+		"Store Eiffelcase readable format of system to disk.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_CASE_STORAGE 
 
 inherit
 
-	EWB_CMD
+	EWB_SYSTEM
 		rename
 			name as storage_cmd_name,
 			help_message as storage_help,
 			abbreviation as storage_abb
 		end
 
-feature
+feature {NONE} -- Implementation
 
-	execute is
-		local
-			format_storage: FORMAT_CASE_STORAGE
-		do
-			init_project;
-			if not (error_occurred or project_is_new) then
-				retrieve_project;
-				!! format_storage;
-				format_storage.execute
-			end;
+	associated_cmd: E_STORE_CASE_INFO is
+			-- Associated system command to be executed
+		once
+			!! Result.do_nothing
 		end;
 
-end
+end -- class EWB_CASE_STORAGE

@@ -18,14 +18,30 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
-feature {NONE} -- Initialization
+	
+	GB_SHARED_SYSTEM_STATUS
+		undefine
+			default_create, copy
+		end
+	
+feature {NONE} -- Initialize
 
 	initialize is
+			-- Initialize `Current'.
 		do
-			Precursor {EV_DIALOG}
-			set_icon_pixmap (icon)
+				-- We must allocate the pixmap correctly during
+				-- creation, and before it is displayed.
+				-- Must be done due to the Windows icon pixmap bug.
+				-- If we only set it as it is displayed, all other
+				-- floating windows, will have their icons flash to the
+				-- default icon for a split second which is ugly.
+			if system_status.tools_always_on_top then
+				set_default_icon
+			else
+				restore_icon
+			end
 		end
+		
 
 feature -- Access
 

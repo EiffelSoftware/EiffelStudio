@@ -6,19 +6,24 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-
 	EV_PIXMAP_I 
-
-inherit
-
-	EV_PRIMITIVE_I
 
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
-                        -- Create a pixmap implementation.
+	make (par: EV_PIXMAP_CONTAINER) is
+			-- Create a pixmap implementation.
 		deferred
-                end	
+		end	
+
+feature -- Meassurement
+
+	width: INTEGER is
+		deferred
+		end
+
+	height: INTEGER is
+		deferred
+		end
 
 feature -- Element change
 	
@@ -31,9 +36,7 @@ feature -- Element change
 		deferred
 		end	
 	
-	
 end -- class EV_PIXMAP_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

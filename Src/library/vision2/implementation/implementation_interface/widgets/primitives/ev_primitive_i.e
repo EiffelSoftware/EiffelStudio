@@ -13,9 +13,7 @@ inherit
 
 	EV_WIDGET_I
 
-
 end -- class EV_PRIMITIVE_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

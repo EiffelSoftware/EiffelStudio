@@ -15,34 +15,34 @@ inherit
 	
 feature -- Status report
 	
-	pressed: BOOLEAN is
-                        -- Is toggle pressed
-                require
-                        exists: not destroyed
-                deferred
-                end 
+	state: BOOLEAN is
+			-- Is toggle button pressed ?
+		require
+			exists: not destroyed
+		deferred
+		end 
 	
 feature -- Status setting
 
-        set_pressed (button_pressed: BOOLEAN) is
-                        -- Set Current toggle on and set
-                        -- pressed to True.
-                require
-                        exists: not destroyed
-                deferred
-                ensure
-                        correct_state: pressed = button_pressed
-                end
+	set_state (flag: BOOLEAN) is
+			-- Set Current toggle on and set
+			-- pressed to True.
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			correct_state: state = flag
+		end
 
-        toggle is
+	toggle is
 			-- Change the state of the toggle button to
 			-- opposite
 		require
-                        exists: not destroyed
-                deferred
-                ensure
-                        state_is_true: pressed = not old pressed
-                end
+			exists: not destroyed
+		deferred
+		ensure
+			state_is_true: state = not old state
+		end
 
 feature -- Event - command association
 	

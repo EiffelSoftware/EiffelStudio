@@ -14,7 +14,15 @@ deferred class
 inherit
 	
 	EV_CONTAINER_I
+		redefine
+			initialize_colors
+		end
 	
+	EV_DEFAULT_COLORS
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 	
 	make (par: EV_WINDOW) is
@@ -29,6 +37,27 @@ feature {NONE} -- Initialization
 			-- Create a top level window (a Window 
 			-- without a parent).
 		deferred
+		end
+
+feature {EV_WIDGET} -- Initialization
+
+	initialize_colors is
+			-- Called after the creation of the widget and after
+			-- having stored the parent. It define the default
+			-- colors of a widget which are the same than the
+			-- parent. This feature is redefined by several
+			-- children.
+		local
+			color: EV_COLOR
+		do
+			if parent_imp /= Void then
+				set_background_color (parent_imp.background_color.interface)
+				set_foreground_color (parent_imp.foreground_color.interface)
+			else
+				set_background_color (Color_dialog)
+				!! color.make_rgb (0, 0, 0)
+				set_foreground_color (color)
+			end
 		end
 
 feature  -- Access
@@ -102,10 +131,10 @@ feature -- Measurement
 
 feature -- Status report
 
-        is_iconic_state: BOOLEAN is
-                        -- Does application start in iconic state?
-                deferred
-                end
+ 	is_iconic_state: BOOLEAN is
+			-- Does application start in iconic state?
+		deferred
+		end
 
 feature -- Status setting
 
@@ -116,7 +145,7 @@ feature -- Status setting
 		deferred
 		end
 
-        set_normal_state is
+ 	set_normal_state is
 			-- Set start state of the application to be normal.
 		require
 			exists: not destroyed

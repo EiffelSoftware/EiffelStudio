@@ -386,6 +386,16 @@ feature {NONE} -- Implementation
 		once
 			Result ?= default_window.implementation
 		end
+		
+	default_font_height: INTEGER is
+			--
+		local
+			temp_style: POINTER
+		once
+			temp_style := C.gtk_widget_struct_style (default_gtk_window)
+			Result := C.gdk_font_struct_ascent (C.gtk_style_struct_font (temp_style)) +
+				C.gdk_font_struct_descent (C.gtk_style_struct_font (temp_style))
+		end
 	
 	app_implementation: EV_APPLICATION_IMP is
 			-- 

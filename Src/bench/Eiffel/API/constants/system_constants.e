@@ -80,7 +80,7 @@ feature {NONE}
 			Result := Platform_constants.Driver
 		end;
 
-	Eattr: STRING is "eattr"
+	Epoly: STRING is "epoly"
 
 	Ecall: STRING is "ecall"
 
@@ -113,8 +113,6 @@ feature {NONE}
 	Eplug: STRING is "eplug"
 
 	Eref: STRING is "eref"
-
-	Erout: STRING is "erout"
 
 	Esize: STRING is "esize"
 
@@ -174,10 +172,10 @@ feature {NONE}
 feature {NONE, AUXILIARY_FILES} -- Versioning
 
 	Precompilation_id_tag: STRING is "precompilation_id"
-	Version_number: STRING is "4.5.014"
-	Version_tag: STRING is "0x0000001F"
+	Version_number: STRING is "4.5.015"
+	Version_tag: STRING is "0x00000020"
 	Version_number_tag: STRING is "version_number"
-	Storable_version_number: STRING is "4.5.014"
+	Storable_version_number: STRING is "4.5.015"
 	Storable_version_number_tag: STRING is "storable_version_number"
 
 feature {NONE}

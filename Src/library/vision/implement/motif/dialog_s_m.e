@@ -18,7 +18,7 @@ inherit
 
 	POPUP_S_M
 		redefine
-			set_x, set_y, set_x_y
+			set_x, set_y, set_x_y, set_background_color
 		end
 
 creation
@@ -94,6 +94,32 @@ feature {NONE} -- Creation
 				end
 			end
 		end
+
+feature -- Color
+
+	set_background_color (a_color: COLOR) is
+			-- Set background_color to `a_color'.
+		local
+			pixmap_implementation: PIXMAP_X;
+			color_implementation: COLOR_X;
+			ext_name: ANY
+		do
+			if bg_pixmap /= Void then
+				pixmap_implementation ?= bg_pixmap.implementation;
+				pixmap_implementation.remove_object (Current);
+				bg_pixmap := Void
+			end;
+			if bg_color /= Void then
+				color_implementation ?= background_color.implementation;
+				color_implementation.remove_object (Current)
+			end;
+			bg_color := a_color;
+			color_implementation ?= background_color.implementation;
+			color_implementation.put_object (Current);
+			ext_name := Mbackground.to_c;
+			c_set_color (screen_object, color_implementation.pixel (screen),
+						$ext_name)
+		end;
 
 feature {NONE} -- External features
 

@@ -555,7 +555,7 @@ feature {NONE} -- Translation
 				if appl.count>4 then
 					extension := clone (appl)
 					extension.to_lower
-					extension.tail (4)
+					extension.keep_tail (4)
 					if extension.is_equal (options.get_string ("executable_file_ext", Void)) then
 						appl := appl.substring (1, appl.count -4)
 					end
@@ -1492,7 +1492,7 @@ feature {NONE}	-- substitutions
 					command.append (options.get_string ("precomp_lib_command_text", Void))
 					command.replace_substring_all ("$precompiled_library", lib)
 					
-					libs.tail (libs.count - lib_start_pos)
+					libs.remove_head (lib_start_pos)
 					lib_start_pos := libs.substring_index (" ", 1)
 				end
 
@@ -1779,10 +1779,10 @@ feature {NONE} -- Implementation
 			end
 
 			if word.item (1) = '(' then
-				word.tail (word.count-1)
+				word.remove_head (1)
 			
 				if word.item (word.count) = ')' then
-					word.head (word.count-1)
+					word.remove_tail (1)
 				end
 			end
 		end

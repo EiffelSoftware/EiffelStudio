@@ -18,6 +18,7 @@ inherit
 	WEL_PROGRESS_BAR
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy
 		undefine

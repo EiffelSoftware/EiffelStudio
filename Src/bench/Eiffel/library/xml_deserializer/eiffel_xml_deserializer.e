@@ -19,7 +19,9 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
+	TYPE_NAME_ID
+
 	ANY
 
 create
@@ -35,18 +37,16 @@ feature -- Query
 		local
 			retried: BOOLEAN
 			l_xml_tree_parser: XML_TREE_PARSER
-			l_file_name: STRING
 			l_file: RAW_FILE
 		do
 			if not retried then
 				create l_file.make (a_file_name)
 				
 				if l_file.exists and l_file.is_readable then
-					create l_file_name.make_from_string (a_file_name)
 					l_file.open_read
 					l_file.readstream (l_file.count)
 					l_file.close
-	
+
 					create l_xml_tree_parser.make
 					l_xml_tree_parser.parse_string (l_file.last_string)
 					l_xml_tree_parser.set_end_of_file
@@ -81,7 +81,7 @@ feature {NONE} -- Object retrieval from node.
 			l_xml_attribute := a_xml_element.attributes.item (Type_attr)
 			name := l_xml_attribute.value.out
 			
-			dt := dynamic_type_from_string (name)
+			dt := dynamic_type_from_string (type_from_id (name.to_integer))
 			if dt = -1 then
 			else
 				Result := new_instance_of (dt)

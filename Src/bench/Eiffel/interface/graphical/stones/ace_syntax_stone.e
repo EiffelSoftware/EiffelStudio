@@ -12,7 +12,7 @@ inherit
 	SYNTAX_STONE
 		redefine
 			stone_type, stone_name, stone_cursor,
-			process
+			process, x_stone_cursor
 		end;
 	INTERFACE_W
 
@@ -23,10 +23,17 @@ creation
 feature -- Access
 
 	stone_cursor: SCREEN_CURSOR is
-			-- Cursor associated with
-			-- Current stone during transport.
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := cur_System
+		end;
+
+	x_stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is not compatible with Current stone
+		do
+			Result := cur_X_system
 		end;
 
 	stone_type: INTEGER is 

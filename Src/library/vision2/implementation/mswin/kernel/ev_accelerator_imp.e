@@ -9,8 +9,14 @@ class
 
 inherit
 	EV_ACCELERATOR_I
+		undefine
+			copy, is_equal
+		end
 
 	EV_WEL_KEY_CONVERSION
+		undefine
+			copy, is_equal
+		end
 
 	WEL_ACCELERATOR
 		rename
@@ -22,14 +28,21 @@ inherit
 	WEL_ACCELERATOR_FLAG_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_BIT_OPERATIONS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	EV_ID_IMP
+		undefine
+			copy, is_equal
+		end
 
 create
 	make

@@ -463,7 +463,7 @@ public class EiffelClassGenerator: Globals
 					for( j = 0; j < ClassFactory.Renames.Count( Parent ); j++ )
 					{
 						Rename = new RenameClause();
-						Rename.Make( ClassFactory.Renames.RenameClauseSource( Parent, j ) );
+						Rename.SetSourceName( ClassFactory.Renames.RenameClauseSource( Parent, j ) );
 						Rename.SetTargetName( ClassFactory.Renames.RenameClauseTarget( Parent, j ) );
 						ClauseAdded = NewRenameClauses.Add( Rename );						
 						if( ClauseAdded != ( NewRenameClauses.Count - 1 ) )
@@ -481,7 +481,7 @@ public class EiffelClassGenerator: Globals
 					for( j = 0; j < ClassFactory.Undefines.Count( Parent ); j++ )
 					{
 						Undefine = new UndefineClause();
-						Undefine.Make( ClassFactory.Undefines.UndefineFeature( Parent, j ) );
+						Undefine.SetSourceName( ClassFactory.Undefines.UndefineFeature( Parent, j ) );
 						ClauseAdded = NewUndefineClauses.Add( Undefine );
 						if( ClauseAdded != ( NewUndefineClauses.Count - 1 ) )
 							throw new ApplicationException( "undefine clause not added" );
@@ -498,7 +498,7 @@ public class EiffelClassGenerator: Globals
 					for( j = 0; j < ClassFactory.Redefines.Count( Parent ); j++ )
 					{
 						Redefine = new RedefineClause();
-						Redefine.Make( ClassFactory.Redefines.RedefineFeature( Parent, j ) );
+						Redefine.SetSourceName( ClassFactory.Redefines.RedefineFeature( Parent, j ) );
 						ClauseAdded = NewRedefineClauses.Add( Redefine );
 						if( ClauseAdded != ( NewRedefineClauses.Count - 1 ) )
 							throw new ApplicationException( "redefine clause not added" );
@@ -515,7 +515,7 @@ public class EiffelClassGenerator: Globals
 					for( j = 0; j < ClassFactory.Selects.Count( Parent ); j++ )
 					{
 						Select = new SelectClause();
-						Select.Make( ClassFactory.Selects.SelectFeature( Parent, j ) );
+						Select.SetSourceName( ClassFactory.Selects.SelectFeature( Parent, j ) );
 						ClauseAdded = NewSelectClauses.Add( Select );
 						if( ClauseAdded != ( NewSelectClauses.Count - 1 ) )
 							throw new ApplicationException( "select clause not added" );

@@ -732,7 +732,7 @@ feature {NONE} -- Implementation
 							if undefine_clauses_string.get_length > 0 then
 								if undefine_clauses_string.Index_Of_Char (',') = -1 then
 									create undefine_clause.make_undefineclause
-									undefine_clause.make (undefine_clauses_string)
+									undefine_clause.set_source_name (undefine_clauses_string)
 									clause_added := undefine_clauses.extend (undefine_clause)
 								else					
 									from
@@ -741,12 +741,12 @@ feature {NONE} -- Implementation
 									loop
 										comma_index := undefine_clauses_string.Index_Of_Char (',')
 										create undefine_clause.make_undefineclause
-										undefine_clause.make (undefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
+										undefine_clause.set_source_name (undefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
 										clause_added := undefine_clauses.extend (undefine_clause)
 										undefine_clauses_string := undefine_clauses_string.Substring (comma_index + 1).Trim
 									end
 									create undefine_clause.make_undefineclause
-									undefine_clause.make (undefine_clauses_string)
+									undefine_clause.set_source_name (undefine_clauses_string)
 									clause_added := undefine_clauses.extend (undefine_clause)
 								end
 							end						
@@ -756,7 +756,7 @@ feature {NONE} -- Implementation
 							if redefine_clauses_string.get_length > 0 then
 								if redefine_clauses_string.Index_Of_Char (',') = -1 then
 									create redefine_clause.make_redefineclause
-									redefine_clause.make (redefine_clauses_string)
+									redefine_clause.set_source_name (redefine_clauses_string)
 									clause_added := redefine_clauses.extend (redefine_clause)
 								else					
 									from
@@ -765,12 +765,12 @@ feature {NONE} -- Implementation
 									loop
 										comma_index := redefine_clauses_string.Index_Of_Char (',')
 										create redefine_clause.make_redefineclause
-										redefine_clause.make (redefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
+										redefine_clause.set_source_name (redefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
 										clause_added := redefine_clauses.extend (redefine_clause)
 										redefine_clauses_string := redefine_clauses_string.Substring (comma_index + 1).Trim
 									end
 									create redefine_clause.make_redefineclause
-									redefine_clause.make (redefine_clauses_string)
+									redefine_clause.set_source_name (redefine_clauses_string)
 									clause_added := redefine_clauses.extend (redefine_clause)
 								end
 							end						
@@ -780,7 +780,7 @@ feature {NONE} -- Implementation
 							if select_clauses_string.get_length > 0 then
 								if select_clauses_string.Index_Of_Char (',') = -1 then
 									create select_clause.make_selectclause
-									select_clause.make (select_clauses_string)
+									select_clause.set_source_name (select_clauses_string)
 									clause_added := select_clauses.extend (select_clause)
 								else					
 									from
@@ -789,12 +789,12 @@ feature {NONE} -- Implementation
 									loop
 										comma_index := select_clauses_string.Index_Of_Char (',')
 										create select_clause.make_selectclause
-										select_clause.make (select_clauses_string.Substring_Int32_Int32 (0, comma_index))
+										select_clause.set_source_name (select_clauses_string.Substring_Int32_Int32 (0, comma_index))
 										clause_added := select_clauses.extend (select_clause)
 										select_clauses_string := select_clauses_string.Substring (comma_index + 1).Trim
 									end
 									create select_clause.make_selectclause
-									select_clause.make (select_clauses_string)
+									select_clause.set_source_name (select_clauses_string)
 									clause_added := select_clauses.extend (select_clause)
 								end
 							end						

@@ -120,7 +120,7 @@ feature -- Access
 			source_name := source_from_text (a_text)
 			target_name := target_from_text (a_text)
 			create Result.make_renameclause
-			Result.make (source_name)
+			Result.set_source_name (source_name)
 			Result.set_target_name (target_name)
 		ensure
 			rename_clause_created: Result /= Void
@@ -190,7 +190,7 @@ feature -- Access
 			if opening_curl_bracket_index /= -1 then
 				closing_curl_bracket_index := a_text.index_of_string_int32 (Closing_curl_bracket, opening_curl_bracket_index)
 				if closing_curl_bracket_index /= -1 then
-					Result.make (a_text.substring (closing_curl_bracket_index + Closing_curl_bracket.get_length + 1).trim)
+					Result.set_source_name (a_text.substring (closing_curl_bracket_index + Closing_curl_bracket.get_length + 1).trim)
 					exportation_string := a_text.substring_int32_int32 (0, closing_curl_bracket_index)	
 					if exportation_string.index_of_char (',') = -1 then
 						Result.add_exportation (exportation_string)	
@@ -207,7 +207,7 @@ feature -- Access
 					end
 				end
 			else
-				Result.make (a_text)
+				Result.set_source_name (a_text)
 			end
 		ensure
 			non_void_export_clause: Result /= Void

@@ -132,12 +132,24 @@ feature {NONE}
 			original_feature: FEATURE_I;
 			written_class: CLASS_C;
 			just_born: BOOLEAN;
+			like_feature: LIKE_FEATURE;
+			like_Feat: FEATURE_I;
+			r_id: ROUTINE_ID
 		do
 			just_born := not is_alive (feat);
 				-- Mark feature alive
 			mark_alive (feat, rout_id_val);
 
 			if just_born then
+
+				like_feature ?= feat.type
+				if like_feature /= Void then
+					r_id := like_feature.rout_id;
+					like_feat := actual_class.feature_table.
+						feature_of_rout_id (r_id)
+					mark (like_feat, actual_class, r_id)
+				end
+
 
 					-- Take care of dependances
 				written_class := feat.written_class;

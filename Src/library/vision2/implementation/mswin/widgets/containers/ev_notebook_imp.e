@@ -838,7 +838,10 @@ feature {NONE} -- Implementation
 		do
 			child_imp ?= v.implementation
 			an_index := get_child_index (child_imp)
-			set_current_selection (an_index - 1)
+				-- Only select a page if it is not already selected.
+			if an_index /= selected_item_index then
+				set_current_selection (an_index - 1)	
+			end
 		end
 
 	set_item_text (v: like item; a_text: STRING) is

@@ -1,10 +1,23 @@
--- Abstract description of an Eiffel function pointer
+indexing
 
-class ADDRESS_AS
+	description:
+		"Abstract description of an Eiffel function pointer. %
+		%Version for Bench";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class ADDRESS_AS_B
 
 inherit
 
-	EXPR_AS
+	ADDRESS_AS
+		redefine
+			feature_name
+		end;
+
+	EXPR_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -12,26 +25,16 @@ inherit
 
 feature -- Attribute
 
-	feature_name: FEATURE_NAME;
+	feature_name: FEATURE_NAME_B;
 			-- Feature name to address
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			feature_name ?= yacc_arg (0);
-		ensure then
-			feature_name_exists: feature_name /= Void
-		end;
 
 feature -- Type check, byte code and dead code removal
 
 	type_check is
-			-- Type check an address access
+			-- Type check an address access.
 		local
-			internal_name: ID_AS;
-			access_address: ACCESS_ADDRESS_AS;
+			internal_name: ID_AS_B;
+			access_address: ACCESS_ADDRESS_AS_B;
 			id_type: TYPE_A;
 		do
 				-- Initialization of the type stack
@@ -51,7 +54,7 @@ feature -- Type check, byte code and dead code removal
 		end;
 
 	byte_node: EXPR_B is
-			-- Associated byte code
+			-- Associated byte code.
 		local
 			access_line: ACCESS_LINE;
 			access: ACCESS_B;
@@ -75,15 +78,15 @@ feature -- Type check, byte code and dead code removal
 			end;
 		end;
 
-
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
 			ctxt.prepare_for_feature (feature_name.internal_name, void);
 			if ctxt.is_feature_visible then
 				ctxt.put_text_item (ti_Dollar);
-				ctxt.put_current_feature; 	-- treat infix and prefix
+					-- Treat infix and prefix
+				ctxt.put_current_feature; 	
 				ctxt.commit;
 			else
 				ctxt.rollback;
@@ -104,5 +107,4 @@ feature	-- Replication
 			Result.feature_name.set_name (ctxt.adapted_name);
 		end;
 
-
-end
+end -- class ADDRESS_AS_B

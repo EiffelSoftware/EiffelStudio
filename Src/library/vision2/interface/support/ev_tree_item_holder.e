@@ -1,8 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision tree-item container. Common ancestor for%
-		% EV_TREE and EV_TREE_ITEM."
+		"Base class for EV_TREE and EV_TREE_ITEM."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,9 +16,7 @@ inherit
 feature -- Status report
 
 	find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
-			-- If `data' contained in a tree item at any level then
-			-- assign this item to `Result'.
-		require
+			-- An item at any level in tree that has `data'.
 		do
 			Result := implementation.find_item_recursively_by_data (data)
 		end
@@ -28,7 +24,7 @@ feature -- Status report
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_TREE_ITEM_LIST_I
-			-- Platform dependent access.
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_TREE_ITEM_LIST
 
@@ -53,6 +49,9 @@ end -- class EV_TREE_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/04 21:31:56  oconnor
+--| comments
+--|
 --| Revision 1.13  2000/03/16 23:15:46  king
 --| Renamed from holder to list
 --|
@@ -85,7 +84,6 @@ end -- class EV_TREE_ITEM_LIST
 --|
 --| Revision 1.9.2.2  1999/11/02 17:20:12  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -14,6 +14,10 @@ inherit
 		export
 			{NONE} all
 		end;
+	SHARED_PIXMAPS
+		rename
+			resources as parsed_resources
+		end;
 	PREFERENCE_CATEGORY
 		rename
 			make as rc_make
@@ -70,12 +74,8 @@ feature -- Properties
 
 	symbol: PIXMAP is
 			-- Current's symobl for being unselected
-		local
-			full_path: FILE_NAME
 		once
-			!! full_path.make_from_string ("/turin1/guusl/resource_control");
-			full_path.set_file_name ("test_pixmap_1");
-			Result := read_pixmap (full_path)
+			Result := bm_System
 		end;
 
 	dark_symbol: PIXMAP is
@@ -83,9 +83,7 @@ feature -- Properties
 		local
 			full_path: FILE_NAME
 		once
-			!! full_path.make_from_string ("/turin1/guusl/resource_control")
-			full_path.set_file_name ("test_pixmap_3");
-			Result := read_pixmap (full_path)
+			Result := bm_System_dot
 		end;
 
 feature -- User Interface

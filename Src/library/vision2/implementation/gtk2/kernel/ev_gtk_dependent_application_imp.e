@@ -312,9 +312,29 @@ feature -- Implementation
 			a_pixbuf: POINTER
 		do
 			a_cursor_imp ?= a_cursor.implementation
-			a_pixbuf := a_cursor_imp.pixbuf_from_drawable
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_cursor_new_from_pixbuf (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_display_get_default, a_pixbuf, a_cursor.x_hotspot, a_cursor.y_hotspot)
-			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+			if a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.busy_cursor_xpm then
+				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_watch_enum)
+			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.standard_cursor_xpm then
+				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_left_ptr_enum)
+			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.crosshair_cursor_xpm then
+				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_crosshair_enum)
+				
+			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.ibeam_cursor_xpm then
+				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_xterm_enum)
+
+			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.sizeall_cursor_xpm then
+				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_fleur_enum)
+
+			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.sizens_cursor_xpm then
+				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
+
+			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.wait_cursor_xpm then
+				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_watch_enum)
+			else
+				a_pixbuf := a_cursor_imp.pixbuf_from_drawable
+				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_cursor_new_from_pixbuf (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_display_get_default, a_pixbuf, a_cursor.x_hotspot, a_cursor.y_hotspot)
+				feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+			end
 		end
 
 feature {NONE} -- Externals

@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			else
 				create {RANGE_COMPARATOR} c.make (low, high)
 			end
-			comparators.extend (clone (c))
+			comparators.extend (c.twin)
 		ensure
 			comparator_added: comparators.count = old comparators.count + 1
 		end

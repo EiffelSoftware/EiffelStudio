@@ -8,7 +8,7 @@ deferred class DELAY_SERVER [T -> IDABLE]
 inherit
 	COMPILER_SERVER [T]
 		redefine
-			put, flush, item, has, remove, wipe_out
+			put, flush, item, has, remove
 		end
 
 feature
@@ -151,16 +151,5 @@ end
 		do
 			Result := cache.has_id (an_id) or else tbl_has (an_id)
 		end;
-
-feature -- Removal
-
-	wipe_out is
-			-- Remove all items (even those saved on disk)
-		do
-			cache.wipe_out
-			delayed.wipe_out
-			files_purge
-			make
-		end
 
 end -- class DELAY_SERVER

@@ -422,13 +422,13 @@ extern int fcount;
  */
 #define RTSN int is_nested = nstcall
 #ifdef WORKBENCH
-#define RTIV(x,y) if (is_nested && ((y) & CK_INVARIANT)) chkinv(x,0)
-#define RTVI(x,y) if (is_nested && ((y) & CK_INVARIANT)) chkinv(x,1)
-#define RTCI(x) chkcinv(x)
+#define RTIV(x,y) if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,0)
+#define RTVI(x,y) if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,1)
+#define RTCI(x) chkcinv(MTC x)
 #else
-#define RTIV(x) if (~in_assertion & is_nested) chkinv(x,0)
-#define RTVI(x) if (~in_assertion & is_nested) chkinv(x,1)
-#define RTCI(x) if (~in_assertion) chkinv(x,1)
+#define RTIV(x) if (~in_assertion & is_nested) chkinv(MTC x,0)
+#define RTVI(x) if (~in_assertion & is_nested) chkinv(MTC x,1)
+#define RTCI(x) if (~in_assertion) chkinv(MTC x,1)
 #endif
 
 /* Macros for basic conversions

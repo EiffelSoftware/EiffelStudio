@@ -972,7 +972,7 @@ feature {EV_ANY_I} -- Implementation
 	
 invariant
 	combo_not_void: is_initialized implies combo /= Void
-	text_field_not_void: is_initialized implies text_field /= Void
+	text_field_not_void: (is_initialized and then is_editable) implies text_field /= Void
 
 end -- class EV_COMBO_BOX_IMP
 

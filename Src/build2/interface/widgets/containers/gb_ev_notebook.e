@@ -51,10 +51,9 @@ feature {GB_XML_STORE} -- Output
 				loop					
 						-- Note that we always add the element for each item text, even if empty
 						-- as the code that updates the constants in GB_EV_NOTEBOOK relies on this fact.
-					add_string_element (item_text_element, item_text_string + first.index.out, enclose_in_cdata (first.item_text (first.item)))
+					add_string_element (item_text_element, item_text_string + first.index.out, first.item_text (first.item))
 					first.forth
 				end
-				element.force_last (item_text_element)
 				item_pixmap_element ?= new_child_element (element, item_pixmap_string_new, "")
 				from
 					first.start
@@ -66,7 +65,6 @@ feature {GB_XML_STORE} -- Output
 						end
 					first.forth
 				end
-				element.force_last (item_pixmap_element)
 			end
 		end
 		
@@ -119,8 +117,8 @@ feature {GB_XML_STORE} -- Output
 							if full_information.has (item_text_string + counter.out) then
 								string_value := retrieve_and_set_string_value (item_text_string + counter.out)
 								if string_value /= Void then
-									first.set_item_text (first.i_th (counter), strip_cdata (string_value))
-									(objects @ 2).set_item_text ((objects @ 2).i_th (counter), strip_cdata (string_value))
+									first.set_item_text (first.i_th (counter), string_value)
+									(objects @ 2).set_item_text ((objects @ 2).i_th (counter), string_value)
 								end
 							end
 							counter := counter + 1

@@ -10,7 +10,7 @@ class
 	EV_STATIC_MENU_BAR
 
 inherit
-	EV_MENU_ITEM_CONTAINER 
+	EV_MENU_CONTAINER 
 		redefine
 			implementation
 		end
@@ -26,10 +26,6 @@ feature {NONE} -- Initialization
 			parent_exists: not par.destroyed
 		do
 			!EV_STATIC_MENU_BAR_IMP!implementation.make (par)
---			implementation.set_interface (Current)
---			implementation.test_and_set_parent (par)
---			implementation.build
---			managed := par.manager
 		end
 
 feature -- Access

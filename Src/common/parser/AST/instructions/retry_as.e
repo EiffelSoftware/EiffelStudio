@@ -6,7 +6,8 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node,
+			find_breakable
 		end
 
 feature -- Initialization
@@ -36,6 +37,14 @@ feature -- Type check and byte code
 				context.init_error (vxrt);
 				Error_handler.insert_error (vxrt);
 			end;
+		end;
+
+feature -- Debugger
+ 
+	find_breakable is
+			-- Cannot break after a `retry' since it is an inconditional jump.
+		do
+			-- Do nothing
 		end;
 
 end

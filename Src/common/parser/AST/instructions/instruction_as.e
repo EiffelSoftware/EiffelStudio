@@ -6,7 +6,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			byte_node
+			byte_node,
+			find_breakable
 		end
 
 feature
@@ -18,4 +19,14 @@ feature
 			False
 		end
 
+feature -- Debugger
+ 
+	find_breakable is
+			-- Look for instruction (this node IS an instruction).
+			-- This will be redefined for non-atomic instructions like loop
+			-- or inspect statements to actually propagate the message.
+		do
+			record_break_node;		-- Most node are atomic instructions
+		end;
+ 
 end

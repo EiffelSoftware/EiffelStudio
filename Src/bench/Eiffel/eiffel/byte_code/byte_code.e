@@ -273,8 +273,14 @@ feature -- Byte code generation
 			local_list: LINKED_LIST [TYPE_I];
 		do
 			Temp_byte_code_array.clear;
-	
-			Temp_byte_code_array.append (Bc_start);
+			
+				-- Header for debuggable byte code.
+			if context.debug_mode then
+				Temp_byte_code_array.append (Bc_debuggable);
+				Temp_byte_code_array.append_integer (body_id);	
+			else
+				Temp_byte_code_array.append (Bc_start);
+			end;
 
 				-- Routine id
 			Temp_byte_code_array.append_integer (rout_id);
@@ -367,7 +373,7 @@ feature -- Byte code generation
 			end;
 			Temp_byte_code_array.append (Bc_no_clone_arg);
 
-			ba.prepend (Temp_byte_code_array);
+			context.byte_prepend (ba, Temp_byte_code_array);
 
 				-- Clean the context
 			local_list.wipe_out;

@@ -119,10 +119,6 @@ feature -- Access
 	project_name: STRING
 		-- Name of project.
 		
-	client_of_window: BOOLEAN
-		-- Should generated code use EV_WINDOW as client?
-		-- If False, then we inherit EV_WINDOW.
-		
 	load_constants: BOOLEAN
 		-- Should generated constants be loaded from a text file,
 		-- or hard coded into the generated constants file?
@@ -134,6 +130,11 @@ feature -- Access
 		-- Was last call to `load' cancelled by user?
 		-- This can only occur if the file was in an old format, and
 		-- they selected not to update to current format.
+		
+	loaded_project_had_client_information: BOOLEAN
+		-- Was client information for the project contained directly in the project file?
+		-- This is only true for older projects. In this case, we must now set the client
+		-- information for all windows to match the original setting from the file.
 	
 feature -- Basic operation
 
@@ -154,7 +155,6 @@ feature -- Basic operation
 			data.extend ([grouped_locals_string, grouped_locals.out])
 			data.extend ([debugging_output_string, debugging_output.out])
 			data.extend ([attributes_local_string, attributes_local.out])
-			data.extend ([client_of_window_string, client_of_window.out])
 			data.extend ([rebuild_ace_file_string, rebuild_ace_file.out])
 			data.extend ([load_constants_string, load_constants.out])
 			data.extend ([constants_class_name_string, constants_class_name])
@@ -183,19 +183,22 @@ feature -- Basic operation
 				check
 					data_not_void: data /= Void
 				end
-				if data.count > 10 and data.count < 14 then
-					set_integer_attribute (data @ project_type_string, agent set_project_type (?))
-					set_string_attribute (data @ project_name_string, agent set_project_name (?))
-					set_string_attribute (data @ project_location_string, agent set_project_location (?))
-					set_string_attribute (data @ main_window_class_name_string, agent set_main_window_class_name (?))
-					set_string_attribute (data @ application_class_name_string, agent set_application_class_name (?))
-					set_boolean_attribute (data @ complete_project_string, agent enable_complete_project, agent disable_complete_project)
-					set_boolean_attribute (data @ grouped_locals_string, agent enable_grouped_locals, agent disable_grouped_locals)
-					set_boolean_attribute (data @ debugging_output_string, agent enable_debugging_output, agent disable_debugging_output)
-					set_string_attribute (data @ attributes_local_string, agent set_attributes_locality (?))
-					set_boolean_attribute (data @ client_of_window_string, agent enable_client_of_window, agent disable_client_of_window)
-					set_boolean_attribute (data @ rebuild_ace_file_string, agent enable_rebuild_ace_file, agent disable_rebuild_ace_file)
+				set_integer_attribute (data @ project_type_string, agent set_project_type (?))
+				set_string_attribute (data @ project_name_string, agent set_project_name (?))
+				set_string_attribute (data @ project_location_string, agent set_project_location (?))
+				set_string_attribute (data @ main_window_class_name_string, agent set_main_window_class_name (?))
+				set_string_attribute (data @ application_class_name_string, agent set_application_class_name (?))
+				set_boolean_attribute (data @ complete_project_string, agent enable_complete_project, agent disable_complete_project)
+				set_boolean_attribute (data @ grouped_locals_string, agent enable_grouped_locals, agent disable_grouped_locals)
+				set_boolean_attribute (data @ debugging_output_string, agent enable_debugging_output, agent disable_debugging_output)
+				set_string_attribute (data @ attributes_local_string, agent set_attributes_locality (?))
+				if data.has (client_of_window_string) then
+					if data.item (client_of_window_string).is_equal (true_string) then
+						loaded_project_had_client_information := True
+					end
 				end
+				set_boolean_attribute (data @ rebuild_ace_file_string, agent enable_rebuild_ace_file, agent disable_rebuild_ace_file)
+
 				if data.has (load_constants_string) then
 					set_boolean_attribute (data @ load_constants_string, agent enable_constant_loading, agent disable_constant_loading)
 				end
@@ -281,18 +284,6 @@ feature -- Status Setting
 			project_name.is_equal (name)
 		end
 		
-	enable_client_of_window is
-			-- Assign `True' to `client_of_window'.
-		do
-			client_of_window := True
-		end
-		
-	disable_client_of_window is
-			-- Assign `False' to `client_of_window'.
-		do
-			client_of_window := False
-		end
-		
 	enable_complete_project is
 			-- Assign `True' to `complete_project'.
 		do
@@ -360,6 +351,16 @@ feature -- Status Setting
 			-- Assign `False' to `load_constants'.
 		do
 			load_constants := False
+		end
+		
+feature {GB_FILE_OPEN_COMMAND}
+
+	set_object_as_client (an_object: GB_OBJECT) is
+			-- Ensure `an_object' is generated as a client.
+		require
+			an_object_not_void: an_object /= Void
+		do
+			an_object.enable_client_generation
 		end
 
 feature {NONE} -- Constants

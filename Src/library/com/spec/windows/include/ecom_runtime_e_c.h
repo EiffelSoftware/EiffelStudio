@@ -51,6 +51,7 @@ class ecom_runtime_ec
 		DECIMAL * ccom_ec_pointed_decimal (EIF_REFERENCE a_ref);
 		LARGE_INTEGER * ccom_ec_pointed_long_long (EIF_REFERENCE a_ref);
 		ULARGE_INTEGER * ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref);
+		void ** ccom_ec_pointed_pointer (EIF_REFERENCE a_pointer);
 
 		// ARRAY
 		DATE * ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension);

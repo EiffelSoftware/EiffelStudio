@@ -28,8 +28,22 @@ feature {NONE} -- Initialization
 			-- Create a cursor from the given file path
 		require
 			valid_filename: filename /= Void
-			filename_exists: interface.file_exists (filename)
+			filename_exists: file_exists (filename)
 		deferred
+		end
+
+
+	file_exists (file_name: STRING) : BOOLEAN is
+			-- Does the given file name exist?
+		require
+			valid_file: file_name /= Void
+		local
+			file: RAW_FILE
+		do	
+			create file.make (file_name)
+			if file.exists then
+				Result := True
+			end
 		end
 
 end -- class EV_CURSOR_I

@@ -2146,6 +2146,7 @@ public class Core : ICore
 
 		name.Name = "ise_runtime";
 		name.Version = new Version( 5,0,35,1 );
+		name.SetPublicKeyToken (new byte[8] {0xde, 0xf2, 0x6f, 0x29, 0x6e, 0xfe, 0xf4, 0x69});
 		ExternalAssemblies.Add( Assembly.Load( name ));
 
 		ISE_class = Type.GetType( "ISE.Runtime.RUN_TIME, ise_runtime" );

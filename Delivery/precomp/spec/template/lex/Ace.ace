@@ -1,18 +1,13 @@
 system EiffelLex
 
 root
-
 	ANY
 
 default
-
-	assertion (require);
-	precompiled ("$EIFFEL5/precomp/spec/$PLATFORM/base")
+	assertion (require)
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
-
--- EiffelLex
-
-	lex:				"$EIFFEL5/library/lex";
+	lex: "$ISE_EIFFEL/library/lex";
 
 end

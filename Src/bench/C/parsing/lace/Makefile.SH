@@ -38,16 +38,16 @@ CC = $cc
 CP = $cp
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $ccflags $large
-JLFLAGS = \$(LFLAGS)
-JYFLAGS = \$(YFLAGS)
-LEX = lex
+JLFLAGS = \$(LFLAGS) $lexflags
+JYFLAGS = \$(YFLAGS) $yaccflags
+LEX = $lex
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
 RANLIB = $ranlib
 RM = $rm -f
 SED = $sed
-YACC = yacc
+YACC = $yacc
 
 ########################################################################
 # Automatically generated parameters -- do not edit

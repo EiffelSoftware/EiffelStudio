@@ -64,6 +64,8 @@ feature -- Access
 	show_deleting_directories_warning: STRING is "show_deleting_directories_warning"
 	
 	show_deleting_final_directory_warning: STRING is "show_deleting_final_directory_warning"
+	
+	tools_on_top:STRING is "tools_on_top"
 			
 feature -- Basic operations
 

@@ -29,6 +29,10 @@ feature
 	count: INTEGER;
 			-- Count of new and obsolete units already recorded
 
+	max_rout_id: INTEGER
+			-- What it the highest assigned ROUTINE_ID?
+			--| Needed in EIFFEL_HISTORY to create the tables.
+
 	add_new (entry: ENTRY; rout_id: ROUTINE_ID; pattern_id: PATTERN_ID) is
 			-- Add a new unit for routine id `rout_id' to the controler
 		require
@@ -39,8 +43,7 @@ feature
 		do
 			poly_table := new_units.item (rout_id);
 			if poly_table = Void then
-				poly_table := entry.new_poly_table;
-				poly_table.set_rout_id (rout_id);
+				poly_table := entry.new_poly_table (rout_id);
 				new_units.put (poly_table, rout_id);
 				create_poly_table_with_entry (poly_table, entry);
 			else
@@ -132,6 +135,9 @@ end
 				server_set.sort
 				Tmp_poly_server.put (server_set);
 				new_units.forth;
+
+					-- Get the maximum encountered ROUTINE_ID
+				max_rout_id := max_rout_id.max (id.id)
 			end;
 debug ("TRANSFER")
 			print ("%NPoly_tables count: ")
@@ -152,9 +158,10 @@ end
 		do
 			if count > Overload then
 				transfer;
+				print ("Is transferring%N")
 			end;
 		end;
 
-	Overload: INTEGER is 10000;
+	Overload: INTEGER is 20000;
 
 end

@@ -7,12 +7,20 @@ inherit
 			dump,
 			is_double,
 			is_numeric,
-			same_as, element_type,
+			same_as, element_type, il_convert_from,
 			description, sk_value, generate_cecil_value, hash_code,
 			generate_byte_code_cast, generated_id, typecode
 		end
 
 	BYTE_CONST
+		export
+			{NONE} all
+		end
+		
+	SHARED_IL_CODE_GENERATOR
+		export
+			{NONE} all
+		end
 
 feature -- Status report
 
@@ -131,6 +139,16 @@ feature -- Generic conformance
 
 		do
 			Result := Double_type
+		end
+
+feature -- IL code generation
+
+	il_convert_from (source: TYPE_I) is
+			-- Generate convertion from Current to `source' if needed.
+		do
+			if not source.is_double then
+				il_generator.convert_to (Current)
+			end
 		end
 
 feature

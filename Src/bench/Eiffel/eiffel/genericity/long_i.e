@@ -8,12 +8,20 @@ inherit
 			dump,
 			is_long,
 			is_numeric,
-			same_as, element_type,
+			same_as, element_type, il_convert_from,
 			description, sk_value, generate_cecil_value, hash_code,
 			generate_byte_code_cast, generated_id, heaviest, typecode
 		end
 
 	BYTE_CONST
+		export
+			{NONE} all
+		end
+		
+	SHARED_IL_CODE_GENERATOR
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -254,7 +262,27 @@ feature -- Generic conformance
 			end
 		end
 
-feature
+feature -- IL code generation
+
+	il_convert_from (source: TYPE_I) is
+			-- Generate convertion from Currento to `source' if needed.
+		local
+			l_int: like Current
+		do
+			if not source.is_long then
+				il_generator.convert_to (Current)
+			else
+				l_int ?= source
+				if
+					size < l_int.size or
+					(size = 64 and l_int.size < 64)
+				then
+					il_generator.convert_to (Current)
+				end
+			end
+		end
+
+feature -- Byte code generation
 
 	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
 

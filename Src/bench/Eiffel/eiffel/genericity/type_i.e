@@ -312,6 +312,15 @@ feature -- Code generation
 		deferred
 		end
 
+feature -- IL code generation
+
+	il_convert_from (source: TYPE_I) is
+			-- Generate convertion from Current to `source' if needed.
+		require
+			source_not_void: source /= Void
+		do
+		end
+
 feature -- Array optimization
 
 	conforms_to_array: BOOLEAN is

@@ -97,19 +97,23 @@ feature {NONE} -- code in the glue library
 		end
 
 	c_gtk_widget_sensitive (w: POINTER): BOOLEAN is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 	
 	c_gtk_widget_set_size (w: POINTER; width, height: INTEGER) is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 	
 	c_gtk_widget_minimum_width (w: POINTER): INTEGER is
-		external "C [macro %"gtk_eiffel.h%"]"
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_widget_minimum_height (w: POINTER): INTEGER is
-		external "C [macro %"gtk_eiffel.h%"]"
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_widget_position_set (widget: POINTER; x, y: INTEGER): BOOLEAN is

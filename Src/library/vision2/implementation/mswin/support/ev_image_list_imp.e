@@ -285,9 +285,10 @@ feature {NONE} -- Implementation (Private features)
 			mask_bitmap		: WEL_BITMAP
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			if (pixmap_imp.height /= bitmaps_height) or 
+			if (pixmap_imp.height /= bitmaps_height) or 	
 			   (pixmap_imp.width /= bitmaps_width)
 			then
+				create resized_pixmap
 				resized_pixmap.copy (a_pixmap)
 				resized_pixmap.stretch (
 					bitmaps_width,

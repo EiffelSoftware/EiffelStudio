@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	parent: EV_WIDGET is
+	parent: EV_WINDOW is
 			-- The parent of the Current widget
 			-- If the widget is an EV_WINDOW without parent,
 			-- this attribute will be `Void'

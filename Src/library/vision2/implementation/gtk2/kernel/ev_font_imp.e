@@ -304,9 +304,9 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 				from
 					preferred_families.start
 				until
-					Result /= Void or else preferred_families.item = Void
+					Result /= Void or else preferred_families.off
 				loop
-					if app_implementation.font_names_on_system_as_lower.has (preferred_families.item.as_lower) then
+					if preferred_families.item /= Void and then app_implementation.font_names_on_system_as_lower.has (preferred_families.item.as_lower) then
 						Result := preferred_families.item.twin
 					end
 					preferred_families.forth

@@ -125,13 +125,13 @@ feature -- Access
 	port_x: INTEGER is
 			-- x position where links are starting.
 		do
-			Result := ellipse.x
+			Result := point_x
 		end
 		
 	port_y: INTEGER is
 			-- y position where links are starting.
 		do
-			Result := ellipse.y
+			Result := point_y
 		end
 		
 	size: EV_RECTANGLE is
@@ -235,6 +235,7 @@ feature -- Status settings
 		do
 			if is_fixed then
 				anchor.show
+				anchor.set_x_y (ellipse.point_a_x + 3, ellipse.point_a_y + 3)
 				is_anchor_shown := True
 				request_update
 			end
@@ -415,24 +416,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 		
 	update is
 			-- Some properties of `Current' may have changed.
-		local
-			l_min_size: like minimum_size
-			cx, cy, a, b: INTEGER
 		do
-			l_min_size := minimum_size
-			
-			cx := l_min_size.width // 2 + l_min_size.left
-			cy := l_min_size.height // 2 + l_min_size.top
-			
-			a := ellipse_radius_1.truncated_to_integer
-			b := ellipse_radius_2.truncated_to_integer
-			
-			ellipse.set_point_a_position (cx - a, cy - b)
-			ellipse.set_point_b_position (cx + a, cy + b)
-			
-			if anchor.is_show_requested then
-				anchor.set_x_y (ellipse.point_a_x + 3, ellipse.point_a_y + 3)
-			end
 			is_update_required := False
 		end
 		
@@ -442,10 +426,20 @@ feature {EV_MODEL_GROUP} -- Figure group
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
+		local
+			i_radius: INTEGER
 		do
 			Precursor {EIFFEL_CLASS_FIGURE} (a_transformation)
 			ellipse_radius_1 := ellipse_radius_1 * a_transformation.item (1, 1)
 			ellipse_radius_2 := ellipse_radius_2 * a_transformation.item (2, 2)
+			i_radius := as_integer (ellipse_radius_1)
+			if ellipse.radius1 /= i_radius then
+				ellipse.set_radius1 (i_radius)
+			end
+			i_radius := as_integer (ellipse_radius_2)
+			if ellipse.radius2 /= i_radius then
+				ellipse.set_radius2 (i_radius)
+			end
 		end
 		
 feature {EIFFEL_PROJECTOR} -- Ellipse
@@ -527,7 +521,7 @@ feature {NONE} -- Implementation
 				icon_figures.extend (icon)
 			end
 			from
-				hw := icon_figures.bounding_box.width // 2
+				hw := as_integer (icon_figures.bounding_box.width / 2)
 				icon_figures.start
 			until
 				icon_figures.after
@@ -716,38 +710,42 @@ feature {NONE} -- Implementation
 			cur_pos, cur_y_pos: INTEGER
 			h, w: INTEGER
 		do
-			ibbox := icon_figures.bounding_box
-			nbbox := name_labels.bounding_box
-			gbbox := generics_label.bounding_box
-			
-			if model.generics /= Void and then model.generics.count + model.name.count <= max_class_name_length  then
-				-- on one line
-				h := ibbox.height + nbbox.height
+			if is_high_quality then
+				ibbox := icon_figures.bounding_box
+				nbbox := name_labels.bounding_box
+				gbbox := generics_label.bounding_box
 				
-				cur_pos := port_y - h // 2
-				
-				icon_figures.set_point_position (port_x, cur_pos)
-				cur_pos := cur_pos + ibbox.height
-				
-				w := gbbox.width // 2
-				
-				cur_y_pos := port_x - w
-				
-				name_labels.set_point_position (cur_y_pos, cur_pos)
-				cur_y_pos := cur_y_pos + nbbox.width // 2 + w
-				generics_label.set_point_position (cur_y_pos, cur_pos)
+				if model.generics /= Void and then model.generics.count + model.name.count <= max_class_name_length  then
+					-- on one line
+					h := ibbox.height + nbbox.height
+					
+					cur_pos := port_y - as_integer (h / 2)
+					
+					icon_figures.set_point_position (port_x, cur_pos)
+					cur_pos := cur_pos + ibbox.height
+					
+					w := as_integer (gbbox.width / 2)
+					
+					cur_y_pos := port_x - w
+					
+					name_labels.set_point_position (cur_y_pos, cur_pos)
+					cur_y_pos := cur_y_pos + as_integer (nbbox.width / 2) + w
+					generics_label.set_point_position (cur_y_pos, cur_pos)
+				else
+					h := ibbox.height + nbbox.height + gbbox.height
+					
+					cur_pos := port_y - as_integer (h / 2)
+					
+					icon_figures.set_point_position (port_x, cur_pos)
+					cur_pos := cur_pos + ibbox.height
+					
+					name_labels.set_point_position (port_x, cur_pos)
+					cur_pos := cur_pos + nbbox.height
+					
+					generics_label.set_point_position (port_x, cur_pos)	
+				end
 			else
-				h := ibbox.height + nbbox.height + gbbox.height
-				
-				cur_pos := port_y - h // 2
-				
-				icon_figures.set_point_position (port_x, cur_pos)
-				cur_pos := cur_pos + ibbox.height
-				
-				name_labels.set_point_position (port_x, cur_pos)
-				cur_pos := cur_pos + nbbox.height
-				
-				generics_label.set_point_position (port_x, cur_pos)	
+				name_labels.set_x_y (port_x, port_y)
 			end
 			
 			update_radius
@@ -767,7 +765,7 @@ feature {NONE} -- Implementation
 					w := l_min_size.width
 					h := l_min_size.height
 					if icon_figures.bounding_box.height = 0 then
-						h := (h * 1.5).truncated_to_integer
+						h := as_integer (h * 1.5)
 					end
 				else
 					l_min_size := minimum_size
@@ -775,7 +773,7 @@ feature {NONE} -- Implementation
 					w := l_min_size.width
 					h := l_min_size.height
 					if icon_figures.bounding_box.height = 0 and then generics_label.bounding_box.height = 0 and then name_labels.count = 1 then
-						h := (h * 1.5).truncated_to_integer
+						h := as_integer (h * 1.5)
 					end
 				end
 			else
@@ -784,7 +782,7 @@ feature {NONE} -- Implementation
 				w := l_min_size.width
 				h := l_min_size.height
 				if name_labels.count = 1 then
-					h := (h * 1.5).truncated_to_integer
+					h := as_integer (h * 1.5)
 				end
 			end
 
@@ -792,6 +790,13 @@ feature {NONE} -- Implementation
 			omega := line_angle (l_min_size.left + w / 2, l_min_size.top + h / 2, l_min_size.left + w, l_min_size.top)
 			ellipse_radius_2 := sqrt (r^2*sine(omega)^2*(1 + (cosine(omega)^2/(sine(omega)^2*(w^2/h^2)))))
 			ellipse_radius_1 := w * ellipse_radius_2 / h
+			
+			if ellipse.radius1 /= as_integer (ellipse_radius_1) then
+				ellipse.set_radius1 (as_integer (ellipse_radius_1))
+			end
+			if ellipse.radius2 /= as_integer (ellipse_radius_2) then
+				ellipse.set_radius2 (as_integer (ellipse_radius_2))
+			end
 		end
 		
 
@@ -889,7 +894,7 @@ feature {NONE} -- Implementation
 					icon_figures.hide
 					generics_label.hide
 				end
-				update_radius
+				update_information_positions
 				request_update
 			end
 		end

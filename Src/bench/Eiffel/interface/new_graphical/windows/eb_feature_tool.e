@@ -36,7 +36,7 @@ inherit
 creation
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (man: EB_TOOL_MANAGER) is
 			-- Create a feature tool.
@@ -66,19 +66,6 @@ feature -- Initialization
 --  			init_text_window
 --		end
 
-	build_interface is
-			-- Build the widgets for this window.
-		do
-			precursor
-
---			if not resources.keep_toolbar.actual_value then
---				feature_toolbar.remove
---				if has_double_line_toolbar then
---					format_bar.remove
---				end
---			end
-		end
-
 	init_formatters is
 		do
 			create format_list.make (Current)
@@ -94,6 +81,21 @@ feature -- Initialization
 			create current_target_cmd.make (Current)
 			create previous_target_cmd.make (Current)
 			create next_target_cmd.make (Current)
+		end
+
+feature {EB_TOOL_MANAGER} -- Initialize
+
+	build_interface is
+			-- Build the widgets for this window.
+		do
+			precursor
+
+--			if not resources.keep_toolbar.actual_value then
+--				feature_toolbar.remove
+--				if has_double_line_toolbar then
+--					format_bar.remove
+--				end
+--			end
 		end
 
 feature -- Update Resources
@@ -216,9 +218,11 @@ feature -- Update
 		end
 
 	set_mode_for_editing is
-			-- Set the text mode to be editable.
+			-- Set the text mode not to be editable.
+			-- do not ask me why
+			-- OK, if you insist: text is never editable in a feature tool
 		do
-			text_window.set_editable (True)
+			text_window.set_editable (False)
 		end
  
 	close_windows is

@@ -396,6 +396,16 @@ feature
 			end
 		end;
 
+	add_to_dt_current (i: INTEGER) is
+			-- Add `i' to dt_current.
+		require
+			valid_i: i > 0
+		do
+			dt_current := dt_current + i;
+		ensure
+			added: old dt_current + i = dt_current
+		end;
+
 	set_inlined_dt_current (i: INTEGER) is
 			-- Set the value of `inlined_dt_current' to `i'
 		do

@@ -336,12 +336,17 @@ feature {NONE} -- Disposal
 
 feature {NONE} -- Implement .NET feature
 
-	frozen equals (obj: ANY): BOOLEAN is
+	frozen equals (obj: SYSTEM_OBJECT): BOOLEAN is
 			-- Compare `obj' to Current using Eiffel semantic.
+		local
+			l_other: ANY
 		do
-			Result := equal (Current, obj)
+			l_other ?= obj
+			if l_other /= Void then
+				Result := is_equal (l_other)
+			end
 		end
-		
+
 	frozen to_string: SYSTEM_STRING is
 			-- New string containing terse printable representation
 			-- of current object

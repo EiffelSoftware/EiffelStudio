@@ -15,11 +15,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include "eif_logfile.h"
-#ifdef I_STRING
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 #include "stream.h"
 #include "ewbio.h"
 #include "transfer.h"

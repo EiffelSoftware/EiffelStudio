@@ -95,22 +95,22 @@ feature {NONE} -- Externals
 
 	eif_thr_sem_create (count: INTEGER): POINTER is
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		end
 
 	eif_thr_sem_wait (a_sem_pointer: POINTER) is
 		external
-			"C | %"eif_threads.h%""
+			"C blocking use %"eif_threads.h%""
 		end
 
 	eif_thr_sem_post (a_sem_pointer: POINTER) is
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		end
 
 	eif_thr_sem_trywait (a_sem_pointer: POINTER): BOOLEAN is
 		external
-			"C | %"eif_threads.h%""
+			"C blocking use %"eif_threads.h%""
 		end
 
 	eif_thr_sem_destroy (a_sem_pointer: POINTER) is

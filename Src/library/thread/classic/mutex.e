@@ -109,7 +109,7 @@ feature {NONE} -- Externals
 
 	eif_thr_mutex_lock (a_mutex_pointer: POINTER) is
 		external
-			"C | %"eif_threads.h%""
+			"C blocking use %"eif_threads.h%""
 		end
 
 	eif_thr_mutex_unlock (a_mutex_pointer: POINTER) is
@@ -119,7 +119,7 @@ feature {NONE} -- Externals
 
 	eif_thr_mutex_trylock (a_mutex_pointer: POINTER): BOOLEAN is
 		external
-			"C | %"eif_threads.h%""
+			"C blocking use %"eif_threads.h%""
 		end
 
 	eif_thr_mutex_destroy (a_mutex_pointer: POINTER) is

@@ -7,11 +7,14 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SCROLL_L_M 
+class 
+	SCROLL_L_M 
 
 inherit
 
 	SCROLL_L_I;
+
+	FONTABLE_M;
 
 	PRIMITIVE_COMPOSITE_M
 		undefine
@@ -28,15 +31,11 @@ inherit
 			x, y, hide, lower, propagate_event, raise,
 			realize, set_x, set_x_y, set_y, show, unrealize,
 			make_from_existing, create_callback_struct,
-			clean_up, set_no_event_propagation
+			set_no_event_propagation, clean_up, object_clean_up
 		redefine
 			set_size, set_height, set_width,
-			update_background_color, update_foreground_color,
-			set_background_color, set_foreground_color,
-			set_managed
+			set_background_color_from_imp, set_managed, parent
 		end;
-
-	FONTABLE_M;
 
 	MEL_SCROLLED_LIST
 		rename
@@ -54,13 +53,13 @@ inherit
 			deselect_all_items as deselect_all,
 			select_item as mel_select_item,
 			index_of as mel_index_of,
-            is_shown as shown
+			is_shown as shown
 		undefine
 			height, real_x, real_y, realized, width,
 			x, y, hide, lower, propagate_event, raise,
 			realize, set_x, set_x_y, set_y, show, unrealize
 		redefine	
-			set_height, set_width, set_size
+			set_height, set_width, set_size, parent
 		select
 			list_make_from_existing, make_variable
 		end
@@ -76,35 +75,37 @@ feature {NONE} -- Initialization
 			-- window which contains current list.
 		local
 			ext_name: ANY;
-			sb: MEL_SCROLL_BAR
+			sb: MEL_SCROLL_BAR;
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_list.identifier.to_c;
 			if is_fixed then
-				make_constant (a_list.identifier,
-						mel_parent (a_list, widget_index),
-						man);
+				make_constant (a_list.identifier, mc, man)
 			else
-				make_resize_if_possible (a_list.identifier,
-						mel_parent (a_list, widget_index),
-						man);
+				make_resize_if_possible (a_list.identifier, mc, man)
 			end;
 			set_navigation_to_exclusive_tab_group;
-			sb := scrolled_window.vertical_scroll_bar;
+			sb := parent.vertical_scroll_bar;
 			sb.set_navigation_to_exclusive_tab_group;
-			sb := scrolled_window.horizontal_scroll_bar;
+			sb := parent.horizontal_scroll_bar;
 			if sb /= Void then
 				sb.set_navigation_to_exclusive_tab_group;
 			end;
 			a_list.set_list_imp (Current);
+			a_list.set_font_imp (Current);
 		end;
 
 feature -- Access
 
+	parent: MEL_SCROLLED_WINDOW;
+			-- Dialog shell parent
+
 	main_widget: MEL_SCROLLED_WINDOW is
 			-- Main widget of scroll list (scrolled window)
 		do
-			Result := scrolled_window
+			Result := parent
 		end
 
 feature -- Status setting
@@ -115,10 +116,10 @@ feature -- Status setting
 			-- otherwise.
 		do
 			if flag then
-				scrolled_window.manage;
+				parent.manage;
 				manage;
 			else
-				scrolled_window.unmanage;
+				parent.unmanage;
 				unmanage;
 			end
 		end;
@@ -133,7 +134,7 @@ feature -- Status setting
 				manage;
 				was_unmanaged := True
 			end;
-			scrolled_window.set_size (new_width, new_height)
+			parent.set_size (new_width, new_height)
 			if was_unmanaged then
 				manage
 			end
@@ -148,7 +149,7 @@ feature -- Status setting
 				manage
 				was_unmanaged := True
 			end;
-			scrolled_window.set_width (new_width)
+			parent.set_width (new_width)
 			if was_unmanaged then
 				unmanage
 			end
@@ -163,90 +164,34 @@ feature -- Status setting
 				manage
 				was_unmanaged := True
 			end;
-			scrolled_window.set_height (new_height);
+			parent.set_height (new_height);
 			if was_unmanaged then
 				unmanage
 			end
 		end;
 
-	set_foreground_color (a_color: COLOR) is
-			-- Set `foreground_color' to `a_color'.
+	set_background_color_from_imp (color_imp: COLOR_X) is
+			-- Set the background color from implementation `color_imp'.
 		local
-			color_implementation: COLOR_X;
-			ext_name: ANY
+			w: MEL_WIDGET
 		do
-			if private_foreground_color /= Void then
-				color_implementation ?= private_foreground_color.implementation;
-				color_implementation.remove_object (Current)
+			mel_set_background_color (color_imp);
+			update_colors;
+			parent.set_background_color (color_imp)
+			w := parent.vertical_scroll_bar;
+			if w /= Void then
+				w.set_background_color (color_imp);
+				w.update_colors
 			end;
-			private_foreground_color := a_color;
-			color_implementation ?= a_color.implementation;
-			color_implementation.put_object (Current);
-			--ext_name := Mforeground_color.to_c;
-			--c_set_color (action_target, color_implementation.pixel (screen), $ext_name)
-	   end;
-
-	set_background_color (a_color: COLOR) is
-			-- Set background_color to `a_color'.
-		local
-			pixmap_implementation: PIXMAP_X;
-			color_implementation: COLOR_X;
-			pix: POINTER;
-		do
-			if private_background_pixmap /= Void then
-				pixmap_implementation ?= private_background_pixmap.implementation;
-				pixmap_implementation.remove_object (Current);
-				private_background_pixmap := Void
+			w := parent.horizontal_scroll_bar;
+			if w /= Void then
+				w.set_background_color (color_imp);
+				w.update_colors
 			end;
-			if private_background_color /= Void then
-				color_implementation ?= private_background_color.implementation;
-				color_implementation.remove_object (Current)
-			end;
-			private_background_color := a_color;
-			color_implementation ?= private_background_color.implementation;
-			color_implementation.put_object (Current);
-			pix := color_implementation.pixel (screen);
-			--xm_change_bg_color (screen_object, pix); 
-			--xm_change_bg_color (list_screen_object, pix); 
-			--xm_change_bg_color (horizontal_widget, pix); 
-			--xm_change_bg_color (vertical_widget, pix); 
 			if private_foreground_color /= Void then
 				update_foreground_color
 			end
-		end;
-
-feature {COLOR_X} -- Implementation
-
-	update_background_color is 
-			-- Update the X color after a change inside the Eiffel color.  
-		local 
-			ext_name: ANY; 
-			color_implementation: COLOR_X; 
-			pix: POINTER
-		do
-		--	ext_name := Mbackground.to_c;
-			color_implementation ?= background_color.implementation;
-			pix := color_implementation.pixel (screen);
-			--xm_change_bg_color (screen_object, pix);
-			--xm_change_bg_color (list_screen_object, pix);  
-			--xm_change_bg_color (horizontal_widget, pix); 
-			--xm_change_bg_color (vertical_widget, pix); 
-			if private_foreground_color /= Void then
-				update_foreground_color
-			end
-		end;
-
-	update_foreground_color is
-			-- Update the X color after a change inside the Eiffel color.
-		local
-			ext_name: ANY;
-			color_implementation: COLOR_X
-		do
-			--ext_name := Mforeground_color.to_c;
-			color_implementation ?= foreground_color.implementation;
-			--c_set_color (action_target,
-				--color_implementation.pixel (screen), $ext_name)
-		end;
+		end
 
 end -- class SCROLL_L_M
 

@@ -44,6 +44,8 @@ feature {EV_BOX} -- Implementation
 			-- creation of the gtk vbox where the widget will be placed
 			-- to allow vertical resizing options.
 			vbox_wid := gtk_vbox_new (False, 0)
+			gtk_object_ref (vbox_wid)
+
 			child_imp.set_box_widget (vbox_wid)
 			gtk_widget_show (child_imp.box_widget)
 
@@ -54,6 +56,8 @@ feature {EV_BOX} -- Implementation
 			gtk_box_pack_start (widget, child_imp.box_widget, 
 			    child_imp.expandable,
 			    child_imp.vertical_resizable, 0)
+
+--			gtk_object_unref (child_imp.widget)
 		end
 
 feature {EV_HORIZONTAL_BOX_IMP} -- Implementation

@@ -66,8 +66,8 @@ feature -- Access
 			c_parent: POINTER
 			Result_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 		do
-			if combo_parent_imp /= Void then
-				Result := combo_parent_imp
+			if item_parent_imp /= Void then
+				Result := item_parent_imp
 			else
 			from
 				c_parent := c_object
@@ -95,14 +95,14 @@ feature -- Assertion features
 
 feature {EV_ITEM_IMP, EV_ITEM_LIST_IMP} -- Implementation
 
-	combo_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]
+	item_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 		-- Used to store parent imp of items where parent stores
 		-- items in a list widget instead of the c_object.
 
 	set_parent_imp (a_parent: EV_ITEM_LIST_IMP [EV_ITEM]) is
 			-- Set the `combo_parent_imp' to `a_parent'.
 		do
-			combo_parent_imp := a_parent
+			item_parent_imp := a_parent
 		end
 
 	interface: EV_ITEM
@@ -130,6 +130,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/08 22:32:25  king
+--| Changed combo_parent_imp -> item_parent_imp
+--|
 --| Revision 1.21  2000/03/08 22:20:39  king
 --| Made set_combo_parent_imp generic to deal with tree items
 --|

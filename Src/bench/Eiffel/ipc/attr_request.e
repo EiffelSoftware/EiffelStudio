@@ -45,7 +45,7 @@ feature
 			send_rqst_3 (Rqst_sp_upper, 0, 0, sp_upper);
 			send_rqst_3 (request_code, In_h_addr, 0, 
 											hex_to_integer (object_address));
-			dynamic_type := clone (c_tread);
+			dynamic_type := c_tread;
 			obj_addr := c_tread;
 			if dynamic_type.is_equal ("SPECIAL") then
 				is_special := true;
@@ -90,24 +90,24 @@ feature
 			until
 				i > attr_nb
 			loop
-				attr_name := clone (c_tread);
-				type_name := clone (c_tread);
+				attr_name := c_tread;
+				type_name := c_tread;
 				if type_name.is_equal ("BOOLEAN") then
-					!BOOLEAN_ATTR!attr.make (attr_name, class_c, clone(c_tread))
+					!BOOLEAN_ATTR!attr.make (attr_name, class_c, c_tread)
 				elseif type_name.is_equal ("INTEGER") then
-					!INTEGER_ATTR!attr.make (attr_name, class_c, clone(c_tread))
+					!INTEGER_ATTR!attr.make (attr_name, class_c, c_tread)
 				elseif type_name.is_equal ("REAL") then
-					!REAL_ATTR!attr.make (attr_name, class_c, clone (c_tread))
+					!REAL_ATTR!attr.make (attr_name, class_c, c_tread)
 				elseif type_name.is_equal ("DOUBLE") then
-					!DOUBLE_ATTR!attr.make (attr_name, class_c, clone (c_tread))
+					!DOUBLE_ATTR!attr.make (attr_name, class_c, c_tread)
 				elseif type_name.is_equal ("CHARACTER") then
-					!CHARACTER_ATTR!attr.make (attr_name,class_c,clone(c_tread))
+					!CHARACTER_ATTR!attr.make (attr_name, class_c, c_tread)
 				elseif type_name.is_equal ("POINTER") then
-					!POINTER_ATTR!attr.make (attr_name, class_c, clone(c_tread))
+					!POINTER_ATTR!attr.make (attr_name, class_c, c_tread)
 				elseif type_name.is_equal ("BIT") then
-					!BIT_ATTR!attr.make (attr_name, class_c, clone (c_tread))
+					!BIT_ATTR!attr.make (attr_name, class_c, c_tread)
 				elseif type_name.is_equal ("expanded") then
-					type_name := clone (c_tread);
+					type_name := c_tread;
 					!EXPANDED_ATTR!attr.make (attr_name, class_c, type_name);
 					lower_type_name := clone (type_name);
 					lower_type_name.to_lower;
@@ -116,12 +116,12 @@ feature
 					recv_attributes (exp_attr.attributes, c_stone.class_c)
 				elseif type_name.is_equal ("SPECIAL") then
 					!SPECIAL_ATTR!attr.make (attr_name, class_c, 
-								clone(c_tread), c_tread.to_integer);
+								c_tread, c_tread.to_integer);
 					spec_attr ?= attr;
 					recv_attributes (spec_attr.items, Void)
 				else
 					!REFERENCE_ATTR!attr.make (attr_name, class_c, 
-													type_name, clone (c_tread))
+													type_name, c_tread)
 				end
 				attr_list.extend (attr);
 				i := i + 1

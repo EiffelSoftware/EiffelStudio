@@ -675,6 +675,7 @@ feature -- Setting
 			reverse_b: REVERSE_BL
 			call: CALL_B
 			expr_b: EXPR_B
+			creation_expr: CREATION_EXPR_B
 			instruction_call: INSTR_CALL_B
 			attribute_b: ATTRIBUTE_B
 			compound: BYTE_LIST [BYTE_NODE]
@@ -714,7 +715,10 @@ feature -- Setting
 							call ?= assign.source
 							if call /= Void and then call.is_single and reverse_b = Void then
 									-- Simple assignment of a single call
-								if has_invariant then
+								creation_expr ?= call
+								if creation_expr /= Void or has_invariant then
+										-- We do not optimize if we are handling a creation expression or
+										-- if invariant checking is enabled.
 									tmp := True
 								else
 									if call.is_constant then

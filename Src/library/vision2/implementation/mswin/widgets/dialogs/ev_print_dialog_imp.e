@@ -207,12 +207,14 @@ feature -- Element change
 			-- Make 'value' the new maximum 'to_page' value.
 		do
 			maximum_to_page := value
+			set_maximum_range (maximum_to_page)
 		end
 
 	set_minimum_from_page (value: INTEGER) is
 			-- Make 'value' the new minimum 'to_page' value.
 		do
 			minimum_from_page := value
+			set_minimum_page (minimum_from_page)
 		end
 
 feature -- Status_report
@@ -220,13 +222,7 @@ feature -- Status_report
 	landscape_checked: BOOLEAN is
 		do
 		end
-
-feature {NONE} -- Implementation
-
-	dispatch_events is
-		do
-		end
-
+		
 end -- class EV_PRINT_DIALOG_IMP
 
 --|----------------------------------------------------------------

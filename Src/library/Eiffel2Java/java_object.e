@@ -86,9 +86,14 @@ feature -- method id's
 			-- encoded by "signature"
 		require
 			(method_name /= Void) and (signature /= Void)
+		local
+			method_name_to_c: ANY
+			signature_to_c: ANY
 		do
+			method_name_to_c := method_name.to_c
+			signature_to_c := signature.to_c
 			Result := c_get_method_id (jni.envp, jclass.java_class_id, 
-									   $(method_name.to_c), $(signature.to_c))
+									   $method_name_to_c, $signature_to_c)
 		ensure
 			method_exists: Result /= default_pointer	
 		end
@@ -258,9 +263,14 @@ feature -- attribute IDs
 			-- Get the java field id used to set/get this field
 		require
 			(lname /= Void) and (sig /= Void)
+		local 
+			lname_to_c: ANY
+			sig_to_c: ANY
 		do
+			lname_to_c := lname.to_c
+			sig_to_c := sig.to_c
 			Result := c_get_field_id (jni.envp, jclass.java_class_id, 
-									  $(lname.to_c), $(sig.to_c))
+									  $lname_to_c, $sig_to_c)
 		end
 
 feature -- access object's attributes

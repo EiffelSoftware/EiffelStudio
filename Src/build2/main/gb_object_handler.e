@@ -64,6 +64,13 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_XML_OBJECT_BUILDER
+		rename
+			new_object as builder_new_object
+		export
+			{NONE} all	
+		end
 	
 create
 	initialize
@@ -73,11 +80,12 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Create `Current'.
 		do
-			create objects.make (20)
-			create deleted_objects.make (20)
+			reset_objects
+			reset_deleted_objects
 		ensure
 			objects_not_void: objects /= Void
-		end
+		end		
+		
 		
 feature -- Access
 
@@ -128,6 +136,57 @@ feature -- Basic operation
 		require
 			container_object_exists: container /= Void
 			new_object_exists: new_object /= Void
+			position_valid: position >= 1 and position <= container.children.count + 1
+		local
+			all_editors_local: ARRAYED_LIST [GB_OBJECT_EDITOR]
+			parent_object: GB_PARENT_OBJECT
+		do
+			parent_object ?= container
+			check
+				not_a_parent_type: parent_object /= Void
+			end
+
+				-- When we change the type of an object, we keep the
+				-- original layout_item. This is why the layout item
+				-- may not be void, and the other attributes may be.
+			if new_object.layout_item = Void then
+				new_object.create_layout_item
+			end
+			if new_object.object = Void then
+				new_object.build_objects
+			end
+			parent_object.add_child_object (new_object, position)
+			
+				-- We must now update the object editors to take into account
+				-- This information. Some representations of objects in the editor
+				-- display information regarding their children, so a call to
+				-- this function requires and update to the object editor.
+			all_editors_local := all_editors
+			from
+				all_editors_local.start
+			until
+				all_editors_local.off
+			loop
+				if container = all_editors_local.item.object then
+					all_editors_local.item.update_current_object
+				end
+				all_editors_local.forth
+			end
+			
+				-- Notify the system that we have modified something.
+			system_status.enable_project_modified
+			command_handler.update
+		ensure
+			new_object_layout_item_not_void: new_object.layout_item /= Void
+			new_object_display_object_not_void: new_object.display_object /= Void
+			new_object_object_not_void: new_object.object /= Void
+		end
+		
+	add_top_level_object (container, new_object: GB_OBJECT; position: INTEGER) is
+			-- Add `new_object' to `container' at position `position'.
+		require
+			container_object_exists: container /= Void
+			new_object_exists: new_object /= Void
 			position_valid: position >= 1 and position <= container.layout_item.count + 1
 		local
 			all_editors_local: ARRAYED_LIST [GB_OBJECT_EDITOR]
@@ -153,12 +212,6 @@ feature -- Basic operation
 				not_a_parent_type: parent_object /= Void
 			end
 			parent_object.add_child_object (new_object, position)
-
-				-- If we are moving an object within objects, then it will already
-				-- exist in `objects' and should not be added again.-
-			if not objects.has (new_object) then
-				objects.extend (new_object)
-			end
 			
 				-- We must now update the object editors to take into account
 				-- This information. Some representations of objects in the editor
@@ -180,7 +233,7 @@ feature -- Basic operation
 			system_status.enable_project_modified
 			command_handler.update
 		ensure
-			new_object_added_to_object_list: objects.has (new_object)
+			new_object_added_to_object_list: objects.has (new_object.id)
 			new_object_only_occurs_once_in_object_list: objects.occurrences (new_object) = 1
 			new_object_layout_item_not_void: new_object.layout_item /= Void
 			new_object_display_object_not_void: new_object.display_object /= Void
@@ -288,6 +341,8 @@ feature -- Basic operation
 		
 	add_initial_window is
 			-- Add a new window when there are no other contained.
+		require
+			root_window_void: root_window_object = Void
 		local
 			window_object: GB_TITLED_WINDOW_OBJECT
 		do
@@ -296,19 +351,29 @@ feature -- Basic operation
 				object_was_window: window_object /= Void
 			end
 			add_new_window (window_object)
+			window_object.set_name (initial_main_window_name)
 			window_selector.set_item_for_prebuilt_window (window_object)
 			window_object.set_as_root_window
+		ensure
+			root_window_set: root_window_object /= Void
 		end
 		
-	add_root_window (a_type: STRING): GB_TITLED_WINDOW_OBJECT is
+	add_root_window (a_type: STRING): GB_OBJECT is
 			-- Add a new root item and return the newly created object.
 			-- The only root item types that are currently supported
 			-- are GB_TITLED_WINDOW_OBJECT and GB_DIALOG which is a descendent
 			-- therefore, the result is always a window object.
 			--| FIXME, this is a function with a side effect.
+		local
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
-			Result ?= build_object_from_string_and_assign_id (a_type)
-			add_new_window (Result)
+			Result := build_object_from_string (a_type)
+			titled_window_object ?= Result
+			if titled_window_object /= Void then
+				add_new_window (titled_window_object)
+			else
+				add_new_object (Result)
+			end
 			window_selector.set_item_for_prebuilt_window (Result)
 		ensure
 			result_not_void: Result /= Void
@@ -336,13 +401,50 @@ feature -- Basic operation
 			window_object.set_object (titled_window)
 			window_object.build_display_object
 		end
+		
+	add_new_object (an_object: GB_OBJECT) is
+			-- Perform necessary initialization for new top level object,
+			-- `an_object'.
+		local
+			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			titled_window: EV_TITLED_WINDOW
+			display_win: GB_DISPLAY_WINDOW
+			builder_win: GB_BUILDER_WINDOW
+			widget: EV_WIDGET
+		do
+			create layout_item.make (an_object)
+				-- We must only add the layout item if there is
+				-- no window currently displayed.
+			if layout_constructor.is_empty then
+				layout_constructor.add_root_item (layout_item)	
+			end
+			an_object.set_layout_item (layout_item)
+			an_object.build_drop_actions_for_layout_item
+			create display_win
+			titled_window ?= display_win
+			titled_window.set_size (Default_window_dimension, Default_window_dimension)
+			an_object.create_object_from_type
+			an_object.build_display_object
+			create display_win
+			widget ?= an_object.object
+			check
+				object_was_widget: widget /= Void
+			end
+			display_win.extend (widget)
+			create builder_win
+			widget ?= an_object.display_object
+			check
+				display_object_was_widget: widget /= Void
+			end
+			builder_win.extend (widget)
+		end
 
 	remove_object (an_object: GB_OBJECT) is
 			-- Remove `an_object' from `objects'.
 		do
-			objects.prune_all (an_object)
+			objects.remove (an_object.id)
 		ensure
-			not_in_objects: not objects.has (an_object)
+			not_in_objects: not objects.has (an_object.id)
 		end
 
 	build_object_from_string_and_assign_id (a_text: STRING): GB_OBJECT is
@@ -462,13 +564,13 @@ feature -- Basic operation
 			-- Remove all objects, so we are back in the intial
 			-- state of the system.
 		do			
-				-- Wipe `deleted_objects'.
-			deleted_objects.wipe_out
-				-- Wipe out `objects' but restore the
-			
-			objects.wipe_out
-			
+			reset_objects
+			reset_deleted_objects
 			window_selector.wipe_out
+		ensure
+			objects_is_empty: objects.is_empty
+			deleted_objects_is_empty: deleted_objects.is_empty
+			window_selector_is_empty: window_selector.is_empty
 		end
 		
 	string_used_globally_as_object_or_feature_name (a_string: STRING): BOOLEAN is
@@ -481,10 +583,10 @@ feature -- Basic operation
 			until
 				objects.off or Result
 			loop
-				if objects.item.name.as_lower.is_equal (a_string) then
+				if objects.item_for_iteration.name.as_lower.is_equal (a_string) then
 					Result := True
 				end
-				object_events := objects.item.events
+				object_events := objects.item_for_iteration.events
 				from
 					object_events.start
 				until
@@ -503,6 +605,7 @@ feature -- Basic operation
 			-- `Result' is all object and event names in system.
 		local
 			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
+			current_item: GB_OBJECT
 		do
 			create Result.make (objects.count)
 			from
@@ -510,10 +613,11 @@ feature -- Basic operation
 			until
 				objects.off
 			loop
-				if not objects.item.name.is_empty then
-					Result.extend (objects.item.name)
+				current_item := objects.item_for_iteration
+				if not current_item.name.is_empty then
+					Result.extend (current_item.name)
 				end
-				object_events := objects.item.events
+				object_events := current_item.events
 				from
 					object_events.start
 				until
@@ -643,12 +747,25 @@ feature -- Basic operation
 		do
 			string_is_feature_name_result := False
 			string_is_object_name_result := False
-			objects.do_all (agent check_object_name (a_name, Void, True,  ?))
-			objects.do_all (agent check_feature_name (a_name, Void, ?))
+			from
+				objects.start
+			until
+				objects.off
+			loop
+				check_object_name (a_name, Void, True, objects.item_for_iteration)
+				objects.forth
+			end
+			from
+				objects.start
+			until
+				objects.off
+			loop
+				check_feature_name (a_name, Void, objects.item_for_iteration)
+				objects.forth
+			end
 			Result := not (string_is_feature_name_result or string_is_object_name_result)
 		end
-		
-		
+
 	name_in_use (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
 			-- Is `object_name' a valid name for `an_object'? Must check
 			-- all other object names in the current scope (window) as `an_object',
@@ -725,28 +842,32 @@ feature -- Basic operation
 			-- to `deleted_objects'.
 		require
 			an_object_not_void: an_object /= Void
-			an_object_not_deleted: objects.has (an_object)
+			an_object_not_deleted: objects.has (an_object.id)
 			-- All children objects contained in `objects'.
 		local
-			temp_object: GB_OBJECT
+			all_children_recursive: ARRAYED_LIST [GB_OBJECT]
+			current_object: GB_OBJECT
 		do
-			objects.prune_all (an_object)
-			deleted_objects.extend (an_object)
+			objects.remove (an_object.id)
+			deleted_objects.extend (an_object, an_object.id)
+			create all_children_recursive.make (40)
+			an_object.all_children_recursive (all_children_recursive)
 			from
-				objects.start
+				all_children_recursive.start
 			until
-				objects.off
+				all_children_recursive.off
 			loop
-				temp_object := objects.item
-				if object_contained_in_object (an_object, temp_object) then
-					objects.remove
-					deleted_objects.extend (temp_object)
-				else
-					objects.forth
+				current_object := all_children_recursive.item
+				check
+					object_exists: objects.has (current_object.id)
+					object_not_deleted: not deleted_objects.has (current_object.id)
 				end
+				objects.remove (current_object.id)
+				deleted_objects.extend (current_object, current_object.id)
+				all_children_recursive.forth
 			end
 		ensure
-			object_deleted: deleted_objects.has (an_object)
+			object_deleted: deleted_objects.has (an_object.id) and not objects.has (an_object.id)
 		end
 		
 	mark_existing (an_object: GB_OBJECT) is
@@ -754,28 +875,33 @@ feature -- Basic operation
 			-- `objects'.
 		require
 			an_object_not_void: an_object /= Void
-			an_object_deleted: deleted_objects.has (an_object)
+			an_object_deleted: deleted_objects.has (an_object.id)
 			-- All children objects contained in `deleted_objects'.
 		local
-			temp_object: GB_OBJECT
+			all_children_recursive: ARRAYED_LIST [GB_OBJECT]
+			current_object: GB_OBJECT
 		do
-			deleted_objects.prune_all (an_object)
-			objects.extend (an_object)
+			deleted_objects.remove (an_object.id)
+			objects.extend (an_object, an_object.id)
+			
+			create all_children_recursive.make (40)
+			an_object.all_children_recursive (all_children_recursive)
 			from
-				deleted_objects.start
+				all_children_recursive.start
 			until
-				deleted_objects.off
+				all_children_recursive.off
 			loop
-				temp_object := deleted_objects.item
-				if object_contained_in_object (an_object, temp_object) then
-					deleted_objects.remove
-					objects.extend (temp_object)
-				else
-					deleted_objects.forth
+				current_object := all_children_recursive.item
+				check
+					object_not_exists: not objects.has (current_object.id)
+					object_deleted: deleted_objects.has (current_object.id)
 				end
+				deleted_objects.remove (current_object.id)
+				objects.extend (current_object, current_object.id)
+				all_children_recursive.forth
 			end
 		ensure
-			object_removed_from_deleted: objects.has (an_object)
+			object_removed_from_deleted: objects.has (an_object.id) and not deleted_objects.has (an_object.id)
 		end
 		
 	recursive_do_all (an_object: GB_OBJECT; action: PROCEDURE [ANY, TUPLE [GB_OBJECT]]) is
@@ -813,65 +939,40 @@ feature -- Basic operation
 			-- `Result' is GB_OBJECT with `ev_any' as `object'.
 			-- Only checks in `objects'.
 		local
-			local_objects: ARRAYED_LIST [GB_OBJECT]
-			counter: INTEGER
+			local_objects: HASH_TABLE [GB_OBJECT, INTEGER]
 		do
 			local_objects ?= objects
 			from
-				counter := 1
+				local_objects.start
 			until
-				counter > local_objects.count or
+				local_objects.off or
 				Result /= Void
 			loop
-				if (local_objects @ counter).object = ev_any then
-					Result := local_objects @ counter
+				if (local_objects.item_for_iteration).object = ev_any then
+					Result := local_objects.item_for_iteration
 				end
-				counter := counter + 1
+				local_objects.forth
 			end
 		end
 		
 	object_from_id (an_id: INTEGER): GB_OBJECT is
 			-- `Result' is GB_OBJECT with id `an_id'.
 			-- Only checks in `objects'.
-		local
-			local_objects: ARRAYED_LIST [GB_OBJECT]
-			counter: INTEGER
+		require
+			valid_id: an_id >= 0
 		do
-			local_objects ?= objects
-			from
-				counter := 1
-			until
-				counter > local_objects.count or
-				Result /= Void
-			loop
-				if (local_objects @ counter).id = an_id then
-					Result := local_objects @ counter
-				end
-				counter := counter + 1
-			end
+			Result := objects.item (an_id)
 		end
 		
 	deep_object_from_id (an_id: INTEGER): GB_OBJECT is
 			-- `Result' is GB_OBJECT with id `an_id'.
 			-- Checks in `objects' and `deleted_objects'.
-		local
-			local_objects: ARRAYED_LIST [GB_OBJECT]
-			counter: INTEGER
+		require
+			valid_id: an_id >= 0
 		do
-			Result := object_from_id (an_id)
+			Result := objects.item (an_id)
 			if Result = Void then
-				local_objects ?= deleted_objects
-				from
-					counter := 1
-				until
-					counter > local_objects.count or
-					Result /= Void
-				loop
-					if (local_objects @ counter).id = an_id then
-						Result := local_objects @ counter
-					end
-					counter := counter + 1
-				end	
+				Result := deleted_objects.item (an_id)
 			end
 		end
 		
@@ -881,7 +982,6 @@ feature -- Basic operation
 		local
 			names: ARRAYED_LIST [STRING]
 			an_object: GB_OBJECT
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
 				-- We firstly find all names that are used, as we must know all of them
 				-- before we actually start to set them.
@@ -905,10 +1005,7 @@ feature -- Basic operation
 				an_object := some_objects.item
 				if an_object.name.is_empty then
 					an_object.set_name (unique_name_from_array (names, an_object.short_type))
-					titled_window_object ?= an_object
-					if titled_window_object /= Void then
-						titled_window_object.window_selector_item.set_text (name_and_type_from_object (an_object))	
-					end
+					an_object.window_selector_item.set_text (name_and_type_from_object (an_object))	
 						--Add the new name to `names' so that it is not used again.
 					names.extend (an_object.name)
 				end
@@ -918,6 +1015,38 @@ feature -- Basic operation
 				-- Update project so it may be saved.
 			system_status.enable_project_modified
 			command_handler.update
+		end
+		
+	reset_deleted_objects is
+			-- Reset `deleted_objects' to it's default state.
+		do
+			--|FIXME should probably remove all deleted instance referers.
+			create deleted_objects.make (100)
+		end
+		
+	reset_objects is
+			-- Reset `objects' to it's default state.
+		do
+			create objects.make (100)
+		end
+		
+feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Implementatation
+
+	update_all_associated_objects is
+			-- Update all objects in system after a load or import
+			-- so that the instance referers are correctly built.
+			-- If an import has just been executed, there is no need to update
+			-- all `objects' but it is easier, and there is no problem with doing this
+			-- as existing objects do nothing.
+		do
+			from
+				objects.start
+			until
+				objects.off
+			loop
+				objects.item_for_iteration.update_object_as_instance_representation
+				objects.forth
+			end
 		end
 		
 feature {GB_TITLED_WINDOW_OBJECT} -- Basic operations
@@ -968,213 +1097,228 @@ feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 			new_object_object_not_void: new_object.object /= Void
 		end
 		
-feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
+feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR, GB_OBJECT} -- Implementation
 
 	reset_object (an_object: GB_OBJECT) is
 			-- Reset `an_object' by rebuilding. An XML representation
 			-- of the object is built, and then a new object is generated from
 			-- this XML. The new object replaces the old version with the same ID,
 			-- and the contents are transferred across.
+		require
+			an_object_not_void: an_object /= Void
 		local
 			store: GB_XML_STORE
 			element: XM_ELEMENT
 			load: GB_XML_LOAD
 			new_object, parent_object: GB_OBJECT
-			table_parent_object: GB_TABLE_OBJECT
-			original_position, x, y, width, height: INTEGER
-			fixed: EV_FIXED
-			widget, old_builder_contents: EV_WIDGET
-			table: EV_TABLE
-			container_object: GB_CONTAINER_OBJECT
+			original_position: INTEGER
+			display_widget, builder_widget: EV_WIDGET
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
-			old_contents: EV_WIDGET
-			old_window, new_window,  old_builder_window, new_builder_window: EV_TITLED_WINDOW
-			locked_in_here: BOOLEAN
-			old_window_selector_item: GB_WINDOW_SELECTOR_ITEM
-			old_builder_menu_bar, old_window_menu_bar: EV_MENU_BAR
+			new_display_window, old_display_window: GB_DISPLAY_WINDOW
+			new_builder_window, old_builder_window: GB_BUILDER_WINDOW
+			display_object: GB_DISPLAY_OBJECT
+			locked_in_here, display_window_shown, builder_window_shown: BOOLEAN
+			original_children: ARRAYED_LIST [GB_OBJECT]
 		do
 			if ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
 				locked_in_here := True
 				parent_window (Layout_constructor).lock_update
 			end
-			titled_window_object ?= an_object
-				-- We must handle windows as a special case,
-				-- as they are built by Build and are not completely dynamic
-				-- like other objects.
-				
-			if titled_window_object = Void then
-				store_layout_constructor
-				parent_object := an_object.parent_object
-				table_parent_object ?= parent_object
-				
-				if table_parent_object /= Void then
-						-- If the object is parented in a table, store
-						-- relevent information to enable us to restore the position.
-					widget ?= an_object.object
-					x := table_parent_object.object.item_column_position (widget)
-					y := table_parent_object.object.item_row_position (widget)
-					width := table_parent_object.object.item_column_span (widget)
-					height := table_parent_object.object.item_row_span (widget)
-				end
-				fixed ?= an_object.parent_object.object
-				if fixed /= Void then
-						-- If the object is parented in a fixed, store relevent information
-						-- which enables us to restore the position.
-					widget ?= an_object.object
-					x := widget.x_position
-					y := widget.y_position
-					width := widget.width
-					height := widget.height
+			
+			store_layout_constructor
+			parent_object := an_object.parent_object
+			if parent_object /= Void then
+				check
+					parent_object_has_child: parent_object.children.has (an_object)
 				end
 				original_position := parent_object.children.index_of (an_object, 1)
-				parent_object.remove_child (an_object)	
+			end
+			
+				-- Store original children, to ensure that the new object has the same children after the reset.
+				-- This is performed as a check, so we cannot write this using "old" in the postcondition.
+			original_children := an_object.children.twin
+			
+			create store
+			create load
+			create element.make_root (create {XM_DOCUMENT}.make, "item", create {XM_NAMESPACE}.make_default)
+			add_attribute_to_element (element, "type", "xsi", an_object.type)
+
+			store.output_attributes (an_object, element, create {GB_GENERATION_SETTINGS})
+				-- Generate an XML representation of `an_object' in `element'.
 				
-				create store
-				create load
-				create element.make_root (create {XM_DOCUMENT}.make, "item", create {XM_NAMESPACE}.make_default)
-				add_attribute_to_element (element, "type", "xsi", an_object.type)
+				-- Call `delete' as the object must be deleted before being re-created. This performs
+				-- any necessary processing on `an_object', ensuring that the state of the system
+				-- is ok post re-creation.
+			an_object.delete
+
+				-- Build a new object from XML representation we made from `an_object'.
+			new_object := build_object_from_string (element.attribute_by_name (type_string).value)
+			
+				-- Now build the representations of `new_object'. Note that windows are handled differently.
+			titled_window_object ?= new_object
+			if titled_window_object /= Void then
+				add_new_window (titled_window_object)
+			else
+				new_object.create_object_from_type
+				new_object.build_display_object
+			end
+
+				-- Set the layout item of `new_object' to the old object's layout item.
+				-- This means that the layout item does not need to be unparented, it's reference
+				-- is simply updated in both directions.
+			new_object.set_layout_item (an_object.layout_item)
+			
+			if an_object.window_selector_item /= Void then
+					-- Set the window selector item to the original window selector item which
+					-- simply remains in the window selector, but it's `object' also gets updated
+					-- to point to `new_object' from within `set_window_selector_item'.
+				new_object.set_window_selector_item (an_object.window_selector_item)
+			end
 				
-				store.output_attributes (an_object, element, create {GB_GENERATION_SETTINGS})
-					-- Generate an XML representation of `an_object' in `element'.
-					
-					-- We must now remove `an_object' from `objects' as it will be replaced with
-					-- the new version. If we leave it there, then we will have two objects with the
-					-- same id. When we reset an object, the old object is never used again, it is completely
-					-- replaced with the new. This is not an undoable command, as it will always be silent to
-					-- the user.
-					-- We do this after we generate using `output_attributes' as some widget types may
-					-- need the object contained within `objects'
-				objects.prune_all (an_object)
-					-- Call `delete' as the object must be deleted before being re-created. This performs
-					-- any necessary processing on `an_object', ensuring that the state of the system
-					-- is ok post re-creation.
-				an_object.delete
-					
-				new_object := load.retrieve_new_object (element, parent_object, original_position)
-					-- construct `new_object' from `element.
-				
-					
+			if an_object.is_instance_of_top_level_object then
+					-- If the original object had an associated top level object, ensure that the new one also does.
+				new_object.set_associated_top_level_object (deep_object_from_id (an_object.associated_top_level_object))
+			end
+			
+				-- Assign the `id' of the old object to `new_object'.
+			new_object.set_id (an_object.id)
+			
+				-- Set the `parent_object' of the new object.
+			new_object.set_parent (an_object.parent_object)
+			
+			
+				-- Now reparent the representations of the objects into the original
+				-- widget structure that contained the representations for the original object, `an_object'.
+				-- This is only performed if the original object was not a top level window or dialog.
+			
+			if titled_window_object = Void then
+				display_widget ?= an_object.object		
+				builder_widget ?= new_object.object
+				check
+					objects_were_widgets: display_widget /= Void and builder_widget /= Void
+				end
+				reparent (display_widget, builder_widget)
+				display_widget ?= an_object.display_object
+				builder_widget ?= new_object.display_object
+				reparent (display_widget, builder_widget)
 				if is_instance_of (new_object, dynamic_type_from_string (gb_parent_object_class_name)) then
 					move_object_contents (new_object, an_object, False)
 				end
 				
-					
-				if table_parent_object /= Void then
-						-- We must now position `an_object' if it was contained in a table.
-					widget ?= new_object.object
-					table_parent_object.object.set_item_position_and_span (widget, x, y, width, height)
-					widget ?= new_object.display_object
-					table ?= table_parent_object.display_object.child
-					table.set_item_position_and_span (widget, x, y, width, height)
+					-- As each object has a reference to it's children, we must replace all reference with
+					-- `new_object' which is replacing `an_object'.
+				if parent_object /= Void then
+						-- Note that `parent_object' may be Void as although this section of code is
+						-- only executed if we are not a window, EiffelBuild supports and widget at a top
+						-- level, and in this case `parent_object' is Void'.
+					parent_object.children.go_i_th (parent_object.children.index_of (an_object, 1))
+					parent_object.children.remove
+					parent_object.children.put_left (new_object)
 				end
-				
-				if fixed /= Void then
-						-- We must now position `an_object' if it was contained in a fixed.
-					widget ?= new_object.object
-					fixed.set_item_position (widget, x, y)
-					fixed.set_item_size (widget, width.max (widget.minimum_width), height.max (widget.minimum_height))
-					container_object ?= parent_object
-					fixed ?= container_object.display_object.child
-					widget ?= new_object.display_object
-					fixed.set_item_position (widget, x, y)
-					fixed.set_item_size (widget, width.max (widget.minimum_width), height.max (widget.minimum_height))
-				end
-				
-					-- We now perform any deferred building that is required.
-				Deferred_builder.build
-				
-				restore_layout_constructor
 			else
-					-- We must handle windows as a special case. Store the contents.
-				old_window ?= titled_window_object.object
-				old_builder_window ?= titled_window_object.display_object.child
-				old_window_selector_item ?= titled_window_object.window_selector_item
-				old_window_menu_bar ?= titled_window_object.object.menu_bar
-				new_window ?= titled_window_object.display_object.child
-				old_builder_menu_bar := new_window.menu_bar
-				if titled_window_object.is_full then
-						-- If the window does have an `item' then we store it
-						-- for later restoration.
-					old_contents := titled_window_object.object.item	
-					old_builder_contents := titled_window_object.display_object.child.item
+				new_display_window ?= new_object.object
+				display_object ?= new_object.display_object
+				check
+					object_was_display_object: display_object /= Void
 				end
-
-				create store
-				create load
-				create element.make_root (create {XM_DOCUMENT}.make, "item", create {XM_NAMESPACE}.make_default)
-				add_attribute_to_element (element, "type", "xsi", an_object.type)
-				store.output_attributes (an_object, element, create {GB_GENERATION_SETTINGS})
-				
-				titled_window_object.update_objects
-				load.rebuild_window (titled_window_object, element)
-				
-				new_window := titled_window_object.object
-				new_builder_window ?= titled_window_object.display_object.child
-				
-				old_window.wipe_out
-				old_builder_window.wipe_out
-				
-				if old_contents /= Void then
-						-- Restore contents of windows, if not Void.
-					check
-						old_builder_contents_also_not_void: old_builder_contents /= Void
-					end
-					new_window.extend (old_contents)
-					new_builder_window.extend (old_builder_contents)
+				new_builder_window ?= display_object.child
+				old_display_window ?= an_object.object
+				display_object ?= an_object.display_object
+				check
+					object_was_display_object: display_object /= Void
+				end
+				old_builder_window ?= display_object.child
+				check
+					objects_were_display_windows: new_display_window /= Void and old_display_window /= Void and
+					new_builder_window /= Void and old_builder_window /= Void
 				end
 				
-				new_window.set_position (old_window.x_position, old_window.y_position)
-				new_window.set_size (old_window.width.max (new_window.minimum_width), old_window.height.max (new_window.minimum_height))
-				if old_window.is_displayed then
-						-- Executing the show command twice, prevents us from 
-						-- having to know about the different states for displaying
-						-- the window. The command already knows about it, we simply
-						-- hide, and then show, and the command handles everything for us.
-					Command_handler.Show_hide_display_window_command.execute
-					Command_handler.Show_hide_display_window_command.execute
-				end
-					-- Now handle menu bars as a special case.
-				if old_window_menu_bar /= Void then
-					old_window_menu_bar.parent.remove_menu_bar
-					new_window.set_menu_bar (old_window_menu_bar)
-				end
+				set_display_window (new_display_window)
+				set_builder_window (new_builder_window)
 				
-				old_window.destroy
+				move_object_contents (new_object, an_object, False)
 				
-				titled_window_object.set_window_selector_item (old_window_selector_item)
-				
+					-- Now ensure that the new windows have the same size and position as the old one.
+				new_display_window.set_position (old_display_window.x_position, old_display_window.y_position)
 				new_builder_window.set_position (old_builder_window.x_position, old_builder_window.y_position)
+				new_display_window.set_size (old_display_window.width.max (new_display_window.minimum_width), old_display_window.height.max (new_display_window.minimum_height))
 				new_builder_window.set_size (old_builder_window.width.max (new_builder_window.minimum_width), old_builder_window.height.max (new_builder_window.minimum_height))
-				if old_builder_window.is_displayed then
-						-- Executing the show command twice, prevents us from 
-						-- having to know about the different states for displaying
-						-- the window. The command already knows about it, we simply
-						-- hide, and then show, and the command handles everything for us.
-					Command_handler.Show_hide_builder_window_command.execute
-					Command_handler.Show_hide_builder_window_command.execute
-				end
-						-- Now handle menu bars as a special case.
-					if old_builder_menu_bar /= Void then
-						old_builder_menu_bar.parent.remove_menu_bar
-						new_builder_window.set_menu_bar (old_builder_menu_bar)
-					end
 				
+				display_window_shown := old_display_window.is_displayed
+				builder_window_shown := old_builder_window.is_displayed
+				
+					-- Destroy the old windows.
+				old_display_window.hide
+				old_display_window.destroy
+				old_builder_window.hide
 				old_builder_window.destroy
+					
+					-- Force the new windows to be shown.
+				if display_window_shown then
+					new_display_window.show
+				end
+				if builder_window_shown then
+					new_builder_window.show
+				end
 			end
+			
+			load.modify_from_xml (element, new_object)
+		
+				-- Now update all of the objects in `objects' so that the new objects replace the old.
+				-- `objects' contains all obejcts in a hash table referenced by their respective id's so
+				-- none of the id's should have changed, but the `object' contained needs to be the new version.
+			check
+				objects_have_same_id: an_object.id = new_object.id
+			end
+			
+				-- Only the original object changes and must be updated in `objects'. All of the original children
+				-- objects do not change. See implementation of `objects_equal' postcondition.
+			remove_object (an_object)
+			add_object_to_objects (new_object)
+			
+				-- Now ensure that the `instance_referers' are set in the new object.
+				-- We simply copy all of the exsiting instance referers to the new object.
+			from
+				an_object.instance_referers.start
+			until
+				an_object.instance_referers.off
+			loop
+				new_object.instance_referers.extend (an_object.instance_referers.item_for_iteration, an_object.instance_referers.item_for_iteration)
+				an_object.instance_referers.forth
+			end				
+				-- We now perform any deferred building that is required.
+			Deferred_builder.build
+			
+			restore_layout_constructor
+
 			if locked_in_here then
 				parent_window (Layout_constructor).unlock_update
 			end
+			check
+					-- As we cannot use `new_object' within the postcondition, we use a number of checks here.
+				parent_correct: new_object.parent_object = an_object.parent_object
+				parent_has_new_object: new_object.parent_object /= Void implies new_object.parent_object.children.has (new_object)
+				object_children_equal: original_children.is_equal (new_object.children)
+			end
+			
+				-- Now destroy `an_object' and all of its children as it is never used again
+				-- as it has now been completely replaced with `new_object'.
+			an_object.destroy_recursive
+		ensure
+			objects_equal: objects_updated_correctly ((old objects.twin), objects, an_object) and
+				objects_updated_correctly ((old deleted_objects.twin), deleted_objects, an_object)
 		end
-		
-		
-feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER} -- Implementation
+
+feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER, GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 		
 	add_object_to_objects (an_object: GB_OBJECT) is
 			-- Add `an_object' to `objects'.
 		require
-			not_already_included: not objects.has (an_object)
+			not_already_included: not objects.has (an_object.id)
 		do		
-			objects.extend (an_object)
+			objects.extend (an_object, an_object.id)
+		ensure
+			contained: objects.has (an_object.id)
 		end
 		
 feature {GB_COMMAND_DELETE_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementation
@@ -1247,16 +1391,44 @@ feature {GB_COMMAND_DELETE_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_A
 		
 feature {NONE} -- Implementation
 
-	object_contained_in_object_result: Boolean
+	object_contained_in_object_result: BOOLEAN
 		-- Result of last call to `object_contained_in_object'.
+		
+	objects_updated_correctly (old_objects, new_objects: like objects; an_object: GB_OBJECT): BOOLEAN is
+			-- Are contents of `old_objects' and `new_objects' the same except for
+			-- the item referenced by `an_object.id'. This is only used for the postcondition of `reset_object'.
+			-- Only the `item' in `objects' that was reset may change. All other objects must remain identical
+			-- and 
+		require
+			old_objects_not_void: old_objects /= Void
+			new_objects_not_void: new_objects /= Void
+			an_object_not_void: an_object /= Void
+		do
+			Result := old_objects.count = new_objects.count
+			from
+				old_objects.start
+				new_objects.start
+			until
+				old_objects.off
+			loop
+				if old_objects.key_for_iteration /= new_objects.key_for_iteration then
+					Result := False
+				end
+				if an_object.id /= old_objects.key_for_iteration and old_objects.item_for_iteration /= new_objects.item_for_iteration then
+					Result := False
+				end
+				old_objects.forth
+				new_objects.forth
+			end
+		end
 
 feature -- Access
 
-	objects: ARRAYED_LIST [GB_OBJECT]
+	objects: HASH_TABLE [GB_OBJECT, INTEGER]
 		-- All objects currently in system.
 		-- Mutually exclusive with `deleted_objects'.
 		
-	deleted_objects: ARRAYED_LIST [GB_OBJECT]
+	deleted_objects: HASH_TABLE [GB_OBJECT, INTEGER]
 		-- All objects that have been deleted in
 		-- this session of the application.
 		-- Mutually exclusive with `objects'.

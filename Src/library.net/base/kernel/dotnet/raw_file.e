@@ -131,11 +131,11 @@ feature -- Input
 			str_area_index: INTEGER
 		do
 			if last_string = Void then
-				create_last_string
+				create_last_string (nb_char)
 			else
 				last_string.clear_all
+				last_string.grow (nb_char)
 			end
-			last_string.grow (nb_char)
 			create str_area.make (nb_char)
 			new_count := reader.read_integer_8_array_integer_integer (str_area, 0, nb_char)
 			

@@ -49,6 +49,7 @@ char *last_name;		/* when we deal with a so called terminal feature (a feature w
 
 /* Struct to keep the information gathered */
 #ifdef HAS_GETRUSAGE
+
 typedef struct
 {
 	long	seconds;
@@ -60,6 +61,11 @@ struct prof_rusage
 	time_struct user_time;
 	time_struct system_time;
 };
+
+#elif defined (EIF_WIN32)
+
+#include <windows.h>
+
 #endif /* HAS_GETRUSAGE */
 
 struct prof_info {
@@ -71,22 +77,27 @@ struct prof_info {
 #ifdef HAS_GETRUSAGE
 	struct	prof_rusage	*this_total_time;
 	struct	prof_rusage	*all_total_time;
-	struct	prof_rusage *descendent_time;
-#else
+	struct	prof_rusage	*descendent_time;
+
+#elif defined(HAS_TIMES)
 				double	this_total_time;	/* Time spent in the feature */
 											/* (during this execution) */
 				double	all_total_time;		/* Time spent in the feature */
 											/* (summarized) */
 				double	descendent_time;	/* Time spent in the */
 											/* descendents */
-#endif /* HAS_GETRUSAGE */
+#elif defined(EIF_WIN32)
+	SYSTEMTIME	*this_total_time;
+	SYSTEMTIME	*all_total_time;
+	SYSTEMTIME	*descendent_time;
+
+#endif /* HAS_GERUSAGE */
 				int		is_running;			/* Is the feature running? */
 											/* Needed for recursives */
 };
 
 /* Internal Macros */
 #ifdef HAS_GETRUSAGE
-
 #define u_seconds	user_time.seconds
 #define u_micro		user_time.micro_seconds
 #define s_seconds	system_time.seconds
@@ -138,8 +149,7 @@ struct prof_info {
 							x->s_micro = y->s_micro + z->s_micro;\
 						}
 
-#else
-
+#elif defined(HAS_TIMES)
 #define record_time(x)	{\
 							double utime, stime;\
 							prof_time(&utime, &stime);\
@@ -164,9 +174,130 @@ struct prof_info {
 #define check_existance(x)	{\
 								if(!x) {\
 										/* Bad Luck! */\
-									enomem(MTC_NOARG);\
+									enomem();\
 								}\
 							}
+
+#elif defined(EIF_WIN32)
+#define real_time(x)		(x->wHour*3600 + x->wMinute*60 + x->wSecond + x->wMilliseconds / 1000.)
+#define record_time(x)	{\
+							prof_time(x);\
+						}
+#define zero_time(x)	{\
+							x->wMilliseconds = 0;\
+							x->wSecond = 0;\
+							x->wMinute = 0;\
+							x->wHour = 0;\
+							x->wDay = 0;\
+							x->wDayOfWeek = 0;\
+							x->wMonth = 0;\
+							x->wYear = 0;\
+						}
+#define subtract_gc_time(x,y)	{\
+									if(x->wMilliseconds >= y)\
+										x->wMilliseconds -= (unsigned short) y;\
+									else\
+									{\
+										x->wMilliseconds = 1000 - ((unsigned short) y - x->wMilliseconds);\
+										x->wSecond -= 1;\
+									}\
+								}
+#define subtract_time(x,y,z)	{\
+	int ExtraSecond = 0;\
+	int ExtraMinute = 0;\
+	int ExtraHour = 0;\
+	if(real_time(y) == 0)\
+	{\
+		x->wMilliseconds = -(z->wMilliseconds);\
+		x->wSecond = -(z->wSecond);\
+		x->wMinute = -(z->wMinute);\
+		x->wHour = -(z->wHour);\
+	}\
+	else\
+	{\
+		if(y->wMilliseconds >= z->wMilliseconds)\
+		{\
+			x->wMilliseconds = y->wMilliseconds - z->wMilliseconds;\
+		}\
+		else\
+		{\
+			x->wMilliseconds = 1000 - (z->wMilliseconds - y->wMilliseconds);\
+			ExtraSecond = -1;\
+		}\
+		if(y->wSecond >= z->wSecond)\
+		{\
+			x->wSecond = y->wSecond - z->wSecond;\
+		}\
+		else\
+		{\
+			x->wSecond = 60 - (z->wSecond - y->wSecond);\
+			ExtraMinute = -1;\
+		}\
+		x->wSecond += ExtraSecond;\
+		if(y->wMinute >= z->wMinute)\
+		{\
+			x->wMinute = y->wMinute - z->wMinute;\
+		}\
+		else\
+		{\
+			x->wMinute = 60 - (z->wMinute - y->wMinute);\
+			ExtraHour = -1;\
+		}\
+		x->wMinute += ExtraMinute;\
+		if(y->wHour >= z->wHour)\
+		{\
+			x->wHour = y->wHour - z->wHour;\
+		}\
+		else\
+		{\
+			x->wHour = 24 - (z->wHour - y->wHour);\
+		}\
+		x->wHour += ExtraHour;\
+	}\
+								}
+#define add_time(x,y,z)	{\
+	x->wMilliseconds = y->wMilliseconds + z->wMilliseconds;\
+	x->wSecond = y->wSecond + z->wSecond;\
+	x->wMinute = y->wMinute + z->wMinute;\
+	x->wHour = y->wHour + z->wHour;\
+	if((signed) x->wMilliseconds > 1000)\
+	{\
+		x->wMilliseconds -= 1000;\
+		x->wSecond += 1;\
+	}\
+	if((signed) x->wSecond > 60)\
+	{\
+		x->wSecond -= 60;\
+		x->wMinute += 1;\
+	}\
+	if((signed) x->wMinute > 60)\
+	{\
+		x->wMinute -= 60;\
+		x->wHour += 1;\
+	}\
+						}
+#define new_prof_info(x)	{\
+								x = (struct prof_info *) cmalloc(sizeof(struct prof_info));\
+								x->this_total_time =\
+				(SYSTEMTIME *) cmalloc(sizeof(SYSTEMTIME));\
+								x->all_total_time =\
+				(SYSTEMTIME *) cmalloc(sizeof(SYSTEMTIME));\
+								x->descendent_time =\
+				(SYSTEMTIME *) cmalloc(sizeof(SYSTEMTIME));\
+							}
+#define free_prof_info(x)	{\
+								xfree(x->this_total_time);\
+								xfree(x->all_total_time);\
+								xfree(x->descendent_time);\
+								xfree(x);\
+							}
+#define check_existance(x)	{\
+								if(!x || !(x->all_total_time) || !(x->this_total_time) || !(x->descendent_time)) {\
+										/* Bad Luck! */\
+									enomem();\
+								}\
+							}
+
 #endif /* HAS_GETRUSAGE */
 
 rt_public struct stack *profile_stack;
@@ -320,7 +451,7 @@ void initprf(void)
 			/* Allocate table */
 		class_table = (struct htable *) cmalloc(sizeof(struct htable));
 		if (class_table == (struct htable *) 0)
-			enomem(MTC_NOARG);
+			enomem();
 
 			/* Create H table */
 		if (!ht_create(class_table, 10, sizeof(struct feat_table)))
@@ -366,14 +497,12 @@ void exitprf(void)
 #ifdef HAS_GETRUSAGE
 		    					(real_time(features[j].all_total_time)) / 1000000.,
 								(real_time(features[j].descendent_time)) / 1000000.,
-#else
-#ifdef HAS_TIMES
+#elif defined(HAS_TIMES)
 								features[j].all_total_time / (double)HZ,
 								features[j].descendent_time / (double)HZ,
-#else
-								features[j].all_total_time,
-								features[j].descendent_time,
-#endif /* HAS_TIMES */
+#elif defined(EIF_WIN32)
+								real_time(features[j].all_total_time),
+								real_time(features[j].descendent_time),
 #endif /* HAS_GETRUSAGE */
 		    					features[j].number_of_calls,
 		    					features[j].featurename,
@@ -816,13 +945,11 @@ void prof_time(struct prof_rusage *a_time)
 	a_time->s_micro = usage.ru_stime.tv_usec;
 }
 
-#else
+#elif defined(HAS_TIMES)
 
 void prof_time(double *usertime, double *systime)
 		/* Time in user mode */
 		/* Time in kernel mode */
-
-#ifdef HAS_TIMES
 
 {
 	struct tms time;
@@ -832,13 +959,12 @@ void prof_time(double *usertime, double *systime)
 	*systime = (double)time.tms_stime;
 }
 
-#else
+#elif defined(EIF_WIN32)
+
+void prof_time(SYSTEMTIME *a_time)
 
 {
-	*usertime = 0;
-	*systime = 0;
+	GetSystemTime(a_time);
 }
-
-#endif /* HAS_TIMES */
 
 #endif /* HAS_GETRUSAGE */

@@ -28,7 +28,7 @@ inherit
 	SHARED_INST_CONTEXT;
 	SHARED_RESCUE_STATUS;
 	SHARED_FORMAT_INFO;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
 
 creation
 
@@ -433,34 +433,30 @@ feature -- Element change
 	put_class_name (c: CLASS_C) is
 			-- Append class name to 'text', treated as a stone.
 		local
-			p: CLASSC_STONE;
 			s: STRING;
 			item: CLASS_NAME_TEXT
 		do
 			if not tabs_emitted then
 				emit_tabs
 			end;
-			!! p.make(c.e_class);
 			s := clone (c.class_name)
 			s.to_upper;
-			!! item.make (s, p);
+			!! item.make (s, c.lace_class);
 			text.add (item);
 		end;
 
 	put_classi_name (c: CLASS_I) is
 			-- Append class name to 'text', treated as a stone.
 		local
-			p : CLASSI_STONE;
 			s: STRING;
 			item: CLASS_NAME_TEXT
 		do
 			if not tabs_emitted then
 				emit_tabs
 			end;
-			!!p.make(c);
 			s := clone (c.class_name)
 			s.to_upper;
-			!!item.make (s, p);
+			!!item.make (s, c);
 			text.add (item);
 		end;
 
@@ -651,7 +647,6 @@ feature {NONE} -- Implementation
 			-- Put normal feature (not infix or prefix feature).
 		local
 			feature_i: FEATURE_I;
-			stone: FEATURE_STONE;
 			args: like arguments;
 			item: BASIC_TEXT;
 			f_name: STRING;
@@ -672,8 +667,8 @@ feature {NONE} -- Implementation
 				feature_i := adapt.target_feature;
 				f_name := adapt.final_name;
 				if feature_i /= void and then in_bench_mode then
-					stone := feature_i.api_feature.stone (adapt.target_class.e_class);
-					!CLICKABLE_TEXT!item.make (f_name, stone);
+					!FEATURE_NAME_TEXT! item.make (f_name, 
+						feature_i.api_feature, adapt.target_class.e_class);
 				else			
 					!! item.make (f_name)
 				end;
@@ -711,7 +706,6 @@ feature {NONE} -- Implementation
 		local
 			feature_i: FEATURE_I; 
 			item: BASIC_TEXT;
-			stone: FEATURE_STONE;
 			f_name: STRING;
 			adapt: like local_adapt;
 		do
@@ -720,8 +714,8 @@ feature {NONE} -- Implementation
 				-- Use source feature for stone.
 			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
-				stone := feature_i.api_feature.stone (adapt.target_class.e_class);
-				! CLICKABLE_TEXT !item.make (f_name, stone)
+				!FEATURE_NAME_TEXT! item.make (f_name, 
+					feature_i.api_feature, adapt.target_class.e_class)
 			else
 				!! item.make (f_name)
 			end;
@@ -763,7 +757,6 @@ feature {NONE} -- Implementation
 			-- Put infix feature.
 		local
 			feature_i: FEATURE_I;
-			stone: FEATURE_STONE;
 			f_name: STRING;
 			item: BASIC_TEXT;
 		do
@@ -771,8 +764,8 @@ feature {NONE} -- Implementation
 				-- Use source feature for stone.
 			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
-				stone := feature_i.api_feature.stone (adapt.target_class.e_class);
-				!CLICKABLE_TEXT!item.make (f_name, stone)
+				!FEATURE_NAME_TEXT! item.make (f_name, 
+					feature_i.api_feature, adapt.target_class.e_class)
 			else	
 				!!item.make (f_name)
 			end;

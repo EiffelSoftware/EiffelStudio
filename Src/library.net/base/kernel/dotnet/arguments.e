@@ -26,10 +26,10 @@ feature -- Access
 
 	argument_array: ARRAY [STRING] is
 			-- Array containing command name (position 0) and arguments
-		local
-			i: INTEGER
 		once
 			Result := internal_argument_array
+		ensure
+			argument_array_not_void: Result /= Void
 		end
 
 	command_line: STRING is
@@ -357,6 +357,8 @@ feature {NONE} -- Implementation
 				Result.put (arg_option (i), i)
 				i := i + 1
 			end
+		ensure
+			internal_argument_array_not_void: Result /= Void
 		end
 
 indexing

@@ -58,6 +58,17 @@ feature -- Status report
 			index_valid: an_index >= 1 and an_index <= text_length
 		deferred
 		end
+		
+	tab_positions: ACTIVE_LIST [INTEGER]
+			-- Width of each tab position in pixels, from left to right.
+			-- All tab positions not included use `tab_width'.
+		
+	tab_width: INTEGER is
+			-- Default width in pixels of each tab in `Current'.
+		deferred
+		ensure
+			result_positive: Result > 0
+		end
 
 feature -- Status setting
 
@@ -116,6 +127,23 @@ feature -- Status setting
 		ensure	
 			buffer_locked_for_append: not buffer_locked_in_append_mode
 		end
+		
+	set_tab_width (a_width: INTEGER) is
+			-- Assign `a_width' to `tab_width'.
+		require
+			width_positive: a_width > 0
+		deferred
+		ensure
+			tab_width_set: tab_width = a_width
+		end
+		
+feature {NONE} -- Implementation
+
+	update_tab_positions (value: INTEGER) is
+			-- Update tab widths based on contents of `tab_positions'.
+		deferred
+		end
+		
 
 feature {EV_FONT_I} -- Implementation
 

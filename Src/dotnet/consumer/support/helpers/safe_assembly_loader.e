@@ -87,7 +87,7 @@ feature -- Query
 			a_assembly_not_void: a_assembly /= Void
 		local
 			l_name: ASSEMBLY_NAME
-			l_pkt: NATIVE_ARRAY [INTEGER_8]
+			l_pkt: NATIVE_ARRAY [NATURAL_8]
 		do
 			l_name := a_assembly.get_name
 			if ("mscorlib").is_equal (l_name.name) then

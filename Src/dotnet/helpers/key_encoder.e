@@ -6,7 +6,7 @@ class
 
 feature -- Access
 
-	encoded_key (a_key: NATIVE_ARRAY [INTEGER_8]): STRING is
+	encoded_key (a_key: NATIVE_ARRAY [NATURAL_8]): STRING is
 			-- Printable representation of `a_key'
 		require
 			a_key_not_void: a_key /= Void

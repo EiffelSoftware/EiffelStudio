@@ -24,74 +24,82 @@ create
 
 feature -- Initialization
 
-	make_boolean(value: BOOLEAN) is
+	make_boolean(value: BOOLEAN; dtype: CLASS_C) is
 			-- make a boolean item initialized to `value'
 		do
 			value_boolean := value
 			type := Type_boolean
+			dynamic_type := dtype
 		ensure
 			type /= Type_unknown
 		end
 
-	make_character(value: CHARACTER) is
+	make_character(value: CHARACTER; dtype: CLASS_C) is
 			-- make a character item initialized to `value'
 		do
 			value_character := value
 			type := Type_character
+			dynamic_type := dtype
 		ensure
 			type /= Type_unknown
 		end
 
-	make_integer(value: INTEGER) is
+	make_integer(value: INTEGER; dtype: CLASS_C) is
 			-- make a integer item initialized to `value'
 		do
 			value_integer := value
 			type := Type_integer
+			dynamic_type := dtype
 		ensure
 			type /= Type_unknown
 		end
 
-	make_real(value: REAL) is
+	make_real(value: REAL; dtype: CLASS_C) is
 			-- make a real item initialized to `value'
 		do
 			value_real := value
 			type := Type_real
+			dynamic_type := dtype
 		ensure
 			type /= Type_unknown
 		end
 
-	make_double(value: DOUBLE) is
+	make_double(value: DOUBLE; dtype: CLASS_C) is
 			-- make a double item initialized to `value'
 		do
 			value_double := value
 			type := Type_double
+			dynamic_type := dtype
 		ensure
 			type /= Type_unknown
 		end
 
-	make_pointer(value: POINTER) is
+	make_pointer(value: POINTER; dtype: CLASS_C) is
 			-- make a pointer item initialized to `value'
 		do
 			value_pointer := value
 			type := Type_pointer
+			dynamic_type := dtype
 		ensure
 			type /= Type_unknown
 		end
 
-	make_object(value: STRING) is
+	make_object(value: STRING; dtype: CLASS_C) is
 			-- make a object item initialized to `value'
 		do
 			value_object := value
 			type := Type_object
+			dynamic_type := dtype
 		ensure
 			type /= Type_unknown
 		end
 
-	make_manifest_string(value: STRING) is
+	make_manifest_string(value: STRING; dtype: CLASS_C) is
 			-- make a string item initialized to `value'
 		do
 			value_object := value
 			type := Type_string
+			dynamic_type := dtype
 		ensure
 			type /= Type_unknown
 		end
@@ -127,7 +135,11 @@ feature -- Action
 					send_string_value($value_string_c)
 				
 				when Type_object then
-					send_ref_value(hex_to_integer(value_object))
+					if value_object /= Void then
+						send_ref_value(hex_to_integer(value_object))
+					else
+						send_ref_value(0)
+					end
 
 				else
 					-- unexpected value, do nothing
@@ -160,7 +172,11 @@ feature -- Access
 			when Type_pointer then
 				Result := value_pointer.out
 			when Type_object then
-				Result := value_object
+				if value_object /= Void then
+					Result := value_object
+				else
+					Result := "Void"
+				end
 			else
 				Result := ""
 			end
@@ -170,10 +186,20 @@ feature -- Access
 
 	address: STRING is
 			-- If it makes sense, return the address of current object.
+			-- Void if `is_void' or if `Current' does not represent an object.
 		do
 			if type = Type_object then
 				Result := value_object
 			end
+		end
+
+	dynamic_type: CLASS_C
+			-- Dynamic type of `Current'. Void iff `is_void'.
+	
+	is_void: BOOLEAN is
+			-- Is `Current' a Void reference?
+		do
+			Result := type = Type_object and address = Void
 		end
 
 feature -- Inapplicable

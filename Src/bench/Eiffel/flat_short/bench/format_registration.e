@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 			--| structures reparse class)
 		local
 			parser: like eiffel_parser
-			file: RAW_FILE;
+			file: KL_BINARY_INPUT_FILE
 			class_file_name: STRING;
 			vd21: VD21;
 			class_id: INTEGER
@@ -458,10 +458,7 @@ debug ("FLAT_SHORT")
 end;
 				class_file_name := current_class.file_name;
 				!! file.make (class_file_name);
-				if
-					not (file.exists and then file.is_readable and then
-						file.is_plain)
-				then
+				if not (file.exists and then file.is_readable) then
 					!!vd21;
 					vd21.set_cluster (current_class.cluster);
 					vd21.set_file_name (current_class.file_name);

@@ -3,7 +3,6 @@
 class REF_REGISTER 
 
 inherit
-
 	REGISTER
 		redefine
 			get_register, free_register, print_register,
@@ -11,7 +10,6 @@ inherit
 		end;
 
 creation
-
 	make
 
 	

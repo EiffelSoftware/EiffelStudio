@@ -225,7 +225,7 @@ end;
 			Result := (not optimizer.is_safe (f))
 				or else (parameters /= Void and then parameters.is_unsafe)
 debug ("OPTIMIZATION")
-	if result then
+	if Result then
 		io.error.putstring (f.feature_name);
 		io.error.putstring (" from ")
 		io.error.putstring (base_class.name);

@@ -29,6 +29,7 @@ feature -- Command
 			nm: NAMABLE
 			ed: EDITABLE
 		do
+			source.set_data_type (Void)
 			source.set_transported_data (Void)
 			if ev_data.shift_key_pressed then
 					-- Rename command

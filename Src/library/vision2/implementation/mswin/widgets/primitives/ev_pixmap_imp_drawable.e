@@ -142,8 +142,6 @@ feature {NONE} -- Initialization
 			drop_actions_internal := other.drop_actions_internal
 			pick_actions_internal := other.pick_actions_internal
 			pick_ended_actions_internal := other.pick_ended_actions_internal
-			
-			
 		end
 		
 

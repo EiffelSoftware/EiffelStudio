@@ -42,7 +42,7 @@ typedef EIF_INTEGER (* EIF_DLGPROC) (
 /* Eiffel routine signature for `dialog_procedure' */
 
 LRESULT CALLBACK cwel_window_procedure (HWND, UINT, WPARAM, LPARAM);
-BOOL CALLBACK cwel_dialog_procedure (HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK cwel_dialog_procedure (HWND, UINT, WPARAM, LPARAM);
 
 #define cwel_window_procedure_address ((EIF_POINTER) cwel_window_procedure)
 /* Address of `cwel_window_procedure' */

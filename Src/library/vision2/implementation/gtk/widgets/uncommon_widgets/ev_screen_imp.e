@@ -22,6 +22,8 @@ inherit
 			initialize
 		end
 
+	EV_GTK_DEPENDENT_ROUTINES
+
 create
 	make
 
@@ -200,17 +202,15 @@ feature -- Basic operation
 feature -- Measurement
 
 	horizontal_resolution: INTEGER is
-			-- Number of pixels per inch along screen width.
+			-- Number of pixels per inch along horizontal axis
 		do
-			--| FIXME IEK Implement this properly
-			Result := 75
+			Result := horizontal_resolution_internal
 		end
 
 	vertical_resolution: INTEGER is
-			-- Number of pixels per inch along screen height.
+			-- Number of pixels per inch along vertical axis
 		do
-			--| FIXME IEK Implement this properly
-			Result := 75
+			Result := vertical_resolution_internal
 		end
 
 	height: INTEGER is

@@ -17,7 +17,8 @@ deferred class
 inherit
 	EV_ANY
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
 		end
 		
 	EV_DOCKABLE_SOURCE_ACTION_SEQUENCES
@@ -61,6 +62,18 @@ feature -- Status report
 			Result := implementation.is_external_docking_enabled
 		ensure
 			bridge_ok: Result = implementation.is_external_docking_enabled
+		end
+		
+	is_external_docking_relative: BOOLEAN is
+			-- Will dockable dialog displayed when `Current' is docked externally
+			-- be displayed relative to parent window of `Current'?
+			-- Otherwise displayed as a standard window.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_external_docking_relative
+		ensure
+			bridge_ok: Result = implementation.is_external_docking_relative
 		end
 
 feature -- Status setting
@@ -135,8 +148,40 @@ feature -- Status setting
 		ensure
 			not_externally_dockable: not is_external_docking_enabled
 		end
+		
+	enable_external_docking_relative is
+			-- Assign `True' to `is_external_docking_relative', ensuring that
+			-- a dockable dialog displayed when `Current' is docked externally
+			-- is displayed relative to the top level window.
+		require
+			not_destroyed: not is_destroyed
+			external_docking_enabled: is_external_docking_enabled
+		do
+			implementation.enable_external_docking_relative
+		ensure
+			external_docking_not_relative: is_external_docking_relative
+		end
+		
+	disable_external_docking_relative is
+			-- Assign `False' to `is_external_docking_relative', ensuring that
+			-- a dockable dialog displayed when `Current' is docked externally
+			-- is displayed as a standard window.
+		require
+			not_destroyed: not is_destroyed
+			external_docking_enabled: is_external_docking_enabled
+		do
+			implementation.disable_external_docking_relative
+		ensure
+			external_docking_not_relative: not is_external_docking_relative
+		end	
 
 feature -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := not is_dockable and is_external_docking_relative and real_source = Void
+		end
 
 	source_has_current_recursive (source: EV_DOCKABLE_SOURCE): BOOLEAN is
 			-- Does `source' recursively contain `Current'?

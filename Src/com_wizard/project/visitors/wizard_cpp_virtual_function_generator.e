@@ -132,7 +132,7 @@ feature -- Basic operations
 			l_header_file: STRING
 		do
 			a_visitor := a_descriptor.visitor
-			l_header_file := a_visitor.c_declaration_header_file_name
+			l_header_file := a_visitor.c_definition_header_file_name
 			if l_header_file /= Void and then not l_header_file.is_empty then
 				if a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
 						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer then

@@ -25,7 +25,8 @@ inherit
 			destroy,
 			drawable,
 			draw_full_pixmap,
-			draw_point
+			draw_point,
+			pixbuf_from_drawable
 		end
 
 	EV_PRIMITIVE_IMP
@@ -162,75 +163,6 @@ feature -- Element change
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_gdkpixbuf, $a_gdkpix, $a_gdkmask, 255)
 			set_pixmap (a_gdkpix, a_gdkmask)
 			feature {EV_GTK_EXTERNALS}.object_unref (a_gdkpixbuf)
-		end
-
-	pixbuf_from_drawable: POINTER is
-			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
-		local
-			a_pix, mask_pixbuf1, mask_pixbuf2: POINTER
-		do
-			if filepixbuf /= default_pointer then
-				Result := filepixbuf
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (filepixbuf)
-			else
-				a_pix := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (Result, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
-				if mask /= default_pointer then
-					mask_pixbuf1 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, 0, 0, 0, 0, -1, -1)
-					mask_pixbuf2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (mask_pixbuf1, True, '%/255/', '%/255/', '%/255/')
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (mask_pixbuf2, a_pix, 0, 0, width, height, 0, 0, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 254)
-					Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (a_pix, False, '%/0/', '%/0/', '%/0/')
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (a_pix)
-					draw_mask_on_pixbuf (Result, mask_pixbuf2)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf1)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf2)
-				else
-					Result := a_pix
-				end
-			end
-		end
-
-	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER) is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"[
-				{
-				int x, y;
-				
-				GdkPixbuf *pixbuf, *mask;
-				
-				pixbuf = (GdkPixbuf*) $a_pixbuf_ptr;
-				mask = (GdkPixbuf*) $a_mask_ptr; 
-				
-				for (y = 0; y < gdk_pixbuf_get_height (pixbuf); y++)
-				{
-					guchar *src, *dest;
-					
-					src = gdk_pixbuf_get_pixels (mask) + y * gdk_pixbuf_get_rowstride (mask);
-					dest = gdk_pixbuf_get_pixels (pixbuf) + y * gdk_pixbuf_get_rowstride (pixbuf);
-					
-					for (x = 0; x < gdk_pixbuf_get_width (pixbuf); x++)
-					{
-						if (src [0] == 0)
-							dest [3] = 0;
-						
-						src += 4;
-						dest += 4;				
-					}
-					
-				}
-				}
-			]"
-		end
-
-	pixbuf_from_drawable_with_size (a_width, a_height: INTEGER): POINTER is
-			-- Return a GdkPixbuf object from the current Gdkpixbuf structure with dimensions `a_width' * `a_height'
-		local
-			a_pixbuf: POINTER
-		do
-			a_pixbuf := pixbuf_from_drawable
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
-			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 		end
 
 	set_size (a_x, a_y: INTEGER) is
@@ -391,7 +323,18 @@ feature -- Duplication
 			filepixbuf := other_imp.filepixbuf
 		end
 		
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
+
+	pixbuf_from_drawable: POINTER is
+			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
+		do
+			if filepixbuf /= default_pointer then
+				Result := filepixbuf
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (filepixbuf)
+			else
+				Result := Precursor {EV_DRAWABLE_IMP}
+			end
+		end
 
 	set_pixmap_from_pixbuf (a_pixbuf: POINTER) is
 			-- Construct `Current' from GdkPixbuf `a_pixbuf'

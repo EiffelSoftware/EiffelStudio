@@ -9,7 +9,6 @@ class
 	EV_COMBO_BOX_IMP
 
 inherit
-
 	EV_COMBO_BOX_I
 
 	EV_ITEM_CONTAINER_IMP
@@ -18,10 +17,7 @@ inherit
 		end
 
 	EV_TEXT_COMPONENT_IMP
-		rename
-			wel_make as old_wel_make
-		end	
-	
+		
 	EV_BAR_ITEM_IMP
 
 	WEL_DROP_DOWN_COMBO_BOX
@@ -29,14 +25,14 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			font as wel_font,
-			set_font as wel_set_font
+			set_font as wel_set_font,
+			destroy as wel_destroy
 		undefine
 			-- We undefine the features redefined by EV_WIDGET_IMP,
 			-- EV_PRIMITIVE_IMP and EV_TEXT_CONTAINER_IMP.
 			remove_command,
 			set_width,
 			set_height,
-			destroy,
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
@@ -49,7 +45,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature {NONE} -- Initialization
@@ -57,7 +52,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create a combo-box with `par' as parent.
 		local
-			par_imp: EV_CONTAINER_IMP
+			par_imp: WEL_WINDOW
 		do
 			par_imp ?= par.implementation
 			check
@@ -84,14 +79,6 @@ feature -- Measurement
 
 feature -- Element change
 
-	add_element (a_string: STRING) is
-			-- Add an element with the text `a_string' 
-			-- to the combo-box.
-			-- If string is `Void', it add an element with 
-			-- an empty string "".
-		do
-		end
-
 	insert_element (a_string: STRING; index: INTEGER) is
 			-- Insert an element with the text `a_string'
 			-- at the zero-based `index' position of the 
@@ -100,12 +87,6 @@ feature -- Element change
 			-- an empty string "".
 		do
 		end				
-
-	remove_element (index: INTEGER) is
-			-- Remove the element at the zero-based
-			-- `index' position of the combo-box.
-		do
-		end
 
 	remove_all_elements is
 			-- Remove all the elements of the combo-box.
@@ -136,8 +117,6 @@ feature {EV_COMBO_BOX_ITEM_IMP} -- Implementation
 			item_imp.set_id (ev_children.count - 1)
 		end
 
-feature {EV_COMBO_BOX_ITEM_IMP} -- Implementation
-
 	remove_item (an_id: INTEGER) is
 			-- Remove the child whose id is `id'.
 		do
@@ -151,6 +130,34 @@ feature {EV_COMBO_BOX_ITEM_IMP} -- Implementation
 				ev_children.item.set_id (ev_children.index - 1)
 				ev_children.forth
 			end
+		end
+
+feature -- Implementation
+
+	caret_position: INTEGER is
+			-- Caret position
+		do
+		end
+
+	set_caret_position (a_position: INTEGER) is
+			-- Set the caret position with `position'.
+		do
+		end
+
+	set_selection (start_position, end_position: INTEGER) is
+			-- Set the selection between `start_position'
+			-- and `end_position'.
+		do
+		end
+
+	set_read_only is
+			-- Set the read-only state.
+		do
+		end
+
+	set_read_write is
+			-- Set the read-write state.
+		do
 		end
 
 end -- class EV_COMBO_BOX_IMP

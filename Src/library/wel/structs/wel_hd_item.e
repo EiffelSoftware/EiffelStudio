@@ -73,7 +73,7 @@ feature -- Access
 		end
 		
 	format: INTEGER is
-			-- A set of bit flags that specify the item’s format. 
+			-- A set of bit flags that specify the item's format. 
 			-- Constants are defined in class WEL_HDF_CONSTANTS.
 			-- Constants may be combined.
 		require
@@ -164,7 +164,7 @@ feature -- Element change
 
 
 	set_format (value: INTEGER) is
-			-- Sets a set of bit flags that specify the item’s format. 
+			-- Sets a set of bit flags that specify the item's format. 
 			-- Constants are defined in class WEL_HDF_CONSTANTS.
 			-- Constants may be combined.
 			-- Also updates `mask'

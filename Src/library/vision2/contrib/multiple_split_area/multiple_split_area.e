@@ -421,7 +421,7 @@ feature -- Status setting
 			tool_holder.enable_maximized
 			maximize_tool (tool_holder)
 			tool_holder.maximize_button.set_pixmap (restore_pixmap)
-			tool_holder.maximize_button.set_tooltip ("Restore")
+			tool_holder.maximize_button.set_tooltip (restore_string)
 			tool_holder.label.disable_dockable
 			if locked_in_here then
 				parent_window (Current).unlock_update
@@ -448,7 +448,7 @@ feature -- Status setting
 			tool_holder.set_restore_height (tool_holder.height)
 			minimize_tool (tool_holder)
 			tool_holder.minimize_button.set_pixmap (restore_pixmap)
-			tool_holder.minimize_button.set_tooltip ("Restore")
+			tool_holder.minimize_button.set_tooltip (restore_string)
 
 			if locked_in_here then
 				parent_window (Current).unlock_update
@@ -649,8 +649,12 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			cell: EV_CELL
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			counter: INTEGER
-		do		
-			index_of_tool := index_of_holder (a_holder)
+		do	
+				-- Only retrieve the index if `a_holder' is not external.
+				-- otherwise, `index_of_tool' is initialized to 0.
+			if not external_representation.has (a_holder.tool) then
+				index_of_tool := index_of_holder (a_holder)
+			end
 			
 			from
 				counter := 1
@@ -753,6 +757,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				maximized_tool.disable_minimize_button
 				maximized_tool.remove_maximized_restore
 				maximized_tool.silent_remove_maximized
+				maximized_tool.label.enable_dockable
+				maximized_tool.maximize_button.set_tooltip (Maximize_string)
 				a_tool.silent_remove_minimized
 				a_tool.enable_minimize_button
 				a_tool.tool.show
@@ -817,6 +823,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				end
 				all_holders.forth
 			end
+			tool_holder.maximize_button.set_tooltip (maximize_string)
 			maximized_tool := Void
 			rebuild
 			restore_stored_positions
@@ -1689,7 +1696,7 @@ feature {NONE} -- Implementation
 					end
 					linear_representation.back
 				end
-				resize_widget_to (linear_representation.first, height - total_restored)
+					resize_widget_to (linear_representation.first, height - total_restored)
 			else
 				from
 					linear_representation.start
@@ -1753,6 +1760,10 @@ feature {NONE} -- Implementation
 		do
 			Result := (create {EV_ENVIRONMENT}).application
 		end
+
+	restore_string: STRING is "Restore"
+	maximize_string: STRING is "Maximize"
+	minimize_string: STRING is "Minimize"
 		
 invariant
 	linear_representation_not_void: linear_representation /= Void

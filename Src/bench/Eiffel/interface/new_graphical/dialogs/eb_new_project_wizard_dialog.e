@@ -321,13 +321,15 @@ feature {NONE} -- Execution
 				eiffel_ace.set_file_name (ace_name)
 			else
 				ebench_name := clone (Ebench_command_name)
-				ebench_name.append (" -create ")
+				ebench_name.append (" -create %"")
 				ebench_name.append (dir_name)
-				ebench_name.append (" -ace ")
+				ebench_name.append ("%" -ace %"")
 				ebench_name.append (ace_name)
 				if compile_project then
-					ebench_name.append (" -compile")
+					ebench_name.append ("%" -compile")
 					compile_project := False			
+				else
+					ebench_name.append ("%"")
 				end
 				launch_ebench (ebench_name)
 			end

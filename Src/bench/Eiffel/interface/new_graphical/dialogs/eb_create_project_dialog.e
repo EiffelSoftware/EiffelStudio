@@ -289,13 +289,15 @@ feature -- Execution
 					end
 				else
 					ebench_name := clone ((create {EIFFEL_ENV}).Estudio_command_name)
-					ebench_name.append (" -create ")
+					ebench_name.append (" -create %"")
 					ebench_name.append (directory_name)
-					ebench_name.append (" -ace ")
+					ebench_name.append ("%" -ace %"")
 					ebench_name.append (ace_file_name)
 					if compile_project then
-						ebench_name.append (" -compile")
+						ebench_name.append ("%" -compile")
 						compile_project := False
+					else
+						ebench_name.append ("%"")
 					end
 					launch_ebench (ebench_name)
 					success := True

@@ -1,52 +1,112 @@
--- EiffelBench default resource file
+-- **** General preferences **** 
+--acrobat_reader: "acrobat"
+--text_mode: "UNIX"
+--tab_step: 4
+--editor: "vi"
+--filter_directory: "/base/common/Eiffel4.2/bench/filters"
+--profile_directory: "/base/common/Eiffel4.2/bench/profiler"
+--temporary_directory: "/tmp"
+--shell_command: "xterm -geometry 80x40 -e vi +$line $target"
+--filter_name: "PostScript"
+--filter_command: ""
+--Browsing_classes_using_left_mouse_button: true
+--history_size: 10
+--default_window_position: false
+--window_free_list_number: 2
+--color_list: "black;white;red;blue;green;yellow;brown;cyan"
+--print_shell_command: "lpr $target"
 
---background_color:		white
---foreground_color:		black
---font:		"-adobe-new century schoolbook-bold-r-*-*-*-100-*-*-*-*-*-*"
---editor:				""
---filter_command:		""
---filter_name:			PostScript
---filter_directory:		"$EIFFEL4/bench/filters"
---history_size:			10
---raise_on_error:		true
---shell_command:		"xterm -geometry 80x40 -e vi +$line $target"
---temporary_directory:	"/tmp"
---tab_step:				4
---tabs:					""
+-- **** Project tool preferences **** 
+--project_tool_x: 0
+--project_tool_y: 0
+--project_tool_width: 481
+--project_tool_height: 340
+--project_tool_command_bar: true
+--project_tool_format_bar: true
+--debugger_feature_height: 214
+--debugger_object_height: 214
+--debugger_show_all_callers: false
+--debugger_do_flat_in_breakpoints: true
+--interrupt_every_n_instruction: 500
+--bottom_offset: 25
+--raise_on_error: true
+--graphical_output_disabled: false
 
--- Keyboard accelerators
+-- **** Explain tool preferences **** 
+--explain_tool_width: 440
+--explain_tool_height: 500
+--explain_tool_command_bar: true
+--explain_tool_format_bar: true
 
---melt_accelerator:					"Alt-m"
---melt_no_C_accelerator:			"Ctrl-Alt-m"
---run_accelerator:					"Alt-r"
---argument_accelerator:				"Shift-Alt-r"
---melt_and_run_accelerator:			"Ctrl-Alt-r"
---execution_status_accelerator:		"Alt-t"
---interrupt_accelerator:			"Alt-k"
---end_run_accelerator:				"Ctrl-Alt-k"
---freeze_accelerator:				"Alt-f"
---freeze_no_C_accelerator:			"Ctrl-Alt-f"
---finalize_accelerator:				"Alt-z"
---finalize_no_C_accelerator:		"Ctrl-Alt-z"
---explanation_accelerator:			"Alt-e"
---raise_explanation_accelerator:	"Ctrl-Alt-e"
---system_accelerator:				"Alt-y"
---raise_system_accelerator:			"Ctrl-Alt-y"
---class_accelerator:				"Alt-c"
---raise_class_accelerator:			"Ctrl-Alt-c"
---feature_accelerator:				"Alt-u"
---raise_feature_accelerator:		"Ctrl-Alt-u"
---object_accelerator:				"Alt-o"
---raise_object_accelerator:			"Ctrl-Alt-o"
---stop_points_accelerator:			"Alt-s"
---end_session_accelerator:			"Alt-q"
---next_accelerator:					"Alt-x"
---next_and_run_accelerator:			"Ctrl-Alt-x"
---step_accelerator:					"Alt-v"
---step_and_run_accelerator:			"Ctrl-Alt-v"
---out_routine_accelerator:			"Alt-a"
---out_routine_and_run_accelerator:	"Ctrl-Alt-a"
---no_stop_accelerator:				"Alt-b"
---no_stop_and_run_accelerator:		"Ctrl-Alt-b"
---raise_warner_accelerator:			"Alt-w"
---raise_project_accelerator:		"Alt-p"
+-- **** System tool preferences **** 
+--system_tool_width: 440
+--system_tool_height: 500
+--system_tool_command_bar: true
+--system_tool_format_bar: true
+--parse_ace_after_saving: true
+
+-- **** Class tool preferences **** 
+--class_tool_width: 490
+--class_tool_height: 500
+--class_tool_command_bar: true
+--class_tool_format_bar: true
+--parse_class_after_saving: true
+--feature_clause_order: "Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*"
+
+-- **** Feature tool preferences **** 
+--feature_tool_width: 600
+--feature_tool_height: 450
+--feature_tool_command_bar: true
+--feature_tool_format_bar: true
+--show_all_callers: false
+--do_flat_in_breakpoints: true
+
+-- **** Object tool preferences **** 
+--object_tool_width: 440
+--object_tool_height: 500
+--object_tool_command_bar: true
+--object_tool_format_bar: true
+
+-- **** Profile tool preferences **** 
+--profile_tool_width: 450
+--profile_tool_height: 490
+--profile_query_tool_width: 500
+--profile_query_tool_height: 500
+
+-- **** Graphical preferences **** 
+font: ""
+text_font: "-*-courier-medium-r-*-*-12-*"
+breakable_font: "-*-courier-medium-r-*-*-12-*"
+class_font: "-*-times-medium-i-normal-*-12-*"
+cluster_font: "-*-times-medium-i-normal-*-12-*"
+comment_font: "-*-courier-medium-r-*-*-12-*"
+default_text_font: "-*-courier-medium-r-*-*-12-*"
+error_font: "-*-times-medium-r-normal-*-12-*"
+feature_font: "-*-times-medium-i-normal-*-12-*"
+keyword_font: "-*-times-bold-r-normal-*-12-*"
+object_font: "-*-times-medium-i-normal-*-12-*"
+string_text_font: "-*-times-medium-r-normal-*-12-*"
+symbol_font: "-*-times-medium-r-normal-*-12-*"
+html_font: "-*-courier-medium-r-*-*-12-*"
+background_color: ""
+foreground_color: ""
+text_background_color: "white"
+text_foreground_color: "black"
+breakable_color: "red"
+class_color: "magenta"
+cluster_color: "DarkRed"
+comment_color: "red"
+default_text_color: "black"
+error_color: "red"
+feature_color: "DarkGreen"
+keyword_color: "blue"
+object_color: "brown"
+stop_color: "red"
+string_text_color: "black"
+symbol_color: "black"
+html_color: "blue"
+explanation_label: "LightYellow"
+highlight_background_line_color: "red"
+highlight_foreground_line_color: "white"
+progress_bar_color: "blue"
+

@@ -202,24 +202,25 @@ feature -- Status setting
 	set_width (a_width: INTEGER) is
 			-- Set the horizontal size to `a_width'.
 		do
-			default_width := a_width
-			C.gtk_window_set_default_size (c_object, default_width, height)
+			update_request_size
+			set_size (a_width, height)
 		end
 
 	set_height (a_height: INTEGER) is
 			-- Set the vertical size to `a_height'.
 		do
-			default_height := a_height
-			C.gtk_window_set_default_size (c_object, width, default_height)
+			update_request_size
+			set_size (width, a_height)
 		end
 
 	set_size (a_width, a_height: INTEGER) is
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
 		do
+			update_request_size
 			default_width := a_width
 			default_height := a_height
-			C.gtk_window_set_default_size (c_object, default_width, default_height)
+			C.gtk_window_set_default_size (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
 		end
 
 	forbid_resize is
@@ -253,7 +254,8 @@ feature -- Status setting
 					set_position (user_x_position, user_y_position)
 					--| This is a hack to make sure window is positioned correctly
 					positioned_by_user := False
-				end				
+				end
+				
 			end
 		end
 
@@ -420,9 +422,10 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 		local
 			a_x: INTEGER
 			a_aux_info: POINTER
+			i: INTEGER
 		do
 			if is_displayed then		
-				C.gdk_window_get_root_origin (
+				i := C.gdk_window_get_origin (
 					C.gtk_widget_struct_window (c_object),
 					$a_x, NULL)
 					Result := a_x
@@ -439,9 +442,10 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 		local
 			a_y: INTEGER
 			a_aux_info: POINTER
+			i: INTEGER
 		do
 			if is_displayed then		
-				C.gdk_window_get_root_origin (
+				i := C.gdk_window_get_origin (
 					C.gtk_widget_struct_window (c_object),
 				    NULL, $a_y)
 				Result := a_y
@@ -475,8 +479,9 @@ feature {NONE} -- Implementation
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
+			C.gtk_widget_set_usize (c_object, -1, -1)
 			Precursor {EV_CONTAINER_IMP} (a_minimum_width, a_minimum_height)
-			--C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
+			C.gtk_window_set_default_size (c_object, a_minimum_width, a_minimum_height)
 		end
 
 	default_width: INTEGER
@@ -497,6 +502,7 @@ feature {NONE} -- Implementation
 			if x_position /= previous_x or y_position /= previous_y then
 				previous_x := x_position
 				previous_y := y_position
+				positioned_by_user := False
 				if move_actions_internal /= Void then
 					move_actions_internal.call ([previous_x, previous_y, width, height])
 				end	

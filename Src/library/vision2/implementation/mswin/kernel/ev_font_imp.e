@@ -38,10 +38,8 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 			-- Create a font.
 		do
 			base_make (an_interface)
-			create {WEL_SYSTEM_FONT} wel_font.make
-			create wel_log_font.make_by_font (wel_font)
-			wel_font.set_indirect (wel_log_font)
 			wel_log_font.set_width (0)
+			create wel_font.make_indirect (wel_log_font)
 			set_family (Ev_font_family_sans)
 			set_weight (Ev_font_weight_regular)
 			set_shape (Ev_font_shape_regular)
@@ -51,6 +49,15 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 	initialize is
 		do
 			is_initialized := True
+		end
+
+	wel_log_font: WEL_LOG_FONT is
+			-- Structure used to specify font characteristics.
+		local
+			system_font: WEL_FONT
+		once
+			create {WEL_SYSTEM_FONT} system_font.make
+			create Result.make_by_font (system_font)
 		end
 
 feature -- Access
@@ -67,6 +74,10 @@ feature -- Access
 	height: INTEGER is
 			-- Preferred font height measured in screen pixels.
 		do
+				-- retrieve current values
+			wel_log_font.update_by_font(wel_font)
+
+				-- return value
 			Result := wel_log_font.height
 		end
 
@@ -79,13 +90,23 @@ feature -- Element change
 	set_family (a_family: INTEGER) is
 			-- Set `a_family' as preferred font category.
 		do
+				-- retrieve current values
+			wel_log_font.update_by_font(wel_font)
+
+				-- change value
 			family := a_family
+
+				-- commit changes to `wel_log_font' into `wel_font'.
 			update_font_face
 		end
 
 	set_weight (a_weight: INTEGER) is
 			-- Set `a_weight' as preferred font thickness.
 		do
+				-- retrieve current values
+			wel_log_font.update_by_font(wel_font)
+
+				-- change value
 			weight := a_weight
 			inspect weight
 			when Ev_font_weight_thin then
@@ -99,12 +120,18 @@ feature -- Element change
 			else
 				check impossible: False end
 			end
+
+				-- commit changes to `wel_log_font' into `wel_font'.
 			wel_font.set_indirect (wel_log_font)
 		end
 
 	set_shape (a_shape: INTEGER) is
 			-- Set `a_shape' as preferred font slant.
 		do
+				-- retrieve current values
+			wel_log_font.update_by_font(wel_font)
+
+				-- change value
 			shape := a_shape
 			inspect shape
 			when Ev_font_shape_regular then
@@ -114,27 +141,47 @@ feature -- Element change
 			else
 				check impossible: False end
 			end
+
+				-- commit changes to `wel_log_font' into `wel_font'.
 			wel_font.set_indirect (wel_log_font)
 		end
 
 	set_height (a_height: INTEGER) is
 			-- Set `a_height' as preferred font size.
 		do
+				-- retrieve current values
+			wel_log_font.update_by_font(wel_font)
+
+				-- change value
 			wel_log_font.set_height (a_height)
+
+				-- commit changes to `wel_log_font' into `wel_font'.
 			wel_font.set_indirect (wel_log_font)
 		end
 
 	set_preferred_face (a_preferred_face: STRING) is
 			-- Set `a_preferred_face' as preferred font face.
 		do
+				-- retrieve current values
+			wel_log_font.update_by_font(wel_font)
+
+				-- change value
 			preferred_face := a_preferred_face
+
+				-- commit changes to `wel_log_font' into `wel_font'.
 			update_font_face
 		end
 
 	remove_preferred_face is
 			-- Set `a_preferred_face' to Void.
 		do
+				-- retrieve current values
+			wel_log_font.update_by_font(wel_font)
+
+				-- change value
 			preferred_face := Void
+
+				-- commit changes to `wel_log_font' into `wel_font'.
 			update_font_face
 		end
 
@@ -243,9 +290,6 @@ feature {EV_ANY_I} -- Access
 	wel_font: WEL_FONT
 			-- Basic WEL font.
 
-	wel_log_font: WEL_LOG_FONT
-			-- More detail added to WEL font.
-
 feature {EV_FONTABLE_IMP} -- Access
 
 	set_by_wel_font (wf: WEL_FONT) is
@@ -254,7 +298,7 @@ feature {EV_FONTABLE_IMP} -- Access
 			"This is not the way we do things in vision2."
 		do
 			wel_font := wf
-			create wel_log_font.make_by_font (wel_font)
+			wel_log_font.update_by_font (wel_font)
 			family := 0
 			weight := 0
 			shape := 0
@@ -273,34 +317,55 @@ feature {NONE} -- Implementation
 			-- Find a font face based on properties
 			-- `preferred_face' and `family'.
 		do
-			--| FIXME NOTE
-			--| There seems to be a bug in WEL:
-			--| postcondition violation in set_family.
+				-- First, set the family
+			inspect family
+			when Ev_font_family_screen then
+					--| FIXME ARNAUD: Retrieve user
+					--| preferences from Windows Registry.
+				wel_log_font.set_swiss_family
+				wel_log_font.set_variable_pitch
 
-			if preferred_face /= Void then
-				set_name (preferred_face)
-			else
-				inspect family
-				when Ev_font_family_screen then
-					set_name ("System")
-				when Ev_font_family_roman then
-					set_name ("Times New Roman")
-				when Ev_font_family_sans then
-					set_name ("MS Sans Serif")
+			when Ev_font_family_roman then
+				wel_log_font.set_roman_family
+				wel_log_font.set_variable_pitch
+
+			when Ev_font_family_sans then
+				wel_log_font.set_swiss_family
+				wel_log_font.set_variable_pitch
 				when Ev_font_family_typewriter then
-					set_name ("Courier New")
-				when Ev_font_family_modern then
-					set_name ("Modern")
-				else
-					check impossible: False end
-				end
+				wel_log_font.set_modern_family
+				wel_log_font.set_fixed_pitch
+
+			when Ev_font_family_modern then
+				wel_log_font.set_modern_family
+				wel_log_font.set_variable_pitch
+			else
+				check impossible: False end
 			end
+
+				-- Then, set the face name (if any)
+			if preferred_face /= Void then
+				wel_log_font.set_face_name (preferred_face)
+			else
+					-- Leave Windows choose the font that best
+					-- match our attributes.
+				wel_log_font.set_face_name ("")
+			end
+
+				-- commit changes to `wel_log_font' into `wel_font'.
+			wel_font.set_indirect (wel_log_font)
 		end
 
 	set_name (str: STRING) is
 			-- sets the name of the current font
 		do
+				-- retrieve current values
+			wel_log_font.update_by_font(wel_font)
+
+				-- change value
 			wel_log_font.set_face_name (str)
+
+				-- commit changes to `wel_log_font' into `wel_font'.
 			wel_font.set_indirect (wel_log_font)
 		end
 
@@ -308,9 +373,14 @@ feature {NONE} -- Implementation
 			-- Set face name on WEL font to NULL.
 			-- Let toolkit find the best matching name.
 		do
-			--| FIXME VB
-			--| WEL-expert? Please check this code:
-			--cwel_log_font_set_facename (wel_log_font.item, Default_pointer)
+				-- retrieve current values
+			wel_log_font.update_by_font(wel_font)
+
+				-- change value (Leave windows choose the font)
+			wel_log_font.set_face_name ("")
+
+				-- commit changes to `wel_log_font' into `wel_font'.
+			wel_font.set_indirect (wel_log_font)
 		end
 
 	maximum_line_width (dc: WEL_DC; str: STRING; number_of_lines: INTEGER): INTEGER is
@@ -512,6 +582,11 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/21 20:02:39  pichery
+--| Changed implementation of EV_FONT under Windows. Now we only keep one
+--| WEL_LOG_FONT structure in memory for all EV_FONT objects (wel_log_font is
+--| a once feature). This avoid the creation of a lot of Windows objects.
+--|
 --| Revision 1.19  2000/02/19 05:44:59  oconnor
 --| released
 --|

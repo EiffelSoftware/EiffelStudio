@@ -1,5 +1,4 @@
 indexing
-
 	description: "Unicode characters, with comparison operations"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -7,6 +6,9 @@ indexing
 
 expanded class
 	WIDE_CHARACTER
+
+obsolete
+	"Class will be removed in future releases. Do not use it, instead use CHARACTER."
 
 inherit
 	WIDE_CHARACTER_REF

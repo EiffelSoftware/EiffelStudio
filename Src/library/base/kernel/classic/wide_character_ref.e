@@ -4,8 +4,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class WIDE_CHARACTER_REF inherit
+class
+	WIDE_CHARACTER_REF
 
+obsolete
+	"Class will be removed in future releases. Do not use it, instead use CHARACTER_REF."
+
+inherit
 	COMPARABLE
 		redefine
 			three_way_comparison, is_equal, out

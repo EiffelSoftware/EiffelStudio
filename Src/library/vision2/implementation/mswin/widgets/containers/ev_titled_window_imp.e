@@ -7,19 +7,22 @@ indexing
 	revision: "$Revision$"
 	
 class
-	
 	EV_WINDOW_IMP
 	
 inherit
-
 	EV_WINDOW_I
 		rename
 			expandable as never_displayed
+		redefine
+			set_expand
 		end
 					
 	EV_CONTAINER_IMP
 		rename
 			expandable as never_displayed
+		export
+			{NONE} never_displayed
+			{NONE} set_expand
 		undefine
 			set_width,
 			set_height,
@@ -34,7 +37,10 @@ inherit
 			set_minimum_height,
 			child_minwidth_changed,
 			child_minheight_changed,
-			add_child
+			add_child,
+			set_expand
+--			set_vertical_resize,
+--			set_horizontal_resize
 		end
 
 	WEL_FRAME_WINDOW
@@ -52,7 +58,8 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
-			on_key_up
+			on_key_up,
+			on_draw_item
 		redefine
 			set_menu,
 			default_style,
@@ -62,11 +69,14 @@ inherit
 			on_get_min_max_info,
 			on_destroy,
 			on_menu_command,
-			on_show
+			on_show,
+			on_move,
+			closeable
 		end
 
 creation
-	make, make_top_level
+	make,
+	make_top_level
 
 feature {NONE} -- Initialization
 
@@ -75,10 +85,8 @@ feature {NONE} -- Initialization
 			-- parents
 		do
 			make_top ("EV_WINDOW")
-			!! min_track.make (0, 0)
-			!! max_track.make (1000, 1000)
-			set_maximum_width (1000)
-			set_maximum_height (1000)
+--			!! min_track.make (0, 0)
+--			!! max_track.make (system_metrics.screen_width, system_metrics.screen_height)
 		end
 
 	make (par: EV_WINDOW) is
@@ -90,17 +98,21 @@ feature {NONE} -- Initialization
 			check
 				parent_not_void: par_imp /= Void
 			end
+--			make_top ("EV_CHILD_WINDOW")
 			make_child (par_imp, "EV_WINDOW")
-			!! min_track.make (0,0)
-			!! max_track.make (1000, 1000)
-			set_maximum_width (1000)
-			set_maximum_height (1000)
+--			!! min_track.make (0,0)
+--			!! max_track.make (system_metrics.screen_width, system_metrics.screen_height)
+--			set_maximum_width (system_metrics.screen_width)
+--			set_maximum_height (system_metrics.screen_height)
 		end
 
 	plateform_build (par: EV_CONTAINER_IMP) is
 			-- Initialize few variables
 		do
 			{EV_CONTAINER_IMP} Precursor (par)
+			resize_type := 3
+			set_maximum_width (system_metrics.screen_width)
+			set_maximum_height (system_metrics.screen_height)
 			never_displayed := True
 		end
 		
@@ -174,18 +186,46 @@ feature -- Status report
 
 feature -- Status setting
 
+--	set_horizontal_resize (flag: BOOLEAN) is
+--			-- Allow the window to be verticaly resized.
+--		do
+--			{EV_CONTAINER_IMP} Precursor (flag)
+--			if flag then
+--				min_track.set_x (width)
+--				max_track.set_x (width)
+--			else
+--				min_track.set_x (minimum_width)
+--				max_track.set_x (maximum_width)
+--			end
+--		end
+
+--	set_vertical_resize (flag: BOOLEAN) is
+--			-- Allow the window to be horizontaly resized.
+--		do
+--			{EV_CONTAINER_IMP} Precursor (flag)
+--			if flag then
+--				min_track.set_y (height)
+--				max_track.set_y (height)
+--			else
+--				min_track.set_y (maximum_height)
+--				max_track.set_y (maximum_height)
+--			end
+--		end
+
 	forbid_resize is
 			-- Forbid the resize of the window.
 		do
-			max_track.set_x_y (width, height)
-			min_track.set_x_y (width, height)
+			resize_type := 0
+--			max_track.set_x_y (width, height)
+--			min_track.set_x_y (width, height)
 		end
 
 	allow_resize is
 			-- Allow the resize of the window.
 		do
-			min_track.set_x_y (minimum_width, minimum_height)
-			max_track.set_x_y (maximum_width, maximum_height)
+			resize_type := 3
+--			min_track.set_x_y (minimum_width, minimum_height)
+--			max_track.set_x_y (maximum_width, maximum_height)
 		end
 
 	set_iconic_state is
@@ -222,50 +262,51 @@ feature -- Element change
 		end
 
 	set_minimum_width (value: INTEGER) is
-			-- Minimum width of window
+			-- Make `value' the new `minimum_width'.
 			-- Must be bigger than the mswin minimum, or it does nothing
 		do
 			minimum_width := value --.max (system_metrics.window_minimum_width)
-			min_track.set_x (value)
+--			min_track.set_x (value)
 		end
 
 	set_minimum_height (value: INTEGER) is
-			-- Minimum heigth of window, must be bigger than the mswin minimum
+			-- Make `value' the new `minimum_height'.
+			-- Must be bigger than the mswin minimum
 		do
 			minimum_height := value --.max (system_metrics.window_minimum_height)
-			min_track.set_y (value)
+--			min_track.set_y (value)
 		end
 
 	set_maximum_width (value: INTEGER) is
 			-- Make `value' the new maximum width.
 		do
 			maximum_width := value
-			max_track.set_x (value)
+--			max_track.set_x (value)
 		end
 
 	set_maximum_height (value: INTEGER) is
 			-- Make `value' the new maximum height.
 		do
 			maximum_height := value
-			max_track.set_y (value)
+--			max_track.set_y (value)
 		end
 
-	set_title (new_title: STRING) is
-			-- Make `new_title' the title of the window.            
+	set_title (txt: STRING) is
+			-- Make `txt' the title of the window.            
 		do
-			set_text (new_title)
+			set_text (txt)
 		end
 
-	set_icon_name (a_name: STRING) is
-			-- Set `icon_name' to `a_name'.
+	set_icon_name (txt: STRING) is
+			-- Make `txt' the new icon name.
 		do
 			check
 				not_yet_implemented: False
 			end
 		end	
 
-	set_icon_mask (mask: EV_PIXMAP) is
-			-- Set `icon_mask' to `mask'.
+	set_icon_mask (pixmap: EV_PIXMAP) is
+			-- Make `pixmap' the new icon mask.
 		do
 			check
 				not_yet_implemented: False
@@ -273,15 +314,15 @@ feature -- Element change
 		end
 
 	set_icon_pixmap (pixmap: EV_PIXMAP) is
-			-- Set `icon_pixmap' to `pixmap'.
+			-- Make `pixmap' the new icon pixmap.
 		do
 			check
 				not_yet_implemented: False
 			end
 		end
 
-	set_widget_group (group_widget: EV_WIDGET) is
-			-- Set `widget_group' to `group_widget'.
+	set_widget_group (widget: EV_WIDGET) is
+			-- Make Current part of the group of `widget'.
 		do
 			check
                 not_yet_implemented: False
@@ -290,16 +331,24 @@ feature -- Element change
 
 feature -- Event - command association
 
-	add_resize_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add `command' to the list of commands to be executed when the
-			-- widget is resized.
+	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the window is closed.
 		do
+			add_command (Cmd_close, cmd, arg)
 		end
 
-	add_move_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add `command' to the list of commands to be executed when the
-			-- widget is resized.
+	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the window is resized.
 		do
+			add_command (Cmd_size, cmd, arg)
+		end
+
+	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget is resized.
+		do
+			add_command (Cmd_move, cmd, arg)
 		end
 
 feature {EV_WIDGET_IMP} -- Implementation
@@ -342,37 +391,34 @@ feature {EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
-	add_child (child_imp: EV_WIDGET_I) is
+	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite
 		do
-			child ?= child_imp
+			child := child_imp
 			if has_menu then
-				set_minimum_size (child.minimum_width + 2*window_frame_width, child.minimum_height + title_bar_height + menu_bar_height + window_border_height + 2 * window_frame_height)
+				set_minimum_size (child_imp.minimum_width + 2*window_frame_width, child_imp.minimum_height + title_bar_height + menu_bar_height + window_border_height + 2 * window_frame_height)
 			else
-				set_minimum_size (child.minimum_width + 2*window_frame_width, child.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height)
+				set_minimum_size (child_imp.minimum_width + 2*window_frame_width, child_imp.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	plateform_closed is
-			-- Nothing to do here, because WEL take care of 
-			-- everything.
-		do
-		end 
-
 	default_style: INTEGER is
 		-- Set with the option `Ws_clipchildren' to avoid flashing.
 		once
-			Result := Ws_overlappedwindow + Ws_clipchildren
-					 + Ws_clipsiblings
+			Result := Ws_border + Ws_dlgframe + Ws_sysmenu 
+					+ Ws_thickframe + Ws_overlapped
+					+ Ws_minimizebox + Ws_maximizebox
+					+ Ws_clipchildren + Ws_clipsiblings
 		end
 
 	default_ex_style: INTEGER is
 		-- Set with the option `Ws_ex_controlparent' to allow
 		-- the user to use the tab key.
 		once
-			Result := Ws_ex_controlparent
+			Result := Ws_ex_controlparent + Ws_ex_left
+						+ Ws_ex_ltrreading
 		end
 
 	background_brush: WEL_BRUSH is
@@ -406,21 +452,58 @@ feature {NONE} -- Implementation
 			-- Called when the window is resized.
 			-- Resize the child if it exists.
 		do
+			execute_command (Cmd_size, Void)
 			if shown and then child /= Void then
 				child.parent_ask_resize (a_width, a_height)
 			end
 		end
 
-	min_track: WEL_POINT
-			-- Minimum position where the user can track the window
+   	on_move (x_pos, y_pos: INTEGER) is
+   			-- Wm_move message.
+   			-- This message is sent after a window has been moved.
+   			-- `x_pos' specifies the x-coordinate of the upper-left
+   			-- corner of the client area of the window.
+   			-- `y_pos' specifies the y-coordinate of the upper-left
+   			-- corner of the client area of the window.
+   		do
+			execute_command (Cmd_move, Void)
+ 		end
 
-	max_track: WEL_POINT
-			-- Maximum position where the user can track the window
+	closeable: BOOLEAN is
+			-- Can the user close the window?
+			-- Yes by default.
+		do
+			execute_command (Cmd_close, Void)
+			interface.remove_implementation
+			Result := True
+		end
+
+--	min_track: WEL_POINT
+--			-- Minimum position where the user can track the window
+
+--	max_track: WEL_POINT
+--			-- Maximum position where the user can track the window
 
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+		local
+			min_track, max_track: WEL_POINT
 		do
+			inspect resize_type
+			when 0 then
+				!! min_track.make (width, height)
+				!! max_track.make (width, height)
+			when 1 then
+				!! min_track.make (minimum_width, height)
+				!! max_track.make (maximum_width, height)
+			when 2 then
+				!! min_track.make (width, minimum_height)
+				!! max_track.make (width, maximum_height)
+			when 3 then
+				!! min_track.make (minimum_width, minimum_height)
+				!! max_track.make (maximum_width, maximum_height)
+			end
 			min_max_info.set_min_track_size (min_track)
---			min_max_info.set_max_track_size (max_track)
+			min_max_info.set_max_track_size (max_track)
 		end
 
 	on_destroy is
@@ -469,6 +552,16 @@ feature {NONE} -- Implementation
 
 	current_menu: EV_MENU_CONTAINER_IMP
 			-- The current menu of the window.
+
+feature {NONE} -- Inapplicable
+
+	set_expand (flag: BOOLEAN) is
+			-- Not applicable for windows.
+		do
+			check
+				Inapplicable: False
+			end
+		end
 
 end -- class EV_WINDOW_IMP
 

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 				if system_general /= Void then
 					create test_file.make (system_general)
 					if test_file.exists then
-						create resource_files_parser.make ("bench")
+						create resource_files_parser.make (short_studio_name)
 						resource_files_parser.set_extension ("cfg")
 						resource_files_parser.parse_files (Configure_resources)
 		

@@ -90,6 +90,9 @@ feature -- Access: environment variable
 			end
 		end
 
+	short_studio_name: STRING is "studio"
+			-- Short version of EiffelStudio name.
+
 feature -- Access: file name
 
 	Eiffel_recent_projects: STRING is
@@ -124,7 +127,7 @@ feature -- Access: file name
 			-- Location of templates.
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "help", "defaults", Eiffel_platform>>)
+			Result.extend_from_array (<<short_studio_name, "help", "defaults", Eiffel_platform>>)
 		end
 
 	Default_class_file: FILE_NAME is
@@ -136,26 +139,26 @@ feature -- Access: file name
 	Default_ace_name: FILE_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "help", "defaults", Eiffel_platform>>)
+			Result.extend_from_array (<<short_studio_name, "help", "defaults", Eiffel_platform>>)
 			Result.set_file_name (Default_ace_file)
 		end
 
 	Bitmaps_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "bitmaps">>)
+			Result.extend_from_array (<<short_studio_name, "bitmaps">>)
 		end
 
 	Cursor_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "bitmaps", "cursor">>)
+			Result.extend_from_array (<<short_studio_name, "bitmaps", "cursor">>)
 		end
 
 	Help_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "help", "errors">>)
+			Result.extend_from_array (<<short_studio_name, "help", "errors">>)
 		end
 
 	Bin_path: FILE_NAME is
@@ -165,7 +168,7 @@ feature -- Access: file name
 			-- calls `set_file_name' on returned object.
 		do
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "spec", Eiffel_platform, "bin">>)
+			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
 		end
 
 	Default_precompiled_location: DIRECTORY_NAME is
@@ -187,35 +190,35 @@ feature -- Access: file name
 	filter_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "filters">>)
+			Result.extend_from_array (<<short_studio_name, "filters">>)
 		end
 
 	profile_path: DIRECTORY_NAME is
 			-- Location of the profiler configuration files
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array(<<"studio", "profiler">>)
+			Result.extend_from_array(<<short_studio_name, "profiler">>)
 		end
 
 	New_project_wizards_path: DIRECTORY_NAME is
 			-- Location of new project wizards.
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "wizards", "new_projects">>)
+			Result.extend_from_array (<<short_studio_name, "wizards", "new_projects">>)
 		end
 
 	precompilation_wizard_command_name: FILE_NAME is
 			-- Command to be executed to launch the precompilation wizard.
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "wizards", "precompile", "spec", Eiffel_platform>>)
+			Result.extend_from_array (<<short_studio_name, "wizards", "precompile", "spec", Eiffel_platform>>)
 			Result.set_file_name ("wizard")
 		end
 
 	precompilation_wizard_resources_directory: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "wizards", "precompile">>)
+			Result.extend_from_array (<<short_studio_name, "wizards", "precompile">>)
 		end
 
 	last_opened_projects_resource_name: STRING is "studio_recent_files"
@@ -225,9 +228,9 @@ feature -- Access: file name
 		do
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			if Platform_constants.is_windows then
-				Result.extend_from_array (<<"eifinit", "studio", "spec", "windows">>)
+				Result.extend_from_array (<<"eifinit", short_studio_name, "spec", "windows">>)
 			else
-				Result.extend_from_array (<<"eifinit", "studio", "spec", "gtk">>)
+				Result.extend_from_array (<<"eifinit", short_studio_name, "spec", "gtk">>)
 			end
 			Result.set_file_name ("default_recent_projects")
 			Result.add_extension ("xml")
@@ -241,9 +244,9 @@ feature -- Access: file name
 		do
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			if Platform_constants.is_windows then
-				Result.extend_from_array (<<"eifinit", "studio", "spec", "windows">>)
+				Result.extend_from_array (<<"eifinit", short_studio_name, "spec", "windows">>)
 			else
-				Result.extend_from_array (<<"eifinit", "studio", "spec", "gtk">>)
+				Result.extend_from_array (<<"eifinit", short_studio_name, "spec", "gtk">>)
 			end
 			Result.set_file_name ("default")
 			Result.add_extension ("xml")
@@ -257,7 +260,7 @@ feature -- Access: file name
 			is_windows: Platform_constants.is_windows
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"eifinit", "studio", "spec", "windows">>)
+			Result.extend_from_array (<<"eifinit", short_studio_name, "spec", "windows">>)
 			Result.set_file_name ("culture")
 		end
 
@@ -273,14 +276,14 @@ feature -- Access: command name
 	Freeze_command_name: FILE_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "spec", Eiffel_platform, "bin">>)
+			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
 			Result.set_file_name (Platform_constants.Finish_freezing_script)
 		end
 
 	Prelink_command_name: FILE_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "spec", Eiffel_platform, "bin">>)
+			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
 			Result.set_file_name (Prelink_script)
 		end
 
@@ -288,7 +291,7 @@ feature -- Access: command name
 			-- Complete path to `estudio'.
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "spec", Eiffel_platform, "bin">>)
+			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
 			Result.set_file_name ("estudio")
 		end
 

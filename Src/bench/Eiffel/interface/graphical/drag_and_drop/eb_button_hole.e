@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			-- Create a hole
 		do
 			eb_button_make (a_cmd, a_parent);
+			a_cmd.init_other_button_actions (Current);
 			initialize_transport
 		end;
 
@@ -46,16 +47,9 @@ feature -- Access
 			Result := True
 		end;
 
-feature -- Stone properties
+feature -- Properties
 
-	stone_type: INTEGER is
-		do
-		end;
-
-	transported_stone: STONE is
-		do
-			Result := tool.stone
-		end;
+	associated_command: HOLE_COMMAND;
 
 feature -- For redefinition in the descendants.
 
@@ -64,14 +58,22 @@ feature -- For redefinition in the descendants.
 			Result := associated_command.full_symbol
 		end;
 
+	stone_type: INTEGER is
+		do
+		end;
+
+	transported_stone: STONE is
+		do
+			Result := associated_command.transported_stone
+		end
+
 feature -- Pick and Throw
 
 	receive (a_stone: STONE) is
 			-- Process dropped stone `a_stone'
 		do
-			if a_stone.is_valid and then compatible (a_stone) then
-				tool.receive (a_stone)
-			end
+				-- Propagate receiption to `associated_command'.
+			associated_command.receive (a_stone)
 		end;
 
 feature -- Setting
@@ -89,17 +91,5 @@ feature -- Setting
 				set_symbol (full_symbol)
 			end
 		end
-
-feature -- Properties
-
-	tool: TOOL_W is
-			-- Tool attached to Current
-		do
-			Result := associated_command.tool
-		end
-
-feature {NONE} -- Properties
-
-	associated_command: HOLE_COMMAND
 
 end -- class EB_BUTTON_HOLE

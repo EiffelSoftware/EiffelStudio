@@ -32,7 +32,7 @@ feature -- Initialization
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Creation routine
 		do
-			Precursor (a_name, a_parent)
+			{CATALOG} Precursor (a_name, a_parent)
 		end
 
 

@@ -33,7 +33,6 @@
 #include "stream.h"
 #include "transfer.h"		/* for swallow() */
 #include "eif_logfile.h"
-#include "idrf.h"
 #include "rqst_idrs.h"
 #include "child.h"
 #include <stdio.h>		/* For BUFSIZ */
@@ -334,7 +333,7 @@ rt_public int recv_packet(int s, Request *rqst)
 	}
 
 	rqstcnt++;			/* One more request */
-	idrf_pos(&idrf);	/* Reposition IDR streams */
+	idrf_reset_pos(&idrf);	/* Reposition IDR streams */
 
 	/* Deserialize request */
 	if (!idr_Request(&idrf.i_decode, rqst)) {
@@ -372,7 +371,7 @@ rt_public void send_packet(int s, Request *dans)
 #endif
 
 	rqstsent++;			/* Keep track of the messages sent */
-	idrf_pos(&idrf);	/* Reposition IDR streams */
+	idrf_reset_pos(&idrf);	/* Reposition IDR streams */
 
 	/* Serialize the request */
 	if (!idr_Request(&idrf.i_encode, dans)) {
@@ -489,6 +488,8 @@ rt_private void commute(int from, int to, int size)
 		free (buf);
 		return;
 	}
+
+	free(buf);
 }
 
 #ifdef EIF_WIN32
@@ -600,6 +601,8 @@ rt_private void run_command(int s)
 #elif defined (SIGCLD)
 	signal (SIGCLD, SIG_IGN);
 #endif
+
+	free(cmd);
 
 #ifdef EIF_WIN32
 	if (status == 0)
@@ -764,6 +767,8 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	status = eifrt_vms_spawn(cmd, 1);
 #endif	/* EIF_VMS */
 
+	free(cmd);
+
 	if (status == 0)
 		dans.rq_opaque.op_second = AK_OK;	/* Command completed sucessfully */
 	else
@@ -812,8 +817,10 @@ rt_private void get_application_cwd (int s)
 
 		/* If current directory is `.' we reset the value to NULL,
 		 * meaning that we won't look at the value of `current_directory' */
-	if ((current_directory[0] == '.') && (strlen (current_directory) == 1))
+	if ((current_directory[0] == '.') && (strlen (current_directory) == 1)) {
+		free(current_directory);
 		current_directory = NULL;
+	}
 }
 
 #ifdef EIF_WIN32
@@ -850,6 +857,13 @@ rt_private void start_app(int s)
 #else
 	cp = spawn_child(cmd, current_directory, 1, &pid);	/* Start up children */
 #endif
+
+	free(cmd);
+	cmd = NULL;
+	if (current_directory) {
+		free(current_directory);
+		current_directory = NULL;
+	}
 
 #ifdef EIF_WIN32
 	if (cp != (STREAM *) 0) {

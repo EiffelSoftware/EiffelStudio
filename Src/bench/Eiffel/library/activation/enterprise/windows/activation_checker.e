@@ -56,7 +56,35 @@ feature {NONE} -- Implementation
 
 	report_engine_not_initialized is
 			-- Action to be performed when engine is not initialized.
+		local
+			l_warning: EV_WARNING_DIALOG
+			l_app: EV_APPLICATION
+			l_screen: EV_SCREEN
+			l_accelerator: EV_ACCELERATOR
 		do
+			create l_app			
+			create l_warning.make_with_text (Not_initialized_error_message)
+			create l_screen
+			l_warning.set_position ((l_screen.width - l_warning.width) // 2,
+				(l_screen.height - l_warning.height) // 3)
+			
+			l_warning.set_buttons_and_actions (<<"Quit">>, <<agent die>>)
+			create l_accelerator
+			l_accelerator.set_key (create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_enter))
+			l_accelerator.actions.extend (agent die)
+			l_warning.accelerators.extend (l_accelerator)
+			l_warning.button ("Quit").set_focus
+			l_warning.show
+			l_app.launch
 		end
 
+	die is
+			-- Kill current application.
+		local
+			l_exception: EXCEPTIONS
+		do
+			create l_exception
+			l_exception.die (-1)
+		end
+		
 end -- class ACTIVATION_CHECKER

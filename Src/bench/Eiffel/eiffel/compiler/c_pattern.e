@@ -99,37 +99,6 @@ feature
 
 feature -- Pattern generation
 
-	generate_hooks (buffer: GENERATION_BUFFER) is
-			-- Generate garbage collector hooks
-		local
-			i, nb: INTEGER;
-		do
-			buffer.putstring ("%T%TRTLI(");
-			buffer.putint (nb_hooks);
-			buffer.putstring (");%N");
-			buffer.putstring ("%T%Tl[0] = Current;%N");
-			from
-				i := 1;
-				nb := argument_count;
-			until
-				i > nb
-			loop
-				if argument_types.item (i).is_pointer then
-					buffer.putstring ("%T%Tl[");
-					buffer.putint (argument_hook_index (i));
-					buffer.putstring ("] = arg");
-					buffer.putint (i);
-					buffer.putstring (";%N");
-				end;
-				i := i + 1;
-			end;
-			if result_type.is_pointer then
-				buffer.putstring ("%T%Tl[");
-				buffer.putint (nb_hooks - 1);
-				buffer.putstring ("] = Result;%N");
-			end;
-		end;
-
 	nb_hooks: INTEGER is
 			-- Number of garbage collector hooks needed
 		local
@@ -261,9 +230,8 @@ feature -- Pattern generation
 				i > nb
 			loop
 				if argument_types.item (i).is_pointer then
-					buffer.putstring (", l[");
-					buffer.putint (argument_hook_index (i));
-					buffer.putchar (']');
+					buffer.putchar (',');
+					buffer.put_protected_local (argument_hook_index (i));
 				else
 					buffer.putstring (", arg");
 					buffer.putint (i);

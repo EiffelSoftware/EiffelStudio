@@ -293,17 +293,9 @@ feature -- Element change
 				but.set_bitmap_index (button.image_index)
 			end
 			
-				-- Now take care of the sensitivity.
-				-- As the make features used to create `but' all set the
-				-- `state' to enabled, we must alter it, if the original button
-				-- as not enabled.
-			if not button.is_sensitive then
-				but.set_state (feature {WEL_TB_STATE_CONSTANTS}.Tbstate_indeterminate)
-			end
-			
 				-- Also take care of toggled state if a toggle button.
 			if toggle_button /= Void and then toggle_button.is_selected then
-				but.set_state  (feature {WEL_TB_STATE_CONSTANTS}.Tbstate_checked + feature {WEL_TB_STATE_CONSTANTS}.Tbstate_enabled)
+				but.set_state  (feature {WEL_TB_STATE_CONSTANTS}.Tbstate_checked | feature {WEL_TB_STATE_CONSTANTS}.Tbstate_enabled)
 			end
 			
 				-- If we are a separator then there is no need to handle the text.
@@ -335,7 +327,8 @@ feature -- Element change
 			wel_insert_button (an_index - 1, but)
 			auto_size
 
-			if not is_sensitive then
+				-- Disable the button if it should not be sensitive.
+			if not is_sensitive or not button.is_sensitive then
 				disable_button (button.id)
 			end
 

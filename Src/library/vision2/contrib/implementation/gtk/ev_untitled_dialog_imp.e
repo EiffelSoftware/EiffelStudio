@@ -24,11 +24,11 @@ feature {NONE} -- Initialization
 			-- Create empty dialog box.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_window_new (C.Gtk_window_dialog_enum))
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (C.Gtk_window_dialog_enum))
 				-- Cannot use popup window as Window manager cannot give focus to it.
-			C.gtk_widget_realize (c_object)
-			C.gdk_window_set_decorations (C.gtk_widget_struct_window (c_object), 0)
-			C.gtk_window_set_policy (c_object, 0, 1, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
+			feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 1, 0)
 			enable_closeable
 		end
 		
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			update_request_size
 			default_width := a_width
 			default_height := a_height
-			C.gtk_widget_set_usize (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
 		end
 
 feature {NONE} -- Implementation

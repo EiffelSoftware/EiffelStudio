@@ -8,15 +8,17 @@ root
 	APPLICATION (root_cluster): "make"
 
 default
-	assertion (require)
-	-- assertion (all)
+	assertion (no)
+--	assertion (all)
 	dead_code_removal (yes)
 
 cluster
 	
-	root_cluster: "$EIFFEL4\com_wizard\root";
+	root_cluster: "c:\com_wizard\root";
 
-	all wizard: "$EIFFEL4\com_wizard\project"
+	all e2_idl: "c:\com_wizard\eiffeltoidl";
+
+	all wizard: "c:\com_wizard\project"
 		option
 			assertion (require):ECOM_SAFE_ARRAY_BOUND;
 		visible
@@ -32,7 +34,7 @@ cluster
 		end;
 
 	-- EiffelBase
-	all base:						"$LIBRARY\base"
+	all base:						"$EIFFEL4\library\base"
 		exclude
 			"table_eiffel3";
 			"desc"
@@ -42,28 +44,28 @@ cluster
 		end;
 
 	-- WEL
-	all wel:						"$LIBRARY\wel"
+	all wel:						"$EIFFEL4\library\wel"
 
 	-- EiffelCOM
-	all ecom:						"$LIBRARY\com"
+	all ecom:						"$EIFFEL4\library\com"
 		visible
 			ECOM_CURRENCY;
 			ECOM_DECIMAL;
 		end;
 
 	-- EiffelTime
-	all time:						"$LIBRARY\time"
+	all time:						"$EIFFEL4\library\time"
 		exclude
 			"french";
 			"german"
 		end;
 
 external
-	include_path:	"$LIBRARY\wel\spec\windows\include",
-					"$LIBRARY\com\spec\windows\include"
+	include_path:	"$EIFFEL4\library\wel\spec\windows\include",
+					"$EIFFEL4\library\com\spec\windows\include"
 
-	object: 		"$(LIBRARY)\wel\spec\$(COMPILER)\lib\wel.lib",
-					"$(LIBRARY)\time\spec\msc\lib\datetime.lib",
-					"$(LIBRARY)\com\spec\msc\lib\com.lib",
-					"$(LIBRARY)\com\spec\msc\lib\com_runtime.lib";
+	object: 		"$EIFFEL4\library\wel\spec\$(COMPILER)\lib\wel.lib",
+					"$EIFFEL4\library\time\spec\msc\lib\datetime.lib",
+					"$EIFFEL4\library\com\spec\msc\lib\com.lib",
+					"$EIFFEL4\library\com\spec\msc\lib\com_runtime.lib";
 end

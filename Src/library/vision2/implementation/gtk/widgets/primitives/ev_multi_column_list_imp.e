@@ -156,6 +156,7 @@ feature {NONE} -- Initialization
 			create default_alignment
 			
 			list_widget := C.gtk_clist_new (a_columns)
+			C.gtk_clist_set_shadow_type (list_widget, C.GTK_SHADOW_NONE_ENUM)
 			disable_multiple_selection
 		
 			real_signal_connect (

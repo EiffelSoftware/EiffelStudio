@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 			add_formatter (f)
 			Create {EB_FEATURE_FLAT_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_BREAKPOINTS_FORMATTER} f.make (tool)
-			add_formatter (f)
+			Create {EB_BREAKPOINTS_FORMATTER} stop_points_format.make (tool)
+			add_formatter (stop_points_format)
 
 			Create {EB_FEATURE_CALLERS_FORMATTER} f.make (tool)
 			add_formatter (f)
@@ -55,6 +55,9 @@ feature -- Constants
 		do
 			Result := first
 		end
+
+	stop_points_format: EB_FORMATTER
+			-- format used for debugging
 
 feature -- Constants
 

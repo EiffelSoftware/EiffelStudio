@@ -282,8 +282,6 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 	set_pixmap (gdkpix, gdkmask: POINTER) is
 			-- Set the GtkPixmap using Gdk pixmap data and mask.
-		local
-			old_drawable, old_mask: POINTER
 		do
 			C.gtk_pixmap_set (gtk_pixmap, gdkpix, gdkmask)
 			C.gdk_pixmap_unref (gdkpix)
@@ -306,12 +304,6 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	gdk_pixmap_unref (a_pixmap: POINTER) is 
-			-- void	   gdk_pixmap_unref		(GdkPixmap  *pixmap);
-		external
-			"C (GdkPixmap*) | <gtk/gtk.h>"
-		end
 
 	parent_widget: POINTER
 			-- Parent widget for Current.

@@ -1,8 +1,5 @@
 indexing
-
-	description:
-		"Bit sequences of length `count', with binary operations";
-
+	description: "Bit sequences of length `count', with binary operations";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -103,7 +100,7 @@ feature -- Basic operations
 		end;
 
 	infix "or" (other: BIT_REF): BIT_REF is
-			-- Bit-by-bi boolean disjunction with `other'
+			-- Bit-by-bit boolean disjunction with `other'
 		require
 			other_exists: other /= Void;
 			conformance: other.count <= count

@@ -42,8 +42,6 @@ inherit
 			set_all,
 			set_use_system_default,
 			set_assertions,
-			set_parent_name,
-			set_parent_name_user_precondition,
 			add_exclude,
 			add_exclude_user_precondition,
 			remove_exclude,
@@ -51,27 +49,11 @@ inherit
 			cluster_id
 		end		
 create
-	make_new,
 	make_with_cluster_sd_and_ace_accesser
 	
 feature {NONE} -- Initialization
-
-	make_new (a_name: STRING) is
-			-- Make new cluster.
-		require
-			non_void_name: a_name /= Void
-			valid_name: not a_name.is_empty
-		local
-			id_sd: ID_SD
-		do
-			id_sd := new_id_sd (a_name, False)
-			create cluster_sd.initialize (id_sd, Void, Void, Void, False, False)
-			create ace_dictionary
-		ensure
-			non_void_cluster_sd: cluster_sd /= Void
-		end
 		
-	make_with_cluster_sd_and_ace_accesser (a_cluster: CLUSTER_SD; an_ace: ACE_FILE_ACCESSER) is
+	make_with_cluster_sd_and_ace_accesser (a_cluster: CLUSTER_SD; a_parent: CLUSTER_PROPERTIES; an_ace: ACE_FILE_ACCESSER) is
 			-- Make with CLUSTER_SD and ACE_FILE_ACCESSER.
 		require
 			non_void_cluster: a_cluster /= Void
@@ -79,6 +61,7 @@ feature {NONE} -- Initialization
 			cluster_sd := a_cluster
 			ace := an_ace
 			create ace_dictionary
+			parent_cluster := a_parent
 		ensure
 			non_void_cluster_sd: cluster_sd /= Void
 		end
@@ -142,9 +125,10 @@ feature -- Access
 	parent_name: STRING is
 			-- Name of parent cluster.
 		do
-			Result := cluster_sd.parent_name
-			if Result = Void then
-				Result := ""
+			if parent_cluster /= Void then
+				Result := parent_cluster.name
+			else
+				create Result.make_empty
 			end
 		end
 		
@@ -376,6 +360,12 @@ feature -- Access
 			Result := cluster_path.clone(cluster_path)
 			Result.replace_substring_all ("/", "\")
 			
+			if parent_name /= Void and not parent_name.is_empty then
+				if Result.substring_index ("$\", 1) > 0 then
+					Result.replace_substring_all ("$\", parent_cluster.expanded_cluster_path + "\")
+				end
+			end
+			
 			dollar_pos := Result.index_of ('$', 1)
 			if dollar_pos > 0 then
 				from 
@@ -401,7 +391,7 @@ feature -- Access
 						end
 					elseif parth_pos > 0 then
 						if next_dollar_pos > 0 then
-							slash_pos := slash_pos.min (next_dollar_pos)
+							slash_pos := parth_pos.min (next_dollar_pos)
 						else
 							slash_pos := parth_pos + 1
 						end
@@ -580,7 +570,6 @@ feature -- Element change
 			-- set 'cluster_path' to 'a_path'
 		require else
 			non_void_path: a_path /= Void
-			valid_path: not a_path.is_empty
 		local
 			id_sd: ID_SD
 			l_ise_path: STRING
@@ -737,17 +726,6 @@ feature -- Element change
 			end	
 		end
 
-	set_parent_name (a_parent_name: STRING) is
-			-- set 'parent_name' with 'a_parent_name'
-		require
-			non_void_parent_name: a_parent_name /= Void
-			valid_parent_name: valid_parent_name (a_parent_name)
-		do
-			cluster_sd.set_parent_name (create {ID_SD}.initialize (a_parent_name))
-		ensure
-			parent_name_set: parent_name.is_equal (a_parent_name)
-		end
-		
 	add_exclude (a_file_name: STRING) is
 			-- Add 'a_file_name' to list of cluster excludes.
 		require else
@@ -833,12 +811,6 @@ feature -- User Preconditions
 			Result := False
 		end
 		
-	set_parent_name_user_precondition (return_value: STRING): BOOLEAN is
-			-- 'set_parent_name ' precondition
-		do
-			Result := False
-		end
-		
 	add_exclude_user_precondition (dir_name: STRING): BOOLEAN is
 			-- 'add_exclude ' precondition
 		do
@@ -880,18 +852,7 @@ feature {SYSTEM_CLUSTERS} -- Element Changes
 			id_sd := new_id_sd (a_name, False)
 			cluster_sd.set_cluster_name (id_sd)
 				
-			-- change all of the sub clusters parent name to the current name
-			if subclusters_impl /= Void then
-				from
-					subclusters_impl.start
-				until
-					subclusters_impl.after
-				loop
-					subclusters_impl.item.set_parent_name (a_name)
-					subclusters_impl.forth
-				end
-			end
-			
+			-- reset override cluster
 			if is_override_cluster then
 				set_override (True)	
 			end
@@ -938,7 +899,25 @@ feature {SYSTEM_CLUSTERS} -- Element Changes
 		ensure
 			not_has: not has_child (a_name)
 		end
+		
+	set_parent_cluster (a_parent: CLUSTER_PROPERTIES) is
+			-- set clusters parent
+		require
+			parent_is_self: a_parent /= Void implies not a_parent.is_equal (Current)
+		do
+			parent_cluster := a_parent
+		end
 
+	store is
+			-- apply any temp cluster setting to 'cluster_sd'
+		do
+			if parent_name /= Void and not parent_name.is_empty then
+				cluster_sd.set_parent_name (new_id_sd (parent_name, False))
+			end
+		end
+		
+		
+		
 feature -- Externals
 
 	ccom_release (cpp_obj: POINTER) is
@@ -959,6 +938,10 @@ feature {NONE} -- Implementation
 			
 	subclusters_impl: ARRAYED_LIST [like Current]
 			-- Subclusters.
+			
+			
+	parent_cluster: CLUSTER_PROPERTIES
+			-- parent cluster
 
 	valid_name: BOOLEAN is
 		do
@@ -969,6 +952,7 @@ feature {NONE} -- Implementation
 	
 	id: INTEGER 
 			-- ID in cluster tree.
+			
 invariant
 	has_cluster_sd: cluster_sd /= Void
 	valid_name: valid_name

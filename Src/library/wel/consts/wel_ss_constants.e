@@ -41,10 +41,18 @@ feature -- Access
 
 	Ss_noprefix: INTEGER is 128
 
-	Ss_center_image: INTEGER is 512
+	Ss_centerimage: INTEGER is 512
 
 	Ss_notify: INTEGER is 256
+	
+feature -- Obsolete
 
+	Ss_center_image: INTEGER is 
+		obsolete "use `Ss_centerimage' instead"
+		do
+			Result := Ss_centerimage
+		end
+	
 end -- class WEL_SS_CONSTANTS
 
 --|----------------------------------------------------------------

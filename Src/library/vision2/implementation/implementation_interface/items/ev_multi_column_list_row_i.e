@@ -78,7 +78,7 @@ feature -- Element Change
 		require
 			exists: not destroyed
 			text_not_void: a_text /= Void
-			text_length_ok: a_text.count <= columns
+			valid_text_length: a_text.count <= columns
 		local
 			i: INTEGER
 			list_i: INTEGER

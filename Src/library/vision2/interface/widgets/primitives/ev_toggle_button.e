@@ -30,7 +30,8 @@ feature {NONE} -- Initialization
 		-- Empty button
 		do
 			!EV_TOGGLE_BUTTON_IMP!implementation.make (par)
-			initialize (par)	
+--			implementation.initialize (Current)
+			widget_make (par)
 		end	
 	
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
@@ -38,43 +39,43 @@ feature {NONE} -- Initialization
 			-- text label
 		do
 			!EV_TOGGLE_BUTTON_IMP!implementation.make_with_text (par, txt)
-			initialize (par)
+--			implementation.initialize (Current)
+			widget_make (par)
 		end			
 		
 feature -- Status report
 	
-	pressed: BOOLEAN is
-                        -- Is toggle pressed
-                require
-                        exists: not destroyed
-                do
-                        Result := implementation.pressed
-                end 
+	state: BOOLEAN is
+			-- Is toggle pressed.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.state
+		end 
 	
 feature -- Status setting
 
-        set_pressed (button_pressed: BOOLEAN) is
-                        -- Set Current toggle on and set
-                        -- pressed to True.
-                require
-                        exists: not destroyed
-                do
-                        implementation.set_pressed (button_pressed)
-                ensure
-                        correct_state: pressed = button_pressed
-                end
+	set_state (flag: BOOLEAN) is
+			-- Set Current toggle on and set
+			-- pressed to True.
+		require
+			exists: not destroyed
+		do
+			implementation.set_state (flag)
+		ensure
+			correct_state: state = flag
+		end
 
-        toggle is
+	toggle is
 			-- Change the state of the toggel button to
 			-- opposite
 		require
-                        exists: not destroyed
-                do
-                        implementation.toggle
-                ensure
-                        state_is_true: pressed = not old pressed
-                end
-
+			exists: not destroyed
+		do
+			implementation.toggle
+		ensure
+			state_is_true: state = not old state
+		end
 	
 feature -- Event - command association
 	

@@ -34,7 +34,6 @@ feature -- Initialization
 feature {NONE} -- Implementation
 
 	implementation: EV_RADIO_BUTTON_I
-
 	
 end -- class EV_RADIO_BUTTON
 

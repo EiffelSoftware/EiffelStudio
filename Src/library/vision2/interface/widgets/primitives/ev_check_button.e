@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		-- Empty check button
 		do
 			!EV_CHECK_BUTTON_IMP!implementation.make (par)
-			initialize (par)
+			widget_make (par)
 		end	
 	
 	make_with_text (par: EV_CONTAINER; txt: STRING) is

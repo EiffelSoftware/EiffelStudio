@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			!EV_WINDOW_IMP!implementation.make (par)
 			implementation.set_interface (Current)
+			implementation.initialize_colors
 		end
 	
     make_top_level is
@@ -41,6 +42,7 @@ feature {NONE} -- Initialization
 		do
 			!EV_WINDOW_IMP!implementation.make_top_level 
 			implementation.set_interface (Current)
+			implementation.initialize_colors
 		end
 	
 feature  -- Access
@@ -50,9 +52,14 @@ feature  -- Access
 			-- If the widget is an EV_WINDOW without parent,
 			-- this attribute will be `Void'
 		do
-			Result ?= implementation.parent
-		ensure then
-			parent_set: implementation.parent /= Void implies Result /= Void
+			if implementation.parent_imp /= Void then
+				Result ?= implementation.parent_imp.interface
+				check
+					result_not_void: Result /= Void
+				end
+			else
+				Result := Void
+			end
 		end
 
 	icon_name: STRING is
@@ -172,32 +179,32 @@ feature -- Measurement
 
 feature -- Status report
 
-        is_iconic_state: BOOLEAN is
-                        -- Does application start in iconic state?
-                require
-                        exists: not destroyed
-                do
-                        Result := implementation.is_iconic_state
-                end
+	is_iconic_state: BOOLEAN is
+			-- Does application start in iconic state?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_iconic_state
+		end
 
 feature -- Status setting
 
-        set_iconic_state is
+	set_iconic_state is
 			-- Set start state of the application
 			-- to be iconic.
-                require
-                        exists: not destroyed
-                do
-                        implementation.set_iconic_state
-                end
+		require
+			exists: not destroyed
+		do
+			implementation.set_iconic_state
+		end
 
-        set_normal_state is
-                        -- Set start state of the application to be normal.
-                require
-                        exists: not destroyed
-                do
-                        implementation.set_normal_state
-                end
+	set_normal_state is
+			-- Set start state of the application to be normal.
+		require
+			exists: not destroyed
+		do
+			implementation.set_normal_state
+		end
 
 	set_maximize_state is
 			-- Set start state of the application to be

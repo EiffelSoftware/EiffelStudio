@@ -1,39 +1,29 @@
 indexing
-
-	description: 
-	"EiffelVision pixmap. Pixmap is a data structure that contains a picture."
+	description: "EiffelVision pixmap. Pixmap is a data structure that contains a picture."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_PIXMAP
+class
+	EV_PIXMAP
 
-inherit
-	
-	--EV_DRAWABLE
-	
-	EV_PRIMITIVE
-		redefine
-			make, implementation
-		end
-		
-	
 creation
-	make, make_from_file
+	make,
+	make_from_file
 
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_PIXMAP_CONTAINER) is
 			-- Pixmap with 'par' as parent and 'txt' as 
 			-- text label
 		do
 			!EV_PIXMAP_IMP!implementation.make (par)
-			widget_make (par)
+			par.implementation.add_pixmap (Current)
 		end			
 	
-	make_from_file (par: EV_CONTAINER; file_name: STRING) is
+	make_from_file (par: EV_PIXMAP_CONTAINER; file_name: STRING) is
 			-- Load the pixmap described in 'file_name'.
 			-- If the file does not exist, an exception is
 			-- raised, (but the pixmap object is created 
@@ -41,11 +31,23 @@ feature {NONE} -- Initialization
 		require
 			file_name_exists: file_name /= Void
 		do
-			make (par)
+			!EV_PIXMAP_IMP!implementation.make (par)
 			read_from_file (file_name)
+			par.implementation.add_pixmap (Current)
 		end
-	
-		
+
+feature -- Measurement
+
+	width: INTEGER is
+		do
+			Result := implementation.width
+		end
+
+	height: INTEGER is
+		do
+			Result := implementation.height
+		end
+
 feature -- Element change
 	
 	read_from_file (file_name: STRING) is
@@ -68,18 +70,15 @@ feature -- Element change
 				!!e
 				e.raise (str)
 			end
-			
 			implementation.read_from_file (file_name)
 		end
-		
 	
-feature {NONE} -- Implementation
+feature -- Implementation
 
 	implementation: EV_PIXMAP_I
 			-- Implementation of pixmap
 	
-end -- class EV_BUTTON
-
+end -- class EV_PIXMAP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

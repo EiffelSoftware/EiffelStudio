@@ -91,6 +91,7 @@ feature {NONE} -- Implementation
 			routine_tool: ROUTINE_W;
 			class_tool: CLASS_W;
 			feature_stone: FEATURE_STONE;
+			fs: FILED_STONE;
 			line_nb: INTEGER
 		do
 			if argument = button_three_action then
@@ -116,7 +117,8 @@ feature {NONE} -- Implementation
 						line_nb := text_window.current_line;
 					end;
 					if not cmd_string.empty then
-						cmd_string.replace_substring_all ("$target", tool.file_name)
+						fs ?= tool.stone;
+						cmd_string.replace_substring_all ("$target", fs.file_name)
 						cmd_string.replace_substring_all ("$line", line_nb.out)
 						!! req;
 						req.execute (cmd_string);

@@ -84,6 +84,9 @@ feature
 				end;
 				emitted := true;
 			end;
+			debug ("FLUSH_FILE")
+				flush
+			end
 		end;
 
 	new_line is
@@ -95,6 +98,9 @@ feature
 				emitted := false;
 				nl := nl + 1;
 			end;
+			debug ("FLUSH_FILE")
+				flush
+			end
 		end;
 
 	putchar (c: CHARACTER) is
@@ -103,6 +109,9 @@ feature
 			emit_tabs;
 			nl := 0;
 			file_putchar (c);
+			debug ("FLUSH_FILE")
+				flush
+			end
 		end;
 	
 	putint (i: INTEGER) is
@@ -111,6 +120,9 @@ feature
 			emit_tabs;
 			nl := 0;
 			file_putint (i);
+			debug ("FLUSH_FILE")
+				flush
+			end
 		end;
 	
 	putreal (r: REAL) is
@@ -119,6 +131,9 @@ feature
 			emit_tabs;
 			nl := 0;
 			file_putreal (r);
+			debug ("FLUSH_FILE")
+				flush
+			end
 		end;
 	
 	putdouble (d: DOUBLE) is
@@ -127,6 +142,9 @@ feature
 			emit_tabs;
 			nl := 0;
 			file_putdouble (d);
+			debug ("FLUSH_FILE")
+				flush
+			end
 		end;
 	
 	putstring (s: STRING) is
@@ -135,6 +153,9 @@ feature
 			emit_tabs;
 			nl := 0;
 			file_putstring (s);
+			debug ("FLUSH_FILE")
+				flush
+			end
 		end;
 
 	putoctal (i: INTEGER) is
@@ -169,6 +190,9 @@ feature
 				end;
 				file_putstring (s);
 			end;
+			debug ("FLUSH_FILE")
+				flush
+			end
 		end;
 
 	escape_char (c: CHARACTER) is
@@ -185,6 +209,9 @@ feature
 			else
 				file_putchar (c);
 			end;
+			debug ("FLUSH_FILE")
+				flush
+			end
 		end;
 
 	escape_string (s: STRING) is
@@ -215,6 +242,9 @@ feature
 				end;
 				i := i + 1;
 			end;
+			debug ("FLUSH_FILE")
+				flush
+			end
 		end;
 
 end

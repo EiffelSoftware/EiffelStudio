@@ -27,7 +27,7 @@ creation
 		
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (f_name: STRING; ec: E_CLASS) is
 		require

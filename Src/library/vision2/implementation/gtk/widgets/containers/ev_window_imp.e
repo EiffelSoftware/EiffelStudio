@@ -59,9 +59,6 @@ feature -- Initialization
 			C.gdk_window_set_functions (C.gtk_widget_struct_window (c_object), 0)
 			
 			C.gtk_window_set_policy (c_object, 0, 1, 0) -- allow_shrink = False, allow_grow = True, auto_shrink = False
-			accel_group := C.gtk_accel_group_new
-	
-			C.gtk_window_add_accel_group (c_object, accel_group)
 			default_height := -1
 			default_width := -1
 		end
@@ -225,9 +222,9 @@ feature -- Status setting
 	destroy is
 			-- Render `Current' unusable.
 		do
---			remove_menu_bar
---			lower_bar.destroy
---			upper_bar.destroy
+			remove_menu_bar
+		--	lower_bar.destroy
+		--	upper_bar.destroy
 			Precursor
 		end
 
@@ -324,7 +321,7 @@ feature -- Element change
 		do
 			menu_bar := a_menu_bar
 			mb_imp ?= menu_bar.implementation
-			mb_imp.set_parent_window (interface)
+			mb_imp.set_parent_window_imp (Current)
 			C.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
 			C.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
 			from
@@ -554,6 +551,8 @@ feature {NONE} -- Implementation
 	vbox: POINTER
 			-- Vertical_box to have a possibility for a menu on the
 			-- top and a status bar at the bottom.
+			
+feature {EV_MENU_BAR_IMP} -- Implementation
 
 	accel_group: POINTER
 			-- Pointer to GtkAccelGroup struct.

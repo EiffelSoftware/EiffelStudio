@@ -142,6 +142,10 @@ feature -- Basic Operations
 				if l_ca /= Void and then l_ca.is_consumed and then is_assembly_stale (l_lower_path) then
 						-- unconsume stale assembly
 					unconsume_assembly (l_lower_path)
+					l_name := l_assembly.get_name
+					l_ca.set_culture (l_name.culture_info.to_string)
+					l_ca.set_version (l_name.version.to_string)
+					l_ca.set_key (encoded_key (l_name.get_public_key_token))
 				end
 					
 					-- Reset update (for optimizations)

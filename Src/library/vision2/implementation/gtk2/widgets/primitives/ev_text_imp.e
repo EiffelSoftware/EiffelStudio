@@ -20,9 +20,8 @@ inherit
 		redefine
 			interface,
 			insert_text,
-			visual_widget,
-			set_background_color,
-			initialize
+			initialize,
+			create_change_actions
 		end
 		
 	EV_FONTABLE_IMP
@@ -41,15 +40,25 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_new)
-			entry_widget := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_buffer (c_object)
+			text_buffer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_buffer (c_object)
+		end
+		
+	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Hook up the change actions for the text widget
+		do
+			Result := Precursor {EV_TEXT_COMPONENT_IMP}
+			real_signal_connect (text_buffer, "changed", agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
 		end
 		
 	initialize is
 			-- 
 		do
 			enable_word_wrapping
+			set_editable (True)
 			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
+		
+feature -- Access
 		
 	maximum_character_width: INTEGER is
 			-- Maximum width of a single character in `Current'.
@@ -63,10 +72,8 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is the text editable by the user?
-		do
-		end
 
 	has_selection: BOOLEAN is
 			-- Does `Current' have a selection?
@@ -89,6 +96,8 @@ feature -- Status setting
 			-- if `flag' then make the component read-write.
 			-- if not `flag' then make the component read-only.
 		do
+			is_editable := flag
+			--| FIXME IEK Implement rest of me.
 		end
 
 	set_caret_position (pos: INTEGER) is
@@ -147,7 +156,14 @@ feature -- Access
 
 	text: STRING is
 		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			temp_text: POINTER
 		do
+			create a_start_iter.make
+			create a_end_iter.make
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			temp_text := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter.item, False)
+			create Result.make_from_c (temp_text)
 		end
 
 	line (i: INTEGER): STRING is
@@ -191,25 +207,13 @@ feature -- Status report
 			-- Does `Current' have word wrapping enabled?
 
 feature -- Status setting
-		
-	set_background_color (a_color: EV_COLOR) is
-			-- Set background color of present
-		do
-			Precursor {EV_TEXT_COMPONENT_IMP} (a_color)
-		end
-
-	internal_set_caret_position (pos: INTEGER) is
-			-- Set the position of the caret to `pos'.
-		do
-
-		end
 	
 	insert_text (txt: STRING) is
 		local
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (text)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (entry_widget, a_gs.item, -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_gs.item, -1)
 		end
 	
 	set_text (a_text: STRING) is
@@ -217,7 +221,7 @@ feature -- Status setting
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (a_text)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (entry_widget, a_gs.item, -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_gs.item, -1)
 		end
 	
 	append_text (a_text: STRING) is
@@ -308,15 +312,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	entry_widget: POINTER
+	text_buffer: POINTER
 		-- Pointer to the gtk text editable.
-		
-	visual_widget: POINTER is
-			-- Pointer to widget shown on screen.
-		do
-			Result := entry_widget
-		end
-		
 
 feature {EV_ANY_I} -- Implementation
 

@@ -41,7 +41,7 @@ Editor,,,,,,,,,,
 ,3,3,When there are several locals on the same line only the first one is taken into account by the completion,,Xavier,,,,EDT0009,11/30/2001
 ,4,3,Modifications in the user-defined string do not seem to be taken into account,,Julian,Xavier,1,closed(we now say that the application needs to be restarted),EDT0010,12/17/2001
 ,2,3,"When selecting some text that is not visible (if the bottom of the editor is outside the screen), the display is messed up",,Julian,,,,EDT0011,1/10/2002
-
+,2,1,"When completion list appears, clicking on an item and pressing return will result in nothing, it should put the selected item in the editor",,Ian,,,,EDT0012,
 
 
 
@@ -54,7 +54,7 @@ Debugger,,,,,,,,,,
 ,5,2,t: EV_TREE_ITEM; n: EV_TREE_NODE; create t; n?=t.item => crash at run-time,,Xavier,Xavier,1,closed,DBG0003,11/16/2001
 ,5,2,"Freeze, run, cancel, end freeze, run => EiffelStudio is frozen",,Julian,,,,DBG0004,11/16/2001
 ,1,2,When clicking the remove all breakpoints button and then pressing Cancel the output displays the current breakpoints,,Julian,,,,DBG0005,11/26/2001
-,2,2,In the evaluation of expressions manifest strings do not behave correctly (cannot call features on them and cannot be passed as arguments),,Xavier,,,,DBG0006,01/14/2002
+,2,2,In the evaluation of expressions manifest strings do not behave correctly (cannot call features on them and cannot be passed as arguments),,Xavier,,,,DBG0006,1/14/2002
 
 
 
@@ -80,7 +80,7 @@ Metrics,,,,,,,,,,
 Diagram,,,,,,,,,,
 ,5,2,"Edit a class, rename it in its diagram in the same window, crash",,Julian,,,,DGM0001,11/27/2001
 ,2,4,"If you add a link while they are hidden, they become visible but the tooltip is invalid",,Raphael,Xavier,1,closed,DGM0002,11/29/2001
-,2,1,When clicking a class the move cursor only appears after you start moving it,,Julian,,,,DGM0003,01/15/2002
+,2,1,When clicking a class the move cursor only appears after you start moving it,,Julian,,,,DGM0003,1/15/2002
 
 
 

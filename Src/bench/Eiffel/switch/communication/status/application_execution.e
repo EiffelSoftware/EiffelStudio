@@ -463,7 +463,7 @@ feature -- Execution
 				-- Don't wait until the next event loop to
 				-- to process the actual termination of the application.
 				-- `recv_dead' will wait until the application is dead.
-			if quit_request.recv_dead = Void then end;
+			if quit_request.recv_dead then end;
 		ensure
 			app_is_not_running: not is_running;
 		end;

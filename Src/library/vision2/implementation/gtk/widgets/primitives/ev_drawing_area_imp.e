@@ -69,13 +69,14 @@ feature {NONE} -- Implementation
 	redraw is
 		do
 			redraw_rectangle (0, 0, width, height)
+			full_redraw_needed := True
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
 		do
 			if not full_redraw_needed then
 				C.gtk_widget_queue_draw_area (c_object, a_x, a_y, a_width, a_height)
-			end							
+			end
 		end
 		
 	clear_and_redraw is
@@ -91,8 +92,12 @@ feature {NONE} -- Implementation
 		end
 
 	flush is
-			-- Redraw the screen immediately (useless with GTK)
+			-- Redraw the screen immediately.
 		do
+--			if not full_redraw_needed then
+--				full_redraw_needed := True	
+--				C.gtk_widget_queue_draw (c_object)
+--			end
 		end
 		
 	full_redraw_needed: BOOLEAN
@@ -113,10 +118,10 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if expose_actions_internal /= Void then
 				expose_actions_internal.call ([a_x, a_y, a_width, a_height])
 			end
+			if a_x = 0 and then a_y = 0 and then a_width = width and then a_height = height then
+				full_redraw_needed := False
+			end
 		end
-		
-	expose_actions_called: BOOLEAN
-		-- Are the expose actions currently being called?
 
 	lose_focus is
 		do

@@ -28,7 +28,7 @@ inherit
 
 	EV_COMMAND
 
-	EB_TOOL_MANAGER
+	EB_MULTIPLE_MANAGER
 
 	EB_SHARED_INTERFACE_TOOLS
 		undefine
@@ -51,10 +51,11 @@ feature {NONE} -- Initialization
 		local
 			t_s: EB_TOOL_SUPERVISOR
 		do
+			precursor (man)
 			create t_s.make (parent)
 			set_tool_supervisor (t_s)
 			create history.make
-			precursor (man)
+			init_list
 		end
 
 feature {EB_TOOL_MANAGER} -- Initialization
@@ -69,8 +70,6 @@ feature {EB_TOOL_MANAGER} -- Initialization
 
 			v_split: EV_VERTICAL_SPLIT_AREA
 		do
-			shown_portions := 1
-
 			set_title (empty_tool_name)
 --			set_icon_name (empty_tool_name)
 
@@ -97,30 +96,7 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			create project_toolbar.make (container)
 			container.set_child_expandable (project_toolbar, False)
 
-			create global_verti_split_window.make (container)
-
-			tool_parent := global_verti_split_window
-			create selector_part.make (Current)
-			selector_part.build_interface
-
-  			create hori_split_window.make (global_verti_split_window)
-
-			create top_verti_split_window.make (hori_split_window)
-
-			tool_parent := hori_split_window
-			create feature_part.make (Current)
-			feature_part.build_interface
-			feature_part.update
-
-			tool_parent := top_verti_split_window
-			create debug_part.make (Current)
-			debug_part.build_interface
-			debug_part.update
-
-			set_debug_tool (debug_part)
-			create object_part.make (Current)
-			object_part.build_interface
-			object_part.update
+			build_from_tree (container, default_tree)
 
 				-- now that the debug tool is created,
 				-- we can make the toolbar.
@@ -146,7 +122,7 @@ feature {EB_TOOL_MANAGER} -- Initialization
 				-- Make all the entry disabled.
 			disable_menus
 
-			debug_part.display_welcome_info
+			debug_tool.display_welcome_info
 		end
 		
 feature -- Resource Update
@@ -228,7 +204,7 @@ feature -- Resource Update
 --					tool_supervisor.feature_tool_mgr.set_tab_length (tab_length)
 --					tool_supervisor.class_tool_mgr.set_tab_length (tab_length)
 --					tool_supervisor.object_tool_mgr.set_tab_length (tab_length)
---					tool_supervisor.explain_tool_mgr.set_tab_length (tab_length)
+--					tool_supervisor.cluster_tool_mgr.set_tab_length (tab_length)
 --					if system_tool_is_valid then
 --						System_tool.set_tab_length (tab_length)
 --						System_tool.update_save_symbol
@@ -336,7 +312,7 @@ feature -- Window Holders
 --	routine_hole_holder: HOLE_HOLDER
 --	dynamic_lib_hole_holder: HOLE_HOLDER
 --	object_hole_holder: HOLE_HOLDER
---	explain_hole_holder: HOLE_HOLDER
+--	cluster_hole_holder: HOLE_HOLDER
 --| FIXME
 --| Christophe, 21 oct 1999 
 --| Drag-and-Drop not implemented yet.
@@ -469,70 +445,70 @@ feature -- Update
 	add_feature_entry (f_t: EB_FEATURE_TOOL) is
 		do
 --			add_tool_to_menu (f_t, menus @ open_features_menu)
-			selector_part.add_tool_entry (f_t)
+			select_tool.add_tool_entry (f_t)
 		end
 
 	change_feature_entry (f_t: EB_FEATURE_TOOL) is
 		do
 --			change_tool_in_menu (f_t, menus @ open_features_menu)
-			selector_part.change_tool_entry (f_t)
+			select_tool.change_tool_entry (f_t)
 		end
 
 	remove_feature_entry (f_t: EB_FEATURE_TOOL) is
 		do
 --			remove_tool_from_menu (f_t, menus @ open_features_menu)
-			selector_part.remove_tool_entry (f_t)
+			select_tool.remove_tool_entry (f_t)
 		end
 
 	add_class_entry (c_t: EB_CLASS_TOOL) is
 		do
 --			add_tool_to_menu (c_t, menus @ open_classes_menu)
-			selector_part.add_tool_entry(c_t)
+			select_tool.add_tool_entry(c_t)
 		end
 
 	change_class_entry (c_t: EB_CLASS_TOOL) is
 		do
 --			change_tool_in_menu (c_t, menus @ open_classes_menu)
-			selector_part.change_tool_entry(c_t)
+			select_tool.change_tool_entry(c_t)
 		end
 
 	remove_class_entry (c_t: EB_CLASS_TOOL) is
 		do
 --			remove_tool_from_menu (c_t, menus @ open_classes_menu)
-			selector_part.remove_tool_entry(c_t)
+			select_tool.remove_tool_entry(c_t)
 		end
 
 	add_object_entry (o_t: EB_OBJECT_TOOL) is
 		do
 --			add_tool_to_menu (o_t, menus @ open_objects_menu)
-			selector_part.add_tool_entry(o_t)
+			select_tool.add_tool_entry(o_t)
 		end
 
 	change_object_entry (o_t: EB_OBJECT_TOOL) is
 		do
 --			change_tool_in_menu (o_t, menus @ open_objects_menu)
-			selector_part.change_tool_entry(o_t)
+			select_tool.change_tool_entry(o_t)
 		end
 
 	remove_object_entry (o_t: EB_OBJECT_TOOL) is
 		do
 --			remove_tool_from_menu (o_t, menus @ open_objects_menu)
-			selector_part.remove_tool_entry(o_t)
+			select_tool.remove_tool_entry(o_t)
 		end
 
-	add_explain_entry (e_t: EB_EXPLAIN_TOOL) is
+	add_cluster_entry (cl_t: EB_CLUSTER_TOOL) is
 		do
---			add_tool_to_menu (e_t, menus @ open_explain_menu)
+--			add_tool_to_menu (cl_t, menus @ open_cluster_menu)
 		end
 
-	change_explain_entry (e_t: EB_EXPLAIN_TOOL) is
+	change_cluster_entry (cl_t: EB_CLUSTER_TOOL) is
 		do
---			change_tool_in_menu (e_t, menus @ open_explain_menu)
+--			change_tool_in_menu (cl_t, menus @ open_cluster_menu)
 		end
 
-	remove_explain_entry (e_t: EB_EXPLAIN_TOOL) is
+	remove_cluster_entry (cl_t: EB_CLUSTER_TOOL) is
 		do
---			remove_tool_from_menu (e_t, menus @ open_explain_menu)
+--			remove_tool_from_menu (cl_t, menus @ open_cluster_menu)
 		end
 
 feature -- Graphical Interface
@@ -541,7 +517,7 @@ feature -- Graphical Interface
 			-- Build top bar
 		local
 --			tool_action: TOOLS_MANAGEMENT
-			explain_cmd: EB_CREATE_EXPLAIN_CMD
+			cluster_cmd: EB_CREATE_CLUSTER_CMD
 			system_cmd: EB_SHOW_SYSTEM_TOOL
 			class_cmd: EB_CREATE_CLASS_CMD
 			feature_cmd: EB_CREATE_FEATURE_CMD
@@ -576,10 +552,10 @@ feature -- Graphical Interface
 				-- Regular menu entries.
 			create tb.make (a_toolbar)
 
-			create explain_cmd.make (Current)
+			create cluster_cmd.make (Current)
 			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Explain)
-			b.add_click_command (explain_cmd, Void)
+--			b.add_click_command (explain_cmd, Void)
 
 			create system_cmd.make (parent_window)
 			create b.make (tb)
@@ -714,25 +690,6 @@ feature -- Graphical Interface
 			-- Save the list of recent opened projects during the execution
 			-- Purpose: make it easier to save the data at the end.
 
-feature {NONE} -- Properties
-
-	shown_portions: INTEGER
-			-- Number of portions that are shown
-
-	feature_part: EB_FEATURE_TOOL
-			-- Feature part of Current for debugging
-
-	object_part: EB_OBJECT_TOOL
-			-- Object part of Current for debugging
-
-	selector_part: EB_SELECT_TOOL
-			-- Selector part
-
-	debug_part: EB_DEBUG_TOOL
-			-- Debugger part
-
-feature -- System Execution Modes
-
 feature -- Commands
 
 	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
@@ -762,7 +719,7 @@ feature -- Hole access
 --			t := dropped_stone.stone_type
 --			Result := t = Class_type or else
 --				t = feature_type or else
---				t = Explain_type or else
+--				t = cluster_type or else
 --				t = Object_type or else
 --				t = Breakable_type or else
 --				t = Call_stack_type or else
@@ -788,17 +745,7 @@ feature -- Update
 --			System_tool.process_ace_syntax (a_stone)
 		end
 
-	process_classi (a_stone: CLASSI_STONE) is
-			-- Process dropped stone `a_stone'.
-		local
-			new_tool: EB_CLASS_TOOL
-		do
-			new_tool := tool_supervisor.new_class_tool
-			new_tool.raise
-			new_tool.process_classi (a_stone)
-		end
- 
-	process_class (a_stone: CLASSC_STONE) is
+	process_class (a_stone: CLASS_STONE) is
 			-- Process dropped stone `a_stone'.
 		local
 			new_tool: EB_CLASS_TOOL
@@ -997,106 +944,25 @@ feature -- to be placed where it belongs
 
 feature -- Tool management features
 
-	tool_parent: EV_CONTAINER
-			-- not very good, but it works.
-
 	associated_window: EV_WINDOW is
 		do
 			Result := parent_window
 		end
 
-	show_tool (t: EB_TOOL) is
-			-- shows the tool.
+	init_debug_tool is
+		local
+			dt: EB_DEBUG_TOOL
 		do
-			t.show_imp
+			create dt.make (Current)
+			set_debug_tool (dt)
 		end
 
-	raise_tool (t: EB_TOOL) is
-			-- raises the tool.
+	init_select_tool is
+		local
+			dt: EB_SELECT_TOOL
 		do
-		end
-
-	hide_tool (t: EB_TOOL) is
-			-- hides the tool.
-		do
-			t.hide_imp
-		end
-
-	destroy_tool (t: EB_TOOL) is
-			-- destroys the tool.
-		do
-			t.destroy_imp
-		end
-
-	set_tool_size (t: EB_TOOL; min_x, min_y: INTEGER) is
-		do
-		end
-
-	set_tool_width (t: EB_TOOL; new_width: INTEGER) is
-		do
-		end
-
-	set_tool_height (t: EB_TOOL; new_height: INTEGER) is
-		do
-		end
-
-	feature_title, object_title, selector_title, debug_title: STRING
-	feature_icon_name, object_icon_name, selector_icon_name, debug_icon_name: STRING
-
-	tool_title (t: EB_TOOL): STRING is
-			-- works, but...
-		do
-			if t = debug_part then
-				Result := debug_title
-			elseif t = feature_part then
-				Result := feature_title
-			elseif t = object_part then
-				Result := object_title
-			else
-				Result := selector_title
-			end
-		end
-
-	tool_icon_name (t: EB_TOOL): STRING is
-			-- works, but...
-		do
-			if t = debug_part then
-				Result := debug_icon_name
-			elseif t = feature_part then
-				Result := feature_icon_name
-			elseif t = object_part then
-				Result := object_icon_name
-			else
-				Result := selector_icon_name
-			end
-		end
-
-	set_tool_title (t: EB_TOOL; s: STRING) is
-			-- works, but...
-		do
-			if t = debug_part then
-				debug_title := s
-			elseif t = feature_part then
-				feature_title := s
-			elseif t = object_part then
-				object_title := s
-			else
-				selector_title := s
-			end
-		end
-
-	set_tool_icon_name (t: EB_TOOL; s: STRING) is
-			-- works, but...
-		do
-			if t = debug_part then
-				debug_icon_name := s
-			elseif t = feature_part then
-				feature_icon_name := s
-			elseif t = object_part then
-				object_icon_name := s
-			else
-				selector_icon_name := s
-			end
+			create dt.make (Current)
+			set_select_tool (dt)
 		end
 
 end -- class EB_PROJECT_TOOL

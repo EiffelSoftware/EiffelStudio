@@ -691,7 +691,7 @@ feature -- Generator constants -- 8
 
 	Iunknown_interface: STRING is "ECOM_IUNKNOWN_INTERFACE"
 
-	Empty_function_body: STRING is "%T%T%T-- Redefine in heir."
+	Empty_function_body: STRING is "%T%T%T-- Implementation here."
 
 	Result_clause: STRING is "Result := "
 

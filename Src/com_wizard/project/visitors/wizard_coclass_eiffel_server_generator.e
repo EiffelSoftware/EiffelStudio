@@ -16,7 +16,8 @@ inherit
 
 	WIZARD_COMPONENT_EIFFEL_SERVER_GENERATOR
 		redefine
-			set_default_ancestors
+			set_default_ancestors,
+			generate_functions_and_properties
 		end
 
 feature -- Initialization
@@ -39,6 +40,9 @@ feature -- Access
 			-- Generate eiffel class for coclass.
 		local
 			definition_file_generator: WIZARD_DEFINITION_FILE_GENERATOR
+			server_impl_generator: WIZARD_COCLASS_EIFFEL_SERVER_IMPL_GENERATOR
+			new_descriptor: WIZARD_COCLASS_DESCRIPTOR
+			local_string: STRING
 		do
 			Precursor {WIZARD_COCLASS_EIFFEL_GENERATOR} (a_descriptor)
 			coclass_descriptor := a_descriptor
@@ -49,10 +53,18 @@ feature -- Access
 				valid_writer: eiffel_writer.can_generate
 			end
 
+			-- Set as deferred
+			eiffel_writer.set_deferred
+
 			-- Generate code and file name.
 			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 
+			-- Server Implementation
+			create server_impl_generator
+
+			server_impl_generator.generate (coclass_descriptor)
+			
 			if shared_wizard_environment.in_process_server then
 				create definition_file_generator
 				definition_file_generator.generate (coclass_descriptor)
@@ -60,6 +72,71 @@ feature -- Access
 		end
 
 feature --  Basic operation
+
+	generate_functions_and_properties (a_desc: WIZARD_INTERFACE_DESCRIPTOR;
+				a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
+				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS;
+				inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
+			-- Process functions and properties
+		local
+			prop_generator: WIZARD_EIFFEL_SERVER_PROPERTY_GENERATOR
+			func_generator: WIZARD_EIFFEL_SERVER_FUNCTION_GENERATOR
+			tmp_original_name, tmp_changed_name: STRING
+		do
+			if not a_desc.functions.empty then
+				from
+					a_desc.functions.start
+				until
+					a_desc.functions.off
+				loop
+					-- Generate feature writer
+					create func_generator
+					func_generator.generate (a_component_descriptor.name, a_desc.functions.item)
+
+					if func_generator.function_renamed then
+						inherit_clause.add_rename (func_generator.original_name, func_generator.changed_name)
+						tmp_original_name := vartype_namer.user_precondition_name (func_generator.original_name)
+						tmp_changed_name := vartype_namer.user_precondition_name (func_generator.changed_name)
+						inherit_clause.add_rename (tmp_original_name, tmp_changed_name)
+					end
+
+					a_desc.functions.forth
+				end
+			end
+			if not a_desc.properties.empty then
+				from
+					a_desc.properties.start
+				until
+					a_desc.properties.off
+				loop
+					-- Generate feature writer
+					create prop_generator
+					prop_generator.generate(a_component_descriptor.eiffel_class_name, a_desc.properties.item)
+
+					if prop_generator.property_renamed then
+						from
+							prop_generator.changed_names.start
+						until
+							prop_generator.changed_names.off
+						loop
+							inherit_clause.add_rename (prop_generator.changed_names.key_for_iteration, prop_generator.changed_names.item_for_iteration)
+							prop_generator.changed_names.forth
+						end
+					end
+
+					a_desc.properties.forth
+				end
+			end
+
+			if 
+				a_desc.inherited_interface /= Void and not
+				a_desc.inherited_interface.guid.is_equal (Iunknown_guid) and then
+				not a_desc.inherited_interface.guid.is_equal (Idispatch_guid) 
+			then
+				generate_functions_and_properties (a_desc.inherited_interface, a_component_descriptor, an_eiffel_writer, inherit_clause)
+			end		
+		end
+
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
 		do
@@ -70,8 +147,6 @@ feature {NONE} -- Implementation
 
 	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
 			-- Set default ancestors.
-		local
-			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
 		do
 			Precursor {WIZARD_COCLASS_EIFFEL_GENERATOR} (an_eiffel_writer)
 

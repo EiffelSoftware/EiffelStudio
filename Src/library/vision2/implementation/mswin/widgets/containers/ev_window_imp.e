@@ -213,10 +213,10 @@ feature -- Status setting
 			-- Destroy the widget, but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		local
-			e: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
 		do
-			create e
-			e.application.remove_root_window (interface)
+			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
+			app_imp.remove_root_window (interface)
 			if parent_imp /= Void then
 				parent_imp.disable_sensitive
 			end
@@ -900,6 +900,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/16 21:13:34  brendel
+--| Calls {EV_APPLICATION_IMP}.remove_root_window directly.
+--|
 --| Revision 1.29  2000/03/14 19:59:44  brendel
 --| Removed some commented out code.
 --|

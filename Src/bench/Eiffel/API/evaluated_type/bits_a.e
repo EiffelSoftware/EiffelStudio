@@ -1,7 +1,7 @@
 indexing
 	description: "Actual type for bits."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class BITS_A
 
@@ -21,6 +21,7 @@ create
 feature {NONE} -- Initialization
 
 	make (c: like bit_count) is
+			-- Initialize new instance of BITS_A with `c' bits.
 		require
 			c_positive: c > 0
 		do
@@ -32,12 +33,12 @@ feature {NONE} -- Initialization
 feature -- Property
 
 	is_bits: BOOLEAN is True
-			-- Is the current actual type a bits type ?
+			-- Is the current actual type a bits type?
 
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := bit_count = other.bit_count
 		end
@@ -45,14 +46,12 @@ feature -- Comparison
 feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN is
-			-- Is `other' the same as Current ?
+			-- Is `other' the same as Current?
 		local
 			other_bits: BITS_A
 		do
 			other_bits ?= other
-			Result :=	other_bits /= Void
-						and then
-						other_bits.bit_count = bit_count
+			Result := other_bits /= Void and then other_bits.bit_count = bit_count
 		end
 
 	associated_class: CLASS_C is
@@ -76,7 +75,7 @@ feature -- Output
 
 	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			st.add (ti_Bit_class)
+			st.add (ti_bit_class)
 			st.add_space
 			st.add_int (bit_count)
 		end
@@ -143,5 +142,8 @@ feature {COMPILER_EXPORTER}
 			ctxt.put_string ("BIT ")
 			ctxt.put_string (bit_count.out)
 		end
-		
+
+invariant
+	bit_count_positive: bit_count > 0
+
 end -- class BITS_A

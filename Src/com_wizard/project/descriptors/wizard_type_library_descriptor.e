@@ -471,7 +471,8 @@ feature -- Basic operations
 						interface_descriptor ?= descriptors.item (i)
 						if interface_descriptor /= Void then
 							if 
-								(system_descriptor.is_iunknown or 
+								(shared_wizard_environment.server or
+								system_descriptor.is_iunknown or 
 								not referees.item (i).empty) and 
 								not Non_generated_type_libraries.has (guid) 
 							then

@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 	make_by_pointer (color_pointer: POINTER) is
 			-- Set `item' with `color_pointer'.
 		obsolete
-			"Use `make_by_color' instead. No implemented here."
+			"Use `make_by_color' instead. Not implemented here."
 		do
 		end
 

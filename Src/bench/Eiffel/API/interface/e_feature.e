@@ -398,19 +398,27 @@ feature -- Access
 			Result := name.hash_code
 		end;
 
-	callers (cl_class: CLASS_C): SORTED_TWO_WAY_LIST [STRING] is
+	callers (cl_class: CLASS_C; a_flag: INTEGER_8): SORTED_TWO_WAY_LIST [STRING] is
 			-- Callers for feature from `associated_class'
 			-- to client class `cl_class'
 		require
 			valid_cl_class: associated_class.clients.has (cl_class)
+			valid_flags: a_flag = 0 or
+				a_flag = feature {DEPEND_UNIT}.is_in_assignment_flag or
+				a_flag = feature {DEPEND_UNIT}.is_in_check_flag or
+				a_flag = feature {DEPEND_UNIT}.is_in_creation_flag or
+				a_flag = feature {DEPEND_UNIT}.is_in_ensure_flag or
+				a_flag = feature {DEPEND_UNIT}.is_in_invariant_flag or
+				a_flag = feature {DEPEND_UNIT}.is_in_require_flag
 		local
 			dep: CLASS_DEPENDANCE;
 			fdep: FEATURE_DEPENDANCE;
-			current_d: DEPEND_UNIT;
+			current_d, l_depend_unit: DEPEND_UNIT;
 			l_found: BOOLEAN
 		do
 			create Result.make
 			dep := Depend_server.item (cl_class.class_id)
+				-- No need to set the `flags' here since we do an explicit comparison.
 			create current_d.make (associated_class.class_id,associated_feature_i)
 			from
 				-- Loop through the features of each client
@@ -426,7 +434,9 @@ feature -- Access
 				until
 					l_found or fdep.after
 				loop
-					l_found := fdep.item.same_as (current_d)
+					l_depend_unit := fdep.item
+					l_found := l_depend_unit.same_as (current_d) and then
+						l_depend_unit.internal_flags & a_flag = a_flag
 					fdep.forth
 				end
 				if l_found then

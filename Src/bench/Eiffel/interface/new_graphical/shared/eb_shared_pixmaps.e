@@ -79,6 +79,16 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_format_feature_callers_color")
 		end
 
+	icon_format_assigners: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_assigners_color")
+		end
+
+	icon_format_creators: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_creators_color")
+		end
+
 	Icon_format_ancestors: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_format_ancestors_color")
@@ -1328,7 +1338,7 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("auto_slice_limits")
 		end
-
+		
 feature -- Reading
 
 	build_classic_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP] is
@@ -1551,6 +1561,8 @@ feature {NONE} -- Implementation
 			Result.put ([12, 3], "icon_external_frozen_feature")
 			Result.put ([12, 4], "icon_obsolete_feature")
 			Result.put ([12, 5], "icon_frozen_feature")
+			Result.put ([12,6], "icon_format_assigners_color")
+			Result.put ([12,7], "icon_format_creators_color")
 			Result.compare_objects
 		end
 

@@ -20,14 +20,25 @@ feature -- Status report
 	to_show_all_callers: BOOLEAN;
 			-- Is the format going to show all callers?
 
+	flag: INTEGER_8
+			-- Type of callers we are looking for.
+
 feature -- Status setting
 
 	set_all_callers is
-			-- Set `to_show_all_callers' to True;
+			-- Set `to_show_all_callers' with True;
 		do
 			to_show_all_callers := True
 		ensure
 			show_all_callers: to_show_all_callers	
+		end
+
+	set_flag (a_flag: INTEGER_8) is
+			-- Set `flag' with `a_flag'.
+		do
+			flag := a_flag
+		ensure
+			flag_set: flag = a_flag
 		end
 
 feature -- Execution
@@ -36,14 +47,14 @@ feature -- Execution
 			-- Execute the display of callers.
 		do
 			if to_show_all_callers then
-				show_all_callers
+				show_all_callers (flag)
 			else
 				tabs := -1;
-				show_current_callers (current_class, current_feature)
+				show_current_callers (current_class, current_feature, flag)
 			end
 		end;
 
-	show_current_callers (l_class: like current_class; l_feat: like current_feature) is
+	show_current_callers (l_class: like current_class; l_feat: like current_feature; a_flag: INTEGER_8) is
 			-- Show the callers of `l_feat' in `l_class'.
 		require
 			l_class_not_void: l_class /= Void
@@ -69,7 +80,7 @@ feature -- Execution
 				clients.after
 			loop
 				client := clients.item;
-				list := l_feat.callers (client)
+				list := l_feat.callers (client, a_flag)
 				if list /= Void then
 					table.put (list, client.class_id);
 					classes.put_front (client.lace_class)
@@ -122,7 +133,7 @@ feature {NONE} -- Implementation
 	tabs: INTEGER;
 			-- Number of tabs
 
-	show_all_callers is
+	show_all_callers (a_flag: INTEGER_8) is
 			-- Show all the callers of `current_feature' and its descendants.
 		require
 			to_show_all_callers: to_show_all_callers
@@ -165,9 +176,9 @@ feature {NONE} -- Implementation
 				a_list.after
 			loop
 				cell := a_list.item
-				show_current_callers (cell.item1, cell.item2)
+				show_current_callers (cell.item1, cell.item2, a_flag)
 				a_list.forth
 			end
 		end;
 
-end -- class E_SHOW_SENDERS
+end

@@ -391,14 +391,20 @@ feature {NONE} -- Initialization
 			managed_class_formatters.extend (create {EB_EXTERNALS_FORMATTER}.make (Current))
 			managed_class_formatters.extend (create {EB_EXPORTED_FORMATTER}.make (Current))
 
-			create managed_feature_formatters.make (9)
+			create managed_feature_formatters.make (12)
 			managed_feature_formatters.extend (create {EB_BASIC_FEATURE_FORMATTER}.make (Current))
 			managed_feature_formatters.extend (create {EB_ROUTINE_FLAT_FORMATTER}.make (Current))
 			managed_feature_formatters.extend (Void)
-			managed_feature_formatters.extend (create {EB_CALLERS_FORMATTER}.make (Current))
+			managed_feature_formatters.extend (create {EB_CALLERS_FORMATTER}.make (Current, 0))
+			managed_feature_formatters.extend (create {EB_CALLERS_FORMATTER}.make (Current,
+				feature {DEPEND_UNIT}.is_in_assignment_flag))
+			managed_feature_formatters.extend (create {EB_CALLERS_FORMATTER}.make (Current, 
+				feature {DEPEND_UNIT}.is_in_creation_flag))
+			managed_feature_formatters.extend (Void)
 			managed_feature_formatters.extend (create {EB_IMPLEMENTERS_FORMATTER}.make (Current))
 			managed_feature_formatters.extend (create {EB_ROUTINE_ANCESTORS_FORMATTER}.make (Current))
 			managed_feature_formatters.extend (create {EB_ROUTINE_DESCENDANTS_FORMATTER}.make (Current))
+			managed_feature_formatters.extend (Void)
 			managed_feature_formatters.extend (create {EB_HOMONYMS_FORMATTER}.make (Current))
 			
 

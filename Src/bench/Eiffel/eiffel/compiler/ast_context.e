@@ -149,6 +149,20 @@ feature -- Access
 				feature {DEPEND_UNIT}.is_in_check_flag
 		end
 
+	is_in_assignment: BOOLEAN is
+			-- Level for analysis of target of an assignment
+		do
+			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_assignment_flag) =
+				feature {DEPEND_UNIT}.is_in_assignment_flag
+		end
+
+	is_in_creation: BOOLEAN is
+			-- Level for analyzis of target of a creation
+		do
+			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_creation_flag) =
+				feature {DEPEND_UNIT}.is_in_creation_flag
+		end
+
 	check_for_special_error: BOOLEAN
 			-- Flag for checking the vape error and vaol error
 			
@@ -289,6 +303,32 @@ feature -- Setting
 			is_checking_check_set: is_checking_check = b
 		end
 
+	set_is_in_assignment (b: BOOLEAN) is
+			-- Assign `b' to `is_in_assignment'.
+		do
+			if b then
+				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_assignment_flag
+			else
+				depend_unit_level := depend_unit_level &
+					feature {DEPEND_UNIT}.is_in_assignment_flag.bit_not
+			end
+		ensure
+			is_in_assignment_set: is_in_assignment = b
+		end
+	
+	set_is_in_creation (b: BOOLEAN) is
+			-- Assign `b' to `is_in_creation'.
+		do
+			if b then
+				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_creation_flag
+			else
+				depend_unit_level := depend_unit_level &
+					feature {DEPEND_UNIT}.is_in_creation_flag.bit_not
+			end
+		ensure
+			is_in_creation_set: is_in_creation = b
+		end
+	
 	check_for_vape: BOOLEAN is
 			-- Is Current checking for vape error?
 		do

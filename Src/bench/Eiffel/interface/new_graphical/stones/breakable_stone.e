@@ -1,11 +1,11 @@
 indexing
-
-	description: 
-		"Stone representating a breakable point.";
-	date: "$Date$";
+	description:
+		"Stone representating a breakable point."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class BREAKABLE_STONE 
+class
+	BREAKABLE_STONE 
 
 inherit
 	STONE
@@ -16,7 +16,6 @@ inherit
 	SHARED_APPLICATION_EXECUTION
 
 creation
-
 	make
 	
 feature {NONE} -- Initialization
@@ -25,16 +24,16 @@ feature {NONE} -- Initialization
 		require
 			not_feature_i_void: e_feature /= Void
 		do
-			routine := e_feature;
+			routine := e_feature
 			index := break_index
-		end; -- make
+		end -- make
  
 feature -- Properties
 
-	routine: E_FEATURE;
+	routine: E_FEATURE
 			-- Associated routine
 
-	index: INTEGER;
+	index: INTEGER
 			-- Breakpoint index in `routine'
 
 feature -- Access
@@ -44,14 +43,14 @@ feature -- Access
 			-- when widget at cursor position is compatible with Current stone
 --		do
 --			Result := Cursors.cur_Setstop
---		end;
+--		end
 
 --	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 --		do
 --			Result := Cursors.cur_X_setstop
---		end;
+--		end
 
 	sign: STRING is 
 			-- Textual representation of the breakable mark.
@@ -60,7 +59,7 @@ feature -- Access
 		local
 			status: APPLICATION_STATUS
 		do
-			status := Application.status;
+			status := Application.status
 			if
 				status /= Void and status.is_stopped and
 				status.is_at (routine, index)
@@ -72,23 +71,23 @@ feature -- Access
 			else
 				Result := ":::"
 			end
-		end; 
+		end 
 
-	origin_text: STRING is ":::";
+	origin_text: STRING is ":::"
 
 	stone_type: INTEGER is 
 		do 
 			Result := Breakable_type 
-		end;
+		end
  
 	stone_name: STRING is 
 		do 
 			Result := Interface_names.s_Showstops 
-		end;
+		end
 
-	stone_signature: STRING is "";
+	stone_signature: STRING is ""
  
-	header: STRING is "Stop point";
+	header: STRING is "Stop point"
 
 	click_list: ARRAY [CLICK_STONE] is
 		do
@@ -97,7 +96,7 @@ feature -- Access
 	icon_name: STRING is
 		do
 			Result := stone_signature
-		end;
+		end
  
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?
@@ -111,6 +110,6 @@ feature -- Update
 --			-- Process Current stone dropped in hole `hole'.
 --		do
 --			hole.process_breakable (Current)
---		end;
+--		end
 
 end -- class BREAKABLE_STONE

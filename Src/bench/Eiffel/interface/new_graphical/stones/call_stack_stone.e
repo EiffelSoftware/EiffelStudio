@@ -1,18 +1,16 @@
 indexing
-
 	description: 
-		"Stone representating a breakable point.";
-	date: "$Date$";
+		"Stone representating a breakable point."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class CALL_STACK_STONE 
+class
+	CALL_STACK_STONE 
 
 inherit
-
 	STONE
 
 creation
-
 	make
 	
 feature {NONE} -- Initialization
@@ -27,7 +25,7 @@ feature {NONE} -- Initialization
  
 feature -- Access
 
-	level_number: INTEGER;
+	level_number: INTEGER
 			-- Level number of call stack
 
 --	stone_cursor: SCREEN_CURSOR is
@@ -35,28 +33,28 @@ feature -- Access
 			-- when widget at cursor position is compatible with Current stone
 --		do
 --			Result := Cursors.cur_Setstop
---		end;
+--		end
 
 --	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 --		do
 --			Result := Cursors.cur_X_setstop
---		end;
+--		end
 
 	stone_type: INTEGER is 
 		do 
 			Result := Call_stack_type 
-		end;
+		end
  
 	stone_name: STRING is 
 		do 
 			Result := stone_signature
-		end;
+		end
 
-	stone_signature: STRING is "";
+	stone_signature: STRING is ""
  
-	click_list: ARRAY [CLICK_STONE] is do end;
+	click_list: ARRAY [CLICK_STONE] is do end
 
 	origin_text: STRING is 
 		do
@@ -66,7 +64,7 @@ feature -- Access
 	icon_name: STRING is
 		do
 			Result := stone_signature
-		end;
+		end
  
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?
@@ -79,6 +77,6 @@ feature -- Update
 --			-- Process Current stone dropped in hole `hole'.
 --		do
 --			hole.process_call_stack (Current)
---		end;
+--		end
 
 end -- class BREAKABLE_STONE

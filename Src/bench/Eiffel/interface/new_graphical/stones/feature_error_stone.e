@@ -1,14 +1,13 @@
 indexing
-
 	description: 
-		"Stone for a feature that has a error";
-	date: "$Date$";
+		"Stone for a feature that has a error"
+	date: "$Date$"
 	revision: "$Revision $"
 
-class FEATURE_ERROR_STONE
+class
+	FEATURE_ERROR_STONE
 
 inherit
-
 	FEATURE_STONE
 		rename
 			make as feat_make
@@ -23,11 +22,11 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_feature: E_FEATURE; a_pos: INTEGER) is
-			-- Initialize stone with `a_feature' and error position `a_pos;.
+			-- Initialize stone with `a_feature' and error position `a_pos.
 		do
-			feat_make (a_feature);
+			feat_make (a_feature)
 			error_position := a_pos
-		end;
+		end
 
 feature -- Access
 
@@ -37,23 +36,23 @@ feature -- Access
 	line_number: INTEGER is
 			-- Line number of error 
 		local
-			file: RAW_FILE;
-			start_line_pos: INTEGER;
+			file: RAW_FILE
+			start_line_pos: INTEGER
 		do
-			!! file.make (file_name);
+			create file.make (file_name)
 			if file.is_readable then
-				file.open_read;
+				file.open_read
 				from
 				until
 					file.position > error_position + 1 or else file.end_of_file
 				loop
-					start_line_pos := file.position;
-					Result := Result + 1;
-					file.readline;
-				end;
-				file.close;
+					start_line_pos := file.position
+					Result := Result + 1
+					file.readline
+				end
+				file.close
 			end
-		end;
+		end
 
 feature -- Update
 
@@ -65,6 +64,6 @@ feature -- Update
 --			else
 --				warner (hole.target.top).gotcha_call (invalid_stone_message)
 --			end
---		end;
+--		end
 
 end -- class FEATURE_ERROR_STONE

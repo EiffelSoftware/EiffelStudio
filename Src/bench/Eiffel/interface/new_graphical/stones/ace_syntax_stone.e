@@ -1,14 +1,13 @@
 indexing
-
 	description: 
-		"Ace syntax stone.";
-	date: "$Date$";
+		"Ace syntax stone."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class ACE_SYNTAX_STONE
+class
+	ACE_SYNTAX_STONE
 
 inherit
-
 	SYNTAX_STONE
 		redefine
 			stone_type, stone_name
@@ -17,7 +16,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Access
@@ -27,24 +25,24 @@ feature -- Access
 			-- when widget at cursor position is compatible with Current stone
 --		do
 --			Result := Cursors.cur_System
---		end;
+--		end
 
 --	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 --		do
 --			Result := Cursors.cur_X_system
---		end;
+--		end
 
 	stone_type: INTEGER is 
 		do 
 			Result := System_type 
-		end;
+		end
 
 	stone_name: STRING is 
 		do 
 			Result := Interface_names.s_System 
-		end;
+		end
 
 feature -- Update
 
@@ -52,6 +50,6 @@ feature -- Update
 --			-- Process Current stone dropped in hole `hole'.
 --		do
 --			hole.process_ace_syntax (Current)
---		end;
+--		end
 
 end -- class ACE_SYNTAX_STONE

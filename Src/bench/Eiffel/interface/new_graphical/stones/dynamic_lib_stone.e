@@ -21,7 +21,7 @@ feature -- Access
  
 	click_list: CLICK_STONE_ARRAY is
 		do
---			!! Result.make (Eiffel_ace.click_list, Void)
+--			create Result.make (Eiffel_ace.click_list, Void)
 		end
  
 	stone_signature: STRING is

@@ -63,6 +63,9 @@ feature -- Access
 			Result := client_rect.height
 		end
 
+	background_pixmap: EV_PIXMAP
+			-- Pixmap used for the background of the widget
+
 feature -- Element change
 
 	set_parent (par: EV_CONTAINER) is
@@ -87,6 +90,15 @@ feature -- Element change
 			elseif parent_imp /= Void then
 				parent_imp.remove_child (Current)
 				wel_set_parent (default_parent.item)
+			end
+		end
+
+	set_background_pixmap (pix: EV_PIXMAP) is
+			-- Set the background pixmap and redraw the container.
+		do
+			background_pixmap := pix
+			if exists then
+				invalidate
 			end
 		end
 
@@ -133,9 +145,16 @@ feature {NONE} -- WEL Implementation
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
    			-- By default there is no background  
+		local
+			pix: EV_PIXMAP_IMP
 		do
- 			if exists and background_color_imp /= Void then
- 				!! Result.make_solid (background_color_imp)
+ 			if exists then
+				if background_pixmap /= Void then
+					pix ?= background_pixmap.implementation
+					create Result.make_by_pattern (pix.bitmap)
+				elseif background_color_imp /= Void then
+					create Result.make_solid (background_color_imp)
+				end
  			end
  		end
 

@@ -12,16 +12,6 @@ external C library
 #include "eif_eiffel.h"
 #include "eif_argv.h"
 
-/* GDK events */
-#define GDK_EVENT_TYPE(p) (((GdkEvent*)p)->type)
-
-#define GDK_EVENT_GET_X(p) (((GdkEventButton*)p)->x)
-#define GDK_EVENT_GET_Y(p) (((GdkEventButton*)p)->y)
-#define GDK_EVENT_GET_STATE(p) (((GdkEventMotion*)p)->state)
-				/* EventButton, integer */
-#define GDK_EVENT_GET_BUTTON(p) (((GdkEventButton*)p)->button)
-				/* EventKey, integer */
-#define GDK_EVENT_GET_KEYVAL(p) (((GdkEventKey*)p)->keyval)
 
 
 typedef  struct callback_data {

@@ -14,6 +14,8 @@ inherit
 		end
 
 	ECOM_FUNC_KIND
+		rename
+			to_string as func_kind_to_string
 		export
 			{WIZARD_FUNCTION_DESCRIPTOR_FACTORY} all
 		undefine
@@ -98,7 +100,10 @@ feature -- Access
 	to_string: STRING is
 			-- String representation used for output
 		do
-			Result := clone (name)
+			create Result.make (100)
+			Result.append (func_kind_to_string (func_kind))
+			Result.append (Space)
+			Result.append (name)
 			from
 				arguments.start
 				if not arguments.after then

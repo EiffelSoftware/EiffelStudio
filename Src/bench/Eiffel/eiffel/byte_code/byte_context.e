@@ -350,7 +350,7 @@ feature -- Access: once manifest strings
 		end
 
 	generate_once_manifest_string_allocation (number: INTEGER) is
-			-- Generate code to allocate memory for once manifest strings in current routine body.
+			-- Generate C code to allocate memory for once manifest strings in current routine body.
 		require
 			non_negative_number: number >= 0
 			consistent_number: is_static_system_data_safe implies once_manifest_string_count = number
@@ -366,6 +366,19 @@ feature -- Access: once manifest strings
 				buf.put_character (')')
 				buf.put_character (';')
 				buf.put_new_line
+			end
+		end
+
+	make_once_string_allocation_byte_code (ba: BYTE_ARRAY; number: INTEGER) is
+			-- Generate byte code to allocate memory for once manifest strings in current routine body.
+		require
+			byte_array_not_void: ba /= Void
+			non_negative_number: number >= 0
+		do
+			if number > 0 then
+				ba.append (feature {BYTE_CONST}.Bc_allocate_once_strings)
+				ba.append_integer (original_body_index - 1)
+				ba.append_integer (number)
 			end
 		end
 
@@ -395,23 +408,26 @@ feature -- Access: once manifest strings
 					i <= 0
 				loop
 					value := routine_once_manifest_strings.item (i)
-						-- RTPOMS is the macro used to create and store once manifest string
-						-- provided that it is not created and stored before
-					buf.put_string ("RTPOMS(")
-					buf.put_integer (body_index - 1)
-					buf.put_character (',')
-					buf.put_integer (i - 1)
-					buf.put_character (',')
-					buf.put_character ('%"')
-					buf.escape_string (value)
-					buf.put_character ('%"')
-					buf.put_character (',')
-					buf.put_integer (value.count)
-					buf.put_character(',')
-					buf.put_integer (value.hash_code)
-					buf.put_character (')')
-					buf.put_character (';')
-					buf.put_new_line
+						-- `value' is void when string appears in assertion that is not generated
+					if value /= Void then
+							-- RTPOMS is the macro used to create and store once manifest string
+							-- provided that it is not created and stored before
+						buf.put_string ("RTPOMS(")
+						buf.put_integer (body_index - 1)
+						buf.put_character (',')
+						buf.put_integer (i - 1)
+						buf.put_character (',')
+						buf.put_character ('%"')
+						buf.escape_string (value)
+						buf.put_character ('%"')
+						buf.put_character (',')
+						buf.put_integer (value.count)
+						buf.put_character(',')
+						buf.put_integer (value.hash_code)
+						buf.put_character (')')
+						buf.put_character (';')
+						buf.put_new_line
+					end
 					i := i - 1
 				end
 				class_once_manifest_strings.forth

@@ -4,7 +4,7 @@ inherit
 
 	EXTERNAL_AS
 		redefine
-			language_name, alias_name, check_validity
+			language_name, alias_name
 		end;
 
 	ROUT_BODY_AS_B
@@ -13,8 +13,6 @@ inherit
 		redefine
 			byte_node, type_check
 		end;
-
-	SHARED_MELT_ONLY;
 
 	EXTERNAL_CONSTANTS
 
@@ -26,23 +24,6 @@ feature -- Attributes
 
 	alias_name: STRING_AS_B;
 			-- Optional external name
-
-feature -- Initialization
-
-	check_validity is
-			-- Check to see if the construct is supported by the compiler.
-		local
-			melt_only_error: MELT_ONLY
-		do
-			if melt_only and then not Compilation_modes.is_precompiling then
-					-- The `melt_only' compiler can only generate C code
-					-- during the precompilation
-				!!melt_only_error;
-				melt_only_error.set_class (System.current_class);
-				Error_handler.insert_error (melt_only_error);
-				Error_handler.raise_error;
-			end;
-		end;
 
 feature -- Conveniences
 

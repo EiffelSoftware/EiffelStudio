@@ -1,25 +1,23 @@
-RELEASE NOTES FOR LINUX-ELF VERSION
+RELEASE NOTES FOR LINUX VERSION
 
-This note does not apply to any version other than Linux ELF format.
+This note does not apply to any version other than Linux ELF format. 
 
-This version of ISE Eiffel was built using the 1.2.13 version of the kernel.
+This version of ISE Eiffel was built using the 2.0.30 version of the kernel
+using libc5 and elf format.
 
-1) XKeysymDB problem
---------------------
+1) Glibc
+--------
 
-You may experience trouble while trying to use the BackSpace key.
-If so, you have to check that the file /usr/lib/X11/XKeysymDB
-has the definition of the osf symbols, which should be the case
-if you have installed Motif properly.
-When you have this file correct, and if you still cannot use the
-BackSpace key, you will have to try the following command:
+This release is compatible with both the GNU C library based Linux systems
+and libc5 based systems. The glibc systems has to have libc5 libraries to be
+able run the executables. If you develop under a glibc system, your
+applications will be using the GNU C libary.
 
-xmodmap -e "keysym Delete = BackSpace"
+GLIBC USERS:
+Please check the directories
+$EIFFEL4/bench/spec/$PLATFORM/include/glibc and
+$EIFFEL4/bench/spec/$PLATFORM/lib/glibc
 
-Check with your xmodmap man page.
-
-Note that you may want to add this command to your configuration
-files so that this is done each time you run your X server.
 
 2) `eifid' doesn't return a valid value
 ---------------------------------------
@@ -38,6 +36,7 @@ lo        Link encap:Local Loopback
           RX packets:1050 errors:0 dropped:0 overruns:0
           TX packets:1050 errors:0 dropped:0 overruns:0
 
+
 3) BUG with the backspace key
 -----------------------------
 
@@ -49,6 +48,24 @@ there is a workaround. Add these two lines into your .Xdefaults file
 again after the modification):
 
 ebench*XmText*Translations:	\
-#override <Key>osfBackSpace: delete-previous-character() backward-character()
+override <Key>osfBackSpace: delete-previous-character() backward-character()
+
+
+4) XKeysymDB problem
+--------------------
+
+You may experience trouble while trying to use the BackSpace key.
+If so, you have to check that the file /usr/lib/X11/XKeysymDB
+has the definition of the osf symbols, which should be the case
+if you have installed Motif properly.
+When you have this file correct, and if you still cannot use the
+BackSpace key, you will have to try the following command:
+
+xmodmap -e "keysym Delete = BackSpace"
+
+Check with your xmodmap man page.
+
+Note that you may want to add this command to your configuration
+files so that this is done each time you run your X server.
 
 

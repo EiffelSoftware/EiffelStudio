@@ -12,6 +12,9 @@ class
 
 inherit
 	WEL_CONTROL
+		redefine
+			default_ex_style
+		end
 
 	WEL_TTM_CONSTANTS
 		export
@@ -271,9 +274,15 @@ feature {NONE} -- Implementation
 		end
 
 	default_style: INTEGER is
-			-- Default style used to create the control
+			-- Default style used to create the control.
 		once
 			Result := Tts_alwaystip
+		end
+
+	default_ex_style: INTEGER is
+			-- Default extended style used to create the control.
+		once
+			Result := Ws_ex_topmost
 		end
 
 feature {NONE} -- Externals

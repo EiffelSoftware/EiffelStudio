@@ -16,7 +16,11 @@ inherit
 			{NONE} all
 		end;
 
-	MEL_FORM_CHILD
+	MEL_FORM_CHILD;
+
+	MEL_FRAME_CHILD;
+
+	MEL_PANED_WINDOW_CHILD
 
 feature -- Access
 

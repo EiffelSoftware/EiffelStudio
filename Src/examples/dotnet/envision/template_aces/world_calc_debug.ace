@@ -22,9 +22,6 @@ default
 	check_vape (yes)
 	console_application (no)
 
-
---	my_parser:	"parser"
-
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\winforms\window_calculator"
 
@@ -69,6 +66,17 @@ assembly
 		prefix
 			winforms_
 		end
+
+external
+	include_path:
+		"$(ISE_EIFFEL)\library\vision2\spec\include",
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+
+	object:
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+ 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+ 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
 
 
 end

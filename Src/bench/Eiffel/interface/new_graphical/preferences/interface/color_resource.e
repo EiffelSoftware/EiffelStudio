@@ -33,8 +33,9 @@ feature -- Access
 			-- Color value of resource
 		do
 			if not color_is_void then
-				create Result
-				Result.set_rgb_with_8_bit (r, g, b)
+				create Result.make_with_8_bit_rgb (r, g, b)
+			elseif not is_voidable then
+				Result := default_color
 			end
 		end
 
@@ -42,8 +43,7 @@ feature -- Access
 			-- Negative value of resource
 		do
 			if not color_is_void then
-				create Result
-				Result.set_rgb_with_8_bit (255 - r, 255 - g, 255 - b)
+				create Result.make_with_8_bit_rgb (255 - r, 255 - g, 255 - b)
 			end
 		end
 
@@ -68,6 +68,9 @@ feature -- Status report
 
 	color_is_void: BOOLEAN
 			-- Is the resource marked as "auto"?
+			
+	is_voidable: BOOLEAN
+			-- May the resource be Void?/May the resource be marked as "auto"?
 
 feature -- Status setting
 
@@ -117,6 +120,8 @@ feature -- Status setting
 
 		set_void is
 				-- Set current on "auto" value.
+			require
+				may_be_void: is_voidable
 			do
 				value := "auto"
 				r := 0
@@ -124,7 +129,14 @@ feature -- Status setting
 				b := 0
 				color_is_void := True
 			end
-
+			
+		allow_void is
+				-- `Current' may return a Void color after this, and be set to auto.
+			do
+				is_voidable := True
+			end
+		
+			
 feature {NONE} -- Implementation
 
 	r, g, b: INTEGER
@@ -188,6 +200,5 @@ feature -- Output
 		do
 			Result := "EIFCOL_" + name
 		end
-
 
 end -- class COLOR_RESOURCE

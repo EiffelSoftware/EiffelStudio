@@ -131,6 +131,9 @@ feature -- Element change
 			check
 				v_imp_not_void: v_imp /= Void
 			end
+			if v.parent /= Void then
+				v.parent.prune (v)
+			end
 			ev_children.put_left (v_imp)
 			ev_children.move (-1)
 			ww ?= Current
@@ -293,6 +296,10 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/03 20:02:28  brendel
+--| Fixed bug in replace, where before it did not remove the item from the
+--| old list if it had one.
+--|
 --| Revision 1.12  2000/03/03 19:41:05  brendel
 --| Removed feature `put_left'.
 --|

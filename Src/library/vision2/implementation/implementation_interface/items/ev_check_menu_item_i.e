@@ -38,9 +38,9 @@ feature -- Status setting
 
 	toggle is
 			-- Invert the value of `is_selected'.
-			--| See redefinition in EV_RADIO_ITEM_IMP, why there is no post-
-			--| condition on this function.
 		deferred
+		ensure
+			inverted: old is_selected = not is_selected
 		end
 
 feature {NONE} -- Implementation
@@ -70,6 +70,9 @@ end -- class EV_CHECK_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/24 16:51:35  brendel
+--| Restored old contract on `toggle'.
+--|
 --| Revision 1.9  2000/02/24 01:33:50  brendel
 --| Removed postcondition on toggle, because it cannot be met in radio items.
 --|

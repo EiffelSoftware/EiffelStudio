@@ -24,7 +24,7 @@
                         NULL, NULL,
                         &si, &pi
                         );
-        if (bRet)
+        if (bRet != 0)
         {
             WaitForSingleObject (pi.hProcess, INFINITE);
 			GetExitCodeProcess (pi.hProcess, &result);
@@ -33,5 +33,5 @@
 			return result;
         }
 		else
-			return 1;
+			return 10000;
     }

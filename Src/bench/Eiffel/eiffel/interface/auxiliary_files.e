@@ -537,14 +537,15 @@ feature -- Plug and Makefile file
 									%long *eif_lower_table = (long *)0;%N")
 			end
 
+			has_dispose := System.memory_class /= Void
+
 			if final_mode then
 				init_name := clone (Encoder.table_name (system.routine_id_counter.initialization_rout_id))
 
 				buffer.putstring ("extern char *(*")
 				buffer.putstring (init_name)
 				buffer.putstring ("[])();%N")
-				
-				has_dispose := System.memory_class /= Void
+
 				if has_dispose then
 					dispose_name := clone (Encoder.table_name (system.routine_id_counter.dispose_rout_id))
 					buffer.putstring ("extern char *(*")

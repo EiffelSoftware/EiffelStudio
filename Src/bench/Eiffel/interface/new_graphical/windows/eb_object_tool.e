@@ -65,6 +65,24 @@ feature {NONE} -- Initialization
 --			init_text_window
 --		end
 
+	init_formatters is
+		do
+			create format_list.make (Current)
+			set_last_format (format_list.default_format)
+		end
+
+	init_commands is
+		do
+			Precursor
+			create slice_cmd.make (Current)
+			create current_target_cmd.make (Current)
+			create previous_target_cmd.make (Current)
+			create next_target_cmd.make (Current)
+--			!! history_list_cmd.make (Current)
+		end
+
+feature {EB_TOOL_MANAGER} -- Initialize
+
 	build_interface is
 		do
 			precursor
@@ -83,22 +101,6 @@ feature {NONE} -- Initialization
 --				object_toolbar.remove
 --			end
 
-		end
-
-	init_formatters is
-		do
-			create format_list.make (Current)
-			set_last_format (format_list.default_format)
-		end
-
-	init_commands is
-		do
-			Precursor
-			create slice_cmd.make (Current)
-			create current_target_cmd.make (Current)
-			create previous_target_cmd.make (Current)
-			create next_target_cmd.make (Current)
---			!! history_list_cmd.make (Current)
 		end
 
 feature -- Window Properties

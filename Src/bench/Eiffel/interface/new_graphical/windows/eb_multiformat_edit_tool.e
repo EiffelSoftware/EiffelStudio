@@ -20,6 +20,14 @@ inherit
 
 feature {NONE} -- Initialization
 
+	init_formatters is
+		deferred
+		ensure
+			last_format_non_void: last_format /= Void
+		end
+
+feature {EB_TOOL_MANAGER} -- Initialization
+
 	build_interface is
 			-- Build system widget.
 		do
@@ -32,12 +40,6 @@ feature {NONE} -- Initialization
 --			end
 -- we assume that format_bar is always created,
 -- in `create toolbar' or in `build_edit_bar'
-		end
-
-	init_formatters is
-		deferred
-		ensure
-			last_format_non_void: last_format /= Void
 		end
 
 feature -- Window Properties

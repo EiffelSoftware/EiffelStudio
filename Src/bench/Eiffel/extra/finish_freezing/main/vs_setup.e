@@ -169,9 +169,17 @@ feature -- Keys
 			check_for_vs6: BOOLEAN
 		once
 			create reg
-					-- First look for Visual Studio 7.0.
-			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\7.0\Setup\VC",
+					-- First look for Visual Studio 7.1.
+			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\7.1\Setup\VC",
 				feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+
+					-- If registry key doesn't exsits then look in 7.0			
+			if p = default_pointer then
+				reg.close_key (p)
+				p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\7.0\Setup\VC",
+					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)				
+			end
+
 			if p /= default_pointer then
 				key := reg.key_value (p, "ProductDir")
 				reg.close_key (p)	

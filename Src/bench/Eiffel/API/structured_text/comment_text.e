@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Text that contains comments.";
+		"Comment text when not in `quotes'.";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -9,82 +9,21 @@ class COMMENT_TEXT
 
 inherit
 
-	TEXT_ITEM
+	BASIC_TEXT
+		redefine
+			append_to
+		end
 
 creation
 
 	make
 
-feature -- Initialization
+feature {TEXT_FORMATTER} -- Implementation
 
-	make (line: STRING) is
+	append_to (text: TEXT_FORMATTER) is
+			-- Append comment text to `text'.
 		do
-			image.make (line.count + 2);
-			image.append ("--");
-			image.append (line);
-		end;
-
-feature -- Property
-
-	item: STRING;
-			-- Current item
-			
-feature -- Access
-
-	after: BOOLEAN is
-			-- Is position after?
-		do
-			Result := position > image.count;
-		end;
-
-feature -- Cursor posistion
-
-	start is
-			-- Move position to the start of Current comment.
-		do
-			position := 1;
-			quoted := false;
-			compute_item;		
-		end;
-
-	forth is
-			-- Move position to the next item of Current comment.
-		do
-			position := end_position + 1;
-			compute_item
+			text.process_comment_text (Current)
 		end
 
-feature {NONE} -- Implementation
-
-	position: INTEGER;
-			-- Current position of comment
-
-	end_position: INTEGER;
-			-- End position of comment
-
-	compute_item is
-			-- Compute Current item of comment
-		local
-			end_character: CHARACTER;
-		do
-			if not after then
-				if quoted then 
-					end_character := '%''
-				else
-					end_character := '`'
-				end;
-				from
-					end_position := position
-				until
-					end_position > count
-					or else image.item (end_position) = end_character
-				loop
-					end_position := end_position + 1;
-				end;
-				item = substring (image, position, end_position - 1)
-			end;
-			quoted := not quoted;	
-		end
-				
-end
-	
+end -- class COMMENT_TEXT

@@ -159,7 +159,7 @@ feature -- Status report
 				!! Result.make (0);
 			else
 				Result := ms.to_eiffel_string;
-				ms.free
+				ms.destroy
 			end;
 		end;
 
@@ -232,7 +232,7 @@ feature -- Status setting
 			label.unmanage;
 			set_title_string (ms);
 			label.manage;
-			ms.free
+			ms.destroy
 		end;
 
 	set_size (new_width, new_height: INTEGER) is
@@ -375,7 +375,7 @@ feature -- Element change
 			-- Add `a_command' to the list of action to execute when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		local
-			a_mask: POINTER
+			a_mask: INTEGER
 		do
 			inspect number
 			when 1 then
@@ -390,7 +390,7 @@ feature -- Element change
 				a_mask := Button5MotionMask
 			else
 			end
-			if a_mask /= default_pointer then
+			if a_mask /= 0 then
 				scroll_bar.add_event_handler (a_mask,
 					x_event_vision_callback (a_command), argument)
 			end
@@ -484,7 +484,7 @@ feature -- Removal
 			-- Remove `a_command' to the list of action to execute when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		local
-			a_mask: POINTER
+			a_mask: INTEGER
 		do
 			inspect number
 			when 1 then
@@ -499,7 +499,7 @@ feature -- Removal
 				a_mask := Button5MotionMask
 			else
 			end
-			if a_mask /= default_pointer then
+			if a_mask /= 0 then
 				scroll_bar.remove_event_handler (a_mask,
 					x_event_vision_callback (a_command), argument)
 			end

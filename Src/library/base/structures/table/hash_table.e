@@ -48,6 +48,7 @@ feature -- Initialization
 			!! content.make (0, table_size - 1);
 			!! keys.make (0, table_size - 1);
 			!! deleted_marks.make (0, table_size - 1);
+			pos_for_iter := table_size
 		ensure
 			keys_big_enough: keys.capacity >= n and keys.capacity >= Minimum_size;
 			content_big_enough: content.capacity >= n and content.capacity >= Minimum_size;
@@ -59,18 +60,26 @@ feature -- Access
 	item, infix "@" (key: H): G is
 			-- Item associated with `key', if present;
 			-- otherwise default value of type `G'
+		local
+			old_control: INTEGER
 		do
+			old_control := control;
 			internal_search (key);
 			if control = Found_constant then
 				Result := content.item (position)
-			end
+			end;
+			control := old_control
 		end;
 
 	has (key: H): BOOLEAN is
 			-- Is there an item in the table with key `key'?
+		local
+			old_control: INTEGER
 		do
+			old_control := control;
 			internal_search (key);
 			Result := (control = Found_constant)
+			control := old_control
 		end;
 
 	has_item (v: G): BOOLEAN is
@@ -132,6 +141,11 @@ feature -- Access
 		ensure
 			good_count: Result.count = count
  		end;
+
+	dead_key: H is
+			-- Special key used to mark deleted items
+		do
+		end
 
 	position: INTEGER;
 			-- Hash table cursor, updated after each operation:
@@ -202,11 +216,11 @@ feature -- Status report
 			-- Answer: yes if and only if `k' is not the default
 			-- value of type `H'.
 		local
-			dead_key: H
+			dkey: like dead_key
 		do
-			Result := k /= dead_key and then k.is_hashable
+			Result := k /= dkey and then k.is_hashable
 		ensure then
-			Result = ((k /= Void) and then k.is_hashable)
+			Result = (k /= dead_key and then k.is_hashable)
 		end;
 
 	conflict: BOOLEAN is
@@ -290,7 +304,7 @@ feature -- Cursor movement
 		end;
 
 	go_to (c: CURSOR) is
-			-- Move to position `p'.
+			-- Move to position `c'.
 		require
 			c_not_void: c /= Void;
 			valid_cursor: valid_cursor (c)
@@ -325,7 +339,7 @@ feature -- Element change
 				control := Inserted_constant
 			end
 		ensure then
-			insertion_done: control = Inserted_constant implies item (key) = new
+			insertion_done: inserted implies item (key) = new
 		end;
 
 	replace (new: G; key: H) is
@@ -344,7 +358,7 @@ feature -- Element change
 				control := Not_found_constant
 			end
 		ensure
-			insertion_done: control = Changed_constant implies item (key) = new
+			insertion_done: replaced implies item (key) = new
 		end;
 
 	force (new: G; key: H) is
@@ -378,8 +392,8 @@ feature -- Element change
 			valid_keys: valid_key (new_key) and valid_key (old_key)
 		local
 			old_index: INTEGER;
-			dead_key: H;
-			dead_item: G
+			dead_item: G;
+			dkey: like dead_key
 		do
 			internal_search (old_key);
 			if control = Found_constant then
@@ -388,7 +402,7 @@ feature -- Element change
 				if control /= Conflict_constant then
 					count := count - 1;
 					if position /= old_index then
-						keys.put (dead_key, old_index);
+						keys.put (dkey, old_index);
 						content.put (dead_item, old_index);
 						deleted_marks.put (true, old_index);
 					end;
@@ -396,25 +410,25 @@ feature -- Element change
 				end
 			end
 		ensure
-			changed: control = Changed_constant implies not has (old_key)
+			changed: replaced implies not has (old_key)
 		end;
 
 feature -- Removal
 
 	remove (key: H) is
 			-- Remove item associated with `key', if present.
-			-- Make `inserted' true if and only if an item has been
+			-- Make `removed' true if and only if an item has been
 			-- removed (i.e. `key' was not present).
 		require
 			valid_key: valid_key (key)
 		local
 			iter_pos, increment, hash_code, table_size: INTEGER;
-			k, dead_key: H;
+			dkey: like dead_key;
 			old_item, dead_item: G
 		do
 			internal_search (key);
 			if control = Found_constant then
-				keys.put (dead_key, position);
+				keys.put (dkey, position);
 				content.put (dead_item, position);
 				deleted_marks.put (true, position);
 				control := Removed_constant;

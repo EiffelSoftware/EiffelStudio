@@ -209,10 +209,7 @@ feature -- Access
 			array_offset, array_size: INTEGER
 			array_area: SPECIAL [CHARACTER]
 			color_struct_size: INTEGER
-			temp_alpha: CHARACTER
-			temp_alpha_int: INTEGER
 			local_c: EV_C_EXTERNALS
-			bit_number, array_result: INTEGER
 			character_result, n_character: INTEGER
 			red_value: INTEGER
 		do
@@ -256,6 +253,7 @@ feature -- Access
 				if red_value > 0  then
 					character_result := character_result + (2 ^ (n_character)).rounded
 					-- Bitmap data is stored in a way that pixel 1 is bit 1 (2 ^ 0).
+					-- This is the way it is read in by the gdk function. (FIFO)
 				end
 				if array_offset \\ 8 = 7 then
 					Result.put (character_result.to_character, (array_offset // 8) + 1)
@@ -266,8 +264,6 @@ feature -- Access
 			local_c.c_gdk_color_struct_free (a_color)
 			local_c.gdk_image_destroy (a_gdkimage)
 		end
-
-		
 
 	raw_image_data: EV_RAW_IMAGE_DATA is
 		local

@@ -856,8 +856,16 @@ void c_gtk_widget_set_size (GtkWidget *widget, int width, int height)
   
   allocation.x = widget->allocation.x;
   allocation.y = widget->allocation.y;
-  allocation.width = width;
-  allocation.height = height;
+  
+  if (width < 0)
+	allocation.width = 0;
+  else
+	allocation.width = width;
+
+  if (height < 0)
+	allocation.height = 0;
+  else
+	allocation.height = height;
   
   gtk_widget_size_allocate (widget, &allocation);
 }

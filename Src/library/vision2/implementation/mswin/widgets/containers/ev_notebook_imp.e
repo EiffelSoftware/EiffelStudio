@@ -244,7 +244,7 @@ feature -- Element change
 			index: INTEGER
 		do
 			index := get_child_index (a_child)
-			delete_item (index)
+			delete_item (index - 1)
 			notify_change (2 + 1)
 		end
 

@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Set the messages for this state.
 		do
-			title.set_text ("Completing the%N" + wizard_title)
+			title.set_text ("Completing the%N" + Build_wizard_title)
 			message.set_text (final_message)
 		end
 		

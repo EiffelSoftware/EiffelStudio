@@ -42,7 +42,7 @@ feature
 	identifier: INTEGER;
 
 	
-feature {NONE}
+feature {CAT_EV_IS}
 
 	remove_yourself is
 		local

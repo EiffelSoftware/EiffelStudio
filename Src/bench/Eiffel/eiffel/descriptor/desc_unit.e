@@ -50,7 +50,6 @@ feature -- Generation
 			re: ROUT_ENTRY
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
-			local_copy: ARRAY [ENTRY]
 			uint16, int16, gen_type, separator, null_init: STRING
 			invalid_entry: STRING
 		do
@@ -60,13 +59,12 @@ feature -- Generation
 				gen_type := ", gen_type"
 				separator := "}, "
 				null_init := ", (int16 *) 0"
-				local_copy := Current
 				Invalid_entry := ", (int16) -1, (int16 *) 0},"
 				i := lower
 			until
 				i > upper
 			loop
-				entry_item := local_copy.item (i)
+				entry_item := item (i)
 				if entry_item /= Void then
 					re ?= entry_item
 					if re /= Void then
@@ -141,7 +139,6 @@ feature -- Generation
 			ae: ATTR_ENTRY
 			nb: INTEGER
 			entry_item: ENTRY
-			local_copy: ARRAY [ENTRY]
 			info, desc1, desc2, gen_type, type: STRING
 			non_generic, gen_type_string, end_of_line: STRING
 		do
@@ -155,13 +152,12 @@ feature -- Generation
 				non_generic := "(int16 *) 0;%N"
 				gen_type_string := " gen_type"
 				end_of_line := ";%N"
-				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
 				nb := i + start
-				entry_item := local_copy.item (i)
+				entry_item := item (i)
 				if entry_item /= Void then
 					re ?= entry_item
 					if re /= Void then
@@ -250,19 +246,17 @@ feature -- Generation
 			re: ROUT_ENTRY;
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
-			local_copy: ARRAY [ENTRY]
 			static_decl, start_decl, end_decl: STRING
 		do
 			from
 				static_decl := "static int16 gen_type"
 				start_decl := " [] = {0, "
 				end_decl := "-1};%N"
-				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
-				entry_item := local_copy.item (i)
+				entry_item := item (i)
 				if entry_item /= Void and then entry_item.is_generic then
 					re ?= entry_item
 					if re /= Void then
@@ -304,7 +298,6 @@ feature -- Melting
 			re: ROUT_ENTRY;
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
-			local_copy: ARRAY [ENTRY]
 		do
 				-- Append the id of the origin class
 			ba.append_short_integer (class_id);
@@ -314,12 +307,11 @@ feature -- Melting
 
 				-- Append the descriptor entries
 			from
-				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
-				entry_item := local_copy.item (i)
+				entry_item := item (i)
 				if entry_item /= Void then
 					re ?= entry_item
 					if re /= Void then

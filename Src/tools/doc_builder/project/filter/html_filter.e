@@ -314,7 +314,9 @@ feature {NONE} -- Query
 			-- Can content be output based Current element?
 
 	link_convert (a_url: STRING): STRING is
-			-- Converts `a_url' file link to html file link
+			-- Converts `a_url' file link to html file link.  
+			-- Optionally converts it to relative links also.
+			-- Leaves directory urls unchanged.
 		require
 			url_not_void: a_url /= Void
 			url_not_empty: not a_url.is_empty
@@ -322,18 +324,32 @@ feature {NONE} -- Query
 			l_util: UTILITY_FUNCTIONS
 			l_filename: FILE_NAME
 			l_link: DOCUMENT_LINK
+			l_shared: SHARED_OBJECTS
+			l_dir: DIRECTORY
 		do
 			create l_util
+			create l_shared			
 			create l_link.make (filename, a_url)
-			if not l_link.external_link then
-				create l_filename.make_from_string (l_util.file_no_extension (a_url))
+			create l_filename.make_from_string (l_link.absolute_url)
+			create l_dir.make (l_filename.string)
+			if not l_dir.exists then
+				create l_filename.make_from_string (l_util.file_no_extension (l_filename.string))
 				if not l_filename.is_empty then
 					l_filename.add_extension ("html")
-				end				
-				Result := l_filename.string
+				end
+				if not l_link.external_link then										
+					if l_shared.shared_constants.help_constants.is_web_help then
+							-- For web help we always convert to relative links
+						Result := l_link.relative_url
+					else					
+						Result := l_filename.string	
+					end
+				else
+					Result := a_url
+				end	
 			else
 				Result := a_url
-			end			
+			end		
 		end		
 
 feature {NONE} -- Access

@@ -164,11 +164,6 @@ feature -- Element change
 			)
 			feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
 			internal_set_value (temp_value)
-		ensure
-			value_range_upper_consistent: value_range.upper =
-				feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (adjustment).rounded - page_size
-			value_range_lower_consistent: value_range.lower =
-				feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_lower (adjustment).rounded
 		end
 
 feature {NONE} -- Implementation

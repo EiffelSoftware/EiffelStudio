@@ -342,9 +342,7 @@ feature -- Basic operations
 					include_paths_list.after
 				loop
 					-- replace all " in string with %"
-					string := include_paths_list.item.clone(include_paths_list.item)
-					string.replace_substring_all ("%"", "%%%"")
-					file_names.extend (new_id_sd (string, True))
+					file_names.extend (new_id_sd (include_paths_list.item, True))
 					include_paths_list.forth
 				end
 				
@@ -363,9 +361,7 @@ feature -- Basic operations
 					object_files_list.after
 				loop
 					-- replace all " in string with %"
-					string := object_files_list.item.clone(object_files_list.item)
-					string.replace_substring_all ("%"", "%%%"")
-					file_names.extend (new_id_sd (string, True))
+					file_names.extend (new_id_sd (object_files_list.item, True))
 					object_files_list.forth
 				end
 				

@@ -266,7 +266,9 @@ rt_private char *branch_exit =
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ back to level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
 
 /* Commonly used error messages */
+#ifdef MAY_PANIC
 rt_private char *botched = "Eiffel stack botched";
+#endif
 rt_private char *vanished = "main entry point vanished";
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
@@ -2333,7 +2335,7 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 			sprintf(buf, "         (From %.15s)", Origin(eif_except.from));
 
 	sprintf(buffer, "<%08lX> %-31.31s %-29.29s ",
-		eif_except.obj_id, buf, exception_string(code));
+		(unsigned long) eif_except.obj_id, buf, exception_string(code));
 	append_trace(buffer);
 
 	/* Start panic effect when we reach the EN_BYE record */

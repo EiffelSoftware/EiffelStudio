@@ -124,14 +124,14 @@ rt_shared char *build_out(EIF_OBJECT object)
 
 	if (flags & EO_SPEC) {
 		/* Special object */
-		sprintf(buffero, "SPECIAL [0x%lX]\n", (EIF_REFERENCE) eif_access(object));
+		sprintf(buffero, "SPECIAL [0x%lX]\n", (unsigned long) eif_access(object));
 		write_out();
 		/* Print recursively in `tagged_out' */
 		rec_swrite(eif_access(object), 0);
 	} else {
 		/* Print instance class name and object id */
 		sprintf(buffero, "%s [0x%lX]\n", System(Deif_bid(flags)).cn_generator,
-			eif_access(object));
+			(unsigned long) eif_access(object));
 		write_out();
 		/* Print recursively in `tagged_out' */
 		rec_write(eif_access(object), 0);
@@ -210,7 +210,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 		switch(type & SK_HEAD) {
 		case SK_POINTER:
 			/* Pointer attribute */
-			sprintf(buffero, "POINTER =  C pointer 0x%lX\n", *(fnptr *)o_ref);
+			sprintf(buffero, "POINTER =  C pointer 0x%lX\n", (unsigned long) (*(fnptr *)o_ref));
 			write_out();
 			break;
 		case SK_BOOL:
@@ -276,11 +276,11 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 				ref_flags = HEADER(reference)->ov_flags;
 				if (ref_flags & EO_C) {
 					/* C reference */
-					sprintf(buffero, "POINTER = C pointer 0x%lX\n", (EIF_REFERENCE) reference);
+					sprintf(buffero, "POINTER = C pointer 0x%lX\n", (unsigned long) reference);
 					write_out();
 				} else if (ref_flags & EO_SPEC) {
 					/* Special object */
-					sprintf(buffero, "SPECIAL [0x%lX]\n", (EIF_REFERENCE) reference);
+					sprintf(buffero, "SPECIAL [0x%lX]\n", (unsigned long) reference);
 					write_out();
 					write_tab(tab + 2);
 					sprintf(buffero, "-- begin special object --\n");
@@ -293,7 +293,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 					write_out();
 				} else {
 					sprintf(buffero, "%s [0x%lX]\n",
-						System(Dtype(reference)).cn_generator, (EIF_REFERENCE) reference);
+						System(Dtype(reference)).cn_generator, (unsigned long) reference);
 					write_out();
 				}
 			} else {
@@ -367,7 +367,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 					sprintf(buffero, "DOUBLE = %.17g\n", *(double *)o_ref);
 					write_out();
 				} else if (dt_type == egc_sp_pointer) {
-					sprintf(buffero, "POINTER = C pointer 0x%lX\n", *(fnptr *)o_ref);
+					sprintf(buffero, "POINTER = C pointer 0x%lX\n", (unsigned long) (*(fnptr *)o_ref));
 					write_out();
 				} else {
 					/* Must be bit */
@@ -391,10 +391,10 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 			if (0 == reference)
 				sprintf(buffero, "Void\n");
 			else if (HEADER(reference)->ov_flags & EO_C)
-				sprintf(buffero, "POINTER = C pointer 0x%lX\n", (EIF_REFERENCE) reference);
+				sprintf(buffero, "POINTER = C pointer 0x%lX\n", (unsigned long) reference);
 			else
 				sprintf(buffero, "%s [0x%lX]\n",
-					System(Dtype(reference)).cn_generator, (EIF_REFERENCE) reference);
+					System(Dtype(reference)).cn_generator, (unsigned long) reference);
 			write_out();
 		}
 
@@ -510,7 +510,7 @@ rt_public EIF_REFERENCE c_outp(EIF_POINTER p)
 {
 	EIF_GET_CONTEXT
 	register int len;
-	len = sprintf(buffero, "0x%lX", (EIF_POINTER) p);
+	len = sprintf(buffero, "0x%lX", (unsigned long) p);
 	return makestr(buffero, len);
 }
 

@@ -198,7 +198,7 @@ rt_public EIF_BOOLEAN b_equal(EIF_REFERENCE a, EIF_REFERENCE b)
 		bita = a;
 		bitb = b;
 	}
-		/*return EIF_FALSE;			/* They can't be equal */
+		/*return EIF_FALSE;	*/		/* They can't be equal */
 
 	addr_a = ARENA(a);
 	addr_b = ARENA(b);

@@ -5,6 +5,8 @@
 */
 
 #include <assert.h>
+#include <string.h>
+#include <ctype.h>
 #include "eif_macros.h"
 #include "eif_struct.h"
 #include "eif_gen_conf.h"
@@ -1644,12 +1646,13 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 		idx  = (ttype - stab->min_high_id);
 		mask = (1 << (idx % 8));
 
-		/* If we have computed it already, return result */
-		/* We check first if the computed value is '1', if so, it means both that we already
+		/* If we have computed it already, return result 
+		 * We check first if the computed value is '1', if so, it means both that we already
 		 * computed it and that is True.
 		 * If the computed value is '0' we check if we compute a value, if so we return 0
 		 * because we already know the computed value, otherwise we compute it
-		 * /
+		 */
+
 		if (mask == ((stab->high_tab)[idx/8] & mask))
 			return 1;
 		if (mask == ((stab->high_comp)[idx/8] & mask))
@@ -2100,7 +2103,11 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 
 	if (size > 0)
 	{
+#ifdef VXWORKS
+		memcpy (tp, typearr, size*sizeof(int16));
+#else
 		bcopy(typearr,tp,size*sizeof(int16));
+#endif
 	}
 
 	result->size        = size;

@@ -10,6 +10,7 @@
 	Eiffel retrieve mechanism.
 */
 
+#include "eif_lmalloc.h"
 #include "eif_project.h" /* for egc_ce_gtype, egc_bit_dtype */
 #include "eif_config.h"
 #include "eif_portable.h"
@@ -194,7 +195,6 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 	EIF_GET_CONTEXT
 	char *retrieved = (char *) 0;
 	char rt_type = (char) 0;
-	int pos = 0;
 
 #ifdef EIF_ALPHA
 		/* The conversion from a FILE pointer to a file descriptor
@@ -526,6 +526,9 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 		if (flags & EO_SPEC) {
 			uint32 count, elm_size;
 			uint32 dgen, spec_type;
+			int16 *gt_type;
+			int32 *gt_gen;
+			int nb_gen;
 			struct gt_info *info;
 			char *vis_name;
 
@@ -533,22 +536,20 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 			vis_name = System(spec_type).cn_generator;
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+			assert (info != (struct gt_info *) 0);	/* Must be generic. */
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
-				int16 *gt_type = info->gt_type;
-				int32 *gt_gen;
-				int nb_gen = info->gt_param;
-	
-				for (;;) {
-					if ((*gt_type++ & SK_DTYPE) == (int16) spec_type)
-						break;
-				}
-				gt_type--;
-				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-				dgen = *gt_gen;
+			gt_type = info->gt_type;
+			nb_gen = info->gt_param;
+
+			for (;;) {
+				if ((*gt_type++ & SK_DTYPE) == (int16) spec_type)
+					break;
 			}
+			gt_type--;
+			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+			dgen = *gt_gen;
 
 			if (!((dgen & SK_HEAD) == SK_EXP)) {
 				switch (dgen) {
@@ -714,6 +715,9 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 		if (flags & EO_SPEC) {
 			uint32 count, elm_size;
 			uint32 dgen, spec_type;
+			int16 *gt_type;
+			int32 *gt_gen;
+			int nb_gen;
 			struct gt_info *info;
 			char *vis_name;
 
@@ -722,26 +726,24 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+			assert (info != (struct gt_info *) 0); /* Must be generic */
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
-				int16 *gt_type = info->gt_type;
-				int32 *gt_gen;
-				int nb_gen = info->gt_param;
-	
-				for (;;) {
+			gt_type = info->gt_type;
+			nb_gen = info->gt_param;
+
+			for (;;) {
 #if DEBUG & 1
-					if (*gt_type == SK_INVALID)
-						eif_panic("corrupted cecil table");
+				if (*gt_type == SK_INVALID)
+					eif_panic("corrupted cecil table");
 #endif
-					if ((*gt_type++ & SK_DTYPE) == (int16) spec_type)
-						break;
-				}
-				gt_type--;
-				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-				dgen = *gt_gen;
+				if ((*gt_type++ & SK_DTYPE) == (int16) spec_type)
+					break;
 			}
+			gt_type--;
+			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+			dgen = *gt_gen;
 
 			if (!((dgen & SK_HEAD) == SK_EXP)) {
 				switch (dgen) {
@@ -999,6 +1001,9 @@ rt_private void rt_update2(char *old, char *new, char *parent)
 	long size;				/* New object size */
 	/* struct rt_struct *rt_info;*/ /* %%ss unused */
 
+#ifndef NDEBUG
+	nb_references = -1;
+#endif
 	fflags = zone->ov_flags;
 	flags = Mapped_flags(fflags);
 
@@ -1036,6 +1041,7 @@ rt_private void rt_update2(char *old, char *new, char *parent)
 		size = EIF_Size(flags & EO_TYPE);
 	}
 
+	assert (nb_references != -1);	/* Must be initialized. */
 update:
 	/* Update references */
 	for (addr = new; 	nb_references > 0;
@@ -1558,7 +1564,8 @@ rt_private int new_buffer_read (register char *object, int size)
 	register int read;
 
 	if (current_position + size > end_of_buffer) {
-		if (read = end_of_buffer - current_position) {
+		read = end_of_buffer - current_position;
+		if (read) {
 			memcpy (object, general_buffer + current_position, read);
 				/* This line is useless since current_position is set to `0'
 				 * after retrieve_read_func */
@@ -1590,7 +1597,7 @@ rt_public int retrieve_read (void)
 	EIF_GET_CONTEXT
 	char * ptr = general_buffer;
 	short read_size;
-	int part_read = 0, total_read = 0;
+	int part_read = 0;
 
 	if ((char_read_func ((char *)&read_size, sizeof (short))) < sizeof (short))
 		eise_io("Retrieve: unable to read buffer size.");
@@ -1622,7 +1629,6 @@ rt_public int retrieve_read_with_compression (void)
 	char* ptr = (char *)0;
 	int read_size = 0;
 	int part_read = 0;
-	int total_read = 0;
 	
 	if ((char_read_func (cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
 		eise_io("Retrieve: compression header mismatch.");
@@ -1740,6 +1746,9 @@ rt_private void gen_object_read (char *object, char *parent)
 			char *ref, *o_ptr;
 			char *vis_name;
 			uint32 dgen;
+			int16 *gt_type;
+			int32 *gt_gen;
+			int nb_gen;
 			struct gt_info *info;
 
 			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
@@ -1748,22 +1757,20 @@ rt_private void gen_object_read (char *object, char *parent)
 
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+			assert (info != (struct gt_info *) 0); /* Must be generic */
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
-				int16 *gt_type = info->gt_type;
-				int32 *gt_gen;
-				int nb_gen = info->gt_param;
-	
-				for (;;) {
-					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
-						break;
-				}
-				gt_type--;
-				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-				dgen = *gt_gen;
+			gt_type = info->gt_type;
+			nb_gen = info->gt_param;
+
+			for (;;) {
+				if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
+					break;
 			}
+			gt_type--;
+			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+			dgen = *gt_gen;
 	
 			if (!(flags & EO_REF)) {			/* Special of simple types */
 				switch (dgen & SK_HEAD) {
@@ -1950,6 +1957,9 @@ rt_private void object_read (char *object, char *parent)
 			char *ref, *o_ptr;
 			char *vis_name;
 			uint32 dgen;
+			int16 *gt_type;
+			int32 *gt_gen;
+			int nb_gen;
 			struct gt_info *info;
 
 			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
@@ -1958,26 +1968,24 @@ rt_private void object_read (char *object, char *parent)
 
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+			assert (info != (struct gt_info *) 0);	/* Must be generic.*/
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
-				int16 *gt_type = info->gt_type;
-				int32 *gt_gen;
-				int nb_gen = info->gt_param;
-	
-				for (;;) {
+			gt_type = info->gt_type;
+			nb_gen = info->gt_param;
+
+			for (;;) {
 #if DEBUG & 1
-					if (*gt_type == SK_INVALID)
-						eif_panic("corrupted cecil table");
+				if (*gt_type == SK_INVALID)
+					eif_panic("corrupted cecil table");
 #endif
-					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
-						break;
-				}
-				gt_type--;
-				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-				dgen = *gt_gen;
+				if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
+					break;
 			}
+			gt_type--;
+			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+			dgen = *gt_gen;
 	
 			if (!(flags & EO_REF)) {			/* Special of simple types */
 				switch (dgen & SK_HEAD) {
@@ -2115,22 +2123,23 @@ rt_private void object_read (char *object, char *parent)
 	}
 }
 
+#ifdef SYMANTEC_CPP
 rt_private long dbl_off(long v, long w, long x, long y, long z)
 {
 	return (PTROFF(v,w,x,y)+(z)*PTRSIZ+PADD(PTROFF(v,w,x,y)+(z)*PTRSIZ,DBLSIZ));
 }
-
 rt_private long obj_size(long u, long v, long w, long x, long y, long z)
 {
 	return (dbl_off(u,v,w,x,y)+(z)*DBLSIZ+REMAINDER(dbl_off(u,v,w,x,y)+(z)*DBLSIZ));
 }
+#endif
 
 rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 {
 	/* long Result;*/ /* %%ss removed */
 	int numb, counter, bit_size = 0;
 	int num_ref = 0, num_char = 0, num_float = 0, num_double = 0;
-	int num_pointer = 0, num_int = 0, exp_size = 0, num_exp = 0;
+	int num_pointer = 0, num_int = 0, exp_size = 0; 
 	uint32 types_cn;
 
 	numb = System(o_type).cn_nbattr;
@@ -2188,7 +2197,7 @@ rt_private int stream_read(char *pointer, int size)
 
 	if (stream_buffer_size - stream_buffer_position < size) {
 		stream_buffer_size += buffer_size;
-		stream_buffer = (char *) realloc (stream_buffer, stream_buffer_size);
+		stream_buffer = (char *) eif_realloc (stream_buffer, stream_buffer_size);
 	}	
 
 	memcpy (pointer, (stream_buffer + stream_buffer_position), size);

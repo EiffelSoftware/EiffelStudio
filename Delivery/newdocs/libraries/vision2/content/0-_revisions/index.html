@@ -118,9 +118,12 @@
 					`end_pos'.
 					<LI>
 						<B>EV_PIXMAP</B>
-					- `expose_actions' previously had a feature contained related to the
+					<ul><li> `expose_actions' previously had a feature contained related to the
 					implementation, and calling `wipe_out' on `expose_actions' would stop the image
 					from being redrawn. There are now no side effects related to `expose_actions'.
+					</li>
+					<LI> Calling `copy' on a pixmap that was parented in an EV_CONTAINER, and therefore displayed on screen had no visual effect until the window was re-painted. The image is now updated immediately.</li>
+</ul>
 					<LI>
 						<B>EV_LIST</B>
 					- Calling `disable_sensitive' when already non sensitive would loose the

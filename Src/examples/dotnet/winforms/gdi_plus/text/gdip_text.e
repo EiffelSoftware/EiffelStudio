@@ -37,14 +37,15 @@ feature {NONE} -- Initialization
 				-- Make sure form redraws when it is resized
 			set_style (feature {WINFORMS_CONTROL_STYLES}.resize_redraw, True)
 
-				-- Load the image to be used for the background from the exe's resource fork
-			create l_background_image.make_from_filename (("D:\Eiffel52\examples\dotnet\winforms\gdi_plus\text\colorbars.jpg").to_cil)
+			-- Load the image to be used for the background from the exe's resource fork
+			create l_background_image.make_from_filename (("colorbars.jpg").to_cil)
 
 				-- Now create the brush we are going to use to paint the background
 			create background_brush.make_from_bitmap (l_background_image)
 
-				-- Load the image to be used for the textured text from the exe's resource fork
-			create l_text_image.make_from_filename (("D:\Eiffel52\examples\dotnet\winforms\gdi_plus\text\marble.jpg").to_cil)
+			-- Load the image to be used for the textured text from the exe's resource fork
+			create l_text_image.make_from_filename (("marble.jpg").to_cil)
+
 			create text_texture_brush.make_from_bitmap (l_text_image)
 
 				-- Load the fonts we want to use

@@ -183,6 +183,12 @@ feature -- Access
 				type.is_equal (Ev_window_string) or type.is_equal (Ev_titled_window_string) or type.is_equal (Ev_dialog_string) then
 				can_drop := False
 			end
+			
+				-- This prevents the type of an object being changed if it is a representation
+				-- of a top level object.
+			if object.is_instance_of_top_level_object then
+				can_drop := False
+			end
 
 			if can_drop then
 				drop_actions.extend (agent replace_layout_item (?))	

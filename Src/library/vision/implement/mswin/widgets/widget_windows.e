@@ -593,7 +593,7 @@ feature -- Element change
 				left_button_press_actions.add (Current, a_command, argument)
 			when 2 then 
 				middle_button_press_actions.add (Current, a_command, argument)
-			when 3 then 
+			when 3 then
 				right_button_press_actions.add (Current, a_command, argument)
 			end
 		end;
@@ -1134,7 +1134,7 @@ feature -- Implementation
 	on_mouse_leave is
 			-- Mouse leave
 		local
-			cd: LEAVE_DATA
+			cd: CONTEXT_DATA
 		do
 			if exists then
 				!! cd.make (owner);
@@ -1145,7 +1145,7 @@ feature -- Implementation
 	on_mouse_enter is
 			-- Mouse enter
 		local
-			cd: ENTER_DATA
+			cd: CONTEXT_DATA
 		do
 			!! cd.make (owner);
 			enter_actions.execute (Current, cd)
@@ -1460,7 +1460,7 @@ feature {NONE} -- Implementation
 	on_destroy is
 			-- The window is about be to destroyed.
 		local
-			cd: DESTROY_DATA
+			cd: CONTEXT_DATA
 		do
 			!! cd.make (owner);
 			destroy_actions.execute (Current, cd)

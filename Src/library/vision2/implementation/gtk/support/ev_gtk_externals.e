@@ -408,7 +408,8 @@ feature {NONE} -- code in the glue library
 	c_gtk_signal_connect (widget: POINTER; event: POINTER; 
 			      routine: POINTER; object: POINTER; 
 			      arguments: POINTER; event_data: POINTER; 
-			      set_event_data_rtn: POINTER): INTEGER is
+			      set_event_data_rtn: POINTER;
+			      mouse_button: INTEGER): INTEGER is
 		external "C | %"gtk_eiffel.h%""
 		end
 

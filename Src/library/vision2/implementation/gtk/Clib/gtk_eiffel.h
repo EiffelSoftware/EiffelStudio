@@ -20,6 +20,7 @@ typedef  struct callback_data {
     EIF_OBJ argument;
     EIF_OBJ ev_data;
     EIF_PROC set_event_data;
+    int mouse_button;
 } callback_data_t;
 
 
@@ -52,7 +53,8 @@ gint c_gtk_signal_connect (GtkObject *widget,
 			   EIF_POINTER object,
 			   EIF_POINTER argument,
 			   EIF_POINTER ev_data,
-			   EIF_PROC event_data_rtn);
+			   EIF_PROC event_data_rtn,
+			   int mouse_button);
 
 
 /* Disconnect a call back of a widget/event pair */

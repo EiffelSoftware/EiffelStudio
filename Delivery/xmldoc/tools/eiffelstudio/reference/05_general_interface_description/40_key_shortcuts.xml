@@ -12,25 +12,263 @@
 			<size>1</size>Key shortcuts
 		</heading>
 		<paragraph>Many operations in EiffelStudio do not require the use of the mouse. The same effect can be achieved through the keyboard only.</paragraph>
-		<paragraph>This page gathers all the keyboard shortcuts available in the environment. They are sorted in several categories, depending on their domain of application.</paragraph>
+		<paragraph>This page gathers all the keyboard shortcuts available in the environment. They are sorted in several categories, depending on their domain of application. </paragraph>
 		<heading>
 			<size>2</size>Editor shortcuts
 		</heading>
-		Missing table
+		<table>
+			<row>
+				<cell>
+					<bold>Key shortcut</bold>
+				</cell>
+				<cell>
+					<bold>Purpose</bold>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<italic>- clipboard shortcuts -</italic>
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+C</cell>
+				<cell>Copy : Copy selected text into the clipboard.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Ins</cell>
+				<cell>Equivalent to Ctrl+C.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+X</cell>
+				<cell>Cut: Copy selected text into the clipboard and remove it.</cell>
+			</row>
+			<row>
+				<cell>Shift+Del</cell>
+				<cell>Equivalent to Ctrl+X.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+V</cell>
+				<cell>Paste: Insert clipboard content into the text.</cell>
+			</row>
+			<row>
+				<cell>Shift+Ins</cell>
+				<cell>Equivalent to Ctrl+V.</cell>
+			</row>
+			<row>
+				<cell>
+					<italic>- undo/redo shortcuts -</italic>
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Z</cell>
+				<cell>Undo last action.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Y</cell>
+				<cell>Redo last undone action.</cell>
+			</row>
+			<row>
+				<cell>
+					<italic>- search shortcuts -</italic>
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+F</cell>
+				<cell>Display the Search tool and give the focus to the "Search for..." text field.
+					<line_break></line_break>This shortcut may be customized.
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+H</cell>
+				<cell>Display the Search tool and give the focus to the "Replace with..." text field.
+					<line_break></line_break>This shortcut may be customized.
+				</cell>
+			</row>
+			<row>
+				<cell>F3</cell>
+				<cell>Search the next occurrence of currently selected text or, if there is no selection, of the last searched expression.
+					<line_break></line_break>This shortcut may be customized.
+				</cell>
+			</row>
+			<row>
+				<cell>Shift+F3</cell>
+				<cell>Search the previous occurrence the last searched expression.
+					<line_break></line_break>This shortcut may be customized.
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<italic>- shortcuts to modify selected text -</italic>
+				</cell>
+			</row>
+			<row>
+				<cell>Tab</cell>
+				<cell>Indent selection (only if several lines are selected).</cell>
+			</row>
+			<row>
+				<cell>Shift+Tab</cell>
+				<cell>Unindent the selected lines or the current line if there is no selection.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+K</cell>
+				<cell>Comment the selected lines or the current line if there is no selection.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Shift+K</cell>
+				<cell>Uncomment the selected lines or the current line if there is no selection.
+					<line_break></line_break>A line is uncommented only if '--' is at its beginning.
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+I</cell>
+				<cell>Embed selection (or the current line if there is no selection) in an "if...then...end" structure.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+D</cell>
+				<cell>Embed selection (or the current line if there is no selection) in an "debug...end" structure.</cell>
+			</row>
+			<row>
+				<cell>
+					<italic>- other shortcuts -</italic>
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+A</cell>
+				<cell>Select the entire text.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Space</cell>
+				<cell>Auto-complete current word.
+					<line_break></line_break>This shortcut may be customized.
+				</cell>
+			</row>
+		</table>
 		<note>
-			<bold>Note</bold>: These shortcuts are not available everywhere. All operations that do not imply changes in the text are available both in the editor and in the class and feature tabs of the context tool. Other operations are available only in theeditor.
+			<bold>Note</bold>: These shortcuts are not available everywhere. All operations that do not imply changes in the text are available both in the editor and in the class and feature tabs of the context tool. Other operations are available only in the editor.
 		</note>
 		<heading>
 			<size>2</size>Compiler
 		</heading>
-		Missing table
+		<table>
+			<row>
+				<cell>
+					<bold>Key shortcut</bold>
+				</cell>
+				<cell>
+					<bold>Purpose</bold>
+				</cell>
+			</row>
+			<row>
+				<cell>F7</cell>
+				<cell>Melt the system. This is the standard way to compile a  debuggable system.</cell>
+			</row>
+			<row>
+				<cell>Shift+F7</cell>
+				<cell>Melt classes that have been edited in EiffelStudio since the last  compilation. This is the recommended way to compile a  debuggable system as long as classes are not modified outside EiffelStudio.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+F7</cell>
+				<cell>Freeze the system. This melts the system and recompile the  generated C code.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Shift+F7</cell>
+				<cell>Finalize the system. This generates an optimized executable  which is not debuggable.</cell>
+			</row>
+		</table>
 		<heading>
 			<size>2</size>Debugger
 		</heading>
-		Missing table
+		<table>
+			<row>
+				<cell>
+					<bold>Key shortcut</bold>
+				</cell>
+				<cell>
+					<bold>Purpose</bold>
+				</cell>
+			</row>
+			<row>
+				<cell>F5</cell>
+				<cell>Run. This is the standard way to run a system and debug it.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+F5</cell>
+				<cell>Run without breakpoints. Same as run except that breakpoints are ignored.</cell>
+			</row>
+			<row>
+				<cell>Shift+F5</cell>
+				<cell>Kill the debugged application</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Shift+F5</cell>
+				<cell>Pause the debugged application.</cell>
+			</row>
+			<row>
+				<cell>F11</cell>
+				<cell>Step into.</cell>
+			</row>
+			<row>
+				<cell>F10</cell>
+				<cell>Step by step.</cell>
+			</row>
+			<row>
+				<cell>Shift+F11</cell>
+				<cell>Step out.</cell>
+			</row>
+		</table>
 		<heading>
 			<size>2</size>Miscellaneous
 		</heading>
-		Missing table
-	</paragraph>
-</document>
+		<table>
+			<row>
+				<cell>
+					<bold>Key shortcut</bold>
+				</cell>
+				<cell>
+					<bold>Purpose</bold>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<italic>- File shortcuts -</italic>
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+S</cell>
+				<cell>Save the file currently edited in the editor.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+O</cell>
+				<cell>Open a class file.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+N</cell>
+				<cell>Open a new window.</cell>
+			</row>
+			<row>
+				<cell>
+					<italic>- Editor views shortcuts -</italic>
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Shift+T</cell>
+				<cell>Display the text view in the editor.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Shift+C</cell>
+				<cell>Display the clickable view in the editor.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Shift+F</cell>
+				<cell>Display the flat view in the editor.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Shift+O</cell>
+				<cell>Display the contract view in the editor.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Shift+I</cell>
+				<cell>Display the flat contract view in the editor.</cell>
+			</row>
+		</table>
+	</paragraph></document>

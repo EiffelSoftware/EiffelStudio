@@ -16,7 +16,28 @@
 		<heading>
 			<size>2</size>Compiling
 		</heading>
-		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<paragraph>To compile the example:
+		<output output="studio">
+			<list ordered="false">
+				<item>Launch EiffelStudio.</item>
+				<item>Select 
+					<bold>Use existing Ace (control file)</bold> and click 
+					<bold>OK</bold>
+				</item>
+				<item>Browse to 
+					<italic></italic>
+				</item>
+				<item>Choose 
+					<italic></italic>.ace
+				</item>
+				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
+				<item>Click 
+					<bold>OK</bold>.
+				</item>
+			</list>		
+		</output>
+		<output output="envision">Envision compile instructions go here</output>
+		</paragraph>
 		<heading>
 			<size>2</size>Running
 		</heading>

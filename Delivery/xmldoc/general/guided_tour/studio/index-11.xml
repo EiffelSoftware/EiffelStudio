@@ -369,5 +369,69 @@
 			<size>2</size>
 			<content>The many paths to retargeting</content>
 		</heading>
-		<paragraph>As a conclusion to this review of Pick-and-Drop let's recapitulate the various ways we've seen for retargeting a whole Development Window or a tool to a class:</paragraph>Missing table
+		<paragraph>As a conclusion to this review of Pick-and-Drop let's recapitulate the various ways we've seen for retargeting a whole Development Window or a tool to a class:</paragraph>
+		<table>
+			<row>
+				<cell><bold>How to retarget</bold></cell>
+				<cell><bold>Same window/
+tool, or new?</bold></cell>
+				<cell><bold>Where described</bold></cell>
+			</row>
+			<row>
+				<cell>Type class name, then Enter, in class field at top-left of tool 
+</cell>
+				<cell>Same</cell>
+				<cell><link><label>"Retargeting by name", page 19 
+</label><url>index-07.xml</url></link></cell>
+			</row>
+			<row>
+				<cell>Choose class in Cluster tree</cell>
+				<cell>Same</cell>
+				<cell><link><label>"Retargeting from the Cluster Tree", page 23 </label><url>index-07.xml</url></link>
+</cell>
+			</row>
+			<row>
+				<cell>Choose class in Favorites 
+</cell>
+				<cell>Same</cell>
+				<cell><link><label>"Adding to Favorites", page 27</label><url>index-07.xml</url></link>
+</cell>
+			</row>
+			<row>
+				<cell>"Back" button 
+</cell>
+				<cell>Same</cell>
+				<cell><link><label>"Moving back and forth", page 26 </label><url>index-07.xml</url></link>
+</cell>
+			</row>
+			<row>
+				<cell>"Forth" button 
+</cell>
+				<cell>Same</cell>
+				<cell><link><label>"Moving back and forth", page 26 </label><url>index-07.xml</url></link>
+</cell>
+			</row>
+			<row>
+				<cell>Pick class from history list 
+</cell>
+				<cell>Same</cell>
+				<cell><link><label>"The Target History", page 27 
+</label><url>index-07.xml</url></link></cell>
+			</row>
+			<row>
+				<cell>Pick-and-drop: right-click on class name or graphical representation found in any tool, then move, then right-click</cell>
+				<cell>Existing window/tool (of drop target) 
+</cell>
+				<cell><link><label>"How Pick-and-Drop works", page 64 </label><url>index-11.xml</url></link>
+</cell>
+			</row>
+			<row>
+				<cell>Control-right-click on class name or graphical representation found in any tool 
+</cell>
+				<cell>New</cell>
+				<cell><link><label>"Starting a new tool", page 28 
+</label><url>index-07.xml</url></link></cell>
+			</row>
+		</table>
+
 	</paragraph></document>

@@ -15,11 +15,11 @@
 		<paragraph>In any comprehensive object-oriented system, the act of programming results in creation of new 
 			<link>
 				<url></url>
-				<label>FIXME</label>
+				<label>data types</label>
 			</link>. There must be a way of organizing these types and/or their static representation as 
 			<link>
 				<url></url>
-				<label>FIXME</label>
+				<label>classes</label>
 			</link>. This section tells you how classes are organized in Eiffel and in .NET, and how these organization methods are used together. 
 		</paragraph>
 		<heading>
@@ -28,14 +28,14 @@
 		<paragraph>Eiffel classes are grouped in 
 			<link>
 				<url></url>
-				<label>FIXME</label>
+				<label>clusters</label>
 			</link>. These clusters of classes ordinarily share some commonality of functionality or purpose. In other words,the classes in a particular cluster may provide the same sorts of capabilities or relate to a single software model. In the Eiffel Base Library there is a cluster called 
 			<code>
 				<cluster_name>list</cluster_name>
 			</code> which contains classes which implement different types of lists, for example, 
 			<code>
 				<class_name>ARRAYED_LIST</class_name>
-			</code>,
+			</code>, 
 			<code>
 				<class_name>LINKED_LIST</class_name>
 			</code>, 
@@ -102,15 +102,15 @@
 		<paragraph>The object model for which Eiffel was designed differs in some ways from the .NET object model. Importantly, Eiffel supports the facilties of full, controllable multiple 
 			<link>
 				<url></url>
-				<label>FIXME</label>
+				<label>inheritance</label>
 			</link>, and 
 			<link>
 				<url></url>
-				<label>FIXME</label>
-			</link>, among other things, that the inherent .NET object model does not. That does not mean that these things cannot work in .NET. Indeed they can, and they make Eiffel for .NET very powerful. But, theydo make things look a little different. 
+				<label>genericity</label>
+			</link>, among other things, that the inherent .NET object model does not. That does not mean that these things cannot work in .NET. Indeed they can, and they make Eiffel for .NET very powerful. But, they do make things look a little different. 
 		</paragraph>
 		<paragraph>When you compile Eiffel for .NET, the result is a .NET assembly; either an executable system, or a library of potentially reusable data types. Because the object model for Eiffel is different from that of .NET, the assembly resulting from a compile is different in some ways. </paragraph>
-		<paragraph>First an assembly built using Eiffel for .NET will likely contain lots of types and interfaces. This is because as you use a class from the Eiffel libaries, say class 
+		<paragraph>First an assembly built using Eiffel for .NET will likely contain lots of types and interfaces. This is because as you use a class from the Eiffel libraries, say class 
 			<code>
 				<class_name>STRING</class_name>
 			</code>, all the classes upon which 
@@ -122,11 +122,11 @@
 			</code>'s 
 			<link>
 				<url></url>
-				<label>FIXME</label>
+				<label>suppliers</label>
 			</link> and 
 			<link>
 				<url></url>
-				<label>FIXME</label>
+				<label>ancestors</label>
 			</link>) must also be included in the assembly. That's because the Eiffel libraries, unlike the Microsoft .NET libraries like 
 			<code>
 				<cluster_name>mscorlib</cluster_name>
@@ -135,7 +135,7 @@
 				<cluster_name>System. Data</cluster_name>
 			</code>, are not distributed as shared type libraries. 
 		</paragraph>
-		<paragraph>Another thing you may notice is that each Eiffel class you produce is represented by three entities in the assembly ...two classes and an interface. So, if you produce a class called 
+		<paragraph>Another thing you may notice is that each Eiffel class you produce is represented by three entities in the assembly ... two classes and an interface. So, if you produce a class called 
 			<code>
 				<class_name>GUARD_DOG</class_name>
 			</code>, then in the assembly you'd see an interface called 
@@ -143,10 +143,10 @@
 				<class_name>GuardDog</class_name>
 			</code>, a class called 
 			<code>
-				<class_name>Impl. GuardDog</class_name>
+				<class_name>Impl.GuardDog</class_name>
 			</code>, and a class called 
 			<code>
-				<class_name>Create. GuardDog</class_name>
+				<class_name>Create.GuardDog</class_name>
 			</code>. Again, this is done for reasons that concern the differences in the object models between Eiffel and .NET. 
 		</paragraph>
 		<paragraph>The 
@@ -154,16 +154,16 @@
 				<class_name>GuardDog</class_name>
 			</code> interface is what you use when you declare an entity or variable of that type. The objects attached to that entity at runtime will be of the type 
 			<code>
-				<class_name>Impl. GuardDog</class_name>
+				<class_name>Impl.GuardDog</class_name>
 			</code>. You create an instance of 
 			<code>
-				<class_name>Impl. GuardDog</class_name>
+				<class_name>Impl.GuardDog</class_name>
 			</code> and attach it to an entity of type 
 			<code>
 				<class_name>GuardDog</class_name>
-			</code> by callingaroutine in the factory class 
+			</code> by calling a routine in the factory class 
 			<code>
-				<class_name>Create. GuardDog</class_name>
+				<class_name>Create.GuardDog</class_name>
 			</code>. The factory routines will almost always have names that begin with the word "
 			<code>
 				<feature_name>Make</feature_name>
@@ -201,13 +201,13 @@ end
 			</code> was compiled from an Eiffel class, when the C# client uses 
 			<code>
 				<class_name>GuardDog</class_name>
-			</code>, it uses what would be considered the .NET naming convention forthe type 
+			</code>, it uses what would be considered the .NET naming convention for the type 
 			<code>
 				<class_name>GuardDog</class_name>
 			</code> (vs. 
 			<code>
 				<class_name>GUARD_DOG</class_name>
-			</code>)and the method name 
+			</code>) and the method name 
 			<code>
 				<feature_name>RollOver</feature_name>
 			</code> (vs 

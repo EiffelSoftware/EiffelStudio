@@ -10,14 +10,35 @@ class STRUCTURED_TEXT
 inherit
 
 	TWO_WAY_LIST [TEXT_ITEM]
-		export 
+		rename
+			position as chain_position,
+			extend as twl_extend,
+			put_right as twl_put_right,
+			put_left as twl_put_left,
+			put_front as twl_put_front,
+			wipe_out as twl_wipe_out
+		export
+			{NONE} 
+				all;
+		end;
+
+	TWO_WAY_LIST [TEXT_ITEM]
+		rename
+			position as chain_position
+		export
 			{NONE}
 				all;
 			{ANY}
 				cursor, start, forth, back, after, off, item, empty,
 				finish, wipe_out, islast, first_element, last, append,
 				index, put_right, put_left, put_front, go_to, before
-		end;
+		redefine
+			extend, put_right, put_left, put_front, wipe_out
+		select
+			extend, put_right, put_left, put_front, wipe_out
+		end
+	
+
 	SHARED_RESCUE_STATUS;
 	SHARED_TEXT_ITEMS
 		export
@@ -27,6 +48,12 @@ inherit
 creation
 
 	make
+
+feature -- Properties
+
+	position: INTEGER
+			-- Position in the text, in characters
+			--| Must be updated at each insertion/deletion
 
 feature -- Access
 
@@ -47,6 +74,45 @@ feature -- Access
 		end;
 
 feature -- Element change
+
+	extend (v: like item) is
+			-- Add `v' to end.
+			-- Do not move cursor.
+		do
+			twl_extend (v)
+			position := position + v.image.count
+		end
+
+	put_front (v: like item) is
+			-- Add `v' to beginning.
+			-- Do not move cursor.
+		do
+			twl_put_front (v)
+			position := position + v.image.count
+		end
+
+	put_left (v: like item) is
+			-- Add `v' to the left of cursor position.
+			-- Do not move cursor.
+		do
+			twl_put_left (v)
+			position := position + v.image.count
+		end
+
+	put_right (v: like item) is
+			-- Add `v' to the right of cursor position.
+			-- Do not move cursor.
+		do
+			twl_put_right (v)
+			position := position + v.image.count
+		end
+
+	wipe_out is
+			-- Remove all items.
+		do
+			twl_wipe_out
+			position := 0
+		end
 
 	add (v: like item) is
 			-- Add item `v' to end.
@@ -175,7 +241,7 @@ feature -- Element change
 		local
 			l_item: like item
 		do
-			!CLUSTER_NAME_TEXT! l_item.make (str, e_cluster);
+			!BASIC_TEXT! l_item.make (str);
 			add (l_item)
 		end;
 

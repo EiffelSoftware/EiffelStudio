@@ -9,7 +9,7 @@ class INVARIANT_AS
 inherit
 	AST_EIFFEL
 		redefine
-			is_invariant_obj, type_check, byte_node, format
+			type_check, byte_node, format
 		end
 
 	IDABLE
@@ -32,11 +32,6 @@ feature -- Attribute
 
 	assertion_list: EIFFEL_LIST [TAGGED_AS]
 			-- Assertion list
-
-feature -- Properties
-
-	is_invariant_obj: BOOLEAN is True
-			-- Is the current object an instance of INVARIANT_AS ?
 
 feature -- Comparison
 

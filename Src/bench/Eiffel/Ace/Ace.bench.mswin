@@ -97,6 +97,7 @@ cluster
 	-- Switch:
 	
 		switch:				"$BENCH/Eiffel/batch_bench/bench";
+		dle:				"$BENCH/Eiffel/dle/no_dle";
 
 	-- graphical interface (bench):
 

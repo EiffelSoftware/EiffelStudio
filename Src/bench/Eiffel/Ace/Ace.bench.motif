@@ -98,6 +98,7 @@ cluster
 	
 		switch:				"$BENCH/Eiffel/batch_bench/bench";
 		melt_only_switch:	"$BENCH/Eiffel/batch_bench/professional";
+		dle:				"$BENCH/Eiffel/dle/dle";
 
 	-- graphical interface (bench):
 

@@ -1,0 +1,20 @@
+# eiflocale.lib - Makefile for Microsoft
+
+CC = cl
+
+CFLAGS=  -nologo -c -Zi -W4 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
+
+all:: eiflocale.lib
+	del *.obj
+	
+	
+.c.obj:
+	$(CC) $(CFLAGS) $<
+	
+	
+OBJ =	eiflocale.obj wel_imm.obj
+		
+eiflocale.lib: $(OBJ)
+	if exist $@ del $@
+	lib /NOLOGO /OUT:$@ $(OBJ)
+	copy $@ F:\52dev\examples\unicode\spec

@@ -213,10 +213,34 @@ feature -- Status setting
 		require
 			has_subrows: subrow_count > 0
 			is_parented: parent /= Void
+		local
+			subrow_index: INTEGER
+			expanded_items: INTEGER
 		do
 			if not is_expanded then
 				is_expanded := True
-				update_parent_expanded_node_counts_recursively (subnode_count_recursive)
+					
+					-- Now calculate how may items have been expanded.
+				from
+					subrow_index := 1
+				until
+					subrow_index > subrow_count
+						-- iterate all rows parented within `Current'.
+				loop
+					expanded_items := expanded_items + 1
+						-- Add one for the current row which is now visible.
+						
+					expanded_items := expanded_items + subrows.i_th (subrow_index).expanded_subnode_count_recursive
+						-- Add the number of expanded items for that row.
+						
+					subrow_index := subrow_index + 1
+				end			
+				update_parent_expanded_node_counts_recursively (expanded_items)
+					-- Update the expanded node counts for `Current' and all parent nodes.
+					
+				parent_grid_i.adjust_hidden_node_count ( - expanded_items)
+					-- Update the hidden node count.
+			
 				parent_grid_i.recompute_row_offsets (index)
 				parent_grid_i.recompute_vertical_scroll_bar
 				parent_grid_i.redraw_client_area
@@ -229,10 +253,34 @@ feature -- Status setting
 			-- Hide all subrows of `Current'.
 		require
 			is_parented: parent /= Void
+		local
+			subrow_index: INTEGER
+			collapsed_items: INTEGER
 		do
 			if is_expanded then
 				is_expanded := False
-				update_parent_expanded_node_counts_recursively ( - subnode_count_recursive)
+				
+					-- Now calculate how may items have been collapsed.
+				from
+					subrow_index := 1
+				until
+					subrow_index > subrow_count
+						-- iterate all rows parented within `Current'.
+				loop
+					collapsed_items := collapsed_items + 1
+						-- Add one for the current row which is now hidden.
+						
+					collapsed_items := collapsed_items + subrows.i_th (subrow_index).expanded_subnode_count_recursive
+						-- Add the number of expanded items for that row.
+						
+					subrow_index := subrow_index + 1
+				end
+				update_parent_expanded_node_counts_recursively (- collapsed_items)
+					-- Update the expanded node counts for `Current' and all parent nodes.
+					
+				parent_grid_i.adjust_hidden_node_count (collapsed_items)
+					-- Update the hidden node count.
+				
 				parent_grid_i.recompute_row_offsets (index)
 				parent_grid_i.recompute_vertical_scroll_bar
 				parent_grid_i.redraw_client_area
@@ -286,16 +334,25 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		local
 			row_imp: EV_GRID_ROW_I
 		do
-			--to_implement ("EV_GRID_ROW.add_subrow")
 			row_imp := a_row.implementation
 			subrows.extend (row_imp)
 			row_imp.internal_set_parent_row (Current)
 			
-			update_parent_node_counts_recursively (1)
+				-- Increase the node count for `Current' and all parents by 1 + the node count
+				-- for the added subrow as this may also be a tree structure.
+			update_parent_node_counts_recursively (row_imp.subnode_count_recursive + 1)
+			
+				-- If `Current' is expanded then we must also update the expanded node count by
+				-- 1 + the node count of the added subrow as this may also be a tree structure.
 			if is_expanded then
-				update_parent_expanded_node_counts_recursively (1)
+				update_parent_expanded_node_counts_recursively (row_imp.expanded_subnode_count_recursive + 1)
 			end
+			
+				-- Update the hidden node count in the parent grid.
+			parent_grid_i.adjust_hidden_node_count ((row_imp.subnode_count_recursive + 1) - row_imp.expanded_subnode_count_recursive)
+			
 			parent_grid_i.recompute_row_offsets (index)
+			parent_grid_i.recompute_vertical_scroll_bar
 			parent_grid_i.redraw_client_area
 		ensure
 			added: a_row.parent_row = interface

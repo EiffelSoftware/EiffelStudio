@@ -39,22 +39,22 @@ feature {NONE} -- Initialization
 			end
 			a := args
 			if froz or not virt then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_frozen
+				f := f | {FEATURE_ATTRIBUTE}.Is_frozen
 			end
 			if static then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_static
+				f := f | {FEATURE_ATTRIBUTE}.Is_static
 			end
 			if defer then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_deferred
+				f := f | {FEATURE_ATTRIBUTE}.Is_deferred
 			end
 			if ns then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_newslot
+				f := f | {FEATURE_ATTRIBUTE}.Is_newslot
 			end
 			if virt then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_virtual
+				f := f | {FEATURE_ATTRIBUTE}.Is_virtual
 			end
 			if poe then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_property_or_event				
+				f := f | {FEATURE_ATTRIBUTE}.Is_property_or_event				
 			end
 		ensure
 			eiffel_name_set: eiffel_name = en
@@ -81,11 +81,11 @@ feature {NONE} -- Initialization
 		do
 			member_make (en, en, True, a_type)
 			a := <<arg>>
-			f := f | feature {FEATURE_ATTRIBUTE}.Is_frozen
+			f := f | {FEATURE_ATTRIBUTE}.Is_frozen
 			if a_is_static then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_static	
+				f := f | {FEATURE_ATTRIBUTE}.Is_static	
 			end
-			f := f | feature {FEATURE_ATTRIBUTE}.Is_attribute_setter
+			f := f | {FEATURE_ATTRIBUTE}.Is_attribute_setter
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = en

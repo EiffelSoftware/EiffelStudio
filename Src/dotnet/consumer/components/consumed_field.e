@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 		do
 			member_make (en, dn, pub, a_type)
 			if static then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_static
+				f := f | {FEATURE_ATTRIBUTE}.Is_static
 			end
 			if init_only then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_init_only
+				f := f | {FEATURE_ATTRIBUTE}.Is_init_only
 			end
 			r := rt
 		ensure
@@ -67,8 +67,7 @@ feature -- Status report
 	is_init_only: BOOLEAN is
 			-- Is field a constant?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_init_only =
-				feature {FEATURE_ATTRIBUTE}.Is_init_only
+			Result := f & {FEATURE_ATTRIBUTE}.Is_init_only = {FEATURE_ATTRIBUTE}.Is_init_only
 		end
 		
 	is_field: BOOLEAN is

@@ -56,7 +56,7 @@ feature -- Initialization
 		local
 			command: STRING
 		do					
-				command:= es4_location + "es4 -batch -ace " + ace_name + " -project_path " + project_path
+				command:= es4_location + "ec -batch -ace " + ace_name + " -project_path " + project_path
 				system (command)
 				change_working_directory (project_path + "\EIFGEN\W_Code")
 				ex_launch (es4_location + "finish_freezing.exe")

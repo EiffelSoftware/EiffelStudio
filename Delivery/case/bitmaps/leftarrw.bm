@@ -1,0 +1,4 @@
+#define left_arrow_width 3
+#define left_arrow_height 5
+static char left_arrow_bits[] = {
+   0x04, 0x06, 0x07, 0x06, 0x04};

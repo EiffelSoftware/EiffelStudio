@@ -1,0 +1,14 @@
+Wa/Cannot read in Project\%X\Project may be corrupted.Try again?
+Wb/Do you really want to remove view %X?\(This is a non undoable command)
+Wc/Internal Error: %X!\Project may be unstable.\Do you wish to continue?
+Wd/Project not saved, open a new project ?
+We/Ok to discard existing project\%X\(including generated Eiffel code)?
+Wf/Quit EiffelCase ?
+Wg/Cannot read project\%X\Try again ?
+Wh/Cannot read in File\%X\Check permission and existence. Try again?
+Wi/Project saved from system crash.\Do you wish to retrieve backup files ?
+Wj/Project is not saved. Save project ?
+Wl/Cannot remove "no view".\You need to select an existing view.\Try again?
+Wm/You need to enter a project name.\Try again?
+Wn/Project not saved, create a new project ?
+Wo/An EiffelCase project exists in \%X

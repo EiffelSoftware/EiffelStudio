@@ -155,14 +155,14 @@ feature -- Status setting
 		ensure then
 			base_width = a_width
 		end
-	
+
 	set_height_inc (an_increment: INTEGER) is
 			-- Set `height_inc' to `an_increment'.
 		do
 		ensure then
 			height_inc = an_increment
 		end
-	
+
 	set_width_inc (an_increment: INTEGER) is
 			-- Set `width_inc' to `an_increment'.
 		do

@@ -1,5 +1,4 @@
 -- This Ace file requires the following environment variables:
-
 -- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL4\library)
 
 system
@@ -7,7 +6,6 @@ system
 
 root
 	APPLICATION (root_cluster): "make"
---	NONE
 
 default
 	assertion (all)
@@ -17,56 +15,27 @@ cluster
 	
 	root_cluster: "$LIBRARY\com\Wizard\root";
 
+	all wizard: "$LIBRARY\com\Wizard\project";
+
 	-- EiffelBase
-	base:						"$LIBRARY\base"
-	structures(base):			"$\structures"
-	kernel(base):				"$\kernel"
+	all base:						"$LIBRARY\base"
+		exclude
+			"table_eiffel3";
+			"desc"
 		visible
 			ARRAY;
 			STRING;
 		end;
-	support(base):				"$\support"
-	access(structures):			"$\access"
-	cursors(structures):		"$\cursors"
-	cursor_tree(structures):	"$\cursor_tree"
-	dispenser(structures):		"$\dispenser"
-	iteration(structures):		"$\iteration"
-	list(structures):			"$\list"
-	set(structures):			"$\set"
-	sort(structures):			"$\sort"
-	storage(structures):		"$\storage"
-	table(structures):			"$\table"
-	traversing(structures):		"$\traversing"
-	tree(structures):			"$\tree"
 
 	-- WEL
-	wel:						"$LIBRARY\wel"
-	wel_constants(wel):			"$\consts"
-	wel_controls(wel):			"$\controls"
-	wel_gdi(wel):				"$\gdi"
-	wel_gdi_stocks(wel): 		"$\gdistock"
-	wel_messages(wel):			"$\messages"
-	wel_standard_dialogs(wel):	"$\stddlgs"
-	wel_structures(wel): 		"$\structs"
-	wel_support(wel):			"$\support"
-	wel_windows(wel):			"$\windows"
+	all wel:						"$LIBRARY\wel"
 
 	-- EiffelCOM
-	ecom:									"$LIBRARY\com"
-	ecom_wizard(ecom):						"$\Wizard"
-	ecom_wizard_visitors(ecom_wizard):		"$\visitors"
-	ecom_wizard_descriptors(ecom_wizard):	"$\descriptors"
-	ecom_wizard_support(ecom_wizard):		"$\support"
-	ecom_library(ecom):						"$\library"
-	ecom_library_constants(ecom_library):	"$\constants"
-	ecom_library_interfaces(ecom_library):	"$\interfaces"
-		visible
-			ECOM_TYPE_INFO;
-		end;
-	ecom_library_structures(ecom_library):	"$\structures"
+	all ecom:						"$LIBRARY\com\library"
 		option
 			assertion (require):ECOM_SAFE_ARRAY_BOUND;
 		visible
+			ECOM_TYPE_INFO;
 			ECOM_TYPE_LIB_FIND_NAME_RESULT;
 			ECOM_SAFE_ARRAY_BOUND
 				export
@@ -78,12 +47,13 @@ cluster
 			ECOM_DLL_ENTRY;
 			ECOM_DOCUMENTATION;
 		end;
-	ecom_library_support(ecom_library):		"$\support"	
 
 	-- EiffelTime
-	time:						"$LIBRARY\time"
-	format(time):				"$\format"
-	english(format):			"$\english"
+	all time:						"$LIBRARY\time"
+		exclude
+			"french";
+			"german"
+		end;
 
 external
 	include_path:	"$LIBRARY\wel\spec\windows\include",

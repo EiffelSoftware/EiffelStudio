@@ -95,7 +95,7 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 			end
 			is_destroyed := True
 			disconnect_all_signals
-			C.gtk_object_destroy (c_object)
+			C.gtk_object_unref (c_object)
 			c_object := NULL
 		ensure then
 			c_object_detached: c_object = NULL
@@ -289,20 +289,6 @@ feature {EV_ANY_I} -- Event handling
 			an_action_sequence.empty_actions.extend (
 				gtk_marshal.kamikaze_agent (an_action_sequence.empty_actions, disconnect_agent)
 			)
-		end
-
-	gtk_value_pointer (arg: POINTER): POINTER is
-			-- Pointer to the value of a GtkArg.
-			--| FIXME find a better home for this feature. - sam
-		external
-			"C | %"ev_gtk_callback_marshal.h%""
-		end
-
-	gtk_value_int (arg: POINTER): INTEGER is
-			-- Integer value from a GtkArg.
-			--| FIXME find a better home for this feature. - sam
-		external
-			"C | %"ev_gtk_callback_marshal.h%""
 		end
 
 	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is

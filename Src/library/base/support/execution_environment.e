@@ -27,6 +27,7 @@ feature -- Access
 		end
 
 	default_shell: STRING is
+			-- Default shell
 		once
 			Result := get ("SHELL")
 			if Result = Void then
@@ -35,8 +36,8 @@ feature -- Access
 		end
 
 	get (s: STRING): STRING is
-				-- Value of `s' if it is an environment variable and has been set;
-				-- void otherwise.
+			-- Value of `s' if it is an environment variable and has been set;
+			-- void otherwise.
 		require
 			s_exists: s /= Void
 		local

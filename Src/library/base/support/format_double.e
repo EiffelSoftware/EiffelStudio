@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 				Result.extend (s.item (count))
 				count := count + 1
 			end
-		end -- separate_fraction
+		end
 
 invariant
 	separate_all: no_separator implies not after_decimal_separate

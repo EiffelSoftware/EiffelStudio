@@ -65,6 +65,12 @@ feature
 			!! Result.make (a_color)
 		end;
 
+	color_for_screen (a_color: COLOR; a_screen: SCREEN): COLOR_WINDOWS is
+			-- Toolkit implementation of `a_color' for `a_screen'
+		do
+			!! Result.make (a_color)
+		end;
+
 	exit is
 			-- Exit from the application.
 		do
@@ -73,6 +79,12 @@ feature
 
 	font (a_font: FONT): FONT_WINDOWS is
                         -- MS-Windows implementation of `a_font'
+		do
+			!! Result.make (a_font)
+		end;
+
+	font_for_screen (a_font: FONT; a_screen: SCREEN): FONT_WINDOWS is
+			-- Toolkit implementation of `a_font' for `a_screen'
 		do
 			!! Result.make (a_font)
 		end;
@@ -98,6 +110,12 @@ feature
 			!! Result.make (a_pixmap)
 		end;
 
+	pixmap_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN): PIXMAP_WINDOWS is
+			-- Toolkit implementation of `a_pixmap' for `a_screen'
+		do
+			!! Result.make (a_pixmap)
+		end;
+
 	screen (a_screen: SCREEN): SCREEN_WINDOWS is
                         -- MS-Windows implementation of `a_screen'
 		do
@@ -106,6 +124,12 @@ feature
 
 	screen_cursor (a_cursor: SCREEN_CURSOR): SCREEN_CURSOR_WINDOWS is
                         -- MS-Windows implementation of `a_cursor'
+		do
+			!! Result.make (a_cursor)
+		end;
+
+	screen_cursor_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN): SCREEN_CURSOR_WINDOWS is
+			-- Toolkit implementation of `a_cursor'
 		do
 			!! Result.make (a_cursor)
 		end;

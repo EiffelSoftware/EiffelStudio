@@ -14,6 +14,11 @@ inherit
 			on_size
 		end
 
+	WEL_SYSTEM_METRICS
+		export
+			{NONE} all
+		end
+
 	WEL_WS_CONSTANTS
 		export
 			{NONE} all
@@ -46,7 +51,7 @@ feature {NONE} -- Initialization
 		do
 			make_child (a_parent, Title)
 			set_y (an_offset)
-			set_width (a_parent.width)
+			set_width (a_parent.width - vertical_scroll_bar_arrow_width)
 			set_height (a_parent.height - an_offset)
 			setup_output_edit
 			font_height := output_edit.font.log_font.height
@@ -136,8 +141,12 @@ feature -- Basic Operations
 				new_height := output_edit.position_from_character_index (output_edit.count).y
 				if new_height > height then
 					scroller.set_vertical_range (1,  new_height - height)
-					scroller.set_vertical_position (new_height-  height)
-					scroll (0, old_height - new_height)
+					scroller.set_vertical_position (new_height -  height)
+					if old_height > height then
+						scroll (0, old_height - new_height)
+					else
+						scroll (0, height - new_height)
+					end
 				end
 				process_messages
 			end
@@ -151,7 +160,7 @@ feature -- Basic Operations
 	clear is
 			-- Clear window text.
 		do
-			output_edit.set_text (Empty_text)
+			setup_output_edit
 			create scroller.make (Current, 1, 1, font_height, height)
 			process_messages
 		end
@@ -178,14 +187,14 @@ feature {NONE} -- Behavior
 				scroller.set_vertical_page (height)
 			end
 			if output_edit /= Void then
-				output_edit.set_width (width)
+				output_edit.set_width (width - vertical_scroll_bar_arrow_width)
 			end
 		end
 
 	default_style: INTEGER is
 			-- Window style
 		once
-			Result := Ws_child  + Ws_visible + Es_autovscroll + Ws_clipchildren
+			Result := Ws_child  + Ws_visible + Es_autovscroll + Ws_clipchildren + Ws_border
 		end
 
 feature {NONE} -- Implementation

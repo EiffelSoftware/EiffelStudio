@@ -350,7 +350,7 @@
 		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>{CC72BC24-B220-422B-8E3F-2278DF3CB464}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.codedombase.d</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.CodeDomBase.dll1</td><td>{1D283AEC-4DB4-4282-8BF5-F2B2C21BDF9E}</td><td>GlobalAssemblyCache</td><td>8</td><td/><td>eiffelsoftware.codedombase.d1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>{8F9AB00D-6CB8-402A-B5A6-2625676B9074}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.codedomvision</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>{24000EF0-0A7A-4C7F-8612-25EF2D45B7AD}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.metadataconsu</td><td>33</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>{24000EF0-0A7A-4C7F-8612-25EF2D45B7AD}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.metadataconsu</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.Runtime.dll</td><td>{33127FF4-7555-4BA8-A071-89DD373F8D3E}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.runtime.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.Runtime.dll1</td><td>{75636316-149F-4143-814A-47128E265769}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.runtime.dll1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.Runtime.dll2</td><td>{D35F440D-96EE-47EE-BF57-E3EA55F914AD}</td><td>GlobalAssemblyCache</td><td>8</td><td/><td>eiffelsoftware.runtime.dll2</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -359,8 +359,8 @@
 		<row><td>IconFiles</td><td>{561052E8-AADE-46E5-8331-27342DEA4828}</td><td>ICONS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Library</td><td>{0FEA0AF1-E705-4712-8744-33CF25097FF2}</td><td>LIBRARY</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>LibraryDotNet</td><td>{E05D8E65-9CEB-4E1D-8353-72E4663A9DA1}</td><td>LIBRARY.NET</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>MDRegFile</td><td>{757CE16E-4B12-4B4D-9810-DFA9F4BCB5FA}</td><td>BIN1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>SamplesFiles</td><td>{07FB8B42-EAB9-458C-8FC4-1E9844F0ECD8}</td><td>SAMPLES</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>SetupFiles</td><td>{2160BD6D-A744-4F95-AA7F-5B9B9AF9CC9A}</td><td>BIN1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>VirtualDirComponent</td><td>{70E9460C-4F29-4900-A0DD-A32B0052696C}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>XCACLS</td><td>{8D0F564F-1893-493C-A036-0A18BE7210E1}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ecdpc.exe</td><td>{A1290663-9EDB-4E4C-9BA3-2D19F4370EF4}</td><td>BIN1</td><td>8</td><td/><td>ecdpc.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -992,7 +992,7 @@
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>CheckForProductUpdates</td><td>ISCHECKFORPRODUCTUPDATES="1" And ISENABLEDWUSFINISHDIALOG And NOT ISREBOOTREQUIRED And NOT Installed And ACTION="INSTALL"</td><td>4</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>CheckForProductUpdatesOnReboot</td><td>ISCHECKFORPRODUCTUPDATES="1" And ISENABLEDWUSFINISHDIALOG And ISREBOOTREQUIRED And NOT Installed And ACTION="INSTALL"</td><td>5</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>IS_LAUNCH_MY_PROGRAM_PLEASE</td><td>LAUNCHPROGRAM</td><td>6</td></row>
-		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>StartIE</td><td>1</td><td>7</td></row>
+		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>StartIE</td><td>IIS_VERSION&lt;&gt;""</td><td>7</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
 		<row><td>SetupError</td><td>A</td><td>EndDialog</td><td>ErrorAbort</td><td>1</td><td>0</td></row>
 		<row><td>SetupError</td><td>C</td><td>EndDialog</td><td>ErrorCancel</td><td>1</td><td>0</td></row>
@@ -1405,8 +1405,8 @@
 		<row><td>Feature</td><td>IconFiles</td></row>
 		<row><td>Feature</td><td>Library</td></row>
 		<row><td>Feature</td><td>LibraryDotNet</td></row>
+		<row><td>Feature</td><td>MDRegFile</td></row>
 		<row><td>Feature</td><td>SamplesFiles</td></row>
-		<row><td>Feature</td><td>SetupFiles</td></row>
 		<row><td>Feature</td><td>VirtualDirComponent</td></row>
 		<row><td>Feature</td><td>XCACLS</td></row>
 		<row><td>Feature</td><td>ecdpc.exe</td></row>
@@ -1445,8 +1445,7 @@
 		<row><td>eiffelsoftware.runtime.dll2</td><td>EiffelSoftware.Runtime.dll2</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
 		<row><td>libeiffelsoftware.codedombas</td><td>libEiffelSoftware.CodeDomBase.dll</td><td>LIBEIF~1.DLL|libEiffelSoftware.CodeDomBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\libEiffelSoftware.CodeDomBase.dll</td><td>1</td><td/></row>
 		<row><td>libeiffelsoftware.codedomvis</td><td>libEiffelSoftware.CodeDomVision2.dll</td><td>LIBEIF~1.DLL|libEiffelSoftware.CodeDomVision2.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\libEiffelSoftware.CodeDomVision2.dll</td><td>1</td><td/></row>
-		<row><td>setup.ace</td><td>SetupFiles</td><td>setup.ace</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\setup.ace</td><td>1</td><td/></row>
-		<row><td>setup.e</td><td>SetupFiles</td><td>setup.e</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\setup.e</td><td>1</td><td/></row>
+		<row><td>md.reg</td><td>MDRegFile</td><td>md.reg</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\md.reg</td><td>1</td><td/></row>
 		<row><td>xcacls.vbs</td><td>XCACLS</td><td>XCACLS.vbs</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\XCACLS.vbs</td><td>1</td><td/></row>
 	</table>
 
@@ -1634,8 +1633,8 @@
 		<row><td>IconFiles</td><td/><td/><td>_BBB58E15_2620_4976_9505_7A2352CFAD8D_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Library</td><td/><td/><td>_90E8817E_BF3D_4872_93B7_5DFC046A13B3_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>LibraryDotNet</td><td/><td/><td>_664E0909_D1D9_447D_9BC1_224D5B752C79_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>MDRegFile</td><td/><td/><td>_54F93FD9_84D0_4EBD_B9FB_31D396969C53_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>SamplesFiles</td><td/><td/><td>_CE202EBA_3F2C_4DA0_91D9_B5BD7B0CC407_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>SetupFiles</td><td/><td/><td>_FEFEF12B_2AD1_45E2_82BC_9EB0CE3501F8_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>VirtualDirComponent</td><td/><td/><td>_2186BDB6_DC0C_4E01_A286_C99E24D4AD50_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>XCACLS</td><td/><td/><td>_96C105CC_743D_435E_967F_7F073187F62F_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ecdpc.exe</td><td/><td/><td>_382F364B_6535_423A_A204_2CF8E6919AF0_FILTER</td><td/><td/><td/><td/></row>
@@ -2879,8 +2878,8 @@
 		<col def="S0">Value</col>
 		<row><td>ActiveLanguage</td><td>1033</td></row>
 		<row><td>Comments</td><td/></row>
-		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="c8317fe1ad38c9975426d2ea29aec928">
-VABlAHMAdAABAFQAZQBzAHQA
+		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="75383eef26d1ac478f4b637c41ec182a">
+RgBpAG4AYQBsAAEARgBpAG4AYQBsAA==
 			</td></row>
 		<row><td>ISCompilerOption_CompileBeforeBuild</td><td>1</td></row>
 		<row><td>ISCompilerOption_Debug</td><td>0</td></row>
@@ -3230,6 +3229,7 @@ VABlAHMAdAABAFQAZQBzAHQA
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
 		<row><td>ProgressType3</td><td>installs</td><td/></row>
+		<row><td>RESTARTW3SVC</td><td>1</td><td/></row>
 		<row><td>RebootYesNo</td><td>Yes</td><td/></row>
 		<row><td>ReinstallModeText</td><td>omus</td><td/></row>
 		<row><td>SHOWLAUNCHPROGRAM</td><td>0</td><td/></row>

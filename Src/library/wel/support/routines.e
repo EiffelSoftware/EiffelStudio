@@ -13,6 +13,17 @@ inherit
 			{NONE} all
 		end
 
+feature -- Access
+
+	system_color (index: INTEGER): WEL_COLOR_REF is
+			-- System color associated to `index'
+			-- See WEL_COLOR_CONSTANTS for `index' values.
+		do
+			!! Result.make_by_pointer (cwin_get_sys_color (index))
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Basic operations
 
 	message_beep_asterisk is
@@ -43,15 +54,6 @@ feature -- Basic operations
 			-- Play the system ok waveform sound.
 		do
 			cwin_message_beep (Mb_ok)
-		end
-
-	tick_count: INTEGER is
-			-- Number of milliseconds that have
-			-- elapsed since Windows was started.
-		do
-			Result := cwin_get_tick_count
-		ensure
-			positive_result: Result >= 0
 		end
 
 	show_cursor is
@@ -87,10 +89,27 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 		end
 
+feature -- Status report
+
 	is_win32: BOOLEAN is
 			-- Is the current operating system Windows 95/NT?
 		once
 			Result := cwel_is_win32
+		end
+
+	key_state (virtual_key: INTEGER): BOOLEAN is
+			-- Is `virtual_key' down?
+		do
+			Result := cwin_get_key_state (virtual_key)
+		end
+
+	tick_count: INTEGER is
+			-- Number of milliseconds that have
+			-- elapsed since Windows was started.
+		do
+			Result := cwin_get_tick_count
+		ensure
+			positive_result: Result >= 0
 		end
 
 feature {NONE} -- Implementation
@@ -128,7 +147,7 @@ feature {NONE} -- Externals
 			"ShowCursor"
 		end
 
-        cwin_set_cursor_position (x, y: INTEGER) is
+	cwin_set_cursor_position (x, y: INTEGER) is
 			-- SDK SetCursorPos
 		external
 			"C [macro <wel.h>] (int, int)"
@@ -144,6 +163,22 @@ feature {NONE} -- Externals
 				%int): EIF_INTEGER"
 		alias
 			"LoadString"
+		end
+
+	cwin_get_key_state (virtual_key: INTEGER): BOOLEAN is
+			-- SDK GetKeyState
+		external
+			"C [macro <wel.h>] (int): EIF_BOOLEAN"
+		alias
+			"GetKeyState"
+		end
+
+	cwin_get_sys_color (index: INTEGER): POINTER is
+			-- SDK GetSysColor
+		external
+			"C [macro <wel.h>] (int): EIF_POINTER"
+		alias
+			"GetSysColor"
 		end
 
 	cwel_is_win32: BOOLEAN is

@@ -295,8 +295,7 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTE
 	strcat ((char *)p, (char *)v);
 	strcat ((char *)p,"]");
 	(eif_strset)(string, strlen ((char *)p));
-#elif defined EIF_WINDOWS || defined EIF_OS2
-	strcat ((char *)p, "\\");
+#elif defined EIF_WIN32 || defined EIF_OS2
 	strcat ((char *)p, (char *)v);
 	(eif_strset)(string, strlen ((char *)p));
 #else

@@ -6,4 +6,5 @@ nmake /NOLOGO /C /S /f makefile.m > make.log
 nmake /NOLOGO /C /S /f makefile.il > make.log
 nmake /NOLOGO /C /S /f makefile.mmt >> make.log
 del *.obj >> make.log
+del *.lib >> make.log
 echo EiffelNET C-library compiled.

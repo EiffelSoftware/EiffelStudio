@@ -11,7 +11,6 @@ inherit
 
 	FILED_STONE
 		rename
-			origin_text as normal_origin_text,
 			is_valid as fs_valid
 		redefine
 			synchronized_stone, invalid_stone_message, same_as,
@@ -19,15 +18,15 @@ inherit
 		end;
 	FILED_STONE
 		redefine
-			origin_text, is_valid, synchronized_stone, invalid_stone_message,
+			is_valid, synchronized_stone, invalid_stone_message,
 			history_name, same_as
 		select
-			origin_text, is_valid
+			is_valid
 		end;
 	SHARED_EIFFEL_PROJECT;
 	HASHABLE_STONE
 		redefine
-			origin_text, is_valid, synchronized_stone, header, 
+			is_valid, synchronized_stone, header, 
 			invalid_stone_message, history_name, same_as
 		end;
 	INTERFACE_W;
@@ -119,51 +118,10 @@ feature -- Access
 
 feature -- dragging
 
-	origin_text: STRING is
-			-- Text of the feature
-		local
-			temp: STRING;
-			cn: STRING;
-		do
-			temp := normal_origin_text;
-			if temp /= Void then
-				Result := "-- Version from class: ";
-				cn := clone (e_feature.written_class.name)
-				cn.to_upper;
-				Result.append (cn);
-				Result.append ("%N%N%T");
-				if 
-					temp.count >= end_position and 
-					start_position < end_position 
-				then
-					temp := temp.substring (start_position + 1, end_position);
-					Result.append (temp)
-				end;
-				Result.append ("%N");
-			end
-		end;
-
-	click_list: ARRAY [CLICK_STONE] is
-			-- Structure to make clickable the display of Current, nothing yet
-			-- Now yeah
-		local
-			cs: CLICK_STONE;
-			sp, ep: INTEGER;
-			temp: STRING;
-			classc_stone: CLASSC_STONE
+	click_list: CLICK_STONE_ARRAY is
+			-- Structure to make clickable the display of Current
 		do 
-			!! Result.make (1, 2);
-				temp := "-- Version from class: ";
-				sp := temp.count;
-				ep := e_feature.written_class.name.count;
-				ep := ep + sp;
-			!! classc_stone.make (e_feature.written_class);
-			!! cs.make (classc_stone, sp, ep);
-			Result.put (cs, 1);
-				sp := ep + 3;
-				ep := sp + end_position - start_position;
-			!! cs.make (Current, sp, ep);
-			Result.put (cs, 2);
+			!! Result.make (e_class.click_list, e_class)
 		end;
  
 	file_name: STRING is
@@ -185,13 +143,23 @@ feature -- dragging
 			Result := e_feature.signature
 		end;
 
-	stone_type: INTEGER is do Result := Routine_type end;
+	stone_type: INTEGER is 
+		do 
+			Result := Routine_type 
+		end;
 
 	stone_cursor: SCREEN_CURSOR is
-			-- Cursor associated with
-			-- Current stone during transport.
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := cur_Feature
+		end;
+ 
+	x_stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is not compatible with Current stone
+		do
+			Result := cur_X_feature
 		end;
  
 	stone_name: STRING is
@@ -214,19 +182,22 @@ feature -- dragging
 			-- Line number of feature text.
 		require
 			valid_start_position: start_position > 0;
-			valid_feature: e_feature /= Void 
+			valid_file_name: file_name /= Void 
 		local
 			file: RAW_FILE;
 			start_line_pos: INTEGER;
 		do
-			!!file.make_open_read (file_name);
-			from
-			until
-				file.position > start_position + 1 or else file.end_of_file
-			loop
-				start_line_pos := file.position;
-				Result := Result + 1;
-				file.readline;
+			!! file.make (file_name);
+			if file.is_readable then
+				file.open_read;
+				from
+				until
+					file.position > start_position + 1 or else file.end_of_file
+				loop
+					start_line_pos := file.position;
+					Result := Result + 1;
+					file.readline;
+				end
 			end;
 			file.close;
 		end;

@@ -1,0 +1,23 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN"><HTML><HEAD><TITLE>Component selector</TITLE><LINK REL=StyleSheet HREF="/default.css"></HEAD>
+<BODY><H1>Component Selector</H1>
+<P>The component selector allows you to build and retrieve user defined <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">components</A> for use in your project.</P>
+<P align="center"><IMG SRC="/images/eiffelbuild/screenshots/component_selector.png"></p>
+<H2>Creating a component</H2>
+<P>To define a new <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A>, <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">pick</A> the <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A> that you wish to create the component from, and then <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">drop</A> it anywhere in the component selector. The following dialog will appear:</P>
+<P align="center"><IMG SRC="/images/eiffelbuild/screenshots/component_namer.png"></p>
+<P>Modify the suggested name as desired, and then click <B>OK</B> to create the new component. If you click <B>Cancel</B>, the component will not be created.</P>
+<P>The component that has been created will contain enough information to allow a copy to be built of the existing object. This includes all the children of the original object (to any depth) and the properties (width, height, color etc)of all objects within the structure. The only properties of the objects that will not be set inside a component are the user defined names, and any events connected to the objects.</P>
+<H2>Using a component</H2>
+To create a new set of <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">objects</A> from a <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A>, <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">pick</A> the <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A>, and <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">drop</A> onto an <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A> representation. If an object is full, or does not allow other objects of the new type to be contained, then you will not be able to <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">drop</A> on it.</P>
+<P>If the <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">pick and drop</A> completed successfully, then you should have a new set of objects matching the structure of the <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A>.
+<A NAME="delete_component"><H2>Deleting a component</H2>
+<P>To remove a <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A> from your EiffelBuild system, <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">pick</A> it, and then <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">drop</A> it on <img SRC="/images/eiffelbuild/icons/icon_delete_small_color.png" > in the <A HREF="/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.html">main toolbar</A>.</P>
+<P CLASS="note"><B>Note</B>: The deletion of a <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A> can not be undone.</P>
+
+<H2>Viewing a component</H2>
+<P>To view an existing component, use the <A HREF="/tools/eiffelbuild/reference/65_component_viewer/index.html">component_viewer</A>.</P>
+
+
+
+<P CLASS="seealso"><B>See also</B>: <br><A HREF="/tools/eiffelbuild/reference/65_component_viewer/index.html">component_viewer</A><BR><A HREF="../60_builder_window/index.html">builder window</A><BR><A HREF="/tools/eiffelbuild/reference/20_layout_constructor/index.html">layout constructor</A></P>
+</BODY></HTML>

@@ -65,6 +65,8 @@ inherit
 		end
 	
 	EV_ANY_HANDLER
+	
+	GB_SHARED_ID
 
 feature {GB_OBJECT_HANDLER} -- Initialization
 	
@@ -94,12 +96,17 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			create name.make (0)
 			create events.make (0)
 			create edited_name.make (0)
+			id := new_id
 		ensure
 			type_assigned: type = a_type
 			object_assigned: object = an_object
 		end
 
 feature -- Access
+
+	id: INTEGER
+		-- A unique id representing `Current'.
+		-- This is stored in the XML.
 
 	object: EV_ANY
 		-- The vision2 object that `Current' represents.
@@ -148,13 +155,71 @@ feature -- Access
 			window_has_no_parent_object: is_instance_of (object, dynamic_type_from_string (object_handler.ev_window_string)) implies Result = Void
 		end
 		
-feature {GB_XML_STORE, GB_XML_LOAD}
+	all_children_recursive (a_list: ARRAYED_LIST [GB_OBJECT]) is
+			-- Add all children of `Current' recursively, to
+			-- `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			current_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+		do
+			from
+				layout_item.start
+			until
+				layout_item.off
+			loop
+				current_item ?= layout_item.item
+				check
+					current_item_not_void: current_item /= Void
+				end
+				a_list.extend (current_item.object)
+				current_item.object.all_children_recursive (a_list)
+				layout_item.forth
+			end
+		end
+
+feature {GB_COMMAND_DELETE_OBJECT, GB_OBJECT} -- Deletion
+		
+		update_for_delete is
+				-- Perfrom any necessary processing on `Current'
+				-- and all children contained within for a deletion
+				-- event.
+			local
+				all_objects: ARRAYED_LIST [GB_OBJECT]
+				counter: INTEGER
+			do
+				create all_objects.make (10)
+				all_children_recursive (all_objects)
+				all_objects.extend (Current)
+				from
+					counter := 1
+				until
+					counter > all_objects.count
+				loop
+					(all_objects @ counter).delete
+					counter := counter + 1
+				end
+			end
+			
+		delete is
+				-- Perform any necessary pre processing for
+				-- a deletion of `Current' from the system.
+			do
+				-- Redefine in descendents that need to handle
+				-- special processing for a delete.
+			end
+			
+
+feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of sepecific attributes of `Current'
 			-- in `element'. For now, only a name needs to be stored.
 		do
-			add_element_containing_string (element, name_string, name)
+			add_element_containing_integer (element, Id_string, id)
+			if not name.is_empty then
+				add_element_containing_string (element, name_string, name)
+			end
 		end
 		
 	modify_from_xml (element: XML_ELEMENT) is
@@ -165,17 +230,16 @@ feature {GB_XML_STORE, GB_XML_LOAD}
 			element_info: ELEMENT_INFORMATION
 		do
 			full_information := get_unique_full_info (element)
+			element_info := full_information @ (Id_String)
+				-- Although every saved object should have an ID, 
+				-- we allow there to be none, to maintain backwards compatibility.
+			if element_info /= Void then
+				id := (element_info.data).to_integer	
+			end
 			element_info := full_information @ (name_string)
-			name :=  element_info.data
-			layout_item.set_text (name + ": " + short_type)
-		end
-		
-	xml_storage_required: BOOLEAN is
-			-- Does `Current' need to store internal attributes
-			-- to XML?
-		do
-			if not name.is_empty then
-				Result := True
+			if element_info /= Void then
+				name := element_info.data
+				layout_item.set_text (name + ": " + short_type)
 			end
 		end
 
@@ -235,6 +299,16 @@ feature {GB_OBJECT_HANDLER} -- Status setting
 				-- Notify the system that we have modified something.
 			system_status.enable_project_modified
 			command_handler.update
+		end
+		
+	assign_id is
+			-- Assign a new `id' to `Current'.
+		require
+			id_not_assigned: id = 0
+		do
+			id := new_id
+		ensure
+			id_set: id /= 0
 		end
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT} -- Element change
@@ -347,7 +421,8 @@ feature -- Basic operations
 		require
 			object_parent_not_full: not parent_object.is_full
 		do
-			add_new_object_in_parent (new_object (xml_handler.xml_element_representing_named_component (a_component.name), True))
+			add_new_object_in_parent (a_component.object)
+			
 		end
 		
 		
@@ -378,7 +453,7 @@ feature -- Basic operations
 		require
 			object_not_full: not is_full
 		do
-			add_new_object (new_object (xml_handler.xml_element_representing_named_component (a_component.name), True))
+			add_new_object (a_component.object)
 		end
 
 	add_new_object (an_object: GB_OBJECT) is
@@ -417,6 +492,26 @@ feature -- Basic operations
 		ensure
 			name_assigned: name.is_equal (new_name)
 		end
+		
+	set_id (a_new_id: INTEGER) is
+			-- Assign `new_id' to `id'.
+		require
+			non_negative: a_new_id >= 0
+		do
+			id := a_new_id
+		ensure
+			id_assigned: id = a_new_id
+		end
+		
+feature {GB_ID_COMPRESSOR}
+
+	update_internal_id_references (conversion_data: HASH_TABLE [INTEGER, INTEGER]) is
+			-- For all ids, used in `Current', including `id', and ids used in any
+			-- properties, convert from their current_value  to hash_table [current_value] value.
+		do
+			id := conversion_data @ id
+		end
+		
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 

@@ -85,7 +85,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
 	call_timeout_actions is
 			-- Call the timeout actions.
-			-- FIXME This should be done in the implementation interface to avoid repeated timeouts.
+			-- FIXME This should be done in the implementation interface to avoid nested timeout calls.
 		do
 			if not actions_called then
 				actions_called := True

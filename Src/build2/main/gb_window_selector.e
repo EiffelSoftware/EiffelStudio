@@ -211,7 +211,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	objects: ARRAYED_LIST [GB_OBJECT] is
+	objects: ARRAYED_LIST [GB_TITLED_WINDOW_OBJECT] is
 			-- `Result' is all objects represented in `Current'.
 			-- No paticular order is guaranteed.
 		local
@@ -563,6 +563,17 @@ feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
 			command_handler.update
 		ensure
 			count_increaed: count = old count + 1
+		end
+		
+feature {GB_XML_LOAD} -- Implementation
+
+	mark_first_window_as_root is
+			-- Ensure first window in `Current' is marked as
+			-- the root windwo for the project.
+		do
+			change_root_window_to (objects.first)
+		ensure
+			has_root_window: Object_handler.root_window_object /= Void
 		end
 
 feature {NONE} -- Implementation

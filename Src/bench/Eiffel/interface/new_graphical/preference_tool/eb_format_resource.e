@@ -65,15 +65,9 @@ feature -- Status setting
 		end
 
 	is_default: BOOLEAN is
-			-- Has the resource changed from the default value?
+			-- Has the resource not changed from the default value?
 		do
-			Result := actual_value /= default_value
-		end
-
-	has_changed: BOOLEAN is
-			-- Has the resource changed from the old value?
-		do
-			Result := actual_value /= default_value
+			Result := actual_value = default_value
 		end
 
 feature -- Element change

@@ -49,15 +49,9 @@ feature -- Access
 feature -- Status report
 
 	is_default: BOOLEAN is
-			-- Has the resource changed from the default value?
+			-- Is the resource equal to its default value?
 		do
-			Result := not equal (default_value, actual_value)
-		end
-
-	has_changed: BOOLEAN is
-			-- Has the resource changed from the default value?
-		do
-			Result := not equal (default_value, actual_value)
+			Result := equal (default_value, actual_value)
 		end
 
 	is_valid (a_value: STRING): BOOLEAN is

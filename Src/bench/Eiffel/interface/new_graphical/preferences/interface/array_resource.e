@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 					start_pos := 1
 					end_pos := value.index_of (';', start_pos)
 				until
-					end_pos = 0
+					end_pos = 0 or start_pos = value.count
 				loop
 					actual_value.force (value.substring (start_pos, end_pos - 1), actual_value.count + 1)
 					start_pos := end_pos + 1

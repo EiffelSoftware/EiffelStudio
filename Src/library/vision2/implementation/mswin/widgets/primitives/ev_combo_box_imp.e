@@ -70,8 +70,9 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a combo-box.
 		do
-			is_editable := True
-			wel_make (default_parent.item, 0, 0, 0, 90, 0)
+			internal_window_make (default_parent.item, void, default_style + Cbs_dropdown,
+				0, 0, 0, 90, 0, default_pointer)
+ 			id := 0
 			!! ev_children.make
 		end
 
@@ -109,9 +110,6 @@ feature -- Status report
 		do
 			Result := (an_id = wel_selected_item + 1)
 		end
-
-	is_editable: BOOLEAN
-			-- Is the combo-box editable
 
 	selected_item: EV_LIST_ITEM is
 			-- Give the item which is currently selected
@@ -287,12 +285,13 @@ feature {NONE} -- Implementation
 			temp_list: ARRAYED_LIST [STRING]
 		do
 			if is_editable then
-				is_editable := False
 				par_imp ?= parent_imp
 				!! temp_list.make (0)
 				save_list (temp_list)
 				wel_destroy
-				wel_make (par_imp, 0, 0, 0, 90, 0)
+  				internal_window_make (par_imp, void, default_style + Cbs_dropdownlist,
+					0, 0, 0, 90, 0, default_pointer)
+ 	 			id := 0
 				copy_list (temp_list)
 			end
 		end
@@ -304,14 +303,21 @@ feature {NONE} -- Implementation
 			temp_list: ARRAYED_LIST [STRING]
 		do
 			if not is_editable then
-				is_editable := True
 				par_imp ?= parent_imp
 				!! temp_list.make (0)
 				save_list (temp_list)
 				wel_destroy
-				wel_make (par_imp, 0, 0, 0, 90,	0)
+  				internal_window_make (par_imp, void, default_style + Cbs_dropdown,
+					0, 0, 0, 90, 0, default_pointer)
+ 	 			id := 0
 				copy_list (temp_list)
 			end
+		end
+
+	read_only: BOOLEAN is
+			-- Is the combo-box read-only?
+		do
+			Result := flag_set (style, Cbs_dropdownlist)
 		end
 
 	save_list (temp_list: ARRAYED_LIST [STRING]) is
@@ -386,11 +392,6 @@ feature {NONE} -- Wel implementation
 						+ Ws_tabstop + Ws_vscroll
 						+ Cbs_autohscroll --+ Cbs_ownerdrawfixed
 						+ Cbs_hasstrings
-			if is_editable then
-				Result := Result + Cbs_dropdown
-			else
-				Result := Result + Cbs_dropdownlist
-			end
 		end
 
 	default_process_message (msg, wparam, lparam: INTEGER) is

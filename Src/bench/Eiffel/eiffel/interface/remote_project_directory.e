@@ -103,6 +103,13 @@ feature -- Status setting
 			is_precompile_finalized_set: is_precompile_finalized = v
 		end
 		
+	set_line_generation (b: BOOLEAN) is
+			-- Sets `line_generation' to `b'
+		do
+			line_generation := b
+		ensure
+			line_generation_set: line_generation = b
+		end
 		
 feature -- Access
 
@@ -236,6 +243,9 @@ feature -- Access
 			
 	is_precompile_finalized: BOOLEAN
 			-- Is precompile finalized?
+			
+	line_generation: BOOLEAN
+			-- Does precompile have debug information generated for it?
 
 feature -- Check
 

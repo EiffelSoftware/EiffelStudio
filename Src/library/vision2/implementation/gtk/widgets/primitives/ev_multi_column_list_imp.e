@@ -303,23 +303,16 @@ feature -- Event : command association
 		local
 			ev_data: EV_EVENT_DATA
 		do
-			check
-				Not_yet_implemented: False
-			end
+			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 
---			!EV_EVENT_DATA!ev_data.make
---			add_command_with_event_data ("start_selection", cmd, arg, ev_data, 0, False)
---			add_command ("select_row", cmd, arg)
+			-- We pass -1 as the mouse button to have a different handling in c_gtk_signal_connetc_general'.
+			add_command_with_event_data (widget, "select_row", cmd, arg, ev_data, -1, False)
 		end
 
 	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when a column is clicked.
 		do
-			check
-				Not_yet_implemented: False
-			end
-
 			add_command (widget, "click_column", cmd, arg)
 		end
 
@@ -328,9 +321,21 @@ feature -- Event -- removing command association
 	remove_selection_commands is	
 			-- Empty the list of commands to be executed
 			-- when the selection has changed.
+		local
+			list: LINKED_LIST [EV_COMMAND]
 		do
-			remove_commands (widget, select_row_id)
-			remove_commands (widget, unselect_row_id)
+			-- list of the commands to be executed for "select_row" signal.
+			list := (event_command_array @ select_row_id).command_list
+
+			from
+				list.start
+			until
+				list.after
+			loop
+				remove_single_command (widget, select_row_id, list.item)
+				-- we do not need to do "list.forth" as an item has been removed
+				-- that list.
+			end
 		end
 
 	remove_column_click_commands is

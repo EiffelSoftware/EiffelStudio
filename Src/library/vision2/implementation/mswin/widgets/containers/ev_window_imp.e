@@ -767,7 +767,7 @@ feature {NONE} -- Implementation
 			set_default_processing (False)
 		end
 
-feature {EV_PND_TRANSPORTER_IMP}
+feature {EV_PND_TRANSPORTER_IMP, EV_WIDGET_IMP}
 
 	title_height: INTEGER is
 			-- `Result' is absolute x position of client rect.
@@ -900,6 +900,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/17 18:22:23  rogers
+--| The following features are now also exported to EV_WIDGET_IMP: title_height, frame_height, frame_width, border_width.
+--|
 --| Revision 1.30  2000/03/16 21:13:34  brendel
 --| Calls {EV_APPLICATION_IMP}.remove_root_window directly.
 --|

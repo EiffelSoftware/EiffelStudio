@@ -29,11 +29,10 @@ creation
 feature -- Initialization
 
 	make (par: EV_MULTI_COLUMN_LIST) is
-			-- Create an empty row
+			-- Create an empty row with `par' as parent.
 		do
 			parent_imp ?= par.implementation
 			wel_make
-			initialize_list (item_command_count)
 		end
 
 feature -- Access

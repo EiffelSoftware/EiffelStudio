@@ -13,6 +13,8 @@ inherit
 	EV_MENU_ITEM_I
 
 	EV_MENU_ITEM_CONTAINER_IMP
+		rename
+			item_command_count as command_count
 		redefine
 			add_item
 		end
@@ -44,7 +46,6 @@ feature {NONE} -- Initialization
 				parent_not_void: parent /= Void
 			end
 			text := txt
-			initialize_list (item_command_count)
 			ev_children := parent.ev_children
 		end
 

@@ -41,7 +41,6 @@ feature {NONE} -- Initialization
 				parent_not_void: parent /= Void
 			end
 			text := txt
-			initialize_list (item_command_count)
 		end
 
 feature -- Access

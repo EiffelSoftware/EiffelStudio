@@ -16,6 +16,9 @@ inherit
 		end
 
 	EV_TREE_ITEM_CONTAINER_IMP
+		rename
+			item_command_count as command_count
+		end
 
 	WEL_TREE_VIEW_ITEM
 		rename
@@ -46,7 +49,6 @@ feature -- Initialization
 			wel_make
 			set_mask (Tvif_text + Tvif_state + Tvif_handle)
 			parent ?= par.implementation
-			initialize_list (item_command_count)
 		end
 
 	make_with_text (par: EV_TREE_ITEM_CONTAINER; txt: STRING) is
@@ -57,7 +59,6 @@ feature -- Initialization
 			set_mask (Tvif_text + Tvif_state + Tvif_handle)
 			parent ?= par.implementation
 			set_text (txt)
-			initialize_list (item_command_count)
 		end
 
 feature -- Access

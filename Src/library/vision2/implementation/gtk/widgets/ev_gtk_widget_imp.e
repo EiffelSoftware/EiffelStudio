@@ -207,24 +207,32 @@ feature {EV_ANY_I} -- Implementation
 
 	width: INTEGER is
 			-- Horizontal size measured in pixels.
+		local
+			a_min_width: INTEGER
+			a_toplevel: POINTER
 		do
-			if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer then
+					-- If we are present in a GtkWindow structure then we force a container resize on the parent
+			a_toplevel := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+			if a_toplevel /= default_pointer and then has_struct_flag (a_toplevel, {EV_GTK_ENUMS}.gtk_toplevel_enum) and then a_toplevel /= c_object then
 				{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
-			else
-				update_request_size
 			end
-			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (minimum_width)
+			a_min_width := minimum_width
+			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (a_min_width)
 		end
 
 	height: INTEGER is
 			-- Vertical size measured in pixels.
+		local
+			a_min_height: INTEGER
+			a_toplevel: POINTER
 		do
-			if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer then
+					-- If we are present in a GtkWindow structure then we force a container resize on the parent
+			a_toplevel := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+			if a_toplevel /= default_pointer and then has_struct_flag (a_toplevel, {EV_GTK_ENUMS}.gtk_toplevel_enum) and then a_toplevel /= c_object then
 				{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
-			else
-				update_request_size
 			end
-			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (minimum_height)
+			a_min_height := minimum_height
+			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (a_min_height)
 		end
 
 	update_request_size is
@@ -246,6 +254,21 @@ feature {EV_ANY_I} -- Implementation
 			-- Request that `Current' be displayed when its parent is.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+		end
+
+feature -- Status report
+
+	is_show_requested: BOOLEAN is
+			-- Will `Current' be displayed when its parent is?
+			-- See also `is_displayed'.
+		do
+			Result := has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM)
+		end
+
+	is_displayed: BOOLEAN is
+			-- Is `Current' visible on the screen?
+		do
+			Result := has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM)
 		end
 
 feature {NONE} -- Implementation

@@ -40,6 +40,7 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 /*---  In multi-threaded environment  ---*/
 /*---------------------------------------*/
 
+
 /* Tuning for FSU POSIX Threads */
 #ifdef EIF_FSUTHREADS
 #define HASNT_SCHED_H
@@ -56,14 +57,17 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 /* Tuning for POSIX LinuxThreads */
 #ifdef EIF_LINUXTHREADS
 #define EIF_POSIX_THREADS
-#ifndef EIF_DFLT SIGUSR
-#	define EIF_DFLT_SIGUSR 	/* SIGUSR1&2 are used in inter-thread com */?
+#ifndef EIF_DFL_SIGUSR
+#define EIF_DFLT_SIGUSR
 #endif	/* EIF_DFLT_SIGUSR */
 #endif
 
 /* Tuning for POSIX PCThreads */
 #ifdef EIF_PCTHREADS
 #define HASNT_SCHED_H
+#ifdef SIGVTARLARM
+#define EIF_DFLT_SIGVTALARM
+#endif /* SIGVTARLARM */
 #define EIF_POSIX_THREADS
 #define EIF_NONPOSIX_TSD
 #define EIF_SCHEDPARAM_EXTRA param.sched_quantum = 2; /* bug in PCThreads */
@@ -140,8 +144,30 @@ extern EIF_POINTER eif_thr_last_thread(void);
 /* Defaults for condition variables */
 #ifdef EIF_NO_CONDVAR
 #define EIF_COND_TYPE		unsigned char
-#else	
+#define EIF_COND_ATTR_TYPE  unsigned char
+#define EIF_COND_INIT(cond, msg)
+#define EIF_COND_CREATE(cond, msg)
+#define EIF_COND_WAIT(cond, mutex, msg)
+#define EIF_COND_BROADCAST(cond, msg)
+#define EIF_COND_SIGNAL(cond, msg)
+#define EIF_COND_DESTROY(cond, msg)
+#else /* EIF_NO_CONDVAR */
 #define EIF_COND_TYPE pthread_cond_t
+#define EIF_COND_ATTR_TYPE      pthread_condattr_t
+#define EIF_COND_CREATE(pcond, msg) \
+    pcond = (EIF_COND_TYPE *) eif_malloc (sizeof(EIF_COND_TYPE)); \
+    if (!(pcond)) eraise("cannot allocate memory for cond. variable", EN_OMEM); \
+    EIF_COND_INIT(pcond,msg)
+#define EIF_COND_INIT(pcond, msg) \
+    if (pthread_cond_init (pcond, NULL)) eraise (msg, EN_EXT)
+#define EIF_COND_WAIT(pcond, pmutex, msg) \
+    if (pthread_cond_wait (pcond, pmutex)) eraise (msg, EN_EXT)
+#define EIF_COND_BROADCAST(pcond, msg) \
+    if (pthread_cond_broadcast (pcond)) eraise (msg, EN_EXT)
+#define EIF_COND_SIGNAL(pcond, msg) \
+    if (pthread_cond_signal (pcond)) eraise (msg, EN_EXT)
+#define EIF_COND_DESTROY(pcond, msg) \
+    if (pthread_cond_destroy (pcond)) eraise (msg, EN_EXT)
 #endif	
 
 
@@ -180,6 +206,52 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MAX_PRIORITY 255
 #endif
 
+/*
+ * Posix 1003.1b signals
+ */
+
+#ifdef SIGRTMIN
+#define EIF_DFLT_SIGRTMIN
+#endif
+#ifdef SIGRTMAX
+#define EIF_DFLT_SIGRTMAX
+#endif
+
+/*
+ * Signals reserved for Posix 1003.1c.
+ */
+
+#ifdef SIGPTINTR
+#define EIF_DFLT_SIGPTINTR
+#endif
+#ifdef SIGPTRESCHED
+#define EIF_DFLT_SIGPTRESCHED
+#endif
+
+/* Mutex management */
+
+#ifdef _CRAY
+#define EIF_MUTEX_INIT(m,msg) \
+    { pthread_mutexattr_t mattr = PTHREAD_MUTEX_INITIALIZER; \
+    if (pthread_mutex_init(m,&mattr)) eraise(msg, EN_EXT);}
+#else /* _CRAY */
+#define EIF_MUTEX_INIT(m,msg) \
+    if (pthread_mutex_init(m,NULL)) eraise(msg, EN_EXT)
+#endif /* _CRAY */
+
+#define EIF_MUTEX_CREATE(m,msg) \
+    m = (EIF_MUTEX_TYPE *) eif_malloc(sizeof(EIF_MUTEX_TYPE)); \
+    if (!(m)) eraise("cannot allocate memory for mutex creation", EN_OMEM); \
+    EIF_MUTEX_INIT(m,msg)
+#define EIF_MUTEX_LOCK(m,msg) if (pthread_mutex_lock(m)) eraise(msg, EN_EXT)
+#define EIF_MUTEX_TRYLOCK(m,r,msg)  \
+    r = pthread_mutex_trylock(m);   \
+    if (r && (r!=EBUSY)) eraise(msg, EN_EXT)
+#define EIF_MUTEX_UNLOCK(m,msg) if (pthread_mutex_unlock(m)) eraise(msg, EN_OMEM)
+#define EIF_MUTEX_DESTROY(m,msg) \
+    EIF_MUTEX_DESTROY0(m,msg); eif_free(m)
+#define EIF_MUTEX_DESTROY0(m,msg) \
+    if (pthread_mutex_destroy(m)) eraise(msg, EN_EXT)
 
 #elif defined EIF_WIN32
 
@@ -222,6 +294,25 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define pthread_cond_t			cond_t
 #endif
 
+/* Mutex management */
+
+#define EIF_MUTEX_INIT(m,msg) \
+    if (mutex_init((m),USYNC_THREAD,NULL)) eraise(msg, EN_EXT)
+#define EIF_MUTEX_CREATE(m,msg) \
+    m = (EIF_MUTEX_TYPE *) eif_malloc (sizeof(EIF_MUTEX_TYPE)); \
+    if (!(m)) eraise("cannot allocate memory for mutex creation", EN_OMEM); \
+    EIF_MUTEX_INIT(m,msg)
+#define EIF_MUTEX_LOCK(m,msg)       if (mutex_lock(m)) eraise(msg, EN_EXT)
+#define EIF_MUTEX_TRYLOCK(m,r,msg)  \
+        r = mutex_trylock(m); \
+        if(r && (r != EBUSY)) \
+            eraise(msg, EN_EXT)
+#define EIF_MUTEX_UNLOCK(m,msg)     if (mutex_unlock(m)) eraise(msg, EN_EXT)
+#define EIF_MUTEX_DESTROY0(m,msg)   \
+    if (mutex_destroy(m)) eraise(msg, EN_EXT)
+#define EIF_MUTEX_DESTROY(m,msg) \
+    EIF_MUTEX_DESTROY0(m,msg); eif_free(m)
+
 #elif defined VXWORKS
 
 /*-------------------------*/
@@ -239,6 +330,18 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_THR_TYPE            int
 #define EIF_THR_ATTR_TYPE       int
 #define EIF_TSD_TYPE            eif_global_context_t *
+
+/* Mutex management */
+#define EIF_MUTEX_CREATE(m,msg)     \
+    if ((m=semBCreate(SEM_Q_FIFO,SEM_FULL))==NULL) eraise(msg, EN_EXT)
+#define EIF_MUTEX_LOCK(m,msg)       \
+    if (semTake(m,WAIT_FOREVER)!=OK) eraise(msg, EN_EXT)
+#define EIF_MUTEX_TRYLOCK(m,r,msg)  \
+    r = (semTake(m,NO_WAIT)==OK)
+#define EIF_MUTEX_UNLOCK(m,msg)     \
+    if (semGive(m)!=OK) eraise(msg, EN_EXT)
+#define EIF_MUTEX_DESTROY(m,msg)    \
+    if (semDelete(m)!=OK) eraise(msg, EN_EXT)
 
 #else
 

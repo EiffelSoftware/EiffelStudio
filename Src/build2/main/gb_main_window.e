@@ -40,6 +40,11 @@ inherit
 			default_create, copy, is_equal
 		end
 
+	GB_ACCESSIBLE_COMMAND_HANDLER
+		undefine
+			default_create, copy, is_equal
+		end
+
 create
 	default_create
 
@@ -50,6 +55,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 			set_title (gb_main_window_title)
+			--build_commands
 			build_menu
 			build_widget_structure
 			set_up_first_window
@@ -64,26 +70,62 @@ feature {NONE} -- Implementation
 			-- Generate menu for `Current'.
 		local
 			a_menu_bar: EV_MENU_BAR
-			file_menu: EV_MENU
-			about_menu: EV_MENU
-			settings_menu: EV_MENU
+			file_menu, help_menu, view_menu, project_menu: EV_MENU
+			help_about, file_exit, view_menu_display_window,
+			view_menu_builder_window, view_menu_history, project_menu_build,
+			project_menu_settings,  file_new: EV_MENU_ITEM
 			menu_separator: EV_MENU_SEPARATOR
-			file_exit: EV_MENU_ITEM
 		do
+				-- Initialize the menu bar.
 			create a_menu_bar
 			set_menu_bar (a_menu_bar)
-			create file_menu.make_with_text (gb_file_menu_text)
-			a_menu_bar.extend (file_menu)
-			create settings_menu.make_with_text (gb_settings_menu_text)
-			a_menu_bar.extend (settings_menu)
-			create about_menu.make_with_text (gb_about_menu_text)
-			a_menu_bar.extend (about_menu)
-			about_menu.select_actions.extend (agent show_about_dialog)
 			
+				-- Initialize the file menu.
+			create file_menu.make_with_text (Gb_file_menu_text)
+			a_menu_bar.extend (file_menu)
 			create menu_separator
+			create file_new.make_with_text ("New")
+			file_menu.extend (file_new)
+			file_menu.extend (command_handler.file_load_command.new_menu_item)
+			file_menu.extend (command_handler.file_save_command.new_menu_item)
 			file_menu.extend (menu_separator)
 			create file_exit.make_with_text ("Exit")
 			file_menu.extend (file_exit)
+			file_exit.select_actions.extend (agent close_requested)
+			
+				-- Initialize the view menu.
+			create view_menu.make_with_text (Gb_view_menu_text)
+			a_menu_bar.extend (view_menu)
+				--| FIXME make into a command.
+			create view_menu_display_window.make_with_text ("Show display window")
+			view_menu.extend (view_menu_display_window)
+			create view_menu_builder_window.make_with_text ("Show builder window")
+			view_menu.extend (view_menu_builder_window)
+			create menu_separator
+			view_menu.extend (menu_separator)
+			create view_menu_history.make_with_text ("Show history dialog")
+			view_menu.extend (view_menu_history)
+			
+			
+				-- Initialize the project menu.
+			create project_menu.make_with_text (Gb_project_menu_text)
+			a_menu_bar.extend (project_menu)
+				-- FIXME make into a command.
+			create project_menu_settings.make_with_text (Gb_project_menu_settings_text)	
+			project_menu.extend (project_menu_settings)
+			create project_menu_build.make_with_text (Gb_project_menu_build_text)
+			project_menu.extend (project_menu_build)
+			
+			
+			
+				-- Initialize the help menu.
+			create help_menu.make_with_text (Gb_help_menu_text)
+			a_menu_bar.extend (help_menu)
+			create help_about.make_with_text (Gb_help_about_menu_text)
+			help_menu.extend (help_about)
+			help_about.select_actions.extend (agent show_about_dialog)
+			
+			
 		end
 		
 	build_widget_structure is
@@ -140,8 +182,6 @@ feature {NONE} -- Implementation
 			-- Tool bar of `Current'
 		local
 			delete_button: GB_DELETE_TOOL_BAR_BUTTON
-			save_button: GB_SAVE_TOOL_BAR_BUTTON
-			load_button: GB_LOAD_TOOL_BAR_BUTTON
 			a_new_object_editor: GB_NEW_OBJECT_EDITOR_BUTTON
 			undo_button: GB_UNDO_TOOL_BAR_BUTTON
 			history_button: GB_HISTORY_TOOL_BAR_BUTTON
@@ -152,10 +192,8 @@ feature {NONE} -- Implementation
 			create Result
 			create delete_button
 			Result.extend (delete_button)
-			create save_button
-			Result.extend (save_button)
-			create load_button
-			Result.extend (load_button)
+			--Result.extend (command_handler.file_load_command.new_toolbar_item (True, False))
+			Result.extend (command_handler.file_save_command.new_toolbar_item (True, False))
 			create a_new_object_editor
 			Result.extend (a_new_object_editor)
 			create separator
@@ -202,6 +240,5 @@ feature {NONE} -- Implementation
 				-- Destroy the application.
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
-		
 
 end -- class GB_MAIN_WINDOW

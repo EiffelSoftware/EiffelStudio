@@ -15,7 +15,6 @@ extern "C" {
 #endif
 
 #ifdef EIF_THREADS
-	EIF_BOOLEAN is_wel_global_key_created;
 	extern void wel_init_context(wel_global_context_t *wel_globals);
 	extern void wel_thr_register(void);
 #endif

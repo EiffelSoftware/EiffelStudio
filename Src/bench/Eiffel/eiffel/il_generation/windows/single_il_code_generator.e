@@ -66,7 +66,7 @@ feature -- IL Generation
 			current_class_type := class_type
 			current_select_tbl := class_c.feature_table.origin_table
 			Inst_context.set_cluster (class_c.cluster)
-			is_single_class := class_c.is_frozen or class_c.is_single
+			is_single_class := class_type.is_generated_as_single_type
 
 				-- Initialize implementation.
 			set_current_class (class_c)
@@ -190,8 +190,8 @@ feature {NONE} -- Implementation
 			-- Generate IL code for inherited features of `current_class_type'.
 		require
 			class_c_not_void: class_c /= Void
-			eiffel_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
 		local
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]

@@ -78,6 +78,8 @@ cluster
 		body_indexes:		"$BENCH/Eiffel/eiffel/ids/body_index";
 		real_body_ids:		"$BENCH/Eiffel/eiffel/ids/real_body_id";
 		real_body_indexes:	"$BENCH/Eiffel/eiffel/ids/real_body_index";
+		file_ids:			"$BENCH/Eiffel/eiffel/ids/file";
+		feature_as_ids:		"$BENCH/Eiffel/eiffel/ids/feature_as";
 		inheritance:		"$BENCH/Eiffel/eiffel/inheritance";
 		interface:			"$BENCH/Eiffel/eiffel/interface";
 		polymorphism:		"$BENCH/Eiffel/eiffel/polymorphism";

@@ -22,7 +22,7 @@ inherit
 
 	SHARED_EXEC_ENVIRONMENT
 
-	EB_CONSTANTS
+	WARNING_MESSAGES
 
 feature -- Properties
 
@@ -169,21 +169,19 @@ feature -- Project retrieval
 
 			if Eiffel_project.retrieval_error then
 				if Eiffel_project.is_incompatible then
-					msg := Warning_messages.w_Project_incompatible 
-						(project_dir.name, 
-						version_number, 
-						Eiffel_project.incompatible_version_number)
+					msg := w_Project_incompatible (project_dir.name, 
+						version_number, Eiffel_project.incompatible_version_number)
 				else
 					if Eiffel_project.is_corrupted then
-						msg := Warning_messages.w_Project_corrupted (project_dir.name)
+						msg := w_Project_corrupted (project_dir.name)
 					elseif Eiffel_project.retrieval_interrupted then
-						msg := Warning_messages.w_Project_interrupted (project_dir.name)
+						msg := w_Project_interrupted (project_dir.name)
 					end
 				end
 			elseif Eiffel_project.incomplete_project then
-				msg := Warning_messages.w_Project_directory_not_exist (project_file.name, project_dir.name)
+				msg := w_Project_directory_not_exist (project_file.name, project_dir.name)
 			elseif Eiffel_project.read_write_error then
-				msg := Warning_messages.w_Cannot_open_project
+				msg := w_Cannot_open_project
 			end
 
 			if msg /= Void then

@@ -281,7 +281,7 @@ feature -- Status setting
 			-- A compilation is over. Make all run* commands sensitive.
 		do
 			if is_msil_dll_system then
-				disable_debugging_commands
+				disable_debugging_commands (True)
 			else
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
@@ -301,7 +301,7 @@ feature -- Status setting
 			i: INTEGER
 			rl, rr: ARRAY_RESOURCE
 		do
-			disable_debugging_commands
+			disable_debugging_commands (False)
 			initialize_debugging_window
 			debugging_window.window.lock_update
 
@@ -705,7 +705,7 @@ feature -- Debugging events
 			-- Application just quit.
 		do
 			if Application /= Void and then Application.is_running then
-				disable_debugging_commands
+				disable_debugging_commands (False)
 				Window_manager.display_message (Interface_names.E_not_running)
 					-- Make all debugging tools disappear.
 				if not debugging_window.destroyed then
@@ -962,7 +962,7 @@ feature {NONE} -- Implementation
 			display_error_help_cmd.enable_sensitive
 
 			if is_msil_dll_system then
-				disable_debugging_commands
+				disable_debugging_commands (True)
 			else
 				debug_cmd.enable_sensitive
 				no_stop_cmd.enable_sensitive
@@ -1002,13 +1002,16 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	disable_debugging_commands is
+	disable_debugging_commands (full: BOOLEAN) is
 			-- Disable commands related to debugging.
+			-- If `full' disable also commands for manipulating breakpoints.
 		do
-			clear_bkpt.disable_sensitive
-			enable_bkpt.disable_sensitive
-			disable_bkpt.disable_sensitive
-			bkpt_info_cmd.disable_sensitive
+			if full then
+				clear_bkpt.disable_sensitive
+				enable_bkpt.disable_sensitive
+				disable_bkpt.disable_sensitive
+				bkpt_info_cmd.disable_sensitive
+			end
 			
 			debug_cmd.disable_sensitive
 			no_stop_cmd.disable_sensitive

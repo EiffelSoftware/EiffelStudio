@@ -23,6 +23,7 @@ feature -- Status report
 			-- Is the item selected?
 		require
 			exists: not destroyed
+			has_parent: parent_imp /= Void
 		deferred
 		end
 

@@ -17,6 +17,7 @@ feature -- Status report
 			-- Is the item selected
 		require
 			exists: not destroyed
+			has_parent: parent_imp /= Void
 		deferred
 		end
 
@@ -47,6 +48,7 @@ feature -- Status setting
 			-- Select the item if `flag', unselect it otherwise.
 		require
 			exists: not destroyed
+			has_parent: parent_imp /= Void
 		deferred
 		end
 
@@ -55,6 +57,7 @@ feature -- Status setting
 			-- opposit status.
 		require
 			exists: not destroyed
+			has_parent: parent_imp /= Void
 		deferred
 		end
 

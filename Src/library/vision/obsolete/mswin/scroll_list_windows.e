@@ -57,7 +57,8 @@ inherit
 			on_size,
 			on_move,
 			default_style,
-			on_destroy
+			on_destroy,
+			background_brush
 		redefine
 			on_lbn_selchange
 		select
@@ -119,7 +120,8 @@ inherit
 			on_size,
 			on_move,
 			default_style,
-			on_destroy
+			on_destroy,
+			background_brush
 		redefine
 			on_lbn_selchange
 		end

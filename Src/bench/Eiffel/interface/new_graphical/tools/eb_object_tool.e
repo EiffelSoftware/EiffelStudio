@@ -692,17 +692,7 @@ feature {NONE} -- Implementation
 			if Application.call_stack_is_empty then
 				build_exception_info (a_target_container)
 			else
-				if Application.is_dotnet then
-					cse_dotnet ?= current_stack_element
-					if cse_dotnet /= Void then
-						create module_item
-						module_item.set_text ("Module = " + cse_dotnet.dotnet_module_name)
-						module_item.set_data (cse_dotnet.dotnet_module_filename)
-						module_item.set_pixmap (Pixmaps.Icon_green_tick)
-						a_target_container.extend (module_item)
-						build_exception_info (a_target_container)
-					end
-				end
+				build_exception_info (a_target_container)
 			end
 		end
 

@@ -41,8 +41,7 @@ feature -- Callbacks
 	loose_changes (argument: ANY) is
 			-- The changes will be lost.
 		do
-			text_window.clear_clickable;
-			text_window.set_changed (false);
+			text_window.disable_clicking;
 			execute_licenced (Void)
 		end;
 
@@ -57,7 +56,7 @@ feature -- Execution
 			if not text_window.changed then
 				execute_licenced (argument)
 			 else
-				warner (text_window).call (Current, l_File_changed)
+				warner (popup_parent).call (Current, l_File_changed)
 			end
 		end;
 
@@ -82,12 +81,12 @@ feature {NONE} -- Implementation
 		local
 			history: STONE_HISTORY
 		do
-			history := text_window.history;
+			history := tool.history;
 			if history.empty or else (history.isfirst or history.before) then
-				warner (text_window).gotcha_call (w_Beginning_of_history)
+				warner (popup_parent).gotcha_call (w_Beginning_of_history)
 			else
 				history.back;
-				text_window.last_format.execute (history.item)
+				tool.last_format.execute (history.item)
 			end
 		end;
 

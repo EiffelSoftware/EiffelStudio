@@ -392,7 +392,7 @@ feature -- Output
 			elseif not tabs_emitted then
 				emit_tabs
 			end;
-			text.add_string (name_of_current_feature);
+			text.add_default_string (name_of_current_feature);
 			arg ?= arguments;
 			if arg /= void then
 				begin;
@@ -415,7 +415,7 @@ feature -- Output
 			if not tabs_emitted then
 				emit_tabs
 			end;
-			text.add_string (name_of_current_feature)
+			text.add_default_string (name_of_current_feature)
 		end;
 
 	put_infix_feature is
@@ -425,7 +425,8 @@ feature -- Output
 			item: BASIC_TEXT
 		do
 			text.add_space;
-			text.add_string (operator_table.name (name_of_current_feature));
+			text.add_default_string 
+					(operator_table.name (name_of_current_feature));
 			text.add_space;
 			arg ?= arguments;
 			if arg /= void then

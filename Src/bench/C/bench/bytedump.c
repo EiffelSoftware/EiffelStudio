@@ -812,6 +812,8 @@ static  void    print_instructions ()
 				fprintf (ofp,"fid %ld ", blong ());
 				/* Type of class */
 				print_ctype (bshort ());
+				/* Is precursor or static */
+				(void) bshort ();
 				break;
 			case  BC_PEXTERN :
 				/* External precompiled */
@@ -819,6 +821,8 @@ static  void    print_instructions ()
 				fprintf (ofp,"oid %ld ", blong ());
 				/* Org. offset */
 				fprintf (ofp,"ooff %ld", blong ());
+				/* Is precursor or static */
+				(void) bshort ();
 				break;
 			case  BC_EXTERN_INV :
 				/* External with invariant check */
@@ -828,6 +832,9 @@ static  void    print_instructions ()
 				fprintf (ofp,"fid %ld ", blong ());
 				/* Type of class */
 				print_ctype (bshort ());
+				/* Is precursor or static */
+				(void) bshort ();
+
 				break;
 			case  BC_PEXTERN_INV :
 				/* External precompiled with invariant check */
@@ -837,6 +844,8 @@ static  void    print_instructions ()
 				fprintf (ofp,"oid %ld ", blong ());
 				/* Org. offset */
 				fprintf (ofp,"ooff %ld", blong ());
+				/* Is precursor or static */
+				(void) bshort ();
 				break;
 			case  BC_FEATURE :
 				/* Routine */
@@ -844,7 +853,7 @@ static  void    print_instructions ()
 				fprintf (ofp,"fid %ld ", blong ());
 				/* Type of class */
 				print_ctype (bshort ());
-/* NEW */
+				/* Is precursor or static */
 				(void) bshort ();
 
 				break;
@@ -854,7 +863,7 @@ static  void    print_instructions ()
 				fprintf (ofp,"oid %ld ", blong ());
 				/* Org. offset */
 				fprintf (ofp,"ooff %ld", blong ());
-/* NEW */
+				/* Is precursor or static */
 				(void) bshort ();
 				break;
 			case  BC_FEATURE_INV :
@@ -865,7 +874,7 @@ static  void    print_instructions ()
 				fprintf (ofp,"fid %ld ", blong ());
 				/* Type of class */
 				print_ctype (bshort ());
-/* NEW */
+				/* Is precursor or static */
 				(void) bshort ();
 				break;
 			case  BC_PFEATURE_INV :
@@ -876,7 +885,7 @@ static  void    print_instructions ()
 				fprintf (ofp,"oid %ld ", blong ());
 				/* Org. offset */
 				fprintf (ofp,"ooff %ld", blong ());
-/* NEW */
+				/* Is precursor or static */
 				(void) bshort ();
 				break;
 
@@ -1051,10 +1060,16 @@ static  void    print_instructions ()
 				fprintf (ofp,"%d", (int) bchar ());
 				break;
 			case BC_INT8:
+				fprintf(ofp, "%d", (int) bchar ());
+				break;
 			case BC_INT16:
+				fprintf (ofp, "%ld", (int) bwchar ());
+				break;
 			case BC_INT32:
-			case BC_INT64:
 				fprintf (ofp,"%ld", blong ());
+				break;
+			case BC_INT64:
+				fprintf (ofp, "%ld", (EIF_INTEGER_64) bdouble ());
 				break;
 			case  BC_FLOAT :
 				fprintf (ofp,"%lf", bdouble ());

@@ -88,9 +88,9 @@ void do_init()
 extern void eio(void);
 void do_init(void);
 
-eif_winsock_cleanup()
+void eif_winsock_cleanup(void)
 {
-	int err;
+	int err = 0;
 	err = WSACleanup();
 	/* bad luck if this is an error ! */
 }
@@ -99,7 +99,7 @@ void do_init()
 {
 	WORD wVersionRequested;
 	WSADATA wsaData;
-	int err;
+	int err = 0;
 	static BOOL done = FALSE;
 
 	if (! done)
@@ -657,7 +657,7 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 void c_send_char_to(EIF_INTEGER fd, EIF_CHARACTER c, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of character c through socket fd */
 {
-	CSENDXTO(fd,&c,sizeof(char),flags,addr_pointer,sizeofaddr)
+	CSENDXTO(fd,&c,sizeof(char),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
 void c_send_int_to(EIF_INTEGER fd, EIF_INTEGER i, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
@@ -665,7 +665,7 @@ void c_send_int_to(EIF_INTEGER fd, EIF_INTEGER i, EIF_INTEGER flags, EIF_OBJ add
 {
 	unsigned long ti;
 	ti = htonl((unsigned long) i);
-	CSENDXTO(fd,&ti,sizeof(ti),flags,addr_pointer,sizeofaddr)
+	CSENDXTO(fd,(char *) &ti,sizeof(ti),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
 void c_send_float_to(EIF_INTEGER fd, EIF_REAL f, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
@@ -678,7 +678,7 @@ void c_send_float_to(EIF_INTEGER fd, EIF_REAL f, EIF_INTEGER flags, EIF_OBJ addr
 
 	float tf;
 	tf = f;
-	CSENDXTO(fd,&tf,sizeof(tf),flags,addr_pointer,sizeofaddr)
+	CSENDXTO(fd,(char *)&tf,sizeof(tf),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
 void c_send_double_to(EIF_INTEGER fd, EIF_DOUBLE d, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
@@ -686,13 +686,13 @@ void c_send_double_to(EIF_INTEGER fd, EIF_DOUBLE d, EIF_INTEGER flags, EIF_OBJ a
 {
 	double dbl;
 	dbl = d;
-	CSENDXTO(fd,&dbl,sizeof(dbl),flags,addr_pointer,sizeofaddr)
+	CSENDXTO(fd,(char *) &dbl,sizeof(dbl),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
 void c_send_stream_to(EIF_INTEGER fd, EIF_OBJ stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of string s of size size trought socket fd */
 {
-	CSENDXTO(fd,stream_pointer,length,flags,addr_pointer,sizeofaddr)
+	CSENDXTO(fd,stream_pointer,length,flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
 
@@ -728,7 +728,7 @@ void c_put_int(EIF_INTEGER fd, EIF_INTEGER i)
 {
 	unsigned long ti;
 	ti = htonl ((unsigned long) i);
-	CPUTX(fd,&ti,sizeof(ti))
+	CPUTX(fd,(char *) &ti,sizeof(ti))
 }
 
 void c_put_float(EIF_INTEGER fd, EIF_REAL f)
@@ -742,7 +742,7 @@ void c_put_float(EIF_INTEGER fd, EIF_REAL f)
 	float tf;
 	tf = f;
 	tf = ise_htonf(tf);
-	CPUTX(fd,&tf,sizeof(tf))
+	CPUTX(fd, (char *) &tf,sizeof(tf))
 }
 
 void c_put_double(EIF_INTEGER fd, EIF_DOUBLE d)
@@ -750,7 +750,7 @@ void c_put_double(EIF_INTEGER fd, EIF_DOUBLE d)
 {
 	double dbl;
 	dbl = ise_htond(d);
-	CPUTX(fd,&dbl,sizeof(dbl))
+	CPUTX(fd,(char *) &dbl,sizeof(dbl))
 }
 
 void c_put_stream(EIF_INTEGER fd, EIF_OBJ stream_pointer, EIF_INTEGER length)
@@ -1057,7 +1057,7 @@ void c_set_non_blocking(EIF_INTEGER fd)
 #endif
 }
 
-EIF_INTEGER c_packet_number_size()
+EIF_INTEGER c_packet_number_size(void)
 	/*x size of packet number data structure in packet */
 {
 	return (EIF_INTEGER) (sizeof(uint32));

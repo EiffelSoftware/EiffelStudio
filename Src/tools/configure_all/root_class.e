@@ -64,8 +64,9 @@ feature -- Actions
 						-- bcc32.cfg file.
 					fn2 := clone (fn1)
 					fn2.set_file_name ("bcc32.cfg")
-					txt := "-DWINVER=0x400 -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib %
-							%-L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+					txt := "-D_WIN32_WINDOWS=0x0410 -DWINVER=0x400 %
+						%-I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib %
+						%-L$(ISE_EIFFEL)\BCC55\lib\PSDK"
 					txt.replace_substring_all ("$(ISE_EIFFEL)", short_path)
 					create f.make_open_write (fn2)
 					f.put_string (txt)
@@ -111,7 +112,7 @@ feature -- Actions
 			lib: STRING
 		do
 			lib := clone (precompilation_params)
-			lib.tail (4)
+			lib.keep_tail (4)
 			if not lib.is_equal ("none") then
 				io.putstring ("Precompiling the libraries%N")
 				exec_env.launch (shell_name + " /c call " + short_path + "\precompile_install.bat " + precompilation_params)
@@ -130,8 +131,6 @@ feature -- Actions
 			new_key_val: STRING
 			changed: BOOLEAN
 			buf: STRING
-			a1, a2: ANY
-			ret: INTEGER
 		do
 			new_key_val := clone (short_path)
 			if new_key_val.item (new_key_val.count) = '\' then

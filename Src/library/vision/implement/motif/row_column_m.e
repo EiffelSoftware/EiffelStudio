@@ -34,8 +34,10 @@ feature
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_row_column.identifier.to_c;
-			screen_object := create_row_column ($ext_name, a_row_column.parent.implementation.screen_object);
+			screen_object := create_row_column ($ext_name, 
+				parent_screen_object (a_row_column, widget_index));
 		end;
 
 	is_row_layout: BOOLEAN is

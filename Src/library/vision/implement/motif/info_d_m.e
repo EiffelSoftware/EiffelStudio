@@ -52,8 +52,10 @@ feature
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := an_information_dialog.identifier.to_c;
-			screen_object := create_info_d ($ext_name, an_information_dialog.parent.implementation.screen_object);
+			screen_object := create_info_d ($ext_name, 
+					parent_screen_object (an_information_dialog, widget_index));
 			an_information_dialog.set_dialog_imp (Current);
 			forbid_resize
 			action_target := screen_object;

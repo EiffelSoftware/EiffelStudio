@@ -33,9 +33,10 @@ feature
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_radio_box.identifier.to_c;
 			screen_object := create_radio_box ($ext_name,
-					a_radio_box.parent.implementation.screen_object);
+					parent_screen_object (a_radio_box, widget_index));
 		end;
 feature
 	set_always_one (flag: BOOLEAN) is

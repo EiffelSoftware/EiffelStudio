@@ -35,9 +35,11 @@ feature
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_font_box_dialog.identifier.to_c;
 			data := font_box_create ($ext_name,
-					a_font_box_dialog.parent.implementation.screen_object, True);
+					parent_screen_object (a_font_box_dialog, widget_index),
+					True);
 			screen_object := font_box_form (data);
 			a_font_box_dialog.set_dialog_imp (Current);
 			forbid_resize

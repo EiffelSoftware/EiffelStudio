@@ -97,8 +97,10 @@ feature
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := an_option_menu.identifier.to_c;
-			screen_object := create_option_b ($ext_name, an_option_menu.parent.implementation.screen_object);
+			screen_object := create_option_b ($ext_name, 
+					parent_screen_object (an_option_menu, widget_index));
 			an_option_menu.set_font_imp (Current);
 		end;
 

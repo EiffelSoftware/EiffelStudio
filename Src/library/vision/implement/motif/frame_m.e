@@ -34,9 +34,10 @@ feature -- Creation
 		local
 			ext_name_frame: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name_frame := a_frame.identifier.to_c;
 			screen_object := create_frame ($ext_name_frame,
-					a_frame.parent.implementation.screen_object);
+					parent_screen_object (a_frame, widget_index));
 		end
 
 feature {NONE} -- External features

@@ -34,9 +34,10 @@ feature -- Creation
 		local
 			ext_name_form: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name_form := a_form.identifier.to_c;
 			screen_object := create_form ($ext_name_form,
-					a_form.parent.implementation.screen_object);
+					parent_screen_object (a_form, widget_index));
 		end
 
 feature 

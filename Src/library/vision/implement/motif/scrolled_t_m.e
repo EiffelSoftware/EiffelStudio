@@ -47,9 +47,10 @@ feature -- Creation
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_scrolled_text.identifier.to_c;
 			action_target := create_scrolled_text ($ext_name,
-					a_scrolled_text.parent.implementation.screen_object);
+					parent_screen_object (a_scrolled_text, widget_index));
 			screen_object := xt_parent (action_target);
 			a_scrolled_text.set_font_imp (Current)
 		end;

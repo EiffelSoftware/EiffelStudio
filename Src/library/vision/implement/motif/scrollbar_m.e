@@ -58,9 +58,10 @@ feature
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_scrollbar.identifier.to_c;
 			screen_object := create_scrollbar ($ext_name, 
-						a_scrollbar.parent.implementation.screen_object)
+						parent_screen_object (a_scrollbar, widget_index));
 		end;
 
 	granularity: INTEGER is

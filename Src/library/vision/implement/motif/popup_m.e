@@ -29,9 +29,10 @@ feature
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_popup.identifier.to_c;
 			screen_object := create_popup ($ext_name,
-					a_popup.parent.implementation.screen_object);
+					parent_screen_object (a_popup, widget_index));
 			abstract_menu := a_popup
 		end;
 

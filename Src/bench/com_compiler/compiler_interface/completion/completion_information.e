@@ -372,88 +372,84 @@ feature -- Basic Operations
    	
    	flush_arguments is
    			-- Empty arguments table.
-   		do
-   			create arguments.make (5)
-   		end
+	do
+		create arguments.make (5)
+	end
    		
     flush_completion_features (a_file_name: STRING) is
             -- clear all `completion_features' in `a_file_name'
         require else
-            non_void_file_name: a_file_name /= Void
-            valid_file_name: not a_file_name.is_empty
-        local
-            l_file_name: STRING
+		non_void_file_name: a_file_name /= Void
+		valid_file_name: not a_file_name.is_empty
         do
-            l_file_name := clone (a_file_name)
-            l_file_name.to_lower
-            completion_features.remove (l_file_name)
+		completion_features.remove (a_file_name.as_lower)
         end
         
     initialize_feature (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING; a_row: INTEGER) is
             -- Initialize a feature for completion without compilation
-        require else -- Actually a "require" since parent precondition is "False"
-            non_void_name: a_name /= Void
-            valid_name: not a_name.is_empty
-            non_void_file_name: a_file_name /= Void
-            valid_file_name: not a_file_name.is_empty
-            valid_arguments: a_arguments /= Void implies a_arguments.string_array /= Void
-            valid_argument_types: a_argument_types /= Void implies a_argument_types.string_array /= Void
-            matching_argument_count: (a_arguments /= Void and a_argument_types /= Void) implies a_arguments.string_array.count = a_argument_types.string_array.count
-        local
-            l_feature: COMPLETION_FEATURE
-            l_ci: CLASS_I
-            l_fi: FEATURE_I
-            l_arguments: ARRAYED_LIST [PARAMETER_DESCRIPTOR]
-            l_ecom_arguments: ECOM_ARRAY [STRING]
-            l_ecom_types: ECOM_ARRAY [STRING]
-            l_index: INTEGER
-            l_upper_bound: INTEGER
-            retried: BOOLEAN
-            feature_list: ARRAYED_LIST [COMPLETION_FEATURE]
-        do
-            if not retried then
-                l_ci := Eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (a_file_name))
-                if l_ci /= Void then
-                    if l_ci.compiled_class /= Void and then l_ci.compiled_class.has_feature_table then
-                        l_fi := l_ci.compiled_class.feature_table.item (a_name.as_lower)
-                    end
-                end
-                if l_fi = Void then
-                    if a_arguments /= Void and a_argument_types /= Void then
-                        l_ecom_arguments := a_arguments.string_array
-                        l_ecom_types := a_argument_types.string_array
-                    end
-                    if l_ecom_arguments /= Void and l_ecom_types/= Void and then l_ecom_arguments.count > 0 and then l_ecom_types.count > 0 then
-                        create l_arguments.make (l_ecom_arguments.count)
-                        from
-                            l_index := l_ecom_arguments.lower_indices.item (1)
-                            l_upper_bound := l_ecom_arguments.upper_indices.item (1)
-                        until
-                            l_index > l_upper_bound
-                        loop
-                            l_arguments.extend (create {PARAMETER_DESCRIPTOR}.make (l_ecom_arguments.item (<<l_index>>), l_ecom_types.item (<<l_index>>)))
-                            l_index := l_index + 1
-                        end
-                    end
-                    if a_return_type = Void then
-                        create l_feature.make (a_name, l_arguments, a_feature_type, "", a_file_name, a_row)
-                    else
-                        create l_feature.make_with_return_type (a_name, l_arguments, a_return_type, a_feature_type, "", a_file_name, a_row)
-                    end
-                    completion_features.search (a_file_name.as_lower)
-                    if completion_features.found then
-                        completion_features.found_item.extend (l_feature)
-                    else
-                        create feature_list.make (5)
-                        feature_list.extend (l_feature)
-                        completion_features.put (feature_list, a_file_name)
-                    end
-                end
-            end
-        rescue
-            retried := True
-            retry
-        end
+	require else -- Actually a "require" since parent precondition is "False"
+		non_void_name: a_name /= Void
+		valid_name: not a_name.is_empty
+		non_void_file_name: a_file_name /= Void
+		valid_file_name: not a_file_name.is_empty
+		valid_arguments: a_arguments /= Void implies a_arguments.string_array /= Void
+		valid_argument_types: a_argument_types /= Void implies a_argument_types.string_array /= Void
+		matching_argument_count: (a_arguments /= Void and a_argument_types /= Void) implies a_arguments.string_array.count = a_argument_types.string_array.count
+	local
+		l_feature: COMPLETION_FEATURE
+		l_ci: CLASS_I
+		l_fi: FEATURE_I
+		l_arguments: ARRAYED_LIST [PARAMETER_DESCRIPTOR]
+		l_ecom_arguments: ECOM_ARRAY [STRING]
+		l_ecom_types: ECOM_ARRAY [STRING]
+		l_index: INTEGER
+		l_upper_bound: INTEGER
+		retried: BOOLEAN
+		feature_list: ARRAYED_LIST [COMPLETION_FEATURE]
+	do
+		if not retried then
+			l_ci := Eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (a_file_name))
+			if l_ci /= Void then
+				if l_ci.compiled_class /= Void and then l_ci.compiled_class.has_feature_table then
+					l_fi := l_ci.compiled_class.feature_table.item (a_name.as_lower)
+				end
+			end
+			if l_fi = Void then
+				if a_arguments /= Void and a_argument_types /= Void then
+					l_ecom_arguments := a_arguments.string_array
+					l_ecom_types := a_argument_types.string_array
+				end
+				if l_ecom_arguments /= Void and l_ecom_types/= Void and then l_ecom_arguments.count > 0 and then l_ecom_types.count > 0 then
+					create l_arguments.make (l_ecom_arguments.count)
+					from
+						l_index := l_ecom_arguments.lower_indices.item (1)
+						l_upper_bound := l_ecom_arguments.upper_indices.item (1)
+					until
+						l_index > l_upper_bound
+					loop
+						l_arguments.extend (create {PARAMETER_DESCRIPTOR}.make (l_ecom_arguments.item (<<l_index>>), l_ecom_types.item (<<l_index>>)))
+						l_index := l_index + 1
+					end
+				end
+				if a_return_type = Void then
+					create l_feature.make (a_name, l_arguments, a_feature_type, "", a_file_name, a_row)
+				else
+					create l_feature.make_with_return_type (a_name, l_arguments, a_return_type, a_feature_type, "", a_file_name, a_row)
+				end
+				completion_features.search (a_file_name.as_lower)
+				if completion_features.found then
+					completion_features.found_item.extend (l_feature)
+				else
+					create feature_list.make (5)
+					feature_list.extend (l_feature)
+					completion_features.put (feature_list, a_file_name)
+				end
+			end
+		end
+	rescue
+		retried := True
+		retry
+	end
         
     flush_completion_features_user_precondition (a_file_name: STRING): BOOLEAN is
         do

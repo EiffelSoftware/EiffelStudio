@@ -106,7 +106,6 @@ feature {NONE} -- Implementation
 	animate is
 			-- `animate' layout_item' of `obejct'.
 		local
-			current_pixmap: EV_PIXMAP
 			a_cell: EV_CELL
 			layout_item:GB_LAYOUT_CONSTRUCTOR_ITEM
 			new_pixmap: EV_PIXMAP

@@ -1112,7 +1112,7 @@ feature {EB_WINDOW} -- Implementation / Observer pattern
 	observers: ARRAYED_LIST [EB_WINDOW_MANAGER_OBSERVER]
 			-- All observers for Current.
 
-feature {EB_WINDOW_MANAGER_LIST, EB_WINDOW_MANAGER_MENU} -- Implementation
+feature {EB_WINDOW_MANAGER_LIST, EB_WINDOW_MANAGER_MENU, EB_EXEC_FORMAT_CMD} -- Implementation
 	
 	managed_windows: ARRAYED_LIST [EB_WINDOW]
 			-- Managed windows.

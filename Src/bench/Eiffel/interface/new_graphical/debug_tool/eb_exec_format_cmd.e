@@ -1,5 +1,4 @@
 indexing
-
 	description:	
 		"Set execution format."
 	date: "$Date$"
@@ -15,6 +14,11 @@ inherit
 			new_menu_item
 		end
 
+	EB_SHARED_INTERFACE_TOOLS
+		export 
+			{NONE} all 
+		end
+	
 	EXEC_MODES
 
 	EB_CONSTANTS
@@ -161,22 +165,27 @@ feature {NONE} -- Implementation
 		end
 		
 	button_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Show the arguments dialog box when the user right clicks the button
+			-- Show the arguments dialog box when the user right clicks the button.
 		local
 			args_dialog: EB_ARGUMENT_DIALOG
 			window: EB_DEVELOPMENT_WINDOW
 			dev: EV_WINDOW
 		do
-			if a_button = 3 then	
-			window ?= Window_manager.last_focused_window
-					if window /= Void then
-						if not window.has_argument_dialog then
-							dev := window.window
-							create args_dialog.make_default (window, agent execute)
-							window.attach_argument_dialog (args_dialog)
-							args_dialog.show_relative_to_window (dev)
-						end					
-					end			
+			if a_button = 3 then		
+				window ?= window_manager.last_focused_window
+				if window /= Void then
+					dev := window.window
+					if not argument_dialog_is_valid then
+						create args_dialog.make (window, agent execute)
+						set_argument_dialog (args_dialog)
+					end
+					argument_dialog.update
+					if argument_dialog.is_displayed then
+						argument_dialog.raise
+					else
+						argument_dialog.show_relative_to_window (dev)
+					end
+				end
 			end
 		end
 

@@ -193,3 +193,13 @@ void xm_font_list_entry_free (EIF_POINTER an_entry)
 	XmFontListEntry xm_entry = (XmFontListEntry) an_entry;
 	XmFontListEntryFree (&xm_entry);
 }
+
+void c_xm_set_focus (EIF_POINTER my_widget)
+{
+	/*
+	 * set the widget focus to widget
+	 */
+	 
+	 XmProcessTraversal ( (Widget) my_widget, XmTRAVERSE_CURRENT);
+}
+

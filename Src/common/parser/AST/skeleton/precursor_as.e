@@ -68,10 +68,25 @@ feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			p_name : STRING
 		do
--- FIXME
---            ctxt.prepare_for_feature (feature_name, parameters)
---            ctxt.put_current_feature
+			ctxt.begin
+
+			if parent_name /= Void then
+				p_name := Clone (parent_name.string_value)
+				p_name.to_upper
+				ctxt.put_text_item (ti_L_curly)
+				ctxt.put_class_name (p_name)
+				ctxt.put_text_item (ti_R_curly)
+			end
+
+			ctxt.put_text_item (ti_space)
+			ctxt.put_text_item (ti_Precursor_keyword)
+
+				-- We simply use an empty feature name.
+			ctxt.prepare_for_feature ("", parameters)
+			ctxt.put_current_feature
 		end
 
 feature {COMPILER_EXPORTER} -- Replication {PRECURSOR_AS, USER_CMD, CMD}

@@ -424,9 +424,17 @@ feature
 			elseif how = Clone_assignment then
 				print_register;
 				generated_file.putstring (" = ");
-				generated_file.putstring ("RTCL(");
-				source.print_register;
-				generated_file.putstring (gc_rparan_comma);
+				if context.real_type(target.type).is_separate and
+					not context.real_type(source.type).is_separate then 
+					generated_file.putstring ("CURLTS(")
+					generated_file.putstring ("RTCL(");
+					source.print_register;
+					generated_file.putstring ("));/* Really happened ?! */")
+				else
+					generated_file.putstring ("RTCL(");
+					source.print_register;
+					generated_file.putstring (gc_rparan_comma);
+				end;
 				generated_file.new_line;
 			end;
 		end;
@@ -451,8 +459,15 @@ feature
 				if register /= Void and not register_for_metamorphosis then
 					print_register;
 					generated_file.putstring (" = ");
-					source.print_register;
-					generated_file.putchar (';');
+					if context.real_type(target.type).is_separate and
+						not context.real_type(source.type).is_separate then 
+						generated_file.putstring ("CURLTS(")
+						source.print_register;
+						generated_file.putstring (");/* Really happened ?! */")
+					else
+						source.print_register;
+						generated_file.putchar (';');
+					end;
 					generated_file.new_line;
 					generated_file.putstring ("RTAR(");
 					print_register;
@@ -513,7 +528,14 @@ feature
 							target.print_register;
 							generated_file.putchar (')');
 						else
-							source_print_register;
+							if context.real_type(target.type).is_separate and
+								not context.real_type(source.type).is_separate then 
+								generated_file.putstring ("CURLTS(")
+								source_print_register;
+								generated_file.putstring (")")
+							else
+								source_print_register;
+							end;
 						end;
 						generated_file.putchar (';');
 						generated_file.new_line;

@@ -485,3 +485,37 @@ EXPORTS
 	eifreturntype
 	eifrout
 	eiflocate
+
+;eif_str.h
+	
+	str_left
+	str_ljustify
+	str_rjustify
+	str_cjustify
+	str_right
+	str_search
+	str_last_search
+	str_replace
+	str_insert
+	str_code
+	str_blank
+	str_fill
+	str_tail
+	str_take
+	str_lower
+	str_upper
+	str_cmp
+	str_cpy
+	str_cprepend
+	str_append
+	str_rmchar
+	str_mirror
+	str_reverse
+	str_atoi
+	str_ator
+	str_atod
+	str_isi
+	str_isr
+	str_isd
+	str_len
+

@@ -7,6 +7,8 @@ indexing
 
 class LABEL_G 
 
+obsolete
+		"Use LABEL instead."
 inherit
 
 	LABEL
@@ -47,7 +49,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.label_g (Current, man);
+			implementation:= toolkit.label_g (Current, man, a_parent);
 			set_default
 		end;
 

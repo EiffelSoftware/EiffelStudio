@@ -44,8 +44,6 @@ feature -- Status setting
         
 	set_widgets is
 			-- Set the widgets in the demo windows.
-		local
-			a: EV_ARGUMENT1[BUTTONS_DEMO_WINDOW]
 		do
 			main_widget.set_homogeneous (False)
 			!! b1.make_with_text (main_widget, "Button")
@@ -62,8 +60,6 @@ feature -- Status setting
 			!! radio1_b.make_with_text (box, "Radio 1")
 			!! radio2_b.make_with_text (box, "Radio 2")
 			!! radio3_b.make_with_text (box, "Radio 3")
-			!! a.make (Current)
-			toggle_b.add_destroy_command (Current, a)
        	end
 
 	set_values is

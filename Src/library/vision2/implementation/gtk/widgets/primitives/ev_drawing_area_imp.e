@@ -35,7 +35,8 @@ inherit
 			foreground_color,
 			set_background_color,
 			set_foreground_color,
-			set_default_options
+			set_default_options,
+			pixmap_drawable_ok
 		end
 
 creation

@@ -21,6 +21,8 @@ inherit
 	PREFERENCE_CATEGORY
 		rename
 			make as rc_make
+		redefine
+			init_colors
 		end
 
 creation
@@ -58,6 +60,15 @@ feature {NONE} -- Initialization
 			resources.extend (bool_command_bar);
 			resources.extend (bool_format_bar);
 			resources.extend (bool_raise_on_error)
+		end;
+
+	init_colors is
+			-- Initialize the colors of the page.
+		local
+			att: WINDOW_ATTRIBUTES
+		do
+			!! att;
+			att.set_composite_attributes (Current)
 		end
 
 feature {PREFERENCE_TOOL} -- Initialization
@@ -77,10 +88,6 @@ feature {PREFERENCE_TOOL} -- Initialization
 			rc_make (name, a_parent)
 		end
 
-feature -- Access
-
-	resources: LINKED_LIST [PREFERENCE_RESOURCE]
-
 feature -- Properties
 
 	name: STRING is "Project tool preferences"
@@ -95,41 +102,6 @@ feature -- Properties
 		once
 			Result := bm_Case_storage
 		end
-
-feature -- User Interface
-
-	display is
-			-- Display Current
-			--| This feature is used to initialize `resources'.
-		do
-			holder.set_selected (True);
-			if been_displayed then
-				manage
-			else
-				from
-					resources.start
-				until
-					resources.after
-				loop
-					resources.item.display;
-					resources.forth;
-				end;
-				been_displayed := True
-			end
-		end;
-
-	undisplay is
-			-- Undisplay Current.
-			--| This only updates the pixmap on the button.
-		do
-			holder.set_selected (False);
-			unmanage;
-		end
-
-feature {NONE} -- Properties
-
-	been_displayed: BOOLEAN
-			-- Has Current already been displayed?
 
 feature {NONE} -- Resources
 

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			create ap.build
 			if ap.parse (args) then
 				if ap.output_filename /= Void then
-					create fs_out.make_filestream_2 (ap.output_filename, file_mode_create, file_access_write, file_share_none)
+					create fs_out.make_filestream_2 (ap.output_filename, file_mode_create.create_, file_access_write.write, file_share_none.none)
 					create sw.make_streamwriter (fs_out)
 					console.set_out (sw)
 				end

@@ -72,6 +72,7 @@ feature -- Access
 			create Result.make (14 + name.count)
 			Result.append ("Added coclass ")
 			Result.append (name)
+			Result.append ("%R%N")
 		end
 	
 	feature_c_names: ARRAYED_LIST [STRING]

@@ -7,9 +7,6 @@ class
 
 inherit
 	RESOURCE_FOLDER_I
---		redefine
---			structure
---		end
 
 	WEL_REGISTRY
 
@@ -150,8 +147,6 @@ feature -- Update
 		end
 
 feature -- Access
-
---	structure: RESOURCE_STRUCTURE_IMP
 
 	handle: POINTER
 		-- Handle of the key. Required by windows for access to registry data.

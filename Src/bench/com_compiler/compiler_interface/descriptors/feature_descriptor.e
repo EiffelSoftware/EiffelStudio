@@ -267,9 +267,14 @@ feature -- Access
 				Result.append (")")
 			end
             type := compiler_feature.type          
-            if type /= Void then
+            if type /= Void and then not type.is_void then
                 Result.append (": ")
                 Result.append (type.dump)
+            end
+            if overload_count > 1 then
+            	Result.append (" [+" + overload_count.out + " overloads]")
+            elseif overload_count = 1 then
+            	Result.append (" [+1 overload]")            	
             end
         ensure then
             result_exists: Result /= void           
@@ -542,6 +547,14 @@ feature -- Basic Operations
             end
         end
 
+	increase_overload_count is
+			-- Increment overload count (used in description)
+		do
+			overload_count := overload_count + 1
+		ensure
+			overload_count_increased: overload_count = old overload_count + 1
+		end
+		
 feature {FEATURES_LISTER} -- Element settings
 
 	set_name (a_name: like internal_name) is
@@ -557,6 +570,9 @@ feature {FEATURES_LISTER} -- Element settings
 		
 feature {FEATURE_DESCRIPTOR} -- Implementation
         
+	overload_count: INTEGER
+			-- Overload count (used in description)
+
     local_callers_internal: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE] is
             -- Callers of `compiler_feature'.
         local

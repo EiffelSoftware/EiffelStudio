@@ -651,13 +651,24 @@ feature {EV_ANY_IMP} -- Implementation
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		
 	top_level_window_imp: EV_WINDOW_IMP is
-			-- Window that `Current' is contained within (if any)
+			-- Window implementation that `Current' is contained within (if any)
 		local
 			wind_ptr: POINTER
 		do
 			wind_ptr := feature {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
 			if wind_ptr /= NULL then
 				Result ?= eif_object_from_c (wind_ptr)
+			end
+		end
+		
+	top_level_window: EV_WINDOW is
+			-- Window the current is contained within (if any)
+		local
+			a_window_imp: EV_WINDOW_IMP
+		do
+			a_window_imp := top_level_window_imp
+			if a_window_imp /= Void then
+				Result := a_window_imp.interface
 			end
 		end
 

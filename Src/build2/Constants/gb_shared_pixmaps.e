@@ -166,9 +166,6 @@ feature -- Pngs
 		require
 			a_name_not_void: a_name /= Void
 		local
-			full_path: FILE_NAME
-			retried: BOOLEAN
-			warning_dialog: EV_WARNING_DIALOG
 			file: RAW_FILE
 		do
 			create Result

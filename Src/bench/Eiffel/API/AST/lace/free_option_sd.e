@@ -88,7 +88,7 @@ feature {NONE}
 	inlining_size, server_file_size, extendible, extending,
 	dynamic, hide, profile, override_cluster,
 	address_expression, profiler_type, 
-	document, hide_implementation: INTEGER is UNIQUE;
+	document, hide_implementation, java_generation: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
@@ -113,6 +113,7 @@ feature {NONE}
 			Result.force (address_expression, "address_expression");
 			Result.force (document, "document");
 			Result.force (hide_implementation, "hide_implementation");
+			Result.force (java_generation, "java_generation")
 		end;
 
 feature {COMPILER_EXPORTER}
@@ -313,6 +314,18 @@ feature {COMPILER_EXPORTER}
 				--,else
 				--	System.set_profiler_type (value.value)
 				end
+
+			when java_generation then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
+					System.set_java_generation (False)
+				elseif value.is_yes then
+					System.set_java_generation (True)
+				else
+					error_found := True;
+				end;
+
 			when dynamic, hide, profile then
 					-- This has been taken care of in `adapt'.
 			when document then

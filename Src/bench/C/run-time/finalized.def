@@ -53,6 +53,8 @@ EXPORTS
 
 ;COMMON
 	trace_call_level
+	stop_trace
+	start_trace
 	prof_stack
 	expop
 	eraise
@@ -403,3 +405,28 @@ EXPORTS
 	str_take
 	str_upper
 	upintdiv
+
+;Cecil add-on
+	eifcid
+	eifexp
+	eifgid
+	eifcreate
+	eifproc
+	eiflong
+	eifchar
+	eifreal
+	eifdouble
+	eifbit
+	eifbool
+	eifptr
+	eifref
+	eiftype
+	eifname
+	eifaddr
+	eifgbit
+	eifsbit
+	eifibit
+	eifsibit
+	eifribit
+	eifbcln
+

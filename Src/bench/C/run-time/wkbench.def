@@ -435,4 +435,28 @@ EXPORTS
 	str_upper
 	upintdiv
 
+;Cecil add-on
+	eifcid
+	eifexp
+	eifgid
+	eifcreate
+	eifproc
+	eiflong
+	eifchar
+	eifreal
+	eifdouble
+	eifbit
+	eifbool
+	eifptr
+	eifref
+	eiftype
+	eifname
+	eifaddr
+	eifgbit
+	eifsbit
+	eifibit
+	eifsibit
+	eifribit
+	eifbcln
+
 

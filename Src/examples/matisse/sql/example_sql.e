@@ -178,7 +178,7 @@ feature {NONE}
 		do
 			statement := "SELECT * FROM PRESIDENCY WHERE EP_INCLUDE('"
 			statement.append_integer(number)
-			statement.append("', PRESIDENCY__number)")
+			statement.append("', number)")
 			
 			!!query.make
 			result_set := query.execute_query(statement)
@@ -293,10 +293,11 @@ feature
 			        <<"Question Two",
 	       		  "Who is the forty second President",
 			         "SELECT * FROM PRESIDENCY WHERE EP_INCLUDE('42', number)">>)
+	
 			 Result.extend(
 			        <<"Question Three",
 		       	  "Who are the Presidents whose spouse's name is Jacqueline",
-	       		  "SELECT is_in_charge_of FROM Person WHERE EP_INCLUDE('Jacqueline', spouse.first_name)">>)
+	 	     		  "SELECT is_in_charge_of.* FROM Person WHERE EP_INCLUDE('Jacqueline', spouse.first_name)">>)
 		end
 
 	query_list_easy:  LINKED_LIST[ARRAY[STRING]] is
@@ -309,7 +310,7 @@ feature
 			Result.extend(
 				<<"Question Two",
 				  "Who are the Presidents with a last name ending by 'ton'",
-				  "SELECT is_in_charge_of FROM Person where EP_LIKE('%%ton', last_name) ORDER BY number">>)
+				  "SELECT is_in_charge_of.* FROM Person where EP_LIKE('%%ton', last_name) ORDER BY is_in_charge_of.number">>)
 			Result.extend(
 				<<"Question Three",
 				   "Who are the Presidents serving more than 8 years",
@@ -322,15 +323,15 @@ feature
 			Result.extend(
 				<<"Question One",
 				  "Who are the Presidents with no First Lady",
-				  "SELECT is_in_charge_of FROM Person WHERE spouse IS NULL">>)
+				  "SELECT is_in_charge_of.* FROM Person WHERE spouse IS NULL">>)
 			Result.extend(
 				<<"Question Two",
 				 "Who was the President with several non consecutive duties",
-				 "SELECT is_in_charge_of FROM Person WHERE CARDINALITY(is_in_charge_of) > 1 ORDER BY number">>)
+				 "SELECT is_in_charge_of.* FROM Person WHERE CARDINALITY(is_in_charge_of) > 1 ORDER BY is_in_charge_of.number">>)
 			Result.extend(
 				<<"Question Three",
 				  "Who are the Presidents with William as first name",
-				  "SELECT is_in_charge_of FROM Person WHERE EP_LIKE('William%%', first_name) ORDER BY number">>)
+				  "SELECT is_in_charge_of.* FROM Person WHERE EP_LIKE('William%%', first_name) ORDER BY is_in_charge_of.number">>)
 			Result.extend(
 				<<"Question Four",
 			         "Who were the  Presidents who served consecutive eight years",

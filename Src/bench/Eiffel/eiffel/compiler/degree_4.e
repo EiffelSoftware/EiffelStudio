@@ -156,31 +156,10 @@ feature -- Removal
 
 	remove_class (a_class: CLASS_C) is
 			-- Remove `a_class'.
-		local
-			generic_creation_list: LINKED_LIST [CONSTRAINT_CHECKING_INFO]
-			constraint_info: CONSTRAINT_CHECKING_INFO
 		do
 			if a_class.degree_4_needed then
 				a_class.remove_from_degree_4
 				count := count - 1
-			end
-
-				-- Remove class from remaining_validity_checking_list
-			generic_creation_list := remaining_validity_checking_list
-			from
-				generic_creation_list.start
-			until
-				generic_creation_list.after
-			loop
-				constraint_info := generic_creation_list.item
-				if
-					constraint_info.to_check.associated_class = Void or else
-					constraint_info.to_check.associated_class = a_class
-				then
-					generic_creation_list.remove
-				else
-					generic_creation_list.forth
-				end
 			end
 		end
 
@@ -269,7 +248,6 @@ feature {NONE} -- Processing
 			if external_class /= Void then
 				external_class.process_degree_4
 			else
-				a_class.set_reverse_engineered (False)
 				if a_class.changed then
 					do_pass2 := True
 						-- Incrementality: Degree 3 can be done successfully
@@ -537,7 +515,6 @@ feature {NONE} -- Generic checking
 		local
 			generic_creation_list: LINKED_LIST [CONSTRAINT_CHECKING_INFO]
 			constraint_info: CONSTRAINT_CHECKING_INFO
-			vtcg7: VTCG7
 		do
 			generic_creation_list := remaining_validity_checking_list
 			from
@@ -545,31 +522,12 @@ feature {NONE} -- Generic checking
 			until
 				generic_creation_list.after
 			loop
-				reset_constraint_error_list
 				constraint_info := generic_creation_list.item
-					-- Check that class has not been removed from system
-					-- after an error during compilation.
-				if constraint_info.gen_type_a.associated_class /= Void then
-					constraint_info.gen_type_a.creation_constraint_check(
-						constraint_info.formal_dec_as,
-						constraint_info.constraint_type,
-						constraint_info.context_class,
-						constraint_info.to_check,
-						constraint_info.i,
-						constraint_info.formal_type)
-					if not constraint_error_list.is_empty then
-							-- The feature listed in the creation constraint have
-							-- not been declared in the constraint class.
-						create vtcg7
-						vtcg7.set_class (constraint_info.context_class)
-						vtcg7.set_error_list (constraint_error_list)
-						vtcg7.set_parent_type (constraint_info.gen_type_a)
-						Error_handler.insert_error (vtcg7)
-
-							-- Fill `changed_classes' to memorize the
-							-- classes that need a recompilation.
-						insert_class (constraint_info.context_class)
-					end
+				constraint_info.action.call (Void)
+				if not constraint_error_list.is_empty then
+						-- Fill `changed_classes' to memorize the
+						-- classes that need a recompilation.
+					insert_class (constraint_info.context_class)
 				end
 				generic_creation_list.forth
 			end

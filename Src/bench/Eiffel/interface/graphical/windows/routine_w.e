@@ -380,7 +380,7 @@ feature -- Stone updating
 				showtext_frmt_holder.execute (a_stone);
 			else
 				last_format.execute (a_stone);
-				history.extend (a_stone)
+				add_to_history (a_stone)
 				update_edit_bar
 			end
 		end;

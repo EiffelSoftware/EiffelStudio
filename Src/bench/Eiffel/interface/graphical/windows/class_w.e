@@ -252,7 +252,7 @@ feature -- Status setting
 				reset_format_buttons
 			end;
 			last_format.execute (s);
-			history.extend (s)
+			add_to_history (s)
 		end;
  
 feature -- Stone process
@@ -294,7 +294,7 @@ feature -- Stone process
 					text_window.search_stone (s)
 				else
 					showtext_frmt_holder.execute (cl_stone);
-					history.extend (stone);
+					add_to_history (stone)
 					text_window.deselect_all;
 					pos := s.error_position;
 					txt := text_window.text;
@@ -330,11 +330,10 @@ feature -- Stone process
 					text_window.search_stone (s)
 				else
 					showtext_frmt_holder.execute (cl_stone);
-					history.extend (stone);
+					add_to_history (stone)
 					text_window.deselect_all;
 					text_window.set_cursor_position (s.start_position);
-					text_window.highlight_selected
-						(s.start_position, s.end_position)
+					text_window.highlight_selected (s.start_position, s.end_position)
 				end
 			end
 		end;

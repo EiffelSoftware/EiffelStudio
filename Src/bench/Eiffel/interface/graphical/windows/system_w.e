@@ -250,7 +250,7 @@ feature -- Update
 				showtext_frmt_holder.execute (s);
 			else
 				last_format.execute (s);
-				history.extend (s)
+				add_to_history (s)
 			end
 		end;
 

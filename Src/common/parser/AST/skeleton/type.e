@@ -10,27 +10,10 @@ inherit
 
 	AST_EIFFEL
 
-feature
+feature -- Access
 
 	has_like: BOOLEAN is
 			-- Is the type an anchored type ?
-		do
-			-- Do nothing
-		end;
-
-	trace is
-		do
-			io.error.putstring (dump);
-		end;
-
-	dump: STRING is
-			-- Dumped trace
-		deferred
-		end;
-
-	is_solved: BOOLEAN is
-			-- Is the type solved ? (i.e: is the type a result to a call
-			-- to feature `solved_type' ?)
 		do
 			-- Do nothing
 		end;
@@ -48,6 +31,14 @@ feature
 			-- Do nothing: implemented only for descendants of TYPE_A
 		end;
 
+	is_like_current: BOOLEAN is
+			-- Is the current type a anchored type an Current ?
+		do
+			-- Do nothing
+		end;
+
+feature -- Access
+
 	is_deep_equal (other: TYPE): BOOLEAN is
 			-- Is the current type the same as `other' ?
 			--| `deep_equal' cannot be used as for STRINGS, the area
@@ -57,13 +48,34 @@ feature
 			Result := deep_equal (Current, other)
 		end;
 
-	is_like_current: BOOLEAN is
-			-- Is the current type a anchored type an Current ?
+feature -- Output
+
+	trace is
+		do
+			io.error.putstring (dump);
+		end;
+
+	dump: STRING is
+			-- Dumped trace
+		deferred
+		end;
+
+	append_to (cw: OUTPUT_WINDOW) is
+			-- Append Current type to `cw'.:wq
+		require
+			non_void_cw: cw /= Void
+		do
+			cw.put_string (dump)
+		end;
+
+feature {COMPILER_EXPORTER} 
+
+	is_solved: BOOLEAN is
+			-- Is the type solved ? (i.e: is the type a result to a call
+			-- to feature `solved_type' ?)
 		do
 			-- Do nothing
 		end;
-
-feature -- Simple formatting
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

@@ -150,7 +150,6 @@ feature -- Element change
 			button_realized: button.realized
 			button_text_not_void: button.text /= Void
 		local
-			screen_dc: WEL_SCREEN_DC
 			s: STRING
 			b: BUTTON
 		do

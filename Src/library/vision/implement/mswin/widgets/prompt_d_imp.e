@@ -343,7 +343,6 @@ feature {NONE} -- Implementation
 		local
 			width_used: INTEGER
 			b_height: INTEGER
-			default_button_defined: BOOLEAN
 		do
 			b_height := button_height
 			width_used := (client_rect.width - total_buttons_width) // 2 + 2 * Dialog_unit

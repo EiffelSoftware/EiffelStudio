@@ -35,7 +35,7 @@ feature -- Basic Operations
 			l_framework_path := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
 			l_framework_version := feature {RUNTIME_ENVIRONMENT}.get_system_version
 			if Default_metadata_cache_path /= Void and l_framework_path /= Void and l_framework_version /= Void then
-				create l_cache_manager.make_with_path (Default_metadata_cache_path, l_framework_version)
+				create l_cache_manager.make_with_path (Default_metadata_cache_path)
 				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Web.Services.dll")
 				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Windows.Forms.dll")
 				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Design.dll")

@@ -57,20 +57,21 @@ feature -- Access
 		local
 			widget: EV_WIDGET
 		do
-			--| For now, just deal with widgets. At some point items may be supported also.
-		user_event_widget := vision2_object
-		widget ?= vision2_object
-		check
-			we_are_dealing_with_a_widget: widget /= Void
-		end
-		objects.extend (an_object)
-		objects.extend (vision2_object)
-		widget.pointer_button_release_actions.force_extend (agent start_timer)
-		widget.key_release_actions.force_extend (agent start_timer)
+				--| For now, just deal with widgets. At some point items may be supported also.
+			user_event_widget := vision2_object
+			widget ?= vision2_object
+			check
+				we_are_dealing_with_a_widget: widget /= Void
+			end
+			objects.extend (an_object)
+			objects.extend (vision2_object)
+			widget.pointer_button_release_actions.force_extend (agent start_timer)
+			widget.key_release_actions.force_extend (agent start_timer)
 		end	
 		
 		start_timer is
-				--
+				-- Start a timer which is used to delay execution of `check_state'
+				-- until after the staate has changed.
 			local
 				timer: EV_TIMEOUT
 			do
@@ -80,13 +81,15 @@ feature -- Access
 			end
 			
 		check_state is
-				--
+				--  Check state of `user_event_widget' and update first object in response.
+			require
+				widget_not_void: user_event_widget /= Void
 			do
 				if user_event_widget.is_selected then
-					objects.first.enable_select
+					for_first_object (agent {EV_DESELECTABLE}.enable_select)
 					update_editors
 				else
-					objects.first.disable_select
+					for_first_object (agent {EV_DESELECTABLE}.enable_select)
 					update_editors
 				end
 			end

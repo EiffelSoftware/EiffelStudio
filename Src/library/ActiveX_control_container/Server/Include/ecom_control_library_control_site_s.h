@@ -22,6 +22,8 @@ class control_site;
 
 #include "ecom_server_rt_globals.h"
 
+#include "ecom_control_library_IAxWinAmbientDispatch_s.h"
+
 #include "ecom_control_library_IAxWinHostWindow_s.h"
 
 #include "ecom_control_library_IOleClientSite_s.h"
@@ -36,14 +38,11 @@ class control_site;
 
 #include "ecom_control_library_IPropertyNotifySink_s.h"
 
-#include "ecom_control_library_IAxWinAmbientDispatch_s.h"
-
 #include "ecom_control_library_IDocHostUIHandler_s.h"
 
 #include "ecom_control_library_IAdviseSink_s.h"
 
 #include "ecom_control_library_iserviceprovider_s.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -55,16 +54,16 @@ extern "C" {
 namespace ecom_control_library
 {
 class control_site : 
-  public ecom_control_library::IOleClientSite, 
-  public ecom_control_library::IOleInPlaceSiteWindowless, 
-  public ecom_control_library::IOleControlSite, 
-  public ecom_control_library::IOleContainer, 
-  public ecom_control_library::IObjectWithSite, 
-  public ecom_control_library::IPropertyNotifySink, 
+  public ::IOleClientSite, 
+  public ::IOleInPlaceSiteWindowless, 
+  public ::IOleControlSite, 
+  public ::IOleContainer, 
+  public ::IObjectWithSite, 
+  public ::IPropertyNotifySink, 
   public ecom_control_library::IAxWinAmbientDispatch, 
-  public ecom_control_library::IDocHostUIHandler, 
-  public ecom_control_library::IAdviseSink, 
-  public ecom_control_library::IServiceProvider
+  public ::IDocHostUIHandler, 
+  public ::IAdviseSink, 
+  public ::IServiceProvider
 {
 public:
   control_site (EIF_TYPE_ID tid);
@@ -80,13 +79,13 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetMoniker(  /* [in] */ ULONG dw_assign, /* [in] */ ULONG dw_which_moniker, /* [out] */ ecom_control_library::IMoniker * * ppmk );
+  STDMETHODIMP GetMoniker(  /* [in] */ ULONG dw_assign, /* [in] */ ULONG dw_which_moniker, /* [out] */ ::IMoniker * * ppmk );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetContainer(  /* [out] */ ecom_control_library::IOleContainer * * pp_container );
+  STDMETHODIMP GetContainer(  /* [out] */ ::IOleContainer * * pp_container );
 
 
   /*-----------------------------------------------------------
@@ -110,7 +109,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetWindow(  /* [out] */ ecom_control_library::wireHWND * phwnd );
+  STDMETHODIMP GetWindow(  /* [out] */ HWND * phwnd );
 
 
   /*-----------------------------------------------------------
@@ -140,7 +139,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetWindowContext(  /* [out] */ ecom_control_library::IOleInPlaceFrame * * pp_frame, /* [out] */ ecom_control_library::IOleInPlaceUIWindow * * pp_doc, /* [out] */ ecom_control_library::tagRECT * lprc_pos_rect, /* [out] */ ecom_control_library::tagRECT * lprc_clip_rect, /* [in, out] */ ecom_control_library::tagOIFI * lp_frame_info );
+  STDMETHODIMP GetWindowContext(  /* [out] */ ::IOleInPlaceFrame * * pp_frame, /* [out] */ ::IOleInPlaceUIWindow * * pp_doc, /* [out] */ ecom_control_library::tagRECT * lprc_pos_rect, /* [out] */ ecom_control_library::tagRECT * lprc_clip_rect, /* [in, out] */ ecom_control_library::tagOIFI * lp_frame_info );
 
 
   /*-----------------------------------------------------------
@@ -314,13 +313,13 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP ParseDisplayName(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ LPWSTR psz_display_name, /* [out] */ ULONG * pch_eaten, /* [out] */ ecom_control_library::IMoniker * * ppmk_out );
+  STDMETHODIMP ParseDisplayName(  /* [in] */ ::IBindCtx * pbc, /* [in] */ LPWSTR psz_display_name, /* [out] */ ULONG * pch_eaten, /* [out] */ ::IMoniker * * ppmk_out );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP EnumObjects(  /* [in] */ ULONG grf_flags, /* [out] */ ecom_control_library::IEnumUnknown * * ppenum );
+  STDMETHODIMP EnumObjects(  /* [in] */ ULONG grf_flags, /* [out] */ ::IEnumUnknown * * ppenum );
 
 
   /*-----------------------------------------------------------
@@ -536,7 +535,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP ShowUI(  /* [in] */ ULONG dw_id, /* [in] */ ecom_control_library::IOleInPlaceActiveObject * p_active_object, /* [in] */ ecom_control_library::IOleCommandTarget * p_command_target, /* [in] */ ecom_control_library::IOleInPlaceFrame * p_frame, /* [in] */ ecom_control_library::IOleInPlaceUIWindow * p_doc );
+  STDMETHODIMP ShowUI(  /* [in] */ ULONG dw_id, /* [in] */ ::IOleInPlaceActiveObject * p_active_object, /* [in] */ ::IOleCommandTarget * p_command_target, /* [in] */ ::IOleInPlaceFrame * p_frame, /* [in] */ ::IOleInPlaceUIWindow * p_doc );
 
 
   /*-----------------------------------------------------------
@@ -572,7 +571,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP ResizeBorder(  /* [in] */ ecom_control_library::tagRECT * prc_border, /* [in] */ ecom_control_library::IOleInPlaceUIWindow * p_uiwindow, /* [in] */ LONG f_rame_window );
+  STDMETHODIMP ResizeBorder(  /* [in] */ ecom_control_library::tagRECT * prc_border, /* [in] */ ::IOleInPlaceUIWindow * p_uiwindow, /* [in] */ LONG f_rame_window );
 
 
   /*-----------------------------------------------------------
@@ -590,7 +589,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetDropTarget(  /* [in] */ ecom_control_library::IDropTarget * p_drop_target, /* [out] */ ecom_control_library::IDropTarget * * pp_drop_target );
+  STDMETHODIMP GetDropTarget(  /* [in] */ ::IDropTarget * p_drop_target, /* [out] */ ::IDropTarget * * pp_drop_target );
 
 
   /*-----------------------------------------------------------
@@ -602,13 +601,13 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP TranslateUrl(  /* [in] */ ULONG dw_translate, /* [in] */ SHORT * pch_urlin, /* [out] */ SHORT * * ppch_urlout );
+  STDMETHODIMP TranslateUrl(  /* [in] */ ULONG dw_translate, /* [in] */ OLECHAR * pch_urlin, /* [out] */ OLECHAR * * ppch_urlout );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP FilterDataObject(  /* [in] */ ecom_control_library::IDataObject * p_do, /* [out] */ ecom_control_library::IDataObject * * pp_doret );
+  STDMETHODIMP FilterDataObject(  /* [in] */ ::IDataObject * p_do, /* [out] */ ::IDataObject * * pp_doret );
 
 
   /*-----------------------------------------------------------
@@ -620,25 +619,25 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnViewChange(  /* [in] */ ULONG dw_aspect, /* [in] */ LONG lindex );
+  void STDMETHODCALLTYPE OnViewChange(  /* [in] */ DWORD dw_aspect, /* [in] */ LONG lindex );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnRename(  /* [in] */ ecom_control_library::IMoniker * pmk );
+  void STDMETHODCALLTYPE  OnRename(  /* [in] */ ::IMoniker * pmk );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnSave( void );
+  void STDMETHODCALLTYPE  OnSave( void );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnClose( void );
+  void STDMETHODCALLTYPE  OnClose( void );
 
 
   /*-----------------------------------------------------------

@@ -49,7 +49,7 @@ class ecom_gce_control_interfaces2;
 
 #include "ecom_control_library___MIDL_IWinTypes_0005_s.h"
 
-#include "ecom_control_library__remoteMETAFILEPICT_s.h"
+#include "ecom_control_library__METAFILEPICT_s.h"
 
 #include "ecom_control_library__userHMETAFILE_s.h"
 
@@ -82,8 +82,6 @@ class ecom_gce_control_interfaces2;
 #include "ecom_control_library_IEnumMoniker_s.h"
 
 #include "ecom_control_library__FILETIME_s.h"
-
-#include "ecom_control_library_IStream_s.h"
 
 #include "ecom_control_library__ULARGE_INTEGER_s.h"
 
@@ -182,8 +180,6 @@ class ecom_gce_control_interfaces2;
 #include "ecom_control_library_IPropertyBag2_s.h"
 
 #include "ecom_control_library_tagPROPBAG2_s.h"
-
-#include "ecom_control_library_IStorage_s.h"
 
 #include "ecom_control_library_tagRemSNB_s.h"
 
@@ -324,9 +320,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IMoniker *  to IMONIKER_INTERFACE.
+  Convert ::IMoniker *  to IMONIKER_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_8( ecom_control_library::IMoniker * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_8( ::IMoniker * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -450,15 +446,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::_remoteMETAFILEPICT  to X_REMOTE_METAFILEPICT_RECORD.
+  Convert ecom_control_library::_METAFILEPICT  to X_METAFILEPICT_RECORD.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_record_x_remote_metafilepict_record29( ecom_control_library::_remoteMETAFILEPICT a_record );
+  EIF_REFERENCE ccom_ce_record_x_metafilepict_record29( ecom_control_library::_METAFILEPICT a_record );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::_remoteMETAFILEPICT *  to X_REMOTE_METAFILEPICT_RECORD.
+  Convert ecom_control_library::_METAFILEPICT *  to X_METAFILEPICT_RECORD.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_record_30( ecom_control_library::_remoteMETAFILEPICT * a_record_pointer );
+  EIF_REFERENCE ccom_ce_pointed_record_30( ecom_control_library::_METAFILEPICT * a_record_pointer );
 
 
   /*-----------------------------------------------------------
@@ -600,9 +596,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IBindCtx *  to IBIND_CTX_INTERFACE.
+  Convert ::IBindCtx *  to IBIND_CTX_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_55( ecom_control_library::IBindCtx * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_55( ::IBindCtx * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -642,33 +638,33 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IMoniker * *  to CELL [IMONIKER_INTERFACE].
+  Convert ::IMoniker * *  to CELL [IMONIKER_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_60( ecom_control_library::IMoniker * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_60( ::IMoniker * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IMoniker * *.
+  Free memory of ::IMoniker * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_60( ecom_control_library::IMoniker * * a_pointer );
+  void ccom_free_memory_pointed_60( ::IMoniker * * a_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumMoniker *  to IENUM_MONIKER_INTERFACE.
+  Convert ::IEnumMoniker *  to IENUM_MONIKER_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_62( ecom_control_library::IEnumMoniker * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_62( ::IEnumMoniker * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumMoniker * *  to CELL [IENUM_MONIKER_INTERFACE].
+  Convert ::IEnumMoniker * *  to CELL [IENUM_MONIKER_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_63( ecom_control_library::IEnumMoniker * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_63( ::IEnumMoniker * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IEnumMoniker * *.
+  Free memory of ::IEnumMoniker * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_63( ecom_control_library::IEnumMoniker * * a_pointer );
+  void ccom_free_memory_pointed_63( ::IEnumMoniker * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -714,9 +710,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IStream *  to ISTREAM_INTERFACE.
+  Convert ::IStream *  to ECOM_STREAM.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_71( ecom_control_library::IStream * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_71( ::IStream * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -750,15 +746,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IStream * *  to CELL [ISTREAM_INTERFACE].
+  Convert ::IStream * *  to CELL [ECOM_STREAM].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_77( ecom_control_library::IStream * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_77( ::IStream * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IStream * *.
+  Free memory of ::IStream * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_77( ecom_control_library::IStream * * a_pointer );
+  void ccom_free_memory_pointed_77( ::IStream * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -798,21 +794,21 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IRunningObjectTable *  to IRUNNING_OBJECT_TABLE_INTERFACE.
+  Convert ::IRunningObjectTable *  to IRUNNING_OBJECT_TABLE_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_85( ecom_control_library::IRunningObjectTable * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_85( ::IRunningObjectTable * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IRunningObjectTable * *  to CELL [IRUNNING_OBJECT_TABLE_INTERFACE].
+  Convert ::IRunningObjectTable * *  to CELL [IRUNNING_OBJECT_TABLE_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_86( ecom_control_library::IRunningObjectTable * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_86( ::IRunningObjectTable * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IRunningObjectTable * *.
+  Free memory of ::IRunningObjectTable * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_86( ecom_control_library::IRunningObjectTable * * a_pointer );
+  void ccom_free_memory_pointed_86( ::IRunningObjectTable * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -828,21 +824,21 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumString *  to IENUM_STRING_INTERFACE.
+  Convert ::IEnumString *  to IENUM_STRING_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_89( ecom_control_library::IEnumString * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_89( ::IEnumString * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumString * *  to CELL [IENUM_STRING_INTERFACE].
+  Convert ::IEnumString * *  to CELL [IENUM_STRING_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_90( ecom_control_library::IEnumString * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_90( ::IEnumString * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IEnumString * *.
+  Free memory of ::IEnumString * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_90( ecom_control_library::IEnumString * * a_pointer );
+  void ccom_free_memory_pointed_90( ::IEnumString * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -942,15 +938,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IDataObject *  to IDATA_OBJECT_INTERFACE.
+  Convert ::IDataObject *  to IDATA_OBJECT_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_106( ecom_control_library::IDataObject * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_106( ::IDataObject * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IAdviseSink *  to IADVISE_SINK_INTERFACE.
+  Convert ::IAdviseSink *  to IADVISE_SINK_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_108( ecom_control_library::IAdviseSink * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_108( ::IAdviseSink * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -960,21 +956,21 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumSTATDATA *  to IENUM_STATDATA_INTERFACE.
+  Convert ::IEnumSTATDATA *  to IENUM_STATDATA_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_111( ecom_control_library::IEnumSTATDATA * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_111( ::IEnumSTATDATA * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumSTATDATA * *  to CELL [IENUM_STATDATA_INTERFACE].
+  Convert ::IEnumSTATDATA * *  to CELL [IENUM_STATDATA_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_112( ecom_control_library::IEnumSTATDATA * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_112( ::IEnumSTATDATA * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IEnumSTATDATA * *.
+  Free memory of ::IEnumSTATDATA * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_112( ecom_control_library::IEnumSTATDATA * * a_pointer );
+  void ccom_free_memory_pointed_112( ::IEnumSTATDATA * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1026,21 +1022,21 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumFORMATETC *  to IENUM_FORMATETC_INTERFACE.
+  Convert ::IEnumFORMATETC *  to IENUM_FORMATETC_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_120( ecom_control_library::IEnumFORMATETC * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_120( ::IEnumFORMATETC * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumFORMATETC * *  to CELL [IENUM_FORMATETC_INTERFACE].
+  Convert ::IEnumFORMATETC * *  to CELL [IENUM_FORMATETC_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_121( ecom_control_library::IEnumFORMATETC * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_121( ::IEnumFORMATETC * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IEnumFORMATETC * *.
+  Free memory of ::IEnumFORMATETC * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_121( ecom_control_library::IEnumFORMATETC * * a_pointer );
+  void ccom_free_memory_pointed_121( ::IEnumFORMATETC * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1206,39 +1202,39 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumConnections *  to IENUM_CONNECTIONS_INTERFACE.
+  Convert ::IEnumConnections *  to IENUM_CONNECTIONS_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_145( ecom_control_library::IEnumConnections * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_145( ::IEnumConnections * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumConnections * *  to CELL [IENUM_CONNECTIONS_INTERFACE].
+  Convert ::IEnumConnections * *  to CELL [IENUM_CONNECTIONS_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_146( ecom_control_library::IEnumConnections * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_146( ::IEnumConnections * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IEnumConnections * *.
+  Free memory of ::IEnumConnections * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_146( ecom_control_library::IEnumConnections * * a_pointer );
+  void ccom_free_memory_pointed_146( ::IEnumConnections * * a_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IConnectionPoint *  to ICONNECTION_POINT_INTERFACE.
+  Convert ::IConnectionPoint *  to ICONNECTION_POINT_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_148( ecom_control_library::IConnectionPoint * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_148( ::IConnectionPoint * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IConnectionPoint * *  to CELL [ICONNECTION_POINT_INTERFACE].
+  Convert ::IConnectionPoint * *  to CELL [ICONNECTION_POINT_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_149( ecom_control_library::IConnectionPoint * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_149( ::IConnectionPoint * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IConnectionPoint * *.
+  Free memory of ::IConnectionPoint * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_149( ecom_control_library::IConnectionPoint * * a_pointer );
+  void ccom_free_memory_pointed_149( ::IConnectionPoint * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1248,39 +1244,39 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumConnectionPoints *  to IENUM_CONNECTION_POINTS_INTERFACE.
+  Convert ::IEnumConnectionPoints *  to IENUM_CONNECTION_POINTS_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_152( ecom_control_library::IEnumConnectionPoints * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_152( ::IEnumConnectionPoints * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumConnectionPoints * *  to CELL [IENUM_CONNECTION_POINTS_INTERFACE].
+  Convert ::IEnumConnectionPoints * *  to CELL [IENUM_CONNECTION_POINTS_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_153( ecom_control_library::IEnumConnectionPoints * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_153( ::IEnumConnectionPoints * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IEnumConnectionPoints * *.
+  Free memory of ::IEnumConnectionPoints * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_153( ecom_control_library::IEnumConnectionPoints * * a_pointer );
+  void ccom_free_memory_pointed_153( ::IEnumConnectionPoints * * a_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IConnectionPointContainer *  to ICONNECTION_POINT_CONTAINER_INTERFACE.
+  Convert ::IConnectionPointContainer *  to ICONNECTION_POINT_CONTAINER_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_155( ecom_control_library::IConnectionPointContainer * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_155( ::IConnectionPointContainer * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IConnectionPointContainer * *  to CELL [ICONNECTION_POINT_CONTAINER_INTERFACE].
+  Convert ::IConnectionPointContainer * *  to CELL [ICONNECTION_POINT_CONTAINER_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_156( ecom_control_library::IConnectionPointContainer * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_156( ::IConnectionPointContainer * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IConnectionPointContainer * *.
+  Free memory of ::IConnectionPointContainer * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_156( ecom_control_library::IConnectionPointContainer * * a_pointer );
+  void ccom_free_memory_pointed_156( ::IConnectionPointContainer * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1290,21 +1286,21 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleUndoUnit *  to IOLE_UNDO_UNIT_INTERFACE.
+  Convert ::IOleUndoUnit *  to IOLE_UNDO_UNIT_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_159( ecom_control_library::IOleUndoUnit * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_159( ::IOleUndoUnit * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleUndoUnit * *  to CELL [IOLE_UNDO_UNIT_INTERFACE].
+  Convert ::IOleUndoUnit * *  to CELL [IOLE_UNDO_UNIT_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_160( ecom_control_library::IOleUndoUnit * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_160( ::IOleUndoUnit * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IOleUndoUnit * *.
+  Free memory of ::IOleUndoUnit * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_160( ecom_control_library::IOleUndoUnit * * a_pointer );
+  void ccom_free_memory_pointed_160( ::IOleUndoUnit * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1314,27 +1310,27 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumOleUndoUnits *  to IENUM_OLE_UNDO_UNITS_INTERFACE.
+  Convert ::IEnumOleUndoUnits *  to IENUM_OLE_UNDO_UNITS_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_163( ecom_control_library::IEnumOleUndoUnits * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_163( ::IEnumOleUndoUnits * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumOleUndoUnits * *  to CELL [IENUM_OLE_UNDO_UNITS_INTERFACE].
+  Convert ::IEnumOleUndoUnits * *  to CELL [IENUM_OLE_UNDO_UNITS_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_164( ecom_control_library::IEnumOleUndoUnits * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_164( ::IEnumOleUndoUnits * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IEnumOleUndoUnits * *.
+  Free memory of ::IEnumOleUndoUnits * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_164( ecom_control_library::IEnumOleUndoUnits * * a_pointer );
+  void ccom_free_memory_pointed_164( ::IEnumOleUndoUnits * * a_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleUndoManager *  to IOLE_UNDO_MANAGER_INTERFACE.
+  Convert ::IOleUndoManager *  to IOLE_UNDO_MANAGER_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_166( ecom_control_library::IOleUndoManager * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_166( ::IOleUndoManager * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1356,9 +1352,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleParentUndoUnit *  to IOLE_PARENT_UNDO_UNIT_INTERFACE.
+  Convert ::IOleParentUndoUnit *  to IOLE_PARENT_UNDO_UNIT_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_170( ecom_control_library::IOleParentUndoUnit * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_170( ::IOleParentUndoUnit * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1416,21 +1412,21 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumOLEVERB *  to IENUM_OLEVERB_INTERFACE.
+  Convert ::IEnumOLEVERB *  to IENUM_OLEVERB_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_179( ecom_control_library::IEnumOLEVERB * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_179( ::IEnumOLEVERB * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumOLEVERB * *  to CELL [IENUM_OLEVERB_INTERFACE].
+  Convert ::IEnumOLEVERB * *  to CELL [IENUM_OLEVERB_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_180( ecom_control_library::IEnumOLEVERB * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_180( ::IEnumOLEVERB * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IEnumOLEVERB * *.
+  Free memory of ::IEnumOLEVERB * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_180( ecom_control_library::IEnumOLEVERB * * a_pointer );
+  void ccom_free_memory_pointed_180( ::IEnumOLEVERB * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1464,39 +1460,39 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleContainer *  to IOLE_CONTAINER_INTERFACE.
+  Convert ::IOleContainer *  to IOLE_CONTAINER_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_187( ecom_control_library::IOleContainer * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_187( ::IOleContainer * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleContainer * *  to CELL [IOLE_CONTAINER_INTERFACE].
+  Convert ::IOleContainer * *  to CELL [IOLE_CONTAINER_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_188( ecom_control_library::IOleContainer * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_188( ::IOleContainer * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IOleContainer * *.
+  Free memory of ::IOleContainer * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_188( ecom_control_library::IOleContainer * * a_pointer );
+  void ccom_free_memory_pointed_188( ::IOleContainer * * a_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumUnknown *  to IENUM_UNKNOWN_INTERFACE.
+  Convert ::IEnumUnknown *  to IENUM_UNKNOWN_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_190( ecom_control_library::IEnumUnknown * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_190( ::IEnumUnknown * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumUnknown * *  to CELL [IENUM_UNKNOWN_INTERFACE].
+  Convert ::IEnumUnknown * *  to CELL [IENUM_UNKNOWN_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_191( ecom_control_library::IEnumUnknown * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_191( ::IEnumUnknown * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IEnumUnknown * *.
+  Free memory of ::IEnumUnknown * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_191( ecom_control_library::IEnumUnknown * * a_pointer );
+  void ccom_free_memory_pointed_191( ::IEnumUnknown * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1620,15 +1616,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleInPlaceUIWindow *  to IOLE_IN_PLACE_UIWINDOW_INTERFACE.
+  Convert ::IOleInPlaceUIWindow *  to IOLE_IN_PLACE_UIWINDOW_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_212( ecom_control_library::IOleInPlaceUIWindow * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_212( ::IOleInPlaceUIWindow * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleInPlaceActiveObject *  to IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE.
+  Convert ::IOleInPlaceActiveObject *  to IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_214( ecom_control_library::IOleInPlaceActiveObject * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_214( ::IOleInPlaceActiveObject * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1668,51 +1664,51 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IDropTarget *  to IDROP_TARGET_INTERFACE.
+  Convert ::IDropTarget *  to IDROP_TARGET_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_222( ecom_control_library::IDropTarget * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_222( ::IDropTarget * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IDropTarget * *  to CELL [IDROP_TARGET_INTERFACE].
+  Convert ::IDropTarget * *  to CELL [IDROP_TARGET_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_223( ecom_control_library::IDropTarget * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_223( ::IDropTarget * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IDropTarget * *.
+  Free memory of ::IDropTarget * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_223( ecom_control_library::IDropTarget * * a_pointer );
+  void ccom_free_memory_pointed_223( ::IDropTarget * * a_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleInPlaceFrame *  to IOLE_IN_PLACE_FRAME_INTERFACE.
+  Convert ::IOleInPlaceFrame *  to IOLE_IN_PLACE_FRAME_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_225( ecom_control_library::IOleInPlaceFrame * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_225( ::IOleInPlaceFrame * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleInPlaceFrame * *  to CELL [IOLE_IN_PLACE_FRAME_INTERFACE].
+  Convert ::IOleInPlaceFrame * *  to CELL [IOLE_IN_PLACE_FRAME_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_226( ecom_control_library::IOleInPlaceFrame * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_226( ::IOleInPlaceFrame * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IOleInPlaceFrame * *.
+  Free memory of ::IOleInPlaceFrame * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_226( ecom_control_library::IOleInPlaceFrame * * a_pointer );
+  void ccom_free_memory_pointed_226( ::IOleInPlaceFrame * * a_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleInPlaceUIWindow * *  to CELL [IOLE_IN_PLACE_UIWINDOW_INTERFACE].
+  Convert ::IOleInPlaceUIWindow * *  to CELL [IOLE_IN_PLACE_UIWINDOW_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_227( ecom_control_library::IOleInPlaceUIWindow * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_227( ::IOleInPlaceUIWindow * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IOleInPlaceUIWindow * *.
+  Free memory of ::IOleInPlaceUIWindow * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_227( ecom_control_library::IOleInPlaceUIWindow * * a_pointer );
+  void ccom_free_memory_pointed_227( ::IOleInPlaceUIWindow * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1818,33 +1814,33 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleClientSite *  to IOLE_CLIENT_SITE_INTERFACE.
+  Convert ::IOleClientSite *  to IOLE_CLIENT_SITE_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_244( ecom_control_library::IOleClientSite * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_244( ::IOleClientSite * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleClientSite * *  to CELL [IOLE_CLIENT_SITE_INTERFACE].
+  Convert ::IOleClientSite * *  to CELL [IOLE_CLIENT_SITE_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_245( ecom_control_library::IOleClientSite * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_245( ::IOleClientSite * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IOleClientSite * *.
+  Free memory of ::IOleClientSite * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_245( ecom_control_library::IOleClientSite * * a_pointer );
+  void ccom_free_memory_pointed_245( ::IOleClientSite * * a_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IDataObject * *  to CELL [IDATA_OBJECT_INTERFACE].
+  Convert ::IDataObject * *  to CELL [IDATA_OBJECT_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_246( ecom_control_library::IDataObject * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_246( ::IDataObject * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IDataObject * *.
+  Free memory of ::IDataObject * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_246( ecom_control_library::IDataObject * * a_pointer );
+  void ccom_free_memory_pointed_246( ::IDataObject * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1974,15 +1970,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IPropertyBag *  to IPROPERTY_BAG_INTERFACE.
+  Convert ::IPropertyBag *  to IPROPERTY_BAG_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_265( ecom_control_library::IPropertyBag * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_265( ::IPropertyBag * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IErrorLog *  to IERROR_LOG_INTERFACE.
+  Convert ::IErrorLog *  to IERROR_LOG_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_267( ecom_control_library::IErrorLog * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_267( ::IErrorLog * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1998,9 +1994,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IPropertyBag2 *  to IPROPERTY_BAG2_INTERFACE.
+  Convert ::IPropertyBag2 *  to IPROPERTY_BAG2_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_271( ecom_control_library::IPropertyBag2 * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_271( ::IPropertyBag2 * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2046,9 +2042,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IStorage *  to ISTORAGE_INTERFACE.
+  Convert ::IStorage *  to ECOM_STORAGE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_280( ecom_control_library::IStorage * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_280( ::IStorage * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2058,15 +2054,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IStorage * *  to CELL [ISTORAGE_INTERFACE].
+  Convert ::IStorage * *  to CELL [ECOM_STORAGE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_282( ecom_control_library::IStorage * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_282( ::IStorage * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IStorage * *.
+  Free memory of ::IStorage * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_282( ecom_control_library::IStorage * * a_pointer );
+  void ccom_free_memory_pointed_282( ::IStorage * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2094,21 +2090,21 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumSTATSTG *  to IENUM_STATSTG_INTERFACE.
+  Convert ::IEnumSTATSTG *  to IENUM_STATSTG_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_288( ecom_control_library::IEnumSTATSTG * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_288( ::IEnumSTATSTG * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IEnumSTATSTG * *  to CELL [IENUM_STATSTG_INTERFACE].
+  Convert ::IEnumSTATSTG * *  to CELL [IENUM_STATSTG_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_289( ecom_control_library::IEnumSTATSTG * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_289( ::IEnumSTATSTG * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IEnumSTATSTG * *.
+  Free memory of ::IEnumSTATSTG * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_289( ecom_control_library::IEnumSTATSTG * * a_pointer );
+  void ccom_free_memory_pointed_289( ::IEnumSTATSTG * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2130,9 +2126,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IPropertyPageSite *  to IPROPERTY_PAGE_SITE_INTERFACE.
+  Convert ::IPropertyPageSite *  to IPROPERTY_PAGE_SITE_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_294( ecom_control_library::IPropertyPageSite * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_294( ::IPropertyPageSite * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2178,117 +2174,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::ITypeInfo_2 *  to ITYPE_INFO_2_INTERFACE.
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_301( ecom_control_library::ITypeInfo_2 * a_interface_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::ITypeInfo_2 * *  to CELL [ITYPE_INFO_2_INTERFACE].
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_302( ecom_control_library::ITypeInfo_2 * * a_pointer, EIF_OBJECT an_object );
-
-
-  /*-----------------------------------------------------------
-  Free memory of ecom_control_library::ITypeInfo_2 * *.
-  -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_302( ecom_control_library::ITypeInfo_2 * * a_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::tagTYPEATTR  to TAG_TYPEATTR_RECORD.
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_record_tag_typeattr_record303( ecom_control_library::tagTYPEATTR a_record );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::tagTYPEATTR *  to TAG_TYPEATTR_RECORD.
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_record_304( ecom_control_library::tagTYPEATTR * a_record_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::tagTYPEATTR * *  to CELL [TAG_TYPEATTR_RECORD].
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_305( ecom_control_library::tagTYPEATTR * * a_pointer, EIF_OBJECT an_object );
-
-
-  /*-----------------------------------------------------------
-  Free memory of ecom_control_library::tagTYPEATTR * *.
-  -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_305( ecom_control_library::tagTYPEATTR * * a_pointer );
-
-
-  /*-----------------------------------------------------------
   Free memory of ecom_control_library::DWORD1 *.
   -----------------------------------------------------------*/
   void ccom_free_memory_pointed_307( ecom_control_library::DWORD1 * a_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::ITypeComp *  to ITYPE_COMP_INTERFACE.
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_309( ecom_control_library::ITypeComp * a_interface_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::ITypeComp * *  to CELL [ITYPE_COMP_INTERFACE].
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_310( ecom_control_library::ITypeComp * * a_pointer, EIF_OBJECT an_object );
-
-
-  /*-----------------------------------------------------------
-  Free memory of ecom_control_library::ITypeComp * *.
-  -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_310( ecom_control_library::ITypeComp * * a_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::tagFUNCDESC  to TAG_FUNCDESC_RECORD.
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_record_tag_funcdesc_record311( ecom_control_library::tagFUNCDESC a_record );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::tagFUNCDESC *  to TAG_FUNCDESC_RECORD.
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_record_312( ecom_control_library::tagFUNCDESC * a_record_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::tagFUNCDESC * *  to CELL [TAG_FUNCDESC_RECORD].
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_313( ecom_control_library::tagFUNCDESC * * a_pointer, EIF_OBJECT an_object );
-
-
-  /*-----------------------------------------------------------
-  Free memory of ecom_control_library::tagFUNCDESC * *.
-  -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_313( ecom_control_library::tagFUNCDESC * * a_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::tagVARDESC  to TAG_VARDESC_RECORD.
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_record_tag_vardesc_record314( ecom_control_library::tagVARDESC a_record );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::tagVARDESC *  to TAG_VARDESC_RECORD.
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_record_315( ecom_control_library::tagVARDESC * a_record_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::tagVARDESC * *  to CELL [TAG_VARDESC_RECORD].
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_316( ecom_control_library::tagVARDESC * * a_pointer, EIF_OBJECT an_object );
-
-
-  /*-----------------------------------------------------------
-  Free memory of ecom_control_library::tagVARDESC * *.
-  -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_316( ecom_control_library::tagVARDESC * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2415,24 +2303,6 @@ public:
   Free memory of BSTR *.
   -----------------------------------------------------------*/
   void ccom_free_memory_pointed_330( BSTR * a_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::ITypeLib_2 *  to ITYPE_LIB_2_INTERFACE.
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_332( ecom_control_library::ITypeLib_2 * a_interface_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::ITypeLib_2 * *  to CELL [ITYPE_LIB_2_INTERFACE].
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_333( ecom_control_library::ITypeLib_2 * * a_pointer, EIF_OBJECT an_object );
-
-
-  /*-----------------------------------------------------------
-  Free memory of ecom_control_library::ITypeLib_2 * *.
-  -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_333( ecom_control_library::ITypeLib_2 * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2724,9 +2594,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IContinue *  to ICONTINUE_INTERFACE.
+  Convert ::IContinue *  to ICONTINUE_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_383( ecom_control_library::IContinue * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_383( ::IContinue * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2760,15 +2630,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IAdviseSink * *  to CELL [IADVISE_SINK_INTERFACE].
+  Convert ::IAdviseSink * *  to CELL [IADVISE_SINK_INTERFACE].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_388( ecom_control_library::IAdviseSink * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_388( ::IAdviseSink * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::IAdviseSink * *.
+  Free memory of ::IAdviseSink * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_388( ecom_control_library::IAdviseSink * * a_pointer );
+  void ccom_free_memory_pointed_388( ::IAdviseSink * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2826,15 +2696,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IAdviseSinkEx *  to IADVISE_SINK_EX_INTERFACE.
+  Convert ::IAdviseSinkEx *  to IADVISE_SINK_EX_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_399( ecom_control_library::IAdviseSinkEx * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_399( ::IAdviseSinkEx * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IPropertyNotifySink *  to IPROPERTY_NOTIFY_SINK_INTERFACE.
+  Convert ::IPropertyNotifySink *  to IPROPERTY_NOTIFY_SINK_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_401( ecom_control_library::IPropertyNotifySink * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_401( ::IPropertyNotifySink * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2850,27 +2720,27 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IBindHost *  to IBIND_HOST_INTERFACE.
+  Convert ::IBindHost *  to IBIND_HOST_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_407( ecom_control_library::IBindHost * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_407( ::IBindHost * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleControlSite *  to IOLE_CONTROL_SITE_INTERFACE.
+  Convert ::IOleControlSite *  to IOLE_CONTROL_SITE_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_409( ecom_control_library::IOleControlSite * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_409( ::IOleControlSite * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IServiceProvider *  to ISERVICE_PROVIDER_INTERFACE.
+  Convert ::IServiceProvider *  to ISERVICE_PROVIDER_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_411( ecom_control_library::IServiceProvider * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_411( ::IServiceProvider * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IBindStatusCallback *  to IBIND_STATUS_CALLBACK_INTERFACE.
+  Convert ::IBindStatusCallback *  to IBIND_STATUS_CALLBACK_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_413( ecom_control_library::IBindStatusCallback * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_413( ::IBindStatusCallback * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2898,9 +2768,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IBinding *  to IBINDING_INTERFACE.
+  Convert ::IBinding *  to IBINDING_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_417( ecom_control_library::IBinding * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_417( ::IBinding * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -3150,9 +3020,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::IOleCommandTarget *  to IOLE_COMMAND_TARGET_INTERFACE.
+  Convert ::IOleCommandTarget *  to IOLE_COMMAND_TARGET_INTERFACE.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_interface_457( ecom_control_library::IOleCommandTarget * a_interface_pointer );
+  EIF_REFERENCE ccom_ce_pointed_interface_457( ::IOleCommandTarget * a_interface_pointer );
 
 
   /*-----------------------------------------------------------
@@ -3188,19 +3058,19 @@ public:
   /*-----------------------------------------------------------
   Free memory of SHORT *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_461( SHORT * a_pointer );
+  void ccom_free_memory_pointed_461( OLECHAR * a_pointer );
 
 
   /*-----------------------------------------------------------
   Convert SHORT * *  to CELL [INTEGER_REF].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_462( SHORT * * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_462( OLECHAR * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
   Free memory of SHORT * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_462( SHORT * * a_pointer );
+  void ccom_free_memory_pointed_462( OLECHAR * * a_pointer );
 
 
   /*-----------------------------------------------------------

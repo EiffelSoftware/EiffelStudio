@@ -23,9 +23,6 @@ class IEnumUnknown_impl_stub;
 #include "ecom_server_rt_globals.h"
 
 
-
-#include "ecom_control_library_IEnumUnknown_s.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -34,7 +31,7 @@ extern "C" {
 extern "C" {
 namespace ecom_control_library
 {
-class IEnumUnknown_impl_stub : public ecom_control_library::IEnumUnknown
+class IEnumUnknown_impl_stub : public IEnumUnknown
 {
 public:
   IEnumUnknown_impl_stub (EIF_OBJECT eif_obj);
@@ -43,7 +40,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteNext(  /* [in] */ ULONG celt, /* [out] */ IUnknown * * rgelt, /* [out] */ ULONG * pcelt_fetched );
+  STDMETHODIMP Next(  /* [in] */ ULONG celt, /* [out] */ IUnknown * * rgelt, /* [out] */ ULONG * pcelt_fetched );
 
 
   /*-----------------------------------------------------------
@@ -61,7 +58,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP Clone(  /* [out] */ ecom_control_library::IEnumUnknown * * ppenum );
+  STDMETHODIMP Clone(  /* [out] */ IEnumUnknown * * ppenum );
 
 
   /*-----------------------------------------------------------

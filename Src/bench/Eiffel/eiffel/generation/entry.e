@@ -169,7 +169,7 @@ feature -- from ENTRY
 		require
 			is_generic : is_generic
 		do
-			Result := type.gen_type_string (False) -- Necessarily in WB mode!
+			Result := type.gen_type_string (False, False) -- Necessarily in WB mode!
 		ensure
 			exists : Result /= Void
 		end;
@@ -179,7 +179,7 @@ feature -- from ENTRY
 		require
 			is_generic : is_generic
 		do
-			type.make_gen_type_byte_code (ba)
+			type.make_gen_type_byte_code (ba, False)
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

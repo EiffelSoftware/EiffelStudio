@@ -55,6 +55,7 @@ feature
 	merge_label: STRING is "Merge"
 	mouse_label: STRING is "Mouse"
 	namer_label: STRING is "Namer"
+	observer_label: STRING is "Observer"
 	parent_label: STRING is "Parent"
 	popup_filename_label: STRING is "Search class name"
 	popup_instance_label: STRING is "Popup instances"

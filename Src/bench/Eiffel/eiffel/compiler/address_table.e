@@ -131,8 +131,9 @@ feature -- Generation
 					loop
 						feature_id := features.item
 						a_feature := a_class.feature_table.feature_of_feature_id (feature_id)
-						if a_feature = Void then
-								-- Remove invalid entry
+						if a_feature = Void or a_feature.is_attribute then
+								-- Remove invalid entry or feature which has been converted
+								-- from a routine to an attribute.
 							features.remove
 						else
 								-- Feature exists

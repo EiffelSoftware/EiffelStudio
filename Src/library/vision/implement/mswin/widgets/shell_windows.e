@@ -85,7 +85,7 @@ inherit
 
 feature -- Initialization
 
-	make_with_coordinates (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height: INTEGER) is
+	make_with_coordinates (a_parent: WEL_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height: INTEGER) is
 		require
 			a_name_not_void: a_name /= Void
 		do

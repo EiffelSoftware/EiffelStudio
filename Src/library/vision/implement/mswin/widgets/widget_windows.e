@@ -1047,7 +1047,7 @@ feature -- Implementation
 		deferred
 		end
 
-	wel_parent: WEL_COMPOSITE_WINDOW is
+	wel_parent: WEL_WINDOW is
 			-- Parent window
 		deferred
 		end

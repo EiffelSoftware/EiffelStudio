@@ -174,6 +174,13 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 	lower_box, upper_box: EV_VERTICAL_BOX
 	
 	main_box: EV_VERTICAL_BOX
+	
+	is_external: BOOLEAN is
+			-- Is `Current' external to `parent_area' and
+			-- therefore contained in a dockable dialog?
+		do
+			Result := parent_dockable_dialog (Current) /= Void
+		end
 
 feature {MULTIPLE_SPLIT_AREA}-- Access
 
@@ -183,15 +190,7 @@ feature {MULTIPLE_SPLIT_AREA}-- Access
 
 	tool: EV_WIDGET
 		-- Tool in `Current'.
-		
-	is_external: BOOLEAN is
-			-- Is `Current' external to `parent_area' and
-			-- therefore contained in a dockable dialog?
-		do
-			Result := parent_dockable_dialog (Current) /= Void
-		end
-		
-		
+
 	is_minimized: BOOLEAN
 		-- Is `Current' minimized?
 		
@@ -314,9 +313,9 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			
 				-- Now restore the height of `tool' within `parent_area'.
 				-- FIXME we should traverse through the items in `parent' area, resizing them
-				-- accordingly, so that they keey their current size, and the only item that
+				-- accordingly, so that they keep their current size, and the only item that
 				-- changes size is the item that may be resized.
-			parent_area.resize_widget_to (tool, tool_height)
+			parent_area.resize_widget_to (tool, calculate_restore_height (tool_height))
 
 			parent_window (parent_area).unlock_update
 		ensure
@@ -373,11 +372,41 @@ feature {NONE} -- Implementation
 		end
 		
 	close is
-			--
+			-- Respond to a user selecting the close icon.
 		do
 			
 		end
 		
+	calculate_restore_height (tool_height: INTEGER): INTEGER is
+			-- Calculate height at which `Current' will be restored in `parent_area'.
+			-- `tool_height' is the current height, which is the desired height, however
+			-- if this is too large, it will expand `parent_area', hence we must constrain
+			-- it to the allowable space.
+		require
+			tool_height_valid: tool_height >= 0
+		local
+			minimum_height_sum: INTEGER
+			all_holders: ARRAYED_LIST [MULTIPLE_SPLIT_AREA_TOOL_HOLDER]
+			a_cursor: CURSOR
+		do
+			all_holders := parent_area.all_holders
+			a_cursor := all_holders.cursor
+			from
+				all_holders.start
+			until
+				all_holders.off
+			loop
+				if all_holders.item /= Current and then not all_holders.item.is_external then
+					minimum_height_sum := minimum_height_sum  + all_holders.item.minimum_height
+				end
+				all_holders.forth
+			end
+			Result := tool_height.min (parent_area.height - minimum_height_sum)
+			all_holders.go_to (a_cursor)
+		ensure
+			index_not_changed: old parent_area.all_holders.index = parent_area.all_holders.index
+			result_valid: Result >= 0 and Result <= tool_height
+		end
 		
 
 	change_maximized_state is

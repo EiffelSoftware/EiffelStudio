@@ -8,6 +8,7 @@ inherit
 			loop_execute, check_permissions
 		end;
 	EIFFEL_ENV;
+	SHARED_MELT_ONLY
 
 feature
 
@@ -213,24 +214,32 @@ feature -- Compilation
 	link_driver is
 		local
 			arg2: STRING;
-			cmd_string: STRING;
-			uf: RAW_FILE
+			uf: PLAIN_TEXT_FILE;
+			app_name: STRING
+			file_name: FILE_NAME;
 		do
 			if not melt_only and then System.uses_precompiled then
 					-- Target
-				arg2 := build_path (Workbench_generation_path, System.system_name);
+				!!file_name.make_from_string (Workbench_generation_path);
+				app_name := clone (System.system_name);
+				app_name.append (Executable_suffix);
+				file_name.set_file_name (app_name);
+
+				arg2 := file_name.path;
+
 				!!uf.make (arg2);
 				if not uf.exists then
-						-- Request
-					!!cmd_string.make (200);
-					cmd_string.append (Prelink_command_name);
-					cmd_string.extend (' ');
-					cmd_string.append (Precompilation_driver);
-					cmd_string.extend (' ');
-					cmd_string.append (arg2);
-					Execution_environment.system (cmd_string);
+					eif_link_driver (Workbench_generation_path.to_c, System.system_name.to_c,
+						Prelink_command_name.to_c, Precompilation_driver.to_c);
 				end;
 			end;
 		end;
+
+feature {NONE} -- Externals
+
+	eif_link_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: ANY) is
+		external
+			"C"
+		end
 
 end

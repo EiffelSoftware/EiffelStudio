@@ -260,6 +260,7 @@ feature -- Type check, byte code and dead code removal
 					obs_warn.set_feature (context.a_feature);
 					Error_handler.insert_warning (obs_warn);
 				end;
+if not System.do_not_check_vape then
 				if context.level4 and then context.check_for_vape then
 					-- In precondition and checking for vape
 					context_export := context.a_feature.export_status;
@@ -287,8 +288,11 @@ end;
 						vape.set_exported_feature (a_feature);
 						vape.trace
 						Error_handler.insert_error (vape);
+						Error_handler.raise_error;
 					end;
 				end;
+end; -- System.do_not_check_vape
+
 					-- Access managment
 				access_b := a_feature.access (Result.type_i);
 				context.access_line.insert (access_b);

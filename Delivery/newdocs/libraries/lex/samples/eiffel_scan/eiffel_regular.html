@@ -10,23 +10,23 @@
 <PRE>
 Real $R
 Integer $Z
-String ("\"" -> "\"")
-Div "//"
-Mod "\\"
+String (&quot;\&quot;&quot; -&gt; &quot;\&quot;&quot;)
+Div &quot;//&quot;
+Mod &quot;\\&quot;
 Quotient '/'
 Product '*'
 Plus '+'
 Minus '-'
-Relational ('=' | '<' | '>' | ('<' '=') |  ('>' '=') | ('/' '='))
-Comment ("--" -> "\n") *(' '| '\t') *("--" -> "\n")
+Relational ('=' | '&lt;' | '&gt;' | ('&lt;' '=') |  ('&gt;' '=') | ('/' '='))
+Comment (&quot;--&quot; -&gt; &quot;\n&quot;) *(' '| '\t') *(&quot;--&quot; -&gt; &quot;\n&quot;)
 FeatureAddress '$'
 Dot '.'
-Dotdot ".."
+Dotdot &quot;..&quot;
 Semicolon ';'
 Colon ':'
 Comma ','
-Assign ":="
-ReverseAssign "?="
+Assign &quot;:=&quot;
+ReverseAssign &quot;?=&quot;
 Lparan '('
 Rparan ')'
 Lcurly '{'
@@ -34,10 +34,10 @@ Rcurly '}'
 Lsquare '['
 Rsquare ']'
 Bang '!'
-LeftArray "<<"
-RightArray ">>"
+LeftArray &quot;&lt;&lt;&quot;
+RightArray &quot;&gt;&gt;&quot;
 Power '^'
-Constraint "->"
+Constraint &quot;-&gt;&quot;
 Character (('\''$P'\'') | ('\'''\\'['t'|'n'|'r'|'f']'\'') | ('\''+('0'..'7')'\''))
 Identifier ~('a'..'z') *(~('a'..'z') | '_' | ('0'..'9'))
 -- Keywords

@@ -17,6 +17,8 @@ inherit
 			initialize_colors
 		end
 
+	EV_DEFAULT_COLORS
+
 feature -- Access
 
 	position: INTEGER is
@@ -26,6 +28,21 @@ feature -- Access
 		end
 
 feature -- Status setting
+
+	set_editable (flag: BOOLEAN) is
+			-- `flag' true make the component read-write and
+			-- `flag' false make the component read-only.
+		local
+			color: EV_COLOR
+		do
+			if flag then
+				set_read_write
+				set_background_color (Color_read_write)
+			else
+				set_read_only
+				set_background_color (Color_read_only)
+			end
+		end
 
 	insert_text (txt: STRING) is
 			-- Add `txt' to the left of `position' 
@@ -143,6 +160,16 @@ feature -- Implementation : deferred features of WEL_EDIT that
 
 	set_text (a_text: STRING) is
    			-- Set the window text
+		deferred
+		end
+
+	set_read_only is
+			-- Set the read-only state.
+		deferred
+		end
+
+	set_read_write is
+			-- Set the read-write state.
 		deferred
 		end
 

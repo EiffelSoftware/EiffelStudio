@@ -13,32 +13,7 @@ creation
 
 	make 
 
-feature 
-
-	start_application (app_name: STRING): BOOLEAN is
-			-- Send a request to the Ised daemon to 
-			-- start the application `app_name',
-			-- and perform a handshake with the
-			-- application to check that it is alive.
-			-- Return False if something went wrong
-			-- in the communication.
-		local
-			ext_str: ANY;
-		do
-			-- Start the application (in debug mode).
-			send_rqst_0 (Rqst_application);
-
-			-- Send the name of the application.
-			ext_str := app_name.to_c;
-			c_send_str ($ext_str);
-			Result := recv_ack;
-
-			-- Perform a handskae with the application.
-			if Result then
-				send_rqst_0 (Rqst_hello);
-				Result := recv_ack
-			end;
-		end;
+feature -- Update
 
 	send_byte_code: BOOLEAN is
 			-- Send the byte code of routines which have
@@ -182,7 +157,7 @@ feature
 			from
 				bpts.start
 			until
-				bpts.off
+				bpts.after
 			loop
 				bp := bpts.item_for_iteration;
 				if bp.is_continue then

@@ -9,7 +9,8 @@ class
 inherit
 	BULLETIN_WINDOWS
 		redefine
-			class_name
+			class_name,
+			resize_for_shell
 		end
 
 feature {TERMINAL} -- Initialisation
@@ -71,6 +72,18 @@ feature -- Report
 			-- Class name
 		once
 			Result := "EvisionTerminal"
+		end
+
+	resize_for_shell is
+			-- Resize current widget if the parent is a shell.			
+		local
+			tw: TOP_WINDOWS
+		do
+			tw ?= parent
+			if tw /= Void and then tw.exists and then not fixed_size_flag then
+				set_x_y (0, 0)
+				set_size (tw.client_width, tw.client_height)
+			end
 		end
 
 end -- TERMINAL_WINDOWS

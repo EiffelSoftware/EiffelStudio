@@ -5,7 +5,7 @@ class
 	INHERIT_TABLE 
 
 inherit
-	EXTEND_TABLE [INHERIT_FEAT, STRING]
+	EXTEND_TABLE [INHERIT_FEAT, INTEGER]
 		rename
 			make as extend_tbl_make,
 			merge as extend_table_merge
@@ -55,6 +55,13 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 	COMPILER_EXPORTER
 		undefine
 			copy, is_equal
@@ -100,7 +107,7 @@ feature
 	body_table: EXTEND_TABLE [READ_INFO, INTEGER];
 			-- Body table information for `Tmp_body_server'.
 
-	changed_features: ARRAYED_LIST [STRING];
+	changed_features: ARRAYED_LIST [INTEGER];
 			-- Changed features of `a_class'.
 
 	invariant_changed: BOOLEAN;
@@ -109,7 +116,7 @@ feature
 	invariant_removed: BOOLEAN;
 			-- Is the invariant clause removed ?
 
-	origins: LINKED_LIST [STRING];
+	origins: ARRAYED_LIST [INTEGER];
 			-- Origin features name list for pattern processing
 
 	supplier_status_modified: BOOLEAN;
@@ -140,7 +147,7 @@ feature
 			create inherited_features.make (n)
 			create body_table.make (50)
 			create changed_features.make (100)
-			create origins.make
+			create origins.make (100)
 			create new_externals.make
 		end
 
@@ -498,26 +505,26 @@ end;
 				info.set_parent (parent_c);
 					-- Add the information to the concerned instance of
 					-- INHERIT_FEAT
-				add_inherited_feature (info, feature_i.feature_name);
+				add_inherited_feature (info, feature_i.feature_name_id);
 				parent_table.forth
 			end;
 		end;
 
-	add_inherited_feature (info: INHERIT_INFO; feature_name: STRING) is
+	add_inherited_feature (info: INHERIT_INFO; feature_name_id: INTEGER) is
 				-- Add an inherited feature in the table.
 		local
-			l: INHERIT_FEAT;
+			l: INHERIT_FEAT
 		do
-			l := item (feature_name);
+			l := item (feature_name_id)
 			if l = Void then
 					-- Take a new object from the free list
-				!!l.make;
-				put (l, feature_name);
-			end;
+				create l.make
+				put (l, feature_name_id)
+			end
 				-- Add the information to the concerned instance of
 				-- INHERIT_FEAT
-			l.insert (info);
-		end;
+			l.insert (info)
+		end
 
 	check_renamings is
 			-- Check all the renamings made in the table of
@@ -544,7 +551,7 @@ end;
 			a_class /= Void;
 			feature_table /= Void;
 		local
-			feature_name: STRING;
+			feature_name_id: INTEGER;
 			inherit_feat: INHERIT_FEAT;
 			inherited_info: INHERIT_INFO;
 			feature_i: FEATURE_I;
@@ -559,18 +566,18 @@ end;
 					-- Calculates an inherited feature: instance of
 					-- FEATURE_I
 				inherit_feat := item_for_iteration;
-				feature_name := key_for_iteration;
+				feature_name_id := key_for_iteration;
 
 					-- Calculates attribute `inherited_feature' of
 					-- instance `inherit_feat'.		
-				inherit_feat.process (a_class, feature_name);
+				inherit_feat.process (a_class, Names_heap.item (feature_name_id))
 				inherited_info := inherit_feat.inherited_info;
 				if inherited_info /= Void then
 						-- Class inherit from a feature coming from one
 						-- parent.
 					feature_i := inherited_info.a_feature;
 						-- Feature name
-					feature_i.set_feature_name (feature_name);
+					feature_i.set_feature_name_id (feature_name_id);
 						-- initialization of an inherited feature
 					init_inherited_feature (feature_i, inherit_feat);
 						-- Insertion in the origin table
@@ -641,7 +648,7 @@ end;
 								-- `written_in' are ok now. If it is an old
 								-- instance of FEATURE_I from a previous
 								-- compilation, we know if it was an origin.
-							analyze_local (feature_i, feat_name.internal_name);
+							analyze_local (feature_i, feature_i.feature_name_id)
 								-- Set the export status
 							feature_i.set_export_status (export_status);
 							name_list.forth;
@@ -662,10 +669,8 @@ end;
 			non_syntactically_changed: a_class.changed2;
 		local
 			feature_i: FEATURE_I;
-			feature_name: STRING;
-				-- Feature name
+			feature_name_id: INTEGER;
 			id: INTEGER;
-				-- Current class id
 		do
 			from
 				id := a_class.class_id;
@@ -675,20 +680,20 @@ end;
 			loop
 				feature_i := feature_table.item_for_iteration;
 				if feature_i.written_in = id then
-					feature_name := feature_table.key_for_iteration;
+					feature_name_id := feature_table.key_for_iteration_id;
 						-- recompute a former local declaration
-					analyze_local (feature_i.duplicate, feature_name);
+					analyze_local (feature_i.duplicate, feature_name_id);
 				end;
 				feature_table.forth;
 			end;
 		end;
 				
-	analyze_local (feature_i: FEATURE_I; feature_name: STRING) is
+	analyze_local (feature_i: FEATURE_I; feature_name_id: INTEGER) is
 			-- Analyze local declaration of class `a_class' named
 			-- `feat_name' which abstract representation is `yacc_feature'.
 		require
 			good_feature: feature_i /= Void;
-			good_feature_name: feature_name /= Void;
+			good_feature_name_id: feature_name_id > 0
 		local
 			inherit_feat: INHERIT_FEAT;
 				-- Possible inherited features
@@ -703,11 +708,11 @@ end;
 			read_info: READ_INFO
 		do
 				-- Now, compute the routine id set of the feature.	
-			inherit_feat := item (feature_name);
+			inherit_feat := item (feature_name_id);
 
 				-- Find out it there previously was a feature with name
 				-- `feature_name'
-			old_feature := feature_table.item (feature_name);
+			old_feature := feature_table.item_id (feature_name_id);
 
 			if inherit_feat = Void then
 					-- No feature inherited under name `feature_name'. This
@@ -736,7 +741,7 @@ end;
 							-- mark the feature as changed since its assertions
 							-- could have been changed even though its body did
 							-- not changed
-						changed_features.extend (feature_name)
+						changed_features.extend (feature_name_id)
 					end
 					feature_i.set_is_origin (True);
 					compute_new_rout_id := True;
@@ -767,7 +772,7 @@ end;
 							-- mark the feature as changed since its assertions
 							-- could have been changed even though its body did
 							-- not change.
-						changed_features.extend (feature_name)
+						changed_features.extend (feature_name_id)
 					end
 						-- Routine id set for the redefinition
 					feature_i.set_rout_id_set (new_rout_id_set);
@@ -787,7 +792,7 @@ end;
 					!!vmfn;
 					vmfn.set_class (a_class);
 					vmfn.set_a_feature (feature_i);
-					vmfn.set_inherited_feature (inherited_features.item (feature_name));
+					vmfn.set_inherited_feature (inherited_features.item_id (feature_name_id));
 					Error_handler.insert_error (vmfn);
 				else
 						-- Name clash: a non-deferred feature is inherited
@@ -837,7 +842,7 @@ end;
 			end;
 				-- Keep track of the origin features for pattern
 				-- processing
-			origins.put_front (feature_i.feature_name);
+			origins.extend (feature_i.feature_name_id);
 		end;
 
 	feature_unit (yacc_feature: FEATURE_AS; feat: FEATURE_NAME): FEATURE_I is
@@ -860,22 +865,22 @@ end;
 				-- Is the parsed feature the saem than a previous
 				-- compiled one ?
 			read_info: READ_INFO;
-			feature_name: STRING;
+			feature_name_id: INTEGER;
 			integer_value: INT_VALUE_I;
 				-- Internal name of the feature
 			vffd4: VFFD4;
 			external_i: EXTERNAL_I;
 			l_ext_name: STRING
 		do
-			feature_name := feat.internal_name;
+			feature_name_id := feat.internal_name_id;
 debug ("ACTIVITY")
 	io.error.putstring ("FEATURE_UNIT on ");
-	io.error.putstring (feature_name);
+	io.error.putstring (feat.internal_name);
 	io.error.new_line;
 end;
 
 			Result := yacc_feature.new_feature;
-			Result.set_feature_name (feature_name);
+			Result.set_feature_name_id (feature_name_id);
 			Result.set_written_in (a_class.class_id);
 			Result.set_is_frozen (feat.is_frozen);
 			Result.set_is_infix (feat.is_infix);
@@ -884,7 +889,7 @@ end;
 					-- Unique value processing
 				unique_feature ?= Result;
 				!!integer_value;
-				integer_value.set_int_val (class_info.unique_values.item (feature_name));
+				integer_value.set_int_val (class_info.unique_values.item (Result.feature_name));
 				unique_feature.set_value (integer_value);
 debug ("ACTIVITY")
 	io.error.putstring ("Value: ");
@@ -911,7 +916,7 @@ end;
 			read_info := class_info.index.item (yacc_feature.id);
 
 				-- Look for a previous definition of the feature
-			feature_i := feature_table.item (feature_name);
+			feature_i := feature_table.item_id (feature_name_id);
 
 			if feature_i /= Void then
 				old_feature_in_class := feature_i.written_in = a_class.class_id
@@ -985,7 +990,7 @@ end;
 
 						-- Insert the changed feature in the table of
 						-- changed features of class `a_class'.
-					changed_features.extend (feature_name);
+					changed_features.extend (feature_name_id);
 				else
 						-- Keep the type
 					Result.set_type (feature_i.type);
@@ -1004,7 +1009,7 @@ end;
 
 					-- Insert the changed feature in the table of changed
 					-- features of `a_class'.
-				changed_features.extend (feature_name);
+				changed_features.extend (feature_name_id);
 
 					-- If new external feature, we need to force a freeze if it
 					-- is encapsulated in order to force the generation of encapsulation.
@@ -1055,14 +1060,16 @@ end;
 		local
 			a_feature: FEATURE_I;
 			sys: SYSTEM_I
+			l_origins: like origins
 		do
 			from
 				sys := System
-				origins.start
+				l_origins := origins
+				l_origins.start
 			until
-				origins.after
+				l_origins.after
 			loop
-				a_feature := resulting_table.item (origins.item);
+				a_feature := resulting_table.item_id (l_origins.item);
 				if sys.has_separate and then a_class.is_used_as_separate then
 					if a_feature.sep_process_pattern and then sys.byte_context.workbench_mode then
 						sys.set_freeze
@@ -1070,7 +1077,7 @@ end;
 				else
 					a_feature.process_pattern;
 				end;
-				origins.forth;
+				l_origins.forth;
 			end;
 		end;
 
@@ -1101,7 +1108,7 @@ end;
 		local
 			rep_dep: REP_CLASS_DEPEND;
 			feat_rep_dep: REP_FEATURE_DEPEND;
-			feature_name: STRING
+			feature_name_id: INTEGER
 			class_id: INTEGER
 		do
 			from
@@ -1115,10 +1122,10 @@ end;
 			until
 				changed_features.after
 			loop
-				feature_name := changed_features.item;
-				a_class.insert_changed_feature (feature_name);
+				feature_name_id := changed_features.item;
+				a_class.insert_changed_feature (feature_name_id);
 				if rep_dep /= Void then
-					feat_rep_dep := rep_dep.item (feature_name);
+					feat_rep_dep := rep_dep.item (Names_heap.item (feature_name_id));
 					if feat_rep_dep /= Void then
 						a_class.propagate_replication (feat_rep_dep)
 					end;
@@ -1156,7 +1163,7 @@ end;
 			inherited_feature: FEATURE_I;
 			deferred_info, inherited_info: INHERIT_INFO;
 			inherit_feat: INHERIT_FEAT;
-			feature_name: STRING;
+			feature_name_id: INTEGER;
 			join: JOIN;
 			vdrs4: VDRS4;
 		do
@@ -1172,18 +1179,18 @@ end;
 							-- Cannot find a redefinition
 						!!vdrs4;
 						vdrs4.set_class (a_class);
-						vdrs4.set_feature_name (key_for_iteration);
+						vdrs4.set_feature_name (Names_heap.item (key_for_iteration))
 						Error_handler.insert_error (vdrs4);
 					else
 							-- Case of deferred features only
 						check
 							not inherit_feat.is_empty;
 						end;
-						feature_name := key_for_iteration;
+						feature_name_id := key_for_iteration;
 						deferred_info := inherit_feat.deferred_features.first;
 							-- New inherited feature
 						inherited_feature := deferred_info.a_feature;
-						inherited_feature.set_feature_name (feature_name);
+						inherited_feature.set_feature_name_id (feature_name_id);
 							-- Initialization of an inherited feature
 						init_inherited_feature (inherited_feature,inherit_feat);
 							-- Insertion in the origin table
@@ -1218,7 +1225,7 @@ end;
 		local
 			rout_ids: ROUT_ID_SET;
 			old_feature: FEATURE_I;
-			feature_name: STRING;
+			feature_name_id: INTEGER;
 		do
 				-- It is no more an origin
 			f.set_is_origin (False)
@@ -1227,8 +1234,8 @@ end;
 			rout_ids := inherit_feat.rout_id_set;
 			f.set_rout_id_set (clone (rout_ids));
 				-- Process feature id
-			feature_name := f.feature_name;
-			old_feature := feature_table.item (feature_name);
+			feature_name_id := f.feature_name_id;
+			old_feature := feature_table.item_id (feature_name_id);
 			if old_feature = Void then
 					-- New feature id since the old feature table
 					-- doesn't have an entry `feature_name'
@@ -1250,22 +1257,22 @@ end;
 				-- Concatenation of the export statuses of all the
 				-- precursors of the inherited feature: take care of new
 				-- adapted export status specified in inheritance clause
-			f.set_export_status (inherit_feat.exports (feature_name));
+			f.set_export_status (inherit_feat.exports (Names_heap.item (feature_name_id)));
 				-- Insert it in the table `inherited_features'.
-			inherited_features.put (f, feature_name);
+			inherited_features.put_id (f, feature_name_id);
 		end;
 
 	give_new_feature_id (f: FEATURE_I) is
 			-- Give a new feature id to `f'.
 		require
 			good_argument: f /= Void;
-			has_a_new_name: not feature_table.has (f.feature_name);
+			has_a_new_name: not feature_table.has_id (f.feature_name_id);
 		local
 			new_feature_id: INTEGER;
 			old_feature: FEATURE_I;
 		do
 			if previous_feature_table /= Void then
-				old_feature := previous_feature_table.item (f.feature_name);
+				old_feature := previous_feature_table.item_id (f.feature_name_id);
 				if old_feature /= Void then
 						-- Keep the feature id, because byte code for client
 						-- features using this new feature name could have been	
@@ -1313,16 +1320,16 @@ end;
 		require
 			good_argument: f /= Void;
 		local
-			feature_name: STRING;
+			feature_name_id: INTEGER;
 			vmfn: VMFN;
 		do
-			feature_name := f.feature_name;
-			inherited_features.put (f, feature_name);
+			feature_name_id := f.feature_name_id;
+			inherited_features.put_id (f, feature_name_id);
 			if inherited_features.conflict then
 				!!vmfn;
 				vmfn.set_class (a_class);
 				vmfn.set_a_feature (f);
-				vmfn.set_inherited_feature (inherited_features.item (feature_name));
+				vmfn.set_inherited_feature (inherited_features.item_id (feature_name_id));
 				Error_handler.insert_error (vmfn);
 			end;
 		end;

@@ -278,7 +278,7 @@ rt_public int16 eifthd_final_id (int16, int16 *, int16 **, int16, int );
 rt_shared int eifthd_gen_count_with_dftype (int16 );
 rt_shared char eifthd_gen_typecode_with_dftype (int16 , int);
 rt_public EIF_REFERENCE eifthd_gen_typecode_str (EIF_REFERENCE );
-rt_public int16 eifthd_gen_param_id (int16, EIF_REFERENCE , int);
+rt_public int16 eifthd_gen_param_id (int16, int16 , int);
 rt_public EIF_REFERENCE eifthd_gen_create (EIF_REFERENCE , int);
 rt_shared int16 eifthd_register_bit_type (long);
 rt_shared int16 eifthd_typeof_array_of (int16);
@@ -295,7 +295,7 @@ rt_public int eifthd_gen_conf (int16, int16);
 #endif
 /*------------------------------------------------------------------*/
 
-rt_private int16 eif_gen_param (int16, EIF_REFERENCE, int, char *, long *);
+rt_private int16 eif_gen_param (int16, int16, int, char *, long *);
 rt_private void eif_create_typename (int16, char*);
 rt_private EIF_GEN_DER *eif_new_gen_der(long, int16*, int16, char, char, int16);
 rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16, int16);
@@ -395,13 +395,13 @@ rt_shared char eif_gen_typecode_with_dftype (int16 dftype, int pos)
 }
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_gen_param_id (int16 stype, EIF_REFERENCE obj, int pos)
+rt_public int16 eif_gen_param_id (int16 stype, int16 dftype, int pos)
 {
 	int16   result;
 
 	EIFMTX_LOCK;
 
-	result = eifthd_gen_param_id (stype, obj, pos);
+	result = eifthd_gen_param_id (stype, dftype, pos);
 
 	EIFMTX_UNLOCK;
 
@@ -892,21 +892,13 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, int16
 /* Result: RTUD(yes)                                                */
 /*------------------------------------------------------------------*/
 
-rt_private int16 eif_gen_param (int16 stype, EIF_REFERENCE obj, int pos, char *is_exp, long *nr_bits)
+rt_private int16 eif_gen_param (int16 stype, int16 dftype, int pos, char *is_exp, long *nr_bits)
 {
-	int16 dftype, result;
+	int16 result;
 	EIF_GEN_DER *gdp;
 	EIF_ANC_ID_MAP *amap;
 
-	if (obj == (EIF_REFERENCE )0)
-		eif_panic ("Generic parameter of void.");
-
-	dftype = Dftype(obj);
-
-	/* Check for expanded */
-
-	if ((dftype < 0) || (dftype >= next_gen_id))
-		eif_panic ("Invalid type");
+	REQUIRE("Valid type", (dftype >= 0) && (dftype < next_gen_id));
 
 	/* get actual generic from `stype' for descendant
 	   `dftype' if stype >= 0 else use dftype.
@@ -929,11 +921,8 @@ rt_private int16 eif_gen_param (int16 stype, EIF_REFERENCE obj, int pos, char *i
 		gdp = eif_derivations [dftype];
 	}
 
-	if ((gdp == (EIF_GEN_DER *)0) || (gdp->is_bit))
-		eif_panic ("Not a generic type.");
-
-	if ((pos <= 0) || (pos > gdp->size))
-		eif_panic ("Invalid generic parameter position.");
+	CHECK("A generic type", gdp && (!gdp->is_bit));
+	CHECK("Valid generic parameter position", (pos > 0) && (pos <= gdp->size));
 
 	*is_exp = (char) 0;
 	*nr_bits = 0;
@@ -984,33 +973,22 @@ rt_shared int eif_gen_count_with_dftype (int16 dftype)
 	EIF_GEN_DER *gdp;
 	EIF_ANC_ID_MAP *amap;
 
-	/* Check for expanded */
+	REQUIRE("Valid type", (dftype >= 0) && (dftype < next_gen_id));
 
-	if ((dftype < 0) || (dftype >= next_gen_id))
-		eif_panic ("Invalid type");
-
-	if (tuple_static_type >= 0)
-	{
+	if (tuple_static_type >= 0) {
 		amap = eif_anc_id_map [dftype];
 
-		if (amap == (EIF_ANC_ID_MAP *) 0)
-		{
+		if (amap == (EIF_ANC_ID_MAP *) 0) {
 			eif_compute_anc_id_map (dftype);
 			amap = eif_anc_id_map [dftype];
 		}
 
 		gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
-	}
-	else
-	{
+	} else {
 		gdp = eif_derivations [dftype];
 	}
 
-	if (gdp == (EIF_GEN_DER *)0)
-		eif_panic ("Not a generic type.");
-
-	if (gdp->is_bit)
-		return 0;
+	CHECK("Generic type", gdp && (!gdp->is_bit));
 
 	return gdp->size;
 }
@@ -1307,13 +1285,15 @@ rt_public EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj)
 /* Result: RTUD(yes)                                                */
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_gen_param_id (int16 stype, EIF_REFERENCE obj, int pos)
+rt_public int16 eif_gen_param_id (int16 stype, int16 dftype, int pos)
 
 {
 	char    is_expanded;
 	long    nr_bits;
 
-	return eif_gen_param (stype, obj, pos, &is_expanded, &nr_bits);
+	REQUIRE("Valid type", (dftype >= 0) && (dftype < next_gen_id));
+
+	return eif_gen_param (stype, dftype, pos, &is_expanded, &nr_bits);
 }
 /*------------------------------------------------------------------*/
 /* Create an object with the same type as the type of the generic   */
@@ -1326,10 +1306,11 @@ rt_public EIF_REFERENCE eif_gen_create (EIF_REFERENCE obj, int pos)
 	char    is_expanded;
 	long    nr_bits;
 
-	result_type = eif_gen_param (-1, obj, pos, &is_expanded, &nr_bits);
+	REQUIRE("obj not null", obj);
+
+	result_type = eif_gen_param (-1, (int16) Dftype(obj), pos, &is_expanded, &nr_bits);
 
 #ifndef WORKBENCH
-
 	if (is_expanded)
 	{
 		eif_panic ("Expanded generic parameter.");
@@ -2387,8 +2368,7 @@ rt_shared char *eif_typename (int16 dftype)
 	int         len;
 	char    *result;
 			
-	if (dftype < 0)
-		eif_panic ("Invalid type");
+	REQUIRE("Valid type", (dftype >= 0) && (dftype < next_gen_id));
 
 	if (dftype < first_gen_id) {
 		RT_GET_CONTEXT

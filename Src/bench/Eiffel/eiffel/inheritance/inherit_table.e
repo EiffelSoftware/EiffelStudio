@@ -1103,7 +1103,13 @@ end;
 				origins.after
 			loop
 				a_feature := resulting_table.item (origins.item);
-				a_feature.process_pattern;
+				if System.has_separate and then a_class.is_used_as_separate then
+					if a_feature.sep_process_pattern and then System.byte_context.generation_mode then
+						System.set_freeze (True);	
+					end;
+				else
+					a_feature.process_pattern;
+				end;
 				origins.forth;
 			end;
 		end;

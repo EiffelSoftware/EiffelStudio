@@ -130,6 +130,8 @@ feature -- Constants
 	system_string_name_id: INTEGER is 120
 	system_object_name_id: INTEGER is 121
 	system_boolean_name_id: INTEGER is 122
+	get_hash_code_name_id: INTEGER is 123
+	equals_name_id: INTEGER is 124
 			-- Predefined name IDs constants
 
 end -- class PREDEFINED_NAMES

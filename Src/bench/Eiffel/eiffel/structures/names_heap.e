@@ -287,6 +287,8 @@ feature {NONE} -- Implementation: access
 			put ("System.String") check found_item = system_string_name_id end
 			put ("System.Object") check found_item = system_object_name_id end
 			put ("System.Boolean") check found_item = system_boolean_name_id end
+			put ("get_hash_code") check found_item = get_hash_code_name_id end
+			put ("equals") check found_item = equals_name_id end
 		end
 		
 invariant

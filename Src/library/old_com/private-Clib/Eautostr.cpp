@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------------
 
 #include "eifole.h"
-#include "eif_hector.h"
 
 //---------------------------------------------------------------------------
 // This file contains support for various structures necessary
@@ -1010,7 +1009,7 @@ extern "C" EIF_OBJ eole2_arraydesc_bounds( EIF_POINTER pThis )
 	USHORT dims = pAR->cDims;
 
 	eif_bound_id = eif_type_id ("EOLE_SAFEARRAY_BOUNDS");
-	eif_array_id = eif_generic_id ("ARRAY", eif_bound_id);
+	eif_array_id = eif_type_id ("ARRAY [EOLE_SAFEARRAY_BOUNDS]");
 	eif_array_make = eif_proc ("make", eif_array_id);
 	eif_array_put = eif_proc ("put", eif_array_id);
 	eif_bound_init = eif_proc ("init", eif_bound_id);

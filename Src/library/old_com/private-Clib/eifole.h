@@ -15,11 +15,11 @@
 #ifndef __EIFOLE_H_INC__
 #define __EIFOLE_H_INC__
 
+#include "eif_eiffel.h"
 #include <windows.h>
 #include <ole2.h>
 #include <olectl.h>
 #include <stdio.h>
-#include "eif_cecil.h"
 #include "interfac.h"
 #include "wrapfunc.h"
 #include "ocxcecil.h"

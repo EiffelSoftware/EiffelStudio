@@ -9,6 +9,12 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
+// Revision 1.7  1999/01/22 18:51:10  marina
+//  Modified Files:
+//  	Eautostr.cpp Eoleauto.cpp eifole.h ieconpnt.cpp ienumcon.cpp
+//  	ienumukn.cpp
+// 		-- removed use of `eif_generic_id'
+//
 // Revision 1.6  1998/02/09 19:20:08  raphaels
 // Mainly cosmetics. Added `character' to EOLE_VARIANT.
 //
@@ -24,7 +30,6 @@
 //---------------------------------------------------------------------------
 
 #include "eifole.h"
-#include "eif_hector.h"
 
 // dispatch_get_type_info_eiffel_called is 0 if eiffel has not been called during 
 // eole2_dispatch_get_type_info or 1 if it has been called.
@@ -146,7 +151,7 @@ extern "C" HRESULT E_IDispatch_GetIDsOfNames(
 		EIF_TYPE_ID eif_array_id;
 		char *name;
 
-		eif_array = eif_create (eif_generic_id ("ARRAY", eif_type_id ("STRING")));
+		eif_array = eif_create (eif_type_id ("ARRAY [STRING]"));
 		eif_array_id = eif_type (eif_array);
 		eif_make = eif_proc ("make", eif_array_id);
 		eif_put = eif_proc ("put", eif_array_id);
@@ -156,7 +161,7 @@ extern "C" HRESULT E_IDispatch_GetIDsOfNames(
 			(eif_put) (eif_array, makestr (name, strlen (name)), i);
 		}
 		result = Ocxdisp_DispatchGetIdsOfNames (eif_access (eoleOcxDisp), eif_access (ptr), eif_array);
-		eif_to_c = eif_fn_pointer ("to_c", eif_generic_id ("ARRAY", eif_type_id ("STRING")));
+		eif_to_c = eif_fn_pointer ("to_c", eif_type_id ("ARRAY [STRING]"));
 		*rgdispid = (DISPID __RPC_FAR) (eif_to_c) (result);
 		return Ocxdisp_UnknownGetStatusCode (eif_access (eoleOcxDisp), eif_access (ptr));
     }
@@ -868,8 +873,8 @@ extern "C" HRESULT E_ITypeInfo_GetNames(
 	  int i = 0;
 	  
       result = Ocxdisp_TypeInfoGetNames (eif_access (eoleOcxDisp), eif_access (ptr));
-      eif_item = eif_fn_pointer ("item", eif_generic_id ("ARRAY", eif_type_id ("STRING")));
-	  eif_count = eif_fn_int ("count", eif_generic_id ("ARRAY", eif_type_id ("STRING")));
+      eif_item = eif_fn_pointer ("item", eif_type_id ("ARRAY [STRING]"));
+	  eif_count = eif_fn_int ("count", eif_type_id ("ARRAY [STRING]"));
 	  size = (eif_count) (result);
 	  while (i < size, i++) {
 	  	*(rgbstrNames + i) = (BSTR) Eif2OleString ((eif_item) (result, i));
@@ -926,7 +931,7 @@ extern "C" HRESULT E_ITypeInfo_GetIDsOfNames(
 		EIF_TYPE_ID eif_array_id;
 		char *name;
 
-		eif_array = eif_create (eif_generic_id ("ARRAY", eif_type_id ("STRING")));
+		eif_array = eif_create (eif_type_id ("ARRAY [STRING]"));
 		eif_array_id = eif_type (eif_array);
 		eif_make = eif_proc ("make", eif_array_id);
 		eif_put = eif_proc ("put", eif_array_id);
@@ -936,7 +941,7 @@ extern "C" HRESULT E_ITypeInfo_GetIDsOfNames(
 			(eif_put) (eif_array, makestr (name, strlen (name)), i);
 		}
 		result = Ocxdisp_DispatchGetIdsOfNames (eif_access (eoleOcxDisp), eif_access (ptr), eif_array);
-		eif_to_c = eif_fn_pointer ("to_c", eif_generic_id ("ARRAY", eif_type_id ("STRING")));
+		eif_to_c = eif_fn_pointer ("to_c", eif_type_id ("ARRAY [STRING]"));
 		rgmemid = (MEMBERID __RPC_FAR*) (eif_to_c) (result);
 		return Ocxdisp_UnknownGetStatusCode (eif_access (eoleOcxDisp), eif_access (ptr));
 	}

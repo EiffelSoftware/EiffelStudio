@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision widget, mswindows implementation."
 	note: "The parent of a widget cannot be void, except for a%
@@ -67,7 +66,7 @@ inherit
 feature {NONE} -- Initialization
 
 	initialize  is
-			-- Creation of the widget.
+			-- Initialize `Current'.
 		local
 			win: EV_WINDOW_IMP
 		do
@@ -93,11 +92,12 @@ feature -- Access
 		do
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
-			create Result.set (wel_point.x - interface.screen_x, wel_point.y - interface.screen_y)
+			create Result.set (wel_point.x - interface.screen_x, wel_point.y -
+				interface.screen_y)
 		end
 
 	pointer_style: EV_CURSOR is
-			-- Cursor used currently on the widget.
+			-- Pointer displayed when the pointing device is over `Current'.
 		do
 			if cursor_imp = Void then
 				Result := Void
@@ -107,7 +107,7 @@ feature -- Access
 		end
 
 	background_color: EV_COLOR is
-			-- Color used for the background of the widget
+			-- Color used for the background of `Current'.
 		do
 			if background_color_imp /= Void then
 				Result ?= background_color_imp.interface
@@ -117,7 +117,7 @@ feature -- Access
 		end
 
 	foreground_color: EV_COLOR is
-			-- Color used for the foreground of the widget
+			-- Color used for the foreground of `Current'.
 		do
 			if foreground_color_imp /= Void then
 				Result ?= foreground_color_imp.interface
@@ -127,7 +127,7 @@ feature -- Access
 		end
 
 	tooltip: STRING is
-			-- Text displayed when user moves mouse over widget.
+			-- Text displayed when user moves pointing device over `Current'.
 		do
 			check
 				to_be_implemented: False
@@ -135,13 +135,13 @@ feature -- Access
 		end
 
 	top_level_window: EV_TITLED_WINDOW is
-			-- Top level window that contains the current widget.
+			-- Top level window that contains `Current'.
 		do
 			Result ?= top_level_window_imp.interface
 		end
 
 	default_parent: EV_INTERNAL_SILLY_WINDOW_IMP is
-			-- A default parent for creation of the widgets.
+			-- A default parent for creation of `Current'.
 		once
 			create Result.make_top ("Eiffel Vision default parent window")
 		ensure
@@ -199,6 +199,7 @@ feature -- Access
 		end
 
 	width: INTEGER is
+			-- Width of `Current'.
 		do
 			--|FIXME During the major changes to vision
 			--|This code was changed to wel_width.max (minimum_width)
@@ -215,6 +216,7 @@ feature -- Access
 		end
 
 	height: INTEGER is
+			-- Height of `Current'.
 		do
 			--|FIXME During the major changes to vision
 			--|This code was changed to wel_height.max (minimum_height)
@@ -228,7 +230,7 @@ feature -- Access
 
 
 	screen_x: INTEGER is
-			-- Horizontal offset relative to screen
+			-- Horizontal offset of `Current' relative to screen
 		local
 			wind: EV_WINDOW_IMP
 		do
@@ -241,7 +243,7 @@ feature -- Access
 		end
 
 	screen_y: INTEGER is
-			-- Vertical offset relative to screen. 
+			-- Vertical offset of `Current' relative to screen. 
 		local 
 			wind: EV_WINDOW_IMP
 		do 
@@ -256,13 +258,13 @@ feature -- Access
 feature -- Status report
 
 	destroyed: BOOLEAN is
-			-- Is Current widget destroyed ?
+			-- Is `Current' destroyed ?
 		do
 			Result := not exists
 		end
 
 	is_show_requested: BOOLEAN is
-			-- Is the widget shown in its parent?
+			-- Is `Current' displayed in its parent?
 		do
 			Result := flag_set (style, Wel_window_constants.Ws_visible)
 		end
@@ -272,11 +274,10 @@ feature -- Status report
 feature -- Status setting
 
 	destroy is
-			-- Destroy the widget, but set the parent sensitive
+			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
 			if parent_imp /= Void then
-				--parent_imp.remove_child (Current)
 				parent_imp.interface.prune (Current.interface)
 			end
 			wel_destroy
@@ -285,7 +286,7 @@ feature -- Status setting
 		end
 
 	show is
-			-- Show the window
+			-- Show `Current'.
 			-- Need to notify the parent.
 		do
 			show_window (wel_item, Wel_window_constants.Sw_show)
@@ -295,7 +296,7 @@ feature -- Status setting
 		end
 
 	hide is
-			-- Hide the window
+			-- Hide `Current'.
 		do
 			show_window (wel_item, Wel_window_constants.Sw_hide)
 			if parent_imp /= Void then
@@ -304,7 +305,7 @@ feature -- Status setting
 		end
 
 	disable_sensitive is
-			-- Set current widget in insensitive mode if
+			-- Set `Current' to insensitive mode if
 			-- `flag'. This means that any events with an
 			-- event type of KeyPress, KeyRelease,
 			-- ButtonPress, ButtonRelease, MotionNotify,
@@ -317,13 +318,15 @@ feature -- Status setting
 		end
 
 	enable_sensitive is
+			-- Set `Current' to sensitive mode.
+			--| See comment for `disable_sensitive'.
 		do
 			enable
 		end
 
 	set_default_minimum_size is
-			-- Initialize the size of the widget.
-			-- Redefine by some widgets.
+			-- Initialize the size of `Current'.
+			-- Redefined by many widgets.
 		do
 			internal_set_minimum_size (0, 0)
 		end
@@ -331,7 +334,7 @@ feature -- Status setting
 feature -- Element change
 
 	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the widget.
+			-- Make `par' the new parent of `Current'.
 			-- `par' can be Void then the parent is the
 			-- default_parent.
 		deferred
@@ -376,15 +379,14 @@ feature -- Element change
 feature -- Implementation
 
 	background_color_imp: EV_COLOR_IMP
-			-- Color used for the background of the widget
+			-- Color used for the background of `Current'.
 
 	foreground_color_imp: EV_COLOR_IMP
-			-- Color used for the foreground of the widget,
+			-- Color used for the foreground of `Current'
 			-- usually the text.
 
 	parent_imp: EV_CONTAINER_IMP is
-			-- Parent container of this widget. The same than
-			-- parent but with a different type.
+			-- Parent container of `Current'.
 		do
 			if wel_parent = default_parent then
 				Result := Void
@@ -397,112 +399,103 @@ feature {NONE} -- Implementation, mouse button events
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the left button is pressed.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			pt: WEL_POINT
 		do
 			pt := client_to_screen (x_pos, y_pos)
 			pnd_press (x_pos, y_pos, 1, pt.x, pt.y)
-			interface.pointer_button_press_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 1, 0.0,
+				0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the middle button is pressed.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			pt: WEL_POINT
 		do
 			pt := client_to_screen (x_pos, y_pos)
 			pnd_press (x_pos, y_pos, 2, pt.x, pt.y)
-			interface.pointer_button_press_actions.call ([x_pos, y_pos, 2, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 2, 0.0,
+				 0.0, 0.0, pt.x, pt.y])
 		end
 	
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the right button is pressed.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			pt: WEL_POINT
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
-			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0,
+				0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the left button is released.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			pt: WEL_POINT
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			check_drag_and_drop_release (x_pos, y_pos)
-			interface.pointer_button_release_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_button_release_actions.call ([x_pos, y_pos, 1,
+				0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the middle button is released.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			pt: WEL_POINT
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_button_release_actions.call ([x_pos, y_pos, 2, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_button_release_actions.call ([x_pos, y_pos, 2,
+				0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the right button is released.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			pt: WEL_POINT
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_button_release_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_button_release_actions.call ([x_pos, y_pos, 3,
+				0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the right button is double clicked.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			pt: WEL_POINT
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_double_press_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_double_press_actions.call ([x_pos, y_pos, 1, 0.0,
+				0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the right button is double clicked.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			pt: WEL_POINT
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_double_press_actions.call ([x_pos, y_pos, 2, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_double_press_actions.call ([x_pos, y_pos, 2, 0.0,
+				0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_right_button_double_click (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the right button is double clicked.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			pt: WEL_POINT
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_double_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_double_press_actions.call ([x_pos, y_pos, 3, 0.0,
+				0.0, 0.0, pt.x, pt.y])
 		end
 
 feature {NONE} -- Implementation, mouse move, enter and leave events
@@ -523,8 +516,6 @@ feature {NONE} -- Implementation, mouse move, enter and leave events
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse move.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			wid: EV_WIDGET
 			pt: WEL_POINT
@@ -538,10 +529,12 @@ feature {NONE} -- Implementation, mouse move, enter and leave events
 				cursor_on_widget.replace (Current)
 				on_mouse_enter
 			end
-			interface.pointer_motion_actions.call ([x_pos, y_pos, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_motion_actions.call ([x_pos, y_pos, 0.0, 0.0,
+				0.0, pt.x, pt.y])
 		end
 
 	on_mouse_enter is
+			-- Called when the mouse enters `Current'.
 		do
 			interface.pointer_enter_actions.call ([])
 		end
@@ -549,6 +542,11 @@ feature {NONE} -- Implementation, mouse move, enter and leave events
 feature {EV_WIDGET_IMP} -- on_mouse_leave must be visible 
 
 	on_mouse_leave is
+			-- Called when the mouse leaves `Current'.
+			--| If the mouse leaves `Current' and moves over a window which
+			--| is not part of the application then this will not be called, as
+			--| Windows will not send the appropriate message to this window.
+			--| This is standard windows behaviour.
 		do
 			interface.pointer_leave_actions.call ([])
 		end
@@ -557,8 +555,6 @@ feature {NONE} -- Implementation, key events
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- Executed when a key is pressed.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			key: EV_KEY
 		do
@@ -570,8 +566,6 @@ feature {NONE} -- Implementation, key events
 
 	on_key_up (virtual_key, key_data: INTEGER) is
 			-- Executed when a key is released.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			key: EV_KEY
 		do
@@ -594,7 +588,7 @@ feature {NONE} -- Implementation, key events
 feature {NONE} -- Implementation, focus event
 
 	on_set_focus is
-			-- Wm_setfocus message
+			-- Called when a `Wm_setfocus' message is recieved.
 		local
 			notebooks: ARRAY[EV_NOTEBOOK_IMP]
 			counter: INTEGER
@@ -617,7 +611,7 @@ feature {NONE} -- Implementation, focus event
 		end
 
 	on_kill_focus is
-			-- Wm_killfocus message
+			-- Called when a `Wm_killfocus' message is recieved.
 		local
 			notebooks: ARRAY[EV_NOTEBOOK_IMP]
 			counter: INTEGER
@@ -639,7 +633,7 @@ feature {NONE} -- Implementation, focus event
 feature {NONE} -- Implementation, cursor of the widget
 
 	on_set_cursor (hit_code: INTEGER) is
-			-- Wm_setcursor message.
+			-- Called when a `Wm_setcursor' message is recieved.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		do
 			if cursor_imp /= Void then
@@ -733,7 +727,7 @@ feature {WEL_DISPATCHER} -- Message dispatcher
 feature {NONE} -- Implementation, pick and drop
 
 	widget_source: EV_WIDGET_IMP is
-			-- Widget drag source used for transport
+			-- Widget drag source used for transport.
 		do
 			Result := Current
 		end
@@ -751,13 +745,13 @@ feature -- Deferred features
 		end
 
 	top_level_window_imp: EV_WINDOW_IMP is
-			-- Top level window that contains the current widget.
+			-- Top level window that contains `Current'.
 		deferred
 		end
 
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
-			-- of the widget.
+			-- of `Current'.
 		deferred
 		end
 
@@ -776,6 +770,7 @@ feature -- Deferred features
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
+			-- `Current' has been resized.
 		deferred
 		end
 
@@ -812,30 +807,37 @@ feature -- Deferred features
 		end
 
 	wel_parent: WEL_WINDOW is
+			-- The wel parent of `Current'.
 		deferred
 		end
 
 	wel_set_parent (a_parent: WEL_WINDOW) is
+			-- Set the wel parent of `Current'.
 		deferred
 		end
 
 	default_style: INTEGER is
+			-- Default style of `Current'.
 		deferred
 		end
 
 	style: INTEGER is
+			-- Current style of `Current'
 		deferred
 		end
 
 	set_style (a_style: INTEGER) is
+			-- Assign `a_Style' to `style' of `Current'.
 		deferred
 		end
 
 	client_rect: WEL_RECT is
+			-- Area used by `Current'.
 		deferred
 		end
 
 	invalidate is
+			-- Cause `Current' to re-draw.
 		deferred
 		end
 
@@ -885,7 +887,7 @@ feature -- Feature that should be directly implemented by externals
 
 end -- class EV_WIDGET_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -899,13 +901,16 @@ end -- class EV_WIDGET_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.73  2000/05/03 16:57:04  rogers
+--| Comments, formatting.
+--|
 --| Revision 1.72  2000/05/03 00:32:40  pichery
 --| Changed constants retrieval
 --|
@@ -956,10 +961,12 @@ end -- class EV_WIDGET_IMP
 --| Implemented recently changed key event to take EV_KEY.
 --|
 --| Revision 1.58  2000/03/17 23:02:51  rogers
---| Removed set_pointer_style and cursor_imp. They are now in EV_PICK_AND_DROPABLE.
+--| Removed set_pointer_style and cursor_imp. They are now in
+--| EV_PICK_AND_DROPABLE.
 --|
 --| Revision 1.57  2000/03/17 18:20:31  rogers
---| Implemented screen_x and screen_y as they are now deferred from EV_WIDGET_I. Removed set_vertical_resize, set_horizontal_resize.
+--| Implemented screen_x and screen_y as they are now deferred from EV_WIDGET_I.
+--| Removed set_vertical_resize, set_horizontal_resize.
 --|
 --| Revision 1.56  2000/03/14 20:02:36  brendel
 --| Rearranged initialization.
@@ -971,7 +978,8 @@ end -- class EV_WIDGET_IMP
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|
 --| Revision 1.53  2000/03/09 21:10:05  rogers
---| All calls to interface.pointer.button_***_actions are passes 0.0 instead of 0.
+--| All calls to interface.pointer.button_***_actions are passes 0.0 instead of 
+--| 0.
 --|
 --| Revision 1.52.2.2  2000/03/09 21:39:47  brendel
 --| Replaced x with x_position and y with y_position.
@@ -1026,13 +1034,16 @@ end -- class EV_WIDGET_IMP
 --| Removed deferred features set_capture and release_capture.
 --|
 --| Revision 1.49.6.4  2000/01/19 23:49:02  rogers
---| Added show to initialize, and added managed which means that all widgets are automatically managed by their parents.
+--| Added show to initialize, and added managed which means that all widgets
+--| are automatically managed by their parents.
 --|
 --| Revision 1.49.6.3  1999/12/22 17:54:15  rogers
 --| Implemented most of the mouse actions to use the new events.
 --|
 --| Revision 1.49.6.2  1999/12/17 01:00:56  rogers
---| Altered to fit in with the review branch. No inherits EV_PICK_AND_DROPABLE instead of the two old pick and drop classe. is_show_requested replaces shown.
+--| Altered to fit in with the review branch. No inherits
+--| EV_PICK_AND_DROPABLE instead of the two old pick and drop classe.
+--| is_show_requested replaces shown.
 --|
 --| Revision 1.49.6.1  1999/11/24 17:30:23  oconnor
 --| merged with DEVEL branch

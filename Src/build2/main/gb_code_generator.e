@@ -1139,9 +1139,9 @@ feature {NONE} -- Implementation
 			loop
 				generated_info := document_info.generated_info_by_id.item (all_ids.item)
 					-- Fixme, why assign id here? Try generating, and then see new ids after...
-				new_object := object_handler.build_object_from_string (generated_info.type)--_and_assign_id (generated_info.type)
+				new_object := object_handler.build_object_from_string (generated_info.type)
 				code_for_insert := generated_info.name.twin
-				if generated_info.associated_root_object_id > 0 and generated_info.generate_as_client then
+				if generated_info.associated_root_object_id > 0 and object_handler.object_from_id (generated_info.associated_root_object_id).generate_as_client then
 					if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
 						code_for_insert.append ("." + client_window_string)
 					else

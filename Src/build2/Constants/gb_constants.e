@@ -132,6 +132,18 @@ feature -- XML saving
 			Result.extend ("xml_output.xml")
 		end		
 		
+	component_filename: FILE_NAME is
+			-- Location of component file.
+		do
+			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
+			Result.extend ("build")
+			Result.extend ("temp")
+			Result.extend ("xml_components.xml")
+		end
+		
+	xml_format: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>"
+		-- XML format type, included at start of `document'.
+		
 feature -- XML constants
 
 

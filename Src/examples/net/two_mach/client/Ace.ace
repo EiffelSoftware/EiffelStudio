@@ -1,17 +1,17 @@
-system our_client
+system
+	our_client
 
 root
 	our_client (ROOT_CLUSTER): "make"
 
 default
---	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/net")
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
 	ROOT_CLUSTER: 	".";
 	common_classes:	"../common";
 
-	-- EiffelNet
+		-- EiffelNet
 	net:				"$EIFFEL4/library/net";
 	abstract_socket (net):		"$/abstract/socket";
 	net_socket (net):		"$/network/socket";
@@ -24,7 +24,7 @@ cluster
 	net_client_server (net):	"$/network/client_server";
 	local_client_server (net):	"$/local/client_server";
 
-	-- EiffelBase
+		-- EiffelBase
 	base:			"$EIFFEL4/library/base";
 	kernel (base):		"$/kernel";
 	support (base):		"$/support";
@@ -41,9 +41,9 @@ cluster
 	traversing (base):	"$/structures/traversing";
 	tree (base):		"$/structures/tree";
 
---external
+external
 	-- External EiffelNet library 
-	--object:
-		--"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
--- win		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
+	object:
+-- unix		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
 end

@@ -11,10 +11,11 @@ inherit
 
 	TOOL_W
 		redefine
-			save_cmd_holder, set_default_format, hole_button
+			save_cmd_holder, set_default_format, hole_button,
+			init_modify_action
 		end;
 	COMMAND;
-	SET_WINDOW_ATTRIBUTES;
+	WINDOW_ATTRIBUTES;
 	RESOURCE_USER
 
 creation
@@ -28,7 +29,6 @@ feature {NONE} -- Initialization
 		require
 			a_shell_not_void: a_shell /= Void
 		do
-			bar_and_text_name_chooser := Void;
 			make_form (a_shell.associated_form);
 			eb_shell := a_shell;
 			set_default_size;
@@ -48,12 +48,17 @@ feature {NONE} -- Initialization
 		require
 			a_form_not_void: a_form /= Void
 		do
-			bar_and_text_name_chooser := Void;
 			eb_shell := Void;
 			global_form := a_form;
 			!! history.make;
 			build_widgets;
 			register;
+		end;
+
+	init_modify_action (a_text_window: SCROLLED_TEXT_WINDOW) is
+			-- Initialization of the text window action.
+		do
+			a_text_window.add_modify_action (Current, modify)
 		end;
 
 feature -- Standard Interface
@@ -102,7 +107,6 @@ feature -- Standard Interface
 			!! edit_menu.make ("Edit", menu_bar);
 			!! format_menu.make ("Formats", menu_bar);
 			!! special_menu.make ("Special", menu_bar);
-			!! preference_menu.make ("Preference", menu_bar);
 			!! window_menu.make ("Windows", menu_bar);
 			!! help_menu.make ("Help", menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button)
@@ -124,27 +128,15 @@ feature -- Standard Interface
 			quit_cmd: QUIT_FILE;
 			quit_button: EB_BUTTON;
 			quit_menu_entry: EB_MENU_ENTRY;
-			exit_menu_entry: EB_MENU_ENTRY;
-			change_font_cmd: CHANGE_FONT;
-			change_font_menu_entry: EB_MENU_ENTRY;
-			search_cmd: SEARCH_STRING;
-			search_button: EB_BUTTON;
-			search_menu_entry: EB_MENU_ENTRY;
+			exit_menu_entry: EB_MENU_ENTRY
 		do
 				-- Creation of all the commands, holes, buttons, and menu entries
 			!! hole.make (Current);
 			!! hole_button.make (hole, edit_bar);
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
-			!! search_cmd.make (Current);
-			!! search_button.make (search_cmd, edit_bar);
-			!! search_menu_entry.make (search_cmd, edit_menu);
-			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
-			!! change_font_cmd.make (text_window);
-			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
-			!! change_font_cmd_holder.make_plain (change_font_cmd);
-			change_font_cmd_holder.set_menu_entry (change_font_menu_entry);
-			!! quit_cmd.make (text_window);
+			build_edit_menu (edit_bar);
+			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
 			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
@@ -156,9 +148,9 @@ feature -- Standard Interface
 				-- I know it's not really maintainable.
 			edit_bar.attach_left (hole_button, 0);
 			edit_bar.attach_top (hole_button, 0);
-			edit_bar.attach_top (search_button, 0);
+			edit_bar.attach_top (search_cmd_holder.associated_button, 0);
 			edit_bar.attach_top (quit_button, 0);
-			edit_bar.attach_right_widget (quit_button, search_button, 5);
+			edit_bar.attach_right_widget (quit_button, search_cmd_holder.associated_button, 5);
 			edit_bar.attach_right (quit_button, 0);
 		end;
 
@@ -226,14 +218,6 @@ feature -- Standard Interface
 		end
 
 feature -- Access
-
-	tool_name_chooser: NAME_CHOOSER_W is
-		do
-			if bar_and_text_name_chooser = Void then
-				bar_and_text_name_chooser := name_chooser (eb_shell)
-			end;
-			Result := bar_and_text_name_chooser
-		end;
 
 	realized: BOOLEAN is
 			-- Is Current realized?
@@ -339,40 +323,25 @@ feature -- Window Implementation
 			quit_cmd: QUIT_FILE;
 			quit_button: EB_BUTTON;
 			quit_menu_entry: EB_MENU_ENTRY
-			change_font_cmd: CHANGE_FONT;
-			change_font_button: EB_BUTTON;
-			change_font_menu_entry: EB_MENU_ENTRY
-			search_cmd: SEARCH_STRING;
-			search_button: EB_BUTTON;
-			search_menu_entry: EB_MENU_ENTRY;
 			exit_menu_entry: EB_MENU_ENTRY;
 		do
-			!! quit_cmd.make (text_window);
+			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
 			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
 			exit_cmd_holder.set_menu_entry (exit_menu_entry);
-			!! change_font_cmd.make (text_window);
-			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
-			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
-			!! search_cmd.make (Current);
-			!! search_button.make (search_cmd, edit_bar);
-			!! search_menu_entry.make (search_cmd, edit_menu);
-			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
+			build_edit_menu (edit_bar);
 		end;
 
 	close_windows is
 			-- Close sub-windows.
 		local
-			cf: CHANGE_FONT
 			ss: SEARCH_STRING
 		do
 			ss ?= search_cmd_holder.associated_command;
-			ss.close;
-			cf ?= change_font_cmd_holder.associated_command;
-			cf.close
+			ss.close
 		end;
 
 	resize_action is
@@ -404,22 +373,24 @@ feature -- Window Settings
 			new_x, new_y: INTEGER;
 			s: SCREEN
 		do
-			s := eb_shell.screen;
-			new_x := s.x;
-			new_y := s.y;
-			if new_x + eb_shell.width > s.width then
-				new_x := s.width - eb_shell.width
-			end;
-			if new_x < 0 then
-				new_x := 0
-			end;
-			if new_y + eb_shell.height > s.height then
-				new_y := s.height - eb_shell.height
-			end;
-			if new_y < 0 then
-				new_y := 0
-			end;
-			eb_shell.set_x_y (new_x, new_y)
+			if not System_resources.default_window_position.actual_value then
+				s := eb_shell.screen;
+				new_x := s.x;
+				new_y := s.y;
+				if new_x + eb_shell.width > s.width then
+					new_x := s.width - eb_shell.width
+				end;
+				if new_x < 0 then
+					new_x := 0
+				end;
+				if new_y + eb_shell.height > s.height then
+					new_y := s.height - eb_shell.height
+				end;
+				if new_y < 0 then
+					new_y := 0
+				end;
+				eb_shell.set_x_y (new_x, new_y)
+			end
 		end;
 
 	set_title (s: STRING) is
@@ -465,8 +436,6 @@ feature -- Window Properties
 
 	special_menu: MENU_PULL;
 
-	preference_menu: MENU_PULL;
-
 	window_menu: MENU_PULL;
 
 	help_menu: MENU_PULL;
@@ -500,9 +469,6 @@ feature -- Window Properties
 		do
 		end;
 
-	change_font_cmd_holder: COMMAND_HOLDER
-			-- Command to change the font.
-
 	open_cmd_holder: COMMAND_HOLDER is
 			-- Command to open a file.
 		do
@@ -526,6 +492,7 @@ feature -- Window Properties
 
 	exit_cmd_holder: COMMAND_HOLDER;
 			-- Command used to end the session.
+
 feature -- Execution Implementation
 
 	execute (argument: ANY) is
@@ -537,6 +504,9 @@ feature -- Execution Implementation
 					-- The tool is being raised,
 					-- moved, or resized.
 				resize_action
+			elseif argument = modify and then not text_window.changed then
+				text_window.set_changed (True);
+				update_save_symbol;
 			end;
 		end;
 
@@ -556,8 +526,11 @@ feature -- Properties
 			!!Result
 		end;
 
-feature {NONE} -- Properties
-
-	bar_and_text_name_chooser: NAME_CHOOSER_W
+	modify: ANY is
+			-- Argument used to indicate that text_window is being
+			-- modified.
+		once
+			!!Result
+		end;
 
 end -- class BAR_AND_TEXT

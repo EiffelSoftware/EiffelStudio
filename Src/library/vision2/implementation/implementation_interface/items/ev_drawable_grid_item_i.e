@@ -22,8 +22,6 @@ feature {NONE} -- Implementation
 
 	redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
-		local
-			back_color: EV_COLOR
 		do
 			if expose_actions_internal /= Void then
 				expose_actions_internal.call ([an_x, a_y, a_width, a_height, parent_grid_i.drawable])

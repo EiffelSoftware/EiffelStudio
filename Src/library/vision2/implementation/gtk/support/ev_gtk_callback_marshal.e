@@ -54,13 +54,15 @@ feature {NONE} -- Basic operation
 			agent_not_void: agent /= Void
 			n_args_not_negative: n_args >= 0
 			args_not_null: n_args > 0 implies args /= Default_pointer
-			--| FIXME IEK MCList needs three two_args_max: n_args <= 2
+			two_args_max: n_args <= 3
 				-- At present we only know how to deal with
-				-- no arguments or one agrument. (a GdkEvent*)
+				-- one to three agruments. (a GdkEvent*)
 				-- (Or two arguments which are ignored)
+				-- (Or two three from multi col lists)
 				-- FIXME improve this comment. sam
 		local
 			tuple: TUPLE
+			mcl_int_agent: PROCEDURE [EV_MULTI_COLUMN_LIST TUPLE [INTEGER]]
 		do
 			if n_args = 1 then
 				tuple := gdk_event_to_tuple (gtk_value_pointer (args))
@@ -76,6 +78,13 @@ feature {NONE} -- Basic operation
 						agent.call (tuple)
 					end
 				end
+			elseif n_args = 3
+					-- If we have a single INTEGER operand agent on EV_MULTI_COLUMN_LIST
+					-- we assume we have a row number in the first arg and we pass it.
+				mcl_int_agent ?= agent
+				if mcl_int_agent /= Void then
+					agent.call ([[gtk_value_pointer (args)]])
+				end
 			else
 				agent.call ([[]])
 			end
@@ -83,6 +92,12 @@ feature {NONE} -- Basic operation
 
 	gtk_value_pointer (arg: POINTER): POINTER is
 			-- Pointer to the value of a GtkArg.
+		external
+			"C | %"ev_gtk_callback_marshal.h%""
+		end
+
+	gtk_value_int (arg: POINTER): INTEGER is
+			-- Integer value from a GtkArg.
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
 		end
@@ -293,6 +308,9 @@ end -- class EV_GTK_CALLBACK_MARSHAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/18 19:17:24  oconnor
+--| added experimental support for MCL data
+--|
 --| Revision 1.4  2000/02/18 18:37:21  king
 --| Commented out two_args_max precond in marshal to allow signal connection for clist
 --|

@@ -72,23 +72,29 @@ feature -- Basic operation
 		local
 			formater: XM_FORMATTER
 			generation_settings: GB_GENERATION_SETTINGS
-			last_string: STRING
+			output_file: KL_TEXT_OUTPUT_FILE
+			last_string: KL_STRING_OUTPUT_STREAM
 		do
 			create generation_settings
 			generation_settings.enable_is_saving
 				-- Generate an XML representation of the system in `document'.
 			generate_document (generation_settings)
 			
+				-- Process XML to `last_string'.
+			create last_string.make ("")
 			create formater.make
-				-- Process the document ready for output
+			formater.set_output (last_string)
 			formater.process_document (document)
-				
-				-- Now format the generated XML.
-			last_string := formater.last_string
-			process_xml_string (last_string)
+			
+				-- Nicely format `last_string.string' to have indentation.
+			process_xml_string (last_string.string)
 					
-				-- Save our XML ouput to disk in `filename'.
-			write_file_to_disk (last_string)
+				-- Save nicely formatted XML ouput to disk in `filename'.
+			create output_file.make (filename)
+			output_file.open_write
+			output_file.put_string (xml_format)
+			output_file.put_string (last_string.string)
+			output_file.close
 			set_timed_status_text ("Saved.")
 		end
 		
@@ -100,20 +106,6 @@ feature -- Basic operation
 			object_written_action := an_agent
 		end
 
-feature {NONE} -- Basic operation.
-	
-	write_file_to_disk (xml_text: STRING) is
-			-- Create a file named `filename' with content `xml_text'.
-		local
-			file: RAW_FILE
-		do
-			create file.make_open_write (filename)
-			file.start
-			file.putstring (xml_format)
-			file.put_string (xml_text)
-			file.close
-		end
-		
 feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 
 	add_new_object_to_output (an_object: GB_OBJECT; element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
@@ -242,14 +234,11 @@ feature {GB_CODE_GENERATOR} -- Implementation
 				generated_names.wipe_out
 			end
 			
-			create namespace.make ("", "")
-			create application_element.make_root ("application", namespace)
+			create namespace.make_default
+			create document.make_with_root_named ("application", namespace)
+			application_element := document.root_element
 			add_attribute_to_element (application_element, "xsi", "xmlns", Schema_instance)	
-			create document.make
 
-				-- Add `application_element' as the root element of `document'.
-			document.force_first (application_element)
-			
 				-- Firstly store all constants.
 			 constants_list := constants.all_constants
 			 

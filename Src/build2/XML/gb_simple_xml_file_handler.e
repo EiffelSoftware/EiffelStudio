@@ -51,13 +51,13 @@ feature -- Basic operations
 			counter: INTEGER
 			namespace: XM_NAMESPACE
 			a_name_string, a_data_string: STRING
+			file: KL_TEXT_OUTPUT_FILE
 		do
 				-- Create the root element.
-			create namespace.make ("", "")
-			create root_element.make_root (root_node_name, namespace)
+			create namespace.make_default
+			create document.make_with_root_named (root_node_name, namespace)
+			root_element := document.root_element
 			add_attribute_to_element (root_element, "xsi", "xmlns", Schema_instance)	
-			create document.make
-			document.force_first (root_element)
 				-- Add information in `names' and `data' to the file.
 			from
 				counter := 1
@@ -74,9 +74,13 @@ feature -- Basic operations
 			end
 			
 				-- Format and save the document.
+			create file.make (file_name)
+			file.open_write
+			file.put_string (xml_format)
 			create formater.make
+			formater.set_output (file)
 			formater.process_document (document)
-			write_file_to_disk (formater.last_string, file_name)
+			file.close
 		end
 		
 	load_file (file_name: STRING): ARRAYED_LIST [TUPLE [STRING, STRING]] is
@@ -121,18 +125,6 @@ feature -- Basic operations
 		-- Was the last call to `load file' successful?
 		
 feature {NONE} -- Implementation
-
-	write_file_to_disk (xml_text: STRING; file_name: STRING) is
-			-- Create a file named `filename' with content `xml_text'.
-		local
-			file: RAW_FILE
-		do
-			create file.make_open_write (file_name)
-			file.start
-			file.putstring (xml_format)
-			file.put_string (xml_text)
-			file.close
-		end
 		
 	load_and_parse_xml_file (a_filename:STRING): ARRAYED_LIST [TUPLE [STRING, STRING]] is
 			-- Load file `a_filename' and parse.

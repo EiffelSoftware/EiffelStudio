@@ -130,10 +130,9 @@ feature -- Basic operations
 				component_selector.add_components (all_child_element_names (an_element))
 			else
 					-- Create `component_document'.
-				create component_element.make_root ("Components", create {XM_NAMESPACE}.make ("", ""))
+				create component_document.make_with_root_named ("Components", create {XM_NAMESPACE}.make_default)
+				component_element := component_document.root_element
 				add_attribute_to_element (component_element, "xsi", "xmlns", Schema_instance)
-				create component_document.make
-				component_document.force_first (component_element)
 			end
 		ensure
 			component_doc_not_void: component_document /= Void
@@ -191,15 +190,15 @@ feature -- Basic operations
 	actual_save_components is
 			-- Actually perform saving of components.
 		local
-			file: RAW_FILE
+			file: KL_TEXT_OUTPUT_FILE
 			formater: XM_FORMATTER
 		do
+			create file.make (component_filename)			
+			file.open_write
+			file.put_string (xml_format)
 			create formater.make
+			formater.set_output (file)
 			formater.process_document (component_document)
-			create file.make_open_write (component_filename)			
-			file.start
-			file.putstring (xml_format)
-			file.putstring (formater.last_string)
 			file.close
 		end
 		

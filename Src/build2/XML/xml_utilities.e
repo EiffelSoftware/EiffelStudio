@@ -41,7 +41,7 @@ feature -- Access
 		local
 			attribute: XM_ATTRIBUTE
 		do
-			create attribute.make (a_name, create {XM_NAMESPACE}.make ("", ""), a_value, element )
+			create attribute.make (a_name, create {XM_NAMESPACE}.make_default, a_value, element )
 			element.force_last (attribute)
 		end
 	

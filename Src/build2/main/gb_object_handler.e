@@ -1036,7 +1036,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				
 				create store
 				create load
-				create element.make_root ("item", create {XM_NAMESPACE}.make ("", ""))
+				create element.make_root (create {XM_DOCUMENT}.make, "item", create {XM_NAMESPACE}.make_default)
 				add_attribute_to_element (element, "type", "xsi", an_object.type)
 				
 				store.output_attributes (an_object, element, create {GB_GENERATION_SETTINGS})
@@ -1109,7 +1109,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 
 				create store
 				create load
-				create element.make_root ("item", create {XM_NAMESPACE}.make ("", ""))
+				create element.make_root (create {XM_DOCUMENT}.make, "item", create {XM_NAMESPACE}.make_default)
 				add_attribute_to_element (element, "type", "xsi", an_object.type)
 				store.output_attributes (an_object, element, create {GB_GENERATION_SETTINGS})
 				

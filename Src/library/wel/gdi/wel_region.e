@@ -33,6 +33,9 @@ feature {NONE} -- Initialization
 			-- Make an empty rectangle region
 		do
 			item := cwin_create_rect_rgn (0, 0, 0, 0)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 	make_elliptic (left, top, right, bottom: INTEGER) is
@@ -40,6 +43,9 @@ feature {NONE} -- Initialization
 			-- bounding rectangle `left', `top', `right', `bottom'
 		do
 			item := cwin_create_elliptic_rgn (left, top, right, bottom)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 	make_elliptic_indirect (rect: WEL_RECT) is
@@ -49,6 +55,9 @@ feature {NONE} -- Initialization
 			rect_not_void: rect /= Void
 		do
 			item := cwin_create_elliptic_rgn_indirect (rect.item)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 	make_polygon_alternate (points: ARRAY [INTEGER]) is
@@ -62,9 +71,12 @@ feature {NONE} -- Initialization
 		local
 			a: WEL_INTEGER_ARRAY
 		do
-			!! a.make (points)
+			create a.make (points)
 			item := cwin_create_polygon_rgn (a.item, points.count // 2,
 				Alternate)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 	make_polygon_winding (points: ARRAY [INTEGER]) is
@@ -77,9 +89,12 @@ feature {NONE} -- Initialization
 		local
 			a: WEL_INTEGER_ARRAY
 		do
-			!! a.make (points)
+			create a.make (points)
 			item := cwin_create_polygon_rgn (a.item, points.count // 2,
 				Winding)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 	make_rect (left, top, right, bottom: INTEGER) is
@@ -87,6 +102,9 @@ feature {NONE} -- Initialization
 			-- `left', `top', `right', `bottom'.
 		do
 			item := cwin_create_rect_rgn (left, top, right, bottom)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 	make_rect_indirect (rect: WEL_RECT) is
@@ -96,6 +114,9 @@ feature {NONE} -- Initialization
 			rect_not_void: rect /= Void
 		do
 			item := cwin_create_rect_rgn_indirect (rect.item)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 feature -- Comparison
@@ -116,7 +137,7 @@ feature -- Basic operations
 			region_not_void: region /= Void
 			region_exists: region.exists
 		do
-			!! Result.make_empty
+			create Result.make_empty
 			cwin_combine_rgn (Result.item , item, region.item, mode)
 		ensure
 			result_not_void: Result /= Void			

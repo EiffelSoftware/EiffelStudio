@@ -16,8 +16,11 @@ inherit
 		rename
 			make as structure_make
 		redefine
-			structure_size
+			structure_size,
+			destroy_item
 		end
+
+	WEL_OBJECT_ID_MANAGER
 
 creation
 	make_by_file,
@@ -60,6 +63,8 @@ feature {NONE} -- Initialization
 			calculate_palette
 			file.close
 		ensure
+			palette_not_void: palette /= Void
+			palette_exists: palette.exists
 			file_closed: file.is_closed
 		end
 
@@ -73,6 +78,9 @@ feature {NONE} -- Initialization
 			memory_copy (bits_ptr, structure_size)
 			info_header.memory_copy (item, info_header.structure_size)
 			calculate_palette
+		ensure
+			palette_not_void: palette /= Void
+			palette_exists: palette.exists
 		end
 
 feature -- Access
@@ -124,7 +132,10 @@ feature -- Access
 		end
 
 	palette: WEL_PALETTE
-			-- Dib palette
+			-- Dib palette.
+			--
+			-- You can track the references of `palette' if you want to
+			-- free the GDI object contained in `palette' more quickly.
 
 feature -- Basic operations
 
@@ -151,9 +162,28 @@ feature -- Basic operations
 			end
 		end
 
+feature {NONE} -- Removal
+
+	destroy_item is
+			-- Free all GDI resource allocated by Current.
+			-- Should be called by the GC or by the user if i
+		local
+			internal_palette: like palette
+		do
+			internal_palette ?= eif_id_object (object_id_palette)
+			if internal_palette /= Void and then internal_palette.reference_tracked then
+				internal_palette.decrement_reference
+			end
+			Precursor
+		end
+
 feature {NONE} -- Implementation
+	
+	object_id_palette: INTEGER
+			-- Object id of `palette'.
 
 	structure_size: INTEGER
+			-- Size of the C structure representing `Current'.
 
 	i_th_quad (i: INTEGER): WEL_RGB_QUAD is
 		require
@@ -161,7 +191,7 @@ feature {NONE} -- Implementation
 			positive_i: i >= 0
 			i_small_enough: i < color_count
 		do
-			!! Result.make
+			create Result.make
 			Result.memory_copy (cwel_integer_to_pointer (
 				cwel_pointer_to_integer(item) + 
 				info_header.structure_size + i * rgb_quad_size),
@@ -192,6 +222,7 @@ feature {NONE} -- Implementation
 					dead_end: False
 				end
 			end
+			object_id_palette := eif_object_id (palette)
 		ensure
 			palette_not_void: palette /= Void
 			palette_exists: palette.exists
@@ -211,7 +242,7 @@ feature {NONE} -- Implementation
 			num_color: INTEGER
 		do
 			num_color := color_count
-			!! log_pal.make (768, num_color)
+			create log_pal.make (768, num_color)
 			--| 768 is the Windows version (0x300)
 			from
 				ind := 0
@@ -219,12 +250,12 @@ feature {NONE} -- Implementation
 				ind = num_color
 			loop
 				rgb_quad := i_th_quad (ind)	
-				!! pal_entry.make (rgb_quad.red, rgb_quad.green,
+				create pal_entry.make (rgb_quad.red, rgb_quad.green,
 							rgb_quad.blue, 0)
 				log_pal.set_pal_entry (ind, pal_entry)
 				ind := ind + 1
 			end
-			!! palette.make (log_pal)	
+			create palette.make (log_pal)
 		ensure
 			palette_not_void: palette /= Void
 			palette_exists: palette.exists
@@ -242,13 +273,13 @@ feature {NONE} -- Implementation
 			pal_entry: WEL_PALETTE_ENTRY
 			log_pal: WEL_LOG_PALETTE
 		do
-			!! log_pal.make (768, max_palette)
+			create log_pal.make (768, max_palette)
 			from
 				ind := 0
 			until
 				ind = max_palette
 			loop
-				!! pal_entry.make (red, green, blue, 0)
+				create pal_entry.make (red, green, blue, 0)
 				log_pal.set_pal_entry (ind, pal_entry)
 
 
@@ -270,12 +301,10 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-			
-				
 				
 				ind := ind + 1
 			end
-			!! palette.make (log_pal)	
+			create palette.make (log_pal)	
 		ensure
 			palette_not_void: palette /= Void
 			palette_exists: palette.exists
@@ -294,7 +323,7 @@ feature {NONE} -- Implementation
 		local
 			rgb: WEL_RGB_QUAD
 		once
-			!! rgb.make
+			create rgb.make
 			Result := rgb.structure_size
 		ensure
 			positive_result: Result >= 0

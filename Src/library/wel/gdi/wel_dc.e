@@ -754,10 +754,6 @@ feature -- Status setting
 			else
 				old_hbitmap := cwin_select_object_result (item,
 					a_bitmap.item)
-				check
-					hbitmap_not_null:
-						old_hbitmap /= default_pointer
-				end
 			end
 			bitmap := a_bitmap
 		ensure

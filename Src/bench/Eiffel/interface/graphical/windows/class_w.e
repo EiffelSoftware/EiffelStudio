@@ -23,12 +23,13 @@ inherit
 			build_edit_bar, stone_type, synchronize,
 			process_class_syntax, process_feature, process_feature_error,
 			process_class, process_classi, compatible,
-			set_mode_for_editing, set_font, editable_text_window,
+			set_mode_for_editing, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
 			set_read_only_text_window,
 			update_boolean_resource,
 			update_integer_resource,
-			close, set_title, parse_file
+			close, set_title, parse_file,
+			resources
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -40,16 +41,15 @@ inherit
 			close_windows, resize_action, stone_type,
 			synchronize, set_stone, process_class_syntax,
 			process_feature, process_class, process_classi,
-			compatible, set_mode_for_editing, set_font, editable_text_window,
+			compatible, set_mode_for_editing, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
 			set_read_only_text_window, process_feature_error,
 			update_boolean_resource,
 			update_integer_resource,
-			close, set_title, parse_file
+			close, set_title, parse_file, resources
 		select
 			reset, close_windows, set_stone
 		end;
-	EB_CONSTANTS
 
 creation
 
@@ -60,9 +60,9 @@ feature -- Resource Update
 	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is
 			-- Update Current, according to `old_res' and `new_res'.
 		local
-			cr: like Class_tool_resources
+			cr: like resources
 		do
-			cr := Class_tool_resources;
+			cr := resources;
 			if old_res = cr.command_bar then
 				if new_res.actual_value then
 					edit_bar.add
@@ -84,9 +84,9 @@ feature -- Resource Update
 			-- if the value of `new_res' is applicable.
 			-- Also update the interface.
 		local
-			cr: like Class_tool_resources
+			cr: like Class_resources
 		do
-			cr := Class_tool_resources;
+			cr := Class_resources;
 			if new_res.actual_value > 0 then
 				if old_res = cr.tool_height then
 					if old_res.actual_value /= new_res.actual_value then
@@ -119,10 +119,16 @@ feature -- Properties
 
 feature -- Access
 
+	resources: like Class_resources is
+			-- Resources for tool
+		do
+			Result := Class_resources
+		end;
+
 	has_editable_text: BOOLEAN is
 			-- Does Current tool have an editable text window?
 		do
-			Result := True
+			Result := last_format = showtext_frmt_holder
 		end;
 
 	compatible (a_stone: STONE): BOOLEAN is
@@ -180,12 +186,6 @@ feature -- Status setting
 		do
 			text_window.set_editable
 		end;
-
-	set_font (a_font: FONT) is
-			-- Set new font `a_font' to window
-		do
-			class_text_field.set_font (a_font)
-		end
 
 	set_editable_text_window (ed: like editable_text_window) is
 			-- Set `editable_text_window' to `ed'.
@@ -416,20 +416,20 @@ feature -- Grahpical Interface
 
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
 			!! sep.make (Interface_names.t_Empty, toolbar_parent);
 			build_bar;
-			!! format_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
 			fill_menus;
 			build_toolbar_menu;
 			set_last_format (default_format);
 
-			if Class_tool_resources.command_bar.actual_value = False then
+			if Class_resources.command_bar.actual_value = False then
 				edit_bar.remove
 			end;
-			if Class_tool_resources.format_bar.actual_value = False then
+			if Class_resources.format_bar.actual_value = False then
 				format_bar.remove
 			end;
 
@@ -472,8 +472,8 @@ feature {NONE} -- Implemetation; Window Settings
 	set_default_size is
 			-- Set the size of Current to its default.
 		do
-			eb_shell.set_size (Class_tool_resources.tool_width.actual_value,
-				Class_tool_resources.tool_height.actual_value)
+			eb_shell.set_size (Class_resources.tool_width.actual_value,
+				Class_resources.tool_height.actual_value)
 		end;
 
 	set_format_label (s: STRING) is
@@ -680,23 +680,23 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! tex_button.make (tex_cmd, format_bar);
 			!! tex_menu_entry.make (tex_cmd, format_menu);
 			!! showtext_frmt_holder.make (tex_cmd, tex_button, tex_menu_entry);
+			!! click_cmd.make (Current);
+			!! click_button.make (click_cmd, format_bar);
+			!! click_menu_entry.make (click_cmd, format_menu);
+			!! showclick_frmt_holder.make (click_cmd, click_button, click_menu_entry);
 			!! fla_cmd.make (Current);
 			!! fla_button.make (fla_cmd, format_bar);
 			!! fla_menu_entry.make (fla_cmd, format_menu);
 			!! showflat_frmt_holder.make (fla_cmd, fla_button, fla_menu_entry);
-			!! fs_cmd.make (Current);
-			!! fs_button.make (fs_cmd, format_bar);
-			!! fs_menu_entry.make (fs_cmd, format_menu);
-			!! showflatshort_frmt_holder.make (fs_cmd, fs_button, fs_menu_entry);
 			!! sho_cmd.make (Current);
 			!! sho_button.make (sho_cmd, format_bar);
 			!! sho_menu_entry.make (sho_cmd, format_menu);
 			!! showshort_frmt_holder.make (sho_cmd, sho_button, sho_menu_entry);
-			!! click_cmd.make (Current);
-			!! click_button.make (click_cmd, format_bar);
-			!! click_menu_entry.make (click_cmd, format_menu);
+			!! fs_cmd.make (Current);
+			!! fs_button.make (fs_cmd, format_bar);
+			!! fs_menu_entry.make (fs_cmd, format_menu);
+			!! showflatshort_frmt_holder.make (fs_cmd, fs_button, fs_menu_entry);
 			!! sep.make (new_name, format_menu);
-			!! showclick_frmt_holder.make (click_cmd, click_button, click_menu_entry);
 			!! anc_cmd.make (Current);
 			!! anc_button.make (anc_cmd, format_bar);
 			!! anc_menu_entry.make (anc_cmd, format_menu);

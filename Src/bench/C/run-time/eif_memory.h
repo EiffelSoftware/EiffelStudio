@@ -22,7 +22,8 @@ RT_LNK void mem_free(EIF_REFERENCE object);	/* Unconditionally free object */
 RT_LNK void mem_speed(void);
 RT_LNK void mem_slow(void);
 RT_LNK void mem_tiny(void);
-RT_LNK EIF_INTEGER mem_coalesc(void);
+RT_LNK EIF_INTEGER mem_largest(void);
+RT_LNK void mem_coalesc(void);
 RT_LNK long mem_tget(void);
 RT_LNK void mem_tset(long int value);
 RT_LNK long mem_pget(void);

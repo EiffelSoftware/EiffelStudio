@@ -216,6 +216,9 @@ typedef struct tag_rt_globals
 	SYSTEMTIME 	*init_date_cx;
 #endif  /* HAS_GERUSAGE */
 
+		/* memory.c */
+	EIF_INTEGER m_largest_cx;
+
 
 } rt_global_context_t;
 
@@ -421,6 +424,9 @@ rt_private rt_global_context_t * rt_thr_getspecific (EIF_TSD_TYPE global_key) {
 #define last_name			(rt_globals->last_name_cx)
 #define class_table			(rt_globals->class_table_cx)
 #define init_date			(rt_globals->init_date_cx)
+
+		/* memory.c */
+#define m_largest			(rt_globals->m_largest_cx)
 
 RT_LNK EIF_TSD_TYPE rt_global_key;
 

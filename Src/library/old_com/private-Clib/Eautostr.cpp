@@ -1017,15 +1017,16 @@ extern "C" EIF_OBJ eole2_arraydesc_bounds( EIF_POINTER pThis )
 	eif_bound_set_lower_bound = eif_proc ("set_lower_bound", eif_bound_id);
 	Result = eif_create (eif_array_id);
 	eif_array_make (eif_access (Result), 1, dims);
-	Bounds = eif_create (eif_bound_id);
-	eif_bound_init (eif_access (Bounds));
 	while (i <= dims) {
+		Bounds = eif_create (eif_bound_id);
+		eif_bound_init (eif_access (Bounds));
 		eif_bound_set_elem_count (eif_access (Bounds), pAR->rgbounds [i-1].cElements);
 		eif_bound_set_lower_bound (eif_access (Bounds), pAR->rgbounds [i-1].lLbound);
 		eif_array_put (eif_access (Result), eif_access (Bounds), i);
 		i++;
+		eif_wean (Bounds);
 	}
-	return eif_access (Result);
+	return eif_wean (Result);
 }
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------

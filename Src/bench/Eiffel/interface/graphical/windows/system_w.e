@@ -8,14 +8,14 @@ indexing
 class SYSTEM_W 
 
 inherit
+	PROJECT_CONTEXT
 
-	PROJECT_CONTEXT;
 	BAR_AND_TEXT
 		redefine
 			hole, build_format_bar, build_widgets,
 			open_cmd_holder, save_cmd_holder,
 			tool_name, editable, display, stone, stone_type, 
-			synchronise_stone, process_system,
+			synchronise_stone, process_system, parse_file,
 			process_class, process_classi, process_ace_syntax, compatible,
 			set_mode_for_editing, hide, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
@@ -26,8 +26,11 @@ inherit
 			set_default_size,
 			resources, close, update_graphical_resources,
 			raise, build_save_as_menu_entry, help_index, icon_id
-		end;
-	EB_CONSTANTS;
+		end
+
+	EB_CONSTANTS
+
+	SHARED_LACE_PARSER
 
 creation
 	make
@@ -188,6 +191,38 @@ feature -- Status setting
 			eb_shell.set_size (System_resources.tool_width.actual_value,
 				System_resources.tool_height.actual_value)
 		end;
+
+feature -- Parsing
+
+	parse_file is
+		local
+			retried: BOOLEAN
+			syntax_error: SYNTAX_ERROR
+			syntax_stone: ACE_SYNTAX_STONE
+			error_msg, msg: STRING
+		do
+			Parser.parse_file (file_name)
+
+			syntax_error := Parser.last_syntax_error
+			if syntax_error /= Void then
+				error_msg := "Ace has syntax error"
+				msg := syntax_error.syntax_message
+
+				if not msg.empty then
+					error_msg.append (" (");
+					error_msg.append (msg);
+					error_msg.extend (')')
+				end
+				
+				error_msg.append (".%NSee higlighted area")
+				!! syntax_stone.make (syntax_error)
+				process_ace_syntax (syntax_stone);
+				Parser.clear_syntax_error;
+				warner (popup_parent).gotcha_call (error_msg);
+			else
+				text_window.update_clickable_from_stone (stone)
+			end
+		end
 
 feature -- Update
 

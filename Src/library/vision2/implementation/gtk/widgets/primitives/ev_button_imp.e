@@ -14,7 +14,8 @@ inherit
         
 	EV_PRIMITIVE_IMP
 		undefine
-			set_foreground_color
+			set_foreground_color,
+			set_background_color
 		end
 	
 	EV_BAR_ITEM_IMP
@@ -24,6 +25,10 @@ inherit
 	EV_PIXMAPABLE_IMP
 		undefine
 			pixmap_size_ok
+		redefine
+			set_foreground_color,
+			set_background_color,
+			create_pixmap_place
 		end
         
 	EV_GTK_BUTTONS_EXTERNALS
@@ -46,10 +51,55 @@ feature {NONE} -- Initialization
 			-- Create a gtk label with a text set to ""
 			create_text_label ("")
 
-			-- We center-align and vertical_center-position the text.
+			-- We left-align and vertical_center-position the text.
 			gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
 		end	
 		
+	create_pixmap_place is
+			-- prepare the place for the pixmap in the `box'.
+			-- For that, we add a pixmap with a default gdk pixmap
+			-- in the `box'.
+			-- Redefined because, we want the pixmap to be in the middle of the button.
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+		do
+			-- create the pixmap with a default xpm.
+			pixmap_widget := c_gtk_pixmap_create_empty (box)
+
+			-- Set the pixmap in the `box'.
+			gtk_box_pack_start (GTK_BOX (box), pixmap_widget, True, True, 0)
+
+			-- show the pixmap now that it has a parent.
+			gtk_widget_show (pixmap_widget)
+
+			-- We right-align and vertical_center-position the pixmap.
+			gtk_misc_set_alignment (gtk_misc (pixmap_widget), 1.0, 0.5)
+		end					
+
+feature -- Element change
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'.
+			-- Redefined because the text is in a gtk_label.
+		do
+			{EV_PIXMAPABLE_IMP} Precursor (color)
+
+			if box /= default_pointer then
+				c_gtk_widget_set_fg_color (box, color.red, color.green, color.blue)
+			end
+		end
+
+	set_background_color (color: EV_COLOR) is
+			-- Assign `color' as new `foreground_color'.
+			-- Redefined because the text is in a gtk_label.
+		do
+			{EV_PIXMAPABLE_IMP} Precursor (color)
+
+			if box /= default_pointer then
+				c_gtk_widget_set_bg_color (box, color.red, color.green, color.blue)
+			end
+		end
+
 feature -- Event - command association
 	
 	add_click_command (com: EV_COMMAND; arg: EV_ARGUMENT) is

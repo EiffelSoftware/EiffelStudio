@@ -29,6 +29,7 @@ feature -- Initialization
 		local
 			file: RAW_FILE
 			dc: WEL_CLIENT_DC
+			dib: WEL_DIB
 		do
 			mdi_child_window_make (a_parent, a_name)
 			!! file.make_open_read (a_name)
@@ -46,17 +47,12 @@ feature -- Access
 	bitmap: WEL_BITMAP
 			-- Bitmap selected by the user
 
-	dib: WEL_DIB
-			-- DIB informations about `bitmap'
-
 feature -- Basic operations
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Paint the bitmap
 		do
-			paint_dc.draw_bitmap (bitmap, 
-				(client_rect.width - bitmap.width) // 2,
-				(client_rect.height - bitmap.height) // 2, 
+			paint_dc.draw_bitmap (bitmap, 0, 0,
 				bitmap.width, bitmap.height)
 		end
 

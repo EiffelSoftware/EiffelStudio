@@ -16,9 +16,11 @@
 			<cell style="product_type">[!Product!]</cell>
 		</row>
 	</table>
-	<table style="page_title">
+	<table>
 		<row>
-			<cell style="page_title">[!Title!]</cell>
+			<cell class="content_style">
+				<heading><size>1</size>[!Title!]</heading>
+			</cell>
 		</row>
 	</table>
 </span>

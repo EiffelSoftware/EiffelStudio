@@ -40,16 +40,16 @@ feature -- Initialization
 			open_read;
 		end;
 
-    	create is
-            -- Create a physical directory.(d.H) 	
+	create is
+			-- Create a physical directory.
 		require
-            		physical_not_exists: not exists
-        	local
-            		external_name: ANY
-        	do
-           	 	external_name := name.to_c;
-            		file_mkdir ($external_name);
-        	end;
+			physical_not_exists: not exists
+		local
+			external_name: ANY
+		do
+			external_name := name.to_c;
+			file_mkdir ($external_name);
+		end;
 
 feature -- Access
 
@@ -204,10 +204,10 @@ feature  {NONE} -- Status report
 feature  {NONE} -- External, Initialization
 
 	file_mkdir (dir_name: ANY) is
-            -- Make directory `dir_name'.
-        	external
-            		"C"
-        	end;
+			-- Make directory `dir_name'.
+		external
+			"C"
+		end;
 
 feature  {NONE} -- External, Access
 
@@ -230,7 +230,7 @@ feature  {NONE} -- External, Access
 		end;
 
 	dir_next (dir_ptr: POINTER): STRING is
-			-- Return the next entry for directory 'dir_ptr'.(d.H)
+			-- Return the next entry for directory 'dir_ptr'.
 		external
 			"C"
 		end;

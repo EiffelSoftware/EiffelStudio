@@ -34,3 +34,38 @@ remtrace web
 exprt -r $DEFAULT_CVS_TAG -d web Src/library/web
 
 cd ../..
+
+remtrace Retrieve examples
+cd $INSTALL_DIR
+md examples
+cd examples
+remtrace base
+exprt -r $DEFAULT_CVS_TAG -d base Src/examples/base
+remtrace Eiffel2Java
+exprt -r $DEFAULT_CVS_TAG -d Eiffel2Java Src/examples/Eiffel2Java
+remtrace cecil
+exprt -r $DEFAULT_CVS_TAG -d cecil Src/examples/cecil
+remtrace cpp
+exprt -r $DEFAULT_CVS_TAG -d cpp Src/examples/cpp
+remtrace lex
+exprt -r $DEFAULT_CVS_TAG -d lex Src/examples/lex
+remtrace mel
+exprt -r $DEFAULT_CVS_TAG -d mel Src/examples/mel
+remtrace net
+exprt -r $DEFAULT_CVS_TAG -d net Src/examples/net
+remtrace parse
+exprt -r $DEFAULT_CVS_TAG -d parse Src/examples/parse
+remtrace store
+exprt -r $DEFAULT_CVS_TAG -d store Src/examples/store
+remtrace thread
+exprt -r $DEFAULT_CVS_TAG -d thread Src/examples/thread
+remtrace time
+exprt -r $DEFAULT_CVS_TAG -d time Src/examples/time
+remtrace vision
+exprt -r $DEFAULT_CVS_TAG -d vision Src/examples/vision
+remtrace vision2
+exprt -r $DEFAULT_CVS_TAG -d vision2 Src/examples/vision2
+remtrace studio
+exprt -r $DEFAULT_CVS_TAG -d studio Src/examples/studio
+
+cd ../..

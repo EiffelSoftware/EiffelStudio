@@ -1549,6 +1549,11 @@ feature {NONE} -- Messages
 			-- Called when window receives WM_GETDLGCODE message.
 		do
 		end
+		
+	on_wm_theme_changed is
+			-- Called when window receives WM_THEMECHANGED message.
+		do
+		end
 
 feature {WEL_WINDOW, WEL_DISPATCHER} -- Implementation
 
@@ -1808,6 +1813,8 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 				on_wm_activate (wparam.to_integer_32)
 			when wm_getdlgcode then
 				on_getdlgcode
+			when wm_themechanged then
+				on_wm_theme_changed
 			when wm_queryuistate, wm_changeuistate, wm_updateuistate then
 					-- Override windows behavior so that when running on Windows XP
 					-- with a manifest file you get the focus outline rectangle on

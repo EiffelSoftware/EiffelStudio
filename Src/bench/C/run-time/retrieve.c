@@ -384,8 +384,8 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
-		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
+		RTXSC;					/* Restore stack contexts */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -504,8 +504,8 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
-		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
+		RTXSC;					/* Restore stack contexts */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -709,8 +709,8 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
-		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
+		RTXSC;					/* Restore stack contexts */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -1163,8 +1163,8 @@ rt_private void read_header(char rt_type)
 
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
-		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
+		RTXSC;					/* Restore stack contexts */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 	r_buffer = (char*) xmalloc (bsize * sizeof (char), C_T, GC_OFF);
@@ -1308,8 +1308,8 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
-		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
+		RTXSC;					/* Restore stack contexts */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -1706,8 +1706,8 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					buffer_read((char *) &old_flags, sizeof(uint32));
 					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
 
-						/* No need to set `ov_size' as it is done while creating the object */
-					HEADER(object + attrib_offset)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
+						/* No need to set `ov_size' or `ov_flags' as it is done while creating
+						 * the object */
 					gen_object_read (object + attrib_offset, parent);						
 
 					}
@@ -1793,7 +1793,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 	
-							HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
+							HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_EXP|EO_COMP|EO_TYPE));
 							HEADER(ref)->ov_size = (uint32)(ref - parent);
 							gen_object_read (ref, parent);						
 							}
@@ -1930,9 +1930,8 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					printf ("\n %lx", *((EIF_REFERENCE *)(object + attrib_offset)));
 					printf (" %lx", old_flags);
 #endif
-
-						/* No need to set `ov_size' as it is done while creating the object */
-					HEADER(object + attrib_offset)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
+						/* No need to set `ov_size' or `ov_flags' as it is done while creating
+						 * the object */
 					object_read (object + attrib_offset, parent);						
 
 					}
@@ -2090,7 +2089,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 #if DEBUG & 1
 							printf (" %x", old_flags);
 #endif
-							HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
+							HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_EXP|EO_COMP|EO_TYPE));
 							HEADER(ref)->ov_size = (uint32)(ref - parent);
 							object_read (ref, parent);						
 	

@@ -184,7 +184,7 @@ feature {NONE} -- Type description
 				il_generator.set_class_type_id (static_type_id_counter.count + 2)
 				il_generator.set_generic_type_id (static_type_id_counter.count + 3)
 				il_generator.set_formal_type_id (static_type_id_counter.count + 4)
-				il_generator.set_anchored_type_id (static_type_id_counter.count + 5)
+				il_generator.set_none_type_id (static_type_id_counter.count + 5)
 				il_generator.set_basic_type_id (static_type_id_counter.count + 6)
 				il_generator.generate_type_class_mappings
 			variant

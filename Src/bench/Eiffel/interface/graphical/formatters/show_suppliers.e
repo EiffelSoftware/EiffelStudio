@@ -6,7 +6,7 @@ inherit
 
 	FORMATTER
 		redefine
-			dark_symbol, display_temp_header
+			dark_symbol, display_temp_header, post_fix
 		end
 
 creation
@@ -52,5 +52,7 @@ feature {NONE}
 		do
 			text_window.display_header ("Searching for suppliers...")
 		end;
+
+	post_fix: STRING is "sup";
 
 end

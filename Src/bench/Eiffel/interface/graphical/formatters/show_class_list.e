@@ -8,7 +8,7 @@ inherit
 	SHARED_WORKBENCH;
 	LONG_FORMATTER
 		redefine
-			file_name, dark_symbol, display_temp_header
+			dark_symbol, display_temp_header, post_fix
 		end
 
 creation
@@ -39,19 +39,6 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Class_list_of end;
 
-	file_name (stone: STONE): STRING is
-		local
-			filed_stone: FILED_STONE
-		do
-			filed_stone ?= stone;
-			!!Result.make (0);
-			if filed_stone /= Void then
-				Result.append (filed_stone.file_name);
-				Result.append (".");
-				Result.append (post_fix); --| Should produce Ace.clusters
-			end;
-		end;
- 
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Show universe: classes in alphabetic order, in `text_window'.
 		local
@@ -67,5 +54,7 @@ feature {NONE}
 		do
 			text_window.display_header ("Exploring and sorting classes...")
 		end;
+
+	post_fix: STRING is "alf";
 
 end

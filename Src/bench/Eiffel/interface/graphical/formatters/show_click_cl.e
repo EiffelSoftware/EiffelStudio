@@ -9,7 +9,8 @@ inherit
 		rename
 			filter_context as clickable_context
 		redefine
-			dark_symbol, text_window, format, display_temp_header
+			dark_symbol, text_window, format, display_temp_header,
+			post_fix
 		end;
 	SHARED_FORMAT_TABLES
 
@@ -126,5 +127,7 @@ feature {NONE}
 		do
 			text_window.display_header ("Switching to clickable format...")
 		end;
+
+	post_fix: STRING is "clk";
 
 end

@@ -18,35 +18,35 @@ feature -- Initialization
 			size: DRAWING_SIZE
 			handler: EVENT_HANDLER
 		do
-			create main_window.make_winforms_form
+			create main_window.make
 			set_geometry (main_window,0,0,630,440,"Data Grid demo")
 
-			create lb_server.make_winforms_label
+			create lb_server.make
 			lb_server.set_parent (main_window)
 			set_geometry (lb_server,5,7,80,23,"SQL Server")
-			create tb_server.make_winforms_text_box
+			create tb_server.make
 			tb_server.set_parent (main_window)
 			set_geometry (tb_server,90,5,160,25,"(local)\VSDotNet")
 
-			create lb_database.make_winforms_label
+			create lb_database.make
 			lb_database.set_parent (main_window)
 			set_geometry (lb_database,255,7,30,23,"DB")
-			create tb_database.make_winforms_text_box
+			create tb_database.make
 			tb_database.set_parent (main_window)
 			set_geometry (tb_database,290,5,160,25,"Northwind")
 
-			create bn_populate.make_winforms_button
+			create bn_populate.make
 			bn_populate.set_parent (main_window)
 			set_geometry (bn_populate,455,3,120,25,"Populate grid")
-			create handler.make_event_handler (Current,$populate_grid)
+			create handler.make (Current,$populate_grid)
 			bn_populate.add_click (handler)
 
-			create data_grid.make_winforms_data_grid
+			create data_grid.make
 			set_geometry (data_grid,5,35,620,400,Void)
 			data_grid.set_caption_text (("This is DataGrid's caption text").to_cil)
 			main_window.get_controls.add (data_grid)
 
-			create handler.make_event_handler (Current,$on_resize)
+			create handler.make (Current,$on_resize)
 			main_window.add_resize (handler)
 			main_window.show
 			on_resize (Void,Void)
@@ -116,54 +116,55 @@ feature {NONE} -- Implementation
 			append_cil (connection_string,tb_server.get_text)
 			connection_string.append (";Trusted_Connection=yes;database=")
 			append_cil (connection_string,tb_database.get_text)
-			create northwind_connection.make_data_sql_connection_1 (connection_string.to_cil)
+			create northwind_connection.make_from_connection_string (connection_string.to_cil)
 
 				-- Create a DATA_SQL_DATA_ADAPTER for the Suppliers table.
-			create suppliers_adapter.make_data_sql_data_adapter
-
+			create suppliers_adapter.make
+			
 				-- A table mapping tells the adapter what to call the table.
-			a_mapping := suppliers_adapter.get_table_mappings.add_string2(("Table").to_cil,
+			a_mapping := suppliers_adapter.get_table_mappings.add_string (("Table").to_cil,
 				("Suppliers").to_cil)
 
 			northwind_connection.open
-			create command_on_suppliers.make_data_sql_command_2(("SELECT * FROM Suppliers").to_cil,
+			create command_on_suppliers.make_from_cmd_text_and_connection (("SELECT * FROM Suppliers").to_cil,
 				northwind_connection)
 
 			command_on_suppliers.set_command_type (feature {DATA_COMMAND_TYPE}.Text)
 			suppliers_adapter.set_select_command (command_on_suppliers)
 
-			feature {SYSTEM_CONSOLE}.write_string(("The connection is open.").to_cil)
+			feature {SYSTEM_CONSOLE}.write (("The connection is open.").to_cil)
 			feature {SYSTEM_CONSOLE}.write_line
-			create data_set.make_data_data_set_1(("Customers").to_cil)
+			create data_set.make_from_data_set_name (("Customers").to_cil)
 			count := suppliers_adapter.fill_data_set (data_set)
 
 				-- Create a second DATA_SQL_DATA_ADAPTER and DATA_SQL_COMMAND to get
 				-- the Products table, a child table of Suppliers.
 
-			create products_adapter.make_data_sql_data_adapter
-			a_mapping := products_adapter.get_table_mappings.add_string2 (("Table").to_cil,
+			create products_adapter.make
+			a_mapping := products_adapter.get_table_mappings.add_string (("Table").to_cil,
 				("Products").to_cil)
 
-			create command_on_products.make_data_sql_command_2(("SELECT * FROM Products").to_cil,
+			create command_on_products.make_from_cmd_text_and_connection (("SELECT * FROM Products").to_cil,
 				northwind_connection)
 
 			products_adapter.set_select_command (command_on_products)
 			count := products_adapter.fill_data_set (data_set)
 			northwind_connection.Close
 
-			feature {SYSTEM_CONSOLE}.write_string(("The connection is closed.").to_cil)
+			feature {SYSTEM_CONSOLE}.write (("The connection is closed.").to_cil)
 			feature {SYSTEM_CONSOLE}.write_line
 
 				-- You must create a DATA_DATA_RELATION to link the two tables.
 				-- Get the parent and child columns of the two tables.
 
-			data_column_1 := data_set.get_tables.get_item(
+			data_column_1 := data_set.get_tables.get_item_string (
 				("Suppliers").to_cil).get_columns.get_item_string(("SupplierID").to_cil)
-			data_column_2 := data_set.get_tables.get_item(
+			data_column_2 := data_set.get_tables.get_item_string (
 				("Products").to_cil).get_columns.get_item_string(("SupplierID").to_cil)
 
-			create data_relation.make (("suppliers2products").to_cil, data_column_1, data_column_2)
-			data_set.get_relations.add(data_relation)
+			create data_relation.make_from_relation_name_and_parent_column_and_child_column (
+				("suppliers2products").to_cil, data_column_1, data_column_2)
+			data_set.get_relations.add (data_relation)
 		end
 
 	set_geometry (a_control: WINFORMS_CONTROL; a_x, a_y, a_w, a_h: INTEGER; a_text: STRING) is
@@ -172,11 +173,11 @@ feature {NONE} -- Implementation
 			l_size: DRAWING_SIZE
 		do
 			if a_x >0  then
-				l_point.make_drawing_point (a_x, a_y)
+				l_point.make_from_x_and_y (a_x, a_y)
 				a_control.set_location (l_point)
 			end
 			if a_w >0  then
-				l_size.make_drawing_size_1 (a_w, a_h)
+				l_size.make_from_width_and_height (a_w, a_h)
 				a_control.set_size (l_size)
 			end
 			if a_text /= Void then

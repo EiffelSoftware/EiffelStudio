@@ -30,12 +30,12 @@ feature -- Initialization
 		local
 			ok : BOOLEAN
 		do
-			create my_sql_connection.make_data_sql_connection_1
+			create my_sql_connection.make_from_connection_string
 				(("server=(local)\NetSDK;Trusted_Connection=yes;database=northwind").to_cil)
-	 		create my_sql_command.make_data_sql_command_2
+	 		create my_sql_command.make_from_cmd_text_and_connection
 				(("select * from customers").to_cil, my_sql_connection)
 
-			my_sql_connection.Open
+			my_sql_connection.open
 			my_reader := my_sql_command.execute_reader
 
 				-- Print header
@@ -48,10 +48,10 @@ feature -- Initialization
 			until
 				not ok
 			loop
-				feature {SYSTEM_CONSOLE}.write_string (
+				feature {SYSTEM_CONSOLE}.write (
 					my_reader.get_item_string (("CustomerID").to_cil).to_string)
-				feature {SYSTEM_CONSOLE}.write_string (("    ").to_cil)
-				feature {SYSTEM_CONSOLE}.write_string (
+				feature {SYSTEM_CONSOLE}.write (("    ").to_cil)
+				feature {SYSTEM_CONSOLE}.write (
 					my_reader.get_item_string (("CompanyName").to_cil).to_string)
 				feature {SYSTEM_CONSOLE}.write_line
 				ok := my_reader.read

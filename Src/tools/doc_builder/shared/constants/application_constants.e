@@ -70,9 +70,20 @@ feature -- Directory Paths
 		
 	temporary_directory: DIRECTORY_NAME is
 			-- Directory for temporary file generation
+		local
+			l_dir: DIRECTORY
 		once
-			create Result.make_from_string ("C:")
-			Result.extend ("doc")
+			if (create {PLATFORM}).is_windows then				
+				create Result.make_from_string ("C:")
+				Result.extend ("doc")
+			else
+				Result := application_root_directory.twin
+				Result.extend ("temp")
+				create l_dir.make (Result.string)
+				if not l_dir.exists then
+					l_dir.create_dir
+				end
+			end
 		end
 		
 	temporary_html_directory: DIRECTORY_NAME is
@@ -330,7 +341,6 @@ feature -- Platform
 		once
 			create Result.make (3)
 			Result.compare_objects
-			Result.extend ("unix")
 			Result.extend ("classic")
 			Result.extend (".net")
 		end

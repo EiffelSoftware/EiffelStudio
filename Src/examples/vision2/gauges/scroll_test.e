@@ -34,6 +34,10 @@ feature -- Initialization
 			create pb
 			--pb.enable_segmentation
 			vb.extend (pb)
+
+			create hr
+			vb.extend (hr)
+
 			create min_field.make_with_range (-1000, 1)
 			min_field.set_value (1)
 			hb.extend (create {EV_LABEL}.make_with_text ("Min: "))
@@ -50,10 +54,12 @@ feature -- Initialization
 			max_field.change_actions.extend (~on_max_change)
 			sb.change_actions.extend (~on_sb_change)
 			val_field.change_actions.extend (~on_val_change)
+			hr.change_actions.extend (~on_hr_change)
 
 			val_field.set_range (min_field.value, max_field.value)
 			sb.set_range (min_field.value, max_field.value)
 			pb.set_range (min_field.value, max_field.value)
+			hr.set_range (min_field.value, max_field.value)
 		end
 
 	max_field: EV_SPIN_BUTTON
@@ -62,12 +68,14 @@ feature -- Initialization
 
 	sb: EV_HORIZONTAL_SCROLL_BAR
 	pb: EV_HORIZONTAL_PROGRESS_BAR
+	hr: EV_HORIZONTAL_RANGE
 
 	on_min_change is
 		do
 			val_field.set_minimum (min_field.value)
 			sb.set_minimum (min_field.value)
 			pb.set_minimum (min_field.value)
+			hr.set_minimum (min_field.value)
 		end
 
 	on_max_change is
@@ -75,6 +83,7 @@ feature -- Initialization
 			val_field.set_maximum (max_field.value)
 			sb.set_maximum (max_field.value)
 			pb.set_maximum (max_field.value)
+			hr.set_maximum (max_field.value)
 		end
 
 	on_sb_change is
@@ -84,22 +93,32 @@ feature -- Initialization
 			min_field.set_maximum (sb.value)
 			val_field.set_value (sb.value)
 			pb.set_value (sb.value)
+			hr.set_value (sb.value)
+		end
+
+	on_hr_change is
+		do
+			max_field.set_minimum (hr.value)
+			min_field.set_maximum (hr.value)
+			val_field.set_value (hr.value)
+			pb.set_value (hr.value)
+			sb.set_value (hr.value)
 		end
 
 	on_val_change is
-			-- Scrollbar changes.
 		do
 			max_field.set_minimum (val_field.value)
 			min_field.set_maximum (val_field.value)
 			sb.set_value (val_field.value)
 			pb.set_value (val_field.value)
+			hr.set_value (val_field.value)
 		end
 
 	first_window: EV_TITLED_WINDOW is
 		once
 			create Result
 			Result.set_title ("Main window")
-			Result.show
+			--Result.show
 			Result.set_size (300, 300)
 		end
 

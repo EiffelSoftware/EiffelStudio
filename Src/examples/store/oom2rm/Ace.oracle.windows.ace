@@ -6,7 +6,7 @@ root
 default
 	assertion (all)
 	console_application (yes)
---	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base")
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base")
 
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\store\oom2rm";

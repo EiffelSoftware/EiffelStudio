@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 				Result.set_pebble_function (~pebble_from_x_y (?, ?, level))
 				Result.set_accept_cursor (Cursors.cur_Setstop)
 				Result.set_data (level)
-				Result.pointer_double_press_actions.extend (~select_element(?,?,?,?,?,?,?,?,level))
+				Result.pointer_button_press_actions.extend (~select_element(?,?,?,?,?,?,?,?,level))
 				if level = Application.current_execution_stack_number then
 					Result.set_pixmap (Pixmaps.Icon_green_arrow)
 					arrowed_level := level
@@ -361,9 +361,14 @@ feature {NONE} -- Implementation
 			-- Set `a_stone' in the development window.
 		require
 			valid_level: level > 0 and level <= stack_list.count
+		local
+			st: CALL_STACK_STONE
 		do
 			if a_button = 1 then
-				debugger_manager.launch_stone (create {CALL_STACK_STONE}.make (level))
+				create st.make (level)
+				if st.is_valid then
+					debugger_manager.launch_stone (st)
+				end
 			end
 		end
 

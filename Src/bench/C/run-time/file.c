@@ -327,7 +327,7 @@ float number;
 	/* Write `number' on `f' */
 
 	errno = 0;
-    if (1 != fprintf (&number, sizeof(float),1, f))
+    if (1 != fwrite(&number, sizeof(float),1, f))
 		eio();
 }
 

@@ -1868,7 +1868,7 @@ feature -- Class initialization
 			end
 
 				-- Class status
-			is_external := ast_b.is_external
+			is_external := is_basic or else ast_b.is_external
 			has_externals := ast_b.has_externals
 			old_is_frozen := is_frozen
 			is_frozen := ast_b.is_frozen

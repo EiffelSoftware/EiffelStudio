@@ -18,7 +18,7 @@ feature {NONE} -- Specific implementation
 			-- Add constructor
 		do
 			create Result.make_empty
-			if not name.is_equal ("ctor") then
+			if not name.is_equal (".ctor") then
 				Result.append (indent_string)
 				Result.append ("make%N")
 			end

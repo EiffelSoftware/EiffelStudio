@@ -34,42 +34,13 @@ feature {NONE} -- Initialization
 	
 	make (an_interface: like interface) is
 			-- Set up the callback marshal and initialize GTK+.
-		local
-			temp_string, previous_gtk_rc_files: STRING
-			temp_int: INTEGER
 		do
 			base_make (an_interface)
-	
-			-- Set Debug mode from environment variable.
-			temp_string := get ("ISE_GTK_DEBUG")
-			if temp_string /= Void then
-				temp_int := temp_string.to_integer
-			end
 			
-			--| FIXME IEK Do not continue running system if gtk version is less than 1.2.8
-			if temp_int = 1 or temp_int = 2 then
-				print (
-					"Vision2 GTK Debug Mode, Gtk version = " +
-					gtk_maj_ver.out + "." + gtk_min_ver.out + "."+ gtk_mic_ver.out + "%N"
-				)
-				enable_ev_gtk_log (temp_int)
-				C.gdk_set_show_events (True)	
-			else
-				enable_ev_gtk_log (0)
-				C.gdk_set_show_events (False)
-			end
-
-			--| FIXME IEK
-			-- Only load rc file if system is ec.
-			-- Check argument zero to compare execution paths.
-			temp_string := get ("ISE_EIFFEL")
-			previous_gtk_rc_files := get ("GTK_RC_FILES")
-			put (temp_string + "/eifinit/studio/spec/gtk/studiorc", "GTK_RC_FILES")			
-			
-			C.gtk_rc_parse (eiffel_to_c ("studiorc"));
-			if previous_gtk_rc_files /= Void then
-				put (previous_gtk_rc_files, "GTK_RC_FILES")
-			end
+			enable_ev_gtk_log (0)
+			-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
+			C.gdk_set_show_events (False)
+				
 			gtk_init
 			C.gdk_rgb_init
 		
@@ -110,9 +81,14 @@ feature {NONE} -- Initialization
 			if not interface.idle_actions.is_empty then
 				internal_idle_actions.extend (idle_actions_agent)
 			end
-			is_in_gtk_main := True
-			C.gtk_main
-			is_in_gtk_main := False
+			
+			if gtk_mic_ver < 8 then
+				print ("This application requires Gtk 1.2.8 or greater%N")
+			else
+				is_in_gtk_main := True
+				C.gtk_main
+				is_in_gtk_main := False
+			end
 			
 			-- Unhook marshal object.
 			gtk_marshal.destroy
@@ -263,7 +239,8 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 						then
 							Result := trg
 						end
-					elseif imp.is_displayed and then imp.pointer_over_widget (a_gdk_window, a_x, a_y) then
+					elseif imp.is_displayed and then not imp.internal_non_sensitive
+					and then imp.pointer_over_widget (a_gdk_window, a_x, a_y) then
 						Result := trg
 					end				
 					pnd_targets.forth

@@ -186,8 +186,9 @@ end
 				end
 				array_descendants.forth
 			end;
-
-io.error.putstring ("FIXME: features from GENERAL (hints to stop propagation)%N");
+				-- FIXME
+				-- features from GENERAL (hints to stop propagation)
+				-- Does it work?
 			a_class := System.general_class.compiled_class
 			a_feature := a_class.feature_table.item ("clone");
 			!!dep.make (a_class.id, a_feature.feature_id);
@@ -350,10 +351,16 @@ feature -- Contexts
 			type_a: TYPE_A
 			bc: BYTE_CODE
 			array_type_a: TYPE_A
-
+			f: FEATURE_I
+-- REMOVE FROM INTEGRATION
+-- REMOVE FROM INTEGRATION
+-- REMOVE FROM INTEGRATION
+-- REMOVE FROM INTEGRATION
+-- REMOVE FROM INTEGRATION
+			t: TYPE
 			debug_on: BOOLEAN
 		do
-debug_on := System.current_class.class_name.is_equal ("cl_type_a");
+debug_on := System.current_class.class_name.is_equal ("eiffel_list");
 
 			bc := context.byte_code;
 			if id = 0 then
@@ -368,24 +375,33 @@ debug_on := System.current_class.class_name.is_equal ("cl_type_a");
 			end
 if debug_on then
 	if array_type = Void then
-		io.error.putstring ("VOID TYPE");
+		io.error.putstring ("VOID TYPE%N");
 	else
 		array_type.trace
 	end
 end;
 			array_type_a := array_type.type_a;
 if debug_on then
-	if array_type = Void then
-		io.error.putstring ("VOID TYPE");
+	if array_type_a = Void then
+		io.error.putstring ("VOID TYPE%N");
 	else
-		array_type.trace
+		array_type_a.trace
 	end
 end;
-			type_a ?= array_type.base_class.
-					feature_table.origin_table.item (item_rout_id).type;
+			f := array_type.base_class.feature_table.origin_table.item (item_rout_id);
+
+			t := f.type;
+if debug_on then
+	if t = Void then
+		io.error.putstring ("VOID TYPE%N");
+	else
+		t.trace
+	end
+end
+			type_a ?= t;
 if debug_on then
 	if type_a = Void then
-		io.error.putstring ("VOID TYPE");
+		io.error.putstring ("VOID TYPE%N");
 	else
 		type_a.trace
 	end
@@ -394,14 +410,19 @@ end;
 				(array_type_a, array_type.base_class.id)
 if debug_on then
     if type_a = Void then
-        io.error.putstring ("VOID TYPE");
+        io.error.putstring ("VOID TYPE%N");
     else
         type_a.trace
     end
 end;
-
 				--(array_type_a, System.current_class.id)
-			Result := type_a.type_i.c_type
+
+			if type_a.is_formal then
+				Result := Context.class_type.type.meta_generic.item
+						(type_a.base_type).c_type
+			else
+				Result := type_a.type_i.c_type
+			end;
 		end
 
 	generate_plug_declarations (plug_file: INDENT_FILE) is

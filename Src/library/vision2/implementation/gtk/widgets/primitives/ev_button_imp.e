@@ -1,5 +1,4 @@
 indexing
-
         description: 
                 "EiffelVision push button, gtk implementation.";
         status: "See notice at end of class";
@@ -53,12 +52,11 @@ feature {NONE} -- Initialization
 		
 feature -- Event - command association
 	
-	add_click_command ( command: EV_COMMAND; 
-			    arguments: EV_ARGUMENT) is
-			-- Add 'command' to the list of commands to be
+	add_click_command (com: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'com' to the list of commands to be
 			-- executed when the button is pressed
 		do
-			add_command ( "clicked", command,  arguments )
+			add_command ("clicked", com, arg)
 		end
 	
 feature -- Event -- removing command association

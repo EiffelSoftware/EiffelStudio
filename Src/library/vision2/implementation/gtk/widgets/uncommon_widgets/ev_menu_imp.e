@@ -66,13 +66,13 @@ feature -- Element change
 				parent_imp := Void
 			end
 			if par /= Void then
-				show
 				par_imp ?= par.implementation
 				check
 					parent_not_void: par_imp /= Void
 				end
 				parent_imp ?= par_imp
 				par_imp.add_menu (Current)
+				show
 				gtk_object_unref (widget)
 			end
 		end

@@ -20,12 +20,27 @@ inherit
 	EV_VIEWPORT 
 		redefine
 			implementation,
-			create_implementation
+			create_implementation,
+			make_for_test
 		end
 
 create
 	default_create,
 	make_for_test
+
+feature {NONE} -- Initialization
+
+	make_for_test is
+			-- Create and perform tests.
+		local
+			pixmap: EV_PIXMAP
+		do
+			default_create
+			create pixmap.make_for_test
+			extend (pixmap)
+			pixmap.set_minimum_width (pixmap.width)
+			pixmap.set_minimum_height (pixmap.height)
+		end
 
 feature -- Access
 
@@ -155,6 +170,9 @@ end -- class EV_SCROLLABLE_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/24 16:01:02  brendel
+--| Redefined make_for_test, since viewport now has a too cool make_for_test.
+--|
 --| Revision 1.17  2000/04/21 23:07:59  brendel
 --| scrollbar -> scroll_bar.
 --|

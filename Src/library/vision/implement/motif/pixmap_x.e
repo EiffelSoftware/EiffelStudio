@@ -41,11 +41,6 @@ inherit
 			dispose
 		end;
 
-	SHARED_MEL_DISPLAY
-		undefine
-			is_equal
-		end
-
 creation
 
 	make, 
@@ -58,7 +53,7 @@ feature {NONE} -- Initialization
 		require
 			last_open_display_not_null: last_open_display /= Void
 		do
-			display := last_open_display
+			display := last_open_display;
 		end; 
 
 	make_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN) is
@@ -145,6 +140,7 @@ feature -- Element change
 				gc.set_background_color (def_screen.white_pixel);
 				gc.set_foreground_color (def_screen.black_pixel);
 				pixmap := bitmap_format.to_pixmap (def_screen, gc);
+				gc.free;
 				identifier := pixmap.identifier;
 				display_handle := pixmap.display_handle;
 				depth := 2; -- Black and white bitmap
@@ -172,6 +168,7 @@ feature -- Element change
 				mel_widget ?= a_widget;
 				!! gc.make (mel_s);
 				mp.copy_area (mel_widget, gc, x, y, p_width, p_height, 0, 0);
+				gc.free;
 				is_allocated := True; 
 				update_widgets;
 			end
@@ -214,7 +211,8 @@ feature -- Element change
 				!! gc.make (bitmap);
 				gc.set_background_color (def_screen.white_pixel);
 				gc.set_foreground_color (def_screen.black_pixel);
-				bitmap.copy_plane (Current, gc, 0, 0, width, height, 0, 0, 1)
+				bitmap.copy_plane (Current, gc, 0, 0, width, height, 0, 0, 1);
+				gc.free
 			end;
 		ensure
 			valid_bitmap: bitmap /=  Void and then bitmap.is_valid

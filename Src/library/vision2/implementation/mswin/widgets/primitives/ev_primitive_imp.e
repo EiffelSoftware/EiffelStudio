@@ -81,7 +81,7 @@ feature -- Basic operations
 			window: WEL_WINDOW
 		do
 			hwnd := next_dlgtabitem (top_level_window_imp.wel_item,
-			wel_item, direction)
+				wel_item, direction)
 			window := window_of_item (hwnd)
 			if window /= Void then
 				window.set_focus
@@ -94,17 +94,12 @@ feature -- Basic operations
 			-- it goes to the previous one.
 		local
 			hwnd: POINTER
-			window: EV_WIDGET_IMP
+			window: WEL_WINDOW
 		do
 			hwnd := next_dlggroupitem (top_level_window_imp.wel_item,
-			wel_item, direction)
-			window ?= window_of_item (hwnd)
-			check
-				valid_cast: window /= Void
-			end
-			if parent_imp = window.parent_imp then
-				-- The next widget must have the same parent as the
-				-- widget which currently has the focus.
+				wel_item, direction)
+			window := window_of_item (hwnd)
+			if window /= Void then
 				window.set_focus
 			end
 		end
@@ -126,12 +121,16 @@ feature -- Basic operations
 			-- widget. Need to be called in the feature on_key_down when the
 			-- control need to process this kind of keys.
 		do
-			if virtual_key = (feature {WEL_INPUT_CONSTANTS}.Vk_tab) then
-				tab_action (not key_down (feature {WEL_INPUT_CONSTANTS}.Vk_shift))
-			elseif virtual_key = (feature {WEL_INPUT_CONSTANTS}.Vk_down) then
+			inspect
+				virtual_key
+			when feature {WEL_INPUT_CONSTANTS}.vk_tab then
+				tab_action (not key_down (feature {WEL_INPUT_CONSTANTS}.vk_shift))
+			when feature {WEL_INPUT_CONSTANTS}.vk_down, feature {WEL_INPUT_CONSTANTS}.vk_right then
 				arrow_action (True)
-			elseif virtual_key = (feature {WEL_INPUT_CONSTANTS}.Vk_up) then
+			when feature {WEL_INPUT_CONSTANTS}.vk_up, feature {WEL_INPUT_CONSTANTS}.vk_left then
 				arrow_action (False)
+			else
+				-- Do nothing
 			end
 		end
 

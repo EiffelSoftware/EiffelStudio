@@ -186,12 +186,13 @@ feature -- Directory
 		do
 			l_dir := a_dir
 			l_dir.replace_substring_all ("\", "/")
+			l_dir.prune_all_leading ('\')
 			l_max_index := l_dir.occurrences ('\') + l_dir.occurrences ('/')
 			if l_max_index > 0 then
 				from
 					cnt := 1
 					l_arr_index := 1
-					create Result.make (1, l_max_index)
+					create Result.make (1, l_max_index - 1)
 					create l_dir_string.make_empty
 				until
 					cnt > l_dir.count

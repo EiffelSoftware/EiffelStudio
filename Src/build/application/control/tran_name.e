@@ -3,7 +3,7 @@ class TRAN_NAME
 
 inherit
 
-	STRING
+	STRING_SCROLLABLE_ELEMENT
 		rename 
 			make as string_create
 		end

@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			create all_space_indexes.make (20)
 			create lines.make (4)
 			font := tip_label.font
-			modified_tip := clone (tip)
+			modified_tip := tip.twin
 			modified_tip.replace_substring_all ("%N", " ")
 			modified_tip.append_character (' ')
 			maximum_string_width := tip_label.width - 10

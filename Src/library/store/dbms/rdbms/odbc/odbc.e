@@ -728,11 +728,11 @@ feature -- External
 			Result := odbc_begin
 		end
 
-	database_handle: DATABASE_HANDLE [ODBC] is
-		once
-			create Result
-		end
-
+--	database_handle: DATABASE_HANDLE [ODBC] is
+--		once
+--			create Result
+--		end
+--
 	support_proc: INTEGER is
 		do
 			Result := odbc_support_proc
@@ -742,25 +742,31 @@ feature {NONE} -- External features
 
 	odbc_get_error_message: POINTER is
 			-- C buffer which contains the error_message.
+--		external
+--			"C [macro %"odbc.h%"]"
+--		alias
+--			"error_message"
 		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"error_message"
+			"C"
 		end
 
 	odbc_get_error_code: INTEGER is
 			-- C buffer which contains the error code.
+--		external
+--			"C [macro %"odbc.h%"]"
+--		alias
+--			"error_number"
 		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"error_number"
+			"C"
 		end
 
 	odbc_get_warn_message: POINTER is
+--		external
+--			"C [macro %"odbc.h%"]"
+--		alias
+--			"warn_message"
 		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"warn_message"
+			"C"
 		end
 
 	odbc_new_descriptor: INTEGER is
@@ -1231,4 +1237,5 @@ feature {NONE} -- External features
 
 invariant
 		test_false : is_ok_mat = False
+
 end -- class ODBC

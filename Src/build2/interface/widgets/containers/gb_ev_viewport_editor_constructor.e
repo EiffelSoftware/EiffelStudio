@@ -63,6 +63,15 @@ feature {NONE} -- Implementation
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
+			x_offset_entry.update_constant_display (first.x_offset.out)
+			y_offset_entry.update_constant_display (first.y_offset.out)
+			if first.full then
+				item_width_entry.update_constant_display (first.item.width.out)
+				item_height_entry.update_constant_display (first.item.height.out)
+			else
+				item_width_entry.set_text ("0")
+				item_height_entry.set_text ("0")
+			end
 				-- We need to enable/disable all input fields
 				-- depending on whether there is currently an item
 				-- in the viewport. This is because these attributes
@@ -77,16 +86,6 @@ feature {NONE} -- Implementation
 				y_offset_entry.enable_sensitive
 				item_width_entry.enable_sensitive
 				item_height_entry.enable_sensitive
-			end
-
-			x_offset_entry.update_constant_display (first.x_offset.out)
-			y_offset_entry.update_constant_display (first.y_offset.out)
-			if first.full then
-				item_width_entry.update_constant_display (first.item.width.out)
-				item_height_entry.update_constant_display (first.item.height.out)
-			else
-				item_width_entry.set_text ("0")
-				item_height_entry.set_text ("0")
 			end
 		end
 
@@ -117,10 +116,8 @@ feature {NONE} -- Implementation
 				-- desired size against the allowable size for the second widget.
 				-- This is because the minimum size of that widget is consrained by
 				-- the additional parenting used in the builer display.
-			first.set_item_width (integer)
-			if objects @ 2 /= Void then
-				(objects @ 2).set_item_width (integer.max ((objects @ 2).item.width))
-			end
+			actual_set_item_width (object, integer)
+			for_all_instance_referers (object, agent actual_set_item_width (?, integer))
 				-- We update the system settings to reflect
 				-- the fact that a user modification has taken place.
 				-- This enables us to do things such as enable the save
@@ -129,6 +126,27 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 		
+	actual_set_item_width (an_object: GB_OBJECT; width: INTEGER) is
+			-- Set width of widgets contained in representations of `an_object' to `width'.
+		require
+			an_object_not_void: an_object /= Void
+		local
+			viewport: EV_VIEWPORT
+		do
+			viewport ?= an_object.object
+			check
+				object_was_viewport: viewport /= Void
+			end
+			viewport.set_item_width (width)
+			viewport ?= an_object.real_display_object
+			if viewport /= Void then
+				check
+					object_was_viewport: viewport /= Void
+				end
+				viewport.set_item_width (width.max (viewport.item.width))
+			end
+		end
+
 	set_item_height (integer: INTEGER) is
 			-- Call `set_item_height' on all items in `objects'.
 		do
@@ -136,10 +154,8 @@ feature {NONE} -- Implementation
 				-- desired size against the allowable size for the second widget.
 				-- This is because the minimum size of that widget is consrained by
 				-- the additional parenting used in the builer display.
-			first.set_item_height (integer)
-			if objects @ 2 /= Void then
-				(objects @ 2).set_item_height (integer.max ((objects @ 2).item.height))
-			end
+			actual_set_item_height (object, integer)
+			for_all_instance_referers (object, agent actual_set_item_height (?, integer))
 				-- We update the system settings to reflect
 				-- the fact that a user modification has taken place.
 				-- This enables us to do things such as enable the save
@@ -148,8 +164,29 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 		
+	actual_set_item_height (an_object: GB_OBJECT; height: INTEGER) is
+			-- Set height of widgets contained in representations of `an_object' to `height'.
+		require
+			an_object_not_void: an_object /= Void
+		local
+			viewport: EV_VIEWPORT
+		do
+			viewport ?= an_object.object
+			check
+				object_was_viewport: viewport /= Void
+			end
+			viewport.set_item_height (height)
+			viewport ?= an_object.real_display_object
+			if viewport /= Void then
+				check
+					object_was_viewport: viewport /= Void
+				end
+				viewport.set_item_height (height.max (viewport.item.height))
+			end
+		end
+		
 	valid_item_width (integer: INTEGER): BOOLEAN is
-			--
+			-- Is `integer' a valid width for item of `Current'?
 		do
 			if integer >= first.item.minimum_width then
 				Result := True
@@ -157,7 +194,7 @@ feature {NONE} -- Implementation
 		end
 		
 	valid_item_height (integer: INTEGER): BOOLEAN is
-			--
+			-- Is `integer' a valid height for item of `Current'?
 		do
 			if integer >= first.item.minimum_height then
 				Result := True

@@ -5,7 +5,7 @@ indexing
 
 class	
 	EIFFEL_FEATURE
-
+		
 create
 	make
 

@@ -6,7 +6,7 @@ root
 
 default
 	assertion (all)
-	line_generation (yes)
+	line_generation (no)
 	msil_generation ("dll")
 
 cluster	
@@ -43,6 +43,6 @@ cluster
 external
 	assembly: 	"..\..\bin\ISE.Reflection.EiffelComponents.dll",
 			"..\..\bin\ISE.Reflection.Formatter.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.XML.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll"
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.dll"
 end

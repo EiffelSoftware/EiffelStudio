@@ -7,10 +7,9 @@ indexing
 --			create {SYSTEM_REFLECTION_ASSEMBLYKEYNAMEATTRIBUTE}.make_assemblykeynameattribute ("") end,
 --			create {SYSTEM_OBSOLETEATTRIBUTE}.make_obsoleteattribute end
 		
-
 class
 	EIFFEL_COMPONENTS
-
+		
 create
 	make
 

@@ -55,7 +55,14 @@ feature -- Basic Operation
 				-- If we are modifying an existing Envision .bpr, then
 				-- we must load the project now.
 			if is_modify_wizard then
-				open_with_name (argument_array @ 1)	
+					-- If there are four arguments, then it has been launched through a double click
+					-- in the VisualStudio file browser. Otherwise, a double click
+					-- from the file system.
+				if argument_array.count = 4 then
+					open_with_name (argument_array @ 3)
+				else
+					open_with_name (argument_array @ 1)	
+				end
 			end
 			set_updatable_entries(<<>>)
 			first_window.enable_user_resize

@@ -108,24 +108,24 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_page_title (index: INTEGER; str: STRING) is
-			-- Set the label of the `index' page of the notebook.
+	set_page_title (index: INTEGER; title: STRING) is
+			-- Set the title of the `index' page of the notebook to `title'.
 			-- The first page is the page number 1.
 		require
 			exists: not destroyed
 			good_index: index <= count
 		do
-			implementation.set_page_title (index, str)
+			implementation.set_page_title (index, title)
 		end
 	
-	append_page (c: EV_WIDGET; label: STRING) is
-		-- New page for notebook containing child 'c' with tab 
-		-- label 'label
+	append_page (c: EV_WIDGET; title: STRING) is
+		-- New page for notebook containing child 'c' with 
+		-- title as `title'
 		require
 			exists: not destroyed		
 			child_of_notebook: c.parent = Current
 		do
-			implementation.append_page (c.implementation, label)
+			implementation.append_page (c.implementation, title)
 		end
 
 feature -- Miscellaneous - Constants

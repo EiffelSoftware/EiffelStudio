@@ -6,8 +6,8 @@
 ?RCS: Licence as specified in the README file that comes with dist.
 ?RCS:
 ?RCS: $Log$
-?RCS: Revision 1.1  1993/03/12 13:08:58  grator
-?RCS: Initial revision
+?RCS: Revision 1.2  1994/10/28 21:41:53  grator
+?RCS: lex/flex
 ?RCS:
 ?RCS: Revision 2.8  91/07/08  13:30:45  ram
 ?RCS: 3.0 alpha baseline.
@@ -25,4 +25,5 @@
 ?X: The XDR routines are also located there
 ?X: Math library wanted for math.c
 libswanted="c_s rpc xdr bsd socket inet nsl m"
-
+lex="flex"
+lexflags="-lB8 -C"

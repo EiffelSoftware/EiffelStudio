@@ -140,7 +140,7 @@ feature
 				file.putint (gen_type.type_id - 1);
 			else
 				file.putstring ("RTUD(");
-				file.putstring (gen_type.associated_class_type.id.generated_id);
+				gen_type.associated_class_type.id.generated_id (file)
 				file.putchar (')');
 			end;
 			if gen_param.is_reference or else gen_param.is_bit then
@@ -290,7 +290,7 @@ feature
 			then
 				rout_info := System.rout_info_table.item (rout_id);
 				file.putstring ("+ RTWPA(");
-				file.putstring (rout_info.origin.generated_id);
+				rout_info.origin.generated_id (file);
 				file.putstring (", ");
 				file.putint (rout_info.offset);
 				file.putstring (", Dtype(l[0])))");

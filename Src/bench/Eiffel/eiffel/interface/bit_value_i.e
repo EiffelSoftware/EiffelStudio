@@ -43,11 +43,8 @@ feature
 			end
 		end
 
-	is_bit: BOOLEAN is
+	is_bit: BOOLEAN is True
 			-- Is the current constant a bit one ?
-		do
-			Result := True;
-		end;
 
 	generate (file: INDENT_FILE) is
 			-- Generate value in `file'.

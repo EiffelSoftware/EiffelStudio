@@ -26,11 +26,8 @@ feature
 			int_val := i
 		end
 
-	is_integer: BOOLEAN is
+	is_integer: BOOLEAN is True
 			-- Is the current constant a boolean one ?
-		do
-			Result := True
-		end
 
 	valid_type (t: TYPE_A): BOOLEAN is
 			-- Is the current value compatible with `t' ?

@@ -28,11 +28,8 @@ feature
 			char_val := i;
 		end;
 
-	is_character: BOOLEAN is
+	is_character: BOOLEAN is True
 			-- Is the current constant a character one ?
-		do
-			Result := True;
-		end;
 
 	is_propagation_equivalent (other: CHAR_VALUE_I): BOOLEAN is
 		do

@@ -30,11 +30,8 @@ feature
 			real_val.replace_substring_all ("_","")
 		end;
 
-	is_double: BOOLEAN is
+	is_double: BOOLEAN is True
 			-- Is the current constant a real one ?
-		do
-			Result := True;
-		end;
 
 	valid_type (t: TYPE_A): BOOLEAN is
 			-- Is the current value compatible with `t' ?

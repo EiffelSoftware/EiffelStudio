@@ -26,11 +26,8 @@ feature
 			bool_val := i;
 		end;
 
-	is_boolean: BOOLEAN is
+	is_boolean: BOOLEAN is True
 			-- Is the constant value a boolean one ?
-		do
-			Result := True;
-		end;
 
 	valid_type (t: TYPE_A): BOOLEAN is
 			-- Is the current value compatible with `t' ?

@@ -93,6 +93,7 @@ feature -- Basic Operation
 				object_not_void: object /= Void
 				object_is_top_level_object: object.is_top_level_object
 			end
+			object.remove_client_representation_recursively
 				-- If the root window is being deleted, select the next window.
 			if Object_handler.root_window_object = object then
 				Window_selector.mark_next_window_as_root (1)
@@ -129,6 +130,7 @@ feature -- Basic Operation
 				object_not_void: object /= Void
 				object_is_top_level_object: object.is_top_level_object
 			end
+			object.add_client_representation_recursively
 			object_handler.mark_existing (object)
 			if parent_directory /= Void then
 					-- Only try to retrieve the directory item if there was one.

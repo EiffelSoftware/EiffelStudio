@@ -28,7 +28,7 @@ EIF_INTEGER c_sql_exec(char * statement)
 	/*(CHECK_STS(MtSQLExec(statement, &sql_result));*/
 	mtResult = MtSQLExec (statement, &sql_result);
 	/*return &sql_result;*/
-	return (MTEIF_OPAQUE_TYPE) sql_result.result.select.selection;
+	return (MTEIF_OPAQUE_TYPE) sql_result.selection;
 }
 
 /*

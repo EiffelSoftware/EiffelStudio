@@ -24,6 +24,8 @@ inherit
 			remove_child,
 			set_parent,
 			show
+		redefine
+			destroy_signal_callback
 		end
 
 creation
@@ -56,16 +58,10 @@ feature -- Initialization
 		do
 			par_imp ?= par.implementation
 
-			-- Create the window
-			widget := gtk_window_new (GTK_WINDOW_POPUP)
+			make
 
 			-- Attach the window to `par'.
 			gtk_window_set_transient_for (widget, par_imp.widget)
-
-			-- set the events to be handled by the window
-			c_gtk_widget_set_all_events (widget)
-
-			initialize
 		end
 
 feature  -- Access
@@ -146,6 +142,23 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			gtk_widget_show (widget)
+		end
+
+	destroy_signal_callback is
+			-- Called when the gtk widget is destroyed
+			-- Remove reference to destroyed widget
+		local
+			a: ANY
+			s: STRING
+		do
+			if (has_close_command = True) then
+				s := "destroy"
+				a := s.to_c
+				gtk_signal_emit_stop_by_name (widget, $a)
+			else
+				widget := default_pointer
+				interface.remove_implementation
+			end
 		end
 
 feature -- Element change
@@ -374,3 +387,19 @@ feature {NONE} -- Implementation
 		end
 
 end -- class EV_UNTITLED_WINDOW_IMP
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

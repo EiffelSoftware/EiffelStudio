@@ -51,6 +51,7 @@ inherit
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
+			text as wel_text,
 			make as ev_wel_control_container_make,
 			move as move_to
 		redefine
@@ -109,6 +110,15 @@ feature -- Access
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains the current widget.
 
+	text: STRING is
+			-- Frame caption.
+		do	
+			Result := wel_text
+			if Result.empty then
+				Result := Void
+			end
+		end
+
 feature -- Status setting
 
 	set_default_minimum_size is
@@ -118,7 +128,7 @@ feature -- Status setting
 		do
 			!! dc.make (Current)
 			dc.get
-			internal_set_minimum_size (dc.string_width (text) + 2 * box_width + 10, box_text_height + 2 * box_width)
+			internal_set_minimum_size (dc.string_width (wel_text) + 2 * box_width + 10, box_text_height + 2 * box_width)
 			dc.release
 		end
 
@@ -191,8 +201,8 @@ feature {NONE} -- WEL Implementation
 			paint_dc.select_font (wel_font)
 			paint_dc.set_text_color (foreground_color_imp)
 			paint_dc.set_background_color (background_color_imp)
-			paint_dc.text_out (10, 0, text)
-			if text.empty then
+			paint_dc.text_out (10, 0, wel_text)
+			if wel_text.empty then
 				top := 0
 			else
 				top := wel_font.log_font.height // 2
@@ -201,22 +211,22 @@ feature {NONE} -- WEL Implementation
 			paint_dc.line (0, top, 0, height - 1)
 			paint_dc.line (0, height - 2, width - 2, height - 2)
 			paint_dc.line (width - 2, height - 2, width - 2, top)
-			if text.empty then
+			if wel_text.empty then
 				paint_dc.line (0, top, width - 2, top)
 			else
 				paint_dc.line (0, top, 7, top)
-				paint_dc.line (width - 2, top, paint_dc.string_size (text).width + 13 , top)
+				paint_dc.line (width - 2, top, paint_dc.string_size (wel_text).width + 13 , top)
 			end
 
 			paint_dc.select_pen (highlight_pen)
 			paint_dc.line (1, top + 1, 1, height - 2)
 			paint_dc.line (0,  height - 1, width - 1, height - 1)
 			paint_dc.line (width - 1, height - 1, width - 1, top)
-			if text.empty then
+			if wel_text.empty then
 				paint_dc.line (1, 1, width - 3, 1)
 			else
 				paint_dc.line (1, top + 1, 7, top +1)
-				paint_dc.line (width - 3, top + 1, paint_dc.string_size (text).width + 13, top + 1)
+				paint_dc.line (width - 3, top + 1, paint_dc.string_size (wel_text).width + 13, top + 1)
 			end
 		end
 
@@ -233,10 +243,10 @@ feature {NONE} -- WEL Implementation
 			dc.get
 			dc.select_font (a_font)
 			if child /= Void then
-				internal_set_minimum_size (dc.string_width (text) + 2 * box_width + 10 + child.minimum_width,
+				internal_set_minimum_size (dc.string_width (wel_text) + 2 * box_width + 10 + child.minimum_width,
 						box_text_height + 2 * box_width + child.minimum_height)
 			else
-				internal_set_minimum_size (dc.string_width (text) + 2 * box_width + 10,
+				internal_set_minimum_size (dc.string_width (wel_text) + 2 * box_width + 10,
 						box_text_height + 2 * box_width)
 			end
 			dc.release
@@ -248,10 +258,13 @@ feature {NONE} -- WEL Implementation
 	box_text_height: INTEGER is
 			-- Height of the label of the frame
 		do
-			if text.empty then
+			if wel_text.empty then
 				Result := 0
 			else
-				Result := wel_font.log_font.height
+						--|FIXME Fonts are currently changing.
+						--|Needs to be changed to the new implementation
+						--|Of the old code listed below
+				Result := 10 --|wel_font.log_font.height
 			end
 		end
 
@@ -287,6 +300,9 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/02/22 01:16:24  rogers
+--| Renamed text inherited from EV_WEL_CONTROL_CONTAINER_IMP to wel_text. Implemented text to return Void if wel_text is empty, wel text otherwise. All references to text, where apprpriate have been changed to wel_text. Added a FIXME to box_text_height, this change is only temporary.
+--|
 --| Revision 1.22  2000/02/19 05:45:00  oconnor
 --| released
 --|

@@ -40,7 +40,8 @@ inherit
 	SHARED_DLE;
 	COMPILER_EXPORTER;
 	SHARED_ID;
-	SHARED_EIFFEL_PROJECT
+	SHARED_EIFFEL_PROJECT;
+	SHARED_RESOURCES
 
 feature -- Counters
 
@@ -4266,7 +4267,7 @@ feature -- Concurrent Eiffel
 	Concurrent_eiffel: BOOLEAN is
 			-- Can this compiler generate Concurrent Eiffel code?
 		do
-			Result := True
+			Result := Resources.get_boolean ("concurrent_eiffel", False)
 		end
 
 	has_separate: BOOLEAN

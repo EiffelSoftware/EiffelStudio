@@ -390,10 +390,18 @@ feature {NONE} -- Implementation
 				buffer.putstring (a_table_name)
 				buffer.putstring ("[i] = ")
 				buffer.putstring (function_ptr_cast_string);
+					-- FIXME: Manu: 03/23/2004: The following two lines should
+					-- be used. Unfortunately, there is a bug in VC6++ which prevents
+					-- the C compilation. Therefore we use a trick, a function that returns
+					-- its argument and it works just fine. It might be slightly slower
+					-- but it is barely noticeable. So as soon as we do not need to support
+					-- VC6++, then we can restore the next two lines and get rid of the call
+					-- to `eif_pointer_identity'.
+--				buffer.putstring (a_routine_name);
+--				buffer.putstring (";};")
+				buffer.putstring ("eif_pointer_identity ((void *) ")
 				buffer.putstring (a_routine_name);
-				buffer.putchar (';')
-				buffer.putchar ('}')
-				buffer.putchar (';')
+				buffer.putstring (");};")
 				buffer.new_line
 			end
 		end

@@ -863,10 +863,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 		local
 			l_ovcs: like override_clusters
 			l_cluster: CLUSTER_I
-			l_old_universe: like Current
-			l_cluster_name: STRING
-			l_class: CLASS_C
-			l_classes: HASH_TABLE [CLASS_I, STRING]
 		do
 			if has_override_cluster then
 					-- Remove classes which are overridden
@@ -900,7 +896,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			has_override_cluster: has_override_cluster
 		local
 			l_ovcs: like override_clusters
-			l_ovc: CLUSTER_I
 		do
 				-- Remove classes which are overridden
 			l_ovcs := override_clusters

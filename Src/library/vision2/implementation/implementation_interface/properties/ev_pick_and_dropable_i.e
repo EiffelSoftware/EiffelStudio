@@ -28,21 +28,6 @@ feature -- Access
 	pebble_function: FUNCTION [ANY, TUPLE [], ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 
-	pick_x, pick_y: INTEGER
-			-- Initial point for the pick and drop.
-
-	pebble_x_position: INTEGER is
-			-- Initial x position for pick and drop relative to `Current'.
-		do
-			Result := pick_x
-		end
-
-	pebble_y_position: INTEGER is
-			-- Initial y position for pick and drop relative to `Current'.
-		do
-			Result := pick_y
-		end
-
 	pebble_positioning_enabled: BOOLEAN is
 			-- If `True' then pick and drop start coordinates are
 			-- `pebble_x_position', `pebble_y_position'.
@@ -60,6 +45,18 @@ feature -- Access
 	deny_cursor: EV_CURSOR
 		-- Deny cursor set by user.
 		-- To be displayed when the screen pointer is not over a valid target.
+		
+	pebble_x_position: INTEGER is
+			-- Initial x position for pick and drop relative to `Current'.
+		do
+			Result := pick_x
+		end
+
+	pebble_y_position: INTEGER is
+			-- Initial y position for pick and drop relative to `Current'.
+		do
+			Result := pick_y
+		end
 
 feature -- Status setting
 
@@ -203,6 +200,9 @@ feature -- Status report
 
 feature {EV_ANY_I} -- Implementation
 
+	pick_x, pick_y: INTEGER
+		-- Initial point for the pick and drop.
+
 	internal_pebble_positioning_enabled: BOOLEAN
 		-- Is `pebble_positining_enabled' ? 
 
@@ -231,25 +231,6 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		ensure
 			last_pointed_target_is_void: last_pointed_target = Void
-		end
-
---	pointer_x,
---	pointer_y: INTEGER
---			-- Destination screen position.
-
-	over_valid_target: BOOLEAN
-			-- Is the cursor over a target that accepts `pebble'?
-
-	default_accept_cursor: EV_CURSOR is
-			-- Used in lieu of a user defined `accept_cursor'.
-		once
-			Result := Default_pixmaps.Standard_cursor
-		end
-
-	default_deny_cursor: EV_CURSOR is
-			-- Used in lieu of a user defined `deny_cursor'.
-		once
-			Result := Default_pixmaps.No_cursor
 		end
 	
 	execute (
@@ -351,20 +332,8 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	rubber_band_is_drawn: BOOLEAN
-			-- Is a rubber band line currently on the screen?
-
-	global_pnd_targets: ARRAYED_LIST [INTEGER] is
-			-- Shortcut to EV_APPLICATION.pnd_targets.
-		local
-			env: EV_ENVIRONMENT
-		once
-			create env
-			Result := env.application.implementation.pnd_targets
-		end
-
 	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
-		-- Set `pebble' using `pebble_function' if present.
+			-- Set `pebble' using `pebble_function' if present.
 		do
 			if pebble_function /= Void then
 				pebble_function.call ([a_x, a_y])
@@ -392,14 +361,6 @@ feature {EV_WIDGET, EV_WIDGET_I}
 	disable_capture is
 			-- Ungrab the user input.
 		deferred
-		end
-
-feature {NONE} -- Constants
-
-	Default_pixmaps: EV_STOCK_PIXMAPS is
-			-- Default pixmaps
-		once
-			create Result
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -950,6 +950,11 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line)
 			Result.append (New_line_tab)
+			
+			-- if (eif_ref != NULL)
+			-- {
+			
+			Result.append ("if (eif_ref != NULL)%N%T{%N%T%T")
 
 			-- eif_object = eif_protect (eif_ref);
 
@@ -963,7 +968,7 @@ feature {NONE} -- Implementation
 			Result.append ("eif_ref")
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 
 			-- a_pointer =  (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 
@@ -987,7 +992,7 @@ feature {NONE} -- Implementation
 			Result.append (Eif_pointer)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 			
 			if is_interface_wrapper then
 				Result.append (addition_for_interface (c_type_name))
@@ -1004,6 +1009,10 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
+			
+			-- }
+			
+			Result.append ("}%N%T")
 
 			-- return (`c_type_name ') a_pointer;
 
@@ -1029,18 +1038,18 @@ feature {NONE} -- Implementation
 			valid_eiffel_type: not eiffel_type_name.is_empty
 		do
 			create Result.make (1000)
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 
 			Result.append ("EIF_TYPE_ID type_id = eif_type_id (%"")
 			Result.append (eiffel_type_name)
 			Result.append ("%");")
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 
 			Result.append ("EIF_PROCEDURE set_shared =  eif_procedure (%"set_shared%", type_id);")
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 
 			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE))set_shared) (eif_access (eif_object));")
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 		ensure
 			non_void_addition: Result /= Void
 			valid_addition: not Result.is_empty
@@ -1063,7 +1072,7 @@ feature {NONE} -- Implementation
 			Result.append (C_equal)
 			Result.append (Null)
 			Result.append (Close_parenthesis)
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 			
 			-- {
 			
@@ -1078,7 +1087,7 @@ feature {NONE} -- Implementation
 			Result.append (Space_equal_space)
 			Result.append (Zero)
 			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
+			Result.append (New_line_tab_tab_tab)
 			
 			-- 	EIF_TYPE_ID type_id = eif_type (eif_object);
 			
@@ -1091,7 +1100,7 @@ feature {NONE} -- Implementation
 			Result.append ("eif_object")
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
+			Result.append (New_line_tab_tab_tab)
 			
 			-- 	create_item = eif_procedure ("create_item", type_id);
 			
@@ -1106,7 +1115,7 @@ feature {NONE} -- Implementation
 			Result.append ("type_id")
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
+			Result.append (New_line_tab_tab_tab)
 			
 			-- 	(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 			
@@ -1135,12 +1144,12 @@ feature {NONE} -- Implementation
 			Result.append (Eif_pointer)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 			
 			-- }
 			
 			Result.append (Close_curly_brace)
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 			
 			-- ((`c_type_name') a_pointer)->AddRef ();
 			
@@ -1152,7 +1161,7 @@ feature {NONE} -- Implementation
 			Result.append (A_pointer)
 			Result.append (Close_parenthesis)
 			Result.append (Add_reference_function)
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 		ensure
 			non_void_addition: Result /= Void
 			valid_addition: not Result.is_empty

@@ -51,6 +51,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_WIDGET_UTILITIES
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature -- Initialization
 
@@ -82,14 +87,14 @@ feature -- Initialization
 			is_initialized := True
 		end
 		
-		do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
-			do
-					-- If the object is not void, it means that
-					-- we are not currently picking a type.
-				if transported_object.object /= Void then
-					Result := True
-				end
+	do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
+		do
+				-- If the object is not void, it means that
+				-- we are not currently picking a type.
+			if transported_object.object /= Void then
+				Result := True
 			end
+		end
 
 feature -- Access
 
@@ -102,36 +107,6 @@ feature -- Access
 			-- Is an object being edited in `Current'?
 		do
 			Result := object /= Void
-		end
-
-feature {GB_EV_ANY, GB_COMMAND_DELETE_OBJECT} -- Access
-
-	window_parent: EV_WINDOW is
-			-- `Result' is EV_WINDOW containing `Current'.
-		local
-			window: EV_WINDOW
-		do
-			window ?= parent
-			if window /= Void then
-				Result := window
-			else
-				Result := get_window_parent_recursively (parent)
-			end
-		end
-		
-feature {NONE}
-		
-	get_window_parent_recursively (w: EV_WIDGET): EV_WINDOW is
-			-- Result is EV_WINDOW containing `w'.
-		local
-			window: EV_WINDOW
-		do
-			window ?= w.parent
-			if window /= Void then
-				Result := window
-			else
-				Result := get_window_parent_recursively (w.parent)
-			end
 		end
 
 feature -- Status setting
@@ -171,16 +146,23 @@ feature -- Status setting
 	make_empty is
 			-- Remove all editor objects from `Current'.
 			-- Assign `Void' to `object'.
+		local
+			current_parent_window: EV_WINDOW
 		do
+			current_parent_window := parent_window (Current)
 			if name_field /= Void then
 				name_field.focus_in_actions.block
 				name_field.focus_out_actions.block			
 			end
 			object := Void
-			window_parent.lock_update
+			if current_parent_window /= Void then
+				current_parent_window.lock_update
+			end
 			item_parent.wipe_out
 			attribute_editor_box.wipe_out
-			window_parent.unlock_update
+			if current_parent_window /= Void then
+				current_parent_window.unlock_update
+			end
 			if name_field /= Void then
 				name_field.focus_in_actions.resume
 				name_field.focus_out_actions.resume	
@@ -273,9 +255,9 @@ feature {NONE} -- Implementation
 		do	
 			if not (current = docked_object_editor) then
 				if object.output_name.is_empty then
-					window_parent.set_title (object.short_type)
+					parent_window (Current).set_title (object.short_type)
 				else
-					window_parent.set_title (object.output_name + ": " + object.short_type)
+					parent_window (Current).set_title (object.output_name + ": " + object.short_type)
 				end
 			end
 		end
@@ -293,8 +275,12 @@ feature {NONE} -- Implementation
 			display_object: GB_DISPLAY_OBJECT
 			separator: EV_HORIZONTAL_SEPARATOR
 			label: EV_LABEL
+			current_window_parent: EV_WINDOW
 		do
-			window_parent.lock_update
+			current_window_parent := parent_window (Current)
+			if current_window_parent /= Void then
+				current_window_parent.lock_update	
+			end
 			attribute_editor_box.wipe_out
 			create label.make_with_text ("Type:")
 			label.align_text_left
@@ -360,7 +346,9 @@ feature {NONE} -- Implementation
 				end
 				supported_types.forth
 			end
-			window_parent.unlock_update
+			if current_window_parent /= Void then
+				current_window_parent.unlock_update	
+			end
 		end
 		
 	update_visual_representations_on_name_change is
@@ -432,7 +420,7 @@ feature {NONE} -- Implementation
 			if not name_field.text.is_empty and then object_handler.named_object_exists (name_field.text, object) then
 				previous_caret_position := name_field.caret_position
 				create my_dialog.make_with_text (Duplicate_name_warning_part1 + name_field.text + Duplicate_name_warning_part2)
-				my_dialog.show_modal_to_window (window_parent)
+				my_dialog.show_modal_to_window (parent_window (Current))
 				my_dialog.destroy
 				if my_dialog.selected_button.is_equal ("Modify") then
 					restore_name_field (name_field.text, previous_caret_position)	

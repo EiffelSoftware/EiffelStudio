@@ -77,12 +77,12 @@ feature -- Access
 
 feature -- Status setting
 
-	connect_radio_grouping (a_container: EV_CONTAINER) is
-			-- Join radio grouping of `a_container' to Current.
+	merge_radio_button_groups (other: like Current) is
+			-- Merge `Current' radio button group with that of `other'.
 		require
-			a_container_not_void: a_container /= Void
+			other_not_void: other /= Void
 		do
-			implementation.connect_radio_grouping (a_container)
+			implementation.connect_radio_grouping (other)
 		end
 
 feature -- Status report
@@ -255,6 +255,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/17 02:11:03  oconnor
+--| re: meeting of thismorning, changed radio grouping name
+--|
 --| Revision 1.14  2000/02/16 23:38:52  king
 --| Added connect_radio_grouping
 --|

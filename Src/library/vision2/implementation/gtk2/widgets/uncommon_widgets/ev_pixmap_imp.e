@@ -167,17 +167,21 @@ feature -- Element change
 	pixbuf_from_drawable: POINTER is
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
 		local
-			a_pix, mask_pixbuf: POINTER
+			a_pix, mask_pixbuf1, mask_pixbuf2: POINTER
 		do
 			a_pix := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (Result, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
 			if mask /= default_pointer then
-				mask_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, 0, 0, 0, 0, -1, -1)
-				mask_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (mask_pixbuf, True, '%/255/', '%/255/', '%/255/')
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (mask_pixbuf, a_pix, 0, 0, width, height, 0, 0, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 254)
-				a_pix := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (a_pix, False, '%/0/', '%/0/', '%/0/')
-				draw_mask_on_pixbuf (a_pix, mask_pixbuf)
+				mask_pixbuf1 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, 0, 0, 0, 0, -1, -1)
+				mask_pixbuf2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (mask_pixbuf1, True, '%/255/', '%/255/', '%/255/')
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (mask_pixbuf2, a_pix, 0, 0, width, height, 0, 0, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 254)
+				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (a_pix, False, '%/0/', '%/0/', '%/0/')
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (a_pix)
+				draw_mask_on_pixbuf (Result, mask_pixbuf2)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf1)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf2)
+			else
+				Result := a_pix
 			end
-			Result := a_pix
 		end
 
 	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER) is
@@ -441,11 +445,13 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 		require
 			a_stock_id_not_null: a_stock_id /= NULL
 		local
-			a_pixbuf: POINTER
+			stock_pixbuf, scaled_pixbuf: POINTER
 		do
-			a_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_render_icon (gtk_image, a_stock_id, gtk_icon_size_dialog, NULL)
-			a_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_pixbuf, 48, 48, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_hyper)		
-			set_pixmap_from_pixbuf (a_pixbuf)
+			stock_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_render_icon (gtk_image, a_stock_id, gtk_icon_size_dialog, NULL)
+			scaled_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (stock_pixbuf, 48, 48, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_hyper)		
+			set_pixmap_from_pixbuf (scaled_pixbuf)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (stock_pixbuf)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (scaled_pixbuf)
 		end
 
 	gtk_icon_size_dialog: INTEGER is
@@ -550,7 +556,7 @@ feature {NONE} -- Constants
 	Monochrome_color_depth: INTEGER is 1
 			-- Black and White color depth (for mask).
 
-feature {EV_PIXMAP_I, EV_PIXMAPABLE_IMP} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PIXMAP
 

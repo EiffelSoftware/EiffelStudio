@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Array resource with a text field."
+		"Array resource with a text area."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -114,13 +114,13 @@ feature -- Access
 			end
 		end
 
-	modified_resource: CELL2 [EB_RESOURCE, EB_RESOURCE] is
+	modified_resource: EB_MODIFIED_RESOURCE is
 			-- Modified resource
 		local
 			new_res: like resource
 		do
-			!! new_res.make_with_values (resource.name, array_from_text)
-			!! Result.make (resource, new_res)
+			create new_res.make_with_values (resource.name, array_from_text)
+			create Result.make (resource, new_res)
 		end
 
 feature {NONE} -- Properties

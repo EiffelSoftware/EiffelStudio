@@ -40,9 +40,7 @@ feature -- Access
 	resource: EB_RESOURCE
 			-- The resource to represent
 
-feature {NONE} -- Access
-
-	modified_resource: CELL2 [EB_RESOURCE, EB_RESOURCE] is
+	modified_resource: EB_MODIFIED_RESOURCE is
 			-- Modified resource
 		require
 			is_changed: is_changed
@@ -54,9 +52,9 @@ feature -- Basic Operations
 	save (file: PLAIN_TEXT_FILE) is
 			-- Save Current in `file'.
 		do
-			if not resource.has_changed then
+			if resource.is_default then
 				file.putstring ("--")
-			end;
+			end
 			file.putstring (resource.name)
 			file.putstring (": ")
 			save_value (file)

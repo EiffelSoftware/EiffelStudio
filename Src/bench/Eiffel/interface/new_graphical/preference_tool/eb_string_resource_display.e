@@ -151,13 +151,13 @@ feature {EB_ENTRY_PANEL} -- Access
 			end
 		end
 
-	modified_resource: CELL2 [EB_RESOURCE, EB_RESOURCE] is
+	modified_resource: EB_MODIFIED_RESOURCE is
 			-- Modified resource
 		local
 			new_res: like resource
 		do
-			!! new_res.make_with_values (resource.name, text.text)
-			!! Result.make (resource, new_res)
+			create new_res.make_with_values (resource.name, text.text)
+			create Result.make (resource, new_res)
 		end
 
 feature {NONE} -- Implementation

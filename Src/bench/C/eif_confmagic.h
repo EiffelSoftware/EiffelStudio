@@ -51,6 +51,9 @@
 #endif
 #endif
 
+/* Define a certain kind of optimization */
+#define EIF_REM_SET_OPTIMIZATION
+
 /* Do not compile with assertions, by default. */
 #ifndef EIF_ASSERTIONS
 #define NDEBUG

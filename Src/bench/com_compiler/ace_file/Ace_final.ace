@@ -144,6 +144,14 @@ cluster
         end
       exception
         end
+  	  ieiffel_definition_result_impl_proxy
+		end
+	  ieiffel_definition_feature_result_impl_proxy
+		end
+	  definition_search_result
+		end
+	  definition_search_result_feature
+		end
     end
 
   all base:   "$EIFFEL_SRC\library\base"

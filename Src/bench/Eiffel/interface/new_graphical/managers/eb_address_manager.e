@@ -1096,18 +1096,20 @@ feature {NONE} -- open new class
 						process_feature_feature
 					end
 				else
-					from
-						create sorted_features.make
-						ft := current_class.api_feature_table
-						ft.start
-					until
-						ft.after
-					loop
-						matcher.set_text (ft.item_for_iteration.name) 
-						if matcher.pattern_matches then
-							sorted_features.put_front (ft.item_for_iteration)
+					create sorted_features.make
+					if current_class.has_feature_table then
+						from
+							ft := current_class.api_feature_table
+							ft.start
+						until
+							ft.after
+						loop
+							matcher.set_text (ft.item_for_iteration.name) 
+							if matcher.pattern_matches then
+								sorted_features.put_front (ft.item_for_iteration)
+							end
+							ft.forth
 						end
-						ft.forth
 					end
 					sorted_features.sort
 					feature_list := sorted_features

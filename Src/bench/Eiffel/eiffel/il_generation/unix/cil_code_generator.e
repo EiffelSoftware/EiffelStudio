@@ -818,6 +818,13 @@ feature -- Variables access
 		do
 		end
 
+	put_type_instance (a_type: TYPE_I) is
+			-- Put instance of System.Type corresponding to `a_type' on stack.
+		require
+			a_type_not_void: a_type /= Void
+		do
+		end
+
 	put_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate access to feature of `a_feature_id' in `type_i'.
 		require

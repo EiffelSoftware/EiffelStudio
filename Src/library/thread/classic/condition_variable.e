@@ -61,6 +61,18 @@ feature -- Status setting
 			eif_thr_cond_wait (cond_pointer, a_mutex.mutex_pointer)
 		end
 
+	wait_with_timeout (a_mutex: MUTEX; a_timeout: INTEGER): BOOLEAN is
+			-- Block calling thread on current condition variable.
+			--| Return `True' is we got the condition variable on time
+			--| Otherwise return `False'
+		require
+			valid_pointer: is_set
+			a_mutex_not_void: a_mutex /= Void
+			timeout_positive: a_timeout >= 0
+		do
+			eif_thr_cond_wait_with_timeout (cond_pointer, a_mutex.mutex_pointer, a_timeout)
+		end
+
 	destroy is
 			-- Destroy condition variable.
 		require
@@ -104,6 +116,11 @@ feature {NONE} -- Externals
 		end
 
 	eif_thr_cond_wait (a_cond_ptr: POINTER; a_mutex_ptr: POINTER) is
+		external
+			"C | %"eif_threads.h%""
+		end
+
+	eif_thr_cond_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER) is
 		external
 			"C | %"eif_threads.h%""
 		end

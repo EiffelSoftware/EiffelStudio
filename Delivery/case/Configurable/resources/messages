@@ -28,6 +28,7 @@ Mae/The import failed : please check the format and the file content and retry
 Maf/The content of the file has to follow the .csv format 
 Mag/Please change the value ( $EIFINIT/general ) of width_to_scatter with something superior to 200. 
 Mah/A class content was not correctly retrieved. Please refer to the file "CASEGEN/error".
+Mai/The generation was successful.
 Mg/Please open or create a project before using this Tool
 Mf/Please open or create a project before creating an entity. 
 Ml/Please ensure that the Tool contains a data

@@ -52,4 +52,5 @@ E40/Problem saving a class content.
 E41/Impossible to open resources file.
 E42/Problem to open Eiffel files (parsing).
 E43/Can not generate cluster content.
+E44/The generation of cluster %X failed .Please check its path.\ Eventual Merging Process not initiated. 
 E32/Problem with the selected directory. Please check the path and the right access and try again. 

@@ -10,7 +10,9 @@ class
 inherit
 	GB_OBJECT
 		redefine
-			object, display_object, is_full, build_display_object, delete
+			object, display_object, is_full,
+			build_display_object, delete,
+			accepts_child
 		end
 		
 	GB_PARENT_OBJECT
@@ -69,7 +71,18 @@ feature {GB_OBJECT} -- Delete
 				container.unmerge_radio_button_groups (display_object.child)
 			end
 		end
-
+		
+feature {NONE} -- Access
+		
+	accepts_child (a_type: STRING): BOOLEAN is
+			-- Does `Current' accept `an_object'?
+			-- Only widgets are accepted.
+		do
+			if type_conforms_to (dynamic_type_from_string (a_type), dynamic_type_from_string (Ev_widget_string)) then
+				Result := True
+			end
+		end
+		
 feature {NONE} -- Implementation
 
 	build_display_object is

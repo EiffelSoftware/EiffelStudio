@@ -131,12 +131,6 @@ feature {NONE}
 			!!Result.make (build_path (p, Makefile_SH));
 		end;
 
-	Update_file: RAW_FILE is
-			-- File containing all the byte code to update
-		once
-			!!Result.make (build_path (Workbench_generation_path, Updt));
-		end
-
 feature {NONE}
 
 	final_file_name (base_name: STRING): STRING is

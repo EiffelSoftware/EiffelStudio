@@ -25,9 +25,11 @@ extern "C" {
 /*     maximum between its quota and the effective disk space                */
 /*---------------------------------------------------------------------------*/
 EIF_BOOLEAN cwin_query_disk_space(
-		EIF_POINTER CurrentObject,		// Object calling this function
+#ifndef EIF_IL_DLL
+		EIF_REFERENCE CurrentObject,	// Object calling this function
+#endif
 		EIF_CHARACTER DriveLetter,		// Letter of the drive to query
-		void *fnptr 					// Eiffel Callback function.
+		EIF_POINTER fnptr 				// Eiffel Callback function.
 		);
 
 #ifdef __cplusplus

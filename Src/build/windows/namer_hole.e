@@ -7,14 +7,14 @@ indexing
 class NAMER_HOLE 
 
 inherit
-
 	EDIT_BUTTON
 		redefine
 			make
 		end
 
-creation
+	ERROR_POPUPER
 
+creation
 	make
 
 feature {NONE} -- Initialization
@@ -47,6 +47,9 @@ feature {NAMER_HOLE} -- Command
 			namable ?= ev_data.data
 			if namable /= Void then
 				change_name (namable)
+			else
+				error_dialog.popup (Current,
+									Messages.cannot_rename_er, Void)
 			end
 		end
 

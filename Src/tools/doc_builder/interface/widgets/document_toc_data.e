@@ -65,7 +65,7 @@ feature -- Access
 			-- Location of Current relative to project
 		do
 			Result := file_no_extension (filename.substring 
-				(document.Shared_project.preferences.root_directory.out.count + 1, filename.count))
+				(document.Shared_project.root_directory.out.count + 1, filename.count))
 		end		
 		
 	real_location: STRING is

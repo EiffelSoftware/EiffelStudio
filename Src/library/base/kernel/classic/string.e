@@ -199,8 +199,11 @@ feature -- Access
 		require
 			index_small_enough: i <= count
 			index_large_enough: i > 0
+		local
+			c: CHARACTER
 		do
-			Result := area.item (i - 1).code
+			c := area.item (i - 1)
+			Result := c.code
 		end
 
 	hash_code: INTEGER is

@@ -466,7 +466,7 @@ feature -- Basic Operations
 				until
 					a_member_info.parameters.off
 				loop
-					a_description_string := a_description_string + a_member_info.parameters.item.name + ":" + a_member_info.parameters.item.description + "%N"
+					a_description_string := a_description_string + a_member_info.parameters.item.name + ": " + a_member_info.parameters.item.description + "%N"
 					a_member_info.parameters.forth
 				end
 				

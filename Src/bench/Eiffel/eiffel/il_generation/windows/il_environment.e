@@ -53,10 +53,10 @@ feature -- Access
 			l_installed: like installed_runtimes
 		do
 			l_installed := installed_runtimes
-			if l_installed.has (v1_0) then
-				Result := clone (v1_0)
-			else
+			if l_installed.has (v1_1) then
 				Result := clone (v1_1)
+			else
+				Result := clone (v1_0)
 			end
 		ensure
 			default_version_not_void: Result /= Void

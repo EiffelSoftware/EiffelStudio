@@ -1175,7 +1175,7 @@ rt_private char *mark_expanded(char *root, char *(*marker) (char *))
 
 /* Start of workbench-specific marking functions */
 #ifdef WORKBENCH
-rt_private void mark_op_stack(register4 char *(*marker) (char *), register5 int move)
+rt_private void mark_op_stack(EIF_CONTEXT register4 char *(*marker) (char *), register5 int move)
                             		/* The routine used to mark objects */
                    					/* Are the objects expected to move? */
 {

@@ -8,15 +8,15 @@ inherit
 			make as normal_create
 		redefine
 			text_window, build_format_bar, hole,
-			tool_name
+			tool_name, build_text_window
 		end;
 	BAR_AND_TEXT
 		redefine
 			text_window, build_format_bar, hole,
-			tool_name, make
+			tool_name, make, build_text_window
 		select
 			make
-		end
+		end;
 
 creation
 
@@ -29,6 +29,17 @@ feature {NONE}
 		do
 			normal_create (a_screen);
 			text_window.set_read_only
+		end;
+
+	build_text_window is
+			-- Create `text_window' different ways whether
+			-- the tabulation mecanism is disable or not
+		do
+			if tabs_disabled then
+				!! text_window.make (new_name, global_form, Current)
+			else
+				!EXPLAIN_TAB_TEXT! text_window.make (new_name, global_form, Current)
+			end
 		end;
 
 	build_format_bar is

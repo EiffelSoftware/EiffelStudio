@@ -79,11 +79,18 @@ feature
 	edit_bar, format_bar: FORM;
 			-- Main and format menu bars
 
+	build_text_window is
+			-- Create `text_window' different ways whether
+			-- the tabulation mecanism is disable or not
+		do
+			!!text_window.make (new_name, global_form, Current)
+		end;
+
 	build_widgets is
 			-- Build system widget.
 		do
 			set_default_size;
-				!!text_window.make (new_name, global_form, Current);
+				build_text_window;
 				!!edit_bar.make (new_name, global_form);
 				build_bar;
 				!!format_bar.make (new_name, global_form);

@@ -73,7 +73,11 @@ feature {NONE}
 	build_widgets is
 		do
 			set_default_size;
-			!!text_window.make (new_name, global_form, Current);
+			if tabs_disabled then
+				!!text_window.make (new_name, global_form, Current);
+			else
+				!OBJECT_TAB_TEXT!text_window.make (new_name, global_form, Current);
+			end;
 			!!edit_bar.make (new_name, global_form);
 			build_bar;
 			!!format_bar.make (new_name, global_form);

@@ -25,6 +25,8 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.text
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature -- Status setting
@@ -34,7 +36,6 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.is_empty
 		do
 			implementation.set_text (a_text)
 		ensure
@@ -42,13 +43,13 @@ feature -- Status setting
 		end
 
 	remove_text is
-			-- Make `text' `Void'.
+			-- Make `text' empty.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.remove_text
+			set_text ("")
 		ensure
-			text_removed: text = Void
+			text_removed: text.is_empty
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -27,3 +27,4 @@ mtwel.lib: $(OBJ)
 	copy $@ $(ISE_EIFFEL)\library\wel\spec\bcb\lib
 	del $@
 	del *.obj
+	del *.bak

@@ -26,3 +26,4 @@ wel.lib: $(OBJ)
 	copy $@ ..\spec\bcb\lib
 	del $@
 	del *.obj
+	del *.bak

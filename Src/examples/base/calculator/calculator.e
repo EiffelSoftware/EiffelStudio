@@ -13,7 +13,7 @@ class
 inherit
 	SET_UP 
 
-creation
+create
 	make
 
 feature -- creation
@@ -106,21 +106,21 @@ feature {NONE} -- Implementation
 	initialize is 
 			-- Build operator states. 
 		do 
-			!! qst
+			create qst
 			enter_operator ("a", "Enter operand onto stack.", qst)
-			!! pls
+			create pls
 			enter_operator ("+", "Add top two numbers on the stack", pls)
-			!! mns
+			create mns
 			enter_operator ("-", "Subtract top two numbers on the stack.", mns)
-			!! mlt
+			create mlt
 			enter_operator ("*", "Multiply top two numbers on the stack.", mlt)
-			!! dvd
+			create dvd
 			enter_operator ("/", "Divide top two numbers on the stack.", dvd)
-			!! remove
+			create remove
 			enter_operator ("0", "Empty the stack.", remove)
-			!! quit_state
+			create quit_state
 			enter_operator ("q", "Quit.", quit_state)
-			!! help_state
+			create help_state
 			enter_operator ("?", "Help.", help_state)
 		end
 	

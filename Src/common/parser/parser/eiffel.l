@@ -529,6 +529,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				append_text_to_string (token_buffer)
 				current_position.go_to (token_buffer.count)
 				last_token := TE_ID
+				if token_buffer.count > maximum_string_length then
+					report_too_long_string
+				end
 			}
 
 
@@ -832,6 +835,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
 				current_position.go_to (text_count)
 				last_token := TE_STR_FREE
+				if token_buffer.count > maximum_string_length then
+					report_too_long_string
+				end
 			}
 \"\"		{
 					-- Empty string.
@@ -844,6 +850,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
 				current_position.go_to (text_count)
 				last_token := TE_STRING
+				if token_buffer.count > maximum_string_length then
+					report_too_long_string
+				end
 			}
 \"[^\n"]*[\[\{]/[ \t\r]*\n {
 					-- Verbatim string.
@@ -926,6 +935,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 						last_token := TE_EMPTY_VERBATIM_STRING
 					else
 						last_token := TE_VERBATIM_STRING
+						if token_buffer.count > maximum_string_length then
+							report_too_long_string
+						end
 					end
 				else
 					current_position.go_to (text_count)
@@ -1111,6 +1123,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					last_token := TE_EMPTY_STRING
 				else
 					last_token := TE_STRING
+					if token_buffer.count > maximum_string_length then
+						report_too_long_string
+					end
 				end
 			}
 	%		{

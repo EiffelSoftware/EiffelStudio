@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 								a_header_file_name.count - 1
 		do
 			Result := clone (a_header_file_name)
-			Result.insert ("_impl", Result.count - 1)
+			Result.insert_string ("_impl", Result.count - 1)
 		ensure
 			non_void_header_file_name: Result /= Void
 			non_empty_header_file_name: not Result.is_empty

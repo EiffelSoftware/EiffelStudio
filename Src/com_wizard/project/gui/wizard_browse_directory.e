@@ -51,7 +51,7 @@ feature -- Basic operations
 			if a_file_dialog.selected then
 				a_name := clone (a_file_dialog.file_name)
 				a_title := a_file_dialog.file_title
-				a_name.head (a_name.count - a_title.count)
+				a_name.keep_head (a_name.count - a_title.count)
 				set_browse_directory (a_name)
 			end
 		end

@@ -101,7 +101,7 @@ feature -- Behavior
 				shared_wizard_environment.set_project_name (project_name)
 
 				if folder_name.item (folder_name.count) = Directory_separator then
-					folder_name.head (folder_name.count -1)
+					folder_name.keep_head (folder_name.count -1)
 				end
 				create a_file.make (folder_name)
 				if not a_file.exists then
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 		do
 			Result := definition_file_edit.text
 			separator_index := Result.last_index_of (Directory_separator, Result.count)
-			Result.tail (Result.count - separator_index)
+			Result.keep_tail (Result.count - separator_index)
 		end
 
 end -- class WIZARD_DEFINITION_FILE_DIALOG

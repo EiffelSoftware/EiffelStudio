@@ -346,17 +346,8 @@ feature -- Element change
 			-- to `n2', or to empty string if no such substring.
 		require
 			argument_not_void: t /= Void;
-		local
-			t_area: like area
 		do
-			if (1 <= n1) and (n1 <= n2) and (n2 <= t.count) then
-				resize (n2 - n1 + 1); -- if necessary
-				t_area := t.area;
-				str_take ($t_area, $area, n1, n2);
-				count := n2 - n1 + 1;
-			else
-				wipe_out
-			end
+			make_from_string (t.substring (n1, n2))
 		ensure
 			is_substring: is_equal (t.substring (n1, n2))
 		end;
@@ -445,22 +436,44 @@ feature -- Element change
 			end
 		end;
 
+	replace_blank is
+			-- Replace all current characters with blanks.
+		do
+			str_blank ($area, count);
+		ensure
+			same_size: (count = old count) and (capacity = old capacity)
+			-- all_blank: For every `i' in 1..`count, `item' (`i') = `Blank'
+		end;
+
 	fill_blank is
-			-- Fill with blanks.
+			-- Fill with `capacity' blank characters.
 		do
 			str_blank ($area, capacity);
 			count := capacity
 		ensure
-			-- all_blank: For every `i' in 1..`count', `item' (`i') = `Blank'
+			filled: full
+			same_size: (count = capacity) and (capacity = old capacity)
+			-- all_blank: For every `i' in 1..`capacity', `item' (`i') = `Blank'
+		end;
+
+	replace_character (c: CHARACTER) is
+			-- Replace all current characters with characters all equal to `c'.
+		do
+			str_fill ($area, count, c);
+		ensure
+			same_size: (count = old count) and (capacity = old capacity)
+			-- all_char: For every `i' in 1..`count', `item' (`i') = `c'
 		end;
 
 	fill_character (c: CHARACTER) is
-			-- Fill with `c'.
+			-- Fill with `capacity' characters all equal to `c'.
 		do
 			str_fill ($area, capacity, c);
 			count := capacity
 		ensure
-			-- all_char: For every `i' in 1..`count', `item' (`i') = `c'
+			filled: full
+			same_size: (count = capacity) and (capacity = old capacity)
+			-- all_char: For every `i' in 1..`capacity', `item' (`i') = `c'
 		end;
 
 	head (n: INTEGER) is
@@ -668,7 +681,7 @@ feature -- Element change
 			append (b.out);
 		end;
 
-	insert (s: like Current; i: INTEGER) is
+	insert (s: STRING; i: INTEGER) is
 			-- Add `s' to the left of position `i' in current string.
 		require
 			string_exists: s /= Void;
@@ -973,19 +986,19 @@ feature -- Duplication
 	substring (n1, n2: INTEGER): like Current is
 			-- Copy of substring containing all characters at indices
 			-- between `n1' and `n2'
-		require
-			meaningful_origin: 1 <= n1;
-			meaningful_interval: n1 <= n2;
-			meaningful_end: n2 <= count
 		local
 			other_area: like area
 		do
-			!! Result.make (n2 - n1 + 1);
-			other_area := Result.area;
-			str_take ($area, $other_area, n1, n2);
-			Result.set_count (n2 - n1 + 1)
+			if (1 <= n1) and (n1 <= n2) and (n2 <= count) then
+				!! Result.make (n2 - n1 + 1);
+				other_area := Result.area;
+				str_take ($area, $other_area, n1, n2);
+				Result.set_count (n2 - n1 + 1);
+			else
+				!! Result.make (0)
+			end
 		ensure
-			new_result_count: Result.count = n2 - n1 + 1
+			new_result_count: Result.count = n2 - n1 + 1 or Result.count = 0
 			-- original_characters: For every `i' in 1..`n2'-`n1', `Result'.`item' (`i') = `item' (`n1'+`i'-1)
 		end;
 

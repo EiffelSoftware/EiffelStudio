@@ -102,12 +102,6 @@ feature {NONE} -- Eiffel Project Directories
 			!! Result.make
 		end;
 
-	Precompilation_descobj: FILE_NAME is
-			-- Full name of the precompilation descriptor tables
-		once
-			!! Result.make
-		end;
-
 feature {NONE} -- Directory creation
 
 	Create_generation_directory is

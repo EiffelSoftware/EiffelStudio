@@ -3,10 +3,7 @@ deferred class HELPABLE
 
 inherit
 
-	UNIX_ENV
-		export
-			{NONE} all
-		end
+	CONSTANTS
     
 feature 
 
@@ -16,9 +13,9 @@ feature
 			help_file: UNIX_FILE;
 			temp: STRING;
         do
-            !!full_path.make (0);
-            full_path.append (EiffelBuild_directory);
-            full_path.append ("/help/");
+            !! full_path.make (0);
+            full_path.append (Environment.help_directory);
+			full_path.extend (Environment.directory_separator);
 			temp := clone (help_file_name);
 			temp.to_lower;
             full_path.append (temp);
@@ -41,7 +38,6 @@ feature
                 Result := "No help available"
             end;
         end;
- 
 	
 feature {NONE}
 

@@ -3,10 +3,8 @@ deferred class HOLE
 
 inherit
 
+	CONSTANTS;
 	WINDOWS
-		export
-			{NONE} all
-		end
 	
 feature 
 

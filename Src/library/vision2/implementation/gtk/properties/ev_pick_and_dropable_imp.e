@@ -454,12 +454,6 @@ feature -- Implementation
 			Result := feature {EV_GTK_EXTERNALS}.gdk_root_parent
 		end
 
-	real_draw_rubber_band is
-			-- Implementation of draw_rubber_band.
-		do
-			feature {EV_GTK_EXTERNALS}.gdk_draw_line (root_parent, invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
-		end
-
 	invert_gc: POINTER is
 		local
 			col: POINTER

@@ -15,9 +15,6 @@ feature -- Access
 	length: INTEGER
 		-- Number of characters represented by the token.
 
-	width: INTEGER
-		-- Width in pixel (computed at the last display).
-
 feature -- Linkable functions
 
 	previous: EDITOR_TOKEN
@@ -34,6 +31,14 @@ feature -- Miscellaneous
 		deferred
 		end
 
+	width: INTEGER is
+		-- Width in pixel of the entire token.
+		do
+			dc.select_font(font)
+			Result := dc.string_width(image)
+			dc.unselect_font
+		end
+
 	get_substring_width(n: INTEGER) is
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
@@ -41,6 +46,44 @@ feature -- Miscellaneous
 			dc.select_font(font)
 			Result := dc.string_width(image.substring(1,n))
 			dc.unselect_font
+		end
+
+	retrieve_position_by_width(a_width: INTEGER): INTEGER is
+			-- Return the character situated under the `a_width'-th
+			-- pixel.
+		local
+			space_width: INTEGER
+			current_position: INTEGER
+			current_width: INTEGER
+			next_width: INTEGER
+		do
+			dc.select_font(font)
+
+				-- precompute an estimation of the current_position
+			space_width := dc.string_width(" ")
+			current_position := a_width // space_width
+
+				-- We have now to check that our current position is the good one.
+				-- If we are above, we decrease current_position, and the opposite.
+			from
+				current_width := dc.string_width(image.substring(1,current_position)) and then
+				next_width := dc.string_width(image.substring(1,current_position+1))
+			until
+				a_width >= current_width and then a_width < next_width
+			loop
+				if a_width < current_width then
+					current_position := current_position - 1
+					next_width := current_width
+					current_width := dc.string_width(image.substring(1,current_position)) and then
+				else
+					current_position := current_position + 1
+					current_width := next_width
+					next_width := dc.string_width(image.substring(1,current_position+1)) and then
+				end
+			end
+			dc.unselect_font
+
+			Result := current_position
 		end
 
 feature {NONE} -- Properties used to display the token

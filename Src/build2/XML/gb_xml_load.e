@@ -19,6 +19,8 @@ inherit
 	
 	GB_CONSTANTS
 	
+	GB_ACCESSIBLE_SYSTEM_STATUS
+	
 	GB_ACCESSIBLE_OBJECT_HANDLER
 		undefine
 			default_create, is_equal, copy
@@ -29,17 +31,28 @@ inherit
 feature -- Basic operation
 
 	load is
-			--
+			-- Load the system.
 		do
 				-- Do initialization necessary
 			parser := create_tree_parser
 			create type_string.make_from_string ("type")
+			
+			display_window.hide
+			builder_window.hide
 			
 				-- Load and parse file `filename'.
 			load_and_parse_xml_file (filename)
 			
 				-- Build deferred parts.
 			deferred_builder.build
+			
+			display_window.show
+			builder_window.show
+			
+				-- As we have just loaded the project, the
+				-- system should know that it has not been modifified
+				-- by the user.
+			system_status.disable_project_modified
 			
 				-- Set up the drop actions on all objects just loaded.
 			--object_handler.for_all_objects_build_drop_actions_for_new_object
@@ -51,7 +64,6 @@ feature {NONE} -- Implementation
 			-- Build a window representing `window'.
 		local
 			current_element: XML_ELEMENT
-			--a_class_name: STRING
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
 			window_object: GB_OBJECT
@@ -177,9 +189,6 @@ feature {NONE} -- Implementation
 				element.forth
 			end
 		end
-		
-		
-		
 
 	create_system is
 			-- Create a system from the parsed XML file.

@@ -20,19 +20,23 @@ default
 	disabled_debug("win_dispatcher")
 	debug(no)
 	line_generation(no)
-	profile(yes)
+	profile(no)
 	trace(no)
 	il_verifiable(yes)
 	msil_generation_type("exe")
 	check_vape(no)
 	console_application(no)
 	address_expression(no)
-	array_optimization(no)
-	dead_code_removal(no)
+	array_optimization(yes)
+	dead_code_removal(yes)
 	dynamic_runtime(no)
-	exception_trace(no)
+	exception_trace(yes)
 	inlining(no)
 	multithreaded(no)
+
+
+-- Note that we exclude ev_widget, as we have a new version for build, which allows
+-- you to query whether the minimum_size and minimum_height were set by the user.
 
 cluster
 	all build2:		"D:\work\build2"
@@ -43,12 +47,17 @@ cluster
 	dev:		"D:\work\library"
 
 	all wel (dev):		"$\wel"
+		default
+			assertion(no)
+		end
 
 	all vision2 (dev):		"$\vision2"
 		include
 			"ev_button"; 
 		exclude
-			"new_figures"; "gtk"; "components"; "obsolete"; "release"; 
+			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; 
+		default
+			assertion(no)
 		end
 
 	all base:		"d:\work\library\base"

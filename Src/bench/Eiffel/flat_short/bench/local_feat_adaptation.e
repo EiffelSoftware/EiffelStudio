@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 							-- If result is format then get the
 							-- the constraint type from last_class.
 						formal_type ?= type;
-						enclosing_class :=  global_type.target_enclosing_class;
+						enclosing_class := global_type.target_enclosing_class;
 						type := enclosing_class.constraint (formal_type.position)
 					end;
 					check
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	evaluate_type (last_type: TYPE_A; type: TYPE): TYPE_A is
+	evaluate_type (last_type: TYPE_A; type: TYPE_B): TYPE_A is
 			-- Evaluate type `type' in relation to `last_type'.
 		local
 			last_constrained: TYPE_A;
@@ -452,8 +452,10 @@ feature {NONE} -- Implementation
 			formal_type: FORMAL_A
 		do
 			Result ?= type;
-			check
-				valid_result: Result /= Void
+			if Result = Void then	
+					-- This is done since the target feature is retrieved from the
+					-- select table which doesn't evaluate types (ie. TYPE_A)
+				Result := type.actual_type
 			end;
 			last_class := last_type.associated_class;
 			if last_type.is_formal then
@@ -488,6 +490,8 @@ feature -- Debug
 				io.error.putstring ("VOID");
 			else
 				io.error.putstring (source_feature.feature_name);
+				io.error.putstring (" ");
+				io.error.putstring (source_feature.type.out);
 			end;
 			io.error.putstring (" (");
 			if source_class = Void then
@@ -501,6 +505,8 @@ feature -- Debug
 				io.error.putstring ("VOID");
 			else
 				io.error.putstring (target_feature.feature_name);
+				io.error.putstring (" ");
+				io.error.putstring (target_feature.type.out);
 			end;
 			io.error.putstring (" (");
 			if target_class = Void then

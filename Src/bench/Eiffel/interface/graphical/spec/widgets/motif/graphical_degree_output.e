@@ -14,7 +14,7 @@ inherit
 	WINDOW_ATTRIBUTES
 	G_ANY
 	MEL_COMMAND
-	SHARED_EIFFEL_PROJECT
+	SHARED_ERROR_HANDLER
 	DEGREE_OUTPUT
 		redefine
 			put_start_degree_6, put_end_degree_6, put_start_degree, 
@@ -33,15 +33,21 @@ inherit
 			display_degree_output
 		end 
 
-creation
-	make
+--creation
+	----make
 
-feature -- Initialization
+--feature -- Initialization
 
-	make (parent_implementation: BASE_I) is
-			-- Set the parent of the progress window for a later use.
+	--make (parent_implementation: BASE_I) is
+			---- Set the parent of the progress window for a later use.
+		--do
+			--mel_parent ?= parent
+		--end
+feature
+
+	set_parent_window (a_parent: BASE_I) is
 		do
-			mel_parent ?= parent
+			mel_parent ?= a_parent
 		end
 
 feature -- Start output features
@@ -547,8 +553,8 @@ feature {NONE} -- Implementation
 	update_resources is
 			-- Update the font/color of progress window.
 		local
-			imp: COLOR_X
-			font_x: FONT_X
+			imp: COLOR_IMP
+			font_x: FONT_IMP
 			a_font_list: MEL_FONT_LIST
 			bg_color, fg_color: COLOR
 			global_font: FONT
@@ -602,7 +608,7 @@ feature {NONE} -- Implementation
 	popup_window is
 			-- Popup the window.
 		local
-			cursor_imp: SCREEN_CURSOR_X
+			cursor_imp: SCREEN_CURSOR_IMP
 			mp: MOUSE_PTR
 			new_x, new_y: INTEGER
 			p: MEL_COMPOSITE
@@ -648,7 +654,7 @@ feature {NONE} -- Implementation
 			-- Cancel the compilation.
 		do
 			cancel_b.set_insensitive
-			Eiffel_project.interrupt_compilation
+			Error_handler.insert_interrupt_error (True)
 		end
 
 end -- class GRAPHICAL_DEGREE_OUTPUT

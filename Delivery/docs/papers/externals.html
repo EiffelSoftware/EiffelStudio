@@ -209,7 +209,7 @@ field:</p>
 			&quot;y&quot;
 		end	
 
-	set_x (p: POINTER; v: INTEGER): INTEGER is
+	set_x (p: POINTER; v: INTEGER) is
 			-- Set field x of struct pointed by `p'.
 		external
 			&quot;C [struct %&quot;my_header.h%&quot;] (Point, int)&quot;
@@ -217,7 +217,7 @@ field:</p>
 			&quot;x&quot;
 		end	
 
-	set_y (p: POINTER: v: INTEGER): INTEGER is
+	set_y (p: POINTER: v: INTEGER) is
 			-- Set field y of struct pointed by `p' with `v'.
 		external
 			&quot;C [struct %&quot;my_header.h%&quot;] (Point, int)&quot;

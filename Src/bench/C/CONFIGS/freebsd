@@ -1,6 +1,6 @@
 #!/bin/sh
 # Configured by: manuelt
-# Target system: Linux + LinuxThreads (kernel threads)
+# Target system: FreeBSD
 
 d_bsdsig='undef'
 ar='ar'
@@ -285,7 +285,7 @@ xlibpth='/usr/lib/386 /lib/386'
 lns='/bin/ln -s'
 longsize='4'
 integer_64_size='8'
-eif_integer_64_size='"Ld"'
+eif_integer_64_display='"lld"'
 integer_16_size='2'
 d_mymalloc=''
 mallocobj=''

@@ -36,7 +36,6 @@ feature -- Initialization
 		ensure
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name);
-			managed: managed
 		end;
 
 feature -- Access

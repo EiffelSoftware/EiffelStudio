@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 			l_emitter: IL_EMITTER
 		do
 				-- Check assembly existence.
-			create l_file.make (an_assembly)
+			create l_file.make (environ.interpreted_string (an_assembly))
 			if not l_file.exists then
 					-- Assembly file was not found.
 				create l_vd63.make (an_assembly)

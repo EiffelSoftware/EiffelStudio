@@ -9,6 +9,8 @@ class
 inherit
 	SYSTEM_DLL_COMPONENT
 
+	ANY
+
 create
 	make_with_data
 
@@ -112,11 +114,6 @@ feature -- Status Setting
 		do
 			date_of_birth := a_date_of_birth
 		end
-
-feature {NONE} -- Implementation
-
-	Void: NONE
-		-- Void reference
 
 invariant
 	non_void_id: id /= Void

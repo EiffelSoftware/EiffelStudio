@@ -54,6 +54,26 @@ feature -- Basic operation
 			description.append ("Testing feature `replace'...")
 			test_replace
 			append_result
+
+			description.append ("Testing feature `put_left'...")
+			test_put_left
+			append_result
+
+			description.append ("Testing feature `put_right'...")
+			test_put_right
+			append_result
+
+			description.append ("Testing feature `put_i_th'...")
+			test_put_i_th
+			append_result
+
+			description.append ("Testing feature `force'...")
+			test_force
+			append_result
+
+			description.append ("Testing feature `put_front'...")
+			test_put_front
+			append_result
 		rescue
 			test_successful := False
 			if assertion_violation then
@@ -127,6 +147,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	Magnitude: INTEGER is 3
+			-- Order of test.
+
 	test_extend is
 		local
 			n: INTEGER
@@ -134,7 +157,7 @@ feature {NONE} -- Implementation
 			list.start
 			similar_list.start
 			from
-				n := 10
+				n := Magnitude
 			until
 				n = 1
 			loop
@@ -152,7 +175,7 @@ feature {NONE} -- Implementation
 			list.start
 			similar_list.start
 			from
-				n := 10
+				n := Magnitude
 			until
 				n = 1
 			loop
@@ -170,13 +193,103 @@ feature {NONE} -- Implementation
 			list.start
 			similar_list.start
 			from
-				n := 10
+				n := Magnitude
 			until
 				n = 1
 			loop
 				new_item
 				list.replace (last_item)
 				similar_list.replace (last_item)
+				n := n - 1
+			end
+		end
+
+	test_put_front is
+		local
+			n: INTEGER
+		do
+			list.start
+			similar_list.start
+			from
+				n := Magnitude
+			until
+				n = 1
+			loop
+				new_item
+				list.put_front (last_item)
+				similar_list.put_front (last_item)
+				n := n - 1
+			end
+		end
+
+	test_put_i_th is
+		local
+			n: INTEGER
+		do
+			list.start
+			similar_list.start
+			from
+				n := Magnitude
+			until
+				n = 1
+			loop
+				new_item
+				list.put_i_th (last_item, n)
+				similar_list.put_i_th (last_item, n)
+				n := n - 1
+			end
+		end
+
+	test_put_left is
+		local
+			n: INTEGER
+		do
+			list.start
+			similar_list.start
+			from
+				n := Magnitude
+			until
+				n = 1
+			loop
+				new_item
+				list.put_left (last_item)
+				similar_list.put_left (last_item)
+				n := n - 1
+			end
+		end
+
+	test_put_right is
+		local
+			n: INTEGER
+		do
+			list.start
+			similar_list.start
+			from
+				n := Magnitude
+			until
+				n = 1
+			loop
+				new_item
+				list.put_right (last_item)
+				similar_list.put_right (last_item)
+				n := n - 1
+			end
+		end
+
+	test_force is
+		local
+			n: INTEGER
+		do
+			list.start
+			similar_list.start
+			from
+				n := Magnitude
+			until
+				n = 1
+			loop
+				new_item
+				list.force (last_item)
+				similar_list.force (last_item)
 				n := n - 1
 			end
 		end
@@ -208,6 +321,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/03/01 16:18:17  brendel
+--| Added tests for all single-item-add features.
+--|
 --| Revision 1.1  2000/03/01 02:23:16  brendel
 --| Initial test of DYNAMIC_LISTS.
 --|

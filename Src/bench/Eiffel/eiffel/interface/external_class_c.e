@@ -1332,8 +1332,7 @@ feature {NONE} -- Implementation
 				else
 					l_val := a_value
 				end
-				create l_int.make_default
-				l_int.initialize (l_is_negative, l_val)
+				create l_int.make_from_string (Void, l_is_negative, l_val)
 				l_value := l_int
 			elseif a_external_type.is_boolean then
 				a_value.to_lower

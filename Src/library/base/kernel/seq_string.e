@@ -256,8 +256,6 @@ feature -- Removal
 
 	prune (c: CHARACTER) is
 			-- Remove `c'.
-		require else
-			not off
 		local
 			i: INTEGER
 		do
@@ -333,10 +331,6 @@ feature {NONE} -- Inapplicable
 			-- Go to position marked `r'.
 		do
 		end;
-
-invariant
-
-	extendible_constraint: extendible
 
 end -- class SEQ_STRING
 

@@ -39,17 +39,17 @@ feature -- Initialization
 			table_size: INTEGER
 		do
 			!! clever;
-			table_size := clever.higher_prime (n);
-			if table_size < 5 then
-				table_size := 5
+			table_size := clever.higher_prime ((High_ratio * n) // Low_ratio);
+			if table_size < Minimum_size then
+				table_size := Minimum_size
 			end;
 			!! content.make (0, table_size - 1);
 			!! keys.make (0, table_size - 1);
 			!! deleted_marks.make (0, table_size - 1);
 		ensure
-			keys_big_enough: keys.capacity >= n and keys.capacity >= 5;
-			content_big_enough: content.capacity >= n and content.capacity >= 5;
-			deleted_marks_big_enough: deleted_marks.capacity >= n and deleted_marks.capacity >= 5
+			keys_big_enough: keys.capacity >= n and keys.capacity >= Minimum_size;
+			content_big_enough: content.capacity >= n and content.capacity >= Minimum_size;
+			deleted_marks_big_enough: deleted_marks.capacity >= n and deleted_marks.capacity >= Minimum_size
 		end;
 
 feature -- Access
@@ -579,7 +579,7 @@ feature {NONE} -- Implementation
 		do
 			from
 				table_size := keys.count;
-				!! other.make ((3 * table_size) // 2);
+				!! other.make ((High_ratio * table_size) // Low_ratio);
 			until
 				i >= table_size
 			loop
@@ -606,6 +606,12 @@ feature {NONE} -- Implementation
 	control: INTEGER;
 			-- Control code set by operations that may produce
 			-- several possible conditions.
+
+	Minimum_size : INTEGER is 5;
+
+	High_ratio : INTEGER is 3;
+
+	Low_ratio : INTEGER is 2;
 
 invariant
 

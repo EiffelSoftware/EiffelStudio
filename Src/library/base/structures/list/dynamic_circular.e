@@ -35,13 +35,11 @@ deferred class DYNAMIC_CIRCULAR [G] inherit
 			consistent, setup
 		end;
 
-feature
+feature -- Duplication
 
    duplicate (n: INTEGER): like Current is
 			-- Copy of sub-chain beginning at current position
-			-- and having min (`n', `count') items,
-			-- where `from_here' is the number of items
-			-- at or to the right of current position.
+			-- and having min (`n', `count') items.
 		local
 			pos: CURSOR;
 			to_be_removed, counter: INTEGER

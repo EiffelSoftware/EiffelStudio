@@ -14,8 +14,8 @@ class DIRECTORY creation
 feature -- Initialization
 
 	make (dn: STRING) is
-			-- Create an Eiffel Directory with `dn'
-			-- as directory name.
+			-- Create directory object for the directory 
+			-- of name `dn'.
 		require
 			string_exists: dn /= Void
 		do
@@ -24,8 +24,8 @@ feature -- Initialization
 		end;
 
 	make_open_read (dn: STRING) is
-			-- Create an Eiffel directory with `dn'
-			-- as directory name and open it for reading.
+			-- Create directory object for the directory
+			-- of name `dn' and open it for reading.
 		require
 			string_exists: dn /= Void
 		do
@@ -46,13 +46,10 @@ feature -- Initialization
 
 feature -- Access
 
-	
-
 	readentry is
-			-- Read next directory entry and
+			-- Read next directory entry;
 			-- make result available in `lastentry'.
-			-- (the result may be void if the end of directory
-			-- is encountered)
+			-- Make result void if all entries have been read.
 		require
 			is_opened: not is_closed
 		do
@@ -67,7 +64,7 @@ feature -- Access
 	has_entry (entry_name: STRING): BOOLEAN is
 			-- Has directory the entry `entry_name'?
 			-- The use of `dir_temp' is required not
-			-- to perturbate the position in the current
+			-- to change the position in the current
 			-- directory entries list.
 		require
 			string_exists: entry_name /= Void;

@@ -24,6 +24,10 @@ class CURSOR_TREE_ITERATOR [G] inherit
 				do_if as pre_do_if,
 				search as pre_search,
 				do_for as pre_do_for,
+				do_while as pre_do_while,
+				while_do as pre_while_do,
+				while_continue as pre_while_continue,
+				continue_while as pre_continue_while,
 				continue_until as pre_continue_until,
 				continue_search as pre_continue_search,
 				continue_for as pre_continue_for,
@@ -36,7 +40,9 @@ class CURSOR_TREE_ITERATOR [G] inherit
 				pre_do_all, pre_until_do, pre_do_until,
 				pre_do_if, pre_search, pre_do_for, pre_continue_until,
 				pre_continue_search, pre_continue_for,
-				pre_forall, pre_exists, pre_forth, start
+				pre_forall, pre_exists, pre_forth, start,
+				pre_while_do, pre_do_while, pre_continue_while,
+				pre_while_continue
 			end;
 
 		LINEAR_ITERATOR [G]
@@ -47,6 +53,10 @@ class CURSOR_TREE_ITERATOR [G] inherit
 				do_if as post_do_if,
 				search as post_search,
 				do_for as post_do_for,
+				do_while as post_do_while,
+				while_do as post_while_do,
+				while_continue as post_while_continue,
+				continue_while as post_continue_while,
 				continue_until as post_continue_until,
 				continue_search as post_continue_search,
 				continue_for as post_continue_for,
@@ -68,6 +78,10 @@ class CURSOR_TREE_ITERATOR [G] inherit
 				do_if as breadth_do_if,
 				search as breadth_search,
 				do_for as breadth_do_for,
+				do_while as breadth_do_while,
+				while_do as breadth_while_do,
+				while_continue as breadth_while_continue,
+				continue_while as breadth_continue_while,
 				continue_until as breadth_continue_until,
 				continue_search as breadth_continue_search,
 				continue_for as breadth_continue_for,

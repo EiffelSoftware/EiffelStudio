@@ -661,7 +661,7 @@ invariant
 	non_negative_breadth: breadth >= 0;
 	is_leaf_definition: not off implies is_leaf = (arity = 0);
 	above_property: above implies (arity <= 1);
-	(isfirst or islast or is_leaf or is_root) implies not off;
+	on_tree: (isfirst or islast or is_leaf or is_root) implies not off;
 
 -- The following clauses express the constraints
 -- on the different legal cursor positions.
@@ -671,7 +671,7 @@ invariant
 	above_constraint: above implies not (before or after or below);
 	after_constraint: after implies not (before or above);
 	before_constaint: before implies not (after or above);
-	(empty and (after or before)) implies below;
+	empty_below_constraint: (empty and (after or before)) implies below;
 
 end -- class CURSOR_TREE
 

@@ -17,6 +17,7 @@ class FIXED_LIST [G] inherit
 		export
 			{NONE}
 				force, extend, 
+				put, fill,
 				prune, prune_all;
 		undefine
 			force, prune, infix "@", is_equal, setup, put_i_th, occurrences,
@@ -113,50 +114,21 @@ feature -- Access
 			!ARRAYED_LIST_CURSOR! Result.make (index)
 		end;
 		
-feature -- Transformation
+feature -- Status report
 
-	swap (i: INTEGER) is
-            -- Exchange item at `i'-th position with item
-            -- at cursor position.
+	extendible: BOOLEAN is false;
+	
+	valid_cursor (p: CURSOR): BOOLEAN is
+			-- Is `p' a valid cursor?
 		local
-			old_item: like item;
+			fl_c: ARRAYED_LIST_CURSOR
 		do
-			old_item := item;
-			replace (i_th (i));
-			put_i_th (old_item, i)
+			fl_c ?= p;
+			if fl_c /= Void then
+				Result := valid_index (fl_c.index)
+			end
 		end;
-		
-feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
-            -- Copy of sub-list beginning at cursor position
-            -- and having min (`n', `count' - `index' + 1) items
-		local
-			pos: INTEGER
-		do
-			!!Result.make (min (count - index + 1, n));
-			from
-				Result.start;
-				pos := index
-			until
-				Result.exhausted
-			loop
-				Result.replace (item);
-				forth;
-				Result.forth
-			end;
-			Result.start;
-			index := pos;
-		end;
-		
-feature -- Modification
-
-	replace (v: like first) is
-			-- Replace current item by `v'.
-		do
-			put_i_th (v, index)
-		end;
-		
 feature -- Cursor movement
 
 	move (i: INTEGER) is
@@ -212,21 +184,50 @@ feature -- Cursor movement
 			index := fl_c.index
 		end;
 		
-feature -- Status report
+feature -- Element change
 
-	extendible: BOOLEAN is false;
-	
-	valid_cursor (p: CURSOR): BOOLEAN is
-			-- Is `p' a valid cursor?
-		local
-			fl_c: ARRAYED_LIST_CURSOR
+	replace (v: like first) is
+			-- Replace current item by `v'.
 		do
-			fl_c ?= p;
-			if fl_c /= Void then
-				Result := valid_index (fl_c.index)
-			end
+			put_i_th (v, index)
 		end;
 
+feature -- Transformation
+
+   swap (i: INTEGER) is
+             -- Exchange item at `i'-th position with item
+             -- at cursor position.
+       local
+           old_item: like item;
+       do
+           old_item := item;
+           replace (i_th (i));
+           put_i_th (old_item, i)
+       end;
+
+feature -- Duplication
+
+	duplicate (n: INTEGER): like Current is
+            -- Copy of sub-list beginning at cursor position
+            -- and having min (`n', `count' - `index' + 1) items
+		local
+			pos: INTEGER
+		do
+			!!Result.make (min (count - index + 1, n));
+			from
+				Result.start;
+				pos := index
+			until
+				Result.exhausted
+			loop
+				Result.replace (item);
+				forth;
+				Result.forth
+			end;
+			Result.start;
+			index := pos;
+		end;
+		
 feature {NONE} 	-- Inapplicable
 
 	force (v: like item) is

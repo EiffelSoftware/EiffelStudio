@@ -92,9 +92,6 @@ feature -- Access
 
 	item, infix "@" (i: INTEGER): CHARACTER is
 			-- Character at position `i'
-		require else
-			index_small_enough: i <= count;
-			index_large_enough: i > 0
 		do
 			Result := area.item (i - 1)
 		end;
@@ -139,18 +136,6 @@ feature -- Access
 				end;
 				Result := (counter <= count);
 			end;
-		end;
-
-	to_c: ANY is
-			-- An integer which a C function may cast into a pointer
-			-- to a `C' form of current string.
-			-- Useful only for interfacing with C software.
-		do
-			if count = 0 or else item (count) /= '%U' then
-				extend ('%U');
-				count := count - 1;
-			end;
-			Result := area
 		end;
 
 	index_of (c: CHARACTER; start: INTEGER): INTEGER is
@@ -279,8 +264,6 @@ feature -- Element change
 	copy (other: like Current) is
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `clone'.)
-		--require else
-			--same_capacity: capacity = other.capacity
 		do
 			make (other.capacity);
 			area.copy (other.area);
@@ -292,7 +275,8 @@ feature -- Element change
 
 
 	replace_substring (s: like Current; start_pos, end_pos:  INTEGER) is
-			-- Replace the substring (`start_pos', `end_pos') of Current by `s'.
+			-- Copy the characters of `s' to positions
+			-- `start_pos' .. `end_pos'.
 		require
 			string_exists: s /= Void;
 			index_small_enough: end_pos <= count;
@@ -325,7 +309,7 @@ feature -- Element change
 
 	head (n: INTEGER) is
 			-- Remove all characters except for the first `n';
-			-- do nothing if `n >= count'.
+			-- do nothing if `n' >= `count'.
 		require
 			non_negative_argument: n >= 0
 		do
@@ -481,7 +465,7 @@ feature -- Element change
 		end;
 
 	insert (s: like Current; i: INTEGER) is
-			-- Insert the string `s' at the left of position `i' in Current.
+			-- Insert `s' to the left of position `i' in current string.
 		require
 			string_exists: s /= Void;
 			index_small_enough: i <= count;
@@ -559,7 +543,7 @@ feature -- Removal
 feature -- Resizing
 
 	adapt_size is
-			-- Adapt the size to accomodate exactly `count' characters.
+			-- Adapt the size to accommodate `count' characters.
 		do
 			resize (count);
 		end;
@@ -567,8 +551,8 @@ feature -- Resizing
 	resize (newsize: INTEGER) is
 			-- Reallocate space to accommodate
 			-- `newsize' characters.
-			-- May discard some characters in string if `newsize' is
-			-- lower than the number of characters making up the string
+			-- May discard some characters if `newsize' is
+			-- lower than the current number of characters.
 		require
 			new_size_non_negative: newsize >= 0
 		do
@@ -588,7 +572,7 @@ feature -- Resizing
 			end;
 		end;
 
-feature -- Transformation
+feature -- Conversion
 
 	to_lower is
 			-- Convert to lower case.
@@ -601,8 +585,6 @@ feature -- Transformation
 		do
 			str_upper ($area, count)
 		end;
-
-feature -- Conversion
 
 	to_integer: INTEGER is
 			-- Integer value;
@@ -650,10 +632,20 @@ feature -- Conversion
 		do
 		end;
 
-feature -- Duplication
+	to_c: ANY is
+			-- An integer which a C function may cast into a pointer
+			-- to a `C' form of current string.
+			-- Useful only for interfacing with C software.
+		do
+			if count = 0 or else item (count) /= '%U' then
+				extend ('%U');
+				count := count - 1;
+			end;
+			Result := area
+		end;
 
 	mirrored: like Current is
-			-- Mirror image of string (i.e. string read from right to left);
+			-- Mirror image of string;
 			-- result for "Hello world" is "dlrow olleH".
 		local
 			result_area: like area;
@@ -680,6 +672,8 @@ feature -- Duplication
 		--  	reverse_entries:
 		--	for all `i: 1..count, item (i) = old item (count + 1 - i)'
 		end;
+
+feature -- Duplication
 
 	substring (n1, n2: INTEGER): like Current is
 			-- Copy of substring containing all characters at indices
@@ -708,16 +702,6 @@ feature -- Output
 			Result := clone (Current);
 		end;
 
-feature -- Inapplicable
-
-	search_substring (other: STRING; start: INTEGER): INTEGER is
-			-- Position of first occurrence of `other' at or after `start';
-			-- 0 if none.
-		obsolete "Use ``substring_index'' instead"
-		do
-			Result := substring_index (other, start);
-		end;
-
 feature -- Obsolete
 
 	clear is obsolete "Use ``wipe_out''"
@@ -739,7 +723,17 @@ feature -- Obsolete
 		do
 			Result := to_c
 		end;
-	
+
+feature {NONE} -- Inapplicable
+
+	search_substring (other: STRING; start: INTEGER): INTEGER is
+			-- Position of first occurrence of `other' at or after `start';
+			-- 0 if none.
+		obsolete "Use ``substring_index'' instead"
+		do
+			Result := substring_index (other, start);
+		end;
+
 feature {STRING, FILE, TEXT_FILLER} -- Implementation
 
 	frozen set_count (number: INTEGER) is
@@ -944,7 +938,7 @@ feature {STRING} -- Implementation
 invariant
 
 	extendible: extendible;
-	compare_character:object_comparison = false
+	compare_character: object_comparison = false
 
 end -- class STRING
 

@@ -210,6 +210,8 @@ feature -- Element change
 			else
 				p.put_left (active.left);
 				p.put_right (active);
+				active.left.put_right (p)
+				active.put_left (p)
 			end;
 			count := count + 1
 		end;
@@ -413,8 +415,6 @@ feature {TWO_WAY_LIST} -- Implementation
 		do
 			!! Result;
 			Result.put (v)
-		ensure then
-			Result /= Void
 		end;
 
 	previous: like first_element is

@@ -56,7 +56,7 @@ feature -- Access
 		end;
 
 	index: INTEGER is
-			-- Current cursor index
+			-- Index of current position
 		local
 			p: LINKED_LIST_CURSOR [G]
 		do
@@ -365,7 +365,7 @@ feature -- Element change
 			p: like first_element;
 		do
 			p := new_cell (v);
-				check empty implies before end;
+			check empty implies before end;
 			if before then
 				p.put_right (first_element);
 				first_element := p;
@@ -377,7 +377,8 @@ feature -- Element change
 			count := count + 1
 		ensure then
 			next_exists: next /= Void;
-			item_inserted: next.item = v
+			item_inserted: not old before implies next.item = v
+			item_inserted_before: old before implies active.item = v
 		end;
 
 	replace (v: like item) is

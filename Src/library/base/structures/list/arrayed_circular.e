@@ -1,11 +1,11 @@
 indexing
 
 	description:
-		"Circular chains implemented by resizable array";
+		"Circular chains implemented by resizable arrays";
 
 	copyright: "See notice at end of class";
-	names: fixed_circular, ring, sequence;
-	representation: linked;
+	names: arrayed_circular, ring, sequence;
+	representation: array;
 	access: index, cursor, membership;
 	contents: generic;
 	date: "$Date$";
@@ -56,65 +56,6 @@ feature -- Initialization
 			!!list.make (n)
 		end
 
-feature -- Measurement
-
-	count : INTEGER is
-			-- Number of items
-		do
-			Result := list.count
-		end
-
-feature -- Element change
-
-	replace (v : G) is
-			-- Replace current item by `v'.
-		do
-			list.replace (v)
-		end
-
-	merge_right (other: like Current) is
-			-- Merge `other' into current structure after cursor
-			-- position. Do not move cursor. Empty `other'.
-		do
-			list.merge_right (other.list)
-		end
-	
-	put_right (v : like item) is
-			-- Put `v' to the right of cursor position.
-			-- Do not move cursor.
-		do
-			list.put_right(v)
-		end
-
-	put_front (v : like item) is
-			-- Add `v' to beginning.
-			-- Do not move cursor.
-		do
-			list.put_front (v)
-		end
-
-	extend (v : like item) is
-			-- Add `v' to end.
-			-- Do not move cursor except when off.
-		do
-			list.extend (v)
-			if standard_index = 0 then list.forth end
-		end
-
-	merge_left (other : like Current) is
-			-- Merge `other' into current structure before cursor
-			-- position. Do not move cursor. Empty `other'.
-		do
-			list.merge_left (other.list)
-		end
-
-	put_left (v : like item) is
-			-- Put `v' to the left of cursor position.
-			-- Do not move cursor.
-		do
-			list.put_left (v)
-		end
-	
 feature --  Access 
 
 	item : G is
@@ -127,6 +68,14 @@ feature --  Access
 			-- Current cursor position
 		do
 			!CIRCULAR_CURSOR!Result.make (list.cursor, internal_exhausted, starter)
+		end
+
+feature -- Measurement
+
+	count : INTEGER is
+			-- Number of items
+		do
+			Result := list.count
 		end
 
 feature -- Status report
@@ -219,7 +168,58 @@ feature -- Cursor movement
 			end
 		end
 
-feature -- Element removal
+feature -- Element change
+
+	replace (v : G) is
+			-- Replace current item by `v'.
+		do
+			list.replace (v)
+		end
+
+	merge_right (other: like Current) is
+			-- Merge `other' into current structure after cursor
+			-- position. Do not move cursor. Empty `other'.
+		do
+			list.merge_right (other.list)
+		end
+	
+	put_right (v : like item) is
+			-- Put `v' to the right of cursor position.
+			-- Do not move cursor.
+		do
+			list.put_right(v)
+		end
+
+	put_front (v : like item) is
+			-- Add `v' to beginning.
+			-- Do not move cursor.
+		do
+			list.put_front (v)
+		end
+
+	extend (v : like item) is
+			-- Add `v' to end.
+			-- Do not move cursor except when off.
+		do
+			list.extend (v)
+			if standard_index = 0 then list.forth end
+		end
+
+	merge_left (other : like Current) is
+			-- Merge `other' into current structure before cursor
+			-- position. Do not move cursor. Empty `other'.
+		do
+			list.merge_left (other.list)
+		end
+
+	put_left (v : like item) is
+			-- Put `v' to the left of cursor position.
+			-- Do not move cursor.
+		do
+			list.put_left (v)
+		end
+	
+feature -- Removal
 
 	remove_left is
 			-- Remove item to the left of cursor position.

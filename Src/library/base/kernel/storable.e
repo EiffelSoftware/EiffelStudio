@@ -14,10 +14,12 @@ class
 feature -- Access
 
 	retrieved (file: UNIX_FILE): STORABLE is
-			-- Retrieved object structure from external representation
-			-- previously stored in `file'.
+			-- Retrieved object structure, from external
+			-- representation previously stored in `file'.
 			-- To access resulting object under correct type,
 			-- use assignment attempt.
+			-- Will raise an exception (code `Retrieve_exception')
+			-- if file content is not a `STORABLE' structure.
 		require
 			file_not_void: file /= Void;
 			file_exists: file.exists;
@@ -46,10 +48,11 @@ feature -- Element change
 	general_store (file: UNIX_FILE) is
 			-- Produce on `file' an external representation of the
 			-- entire object structure reachable from current object.
-			-- Retrievable from other systems for same machine architecture.
-			--| This primitive may use a visible name of a class written
-			--| in the visible clause of the Ace file. This provides the
-			--| user with the possibility to remove class clash names.
+			-- Retrievable from other systems for same platform
+			-- (machine architecture).
+			--| This feature may use a visible name of a class written
+			--| in the `visible' clause of the Ace file. This makes it 
+			--| possible to overcome class name clashes.
 		require
 			file_not_void: file /= Void;
 			file_exists: file.exists;

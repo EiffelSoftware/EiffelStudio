@@ -35,9 +35,10 @@ class ARRAYED_STACK [G] inherit
 			before as after
 		export
 			{NONE} all;
-			{ANY} readable;
-			{STACK} start, finish, forth, back;
-			{ARRAYED_STACK} count
+			{ANY} 
+			    count, readable, writable, extendible,
+			    make, wipe_out
+			{STACK} start, finish, forth, back
 		undefine
 			readable, writable,
 			append, fill, put, force

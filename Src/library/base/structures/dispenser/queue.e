@@ -18,10 +18,10 @@ deferred class QUEUE [G] inherit
 			{NONE} prune, prune_all
 		end
 
-feature
+feature -- Element change
 
-	extend, force, put (v: like item) is
-			-- Add `v' as newest element.
+	 force (v: like item) is
+			-- Add `v' as newest item.
 		deferred
 		end;
 

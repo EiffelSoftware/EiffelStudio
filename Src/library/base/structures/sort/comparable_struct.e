@@ -11,7 +11,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class COMPARABLE_STRUCT [G -> PART_COMPARABLE] inherit
+deferred class COMPARABLE_STRUCT [G -> COMPARABLE] inherit
 
 	BILINEAR [G]
 

@@ -75,7 +75,7 @@ feature -- Element change
 feature -- Basic operations
 
 
-	infix "^" (s: INTEGER): BIT_REF is
+	infix "^" (s: INTEGER): like Current is
 			-- Result of shifting bit sequence by `s' positions
 			-- (Positive `s' shifts right, negative `s' shifts left;
 			-- bits failling off the sequence's bounds are lost.)
@@ -83,7 +83,7 @@ feature -- Basic operations
 			Result := b_shift ($Current, s)
 		end;
 
-	infix "#" (s: INTEGER): BIT_REF is
+	infix "#" (s: INTEGER): like Current is
 			-- Result of rotating bit sequence by `s' positions
 			-- (Positive `s' rotates right, negative `s' rotates left.)
 		do
@@ -126,7 +126,7 @@ feature -- Basic operations
 			Result := b_xor ($Current, $other)
 		end;
 
-	prefix "not": BIT_REF is
+	prefix "not": like Current is
 			-- Bit-by-bit negation
 		do
 			Result := b_not ($Current)

@@ -45,81 +45,82 @@ feature -- Initialization
 
 feature -- Access
 
-type: INTEGER;
+	type: INTEGER;
 			-- Collector type (Full, Collect),
-			-- for `type' and before last call to `update
- 
+			-- for `type' before last call to `update'
 
 	cycle_count: INTEGER;
-			-- Number of collection cycles for `type' and before last call to
-			-- `update'
+			-- Number of collection cycles for `type' 
+			-- before last call to `update'
 	
 	memory_used: INTEGER;
-			-- Total number of bytes used (counting overhead) after the last
-			-- cycle for `type' and before last call to `update'
+			-- Total number of bytes used (counting overhead) 
+			-- after last cycle for `type' before last 
+			-- call to `update'
 
 	collected: INTEGER;
 			-- Number of bytes collected by the last cycle,
-			-- for `type' and before last call to `update'
+			-- for `type' before last call to `update'
 	
 	collected_average: INTEGER;
 			-- Average number of bytes collected by a cycle,
-			-- for `type' and before last call to `update'
+			-- for `type' before last call to `update'
 	
 	real_time: INTEGER;
-			-- Number of centi-seconds used by last cycle (real time),
-			-- for `type' and before last call to `update'
-			-- n.b: This may not be accurate on systems which do not provide a
-			-- sub-second accuracy clock (typically provided on BSD)
+			-- Real time in centi-seconds used by last cycle
+			-- for `type', before last call to `update';
+			-- this may not be accurate on systems which do not
+			-- provide a sub-second accuracy clock (typically
+			-- provided on BSD).
 
 	real_time_average: INTEGER;
-			-- Average amount of real time, in centi-seconds, spent in the
-			-- collection cycle,
-			-- for `type' and before last call to `update'
+			-- Average amount of real time, in centi-seconds,
+			-- spent in collection cycle,
+			-- for `type' before last call to `update'
 	
 	real_interval_time: INTEGER;
-			-- Real interval time (as opposed to CPU time) between two
-			-- automatically raised cycles, in centi-seconds,
-			-- for `type' and before last call to `update'
+			-- Real interval time (as opposed to CPU time) between
+			-- two automatically raised cycles, in centi-seconds,
+			-- for `type' before last call to `update'
 	
 	real_interval_time_average: INTEGER;
-			-- Average real interval time between two automatic cycles,
-			-- in centi-seconds,
-			-- for `type' and before last call to `update
+			-- Average real interval time between two automatic
+			-- cycles, in centi-seconds,
+			-- for `type' before last call to `update'
 	
 	cpu_time: DOUBLE;
 			-- Amount of CPU time, in seconds, spent in cycle,
-			-- for `type' and before last call to `update
+			-- for `type' before last call to `update'
 	
 	cpu_time_average: DOUBLE;
-			-- Average amount of CPU time spent in cycle, in seconds.,
-			-- for `type' and before last call to `update
+			-- Average amount of CPU time spent in cycle, 
+			-- in seconds, for `type' before last call to `update'
 
 	cpu_interval_time: DOUBLE;
-			-- Amount of CPU time elapsed since between the last and the
-			-- penultimate cycle.,
-			-- for `type' and before last call to `update
+			-- Amount of CPU time elapsed since between last 
+			-- and penultimate cycles for `type' before
+			-- last call to `update'
 
 	cpu_interval_time_average: DOUBLE;
 			-- Average amount of CPU time between two cycles,
-			-- for `type' and before last call to `update
+			-- for `type' before last call to `update'
 	
 	sys_time: DOUBLE;
 			-- Amount of kernel time, in seconds, spent in cycle,
-			-- for `type' and before last call to `update
+			-- for `type' before last call to `update'
 	
 	sys_time_average: DOUBLE;
 			-- Average amount of kernel time spent in cycle,
-			-- for `type' and before last call to `update
+			-- for `type' before last call to `update'
 	
 	sys_interval_time: DOUBLE;
-			-- Amount of kernel time elapsed since between the last and the
-			-- penultimate cycle,
-			-- for `type' and before last call to `update
+			-- Amount of kernel time elapsed since between 
+			-- the last and the penultimate cycle,
+			-- for `type' before last call to `update'
 
 	sys_interval_time_average: DOUBLE;
 			-- Average amount of kernel time between two cycles,
-			-- for `type' and before last call to `update
+			-- for `type' before last call to `update'
 
 	
 feature {NONE} -- Implementation

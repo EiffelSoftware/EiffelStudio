@@ -15,6 +15,8 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		deferred
+		ensure
+			valid_hash_value: Result > 0
 		end;
 
 end -- class HASHABLE

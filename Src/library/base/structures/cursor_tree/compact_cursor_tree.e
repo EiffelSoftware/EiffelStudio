@@ -271,6 +271,8 @@ feature -- Cursor movement
 			-- to `i'-th child if there is one,
 			-- or `after' if `i' = `arity' + 1,
 			-- or `before' if `i' = 0.
+		require else
+			true
 		local
 			index, next, counter: INTEGER
 		do
@@ -278,14 +280,16 @@ feature -- Cursor movement
 			if above then
 				above := false
 				below := empty
-				before := true
+				before := empty
 				after := false
 			elseif index <= 0 then
 				below := true;
 				if i = 0 then
 					before := true
+					after := false
 				else
 					after := true
+					before := false
 				end
 			else
 				from
@@ -301,8 +305,10 @@ feature -- Cursor movement
 				active := index;
 				if i = 0 then
 					before := true
+					after := false
 				elseif counter < i then
 					after := true
+					before := false
 				end
 			end
 		end;
@@ -362,6 +368,8 @@ feature -- Element change
 		
 	put_left (v: G) is
 			-- Put `v' at the left of current position.
+		require else
+			not_above: not above
 		local
 			new: INTEGER;
 		do
@@ -526,7 +534,7 @@ feature -- Removal
 			-- than one child.
 			-- Move the cursor up
 		require
-			not off;
+			not_off: not off;
 			is_root implies arity <= 1
 		local
 			old_active, next, index,
@@ -589,7 +597,6 @@ feature -- Removal
 			below := false;
 		ensure then
 			cursor_above: above
-			is_empty: empty
 		end;
 
 feature {COMPACT_CURSOR_TREE} -- Implementation

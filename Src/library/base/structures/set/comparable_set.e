@@ -12,10 +12,7 @@ indexing
 
 deferred class COMPARABLE_SET [G -> COMPARABLE] inherit
 
-	SET [G]
-		undefine
-			changeable_comparison_criterion
-		end;
+	SUBSET [G];
 
 	COMPARABLE_STRUCT [G]
 		rename
@@ -24,6 +21,8 @@ deferred class COMPARABLE_SET [G -> COMPARABLE] inherit
 		export
 			{NONE}
 				all
+		undefine
+			changeable_comparison_criterion
 		end
 
 feature -- Measurement

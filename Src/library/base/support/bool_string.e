@@ -32,7 +32,7 @@ feature -- Initialization
 		do
 			make_area (n);
 		ensure
-			count = n
+			correct_allocation: count = n
 		end;
 
 feature -- Access

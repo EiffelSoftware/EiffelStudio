@@ -36,7 +36,7 @@ feature -- Initialization
 		require
 			non_negative_argument: n >= 0
 		do
-			!!fl.make (0,n);
+			!! fl.make (0,n);
 		ensure
 			stack_allocated: capacity = n;
 			empty_stack: count = 0
@@ -125,11 +125,14 @@ feature -- Status report
 	extendible: BOOLEAN is
 		do
 			Result := not full
+		ensure then
+			Result = not full
 		end;
 
 	resizable: BOOLEAN is true;
 
 	prunable: BOOLEAN is true;
+
 feature -- Conversion
 
 	linear_representation: ARRAYED_LIST [G] is
@@ -139,7 +142,7 @@ feature -- Conversion
 			i: INTEGER
 		do
 			from
-				!!Result.make (count);
+				!! Result.make (count);
 				i := count
 			until
 				i < 0

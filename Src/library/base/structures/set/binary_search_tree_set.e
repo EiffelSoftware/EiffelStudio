@@ -11,8 +11,10 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BINARY_SEARCH_TREE_SET [G -> COMPARABLE] inherit
+class 
+  BINARY_SEARCH_TREE_SET [G -> COMPARABLE]
 
+inherit
 	COMPARABLE_SET [G]
 		redefine
 			min, max, has
@@ -48,7 +50,6 @@ feature -- Access
 
 feature -- Measurement
 
- 
 	count: INTEGER is
 			-- Number of elements in subtree.
 		do
@@ -56,12 +57,6 @@ feature -- Measurement
 				Result := tree.count
 			end
 		end;
-
-	empty: BOOLEAN is
-		do
-			Result := tree = Void
-		end;
-
 
 	min: like item is
 			-- Minimum element in subtree
@@ -81,6 +76,11 @@ feature -- Measurement
 		end;
 
 feature -- Status report
+
+	empty: BOOLEAN is
+		do
+			Result := tree = Void
+		end;
 
 	extendible: BOOLEAN is true;
 		-- Can new items be added? (Answer: yes.)
@@ -223,7 +223,18 @@ feature -- Removal
 				tree := tree.pruned (v)
 			end
 		end;
-	
+
+feature -- Duplication
+
+	duplicate (n: INTEGER): BINARY_SEARCH_TREE_SET [G] is
+			-- New structure containing min (`n', `count')
+			-- items from current structure
+		local
+			temp_tree: BINARY_SEARCH_TREE [G]
+		do
+			!!Result.make
+			Result.set_tree (tree.duplicate (n))
+		end
 
 feature -- Basic operations
 
@@ -309,6 +320,13 @@ feature {BINARY_SEARCH_TREE_SET} -- Implementation
 	tree: BINARY_SEARCH_TREE [G];
 
 	active_node: like tree;
+
+	set_tree (t : like tree) is
+			-- Set `tree' and `active_node' to `t'
+		do
+			tree := t
+			active_node := t
+		end
 
 feature {NONE} -- Implementation
 

@@ -38,6 +38,10 @@ feature {LINKED_LIST} -- Implementation
 	before: BOOLEAN;
 			-- Is there no valid cursor position to the right of cursor?
 
+invariant
+	not_both: not (before and after);
+	no_active_not_on: active = Void implies (before or after)
+
 end -- class LINKED_LIST_CURSOR
 
 

@@ -1,6 +1,3 @@
--- The symbolic names for ASCII character codes.
--- Some characters have more than one name.
-
 indexing
 
 	description:

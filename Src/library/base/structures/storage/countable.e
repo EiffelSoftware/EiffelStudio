@@ -13,7 +13,7 @@ deferred class COUNTABLE [G] inherit
 
 	INFINITE [G]
 
-feature -- Element access
+feature -- Access
 
 	item (i: INTEGER): G is
 			-- The `i'-th item

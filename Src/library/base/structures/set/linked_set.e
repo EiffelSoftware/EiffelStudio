@@ -27,6 +27,7 @@ class LINKED_SET [G] inherit
 			prune as ll_prune
 		export
 			{NONE} all
+			{ANY} make
 			{LINKED_SET} forth, item, off, start
 		undefine
 			changeable_comparison_criterion

@@ -84,77 +84,27 @@ feature -- Measurement
 			end
 		end;
 
-feature -- Transformation
+feature	-- Status report
 
-	sort is
-			-- Sort `Current'.
-			--| use heapsort
-			--| the reason for the `external sort' is that
-			--| the insertion order in the tree will ensure
-			--| it is balanced
-		local
-			seq: LINEAR [G];
-			temp: ARRAY [G];	
-			heap: HEAP [G];
-			i: INTEGER
+	sorted: BOOLEAN is
+			-- Is Current sorted
 		do
-			seq := linear_representation;
-			remove_left_child;
-			remove_right_child;
-			from
-				seq.start;
-				!!heap.make (count)
-			until
-				seq.off
-			loop
-				heap.put (seq.item);
-				seq.forth;
-			end;	
-			from
-				!!temp.make (1, heap.count)
-			until
-				heap.empty
-			loop
-				temp.put (heap.item, i);
-				heap.remove;
-				i := i + 1
-			end;
-			replace (temp.item ((temp.count) // 2));
-			fill_from_sorted_special (temp.area, 0, temp.count - 1);
-		end;
-					
-feature -- Modification & Insertion
-
-	put, extend (v: like item) is
-			-- Put `v' at proper position in tree
-			-- (unless `v' exists already).
-			-- (Reference or object equality,
-			-- based on `object_comparison'.)
-		require
-			new_item_exists: v /= Void
-		do
-			if v /= item then
-				if v < item then
-					if left_child = Void then
-						put_left_child (new_tree);
-						left_child.replace (v)
-					else
-						left_child.put (v)
-					end
-				else
-					if right_child = Void then
-						put_right_child (new_tree);
-						right_child.replace (v)
-					else
-						right_child.put (v)
-					end
+			Result := true;
+			if
+				has_left and left_item > item 
+				or has_right and right_item < item
+			then
+				Result := false
+			else
+				if has_left then
+					Result := left_child.sorted
 				end;
+				if has_right and Result then
+					Result := right_child.sorted
+				end
 			end
-		ensure
-			item_inserted: has (v)
 		end;
 
-			
 feature -- Cursor movement
 
 	node_action (v: like item) is
@@ -205,7 +155,77 @@ feature -- Cursor movement
 			node_action (item)
 		end;
 
-feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Set operations
+feature -- Element change
+
+	put, extend (v: like item) is
+			-- Put `v' at proper position in tree
+			-- (unless `v' exists already).
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
+		require
+			new_item_exists: v /= Void
+		do
+			if v /= item then
+				if v < item then
+					if left_child = Void then
+						put_left_child (new_tree);
+						left_child.replace (v)
+					else
+						left_child.put (v)
+					end
+				else
+					if right_child = Void then
+						put_right_child (new_tree);
+						right_child.replace (v)
+					else
+						right_child.put (v)
+					end
+				end;
+			end
+		ensure
+			item_inserted: has (v)
+		end;
+
+feature -- Transformation
+
+	sort is
+			-- Sort `Current'.
+			--| use heapsort
+			--| the reason for the `external sort' is that
+			--| the insertion order in the tree will ensure
+			--| it is balanced
+		local
+			seq: LINEAR [G];
+			temp: ARRAY [G];	
+			heap: HEAP_PRIORITY_QUEUE [G];
+			i: INTEGER
+		do
+			seq := linear_representation;
+			remove_left_child;
+			remove_right_child;
+			from
+				seq.start;
+				!! heap.make (count)
+			until
+				seq.off
+			loop
+				heap.put (seq.item);
+				seq.forth;
+			end;	
+			from
+				!! temp.make (1, heap.count)
+			until
+				heap.empty
+			loop
+				temp.put (heap.item, i);
+				heap.remove;
+				i := i + 1
+			end;
+			replace (temp.item ((temp.count) // 2));
+			fill_from_sorted_special (temp.area, 0, temp.count - 1);
+		end;
+					
+feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 
 
 	is_subset (other: like Current): BOOLEAN is
@@ -349,7 +369,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Set operations
 			end
 		end;
 			
-feature  {NONE} -- Initialization
+feature  {NONE} -- Implementation
 
 	fill_from_sorted_special (t: SPECIAL [G]; s, e: INTEGER) is
 			-- put values from `t' in `Current' in such an order that
@@ -367,27 +387,6 @@ feature  {NONE} -- Initialization
 			end;
 		end;
 			
-feature	-- Status Report
-
-	sorted: BOOLEAN is
-			-- Is Current sorted
-		do
-			Result := true;
-			if
-				has_left and left_item > item 
-				or has_right and right_item < item
-			then
-				Result := false
-			else
-				if has_left then
-					Result := left_child.sorted
-				end;
-				if has_right and Result then
-					Result := right_child.sorted
-				end
-			end
-		end;
-
 end -- class BINARY_SEARCH_TREE
 
 

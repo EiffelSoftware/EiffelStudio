@@ -12,7 +12,8 @@ inherit
 	TOP_WINDOWS
 		redefine
 			make,
-			class_name
+			class_name,
+			child_has_resized
 		end
 
 creation
@@ -37,6 +38,12 @@ feature -- Initialization
 		end
 
 feature {NONE} -- Implementation
+
+	child_has_resized is
+			-- Size shell children
+		do
+			resize_shell_children (width, height)
+		end
 
 	class_name: STRING is
 			-- Class name

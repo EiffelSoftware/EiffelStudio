@@ -8,6 +8,14 @@ class ALL_AS
 inherit
 	FEATURE_SET_AS
 
+feature {AST_FACTORY} -- Initialization
+
+	 initialize is
+			-- Create a new ALL AST node.
+		do
+			-- Do nothing.
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -15,7 +15,16 @@ inherit
 		end
 
 creation
-	make
+	make, initialize
+
+feature {AST_FACTORY} -- Initialization
+
+	initialize is
+			-- Create a new SUPPLIERS AST node.
+		do
+			!! supplier_ids.make
+			supplier_ids.compare_objects
+		end
 
 feature {NONE} -- Initialization
 

@@ -6,6 +6,18 @@ inherit
 			is_equivalent, format
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (c: like clients; f: like feature_list) is
+			-- Create a new CREATION clause AST node.
+		do
+			clients := c
+			feature_list := f
+		ensure
+			clients_set: clients = c
+			feature_list_set: feature_list = f
+		end
+
 feature {NONE} -- Initialization
 
 	set is

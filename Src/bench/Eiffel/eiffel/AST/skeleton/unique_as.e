@@ -12,6 +12,14 @@ inherit
 			is_unique, is_equivalent, type_check
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize is
+			-- Create a new UNIQUE AST node.
+		do
+			-- Do nothing.
+		end
+
 feature {NONE} -- Initialization
 
 	set is

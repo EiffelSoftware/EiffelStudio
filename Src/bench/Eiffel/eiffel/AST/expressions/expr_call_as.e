@@ -14,6 +14,18 @@ inherit
 			fill_calls_list, replicate
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (c: like call) is
+			-- Create a new EXPR_CALL AST node.
+		require
+			c_not_void: c /= Void
+		do
+			call := c
+		ensure
+			call_set: call = c
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -22,6 +22,32 @@ inherit
 
 	SHARED_EVALUATOR
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (o: like obsolete_message; pr: like precondition;
+		l: like locals; b: like routine_body; po: like postcondition;
+		r: like rescue_clause; p: INTEGER) is
+			-- Create a new ROUTINE AST node.
+		require
+			b_not_void: b /= Void
+		do
+			obsolete_message := o
+			precondition := pr
+			locals := l
+			routine_body := b
+			postcondition := po
+			rescue_clause := r
+			body_start_position := p
+		ensure
+			obsolete_message_set: obsolete_message = o
+			precondition_set: precondition = pr
+			locals_set: locals = l
+			routine_body_set: routine_body = b
+			postcondition_set: postcondition = po
+			rescue_clause_set: rescue_clause = r
+			body_start_position_set: body_start_position = p
+		end
+
 feature {NONE} -- Initialization
 
 	set is

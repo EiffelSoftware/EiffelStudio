@@ -12,6 +12,16 @@ inherit
 			type_check, byte_node, value_i, make_integer
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (i: INTEGER) is
+			-- Create a new INTEGER AST node.
+		do
+			value := i
+		ensure
+			value_set: value = i
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -14,6 +14,20 @@ inherit
 			is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (t: like tag; i: like index_list) is
+			-- Create a new INDEX AST node.
+		require
+			i_not_void: i /= Void
+		do
+			tag := t
+			index_list := i
+		ensure
+			tag_set: tag = t
+			index_list_set: index_list = i
+		end
+
 feature {NONE} -- Initialization
 
 	set is

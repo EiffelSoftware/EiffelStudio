@@ -1,7 +1,7 @@
 indexing
 
 	description:
-			"Abstract description of an Eiffel loop instruction. %
+			"Abstract description of an Eiffel retry instruction. %
 			%Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,6 +12,14 @@ inherit
 	INSTRUCTION_AS
 		redefine
 			byte_node
+		end
+
+feature {AST_FACTORY} -- Initialization
+
+	initialize (l: INTEGER) is
+			-- Create a new RETRY AST node.
+		do
+			line_number := l
 		end
 
 feature {NONE} -- Initialization

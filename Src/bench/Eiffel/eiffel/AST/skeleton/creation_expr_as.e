@@ -14,6 +14,20 @@ inherit
 
 	SHARED_INSTANTIATOR
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (t: like type; c: like call) is
+			-- Create a new CREATION_EXPR AST node.
+		require
+			t_not_void: t /= Void
+		do
+			type := t
+			call := c
+		ensure
+			type_set: type = t
+			call_set: call = c
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -12,6 +12,18 @@ inherit
 			type_check, byte_node
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (i: like id_list) is
+			-- Create a new UN_STRIP AST node.
+		require
+			i_not_void: i /= Void
+		do
+			id_list := i
+		ensure
+			id_list_set: id_list = i
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -12,6 +12,20 @@ inherit
 			byte_node, fill_calls_list, replicate
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (c: like check_list; s, l: INTEGER) is
+			-- Create a new CHECK AST node.
+		do
+			check_list := c
+			start_position := s
+			line_number := l
+		ensure
+			check_list_set: check_list = c
+			start_postion_set: start_position = s
+			line_number_set: line_number = l
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -7,6 +7,18 @@ inherit
 			replicate, is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (exp: like expressions) is
+			-- Create a new Manifest ARRAY AST node.
+		require
+			exp_not_void: exp /= Void
+		do
+			expressions := exp
+		ensure
+			expressions_set: expressions = exp
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -17,6 +17,21 @@ inherit
 
 	SHARED_TYPES
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (e: like expr) is
+			-- Create a new EXPR_ADDRESS AST node.
+		require
+			e_not_void: e /= Void
+		do
+			expr := e
+			if not is_allowed then
+				Error_handler.make_syntax_error
+			end
+		ensure
+			expr_set: expr = e
+		end
+
 feature {NONE} -- Initialization
 
 	set is

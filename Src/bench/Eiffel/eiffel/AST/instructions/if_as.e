@@ -15,6 +15,29 @@ inherit
 			byte_node, find_breakable, fill_calls_list, replicate
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (cnd: like condition; cmp: like compound;
+		ei: like elsif_list; e: like else_part; s, l: INTEGER) is
+			-- Create a new IF AST node.
+		require
+			cnd_not_void: cnd /= Void
+		do
+			condition := cnd
+			compound := cmp
+			elsif_list := ei
+			else_part := e
+			start_position := s
+			line_number := l
+		ensure
+			condition_set: condition = cnd
+			compound_set: compound = cmp
+			elsif_list_set: elsif_list = ei
+			else_part_set: else_part = e
+			start_position_set: start_position = s
+			line_number_set: line_number = l
+		end
+
 feature {NONE} -- Initialization
 
 	set is

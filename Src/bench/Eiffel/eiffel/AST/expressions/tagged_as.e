@@ -15,6 +15,22 @@ inherit
 			fill_calls_list, replicate
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (t: like tag; e: like expr; s: INTEGER) is
+			-- Create a new TAGGED AST node.
+		require
+			e_not_void: e /= Void
+		do
+			tag := t
+			expr := e
+			start_position := s
+		ensure
+			tag_set: tag = t
+			expr_set: expr = e
+			start_position_set: start_position = s
+		end
+
 feature {NONE} -- Initialization
 
 	set is

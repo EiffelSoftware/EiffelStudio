@@ -17,6 +17,48 @@ inherit
 	SHARED_TYPES
 	SHARED_EVALUATOR
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (t: like target; f: like feature_name; o: like operands) is
+			-- Create a new ROUTINE_CREATION AST node.
+		require
+			f_not_void: f /= Void
+		local
+			access_feat_as: DELAYED_ACCESS_FEAT_AS
+			current_as: CURRENT_AS
+			access_id_as: ACCESS_ID_AS
+		do
+			target := t
+			feature_name := f
+			operands := o
+			if target /= Void then
+				if target.target /= Void then
+						-- Target is an entity
+					!!access_id_as
+					access_id_as.set_feature_name (target.target)
+					target_ast := access_id_as
+				else
+					if target.expression /= Void then
+							-- Target is an expression
+						target_ast := target.expression
+					else
+						if target.class_type = Void then
+								-- Target is Current
+							!! current_as
+							target_ast := current_as
+						end
+					end
+				end
+			end
+
+			!! access_feat_as.make (feature_name, operands)
+			call_ast := access_feat_as
+		ensure
+			target_set: target = t
+			feature_name_set: feature_name = f
+			operands_set: operands = o
+		end
+
 feature {NONE} -- Initialization
 
 	set is

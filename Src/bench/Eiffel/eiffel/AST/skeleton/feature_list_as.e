@@ -11,6 +11,18 @@ inherit
 			format
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (f: like features) is
+			-- Create a new FEATURE_LIST AST node.
+		require
+			f_not_void: f /= Void
+		do
+			features := f
+		ensure
+			features_set: features = f
+		end
+
 feature {NONE} -- Initialization
 
 	set is

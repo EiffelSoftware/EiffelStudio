@@ -17,6 +17,13 @@ inherit
 			is_class, associated_eiffel_class
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize is
+			-- Create a new BASIC_TYPE AST node.
+		do
+		end
+
 feature {NONE} -- Initialization
 
 	set is

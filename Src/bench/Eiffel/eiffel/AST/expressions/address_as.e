@@ -17,6 +17,18 @@ inherit
 
 	SHARED_TYPES
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (f: like feature_name) is
+			-- Create a new ADDRESS AST node.
+		require
+			f_not_void: f /= Void
+		do
+			feature_name := f
+		ensure
+			feature_name_set: feature_name = f
+		end
+
 feature {NONE} -- Initialization
 
 	set is

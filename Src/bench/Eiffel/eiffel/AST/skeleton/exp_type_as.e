@@ -9,8 +9,18 @@ class EXP_TYPE_AS
 inherit
 	CLASS_TYPE_AS
 		redefine
+			initialize,
 			actual_type, solved_type,
 			set, dump, simple_format
+		end
+
+feature {AST_FACTORY} -- Initialization
+
+	initialize (n: like class_name; g: like generics) is
+			-- Create a new EXPANDED_CLASS_TYPE AST node.
+		do
+			Precursor (n, g)
+			record_expanded
 		end
 
 feature {NONE} -- Initialization

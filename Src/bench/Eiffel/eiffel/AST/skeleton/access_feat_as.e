@@ -18,6 +18,23 @@ inherit
 
 	SHARED_CONFIGURE_RESOURCES
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (f: like feature_name; p: like parameters) is
+			-- Create a new FEATURE_ACCESS AST node.
+		require
+			f_not_void: f /= Void
+		do
+			feature_name := f
+			parameters := p
+			if parameters /= Void then
+				parameters.start
+			end
+		ensure
+			feature_name_set: feature_name = f
+			parameters_set: parameters = p
+		end
+
 feature {NONE} -- Initialization
 
 	set is

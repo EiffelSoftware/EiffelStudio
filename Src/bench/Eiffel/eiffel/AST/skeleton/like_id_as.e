@@ -15,6 +15,18 @@ inherit
 
 	SHARED_LIKE_CONTROLER
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (a: like anchor) is
+			-- Create a new LIKE_ID AST node.
+		require
+			a_not_void: a /= Void
+		do
+			anchor := a
+		ensure
+			anchor_set: anchor = a
+		end
+
 feature {NONE} -- Initialization
 
 	set is

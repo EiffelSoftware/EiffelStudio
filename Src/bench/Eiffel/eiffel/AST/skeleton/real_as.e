@@ -12,6 +12,20 @@ inherit
 			type_check, byte_node, value_i, is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (r: STRING) is
+			-- Create a new REAL AST node with `r'
+			-- containing the textual representation
+			-- of the real value.
+		require
+			r_not_void: r /= Void
+		do
+			value := r
+		ensure
+			value_set: value = r
+		end
+
 feature {NONE} -- Initilization
 
 	set is

@@ -25,7 +25,7 @@ feature -- Preconditions
 			is_month0 (s) or is_month_text (s) or
 			is_second (s) or is_second0 (s) or
 			is_slash (s) or is_space (s) or
-			is_year2 (s) or is_year4 (s);
+			is_year2 (s) or is_year4 (s)
 		end
 
 	is_day (s: STRING): BOOLEAN is

@@ -1,6 +1,6 @@
 indexing
-	description: "Code used by the DATE/TIME to STRING conversion";
-	date: "$Date$";
+	description: "Code used by the DATE/TIME to STRING conversion"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class DATE_TIME_CODE inherit

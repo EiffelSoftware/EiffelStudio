@@ -117,7 +117,7 @@ feature -- Initialization
 			mi := c_minute_now
 			s := c_second_now
 			create date.make (y, m, d) 
-			create time.make_fine (h, mi, s+ c_millisecond_now / 1000)
+			create time.make_fine (h, mi, s + c_millisecond_now / 1000)
 		end
 
 	make_from_string_default (s: STRING) is

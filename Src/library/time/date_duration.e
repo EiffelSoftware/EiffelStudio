@@ -205,7 +205,7 @@ feature -- Status report
 					create d.make (year, month - 1, 0)
 					limit_date := date + d; 
 					Result := (year <= 0) and then (month <= 0)
-						and then (month > - Months_in_year)
+						and then (month > -Months_in_year)
 						and then (day <= 0) and then (final_date > limit_date)
 			end
 		end

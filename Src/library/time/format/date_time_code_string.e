@@ -1,6 +1,6 @@
 indexing
-	description: "DATE/TIME to STRING conversion";
-	date: "$Date$";
+	description: "DATE/TIME to STRING conversion"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class DATE_TIME_CODE_STRING	inherit
@@ -18,11 +18,11 @@ feature -- Creation
 		require
 			s_exists: s /= Void
 		local
-			code, code_separator: DATE_TIME_CODE
+			code: DATE_TIME_CODE
 			i, pos1, pos2: INTEGER
 			date_constants: DATE_CONSTANTS
 		do
-			create value.make(20)
+			create value.make (20)
 			pos1 := 1
 			pos2 := 1
 			create date_constants
@@ -45,9 +45,8 @@ feature -- Creation
 						value.put (code, i)
 					end
 					if substrg2.count > 0 then
-						create code_separator.make (substrg2)
 						i := i + 1
-						value.put (code_separator, i)
+						value.put (create {DATE_TIME_CODE}.make (substrg2), i)
 						separators_used := True
 					end
 					pos1 := pos2 + 1
@@ -76,10 +75,10 @@ feature -- Attributes
 			from
 				i := 1
 			until
-				value.item(i) = Void
+				value.item (i) = Void
 			loop
-				Result.append (value.item(i).name)
-				Result.append(" ")
+				Result.append (value.item (i).name)
+				Result.append (" ")
 				i := i + 1
 			end
 		end
@@ -199,7 +198,7 @@ feature -- Interface
 							end
 						end
 						if has_seps then
-							code := value.item (i+1)
+							code := value.item (i + 1)
 							if code /= Void then
 								Result := Result and (pos2 /= s.count) and 
 									substrg2.is_equal (code.value)
@@ -236,7 +235,7 @@ feature -- Interface
 			until
 				value.item (i) = Void
 			loop
-				type := value.item(i).type
+				type := value.item (i).type
 				inspect
 					type
 				when 1 then
@@ -253,19 +252,19 @@ feature -- Interface
 				when 4 then
 					-- Test if the year has four digits, if not put 0 to fill it
 					if date.year.out.count = 4 then
-						Result.append(date.year.out)
+						Result.append (date.year.out)
 					else
 						if date.year.out.count = 1 then
 							Result.append ("000")
-							Result.append(date.year.out)
+							Result.append (date.year.out)
 						end
 						if date.year.out.count = 2 then
 							Result.append ("00")
-							Result.append(date.year.out)
+							Result.append (date.year.out)
 						end
 						if date.year.out.count = 3 then
-							Result.append("0")
-							Result.append(date.year.out)
+							Result.append ("0")
+							Result.append (date.year.out)
 						end
 					end
 				when 5 then 
@@ -322,11 +321,11 @@ feature -- Interface
 					Result.append (int.out)
 				when 16 then
 					double := time.fractional_second * 
-						10^(value.item(i).count_max)
+						10 ^ (value.item (i).count_max)
 					int := double.truncated_to_integer
 					Result.append (int.out)
 				else
-					Result.append (value.item(i).value)
+					Result.append (value.item (i).value)
 				end
 			i := i + 1
 			end
@@ -400,7 +399,7 @@ feature -- Interface
 			s_correspond: correspond (s)
 		local
 			tmp_code: DATE_TIME_CODE
-			tmp_ht: HASH_TABLE [DATE_TIME_CODE,INTEGER]
+			tmp_ht: HASH_TABLE [DATE_TIME_CODE, INTEGER]
 			i: INTEGER
 		do
 			tmp_ht := clone (value)
@@ -448,7 +447,7 @@ feature -- Interface
 			s_correspond: correspond (s)
 		local
 			tmp_code: DATE_TIME_CODE
-			tmp_ht: HASH_TABLE [DATE_TIME_CODE,INTEGER]
+			tmp_ht: HASH_TABLE [DATE_TIME_CODE, INTEGER]
 			i: INTEGER
 		do
 			tmp_ht := clone (value)

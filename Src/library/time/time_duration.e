@@ -160,8 +160,8 @@ feature -- Status report
 					fine_second >= 0 and then minute < minutes_in_hour and then 
 					minute >= 0
 			else
-				Result := fine_second > - Seconds_in_minute and then 
-					fine_second <= 0 and then minute > - Minutes_in_hour and then
+				Result := fine_second > -Seconds_in_minute and then 
+					fine_second <= 0 and then minute > -Minutes_in_hour and then
 					minute <= 0
 			end
 		end
@@ -296,7 +296,7 @@ feature {NONE} -- Constants
 			
 invariant
 
-	fractionals_large_enough: fractional_second > - 1
+	fractionals_large_enough: fractional_second > -1
 	fractionals_small_enough: fractional_second < 1
 	fractional_and_second_same_sign: second * fractional_second >= 0
 	equal_signs: canonical implies (hour >= 0 and minute >= 0 and 

@@ -43,11 +43,9 @@ feature -- Basic operation
 			command_list.force (a_command)
 			dialog.add_command_representation (a_command.textual_representation)
 			set_current_position (command_list.count)
-			undo_button.enable_sensitive
 		ensure
 			command_added: command_list.has (a_command)
 			current_position = (command_list.count)
-			undo_button.is_sensitive
 		end
 		
 	step_from (start, finish: INTEGER) is
@@ -95,8 +93,7 @@ feature -- Basic operation
 			else
 				dialog.select_item (current_position)
 			end
-				-- Update undo/redo buttons.
-			update_button_sensitivity
+			--| FIXME may need to call update all commands here.
 		end
 		
 	redo is
@@ -109,28 +106,9 @@ feature -- Basic operation
 
 			(command_list @ (current_position + 1)).execute
 			set_current_position (current_position + 1)
-			update_button_sensitivity
 				-- Update undo/redo buttons.
 			dialog.select_item (current_position)
-		end
-		
-	update_button_sensitivity is
-			-- Update `undo_button' and `redo_button' to reflect
-			-- the current position in the history referenced by
-			-- `current_position'. 
-		do
-			if current_position >= command_list.count then
-				redo_button.disable_sensitive
-			end
-			if current_position > 0 then
-				undo_button.enable_sensitive
-			end
-			if current_position <= 0 then
-				undo_button.disable_sensitive
-			end
-			if current_position < command_list.count then
-				redo_button.enable_sensitive
-			end
+			--| FIXME may need to update all command here.
 		end
 		
 	cut_off_at_current_position is
@@ -154,20 +132,7 @@ feature -- Basic operation
 				dialog.remove_items_from_position (current_position + 1)
 			end
 		end
-		
-		
-	set_undo_button (a_button: EV_TOOL_BAR_BUTTON) is
-			-- Assign `a_button' to `undo_button'.
-		do
-			undo_button := a_button
-		end
-		
-	set_redo_button (a_button: EV_TOOL_BAR_BUTTON) is
-			-- Assign `a_button' to `redo_button'.
-		do
-			redo_button := a_button
-		end	
-		
+
 	current_position: INTEGER is
 			-- Position `Current' refers to.
 			-- i.e. as users step forewards or backwards in
@@ -192,15 +157,4 @@ feature {NONE} -- Implementation
 			create Result
 		end
 		
-	redo_button: EV_TOOL_BAR_BUTTON
-		-- Button linked to redo for this history.
-		-- Current will modify the sensitivity of this button
-		-- to reflect `current_position'.
-	
-	
-	undo_button: EV_TOOL_BAR_BUTTON
-		-- Button linked to undo for this history.
-		-- Current will modify the sensitivity of this button
-		-- to reflect `current_position'.
-
 end -- class GLOBAL_HISTORY

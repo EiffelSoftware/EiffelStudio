@@ -34,11 +34,19 @@ feature {NONE} -- Initialization
 			a_cs: C_STRING
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.gTK_WINDOW_DIALOG_ENUM))
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (GTK_WINDOW_DIALOG_ENUM))
 			create a_cs.make ("Print")
 			feature {EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 		end
+	
+	gtk_window_dialog_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_WINDOW_DIALOG"
+		end
+		
 
 	printer_rdo, file_rdo, all_rdo, range_rdo, 
 	selection_rdo, portrait_rdo, landscape_rdo: EV_RADIO_BUTTON

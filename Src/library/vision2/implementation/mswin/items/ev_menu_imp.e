@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 		do
 			Precursor (an_interface)
-			wel_make
+			make_track
 			make_id
 		end
 
@@ -54,13 +54,12 @@ feature -- Basic operations
 			-- Pop up on the current pointer position.
 		local
 			wel_point: WEL_POINT
-			wel_win: WEL_COMPOSITE_WINDOW
 		do
-			if count /= 0 then
-				wel_win ?= parent_imp
+			if count > 0 then
 				create wel_point.make (0, 0)
 				wel_point.set_cursor_position
-				show_track (wel_point.x, wel_point.y, wel_win)
+				show_track (wel_point.x, wel_point.y,
+					create {EV_POPUP_MENU_HANDLER}.make_with_menu (Current))
 			end
 		end
 
@@ -68,11 +67,20 @@ feature -- Basic operations
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		local
-			wel_win: WEL_COMPOSITE_WINDOW
+			wel_point: WEL_POINT
+			wel_win: WEL_WINDOW
 		do
-			wel_win ?= a_widget.implementation
-			if wel_win /= Void then
-				show_track (a_x, a_y, wel_win)
+			if count > 0 then
+				create wel_point.make (a_x, a_y)
+				wel_win ?= a_widget.implementation
+				if wel_win /= Void then
+					create wel_point.make (a_x, a_y)
+					wel_point.client_to_screen (wel_win)
+				else
+					create wel_point.make (0, 0)
+				end
+				show_track (wel_point.x, wel_point.y,
+					create {EV_POPUP_MENU_HANDLER}.make_with_menu (Current))
 			end
 		end
 
@@ -103,6 +111,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/23 01:06:15  brendel
+--| Implemented show and show-at.
+--|
 --| Revision 1.17  2000/03/22 22:51:08  brendel
 --| Added show and show_at. Do not work yet.
 --|

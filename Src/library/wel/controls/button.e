@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING;
+	make (a_parent: WEL_WINDOW; a_name: STRING;
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a button.
 		require

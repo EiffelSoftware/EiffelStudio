@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_vertical (a_parent: WEL_COMPOSITE_WINDOW;
+	make_vertical (a_parent: WEL_WINDOW;
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a vertical scroll bar.
 		require
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			maximum_equal_zero: maximum = 0
 		end
 
-	make_horizontal (a_parent: WEL_COMPOSITE_WINDOW;
+	make_horizontal (a_parent: WEL_WINDOW;
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a horizontal scroll bar.
 		require

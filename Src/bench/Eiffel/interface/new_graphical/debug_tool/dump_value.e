@@ -423,7 +423,7 @@ feature -- Status report
 			-- Complete output, including string representation.
 			--| `output_value' = "This is a string"
 		do
-			Result := clone (output_value)
+			Result := output_value.twin
 			if type /= type_string and has_formatted_output then
 				Result.append_character ('=')
 				Result.append (formatted_output)

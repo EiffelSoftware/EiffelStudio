@@ -160,12 +160,15 @@ feature -- Generation
 					call.set_info (info)
 					call.generate
 				else
+					info.generate_start (Current)
+					info.generate_gen_type_conversion (Current)
 					register.print_register
 					buf := buffer
 					buf.putstring (" = RTLN(")
 					info.generate
 					buf.putstring (");")
 					buf.new_line
+					info.generate_end (Current)
 					if
 						context.workbench_mode
 						or else context.assertion_level.check_invariant

@@ -47,7 +47,8 @@ feature -- Access
 			-- Popup menu at the zero-based relative `position'
 		require
 			exists: exists
-			positive_position: position >= 0
+			position_large_enough: position >= 0
+			position_small_enough: position < count
 			popup_exists: popup_exists (position)
 		do
 			!! Result.make_by_pointer (cwin_get_sub_menu (item,
@@ -64,6 +65,7 @@ feature -- Element change
 		require
 			exists: exists
 			a_string_not_void: a_string /= Void
+			positive_id: an_id > 0
 			item_not_exists: not item_exists (an_id)
 		local
 			a: ANY
@@ -113,6 +115,7 @@ feature -- Element change
 			exists: exists
 			bitmap_not_void: bitmap /= Void
 			bitmap_exists: bitmap.exists
+			positive_id: an_id > 0
 			item_not_exists: not item_exists (an_id)
 		do
 			cwin_append_menu (item, Mf_bitmap + Mf_bycommand,
@@ -130,6 +133,7 @@ feature -- Element change
 			a_position_large_enough: a_position >= 0
 			a_position_small_enough: a_position <= count
 			a_string_not_void: a_string /= Void
+			positive_id: an_id > 0
 			item_not_exists: not item_exists (an_id)
 		local
 			a: ANY
@@ -185,6 +189,7 @@ feature -- Element change
 			a_position_small_enough: a_position <= count
 			bitmap_not_void: bitmap /= Void
 			bitmap_exists: bitmap.exists
+			positive_id: an_id > 0
 			item_not_exists: not item_exists (an_id)
 		do
 			cwin_insert_menu (item, a_position,
@@ -199,6 +204,7 @@ feature -- Element change
 		require
 			exists: exists
 			a_string_not_void: a_string /= Void
+			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		local
 			a: ANY
@@ -216,12 +222,25 @@ feature -- Removal
 			-- Delete `an_id' from the menu.
 		require
 			exists: exists
+			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
 			cwin_delete_menu (item, an_id, Mf_bycommand)
 		ensure
 			new_count: count = old count - 1
 			item_not_exists: not item_exists (an_id)
+		end
+
+	delete_position (position: INTEGER) is
+			-- Delete the item at zero-based `position'.
+		require
+			exists: exists
+			position_large_enough: position >= 0
+			position_small_enough: position < count
+		do
+			cwin_delete_menu (item, position, Mf_byposition)
+		ensure
+			new_count: count = old count - 1
 		end
 
 feature -- Basic operations
@@ -233,6 +252,8 @@ feature -- Basic operations
 			exists: exists
 			window_not_void: window /= Void
 			window_exists: window.exists
+			positive_id: an_id > 0
+			item_exists: item_exists (an_id)
 		do
 			cwin_hilite_menu_item (window.item, item,
 				an_id, Mf_bycommand + Mf_hilite)
@@ -245,6 +266,8 @@ feature -- Basic operations
 			exists: exists
 			window_not_void: window /= Void
 			window_exists: window.exists
+			positive_id: an_id > 0
+			item_exists: item_exists (an_id)
 		do
 			cwin_hilite_menu_item (window.item, item,
 				an_id, Mf_bycommand + Mf_unhilite)
@@ -304,52 +327,83 @@ feature -- Measurement
 
 feature -- Status setting
 
-	check_item (item_id: INTEGER) is
-			-- Put a check mark for `item_id'
+	check_item (an_id: INTEGER) is
+			-- Put a check mark for the item identified by `an_id'.
 		require
 			exists: exists
-			item_exists: item_exists (item_id)
+			positive_id: an_id > 0
+			item_exists: item_exists (an_id)
 		do
-			cwin_check_menu_item (item, item_id,
+			cwin_check_menu_item (item, an_id,
 				Mf_checked + Mf_bycommand)
 		ensure
-			item_checked: item_checked (item_id)
+			item_checked: item_checked (an_id)
 		end
 
-	uncheck_item (item_id: INTEGER) is
-			-- Remove the check mark for `item_id'
+	uncheck_item (an_id: INTEGER) is
+			-- Remove the check mark for the item identified
+			-- by `an_id'.
 		require
 			exists: exists
-			item_exists: item_exists (item_id)
+			positive_id: an_id > 0
+			item_exists: item_exists (an_id)
 		do
-			cwin_check_menu_item (item, item_id,
+			cwin_check_menu_item (item, an_id,
 				Mf_unchecked + Mf_bycommand)
 		ensure
-			item_unchecked: not item_checked (item_id)
+			item_unchecked: not item_checked (an_id)
 		end
 
-	enable_item (item_id: INTEGER) is
-			-- Enable `item_id'
+	enable_item (an_id: INTEGER) is
+			-- Enable the item idenfied by `an_id'.
 		require
 			exists: exists
-			item_exists: item_exists (item_id)
+			positive_id: an_id > 0
+			item_exists: item_exists (an_id)
 		do
-			cwin_enable_menu_item (item, item_id,
+			cwin_enable_menu_item (item, an_id,
 				Mf_enabled + Mf_bycommand)
 		ensure
-			item_enabled: item_enabled (item_id)
+			item_enabled: item_enabled (an_id)
 		end
 
-	disable_item (item_id: INTEGER) is
-			-- Disable `item_id'
+	enable_position (position: INTEGER) is
+			-- Enable the item at zero-based `position'.
 		require
 			exists: exists
-			item_exists: item_exists (item_id)
+			position_large_enough: position >= 0
+			position_small_enough: position < count
 		do
-			cwin_enable_menu_item (item, item_id,
+			cwin_enable_menu_item (item, position,
+				Mf_enabled + Mf_byposition)
+		ensure
+			position_enabled: position_enabled (position)
+		end
+
+	disable_item (an_id: INTEGER) is
+			-- Disable the item identified by `an_id'.
+		require
+			exists: exists
+			positive_id: an_id > 0
+			item_exists: item_exists (an_id)
+		do
+			cwin_enable_menu_item (item, an_id,
 				Mf_disabled + Mf_grayed + Mf_bycommand)
 		ensure
-			item_disabled: not item_enabled (item_id)
+			item_disabled: not item_enabled (an_id)
+		end
+
+	disable_position (position: INTEGER) is
+			-- Disable the item at zero-based `position'.
+		require
+			exists: exists
+			position_large_enough: position >= 0
+			position_small_enough: position < count
+		do
+			cwin_enable_menu_item (item, position,
+				Mf_disabled + Mf_grayed + Mf_byposition)
+		ensure
+			position_disabled: not position_enabled (position)
 		end
 
 feature -- Status report
@@ -358,35 +412,50 @@ feature -- Status report
 			-- Does `an_id' exist in the menu?
 		require
 			exists: exists
+			positive_id: an_id > 0
 		do
 			Result := cwin_get_menu_state (item, an_id,
 				Mf_bycommand) /= cwel_menu_item_not_found
 		end
 
-	item_checked (item_id: INTEGER): BOOLEAN is
-			-- Is `item_id' checked?
+	item_checked (an_id: INTEGER): BOOLEAN is
+			-- Is the item idenfied by `an_id' checked?
 		require
 			exists: exists
-			item_exists: item_exists (item_id)
+			positive_id: an_id > 0
+			item_exists: item_exists (an_id)
 		do
-			Result := cwin_get_menu_state (item, item_id,
+			Result := cwin_get_menu_state (item, an_id,
 				Mf_checked + Mf_bycommand) = Mf_checked
 		end
 
-	item_enabled (item_id: INTEGER): BOOLEAN is
-			-- Is `item_id' enabled?
+	item_enabled (an_id: INTEGER): BOOLEAN is
+			-- Is the item idenfied by `an_id' enabled?
 		require
 			exists: exists
-			item_exists: item_exists (item_id)
+			positive_id: an_id > 0
+			item_exists: item_exists (an_id)
 		do
-			Result := cwin_get_menu_state (item, item_id,
+			Result := cwin_get_menu_state (item, an_id,
 				Mf_enabled + Mf_bycommand) = Mf_enabled
+		end
+
+	position_enabled (position: INTEGER): BOOLEAN is
+			-- Is the item at zero-based `position' enabled?
+		require
+			exists: exists
+			position_large_enough: position >= 0
+			position_small_enough: position < count
+		do
+			Result := cwin_get_menu_state (item, position,
+				Mf_enabled + Mf_byposition) = Mf_enabled
 		end
 
 	id_string (an_id: INTEGER): STRING is
 			-- String associated with `an_id'
 		require
 			exists: exists
+			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		local
 			a: ANY
@@ -401,14 +470,28 @@ feature -- Status report
 		end
 
 	popup_exists (position: INTEGER): BOOLEAN is
-			-- Does a popup menu exists at
-			-- the zero-based position?
+			-- Does a popup menu exists at the zero-based position?
 		require
 			exists: exists
 			positive_position: position >= 0
 		do
 			Result := cwin_get_sub_menu (item,
 				position) /= default_pointer
+		end
+
+feature -- Conversion
+
+	position_to_item_id (position: INTEGER): INTEGER is
+			-- Retrieve the menu item identifier of a menu item at
+			-- the zero-based `position'.
+			-- Return 0 if the item at the zero-based
+			-- `position' is a separator or a pop-up menu.
+		require
+			exists: exists
+			position_large_enough: position >= 0
+			position_small_enough: position < count
+		do
+			Result := cwin_get_menu_item_id (item, position)
 		end
 
 feature {NONE} -- Implementation
@@ -571,6 +654,14 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HWND, HMENU, UINT, UINT)"
 		alias
 			"HiliteMenuItem"
+		end
+
+	cwin_get_menu_item_id (hmenu: POINTER; position: INTEGER): INTEGER is
+			-- SDK GetMenuItemID
+		external
+			"C [macro <wel.h>] (HMENU, int): EIF_INTEGER"
+		alias
+			"GetMenuItemID"
 		end
 
 	cwel_menu_item_not_found: INTEGER is

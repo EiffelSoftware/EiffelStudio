@@ -469,9 +469,17 @@ feature -- Basic operations
 			-- `project_ace_file_name' [in].  
 		local
 			project_ace: ACE_FILE_ACCESSER
+			project_ace_file: RAW_FILE
 		do
-			create project_ace.make (project_ace_file_name)
-			update_ace (project_ace, ace)
+			if ace.is_valid then
+				create project_ace_file.make (project_ace_file_name)
+				if not project_ace_file.exists then
+					project_ace_file.create_read_write
+				end
+				create project_ace.make (project_ace_file_name)
+				update_ace (project_ace, ace)
+				project_ace.apply
+			end
 		end
 
 	synchronize_with_project_ace_file (project_ace_file_name: STRING) is
@@ -483,6 +491,7 @@ feature -- Basic operations
 			create project_ace.make (project_ace_file_name)
 			if project_ace.is_valid then				
 				update_ace (ace, project_ace)
+				ace.apply
 			end
 		end
 
@@ -528,14 +537,28 @@ feature {NONE} -- Implementation
 			non_void_original_ace: original_ace /= Void
 			valid_original_ace: original_ace.is_valid
 		do
-			if not original_ace.system_name.is_equal (target_ace.system_name) then
+			if 
+				original_ace.system_name /= Void and then
+				(target_ace.system_name = Void or else 
+				not original_ace.system_name.is_equal (target_ace.system_name)) 
+			then
 				target_ace.set_system_name (original_ace.system_name)
 			end
-			if not original_ace.root_class_name.is_equal (target_ace.root_class_name) then
-				target_ace.set_root_class_name (original_ace.root_class_name)
-			end
-			if not original_ace.creation_routine_name.is_equal (target_ace.creation_routine_name) then
-				target_ace.set_creation_routine_name (original_ace.creation_routine_name)
+			if original_ace.root_ast.root /= Void then
+				if 
+					original_ace.root_class_name /= Void and then
+					(target_ace.root_class_name = Void or else
+					not original_ace.root_class_name.is_equal (target_ace.root_class_name)) 
+				then
+					target_ace.set_root_class_name (original_ace.root_class_name)
+				end
+				if 
+					original_ace.creation_routine_name /= Void and then
+					(target_ace.creation_routine_name = Void or else
+					not original_ace.creation_routine_name.is_equal (target_ace.creation_routine_name)) 
+				then
+					target_ace.set_creation_routine_name (original_ace.creation_routine_name)
+				end
 			end
 			
 			update_clusters (target_ace, original_ace)
@@ -545,55 +568,59 @@ feature {NONE} -- Implementation
 			-- Update clusters in `target_ace'.
 		require
 			non_void_target_ace: target_ace /= Void
-			valid_target_ace: target_ace.is_valid
 			non_void_original_ace: original_ace /= Void
 			valid_original_ace: original_ace.is_valid
 		local
 			target_clusters: HASH_TABLE [CLUSTER_SD, STRING]
+			a_cluster: CLUSTER_SD
 		do
 				-- Create hash table of clusters that are 
 				-- in target ace file.
-			create target_clusters.make (target_ace.root_ast.clusters.count)
-			target_clusters.compare_objects
-			from
-				target_ace.root_ast.clusters.start
-			until
-				target_ace.root_ast.clusters.after
-			loop
-				target_clusters.put (target_ace.root_ast.clusters.item, 
-									target_ace.root_ast.clusters.item.cluster_name)
-				target_ace.root_ast.clusters.forth
+			if target_ace.root_ast.clusters /= Void then
+				create target_clusters.make (target_ace.root_ast.clusters.count)
+				target_clusters.compare_objects
+				from
+					target_ace.root_ast.clusters.start
+				until
+					target_ace.root_ast.clusters.after
+				loop
+					target_clusters.put (target_ace.root_ast.clusters.item, 
+										target_ace.root_ast.clusters.item.cluster_name)
+					target_ace.root_ast.clusters.forth
+				end
 			end
 			
 				-- Update clusters that are in both 
 				-- original ace file and in target ace file,
 				-- and remove them from hash table.
 				-- Add clusters that are not in target ace file.
-			from
-				original_ace.root_ast.clusters.start
-			until
-				original_ace.root_ast.clusters.after
-			loop
-				if 
-					target_clusters.has (original_ace.root_ast.clusters.item.cluster_name)
-				then
+			if original_ace.root_ast.clusters /= Void then
+				from
+					original_ace.root_ast.clusters.start
+				until
+					original_ace.root_ast.clusters.after
+				loop
 					if 
-						not is_same_cluster (original_ace.root_ast.clusters.item,
-								target_clusters.item (original_ace.root_ast.clusters.item.cluster_name))
+						target_clusters.has (original_ace.root_ast.clusters.item.cluster_name)
 					then
-						update_cluster (target_clusters.item (original_ace.root_ast.clusters.item.cluster_name),
-										original_ace.root_ast.clusters.item)
+						if 
+							not is_same_cluster (original_ace.root_ast.clusters.item,
+									target_clusters.item (original_ace.root_ast.clusters.item.cluster_name))
+						then
+							update_cluster (target_clusters.item (original_ace.root_ast.clusters.item.cluster_name),
+											original_ace.root_ast.clusters.item)
+						end
+						target_clusters.remove (original_ace.root_ast.clusters.item.cluster_name)
+					else
+						target_ace.root_ast.clusters.force (original_ace.root_ast.clusters.item.duplicate)
 					end
-					target_clusters.remove (original_ace.root_ast.clusters.item.cluster_name)
-				else
-					target_ace.root_ast.clusters.force (original_ace.root_ast.clusters.item)
+					
+					original_ace.root_ast.clusters.forth
 				end
-				
-				original_ace.root_ast.clusters.forth
 			end
 			
 				-- Remove clusters that are not in original ace file.
-			if not target_clusters.is_empty then
+			if target_clusters /= Void and then not target_clusters.is_empty then
 				from
 					target_clusters.start
 				until
@@ -614,12 +641,12 @@ feature {NONE} -- Implementation
 			if not target.cluster_name.same_as (origin.cluster_name) then
 				target.set_cluster_name (origin.cluster_name)
 			end
---			if
---				(target.parent_name = Void xor origin.parent_name = Void) 
---				or else not target.parent_name.same_as (origin.parent_name)
---			then
---				target.set_parent_name (origin.parent_name)
---			end
+			if
+				(target.parent_name = Void xor origin.parent_name = Void) 
+				or else not target.parent_name.same_as (origin.parent_name)
+			then
+				target.set_parent_name (origin.parent_name)
+			end
 			if not target.directory_name.same_as (origin.directory_name) then
 				target.set_directory_name (origin.directory_name)
 			end

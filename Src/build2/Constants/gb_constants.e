@@ -36,7 +36,7 @@ feature -- Menu texts.
 		
 	Gb_file_exit_menu_text: STRING is "&Exit"
 		
-	Gb_help_about_menu_text: STRING is "&About"
+	Gb_help_about_menu_text: STRING is "&About..."
 	
 	Gb_help_menu_text: STRING is "&Help"
 	
@@ -207,7 +207,7 @@ feature -- XML saving
 			Result.extend ("xml_components.xml")
 		end
 		
-	project_filename: STRING is "project.bpr"
+	project_filename: STRING is "build_project.bpr"
 		-- File name for project settings.
 		
 	project_file_filter: STRING is "*.bpr"
@@ -246,6 +246,8 @@ feature -- Dialogs
 	Save_prompt: STRING is "Do you wish to save the current project?"
 	
 feature -- Warning Dialogs
+	
+	Project_exists_warning: STRING is "A Build project already exists in the selected directory. Do you wish to overwrite this project?"
 
 	Invalid_project_warning: STRING is "Invalid build project file. Please select a different file."
 		-- Warning displayed when a user attempts to open an invalid build project.

@@ -36,9 +36,6 @@ feature -- Access
 	interface_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 			-- Coclass interfaces descriptors
 
-	guid: ECOM_GUID
-			-- CLSID
-
 	lcid: INTEGER
 			-- Locale of member names and doc strings.
 
@@ -69,16 +66,6 @@ feature -- Element Change
 		ensure
 			valid_descriptors: interface_descriptors /= Void and 
 				interface_descriptors = some_descriptors
-		end
-
-	set_guid (a_guid: ECOM_GUID) is
-			-- Set `guid' with `a_guid'.
-		require
-			valid_guid: a_guid /= Void
-		do
-			guid := a_guid
-		ensure
-			valid_guid: guid /= Void and guid = a_guid
 		end
 
 	set_lcid (a_lcid: INTEGER) is

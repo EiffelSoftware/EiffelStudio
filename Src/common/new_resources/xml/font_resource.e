@@ -1,39 +1,32 @@
 indexing
 
 	description:
-		"A resource value for string resouorces.";
-	date: "$Date$";
+		"A resource value for string resources."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class FONT_RESOURCE
+class
+	FONT_RESOURCE
 
 inherit
 	STRING_RESOURCE
 		redefine
-			make, set_value, is_valid, make_with_values,get_value
+			make, set_value, is_valid, get_value
 		end
 
 creation
-	make,
-	make_with_values
+	make
 
 feature {NONE} -- Initialization
 
-    make_with_values (a_name: STRING; a_value: STRING) is
-            -- Initialie Current
-        do
-            name := a_name;
-            value := a_value
-        end;
-
-	make (a_name: STRING; rt: RESOURCES_TABLE; def_value: STRING) is
+	make (a_name: STRING; a_value: STRING) is
 			-- Initialize Current
 		do
 			name := a_name
-			default_value := def_value
-			value := def_value
+			default_value := a_value
+			value := a_value
 			if value /= Void and then not value.empty then
-				!! actual_value.make_by_system_name(value)
+				!! actual_value.make_by_system_name (value)
 				--!! actual_value.make
 				--actual_value.set_name(value)
 				if actual_value.destroyed then
@@ -45,7 +38,6 @@ feature {NONE} -- Initialization
 					actual_value := default_font
 				end
 			end
-			rt.put(Current, a_name)
 		end
 
 feature -- Access
@@ -62,7 +54,7 @@ feature -- Access
 	valid_actual_value: EV_FONT is
 			-- A non void font value
 		do
-			Result := actual_value;
+			Result := actual_value
 			if Result = Void then
 				Result := default_font
 			end
@@ -77,7 +69,7 @@ feature -- Access
 			font: EV_FONT
 		do
 			if not a_value.empty then
-				!! font.make_by_name(a_value)
+				create font.make_by_name(a_value)
 				Result := font.destroyed
 			end
 		end
@@ -85,7 +77,7 @@ feature -- Access
 	default_font: EV_FONT is
 			-- Default value if resource not found in a resource file
 		once
-			!! Result.make_by_name("fixed")
+			create Result.make_by_name("fixed")
 		end
 
 feature -- Setting
@@ -94,7 +86,7 @@ feature -- Setting
 			-- Set `value' to `new_value'.
 		do
 			if not new_value.empty then	
-				!! actual_value.make_by_system_name(new_value)
+				create actual_value.make_by_system_name(new_value)
 			else
 				actual_value := Void
 			end

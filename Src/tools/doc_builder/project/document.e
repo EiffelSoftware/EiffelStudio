@@ -168,7 +168,7 @@ feature -- Query
 			-- Has current been modified since last save?
 		do
 			if widget /= Void and widget.data /= Void then
-				Result := not saved_text.is_equal (widget.data)
+				Result := not saved_text.is_equal (widget.data.text)
 			else				
 				Result := not saved_text.is_equal (text)	
 			end

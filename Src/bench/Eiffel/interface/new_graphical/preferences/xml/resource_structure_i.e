@@ -7,6 +7,11 @@ deferred class
 
 feature -- Initialization
 
+	make (in: like interface) is
+		do
+			interface := in
+		end
+
 	make_default (default_file: STRING) is
 				-- Initialize Current from file
 				-- named `default_file'.

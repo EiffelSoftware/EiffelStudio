@@ -1,6 +1,7 @@
 indexing
 	description: 
-		"EiffelVision widget, gtk implementation."
+		"EiffelVision widget, the parent of all EV class. %
+		% Mswindows implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -13,16 +14,6 @@ deferred class
 inherit
         EV_WIDGET_I
         
---	WEL_WINDOW
---	rename
---	 	resize as set_size,
---		move as set_x_y,
---		command as wel_command,
---		parent as wel_parent
---	undefine
---		remove_command
---	end
-	
 
 feature -- Status report
 	
@@ -34,8 +25,8 @@ feature -- Status report
 		
 	insensitive: BOOLEAN is
 			-- Is current widget insensitive?
-                do
-                        Result := not wel_window.enabled
+        do
+            Result := not wel_window.enabled
 		end
 
 	shown: BOOLEAN is
@@ -100,46 +91,113 @@ feature -- Measurement
 			Result := wel_window.height
 		end
 	
-	minimum_width: INTEGER is
-			-- Minimum width of widget
-		once
-			Result := 0
-		end
+	maximum_height: INTEGER is
+                        -- Maximum height that application wishes widget
+                        -- instance to have
+ 		do
+                        check
+                                not_yet_implemented: False
+                        end
+		end	
 
-	minimum_height: INTEGER is
-			-- Minimum height of widget
-		once
-			Result := 0
-		end
+    maximum_width: INTEGER is
+                        -- Maximum width that application wishes widget
+                        -- instance to have
+ 		do
+                        check
+                                not_yet_implemented: False
+                        end
+		end	
+
+
+	minimum_width: INTEGER 
+			-- Minimum width of widget, `0' by default
+		
+
+	minimum_height: INTEGER
+			-- Minimum height of widget, `0' by default
+		
 	
 feature -- Resizing
 
+	parent_ask_resize (new_width, new_height: INTEGER) is
+			-- When the parent asks the resize, it's not 
+			-- necessary to send him back the information
+		local
+			temp_width, temp_height: INTEGER
+		do
+			temp_width := minimum_width.max(new_width)
+			temp_height := minimum_height.max (new_height)
+			wel_window.resize (temp_width, temp_height)
+		end
+
+
 	set_size (new_width:INTEGER; new_height: INTEGER) is
 			-- Resize the widget and notify the parent of 
-			-- the resize
+			-- the resize which must be bigger than the
+			-- minimal size or nothing happens
 		do
-			wel_window.resize (new_width, new_height)
+			parent_ask_resize (new_width, new_height)
 			if parent_imp /= Void then
-				parent_imp.child_has_resized (new_width, new_height)
+				parent_imp.child_has_resized (minimum_width.max(new_width),
+											  minimum_height.max (new_height),
+											  Current)
 			end
 		end
+
 	
 	set_width (new_width :INTEGER) is
+		local
+			temp_width: INTEGER
 		do
-			wel_window.set_width (new_width)
+			temp_width := minimum_width.max(new_width)
+			wel_window.set_width (temp_width)
 			if parent_imp /= Void then
-				parent_imp.child_has_resized (new_width, height)
+				parent_imp.child_has_resized (temp_width, height, Current)
 			end
 		end
+
 		
 	set_height (new_height: INTEGER) is
+		local
+			temp_height: INTEGER
 		do
-			wel_window.set_height (new_height)
+			temp_height := minimum_height.max(new_height)
+			wel_window.set_height (temp_height)
 			if parent_imp /= Void then
-				parent_imp.child_has_resized (width, new_height)
+				parent_imp.child_has_resized (width, temp_height, Current)
 			end
 		end
 	
+	set_maximum_height (max_height: INTEGER) is
+                        -- Set `maximum_height' to `max_height'.
+		do
+                        check
+                                not_yet_implemented: False
+                        end		
+		end
+
+    set_maximum_width (max_width: INTEGER) is
+                        -- Set `maximum_width' to `max_width'.
+		do
+                        check
+                                not_yet_implemented: False
+                        end		
+		end
+
+    set_minimum_height (min_height: INTEGER) is
+                        -- Set `minimum__height' to `min_height'.
+		do
+			minimum_height := min_height
+		end
+
+    set_minimum_width (min_width: INTEGER) is
+                        -- Set `minimum_width' to `min_width'.
+		do
+			minimum_width := min_width		
+		end
+
+
 	set_x (new_x: INTEGER) is
 		do
 			wel_window.set_x (new_x)
@@ -198,6 +256,8 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			parent_imp := p
 		end
 	
+
+
 feature {NONE} -- Implementation
 	
 	parent_imp: EV_CONTAINER_IMP

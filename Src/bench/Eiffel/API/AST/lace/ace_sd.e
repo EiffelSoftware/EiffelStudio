@@ -138,7 +138,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 							is_subset (object_file_names, System.object_file_names) and
 							is_subset (makefile_names, System.makefile_names)
 			if not no_change then
-				System.set_freeze (True)
+				System.set_freeze
 			end
 		end
 

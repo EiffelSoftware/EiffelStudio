@@ -5,6 +5,16 @@ indexing
 deferred class
 	AST_VISITOR
 
+feature {AST_EIFFEL} -- Helpers
+
+	frozen safe_process (l_as: AST_EIFFEL) is
+			-- Process `l_as'. Nothing if `l_as' is Void.
+		do
+			if l_as /= Void then
+				l_as.process (Current)
+			end
+		end
+		
 feature {AST_EIFFEL} -- Skeleton Visitors
 
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
@@ -196,14 +206,14 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
-	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
+	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]) is
 			-- Process `l_as'.
 		require
-			non_void_as: l_as /= Void
+			l_as_not_void: l_as /= Void
 		deferred
 		end
 
-	process_value_as (l_as: VALUE_AS) is
+	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
@@ -315,13 +325,6 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
-	process_suppliers_as (l_as: SUPPLIERS_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 	process_rename_as (l_as: RENAME_AS) is
 			-- Process `l_as'.
 		require
@@ -364,13 +367,6 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
-	process_assert_list_as (l_as: ASSERT_LIST_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 	process_ensure_as (l_as: ENSURE_AS) is
 			-- Process `l_as'.
 		require
@@ -400,13 +396,6 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		end
 
 	process_convert_feat_as (l_as: CONVERT_FEAT_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_internal_as (l_as: INTERNAL_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void

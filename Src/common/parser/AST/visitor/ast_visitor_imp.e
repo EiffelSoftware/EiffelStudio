@@ -2,7 +2,7 @@ indexing
 	description: "Class that parses an Eiffel class an does nothing"
 
 class
-	AST_VISITOR_IMP
+	AST_NULL_VISITOR
 
 inherit
 	AST_VISITOR
@@ -134,10 +134,6 @@ feature -- Implementation
 		end
 
 	process_variant_as (l_as: VARIANT_AS) is
-		do
-		end
-
-	process_value_as (l_as: VALUE_AS) is
 		do
 		end
 
@@ -397,10 +393,6 @@ feature -- Implementation
 		do
 		end
 
-	process_suppliers_as (l_as: SUPPLIERS_AS) is
-		do
-		end
-
 	process_rename_as (l_as: RENAME_AS) is
 		do
 		end
@@ -437,10 +429,6 @@ feature -- Implementation
 		do
 		end
 
-	process_assert_list_as (l_as: ASSERT_LIST_AS) is
-		do
-		end
-
 	process_ensure_as (l_as: ENSURE_AS) is
 		do
 		end
@@ -468,10 +456,6 @@ feature -- Implementation
 	process_use_list_as (l_as: USE_LIST_AS) is
 		do
 		end
-
-	process_internal_as (l_as: INTERNAL_AS) is
-		do
-		end
 		
 	process_delayed_access_feat_as (l_as: DELAYED_ACCESS_FEAT_AS) is
 		do
@@ -485,4 +469,4 @@ feature -- Implementation
 		do
 		end
 
-end -- class AST_VISITOR_IMP
+end -- class AST_NULL_VISITOR

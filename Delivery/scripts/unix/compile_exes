@@ -186,6 +186,27 @@ cd $INSTALL_DIR
 . $EXPORT_DIR/compile_libraries
 
 
+
+remtrace Build
+move $INSTALL_DIR/build/spec/unix $INSTALL_DIR/build/spec/$ISE_PLATFORM
+cd $EXPORT_DIR/build
+gunzip -c gobo_16.tar.gz | tar -xf -
+gunzip -c exml.tar.gz | tar -xf -
+cd ..
+safe_md $EXPORT_DIR/build2
+safe_md $EXPORT_DIR/build2/modified_libraries
+move $EXPORT_DIR/build/gobo_16 $EXPORT_DIR/build2/modified_libraries
+move $EXPORT_DIR/build/exml $EXPORT_DIR/build2/modified_libraries
+cd $EXPORT_DIR/build2/modified_libraries/exml/lib/implementation/expat/compiler_specific/ise/clib
+default_make
+cd $EXPORT_DIR/build
+untgz_ccode build
+strip build
+gzip build
+if [ -z "$MULTIPLE_EDITIONS" ]; then
+	gunzip -c build.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin
+fi
+
 remtrace Recompile EiffelStudio
 cd $EXPORT_DIR
 safe_md $EXPORT_DIR/ecs
@@ -198,8 +219,7 @@ gzip ec
 move ec.gz $EXPORT_DIR/ecs/ec_enterprise.gz
 
 if [ -z "$MULTIPLE_EDITIONS" ]; then
-	gunzip ec.gz
-	move ec $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+	gunzip -c $EXPORT_DIR/ecs/ec_enterprise.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 else
 	remtrace Free edition
 	cp ecfree.tar.gz ecfree.tar.gz.old

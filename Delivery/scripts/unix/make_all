@@ -37,9 +37,6 @@ rm -f set_aliases
 mv -f tmp set_aliases
 cd ..
 
-#Copy existing Build distribution
-cp -f /home/delivery/Eiffel51/build_deliv.tgz PorterPackage/
-
 # Let's keep an archive of this package
 if [ ! -e PorterPackage_all.tar ]; then
 	tar cvf PorterPackage_all.tar PorterPackage

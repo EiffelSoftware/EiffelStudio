@@ -77,13 +77,14 @@ feature -- Access
 	header: STRING is
 		do
 			!!Result.make (20);
-			Result.append ("Class: ");
 			Result.append (stone_signature);
-			Result.append ("  ");
-			Result.append ("Cluster: ");
+			Result.append ("  in cluster ");
 			Result.append (e_class.cluster.cluster_name);
 			if e_class.is_precompiled then
-				Result.append ("   (precompiled)")
+				Result.append ("  (precompiled)")
+			else
+				Result.append ("   located in ")
+				Result.append (clone (e_class.lace_class.cluster.path))
 			end
 		end;
 

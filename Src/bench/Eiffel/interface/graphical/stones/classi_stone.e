@@ -78,12 +78,12 @@ feature -- Access
 	header: STRING is
 		do
 			!!Result.make (20);
-			Result.append ("Class: ");
 			Result.append (stone_signature);
-			Result.append ("  ");
-			Result.append ("Cluster: ");
+			Result.append ("  in cluster ");
 			Result.append (class_i.cluster.cluster_name);
-			Result.append (" (not in system)");
+			Result.append ("  (not in system)");
+			Result.append ("  located in ")
+			Result.append (clone (class_i.cluster.path))
 		end;
  
 	stone_type: INTEGER is do Result := Class_type end;

@@ -10,9 +10,9 @@ inherit
 		rename
 			make as base_make
 		redefine
-			is_long,
+			is_integer,
 			is_numeric,
-			same_as, element_type, il_convert_from,
+			same_as, element_type,
 			description, sk_value, hash_code,
 			heaviest, tuple_code,
 			maximum_interval_value,
@@ -56,13 +56,8 @@ feature -- Status report
 	element_type: INTEGER_8 is
 			-- Pointer element type
 		do
-				-- FIXME: Manu 4/8/2002: In order to be CLS compliant and to be
-				-- able to consume CLS compliant type, we force our INTEGER_8 to
-				-- be unsigned by using `Element_type_u1'.
-				-- Fix is to introduce UNSIGNED_INTEGER_8 as well as a basic
-				-- class.
 			inspect size
-			when 8 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_u1
+			when 8 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i1
 			when 16 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i2
 			when 32 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4
 			when 64 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i8
@@ -109,8 +104,8 @@ feature -- Access
 			end
 		end
 
-	is_long: BOOLEAN is True
-			-- Is the type a long type ?
+	is_integer: BOOLEAN is True
+			-- Is the type a integer type ?
 
 	is_numeric: BOOLEAN is True
 			-- Is the type a numeric one ?
@@ -122,7 +117,7 @@ feature -- Access
 			if other.is_real_64 or other.is_real_32 then
 				Result := other
 			else
-				if other.is_long then
+				if other.is_integer then
 					l_long ?= other
 					if size >= l_long.size then
 						Result := Current
@@ -140,7 +135,7 @@ feature -- Access
 		local
 			o: like Current
 		do
-			if other.is_long then
+			if other.is_integer then
 				o ?= other
 				Result := size = o.size
 			end
@@ -178,10 +173,10 @@ feature -- Access
 			-- Hash code for current type
 		do
 			inspect size
-			when 8 then Result := Integer8_code
-			when 16 then Result := Integer16_code
-			when 32 then Result := Integer32_code
-			when 64 then Result := Integer64_code
+			when 8 then Result := Integer_8_code
+			when 16 then Result := Integer_16_code
+			when 32 then Result := Integer_32_code
+			when 64 then Result := Integer_64_code
 			end
 		end
 
@@ -230,26 +225,6 @@ feature -- Code generation
 			create Result.make ((1 |<< (size - 1)) - 1)
 		end
 
-feature -- IL code generation
-
-	il_convert_from (source: TYPE_I) is
-			-- Generate convertion from Currento to `source' if needed.
-		local
-			l_int: like Current
-		do
-			if not source.is_long then
-				il_generator.convert_to (Current)
-			else
-				l_int ?= source
-				if
-					size < l_int.size or
-					(size = 64 and l_int.size < 64)
-				then
-					il_generator.convert_to (Current)
-				end
-			end
-		end
-
 feature -- Byte code generation
 
 	make_default_byte_code (ba: BYTE_ARRAY) is
@@ -258,13 +233,13 @@ feature -- Byte code generation
 			inspect size
 			when 8 then
 				ba.append (Bc_int8)
-				ba.append ('%U')
+				ba.append_integer_8 (0)
 			when 16 then
 				ba.append (Bc_int16)
-				ba.append_short_integer (0)
+				ba.append_integer_16 (0)
 			when 32 then
 				ba.append (Bc_int32)
-				ba.append_integer (0)
+				ba.append_integer_32 (0)
 			when 64 then
 				ba.append (Bc_int64)
 				ba.append_integer_64 (0)
@@ -277,26 +252,6 @@ feature {NONE} -- Constants for generation
 	String_integer_16: STRING is "EIF_INTEGER_16"
 	String_integer_32: STRING is "EIF_INTEGER_32"
 	String_integer_64: STRING is "EIF_INTEGER_64"
-
-	String_integer_8_id: INTEGER is
-		once
-			Result := Names_heap.eif_integer_8_name_id
-		end
-		
-	String_integer_16_id: INTEGER is
-		once
-			Result := Names_heap.eif_integer_16_name_id
-		end
-
-	String_integer_32_id: INTEGER is
-		once
-			Result := Names_heap.eif_integer_32_name_id
-		end
-
-	String_integer_64_id: INTEGER is
-		once
-			Result := Names_heap.eif_integer_64_name_id
-		end
 
 	Union_tag_8: STRING is "i8arg"
 	Union_tag_16: STRING is "i16arg"

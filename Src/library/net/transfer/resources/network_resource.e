@@ -68,7 +68,6 @@ feature -- Status report
 			end
 			mode := m
 		rescue
-			Io.put_string ("foo%N")
 			mode := m
 			failed := True
 			retry

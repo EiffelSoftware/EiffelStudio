@@ -1,4 +1,4 @@
-ISE EiffelTime 4.4.005, May 1999.
+ISE EiffelTime 4.5.020, November 1999.
 
 Introduction
 ============
@@ -12,8 +12,7 @@ length of an interval (the meeting will take 2:15). The notion of absolute is
 Documentation
 =============
 
-  A complete documentation can be found in the directory $EIFFEL4\library\time\doc
-in different formats (pdf, word or postscript).
+A complete documentation can be found using the $EIFFEL4\docs\index.html file.
 
 Installation
 ============

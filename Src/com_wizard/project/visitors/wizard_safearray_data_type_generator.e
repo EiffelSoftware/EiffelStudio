@@ -392,8 +392,6 @@ feature -- Basic operations
 		local
 			tmp_element_c_type, tmp_element_eiffel_type, tmp_string: STRING
 			a_visitor: WIZARD_DATA_TYPE_VISITOR
-			library_guid, element_guid: ECOM_GUID
-			library_guid_str, element_guid_str: STRING
 			major_ver_number, minor_ver_number, a_lcid: INTEGER
 		do
 			a_visitor := a_safearray_descriptor.visitor

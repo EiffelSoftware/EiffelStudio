@@ -84,7 +84,6 @@ feature -- Basic Operations
 			valid_working_directory: not a_working_directory.empty
 		local
 			a_string: STRING
-			a_wel_string1, a_wel_string2: WEL_STRING
 			a_boolean: BOOLEAN
 			an_integer: INTEGER
 			a_last_process_result: INTEGER

@@ -96,7 +96,6 @@ feature {NONE} -- Implementation
 			a_user_defined_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
 			an_index: INTEGER
 			a_type_descriptor: WIZARD_TYPE_DESCRIPTOR
-			a_comment: STRING
 		do
 			if a_visitor.is_enumeration then
 				a_user_defined_descriptor ?= a_type

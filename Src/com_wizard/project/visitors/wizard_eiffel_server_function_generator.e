@@ -18,7 +18,7 @@ feature -- Basic operations
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Generate server feature signature.
 		local
-			coclass_name, tmp_string: STRING
+			coclass_name: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			coclass_name := a_component_descriptor.name

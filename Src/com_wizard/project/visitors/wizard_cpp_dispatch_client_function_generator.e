@@ -93,7 +93,6 @@ feature {NONE} -- Implementation
 		local
 			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
 			tmp_string: STRING
-			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create tmp_string.make (1000)
@@ -386,7 +385,6 @@ feature {NONE} -- Implementation
 			valid_name: not name.empty
 			valid_position: position >= 0
 		local
-			tmp_string: STRING
 			type: INTEGER
 		do
 			type := visitor.vt_type

@@ -54,9 +54,6 @@ feature -- Access
 
 	concurrency_model: STRING is "COINIT_APARTMENTTHREADED"
 
-	Temporary_input_file_name: STRING is "Input_File"
-			-- Input file
-
 	Standard_abort_value: INTEGER is -100
 			-- Standard abort value
 

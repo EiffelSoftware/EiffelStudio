@@ -59,7 +59,7 @@ feature -- Basic operations
 			cpp_class_writer.add_import (coclass_descriptor.c_header_file_name)
 
 			-- Parent
-			cpp_class_writer.add_parent (Class_factory, Public)
+			cpp_class_writer.add_parent (Class_factory, Void, Public)
 
 			-- AddRef
 			cpp_class_writer.add_function (addref_feature, Public)

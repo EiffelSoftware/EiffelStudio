@@ -292,9 +292,8 @@ feature -- Basic operations
 	is_empty_clib_folder (a_folder: STRING): BOOLEAN is
 			-- Is folder `a_folder' empty?
 		local
-			a_file: RAW_FILE
 			a_directory: DIRECTORY
-			a_working_directory, a_string: STRING
+			a_working_directory: STRING
 		do
 			a_working_directory := clone (shared_wizard_environment.destination_folder)
 			a_working_directory.append (a_folder)

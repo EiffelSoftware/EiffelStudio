@@ -19,7 +19,6 @@ feature -- Basic operations
 			-- Generate access and setting features from property.
 		local
 			coclass_name, access_name, setting_name, an_argument, a_comment, tmp_string: STRING
-			tmp_assertion: WIZARD_WRITER_ASSERTION
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			coclass_name := a_component_descriptor.eiffel_class_name

@@ -24,8 +24,6 @@ feature --  Basic operations
 			-- Generate eiffel class for coclass.
 		local
 			server_impl_generator: WIZARD_COCLASS_EIFFEL_SERVER_IMPL_GENERATOR
-			new_descriptor: WIZARD_COCLASS_DESCRIPTOR
-			local_string: STRING
 		do
 			Precursor {WIZARD_COCLASS_EIFFEL_GENERATOR} (a_coclass)
 

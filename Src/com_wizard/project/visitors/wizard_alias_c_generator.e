@@ -22,7 +22,6 @@ feature -- Access
 			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
 			type_definition: STRING
 			included_name: STRING
-			header: STRING
 		do
 			c_writer := Alias_c_writer
 			a_data_type_descriptor := alias_descriptor.type_descriptor

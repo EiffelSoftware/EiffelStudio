@@ -375,9 +375,11 @@ feature {NONE} -- Implementation
 		local
 			new_line_index: INTEGER 
 		do
-			new_line_index := pixmap_warning_dialog.text.last_index_of ('%N', pixmap_warning_dialog.text.count)
-			pixmap_warning_dialog.set_text (pixmap_warning_dialog.text.substring (1, new_line_index - 1) + "%N" +
-				new_text + pixmap_warning_dialog.text.substring (new_line_index, pixmap_warning_dialog.text.count))
+			if not pixmap_warning_dialog.is_destroyed then
+				new_line_index := pixmap_warning_dialog.text.last_index_of ('%N', pixmap_warning_dialog.text.count)
+				pixmap_warning_dialog.set_text (pixmap_warning_dialog.text.substring (1, new_line_index - 1) + "%N" +
+					new_text + pixmap_warning_dialog.text.substring (new_line_index, pixmap_warning_dialog.text.count))
+			end
 		end
 		
 

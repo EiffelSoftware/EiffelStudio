@@ -407,16 +407,25 @@ feature -- Comparison
 
 feature -- Event - command association
 	
-	add_button_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_button_press_command (mouse_button: INTEGER; 
+				  command: EV_COMMAND; 
+				  arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to 
+			-- be executed when button no 'mouse_button' 
+			-- is pressed
 		do
-			implementation.add_button_press_command (command, 
+			implementation.add_button_press_command (mouse_button,
+								 command, 
 								 arguments)
 		end
 	
 	
-	add_button_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_button_release_command (mouse_button: INTEGER;
+				    command: EV_COMMAND; 
+				    arguments: EV_ARGUMENTS) is
 		do
-			implementation.add_button_release_command (command, 
+			implementation.add_button_release_command (mouse_button,
+								   command, 
 								   arguments)
 		end
 			
@@ -453,7 +462,7 @@ feature -- Event - command association
 	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		do
 			implementation.add_leave_notify_command (command, 
-							 arguments)
+								 arguments)
 		end	
 
 

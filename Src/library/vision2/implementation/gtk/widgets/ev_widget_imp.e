@@ -216,21 +216,25 @@ feature -- Resizing
 
 feature -- Event - command association
 	
-	add_button_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_button_press_command (mouse_button: INTEGER; 
+				  command: EV_COMMAND; 
+				  arguments: EV_ARGUMENTS) is
 		local
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command ("button_press_event", command, arguments, ev_data)
+			add_command ("button_press_event", command, arguments, ev_data, mouse_button)
 		end
 	
 	
-	add_button_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_button_release_command (mouse_button: INTEGER; 
+				    command: EV_COMMAND; 
+				    arguments: EV_ARGUMENTS) is
 		local
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command ("button_release_event", command, arguments, ev_data)
+			add_command ("button_release_event", command, arguments, ev_data, mouse_button)
 		end
 			
 	add_motion_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -238,7 +242,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_MOTION_EVENT_DATA!ev_data.make
-			add_command ("motion_notify_event", command, arguments, ev_data)
+			add_command ("motion_notify_event", command, arguments, ev_data, 0)
 		end
 	
 	add_delete_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -246,7 +250,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
-			add_command ("delete_event", command, arguments, ev_data)
+			add_command ("delete_event", command, arguments, ev_data, 0)
 		end
 	
 	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -254,7 +258,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command ("key_press_event", command, arguments, ev_data)
+			add_command ("key_press_event", command, arguments, ev_data, 0)
 		end
 			
 	add_key_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -262,7 +266,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command ("key_press_event", command, arguments, ev_data)
+			add_command ("key_press_event", command, arguments, ev_data, 0)
 		end	
 	
 	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -270,7 +274,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
-			add_command ("enter_notify_event", command, arguments, ev_data)
+			add_command ("enter_notify_event", command, arguments, ev_data, 0)
 		end
 	
 	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -278,7 +282,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, craeta a correct object here XX
-			add_command ("leave_notify_event", command, arguments, ev_data)
+			add_command ("leave_notify_event", command, arguments, ev_data, 0)
 		end
 	
 
@@ -301,7 +305,8 @@ feature -- Event - command association
 feature {NONE} -- Implementation
 
 	add_command (event: STRING; command: EV_COMMAND; 
-		     arguments: EV_ARGUMENTS; ev_data: EV_EVENT_DATA) is
+		     arguments: EV_ARGUMENTS; ev_data: EV_EVENT_DATA;
+		     mouse_button: INTEGER) is
 			-- Add `command' at the end of the list of
 			-- actions to be executed when the 'event'
 			-- happens `arguments' will be passed to
@@ -311,6 +316,7 @@ feature {NONE} -- Implementation
 			-- command. 'ev_data' is an empty object 
 			-- which will be filled by gtk (in C library) 
 			-- when the event happens.
+		
 		require		
 			valid_event: event /= Void
 			valid_command: command /= Void
@@ -344,7 +350,8 @@ feature {NONE} -- Implementation
 						      $cmd,
 						      $arguments,
 						      $ev_d_imp,
-						      ev_d_imp.initialize_address)
+						      ev_d_imp.initialize_address,
+						      mouse_button)
 		end
         
 	

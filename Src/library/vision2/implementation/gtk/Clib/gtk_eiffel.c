@@ -9,6 +9,7 @@ external C library
 **************************************** */
 
 #include "gtk_eiffel.h"
+#include "gdk_eiffel.h"
 
 
 static void c_gtk_widget_show_children_recurse (GtkWidget *widget,
@@ -54,10 +55,17 @@ void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data)
 	(pcbd->set_event_data)(eif_access(pcbd->ev_data), ev); 
     }
 
-    /* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument'
+    /* In case of button event we have to check that the right button
+       was pressed. Otherwise, no callback is executed */
+    if (pcbd->mouse_button == 0 ||
+	pcbd->mouse_button == c_gdk_event_button (ev))
+    {
+	
+	/* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument'
 
-       (routine execute of EV_COMMAND object with EV_ARGUMENTS */
-    (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));
+	   (routine execute of EV_COMMAND object with EV_ARGUMENTS */
+	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));
+    }
 
 }
 
@@ -85,6 +93,8 @@ void c_gtk_signal_destroy_data (gpointer data)
    argument = object of type EV_ARGUMENTS which will be passed to object.execute when it is executed
    ev_data = object of type EV_EVENT_DATA. The fields of this object are filled in 'event_data_rtn' which is called in 'c_event_callback' according to the C(gdk) event struct
 
+   mouse_button = number of mouse button. Only applicable in button events.
+
    argument can be NULL which means that there is no arguments for excute (the corresponding
    ev_data can be NULL which means that event data is not needed for this event
 
@@ -99,7 +109,8 @@ gint c_gtk_signal_connect (GtkObject *widget,
 			   EIF_POINTER object,
 			   EIF_POINTER argument,
 			   EIF_POINTER ev_data,
-			   EIF_PROC event_data_rtn)
+			   EIF_PROC event_data_rtn,
+			   int mouse_button)
 {
     callback_data_t *pcbd;
     int name_len;
@@ -115,7 +126,8 @@ gint c_gtk_signal_connect (GtkObject *widget,
     pcbd->obj = henter (object);
     pcbd->argument = henter (argument);
     pcbd->ev_data = henter (ev_data);
-    pcbd->set_event_data = event_data_rtn;  
+    pcbd->set_event_data = event_data_rtn;
+    pcbd->mouse_button = mouse_button;  
     /*  printf ("connect rtn= %d object= %d pcbd= %d\n", pcbd->rtn, (pcbd->obj), pcbd); */
 
     /* allow the garbage collection of object and argument, when the signal is destroyed */ 

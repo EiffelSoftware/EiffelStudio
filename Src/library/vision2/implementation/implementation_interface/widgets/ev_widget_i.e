@@ -288,12 +288,12 @@ Result := True
 		
 feature -- Event - command association
 	
-	add_button_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_button_press_command (mouse_button: INTEGER; command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		deferred
 		end
 	
 	
-	add_button_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_button_release_command (mouse_button: INTEGER; command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		deferred
 		end
 			

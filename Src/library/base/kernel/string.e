@@ -47,7 +47,11 @@ feature {NONE} -- Initialization
 		require
 			non_negative_size: n >= 0
 		do
-			make_area (n)
+			if n = 0 then
+				area := empty_area
+			else
+				make_area (n + 1)
+			end
 		ensure
 			empty_string: count = 0;
 			area_allocated: capacity >= n
@@ -60,8 +64,8 @@ feature -- Initialization
 		require
 			non_negative_size: n >= 0
 		do
-			make_area (n);
 			count := 0
+			make (n)
 		ensure
 			empty_string: count = 0;
 			area_allocated: capacity >= n
@@ -80,7 +84,7 @@ feature -- Initialization
 			shared_implementation: shared_with (s)
 		end
 
-	make_from_external (c_string: POINTER) is
+	make_from_c (c_string: POINTER) is
 			-- Initialize from contents of `c_string',
 			-- a string created by some external C function
 		require
@@ -88,8 +92,8 @@ feature -- Initialization
 		local
 			length: INTEGER
 		do
-			length := str_len (c_string);
-			make_area (length)
+			length := str_len (c_string)
+			make_area (length + 1)
 			str_cpy ($area, c_string, length)
 			count := length
 		end
@@ -102,11 +106,11 @@ feature -- Initialization
 		local
 			length: INTEGER
 		do
-			length := str_len (c_string);
-			if length >= capacity then
-				make_area (length)
+			length := str_len (c_string)
+			if capacity < length then
+				make_area (length + 1)
 			end
-			str_cpy ($area, c_string, length);
+			str_cpy ($area, c_string, length)
 			count := length
 		end;
 
@@ -120,9 +124,9 @@ feature -- Initialization
 		local
 			length: INTEGER
 		do
-			length := end_pos - start_pos + 1
-			if length >= capacity then
-				make_area (length)
+			length := end_pos - start_pos + 1;
+			if capacity < length then
+				make_area (length + 1)
 			end
 			str_take (c_string, $area, start_pos, end_pos);
 			count := length
@@ -258,7 +262,7 @@ feature -- Measurement
 	capacity: INTEGER is
 			-- Allocated space
 		do
-			Result := area.count
+			Result := area.count - 1
 		end;
 
 	count: INTEGER;
@@ -815,10 +819,10 @@ feature -- Removal
 	wipe_out is
 			-- Remove all characters.
 		do
-			make_area(0);
-			count := 0;
+			area := empty_area
+			count := 0
 		ensure then
-			empty: count = 0;
+			empty: count = 0
 			empty_capacity: capacity = 0
 		end;
 
@@ -845,11 +849,16 @@ feature -- Resizing
 			-- Do not lose any previously entered character.
 		require
 			new_size_non_negative: newsize >= 0
+		local
+			area_count: INTEGER
 		do
-			if newsize >= count then
-				area := str_resize ($area, newsize);
-			else
-				area := str_resize ($area, count);
+			area_count := area.count
+			if newsize >= area_count then
+				if area_count = 1 then
+					make_area (newsize + 1)
+				else
+					area := str_resize ($area, newsize + 1);
+				end
 			end
 		end;
 
@@ -1000,10 +1009,7 @@ feature -- Conversion
 			-- A reference to a C form of current string.
 			-- Useful only for interfacing with C software.
 		do
-			if count = 0 or else item (count) /= '%U' then
-				extend ('%U');
-				count := count - 1;
-			end;
+			area.put ('%U', count)
 			Result := area
 		end;
 
@@ -1095,6 +1101,19 @@ feature {STRING, IO_MEDIUM} -- Implementation
 		ensure
 			new_count: count = number
 		end;
+
+feature {NONE} -- Empty string implementation
+
+	empty_area: SPECIAL [CHARACTER] is
+			-- Empty `area' used when calling `make (0)'.
+		local
+			old_area: like area
+		once
+			old_area := area
+			make_area (1)
+			Result := area
+			area := old_area
+		end
 
 feature {STRING} -- Implementation
 

@@ -45,14 +45,35 @@ feature -- Status report
 
 feature -- Operations
 
-	offset_pointer (i: INTEGER; s: INTEGER): POINTER is
-			-- Pointer to `i'-th item considering that
-			-- `Current' is a pointer to an array of items
- 			-- of size `s'
+	infix "+" (offset: INTEGER): like Current is
+			-- Pointer moved by an offset of `o' bytes.
 		do
-			Result := c_offset_pointer (item, i, s)
+			create Result
+			Result.set_item (c_offset_pointer (item, offset))
 		end
- 
+
+feature -- Memory copy
+
+	memory_copy (a_source: POINTER; a_size: INTEGER) is
+			-- Copy `a_size' bytes from `a_source' to `Current'.
+			-- `a_source' and `Current' should not overlap.
+		require
+			valid_size: a_size >= 0
+			valid_source: a_source /= default_pointer
+		do
+			item := c_memcpy (item, a_source, a_size)
+		end
+
+	memory_move (a_source: POINTER; a_size: INTEGER) is
+			-- Copy `a_size' bytes from `a_source' to `Current'.
+			-- `a_source' and `Current' can overlap.
+		require
+			valid_size: a_size >= 0
+			valid_source: a_source /= default_pointer
+		do
+			item := c_memmove (item, a_source, a_size)
+		end
+
 feature -- Output
 
 	out: STRING is
@@ -77,14 +98,28 @@ feature {NONE} -- Implementation
 			"conv_pi"
 		end;
 
-	c_offset_pointer (p: POINTER; i: INTEGER; s: INTEGER): POINTER is
-			-- Pointer to `i'-th item of `p' considering that
-			-- `Current' is a pointer to an array of items
- 			-- of size `s'
+	c_offset_pointer (p: POINTER; o: INTEGER): POINTER is
+			-- Pointer moved by an offset of `o' bytes from `p'.
 		external
 			"C [macro %"eif_macros.h%"]"
 		alias
-			"RTSOFN"
+			"RTPOF"
+		end
+
+	c_memcpy (destination, source: POINTER; count: INTEGER): POINTER is
+			-- C memcpy
+		external
+			"C (void *, const void *, size_t): EIF_POINTER | <string.h>"
+		alias
+			"memcpy"
+		end
+	
+	c_memmove (destination, source: POINTER; count: INTEGER): POINTER is
+			-- C memcpy
+		external
+			"C (void *, const void *, size_t): EIF_POINTER | <string.h>"
+		alias
+			"memmove"
 		end
 	
 end -- class POINTER_REF

@@ -274,7 +274,7 @@ feature -- Access
 			file_exists: exists
 		do
 			internal_file.refresh
-			Result := eiffel_file_date_time (internal_file.last_write_time.to_universal_time)
+			Result := eiffel_file_date_time (internal_file.last_write_time_utc)
 		end
 
 	access_date: INTEGER is
@@ -283,7 +283,7 @@ feature -- Access
 			file_exists: exists
 		do
 			internal_file.refresh
-			Result := eiffel_file_date_time (internal_file.last_access_time.to_universal_time)
+			Result := eiffel_file_date_time (internal_file.last_access_time_utc)
 		end
 
 	retrieved: ANY is
@@ -1204,7 +1204,7 @@ feature -- Element change
 			file_exists: exists
 		do
 			internal_file.refresh
-			Result := internal_file.last_write_time.to_file_time.to_integer
+			Result := eiffel_file_date_time (internal_file.last_write_time_utc)
 		end
 
 	touch is

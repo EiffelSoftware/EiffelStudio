@@ -7,8 +7,8 @@ indexing
 class
 	EV_COLOR_SELECTION_DIALOG
 
---inherit
---	EV_DIALOG
+inherit
+	EV_DIALOG
 
 end -- class EV_COLOR_SELECTION_DIALOG
 

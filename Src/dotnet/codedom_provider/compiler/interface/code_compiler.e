@@ -562,7 +562,6 @@ feature {NONE} -- Implementation
 					
 					l_properties.apply
 					load_result_in_memory := a_options.generate_in_memory
-					evidence := a_options.evidence
 					compiler := l_project.compiler
 					is_initialized := True
 				end
@@ -599,8 +598,6 @@ feature {NONE} -- Implementation
 				feature {OUTPUT_DISPATCHER}.add_handler (compiler, Current)
 				create last_compilation_results.make (temp_files)
 				compiler.compile (feature {EIF_COMPILATION_MODE}.eif_compilation_mode_finalize)
-				(create {SECURITY_PERMISSION}.make_from_flag (feature {SECURITY_PERMISSION_FLAG}.Control_evidence)).assert
-				last_compilation_results.set_evidence (evidence)
 				last_compilation_results.set_native_compiler_return_value (1)
 				if compiler.was_compilation_successful then
 					l_sep_char := (create {OPERATING_ENVIRONMENT}).Directory_separator
@@ -636,8 +633,7 @@ feature {NONE} -- Implementation
 								if load_result_in_memory then
 									create l_file_stream.make (system_path, feature {FILE_MODE}.Open, feature {FILE_ACCESS}.Read, feature {FILE_SHARE}.Read)
 									create l_array.make (l_file_stream.length.to_integer)
-									(create {SECURITY_PERMISSION}.make_from_flag (feature {SECURITY_PERMISSION_FLAG}.Control_evidence)).assert
-									last_compilation_results.set_compiled_assembly (feature {ASSEMBLY}.load (l_array, Void, evidence))
+									last_compilation_results.set_compiled_assembly (feature {ASSEMBLY}.load (l_array, Void))
 									l_file_stream.close
 								end
 							end
@@ -738,9 +734,6 @@ feature {NONE} -- Private access
 	
 	load_result_in_memory: BOOLEAN
 			-- Should compiled assembly be loaded in memory?
-
-	evidence: EVIDENCE
-			-- Evidence associated with compilation process
 
 end -- class CODE_COMPILER
 

@@ -108,7 +108,6 @@ feature -- Initialization
 						icor_debug_managed_callback_obj.initialize_callback
 						l_icor_debug.set_managed_handler (icor_debug_managed_callback_obj)
 						
-						
 						icor_debug_unmanaged_callback_obj := (create {ICOR_DEBUG_UNMANAGED_CALLBACK_FACTORY}).new_cordebug_unmanaged_callback
 						icor_debug_unmanaged_callback_obj.add_ref
 						icor_debug_unmanaged_callback_obj.initialize_callback
@@ -277,8 +276,11 @@ feature -- Debugging session Termination ...
 						l_pro_hdl := icor_debug.last_icor_debug_process_handle
 					end
 					l_success := cwin_terminate_process (l_pro_hdl, 0)
-					notify_exit_process_occurred
 				end
+					-- FIXME jfiat [2004/07/30] : check if this is not too violent ?
+					-- maybe we could find a smarter way to terminate debugging synchronisation
+				terminate_debugger_session
+				notify_exit_process_occurred
 			else
 				eif_debug_display ("[EIFDBG] could not find ICorDebugController object ...")
 				on_exit_process

@@ -306,16 +306,19 @@ rt_public EIF_BOOLEAN dbg_is_synchronizing () {
 rt_public void dbg_init_synchro () {
 	/* Initialize synchronisation */
 	DBG_INIT_ESTUDIO_THREAD_HANDLE;
-	
 #ifdef DBGTRACE_ENABLED
 	CLI_MUTEX_CREATE(trace_mutex, "");
 #endif
 	dbg_keep_synchro = 1;
+	InterlockedExchange (&dbg_state, 0);
 }
 rt_public void dbg_terminate_synchro () {
 	/* Terminate synchronisation */
+	DBGTRACE("[Synchro|eStudio] Terminate Synchro : start");					/*D*/
 	dbg_keep_synchro = 0;
+	InterlockedExchange (&dbg_state, 2); /* Release dbg in case dbg is waiting and stucked */
 	DBG_CLOSE_ESTUDIO_THREAD_HANDLE;
+	DBGTRACE("[Synchro|eStudio] Terminate Synchro: done");					/*D*/
 #ifdef DBGTRACE_ENABLED
 	CLI_MUTEX_DESTROY(trace_mutex, "");
 #endif
@@ -386,7 +389,7 @@ rt_public void dbg_stop_timer () {
 ///////////////////////////////////////////////////////////
 */
 rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
-	DBGTRACE("[eStudio] timer callback");
+	DBGTRACE("[eStudio] timer callback");									/*D*/
 	if (InterlockedExchangeAdd (&dbg_state, 0) != 1) {
 //<not 1>---------------------------------------------------------//
 #ifdef DBGTRACE_ENABLED														/*D*/
@@ -554,21 +557,26 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 #ifdef DBGTRACE_ENABLED															/*D*/
 	once_enter_cb = 0;															/*D*/
 #endif																			/*D*/
-	while (InterlockedExchangeAdd (&dbg_state, 0) == 1) {
+	if (dbg_keep_synchro == 0) { /* We are terminating debugging .. */
+		DBGTRACE("3.3 - [Dbg] now s=2, we by pass ec's turn, because dbg_keep_synchro == 0");	/*D*/
+		InterlockedExchange (&dbg_state, 2);
+	} else {
+		while (InterlockedExchangeAdd (&dbg_state, 0) == 1) {
 //<1>---< wait for ec to finish >--------------------------------//
-		if (callback_id == CB_CREATE_PROCESS) {
-				/* Special case here to let EiffelStudio debugger to have time
-				 * to refresh itself before starting debugging. */
-			Sleep (100);
+			if (callback_id == CB_CREATE_PROCESS) {
+					/* Special case here to let EiffelStudio debugger to have time
+					 * to refresh itself before starting debugging. */
+				Sleep (100);
+			}
+			// Dbg wait for the Ec to call back
+			// no sleep for a spinlock (active waiting)
+#ifdef DBGTRACE_ENABLED																/*D*/
+			if (once_enter_cb == 0) {												/*D*/
+				DBGTRACE("3.5 - [Dbg] wait at entrance door");						/*D*/
+				once_enter_cb = (once_enter_cb + 1) % 500;							/*D*/
+			}																		/*D*/
+#endif																				/*D*/
 		}
-		// Dbg wait for the Ec to call back
-		// no sleep for a spinlock (active waiting)
-#ifdef DBGTRACE_ENABLED															/*D*/
-		if (once_enter_cb == 0) {												/*D*/
-			DBGTRACE("3.5 - [Dbg] wait at entrance door");						/*D*/
-			once_enter_cb = (once_enter_cb + 1) % 500;							/*D*/
-		}																		/*D*/
-#endif																			/*D*/
 	}
 //<2>---< ec waiting >-------------------------------------------//
 	DBGTRACE2("5 - [Dbg] start exec callback :", Callback_name(callback_id));	/*D*/

@@ -138,4 +138,48 @@ feature {NONE}
 	Bc_reserve:			CHARACTER is '%/130/';
 	Bc_pop:				CHARACTER is '%/131/';
 
+		-- Instructions for Concurrent Eiffel
+
+	Bc_sep_set:			CHARACTER is '%/150/'; 
+		-- the precondition clause contains separate feature call.
+	Bc_sep_unset:		CHARACTER is '%/151/'; 
+		-- clear the variable indicating if separate feature call has been met
+	Bc_sep_reserve:		CHARACTER is '%/152/'; 
+		-- reserve separate parameters of a feature.
+	Bc_sep_free:		CHARACTER is '%/153/'; 
+		-- free separate parameters of a feature.
+	Bc_sep_to_sep:		CHARACTER is '%/154/'; 
+		-- convert a local reference object into separate object.
+	Bc_sep_raise_prec:	CHARACTER is '%/155/'; 
+		-- process the failure of precondition checking with separate feature call(s)
+	Bc_sep_create:			CHARACTER is '%/156/';
+		-- create a separate object.
+	Bc_sep_create_end: 		CHARACTER is '%/157/';
+		-- end of creating a separate object.
+
+	Bc_sep_attribute_inv:	CHARACTER is '%/158/'; 
+		-- a separate attribute call which is not precompiled.
+	Bc_sep_extern_inv:		CHARACTER is '%/159/';
+		-- a separate external feature call which is not precompiled.
+	Bc_sep_feature_inv:		CHARACTER is '%/160/'; 
+		-- a separate feature call which is not precompiled.
+
+	Bc_sep_pattribute_inv:	CHARACTER is '%/161/'; 
+		-- a separate attribute call which is precompiled.
+	Bc_sep_pextern_inv:		CHARACTER is '%/162/';
+		-- a separate external feature call which is  precompiled.
+	Bc_sep_pfeature_inv:	CHARACTER is '%/163/'; 
+		-- a separate feature call which is precompiled.
+
+		-- The following 4 instructions are only used for creating separate 
+		-- object, and actually they can be got rid of if necessary.
+	Bc_sep_extern:			CHARACTER is '%/164/';
+		-- a separate external feature call which is not precompiled.
+	Bc_sep_feature:			CHARACTER is '%/165/'; 
+		-- a separate feature call which is not precompiled.
+	Bc_sep_pextern:			CHARACTER is '%/166/';
+		-- a separate external feature call which is precompiled.
+	Bc_sep_pfeature:		CHARACTER is '%/167/'; 
+		-- a separate feature call which is precompiled.
+
 end

@@ -624,6 +624,8 @@ feature {NONE} -- Implementation
 			else
 				object.disable_client_generation
 			end
+			system_status.enable_project_modified
+			command_handler.update
 		end
 
 	show_event_dialog is

@@ -227,7 +227,7 @@ feature {NONE} -- Generation
 
 					type_id_array.put (a_type.type_id, a_type.id.id)
 
-					gen_file.putstring ("static char *(*");
+					gen_file.putstring ("char *(*");
 					gen_file.putstring (dle_prefix);
 					gen_file.putstring ("eif_address_t")
 					gen_file.putint (a_type.id.id)

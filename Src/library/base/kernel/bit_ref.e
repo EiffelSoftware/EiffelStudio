@@ -100,7 +100,7 @@ feature -- Basic operations
 			Result := b_implies ($Current, $other)
 		end
 
-	infix "or" (other: BIT_REF): BIT_REF is
+	infix "or", infix "|" (other: BIT_REF): BIT_REF is
 			-- Bit-by-bit boolean disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -202,6 +202,9 @@ feature {NONE} -- Implementation
 			"b_eout"
 		end
 
+invariant
+	valid_count: count > 0
+	
 indexing
 
 	library: "[

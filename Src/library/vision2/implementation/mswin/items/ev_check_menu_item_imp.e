@@ -14,24 +14,25 @@ inherit
 
 	EV_MENU_ITEM_IMP
 		redefine
-			on_activate
+			on_activate,
+			is_selected,
+			set_selected
 		end
 	
 creation
-	make,
-	make_with_text
+	make
 
 feature -- Status report
 	
-	state: BOOLEAN is
-			-- Is current menu-item checked ?
+	is_selected: BOOLEAN is
+			-- Is current menu-item selected?
 		do
 			Result := parent_menu.item_checked (id)	
 		end
 	
 feature -- Status setting
 
-	set_state (flag: BOOLEAN) is
+	set_selected (flag: BOOLEAN) is
 			-- Make `flag' the new state of the menu-item.
 		do
 			if flag then
@@ -45,23 +46,23 @@ feature -- Status setting
 			-- Change the state of the menu-item to
 			-- opposite
 		do
-			set_state (not state)
+			set_selected (not is_selected)
 		end
 
 feature -- Event : command association
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unactivated.
+			-- when the item is unselected.
 		do
 			add_command (Cmd_item_deactivate, cmd, arg)		
 		end
 
 feature -- Event -- removing command association
 
-	remove_deactivate_commands is
+	remove_unselect_commands is
 			-- Empty the list of commands to be executed when
-			-- the item is deactivated.
+			-- the item is unselected.
 		do
 			remove_command (Cmd_item_deactivate)		
 		end

@@ -19,16 +19,6 @@ inherit
 
 	EV_PIXMAPABLE_IMP
 
-feature {NONE} -- Initialization
-
-	make_with_text (txt: STRING) is
-			-- Create an item with `par' as parent and `txt'
-			-- as text.
-		do
-			make
-			set_text (txt)
-		end
-
 feature -- Access
 
 	text: STRING

@@ -14,46 +14,31 @@ inherit
 
 	EV_CHECK_MENU_ITEM_IMP
 		redefine
+			set_selected,
 			on_activate,
 			destroy
 		end
 
+	EV_RADIO_IMP [EV_RADIO_MENU_ITEM]
+
 creation
-	make,
-	make_with_text
+	make
 
-feature -- Status report
+feature -- Status setting
 
-	is_peer (peer: EV_RADIO_MENU_ITEM): BOOLEAN is
-			-- Is this item in same group as peer?
-		local
-			peer_imp: EV_RADIO_MENU_ITEM_IMP
+	destroy is
+			-- Destroy the current item.
 		do
-			peer_imp ?= peer.implementation
-			check
-				valid_peer: peer_imp /= Void
-			end
-			Result := group.has (peer_imp)
+			group.remove_item (Current)
+			parent_imp.remove_item (Current)
 		end
 
-feature -- Status Setting
-
-	set_peer (peer: EV_RADIO_MENU_ITEM) is
-			-- Put in same group as peer.
-		local
-			a_group: EV_MENU_GROUP_IMP
-			peer_imp: EV_RADIO_MENU_ITEM_IMP
+	set_selected (flag: BOOLEAN) is
+			-- Make `flag' the new state of the menu-item.
 		do
-			peer_imp ?= peer.implementation
-			check
-				valid_peer: peer_imp /= Void
-			end
-			if peer_imp.group /= Void then
-				set_group (peer_imp.group)
-			else
-				!! a_group.make
-				set_group (a_group)
-				peer_imp.set_group (a_group)
+			{EV_CHECK_MENU_ITEM_IMP} Precursor (flag)
+			if group /= Void then
+				group.set_selection_at_no_event (Current)
 			end
 		end
 
@@ -63,32 +48,16 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 			-- Is called by the menu when the item is activate.
 		do
 			if group /= Void then
-				group.uncheck_other_items (Current)
+				group.set_selection_at (Current)
 			end
-			set_state (True)
+			set_selected (True)
 			execute_command (Cmd_item_activate, Void)
 		end
 
-feature {EV_RADIO_MENU_ITEM_IMP} -- Implementation
-
-	group: EV_MENU_GROUP_IMP
-			-- Current group of the item
-
-	set_group (a_group: EV_MENU_GROUP_IMP) is
-			-- Make `a_group' the current group and add the 
-			-- item to it.
+	on_unselect is
+			-- Is called when the item is unselected.
 		do
-			a_group.add_item (Current)
-			group := a_group
-		end
-
-feature {NONE} -- Implementation
-
-	destroy is
-			-- Destroy the current item.
-		do
-			group.remove_item (Current)
-			parent_imp.remove_item (Current)
+			execute_command (Cmd_item_deactivate, Void)
 		end
 
 end -- class EV_RADIO_MENU_ITEM_IMP

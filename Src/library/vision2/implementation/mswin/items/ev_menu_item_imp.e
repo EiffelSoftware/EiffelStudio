@@ -12,13 +12,6 @@ class
 inherit
 	EV_MENU_ITEM_I
 
-	EV_MENU_ITEM_HOLDER_IMP
-		rename
-			item_command_count as command_count
-		redefine
-			add_item
-		end
-
 	EV_SIMPLE_ITEM_IMP
 		undefine
 			pixmap_size_ok
@@ -26,9 +19,17 @@ inherit
 			set_text
 		end
 
+	EV_MENU_ITEM_HOLDER_IMP
+		rename
+			item_command_count as command_count
+		redefine
+			add_item
+		end
+
+	EV_ID_IMP
+
 creation
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
@@ -36,12 +37,8 @@ feature {NONE} -- Initialization
 			-- Create the widget with `par' as parent.
 		do
 			set_text ("")
+			id := new_id
 		end
-
-feature -- Access
-
-	id: INTEGER
-		-- Identifier of the item
 
 feature -- Status report
 
@@ -81,7 +78,7 @@ feature -- Status setting
 			end
 		end
 
-	set_selected is
+	set_selected (flag: BOOLEAN) is
    			-- Set current item as the selected one.
 			-- We use it only when the grand parent is an option button.
    		do
@@ -114,12 +111,6 @@ feature -- Element change
 			end
 		end
 
-	set_id (new_id: INTEGER) is
-			-- Set `id' to `new_id'
-		do
-			id := new_id
-		end
-
 	add_item (an_item: EV_MENU_ITEM_IMP) is
 			-- Add `an_item' into container.
 		do
@@ -139,35 +130,41 @@ feature -- Assertion
 			-- Is true if the grand parent is an option button.
 			-- False otherwise.
 		do
-			check
-				not_yet_implemented: False
-			end
 		end
 
 	is_selected: BOOLEAN is
 			-- True if the current item is selected.
 			-- False otherwise.
 			-- We use it only when the grand parent is an option button.
+		local
+			menu: EV_MENU_IMP
+			option: EV_OPTION_BUTTON
+			mitem: EV_MENU_ITEM
 		do
-			check
-				not_yet_implemented: False
+			menu ?= parent_imp
+			if menu /= Void then
+				option ?= menu.parent_imp
+				if option /= Void then
+					mitem ?= interface
+					Result := mitem.is_equal (option.selected_item)
+				end
 			end
 		end
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is activated.
+			-- when the item is selected.
 		do
 			add_command (Cmd_item_activate, cmd, arg)			
 		end
 
 feature -- Event -- removing command association
 
-	remove_activate_commands is
+	remove_select_commands is
 			-- Empty the list of commands to be executed when
-			-- the item is activated.
+			-- the item is unselected.
 		do
 			remove_command (Cmd_item_activate)			
 		end

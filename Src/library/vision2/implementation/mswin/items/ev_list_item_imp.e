@@ -23,7 +23,6 @@ inherit
 
 creation
 	make,
-	make_with_text,
 	make_with_index,
 	make_with_all
 
@@ -155,16 +154,16 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is activated.
+			-- when the item is selected.
 		do
 			add_command (Cmd_item_activate, cmd, arg)			
 		end	
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unactivated.
+			-- when the item is unselected.
 		do
 			add_command (Cmd_item_deactivate, cmd, arg)		
 		end
@@ -178,16 +177,16 @@ feature -- Event : command association
 
 feature -- Event -- removing command association
 
-	remove_activate_commands is
+	remove_select_commands is
 			-- Empty the list of commands to be executed when
-			-- the item is activated.
+			-- the item is selected.
 		do
 			remove_command (Cmd_item_activate)			
 		end	
 
-	remove_deactivate_commands is
+	remove_unselect_commands is
 			-- Empty the list of commands to be executed when
-			-- the item is deactivated.
+			-- the item is unselected.
 		do
 			remove_command (Cmd_item_deactivate)		
 		end
@@ -197,7 +196,7 @@ feature -- Event -- removing command association
 			-- the item is double-clicked.
 		do
 			remove_command (Cmd_item_dblclk)
-		end	
+		end
 
 feature {EV_LIST_ITEM_HOLDER_IMP} -- Implementation for drawing
 

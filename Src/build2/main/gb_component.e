@@ -10,16 +10,34 @@ class
 inherit
 	
 	GB_XML_OBJECT_BUILDER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_ID
+		export
+			{NONE} all
+		end
 	
 	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_XML_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_NAMING_UTILITIES
+		export
+			{NONE} all
+		end
 
 create
 	
@@ -53,7 +71,8 @@ feature -- Access
 			full_information1: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			current_element: XM_ELEMENT
 		do
-			Result := (new_object ((create {GB_SHARED_XML_HANDLER}).xml_handler.xml_element_representing_named_component (name), True))
+			current_element := (create {GB_SHARED_XML_HANDLER}).xml_handler.xml_element_representing_named_component (name)
+			Result := (new_object (current_element, True))
 				-- We must now update all ids in the new object, as they may not
 				-- be the values that were originally stored, as this would duplicate ids.
 				-- All these ids must stay relative, or the radio button grouping would not work correctly.
@@ -148,14 +167,12 @@ feature -- Access
 				an_object.layout_item.set_text (name_and_type_from_object (an_object))
 			end
 		end
-		
 
 	root_element_type: STRING is
 			-- `Result' is type of root element.
 		do
 			Result := ((create {GB_SHARED_XML_HANDLER}).xml_handler.component_root_element_type (name))
 		end
-		
 
 feature -- Status Setting
 

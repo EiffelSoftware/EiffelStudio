@@ -104,7 +104,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value of `Current'
 		do
-			Result := hashcode ($area)
+			Result := hashcode ($area, count)
 		end;
 
 	out: like Current is
@@ -768,7 +768,7 @@ feature {STRING} -- Externals
 			"C"
 		end;
 
-	hashcode (c_string: like area): INTEGER is
+	hashcode (c_string: like area; len: INTEGER): INTEGER is
 			-- Hash code value of `c_string'
 		external
 			"C"

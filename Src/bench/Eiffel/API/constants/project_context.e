@@ -63,22 +63,20 @@ feature {NONE} -- Eiffel Project Directories
 		end
 
 	Workbench_generation_path: DIRECTORY_NAME is
+			-- Valid path for compilation
 		once
-			!! Result.make_from_string (Project_directory_name);
-			Result.extend_from_array (<<Eiffelgen, W_code>>);
+			Result := temp_workbench_generation_path
 		end
-
+	
 	Final_generation_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Project_directory_name);
-			Result.extend_from_array (<<Eiffelgen, F_code>>);
+			Result := temp_final_generation_path
 		end
 
 	Compilation_path: DIRECTORY_NAME is
 			-- Path to the compilation directory
 		once
-			!! Result.make_from_string (Project_directory_name);
-			Result.extend_from_array (<<Eiffelgen, Comp>>);
+			Result := temp_compilation_path
 		end
 
 	Precompilation_file_name: FILE_NAME is
@@ -94,6 +92,27 @@ feature {NONE} -- Eiffel Project Directories
 			-- Full name of the precompilation driver used
 		once
 			!! Result.make
+		end
+
+feature -- Temporary access prior to the creation or the opening of a file.
+
+	temp_workbench_generation_path: DIRECTORY_NAME is
+			-- Generate a temporary generation path
+		do
+			!! Result.make_from_string (Project_directory_name);
+			Result.extend_from_array (<<Eiffelgen, W_code>>);
+		end
+
+	temp_final_generation_path: DIRECTORY_NAME is
+		do
+			!! Result.make_from_string (Project_directory_name);
+			Result.extend_from_array (<<Eiffelgen, F_code>>);
+		end
+
+	temp_compilation_path: DIRECTORY_NAME is
+		do
+			!! Result.make_from_string (Project_directory_name);
+			Result.extend_from_array (<<Eiffelgen, Comp>>);
 		end
 
 feature {NONE} -- Directory creation

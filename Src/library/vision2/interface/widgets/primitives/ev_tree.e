@@ -16,7 +16,7 @@ inherit
 			implementation
 		end
 
-	EV_TREE_ITEM_CONTAINER
+	EV_TREE_ITEM_HOLDER
 		redefine
 			implementation
 		end

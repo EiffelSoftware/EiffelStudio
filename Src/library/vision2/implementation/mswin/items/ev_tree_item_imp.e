@@ -12,7 +12,7 @@ inherit
 
 	EV_ITEM_IMP
 
-	EV_TREE_ITEM_CONTAINER_IMP
+	EV_TREE_ITEM_HOLDER_IMP
 		rename
 			item_command_count as command_count
 		end
@@ -51,10 +51,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent_imp: EV_TREE_ITEM_CONTAINER_IMP
+	parent_imp: EV_TREE_ITEM_HOLDER_IMP
 			-- Tree that contains the item
 
-	parent: EV_TREE_ITEM_CONTAINER is
+	parent: EV_TREE_ITEM_HOLDER is
 			-- Parent of the current item.
 		do
 			if parent_imp /= Void then
@@ -111,7 +111,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (par: EV_TREE_ITEM_CONTAINER) is
+	set_parent (par: EV_TREE_ITEM_HOLDER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		do

@@ -10,7 +10,7 @@ class
 	EV_OPTION_BUTTON
 
 inherit
-	EV_MENU_CONTAINER
+	EV_MENU_HOLDER
 		redefine
 			implementation
 		end

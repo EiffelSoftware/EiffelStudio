@@ -10,7 +10,7 @@ deferred class
 	EV_MENU_I
 	
 inherit
-	EV_MENU_ITEM_CONTAINER_I
+	EV_MENU_ITEM_HOLDER_I
 
 feature {NONE} -- Initialization
 
@@ -45,7 +45,7 @@ feature -- Element change
 			interface := an_interface
 		end
 
-	set_parent (par: EV_MENU_CONTAINER) is
+	set_parent (par: EV_MENU_HOLDER) is
 			-- Make `par' the new parent of the item.
 		require
 			exists: not destroyed

@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_MENU_CONTAINER
+	EV_MENU_HOLDER
 
 inherit
 	EV_ANY
@@ -17,9 +17,9 @@ inherit
 
 feature -- Implementation
 
-	implementation: EV_MENU_CONTAINER_I
+	implementation: EV_MENU_HOLDER_I
 
-end -- class EV_MENU_CONTAINER
+end -- class EV_MENU_HOLDER
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

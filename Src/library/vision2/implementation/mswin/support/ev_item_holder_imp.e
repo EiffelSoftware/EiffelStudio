@@ -2,13 +2,13 @@ indexing
 	description: "EiffelVision item container. This class%
 			% has been created to centralise the%
 			% implementation of several features for%
-			% EV_LIST_IMP and EV_MENU_ITEM_CONTAINER"
+			% EV_LIST_IMP and EV_MENU_ITEM_HOLDER"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	EV_ITEM_CONTAINER_IMP
+	EV_ITEM_HOLDER_IMP
 
 inherit
 	EV_ANY_I
@@ -19,12 +19,6 @@ inherit
 		end
 
 feature -- Access
-
---	ev_children: LINKED_LIST [EV_ITEM_IMP] is
---			-- List of all the children of the container
---			-- In most case, the index of the child is its id.
---		deferred
---		end
 
 	interface: EV_ANY is
 			-- Interface of the current implementation
@@ -57,7 +51,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		do
 		end
 
-end -- class EV_ITEM_CONTAINER_IMP
+end -- class EV_ITEM_HOLDER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -1,7 +1,7 @@
 indexing	
 	description: 
 		"EiffelVision radio menu item. Item that must be put in%
-		% an EV_MENU_ITEM_CONTAINER. It has the same appearance%
+		% an EV_MENU_ITEM_HOLDER. It has the same appearance%
 		% than the check menu-item, yet, when a radio menu-item%
 		% is checked, all the other radio menu-item of the%
 		% container are unchecked."
@@ -28,7 +28,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_MENU_ITEM_CONTAINER) is
+	make (par: EV_MENU_ITEM_HOLDER) is
 			-- Create the widget with `par' as parent.
 		do
 			!EV_RADIO_MENU_ITEM_IMP! implementation.make
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
+	make_with_text (par: EV_MENU_ITEM_HOLDER; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
---	make_with_pixmap (par: EV_MENU_ITEM_CONTAINER; pix: EV_PIXMAP) is
+--	make_with_pixmap (par: EV_MENU_ITEM_HOLDER; pix: EV_PIXMAP) is
 --			-- Create an item with `par' as parent and `pix'
 --			-- as pixmap.
 --		do
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 --			set_parent (par)
 --		end
 
---	make_with_all (par: EV_MENU_ITEM_CONTAINER; txt: STRING; pix: EV_PIXMAP) is
+--	make_with_all (par: EV_MENU_ITEM_HOLDER; txt: STRING; pix: EV_PIXMAP) is
 --			-- Create an item with `par' as parent, `txt' as text
 --			-- and `pix' as pixmap.
 --		do
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 --			set_parent (par)
 --		end
 
-	make_peer_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING; peer: EV_RADIO_MENU_ITEM) is
+	make_peer_with_text (par: EV_MENU_ITEM_HOLDER; txt: STRING; peer: EV_RADIO_MENU_ITEM) is
 			-- Create a radio menu item and put it in
 			-- the same group as peer
 		do

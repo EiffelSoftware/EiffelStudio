@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent_imp: EV_LIST_ITEM_CONTAINER_IMP
+	parent_imp: EV_LIST_ITEM_HOLDER_IMP
 			-- Tree that contains the item
 
 	parent: EV_LIST is
@@ -154,7 +154,7 @@ feature -- Event -- removing command association
 			remove_command (Cmd_item_dblclk)
 		end	
 
-feature {EV_LIST_ITEM_CONTAINER_IMP} -- Implementation for drawing
+feature {EV_LIST_ITEM_HOLDER_IMP} -- Implementation for drawing
 
 	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
 			-- Draw the current item according to the given

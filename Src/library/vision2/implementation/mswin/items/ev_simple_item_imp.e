@@ -1,7 +1,7 @@
 indexing	
 	description: "EiffelVision item. Mswindows implementation"
 	note: "It is not necessary to inherit from%
-		% EV_TEXT_CONTAINER_IMP because all the features%
+		% EV_TEXTABLE_IMP because all the features%
 		% use `wel_window', but such a big object isn't%
 		% necessary here."
 	status: "See notice at end of class"
@@ -19,7 +19,7 @@ inherit
 
 	EV_EVENT_HANDLER_IMP
 		export
-			{EV_ITEM_CONTAINER_IMP} execute_command
+			{EV_ITEM_HOLDER_IMP} execute_command
 		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
@@ -101,7 +101,7 @@ feature -- Event -- removing command association
 
 feature -- Implementation
 
-	parent_imp: EV_ITEM_CONTAINER_IMP is
+	parent_imp: EV_ITEM_HOLDER_IMP is
 			-- The current container of the item
 		deferred
 		end

@@ -12,7 +12,7 @@ class
 inherit
 	EV_MENU_ITEM_I
 
-	EV_MENU_ITEM_CONTAINER_IMP
+	EV_MENU_ITEM_HOLDER_IMP
 		rename
 			item_command_count as command_count
 		redefine
@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent_imp: EV_MENU_ITEM_CONTAINER_IMP
+	parent_imp: EV_MENU_ITEM_HOLDER_IMP
 			-- Container of the current item
 
-	parent: EV_MENU_ITEM_CONTAINER is
+	parent: EV_MENU_ITEM_HOLDER is
 			-- Parent of the current item.
 		do
 			if parent_imp /= Void then
@@ -74,7 +74,7 @@ feature -- Status setting
 			-- Destroy the current item.
 		do
 			if parent_imp /= Void then
-				parent_imp.remove_item (id)
+				parent_imp.remove_item (Current)
 				parent_imp := Void
 			end
 			interface := Void
@@ -93,12 +93,12 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (par: EV_MENU_ITEM_CONTAINER) is
+	set_parent (par: EV_MENU_ITEM_HOLDER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		do
 			if parent_imp /= Void then
-				parent_imp.remove_item (id)
+				parent_imp.remove_item (Current)
 				parent_imp := Void
 			end
 			if par /= Void then
@@ -128,10 +128,10 @@ feature -- Element change
 				parent_menu.delete_item (id)
 				parent_imp.insert_item (submenu, position, text)
 			end
-			{EV_MENU_ITEM_CONTAINER_IMP} Precursor (an_item)
+			{EV_MENU_ITEM_HOLDER_IMP} Precursor (an_item)
 		end
 
-feature {EV_MENU_ITEM_CONTAINER_IMP} -- Access
+feature {EV_MENU_ITEM_HOLDER_IMP} -- Access
 	
 	parent_menu: WEL_MENU is
 			-- Wel menu that contains the current item.

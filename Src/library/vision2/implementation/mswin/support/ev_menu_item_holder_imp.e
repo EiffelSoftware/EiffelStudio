@@ -6,12 +6,12 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_MENU_ITEM_CONTAINER_IMP
+	EV_MENU_ITEM_HOLDER_IMP
 
 inherit
-	EV_MENU_ITEM_CONTAINER_I
+	EV_MENU_ITEM_HOLDER_I
 
-	EV_ITEM_CONTAINER_IMP
+	EV_ITEM_HOLDER_IMP
 
 feature -- Access
 
@@ -49,18 +49,18 @@ feature -- Element change
 			item_imp.set_position (submenu.count - 1)
 		end
 
+	remove_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Remove `item_imp' from the menu,
+		do
+			submenu.delete_item (item_imp.id)
+			ev_children.remove (item_imp.id)
+		end
+
 	insert_item (wel_menu: WEL_MENU; pos: INTEGER; label: STRING) is
 			-- Insert a new menu-item which is a menu into
 			-- container.
 		do
 			submenu.insert_popup (wel_menu, pos, label)
-		end
-
-	remove_item (an_id: INTEGER) is
-			-- Remove the item with `id' as identification
-		do
-			submenu.delete_item (an_id)
-			ev_children.remove (an_id)
 		end
 
 feature -- Event association
@@ -70,7 +70,7 @@ feature -- Event association
 		deferred
 		end
 
-end -- class EV_MENU_ITEM_CONTAINER_IMP
+end -- class EV_MENU_ITEM_HOLDER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_MENU_CONTAINER_IMP
+	EV_MENU_HOLDER_IMP
 
 inherit
-	EV_MENU_CONTAINER_I
+	EV_MENU_HOLDER_I
 
 feature -- Event association
 
@@ -42,7 +42,7 @@ feature {EV_MENU_IMP} -- Implementation
 	ev_children: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
 			-- List of all the children
 
-end -- class EV_MENU_CONTAINER_IMP
+end -- class EV_MENU_HOLDER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

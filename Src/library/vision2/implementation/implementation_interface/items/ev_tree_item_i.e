@@ -10,11 +10,11 @@ deferred class
 inherit
 	EV_ITEM_I
 
-	EV_TREE_ITEM_CONTAINER_I
+	EV_TREE_ITEM_HOLDER_I
 
 feature -- Access
 
-	parent: EV_TREE_ITEM_CONTAINER is
+	parent: EV_TREE_ITEM_HOLDER is
 			-- Parent of the current item.
 		require
 			exists: not destroyed
@@ -39,7 +39,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_parent (par: EV_TREE_ITEM_CONTAINER) is
+	set_parent (par: EV_TREE_ITEM_HOLDER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		require

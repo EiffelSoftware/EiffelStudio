@@ -6,10 +6,10 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_LIST_ITEM_CONTAINER_IMP
+	EV_LIST_ITEM_HOLDER_IMP
 
 inherit
-	EV_ITEM_CONTAINER_IMP
+	EV_ITEM_HOLDER_IMP
 		redefine
 			on_draw
 		end
@@ -119,7 +119,7 @@ feature {EV_LIST_ITEM_IMP} -- Deferred features
 		deferred
 		end
 
-end -- class EV_LIST_ITEM_CONTAINER_IMP
+end -- class EV_LIST_ITEM_HOLDER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision : library of reusable components for ISE Eiffel.

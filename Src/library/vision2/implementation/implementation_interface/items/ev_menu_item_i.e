@@ -16,11 +16,11 @@ inherit
 			pixmap_size_ok
 		end
 
-	EV_MENU_ITEM_CONTAINER_I
+	EV_MENU_ITEM_HOLDER_I
 
 feature -- Access
 
-	parent: EV_MENU_ITEM_CONTAINER is
+	parent: EV_MENU_ITEM_HOLDER is
 			-- Parent of the current item.
 		require
 			exists: not destroyed
@@ -46,7 +46,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (par: EV_MENU_ITEM_CONTAINER) is
+	set_parent (par: EV_MENU_ITEM_HOLDER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		require

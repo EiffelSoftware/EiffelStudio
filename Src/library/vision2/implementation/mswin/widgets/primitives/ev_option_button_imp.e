@@ -10,7 +10,7 @@ class
 inherit
 	EV_OPTION_BUTTON_I
 
-	EV_MENU_CONTAINER_IMP
+	EV_MENU_HOLDER_IMP
 		undefine
 			add_menu,
 			remove_menu
@@ -131,14 +131,14 @@ feature {NONE} -- Implementation
 	add_menu (menu_imp: EV_MENU_IMP) is
 			-- Add `a_menu' into container.
 		do
-			{EV_MENU_CONTAINER_IMP} Precursor (menu_imp)
+			{EV_MENU_HOLDER_IMP} Precursor (menu_imp)
 			set_text (menu_imp.text)
 		end 
 
 	remove_menu (menu_imp: EV_MENU_IMP) is
 			-- Remove the menu from the option button.
 		do
-			{EV_MENU_CONTAINER_IMP} Precursor (menu_imp)
+			{EV_MENU_HOLDER_IMP} Precursor (menu_imp)
 			set_text ("")
 		end
 

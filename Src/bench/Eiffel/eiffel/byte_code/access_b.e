@@ -526,15 +526,14 @@ feature -- IL code generation
 					-- We do not load the address if it is an optimized call of the compiler.
 				Result := not call_access.is_il_feature_special (cl_type)
 				if Result then
-					if call_access /= Void and then cl_type.is_basic then
-						if call_access.written_in > 0 then
-								-- Find location of feature to find out if the address needs
-								-- to be loaded. True when written in the same class, False
-								-- otherwise.
-							Result := cl_type.same_as (
-								il_generator.implemented_type (call_access.written_in, cl_type))
-						end
-					else
+					if call_access.written_in > 0 then
+							-- Find location of feature to find out if the address needs
+							-- to be loaded. True when written in the same class, False
+							-- otherwise.
+						Result := cl_type.same_as (
+							il_generator.implemented_type (call_access.written_in, cl_type))
+					end
+					if Result then
 						l_ext ?= call_access
 						if l_ext /= Void then
 							l_il_ext ?= l_ext.extension

@@ -644,7 +644,7 @@ feature {LACE_I} -- Initialization
 	init_system is
 			-- Initializes the system.
 		do
-			!! system.make
+			!! system
 		end;
 
 feature {APPLICATION_EXECUTION}

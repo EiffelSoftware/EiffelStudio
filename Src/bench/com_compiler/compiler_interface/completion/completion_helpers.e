@@ -53,10 +53,12 @@ feature -- Basic operations
 			l_file_name, l_docs: STRING
 			l_dictionary: IDM_DICTIONARY_INTERFACE
 			l_external_class: EXTERNAL_CLASS_I
+			l_extracted_description, l_first_line: STRING
+			l_index: INTEGER
 		do
-			extracted_description := ""
+			create l_extracted_description.make (256)
 			if a_feature_i.is_il_external then
-				extracted_description := external_signature (a_feature_i, a_feature_name)
+				l_extracted_description.append (external_signature (a_feature_i, a_feature_name))
 				l_external_class ?= a_feature_i.written_class.lace_class
 				check
 					non_void_external_class: l_external_class /= Void
@@ -68,20 +70,29 @@ feature -- Basic operations
 						l_dictionary.set_type (l_external_class.external_name)
 						l_docs := l_dictionary.feature_documentation (a_feature_i.external_name, dotnet_arguments (a_feature_i))
 						if l_docs /= Void and then not l_docs.is_empty then
-							extracted_description.append_character ('%N')
-							extracted_description.append (l_docs)
+							l_extracted_description.append_character ('%N')
+							l_extracted_description.append (l_docs)
 						end
 					end
 				end
 			else
 				create l_ctxt
 				l_ctxt.format_short (a_feature_i.api_feature (a_class_i.compiled_class.class_id), False)
-				format (l_ctxt.text)
+				l_extracted_description := formatted (l_ctxt.text)
+				l_extracted_description.replace_substring_all ("%T%T-- ", "")
 			end
-			extracted_description.replace_substring_all ("%T%T-- ", "")
-			extracted_description.replace_substring_all ("%T", "  ")
+			l_extracted_description.replace_substring_all ("%T", "  ")
+			l_index := l_extracted_description.index_of ('%N', 1)
+			if l_index > 0 then -- Keep first line unwrapped since it's the signature
+				create extracted_description.make (l_extracted_description.count)
+				l_first_line := l_extracted_description.substring (1, l_index)
+				extracted_description.append (l_first_line)
+				extracted_description.append (wrapped (l_extracted_description.substring (l_index + 1, l_extracted_description.count), Line_count.max (l_first_line.count)))
+			else
+				extracted_description := l_extracted_description
+			end
  		end
-
+ 
 	features_list_from_table (table: FEATURE_TABLE; class_i: CLASS_I; use_overloading: BOOLEAN): SORTABLE_ARRAY [FEATURE_DESCRIPTOR] is
 			-- Convert `table' into an instance of LIST [FEATURE_DESCRIPTOR].
 		require
@@ -344,6 +355,76 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	wrapped (a_text: STRING; a_wrap_count: INTEGER): STRING is
+			-- Wrapped string based on `a_text' wrapped to `a_wrap_count' characters.
+		require
+			non_void_text: a_text /= Void
+		local
+			l_lines: LIST [STRING]
+		do
+			create Result.make (a_text.count)
+			l_lines := a_text.split ('%N')
+			from
+				l_lines.start
+			until
+				l_lines.after
+			loop
+				Result.append (wrapped_single_line (l_lines.item, a_wrap_count))
+				l_lines.forth
+				if not l_lines.after then
+					Result.append_character ('%N')				
+				end
+			end
+		end
+
+	wrapped_single_line (a_text: STRING; a_wrap_count: INTEGER): STRING is
+			-- Wrapped string based on `a_text' wrapped to `a_wrap_count' characters.
+		require
+			non_void_text: a_text /= Void
+			single_line: not a_text.has ('%N')
+		local
+			i: INTEGER
+			found: BOOLEAN
+			l_lines: LIST [STRING]
+		do
+			create Result.make (a_text.count)
+			if a_text.count <= a_wrap_count then
+				Result.append (a_text)
+			else
+				from
+					i := a_wrap_count
+					found := a_text.item (i) = ' '
+				until
+					i <= 1 or found
+				loop
+					i := i - 1
+					found := a_text.item (i) = ' '
+				end
+				if not found then -- Try to cut after `Line_count'
+					from
+						i := a_wrap_count + 1
+						found := a_text.item (i) = ' '
+					until
+						i >= a_text.count or found
+					loop
+						i := i + 1
+						found := a_text.item (i) = ' '
+					end
+				end
+				if found then
+					if i > 1 then
+						Result.append (a_text.substring (1, i - 1))
+					end
+					if i < a_text.count then
+						Result.append_character ('%N')
+						Result.append (wrapped_single_line (a_text.substring (i + 1, a_text.count), a_wrap_count))
+					end
+				else
+					Result.append (a_text)
+				end
+			end
+		end
+
 	external_signature (a_feature_i: FEATURE_I; a_feature_name: STRING): STRING is
 			-- Signature of `a_feature_i'
 		require
@@ -431,17 +512,17 @@ feature {NONE} -- Implementation
 			valid_format: a_feature.argument_count > 0 implies Result.item (1) = '(' and Result.item (Result.count) = ')'
 		end
 		
-	format (a_text: STRUCTURED_TEXT) is
-			-- Format `a_text' as ASCII string and put result in `extracted_description'.
+	formatted (a_text: STRUCTURED_TEXT): STRING is
+			-- `a_text' formatted as ASCII string.
 		require
 			non_void_text: a_text /= Void
 		do
 			Formatter.reset_output
 			Formatter.process_text (a_text)
-			extracted_description := Formatter.output
-			extracted_description.left_adjust
-			extracted_description.replace_substring_all ("%N%T", "%N")
-			extracted_description.right_adjust
+			Result := Formatter.output
+			Result.left_adjust
+			Result.replace_substring_all ("%N%T", "%N")
+			Result.right_adjust
 		end
 
 	type_from_type_name (name: STRING): TYPE is
@@ -609,6 +690,10 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	Line_count: INTEGER is 79
+			-- Maximum number of character on one line for `extracted_description'
+			-- if the length of the feature signature is lesser
 
 	Formatter: STRING_FORMATTER is
 			-- Text formatter for structured texts

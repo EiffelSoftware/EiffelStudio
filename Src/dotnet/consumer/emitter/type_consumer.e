@@ -31,22 +31,27 @@ feature {NONE} -- Initialization
 			inter: NATIVE_ARRAY [TYPE]
 			interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
 			parent: CONSUMED_REFERENCED_TYPE
-			i: INTEGER
-			interface_type: TYPE
+			i, count: INTEGER
+			parent_type: TYPE
 			members, constructors: NATIVE_ARRAY [MEMBER_INFO]
 		do
 			create dotnet_name.make_from_cil (t.get_full_name)
-			if t.get_base_type /= Void then
-				parent := referenced_type_from_type (t.get_base_type)
+			parent_type := t.get_base_type
+			if parent_type /= Void and then is_consumed_type (parent_type) then
+				parent := referenced_type_from_type (parent_type)
 			end 
 			inter := t.get_interfaces
-			create interfaces.make (1, inter.get_length)
+			create interfaces.make (1, 0)
 			from
 				i := 1
 		 	until
 				i > inter.get_length
 			loop
-				interfaces.put (referenced_type_from_type (inter.item (i - 1)), i)
+				parent_type := inter.item (i - 1)
+				if is_consumed_type (parent_type) then
+					count := count + 1
+					interfaces.force (referenced_type_from_type (parent_type), count)
+				end
 				i := i + 1
 			end
 			create consumed_type.make (dotnet_name,

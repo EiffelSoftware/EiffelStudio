@@ -66,7 +66,6 @@ feature -- Basic operations
 			current_column_width, current_row_height: INTEGER
 			rectangle_width, rectangle_height: INTEGER
 			i: INTEGER
-			label_item: EV_GRID_LABEL_ITEM
 			grid_item_exists: BOOLEAN
 			current_item_y_position, current_item_x_position: INTEGER
 			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
@@ -183,8 +182,7 @@ feature -- Basic operations
 					(not grid.is_row_height_fixed and row_counter > row_offsets.count) or
 					first_row_index = 0
 				loop
-						-- Assume that there is no grid item at the current position.
-					grid_item_exists := False
+					
 					if not bool and printing_values then
 						print ("%N%NStarting to draw row%N")
 					end
@@ -204,34 +202,54 @@ feature -- Basic operations
 						column_counter > last_column_index or
 						column_counter > column_offsets.count or first_column_index = 0
 					loop
+							-- Assume that there is no grid item at the current position.
+							-- It is not possible to simply set `grid_item' to Void within the loop as otherwise
+							-- this effectively inserts `Void' at the grid item's position within the grid's
+							-- data structures. So we use a BOOLEAN to determine this instead.
+						grid_item_exists := False
+						
 						if not bool and printing_values then
 							print ("%N%NColumn Counter : " + column_counter.out + "%N")
 							print ("Column widths @ column_counter : " + (column_offsets @ (column_counter)).out + "%N")
 							print ("An_x : " + an_x.out + "%N")
 							print ("a_width : " + a_width.out + "%N")
 						end
-						if current_row /= Void and then current_row.count > (current_index_in_row - 1) then
+						if not grid.is_content_completely_dynamic and current_row /= Void and then current_row.count > (current_index_in_row - 1) then
+								-- If the grid is set to retrieve completely dynamic content, then we do not execute this code
+								-- as the current contents of the grid are never used. We also check that the current row and
+								-- current row position are valid.
+								
 							grid_item := current_row @ (current_index_in_row - 1)
 								-- In this case, we have found the grid item so we flag this fact
 								-- so that the calculations for the partial dynamic content know that
 								-- a new item must not be retrieved.
-							grid_item_exists := False
+							if grid_item /= Void then
+								grid_item_exists := True
+							end
 						end
 	
 						current_item_x_position  := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
 						current_column_width := column_offsets @ (column_counter + 1) - column_offsets @ (column_counter)
 						
-						if grid.is_content_partially_dynamic and then not grid_item_exists and dynamic_content_function /= Void then
+						if (grid.is_content_partially_dynamic or grid.is_content_completely_dynamic) and then not grid_item_exists and dynamic_content_function /= Void then
+								-- If we are dynamically computing the contents of the grid and we have not already retrieved an item for
+								-- the grid, then we execute this code.
+								
 							dynamic_content_function.call ([current_index_in_row.min (grid.row_count), current_index_in_column])
 							grid_item_interface := dynamic_content_function.last_result
 							if grid_item_interface /= Void then
 								grid_item := grid_item_interface.implementation
-								grid_item.set_parent_grid_i (grid)
+								if grid.is_content_partially_dynamic then
+									grid.set_item (current_index_in_row, current_index_in_column, grid_item.interface)
+								else
+									grid_item.set_parent_grid_i (grid)
+								end
 								grid_item_exists := True
 							end
 						end
 						
 						if grid_item_exists then
+								-- An item has been retrieved for the current drawing position so draw it.
 							grid_item.redraw (current_item_x_position , current_item_y_position, current_column_width, current_row_height, grid.drawable)
 						else
 								-- As there is no current item, we must now fill the background with the
@@ -274,6 +292,7 @@ feature -- Basic operations
 				end
 			end
 			else
+					-- In this situation, the grid is completely empty, so we simply fill the background color.
 				grid.drawable.set_foreground_color (grid.background_color)
 				grid.drawable.fill_rectangle (an_x, a_y, a_width, a_height)
 			end

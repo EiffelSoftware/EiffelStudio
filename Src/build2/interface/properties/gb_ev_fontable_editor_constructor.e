@@ -45,6 +45,7 @@ feature -- Access
 			horizontal_box.set_padding_width (4)
 			horizontal_box.extend (reset_button)
 			horizontal_box.disable_item_expand (reset_button)
+			horizontal_box.disable_item_expand (font_button)
 			Result.extend (horizontal_box)
 			update_attribute_editor
 		end

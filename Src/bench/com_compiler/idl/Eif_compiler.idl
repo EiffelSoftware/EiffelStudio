@@ -207,6 +207,13 @@ interface IEiffelSystemBrowser: IUnknown
   
   [helpstring ("Feature descriptor.")]
   HRESULT feature_descriptor ([in] BSTR class_name, [in] BSTR feature_name, [out, retval] IEiffelFeatureDescriptor ** return_value);
+  
+  [helpstring ("Search classes with names matching `a_string'.")]
+  HRESULT substring_search_classes ([in] BSTR a_string, [out, retval] IEnumClass ** some_classes);
+
+  [helpstring ("Search feature with names matching `a_string'.")]
+  HRESULT substring_search_features ([in] BSTR a_string, [out, retval] IEnumFeature ** some_features);
+
 };
 //---------------------------------------------------------------------
 
@@ -224,6 +231,9 @@ interface IEiffelClusterDescriptor: IUnknown
   [helpstring ("Cluster description.")]
   HRESULT description ([out, retval] BSTR * return_value);
   
+  [helpstring ("Cluster Tool Tip.")]
+  HRESULT tool_tip ([out, retval] BSTR * return_value);
+  
   [helpstring ("List of classes in cluster.")]
   HRESULT classes ([out, retval] IEnumClass ** some_classes);
 
@@ -238,6 +248,18 @@ interface IEiffelClusterDescriptor: IUnknown
 
   [helpstring ("Full path to cluster.")]
   HRESULT cluster_path ([out, retval] BSTR * path);
+  
+  [helpstring ("Relative path to cluster.")]
+  HRESULT relative_path ([out, retval] BSTR * path);
+
+  [helpstring ("Should this cluster classes take priority over other classes with same name?")]
+  HRESULT is_override_cluster ([out, retval] VARIANT_BOOL * return_value);
+
+  [helpstring ("Should this cluster be treated as library?")]
+  HRESULT is_library ([out, retval] VARIANT_BOOL * path);
+  
+  [helpstring ("Should subclusters be included recursively?")]
+  HRESULT is_recursive ([out, retval] VARIANT_BOOL * path);
 };
 //---------------------------------------------------------------------
 
@@ -256,6 +278,12 @@ interface IEiffelClassDescriptor: IUnknown
   
   [helpstring ("Class external name.")]
   HRESULT external_name ([out, retval] BSTR * return_value);
+  
+  [helpstring ("Class Tool Tip.")]
+  HRESULT tool_tip ([out, retval] BSTR * return_value);
+
+  [helpstring ("Is class in system?")]
+  HRESULT is_in_system ([out, retval] VARIANT_BOOL * return_value);
   
   [helpstring ("List of names of class features.")]
   HRESULT feature_names ([out, retval] SAFEARRAY (BSTR) * names);

@@ -236,7 +236,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 		local
 			cur: CURSOR
 			imp: EV_PICK_AND_DROPABLE_IMP
-			row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			row_imp: EV_PND_DEFERRED_ITEM
 			trg: EV_PICK_AND_DROPABLE
 		do
 			cur := pnd_targets.cursor
@@ -246,9 +246,10 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 				pnd_targets.after or Result /= Void
 			loop
 				trg ?= id_object (pnd_targets.item)
-				if trg = Void or trg.is_destroyed then
+				if trg = Void or else trg.is_destroyed then
+					--| FIXME Unsensitive widgets should not be droppable.
 					pnd_targets.forth
-					-- This will be removed on the next pick.
+					-- If Void or destroyed then it will be removed on the next pick.
 				else
 					imp ?= trg.implementation
 					if imp = Void then
@@ -257,7 +258,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 							imp_not_void: row_imp /= Void
 						end
 						if
-							(row_imp.parent_imp /= Void and then row_imp.parent_imp.is_displayed) and then
+							row_imp.parent_widget_is_displayed and then
 							row_imp.pointer_over_widget (a_gdk_window, a_x, a_y)
 						then
 							Result := trg

@@ -778,7 +778,7 @@ feature
 			when C_double then
 				generated_file.putstring("double td");
 			when C_pointer then
-				generated_file.putstring ("fnptr ta");
+				generated_file.putstring ("char *ta");
 			end;
 			generated_file.putint (num);
 			generated_file.putchar (';');

@@ -35,7 +35,7 @@ inherit
 			disable_sensitive
 		end
 
-	EV_TEXTABLE_IMP
+	EV_TEXT_ALIGNABLE_IMP
 		undefine
 			set_default_minimum_size
 		redefine
@@ -72,6 +72,7 @@ feature {NONE} -- Initialization
 			ev_wel_control_container_make
 			frame_style := Ev_frame_etched_in
 			wel_font := (create {WEL_SHARED_FONTS}).gui_font
+			text_alignment := default_alignment
 		end
 
 feature -- Access
@@ -134,12 +135,12 @@ feature -- Element change
 			if a_text.is_empty then
 				text_width := 0
 				text_height := 0
-				Precursor {EV_TEXTABLE_IMP} (a_text)
+				Precursor {EV_TEXT_ALIGNABLE_IMP} (a_text)
 			else		
 				t := wel_font.string_size (" " + a_text + " ")
 				text_width := t.integer_item (1)
 				text_height := t.integer_item (2)
-				Precursor {EV_TEXTABLE_IMP} (a_text)
+				Precursor {EV_TEXT_ALIGNABLE_IMP} (a_text)
 			end
 			notify_change (2 + 1, Current)
 			invalidate
@@ -156,21 +157,21 @@ feature -- Status setting
 	align_text_center is
 			-- Display `text' centered.
 		do
-			Precursor {EV_TEXTABLE_IMP}
+			Precursor {EV_TEXT_ALIGNABLE_IMP}
 			invalidate
 		end
 
 	align_text_left is
 			-- Display `text' left aligned.
 		do
-			Precursor {EV_TEXTABLE_IMP}
+			Precursor {EV_TEXT_ALIGNABLE_IMP}
 			invalidate
 		end
 
 	align_text_right is
 			-- Display `text' right aligned.
 		do
-			Precursor {EV_TEXTABLE_IMP}
+			Precursor {EV_TEXT_ALIGNABLE_IMP}
 			invalidate
 		end
 
@@ -303,11 +304,11 @@ feature {NONE} -- WEL Implementation
 
 				-- Fill empty space
 			if not text.is_empty then
-				if alignment.is_left_aligned then
+				if alignment = feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_left then
 					text_pos := Text_padding
-				elseif alignment.is_center_aligned then
+				elseif alignment = feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_center then
 					text_pos := (cur_width - text_width) // 2
-				elseif alignment.is_right_aligned then
+				elseif alignment = feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_right then
 					text_pos := cur_width - text_width - Text_padding
 				end
 

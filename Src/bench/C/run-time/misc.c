@@ -339,6 +339,9 @@ rt_public char * eif_getenv (char * k)
 			}
 		} else {
 			if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS) {
+					/* Could not read from HKCU entry, so let's close it before opening
+					 * the one possibly in HKLM */
+				RegCloseKey(hkey);
 				if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
 					eif_free (key);
 					eif_free (lower_k);

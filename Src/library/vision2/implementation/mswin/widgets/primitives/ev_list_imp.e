@@ -28,6 +28,7 @@ inherit
 			on_right_button_down,
 			on_left_button_down,
 			on_middle_button_down,
+			on_left_button_up,
 			pnd_press
 		redefine
 			make,
@@ -553,6 +554,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.79  2000/04/27 23:22:49  rogers
+--| Undefined on_left_button_up from EV_PRIMITIVE_IMP.
+--|
 --| Revision 1.78  2000/04/27 23:03:28  pichery
 --| Added set_default_minimum_size
 --|

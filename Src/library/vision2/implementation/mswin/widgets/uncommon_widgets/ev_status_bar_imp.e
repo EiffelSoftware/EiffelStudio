@@ -1,7 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
-	description: "EiffelVision status bar."
-	status: "See notice at end of class"
+	description: "EiffelVision status bar. Mswindows implementation."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,6 +19,7 @@ inherit
 			on_right_button_down,
 			on_middle_button_down,
 			on_left_button_down,
+			on_left_button_up,
 			pnd_press
 		redefine
 			parent_imp,
@@ -83,7 +84,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a status bar with one part.
+			-- Create `Current' with one part.
 		do 
 			base_make (an_interface)
 			wel_make (default_parent, 0)
@@ -91,6 +92,7 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
+			-- Initialize `Current'.
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_ITEM_LIST_IMP} Precursor
@@ -99,10 +101,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	ev_children: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
-			-- List of the children
+			-- List of the children.
 
 	parent_imp: EV_TITLED_WINDOW_IMP is
-			-- It is a window
+			-- parent of `Current'.
 		do
 			Result ?= {EV_PRIMITIVE_IMP} Precursor
 		end
@@ -443,8 +445,8 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.29  2000/04/26 23:36:56  rogers
---| Removed wel_window_parent fix and item which was redundent.
+--| Revision 1.30  2000/04/27 23:25:16  rogers
+--| Undefined on_left_button_up from EV_PRIMITIVE_IMP.
 --|
 --| Revision 1.28  2000/04/26 23:32:24  rogers
 --| insert_item no longer directly modifies ev_children.

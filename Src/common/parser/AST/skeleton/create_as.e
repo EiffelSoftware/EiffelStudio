@@ -35,10 +35,10 @@ feature -- Visitor
 
 feature -- Attributes
 
-	clients: CLIENT_AS;
+	clients: CLIENT_AS
 			-- Client list
 
-	feature_list: EIFFEL_LIST [FEATURE_NAME];
+	feature_list: EIFFEL_LIST [FEATURE_NAME]
 			-- Feature list
 
 feature -- Comparison

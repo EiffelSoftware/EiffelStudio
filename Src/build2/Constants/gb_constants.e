@@ -543,6 +543,12 @@ feature -- Miscellaneous
 			create Result
 		end
 		
+feature -- GB_TOOL_HOLDER constants
+
+	maximize_tooltip: STRING is "Maximize"
+	minimize_tooltip: STRING is "Minimize"
+	restore_tooltip: STRING is "Restore"
+		
 	
 feature -- Warning Dialogs
 

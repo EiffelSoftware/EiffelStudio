@@ -23,26 +23,28 @@
   */
 
 
+#include "eif_config.h"	    /* must always be first include files */
+#include "eif_portable.h"
+
 #include <sys/types.h> /* for Cray */
 #include <errno.h>
-#include "eif_config.h"
-#include "ipcvms.h"		/* only affects VMS */
-#include "eif_portable.h"
 #include "timehdr.h" 	/* %%ss moved */
 #include "select.h"
 #include "string.h"
 
 #ifdef EIF_WIN32
 #include "eif_logfile.h"
-
 #ifndef NOFILE
 #define NOFILE VAL_NOFILE	/* File descriptor limit */
 #endif
-
 #include <windows.h>
+
 #else
 #include "bitmask.h"
-#endif
+#ifdef EIF_VMS
+#include "ipcvms.h"		/* only affects VMS */
+#endif /* EIF_VMS */
+#endif /* (not) EIF_WIN32 */
 
 #define TMP_TIMEOUT	200000	/* Number of micro-seconds for temporary select */
 

@@ -8,12 +8,12 @@
   ####   #    #     #    ######  #####    ###     ####
 
 	Child spawning and comforting.
+
+	$Id$
+
 */
 
 #include "eif_config.h"
-#ifdef __VMS	/* must come before eif_portable here */
-#include "ipcvms.h"
-#endif
 #include "eif_portable.h"
 
 #include "rt_err_msg.h"
@@ -46,6 +46,10 @@
 
 #ifdef I_FCNTL
 #include <fcntl.h>
+#endif
+
+#ifdef EIF_VMS
+#include "ipcvms.h"
 #endif
 
 /* #define USE_ADD_LOG */
@@ -147,6 +151,9 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		/* Set MELT_PATH */
 	if (handle_meltpath) {
 		char *meltpath, *appname, *envstring;	/* set MELT_PATH */
+#ifdef EIF_VMS
+		size_t dirname_size;
+#endif
 
 #ifdef EIF_WIN32
 		meltpath = (char *) (strdup (cmd2));
@@ -157,10 +164,16 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 			dexit (1);
 		}
 
-#ifdef EIF_VMS
+#if defined(EIF_VMS_V6_ONLY)
 		appname = rindex (meltpath, ']');
 		if (appname) 
 			*(++appname) = 0;
+		else
+			strcpy (meltpath, "[]");
+#elif defined(EIF_VMS)
+		dirname_size = eifrt_vms_dirname_len (meltpath);
+		if (dirname_size) 
+			meltpath[--dirname_size] = '\0';
 		else
 			strcpy (meltpath, "[]");
 #elif defined(EIF_WIN32)
@@ -175,7 +188,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 			*appname = 0;
 		else
 			strcpy (meltpath, ".");
-#endif /* EIF_VMS */
+#endif /* platform */
 
 		envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
 		if (!envstring){
@@ -363,14 +376,14 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 #endif
 	}
 
-#else	/* #ifdef EIF_WIN32 */
+#else	/* (not) EIF_WIN32 -- UNIX, VMS */
 
 #ifdef EIF_VMS
     /* VMS has no fork(). It does have vfork, which sets up the context	*/
     /* for a subsequent exec call. vfork and exec work together like	*/
     /* setjmp and longjmp. When control returns from vfork the first	*/
     /* time, the return value (child process id) is zero, and the	*/
-    /* context is set up for a subsequent vfork, but the child process	*/
+    /* context is set up for a subsequent exec, but the child process	*/
     /* has not yet been created. After a successful exec call, the	*/
     /* child process is created and control returns (in the parent) to	*/
     /* the statement following the vfork call, with the return value	*/
@@ -387,7 +400,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	pid = vfork();
 	/* control returns here after a successful exec[v] call */
 
-#else	/* (not) EIF_VMS */
+#else	/* EIF_VMS */
 
 	    /* The fork and exec stuff: a classic */
 
@@ -405,16 +418,40 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		dexit(1);
 
 	case 0:			/* Child process */
-#ifdef USE_ADD_LOG
+#if defined(USE_ADD_LOG) && !defined(EIF_VMS)
 		close_log();					/* Logfile should not cross exec() */
 #endif
 
-#ifndef EIF_VMS	/* can't do this on VMS, child not created yet (not till exec) */
+#ifdef EIF_VMS	/* On VMS, we're still executing in the parent process.	    */
+		/* Now we set up file descriptors for the child and ensure  */
+		/* that the parent ends of the pipes (pdn[WRITE] and	    */
+		/* pup[READ]) remain open and are not implicitly closed by  */
+		/* the dup2 fest below, and mark them FD_CLOEXEC.	    */
+		/* The required state for spawning the child is:	    */
+		/*   EWBOUT == pup[WRITE], EWBIN == pdn[READ]		    */
+/*DEBUG*/	ipcvms_fd_dump ("before adjust pipes for child: pup[%d,%d], pdn[%d,%d]", pup[0],pup[1],pdn[0],pdn[1]);
+		if (EWBOUT == pdn[PIPE_WRITE] || EWBOUT == pup[PIPE_READ] 
+			|| EWBIN == pdn[PIPE_WRITE] || EWBIN == pup[PIPE_READ]) {
+		    int new_recv, new_send;
+		    new_recv = dup(pup[PIPE_READ]);
+		    new_send = dup(pdn[PIPE_WRITE]);
+		    close (pup[PIPE_READ]);
+		    close (pdn[PIPE_WRITE]);
+		    pup[PIPE_READ]  = new_recv;
+		    pdn[PIPE_WRITE] = new_send;
+		}
+		close_on_exec (pup[PIPE_READ]);
+		close_on_exec (pdn[PIPE_WRITE]);
+/*DEBUG*/	ipcvms_fd_dump ("before dup2 pipes for child: pup[%d,%d], pdn[%d,%d]", pup[0],pup[1],pdn[0],pdn[1]);
+
+#else /* (not) EIF_VMS */
+		/* FIXME why is it necessary to close each twice??? -- David_sS */
 		close(pdn[PIPE_WRITE]);
 		close(pup[PIPE_READ]);
 		close(pdn[PIPE_WRITE]);
 		close(pup[PIPE_READ]);
-#endif
+#endif /* EIF_VMS */
+
 		/* Start duping first allocated pipe, otherwise good luck!--RAM.
 		 * Be careful about the case where the pipe you want to dup on is
 		 * already used by the other pipe.
@@ -453,6 +490,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 			}
 
 #ifdef EIF_VMS
+/*DEBUG*/		ipcvms_fd_dump ("before execv (spawn child): pup[%d,%d], pdn[%d,%d]", pup[0],pup[1],pdn[0],pdn[1]);
 			execv(argv[0], argv);
 #else
 			execvp(argv[0], argv);
@@ -469,12 +507,15 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 			add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
 #endif
 		dexit(1);
+
 	default:		/* Parent process */
-#ifndef EIF_VMS
 		sleep(1);	/* Let child initialize or print error */
-#endif
+#ifndef EIF_VMS
+		/* on VMS this was done in the case 0: code above when	*/
+		/* when the child's pipes were dup2'ed to EWBOUT/EWBIN	*/
 		close(pdn[PIPE_READ]);
 		close(pup[PIPE_WRITE]);
+#endif
 		/* Reset those file descriptors to the lowest possible number, just to
 		 * remain clean (the pipe() system call allocating two files, multiple
 		 * calls to pipe() lead to a messy file allocation table)--RAM.
@@ -500,7 +541,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		 */
 		close_on_exec(pup[PIPE_READ]);
 		close_on_exec(pdn[PIPE_WRITE]);
-	}
+	} /* end switch(pid) */
 #endif
 
 	/* Create a STREAM structure, which provides the illusion of bidrectional
@@ -523,9 +564,21 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	CloseHandle (pdn[PIPE_READ]);
 	pup[PIPE_WRITE] = NULL;
 	pdn[PIPE_READ] = NULL;
-#else
+
+#else /* EIF_WIN32 */
 	sp = new_stream(pup[PIPE_READ], pdn[PIPE_WRITE]);
+
+#ifdef EIF_VMS
+	/* now close files that we had to open to set up for child exec */
+	close (EWBOUT);
+	close (EWBIN);
+#if defined(USE_ADD_LOG) 
+#define EIF_VMS 10 /* cause duplicate define warning */
+	ipcvms_fd_dump ("after spawn child");
 #endif
+#endif /* EIF_VMS */
+
+#endif /* (not) EIF_WIN32 */
 
 	/* Makes sure the child started correctly, and let him know we started him
 	 * from here, and that it is not a normal user invocation.
@@ -715,6 +768,9 @@ rt_private void close_on_exec(int fd)
 
 rt_private Signal_t broken(void)
 {
+#ifdef USE_ADD_LOG
+	add_log(20, "SIGPIPE signal handler broken() called in child.c");
+#endif
 	longjmp(env, 1);			/* SIGPIPE was received */
 	/* NOTREACHED */
 }
@@ -772,4 +828,4 @@ void create_dummy_window (void)
 	}
 }
 
-#endif
+#endif /* EIF_WIN32 */

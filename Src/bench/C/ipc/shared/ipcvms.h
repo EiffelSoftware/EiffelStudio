@@ -2,51 +2,61 @@
 #define _IPCVMS_H   1
 
 /*	Public definitions file for IPC/VMS facility  */
+/*	$Id$	*/
 
 #if defined(__VMS)	/* these definitions only intended for OpenVMS */
 
-/* must be included before unixio.h or processes.h */
-
 
 #ifdef moose	/* pre DECC V5 */
-/* #include <time.h>	*/	/* for ftime() */
-
+#include <time.h>	/* for ftime() */
 /*  From Ultrix's time.h */
 struct timeval {
     long tv_sec;	/* seconds */
     long tv_usec;	/* microseconds */
 };
 #else
-#include <sys/socket.h>
 #include <sys/time.h>
-#endif
+#endif /* pre DECC V5 */
 
+
+/* Eiffel Runtime Support VMS Utility Routines */
+void ipcvms_cleanup_fd (fd_set* maskp, int max_fd) ;
 #ifdef dont_do_this_anymore	/* the future is here! */
 /* abstracts EWB wakeup mechanism. In future, it will be nugatory. */
 #define IPCVMS_WAKE_EWB(strm)	ipcvms_wake_ewb(strm)
-void ipcvms_wake_ewb(int strm);
+void ipcvms_wake_ewb(int strm) ;
 #else
 #define IPCVMS_WAKE_EWB		/* nugatory */
 #endif
 
-/* putenv now handled in portable.h, C/run-time/misc.c
-#define putenv ipcvms_putenv 
-int ipcvms_putenv(char *); 
-*/
-int ipcvms_spawn(char *cmd, int async);
 
-/* define macros for ipcvms_ jacket routines with fixed arglist */
-#define  close ipcvms_close
-#define  dup   ipcvms_dup
-#define  dup2  ipcvms_dup2
-#define  read  ipcvms_read
-#define  write ipcvms_write
-#define  select ipcvms_select
-/* define macros for ipcvms_ jacket routines with variable arglist */
-#define  pipe  ipcvms_pipe
-#define  fdopen ipcvms_fdopen
-/* #define  open  ipcvms_open */
+#ifdef USE_VMS_JACKETS
+/* undefine macros for IPCVMS_ jacket routines that have VMS Porting library jackets. */
+#undef fcntl
+#undef write
+#undef select
+#endif /* USE_VMS_JACKETS */
+/* define macros for IPCVMS_ jacket routines with fixed arglist */
+#define  close IPCVMS_CLOSE_JACKET
+#define  dup   IPCVMS_DUP_JACKET
+#define  dup2  IPCVMS_DUP2_JACKET
+#define  fcntl IPCVMS_FCNTL_JACKET
+#define  read  IPCVMS_READ_JACKET
+#define  write IPCVMS_WRITE_JACKET
+#define  select IPCVMS_SELECT_JACKET
+/* define macros for IPCVMS_ jacket routines with variable arglist */
+#define  pipe  IPCVMS_PIPE_JACKET
+/* #define  fdopen IPCVMS_FDOPEN_JACKET */
+/* #define  open  IPCVMS_OPEN_JACKET */
 
+int IPCVMS_CLOSE_JACKET (int fd) ;
+int IPCVMS_DUP_JACKET (int fd) ;
+int IPCVMS_DUP2_JACKET (int fd, int fd2) ;
+int IPCVMS_FCNTL_JACKET (int fd, int cmd, ...) ;
+int IPCVMS_READ_JACKET (int fd, void* buf, size_t nbytes) ;
+int IPCVMS_WRITE_JACKET (int fd, const void* buf, size_t nbytes) ;
+int IPCVMS_PIPE_JACKET (int fd[2], ...) ;
+int IPCVMS_SELECT_JACKET (int nfds, fd_set* rd, fd_set* wrt, fd_set* excp, struct timeval*) ;
 
 /* define interfaces (if not already defined) */
 #include <stdio.h>	    /* BUFSIZ et. al. */
@@ -59,12 +69,11 @@ int ipcvms_spawn(char *cmd, int async);
 
 /* 
    DECC supplies a header definition file (file.h) to define the
-   manifest constants used by the unix i/o routines. Unfortunately,
-   Eiffel also has a file of the same name, which will usually
-   supersede it. So, we hereinafter define those constants if they
-   haven't been defined already.
+   manifest constants used by the unix i/o routines. Eiffel formerly
+   had a file of the same name, which would supersede the DECC file. 
+   So, we hereinafter define those constants if they are not defined.
 */
-#include file		/* VMS-specific include-from-text-library form */
+#include file		/* VMS DECC-specific include-from-text-library form */
 #ifndef O_RDONLY	/* if it didn't work... */
 # define O_RDONLY	000
 # define O_WRONLY	001
@@ -72,15 +81,29 @@ int ipcvms_spawn(char *cmd, int async);
 # define O_NDELAY	004
 #endif
 
-#ifndef NOFILE
-#define NOFILE 64	/* max number of file descriptors per process */
-#endif
+//#ifndef NOFILE
+//#define NOFILE 64	/* max number of file descriptors per process */
+//#endif
 
-int ipcvms_pipe(int fd[2], ...);
-int ipcvms_select(int nfds, Select_fd_set_t rd, Select_fd_set_t wrt, Select_fd_set_t excp, struct timeval *tm);
+/* special fcntl cmd to dump known fd's */
+//#define F_FDDUMP 9876                       
+
+/*** prototypes for IPCVMS_ jacket functions ***/
+int IPCVMS_CLOSE (int fd) ;
+int IPCVMS_DUP (int fd) ;
+int IPCVMS_DUP2 (int fd1, int fd2) ;
+int IPCVMS_FCNTL (int fd, int cmd, ...) ;
+int IPCVMS_READ  (int fd, void* buf, size_t nbytes) ;
+int IPCVMS_WRITE (int fd, const void* buf, size_t nbytes) ;
+int IPCVMS_SELECT(int nfds, Select_fd_set_t rd, Select_fd_set_t wrt, Select_fd_set_t excp, struct timeval *tm);
+int IPCVMS_PIPE  (int fd[2], ...) ;
+FILE* IPCVMS_FDOPEN (int fd, const char* a_mode, ...) ;
 
 
-/* Secondary functions */
+/*** Secondary functions ***/
+
+/* generate dump of open file descriptors to log file (for debugging) */
+void ipcvms_fd_dump (const char* fmt, ...) ;
 
 /* change current synchronicity mode (sync/async) */
 /* int ipcvms_setmode(int fd, int newmode); */
@@ -88,11 +111,10 @@ int ipcvms_select(int nfds, Select_fd_set_t rd, Select_fd_set_t wrt, Select_fd_s
 
 /* Misc. utility functions - VMS abstractions. (Maybe this isn't the	*/
 /* best place for these, but I don't know where else to put them.	*/
-char* ipcvms_get_progname(char* buf) ;
 int ipcvms_read_avail(int fd) ;
 
-void ipcvms_free_fd_efn(int fd) ;
-int ipcvms_get_fd_efn(int fd, int flag) ;
+void ipcvms_free_fd_efn (int fd) ;
+int ipcvms_get_fd_efn (int fd, int flag) ;
 
 #include "bitmask.h"	/* defines fd_mask and FD_ macros */
 

@@ -40,8 +40,6 @@
 #include <windows.h>
 #define EWB		"\\bin\\ec.exe -bench"	/* Ewb process within Eiffel dir */
 #elif defined EIF_VMS
-#include "ipcvms.h"	/* for ipcvms_get_progname() */
-/* #define ISE_EIFFEL		"ISE_EIFFEL:"		*//* Default installation directory */
 #define EWB		".bin]ec -bench"	/* Ewb process within Eiffel dir */
 #else
 #define ISE_EIFFEL	"/usr/lib/Eiffel4"	/* Default installation directory */
@@ -117,6 +115,8 @@ rt_public void init_bench(int argc, char **argv)
 /*	progname = rindex(argv[0], '\\');	*//* Only last name if '\' found */
 /*	if (progname++ == (char *) 0)		*//* There were no '\' */
 /*	strcpy (progname,"estudio.exe");		*//* This must be the filename then */
+#elif defined(EIF_VMS)
+	progname = (char*)eifrt_vms_get_progname (NULL,0);
 #else
 	progname = rindex(argv[0], '/');	/* Only last name if '/' found */
 	if (progname++ == (char *) 0)		/* There were no '/' */
@@ -132,11 +132,15 @@ rt_public void init_bench(int argc, char **argv)
 #else
 	progpid = getpid();					/* Program's PID */
 
+#ifdef EIF_VMS
+	(void) open_log("sys$scratch:ebench.log");
+#else
 	/* Open a logfile in /tmp */
 	(void) open_log("/tmp/ised.log");
+#endif
 	set_loglvl(LOGGING_LEVEL);			/* Set debug level */
-#endif
-#endif
+#endif /* platform */
+#endif /* USE_ADD_LOG */
 
 	set_signal();						/* Set up signal handler */
 	signal (SIGABRT ,exit);

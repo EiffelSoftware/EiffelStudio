@@ -17,7 +17,7 @@
 #ifndef _size_h_
 #define _size_h_
 
-#include "eif_config.h"
+#include "eif_portable.h"
 
 #ifndef EIF_VMS
 CONFIGURATION ERROR EIF_VMS NOT DEFINED

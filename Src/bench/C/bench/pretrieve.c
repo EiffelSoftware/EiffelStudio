@@ -147,10 +147,17 @@ rt_private void stream_buffer_initialization (EIF_INTEGER file_desc, size_t file
 rt_private int parsing_retrieve_read_with_compression (void)
 {
 	RT_GET_CONTEXT
+#ifdef EIF_VMS
+	void* dcmps_in_ptr = (char *)0;
+	void* dcmps_out_ptr = (char *)0;
+	lzo_uint dcmps_in_size = 0;
+	lzo_uint dcmps_out_size = cmp_buffer_size;
+#else
 	char* dcmps_in_ptr = (char *)0;
 	char* dcmps_out_ptr = (char *)0;
 	int dcmps_in_size = 0;
 	int dcmps_out_size = cmp_buffer_size;
+#endif
 	char* ptr = (char *)0;
 	int read_size = 0;
 	int part_read = 0;

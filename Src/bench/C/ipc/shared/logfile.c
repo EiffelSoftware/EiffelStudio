@@ -12,9 +12,12 @@
 */
 
 #include "eif_config.h"
-#include "ipcvms.h"		/* only affects VMS */
 #include "eif_portable.h"
 #include <sys/types.h>
+
+#ifdef EIF_VMS
+#include "ipcvms.h"		/* only affects VMS */
+#endif
 
 #ifdef I_TIME
 # include <time.h>

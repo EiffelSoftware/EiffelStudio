@@ -15,6 +15,7 @@ inherit
 			default_style
 		redefine
 			class_name,
+			background_color,
 			process_notification
 		end
 
@@ -26,6 +27,16 @@ inherit
 	WEL_EN_CONSTANTS
 		export
 			{NONE} all
+		end
+
+feature -- Access
+
+	background_color: WEL_COLOR_REF is
+			-- Background color used for the background of the
+			-- control
+			-- Can be redefined by the user
+		do
+			!! Result.make_rgb (255, 255, 255)
 		end
 
 feature -- Basic operations

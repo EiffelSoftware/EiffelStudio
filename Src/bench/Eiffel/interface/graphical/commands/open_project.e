@@ -162,7 +162,10 @@ feature {NONE} -- Implementation
 								Warning_messages.w_file_not_exist (project_file_name), 
 								Interface_names.b_Ok, Void, Void)
 					else
-						open_project_file (project_file_name)
+						ebench_name := ebench_command_name
+						ebench_name.append (" ")
+						ebench_name.append (project_file_name)
+						launch_ebench (ebench_name)
 					end
 				else
 					if argument = project_tool then

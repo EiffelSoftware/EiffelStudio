@@ -16,6 +16,8 @@ inherit
 
 	SHARED_IL_CONSTANTS
 
+	SHARED_IL_DEBUG_INFO_RECORDER
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all 
@@ -491,6 +493,10 @@ feature -- Generation Structure
 			l_assembly_flags: INTEGER
 			l_host: CLR_HOST
 		do
+				--| Initialize recording of IL Information used for eStudio .NET debugger			
+			Il_debug_info_recorder.init_recording_session
+			
+				--| beginning of assembly generation
 			location_path := location
 			assembly_name := a_assembly_name
 			
@@ -533,7 +539,8 @@ feature -- Generation Structure
 				l_assembly_flags := feature {MD_ASSEMBLY_FLAGS}.public_key
 			end
 
-			is_debug_info_enabled := debug_mode
+			is_debug_info_enabled := debug_mode 
+			-- FIXME jfiat [2003/10/10 - 16:41] try without debug_mode, for no pdb info
 
 			create output_file_name.make_from_string (location)
 			output_file_name.set_file_name (a_file_name)
@@ -663,6 +670,9 @@ feature -- Generation Structure
 			define_assembly_attributes
 		
 			main_module.save_to_disk
+			
+			--| Save IL Information used for eStudio .NET debugger
+			Il_debug_info_recorder.save			
 		end
 
 	generate_resources (a_resources: LIST [STRING]) is
@@ -1725,6 +1735,11 @@ feature -- Features info
 					create l_ca_factory
 					l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
 				end
+
+				if l_is_attribute then
+					Il_debug_info_recorder.set_record_context (l_is_attribute, is_static, in_interface)
+					Il_debug_info_recorder.record_il_feature_info (current_module, current_class_type, feat, current_class_token, l_meth_token)
+				end
 			end
 		end
 
@@ -2201,6 +2216,12 @@ feature -- IL Generation
 					l_sequence_point_list.extend ([dbg_offsets_count, dbg_offsets, dbg_start_lines,
 						dbg_start_columns, dbg_end_lines, dbg_end_columns, feat.written_in])
 				end
+				
+				--| feature is not attribute |--
+				-- we assume the feature concerned by `generate_feature_code' 
+				-- here are static and not in_interface
+				Il_debug_info_recorder.set_record_context (False, True, False)	
+				Il_debug_info_recorder.record_il_feature_info (current_module, current_class_type, feat, current_class_token, l_meth_token)
 			end
 		end
 
@@ -3440,6 +3461,8 @@ feature -- Once management
 				current_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
 				done_sig)
+
+			Il_debug_info_recorder.record_once_info (current_class_type, name, done_token, 0)
 		end
 
 	generate_once_result_info (name: STRING; type_i: TYPE_I) is
@@ -3460,6 +3483,8 @@ feature -- Once management
 			result_token := md_emit.define_field (uni_string,
 				current_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static, l_sig)
+				
+			Il_debug_info_recorder.record_once_info (current_class_type, name, 0, result_token)
 		end
 
 	generate_once_computed is
@@ -4266,6 +4291,8 @@ feature -- Line info
 				dbg_end_lines.force (n, l_pos)
 				dbg_end_columns.force (1000, l_pos)
 				dbg_offsets_count := l_pos + 1
+
+				Il_debug_info_recorder.record_line_info (Byte_context.current_feature, method_body.count, n)
 				method_body.put_nop
 			end
 		end
@@ -4286,9 +4313,23 @@ feature -- Line info
 				dbg_end_lines.force (location.line_number, l_pos)
 				dbg_end_columns.force (location.end_column_position, l_pos)
 				dbg_offsets_count := l_pos + 1
+
+				Il_debug_info_recorder.record_line_info (Byte_context.current_feature, method_body.count, location.line_number)			
 				method_body.put_nop
 			end
 		end
+		
+	put_silent_debug_info (location: TOKEN_LOCATION) is
+			-- Generate debug information for `location' to enable to
+			-- find corresponding Eiffel class file in IL code.
+			-- But in case of dotnet debugger inside eStudio
+			-- ignore those 'dummy' nope.
+		require
+			location_not_void: location /= Void
+		do
+			Il_debug_info_recorder.ignore_next_debug_info
+			put_debug_info (location)
+		end		
 
 	flush_sequence_points (a_class_type: CLASS_TYPE) is
 			-- Flush all sequence points.

@@ -177,7 +177,8 @@ feature -- IL code generation
 			check
 				end_location_not_void: end_location /= Void
 			end
-			il_generator.put_debug_info (end_location)
+			
+			il_generator.put_silent_debug_info (end_location)
 		end
 
 feature -- Byte code generation

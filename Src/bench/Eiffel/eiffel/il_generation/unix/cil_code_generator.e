@@ -1473,6 +1473,15 @@ feature -- Line info
 		do
 		end
 
+	put_silent_debug_info (location: TOKEN_LOCATION) is
+			-- Generate debug information for `location' to enable to
+			-- find corresponding Eiffel class file in IL code.
+			-- but ignored from the EiffelStudio Debugger (.NET)
+		require
+			location_not_void: location /= Void
+		do
+		end
+
 	flush_sequence_points (a_class_type: CLASS_TYPE) is
 			-- Flush all sequence points.
 		require

@@ -9,30 +9,10 @@ class
 inherit
 	COM_OBJECT
 	
-creation
-	make,
+creation {FUSION_FACTORY}
 	make_by_pointer
 	
-feature {NONE} -- Initialization
-
-	make is
-			-- New instance of a IFusionSupport.
-		do
-				-- Initialize COM.
-			(create {CLI_COM}).initialize_com
-
-			item := new_fusion_support
-			if item = default_pointer then
-				exists := False
-			else
-				exists := True
-			end
-		end
-
 feature -- Access
-
-	exists: BOOLEAN
-			-- Was components correctly initialized?
 
 	signed (a_loc: UNI_STRING): BOOLEAN is
 			-- Is assembly at 'a_loc' signed?
@@ -79,22 +59,20 @@ feature -- Definition
 
 feature {NONE} -- Implementation
 
-	new_fusion_support: POINTER is
-			-- New instance of IFusionSupport
-		external
-			"C use %"cli_writer.h%""
-		end
-		
 	c_get_bstr (a_string: POINTER): POINTER is
-			-- Retrieve a BSTR from 'a__string'
+			-- Retrieve a BSTR from 'a_string' which is a LPWSTR.
 		external
-			"C use %"cli_writer.h%""
+			"C macro signature (LPWSTR): EIF_POINTER use %"cli_writer.h%""
+		alias
+			"SysAllocString"
 		end
 	
 	c_free_bstr (a_bstr: POINTER) is
 			-- Free memory associated with 'a_bstr'
 		external
-			"C use %"cli_writer.h%""
+			"C macro signature (BSTR) use %"cli_writer.h%""
+		alias
+			"SysFreeString"
 		end
 
 	c_get_gac_assemblies (p, ass: POINTER): INTEGER is

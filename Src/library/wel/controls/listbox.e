@@ -388,8 +388,8 @@ feature {NONE} -- Implementation
 				on_lbn_errspace
 			elseif notification_code = Lbn_selcancel then
 				on_lbn_selcancel
-			elseif notification_code = Lbn_selchange then
-				on_lbn_selchange
+			elseif notification_code = Lbn_killfocus then
+				on_lbn_killfocus
 			elseif notification_code = Lbn_setfocus then
 				on_lbn_setfocus
 			else

@@ -27,10 +27,10 @@ rt_public bool_t idr_double(IDR *idrs, double *dp)
 	CHK_SIZE(idrs, sizeof (double));			/* Long integer coded on four bytes */
 
 	if (idrs->i_op == IDR_ENCODE) {
-		bcopy(dp, idrs->i_ptr, sizeof (double));
+		memcpy (idrs->i_ptr, dp, sizeof (double));
 		idrs->i_ptr += sizeof (double);
 	} else {
-		bcopy(idrs->i_ptr, dp, sizeof (double));
+		memcpy (dp, idrs->i_ptr, sizeof (double));
 		idrs->i_ptr += sizeof (double);
 	}
 	

@@ -46,7 +46,7 @@ rt_public bool_t idr_long(IDR *idrs, long int *lp)
 #if LNGSIZ == 4
 					/*encode for long = 4 bytes */
 			value = htonl((uint32)(*lp));
-			bcopy(&value, idrs->i_ptr, size);
+			memcpy (idrs->i_ptr, &value, size);
 			idrs->i_ptr += size;
 #else
 							/*encode for long = 8bytes */
@@ -58,17 +58,17 @@ rt_public bool_t idr_long(IDR *idrs, long int *lp)
 			lower = (uint32) (temp & 0x00000000ffffffff);
 			upper = (uint32) ((temp >> 32) & 0x00000000ffffffff);
 			value = htonl((uint32)(lower));
-			bcopy(&value, idrs->i_ptr, 4);
+			memcpy (idrs->i_ptr, &value, 4);
 			idrs->i_ptr += 4;
 
 			value = htonl((uint32)(upper));
-			bcopy(&value, idrs->i_ptr, 4);
+			memcpy (idrs->i_ptr, &value, 4);
 			idrs->i_ptr += 4;
 
 #endif
 	} else {
 		if (size == 4) {				/* decode a 4 byte long */
-			bcopy(idrs->i_ptr, &value, size);
+			memcpy (&value, idrs->i_ptr, size);
 			*lp = (long) ntohl(value);
 			idrs->i_ptr += size;
 #if LNGSIZ > 4
@@ -80,10 +80,10 @@ rt_public bool_t idr_long(IDR *idrs, long int *lp)
 		} else {				/*decode an 8 byte long */
 			long upper, lower;
 
-			bcopy(idrs->i_ptr, &value, 4);
+			memcpy (&value, idrs->i_ptr, 4);
 			lower = (long) ntohl(value);
 			idrs->i_ptr += 4;
-			bcopy(idrs->i_ptr, &value, 4);
+			memcpy (&value, idrs->i_ptr, 4);
 			upper = (long) ntohl(value);
 			idrs->i_ptr += 4;
 #if PTRSIZ == 4

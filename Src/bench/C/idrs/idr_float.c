@@ -27,10 +27,10 @@ rt_public bool_t idr_float(IDR *idrs, float *fp)
 	CHK_SIZE(idrs, sizeof (float));			/* Long integer coded on four bytes */
 
 	if (idrs->i_op == IDR_ENCODE) {
-		bcopy(fp, idrs->i_ptr, sizeof (float));
+		memcpy (idrs->i_ptr, fp, sizeof (float));
 		idrs->i_ptr += sizeof (float);
 	} else {
-		bcopy(idrs->i_ptr, fp, sizeof (float));
+		memcpy ( fp, idrs->i_ptr, sizeof (float));
 		idrs->i_ptr += sizeof (float);
 	}
 	

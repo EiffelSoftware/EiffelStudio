@@ -67,6 +67,8 @@ feature {NONE} -- Implementation
 	c_data (a_callback_struct_ptr: POINTER): POINTER is
 		external
 			"C [macro %"callback_struct.h%"] (XmRowColumnCallbackStruct *): EIF_POINTER"
+		alias
+			"c_mdata"	
 		end;
 
 	c_callback_struct (a_callback_struct_ptr: POINTER): POINTER is

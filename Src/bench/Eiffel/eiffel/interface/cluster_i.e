@@ -490,6 +490,8 @@ end;
 			sub_dir_file: DIRECTORY
 			sub_dir_id: STRING
 		do
+			Degree_output.put_recursive_degree_6 (Current, cl_path)
+
 			!!cluster_file.make (cl_path)
 			if not cluster_file.exists then
 				!!vd01

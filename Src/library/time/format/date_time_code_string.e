@@ -92,7 +92,7 @@ feature -- Status report
 	is_date (s: STRING): BOOLEAN is
 			-- Does `s' contain a DATE?
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			build_parser (s)
 			Result := parser.is_date
@@ -101,7 +101,7 @@ feature -- Status report
 	is_time (s: STRING): BOOLEAN is
 			-- Does `s' contain a TIME?
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			build_parser (s)
 			Result := parser.is_time
@@ -110,7 +110,7 @@ feature -- Status report
 	is_date_time (s: STRING): BOOLEAN is
 			-- Does `s' contain a DATE_TIME?
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			build_parser (s)
 			Result := parser.is_date_time
@@ -119,7 +119,7 @@ feature -- Status report
 	is_value_valid (s: STRING): BOOLEAN is
 			-- Does `s' contain a valid date or time as string representation?
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			build_parser (s)
 			Result := parser.is_date or parser.is_time or parser.is_date_time
@@ -541,7 +541,7 @@ feature {NONE} -- Implementation
 	build_parser (s: STRING) is
 			-- Build parser from `s'.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			if parser = Void or else not equal (parser.source_string, s) then
 				create parser.make (value)

@@ -217,6 +217,7 @@ feature -- Access
 			-- Can we compile?
 		do
 			Result := not is_read_only and then
+				(System = Void or else not System.is_precompiled) and then 
 				initialized and then
 				ace.file_name /= Void and then
 				error_displayer /= Void and then
@@ -372,13 +373,10 @@ feature -- Status setting
 			-- Set filter_path to `f_path'.
 		require
 			valid_arg: f_path /= Void 
-		local
-			dir: DIRECTORY_NAME
 		do
 			if not f_path.is_equal (filter_path) then
 				filter_path.wipe_out;
-				!! dir.make_from_string (interpreted_string (f_path));
-				filter_path.append (dir)
+				filter_path.make_from_string (interpreted_string (f_path))
 			end
 		end
 
@@ -386,13 +384,10 @@ feature -- Status setting
 			-- Set profile_path to `p_path'.
 		require
 			valid_arg: p_path /= Void 
-		local
-			dir: DIRECTORY_NAME
 		do
 			if not p_path.is_equal (profile_path) then
 				profile_path.wipe_out;
-				!! dir.make_from_string (interpreted_string (p_path));
-				profile_path.append (dir)
+				profile_path.make_from_string (interpreted_string (p_path));
 			end
 		end;
 
@@ -400,13 +395,10 @@ feature -- Status setting
 			-- Set tmp_directory to `t_path'.
 		require
 			valid_args: t_path /= Void 
-		local
-			dir: DIRECTORY_NAME
 		do
 			if not t_path.is_equal (tmp_directory) then
 				tmp_directory.wipe_out;
-				!! dir.make_from_string (interpreted_string (t_path));
-				tmp_directory.append (dir)
+				tmp_directory.make_from_string (interpreted_string (t_path))
 			end
 		end;
 
@@ -621,7 +613,8 @@ feature -- Output
 				!! file.make (Precompilation_file_name);
 				file.open_write;
 				precomp_info.independent_store (file);
-				file.close
+				file.close;
+				set_file_status (read_only_status);
 			else
 				if file /= Void and then not file.is_closed then
 					file.close
@@ -651,7 +644,7 @@ feature {LACE_I} -- Initialization
 	init_system is
 			-- Initializes the system.
 		do
-			!! system
+			!! system.make
 		end;
 
 feature {APPLICATION_EXECUTION}

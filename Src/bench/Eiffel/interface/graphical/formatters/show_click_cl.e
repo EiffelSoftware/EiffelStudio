@@ -12,9 +12,10 @@ inherit
 
 	FILTERABLE
 		rename
+			init_from_tool as make,
 			create_structured_text as clickable_context_text
 		redefine
-			dark_symbol, text_window, format, display_temp_header,
+			dark_symbol, tool, format, display_temp_header,
 			post_fix
 		end;
 	SHARED_FORMAT_TABLES
@@ -23,14 +24,6 @@ creation
 
 	make
 	
-feature -- Initialization
-
-	make (a_text_window: CLASS_TEXT) is
-			-- Initialize the command.
-		do
-			init (a_text_window)
-		end;
-
 feature -- Properties
 
 	symbol: PIXMAP is 
@@ -45,8 +38,8 @@ feature -- Properties
 			Result := bm_Dark_clickable
 		end;
  
-	text_window: CLASS_TEXT;
-			-- Text of offended class.
+	tool: CLASS_W;
+			-- Tool of edited class
 
 feature -- Formatting
 
@@ -54,63 +47,49 @@ feature -- Formatting
 			-- Show special format of `stone' in class text `text_window',
 			-- if it's clickable; do nothing otherwise.
 		local
-			last_cursor_position, last_top_position: INTEGER;
-			position_saved: BOOLEAN;
+			cur: CURSOR;
 			root_stone: CLASSC_STONE;
 			retried: BOOLEAN;
-			tool: BAR_AND_TEXT;
 			mp: MOUSE_PTR
 		do
 			if not retried then
-				root_stone ?= text_window.root_stone;
+				root_stone ?= tool.stone;
 				if
 					do_format or else filtered or else
-					(text_window.last_format.associated_command /= Current or
-					not equal (stone, root_stone))
+					(tool.last_format.associated_command /= Current or
+					not stone.same_as (root_stone))
 				then
 					if stone /= Void and then stone.is_valid then
 						if stone.clickable then
 							display_temp_header (stone);
 							!! mp.set_watch_cursor;
-							text_window.clean;
-							text_window.set_file_name (file_name (stone));
+							text_window.clear_window;
+							tool.set_read_only_text;
+							tool.set_file_name (file_name (stone));
 							display_info (stone);
 							if 
-								text_window.last_format = 
-									text_window.tool.showtext_frmt_holder
+								tool.last_format = 
+									tool.showtext_frmt_holder
 							then
-								last_cursor_position := text_window.cursor_position;
-								last_top_position := text_window.top_character_position;
-								position_saved := true
+								cur := text_window.cursor;
 							end;
-							text_window.set_editable;
+							tool.show_read_only_text;
 							text_window.display;
-							text_window.set_read_only;
-							if position_saved then
-								if last_cursor_position > text_window.size then
-									last_cursor_position := text_window.size
-								end;
-								if last_top_position > text_window.size then
-									last_top_position := text_window.size
-								end;
-								text_window.set_cursor_position (last_cursor_position);
-								text_window.set_top_character_position (last_top_position)
+							if cur /= Void then
+								text_window.go_to (cur)
 							end;
-							text_window.set_root_stone (stone);
-							text_window.set_last_format (holder);
+							tool.set_stone (stone);
+							tool.set_last_format (holder);
 							filtered := false;
 							display_header (stone);
 							mp.restore
 						else
-							tool ?= text_window.tool;
-							if tool /= Void then
-								tool.showtext_frmt_holder.execute (stone)
-							end
+							tool.showtext_frmt_holder.execute (stone)
 						end
 					end
 				end
 			else
-				warner (text_window).gotcha_call (w_Cannot_retrieve_info);
+				warner (popup_parent).gotcha_call (w_Cannot_retrieve_info);
 				restore_cursors
 			end
 		rescue
@@ -142,10 +121,10 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			if text_window.last_format.associated_command = Current then
-				text_window.display_header ("Producing clickable format...")
+			if tool.last_format.associated_command = Current then
+				tool.set_title ("Producing clickable format...")
 			else
-				text_window.display_header ("Switching to clickable format...")
+				tool.set_title ("Switching to clickable format...")
 			end
 		end;
 

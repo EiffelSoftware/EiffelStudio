@@ -76,6 +76,11 @@ feature -- Access
 
 	feature_name_id: INTEGER
 			-- Id of `feature_name' in `Names_heap' table.
+
+	original_name_id: INTEGER
+			-- Original Id name where feature was first defined. Even if 
+			-- descendants of `written_in' rename current feature, `original_name_id'
+			-- is preserved.
 			
 	feature_id: INTEGER
 			-- Feature id: first key in the feature call hash table
@@ -83,8 +88,16 @@ feature -- Access
 			-- different feature ids.
 
 	written_in: INTEGER
-			-- Class id where the feature is written
+			-- Class id where feature is written
 
+	implemented_in: INTEGER
+			-- Class id where feature is defined to be implemented in an interface.
+			-- Useful only in IL generation.
+
+	belongs_to_interface: BOOLEAN
+			-- Does current feature needs to be declared in
+			-- corresponding interface of class being analyzed.
+	
 	body_index: INTEGER
 			-- Index of body id
 
@@ -220,6 +233,15 @@ feature -- Status
 			Result := a_class.class_id = written_in
 		end
 
+	frozen to_implement_in (a_class: CLASS_C): BOOLEAN is
+			-- Does Current feature need to be exposed in interface 
+			-- used for IL generation?
+		require
+			a_class_not_void: a_class /= Void
+		do
+			Result := a_class.class_id = written_in
+		end
+
 feature -- Setting
 
 	set_feature_id (i: INTEGER) is
@@ -267,6 +289,16 @@ feature -- Setting
 			feature_name_id_set: feature_name_id = id
 		end
 
+	set_original_name_id (id: INTEGER) is
+			-- Assign `id' to `original_name_id'.
+		require
+			valid_id: Names_heap.valid_index (id)
+		do
+			original_name_id := id
+		ensure
+			original_name_id_set: original_name_id = id
+		end
+
 	set_written_in (a_class_id: like written_in) is
 			-- Assign `a_class_id' to `written_in'.
 		require
@@ -275,6 +307,24 @@ feature -- Setting
 			written_in := a_class_id
 		ensure
 			written_in_set: written_in = a_class_id
+		end
+
+	set_implemented_in (a_class_id: like implemented_in) is
+			-- Assign `a_class_id' to `implemented_in'.
+		require
+			a_class_id_not_void: a_class_id >= 0
+		do
+			implemented_in := a_class_id
+		ensure
+			implemented_in_set: implemented_in = a_class_id
+		end
+
+	set_belongs_to_interface (v: like belongs_to_interface) is
+			-- Set `v' to `belongs_to_interface'
+		do
+			belongs_to_interface := v
+		ensure
+			belongs_to_interface: belongs_to_interface = v
 		end
 
 	set_is_origin (b: BOOLEAN) is
@@ -627,6 +677,17 @@ feature -- Conveniences
 			-- Is the current feature an external one ?
 		do
 			-- Do nothing
+		end
+
+	frozen is_c_external: BOOLEAN is
+			-- Is current feature a C external one?
+		local
+			ext: EXTERNAL_I
+		do
+			if is_external then
+				ext ?= Current
+				Result := not ext.extension.is_il
+			end
 		end
 
 	is_require_else: BOOLEAN is
@@ -1366,6 +1427,7 @@ debug ("ACTIVITY")
 	end
 	io.error.new_line
 end
+
 			if not current_class.valid_redeclaration (old_type, new_type) then
 				!!vdrd51
 				vdrd51.init (old_feature, Current)
@@ -1496,6 +1558,52 @@ end
 			end
 		end
 
+	has_same_il_signature (a_parent_type, a_written_type: CL_TYPE_A; old_feature: FEATURE_I): BOOLEAN is
+			-- Is current feature defined in `a_written_type' same as `old_feature'
+			-- defined in `a_parent_type'?
+		require
+			a_parent_type_not_void: a_parent_type /= Void
+			a_written_type_not_void: a_written_type /= Void
+			old_feature_not_void: old_feature /= Void
+			il_generation: System.il_generation
+		local
+			old_type, new_type: TYPE_A
+			i, arg_count, id: INTEGER
+			old_arguments: like arguments
+		do
+				-- Initialization for like-argument types
+			Argument_types.init1 (Current)
+	
+			id := a_written_type.base_class_id
+			old_type ?= old_feature.type	
+			old_type := old_type.conformance_type.
+				instantiation_in (a_written_type, a_written_type.base_class_id).actual_type
+
+			new_type := type.actual_type
+
+				-- Check exact match of signature for IL generation.
+			Result := old_type.same_as (new_type)
+
+				-- Check the argument conformance
+			from
+				i := 1
+				arg_count := argument_count
+				old_arguments := old_feature.arguments
+			until
+				i > arg_count
+			loop
+				old_type ?= old_arguments.i_th (i)
+				old_type := old_type.conformance_type.
+					instantiation_in (a_written_type, a_written_type.base_class_id).actual_type
+
+				new_type := arguments.i_th (i).actual_type
+					-- Check exact match of signature for IL generation.
+				Result := Result and then old_type.same_as (new_type)
+
+				i := i + 1
+			end
+		end
+
 	solve_types (feat_tbl: FEATURE_TABLE) is
 			-- Evaluates signature types in the context of `feat_tbl'.
 			-- | Take care of possible anchored types
@@ -1565,7 +1673,10 @@ feature -- Undefinition
 			end
 			Result.set_type (type)
 			Result.set_arguments (arguments)
+			Result.set_original_name_id (original_name_id)
 			Result.set_written_in (written_in)
+			Result.set_implemented_in (implemented_in)
+			Result.set_belongs_to_interface (True)
 			Result.set_rout_id_set (rout_id_set)
 			Result.set_assert_id_set (assert_id_set)
 			Result.set_is_selected (is_selected)
@@ -1664,6 +1775,9 @@ feature -- Replication
 			other.set_pattern_id (pattern_id)
 			other.set_rout_id_set (rout_id_set)
 			other.set_written_in (written_in)
+			other.set_original_name_id (original_name_id)
+			other.set_implemented_in (implemented_in)
+			other.set_belongs_to_interface (belongs_to_interface)
 			other.set_is_origin (is_origin)
 		end
 

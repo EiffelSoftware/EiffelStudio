@@ -71,7 +71,6 @@ inherit
 		end
 
 creation
-
 	make
 	
 feature {NONE} -- Initialization
@@ -212,6 +211,11 @@ feature -- Access
 		do
 			Result := Ast_server.has (class_id)
 		end
+
+feature -- Access: CLI implementation
+
+	class_interface: CLASS_INTERFACE
+			-- CLI corresponding interface of Current class.
 
 feature -- Action
 
@@ -1722,6 +1726,7 @@ feature -- Class initialization
 			pars: like parents
 			gens: like generics
 			obs_msg: like obsolete_message
+			ancestor_id: INTEGER
 		do
 				-- Assign external name clause
 			if System.il_generation then
@@ -1869,8 +1874,9 @@ feature -- Class initialization
 			parents_as := ast_b.parents
 			parent_list := class_info.parents
 
+			ancestor_id := System.ancestor_class_to_all_classes_id
 			if parents_as /= Void and then not parents_as.is_empty then
-				if class_id = System.any_id then
+				if class_id = ancestor_id then
 					create vhpr1
 					create dummy_list.make
 					dummy_list.extend (class_id)
@@ -1928,22 +1934,30 @@ feature -- Class initialization
 					pars.put_i_th (parent_type, lower)
 					lower := lower + 1
 				end
-			elseif not (class_id = System.any_id) then
+			elseif not (class_id = ancestor_id) then
 					-- No parents are syntactiaclly specified: ANY is
-					-- the default parent, except for class ANY which has
-					-- no parent at all (we don't want a cycle in the
-					-- inheritance graph, otherwise the topological sort
-					-- on the classes will fail...).
-				!! pars.make (1)
-				pars.extend (Any_type)
-					-- Add a descendant to class ANY
-				System.any_class.compiled_class.add_descendant (Current)
-					-- Fill parent list of corresponding class info
-				parent_list.put_i_th (Any_parent, 1)
+					-- the default parent for Eiffel classes, but not for CLI
+					-- classes which inherits from SYSTEM_OBJECT. And ANY
+					-- also inherits from SYSTEM_OBJECT.
+				create pars.make (1)
+
+				if is_external or else class_id = System.any_id then
+					pars.extend (System_object_type)
+						-- Add a descendant to class SYSTEM_OBJECT
+					System.system_object_class.compiled_class.add_descendant (Current)
+						-- Fill parent list of corresponding class info
+					parent_list.put_i_th (System_object_parent, 1)
+				else
+					pars.extend (Any_type)
+						-- Add a descendant to class SYSTEM_OBJECT
+					System.any_class.compiled_class.add_descendant (Current)
+						-- Fill parent list of corresponding class info
+					parent_list.put_i_th (Any_parent, 1)
+				end
 			else
-					-- In case of the ANY class, just create an empty
-					-- parent structure
-				!! pars.make (0)
+					-- In case of the ancestor class to all classes, just create an empty
+					-- parent structure.
+				create pars.make (0)
 			end
 
 			set_parents (pars)
@@ -2041,6 +2055,17 @@ feature -- Class initialization
 			parents /= Void
 		end
 
+	init_class_interface is
+			-- Initialize `class_interface' accordingly to current class
+			-- definition.
+		require
+			il_generation: System.il_generation
+		do
+			if class_interface = Void then
+				create class_interface.make_with_class (Current)
+			end
+		end
+
 	same_parents (old_parents: like parents): BOOLEAN is
 			-- Are `old_parents' the same as `parents' ?
 			-- [Incrementality for conformance tables building.]
@@ -2110,18 +2135,34 @@ feature -- Class initialization
 			end
 		end
 
+feature {NONE} -- Private access
+
 	Any_type: CL_TYPE_A is
 			-- Default parent type
 		once
-			!!Result
+			create Result
 			Result.set_base_class_id (System.any_id)
 		end
 
 	Any_parent: PARENT_C is
 			-- Default compiled parent
 		once
-			!!Result
+			create Result
 			Result.set_parent_type (Any_type)
+		end
+
+	System_object_type: CL_TYPE_A is
+			-- Default parent type
+		once
+			create Result
+			Result.set_base_class_id (System.system_object_id)
+		end
+
+	System_object_parent: PARENT_C is
+			-- Default compiled parent
+		once
+			create Result
+			Result.set_parent_type (System_object_type)
 		end
 
 feature
@@ -3136,9 +3177,19 @@ end
 		end
 
 	is_special: BOOLEAN is
-			-- Is the class SPECIAL or TO_SPECIAL ?
+			-- Is class SPECIAL or TO_SPECIAL ?
 		do
 			-- Do nothing
+		end
+
+	is_special_array: BOOLEAN is
+			-- Is class SPECIAL?
+		do
+		end
+
+	is_native_array: BOOLEAN is
+			-- Is class a NATIVE_ARRAY class?
+		do
 		end
 
 feature -- Meta-type
@@ -3854,7 +3905,7 @@ feature -- Access
 		local
 			feat: FEATURE_I
 		do
-			feat := feature_table.origin_table.item (rout_id)
+			feat := feature_table.feature_of_rout_id (rout_id)
 			if feat /= Void then
 				Result := feat.api_feature (class_id)
 			end

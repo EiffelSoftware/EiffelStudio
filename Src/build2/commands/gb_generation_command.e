@@ -42,6 +42,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -88,6 +93,7 @@ feature -- Basic operations
 			objects := Window_selector.objects
 			if not object_handler.objects_all_named (objects) then
 				create confirmation_dialog.make_with_text (Not_all_windows_named_string)
+				confirmation_dialog.set_icon_pixmap (Icon_build_window @ 1)
 				confirmation_dialog.show_modal_to_window (main_window)
 				if confirmation_dialog.selected_button.is_equal ("OK") then
 					object_handler.add_default_names (objects)

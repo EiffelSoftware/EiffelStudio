@@ -504,6 +504,30 @@ feature -- IL code generation
 			generate_il_call_access (False)	
 		end
 
+	need_address (is_target_of_call: BOOLEAN): BOOLEAN is
+			-- Does current access need its address loaded in memory?
+		local
+			cl_type: CL_TYPE_I
+			call_access: CALL_ACCESS_B
+		do
+			cl_type ?= real_type (type)
+			Result := is_target_of_call and then cl_type.is_expanded
+			
+			if Result then
+				call_access ?= parent.message
+					-- We do not load the address if it is an optimized call of the compiler.
+				Result := call_access = Void or else not call_access.is_il_feature_special (cl_type)
+				if Result and then call_access /= Void and then cl_type.is_basic then
+					if call_access.written_in > 0 then
+							-- Find location of feature to find out if the address needs
+							-- to be loaded. True when written in the same class, False
+							-- otherwise.
+						Result := cl_type.same_as (il_generator.implemented_type (call_access.written_in, cl_type))
+					end
+				end
+			end
+		end
+
 	generate_il_start_assignment is
 			-- Generate location of assignment if needed.
 		do
@@ -521,10 +545,13 @@ feature -- IL code generation
 			loc: LOCAL_B
 			res: RESULT_B
 			target_type: TYPE_I
+			cl_type: CL_TYPE_I
+			feat_tbl: FEATURE_TABLE
+			feat: FEATURE_I
 		do
 			target_type := Context.real_type (type)
 			if target_type.is_reference and then source_type.is_expanded then
-				generate_il_metamorphose (source_type, True)
+				generate_il_metamorphose (source_type, target_type, True)
 			end
 
 					-- Generate cast if we have to generate verifiable code
@@ -543,7 +570,14 @@ feature -- IL code generation
 
 			if is_attribute then
 				attr ?= Current
-				il_generator.generate_attribute_assignment (attr.attribute_id)
+					-- FIXME: Manu 10/24/2001. This could be improved.
+					-- I'm not even sure if we really need to look at the
+					-- feature table here.
+				feat_tbl := System.class_of_id (attr.written_in).feature_table
+				feat := feat_tbl.item_id (attr.attribute_name_id)
+				cl_type ?= attr.context_type
+				il_generator.generate_attribute_assignment (
+					il_generator.implemented_type (attr.written_in, cl_type), feat.feature_id)
 			elseif is_local then
 				loc ?= Current
 				il_generator.generate_local_assignment (loc.position)

@@ -276,7 +276,7 @@ feature -- Generate Dynamic Library
 			make_file.putstring ("%NDYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS) %N");
 			make_file.putstring ("$(SYSTEM_IN_DYNAMIC_LIB): $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
 			make_file.putstring ("%T$(RM) $(SYSTEM_IN_DYNAMIC_LIB) %N")
-			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS) %N")
+			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS) %N")
 			
 			make_file.new_line
 			make_file.new_line

@@ -45,5 +45,6 @@ feature -- Token codes
 	TE_UNSIGNED: INTEGER is 293
 	TE_USE: INTEGER is 294
 	TE_ID: INTEGER is 295
+	TE_INCLUDE_ID: INTEGER is 296
 
 end -- class EXTERNAL_TOKENS

@@ -203,6 +203,7 @@ N		[0-9]
 			}
 
 [@]{A}{X}*	{
+					-- To escape external keywords.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
 				current_position.go_to (token_buffer.count)
@@ -211,11 +212,21 @@ N		[0-9]
 			}
 
 {A}{X}*		{
+					-- Traditional identifier
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
 				current_position.go_to (token_buffer.count)
 				last_token := TE_ID
 			}
+({A}{X}*)("/"({A}{X}*))*	{
+					-- Special identifier for include files that specifies
+					-- a path, e.g. <sys/timeb.h>
+				token_buffer.clear_all
+				append_text_to_string (token_buffer)
+				current_position.go_to (token_buffer.count)
+				last_token := TE_INCLUDE_ID
+			}
+
 .			{
 				current_position.go_to (1)
 			}

@@ -10,7 +10,7 @@ default
 	arguments (" ")
 	disabled_debug (yes)
 	debug (no)
-	line_generation (yes)
+	line_generation (no)
 	il_verifiable (yes)
 	msil_generation_type ("exe")
 	check_vape (yes)
@@ -39,11 +39,11 @@ cluster
 external
 
 	assembly:
-		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\System.dll",
-		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\System.Web.dll",
-		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\System.Web.Services.dll",
-		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\System.Drawing.dll",
-		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\System.Windows.Forms.dll",
-		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\Accessibility.dll"
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.Services.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Drawing.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Windows.Forms.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\Accessibility.dll"
 
 end

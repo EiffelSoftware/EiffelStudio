@@ -62,9 +62,6 @@ inherit
 	SHARED_NAMES_HEAP
 		
 	DEBUG_OUTPUT
-		rename
-			debug_output as feature_name
-		end
 			
 feature -- Access
 
@@ -233,15 +230,25 @@ feature -- Debugger access
 	number_of_precondition_slots: INTEGER is 
 			-- Number of preconditions
 			-- (inherited assertions are not taken into account)
+		local
+			l_body: like body
 		do
-			Result := body.number_of_precondition_slots
+			l_body := body
+			if l_body /= Void then
+				Result := l_body.number_of_precondition_slots
+			end
 		end
 
 	number_of_postcondition_slots: INTEGER is 
 			-- Number of postconditions
 			-- (inherited assertions are not taken into account)
+		local
+			l_body: like body
 		do
-			Result := body.number_of_postcondition_slots
+			l_body := body
+			if l_body /= Void then
+				Result := l_body.number_of_postcondition_slots
+			end
 		end
 
 feature -- Status
@@ -2201,6 +2208,17 @@ io.putint (pattern_id)
 io.new_line
 end
 end
+		end
+
+feature {NONE} -- Debug output
+
+	debug_output: STRING is
+			-- Textual representation of current feature for debugging.
+		do
+			Result := feature_name 
+			if Result = Void then
+				Result := "Name not yet assigned"
+			end
 		end
 
 end

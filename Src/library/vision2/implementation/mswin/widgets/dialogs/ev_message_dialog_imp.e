@@ -149,7 +149,11 @@ feature -- Status settings
 			wid := parent_imp.focus_on_widget.item
 			!! a_msgboxparams.make_basic (ww, message, title, dialog_style, LANG_ENGLISH, SUBLANG_ENGLISH_US)
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
-			wid.set_focus
+			if wid/= Void then
+				-- If another widget had the focus, set the focus back to it,
+				-- otherwise, do nothing.
+				wid.set_focus
+			end
 			dispatch_events (message_box_result)
 		end
 

@@ -60,7 +60,11 @@ feature -- Status setting
 
 			-- Finally, we give back the focus to `wid' and we
 			-- dispatch the events.
-			wid.set_focus
+			if wid/= Void then
+				-- If another widget had the focus, set the focus back to it,
+				-- otherwise, do nothing.
+				wid.set_focus
+			end
 			dispatch_events
 		end
 

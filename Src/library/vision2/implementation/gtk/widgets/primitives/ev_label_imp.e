@@ -30,7 +30,8 @@ inherit
 
 	EV_FONTABLE_IMP
 		redefine
-			interface
+			interface,
+			fontable_widget
 		end
 
 create
@@ -43,12 +44,17 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
-			text_label := C.gtk_label_new (NULL)
-			C.gtk_widget_show (text_label)
+			textable_imp_initialize
 			C.gtk_container_add (c_object, text_label)
 		end
 
 feature {NONE} -- Implementation
+
+	fontable_widget: POINTER is
+			-- Pointer to `text_label'
+		do
+			Result := text_label
+		end
 
 	foreground_color_pointer: POINTER is
 			-- Color of foreground features like text.

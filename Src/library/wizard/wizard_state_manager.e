@@ -97,7 +97,7 @@ feature {NONE} -- Internal Operations
 
 feature {NONE} -- Implementation
 
-	state_information: WIZARD_INFORMATION
+	wizard_information: WIZARD_INFORMATION
 		-- State relative to Current State.
 
 	is_final_state: BOOLEAN
@@ -106,6 +106,9 @@ feature {NONE} -- Implementation
 	is_initial_state: BOOLEAN
 		-- Is Current state the initial state.
 
+	is_common_state: BOOLEAN
+		-- Is Current a common state
+
 invariant
-	state_information_defined: state_information /= Void
+	state_information_defined: wizard_information /= Void
 end -- class WIZARD_STATE_MANAGER

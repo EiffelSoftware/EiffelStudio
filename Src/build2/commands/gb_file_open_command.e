@@ -102,10 +102,6 @@ feature -- Basic operations
 				-- starting build by double clicking on a .bpr file.
 			local
 				file_handler: GB_SIMPLE_XML_FILE_HANDLER
-				test_file: RAW_FILE
-				error_dialog: EV_ERROR_DIALOG
-				dialog_constants: EV_DIALOG_CONSTANTS
-				discardable_error_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 			do
 				create project_settings
 				create file_handler
@@ -113,65 +109,21 @@ feature -- Basic operations
 				if file_handler.last_load_successful then
 					if not project_settings.load_cancelled then
 							-- Do nothing if we cancelled the loading.
-						if project_settings.main_window_class_name = Void then
-								-- If the main window class name is Void, then it means that
-								-- the settings were not loaded (As they were not compatible),
-								-- so we fill in the location, and use the default_values.
-							create project_settings.make_stand_alone_with_default_values
-								-- Set the location to the current file location.
-							project_settings.set_project_location (directory_of_file (file_name))
-						end
-						system_status.set_current_project (project_settings)
-						if not directory_of_file (file_name).is_equal (project_settings.project_location) then								
-							create discardable_error_dialog.make_initialized (1, show_project_location_changed_warning,
-								"The location of the .bpr file has changed from " + project_settings.project_location + " to " + directory_of_file (file_name) + ".%N%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory%NEiffelBuild will now attempt to load `system_interface.xml'.",
-								"Do not show again and always check for `system_interface.xml' in the current directory")
-							discardable_error_dialog.set_ok_action (agent update_location (directory_of_file (file_name)))
-							discardable_error_dialog.show_modal_to_window (main_window)
-						end
-						
-						if not location_update_cancelled then
-							create test_file.make (filename)
-							if test_file.exists then
-								xml_handler.load
-								if not system_status.current_project_settings.is_envision_project then
-									main_window.show_tools	
-								end
-								command_handler.update
-									-- Compress all used ids.
-								id_compressor.compress_all_id
-							end
-						end
+						internal_load_file (file_name)
 					end
 				end
-				if test_file /= Void and then not test_file.exists and not location_update_cancelled then
-					create error_dialog.make_with_text ("The system interface file '" + filename + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
-					create dialog_constants
-						-- Hide unwanted buttons from the dialog
-					error_dialog.button (dialog_constants.ev_retry).hide;
-					(error_dialog.button (dialog_constants.ev_ignore)).hide
-					error_dialog.show_modal_to_window (main_window)
-					system_status.close_current_project
-					if project_settings.is_envision_project then
-						Environment.application.destroy
-					end
-				end
+				check_for_missing_interface_file
 				if System_status.project_open then
 					add_project_to_recent_projects
 				end
 			end
-			
-	
+
 		execute is
 				-- Execute `Current'.
 			local
 				dialog: EV_FILE_OPEN_DIALOG
 				opened: BOOLEAN
 				file_handler: GB_SIMPLE_XML_FILE_HANDLER
-				test_file: RAW_FILE
-				error_dialog: EV_ERROR_DIALOG
-				discardable_error_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
-				dialog_constants: EV_DIALOG_CONSTANTS
 			do
 					-- Reset this value.
 				location_update_cancelled := False
@@ -203,51 +155,12 @@ feature -- Basic operations
 							-- i.e. that the system_interface file exists.
 							if not project_settings.load_cancelled then
 									-- Do nothing if we cancelled the loading.
-								if project_settings.main_window_class_name = Void then
-										-- If the main window class name is Void, then it means that
-										-- the settings were not loaded (As they were not compatible),
-										-- so we fill in the location, and use the default_values.
-									create project_settings.make_stand_alone_with_default_values
-									project_settings.set_project_location (dialog.file_path)
-								end
-								system_status.set_current_project (project_settings)
-									-- We must now check to see if the build project is in a different location
-									-- to the location referenced in the file. If it is, we need to update the
-									-- location, so we can find `system_interface.xml' correctly in the new location.
-								if not dialog.file_path.is_equal (project_settings.project_location) then								
-									create discardable_error_dialog.make_initialized (1, show_project_location_changed_warning,
-										"The location of the .bpr file has changed from " + project_settings.project_location + " to " + dialog.file_path + ".%N%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory%NEiffelBuild will now attempt to load `system_interface.xml'.",
-										"Do not show again and always check for `system_interface.xml' in the current directory")
-									discardable_error_dialog.set_ok_action (agent update_location (dialog.file_path))
-									discardable_error_dialog.show_modal_to_window (main_window)
-								end
-								
-								if not location_update_cancelled then
-										-- Do not load the project, as the used selected "abort" from
-										-- the previous dialog.
-									create test_file.make (filename)
-									if test_file.exists then
-										xml_handler.load
-										add_project_to_recent_projects
-										main_window.show_tools
-										command_handler.update
-											-- Compress all used ids.
-										id_compressor.compress_all_id
-									end
-								end
+								internal_load_file (dialog.file_path)
 							end
 						end	
 					end
 				end
-				if test_file /= Void and then not test_file.exists and not location_update_cancelled then
-					create error_dialog.make_with_text ("The system interface file '" + filename + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
-					create dialog_constants
-						-- Hide unwanted buttons from the dialog
-					error_dialog.button (dialog_constants.ev_retry).hide;
-					(error_dialog.button (dialog_constants.ev_ignore)).hide
-					error_dialog.show_modal_to_window (main_window)
-					system_status.close_current_project
-				end
+				check_for_missing_interface_file
 			end
 			
 feature {NONE} -- Implementation
@@ -300,5 +213,68 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
+		
+	internal_load_file (file_name: STRING) is
+			-- Actually perform loading of file `file_name'.
+		require
+			file_name_not_void: file_name /= Void
+		local
+			discardable_error_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+		do
+			if project_settings.main_window_class_name = Void then
+					-- If the main window class name is Void, then it means that
+					-- the settings were not loaded (As they were not compatible),
+					-- so we fill in the location, and use the default_values.
+				create project_settings.make_stand_alone_with_default_values
+					-- Set the location to the current file location.
+				project_settings.set_project_location (directory_of_file (file_name))
+			end
+			system_status.set_current_project (project_settings)
+			if not directory_of_file (file_name).is_equal (project_settings.project_location) then								
+				create discardable_error_dialog.make_initialized (1, show_project_location_changed_warning,
+					"The location of the .bpr file has changed from " + project_settings.project_location + " to " + directory_of_file (file_name) + ".%N%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory%NEiffelBuild will now attempt to load `system_interface.xml'.",
+					"Do not show again and always check for `system_interface.xml' in the current directory")
+				discardable_error_dialog.set_ok_action (agent update_location (directory_of_file (file_name)))
+				discardable_error_dialog.show_modal_to_window (main_window)
+			end
+			
+			if not location_update_cancelled then
+				create test_file.make (filename)
+				if test_file.exists then
+					xml_handler.load
+					if not system_status.current_project_settings.is_envision_project then
+						main_window.show_tools	
+					end
+					command_handler.update
+						-- Compress all used ids.
+					id_compressor.compress_all_id
+				end
+			end
+		end
+		
+	check_for_missing_interface_file is
+			-- Check to see if referenced interface file exists. If it does not,
+			-- close the current project that is being opened.
+		local
+			error_dialog: EV_ERROR_DIALOG
+			dialog_constants: EV_DIALOG_CONSTANTS
+		do
+			if test_file /= Void and then not test_file.exists and not location_update_cancelled then
+				create error_dialog.make_with_text ("The system interface file '" + filename + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
+				create dialog_constants
+					-- Hide unwanted buttons from the dialog
+				error_dialog.button (dialog_constants.ev_retry).hide;
+				(error_dialog.button (dialog_constants.ev_ignore)).hide
+				error_dialog.show_modal_to_window (main_window)
+				system_status.close_current_project
+				if project_settings.is_envision_project then
+					Environment.application.destroy
+				end
+			end
+		end
+		
+	test_file: RAW_FILE
+		-- File used internally to determine if pointed location of interface file
+		-- actually contains a file.
 
 end -- class GB_FILE_OPEN_COMMAND

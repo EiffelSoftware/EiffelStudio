@@ -11,13 +11,6 @@ inherit
 	COMPOSITE_IMP
 		redefine
 			realize
-		select
-			realize
-		end
-
-	COMPOSITE_IMP
-		rename
-			realize as composite_realize
 		end
 
 	MANAGER_I
@@ -28,25 +21,11 @@ feature --Status setting
 	
 	realize is
 		do
-			composite_realize
+			{COMPOSITE_IMP} Precursor
+
 				-- set initial focus
-			if initial_focus /= void then
+			if initial_focus /= Void then
 				initial_focus.wel_set_focus
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	class_background: WEL_BRUSH is
-			-- Default background.
-		local
-			windows_color: COLOR_IMP
-		do
-			if private_background_color = Void then
-				!! Result.make_by_sys_color (Color_window + 1)
-			else
-				windows_color ?= private_background_color.implementation
-				Result := windows_color.brush
 			end
 		end
 

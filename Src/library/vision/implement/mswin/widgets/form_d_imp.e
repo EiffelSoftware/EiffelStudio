@@ -11,41 +11,8 @@ inherit
 	DIALOG_IMP
 		rename
 			allow_resize as allow_recompute_size,
-			forbid_resize as forbid_recompute_size,
-			show as dialog_show
-		undefine
-			class_background,
-			child_has_resized,
-			on_destroy,
-			make_with_coordinates,
-			set_default_position,
-			set_enclosing_size,
-			maximal_width,
-			maximal_height,
-			on_vertical_scroll_control,
-			on_horizontal_scroll_control
-		redefine
-			unrealize,
-			realize,
-			class_name,
-			on_size,
-			set_form_width,
-			set_form_height,
-			set_height,
-			set_size,
-			set_width,
-			default_style,
-			default_position
-		select
-			unrealize
-		end;
-
-	DIALOG_IMP
-		rename
-			allow_resize as allow_recompute_size,
 			forbid_resize as forbid_recompute_size
 		undefine
-			class_background,
 			child_has_resized,
 			on_destroy,
 			make_with_coordinates,
@@ -68,15 +35,12 @@ inherit
 			set_width,
 			default_style,
 			default_position
-		select
-			show
 		end;
 
 	FORM_IMP
 		rename
 			make as form_make,
-			wel_make as make_child,
-			unrealize as form_unrealize
+			wel_make as make_child
 		undefine
 			realize_current,
 			default_style,
@@ -94,12 +58,13 @@ inherit
 			width,
 			wel_move,
 			real_x,
-			show,
 			real_y
 		redefine
+			unrealize,
 			class_name,
 			realize,
 			on_size,
+			show,
 			initialize,
 			set_form_height,
 			set_form_width,
@@ -244,8 +209,7 @@ feature -- Status setting
 			-- Show current form dialog and children.
 		do
 			set_enclosing_size
-			update_all
-			bulletin_show
+			{FORM_IMP} Precursor
 		end
 
 	unrealize is
@@ -253,7 +217,7 @@ feature -- Status setting
 			if insensitive_list /= Void then
 				set_windows_sensitive
 			end
-			form_unrealize
+			{FORM_IMP} Precursor
 		end
 
 	class_name: STRING is

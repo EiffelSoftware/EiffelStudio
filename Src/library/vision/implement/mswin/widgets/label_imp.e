@@ -12,15 +12,8 @@ inherit
 		redefine
 			set_font,
 			realize
-		select
-			set_font
 		end
 		
-	PRIMITIVE_IMP
-		rename
-			set_font as fontable_set_font
-		end
-
 	LABEL_I
 
 	SIZEABLE_WINDOWS
@@ -60,6 +53,8 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item
 		undefine
+			class_background,
+			background_brush,
 			on_show,
 			on_hide,
 			on_size,
@@ -72,8 +67,7 @@ inherit
 			on_destroy,
 			on_set_cursor,
 			on_key_up,
-			on_key_down,
-			class_background
+			on_key_down
 		redefine
 			on_paint,
 			default_style,
@@ -149,7 +143,7 @@ feature -- Element change
 	set_font (a_font: FONT) is
 			-- Set the font for the text
 		do
-			fontable_set_font (a_font)
+			{PRIMITIVE_IMP} Precursor (a_font)
 			adjust_label
 		end
 

@@ -3,7 +3,7 @@ system
 
 root
 
-	test_events (ROOT_CLUSTER): "make"
+	hello_world (ROOT_CLUSTER): "make"
 
 default
 	assertion (all);

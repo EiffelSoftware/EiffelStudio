@@ -22,7 +22,10 @@ inherit
 			is_equal
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (op: STRING_AS; b: BOOLEAN; inf: BOOLEAN) is
 			-- Create a new INFIX AST node.

@@ -652,8 +652,7 @@ feature -- Access
 			t_not_void: t /= Void
 			l_not_void: l /= Void
 		do
-			create Result
-			Result.initialize (t, c, l)
+			create Result.initialize (t, c, l)
 		ensure
 			creation_expr_as_not_void: Result /= Void
 			type_set: Result.type = t
@@ -1176,8 +1175,7 @@ feature -- Access
 		require
 			op_not_void: op /= Void
 		do
-			create Result
-			Result.initialize (op, b, True)
+			create Result.initialize (op, b, True)
 		ensure
 			infix_as_not_void: Result /= Void
 			operator_set: Result.visual_name = op.value
@@ -1453,8 +1451,7 @@ feature -- Access
 		require
 			op_not_void: op /= Void
 		do
-			create Result
-			Result.initialize (op, b, False)
+			create Result.initialize (op, b, False)
 		ensure
 			prefix_as_not_void: Result /= Void
 			operator_set: Result.visual_name = op.value

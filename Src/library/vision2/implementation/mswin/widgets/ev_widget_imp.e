@@ -136,13 +136,6 @@ feature -- Access
 			valid_parent: Result.item /= Void
 		end
 
-	application: CELL [EV_APPLICATION_IMP] is
-			-- The current application. Needed for the
-			-- accelerators.
-		once
-			!! Result.put (Void)
-		end
-			
 	focus_on_widget: CELL [EV_WIDGET_IMP] is
 			-- Widget that has currently the focus.
 		once
@@ -1006,13 +999,14 @@ feature -- Deferred features
 		deferred
 		end
 
+feature {NONE} -- Feature that should be directly implemented by externals
+
 	mouse_message_x (lparam: INTEGER): INTEGER is
 			-- Encapsulation of the c_mouse_message_x function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
 			-- c_mouse_message_x deferred but it does not wotk because
 			-- it would be implemented by an external.
-		do
-			Result := cwin_lo_word (lparam)
+		deferred
 		end
 
 	mouse_message_y (lparam: INTEGER): INTEGER is
@@ -1020,8 +1014,7 @@ feature -- Deferred features
 			-- WEL_WINDOW. Normaly, we should be able to have directly
 			-- c_mouse_message_x deferred but it does not wotk because
 			-- it would be implemented by an external.
-		do
-			Result := cwin_hi_word (lparam)
+		deferred
 		end
 
 end -- class EV_WIDGET_IMP

@@ -365,8 +365,12 @@ feature -- Element change
 				disable_button (button.id)
 			end
 
-				-- We notify the change to integrate them if necessary
-			notify_change (2 + 1, Current)
+				-- Only perform resizing if we are not currently within
+				-- execution of `reset_button'.
+			if not is_in_reset_button then
+					-- We notify the change to integrate them if necessary
+				notify_change (2 + 1, Current)
+			end
 		end
 		
 	remove_item (button: EV_TOOL_BAR_ITEM_IMP) is
@@ -376,7 +380,11 @@ feature -- Element change
 		do
 			id1 := ev_children.index_of (button, 1)
 			delete_button (internal_get_index (button))
-			notify_change (2 + 1, Current)
+				-- Only perform resizing if we are not currently within
+				-- execution of `reset_button'.
+			if not is_in_reset_button then
+				notify_change (2 + 1, Current)
+			end
 				-- Now restore `private_pixmap' and
 				-- `private_grey_pixmap' if necessary.
 			button.restore_private_pixmaps
@@ -438,10 +446,21 @@ feature -- Basic operation
 		local
 			an_index: INTEGER
 		do
+				-- Flag `is_in_reset_button' to `True', preventing resizing occurring.
+			is_in_reset_button := True
+			lock_window_update
 			an_index := internal_get_index (but) + 1
 			remove_item (but)
 			insert_item (but, an_index)
+			unlock_window_update
+			is_in_reset_button := False
+			notify_change (2 + 1, Current)
 		end
+		
+	is_in_reset_button: BOOLEAN
+		-- Is `internal_reset_button' currently executing?
+		-- Used to prevent sizing notifications from occurring during `internal_reset_button' which
+		-- calls `remove_item' followed by `insert_item'.
 		
 	is_dockable_source (x_pos, y_pos: INTEGER): BOOLEAN is
 			-- Is `Current' at position `x_pos', `y_pos' a dockable source?
@@ -454,7 +473,6 @@ feature -- Basic operation
 				Result := True
 			end
 		end
-		
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_ITEM_IMP is
 			-- Find the item at `x_pos', `y_pos'.

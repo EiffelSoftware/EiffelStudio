@@ -20,6 +20,12 @@ inherit
 	EV_TEXTABLE_IMP
                 rename
                         label_widget as widget
+		export {NONE}
+			box,
+			initialize,
+			create_text_label
+		redefine
+			make_with_text
                 end
 
 creation

@@ -336,8 +336,13 @@ feature  -- Status report
 	selected_item: SCROLLABLE_LIST_ELEMENT is
 			-- Selected item if single or extended selection mode is selected
 			-- Void if nothing is selected
+		local
+			its: like selected_items
 		do
-			Result := selected_items.first
+			its := selected_items;
+			if not its.empty then
+				Result := its.first
+			end
 		end;
 
 	selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT] is
@@ -361,8 +366,13 @@ feature  -- Status report
 			-- Position of selected item if single or extended selection mode is
 			-- selected
 			-- Null if nothing is selected
+		local	
+			pos: like selected_positions
 		do
-			Result := selected_positions.first
+			pos := selected_positions;
+			if not pos.empty then
+				Result := pos.first
+			end
 		end;
 
 feature  -- Status setting

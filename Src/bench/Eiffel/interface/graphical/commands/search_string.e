@@ -10,26 +10,22 @@ class SEARCH_STRING
 inherit
 
 	ICONED_COMMAND
+		rename
+			init_from_tool as make
+		end
 
 creation
 
 	make
-
-feature -- Initialization
-
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
-			-- Initialize the command. And create the window.
-		do
-			!!search_window.make (c, a_text_window);
-			init (a_text_window);
-		end;
 
 feature -- Close window
 
 	close is
 			-- Close the search window.
 		do
-			search_window.close
+			if search_window /= Void then
+				search_window.close
+			end
 		end; 
 
 feature -- Properties
@@ -46,8 +42,11 @@ feature -- Properties
 feature {NONE} -- Implementation
 
 	work (arg: ANY) is
-			-- Change font in `a_text_window'.
+			-- Popup seach window in `tool'.
 		do
+			if search_window = Void then
+				!! search_window.make (tool);
+			end;
 			search_window.call 
 		end;
 

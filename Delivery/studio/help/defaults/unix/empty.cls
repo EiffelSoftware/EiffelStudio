@@ -7,4 +7,4 @@ indexing
 $class_typeclass
 	$classname
 
-$inheritance_clause$creation_clause$initialization_clauseend -- class $classname
+$inheritance_clause$creation_clause$initialization_clauseend

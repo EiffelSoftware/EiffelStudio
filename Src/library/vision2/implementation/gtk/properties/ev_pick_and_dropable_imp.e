@@ -250,8 +250,11 @@ feature -- Implementation
 		end
 
 	signal_emit_stop (a_c_object: POINTER; signal: STRING) is
+		local
+			temp_string: ANY
 		do
-			C.gtk_signal_emit_stop_by_name (a_c_object, eiffel_to_c (signal))
+			temp_string := signal.to_c
+			C.gtk_signal_emit_stop_by_name (a_c_object, $temp_string)
 		end
 
 	end_transport_filter (a_type, a_x, a_y, a_button: INTEGER;

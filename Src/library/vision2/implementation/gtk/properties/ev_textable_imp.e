@@ -93,9 +93,12 @@ feature -- Element change
 	
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
+		local
+			temp_string: ANY
 		do
+			temp_string := a_text.to_c
 			C.gtk_widget_show (text_label)
-			C.gtk_label_set_text (text_label, eiffel_to_c (a_text))
+			C.gtk_label_set_text (text_label, $temp_string)
 		end
 
 	remove_text is

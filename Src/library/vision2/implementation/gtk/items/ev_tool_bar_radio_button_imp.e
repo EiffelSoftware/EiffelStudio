@@ -14,6 +14,9 @@ inherit
 
 	EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 
+creation
+	make
+
 feature -- Status report
 
 	is_peer (peer: EV_TOOL_BAR_RADIO_BUTTON): BOOLEAN is

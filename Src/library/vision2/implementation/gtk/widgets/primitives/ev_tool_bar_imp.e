@@ -15,6 +15,10 @@ inherit
 			set_default_options
 		end
 
+creation
+	make,
+	make_with_bitmap_size
+
 feature {NONE} -- Implementation
 
 	make is

@@ -34,6 +34,7 @@ feature {NONE} -- Implementation
 			combo_box_simple_test: COMBO_BOX_SIMPLE_TEST
 			list_basic_test: LIST_BASIC_TEST
 			list_pixmap_test: LIST_PIXMAP_TEST
+			list_multiple_selection_test: LIST_MULTIPLE_SELECTION_TEST
 			password_field_basic_test: PASSWORD_FIELD_BASIC_TEST
 			password_field_validate_entry_test: PASSWORD_FIELD_VALIDATE_ENTRY_TEST
 			toggle_button_is_toggled_test: TOGGLE_BUTTON_IS_SELECTED_TEST
@@ -71,8 +72,18 @@ feature {NONE} -- Implementation
 			tree_dynamic_test: TREE_DYNAMIC_TEST
 			tree_pixmap_test: TREE_PIXMAP_TEST
 			multi_column_list_basic_test: MULTI_COLUMN_LIST_BASIC_TEST
-			
-			
+			multi_column_list_column_resizing_test: MULTI_COLUMN_LIST_COLUMN_RESIZING_TEST
+			multi_column_list_pixmap_test: MULTI_COLUMN_LIST_PIXMAP_TEST
+			multi_column_list_multiple_selection_test: MULTI_COLUMN_LIST_MULTIPLE_SELECTION_TEST
+			text_field_basic_test: TEXT_FIELD_BASIC_TEST
+			text_field_validate_entry_test: TEXT_FIELD_VALIDATE_ENTRY_TEST
+			spin_button_basic_test: SPIN_BUTTON_BASIC_TEST
+			spin_button_range_test: SPIN_BUTTON_RANGE_TEST
+			tool_bar_basic_test: TOOL_BAR_BASIC_TEST
+			tool_bar_pixmap_test: TOOL_BAR_PIXMAP_TEST
+			tool_bar_radio_button_test: TOOL_BAR_RADIO_BUTTON_TEST
+			tool_bar_toggle_button_test: TOOL_BAR_TOGGLE_BUTTON_TEST
+			tool_bar_combo_box_test: TOOL_BAR_COMBO_BOX_TEST
 			
 			--| FIXME remove
 			table_testing_test: TABLE_TESTING_TEST

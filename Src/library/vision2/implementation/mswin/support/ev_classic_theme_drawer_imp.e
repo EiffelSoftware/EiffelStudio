@@ -97,7 +97,7 @@ feature -- Basic operations
 			end
 		end
 
-	draw_text (wel_item: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; text: STRING; dw_text_flags: INTEGER; is_sensitive: BOOLEAN; a_content_rect: WEL_RECT; foreground_color: EV_COLOR) is
+	draw_text (wel_item: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; text: STRING; dw_text_flags: INTEGER; is_sensitive: BOOLEAN; a_content_rect: WEL_RECT; foreground_color: EV_COLOR_IMP) is
 			-- Draw `text' on `a_hdc' within `a_content_rect' corresponding to part `a_part_id', `a_state_id'. Respect state of `is_sensitive' and use `foreground_color'
 			-- if set. Font used is that already selected into `a_hdc'.
 		do

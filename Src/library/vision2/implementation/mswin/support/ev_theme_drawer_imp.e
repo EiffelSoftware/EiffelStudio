@@ -100,7 +100,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	draw_text (theme: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; text: STRING; dw_text_flags: INTEGER; is_sensitive: BOOLEAN; a_content_rect: WEL_RECT; foreground_color: EV_COLOR) is
+	draw_text (theme: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; text: STRING; dw_text_flags: INTEGER; is_sensitive: BOOLEAN; a_content_rect: WEL_RECT; foreground_color: EV_COLOR_IMP) is
 			-- Draw `text' using theme `theme' on `a_hdc' within `a_content_rect' corresponding to part `a_part_id', `a_state_id'. Respect state of `is_sensitive' and use `foreground_color'
 			-- if set.
 		require
@@ -185,13 +185,12 @@ feature -- Basic operations
 			end		
 		end
 		
-	internal_draw_text (item: POINTER; dc: WEL_DC; text: STRING; r: WEL_RECT; flags: INTEGER; is_sensitive: BOOLEAN; foreground_color: EV_COLOR) is
+	internal_draw_text (item: POINTER; dc: WEL_DC; text: STRING; r: WEL_RECT; flags: INTEGER; is_sensitive: BOOLEAN; foreground_color: EV_COLOR_IMP) is
 			-- Draw `text' of `Current' on `dc', in `r'.
 			-- If not `is_sensitive' then perform appropriate
 			-- higlighting on text.
 		local
 			old_text_color: WEL_COLOR_REF
-			color_imp: EV_COLOR_IMP
 		do
 			old_text_color := dc.text_color
 			if not is_sensitive then
@@ -202,8 +201,7 @@ feature -- Basic operations
 				dc.set_text_color (color_gray_text)
 				r.offset (-1, -1)
 			else
-				color_imp ?= foreground_color.implementation
-				dc.set_text_color (color_imp)
+				dc.set_text_color (foreground_color)
 			end
 			dc.set_background_transparent
 			dc.draw_text (text, r, flags)

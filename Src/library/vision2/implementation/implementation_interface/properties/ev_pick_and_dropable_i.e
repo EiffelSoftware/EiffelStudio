@@ -257,17 +257,18 @@ feature {EV_ANY_I} -- Implementation
 		is
 			-- Executed when `pebble' is being moved.
 			-- Draw a rubber band from pick position to pointer position.
-		require
-			accept_cursor_not_void: default_accept_cursor /= Void
-			deny_cursor_not_void: default_deny_cursor /= Void
 		local
 			target: EV_ABSTRACT_PICK_AND_DROPABLE
+			last_widget_target: EV_WIDGET_I
 		do
 			draw_rubber_band
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
-			target := pointed_target 
-			update_pointer_style (target)			
+			
+			target := pointed_target
+			if target /= last_pointed_target then
+				update_pointer_style (target)
+			end						
 		end
 
 	update_pointer_style (target: EV_ABSTRACT_PICK_AND_DROPABLE) is
@@ -287,6 +288,7 @@ feature {EV_ANY_I} -- Implementation
 				end
 			else
 				over_valid_target := False
+				last_pointed_target := Void
 				if deny_cursor /= Void then
 					internal_set_pointer_style (deny_cursor)
 				else
@@ -423,6 +425,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2001/06/16 01:09:07  king
+--| Optimized execute to not set pointer everytime
+--|
 --| Revision 1.3  2001/06/07 23:08:08  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

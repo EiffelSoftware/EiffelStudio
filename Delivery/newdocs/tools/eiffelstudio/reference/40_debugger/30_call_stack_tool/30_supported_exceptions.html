@@ -1,0 +1,66 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+
+<head>
+<title>Supported exceptions</title>
+<META NAME="MS-HKWD" CONTENT="supported exceptions">
+<META NAME="MS-HKWD" CONTENT="exceptions">
+<META NAME="MS-HKWD" CONTENT="handled exceptions">
+<META NAME="MS-HKWD" CONTENT="stack overflow">
+<LINK REL=StyleSheet HREF="/default.css">
+</head>
+
+<body>
+
+<h1>Supported exceptions</h1>
+
+<p>Here is a list of exceptions that may appear in the <A HREF="10_call_stack_tool.html">call stack tool</a>. When
+they are raised, a tag may be there to give more information, if necessary. All
+these exceptions are declared in <A CLASS="eclass" HREF="/libraries/base/reference/kernel/except_const.html">EXCEPT_CONST</a>.</p>
+<p><b>Feature call on Void target</b>: An attempt was made to call a feature on
+an object that is Void. The tag indicates the name of the feature of the feature
+that could not be called. For instance if the code line is a.b.c and the tag is
+&quot;c&quot; then a.b was Void.
+<p><b> No more memory</b>: A memory allocation failed.<p><b>Precondition violated</b>: One of the conditions necessary prior to
+entering a feature is not verified. This may indicate either that the
+precondition is too strong, or that the call is invalid. The tag should give the
+name of the violated precondition, if any.<p><b>Postcondition violated</b>: One of the conditions checked when a feature
+exits is not verified. This may indicate either that the postcondition is too
+strong, or that the feature did not behave correctly. The tag should give the
+name of the violated postcondition, if any.<p><b>Class invariant violated</b>: One of
+the conditions that checks the validity of objects is not verified. This may
+indicate that an object was left in an invalid state after a method call. The
+tag should give the name of the violated invariant, if any.<p><b> Assertion
+violated</b>: An assertion was not verified. The tag should give the name of
+the violated assertion, if any.
+<p><b> Non-decreasing loop variant</b>: A loop variant does not vary. This may
+lead to stack overflows or erroneous results.<p><b> Loop invariant violated</b>:
+A condition that should be checked when executing a loop is not verified. The
+tag should give the name of the violated invariant.<p><b>Floating point exception</b> (signal
+SIGFPE): An error occured while processing floating point numbers. This may be
+for example a FPU overflow, a division by zero, or an invalid operation.<p><b> Unmatched inspect value</b>:
+An inspect clause couldn't find the value it was passed among the `when'
+clauses. If any value may be passed to the `when' clause, adding an `else'
+clause will solve this problem.
+<p><b> I/O error</b>: An error occurred while accessing a stream. Examples of
+this are a missing file, or insufficient rights.
+<p> <b> Retrieval error</b>: A file could not be retrieved. This may be caused by an
+invalid header, or more generally by a corrupted data file.<p><b> Developer
+exception</b>: Developer exceptions can be raised by calling {<A CLASS="eclass" HREF="/libraries/base/reference/kernel/exceptions.html">EXCEPTIONS</a>}.<A CLASS="efeature" HREF="/libraries/base/reference/kernel/exceptions.html#raise">raise</A>.
+They can indicate any kind of internal error.
+<p><b>Operating system signal</b>: The
+program received a signal from the operating system.<p><b>Exception in rescue
+clause</b>: An
+exception occurred within a rescue clause.<p><b>Void assigned to expanded</b>:
+An attempt was made to assign a Void value to an expanded object.<p><b>Run-time
+I/O error</b>: Exception raised by the run-time when encountering a I/O error
+internally.<p><b>External event</b>: On Unix, this happens when an operating
+system error occurs and does not set the `errno' variable.<p><b>Operatig system
+error</b>: On Unix, this happens when an operating system error occurs and sets
+the `errno' variable.<p><b>COM error</b>: Raised when EiffelCOM encounters an
+error.
+
+
+</body>
+
+</html>

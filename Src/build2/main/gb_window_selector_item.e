@@ -41,6 +41,26 @@ feature {NONE} -- Initialization
 		ensure
 			object_set: object = an_object
 		end
+		
+feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
+
+	unparent is
+			-- Remove `Current' from its parent.
+		local
+			parent_item: EV_TREE_NODE_LIST
+		do
+			parent_item ?= parent
+			if parent_item /= Void then
+				check
+					parent_item_not_void: parent_item /= Void
+					item_contained_in_parent: parent_item.has (Current)
+				end
+				parent_item.prune (Current)			
+			end
+		ensure
+			parent_void: parent = Void
+		end
+
 
 feature -- Access
 

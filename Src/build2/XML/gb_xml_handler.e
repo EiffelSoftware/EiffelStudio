@@ -63,7 +63,7 @@ feature -- Basic operations
 			create xml_load
 			xml_load.load
 		end
-		
+	
 	load_components is
 			-- Load previously stored components in `component_document',
 			-- or create `component_document' if no component file exists.
@@ -156,8 +156,7 @@ feature -- Basic operations
 			element_to_remove := child_element_by_name (an_element, component_name)
 			an_element.delete (element_to_remove)
 		end
-		
-		
+
 feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 
 	xml_element_representing_named_component (a_name: STRING): XML_ELEMENT is
@@ -201,6 +200,35 @@ feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 		
 		
 feature {NONE} -- Implementation
+
+	component_filename: FILE_NAME is
+			-- Location of component file.
+		do
+			if visual_studio_information.is_visual_studio_wizard then
+				create Result.make_from_string (visual_studio_information.wizard_installation_path)
+				Result.extend ("Wizards")
+				Result.extend ("Build")
+				Result.extend ("components")
+				Result.extend ("components.xml")
+			else
+				create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
+				Result.extend ("build")
+				Result.extend ("components")
+				Result.extend ("components.xml")
+			end
+		ensure
+			Result_exists: Result /= Void and not Result.is_empty
+		end	
+
+	visual_studio_information: VISUAL_STUDIO_INFORMATION is
+			-- `Result' is instance of VISUAL_STUDIO_INFORMATION.
+			-- Is a Once, as the state will never change during the
+			-- execution of Build.
+		once
+			create Result
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	component_document: XML_DOCUMENT
 		-- Document which contains representations of all components

@@ -495,13 +495,12 @@ rt_shared void initsig(void)
 	sig_stk.s_pending = '\0';		/* No signals pending yet */
 
 	for (sig = 1; sig < EIF_NSIG; sig++) {
+		old = SIG_IGN;
+
 #ifdef EIF_THREADS
 	/* In Multi-threaded mode, we do not want to call
      * signal () on some specific signals.
 	 */
-
-	old = SIG_IGN;
-
 	switch (sig) {
 	
 #ifdef EIF_DFLT_SIGUSR

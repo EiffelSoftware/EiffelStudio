@@ -415,7 +415,7 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			-- Only increment counter.
+				-- Only increment counter.
 			dummy := idx_cnt.next
 		end
 

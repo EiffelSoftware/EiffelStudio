@@ -80,8 +80,7 @@ feature -- Generic conformance
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 
 		do
-			buffer.putint (Like_current_type)
-			buffer.putstring (", Dftype(")
+			buffer.putstring ("Dftype(")
 			context.Current_register.print_register
 			buffer.putstring ("), ")
 		end
@@ -97,9 +96,7 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			buffer.putint (Like_current_type)
-			buffer.putstring (", 0,")
-			dummy := idx_cnt.next
+			buffer.putstring ("0,")
 			dummy := idx_cnt.next
 		end
 
@@ -108,12 +105,11 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			dummy := idx_cnt.next
 			buffer.putstring ("typarr[")
 			buffer.putint (idx_cnt.value)
-			buffer.putstring ("] = Dftype(")
+			buffer.putstring ("] = RTID(Dftype(")
 			context.Current_register.print_register
-			buffer.putstring (");")
+			buffer.putstring ("));")
 			buffer.new_line
 			dummy := idx_cnt.next
 		end

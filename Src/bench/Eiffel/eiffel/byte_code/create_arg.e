@@ -183,8 +183,7 @@ feature -- Generic conformance
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 
 		do
-			buffer.putint (Like_arg_type)
-			buffer.putstring (", RTCA(arg")
+			buffer.putstring ("RTCA(arg")
 			buffer.putint (position)
 			buffer.putchar (',')
 			buffer.putint (Internal_type)
@@ -203,10 +202,7 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			buffer.putint (Like_arg_type)
-			buffer.putstring (", 0,")
-
-			dummy := idx_cnt.next
+			buffer.putstring ("0,")
 			dummy := idx_cnt.next
 		end
 
@@ -215,14 +211,13 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			dummy := idx_cnt.next
 			buffer.putstring ("typarr[")
 			buffer.putint (idx_cnt.value)
-			buffer.putstring ("] = RTCA(arg")
+			buffer.putstring ("] = RTID(RTCA(arg")
 			buffer.putint (position)
 			buffer.putchar (',')
 			buffer.putint (Internal_type)
-			buffer.putstring (");")
+			buffer.putstring ("));")
 			buffer.new_line
 			dummy := idx_cnt.next
 		end

@@ -479,9 +479,10 @@ feature -- Generic conformance
 			then
 				-- It's an anchored type 
 				cr_info.generate_cid (buffer, final_mode)
+			else
+				buffer.putint (generated_id (final_mode))
+				buffer.putstring (", ")
 			end
-			buffer.putint (generated_id (final_mode))
-			buffer.putstring (", ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
@@ -492,8 +493,9 @@ feature -- Generic conformance
 			then
 				-- It's an anchored type 
 				cr_info.make_gen_type_byte_code (ba)
+			else
+				ba.append_short_integer (generated_id (False))
 			end
-			ba.append_short_integer (generated_id (False))
 		end
 
 	generate_cid_array (buffer : GENERATION_BUFFER; 
@@ -505,14 +507,15 @@ feature -- Generic conformance
 				use_info and then (cr_info /= Void)
 				and then not is_expanded
 			then
-				-- It's an anchored type 
+					-- It's an anchored type 
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
-			end
-			buffer.putint (generated_id (final_mode))
-			buffer.putstring (", ")
+			else
+				buffer.putint (generated_id (final_mode))
+				buffer.putstring (", ")
 
-			-- Increment counter
-			dummy := idx_cnt.next
+					-- Increment counter
+				dummy := idx_cnt.next
+			end
 		end
 
 	generate_cid_init (buffer : GENERATION_BUFFER; 
@@ -526,9 +529,9 @@ feature -- Generic conformance
 			then
 				-- It's an anchored type 
 				cr_info.generate_cid_init (buffer, final_mode, idx_cnt)
+			else
+				dummy := idx_cnt.next
 			end
-
-			dummy := idx_cnt.next
 		end
 
 feature -- Generic conformance for IL

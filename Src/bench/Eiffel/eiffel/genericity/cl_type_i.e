@@ -11,7 +11,6 @@ inherit
 			is_reference,
 			is_true_expanded,
 			is_separate,
-			is_out,
 			is_valid,
 			is_explicit,
 			is_external,
@@ -240,9 +239,9 @@ feature -- Status
 					-- We only support expanded for external class at the moment.
 				Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype				
 			else
-				if base_class = System.system_string_class.compiled_class then
+				if class_id = System.system_string_class.compiled_class.class_id then
 					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_string
-				elseif base_class.class_id = System.system_object_id then
+				elseif class_id = System.system_object_id then
 					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_object
 				else
 					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_class
@@ -255,9 +254,6 @@ feature -- Status
 
 	is_separate: BOOLEAN
 			-- Is the type separate?
-
-	is_out: BOOLEAN
-			-- Is current actual type represent a out parameter type?
 
 	is_enum: BOOLEAN is
 			-- Is current type an IL enum type?
@@ -343,14 +339,6 @@ feature -- Setting
 			is_separate_set: is_separate = b
 		end
 
-	set_is_out (b: BOOLEAN) is
-			-- Assign `b' to `is_out'.
-		do
-			is_out := b
-		ensure
-			is_out_set: is_out = b
-		end
-		
 	set_cr_info (cinfo : CREATE_INFO) is
 			-- Set `cr_info' to `cinfo'.
 		require

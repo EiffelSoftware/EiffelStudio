@@ -50,9 +50,7 @@ feature -- Access
 	selected_value: STRING is
 			-- The value of the selected item from 'value', if any, otherwise void.
 		local
-			l_item: STRING
 			l_items: LIST [STRING]
-			found: BOOLEAN
 		do
 			l_items := value.split (';')
 			Result := l_items.first

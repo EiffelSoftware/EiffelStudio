@@ -405,9 +405,7 @@ feature {NONE} -- Implementation
 				i > nb
 			loop
 				l_name := field_name_of_type (i, dtype)
-				if l_name.item (1) /= '_' then
-					internal_serialize (l_name, field (i, obj), tab_count + 1, f)
-				end
+				internal_serialize (l_name, field (i, obj), tab_count + 1, f)
 				i := i + 1
 			end
 			write_tabs (f, tab_count)
@@ -424,10 +422,10 @@ feature {NONE} -- Implementation
 	write (name: STRING; a: ANY; prefix_text, suffix: SYSTEM_STRING; tab_count: INTEGER; f: TEXT_WRITER) is
 			-- Write `a' with name `name' in `f' in between `prefix' and `suffix' after `tab_count' tabs.
 		require
-			non_void_object: a /= void
-			non_void_name: name /= void
-			non_void_prefix_text: prefix_text /= void
-			non_void_suffix_text: suffix /= void
+			non_void_object: a /= Void
+			non_void_name: name /= Void
+			non_void_prefix_text: prefix_text /= Void
+			non_void_suffix_text: suffix /= Void
 			valid_tab_count: tab_count >= 0
 			non_void_file: f /= Void
 		do

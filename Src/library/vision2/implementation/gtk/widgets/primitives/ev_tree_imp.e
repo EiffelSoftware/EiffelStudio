@@ -552,8 +552,8 @@ feature {NONE} -- Implementation
 			-- Ensure `an_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		local
-			item_alloc_y: INTEGER
-			v_adjustment: POINTER
+--			item_alloc_y: INTEGER
+--			v_adjustment: POINTER
 		do
 --			-- Move down in to ev_list_imp or refactor a scrolled window pointer.
 --			item_alloc_y := C.gtk_allocation_struct_y (
@@ -728,6 +728,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2001/07/02 16:19:57  king
+--| Uncommented as of yet unused locals
+--|
 --| Revision 1.46  2001/06/29 22:37:41  king
 --| Added unimplemented ensure_item_visible
 --|

@@ -82,7 +82,7 @@ feature -- Element Change
 			wel_string: WEL_STRING;
 			registry_value_ptr: POINTER
 		do
-			if path /= void then
+			if path /= Void then
 				!! wel_string.make (path);
 				registry_value_ptr := cwin_reg_def_query_value (key, wel_string.item)
 			else

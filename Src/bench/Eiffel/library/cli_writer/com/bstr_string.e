@@ -7,10 +7,7 @@ class
 	BSTR_STRING
 
 inherit
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 create
 	make_by_uni_string,

@@ -124,7 +124,7 @@ feature -- Basic operation
 				-- Only select a main window if there is at least one window
 				-- in the system. It is possible to save a project after having
 				-- deleted all windows.
-			if not window_selector.objects.is_empty then
+			if object_handler.root_window_object /= Void then
 				Window_selector.select_main_window
 			end
 			

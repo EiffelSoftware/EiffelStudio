@@ -12,7 +12,7 @@ inherit
 			find_assign_result, last_all_in_result, make_byte_code,
 			assigns_to, is_unsafe, generate_il,
 			optimized_byte_node, calls_special_features,
-			size, inlined_byte_code, pre_inlined_code
+			size, inlined_byte_code, pre_inlined_code, enlarged, need_enlarging
 		end
 
 	VOID_REGISTER
@@ -60,6 +60,152 @@ feature -- Settings
 			else_part := e
 		end
 
+	need_enlarging: BOOLEAN is
+			-- Does current need to be modified for improved code generation?
+ 		do
+				-- Made `need_enlarging' return True in final mode. This enables us to implement
+				-- `enlarged' that will simplify current IF_B node into something simpler if
+				-- associated boolean expressions can be simplified.
+			Result := context.final_mode
+		end
+		
+	enlarged: INSTR_B is
+			-- Enlarge the tree to get more attributes and return the
+			-- new enlarged tree node.
+		local
+			l_value: VALUE_I
+			l_if_b: IF_B
+			l_elseif_b: ELSIF_B
+			l_expr: EXPR_B
+		do
+			check
+				final_mode: context.final_mode
+			end
+			condition := condition.enlarged
+			l_value := condition.evaluate
+			if l_value.is_boolean then
+				if l_value.boolean_value then
+					compound.enlarge_tree
+					create {INSTR_LIST_B} Result.make (compound)
+				else
+					if elsif_list = Void and else_part = Void then
+						create {INSTR_LIST_B} Result.make (null_byte_node)
+					elseif elsif_list = Void then
+						else_part.enlarge_tree
+						create {INSTR_LIST_B} Result.make (else_part)
+					else
+						check
+							not_elsif_list_empty: not elsif_list.is_empty
+						end
+						
+							-- Now remove useless `elseif' statements.
+						from
+							elsif_list.start
+						until
+							elsif_list.after
+						loop
+							l_elseif_b ?= elsif_list.item
+							l_expr := l_elseif_b.expr.enlarged
+							l_value := l_expr.evaluate
+							if l_value.is_boolean then
+								if l_value.boolean_value then
+										-- Code will always be executed, get rid of remaining items.
+									l_elseif_b.enlarge_tree
+									elsif_list.forth
+									from
+									until
+										elsif_list.after
+									loop
+										elsif_list.remove
+									end
+									else_part := Void
+								else
+										-- Code will never be executed, get rid of it.
+									elsif_list.remove
+								end
+							else
+								l_elseif_b.enlarge_tree
+								elsif_list.forth
+							end
+						end
+						
+							-- Create new node.
+						if not elsif_list.is_empty then
+							create l_if_b
+							l_elseif_b ?= elsif_list.first
+							l_if_b.set_condition (l_elseif_b.expr)
+							l_if_b.set_compound (l_elseif_b.compound)
+							elsif_list.start
+							elsif_list.remove
+							if not elsif_list.is_empty then
+								l_if_b.set_elsif_list (elsif_list)
+							end
+							else_part.enlarge_tree
+							l_if_b.set_else_part (else_part)
+							Result := l_if_b
+						else
+							if else_part = Void then
+								create {INSTR_LIST_B} Result.make (null_byte_node)
+							else
+								else_part.enlarge_tree
+								create {INSTR_LIST_B} Result.make (else_part)
+							end
+						end
+					end
+				end
+			else
+					-- We could not simplify first if statment, let's see if we can simplifiy
+					-- remaining `elsif_list'.
+				Result := Current
+				if compound /= Void then
+					compound.enlarge_tree
+				end
+				if elsif_list /= Void then
+					check
+						not_elsif_list_empty: not elsif_list.is_empty
+					end
+					
+						-- Now remove useless `elseif' statements.
+					from
+						elsif_list.start
+					until
+						elsif_list.after
+					loop
+						l_elseif_b ?= elsif_list.item
+						l_expr := l_elseif_b.expr.enlarged
+						l_value := l_expr.evaluate
+						if l_value.is_boolean then
+							if l_value.boolean_value then
+									-- Code will always be executed, get rid of remaining items.
+								l_elseif_b.enlarge_tree
+								elsif_list.forth
+								from
+								until
+									elsif_list.after
+								loop
+									elsif_list.remove
+								end
+								else_part := Void
+							else
+									-- Code will never be executed, get rid of it.
+								elsif_list.remove
+							end
+						else
+							l_elseif_b.enlarge_tree
+							elsif_list.forth
+						end
+					end
+					
+					if elsif_list.is_empty then
+						elsif_list := Void
+					end
+				end
+				if else_part /= Void then
+					else_part.enlarge_tree
+				end
+			end
+		end
+		
 	enlarge_tree is
 			-- Enlarge the if construct
 		do

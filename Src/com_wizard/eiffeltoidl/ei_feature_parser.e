@@ -45,10 +45,10 @@ feature -- Basic operations
 					inputs.forth
 				until
 					inputs.after or else
-					inputs.item.substring_index (Comment_indicator, 1) <= 0
+					inputs.item.substring_index ("--", 1) <= 0
 				loop
-					if inputs.item.substring_index (Comment_indicator, 1) > 0 then
-						inputs.item.replace_substring_all (Comment_indicator, Empty_string)
+					if inputs.item.substring_index ("--", 1) > 0 then
+						inputs.item.replace_substring_all ("--", Empty_string)
 						inputs.item.left_adjust
 						inputs.item.right_adjust
 						l_comment.append (inputs.item)

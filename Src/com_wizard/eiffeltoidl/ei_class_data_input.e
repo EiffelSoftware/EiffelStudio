@@ -74,7 +74,9 @@ feature -- Basic operations
 	
 									create raw_features.make
 									raw_features.extend (clone (input_file.last_string))
-								elseif input_file.last_string.substring_index (Comment_indicator, 1) = 1 then
+								elseif 
+									input_file.last_string.substring_index ("--", 1) = 1 
+								then
 									raw_features.extend (clone (input_file.last_string))
 								end
 							end
@@ -98,8 +100,6 @@ feature -- Basic operations
 				if eiffel_class /= Void and l_description /= Void and not l_description.empty then
 					eiffel_class.set_description (l_description)
 				end
-
-				-- Parse through the list to set "like" types to matching types.
 				parse_eiffel_type
 			end
 		end

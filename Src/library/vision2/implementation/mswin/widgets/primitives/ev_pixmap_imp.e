@@ -58,8 +58,6 @@ feature -- Loading/Saving
 
 	read_from_file (a_file: IO_MEDIUM) is
 			-- Load the pixmap described in 'file_name'. 
-			--| FIXME: If the file is in a wrong format, 
-			--|        an exception is raised.
 		local
 			dib: EV_WEL_DIB
 			s_dc: WEL_SCREEN_DC
@@ -135,10 +133,7 @@ feature -- Loading/Saving
 
 				if data_type = Loadpixmap_hbitmap then
 					create bitmap.make_by_pointer(rgb_data)
---| FIXME ARNAUD: see if the following lines are correct for the GC.
---					bitmap.set_unshared
 					create mask_bitmap.make_by_pointer(alpha_data)
---					mask_bitmap.set_unshared
 				end
 
 				if data_type = Loadpixmap_rgb_data then
@@ -1198,6 +1193,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/13 18:45:28  pichery
+--| cosmetics
+--|
 --| Revision 1.30  2000/04/12 17:00:17  brendel
 --| Added redefine of on_parented.
 --| Fixed indexing clause to EV2 standards.

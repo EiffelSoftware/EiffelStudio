@@ -71,6 +71,13 @@ feature -- Element change
 			parent_imp.move_item (Current, pos)
 		end
 
+feature {NONE} -- Invalidate
+
+	invalidate is
+			-- Should invalidate the top parent.
+		do
+		end
+
 end -- class EV_ITEM_IMP
 
 --|----------------------------------------------------------------

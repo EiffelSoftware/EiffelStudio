@@ -9,19 +9,20 @@ feature
 			-- user changed parents will be overwritten.
 		local
 			temp_parents: LINKED_LIST [PARENT_AS]
-			previous_parent, parent_diffs: PARENT_AS;
+			prev_user, previous_parent, parent_diffs: PARENT_AS;
 			exact_parent_found, parent_found: BOOLEAN;
-			new_p_nbr, nbr_of_same_parent_type: INTEGER
+			new_p_nbr, nbr_of_same_parent_type, user_same_type_count: INTEGER
 			new_parent: PARENT_AS;
-			old_new_parents: EIFFEL_LIST [PARENT_AS]				
+			old_new_parents: LINKED_LIST [PARENT_AS]				
 		do
 			if user_p /= Void then
 				if new_p /= Void or else old_p /= Void then
+					!! old_new_parents.make;
 					if old_p = Void then
-						old_new_parents := new_p
+						old_new_parents.append (new_p)
 							-- compare it with the new template
 					else
-						old_new_parents := old_p
+						old_new_parents.append (old_p)
 							-- compare it with the old template
 					end
 					from
@@ -31,6 +32,15 @@ feature
 					until
 						user_p.after
 					loop
+						if prev_user /= Void then
+							if deep_equal (prev_user.type, user_p.item.type) then
+								user_same_type_count := user_same_type_count + 1
+							else
+								user_same_type_count := 1
+							end;	
+						else
+							user_same_type_count := 1
+						end
 						from
 							nbr_of_same_parent_type := 0;
 							old_new_parents.start
@@ -46,7 +56,10 @@ feature
 								exact_parent_found := True;
 							elseif deep_equal (old_new_parents.item.type, user_p.item.type) then
 								nbr_of_same_parent_type := nbr_of_same_parent_type + 1;
-								parent_found := old_new_parents.item.is_subset_of (user_p.item);
+								if old_new_parents.item.is_subset_of (user_p.item) then
+									parent_found := nbr_of_same_parent_type 
+											= user_same_type_count
+								end
 							end;
 							if not parent_found then
 								old_new_parents.forth
@@ -60,7 +73,7 @@ feature
 								-- type then discard diff.
 							parent_diffs := user_parent_diffs 
 												(old_new_parents.item, user_p.item);
-							if old_new_parents = new_p then
+							if old_p = Void then
 								new_parent := new_p.item;
 							else
 									-- Find equivalent parent in new template
@@ -107,6 +120,7 @@ feature
 						elseif not exact_parent_found then
 							temp_parents.put_left (user_p.item)
 						end	
+						prev_user := user_p.item;
 						user_p.forth
 					end
 

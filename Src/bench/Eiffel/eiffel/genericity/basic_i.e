@@ -75,15 +75,13 @@ feature
 		do
 			reg.print_register
 			buffer.putstring (" = ")
-			buffer.putstring("RTLN(")
-			if workbench_mode then
-				buffer.putstring ("RTUD(")
-				buffer.generate_type_id (associated_reference.static_type_id)
-				buffer.putchar (')')
-			else
-				buffer.putint (associated_dtype)
-			end
-			buffer.putstring ("), *")
+				-- Even though we pass Current (which does not correspond
+				-- to the associated reference class) to CREATE_TYPE, it works
+				-- because `base_class' is redefined so that it always return
+				-- the associated reference class and `base_class' is called
+				-- by `associated_class_type' which is called by CREATE_TYPE.
+			(create {CREATE_TYPE}.make (Current)).generate
+			buffer.putstring (", *")
 			generate_access_cast (buffer)
 			reg.print_register
 			buffer.putstring (" = ")

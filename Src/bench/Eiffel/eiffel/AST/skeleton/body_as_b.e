@@ -164,7 +164,6 @@ feature -- New feature description
 					extern_proc.set_arg_list (ext_lang.arg_list);
 					extern_proc.set_return_type (ext_lang.return_type);
 					extern_proc.set_include_list (ext_lang.include_list);
-					extern_proc.set_dll_arg (ext_lang.dll_arg);
 
 -- Assertions and Rescue compound are not supported in
 -- externals.
@@ -216,7 +215,6 @@ feature -- New feature description
 					extern_func.set_arg_list (ext_lang.arg_list);
 					extern_func.set_return_type (ext_lang.return_type);
 					extern_func.set_include_list (ext_lang.include_list);
-					extern_func.set_dll_arg (ext_lang.dll_arg);
 
 -- Assertions and Rescue compound are not supported in
 -- externals.

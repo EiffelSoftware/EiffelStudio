@@ -29,9 +29,6 @@ feature -- Attributes
 	include_list: EXTERNALS_LIST;
 			-- List of include files
 
-	dll_arg: STRING;
-			-- Extra arg for dll (Windows)
-
 feature -- Routines
 
 	is_special: BOOLEAN is
@@ -240,22 +237,11 @@ feature -- Parsing
 								end;
 								rest.left_adjust;
 								if rest.count /= 0 then
-									if not rest.has (' ') then
-										dll_arg := rest;
-									else
-											-- there's more than one argument, raise an error
-										loc_begin := source.substring_index (segment, 1);
-										loc_end := loc_begin + segment.count - 1;
-										raise_external_error ("Illegal dll declaration for external%N%
-																%(It must be of the form [dll16/dll32 filename aliasname/ordinal])%N",
-																loc_begin,loc_end);
-									end;
-								else
-										-- something is missing, raise an error
+										-- there's an extra argument, raise an error
 									loc_begin := source.substring_index (segment, 1);
 									loc_end := loc_begin + segment.count - 1;
 									raise_external_error ("Illegal dll declaration for external%N%
-															%(It must be of the form [dll16/dll32 filename aliasname/ordinal])%N",
+															%(It must be of the form [dll16/dll32 filename])%N",
 															loc_begin,loc_end);
 								end;
 									-- if we reached this point, everything seems to be OK
@@ -521,11 +507,6 @@ feature -- Debug
 					io.putstring ("Special file: ");
 					io.putstring (special_file_name);
 					io.new_line;
-					if (special_id = dll16_id) or (special_id = dll32_id) then
-						io.putstring ("dll arg: ");
-						io.putstring (dll_arg);
-						io.new_line;
-					end;
 				else
 					io.putstring ("No special declaration%N");
 				end;

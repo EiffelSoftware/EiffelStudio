@@ -38,9 +38,6 @@ feature -- Attributes for externals
 	include_list: ARRAY[STRING];
 			-- List of include files
 
-	dll_arg: STRING;
-			-- Extra arg for dll (Windows)
-
 	arg_list: ARRAY[STRING];
 			-- List of arguments for the signature
 
@@ -68,12 +65,6 @@ feature -- Routines for externals
 			-- Does the external declaration include a list of include files ?
 		do
 			Result := (include_list /= Void) and then (include_list.count > 0);
-		end;
-
-	set_dll_arg (s: STRING) is
-			-- Assign s to `dll_arg'
-		do
-			dll_arg := s;
 		end;
 
 	has_signature: BOOLEAN is

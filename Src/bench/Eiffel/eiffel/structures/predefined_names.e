@@ -97,6 +97,7 @@ feature -- Constants
 	ascii_char_name_id: INTEGER is 87
 	internal_clone_name_id: INTEGER is 88
 	internal_copy_name_id: INTEGER is 89
+	put_value_at_name_id: INTEGER is 90
 	
 			-- Predefined name IDs constants
 

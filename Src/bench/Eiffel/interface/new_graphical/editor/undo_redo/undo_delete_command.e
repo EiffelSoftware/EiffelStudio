@@ -72,6 +72,7 @@ feature -- Basic operations
 			cur: TEXT_CURSOR
 		do
 			cur := chwin.cursor
+			chwin.set_selection_start (cur)
 			cur.make_from_character_pos (x_start, y_start, chwin)
 			cur.insert_string (message)
 		end

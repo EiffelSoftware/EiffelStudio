@@ -82,20 +82,24 @@ feature -- Basic operations
 	undo is
 		local
 			cur: TEXT_CURSOR
+				--| Commodite d'ecriture pour "chwin.cursor".
 		do
 			cur := chwin.cursor
-			create cur.make_from_character_pos (x_start, y_start, chwin)
+			cur.make_from_character_pos (x_start, y_start, chwin)
 			cur.delete_n_chars (new_message.count)
+			chwin.set_selection_start (cur)
 			cur.insert_string (old_message)
 		end
 
 	redo is
 		local
 			cur: TEXT_CURSOR
+				--| Commodite d'ecriture pour "chwin.cursor".
 		do
 			cur := chwin.cursor
-			create cur.make_from_character_pos (x_start, y_start, chwin)
+			cur.make_from_character_pos (x_start, y_start, chwin)
 			cur.delete_n_chars (old_message.count)
+			chwin.set_selection_start (cur)
 			cur.insert_string (new_message)
 		end
 

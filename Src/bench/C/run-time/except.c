@@ -13,6 +13,10 @@
 	executable.
 */
 
+/*
+doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exception handling routines">
+*/
+
 #include "eif_portable.h"
 
 #include <signal.h>
@@ -63,69 +67,14 @@
 /* For debugging */
 #define dprintf(n)		if (DEBUG & (n)) printf
 
-/*
-doc:<file name="except.c" header="eif_except.c">
-doc:	<attribute name="eif_stack" return_type="struct xstack">
-doc:		<summary>Stack of current execution. On entrance, each routine pushes the address of its own execution vector structure (held in the process's stack).</summary>
-doc:		<thread_safety>Per thread data.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="eif_trace" return_type="struct xstack">
-doc:		<summary>The exception trace records all the unresolved exceptions. For the case where multiple exceptions occurred and we entered different rescue clauses, we have to store the exception levels along with the unsolved exceptions.</summary>
-doc:		<thread_safety>Per thread data.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="ex_ign" return_type="char []">
-doc:		<summary>Array of ignored exceptions. The EN_BYE exception is a run-time panic that can never be caught, even by a rescue. The EN_OMEM cannot be ignored but can be caught. It is raised by the run-time system when there is not enough memory to ensure a correct Eiffel execution. The EN_FATAL exception is a run-time fatal error which cannot be caught nor ignored.</summary>
-doc:		<thread_safety>Per thread data.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="exdata" return_type="struct eif_exception">
-doc:		<summary>Stack of current exception flags. This is used to control the assertion checking (e.g. disable it when already in assertion checking).</summary>
-doc:		<thread_safety>Per thread data.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="db_ign" return_type="unsigned char []">
-doc:		<summary>Array of ignored exceptions, from the debugger's point of view. Normally an exception stops the program to allow user inspection of the objects.</summary>
-doc:		<thread_safety>Per thread data.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="eif_except" return_type="struct exprint">
-doc:		<summary>Structure used to store routine information during exception stack dumps (gathered thanks to stack look-ahead).</summary>
-doc:		<thread_safety>Not safe because not all accesses are protected through `eif_except_lock'.</thread_safety>
-doc:		<synchronization>eif_except_lock</synchronization>
-doc:		<fixme>We should protect access through `eif_except_lock' or use a private per thread data.</fixme>
-doc:	</attribute>
-doc:	<attribute name="eif_except_lock" return_type="EIF_LW_MUTEX_TYPE">
-doc:		<summary></summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Creation is not thread safe. It should be created in `eif_thread.c'</fixme>
-doc:	</attribute>
-doc:	<attribute name="print_history_table" return_type="int">
-doc:		<summary>Enable/disable printing of history table.</summary>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<eiffel_classes>EXCEPTIONS</eiffel_classes>
-doc:		<fixme>We should protect access through a mutex or use a private per thread data.</fixme>
-doc:	</attribute>
-doc:	<attribute name="ex_string" return_type="SMART_STRING">
-doc:		<summary>Container of the exception trace</summary>
-doc:		<thread_safety>Note safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<eiffel_classes>EXCEPTIONS</eiffel_classes>
-doc:		<fixme>We should protect access through a mutex or use a private per thread data.</fixme>
-doc:	</attribute>
-doc:	<attribute name="ex_tag" return_type="char * []">
-doc:		<summary>Pre-defined exception tags. No restriction on size.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None since statically initialized.</synchronization>
-doc:	</attribute>
-doc:	<attribute name="ex_tagc" return_type="unsigned char []">
-doc:		<summary>Converts a vector's type in the stack to an exception code, i.e. given a vector in the stack, which exception has to be raised?</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None since statically initialized.</synchronization>
-doc:	</attribute>
-doc:</file>
-*/
-
 #ifndef EIF_THREADS
-
+/*
+doc:	<attribute name="eif_stack" return_type="struct xstack" export="public">
+doc:		<summary>Stack of current execution. On entrance, each routine pushes the address of its own execution vector structure (held in the process's stack).</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_public struct xstack eif_stack = {		/* Calling stack */
 	(struct stxchunk *) 0,				/* st_hd */
 	(struct stxchunk *) 0,				/* st_tl */
@@ -134,6 +83,14 @@ rt_public struct xstack eif_stack = {		/* Calling stack */
 	(struct ex_vect *) 0,				/* st_end */
 	(struct ex_vect *) 0,				/* st_bot */
 };
+
+/*
+doc:	<attribute name="eif_trace" return_type="struct xstack" export="public">
+doc:		<summary>The exception trace records all the unresolved exceptions. For the case where multiple exceptions occurred and we entered different rescue clauses, we have to store the exception levels along with the unsolved exceptions.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_public struct xstack eif_trace = {		/* Exception trace */
 	(struct stxchunk *) 0,				/* st_hd */
 	(struct stxchunk *) 0,				/* st_tl */
@@ -143,8 +100,22 @@ rt_public struct xstack eif_trace = {		/* Exception trace */
 	(struct ex_vect *) 0,				/* st_bot */
 };
 
+/*
+doc:	<attribute name="ex_ign" return_type="char []" export="public">
+doc:		<summary>Array of ignored exceptions. The EN_BYE exception is a run-time panic that can never be caught, even by a rescue. The EN_OMEM cannot be ignored but can be caught. It is raised by the run-time system when there is not enough memory to ensure a correct Eiffel execution. The EN_FATAL exception is a run-time fatal error which cannot be caught nor ignored.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_public unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt */
 
+/*
+doc:	<attribute name="exdata" return_type="struct eif_exception" export="public">
+doc:		<summary>Stack of current exception flags. This is used to control the assertion checking (e.g. disable it when already in assertion checking).</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_public struct eif_exception exdata = {
 	0,				/* ex_val */
 	0,				/* ex_nomem */
@@ -160,13 +131,36 @@ rt_public struct eif_exception exdata = {
 };
 
 #ifdef WORKBENCH
+/*
+doc:	<attribute name="db_ign" return_type="unsigned char []" export="public">
+doc:		<summary>Array of ignored exceptions, from the debugger's point of view. Normally an exception stops the program to allow user inspection of the objects.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_public unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */
 #endif
 
+/*
+doc:	<attribute name="eif_except" return_type="struct exprint" export="private">
+doc:		<summary>Structure used to store routine information during exception stack dumps (gathered thanks to stack look-ahead).</summary>
+doc:		<thread_safety>Safe.</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
+doc:	</attribute>
+*/
 rt_private struct exprint eif_except;		/* Where exception has been raised */
 #define EIF_EXCEPT_LOCK	
 #define EIF_EXCEPT_UNLOCK 
 #else	/* EIF_THREADS */
+/*
+doc:	<attribute name="eif_except_lock" return_type="EIF_LW_MUTEX_TYPE" export="private">
+doc:		<summary></summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Creation is not thread safe. It should be created in `eif_thread.c'</fixme>
+doc:	</attribute>
+*/
 rt_private	EIF_LW_MUTEX_TYPE *eif_except_lock = (EIF_LW_MUTEX_TYPE *) 0;
 #define EIF_EXCEPT_LOCK	\
 	if (!eif_except_lock) \
@@ -208,6 +202,15 @@ rt_private void exception(int how);		/* Debugger hook */
 #endif
 
 #ifndef EIF_THREADS
+/*
+doc:	<attribute name="print_history_table" return_type="int" export="private">
+doc:		<summary>Enable/disable printing of history table.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<eiffel_classes>EXCEPTIONS</eiffel_classes>
+doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
+doc:	</attribute>
+*/
 rt_private int print_history_table = ~0;
 #endif /* EIF_THREADS */
 
@@ -241,6 +244,15 @@ rt_private void extend_trace_string(char *line);	/* Extend exception trace strin
 
 #ifndef EIF_THREADS
 
+/*
+doc:	<attribute name="ex_string" return_type="SMART_STRING" export="public">
+doc:		<summary>Container of the exception trace</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<eiffel_classes>EXCEPTIONS</eiffel_classes>
+doc:		<fixme>Should we protect access through use of a private per thread data?</fixme>
+doc:	</attribute>
+*/
 rt_public SMART_STRING ex_string = {	/* Container of the exception trace */
 	NULL,	/* No area */
 	0L,		/* No byte used yet */
@@ -249,7 +261,13 @@ rt_public SMART_STRING ex_string = {	/* Container of the exception trace */
 
 #endif /* EIF_THREADS */
 
-/* Pre-defined exception tags. No restriction on size. */
+/*
+doc:	<attribute name="ex_tag" return_type="char * []" export="private">
+doc:		<summary>Pre-defined exception tags. No restriction on size.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since statically initialized.</synchronization>
+doc:	</attribute>
+*/
 rt_private char *ex_tag[] = {
 	(char *) 0,							/* Nothing */
 	"Feature call on void target.",		/* EN_VOID */
@@ -283,9 +301,13 @@ rt_private char *ex_tag[] = {
 	"Runtime check violated."			/* EN_RT_CHECK */
 };
 
-/* Converts a vector's type in the stack to an exception code, i.e. given a
- * vector in the stack, which exception has to be raised?
- */
+/*
+doc:	<attribute name="ex_tagc" return_type="unsigned char []" export="private">
+doc:		<summary>Converts a vector's type in the stack to an exception code, i.e. given a vector in the stack, which exception has to be raised?</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since statically initialized.</synchronization>
+doc:	</attribute>
+*/
 rt_private unsigned char ex_tagc[] = {
 	(unsigned char) EN_FAIL,		/* EX_CALL */
 	(unsigned char) EN_PRE,			/* EX_PRE */
@@ -1763,7 +1785,7 @@ rt_public void esfail(void)
 
 	/* Signals failure. If the out of memory flags are set, mention it */
 	EIF_EXCEPT_LOCK
-	print_err_msg(stderr, "\n%s: system execution failed.\n", ename);
+	print_err_msg(stderr, "\n%s: system execution failed.\n", egc_system_name);
 	print_err_msg(stderr, "Following is the set of recorded exceptions");
 	if (echmem & MEM_FSTK) {
 		print_err_msg(stderr,".\nDue to a lack of memory, the sequence is incomplete near the end");
@@ -1841,16 +1863,16 @@ rt_public void eif_panic(char *msg)
 	switch (done) {
 		case 0:
 			done = 1;
-			print_err_msg(stderr, "\n%s: PANIC: %s ...\n", ename, msg);
+			print_err_msg(stderr, "\n%s: PANIC: %s ...\n", egc_system_name, msg);
 			break;
 		case 1:
 			done = 2;
-			print_err_msg(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n", ename, msg);
+			print_err_msg(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n", egc_system_name, msg);
 			reclaim ();
 			exit (2);
 			break;
 		default:
-			print_err_msg(stderr, "\n%s: FINAL PANIC: Cannot reclaim Eiffel objects -- Giving up...\n", ename);
+			print_err_msg(stderr, "\n%s: FINAL PANIC: Cannot reclaim Eiffel objects -- Giving up...\n", egc_system_name);
 			exit (2);
 			break;
 	}
@@ -1896,16 +1918,16 @@ rt_public void fatal_error(char *msg)
 	switch (done) {
 		case 0:
 			done = 1;
-			print_err_msg(stderr, "\n%s: PANIC: %s ...\n", ename, msg);
+			print_err_msg(stderr, "\n%s: PANIC: %s ...\n", egc_system_name, msg);
 			break;
 		case 1:
 			done = 2;
-			print_err_msg(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n", ename, msg);
+			print_err_msg(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n", egc_system_name, msg);
 			reclaim ();
 			exit (2);
 			break;
 		default:
-			print_err_msg(stderr, "\n%s: FINAL PANIC: Cannot reclaim Eiffel objects -- Giving up...\n", ename);
+			print_err_msg(stderr, "\n%s: FINAL PANIC: Cannot reclaim Eiffel objects -- Giving up...\n", egc_system_name);
 			exit (2);
 			break;
 	}
@@ -1947,7 +1969,7 @@ rt_private void dump_core(void)
 
 	/* Stdout has already been flushed */
 	print_err_msg(stderr, "%s: dumping core to generate debugging information...\n",
-		ename);
+		egc_system_name);
 	reclaim();
 	abort();
 
@@ -3391,3 +3413,6 @@ rt_private void cur_print_top(void)
 
 #endif
 
+/*
+doc:</file>
+*/

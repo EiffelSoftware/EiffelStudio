@@ -51,7 +51,7 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk"; "ev_pixmap.e"; "ev_pixmapable.e"; 
+			"gtk"; "ev_pixmap.e"; "ev_pixmapable.e"; "ev_notebook.e";
 		end
 
 external

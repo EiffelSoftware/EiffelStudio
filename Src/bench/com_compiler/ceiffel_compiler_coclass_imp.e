@@ -8,6 +8,11 @@ class
 inherit
 	CEIFFEL_COMPILER_COCLASS
 
+	SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_from_pointer
@@ -33,6 +38,12 @@ feature -- Access
 			-- Was last compilation successful?
 		do
 			-- Put Implementation here.
+		end
+
+	compiler_version: STRING is
+			-- Compiler version.
+		do
+			Result := Version_number
 		end
 
 feature -- Basic Operations

@@ -38,7 +38,7 @@ feature -- Access
 		end
 
 	override: BOOLEAN is
-			-- Should this cluster classes take priority over other classes with same name.
+			-- Should this cluster classes take priority over other classes with same name?
 		do
 			Result := ccom_override (initializer)
 		end
@@ -140,7 +140,7 @@ feature -- Basic Operations
 		end
 
 	set_override (return_value: BOOLEAN) is
-			-- Should this cluster classes take priority over other classes with same name.
+			-- Should this cluster classes take priority over other classes with same name?
 			-- `return_value' [in].  
 		do
 			ccom_set_override (initializer, return_value)
@@ -251,13 +251,13 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_override (cpp_obj: POINTER): BOOLEAN is
-			-- Should this cluster classes take priority over other classes with same name.
+			-- Should this cluster classes take priority over other classes with same name?
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_set_override (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Should this cluster classes take priority over other classes with same name.
+			-- Should this cluster classes take priority over other classes with same name?
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
 		end

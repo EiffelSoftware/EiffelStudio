@@ -222,7 +222,7 @@ feature -- Basic Operations
 		end
 
 	override: BOOLEAN is
-			-- Should this cluster classes take priority over other classes with same name.
+			-- Should this cluster classes take priority over other classes with same name?
 		require
 			override_user_precondition: override_user_precondition
 		deferred
@@ -230,7 +230,7 @@ feature -- Basic Operations
 		end
 
 	set_override (return_value: BOOLEAN) is
-			-- Should this cluster classes take priority over other classes with same name.
+			-- Should this cluster classes take priority over other classes with same name?
 			-- `return_value' [in].  
 		require
 			set_override_user_precondition: set_override_user_precondition (return_value)

@@ -24,6 +24,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	compiler_version_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `compiler_version'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	compile is
@@ -38,6 +45,14 @@ feature -- Basic Operations
 			-- Was last compilation successful?
 		require
 			is_successful_user_precondition: is_successful_user_precondition
+		deferred
+
+		end
+
+	compiler_version: STRING is
+			-- Compiler version.
+		require
+			compiler_version_user_precondition: compiler_version_user_precondition
 		deferred
 
 		end

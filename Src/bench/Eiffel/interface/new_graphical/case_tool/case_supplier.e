@@ -54,10 +54,15 @@ feature {CLASS_TEXT_MODIFIER} -- Initialization
 
 	initialize is
 			-- Build structures.
+		local
+			l_body: BODY_AS
 		do
 			create {LINKED_LIST [CLASS_I]} supplier_classes.make
 			create type_as_string.make (10)
-			add_suppliers (feature_as.body.type)
+			l_body := feature_as.body
+			if l_body /= Void then
+				add_suppliers (l_body.type)
+			end
 			type_as_string.to_upper
 			create {LINKED_LIST [CLIENT_SUPPLIER_FIGURE]} graphical_links.make
 			initialized := True
@@ -267,20 +272,22 @@ feature -- Status report
 			ct: CLASS_TYPE_AS
 			type_as_class_c: CLASS_C
 			class_c_any: CLASS_C
+			l_body: BODY_AS
 		do
-			et ?= feature_as.body.type
-			bt ?= feature_as.body.type
+			l_body := feature_as.body
+			if l_body /= Void then
+				et ?= l_body.type
+				bt ?= l_body.type
+				ct ?= l_body.type
+			end
 			Result := (et /= Void) or (bt /= Void)
-			if not Result then
-				ct ?= feature_as.body.type
-				if ct /= Void then
-					if System.any_class.is_compiled then
-						class_c_any := System.any_class.compiled_class
-							--| FIXME remove argument from `associated_eiffel_class'.
-						type_as_class_c := ct.associated_eiffel_class(class_c_any)
-						if type_as_class_c /= Void then
-							Result := type_as_class_c.is_expanded
-						end
+			if not Result and then ct /= Void then
+				if System.any_class.is_compiled then
+					class_c_any := System.any_class.compiled_class
+						--| FIXME remove argument from `associated_eiffel_class'.
+					type_as_class_c := ct.associated_eiffel_class(class_c_any)
+					if type_as_class_c /= Void then
+						Result := type_as_class_c.is_expanded
 					end
 				end
 			end

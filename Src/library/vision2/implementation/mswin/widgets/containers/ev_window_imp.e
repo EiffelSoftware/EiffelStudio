@@ -575,20 +575,22 @@ feature {NONE} -- Implementation
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
 		local
 			min_track, max_track: WEL_POINT
+			w, h: BOOLEAN
 		do
-			inspect resize_type
-			when 0 then
-				!! min_track.make (width, height)
-				!! max_track.make (width, height)
-			when 1 then
-				!! min_track.make (internal_minimum_width, height)
-				!! max_track.make (maximum_width, height)
-			when 2 then
-				!! min_track.make (width, internal_minimum_height)
-				!! max_track.make (width, maximum_height)
-			when 3 then
+			w := bit_set (internal_changes, 16)
+			h := bit_set (internal_changes, 32)
+			if w and h then
 				!! min_track.make (internal_minimum_width, internal_minimum_height)
 				!! max_track.make (maximum_width, maximum_height)
+			elseif w then
+				!! min_track.make (internal_minimum_width, height)
+				!! max_track.make (maximum_width, height)
+			elseif h then
+				!! min_track.make (width, internal_minimum_height)
+				!! max_track.make (width, maximum_height)
+			else
+				!! min_track.make (width, height)
+				!! max_track.make (width, height)
 			end
 			min_max_info.set_min_track_size (min_track)
 			min_max_info.set_max_track_size (max_track)

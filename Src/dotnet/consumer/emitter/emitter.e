@@ -1,5 +1,9 @@
 indexing
 	description	: "Emitter's root class"
+	assembly_attribute:
+		create {COM_VISIBLE_ATTRIBUTE}.make (False) end,
+		create {ASSEMBLY_COMPANY_ATTRIBUTE}.make ("Eiffel Software") end,
+		create {ASSEMBLY_COPYRIGHT_ATTRIBUTE}.make ("Copyright Eiffel Software 1985-2003") end
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,8 +25,8 @@ inherit
 		export
 			{NONE} all
 		end
-
-creation
+	
+create
 	make
 
 feature -- Initialization

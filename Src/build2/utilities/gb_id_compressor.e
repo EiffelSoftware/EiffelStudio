@@ -12,6 +12,14 @@ inherit
 	GB_SHARED_OBJECT_HANDLER
 	
 	GB_SHARED_ID
+		export
+			{NONE} all
+		end
+	
+	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 
 feature -- Basic operation
 
@@ -24,10 +32,11 @@ feature -- Basic operation
 			objects: ARRAYED_LIST [GB_OBJECT]
 			counter: INTEGER
 			objects_without_ids: BOOLEAN
+			current_object: GB_OBJECT
 		do
 				-- First, intialization.
 			create existing_ids.make (50)
-			objects := object_handler.objects
+			objects := object_handler.objects.linear_representation
 				-- Firstly, store all ids into an array
 			objects.do_all (agent record_id)
 				-- Now create lookup table.
@@ -38,9 +47,9 @@ feature -- Basic operation
 			until
 				counter > existing_ids.count
 			loop
-						-- If existing id is 0, then it means that
-						-- we are dealing with an old save, and as such there
-						-- were no ids in the system, so ignore.
+					-- If existing id is 0, then it means that
+					-- we are dealing with an old save, and as such there
+					-- were no ids in the system, so ignore.
 				if existing_ids @ counter /= 0  then
 					lookup.extend (counter, existing_ids @ counter)
 				else
@@ -49,7 +58,8 @@ feature -- Basic operation
 				counter := counter + 1
 			end
 			
-			
+				-- Clear all existing objects.			
+			object_handler.objects.clear_all
 			
 				-- Now update all ids stored in objects.
 			from
@@ -57,7 +67,12 @@ feature -- Basic operation
 			until
 				objects.off
 			loop
-				objects.item.update_internal_id_references (lookup)
+				current_object := objects.item
+				current_object.update_internal_id_references (lookup)
+			
+					-- Now place object back in `objects' as it's id has changed.
+				object_handler.objects.extend (current_object, current_object.id)
+					
 				objects.forth
 			end
 			set_current_id_counter (objects.count + 1)
@@ -67,6 +82,7 @@ feature -- Basic operation
 				-- that some of the objects referenced in the save file
 				-- do not have ids (an old save file). So we must now add ids
 				-- to all of these objects.
+				--| FIXME
 			from
 				objects.start
 			until
@@ -81,26 +97,101 @@ feature -- Basic operation
 		
 	shift_all_ids_upwards is
 			-- For every id in system, shift higher.
-			-- Used when importing pjects, so we do not get
+			-- Used when importing projects, so we do not get
 			-- a clash between the current and new ids.
 		local
-			objects: ARRAYED_LIST [GB_OBJECT]
+			linear_objects: LINEAR [GB_OBJECT]
 		do
-			objects := object_handler.objects
-			objects.do_all (agent shift_id)
+			linear_objects := object_handler.objects.linear_representation
+			from
+				linear_objects.start
+			until
+				linear_objects.off
+			loop
+				shift_id (linear_objects.item)
+				shift_referer_ids (linear_objects.item)
+				linear_objects.forth
+			end
 		end
 		
-	shift_id (an_object: GB_OBJECT) is
-				-- Adjust id of `an_object' upwards by 32000.
-			require
-				an_object_not_void: an_object /= Void
-			do
-				an_object.set_id (an_object.id + 32000)
+	shift_object_ids_updwards (an_object: GB_OBJECT) is
+			-- For `an_object' and all child objects recursively, shift their
+			-- ids upwards by `amount_to_shift_ids_during_import'.
+		require
+			an_object_not_void: an_object /= Void
+			is_new_object: not object_handler.objects.has_item (an_object) and not object_handler.deleted_objects.has_item (an_object)
+			no_instance_referers: an_object.instance_referers.is_empty
+		local
+			recursive_children: ARRAYED_LIST [GB_OBJECT]
+			current_object: GB_OBJECT
+		do
+			an_object.set_id (an_object.id + amount_to_shift_ids_during_import)
+			create recursive_children.make (50)
+			an_object.all_children_recursive (recursive_children)
+			from
+				recursive_children.start
+			until
+				recursive_children.off
+			loop
+				current_object := recursive_children.item
+				current_object.set_id (current_object.id + amount_to_shift_ids_during_import)
+				recursive_children.forth
 			end
+		end
+
+	shift_referer_ids (an_object: GB_OBJECT) is
+			-- For all `instance_referers' of `an_object', shift their
+			-- ids upwards by `amount_to_shift_ids_during_import'.
+		require
+			an_object_not_void: an_object /= Void
+		local
+			linear: LINEAR [INTEGER]
+			new_value: INTEGER
+		do
+			linear := an_object.instance_referers.linear_representation
+				-- Remove all entries from the `instance_referers'.
+			an_object.instance_referers.clear_all
+			from
+				linear.start
+			until
+				linear.off
+			loop
+				new_value := linear.item + amount_to_shift_ids_during_import
+					-- Insert the new referer back into `instance_referers'.
+				an_object.instance_referers.extend (new_value, new_value)
+				linear.forth
+			end
+		ensure
+			instance_referers_count_not_changed: old an_object.instance_referers.count = an_object.instance_referers.count
+		end
+
+	shift_id (an_object: GB_OBJECT) is
+			-- Adjust id of `an_object' upwards by `amount_to_shift_ids_during_import'.
+		require
+			an_object_not_void: an_object /= Void
+			object_already_exists: object_handler.objects.has (an_object.id) or object_handler.deleted_objects.has (an_object.id)
+		local
+			in_objects: BOOLEAN
+		do
+			in_objects := object_handler.objects.has (an_object.id)
+			if in_objects then
+				object_handler.objects.remove (an_object.id)
+			else
+				object_handler.deleted_objects.remove (an_object.id)
+			end
+			an_object.set_id (an_object.id + amount_to_shift_ids_during_import)
+			if in_objects then
+				object_handler.objects.put (an_object, an_object.id)
+			else
+				object_handler.deleted_objects.put (an_object, an_object.id)
+			end
+		end
 
 	compress_object_id (an_object: GB_OBJECT; start_value: INTEGER) is
 			-- Compress all ids of `an_object' and all children, so
 			-- they are contiguous, starting at `start_value'.
+		require
+			an_object_not_void: an_object /= Void
 		local
 			objects: ARRAYED_LIST [GB_OBJECT]
 			counter: INTEGER
@@ -153,11 +244,15 @@ feature {GB_COMPONENT} -- implementation
 
 feature {NONE} -- Implementation
 		
-		record_id (an_object: GB_OBJECT) is
-				-- Add `id' of `an_object' to `existing_ids'.
-			do
-				existing_ids.extend (an_object.id)
-					-- Firstly, store all ids into an array.
-			end
+	record_id (an_object: GB_OBJECT) is
+			-- Add `id' of `an_object' to `existing_ids'.
+		require
+			an_object_not_void: an_object /= Void
+		do
+			existing_ids.extend (an_object.id)
+				-- Firstly, store all ids into an array.
+		ensure
+			added: existing_ids.has (an_object.id)
+		end
 			
 end -- class GB_ID_COMPRESSOR

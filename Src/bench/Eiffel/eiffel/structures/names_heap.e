@@ -272,7 +272,7 @@ feature {NONE} -- Implementation: access
 			put ("to_string") check found_item = to_string_name_id end
 			put ("to_cil") check found_item = to_cil_name_id end
 			put ("is_digit") check found_item = is_digit_name_id end
-			put ("internal_correct_mismatch") check found_item = correct_mismatch_name_id end
+			put ("internal_correct_mismatch") check found_item = internal_correct_mismatch_name_id end
 		end
 		
 invariant

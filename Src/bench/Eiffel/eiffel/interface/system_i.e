@@ -2394,6 +2394,10 @@ feature -- Dead code removal
 			l_class := routine_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
 			
+				-- Protection of feature `internal_correct_mismatch' of ANY
+			l_class := any_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Internal_correct_mismatch_name_id), l_class)
+
 debug ("DEAD_CODE")
 			remover.dump_alive
 			remover.dump_marked

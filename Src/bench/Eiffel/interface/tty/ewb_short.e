@@ -1,17 +1,25 @@
+indexing
+
+	description: 
+		"Displays short of a class in output_window.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class EWB_SHORT 
 
 inherit
 
-	EWB_FS
+	EWB_FILTER
 		redefine
-			loop_execute, help_message, name, abbreviation
+			help_message, name, abbreviation,
+			set_context_attributes
 		end;
 
 creation
 
-	null
+	make, do_nothing
 
-feature
+feature -- Properties
 
 	name: STRING is
 		do
@@ -28,14 +36,13 @@ feature
 			Result := short_help
 		end;
 
-	loop_execute is
+feature {NONE} -- Implementation
+
+	set_context_attributes (ctxt: FORMAT_CONTEXT_B) is
+			-- Set context attributes `ctxt'.
 		do
-			get_class_name;
-			class_name := last_input;
-			troffed := False;
-			filter_name := Void;
-			only_current_class := True;
-			check_arguments_and_execute;
+			ctxt.set_is_short;
+			ctxt.set_order_same_as_text;
 		end;
 
-end
+end -- class EWB_SHORT

@@ -1170,6 +1170,15 @@ feature -- Basic operations
 			cwin_invalidate_rgn (item, region.item,
 				erase_background)
 		end
+		
+	validate is
+			-- Validate the entire client area of the window.
+		require
+			exists: exists
+		do
+			cwin_validate_rect (item, default_pointer)
+		end
+		
 
 	validate_rect (rect: WEL_RECT) is
 			-- Validate the area `rect'.
@@ -1664,7 +1673,7 @@ feature {WEL_WINDOW} -- Implementation
 		do
 		end
 
-feature {WEL_DISPATCHER, WEL_WINDOW}
+feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 
 	window_process_message, process_message (hwnd: POINTER; msg,
 			wparam, lparam: INTEGER): INTEGER is

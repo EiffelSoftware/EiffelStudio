@@ -152,19 +152,19 @@ feature -- Properties
 		do
 			Result := class_tool_mgr.changed
 				or else
-			(system_tool_is_valid and then system_tool.text_window.changed)
+			(system_tool_is_valid and then system_tool.text_area.changed)
 				or else
-			(dynamic_lib_tool_is_valid and then dynamic_lib_tool.text_window.changed)
+			(dynamic_lib_tool_is_valid and then dynamic_lib_tool.text_area.changed)
 		end
 				
 	save_all_editors is
 			-- save all editors that had been modified.
 		do
 			class_tool_mgr.save_all
-			if (system_tool_is_valid and then system_tool.text_window.changed) then
+			if (system_tool_is_valid and then system_tool.text_area.changed) then
 				system_tool.save_text
 			end
-			if (dynamic_lib_tool_is_valid and then dynamic_lib_tool.text_window.changed) then
+			if (dynamic_lib_tool_is_valid and then dynamic_lib_tool.text_area.changed) then
 				dynamic_lib_tool.save_text
 			end
 		end

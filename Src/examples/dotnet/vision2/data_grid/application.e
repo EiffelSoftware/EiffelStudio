@@ -27,8 +27,6 @@ feature {NONE} -- Initialization
 			-- Prepare the first window to be displayed.
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
-		local
-			i: INTEGER
 		do
 				-- create and initialize the first window.
 			create first_window

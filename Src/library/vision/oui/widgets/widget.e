@@ -485,7 +485,7 @@ feature -- Windowing
 		require
 			is_realized: realized;
 		do
-			implementation.raise;
+			implementation.lower;
 		end;
 
 	set_managed (b: BOOLEAN) is

@@ -147,27 +147,30 @@ BEGIN
     CONTROL         114,Wizard1_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
     CONTROL         "In-process (.dll)",In_Process_Check,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,135,75,140,10
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,135,70,140,10
+    CONTROL         "Out-of-process (.exe)",Out_Of_Proces_Check2,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,135,85,145,10
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
-    CONTROL         "Client code to access a component?",Client_Check,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,135,20,149,10
-    CONTROL         "Server code for a new component?",Server_Check,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,135,35,130,10
     PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14
     LTEXT           "Do you want to generate:",Code_Type_Static,120,5,95,10
-    LTEXT           "(You may generate both for a new component)",
-                    Code_Type_Info_Static,135,45,155,10
     LTEXT           "What is the type of the component executable?",
-                    Component_Type_Static,120,60,160,10
+                    Component_Type_Static,120,55,160,10
     CONTROL         "Do not compile the Eiffel code",
                     Eiffel_Code_Compilation_Check,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,135,140,125,10
+                    WS_TABSTOP,135,135,125,10
     LTEXT           "By default the wizard will compile the generated C and Eiffel code",
-                    Eiffel_Code_Compilation_Static,120,110,208,10
-    CONTROL         "Out-of-process (.exe)",Out_Of_Proces_Check2,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,135,90,145,10
+                    Eiffel_Code_Compilation_Static,120,105,208,10
     CONTROL         "Do not compile the C code",C_Code_Compilation_Check,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,135,125,125,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,135,120,125,10
+    CONTROL         "Client code to access an existing component?",
+                    Client_radio,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,
+                    135,20,165,13
+    CONTROL         "Server code for a new component?",Server_radio,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,135,35,155,10
+    GROUPBOX        "Static",IDC_STATIC,130,15,190,35,NOT WS_VISIBLE | 
+                    WS_GROUP
+    GROUPBOX        "Static",IDC_STATIC,125,65,195,35,NOT WS_VISIBLE | 
+                    WS_GROUP
 END
 
 Progress_Dialog DIALOG DISCARDABLE  0, 0, 187, 90
@@ -278,9 +281,7 @@ BEGIN
     Splash_screen_dialog, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 223
         TOPMARGIN, 7
-        BOTTOMMARGIN, 139
     END
 END
 #endif    // APSTUDIO_INVOKED

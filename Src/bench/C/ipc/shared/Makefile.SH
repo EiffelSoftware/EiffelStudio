@@ -40,19 +40,21 @@ AR = ar rc
 CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $ccflags $large
+JMTCFLAGS = \$(CFLAGS) $optimize $mtccflags $large
 LINT = lint
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
 RANLIB = $ranlib
 RM = $rm -f
+LN = $ln
 SED = $sed
 
 ########################################################################
 # Automatically generated parameters -- do not edit
 
 SOURCES =  \$(LSRC)
-OBJECTS =  \$(LOBJ)
+OBJECTS =  \$(LOBJ) \$(MT_LOBJ)
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -85,6 +87,152 @@ CFLAGS = $(DPFLAGS) -DWORKBENCH
 LSRC = com.c identify.c lock.c logfile.c network.c select.c shword.c stack.c \
 	stream.c system.c transfer.c rqst_idrs.c
 
+MT_LOBJ = \
+    MTcom.o \
+    MTidentify.o \
+    MTlock.o \
+    MTlogfile.o \
+    MTnetwork.o \
+    MTselect.o \
+    MTshword.o \
+    MTstack.o \
+    MTstream.o \
+    MTsystem.o \
+    MTtransfer.o \
+    MTrqst_idrs.o
+
+all:: libmtipc.a
+
+local_realclean::
+	$(RM) libmtipc.a
+
+libmtipc.a: $(MT_LOBJ)
+	$(RM) $@
+	$(AR) $@ $(MT_LOBJ)
+	$(RANLIB) $@
+
+
+MTcom.c: com.c
+	$(RM) MTcom.c
+	$(LN) com.c MTcom.c
+remove::
+	$(RM) MTcom.c
+
+MTidentify.c: identify.c
+	$(RM) MTidentify.c
+	$(LN) identify.c MTidentify.c
+remove::
+	$(RM) MTidentify.c
+
+MTlock.c: lock.c
+	$(RM) MTlock.c
+	$(LN) lock.c MTlock.c
+remove::
+	$(RM) MTlock.c
+
+MTlogfile.c: logfile.c
+	$(RM) MTlogfile.c
+	$(LN) logfile.c MTlogfile.c
+remove::
+	$(RM) MTlogfile.c
+
+MTnetwork.c: network.c
+	$(RM) MTnetwork.c
+	$(LN) network.c MTnetwork.c
+remove::
+	$(RM) MTnetwork.c
+
+MTselect.c: select.c
+	$(RM) MTselect.c
+	$(LN) select.c MTselect.c
+remove::
+	$(RM) MTselect.c
+
+MTshword.c: shword.c
+	$(RM) MTshword.c
+	$(LN) shword.c MTshword.c
+remove::
+	$(RM) MTshword.c
+
+MTstream.c: stream.c
+	$(RM) MTstream.c
+	$(LN) stream.c MTstream.c
+remove::
+	$(RM) MTstream.c
+
+MTstack.c: stack.c
+	$(RM) MTstack.c
+	$(LN) stack.c MTstack.c
+remove::
+	$(RM) MTstack.c
+
+MTsystem.c: system.c
+	$(RM) MTsystem.c
+	$(LN) system.c MTsystem.c
+remove::
+	$(RM) MTsystem.c
+
+MTtransfer.c: transfer.c
+	$(RM) MTtransfer.c
+	$(LN) transfer.c MTtransfer.c
+remove::
+	$(RM) MTtransfer.c
+
+MTrqst_idrs.c: rqst_idrs.c
+	$(RM) MTrqst_idrs.c
+	$(LN) rqst_idrs.c MTrqst_idrs.c
+remove::
+	$(RM) MTrqst_idrs.c
+
+
+MTcom.o: MTcom.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
+MTidentify.o: MTidentify.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
+MTlogfile.o: MTlogfile.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
+MTnetwork.o: MTnetwork.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
+MTselect.o: MTselect.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
+MTshword.o: MTshword.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
+MTstream.o: MTstream.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
+MTsystem.o: MTsystem.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
+MTstack.o: MTstack.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
+MTtransfer.o: MTtransfer.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
+MTrqst_idrs.o: MTrqst_idrs.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
+MTlock.o: MTlock.c
+	$(CC) -c $(JMTCFLAGS) $*.c
+	$(RM) $*.c
+
 LOBJ = \
 	com.o \
 	identify.o \
@@ -108,6 +256,7 @@ libipc.a: $(LOBJ)
 	$(RM) $@
 	$(AR) $@ $(LOBJ)
 	$(RANLIB) $@
+
 
 depend:: ../../mkdep
 

@@ -275,7 +275,8 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			temp_column_positions_string, temp_row_positions_string,
 			temp_column_spans_string, temp_row_spans_string: STRING
 			extracted_column, extracted_row, extracted_column_span, extracted_row_span: STRING
-			first_items, second_items, temp_item_list: ARRAYED_LIST [EV_WIDGET]
+			first_items, second_items: ARRAYED_LIST [EV_WIDGET]
+			temp_item_list: LINEAR [EV_WIDGET]
 			lower, upper: INTEGER
 		do
 				-- Only perfrom subsequent processing of children
@@ -321,25 +322,25 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 					-- Note that we cannot use `item_list' as this returns the items in the wroing order.
 					-- In Build, we move down, then across. We used `item_list' previously, but offset of
 					-- all widgets was messaed up after loading.
-				first_items := table_items (first)
-				second_items := table_items (objects @ 2)
-				temp_item_list := table_items (first)
+				temp_item_list := first.linear_representation
+				create first_items.make (first.count)
+				create second_items.make (first.count)
 				from
 					temp_item_list.start
 				until
 					temp_item_list.off
 				loop
+					first_items.extend (temp_item_list.item)
 					first.prune (temp_item_list.item)
-					temp_item_list.forth
 				end
-				temp_item_list := (objects @ 2).item_list
+				temp_item_list := (objects @ 2).linear_representation
 				from
 					temp_item_list.start
 				until
 					temp_item_list.off
 				loop
+					second_items.extend (temp_item_list.item)
 					(objects @ 2).prune (temp_item_list.item)
-					temp_item_list.forth
 				end
 				
 				from

@@ -38,12 +38,14 @@ feature {NONE} -- Initialization
 
 	make (a_push_bg: PUSH_BG; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif push button gadget.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_pb_make (a_push_bg.identifier,
-					mel_parent (a_push_bg, widget_index),
-					man);
-			a_push_bg.set_font_imp (Current)
+			mel_pb_make (a_push_bg.identifier, mc, man);
+			a_push_bg.set_font_imp (Current);
+			set_mnemonic_from_text (a_push_bg.identifier, False)
 		end;
 
 feature -- Status setting

@@ -247,13 +247,13 @@ Manifest_string: Non_empty_string
 	|	TE_EMPTY_STRING
 			{ $$ := new_empty_string_as }
 	|	TE_EMPTY_VERBATIM_STRING
-			{ $$ := new_empty_verbatim_string_as (cloned_string (verbatim_marker)) }
+			{ $$ := new_empty_verbatim_string_as (verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']') }
 	;
 
 Non_empty_string: TE_STRING
 			{ $$ := new_string_as (cloned_string (token_buffer)) }
 	|	TE_VERBATIM_STRING
-			{ $$ := new_verbatim_string_as (cloned_string (token_buffer), cloned_string (verbatim_marker)) }
+			{ $$ := new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']') }
 	|	TE_STR_LT
 			{ $$ := new_lt_string_as }
 	|	TE_STR_LE

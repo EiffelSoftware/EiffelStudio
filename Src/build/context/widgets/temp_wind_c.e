@@ -51,6 +51,11 @@ feature
 				y1 := a_parent.real_y + a_parent.height // 2 
 							- widget.height //2;
 				set_x_y (x1, y1);
+				if toolkit.name.is_equal ("MS_WINDOWS") then
+					configure_count := 0
+					-- Setting x, y under MS Windows does not cause
+					-- a configure event before realization.
+				end
 				set_start_hidden (True);
 			end;
 			add_window_geometry_action;

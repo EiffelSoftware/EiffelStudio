@@ -73,6 +73,7 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 #define eif_integer_8_function(rout,cid)	(EIF_INTEGER_8_FUNCTION) eifref(rout,cid)
 #define eif_integer_16_function(rout,cid)	(EIF_INTEGER_16_FUNCTION) eifref(rout,cid)
 #define eif_integer_32_function(rout,cid)	(EIF_INTEGER_32_FUNCTION) eifref(rout,cid)
+#define eif_integer_function(rout,cid)		(EIF_INTEGER_32_FUNCTION) eifref(rout,cid)
 #define eif_integer_64_function(rout,cid)	(EIF_INTEGER_64_FUNCTION) eifref(rout,cid)
 #define eif_character_function(rout,cid)	(EIF_CHARACTER_FUNCTION) eifref(rout,cid)
 #define eif_real_function(rout,cid)			(EIF_REAL_FUNCTION) eifref(rout,cid)

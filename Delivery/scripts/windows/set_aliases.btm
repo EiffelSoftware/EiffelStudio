@@ -1,17 +1,17 @@
 REM Define some user parameters here
 
 REM The file where all output is stored
-set INSTALL_LOG=g:\55dev_deliv\install.log
+set INSTALL_LOG=g:\56dev_deliv\install.log
 REM NB: The following directory is where a new version of ec.exe will be finalized.
-set FINALIZATION_DIR=g:\55dev_deliv
+set FINALIZATION_DIR=g:\56dev_deliv
 REM NB: The following directory must contain document.exe
-set DOCUMENT_DIR=g:\Deliv_55
+set DOCUMENT_DIR=g:\Deliv_56
 REM Tag to export files in CVS
 set DEFAULT_CVS_TAG=HEAD
 REM NB: The following directory will be erased!
 set TMP_EIFFEL_SRC=g:\tmpdev
 REM Where the new delivery is set up. Warning: if it exists, the directory will be erased!
-set INSTALL_DIR=f:\InstalledEiffel55
+set INSTALL_DIR=f:\InstalledEiffel56
 REM Where Visual C++ is installed (to recompile the run-time)
 set C_COMPILER_PATH=d:\\apps\\MSVC\\VC98
 REM Get where hhc and wfwi are located, to be able to compile the documentation and the delivery.

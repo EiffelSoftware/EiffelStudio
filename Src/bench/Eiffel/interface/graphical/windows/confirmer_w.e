@@ -76,7 +76,7 @@ feature -- Graphical Interface
 			question_popup
 		end;
 
-	call (a_command: COMMAND_W; a_message, ok_label: STRING) is
+	call (a_command: COMMAND; a_message, ok_label: STRING) is
 			-- Record calling command `a_command' and popup current,
 			-- with the message `a_message'.
 		do
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Properties
 
-	last_caller: COMMAND_W
+	last_caller: COMMAND
 			-- Last command which popped up current
 
 	window: WIDGET;

@@ -54,7 +54,6 @@ feature -- Properties
 	body: S_FREE_TEXT_DATA
 			-- Body (with locals and recue) if routine or constant
 
-
 feature -- Setting
 
 	set_body (b: like body) is
@@ -69,6 +68,16 @@ feature -- Setting
 			status := status_handler.set_reversed_engineered (status)
 		ensure then
 			is_reversed_engineered: is_reversed_engineered
+		end;
+
+	set_is_constant: INTEGER is
+		do
+			status := status_handler.set_is_constant (status)
+		end
+
+	set_is_once is
+		do
+			status := status_handler.set_is_once (status)
 		end
 
 	set_status (s: like status) is
@@ -77,7 +86,7 @@ feature -- Setting
 			status := s
 		end
 
-feature {FEATURE_DATA} -- Implementation
+feature {FEATURE_DATA, FEATURE_ADAPTER} -- Implementation
 
 	status_handler: FEATURE_STATUS_HANDLER is
 			-- Used to encode/decode boolean properties in `status'.

@@ -42,7 +42,9 @@ feature {NONE}
 			f: PLAIN_TEXT_FILE;
 			temp: STRING
 		do
-			if project_tool.initialized then
+			if tool = system_tool then
+				tool.synchronize
+			elseif project_tool.initialized then
 				if lace.file_name = void then
 					if argument = void then
 						system_tool.display;

@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			cmd_string := command_shell_name
 			if not cmd_string.is_empty then
 				replace_target(cmd_string, syn.file_name)
-				cmd_string.replace_substring_all ("$line", syn.syntax_message.line_number.out)
+				cmd_string.replace_substring_all ("$line", syn.syntax_message.line.out)
 				create req
 				req.execute (cmd_string)
 			end

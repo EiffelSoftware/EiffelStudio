@@ -157,24 +157,36 @@ feature
 			ext_name: ANY;
 			c_bitmap: POINTER;
 		do
-			if not (icon_pixmap = Void) then
-				pixmap_implementation ?= icon_pixmap.implementation;
+			if icon_pixmap_data /= Void then
+				pixmap_implementation ?= icon_pixmap_data.implementation;
 				pixmap_implementation.remove_object (Current)
 			end;
-			icon_pixmap := a_pixmap;
-			pixmap_implementation ?= icon_pixmap.implementation;
+			icon_pixmap_data := a_pixmap;
+			pixmap_implementation ?= icon_pixmap_data.implementation;
 			c_bitmap := pixmap_implementation.resource_bitmap (screen);
 			pixmap_implementation.put_object (Current);
 			ext_name := MiconPixmap.to_c;
 			m_wm_set_pixmap (screen_object, c_bitmap, $ext_name)
-		ensure then
-			icon_pixmap = a_pixmap
-
 		end;
 
-	icon_pixmap: PIXMAP;
+	icon_pixmap_data: PIXMAP;
+
+	icon_pixmap: PIXMAP is
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon
+        local
+            ext_name: ANY;
+            pixmap_x: PIXMAP_X
+        do
+            if icon_pixmap_data = Void then
+                !! icon_pixmap_data.make;
+                pixmap_x ?= icon_pixmap_data.implementation;
+                ext_name := MiconPixmap.to_c;
+                pixmap_x.set_default_pixmap (m_wm_c_get_pixmap 
+						(screen_object, $ext_name));
+            end;
+            Result := icon_pixmap_data
+		end
 
 feature {NONE}
 
@@ -460,6 +472,13 @@ feature {NONE} -- External features
 		alias
 			"set_int"
 		end;
+
+    m_wm_c_get_pixmap (scr_obj: POINTER; name: ANY): POINTER is
+        external
+            "C"
+        alias
+            "c_get_pixmap"
+        end;
 
 	m_wm_shell_get_string (scr_obj: POINTER; name: ANY): STRING is
 		external

@@ -415,6 +415,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			lv_item.set_image (image_index)
 			lv_item.set_iitem (position - 1)
 			wel_replace_item (lv_item)
+			set_column_width (-1, 0)
 		end
 
 	remove_pixmap_of_child (an_item: EV_LIST_ITEM_IMP; position: INTEGER) is
@@ -427,6 +428,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			lv_item.set_image (0)
 			lv_item.set_iitem (position - 1)
 			wel_replace_item (lv_item)
+			set_column_width (-1, 0)
 		end
 
 	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is

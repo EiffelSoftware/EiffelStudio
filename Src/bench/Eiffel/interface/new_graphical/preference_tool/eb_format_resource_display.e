@@ -33,12 +33,12 @@ feature {NONE} -- Initialization
 			make (par)
 			
 			name := a_name
-			Create name_label.make_with_text (Current, name)
+			create name_label.make_with_text (Current, name)
 			name_label.set_minimum_height (50)
 			set_child_expandable (name_label, False)
 
-			Create font.make_with_resource (Current, a_font)
-			Create color.make_with_resource (Current, a_color)
+			create font.make_with_resource (Current, a_font)
+			create color.make_with_resource (Current, a_color)
 
 			name_label.set_font (font.resource.actual_value)	
 			name_label.set_foreground_color (color.resource.actual_value)
@@ -53,12 +53,12 @@ feature {NONE} -- Initialization
 			make (par)
 			
 			name := a_format.visual_name
-			Create name_label.make_with_text (Current, name)
+			create name_label.make_with_text (Current, name)
 			name_label.set_minimum_height (50)
 			set_child_expandable (name_label, False)
 
-			Create font.make_with_resource (Current, a_format.font_resource)
-			Create color.make_with_resource (Current, a_format.color_resource)
+			create font.make_with_resource (Current, a_format.font_resource)
+			create color.make_with_resource (Current, a_format.color_resource)
 
 			name_label.set_font (font.resource.actual_value)	
 			name_label.set_foreground_color (color.resource.actual_value)
@@ -133,23 +133,23 @@ feature -- Display
 	display (par: EV_CONTAINER) is
 			-- Display Current in `par'
 		do
-			if not shown then
+			if not displayed then
 				set_parent (par)
 				show
 			end
 		ensure
 			has_parent: parent /= Void
-			visible: shown
+			visible: displayed
 		end
 
 	undisplay is
 			-- Undisplay Current
 		do
-			set_parent (void)
 			hide
+			set_parent (void)
 		ensure
 			orphan: parent = Void
-			invisible: not shown
+			invisible: not displayed
 		end
 
 feature {NONE} -- Properties

@@ -258,7 +258,7 @@ feature -- Byte code generation
 	is_once: BOOLEAN is
 			-- is the constant (implemented like) a once function ?
 		do
-			Result := value.is_string or value.is_bit
+			Result := value.is_string or else value.is_bit
 		end
 
 	replicated: FEATURE_I is

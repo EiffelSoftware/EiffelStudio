@@ -1,7 +1,7 @@
 indexing
 	description: "Include all the information needed to produce feature Eiffel code and XML file."
 	external_name: "ISE.Reflection.EiffelFeature"
---	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
+	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
 
 class	
 	EIFFEL_FEATURE

@@ -1,7 +1,7 @@
 indexing
 	description: "Assembly descriptor: version, culture and public key"
 	external_name: "ISE.Reflection.AssemblyDescriptor"
---	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
+	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
 
 class
 	ASSEMBLY_DESCRIPTOR

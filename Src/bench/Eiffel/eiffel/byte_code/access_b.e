@@ -530,12 +530,6 @@ feature -- IL code generation
 			target_type: TYPE_I
 		do
 			target_type := Context.real_type (type)
-			if target_type.is_reference and then source_type.is_expanded then
-				generate_il_metamorphose (source_type, target_type, True)
-			elseif target_type.is_numeric and then not target_type.same_as (source_type) then
-				target_type.il_convert_from (source_type)
-			end
-
 			generate_il_simple_assignment (target_type, source_type)
 		end
 
@@ -548,10 +542,6 @@ feature -- IL code generation
 			target_type: TYPE_I
 		do
 			target_type := Context.real_type (type)
-			if target_type.is_numeric and then not target_type.same_as (source_type) then
-				target_type.il_convert_from (source_type)
-			end
-
 			generate_il_simple_assignment (target_type, source_type)
 		end
 

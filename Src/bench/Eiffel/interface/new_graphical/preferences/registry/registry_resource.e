@@ -74,7 +74,7 @@ feature -- Implementation
 					elseif equal (sprefix, "EIFCOL_") then
 						type := color_type
 						name := name.substring (8, name.count)
-					elseif equal (sprefix, "EIFFNT_") then
+					elseif equal (sprefix, "EIFFON_") then
 						type := font_type
 						name := name.substring (8, name.count)
 					elseif equal (sprefix, "EIFARR_") then

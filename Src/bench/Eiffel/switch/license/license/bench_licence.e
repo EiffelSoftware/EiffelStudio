@@ -8,10 +8,7 @@ creation
 
 feature
 
-	crypt (t: INTEGER): INTEGER is
-		do
-			Result := t
-		end
+	application_delay: INTEGER is 234
 
 	override_key_line: INTEGER is 4;
 

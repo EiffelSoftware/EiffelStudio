@@ -66,6 +66,11 @@
 #define arg(n)		(*(iregs+3+locnum+(n)))		/* Arguments from 1 to argnum */
 #define nbregs		(locnum+argnum+SPECIAL_REG)	/* Total # of registers */
 #define icur_dtype	Dtype(icurrent->it_ref)		/* Dtype of current */
+/* Interpreter routine flag */
+#define INTERP_CMPD 1			/* Interpretation of a compound */
+#define INTERP_INVA	2			/* Interpretation of invariant */
+
+#ifndef EIF_THREADS
 
 /* Operational stack. This is the stack used by the virtual stack machine,
  * in a reverse polish notation manner (RPN). All the operations defined
@@ -80,10 +85,6 @@ rt_shared struct opstack op_stack = { /* %%ss mt */
 	(struct item *) 0,			/* st_top */
 	(struct item *) 0,			/* st_end */
 };
-
-/* Interpreter routine flag */
-#define INTERP_CMPD 1			/* Interpretation of a compound */
-#define INTERP_INVA	2			/* Interpretation of invariant */
 
 /* The interpreter counter is the location in byte code of the next instruction
  * to be fetched. Its behaviour is similar to the one of PC in a central
@@ -111,7 +112,8 @@ rt_private int locnum = 0;		/* Number of locals */ /* %%ss mt */
  * routine due to a function call. If none have been called, then the registers
  * have no reason to have changed.
  */
-rt_private unsigned long tagval = 0L;	/* Records number of interpreter's call */ /* %%ss mr */
+rt_private unsigned long tagval = 0L;	/* Records number of interpreter's call */ /* %%ss mt */
+#endif /* EIF_THREADS */
 
 /* Error message */
 rt_private char *botched = "Operational stack botched";
@@ -744,12 +746,12 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		switch (last->type & SK_HEAD) {
 			case (SK_FLOAT):{
 				float f = last->it_float;
-				last->it_long = f;
+				last->it_long = (long) f;
 				}
 				break;
 			case (SK_DOUBLE):{
 				double d = last->it_double;
-				last->it_long = d;
+				last->it_long = (long) d;
 				}
 				break;
 			case (SK_INT):
@@ -772,12 +774,12 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		switch (last->type & SK_HEAD) {
 			case (SK_INT):{
 				long l = last->it_long;
-				last->it_float = l;
+				last->it_float = (float) l;
 				}
 				break;
 			case (SK_DOUBLE):{
 				double d = last->it_double;
-				last->it_float = d;
+				last->it_float = (float) d;
 				}
 				break;
 			case (SK_FLOAT):
@@ -3272,17 +3274,16 @@ null:
 	EIF_END_GET_CONTEXT
 }
 
-
+#ifndef EIF_THREADS
 /*
  * Invariant checking
  */
-
-rt_private char *inv_mark_table;	/* Marking table to avoid checking the same
+char *inv_mark_table;	/* Marking table to avoid checking the same
 									 * invariant several times
 									 */ /* %%ss mt */
+#endif /* EIF_THREADS */
 
-rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct item *stop, int where)
-          
+rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct item *stop, int where)          
                       		/* Current chunk (stack context) */
                   			/* To save stack context */
           					/* Invariant after or before */
@@ -4923,7 +4924,7 @@ rt_public struct item *opush(EIF_CONTEXT register struct item *val)
 	 * an "Out of memory" exception. If 'val' is a null pointer, simply
 	 * get a new cell at the top of the stack.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 struct item *top = op_stack.st_top;	/* Top of stack */
 
 	if (top == (struct item *) 0)	{			/* No stack yet? */
@@ -4958,6 +4959,7 @@ rt_public struct item *opush(EIF_CONTEXT register struct item *val)
 		bcopy(val, top, ITEM_SZ);		/* Push it on the stack */
 
 	return top;				/* Address of allocated item */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int stack_extend(EIF_CONTEXT register int size)
@@ -4966,7 +4968,7 @@ rt_private int stack_extend(EIF_CONTEXT register int size)
 	/* The operational stack is extended and the stack structure is updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
-
+	EIF_GET_CONTEXT
 	register2 struct item *arena;		/* Address for the arena */
 	register3 struct stochunk *chunk;	/* Address of the chunk */
 
@@ -4991,6 +4993,7 @@ rt_private int stack_extend(EIF_CONTEXT register int size)
 	SIGRESUME;									/* Restore signal handling */
 
 	return 0;			/* Everything is ok */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public struct item *opop(EIF_CONTEXT_NOARG)
@@ -4998,7 +5001,7 @@ rt_public struct item *opop(EIF_CONTEXT_NOARG)
 	/* Removes one item from the operational stack and return a pointer to
 	 * the removed item, which also happens to be the first free location.
 	 */
-	
+	EIF_GET_CONTEXT
 	register1 struct item *top = op_stack.st_top;	/* Top of the stack */
 	register2 struct stochunk *s;			/* To walk through stack chunks */
 	register3 struct item *arena;			/* Base address of current chunk */
@@ -5029,6 +5032,7 @@ rt_public struct item *opop(EIF_CONTEXT_NOARG)
 	SIGRESUME;
 
 	return op_stack.st_top;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void npop(EIF_CONTEXT register int nb_items)
@@ -5037,7 +5041,7 @@ rt_private void npop(EIF_CONTEXT register int nb_items)
 	 * try to truncate the unused chunks from the tail of the stack. We do
 	 * not do that in opop() because that would create an overhead...
 	 */
-
+	EIF_GET_CONTEXT
 	register2 struct item *top;			/* Current top of operational stack */
 	register3 struct stochunk *s;		/* To walk through stack chunks */
 	register4 struct item *arena;		/* Base address of current chunk */
@@ -5097,6 +5101,7 @@ rt_private void npop(EIF_CONTEXT register int nb_items)
 
 	if (d_cxt.pg_status == PG_RUN)	/* Program is running */
 		stack_truncate();			/* Eventually remove unused chunks */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public struct item *otop(EIF_CONTEXT_NOARG)

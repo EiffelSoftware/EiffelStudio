@@ -307,8 +307,6 @@ feature {NONE} -- Update
 				-- of build.exe
 			if visual_studio_information.is_visual_studio_wizard then
 				create Result.make_from_string (visual_studio_information.wizard_installation_path)
-				Result.extend ("Wizards")
-				Result.extend ("build")
 				Result.extend ("bitmaps")
 				Result.extend ("ico")
 				Result.set_file_name (file)

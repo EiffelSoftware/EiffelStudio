@@ -13,15 +13,18 @@ verbose
 open lisbon.ise 
 user manus manus 
 binary
-get local/TEST_DELIV/PorterPackage/Eiffel54_enterprise.tgz Eiffel54_ppc.tgz
-get local/TEST_DELIV/PorterPackage/Eiffel54_enterprise.iso Eiffel54_enterprise_ppc.iso
+get local/TEST_DELIV/PorterPackage/Eiffel55_enterprise.tgz Eiffel55_ppc.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel55_free.tgz Eiffel55_free_ppc.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel55_enterprise.iso.gz Eiffel55_enterprise_ppc.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel55_university.iso.gz Eiffel55_university_ppc.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel55_free.iso.gz Eiffel55_free_ppc.iso.gz
 close 
 EOF
 
 	echo LinuxPPC compilation done
 else
 	rm -rf PorterPackage
-	tar xvf ~/PorterPackage_enterprise.tar
+	tar xvf ~/PorterPackage_all.tar
 	cd PorterPackage
 	export ISE_PLATFORM=linuxppc
 	compile_exes

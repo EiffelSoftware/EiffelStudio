@@ -452,10 +452,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 		value = value + egc_compiler_tag;
 #ifndef WORKBENCH
 #ifdef NON_COMMERCIAL
-		if (value != egc_type_of_gc)
-			display_reminder();
-		else
-			display_non_commercial();
+		display_non_commercial();
 #else
 		if (value != egc_type_of_gc)
 			display_reminder();

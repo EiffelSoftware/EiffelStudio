@@ -59,16 +59,20 @@ feature
 
 	generate is
 			-- Generate C code in `generated_file'.
-		local
-			generate_invariant, generate_variant, workbench_mode: BOOLEAN;
 		do
-			
+			generate_assertions
+			generate_loop_body
+		end;
+
+	generate_assertions is
+		local
+			generate_variant, workbench_mode: BOOLEAN;
+		do
 			workbench_mode := context.workbench_mode;
 			if 	workbench_mode
 				or else
 				context.assertion_level.check_loop
 			then
-				generate_invariant := invariant_part /= Void;
 				generate_variant := variant_part /= Void;
 			end;
 				-- Outstand loop structure
@@ -86,6 +90,20 @@ feature
 					variant_part.generate;
 					generate_end_final_mode_test
 				end;
+			end;
+		end;
+
+	generate_loop_body is
+		local
+			generate_invariant, generate_variant, workbench_mode: BOOLEAN;
+		do
+			workbench_mode := context.workbench_mode;
+			if 	workbench_mode
+				or else
+				context.assertion_level.check_loop
+			then
+				generate_invariant := invariant_part /= Void;
+				generate_variant := variant_part /= Void;
 			end;
 			stop.generate;
 				-- The code for the evaluation of the expression is

@@ -170,9 +170,6 @@ feature {NONE}  -- Type
 			a_feature: FEATURE_I
 			a_table: FEATURE_TABLE
 			ttype: TYPE_A
-			formal_type: FORMAL_A
-			formal_dec: FORMAL_DEC_AS
-			formal_position: INTEGER
 			not_supported: NOT_SUPPORTED
 			vtug: VTUG
 			vtcg3: VTCG3
@@ -208,22 +205,6 @@ feature {NONE}  -- Type
 				not_supported.set_message ("Type qualifiers in delayed calls may not involve anchors.")
 				Error_handler.insert_error (not_supported)
 				Error_handler.raise_error
-			end
-
-			-- If it is a formal generic use its
-			-- constraint if it has one or ANY otherwise.
-			
-			if ttype.is_formal then
-				formal_type ?= ttype
-				formal_position := formal_type.position
-				-- Get the corresponding constraint type 
-				-- of the current class
-				formal_dec := a_class.generics.i_th (formal_position)
-				if formal_dec.has_constraint then
-					ttype := formal_dec.constraint_type
-				else
-					create {CL_TYPE_A} ttype.make (System.any_id)
-				end
 			end
 
 			if ttype.is_basic then

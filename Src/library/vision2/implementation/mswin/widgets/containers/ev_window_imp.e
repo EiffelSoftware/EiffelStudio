@@ -202,7 +202,7 @@ feature -- Access
 	menu_bar: EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
 
-	status_bar: EV_STATUS_BAR
+	status_bar: EV_WIDGET
 			-- Status bar of the window.
 
 	notebook_parent: ARRAYED_LIST[EV_NOTEBOOK_IMP] is
@@ -387,9 +387,10 @@ feature -- Element change
 			compute_minimum_height
 		end
 
-	set_status_bar (a_bar: EV_STATUS_BAR) is
+	set_status_bar (a_bar: EV_WIDGET) is
 			-- Make `a_bar' the new status bar of the window.
 		do
+			--| FIXME Vertical box, etc...
 			status_bar := a_bar
 			compute_minimum_height
 		end
@@ -798,7 +799,7 @@ feature {NONE} -- Implementation
 			-- Called when the window is resized.
 			-- Resize the child if it exists.
 		local
-			sb_imp: EV_STATUS_BAR_IMP
+			sb_imp: EV_WIDGET_IMP
 		do
 			if size_type /= size_minimized then
 				if item /= Void then
@@ -1007,6 +1008,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/04/28 21:43:35  brendel
+--| Replaced EV_STATUS_BAR with EV_WIDGET.
+--|
 --| Revision 1.40  2000/04/26 21:01:29  brendel
 --| child -> item or item_imp.
 --|

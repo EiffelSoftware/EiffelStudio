@@ -103,7 +103,7 @@ feature  -- Access
 		deferred
 		end
 
-	status_bar: EV_STATUS_BAR is
+	status_bar: EV_WIDGET is
 			-- Horizontal bar at bottom of client area used for showing
 			-- helpful messages to the user.
 		deferred
@@ -260,7 +260,7 @@ feature -- Status setting
 			void: menu_bar = Void
 		end
 
-	set_status_bar (a_bar: EV_STATUS_BAR) is
+	set_status_bar (a_bar: EV_WIDGET) is
 			-- Make `a_bar' the new status bar of the window.
 		require
 			no_status_bar_assigned: status_bar = Void
@@ -318,6 +318,9 @@ end -- class EV_WINDOW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/28 21:43:34  brendel
+--| Replaced EV_STATUS_BAR with EV_WIDGET.
+--|
 --| Revision 1.11  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

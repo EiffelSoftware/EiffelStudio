@@ -12,7 +12,6 @@
 
 #include "config.h"
 #include "copy.h"
-#include <memory.h>
 #include "traverse.h"		/* For deep copies */
 #include "hash.h"			/* For deep copies */
 #include "macros.h"			/* For macro LNGPAD */

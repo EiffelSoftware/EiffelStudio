@@ -17,7 +17,8 @@ feature -- Access
 
 	find_item_recursively_by_data (some_data: ANY): EV_TREE_NODE is
 			-- If `data' contained in a tree item at any level then
-			-- assign this item to `Result'.
+			-- assign this item to `Result'. Search comparison is based
+			-- on `object_comparison'.
 		do
 			Result := implementation.find_item_recursively_by_data (some_data)
 		ensure
@@ -25,6 +26,18 @@ feature -- Access
 			index_not_changed: old index = index
 		end
 		
+	find_items_recursively_by_data (some_data: ANY): ARRAYED_LIST [EV_TREE_NODE] is
+			-- `Result' is all tree items contained in `Current' at any level
+			-- with data matching `some_data'. Search comparisonis based on
+			-- `object_comparison'.
+		do
+			Result := implementation.find_items_recursively_by_data (some_data)
+		ensure
+			Result_not_void: Result /= Void
+			not_found_in_empty: not Result.is_empty implies not is_empty
+			index_not_changed: old index = index
+		end
+
 	has_recursively (an_item: EV_TREE_NODE): BOOLEAN is
 			-- Is `an_item' contained in `Current' at any level?
 		require

@@ -192,10 +192,10 @@ feature -- Access
 		do
 			update_content
 			if private_icon /= Void or private_cursor /= Void then
-					-- Bitmap stocked as WEL_ICON or WEL_CURSOR, turn that
-					-- into WEL_BITMAP/WEL_BITMAP.
-				retrieve_icon_information
-				reset_resource_content
+				-- Bitmap stocked as WEL_ICON or WEL_CURSOR, turn that
+				-- into WEL_BITMAP/WEL_BITMAP.
+					retrieve_icon_information
+					reset_resource_content
 			else
 				if private_bitmap = Void then
 						-- No bitmap defined, create a new & empty bitmap.
@@ -219,10 +219,10 @@ feature -- Access
 		do
 			update_content
 			if private_icon /= Void or private_cursor /= Void then
-					-- Bitmap stocked as WEL_ICON or WEL_CURSOR, turn that
-					-- into WEL_BITMAP/WEL_BITMAP.
-				retrieve_icon_information
-				reset_resource_content
+				-- Bitmap stocked as WEL_ICON or WEL_CURSOR, turn that
+				-- into WEL_BITMAP/WEL_BITMAP.
+					retrieve_icon_information
+					reset_resource_content
 			end
 			if private_mask_bitmap /= Void then
 				private_mask_bitmap.increment_reference
@@ -729,13 +729,13 @@ feature {EV_ANY_I} -- Delegated features
 			Result := Void
 		end
 		
-	internal_enable_drag is
+	internal_enable_dockable is
 			-- Platform specific implementation of `enable_drag'.
 			-- Does nothing in this implementation.
 		do
 		end
 		
-	internal_disable_drag is
+	internal_disable_dockable is
 			-- Platform specific implementation of `disable_drag'.
 			-- Does nothing in this implementation.
 		do

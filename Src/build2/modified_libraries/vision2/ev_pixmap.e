@@ -85,8 +85,30 @@ feature -- Comparison
 		
 	pixmap_path: STRING
 		-- Path of `pixmap'.
+		
+	pixmap_exists: BOOLEAN
+		-- Does pixmap `pixmap_path' exist?
 
 feature -- Status setting
+
+	enable_pixmap_exists is
+			-- Assign `True' to `pixmap_exists'.
+		do
+			pixmap_exists := True
+		end
+		
+	disable_pixmap_exists is
+			-- Assign `False' to `pixmap_exists'.
+		do
+			pixmap_exists := False
+		end
+		
+	set_pixmap_path (path: STRING) is
+			-- Assign `path' to `pixmap_path'.
+		do
+			pixmap_path := path
+		end
+		
 
 	set_with_named_file (file_name: STRING) is
 			-- Attempt to load pixmap data from a file specified by `file_name'.
@@ -98,7 +120,6 @@ feature -- Status setting
 			file_name_not_empty: not file_name.is_empty
 		do
 			implementation.read_from_named_file(file_name)
-			pixmap_path := file_name
 		end
 
 	set_size (a_width, a_height: INTEGER) is

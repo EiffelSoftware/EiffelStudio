@@ -564,6 +564,8 @@ feature {NONE} -- Implementation
 			l_class_type: CLASS_TYPE
 			l_params: ARRAY [DUMP_VALUE]
 			l_params_index: INTEGER
+			
+			l_ref_type: CL_TYPE_I			
 		do
 				-- Evaluate the parameters.
 			evaluate_parameters
@@ -600,7 +602,11 @@ feature {NONE} -- Implementation
 			
 				-- First find out the generic derivation if any in which we are
 				-- evaluation `f'.
-			if dtype.types.count > 1 then
+			if dtype.is_basic then
+				-- FIXME JFIAT: 2004/03/11 check better way for this basic type issue 
+				create l_ref_type.make (dtype.class_id)
+				l_class_type := l_ref_type.associated_class_type
+			elseif dtype.types.count > 1 then
 				if addr /= Void then
 						-- The type has generic derivations: we need to find the precise type.
 					if application.is_dotnet then
@@ -652,7 +658,7 @@ feature {NONE} -- Implementation
 								(not byte_context.real_type (
 									realf.arguments.i_th (parameters.index).type_i).is_basic)
 							then
-								dmp := evaluator.dotnet_metamorphose_basic_to_ref (dmp)
+								dmp := evaluator.dotnet_metamorphose_basic_to_reference_value (dmp)
 								debug ("debugger_trace_eval")
 									print ("Metamorphose ... %N")
 								end

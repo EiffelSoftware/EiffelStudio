@@ -193,7 +193,6 @@ feature -- Status setting
 					else
 						create command_name_change.make (object, object.edited_name, object.name)
 						object.accept_edited_name
-						history.cut_off_at_current_position
 						command_name_change.execute
 					end
 				end
@@ -326,7 +325,6 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 						-- We have guaranteed that the name is unique at this point.
 					create command_name_change.make (object, object.edited_name, object.name)
 					object.accept_edited_name
-					history.cut_off_at_current_position
 					command_name_change.execute
 				end
 			end
@@ -401,8 +399,7 @@ feature {NONE} -- Implementation
 			label.align_text_left
 			attribute_editor_box.extend (label)
 			attribute_editor_box.disable_item_expand (label)
-
-			
+	
 			create label.make_with_text ("Name:")
 			label.align_text_left
 			attribute_editor_box.extend (label)
@@ -569,7 +566,6 @@ feature {NONE} -- Implementation
 					-- and are editing it.
 				create command_name_change.make (object, object.edited_name, object.name)
 				object.accept_edited_name
-				history.cut_off_at_current_position
 				command_name_change.execute
 			end
 			name_field.focus_out_actions.resume

@@ -10,16 +10,12 @@ class
 
 inherit
 	EOLE_DISPATCH
-		redefine
-			on_query_interface,
-			on_invoke
-		end
-		
-	EOLE_PICTURE
+		rename
+			create_ole_interface_ptr as dispatch_create_ole_interface_ptr
 		undefine
-			create_ole_interface_ptr
+			interface_identifier
 		redefine
-			on_query_interface
+			on_invoke
 		end
 		
 	EOLE_DISPID
@@ -36,20 +32,31 @@ inherit
 		export
 			{NONE} all
 		end
-	
-feature -- Callback
 
-	on_query_interface (iid: STRING): POINTER is
-			-- Query `iid' interface.
-		do
-			if iid.is_equal (Iid_font_disp) or iid.is_equal (Iid_unknown) then
-				Current.add_ref
-				Result := Current.ole_interface_ptr
-				set_last_hresult (S_ok)
-			else
-				set_last_hresult (E_nointerface)
-			end
+feature -- Access
+
+	interface_identifier: STRING is
+			-- Interface identifier
+		once
+			Result := Iid_picture_disp
 		end
+
+	picture: EOLE_PICTURE is
+			-- Picture with exposed properties
+		once
+			!! Result.make
+		end
+
+feature -- Element Change
+
+	create_ole_interface_ptr is
+			-- Initialize associated OLE pointers.
+		do
+			dispatch_create_ole_interface_ptr
+			picture.create_ole_interface_ptr
+		end
+
+feature {EOLE_CALL_DISPATCHER} -- Callback
 		
 	on_invoke (dispid, flags: INTEGER; params: EOLE_DISPPARAMS; res: EOLE_VARIANT; exception: EOLE_EXCEPINFO) is
 			-- Expose picture object’s properties through Automation.
@@ -60,79 +67,28 @@ feature -- Callback
 		do
 			if flags = Dispatch_propertyget then
 				if dispid = Dispid_pict_handle then
-					res.set_integer2 (get_handle)
+					res.set_integer2 (picture.get_handle)
 				elseif dispid = Dispid_pict_hpal then
-					res.set_integer2 (get_hpal)
+					res.set_integer2 (picture.get_hpal)
 				elseif dispid = Dispid_pict_type then
-					res.set_integer2 (get_type)
+					res.set_integer2 (picture.get_type)
 				elseif dispid = Dispid_pict_width then
-					res.set_integer2 (get_width)
+					res.set_integer4 (picture.get_width)
 				elseif dispid = Dispid_pict_height then
-					res.set_integer2 (get_height)
-				else
-					exception.set_error_code (Disp_e_membernotfound)
-				end
-			elseif flags = Dispatch_method then
-				if dispid = Dispid_pict_render then
-					if params.argument (0).var_type = Vt_i4 then
-						hdc := params.argument(0).integer4
-					else
-						exception.set_error_code (Disp_e_typemismatch)
-					end
-					if params.argument (1).var_type = Vt_i4 then
-						x := params.argument(1).integer4
-					else
-						exception.set_error_code (Disp_e_typemismatch)
-					end
-					if params.argument (2).var_type = Vt_i4 then
-						y := params.argument(2).integer4
-					else
-						exception.set_error_code (Disp_e_typemismatch)
-					end
-					if params.argument (3).var_type = Vt_i4 then
-						cx := params.argument(3).integer4
-					else
-						exception.set_error_code (Disp_e_typemismatch)
-					end
-					if params.argument (4).var_type = Vt_i4 then
-						cy := params.argument(4).integer4
-					else
-						exception.set_error_code (Disp_e_typemismatch)
-					end
-					if params.argument (5).var_type = Vt_i4 then
-						x_src := params.argument(5).integer4
-					else
-						exception.set_error_code (Disp_e_typemismatch)
-					end
-					if params.argument (6).var_type = Vt_i4 then
-						y_src := params.argument(6).integer4
-					else
-						exception.set_error_code (Disp_e_typemismatch)
-					end
-					if params.argument (7).var_type = Vt_i4 then
-						cx_src := params.argument(7).integer4
-					else
-						exception.set_error_code (Disp_e_typemismatch)
-					end
-					if params.argument (8).var_type = Vt_i4 then
-						cy_src := params.argument(8).integer4
-					else
-						exception.set_error_code (Disp_e_typemismatch)
-					end
-					if params.argument (9).is_reference then
-						!! bounds.make
-						bounds.attach (params.argument(9).by_reference.ptr)
-					else
-						exception.set_error_code (Disp_e_typemismatch)
-					end
-					render (hdc, x, y, cx, cy, x_src, y_src, cx_src, cy_src, bounds)
+					res.set_integer4 (picture.get_height)
 				else
 					exception.set_error_code (Disp_e_membernotfound)
 				end
 			elseif flags = Dispatch_propertyput then
-				exception.set_error_code (Disp_e_membernotfound)
-			elseif flags = Dispatch_propertyputref then
-				exception.set_error_code (Disp_e_membernotfound)
+				if dispid = Dispid_pict_hpal then
+					if params.argument (0).var_type = Vt_i2 then
+						picture.set_hpal (params.argument (0).integer2)
+					else
+						exception.set_error_code (Disp_e_typemismatch)
+					end
+				else
+					exception.set_error_code (Disp_e_membernotfound)
+				end
 			else
 				exception.set_error_code (E_notimpl)
 			end

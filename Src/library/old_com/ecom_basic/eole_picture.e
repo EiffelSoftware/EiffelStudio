@@ -11,8 +11,7 @@ class
 inherit
 	EOLE_UNKNOWN
 		redefine
-			create_ole_interface_ptr,
-			on_query_interface
+			interface_identifier
 		end
 
 	EOLE_PICTYPE
@@ -20,15 +19,12 @@ inherit
 creation
 	make
 	
-feature -- Element change
+feature -- Access
 
-	create_ole_interface_ptr is
-			-- Create associated OLE pointer
-		local
-			wel_string: WEL_STRING
-		do
-			!! wel_string.make (Iid_picture)
-			ole_interface_ptr := ole2_create_interface_pointer ($Current, wel_string.item)
+	interface_identifier: STRING is
+			-- Unique interface identifier
+		once
+			Result := Iid_picture
 		end
 
 feature -- Message Transmission
@@ -178,18 +174,6 @@ feature -- Message Transmission
 		end
 
 feature {EOLE_CALL_DISPATCHER} -- Callback
-
-	on_query_interface (iid: STRING): POINTER is
-			-- Query `iid' interface.
-		do
-			if iid.is_equal (Iid_picture) or iid.is_equal (Iid_unknown) then
-				Current.add_ref
-				Result := Current.ole_interface_ptr
-				set_last_hresult (S_ok)
-			else
-				set_last_hresult (E_nointerface)
-			end
-		end
 		
 	on_get_handle: INTEGER is
 			-- Windows GDI handle of picture.

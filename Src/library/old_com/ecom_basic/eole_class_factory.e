@@ -11,49 +11,37 @@ class
 inherit
 	EOLE_UNKNOWN
 		redefine
-			on_query_interface,
-			create_ole_interface_ptr
+			interface_identifier
 		end
 
 creation
 	make
 			
-feature -- Element change
-
-	create_ole_interface_ptr is
-			-- Create associated OLE pointer.
-		local
-			wel_string: WEL_STRING
-		do
-			!! wel_string.make (iid_class_factory)
-			ole_interface_ptr := ole2_create_interface_pointer ($Current, wel_string.item)
-		end
-		
-	terminate is
-			-- End server.
-			-- Redefine in descendant.
-		do
-		end
-		
 feature -- Access
+
+	interface_identifier: STRING is
+			-- Unique interface identifier
+		once
+			Result := Iid_class_factory
+		end
 	
 	server_locks: INTEGER
 			-- Locks on server
 
 feature -- Message Transmission.
 
-	create_instance (controller_interface: POINTER; interface_identifier: STRING): POINTER is
-			-- Create instance of class with `interface_identifier'
+	create_instance (controller_interface: POINTER; interface_id: STRING): POINTER is
+			-- Create instance of class with `interface_id'
 			-- interface, may optionally be controlled by `controller_interface'.
 			-- Return Void if fails.
 			-- Not meant to be redefined; redefine `on_create_instance' instead.
 		require
 			valid_interface: is_valid_interface
-			valid_interface_identifier: interface_identifier /= Void
+			valid_interface_identifier: interface_id /= Void
 		local
 			wel_string: WEL_STRING
 		do
-			!! wel_string.make (interface_identifier)
+			!! wel_string.make (interface_id)
 			Result := ole2_clsfact_create_instance (ole_interface_ptr, controller_interface, wel_string.item)
 		end
 		
@@ -69,20 +57,8 @@ feature -- Message Transmission.
 		
 feature {EOLE_CALL_DISPATCHER} -- Callback
 
-	on_query_interface (iid: STRING): POINTER is
-			-- Query `iid' interface.
-		do
-			if iid.is_equal (Iid_class_factory) or iid.is_equal (Iid_unknown) then
-				add_ref
-				Result := ole_interface_ptr
-				set_last_hresult (S_ok)
-			else
-				set_last_hresult (E_nointerface)
-			end
-		end
-
-	on_create_instance (controller_interface: POINTER; interface_identifier: STRING): POINTER is
-			-- Create an instance of an object with `interface_identifier'
+	on_create_instance (controller_interface: POINTER; interface_id: STRING): POINTER is
+			-- Create an instance of an object with `interface_id'
 			-- interface, which may optionally be controlled by
 			-- `controller_interface'. Returns Void if fails.
 			-- By default: set status code with `Class_e_classnotavailable'.
@@ -112,12 +88,18 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 	
 feature {NONE} -- Implementation
 
+	terminate is
+			-- End server.
+			-- redefine in descendant if needed.
+		do
+		end
+
 	server_locked: BOOLEAN
 			-- When `True', server is locked in memory.
 	
 feature {NONE} -- Externals
 
-	ole2_clsfact_create_instance (ip: POINTER; controller: POINTER; interface_identifier: POINTER): POINTER is
+	ole2_clsfact_create_instance (ip: POINTER; controller: POINTER; interface_id: POINTER): POINTER is
 		external
 			"C"
 		alias

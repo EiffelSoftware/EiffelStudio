@@ -11,22 +11,18 @@ class
 inherit
 	EOLE_UNKNOWN
 		redefine
-			on_query_interface,
-			create_ole_interface_ptr
+			interface_identifier
 		end
 
 creation
 	make
 	
-feature -- Element Change
+feature -- Access
 
-	create_ole_interface_ptr is
-			--  Create associated OLE pointer.
-		local
-			wel_string: WEL_STRING
-		do
-			!! wel_string.make (Iid_connection_point)
-			ole_interface_ptr := ole2_create_interface_pointer ($Current, wel_string.item)
+	interface_identifier: STRING is
+			-- Unique interface identifier
+		once
+			Result := Iid_connection_point
 		end
 
 feature -- Message Transmission
@@ -84,19 +80,6 @@ feature -- Message Transmission
 	
 
 feature {EOLE_CALL_DISPATCHER} -- Callback
-
-	on_query_interface (iid: STRING): POINTER is
-			-- Query `iid' interface.
-			-- Return Void if interface is not supported.
-		do
-			if iid.is_equal (Iid_connection_point_container) or iid.is_equal (Iid_unknown) then
-				Current.add_ref
-				Result := Current.ole_interface_ptr
-				set_last_hresult (S_ok)
-			else
-				set_last_hresult (E_nointerface)
-			end
-		end
 
 	on_advise (client_sink: EOLE_UNKNOWN): INTEGER is
 			-- Create connection between connection point 

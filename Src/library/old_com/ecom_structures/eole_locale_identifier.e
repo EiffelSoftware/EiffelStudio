@@ -27,9 +27,9 @@ feature -- access
 			
 feature {NONE} -- Externals
 
-	ole2_locale_identifier_create (lang, sublang: INTEGER) is
+	ole2_locale_identifier_create (lang, sublang: INTEGER): INTEGER is
 		external
-			"C [macro <Winnt.h>] (USHORT, USHORT): ULONG"
+			"C [macro <Winnt.h>] (EIF_INTEGER, EIF_INTEGER): EIF_INTEGER"
 		alias
 			"MAKELANGID"
 		end

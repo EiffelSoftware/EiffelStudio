@@ -16,7 +16,7 @@ inherit
 	
 	EOLE_INTERFACE_IDENT
 		export
-			{NONE} all;
+			{NONE} all
 			{ANY} default_pointer
 		end
 
@@ -34,12 +34,13 @@ feature -- Initialization
 feature -- Element change
 		
 	create_ole_interface_ptr is
-			-- Create associated OLE pointer.
-			-- Automatically update `ole_interface_ptr'.
+			-- Initialize associated OLE pointer.
+		require
+			initializable_from_eiffel: is_initializable_from_eiffel
 		local
 			wel_string: WEL_STRING
 		do
-			!! wel_string.make (Iid_unknown)
+			!! wel_string.make (interface_identifier)
 			ole_interface_ptr := ole2_create_interface_pointer ($Current, wel_string.item)
 		ensure
 			is_valid_interface: is_valid_interface
@@ -97,6 +98,18 @@ feature -- Element change
 
 feature -- Access
 
+	interface_identifier: STRING is
+			-- Unique interface identifier
+		once
+			Result := Iid_unknown
+		end
+
+	is_initializable_from_eiffel: BOOLEAN is
+			-- Does interface support Callbacks?
+		once
+			Result := True
+		end
+			
 	status: EOLE_RESULT
 			-- OLE result handler
 		
@@ -155,7 +168,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			-- Query `iid' interface.
 			-- Return Void if interface is not supported.
 		do
-			if iid.is_equal (Iid_unknown) then
+			if iid.is_equal (interface_identifier) or iid.is_equal (Iid_unknown) then
 				add_ref
 				Result := ole_interface_ptr
 				set_last_hresult (S_ok)

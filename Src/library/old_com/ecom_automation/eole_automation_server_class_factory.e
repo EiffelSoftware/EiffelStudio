@@ -37,17 +37,17 @@ feature -- Access
 			
 feature {EOLE_CALL_DISPATCHER} -- Callback
 
-	on_create_instance (controller_interface: POINTER; interface_identifier: STRING): POINTER is
-			-- Create an instance of an object with `interface_identifier'
+	on_create_instance (controller_interface: POINTER; interface_id: STRING): POINTER is
+			-- Create an instance of an object with `interface_id'
 			-- interface, which may optionally be controlled by
 			-- `controller_interface'. Returns Void if fails.
 			-- By default: set status code with `Eole_e_notimpl'.
 			-- Redefine in descendant if needed.
 		do
-			if interface_identifier.is_equal (Iid_class_factory) or interface_identifier.is_equal (Iid_unknown) then
+			if interface_id.is_equal (Iid_class_factory) or interface_id.is_equal (Iid_unknown) then
 				Result := Current.ole_interface_ptr
 				set_last_hresult (S_ok)
-			elseif interface_identifier.is_equal (Iid_dispatch) then
+			elseif interface_id.is_equal (Iid_dispatch) then
 				Result := dispatch_interface.ole_interface_ptr
 				set_last_hresult (S_ok)
 			else

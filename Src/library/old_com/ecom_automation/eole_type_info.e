@@ -10,6 +10,12 @@ class
 
 inherit
 	EOLE_UNKNOWN
+		export
+			{NONE} create_ole_interface_ptr
+		redefine
+			interface_identifier,
+			is_initializable_from_eiffel
+		end
 
 	EOLE_METHOD_FLAGS
 	
@@ -20,6 +26,20 @@ inherit
 creation
 	make
 		
+feature -- Access
+
+	interface_identifier: STRING is
+			-- Unique interface identifier
+		once
+			Result := Iid_type_info
+		end
+
+	is_initializable_from_eiffel: BOOLEAN is
+			-- Does interface support Callbacks?
+		once
+			Result := False
+		end
+
 feature -- Message Transmission
 
 	address_of_member (member_id, invoke_ind: INTEGER): POINTER is

@@ -15,13 +15,31 @@ inherit
 	COMPILER_EXPORTER
 	SHARED_GEN_CONF_LEVEL
 
+create
+	make
+	
+feature {NONE} -- Initialization
+
+	make (f_id, f_name_id: INTEGER) is
+			-- Initialize Current with `f_id' and `f_name_id'.
+		require
+			valid_f_id: f_id > 0
+			valid_f_name_id: f_name_id > 0
+		do
+			feature_id := f_id
+			feature_name_id := f_name_id
+		ensure
+			feature_id_set: feature_id = f_id
+			feature_name_id_set: feature_name_id = f_name_id
+		end
+		
 feature -- Access
 
 	feature_id: INTEGER;
-			-- Feature ID to create
+			-- Feature ID to create.
 
-	feature_name: STRING;
-			-- Feature name to create
+	feature_name_id: INTEGER;
+			-- Feature name index in NAMES_HEAP.
 
 	is_array (type: TYPE_I): BOOLEAN is
 			-- Is type we want to create an ARRAY one?
@@ -55,25 +73,11 @@ feature -- Access
 			Result := cl_type.base_class.is_external
 		end
 
-feature -- Setting
-
-	set_feature_id (i: INTEGER) is
-			-- Assign `i' to `feature_id'.
-		do
-			feature_id := i;
-		end;
-
-	set_feature_name (n: STRING) is
-			-- Assign `n' to `feature_name'
-		do
-			feature_name := n;
-		end;
-
 	rout_id: INTEGER is
 			-- Routine ID of the feature to be created
 		do
 			Result := context.current_type.base_class.feature_table.
-						item (feature_name).rout_id_set.first;
+						item_id (feature_name_id).rout_id_set.first;
 		ensure
 			routine_id_not_void: Result > 0
 		end;
@@ -194,8 +198,20 @@ feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for an anchored creation type.
+		local
+			feat_tbl: FEATURE_TABLE
+			feat: FEATURE_I
+			target_type: CL_TYPE_I
 		do
-			il_generator.create_attribute_object (context.current_type, feature_id)
+				-- FIXME: Manu 10/24/2001. Code is not efficient at all and could be
+				-- improved if more data were stored in Current.
+			feat_tbl := Context.class_type.associated_class.feature_table
+			feat := feat_tbl.item_id (feature_name_id)
+			feat_tbl := System.class_of_id (feat.implemented_in).feature_table
+			feat := feat_tbl.item_id (feat.original_name_id)
+			target_type := il_generator.implemented_type (feat.implemented_in,
+				context.current_type)
+			il_generator.create_attribute_object (target_type, feat.feature_id)
 		end
 
 feature -- Byte code generation
@@ -618,7 +634,8 @@ feature -- Debug
 		do
 			io.error.putstring (generator);
 			io.error.putstring ("  ");
-			io.error.putstring (feature_name);
+			io.error.putstring (System.names.item (feature_name_id));
 			io.error.new_line;
 		end
+		
 end

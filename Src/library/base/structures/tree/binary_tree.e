@@ -15,9 +15,7 @@ class BINARY_TREE [G] inherit
 
 		CELL [G]
 			undefine
-				is_equal
-			redefine
-				copy
+				copy, is_equal
 			end
 
 		TREE [G]
@@ -29,8 +27,7 @@ class BINARY_TREE [G] inherit
 				fill_list,
 				child_remove,
 				child_after,
-				child_capacity,
-				copy
+				child_capacity
 			end
 
 create
@@ -288,13 +285,17 @@ feature -- Element change
 			else
 				n.compare_references
 			end
-			n.attach_to_parent (Current)
+			n.attach_to_parent (Void)
+			if not has_left and not has_right then
+				child_index := 1
+			end
+			
 			inspect
 				child_index
 			when 1 then
-				left_child := n
+				put_left_child (n)
 			when 2 then
-				right_child := n
+				put_right_child (n)
 			end
 		end
 
@@ -346,6 +347,29 @@ feature -- Removal
 			end
 		end
 
+	wipe_out is
+			-- Remove all children.
+		do 
+			remove_left_child
+			remove_right_child
+		end
+		
+	forget_left is
+			-- Forget left sibling.
+		do
+			if not is_root and then parent.right_child = Current then
+				parent.remove_left_child
+			end
+		end
+		
+	forget_right is
+			-- Forget right sibling.
+		do
+			if not is_root and then parent.left_child = Current then
+				parent.remove_right_child
+			end
+		end
+		
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
@@ -373,16 +397,6 @@ feature -- Duplication
 			end
 		end
 
-	copy (other: like Current) is
-			-- Copy contents from `other'.
-		local
-			tmp_tree: like Current
-		do
-			create tmp_tree.make (other.item)
-			if not other.is_leaf then tree_copy (other, tmp_tree) end
-			standard_copy (tmp_tree)
-		end
-
 feature {BINARY_TREE} -- Implementation
 
 	fill_list (al: ARRAYED_LIST [G]) is
@@ -398,6 +412,13 @@ feature {BINARY_TREE} -- Implementation
 			end
 		end
 
+	cut_off_node is
+			-- Cut off all links from current node.
+		do
+			left_child := Void
+			right_child := Void
+			parent := Void
+		end
 feature {NONE} -- Implementation
 
 	subtree_has (v: G): BOOLEAN is

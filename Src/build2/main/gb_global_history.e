@@ -27,10 +27,16 @@ feature -- Access
 			Result /= Void
 		end
 		
+	is_empty: BOOLEAN is
+			-- Is the history empty?
+		do
+			Result := command_list.is_empty
+		end
+		
 feature -- Basic operation
 
 	add_command (a_command: GB_COMMAND) is
-			--
+			-- Add `a_command' to `command_list'.
 		require
 			command_not_void: a_command /= Void
 		do

@@ -11,7 +11,7 @@ inherit
 
 	SHARED_ERROR_HANDLER;
 	SHARED_OPERATOR_TABLE;
-	SHARED_TEXT_ITEMS
+	SHARED_TEXT_ITEMS;
 
 creation
 
@@ -31,13 +31,16 @@ feature -- Initialization
 			format_stack.extend (format);
 		end;
 
-	make (ast: CLASS_AS) is
+	make (ast: CLASS_AS; file_name: STRING) is
 			-- Initialize current for simple
-			-- format.
+			-- format with file_name `file_name'.
 		require
-			valid_ast: ast /= Void
+			valid_ast: ast /= Void;
+		local
+			file: PLAIN_TEXT_FILE
 		do
 			make_for_case;
+			!! eiffel_file.make (file_name, ast.end_position);
 			class_ast := ast
 		ensure
 			set: class_ast = ast
@@ -45,8 +48,15 @@ feature -- Initialization
 
 feature -- Properties
 
-	class_ast: CLASS_AS
+	class_ast: CLASS_AS;
 			-- Class ast being formatted
+
+	feature_comments: EIFFEL_COMMENTS;
+			-- Comments for current analyzed feature
+
+	eiffel_file: EIFFEL_FILE;
+			-- Eiffel file associated with class_ast
+			--| (Not used in format context b).
 
  	format: LOCAL_FORMAT;
 			-- Current internal formatting directives.
@@ -83,6 +93,11 @@ feature -- Access
 		end;
 
 feature -- Local format setting details
+
+	set_type_creation (t: TYPE) is
+			-- Set _type_creation to `t'.
+		do
+		end;
 
 	set_separator (s: TEXT_ITEM) is
 			-- Set current separator to `s'.
@@ -151,6 +166,16 @@ feature -- Local format setting details
 			format.set_dot_needed (true);
 		ensure
 			format.dot_needed
+		end;
+
+feature -- Setting
+
+	set_feature_comments (c: like feature_comments) is
+			-- Set feature_comment to `c'
+		do
+			feature_comments := c
+		ensure
+			feature_comments = c
 		end;
 
 feature -- Update
@@ -432,41 +457,25 @@ feature -- Output
 			end;
 		end;
 
-	put_comment (comment: EIFFEL_COMMENTS) is
+	put_comments (comments: EIFFEL_COMMENTS) is
 			-- Put `comment' in `text'.
 		require
-			valid_comment: comment /= Void
+			valid_comments: comments /= Void
 		local
-			i: INTEGER;
+			txt: STRING
 		do
 			from
-				from
-					i := 1
-				until
-					i > comment.count or else
-					comment.text.item (i).empty or else
-					comment.text.item (i).item (1) /= '|'
-				loop
-					i := i + 1
-				end;
-				if i <= comment.count then
-					put_text_item (ti_Dashdash);
-					put_comment_text (comment.text.item (i))
-					new_line;
-				end;
-				i := i + 1
+				comments.start
 			until
-				i > comment.count
+				comments.after
 			loop
-				if 
-					comment.text.item (i).empty or else
-					comment.text.item (i).item (1) /= '|' 
-				then
+				txt := comments.item;
+				if txt.empty or else txt.item (1) /= '|' then
 					put_text_item (ti_Dashdash);
-					put_comment_text (comment.text.item (i))
+					put_comment_text (comments.item)
 					new_line;
 				end;
-				i := i + 1
+				comments.forth
 			end
 		end;
 
@@ -475,19 +484,20 @@ feature -- Output
 		end;
 
 	put_comment_text (c: STRING) is
-			-- Interprete the ` and ' signs of the comment
+			-- Interprets the ` and ' signs of the comment
 			-- and append it to `text'.
 		require
 			c_not_void: c /= Void
 		local
-			item: BASIC_TEXT;
+			quoted_text: QUOTED_TEXT;
+			comment_text: COMMENT_TEXT;
 			i, c_count: INTEGER;
 			c_area: SPECIAL [CHARACTER];
 			between_quotes: BOOLEAN;
 			s: STRING
 		do
 			from
-				!!s.make (0);
+				!! s.make (0);
 				c_count := c.count;
 				c_area := c.area
 			until
@@ -495,17 +505,16 @@ feature -- Output
 			loop
 				if between_quotes and c_area.item (i) = '%'' then
 					if not s.empty then
-						!!item.make (s);
-						put_text_item (item);
-						!!s.make (0)
+						!! quoted_text.make (s);
+						text.add (quoted_text);
+						!! s.make (0)
 					end;
 					between_quotes := false
 				elseif not between_quotes and c_area.item (i) = '`' then
 					if not s.empty then
-						!!item.make (s);
-						item.set_is_comment;
-						put_text_item (item);
-						!!s.make (0)
+						!! comment_text.make (s);
+						text.add (comment_text)
+						!! s.make (0)
 					end;
 					between_quotes := true
 				else
@@ -514,9 +523,8 @@ feature -- Output
 				i := i + 1
 			end;
 			if not s.empty then
-				!! item.make (s);
-				item.set_is_comment;
-				text.add (item)
+				!! comment_text.make (s);
+				text.add (comment_text)
 			end
 		end;
 

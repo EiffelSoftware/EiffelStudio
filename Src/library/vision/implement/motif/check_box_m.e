@@ -1,6 +1,7 @@
 indexing
 
-	description: "Motif check box implementation";
+	description: 	
+		"EiffelVision implementation of a Motif check box.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -9,42 +10,43 @@ class CHECK_BOX_M
 
 inherit
 
-	CHECK_BOX_I
-		export
-			{NONE} all
-		end;
+	CHECK_BOX_I;
 
 	MANAGER_M
+		undefine
+			create_callback_struct
+		end;
+
+	MEL_CHECK_BOX
+		rename
+			make as mel_check_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen
+		end
+
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_check_box: CHECK_BOX; man: BOOLEAN) is
 			-- Create a motif check_box.
-		local
-			ext_name_c_box: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name_c_box := a_check_box.identifier.to_c;
-			screen_object := create_check_box ($ext_name_c_box,
-						parent_screen_object (a_check_box, widget_index),
-						man);
+			mel_check_make (a_check_box.identifier,
+					mel_parent (a_check_box, widget_index),
+					man);
 		end
 
-feature {NONE} -- External features
-
-	create_check_box (cb_name: POINTER; scr_obj: POINTER; 
-				man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class CHECK_BOX_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -1,214 +1,132 @@
 indexing
 
-	description: "Implementation of popup shell";
+	description: 
+		"EiffelVision implementation of popup shell.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class POPUP_S_M 
+class 
+	POPUP_S_M 
 
 inherit
 
+	POPUP_S_I;
+
 	SHELL_M
 		rename
-			clean_up as shell_clean_up
-		end;   
+			popdown as mel_popdown
+		end;
 
 	SHELL_M
 		redefine
-			clean_up 
+			popdown
 		select
-			clean_up
-		end;   
+			popdown
+		end
 
-	COMMAND
-		export
-			{NONE} all
-		end;
+	MEL_CALLBACK
 
-feature {NONE}
-
-	grab_type: INTEGER;
-			-- Type of grab
-	
-	initialize (a_widget: WIDGET) is
-			-- Initialize the current dialog
-		local
-			true_ref, false_ref: BOOLEAN_REF
-		do
-			!!popup_actions.make (screen_object, Mpopup, a_widget);
-			!!true_ref;
-			true_ref.set_item (True);
-			popup_actions.add (Current, true_ref);
-			!!popdown_actions.make (screen_object, Mpopdown, a_widget);
-			!!false_ref;
-			false_ref.set_item (False);
-			popdown_actions.add (Current, false_ref)
-		end;
-
-	execute (up: ANY) is
-		local
-			bool_ref: BOOLEAN_REF
-		do
-			bool_ref ?= up;
-			is_popped_up_ref := bool_ref;
-		end;
-
-feature 
+feature -- Status report
 
 	is_cascade_grab: BOOLEAN is
 			-- Is the shell popped up with cascade grab (allowing the other
 			-- shells popped up with grab to receive events) ?
 		do
 			Result := grab_type = 2
-		end; -- is_cascade_grab
+		end; 
 
 	is_exclusive_grab: BOOLEAN is
 			-- Is the shell popped up with exclusive grab ?
 		do
 			Result := grab_type = 1
-		end; -- is_no_grab
+		end;
 
 	is_no_grab: BOOLEAN is
 			-- Is the shell popped up with no grab ?
 		do
 			Result := grab_type = 0
-		end; -- is_no_grab
+		end; 
 
-feature {NONE}
-
-	is_poped_up: BOOLEAN is
+	is_popped_up: BOOLEAN;
 			-- Is the popup widget popped up on screen ?
-		obsolete "Use is_popped_up instead, corrected feature spelling."
-		do
-			Result := is_popped_up_ref.item
-		end;
 
-	is_popped_up: BOOLEAN is
-			-- Is the popup widget popped up on screen ?
-		do
-			Result := is_popped_up_ref.item
-		end;
-
-	is_popped_up_ref: BOOLEAN_REF;
-
-	is_poped_up_ref: BOOLEAN_REF is
-		obsolete "Use is_popped_up_ref instead, corrected feature spelling."
-		do
-			Result := is_popped_up_ref
-		end
-
-feature {NONE}
-
-	popup_actions: EVENT_HAND_M;
-   
-	popdown_actions: EVENT_HAND_M;
-
-	clean_up is
-		do
-			shell_clean_up;
-			if popup_actions /= Void then
-				popup_actions.free_cdfd
-			end;
-			if popdown_actions /= Void then
-				popdown_actions.free_cdfd
-			end;
-		end
-
-feature 
-
-	popdown is
-			-- Popdown popup shell.
-		do
-			if is_popped_up then
-				xt_popdown (screen_object);
-			end;
-					is_popped_up_ref.set_item (False);
-		ensure
-			not is_popped_up
-		end; -- popdown
-
-	popup is
-			-- Popup a popup shell.
-		do
-			if not is_popped_up then
-				inspect	grab_type
-						when 0 then
-								xt_popup_none (screen_object)
-			   			when 1 then
-								xt_popup_exclusive (screen_object)
-						when 2 then
-								xt_popup_non_ex (screen_object)
-						end;
-						is_popped_up_ref.set_item (True)
-
-			end
-		ensure
-			is_popped_up
-		end;
+feature -- Status setting
 
 	set_cascade_grab is
 			-- Specifies that the shell would be popped up with cascade grab
 			-- (allowing the other shells popped up with grab to receive events).
 		do
 			grab_type := 2
-		ensure
-			is_cascade_grab
-		end; -- set_cascade_grab
+		end; 
 
 	set_exclusive_grab is
 			-- Specifies that the shell would be popped up with exclusive grab.
 		do
 			grab_type := 1
-		ensure
-			is_exclusive_grab
-		end; -- set_exclusive_grab
+		end;
 
 	set_no_grab is
 			-- Specifies that the shell would be popped up with no grab.
 		do
 			grab_type := 0
-		ensure
-			is_no_grab
-		end
-
-feature {NONE} -- External features
-
-	c_is_poped_up (value: POINTER): BOOLEAN is
-		external
-			"C"
 		end;
 
-	c_add_grab (scr_obj: POINTER; g_type: INTEGER) is
-		external
-			"C"
+feature -- Display
+
+	popdown is
+			-- Popdown popup shell.
+		do
+			if is_popped_up then
+				mel_popdown
+			end;
+			is_popped_up := False
 		end;
 
-	xt_popup_non_ex (a_popup: POINTER) is
-		external
-			"C"
+	popup is
+			-- Popup a popup shell.
+		do
+			if not is_popped_up then
+				inspect 
+					grab_type
+				when 0 then
+					popup_none
+				when 1 then
+					popup_exclusive
+				when 2 then
+					popup_non_exclusive
+				end;
+				is_popped_up := False
+			end
 		end;
 
-	xt_popup_exclusive (a_popup: POINTER) is
-		external
-			"C"
+feature {NONE} -- Implementation
+
+	grab_type: INTEGER;
+			-- Type of grab
+	
+	initialize (shell: MEL_SHELL) is
+			-- Initialize the current dialog
+		do
+			shell.set_allow_shell_resize (False);
+			shell.add_popup_callback (Current, True);
+			shell.add_popdown_callback (Current, False);
 		end;
 
-	xt_popup_none (a_popup: POINTER) is
-		external
-			"C"
+feature {NONE} -- Execution
+
+	execute (up: ANY) is
+		local
+			bool_ref: BOOLEAN_REF
+		do
+			bool_ref ?= up;
+			check
+				non_void_bool_ref: bool_ref /= Void
+			end;
+			is_popped_up := bool_ref.item
 		end;
 
-	xt_popdown (scr_obj: POINTER) is
-		external
-			"C"
-		end;
-
-
-
-end
-
-
+end -- class POPUP_S_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

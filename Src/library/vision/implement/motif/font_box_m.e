@@ -1,5 +1,7 @@
 indexing
 
+	description:
+		"EiffelVision Implementation of a font box";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -8,23 +10,17 @@ class FONT_BOX_M
 
 inherit
 
-	TERMINAL_M
-		rename
-			clean_up as terminal_clean_up
-		redefine
-			make
-		end
-
-	TERMINAL_M
-		redefine
-			make, clean_up
-		select
-			clean_up
-		end;
-
 	FONT_BOX_I;
 
-	FONT_BOX_R_M
+	MEMORY
+		redefine
+			dispose
+		end;
+
+	TERMINAL_M
+		redefine
+			make
+		end;
 
 creation
 
@@ -42,113 +38,23 @@ feature {NONE} -- Creation
 			data := font_box_create ($ext_name,
 					parent_screen_object (a_font_box, widget_index),
 					False, man);
-			screen_object := font_box_form (data)
+			screen_object := font_box_form (data);
+				--| Need redefinition of default_exec_callback
+				--| in order to remove callbacks correctly.
+			!! ok_b.make_from_existing (font_box_ok_button (data));
+			!! cancel_b.make_from_existing (font_box_cancel_button (data));
+			!! apply_b.make_from_existing (font_box_apply_button (data));
 		end;
 
-feature {NONE} -- Color
-
-	update_other_fg_color (pixel: POINTER) is
-		do
-			xm_set_children_fg_color (pixel, font_box_form (data));
-			fb_set_button_fg_color (data, pixel);
-		end;
-
-	update_other_bg_color (pixel: POINTER) is
-		do
-			xm_set_children_bg_color (pixel, font_box_form (data));
-			fb_set_button_bg_color (data, pixel);
-		end;
-
-feature {NONE} -- Font
-
-	update_text_font (f_ptr: POINTER) is
-		do
-			fb_set_text_font (data, f_ptr)
-		end;
-
-	update_label_font (f_ptr: POINTER) is
-		do
-		end;
-
-	update_button_font (f_ptr: POINTER) is
-		do
-			fb_set_button_font (data, f_ptr)
-		end;
-
-feature 
-
-	add_apply_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- apply button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			if (apply_actions = Void) then
-				!! apply_actions.make (font_box_apply_button (data), Mactivate, widget_oui)
-			end;
-			apply_actions.add (a_command, argument)
-		end;
-
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- cancel button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			if (cancel_actions = Void) then
-				!! cancel_actions.make (font_box_cancel_button (data), Mactivate, widget_oui)
-			end;
-			cancel_actions.add (a_command, argument)
-		end;
-
-	add_ok_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- ok button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			if (ok_actions = Void) then
-				!! ok_actions.make (font_box_ok_button (data), Mactivate, widget_oui)
-			end;
-			ok_actions.add (a_command, argument)
-		end;
-
+feature -- Access
 	
-feature {NONE}
-
-	ok_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when ok button is
-			-- activated
-
-	apply_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when apply button is
-			-- activated
-
-	cancel_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when cancel button is
-			-- activated
+	ok_b, apply_b, cancel_b: MEL_PUSH_BUTTON_GADGET
+			-- Buttons in the font box
 
 	data: POINTER;
 			-- Pointer to the font_box_data structure
 
-	clean_up is
-		do
-			terminal_clean_up;
-			if cancel_actions /= Void then
-				cancel_actions.free_cdfd
-			end;
-			if apply_actions /= Void then
-				apply_actions.free_cdfd
-			end;
-			if ok_actions /= Void then
-				ok_actions.free_cdfd
-			end;
-			free_data (data);
-		ensure then
-			data_freed: data = default_pointer
-		end;
-
-feature 
+feature -- Status report
 
 	font: FONT is
 			-- Font currently selected by the user
@@ -159,9 +65,63 @@ feature
 			str.from_c (font_box_current_font (data));
 			!! Result.make;
 			Result.set_name (str)
-		ensure then
-			not (Result = Void)
 		end;
+
+feature -- Status setting
+
+	set_font (a_font: FONT) is
+			-- Edit `a_font'.
+		require else
+			a_font_exists: not (a_font = Void)
+		local
+			ext_name: ANY
+		do
+			ext_name := a_font.name.to_c;
+			font_box_set_font ($ext_name, data)
+		end;
+
+feature  -- Element change
+
+	add_apply_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- apply button is activated.
+		do
+			apply_b.add_activate_callback (mel_vision_callback (a_command), argument)
+		end;
+
+	add_cancel_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- cancel button is activated.
+		do
+			cancel_b.add_activate_callback (mel_vision_callback (a_command), argument)
+		end;
+
+	add_ok_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- ok button is activated.
+		do
+			cancel_b.add_activate_callback (mel_vision_callback (a_command), argument)
+		end;
+
+feature -- Display
+
+	show_apply_button is
+			-- Make apply button visible.
+		do
+			font_box_show_apply (data)
+		end;
+
+	show_cancel_button is
+			-- Make cancel button visible.
+		do
+			font_box_show_cancel (data)
+		end;
+
+	show_ok_button is
+			-- Make ok button visible.
+		do
+			font_box_show_ok (data)
+		end
 
 	hide_apply_button is
 			-- Make apply button invisible.
@@ -181,63 +141,64 @@ feature
 			font_box_hide_ok (data)
 		end;
 
-feature 
+feature -- Removal
 
 	remove_apply_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			apply_actions.remove (a_command, argument)
+			apply_b.remove_activate_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			cancel_actions.remove (a_command, argument)
+			cancel_b.remove_activate_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			ok_actions.remove (a_command, argument)
+			ok_b.remove_activate_callback (mel_vision_callback (a_command), argument)
 		end;
 
-	set_font (a_font: FONT) is
-			-- Edit `a_font'.
-		require else
-			a_font_exists: not (a_font = Void)
-		local
-			ext_name: ANY
+	dispose is
 		do
-			ext_name := a_font.name.to_c;
-			font_box_set_font ($ext_name, data)
+			free_data (data);
+			data := default_pointer
+		ensure then
+			data_freed: data = default_pointer
 		end;
 
-	show_apply_button is
-			-- Make apply button visible.
+feature {NONE} -- Implementation
+
+	update_text_font (f_ptr: POINTER) is
 		do
-			font_box_show_apply (data)
+			fb_set_text_font (data, f_ptr)
 		end;
 
-	show_cancel_button is
-			-- Make cancel button visible.
+	update_label_font (f_ptr: POINTER) is
 		do
-			font_box_show_cancel (data)
 		end;
 
-	show_ok_button is
-			-- Make ok button visible.
+	update_button_font (f_ptr: POINTER) is
 		do
-			font_box_show_ok (data)
-		end
+			fb_set_button_font (data, f_ptr)
+		end;
+
+	update_other_fg_color (pixel: POINTER) is
+		do
+			xm_set_children_fg_color (pixel, font_box_form (data));
+			fb_set_button_fg_color (data, pixel);
+		end;
+
+	update_other_bg_color (pixel: POINTER) is
+		do
+			xm_set_children_bg_color (pixel, font_box_form (data));
+			fb_set_button_bg_color (data, pixel);
+		end;
 
 feature {NONE} -- External features
 

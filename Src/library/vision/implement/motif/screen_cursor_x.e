@@ -179,7 +179,7 @@ feature {NONE}
 			-- Update widgets.
 		
 		local
-			widgets_to_update: LIST [WIDGET_X]
+			widgets_to_update: LIST [WIDGET_M]
 		do
 			from
 				widgets_to_update ?= objects;

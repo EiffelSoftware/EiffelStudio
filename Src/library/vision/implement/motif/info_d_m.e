@@ -1,72 +1,71 @@
 indexing
 
-	description: "Motif information dialog implementation";
+	description: 
+		"EiffelVision implemenation of Motif information dialog.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class INFO_D_M 
+class 
+	INFO_D_M 
 
 inherit
 
-	INFO_D_I
-		export
-			{NONE} all
-		end;
+	INFO_D_I;
 
 	MESSAGE_D_M
 		undefine
-			make
+			clean_up, create_widget
 		redefine
-		define_cursor_if_shell, undefine_cursor_if_shell
+			make, dialog_shell, screen_object
 		end;
+
+	MEL_INFORMATION_DIALOG
+		rename
+			make as mel_info_make,
+			make_no_auto_unmanage as mel_info_make_no_auto,
+			foreground_color as mel_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_foreground_color as mel_set_foreground_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen
+		undefine
+			raise, lower, show, hide, is_shown
+		redefine
+			dialog_shell, screen_object
+		select 
+			mel_info_make, mel_info_make_no_auto
+		end
 
 creation
 
 	make
 
-feature {ALL_CURS_X}
-
-	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
-            -- Define `cursor' if the current widget is a shell.
-        require else
-            a_cursor_exists: not (a_cursor = Void)
-        do
-            dialog_define_cursor_if_shell (a_cursor)
-        end;
-
-    undefine_cursor_if_shell is
-            -- Undefine the cursor if the current widget is a shell.
-        do
-            dialog_undefine_cursor_if_shell
-        end;
-
-feature 
+feature {NONE} -- Initialization
 
 	make (an_information_dialog: INFO_D) is
 			-- Create a motif information dialog.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := an_information_dialog.identifier.to_c;
-			screen_object := create_info_d ($ext_name, 
-					parent_screen_object (an_information_dialog, widget_index));
+			mel_info_make_no_auto (an_information_dialog.identifier,
+				mel_parent (an_information_dialog, widget_index));
 			an_information_dialog.set_dialog_imp (Current);
-			forbid_resize
 			action_target := screen_object;
-		end;
+			initialize (dialog_shell)
+		end
 
-feature {NONE} -- External features
+feature -- Access
 
-	create_info_d (name: POINTER; scr_obj: POINTER): POINTER is
-		external
-			"C"
-		end;
+	dialog_shell: MEL_DIALOG_SHELL
+			-- Dialog shell of the working dialog
 
-end
+	screen_object: POINTER
+			-- Associated widget C pointer
 
-
+end -- class INFO_D_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

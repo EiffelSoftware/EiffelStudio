@@ -12,9 +12,22 @@ inherit
 	POPUP_I;
 
 	MENU_M
-		export
-			{NONE} all
-		end
+		undefine
+			create_callback_struct
+		end;
+
+	MEL_POPUP_MENU
+        rename
+            make as popup_make,
+            foreground_color as mel_foreground_color,
+            set_foreground_color as mel_set_foreground_color,
+            background_color as mel_background_color,
+            background_pixmap as mel_background_pixmap,
+            set_background_color as mel_set_background_color,
+            set_background_pixmap as mel_set_background_pixmap,
+            destroy as mel_destroy,
+            screen as mel_screen
+        end
 
 creation
 
@@ -24,34 +37,22 @@ feature {NONE} -- Creation
 
 	make (a_popup: POPUP) is
 			-- Create a motif popup menu.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_popup.identifier.to_c;
-			screen_object := create_popup ($ext_name,
-					parent_screen_object (a_popup, widget_index));
+            popup_make (a_popup.identifier,
+                    mel_parent (a_popup, widget_index));
 			abstract_menu := a_popup
 		end;
 
-feature
+feature -- Display
 
 	popup is
 			-- Popup current popup menu on screen.
 		do
-			xt_manage_child (screen_object)
-		end
-
-feature {NONE} -- External features
-
-	create_popup (p_name: POINTER; scr_obj: POINTER): POINTER is
-		external
-			"C"
+			manage
 		end;
 
-end
-
-
+end -- class POPUP_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

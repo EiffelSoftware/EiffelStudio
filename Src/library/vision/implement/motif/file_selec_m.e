@@ -1,586 +1,457 @@
 indexing
 
+	description:
+		"EiffelVision Implementation of a Motif file selection box.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FILE_SELEC_M 
+class 
+	FILE_SELEC_M 
 
 inherit
 
 	FILE_SELEC_I;
 
-	PROMPT_R_M;
-
-	FILE_SELEC_R_M;
-
 	TERMINAL_M
-		rename
-			clean_up as terminal_clean_up
+		undefine
+			create_callback_struct, create_widget,
+			default_button, cancel_button
 		redefine
 			make
-		end
-
-	TERMINAL_M
-		redefine
-			clean_up, make
-		select
-			clean_up
 		end;
+
+	MEL_FILE_SELECTION_BOX
+		rename
+			make as file_selection_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			dir_list as mel_dir_list,
+			set_pattern as mel_set_pattern,
+			pattern as mel_pattern,
+			set_directory as mel_set_directory,
+			directory as mel_directory
+		select
+			file_selection_make, make_no_auto_unmanage
+		end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_file_selection: FILE_SELEC; man: BOOLEAN) is
 			-- Create a motif file selection.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_file_selection.identifier.to_c;
-			screen_object := create_file_selection ($ext_name,
-				parent_screen_object (a_file_selection, widget_index),
+			file_selection_make (a_file_selection.identifier,
+				mel_parent (a_file_selection, widget_index),
 				man);
 		end;
 
-feature {NONE} -- Color
-
-	update_other_bg_color (pixel: POINTER) is
-		do
-			xm_set_children_bg_color (pixel, screen_object);
-		end;
-
-	update_other_fg_color (pixel: POINTER) is
-		do
-			xm_set_children_fg_color (pixel, screen_object);
-		end;
-
-feature {NONE} -- Font
-
-	update_text_font (f_ptr: POINTER) is
-		do
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_TEXT),
-						f_ptr);
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_LIST),
-						f_ptr);
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_FILTER_TEXT),
-						f_ptr);
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_DIR_LIST),
-						f_ptr);
-		end;
-
-	update_label_font (f_ptr: POINTER) is
-		do
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_DIR_LIST_LABEL),
-						f_ptr);
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_LIST_LABEL),
-						f_ptr);
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_FILTER_LABEL),
-						f_ptr);
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_SELECTION_LABEL),
-						f_ptr);
-		end;
-
-	update_button_font (f_ptr: POINTER) is
-		do
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_APPLY_BUTTON),
-						f_ptr);
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_CANCEL_BUTTON),
-						f_ptr);
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_DEFAULT_BUTTON),
-						f_ptr);
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_HELP_BUTTON),
-						f_ptr);
-			set_primitive_font (xm_file_selection_box_get_child 
-						(screen_object, MDIALOG_OK_BUTTON),
-						f_ptr);
-		end;
-
-feature {NONE}
-
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- cancel button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			if (cancel_actions = Void) then
-				!! cancel_actions.make (screen_object, Mcancel,
-						widget_oui)
-			end;
-			cancel_actions.add (a_command, argument)
-		end;
-
-	add_filter_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- filter button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			if (filter_actions = Void) then
-				!! filter_actions.make (screen_object, Mapply,
-						widget_oui)
-			end;
-			filter_actions.add (a_command, argument)
-		end;
-
-	add_help_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- help button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			if (help_actions = Void) then
-				!! help_actions.make (screen_object, Mhelp,
-						widget_oui)
-			end;
-			help_actions.add (a_command, argument)
-		end;
-
-	add_ok_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- ok button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			if (ok_actions = Void) then
-				!! ok_actions.make (screen_object, Mok, widget_oui)
-			end;
-			ok_actions.add (a_command, argument)
-		end;
-
-feature
-
-	set_file_list_label (a_label: STRING) is
-			-- Set `a_label' as file list label,
-			-- by default this label is `Files'.
-		require else
-			a_label_not_void: not (a_label = Void)
-		local
-			ext_name_label, ext_name: ANY
-		do
-			ext_name_label := a_label.to_c;
-			ext_name := MfileListlabelString.to_c;
-			to_left_xm_string (screen_object, ext_name_label, ext_name)
-		end;
-
-	set_dir_list_label (a_label: STRING) is
-			-- Set `a_label' as dir list label,
-			-- by default this label is `Directories'.
-		require else
-			a_label_not_void: not (a_label = Void)
-		local
-			ext_name_label, ext_name: ANY
-		do
-			ext_name_label := a_label.to_c;
-			ext_name := MdirListlabelString.to_c;
-			to_left_xm_string (screen_object, ext_name_label, ext_name)
-		end;
-
-	selected_file: STRING is
-			-- Current selected file
-		local
-			ext_name: ANY
-		do
-			ext_name := MdirSpec.to_c;
-			Result := from_xm_string (screen_object, $ext_name)
-		end;
-
-			
-	filter: STRING is
-			-- Current filter value
-		local
-			ext_name: ANY
-		do
-			ext_name := MdirMask.to_c;
-			Result := from_xm_string (screen_object, $ext_name)
-		end;
-
-	set_filter (a_filter: STRING) is
-			-- Set current filter to `a_filter'.
-		require else
-			not_a_filter_void: not (a_filter = Void)
-		local
-			ext_name, ext_name_filter: ANY
-		do
-			ext_name := MdirMask.to_c;
-			ext_name_filter := a_filter.to_c;
-			to_left_xm_string (screen_object, ext_name_filter, ext_name)
-		end;
+feature -- Access
 
 	is_dir_valid: BOOLEAN is
 			-- Is current search directory valid?
-		local
-			ext_name: ANY
 		do
-			ext_name := MdirectoryValid.to_c;
-			Result := get_boolean (screen_object, $ext_name)
-		end;
-
-	is_list_updated: BOOLEAN is
-			-- Is file od directory list updated during last search?
-		local
-			ext_name: ANY
-		do
-			ext_name := MlistUpdated.to_c;
-			Result := get_boolean (screen_object, $ext_name)
-		end;
-
-	directory: STRING is
-			-- Base directory used in determining files and directories
-			-- to be displayed
-		local
-			ext_name: ANY
-		do
-			ext_name := Mdirectory.to_c;
-			Result := from_xm_string (screen_object, $ext_name)
-		end;
-
-	set_directory (a_directory_name: STRING) is
-			-- Set base directory used in determining files and directories
-		   -- to be displayed to `a_directory_name'.
-		require else
-			not_a_directory_name_void: not (a_directory_name = Void)
-		local
-			ext_name, ext_name_dir: ANY
-		do
-			ext_name_dir := a_directory_name.to_c;
-			ext_name := Mdirectory.to_c;
-			to_left_xm_string (screen_object, ext_name_dir, ext_name)
-		end;
-
-	pattern: STRING is
-			-- Search pattern used in combination with `directory'
-			-- files and directories to be displayed
-		local
-			ext_name: ANY
-		do
-			ext_name := Mpattern.to_c;
-			Result := from_xm_string (screen_object, $ext_name)
-		end;
-
-	set_pattern (a_pattern: STRING) is
-			-- Set pattern to `a_pattern'.
-		require else
-			not_a_pattern_void: not (a_pattern = Void)
-		local
-			ext_name, ext_name_pattern: ANY
-		do
-			ext_name := Mpattern.to_c;
-			ext_name_pattern := a_pattern.to_c;
-			to_left_xm_string (screen_object, ext_name_pattern, ext_name)
-		end;
-
-	set_filter_label (a_label: STRING) is
-			-- Set `a_label' as filter label,
-			-- by default this label is `Filter'.
-		require else
-			not_a_label_void: not (a_label = Void)
-		local
-			ext_name_label, ext_name: ANY
-		do
-			ext_name_label := a_label.to_c;
-			ext_name := MfilterLabelString.to_c;
-			to_left_xm_string (screen_object, ext_name_label, ext_name)
+			Result := directory_valid
 		end;
 
 	file_list: LINKED_LIST [STRING] is
 			-- Items of current file list
 		local
-			xt_table: POINTER;
-			current_position: INTEGER;
-			last_position: INTEGER;
-			ext_name: ANY
+			c, i: INTEGER;
+			mel_table: MEL_STRING_TABLE;
+			ms: MEL_STRING
 		do
-			from
-				!! Result.make;
-				Result.start;
-				ext_name := MfileListItems.to_c;
-				xt_table := get_xmstring_tab (screen_object, $ext_name);
-				current_position := 1;
-				last_position := file_count + 1
-			until
-				current_position = last_position
-			loop
-				Result.put_left (get_i_th_table (xt_table,
-												current_position));
-				current_position := current_position + 1
+			!! Result.make;
+			c := file_count;
+			if c > 0 then
+				mel_table := file_list_items
+				from
+					i := 1;
+				until
+					i > c
+				loop
+					ms := mel_table.item (i);
+					Result.extend (ms.to_eiffel_string);
+					i := i + 1
+				end;
 			end
 		end;
 
 	dir_list: LINKED_LIST [STRING] is
 			-- Items of current directory list
 		local
-			xt_table: POINTER;
-			current_position: INTEGER;
-			last_position: INTEGER;
-			ext_name: ANY
+			c, i: INTEGER;
+			mel_table: MEL_STRING_TABLE;
+			ms: MEL_STRING
 		do
-			from
-				!! Result.make;
-				Result.start;
-				ext_name := MdirListItems.to_c;
-				xt_table := get_xmstring_tab (screen_object, $ext_name);
-				current_position := 1;
-				last_position := dir_count + 1
-			until
-				current_position = last_position
-			loop
-				Result.put_left (get_i_th_table (xt_table,
-												current_position));
-				current_position := current_position + 1
+			!! Result.make;
+			c := dir_count;
+			if c > 0 then
+				from
+					mel_table := dir_list_items;
+					Result.start;
+					i := 1;
+				until
+					i > c
+				loop
+					ms := mel_table.item (i);
+					Result.put_left (ms.to_eiffel_string);
+					i := i + 1
+				end;
 			end
 		end;
 
 	dir_count: INTEGER is
 			-- Number of items in directory list
-		local
-			ext_name: ANY	
 		do
-			ext_name := MdirListItemCount.to_c;
-			Result := get_int (screen_object, $ext_name)
+			Result := dir_list_item_count
 		end;
 
 	file_count: INTEGER is
 			-- Number of items in file list
+		do
+			Result := file_list_item_count
+		end;
+
+feature -- Status report
+
+	selected_file: STRING is
+			-- Current selected file
 		local
-			ext_name: ANY
+			ms: MEL_STRING
 		do
-			ext_name := MfileListItemCount.to_c;
-			Result := get_int (screen_object, $ext_name)
-		end;
-
-feature {NONE}
-
-	ok_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when ok button
-			-- is activated
-
-	cancel_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when cancel button
-			-- is activated
-
-	filter_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when filter button
-			-- is activated
-
-	help_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when help button
-			-- is activated
-
-	clean_up is
-		do
-			terminal_clean_up;
-			if filter_actions /= Void then
-				filter_actions.free_cdfd
-			end;
-			if cancel_actions /= Void then
-				cancel_actions.free_cdfd
-			end;
-			if help_actions /= Void then
-				help_actions.free_cdfd
-			end;
-			if ok_actions /= Void then
-				ok_actions.free_cdfd
-			end;
-		end;
-
-feature {NONE}
-
-	hide_cancel_button is
-			-- Make cancel button invisible.
-		do
-			xt_unmanage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_CANCEL_BUTTON))
-		end; -- hide_cancel_button
-
-	hide_filter_button is
-			-- Make filter button invisible.
-		do
-			xt_unmanage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_APPLY_BUTTON))
-		end;
-
-	hide_help_button is
-			-- Make help button invisible.
-		do
-			xt_unmanage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_HELP_BUTTON))
-		end;
-
-	hide_ok_button is
-			-- Make ok button invisible.
-		do
-			xt_unmanage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_OK_BUTTON))
-		end;
-
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- cancel button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			cancel_actions.remove (a_command, argument)
-		end; -- remove_cancel_action
-
-	remove_filter_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- filter button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			filter_actions.remove (a_command, argument)
-		end; -- remove_filter_action
-
-	remove_help_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- help button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			help_actions.remove (a_command, argument)
-		end; -- remove_help_action
-
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- ok button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			ok_actions.remove (a_command, argument)
-		end; -- remove_ok_action
-
-	show_cancel_button is
-			-- Make cancel button visible.
-		do
-			xt_manage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_CANCEL_BUTTON))
-		end; -- show_cancel_button
-
-	show_filter_button is
-			-- Make filter button visible.
-		do
-			xt_manage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_APPLY_BUTTON))
-		end; -- show_filter_button
-
-	show_help_button is
-			-- Make help button visible.
-		do
-			xt_manage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_HELP_BUTTON))
-		end; -- show_help_button
-
-	show_ok_button is
-			-- Make ok button visible.
-		do
-			xt_manage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_OK_BUTTON))
-		end
-
-feature
-	set_file_list_width (new_width: INTEGER) is
-		require else
-			width_large_enough: new_width >= 1;
-		local
-			ext_name_Mw: ANY
-		do
-			ext_name_Mw := Mwidth.to_c;
-			set_dimension (xm_file_selection_box_get_child (screen_object, MDIALOG_LIST), new_width, $ext_name_Mw)
-		end;
-
-
-	hide_file_selection_list is
-		do
-			xt_unmanage_child (xt_parent (xm_file_selection_box_get_child (screen_object, MDIALOG_LIST)));
-		end;
-
-	hide_file_selection_label is
-		do
-			xt_unmanage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_LIST_LABEL));
+			ms := dir_spec;
+			Result := dir_spec.to_eiffel_string;
+			ms.free
 		end;
 			
-
-	show_file_selection_label is
+	filter: STRING is
+			-- Current filter value
+		local
+			ms: MEL_STRING
 		do
-			xt_manage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_LIST_LABEL));
+			ms := dir_mask;
+			Result := dir_mask.to_eiffel_string;
+			ms.free
 		end;
 
-	show_file_selection_list is
+	directory: STRING is
+			-- Base directory used in determining files and directories
+			-- to be displayed
+		local
+			ms: MEL_STRING
 		do
-			xt_manage_child (xt_parent (xm_file_selection_box_get_child (screen_object, MDIALOG_LIST)));
+			ms := mel_directory;
+			Result := ms.to_eiffel_string;
+			ms.free
 		end;
-		
+
+	pattern: STRING is
+			-- Search pattern used in combination with `directory'
+			-- files and directories to be displayed
+		local
+			ms: MEL_STRING
+		do
+			ms := mel_pattern;
+			Result := ms.to_eiffel_string;
+			ms.free
+		end;
+
+feature -- Status setting
+
+	set_file_list_label (a_label: STRING) is
+			-- Set `a_label' as file list label,
+			-- by default this label is `Files'.
+		local
+			ms: MEL_STRING
+		do
+			!! ms.make_localized (a_label);
+			set_file_list_label_string (ms);
+			ms.free
+		end;
+
+	set_dir_list_label (a_label: STRING) is
+			-- Set `a_label' as dir list label,
+			-- by default this label is `Directories'.
+		local
+			ms: MEL_STRING
+		do
+			!! ms.make_localized (a_label);
+			set_dir_list_label_string (ms);
+			ms.free
+		end;
+
+	set_filter (a_filter: STRING) is
+			-- Set current filter to `a_filter'.
+		local
+			ms: MEL_STRING
+		do
+			!! ms.make_localized (a_filter);
+			set_dir_mask (ms);
+			ms.free
+		end;
+
+	set_directory (a_directory_name: STRING) is
+			-- Set base directory used in determining files and directories
+		   -- to be displayed to `a_directory_name'.
+		local
+			ms: MEL_STRING
+		do
+			!! ms.make_localized (a_directory_name);
+			mel_set_directory (ms);
+			ms.free
+		end;
+
+	set_pattern (a_pattern: STRING) is
+			-- Set pattern to `a_pattern'.
+		local
+			ms: MEL_STRING
+		do
+			!! ms.make_localized (a_pattern);
+			mel_set_pattern (ms);
+			ms.free
+		end;
+
+	set_filter_label (a_label: STRING) is
+			-- Set `a_label' as filter label,
+			-- by default this label is `Filter'.
+		local
+			ms: MEL_STRING
+        do
+            !! ms.make_localized (a_label);
+            set_filter_label_string (ms);
+            ms.free
+		end;
 
 	set_directory_selection is
 			-- Sets selection to directories only.
 		do
-			set_xt_unsigned_char (screen_object, 1, MfileTypeMask)
+			use_file_directory_mask
 		end;
 
 	set_file_selection is
 			-- Sets selection to files (default value). 
 		do
-			set_xt_unsigned_char (screen_object, 2, MfileTypeMask)
+			use_file_regular_mask
 		end;
 
 	set_all_selection is
-		 -- Sets selection to files and directories.
+		 	-- Sets selection to files and directories.
 		do
-			 set_xt_unsigned_char (screen_object, 3, MfileTypeMask)
+			use_file_any_type_mask
 		end;
 
-	
-feature {NONE}
-
-	filter_button: POINTER is
+	set_file_list_width (new_width: INTEGER) is
+			-- Set `file_list' widget to `new_width'.
 		do
-			Result := xm_file_selection_box_get_child (screen_object, MDIALOG_APPLY_BUTTON);
+			list.set_width (new_width)	
 		end;
 
-feature {NONE} -- External features
+feature -- Display
 
-	create_file_selection (s_name: POINTER; scr_obj: POINTER;
-				man: BOOLEAN): POINTER is
-		external
-			"C"
+	hide_cancel_button is
+			-- Make cancel button invisible.
+		do
+			cancel_button.unmanage
+		end; 
+
+	hide_filter_button is
+			-- Make filter button invisible.
+		do
+			apply_button.unmanage
 		end;
 
-	xm_file_selection_box_get_child (scr_obj: POINTER; value: INTEGER): POINTER is
-		external
-			"C"
+	hide_help_button is
+			-- Make help button invisible.
+		do
+			help_button.unmanage
 		end;
 
-	to_left_xm_string (scr_obj: POINTER; name1, name2: ANY) is
-		external
-			"C"
+	hide_ok_button is
+			-- Make ok button invisible.
+		do
+			ok_button.unmanage
 		end;
 
-	get_i_th_table (table: POINTER; value2: INTEGER): STRING is
-		external
-			"C"
+	hide_file_selection_list is
+		do
+			list.scrolled_window.unmanage
 		end;
 
-	get_xmstring_tab (scr_obj: POINTER; name: POINTER): POINTER is
-		external
-			"C"
+	hide_file_selection_label is
+		do
+			list_label.unmanage
+		end;
+			
+	show_cancel_button is
+			-- Make cancel button visible.
+		do
+			cancel_button.manage
 		end;
 
-	from_xm_string (scr_obj: POINTER; name: POINTER): STRING is
-		external
-			"C"
+	show_filter_button is
+			-- Make filter button visible.
+		do
+			apply_button.manage
+		end; 
+
+	show_help_button is
+			-- Make help button visible.
+		do
+			help_button.manage
+		end; 
+
+	show_ok_button is
+			-- Make ok button visible.
+		do
+			ok_button.manage
 		end;
-end
+
+	show_file_selection_label is
+		do
+			list_label.manage
+		end;
+
+	show_file_selection_list is
+		do
+			list.scrolled_window.manage
+		end;
+		
+feature -- Element change
+
+	add_cancel_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- cancel button is activated.
+		do
+			add_cancel_callback (mel_vision_callback (a_command), argument)
+		end;
+
+	add_filter_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- filter button is activated.
+		do
+			add_apply_callback (mel_vision_callback (a_command), argument)
+		end;
+
+	add_help_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- help button is activated.
+		do
+			add_help_callback (mel_vision_callback (a_command), argument)
+		end;
+
+	add_ok_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- ok button is activated.
+		do
+			add_ok_callback (mel_vision_callback (a_command), argument)
+		end;
+
+feature -- Removal
+
+	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- cancel button is activated.
+		do
+			remove_cancel_callback (mel_vision_callback (a_command), argument)
+		end; 
+
+	remove_filter_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- filter button is activated.
+		do
+			remove_apply_callback (mel_vision_callback (a_command), argument)
+		end; 
+
+	remove_help_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- help button is activated.
+		do
+			remove_help_callback (mel_vision_callback (a_command), argument)
+		end; 
+
+	remove_ok_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- ok button is activated.
+		do
+			remove_ok_callback (mel_vision_callback (a_command), argument)
+		end;
+
+feature {NONE} -- Implementation
+
+	update_other_bg_color (pixel: POINTER) is
+		do
+			--xm_set_children_bg_color (pixel, screen_object);
+		end;
+
+	update_other_fg_color (pixel: POINTER) is
+		do
+			--xm_set_children_fg_color (pixel, screen_object);
+		end;
+
+	update_text_font (f_ptr: POINTER) is
+		do
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_TEXT),
+						--f_ptr);
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_LIST),
+						--f_ptr);
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_FILTER_TEXT),
+						--f_ptr);
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_DIR_LIST),
+						--f_ptr);
+		end;
+
+	update_label_font (f_ptr: POINTER) is
+		do
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_DIR_LIST_LABEL),
+						--f_ptr);
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_LIST_LABEL),
+						--f_ptr);
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_FILTER_LABEL),
+						--f_ptr);
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_SELECTION_LABEL),
+						--f_ptr);
+		end;
+
+	update_button_font (f_ptr: POINTER) is
+		do
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_APPLY_BUTTON),
+						--f_ptr);
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_CANCEL_BUTTON),
+						--f_ptr);
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_DEFAULT_BUTTON),
+						--f_ptr);
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_HELP_BUTTON),
+						--f_ptr);
+			--set_primitive_font (xm_file_selection_box_get_child 
+						--(screen_object, MDIALOG_OK_BUTTON),
+						--f_ptr);
+		end;
 
 
+end -- class FILE_SELEC_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -1,5 +1,7 @@
 indexing
 
+	description: 
+		"EiffelVision implementation of a Motif scrolled text widget.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -8,120 +10,154 @@ class SCROLLED_T_M
 
 inherit
 
+	SCROLLED_T_I;
+
+	PRIMITIVE_COMPOSITE_M
+		redefine
+			set_size, set_height, set_width
+		end;
+
 	TEXT_M
 		undefine
-			make, make_word_wrapped
+			mel_text_make, clean_up,
+			height, real_x, real_y, realized, is_shown, width,
+			x, y, hide, lower, propagate_event, raise,
+			realize, set_x, set_x_y, set_y, show, unrealize
 		redefine
-			action_target, 
+			make, make_word_wrapped,
 			set_background_color,
 			update_background_color,
 			set_foreground_color,
 			update_foreground_color,
-			set_managed, managed, set_size, set_height,
-			set_width
+			set_managed, set_size, set_height,
+			set_width	
 		end;
 
-	SCROLLED_W_R_M;
-
-	SCROLLED_T_I;
+    MEL_SCROLLED_TEXT
+        rename
+            make as mel_text_make,
+            foreground_color as mel_foreground_color,
+            set_foreground_color as mel_set_foreground_color,
+            background_color as mel_background_color,
+            background_pixmap as mel_background_pixmap,
+            set_background_color as mel_set_background_color,
+            set_background_pixmap as mel_set_background_pixmap,
+            destroy as mel_destroy,
+            screen as mel_screen,
+            set_editable as mel_set_editable,
+            pos_to_x as x_coordinate,
+            pos_to_y as y_coordinate,
+            xy_to_pos as character_position,
+            resize_height as is_height_resizable,
+            resize_width as is_width_resizable,
+            word_wrap as is_word_wrap_mode,
+            verify_bell as is_bell_enabled,
+            string as text,
+            set_string as set_text,
+            max_length as maximum_size,
+            set_max_length as set_maximum_size,
+            set_single_line_edit_mode as set_single_line_mode,
+            top_character as top_character_position,
+            set_top_character as set_top_character_position,
+            clear_selection as clear_selecton_with_time,
+            clear_selection_with_current_time as clear_selection,
+            set_selection as set_selecton_with_time,
+            set_selection_with_current_time as set_selection,
+            insert as mel_insert,
+			is_scroll_vertical as is_vertical_scrollbar,
+			is_scroll_horizontal as is_horizontal_scrollbar
+		undefine
+			height, real_x, real_y, realized, is_shown, width,
+			x, y, hide, lower, propagate_event, raise,
+			realize, set_x, set_x_y, set_y, show, unrealize
+		redefine
+			set_height, set_width, set_size
+        end
 
 creation
 
 	make, make_word_wrapped
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_scrolled_text: TEXT; man: BOOLEAN) is
 			-- Create a motif scrolled text.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_scrolled_text.identifier.to_c;
-			action_target := create_scrolled_text ($ext_name,
-				parent_screen_object (a_scrolled_text, widget_index),
-				man);
-			screen_object := xt_parent (action_target);
-			if not man then
-				xt_unmanage_child (screen_object)
-			end;
-			a_scrolled_text.set_font_imp (Current)
+            mel_text_make (a_scrolled_text.identifier,
+                    mel_parent (a_scrolled_text, widget_index),
+                    man);
+			a_scrolled_text.set_font_imp (Current);
+			set_single_line_mode (False);
 		end;
 
 	make_word_wrapped (a_scrolled_text: TEXT; man: BOOLEAN) is
 			-- Create a motif scrolled text enabling word wrap.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_scrolled_text.identifier.to_c;
-			action_target := create_scrolled_text_ww ($ext_name,
-					parent_screen_object (a_scrolled_text, widget_index),
-					man);
-			screen_object := xt_parent (action_target);
-			if not man then
-				xt_unmanage_child (screen_object)
-			end;
-			a_scrolled_text.set_font_imp (Current)
+            make_detailed (a_scrolled_text.identifier,
+                    mel_parent (a_scrolled_text, widget_index),
+                    man, False, True, False, False);
+			a_scrolled_text.set_font_imp (Current);
+			set_single_line_mode (False);
+            set_word_wrap (True);
 		end;
 
-feature -- Setting size
+feature -- Access
+
+	main_widget: MEL_WIDGET is
+			-- Main widget which is the scrolled window
+		do
+			Result := scrolled_window
+		end
+
+feature -- Status setting
 
 	set_size (new_width:INTEGER; new_height: INTEGER) is
 			-- Set both width and height to `new_width'
 			-- and `new_height'.
 		local
-			ext_name_Mw, ext_name_Mh: ANY
 			was_unmanaged: BOOLEAN
 		do
-			ext_name_Mw := Mwidth.to_c;
-			ext_name_Mh := Mheight.to_c;
 			if not managed then
-				xt_manage_child (action_target);
+				manage;
 				was_unmanaged := True
 			end;
-			set_dimension (screen_object, new_width, $ext_name_Mw);
-			set_dimension (screen_object, new_height, $ext_name_Mh)
+			main_widget.set_size (new_width, new_height)
 			if was_unmanaged then
-				xt_unmanage_child (action_target)
+				unmanage
 			end
 		end;
 
 	set_width (new_width :INTEGER) is
 			-- Set width to `new_width'.
 		local
-			ext_name_Mw: ANY;
 			was_unmanaged: BOOLEAN
 		do
-			ext_name_Mw := Mwidth.to_c;
 			if not managed then
-				xt_manage_child (action_target);
+				manage;
 				was_unmanaged := True
 			end;
-			set_dimension (screen_object, new_width, $ext_name_Mw)
+			main_widget.set_width (new_width)
 			if was_unmanaged then
-				xt_unmanage_child (action_target)
+				unmanage;
 			end
 		end;
 
 	set_height (new_height: INTEGER) is
 			-- Set height to `new_height'.
 		local
-			ext_name: ANY;
-			was_unmanaged: BOOLEAN;
+			was_unmanaged: BOOLEAN
 		do
 			if not managed then
-				xt_manage_child (action_target);
+				manage;
 				was_unmanaged := True
 			end;
-			ext_name := Mheight.to_c;
-			set_dimension (screen_object, new_height, $ext_name)
+			main_widget.set_height (new_height)
 			if was_unmanaged then
-				xt_unmanage_child (action_target)
+				unmanage;
 			end
 		end;
-
-feature -- Managing
 
 	set_managed (flag: BOOLEAN) is
 			-- Enable geometry managment on screen widget implementation,
@@ -129,22 +165,57 @@ feature -- Managing
 			-- otherwise.
 		do
 			if flag then
-				xt_manage_child (screen_object)
-				xt_manage_child (action_target)
+				main_widget.manage
+				manage
 			else
-				xt_unmanage_child (screen_object)
-				xt_unmanage_child (action_target)
+				main_widget.unmanage
+				unmanage
 			end
 		end;
 
-	managed: BOOLEAN is
-			-- Is there geometry managment on X widget implementation
-			-- perform by window manager of parent widget?
+	hide_horizontal_scrollbar is
+			-- Make horizontal scrollbar invisible.
+		local
+			w: MEL_WIDGET
 		do
-			Result := xt_is_managed (action_target)
+			w := scrolled_window.horizontal_scroll_bar
+			if w /= Void then
+				w.unmanage
+			end;
 		end;
 
-feature -- Color
+	hide_vertical_scrollbar is
+			-- Make vertical scrollbar invisible.
+		local
+			w: MEL_WIDGET
+		do
+			w := scrolled_window.vertical_scroll_bar
+			if w /= Void then
+				w.unmanage
+			end;
+		end;
+
+	show_horizontal_scrollbar is
+			-- Make horizontal scrollbar visible.
+		local
+			w: MEL_WIDGET
+		do
+			w := scrolled_window.horizontal_scroll_bar
+			if w /= Void then
+				w.manage
+			end;
+		end;
+
+	show_vertical_scrollbar is
+			-- Make vertical scrollbar visible.
+		local
+			w: MEL_WIDGET
+		do
+			w := scrolled_window.vertical_scroll_bar
+			if w /= Void then
+				w.manage
+			end
+		end;
 
 	set_background_color (a_color: COLOR) is
 			-- Set background_color to `a_color'.
@@ -153,28 +224,28 @@ feature -- Color
 			color_implementation: COLOR_X;
 			pix: POINTER
 		do
-			if bg_pixmap /= Void then
-				pixmap_implementation ?= bg_pixmap.implementation;
+			if private_background_pixmap /= Void then
+				pixmap_implementation ?= private_background_pixmap.implementation;
 				pixmap_implementation.remove_object (Current);
-				bg_pixmap := Void
+				private_background_pixmap := Void
 			end;
-			if bg_color /= Void then
-				color_implementation ?= bg_color.implementation;
+			if private_background_color /= Void then
+				color_implementation ?= private_background_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
-			bg_color := a_color;
-			color_implementation ?= bg_color.implementation;
+			private_background_color := a_color;
+			color_implementation ?= private_background_color.implementation;
 			color_implementation.put_object (Current);
 			pix := color_implementation.pixel (screen);
-			xm_change_bg_color (screen_object, pix);
-			xm_change_bg_color (action_target, pix);
-			xm_change_bg_color (vertical_widget, pix);
+			--xm_change_bg_color (screen_object, pix);
+			--xm_change_bg_color (action_target, pix);
+			--xm_change_bg_color (vertical_widget, pix);
 			if not is_word_wrap_mode then
 					-- There are no horizontal_widget when
 					-- Current is word wrapped.
-				xm_change_bg_color (horizontal_widget, pix);
+				--xm_change_bg_color (horizontal_widget, pix);
 			end;
-			if fg_color /= Void then
+			if private_foreground_color /= Void then
 				update_foreground_color
 			end
 		end;
@@ -185,19 +256,18 @@ feature -- Color
 			color_implementation: COLOR_X;
 			ext_name: ANY
 		do
-			if fg_color /= Void then
-				color_implementation ?= fg_color.implementation;
+			if private_foreground_color /= Void then
+				color_implementation ?= private_foreground_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
-			fg_color := a_color;
+			private_foreground_color := a_color;
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
-			ext_name := Mforeground_color.to_c;
-			c_set_color (action_target, color_implementation.pixel (screen), $ext_name)
+			--ext_name := Mforeground_color.to_c;
+			--c_set_color (action_target, color_implementation.pixel (screen), $ext_name)
 		end;
 
-
-feature {COLOR_X}
+feature {COLOR_X} -- Implementation
 
 	update_background_color is
 			-- Update the X color after a change inside the Eiffel color.
@@ -207,15 +277,15 @@ feature {COLOR_X}
 		do
 			color_implementation ?= background_color.implementation;
 			pix := color_implementation.pixel (screen);
-			xm_change_bg_color (screen_object, pix);
-			xm_change_bg_color (action_target, pix);
+			--xm_change_bg_color (screen_object, pix);
+			--xm_change_bg_color (action_target, pix);
 			if not is_word_wrap_mode then
 					-- There are no horizontal_widget when
 					-- Current is word wrapped.
-				xm_change_bg_color (horizontal_widget, pix);
+				--xm_change_bg_color (horizontal_widget, pix);
 			end;
-			xm_change_bg_color (vertical_widget, pix);
-			if fg_color /= Void then
+			--xm_change_bg_color (vertical_widget, pix);
+			if private_foreground_color /= Void then
 				update_foreground_color
 			end
 		end;
@@ -226,87 +296,13 @@ feature {COLOR_X}
 			ext_name: ANY;
 			color_implementation: COLOR_X
 		do
-			ext_name := Mforeground_color.to_c;
+			--ext_name := Mforeground_color.to_c;
 			color_implementation ?= foreground_color.implementation;
-			c_set_color (action_target,
-				color_implementation.pixel (screen), $ext_name)
+			--c_set_color (action_target,
+				--color_implementation.pixel (screen), $ext_name)
 		end;
 
-feature
-
-	action_target: POINTER;
-			-- Widget ID on which action must be applied
-
-	hide_horizontal_scrollbar is
-			-- Make horizontal scrollbar invisible.
-		do
-			xt_unmanage_child (horizontal_widget);
-			--set_xt_boolean (screen_object, False, MscrollHorizontal);
-		end;
-
-	hide_vertical_scrollbar is
-			-- Make vertical scrollbar invisible.
-		do
-			xt_unmanage_child (vertical_widget);
-			--set_xt_boolean (screen_object, False, MscrollVertical);
-		end;
-
-	is_horizontal_scrollbar: BOOLEAN is
-			-- Is horizontal scrollbar visible?
-		do
-			Result := xt_is_managed (horizontal_widget);
-			--Result := xt_boolean (action_target, MscrollHorizontal);
-		end;
-
-	is_vertical_scrollbar: BOOLEAN is
-			-- Is vertical scrollbar visible?
-		do
-			Result := xt_is_managed (vertical_widget);;
-		end;
-
-	show_horizontal_scrollbar is
-			-- Make horizontal scrollbar visible.
-		do
-			xt_manage_child (horizontal_widget);
-			--set_xt_boolean (screen_object, True, MscrollHorizontal);
-		end;
-
-	show_vertical_scrollbar is
-			-- Make vertical scrollbar visible.
-		do
-			xt_manage_child (vertical_widget);
-			--set_xt_boolean (screen_object, True, MscrollVertical);
-		end;
-
-feature {NONE}
-
-	vertical_widget: POINTER is
-		do
-			Result := xt_widget (screen_object, MverticalScrollBar);
-		end;
-
-	horizontal_widget: POINTER is
-		do
-			Result := xt_widget (screen_object, MhorizontalScrollBar);
-		end;
-
-feature {NONE} -- Externals
-
-	create_scrolled_text (st_name: POINTER; scr_obj: POINTER; 
-				is_man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-	create_scrolled_text_ww (st_name: POINTER; scr_obj: POINTER; 
-				is_man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class SCROLLED_T_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

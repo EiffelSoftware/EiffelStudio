@@ -1,54 +1,76 @@
 indexing
 
-	description: "A tasking manager";
+	description: 
+		"A tasking manager.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TASK_X 
+class 
+	TASK_X 
 
 inherit
 
 	LINKED_LIST [COMMAND_EXEC]
-		rename
-			make as linked_list_make
 		export
-			{NONE} all;
-			{ANY} empty
+			{NONE} all
 		end;
 
 	TASK_I;
 
-	EVENT_HDL;
+	INPUT_EVENT_X
+		rename
+			object_comparison as cb_object_comparison
+		end
 
 creation
 
 	make
 
-feature 
+feature -- Element change
 
 	add_action (a_command: COMMAND; an_argument: ANY) is
 			-- Add `a_command' with `argument' to the list of action to execute 
 			-- while the system is waiting for user events.
 		local
 			command_info: COMMAND_EXEC;
+			ac: like application_context;
 		do
 			if not is_call_back_set then
-				c_task_set_call_back (c_data);
+				ac := application_context;
+				ac.add_work_proc_callback (Current, Void);
+				identifier := ac.last_id;
 			end;
 			!! command_info.make (a_command, an_argument);
 			extend (command_info);
-		ensure then
-			not empty;
-			is_call_back_set;
 		end;
 
-feature {NONE}
+feature -- Removal
 
-	c_data: POINTER;
-			-- Address of datas for C routines
+	remove_action (a_command: COMMAND; an_argument: ANY) is
+			-- Remove `a_command' with `argument' to the list of action to
+			-- execute while the system is waiting for user events.
+		local
+			command_info: COMMAND_EXEC;
+			is_removed: BOOLEAN;
+		do
+			!! command_info.make (a_command, an_argument);
+			start;
+			compare_objects;
+			search (command_info);
+			compare_references;
+			if not after then
+				remove;
+				is_removed := true;
+			end;
+			if empty and is_call_back_set then
+				set_no_call_back;
+			end;
+		end;
 
-	call_back is
+feature {NONE} -- Execution
+
+	execute (arg: ANY) is
 			-- Call the command.
 		do
 			from
@@ -63,111 +85,7 @@ feature {NONE}
 			end;
 		end;
 
-	
-feature 
-
-	make (a_task: TASK; an_application_context: POINTER) is
-			-- Create a openlook task.
-		require
-			a_task_exists: not (a_task = Void);
-		do
-			linked_list_make;
-			c_data := c_task_create (an_application_context, Current, $call_back);
-			if false then
-				call_back
-			end;
-		end; 
-
-	
-feature 
-
-	is_call_back_set: BOOLEAN is
-			-- Is a call back already set ?
-		do		
-			Result := c_task_is_call_back_set (c_data);
-		end; 
-
-	
-feature 
-
-	remove_action (a_command: COMMAND; an_argument: ANY) is
-			-- Remove `a_command' with `argument' to the list of action to
-			-- execute while the system is waiting for user events.
-		require else
-			not_a_command_void: not (a_command = Void);
-			is_call_back_set;
-		
-		local
-			command_info: COMMAND_EXEC;
-			is_removed: BOOLEAN;
-		do
-			!! command_info.make (a_command, an_argument);
-			start;
-			compare_objects;
-			search (command_info);
-			compare_references;
-			if not off then
-				remove;
-				is_removed := true;
-			end;
-			if empty and is_call_back_set then
-				c_task_set_no_call_back (c_data);
-			end;
-		ensure then
-			empty /= is_call_back_set;
-		end;
-
-	destroy is
-			-- Free `c_data' C structure.
-		local
-			null_pointer: POINTER
-		do
-			check
-				not_freed: null_pointer /= c_data
-			end;
-			c_free_task (c_data);
-			c_data := null_pointer;
-		ensure then
-			is_data_freed: is_data_freed
-		end
-		
-	is_data_freed: BOOLEAN is
-			-- Is `c_data' freed ?
-		local
-			null_pointer: POINTER
-		do
-			Result := null_pointer = c_data
-		end;
-	
-feature {NONE} -- External features
-
-	c_free_task (data: POINTER) is
-		external
-			"C"
-		end;
-
-	c_task_set_call_back (data: POINTER) is
-		external
-			"C"
-		end;
-
-	c_task_set_no_call_back (data: POINTER) is
-		external
-			"C"
-		end;
-
-	c_task_is_call_back_set (data: POINTER): BOOLEAN is
-		external
-			"C"
-		end; 
-
-	c_task_create (app_ctxt: POINTER; obj: G_ANY_I; cb: POINTER): POINTER is
-		external
-			"C"
-		end; 
-
-end
-
+end -- TASK_X
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

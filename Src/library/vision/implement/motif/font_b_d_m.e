@@ -1,5 +1,7 @@
 indexing
 
+	description:
+		"EiffelVision implementation of a font box dialog.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -8,23 +10,24 @@ class FONT_B_D_M
 
 inherit
 
-	FONT_B_D_I
-		export
-			{NONE} all
+	FONT_B_D_I;
+
+	DIALOG_M
+		redefine
+			screen_object
 		end;
 
 	FONT_BOX_M
 		rename
 			make as font_box_make
 		undefine
-			lower, raise, action_target,
-			show, hide, shown, destroy_xt_widget
-		redefine
+			lower, raise, 
+			show, hide, is_shown, destroy,
 			define_cursor_if_shell, undefine_cursor_if_shell,
-			set_x, set_y, set_x_y, is_stackable
-		end;
-
-	DIALOG_M
+			is_stackable
+		redefine
+			mel_destroy, screen_object
+		end
 
 creation
 
@@ -44,101 +47,28 @@ feature {NONE} -- Creation
 					True, True);
 			screen_object := font_box_form (data);
 			a_font_box_dialog.set_dialog_imp (Current);
-			forbid_resize
 			action_target := screen_object;
+			!! dialog_shell.make_from_existing (xt_parent (screen_object));
+			initialize (dialog_shell)
 		end;
 
-	is_stackable: BOOLEAN is do end;
+feature -- Access
 
-feature {ALL_CURS_X}
+	dialog_shell: MEL_DIALOG_SHELL;
+			-- Dialog shell where font box is in
 
-	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
-			-- Define `cursor' if the current widget is a shell.
-		require else
-			a_cursor_exists: not (a_cursor = Void)
+	screen_object: POINTER
+			-- Associated C widget pointer
+
+feature -- Removal
+
+	mel_destroy is
+			-- Destroy the dialog shell of the font box.
 		do
-			dialog_define_cursor_if_shell (a_cursor)
+			dialog_shell.destroy
 		end;
 
-feature 
-
-	set_x (new_x: INTEGER) is
-			-- Put at horizontal position `new_x'
-		local
-			ext_name_Mx: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, new_x, y)
-			else
-				if shown then
-					ext_name_Mx := Mx.to_c;
-					set_posit (screen_object, new_x, $ext_name_Mx)
-				else
-					xt_move_widget (screen_object, new_x, y)
-				end
-			end
-		end;
-
-	set_x_y (new_x: INTEGER; new_y: INTEGER) is
-			-- Put at horizontal position `new_x' and at
-			-- vertical position `new_y'
-		local
-			ext_name_Mx, ext_name_My: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, new_x, new_y)
-			else
-				if shown then
-					ext_name_Mx := Mx.to_c;
-					ext_name_My := My.to_c;
-					set_posit (screen_object, new_x, $ext_name_Mx);
-					set_posit (screen_object, new_y, $ext_name_My);
-				else
-					xt_move_widget (screen_object, new_x, new_y)
-				end
-			end;
-		end;
-
-	set_y (new_y: INTEGER) is
-			-- Put at vertical position `new_y'
-		local
-			ext_name_My: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, x, new_y)
-			else
-				if shown then
-					ext_name_My := My.to_c;
-					set_posit (screen_object, new_y, $ext_name_My);
-				else
-					xt_move_widget (screen_object, x, new_y)
-				end
-			end
-		end;
-
-feature {ALL_CURS_X}
-
-	undefine_cursor_if_shell is
-			-- Undefine the cursor if the current widget is a shell.
-		do
-			dialog_undefine_cursor_if_shell
-		end;
-
-feature {NONE} -- External features
-
-	xt_set_geometry (scr_obj: POINTER; x_value, y_value: INTEGER) is
-		external
-			"C"
-		end;
-
-	xt_move_widget (scr_obj: POINTER; x_value, y_value: INTEGER) is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class FONT_B_D_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

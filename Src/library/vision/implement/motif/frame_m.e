@@ -1,55 +1,49 @@
 indexing
 
-	description: "Motif frame implementation";
+	description: 
+		"EiffelVision implementation of a Motif frame widget.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FRAME_M 
+class 
+	FRAME_M 
 
 inherit
 
-	FRAME_I
-		export
-			{NONE} all
-		end;
+	FRAME_I;
 
-	FRAME_R_M
-		export
-			{NONE} all
-		end;
+	MANAGER_M;
 
-	MANAGER_M
+	MEL_FRAME
+		rename
+			make as mel_frame_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen
+		end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_frame: FRAME; man: BOOLEAN) is
 			-- Create a motif frame.
-		local
-			ext_name_frame: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name_frame := a_frame.identifier.to_c;
-			screen_object := create_frame ($ext_name_frame,
-					parent_screen_object (a_frame, widget_index),
+			mel_frame_make (a_frame.identifier,
+					mel_parent (a_frame, widget_index),
 					man);
 		end
 
-feature {NONE} -- External features
-
-	create_frame (f_name: POINTER; scr_obj: POINTER;
-					man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class FRAME
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

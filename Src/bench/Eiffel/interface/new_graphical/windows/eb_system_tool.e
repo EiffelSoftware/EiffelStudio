@@ -13,7 +13,7 @@ inherit
 			build_edit_bar as build_system_toolbar
 --			System_type as stone_type
 		redefine
-			make, build_interface,
+			make,
 			init_commands,
 			save_text,
 			empty_tool_name, stone, 
@@ -25,14 +25,12 @@ inherit
 --			process_ace_syntax, compatible,
 			set_mode_for_editing,
 			has_editable_text,
-			able_to_edit, icon_id,
-			build_file_menu
+			able_to_edit,
+			build_file_menu,
+			build_special_menu
 		end
 
 	EB_SYSTEM_TOOL_DATA
-		rename
-			System_resources as resources
-		end
 		
 	PROJECT_CONTEXT
 
@@ -45,7 +43,6 @@ feature -- Initialization
 
 	make (man: EB_TOOL_MANAGER) is
 		do
---			resources.add_user (Current)
 			Precursor (man)
 --			set_default_size
 --			set_default_format
@@ -68,28 +65,17 @@ feature -- Initialization
 			create filter_cmd.make (Current)
 		end
 
-feature {EB_TOOL_MANAGER} -- Initialize
-
-	build_interface is
-		do
-			precursor
-
-			if resources.command_bar.actual_value = False then
-				system_toolbar.hide
-			end
-		end
-
 feature -- Access
 
 	stone: SYSTEM_STONE
 
 --	help_index: INTEGER is 7
 		
-	icon_id: INTEGER is
-			-- Icon id of Current window (only for windows)
-		do
-			Result := Interface_names.i_System_id
-		end
+--	icon_id: INTEGER is
+--			-- Icon id of Current window (only for windows)
+--		do
+--			Result := Interface_names.i_System_id
+--		end
 
 	format_list: EB_SYSTEM_FORMATTER_LIST
 
@@ -172,6 +158,28 @@ feature -- Parsing
 		end
 
 feature -- Update
+
+	register is
+		do
+			register_to ("system_tool_bar")
+		end
+
+	update is
+		do
+			if system_tool_bar then
+				system_toolbar.show
+			else
+				system_toolbar.hide
+			end
+			if edit_bar_menu_item /= Void then
+				edit_bar_menu_item.set_selected (system_tool_bar)
+			end
+		end
+
+	unregister is
+		do
+			unregister_to ("system_tool_bar")
+		end
 
 	process_system (s: SYSTEM_STONE) is
 			-- Process system stone.
@@ -312,9 +320,6 @@ feature {NONE} -- Implementation Graphical Interface
 
 			create sep.make (a_toolbar)
 
-				-- Should we have a close button?
---			has_close_button := General_resources.close_button.actual_value
-
 --			create hole.make (Current)
 			create b.make (a_toolbar)
 			b.set_pixmap (Pixmaps.bm_System_dot)
@@ -330,14 +335,12 @@ feature {NONE} -- Implementation Graphical Interface
 			create format_bar.make (a_toolbar)
 
 				-- Should we have a close button?
---			has_close_button := Tool_resources.close_button.actual_value
-
---			if has_close_button then
---				create sep.make (a_toolbar)
---				create b.make (a_toolbar)
---				b.set_pixmap (Pixmaps.bm_Quit)
---				b.add_click_command (close_cmd, Void)
---			end
+			if close_button_in_every_tool then
+				create sep.make (a_toolbar)
+				create b.make (a_toolbar)
+				b.set_pixmap (Pixmaps.bm_Quit)
+				b.add_click_command (close_cmd, Void)
+			end
 		end
 
 feature {EB_TOOL_MANAGER} -- Menus Implementation
@@ -372,6 +375,8 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 			create i.make_with_text (a_menu, Interface_names.m_Filter)
 			i.add_select_command (filter_cmd, Void)
+
+			Precursor (a_menu)
 		end
 
 feature {NONE} -- Attributes

@@ -83,29 +83,34 @@ feature -- Access
 				Result := str_file_name.space_separated_strings
 			end
 
-				-- The first string of `Result' is the selected
-				-- directory, the following strings are the name
-				-- of the selected files
-			from
-				Result.start
-				directory_name := Result.item
-					-- add the final backslash if not present
-				if (directory_name @ directory_name.count) /= '\' then
-					directory_name.append_character('\')
-				end
-				if not Result.after then
+				-- If the user has selected only one file, Windows returns
+				-- this only file, otherwise...(see below)
+
+			if Result.count > 1 then
+					-- The first string of `Result' is the selected
+					-- directory, the following strings are the name
+					-- of the selected files
+				from
+					Result.start
+					directory_name := Result.item
+						-- add the final backslash if not present
+					if (directory_name @ directory_name.count) /= '\' then
+						directory_name.append_character('\')
+					end
+					if not Result.after then
+						Result.forth
+					end
+				until
+					Result.after
+				loop
+						-- prepend the directory to the filename
+					Result.item.prepend(directory_name)
 					Result.forth
 				end
-			until
-				Result.after
-			loop
-					-- prepend the directory to the filename
-				Result.item.prepend(directory_name)
-				Result.forth
+					-- Remove the directory from the string list.
+				Result.start
+				Result.remove
 			end
-				-- Remove the directory from the string list.
-			Result.start
-			Result.remove
 		ensure
 			result_not_void: Result /= Void
 		end

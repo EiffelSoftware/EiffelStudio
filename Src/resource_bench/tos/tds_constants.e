@@ -1,124 +1,70 @@
 indexing
-	description: "Edittext statement representation in the tds"
+	description: "Constants used by the tds"
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_EDITTEXT_STATEMENT
+	TDS_CONSTANTS
 
-inherit
-	TDS_CONTROL_STATEMENT
+feature
 
-	TDS_CONTROL_CONSTANTS
-		export
-			{NONE} all
-		end
+	Normal: INTEGER is 1
 
-creation
-	make
+	Dialog_x: INTEGER is 2
+	Dialog_y: INTEGER is 3
+	Dialog_width: INTEGER is 4
+	Dialog_height: INTEGER is 5
 
-feature	-- Initialization
+	Option_characteristic: INTEGER is 6
+	Option_language: INTEGER is 7
+	Option_version: INTEGER is 8
+	Option_caption: INTEGER is 9
+	Option_class: INTEGER is 10
+	Option_exstyle: INTEGER is 11
+	Option_font_size: INTEGER is 12
+	Option_font_type: INTEGER is 13
+	Option_font_weight: INTEGER is 14
+	Option_font_italic: INTEGER is 15
+	Option_menu: INTEGER is 16
+	Option_style: INTEGER is 17
+	
+	Control_type: INTEGER is 18
+	Control_text: INTEGER is 19
+	Control_id: INTEGER is 20
+	Control_x: INTEGER is 21
+	Control_y: INTEGER is 22
+	Control_width: INTEGER is 23
+	Control_height: INTEGER is 24
+	Control_style: INTEGER is 25
+	Control_exstyle: INTEGER is 26
 
-	finish_control_setup is
-		local
-			es_multiple: TDS_STYLE
-		do
-			!! es_multiple.make
-			es_multiple.set_style ("ES_MULTILINE")
+	Generic_Control_text: INTEGER is 27
+	Generic_Control_id: INTEGER is 28
+	Generic_Control_class: INTEGER is 29
+	Generic_Control_style: INTEGER is 30
+	Generic_Control_x: INTEGER is 31
+	Generic_Control_y: INTEGER is 32
+	Generic_Control_width: INTEGER is 33
+	Generic_Control_height: INTEGER is 34
+	Generic_Control_exstyle: INTEGER is 35
 
-			if (style /= Void) and then (style.is_almost_present (es_multiple)) then
-				set_wel_class_name ("WEL_MULTIPLE_LINE_EDIT")
-			else
-				set_wel_class_name ("WEL_SINGLE_LINE_EDIT")
-			end
+	Stringtable_id: INTEGER is 36
+	Stringtable_text: INTEGER is 37
 
-			set_variable_name ("edit_text")
-			set_type (C_edittext)
-		end
+	Menu_text: INTEGER is 38
+	Menu_command: INTEGER is 39
+	Menu_flags: INTEGER is 40
 
-feature -- Code generation
+	Accelerators_event: INTEGER is 41
+	Accelerators_id: INTEGER is 42
+	Accelerators_type: INTEGER is 43
+	Accelerators_options: INTEGER is 44
+	
+	Toolbar_width: INTEGER is 45
+	Toolbar_height: INTEGER is 46
 
-	display is
-		do
-			from 
-				start
-			until
-				after
-
-			loop
-				io.putstring ("%NEDITTEXT ")
-
-				io.putstring (" ")
-				item.id.display
-
-				io.putstring (" ")
-				io.putint (item.x)
-
-				io.putstring (" ")
-				io.putint (item.y)
-
-				io.putstring (" ")
-				io.putint (item.width)
-
-				io.putstring (" ")
-				io.putint (item.height)
-
-				if (item.style /= Void) then
-					item.style.display
-				end
-
-				if (item.exstyle /= Void) then
-					item.exstyle.display
-				end
-
-				forth
-			end
-		end
-
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
-			-- Generate `a_resource_file' from the tds memory structure.
-		do
-			from 
-				start
-			until
-				after
-
-			loop
-				a_resource_file.putstring ("%N%TEDITTEXT ")
-
-			--	a_resource_file.putstring (item.text)
-
-			--	a_resource_file.putstring (", ")
-				item.id.generate_resource_file (a_resource_file)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.x)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.y)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.width)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.height)
-
-				if (item.style /= Void) then
-					a_resource_file.putstring (", ")
-					item.style.generate_resource_file (a_resource_file)
-				end
-
-				if (item.exstyle /= Void) then
-					a_resource_file.putstring (", ")
-					item.exstyle.generate_resource_file (a_resource_file)
-				end
-
-				forth
-			end
-		end
-
-end -- class TDS_EDITTEXT_STATEMENT
+end -- class TDS_CONSTANTS
 
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --

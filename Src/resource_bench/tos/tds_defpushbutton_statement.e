@@ -1,192 +1,116 @@
 indexing
-	description: "resource ID representation"
+	description: "Defpushbutton statement representation in the tds"
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_ID
+	TDS_DEFPUSHBUTTON_STATEMENT
 
 inherit
-	TDS_DEFINE_TABLE
+	TDS_CONTROL_STATEMENT 
 
-feature -- Access
-
-	number_id: INTEGER
-			-- Number Id of the resource.
-
-	name_id: STRING
-			-- Name Id of the resource
-
-	is_number: BOOLEAN
-			-- Is the ID a number?
-
-	has_number: BOOLEAN
-			-- Does the ID have a number?
-
-	has_name: BOOLEAN
-			-- Does the ID have a name?
-
-feature -- Element change
-
-	set_number_id (a_id: INTEGER) is
-			-- Set `number_id' to `a_id'.
-		do
-			number_id := a_id
-			is_number := true
-			has_number := true
-		ensure
-			number_id_set: number_id = a_id
-			is_number_set: is_number
-			has_number_set: has_number
+	TDS_CONTROL_CONSTANTS
+		export
+			{NONE} all
 		end
 
-	set_name_id (a_id: STRING) is
-			-- Set `name_id' to `a_id'.
-		require
-			a_id_exists: a_id /= Void and then a_id.count > 0
+creation
+	make
+
+feature -- Initialization
+
+	finish_control_setup is
 		do
-			name_id := clone (a_id)
-			is_number := false
-			has_name := true
-		ensure
-			name_id_set: name_id.is_equal (a_id)
-			is_number_set: not is_number
+			set_variable_name ("default_push_button")
+			set_type (C_defpushbutton)
+			set_wel_class_name ("WEL_PUSH_BUTTON")
 		end
 
-	set_id (a_id: STRING) is
-			-- Set properly `a_id' to the current object.
-		require
-			a_id_exists: a_id /= Void and then a_id.count > 0
-		do
-			if (a_id.is_integer) then
-				set_number_id (a_id.to_integer)
-			else
-				set_name_id (a_id)
-			end
-		end
-
-feature -- Conversion
-
-	to_constant_style: STRING is
-			-- Convert the `name_id' to a eiffel constant format if exists (ie like "Constant")
-			-- Otherwise put the `number_id'.
-		local
-			first_character: STRING
-		do
-			if (not has_name) then
-				Result := clone (number_id.out)
-			else
-				Result := to_variable_style
-
-				first_character := Result.substring (1,1)
-				first_character.to_upper
-
-				Result.remove (1)
-				Result.prepend_string (first_character)
-
-				if define_table.has (name_id) then
-					Result.append ("_constant")
-				end
-			end
-		end
-
-	to_variable_style: STRING is
-			-- Convert the `name_id' to a eiffel variable format (ie like "variable").
-		require
-			name_id_exists: name_id /= Void and then name_id.count > 0
-		do
-			Result := clone (name_id)
-			Result.to_lower
-		end
-
-	to_class_style (a_standard_class_name: STRING): STRING is
-			-- Convert the `name_id' or `number_id' to a eiffel class format (ie like "CLASS").
-		require
-			a_standard_class_name_exists: a_standard_class_name /= Void and then a_standard_class_name.count > 0
-		local
-			temp: INTEGER
-		do
-			if has_name then
-				Result := clone (name_id)
-				Result.to_upper
-			else
-				Result := clone (a_standard_class_name)
-				Result.append ("_")
-				if number_id < 0 then
-					temp := -number_id
-					Result.append ("minus_")
-					Result.append (temp.out)
-				else
-					Result.append (number_id.out)
-				end	
-			end
-		end
-
-feature -- Code generation
+feature -- Code Generation
 
 	display is
 		do
-			if (is_number) then
-				io.putint (number_id)
-			else
-				io.putstring (name_id)
+			from 
+				start
+			until
+				after
+
+			loop
+				io.putstring ("%NDEFPUSHBUTTON ")
+
+				io.putstring (item.text)
+
+				io.putstring (" ")
+				item.id.display
+
+				io.putstring (" ")
+				io.putint (item.x)
+
+				io.putstring (" ")
+				io.putint (item.y)
+
+				io.putstring (" ")
+				io.putint (item.width)
+
+				io.putstring (" ")
+				io.putint (item.height)
+
+				if (item.style /= Void) then
+					item.style.display
+				end
+
+				if (item.exstyle /= Void) then
+					item.exstyle.display
+				end
+
+				forth
 			end
-		end
+	end
 
 	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
 			-- Generate `a_resource_file' from the tds memory structure.
-		require
-			a_resource_file_exists: a_resource_file.exists
 		do
-			if (is_number) then
-				a_resource_file.putint (number_id)
-			else
-				a_resource_file.putstring (name_id)
+			from 
+				start
+			until
+				after
+
+			loop
+				a_resource_file.putstring ("%N%TDEFPUSHBUTTON ")
+
+				a_resource_file.putstring (item.text)
+
+				a_resource_file.putstring (", ")
+				item.id.generate_resource_file (a_resource_file)
+
+				a_resource_file.putstring (", ")
+				a_resource_file.putint (item.x)
+
+				a_resource_file.putstring (", ")
+				a_resource_file.putint (item.y)
+
+				a_resource_file.putstring (", ")
+				a_resource_file.putint (item.width)
+
+				a_resource_file.putstring (", ")
+				a_resource_file.putint (item.height)
+
+				if (item.style /= Void) then
+					a_resource_file.putstring (", ")
+					item.style.generate_resource_file (a_resource_file)
+				end
+
+				if (item.exstyle /= Void) then
+					a_resource_file.putstring (", ")
+					item.exstyle.generate_resource_file (a_resource_file)
+				end
+
+				forth
 			end
 		end
 
-	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: INTEGER) is
-			-- Generate `a_tree_view' control from the tds memory structure.
-		require
-			a_tree_view_not_void: a_tree_view /= Void
-       		local
-			tvis: WEL_TREE_VIEW_INSERT_STRUCT
-			tv_item: WEL_TREE_VIEW_ITEM
-			parent: INTEGER
-		do
-			!! tvis.make
-			tvis.set_sort
-			tvis.set_parent (a_parent)
-			!! tv_item.make
-
-			if (is_number) then
-				tv_item.set_text (number_id.out)
-			else
-				tv_item.set_text (name_id)
-			end
-
-			tvis.set_tree_view_item (tv_item)
-			a_tree_view.insert_item (tvis)
-		end
-
-	generate_wel_code (a_text_file: PLAIN_TEXT_FILE) is
-			-- Generate the eiffel code in `a_text_file'
-		require
-			a_text_file_exists: a_text_file.exists
-		local
-			wel_name: STRING
-		do
-			if (is_number) then
-				a_text_file.putint (number_id)
-			else
-				wel_name := clone (name_id)
-				wel_name.to_upper
-				a_text_file.putstring (wel_name)
-			end
-		end
-
-end -- class TDS_ID
+end -- class TDS_DEFPUSHBUTTON_STATEMENT
 
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --

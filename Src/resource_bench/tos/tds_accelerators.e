@@ -1,120 +1,64 @@
 indexing
-	description: "Checkbox statement representation in the tds"
-	product: "Resource Bench"
+	description: "Objects that ..."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_CHECKBOX_STATEMENT
+	TDS_ACCELERATORS
 
+	-- Replace ANY below by the name of parent class if any (adding more parents
+	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
-	TDS_CONTROL_STATEMENT
-
-	TDS_CONTROL_CONSTANTS
+	ANY
+		rename
 		export
-			{NONE} all
+		undefine
+		redefine
+		select
 		end
 
-creation
-	make
+-- The following Creation_clause can be removed if you need no other
+-- procedure than `default_create':
 
-feature -- Initalization
+create
+	default_create
 
-	finish_control_setup is
-		do
-			set_variable_name ("checkbox")
-			set_wel_class_name ("WEL_CHECK_BOX")
-			set_type (C_checkbox)
-		end
+feature -- Initialization
 
-feature -- Code generation
+feature -- Access
 
-	display is
-		do
-			from 
-				start
-			until
-				after
+feature -- Measurement
 
-			loop
-				io.putstring ("%NCHECKBOX ")
+feature -- Status report
 
-				io.putstring (item.text)
+feature -- Status setting
 
-				io.putstring (" ")
-				item.id.display
+feature -- Cursor movement
 
-				io.putstring (" ")
-				io.putint (item.x)
+feature -- Element change
 
-				io.putstring (" ")
-				io.putint (item.y)
+feature -- Removal
 
-				io.putstring (" ")
-				io.putint (item.width)
+feature -- Resizing
 
-				io.putstring (" ")
-				io.putint (item.height)
+feature -- Transformation
 
-				if (item.style /= Void) then
-					item.style.display
-				end
+feature -- Conversion
 
-				if (item.exstyle /= Void) then
-					item.exstyle.display
-				end
+feature -- Duplication
 
-				forth
-			end
-		end
+feature -- Miscellaneous
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
-			-- Generate `a_resource_file' from the tds memory structure.
-		do
-		    	from 
-				start
-			until
-				after
+feature -- Basic operations
 
-			loop
-				a_resource_file.putstring ("%N%TCHECKBOX ")
+feature -- Obsolete
 
-				a_resource_file.putstring (item.text)
+feature -- Inapplicable
 
-				a_resource_file.putstring (", ")
-				item.id.generate_resource_file (a_resource_file)
+feature {NONE} -- Implementation
 
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.x)
+invariant
+	invariant_clause: -- Your invariant here
 
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.y)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.width)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.height)
-
-				if (item.style /= Void) then
-					a_resource_file.putstring (", ")
-					item.style.generate_resource_file (a_resource_file)
-				end
-
-				if (item.exstyle /= Void) then
-					a_resource_file.putstring (", ")
-					item.exstyle.generate_resource_file (a_resource_file)
-				end
-
-				forth
-			end
-		end
-
-end -- class TDS_CHECKBOX_STATEMENT
-
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+end -- class TDS_ACCELERATORS

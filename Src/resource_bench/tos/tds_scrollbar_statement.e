@@ -1,11 +1,11 @@
 indexing
-	description: "Treeview statement representation in the tds"
+	description: "Scrollbar statement representation in the tds"
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_TREEVIEW_STATEMENT
+	TDS_SCROLLBAR_STATEMENT
 
 inherit
 	TDS_CONTROL_STATEMENT
@@ -18,16 +18,16 @@ inherit
 creation
 	make
 
-feature -- Initialization
+feature	-- Initialization
 
 	finish_control_setup is
 		do
-			set_variable_name ("treeview")
-			set_wel_class_name ("WEL_TREE_VIEW")
-			set_type (C_treeview)
+			set_variable_name ("scrollbar")
+			set_wel_class_name ("WEL_SCROLL_BAR")
+			set_type (C_scrollbar)
 		end
 
-feature -- Code Generation
+feature -- Code generation
 
 	display is
 		do
@@ -37,13 +37,8 @@ feature -- Code Generation
 				after
 
 			loop
-				io.putstring ("%NCONTROL ")
-
-				io.putstring (item.class_name)
-
-				if (item.style /= Void) then
-					item.style.display
-				end
+				io.new_line
+				io.putstring ("SCROLLBAR ")
 
 				io.putstring (item.text)
 
@@ -62,6 +57,10 @@ feature -- Code Generation
 				io.putstring (" ")
 				io.putint (item.height)
 
+				if (item.style /= Void) then
+					item.style.display
+				end
+
 				if (item.exstyle /= Void) then
 					item.exstyle.display
 				end
@@ -70,8 +69,8 @@ feature -- Code Generation
 			end
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
-			-- Generate `a_resource_file' from the tds memory structure.
+	generate_resource_file (resource_file: PLAIN_TEXT_FILE) is
+			-- generate the resource script file from the tds memory structure
 		do
 			from 
 				start
@@ -79,42 +78,40 @@ feature -- Code Generation
 				after
 
 			loop
-				a_resource_file.putstring ("%N%TCONTROL ")
+				resource_file.putstring ("%N%TSCROLLBAR ")
 
-				a_resource_file.putstring (item.text)
-				a_resource_file.putstring (", ")
-				item.id.generate_resource_file (a_resource_file)
-				a_resource_file.putstring (", ")
+				resource_file.putstring (item.text)
 
-				a_resource_file.putstring (item.class_name)
+				resource_file.putstring (", ")
+				item.id.generate_resource_file (resource_file)
+
+				resource_file.putstring (", ")
+				resource_file.putint (item.x)
+
+				resource_file.putstring (", ")
+				resource_file.putint (item.y)
+
+				resource_file.putstring (", ")
+				resource_file.putint (item.width)
+
+				resource_file.putstring (", ")
+				resource_file.putint (item.height)
 
 				if (item.style /= Void) then
-					a_resource_file.putstring (", ")
-					item.style.generate_resource_file (a_resource_file)
+					resource_file.putstring (", ")
+					item.style.generate_resource_file (resource_file)
 				end
 
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.x)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.y)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.width)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.height)
-
 				if (item.exstyle /= Void) then
-					a_resource_file.putstring (", ")
-					item.exstyle.generate_resource_file (a_resource_file)
+					resource_file.putstring (", ")
+					item.exstyle.generate_resource_file (resource_file)
 				end
 
 				forth
 			end
 		end
 
-end -- class TDS_TREEVIEW_STATEMENT
+end -- class TDS_SCROLLBAR_STATEMENT
 
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --

@@ -1,120 +1,40 @@
 indexing
-	description: "Icon statement representation in the tds"
+	description: "To store the `#define' data";
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_ICON_STATEMENT
+	TDS_DEFINE_TABLE
 
-inherit
-	TDS_CONTROL_STATEMENT
+feature -- Access
 
-	TDS_CONTROL_CONSTANTS
-		export
-			{NONE} all
-		end
-
-creation
-	make
-
-feature -- Initialization
-
-	finish_control_setup is
+	define_table: HASH_TABLE [COUPLE, STRING] is
+			-- Contain the define name and the define value.
 		do
-			set_variable_name ("icon")
-			set_wel_class_name ("WEL_ICON")
-			set_type (C_icon)
+			Result := define_table_cell.item
 		end
 
-feature -- Code Generation
+feature -- Element change
 
-	display is
+	set_define_table (a_define_table: HASH_TABLE [COUPLE, STRING]) is
+			-- Set `define_table' to `a_define_table'.
+		require
+			a_define_table_not_void: a_define_table /= Void
 		do
-			from 
-				start
-			until
-				after
-
-			loop
-				io.putstring ("%NICON ")
-
-				io.putstring (item.text)
-
-				io.putstring (" ")
-				item.id.display
-
-				io.putstring (" ")
-				io.putint (item.x)
-
-				io.putstring (" ")
-				io.putint (item.y)
-
-				io.putstring (" ")
-				io.putint (item.width)
-
-				io.putstring (" ")
-				io.putint (item.height)
-
-				if (item.style /= Void) then
-					item.style.display
-				end
-
-				if (item.exstyle /= Void) then
-					item.exstyle.display
-				end
-
-				forth
-			end
+			define_table_cell.put (a_define_table)
+		ensure
+			define_table_set: define_table = a_define_table
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
-			-- Generate `a_resource_file' from the tds memory structure.
-		do
-			from 
-				start
-			until
-				after
+feature {NONE} -- Implementation
 
-			loop
-				a_resource_file.putstring ("%N%TICON ")
-
-				a_resource_file.putstring (item.text)
-
-				a_resource_file.putstring (", ")
-				item.id.generate_resource_file (a_resource_file)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.x)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.y)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.width)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.height)
-
-				if (item.style /= Void) then
-					a_resource_file.putstring (", ")
-					item.style.generate_resource_file (a_resource_file)
-				end
-
-				if (item.exstyle /= Void) then
-					a_resource_file.putstring (", ")
-					item.exstyle.generate_resource_file (a_resource_file)
-				end
-
-				forth
-			end
+	define_table_cell: CELL [HASH_TABLE [COUPLE, STRING]] is
+			-- The current `define_table'.
+		once
+			!!Result.put (Void)
+		ensure
+			result_not_void: Result /= Void
 		end
 
-end -- class TDS_ICON_STATEMENT
-
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+end -- class TDS_DEFINE_TABLE

@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	TDS_AUTORADIOBUTTON_STATEMENT
+	TDS_PROGRESSBAR_STATEMENT
 
 	-- Replace ANY below by the name of parent class if any (adding more parents
 	-- if necessary); otherwise you can remove inheritance clause altogether.
@@ -61,4 +61,4 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: -- Your invariant here
 
-end -- class TDS_AUTORADIOBUTTON_STATEMENT
+end -- class TDS_PROGRESSBAR_STATEMENT

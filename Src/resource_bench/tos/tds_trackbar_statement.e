@@ -1,11 +1,11 @@
 indexing
-	description: "Ctext statement representation in the tds"
+	description: "Treeview statement representation in the tds"
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_CTEXT_STATEMENT
+	TDS_TRACKBAR_STATEMENT
 
 inherit
 	TDS_CONTROL_STATEMENT
@@ -22,10 +22,9 @@ feature -- Initialization
 
 	finish_control_setup is
 		do
-			set_wel_code (true)
-			set_variable_name ("center_text")
-			set_wel_class_name ("WEL_STATIC")
-			set_type (C_ctext)
+			set_variable_name ("track_bar")
+			set_wel_class_name ("WEL_TRACK_BAR")
+			set_type (C_trackbar)
 		end
 
 feature -- Code Generation
@@ -38,7 +37,13 @@ feature -- Code Generation
 				after
 
 			loop
-				io.putstring ("%NCTEXT ")
+				io.putstring ("%NCONTROL ")
+
+				io.putstring (item.class_name)
+
+				if (item.style /= Void) then
+					item.style.display
+				end
 
 				io.putstring (item.text)
 
@@ -57,10 +62,6 @@ feature -- Code Generation
 				io.putstring (" ")
 				io.putint (item.height)
 
-				if (item.style /= Void) then
-					item.style.display
-				end
-
 				if (item.exstyle /= Void) then
 					item.exstyle.display
 				end
@@ -78,12 +79,19 @@ feature -- Code Generation
 				after
 
 			loop
-				a_resource_file.putstring ("%N%TCTEXT ")
+				a_resource_file.putstring ("%N%TCONTROL ")
 
 				a_resource_file.putstring (item.text)
-
 				a_resource_file.putstring (", ")
 				item.id.generate_resource_file (a_resource_file)
+				a_resource_file.putstring (", ")
+
+				a_resource_file.putstring (item.class_name)
+
+				if (item.style /= Void) then
+					a_resource_file.putstring (", ")
+					item.style.generate_resource_file (a_resource_file)
+				end
 
 				a_resource_file.putstring (", ")
 				a_resource_file.putint (item.x)
@@ -97,11 +105,6 @@ feature -- Code Generation
 				a_resource_file.putstring (", ")
 				a_resource_file.putint (item.height)
 
-				if (item.style /= Void) then
-					a_resource_file.putstring (", ")
-					item.style.generate_resource_file (a_resource_file)
-				end
-
 				if (item.exstyle /= Void) then
 					a_resource_file.putstring (", ")
 					item.exstyle.generate_resource_file (a_resource_file)
@@ -111,7 +114,7 @@ feature -- Code Generation
 			end
 		end
 
-end -- class TDS_CTEXT_STATEMENT
+end -- class TDS_TRACKBAR_STATEMENT
 
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --

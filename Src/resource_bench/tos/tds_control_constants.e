@@ -1,125 +1,39 @@
 indexing
-	description: "Font representation in the tds"
+	description: "Constants used by control statement"
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_FONT
+	TDS_CONTROL_CONSTANTS
 
-inherit
-	TDS_RESOURCE
-		rename
-			make as list_make
-		end
+feature
 
-creation
-	make
+	C_generic: INTEGER is 1
+	C_auto3state: INTEGER is 2
+	C_autocheckbox: INTEGER is 3
+	C_autoradiobutton: INTEGER is 4
+	C_checkbox: INTEGER is 5
+	C_combobox: INTEGER is 6
+	C_ctext: INTEGER is 7
+	C_defpushbutton: INTEGER is 8
+	C_edittext: INTEGER is 9
+	C_groupbox: INTEGER is 10
+	C_icon: INTEGER is 11
+	C_listbox: INTEGER is 12
+	C_ltext: INTEGER is 13
+	C_pushbox: INTEGER is 14
+	C_pushbutton: INTEGER is 15
+	C_radiobutton: INTEGER is 16
+	C_rtext: INTEGER is 17
+	C_scrollbar: INTEGER is 18
+	C_state3: INTEGER is 19
+	C_treeview: INTEGER is 20
+	C_progressbar: INTEGER is 21
+	C_statusbar: INTEGER is 22
+	C_trackbar: INTEGER is 23
 
-feature	-- Initialization
-
-	make is
-		do
-			list_make
-			set_type (R_font)
-		end
-
-feature -- Code generation
-
-	display is
-			-- Display the tds.
-		local
-			font: TDS_FONT
-		do
-			from 
-				start
-			until 
-				after
-			loop
-				font ?= item
-
-				io.putstring ("%N------------------------------------")
-				io.putstring ("%NFont ID : ")
-				font.id.display
-
-				if (font.load_and_mem_attributes /= Void) then
-					font.load_and_mem_attributes.display
-				end                
-
-				io.putstring ("%Nfilename = ")
-				io.putstring (font.filename)
-
-				io.new_line
-				forth
-			end
-		end
-
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
-			-- Generate `a_resource_file' from the tds memory structure.
-		local
-			font: TDS_FONT
-		do
-			a_resource_file.putstring ("%N////////////////////////////////////////////////////////////////%N")
-			a_resource_file.putstring ("//%N")
-			a_resource_file.putstring ("// FONT%N")
-			a_resource_file.putstring ("//%N%N")
-			
-			from 
-				start
-			until 
-				after
-			loop
-				font ?= item
-
-				font.id.generate_resource_file (a_resource_file)
-				a_resource_file.putstring (" FONT ")
-
-
-				if (font.load_and_mem_attributes /= Void) then
-					font.load_and_mem_attributes.generate_resource_file (a_resource_file)
-				end                
-
-				a_resource_file.putstring (font.filename)
-				forth
-			end
-
-			a_resource_file.new_line
-		end
-
-	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: INTEGER) is
-			-- Generate `a_tree_view' control from the tds memory structure.
-		local
-			tvis: WEL_TREE_VIEW_INSERT_STRUCT
-			tv_item: WEL_TREE_VIEW_ITEM
-			parent: INTEGER
-		do
-			!! tvis.make
-			tvis.set_sort
-			tvis.set_parent (a_parent)
-			!! tv_item.make
-			tv_item.set_text ("Font")
-			tvis.set_tree_view_item (tv_item)
-			a_tree_view.insert_item (tvis)
-
-			from
-				parent := a_tree_view.last_item
-				set_tree_view_item (parent)
-				start
-			until
-				after
-			loop
-				item.id.generate_tree_view (a_tree_view, parent)
-				item.set_tree_view_item (a_tree_view.last_item)
-				forth
-			end 
-		end
-
-	generate_wel_code is
-			-- Generate the eiffel code.
-		do
-		end
-
-end -- class TDS_FONT
+end -- class TDS_CONTROL_CONSTANTS
 
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --

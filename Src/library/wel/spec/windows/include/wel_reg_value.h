@@ -23,7 +23,6 @@ typedef struct {
 #define cwin_reg_value_set_data(_ptr_, _data_) (((REG_VALUE *) _ptr_)->data = (LPBYTE) (_data_))
 #define cwin_reg_value_set_data_length(_ptr_, _length_) (((REG_VALUE *) _ptr_)->length = (DWORD) (_length_))
 #define cwin_reg_value_set_data_dword(_ptr_, _data_) (((REG_VALUE *) _ptr_)->data = (LPBYTE) (&(_data_)))
-#define cwin_reg_value_destroy(_ptr_) (free ((REG_VALUE *)_ptr_))
 
 #endif  /* __WEL_REGISTRY_VALUE__ */
 

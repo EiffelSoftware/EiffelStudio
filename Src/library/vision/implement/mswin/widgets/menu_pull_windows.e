@@ -42,6 +42,7 @@ feature -- Initialization
 		local
 			mp: MENU_WINDOWS
 		do
+			associated_root ?= parent
 			mp ?= parent
 			if mp /= Void and then mp.realized then
 				mp.add_a_child (Current)

@@ -23,6 +23,7 @@ feature -- Initialization
 			-- Create the tab and initialise objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
+			h1: EV_HORIZONTAL_SEPARATOR
 		do
 			{ANY_TAB} Precursor (Void)
 				
@@ -37,14 +38,18 @@ feature -- Initialization
 			create cmd1.make (~aset_column_spacing)
 			create cmd2.make (~get_column_spacing)
 			create f4.make (Current, 3, 0, "Column Spacing", cmd1, cmd2)
-			create b2.make_with_text (Current,"Add Buttons To Table")
+			create h1.make (Current)
+			set_child_position (h1, 4, 0, 5, 3)
+			create b2.make_with_text (Current,"Add Buttons")
 			create cmd1.make (~add_buttons)
 			b2.add_click_command(cmd1, Void)
 			b2.set_vertical_resize(False)
+			set_child_position (b2, 5, 0, 6, 1)
 			create b1.make_with_text (Current, "Reset Table")
 			create cmd1.make (~reset_table)
 			b1.add_click_command(cmd1, Void)
 			b1.set_vertical_resize(False)
+			set_child_position (b1, 5, 1, 6, 2)
 			set_parent(par)
 		end
 

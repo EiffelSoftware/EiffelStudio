@@ -24,6 +24,7 @@ feature -- Initialization
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 				-- Commands used by the tab.
+			h1: EV_HORIZONTAL_SEPARATOR
 			
 		do
 		{ANY_TAB} Precursor (Void)
@@ -31,9 +32,12 @@ feature -- Initialization
 		create cmd1.make (~search)
 		create f1.make (Current, 0, 0, "Find Text", cmd1, cmd1)
 		create cmd1.make (~put_new_line)
+		create h1.make (Current)
+		set_child_position (h1, 1, 0, 2, 3)
 		create b1.make_with_text (Current, "Put New Line")
 		b1.set_vertical_resize (False)
 		b1.add_click_command (cmd1, Void)
+		set_child_position (b1, 2, 1, 3, 2)
 
 		set_parent (par)
 		end

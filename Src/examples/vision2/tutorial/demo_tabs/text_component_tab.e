@@ -26,6 +26,8 @@ feature -- Initialization
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 			but: EV_BUTTON
 			item: EV_LIST_ITEM
+			h1 : EV_HORIZONTAL_SEPARATOR
+				-- The vertical seperator.
 		do
 			{ANY_TAB} Precursor (Void)
 
@@ -33,39 +35,48 @@ feature -- Initialization
 			create cmd1.make (~set_text)
 			create cmd2.make (~get_text)	
 			create f1.make (Current, 0, 0, "Text", cmd1, cmd2)
+			create h1.make (Current)
+			set_child_position (h1, 1, 0, 2, 3)
 			create b1.make_with_text (Current,"Copy Selection")
 			b1.set_vertical_resize (False)
 			create cmd1.make (~copy_text)
 			b1.add_click_command (cmd1, Void)
+			set_child_position (b1, 2, 0, 3, 1)
 			create b2.make_with_text (Current, "Cut Selection")
 			b2.set_vertical_resize (False)
 			create cmd1.make (~cut_text)
 			b2.add_click_command (cmd1, Void)
+			set_child_position (b2, 2, 1, 3, 2)
 			create b3.make_with_text (Current, "Delete Selection")
 			b3.set_vertical_resize (False)
 			create cmd1.make (~delete_text)
 			b3.add_click_command (cmd1, Void)
+			set_child_position (b3, 2, 2, 3, 3)
 			create b4.make_with_text (Current, "Paste Selection")
 			b4.set_vertical_resize (False)
 			create cmd1.make (~paste_text)
 			b4.add_click_command (cmd1, Void)
+			set_child_position (b4, 3, 0, 4, 1)
 			create b5.make_with_text (Current, "Select All")
 			b5.set_vertical_resize (False)
 			create cmd1.make (~select_all)
 			b5.add_click_command (cmd1, Void)
+			set_child_position (b5, 3, 1, 4, 2)
 			create b6.make_with_text (Current, "Deselect All")
 			b6.set_vertical_resize (False)
 			create cmd1.make (~deselect_all)
 			b6.add_click_command (cmd1, Void)
+			set_child_position (b6, 3, 2, 4, 3)
 			create b7.make_with_text (Current, "Set Editable")
 			b7.set_vertical_resize (False)
 			create cmd1.make (~set_editable)
 			b7.add_click_command (cmd1, Void)
+			set_child_position (b7, 4, 0, 5, 1)
 			create b8.make_with_text (Current, "Set Non Editable")
 			b8.set_vertical_resize (False)
 			create cmd1.make (~set_not_editable)
 			b8.add_click_command (cmd1, Void)
-
+			set_child_position (b8, 4, 1, 5, 2)
 
 			set_parent(par)
 		end

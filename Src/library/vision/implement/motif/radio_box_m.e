@@ -30,6 +30,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			is_shown as shown
 		end
@@ -55,7 +56,11 @@ feature -- Status setting
 	set_always_one (flag: BOOLEAN) is
 			-- Set radio always one to `flag;.
 		do
-			set_radio_always_one (flag)
+			if flag then
+				enable_always_one 
+			else
+				disable_always_one
+			end
 		end;
 
 end -- class RADIO_BOX_M

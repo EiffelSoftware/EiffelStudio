@@ -30,6 +30,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			is_shown as shown
 		redefine
@@ -59,22 +60,6 @@ feature -- Access
 
 	parent: MEL_ROW_COLUMN
 			-- Parent of menu button
-
-feature -- Status setting
-
-	allow_recompute_size is
-			-- Allow Current to recompute its size
-			-- according to the children.
-		do
-			set_recomputing_size_allowed (True)
-		end;
-
-	forbid_recompute_size is
-			-- Forbid Current to recompute its size
-			-- according to the children.
-		do
-			set_recomputing_size_allowed (False)
-		end;
 
 feature -- Element change
 

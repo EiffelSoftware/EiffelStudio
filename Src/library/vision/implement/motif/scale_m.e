@@ -75,8 +75,10 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			set_horizontal as mel_set_horizontal,
+			set_vertical as mel_set_vertical,
 			scale_multiple as granularity,
 			set_scale_multiple as set_granularity,
 			is_shown as shown
@@ -173,6 +175,15 @@ feature -- Status setting
 					x_event_vision_callback (a_command), argument)
 		end;
 
+    set_value_shown (flag: BOOLEAN) is
+        do
+			if flag then	
+				show_value
+			else
+				hide_value
+			end
+        end;
+
 	set_horizontal (flag: BOOLEAN) is
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
@@ -185,7 +196,11 @@ feature -- Status setting
 				old_length := height;
 			end;
 
-			mel_set_horizontal (flag);
+			if flag then
+				mel_set_horizontal
+			else
+				mel_set_vertical
+			end;
 
 			if old_length /= 0 then
 				if is_horizontal then
@@ -203,15 +218,15 @@ feature -- Status setting
 		do
 			if flag then
 				if is_horizontal then
-					set_maximum_on_left (False)
+					set_maximum_on_right
 				else
-					set_maximum_on_top (False)
+					set_maximum_on_bottom
 				end
 			else
 				if is_horizontal then
-					set_maximum_on_left (True)
+					set_maximum_on_left
 				else
-					set_maximum_on_top (True)
+					set_maximum_on_top
 				end
 			end
 		end;
@@ -220,7 +235,7 @@ feature -- Status setting
 			-- Set scale mode to output only if `flag' and to input/output
 			-- otherwise.
 		do
-			set_sensitive (not flag)
+			set_insensitive (flag)
 		end;
 
 	set_text (a_text: STRING) is

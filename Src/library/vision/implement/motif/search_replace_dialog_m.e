@@ -47,6 +47,7 @@ inherit
 			set_foreground_color as mel_set_foreground_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			is_shown as shown
 		undefine
@@ -131,13 +132,13 @@ feature -- Status setting
 	enable_direction_request is
 			-- Enable the direction requestor
 		do
-			find_backwards_t.set_sensitive (True)
+			find_backwards_t.set_sensitive 
 		end
 
 	disable_direction_request is
 			-- Disable the direction requestor
 		do
-			find_backwards_t.set_sensitive (False)
+			find_backwards_t.set_insensitive
 		end
 
 	show_match_case is
@@ -155,13 +156,13 @@ feature -- Status setting
 	enable_match_case is
 			-- Enable match case requestor
 		do
-			case_sensitive_t.set_sensitive (True)
+			case_sensitive_t.set_sensitive
 		end
 
 	disable_match_case is
 			-- Disable match case requestor
 		do
-			case_sensitive_t.set_sensitive (False)
+			case_sensitive_t.set_insensitive
 		end
 
 	set_replace is

@@ -27,7 +27,8 @@ inherit
 
 	PRIMITIVE_M
 		undefine
-			create_callback_struct, clean_up, object_clean_up, mel_destroy
+			create_callback_struct, clean_up, object_clean_up, mel_destroy,
+			mel_set_insensitive
 		redefine	
 			display_handle
 		end;
@@ -40,6 +41,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			draw_arc as mel_draw_arc,
 			draw_point as mel_draw_point,

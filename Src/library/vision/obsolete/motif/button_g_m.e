@@ -25,6 +25,7 @@ inherit
 		rename
 			make as mel_label_make,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen
 		end
 

@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 	initialize (shell: MEL_SHELL) is
 			-- Initialize the current dialog
 		do
-			shell.set_allow_shell_resize (False);
+			shell.forbid_shell_resize;
 			shell.add_popup_callback (Current, True);
 			shell.add_popdown_callback (Current, False);
 		end;

@@ -30,6 +30,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			is_shown as shown
 		select
@@ -52,22 +53,6 @@ feature {NONE} -- Creation
 			mel_toggle_make (a_toggle_b.identifier, mc, man);
 			a_toggle_b.set_font_imp (Current);	
 			set_mnemonic_from_text (a_toggle_b.identifier, False)
-		end;
-
-feature -- Status setting
-
-	allow_recompute_size is
-			-- Allow Current to recompute its size
-			-- according to the children.
-		do
-			set_recomputing_size_allowed (True)
-		end;
-
-	forbid_recompute_size is
-			-- Forbid Current to recompute its size
-			-- according to the children.
-		do
-			set_recomputing_size_allowed (False)
 		end;
 
 feature -- Element change

@@ -816,20 +816,6 @@ feature -- Transformation
 			swapped_from_item: i_th (i) = old item
 		end
 
-feature -- Update
-
-	update is
-			-- Update the content of the scrollable list from
-			-- `list'.
-			--| `list' can be modified without updating the
-			--| scroll_list. This routine will make sure that both
-			--| are up to date.
-		require
-			exists: not destroyed
-		do
-			implementation.update
-		end;
-
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: SCROLLABLE_LIST_I;

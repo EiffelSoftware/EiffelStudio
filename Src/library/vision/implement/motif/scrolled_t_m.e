@@ -44,15 +44,13 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
-			set_editable as mel_set_editable,
 			pos_to_x as x_coordinate,
 			pos_to_y as y_coordinate,
 			xy_to_pos as character_position,
-			resize_height as is_height_resizable,
-			resize_width as is_width_resizable,
-			word_wrap as is_word_wrap_mode,
-			verify_bell as is_bell_enabled,
+			is_word_wrapped as is_word_wrap_mode,
+			is_verify_bell_enabled as is_bell_enabled,
 			string as text,
 			set_string as set_text,
 			max_length as maximum_size,
@@ -66,7 +64,10 @@ inherit
 			insert as mel_insert,
 			is_scroll_vertical as is_vertical_scrollbar,
 			is_scroll_horizontal as is_horizontal_scrollbar,
-			is_shown as shown
+			is_shown as shown,
+			set_single_line_edit_mode as set_single_line_mode,
+			set_multi_line_edit_mode as set_multi_line_mode,
+			set_cursor_position_visible as mel_set_cursor_position_visible
 		undefine
 			height, real_x, real_y, realized, width,
 			x, y, hide, lower, propagate_event, raise,
@@ -107,7 +108,7 @@ COMPOSITE) is
 					man, False, True, False, False);
 			a_scrolled_text.set_font_imp (Current);
 			set_single_line_mode;
-			set_word_wrap (True);
+			enable_word_wrap
 		end;
 
 feature -- Access

@@ -14,7 +14,7 @@ inherit
 	COMPOSITE_M
 		undefine
 			real_x, real_y, mel_destroy, make_from_existing, 
-			unmanage, manage, clean_up_callbacks
+			unmanage, manage, clean_up_callbacks, mel_set_insensitive
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell
 		end;
@@ -26,6 +26,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen
 		end;
 
@@ -35,14 +36,14 @@ feature -- Geometry operations
 			-- Allow geometry resize to all geometry requests
 			-- from its children.
 		do
-			set_allow_shell_resize (True)
+			allow_shell_resize 
 		end;
 
 	forbid_resize is
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.
 		do
-			set_allow_shell_resize (False)
+			forbid_shell_resize 
 		end;
 
 feature  -- Status Setting
@@ -52,7 +53,11 @@ feature  -- Status Setting
 			-- away from the application windows according
 			-- to `flag'.
 		do
-			set_override_redirect (flag);
+			if flag then
+				enable_override_redirect
+			else
+				disable_override_redirect
+			end
 		end;
 
 feature {ALL_CURS_X} -- Implementation

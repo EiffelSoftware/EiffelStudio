@@ -53,22 +53,6 @@ feature -- Access
 			Result := True
 		end;
 
-feature -- Status Setting
-
-	allow_recompute_size is
-			-- Allow Current to recompute its size
-			-- according to the children.
-		do
-			set_recomputing_size_allowed (True)
-		end;
-
-	forbid_recompute_size is
-			-- Forbid Current to recompute its size
-			-- according to the children.
-		do
-			set_recomputing_size_allowed (False)
-		end;
-
 end -- class LABEL_M
 
 --|----------------------------------------------------------------

@@ -29,6 +29,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			icon_mask as mel_icon_mask,
 			set_icon_mask as mel_set_icon_mask,
 			icon_pixmap as mel_icon_pixmap,

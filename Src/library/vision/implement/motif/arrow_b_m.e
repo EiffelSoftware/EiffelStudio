@@ -28,6 +28,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			is_left as left,
 			is_right as right,
@@ -133,31 +134,17 @@ feature {NONE} -- Implementation
 		do
 		end;
 
-	set_recomputing_size_allowed (b: BOOLEAN) is
-			-- Set `recomputing_size_allowed' to `b'.
-		do
-		end;
+    allow_recompute_size is
+            -- Allow current button to recompute its  size according to
+            -- some changes on its text.
+        do
+        end;
 
-	recomputing_size_allowed: BOOLEAN is
-			-- Is Current allowed to recompute its size?
-		require
-			exists: not is_destroyed
-		do
-		end
-
-	allow_recompute_size is
-			-- Allow current button to recompute its  size according to
-			-- some changes on its text.
-		do
-			set_recomputing_size_allowed (True)
-		end;
-
-	forbid_recompute_size is
-			-- Forbid current button to recompute its size according to
-			-- some changes on its text.
-		do
-			set_recomputing_size_allowed (False)
-		end; 
+    forbid_recompute_size is
+            -- Forbid current button to recompute its size according to
+            -- some changes on its text.
+        do
+        end;
 
 end -- class ARROW_B_M
 

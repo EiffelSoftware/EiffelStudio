@@ -40,6 +40,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			draw_arc as mel_draw_arc,
 			draw_point as mel_draw_point,
@@ -70,8 +71,8 @@ feature {NONE} -- Initialization
 			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
 			mel_drawn_make (a_draw_b.identifier, mc, man);
-			set_shadow_in (False);
-			set_push_button_enabled (True);
+			set_shadow_out;
+			enable_push_button;
 			a_draw_b.set_font_imp (Current);
 			create_gc (mel_screen)
 		end;
@@ -80,22 +81,6 @@ feature -- Access
 
 	display_handle: POINTER;
 			-- C handle to the display
-
-feature -- Status setting
-
-	allow_recompute_size is
-			-- Allow Current to recompute its size
-			-- according to the children.
-		do
-			set_recomputing_size_allowed (True)
-		end;
-
-	forbid_recompute_size is
-			-- Forbid Current to recompute its size
-			-- according to the children.
-		do
-			set_recomputing_size_allowed (False)
-		end;
 
 feature -- Element change
 

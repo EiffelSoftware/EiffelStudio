@@ -17,7 +17,8 @@ extern void dbg_enable_estudio_callback (EIF_OBJECT estudio_cb_obj, EIF_POINTER 
 
 extern void dbg_start_timer();
 extern void dbg_stop_timer();
-extern void dbg_timer_callback();
+//extern void dbg_timer_callback();
+extern void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 extern void dbg_lock_and_wait_callback ();
 extern void dbg_debugger_before_callback(Callback_ids);
 extern void dbg_debugger_after_callback(Callback_ids);

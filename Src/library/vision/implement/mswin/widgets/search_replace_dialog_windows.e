@@ -71,6 +71,7 @@ inherit
 			on_mouse_move,
 			on_set_cursor,
 			on_menu_command,
+			on_accelerator_command,
 			on_size,
 			on_key_up,
 			on_key_down,

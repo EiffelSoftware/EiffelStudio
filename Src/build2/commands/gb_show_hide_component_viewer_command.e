@@ -23,9 +23,9 @@ inherit
 		end
 
 create
-	make
+	default_create
 
-feature {NONE} -- Initialization
+feature {GB_COMMAND_HANDLER} -- Initialization
 
 	make is
 			-- Create `Current'.

@@ -22,10 +22,7 @@ inherit
 			{NONE} all
 		end
 
-create
-	make
-
-feature {NONE} -- Initialization
+feature {GB_COMMAND_HANDLER} -- Initialization
 
 	make is
 			-- Create `Current'.

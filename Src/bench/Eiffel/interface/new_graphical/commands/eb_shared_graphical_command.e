@@ -67,6 +67,13 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
+	Quick_melt_project_cmd: EB_QUICK_MELT_COMMAND is
+			-- Command to melt a system.
+		once
+			create Result.make
+			Result.disable_sensitive
+		end
+
 	Freeze_project_cmd: EB_FREEZE_PROJECT_COMMAND is
 			-- Command to freeze a system.
 		once

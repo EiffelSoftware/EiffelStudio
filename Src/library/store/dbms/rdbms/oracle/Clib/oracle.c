@@ -834,9 +834,9 @@ int ora_get_integer_data (int no_desc, int i)
 	return (int) def[i-1].int_buf;
 }
 
-float ora_get_float_data (int no_desc, int i)
+double ora_get_float_data (int no_desc, int i)
 {
-	return (float) def[i-1].flt_buf;
+	return (double) def[i-1].flt_buf;
 }
 
 float ora_get_real_data (int no_desc, int i)

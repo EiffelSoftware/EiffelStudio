@@ -815,6 +815,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 #ifdef RECOVERABLE_DEBUG
 	printf ("-- Accounting objects:\n");
 #endif
+	EIF_EO_STORE_LOCK;
 	obj_nb = 0;
 	traversal(object,accounting);
 
@@ -844,6 +845,8 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	st_store(object);		/* Write objects to be stored */
 
 	flush_buffer_func();	/* flush the buffer */
+
+	EIF_EO_STORE_UNLOCK;
 #if DEBUG & 3
 	printf ("\n");
 #endif
@@ -1521,6 +1524,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 			eif_rt_xfree(s_buffer);
 		}
 		RTXSC;					/* Restore stack contexts */
+		EIF_EO_STORE_UNLOCK;	/* Unlock mutex which was locked in `internal_store'. */
 		rt_reset_store ();				/* Reset data structure */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
@@ -1698,6 +1702,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 			eif_rt_xfree(s_buffer);
 		}
 		RTXSC;					/* Restore stack contexts */
+		EIF_EO_STORE_UNLOCK;	/* Unlock mutex which was locked in `internal_store'. */
 		rt_reset_store ();				/* Clean data structure */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
@@ -1934,6 +1939,7 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
+		EIF_EO_STORE_UNLOCK;	/* Unlock mutex which was locked in `internal_store'. */
 		rt_reset_store ();				/* Clean data structure */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}

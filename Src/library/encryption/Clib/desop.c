@@ -16,7 +16,7 @@
 #include "des.h"
 #include "desop.h"
 
-rt_private void desop(char *buf, int size, void (*crypter)())
+rt_private void desop(char *buf, int size, void (*crypter)(char *))
 	 /* Pointer to data to be (de)crypted */
 	 /* Size in bytes of encrypted data */
 	 /* Routine used to perform DES operation */

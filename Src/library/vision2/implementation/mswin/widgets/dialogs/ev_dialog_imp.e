@@ -437,6 +437,9 @@ feature {NONE} -- Implementation
 					-- Simulate a click on the default_cancel_button
 				call_default_button_action (False)
 					-- Do not actually close the window.
+				if close_request_actions_internal /= Void then
+					close_request_actions_internal.call (Void)
+				end
 				set_default_processing (False)
 			else
 				Result := Precursor {EV_TITLED_WINDOW_IMP} (hwnd, msg, wparam, lparam)

@@ -293,30 +293,16 @@ feature {NONE} -- Implementation
 					has_vertical_bar := (working_area.height > height - horizontal_scroll_bar_arrow_height)
 				end
 				if has_horizontal_bar then
-					if has_vertical_bar then
-						maximum_x := working_area.width - width + vertical_scroll_bar_arrow_width + 2
-					else
-						maximum_x := working_area.width - width + 2
-					end
-					set_horizontal_range (0, maximum_x)
+					set_horizontal_range (0, working_area.width)
 					show_horizontal_scroll_bar
 				else
 					hide_horizontal_scroll_bar
-					working_area.set_x_y (0, working_area.y)
-					maximum_x := 0
 				end
 				if has_vertical_bar then
-					if has_horizontal_bar then
-						maximum_y := working_area.height - height + horizontal_scroll_bar_arrow_height + 2
-					else
-						maximum_y := working_area.height - height + 2
-					end
-					set_vertical_range (0, maximum_y)
+					set_vertical_range (0, working_area.height)
 					show_vertical_scroll_bar
 				else
 					hide_vertical_scroll_bar
-					working_area.set_x_y (working_area.x, 0)
-					maximum_y := 0
 				end
 			end
 		end
@@ -366,18 +352,6 @@ feature {NONE} -- Implementation
 	granularity: INTEGER
 			-- Value of the amount to move the slider and modify
 			-- the slide position value when a move action occurs
-
-	minimum_x: INTEGER is 0
-			-- Minimum scrolling value in x axis
-
-	maximum_x: INTEGER
-			-- Maximum scrolling value in x axis
-
-	minimum_y: INTEGER is 0
-			-- Minimum scrolling value in y axis
-
-	maximum_y: INTEGER
-			-- Maximum scrolling value in x axis
 
 	default_style: INTEGER is
 		do

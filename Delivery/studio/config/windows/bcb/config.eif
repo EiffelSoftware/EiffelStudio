@@ -34,7 +34,7 @@ large: ""
 -- linker flags
 ar: ""
 ld: ""
-ldflags: "-c -x -Tpe"
+ldflags: "-c -x -Tpe -L$(ISE_EIFFEL)\bcc55\lib -L$(ISE_EIFFEL)\bcc55\lib\psdk"
 mtldflags: "-c -x -Tpe"
 console_flags: "-ap"
 windows_flags: "-aa"

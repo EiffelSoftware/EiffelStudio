@@ -1,60 +1,78 @@
-<script src="../../../../../technologies/dotnet/samples/instal.js"></script>
-
-<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
-<HTML>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<XML>
+		<MSHelp:Keyword Index="K" Term="WEL Tutorial" />
+		<MSHelp:Attr Name="Product" Value="Eiffel"/>
+		<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+	</XML>
 	<HEAD>
-		<TITLE>Step2</TITLE>
-		<LINK REL=StyleSheet HREF="/default.css">
-		<META NAME="MS-HKWD" CONTENT="WEL Tutorial, Step2">
+		<TITLE>WEL Tutorial, Step 2</TITLE>
+		<LINK HREF="../../../../../default.css" TYPE="text/css" REL="STYLESHEET">
 	</HEAD>
+	<BODY LANGUAGE="vbscript" ONLOAD="onLoadHandler">
+		<TABLE CLASS="HEADER">
+			<TR>
+				<TD CLASS="HEADER">Eiffel ENViSioN!</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD CLASS="SUBHEADER">WEL Tutorial, Step 2</TD>
+				<TD ALIGN=right>
+					<A CLASS="bold" HREF="#NONEXISTANT" OnClick="LoadSample()">Load in Eiffel ENViSioN! </A>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FRAME">
+			<TR>
+				<TD>
+					<SCRIPT LANGUAGE=VBScript SRC="/technologies/dotnet/sample/sample.vbs"></SCRIPT>
+					<SCRIPT LANGUAGE=VBScript>
+						Sub onLoadHandler()
+							'Initialize global variables
+							SampleDir = "\wel\step2"
+							SamplePrj = "tutorial_step2.eifp"
+						End Sub							
+					</SCRIPT>
 
-	<BODY>
-		<H1>Tutorial Step 2</H1>
-		<p>This sample shows you how to respond to an event occurring within
-        your application. It also demonstrates the use of a <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box.html">WEL_MSG_BOX</A> control and a redefinition of
-		<A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_composite_window.html#f_closeable">closeable</A> from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_composite_window.html">WEL_COMPOSITE_WINDOW</A>.</p>
-		<CENTER><IMG SRC="step2.png" ALT="step2" /></CENTER><BR><BR>
-		<H2>Compiling</H2>
-<script language="JavaScript">
-<!--
-var path_to_ace_file = Eiffel_version + "\\examples\\wel\\tutorial\\step2\\";
-var ace_file_name = "Ace";
-var path_eifp_file = "..\\..\\samples\\wel\\tutorial\\step2\\"
-var eifp_name = "step2.eifp";
+					<p>This sample shows you how to respond to an event occurring within
+					your application. It also demonstrates the use of a
+					<A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box.html">WEL_MSG_BOX</A>
+					control and a redefinition of
+					<A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_composite_window.html#f_closeable">closeable</A> 
+					from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_composite_window.html">WEL_COMPOSITE_WINDOW</A>.</p>
+					
+					<IMG SRC="step2.png" ALT="step2" />
 
-if (eiffel_studio) {
-	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
-}
-else {
-	write_envision_compiling_instruction (path_eifp_file, eifp_name)
-}
--->
-        </script>
-<noscript>
-        <p>To see compiling instructions, you have to enable javascript.</p></noscript>
-
-		<H2>Running</H2>
-		<P>
-			After launching the sample, you should see a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> displayed. If you click the
-			left mouse button in the client area of the window, a <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box.html">WEL_MSG_BOX</A> will appear, notifying you of your click.</P>
-		<H2>Under the Hood</H2>
-		<P>This system is a demonstration of how to connect an event to one of the common message hooks available within WEL. See <A HREF="/libraries/wel/content/common_concepts/index.html#common_message_hooks">Common message hooks</A> for more information.
-		In this example, <A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_left_button_down">on_left_button_down</A> has been redefined from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A> to display a
-		<A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box_chart.html">WEL_MSG_BOX</A> containing notification of the event occuring.
-		</P>
-		<P>If you look at <A CLASS="efeature" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window.html#f_closeable">closeable</A> from <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window_chart.html">MAIN_WINDOW</A>, you will see
-		that it has been redefined to display a <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box_chart.html">WEL_MSG_BOX</A> and the result from this message box is used to generate the return value of <A CLASS="efeature" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window.html#f_closeable">closeable</A>.
-		If this Result is True, the window will be closed.
-		<P>This sample contains the following classes:
-			<UL>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/tutorial_step2_chart.html">TUTORIAL_STEP2</A>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window.html">MAIN_WINDOW</A>
-			</UL>
-		</P>
-		<P CLASS="note">
-			<B>Note:</b>If you follow the link to <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window_chart.html">MAIN_WINDOW</A> you will see that it contains many features, but nearly all of these are inherited from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>.
-		</P>
-		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/content/common_concepts/index.html#common_message_hooks">Common message hooks</A><BR></P>
+					<H2>Running</H2>
+					<P>
+						After launching the sample, you should see a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> displayed. If you click the
+						left mouse button in the client area of the window, a <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box.html">WEL_MSG_BOX</A> will appear, notifying you of your click.</P>
+					<H2>Under the Hood</H2>
+					<P>This system is a demonstration of how to connect an event to one of the common message hooks available within WEL. See <A HREF="/libraries/wel/content/common_concepts/index.html#common_message_hooks">Common message hooks</A> for more information.
+					In this example, <A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_left_button_down">on_left_button_down</A> has been redefined from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A> to display a
+					<A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box_chart.html">WEL_MSG_BOX</A> containing notification of the event occuring.
+					</P>
+					<P>If you look at <A CLASS="efeature" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window.html#f_closeable">closeable</A> from <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window_chart.html">MAIN_WINDOW</A>, you will see
+					that it has been redefined to display a <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box_chart.html">WEL_MSG_BOX</A> and the result from this message box is used to generate the return value of <A CLASS="efeature" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window.html#f_closeable">closeable</A>.
+					If this Result is True, the window will be closed.</p>
+					
+					<P>This sample contains the following classes:</P>
+						<UL>
+							<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/tutorial_step2_chart.html">TUTORIAL_STEP2</A></li>
+							<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window.html">MAIN_WINDOW</A></li>
+						</UL>
+				
+					<P CLASS="note">
+						<B>Note:</b>If you follow the link to <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window_chart.html">MAIN_WINDOW</A> you will see that it contains many features, but nearly all of these are inherited from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>.
+					</P>
+					<P CLASS="seealso"><B>See Also</B><BR /><A HREF="/libraries/wel/content/common_concepts/index.html#common_message_hooks">Common message hooks</A><BR /></P>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FOOTER">
+			<TR>
+				<TD>© 2003-2004 Eiffel Software. All rights reserved.</TD>
+			</TR>
+		</TABLE>
 	</BODY>
 </HTML>

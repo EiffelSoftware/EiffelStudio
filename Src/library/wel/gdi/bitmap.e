@@ -13,6 +13,12 @@ inherit
 
 	WEL_RESOURCE
 
+	WEL_DIB_COLORS_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_dib_colors_constant
+		end
+
 creation
 	make_by_id,
 	make_by_name,
@@ -36,11 +42,12 @@ feature {NONE} -- Initialization
 	make_by_dib (a_dc: WEL_DC; dib: WEL_DIB; mode: INTEGER) is
 			-- Create a WEL_BITMAP from a `dib' in the `a_dc'
 			-- using `mode'. See class `WEL_DIB_COLORS_CONSTANTS'
-			-- for mode values.
+			-- for `mode' values.
 		require
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 			dib_not_void: dib /= Void
+			valid_mode: valid_dib_colors_constant (mode)
 		do
 			item := cwin_create_di_bitmap (a_dc.item, dib.item,
 				Cbm_init, dib.item_bits, dib.item, mode)
@@ -85,12 +92,13 @@ feature -- Basic operations
 			-- Set the bits of the current bitmap to the values
 			-- given in `dib', starting at line `start_line'
 			-- during `length' lines, using `mode'.
-			-- See class WEL_DIB_COLORS_CONSTANTS for `mode'
-			-- values.
+			-- See class WEL_DIB_COLORS_CONSTANTS for `mode' values.
 		require
+			exists: exists
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 			dib_not_void: dib /= Void
+			valid_mode: valid_dib_colors_constant (mode)
 		do
 			cwin_set_di_bits (a_dc.item, item, start_line, length,
 				dib.item_bits, dib.item, mode)

@@ -353,10 +353,19 @@ feature -- Element change
 	copy (other: like Current) is
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `clone'.)
+		local
+			old_area: like area
 		do
-			remake (other.capacity);
-			area.copy (other.area);
-			count := other.count
+			if other /= Current then
+				old_area := area
+				standard_copy (other)
+				if old_area = Void or else old_area.count < area.count then
+					area := standard_clone (area)
+				else
+					str_append ($old_area, $area, 0, count)
+					area := old_area
+				end
+			end
 		ensure then
 			new_result_count: count = other.count;
 			-- same_characters: For every `i' in 1..`count', `item' (`i') = `other'.`item' (`i')
@@ -631,7 +640,7 @@ feature -- Element change
 			s_area := s.area;
 			str_append ($area, $s_area, count, s.count);
 			count := new_size
-		ensure then
+		ensure
 			new_count: count = old count + old s.count
 			-- appended: For every `i' in 1..`s'.`count', `item' (old `count'+`i') = `s'.`item' (`i')
 		end;
@@ -642,11 +651,12 @@ feature -- Element change
 		require
 			argument_not_void: s /= Void	
 		do
-			Result := clone(Current)
-			Result.append(s)
+			!! Result.make (count + s.count)
+			Result.append_string (Current)
+			Result.append_string (s)
 		ensure
 			Result_exists: Result /= Void
-			new_count: count = Result.count - s.count	
+			new_count: Result.count = count + s.count
 		end
 
 	append_string (s: STRING) is

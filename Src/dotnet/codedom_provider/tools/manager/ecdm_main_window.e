@@ -116,10 +116,6 @@ feature {NONE} -- Initialization
 			end
 			configurations_list.first.enable_select
 			prefixes_list.set_column_titles (<<"Prefix", "Assembly File Name">>)
-			set_help_context (agent hlp_ctxt)
-			create help_parent_control.make_from_text ("")
-			create help_control
-			help_control.extend (help_parent_control)
 			initialize_combo (precompile_ace_file_combo_box, Precompile_ace_files)
 			initialize_combo (metadata_cache_combo_box, Metadata_cache_paths)
 			initialize_combo (precompile_cache_combo_box, Precompile_cache_paths)
@@ -130,24 +126,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	help_control: EV_WINFORM_CONTAINER
-			-- Help parent control container
-
-	help_parent_control: WINFORMS_CONTROL
-			-- Help dialog parent
-
 	manager: ECDM_MANAGER
 			-- Associated manager
 	
 	initialized: BOOLEAN
 			-- Was interface initialized?
 
-	hlp_ctxt: ECDM_HELP_CONTEXT is
-			-- Help context
-		do
-			create Result.make_from_string ("")
-		end
-		
 feature {NONE} -- Events
 
 	on_config_new is

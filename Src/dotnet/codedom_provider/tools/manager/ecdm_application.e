@@ -47,19 +47,26 @@ feature {NONE} -- Initialization
 			end
 		end
 		
-		start_gui is
+	start_gui is
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
 		do
 			create config_manager
 			create main_window.make (config_manager)
+			main_window.set_help_context (agent help_context)
+			set_help_engine (create {CODE_HELP_ENGINE})
 			main_window.show
-			set_help_engine (create {ECDM_HELP_ENGINE}.make ("C:\Documents and Settings\Administrator\My Documents\help window\htmlhelp.chm", main_window.help_control))
 			launch
 		end
 
 feature {NONE} -- Implementation
 
+	help_context: CODE_HELP_CONTEXT is
+			-- Help context
+		do
+			create Result.make_from_string ("tools/manager.html")
+		end
+		
 	register_codedom_provider (a_path: STRING) is
 			-- Register codedom provider and use `a_path' as default configuration folder.
 		require

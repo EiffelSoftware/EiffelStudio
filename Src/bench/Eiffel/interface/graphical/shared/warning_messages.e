@@ -58,6 +58,16 @@ feature {NONE}
 	w_Cannot_open_project: STRING is 
 			"Project is not readable; check permissions.";
 
+	w_Cannot_read_directory (dir_name: STRING): STRING is
+		require
+			dir_name_not_void: dir_name /= Void
+		do
+			!!Result.make (30);
+			Result.append ("Directory: ");
+			Result.append (dir_name);
+			Result.append ("%Ncannot be read")
+		end;
+
 	w_Cannot_read_file (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void
@@ -147,7 +157,8 @@ feature {NONE}
 			!!Result.make (30);
 			Result.append ("Directory: ");
 			Result.append (dir_name);
-			Result.append ("%Ndoes not have appropriate permissions.")
+			Result.append ("%Ndoes not have read-write-execute permissions.")
+			Result.append ("%NYou may try again after fixing the permissions.")
 		end;
 
 	w_End_of_history: STRING is "End of history";

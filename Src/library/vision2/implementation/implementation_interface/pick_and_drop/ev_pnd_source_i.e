@@ -13,7 +13,7 @@ inherit
 
 feature -- Attributes 
 
-	transported_data: EV_PND_DATA
+	transported_data: ANY
 			-- Transported data
 
 	data_type: EV_PND_TYPE
@@ -33,22 +33,17 @@ feature -- Access
 			Result := interf.transportable
 		end
 
-	activate_pick_and_drop (mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE; cmd: EV_COMMAND; args: EV_ARGUMENT) is
-			-- Activate the mechanism through which the current stone
-			-- may be dragged and dropped, when right clicking.
+	activate_pick_and_drop (mouse_button: INTEGER; cmd: EV_COMMAND; args: EV_ARGUMENT) is
+			-- Activate the mechanism of pick and drop,
+			-- when clicking on the `mouse_button'.
 			-- Add `cmd' (if not Void) to the list of commands to be
-			-- executed when initializing the transport.
+			-- executed just before initializing the transport.
 		require
-			valid_type: dt_type /= Void	
+			valid_button: mouse_button > 0 and then mouse_button < 4	
 		local
 			com: EV_ROUTINE_COMMAND
 			arg: EV_ARGUMENT3 [INTEGER, TUPLE [EV_COMMAND, EV_ARGUMENT], EV_COMMAND]
 		do
-			transported_data := dt
-			data_type := dt_type
-			check
-				transportable: transportable
-			end
 			!! com.make (~initialize_transport)
 			!! arg.make (mouse_button, [cmd, args], com)
 			add_button_press_command (mouse_button, com, arg)
@@ -60,7 +55,7 @@ feature -- Access
 			!! initial_point.set (a_x, a_y)
 		end
 
-	set_transported_data (dt: EV_PND_DATA) is
+	set_transported_data (dt: like transported_data) is
 			-- Set the `transported_data'.
 		do
 			transported_data := dt

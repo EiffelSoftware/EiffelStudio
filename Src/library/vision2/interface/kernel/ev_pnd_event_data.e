@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access	
 	
-	data: EV_PND_DATA is
+	data: ANY is
 			-- Transported data
 		do
 			Result := implementation.data
@@ -42,7 +42,7 @@ feature -- Access
 
 feature {EV_PND_TARGET_I} -- Element change
 	
-	set_data (new_data: EV_PND_DATA) is
+	set_data (new_data: like data) is
 		do
 			implementation.set_data (new_data)
 		end

@@ -79,7 +79,7 @@ feature {NONE} -- Access
 
 feature {EV_PND_TRANSPORTER_IMP} -- Access
 
-	receive (data_type: EV_PND_TYPE; data: EV_PND_DATA; button_data: EV_BUTTON_EVENT_DATA) is
+	receive (data_type: EV_PND_TYPE; data: ANY; button_data: EV_BUTTON_EVENT_DATA) is
 		local
 			pnd_event_data: EV_PND_EVENT_DATA
 			zero_type: EV_PND_TYPE
@@ -111,7 +111,7 @@ feature {EV_PND_TRANSPORTER_IMP} -- Access
 			end
 		end
 
-	get_pnd_data (data_type: EV_PND_TYPE; data: EV_PND_DATA; button_data: EV_BUTTON_EVENT_DATA): EV_PND_EVENT_DATA is
+	get_pnd_data (data_type: EV_PND_TYPE; data: ANY; button_data: EV_BUTTON_EVENT_DATA): EV_PND_EVENT_DATA is
 		do
 			!! Result.make
 			Result.implementation.set_data_type (data_type)

@@ -44,7 +44,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_date (DATE a_date)
 
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_hresult (HRESULT a_hresult)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_hresult (HRESULT a_hresult, EIF_OBJECT an_object)
 
 // Create Eiffel object ECOM_HRESULT from C HRESULT.
 {
@@ -54,9 +54,15 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_hresult (HRESULT a_hresult)
 
 	type_id = eif_type_id ("ECOM_HRESULT");
 	make = eif_procedure ("make_from_integer", type_id);
-	result = eif_create (type_id);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = eif_create (type_id);
+	else
+		result = an_object;
 	make (eif_access (result), (EIF_INTEGER) a_hresult);
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
@@ -173,7 +179,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_dispatch (IDispatch * a_dispatch)
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_short (short * an_integer)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_short (short * an_integer, EIF_OBJECT an_object)
 
 // Create INTEGER_REF from integer
 {
@@ -182,15 +188,22 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_short (short * an_integer)
 	EIF_PROC set_item;
 
 	type_id = eif_type_id ("INTEGER_REF");
-	result = eif_create (type_id);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = eif_create (type_id);
+	else
+		result = an_object;
+		
 	set_item = eif_proc ("set_item", type_id);
 	set_item (eif_access (result), (EIF_INTEGER)*an_integer);
 
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long (long * an_integer)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long (long * an_integer, EIF_OBJECT an_object)
 
 // Create INTEGER_REF from integer
 {
@@ -199,15 +212,22 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long (long * an_integer)
 	EIF_PROC set_item;
 
 	type_id = eif_type_id ("INTEGER_REF");
-	result = eif_create (type_id);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = eif_create (type_id);
+	else
+		result = an_object;
+
 	set_item = eif_proc ("set_item", type_id);
 	set_item (eif_access (result), (EIF_INTEGER)*an_integer);
 
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_real (EIF_REAL * a_real)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_real (EIF_REAL * a_real, EIF_OBJECT an_object)
 
 // Create REAL_REF from real
 {
@@ -216,15 +236,22 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_real (EIF_REAL * a_real)
 	EIF_PROC set_item;
 
 	type_id = eif_type_id ("REAL_REF");
-	result = eif_create (type_id);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = eif_create (type_id);
+	else
+		result = an_object;
+
 	set_item = eif_proc ("set_item", type_id);
 	set_item (eif_access (result), *a_real);
 
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_double (EIF_DOUBLE * a_double)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_double (EIF_DOUBLE * a_double, EIF_OBJECT an_object)
 
 // Create DOUBLE_REF from double
 {
@@ -233,15 +260,22 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_double (EIF_DOUBLE * a_double)
 	EIF_PROC set_item;
 
 	type_id = eif_type_id ("DOUBLE_REF");
-	result = eif_create (type_id);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = eif_create (type_id);
+	else
+		result = an_object;
+
 	set_item = eif_proc ("set_item", type_id);
 	set_item (eif_access (result), *a_double);
 
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_character (EIF_CHARACTER * a_character)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_character (EIF_CHARACTER * a_character, EIF_OBJECT an_object)
 
 // Create CHARACTER_REF from character
 {
@@ -250,15 +284,22 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_character (EIF_CHARACTER * a_char
 	EIF_PROC set_item;
 
 	type_id = eif_type_id ("CHARACTER_REF");
-	result = eif_create (type_id);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = eif_create (type_id);
+	else
+		result = an_object;
+
 	set_item = eif_proc ("set_item", type_id);
 	set_item (eif_access (result), *a_character);
 
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_boolean (VARIANT_BOOL * a_bool)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_boolean (VARIANT_BOOL * a_bool, EIF_OBJECT an_object)
 
 // Create BOOLEAN_REF from pointer to VARIANT_BOOL
 {
@@ -267,11 +308,18 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_boolean (VARIANT_BOOL * a_bool)
 	EIF_PROC set_item;
 
 	type_id = eif_type_id ("BOOLEAN_REF");
-	result = eif_create (type_id);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = eif_create (type_id);
+	else
+		result = an_object;
+
 	set_item = eif_proc ("set_item", type_id);
 	set_item (eif_access (result), ccom_ce_boolean (*a_bool));
 
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
@@ -307,14 +355,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_decimal (DECIMAL * a_decimal)
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_hresult (HRESULT * a_hresult)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_hresult (HRESULT * a_hresult, EIF_OBJECT an_object)
 
 // Create ECOM_HRESULT from pointer to HRESULT.
 {
-	EIF_OBJECT result;
-
-	result = eif_protect (ccom_ce_hresult (* (HRESULT *)a_hresult));
-	return eif_wean (result);
+	return ccom_ce_hresult (* (HRESULT *)a_hresult, an_object);
 };
 //-------------------------------------------------------------------------
 
@@ -382,7 +427,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_ulong_long (ULARGE_INTEGER * an_u
 };
 //----------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_short (short * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_short 
+		(short * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of short.
 {
@@ -400,14 +446,22 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_short (short * an_array, EIF_INTEGE
 	}
 
 	// Create Eiffel array and initialize it to C array.
-	result = ccom_create_array ("INTEGER", dim_count, element_count);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = ccom_create_array ("INTEGER", dim_count, element_count);
+	else
+		result = an_object;
+		
 	eif_make_from_c (eif_access (result), c_array, (EIF_INTEGER)element_number, EIF_INTEGER);
 
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long (long * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long 
+		(long * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of long.
 {
@@ -416,14 +470,22 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long (long * an_array, EIF_INTEGER 
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
 
-	result = ccom_create_array ("INTEGER", dim_count, element_count);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = ccom_create_array ("INTEGER", dim_count, element_count);
+	else
+		result = an_object;
+		
 	eif_make_from_c (eif_access (result), an_array, element_number, EIF_INTEGER);
 
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_float (float * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_float 
+		(float * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of float.
 {
@@ -432,14 +494,22 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_float (float * an_array, EIF_INTEGE
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
 
-	result = ccom_create_array ("REAL", dim_count, element_count);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = ccom_create_array ("REAL", dim_count, element_count);
+	else
+		result = an_object;
+		
 	eif_make_from_c (eif_access (result), an_array, element_number, EIF_REAL);
 
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_double (double * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_double 
+		(double * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of double.
 {
@@ -448,14 +518,22 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_double (double * an_array, EIF_INTE
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
 
-	result = ccom_create_array ("DOUBLE", dim_count, element_count);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = ccom_create_array ("DOUBLE", dim_count, element_count);
+	else
+		result = an_object;
+		
 	eif_make_from_c (eif_access (result), an_array, element_number, EIF_DOUBLE);
 
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_character (char * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_character 
+		(char * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of char.
 {
@@ -464,14 +542,21 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_character (char * an_array, EIF_INT
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
 
-	result = ccom_create_array ("CHARACTER", dim_count, element_count);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = ccom_create_array ("CHARACTER", dim_count, element_count);
+	else
+		result = an_object;
 	eif_make_from_c (eif_access (result), an_array, element_number, EIF_CHARACTER);
 
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_currency (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_currency 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of CURRENCY.
 {
@@ -489,53 +574,67 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_currency (EIF_POINTER an_array, EIF
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
+		
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (CURRENCY *)&((ccom_c_array_element (an_array, i,CURRENCY)));
 		put (eif_access (intermediate_array), ccom_ce_pointed_currency (an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
-	{
-		result = intermediate_array;
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{	
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+	
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+	
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+	
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+		
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [ECOM_CURRENCY]
+			type_id = eif_type_id ("ECOM_ARRAY [ECOM_CURRENCY]");
+			make = eif_procedure ("make_from_array", type_id);
+	
+				result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [ECOM_CURRENCY]
-		type_id = eif_type_id ("ECOM_ARRAY [ECOM_CURRENCY]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_bstr (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_bstr 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of BSTR.
 {
@@ -553,53 +652,67 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_bstr (EIF_POINTER an_array, EIF_INT
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
+		
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (BSTR )((ccom_c_array_element (an_array, i, BSTR)));
 		put (eif_access (intermediate_array), ccom_ce_bstr ((BSTR)an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [STRING]
+			type_id = eif_type_id ("ECOM_ARRAY [STRING]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [STRING]
-		type_id = eif_type_id ("ECOM_ARRAY [STRING]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_decimal (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_decimal 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of DECIMAL.
 {
@@ -617,53 +730,67 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_decimal (EIF_POINTER an_array, EIF_
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
+		
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (DECIMAL *)&((ccom_c_array_element (an_array, i, DECIMAL)));
 		put (eif_access (intermediate_array), ccom_ce_pointed_decimal (an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [ECOM_DECIMAL]
+			type_id = eif_type_id ("ECOM_ARRAY [ECOM_DECIMAL]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [ECOM_DECIMAL]
-		type_id = eif_type_id ("ECOM_ARRAY [ECOM_DECIMAL]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_boolean (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_boolean 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of VARIANT_BOOL.
 {
@@ -681,53 +808,67 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_boolean (EIF_POINTER an_array, EIF_
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
+		
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (VARIANT_BOOL *)&((ccom_c_array_element (an_array, i, VARIANT_BOOL)));
 		put (eif_access (intermediate_array), ccom_ce_boolean ((VARIANT_BOOL)*an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [BOOLEAN]
+			type_id = eif_type_id ("ECOM_ARRAY [BOOLEAN]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [BOOLEAN]
-		type_id = eif_type_id ("ECOM_ARRAY [BOOLEAN]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_date (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_date 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of DATE.
 {
@@ -745,53 +886,67 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_date (EIF_POINTER an_array, EIF_INT
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
+
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (DATE *)&((ccom_c_array_element (an_array, i, DATE)));
 		put (eif_access (intermediate_array), ccom_ce_date ((DATE)*an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [DATE_TIME]
+			type_id = eif_type_id ("ECOM_ARRAY [DATE_TIME]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [DATE_TIME]
-		type_id = eif_type_id ("ECOM_ARRAY [DATE_TIME]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_variant (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_variant 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of VARIANT.
 {
@@ -809,53 +964,67 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_variant (EIF_POINTER an_array, EIF_
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
+		
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (VARIANT *)&(ccom_c_array_element (an_array, i, VARIANT));
 		put (eif_access (intermediate_array), ccom_ce_pointed_variant ((VARIANT *) an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [ECOM_VARIANT]
+			type_id = eif_type_id ("ECOM_ARRAY [ECOM_VARIANT]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [ECOM_VARIANT]
-		type_id = eif_type_id ("ECOM_ARRAY [ECOM_VARIANT]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_hresult (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_hresult 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of HRESULT.
 {
@@ -873,54 +1042,65 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_hresult (EIF_POINTER an_array, EIF_
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (HRESULT *)&((ccom_c_array_element (an_array, i, HRESULT)));
-		put (eif_access (intermediate_array), ccom_ce_hresult ((HRESULT)*an_array_element), i + 1);
+		put (eif_access (intermediate_array), ccom_ce_hresult ((HRESULT)*an_array_element, NULL), i + 1);
 	}
-	if ( dim_count == 1)
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [ECOM_HRESULT]
+			type_id = eif_type_id ("ECOM_ARRAY [ECOM_HRESULT]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [ECOM_HRESULT]
-		type_id = eif_type_id ("ECOM_ARRAY [ECOM_HRESULT]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr (EIF_POINTER an_array,
-			EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel Array from C array of LPSTR
 {
@@ -938,54 +1118,65 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr (EIF_POINTER an_array,
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (LPSTR )((ccom_c_array_element (an_array, i, LPSTR)));
 		put (eif_access (intermediate_array), ccom_ce_lpstr ((LPSTR)an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [STRING]
+			type_id = eif_type_id ("ECOM_ARRAY [STRING]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [STRING]
-		type_id = eif_type_id ("ECOM_ARRAY [STRING]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //----------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr (EIF_POINTER an_array,
-			EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel Array from C array of LPWSTR
 {
@@ -1003,53 +1194,66 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr (EIF_POINTER an_array,
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (LPWSTR)((ccom_c_array_element (an_array, i, LPWSTR)));
 		put (eif_access (intermediate_array), ccom_ce_lpwstr ((LPWSTR)an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
+
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [STRING]
+			type_id = eif_type_id ("ECOM_ARRAY [STRING]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [STRING]
-		type_id = eif_type_id ("ECOM_ARRAY [STRING]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //----------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long_long (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long_long 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel Array from C array of LARGE_INTEGER
 {
@@ -1067,53 +1271,65 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long_long (EIF_POINTER an_array, EI
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (LARGE_INTEGER *)&((ccom_c_array_element (an_array, i, LARGE_INTEGER)));
 		put (eif_access (intermediate_array), ccom_ce_pointed_long_long (an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
+	
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [ECOM_LARGE_INTEGER]
+			type_id = eif_type_id ("ECOM_ARRAY [ECOM_LARGE_INTEGER]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [ECOM_LARGE_INTEGER]
-		type_id = eif_type_id ("ECOM_ARRAY [ECOM_LARGE_INTEGER]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //----------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_ulong_long (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_ulong_long 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel Array from C array of ULARGE_INTEGER
 {
@@ -1131,53 +1347,66 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_ulong_long (EIF_POINTER an_array, E
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+	
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (ULARGE_INTEGER *)&((ccom_c_array_element (an_array, i, ULARGE_INTEGER)));
 		put (eif_access (intermediate_array), ccom_ce_pointed_ulong_long (an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
+	
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [ECOM_ULARGE_INTEGER]
+			type_id = eif_type_id ("ECOM_ARRAY [ECOM_ULARGE_INTEGER]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [ECOM_ULARGE_INTEGER]
-		type_id = eif_type_id ("ECOM_ARRAY [ECOM_ULARGE_INTEGER]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //----------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of IUnknown *.
 {
@@ -1195,53 +1424,66 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown (EIF_POINTER an_array, EIF_
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
+	else
+		intermediate_array = an_object;
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (IUnknown *)&((ccom_c_array_element (an_array, i, IUnknown *)));
 		put (eif_access (intermediate_array), ccom_ce_pointed_unknown ((IUnknown *)an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [ECOM_GENERIC_INTERFACE]
+			type_id = eif_type_id ("ECOM_ARRAY [ECOM_GENERIC_INTERFACE]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [ECOM_GENERIC_INTERFACE]
-		type_id = eif_type_id ("ECOM_ARRAY [ECOM_GENERIC_INTERFACE]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch 
+		(EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of IDispatch *.
 {
@@ -1259,49 +1501,59 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch (EIF_POINTER an_array, EIF
 	put = eif_procedure ("put", type_id);
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
-	intermediate_array = eif_create (type_id);
-	make (eif_access (intermediate_array), 1, element_number);
+	
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		intermediate_array = eif_create (type_id);
+		make (eif_access (intermediate_array), 1, element_number);
+	}
 
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (IDispatch *)&((ccom_c_array_element (an_array, i, IDispatch *)));
 		put (eif_access (intermediate_array), ccom_ce_pointed_unknown ((IDispatch *)an_array_element), i + 1);
 	}
-	if ( dim_count == 1)
+	
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		result = intermediate_array;
+		if ( dim_count == 1)
+		{
+			result = intermediate_array;
+		}
+		else
+		{
+			// Create array of lower indeces
+			int_array_id = eif_type_id ("ARRAY [INTEGER]");
+			make = eif_procedure ("make", int_array_id);
+			eif_lower_indeces = eif_create (int_array_id);
+			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+			for ( i = 0; i < dim_count; i++)
+				lower_indeces [i] = 1;
+
+			eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+			free (lower_indeces);
+
+			// Create array of element counts
+			eif_element_count = eif_create (int_array_id);
+			make (eif_access (eif_element_count), 1, dim_count);
+
+			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+
+			// Create ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE]
+			type_id = eif_type_id ("ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE]");
+			make = eif_procedure ("make_from_array", type_id);
+
+			result = eif_create (type_id);
+			make (eif_access (result), eif_access (intermediate_array),
+					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+			eif_wean (intermediate_array);
+		}
+		return eif_wean (result);
 	}
 	else
-	{
-		// Create array of lower indeces
-		int_array_id = eif_type_id ("ARRAY [INTEGER]");
-		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
-
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
-		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
-
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
-
-		// Create array of element counts
-		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
-
-		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-
-		// Create ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE]
-		type_id = eif_type_id ("ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE]");
-		make = eif_procedure ("make_from_array", type_id);
-
-		result = eif_create (type_id);
-		make (eif_access (result), eif_access (intermediate_array),
-				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
-		eif_wean (intermediate_array);
-	}
-	return eif_wean (result);
+		return NULL;
 };
 //-------------------------------------------------------------------------
 
@@ -2608,7 +2860,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
 		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
-		put (eif_access (result), ccom_ce_hresult (sa_element), eif_access (eif_index));
+		put (eif_access (result), ccom_ce_hresult (sa_element, NULL), eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
 
@@ -2851,7 +3103,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointer (void ** a_pointer)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointer (void ** a_pointer, EIF_OBJECT an_object)
 
 // Create CELL [POINTER] from void **.
 {
@@ -2861,9 +3113,15 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointer (void ** a_pointer)
 
 	type_id = eif_type_id ("CELL [POINTER]");
 	set_item = eif_procedure ("set_item", type_id);
-	result = eif_create (type_id);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = eif_create (type_id);
+	else
+		result = an_object;
 	set_item (eif_access (result), *a_pointer);
 	CoTaskMemFree (a_pointer);
-	return eif_wean (result);
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
 };
 //-------------------------------------------------------------------------

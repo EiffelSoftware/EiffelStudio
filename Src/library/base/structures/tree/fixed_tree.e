@@ -478,19 +478,12 @@ feature -- Access
 
 	prune (n: like parent) is
 		do
-			--fixed_list.prune (n)
 		end
 	
 	wipe_out is
 		do
-			fixed_list.wipe_out
-			--fixed_list.discard_items
+			create fixed_list.make (fixed_list.count)
 		end
-
---	force_i_th (v: FIXED_TREE [like item]; n: INTEGER) is
---		do
---			fixed_list.force_i_th (v, n)
---		end
 
 	put_i_th (v: FIXED_TREE [like item]; n: INTEGER) is
 		do

@@ -87,11 +87,11 @@ feature -- Access
 			"_internal_Invariants"
 		end
 
-	get_enum_type: STRING is
+	get_namespace: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelClass"
 		alias
-			"get_EnumType"
+			"get_Namespace"
 		end
 
 	get_eiffel_name: STRING is
@@ -150,13 +150,6 @@ feature -- Access
 			"_internal_IsFrozen"
 		end
 
-	get_special_features: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
-		alias
-			"get_SpecialFeatures"
-		end
-
 	frozen a_internal_eiffel_name: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelClass"
@@ -164,11 +157,11 @@ feature -- Access
 			"_internal_EiffelName"
 		end
 
-	get_namespace: STRING is
+	get_enum_type: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelClass"
 		alias
-			"get_Namespace"
+			"get_EnumType"
 		end
 
 	frozen a_internal_external_name: STRING is
@@ -204,13 +197,6 @@ feature -- Access
 			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
 			"get_UnaryOperatorsFeatures"
-		end
-
-	get_attribute: ISE_REFLECTION_EIFFELFEATURE is
-		external
-			"IL signature (): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
-		alias
-			"get_Attribute"
 		end
 
 	frozen a_internal_element_change_features: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -325,11 +311,11 @@ feature -- Access
 			"get_CreateNone"
 		end
 
-	frozen a_internal_creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST is
+	get_binary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
-			"_internal_CreationRoutines"
+			"get_BinaryOperatorsFeatures"
 		end
 
 	get_implementation_features: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -337,6 +323,20 @@ feature -- Access
 			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
 			"get_ImplementationFeatures"
+		end
+
+	frozen a_internal_creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"_internal_CreationRoutines"
+		end
+
+	get_special_features: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"get_SpecialFeatures"
 		end
 
 	frozen a_internal_attribute: ISE_REFLECTION_EIFFELFEATURE is
@@ -353,11 +353,11 @@ feature -- Access
 			"get_Parents"
 		end
 
-	get_binary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST is
+	get_attribute: ISE_REFLECTION_EIFFELFEATURE is
 		external
-			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+			"IL signature (): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
 		alias
-			"get_BinaryOperatorsFeatures"
+			"get_Attribute"
 		end
 
 	get_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is

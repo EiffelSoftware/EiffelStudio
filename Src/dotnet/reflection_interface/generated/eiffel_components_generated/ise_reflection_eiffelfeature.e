@@ -24,6 +24,13 @@ feature -- Access
 			"get_Preconditions"
 		end
 
+	get_is_method: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.EiffelFeature"
+		alias
+			"get_IsMethod"
+		end
+
 	frozen a_internal_modified: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
@@ -143,13 +150,6 @@ feature -- Access
 			"_internal_IsMethod"
 		end
 
-	get_modified: BOOLEAN is
-		external
-			"IL signature (): System.Boolean use ISE.Reflection.EiffelFeature"
-		alias
-			"get_Modified"
-		end
-
 	frozen a_internal_external_name: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelFeature"
@@ -169,13 +169,6 @@ feature -- Access
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
 		alias
 			"_internal_IsField"
-		end
-
-	get_eiffel_name: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelFeature"
-		alias
-			"get_EiffelName"
 		end
 
 	frozen a_internal_is_prefix: BOOLEAN is
@@ -204,6 +197,13 @@ feature -- Access
 			"IL signature (): System.Boolean use ISE.Reflection.EiffelFeature"
 		alias
 			"get_IsLiteral"
+		end
+
+	get_modified: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.EiffelFeature"
+		alias
+			"get_Modified"
 		end
 
 	frozen a_internal_is_static: BOOLEAN is
@@ -269,11 +269,11 @@ feature -- Access
 			"_internal_ReturnType"
 		end
 
-	get_is_method: BOOLEAN is
+	get_eiffel_name: STRING is
 		external
-			"IL signature (): System.Boolean use ISE.Reflection.EiffelFeature"
+			"IL signature (): System.String use ISE.Reflection.EiffelFeature"
 		alias
-			"get_IsMethod"
+			"get_EiffelName"
 		end
 
 	frozen a_internal_comments: SYSTEM_COLLECTIONS_ARRAYLIST is

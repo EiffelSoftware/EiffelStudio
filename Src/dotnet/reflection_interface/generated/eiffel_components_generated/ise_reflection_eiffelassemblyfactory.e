@@ -131,6 +131,13 @@ feature -- Basic Operations
 			"Make"
 		end
 
+	set_eiffel_cluster_path (a_path: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"SetEiffelClusterPath"
+		end
+
 	set_emitter_version_number (a_value: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssemblyFactory"
@@ -138,11 +145,11 @@ feature -- Basic Operations
 			"SetEmitterVersionNumber"
 		end
 
-	set_eiffel_cluster_path (a_path: STRING) is
+	add_type (a_type: ISE_REFLECTION_EIFFELCLASS) is
 		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssemblyFactory"
+			"IL signature (ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"SetEiffelClusterPath"
+			"AddType"
 		end
 
 	set_assembly_name (a_name: STRING) is
@@ -157,13 +164,6 @@ feature -- Basic Operations
 			"IL static signature (ISE.Reflection.EiffelAssemblyFactory): System.Void use ISE.Reflection.EiffelAssemblyFactory"
 		alias
 			"_invariant"
-		end
-
-	add_type (a_type: ISE_REFLECTION_EIFFELCLASS) is
-		external
-			"IL signature (ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.EiffelAssemblyFactory"
-		alias
-			"AddType"
 		end
 
 	set_assembly_version (a_version: STRING) is

@@ -39,7 +39,7 @@ create
 feature {NONE} -- initialization
 
 	make (an_interface: like interface) is
-			-- Connect interface.
+			-- Create `Current'.
 		do
 			base_make (an_interface)
 			ev_wel_control_container_make
@@ -48,11 +48,11 @@ feature {NONE} -- initialization
 feature -- Element change
 
 	top_level_window_imp: EV_WINDOW_IMP
-			-- Top level window that contains the current widget.
+			-- Top level window that contains `Current'.
 
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
-			-- of the widget.
+			-- of `Current'.
 		do
 			top_level_window_imp := a_window
 			if item_imp /= Void then
@@ -64,9 +64,9 @@ feature {EV_ANY_I} -- Implementation
 
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
 		repaint: BOOLEAN) is
-			-- Make `x' and `y' the new position of the current object and
-			-- `w' and `h' the new width and height of it.
-			-- If there is any child, it also adapt them to fit to the given
+			-- Make `x' and `y' the new position of `Current' and
+			-- `w' and `h' the new width and height.
+			-- If there is a child, it also adapts them to fit to the given
 			-- value.
 		do
 			Precursor (a_x, a_y, a_width, a_height, repaint)
@@ -77,7 +77,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	compute_minimum_width is
-			-- Recompute the minimum_width of the object.
+			-- Recompute the minimum_width of `Current'.
 		do
 			if item_imp /= Void then
 				internal_set_minimum_width (item_imp.minimum_width)
@@ -85,7 +85,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	compute_minimum_height is
-			-- Recompute the minimum_width of the object.
+			-- Recompute the minimum_width of `Current'.
 		do
 			if item_imp /= Void then
 				internal_set_minimum_height (item_imp.minimum_height)
@@ -93,8 +93,8 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	compute_minimum_size is
-			-- Recompute both the minimum_width and then
-			-- minimum_height of the object.
+			-- Recompute both the minimum_width the
+			-- minimum_height of `Current'.
 		do
 			if item_imp /= Void then
 				internal_set_minimum_size (item_imp.minimum_width, 
@@ -129,6 +129,9 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/05/03 16:23:02  rogers
+--| Comments, formatting.
+--|
 --| Revision 1.12  2000/04/26 21:01:29  brendel
 --| child -> item or item_imp.
 --|

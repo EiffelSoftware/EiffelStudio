@@ -162,8 +162,8 @@ feature {NONE}
 				end;
 			elseif argument = Second then
 				dropped := True;
-				ungrab;
 				target := pointed_hole;
+				ungrab;
 				draw_segment (x0, y0, x1, y1);
 				if (target /= Void) and stone /= Void then
 					target.receive (stone);

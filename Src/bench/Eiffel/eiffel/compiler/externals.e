@@ -234,6 +234,11 @@ feature {NONE} -- Implementation
 
 	generate_class_il (a_s: SEARCH_TABLE [INTEGER]; class_c: CLASS_C; class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
 			-- Generate C il code
+		require
+			a_s_not_void: a_s /= Void
+			class_c_not_void: class_c /= Void
+			class_type_not_void: class_type /= Void
+			buffer_not_void: buffer /= Void
 		local
 			ext: EXTERNAL_I
 			feat_tbl: FEATURE_TABLE
@@ -246,11 +251,20 @@ feature {NONE} -- Implementation
 				a_s.after
 			loop
 				ext ?= feat_tbl.item_id (a_s.item_for_iteration)
-				is_cpp := is_cpp or else ext.extension.is_cpp
-				buffer.put_string ("/* ")
-				buffer.put_string (class_c.name)
-				buffer.put_string (" */")
-				ext.generate (class_type, buffer)
+				check
+					external_feature_not_void: ext /= Void
+				end
+				if ext /= Void then
+						-- We found that it might be Void time to time, thus
+						-- the if statement in addition to the check so that in
+						-- production we do not fail, but at least when debugging
+						-- we get an exception.
+					is_cpp := is_cpp or else ext.extension.is_cpp
+					buffer.put_string ("/* ")
+					buffer.put_string (class_c.name)
+					buffer.put_string (" */")
+					ext.generate (class_type, buffer)
+				end
 				a_s.forth
 			end
 		end

@@ -85,7 +85,6 @@ feature -- Status report
 				(i = line_count implies last_line_not_empty)
 		do
 			Result := implementation.last_position_from_line_number (i)
-			io.putstring ("d")
 		ensure
 			valid_caret_position: valid_caret_position (i)
 		end

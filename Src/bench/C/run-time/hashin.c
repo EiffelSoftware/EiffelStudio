@@ -287,6 +287,6 @@ rt_public void ht_free(struct htable *ht)
 
 	free(ht->h_values);
 	free(ht->h_keys);
-	xfree(ht);
+	xfree((char *) ht);
 }
 

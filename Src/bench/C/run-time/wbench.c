@@ -597,7 +597,7 @@ rt_public void put_mdesc(struct desc_info *desc_ptr, int org, int dtype)
 	if (mdesc_tab_size <= mdesc_count) { 
 		mdesc_tab_size += MDESC_INC;
 		mdesc_tab = (struct mdesc *) 
-				crealloc (mdesc_tab, sizeof(struct mdesc) * mdesc_tab_size);	
+				crealloc ((char *) mdesc_tab, sizeof(struct mdesc) * mdesc_tab_size);	
 		if ((struct mdesc *) 0 == mdesc_tab)
 			enomem();
 	}
@@ -649,7 +649,7 @@ rt_public void create_desc(void)
 
 
 	/* Free temporary structure */
-	xfree(bounds_tab);
+	xfree((char *) bounds_tab);
 
 	/* Actually fill the call structure */
 
@@ -665,5 +665,5 @@ rt_public void create_desc(void)
 	}
 
 	/* Free temporary structure */
-	xfree(mdesc_tab);
+	xfree((char *) mdesc_tab);
 }

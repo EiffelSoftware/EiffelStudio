@@ -104,8 +104,8 @@ rt_public void s_resize(register struct s_table *tbl)
 		if (one_key != (char *) 0)
 			s_put(new,one_key);
 	}
-	xfree(tbl->s_keys);						/* Free old keys */
+	xfree((char *) (tbl->s_keys));			/* Free old keys */
 	bcopy(new,tbl,sizeof(struct s_table));	/* Copy new descriptor */
-	xfree(new);								/* Free temporary descriptor */
+	xfree((char *) new);					/* Free temporary descriptor */
 }
 

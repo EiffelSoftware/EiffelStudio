@@ -288,8 +288,8 @@ rt_public int ediso(char *target, char *source)
 	table = s_create(100);				/* Create search table */	
 	result = rdeepiso(target,source);	/* Recursive isomorphism test */
 	g_data.status = g_status;			/* Restore GC status */
-	xfree(table->s_keys);				/* Free search table keys */
-	xfree(table);						/* Free search table descriptor */
+	xfree((char *) (table->s_keys));	/* Free search table keys */
+	xfree((char *) table);						/* Free search table descriptor */
 	return result;
 }
 

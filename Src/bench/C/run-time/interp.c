@@ -487,14 +487,14 @@ rt_private void interpret(int flag, int where)
 			switch (last->type & SK_HEAD) {
 			case SK_REF:			/* Lovely comment */
 			case SK_EXP:
-				epush(&loc_stack, &ref);
+				epush(&loc_stack, (char *)(&ref));
 				last->it_ref = RTLN(get_short());
 				epop(&loc_stack, 1);
 				last->type = SK_EXP;
 				ecopy(ref, last->it_ref);
 				break;
 			case SK_BIT:
-				epush(&loc_stack, &ref);
+				epush(&loc_stack, (char *)(&ref));
 				last->it_bit = RTLB(get_short());
 				epop(&loc_stack, 1);
 				b_copy(ref, last->it_bit);
@@ -2198,7 +2198,7 @@ end:
 			OLD_IC = IC;					/* Save IC counter */
  
 			new_obj = RTLN(dtype);			/* Create new object */
-			epush (&loc_stack, &new_obj);   /* Protect new_obj */
+			epush (&loc_stack, (char *)(&new_obj));   /* Protect new_obj */
 			((void (*)()) RTWF(stype, feat_id, dtype))
 									(new_obj, 1L, nbr_of_items);
 
@@ -2286,7 +2286,7 @@ end:
 			OLD_IC = IC;					/* Save IC counter */
  
 			new_obj = RTLN(dtype);			/* Create new object */
-			epush (&loc_stack, &new_obj);   /* Protect new_obj */
+			epush (&loc_stack, (char *)(&new_obj));   /* Protect new_obj */
 			((void (*)()) RTWPF(origin, ooffset, dtype))
 									(new_obj, 1L, nbr_of_items);
 
@@ -2439,7 +2439,7 @@ end:
 			array = striparr(icurrent->it_ref, d_type, stripped, temp);
 			if (tagval != stagval)
 				sync_registers(scur, stop); /* If G.C calls melted dispose */
-			xfree (stripped);
+			xfree ((char *) stripped);
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = array;
@@ -3319,7 +3319,7 @@ rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, s
 		inv_mark_table[dtype] = (char) 1;	/* Mark as checked */
 
 	/* Automatic protection of `obj' */
-	epush(&loc_stack, &obj);
+	epush(&loc_stack, (char *)(&obj));
 
 	/* Recursion on parents first. */
 	cn_parents = node->cn_parents;
@@ -4707,7 +4707,7 @@ rt_private void allocate_registers(void)
 
 	size = nbregs * ITEM_SZ;				/* The size it should have */
 	if (size > iregsz) {					/* The array is not big enough */
-		new = (struct item **) crealloc(iregs, size);
+		new = (struct item **) crealloc((char *)iregs, size);
 		if (new == (struct item **) 0)		/* No room for extension */
 			enomem();						/* This is a critical exception */
 		bigger = 0;
@@ -4719,7 +4719,7 @@ rt_private void allocate_registers(void)
 	) {
 		if (++bigger > BIGGER_LIMIT) {	/* Time to reduce length */
 			size = (REGISTER_SIZE * ITEM_SZ);
-			new = (struct item **) crealloc(iregs, size);
+			new = (struct item **) crealloc((char *)iregs, size);
 			if (new == (struct item **) 0)	/* Paranoid (can't happen?) */
 				enomem();				/* This is a critical exception */
 			iregsz = size;				/* Array has shrinked */

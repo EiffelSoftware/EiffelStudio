@@ -445,7 +445,7 @@ rt_public void cnode_updt(void)
 		if (rout_ids == (int32 *) 0)
 			enomem();
 		node->cn_attr = rout_ids;
-		wread(rout_ids, nbattr * sizeof(int32));
+		wread((char *)rout_ids, nbattr * sizeof(int32));
 #ifdef DEBUG
 	dprintf(4)("\n\trout id array = ");
 	for (i=0; i<nbattr; i++)
@@ -502,7 +502,7 @@ rt_public void routid_updt(void)
 			cn_eroutid = (int32 *) cmalloc(array_size * sizeof(int32));
 			if (cn_eroutid == (int32 *) 0)
 				enomem();
-			wread(cn_eroutid, array_size * sizeof(int32));
+			wread((char *) cn_eroutid, array_size * sizeof(int32));
 		} else {
 			 cn_eroutid = (int32 *) 0;
 		}
@@ -520,7 +520,7 @@ rt_public void routid_updt(void)
 			feature_ids = (uint32 *) cmalloc(size * sizeof(uint32));
 			if (feature_ids == (uint32 *) 0)
 				enomem();
-			wread(feature_ids, size * sizeof(uint32));
+			wread((char *) feature_ids, size * sizeof(uint32));
 		}
 		while ((dtype = wlong()) != -1L) {	/* Dynamic type */
 #ifdef DEBUG
@@ -601,7 +601,7 @@ rt_private void cecil_updt(void)
 	type_val = (uint32 *) cmalloc(count * sizeof(uint32));
 	if (type_val == (uint32 *) 0)
 		enomem();
-	wread(type_val, count * sizeof(uint32));
+	wread((char *) type_val, count * sizeof(uint32));
 	ce_nogeneric->h_values = (char *) type_val;
 
 	/* Seocnd, generic class table */
@@ -623,13 +623,13 @@ rt_private void cecil_updt(void)
 		gt_gen = (int32 *) cmalloc((n + 1) * sizeof(int32));
 		if (gt_gen == (int32 *) 0)
 			enomem();
-		wread(gt_gen, n * sizeof(int32));	/* Read meta type desc */
+		wread((char *) gt_gen, n * sizeof(int32));	/* Read meta type desc */
 		gt_gen[n] = SK_INVALID;
 		gtype_val->gt_gen = gt_gen;
 		gt_type = (int16 *) cmalloc(nb_types * sizeof(int16));
 		if (gt_type == (int16 *) 0)
 			enomem();
-		wread(gt_type, nb_types * sizeof(int16));
+		wread((char *) gt_type, nb_types * sizeof(int16));
 		gtype_val->gt_type = gt_type;
 	}
 }
@@ -816,7 +816,7 @@ rt_public short wshort(void)
 
 	short result;
 
-	wread(&result, sizeof(short));
+	wread((char *)(&result), sizeof(short));
 	return result;
 }
 
@@ -826,7 +826,7 @@ rt_public long wlong(void)
 
 	long result;
 
-	wread(&result, sizeof(long));
+	wread((char *)(&result), sizeof(long));
 	return result;
 }
 
@@ -836,7 +836,7 @@ rt_public int32 wint32(void)
 
 	int32 result;
 
-	wread(&result, sizeof(int32));
+	wread((char *)(&result), sizeof(int32));
 	return result;
 }
 
@@ -846,6 +846,6 @@ rt_public uint32 wuint32(void)
 
 	uint32 result;
 
-	wread(&result, sizeof(uint32));
+	wread((char *)(&result), sizeof(uint32));
 	return result;
 }

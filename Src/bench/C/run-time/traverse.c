@@ -106,13 +106,13 @@ rt_shared void traversal(char *object, int accounting)
 		 */
 
 		if (accounting & TR_MAP) {
-			epush(&loc_stack, &object);		/* Protection against GC */
+			epush(&loc_stack, (char *) &object);		/* Protection against GC */
 			if (flags & EO_SPEC)
 				new = spclone(object);
 			else
 				new = emalloc(flags & EO_TYPE);
 			mapped = hrecord(new);
-			if (-1 == epush(&map_stack, (char *) mapped))
+			if (-1 == epush((struct stack *) &map_stack, (char *) mapped))
 				eraise("map table recording", EN_MEM);
 			zone = HEADER(object);			/* Object may have moved */
 			flags = zone->ov_flags;			/* Flags may have changed */
@@ -227,7 +227,7 @@ rt_shared EIF_OBJ map_next(void)
 		map_stack.st_end = cur->sk_end;			/* Precompute end of chunk */
 		map_stack.st_bot = cur->sk_arena;		/* This is the new bottom */
 		item = (EIF_OBJ *) map_stack.st_bot++;	/* Next item in stack */
-		xfree(map_stack.st_cur);				/* Free previous chunk */
+		xfree((char *) (map_stack.st_cur));				/* Free previous chunk */
 		map_stack.st_cur = cur;					/* It's the new first chunk */
 		map_stack.st_hd = cur;					/* In case of emergency */
 	}
@@ -264,10 +264,10 @@ rt_shared void map_reset(int emergency)
 		for (next = map_stack.st_hd; next != 0; /*empty */) {
 			cur = next;						/* Current chunk to be freed */
 			next = next->sk_next;			/* Compute next chunk... */
-			xfree(cur);						/* ...before freeing it */
+			xfree((char *) cur);			/* ...before freeing it */
 		}
 	} else
-		xfree(map_stack.st_cur);				/* Free last chunk in stack */
+		xfree((char *) (map_stack.st_cur));	/* Free last chunk in stack */
 
 	bzero(&map_stack, sizeof(map_stack));	/* Reset an empty stack */
 

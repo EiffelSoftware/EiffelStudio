@@ -47,8 +47,8 @@ rt_shared void hash_free(struct hash *hp)
 {
 	/* Free memory allocated to the tables. */
 
-	xfree(hp->h_key);			/* Free keys array */
-	xfree(hp->h_entry);			/* Free entries array */
+	xfree((char *) (hp->h_key));			/* Free keys array */
+	xfree((char *) (hp->h_entry));			/* Free entries array */
 }
 
 rt_shared char **hash_search(struct hash *hp, register char *object)

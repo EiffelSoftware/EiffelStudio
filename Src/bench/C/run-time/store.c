@@ -226,7 +226,7 @@ rt_private void internal_store(char *object)
 printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsigned int *), sorted_attributes);
 #endif
 			if (sorted_attributes == (unsigned int **) 0){
-				xfree(accounting);
+				xfree((char *)accounting);
 				xraise(EN_MEM);
 			}
 			bzero(sorted_attributes, scount * sizeof(unsigned int *));
@@ -246,7 +246,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 			xfree(account);
 			if (c==GENERAL_STORE_4_0)
 					/* sorted_attributes is empty so a basic free is enough */
-				xfree(sorted_attributes);
+				xfree((char *)sorted_attributes);
 				sorted_attributes = (unsigned int **) 0;
 			}
 		eio();
@@ -270,7 +270,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	if (accounting == INDEPEND_ACCOUNT)
 		widr_multi_int (&obj_nb, 1);
 	else
-		buffer_write(&obj_nb, sizeof(long));
+		buffer_write((char *)(&obj_nb), sizeof(long));
 
 #if DEBUG & 3
 		printf (" %lx", obj_nb);
@@ -361,8 +361,8 @@ rt_public void st_write(char *object)
 	flags = zone->ov_flags;
 	/* Write address */
 
-	buffer_write(&object, sizeof(char *));
-	buffer_write(&flags, sizeof(uint32));
+	buffer_write((char *)(&object), sizeof(char *));
+	buffer_write((char *)(&flags), sizeof(uint32));
 #if DEBUG & 2
 		printf ("\n %lx", object);
 		printf (" %lx", flags);
@@ -370,7 +370,7 @@ rt_public void st_write(char *object)
 
 	if (flags & EO_SPEC) {
 		/* We have to save the size of the special object */
-		buffer_write(&zone->ov_size, sizeof(uint32));
+		buffer_write((char *)(&(zone->ov_size)), sizeof(uint32));
 
 #if DEBUG & 2
 		printf (" %lx", zone->ov_size);
@@ -411,8 +411,8 @@ rt_private void gst_write(char *object)
 	flags = zone->ov_flags;
 	/* Write address */
 
-	buffer_write(&object, sizeof(char *));
-	buffer_write(&flags, sizeof(uint32));
+	buffer_write((char *)(&object), sizeof(char *));
+	buffer_write((char *)(&flags), sizeof(uint32));
 
 #if DEBUG & 1
 		printf ("\n %lx", object);
@@ -428,8 +428,8 @@ rt_private void gst_write(char *object)
 
 		/* We have to save the number of objects in the special object */
 
-		buffer_write(&count, sizeof(uint32));
-		buffer_write(&elm_size, sizeof(uint32));
+		buffer_write((char *)(&count), sizeof(uint32));
+		buffer_write((char *)(&elm_size), sizeof(uint32));
 
 #if DEBUG & 1
 		printf ("\ncount  %x", count);
@@ -456,7 +456,7 @@ rt_private void ist_write(char *object)
 	flags = zone->ov_flags;
 	/* Write address */
 
-	widr_multi_any (&object, 1);
+	widr_multi_any ((char *)(&object), 1);
 	widr_norm_int (&flags);
 
 #if DEBUG & 1
@@ -565,9 +565,9 @@ rt_private void gen_object_write(char *object)
 					{
 						int q;
 						struct bit *bptr = (struct bit *)(object + attrib_offset);
-						buffer_write(&(HEADER(bptr)->ov_flags), sizeof(uint32));
-						buffer_write(&(bptr->b_length), sizeof(uint32));
-						buffer_write(bptr->b_value, bptr->b_length);
+						buffer_write((char *)(&(HEADER(bptr)->ov_flags)), sizeof(uint32));
+						buffer_write((char *)(&(bptr->b_length)), sizeof(uint32));
+						buffer_write((char *) (bptr->b_value), bptr->b_length);
 					}
 					break;
 				case SK_EXP:
@@ -615,28 +615,28 @@ rt_private void gen_object_write(char *object)
 			if (!(flags & EO_REF)) {		/* Special of simple types */
 				switch (dgen & SK_HEAD) {
 					case SK_INT:
-						buffer_write(((long *)object), count*sizeof(EIF_INTEGER));
+						buffer_write(object, count*sizeof(EIF_INTEGER));
 						break;
 					case SK_BOOL:
 					case SK_CHAR:
 						buffer_write(object, count*sizeof(EIF_CHARACTER));
 						break;
 					case SK_FLOAT:
-						buffer_write((float *)object, count*sizeof(EIF_REAL));
+						buffer_write(object, count*sizeof(EIF_REAL));
 						break;
 					case SK_DOUBLE:
-						buffer_write((double *)object, count*sizeof(EIF_DOUBLE));
+						buffer_write(object, count*sizeof(EIF_DOUBLE));
 						break;
 					case SK_BIT:
 						dgen_typ = dgen & SK_DTYPE;
 						elem_size = *(long *) (o_ptr + sizeof(long));
 
 /*FIXME: header for each object ????*/
-						buffer_write((struct bit *)object, count*elem_size);
+						buffer_write(object, count*elem_size); /* %%ss arg1 was cast (struct bit *) */
 						break;
 					case SK_EXP:
 						elem_size = *(long *) (o_ptr + sizeof(long));
-						buffer_write(&(HEADER (object + OVERHEAD)->ov_flags), sizeof(uint32));
+						buffer_write((char *) (&(HEADER(object + OVERHEAD)->ov_flags)), sizeof(uint32));
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 							gen_object_write(ref);
@@ -654,7 +654,7 @@ rt_private void gen_object_write(char *object)
 					buffer_write(object, count*sizeof(EIF_REFERENCE));
 				} else {			/* Special of composites */
 					elem_size = *(long *) (o_ptr + sizeof(long));
-					buffer_write(&(HEADER (object)->ov_flags), sizeof(uint32));
+					buffer_write((char *)(&(HEADER(object)->ov_flags)), sizeof(uint32));
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 						gen_object_write(ref);
@@ -685,7 +685,7 @@ rt_private void object_write(char *object)
 #if DEBUG &1
 					printf (" %lx", *((long *)(object + attrib_offset)));
 #endif
-					widr_multi_int (object + attrib_offset, 1);
+					widr_multi_int ((long int *)(object + attrib_offset), 1);
 
 					break;
 				case SK_BOOL:
@@ -700,14 +700,14 @@ rt_private void object_write(char *object)
 #if DEBUG &1
 					printf (" %f", *((float *)(object + attrib_offset)));
 #endif
-					widr_multi_float (object + attrib_offset, 1);
+					widr_multi_float ((float *)(object + attrib_offset), 1);
 
 					break;
 				case SK_DOUBLE:
 #if DEBUG &1
 					printf (" %lf", *((double *)(object + attrib_offset)));
 #endif
-					widr_multi_double (object + attrib_offset, 1);
+					widr_multi_double ((double *)(object + attrib_offset), 1);
 
 					break;
 				case SK_BIT:
@@ -724,7 +724,7 @@ rt_private void object_write(char *object)
 						}
 #endif
 						widr_norm_int (&(HEADER(bptr)->ov_flags));	/* %%zs misuse, removed ",1" */
-						widr_multi_bit (bptr, 1, bptr->b_length, NULL);
+						widr_multi_bit (bptr, 1, bptr->b_length, 0);
 					}
 
 					break;
@@ -1052,7 +1052,7 @@ printf ("%d %d\n", attr_types[s_attr[j]], attr_types[s_attr[j+1]]);
 #ifdef DEBUG_GENERAL_STORE
 printf ("Freeing s_attr %lx\n", s_attr);
 #endif
-			xfree(s_attr);
+			xfree((char *)s_attr);
 			sorted_attributes[dtype] = (unsigned int*)0;
 			}
 		}
@@ -1215,7 +1215,7 @@ printf ("free_sorted_attributes %lx\n", sorted_attributes);
 #endif
 		for (i=0; i < scount; i++)
 			if ((s_attr = sorted_attributes[i])!= (unsigned int *)0){
-				xfree(s_attr);
+				xfree((char *)s_attr);
 #ifdef DEBUG_GENERAL_STORE
 printf ("Free s_attr (%d) %lx\n", i, s_attr);
 #endif

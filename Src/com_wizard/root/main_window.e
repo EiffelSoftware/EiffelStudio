@@ -84,6 +84,7 @@ feature {NONE} -- Initialization
 			make_top (Title)
 			set_menu (main_menu)
 			setup_output_edit
+			create introduction_dialog.make (Current)
 			create initial_dialog.make (Current)
 			create idl_dialog.make (Current)
 			create ps_dialog.make (Current)
@@ -131,6 +132,9 @@ feature -- GUI Elements
 			Result.reposition
 		end
 	
+	introduction_dialog: WIZARD_INTRODUCTION_DIALOG
+			-- Wizard introduction dialog
+
 	initial_dialog: WIZARD_INITIAL_DIALOG
 			-- Wizard initial dialog
 
@@ -216,7 +220,7 @@ feature -- GUI Elements
 	Warning_color: WEL_COLOR_REF is
 			-- Text output color
 		once
-			create Result.make_rgb (50, 50, 50)
+			create Result.make_rgb (100, 50, 50)
 		end
 
 	Error_color: WEL_COLOR_REF is
@@ -289,7 +293,7 @@ feature -- Element Change
 
 feature {NONE} -- State management
 
-	Initial_state, Idl_state, Ps_state, Final_state, Finished_state, Abort_state: INTEGER is unique
+	Introduction_state, Initial_state, Idl_state, Ps_state, Final_state, Finished_state, Abort_state: INTEGER is unique
 			-- Possible states
 
 	state: INTEGER
@@ -303,6 +307,8 @@ feature {NONE} -- State management
 		do
 			inspect
 				state
+			when Introduction_state then
+				Result := Introduction_dialog
 			when Initial_state then
 				Result := Initial_dialog
 			when Idl_state then
@@ -320,7 +326,7 @@ feature {NONE} -- State management
 		do
 			from
 				previous_states.extend (Abort_state)
-				state := Initial_state
+				state := Introduction_state
 				shared_wizard_environment.set_no_abort
 			until
 				state = Finished_state or state = Abort_state
@@ -343,6 +349,8 @@ feature {NONE} -- State management
 				previous_states.extend (state)
 				inspect
 					state	
+				when Introduction_state then
+					state := Initial_state
 				when Initial_state then
 					if shared_wizard_environment.idl then
 						state := Idl_state
@@ -376,8 +384,6 @@ feature {NONE} -- Implementation
 			process_messages
 		end
 	
-	should_process_messages: BOOLEAN
-
 	process_messages is
 			-- Process messages in queue.
 		do
@@ -639,7 +645,7 @@ feature {NONE} -- Behavior
 
 invariant
 	
-	valid_state: state = Initial_state or state = Idl_state or state = Ps_state or 
+	valid_state: state = Introduction_state or state = Initial_state or state = Idl_state or state = Ps_state or 
 				state = Final_state or state = Finished_state or state = Abort_state
 	non_void_lines: lines /= Void
 

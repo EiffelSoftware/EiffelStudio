@@ -64,14 +64,14 @@ feature -- Event : command association
 			-- The toggle event doesn't work on gtk, then
 			-- we add both event command.
 		do
-			add_command ("select", command, arguments)
+			add_command (widget, "select", command, arguments)
 		end
 
 	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `cmd' the executed command when the item is
 			-- unactivated.
 		do
-			add_command ("deselect", cmd, arg)
+			add_command (widget, "deselect", cmd, arg)
 		end	
 
 feature -- Event -- removing command association
@@ -80,14 +80,14 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the item is activated.
 		do
-			remove_commands (select_id)
+			remove_commands (widget, select_id)
 		end	
 
 	remove_deactivate_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is deactivated.
 		do	
-			remove_commands (deselect_id)
+			remove_commands (widget, deselect_id)
 		end
 
 end -- class EV_ITEM_IMP

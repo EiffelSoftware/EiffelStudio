@@ -141,7 +141,7 @@ feature -- Event : command association
 			-- The toggle event doesn't work on gtk, then
 			-- we add both event command.
 		do
-			add_command ("activate", command, arguments)
+			add_command (widget, "activate", command, arguments)
 		end
 
 feature {NONE} -- Implementation

@@ -9,7 +9,6 @@
 #	include "wel.h"
 #endif
 
-
 typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
 	(EIF_OBJ,     /* WEL_FONT_FAMILY_ENUMERATOR Eiffel object */
 	 EIF_POINTER, /* ENUMLOGFONT * */
@@ -23,7 +22,6 @@ typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
 #endif
 
 /* Eiffel routine signature for `converter' */
-
 int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT *, NEWTEXTMETRIC *, int, LPARAM);
 
 #ifdef EIF_THREADS

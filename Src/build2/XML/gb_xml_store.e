@@ -25,36 +25,12 @@ feature -- Basic operation
 	store is
 			-- Store `display_window' and contents in XML format in file `filename'.
 		local
-			application_element: XML_ELEMENT
-			toe_document: TOE_DOCUMENT
 			formater: XML_FORMATER
-			window_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-			window_element: XML_ELEMENT
 		do
-			application_element := new_root_element ("application", "")
-			add_attribute_to_element (application_element, "xsi", "xmlns", "http://www.w3.org/1999/XMLSchema-instance")	
-			
-			create toe_document.make
-			create document.make_from_imp (toe_document)
-			document.start
-				-- Add `application_element' as the root element of `document'.
-			document.force_first (application_element)
-			
-
-			window_item ?= layout_constructor.first
-			check
-				window_item /= Void
-			end
-			
-				-- We explicitly add the titled window. When we support more than
-				-- one window, then this will need to be updated.
-			window_element := create_widget_instance (application_element, "EV_TITLED_WINDOW")
-			application_element.force_last (window_element)
-			--output_attributes (window_item.object, window_element)
-			add_new_object_to_output (window_item.object, window_element)
-			
-			
+				-- Generate an XML representation of the sysyetm in `document'.
+			generate_document
 			create formater.make
+				-- Process the document ready for output
 			formater.process_document (document)
 				-- Save our XML ouput to disk in `filename'.
 			write_file_to_disk (formater.last_string.to_utf8)
@@ -73,7 +49,6 @@ feature {NONE} -- Basic operation.
 			file.put_string (xml_text)
 			file.close
 		end
-		
 		
 feature {NONE} -- Implementation
 
@@ -168,6 +143,45 @@ feature {NONE} -- Implementation
 				supported_types.forth
 			end
 		end
+		
+feature {GB_CODE_GENERATOR} -- Implementation
+		
+	generate_document is
+			-- Generate an XML representation of the
+			-- current system in `document'.
+		local
+			application_element: XML_ELEMENT
+			toe_document: TOE_DOCUMENT
+			formater: XML_FORMATER
+			window_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			window_element: XML_ELEMENT
+		do
+			application_element := new_root_element ("application", "")
+			add_attribute_to_element (application_element, "xsi", "xmlns", "http://www.w3.org/1999/XMLSchema-instance")	
+			
+			create toe_document.make
+			create document.make_from_imp (toe_document)
+			document.start
+				-- Add `application_element' as the root element of `document'.
+			document.force_first (application_element)
+			
+
+			window_item ?= layout_constructor.first
+			check
+				window_item /= Void
+			end
+			
+				-- We explicitly add the titled window. When we support more than
+				-- one window, then this will need to be updated.
+			window_element := create_widget_instance (application_element, "EV_TITLED_WINDOW")
+			application_element.force_last (window_element)
+			add_new_object_to_output (window_item.object, window_element)		
+		end
+		
+	document: XML_DOCUMENT
+		-- Result of last call to `generate_document'.
+		-- XML document generated from created window.
+
 
 feature {NONE} -- Implementation
 
@@ -176,9 +190,5 @@ feature {NONE} -- Implementation
 
 	filename: STRING is "D:\work\build2\xml_output.xml"
 		-- File to be generated.
-		
-	document: XML_DOCUMENT
-		-- XML document generated from created window.
-
 
 end -- class GB_XML_STORE

@@ -1,6 +1,6 @@
 indexing
 	description: "Action sequences for EV_DOCKABLE_TARGET."
-	author: ""
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

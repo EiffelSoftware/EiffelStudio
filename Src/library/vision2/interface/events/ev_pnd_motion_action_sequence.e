@@ -1,6 +1,6 @@
 indexing
 	description: "Action sequence for a pointer motion during a pick and drop."
-	author: ""
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -21,13 +21,6 @@ feature
 			result_not_void: Result /= Void
 		end;
 
-	height: INTEGER is
-			-- Height of screen (in pixel)
-		deferred
-		ensure
-			height_large_enough: Result >= 0
-		end;
-
 	screen_object: POINTER is
 			-- Screen object associated
 		deferred
@@ -43,6 +36,27 @@ feature
 		deferred
 		ensure
 			width_large_enough: Result >= 0
+		end;
+
+	height: INTEGER is
+			-- Height of screen (in pixel)
+		deferred
+		ensure
+			height_large_enough: Result >= 0
+		end;
+
+	visible_width: INTEGER is
+			-- Width of the visible part of the screen (in pixel)
+		deferred
+		ensure
+			visible_width_large_enough: Result >= 0
+		end;
+
+	visible_height: INTEGER is
+			-- Height of the visible part of the screen (in pixel)
+		deferred
+		ensure
+			visible_height_large_enough: Result >= 0
 		end;
 
 	x: INTEGER is

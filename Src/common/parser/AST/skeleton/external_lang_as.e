@@ -491,6 +491,13 @@ feature -- Debug
 		do
 		end;
 
+feature -- Output
+
+		simple_format (ctxt: FORMAT_CONTEXT) is
+			do
+				ctxt.format_ast (language_name)
+			end
+
 feature -- Error handling
 
 	raise_external_error (msg: STRING; start_p: INTEGER; end_p: INTEGER) is

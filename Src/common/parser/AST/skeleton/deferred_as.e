@@ -4,8 +4,7 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			is_deferred, has_instruction, index_of_instruction,
-			simple_format
+			is_deferred, has_instruction, index_of_instruction
 		end
 
 feature -- Initialization
@@ -43,6 +42,7 @@ feature -- Simple formatting
 			-- Reconstitute text.
         do
             ctxt.put_text_item (ti_Deferred_keyword);
+		ctxt.new_line
         end;
 
 end -- class DEFERRED_AS

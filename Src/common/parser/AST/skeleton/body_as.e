@@ -9,9 +9,6 @@ class BODY_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -141,31 +138,25 @@ feature -- Simple formatting
 		local
 			routine_as: ROUTINE_AS;
 		do
-			ctxt.begin;
 			if arguments /= void and then not arguments.empty then
 				ctxt.put_space;
-				ctxt.put_text_item (ti_L_parenthesis);
+				ctxt.put_text_item_without_tabs (ti_L_parenthesis);
 				ctxt.set_separator (ti_Semi_colon);
-				ctxt.space_between_tokens;
-				arguments.simple_format (ctxt);
-				ctxt.put_text_item (ti_R_parenthesis)
+				ctxt.set_space_between_tokens;
+				ctxt.format_ast (arguments)
+				ctxt.put_text_item_without_tabs (ti_R_parenthesis)
 			end;
-
 			if type /= void then
-				ctxt.put_text_item (ti_Colon);
+				ctxt.put_text_item_without_tabs (ti_Colon);
 				ctxt.put_space;
 				if type.has_like then
 					ctxt.new_expression;
 				end;
-				type.simple_format (ctxt);
+				ctxt.format_ast (type)
 			end;
-
 			if content /= void then
-				content.simple_format (ctxt)
+				ctxt.format_ast (content)
 			end;
-
-			ctxt.put_text_item (ti_Semi_colon);
-			ctxt.commit;
 		end;
 				
 feature {BODY_AS, FEATURE_AS, BODY_MERGER, USER_CMD, CMD} -- Replication

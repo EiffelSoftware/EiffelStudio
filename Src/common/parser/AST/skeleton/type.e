@@ -9,9 +9,6 @@ deferred class TYPE
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature
 

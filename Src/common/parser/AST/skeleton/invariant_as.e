@@ -10,7 +10,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			is_invariant_obj, simple_format
+			is_invariant_obj
 		end;
 
 feature -- Identity
@@ -48,48 +48,41 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
-			ctxt.put_text_item (ti_Before_invariant);
 			ctxt.put_text_item (ti_Invariant_keyword);
-			ctxt.indent_one_more;
-			ctxt.next_line;
+			ctxt.indent;
+			ctxt.new_line;
 			ctxt.set_separator (ti_Semi_colon);
-			ctxt.new_line_between_tokens;
+			ctxt.set_new_line_between_tokens;
 			if assertion_list /= Void then
-				format_assertions (ctxt);
+				simple_format_assertions (ctxt);
+				ctxt.new_line;
+				ctxt.new_line;
 			end;
-			ctxt.commit;
-			ctxt.put_text_item (ti_After_invariant)
-			ctxt.next_line
+			ctxt.exdent;
 		end;
 
-	format_assertions (ctxt: FORMAT_CONTEXT) is
+	simple_format_assertions (ctxt: FORMAT_CONTEXT) is
 			-- Format assertions of this invariant.
 		local
 			i, l_count: INTEGER;
 			not_first: BOOLEAN
 		do
+			ctxt.begin;
 			from
-				ctxt.begin;
 				i := 1;
 				l_count := assertion_list.count;
 			until
 				i > l_count
 			loop
-				ctxt.begin;
 				if not_first then
 					ctxt.put_separator;
 				end;
 				ctxt.new_expression;
 				assertion_list.i_th(i).simple_format(ctxt);
 				not_first := True
-				ctxt.commit;
 				i := i + 1
 			end;
-			if not_first then
-				ctxt.indent_one_less;
-				ctxt.commit
-			end
+			ctxt.commit;
 		end;
 
 feature -- Conveniences

@@ -14,8 +14,6 @@ inherit
 		end;
 
 	EXPR_AS_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate

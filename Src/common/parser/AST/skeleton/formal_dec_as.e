@@ -67,9 +67,9 @@ feature -- Simple formatting
 			ctxt.put_string (s);
 			if constraint /= void then
 				ctxt.put_space;
-				ctxt.put_text_item (ti_Constraint);
+				ctxt.put_text_item_without_tabs (ti_Constraint);
 				ctxt.put_space;
-				constraint.simple_format (ctxt);
+				ctxt.format_ast (constraint)
 			end;
 		end;
 

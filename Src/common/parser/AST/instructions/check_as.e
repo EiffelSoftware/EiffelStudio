@@ -9,9 +9,6 @@ class CHECK_AS
 inherit
 
 	INSTRUCTION_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -54,18 +51,16 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute Text
 		do
-			ctxt.begin;
 			ctxt.put_breakable;
 			ctxt.put_text_item (ti_check_keyword);
 			if check_list /= void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				check_list.simple_format (ctxt);
-				ctxt.indent_one_less;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
+				ctxt.format_ast (check_list);
+				ctxt.exdent;
+				ctxt.new_line;
 			end;
 			ctxt.put_text_item (ti_End_keyword);
-			ctxt.commit;
 		end;
 			
 feature {CHECK_AS} -- Replication

@@ -9,9 +9,6 @@ class LOOP_AS
 inherit
 
 	INSTRUCTION_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -88,52 +85,50 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.put_breakable;
 			ctxt.put_text_item (ti_From_keyword);
 			ctxt.set_separator (ti_Semi_colon);
-			ctxt.new_line_between_tokens;
+			ctxt.set_new_line_between_tokens;
 			if from_part /= void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				from_part.simple_format (ctxt);
-				ctxt.indent_one_less;
+				ctxt.indent;
+				ctxt.new_line;
+				ctxt.format_ast (from_part);
+				ctxt.new_line;
+				ctxt.exdent;
 			end;
 			ctxt.put_breakable;
-			if invariant_part /= void then
-				ctxt.next_line;
+			if invariant_part /= Void then
 				ctxt.put_text_item (ti_Invariant_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				invariant_part.simple_format (ctxt);
-				ctxt.indent_one_less;
+				ctxt.indent;
+				ctxt.new_line;
+				ctxt.format_ast (invariant_part);
+				ctxt.new_line;
+				ctxt.exdent;
 			end;
 			if variant_part /= void then
-				ctxt.next_line;
 				ctxt.put_text_item (ti_Variant_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				variant_part.simple_format(ctxt);
-				ctxt.indent_one_less;
+				ctxt.indent;
+				ctxt.new_line;
+				ctxt.format_ast (variant_part);
+				ctxt.new_line;
+				ctxt.exdent;
 			end;
-			ctxt.next_line;
 			ctxt.put_text_item (ti_Until_keyword);
-			ctxt.indent_one_more;
-			ctxt.next_line;
-			stop.simple_format (ctxt);
-			ctxt.indent_one_less;
-			ctxt.next_line;
+			ctxt.indent;
+			ctxt.new_line;
+			ctxt.format_ast (stop);
+			ctxt.exdent;
+			ctxt.new_line;
 			ctxt.put_text_item (ti_Loop_keyword);
 			if compound /= void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				compound.simple_format (ctxt);
-				ctxt.indent_one_less;
+				ctxt.indent;
+				ctxt.new_line;
+				ctxt.format_ast (compound);
+				ctxt.exdent;
 			end;
-			ctxt.next_line;
+			ctxt.new_line;
 			ctxt.put_breakable;
 			ctxt.put_text_item (ti_End_keyword);
-			ctxt.commit
 		end;
 
 feature {LOOP_AS} -- Replication

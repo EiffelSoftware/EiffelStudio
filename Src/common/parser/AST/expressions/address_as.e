@@ -9,9 +9,6 @@ class ADDRESS_AS
 inherit
 
 	EXPR_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attribute
 
@@ -33,10 +30,9 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.prepare_for_feature (feature_name.internal_name, void);
-			ctxt.put_current_feature; -- treat infix and prefix
-			ctxt.commit
+			ctxt.put_text_item_without_tabs (ti_Dollar);
+			ctxt.put_normal_feature;
 		end;
 
 end -- class ADDRESS_AS

@@ -4,7 +4,7 @@ inherit
 
 	BASIC_TYPE
 		redefine
-			set, is_deep_equal, simple_format
+			set, is_deep_equal
 		end
 
 feature -- Attributes
@@ -39,17 +39,5 @@ feature -- Initialization
 			Result.append ("BIT ");
 			Result.append (bits_symbol);
    		end;
-
-feature -- Simple formatting
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			ctxt.put_string ("BIT ");
-			ctxt.prepare_for_feature (bits_symbol, Void);
-			ctxt.put_current_feature;
-			ctxt.commit;
-		end
 
 end -- class BITS_SYMBOL_AS

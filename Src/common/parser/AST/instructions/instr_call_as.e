@@ -9,9 +9,6 @@ class INSTR_CALL_AS
 inherit
 
 	INSTRUCTION_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -57,7 +54,7 @@ feature -- Simple formatting
 			-- Reconstitute text.
 		do
 			ctxt.put_breakable;
-			call.simple_format (ctxt);
+			ctxt.format_ast (call)
 		end;
 
 feature {INSTR_CALL_AS, CMD, USER_CMD} -- Replication

@@ -3,9 +3,6 @@ class ASSERT_LIST_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -56,45 +53,43 @@ feature -- Simple formatting
 			-- Reconstitute text
 		do
 			if assertions /= void then
-				ctxt.begin;
-				ctxt.next_line;
-				put_clause_keywords (ctxt);
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				simple_put_clause_keywords (ctxt);
+				ctxt.new_line;
 				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
-				format_assertions (ctxt);
-				ctxt.commit;
+				ctxt.set_new_line_between_tokens;
+				ctxt.indent;
+				simple_format_assertions (ctxt);
+				ctxt.exdent;
 			end
 		end;
 
-	format_assertions (ctxt: FORMAT_CONTEXT) is
+	simple_format_assertions (ctxt: FORMAT_CONTEXT) is
 			-- Format assertions.
 		local
 			i, l_count: INTEGER;
 			not_first: BOOLEAN
 		do
+			ctxt.begin;
 			from
-				ctxt.begin;
 				i := 1;
 				l_count := assertions.count;
 			until
 				i > l_count
 			loop
-				ctxt.begin;
 				if not_first then
 					ctxt.put_separator;
 				end;
 				ctxt.new_expression;
-				assertions.i_th(i).simple_format(ctxt);
-				not_first := True
+				ctxt.begin;
+				assertions.i_th (i).simple_format(ctxt);
 				ctxt.commit;
+				not_first := True
 				i := i + 1
 			end;
-			if not_first then
-				ctxt.indent_one_less;
-				ctxt.commit
-			end
+			if l_count > 0 then
+				ctxt.new_line
+			end;
+			ctxt.commit;
 		end;
 
 feature {ASSERT_LIST_AS, REQUIRE_MERGER, ENSURE_MERGER} -- Replication
@@ -106,13 +101,7 @@ feature {ASSERT_LIST_AS, REQUIRE_MERGER, ENSURE_MERGER} -- Replication
 	
 feature {NONE}
 	
-	clause_name (ctxt: FORMAT_CONTEXT): STRING is
-			-- name of the assertion: require, require else, ensure, 
-			-- ensure then, invariant
-		do
-		end;
-
-	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
+	simple_put_clause_keywords (ctxt: FORMAT_CONTEXT) is
 			-- Append the assertion keywords ("require", "require else",
 			-- "ensure", "ensure then" or "invariant").
 		do

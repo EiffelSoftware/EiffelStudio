@@ -9,9 +9,6 @@ class INDEX_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -45,17 +42,15 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			if tag /= Void then
-				tag.simple_format (ctxt);
-				ctxt.put_text_item (ti_Colon);
+				ctxt.format_ast (tag);
+				ctxt.put_text_item_without_tabs (ti_Colon);
 				ctxt.put_space
 			end;
 
-			ctxt.space_between_tokens;
+			ctxt.set_space_between_tokens;
 			ctxt.set_separator (ti_Comma);
-			index_list.simple_format (ctxt);
-			ctxt.commit;
+			ctxt.format_ast (index_list);
 		end;
 	
 end -- class INDEX_AS

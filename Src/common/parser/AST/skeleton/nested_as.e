@@ -9,9 +9,6 @@ class NESTED_AS
 inherit
 
 	CALL_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -38,11 +35,9 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			target.simple_format (ctxt);
 			ctxt.need_dot;
 			message.simple_format (ctxt);
-			ctxt.commit
 		end;
 
 feature {NESTED_AS} -- Replication

@@ -12,9 +12,6 @@ class ACCESS_FEAT_AS
 inherit
 
 	ACCESS_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -56,10 +53,8 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.prepare_for_feature (feature_name, parameters);
 			ctxt.put_current_feature;
-			ctxt.commit
 		end;
 
 feature -- Replication {ACCESS_FEAT_AS, USER_CMD, CMD}

@@ -10,7 +10,7 @@ inherit
 
 	CONTENT_AS
 		redefine
-			is_unique, is_constant, simple_format
+			is_unique, is_constant
 		end
 
 feature -- Attributes
@@ -71,12 +71,10 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.put_space;
-			ctxt.put_text_item (ti_Is_keyword);
+			ctxt.put_text_item_without_tabs (ti_Is_keyword);
 			ctxt.put_space;
-			value.simple_format(ctxt);
-			ctxt.commit;
+			ctxt.format_ast (value)
 		end;
 
 feature -- Replication

@@ -9,9 +9,6 @@ class PARENT_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -59,81 +56,78 @@ feature -- Simple formatting
 		local
 			end_to_print: BOOLEAN
 		do
-			ctxt.begin;
-			type.simple_format (ctxt);
+			ctxt.format_ast (type);
 			if renaming /= Void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.put_text_item (ti_Rename_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.set_separator (ti_Comma);
-				ctxt.new_line_between_tokens;
-				renaming.simple_format (ctxt)
-				ctxt.indent_one_less;
-				ctxt.indent_one_less;
+				ctxt.set_new_line_between_tokens;
+				ctxt.format_ast (renaming)
+				ctxt.exdent;
+				ctxt.exdent;
 				end_to_print := true
 			end;
 			if exports /= Void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.put_text_item (ti_Export_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
-				exports.simple_format (ctxt)
-				ctxt.indent_one_less
-				ctxt.indent_one_less
+				ctxt.set_new_line_between_tokens;
+				ctxt.format_ast (exports)
+				ctxt.exdent
+				ctxt.exdent
 				end_to_print := true
 			end;
 			if undefining /= Void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.put_text_item (ti_Undefine_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.set_separator (ti_Comma);
-				ctxt.space_between_tokens;
-				undefining.simple_format (ctxt)
-				ctxt.indent_one_less;
-				ctxt.indent_one_less;
+				ctxt.set_space_between_tokens;
+				ctxt.format_ast (undefining)
+				ctxt.exdent;
+				ctxt.exdent;
 				end_to_print := true
 			end;
 			if redefining /= Void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.put_text_item (ti_Redefine_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.set_separator (ti_Comma);
-				ctxt.space_between_tokens;
-				redefining.simple_format (ctxt)
-				ctxt.indent_one_less;
-				ctxt.indent_one_less;
+				ctxt.set_space_between_tokens;
+				ctxt.format_ast (redefining)
+				ctxt.exdent;
+				ctxt.exdent;
 				end_to_print := true
 			end;
 			if selecting /= Void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.put_text_item (ti_Select_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.set_separator (ti_Comma);
-				ctxt.space_between_tokens;
-				selecting.simple_format (ctxt)
-				ctxt.indent_one_less;
-				ctxt.indent_one_less;
+				ctxt.set_space_between_tokens;
+				ctxt.format_ast (selecting)
+				ctxt.exdent;
+				ctxt.exdent;
 				end_to_print := true
 			end;
 			if end_to_print then
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.put_text_item (ti_End_keyword);
-				ctxt.indent_one_less
+				ctxt.exdent
 			end
-			ctxt.indent_one_less;
-			ctxt.commit
 		end;
 
 feature -- Merging

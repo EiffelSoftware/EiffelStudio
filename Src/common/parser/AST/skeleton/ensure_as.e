@@ -4,7 +4,7 @@ inherit
 
 	ASSERT_LIST_AS
 		redefine
-			clause_name, put_clause_keywords
+			simple_put_clause_keywords
 		end
 
 feature
@@ -15,18 +15,16 @@ feature
 			-- Do nothing
 		end;
 
-feature {}
+feature 
 	
-	clause_name (ctxt: FORMAT_CONTEXT): STRING is
-			-- "ensure"
-		do
-			Result := "ensure"
-		end;
-			
-	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
+	simple_put_clause_keywords (ctxt: FORMAT_CONTEXT) is
 			-- Append keyword "ensure".
 		do
-			ctxt.put_text_item (ti_Ensure_keyword)
+			ctxt.put_text_item (ti_Ensure_keyword);
+			if is_then then
+				ctxt.put_space;
+            	ctxt.put_text_item_without_tabs (ti_Then_keyword)
+			end
 		end;
 
 end -- class ENSURE_AS

@@ -3,9 +3,6 @@ class ALL_AS
 inherit
 
 	FEATURE_SET_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Initialization
 

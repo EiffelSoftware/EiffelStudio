@@ -9,9 +9,6 @@ class CLASS_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -148,44 +145,26 @@ feature -- Conveniences
 			suppliers := s
 		end;
 
-	set_comments (c: EIFFEL_FILE) is
-		do
-			if features /= Void and then c /= Void then
-				from
-					features.start
-				until
-					features.after
-				loop
-					features.item.set_comments (c)
-					features.forth
-				end
-			end
-		end;
-
 feature -- Simple formatting
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 		local
-			flat: FLAT_AST;
-			s: STRING;
+			c_name: STRING;
 		do
-			ctxt.put_text_item (ti_Before_class_declaration);
-			ctxt.begin;
+			c_name := class_name.string_value;
+			c_name.to_upper;
 			if indexes /= void and not indexes.empty then
-				ctxt.put_text_item (ti_Before_indexing);
 				ctxt.put_text_item (ti_Indexing_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
+				ctxt.set_new_line_between_tokens;
 				indexes.simple_format (ctxt);
-				ctxt.indent_one_less;
-				ctxt.next_line;
-				ctxt.next_line;
-				ctxt.put_text_item (ti_After_indexing);
+				ctxt.exdent;
+				ctxt.new_line;
+				ctxt.new_line;
 			end;
 
-			ctxt.put_text_item (ti_Before_class_header);
 			if is_expanded then
 				ctxt.put_text_item (ti_Expanded_keyword);
 				ctxt.put_space
@@ -194,87 +173,67 @@ feature -- Simple formatting
 				ctxt.put_space
 			end;
 			ctxt.put_text_item (ti_Class_keyword);
-			ctxt.indent_one_more;
-			ctxt.put_space
-			ctxt.put_name_of_class;
-			ctxt.put_text_item (ti_After_class_header);
+			ctxt.put_space;
+			ctxt.put_string (c_name);
 
 			if generics /= Void then
 				ctxt.put_space;
-				ctxt.put_text_item (ti_Before_formal_generics);
-				ctxt.put_text_item (ti_L_bracket);
-				ctxt.space_between_tokens;
+				ctxt.put_text_item_without_tabs (ti_L_bracket);
+				ctxt.set_space_between_tokens;
 				ctxt.set_separator (ti_Comma);
 				generics.simple_format (ctxt);
-				ctxt.put_text_item (ti_R_bracket);
-				ctxt.put_text_item (ti_After_formal_generics)
+				ctxt.put_text_item_without_tabs (ti_R_bracket);
 			end;
-			ctxt.indent_one_less;
-			ctxt.next_line;
-			ctxt.next_line;
+			ctxt.new_line;
 
 			if obsolete_message /= Void then
-				ctxt.put_text_item (ti_Before_obsolete);
+				ctxt.new_line;
 				ctxt.put_text_item (ti_Obsolete_keyword);
 				ctxt.put_space;
 				obsolete_message.simple_format (ctxt);
-				ctxt.put_text_item (ti_After_obsolete);
-				ctxt.next_line;
-				ctxt.next_line
+				ctxt.new_line;
 			end;
 
 			if parents /= Void then
-				ctxt.put_text_item (ti_Before_inheritance);
+				ctxt.new_line;
 				ctxt.put_text_item (ti_Inherit_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				ctxt.new_line_between_tokens;
+				ctxt.indent;
+				ctxt.new_line;
+				ctxt.set_new_line_between_tokens;
 				ctxt.set_separator (ti_Semi_colon);
 				parents.simple_format (ctxt);
-				ctxt.put_text_item (ti_After_inheritance);
-				ctxt.indent_one_less;
-				ctxt.next_line;
+				ctxt.new_line;
+				ctxt.exdent;
 			end;
+
+			ctxt.new_line;
 
 			if creators /= Void then
-				ctxt.next_line;
-				ctxt.put_text_item (ti_Before_creators);
-				ctxt.new_line_between_tokens;
-				ctxt.set_separator (Void);
 				creators.simple_format (ctxt);
-				ctxt.put_text_item (ti_After_creators);
-				ctxt.next_line;
+				ctxt.new_line;
 			end;
 
-			ctxt.begin;
-
 			if features /= Void then
-				ctxt.next_line
-				ctxt.set_separator (Void)
+				ctxt.set_new_line_between_tokens;
+				ctxt.set_separator (Void);
 				features.simple_format (ctxt)
+				ctxt.new_line;
 			end
 
 			if invariant_part /= Void then
-				ctxt.next_line
 				invariant_part.simple_format (ctxt)
 			end
 
-			ctxt.commit;
-			ctxt.next_line
-			ctxt.put_text_item (ti_Before_class_end);
 			ctxt.put_text_item (ti_End_keyword);
 
 			ctxt.put_space
-			ctxt.put_text_item (ti_Dashdash)
+			ctxt.put_text_item_without_tabs (ti_Dashdash)
 			ctxt.put_space
-			ctxt.put_text_item (ti_Class_keyword);
+			ctxt.put_text_item_without_tabs (ti_Class_keyword);
 
 			ctxt.put_space
-			ctxt.put_name_of_class
-			ctxt.put_text_item (ti_After_class_end);
-			ctxt.next_line;
-			ctxt.commit;
-			ctxt.put_text_item (ti_After_class_declaration)
+			ctxt.put_string (c_name)
+			ctxt.new_line
 		end;
  
 feature -- Equivalence

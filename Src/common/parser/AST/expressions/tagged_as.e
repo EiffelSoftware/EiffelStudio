@@ -9,9 +9,6 @@ class TAGGED_AS
 inherit
 
 	EXPR_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -45,15 +42,13 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
-			if tag /= void then
-				ctxt.put_string(tag);
-				ctxt.put_text_item (ti_Colon);
+			if tag /= Void then
+				ctxt.put_string (tag);
+				ctxt.put_text_item_without_tabs (ti_Colon);
 				ctxt.put_space
 			end;
 			ctxt.new_expression;
-			expr.simple_format (ctxt);
-			ctxt.commit;
+			ctxt.format_ast (expr);
 		end;
 
 feature {TAGGED_AS}	-- Replication

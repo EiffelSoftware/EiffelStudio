@@ -3,9 +3,6 @@ class CLIENT_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -69,11 +66,9 @@ feature -- Simple formatting
 		local
 			temp: STRING;
 		do
-			ctxt.begin;
 			ctxt.put_text_item (ti_L_curly);
 			ctxt.set_separator (ti_Comma);
-			ctxt.space_between_tokens;
-
+			ctxt.set_space_between_tokens;
 			if clients /= Void then
 				from
 					clients.start
@@ -85,14 +80,12 @@ feature -- Simple formatting
 					ctxt.put_string (temp)
 					clients.forth
 					if not clients.after then
-						ctxt.put_text_item (ti_Comma)
+						ctxt.put_text_item_without_tabs (ti_Comma)
 						ctxt.put_space
 					end
 				end
 			end
-
-			ctxt.put_text_item (ti_R_curly);
-			ctxt.commit
+			ctxt.put_text_item_without_tabs (ti_R_curly);
 		end;
 
 end -- class CLIENT_AS

@@ -9,9 +9,6 @@ class PARAN_AS
 inherit
 
 	EXPR_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -33,11 +30,9 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.put_text_item (ti_L_parenthesis);
-			expr.simple_format (ctxt);
-			ctxt.put_text_item (ti_R_parenthesis);
-			ctxt.commit;
+			ctxt.format_ast (expr);
+			ctxt.put_text_item_without_tabs (ti_R_parenthesis);
 		end;
 
 feature {PARAN_AS}	-- Replication

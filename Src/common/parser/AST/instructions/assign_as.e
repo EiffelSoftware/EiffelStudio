@@ -9,9 +9,6 @@ class ASSIGN_AS
 inherit
 
 	INSTRUCTION_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -70,16 +67,14 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconsitute text.
 		do
-			ctxt.begin;
 			ctxt.put_breakable;
 			ctxt.new_expression;
-			target.simple_format (ctxt);
+			ctxt.format_ast (target);
 			ctxt.put_space;
-			ctxt.put_text_item (assign_symbol);
+			ctxt.put_text_item_without_tabs (assign_symbol);
 			ctxt.put_space;
 			ctxt.new_expression;
-			source.simple_format (ctxt);
-			ctxt.commit;
+			ctxt.format_ast (source);
 		end;
 
 feature {ASSIGN_AS} -- Formatter

@@ -37,27 +37,19 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		local
-			dumped_class_name: STRING;
+			s: STRING;
 		do
-			dumped_class_name := clone (class_name)
-			dumped_class_name.to_upper;
+			s := clone (class_name)
+			s.to_upper;
 
-			ctxt.put_string (dumped_class_name)
+			ctxt.put_string (s)
 			if generics /= Void then
-				from
-					ctxt.put_space;
-					generics.start;
-					ctxt.put_text_item (ti_L_bracket)
-				until
-					generics.after
-				loop
-					generics.item.simple_format (ctxt)
-					if not generics.islast then
-						ctxt.put_string (", ");
-					end;
-					generics.forth;
-				end;
-				ctxt.put_text_item (ti_R_bracket)
+				ctxt.put_space;
+				ctxt.put_text_item_without_tabs (ti_L_bracket);
+				ctxt.set_space_between_tokens;
+				ctxt.set_separator (ti_Comma);
+				ctxt.format_ast (generics);
+				ctxt.put_text_item_without_tabs (ti_R_bracket);
 			end;
 		end;
 

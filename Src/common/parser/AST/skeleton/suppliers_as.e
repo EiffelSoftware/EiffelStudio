@@ -49,6 +49,13 @@ feature
 			-- Do nothing
 		end; -- set
 
+feature -- Output
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Do nothing.
+		do
+		end;
+
 feature {NONE} -- Externals
 
 	c_get_set_put (ptr: POINTER) is

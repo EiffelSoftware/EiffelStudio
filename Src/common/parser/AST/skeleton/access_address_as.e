@@ -30,14 +30,10 @@ feature
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.new_expression;
 			ctxt.prepare_for_feature (feature_name, void);
-			ctxt.put_text_item (ti_Dollar);
+			ctxt.put_text_item_without_tabs (ti_Dollar);
 			ctxt.put_current_feature;
-			--if ctxt.last_was_printed then
-				ctxt.commit;
-			--end
 		end;
 
 end -- class ACCESS_ADDRESS_AS

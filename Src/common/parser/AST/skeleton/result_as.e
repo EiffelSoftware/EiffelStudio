@@ -9,9 +9,6 @@ class RESULT_AS
 inherit
 
 	ACCESS_AS
-		redefine
-			simple_format
-		end;
 
 feature
 
@@ -31,10 +28,8 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.prepare_for_result;
-			ctxt.put_result;
-			ctxt.commit;
+			ctxt.put_text_item (ti_Result);
 		end;
 
 end -- class RESULT_AS

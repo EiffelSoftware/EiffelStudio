@@ -10,8 +10,7 @@ inherit
 
 	FEATURE_NAME
 		redefine
-			is_infix, is_valid, main_feature_format,
-			offset, simple_format
+			is_infix, is_valid, offset, simple_format
 		end
 
 feature -- Attributes
@@ -62,7 +61,6 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			if is_frozen then
 				ctxt.put_text_item (ti_Frozen_keyword);
 				ctxt.put_space
@@ -70,16 +68,17 @@ feature -- Simple formatting
 			if is_infix then
 				ctxt.put_text_item (ti_Infix_keyword);
 				ctxt.put_space;
-				ctxt.put_text_item (ti_Double_quote);
+				ctxt.put_text_item_without_tabs (ti_Double_quote);
 				ctxt.prepare_for_infix (internal_name, void);
+				ctxt.put_infix_feature
 			else
 				ctxt.put_text_item (ti_Prefix_keyword);
 				ctxt.put_space;
-				ctxt.put_text_item (ti_Double_quote);
+				ctxt.put_text_item_without_tabs (ti_Double_quote);
 				ctxt.prepare_for_prefix (internal_name);
+				ctxt.put_prefix_feature
 			end;
-			ctxt.put_text_item (ti_Double_quote);
-			ctxt.commit;
+			ctxt.put_text_item_without_tabs (ti_Double_quote);
 		end;
 
 feature
@@ -160,27 +159,6 @@ feature
 			Result implies not code_table.has (fix_operator.value);
 		end;
 
-	main_feature_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			if is_frozen then
-				ctxt.put_text_item (ti_Frozen_keyword);
-				ctxt.put_space
-			end;
-			if is_infix then
-				--ctxt.put_text_item (ti_Infix_keyword);
-				--ctxt.put_space;
-				ctxt.prepare_for_main_infix;
-			else
-				--ctxt.put_text_item (ti_Prefix_keyword);
-				--ctxt.put_space;
-				ctxt.prepare_for_main_prefix;
-			end;
-			ctxt.put_main_fix;
-			ctxt.commit;
-		end;
-	
 	offset: INTEGER is
 		do
 			if is_frozen then

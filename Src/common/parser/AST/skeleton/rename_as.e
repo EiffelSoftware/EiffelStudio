@@ -9,9 +9,6 @@ class RENAME_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -38,13 +35,11 @@ feature -- Simple formatting
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
-			old_name.simple_format (ctxt);
+			ctxt.format_ast (old_name);
 			ctxt.put_space;
-			ctxt.put_text_item (ti_As_keyword);
+			ctxt.put_text_item_without_tabs (ti_As_keyword);
 			ctxt.put_space;
-			new_name.simple_format (ctxt);
-			ctxt.commit
+			ctxt.format_ast (new_name);
 		end;
 
 feature -- Replication

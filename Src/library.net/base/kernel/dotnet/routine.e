@@ -118,10 +118,16 @@ feature -- Status report
 	valid_operands (args: OPEN_ARGS): BOOLEAN is
 			-- Are `args' valid operands for this routine?
 		do
-				-- True for the moment. If it is not valid then an
-				-- exception will be thrown by the .NET runtime during
-				-- feature call.
-			Result := True
+			if args = Void or open_map = Void then
+					-- Void operands are only allowed
+					-- if object has no open operands.
+				Result := (open_map = Void)
+			else
+					-- True for the moment. If it is not valid then an
+					-- exception will be thrown by the .NET runtime during
+					-- feature call.
+				Result := True
+			end
 		end
 
 feature -- Measurement
@@ -165,7 +171,8 @@ feature -- Element change
 				end
 			end
 		ensure
-			operands_set: equal (operands, args)
+			operands_set: (operands /= Void implies equal (operands, args)) or
+				(operands = Void implies (args = Void or else args.is_empty))
 		end
 
 feature -- Duplication

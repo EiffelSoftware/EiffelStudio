@@ -29,7 +29,7 @@ char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
 	char *result;
 
-	rt_init_retrieve(old_retrieve_read_with_compression, char_read, 0);
+	rt_init_retrieve(retrieve_read_with_compression, char_read, 0);
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
@@ -52,7 +52,7 @@ char *retrieve_all(EIF_INTEGER f_desc, long position)
 	 * position. */
 	char *result;
 
-	rt_init_retrieve(old_retrieve_read_with_compression, char_read, 0);
+	rt_init_retrieve(retrieve_read_with_compression, char_read, 0);
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;

@@ -18,7 +18,7 @@ struct token {
 #define MIN_HASH_VALUE 2
 #define MAX_HASH_VALUE 144
 /*
-   57 keywords
+   58 keywords
   143 is the maximum key range
 */
 
@@ -67,7 +67,7 @@ in_word_set (register char *str, register unsigned int len)
       8,  0,  0,  0,  2,  8,  0,  5,  6,  0,  3,  0,  0,  0,
       0,  0,  4,  5,  0,  2,  3,  4,  0,  0,  7,  8,  0,  5,
       0,  6,  8,  0,  5,  0,  2,  3,  4,  5,  6,  7,  8,  4,
-      0,  0,  7,  3,  8,  0,  6,  7,  8,  0,  0,  6,  7,  3,
+      9,  0,  7,  3,  8,  0,  6,  7,  8,  0,  0,  6,  7,  3,
       4,  0,  6,  0,  0,  0,  0,  6,  0,  3,  9,  0,  0,  7,
       0,  0,  0,  0,  0,  3,  0,  5,  0,  0,  0,  0,  0,  0,
       0,  0,  0,  0,  0,  0,  7,  0,  5,  0,  0,  0,  0,  0,
@@ -131,7 +131,8 @@ in_word_set (register char *str, register unsigned int len)
       {"inherit", 		TE_INHERIT},
       {"expanded", 		TE_EXPANDED},
       {"loop", 			TE_LOOP},
-      {"",}, {"",}, 
+      {"precursor", 		TE_PRECURSOR},
+      {"",}, 
       {"require", 		TE_REQUIRE},
       {"all", 			TE_ALL},
       {"creation", 		TE_CREATION},

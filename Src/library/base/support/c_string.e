@@ -50,6 +50,18 @@ feature --{NONE} -- Initialization
 	
 feature -- Access
 
+	substring (start_pos, end_pos: INTEGER): STRING is
+			-- Copy of substring containing all characters at indices
+			-- between `start_pos' and `end_pos'.
+		require
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_position_not_too_big: end_pos <= count
+		do
+			create Result.make (end_pos - start_pos + 1)
+			Result.from_c_substring (item, start_pos, end_pos)
+		end
+		
 	string: STRING is
 			-- Eiffel string
 		do

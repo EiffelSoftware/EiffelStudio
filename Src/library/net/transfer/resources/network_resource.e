@@ -73,9 +73,11 @@ feature -- Status report
 			end
 			mode := m
 		rescue
-			mode := m
-			failed := True
-			retry
+			if is_developer_exception then
+				mode := m
+				failed := True
+				retry
+			end
 		end
 	
 	is_writable: BOOLEAN is
@@ -105,9 +107,11 @@ feature -- Status report
 			end
 			mode := m
 		rescue
-			mode := m
-			failed := True
-			retry
+			if is_developer_exception then
+				mode := m
+				failed := True
+				retry
+			end
 		end
 	
 	is_packet_pending: BOOLEAN

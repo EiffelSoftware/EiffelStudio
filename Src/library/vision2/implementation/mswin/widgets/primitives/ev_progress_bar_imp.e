@@ -85,12 +85,6 @@ feature -- Access
 	leap: INTEGER
 			-- Leap value.
 
-	proportion: REAL is
-			-- Proportion of bar filled. Range: [0,1].
-		do
-			Result := (value - minimum) / (maximum - minimum)
-		end
-
 feature -- Status report
 
 	is_segmented: BOOLEAN is
@@ -152,12 +146,6 @@ feature -- Status setting
 		do
 			Precursor (a_step)
 			step := a_step
-		end
-
-	set_proportion (a_proportion: REAL) is
-			-- Display bar with `a_proportion' filled.
-		do
-			set_value ((minimum + a_proportion * (maximum - minimum)).truncated_to_integer)
 		end
 
 feature {NONE} -- Implementation
@@ -239,6 +227,9 @@ end -- class EV_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/13 18:18:54  brendel
+--| Removed proportion and set_proportion.
+--|
 --| Revision 1.14  2000/03/17 20:51:33  rogers
 --| renamed
 --| 	x -> x_position,

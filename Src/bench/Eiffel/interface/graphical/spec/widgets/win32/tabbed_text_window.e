@@ -27,8 +27,8 @@ inherit
 	SCROLLED_TEXT_WINDOW
 		undefine
 			make_word_wrapped, text_create,
-			consistent, create_ev_widget_ww, create_ev_widget,
-			copy, setup, set_tab_length
+			create_ev_widget_ww, create_ev_widget,
+			copy, set_tab_length
 		redefine
 			implementation
 		end

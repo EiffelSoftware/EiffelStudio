@@ -25,7 +25,7 @@ inherit
 
 	GRAPHICAL_VALUES
 		undefine
-			is_equal, consistent, copy, setup
+			is_equal, copy
 		end
 
 creation

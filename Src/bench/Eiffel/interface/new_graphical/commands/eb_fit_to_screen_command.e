@@ -31,7 +31,7 @@ feature -- Basic operations
 			wc := tool.world_cell
 			wc.fit_to_screen
 			new_scale_factor := l_world.scale_factor
-			new_scale := (new_scale_factor * 100).rounded
+			new_scale := (new_scale_factor * 100).rounded.max (1)
 			l_zoom_selector := tool.zoom_selector
 			l_zoom_selector.show_as_text (new_scale)
 			l_projector := tool.projector

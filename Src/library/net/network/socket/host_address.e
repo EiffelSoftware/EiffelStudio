@@ -85,8 +85,12 @@ feature -- Status_report
 
 	local_host_name: STRING is
 			-- Host name of the local machine
+		local
+			l_c_str: C_STRING
 		do
-			create Result.make_from_c (c_get_hostname)
+			create l_c_str.make_empty (256)
+			c_get_hostname (l_c_str.item, 256)
+			Result := l_c_str.string
 		end
 
 feature -- Status_setting
@@ -146,10 +150,10 @@ feature -- Duplication
 
 feature {NONE} -- External
 
-	c_get_hostname: POINTER is
+	c_get_hostname (buf: POINTER; nb: INTEGER) is
 			-- Get local hostname.
 		external
-			"C"
+			"C signature (char *, size_t)"
 		end;
 
 	in_addr_size: INTEGER is
@@ -205,9 +209,6 @@ feature {NONE} -- External
 		end
 
 end -- class HOST_ADDRESS
-
-
-
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.

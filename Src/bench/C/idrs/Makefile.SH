@@ -60,9 +60,6 @@ OBJECTS =  \$(LOBJ) \$(MT_LOBJ)
 ########################################################################
 # New suffixes and associated building rules -- edit with care
 
-.c.o:
-	\$(RM) \$@
-	\$(CC) -c \$(JCFLAGS) \$<
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
@@ -155,88 +152,88 @@ libmtidr.a: $(MT_LOBJ)
 	$(RANLIB) $@
 
 MTidr_double.o: idr_double.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_float.o: idr_float.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_array.o: idr_array.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_char.o: idr_char.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_getpos.o: idr_getpos.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_int.o: idr_int.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidrm_dstry.o: idrm_dstry.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidrm_creat.o: idrm_creat.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidrf_pos.o: idrf_pos.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidrf_dstry.o: idrf_dstry.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidrf_creat.o: idrf_creat.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_write.o: idr_write.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_void.o: idr_void.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_vector.o: idr_vector.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_ushort.o: idr_ushort.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_union.o: idr_union.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_ulong.o: idr_ulong.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_uint.o: idr_uint.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_uchar.o: idr_uchar.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_string.o: idr_string.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_stack.o: idr_stack.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_size.o: idr_size.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_short.o: idr_short.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_setpos.o: idr_setpos.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_read.o: idr_read.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_poly.o: idr_poly.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_opaque.o: idr_opaque.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 MTidr_long.o: idr_long.c
-	$(CC) -c 	$(JMTCFLAGS)  	$< -o $@
+	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
 
 LOBJ = \
 	idr_double.o \

@@ -268,14 +268,6 @@ feature -- Access
 			Result := eiffel_file_date_time (internal_file.get_last_write_time)
 		end
 
-	creation_date: INTEGER is
-			-- Time stamp for when the file was created
-		require
-			file_exists: exists
-		do
-			Result := eiffel_file_date_time (internal_file.get_creation_time)
-		end
-
 	access_date: INTEGER is
 			-- Time stamp of last access made to the inode.
 		require

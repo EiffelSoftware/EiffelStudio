@@ -28,8 +28,6 @@ feature {NONE}
 			-- Byte code smaller than `min_inlining_threshold' will be inlined
 			-- even if they are called several times
 
-	inlining_on: BOOLEAN;
-			-- In inlining on ?
 
 	processed_features: ARRAY [BOOLEAN];
 
@@ -44,7 +42,10 @@ feature -- Current inlined feature
 
 	inlined_feature: INLINED_FEAT_B
 
-feature
+feature  -- Status
+
+	inlining_on: BOOLEAN;
+			-- In inlining on ?
 
 	current_feature_inlined: BOOLEAN;
 
@@ -58,44 +59,89 @@ feature
 			current_feature_inlined := False
 		end
 
-feature
+feature -- Conversion
 
-	inline (body_id: BODY_ID): BOOLEAN is
+	bid_cid_table: EXTEND_TABLE [CLASS_ID, BODY_ID] is
+		once
+			Result := Depend_server.bid_cid_table
+		end
+
+feature -- Status
+
+	inline (type: TYPE_I; body_id: BODY_ID): BOOLEAN is
 			-- Can we inline `f' ?
+		require
+			is_inlining_enabled: inlining_on
 		local
 			body_id_id: INTEGER
 		do
-			Result := to_be_inlined.item (body_id.id)
+			body_id_id := body_id.id
+			if not processed_features.item (body_id_id) then
+				processed_features.put (True, body_id_id)
+				if can_be_inlined (type, body_id) then
+					to_be_inlined.put (True, body_id_id)
+					Result := True
+				end
+			else
+				Result := to_be_inlined.item (body_id_id)
+			end
 		end
 
-	process (f: FEATURE_I) is
-			-- Analyze `f' to see if it can be inlined
-		require
-			good_argument: f /= Void
+	can_be_inlined (type: TYPE_I; body_id: BODY_ID): BOOLEAN is
+			-- Tell us if we can inline the code corresponding to `body_id'
 		local
 			byte_code: BYTE_CODE;
-			body_id: BODY_ID;
-			body_id_id, size: INTEGER
+			body_id_id, size, i: INTEGER
+			type_i: TYPE_I	
+			types: ARRAY [TYPE_I]
+			wc: CLASS_C
 		do
-			if inlining_on then
-				body_id := f.body_id;
-				body_id_id := body_id.id
-				if not processed_features.item (body_id_id) then
-					processed_features.put (True, body_id_id)
-					if f.can_be_inlined then
-						byte_code := Byte_server.item (body_id)
-						size := byte_code.size
-						if size < min_inlining_threshold then
-							to_be_inlined.put (True, body_id_id);
-debug ("RECORD")
-	io.error.new_line;
-	io.error.putstring (f.written_class.name);
-	io.error.putstring (" ");
-	io.error.putstring (f.feature_name);
-	io.error.putstring (" can be inlined%N");
-end
-						end;
+ 			if byte_server.server_has (body_id) then
+ 				byte_code := Byte_server.disk_item (body_id)
+ 			end
+
+			if byte_code /= Void then
+				Result := (type = Void or else not (type.is_expanded or else type.is_bit))
+					and then (byte_code.rescue_clause = Void)
+
+				if Result then
+					types := byte_code.locals
+					if types /= Void then
+						from
+							i := types.count
+						until
+							i = 0 or else not Result
+						loop
+							type_i := types.item (i)
+							Result := not (type_i.is_expanded or else type_i.is_bit)
+							i := i - 1
+						end
 					end
+				end
+
+				if Result then
+					types := byte_code.arguments
+					if types /= Void then
+						from
+							i := types.count
+						until
+							i = 0 or else not Result
+						loop
+							type_i := types.item (i)
+							Result := not (type_i.is_expanded or else type_i.is_bit)
+							i := i - 1
+						end
+					end
+				end
+
+				if Result then
+					wc := System.class_of_id (bid_cid_table.item (body_id))
+					Result := not (wc.is_basic or else (wc.is_special
+							and then byte_code.feature_name.is_equal ("make_area")))
+				end
+
+				if Result then
+					Result := byte_code.size < min_inlining_threshold
 				end
 			end
 		end

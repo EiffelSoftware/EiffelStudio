@@ -61,17 +61,16 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	tar -c Eiffel52 | gzip -c > Eiffel52_free.tgz
 fi
 
-if [ -f build_deliv.tgz ]; then
-	remtrace copying EiffelBuild delivery
-	cd $INSTALL_DIR
-	gunzip -c $EXPORT_DIR/build_deliv.tgz | tar -xf -
-	cd $EXPORT_DIR
-fi
 remtrace Preparing Enterprise version
 cp -r commercial_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 gunzip -c $EXPORT_DIR/ecs/ec_enterprise.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+
+remtrace copying Build
+gunzip -c $EXPORT_DIR/build/build.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
+chmod a+rx $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
+chmod go-w $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build 
 
 remtrace Building Enterprise CD image
 mv Eiffel52 cdrom

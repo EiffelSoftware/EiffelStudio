@@ -8,9 +8,9 @@ feature
 
 	shared_include_queue: LINKED_QUEUE [STRING] is
 		once
-			!!Result.make;
-			Result.compare_objects;
-		end;
+			!! Result.make
+			Result.compare_objects
+		end
 
 end -- class SHARED_INCLUDE
 

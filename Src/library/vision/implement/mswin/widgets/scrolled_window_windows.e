@@ -65,10 +65,11 @@ inherit
 			on_menu_command,
 			on_draw_item
 		redefine
-			on_horizontal_scroll,
-			on_vertical_scroll,
 			class_name,
-			default_style
+			default_style,
+			horizontal_update,
+			vertical_update,
+			on_size
 		end
 
 	SIZEABLE_WINDOWS
@@ -78,7 +79,6 @@ creation
 	make
 
 feature {NONE} -- Initialization
-
 
 	make (a_scrolled_window: SCROLLED_W; man: BOOLEAN; oui_parent: COMPOSITE) is
 		do
@@ -93,6 +93,7 @@ feature {NONE} -- Initialization
 feature -- Status setting
 
 	realize_current is
+			-- Realize current widget.
 		local
 			wc: WEL_COMPOSITE_WINDOW
 		do
@@ -106,7 +107,7 @@ feature -- Status setting
 				debug ("SCROLLED_W")
 					print ("SCROLLED_WINDOW_WINDOWS.realize")
 				end
-				show_scroll_bars
+				set_scroll_range
 			end
 		end
 
@@ -130,7 +131,9 @@ feature -- Status setting
 					working_area.show
 				end
 			end
-			set_scroll_range
+			if exists then
+				set_scroll_range
+			end
 		end
 
 feature -- Element change
@@ -155,69 +158,94 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	on_size (hit_code, a_width, a_height: INTEGER) is
+			-- Respond to a size message.
+		do
+			set_scroll_range 
+			if scroller /= Void then
+				scroller.set_horizontal_line (client_rect.width // 4)
+				scroller.set_horizontal_page (client_rect.width)
+				scroller.set_vertical_line (client_rect.height // 4)
+				scroller.set_vertical_page (client_rect.height)
+			end
+		end
+	horizontal_update (inc, position: INTEGER) is
+			-- Respond to an horizontal update of the scroller.
+		local
+			cd: SCROLLING_DATA_WINDOWS
+		do
+			wel_set_horizontal_position (position)
+			working_area.set_x (- position)
+			!! cd.make (widget_oui, 0, position, False)
+			value_changed_actions.execute (Current, cd)
+		end
+
+	vertical_update (inc, position: INTEGER) is
+			-- Respond to a vertical update of the scroller.
+		local
+			cd: SCROLLING_DATA_WINDOWS
+		do
+			wel_set_vertical_position (position)
+			working_area.set_y (- position)
+			!! cd.make (widget_oui, 0, position, True)
+			value_changed_actions.execute (Current, cd)
+		end
+
 	set_default is
+			-- Set default values for current widget.
 		do
 			granularity := 1
 		end
 
 	set_scroll_range is
+			-- Set the correct scroll range.
+		require
+			exists: exists
+		local
+			local_horizontal_scroll_bar_shown: BOOLEAN
+			local_vertical_scroll_bar_shown: BOOLEAN
 		do
 			if working_area /= Void and then exists then
-                                if working_area.width > width then
+				if working_area.width > width then
+					local_horizontal_scroll_bar_shown := has_horizontal_scroll_bar
+					local_vertical_scroll_bar_shown := has_vertical_scroll_bar
 					show_horizontal_scroll_bar
 					set_horizontal_range (0, maximum_x)
+					if working_area.height > height -  horizontal_scroll_bar_arrow_height then
+						show_vertical_scroll_bar
+						set_vertical_range (0, maximum_y)
+						set_horizontal_range (0, (working_area.width - width + 2 + vertical_scroll_bar_arrow_width).max (1))
+					else
+						hide_vertical_scroll_bar
+						working_area.set_x_y (working_area.x, 0)
+						set_horizontal_range (0, (working_area.width - width + 2).max (1))
+						if local_vertical_scroll_bar_shown then
+							working_area.set_x_y (working_area.x + vertical_scroll_bar_arrow_width, working_area.y)
+						end
+					end			
 				else
 					hide_horizontal_scroll_bar
+					working_area.set_x_y (0, working_area.y)
+					if working_area.height > height then
+						show_vertical_scroll_bar
+						set_vertical_range (0, maximum_y)
+					else
+						hide_vertical_scroll_bar
+						working_area.set_x_y (working_area.x, 0)
+					end
 				end
-                                if working_area.height > height then
-					show_vertical_scroll_bar
-					set_vertical_range (0, maximum_y)
-				else
-					hide_vertical_scroll_bar
-				end
+			else
+				hide_horizontal_scroll_bar
+				hide_vertical_scroll_bar
 			end
-		end
-
-	on_vertical_scroll (scroll_code, a_position: INTEGER) is
-		local
-			position: INTEGER
-		do
-			if working_area /= Void then
-				position := working_area.x
-				if scroll_code = Sb_linedown or else scroll_code = Sb_lineright then
-					position := (position + granularity).min (maximum_x)
-				elseif  scroll_code = Sb_pagedown or else scroll_code = Sb_pageright then
-					position := (position + granularity * 10).min (maximum_x)
-				elseif  scroll_code = Sb_lineup or else scroll_code = Sb_lineleft then
-					position := (position - granularity).max (minimum_x)
-				elseif  scroll_code = Sb_pageup or else scroll_code = Sb_pageleft then
-					position := (position - granularity * 10).max (minimum_x)
-				elseif scroll_code = Sb_bottom or else scroll_code = Sb_right then
-					position := maximum_x
-				elseif scroll_code = Sb_top or else scroll_code = Sb_left then
-					position := minimum_x
-				elseif scroll_code = Sb_thumbposition then
-					position := a_position
-				elseif scroll_code = Sb_thumbtrack then
-					position := a_position
-					--- !! sc_data.make (widget_oui, position)
-					move_actions.execute (Current, Void)
-				end
-				working_area.set_x (position)
-			end
-			value_changed_actions.execute (Current, Void)
-		end
-
-	on_horizontal_scroll  (scroll_code, position: INTEGER) is
-		do
-			value_changed_actions.execute (Current, Void)
-			move_actions.execute (Current, Void)
 		end
 
 	child_has_resized is
 			-- A child has resized
 		do
-			set_scroll_range
+			if exists then
+				set_scroll_range
+			end
 		end
 
 	granularity: INTEGER
@@ -229,7 +257,11 @@ feature {NONE} -- Implementation
 		require
 			working_area_not_void: working_area /= Void
 		do
-			Result := (working_area.width - width).max (1)
+			if working_area.height > height then
+				Result := (working_area.width - width + 2 + vertical_scroll_bar_arrow_width).max (1)
+			else
+				Result := (working_area.width - width + 2).max (1)
+			end			
 		ensure
 			positive_result: Result > 0
 		end
@@ -242,7 +274,11 @@ feature {NONE} -- Implementation
 		require
 			working_area_not_void: working_area /= Void
 		do
-			Result := (working_area.height - height).max (1)
+			if working_area.width > width then
+				Result := (working_area.height - height + 2 + horizontal_scroll_bar_arrow_height).max (1)
+			else
+				Result := (working_area.height - height + 2).max (1)
+			end
 		ensure
 			positive_result: Result > 0
 		end

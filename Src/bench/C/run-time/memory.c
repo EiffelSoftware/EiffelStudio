@@ -230,8 +230,8 @@ rt_public long mem_info(long int field)
  * GC statistics.
  */
 #ifndef EIF_THREADS
-rt_private struct gacstat gc_stats; /* %%ss mt */
-rt_private long gc_count; /* %%ss mt */
+rt_private struct gacstat gc_stats;
+rt_private long gc_count;
 #endif /* EIF_THREADS */
 
 rt_public void gc_mon(char flag)

@@ -52,19 +52,19 @@ rt_public Signal_t (*esig[NSIG])(int);	/* Array of signal handlers */
  * record the original signal status to know whether by default a signal is
  * ignored or not.
  */
-rt_public char sig_ign[NSIG];			/* Is signal ignored by default? */ /* %%ss mt should be private */
-rt_public char osig_ign[NSIG];			/* Original signal default (1 = ignored) */ /* %%ss mt should be private */
+rt_public char sig_ign[NSIG];			/* Is signal ignored by default? */
+rt_public char osig_ign[NSIG];		/* Original signal default (1 = ignored) */
 
 /* Global signal handler status. If set to 0, then signal handler is activated
  * an normal processing occurs. Otherwise, signals are queued if they are not
  * ignored, for later processing.
  */
-rt_shared int esigblk = 0;				/* By default, signals are not blocked */ /* %%ss mt */
+rt_shared int esigblk = 0;			/* By default, signals are not blocked */
 
 /* The FIFO stack (circular buffer) used to record arrived signals while
  * esigblk was set (for instance, while in the garbage collector).
  */
-rt_shared struct s_stack sig_stk;		/* Initialized by initsig() */ /* %%ss mt */
+rt_shared struct s_stack sig_stk;		/* Initialized by initsig() */
 
 #endif /* EIF_THREADS */
 

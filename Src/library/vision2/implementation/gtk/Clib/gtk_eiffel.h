@@ -65,6 +65,12 @@ void c_gtk_signal_disconnect (GtkObject *widget,
 			      EIF_OBJ object,
 			      EIF_OBJ argument);
 
+/********************************
+ *
+ * Some routines for widgets
+ *
+ ********************************/
+
 /* True, if widget is destroyed */
 int c_gtk_widget_destroyed (GtkWidget *widget);
 
@@ -114,15 +120,23 @@ EIF_INTEGER c_gtk_widget_minimum_width (GtkWidget *w);
 */
 EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *w); 
 
-/* Widget:
-   set size */
+/* set size */
 void c_gtk_widget_set_size (GtkWidget *widget, int width, int height);
 
+/* return widget name */
+EIF_REFERENCE c_gtk_widget_get_name (GtkWidget *widget);
+
+/* set widget name */
+void c_gtk_widget_set_name (GtkWidget *widget, const gchar *name);
+
+/********************************
+ *
+ * Some routines for toolbar
+ *
+ ********************************/
 
 /* Call back for toolbar buttons */
 void c_toolbar_callback (GtkObject *w, gpointer data);
-
-
 
 /* Call back for buttons on a tool bar */
 void c_gtk_toolbar_append_item (GtkToolbar *toolbar, 
@@ -133,14 +147,11 @@ void c_gtk_toolbar_append_item (GtkToolbar *toolbar,
 				EIF_PROC func, EIF_OBJ object,
 				callback_data_t **p);
 
-				/* return widget name */
-EIF_REFERENCE c_gtk_widget_get_name (GtkWidget *widget);
-				/* set widget name */
-void c_gtk_widget_set_name (GtkWidget *widget, const gchar *name);
-
-
-				/* message dialog */
-
+/********************************
+ *
+ * Some routines for message dialog
+ *
+ ********************************/
 
 				/* Create message dialog buttons */
 void c_gtk_create_message_d_buttons (GtkWidget *dialog, GtkWidget *ok,
@@ -150,6 +161,11 @@ void c_gtk_create_message_d_buttons (GtkWidget *dialog, GtkWidget *ok,
 				/* Message dialog text */
 void c_gtk_create_message_d_label (GtkWidget *dialog, GtkWidget *label);
 
+/********************************
+ *
+ * Some routines for buttons
+ *
+ ********************************/
 
 /* 
    out: label_widget pointer to buttons label widget
@@ -166,8 +182,14 @@ void c_gtk_create_message_d_label (GtkWidget *dialog, GtkWidget *label);
 */
 GtkWidget* c_gtk_get_label_widget (GtkWidget *widget);
 
+/* Return a state of a toggle button */
+EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button);
 
-				/* Text */
+/********************************
+ *
+ * Some routines for text
+ *
+ ********************************/
 
 /* The length of the string in text widget */
 int c_gtk_get_text_length (GtkWidget* text);
@@ -175,16 +197,20 @@ int c_gtk_get_text_length (GtkWidget* text);
 /* The maximum length of string in text widget */
 int c_gtk_get_text_max_length (GtkWidget* text);
 
-
-				/* Container widgets (all widgets) */
+/********************************
+ *
+ * Some routines for containers
+ *
+ ********************************/
 
 /* Show the children of widget recursively */
 void c_gtk_widget_show_children (GtkWidget *widget);
 
-
-/* Return a state of a toggle button */
-EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button);
-
+/********************************
+ *
+ * Some routines for pixmaps
+ *
+ ********************************/
 
 /* Create an empty pixmap */
 GtkWidget* c_gtk_pixmap_create_empty  (GtkWidget *widget);
@@ -197,10 +223,62 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
 				  GtkWidget *pixmap_parent,
 				  char *file_name );
 
+/********************************
+ *
+ * Some routines for lists
+ *
+ ********************************/
+
 /* List : add a listItem to a list */
 void c_gtk_add_list_item (GtkWidget *list, GtkWidget *item);
+void c_gtk_list_item_select (GtkWidget *item);
+void c_gtk_list_item_unselect (GtkWidget *item);
 
+/********************************
+ *
+ * Some routines for tables
+ *
+ ********************************/
 
 /* Routines to get and set the number of rows and columns of a table. */
 EIF_INTEGER c_gtk_table_rows        (GtkWidget *widget            );
 EIF_INTEGER c_gtk_table_columns     (GtkWidget *widget            );
+
+/********************************
+ *
+ * Some routines for trees
+ *
+ ********************************/
+
+/* Routine to know if a tree item is expanded */
+EIF_BOOLEAN c_gtk_tree_item_expanded (GtkWidget *widget);
+
+/********************************
+ *
+ * Some routines for text area
+ *
+ ********************************/
+
+/* Insert a text in a text-area widget. */
+void c_gtk_text_insert (GtkWidget *widget, const char *txt);
+
+/********************************
+ *
+ * Some routines for boxes
+ *
+ ********************************/
+
+/* Set the options of a child in a box */
+void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
+				  gint expand, gint fill);
+
+
+/********************************
+ *
+ * Some routines for windows
+ *
+ ********************************/
+
+/* Give the position of a window. */
+EIF_INTEGER c_gtk_window_x (GtkWidget *w);
+EIF_INTEGER c_gtk_window_y (GtkWidget *w);

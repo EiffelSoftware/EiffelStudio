@@ -1,0 +1,120 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.017">
+		
+<TITLE>MEMORY Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../reference/kernel/index.html">base.kernel</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">"Facilities for tuning up the garbage collection mechanism. %</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">&nbsp;&nbsp;&nbsp;his class may be used as ancestor by classes needing its facilities."</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/mem_const_chart.html">MEM_CONST</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`c_memory' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../reference/kernel/mem_const.html#f_c_memory">C_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`chunk_size' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_chunk_size">chunk_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`coalesce_period' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_coalesce_period">coalesce_period</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`collecting' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_collecting">collecting</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`collection_period' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_collection_period">collection_period</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`eiffel_memory' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../reference/kernel/mem_const.html#f_eiffel_memory">Eiffel_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`full_collector' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../reference/kernel/mem_const.html#f_full_collector">Full_collector</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`gc_statistics' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_gc_statistics">gc_statistics</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">collector_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/gc_info_chart.html">GC_INFO</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`generation_object_limit' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_generation_object_limit">generation_object_limit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`incremental_collector' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../reference/kernel/mem_const.html#f_incremental_collector">Incremental_collector</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`largest_coalesced_block' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_largest_coalesced_block">largest_coalesced_block</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`max_mem' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_max_mem">max_mem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`memory_statistics' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_memory_statistics">memory_statistics</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">memory_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/mem_info_chart.html">MEM_INFO</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`memory_threshold' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_memory_threshold">memory_threshold</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`referers' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_referers">referers</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`scavenge_zone_size' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_scavenge_zone_size">scavenge_zone_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`tenure' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_tenure">tenure</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`total_memory' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../reference/kernel/mem_const.html#f_total_memory">Total_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`allocate_compact' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_allocate_compact">allocate_compact</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`allocate_fast' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_allocate_fast">allocate_fast</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`allocate_tiny' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_allocate_tiny">allocate_tiny</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`collect' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_collect">collect</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`collection_off' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_collection_off">collection_off</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`collection_on' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_collection_on">collection_on</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`disable_time_accounting' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_disable_time_accounting">disable_time_accounting</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dispose' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_dispose">dispose</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_time_accounting' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_enable_time_accounting">enable_time_accounting</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`free' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_free">free</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`full_coalesce' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_full_coalesce">full_coalesce</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`full_collect' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_full_collect">full_collect</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`mem_free' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_mem_free">mem_free</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">addr</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_coalesce_period' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_set_coalesce_period">set_coalesce_period</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_collection_period' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_set_collection_period">set_collection_period</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_max_mem' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_set_max_mem">set_max_mem</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_memory_threshold' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_set_memory_threshold">set_memory_threshold</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<BR>
+
+<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
+</BODY>
+
+</HTML>

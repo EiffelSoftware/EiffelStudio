@@ -29,11 +29,8 @@ feature -- Create
 		local
 			l_text,
 			l_product: STRING
-			l_file: PLAIN_TEXT_FILE
-		do
-			create l_file.make_open_read (header_xml_template_file_name)
-			l_file.readstream (l_file.count)
-			l_text := l_file.last_string						
+		do			
+			l_text := file_text.twin
 			l_product := (create {SHARED_OBJECTS}).shared_project.filter_manager.filter.description
 			if l_product.is_equal ((create {OUTPUT_CONSTANTS}).unfiltered) then
 				l_product.wipe_out
@@ -46,5 +43,16 @@ feature -- Create
 		ensure
 			generation_successful: not text.is_empty
 		end
+
+	file_text: STRING is
+			-- The text of the file
+		local
+			l_file: PLAIN_TEXT_FILE
+		once
+			create l_file.make_open_read (header_xml_template_file_name)
+			l_file.readstream (l_file.count)
+			Result := l_file.last_string.twin
+			l_file.close
+		end		
 
 end -- class DOCUMENT_HEADER

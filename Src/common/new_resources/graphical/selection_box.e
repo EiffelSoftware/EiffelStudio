@@ -7,6 +7,9 @@ indexing
 deferred class
 	SELECTION_BOX
 
+inherit
+	RESOURCE_OBSERVATION_MANAGER
+
 feature -- Initialization
 
 	make(h: EV_HORIZONTAL_BOX; new_caller: PREFERENCE_WINDOW) is
@@ -49,6 +52,13 @@ feature -- Implementation
 
 	caller: PREFERENCE_WINDOW
 		-- Caller
+
+	update_resource is
+		do
+			if observer_manager.get_data_observer (resource) /= Void then
+				observer_manager.update_observer (resource)
+			end
+		end
 
 invariant
 	SELECTION_BOX_parent_exists: parent /= Void

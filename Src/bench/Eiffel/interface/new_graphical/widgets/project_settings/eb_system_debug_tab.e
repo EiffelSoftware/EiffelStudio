@@ -110,15 +110,12 @@ feature -- Store/Retrieve
 			defaults.extend (new_special_option_sd (
 				feature {FREE_OPTION_SD}.line_generation, Void, line_generation.is_selected))
 
-			if Has_profiler and then profile_check.is_sensitive then
+			if Has_profiler then
 				defaults.extend (new_special_option_sd (
 					feature {FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
 			end
 
-			if trace_check.is_sensitive then
-				defaults.extend (new_trace_option_sd (trace_check.is_selected))
-			end
-			
+			defaults.extend (new_trace_option_sd (trace_check.is_selected))
 		end
 
 	retrieve (root_ast: ACE_SD) is

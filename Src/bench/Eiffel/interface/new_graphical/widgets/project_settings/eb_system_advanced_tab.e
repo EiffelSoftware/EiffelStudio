@@ -124,47 +124,33 @@ feature -- Store/Retrieve
 			defaults.extend (new_special_option_sd (
 				feature {FREE_OPTION_SD}.syntax_warning, Void, syntax_warning_check.is_selected))
 
-			if address_expression_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.address_expression,
-					Void, address_expression_check.is_selected))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.address_expression,
+				Void, address_expression_check.is_selected))
+
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.array_optimization,
+				Void, array_optimization_check.is_selected))
+
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Dead_code, Void,
+				dead_code_removal_check.is_selected))
+
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.dynamic_runtime,
+				Void, dynamic_rt_check.is_selected))
+
+			defaults.extend (new_special_option_sd (
+				feature {FREE_OPTION_SD}.Exception_stack_managed, Void,
+				exception_trace_check.is_selected))
+
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.inlining, Void,
+				inlining_check.is_selected))
+			if inlining_check.is_selected then
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.inlining_size,
+					inlining_size_field.text, True))
 			end
 
-			if array_optimization_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.array_optimization,
-					Void, array_optimization_check.is_selected))
-			end
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.multithreaded,
+				Void, mt_runtime_check.is_selected))
 
-			if dead_code_removal_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Dead_code, Void,
-					dead_code_removal_check.is_selected))
-			end
-
-			if dynamic_rt_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.dynamic_runtime,
-					Void, dynamic_rt_check.is_selected))
-			end
-
-			if exception_trace_check.is_sensitive then
-				defaults.extend (new_special_option_sd (
-					feature {FREE_OPTION_SD}.Exception_stack_managed, Void,
-					exception_trace_check.is_selected))
-			end
-
-			if inlining_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.inlining, Void,
-					inlining_check.is_selected))
-				if inlining_check.is_selected then
-					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.inlining_size,
-						inlining_size_field.text, True))
-				end
-			end
-
-			if mt_runtime_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.multithreaded,
-					Void, mt_runtime_check.is_selected))
-			end
-
-			if shared_library_check.is_sensitive and then shared_library_check.is_selected then
+			if shared_library_check.is_selected then
 				l_name := shared_library_field.text
 				if not l_name.is_empty then
 					defaults.extend (new_special_option_sd (

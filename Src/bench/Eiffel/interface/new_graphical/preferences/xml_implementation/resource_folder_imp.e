@@ -14,11 +14,15 @@ create
 feature -- Initialization
 
 	make (doc: XML_ELEMENT; struct: like structure) is
+			-- Initialization of Current, belonging to `struct',
+			-- according to `doc'.
 		do
 			make_default (doc, struct)
 		end
 
 	make_root (file_name: FILE_NAME; struct: RESOURCE_STRUCTURE) is
+			-- Create Current (as a root folder of `struct')
+			-- taking data from `file_name'.
 		do
 			make_default_root (file_name, struct)
 		end
@@ -26,6 +30,7 @@ feature -- Initialization
 feature -- Update
 
 	update_root (file_name: FILE_NAME) is
+			-- Update information with data from `file_name'.
 		local
 			file: RAW_FILE
 			s: STRING
@@ -60,6 +65,7 @@ feature -- Update
 		end
 
 	update_attributes (doc: XML_ELEMENT) is
+			-- Update Current, according to `doc'.
 		local
 			res_xml: XML_RESOURCE
 			resource: RESOURCE
@@ -109,6 +115,8 @@ feature -- Update
 feature -- Saving
 
 	root_save (location: FILE_NAME) is
+			-- Save folder in `location' as a root folder.
+			-- Used as a part of `save' from RESOURCE_STRUCTURE_I
 		local
 			file: RAW_FILE
 			s: STRING
@@ -125,6 +133,15 @@ feature -- Saving
 				loop
 					s.append (l.item.xml_trace (""))
 					l.forth
+				end
+				from
+					resource_list.start
+				until
+					resource_list.after
+				loop
+					Result.append (resource_list.item.xml_trace)
+					Result.extend ('%N')
+					resource_list.forth
 				end
 				s.append ("</EIFFEL_DOCUMENT>%N")
 				file.put_string (s)

@@ -45,7 +45,24 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-
+	pointer_double_press_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
+			-- Actions to be performed when a double press event is received by a grid.
+			-- Arguments (with names for clarity):
+			
+			-- x_pos: INTEGER		The x position of the motion relative to the left edge of the viewable
+			--						area of the grid. 
+			-- y_pos: INTEGER		The y position of the motion relative to the top of the viewable
+			--						area of the grid.
+			-- a_button: INTEGER	The index of the pressed button.
+			--
+			-- item: EV_GRID_ITEM	If the motion occurred above an item, this is the pointed item, otherwise
+			--						this argument is set to `Void'.
+		do
+			Result := implementation.pointer_double_press_actions
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 end
 
 --|----------------------------------------------------------------

@@ -5,7 +5,7 @@ inherit
 	PLAIN_TEXT_FILE;
 	SHARED_RESCUE_STATUS
 
-creation
+create
 
 	make
 

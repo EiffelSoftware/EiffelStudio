@@ -6,7 +6,7 @@ indexing
 class
 	SEARCH_TABLE [H -> HASHABLE]
 
-creation
+create
 	make
 
 feature -- Creation

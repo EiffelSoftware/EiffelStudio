@@ -1034,7 +1034,7 @@ feature {NONE} -- Externals
 	cwel_enum_child_windows_procedure (cur_obj: POINTER; callback: POINTER; hwnd: POINTER) is
 			-- SDK EnumChildWindows
 		external
-			"C | %"wel_enum_child_windows.h%""
+			"C signature (EIF_REFERENCE, EIF_POINTER, HWND) use %"wel_enum_child_windows.h%""
 		end
 		
 	cwin_set_menu (hwnd, hmenu: POINTER) is

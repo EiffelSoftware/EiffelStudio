@@ -88,9 +88,10 @@ feature -- Output
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Fill where with the calls stack
-			-- where is left empty if there is an error
+	make (n: INTEGER) is
+			-- Fill `where' with the `n' first call stack elements.
+			-- `where' is left empty if there is an error.
+			-- Retrieve the whole call stack if `n' = -1.
 		local
 			call	: CALL_STACK_ELEMENT
 			level	: INTEGER
@@ -100,7 +101,7 @@ feature {NONE} -- Initialization
 			list_make
 	
 			from
-				request_dump
+				request_dump (n)
 				level := 1			-- we start from the top of the call stack.
 				create call.make(level)
 			until
@@ -140,7 +141,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Externals
 
-	request_dump is
+	request_dump (n: INTEGER) is
 		external 
 			"C"
 		end

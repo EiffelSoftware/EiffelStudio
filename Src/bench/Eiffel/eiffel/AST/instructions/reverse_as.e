@@ -40,33 +40,51 @@ feature -- Access
 			context.pop (1)
 			target_type := context.item
 			
-			if not System.il_generation then
-				if target_type.is_expanded then
+			if target_type.is_expanded then
+				if not System.il_generation then
 					create vjrv1
 					context.init_error (vjrv1)
 					vjrv1.set_target_name (target.access_name)
 					vjrv1.set_target_type (target_type)
 					Error_handler.insert_error (vjrv1)
-				elseif target_type.is_formal then
-					l_formal ?= target_type
-					check
-						l_formal_not_void: l_formal /= Void
-					end
-					if not l_formal.is_reference then
-						create vjrv2
-						context.init_error (vjrv2)
-						vjrv2.set_target_name (target.access_name)
-						vjrv2.set_target_type (target_type)
-						Error_handler.insert_error (vjrv2)
-					end
-				else
-						-- Special case `t ?= exp' where we convert
+				end
+			elseif target_type.is_formal then
+				l_formal ?= target_type
+				check
+					l_formal_not_void: l_formal /= Void
+				end
+				if not l_formal.is_reference and not system.il_generation then
+					create vjrv2
+					context.init_error (vjrv2)
+					vjrv2.set_target_name (target.access_name)
+					vjrv2.set_target_type (target_type)
+					Error_handler.insert_error (vjrv2)
+				end
+			else
+					-- Target is a reference, but source is not.
+				if source_type.is_expanded then
+						-- Special case `ref ?= exp' where we convert
 						-- `exp' to its associated reference before
 						-- doing the assignment.
 					if
-						source_type.is_expanded and then
 						source_type.convert_to (context.current_class,
 							source_type.reference_actual_type)
+					then
+						conversion_info := context.last_conversion_info
+						if conversion_info.has_depend_unit then
+							context.supplier_ids.extend (conversion_info.depend_unit)
+						end
+					end
+				elseif source_type.is_formal then
+						-- Special case `ref ?= formal' where we force 
+						-- a conversion of the formal to its associated reference
+						-- type when `formal' will be instantiated as an expanded
+						-- type. Then after the conversion we perform the normal
+						-- assignment attempt to the target which is a reference.
+					l_formal ?= source_type
+					if
+						source_type.convert_to (context.current_class,
+							context.current_class.constraint (l_formal.position))
 					then
 						conversion_info := context.last_conversion_info
 						if conversion_info.has_depend_unit then

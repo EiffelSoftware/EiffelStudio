@@ -17,7 +17,7 @@ inherit
 	
 	EV_BAR_ITEM_IMP
 		undefine
-			initialize_colors
+			build
 		end	
                 
 creation
@@ -52,6 +52,13 @@ feature -- Access
 
 feature -- Status setting
 	
+	set_editable (flag: BOOLEAN) is
+			-- `flag' true make the component read-write and
+			-- `flag' false make the component read-only.
+		do
+			gtk_entry_set_editable (widget, flag)
+		end
+
 	set_text (txt: STRING) is
 		local
 			a: ANY

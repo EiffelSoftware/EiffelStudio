@@ -26,8 +26,8 @@ create {LACE_I}
 feature {NONE} -- Initialization
 
 	initialize (sn: like system_name; r: like root;
-		d: like defaults; c: like clusters; e: like externals;
-		cl: like click_list) is
+		d: like defaults; c: like clusters; a: like assemblies;
+		e: like externals; cl: like click_list) is
 			-- Create a new ACE AST node.
 		require
 			sn_not_void: sn /= Void
@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			root_set: root = r
 			defaults_set: defaults = d
 			clusters_set: clusters = c
+			assemblies_set: assemblies = a
 			externals_set: externals = e
 			click_list_set: click_list = cl
 		end
@@ -62,6 +63,9 @@ feature -- Properties
 
 	clusters: LACE_LIST [CLUSTER_SD];
 			-- Description of cluster clauses
+			
+	assemblies: LACE_LIST [ASSEMBLY_SD]
+			-- Description of assemblies
 
 	externals: LACE_LIST [LANG_TRIB_SD];
 			-- Description of extenal clauses
@@ -112,8 +116,18 @@ feature -- Setting
 			clusters_set: clusters = cl
 		end
 
+	set_assemblies (a: like assemblies) is
+			-- Set `assemblies' with `a'.
+		require
+			a_not_void: a /= Void
+		do
+			assemblies := a
+		ensure
+			assemblies_set: assemblies = a
+		end
+
 	set_externals (e: like externals) is
-			-- Set `externals' with `r'.
+			-- Set `externals' with `e'.
 		require
 			e_not_void: e /= Void
 		do
@@ -128,7 +142,9 @@ feature -- Duplication
 			-- Duplicate current object
 		do
 			create Result.initialize (system_name.duplicate, root.duplicate,
-				duplicate_ast (defaults), duplicate_ast (clusters), duplicate_ast (externals), click_list)
+				duplicate_ast (defaults), duplicate_ast (clusters),
+				duplicate_ast (assemblies), duplicate_ast (externals),
+				click_list)
 			Result.set_comment_list (comment_list)
 		end
 
@@ -141,6 +157,7 @@ feature -- Comparison
 					and then root.same_as (other.root)
 					and then same_ast (defaults, other.defaults)
 					and then same_ast (clusters, other.clusters)
+					and then same_ast (assemblies, other.assemblies)
 					and then same_ast (externals, other.externals)
 		end
 
@@ -197,6 +214,14 @@ feature -- Saving
 			end
 			st.exdent
 
+			if assemblies /= Void then
+				st.putstring ("assembly")
+				st.new_line
+				st.indent
+				assemblies.save_with_new_line (st)
+				st.exdent
+			end
+			
 			if externals /= Void then
 				st.putstring ("external")
 				st.new_line

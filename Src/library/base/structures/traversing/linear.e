@@ -285,6 +285,8 @@ feature -- Iteration
 			if cs /= Void then
 				cs.go_to (c)
 			end
+		ensure
+			empty: is_empty implies Result
 		end
 
 feature -- Conversion

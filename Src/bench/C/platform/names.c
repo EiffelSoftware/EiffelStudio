@@ -44,7 +44,7 @@ rt_public EIF_REFERENCE eif_exec_suffix ()
 rt_public EIF_REFERENCE eif_finish_freezing ()
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
-	return RTMS ("es3sh");
+	return RTMS ("es4sh");
 #else
 	return RTMS ("finish_freezing");
 #endif

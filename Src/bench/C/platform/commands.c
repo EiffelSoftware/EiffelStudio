@@ -71,13 +71,13 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 	current_dir = (char *) getcwd(NULL, PATH_MAX);
 	chdir(eif_access(c_code_dir));
 
-	eiffel_dir = (char *) eif_getenv("EIFFEL3");
+	eiffel_dir = (char *) eif_getenv("EIFFEL4");
 	cmd = cmalloc (45 + strlen (eiffel_dir));
 	if (cmd == (char *)0)
 		enomem();
 	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);
 	strcat (cmd, eif_getenv("PLATFORM"));
-	strcat (cmd, "\\bin\\es3sh.exe");
+	strcat (cmd, "\\bin\\es4sh.exe");
 
 #ifdef EIF_WIN32
 	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
@@ -116,13 +116,13 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 	current_dir = getcwd(NULL, PATH_MAX);
 	chdir(eif_access(c_code_dir));
 
-	eiffel_dir = (char *) eif_getenv("EIFFEL3");
+	eiffel_dir = (char *) eif_getenv("EIFFEL4");
 	cmd = cmalloc (45 + strlen (eiffel_dir));
 	if (cmd == (char *)0)
 		enomem();
 	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);
 	strcat (cmd, eif_getenv("PLATFORM"));
-    strcat (cmd, "\\bin\\es3sh.exe");
+    strcat (cmd, "\\bin\\es4sh.exe");
     rc = DosExecPgm(LoadError,           /* Object name buffer           */
                     sizeof(LoadError),   /* Length of object name buffer */
 					EXEC_ASYNC, 		  /* Asynchronous/Trace flags	  */
@@ -220,7 +220,7 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 
 		/* Link */
 
-	eiffel_dir = (char *) eif_getenv("EIFFEL3");
+	eiffel_dir = (char *) eif_getenv("EIFFEL4");
 	src = cmalloc(strlen(eif_access(driver_name))+1);
 	if (src == (char *)0)
 		enomem();
@@ -272,7 +272,7 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 
 		/* Link */
 
-	eiffel_dir = (char *) eif_getenv("EIFFEL3");
+	eiffel_dir = (char *) eif_getenv("EIFFEL4");
 	src = cmalloc(38 + strlen (eiffel_dir));
 	if (src == (char *)0)
 		enomem();

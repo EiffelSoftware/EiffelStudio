@@ -120,7 +120,7 @@ feature -- Basic operations
 			file.close
 		end
 		
-feature {GB_COMPONENT_SELECTOR_ITEM} -- Implementation
+feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT} -- Implementation
 
 	xml_element_representing_named_component (a_name: STRING): XML_ELEMENT is
 			-- `Result' is the element representing component `a_name' in

@@ -10,6 +10,9 @@ class RESULT_AS
 inherit
 
 	ACCESS_AS
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -25,6 +28,14 @@ feature -- Properties
 		once
 			Result := "Result"
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := True
+		end
 
 feature {AST_EIFFEL} -- Output
 

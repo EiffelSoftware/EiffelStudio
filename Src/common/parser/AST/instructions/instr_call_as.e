@@ -28,26 +28,11 @@ feature -- Properties
 
 feature -- Comparison
 
-	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
-			-- Is `other' instruction equivalent to Current?
-		local
-			instr_call_as: INSTR_CALL_AS
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
 		do
-			instr_call_as ?= other
-			if instr_call_as /= Void then
-				-- May be equivalent
-				Result := equiv (instr_call_as)
-			else
-				-- NOT equivalent
-				Result := False
-			end
-		end;
-
-	equiv (other: like Current): BOOLEAN is
-			-- Is `other' instr_call_as equivalent to Current?
-		do
-			Result := deep_equal (call, other.call)
-		end;
+			Result := equivalent (call, other.call)
+		end
 
 feature {AST_EIFFEL} -- Output
 

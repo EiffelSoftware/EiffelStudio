@@ -7,6 +7,14 @@ inherit
 			generate, is_real
 		end
 	
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := real_val.is_equal (other.real_val)
+		end
+
 feature 
 
 	real_val: STRING;

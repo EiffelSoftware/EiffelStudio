@@ -11,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			is_feature_obj, number_of_stop_points
+			is_feature_obj, number_of_stop_points, is_equivalent
 		end;
 	COMPARABLE
 		undefine
@@ -66,6 +66,16 @@ feature -- Access
 		do
 			Result := True
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+-- FIXME: see is_equiv
+			Result := equivalent (body, other.body) and
+				equivalent (feature_names, other.feature_names)
+		end
 
 feature -- Access
 

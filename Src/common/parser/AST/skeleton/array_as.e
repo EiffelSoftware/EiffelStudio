@@ -10,6 +10,9 @@ class ARRAY_AS
 inherit
 
 	ATOMIC_AS
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -18,7 +21,7 @@ feature {NONE} -- Initialization
 		do
 			expressions ?= yacc_arg (0);
 			if expressions = Void then
-				-- Create empty list
+					-- Create empty list
 				!!expressions.make (0)
 			end
 		ensure then
@@ -29,6 +32,14 @@ feature -- Properties
 
 	expressions: EIFFEL_LIST [EXPR_AS];
 			-- Expression list symbolizing the manifest array
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (expressions, other.expressions)
+		end
 
 feature {AST_EIFFEL} -- Output
 

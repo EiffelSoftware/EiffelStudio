@@ -10,6 +10,9 @@ class REAL_AS
 inherit
 
 	ATOMIC_AS
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initilization
 
@@ -23,6 +26,14 @@ feature -- Properties
 
 	value: STRING;
 			-- Real value
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := value.is_equal (other.value)
+		end
 
 feature {AST_EIFFEL} -- Output
 

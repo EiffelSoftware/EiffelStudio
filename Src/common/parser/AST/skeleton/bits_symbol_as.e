@@ -11,7 +11,7 @@ inherit
 
 	BASIC_TYPE
 		redefine
-			set, is_deep_equal
+			set, is_equivalent
 		end
 
 feature -- Properties
@@ -21,15 +21,11 @@ feature -- Properties
 
 feature -- Comparison
 
-	is_deep_equal (other: TYPE): BOOLEAN is
-			-- ATTENTION: May be this feature should be deferred now...
-		local
-			o: BITS_SYMBOL_AS
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
 		do
-			o ?= other;
-			Result := o /= Void and then
-				bits_symbol.is_equal (o.bits_symbol)
-		end;
+			Result := equivalent (bits_symbol, other.bits_symbol)
+		end
 
 feature -- Output
 

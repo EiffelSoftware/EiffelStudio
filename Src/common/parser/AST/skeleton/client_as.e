@@ -10,6 +10,9 @@ class CLIENT_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -27,6 +30,19 @@ feature -- Properties
 			-- Client list
 
 feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+				-- FIXME: use mechanism similar to `is_equiv'!!!!
+				-- FIXME
+				-- FIXME
+				-- FIXME
+				-- FIXME
+				-- FIXME
+				-- FIXME
+			Result := equivalent (clients, other.clients)
+		end
 
 	is_equiv (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to Current?

@@ -11,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			number_of_stop_points
+			number_of_stop_points, is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -42,6 +42,16 @@ feature -- Properties
 		do
 			Result := content /= Void and then content.is_unique
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (arguments, other.arguments) and
+				equivalent (content, other.content) and
+				equivalent (type, other.type)
+		end
 
 feature -- Access
 
@@ -89,8 +99,8 @@ feature {BODY_AS, FEATURE_AS}
 			-- Is the body of current feature equivalent to 
 			-- body of `other' ?
 		do
-			Result := deep_equal (type, other.type) and then
-					deep_equal (arguments, other.arguments);
+			Result := equivalent (type, other.type) and then
+					equivalent (arguments, other.arguments);
 debug
 	io.error.putstring ("BODY_AS.is_body_equiv%N");
 	if not Result then

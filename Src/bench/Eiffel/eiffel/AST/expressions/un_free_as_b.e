@@ -15,7 +15,7 @@ inherit
 
 	UNARY_AS_B
 		undefine
-			set
+			set, is_equivalent
 		redefine
 			byte_node, expr
 		end

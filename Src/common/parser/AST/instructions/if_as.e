@@ -62,38 +62,14 @@ feature -- Access
 
 feature -- Comparison 
 
-	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
-			-- Is `other' instruction equivalent with Current?
-		local
-			if_as: IF_AS
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
 		do
-			if_as ?= Other
-			if if_as /= Void then
-				-- May be equivalent
-				Result := equiv (if_as)
-			else
-				-- NOT equivalent
-				Result := False
-			end
-		end;
-
-	equiv (other: like Current): BOOLEAN is
-			-- Is `other' if_as equivalent with Current?
-		do
-			Result := deep_equal (condition, other.condition)
-			if Result then
-				-- May be equivalent
-				Result := deep_equal (compound, other.compound)
-				if Result then
-					-- May be equivalent
-					Result := deep_equal (elsif_list, other.elsif_list)
-					if Result then
-						-- May be equivalent
-						Result := deep_equal (else_part, other.else_part)
-					end
-				end
-			end
- 	   end;
+			Result := equivalent (compound, other.compound) and then
+				equivalent (condition, other.condition) and then
+				equivalent (else_part, other.else_part) and then
+				equivalent (elsif_list, other.elsif_list)
+		end
 
 feature {AST_EIFFEL} -- Output
 

@@ -9,7 +9,10 @@ class CLASS_AS
 
 inherit
 
-	AST_EIFFEL;
+	AST_EIFFEL
+		redefine
+			is_equivalent
+		end;
 	CLICKABLE_AST
 		redefine
 			is_class
@@ -162,46 +165,33 @@ feature -- Access
 
 feature -- Comparison
 
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+-- FIXME: suppliers_AS not used ???!!!
+			Result := equivalent (class_name, other.class_name) and then
+				equivalent (creators, other.creators) and then
+				equivalent (generics, other.generics) and then
+				equivalent (indexes, other.indexes) and then
+				equivalent (invariant_part, other.invariant_part) and then
+				equivalent (obsolete_message, other.obsolete_message) and then
+				equivalent (parents, other.parents) and then
+				equivalent (features, other.features) and then
+				is_deferred = other.is_deferred and then
+				is_expanded = other.is_expanded and then
+				is_separate = other.is_separate 
+		end
+
 	is_equiv (other: like Current): BOOLEAN is
 			-- Is `other' class equivalent to Current?
 		require
 			valid_other: other /= Void
 		do
-			Result := deep_equal (class_name, other.class_name) and then
-				deep_equal (creators, other.creators) and then
-				deep_equal (generics, other.generics) and then
-				deep_equal (indexes, other.indexes) and then
-				deep_equal (invariant_part, other.invariant_part) and then
-				deep_equal (obsolete_message, other.obsolete_message) and then
-				deep_equal (parents, other.parents) and then
-				features_deep_equal (other.features) and then
-				is_deferred = other.is_deferred and then
-				is_expanded = other.is_expanded and then
-				is_separate = other.is_separate 
+-- FIXME
+-- FIXME
+-- FIXME
+			Result := is_equivalent (other)
 		end;
-
-	features_deep_equal (other: like features): BOOLEAN is
-			-- Are `other' features equal to Current?
-		do
-			if features = Void and other = Void then
-				Result := True
-			elseif features /= Void and then 
-				other /= Void and then
-				other.count = features.count
-			then	
-				Result := True
-				from
-					features.start;
-					other.start
-				until
-					features.after or else not Result
-				loop
-					Result := features.item.is_equiv (other.item)
-					features.forth
-					other.forth
-				end
-			end	
-		end
 
 feature {COMPILER_EXPORTER} -- Element change
 

@@ -11,7 +11,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			is_unique
+			is_unique, is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -20,6 +20,14 @@ feature {NONE} -- Initialization
 			-- Yacc initialization
 		do
 		end; 
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := True
+		end
 
 feature -- Properties
 

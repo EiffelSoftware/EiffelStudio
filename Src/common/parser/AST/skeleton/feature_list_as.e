@@ -10,6 +10,9 @@ class FEATURE_LIST_AS
 inherit
 
 	FEATURE_SET_AS
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -23,6 +26,14 @@ feature -- Properties
 
 	features: EIFFEL_LIST [FEATURE_NAME];
 			-- List of feature names
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (features, other.features)
+		end
 
 feature {AST_EIFFEL} -- Output
 

@@ -15,7 +15,7 @@ inherit
 			position as text_position
 		undefine
 			pass_address, copy, setup, 
-			consistent, is_equal, is_equivalent
+			consistent, is_equal
 		redefine
 			byte_node, type_check,
 			find_breakable, format,

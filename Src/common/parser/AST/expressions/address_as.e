@@ -26,6 +26,14 @@ feature -- Properties
 	feature_name: FEATURE_NAME;
 			-- Feature name to address
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (feature_name, other.feature_name)
+		end
+
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is

@@ -11,7 +11,7 @@ inherit
 
 	BINARY_AS
 		redefine
-			set, operator_is_keyword
+			set, operator_is_keyword, is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -46,6 +46,16 @@ feature -- Properties
 			-- Internal prefix name for feature
 
 	operator_is_keyword: BOOLEAN is false;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (op_name, other.op_name) and then
+				equivalent (left, other.left) and then
+				equivalent (right, other.right)
+		end
 
 feature {BINARY_AS}
 

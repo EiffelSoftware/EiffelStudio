@@ -56,6 +56,15 @@ feature -- Properties
 		do
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := anchor.is_equal (other.anchor) and then
+				is_like_current = other.is_like_current
+		end
+
 feature -- Setting
 
 	set_like_current is

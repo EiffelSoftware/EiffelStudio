@@ -12,7 +12,8 @@ inherit
 
 	FORMAL_AS
 		redefine
-			set, is_deep_equal, simple_format
+			set, simple_format,
+			is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -35,27 +36,15 @@ feature -- Properties
 	constraint: TYPE;
 			-- Constraint of the formal generic
 
-feature -- Access
+feature -- Comparison
 
-	is_deep_equal (other: TYPE): BOOLEAN is
-		local
-			o: like Current;
-			o_c: TYPE;
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
 		do
-			o ?= other;
-			Result := o /= Void and then
-				formal_name.is_equal (o.formal_name) and then
-				position = o.position;
-			if Result then
-				o_c := o.constraint;
-				if constraint = Void then
-					Result := o_c = Void
-				else
-					Result := o_c /= Void and then
-						constraint.is_deep_equal (o_c)
-				end;
-			end;
-		end;
+			Result := equivalent (formal_name, other.formal_name) and then
+				position = other.position and then
+				equivalent (constraint, other.constraint)
+		end
 
 feature {AST_EIFFEL} -- Output
 

@@ -10,6 +10,9 @@ class PARENT_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initilization
 	
@@ -46,6 +49,19 @@ feature -- Properties
 	selecting: EIFFEL_LIST [FEATURE_NAME];
 			-- Select clause
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (exports, other.exports) and
+				equivalent (redefining, other.redefining) and
+				equivalent (renaming, other.renaming) and
+				equivalent (selecting, other.selecting) and
+				equivalent (type, other.type) and
+				equivalent (undefining, other.undefining)
+		end
+
 feature -- Access
 
 	is_subset_of (other: like Current): BOOLEAN is
@@ -53,7 +69,7 @@ feature -- Access
 			--| Does Current content appear in `other'?
 		require
 			valid_other: other /= Void;
-			same_type: deep_equal (type, other.type);
+			same_type: equivalent (type, other.type);
 		do
 			Result := is_list_subset_of (exports, other.exports);
 			if Result then
@@ -177,7 +193,7 @@ is
 						until
 							other_list.after or else found
 						loop
-							found := deep_equal (item, other_list.item);
+							found := equivalent (item, other_list.item);
 							other_list.forth
 						end
 						Result := found;
@@ -215,7 +231,7 @@ is
 					until
 						list.after or else found
 					loop
-						found := deep_equal (item, list.item);
+						found := equivalent (item, list.item);
 						list.forth
 					end;
 					if found then

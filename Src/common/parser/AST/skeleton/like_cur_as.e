@@ -22,6 +22,14 @@ feature {NONE} -- Initialization
 			-- Do nothing
 		end; -- set
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := True
+		end
+
 feature -- Properties
 
 	has_like: BOOLEAN is True;

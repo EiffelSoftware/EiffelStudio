@@ -10,6 +10,9 @@ class RENAME_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -30,6 +33,15 @@ feature -- Properties
 
 	new_name: FEATURE_NAME;
 			-- New name
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (old_name, other.old_name) and
+				equivalent (new_name, other.new_name)
+		end
 
 feature {AST_EIFFEL} -- Output
 

@@ -11,7 +11,8 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			is_deferred, has_instruction, index_of_instruction
+			is_deferred, has_instruction, index_of_instruction,
+			is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -21,6 +22,14 @@ feature {NONE} -- Initialization
 		do
 			-- Do nothing
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := True
+		end
 
 feature -- Properties
 

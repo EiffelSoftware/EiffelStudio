@@ -26,6 +26,14 @@ feature -- Properties
 	terminal: ATOMIC_AS;
 			-- terminal
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (terminal, other.terminal)
+		end
+
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is

@@ -11,7 +11,7 @@ inherit
 
 	CONTENT_AS
 		redefine
-			is_unique, is_constant
+			is_unique, is_constant, is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -46,13 +46,21 @@ feature -- Properties
 			end;
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (value, other.value)
+		end
+
 feature -- Access
 
 	is_body_equiv (other: like Current): BOOLEAN is
 			-- Are the values of Current and other the
 			-- same?
 		do
-			Result := deep_equal (value, other.value)
+			Result := equivalent (value, other.value)
 		end;
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is

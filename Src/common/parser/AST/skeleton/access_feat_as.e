@@ -12,6 +12,9 @@ class ACCESS_FEAT_AS
 inherit
 
 	ACCESS_AS
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -47,6 +50,15 @@ feature -- Properties
 		do
 			Result := feature_name
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (feature_name, other.feature_name) and
+				equivalent (parameters, other.parameters)
+		end
 
 feature {AST_EIFFEL} -- Output
 

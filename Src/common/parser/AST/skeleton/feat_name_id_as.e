@@ -10,6 +10,9 @@ class FEAT_NAME_ID_AS
 inherit
 
 	FEATURE_NAME
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -34,6 +37,13 @@ feature -- Properties
 		end;
 
 feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := is_frozen = other.is_frozen and then
+				equivalent (feature_name, other.feature_name)
+		end
 
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
 		local

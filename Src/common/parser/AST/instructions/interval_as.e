@@ -10,6 +10,9 @@ class INTERVAL_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -21,6 +24,15 @@ feature {NONE} -- Initialization
 		ensure then
 			lower_exists: lower /= Void;
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (lower, other.lower) and
+				equivalent (upper, other.upper)
+		end
 
 feature -- Properties
 

@@ -9,10 +9,7 @@ inherit
 			dll_extension, macro_extension
 		end;
 
-	AST_EIFFEL_B
-		undefine
-			is_equivalent
-		end;
+	AST_EIFFEL_B;
 
 	EXTERNAL_CONSTANTS
 

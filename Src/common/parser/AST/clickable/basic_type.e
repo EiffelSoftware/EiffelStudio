@@ -23,6 +23,14 @@ feature {NONE} -- Initialization
 			-- Do nothing
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := True
+		end
+
 feature -- Properties
 
 	is_class: BOOLEAN is

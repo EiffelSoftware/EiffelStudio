@@ -33,7 +33,7 @@ inherit
 			same_as,
 			same_class_type,
 			format,
-			is_deep_equal,
+			is_equivalent,
 			storage_info,
 			storage_info_with_name
 		end;
@@ -60,7 +60,7 @@ inherit
 			same_as,
 			same_class_type,
 			format,
-			is_deep_equal,
+			is_equivalent,
 			storage_info,
 			storage_info_with_name
 		select
@@ -72,6 +72,33 @@ feature -- Property
 
 	generics: ARRAY [TYPE_A];
 			-- Actual generical parameter
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		local
+			i, nb: INTEGER
+			other_generics: like generics;
+		do
+			Result := is_expanded = other.is_expanded and then
+				is_separate = other.is_separate and then
+				equal (base_class_id, other.base_class_id)
+			if Result then
+				from
+					i := 1;
+					nb := generics.count;
+					other_generics := other.generics;
+					Result := nb = other_generics.count
+				until
+					i > nb or else not Result
+				loop
+					Result := equivalent (generics.item (i),
+							other_generics.item (i));
+					i := i + 1;
+				end;
+			end
+		end
 
 feature -- Access
 
@@ -503,34 +530,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 				gen_param.check_generics (context_class);
 
 				i := i + 1;
-			end;
-		end;
-		
-	is_deep_equal (other: TYPE_B): BOOLEAN is
-		local
-			other_gen_type: GEN_TYPE_A;
-			i, nb: INTEGER;
-			other_generics: like generics;
-		do
-			other_gen_type ?= other;
-			if 	other_gen_type /= Void
-				and then
-				other_gen_type.base_class_id.is_equal (base_class_id)
-				and then
-				is_expanded = other_gen_type.is_expanded
-			then
-				from
-					i := 1;
-					nb := generics.count;
-					other_generics := other_gen_type.generics;
-					Result := nb = other_generics.count
-				until
-					i > nb or else not Result
-				loop
-					Result := generics.item (i).is_deep_equal
-												(other_generics.item (i));
-					i := i + 1;
-				end;
 			end;
 		end;
 

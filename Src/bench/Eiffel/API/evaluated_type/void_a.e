@@ -22,6 +22,14 @@ feature -- Property
 			Result := True;
 		end; -- is_void
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := True
+		end
+
 feature -- Access
 
 	associated_eclass: E_CLASS is

@@ -11,7 +11,7 @@ inherit
 
 	UNARY_AS
 		redefine
-			set
+			set, is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -46,6 +46,15 @@ feature -- Properties
 		do
 			Result := op_name;
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (op_name, other.op_name) and then
+				equivalent (expr, other.expr)
+		end
 
 feature {UNARY_AS}	-- Replication
 

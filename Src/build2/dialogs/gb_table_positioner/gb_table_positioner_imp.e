@@ -31,6 +31,8 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
 			l_ev_cell_1, l_ev_cell_2, l_ev_cell_3: EV_CELL
 			l_ev_frame_1, l_ev_frame_2: EV_FRAME
+			l_ev_table_1: EV_TABLE
+			l_ev_scrollable_area_1: EV_SCROLLABLE_AREA
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
@@ -55,6 +57,8 @@ feature {NONE}-- Initialization
 			create l_ev_frame_2
 			create prompt_label
 			create ok_button
+			create l_ev_table_1
+			create l_ev_scrollable_area_1
 			
 				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
@@ -76,8 +80,9 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_3.extend (l_ev_frame_2)
 			l_ev_frame_2.extend (prompt_label)
 			l_ev_horizontal_box_3.extend (ok_button)
+			l_ev_horizontal_box_3.extend (l_ev_table_1)
 			
-			set_title ("Display window")
+			set_title ("EV_TABLE child positioner")
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
 			scrollable_area.set_minimum_width (100)
 			scrollable_area.set_minimum_height (100)
@@ -95,6 +100,9 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_3.disable_item_expand (ok_button)
 			l_ev_frame_2.set_style (1)
 			ok_button.set_text ("Done")
+			l_ev_table_1.resize (1, 1)
+				-- Insert and position all children of `l_ev_table_1'.
+			l_ev_table_1.put_at_position (l_ev_scrollable_area_1, 1, 1, 1, 1)
 			
 				--Connect events.
 				-- Close the application when an interface close

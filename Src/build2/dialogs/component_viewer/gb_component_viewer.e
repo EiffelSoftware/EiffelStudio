@@ -104,6 +104,8 @@ feature -- Basic operation
 			builder_widget := Void
 			component := Void
 			component_holder.wipe_out
+			set_title ("Component viewer")
+			type_display.remove_text
 		end
 		
 		

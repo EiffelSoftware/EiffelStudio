@@ -25,32 +25,58 @@ default
 cluster
 	all root_cluster:		"$EIFFEL_SRC\dotnet\consumer\emitter"
 		exclude
-			"EIFGEN"; 
+			"EIFGEN"; "CVS"; 
 		end
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"table_eiffel3"; "desc"; "classic"; 
+			"table_eiffel3"; "desc"; "classic"; "CVS"; 
 		end
 
 	all base_net:		"$EIFFEL_SRC\library.net\base"
+		exclude
+			"CVS"; 
+		end
 
 	helpers:		"$EIFFEL_SRC\dotnet\helpers"
+		exclude
+			"CVS"; 
+		end
 
 	components:		"$EIFFEL_SRC\dotnet\consumer\components"
+		exclude
+			"CVS"; 
+		end
 
 	xml_serializer:		"$EIFFEL_SRC\dotnet\consumer\serialization"
+		exclude
+			"CVS"; 
+		end
 
 	all support:		"$EIFFEL_SRC\dotnet\consumer\support"
-
+		exclude
+			"CVS"; 
+		end
 
 	library xml:		"$ISE_EIFFEL\library.net\xml"
+		exclude
+			"CVS"; 
+		end
 
 	library system_:		"$ISE_EIFFEL\library.net\system"
+		exclude
+			"CVS"; 
+		end
 
 	cache:		"E:\dotnet\consumer\cache"
+		exclude
+			"CVS"; 
+		end
 
 	all wel:		"E:\library\wel"
+		exclude
+			"CVS"; 
+		end
 
 external
 

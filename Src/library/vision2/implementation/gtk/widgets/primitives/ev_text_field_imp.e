@@ -333,11 +333,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				if not text.is_equal (stored_text) then
 						-- The text has actually changed
 					stored_text := text
-					change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
+					change_actions_internal.call (Void)
 				end
 			else
 				stored_text := text
-				change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
+				change_actions_internal.call (Void)
 			end
 			toggle_in_change_action (False)
 		end

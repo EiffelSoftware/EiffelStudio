@@ -780,13 +780,13 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW} -- Element change
 				Result := True
 				create env
 					-- If shift is pressed `object_representation' must be added to the parent.
-				if env.application.shift_pressed then
+				if env.application.shift_pressed and not an_object.is_instance_of_top_level_object then
 					local_parent_object := parent_object
 				else
 					local_parent_object := Current
 				end
 					-- Firstly, ensure that we do not drop an object into a representation of a top level object.
-				if local_parent_object.is_instance_of_top_level_object then
+				if local_parent_object /= Void and then local_parent_object.is_instance_of_top_level_object then
 					Result := False
 					set_status_text ("Cannot parent object in locked instance of " + object_handler.deep_object_from_id (local_parent_object.associated_top_level_object).name)
 				end
@@ -1541,11 +1541,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			l_object: GB_OBJECT
 			all_children: ARRAYED_LIST [GB_OBJECT]
 		do
-				-- We check that `layout_item.data' is not void as this is used to signify the
-				-- fact that we are representing an instance of a top level widget. If we did not
-				-- check this, when importing, all objects that already existed and had an
-				-- `associated_top_level_object' would be processed again which crahsed EiffelBuild.
-			if associated_top_level_object > 0 and layout_item.data /= Void then
+			if associated_top_level_object > 0 then
 					-- Retrieve the object which `Current' represents.
 				l_object := object_handler.object_from_id (associated_top_level_object)
 				check

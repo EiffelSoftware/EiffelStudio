@@ -41,11 +41,7 @@
 #include <sys/file.h>
 #endif
 
-#ifdef I_STRING
 #include <string.h>					/* Try to find strerror() there */
-#else
-#include <strings.h>
-#endif
 
 #ifdef USE_ADD_LOG
 #include "eif_logfile.h"

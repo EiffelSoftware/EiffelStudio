@@ -610,6 +610,8 @@ rt_public typedef struct {
 #include <sched.h>          /* 'sched_yield' */
 
 
+/* Current Thread Id */
+#define EIF_THR_SELF	taskIdSelf ()
 
 /* Constants */
 #define EIF_MIN_PRIORITY 0

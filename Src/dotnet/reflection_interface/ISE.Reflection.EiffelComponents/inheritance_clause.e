@@ -1,10 +1,16 @@
 indexing
 	description: "Representation of an inheritance clause"
 	external_name: "ISE.Reflection.InheritanceClause"
-	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 deferred class
  	INHERITANCE_CLAUSE
+
+inherit
+	ANY
+		redefine
+			equals
+		end
  
 feature {NONE} -- Initialization
  
@@ -37,6 +43,16 @@ feature {NONE} -- Initialization
 		ensure
 			non_void_eiffel_keyword: Result /= Void
 			not_empty_eiffel_keyword: Result.get_length > 0
+		end
+
+feature -- Status Report
+
+	equals (obj: INHERITANCE_CLAUSE): BOOLEAN is
+		indexing
+			description: "Is Current equals to `obj'?"
+			external_name: "Equals"
+		do
+			Result := source_name.to_lower.equals_string (obj.source_name.to_lower)
 		end
 		
 feature -- Status Setting

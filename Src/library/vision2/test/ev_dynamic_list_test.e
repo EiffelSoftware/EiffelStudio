@@ -21,7 +21,7 @@ feature -- Initialization
 		do
 			first_window.set_title ("EV_BOX test")
 			post_launch_actions.extend (~do_tests)
-			(create {MEMORY}).collection_off
+			--(create {MEMORY}).collection_off
 		end
 
 	do_tests is

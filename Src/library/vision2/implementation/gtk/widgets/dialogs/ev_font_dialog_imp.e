@@ -186,85 +186,19 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_FONT_DIALOG_IMP
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.11  2001/07/14 12:46:23  manus
---| Replace --! by --|
---|
---| Revision 1.10  2001/07/14 12:16:27  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.9  2001/06/22 00:50:03  king
---| Now using initialize precursor
---|
---| Revision 1.8  2001/06/14 18:45:31  rogers
---| Corrected spelling mistake. familys is now families.
---|
---| Revision 1.7  2001/06/14 17:21:43  rogers
---| Now references preferred_familys instead of preferred_faces.
---|
---| Revision 1.6  2001/06/07 23:08:06  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.3.4.8  2001/04/27 22:58:05  king
---| Made releasable
---|
---| Revision 1.3.4.7  2001/02/26 16:35:11  andrew
---| Restored ev_file_dialog_imp on gtk
---|
---| Revision 1.3.4.5  2000/08/16 19:43:08  king
---| Connecting delete_event to on_cancel
---|
---| Revision 1.3.4.4  2000/08/02 23:06:42  king
---| Fixed font to return user set font sizes such as 200
---|
---| Revision 1.3.4.3  2000/07/26 17:13:12  king
---| Half fixed font retrieval
---|
---| Revision 1.3.4.2  2000/07/25 20:24:38  king
---| All but font is implemented
---|
---| Revision 1.3.4.1  2000/05/03 19:08:46  oconnor
---| mergred from HEAD
---|
---| Revision 1.5  2000/02/22 18:39:37  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.4  2000/02/14 11:40:31  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.3.6.2  2000/01/27 19:29:41  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.3.6.1  1999/11/24 17:29:52  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.3.2.2  1999/11/02 17:20:03  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------

@@ -108,78 +108,19 @@ invariant
 
 end -- class EV_DYNAMIC_LIST_IMP
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.12  2001/07/14 12:46:23  manus
---| Replace --! by --|
---|
---| Revision 1.11  2001/07/14 12:16:27  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.10  2001/06/07 23:08:06  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.8.2.4  2000/12/20 00:36:35  etienne
---| Added hack on destroy due to base invariants
---|
---| Revision 1.8.2.3  2000/08/04 19:19:28  oconnor
---| Optimised radio button management by using a polymorphic call
---| instaed of using agents.
---|
---| Revision 1.8.2.2  2000/05/13 00:04:12  king
---| Converted to new EV_CONTAINABLE class
---|
---| Revision 1.8.2.1  2000/05/03 19:08:48  oconnor
---| mergred from HEAD
---|
---| Revision 1.8  2000/05/02 18:55:28  oconnor
---| Use NULL instread of Defualt_pointer in C code.
---| Use eiffel_to_c (a) instead of a.to_c.
---|
---| Revision 1.7  2000/05/02 17:30:52  king
---| Made *_i_th deferred, added deferred *_item_actions
---|
---| Revision 1.6  2000/04/12 18:51:59  oconnor
---| formatting
---|
---| Revision 1.5  2000/04/12 18:51:34  brendel
---| Removed invariant. Should be put in individual classes where is does
---| apply?
---|
---| Revision 1.4  2000/04/06 20:24:51  brendel
---| Changed list_widget from attribute to function.
---|
---| Revision 1.3  2000/04/06 02:06:23  brendel
---| Added invariant.
---|
---| Revision 1.2  2000/04/05 21:16:09  brendel
---| Merged changes from LIST_REFACTOR_BRANCH.
---|
---| Revision 1.1.2.1  2000/04/05 19:29:26  brendel
---| Initial.
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------

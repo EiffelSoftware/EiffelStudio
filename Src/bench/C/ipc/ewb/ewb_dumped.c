@@ -91,7 +91,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 							/* Protect just created object */
 						RT_GC_PROTECT(eif_rout_name);
 
-						sprintf (ptr, "%" EIF_POINTER_DISPLAY "\0", (rt_uint_ptr) dump.dmp_vect -> ex_id);
+						sprintf (ptr, "%" EIF_POINTER_DISPLAY, (rt_uint_ptr) dump.dmp_vect -> ex_id);
 						obj_addr = RTMS (ptr);
 
 							/* Protect just created object */

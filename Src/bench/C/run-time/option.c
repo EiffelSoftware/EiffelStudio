@@ -639,7 +639,7 @@ void exitprf(void)
 		record_time (execution_time); 
 
 #ifdef EIF_THREADS
-		sprintf(buffer, "%" EIF_POINTER_DISPLAY "\0", (rt_uint_ptr) eif_thr_id);
+		sprintf(buffer, "%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_thr_id);
 		file_name = malloc (strlen(profile_output_file) + strlen(buffer) + 2);
 		file_name[0] = '\0';
 		strcat (file_name, profile_output_file);

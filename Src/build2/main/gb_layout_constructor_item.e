@@ -110,6 +110,8 @@ feature {GB_OBJECT} -- Implementation
 			-- Assign `an_object' to `object'
 		do
 			object := an_object
+		ensure
+			object_set: object = an_object
 		end
 		
 feature {GB_COMMAND_CHANGE_TYPE} -- Implementation
@@ -161,7 +163,6 @@ feature {NONE} -- Implementation
 		do
 			object.register_collapse
 		end
-		
 
 	retrieve_pebble: ANY is
 			-- Retrieve pebble for transport.

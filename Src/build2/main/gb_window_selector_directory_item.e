@@ -91,7 +91,7 @@ feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 			end
 		end
 		
-feature {GB_WINDOW_SELECTOR} -- Implementation
+feature {GB_WINDOW_SELECTOR, GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
 
 	is_grayed_out: BOOLEAN
 		-- Is current represent with a gray icon?

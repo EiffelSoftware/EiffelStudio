@@ -295,7 +295,7 @@ feature -- text construction
 		local
 			p : CLASSC_STONE;
 			s: STRING;
-			item: CLICKABLE_TEXT
+			item: CLASS_NAME_TEXT
 		do
 			!!p.make(c);
 			s := clone (c.class_name)
@@ -309,7 +309,7 @@ feature -- text construction
 		local
 			p : CLASSI_STONE;
 			s: STRING;
-			item: CLICKABLE_TEXT
+			item: CLASS_NAME_TEXT
 		do
 			!!p.make(c);
 			s := clone (c.class_name)

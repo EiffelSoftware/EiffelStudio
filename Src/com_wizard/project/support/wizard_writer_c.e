@@ -31,6 +31,45 @@ feature -- Access
 	global_variables: LIST [WIZARD_WRITER_C_MEMBER]
 			-- Global variables
 
+	cpp_protector_start: STRING is
+			-- C++ protector start.
+		once
+			create Result.make (100)
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Cplusplus)
+			Result.append (New_line)
+
+			Result.append (Extern)
+			Result.append (Space)
+			Result.append (Double_quote)
+			Result.append ("C")
+			Result.append (Double_quote)
+			Result.append (Space)
+			Result.append (Open_curly_brace)
+			Result.append (New_line)
+			Result.append (Hash_end_if)
+		ensure
+			non_void_protector: Result /= Void
+			valid_protector: not Result.empty
+		end
+
+	cpp_protector_end: STRING is
+			-- C++ protector end.
+		once
+			create Result.make (100)
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Cplusplus)
+			Result.append (New_line)
+			Result.append (Close_curly_brace)
+			Result.append (New_line)
+			Result.append (Hash_end_if)
+		ensure
+			non_void_protector: Result /= Void
+			valid_protector: not Result.empty
+		end
+
 feature -- Basic operations
 
 	standard_include is
@@ -38,7 +77,11 @@ feature -- Basic operations
 		do
 			add_import (Eif_com_h)
 			add_import (Eif_eiffel_h)
---			add_import (Windows_h)
+		end
+
+	conversion_include is
+			-- Standart include files.
+		do
 			add_import (Ecom_generated_rt_globals_header_file_name)
 		end
 

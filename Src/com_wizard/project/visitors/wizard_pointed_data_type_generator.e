@@ -97,9 +97,7 @@ feature -- Basic operations
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_interface_pointer")
 
-				tmp_string := clone (pointed_visitor.c_type)
-				tmp_string.append ("_impl")
-				ce_function_body := ce_function_body_interface (name_for_class (tmp_string, Tkind_coclass, True))
+				ce_function_body := ce_function_body_interface (eiffel_type)
 				ce_function_return_type := clone (Eif_reference)
 
 				create ec_function_signature.make (0)

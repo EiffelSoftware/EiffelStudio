@@ -140,9 +140,9 @@ feature {NONE} -- Implementation
 						z_min, z_max, ang, rap)
 				dec := dec + 1
 			end
-			ready := True
 			win_dc.unselect_all
 			win_dc.release
+			ready := True
 		end
 
 	initialize_demo is 
@@ -266,10 +266,6 @@ feature {NONE} -- Implementation
 				z := evaluate (xx, yy)
 				x_screen := (p1 * xx + q1 * yy + s1 ).truncated_to_integer
 				y_screen := (p2 * xx + r2 * z + s2 ).truncated_to_integer
-				IF (yp >= 0) and then (yp <= max_y) and then
-					(y_screen >= 0) and then (y_screen <= max_y) then
-					--win_dc.Line (xp, yp, x_screen, y_screen)
-				end
 				xp := x_screen
 				yp := y_screen
 				coord.item (iy).set_x (x_screen)

@@ -1,1315 +1,1272 @@
-
-# line 6 "lace_y.y"
+#ifndef lint
+static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
+#endif
+#define YYBYACC 1
+#define YYMAJOR 1
+#define YYMINOR 9
+#define yyclearin (yychar=(-1))
+#define yyerrok (yyerrflag=0)
+#define YYRECOVERING (yyerrflag!=0)
+#define yyparse xxparse
+#define yylex xxlex
+#define yyerror xxerror
+#define yychar xxchar
+#define yyval xxval
+#define yylval xxlval
+#define yydebug xxdebug
+#define yynerrs xxnerrs
+#define yyerrflag xxerrflag
+#define yyss xxss
+#define yyssp xxssp
+#define yyvs xxvs
+#define yyvsp xxvsp
+#define yylhs xxlhs
+#define yylen xxlen
+#define yydefred xxdefred
+#define yydgoto xxdgoto
+#define yysindex xxsindex
+#define yyrindex xxrindex
+#define yygindex xxgindex
+#define yytable xxtable
+#define yycheck xxcheck
+#define yyname xxname
+#define yyrule xxrule
+#define YYPREFIX "xx"
+#line 6 "lace_y.y"
 #include "lace_c.h"
 #undef NULL
 #define NULL (char *) 0
-
-# line 11 "lace_y.y"
-typedef union  {
+#line 11 "lace_y.y"
+typedef union {
 	char *node;
 	int  value;
 } YYSTYPE;
-# define LAC_ADAPT 257
-# define LAC_ALL 258
-# define LAC_AS 259
-# define LAC_ASSERTION 260
-# define LAC_C 261
-# define LAC_CHECK 262
-# define LAC_CLUSTER 263
-# define LAC_COLUMN 264
-# define LAC_COMMA 265
-# define LAC_COMMENT 266
-# define LAC_CREATION 267
-# define LAC_DEBUG 268
-# define LAC_DEFAULT 269
-# define LAC_END 270
-# define LAC_ENSURE 271
-# define LAC_EXCLUDE 272
-# define LAC_EXECUTABLE 273
-# define LAC_EXPORT 274
-# define LAC_EXTERNAL 275
-# define LAC_GENERATE 276
-# define LAC_IDENTIFIER 277
-# define LAC_IGNORE 278
-# define LAC_INCLUDE 279
-# define LAC_INVARIANT 280
-# define LAC_LEFT_PARAM 281
-# define LAC_LOOP 282
-# define LAC_MAKE 283
-# define LAC_NO 284
-# define LAC_OBJECT 285
-# define LAC_OPTIMIZE 286
-# define LAC_OPTION 287
-# define LAC_RENAME 288
-# define LAC_REQUIRE 289
-# define LAC_RIGHT_PARAM 290
-# define LAC_ROOT 291
-# define LAC_SEMICOLON 292
-# define LAC_STRING 293
-# define LAC_SYSTEM 294
-# define LAC_TRACE 295
-# define LAC_USE 296
-# define LAC_VISIBLE 297
-# define LAC_YES 298
-# define LAC_WHITE 299
-# define LAC_ERROR2 300
-# define LAC_ERROR3 301
-# define LAC_ERROR4 302
-# define LAC_ERROR6 303
-# define LAC_ERROR7 304
-#define xxclearin xxchar = -1
-#define xxerrok xxerrflag = 0
-extern int xxchar;
-extern int xxerrflag;
-#ifndef YYMAXDEPTH
-#define YYMAXDEPTH 150
+#line 45 "y_tab.c"
+#define LAC_ADAPT 257
+#define LAC_ALL 258
+#define LAC_AS 259
+#define LAC_ASSERTION 260
+#define LAC_C 261
+#define LAC_CHECK 262
+#define LAC_CLUSTER 263
+#define LAC_COLUMN 264
+#define LAC_COMMA 265
+#define LAC_COMMENT 266
+#define LAC_CREATION 267
+#define LAC_DEBUG 268
+#define LAC_DEFAULT 269
+#define LAC_END 270
+#define LAC_ENSURE 271
+#define LAC_EXCLUDE 272
+#define LAC_EXECUTABLE 273
+#define LAC_EXPORT 274
+#define LAC_EXTERNAL 275
+#define LAC_GENERATE 276
+#define LAC_IDENTIFIER 277
+#define LAC_IGNORE 278
+#define LAC_INCLUDE 279
+#define LAC_INCLUDE_PATH 280
+#define LAC_INVARIANT 281
+#define LAC_LEFT_PARAM 282
+#define LAC_LOOP 283
+#define LAC_MAKE 284
+#define LAC_NO 285
+#define LAC_OBJECT 286
+#define LAC_OPTIMIZE 287
+#define LAC_OPTION 288
+#define LAC_RENAME 289
+#define LAC_REQUIRE 290
+#define LAC_RIGHT_PARAM 291
+#define LAC_ROOT 292
+#define LAC_SEMICOLON 293
+#define LAC_STRING 294
+#define LAC_SYSTEM 295
+#define LAC_TRACE 296
+#define LAC_USE 297
+#define LAC_VISIBLE 298
+#define LAC_YES 299
+#define LAC_WHITE 300
+#define LAC_ERROR2 301
+#define LAC_ERROR3 302
+#define LAC_ERROR4 303
+#define LAC_ERROR6 304
+#define LAC_ERROR7 305
+#define YYERRCODE 256
+short xxlhs[] = {                                        -1,
+    0,    0,    1,   46,    2,   47,    3,    4,    4,    5,
+    5,    6,   49,    6,   48,   48,    7,    7,    7,    7,
+    8,   43,    9,    9,   10,   10,   51,   10,   11,   11,
+   53,   11,   50,   50,   52,   52,   54,   54,   12,   13,
+   56,   13,   55,   55,   14,   14,   14,   15,   58,   16,
+   57,   57,   17,   18,   60,   18,   19,   62,   19,   59,
+   59,   20,   20,   44,   44,   44,   44,   44,   61,   61,
+   21,   21,   22,   64,   22,   63,   63,   23,   23,   24,
+   24,   25,   25,   25,   26,   26,   26,   27,   27,   27,
+   27,   27,   28,   66,   28,   65,   65,   29,   67,   29,
+   30,   30,   30,   30,   30,   30,   31,   69,   31,   68,
+   68,   32,   32,   33,   33,   34,   34,   35,   70,   35,
+   36,   36,   37,   37,   37,   37,   45,   45,   38,   72,
+   38,   39,   73,   39,   71,   71,   40,   75,   40,   74,
+   74,   41,   41,   42,   42,
+};
+short xxlen[] = {                                         2,
+    1,    2,    7,    0,    3,    0,    5,    0,    3,    0,
+    2,    0,    0,    3,    1,    3,    0,    2,    3,    4,
+    2,    7,    0,    2,    0,    1,    0,    3,    0,    1,
+    0,    3,    1,    3,    1,    3,    1,    3,    1,    0,
+    0,    3,    1,    3,    0,    1,    1,    3,    0,    5,
+    1,    3,    3,    0,    0,    3,    0,    0,    3,    1,
+    3,    0,    2,    1,    1,    1,    1,    1,    1,    3,
+    0,    3,    0,    0,    4,    1,    3,    0,    1,    0,
+    3,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+    1,    1,    0,    0,    3,    1,    3,    0,    0,    4,
+    1,    1,    1,    1,    1,    1,    0,    0,    3,    1,
+    3,    0,    4,    0,    3,    1,    1,    0,    0,    3,
+    1,    3,    0,    1,    2,    6,    0,    2,    0,    0,
+    3,    0,    0,    3,    1,    3,    0,    0,    3,    1,
+    3,    0,    3,    1,    1,
+};
+short xxdefred[] = {                                      0,
+    4,    0,    0,    1,    0,    0,    0,    0,  144,  145,
+   24,    0,    0,    0,    0,    2,    5,    6,   55,    0,
+    0,    0,    0,    0,    0,   13,    0,   33,    0,    0,
+   41,    0,    0,    0,   64,   65,   66,   67,   60,   68,
+    0,    0,    0,   94,    0,    0,   35,    0,    0,    0,
+    0,    0,    7,    0,   63,    0,   15,    0,    0,    0,
+    0,  108,    0,   34,    0,   43,   46,   47,    0,    0,
+   58,    0,    9,   11,   87,   92,   89,   90,   91,   86,
+   88,   85,    0,   82,   83,   84,   61,    0,   21,    0,
+  101,  105,  102,  103,  104,   96,    0,  106,    0,    0,
+    3,   36,    0,    0,    0,  119,   22,   81,   19,    0,
+   16,   99,    0,    0,  110,    0,   48,   49,   44,   69,
+    0,    0,    0,   20,    0,   97,    0,    0,    0,    0,
+    0,    0,    0,  121,    0,   37,   39,    0,  117,  116,
+    0,    0,  111,   51,    0,    0,    0,   72,   70,    0,
+    0,  125,    0,    0,  115,  113,    0,    0,   74,  122,
+  128,  130,    0,   38,   53,   52,    0,    0,  133,    0,
+   76,   79,    0,  135,    0,    0,  138,    0,    0,    0,
+    0,    0,  126,   77,  136,  140,    0,    0,    0,    0,
+  143,  141,
+};
+short xxdgoto[] = {                                       3,
+    4,    5,   13,   34,   53,   27,   57,   58,    6,   15,
+   23,  136,   32,   66,   67,   68,  144,   20,   72,   39,
+  120,  148,  174,   55,   83,   84,   85,   45,   96,   97,
+   63,  115,  128,  141,  107,  133,  134,  163,  170,  178,
+  186,  172,    7,   41,  153,    8,   24,   60,   43,   29,
+   21,   48,   30,  138,   70,   49,  146,  130,   42,   25,
+  122,  105,  173,  167,   99,   61,  125,  116,  100,  123,
+  175,  168,  176,  188,  182,
+};
+short xxsindex[] = {                                    -22,
+    0, -256,    0,    0, -222, -254, -199, -256,    0,    0,
+    0, -256, -195,    0, -176,    0,    0,    0,    0, -159,
+ -256,    0, -135, -150, -161,    0, -136,    0, -168, -256,
+    0, -195, -256, -117,    0,    0,    0,    0,    0,    0,
+ -105, -115, -256,    0,  -90, -256,    0,  -83, -256,  -98,
+  -57, -256,    0, -251,    0, -161,    0, -256,  -21,  -49,
+  -69,    0,  -23,    0, -256,    0,    0,    0,  -12,  -39,
+    0,  -30,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,  -15,    0,    0,    0,    0, -230,    0, -256,
+    0,    0,    0,    0,    0,    0,   13,    0,  -11,  -69,
+    0,    0, -194, -256, -161,    0,    0,    0,    0,    8,
+    0,    0,  -69,   -1,    0,  -10,    0,    0,    0,    0,
+ -105,   -9, -256,    0, -256,    0, -125,   21,  -69, -256,
+   22, -161,   -5,    0,  -46,    0,    0,   24,    0,    0,
+    1, -256,    0,    0,   28,   25, -256,    0,    0, -256,
+ -256,    0,   26, -256,    0,    0, -256, -256,    0,    0,
+    0,    0,   17,    0,    0,    0, -256, -256,    0,    5,
+    0,    0,   30,    0,   31, -256,    0,   27, -256, -256,
+   31, -256,    0,    0,    0,    0,   39,   34, -256, -256,
+    0,    0,
+};
+short xxrindex[] = {                                   -164,
+    0,    0,    0,    0,    0, -119,    0,    0,    0,    0,
+    0,    0,    4, -197, -253,    0,    0,    0,    0,  -35,
+    0, -157, -152,   -4,  -79,    0, -258,    0,  -99,    0,
+    0, -219,    0,   -6,    0,    0,    0,    0,    0,    0,
+  -70, -261,  -38,    0,   32,    0,    0, -103,  -67, -265,
+    0,    0,    0,    0,    0,  -79,    0,    0,    0,  -25,
+  -95,    0,    0,    0,    0,    0,    0,    0,    0, -126,
+    0,   33,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0, -211,    0,  -38,
+    0,    0,    0,    0,    0,    0,    0,    0,  -34, -184,
+    0,    0,    0,  -67, -269,    0,    0,    0,    0,    0,
+    0,    0,  -95,   36,    0,   35,    0,    0,    0,    0,
+ -215, -262, -128,    0,    0,    0,    0,    0, -184,    0,
+ -217, -269,   37,    0,  -73,    0,    0,  -37,    0,    0,
+    0,    0,    0,    0,    0,  -40,    0,    0,    0, -128,
+    0,    0, -160,    0,    0,    0,    0,    0,    0,    0,
+    0,    0, -267,    0,    0,    0, -208, -106,    0,   38,
+    0,    0, -204,    0, -113,  -43,    0,    0, -208, -106,
+ -107,  -58,    0,    0,    0,    0,    0,   40,    0,  -58,
+    0,    0,
+};
+short xxgindex[] = {                                      0,
+    0,    0,    0,    0,    0,    0,  211,    0,    0,    0,
+    0,  150,    0,  202,    0,    0,  151,  279,    0,  256,
+  181,    0,   82,  193,    0,    0,    0,    0,  203,  -87,
+    0,  186,    0,    0,    0,    0,  167,    0,    0,    0,
+  128,   -2,  231,  -13,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+  144,    0,    0,    0,    0,
+};
+#define YYTABLESIZE 320
+short xxtable[] = {                                      11,
+   71,   56,  132,   29,   57,   17,   75,   59,   56,   18,
+   76,   93,  114,   56,   56,   29,   29,   93,   28,   77,
+    9,  132,   40,   71,   14,    9,   56,   47,   71,   78,
+   51,   79,   57,   80,   29,   59,   56,   10,   81,  109,
+   59,  114,   10,   64,   29,   23,   69,   82,   80,   74,
+   54,   86,   73,   40,   80,   88,   78,   23,   98,   26,
+   23,   78,  102,   18,   18,   75,    2,   23,   54,   12,
+   16,   26,   26,   19,   26,   73,   23,   80,   54,   27,
+   73,   18,   80,  117,   78,  112,   23,   59,   75,   78,
+   26,  121,   23,   75,  118,   22,   27,   98,   35,   30,
+   26,   69,   40,   26,   23,   23,   36,   23,  112,  129,
+   98,   30,   30,  129,   23,    9,   40,   40,  121,   31,
+  135,   31,  137,   23,   46,   37,   98,  145,  129,   40,
+   30,   33,   10,   23,   38,   40,   31,   25,   44,  156,
+   30,  123,   42,   42,  159,   40,   52,  135,  161,   25,
+   25,  137,   25,   32,  165,  145,  131,   28,   78,  139,
+  131,   42,  134,   78,  123,   32,   32,   78,   25,   28,
+   28,   42,   28,  140,   98,  131,   54,   56,   25,  187,
+   98,  134,   78,   62,   32,   62,  191,  187,   28,   71,
+   62,   91,   80,  127,   32,   62,   62,   98,   28,   80,
+  127,   45,   45,   92,   80,   80,  142,    9,   62,   65,
+   93,  142,  151,   62,   94,  127,   95,   80,   62,  124,
+   45,   78,   80,  152,   10,   45,   78,   80,   50,   50,
+   45,   17,  100,   73,   12,   95,   17,   17,  100,   12,
+   12,   95,   89,   90,   14,   78,  101,   50,  171,   14,
+   14,  103,   50,  104,   17,  100,   10,   50,    8,    8,
+  184,  185,   10,   10,    8,    8,   54,  106,   10,   10,
+    8,    8,    1,   54,    2,  108,  112,  124,   54,   54,
+  127,  113,  129,  132,  142,  147,  157,  150,  154,  158,
+  169,  155,  162,  177,  179,  180,  183,  189,  190,  114,
+  111,  107,  118,  164,  109,  119,  120,  137,  166,  139,
+   50,   87,  149,  131,  143,  126,  160,  192,  110,  181,
+};
+short xxcheck[] = {                                       2,
+  270,  263,  270,  257,  270,    8,  258,  270,  270,   12,
+  262,  270,  100,  275,  276,  269,  270,  276,   21,  271,
+  277,  289,   25,  293,  279,  277,  288,   30,  298,  281,
+   33,  283,  298,  285,  288,  298,  298,  294,  290,  270,
+   43,  129,  294,   46,  298,  257,   49,  299,  264,   52,
+  270,   54,  270,   56,  270,   58,  265,  269,   61,  257,
+  272,  270,   65,  275,  276,  270,  297,  279,  288,  292,
+  270,  269,  270,  269,  272,  293,  288,  293,  298,  277,
+  298,  293,  298,  278,  293,  270,  298,   90,  293,  298,
+  288,  105,  257,  298,  289,  272,  294,  100,  260,  257,
+  298,  104,  105,  263,  269,  270,  268,  272,  293,  270,
+  113,  269,  270,  274,  279,  277,  269,  270,  132,  277,
+  123,  257,  125,  288,  293,  287,  129,  130,  289,  132,
+  288,  282,  294,  298,  296,  288,  294,  257,  275,  142,
+  298,  270,  269,  270,  147,  298,  264,  150,  151,  269,
+  270,  154,  272,  257,  157,  158,  270,  257,  265,  285,
+  274,  288,  270,  270,  293,  269,  270,  274,  288,  269,
+  270,  298,  272,  299,  270,  289,  282,  293,  298,  182,
+  276,  289,  289,  263,  288,  276,  189,  190,  288,  288,
+  270,  261,  263,  267,  298,  275,  276,  293,  298,  270,
+  274,  269,  270,  273,  275,  276,  265,  277,  288,  293,
+  280,  270,  259,  293,  284,  289,  286,  288,  298,  293,
+  288,  265,  293,  270,  294,  293,  270,  298,  269,  270,
+  298,  270,  270,  291,  270,  270,  275,  276,  276,  275,
+  276,  276,  264,  293,  270,  289,  270,  288,  167,  275,
+  276,  264,  293,  293,  293,  293,  263,  298,  263,  264,
+  179,  180,  269,  270,  269,  270,  263,  298,  275,  276,
+  275,  276,  295,  270,  297,  291,  264,  270,  275,  276,
+  282,  293,  293,  293,  264,  264,  259,  293,  265,  265,
+  274,  291,  267,  289,  265,  265,  270,  259,  265,  264,
+   90,  270,  270,  154,  270,  104,  270,  270,  158,  270,
+   32,   56,  132,  121,  129,  113,  150,  190,   88,  176,
+};
+#define YYFINAL 3
+#ifndef YYDEBUG
+#define YYDEBUG 0
 #endif
-YYSTYPE xxlval, xxval;
-typedef int xxtabelem;
-# define YYERRCODE 256
-
-# line 467 "lace_y.y"
-
+#define YYMAXTOKEN 305
+#if YYDEBUG
+char *xxname[] = {
+"end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"LAC_ADAPT","LAC_ALL","LAC_AS",
+"LAC_ASSERTION","LAC_C","LAC_CHECK","LAC_CLUSTER","LAC_COLUMN","LAC_COMMA",
+"LAC_COMMENT","LAC_CREATION","LAC_DEBUG","LAC_DEFAULT","LAC_END","LAC_ENSURE",
+"LAC_EXCLUDE","LAC_EXECUTABLE","LAC_EXPORT","LAC_EXTERNAL","LAC_GENERATE",
+"LAC_IDENTIFIER","LAC_IGNORE","LAC_INCLUDE","LAC_INCLUDE_PATH","LAC_INVARIANT",
+"LAC_LEFT_PARAM","LAC_LOOP","LAC_MAKE","LAC_NO","LAC_OBJECT","LAC_OPTIMIZE",
+"LAC_OPTION","LAC_RENAME","LAC_REQUIRE","LAC_RIGHT_PARAM","LAC_ROOT",
+"LAC_SEMICOLON","LAC_STRING","LAC_SYSTEM","LAC_TRACE","LAC_USE","LAC_VISIBLE",
+"LAC_YES","LAC_WHITE","LAC_ERROR2","LAC_ERROR3","LAC_ERROR4","LAC_ERROR6",
+"LAC_ERROR7",
+};
+char *xxrule[] = {
+"$accept : Ace_or_Properties",
+"Ace_or_Properties : Ace",
+"Ace_or_Properties : Cluster_properties LAC_END",
+"Ace : System Root Defaults Clusters Externals Generation LAC_END",
+"$$1 :",
+"System : LAC_SYSTEM $$1 Name",
+"$$2 :",
+"Root : LAC_ROOT Name $$2 Cluster_mark Creation_procedure",
+"Cluster_mark :",
+"Cluster_mark : LAC_LEFT_PARAM Name LAC_RIGHT_PARAM",
+"Creation_procedure :",
+"Creation_procedure : LAC_COLUMN Name",
+"Clusters :",
+"$$3 :",
+"Clusters : LAC_CLUSTER $$3 Cluster_clause_list",
+"Cluster_clause_list : Cluster_clause",
+"Cluster_clause_list : Cluster_clause_list LAC_SEMICOLON Cluster_clause",
+"Cluster_clause :",
+"Cluster_clause : Cluster_tag Name",
+"Cluster_clause : Cluster_tag Name LAC_END",
+"Cluster_clause : Cluster_tag Name Cluster_properties LAC_END",
+"Cluster_tag : Name LAC_COLUMN",
+"Cluster_properties : Use Include Exclude Name_adapt Defaults Options Visible",
+"Use :",
+"Use : LAC_USE Name",
+"Include :",
+"Include : LAC_INCLUDE",
+"$$4 :",
+"Include : LAC_INCLUDE $$4 Include_file_list",
+"Exclude :",
+"Exclude : LAC_EXCLUDE",
+"$$5 :",
+"Exclude : LAC_EXCLUDE $$5 Exclude_file_list",
+"Include_file_list : Name",
+"Include_file_list : Include_file_list LAC_SEMICOLON Name",
+"Exclude_file_list : Name",
+"Exclude_file_list : Exclude_file_list LAC_SEMICOLON Name",
+"File_list : File_clause",
+"File_list : File_list LAC_COMMA File_clause",
+"File_clause : Name",
+"Name_adapt :",
+"$$6 :",
+"Name_adapt : LAC_ADAPT $$6 Cluster_adapt_list",
+"Cluster_adapt_list : Cluster_adapt_clause",
+"Cluster_adapt_list : Cluster_adapt_list LAC_SEMICOLON Cluster_adapt_clause",
+"Cluster_adapt_clause :",
+"Cluster_adapt_clause : Cluster_ignore",
+"Cluster_adapt_clause : Cluster_rename_clause",
+"Cluster_ignore : Name LAC_COLUMN LAC_IGNORE",
+"$$7 :",
+"Cluster_rename_clause : Name LAC_COLUMN LAC_RENAME $$7 Class_rename_list",
+"Class_rename_list : Class_rename_pair",
+"Class_rename_list : Class_rename_list LAC_COMMA Class_rename_pair",
+"Class_rename_pair : Name LAC_AS Name",
+"Defaults :",
+"$$8 :",
+"Defaults : LAC_DEFAULT $$8 D_option_clause_list",
+"Options :",
+"$$9 :",
+"Options : LAC_OPTION $$9 O_option_clause_list",
+"D_option_clause_list : D_option_clause",
+"D_option_clause_list : D_option_clause_list LAC_SEMICOLON D_option_clause",
+"D_option_clause :",
+"D_option_clause : Option_name Option_mark",
+"Option_name : LAC_ASSERTION",
+"Option_name : LAC_DEBUG",
+"Option_name : LAC_OPTIMIZE",
+"Option_name : LAC_TRACE",
+"Option_name : Name",
+"O_option_clause_list : O_option_clause",
+"O_option_clause_list : O_option_clause_list LAC_SEMICOLON O_option_clause",
+"O_option_clause :",
+"O_option_clause : Option_name Option_mark Target_list",
+"Target_list :",
+"$$10 :",
+"Target_list : LAC_COLUMN Name $$10 Class_name_list",
+"Class_name_list : Name_star",
+"Class_name_list : Class_name_list LAC_COMMA Name_star",
+"Name_star :",
+"Name_star : Name",
+"Option_mark :",
+"Option_mark : LAC_LEFT_PARAM Option_value LAC_RIGHT_PARAM",
+"Option_value : Standard_value",
+"Option_value : Class_value",
+"Option_value : Name",
+"Standard_value : LAC_YES",
+"Standard_value : LAC_NO",
+"Standard_value : LAC_ALL",
+"Class_value : LAC_REQUIRE",
+"Class_value : LAC_ENSURE",
+"Class_value : LAC_INVARIANT",
+"Class_value : LAC_LOOP",
+"Class_value : LAC_CHECK",
+"Externals :",
+"$$11 :",
+"Externals : LAC_EXTERNAL $$11 Language_contrib_list",
+"Language_contrib_list : Language_contrib",
+"Language_contrib_list : Language_contrib_list LAC_SEMICOLON Language_contrib",
+"Language_contrib :",
+"$$12 :",
+"Language_contrib : Language_name LAC_COLUMN $$12 File_list",
+"Language_name : LAC_C",
+"Language_name : LAC_INCLUDE_PATH",
+"Language_name : LAC_MAKE",
+"Language_name : LAC_OBJECT",
+"Language_name : LAC_EXECUTABLE",
+"Language_name : Name",
+"Generation :",
+"$$13 :",
+"Generation : LAC_GENERATE $$13 Language_gen_list",
+"Language_gen_list : Language_generation",
+"Language_gen_list : Language_gen_list LAC_SEMICOLON Language_generation",
+"Language_generation :",
+"Language_generation : Language_name Generate_option LAC_COLUMN Name",
+"Generate_option :",
+"Generate_option : LAC_LEFT_PARAM Generate_option_value LAC_RIGHT_PARAM",
+"Generate_option_value : LAC_YES",
+"Generate_option_value : LAC_NO",
+"Visible :",
+"$$14 :",
+"Visible : LAC_VISIBLE $$14 Class_visi_list",
+"Class_visi_list : Class_visibility",
+"Class_visi_list : Class_visi_list LAC_SEMICOLON Class_visibility",
+"Class_visibility :",
+"Class_visibility : Name",
+"Class_visibility : Name LAC_END",
+"Class_visibility : Name External_name Creation_restriction Export_restriction External_rename LAC_END",
+"External_name :",
+"External_name : LAC_AS Name",
+"Creation_restriction :",
+"$$15 :",
+"Creation_restriction : LAC_CREATION $$15 Feature_name_list",
+"Export_restriction :",
+"$$16 :",
+"Export_restriction : LAC_EXPORT $$16 Feature_name_list",
+"Feature_name_list : Name_star",
+"Feature_name_list : Feature_name_list LAC_COMMA Name_star",
+"External_rename :",
+"$$17 :",
+"External_rename : LAC_RENAME $$17 External_rename_list",
+"External_rename_list : ExternaL_rename_pair",
+"External_rename_list : External_rename_list LAC_COMMA ExternaL_rename_pair",
+"ExternaL_rename_pair :",
+"ExternaL_rename_pair : Name LAC_AS Name",
+"Name : LAC_IDENTIFIER",
+"Name : LAC_STRING",
+};
+#endif
+#ifdef YYSTACKSIZE
+#undef YYMAXDEPTH
+#define YYMAXDEPTH YYSTACKSIZE
+#else
+#ifdef YYMAXDEPTH
+#define YYSTACKSIZE YYMAXDEPTH
+#else
+#define YYSTACKSIZE 500
+#define YYMAXDEPTH 500
+#endif
+#endif
+int yydebug;
+int yynerrs;
+int yyerrflag;
+int yychar;
+short *yyssp;
+YYSTYPE *yyvsp;
+YYSTYPE yyval;
+YYSTYPE yylval;
+short yyss[YYSTACKSIZE];
+YYSTYPE yyvs[YYSTACKSIZE];
+#define yystacksize YYSTACKSIZE
+#line 472 "lace_y.y"
 
 xxwrap()
 {
     return 1;
 }
-xxtabelem xxexca[] ={
--1, 1,
-	0, -1,
-	-2, 0,
--1, 12,
-	277, 27,
-	293, 27,
-	-2, 26,
--1, 21,
-	277, 31,
-	293, 31,
-	-2, 30,
--1, 84,
-	275, 18,
-	276, 18,
-	292, 18,
-	-2, 23,
--1, 131,
-	292, 123,
-	-2, 126,
-	};
-# define YYNPROD 145
-# define YYLAST 271
-xxtabelem xxact[]={
-
-    93,    39,   139,   102,    98,     6,   113,     7,   155,    40,
-   154,   143,    15,    95,   132,   123,   138,    78,    15,    15,
-   110,   104,    96,    83,    97,    71,    92,    41,    16,    81,
-    58,    94,     7,    15,    16,    16,    42,    50,    10,    79,
-    91,    80,   115,   100,   121,   171,    65,    12,    60,    16,
-   125,    45,    52,    34,   122,   165,    21,   146,   178,   128,
-    73,     8,    18,   158,   188,   181,   182,   161,   144,   149,
-   136,   111,   105,    85,    62,    25,   189,   162,    29,   175,
-   174,   184,   173,   151,   141,    38,   130,    14,   118,    77,
-    19,   108,    67,    23,    76,     3,    37,    59,    55,    17,
-   183,   179,    32,   172,   166,   116,    43,   107,    74,   127,
-    49,    75,    53,   176,   167,    57,   117,   103,    36,    26,
-   150,   134,    66,    47,   140,    63,    48,    70,    46,    30,
-    72,    31,    22,    82,    54,    35,    84,    27,    43,    13,
-    90,   145,    99,   170,   164,   157,   129,   101,   137,   124,
-    51,   106,    33,    89,    82,    86,    88,    87,   148,    64,
-    69,    68,    28,    57,   109,    20,    11,     5,    56,    24,
-    61,    44,     9,     4,     2,     1,     0,     0,     0,     0,
-   114,     0,   112,    43,    70,     0,     0,     0,     0,   119,
-    82,     0,     0,     0,     0,     0,   131,   120,     0,     0,
-     0,     0,     0,    82,     0,   126,     0,   142,     0,     0,
-     0,     0,    43,   109,   152,   135,   153,   133,   119,     0,
-     0,   147,     0,   131,     0,     0,   159,     0,     0,   160,
-   156,     0,     0,     0,     0,   142,     0,     0,     0,     0,
-   163,   152,   169,     0,     0,   168,     0,     0,   177,     0,
-     0,     0,     0,     0,     0,   180,     0,     0,     0,   185,
-     0,     0,   186,   187,     0,     0,     0,     0,   185,   191,
-   190 };
-xxtabelem xxpact[]={
-
-  -289, -1000, -1000,  -209,  -253,  -232, -1000,  -265, -1000,  -207,
-  -265,  -216, -1000,  -265, -1000, -1000, -1000,  -188, -1000, -1000,
-  -179, -1000,  -265, -1000,  -222, -1000,  -259,  -230,  -207, -1000,
-  -265,  -255, -1000,  -224, -1000,  -265,  -262, -1000,  -233, -1000,
- -1000, -1000, -1000, -1000,  -190,  -265,  -241,  -265,  -267, -1000,
-  -265,  -210, -1000,  -244,  -269, -1000,  -265,  -191,  -259, -1000,
-  -258, -1000,  -265,  -247,  -294, -1000,  -271, -1000, -1000, -1000,
-  -192,  -265, -1000, -1000,  -244,  -272, -1000,  -193, -1000, -1000,
- -1000, -1000, -1000,  -265,  -264, -1000, -1000,  -248, -1000, -1000,
- -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000,
- -1000, -1000, -1000,  -259,  -265,  -234, -1000,  -277, -1000,  -231,
-  -244, -1000, -1000, -1000,  -211, -1000,  -265,  -278, -1000,  -233,
- -1000, -1000, -1000,  -244,  -194,  -282, -1000,  -265, -1000,  -281,
- -1000,  -202,  -259,  -195,  -265, -1000,  -265,  -280, -1000, -1000,
-  -284, -1000, -1000,  -265, -1000,  -204,  -265, -1000, -1000,  -265,
-  -198, -1000,  -182, -1000, -1000,  -265, -1000,  -219, -1000, -1000,
- -1000,  -265,  -265, -1000,  -243, -1000,  -265,  -265, -1000, -1000,
-  -212, -1000,  -265,  -200, -1000, -1000,  -199, -1000, -1000,  -265,
-  -200,  -265,  -265,  -201, -1000,  -183, -1000, -1000,  -265,  -265,
- -1000, -1000 };
-xxtabelem xxpgo[]={
-
-     0,   175,   174,   173,   172,   171,   170,   169,    98,   168,
-   167,   166,   165,    84,   162,    92,   161,   160,    83,    99,
-   159,    96,    88,   158,    80,    97,   157,   156,   153,   152,
-    94,    89,   150,    91,   149,   148,   147,   146,    86,   145,
-   144,   143,    81,    79,    95,    85,   141,   139,   137,   135,
-   134,   132,   131,   129,   126,   124,   123,   122,   121,   120,
-   119,   118,   117,   116,   114,   113,   112,   111,   109,   108,
-   107,   105,   104,    82,   103,   101,   100 };
-xxtabelem xxr1[]={
-
-     0,     1,     1,     2,    47,     3,    48,     4,     5,     5,
-     6,     6,     7,    49,     7,    50,    50,     8,     8,     8,
-     8,     9,    44,    10,    10,    11,    11,    51,    11,    12,
-    12,    53,    12,    52,    52,    54,    54,    55,    55,    13,
-    14,    56,    14,    57,    57,    15,    15,    15,    16,    58,
-    17,    59,    59,    18,    19,    60,    19,    20,    62,    20,
-    61,    61,    21,    21,    45,    45,    45,    45,    45,    63,
-    63,    22,    22,    23,    64,    23,    65,    65,    24,    24,
-    25,    25,    26,    26,    26,    27,    27,    27,    28,    28,
-    28,    28,    28,    29,    66,    29,    67,    67,    30,    68,
-    30,    31,    31,    31,    31,    31,    32,    69,    32,    70,
-    70,    33,    33,    34,    34,    35,    35,    36,    71,    36,
-    37,    37,    38,    38,    38,    38,    46,    46,    39,    72,
-    39,    40,    74,    40,    73,    73,    41,    75,    41,    76,
-    76,    42,    42,    43,    43 };
-xxtabelem xxr2[]={
-
-     0,     3,     5,    15,     1,     7,     1,    11,     1,     7,
-     1,     5,     1,     1,     7,     3,     7,     1,     5,     7,
-     9,     5,    15,     1,     5,     1,     3,     1,     7,     1,
-     3,     1,     7,     3,     7,     3,     7,     3,     7,     3,
-     1,     1,     7,     3,     7,     1,     3,     3,     7,     1,
-    11,     3,     7,     7,     1,     1,     7,     1,     1,     7,
-     3,     7,     1,     5,     3,     3,     3,     3,     3,     3,
-     7,     1,     7,     1,     1,     9,     3,     7,     1,     3,
-     1,     7,     3,     3,     3,     3,     3,     3,     3,     3,
-     3,     3,     3,     1,     1,     7,     3,     7,     1,     1,
-     9,     3,     3,     3,     3,     3,     1,     1,     7,     3,
-     7,     1,     9,     1,     7,     3,     3,     1,     1,     7,
-     3,     7,     1,     3,     5,    13,     1,     5,     1,     1,
-     7,     1,     1,     7,     3,     7,     1,     1,     7,     3,
-     7,     1,     7,     3,     3 };
-xxtabelem xxchk[]={
-
- -1000,    -1,    -2,   -44,    -3,   -10,   294,   296,   270,    -4,
-   291,   -11,   279,   -47,   -43,   277,   293,   -19,   269,   -43,
-   -12,   272,   -51,   -43,    -7,   263,   -60,   -48,   -14,   257,
-   -53,   -52,   -43,   -29,   275,   -49,   -61,   -21,   -45,   260,
-   268,   286,   295,   -43,    -5,   281,   -19,   -56,   -54,   -43,
-   292,   -32,   276,   -66,   -50,    -8,    -9,   -43,   292,   -25,
-   281,    -6,   264,   -43,   -20,   287,   -57,   -15,   -16,   -17,
-   -43,   292,   -43,   270,   -69,   -67,   -30,   -31,   261,   283,
-   285,   273,   -43,   292,   -43,   264,   -21,   -26,   -27,   -28,
-   -43,   298,   284,   258,   289,   271,   280,   282,   262,   -43,
-   290,   -36,   297,   -62,   292,   264,   -43,   -70,   -33,   -31,
-   292,   264,    -8,   270,   -44,   290,   -71,   -63,   -22,   -45,
-   -15,   278,   288,   292,   -34,   281,   -30,   -68,   270,   -37,
-   -38,   -43,   292,   -25,   -58,   -33,   264,   -35,   298,   284,
-   -55,   -13,   -43,   292,   270,   -46,   259,   -22,   -23,   264,
-   -59,   -18,   -43,   -43,   290,   292,   -38,   -39,   267,   -43,
-   -43,   265,   259,   -13,   -40,   274,   -72,   -64,   -18,   -43,
-   -41,   288,   -74,   -73,   -24,   -43,   -65,   -24,   270,   -75,
-   -73,   265,   265,   -76,   -42,   -43,   -24,   -24,   265,   259,
-   -42,   -43 };
-xxtabelem xxdef[]={
-
-    23,    -2,     1,     0,     0,    25,     4,     0,     2,    54,
-     0,    29,    -2,     0,    24,   143,   144,    12,    55,     6,
-    40,    -2,     0,     5,    93,    13,    62,     8,    54,    41,
-     0,    28,    33,   106,    94,    17,    56,    60,    80,    64,
-    65,    66,    67,    68,    10,     0,    57,    45,    32,    35,
-     0,     0,   107,    98,    14,    15,     0,     0,    62,    63,
-     0,     7,     0,     0,   117,    58,    42,    43,    46,    47,
-     0,     0,    34,     3,   111,    95,    96,     0,   101,   102,
-   103,   104,   105,    17,    -2,    21,    61,     0,    82,    83,
-    84,    85,    86,    87,    88,    89,    90,    91,    92,    11,
-     9,    22,   118,    71,    45,     0,    36,   108,   109,   113,
-    98,    99,    16,    19,     0,    81,   122,    59,    69,    80,
-    44,    48,    49,   111,     0,     0,    97,     0,    20,   119,
-   120,    -2,    71,    73,     0,   110,     0,     0,   115,   116,
-   100,    37,    39,   122,   124,   128,     0,    70,    72,     0,
-    50,    51,     0,   112,   114,     0,   121,   131,   129,   127,
-    74,     0,     0,    38,   136,   132,    78,    78,    52,    53,
-     0,   137,    78,   130,   134,    79,    75,    76,   125,   141,
-   133,    78,    78,   138,   139,     0,   135,    77,   141,     0,
-   140,   142 };
-typedef struct { char *t_name; int t_val; } xxtoktype;
-#ifndef YYDEBUG
-#	define YYDEBUG	0	/* don't allow debugging */
-#endif
-
-#if YYDEBUG
-
-xxtoktype xxtoks[] =
-{
-	"LAC_ADAPT",	257,
-	"LAC_ALL",	258,
-	"LAC_AS",	259,
-	"LAC_ASSERTION",	260,
-	"LAC_C",	261,
-	"LAC_CHECK",	262,
-	"LAC_CLUSTER",	263,
-	"LAC_COLUMN",	264,
-	"LAC_COMMA",	265,
-	"LAC_COMMENT",	266,
-	"LAC_CREATION",	267,
-	"LAC_DEBUG",	268,
-	"LAC_DEFAULT",	269,
-	"LAC_END",	270,
-	"LAC_ENSURE",	271,
-	"LAC_EXCLUDE",	272,
-	"LAC_EXECUTABLE",	273,
-	"LAC_EXPORT",	274,
-	"LAC_EXTERNAL",	275,
-	"LAC_GENERATE",	276,
-	"LAC_IDENTIFIER",	277,
-	"LAC_IGNORE",	278,
-	"LAC_INCLUDE",	279,
-	"LAC_INVARIANT",	280,
-	"LAC_LEFT_PARAM",	281,
-	"LAC_LOOP",	282,
-	"LAC_MAKE",	283,
-	"LAC_NO",	284,
-	"LAC_OBJECT",	285,
-	"LAC_OPTIMIZE",	286,
-	"LAC_OPTION",	287,
-	"LAC_RENAME",	288,
-	"LAC_REQUIRE",	289,
-	"LAC_RIGHT_PARAM",	290,
-	"LAC_ROOT",	291,
-	"LAC_SEMICOLON",	292,
-	"LAC_STRING",	293,
-	"LAC_SYSTEM",	294,
-	"LAC_TRACE",	295,
-	"LAC_USE",	296,
-	"LAC_VISIBLE",	297,
-	"LAC_YES",	298,
-	"LAC_WHITE",	299,
-	"LAC_ERROR2",	300,
-	"LAC_ERROR3",	301,
-	"LAC_ERROR4",	302,
-	"LAC_ERROR6",	303,
-	"LAC_ERROR7",	304,
-	"-unknown-",	-1	/* ends search */
-};
-
-char * xxreds[] =
-{
-	"-no such reduction-",
-	"Ace_or_Properties : Ace",
-	"Ace_or_Properties : Cluster_properties LAC_END",
-	"Ace : System Root Defaults Clusters Externals Generation LAC_END",
-	"System : LAC_SYSTEM",
-	"System : LAC_SYSTEM Name",
-	"Root : LAC_ROOT Name",
-	"Root : LAC_ROOT Name Cluster_mark Creation_procedure",
-	"Cluster_mark : /* empty */",
-	"Cluster_mark : LAC_LEFT_PARAM Name LAC_RIGHT_PARAM",
-	"Creation_procedure : /* empty */",
-	"Creation_procedure : LAC_COLUMN Name",
-	"Clusters : /* empty */",
-	"Clusters : LAC_CLUSTER",
-	"Clusters : LAC_CLUSTER Cluster_clause_list",
-	"Cluster_clause_list : Cluster_clause",
-	"Cluster_clause_list : Cluster_clause_list LAC_SEMICOLON Cluster_clause",
-	"Cluster_clause : /* empty */",
-	"Cluster_clause : Cluster_tag Name",
-	"Cluster_clause : Cluster_tag Name LAC_END",
-	"Cluster_clause : Cluster_tag Name Cluster_properties LAC_END",
-	"Cluster_tag : Name LAC_COLUMN",
-	"Cluster_properties : Use Include Exclude Name_adapt Defaults Options Visible",
-	"Use : /* empty */",
-	"Use : LAC_USE Name",
-	"Include : /* empty */",
-	"Include : LAC_INCLUDE",
-	"Include : LAC_INCLUDE",
-	"Include : LAC_INCLUDE Include_file_list",
-	"Exclude : /* empty */",
-	"Exclude : LAC_EXCLUDE",
-	"Exclude : LAC_EXCLUDE",
-	"Exclude : LAC_EXCLUDE Exclude_file_list",
-	"Include_file_list : Name",
-	"Include_file_list : Include_file_list LAC_SEMICOLON Name",
-	"Exclude_file_list : Name",
-	"Exclude_file_list : Exclude_file_list LAC_SEMICOLON Name",
-	"File_list : File_clause",
-	"File_list : File_list LAC_SEMICOLON File_clause",
-	"File_clause : Name",
-	"Name_adapt : /* empty */",
-	"Name_adapt : LAC_ADAPT",
-	"Name_adapt : LAC_ADAPT Cluster_adapt_list",
-	"Cluster_adapt_list : Cluster_adapt_clause",
-	"Cluster_adapt_list : Cluster_adapt_list LAC_SEMICOLON Cluster_adapt_clause",
-	"Cluster_adapt_clause : /* empty */",
-	"Cluster_adapt_clause : Cluster_ignore",
-	"Cluster_adapt_clause : Cluster_rename_clause",
-	"Cluster_ignore : Name LAC_COLUMN LAC_IGNORE",
-	"Cluster_rename_clause : Name LAC_COLUMN LAC_RENAME",
-	"Cluster_rename_clause : Name LAC_COLUMN LAC_RENAME Class_rename_list",
-	"Class_rename_list : Class_rename_pair",
-	"Class_rename_list : Class_rename_list LAC_COMMA Class_rename_pair",
-	"Class_rename_pair : Name LAC_AS Name",
-	"Defaults : /* empty */",
-	"Defaults : LAC_DEFAULT",
-	"Defaults : LAC_DEFAULT D_option_clause_list",
-	"Options : /* empty */",
-	"Options : LAC_OPTION",
-	"Options : LAC_OPTION O_option_clause_list",
-	"D_option_clause_list : D_option_clause",
-	"D_option_clause_list : D_option_clause_list LAC_SEMICOLON D_option_clause",
-	"D_option_clause : /* empty */",
-	"D_option_clause : Option_name Option_mark",
-	"Option_name : LAC_ASSERTION",
-	"Option_name : LAC_DEBUG",
-	"Option_name : LAC_OPTIMIZE",
-	"Option_name : LAC_TRACE",
-	"Option_name : Name",
-	"O_option_clause_list : O_option_clause",
-	"O_option_clause_list : O_option_clause_list LAC_SEMICOLON O_option_clause",
-	"O_option_clause : /* empty */",
-	"O_option_clause : Option_name Option_mark Target_list",
-	"Target_list : /* empty */",
-	"Target_list : LAC_COLUMN Name",
-	"Target_list : LAC_COLUMN Name Class_name_list",
-	"Class_name_list : Name_star",
-	"Class_name_list : Class_name_list LAC_COMMA Name_star",
-	"Name_star : /* empty */",
-	"Name_star : Name",
-	"Option_mark : /* empty */",
-	"Option_mark : LAC_LEFT_PARAM Option_value LAC_RIGHT_PARAM",
-	"Option_value : Standard_value",
-	"Option_value : Class_value",
-	"Option_value : Name",
-	"Standard_value : LAC_YES",
-	"Standard_value : LAC_NO",
-	"Standard_value : LAC_ALL",
-	"Class_value : LAC_REQUIRE",
-	"Class_value : LAC_ENSURE",
-	"Class_value : LAC_INVARIANT",
-	"Class_value : LAC_LOOP",
-	"Class_value : LAC_CHECK",
-	"Externals : /* empty */",
-	"Externals : LAC_EXTERNAL",
-	"Externals : LAC_EXTERNAL Language_contrib_list",
-	"Language_contrib_list : Language_contrib",
-	"Language_contrib_list : Language_contrib_list LAC_SEMICOLON Language_contrib",
-	"Language_contrib : /* empty */",
-	"Language_contrib : Language_name LAC_COLUMN",
-	"Language_contrib : Language_name LAC_COLUMN File_list",
-	"Language_name : LAC_C",
-	"Language_name : LAC_MAKE",
-	"Language_name : LAC_OBJECT",
-	"Language_name : LAC_EXECUTABLE",
-	"Language_name : Name",
-	"Generation : /* empty */",
-	"Generation : LAC_GENERATE",
-	"Generation : LAC_GENERATE Language_gen_list",
-	"Language_gen_list : Language_generation",
-	"Language_gen_list : Language_gen_list LAC_SEMICOLON Language_generation",
-	"Language_generation : /* empty */",
-	"Language_generation : Language_name Generate_option LAC_COLUMN Name",
-	"Generate_option : /* empty */",
-	"Generate_option : LAC_LEFT_PARAM Generate_option_value LAC_RIGHT_PARAM",
-	"Generate_option_value : LAC_YES",
-	"Generate_option_value : LAC_NO",
-	"Visible : /* empty */",
-	"Visible : LAC_VISIBLE",
-	"Visible : LAC_VISIBLE Class_visi_list",
-	"Class_visi_list : Class_visibility",
-	"Class_visi_list : Class_visi_list LAC_SEMICOLON Class_visibility",
-	"Class_visibility : /* empty */",
-	"Class_visibility : Name",
-	"Class_visibility : Name LAC_END",
-	"Class_visibility : Name External_name Creation_restriction Export_restriction External_rename LAC_END",
-	"External_name : /* empty */",
-	"External_name : LAC_AS Name",
-	"Creation_restriction : /* empty */",
-	"Creation_restriction : LAC_CREATION",
-	"Creation_restriction : LAC_CREATION Feature_name_list",
-	"Export_restriction : /* empty */",
-	"Export_restriction : LAC_EXPORT",
-	"Export_restriction : LAC_EXPORT Feature_name_list",
-	"Feature_name_list : Name_star",
-	"Feature_name_list : Feature_name_list LAC_COMMA Name_star",
-	"External_rename : /* empty */",
-	"External_rename : LAC_RENAME",
-	"External_rename : LAC_RENAME External_rename_list",
-	"External_rename_list : ExternaL_rename_pair",
-	"External_rename_list : External_rename_list LAC_COMMA ExternaL_rename_pair",
-	"ExternaL_rename_pair : /* empty */",
-	"ExternaL_rename_pair : Name LAC_AS Name",
-	"Name : LAC_IDENTIFIER",
-	"Name : LAC_STRING",
-};
-#endif /* YYDEBUG */
-/*
- *	@(#) yaccpar 1.4 88/11/11 
- *
- *	      UNIX is a registered trademark of AT&T
- *		Portions Copyright 1976-1989 AT&T
- *	Portions Copyright 1980-1989 Microsoft Corporation
- *   Portions Copyright 1983-1989 The Santa Cruz Operation, Inc
- *		      All Rights Reserved
- */
-#ident	"@(#)yacc:yaccpar	1.10"
-
-/*
-** Skeleton parser driver for yacc output
-*/
-
-/*
-** yacc user known macros and defines
-*/
-#define YYERROR		goto xxerrlab
-#define YYACCEPT	return(0)
-#define YYABORT		return(1)
-#define YYBACKUP( newtoken, newvalue )\
-{\
-	if ( xxchar >= 0 || ( xxr2[ xxtmp ] >> 1 ) != 1 )\
-	{\
-		xxerror( "syntax error - cannot backup" );\
-		goto xxerrlab;\
-	}\
-	xxchar = newtoken;\
-	xxstate = *xxps;\
-	xxlval = newvalue;\
-	goto xxnewstate;\
-}
-#define YYRECOVERING()	(!!xxerrflag)
-#ifndef YYDEBUG
-#	define YYDEBUG	1	/* make debugging available */
-#endif
-
-/*
-** user known globals
-*/
-int xxdebug;			/* set to 1 to get debugging */
-
-/*
-** driver internal defines
-*/
-#define YYFLAG		(-1000)
-
-/*
-** global variables used by the parser
-*/
-YYSTYPE xxv[ YYMAXDEPTH ];	/* value stack */
-int xxs[ YYMAXDEPTH ];		/* state stack */
-
-YYSTYPE *xxpv;			/* top of value stack */
-int *xxps;			/* top of state stack */
-
-int xxstate;			/* current state */
-int xxtmp;			/* extra var (lasts between blocks) */
-
-int xxnerrs;			/* number of errors */
-int xxerrflag;			/* error recovery flag */
-int xxchar;			/* current input token number */
-
-
-
-/*
-** xxparse - return 0 if worked, 1 if syntax error not recovered from
-*/
+#line 486 "y_tab.c"
+#define YYABORT goto yyabort
+#define YYREJECT goto yyabort
+#define YYACCEPT goto yyaccept
+#define YYERROR goto yyerrlab
 int
-xxparse()
+yyparse()
 {
-	register YYSTYPE *xxpvt;	/* top of value stack for $vars */
-
-	/*
-	** Initialize externals - xxparse may be called more than once
-	*/
-	xxpv = &xxv[-1];
-	xxps = &xxs[-1];
-	xxstate = 0;
-	xxtmp = 0;
-	xxnerrs = 0;
-	xxerrflag = 0;
-	xxchar = -1;
-
-	goto xxstack;
-	{
-		register YYSTYPE *xx_pv;	/* top of value stack */
-		register int *xx_ps;		/* top of state stack */
-		register int xx_state;		/* current state */
-		register int  xx_n;		/* internal state number info */
-
-		/*
-		** get globals into registers.
-		** branch to here only if YYBACKUP was called.
-		*/
-	xxnewstate:
-		xx_pv = xxpv;
-		xx_ps = xxps;
-		xx_state = xxstate;
-		goto xx_newstate;
-
-		/*
-		** get globals into registers.
-		** either we just started, or we just finished a reduction
-		*/
-	xxstack:
-		xx_pv = xxpv;
-		xx_ps = xxps;
-		xx_state = xxstate;
-
-		/*
-		** top of for (;;) loop while no reductions done
-		*/
-	xx_stack:
-		/*
-		** put a state and value onto the stacks
-		*/
+    register int yym, yyn, yystate;
 #if YYDEBUG
-		/*
-		** if debugging, look up token value in list of value vs.
-		** name pairs.  0 and negative (-1) are special values.
-		** Note: linear search is used since time is not a real
-		** consideration while debugging.
-		*/
-		if ( xxdebug )
-		{
-			register int xx_i;
+    register char *yys;
+    extern char *getenv();
 
-			printf( "State %d, token ", xx_state );
-			if ( xxchar == 0 )
-				printf( "end-of-file\n" );
-			else if ( xxchar < 0 )
-				printf( "-none-\n" );
-			else
-			{
-				for ( xx_i = 0; xxtoks[xx_i].t_val >= 0;
-					xx_i++ )
-				{
-					if ( xxtoks[xx_i].t_val == xxchar )
-						break;
-				}
-				printf( "%s\n", xxtoks[xx_i].t_name );
-			}
-		}
-#endif /* YYDEBUG */
-		if ( ++xx_ps >= &xxs[ YYMAXDEPTH ] )	/* room on stack? */
-		{
-			xxerror( "yacc stack overflow" );
-			YYABORT;
-		}
-		*xx_ps = xx_state;
-		*++xx_pv = xxval;
-
-		/*
-		** we have a new state - find out what to do
-		*/
-	xx_newstate:
-		if ( ( xx_n = xxpact[ xx_state ] ) <= YYFLAG )
-			goto xxdefault;		/* simple state */
-#if YYDEBUG
-		/*
-		** if debugging, need to mark whether new token grabbed
-		*/
-		xxtmp = xxchar < 0;
+    if (yys = getenv("YYDEBUG"))
+    {
+        yyn = *yys;
+        if (yyn >= '0' && yyn <= '9')
+            yydebug = yyn - '0';
+    }
 #endif
-		if ( ( xxchar < 0 ) && ( ( xxchar = xxlex() ) < 0 ) )
-			xxchar = 0;		/* reached EOF */
-#if YYDEBUG
-		if ( xxdebug && xxtmp )
-		{
-			register int xx_i;
 
-			printf( "Received token " );
-			if ( xxchar == 0 )
-				printf( "end-of-file\n" );
-			else if ( xxchar < 0 )
-				printf( "-none-\n" );
-			else
-			{
-				for ( xx_i = 0; xxtoks[xx_i].t_val >= 0;
-					xx_i++ )
-				{
-					if ( xxtoks[xx_i].t_val == xxchar )
-						break;
-				}
-				printf( "%s\n", xxtoks[xx_i].t_name );
-			}
-		}
-#endif /* YYDEBUG */
-		if ( ( ( xx_n += xxchar ) < 0 ) || ( xx_n >= YYLAST ) )
-			goto xxdefault;
-		if ( xxchk[ xx_n = xxact[ xx_n ] ] == xxchar )	/*valid shift*/
-		{
-			xxchar = -1;
-			xxval = xxlval;
-			xx_state = xx_n;
-			if ( xxerrflag > 0 )
-				xxerrflag--;
-			goto xx_stack;
-		}
+    yynerrs = 0;
+    yyerrflag = 0;
+    yychar = (-1);
 
-	xxdefault:
-		if ( ( xx_n = xxdef[ xx_state ] ) == -2 )
-		{
+    yyssp = yyss;
+    yyvsp = yyvs;
+    *yyssp = yystate = 0;
+
+yyloop:
+    if (yyn = yydefred[yystate]) goto yyreduce;
+    if (yychar < 0)
+    {
+        if ((yychar = yylex()) < 0) yychar = 0;
 #if YYDEBUG
-			xxtmp = xxchar < 0;
+        if (yydebug)
+        {
+            yys = 0;
+            if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
+            if (!yys) yys = "illegal-symbol";
+            printf("%sdebug: state %d, reading %d (%s)\n",
+                    YYPREFIX, yystate, yychar, yys);
+        }
 #endif
-			if ( ( xxchar < 0 ) && ( ( xxchar = xxlex() ) < 0 ) )
-				xxchar = 0;		/* reached EOF */
+    }
+    if ((yyn = yysindex[yystate]) && (yyn += yychar) >= 0 &&
+            yyn <= YYTABLESIZE && yycheck[yyn] == yychar)
+    {
 #if YYDEBUG
-			if ( xxdebug && xxtmp )
-			{
-				register int xx_i;
-
-				printf( "Received token " );
-				if ( xxchar == 0 )
-					printf( "end-of-file\n" );
-				else if ( xxchar < 0 )
-					printf( "-none-\n" );
-				else
-				{
-					for ( xx_i = 0;
-						xxtoks[xx_i].t_val >= 0;
-						xx_i++ )
-					{
-						if ( xxtoks[xx_i].t_val
-							== xxchar )
-						{
-							break;
-						}
-					}
-					printf( "%s\n", xxtoks[xx_i].t_name );
-				}
-			}
-#endif /* YYDEBUG */
-			/*
-			** look through exception table
-			*/
-			{
-				register int *xxxi = xxexca;
-
-				while ( ( *xxxi != -1 ) ||
-					( xxxi[1] != xx_state ) )
-				{
-					xxxi += 2;
-				}
-				while ( ( *(xxxi += 2) >= 0 ) &&
-					( *xxxi != xxchar ) )
-					;
-				if ( ( xx_n = xxxi[1] ) < 0 )
-					YYACCEPT;
-			}
-		}
-
-		/*
-		** check for syntax error
-		*/
-		if ( xx_n == 0 )	/* have an error */
-		{
-			/* no worry about speed here! */
-			switch ( xxerrflag )
-			{
-			case 0:		/* new error */
-				xxerror( "syntax error" );
-				goto skip_init;
-			xxerrlab:
-				/*
-				** get globals into registers.
-				** we have a user generated syntax type error
-				*/
-				xx_pv = xxpv;
-				xx_ps = xxps;
-				xx_state = xxstate;
-				xxnerrs++;
-			skip_init:
-			case 1:
-			case 2:		/* incompletely recovered error */
-					/* try again... */
-				xxerrflag = 3;
-				/*
-				** find state where "error" is a legal
-				** shift action
-				*/
-				while ( xx_ps >= xxs )
-				{
-					xx_n = xxpact[ *xx_ps ] + YYERRCODE;
-					if ( xx_n >= 0 && xx_n < YYLAST &&
-						xxchk[xxact[xx_n]] == YYERRCODE)					{
-						/*
-						** simulate shift of "error"
-						*/
-						xx_state = xxact[ xx_n ];
-						goto xx_stack;
-					}
-					/*
-					** current state has no shift on
-					** "error", pop stack
-					*/
-#if YYDEBUG
-#	define _POP_ "Error recovery pops state %d, uncovers state %d\n"
-					if ( xxdebug )
-						printf( _POP_, *xx_ps,
-							xx_ps[-1] );
-#	undef _POP_
+        if (yydebug)
+            printf("%sdebug: state %d, shifting to state %d\n",
+                    YYPREFIX, yystate, yytable[yyn]);
 #endif
-					xx_ps--;
-					xx_pv--;
-				}
-				/*
-				** there is no state on stack with "error" as
-				** a valid shift.  give up.
-				*/
-				YYABORT;
-			case 3:		/* no shift yet; eat a token */
-#if YYDEBUG
-				/*
-				** if debugging, look up token in list of
-				** pairs.  0 and negative shouldn't occur,
-				** but since timing doesn't matter when
-				** debugging, it doesn't hurt to leave the
-				** tests here.
-				*/
-				if ( xxdebug )
-				{
-					register int xx_i;
-
-					printf( "Error recovery discards " );
-					if ( xxchar == 0 )
-						printf( "token end-of-file\n" );
-					else if ( xxchar < 0 )
-						printf( "token -none-\n" );
-					else
-					{
-						for ( xx_i = 0;
-							xxtoks[xx_i].t_val >= 0;
-							xx_i++ )
-						{
-							if ( xxtoks[xx_i].t_val
-								== xxchar )
-							{
-								break;
-							}
-						}
-						printf( "token %s\n",
-							xxtoks[xx_i].t_name );
-					}
-				}
-#endif /* YYDEBUG */
-				if ( xxchar == 0 )	/* reached EOF. quit */
-					YYABORT;
-				xxchar = -1;
-				goto xx_newstate;
-			}
-		}/* end if ( xx_n == 0 ) */
-		/*
-		** reduction by production xx_n
-		** put stack tops, etc. so things right after switch
-		*/
-#if YYDEBUG
-		/*
-		** if debugging, print the string that is the user's
-		** specification of the reduction which is just about
-		** to be done.
-		*/
-		if ( xxdebug )
-			printf( "Reduce by (%d) \"%s\"\n",
-				xx_n, xxreds[ xx_n ] );
+        if (yyssp >= yyss + yystacksize - 1)
+        {
+            goto yyoverflow;
+        }
+        *++yyssp = yystate = yytable[yyn];
+        *++yyvsp = yylval;
+        yychar = (-1);
+        if (yyerrflag > 0)  --yyerrflag;
+        goto yyloop;
+    }
+    if ((yyn = yyrindex[yystate]) && (yyn += yychar) >= 0 &&
+            yyn <= YYTABLESIZE && yycheck[yyn] == yychar)
+    {
+        yyn = yytable[yyn];
+        goto yyreduce;
+    }
+    if (yyerrflag) goto yyinrecovery;
+#ifdef lint
+    goto yynewerror;
 #endif
-		xxtmp = xx_n;			/* value to switch over */
-		xxpvt = xx_pv;			/* $vars top of value stack */
-		/*
-		** Look in goto table for next state
-		** Sorry about using xx_state here as temporary
-		** register variable, but why not, if it works...
-		** If xxr2[ xx_n ] doesn't have the low order bit
-		** set, then there is no action to be done for
-		** this reduction.  So, no saving & unsaving of
-		** registers done.  The only difference between the
-		** code just after the if and the body of the if is
-		** the goto xx_stack in the body.  This way the test
-		** can be made before the choice of what to do is needed.
-		*/
-		{
-			/* length of production doubled with extra bit */
-			register int xx_len = xxr2[ xx_n ];
-
-			if ( !( xx_len & 01 ) )
-			{
-				xx_len >>= 1;
-				xxval = ( xx_pv -= xx_len )[1];	/* $$ = $1 */
-				xx_state = xxpgo[ xx_n = xxr1[ xx_n ] ] +
-					*( xx_ps -= xx_len ) + 1;
-				if ( xx_state >= YYLAST ||
-					xxchk[ xx_state =
-					xxact[ xx_state ] ] != -xx_n )
-				{
-					xx_state = xxact[ xxpgo[ xx_n ] ];
-				}
-				goto xx_stack;
-			}
-			xx_len >>= 1;
-			xxval = ( xx_pv -= xx_len )[1];	/* $$ = $1 */
-			xx_state = xxpgo[ xx_n = xxr1[ xx_n ] ] +
-				*( xx_ps -= xx_len ) + 1;
-			if ( xx_state >= YYLAST ||
-				xxchk[ xx_state = xxact[ xx_state ] ] != -xx_n )
-			{
-				xx_state = xxact[ xxpgo[ xx_n ] ];
-			}
-		}
-					/* save until reenter driver code */
-		xxstate = xx_state;
-		xxps = xx_ps;
-		xxpv = xx_pv;
-	}
-	/*
-	** code supplied by user is placed in this switch
-	*/
-	switch( xxtmp )
-	{
-		
+yynewerror:
+    yyerror("syntax error");
+#ifdef lint
+    goto yyerrlab;
+#endif
+yyerrlab:
+    ++yynerrs;
+yyinrecovery:
+    if (yyerrflag < 3)
+    {
+        yyerrflag = 3;
+        for (;;)
+        {
+            if ((yyn = yysindex[*yyssp]) && (yyn += YYERRCODE) >= 0 &&
+                    yyn <= YYTABLESIZE && yycheck[yyn] == YYERRCODE)
+            {
+#if YYDEBUG
+                if (yydebug)
+                    printf("%sdebug: state %d, error recovery shifting\
+ to state %d\n", YYPREFIX, *yyssp, yytable[yyn]);
+#endif
+                if (yyssp >= yyss + yystacksize - 1)
+                {
+                    goto yyoverflow;
+                }
+                *++yyssp = yystate = yytable[yyn];
+                *++yyvsp = yylval;
+                goto yyloop;
+            }
+            else
+            {
+#if YYDEBUG
+                if (yydebug)
+                    printf("%sdebug: error recovery discarding state %d\n",
+                            YYPREFIX, *yyssp);
+#endif
+                if (yyssp <= yyss) goto yyabort;
+                --yyssp;
+                --yyvsp;
+            }
+        }
+    }
+    else
+    {
+        if (yychar == 0) goto yyabort;
+#if YYDEBUG
+        if (yydebug)
+        {
+            yys = 0;
+            if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
+            if (!yys) yys = "illegal-symbol";
+            printf("%sdebug: state %d, error recovery discards token %d (%s)\n",
+                    YYPREFIX, yystate, yychar, yys);
+        }
+#endif
+        yychar = (-1);
+        goto yyloop;
+    }
+yyreduce:
+#if YYDEBUG
+    if (yydebug)
+        printf("%sdebug: state %d, reducing by rule %d (%s)\n",
+                YYPREFIX, yystate, yyn, yyrule[yyn]);
+#endif
+    yym = yylen[yyn];
+    yyval = yyvsp[1-yym];
+    switch (yyn)
+    {
 case 1:
-# line 85 "lace_y.y"
-{rn_ast = xxpvt[-0].node;} break;
+#line 86 "lace_y.y"
+{rn_ast = yyvsp[0].node;}
+break;
 case 2:
-# line 87 "lace_y.y"
-{rn_ast = xxpvt[-1].node;} break;
+#line 88 "lace_y.y"
+{rn_ast = yyvsp[-1].node;}
+break;
 case 3:
-# line 91 "lace_y.y"
+#line 92 "lace_y.y"
 {
-							xxval.node = create_node7 (ACE_SD,xxpvt[-6].node,xxpvt[-5].node,xxpvt[-4].node,xxpvt[-3].node,xxpvt[-2].node,xxpvt[-1].node,click_list_new());
-							} break;
+							yyval.node = create_node7 (ACE_SD,yyvsp[-6].node,yyvsp[-5].node,yyvsp[-4].node,yyvsp[-3].node,yyvsp[-2].node,yyvsp[-1].node,click_list_new());
+							}
+break;
 case 4:
-# line 96 "lace_y.y"
-{click_list_init();} break;
+#line 97 "lace_y.y"
+{click_list_init();}
+break;
 case 5:
-# line 97 "lace_y.y"
-{xxval.node = xxpvt[-0].node;} break;
+#line 98 "lace_y.y"
+{yyval.node = yyvsp[0].node;}
+break;
 case 6:
-# line 100 "lace_y.y"
-{xxval.value = click_list_push ();} break;
+#line 101 "lace_y.y"
+{yyval.value = click_list_push ();}
+break;
 case 7:
-# line 102 "lace_y.y"
+#line 103 "lace_y.y"
 {
-							xxval.node = create_node3 (ROOT_SD,xxpvt[-3].node,xxpvt[-1].node,xxpvt[-0].node);
-							click_list_set (xxval.node, xxpvt[-2].value);
-							} break;
+							yyval.node = create_node3 (ROOT_SD,yyvsp[-3].node,yyvsp[-1].node,yyvsp[0].node);
+							click_list_set (yyval.node, yyvsp[-2].value);
+							}
+break;
 case 8:
-# line 109 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 110 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 9:
-# line 111 "lace_y.y"
-{xxval.node = xxpvt[-1].node;} break;
+#line 112 "lace_y.y"
+{yyval.node = yyvsp[-1].node;}
+break;
 case 10:
-# line 115 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 116 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 11:
-# line 117 "lace_y.y"
-{xxval.node = xxpvt[-0].node;} break;
+#line 118 "lace_y.y"
+{yyval.node = yyvsp[0].node;}
+break;
 case 12:
-# line 121 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 122 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 13:
-# line 122 "lace_y.y"
-{list_init();} break;
+#line 123 "lace_y.y"
+{list_init();}
+break;
 case 14:
-# line 123 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 124 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 15:
-# line 127 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 128 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 16:
-# line 129 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 130 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 17:
-# line 133 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 134 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 18:
-# line 136 "lace_y.y"
-{xxval.node = create_node3 (CLUSTER_SD,xxpvt[-1].node,xxpvt[-0].node,NULL);} break;
+#line 137 "lace_y.y"
+{yyval.node = create_node3 (CLUSTER_SD,yyvsp[-1].node,yyvsp[0].node,NULL);}
+break;
 case 19:
-# line 138 "lace_y.y"
-{xxval.node = create_node3 (CLUSTER_SD,xxpvt[-2].node,xxpvt[-1].node,NULL);} break;
+#line 139 "lace_y.y"
+{yyval.node = create_node3 (CLUSTER_SD,yyvsp[-2].node,yyvsp[-1].node,NULL);}
+break;
 case 20:
-# line 140 "lace_y.y"
-{xxval.node = create_node3 (CLUSTER_SD,xxpvt[-3].node,xxpvt[-2].node,xxpvt[-1].node);} break;
+#line 141 "lace_y.y"
+{yyval.node = create_node3 (CLUSTER_SD,yyvsp[-3].node,yyvsp[-2].node,yyvsp[-1].node);}
+break;
 case 21:
-# line 144 "lace_y.y"
-{xxval.node = xxpvt[-1].node;} break;
+#line 145 "lace_y.y"
+{yyval.node = yyvsp[-1].node;}
+break;
 case 22:
-# line 148 "lace_y.y"
-{xxval.node = create_node7 (CLUST_PROP_SD,xxpvt[-6].node,xxpvt[-5].node,xxpvt[-4].node,xxpvt[-3].node,xxpvt[-2].node,xxpvt[-1].node,xxpvt[-0].node);} break;
+#line 149 "lace_y.y"
+{yyval.node = create_node7 (CLUST_PROP_SD,yyvsp[-6].node,yyvsp[-5].node,yyvsp[-4].node,yyvsp[-3].node,yyvsp[-2].node,yyvsp[-1].node,yyvsp[0].node);}
+break;
 case 23:
-# line 152 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 153 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 24:
-# line 154 "lace_y.y"
-{xxval.node = xxpvt[-0].node;} break;
+#line 155 "lace_y.y"
+{yyval.node = yyvsp[0].node;}
+break;
 case 25:
-# line 158 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 159 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 26:
-# line 159 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 160 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 27:
-# line 160 "lace_y.y"
-{list_init();} break;
+#line 161 "lace_y.y"
+{list_init();}
+break;
 case 28:
-# line 161 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 162 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 29:
-# line 165 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 166 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 30:
-# line 166 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 167 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 31:
-# line 167 "lace_y.y"
-{list_init();} break;
+#line 168 "lace_y.y"
+{list_init();}
+break;
 case 32:
-# line 168 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 169 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 33:
-# line 172 "lace_y.y"
-{list_push(create_node1(INCLUDE_SD,xxpvt[-0].node));} break;
+#line 173 "lace_y.y"
+{list_push(create_node1(INCLUDE_SD,yyvsp[0].node));}
+break;
 case 34:
-# line 174 "lace_y.y"
-{list_push(create_node1(INCLUDE_SD,xxpvt[-0].node));} break;
+#line 175 "lace_y.y"
+{list_push(create_node1(INCLUDE_SD,yyvsp[0].node));}
+break;
 case 35:
-# line 178 "lace_y.y"
-{list_push(create_node1(EXCLUDE_SD,xxpvt[-0].node));} break;
+#line 179 "lace_y.y"
+{list_push(create_node1(EXCLUDE_SD,yyvsp[0].node));}
+break;
 case 36:
-# line 180 "lace_y.y"
-{list_push(create_node1(EXCLUDE_SD,xxpvt[-0].node));} break;
+#line 181 "lace_y.y"
+{list_push(create_node1(EXCLUDE_SD,yyvsp[0].node));}
+break;
 case 37:
-# line 184 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 185 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 38:
-# line 186 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 187 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 39:
-# line 190 "lace_y.y"
-{xxval.node = xxpvt[-0].node;} break;
+#line 191 "lace_y.y"
+{yyval.node = yyvsp[0].node;}
+break;
 case 40:
-# line 194 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 195 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 41:
-# line 195 "lace_y.y"
-{list_init();} break;
+#line 196 "lace_y.y"
+{list_init();}
+break;
 case 42:
-# line 196 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 197 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 43:
-# line 200 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 201 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 44:
-# line 202 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 203 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 45:
-# line 206 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 207 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 46:
-# line 208 "lace_y.y"
-{xxval.node = create_node1 (CLUST_IGN_SD,xxpvt[-0].node);} break;
+#line 209 "lace_y.y"
+{yyval.node = create_node1 (CLUST_IGN_SD,yyvsp[0].node);}
+break;
 case 47:
-# line 210 "lace_y.y"
-{xxval.node = create_node2 (CLUST_REN_SD,xxpvt[-0].node,list_new(CONSTRUCT_LIST_SD));} break;
+#line 211 "lace_y.y"
+{yyval.node = create_node2 (CLUST_REN_SD,yyvsp[0].node,list_new(CONSTRUCT_LIST_SD));}
+break;
 case 48:
-# line 214 "lace_y.y"
-{xxval.node = xxpvt[-2].node;} break;
+#line 215 "lace_y.y"
+{yyval.node = yyvsp[-2].node;}
+break;
 case 49:
-# line 217 "lace_y.y"
-{list_init();} break;
+#line 218 "lace_y.y"
+{list_init();}
+break;
 case 50:
-# line 218 "lace_y.y"
-{xxval.node = xxpvt[-4].node;} break;
+#line 219 "lace_y.y"
+{yyval.node = yyvsp[-4].node;}
+break;
 case 51:
-# line 222 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 223 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 52:
-# line 224 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 225 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 53:
-# line 228 "lace_y.y"
-{xxval.node = create_node2 (TWO_NAME_SD,xxpvt[-2].node,xxpvt[-0].node);} break;
+#line 229 "lace_y.y"
+{yyval.node = create_node2 (TWO_NAME_SD,yyvsp[-2].node,yyvsp[0].node);}
+break;
 case 54:
-# line 232 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 233 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 55:
-# line 233 "lace_y.y"
-{list_init();} break;
+#line 234 "lace_y.y"
+{list_init();}
+break;
 case 56:
-# line 234 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 235 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 57:
-# line 238 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 239 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 58:
-# line 239 "lace_y.y"
-{list_init();} break;
+#line 240 "lace_y.y"
+{list_init();}
+break;
 case 59:
-# line 240 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 241 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 60:
-# line 244 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 245 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 61:
-# line 246 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 247 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 62:
-# line 250 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 251 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 63:
-# line 252 "lace_y.y"
-{xxval.node = create_node2 (D_OPTION_SD,xxpvt[-1].node,xxpvt[-0].node);} break;
+#line 253 "lace_y.y"
+{yyval.node = create_node2 (D_OPTION_SD,yyvsp[-1].node,yyvsp[0].node);}
+break;
 case 64:
-# line 256 "lace_y.y"
-{xxval.node = create_node(ASSERTION_SD);} break;
+#line 257 "lace_y.y"
+{yyval.node = create_node(ASSERTION_SD);}
+break;
 case 65:
-# line 258 "lace_y.y"
-{xxval.node = create_node(DEBUG_SD);} break;
+#line 259 "lace_y.y"
+{yyval.node = create_node(DEBUG_SD);}
+break;
 case 66:
-# line 260 "lace_y.y"
-{xxval.node = create_node(OPTIMIZE_SD);} break;
+#line 261 "lace_y.y"
+{yyval.node = create_node(OPTIMIZE_SD);}
+break;
 case 67:
-# line 262 "lace_y.y"
-{xxval.node = create_node(TRACE_SD);} break;
+#line 263 "lace_y.y"
+{yyval.node = create_node(TRACE_SD);}
+break;
 case 68:
-# line 264 "lace_y.y"
-{xxval.node = create_node1(FREE_OPTION_SD,xxpvt[-0].node);} break;
+#line 265 "lace_y.y"
+{yyval.node = create_node1(FREE_OPTION_SD,yyvsp[0].node);}
+break;
 case 69:
-# line 268 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 269 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 70:
-# line 270 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 271 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 71:
-# line 274 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 275 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 72:
-# line 276 "lace_y.y"
-{xxval.node = create_node3 (O_OPTION_SD,xxpvt[-2].node,xxpvt[-1].node,xxpvt[-0].node);} break;
+#line 277 "lace_y.y"
+{yyval.node = create_node3 (O_OPTION_SD,yyvsp[-2].node,yyvsp[-1].node,yyvsp[0].node);}
+break;
 case 73:
-# line 280 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 281 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 74:
-# line 282 "lace_y.y"
-{list_init(); list_push (xxpvt[-0].node);} break;
+#line 283 "lace_y.y"
+{list_init(); list_push (yyvsp[0].node);}
+break;
 case 75:
-# line 284 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 285 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 76:
-# line 288 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 289 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 77:
-# line 290 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 291 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 78:
-# line 294 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 295 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 79:
-# line 296 "lace_y.y"
-{xxval.node = xxpvt[-0].node;} break;
+#line 297 "lace_y.y"
+{yyval.node = yyvsp[0].node;}
+break;
 case 80:
-# line 300 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 301 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 81:
-# line 302 "lace_y.y"
-{xxval.node = xxpvt[-1].node;} break;
+#line 303 "lace_y.y"
+{yyval.node = yyvsp[-1].node;}
+break;
 case 82:
-# line 306 "lace_y.y"
-{xxval.node = xxpvt[-0].node;} break;
+#line 307 "lace_y.y"
+{yyval.node = yyvsp[0].node;}
+break;
 case 83:
-# line 308 "lace_y.y"
-{xxval.node = xxpvt[-0].node;} break;
+#line 309 "lace_y.y"
+{yyval.node = yyvsp[0].node;}
+break;
 case 84:
-# line 310 "lace_y.y"
-{xxval.node = create_node1 (NAME_SD,xxpvt[-0].node);} break;
+#line 311 "lace_y.y"
+{yyval.node = create_node1 (NAME_SD,yyvsp[0].node);}
+break;
 case 85:
-# line 314 "lace_y.y"
-{xxval.node = create_node1(YES_SD,lace_id("yes",start_position,end_position));} break;
+#line 315 "lace_y.y"
+{yyval.node = create_node1(YES_SD,lace_id("yes"));}
+break;
 case 86:
-# line 316 "lace_y.y"
-{xxval.node = create_node1(NO_SD,lace_id("no",start_position,end_position));} break;
+#line 317 "lace_y.y"
+{yyval.node = create_node1(NO_SD,lace_id("no"));}
+break;
 case 87:
-# line 318 "lace_y.y"
-{xxval.node = create_node1(ALL_SD,lace_id("all",start_position,end_position));} break;
+#line 319 "lace_y.y"
+{yyval.node = create_node1(ALL_SD,lace_id("all"));}
+break;
 case 88:
-# line 322 "lace_y.y"
-{xxval.node = create_node1(REQUIRE_SD,lace_id("require",start_position,end_position));} break;
+#line 323 "lace_y.y"
+{yyval.node = create_node1(REQUIRE_SD,lace_id("require"));}
+break;
 case 89:
-# line 324 "lace_y.y"
-{xxval.node = create_node1(ENSURE_SD,lace_id("ensure",start_position,end_position));} break;
+#line 325 "lace_y.y"
+{yyval.node = create_node1(ENSURE_SD,lace_id("ensure"));}
+break;
 case 90:
-# line 326 "lace_y.y"
-{xxval.node = create_node1(INVARIANT_SD,lace_id("invariant",start_position,end_position));} break;
+#line 327 "lace_y.y"
+{yyval.node = create_node1(INVARIANT_SD,lace_id("invariant"));}
+break;
 case 91:
-# line 328 "lace_y.y"
-{xxval.node = create_node1(LOOP_SD,lace_id("loop",start_position,end_position));} break;
+#line 329 "lace_y.y"
+{yyval.node = create_node1(LOOP_SD,lace_id("loop"));}
+break;
 case 92:
-# line 330 "lace_y.y"
-{xxval.node = create_node1(CHECK_SD,lace_id("check",start_position,end_position));} break;
+#line 331 "lace_y.y"
+{yyval.node = create_node1(CHECK_SD,lace_id("check"));}
+break;
 case 93:
-# line 334 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 335 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 94:
-# line 335 "lace_y.y"
-{list_init();} break;
+#line 336 "lace_y.y"
+{list_init();}
+break;
 case 95:
-# line 336 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 337 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 96:
-# line 340 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 341 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 97:
-# line 342 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 343 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 98:
-# line 346 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 347 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 99:
-# line 347 "lace_y.y"
-{list_init();} break;
+#line 348 "lace_y.y"
+{list_init();}
+break;
 case 100:
-# line 348 "lace_y.y"
-{xxval.node = create_node2 (LANG_TRIB_SD,xxpvt[-3].node,list_new(CONSTRUCT_LIST_SD));} break;
+#line 349 "lace_y.y"
+{yyval.node = create_node2 (LANG_TRIB_SD,yyvsp[-3].node,list_new(CONSTRUCT_LIST_SD));}
+break;
 case 101:
-# line 352 "lace_y.y"
-{xxval.node =
-		create_node1(C_NAME_SD,lace_id("c",start_position,end_position));} break;
+#line 353 "lace_y.y"
+{yyval.node =
+		create_node1(C_NAME_SD,lace_id("c"));}
+break;
 case 102:
-# line 355 "lace_y.y"
-{xxval.node =
-		create_node1(MAKE_NAME_SD,lace_id("make",start_position,end_position));} break;
+#line 356 "lace_y.y"
+{yyval.node =
+		create_node1(INCLUDE_PATH_NAME_SD,lace_id("include_path"));}
+break;
 case 103:
-# line 358 "lace_y.y"
-{xxval.node =
-		create_node1(OBJECT_NAME_SD,lace_id("object",start_position,end_position));} break;
+#line 359 "lace_y.y"
+{yyval.node =
+		create_node1(MAKE_NAME_SD,lace_id("make"));}
+break;
 case 104:
-# line 361 "lace_y.y"
-{xxval.node =
-		create_node1(EXECUTABLE_NAME_SD,lace_id("executable",start_position,end_position));} break;
+#line 362 "lace_y.y"
+{yyval.node =
+		create_node1(OBJECT_NAME_SD,lace_id("object"));}
+break;
 case 105:
-# line 364 "lace_y.y"
-{xxval.node = create_node1(LANGUAGE_NAME_SD,xxpvt[-0].node);} break;
+#line 365 "lace_y.y"
+{yyval.node =
+		create_node1(EXECUTABLE_NAME_SD,lace_id("executable"));}
+break;
 case 106:
-# line 368 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 368 "lace_y.y"
+{yyval.node = create_node1(LANGUAGE_NAME_SD,yyvsp[0].node);}
+break;
 case 107:
-# line 369 "lace_y.y"
-{list_init();} break;
+#line 372 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 108:
-# line 370 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 373 "lace_y.y"
+{list_init();}
+break;
 case 109:
-# line 374 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 374 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 110:
-# line 376 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 378 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 111:
-# line 380 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 380 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 112:
-# line 382 "lace_y.y"
-{xxval.node = create_node3 (LANG_GEN_SD,xxpvt[-3].node,xxpvt[-2].node,xxpvt[-0].node);} break;
+#line 384 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 113:
-# line 386 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 386 "lace_y.y"
+{yyval.node = create_node3 (LANG_GEN_SD,yyvsp[-3].node,yyvsp[-2].node,yyvsp[0].node);}
+break;
 case 114:
-# line 388 "lace_y.y"
-{xxval.node = xxpvt[-1].node;} break;
+#line 390 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 115:
-# line 392 "lace_y.y"
-{xxval.node = create_node (YES_SD);} break;
+#line 392 "lace_y.y"
+{yyval.node = yyvsp[-1].node;}
+break;
 case 116:
-# line 394 "lace_y.y"
-{xxval.node = create_node (NO_SD);} break;
+#line 396 "lace_y.y"
+{yyval.node = create_node (YES_SD);}
+break;
 case 117:
-# line 398 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 398 "lace_y.y"
+{yyval.node = create_node (NO_SD);}
+break;
 case 118:
-# line 399 "lace_y.y"
-{list_init();} break;
+#line 402 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 119:
-# line 400 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 403 "lace_y.y"
+{list_init();}
+break;
 case 120:
-# line 404 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 404 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 121:
-# line 406 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 408 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 122:
-# line 410 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 410 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 123:
-# line 412 "lace_y.y"
-{xxval.node = create_node5 (CLAS_VISI_SD,xxpvt[-0].node,NULL,NULL,NULL,NULL);} break;
+#line 414 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 124:
-# line 414 "lace_y.y"
-{xxval.node = create_node5 (CLAS_VISI_SD,xxpvt[-1].node,NULL,NULL,NULL,NULL);} break;
+#line 416 "lace_y.y"
+{yyval.node = create_node5 (CLAS_VISI_SD,yyvsp[0].node,NULL,NULL,NULL,NULL);}
+break;
 case 125:
-# line 416 "lace_y.y"
-{xxval.node = create_node5 (CLAS_VISI_SD,xxpvt[-5].node,xxpvt[-4].node,xxpvt[-3].node,xxpvt[-2].node,xxpvt[-1].node);} break;
+#line 418 "lace_y.y"
+{yyval.node = create_node5 (CLAS_VISI_SD,yyvsp[-1].node,NULL,NULL,NULL,NULL);}
+break;
 case 126:
-# line 420 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 420 "lace_y.y"
+{yyval.node = create_node5 (CLAS_VISI_SD,yyvsp[-5].node,yyvsp[-4].node,yyvsp[-3].node,yyvsp[-2].node,yyvsp[-1].node);}
+break;
 case 127:
-# line 422 "lace_y.y"
-{xxval.node = xxpvt[-0].node;} break;
+#line 424 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 128:
-# line 426 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 426 "lace_y.y"
+{yyval.node = yyvsp[0].node;}
+break;
 case 129:
-# line 427 "lace_y.y"
-{list_init();} break;
+#line 430 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 130:
-# line 428 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 431 "lace_y.y"
+{list_init();}
+break;
 case 131:
-# line 432 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 432 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 132:
-# line 433 "lace_y.y"
-{list_init();} break;
+#line 436 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 133:
-# line 434 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 437 "lace_y.y"
+{list_init();}
+break;
 case 134:
-# line 438 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 438 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 135:
-# line 440 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 442 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 136:
-# line 444 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 444 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 137:
-# line 445 "lace_y.y"
-{list_init();} break;
+#line 448 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 138:
-# line 446 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+#line 449 "lace_y.y"
+{list_init();}
+break;
 case 139:
-# line 450 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 450 "lace_y.y"
+{yyval.node = list_new(CONSTRUCT_LIST_SD);}
+break;
 case 140:
-# line 452 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+#line 454 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 141:
-# line 456 "lace_y.y"
-{xxval.node = NULL;} break;
+#line 456 "lace_y.y"
+{list_push(yyvsp[0].node);}
+break;
 case 142:
-# line 458 "lace_y.y"
-{xxval.node = create_node2 (TWO_NAME_SD,xxpvt[-2].node,xxpvt[-0].node);} break;
+#line 460 "lace_y.y"
+{yyval.node = NULL;}
+break;
 case 143:
-# line 462 "lace_y.y"
-{xxval.node = lace_id (token_str,start_position,end_position);} break;
+#line 462 "lace_y.y"
+{yyval.node = create_node2 (TWO_NAME_SD,yyvsp[-2].node,yyvsp[0].node);}
+break;
 case 144:
-# line 464 "lace_y.y"
-{xxval.node = lace_id (token_str,start_position,end_position);} break;
-	}
-	goto xxstack;		/* reset registers in driver code */
+#line 466 "lace_y.y"
+{yyval.node = lace_id (token_str);}
+break;
+case 145:
+#line 468 "lace_y.y"
+{yyval.node = lace_id (token_str);}
+break;
+#line 1217 "y_tab.c"
+    }
+    yyssp -= yym;
+    yystate = *yyssp;
+    yyvsp -= yym;
+    yym = yylhs[yyn];
+    if (yystate == 0 && yym == 0)
+    {
+#if YYDEBUG
+        if (yydebug)
+            printf("%sdebug: after reduction, shifting from state 0 to\
+ state %d\n", YYPREFIX, YYFINAL);
+#endif
+        yystate = YYFINAL;
+        *++yyssp = YYFINAL;
+        *++yyvsp = yyval;
+        if (yychar < 0)
+        {
+            if ((yychar = yylex()) < 0) yychar = 0;
+#if YYDEBUG
+            if (yydebug)
+            {
+                yys = 0;
+                if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
+                if (!yys) yys = "illegal-symbol";
+                printf("%sdebug: state %d, reading %d (%s)\n",
+                        YYPREFIX, YYFINAL, yychar, yys);
+            }
+#endif
+        }
+        if (yychar == 0) goto yyaccept;
+        goto yyloop;
+    }
+    if ((yyn = yygindex[yym]) && (yyn += yystate) >= 0 &&
+            yyn <= YYTABLESIZE && yycheck[yyn] == yystate)
+        yystate = yytable[yyn];
+    else
+        yystate = yydgoto[yym];
+#if YYDEBUG
+    if (yydebug)
+        printf("%sdebug: after reduction, shifting from state %d \
+to state %d\n", YYPREFIX, *yyssp, yystate);
+#endif
+    if (yyssp >= yyss + yystacksize - 1)
+    {
+        goto yyoverflow;
+    }
+    *++yyssp = yystate;
+    *++yyvsp = yyval;
+    goto yyloop;
+yyoverflow:
+    yyerror("yacc stack overflow");
+yyabort:
+    return (1);
+yyaccept:
+    return (0);
 }

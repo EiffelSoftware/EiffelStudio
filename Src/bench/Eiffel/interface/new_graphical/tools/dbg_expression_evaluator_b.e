@@ -549,6 +549,13 @@ feature -- EXPR_B evaluation
 						else
 							evaluate_function (context_address, Void, ef, params)
 						end
+					elseif fi.is_attribute then
+							-- How come ? maybe with redefinition .. and so on ..
+						if tmp_target /= Void then
+							evaluate_attribute (tmp_target.value_address, tmp_target, ef)
+						else
+							evaluate_attribute (context_address, Void, ef)
+						end							
 					else
 						set_error_not_implemented (a_feature_b.generator +  " => ERROR : other than function, constant and once : not available")
 					end
@@ -647,7 +654,7 @@ feature -- EXPR_B evaluation
 				if tmp_target /= Void then
 					evaluate_attribute (tmp_target.value_address, tmp_target, ef)
 				else
-					evaluate_attribute (context_address, tmp_target, ef)
+					evaluate_attribute (context_address, Void, ef)
 				end				
 			end
 		end

@@ -35,6 +35,14 @@ feature -- Comparison
 			Result := item < other.item;
 		end;
 
+feature -- Element change
+
+	set_item (c: CHARACTER) is
+			-- Make `c' the `item' value.
+		do
+			item := c
+		end
+
 feature -- Output
 
 	out: STRING is

@@ -169,6 +169,8 @@ feature -- Status report
 	public static String generator (object o)
 		// Generator class name of `o'.
 	{
+		if (o == null) return "NONE";
+
 		String Result;
 
 		if (o is EIFFEL_TYPE_INFO) {
@@ -184,6 +186,8 @@ feature -- Status report
 	public static String generating_type (object o)
 		// Generating type name of `o'.
 	{
+		if (o == null) return "NONE";
+
 		EIFFEL_DERIVATION der;
 		EIFFEL_TYPE_INFO info;
 		String Result;
@@ -201,6 +205,7 @@ feature -- Status report
 		} else {
 			Result = o.GetType().Name;
 		}
+
 		return Result;
 	}
 

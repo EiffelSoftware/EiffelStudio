@@ -15,28 +15,23 @@ inherit
 			pass_address, copy, setup, consistent, is_equal
 		redefine
 			number_of_stop_points, is_equivalent
-		end;
-	CONSTRUCT_LIST [T]
-		rename
-			make as cl_make
-		end;
+		end
+
 	CONSTRUCT_LIST [T]
 		redefine
-			make
-		select
-			make
-		end;
+			make_filled
+		end
 
 creation {ARRAY_AS, PARENT_AS, UN_STRIP_AS, YACC_EIFFEL, COMPILER_EXPORTER}
-	make
+	make, make_filled
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make_filled (n: INTEGER) is
 		do
-			cl_make (n)
+			{CONSTRUCT_LIST} precursor (n)
 			compare_objects
-		end;
+		end
 
 feature -- Access
 

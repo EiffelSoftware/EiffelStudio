@@ -209,8 +209,8 @@ feature {COMPILER_EXPORTER} -- Element change
 			features.item.add_feature (f)
 			features.forth
 			from
-				offset := f.end_position - f.start_position + 4
-					--| feature size + 1 semicolumn + 2 new lines
+				offset := f.end_position - f.start_position + 2
+					--| feature size + 1 semicolumn
 			until
 				features.off
 			loop
@@ -235,8 +235,8 @@ feature {COMPILER_EXPORTER} -- Element change
 			features.item.remove_feature (f)
 			features.forth
 			from
-				offset := - (f.end_position - f.start_position + 4) --%%%%
-					--| feature size + 1 semicolumn + 2 new lines
+				offset := - (f.end_position - f.start_position + 2) --%%%%
+					--| feature size + 1 semicolumn
 	
 			until
 				features.off

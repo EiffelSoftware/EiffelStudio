@@ -2,48 +2,38 @@ system
 	"sample"
 
 root
-	ROOT_CLASS: make
+	root_class: make
 
 default
-	assertion (check)
-	assertion (require)
-	assertion (ensure)
-	assertion (loop)
-	assertion (invariant)
-	arguments (" ")
+	assertion (all)
 	disabled_debug (yes)
 	disabled_debug ("java")
 	debug (no)
 	line_generation (no)
-	profile (no)
-	trace (no)
-	il_verifiable (no)
-	msil_generation_type ("exe")
 	check_vape (yes)
 	console_application (yes)
-	address_expression (yes)
-	array_optimization (no)
-	dead_code_removal (yes)
-	dynamic_runtime (no)
-	exception_trace (no)
-	inlining (no)
-	multithreaded (no)
+
 
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\Eiffel2Java"
-
 
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude
 			"desc"; "table_eiffel3"; 
 		end
 
-	java:		"$ISE_EIFFEL\library\Eiffel2Java"
+	all java:		"$ISE_EIFFEL\library\Eiffel2Java"
+		exclude
+			"Clib"; "spec"; "CVS"
+		end
 
 external
 
+	include_path:
+		"$(JDK_HOME)\include",
+		"$(JDK_HOME)\include\win32"
+
 	object:
-		"$(ISE_EIFFEL)\library\Eiffel2Java\spec\$(ISE_C_COMPILER)\lib\e2j.obj",
-		"$(JDK_HOME)\lib\javai.lib"
+		"$(JDK_HOME)\lib\jvm.lib"
 
 end

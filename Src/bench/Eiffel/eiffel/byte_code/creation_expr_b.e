@@ -25,6 +25,9 @@ feature -- Register
 		do
 			create {REGISTER} register.make (Reference_c_type)
 		end
+		
+	count_register: REGISTER
+			-- Store size of SPECIAL instance to create is stored if needed.
 
 feature -- C code generation
 
@@ -43,16 +46,26 @@ feature -- Analyze
 
 	analyze is
 			-- Analyze creation node
+		local
+			l_call: like call
 		do
 			if not type.is_basic then
 				info.analyze
 				get_register
-				if call /= Void then
-					call.set_parent (nested_b)
-					call.set_register (register)
-					call.set_need_invariant (False)
-					call.analyze_on (register)
-					call.set_parent (Void)
+				l_call := call
+				if l_call /= Void then
+					if l_call.routine_id = system.special_make_id then
+						check
+							is_special_call_valid: is_special_call_valid
+						end
+						l_call.parameters.first.analyze
+					else
+						l_call.set_parent (nested_b)
+						l_call.set_register (register)
+						l_call.set_need_invariant (False)
+						l_call.analyze_on (register)
+						l_call.set_parent (Void)
+					end
 				end
 			else
 				create {REGISTER} register.make (type.c_type)
@@ -60,11 +73,22 @@ feature -- Analyze
 		end
 
 	unanalyze is
+			-- Unanalyze creation code
+		local
+			l_call: like call
 		do
 			if not type.is_basic then
 				Precursor {ACCESS_B}
-				if call /= Void then
-					call.unanalyze
+				l_call := call
+				if l_call /= Void then
+					if l_call.routine_id = system.special_make_id then
+						check
+							is_special_call_valid: is_special_call_valid
+						end
+						l_call.parameters.first.unanalyze	
+					else
+						l_call.unanalyze
+					end
 				end
 			end
 		end
@@ -198,6 +222,9 @@ feature -- Byte code generation
 			-- Generate byte code for a creation instruction
 		local
 			l_basic_type: BASIC_I
+			l_special_type: GEN_TYPE_I
+			l_class_type: SPECIAL_CLASS_TYPE
+			l_call: like call
 		do
 			l_basic_type ?= type
 			if l_basic_type /= Void then
@@ -206,25 +233,38 @@ feature -- Byte code generation
 					-- is `default_create' and it does nothing.
 				l_basic_type.make_default_byte_code (ba)
 			else
-				ba.append (Bc_create)
-				
-					-- If there is a call, we need to duplicate newly created object
-					-- after its creation. This information is used by the runtime
-					-- to do this duplication.
-				if call /= Void then
-					ba.append ('%/001/')
+				l_call := call
+				if l_call /= Void and then l_call.routine_id = system.special_make_id then
+					l_special_type ?= context.creation_type (type)
+					check
+						is_special_call_valid: is_special_call_valid
+						is_special_type: l_special_type /= Void and then
+							l_special_type.base_class.lace_class = system.special_class
+					end
+					l_class_type ?= l_special_type.associated_class_type
+					check
+						l_class_type_not_void: l_class_type /= Void
+					end
+					l_call.parameters.first.make_byte_code (ba)
+					ba.append (Bc_spcreate)
+					info.make_byte_code (ba)
+					l_class_type.make_creation_byte_code (ba)
 				else
-					ba.append ('%/000/')
-				end
-				
-					-- Create associated object.
-				info.make_byte_code (ba)
-				
-					-- Call creation procedure if any.
-				if call /= Void then
-					call.set_parent (nested_b)
-					call.make_creation_byte_code (ba)
-					call.set_parent (Void)
+					ba.append (Bc_create)
+						-- If there is a call, we need to duplicate newly created object
+						-- after its creation. This information is used by the runtime
+						-- to do this duplication.
+					ba.append_boolean (l_call /= Void)
+					
+						-- Create associated object.
+					info.make_byte_code (ba)
+					
+						-- Call creation procedure if any.
+					if l_call /= Void then
+						l_call.set_parent (nested_b)
+						l_call.make_creation_byte_code (ba)
+						l_call.set_parent (Void)
+					end
 				end
 					-- Runtime is in charge to make sure that newly created object
 					-- has been duplicated so that we can check the invariant.
@@ -255,21 +295,47 @@ feature -- Generation
 		local
 			buf: GENERATION_BUFFER
 			l_basic_type: BASIC_I
+			l_call: like call
+			l_special_creation: BOOLEAN
+			l_special_type: GEN_TYPE_I
+			l_class_type: SPECIAL_CLASS_TYPE
 		do
-			generate_line_info
-			l_basic_type ?= type
-			if l_basic_type = Void then
-				info.generate_start (Current)
-				info.generate_gen_type_conversion (Current)
-			end
-			register.print_register
 			buf := buffer
-			buf.put_string (" = ")
+			generate_line_info
+
+			l_basic_type ?= type
+			l_call := call
+			l_special_creation := l_basic_type = Void and then
+				l_call /= Void and then l_call.routine_id = system.special_make_id
 			if l_basic_type /= Void then
+				register.print_register
+				buf.put_string (" = ")
 				l_basic_type.generate_default_value (buf)
 				buf.put_character (';')
 				buf.put_new_line
+			elseif l_special_creation then
+				check
+					is_special_call_valid: is_special_call_valid
+				end
+				l_special_type ?= context.creation_type (type)
+				check
+					is_special_type: l_special_type /= Void and then
+						l_special_type.base_class.lace_class = system.special_class
+				end
+				l_class_type ?= l_special_type.associated_class_type
+				check
+					l_class_type_not_void: l_class_type /= Void
+				end
+				l_call.parameters.first.generate
+				info.generate_start (Current)
+				info.generate_gen_type_conversion (Current)
+				l_class_type.generate_creation (buf, info, register, l_call.parameters.first)
+				info.generate_end (Current)
 			else
+				info.generate_start (Current)
+				info.generate_gen_type_conversion (Current)
+				register.print_register
+				buf.put_string (" = ")
 				info.generate
 				buf.put_character (';')
 				buf.put_new_line
@@ -305,4 +371,17 @@ feature -- Inlining
 			Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
 		end
 	
+feature {NONE} -- Assertion support
+
+	is_special_call_valid: BOOLEAN is
+			-- Is current creation call a call to SPECIAL.make?
+		do
+			Result := call /= Void and then call.parameters /= Void and then
+				call.parameters.count = 1
+		ensure
+			is_special_call_valid: Result implies
+				(call /= Void and then call.parameters /= Void and then
+				call.parameters.count = 1)
+		end
+		
 end -- class CREATION_EXPR_B

@@ -14,7 +14,9 @@ inherit
 	TWO_WAY_LIST [CALL_STACK_ELEMENT_CLASSIC]
 		rename
 			make as list_make
-		end;
+		export
+			{NONE} list_make			
+		end
 	SHARED_CONFIGURE_RESOURCES
 		export
 			{NONE} all
@@ -28,9 +30,6 @@ inherit
 
 create {RUN_INFO, APPLICATION_STATUS_CLASSIC}
 	make, dummy_make
-
-create {EIFFEL_CALL_STACK_CLASSIC}
-	list_make --, make_sublist
 
 feature -- Properties
 

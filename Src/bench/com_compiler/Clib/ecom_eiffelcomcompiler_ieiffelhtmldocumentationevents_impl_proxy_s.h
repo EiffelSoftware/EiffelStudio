@@ -37,6 +37,30 @@ public:
 	virtual ~IEiffelHtmlDocumentationEvents_impl_proxy ();
 
 	/*-----------------------------------------------------------
+	Last error code
+	-----------------------------------------------------------*/
+	EIF_INTEGER ccom_last_error_code();
+
+
+	/*-----------------------------------------------------------
+	Last source of exception
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_source_of_exception();
+
+
+	/*-----------------------------------------------------------
+	Last error description
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_error_description();
+
+
+	/*-----------------------------------------------------------
+	Last error help file
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_error_help_file();
+
+
+	/*-----------------------------------------------------------
 	Notify that documentation generating is initializing
 	-----------------------------------------------------------*/
 	void ccom_notify_initalizing_documentation();
@@ -93,6 +117,12 @@ private:
 	Default IUnknown interface pointer
 	-----------------------------------------------------------*/
 	IUnknown * p_unknown;
+
+
+	/*-----------------------------------------------------------
+	Exception information
+	-----------------------------------------------------------*/
+	EXCEPINFO * excepinfo;
 
 
 

@@ -41,37 +41,37 @@ public:
 	virtual ~IEnumClusterProp_impl_stub ();
 
 	/*-----------------------------------------------------------
-	No description available.
+	Go to next item in enumerator
 	-----------------------------------------------------------*/
 	STDMETHODIMP Next(  /* [out] */ ecom_EiffelComCompiler::IEiffelClusterProperties * * pp_ieiffel_cluster_properties, /* [out] */ ULONG * pul_fetched );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Skip `ulCount' items.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Skip(  /* [in] */ ULONG ul_count );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Reset enumerator.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Reset( void );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Clone enumerator.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumClusterProp * * pp_ienum_cluster_prop );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerators ith item at `ulIndex'.
 	-----------------------------------------------------------*/
 	STDMETHODIMP IthItem(  /* [in] */ ULONG ul_index, /* [out] */ ecom_EiffelComCompiler::IEiffelClusterProperties * * pp_ieiffel_cluster_properties );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerator item count.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Count(  /* [out, retval] */ ULONG * pul_count0 );
 

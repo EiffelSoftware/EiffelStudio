@@ -33,7 +33,7 @@ extern "C" {
 #define __ecom_EiffelComCompiler_IEiffelCompilerEvents_INTERFACE_DEFINED__
 namespace ecom_EiffelComCompiler
 {
-class IEiffelCompilerEvents : public IUnknown
+class IEiffelCompilerEvents : public IDispatch
 {
 public:
 	IEiffelCompilerEvents () {};

@@ -91,6 +91,32 @@ feature -- Access
 			Result := ccom_is_library (initializer)
 		end
 
+feature -- Status Report
+
+	last_error_code: INTEGER is
+			-- Last error code.
+		do
+			Result := ccom_last_error_code (initializer)
+		end
+
+	last_error_description: STRING is
+			-- Last error description.
+		do
+			Result := ccom_last_error_description (initializer)
+		end
+
+	last_error_help_file: STRING is
+			-- Last error help file.
+		do
+			Result := ccom_last_error_help_file (initializer)
+		end
+
+	last_source_of_exception: STRING is
+			-- Last source of exception.
+		do
+			Result := ccom_last_source_of_exception (initializer)
+		end
+
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -183,6 +209,30 @@ feature {NONE}  -- Externals
 			-- Item
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy_s.h%"]():EIF_POINTER"
+		end
+
+	ccom_last_error_code (cpp_obj: POINTER): INTEGER is
+			-- Last error code
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy_s.h%"]():EIF_INTEGER"
+		end
+
+	ccom_last_error_description (cpp_obj: POINTER): STRING is
+			-- Last error description
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy_s.h%"]():EIF_REFERENCE"
+		end
+
+	ccom_last_error_help_file (cpp_obj: POINTER): STRING is
+			-- Last error help file
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy_s.h%"]():EIF_REFERENCE"
+		end
+
+	ccom_last_source_of_exception (cpp_obj: POINTER): STRING is
+			-- Last source of exception
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy_s.h%"]():EIF_REFERENCE"
 		end
 
 end -- IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_PROXY

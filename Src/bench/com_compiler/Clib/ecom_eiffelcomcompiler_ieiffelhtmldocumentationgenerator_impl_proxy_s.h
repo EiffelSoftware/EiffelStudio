@@ -39,6 +39,30 @@ public:
 	virtual ~IEiffelHtmlDocumentationGenerator_impl_proxy ();
 
 	/*-----------------------------------------------------------
+	Last error code
+	-----------------------------------------------------------*/
+	EIF_INTEGER ccom_last_error_code();
+
+
+	/*-----------------------------------------------------------
+	Last source of exception
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_source_of_exception();
+
+
+	/*-----------------------------------------------------------
+	Last error description
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_error_description();
+
+
+	/*-----------------------------------------------------------
+	Last error help file
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_error_help_file();
+
+
+	/*-----------------------------------------------------------
 	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
 	void ccom_add_excluded_cluster(  /* [in] */ EIF_OBJECT bstr_full_cluster_name );
@@ -89,6 +113,12 @@ private:
 	Default IUnknown interface pointer
 	-----------------------------------------------------------*/
 	IUnknown * p_unknown;
+
+
+	/*-----------------------------------------------------------
+	Exception information
+	-----------------------------------------------------------*/
+	EXCEPINFO * excepinfo;
 
 
 

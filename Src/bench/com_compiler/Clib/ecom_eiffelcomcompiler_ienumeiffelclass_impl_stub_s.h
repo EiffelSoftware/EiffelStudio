@@ -41,37 +41,37 @@ public:
 	virtual ~IEnumEiffelClass_impl_stub ();
 
 	/*-----------------------------------------------------------
-	No description available.
+	Go to next item in enumerator
 	-----------------------------------------------------------*/
 	STDMETHODIMP Next(  /* [out] */ ecom_EiffelComCompiler::IEiffelClassDescriptor * * pp_ieiffel_class_descriptor, /* [out] */ ULONG * pul_fetched );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Skip `ulCount' items.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Skip(  /* [in] */ ULONG ul_count );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Reset enumerator.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Reset( void );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Clone enumerator.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerators ith item at `ulIndex'.
 	-----------------------------------------------------------*/
 	STDMETHODIMP IthItem(  /* [in] */ ULONG ul_index, /* [out] */ ecom_EiffelComCompiler::IEiffelClassDescriptor * * pp_ieiffel_class_descriptor );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerator item count.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Count(  /* [out, retval] */ ULONG * pul_count );
 

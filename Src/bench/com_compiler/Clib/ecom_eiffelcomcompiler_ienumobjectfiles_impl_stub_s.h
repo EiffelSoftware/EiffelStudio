@@ -41,37 +41,37 @@ public:
 	virtual ~IEnumObjectFiles_impl_stub ();
 
 	/*-----------------------------------------------------------
-	No description available.
+	Go to next item in enumerator
 	-----------------------------------------------------------*/
 	STDMETHODIMP Next(  /* [out] */ BSTR * pbstr_object_file, /* [out] */ ULONG * pul_fetched );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Skip `ulCount' items.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Skip(  /* [in] */ ULONG ul_count );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Reset enumerator.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Reset( void );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Clone enumerator.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumObjectFiles * * pp_ienum_object_files );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerators ith item at `ulIndex'.
 	-----------------------------------------------------------*/
 	STDMETHODIMP IthItem(  /* [in] */ ULONG ul_index, /* [out] */ BSTR * pbstr_object_file );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerator item count.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Count(  /* [out, retval] */ ULONG * pul_count );
 

@@ -139,6 +139,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Version of CLR compiler should target
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_target_clr_version(  );
+
+
+	/*-----------------------------------------------------------
+	Version of CLR compiler should target
+	-----------------------------------------------------------*/
+	void ccom_set_target_clr_version(  /* [in] */ EIF_OBJECT pbstr_version );
+
+
+	/*-----------------------------------------------------------
 	.NET Naming convention
 	-----------------------------------------------------------*/
 	EIF_BOOLEAN ccom_dot_net_naming_convention(  );

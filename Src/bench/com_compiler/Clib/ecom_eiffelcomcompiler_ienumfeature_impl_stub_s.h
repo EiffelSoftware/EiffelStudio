@@ -41,37 +41,37 @@ public:
 	virtual ~IEnumFeature_impl_stub ();
 
 	/*-----------------------------------------------------------
-	No description available.
+	Go to next item in enumerator
 	-----------------------------------------------------------*/
 	STDMETHODIMP Next(  /* [out] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * pp_ieiffel_feature_descriptor, /* [out] */ ULONG * pul_fetched );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Skip `ulCount' items.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Skip(  /* [in] */ ULONG ul_count );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Reset enumerator.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Reset( void );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Clone enumerator.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerators ith item at `ulIndex'.
 	-----------------------------------------------------------*/
 	STDMETHODIMP IthItem(  /* [in] */ ULONG ul_index, /* [out] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * pp_ieiffel_feature_descriptor );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerator item count.
 	-----------------------------------------------------------*/
 	STDMETHODIMP Count(  /* [out, retval] */ ULONG * ul_count );
 

@@ -39,37 +39,61 @@ public:
 	virtual ~IEnumClusterProp_impl_proxy ();
 
 	/*-----------------------------------------------------------
-	No description available.
+	Last error code
+	-----------------------------------------------------------*/
+	EIF_INTEGER ccom_last_error_code();
+
+
+	/*-----------------------------------------------------------
+	Last source of exception
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_source_of_exception();
+
+
+	/*-----------------------------------------------------------
+	Last error description
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_error_description();
+
+
+	/*-----------------------------------------------------------
+	Last error help file
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_error_help_file();
+
+
+	/*-----------------------------------------------------------
+	Go to next item in enumerator
 	-----------------------------------------------------------*/
 	void ccom_next(  /* [out] */ EIF_OBJECT pp_ieiffel_cluster_properties,  /* [out] */ EIF_OBJECT pul_fetched );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Skip `ulCount' items.
 	-----------------------------------------------------------*/
 	void ccom_skip(  /* [in] */ EIF_INTEGER ul_count );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Reset enumerator.
 	-----------------------------------------------------------*/
 	void ccom_reset();
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Clone enumerator.
 	-----------------------------------------------------------*/
 	void ccom_clone1(  /* [out] */ EIF_OBJECT pp_ienum_cluster_prop );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerators ith item at `ulIndex'.
 	-----------------------------------------------------------*/
 	void ccom_ith_item(  /* [in] */ EIF_INTEGER ul_index,  /* [out] */ EIF_OBJECT pp_ieiffel_cluster_properties );
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerator item count.
 	-----------------------------------------------------------*/
 	EIF_INTEGER ccom_count(  );
 
@@ -95,6 +119,12 @@ private:
 	Default IUnknown interface pointer
 	-----------------------------------------------------------*/
 	IUnknown * p_unknown;
+
+
+	/*-----------------------------------------------------------
+	Exception information
+	-----------------------------------------------------------*/
+	EXCEPINFO * excepinfo;
 
 
 

@@ -48,6 +48,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	target_clr_version: STRING is
+			-- Version of CLR compiler should target
+		do
+			-- Put Implementation here.
+		end
+
 	dot_net_naming_convention: BOOLEAN is
 			-- .NET Naming convention
 		do
@@ -190,6 +196,13 @@ feature -- Basic Operations
 	set_project_type (penum_project_type: INTEGER) is
 			-- Project type
 			-- `penum_project_type' [in]. See ECOM_EIF_PROJECT_TYPES_ENUM for possible `penum_project_type' values. 
+		do
+			-- Put Implementation here.
+		end
+
+	set_target_clr_version (pbstr_version: STRING) is
+			-- Version of CLR compiler should target
+			-- `pbstr_version' [in].  
 		do
 			-- Put Implementation here.
 		end

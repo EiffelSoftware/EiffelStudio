@@ -54,12 +54,6 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	is_prefix_read_only: BOOLEAN is
-			-- Is assembly prefix read only.
-		do
-			-- Put Implementation here.
-		end
-
 feature -- Basic Operations
 
 	set_prefix (pbstr_prefix: STRING) is

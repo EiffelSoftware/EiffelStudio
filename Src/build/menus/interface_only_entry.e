@@ -26,6 +26,8 @@ feature {NONE}
 			-- Is the menu entry `Context Tree' armed?
 	history_window_state: BOOLEAN
 			-- Is the menu entry `History Window' armed?
+	command_editor_state: BOOLEAN
+			-- Is the menu entry `Command tools' armed?
 	editors_state: BOOLEAN
 			-- Is the menu entry `Editors' armed?
 	command_catalog_state: BOOLEAN
@@ -62,6 +64,10 @@ feature {NONE}
 			history_window_state := main_panel.history_window_entry.armed
 			if history_window_state then
 				main_panel.history_window_entry.disarm
+			end
+			command_editor_state := main_panel.command_editor_entry.armed
+			if command_editor_state then
+				main_panel.command_editor_entry.disarm
 			end
 			editors_state := main_panel.editors_entry.armed
 			if editors_state then
@@ -101,6 +107,11 @@ feature {NONE}
 				not main_panel.history_window_entry.armed
 			then
 				main_panel.history_window_entry.arm
+			end
+			if command_editor_state and then
+				not main_panel.command_editor_entry.armed
+			then
+				main_panel.command_editor_entry.arm
 			end
 			if editors_state and then 
 				not main_panel.editors_entry.armed

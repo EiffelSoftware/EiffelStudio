@@ -17,6 +17,7 @@ inherit
 			process_message,
 			on_wm_destroy,
 			on_wm_notify,
+			on_wm_erase_background,
 			destroy
 		end
 
@@ -125,8 +126,9 @@ feature -- Status report
 			-- Current position of the horizontal scroll box
 		require
 			exists: exists
+			scroller_exists: scroller /= Void
 		do
-			Result := cwin_get_scroll_pos (item, Sb_horz)
+			Result := scroller.horizontal_position
 		ensure
 			result_small_enough: Result <= maximal_horizontal_position
 			result_large_enough: Result >= minimal_horizontal_position
@@ -136,8 +138,9 @@ feature -- Status report
 			-- Current position of the vertical scroll box
 		require
 			exists: exists
+			scroller_exists: scroller /= Void
 		do
-			Result := cwin_get_scroll_pos (item, Sb_vert)
+			Result := scroller.vertical_position
 		ensure
 			result_small_enough: Result <= maximal_vertical_position
 			result_large_enough: Result >= minimal_vertical_position
@@ -147,11 +150,9 @@ feature -- Status report
 			-- Maxium position of the horizontal scroll box
 		require
 			exists: exists
-		local
-			min, max: INTEGER
+			scroller_exists: scroller /= Void
 		do
-			cwin_get_scroll_range (item, Sb_horz, $min, $max)
-			Result := max
+			Result := scroller.maximal_horizontal_position
 		ensure
 			result_large_enough: Result >= minimal_horizontal_position
 		end
@@ -160,11 +161,9 @@ feature -- Status report
 			-- Maxium position of the vertical scroll box
 		require
 			exists: exists
-		local
-			min, max: INTEGER
+			scroller_exists: scroller /= Void
 		do
-			cwin_get_scroll_range (item, Sb_vert, $min, $max)
-			Result := max
+			Result := scroller.maximal_vertical_position
 		ensure
 			result_large_enough: Result >= minimal_vertical_position
 		end
@@ -173,11 +172,9 @@ feature -- Status report
 			-- Minimum position of the horizontal scroll box
 		require
 			exists: exists
-		local
-			min, max: INTEGER
+			scroller_exists: scroller /= Void
 		do
-			cwin_get_scroll_range (item, Sb_horz, $min, $max)
-			Result := min
+			Result := scroller.minimal_horizontal_position
 		ensure
 			result_small_enough: Result <= maximal_horizontal_position
 		end
@@ -186,11 +183,9 @@ feature -- Status report
 			-- Minimum position of the vertical scroll box
 		require
 			exists: exists
-		local
-			min, max: INTEGER
+			scroller_exists: scroller /= Void
 		do
-			cwin_get_scroll_range (item, Sb_vert, $min, $max)
-			Result := min
+			Result := scroller.minimal_vertical_position
 		ensure
 			result_small_enough: Result <= maximal_vertical_position
 		end
@@ -224,10 +219,11 @@ feature -- Status setting
 			-- Set `horizontal_position' with `position'.
 		require
 			exists: exists
+			scroller_exists: scroller /= Void
 			position_small_enough: position <= maximal_horizontal_position
 			position_large_enough: position >= minimal_horizontal_position
 		do
-			cwin_set_scroll_pos (item, Sb_horz, position, True)
+			scroller.set_horizontal_position (position)
 		ensure
 			horizontal_position_set: horizontal_position = position
 		end
@@ -236,10 +232,11 @@ feature -- Status setting
 			-- Set `vertical_position' with `position'.
 		require
 			exists: exists
+			scroller_exists: scroller /= Void
 			position_small_enough: position <= maximal_vertical_position
 			position_large_enough: position >= minimal_vertical_position
 		do
-			cwin_set_scroll_pos (item, Sb_vert, position, True)
+			scroller.set_vertical_position (position)
 		ensure
 			vertical_position_set: vertical_position = position
 		end
@@ -250,10 +247,10 @@ feature -- Status setting
 			-- `maximum'.
 		require
 			exists: exists
+			scroller_exists: scroller /= Void
 			consistent_range: minimum <= maximum
 		do
-			cwin_set_scroll_range (item, Sb_horz, minimum,
-				maximum, True)
+			scroller.set_horizontal_range (minimum, maximum)
 		ensure
 			minimal_horizontal_position_set: minimal_horizontal_position =
 				minimum
@@ -267,10 +264,10 @@ feature -- Status setting
 			-- `maximum'.
 		require
 			exists: exists
+			scroller_exists: scroller /= Void
 			consistent_range: minimum <= maximum
 		do
-			cwin_set_scroll_range (item, Sb_vert, minimum,
-				maximum, True)
+			scroller.set_vertical_range (minimum, maximum)
 		ensure
 			minimal_vertical_position_set: minimal_vertical_position =
 				minimum
@@ -867,6 +864,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_wm_erase_background (wparam: INTEGER) is
+			-- Wm_erasebkgnd message.
+			-- A WEL_DC and WEL_PAINT_STRUCT are created and passed to the
+			-- `on_erase_background' routine.
+		local
+			paint_dc: WEL_PAINT_DC
+		do
+			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
+			if scroller /= Void then
+				paint_dc.set_viewport_origin (-scroller.horizontal_position,
+					-scroller.vertical_position)
+			end
+			on_erase_background (paint_dc, client_rect )
+		end
+
 	application_main_window: WEL_APPLICATION_MAIN_WINDOW is
 			-- Once object used by `on_wm_destroy' to test if `Current'
 			-- is the application's main window.
@@ -881,10 +893,6 @@ feature {WEL_DISPATCHER}
 	frozen composite_process_message, process_message (hwnd: POINTER;
 			msg, wparam, lparam: INTEGER): INTEGER is
 		do
-			-- Call the `process_message' routine of the
-			-- parent class.
-			Result := window_process_message (hwnd, msg, wparam, lparam)
-
 			inspect msg
 			when Wm_paint then
 				on_wm_paint (wparam)
@@ -895,6 +903,8 @@ feature {WEL_DISPATCHER}
 			when Wm_ctlcolorlistbox then
 				on_wm_ctlcolor (wparam, lparam)
 			when Wm_ctlcolorscrollbar then
+				on_wm_ctlcolor (wparam, lparam)
+			when Wm_ctlcolorbtn then
 				on_wm_ctlcolor (wparam, lparam)
 			when Wm_command then
 				on_wm_command (wparam, lparam)
@@ -926,6 +936,9 @@ feature {WEL_DISPATCHER}
 			when Wm_close then
 				on_wm_close
 			else
+				-- Call the `process_message' routine of the
+				-- parent class.
+				Result := window_process_message (hwnd, msg, wparam, lparam)
 			end
 		end
 
@@ -977,41 +990,6 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (int)"
 		alias
 			"PostQuitMessage"
-		end
-
-	cwin_set_scroll_pos (hwnd: POINTER; flag, a_position: INTEGER;
-			redraw: BOOLEAN) is
-			-- SDK SetScrollPos
-		external
-			"C [macro <wel.h>] (HWND, int, int, BOOL)"
-		alias
-			"SetScrollPos"
-		end
-
-	cwin_set_scroll_range (hwnd: POINTER; flag, min, max: INTEGER;
-			redraw: BOOLEAN) is
-			-- SDK SetScrollRange
-		external
-			"C [macro <wel.h>] (HWND, int, int, int, BOOL)"
-		alias
-			"SetScrollRange"
-		end
-
-	cwin_get_scroll_pos (hwnd: POINTER; flag: INTEGER): INTEGER is
-			-- SDK GetScrollPos
-		external
-			"C [macro <wel.h>] (HWND, int): EIF_INTEGER"
-		alias
-			"GetScrollPos"
-		end
-
-	cwin_get_scroll_range (hwnd: POINTER; flag: INTEGER;
-			min, max: POINTER) is
-			-- SDK GetScrollRange
-		external
-			"C [macro <wel.h>] (HWND, int, LPINT, LPINT)"
-		alias
-			"GetScrollRange"
 		end
 
 	cwin_get_wm_command_id (wparam, lparam: INTEGER): INTEGER is

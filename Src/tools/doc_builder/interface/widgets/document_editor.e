@@ -32,26 +32,14 @@ feature -- Initialization
 			key_constants: EV_KEY_CONSTANTS
 			accelerator: EV_ACCELERATOR
 		once
-			create key_constants
-			
---				-- Ctrl-A
---			create key.make_with_code (key_constants.Key_a)
---			create accelerator.make_with_key_combination (key, True, False, False)
---			accelerator.actions.extend (agent select_all)
---			Application_window.accelerators.extend (accelerator)
---			
---				-- Ctrl-B
---			create key.make_with_code (key_constants.Key_b)
---			create accelerator.make_with_key_combination (key, True, False, False)
---			accelerator.actions.extend (agent tag_selection ("bold"))
---			Application_window.accelerators.extend (accelerator)
---			
---				-- Ctrl-I
---			create key.make_with_code (key_constants.Key_i)
---			create accelerator.make_with_key_combination (key, True, False, False)
---			accelerator.actions.extend (agent tag_selection ("italic"))
---			Application_window.accelerators.extend (accelerator)
-			
+			create key_constants			
+
+				-- Ctrl-A
+			create key.make_with_code (key_constants.Key_a)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent select_all)
+			Application_window.accelerators.extend (accelerator)
+
 				-- Ctrl-C
 			create key.make_with_code (key_constants.Key_c)
 			create accelerator.make_with_key_combination (key, True, False, False)
@@ -62,12 +50,6 @@ feature -- Initialization
 			create key.make_with_code (key_constants.Key_x)
 			create accelerator.make_with_key_combination (key, True, False, False)
 			accelerator.actions.extend (agent cut_text)
-			Application_window.accelerators.extend (accelerator)
-			
-				-- Ctrl-V
-			create key.make_with_code (key_constants.Key_v)
-			create accelerator.make_with_key_combination (key, True, False, False)
-			accelerator.actions.extend (agent paste_text)
 			Application_window.accelerators.extend (accelerator)			
 		end
 		
@@ -76,24 +58,37 @@ feature -- Editing
 	cut_text is
 			-- Cut
 		do
-			clip_text := current_widget.internal_edit_widget.selected_text
+			copy_text
 			current_widget.internal_edit_widget.delete_selection
 		end
 		
 	copy_text is
 			-- Copy
+		local
+			l_text: STRING
 		do
-			clip_text := current_widget.internal_edit_widget.selected_text
+			l_text := current_widget.internal_edit_widget.selected_text
+			if l_text /= Void and then not l_text.is_empty then
+				clipboard.set_text (l_text)	
+			end
 		end	
 		
 	paste_text is
 			-- Paste
 		do
-			if current_widget.internal_edit_widget.has_selection then
-				current_widget.internal_edit_widget.delete_selection
+			if not clipboard_empty then
+				if current_widget.internal_edit_widget.has_selection then
+					current_widget.internal_edit_widget.delete_selection
+				end
+				current_widget.internal_edit_widget.insert_text (Clipboard.text)
 			end
-			current_widget.internal_edit_widget.insert_text (clip_text)
 		end		
+	
+	select_all is
+			-- Select all text in open document
+		do
+			current_widget.internal_edit_widget.select_all	
+		end	
 		
 	pretty_print_text is
 			-- Pretty XML format the selected text
@@ -110,8 +105,10 @@ feature -- Editing
 				end
 				l_text := l_widget.selected_text
 				if l_widget.can_insert (l_text) then
-					cut_text
-					l_widget.insert_xml_formatted (l_text)
+					--cut_text
+					l_widget.set_text ("")
+					Clipboard.set_text (l_widget.pretty_xml (l_text))
+					paste_text
 				else
 					l_widget.deselect_all
 				end
@@ -207,19 +204,24 @@ feature -- Commands
 			-- Validate current document to loaded schema
 		local
 			l_widget: DOCUMENT_TEXT_WIDGET
+			l_error: BOOLEAN
 		do
 			if Shared_document_manager.has_schema then 
 				if current_widget /= Void then
 					l_widget := current_widget.internal_edit_widget
 					if not l_widget.is_valid_xml then
-						l_widget.error_report.show
-						l_widget.highlight_xml_error
+						l_error := True
+						parent_window.update_status_report (True, ("Invalid XML"))
 					elseif not l_widget.is_valid_to_schema then
-						l_widget.error_report.show
-						l_widget.highlight_schema_error
+						l_error := True
+						parent_window.update_status_report (True, ("Invalid to schema"))
 					else 
 						parent_window.update_status_report (False, (create {MESSAGE_CONSTANTS}).file_schema_valid_report)						
 						Shared_project.remove_invalid_file (l_widget.document.name)
+					end
+					if l_error and then Shared_constants.Application_constants.is_gui_mode then
+						l_widget.error_report.show
+						l_widget.highlight_error
 					end
 				end
 			end
@@ -258,7 +260,7 @@ feature -- Query
 	clipboard_empty: BOOLEAN is
 			-- Is clipboard empty?
 		do
-			Result := clip_text /= Void and then not clip_text.is_empty	
+			Result := clipboard.text.is_empty
 		end		
 
 feature -- Status Setting
@@ -271,8 +273,8 @@ feature -- Status Setting
 			current_document := a_doc
 		ensure
 			is_current_document: a_doc = current_document
-		end		
-		
+		end			
+
 feature -- Access
 
 	documents: ARRAYED_LIST [DOCUMENT] is
@@ -293,13 +295,10 @@ feature -- Events
 			l_widget: like current_widget
 		do
 			if current_widget /= Void then
-				l_widget ?= notebook.selected_item
+				l_widget ?= notebook.selected_item		
 				set_current_document (l_widget.document)
-				if current_widget /= Void then
-					parent_window.update_status_report (False, current_document.name)
-				else
-					parent_window.update_status_report (False, "No document loaded")
-				end
+				l_widget.update
+				parent_window.update
 			end			
 		end					
 		
@@ -316,11 +315,10 @@ feature {DOCUMENT_EDITOR, DOC_BUILDER_WINDOW} -- Implementation
 	current_widget: DOCUMENT_WIDGET is
 			-- Widget of `current_document'
 		do
-			Result := current_document.widget
+			if current_document /= Void then
+				Result := current_document.widget				
+			end
 		end
-			
-	clip_text: STRING
-			-- Clipboard text
 
 feature {NONE} -- Implementation
 
@@ -333,5 +331,11 @@ feature {NONE} -- Implementation
 				documents.extend (a_doc)
 			end			
 		end	
+
+	clipboard: EV_CLIPBOARD is
+			-- Clipboard
+		once
+			Result := (create {EV_ENVIRONMENT}).application.clipboard
+		end		
 
 end -- class DOCUMENT_EDITOR

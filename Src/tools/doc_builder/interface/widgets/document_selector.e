@@ -12,8 +12,7 @@ inherit
 	SHARED_OBJECTS
 
 create
-	make,
-	make_with_filter
+	make
 	
 feature -- Creation
 
@@ -33,23 +32,6 @@ feature -- Creation
 			top_node.set_text (short_name (root.name))
 			internal_tree.extend (top_node)
 		end		
-	
-	make_with_filter (root_directory: STRING; a_filter: INTEGER; widget: EV_TREE) is
-			-- Make with `root_directory' and `a_filter'
-		require
-			has_root: root_directory /= Void
-			has_widget: widget /= Void
-		local
-			top_node: EV_DYNAMIC_TREE_ITEM
-		do
-			default_create
-			internal_tree := widget
-			create root.make_open_read (root_directory)
-			create top_node.make_with_function (agent get_children (root, top_node))
-			top_node.set_pixmap (Shared_constants.Graphical_constants.Folder_closed_icon)
-			top_node.set_text (short_name (root.name))
-			internal_tree.extend (top_node)
-		end	
 
 feature -- Commands
 

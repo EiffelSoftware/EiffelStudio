@@ -9,21 +9,6 @@ indexing
 class
 	MEL_TEXT_SOURCE
 
-inherit
-
-	MEMORY
-		rename
-			free as memory_free
-		export
-			{NONE} all
-		redefine
-			dispose
-		end;
-	ANY
-		export
-			{ANY} all
-		end
-
 creation
 	make_from_existing
 
@@ -54,23 +39,14 @@ feature -- Status report
 
 feature -- Removal
 
-	dispose is
-			-- Called when Current object is collected by GC.
-			-- The handle is freed.
-		do
-			if not is_destroyed then
-				free
-			end
-		end;
-
-	free is
+	destroy is
 			-- Free the object.
 		require
 			exists: not is_destroyed
 		do
 			handle := default_pointer
 		ensure
-			no_more_exists: is_destroyed
+			destroyed: is_destroyed
 		end;
 
 end -- class MEL_TEXT_SOURCE

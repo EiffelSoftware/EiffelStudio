@@ -1,19 +1,18 @@
 <document output="studio" title="Data Object Coupling">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
-		<paragraph>A smart way to work with relational databases is to have Eiffel objects directly mapping relational tables. 3 EiffelStore main capabilities enable this coupling:</paragraph>
+		<paragraph>A smart way to work with relational databases is to have Eiffel objects directly mapping relational tables. Three EiffelStore classes enable this coupling:</paragraph>
 		<list ordered="false">
 			<item><link><url>/libraries/store/reference/interface/db_repository_flatshort.xml</url><label>DB_REPOSITORY</label></link> objects 
 				<link>
 					<anchor_name>describe</anchor_name>
 					<label>describe a relational table</label>
-				</link> and enable to create Eiffel objects mapping database tables.
+				</link> and allow Eiffel to create objects mapping database tables.
 			</item>
-			<item><link><url>/libraries/store/reference/interface/db_store_flatshort.xml</url><label>DB_STORE</label></link> enables to 
-				<link>
+			<item><link><url>/libraries/store/reference/interface/db_store_flatshort.xml</url><label>DB_STORE</label></link> works directly with <link><url>/libraries/store/reference/interface/db_repository_flatshort.xml</url><label>DB_REPOSITORY</label></link> objects to <link>
 					<anchor_name>insert</anchor_name>
 					<label>insert data into relational tables</label>
-				</link> using directly <link><url>/libraries/store/reference/interface/db_repository_flatshort.xml</url><label>DB_REPOSITORY</label></link> objects.
+				</link>.
 			</item>
 			<item><link><url>/libraries/store/reference/interface/db_selection_flatshort.xml</url><label>DB_SELECTION</label></link> can 
 				<link>
@@ -103,19 +102,19 @@
 		<note>
 			<bold>Note</bold>: You can see how actions are used in <link><url>/libraries/store/reference/interface/db_selection_flatshort.xml</url><label>DB_SELECTION</label></link>.
 		</note>
-		<line_break/>
+		<line_break></line_break>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break/>
+			<line_break></line_break>
 			<link>
 				<url>../30_database_selection/index.xml</url>
 				<label>Performing a database selection.</label>
 			</link>
-			<line_break/>
+			<line_break></line_break>
 			<link>
 				<url>../../30_data_structures_generation/10_data_structures_use/index.xml</url>
 				<label>Database-specific structures use.</label>
 			</link>
-			<line_break/>
+			<line_break></line_break>
 		</seealso>
 	</paragraph></document>

@@ -130,7 +130,7 @@ feature {NONE} -- Output
 			put_string ("%N    is_compiled=")
 			put_bool (project_manager_interface.is_compiled)
 			put_string ("%N    last_error_message=")
-			put_string (project_manager_interface.last_error_message)
+			put_string (project_manager_interface.last_exception.message)
 			put_string ("%N    project_directory=")
 			put_string (project_manager_interface.project_directory)
 			put_string ("%N    project_file_name=")
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 				put_string ("%N  Testing retrieve_project with '")
 				put_string (a_filename)
 				put_string ("'")
-				project_manager_interface.retrieve_project (a_filename)
+				project_manager_interface.retrieve_eiffel_project (a_filename)
 			else
 				put_string ("%N#  Failed")
 			end
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 				put_string ("', '")
 				put_string (a_directory)
 				put_string ("'")
-				project_manager_interface.create_project (a_filename, a_directory)
+				project_manager_interface.create_eiffel_project (a_filename, a_directory)
 			else
 				put_string ("%N#  Failed")
 			end

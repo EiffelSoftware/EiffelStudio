@@ -68,7 +68,6 @@ inherit
 			show,
 			hide,
 			on_destroy,
-			on_move,
 			on_size
 		redefine
 			default_style,
@@ -160,8 +159,8 @@ feature {NONE} -- Implementation
 				item_imp.set_move_and_size (item_imp.x_position,
 					item_imp.y_position, client_width, client_height)
 
-				cw := item_imp.width - client_width
-				ch := item_imp.height - client_height
+				cw := item_imp.wel_width - client_width
+				ch := item_imp.wel_height - client_height
 
 				if x_offset > cw then
 					set_x_offset (cw)
@@ -197,6 +196,9 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/06/09 01:28:47  manus
+--| Merged version 1.12.2.3 from DEVEL BRANCH to Trunc
+--|
 --| Revision 1.13  2000/05/03 20:13:25  brendel
 --| Fixed resize_actions.
 --|

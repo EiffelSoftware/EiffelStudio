@@ -180,7 +180,7 @@ feature {NONE}
 	w_Freeze_warning: STRING is "Freezing implies some C compilation%N%
 									%and linking. Do you want to do it now?";
 
-	w_License_lost: STRING is "You have lost your licence!%N%
+	w_License_lost: STRING is "You have lost your license!%N%
 								%(You can still save your changes%N%
 								%and exit the project.)";
 
@@ -204,6 +204,8 @@ feature {NONE}
 
 	w_No_associated_file: STRING is "There is no associated file for %
 													%pebble dropped";
+
+	w_No_filter_selected: STRING is "No filter selected";
 
 	w_No_system_generated: STRING is "No system was generated.%N%
 						%Do you want to compile the generated C code?";

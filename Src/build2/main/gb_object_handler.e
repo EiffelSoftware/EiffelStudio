@@ -406,6 +406,12 @@ feature -- Basic operation
 					layout_item.forth
 				end
 			end
+				-- Because `window_object' exists throughout
+				-- the execution of the application, we
+				-- must clear the events. Otherwise, every time
+				-- we close and then re-load a project, the
+				-- events recorded for `window_object' are extended.
+			window_object.events.wipe_out
 		end
 		
 	named_object_exists (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is

@@ -737,23 +737,11 @@ feature -- Constants generation
 		deferred
 		end
 
-	put_integer8_constant (i: INTEGER) is
-			-- Put `i' as INTEGER_8 on IL stack
-		deferred
-		end
-		
-	put_integer16_constant (i: INTEGER) is
-			-- Put `i' as INTEGER_16 on IL stack.
-		deferred
-		end
-		
-	put_integer32_constant (i: INTEGER) is
-			-- Put `i' on IL stack.
-		deferred
-		end
-
+	put_integer8_constant,
+	put_integer16_constant,
+	put_integer32_constant,
 	put_integer64_constant (i: INTEGER) is
-			-- Put `i' as INTEGER_64 on IL stack.
+			-- Put `i' as INTEGER_8, INTEGER_16, INTEGER or INTEGER_64 on IL stack
 		deferred
 		end
 		

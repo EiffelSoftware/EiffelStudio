@@ -53,6 +53,8 @@ typedef  struct callback_data {
 
 void c_free_call_back_block (callback_data_t *p);
 
+/* Function to cast an integer to a pointer. */
+#define c_integer_to_pointer(p)      ((EIF_POINTER) p)      /*EIF_POINTER*/
 
 /*------------------------------------------------------------------------------
  Called by gtk when a signal is emitted, passes signal on to Eiffel.
@@ -139,6 +141,9 @@ EIF_BOOLEAN c_gtk_widget_visible (GtkWidget *w);
 
 /*  c_gtk_widget_realized  (GtkWidget *w) : Is widget realised */
 EIF_BOOLEAN c_gtk_widget_realized (GtkWidget *w); 
+
+/*  c_gtk_widget_displayed  (GtkWidget *w) : Is widget visible on the screen? */
+EIF_BOOLEAN c_gtk_widget_displayed (GtkWidget *w);
 
 /*  
     c_gtk_widget_sensitive  (GtkWidget *w) 
@@ -254,6 +259,16 @@ int c_gtk_scrollable_area_has_child (GtkWidget *scroll_area, GtkWidget *child);
 void c_gtk_container_set_bg_pixmap (GtkWidget *container, GtkWidget *pixmap);
 
 /*==============================================================================
+ gtk_tooltips functions
+==============================================================================*/
+
+#define c_gtk_tooltips_delay(p) ((EIF_INTEGER) GTK_TOOLTIPS(p)->delay) /*Integer*/
+void c_gtk_tooltips_get_bg_color (GtkTooltips *tooltips, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b);
+void c_gtk_tooltips_get_fg_color (GtkTooltips *tooltips, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b);
+void c_gtk_tooltips_set_fg_color (GtkTooltips *tooltips, int r, int g, int b);
+void c_gtk_tooltips_set_bg_color (GtkTooltips *tooltips, int r, int g, int b);
+
+/*==============================================================================
  gtk_toolbar functions
 ==============================================================================*/
 
@@ -313,6 +328,7 @@ int c_gtk_get_text_max_length (GtkWidget* text);
 
 #define c_gtk_paned_child1(p) ((EIF_POINTER) GTK_PANED(p)->child1)  /*GtkWidget**/
 #define c_gtk_paned_child2(p) ((EIF_POINTER) GTK_PANED(p)->child2)  /*GtkWidget**/
+#define c_gtk_paned_child1_size(p) ((EIF_INTEGER) GTK_PANED(p)->child1_size)  /*gint*/
 
 /*==============================================================================
  gtk_pixmap functions
@@ -347,6 +363,12 @@ void c_gtk_pixmap_set_from_pixmap (GtkWidget *pixmapDest, GtkWidget *pixmapSourc
 #define c_gtk_editable_editable(p) (GTK_EDITABLE(p)->editable)                   /*guint*/
 
 /*==============================================================================
+ gtk_entry functions
+==============================================================================*/
+
+#define c_gtk_entry_get_max_length(p)     ((EIF_INTEGER) GTK_ENTRY(p)->text_max_length)     /*integer*/
+
+/*==============================================================================
  gtk_list functions
 ==============================================================================*/
 
@@ -369,6 +391,8 @@ guint c_gtk_list_rows (GtkWidget *list);
 
 /* Number of pages in a notebook */
 gint c_gtk_notebook_count (GtkWidget *notebook);
+/* tab position of the notebook */
+#define c_gtk_notebook_tab_position(p)     ((EIF_INTEGER) GTK_NOTEBOOK(p)->tab_pos)     /*integer*/
 
 /*==============================================================================
  gtk_list functions
@@ -395,9 +419,11 @@ void c_gtk_clist_unset_pixmap (GtkWidget* clist, int row, int column);
 ==============================================================================*/
 
 /* Routines to get and set the number of rows and columns of a table. */
-EIF_INTEGER c_gtk_table_rows        (GtkWidget *widget            );
-EIF_INTEGER c_gtk_table_columns     (GtkWidget *widget            );
-void c_gtk_table_set_spacing_if_needed (GtkWidget *widget		  );
+EIF_INTEGER c_gtk_table_rows        (GtkWidget *widget);
+EIF_INTEGER c_gtk_table_columns     (GtkWidget *widget);
+void c_gtk_table_set_spacing_if_needed (GtkWidget *widget);
+#define c_gtk_table_row_spacing(p)	((EIF_INTEGER) GTK_TABLE(p)->row_spacing)  /* guint16 */
+#define c_gtk_table_column_spacing(p)	((EIF_INTEGER) GTK_TABLE(p)->column_spacing)  /* guint16 */
 
 
 /*==============================================================================
@@ -441,6 +467,9 @@ void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 				  gint expand, gint fill);
 
 #define c_gtk_box_homogeneous(p)	(GTK_BOX(p)->homogeneous)  /* guint */
+
+#define c_gtk_box_spacing(p)	(GTK_BOX(p)->spacing)  /* guint */
+
 #define c_gtk_container_border_width(p)     (GTK_CONTAINER(p)->border_width)     /*integer*/
 
 
@@ -536,11 +565,11 @@ EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar);
 /* Pointer to the gtk_button `Cancel'. */
 #define c_gtk_file_selection_get_cancel_button(p)      (GTK_FILE_SELECTION(p)->cancel_button)      /*GtkWidget*/
 
-/* Pointer to the text of the entry of the file selection dialog. */
-EIF_POINTER c_gtk_file_selection_get_file_name (GtkWidget *file_dialog);
+/* Pointer to the text of the entry of the file or directory selection dialog. */
+EIF_POINTER c_gtk_selection_get_selection_entry (GtkWidget *dialog);
 
 /* Pointer to the text of the dir of the file selection dialog. */
-EIF_POINTER c_gtk_file_selection_get_dir_name (GtkWidget *file_dialog);
+EIF_POINTER c_gtk_file_selection_get_dir (GtkWidget *file_dialog);
 
 /* Create a new directory selection dialog. */
 EIF_POINTER c_gtk_directory_selection_new (const gchar *name);
@@ -566,6 +595,60 @@ void c_gtk_color_selection_get_color (GtkWidget *file_dialog, EIF_INTEGER* r,  E
 
 /* Pointer to the text of the dir of the file selection dialog. */
 void c_gtk_color_selection_set_color (GtkWidget *file_dialog, EIF_INTEGER r, EIF_INTEGER g, EIF_INTEGER b);
+
+/*==============================================================================
+ gtk_spin_button functions
+==============================================================================*/
+
+EIF_POINTER c_gtk_spin_button_new (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap);
+
+void c_gtk_spin_button_set_step (GtkSpinButton* spinButton, gfloat step);
+void c_gtk_spin_button_set_minimum (GtkSpinButton* spinButton, gfloat min);
+void c_gtk_spin_button_set_maximum (GtkSpinButton* spinButton, gfloat max);
+
+/* The following value are currently integer but can be real with GTK. Not yet with windows. */
+#define c_gtk_spin_button_step(p)      ((EIF_INTEGER) GTK_SPIN_BUTTON(p)->adjustment->step_increment)      /*Integer*/
+#define c_gtk_spin_button_minimum(p)      ((EIF_INTEGER) GTK_SPIN_BUTTON(p)->adjustment->lower)      /*Integer*/
+#define c_gtk_spin_button_maximum(p)      ((EIF_INTEGER) GTK_SPIN_BUTTON(p)->adjustment->upper)      /*Integer*/
+#define c_gtk_spin_button_entry(p)      ((EIF_POINTER) GTK_ENTRY(p))      /*GtkWidget*/
+
+/*==============================================================================
+ gtk_range (vertical and horizontal) functions for EV_RANGE and EV_SCROLL_BAR
+==============================================================================*/
+
+void c_gtk_range_set_step (GtkRange* range, gfloat step);
+void c_gtk_range_set_minimum (GtkRange* range, gfloat min);
+void c_gtk_range_set_maximum (GtkRange* range, gfloat max);
+void c_gtk_range_set_leap (GtkRange* range, gfloat step);
+
+/* The following value are currently integer but can be real with GTK. Not yet with windows. */
+#define c_gtk_range_step(p)      ((EIF_INTEGER) GTK_RANGE(p)->adjustment->step_increment)      /*Integer*/
+#define c_gtk_range_minimum(p)      ((EIF_INTEGER) GTK_RANGE(p)->adjustment->lower)      /*Integer*/
+#define c_gtk_range_maximum(p)      ((EIF_INTEGER) GTK_RANGE(p)->adjustment->upper)      /*Integer*/
+#define c_gtk_range_leap(p)      ((EIF_INTEGER) GTK_RANGE(p)->adjustment->page_increment)      /*Integer*/
+
+/*==============================================================================
+ gtk_scale (vertical and horizontal) functions for EV_RANGE
+==============================================================================*/
+EIF_POINTER c_gtk_vscale_new (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap);
+EIF_POINTER c_gtk_hscale_new (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap);
+
+/* The following value are currently integer but can be real with GTK. Not yet with windows. */
+#define c_gtk_scale_value(p)      ((EIF_INTEGER) GTK_SCALE(p)->value_pos)      /*Integer*/
+
+/*==============================================================================
+ gtk_scroll (vertical and horizontal) functions for EV_SCROLL_BAR
+==============================================================================*/
+
+EIF_POINTER c_gtk_vscrollbar_new (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap, gfloat page);
+EIF_POINTER c_gtk_hscrollbar_new (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap, gfloat page);
+void c_gtk_scrollbar_set_value (GtkScrollbar* scroll, gfloat value);
+void c_gtk_scrollbar_set_page_size (GtkScrollbar* scroll, gfloat value);
+
+#define c_gtk_range_adjustment(p)      ((EIF_POINTER) GTK_RANGE(p)->adjustment)      /**GtkAdjusment*/
+
+/* The following value are currently integer but can be real with GTK. Not yet with windows. */
+#define c_gtk_scrollbar_value(p)      ((EIF_INTEGER) GTK_RANGE(p)->old_value)      /*Integer*/
 
 /*==============================================================================
  gtk_style functions

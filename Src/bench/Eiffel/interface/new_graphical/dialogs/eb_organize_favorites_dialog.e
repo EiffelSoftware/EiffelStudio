@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 	remove is
 			-- Remove the current selected class.
 		require
-			at_least_one_item_selected: favorites_tree.selected
+			at_least_one_item_selected: favorites_tree.selected_item /= Void
 		local
 			source: EB_FAVORITES_ITEM_LIST
 			item_to_remove: EB_FAVORITES_ITEM
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 	move_to_folder is
 			-- Move the selected item to a given folder.
 		require
-			at_least_one_item_selected: favorites_tree.selected
+			at_least_one_item_selected: favorites_tree.selected_item /= Void
 		local
 			choose_folder_dialog: EB_CHOOSE_FAVORITES_FOLDER_DIALOG
 			destination: EB_FAVORITES_ITEM_LIST
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 					item_to_move.set_parent (destination)
 				end
 			end
-			if not favorites_tree.selected then
+			if favorites_tree.selected_item = Void then
 				move_button.disable_sensitive
 				remove_button.disable_sensitive
 			end
@@ -194,7 +194,7 @@ feature {NONE} -- Vision2 events
 	on_selection_change (a_node: EV_TREE_NODE) is
 			-- The selection in the tree has changed
 		do
-			if favorites_tree.selected then
+			if favorites_tree.selected_item /= Void then
 				move_button.enable_sensitive
 				remove_button.enable_sensitive
 			else

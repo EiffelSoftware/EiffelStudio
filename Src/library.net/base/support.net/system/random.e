@@ -4,7 +4,7 @@ indexing
 	assembly: "mscorlib", "1.0.3300.0", "neutral", "b77a5c561934e089"
 
 external class
-	RANDOM
+	SYSTEM_RANDOM
 
 inherit
 	SYSTEM_OBJECT
@@ -71,4 +71,4 @@ feature {NONE} -- Implementation
 			"Sample"
 		end
 
-end -- class RANDOM
+end -- class SYSTEM_RANDOM

@@ -131,7 +131,7 @@ end
 	generate_basic_body is
 		do
 			if has_signature then
-				generate_macro_body;
+				generate_function_body;
 			end;
 		end;
  
@@ -169,6 +169,45 @@ end
 				generate_arguments_with_cast;
 				generated_file.putchar (')');
 			end;
+			generated_file.putchar (')');
+			generated_file.putchar (';');
+			generated_file.new_line;
+		end;
+
+	generate_function_body is
+			-- Generate the body for an external function
+		local
+			i, count: INTEGER;
+		do
+			if not result_type.is_void or has_return_type then
+				generated_file.putstring ("return ");
+			end;
+				-- next few lines commented out as we want to cast to the Eiffel
+				-- equivalent
+			--if has_return_type then
+			--	generated_file.putchar ('(');
+			--	generated_file.putstring (return_type);
+			--	generated_file.putchar (')');
+			--	generated_file.putchar (' ');
+			if result_type /= Void then
+				result_type.c_type.generate_cast (generated_file);
+			else
+					-- I'm not sure this is really needed
+				generated_file.putstring ("(void) ");
+			end;
+				--| External procedure will be generated as:
+				--| (void) (c_proc (args));
+				--| The extra parenthesis are necessary if c_proc is
+				--| an affectation e.g. c_proc(arg1, arg2) arg1 = arg2
+				--| Without the parenthesis, the cast is done only on the first
+				--| argument, not the entire expression (affectation)
+			generated_file.putchar ('(');
+			generated_file.putstring (external_name);
+			generated_file.putchar ('(');
+			if arguments /= Void then
+				generate_arguments_with_cast;
+			end;
+			generated_file.putchar (')');
 			generated_file.putchar (')');
 			generated_file.putchar (';');
 			generated_file.new_line;

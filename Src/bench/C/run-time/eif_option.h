@@ -103,11 +103,11 @@ RT_LNK struct stack *prof_stack;		/* Stack that maintains profile information */
 RT_LNK void check_options(struct eif_opt *opt, int dtype);			/* Dispatches to start_profile and start_trace */
 RT_LNK void check_options_stop(void);		/* Dispatches to stop_profile and stop_trace */
 
-extern void start_trace(char *name, int origin, int dtype);			/* Prints entering feature ... */
-extern void stop_trace(char *name, int origin, int dtype);			/* Prints leaving feature ... */
+RT_LNK void start_trace(char *name, int origin, int dtype);			/* Prints entering feature ... */
+RT_LNK void stop_trace(char *name, int origin, int dtype);			/* Prints leaving feature ... */
 
 RT_LNK void initprf(void);				/* Generates table for profiling */
-extern void exitprf(void);				/* Saves table as textfile */
+RT_LNK void exitprf(void);				/* Saves table as textfile */
 
 extern void start_profile(char *name, int origin, int dtype);			/* Starts profiling of a certain feature */
 extern void stop_profile(void);			/* Stops profiling of a certain feature */

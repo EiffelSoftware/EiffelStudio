@@ -62,6 +62,24 @@ feature {NONE} -- Creation
 
 feature
 
+	allow_recompute_size is
+			-- Allow Current bulletin to recompute its size 
+			-- according to its children.
+		require
+			exists: not destroyed	
+		do
+			implementation.allow_recompute_size
+		end;
+
+	forbid_recompute_size is
+			-- Forbid Current bulletin to recompute its size 
+			-- according to its children.
+		require
+			exists: not destroyed	
+		do
+			implementation.forbid_recompute_size
+		end;
+
 	set_default_position (flag: BOOLEAN) is
 			-- Set default position of Current to `flag'.
 		require

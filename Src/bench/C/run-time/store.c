@@ -26,7 +26,6 @@ doc:<file name="store.c" header="eif_store.h" version="$Id$" summary="Storing me
 #include <stdio.h>
 #include "rt_struct.h"
 #include "rt_bits.h"
-#include "eif_plug.h"
 #include "rt_run_idr.h"
 #include "rt_error.h"
 #include "eif_main.h"
@@ -775,8 +774,8 @@ rt_shared void internal_store(char *object)
 			printf ("Storing in new recoverable format\n");
 #endif
 			if (eif_is_new_recoverable_format) {
-				c = RECOVERABLE_STORE_5_3;
-				rt_kind_version = RECOVERABLE_STORE_5_3;
+				c = INDEPENDENT_STORE_5_5;
+				rt_kind_version = INDEPENDENT_STORE_5_5;
 			}
 		}
 		else {
@@ -1851,11 +1850,22 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 		printf ("%s%s", i==0 ? " " : i==1 ? " [" : ", ", name_of_attribute_type (&typearr));
 		typearr++;
 #endif
-		if (gtype >= 0)
-			gtype = RTUD (gtype);
-		else if (gtype <= EXPANDED_LEVEL)
-			gtype = EXPANDED_LEVEL - RTUD (EXPANDED_LEVEL - gtype);
-		widr_multi_int16 (&gtype, 1);
+		if (gtype == TUPLE_TYPE) {
+				/* Write TUPLE_TYPE, nb generic parames */
+			widr_multi_int16 (gtypes + i, TUPLE_OFFSET);
+			i += TUPLE_OFFSET;
+			gtype = gtypes [i];
+		}
+		if (gtype == FORMAL_TYPE) {
+				/* Write FORMAL_TYPE and formal position */
+			widr_multi_int16 (gtypes + i, 2);
+			i += 1;
+		} else {
+			if (gtype >= 0) {
+				gtype = RTUD (gtype);
+			}
+			widr_multi_int16 (&gtype, 1);
+		}
 	}
 #ifdef RECOVERABLE_DEBUG
 	printf ("%s\n", num_gtypes > 1 ? "]" : "");
@@ -1951,9 +1961,10 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 	}
 
 	/* count number of types actually present in objects to be stored */
-	for (type_count=0, i=0; i<scount; i++)
+	for (type_count=0, i=0; i<scount; i++) {
 		if (account[i])
 			type_count++;
+	}
 
 #ifdef RECOVERABLE_DEBUG
 	printf ("-- Storing header\n");

@@ -74,6 +74,10 @@ feature {NONE} -- Implementation
 			create {EV_CLIPBOARD_IMP} implementation.make (Current)
 		end
 
+invariant
+	has_text_implies_text_not_empty: has_text implies not text.is_empty
+	not_has_text_implies_text_empty: not has_text implies text.is_empty
+
 end -- class EV_CLIPBOARD
 
 --|----------------------------------------------------------------

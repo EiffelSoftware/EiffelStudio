@@ -83,6 +83,16 @@ feature -- Access
 			Result.append (New_line)
 			Result.append (New_line)
 
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Cplusplus)
+			Result.append (New_line)
+			Result.append (Close_curly_brace)
+			Result.append (New_line)
+			Result.append (Hash_end_if)
+			Result.append (New_line)
+			Result.append (New_line)
+
 			from
 				import_files.start
 			until
@@ -97,6 +107,24 @@ feature -- Access
 				Result.append (New_line)
 				import_files.forth
 			end
+
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Cplusplus)
+			Result.append (New_line)
+
+			Result.append (Extern)
+			Result.append (Space)
+			Result.append (Double_quote)
+			Result.append ("C")
+			Result.append (Double_quote)
+			Result.append (Space)
+			Result.append (Open_curly_brace)
+			Result.append (New_line)
+			Result.append (Hash_end_if)
+			Result.append (New_line)
+			Result.append (New_line)
+
 			from
 				global_variables.start
 			until

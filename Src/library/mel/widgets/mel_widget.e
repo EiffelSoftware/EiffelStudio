@@ -87,13 +87,23 @@ feature -- Status setting
 			background_pixmap_set: background_pixmap.is_equal (a_pixmap)
 		end;
 
-	propagate_event (b: BOOLEAN) is
-			-- Propagate event to direct ancestor according `b'.
+	propagate_event is
+			-- Propagate event to direct ancestor if no action
+			-- is specified for event.
 		require
 			widget_realized: realized
 		do
-			x_propagate_event (screen_object, b)
+			x_propagate_event (screen_object, True)
 		end;
+
+	set_no_event_propagation is
+			-- Don't propagate event to direct ancestor.
+		require
+			widget_realized: realized
+		do
+			x_propagate_event (screen_object, False)
+		end;
+
 
 	set_map_when_managed (b: BOOLEAN) is
 			-- Set `is_mapped_when_managed' to `b'.

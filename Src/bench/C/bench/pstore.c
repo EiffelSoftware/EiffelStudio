@@ -21,6 +21,7 @@
 #include "eif_memory.h"
 #include "eif_error.h"
 #include "eif_compress.h"
+#include "pstore.h"
 
 #ifdef EIF_WIN32
 #include <io.h>
@@ -28,40 +29,59 @@
 #include "unistd.h"
 #endif
 
+/* Exported feature */
+rt_public long store_append (EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, char *s);
+rt_public void parsing_store_initialize (void);
+
+/* Internal variables */
 rt_private fnptr make_index;	/* Index building routine */
 rt_private fnptr need_index;	/* Index checking routine */
 rt_private char *server;		/* Current server used */
+rt_private int file_descriptor;	/* File descriptor of the file where we want to write */
+rt_private long file_position;	/* Position in current opened file */
+rt_private long amount_written;	/* Amount of bytes written in the opened_file */
 
 rt_private long pst_store(char *object, long int object_count);	/* Recursive store */
 rt_private void partial_store_write(void);
+rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid, char *s);
+
+/* Memory writing function */
+rt_private int parsing_char_write (char *pointer, int size);	/* store in stream */
 
 /* Followings declaration are coming from store.c and eif_store.h */
 #define EIF_BUFFER_SIZE EIF_CMPS_IN_SIZE
 
-long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
+rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, char *s)
 {
-	/* Append `o' in file `f', and applies routine `mid'
+	/* Append `object' in file `f', and applies routine `mid'
 	 * on server `s'. Return position in the file where the object is
 	 * stored. */
 
-	long result;	/* Position in the file */
-	char gc_stopped;
-
 	/* Initialization */
-
 	rt_init_store(
 		partial_store_write,
-		char_write,
+		parsing_char_write,
 		flush_st_buffer,
 		st_write,
-		(void (*)()) 0,
+		(void *) (0),
 		0,
 		EIF_BUFFER_SIZE);
 
-	fides = (int)f_desc;				/* For use of `st_write' */
-	result = lseek (fides, 0, SEEK_CUR);
-	if (result==-1)
-		esys();
+	file_descriptor = f_desc;
+	file_position = lseek ((int) f_desc, 0, SEEK_CUR);
+	amount_written = 0L;
+	if (file_position == -1)
+		eraise ("Unable to seek on internal data files", EN_SYS);
+
+	parsing_store_append(object, mid, nid, s);
+
+	rt_reset_store();
+	return file_position;
+}
+
+rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid, char *s)
+{
+	char gc_stopped;
 
 	make_index = mid;
 	need_index = nid;
@@ -71,30 +91,30 @@ long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
 				 * while creating objects. */
 
 #ifdef DEBUG
-	(void) nomark(o);
+	(void) nomark(object);
 #endif
 	/* Do the traversal: mark and count the objects to store */
 	obj_nb = 0;
-	traversal(o,0);
+	traversal(object,0);
 
 	allocate_gen_buffer();
 
-	/* Write in file `fides' the count of stored objects */
+	/* Write in file `file_descriptor' the count of stored objects */
 	buffer_write((char *) (&obj_nb), sizeof(long));
 
 #ifndef DEBUG
-	(void) pst_store(o,0L);		/* Recursive store process */
+	(void) pst_store(object,0L);		/* Recursive store process */
 #else
 	{
-		long nb_stored = pst_store(o,0L);
+		long nb_stored = pst_store(object,0L);
 
 		if (obj_nb != nb_stored) {
 			printf("obj_nb = %ld nb_stored = %ld\n", obj_nb, nb_stored);
-			eif_panic("Eiffel partial store");
+			eraise ("Eiffel partial store", EN_IO);
 		}
 	}
-	if (obj_nb != nomark(o))
-		eif_panic("Partial store inconsistency");
+	if (obj_nb != nomark(object))
+		eraise ("Partial store inconsistency", EN_IO);
 #endif
 
 	flush_st_buffer();				/* Flush the buffer */
@@ -102,9 +122,6 @@ long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
 	if (!gc_stopped)
 		gc_run();					/* Restart GC */
 
-	rt_reset_store();
-
-	return result;
 }
 
 rt_private long pst_store(char *object, long int object_count)
@@ -132,8 +149,9 @@ rt_private long pst_store(char *object, long int object_count)
 			 */
 		flush_st_buffer();
 
-		saved_file_pos = lseek(fides, 0, SEEK_CUR);
-		if (saved_file_pos==-1) esys();
+		saved_file_pos = lseek (file_descriptor, 0, SEEK_CUR);
+		if (saved_file_pos == -1)
+			esys();
 	}
 
 	flags = zone->ov_flags;
@@ -146,8 +164,7 @@ rt_private long pst_store(char *object, long int object_count)
 	zone->ov_flags &= ~EO_STORE;	/* Unmark it */
 
 #ifdef DEBUG
-		printf("object 0x%lx [%s %lx]\n", object, System(flags & EO_TYPE).cn_generator,
-zone->ov_flags);
+		printf("object 0x%lx [%s %lx]\n", object, System(flags & EO_TYPE).cn_generator, zone->ov_flags);
 #endif
 	/* Evaluation of the number of references of the object */
 	if (flags & EO_SPEC) {					/* Special object */
@@ -192,7 +209,7 @@ zone->ov_flags);
 
 	/* Call `make_index' on `server' with `object' */
     if (object_needs_index)
-		(make_index)(server,object,saved_file_pos,object_count-saved_object_count);
+		(make_index)(server, object, saved_file_pos, object_count - saved_object_count);
 
 	return object_count;
 }
@@ -220,16 +237,20 @@ rt_private void partial_store_write(void)
 	number_left = cmps_out_size + EIF_CMPS_HEAD_SIZE;
 	
 	while (number_left > 0) {
-		number_writen = write (fides, ptr, number_left);
+		number_writen = write (file_descriptor, ptr, number_left);
 		if (number_writen <= 0)
-			eio();
+			eraise ("Unable to write on specified device", EN_IO);
 		number_left -= number_writen;
 		ptr += number_writen;
 		}
 		
-	if ((unsigned int) (ptr - cmps_general_buffer) == cmps_out_size + EIF_CMPS_HEAD_SIZE)
+	if ((unsigned int) (ptr - cmps_general_buffer) == cmps_out_size + EIF_CMPS_HEAD_SIZE) {
 		current_position = 0;
-	else
-		eio();		
+		amount_written += number_left;
+	} else
+		eraise ("(Storing write function) Incorrect number of bytes read!", EN_IO);
 }
 
+rt_private int parsing_char_write (char *pointer, int size) {
+	return write (file_descriptor, pointer, size);
+}

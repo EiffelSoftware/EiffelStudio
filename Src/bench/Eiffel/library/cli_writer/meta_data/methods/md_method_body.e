@@ -17,7 +17,8 @@ feature {NONE} -- Initialization
 	make (token: INTEGER) is
 			-- Create new instance ready to be updated.
 		require
-			is_method_token: token & 0xFF000000 = feature {MD_TOKEN_TYPES}.Method_def
+			is_method_token:
+				token & feature {MD_TOKEN_TYPES}.Md_mask = feature {MD_TOKEN_TYPES}.Md_method_def
 		do
 			create item.make (Chunk_size)
 			create labels.make (1, 5)
@@ -40,7 +41,8 @@ feature -- Reset
 	remake (token: like method_token) is
 			-- Reuse current object for body of method `token'.
 		require
-			is_method_token: token & 0xFF000000 = feature {MD_TOKEN_TYPES}.Method_def
+			is_method_token:
+				token & feature {MD_TOKEN_TYPES}.Md_mask = feature {MD_TOKEN_TYPES}.Md_method_def
 		do
 			current_position := 0
 			max_stack := 0

@@ -92,6 +92,7 @@ feature -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0,0)
+			show_vertical_scroll_bar
 		end
 
 feature -- Access
@@ -268,6 +269,7 @@ feature {NONE} -- WEL Implementation
 			Result := Ws_child + Ws_visible + Ws_group 
 					+ Ws_tabstop + Ws_border + Es_left
 					+ Es_multiline + Es_wantreturn
+					+ Es_autovscroll
 		end
 
 	default_ex_style: INTEGER is
@@ -381,6 +383,9 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/04/14 20:40:10  brendel
+--| Is now vertically scrollable.
+--|
 --| Revision 1.34  2000/04/13 23:07:05  brendel
 --| Unreleased.
 --|

@@ -12,11 +12,18 @@ inherit
 
 	VGCP21
 		redefine
-			subcode
+			subcode, build_explain
 		end;
 
 feature -- Properties
 
 	subcode: INTEGER is 4;
+	
+feature -- Output
+
+	build_explain (st: STRUCTURED_TEXT) is
+			-- Nothing to be done.
+		do
+		end
 
 end -- class VGCP4

@@ -23,6 +23,7 @@
 #include "pstore.h"
 #include "minilzo.h"
 #include "rt_compress.h"
+#include "rt_gen_types.h"
 
 #ifdef EIF_WIN32
 #include <io.h>
@@ -204,7 +205,21 @@ rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 
 			o_ptr = RT_SPECIAL_INFO_WITH_ZONE (object, zone);
 			count = RT_SPECIAL_COUNT_WITH_INFO (o_ptr);
-			if (!(flags & EO_COMP)) {		/* Special of references */
+			if (flags & EO_TUPLE) {
+				EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) object;
+					/* Don't forget that first element of TUPLE is just a placeholder
+					 * to avoid offset computation from Eiffel code */
+				l_item++;
+				count--;
+				for (; count > 0; count--, l_item++) {
+					if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+						ref = eif_reference_tuple_item(l_item);
+						if (ref) {
+							object_count = pst_store (ref, object_count);
+						}
+					}
+				}
+			} else if (!(flags & EO_COMP)) {		/* Special of references */
 				for (
 					ref = object;
 					count > 0;

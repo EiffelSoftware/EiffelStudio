@@ -54,7 +54,8 @@ inherit
             set_key_file_name,
             working_directory,
             set_working_directory,
-            apply
+            apply,
+            set_metadata_cache_path
         end
     
     SHARED_EIFFEL_PROJECT
@@ -488,6 +489,12 @@ feature -- Element change
             -- Set the systems working directory
         do
             ace.set_working_directory (a_directory)
+        end
+        
+    set_metadata_cache_path (a_path: STRING) is 
+            -- Set path to EAC.
+        do
+            ace.set_metadata_cache_path (a_path)
         end
         
 feature -- Basic operations

@@ -14,6 +14,7 @@
 
 void
 c_gdk_window_iconify (GdkWindow * window) // is
+		// Hide `window' and display an icon on the desktop.
 {
 	// local
 		GdkWindowPrivate *priv;
@@ -26,6 +27,7 @@ c_gdk_window_iconify (GdkWindow * window) // is
 
 void
 c_gdk_window_deiconify (GdkWindow * window) // is
+		// Show `window' that is iconized.
 {
 	// local
 		GdkWindowPrivate *priv;
@@ -38,6 +40,7 @@ c_gdk_window_deiconify (GdkWindow * window) // is
 
 gboolean
 c_gdk_window_is_iconified (GdkWindow * window) // is
+		// Is `window' hidden and displayed as icon?
 {
 	// local
 		GdkWindowPrivate *priv;
@@ -51,24 +54,6 @@ c_gdk_window_is_iconified (GdkWindow * window) // is
 		XGetWindowAttributes (priv->xdisplay, priv->xwindow, &xattr);
 		return (xattr.map_state == IsUnmapped);
 } 	// end
-
-void
-c_gdk_window_get_geometry (GdkWindow * window,
-		int * x, int * y, int * width, int * height) // is
-{
-	// local
-		GdkWindowPrivate *priv;
-		XWindowAttributes xattr;
-	// require
-		g_return_val_if_fail (window != NULL, 0);
-	// do
-	  	priv = (GdkWindowPrivate*) window;
-      	XGetWindowAttributes (priv->xdisplay, priv->xwindow, &xattr);
-		if (x) *x = xattr.x;
-		if (y) *y = xattr.y;
-		if (width) *width = xattr.width;
-		if (height) *height = xattr.height;
-} // end
 
 //------------------------------------------------------------------------------
 // EiffelVision2: library of reusable components for ISE Eiffel.
@@ -91,6 +76,10 @@ c_gdk_window_get_geometry (GdkWindow * window,
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.4  2000/03/08 16:42:33  brendel
+// Added header comments.
+// Removed c_gdk_window_get_geometry.
+//
 // Revision 1.3  2000/03/08 02:06:39  brendel
 // Added function c_gdk_window_get_geometry.
 //

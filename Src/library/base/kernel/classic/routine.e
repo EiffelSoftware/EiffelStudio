@@ -107,6 +107,7 @@ feature -- Status report
 				and then equal (open_map, other.open_map)
 				and then (rout_disp = other.rout_disp)
 				and then (eiffel_rout_disp = other.eiffel_rout_disp)
+				and then (is_cleanup_needed = other.is_cleanup_needed)
 		end
 
 	valid_operands (args: OPEN_ARGS): BOOLEAN is

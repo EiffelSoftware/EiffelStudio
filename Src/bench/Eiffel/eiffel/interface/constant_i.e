@@ -319,6 +319,7 @@ feature -- IL Code generation
 			type_i := type.actual_type.type_i
 			if is_once then
 				il_generator.set_once_generation (True)
+				il_generator.set_global_once_generation (False)
 				il_generator.generate_once_done_info (feature_name)
 				il_generator.generate_once_result_info (feature_name, type_i)
 				il_label_compute := il_label_factory.new_label

@@ -139,24 +139,6 @@ feature -- Access
 			Result := ccom_expanded_cluster_path (initializer)
 		end
 
-	cluster_path_exists: BOOLEAN is
-			-- Does the path to the cluster exsit
-		do
-			Result := ccom_cluster_path_exists (initializer)
-		end
-
-	create_cluster_path: BOOLEAN is
-			-- Create the cluster path if it doesnt exist
-		do
-			Result := ccom_create_cluster_path (initializer)
-		end
-
-	all_cluster_path_not_excluded: BOOLEAN is
-			-- Does parent cluster have all set and does the cluster path extend upon the parents
-		do
-			Result := ccom_all_cluster_path_not_excluded (initializer)
-		end
-
 	cluster_namespace: STRING is
 			-- Cluster namespace.
 		do
@@ -441,24 +423,6 @@ feature {NONE}  -- Externals
 			-- Full path to cluster with ISE_EIFFEL env var expanded.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_cluster_path_exists (cpp_obj: POINTER): BOOLEAN is
-			-- Does the path to the cluster exsit
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_create_cluster_path (cpp_obj: POINTER): BOOLEAN is
-			-- Create the cluster path if it doesnt exist
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_all_cluster_path_not_excluded (cpp_obj: POINTER): BOOLEAN is
-			-- Does parent cluster have all set and does the cluster path extend upon the parents
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_cluster_namespace (cpp_obj: POINTER): STRING is

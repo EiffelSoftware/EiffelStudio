@@ -66,7 +66,7 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	contains_signed_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
+	contains_gac_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
 			-- Checks to see if a signed assembly has already been added to the project
 			-- `a_name' [in].  
 			-- `a_version' [in].  
@@ -76,14 +76,14 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	contains_unsigned_assembly (a_path: STRING): BOOLEAN is
+	contains_local_assembly (a_path: STRING): BOOLEAN is
 			-- Checks to see if a unsigned assembly has already been added to the project
 			-- `a_path' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	cluster_name_from_signed_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
+	cluster_name_from_gac_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
 			-- Retrieves the cluster name for a signed assembly in the project
 			-- `a_name' [in].  
 			-- `a_version' [in].  
@@ -93,7 +93,7 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	cluster_name_from_unsigned_assembly (a_path: STRING): STRING is
+	cluster_name_from_local_assembly (a_path: STRING): STRING is
 			-- Retrieves the cluster name for a unsigned assembly in the project
 			-- `a_path' [in].  
 		do

@@ -233,24 +233,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Does the path to the cluster exsit
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_cluster_path_exists(  );
-
-
-	/*-----------------------------------------------------------
-	Create the cluster path if it doesnt exist
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_create_cluster_path(  );
-
-
-	/*-----------------------------------------------------------
-	Does parent cluster have all set and does the cluster path extend upon the parents
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_all_cluster_path_not_excluded(  );
-
-
-	/*-----------------------------------------------------------
 	Cluster namespace.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_cluster_namespace(  );

@@ -228,24 +228,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Does the path to the cluster exsit
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_path_exists(  /* [out, retval] */ VARIANT_BOOL * exists1 ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Create the cluster path if it doesnt exist
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP create_cluster_path(  /* [out, retval] */ VARIANT_BOOL * exists1 ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Does parent cluster have all set and does the cluster path extend upon the parents
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP all_cluster_path_not_excluded(  /* [out, retval] */ VARIANT_BOOL * exists1 ) = 0;
-
-
-	/*-----------------------------------------------------------
 	Cluster namespace.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP cluster_namespace(  /* [out, retval] */ BSTR * a_namespace ) = 0;

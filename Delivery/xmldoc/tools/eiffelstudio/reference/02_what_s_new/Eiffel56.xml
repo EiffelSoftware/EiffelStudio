@@ -14,7 +14,7 @@
 						<item>Improved speed/behavior of drawing/scrolling operations especially on large diagram.</item>
 					</list>
 				</item>
-				<item>Added ability to find features performing an assignment to an attribute, or creating an attribute.</item>
+				<item>Added ability to find features performing an assignment to an attribute, or creating an attribute, as well as features using a procedure as creation procedure.</item>
 				<item>Feature tree is now showing a different icon for frozen and obsolete features.</item>
 				<item>Improved look and feel of applications using the EiffelVision library under Windows XP theme engine.</item>
 				<item>Improved keyboard navigation in EiffelStudio windows/dialogs.</item>

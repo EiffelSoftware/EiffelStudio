@@ -287,6 +287,13 @@ end
 				Result := (empty_body = other.empty_body)
 			end
 
+			if Result and then equal (rout_id_set.first, 
+									  System.default_create_id) then
+				-- This is the default create feature.
+				-- Test whether emptiness of body has changed.
+				Result := (empty_body = other.empty_body)
+			end
+
 debug ("ACTIVITY")
 	if not Result then
 		io.error.putstring ("%T%T")

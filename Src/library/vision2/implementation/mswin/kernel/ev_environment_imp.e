@@ -56,6 +56,16 @@ feature {NONE} -- Implementation
 		do
 			Result := get_wheel_scroll_lines
 		end
+		
+	has_printer: BOOLEAN is
+			-- Is a default printer available?
+			-- `Result' is `True' if at least one printer is installed.
+		local
+			default_printer: WEL_DEFAULT_PRINTER_DC
+		do
+			create default_printer.make
+			Result := default_printer.exists
+		end
 
 end -- class EV_ENVIRONMENT_IMP
 

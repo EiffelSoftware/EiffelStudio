@@ -656,7 +656,7 @@ feature {EB_EDITOR_TOOL} -- Update
 				fn := clone (file_name)
 				create backup_file.make (file_name)
 				backup_file.delete
-				fn.head (fn.count - 4)
+				fn.keep_head (fn.count - 4)
 				create file_name.make_from_string (fn)
 				open_backup := False
 			end

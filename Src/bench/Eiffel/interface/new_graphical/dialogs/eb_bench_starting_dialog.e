@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 					entries.after
 				loop
 					extension := clone(entries.item)
-					extension.tail(4)
+					extension.keep_tail(4)
 	
 					if extension.is_equal (".dsc") then
 						create filename.make_from_string (New_project_wizards_path)

@@ -1126,7 +1126,7 @@ feature -- Displayed messages in column list form
 						a_feature := e_feature (feature_name, class_name)
 						a_class := class_c (class_name)
 						class_name.to_upper
-						row_stone_name.head (n1)
+						row_stone_name.keep_head (n1)
 						row_stone_name.append (class_name + ")")
 						a_cluster := a_class.cluster
 					when Class_scope then

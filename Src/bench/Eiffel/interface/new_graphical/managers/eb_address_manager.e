@@ -979,7 +979,7 @@ feature {NONE} -- open new class
 				if not matcher.has_wild_cards then
 					at_pos := cname.index_of ('@', 1)
 					if at_pos = cname.count then
-						cname.head (cname.count - 1)
+						cname.keep_head (cname.count - 1)
 						class_address.set_text (cname)
 						at_pos := 0
 					end
@@ -1405,7 +1405,7 @@ feature {NONE} -- open new class
 									last_caret_position /= nb + 1 or
 									not Workbench.system_defined
 				if nb > 0 and not do_not_complete and last_key_was_backspace and had_selection then
-					str.head (nb - 1)
+					str.keep_head (nb - 1)
 					nb := nb - 1
 					truncated := True
 				end
@@ -1523,7 +1523,7 @@ feature {NONE} -- open new class
 									not is_typing or
 									last_caret_position /= str.count + 1
 				if nb > 0 and not do_not_complete and last_key_was_backspace and cluster_had_selection then
-					str.head (nb - 1)
+					str.keep_head (nb - 1)
 					nb := nb - 1
 					truncated := True
 				end
@@ -1634,7 +1634,7 @@ feature {NONE} -- open new class
 									not is_typing or
 									last_caret_position /= str.count + 1
 				if nb > 0 and not do_not_complete and last_key_was_backspace and feature_had_selection then
-					str.head (nb - 1)
+					str.keep_head (nb - 1)
 					nb := nb - 1
 					truncated := True
 				end

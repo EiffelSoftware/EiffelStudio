@@ -2,9 +2,9 @@
 echo -------------------------------------------------------------------------
 echo - Building EiffelNET C-library                                          -
 echo -------------------------------------------------------------------------
-nmake /NOLOGO /C /S /f makefile.m > make.log
-nmake /NOLOGO /C /S /f makefile.il > make.log
-nmake /NOLOGO /C /S /f makefile.mmt >> make.log
-del *.obj >> make.log
-del *.lib >> make.log
+nmake /NOLOGO /C /S /f makefile.m
+nmake /NOLOGO /C /S /f makefile.il
+nmake /NOLOGO /C /S /f makefile.mmt
+del *.obj
+del *.lib
 echo EiffelNET C-library compiled.

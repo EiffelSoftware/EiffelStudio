@@ -2,11 +2,16 @@ indexing
 
 	description:
 		"Basic mathematical operations, single-precision. %
-		%This class may be used as ancestor by classes needing its facilities.";
-
+		%This class may be used as ancestor by classes needing its %
+		%facilities."
 	status: "See notice at end of class"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class SINGLE_MATH inherit
+class
+	SINGLE_MATH
+
+inherit
 
 	MATH_CONST
 

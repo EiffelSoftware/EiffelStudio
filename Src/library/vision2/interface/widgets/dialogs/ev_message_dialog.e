@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			--| user access to it.
 			buttons.put (new_button, a_text)
 
-			new_button.select_actions.extend (~on_button_press (a_text))
+			new_button.select_actions.extend (agent on_button_press (a_text))
 			button_box.extend (new_button)
 			button_box.disable_item_expand (new_button)
 			new_button.set_minimum_width (new_button.minimum_width.max (75))

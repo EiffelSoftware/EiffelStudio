@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			-- See comment of `dialog_key_press_action'.
 		do
 			set_icon_pixmap (default_pixmaps.Default_window_icon)
-			key_press_actions.extend (~dialog_key_press_action)
+			key_press_actions.extend (agent dialog_key_press_action)
 			implementation.disable_closeable
 			is_initialized := True
 		end

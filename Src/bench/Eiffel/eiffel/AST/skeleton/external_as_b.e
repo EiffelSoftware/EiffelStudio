@@ -4,7 +4,7 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			is_external, byte_node, format
+			is_external, byte_node, format, type_check
 		end;
 	SHARED_STATUS
 
@@ -55,26 +55,25 @@ feature -- Conveniences
 			end;
 		end; -- external_name
 
-	type_string: STRING is
-			-- C type specified in the string `language_name.language_name'.
-			-- Shouldn't it be obsolete ?
+	type_check is
+			-- Put a comment here please
 		local
-			s: STRING;
-			stop: BOOLEAN;
-			i, nb: INTEGER;
+			ext_error: EXTERNAL_SYNTAX_ERROR;
 		do
-			from
-				i := 1;
-				s := language_name.language_name.value;
-				nb := s.count;
-			until
-				i > nb or else stop
-			loop
-				stop := s.item (i) = ':';
-				i := i + 1;
-			end;
-			if stop and then i <= nb then
-				Result := s.substring (i, nb);
+			if language_name.has_arg_list then
+					-- check if the eiffel feature and the signature
+					-- have the same number of arguments
+				if not (language_name.arg_list.count = context.a_feature.argument_count) then
+						-- Raise an error
+						-- This error might not be raised on the right
+						-- line. Is it possible to raise it in EXTERNAL_LANG_AS?
+					!!ext_error.init;
+					ext_error.set_external_error_message 
+						("Wrong number of arguments for signature declaration in external%N %
+							%(feature and signature must have the same number of arguments)%N");
+					Error_handler.insert_error (ext_error);
+					Error_handler.raise_error;
+				end;
 			end;
 		end;
 
@@ -84,6 +83,10 @@ feature -- Byte code
 			-- Byte code for external feature
 		local
 			extern: EXTERNAL_I;
+			arguments: FEAT_ARG;
+			i: INTEGER;
+			local_dec: ARRAY[TYPE_I];
+			arg_c: INTEGER;
 		do
 			check
 				extern_exists: context.a_feature /= Void;
@@ -93,7 +96,27 @@ feature -- Byte code
 			extern ?= context.a_feature;
 			Result.set_external_name (extern.external_name);
 			Result.set_encapsulated (extern.encapsulated);
-			Result.set_c_type_desc (type_string);
+			Result.set_special_type (language_name.special_type);
+			Result.set_special_file_name (language_name.special_file_name);
+			Result.set_arg_list (language_name.arg_list);
+			Result.set_return_type (language_name.return_type);
+			if language_name.is_special or language_name.has_signature then
+				Result.set_result_type (extern.type.actual_type.type_i);
+				arg_c := extern.argument_count;
+				if arg_c > 0 then
+					from
+						arguments := extern.arguments;
+						i := 1;
+						!!local_dec.make (1, arg_c);
+					until
+						i > arg_c
+					loop
+						local_dec.put (arguments.i_th (i).actual_type.type_i, i);
+						i := i + 1;
+					end;
+					Result.set_arguments (local_dec);
+				end;
+			end;
 		ensure then
 			Result.external_name /= Void;
 		end;

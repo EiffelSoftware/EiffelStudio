@@ -20,12 +20,13 @@ feature -- Initialization
 	make_from_schema_file (a_filename: STRING) is
 			-- Make from 'a_filename'
 		do
+			name := a_filename
 		end
 
 feature -- Access
 
-	name: STRING is "No schema support for classic mode"
-			-- Name od schema
+	name: STRING
+			-- Name of schema
 
 	validator: SCHEMA_VALIDATOR
 			-- Schema validation

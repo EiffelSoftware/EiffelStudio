@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			a_creator.initialize_descriptor (Current)
 		ensure
 			non_void_pointed_descriptor: pointed_data_type_descriptor /= Void
-			non_void_type: type /= Void
 		end
 
 feature -- Access

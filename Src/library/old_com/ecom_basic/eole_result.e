@@ -161,3 +161,4 @@ end -- class EOLE_RESULT
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

@@ -36,7 +36,7 @@ feature -- Message Transmission
 			-- Font name
 			-- Not meant to be redefined; redefine `on_get_name' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		local
 			name: POINTER
 		do
@@ -51,7 +51,7 @@ feature -- Message Transmission
 			-- Font size
 			-- Not meant to be redefined; redefine `on_get_size' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			!! Result
 			Result.init
@@ -62,7 +62,7 @@ feature -- Message Transmission
 			-- Is font bold?
 			-- Not meant to be redefined; redefine `on_get_bold' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_font_get_bold (ole_interface_ptr)
 		end
@@ -71,7 +71,7 @@ feature -- Message Transmission
 			-- Is font italics?
 			-- Not meant to be redefined; redefine `on_get_italic' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_font_get_italic (ole_interface_ptr)
 		end
@@ -80,7 +80,7 @@ feature -- Message Transmission
 			-- Is font underline?
 			-- Not meant to be redefined; redefine `on_get_underline' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_font_get_underline (ole_interface_ptr)
 		end
@@ -89,7 +89,7 @@ feature -- Message Transmission
 			-- Is font strikethrough?
 			-- Not meant to be redefined; redefine `on_get_strikethrough' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_font_get_strikethrough (ole_interface_ptr)
 		end
@@ -98,7 +98,7 @@ feature -- Message Transmission
 			-- Font weight
 			-- Not meant to be redefined; redefine `on_get_weight' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_font_get_weight (ole_interface_ptr)
 		end
@@ -107,7 +107,7 @@ feature -- Message Transmission
 			-- Font character set
 			-- Not meant to be redefined; redefine `on_get_charset' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_font_get_charset (ole_interface_ptr)
 		end
@@ -116,7 +116,7 @@ feature -- Message Transmission
 			-- Windows font handle.
 			-- Not meant to be redefined; redefine `on_get_h_font' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_font_get_h_font (ole_interface_ptr)
 		end
@@ -125,7 +125,7 @@ feature -- Message Transmission
 			-- Clone of Current. 
 			-- Not meant to be redefined; redefine `on_font_clone' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_font_clone (ole_interface_ptr)
 		end
@@ -134,7 +134,7 @@ feature -- Message Transmission
 			-- Describe the font.
 			-- Not meant to be redefined; redefine `on_query_text_metrics' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			!! Result
 			Result.init
@@ -145,7 +145,7 @@ feature -- Message Transmission
 			-- Set font name with `name'.
 			-- Not meant to be redefined; redefine `on_put_name' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_name: name /= Void and then name.ole_ptr /= default_pointer
 		do
 			ole2_font_put_name (ole_interface_ptr, name.ole_ptr)
@@ -155,7 +155,7 @@ feature -- Message Transmission
 			-- Set font size with `size'.
 			-- Not meant to be redefined; redefine `on_put_size' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_size: size /= Void and then size.ole_ptr /= default_pointer
 		do
 			ole2_font_put_size (ole_interface_ptr, size.ole_ptr)
@@ -165,7 +165,7 @@ feature -- Message Transmission
 			-- Set bold format with `bold'.
 			-- Not meant to be redefined; redefine `on_put_bold' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_font_put_bold (ole_interface_ptr, bold)
 		end
@@ -174,7 +174,7 @@ feature -- Message Transmission
 			-- Set italics format with `italic'.
 			-- Not meant to be redefined; redefine `on_put_italic' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_font_put_italic (ole_interface_ptr, italic)
 		end
@@ -183,7 +183,7 @@ feature -- Message Transmission
 			-- Set underline format with `underline'.
 			-- Not meant to be redefined; redefine `on_put_underline' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_font_put_underline (ole_interface_ptr, underline)
 		end
@@ -192,7 +192,7 @@ feature -- Message Transmission
 			-- Set strikethrough format with `strikethrough'
 			-- Not meant to be redefined; redefine `on_put_strikethrough' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_font_put_strikethrough (ole_interface_ptr, strikethrough)
 		end
@@ -201,7 +201,7 @@ feature -- Message Transmission
 			-- Set weight with `weight'
 			-- Not meant to be redefined; redefine `on_put_weight' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_font_put_weight (ole_interface_ptr, weight)
 		end
@@ -210,7 +210,7 @@ feature -- Message Transmission
 			-- Set character set with `charset'
 			-- Not meant to be redefined; redefine `on_put_charset' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_font_put_charset (ole_interface_ptr, charset)
 		end
@@ -220,7 +220,7 @@ feature -- Message Transmission
 			-- HIMETRIC units with `cy_logical' and `cy_himetric'.
 			-- Not meant to be redefined; redefine `on_set_ratio' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_font_set_ratio (ole_interface_ptr, cy_logical, cy_himetric)
 		end
@@ -231,7 +231,7 @@ feature -- Message Transmission
 			-- itself is released. 
 			-- Not meant to be redefined; redefine `on_add_ref_hfont' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_font_add_ref_hfont (ole_interface_ptr, hfont)
 		end
@@ -241,7 +241,7 @@ feature -- Message Transmission
 			-- cache with `add_ref_hfont' no longer requires the lock.
 			-- Not meant to be redefined; redefine `on_release_hfont' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_font_release_hfont (ole_interface_ptr, hfont)
 		end
@@ -250,7 +250,7 @@ feature -- Message Transmission
 			-- Provide device context handle to font that describes logical mapping mode. 
 			-- Not meant to be redefined; redefine `on_set_hdc' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_font_set_hdc (ole_interface_ptr, hdc)
 		end
@@ -260,8 +260,8 @@ feature -- Message Transmission
 			-- Set status code for result.
 			-- Not meant to be redefined; redefine `on_is_equal_font' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
-			valid_other_font: other /= Void and then other.ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
+			valid_other_font: other /= Void and then other.is_valid_interface
 		do
 			ole2_font_is_equal (ole_interface_ptr, other.ole_interface_ptr)
 		end

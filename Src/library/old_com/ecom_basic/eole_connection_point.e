@@ -38,8 +38,8 @@ feature -- Message Transmission
 			-- Result is corresponding connection token.
 			-- Not meant to be redefined; redefine `on_advise' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
-			valid_client_sink: client_sink /= Void and then client_sink.ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
+			valid_client_sink: client_sink /= Void and then client_sink.is_valid_interface
 		do
 			Result := ole2_connection_point_advise (ole_interface_ptr, client_sink.ole_interface_ptr)
 		end
@@ -49,7 +49,7 @@ feature -- Message Transmission
 			-- previously given by `advise'.
 			-- Not meant to be redefined; redefine `on_unadvise' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_connection_point_unadvise (ole_interface_ptr, token)
 		end
@@ -58,7 +58,7 @@ feature -- Message Transmission
 			-- IID of outgoing interface
 			-- Not meant to be redefined; redefine `on_get_connection_interface' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_connection_point_get_connection_interface (ole_interface_ptr)
 		end
@@ -68,7 +68,7 @@ feature -- Message Transmission
 			-- IConnectionPointContainer interface pointer
 			-- Not meant to be redefined; redefine `on_get_connection_point_container' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_connection_point_get_connection_point_container (ole_interface_ptr);
 		end
@@ -77,7 +77,7 @@ feature -- Message Transmission
 			-- Enumerate current advisory connection
 			-- Not meant to be redefined; redefine `on_enum_connections' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_connection_point_enum_connections (ole_interface_ptr);
 		end

@@ -9,7 +9,7 @@ class
 	EOLE_REFERENCE
 
 inherit
-	EOLE_VARTYPE
+	EOLE_VAR_TYPE
 
 feature -- Element change
 

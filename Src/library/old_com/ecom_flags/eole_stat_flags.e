@@ -51,3 +51,4 @@ end -- class EOLE_STAT_FLAGS
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

@@ -55,3 +55,4 @@ end -- class EOLE_ROOT_STORAGE
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

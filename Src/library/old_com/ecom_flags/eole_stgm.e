@@ -248,3 +248,4 @@ end -- class STGM
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

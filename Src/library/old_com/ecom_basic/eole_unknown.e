@@ -41,6 +41,8 @@ feature -- Element change
 		do
 			!! wel_string.make (Iid_unknown)
 			ole_interface_ptr := ole2_create_interface_pointer ($Current, wel_string.item)
+		ensure
+			is_valid_interface: is_valid_interface
 		end
 
 	frozen attach_ole_interface_ptr (ptr: POINTER) is
@@ -58,6 +60,8 @@ feature -- Element change
 				ole_interface_ptr := ptr
 				ole2_update_interface ($Current, ptr)
 			end
+		ensure
+			is_attached: ole_interface_ptr /= default_pointer
 		rescue
 			second_time := True
 			retry
@@ -66,14 +70,20 @@ feature -- Element change
 	frozen detach_ole_interface_ptr is
 			-- Destroy current Ole interface pointer.
 		do
-			cpp_delete (ole_interface_ptr)
-			ole_interface_ptr := default_pointer
+			if is_valid_interface then
+				cpp_delete (ole_interface_ptr)
+				ole_interface_ptr := default_pointer
+			end
+		ensure
+			is_detached: ole_interface_ptr = default_pointer
 		end
 
 	frozen set_delegate (unk: EOLE_UNKNOWN) is
 			-- Set `delegate' with `unk'.
 		do
 			delegate := unk
+		ensure
+			delegate_set: delegate = unk
 		end
 		
 	frozen set_last_hresult (hresult: INTEGER) is
@@ -81,6 +91,8 @@ feature -- Element change
 			-- Shortcut for `status.set_last_hresult'.
 		do
 			status.set_last_hresult (hresult)
+		ensure
+			last_hresult_set: status.last_hresult = hresult
 		end
 
 feature -- Access
@@ -122,7 +134,7 @@ feature -- Message Transmission
 			-- current reference counter value.
 			-- Not meant to be redefined; redefine `on_add_ref' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			reference_counter := ole2_unknown_add_ref (ole_interface_ptr)
 		end
@@ -132,7 +144,7 @@ feature -- Message Transmission
 			-- current reference counter value.
 			-- Not meant to be redefined; redefine `on_release' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			reference_counter := ole2_unknown_release (ole_interface_ptr)
 		end

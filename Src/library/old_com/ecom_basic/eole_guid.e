@@ -89,3 +89,4 @@ end -- class EOLE_GUID
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

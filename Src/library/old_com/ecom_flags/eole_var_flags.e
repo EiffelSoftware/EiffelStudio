@@ -1,0 +1,103 @@
+indexing
+
+	description: "VARFLAGS flags"
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	EOLE_VAR_FLAGS
+
+inherit
+	EOLE_FLAGS
+
+feature -- Access
+
+	Varflag_freadonly: INTEGER is
+			-- Assignment to variable should not be allowed
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"VARFLAG_FREADONLY"
+		end
+		
+	Varflag_fsource: INTEGER is
+			-- Variable returns an object that is source of eventsd
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"VARFLAG_FSOURCE"
+		end
+		
+	Varflag_fbindable: INTEGER is
+			-- Variable supports data binding
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"VARFLAG_FBINDABLE"
+		end
+		
+	Varflag_frequestedit: INTEGER is
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"VARFLAG_FREQUESTEDIT"
+		end
+		
+	Varflag_fdisplaybind: INTEGER is
+			-- Variable is displayed to user as bindable
+			-- VARFLAG_FBINDABLE must also be set
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"VARFLAG_FDISPLAYBIND"
+		end
+		
+	Varflag_fdefaultbind: INTEGER is
+			-- Variable is single property that best represents
+			-- object. Only one variable in typeinfo may have this attibute.
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"VARFLAG_FDEFAULTBIND"
+		end
+		
+	Varflag_fhidden: INTEGER is
+			-- Variable should not be displayed to user in browser,
+			-- though it exists and is bindable.
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"VARFLAG_FHIDDEN"
+		end	
+
+	is_valid_varflag (flag: INTEGER): BOOLEAN is
+			-- Is `flag' a valid combination of varflags?
+		do
+			Result := c_and (Varflag_freadonly + Varflag_fsource
+						+ Varflag_fbindable + Varflag_frequestedit
+						+ Varflag_fdisplaybind + Varflag_fdefaultbind
+						+ Varflag_fhidden, flag)
+						= Varflag_freadonly + Varflag_fsource
+						+ Varflag_fbindable + Varflag_frequestedit
+						+ Varflag_fdisplaybind + Varflag_fdefaultbind
+						+ Varflag_fhidden
+		end
+		
+end -- class EOLE_VARFLAGS
+
+--|-------------------------------------------------------------------------
+--| EiffelCOM: library of reusable components for ISE Eiffel.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license.
+--| Contact ISE for any other use.
+--| Based on WINE library, copyright (C) Object Tools, 1996-1997.
+--| Modifications and extensions: copyright (C) ISE, 1997. 
+--|
+--| Interactive Software Engineering Inc.
+--| 270 Storke Road, ISE Building, second floor, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------

@@ -241,3 +241,4 @@ end -- class EOLE_EXCEPINFO
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

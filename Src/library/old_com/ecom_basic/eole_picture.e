@@ -37,7 +37,7 @@ feature -- Message Transmission
 			-- Windows GDI handle of picture.
 			-- Not meant to be redefined; redefine `on_get_handle' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_picture_get_handle (ole_interface_ptr)
 		end
@@ -46,7 +46,7 @@ feature -- Message Transmission
 			-- Windows handle of palette used by picture 
 			-- Not meant to be redefined; redefine `on_get_hpal' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_picture_get_hpal (ole_interface_ptr)
 		end
@@ -56,7 +56,7 @@ feature -- Message Transmission
 			-- (See EOLE_PICTYPE for `Result'  value.)
 			-- Not meant to be redefined; redefine `on_get_type' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_picture_get_type (ole_interface_ptr)
 		ensure
@@ -67,7 +67,7 @@ feature -- Message Transmission
 			-- Current width of picture in picture object
 			-- Not meant to be redefined; redefine `on_get_width' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_picture_get_width (ole_interface_ptr)
 		end
@@ -76,7 +76,7 @@ feature -- Message Transmission
 			-- Current height of picture in picture object
 			-- Not meant to be redefined; redefine `on_get_height' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_picture_get_height (ole_interface_ptr)
 		end
@@ -85,7 +85,7 @@ feature -- Message Transmission
 			-- Current device context into which picture is selected
 			-- Not meant to be redefined; redefine `on_get_cur_dc' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_picture_get_cur_dc (ole_interface_ptr)
 		end
@@ -94,7 +94,7 @@ feature -- Message Transmission
 			-- Current value of picture object’s KeepOriginalFormat property
 			-- Not meant to be redefined; redefine `on_get_keep_original_format' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_picture_get_keep_original_format (ole_interface_ptr)
 		end		
@@ -103,7 +103,7 @@ feature -- Message Transmission
 			-- Current set of picture’s bit attributes
 			-- Not meant to be redefined; redefine `on_get_attributes' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			do
 				Result := ole2_picture_get_attributes (ole_interface_ptr)
 			end
@@ -119,7 +119,7 @@ feature -- Message Transmission
 			-- metafile with `bound'. 
 			-- Not meant to be redefined; redefine `on_render' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_bounds: bounds /= Void and then bounds.ole_ptr /= default_pointer
 		do
 			ole2_picture_render (ole_interface_ptr, hdc, x, y, cx, cy, x_src, y_src, cx_src, cy_src, bounds.ole_ptr)
@@ -129,7 +129,7 @@ feature -- Message Transmission
 			-- Set current palette of picture with `hpal'. 
 			-- Not meant to be redefined; redefine `on_set_hpal' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_picture_set_hpal (ole_interface_ptr, hpal)
 		end
@@ -141,7 +141,7 @@ feature -- Message Transmission
 			-- (See EOLE_SELECT_PICTURE for more details.)
 			-- Not meant to be redefined; redefine `on_select_picture' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			!! Result
 			Result.attach (ole2_picture_select_picture (ole_interface_ptr, hdc_in))
@@ -151,7 +151,7 @@ feature -- Message Transmission
 			-- Set picture object’s KeepOriginalFormat property with `keep'.
 			-- Not meant to be redefined; redefine `on_put_keep_original_format' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_picture_put_keep_original_format (ole_interface_ptr, keep)
 		end
@@ -160,7 +160,7 @@ feature -- Message Transmission
 			-- Notify picture object that its picture resource changed.
 			-- Not meant to be redefined; redefine `on_picture_change' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_picture_picture_changed (ole_interface_ptr)
 		end
@@ -171,8 +171,8 @@ feature -- Message Transmission
 			-- Save in memory when `fsave_mem_copy' is `True'.
 			-- Not meant to be redefined; redefine `on_save_as_file' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
-			valid_stream: stream /= Void and then stream.ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
+			valid_stream: stream /= Void and then stream.is_valid_interface
 		do
 			Result := ole2_picture_save_as_file (ole_interface_ptr, stream.ole_interface_ptr, fsave_mem_copy)
 		end
@@ -270,7 +270,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			-- By default: set status code with `Eole_e_notimpl'.
 			-- Redefine in descedant if needed.
 		require
-			valid_bounds: bounds.is_ole_ptr_attached
+			valid_bounds: bounds.is_attached
 		do
 			set_last_hresult (E_notimpl)
 		end

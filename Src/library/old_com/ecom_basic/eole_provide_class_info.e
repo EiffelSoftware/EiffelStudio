@@ -35,7 +35,7 @@ feature -- Access
 			-- EOLE_TYPE_INFO interface for object's type information 
 			-- Not meant to be redefined; redefine `on_get_class_info' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_provide_class_info_get_class_info (ole_interface_ptr)
 		end

@@ -60,3 +60,4 @@ end -- class EOLE_STGTY
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

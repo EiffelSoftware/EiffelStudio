@@ -6,14 +6,14 @@ indexing
 	revision: "$Revision$"
 
 class
-	EOLE_VARDESC
+	EOLE_VAR_DESC
 
 inherit
 	EOLE_OBJECT_WITH_POINTER
 
-	EOLE_VARKIND
+	EOLE_VAR_KIND
 
-	EOLE_VARFLAGS
+	EOLE_VAR_FLAGS
 		
 feature -- Access
 
@@ -53,7 +53,7 @@ feature -- Access
 			valid_result: is_valid_var_kind (Result)
 		end
 
-	elemdesc: EOLE_ELEMDESC is
+	elemdesc: EOLE_ELEM_DESC is
 			-- Corresponding EOLE_ELEMDESC structure
 		require
 			valid_c_structure: ole_ptr /= default_pointer

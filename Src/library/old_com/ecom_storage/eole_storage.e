@@ -57,7 +57,7 @@ feature -- Message Transmission
 			-- contained in current storage object with mode `mode'.
 			-- See class EOLE_STGM for `mode' values.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_stream_name: stream_name /= Void
 			valid_mode: is_valid_stgm (mode)
 		local
@@ -76,7 +76,7 @@ feature -- Message Transmission
 			-- Child stream object should be opened in
 			-- EOLE_STG_SHARE_EXCLUSIVE access mode.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_stream_name: stream_name /= Void
 			valid_mode: is_valid_stgm (mode)
 		local
@@ -94,7 +94,7 @@ feature -- Message Transmission
 			-- within current storage object according to `mode'.
 			-- See class EOLE_STGM for `mode' values.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_storage_name: storage_name /= Void
 			valid_mode: is_valid_stgm (mode)
 		local
@@ -112,7 +112,7 @@ feature -- Message Transmission
 			-- `stg_name' should be in current storage object.
 			-- See class EOLE_STGM for `mode' values.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_storage_name: stg_name /= Void
 			valid_mode: is_valid_stgm (mode)
 		local
@@ -129,7 +129,7 @@ feature -- Message Transmission
 			-- Remove `element_name' from this storage, subject to the
 			-- transaction mode in which the storage object was opened.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_element_name: element_name /= Void
 		local
 			wel_string: WEL_STRING
@@ -141,8 +141,8 @@ feature -- Message Transmission
 	copy_to (stg_dest: EOLE_STORAGE) is
 			-- Copy entire contents of `Current' into `stg_dest'.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
-			valid_destination_storage: stg_dest /= Void and then stg_dest.ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
+			valid_destination_storage: stg_dest /= Void and then stg_dest.is_valid_interface
 		do
 			ole2_storage_copy_to (ole_interface_ptr, stg_dest.ole_interface_ptr)
 		end
@@ -152,9 +152,9 @@ feature -- Message Transmission
 			-- name `new_element_name' and mode `movmode'.
 			-- See class EOLE_STGMOVE for `movmode' values.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_element_name: element_name /= Void
-			valid_destination_storage: stg_dest /= Void and then stg_dest.ole_interface_ptr /= default_pointer
+			valid_destination_storage: stg_dest /= Void and then stg_dest.is_valid_interface
 			valid_new_element_name: new_element_name /= Void
 			valid_move_mode: is_valid_stgmove (movmode)
 		local
@@ -170,7 +170,7 @@ feature -- Message Transmission
 			-- transaction state of the IStorage object 
 			-- into `new_element_name'.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_old_element_name: old_element_name /= Void
 			valid_new_element_name: new_element_name /= Void
 		local
@@ -184,7 +184,7 @@ feature -- Message Transmission
 	set_class (clsid: STRING) is
 			-- Associate `clsid' as `Current' CLSID.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_clsid: clsid /= Void
 		local
 			wel_string: WEL_STRING
@@ -198,7 +198,7 @@ feature -- Message Transmission
 			-- opened or last committed to persistent storage.
 			-- See class EOLE_STGC for `mode' values.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_mode: is_valid_stgc (mode)
 		do
 			ole2_storage_commit (ole_interface_ptr, mode)
@@ -209,7 +209,7 @@ feature -- Message Transmission
 			-- by nested commits since `Current' was opened or last
 			-- committed.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_storage_revert (ole_interface_ptr)
 		end
@@ -229,7 +229,7 @@ feature -- Message Transmission
 			-- Enumerate elements immediately contained
 			-- within current storage object.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		local
 			statstg: EOLE_STATSTG
 			polestatstg: POINTER

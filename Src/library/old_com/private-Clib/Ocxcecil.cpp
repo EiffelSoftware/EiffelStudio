@@ -809,25 +809,28 @@ extern "C" void eole2_output_debug_string( EIF_POINTER pStr )
 
 /*---------------------------------------------------------------------------*/
 
-extern "C" void EiffelStringToGuid( EIF_POINTER str, GUID* guid )
+extern "C" void EiffelStringToGuid( EIF_POINTER str, GUID *guid )
 {
    CLSIDFromString (Eif2OleString (str), guid);
 }
 
 //---------------------------------------------------------------------------
 
-extern "C" char* GuidToCString( REFIID guid )
+extern "C" char* GuidToCString( REFGUID refguid )
 {
    char *result;
-   LPOLESTR oleStr;
-   StringFromCLSID (guid, &oleStr);
-   Ole2CString (oleStr, &result);
+   HRESULT res;
+   LPOLESTR poleStr;
+
+   res = StringFromCLSID (refguid, &poleStr);
+   Ole2CString (poleStr, &result);
    return result;
 }
 
 //---------------------------------------------------------------------------
 
 extern "C" EIF_REFERENCE GuidToEiffelString (REFIID guid) {
+
     return EStringFromCString (GuidToCString (guid));
 }
 
@@ -912,3 +915,4 @@ extern "C" EIF_REFERENCE EStringFromCString( char* cstring )
 }
 
 /////// END OF FILE /////////////////////////////////////////////////////////
+

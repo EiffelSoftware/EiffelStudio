@@ -14,7 +14,7 @@ inherit
 			allocate
 		end
 		
-	EOLE_LOCKTYPES
+	EOLE_LOCK_TYPES
 	
 	EOLE_STGM
 	

@@ -563,7 +563,8 @@ extern "C" void eole2_update_interface (EIF_REFERENCE unk, EIF_POINTER ptr)
 
 extern "C" void cpp_delete ( EIF_POINTER ip )
 {
-   free (ip);
+   delete ip;
 }
 
 /////// END OF FILE /////////////////////////////////////////////////////////
+

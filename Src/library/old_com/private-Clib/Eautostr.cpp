@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------------
 
 #include "eifole.h"
+#include "eif_hector.h"
 
 //---------------------------------------------------------------------------
 // This file contains support for various structures necessary
@@ -951,35 +952,63 @@ extern "C" EIF_POINTER eole2_get_elemdesc_typedesc( EIF_POINTER pThis )
 
 //---------------------------------------------------------------------------
 
-extern "C" EIF_INTEGER eole2_get_elemdesc_idldesc( EIF_POINTER pThis )
+extern "C" EIF_POINTER eole2_get_elemdesc_idldesc( EIF_POINTER pThis )
 {
     ELEMDESC* pED = (ELEMDESC*)pThis;
-    return (EIF_INTEGER)pED->idldesc.wIDLFlags;
+    return (EIF_POINTER)( &pED->idldesc );
 }
 
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
-// TYPEDESC support
+// ARRAYDESC support
 //---------------------------------------------------------------------------
 
-extern "C" EIF_POINTER eole2_typedesc_allocate( void )
+extern "C" EIF_POINTER eole2_arraydesc_typedesc( EIF_POINTER pThis )
 {
-    return (EIF_POINTER)malloc (sizeof(TYPEDESC));
+	ARRAYDESC* pAR = (ARRAYDESC*)pThis;
+	return (EIF_POINTER)&(pAR->tdescElem);
 }
 
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typedesc_get_vartype( EIF_POINTER pThis )
+extern "C" EIF_INTEGER eole2_arraydesc_count_dims( EIF_POINTER pThis )
 {
-    TYPEDESC* pTD = (TYPEDESC*)pThis;
-    return (EIF_INTEGER)pTD->vt;
+	ARRAYDESC* pAR = (ARRAYDESC*)pThis;
+	return (EIF_INTEGER)pAR->cDims;
 }
 
-extern "C" EIF_POINTER eole2_typedesc_get_typedesc (EIF_POINTER pThis) {
-    TYPEDESC* pTD = (TYPEDESC*)pThis;
-    return (EIF_POINTER)pTD->lptdesc;
-}
+extern "C" EIF_OBJ eole2_arraydesc_bounds( EIF_POINTER pThis )
+{
+	ARRAYDESC *pAR = (ARRAYDESC*)pThis;
+	EIF_OBJ Result;
+	EIF_OBJ Bounds;
+	EIF_PROC eif_array_make;
+	EIF_PROC eif_array_put;
+	EIF_PROC eif_bound_init;
+	EIF_PROC eif_bound_set_elem_count;
+	EIF_PROC eif_bound_set_lower_bound;
+	EIF_TYPE_ID eif_array_id;
+	EIF_TYPE_ID eif_bound_id;
+	int i=1;
+	USHORT dims = pAR->cDims;
 
+	eif_bound_id = eif_type_id ("EOLE_SAFEARRAY_BOUNDS");
+	eif_array_id = eif_generic_id ("ARRAY", eif_bound_id);
+	eif_array_make = eif_proc ("make", eif_array_id);
+	eif_array_put = eif_proc ("put", eif_array_id);
+	eif_bound_init = eif_proc ("init", eif_bound_id);
+	eif_bound_set_elem_count = eif_proc ("set_element_count", eif_bound_id);
+	eif_bound_set_lower_bound = eif_proc ("set_lower_bound", eif_bound_id);
+	Result = eif_create (eif_array_id);
+	eif_array_make (eif_access (Result), 1, dims);
+	Bounds = eif_create (eif_bound_id);
+	eif_bound_init (eif_access (Bounds));
+	while (i <= dims) {
+		eif_bound_set_elem_count (eif_access (Bounds), pAR->rgbounds [i-1].cElements);
+		eif_bound_set_lower_bound (eif_access (Bounds), pAR->rgbounds [i-1].lLbound);
+		eif_array_put (eif_access (Result), eif_access (Bounds), i);
+		i++;
+	}
+	return eif_access (Result);
+}
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 // VARDESC support
@@ -1086,289 +1115,6 @@ extern "C" void eole2_vardesc_set_varflags (EIF_POINTER pThis, EIF_INTEGER varFl
    VARDESC *pVD = (VARDESC*)pThis;
    pVD->wVarFlags = (unsigned short)varFlags;
 }
-
-//---------------------------------------------------------------------------
-//---------------------------------------------------------------------------
-// TYPEATTR support
-//---------------------------------------------------------------------------
-
-extern "C" EIF_POINTER eole2_typeattr_allocate( void )
-{
-    return (EIF_POINTER)malloc (sizeof(TYPEATTR));
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_POINTER eole2_typeattr_get_guid( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (char*)GuidToCString( pTA->guid );
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_locale( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->lcid;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_constructor_id( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->memidConstructor;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_destructor_id( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->memidDestructor;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_instance_size( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->cbSizeInstance;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_typekind( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->typekind;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_num_functions( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->cFuncs;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_num_vars( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->cVars;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_num_interfaces( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->cImplTypes;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_vtbl_size( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->cbSizeVft;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_instance_alignment( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->cbAlignment;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_type_flags( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->wTypeFlags;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_major_version( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->wMajorVerNum;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_minor_version( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->wMinorVerNum;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_POINTER eole2_typeattr_get_typedesc( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_POINTER)&(pTA->tdescAlias);
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" EIF_INTEGER eole2_typeattr_get_idldesc( EIF_POINTER pThis )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    return (EIF_INTEGER)pTA->idldescType.wIDLFlags;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_guid( EIF_POINTER pThis,
-        EIF_POINTER guid_string )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    EiffelStringToGuid( guid_string, &pTA->guid );
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_locale( EIF_POINTER pThis,
-        EIF_INTEGER locale )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->lcid = (LCID)locale;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_constructor_id( EIF_POINTER pThis,
-        EIF_INTEGER id )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->memidConstructor = (MEMBERID)id;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_destructor_id( EIF_POINTER pThis,
-        EIF_INTEGER id )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->memidDestructor = (MEMBERID)id;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_instance_size( EIF_POINTER pThis,
-        EIF_INTEGER sz )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->cbSizeInstance = sz;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_typekind( EIF_POINTER pThis,
-        EIF_INTEGER typekind )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->typekind = (TYPEKIND)typekind;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_num_functions( EIF_POINTER pThis,
-        EIF_INTEGER num )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->cFuncs = (unsigned short)num;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_num_vars( EIF_POINTER pThis,
-        EIF_INTEGER num )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->cVars = (unsigned short)num;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_num_interfaces( EIF_POINTER pThis,
-        EIF_INTEGER num )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->cImplTypes = (unsigned short)num;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_vtbl_size( EIF_POINTER pThis,
-        EIF_INTEGER sz )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->cbSizeVft = (unsigned short)sz;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_instance_alignment( EIF_POINTER pThis,
-        EIF_INTEGER al )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->cbAlignment = (unsigned short)al;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_type_flags( EIF_POINTER pThis,
-        EIF_INTEGER flags )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->wTypeFlags = (unsigned short)flags;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_major_version( EIF_POINTER pThis,
-        EIF_INTEGER ver )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->wMajorVerNum = (unsigned short)ver;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_minor_version( EIF_POINTER pThis,
-        EIF_INTEGER ver )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->wMinorVerNum = (unsigned short)ver;
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_typedesc( EIF_POINTER pThis,
-        EIF_POINTER typedesc )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->tdescAlias = *( (TYPEDESC*)typedesc );
-}
-
-//---------------------------------------------------------------------------
-
-extern "C" void eole2_typeattr_set_idldesc( EIF_POINTER pThis,
-        EIF_INTEGER idldesc )
-{
-    TYPEATTR* pTA = (TYPEATTR*)pThis;
-    pTA->idldescType.wIDLFlags = (unsigned short)idldesc;
-}
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1487,3 +1233,4 @@ extern "C" EIF_INTEGER eole2_currency_get_Hi (EIF_POINTER _this) {
 }
 
 /////// END OF FILE /////////////////////////////////////////////////////////
+

@@ -14,7 +14,7 @@ inherit
 			allocate
 		end
 	
-	EOLE_VARTYPE
+	EOLE_VAR_TYPE
 
 feature -- Element change
 

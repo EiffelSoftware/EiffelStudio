@@ -62,3 +62,4 @@ extern "C" EIF_INTEGER eole2_safearray_dim (EIF_POINTER ptr) {
 extern "C" EIF_INTEGER eole2_safearray_element_size (EIF_POINTER ptr) {
 	return (EIF_INTEGER)SafeArrayGetElemsize ((SAFEARRAY FAR *)ptr);
 	}
+

@@ -8,9 +8,10 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 //-- $Log$
-//-- Revision 1.4  1998/01/27 00:25:11  raphaels
-//-- Added `clone' method on enumerators.
-//-- More corrections to support Borland Compiler.
+//-- Revision 1.5  1998/02/02 18:05:12  raphaels
+//-- Added TypeComp support.
+//-- Updated TypeLib and TypeInfo support.
+//-- Modified some file names.
 //--
 //-- Revision 1.3  1998/01/20 23:47:58  raphaels
 //-- Removed obsolete files.
@@ -222,3 +223,4 @@ extern "C" EIF_POINTER eole2_enum_connection_points_clone (EIF_POINTER ptr) {
 	g_hrStatusCode = E_IEnumConnectionPoints_Clone ((void *)ptr, FALSE, ppecnpt);
 	return (EIF_POINTER)*ppecnpt;
 	}
+

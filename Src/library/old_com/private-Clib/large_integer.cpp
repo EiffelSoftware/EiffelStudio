@@ -118,3 +118,4 @@ extern "C" EIF_INTEGER eole2_large_integer_get_high_part (EIF_POINTER _this) {
    return (EIF_INTEGER)(((ULARGE_INTEGER FAR *)_this)->HighPart);
 #endif /* EIF_BORLAND */
 }
+

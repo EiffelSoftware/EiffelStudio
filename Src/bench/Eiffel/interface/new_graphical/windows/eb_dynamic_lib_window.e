@@ -850,7 +850,7 @@ feature {NONE} -- Implementation: Creation routine selection
 					process_creation_routine_callback (1)
 				else
 					create choice.make_default (~process_creation_routine_callback (?))
-					choice.set_title (Interface_names.t_Select_creation_feature)
+					choice.set_title (Interface_names.t_Select_feature)
 					choice.set_list (feature_names)
 					--choice.set_position (feature_address.screen_x, feature_address.screen_y + feature_address.height)
 					choice.show_modal_to_window (window)
@@ -1373,9 +1373,7 @@ feature {NONE} -- Implementation: Properties dialog
 		do
 			cl := modified_exported_feature.compiled_class
 			f := modified_exported_feature.routine
-			if creation_combo.selected_item.text /= Void then
-				cr := cl.feature_with_name (creation_combo.selected_item.text)
-			end
+			cr := cl.feature_with_name (creation_combo.selected_item.text)
 			al := alias_field.text
 			if is_windows then
 				ind := index_field.value
@@ -1387,16 +1385,12 @@ feature {NONE} -- Implementation: Properties dialog
 				elseif not valid_class (cl) then
 					create cd.make_with_text (Warning_messages.w_Class_cannot_export)
 				elseif f = Void then
-					check
-						cl.name /= Void
-						--| Class wouldn't be valid otherwise right?
-					end
-					create cd.make_with_text (Warning_messages.w_No_exported_feature (feature_field.text, cl.lace_class.name_in_upper))
+					create cd.make_with_text (Warning_messages.w_No_exported_feature (feature_field.text, class_field.text))
 				elseif not valid_feature (f, cl) then
 					create cd.make_with_text (Warning_messages.w_Feature_cannot_be_exported)
 				elseif not valid_creation_routine (cr, cl) then
 					create cd.make_with_text (Warning_messages.w_No_valid_creation_routine)
-				elseif al /= Void and then not valid_alias (al) then
+				elseif not al.is_empty and then not valid_alias (al) then
 					create cd.make_with_text (Warning_messages.w_Invalid_alias)
 				elseif is_windows and then ind /= 0 and then not valid_index (ind) then
 					create cd.make_with_text (Warning_messages.w_Invalid_index)
@@ -1407,7 +1401,7 @@ feature {NONE} -- Implementation: Properties dialog
 			else
 					-- Ah we can update the exported feature.
 				modified_exported_feature.set_creation_routine (cr)
-				if al /= Void then
+				if not al.is_empty then
 					modified_exported_feature.set_alias_name (al)
 				else
 					modified_exported_feature.remove_alias_name
@@ -1458,11 +1452,11 @@ feature {NONE} -- Implementation: Properties dialog
 				end
 			end
 			tmp := feature_field.text
-			if cl /= Void and then cl.has_feature_table and tmp /= Void and then not tmp.is_empty then
+			if cl /= Void and then cl.has_feature_table and then not tmp.is_empty then
 				tmp.to_lower
 				f := cl.feature_with_name (tmp)
 				tmp := creation_combo.selected_item.text
-				if tmp /= Void and then not tmp.is_empty then
+				if not tmp.is_empty then
 					tmp.to_lower
 					cr := cl.feature_with_name (tmp)
 				end
@@ -1481,7 +1475,7 @@ feature {NONE} -- Implementation: Properties dialog
 					create cd.make_with_text (Warning_messages.w_Feature_cannot_be_exported)
 				elseif not valid_creation_routine (cr, cl) then
 					create cd.make_with_text (Warning_messages.w_No_valid_creation_routine)
-				elseif al /= Void and then not valid_alias (al) then
+				elseif not al.is_empty and then not valid_alias (al) then
 					create cd.make_with_text (Warning_messages.w_Invalid_alias)
 				elseif is_windows and then ind /= 0 and then not valid_index (ind) then
 					create cd.make_with_text (Warning_messages.w_Invalid_index)
@@ -1492,7 +1486,7 @@ feature {NONE} -- Implementation: Properties dialog
 			else
 					-- Ah we can create a new exported feature.
 				create exp.make (cl, cr, f)
-				if al /= Void then
+				if not al.is_empty then
 					exp.set_alias_name (al)
 				end
 				if is_windows then
@@ -1526,7 +1520,7 @@ feature {NONE} -- Implementation: Properties dialog
 		do
 			creation_combo.wipe_out
 			tmp := class_field.text
-			if tmp /= Void then
+			if not tmp.is_empty then
 				tmp.to_lower
 				clist := Eiffel_universe.compiled_classes_with_name (tmp)
 				if not clist.is_empty then
@@ -1554,8 +1548,8 @@ feature {NONE} -- Implementation: Properties dialog
 					creation_combo.extend (cit)
 					available_creation_routines.forth
 				end
-				properties_dialog.set_default_push_button (okb)
 				feature_field.set_focus
+				properties_dialog.set_default_push_button (okb)
 			end
 		end
 
@@ -1625,11 +1619,11 @@ feature {NONE} -- Implementation: checks
 						f /= Void and then
 						(cr /= Void implies valid_creation_routine (cr, cl)) and then
 						(cr = Void implies valid_creation_routine (f, cl)) and then
-						(f /= Void implies valid_feature (f, cl)) and then
+						valid_feature (f, cl) and then
 							-- All other parameters are optional.
 						(ind /= 0 implies ind > 0) and then
-						(al /= Void implies valid_alias (al)) and then
-						(cc /= Void implies valid_calling_convention (cc))
+						((al /= Void and then not al.is_empty) implies valid_alias (al)) and then
+						((cc /= Void and then not cc.is_empty) implies valid_calling_convention (cc))
 		end
 
 	conflicting_exports: BOOLEAN is

@@ -12,42 +12,16 @@ deferred class
 
 	EV_COMMAND 
 
-feature -- Access
-
-	event_data: EV_EVENT_DATA
-			-- Information related to Current command,
-			-- provided by the underlying user interface 
-			-- mechanism
-
-feature -- Status report
-	
-	
-	--XX check the purpose of this this
-	is_template: BOOLEAN is
-			-- Is the current command a template, in other words,
-			-- should it be cloned before execution?
-			-- If true, EiffelVision will clone Current command 
-			-- whenever it is invoked as a callback
-		do
-		end
-
-	event_data_useful: BOOLEAN is
-			-- Should the context data be available
-			-- when Current command is invoked as a
-			-- callback
-		do
-		end
-
 feature -- Basic operations
 
-	execute (arguments: EV_ARGUMENTS) is
+	execute (args: EV_ARGUMENTS; data: EV_EVENT_DATA) is
 			-- Execute Current command.
-			-- `arguments' is automatically passed by
+			-- `args' and `data' are automatically passed by
 			-- EiffelVision when Current command is
 			-- invoked as a callback.
 		deferred
 		end
-	
+
 	execute_address: POINTER is
 			-- Address of feature execute 
 		do
@@ -60,18 +34,6 @@ feature {NONE} -- Implementation
 		do
 			Result := routine
 		end
-
-feature {EV_WIDGET_I, EV_EVENT_HANDLER_IMP} -- Element change
-
- 	set_event_data (data: EV_EVENT_DATA) is
- 			-- Set `event_data' to `data'.
-			-- This is used internally by EiffelVision to 
-			-- set event data given by the windowing system
- 		do
- 			event_data := data
- 		ensure
- 			event_data = data
- 		end
 
 end -- class EV_COMMAND
 

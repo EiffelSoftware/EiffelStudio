@@ -10,7 +10,7 @@ class E_SHOW_CLASSES
 
 inherit
 
-	E_CMD;
+	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
 
 creation
@@ -59,9 +59,9 @@ feature -- Execution
 					a_classi := sorted_classes.item;
 					a_classe := a_classi.compiled_eclass;
 					if a_classe /= Void then
-						a_classe.append_clickable_signature (output_window)
+						a_classe.append_signature (output_window)
 					else
-						a_classi.append_clickable_name (output_window)
+						a_classi.append_name (output_window)
 					end;
 					output_window.new_line;
 					output_window.put_string ("%T-- Cluster: ");

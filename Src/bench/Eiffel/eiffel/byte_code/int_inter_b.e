@@ -51,8 +51,8 @@ feature -- C generation
 
 feature -- IL code generation
 
-	generate_il (min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]) is
-			-- Generate code for group assuming that inspect value is in range `min_value'..`max_value'
+	generate_il (min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
+			-- Generate code for single interval of `instruction' assuming that inspect value is in range `min_value'..`max_value'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.
 		local
@@ -68,10 +68,6 @@ feature -- IL code generation
 			lo := lower.generation_value
 			up := upper.generation_value
 			label := labels.item (case_index)
-			if label = Void then
-				label := il_label_factory.new_label
-				labels.put (label, case_index)
-			end
 			else_label := labels.item (0)
 			if is_min_equal_lower then
 					-- No need to test lower bound
@@ -80,33 +76,53 @@ feature -- IL code generation
 					else_label := label
 				else
 						-- Test upper bound
-					il_generator.duplicate_top
+					instruction.generate_il_load_value
 					il_generator.put_integer_32_constant (up)
-					il_generator.branch_on_condition (feature {MD_OPCODES}.ble, label)
+					if label = Void then
+						il_generator.branch_on_condition (feature {MD_OPCODES}.bgt, else_label)
+					else
+						il_generator.branch_on_condition (feature {MD_OPCODES}.ble, label)
+					end
 				end
 			elseif is_max_equal_upper then
 					-- No need to test upper bound
 					-- Test lower bound
-				il_generator.duplicate_top
+				instruction.generate_il_load_value
 				il_generator.put_integer_32_constant (lo)
-				il_generator.branch_on_condition (feature {MD_OPCODES}.bge, label)
+				if label = Void then
+					il_generator.branch_on_condition (feature {MD_OPCODES}.blt, else_label)
+				else
+					il_generator.branch_on_condition (feature {MD_OPCODES}.bge, label)
+				end
 			elseif lo = up then
 					-- This is a single value
 					-- Test for equality
-				il_generator.duplicate_top
+				instruction.generate_il_load_value
 				il_generator.put_integer_32_constant (lo)
-				il_generator.branch_on_condition (feature {MD_OPCODES}.beq, label)
+				if label = Void then
+					il_generator.branch_on_condition (feature {MD_OPCODES}.bne_un, else_label)
+				else
+					il_generator.branch_on_condition (feature {MD_OPCODES}.beq, label)
+				end
 			else
 					-- General case
 					-- Generate unsigned test `val - lo <= up - lo' which is equivalent to
 					-- signed test `lo <= val and val <= up'.
-				il_generator.duplicate_top
+				instruction.generate_il_load_value
 				il_generator.put_integer_32_constant (lo)
 				il_generator.generate_binary_operator (il_minus)
 				il_generator.put_integer_32_constant (up - lo)
-				il_generator.branch_on_condition (feature {MD_OPCODES}.ble_un, label)
+				if label = Void then
+					il_generator.branch_on_condition (feature {MD_OPCODES}.bgt_un, else_label)
+				else
+					il_generator.branch_on_condition (feature {MD_OPCODES}.ble_un, label)
+				end
 			end
-			il_generator.branch_to (else_label)
+			if label = Void then
+				instruction.generate_il_when_part (case_index, labels)
+			else
+				il_generator.branch_to (else_label)
+			end
 		end
 
 feature -- Checking

@@ -10,48 +10,49 @@ inherit
 	IO_MEDIUM
 
 creation
-	make_stream
+	make
 
 feature -- Initialization
 
-		make_stream is
-				-- Create stream object with a default_size of 100 bytes
-			do
-				buffer_size := 100
-				create_c_buffer
-			end
+	make is
+			-- Create stream object with a default_size of 100 bytes
+		do
+			buffer_size := 100
+			create_c_buffer
+		end
 
 feature -- Status report
 
-		support_storable: BOOLEAN is False
-				-- Can medium be used to store an Eiffel structure?
+	support_storable: BOOLEAN is True
+			-- Can medium be used to store an Eiffel structure?
 
 feature -- Access
 
-		name: STRING
+	buffer: POINTER;
+		-- C buffer correspond to the Eiffel STREAM.
 
-		buffer: POINTER;
-				-- C buffer correspond to the Eiffel STREAM.
+	buffer_size: INTEGER
+			-- Buffer's size.
 
-		buffer_size: INTEGER
-				-- Buffer's size.
+	object_stored_size: INTEGER
+			-- Size of last stored object.
 
-		create_c_buffer is
-				-- Create the C memory corresponding to the C
-				-- buffer.
-			do
-				buffer := c_malloc (buffer_size)
-			end
+	create_c_buffer is
+			-- Create the C memory corresponding to the C
+			-- buffer.
+		do
+			buffer := c_malloc (buffer_size)
+		end
 
-		retrieved: ANY is
-				-- Retrieved object structure
-				-- To access resulting object under correct type,
-				-- use assignment attempt.
-				-- Will raise an exception (code `Retrieve_exception')
-				-- if content is not a stored Eiffel structure.
-			do
-				Result := c_retrieved (buffer, buffer_size)
-			end
+	retrieved: ANY is
+			-- Retrieved object structure
+			-- To access resulting object under correct type,
+			-- use assignment attempt.
+			-- Will raise an exception (code `Retrieve_exception')
+			-- if content is not a stored Eiffel structure.
+		do
+			Result := c_retrieved (buffer, buffer_size, $object_stored_size)
+		end
 
 feature -- Element change
 
@@ -60,7 +61,7 @@ feature -- Element change
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
 		do
-			buffer_size := c_stream_basic_store (buffer, buffer_size, $object)
+			buffer_size := c_stream_basic_store (buffer, buffer_size, $object, $object_stored_size)
 		end;
 
 	general_store (object: ANY) is
@@ -72,7 +73,7 @@ feature -- Element change
 			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
 		do
-			buffer_size := c_stream_general_store (buffer, buffer_size, $object)
+			buffer_size := c_stream_general_store (buffer, buffer_size, $object, $object_stored_size)
 		end
 
 	independent_store (object: ANY) is
@@ -81,12 +82,21 @@ feature -- Element change
 			-- Retrievable from other systems for the same or other
 			-- platform (machine architecture).
 		do
-			buffer_size := c_stream_independent_store (buffer, buffer_size, $object)
+			buffer_size := c_stream_independent_store (buffer, buffer_size, $object, $object_stored_size)
+		end
+
+	set_additional_size (new_size: INTEGER) is
+			-- Set `new_size' to BUFFER_SIZE, internal value used to
+			-- increment `buffer_size' during storable operations.
+		external
+			"C | %"eif_store.h%""
+		alias
+			"set_buffer_size"
 		end
 
 feature {NONE} -- Implementation
  
-	c_stream_basic_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER): INTEGER is
+	c_stream_basic_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
 			-- Return new size of `buffer'.
 		external
@@ -95,7 +105,7 @@ feature {NONE} -- Implementation
 			"stream_estore"
 		end;
 
-	c_stream_general_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER): INTEGER is
+	c_stream_general_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
 			-- Return new size of `buffer'.
 		external
@@ -104,7 +114,7 @@ feature {NONE} -- Implementation
 			"stream_eestore"
 		end;
 
-	c_stream_independent_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER): INTEGER is
+	c_stream_independent_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
 			-- Return new size of `buffer'.
 		external
@@ -113,7 +123,7 @@ feature {NONE} -- Implementation
 			"stream_sstore"
 		end;
 
-	c_retrieved (stream_buffer: POINTER; stream_buffer_size: INTEGER): ANY is
+	c_retrieved (stream_buffer: POINTER; stream_buffer_size: INTEGER; c_real_size: POINTER): ANY is
 			-- Object structured retrieved from stream of pointer
 			-- `stream_ptr'
 		external
@@ -128,38 +138,19 @@ feature {NONE} -- Implementation
 		alias
 			"stream_malloc"
 		end;
-
   
 feature -- Status report
 
-	handle: INTEGER is
-			-- Handle to medium
-		do
-		end
+	exists: BOOLEAN is True
+			-- Stream exists in any cases.
 
-	handle_available: BOOLEAN is
-			-- Is the handle available after class has been
-			-- created?
-		do
-		end
+	is_open_read: BOOLEAN is True
+			-- Stream opens for input.
 
-	exists: BOOLEAN is
-			-- Does stream exist?
-		do
-			--Result := 
-		end
+	is_open_write: BOOLEAN is True
+			-- Stream opens for output.
 
-	is_open_read: BOOLEAN; 
-			-- Is stream opened for input
-
-	is_open_write: BOOLEAN;
-			-- Is this stream opened for output
-
-	is_readable: BOOLEAN is
-			-- Is stream a readable?
-		do
-			Result := True
-		end;
+	is_readable: BOOLEAN is True
 
 	is_executable: BOOLEAN is
 			-- Is stream executable?
@@ -167,11 +158,8 @@ feature -- Status report
 			Result := False
 		end
 
-	is_writable: BOOLEAN is
-			-- Is stream writable?
-		do
-			Result := True
-		end
+	is_writable: BOOLEAN is True
+			-- Stream is writable.
 
 	readable: BOOLEAN is
 			-- Is there a current item that may be read?
@@ -188,7 +176,6 @@ feature -- Status report
 			-- Is the I/O medium open
 		do
 		end
-
 
 feature -- Status setting
 
@@ -277,31 +264,23 @@ feature -- Input
 		do
 		end
 
-feature {STREAM} -- Implementation
+feature {NONE} -- Not exported
 
-	mode: INTEGER;
-			-- Input-output mode
-	Closed_stream: INTEGER is 0;
-	Input_stream: INTEGER is 1;
-	Output_stream: INTEGER is 2;
-	
-	set_input_mode is
-			-- Define stream mode as input.
+	name: STRING is
+			-- Not meaningful
 		do
-			mode := Input_stream
-		end;
+		end
 
-	set_output_mode is
-			-- Deffine stream mode as output.
+	handle: INTEGER is
+			-- Handle to medium
 		do
-			mode := Output_stream
-		end;
+		end
 
-invariant
-
-	valid_mode: Closed_stream <= mode and mode <= Output_stream
-	name_exists: name /= Void;
-	name_not_empty: not name.empty
+	handle_available: BOOLEAN is
+			-- Is the handle available after class has been
+			-- created?
+		do
+		end
 
 end -- class STREAM
 

@@ -643,6 +643,9 @@ feature {NONE} -- Drawing implementation
 			l_vertical_box.extend (scroll_bar_spacer)
 			l_vertical_box.disable_item_expand (scroll_bar_spacer)
 			
+			create header_viewport
+			vertical_box.extend (header_viewport)
+			vertical_box.disable_item_expand (header_viewport)
 			create viewport
 			vertical_box.extend (viewport)
 			vertical_box.extend (horizontal_scroll_bar)
@@ -657,12 +660,10 @@ feature {NONE} -- Drawing implementation
 			header.item_resize_actions.extend (agent header_item_resizing)
 			header.item_resize_end_actions.extend (agent header_item_resize_ended)
 			
-			header.set_minimum_height (default_header_height)
-			vertical_box.extend (header)
-			vertical_box.disable_item_expand (header)
-			create drawable
-			vertical_box.extend (drawable)
-			viewport.extend (vertical_box)
+			header_viewport.extend (header)
+			header_viewport.set_minimum_height (default_header_height)
+			header_viewport.set_item_size (10000, default_header_height)
+			viewport.extend (drawable)
 			extend (horizontal_box)
 			viewport.resize_actions.extend (agent viewport_resized)
 			drawable.expose_actions.force_extend (agent drawer.partial_redraw)
@@ -711,6 +712,8 @@ feature {NONE} -- Drawing implementation
 					-- so that they do reach the very left-hand edge of `viewport'
 				horizontal_scroll_bar.change_actions.block
 				viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
+				header_viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
+				
 				horizontal_scroll_bar.change_actions.resume
 			end
 			
@@ -809,6 +812,7 @@ feature {NONE} -- Drawing implementation
 			a_value_non_negative: a_value >= 0
 		do
 			viewport.set_x_offset (a_value)
+			header_viewport.set_x_offset (a_value)
 		ensure
 			viewport_offset_set: viewport.x_offset = a_value
 		end
@@ -854,7 +858,19 @@ feature {NONE} -- Drawing implementation
 		ensure
 			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= viewport.width and
 				viewport.item.height >= viewport.height
-		end		
+		end
+		
+	virtual_x_position: INTEGER is
+			-- Virtual X coordinate of `viewport' relative to left hand edge of grid.
+		do
+			Result := horizontal_scroll_bar.value
+		end
+		
+	virtual_y_position: INTEGER is
+			-- Virtual Y coordinate of `viewport' relative to top edge of grid.
+		do
+			Result := vertical_scroll_bar.value
+		end
 		
 	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
 		-- Vertical scroll bar of `Current'.
@@ -865,6 +881,8 @@ feature {NONE} -- Drawing implementation
 	viewport: EV_VIEWPORT
 		-- Viewport containing `header' and `drawable', permitting the header to be offset
 		-- correctly in relation to the horizontal scroll bar.
+		
+	header_viewport: EV_VIEWPORT
 		
 	header: EV_HEADER
 		-- Header displayed at top of `Current'.
@@ -936,6 +954,11 @@ invariant
 	column_count_non_negative: column_count >= 0
 	drawer_not_void: is_initialized implies drawer /= Void
 	drawable_not_void: is_initialized implies drawable /= Void
+	header_positioned_corrently: is_initialized implies header_viewport.x_offset >= 0 and header_viewport.y_offset = 0
+	virtual_x_position_valid_while_vertical_scrollbar_hidden: is_initialized and then not vertical_scroll_bar.is_show_requested implies virtual_x_position = 0
+	virtual_x_position_valid_while_vertical_scrollbar_shown: is_initialized and then vertical_scroll_bar.is_show_requested implies virtual_x_position >= 0
+	virtual_y_position_valid_while_horizontal_scrollbar_hidden: is_initialized and then not horizontal_scroll_bar.is_show_requested implies virtual_y_position = 0
+	virtual_y_position_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies virtual_y_position >= 0
 	
 end
 

@@ -1,0 +1,125 @@
+"General"
+{
+"VisualStudioVer" = "7.1"
+"ENViSioN!Ver" = "Eiffel ENViSioN! 2.0.1214.0"
+"ProjectIdGuid" = "{F5967D50-9543-4A62-9356-B51F3B534B66}"
+}
+"Configurations"
+{
+    "Debug|.NET"
+    {
+    "ConfigurationRoot" = "obj\\Debug"
+    "AceFile" = "ace.ace"
+    "OutputType" = "PRECOMPLIBRARYROOT"
+    "OptimizeCode" = "0"
+    "DiscardOptimAssertions" = "0"
+    "CompileOnLoad" = "0"
+    "RegisterForCOMInterop" = "0"
+    "DisplayWarnings" = "1"
+    }
+    "Release|.NET"
+    {
+    "ConfigurationRoot" = "obj\\Release"
+    "AceFile" = "ace.ace"
+    "OutputType" = "PRECOMPLIBRARY"
+    "OptimizeCode" = "1"
+    "DiscardOptimAssertions" = "0"
+    "CompileOnLoad" = "0"
+    "RegisterForCOMInterop" = "0"
+    "DisplayWarnings" = "0"
+    }
+}
+"References"
+{
+    "Accessibility"
+    {
+"AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
+"Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\Accessibility.dll"
+"Prefix" = ""
+    }
+    "mscorlib"
+    {
+"AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
+"Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\mscorlib.dll"
+"Prefix" = ""
+    }
+    "System"
+    {
+"AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
+"Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.dll"
+"Prefix" = "SYSTEM_DLL_"
+    }
+    "System.Drawing"
+    {
+"AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
+"Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.Drawing.dll"
+"Prefix" = "DRAWING_"
+    }
+    "System.Runtime.Serialization.Formatters.Soap"
+    {
+"AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
+"Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.Runtime.Serialization.Formatters.Soap.dll"
+"Prefix" = ""
+    }
+    "System.Windows.Forms"
+    {
+"AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
+"Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.Windows.Forms.dll"
+"Prefix" = "WINFORMS_"
+    }
+    "System.Xml"
+    {
+"AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
+"Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.Xml.dll"
+"Prefix" = "XML_"
+    }
+}
+"Files"
+{
+    "Eiffel Source Files"
+    {
+"ProjRelPath" = "F"
+"NodeType" = "Directory"
+    }
+    "SEPNODE"
+    {
+"ProjRelPath" = ""
+"NodeType" = "SEPNODE"
+    }
+    "Other Files"
+    {
+"ProjRelPath" = "F"
+"NodeType" = "Directory"
+    }
+    "obj\\debug\\ace.ace"
+    {
+"ProjRelPath" = "T"
+"NodeType" = "File"
+    }
+    "SEPNODE"
+    {
+"ProjRelPath" = ""
+"NodeType" = "SEPNODE"
+    }
+    "obj\\release\\ace.ace"
+    {
+"ProjRelPath" = "T"
+"NodeType" = "File"
+    }
+    "SEPNODE"
+    {
+"ProjRelPath" = ""
+"NodeType" = "SEPNODE"
+    }
+    "SEPNODE"
+    {
+"ProjRelPath" = ""
+"NodeType" = "SEPNODE"
+    }
+}
+"ProjStartupServices"
+{
+}
+"Globals"
+{
+}

@@ -1,0 +1,33 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "ISE.EiffelCodeDomProvider", "ISE.EiffelCodeDomProvider\ISE.EiffelCodeDomProvider.eifp", "{20573E76-C33E-4DD2-927A-6E869AD60569}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "ISE.Base", "ISE.Base\ISE.Base.eifp", "{0256E70A-BA15-40CE-B3E8-0C72F72CC806}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "ISE.CacheBrowser", "ISE.CacheBrowser\ISE.CacheBrowser.eifp", "{F5967D50-9543-4A62-9356-B51F3B534B66}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{20573E76-C33E-4DD2-927A-6E869AD60569}.Debug.ActiveCfg = Debug
+		{20573E76-C33E-4DD2-927A-6E869AD60569}.Debug.Build.0 = Debug
+		{20573E76-C33E-4DD2-927A-6E869AD60569}.Release.ActiveCfg = Release
+		{20573E76-C33E-4DD2-927A-6E869AD60569}.Release.Build.0 = Release
+		{0256E70A-BA15-40CE-B3E8-0C72F72CC806}.Debug.ActiveCfg = Debug
+		{0256E70A-BA15-40CE-B3E8-0C72F72CC806}.Release.ActiveCfg = Release
+		{F5967D50-9543-4A62-9356-B51F3B534B66}.Debug.ActiveCfg = Debug
+		{F5967D50-9543-4A62-9356-B51F3B534B66}.Release.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

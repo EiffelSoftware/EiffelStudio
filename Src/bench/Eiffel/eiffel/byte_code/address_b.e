@@ -124,17 +124,17 @@ feature -- C code generation
 				if array_index = -2 then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-					buf.putstring ("(char *(*)()) 0")
+					buf.putstring ("NULL")
 				elseif array_index >= 0 then
-						-- Mark table used
-					Eiffel_table.mark_used (l_rout_id)
-
 					table_name := "f"
 					table_name.append (Encoder.address_table_name (feature_id,
 								class_type.associated_class_type.static_type_id))
 
 					buf.putstring ("(EIF_POINTER) ")
 					buf.putstring (table_name)
+
+						-- Mark table used
+					Eiffel_table.mark_used (l_rout_id)
 
 						-- Remember extern declarations
 					Extern_declarations.add_routine (feature_type, table_name)
@@ -150,7 +150,7 @@ feature -- C code generation
 							System.class_type_of_id (rout_table.item.written_type_id).header_filename)
 					else
 							-- Call to a deferred feature without implementation
-						buf.putstring ("(char *(*)()) 0")
+						buf.putstring ("NULL")
 					end
 				end
 			end

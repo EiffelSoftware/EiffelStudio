@@ -1732,7 +1732,7 @@ int odbc_get_date_data (int no_des, int index)
 		//odbc_date.hour = 0;
 		//odbc_date.minute = 0;
 		//odbc_date.second = 0;
-		return 1;
+		return 0;
 	}
 	//if (data_type == SQL_C_DATE) {
 	if (data_type == SQL_C_TYPE_DATE) {

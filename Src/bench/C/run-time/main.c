@@ -47,6 +47,7 @@
 #endif
 #include "umain.h"
 #include "argv.h"
+#include "oncekeys.h"
 #ifdef DEBUG
 #include "malloc.h"						/* for mem_diagnose */
 #endif
@@ -242,6 +243,8 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	umain(argc, argv, envp);			/* User's initializations */
 	arg_init(argc, argv);				/* Save copy for class ARGUMENTS */
 #endif
+	/* Create and initialize once keys */
+	once_init();
 }
 
 rt_public void failure(void)

@@ -238,8 +238,9 @@ feature -- Settings
 
 			Attributes = Attributes | MethodAttributes.Public;
 
-			if (info.is_deferred)
+			if (info.is_deferred) {
 				Attributes = Attributes | MethodAttributes.Abstract;
+			}
 
 			if (is_static && !is_c_external)
 				nb = nb + 1;

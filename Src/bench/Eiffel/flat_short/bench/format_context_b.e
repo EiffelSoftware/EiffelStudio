@@ -220,6 +220,8 @@ feature -- Setting
 
 	set_feature_clause_order (fco: like feature_clause_order) is
             -- Set `feature_clause_order' to `fco'
+		require
+			valid_fco: fco /= Void
         do
             feature_clause_order := fco
         ensure

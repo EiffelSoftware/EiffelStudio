@@ -128,10 +128,10 @@ struct conform {
 */
 
 struct eif_par_types {
-	int16   nb_generics;    /* Number of formal generics */
 	char    *class_name;    /* Name of this class */
-	char    is_expanded;    /* Is it expanded? */
 	int16   *parents;       /* Parent types */
+	int16   nb_generics;    /* Number of formal generics */
+	char    is_expanded;    /* Is it expanded? */
 };
 
 RT_LNK int scount;				/* Numner of dynamic types */

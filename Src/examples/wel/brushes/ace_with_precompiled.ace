@@ -2,7 +2,7 @@ system
 	brushes_demo
 
 root 
-	PRECOMP_BRUSHES_DEMO (root_cluster): "make"
+	BRUSHES_DEMO (root_cluster): "make"
 	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 default

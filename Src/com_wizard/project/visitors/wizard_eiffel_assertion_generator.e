@@ -55,6 +55,8 @@ feature -- Basic operation
 				not visitor.is_basic_type and 
 				not is_boolean (visitor.vt_type) and 
 				not visitor.is_enumeration and 
+				not visitor.is_interface_pointer and 
+				not visitor.is_coclass_pointer and
 				not (visitor.vt_type = Vt_lpstr) and
 				not (visitor.vt_type = Vt_lpwstr) and
 				not (visitor.vt_type = Vt_bstr)
@@ -113,8 +115,11 @@ feature -- Basic operation
 			create assertions.make
 			visitor := a_type.visitor 
 
-			if not visitor.is_basic_type and not is_boolean (visitor.vt_type)
-					and not visitor.is_enumeration then
+			if 
+				not visitor.is_basic_type and 
+				not is_boolean (visitor.vt_type) and 
+				not visitor.is_enumeration 
+			then
 				if ret_val then
 					create tmp_tag.make (100)
 					tmp_tag.append ("non_void_")
@@ -155,9 +160,7 @@ feature {NONE}
 			pointed_descriptor ?= type
 			if pointed_descriptor /= Void and not (visitor.vt_type = binary_or (Vt_ptr, Vt_byref)) then
 				if 
-					visitor.is_structure_pointer or 
-					visitor.is_interface_pointer or
-					visitor.is_coclass_pointer 
+					visitor.is_structure_pointer 
 				then
 					create tmp_tag.make (100)
 					tmp_tag.append ("valid_")

@@ -25,6 +25,8 @@ inherit
 
 	COLOR_NAMES_WINDOWS
 
+	WEL_COLOR_CONSTANTS
+
 creation
 	make,
 	make_by_wel,
@@ -68,31 +70,28 @@ feature -- Initialization
 
 feature  -- Access
 
-	red: INTEGER
+	allocated_red: INTEGER
 			-- Red saturation level
 
-	green: INTEGER
+	allocated_green: INTEGER
 			-- Green saturation level
 
-	blue: INTEGER
+	allocated_blue: INTEGER
 			-- Blue saturation level
 
-	allocated_blue: INTEGER is
-                        -- Allocated blue saturation level for `a_widget'
+	red: INTEGER is
 		do
-			Result := blue
+			Result := allocated_red
 		end
 
-	allocated_green: INTEGER is
-                        -- Allocated green saturation level for `a_widget'
+	green: INTEGER is
 		do
-			Result := green
+			Result := allocated_green
 		end
 
-	allocated_red: INTEGER is
-                        -- Allocated red saturation level for `a_widget'
+	blue: INTEGER is
 		do
-			Result := red
+			Result := allocated_blue
 		end
 
 	is_white_by_default: BOOLEAN
@@ -111,9 +110,9 @@ feature  -- Access
 feature -- Settings
 
 	set_red (r: INTEGER) is
-			-- Set redsaturation level to `green_value'.
+			-- Set red saturation level to `green_value'.
 		do
-			red := r
+			allocated_red := r
 			wel_set_red (r // 256)
 			name := Void
 		end
@@ -121,7 +120,7 @@ feature -- Settings
 	set_green (g: INTEGER) is
 			-- Set green saturation level to `green_value'.
 		do
-			green := g
+			allocated_green := g
 			wel_set_green (g // 256)
 			name := Void
 		end
@@ -129,7 +128,7 @@ feature -- Settings
 	set_blue (b: INTEGER) is
 			-- Set blue saturation level to `green_value'.
 		do
-			blue := b
+			allocated_blue := b
 			wel_set_blue (b // 256)
 			name := Void
 		end
@@ -138,9 +137,9 @@ feature -- Settings
 			-- Set red, green and blue saturation level respectivly to
 			-- `red_value', `green_value' and `blue_value'.
 		do
-			red := r
-			green := g
-			blue := b
+			allocated_red := r
+			allocated_green := g
+			allocated_blue := b
 			wel_set_rgb (r // 256, g // 256, b // 256)
 			name := Void
 		end
@@ -173,13 +172,9 @@ feature -- Settings
 				wel_set_blue (rgb_tripple.blue)
 			else
 				if is_white_by_default then
-					wel_set_red (255)
-					wel_set_green (255)
-					wel_set_blue (255)
+					set_rgb (255 * 256, 255 * 256, 255 * 256)
 				else
-					wel_set_red (0)
-					wel_set_green (0)
-					wel_set_blue (0)
+					set_rgb (0, 0, 0)
 				end
 				debug ("COLORS")
 					print ("undefined color: ")

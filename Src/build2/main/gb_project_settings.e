@@ -70,6 +70,7 @@ feature -- Basic operation
 			data: ARRAYED_LIST [TUPLE [STRING, STRING]]
 		do
 			create data.make (0)
+			data.extend ([project_name_string, project_name.out])
 			data.extend ([project_location_string, project_location])
 			data.extend ([main_window_class_name_string, main_window_class_name])
 			data.extend ([application_class_name_string, application_class_name])
@@ -77,21 +78,18 @@ feature -- Basic operation
 			data.extend ([grouped_locals_string, grouped_locals.out])
 			data.extend ([debugging_output_string, debugging_output.out])
 			data.extend ([attributes_local_string, attributes_local.out])
-			data.extend ([project_name_string, project_name.out])
 			create file_name.make_from_string (project_location)
 			file_name.extend (project_filename)
 			create file_handler
 			file_handler.create_file ("Project_settings", file_name, data)
 		end
-		
+
 	load (a_file_name: STRING; file_handler: GB_SIMPLE_XML_FILE_HANDLER) is
 			-- Load `Current' from file `a_file_name' in location `project_location'.
 		require
 			file_handler_not_void: file_handler /= Void
 		local
 			data: ARRAYED_LIST [TUPLE [STRING, STRING]]
-			temp_tuple: TUPLE [STRING, STRING]
-			temp_string :STRING
 		do
 			data := file_handler.load_file (a_file_name)
 				-- We only retrieve the data if the
@@ -99,79 +97,16 @@ feature -- Basic operation
 			if file_handler.last_load_successful then
 				check
 					data_not_void: data /= Void
-					data_count_is_7: data.count = 7
+					data_count_is_8: data.count = 8
 				end
-				temp_tuple := data @ 1
-				temp_string ?= temp_tuple @ 2
-				check
-					data_was_string: temp_string /= Void
-				end
-				set_project_location (temp_string)
-				
-				temp_tuple := data @ 2
-				temp_string ?= temp_tuple @ 2
-				check
-					data_was_string: temp_string /= Void
-				end
-				set_main_window_class_name (temp_string)
-				
-				temp_tuple := data @ 3
-				temp_string ?= temp_tuple @ 2
-				check
-					data_was_string: temp_string /= Void
-				end
-				set_application_class_name (temp_string)
-				
-				temp_tuple := data @ 4
-				temp_string ?= temp_tuple @ 2
-				check
-					data_was_string: temp_string /= Void
-				end
-				if temp_string.is_equal ("True") then
-					complete_project := True
-				else
-					complete_project := False
-				end
-				
-				temp_tuple := data @ 5
-				temp_string ?= temp_tuple @ 2
-				check
-					data_was_string: temp_string /= Void
-				end
-				if temp_string.is_equal ("True") then
-					grouped_locals := True
-				else
-					grouped_locals := False
-				end
-				
-				temp_tuple := data @ 6
-				temp_string ?= temp_tuple @ 2
-				check
-					data_was_string: temp_string /= Void
-				end
-				if temp_string.is_equal ("True") then
-					debugging_output := True
-				else
-					debugging_output := False
-				end
-				
-				temp_tuple := data @ 7
-				temp_string ?= temp_tuple @ 2
-				check
-					data_was_string: temp_string /= Void
-				end
-				if temp_string.is_equal ("True") then
-					attributes_local := True
-				else
-					attributes_local := False
-				end
-				
-				temp_tuple := data @ 8
-				temp_string ?= temp_tuple @ 2
-				check
-					data_was_string: temp_string /= Void
-				end
-				set_project_name (temp_string)
+				set_string_attribute (data @ 1, agent set_project_name (?))
+				set_string_attribute (data @ 2, agent set_project_location (?))
+				set_string_attribute (data @ 3, agent set_main_window_class_name (?))
+				set_string_attribute (data @ 4, agent set_application_class_name (?))
+				set_boolean_attribute (data @ 5, agent enable_complete_project, agent disable_complete_project)
+				set_boolean_attribute (data @ 6, agent enable_grouped_locals, agent disable_grouped_locals)
+				set_boolean_attribute (data @ 7, agent enable_debugging_output, agent disable_debugging_output)
+				set_boolean_attribute (data @ 8, agent enable_attributes_local, agent disable_attributes_local)
 			end
 		end
 
@@ -285,5 +220,27 @@ feature {NONE} --Implementation
 	attributes_local_string: STRING is "Attributes_local"
 	
 	project_name_string: STRING is "Project_name"
+	
+	set_string_attribute (temp_tuple: TUPLE [STRING, STRING]; an_agent: PROCEDURE [ANY, TUPLE [STRING]]) is
+			-- Call `an_agent' with `temp_tuple' @ 2 string.
+		do
+			an_agent.call ([(temp_tuple @ 2).out])
+		end
+		
+	set_boolean_attribute (temp_tuple: TUPLE [STRING, STRING]; true_agent, false_agent: PROCEDURE [ANY, TUPLE]) is
+			-- If `temp_tuple' @ 2 is `True_string' then call `true_agent', else call `false_agent'.
+		local
+			temp_string: STRING
+		do
+			temp_string ?= temp_tuple @ 2
+			check
+				data_was_string: temp_string /= Void
+			end
+			if temp_string. is_equal (True_string) then
+				true_agent.call ([])
+			else
+				false_agent.call ([])
+			end
+		end
 	
 end -- class GB_PROJECT_SETTINGS

@@ -294,7 +294,7 @@ feature {NONE}
 
 	states_text: STRING is
 		local
-			state_list: LINKED_LIST [STATE]
+			state_list: LINKED_LIST [BUILD_STATE]
 			counter: INTEGER
 		do
 			!!Result.make (0)

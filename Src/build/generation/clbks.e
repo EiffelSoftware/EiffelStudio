@@ -71,7 +71,7 @@ feature
 
 	update is
 		local
-			state_list: LINKED_LIST [STATE]
+			state_list: LINKED_LIST [BUILD_STATE]
 		do
 			from
 				state_list := Shared_app_graph.states
@@ -84,12 +84,12 @@ feature
 			end
 		end
 
-	current_state: STATE
+	current_state: BUILD_STATE
 
 	
 feature {NONE}
 
-	process_state (s: STATE) is
+	process_state (s: BUILD_STATE) is
 		local
 			clbk: CLBK
 			old_pos: INTEGER

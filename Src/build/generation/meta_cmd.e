@@ -4,7 +4,7 @@ class META_CMD
 
 inherit
 
-	EXTEND_TABLE [CMD_INSTANCE, STATE]
+	EXTEND_TABLE [CMD_INSTANCE, BUILD_STATE]
 		rename
 			make as extend_table_create,
 			key_for_iteration as current_state

@@ -98,77 +98,82 @@ feature -- Comparison
 			input_index, input_count: INTEGER;
 			next_automaton, automaton_char, input_char, s_r, c_r: CHARACTER;
 			str_rep_str: STRING
+			str_without_wild: STRING
  		do
 			s_r := string_representation;
 			c_r := character_representation;
 			!! str_rep_str.make (0);
 			str_rep_str.extend (s_r);
-			if count > other.count then
-				Result := false
-			elseif str_is_equal(str_rep_str) then
+			if str_is_equal(str_rep_str) then
 				Result := true
 			else
-
-				from
-					automaton_area := area;
-					input_area := other.area;
-					automaton_count := count;
-					input_count := other.count;
-					Result := true
-				until
-					automaton_index >= automaton_count or else
-					input_index >= input_count or else
-					not Result or else
-					(automaton_index + 1 = automaton_count and next_automaton = s_r)
-				loop
-					automaton_char := automaton_area.item(automaton_index);
-					input_char := input_area.item(input_index);
-					if automaton_index + 1 < automaton_count then
-						next_automaton := automaton_area.item(automaton_index + 1)
-					else
-						if input_index + 1 < input_count then
-								-- `other' has more characters then Current.
-								-- For example: "*y" (Current) against "array2" (`other').
-								-- These words do not match.
-							Result := False
+				str_without_wild := clone (Current)
+				str_without_wild.prune_all (s_r)
+				
+				if str_without_wild.count > other.count then
+					Result := False
+				else
+					from
+						automaton_area := area;
+						input_area := other.area;
+						automaton_count := count;
+						input_count := other.count;
+						Result := true
+					until
+						automaton_index >= automaton_count or else
+						input_index >= input_count or else
+						not Result or else
+						(automaton_index + 1 = automaton_count and next_automaton = s_r)
+					loop
+						automaton_char := automaton_area.item(automaton_index);
+						input_char := input_area.item(input_index);
+						if automaton_index + 1 < automaton_count then
+							next_automaton := automaton_area.item(automaton_index + 1)
 						else
-							input_index := input_count
-						end;
-						automaton_index := automaton_count
-					end
-	
-					if automaton_char.is_equal (s_r)  then
-						if next_automaton = '%U' then
-							input_index := input_index + 1
-						else
-							if next_automaton /= input_char then
-								input_index := input_index + 1
-							end
-							if input_index < input_count and then 
-									input_area.item (input_index) = next_automaton then
-								automaton_index := automaton_index + 1
-							end
+							if input_index + 1 < input_count then
+									-- `other' has more characters then Current.
+									-- For example: "*y" (Current) against "array2" (`other').
+									-- These words do not match.
+								Result := False
+							else
+								input_index := input_count
+							end;
+							automaton_index := automaton_count
 						end
-					elseif automaton_char = c_r then
-						automaton_index := automaton_index + 1;
-						input_index := input_index + 1
-					else
-						if automaton_char /= input_char then
-							Result := false
-						else
+		
+						if automaton_char.is_equal (s_r)  then
+							if next_automaton = '%U' then
+								input_index := input_index + 1
+							else
+								if next_automaton /= input_char then
+									input_index := input_index + 1
+								end
+								if input_index < input_count and then 
+										input_area.item (input_index) = next_automaton then
+									automaton_index := automaton_index + 1
+								end
+							end
+						elseif automaton_char = c_r then
 							automaton_index := automaton_index + 1;
 							input_index := input_index + 1
+						else
+							if automaton_char /= input_char then
+								Result := false
+							else
+								automaton_index := automaton_index + 1;
+								input_index := input_index + 1
+							end
 						end
 					end
-				end
-				if input_index >= input_count then
-					if automaton_index + 1 = automaton_count then
-						if not (automaton_area.item (automaton_index).is_equal (s_r)) and then
-						    not (automaton_area.item (automaton_index).is_equal (c_r)) then
+					if input_index >= input_count then
+						if automaton_index + 1 = automaton_count then
+							if not (automaton_area.item (automaton_index).is_equal (s_r)) and then
+								not (automaton_area.item (automaton_index).is_equal (c_r)) then
+								Result := false
+							end
+						elseif automaton_index < automaton_count then
 							Result := false
 						end
-					elseif automaton_index < automaton_count then
-						Result := false
 					end
 				end
 			end

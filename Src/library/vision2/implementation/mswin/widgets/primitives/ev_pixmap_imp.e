@@ -628,7 +628,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- `Result' is logical operation on pixels when drawing.
 		do
 				-- Simple pixmap => default drawing state.
-			Result := Ev_drawing_mode_copy
+			Result := drawing_mode_copy
 		end
 
 	enable_dashed_line_style is
@@ -1658,6 +1658,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2001/06/20 22:16:13  rogers
+--| We now use `drawing_mode_copy' instead of `Ev_drawing_mode_copy'.
+--|
 --| Revision 1.41  2001/06/14 18:26:17  rogers
 --| Renamed EV_COORDINATES to EV_COORDINATE.
 --|

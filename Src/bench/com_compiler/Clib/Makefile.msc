@@ -53,8 +53,8 @@ ecom_eiffelcomcompiler_ienumfeature_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ienumparameter_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj \
-ecom_gce_eiffelsoftware.obj \
-ecom_gec_eiffelsoftware.obj \
+ecom_gce_eiffelsoftware_compiler.obj \
+ecom_gec_eiffelsoftware_compiler.obj \
 ecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
 server_registration.obj 
 
@@ -105,8 +105,8 @@ wecom_eiffelcomcompiler_ienumfeature_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ienumparameter_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj \
-wecom_gce_eiffelsoftware.obj \
-wecom_gec_eiffelsoftware.obj \
+wecom_gce_eiffelsoftware_compiler.obj \
+wecom_gec_eiffelsoftware_compiler.obj \
 wecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
 wserver_registration.obj 
 
@@ -199,10 +199,10 @@ wecom_eiffelcomcompiler_ieiffelproject_impl_stub_s.obj: ecom_eiffelcomcompiler_i
 wecom_eiffelcomcompiler_ieiffelsystembrowser_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelsystembrowser_impl_stub_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
-wecom_gce_eiffelsoftware.obj: ecom_gce_eiffelsoftware.cpp
+wecom_gce_eiffelsoftware_compiler.obj: ecom_gce_eiffelsoftware_compiler.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
-wecom_gec_eiffelsoftware.obj: ecom_gec_eiffelsoftware.cpp
+wecom_gec_eiffelsoftware_compiler.obj: ecom_gec_eiffelsoftware_compiler.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj: ecom_xcp_ieiffelcompilerevents_ceiffelcompiler.cpp

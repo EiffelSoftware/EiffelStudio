@@ -241,6 +241,7 @@ feature {NONE} -- File
 			Result.extend ("icon_toc_folder_closed.gif")
 			Result.extend ("icon_toc_folder_open.gif")
 			Result.extend ("10x10spacer.png")
+			Result.extend ("icon_page_loading.gif")
 		end
 
 end -- class WEB_HELP_PROJECT

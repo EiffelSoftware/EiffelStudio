@@ -1,0 +1,1 @@
+Replace generated "ceiffel_project_coclass_imp.e" (in Server\Component) and "ieiffel_system_browser_interface" (in Common\Interfaces) with files in this directory.

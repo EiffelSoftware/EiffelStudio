@@ -252,15 +252,17 @@ feature
 			check_validity3 (resulting_table);
 				-- Check useless selections
 			check_validity4;
+
+				-- Creators processing
+			old_creators := a_class.creators;
+		   	a_class.set_creators
+						(class_info.creation_table (resulting_table));
+				-- No update of `Instantiator' if there is an error
+			Error_handler.checksum;
+
 				-- Track generic types in the result and arguments of
 				-- features of a changed class
 			if a_class.changed then
-					-- Creators processing
-				old_creators := a_class.creators;
-			   	a_class.set_creators
-							(class_info.creation_table (resulting_table));
-					-- No update of `Instantiator' if there is an error
-				Error_handler.checksum;
 					-- Generic types tracking
 				resulting_table.update_instantiator2;
 					-- Compute invariant clause

@@ -78,24 +78,22 @@ print <<EOT;
 indexing
 	description:
 		"Eiffel Vision internal information."
-	status: "Generated!"
+	status: "See notice at end of class."
 	keywords: "internal, description, keyword"
-	date: "Generated!"
-	revision: "Generated!"
 
 class
 	EV_INTERNAL
 
 feature -- Access
 
-	descriptions: HASH_TABLE [STRING, STRING] is
+	class_descriptions: HASH_TABLE [STRING, STRING] is
 			-- Table of class descriptions by name.
 		once
 			create Result.make(100)
 			$descriptions
 		end
 
-	keywords: HASH_TABLE [LINKED_LIST [STRING], STRING] is
+	class_keywords: HASH_TABLE [ARRAY [STRING], STRING] is
 			-- Table of class keywords by name.
 		once
 			create Result.make(100)
@@ -105,43 +103,57 @@ feature -- Access
 	classes_by_keyword: HASH_TABLE [LINKED_LIST [STRING], STRING] is
 			-- Table of classes by keyword.
 		local
-			kwt: HASH_TABLE [LINKED_LIST [STRING], STRING]
-			kws: LINKED_LIST [STRING]
+			kwt: HASH_TABLE [ARRAY [STRING], STRING]
+			kws: ARRAY [STRING]
 			kwd: STRING
 			cls: STRING
-			ci: CURSOR
-			cj: CURSOR
+			i: INTEGER
+			c: CURSOR
 		once
 			create Result.make(100)
-			kwt := keywords
-			ci := kwt.cursor
+			kwt := class_keywords
+			c := kwt.cursor
 			from
 				kwt.start
 			until
 				kwt.after
 			loop
-				kws := kwt.item_for_iteration
-				cls := kwt.key_for_iteration
-				cj = kws.cursor
 				from
-					kws.start
+					kws := kwt.item_for_iteration
+					cls := kwt.key_for_iteration
+					i := 1
 				until
-					kws.after
+					i > kws.count
 				loop
-					kwd := kws.item	
+					kwd := kws.item	(i)
 					if Result.item (kwd) = Void then
 						Result.put (create {LINKED_LIST [STRING]}.make, kwd)
 					end
 					Result.item (kwd).extend (cls)
-					kws.forth
+					i := i + 1
 				end
-				kws.go_to (cj)
 				kwt.forth
 			end
-			kwt.go_to (ci)
+			kwt.go_to (c)
 		end
 
 end -- class EV_INTERNAL
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license.
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info\@eiffel.com>
+--! Customer support e-mail <support\@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 EOT
 
 #===============================================================================
@@ -153,6 +165,9 @@ EOT
 #===============================================================================
 #
 # $Log$
+# Revision 1.2  2000/03/01 03:10:29  oconnor
+# perl bug fixes
+#
 # Revision 1.1  2000/02/29 18:48:24  oconnor
 # initial
 #

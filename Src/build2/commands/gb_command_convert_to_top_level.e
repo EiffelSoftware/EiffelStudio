@@ -184,7 +184,7 @@ feature -- Basic Operation
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
-			new_object.add_client_representation_recursively
+			child_object.add_client_representation_recursively
 			child_object.update_representations_for_name_or_type_change
 			command_handler.update
 			executed_once := True

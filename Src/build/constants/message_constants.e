@@ -20,7 +20,7 @@ feature -- Error messages
 	Cannot_remove_group_er: STRING is 
 			"Cannot remove group!%NGroup type %%X is being used.";
 	Cannot_remove_cmd_er: STRING is 
-			"Cannot remove command %%X!%NCommand has descendents.";
+			"Cannot remove command %%X!%NCommand has descendants.";
 	Cannot_save_file_er: STRING is 
 			"File %%X %Nalready exists. Cannot save!";
 	Dir_not_exist_er: STRING is "Import directory %%X%N does not exist!";
@@ -29,13 +29,13 @@ feature -- Error messages
 	Group_name_exists_er: STRING is "Group %%X already exists!";
 	Incomp_er: STRING is "Incompatible types!";
 	Instance_add_arg_er: STRING is 
-			"Command has descendents. Cannot add argument!";
+			"Command has descendants. Cannot add argument!";
 	Instance_rem_arg_er: STRING is 
-			"Command has descendents. Cannot remove argument!";
+			"Command has descendants. Cannot remove argument!";
 	Instance_add_label_er: STRING is 
-			"Command has descendents. Cannot add label!";
+			"Command has descendants. Cannot add label!";
 	Instance_rem_label_er: STRING is 
-			"Command has descendents. Cannot remove label!";
+			"Command has descendants. Cannot remove label!";
 	Instance_add_inh_er: STRING is 
 			"Command has instances: Cannot inherit command with arguments!";
 	Instance_rem_inh_er: STRING is 
@@ -66,7 +66,7 @@ feature -- Question messages
 	Exit_qu: STRING is "Do you wish to exit?";
 	Internal_error_qu: STRING is 
 		"Internal Error: %%X!%NProject may be unstable.%NDo you wish to continue?";
-	Override_qu: STRING is "Directory %%X%Nalready exists, Override it ?";
+	Override_qu: STRING is "Directory %%X%Nalready exists. Override it ?";
 	Retrieve_crash_qu: STRING is 
 			"Project saved from system crash. %N%
 			%Do you wish to retrieve backup files?%N";

@@ -28,17 +28,32 @@ inherit
 	COMPILER_EXPORTER
 		export {NONE} all end
 
+	REFACTORING_HELPER
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make is
-			-- Create a new Eiffel scanner.
+			-- Create a new Eiffel scanner using default factory for creating AST nodes.
+		local
+			l_factory: AST_FACTORY
 		do
+			create l_factory
+			make_with_factory (l_factory)
+		end
+
+	make_with_factory (a_factory: AST_FACTORY) is
+			-- Create a new Eiffel scanner using `a_factory' as factory to create AST nodes.
+		require
+			a_factory_not_void: a_factory /= Void
+		do
+			ast_factory := a_factory
 			make_with_buffer (Empty_buffer)
 			create token_buffer.make (Initial_buffer_size)
 			create verbatim_marker.make (Initial_verbatim_marker_size)
-			create current_position.reset
-			line_number := 1
 			filename := ""
+		ensure
+			ast_factory_set: ast_factory = a_factory
 		end
 
 feature -- Initialization
@@ -51,21 +66,15 @@ feature -- Initialization
 			Precursor
 			token_buffer.clear_all
 			verbatim_marker.clear_all
-			current_position.reset
-			line_number := 1
-			inherit_context := False
 		end
 
 feature -- Access
 
+	ast_factory: AST_FACTORY
+			-- Abstract Syntax Tree factory
+	
 	filename: STRING
 			-- Name of file being parsed
-
-	line_number: INTEGER
-			-- Current line number
-
-	current_position: TOKEN_LOCATION
-			-- Position of last token read
 
 	last_value: ANY
 			-- Semantic value to be passed to the parser
@@ -76,16 +85,6 @@ feature -- Access
 	verbatim_marker: STRING
 			-- Sequence of characters between " and [
 			-- in Verbatim_string_opener
-
-	inherit_context: BOOLEAN
-			-- Was the last token an `end' keyword recognized
-			-- by an `inherit' clause with an empty parent
-			-- adaptation subclause?
-			--
-			-- class FOO
-			-- inherit
-			--		BAR
-			--		end
 
 	has_syntax_warning: BOOLEAN
 			-- Do we create SYNTAX_WARNING instances for obsolte syntactical constructs?
@@ -150,7 +149,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, a_message, False)
+			create an_error.make (line, column, filename, a_message, False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -160,7 +159,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: BAD_CHARACTER
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -176,7 +175,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: BAD_CHARACTER
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -190,7 +189,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -203,7 +202,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -218,7 +217,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: STRING_UNCOMPLETED
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -237,7 +236,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: VERBATIM_STRING_UNCOMPLETED
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -249,17 +248,16 @@ feature {NONE} -- Error handling
 			end
 		end
 
-	report_too_long_string is
+	report_too_long_string (a_text: STRING) is
 			-- Report that current token has too long string representation.
 		require
 			valid_token: last_token = TE_STR_FREE or last_token = TE_ID or last_token = TE_STRING or last_token = TE_VERBATIM_STRING
-			token_buffer_not_void: token_buffer /= Void
-			too_long_token: token_buffer.count > maximum_string_length
+			a_text_not_void: a_text /= Void
+			too_long_token: a_text.count > maximum_string_length
 		do
 			Error_handler.insert_error (
-				create {SYNTAX_ERROR}.make (current_position.start_position,
-					current_position.end_position, filename, 0,
-					"Identifier, manifest string or free operator is " + token_buffer.count.out +
+				create {SYNTAX_ERROR}.make (line, column, filename,
+					"Identifier, manifest string or free operator is " + a_text.count.out +
 					" characters long that exceeds limit of " + maximum_string_length.out + " characters.",
 					False))
 			Error_handler.raise_error
@@ -270,12 +268,29 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
 
 feature {NONE} -- Implementation
+
+	process_id_as is
+			-- Process current token which is an identifier
+		local
+			l_count: INTEGER
+		do
+			l_count := text_count
+				-- Note: Identifiers are converted to lower-case.
+			if l_count > maximum_string_length then
+				report_too_long_string (text)
+			else
+				last_id_as_value := ast_factory.new_filled_id_as (line, column, position, l_count)
+				if last_id_as_value /= Void then
+					append_text_to_string (last_id_as_value)
+				end
+			end
+		end
 
 	is_verbatim_string_closer: BOOLEAN is
 			-- Is `text' a valid Verbatim_string_closer?
@@ -458,10 +473,9 @@ feature {NONE} -- Constants
 			-- Is code case sensitive?
 
 invariant
-
+	ast_factory_not_void: ast_factory /= Void
 	token_buffer_not_void: token_buffer /= Void
 	verbatim_marker_not_void: verbatim_marker /= Void
-	current_position_not_void: current_position /= Void
 	filename_not_void: filename /= Void
 
 end -- class EIFFEL_SCANNER_SKELETON

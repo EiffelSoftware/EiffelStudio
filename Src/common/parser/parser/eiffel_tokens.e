@@ -12,6 +12,15 @@ inherit
 feature -- Last values
 
 	last_any_value: ANY
+	last_id_as_value: ID_AS
+	last_location_as_value: LOCATION_AS
+	last_bool_as_value: BOOL_AS
+	last_current_as_value: CURRENT_AS
+	last_deferred_as_value: DEFERRED_AS
+	last_result_as_value: RESULT_AS
+	last_retry_as_value: RETRY_AS
+	last_unique_as_value: UNIQUE_AS
+	last_void_as_value: VOID_AS
 
 feature -- Access
 

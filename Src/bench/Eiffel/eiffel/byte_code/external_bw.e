@@ -79,13 +79,7 @@ feature
 			generated_file.putint (real_feature_id);
 			generated_file.putstring (gc_comma);
 			if not is_nested then
-				if context.dt_current > 1 then
-					generated_file.putstring (gc_dtype);
-				else
-					generated_file.putstring (gc_upper_dtype_lparan);
-					context.Current_register.print_register_by_name;
-					generated_file.putchar (')');
-				end;
+				context.generate_current_dtype;
 			elseif need_invariant then
 				generated_file.putchar ('"');
 				generated_file.putstring (feature_name);

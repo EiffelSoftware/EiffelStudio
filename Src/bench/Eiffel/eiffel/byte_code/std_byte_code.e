@@ -750,21 +750,9 @@ feature
 			workbench_mode: context.workbench_mode
 		do
 			generated_file.putstring ("RTSA(");
-			generate_current_dtype;
+			context.generate_current_dtype;
 			generated_file.putstring (gc_rparan_comma);
 			generated_file.new_line;
-		end;
-
-	generate_current_dtype is
-			-- Generate dynamic type of Current.
-		do
-			if context.dt_current > 1 then
-				generated_file.putstring (gc_dtype);
-			else
-				generated_file.putstring (gc_upper_dtype_lparan);
-				context.current_register.print_register_by_name;
-				generated_file.putchar (')');
-			end;
 		end;
 
 	generate_invariant_before is

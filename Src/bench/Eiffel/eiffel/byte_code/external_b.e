@@ -443,7 +443,7 @@ feature -- Concurrent Eiffel
 					ba.append ('%/000/');
 				end;
 			end
-			if  my_code = Bc_feature_inv then
+			if  my_code = Bc_extern_inv then
 					-- Generate feature name for test of void reference
 				ba.append_raw_string (feature_name);
 			end;
@@ -488,7 +488,7 @@ feature -- Concurrent Eiffel
 					ba.append ('%/000/');
 				end;
 			end
-			if  my_code = Bc_pfeature_inv  then
+			if  my_code = Bc_pextern_inv  then
 					-- Generate feature name for test of void reference
 				ba.append_raw_string (feature_name);
 			end;

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision2 Toolbar button,%
@@ -150,6 +149,7 @@ feature -- Element change
 feature -- Status report
 
 	index: INTEGER is
+			-- Index in toolbar
 		do
 			if parent_imp /= Void then
 				Result := C.gtk_list_child_position (

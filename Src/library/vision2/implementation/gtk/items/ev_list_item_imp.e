@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "FIXME"
 	status: "See notice at end of class"
@@ -57,16 +56,11 @@ feature {NONE} -- Initialization
 			{EV_ITEM_IMP} Precursor
 			textable_imp_initialize
 			pixmapable_imp_initialize
-			
 			item_box := C.gtk_hbox_new (False, 0)
---gtk_widget_unset_flags (c_object, C.GTK_CAN_FOCUS_ENUM)
 			C.gtk_container_add (c_object, item_box)
 			C.gtk_widget_show (item_box)
-			
 				-- Add the pixmap box to the item but hide it so it
 				-- takes up no space in the item.
-
-			--| FIXME  IEK 01/07/2000  What spacing size should be used.
 			C.gtk_box_pack_start (item_box, pixmap_box, False, False, 2)
 				-- Padding of 2 pixels used for pixmap
 			C.gtk_box_pack_start (item_box, text_label, True, True, 0)
@@ -91,7 +85,7 @@ feature -- Access
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is the item selected
+			-- Is the item selected.
 		local
 			par: POINTER
 		do
@@ -145,7 +139,6 @@ feature -- Element change
 			combo_par: EV_COMBO_BOX_IMP
 		do
 			Precursor (txt)
-
 			-- the gtk part if the parent is a combo_box
 			combo_par ?= parent_imp
 			if (combo_par /= Void) then

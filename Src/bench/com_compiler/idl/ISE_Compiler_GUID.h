@@ -65,6 +65,7 @@
 #define UUID_EnumEIF_ASSERTIONS                     af5ce2a1-488d-410d-a920-db5a4921c1c1
 #define UUID_EnumEIF_CLUSTER_NAMESPACE_GENERATION   1cb05808-5b25-4dbf-b02e-0a50107a99f9
 #define UUID_EnumEIF_COMPILATION_MODE               fcdaf70f-6fe8-445f-80dc-6fdf79e71356
+#define UUID_EnumEIF_COMPLETION_LOCATION            fad1f72f-63e4-475f-89dc-6faf39e773f6
 
 // =========================================================================
 //                                                                 Constants

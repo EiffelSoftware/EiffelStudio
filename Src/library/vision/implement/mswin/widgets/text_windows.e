@@ -642,11 +642,9 @@ feature -- Status setting
 			-- Set the character height of Current widget to `i'.
 		local
 			f: FONT
-			w: WIDGET
 		do
 			f := font
-			w := widget_oui
-			set_height (i * (f.ascent (w) + f.descent (w)))
+			set_height (i * (f.font_ascent + f.font_descent))
 		end
 
 	set_cursor_position_visible (flag: BOOLEAN) is

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		require
 			valid_size: a_size >= 0
 		do
-			create area.make (a_size)
+			create internal_area.make (a_size)
 			is_resizable := True
 		ensure
 			non_void_area: area /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			an_area_not_null: an_area /= default_pointer
 			valid_size: a_size >= 0
 		do
-			create area.make (a_size)
+			create internal_area.make (a_size)
 			is_resizable := False
 		ensure
 			non_void_area: area /= Void
@@ -49,14 +49,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	count: INTEGER is
+			-- Number of bytes in Current.
+		do
+			Result := internal_area.count
+		end
+
 	capacity: INTEGER is
 			-- Number of bytes in Current.
 		do
-			Result := area.count
+			Result := internal_area.count
 		end
 
-	area: MANAGED_POINTER
+	area: POINTER is
 			-- Memory area that holds data.
+		do
+			Result := internal_area.item
+		ensure
+			non_void_area: Result /= Void
+		end
 
 	item, infix "@" (i: INTEGER): INTEGER_8 is
 			-- Entry at index `i'.
@@ -79,11 +90,11 @@ feature -- Status report
 
 feature -- Setting
 
-	set_capacity (n: INTEGER) is
+	set_count, set_capacity (n: INTEGER) is
 		require
 			valid_index: valid_index (n - 1)
 		do
-			area.resize (n)
+			internal_area.resize (n)
 		ensure
 			capacity_set: capacity = n
 		end
@@ -95,7 +106,7 @@ feature -- Element change
 		require
 			valid_index: valid_index (i)
 		do
-			area.put_integer_8 (v, i)
+			internal_area.put_integer_8 (v, i)
 		ensure
 			inserted: item (i) = v
 		end
@@ -107,9 +118,9 @@ feature -- Element change
 			positive_index: i > 0
 		do
 			if not valid_index (i) then
-				area.resize (i + 1)
+				internal_area.resize (i + 1)
 			end
-			area.put_integer_8 (v, i)
+			internal_area.put_integer_8 (v, i)
 		ensure
 			inserted: item (i) = v
 		end
@@ -119,9 +130,12 @@ feature -- Element change
 		require
 			other_not_void: other /= Void
 			resizable: is_resizable
+		local
+			l_mp: MANAGED_POINTER
 		do
-			area.resize (capacity + other.capacity)
-			area.append (other.area)
+			create l_mp.make_from_pointer (other.area, other.capacity)
+			internal_area.resize (capacity + other.capacity)
+			internal_area.append (l_mp)
 		end
 
 feature -- Comparison
@@ -130,7 +144,7 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := capacity = other.capacity and then area.item.memory_compare (other.area.item, capacity)
+			Result := capacity = other.capacity and then area.memory_compare (other.area, capacity)
 		end
 
 feature -- Duplication
@@ -138,9 +152,9 @@ feature -- Duplication
 	copy (other: like Current) is
 			-- Copy other in Current
 		do
-			area.item.memory_free
+			area.memory_free
 			make (other.capacity)
-			area.item.memory_copy (other.area.item, other.capacity)
+			area.memory_copy (other.area, other.capacity)
 		end
 
 feature {NONE} -- Disposal
@@ -151,8 +165,10 @@ feature {NONE} -- Disposal
 			area.item.memory_free
 		end
 
+	internal_area: MANAGED_POINTER
+	
 invariant
-	non_void_area: area /= Void
-	area_not_null: area.item /= default_pointer
+	non_void_internal_area: internal_area /= Void
+	area_not_null: area /= default_pointer
 
 end -- class MEMORY_STREAM

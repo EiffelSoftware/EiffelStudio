@@ -60,9 +60,9 @@ feature -- Element change
 	set_extended_height (a_height: INTEGER) is
 			-- Assign `a_height' to `extended_height'.
 		require
-			a_height_not_negative: value >= 0
+			a_height_not_negative: a_height >= 0
 		do
-			implementation.set_extended_height (value)
+			implementation.set_extended_height (a_height)
 		ensure
 			extended_height_assigned: extended_height = a_height
 		end
@@ -110,6 +110,9 @@ end -- class EV_COMBO_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/21 16:13:53  king
+--| Corrected set_extended_height to deal with name change of parameter
+--|
 --| Revision 1.31  2000/03/21 01:53:23  oconnor
 --| comments and formatting
 --|

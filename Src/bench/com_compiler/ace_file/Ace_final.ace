@@ -112,8 +112,6 @@ cluster
 				end
 			ceiffel_compiler_coclass_imp
 				end
-			ceiffel_htmldoc_events_coclass_imp
-				end
 			ieiffel_project_impl_stub
 				end
 			ieiffel_compiler_impl_stub

@@ -54,7 +54,7 @@ feature {NONE} -- Basic operation
 			agent_not_void: agent /= Void
 			n_args_not_negative: n_args >= 0
 			args_not_null: n_args > 0 implies args /= Default_pointer
-			two_args_max: n_args <= 2
+			--| FIXME IEK MCList needs three two_args_max: n_args <= 2
 				-- At present we only know how to deal with
 				-- no arguments or one agrument. (a GdkEvent*)
 				-- (Or two arguments which are ignored)
@@ -293,6 +293,9 @@ end -- class EV_GTK_CALLBACK_MARSHAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/18 18:37:21  king
+--| Commented out two_args_max precond in marshal to allow signal connection for clist
+--|
 --| Revision 1.3  2000/02/16 03:39:09  oconnor
 --| initial implementation of key event data
 --|

@@ -31,7 +31,7 @@ feature
 		do
 			!!shell_window.make (c, Current);
 			init (c, a_text_window);
-			add_button_press_action (3, Current, Void);
+			add_button_click_action (3, Current, Void);
 		end;
 
 feature {NONE}

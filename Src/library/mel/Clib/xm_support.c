@@ -104,7 +104,7 @@ EIF_POINTER create_xm_string_table (EIF_INTEGER count)
 	/*
 	 * Create a XmStringTable with size `count'
 	 */
-	return (EIF_POINTER) cmalloc ((int) count*sizeof (XmString));
+	return (EIF_POINTER) XtMalloc ((int) count*sizeof (XmString));
 }
 
 void xm_list_put (EIF_POINTER xm_string_table, EIF_POINTER xm_string, EIF_INTEGER i)

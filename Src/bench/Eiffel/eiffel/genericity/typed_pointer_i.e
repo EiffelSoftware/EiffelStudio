@@ -12,7 +12,8 @@ inherit
 			generate_cid_init, creation_instantiation_in, is_explicit,
 			has_true_formal, is_identical, generate_gen_type_il,
 			append_signature, has_formal, same_as, make_gen_type_byte_code,
-			instantiation_in, meta_generic, true_generics, hash_code, base_class
+			instantiation_in, meta_generic, true_generics, hash_code, base_class,
+			complete_instantiation_in
 		redefine
 			dump, is_feature_pointer,
 			description, sk_value, generate_cecil_value,

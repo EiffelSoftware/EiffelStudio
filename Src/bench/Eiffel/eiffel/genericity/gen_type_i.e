@@ -19,6 +19,7 @@ inherit
 			has_true_formal,
 			instantiation_in,
 			creation_instantiation_in,
+			complete_instantiation_in,
 			dump,
 			il_type_name,
 			append_signature,
@@ -103,6 +104,12 @@ feature -- Access
 				true_gen.put (l_true.item (i).complete_instantiation_in (other), i)
 				i := i + 1
 			end
+		end
+
+	complete_instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is
+			-- Instantiation of Current in context of `other'
+		do
+			Result := instantiation_in (other)
 		end
 
 	creation_instantiation_in (other: like Current): like Current is

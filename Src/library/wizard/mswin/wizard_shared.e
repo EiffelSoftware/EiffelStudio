@@ -136,11 +136,14 @@ feature -- Colors
 
 	Welcome_title_font: EV_FONT is
 			-- Title for welcome page
+		local
+			font_constants: EV_FONT_CONSTANTS
 		once
+			create font_constants
 			create Result
-			Result.set_family (Result.Family_screen)
-			Result.set_weight (Result.Weight_bold)
-			Result.set_shape (Result.Shape_regular)
+			Result.set_family (font_constants.Family_screen)
+			Result.set_weight (font_constants.Weight_bold)
+			Result.set_shape (font_constants.Shape_regular)
 			Result.preferred_families.extend ("Verdana")
 			Result.preferred_families.extend ("Arial")
 			Result.preferred_families.extend ("Helvetica")
@@ -149,11 +152,14 @@ feature -- Colors
 
 	Interior_title_font: EV_FONT is
 			-- Title for interior pages
+		local
+			font_constants: EV_FONT_CONSTANTS
 		once
+			create font_constants
 			create Result
-			Result.set_family (Result.Family_screen)
-			Result.set_weight (Result.Weight_bold)
-			Result.set_shape (Result.Shape_regular)
+			Result.set_family (font_constants.Family_screen)
+			Result.set_weight (font_constants.Weight_bold)
+			Result.set_shape (font_constants.Shape_regular)
 			Result.preferred_families.extend ("Tahoma")
 			Result.preferred_families.extend ("Arial")
 			Result.preferred_families.extend ("Helvetica")
@@ -162,11 +168,14 @@ feature -- Colors
 
 	Interior_font: EV_FONT is
 			-- Title for interior pages
+		local
+			font_constants: EV_FONT_CONSTANTS
 		once
+			create font_constants
 			create Result
-			Result.set_family (Result.Family_screen)
-			Result.set_weight (Result.Weight_regular)
-			Result.set_shape (Result.Shape_regular)
+			Result.set_family (font_constants.Family_screen)
+			Result.set_weight (font_constants.Weight_regular)
+			Result.set_shape (font_constants.Shape_regular)
 			Result.preferred_families.extend ("Tahoma")
 			Result.preferred_families.extend ("Arial")
 			Result.preferred_families.extend ("Helvetica")

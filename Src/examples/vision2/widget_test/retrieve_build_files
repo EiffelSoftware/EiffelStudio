@@ -6,6 +6,13 @@ cvs co Src/build2
 # Check out bitmaps from Build delivery
 cvs co Delivery/build/bitmaps
 
+# Check out files from vision2_tour
+cvs co Delivery/vision2_tour
+
+# Copy template files
+cp -r Delivery/vision2_tour/templates/ ./
+
+
 # Copy constants and eiffel environment to interface.
 cp ./Src/build2/Constants/gb_constants.e ./interface/
 cp ./Src/build2/utilities/eiffel_env.e ./interface/
@@ -15,7 +22,15 @@ cp ./Src/build2/utilities/ordered_string_handler.e ./interface/
 cp ./Src/build2/main/gb_supported_events.e ./interface/
 
 # Copy icons for different widget types across.
-cp -r Delivery/build/bitmaps ./bitmaps
+cp -r Delivery/build/bitmaps ./
+
+# Copy png files for tests
+cp Delivery/vision2_tour/png/*.png ./bitmaps/png/
+
+# Copy icons for standard buttons.
+cp Delivery/vision2_tour/bitmaps/png/documentation.png ./bitmaps/png/
+cp Delivery/vision2_tour/bitmaps/png/testing.png ./bitmaps/png/
+cp Delivery/vision2_tour/bitmaps/png/properties.png ./bitmaps/png/
 
 # Copy modified vision2 interface files needed.
 cp -r ./Src/build2/modified_libraries/vision2/ev_pixmap.e ./interface/

@@ -98,20 +98,10 @@ feature {NONE} -- Initialization
 					-- Lookup members of current interface `t' but also add members coming
 					-- from parent interfaces as `t.get_members_binding_flags' does not do it.
 				update_interface_members (t)
---				internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
---						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public)
---				internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
---						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public)
 			else
 				internal_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
 						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
 						feature {BINDING_FLAGS}.non_public)
---				internal_methods := t.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
---						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
---						feature {BINDING_FLAGS}.non_public)
---				internal_fields := t.get_fields_binding_flags (feature {BINDING_FLAGS}.instance |
---						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
---						feature {BINDING_FLAGS}.non_public)
 				internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
 						feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
 						feature {BINDING_FLAGS}.static)
@@ -120,11 +110,6 @@ feature {NONE} -- Initialization
 						feature {BINDING_FLAGS}.static)
 			end
 			
---			internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
---					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public)
---			internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
---					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public)
-
 			internal_constructors := t.get_constructors_binding_flags (
 				feature {BINDING_FLAGS}.instance | feature {BINDING_FLAGS}.public |
 				feature {BINDING_FLAGS}.non_public)
@@ -1150,14 +1135,14 @@ feature {NONE} -- Added features for ENUM types.
 			-- attribute setter feature.
 		require
 			non_void_field: a_field /= Void
-			public_and_static_field: is_public_field (a_field)
+			public_field: is_public_field (a_field)
 			valid_field_name: a_field_name /= Void and then not a_field_name.is_empty
 		local
 			l_eiffel_name: STRING
 			l_arg: CONSUMED_ARGUMENT
 		do		
-			l_eiffel_name := "set_" + a_field_name
-			create l_arg.make ( "a_value", "a_value", referenced_type_from_type (a_field.field_type))
+			l_eiffel_name := "set_" + a_field_name + "_field"
+			create l_arg.make ("a_value", "a_value", referenced_type_from_type (a_field.field_type))
 			create Result.make_attribute_setter (l_eiffel_name,
 												l_arg,
 												internal_referenced_type,

@@ -54,13 +54,14 @@ struct rt_struct {
 /*
  * Eiffel calls
  */
-extern char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type);		/* Retrieve object store in file */
+extern char *eretrieve(EIF_INTEGER file_desc);		/* Retrieve object store in file */
+extern char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_function)(void))
+
 
 /*
  * Utilities
  */
 /* extern int r_fides; 	        /* File descriptor use for retrieve */ /* %%zs removed and inluded eif_globals.h */
-/* extern char r_fstoretype;	/* File storage type use for retrieve */
 extern char *rt_make(void);			/* Retrieve object graph */
 extern char *rt_nmake(EIF_CONTEXT long int objectCount);		/* Retrieve `n' objects */
 extern struct htable *rt_table;	/* Table used for solving references */
@@ -77,6 +78,9 @@ extern void rt_init_retrieve(int (*retrieve_function) (void), int buf_size);
 extern void rt_reset_retrieve(void);
 
 extern int (*retrieve_read_func)();
+extern int (*char_read_func)(char *, int);
+extern int char_read(char *pointer, int size);
+
 
 #ifdef __cplusplus
 }

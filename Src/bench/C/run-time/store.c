@@ -32,11 +32,6 @@
 #include <io.h>
 #endif
 
-#ifdef EIF_WIN32
-#include <io.h>		/* %%ss addded for write */
-#include "winsock.h"
-#endif
-
 #ifdef I_STRING
 #include <string.h>				/* For strlen() */
 #else
@@ -55,7 +50,6 @@
 rt_public char* cmps_general_buffer = (char *) 0;
 
 rt_public int fides;
-rt_public char fstoretype;
 rt_public char *general_buffer = (char *) 0;
 rt_public int current_position = 0;
 rt_public int buffer_size = EIF_BUFFER_SIZE;
@@ -101,6 +95,7 @@ void (*make_header_func)(EIF_CONTEXT_NOARG) = make_header;
 void (*st_write_func)(char *) = st_write;
 void (*flush_buffer_func)(void) = flush_st_buffer;
 void (*store_write_func)(void) = store_write;
+int (*char_write_func)() = char_write;
 
 /*
  * Convenience functions
@@ -108,9 +103,10 @@ void (*store_write_func)(void) = store_write;
 
 /* Initialize store function pointers and globals */
 /* reset buffer size if argument is non null */
-rt_public void rt_init_store(void (*store_function) (void), int buf_size)
+rt_public void rt_init_store(void (*store_function) (void), int (*char_write_function)(char *, int), int buf_size)
 {
 	store_write_func = store_function;
+	char_write_func = char_write_function;
 	if (buf_size)
 		buffer_size = buf_size;
 }
@@ -119,6 +115,7 @@ rt_public void rt_init_store(void (*store_function) (void), int buf_size)
 
 rt_public void rt_reset_store(void) {
 	store_write_func = store_write;
+	char_write_func = char_write;
 	buffer_size = EIF_BUFFER_SIZE;
 }
 
@@ -127,14 +124,13 @@ rt_public void rt_reset_store(void) {
  * Functions definitions
  */
 
-rt_public void eestore(EIF_INTEGER file_desc, char *object, EIF_CHARACTER file_storage_type)
+rt_public void eestore(EIF_INTEGER file_desc, char *object)
 {
 	/* Store object hierarchy of root `object' and produce a header
 	 * so it can be retrieved by other systems.
 	 */
 
 	fides = (int) file_desc;
-	fstoretype = file_storage_type;
 	accounting = TR_ACCOUNT;
 	st_write_func = gst_write;
 	allocate_gen_buffer();
@@ -144,17 +140,16 @@ rt_public void eestore(EIF_INTEGER file_desc, char *object, EIF_CHARACTER file_s
 	st_write_func = st_write;
 }
 
-rt_public void estore(EIF_INTEGER file_desc, char *object, EIF_CHARACTER file_storage_type)
+rt_public void estore(EIF_INTEGER file_desc, char *object)
 {
 	/* Store object hierarchy of root `object' without header. */
 	fides = (int) file_desc;
-	fstoretype = file_storage_type;
 	accounting = 0;
 	allocate_gen_buffer();
 	internal_store(object);
 }
 
-rt_public void sstore (EIF_INTEGER fd, char *object, EIF_CHARACTER file_storage_type)
+rt_public void sstore (EIF_INTEGER fd, char *object)
 {
 	/* Use file decscriptor so sockets and files can be used for storage
 	 * Store object hierarchy of root `object' and produce a header
@@ -162,7 +157,6 @@ rt_public void sstore (EIF_INTEGER fd, char *object, EIF_CHARACTER file_storage_
 	 */
 
 	fides = (int) fd;
-	fstoretype = file_storage_type;
 	accounting = INDEPEND_ACCOUNT;
 	make_header_func = imake_header;
 	flush_buffer_func = idr_flush;
@@ -238,13 +232,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 		c = BASIC_STORE_4_0;
 
 	/* Write the kind of store */
-#ifdef EIF_WIN32
-	if (((fstoretype == 'F')
-		? write(fides, (char *)(&c), sizeof(char))
-		: send (fides, (char *)(&c), sizeof(char), 0)) < 0) {
-#else
-	if (write(fides, &c, sizeof(char)) < 0){
-#endif
+	if (char_write_func(&c, sizeof(char)) < 0){
 		if (accounting) {
 			xfree(account);
 			if (c==GENERAL_STORE_4_0)
@@ -1282,14 +1270,7 @@ void store_write(void)
 	number_left = cmps_out_size + EIF_CMPS_HEAD_SIZE;
  
 	while (number_left > 0) {
-#ifdef EIF_WIN32
-		if (fstoretype == 'F')
-			number_writen = write (fides, ptr, number_left);
-		else
-			number_writen = send (fides, ptr, number_left, 0);
-#else
 		number_writen = write (fides, ptr, number_left);
-#endif
 		if (number_writen <= 0)
 			eio();
 		number_left -= number_writen;

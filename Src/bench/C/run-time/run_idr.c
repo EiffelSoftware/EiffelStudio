@@ -24,10 +24,6 @@
 #include <sys/in.h>
 #endif
 #endif
-#ifdef EIF_WIN32
-#include <io.h>		/* %%ss added for read, write */
-#include "winsock.h"
-#endif
 #include "eiffel.h"
 #include "bits.h"
 #include "retrieve.h"
@@ -144,19 +140,8 @@ rt_private int run_idr_read (IDR *bu)
         short read_size, amount_left;
         register int part_read = 0, total_read = 0;
 
-#ifdef EIF_WIN32
-	if (r_fstoretype == 'F')
-		{
-		if ((read (r_fides, (char *)(&read_size), sizeof (short))) < sizeof (short))
-			eio();
-		}
-	else
-		if ((recv (r_fides, (char *)(&read_size), sizeof (short), 0)) < sizeof (short))
-			eio();
-#else
-        if ((read (r_fides, (char *)(&read_size), sizeof (short))) < sizeof (short))
+        if ((char_read_func ((char *)(&read_size), sizeof (short))) < sizeof (short))
                 eio();
-#endif
 
 	read_size = ntohs (read_size);
 #ifdef DEBUG
@@ -166,19 +151,8 @@ rt_private int run_idr_read (IDR *bu)
 
 	amount_left = read_size;
 	while (total_read < read_size) {
-#ifdef EIF_WIN32
-		if (r_fstoretype == 'F')
-			{
-			if ((part_read = read (r_fides, ptr, amount_left)) < 0)
-				eio();
-			}
-		else
-			if ((part_read = recv (r_fides, ptr, amount_left, 0)) < 0)
-				eio();
-#else
-		if ((part_read = read (r_fides, ptr, amount_left)) < 0)
+		if ((part_read = char_read_func (ptr, amount_left)) < 0)
 			eio();
-#endif
 		total_read += part_read;
 		ptr += part_read;
 		amount_left -= part_read;
@@ -200,34 +174,12 @@ rt_private void run_idr_write (IDR *bu)
 
 	host_send = htons (send_size);
 
-#ifdef EIF_WIN32
-	if (fstoretype == 'F')
-		{
-		if ((write (fides, (char *)(&host_send), sizeof (short))) < sizeof (short))
-			eio();
-		}
-	else
-		if ((send (fides,(char *)(&host_send), sizeof (short), 0)) < sizeof (short))
-			eio();
-#else
-	if ((write (fides, &host_send, sizeof (short))) < sizeof (short))
+	if ((char_write_func (&host_send, sizeof (short))) < sizeof (short))
 		eio();
-#endif
 
 	while (send_size > 0) {
-#ifdef EIF_WIN32
-		if (fstoretype == 'F')
-			{
-			if ((number_writen = write (fides, ptr, (int) send_size)) <= 0)
-				eio();
-			}
-		else
-			if ((number_writen = send (fides, ptr, (int) send_size, 0)) <= 0)
-				eio();
-#else
-		if ((number_writen = write (fides, ptr, (int) send_size)) <= 0)
+		if ((number_writen = char_write_func (ptr, (int) send_size)) <= 0)
 			eio();
-#endif
 		send_size -= number_writen;
 		ptr += number_writen;
 		}

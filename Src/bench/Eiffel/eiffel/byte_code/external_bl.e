@@ -1,4 +1,7 @@
--- Enlarged access to a C external
+indexing
+	description: "Enlarged access to a C external"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EXTERNAL_BL
 
@@ -140,8 +143,8 @@ feature
 			-- Generate external call in a `typ' context
 		local
 			table_name: STRING;
-			is_boolean: BOOLEAN;
 			type_c: TYPE_C
+			l_type_i: TYPE_I
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
 			local_argument_types: like argument_types
@@ -150,11 +153,10 @@ feature
 		do
 			check
 				final_mode: context.final_mode
-				extension_not_void: encapsulated implies extension /= Void
-			end;
-			is_boolean := type.is_boolean;
+			end
 
-			type_c := real_type (type).c_type;
+			l_type_i := real_type (type)
+			type_c := l_type_i.c_type;
 			buf := buffer
 
 			if is_static_call then
@@ -170,21 +172,9 @@ feature
 					-- to be enclosed in parenthesis.
 				table_name := Encoder.table_name (routine_id)
 
-				if is_boolean then
-					buf.putstring ("EIF_TEST((");
-				else
-					buf.putchar ('(');
-				end;
-				if
-					not encapsulated and then
-					extension /= Void and then
-					extension.has_arg_list
-				then
-					type_c.generate_external_function_cast (buf, extension)
-					extension.generate_header_files
-				else
-					type_c.generate_function_cast (buf, argument_types)
-				end
+				buf.putchar ('(');
+				type_c.generate_function_cast (buf, argument_types)
+
 					-- Generate following dispatch:
 					-- table [Actual_offset - base_offset]
 				buf.putstring (table_name);
@@ -201,6 +191,7 @@ feature
 				buf.putchar (']');
 				
 				buf.putchar (')');
+
 					-- Mark routine table used.
 				Eiffel_table.mark_used (routine_id);
 					-- Remember external routine table declaration
@@ -209,155 +200,97 @@ feature
 					-- The call is not polymorphic in the given context,
 					-- so the name can be hardwired.
 				if encapsulated then
-						-- Generate the right name to call the external
-					if is_boolean then
-						buf.putstring ("EIF_TEST(")
+						-- In the case of encapsulated externals, we call the associated
+						-- encapsulation.
+					rout_table ?= Eiffel_table.poly_table (routine_id)
+					if is_static_call then
+						rout_table.goto_implemented (static_class_type.type_id)
 					else
-						if extension.has_return_type then
-							type_c.generate_cast (buf)
-						end
+						rout_table.goto_implemented (typ.type_id)
 					end
-
-					if extension.is_dll then
-							-- In the case of a dll, the encapsulation will be called (encoded name)
-						rout_table ?= Eiffel_table.poly_table (routine_id)
-						if is_static_call then
-							rout_table.goto_implemented (static_class_type.type_id)
-						else
-							rout_table.goto_implemented (typ.type_id)
-						end
-						check
-							is_valid_routine: rout_table.is_implemented
-						end
-						internal_name := rout_table.feature_name
-
-						local_argument_types := argument_types
-						if
-							not (rout_table.item.written_type_id = Context.original_class_type.type_id)
-						then
-								-- Remember extern routine declaration
-							Extern_declarations.add_routine_with_signature (type_c,
-									internal_name, local_argument_types)
-						end
-
-						buf.putchar ('(')
-						type_c.generate_function_cast (buf, local_argument_types)
-						buf.putstring (internal_name)
-						buf.putchar (')')
-					else
-						extension.generate_header_files
-
-							-- In the case of a signature or a macro, the call will be direct
-						extension.generate_external_name (buf, external_name, type_c)
+					check
+						is_valid_routine: rout_table.is_implemented
 					end
-				else
-					if is_boolean then
-						buf.putstring ("EIF_TEST(");
-					end
+					internal_name := rout_table.feature_name
+
+					local_argument_types := argument_types
 					if
-						extension /= Void and then
-						extension.has_include_list
+						not (rout_table.item.written_type_id = Context.original_class_type.type_id)
 					then
-						extension.generate_header_files
-						if extension.has_return_type then
-							type_c.generate_cast (buf);
-						end
-						buf.putstring (external_name);
-					else
-						if extension /= Void and then extension.has_signature then
-							if extension.has_return_type then
-								type_c.generate_cast (buf);
-							end
+							-- Remember extern routine declaration
+						Extern_declarations.add_routine_with_signature (type_c,
+								internal_name, local_argument_types)
+					end
 
-								-- Generate the right name to call the external
-								-- In the case of a signature or a macro, the call will be direct
-								-- In the case of a dll, the encapsulation will be called (encoded name)
-							extension.generate_external_name (buf, external_name, type_c);
-						else
-							local_argument_types := argument_types
-							buf.putchar ('(')
-							type_c.generate_function_cast (buf, local_argument_types);
-							buf.putstring (external_name);
-							buf.putchar (')')
-								-- Remember external routine declaration
-							Extern_declarations.add_routine_with_signature (type_c,
-															external_name, local_argument_types);
-						end
-					end;
-				end;
-			end;
-		end;
+					buf.putchar ('(')
+					type_c.generate_function_cast (buf, local_argument_types)
+					buf.putstring (internal_name)
+					buf.putchar (')')
+				else
+					if not l_type_i.is_void then
+						type_c.generate_cast (buf);
+					end
+						-- Nothing to be done now. Remaining of code generation will be done
+						-- in `generate_end'.
+				end
+			end
+		end
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
 			-- Generate final portion of C code.
 		local
-			is_macro_extension: BOOLEAN
-			is_struct_extension: BOOLEAN
-			is_inline_extension: BOOLEAN
-			is_cpp_extension: BOOLEAN
-			final_mode: BOOLEAN
-			not_polymorphic: BOOLEAN
 			cpp_ext: CPP_EXTENSION_I
+			macro_ext: MACRO_EXTENSION_I
 			struct_ext: STRUCT_EXTENSION_I
 			inline_ext: INLINE_EXTENSION_I
+			c_ext: C_EXTENSION_I
 			buf: GENERATION_BUFFER
-			type_c: TYPE_C
+			l_type: TYPE_I
 		do
-			if encapsulated then
-				is_struct_extension := extension.is_struct
-				is_macro_extension := extension.is_macro
-				is_inline_extension := extension.is_inline
-				is_cpp_extension := extension.is_cpp
-			end
-			final_mode := context.final_mode
-
-			generate_access_on_type (gen_reg, class_type);
+			generate_access_on_type (gen_reg, class_type)
 				-- Now generate the parameters of the call, if needed.
 			buf := buffer
-			if final_mode then
-				not_polymorphic := is_static_call or else
-					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) < 0
-
-				if is_macro_extension then
-					if not not_polymorphic or else parameters /= Void then
-						buf.putchar ('(')
-						if parameters /= Void then
-							extension.generate_parameter_list (parameters)
+			if context.final_mode then
+				if
+					not encapsulated and (is_static_call or
+					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) < 0)
+				then
+					check
+						not_dll: not extension.is_dll
+					end
+					l_type := real_type (type)
+					if extension.is_macro then
+						macro_ext ?= extension
+						macro_ext.generate_access (external_name, parameters, l_type)
+					elseif extension.is_struct then
+						struct_ext ?= extension
+						struct_ext.generate_access (external_name, parameters, l_type)
+					elseif extension.is_inline then
+						inline_ext ?= extension
+						inline_ext.generate_access (parameters, l_type)
+					elseif extension.is_cpp then
+						cpp_ext ?= extension
+						cpp_ext.generate_access (external_name, parameters, l_type)
+					else
+						c_ext ?= extension
+						check
+							is_c_extension: c_ext /= Void
 						end
-						buf.putchar (')')
+						c_ext.generate_access (external_name, parameters, argument_types, l_type)
 					end
-					if not_polymorphic and extension.has_return_type then
-							-- Opening `(' is generated from MACRO_EXTENSION_I in
-							-- generate_external_name.
-						buf.putchar (')');
-					end
-				elseif is_struct_extension and then not_polymorphic then
-					struct_ext ?= extension
-					struct_ext.generate_struct_access (buf, external_name, parameters)
-				elseif is_inline_extension and then not_polymorphic then
-					inline_ext ?= extension
-					type_c := real_type (type).c_type
-					inline_ext.generate_inline_access (buf, parameters, type_c)
-				elseif is_cpp_extension and then not_polymorphic then
-					cpp_ext ?= extension
-					cpp_ext.generate (external_name, parameters)
 				else
+						-- Call is done like a normal Eiffel routine call.
 					buf.putchar ('(')
-					generate_parameters_list;
+					generate_parameters_list
 					buf.putchar (')')
 				end
 			else
+					-- Call is done like a normal Eiffel routine call.
 				buf.putchar ('(')
-				generate_parameters_list;
+				generate_parameters_list
 				buf.putchar (')')
-					
 			end
-
-			if type.is_boolean then
-					-- macro EIF_TEST was generated
-				buf.putchar (')');
-			end
-		end;
+		end
 
 	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
 		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
@@ -385,14 +318,9 @@ feature
 			-- Generate the parameters list for C function call
 		local
 			expr: EXPR_B;
-			ext: like extension
 			buf: GENERATION_BUFFER
 		do
-			ext := extension
-
-			if ext /= Void and then not encapsulated then
-				ext.generate_parameter_list (parameters)
-			elseif parameters /= Void then
+			if parameters /= Void then
 				from
 					buf := buffer
 					parameters.start;

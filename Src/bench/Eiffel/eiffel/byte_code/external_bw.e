@@ -78,7 +78,6 @@ feature -- Code generation
 			is_nested: BOOLEAN
 			r_id: INTEGER
 			rout_info: ROUT_INFO
-			is_boolean: BOOLEAN
 			buf: GENERATION_BUFFER
 			l_typ: CL_TYPE_I
 		do
@@ -91,20 +90,8 @@ feature -- Code generation
 				l_typ := typ
 			end
 
-			is_boolean :=  type.is_boolean
-			if is_boolean then
-				buf.putstring ("EIF_TEST((")
-			else
-				buf.putchar ('(')
-			end
-				-- Generate a function cast only for plain C functions, not for others
-				-- since a cast is done in their body.
-			if not encapsulated and then extension /= Void and then extension.has_arg_list then
-				real_type (type).c_type.generate_external_function_cast (buf, extension)
-				extension.generate_header_files
-			else
-				real_type (type).c_type.generate_function_cast (buf, argument_types)
-			end
+			buf.putchar ('(')
+			real_type (type).c_type.generate_function_cast (buf, argument_types)
 			if	
 				Compilation_modes.is_precompiling or else
 				l_typ.base_class.is_precompiled

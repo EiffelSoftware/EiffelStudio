@@ -105,7 +105,7 @@ debugger,,,,,,
 ,3,Know the static type of Void objects,Manus,DBG0012,,
 ,3,Breakpoints in editor mode,Arnaud,DBG0013,,
 ,4,"Improve invariant support (know which class the invariant comes from, have the invariant in the call stack)",Xavier,DBG0014,,
-,3,Debugger loses focus when running the application,Xavier,DBG0015,,
+,4,When the debugged application stops we should raise the debugging window (preference),Xavier,DBG0015,,
 ,4,Exception text field is too short,Xavier,DBG0016,Xavier,1
 ,2,"Add a ""Remove all breakpoints except this one"" in the breakpoint context menu",Julian,DBG0017,,
 ,1,Gray out the step into command when it is not possible to step into,Julian,DBG0018,,

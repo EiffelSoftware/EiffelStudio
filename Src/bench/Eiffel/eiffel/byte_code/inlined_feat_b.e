@@ -535,8 +535,7 @@ feature {NONE} -- Registers
 			buf.put_string (" 0;");
 			buf.put_new_line
 			if a_type.is_true_expanded then
-				a_type.generate_expanded_creation (byte_code, reg, False)
-				buf.put_new_line;
+				a_type.generate_expanded_creation (buf, reg.register_name)
 			end
 		end
 

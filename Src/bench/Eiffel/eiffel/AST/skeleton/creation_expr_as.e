@@ -63,20 +63,39 @@ feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			dummy_call: ACCESS_INV_AS
+			dummy_name: ID_AS
 		do
 			ctxt.put_breakable
 			ctxt.put_text_item (ti_Create_keyword)
 			ctxt.put_space
-			ctxt.put_text_item (ti_L_curly)
 			ctxt.set_type_creation (type)
+			ctxt.put_text_item (ti_L_curly)
 			ctxt.format_ast (type)
 			ctxt.put_text_item (ti_R_curly)
 			ctxt.put_space
 
 			if call /= Void then
+					--| We have to create a dummy call because the current formating
+					--| algorithm which makes the assumption that a feature call is
+					--| either on Current or on something else.
+					--| In the case of creation expression there is no current or no
+					--| something else, so we create a dummy call which only goal is
+					--| to set some properties of FORMAT_CONTEXT and LOCAL_FEAT_ADAPTATION
+					--| to their correct value and then pass them to the real call, that
+					--| way `call' is correctly formatted thanks to the information provided
+					--| by the call to `dummy_call.format'.
+				create dummy_call
+				create dummy_name.initialize ("")
+				dummy_call.set_feature_name (dummy_name)
+				ctxt.format_ast (dummy_call)
 				ctxt.need_dot
 				ctxt.format_ast (call)
 			end
+
+				-- Reset creation type, otherwise it messed everything up.
+			ctxt.set_type_creation (Void)
 		end
 
 feature -- Properties

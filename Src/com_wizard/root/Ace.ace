@@ -16,7 +16,20 @@ cluster
 	
 	root_cluster: "$LIBRARY\com\Wizard\root";
 
-	all wizard: "$LIBRARY\com\Wizard\project";
+	all wizard: "$LIBRARY\com\Wizard\project"
+		option
+			assertion (require):ECOM_SAFE_ARRAY_BOUND;
+		visible
+			ECOM_TYPE_INFO;
+			ECOM_TYPE_LIB_FIND_NAME_RESULT;
+			ECOM_SAFE_ARRAY_BOUND
+				export
+					"make_by_pointer"
+				end;
+			ECOM_CUST_DATA_ITEM;
+			ECOM_DLL_ENTRY;
+			ECOM_DOCUMENTATION;
+		end;
 
 	-- EiffelBase
 	all base:						"$LIBRARY\base"
@@ -33,20 +46,9 @@ cluster
 
 	-- EiffelCOM
 	all ecom:						"$LIBRARY\com\library"
-		option
-			assertion (require):ECOM_SAFE_ARRAY_BOUND;
 		visible
-			ECOM_TYPE_INFO;
-			ECOM_TYPE_LIB_FIND_NAME_RESULT;
-			ECOM_SAFE_ARRAY_BOUND
-				export
-					"make_by_pointer"
-				end;
 			ECOM_CURRENCY;
 			ECOM_DECIMAL;
-			ECOM_CUST_DATA_ITEM;
-			ECOM_DLL_ENTRY;
-			ECOM_DOCUMENTATION;
 		end;
 
 	-- EiffelTime

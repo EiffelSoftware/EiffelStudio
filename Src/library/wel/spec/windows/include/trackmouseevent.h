@@ -18,10 +18,10 @@ extern "C" {
 #define cwel_trackmouseevent_get_dwflags(_ptr_) ((((TRACKMOUSEEVENT *) _ptr_)->dwFlags))
 #define cwel_trackmouseevent_get_dwhovertime(_ptr_) ((((TRACKMOUSEEVENT *) _ptr_)->dwHoverTime))
 
-#define cwel_trackmouseevent_set_hwndtrack(_ptr_, _value_) (((TRACKMOUSEEVENT *) _ptr_)->hwndTrack = (HWND) (_value_))
-#define cwel_trackmouseevent_set_cbsize(_ptr_, _value_) (((TRACKMOUSEEVENT *) _ptr_)->cbSize = (HWND) (_value_))
-#define cwel_trackmouseevent_set_dwflags(_ptr_, _value_) (((TRACKMOUSEEVENT *) _ptr_)->dwFlags = (UINT) (_value_))
-#define cwel_trackmouseevent_set_dwhovertime(_ptr_, _value_) (((TRACKMOUSEEVENT *) _ptr_)->dwHoverTime = (UINT) (_value_))
+#define cwel_trackmouseevent_set_hwndtrack(_ptr_, _value_) (((TRACKMOUSEEVENT *) _ptr_)->hwndTrack = (_value_))
+#define cwel_trackmouseevent_set_cbsize(_ptr_, _value_) (((TRACKMOUSEEVENT *) _ptr_)->cbSize = (_value_))
+#define cwel_trackmouseevent_set_dwflags(_ptr_, _value_) (((TRACKMOUSEEVENT *) _ptr_)->dwFlags = (_value_))
+#define cwel_trackmouseevent_set_dwhovertime(_ptr_, _value_) (((TRACKMOUSEEVENT *) _ptr_)->dwHoverTime = (_value_))
 
 
 #ifdef __cplusplus

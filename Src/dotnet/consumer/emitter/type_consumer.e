@@ -1200,7 +1200,7 @@ feature {NONE} -- Added features for ENUM types.
 
 	integer_type: CONSUMED_REFERENCED_TYPE is
 			-- Referenced type of `System.Int32'.
-		once
+		do
 			Result := referenced_type_from_type (
 				feature {TYPE}.get_type_string (("System.Int32").to_cil))
 		ensure

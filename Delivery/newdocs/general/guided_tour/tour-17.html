@@ -1,0 +1,536 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 16  HOW EIFFELSTUDIO COMPILES</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tour-16.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tour.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tour-18.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-527441"></A>16  HOW EIFFELSTUDIO COMPILES</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-520712"></A>So far we have relied on the compiling capabilities of EiffelStudio without exploring them in any detail. We must now understand the principles behind ISE Eiffel's compiling strategy, in particular how it reconciles fast turnaround, efficient generated code, and strong typing.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-520719"></A>Compilation is automatic</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-520720"></A>Any speed issue aside, the most important property of the compilation process is that it is entirely automatic.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520742"></A>You've seen it from the beginning of this Tour: all the information the compiler has -- obtained from an Ace file, as here, or generated automatically by the other options -- is the name of the root class and the list of directories holding Eiffel clusters. In fact it only needs these directories for non-precompiled clusters, so here since we are using precompiled EiffelBase the only needed directory is the one containing the root cluster, denoted simply as &quot;<SPAN CLASS="ee-dot">
+.</SPAN>
+&quot; (current directory) since, to simplify things, we've started EiffelStudio from the Tour's own root cluster directory.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520747"></A>The compiler takes care of the rest, in particular of finding all the classes that must be compiled.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520750"></A>There is never any need, when compiling ISE Eiffel systems, to supply &quot;<A NAME="marker-520724"></A>Make files&quot;, &quot;include files&quot;, or other manual descriptions of inter-module dependencies.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-520717"></A>Compilation modes</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-520760"></A>EiffelStudio offers several forms of compilation, which you can see in the entries of the <SPAN CLASS="ee-keyword">
+Compile</SPAN>
+ menu (don't trigger any of them right now) as well as keyboard shortcuts and, in some cases, buttons:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-520763"></A><SPAN CLASS="ff-bold">
+Melt</SPAN>
+: quick incremental recompilation, doesn't optimize code for changed parts.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-520764"></A><SPAN CLASS="ff-bold">
+Freeze</SPAN>
+: incremental recompilation, not as fast as Melt, but generates more efficient code for changed parts.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-520773"></A><SPAN CLASS="ff-bold">
+Finalize</SPAN>
+: recompile entire system, generating highly optimized code.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-520774"></A><SPAN CLASS="ff-bold">
+Precompile</SPAN>
+ (available not through the <SPAN CLASS="ee-keyword">
+Compile</SPAN>
+ menu but through <SPAN CLASS="ee-keyword">
+Tools </SPAN>
+<SPAN CLASS="ee-symbol">
+--> </SPAN>
+<SPAN CLASS="ee-keyword">
+Precompilation wizard</SPAN>
+), to process an entire library, on which many systems can then rely without having to compile it.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-521091"></A>You'll quickly learn to use each of these modes to suit your needs.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-521409"></A>Criteria</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-521410"></A>EiffelStudio's <SPAN CLASS="ff-bold">
+Melting Ice Technology </SPAN>
+reconciles the following goals:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521411"></A><SPAN CLASS="ff-italics">
+Security and efficiency of the generated code</SPAN>
+: compiling techniques for the strongly typed Eiffel language ensure that compilers can catch many errors before it is too late, and generate more efficient code. The &quot;<A NAME="marker-521412"></A>validity constraints&quot; of the language, whose violations are caught as compilation errors, are particularly useful here, playing the role of checkable design rules.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521107"></A><SPAN CLASS="ff-italics">
+Quick turnaround</SPAN>
+: you should experience <A NAME="marker-521103"></A><A NAME="marker-521104"></A><A NAME="marker-521105"></A><A NAME="marker-521106"></A>an almost immediate transition from the time you write or (more commonly) modify software to the time when you can execute the result of what you just wrote.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521856"></A><SPAN CLASS="ff-italics">
+C code generation</SPAN>
+<A NAME="marker-521855"></A>: for portability, it is useful to take advantage of C in its proper role, that of a portable assembly language. C's closeness to machine concepts -- one of the very properties making it less suitable for human programming except in the case of short routines to access low-level mechanisms --, its almost universal availability, and good level of standardization, make it an excellent target language for a code generator. This also enables the environment to benefit from the often extensive optimizations performed by good C compilers, and facilitates interfacing new software with the large body of existing C-based systems, tools and libraries. As the final output of Eiffel compilation, you can obtain a complete C package that you can either C-compile on the same machine or port to other platforms, making ISE Eiffel a tool of choice for <SPAN CLASS="ff-bold">
+cross-platform development</SPAN>
+: develop on one platform, deploy on one or more others.</LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-521110"></A>The Melting Ice Principle</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-521111"></A>The idea of the melting ice is based on the observation that, for the practicing software developer, the crucial day-to-day compilation problem is not how to process an entire system but how best to process a <SPAN CLASS="ff-bold">
+changed system</SPAN>
+, of which an earlier state had previously been processed.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521112"></A>The change may be big or small; the system may be big or small. (&quot;Small system&quot; here means up to a few tens of thousands of lines.) This gives four possible cases, of which only one is really critical:
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521452"></A>&nbsp;
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-521454"></A>Small system
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-521456"></A>Large system
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521458"></A>Small change
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521460"></A>&nbsp;
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521462"></A>***
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521464"></A>Big change
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521466"></A>&nbsp;
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521468"></A>&nbsp;
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-521132"></A>If the system is small, as in both of the left column entries, speed of recompilation with a good compiler will be acceptable.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521133"></A>In the bottom-right box, the developers have spent days or weeks changing many classes in a large system, so they will not resent having to wait a little to see the results of the recompilation, as long as the time remains reasonable. In EiffelStudio this corresponds, as we'll see shortly, to <SPAN CLASS="ff-italics">
+finalization</SPAN>
+, which is in fact quite fast, although not as fast as the incremental modes.<SPAN CLASS="ff-italics">
+</SPAN>
+
+<P CLASS="nn-normal">
+<A NAME="pgfId-521134"></A>In the day-to-day, minute-by-minute practice of building and modifying software, the case that recurs by far the most often -- and can cause most frustration -- is the one marked ***: you change only a small part of a big system. Then the result should come quickly enough. More precisely:
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-521138"></A><A NAME="marker-521137"></A>Melting Ice Principle
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521139"></A>The time to re-process a system after a change should be a function of the logical size of the change, not of the size of the system.
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="jj-small">
+<A NAME="pgfId-521532"></A>The &quot;logical size&quot; of a change may be different from its physical size because a small physical change in a class may have consequences in many others. Imagine for example that you add a feature to class <SPAN CLASS="ee-text">
+ANY</SPAN>
+, although this is an extreme case and won't normally happen. Since every class is a descendant of <SPAN CLASS="ee-text">
+ANY</SPAN>
+, the logical change may affect the entire system.
+<P CLASS="jj-small">
+<A NAME="pgfId-521578"></A>In practice, however, most small physical changes will also be small logical changes and cause only minimal recompilation. In particular, EiffelStudio will detect that a change does not affect the interface of a class -- for example if it's only a change to non-exported features -- so that it doesn' need to re-process its clients.
+<P CLASS="nn-first">
+<A NAME="pgfId-521528"></A>Processing such incremental changes, in time proportional to the logical size of the changes, is known in ISE Eiffel as <A NAME="marker-521141"></A><SPAN CLASS="ff-bold">
+melting</SPAN>
+. The reason for this terminology is the metaphor illustrated on the following figure. Think of a compiled system as a block of ice; it may have taken some time to &quot;freeze&quot; -- compile. Now you start working on it again; the changes are like melted drops of water, dripping from the ice as a result of the heat you produce.
+<DIV>
+<p>
+<ul>
+<!----><IMG SRC="tour-140.png">
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-521162"></A>The Melting Ice Technology ensures that incremental compilation will only process the &quot;melted&quot; part, usually small, leaving alone the &quot;frozen&quot; part, which may be large. This is crucial to the incrementality of the mechanism.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521590"></A>The roles of the four compilation modes follow from this analysis:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521591"></A><SPAN CLASS="ff-bold">
+Melting</SPAN>
+ is the fastest mode: it processes the melted part without affecting the frozen part. With EiffelStudio, the melted elements will be <SPAN CLASS="ff-italics">
+interpreted</SPAN>
+ while the rest is compiled.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521165"></A><SPAN CLASS="ff-bold">
+Freezing</SPAN>
+<A NAME="marker-521164"></A> is the process of putting back the melted parts into the &quot;freezer&quot;: bringing them to the same compiled state as the parts that have not been modified.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521167"></A><SPAN CLASS="ff-bold">
+Finalizing</SPAN>
+<A NAME="marker-521166"></A> is the non-incremental process of producing a stand-alone C package and the resulting executable, extensively optimized, from the current system.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521168"></A><SPAN CLASS="ff-bold">
+Precompiling </SPAN>
+is the process of compiling an entire set of reusable classes, once and for all, so that it can be shared by many systems and many users without duplicating the code or compiling it again for each project.</LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-521169"></A>Properties of the compilation modes</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-521171"></A><A NAME="marker-521618"></A>The following table summarizes the differences between the four compilation modes:
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TH ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521653"></A>&nbsp;
+</TH>
+<TH ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-521655"></A>Regenerate C code?
+</TH>
+<TH ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-521657"></A>Incremental?
+</TH>
+<TH ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-521659"></A>Compilation result shared between projects?
+</TH>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-521661"></A>Melt
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521663"></A>No
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521665"></A>Yes (fast)
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521667"></A>No
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-521669"></A>Freeze
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521671"></A>Yes
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521673"></A>Yes (but requires C compilation of changes &amp; linking)
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521675"></A>No
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-521677"></A>Finalize
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521679"></A>Yes
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521681"></A>No
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521683"></A>No
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-521685"></A>Precompile
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521687"></A>Yes
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521689"></A>No
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-521691"></A>Yes
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-521224"></A>Most of the time, during the production and modification of your software, you will alternate between melting and freezing, since both of these modes are incremental. Most of the time, you will simply <SPAN CLASS="ff-bold">
+melt</SPAN>
+, since melting satisfies the Melting Ice Principle: the time to get back to a working system is very short -- proportional to the size of the changes. Note in particular that the unit of melting is the smallest possible one: each feature of a class -- attribute or routine -- may be melted separately.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521225"></A>The main difference between melting and <SPAN CLASS="ff-bold">
+freezing</SPAN>
+ is that freezing implies re-generating C code for the changed elements, and hence relinking the system as well. In contrast, when you melt changes, you do not change any C code: it remains frozen.
+<P CLASS="jj-small">
+<A NAME="pgfId-522037"></A>As a consequence, melting can only process changes to Eiffel code. If you add new external code (in C, C++ or other languages whose modules will require linking), you must freeze. If you ask for a Melt in such a case, the operation will trigger a freeze anyway. More generally, the <SPAN CLASS="ee-keyword">
+Compile</SPAN>
+ button that you have used a number of times to recompile the system in this Tour triggers a Melt by default, and a Freeze when it has to.
+<P CLASS="nn-first">
+<A NAME="pgfId-522039"></A>EiffelStudio knows how to hide the differences and present you with a uniform view of the frozen parts (the C code) and the melted parts. Here indeed is the full view of the picture that was previously given in part:
+<DIV>
+<p>
+<ul>
+<!----><IMG SRC="tour-141.png">
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-521262"></A>When you examine a component of the system -- to edit a class, produce a view such as Contract or Interface, enable a breakpoint on a routine, run the system, inspect a run-time object -- EiffelStudio automatically knows where to look for the corresponding information: melted or frozen part. If one of your actions requires melting or freezing more elements, EiffelStudio will also handle this automatically.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521263"></A>As suggested by the lower red arrow, successive melting operations &quot;pour water into the bowl&quot;, corresponding to the elements that you have changed since the last freeze. Freezing, represented by the top red arrow, updates the C code so that it integrates all the latest changes, emptying the bowl in the process.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521264"></A>Because the difference between melted and frozen code is largely invisible to users of the environment, the term <A NAME="marker-521265"></A><SPAN CLASS="ff-bold">
+workbench code</SPAN>
+ will cover both kinds; workbench code is code resulting from a succession of freezing and melting operations. As long as you are working within EiffelStudio, you are using workbench code.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521266"></A>When you are happy with the results of your development, you will normally finalize the system, thereby generating <SPAN CLASS="ff-bold">
+final code</SPAN>
+. Although not strictly required, this step is in most cases appropriate since final code is significantly more efficient than workbench code in both time and space: finalization performs a number of optimizations -- dead code removal, replacement of dynamic by static binding -- that make little sense in incremental development where, for example, some code element that is &quot;dead&quot; one minute may be resurrected the next moment through the addition of just one line of text. In addition, because finalized code is more efficient than frozen code, it is the natural choice if, using ISE Eiffel for cross-platform development, you wish to port the resulting C-package to other <A NAME="marker-521934"></A>architectures.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521935"></A>If you have a set of reusable classes that may be useful to many applications, you can <SPAN CLASS="ff-bold">
+precompile them</SPAN>
+ into a library. This set of classes must be <SPAN CLASS="ff-italics">
+self-contained</SPAN>
+ in the sense that all the classes needed by any of them must be either in the library itself or in another library that you will include in the precompilation.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-521269"></A>Bytecode</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-521270"></A>The result of melting operations -- the contents of the &quot;bowl&quot; -- is an internal software representation known as melted code or (for no particularly good reason) as <SPAN CLASS="ff-italics">
+bytecode</SPAN>
+. ISE Eiffel bytecode serves two complementary purposes:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521271"></A>It can be executed directly. This is what happens during melting: while the rest of your system, the frozen part, is executed directly in the form produced by Eiffel compilation generation and C-compilation of the result, the melted part is interpreted &quot;as is&quot; without further translation.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521980"></A>It can be compiled into C for further processing.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-521990"></A>Internally, the melted code is in a file <SPAN CLASS="ee-text">
+base</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-keyword">
+melted</SPAN>
+ (where <SPAN CLASS="ee-text">
+base </SPAN>
+refers to the precompilation library used by our example project) in the subdirectory <SPAN CLASS="ee-keyword">
+EIFGEN/W_CODE</SPAN>
+ of the project directory. The file is not human-readable, but as you add elements to your software and melt you watch its size grow. Whenever you freeze, it's emptied.
+<P CLASS="jj-small">
+<A NAME="pgfId-522059"></A>On the Microsoft .NET implementation of EiffelStudio, bytecode is replaced by that platform's own internal code, MSIL.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-521998"></A>Using EiffelBench without a C compiler</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-522011"></A>Thanks to melting, it is possible to do Eiffel development without a C compiler. You will simply melt the Eiffel elements that you write. This is known as <SPAN CLASS="ff-italics">
+melt-only </SPAN>
+mode and assumes that:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522012"></A>You do not add new external C functions, which would require re-freezing and linking.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522013"></A>You rely on precompiled libraries (such as EiffelBase). The precompilation process itself requires a C compiler, but you can obtain precompiled libraries as part of the ISE Eiffel delivery or download them from <SPAN CLASS="ww-crossref">
+<A HREF="http://www.eiffel.com/doc/manuals/getting_started/index.html" CLASS="URL">eiffel.com</A></SPAN>
+.</LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-521282"></A>Degrees</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-522174"></A>You can now see the reason behing the terminology used to describe compilation steps, called <SPAN CLASS="ff-bold">
+degrees</SPAN>
+ on the messages that flash on the screen when you do a compilation. The names are inspired by the international temperature scale -- Celsius, also known as centigrade -- where water freezes at 0 (and boils at 100, but Eiffel software never reaches that). For EiffelStudio:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522179"></A>Compilation starts at degree 6, which examines the clusters of your system to determine what classes may have changed. In many cases the compilation can safely skip this degree.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522180"></A>Degree 5 parses modified classes. It's executed not only when you explicitly request a compilation, but also when you save a class from the EiffelStudio editor, or exit from an external editor, so that you can see and fix syntax errors without delay.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522181"></A>Degrees 4 down to 1 take care of melting.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522182"></A>Negative degrees only take place when you freeze or finalize.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522183"></A>After negative degrees comes C-compilation if needed.</LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-522173"></A>Using melting and freezing</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-521284"></A><A NAME="marker-521283"></A>When should you melt, freeze, finalize or precompile? The answers are simple and follow directly from the preceding overview;they provide the key to getting the environment to work for you in the most effective way possible.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521286"></A>Melting is the bread and butter of the Eiffel developer. As you build your software, either from scratch or by modifying an existing system, you will regularly melt to benefit from the various checks that compilation performs and, of course, to generate executable code that you can test and debug immediately. During this process, there is no need to refreeze, since this operation (although still incremental) takes significantly more time than melting.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522083"></A>Only one operation, noted above, <SPAN CLASS="ff-italics">
+requires</SPAN>
+ freezing: the addition of external (non-Eiffel) routines, such as C functions or C++ classes. The reason is easy to understand: the EiffelStudio compiler knows how to melt Eiffel software, but not software written in C or other languages.
+<P CLASS="jj-small">
+<A NAME="pgfId-521313"></A>For the first compilation of a system that does not use precompiled EiffelBase, a Freeze is needed since class <SPAN CLASS="ee-text">
+ANY</SPAN>
+, from which all other classes inherit, uses some external routines. In this case the environment automatically starts a freeze even if you just click on the Melt or Quick Melt button. This does not apply if you have access to precompiled EiffelBase.
+<P CLASS="nn-first">
+<A NAME="pgfId-521315"></A>Except for the addition of external routines, freezing is never strictly necessary. It is indeed possible to use melting throughout a development, never requesting a freeze after the first compilation. But as the melted-to-frozen ratio grows, you may also detect a certain degradation in the performance of the system (determined by how big a share of your system is melted, not how many times you melt it). After a while, then, you may want to refreeze. Like melting, freezing is incremental: only those parts of a system that have been logically changed will be recompiled; as with melting, the determination of what needs to be recompiled is entirely performed by the environment, without any manual intervention on the developer's part. The principal difference is that freezing takes longer than melting.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522138"></A>Because of this you are requested to confirm the first time you freeze. Freeze the example system by choosing the menu entry <SPAN CLASS="ee-keyword">
+Project </SPAN>
+<SPAN CLASS="ee-symbol">
+--> </SPAN>
+<SPAN CLASS="ee-keyword">
+Freeze</SPAN>
+. You get the following dialog:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-142.png"><IMG WIDTH="100" SRC="tour-142.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-521329"></A>Note the <SPAN CLASS="ee-keyword">
+No </SPAN>
+option: by default, freezing will start a C compilation, but you can stop after C generation if you wish. This is useful for example if you want to generate a C package for cross-development, C-compiling the result on a different platform.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522147"></A>Click <SPAN CLASS="ee-keyword">
+Yes</SPAN>
+ to confirm freeze and C-compilation. Once the Eiffel compilation is complete, a message in the Development Tool window (<SPAN CLASS="ee-keyword">
+C compilation launched in background</SPAN>
+) tells you when that C-compilation has started. C-compilation does not block EiffelBench: at this point you can continue working with the environment. Any messages from C compiler will appear:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521334"></A>On Windows, in a new console that comes up for the occasion (iconify it if you don't want to see the messages).</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521338"></A>On Unix/Linux and VMS, in the window from which you launched EiffelBench.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-521340"></A>You will be able to execute the frozen system as soon as the C <A NAME="marker-521339"></A>compilation <A NAME="marker-521341"></A>finishes.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522167"></A>You will note that freezing, although it takes more time than melting, is actually quite fast, both due to the speed of Eiffel compilation and to the structure of the generated C code, designed to optimize the operation of the C compiler.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-521343"></A><A NAME="51439"></A>Using finalizing</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-521345"></A><A NAME="marker-521344"></A>The main reason for finalizing a system is run-time performance of the generated system. Finalization enables you to generate the high-performance executables that are among the hallmarks of ISE Eiffel. As a consequence, finalized code is the best vehicle for cross-development: you can port the resulting C package to various target platforms and C-compile them on these platforms.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521348"></A>The <SPAN CLASS="ff-bold">
+optimizations</SPAN>
+<SPAN CLASS="ff-italics">
+ </SPAN>
+performed by finalization affect both space and time:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521349"></A><SPAN CLASS="ff-italics">
+Dead code removal</SPAN>
+ strips the executable module of all the routines in the system that are not actually called, directly or indirectly, by the root's creation procedures. In a large system relying on many general-purpose classes, dead code removal can easily reduce an executable's size by one third or more. </LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-521350"></A>Finalization also applies <SPAN CLASS="ff-italics">
+static binding </SPAN>
+to non-polymorphic calls and <SPAN CLASS="ff-italics">
+inlines</SPAN>
+ some routine calls.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-521351"></A>As long as you continue changing, melting and freezing your system the workbench compiling mechanisms cannot perform such optimizations: if a routine is &quot;dead&quot; today you may resurrect it tomorrow by adding a new call to it somewhere; and if a call is non-polymorphic a single additional assignment may require dynamic binding. Compilation can only generate optimal code by working on a full, stable system. This is the task of finalization.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521352"></A><SPAN CLASS="ff-bold">
+Cross-development</SPAN>
+, the second reason for finalizing, is important if you are taking advantage of the portability of ISE Eiffel to develop your system on a certain platform and then run the result on target computers with possibly different architectures. A target machine may lack an ISE Eiffel compiler (unmistakably signaling its owner's backwardness) but include a C compiler. If the development and target platforms are of different architectures you will need to obtain a copy of the run-time system for the target architecture. The run-time system is also ANSI-C-based, so porting it is usually a straightforward matter.
+<P CLASS="nn-normal">
+<A NAME="pgfId-521353"></A>Note that cross-development does not <SPAN CLASS="ff-italics">
+require</SPAN>
+ finalization, since you can cross-compile a frozen version. In practice, however, the finalized version is usually the preferred form for porting a C package because of the performance advantage.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522488"></A>Finalize the example system now by the menu entry <SPAN CLASS="ee-keyword">
+Project </SPAN>
+<SPAN CLASS="ee-symbol">
+--> </SPAN>
+<SPAN CLASS="ee-keyword">
+Finalize</SPAN>
+. Here too you will be asked to confirm, although the dialog enables you to suppress that confirmation for later attempts, and you may skip C compilation. You will note that finalization is longer than freezing, but still remains quite reasonable thanks to the extensive optimization of the Eiffel compilation process and the structure of the generated C code.<SPAN CLASS="ee-keyword">
+</SPAN>
+
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tour-16.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tour.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tour-18.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

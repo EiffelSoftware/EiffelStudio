@@ -1,0 +1,470 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tutorial.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 7  GENERICITY AND ARRAYS</TITLE>
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-7.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-9.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-514722"></A>7  <A NAME="15572"></A>GENERICITY AND ARRAYS</H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-514723"></A>Some of the classes that we will need, particularly in libraries, are <SPAN CLASS="ff-bold">
+container</SPAN>
+ classes, describing data structures made of a number of objects of the same or similar types. Examples of containers include arrays, stacks and lists. The class <SPAN CLASS="ee-text">
+DEPOSIT_LIST</SPAN>
+ posited in earlier examples describes containers.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514724"></A>It is not hard, with the mechanisms seen so far, to write the class <SPAN CLASS="ee-text">
+DEPOSIT_LIST</SPAN>
+, which would include such features as <SPAN CLASS="ee-text">
+count</SPAN>
+ (query returning the number of deposit objects in the list) and <SPAN CLASS="ee-text">
+put</SPAN>
+ (command to insert a new deposit object).</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514725"></A>Most of the operations, however, would be the same for lists of objects other than deposits. To avoid undue replication of efforts and promote reuse, we need a way to describe <SPAN CLASS="ff-bold">
+generic</SPAN>
+ container classes, which we can use to describe containers containing elements of many different types.</P>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-553955"></A>Making a class generic</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514729"></A>The notation</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514728"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ <SPAN CLASS="ee-text">
+C</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+G</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ &#8230; <SPAN CLASS="ee-comment">
+The rest as for any other class declaration</SPAN>
+ &#8230; </P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514730"></A>introduces a generic class. A name such as <SPAN CLASS="ee-text">
+G</SPAN>
+ appearing in brackets after the class name is known as a <SPAN CLASS="ff-bold">
+formal generic parameter</SPAN>
+; it represents an arbitrary type.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514731"></A>Within the class text, feature declarations can freely use <SPAN CLASS="ee-text">
+G</SPAN>
+ even though it is not known what type <SPAN CLASS="ee-text">
+G</SPAN>
+ stands for. Class <SPAN CLASS="ee-text">
+LIST </SPAN>
+of EiffelBase, for example, includes features</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514734"></A>first: G</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514735"></A>	-- Value of first list item<BR>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514736"></A>extend (val: G) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514737"></A>	-- Add a new item of value <SPAN CLASS="ee-text">
+val</SPAN>
+ at end of list</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514738"></A>	&#8230; </P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514739"></A>The operations available on an entity such as <SPAN CLASS="ee-text">
+first</SPAN>
+ and <SPAN CLASS="ee-text">
+val</SPAN>
+, whose type is a formal generic parameter, are the operations available on all types: use as source <SPAN CLASS="ee-text">
+y </SPAN>
+of an assignment <SPAN CLASS="ee-text">
+x</SPAN>
+ <SPAN CLASS="ee-comment">
+:=</SPAN>
+ <SPAN CLASS="ee-text">
+y</SPAN>
+, use as target <SPAN CLASS="ee-text">
+x</SPAN>
+ of such an assignment (although not for <SPAN CLASS="ee-text">
+val</SPAN>
+, which as a formal routine argument is not writable), use in equality comparisons <SPAN CLASS="ee-text">
+x </SPAN>
+<SPAN CLASS="ee-comment">
+=</SPAN>
+ <SPAN CLASS="ee-text">
+y</SPAN>
+ or <SPAN CLASS="ee-text">
+x</SPAN>
+ <SPAN CLASS="ee-comment">
+/=</SPAN>
+ <SPAN CLASS="ee-text">
+y</SPAN>
+, and application of universal features from <SPAN CLASS="ee-text">
+ANY </SPAN>
+such as <SPAN CLASS="ee-text">
+clone</SPAN>
+, <SPAN CLASS="ee-text">
+equal</SPAN>
+ and <SPAN CLASS="ee-text">
+copy</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514740"></A>To use a generic class such as list, a client will provide a type name as <SPAN CLASS="ff-bold">
+actual generic parameter</SPAN>
+. So instead of relying on a special purpose class <SPAN CLASS="ee-text">
+DEPOSIT_LIST</SPAN>
+, the class <SPAN CLASS="ee-text">
+ACCOUNT </SPAN>
+could include the declaration</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514743"></A><SPAN CLASS="ee-text">
+all_deposits</SPAN>
+: <SPAN CLASS="ee-text">
+LIST </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+DEPOSIT</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514744"></A>using <SPAN CLASS="ee-text">
+LIST</SPAN>
+ as a generic class and <SPAN CLASS="ee-text">
+DEPOSIT</SPAN>
+ as the actual generic parameter. Then all features declared in <SPAN CLASS="ee-text">
+LIST</SPAN>
+ as working on values of type <SPAN CLASS="ee-text">
+G</SPAN>
+ will work, when called on the target <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+, on values of type <SPAN CLASS="ee-text">
+DEPOSIT</SPAN>
+. With the target</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514747"></A><SPAN CLASS="ee-text">
+all_accounts</SPAN>
+: <SPAN CLASS="ee-text">
+LIST </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514748"></A>these features would work on values of type <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+.</P>
+<P CLASS="jj-small">
+<A NAME="pgfId-514749"></A>A note of terminology: to avoid confusion, Eiffel always uses the word <SPAN CLASS="ff-bold">
+argument</SPAN>
+ for routine arguments, reserving <SPAN CLASS="ff-bold">
+parameter</SPAN>
+ for the generic parameters of classes.</P>
+<P CLASS="nn-first">
+<A NAME="pgfId-514750"></A>Genericity reconciles extendibility and reusability with the static type checking demanded by reliability. A typical error, such as confusing an account and a deposit, will be detected immediately at compile time, since the call <SPAN CLASS="ee-text">
+all_accounts</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+extend</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+dep</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ is invalid for <SPAN CLASS="ee-text">
+dep </SPAN>
+declared of type <SPAN CLASS="ee-text">
+DEPOSIT</SPAN>
+. What is valid is something like <SPAN CLASS="ee-text">
+all_accounts</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+extend</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+acc</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ for <SPAN CLASS="ee-text">
+acc</SPAN>
+ of type <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+. In other approaches, the same effect might require costly run-time checks (as in Java, C# or Smalltalk), with the risk of run-time errors.</P>
+<P CLASS="jj-small">
+<A NAME="pgfId-514751"></A>This form of genericity is known as <SPAN CLASS="ff-bold">
+unconstrained</SPAN>
+ because the formal generic parameter, <SPAN CLASS="ee-text">
+G</SPAN>
+ in the example, represents an arbitrary type. You may also want to use types that are guaranteed to have certai operations available. This is known as <SPAN CLASS="ff-bold">
+constrained</SPAN>
+ genericity and will be studied with inheritance.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-553954"></A>Arrays</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514752"></A>An example of generic class from the Kernel Library is <SPAN CLASS="ee-text">
+ARRAY </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+G</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+,<SPAN CLASS="ee-text">
+ </SPAN>
+which describes direct-access arrays. Features include:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514753"></A><SPAN CLASS="ee-text">
+put</SPAN>
+ to replace an element's value, as in <SPAN CLASS="ee-text">
+my_array</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+put</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+val</SPAN>
+, <SPAN CLASS="ee-text">
+25</SPAN>
+<SPAN CLASS="ee-comment">
+) </SPAN>
+which replaces by <SPAN CLASS="ee-text">
+val</SPAN>
+ the value of the array entry at index 25.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514754"></A><SPAN CLASS="ee-text">
+item</SPAN>
+ to access an entry, as in <SPAN CLASS="ee-text">
+my_array</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+item</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+25</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ yielding the entry at index 25. A synonym is <SPAN CLASS="ee-keyword">
+infix</SPAN>
+<SPAN CLASS="ee-comment">
+ &quot;@&quot;</SPAN>
+, so that you may also write more tersely, for the same result, <SPAN CLASS="ee-text">
+my_array</SPAN>
+ <SPAN CLASS="ee-comment">
+@</SPAN>
+ <SPAN CLASS="ee-text">
+25</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514755"></A><SPAN CLASS="ee-text">
+lower</SPAN>
+, <SPAN CLASS="ee-text">
+upper</SPAN>
+ and <SPAN CLASS="ee-text">
+count</SPAN>
+: queries yielding the bounds and the number of entries.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514756"></A>The creation procedure <SPAN CLASS="ee-text">
+make</SPAN>
+, as in <SPAN CLASS="ee-keyword">
+create</SPAN>
+ <SPAN CLASS="ee-text">
+my_array</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+make</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+1, 50</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ which creates an array with the given index bounds. It is also possible to resize an array through <SPAN CLASS="ee-text">
+resize</SPAN>
+, retaining the old elements. In general, the Eiffel method abhors built-in limits, favoring instead structures that resize themselves when needed, either from explicit client request or automatically.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-514757"></A>The comment made about <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ and other basic classes applies to <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+ too: Eiffel compilers know about this class, and will be able to process expressions of the form <SPAN CLASS="ee-text">
+my_array</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+put</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+val</SPAN>
+, <SPAN CLASS="ee-text">
+25</SPAN>
+<SPAN CLASS="ee-comment">
+) </SPAN>
+and <SPAN CLASS="ee-text">
+my_array</SPAN>
+ <SPAN CLASS="ee-comment">
+@</SPAN>
+ <SPAN CLASS="ee-text">
+25</SPAN>
+ in essentially the same way as a C or Fortran array access -- <SPAN CLASS="ee-text">
+my_array</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+25</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ in C. But it is consistent and practical to let developers treat <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+ as a class and arrays as objects; many library classes in EiffelBase, for example, inherit from <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+. Once again the idea is to get the best of both worlds: the convenience and uniformity of the object-oriented way of thinking; and the efficiency of traditional approaches.</P>
+<P CLASS="jj-small">
+<A NAME="pgfId-527882"></A>A similar technique applies to another Kernel Library class, that one not generic: <SPAN CLASS="ee-text">
+STRING</SPAN>
+, describing character strings with a rich set of string manipulation features.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-554151"></A>Generic derivation</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514758"></A>The introduction of genericity brings up a small difference between classes and types. A generic class <SPAN CLASS="ee-text">
+C</SPAN>
+ is not directly a type since you cannot declare an entity as being of type <SPAN CLASS="ee-text">
+C</SPAN>
+: you must use some actual generic parameter <SPAN CLASS="ee-text">
+T</SPAN>
+ -- itself a type. <SPAN CLASS="ee-text">
+C</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+T</SPAN>
+<SPAN CLASS="ee-comment">
+] </SPAN>
+is indeed a type, but class <SPAN CLASS="ee-text">
+C</SPAN>
+ by itself is only a type template.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-527904"></A>The process of obtaining a type <SPAN CLASS="ee-text">
+C</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+T</SPAN>
+<SPAN CLASS="ee-comment">
+] </SPAN>
+from a general class <SPAN CLASS="ee-text">
+C </SPAN>
+is known as a <SPAN CLASS="ff-bold">
+generic derivation</SPAN>
+; <SPAN CLASS="ee-text">
+C</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+T</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ is a <SPAN CLASS="ff-bold">
+generically derived type</SPAN>
+. Type <SPAN CLASS="ee-text">
+T</SPAN>
+ itself is, recursively, either a non-generic class or again a generically derived type <SPAN CLASS="ee-text">
+D </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+U</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ for some <SPAN CLASS="ee-text">
+D</SPAN>
+ and <SPAN CLASS="ee-text">
+U</SPAN>
+, as in <SPAN CLASS="ee-text">
+LIST</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+ARRAY</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+INTEGER</SPAN>
+<SPAN CLASS="ee-comment">
+]]</SPAN>
+.)</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514759"></A>It remains true, however, that every type is based on a class. The base class of a generically derived type <SPAN CLASS="ee-text">
+C</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+T</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ is <SPAN CLASS="ee-text">
+C</SPAN>
+.</P>
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-7.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-9.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

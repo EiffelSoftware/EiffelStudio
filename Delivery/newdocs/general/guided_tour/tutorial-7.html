@@ -1,0 +1,2325 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tutorial.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 6  THE DYNAMIC STRUCTURE: EXECUTION MODEL</TITLE>
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-6.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-8.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-514214"></A>6  THE DYNAMIC STRUCTURE: EXECUTION MODEL</H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-514215"></A>A system with a certain static structure describes a set of possible executions. The run-time model governs the structure of the data (<SPAN CLASS="ee-text">
+objects</SPAN>
+) created during such executions.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514216"></A>The properties of the run-time model are not just of interest to implementers; they also involve concepts directly relevant to the needs of system modelers and analysts at the most abstract levels.</P>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514217"></A>Objects, fields, values and references</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514218"></A>A class was defined as the static description of a a type of run-time data structures. The data structures described by a class are called <SPAN CLASS="ff-bold">
+instances</SPAN>
+ of the class, which in turn is called their <SPAN CLASS="ff-bold">
+generating class</SPAN>
+ (or just &quot;<SPAN CLASS="ff-italics">
+generator</SPAN>
+&quot;). An instance of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ is a data structure representing a bank account; an instance of <SPAN CLASS="ee-text">
+LINKED_LIST</SPAN>
+ is a data structure representing a linked list.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514219"></A>An <SPAN CLASS="ff-bold">
+object</SPAN>
+, as may be created during the execution of a system, is an instance of some class of the system.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514220"></A>Classes and objects belong to different worlds: a class is an element of the software text; an object is a data structure created during execution. Although is possible to define a class whose instances represent classes (as class <SPAN CLASS="ee-text">
+E_CLASS</SPAN>
+ in the ISE libraries, used to access properties of classes at run time), this does not eliminate the distinction between a static, compile-time notion, class, and a dynamic, run-time notion, object.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514221"></A>An object is either an atomic object (integer, real, boolean, double) or a composite object made of a number of <SPAN CLASS="ff-bold">
+fields</SPAN>
+, represented by adjacent rectangles on the conventional run-time diagrams:</P>
+<DIV>
+<MAP NAME="tutorial-5">
+</MAP>
+<IMG SRC="tutorial-5.png" USEMAP="#tutorial-5">
+</DIV>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514240"></A>Each field is a <SPAN CLASS="ff-bold">
+value</SPAN>
+. A value can be either an object or an object reference:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514241"></A>When a field is an object, it will in most cases be an atomic object, as on the figure where the first field from the top is an integer and the third a character. But a field can also be a composite object, in which case it is called a <SPAN CLASS="ff-bold">
+subobject</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-526726"></A>A <SPAN CLASS="ff-bold">
+reference</SPAN>
+ is either void or uniquely identifies an object, to which it is said to be <SPAN CLASS="ff-bold">
+attached</SPAN>
+. In the preceding figure the second field from the top is a reference -- attached in this case, as represented by the arrow, to the enclosing object itself. The bottom field is a void reference.</LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-526764"></A><A NAME="88231"></A>Features</H2>
+<DIV>
+<MAP NAME="tutorial-6">
+</MAP>
+<IMG SRC="tutorial-6.png" USEMAP="#tutorial-6">
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-526765"></A>A feature, as noted, is an operation available on instances of a class. A feature can be either an <SPAN CLASS="ff-bold">
+attribute</SPAN>
+ or a <SPAN CLASS="ff-bold">
+routine</SPAN>
+. This classification, which you can follow by starting from the <SPAN CLASS="ff-italics">
+right</SPAN>
+ on the figure above, is based on implementation considerations:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514286"></A>An attribute is a feature implemented through memory: it describes a field that will be found in all instances of the class. For example class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ may have an attribute <SPAN CLASS="ee-text">
+balance</SPAN>
+; then all instances of the class will have a corresponding field containing each account's current balance.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514287"></A>A routine describes a computation applicable to all instances of the class. <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ may have a routine <SPAN CLASS="ee-text">
+withdraw</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514288"></A>Routines are further classified into <SPAN CLASS="ff-bold">
+functions</SPAN>
+, which will return a result, and <SPAN CLASS="ff-bold">
+procedures</SPAN>
+, which will not. Routine <SPAN CLASS="ee-text">
+withdraw</SPAN>
+ will be a procedure; an example of function may be <SPAN CLASS="ee-text">
+highest_deposit</SPAN>
+, which returns the highest deposit made so far to the account.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-514289"></A>If we instead take the viewpoint of the <SPAN CLASS="ff-bold">
+clients</SPAN>
+ of a class (the classes relying on its feature), you can see the relevant classification by starting from the <SPAN CLASS="ff-italics">
+left</SPAN>
+ on the figure:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514290"></A><SPAN CLASS="ff-bold">
+Commands</SPAN>
+ have no result, and may modify an object. They may only be procedures.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514291"></A><SPAN CLASS="ff-bold">
+Queries</SPAN>
+ have a result: they return information about an object. You may implement a query as either an attribute (by reserving space for the corresponding information in each instance of the class, a memory-based solution) or a function (a computation-based solution). An attribute is only possible for a query without argument, such as <SPAN CLASS="ee-text">
+balance</SPAN>
+; a query with arguments, such as <SPAN CLASS="ee-text">
+balance_on </SPAN>
+(<SPAN CLASS="ee-text">
+d</SPAN>
+), returning the balance at date <SPAN CLASS="ee-text">
+d</SPAN>
+, can only be a function.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-514292"></A>From the outside, there is no difference between a query implemented as an attribute and one implemented as a function: to obtain the balance of an account <SPAN CLASS="ee-text">
+a</SPAN>
+, you will always write <SPAN CLASS="ee-text">
+a</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+balance</SPAN>
+. In the implementation suggested above, <SPAN CLASS="ee-text">
+a </SPAN>
+is an attribute, so that the notation denotes an access to the corresponding object field. But it is also possible to implement <SPAN CLASS="ee-text">
+a</SPAN>
+ as a function, whose algorithm will explore the lists of deposits and withdrawals and compute their accumulated value. To the clients of the class, and in the official class documentation as produced by the environment tools, the difference is not visible.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514295"></A>This principle of <A NAME="UNIFORM ACCESS"></A><SPAN CLASS="ff-bold">
+Uniform Access</SPAN>
+ is central to Eiffel's goals of extendibility, reusability and maintainability: you can change the implementation without affecting clients; and you can reuse a class without having to know the details of its features' implementations. Most object-oriented languages force clients to use a different notation for a function call and an attribute access. This violates Uniform Access and is an impediment to software evolution, turning internal representation changes into interface changes that may disrupt large parts of a system.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514296"></A>A simple class</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514333"></A>The following simple class text illustrates the preceding concepts</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514299"></A><SPAN CLASS="ee-keyword">
+indexing</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514300"></A>	description: &quot;Simple bank accounts&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514301"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514302"></A>	ACCOUNT</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514303"></A><SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+-- Access</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514304"></A>	balance: INTEGER</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514305"></A>			-- Current balance</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514306"></A>	deposit_count: INTEGER <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514307"></A>			-- Number of deposits made since opening</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514308"></A>		<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514309"></A>			<SPAN CLASS="ee-keyword">
+if </SPAN>
+all_deposits /= Void <SPAN CLASS="ee-keyword">
+then</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514310"></A>				Result := all_deposits<SPAN CLASS="ee-dot">
+.</SPAN>
+count</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514311"></A>			<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514312"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514314"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+ <SPAN CLASS="ee-comment">
+-- Element change</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514315"></A>	deposit (sum: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514316"></A>			-- Add <SPAN CLASS="ee-text">
+sum</SPAN>
+ to account.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514317"></A>		<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514318"></A>			<SPAN CLASS="ee-keyword">
+if </SPAN>
+all_deposits= Void <SPAN CLASS="ee-keyword">
+then</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514319"></A>				<SPAN CLASS="ee-keyword">
+create</SPAN>
+ all_deposits</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514320"></A>			<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514321"></A>			all_deposits<SPAN CLASS="ee-dot">
+.</SPAN>
+extend (sum)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514322"></A>			balance := balance + sum</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514323"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514325"></A><SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+{</SPAN>
+NONE<SPAN CLASS="ee-comment">
+} -- Implementation</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514326"></A>	all_deposits: DEPOSIT_LIST</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514327"></A>			-- List of deposits since account's opening.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514328"></A><SPAN CLASS="ee-keyword">
+invariant</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514329"></A>	consistent_balance:</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514330"></A>	(all_deposits /= Void) <SPAN CLASS="ee-keyword">
+implies </SPAN>
+(balance = all_deposits<SPAN CLASS="ee-dot">
+.</SPAN>
+total)<BR>
+	zero_if_no_deposits:</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514331"></A>		(all_deposits = Void) <SPAN CLASS="ee-keyword">
+implies </SPAN>
+(balance = 0)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514332"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+ <SPAN CLASS="ee-comment">
+-- class</SPAN>
+ ACCOUNT</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514334"></A>(The <SPAN CLASS="ee-comment">
+{</SPAN>
+<SPAN CLASS="ee-text">
+NONE</SPAN>
+<SPAN CLASS="ee-comment">
+}</SPAN>
+ qualifier and the <SPAN CLASS="ee-keyword">
+invariant</SPAN>
+ clause, used here to make the example closer to a real class, will be explained shortly. <SPAN CLASS="ee-text">
+DEPOSIT_LIST</SPAN>
+ refers to another class, which can be written separately using library classes.)</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514335"></A>It's easy to deduce, from a feature's syntactic appearance, the category to which it belongs. Here:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-526812"></A>Only <SPAN CLASS="ee-text">
+deposit</SPAN>
+ and <SPAN CLASS="ee-text">
+deposit_count</SPAN>
+, which include a <SPAN CLASS="ee-keyword">
+do</SPAN>
+ &#8230; clause, are routines.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-526816"></A><SPAN CLASS="ee-text">
+balance</SPAN>
+ and <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+, which are simply declared with a type, are attributes. Note that even for attributes it is recommended to have a header comment.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514336"></A>Routine <SPAN CLASS="ee-text">
+deposit_count</SPAN>
+ is declared as returning a result (of type <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+); so it is a function. Routine <SPAN CLASS="ee-text">
+deposit</SPAN>
+ has no such result and hence is a procedure.</LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514337"></A><A NAME="59651"></A>Creating and initializing objects</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514338"></A>Classes, as noted, are a static notion. Objects appear at run time; they are created explicitly. Here is the basic instruction to create an object of type <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ and attach it to <SPAN CLASS="ee-text">
+x</SPAN>
+:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514341"></A><SPAN CLASS="ee-keyword">
+create</SPAN>
+ <SPAN CLASS="ee-text">
+x</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514342"></A>assuming that <SPAN CLASS="ee-text">
+x</SPAN>
+ has been declared of type <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+. Such an instruction must be in a routine of some class -- the only place where instructions can appear -- and its effect at run time will be threefold: create a new object of type <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+; initialize its fields to default values; and attach the value of <SPAN CLASS="ee-text">
+x</SPAN>
+ to it. Here the object will have two fields corresponding to the two attributes of the generating class: an integer for <SPAN CLASS="ee-text">
+balance</SPAN>
+, which will be initialized to 0, and a reference for <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+, which will be initialized to a void reference:</P>
+<DIV>
+<MAP NAME="tutorial-7">
+</MAP>
+<IMG SRC="tutorial-7.png" USEMAP="#tutorial-7">
+</DIV>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514386"></A>The language specifies default initialization values for all possible types:</P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-514363"></A><A NAME="25630"></A>Type</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-514365"></A>Default value</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-514367"></A><SPAN CLASS="ee-text">
+INTEGER</SPAN>
+, <SPAN CLASS="ee-text">
+REAL</SPAN>
+, <SPAN CLASS="ee-text">
+DOUBLE</SPAN>
+</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-514369"></A>Zero</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-514371"></A><SPAN CLASS="ee-text">
+BOOLEAN</SPAN>
+</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-514373"></A>False</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-514375"></A><SPAN CLASS="ee-text">
+CHARACTER</SPAN>
+</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-514377"></A>Null</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-514379"></A>Reference types (such as <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ and <SPAN CLASS="ee-text">
+DEPOSIT_LIST</SPAN>
+)</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-514381"></A>Void reference</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-514383"></A>Composite expanded types (see next)</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-514385"></A>Same rules, applied recursively to all fields</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-553449"></A>It is possible to override the initialization values by providing -- as in the earlier example of class <SPAN CLASS="ee-text">
+HELLO</SPAN>
+ -- one or more creation procedures. For example we might change <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ to make sure that every account is created with an initial deposit:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-553452"></A><SPAN CLASS="ee-keyword">
+indexing</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-553453"></A>	<SPAN CLASS="ee-text">
+description</SPAN>
+: &quot;<SPAN CLASS="ee-text">
+Simple bank accounts, initialized with a first deposit</SPAN>
+&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-553454"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-553455"></A>	ACCOUNT1</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-553456"></A><SPAN CLASS="ee-keyword">
+create</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-553457"></A>	<SPAN CLASS="ee-text">
+make</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-553458"></A><SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+-- Initialization</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-553459"></A>		<SPAN CLASS="ee-text">
+make </SPAN>
+(<SPAN CLASS="ee-text">
+sum</SPAN>
+: <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-553460"></A>			-- Initialize account with <SPAN CLASS="ee-text">
+sum</SPAN>
+.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-553461"></A>		<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-553462"></A>			<SPAN CLASS="ee-text">
+deposit </SPAN>
+(<SPAN CLASS="ee-text">
+sum</SPAN>
+)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-553463"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-553464"></A>&#8230; The rest of the class as for <SPAN CLASS="ee-text">
+ACCOUNT </SPAN>
+&#8230;<SPAN CLASS="ee-text">
+ </SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-553465"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+ -- class <SPAN CLASS="ee-text">
+ACCOUNT1</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-553466"></A>A <SPAN CLASS="ee-keyword">
+create</SPAN>
+ clause may list zero or more (here just one) procedures of the class. </P>
+<P CLASS="jj-small">
+<A NAME="pgfId-553467"></A>Note the use of the same keyword, <SPAN CLASS="ee-keyword">
+create</SPAN>
+, for both a creation clause, as here, and creation instructions such as <SPAN CLASS="ee-keyword">
+creat </SPAN>
+<SPAN CLASS="ee-text">
+x</SPAN>
+.</P>
+<P CLASS="nn-first">
+<A NAME="pgfId-553422"></A>In this case the original form of creation instruction, <SPAN CLASS="ee-keyword">
+create</SPAN>
+ <SPAN CLASS="ee-text">
+x</SPAN>
+, is not valid any more for creating an instance of <SPAN CLASS="ee-text">
+ACCOUNT1</SPAN>
+; you must use the form</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-553442"></A><SPAN CLASS="ee-keyword">
+create</SPAN>
+ <SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+make </SPAN>
+<SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+2000</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514406"></A>known as a creation call. Such a creation call will have the same effect as the original form -- creation, initialization, attachment to <SPAN CLASS="ee-text">
+x -- </SPAN>
+followed by the effect of calling the selected creation procedure, which here will call <SPAN CLASS="ee-text">
+deposit</SPAN>
+ with the given argument.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-553638"></A>Note that in this example all that <SPAN CLASS="ee-text">
+make</SPAN>
+ does is to call <SPAN CLASS="ee-text">
+deposit</SPAN>
+. So an alternative to introducing a new procedure <SPAN CLASS="ee-text">
+make</SPAN>
+ would have been simply to introduce a creation clause of the form <SPAN CLASS="ee-keyword">
+create </SPAN>
+<SPAN CLASS="ee-text">
+deposit</SPAN>
+, elevating <SPAN CLASS="ee-text">
+deposit</SPAN>
+ to the status of creation procedure. Then a creation call would be of the form <SPAN CLASS="ee-keyword">
+create</SPAN>
+ <SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+deposit </SPAN>
+<SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+2000</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+.</P>
+<P CLASS="jj-small">
+<A NAME="pgfId-553639"></A>Some variants of the basic creation instruction will be reviewed later: instruction with an explicit type; creation expressions. See <A HREF="tutorial-11.html#28280" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Creation variants&quot;,  page 90</SPAN>
+</A>.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-553643"></A>Entities</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-553644"></A>The example assumed <SPAN CLASS="ee-text">
+x</SPAN>
+ declared of type <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ (or <SPAN CLASS="ee-text">
+ACCOUNT1</SPAN>
+). Such an <SPAN CLASS="ee-text">
+x </SPAN>
+is an example of <SPAN CLASS="ff-bold">
+entity</SPAN>
+, a notion generalizing the well-known concept of variable. An entity is a name that appears in a class text to represent possible run-time values (a value being, as defined earlier, an object or a reference). An entity is one of the following:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514410"></A>An attribute of the enclosing class, such as <SPAN CLASS="ee-text">
+balance</SPAN>
+ and <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514411"></A>A formal argument of a routine, such as <SPAN CLASS="ee-text">
+sum</SPAN>
+ for <SPAN CLASS="ee-text">
+deposit</SPAN>
+ and <SPAN CLASS="ee-text">
+make</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514412"></A>A local entity declared for the internal needs of a routine.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514413"></A>The special entity <SPAN CLASS="ee-text">
+Result</SPAN>
+ in a function.</LI>
+</UL>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514414"></A>The third case, local entities, arises when a routine needs some auxiliary values for its computation. Here is an example of the syntax:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514417"></A>	<SPAN CLASS="ee-text">
+deposit</SPAN>
+ (<SPAN CLASS="ee-text">
+sum</SPAN>
+: <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514418"></A>			-- Add <SPAN CLASS="ee-text">
+sum</SPAN>
+ to account.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514419"></A>		<SPAN CLASS="ee-keyword">
+local</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514420"></A>			<SPAN CLASS="ee-text">
+new</SPAN>
+: <SPAN CLASS="ee-text">
+AMOUNT</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514421"></A>		<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514422"></A>			<SPAN CLASS="ee-keyword">
+create</SPAN>
+ <SPAN CLASS="ee-text">
+new</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+make</SPAN>
+ (<SPAN CLASS="ee-text">
+sum</SPAN>
+)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514423"></A>			<SPAN CLASS="ee-text">
+all_deposits</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+extend</SPAN>
+ (<SPAN CLASS="ee-text">
+new</SPAN>
+)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514424"></A>			<SPAN CLASS="ee-text">
+balance</SPAN>
+ := <SPAN CLASS="ee-text">
+balance</SPAN>
+ + <SPAN CLASS="ee-text">
+sum</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514425"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514426"></A>This example is a variant of <SPAN CLASS="ee-text">
+deposit</SPAN>
+ for which we assume that the elements of a <SPAN CLASS="ee-text">
+DEPOSIT_LIST</SPAN>
+ such as <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+ are no longer just integers, but objects, instances of a new class, <SPAN CLASS="ee-text">
+AMOUNT</SPAN>
+. Such an object will contain an integer value, but possibly other information as well. So for the purpose of procedure <SPAN CLASS="ee-text">
+deposit</SPAN>
+ we create an instance of <SPAN CLASS="ee-text">
+AMOUNT</SPAN>
+ and insert it, using procedure <SPAN CLASS="ee-text">
+extend</SPAN>
+, into the list <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+. The object is identified through the local entity <SPAN CLASS="ee-text">
+new</SPAN>
+, which is only needed within each execution of the routine (as opposed to an attribute, which yields an object field that will remain in existence for as long as the object).</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514427"></A>The last case of entity, <SPAN CLASS="ee-text">
+Result</SPAN>
+, serves to denote, within the body of a function, the final result to be returned by that function. This was illustrated by the function <SPAN CLASS="ee-text">
+deposits_count</SPAN>
+, which read</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514430"></A><SPAN CLASS="ee-text">
+deposit_count</SPAN>
+: <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514431"></A>		-- Number of deposits made since opening (provisional version)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514432"></A>		<SPAN CLASS="ee-keyword">
+if </SPAN>
+<SPAN CLASS="ee-text">
+all_deposits /= Void </SPAN>
+<SPAN CLASS="ee-keyword">
+then</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514433"></A>			<SPAN CLASS="ee-text">
+Result</SPAN>
+ := <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+count</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514434"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514435"></A>The value returned by any call will be the value of the expression <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+count</SPAN>
+ (to be explained in detail shortly) for that call, unless <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+ has value <SPAN CLASS="ee-text">
+Void</SPAN>
+, denoting a void reference (<SPAN CLASS="ee-text">
+/=</SPAN>
+ is &quot;not equal&quot;). </P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-526872"></A>The default initialization rules seen earlier for attributes (see the table on page <A HREF="tutorial-7.html#25630" CLASS="XRef"><SPAN CLASS="ww-crossref">
+21</SPAN>
+</A>) also serve to initialize local entities and <SPAN CLASS="ee-text">
+Result</SPAN>
+ on routine entry. So in the last example, if <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+ is void (as in the case on initialization with the class as given so far), <SPAN CLASS="ee-text">
+Result</SPAN>
+ keeps its default value of 0, which will be returned as the result of the function.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514440"></A>Calls</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514441"></A>Apart from object creation, the basic computational mechanism, in the object-oriented style of computation represented by Eiffel, is feature call. In its basic form, it appears as</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514444"></A><SPAN CLASS="ee-text">
+target</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+feature </SPAN>
+(<SPAN CLASS="ee-text">
+argument1</SPAN>
+, &#8230;)</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514445"></A>where <SPAN CLASS="ee-text">
+target</SPAN>
+ is an entity or more generally an expression, <SPAN CLASS="ee-text">
+feature</SPAN>
+ is a feature name, and there may be zero or more <SPAN CLASS="ee-text">
+argument</SPAN>
+ expressions. In the absence of any <SPAN CLASS="ee-text">
+argument</SPAN>
+ the part in parentheses should be removed.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514446"></A>We have already seen such calls. If the <SPAN CLASS="ee-text">
+feature</SPAN>
+ denotes a procedure, the call is an instruction, as in</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514449"></A><SPAN CLASS="ee-text">
+all_deposits</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+extend</SPAN>
+ (<SPAN CLASS="ee-text">
+new</SPAN>
+)</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514450"></A>If <SPAN CLASS="ee-text">
+feature</SPAN>
+ denotes a query (function or attribute), the call is an expression, as in the right-hand side of</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514453"></A><SPAN CLASS="ee-text">
+Result</SPAN>
+ := <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+count</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514457"></A>Following the principle of Uniform Access (page <A HREF="tutorial-7.html#UNIFORM ACCESS" CLASS="XRef"><SPAN CLASS="ww-crossref">
+19</SPAN>
+</A>), this form is the same for calls to attributes and to functions without arguments. In this example, feature <SPAN CLASS="ee-text">
+count</SPAN>
+ from class <SPAN CLASS="ee-text">
+DEPOSIT_LIST</SPAN>
+ may indeed be implemented in either of these two ways: we can keep a <SPAN CLASS="ee-text">
+count </SPAN>
+field in each list, updating it for each insertion and removal; or we can compute <SPAN CLASS="ee-text">
+count</SPAN>
+, whenever requested, by traversing the list and counting the number of items.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514458"></A>In the case of a routine with arguments -- procedure or function -- the routine will be declared, in its class, as</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514461"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+ (  <SPAN CLASS="ee-text">
+formal1</SPAN>
+: <SPAN CLASS="ee-text">
+TYPE1</SPAN>
+; &#8230;) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514462"></A>	<SPAN CLASS="ee-keyword">
+do</SPAN>
+ &#8230; <SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514463"></A>meaning that, at the time of each call, the value of each formal will be set to the corresponding actual (<SPAN CLASS="ee-text">
+formal1</SPAN>
+ to <SPAN CLASS="ee-text">
+argument1</SPAN>
+ and so on).</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-526909"></A>In the routine body, it is not permitted to change the value of a formal argument, although it is possible to change the value of an attached object through a procedure call such as <SPAN CLASS="ee-text">
+formal1</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+some_  procedure </SPAN>
+(&#8230;).</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514464"></A>Infix and prefix notation</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514465"></A>Basic types such as <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ are, as noted, full-status citizens of Eiffel's type system, and so are declared as classes (part of the Kernel Library). <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+, for example, is characterized by the features describing integer operations: plus, minus, times, division, less than, and so on.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514466"></A>With the dot notation seen so far, this would imply that simple arithmetic operations would have to be written with a syntax such as <SPAN CLASS="ee-text">
+i</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+plus</SPAN>
+ (<SPAN CLASS="ee-text">
+j</SPAN>
+) instead of the usual <SPAN CLASS="ee-text">
+i + j</SPAN>
+. This would be awkward. Infix and prefix features solve the problem, reconciling the object-oriented view of computation with common notational practices of mathematics. The addition function is declared in class <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ as</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514469"></A><SPAN CLASS="ee-keyword">
+infix</SPAN>
+ &quot;<SPAN CLASS="ee-comment">
++</SPAN>
+&quot; (<SPAN CLASS="ee-text">
+other</SPAN>
+: <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+): <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514470"></A>	<SPAN CLASS="ee-keyword">
+do </SPAN>
+&#8230;<SPAN CLASS="ee-keyword">
+ end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514471"></A>Such a feature has all the properties and prerogatives of a normal &quot;identifier&quot; feature, except for the form of the calls, which is infix, as in <SPAN CLASS="ee-text">
+i </SPAN>
+<SPAN CLASS="ee-comment">
++</SPAN>
+<SPAN CLASS="ee-text">
+ j</SPAN>
+, rather than using dot notation. An infix feature must be a function, and take exactly one argument. Similarly, a function can be declared as <SPAN CLASS="ee-keyword">
+prefix </SPAN>
+<SPAN CLASS="ee-comment">
+&quot;-&quot;</SPAN>
+, with no argument, permitting calls of the form <SPAN CLASS="ee-text">
+-3</SPAN>
+ rather than <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+3</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+negated</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514472"></A>Predefined library classes covering basic types such as <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+, <SPAN CLASS="ee-text">
+CHARACTER</SPAN>
+, <SPAN CLASS="ee-text">
+BOOLEAN</SPAN>
+, <SPAN CLASS="ee-text">
+REAL</SPAN>
+, <SPAN CLASS="ee-text">
+DOUBLE</SPAN>
+ are known to the Eiffel compiler, so that a call of the form <SPAN CLASS="ee-text">
+i + j</SPAN>
+, although conceptually equivalent to a routine call, can be processed just as efficiently as the corresponding arithmetic expression in an ordinary programming language. This brings the best of both worlds: conceptual simplicity, enabling Eiffel developers, when they want to, to think of integers and the like as objects; and efficiency as good as in lower-level approaches.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514473"></A>Infix and prefix features are available to any class, not just the basic types' predefined classes. For example a graphics class could use the name <SPAN CLASS="ee-keyword">
+infix</SPAN>
+ &quot;|-|&quot; for a function computing the distance between two points, to be used in expressions such as <SPAN CLASS="ee-text">
+point1 </SPAN>
+|-|<SPAN CLASS="ee-text">
+ point2</SPAN>
+.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514474"></A>Type declaration</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514475"></A>Every entity appearing in an Eiffel text is declared as being of a certain type, using the syntax already encountered in the above examples:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-526928"></A><SPAN CLASS="ee-text">
+entity_name</SPAN>
+:<SPAN CLASS="ee-text">
+ TYPE_NAME</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514477"></A>This applies to attributes, formal arguments of routines and local entities. You will also declare the result type for a function, as in the earlier example</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-526943"></A><SPAN CLASS="ee-text">
+deposit_count</SPAN>
+: <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ <SPAN CLASS="ee-keyword">
+is </SPAN>
+&#8230;</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514479"></A>Specifying such a function result type also declares, implicitly, the type for <SPAN CLASS="ee-text">
+Result</SPAN>
+ as used in the function's body.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514480"></A>What is a type? With the elements seen so far, every type is a <SPAN CLASS="ee-keyword">
+class</SPAN>
+. <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+, used in the declaration of <SPAN CLASS="ee-text">
+deposits_count</SPAN>
+, is, as we have seen, a library class; and the declaration <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+: <SPAN CLASS="ee-text">
+DEPOSIT_LIST</SPAN>
+ assumes the existence of a class <SPAN CLASS="ee-text">
+DEPOSIT_LIST</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514490"></A>Three mechanisms introduced below -- expanded types (page <A HREF="tutorial-7.html#40534" CLASS="XRef"></A><A HREF="tutorial-7.html#40534" CLASS="XRef"><SPAN CLASS="ww-crossref">
+26</SPAN>
+</A>), genericity (page <A HREF="tutorial-8.html#15572" CLASS="XRef"><SPAN CLASS="ww-crossref">
+36</SPAN>
+</A>) and anchored declarations (page <A HREF="tutorial-10.html#46019" CLASS="XRef"><SPAN CLASS="ww-crossref">
+79</SPAN>
+</A>)-- will generalize the notion of type slightly. But they do not change the fundamental property that<SPAN CLASS="ff-bold">
+ every type is based on a class</SPAN>
+, called the type's<SPAN CLASS="ee-keyword">
+ </SPAN>
+<SPAN CLASS="ff-bold">
+base class</SPAN>
+. In the examples seen so far, each type <SPAN CLASS="ff-italics">
+is</SPAN>
+ a class, serving as its own base class.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-527051"></A>An instance of a class <SPAN CLASS="ee-text">
+C </SPAN>
+is also called &quot;an object of type <SPAN CLASS="ee-text">
+C </SPAN>
+ &quot;.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514495"></A><A NAME="40534"></A>Type categories</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514496"></A>It was noted above that a value is either an object or a reference. This corresponds to two kinds of type: reference types and expanded types.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514497"></A>If a class is declared as just</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-527068"></A><SPAN CLASS="ee-keyword">
+class </SPAN>
+<SPAN CLASS="ee-text">
+CLASS_NAME </SPAN>
+&#8230; </P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514499"></A>it defines a reference type. The entities declared of that type will denote references. So in the declaration</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-527083"></A><SPAN CLASS="ee-text">
+x</SPAN>
+: <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514501"></A>the possible run-time values for <SPAN CLASS="ee-text">
+x </SPAN>
+are references, which will be either void or attached to instances of class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514502"></A>Instead of <SPAN CLASS="ee-keyword">
+class</SPAN>
+, however, you may use the double keyword <SPAN CLASS="ee-keyword">
+expanded class</SPAN>
+, as in the EiffelBase class definition</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514505"></A><SPAN CLASS="ee-keyword">
+indexing</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514506"></A>	<SPAN CLASS="ee-text">
+description</SPAN>
+: &quot;<SPAN CLASS="ee-text">
+Integer values</SPAN>
+&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514507"></A><SPAN CLASS="ee-keyword">
+expanded class</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514508"></A>	<SPAN CLASS="ee-text">
+INTEGER</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514509"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+ <SPAN CLASS="ee-comment">
+-- Basic operations</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514510"></A><SPAN CLASS="ee-keyword">
+	infix</SPAN>
+ &quot;<SPAN CLASS="ee-comment">
++</SPAN>
+&quot; (<SPAN CLASS="ee-text">
+other</SPAN>
+: <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+): <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514511"></A>		<SPAN CLASS="ee-keyword">
+do </SPAN>
+&#8230;<SPAN CLASS="ee-keyword">
+ end</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514512"></A>	&#8230; Other feature declarations &#8230; </P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514513"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+ <SPAN CLASS="ee-comment">
+-- class</SPAN>
+ <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514514"></A>In this case the value of an entity declared as <SPAN CLASS="ee-text">
+n</SPAN>
+: <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ is not a reference to an object, but the object itself -- in this case an atomic object, an integer value.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514518"></A>It is also possible, for some non-expanded class C, to declare an entity as</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514517"></A><SPAN CLASS="ee-text">
+x</SPAN>
+: <SPAN CLASS="ee-keyword">
+expanded</SPAN>
+ <SPAN CLASS="ee-text">
+C</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514519"></A>so that the values for <SPAN CLASS="ee-text">
+x</SPAN>
+ will be objects of type <SPAN CLASS="ee-text">
+C</SPAN>
+, rather than references to such objects. This is our first example of a type -- <SPAN CLASS="ee-keyword">
+expanded </SPAN>
+<SPAN CLASS="ee-text">
+C </SPAN>
+-- that is not directly a class, although it is based on a class, <SPAN CLASS="ee-text">
+C</SPAN>
+. The base type of such a type is <SPAN CLASS="ee-text">
+C</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514520"></A>Note that the value of an entity of an expanded type can never be void; only a reference can. Extending the earlier terminology, an expanded entity is always <SPAN CLASS="ff-bold">
+attached to</SPAN>
+ an object, atomic (as in the case of <SPAN CLASS="ee-text">
+n</SPAN>
+: <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+) or composite (as in <SPAN CLASS="ee-text">
+x</SPAN>
+: <SPAN CLASS="ee-keyword">
+expanded</SPAN>
+ <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+).</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514521"></A>Expanded declarations make it possible to construct composite objects with subobjects, as in the following abbreviated class declaration (indexing clause and routines omitted):</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514524"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ <SPAN CLASS="ee-text">
+CAR </SPAN>
+<SPAN CLASS="ee-keyword">
+feature</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514525"></A>	<SPAN CLASS="ee-text">
+engine</SPAN>
+: <SPAN CLASS="ee-keyword">
+expanded </SPAN>
+<SPAN CLASS="ee-text">
+ENGINE</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514526"></A>	<SPAN CLASS="ee-text">
+originating_plant</SPAN>
+: <SPAN CLASS="ee-text">
+PLANT</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514527"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+ <SPAN CLASS="ee-comment">
+-- class</SPAN>
+ <SPAN CLASS="ee-text">
+CAR</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514543"></A>Here is an illustration of the structure of a typical instance of <SPAN CLASS="ee-text">
+CAR</SPAN>
+:</P>
+<DIV>
+<MAP NAME="tutorial-8">
+</MAP>
+<IMG SRC="tutorial-8.png" USEMAP="#tutorial-8">
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-514544"></A>This example also illustrates that the distinction between expanded and reference types is important not just for system implementation purposes but for high-level system modeling as well. Consider the example of a class covering the notion of car. Many cars share the same <SPAN CLASS="ee-text">
+originating_plant</SPAN>
+, but an <SPAN CLASS="ee-text">
+engine</SPAN>
+ belongs to just one car. References represent the modeling relation &quot;knows about&quot;; subobjects, as permitted by expanded types, represent the relation &quot;has part&quot;, also known as aggregation. The key difference is that sharing is possible in the former case but not in the latter.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514551"></A><A NAME="12485"></A>Basic operations</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514552"></A>To assign, copy and compare values, you can rely on a number of mechanisms. Two of them, assignment and equality testing, are language constructs; the others are library features, coming from the top-level class <SPAN CLASS="ee-text">
+ANY</SPAN>
+ seen earlier (page <A HREF="tutorial-6.html#82680" CLASS="XRef"><SPAN CLASS="ww-crossref">
+15</SPAN>
+</A>).</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514556"></A>Assignment uses the symbol <SPAN CLASS="ee-comment">
+:=</SPAN>
+. The assignment instruction</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514555"></A>x := y</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514557"></A>updates the value of <SPAN CLASS="ee-text">
+x</SPAN>
+ to be the same as that of <SPAN CLASS="ee-text">
+y</SPAN>
+. This means that:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514558"></A>For entities of reference types, the value of <SPAN CLASS="ee-text">
+x</SPAN>
+ will be a void reference if the value of <SPAN CLASS="ee-text">
+y</SPAN>
+ is void, and otherwise <SPAN CLASS="ee-text">
+x</SPAN>
+ will be attached to the same object OBJ2 as <SPAN CLASS="ee-text">
+y</SPAN>
+:</LI>
+</UL>
+<DIV>
+<MAP NAME="tutorial-9">
+</MAP>
+<IMG SRC="tutorial-9.png" USEMAP="#tutorial-9">
+</DIV>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514585"></A>For entities of expanded types, the values are objects; the object attached to <SPAN CLASS="ee-text">
+x</SPAN>
+ will be overwritten with the contents of the object attached to <SPAN CLASS="ee-text">
+y</SPAN>
+. In the case of atomic objects, as in <SPAN CLASS="ee-text">
+n :=</SPAN>
+ <SPAN CLASS="ee-text">
+3</SPAN>
+ with the declaration <SPAN CLASS="ee-text">
+n</SPAN>
+: <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+, this has the expected effect of assigning to <SPAN CLASS="ee-text">
+n</SPAN>
+ the integer value <SPAN CLASS="ee-text">
+3</SPAN>
+; in the case of composite objects, this overwrites the fields for <SPAN CLASS="ee-text">
+x</SPAN>
+, one by one, with the corresponding <SPAN CLASS="ee-text">
+y</SPAN>
+ fields.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-514592"></A>To copy an object, use <SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+copy </SPAN>
+<SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+y</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ which assumes that both <SPAN CLASS="ee-text">
+x</SPAN>
+ and <SPAN CLASS="ee-text">
+y</SPAN>
+ are non-void, and copies the contents of <SPAN CLASS="ee-text">
+y</SPAN>
+'s attached object onto those of <SPAN CLASS="ee-text">
+x</SPAN>
+'s. For expanded entities the effect is the same as that the of the assignment <SPAN CLASS="ee-text">
+x :=</SPAN>
+ <SPAN CLASS="ee-text">
+y</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-527318"></A>A variant of the <SPAN CLASS="ee-text">
+copy</SPAN>
+ operation is <SPAN CLASS="ee-text">
+clone</SPAN>
+. The expression <SPAN CLASS="ee-text">
+clone</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+y</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ produces a newly created object, initialized with a copy of the object attached to <SPAN CLASS="ee-text">
+y, </SPAN>
+or a void value if <SPAN CLASS="ee-text">
+y</SPAN>
+ itself is void. For a reference type (the only interesting case) the returned result for non-void <SPAN CLASS="ee-text">
+y is </SPAN>
+a reference to the new object. This means we may view <SPAN CLASS="ee-text">
+clone</SPAN>
+ as a function that performs</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-527321"></A><SPAN CLASS="ee-keyword">
+create</SPAN>
+<SPAN CLASS="ee-text">
+ Result</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-527322"></A><SPAN CLASS="ee-text">
+Result</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+copy </SPAN>
+(<SPAN CLASS="ee-text">
+y</SPAN>
+)</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514598"></A>So in the assignment <SPAN CLASS="ee-text">
+x</SPAN>
+ := <SPAN CLASS="ee-text">
+clone </SPAN>
+<SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+y</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+, assuming both entities of reference types and <SPAN CLASS="ee-text">
+y</SPAN>
+ not void, will attach <SPAN CLASS="ee-text">
+x</SPAN>
+ to a<SPAN CLASS="ee-keyword">
+ </SPAN>
+<SPAN CLASS="ff-bold">
+new object</SPAN>
+ identical to <SPAN CLASS="ee-text">
+y</SPAN>
+'s attached object, as opposed to the assignment <SPAN CLASS="ee-text">
+x :=</SPAN>
+ <SPAN CLASS="ee-text">
+y </SPAN>
+which attaches <SPAN CLASS="ee-text">
+x</SPAN>
+ to the <SPAN CLASS="ff-bold">
+same object</SPAN>
+ as <SPAN CLASS="ee-text">
+y</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514599"></A>To determine whether two values are equal, use the expression <SPAN CLASS="ee-text">
+x </SPAN>
+<SPAN CLASS="ee-comment">
+=</SPAN>
+ <SPAN CLASS="ee-text">
+y</SPAN>
+. For references, this comparison will yield true if the values are either both void or both attached to the same object; this is the case in the last figure in the state after the assignment, but not before. The symbol for <SPAN CLASS="ff-italics">
+not</SPAN>
+ equal is <SPAN CLASS="ee-comment">
+/=</SPAN>
+, as in <SPAN CLASS="ee-text">
+x </SPAN>
+<SPAN CLASS="ee-comment">
+/=</SPAN>
+<SPAN CLASS="ee-text">
+ y</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514600"></A>As with assignment, there is also a form that works on objects rather than references: <SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+is_equal </SPAN>
+(<SPAN CLASS="ee-text">
+y</SPAN>
+) will return true when <SPAN CLASS="ee-text">
+x</SPAN>
+ and <SPAN CLASS="ee-text">
+y</SPAN>
+ are both non-void and attached to field-by-field identical objects. This can be true even when <SPAN CLASS="ee-text">
+x </SPAN>
+=<SPAN CLASS="ee-text">
+ y </SPAN>
+is not, for example, in the figure, <SPAN CLASS="ee-text">
+before</SPAN>
+ the assignment, if the two objects shown are field-by-field equal.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514601"></A>A more general variant of <SPAN CLASS="ee-text">
+is_equal</SPAN>
+ is used under the form <SPAN CLASS="ee-text">
+equal </SPAN>
+(<SPAN CLASS="ee-text">
+x</SPAN>
+, <SPAN CLASS="ee-text">
+y</SPAN>
+). This is always defined, even if <SPAN CLASS="ee-text">
+x</SPAN>
+ is void, returning true whenever <SPAN CLASS="ee-text">
+is_equal</SPAN>
+ would but also if <SPAN CLASS="ee-text">
+x</SPAN>
+ and <SPAN CLASS="ee-text">
+y</SPAN>
+ are both void. (In contrast, <SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+is_equal </SPAN>
+(<SPAN CLASS="ee-text">
+y</SPAN>
+) is not defined for void <SPAN CLASS="ee-text">
+x</SPAN>
+ and would, if evaluated, yield an exception as explained in <A HREF="tutorial-9.html#10722" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Exception handling&quot;,  page 46</SPAN>
+</A> below.)</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514605"></A><SPAN CLASS="ee-text">
+Void</SPAN>
+ denotes a void reference. So you can make <SPAN CLASS="ee-text">
+x </SPAN>
+void through the assignment <SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-comment">
+ :=</SPAN>
+ <SPAN CLASS="ee-text">
+Void</SPAN>
+, and test whether it is void through <SPAN CLASS="ee-keyword">
+if</SPAN>
+ <SPAN CLASS="ee-text">
+x</SPAN>
+ <SPAN CLASS="ee-comment">
+=</SPAN>
+ <SPAN CLASS="ee-text">
+Void</SPAN>
+ <SPAN CLASS="ee-keyword">
+then</SPAN>
+ &#8230; </P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514609"></A>Where assignment <SPAN CLASS="ee-comment">
+:=</SPAN>
+ and the equality operators <SPAN CLASS="ee-comment">
+=</SPAN>
+ and <SPAN CLASS="ee-comment">
+/=</SPAN>
+ were language constructres, <SPAN CLASS="ee-text">
+copy</SPAN>
+, <SPAN CLASS="ee-text">
+clone</SPAN>
+, <SPAN CLASS="ee-text">
+is_equal</SPAN>
+, <SPAN CLASS="ee-text">
+equal </SPAN>
+and<SPAN CLASS="ee-text">
+ Void</SPAN>
+ are <SPAN CLASS="ff-bold">
+library features </SPAN>
+coming from class <SPAN CLASS="ee-text">
+ANY</SPAN>
+. The type of <SPAN CLASS="ee-text">
+Void</SPAN>
+, as declared in <SPAN CLASS="ee-text">
+ANY</SPAN>
+, is <SPAN CLASS="ee-text">
+NONE</SPAN>
+, the &quot;bottom&quot; type.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-527366"></A>Using the redefinition mechanisms to be seen in the discussion of inheritance, a class can redefine <SPAN CLASS="ee-text">
+copy</SPAN>
+ and <SPAN CLASS="ee-text">
+is_equal</SPAN>
+ to cover specific notions of copy and equality. The assertions will ensure that the two remain compatible: after <SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+copy </SPAN>
+(<SPAN CLASS="ee-text">
+y</SPAN>
+), the property <SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+is_equal </SPAN>
+(<SPAN CLASS="ee-text">
+y</SPAN>
+) must always be true. The effect of <SPAN CLASS="ee-text">
+clone</SPAN>
+ will automatically follow a redefinition of <SPAN CLASS="ee-text">
+copy</SPAN>
+, and <SPAN CLASS="ee-text">
+equal</SPAN>
+ will follow <SPAN CLASS="ee-text">
+is_equal</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-527374"></A>To guarantee the original, non-redefined semantics you may use the variants <SPAN CLASS="ee-text">
+standard_copy</SPAN>
+, <SPAN CLASS="ee-text">
+standard_clone</SPAN>
+, <SPAN CLASS="ee-text">
+standard_equal</SPAN>
+, all defined in <SPAN CLASS="ee-text">
+ANY</SPAN>
+ as &quot;frozen&quot;, that is to say non-redefinable.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514614"></A><A NAME="35815"></A>Deep operations and persistence</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514615"></A>Feature <SPAN CLASS="ee-text">
+clone</SPAN>
+ only duplicates one object. If some of the object's fields are references to other objects, the references themselves will be copied, not those other objects.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514616"></A>It is useful, in some cases, to duplicate not just one object but an entire object structure. The expression <SPAN CLASS="ee-text">
+deep_clone</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+y</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ achieves this goal: assuming non-void <SPAN CLASS="ee-text">
+y</SPAN>
+, it will produce a duplicate not just of the object attached to <SPAN CLASS="ee-text">
+y</SPAN>
+ but of the entire object structure starting at that object. The mechanism respects all the possible details of that structure, such as cyclic reference chains. Like the preceding features, <SPAN CLASS="ee-text">
+deep_clone</SPAN>
+ comes from class <SPAN CLASS="ee-text">
+ANY</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514620"></A>A related mechanism provides a powerful <SPAN CLASS="ff-bold">
+persistence</SPAN>
+ facility. A call of the form</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514619"></A><SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+store </SPAN>
+(<SPAN CLASS="ee-text">
+Some_file_or_network_connection</SPAN>
+)</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514621"></A>will store a copy of the entire object structure starting at <SPAN CLASS="ee-text">
+x</SPAN>
+, under a suitable representation. Like <SPAN CLASS="ee-text">
+deep_clone</SPAN>
+, procedure <SPAN CLASS="ee-text">
+store</SPAN>
+ will follow all references to the end and maintain the properties of the structure. The function <SPAN CLASS="ee-text">
+retrieved</SPAN>
+ can then be used -- in the same system, or another -- to recreate the structure from the stored version.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514622"></A>As the name suggests, <SPAN CLASS="ee-text">
+Some_file_or_network_connection</SPAN>
+ can be an external medium of various possible kinds, not just a file but possibly a database or network. ISE's EiffelNet client-server library indeed uses the <SPAN CLASS="ee-text">
+store</SPAN>
+<SPAN CLASS="ff-italics">
+-</SPAN>
+<SPAN CLASS="ee-text">
+retrieved</SPAN>
+ mechanism to exchange object structures over a network, between compatible or different machine architectures, for example a Windows client and a Unix server.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514623"></A>Memory management</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514627"></A>Reference reattachments <SPAN CLASS="ee-text">
+x</SPAN>
+ <SPAN CLASS="ee-comment">
+:=</SPAN>
+<SPAN CLASS="ee-text">
+ y</SPAN>
+ of the form illustrated by the figure on page <A HREF="tutorial.html#35291" CLASS="XRef"><SPAN CLASS="ww-crossref">
+28</SPAN>
+</A> can cause objects to become unreachable. This is the case for the object identified as OBJ2 on that figure (the object to which <SPAN CLASS="ee-text">
+x</SPAN>
+ was attached before the assignment) if no other reference was attached to it.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514628"></A>In all but toy systems, it is essential to reclaim the memory that has been allocated for such objects; otherwise memory usage could grow forever, as a result of creation instructions <SPAN CLASS="ee-keyword">
+create</SPAN>
+<SPAN CLASS="ee-text">
+ x </SPAN>
+&#8230;<SPAN CLASS="ee-text">
+ </SPAN>
+and calls to <SPAN CLASS="ee-text">
+clone</SPAN>
+ and the like, leading to thrashing and eventually to catastrophic termination.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514629"></A>Tthe Eiffel method suggests that the task of detecting and reclaiming such unused object space should be handled by an automatic mechanism (part of the Eiffel run-time environment), not manually by developers (through calls to procedures such as Pascal's <SPAN CLASS="ee-text">
+dispose</SPAN>
+ and C/C++'s <SPAN CLASS="ee-text">
+free</SPAN>
+). The arguments for this view are:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514630"></A><SPAN CLASS="ff-bold">
+Simplicity</SPAN>
+: handling memory reclamation manually can add enormous complication to the software, especially when -- as is often the case in object-oriented development -- the system manipulates complex run-time data structures with many links and cycles.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514631"></A><SPAN CLASS="ff-bold">
+Reliability</SPAN>
+: memory management errors, such as the incorrect reclamation of an object that is still referenced by a distant part of the structure, are a notorious source of dangerous and hard-to-correct bugs.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-514632"></A>ISE Eiffel provides a sophisticated <SPAN CLASS="ff-bold">
+garbage collector </SPAN>
+which efficiently handles the automatic reclamation process, while causing no visible degradation of a system's performance and response time.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514634"></A>Information hiding and the call rule</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514635"></A>The basic form of computation, it has been noted, is a call of the form <SPAN CLASS="ee-text">
+target</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+(</SPAN>
+&#8230;<SPAN CLASS="ee-comment">
+)</SPAN>
+. This is only meaningful if <SPAN CLASS="ee-text">
+feature</SPAN>
+ denotes a feature of the generating class of the object to which <SPAN CLASS="ee-text">
+target</SPAN>
+ (assumed to be non-void) is attached. The precise rule is the following:</P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-514638"></A>Feature Call rule</P>
+<P CLASS="mm-celltext">
+<A NAME="pgfId-514639"></A>A call of the form <SPAN CLASS="ee-text">
+target</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+(</SPAN>
+&#8230;<SPAN CLASS="ee-comment">
+)</SPAN>
+ appearing in a class <SPAN CLASS="ee-text">
+C</SPAN>
+ is only valid if <SPAN CLASS="ee-text">
+feature </SPAN>
+is a feature of the base class of <SPAN CLASS="ee-text">
+target</SPAN>
+'s type, and is available to <SPAN CLASS="ee-text">
+C</SPAN>
+.</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514640"></A>The first condition simply expresses that if <SPAN CLASS="ee-text">
+target</SPAN>
+ has been declared as <SPAN CLASS="ee-text">
+target</SPAN>
+<SPAN CLASS="ee-comment">
+:</SPAN>
+<SPAN CLASS="ee-text">
+ A </SPAN>
+then <SPAN CLASS="ee-text">
+feature</SPAN>
+ must be the name of one of the features of <SPAN CLASS="ee-text">
+A</SPAN>
+. The second condition reflects Eiffel's application of the principles of information hiding. A <SPAN CLASS="ee-keyword">
+feature</SPAN>
+ clause, introducing one or more feature declarations, may appear not only as</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-comment">
+<A NAME="pgfId-514643"></A><SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+-- Comment identifying the feature category</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514644"></A>	&#8230; Feature declaration &#8230; </P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514645"></A>	&#8230; Feature declaration &#8230; </P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514646"></A>	&#8230; </P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514652"></A>but may also include a list of classes in braces, <SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+{</SPAN>
+<SPAN CLASS="ee-text">
+A</SPAN>
+, <SPAN CLASS="ee-text">
+B</SPAN>
+, &#8230;<SPAN CLASS="ee-comment">
+}</SPAN>
+, as was illustrated for <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514649"></A><SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+{</SPAN>
+<SPAN CLASS="ee-text">
+NONE</SPAN>
+<SPAN CLASS="ee-comment">
+}</SPAN>
+ <SPAN CLASS="ee-comment">
+-- Implementation</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514650"></A>	<SPAN CLASS="ee-text">
+all_deposits</SPAN>
+: <SPAN CLASS="ee-text">
+DEPOSIT_LIST</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514651"></A>			-- List of deposits since account's opening.</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514653"></A>This form indicates that the features appearing in that clause are only <SPAN CLASS="ff-bold">
+available</SPAN>
+ -- in the sense of available for calls, as used in the Feature Call rule -- to the classes listed. In the example feature <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+ is only available to <SPAN CLASS="ee-text">
+NONE</SPAN>
+. Because of the global inheritance structure (page <A HREF="tutorial-6.html#82680" CLASS="XRef"><SPAN CLASS="ww-crossref">
+15</SPAN>
+</A>) this means it is in fact available to no useful client at all, and is equivalent in practice to <SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+{</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-comment">
+}</SPAN>
+ with an empty class list, although the form listing <SPAN CLASS="ee-text">
+NONE</SPAN>
+ explicitly is more visible and hence preferred.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514657"></A>With this specification a class text including the declaration <SPAN CLASS="ee-text">
+acc</SPAN>
+: <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ and a call of the form</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514660"></A><SPAN CLASS="ee-text">
+acc</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+all_deposits</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514661"></A>violates the Feature Call rule and will be rejected by the EiffelStudio compiler.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-527565"></A>Besides fully exported features (introduced by <SPAN CLASS="ee-keyword">
+feature</SPAN>
+ &#8230; without further qualification) and fully secret ones (<SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+{</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-comment">
+}</SPAN>
+ or <SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+{</SPAN>
+<SPAN CLASS="ee-text">
+NONE</SPAN>
+<SPAN CLASS="ee-comment">
+}</SPAN>
+), it is possible to export features selectively to some specified classes, using the specification</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-527578"></A><SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+{</SPAN>
+<SPAN CLASS="ee-text">
+A</SPAN>
+, <SPAN CLASS="ee-text">
+B</SPAN>
+, &#8230;<SPAN CLASS="ee-comment">
+}</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-527566"></A>for arbitrary classes <SPAN CLASS="ee-text">
+A</SPAN>
+, <SPAN CLASS="ee-text">
+B</SPAN>
+, &#8230; This enables a group of related classes to provide each other with privileged access, without requiring the introduction of a special module category above the class level (see <A HREF="tutorial-6.html#29888" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Clusters&quot;,  page 15</SPAN>
+</A>).</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514666"></A>Exporting features selectively to a set of classes <SPAN CLASS="ee-text">
+A</SPAN>
+, <SPAN CLASS="ee-text">
+B</SPAN>
+, &#8230; also makes them available to the descendants of these classes. So a feature clause beginning with just <SPAN CLASS="ee-keyword">
+feature</SPAN>
+ is equivalent to one starting with <SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+{</SPAN>
+<SPAN CLASS="ee-text">
+ANY</SPAN>
+<SPAN CLASS="ee-comment">
+}</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514667"></A>These rules enable successive feature clauses to specify exports to different clients. In addition, the recommended style, illustrated in the examples of this chapter, suggests writing separate feature clauses -- regardless of their use for specifying export privileges -- to group features into separate categories. The standard style rules define a number of fundamental categories and the order in which they should appear; they include: <SPAN CLASS="ee-comment">
+Initialization</SPAN>
+ for creation procedures, <SPAN CLASS="ee-comment">
+Access</SPAN>
+ for general queries, <SPAN CLASS="ee-comment">
+Status report</SPAN>
+ for boolean-valued queries, <SPAN CLASS="ee-comment">
+Status setting</SPAN>
+, <SPAN CLASS="ee-comment">
+Element change</SPAN>
+, <SPAN CLASS="ee-comment">
+Implementation</SPAN>
+ (for selectively exported or secret features. Every feature in the EiffelBase library classes belongs to one of the predefined categories.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514668"></A>The Feature Call rule is the first of the rules that make Eiffel a <SPAN CLASS="ff-bold">
+statically typed</SPAN>
+ approach, where the applicability of operations to objects is verified at compile time rather than during execution. Static typing is one of the principal components of Eiffel's support for reliability in software development.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514670"></A><A NAME="86132"></A>Execution scenario</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514671"></A>The preceding elements make it possible to understand the overall scheme of an Eiffel system's execution.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514672"></A>At any time during the execution of a system, one object is the<SPAN CLASS="ff-bold">
+ current object</SPAN>
+ of the execution, and one of the routines of the system, the <SPAN CLASS="ff-bold">
+current routine</SPAN>
+, is being executed, with the current object as its target. (We will see below how the current object and current routine are determined.) The text of a class, in particular its routines, make constant implicit references to the current object. For example in the instruction</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514675"></A><SPAN CLASS="ee-text">
+balance</SPAN>
+ := <SPAN CLASS="ee-text">
+balance</SPAN>
+ + <SPAN CLASS="ee-text">
+sum</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514676"></A>appearing in the body of procedure <SPAN CLASS="ee-text">
+deposit</SPAN>
+ of class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, the name of the attribute <SPAN CLASS="ee-text">
+balance</SPAN>
+, in both occurrences, denotes the <SPAN CLASS="ee-text">
+balance</SPAN>
+ field of the current object, assumed to be an instance of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+. In the same way, the procedure body that we used for the creation procedure <SPAN CLASS="ee-text">
+make</SPAN>
+ in the <SPAN CLASS="ee-text">
+ACCOUNT1 </SPAN>
+variant</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514679"></A><SPAN CLASS="ee-text">
+make </SPAN>
+(<SPAN CLASS="ee-text">
+sum</SPAN>
+: <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514680"></A>		-- Initialize account with <SPAN CLASS="ee-text">
+sum</SPAN>
+.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514681"></A><SPAN CLASS="ee-keyword">
+	do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514682"></A>		<SPAN CLASS="ee-text">
+deposit </SPAN>
+(<SPAN CLASS="ee-text">
+sum</SPAN>
+)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514683"></A>	<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-514684"></A>contains a call to the procedure <SPAN CLASS="ee-text">
+deposit</SPAN>
+. Contrary to earlier calls written in dot notation as <SPAN CLASS="ee-text">
+target</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+(</SPAN>
+&#8230;<SPAN CLASS="ee-comment">
+)</SPAN>
+, the call to <SPAN CLASS="ee-text">
+deposit</SPAN>
+ has no explicit target; this means its target is the current object, an instance of <SPAN CLASS="ee-text">
+ACCOUNT1</SPAN>
+. Such a call is said to be <SPAN CLASS="ff-bold">
+unqualified</SPAN>
+; those using dot notations are <SPAN CLASS="ff-bold">
+qualified</SPAN>
+ calls.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514685"></A>Although most uses of the current object are implicit, a class may need to name it explicitly. The predefined expression <SPAN CLASS="ee-text">
+Current</SPAN>
+ is available for that purpose. A typical use, in a routine <A NAME="ROUTINE &quot;MERGE&quot;"></A><SPAN CLASS="ee-text">
+merge </SPAN>
+<SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+other</SPAN>
+: <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ of class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, would be a test of the form</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514689"></A><SPAN CLASS="ee-keyword">
+if </SPAN>
+<SPAN CLASS="ee-text">
+other = Current</SPAN>
+<SPAN CLASS="ee-keyword">
+ then</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514690"></A>	<SPAN CLASS="ee-text">
+report_error</SPAN>
+ (&quot;<SPAN CLASS="ee-text">
+Error: trying to merge an account with itself  </SPAN>
+!&quot;)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514691"></A><SPAN CLASS="ee-keyword">
+else</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514692"></A>	&#8230; Normal processing (merging two different accounts) &#8230; </P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514693"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514694"></A>With these notions it is not hard to define precisely the overall scenario of a system execution by defining which object and routine will, at each instant, be the current object and the current routine:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514695"></A>Starting a system execution, as we have seen, consists in creating an instance of the root class, the root object, and executing a designated creation procedure, the root procedure, with the root object as its target. The root object is the initial current object, and the root procedure is the initial current procedure.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514696"></A>From then on only two events can change the current object and current procedure: a qualified routine call; and the termination of a routine.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-527642"></A>In a call of the form <SPAN CLASS="ee-text">
+target</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+routine </SPAN>
+<SPAN CLASS="ee-comment">
+(</SPAN>
+&#8230;<SPAN CLASS="ee-comment">
+)</SPAN>
+, <SPAN CLASS="ee-text">
+target</SPAN>
+ denotes a certain object TC. (If not, that is to say, if the value of target is void, attempting to execute the call will trigger an exception, as studied below.) The generating class of TC must, as per the Feature Call rule, contain a routine of name <SPAN CLASS="ee-text">
+routine</SPAN>
+. As the call starts, TC becomes the new current object and <SPAN CLASS="ee-text">
+routine</SPAN>
+ becomes the new current routine.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514698"></A>When a routine execution terminates, the target object and routine of the most recent non-terminated call -- which, just before just before the terminated call, were the current object and the current routine -- assume again the role of current object and current routine. </LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-527665"></A>The only exception to the last rule is termination of the original root procedure call; in this case the entire execution terminates.</LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514699"></A>Abstraction</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514700"></A>The description of assignments stated that in <SPAN CLASS="ee-text">
+x</SPAN>
+ <SPAN CLASS="ee-comment">
+:=</SPAN>
+ <SPAN CLASS="ee-text">
+y</SPAN>
+ the target <SPAN CLASS="ee-text">
+x</SPAN>
+ must be an entity. More precisely it must be a <SPAN CLASS="ff-bold">
+writable</SPAN>
+ entity. This notion excludes formal routine arguments: as noted, a routine <SPAN CLASS="ee-text">
+r</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+arg</SPAN>
+: <SPAN CLASS="ee-text">
+SOME_TYPE</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ may assign to <SPAN CLASS="ee-text">
+arg </SPAN>
+(reattaching it to a different object), although it can change the attached objects through calls of the form <SPAN CLASS="ee-text">
+arg</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+procedure </SPAN>
+<SPAN CLASS="ee-comment">
+(</SPAN>
+&#8230;<SPAN CLASS="ee-comment">
+)</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514701"></A>Restricting assignment targets to entities precludes assignments of the form <SPAN CLASS="ee-text">
+obj</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+some_attribute </SPAN>
+:= <SPAN CLASS="ee-text">
+some_value</SPAN>
+, since the left-hand side <SPAN CLASS="ee-text">
+obj</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+some_attribute</SPAN>
+ is an expression (a feature call), not an entity: you may no more assign to <SPAN CLASS="ee-text">
+obj</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+some_attribute</SPAN>
+ than to, say, <SPAN CLASS="ee-text">
+a + b</SPAN>
+ -- another expression that is also, formally, a feature call.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514702"></A>To obtain the intended effect of such an assignment you may use a procedure call of the form <SPAN CLASS="ee-text">
+obj</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+set_attribute </SPAN>
+(<SPAN CLASS="ee-text">
+some_value</SPAN>
+), where the base class of <SPAN CLASS="ee-text">
+obj</SPAN>
+'s type has defined the procedure</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514705"></A>set_attribute (v: VALUE_TYPE) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-514706"></A>		-- Set value of attribute to <SPAN CLASS="ee-text">
+v</SPAN>
+.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514707"></A>	<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514708"></A>		attribute := v</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-514709"></A>	<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-527710"></A>This rule is essential to enforcing the method. Permitting direct assignments to an object's fields -- as in C++ and Java -- would violate all the tenets of information hiding by letting clients circumvent the interface carefully crafted by the author of a supplier class. It is the responsibility of each class author to define the exact privileges that the class gives to each of its clients, in particular field modification rights. Building a class is like building a machine: you design the internals, to give yourself the appropriate mechanisms; and you design the control panel, letting users (clients) access the desired subset of these mechanisms, safely and conveniently.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-527775"></A>The levels of privilege available to the class author include, for any field:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-527711"></A>Hide the field completely from clients, by exporting the corresponding attribute to <SPAN CLASS="ee-text">
+NONE</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-527706"></A>Export it, but in read-only mode, by not exporting any procedure that modifies it.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-527726"></A>Export it for free read and write by any client, by also exporting a procedure of the <SPAN CLASS="ee-text">
+set_attribute</SPAN>
+ kind.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-527801"></A>Export it in <SPAN CLASS="ff-bold">
+restricted-write</SPAN>
+ mode, by exporting a procedure such as <SPAN CLASS="ee-text">
+deposit </SPAN>
+of class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, which adds a specified amount to the <SPAN CLASS="ee-text">
+balance</SPAN>
+ field, rather than directly setting the balance.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-527802"></A>The last case is particularly interesting is that it allows the class designer to set the precise way in which clients will manipulate the class instances, respecting the properties of the class and its integrity. The exported routines may, through the Design by Contract mechanism reviewed later (<A HREF="tutorial-9.html#30455" CLASS="XRef"><SPAN CLASS="ww-crossref">
+8</SPAN>
+</A>), place some further restrictions on the permitted modifications, for example by requiring the withdrawn amount to be positive.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-514714"></A>These rules follow directly from the more general goals (reusability, extendibility, reliability) and principles (Uniform Access, information hiding) underlying Eiffel software design. They reflect a view that each class must denote a well-understood abstraction, defined by a set of exported features chosen by the class designer -- the &quot;control panel&quot;.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-527792"></A>The class documentation (the<SPAN CLASS="ff-italics">
+ contract form</SPAN>
+, see page <A HREF="tutorial-9.html#78482" CLASS="XRef"><SPAN CLASS="ww-crossref">
+44</SPAN>
+</A>) makes this view clear to client authors; no violation of that interface is permitted. This approach also paves the way for future <SPAN CLASS="ff-bold">
+generalization</SPAN>
+ -- the final step of the cluster lifecycle, seen earlier on page <A HREF="tutorial-4.html#10958" CLASS="XRef"><SPAN CLASS="ww-crossref">
+9</SPAN>
+</A> -- of the most promising components, and their inclusion into reusable libraries.</P>
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-6.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-8.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

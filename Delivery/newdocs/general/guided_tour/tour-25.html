@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 24  A VALIDITY ERROR</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tour-24.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tour.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tour-26.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-439024"></A>24  <A NAME="10317"></A>A <A NAME="marker-439023"></A>VALIDITY ERROR</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-439025"></A>Our first example error was just a syntax error. The only errors of substance in Eiffel are those which cause violations of one of the <A NAME="marker-439026"></A>validity constraints given in the language definition. Each one of these constraints is identified by a four-letter code of the form <SPAN CLASS="ee-keyword">
+V</SPAN>
+<SPAN CLASS="ee-text">
+XXX</SPAN>
+ (the first letter is always <SPAN CLASS="ee-keyword">
+V</SPAN>
+). A validity violation will produce a precise error message, which includes the validity code. Although short, the error message is usually sufficient to find out what the error is. If not, you can right-click on the error code and drag-and-drop it to an Explanation Tool, which will show the full text of the violated constraint, straight from the book <SPAN CLASS="ff-italics">
+<A HREF="http://www.eiffel.com/doc/index.html#etl" CLASS="URL">Eiffel: The Language</A></SPAN>
+.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-439028"></A>Introducing an error</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-439029"></A>To see this mechanism on an example, let us introduce a validity error. There is in fact one ready for you: at the end of class <SPAN CLASS="ee-keyword">
+TESTROOT</SPAN>
+, just before the final <SPAN CLASS="ee-keyword">
+end</SPAN>
+, you will find the following comment line:
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-439032"></A><SPAN CLASS="ee-keyword">
+-- inv: INVALID</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-normal">
+<A NAME="pgfId-439033"></A>If uncommented, this is a declaration of a feature of type <SPAN CLASS="ee-keyword">
+INVALID</SPAN>
+. A class called <SPAN CLASS="ee-keyword">
+INVALID</SPAN>
+ indeed exists in file <SPAN CLASS="ee-keyword">
+invalid.e </SPAN>
+of the root cluster, but it contains a validity error. To see what it is, remove the initial double-dash <SPAN CLASS="ee-keyword">
+-- </SPAN>
+in the above line from class <SPAN CLASS="ee-keyword">
+TESTROOT</SPAN>
+ so that it is not a comment any more. ( Click after the two dash characters and use the Backspace key to remove them.) Save, and quick-melt again. The compiler executes degrees 5, 4 and 3 on <SPAN CLASS="ee-keyword">
+TESTROOT </SPAN>
+and <SPAN CLASS="ee-keyword">
+INVALID</SPAN>
+, but here is what appears in the <A NAME="marker-439046"></A>Project Tool at the end of degree 3:
+<P CLASS="nn-normal">
+<A NAME="pgfId-439053"></A>Class and feature names in the messages are <A NAME="marker-439050"></A><A NAME="marker-439051"></A><A NAME="marker-439052"></A>clickable, so you may easily find out for yourself, using the mechanisms introduced earlier in this Tour, what went wrong: procedure <SPAN CLASS="ee-keyword">
+display</SPAN>
+ of class <SPAN CLASS="ee-keyword">
+INVALID</SPAN>
+ calls <SPAN CLASS="ee-keyword">
+first_message</SPAN>
+ from <SPAN CLASS="ee-keyword">
+PARENT</SPAN>
+ with one argument, but the procedure actually takes no argument.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-439054"></A>Finding more about the error</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-439056"></A>Something else was also clickable in the above window: the error code itself, <SPAN CLASS="ee-keyword">
+VUAR</SPAN>
+<A NAME="marker-439055"></A>. Assuming the message was not sufficient to understand the error, you could drag-and-drop the code, for which the pebble is of the Explain shape , into the corresponding Explain hole of the Project Tool. This will display the complete text of the violated rule from <SPAN CLASS="ff-italics">
+<A HREF="http://www.eiffel.com/doc/index.html#etl" CLASS="URL">Eiffel: The Language</A></SPAN>
+: 
+<P CLASS="nn-normal">
+<A NAME="pgfId-439077"></A>Since the code appears as <SPAN CLASS="ee-keyword">
+VUAR(1) </SPAN>
+the clause that is violated is the first one; this convention of showing the clause number in parentheses applies to all multi-clause validity constraints.    <A NAME="marker-439078"></A>      <A NAME="marker-439079"></A>    <A NAME="marker-439080"></A> 
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tour-24.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tour.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tour-26.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

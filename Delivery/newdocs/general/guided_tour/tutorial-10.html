@@ -1,0 +1,3456 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tutorial.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 9  INHERITANCE</TITLE>
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-9.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-11.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-515052"></A>9  INHERITANCE</H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-515053"></A>Inheritance is a powerful and attractive technique. A look at either the practice or literature shows, however, that it is not always well applied. Eiffel has made a particular effort to tame inheritance for the benefit of modelers and software developers. Many of the techniques are original with Eiffel. Paul Dubois has written (<SPAN CLASS="ff-italics">
+comp.lang.python</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+Usenet newsgroup, 23 March 1997): <SPAN CLASS="ff-italics">
+there are two things that [Eiffel] got right that nobody else got right anywhere else: support for design by contract, and multiple inheritance. Everyone should understand these &quot;correct answers&quot; if only to understand how to work around the limitations in other languages</SPAN>
+.</P>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515055"></A><A NAME="17280"></A>Basic inheritance structure</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515064"></A>To make a class inherit from another, simply use an <SPAN CLASS="ee-keyword">
+inherit</SPAN>
+ clause:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515058"></A><SPAN CLASS="ee-keyword">
+indexing </SPAN>
+&#8230;<SPAN CLASS="ee-keyword">
+ class </SPAN>
+D <SPAN CLASS="ee-keyword">
+creation </SPAN>
+&#8230;<SPAN CLASS="ee-keyword">
+ inherit</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515059"></A>	A</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515060"></A>	B</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515061"></A>	&#8230; </P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515062"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515063"></A>	&#8230; </P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515065"></A>This makes <SPAN CLASS="ee-text">
+D</SPAN>
+ an heir of <SPAN CLASS="ee-text">
+A</SPAN>
+, <SPAN CLASS="ee-text">
+B</SPAN>
+ and any other class listed. Eiffel supports <SPAN CLASS="ff-bold">
+multiple</SPAN>
+ inheritance: a class may have as many parents as it needs. Later sections (<A HREF="tutorial-10.html#21906" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Multiple inheritance and renaming&quot;,  page 64</SPAN>
+</A> and <A HREF="tutorial-10.html#69912" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Repeated inheritance and selection&quot;,  page 73</SPAN>
+</A>) will explain how to handle possible conflicts between parent features.</P>
+<P CLASS="jj-small">
+<A NAME="pgfId-529070"></A>This discussion will rely on the terminology introduced on page <A HREF="tutorial-6.html#INHERITANCE AND CLIENT TERMS" CLASS="XRef"><SPAN CLASS="ww-crossref">
+14</SPAN>
+</A>: <SPAN CLASS="ff-italics">
+descendants</SPAN>
+ of a class are the class itself, its heirs, the heirs of its heirs and so on. <SPAN CLASS="ff-italics">
+Proper descendants</SPAN>
+ exclude the class itself. The reverse notions are <SPAN CLASS="ff-italics">
+ancestors</SPAN>
+ and <SPAN CLASS="ff-italics">
+proper ancestors</SPAN>
+.</P>
+<P CLASS="nn-first">
+<A NAME="pgfId-529071"></A>By default <SPAN CLASS="ee-text">
+D</SPAN>
+ will simply include all the original features of <SPAN CLASS="ee-text">
+A</SPAN>
+, <SPAN CLASS="ee-text">
+B</SPAN>
+, &#8230;, to which it may add its own through its <SPAN CLASS="ee-keyword">
+feature</SPAN>
+ clauses if any. But the inheritance mechanism is more flexible, allowing <SPAN CLASS="ee-text">
+D</SPAN>
+ to adapt the inherited features in many ways. Each parent name -- <SPAN CLASS="ee-text">
+A</SPAN>
+, <SPAN CLASS="ee-text">
+B</SPAN>
+, &#8230; in the example -- can be followed by a Feature Adaptation clause, with subclauses, all optional, introduced by keywords <SPAN CLASS="ee-keyword">
+rename</SPAN>
+, <SPAN CLASS="ee-keyword">
+export</SPAN>
+, <SPAN CLASS="ee-keyword">
+undefine</SPAN>
+, <SPAN CLASS="ee-keyword">
+redefine</SPAN>
+ and <SPAN CLASS="ee-keyword">
+select</SPAN>
+, enabling the author of <SPAN CLASS="ee-text">
+A</SPAN>
+ to make the best use of the inheritance mechanism by tuning the inherited features to the precise needs of <SPAN CLASS="ee-text">
+D</SPAN>
+. This makes inheritance a principal tool in the Eiffel process, mentioned earlier, of carefully crafting each individual class, like a machine, for the benefit of its clients. The next sections review the various Feature Adaptation subclauses.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515073"></A>Redefinition</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515074"></A>The first form of feature adaptation is the ability to change the implementation of an inherited feature.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-528366"></A>Assume a class <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT </SPAN>
+that specializes the notion of account. It is probably appropriate to define it as an heir to class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, to benefit from all the features of <SPAN CLASS="ee-text">
+ACCOUNT </SPAN>
+still applicable to savings accounts, and to reflect the conceptual relationship between the two types: every savings account, apart from its own specific properties, also &quot;is&quot; an account. But we may need to produce a different effect for procedure <SPAN CLASS="ee-text">
+deposit</SPAN>
+ which, besides recording the deposit and updating the balance, may also need, for example, to update the interest.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515075"></A>This example is typical of the form of reuse promoted by inheritance and crucial to effective reusability in software: the case of <SPAN CLASS="ff-italics">
+reuse with adaptation</SPAN>
+. Traditional forms of reuse are all-or-nothing: either you take a component exactly as it is, or you build your own. Inheritance will get us out of this &quot;reuse or redo&quot; dilemma by allowing us to reuse <SPAN CLASS="ff-italics">
+and</SPAN>
+ redo. The mechanism is feature redefinition:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-528410"></A><SPAN CLASS="ee-keyword">
+indexing</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-528411"></A>	description: &quot;Savings accounts&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-528412"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-528413"></A>	SAVINGS_ACCOUNT</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-528414"></A><SPAN CLASS="ee-keyword">
+inherit</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-528415"></A>	ACCOUNT</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-528416"></A>		<SPAN CLASS="ee-keyword">
+redefine</SPAN>
+ deposit <SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-528417"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+ <SPAN CLASS="ee-comment">
+-- Element change</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-528418"></A>	<SPAN CLASS="ee-text">
+deposit</SPAN>
+ (<SPAN CLASS="ee-text">
+sum</SPAN>
+: <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-528419"></A>			-- Add <SPAN CLASS="ee-text">
+sum</SPAN>
+ to account.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-528420"></A>		<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-528421"></A>			&#8230; New implementation (see below) &#8230; </P>
+<P CLASS="ee-text">
+<A NAME="pgfId-528422"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-528423"></A>	&#8230; Other features &#8230;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-528424"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+ <SPAN CLASS="ee-comment">
+-- class</SPAN>
+ SAVINGS_ACCOUNT</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515093"></A>Without the <SPAN CLASS="ee-keyword">
+redefine</SPAN>
+ subclause, the declaration of <SPAN CLASS="ee-text">
+deposit</SPAN>
+ would be invalid, yielding two features of the same name, the inherited one and the new one. The subclause makes this valid by specifying that the new declaration will override the old one.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515094"></A>In a redefinition, the original version -- such as the <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ implementation of <SPAN CLASS="ee-text">
+deposit</SPAN>
+ in this example -- is called the <SPAN CLASS="ee-keyword">
+precursor</SPAN>
+ of the new version. It is common for a redefinition to rely on the precursor's algorithm and add some other actions; the reserved word <SPAN CLASS="ee-text">
+Precursor</SPAN>
+ helps achieve this goal simply. Permitted only in a routine redefinition, it denotes the parent routine being redefined. So here he body of the new <SPAN CLASS="ee-text">
+deposit</SPAN>
+ (called &quot;<SPAN CLASS="ee-comment">
+New implementation</SPAN>
+&quot; above) could be of the form</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515097"></A>Precursor (sum)				<SPAN CLASS="ee-comment">
+-- Apply </SPAN>
+<SPAN CLASS="ee-text">
+ACCOUNT's</SPAN>
+<SPAN CLASS="ee-comment">
+ version of </SPAN>
+<SPAN CLASS="ee-text">
+deposit</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515098"></A>&#8230; Instructions to update the interest &#8230; </P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515099"></A>Besides changing the implementation of a routine, a redefinition can turn an argument-less function into an attribute; for example a proper descendant of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ could redefine <SPAN CLASS="ee-text">
+deposits_count</SPAN>
+, originally a function, as an attribute. The Uniform Access Principle (page <A HREF="tutorial-7.html#UNIFORM ACCESS" CLASS="XRef"><SPAN CLASS="ww-crossref">
+19</SPAN>
+</A>) guarantees that the redefinition makes no change for clients, which will continue to use the feature under the form <SPAN CLASS="ee-text">
+acc</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+deposits_count</SPAN>
+.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515104"></A><A NAME="65123"></A>Polymorphism</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515105"></A>The inheritance mechanism is relevant to both roles of classes: module and type. Its application as a mechanism to reuse, adapt and extend features from one class to another, as just seen, covers its role as a <SPAN CLASS="ff-bold">
+module extension</SPAN>
+ mechanism. But it's also a <SPAN CLASS="ff-bold">
+subtyping</SPAN>
+ mechanism. To say that <SPAN CLASS="ee-text">
+D</SPAN>
+ is an heir of <SPAN CLASS="ee-text">
+A</SPAN>
+, or more generally a descendant of <SPAN CLASS="ee-text">
+A</SPAN>
+, is to expresses that instances of <SPAN CLASS="ee-text">
+D</SPAN>
+ can be viewed as instances of <SPAN CLASS="ee-text">
+A</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-554081"></A><SPAN CLASS="ff-bold">
+Polymorphic assignment</SPAN>
+ supports this second role. In an assignment <SPAN CLASS="ee-text">
+x</SPAN>
+ := <SPAN CLASS="ee-text">
+y</SPAN>
+, the types of <SPAN CLASS="ee-text">
+x</SPAN>
+ and <SPAN CLASS="ee-text">
+y</SPAN>
+ do not have, with inheritance, to be identical; the rule is that the type of <SPAN CLASS="ee-text">
+y </SPAN>
+must simply <SPAN CLASS="ff-bold">
+conform</SPAN>
+ to the type of <SPAN CLASS="ee-text">
+x</SPAN>
+. A class <SPAN CLASS="ee-text">
+D</SPAN>
+ conforms to a class <SPAN CLASS="ee-text">
+A</SPAN>
+ if and only if it is a descendant of <SPAN CLASS="ee-text">
+A</SPAN>
+ (which includes the case in which <SPAN CLASS="ee-text">
+A</SPAN>
+ and <SPAN CLASS="ee-text">
+D</SPAN>
+ are the same class); if these classes are generic, conformance of <SPAN CLASS="ee-text">
+D</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+U</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ to <SPAN CLASS="ee-text">
+C</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+T</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ requires in addition that type <SPAN CLASS="ee-text">
+U</SPAN>
+ conform to type <SPAN CLASS="ee-text">
+T </SPAN>
+(through the recursive application of the same rules).</P>
+<P CLASS="jj-small">
+<A NAME="pgfId-554085"></A>In addition, it follows from the earlier discussion of tuples (<A HREF="tutorial-11.html#36752" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Tuple types&quot;,  page 38</SPAN>
+</A>), that TUPLE <SPAN CLASS="ee-comment">
+[</SPAN>
+X<SPAN CLASS="ee-comment">
+]</SPAN>
+ conforms to TUPLE, TUPLE <SPAN CLASS="ee-comment">
+[</SPAN>
+X, Y,<SPAN CLASS="ee-comment">
+]</SPAN>
+ to TUPLE <SPAN CLASS="ee-comment">
+[</SPAN>
+X<SPAN CLASS="ee-comment">
+]</SPAN>
+ and so on.</P>
+<P CLASS="nn-first">
+<A NAME="pgfId-515110"></A>So with the inheritance structure that we have seen, the declarations</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515109"></A><SPAN CLASS="ee-text">
+acc</SPAN>
+: <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+; <SPAN CLASS="ee-text">
+sav</SPAN>
+: <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515114"></A>make it valid to write the assignment</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515113"></A><SPAN CLASS="ee-text">
+acc</SPAN>
+ := <SPAN CLASS="ee-text">
+sav</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515115"></A>which will assign to <SPAN CLASS="ee-text">
+acc</SPAN>
+ a reference attached (if not void) to a direct instance of type <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT</SPAN>
+, not <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515116"></A>Such an assignment, where the source and target types are different, is said to be polymorphic. An entity such as <SPAN CLASS="ee-text">
+acc</SPAN>
+, which as a result of such assignments may become attached at run time to objects of types other than the one declared for it, is itself called a polymorphic entity.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515117"></A>For polymorphism to respect the reliability requirements of Eiffel, it must be controlled by the type system and enable static type checking. We certainly do not want an entity of type <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ to become attached to an object of type <SPAN CLASS="ee-text">
+DEPOSIT</SPAN>
+. Hence the second typing rule:</P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-515120"></A>Type Conformance rule</P>
+<P CLASS="mm-celltext">
+<A NAME="pgfId-515121"></A>An assignment <SPAN CLASS="ee-text">
+x</SPAN>
+ := <SPAN CLASS="ee-text">
+y</SPAN>
+, or the use of <SPAN CLASS="ee-text">
+y</SPAN>
+ as actual argument corresponding to the formal argument <SPAN CLASS="ee-text">
+x</SPAN>
+ in a routine call, is only valid if the type of <SPAN CLASS="ee-text">
+y</SPAN>
+ conforms to the the type of <SPAN CLASS="ee-text">
+x</SPAN>
+.</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515122"></A>The second case listed in the rule is a call such as <SPAN CLASS="ee-text">
+target</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+routine</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+&#8230;, <SPAN CLASS="ee-text">
+y</SPAN>
+, &#8230;<SPAN CLASS="ee-comment">
+)</SPAN>
+ where the routine declaration is of the form <SPAN CLASS="ee-text">
+routine</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+&#8230;, <SPAN CLASS="ee-text">
+x</SPAN>
+: <SPAN CLASS="ee-text">
+SOME_TYPE</SPAN>
+, &#8230;<SPAN CLASS="ee-comment">
+)</SPAN>
+. The relationship between <SPAN CLASS="ee-text">
+y</SPAN>
+, the actual argument in the call, and the corresponding formal argument <SPAN CLASS="ee-text">
+x</SPAN>
+, is exactly the same as in an assignment <SPAN CLASS="ee-text">
+x</SPAN>
+ := <SPAN CLASS="ee-text">
+y</SPAN>
+: not just the type rule, as expressed by Type Conformance (the type of <SPAN CLASS="ee-text">
+y</SPAN>
+ must conform to <SPAN CLASS="ee-text">
+SOME_TYPE</SPAN>
+), but also the actual run-time effect which, as for assignments, will be either a reference attachment or, for expanded types, a copy.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515125"></A>The ability to accept the assignment <SPAN CLASS="ee-text">
+x </SPAN>
+:=<SPAN CLASS="ee-text">
+ Void</SPAN>
+ for <SPAN CLASS="ee-text">
+x</SPAN>
+ of any reference type (<A HREF="tutorial-7.html#12485" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Basic operations&quot;,  page 28</SPAN>
+</A>) is a consequence of the Type Conformance rule, since <SPAN CLASS="ee-text">
+Void</SPAN>
+ is of type <SPAN CLASS="ee-text">
+NONE</SPAN>
+ which by construction (<A HREF="tutorial-6.html#82680" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;The global inheritance structure&quot;,  page 15</SPAN>
+</A>) conforms to all types.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515130"></A>Polymorphism also yields a more precise definition of &quot;instance&quot;. A <SPAN CLASS="ff-bold">
+direct instance</SPAN>
+ of a type <SPAN CLASS="ee-text">
+A </SPAN>
+is an object created from the exact pattern defined by the declaration of <SPAN CLASS="ee-text">
+A</SPAN>
+'s base class, with one field for each of the class attributes; you will obtain it through a creation instruction of the form <SPAN CLASS="ee-keyword">
+create</SPAN>
+<SPAN CLASS="ee-text">
+ x</SPAN>
+&#8230;, for <SPAN CLASS="ee-text">
+x</SPAN>
+ of type <SPAN CLASS="ee-text">
+A</SPAN>
+, or by cloning an existing direct instance. An <SPAN CLASS="ff-bold">
+instance</SPAN>
+ of <SPAN CLASS="ee-text">
+A</SPAN>
+ is a direct instance of any type conforming to <SPAN CLASS="ee-text">
+A</SPAN>
+: <SPAN CLASS="ee-text">
+A</SPAN>
+ itself, but also any type based on descendant classes. So an instance of <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT</SPAN>
+ is also an instance, although not a direct instance, of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515131"></A>A consequence of polymorphism is the ability to define<SPAN CLASS="ff-bold">
+ polymorphic data structures</SPAN>
+. With a declaration such as</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515132"></A><SPAN CLASS="ee-text">
+accounts</SPAN>
+: <SPAN CLASS="ee-text">
+LIST</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+</P>
+<P CLASS="nn-first">
+<A NAME="pgfId-515133"></A>the procedure call <SPAN CLASS="ee-text">
+accounts</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+extend</SPAN>
+ (<SPAN CLASS="ee-text">
+acc</SPAN>
+), because it uses a procedure <SPAN CLASS="ee-text">
+extend</SPAN>
+ which in this case expects an argument of any type conforming to <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, will be valid not only if <SPAN CLASS="ee-text">
+acc</SPAN>
+ is of type <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ but also if it is of a descendant type such as <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT</SPAN>
+. Successive calls of this kind make it possible to construct a data structure that, at run-time, might contain objects of several types, all conforming to <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+:<SPAN CLASS="ee-text">
+</SPAN>
+</P>
+<DIV>
+<IMG SRC="tutorial-10.png">
+</DIV>
+<DIV>
+<IMG SRC="tutorial-11.png">
+</DIV>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515170"></A>Such polymorphic data structures combine the flexibility and safety of genericity and inheritance. You can make them more or less general by choosing for the actual generic parameter, here <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, a type higher or lower in the inheritance hierarchy. Static typing is again essential here, prohibiting for example a mistaken insertion of the form <SPAN CLASS="ee-text">
+accounts</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+extend </SPAN>
+(<SPAN CLASS="ee-text">
+dep</SPAN>
+) where <SPAN CLASS="ee-text">
+dep</SPAN>
+ is of type <SPAN CLASS="ee-text">
+DEPOSIT</SPAN>
+, which does not conform to <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-529138"></A>At the higher (most abstract) end of the spectrum, you can produce an unrestrictedly polymorphic data structure <SPAN CLASS="ee-text">
+general_list</SPAN>
+: <SPAN CLASS="ee-text">
+LIST</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+ANY</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ which makes the call <SPAN CLASS="ee-text">
+general_list</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+extend</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ valid for any <SPAN CLASS="ee-text">
+x</SPAN>
+. The price to pay is that retrieving an element from such a structure will yield an object on which the only known applicable operations are the most general ones, valid for all types: assignment, copy, clone, equality comparison and others from <SPAN CLASS="ee-text">
+ANY</SPAN>
+. Assignment attempt, studied below, will make it possible to apply more specific operations after checking dynamically that a retrieved object is of the appropriate type.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515172"></A>Dynamic binding</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515173"></A>The complement of polymorphism is dynamic binding, the answer to the question &quot;What version of a feature will be applied in a call whose target is polymorphic?&quot;.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-529163"></A>Consider <SPAN CLASS="ee-text">
+acc</SPAN>
+ is of type <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+. Thanks to polymorphism, an object attached to <SPAN CLASS="ee-text">
+acc</SPAN>
+ may be a direct instance not just of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ but also of <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT</SPAN>
+ or other descendants. Some of these descendants, indeed <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT</SPAN>
+ among them, redefine features such as <SPAN CLASS="ee-text">
+deposit</SPAN>
+. Then we have to ask what the effect will be for a call of the form</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515176"></A><SPAN CLASS="ee-text">
+acc</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+deposit</SPAN>
+ (<SPAN CLASS="ee-text">
+some_value</SPAN>
+)</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515177"></A>Dynamic binding is the clearly correct answer: the call will execute the version of <SPAN CLASS="ee-text">
+deposit</SPAN>
+ from the generating class of the object attached to <SPAN CLASS="ee-text">
+acc</SPAN>
+ at run time. If <SPAN CLASS="ee-text">
+acc</SPAN>
+ is attached to a direct instance of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, execution will use the original <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ version; if <SPAN CLASS="ee-text">
+acc</SPAN>
+ is attached to a direct instance of <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT</SPAN>
+, the call will execute the version redefined in that class.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515178"></A>This is a clear correctness requirement. A policy of <SPAN CLASS="ff-italics">
+static binding</SPAN>
+ (as available for example in C++ or Delphi, for non-virtual functions) would take the declaration of <SPAN CLASS="ee-text">
+acc</SPAN>
+ as an <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ literally. But that declaration is only meant to ensure generality, to enable the use of a single entity <SPAN CLASS="ee-text">
+acc</SPAN>
+ in many different cases: what counts at execution time is the object that <SPAN CLASS="ee-text">
+acc</SPAN>
+ represents. Applying the <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ version to a <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT</SPAN>
+ object would be wrong, possibly leading in particular to objects that violate the invariant of their own generating class (since there is no reason a routine of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ will preserve the specific invariant of a proper descendant such as <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT</SPAN>
+, which it does not even know about).</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515179"></A>In some cases, the choice between static and dynamic binding does not matter: this is the case for example if a call's target is not polymorphic, or if the feature of the call is redefined nowhere in the system. In such cases the use of static binding permits slightly faster calls (since the feature is known at compile time). This application of static binding should, however, be treated as a <SPAN CLASS="ff-bold">
+compiler optimization</SPAN>
+. The EiffelStudio compiler, under its &quot;finalization&quot; mode, which performs extensive optimization, will detect some of these cases and process them accordingly -- unlike approaches that make developers responsible for specifying what should be static and what dynamic (a tedious and error-prone task, especially delicate because a minute change in the software can make a static call, in a far-away module of a large system, suddenly become dynamic). Eiffel programmers don't need to worry about such aspects; they can rely on the semantics of dynamic binding in all cases, with the knowledge that the compiler will apply static binding when safe and desirable.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515180"></A>Even in cases that require dynamic binding, the design of Eiffel, in particular the typing rules, enable compilers to make the penalty over the static-binding calls of traditional approaches very small and, most importantly, <SPAN CLASS="ff-bold">
+constant-bounded</SPAN>
+: it does not grow with the depth or complexity of the inheritance structure. The discovery in 1985 of a technique for constant-time dynamic binding calls, even in the presence of multiple and repeated inheritance, was the event that gave the green light to the development of Eiffel.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515181"></A>Dynamic binding is particularly interesting for polymorphic data structures. If you iterate over the list of accounts of various kinds, <SPAN CLASS="ee-text">
+accounts</SPAN>
+: <SPAN CLASS="ee-text">
+LIST</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+, illustrated in the last figure, and at each step let <SPAN CLASS="ee-text">
+acc</SPAN>
+ represent the current list element, you can repeatedly apply</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515184"></A><SPAN CLASS="ee-text">
+acc</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+deposit</SPAN>
+ (&#8230;)</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515185"></A>to have the appropriate variant of the <SPAN CLASS="ee-text">
+deposit</SPAN>
+ operation triggered for each element.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515186"></A>The benefit of such techniques appears clearly if we compare them with the traditional way to address such needs: using multi-branch discriminating instructions of the form <SPAN CLASS="ee-keyword">
+if</SPAN>
+<SPAN CLASS="ee-comment">
+ &quot;</SPAN>
+<SPAN CLASS="ee-text">
+Account is a savings account</SPAN>
+<SPAN CLASS="ee-comment">
+&quot;</SPAN>
+ <SPAN CLASS="ee-keyword">
+then</SPAN>
+ &#8230; <SPAN CLASS="ee-keyword">
+elseif</SPAN>
+ <SPAN CLASS="ee-comment">
+&quot;</SPAN>
+<SPAN CLASS="ee-text">
+It is a money market account</SPAN>
+&quot; <SPAN CLASS="ee-keyword">
+then</SPAN>
+ &#8230; and so on, or the corresponding <SPAN CLASS="ee-keyword">
+case </SPAN>
+&#8230;<SPAN CLASS="ee-keyword">
+ of </SPAN>
+&#8230;, <SPAN CLASS="ee-keyword">
+switch </SPAN>
+or <SPAN CLASS="ee-keyword">
+inspect</SPAN>
+ instructions. Apart from their heaviness and complexity, such solutions cause many components of a software system to rely on the knowledge of the exact set of variants available for a certain notion, such as bank account. Then any addition, change or removal of variants can cause a ripple of changes throughout the architecture. This is one of the majors obstacles to extendibility and reusability in traditional approaches. In contrast, using the combination of inheritance, redefinition, polymorphism and dynamic binding makes it possible to have a <SPAN CLASS="ff-bold">
+point of single choice</SPAN>
+ -- a unique location in the system which knows the exhaustive list of variants. Every client then manipulates entities of the most general type, <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, through dynamically bound calls of the form <SPAN CLASS="ee-text">
+acc</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+some_account_  feature </SPAN>
+(&#8230;).</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515187"></A>These observations make dynamic binding appear for what it is: not an implementation mechanism, but an <SPAN CLASS="ff-bold">
+architectural technique</SPAN>
+ that plays a key role (along with information hiding, which it extends, and Design by Contract, to which it is linked through the assertion redefinition rules seen below) in providing the modular system architectures of Eiffel, the basis for the method's approach to reusability and extendibility. These properties apply as early as analysis and modeling, and continue to be useful throughout the subsequent steps.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515189"></A><A NAME="41757"></A>Deferred features and classes</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515190"></A>The examples of dynamic binding seen so far assumed that all classes were fully implemented, and dynamically bound features had a version in every relevant class, including the most general ones such as <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515191"></A>It is also useful to define classes that leave the implementation of some of their features entirely to proper descendants. Such an abstract class is known as <SPAN CLASS="ee-keyword">
+deferred</SPAN>
+; so are its unimplemented features. The reverse of deferred is <SPAN CLASS="ee-keyword">
+effective</SPAN>
+, meaning fully implemented.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515192"></A><SPAN CLASS="ee-text">
+LIST</SPAN>
+ is a typical example of deferred class. As it describes the general notion of list, it should not favor any particular implementation; that will be the task of its effective descendants, such as <SPAN CLASS="ee-text">
+LINKED_LIST </SPAN>
+(linked implementation), <SPAN CLASS="ee-text">
+TWO_WAY_LIST </SPAN>
+(linked both ways)<SPAN CLASS="ee-text">
+, ARRAYED_LIST </SPAN>
+(implementation by an array), all effective, and all indeed to be found in EiffelBase.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515193"></A>At the level of the deferred class <SPAN CLASS="ee-text">
+LIST</SPAN>
+, some features such as <SPAN CLASS="ee-text">
+extend</SPAN>
+ (add an item at the end of the list) will have no implementation and hence will be declared as deferred. Here is the corresponding form, illustrating the syntax for both deferred classes and their deferred features:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515196"></A><SPAN CLASS="ee-keyword">
+indexing</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515197"></A>	description: &quot;Sequential finite lists, without a commitment%[</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515198"></A>				to a representation%]&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515199"></A><SPAN CLASS="ee-keyword">
+deferred</SPAN>
+ <SPAN CLASS="ee-keyword">
+class</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515200"></A>	LIST <SPAN CLASS="ee-comment">
+[</SPAN>
+G<SPAN CLASS="ee-comment">
+]</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515201"></A><SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+-- Access</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515202"></A>	count: INTEGER<SPAN CLASS="ee-keyword">
+ is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515203"></A>			-- Number of items in list</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515204"></A>		<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515205"></A>			&#8230; See below; this feature can be effective &#8230; </P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515206"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515208"></A><SPAN CLASS="ee-keyword">
+feature </SPAN>
+<SPAN CLASS="ee-comment">
+-- Element change</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515210"></A><A NAME="17380"></A>	extend (x: G) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515211"></A>			-- Add <SPAN CLASS="ee-text">
+x</SPAN>
+ at end of list.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515212"></A>		<SPAN CLASS="ee-keyword">
+require</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515213"></A>			space_available: <SPAN CLASS="ee-keyword">
+not</SPAN>
+ full</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515214"></A>		<SPAN CLASS="ee-keyword">
+deferred</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515215"></A>		<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515216"></A>			one_more: count = <SPAN CLASS="ee-keyword">
+old </SPAN>
+count + 1</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515217"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-comment">
+<A NAME="pgfId-515219"></A>&#8230; Other feature declarations and invariant &#8230; </P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515220"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+ <SPAN CLASS="ee-comment">
+-- class</SPAN>
+ LIST</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515221"></A>A deferred feature (considered to be a routine, although it can yield an attribute in a proper descendant) has the single keyword <SPAN CLASS="ee-keyword">
+deferred</SPAN>
+ in lieu of the <SPAN CLASS="ee-keyword">
+do</SPAN>
+<SPAN CLASS="ee-text">
+ Instructions</SPAN>
+ clause of an effective routine. A deferred class -- defined as a class that has at least one deferred feature -- must be introduced by <SPAN CLASS="ee-keyword">
+deferred class</SPAN>
+ instead of just <SPAN CLASS="ee-keyword">
+class</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515222"></A>As the example of <SPAN CLASS="ee-text">
+extend</SPAN>
+ shows, a deferred feature, although it has no implementation, can be equipped with assertions. They will be binding on implementations in descendants, in a way to be explained below.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515223"></A>Deferred classes do not have to be <SPAN CLASS="ff-italics">
+fully</SPAN>
+ deferred. They may contain some effective features along with their deferred ones. Here, for example, we may express <SPAN CLASS="ee-text">
+count</SPAN>
+ as a function:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515226"></A>	count: INTEGER<SPAN CLASS="ee-keyword">
+ is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515227"></A>			-- Number of items in list</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515228"></A>		<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515229"></A>			<SPAN CLASS="ee-keyword">
+from</SPAN>
+ start <SPAN CLASS="ee-keyword">
+until</SPAN>
+ after <SPAN CLASS="ee-keyword">
+loop</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515230"></A>				Result := Result + 1; forth</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515231"></A>			<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515232"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515233"></A>This implementation relies on the loop construct described below (<SPAN CLASS="ee-keyword">
+from</SPAN>
+ introduces the loop initialization) and on a set of deferred features of the class which allow traversal of a list based on moving a fictitious cursor: <SPAN CLASS="ee-keyword">
+start</SPAN>
+ to bring the cursor to the first element if any, <SPAN CLASS="ee-keyword">
+after</SPAN>
+ to find out whether all relevant elements have been seen, and <SPAN CLASS="ee-keyword">
+forth</SPAN>
+ (with precondition <SPAN CLASS="ee-keyword">
+not </SPAN>
+<SPAN CLASS="ee-text">
+after</SPAN>
+) to advance the cursor to the next element. Procedure <SPAN CLASS="ee-text">
+forth</SPAN>
+ itself appears as</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515236"></A>	forth <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515237"></A>			-- Advance cursor by one position</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515238"></A>		<SPAN CLASS="ee-keyword">
+require</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515239"></A>			not_after: <SPAN CLASS="ee-keyword">
+not</SPAN>
+ after</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515240"></A>		<SPAN CLASS="ee-keyword">
+deferred</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515241"></A>		<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515242"></A>			moved_right: index = <SPAN CLASS="ee-keyword">
+old </SPAN>
+index + 1</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515243"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515244"></A>where <SPAN CLASS="ee-text">
+index </SPAN>
+-- another deferred feature -- is the integer position of the cursor.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515245"></A>Although the above version of feature <SPAN CLASS="ee-text">
+count</SPAN>
+ is time-consuming -- it implies a whole traversal just for the purpose of determining the number of elements -- it has the advantage of being applicable to all variants, without any commitment to a choice of implementation, as would follow for example if we decided to treat <SPAN CLASS="ee-text">
+count</SPAN>
+ as an attribute. Proper descendants can always redefine <SPAN CLASS="ee-text">
+count</SPAN>
+ for more efficiency.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-529347"></A>Function <SPAN CLASS="ee-text">
+count</SPAN>
+ illustrates one of the most important contributions of the method to reusability: the ability to define <SPAN CLASS="ff-bold">
+behavior classes</SPAN>
+ that capture common behaviors (such as count) while leaving the details of the behaviors (such as <SPAN CLASS="ee-text">
+start</SPAN>
+, <SPAN CLASS="ee-text">
+after</SPAN>
+, <SPAN CLASS="ee-text">
+forth</SPAN>
+) open to many variants. As noted earlier, traditional approaches to reusability provide closed reusable components. A component such as <SPAN CLASS="ee-text">
+LIST</SPAN>
+, although equipped with directly usable behaviors such as count, is open to many variations, to be provided by proper descendants.</P>
+<P CLASS="jj-small">
+<A NAME="pgfId-529348"></A>Some O-O languages support only the two extremes: fully effective classes, and fully deferred &quot;interfaces&quot;, but not classes with a mix of effective and deferred features. This is an unacceptable limitation, negating the object-oriented method's support for a seamless, continuous spectrum from the most abstract to the most concrete.</P>
+<P CLASS="nn-first">
+<A NAME="pgfId-515247"></A>A class <SPAN CLASS="ee-text">
+B</SPAN>
+ inheriting from a deferred class <SPAN CLASS="ee-text">
+A</SPAN>
+ may provide implementations -- effective declarations -- for the features inherited in deferred form. In this case there is no need for a <SPAN CLASS="ee-keyword">
+redefine</SPAN>
+ subclause; the effective versions simply replace the inherited versions. The class is said to <SPAN CLASS="ee-keyword">
+effect</SPAN>
+ the corresponding features. If after this process there remain any deferred features, B is still considered deferred, even if it introduces no deferred features of its own, and must be declared as <SPAN CLASS="ee-keyword">
+deferred class</SPAN>
+. </P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515248"></A>In the example, classes such as <SPAN CLASS="ee-text">
+LINKED_LIST</SPAN>
+ and <SPAN CLASS="ee-text">
+ARRAYED_LIST</SPAN>
+ will effect all the deferred features they inherit from <SPAN CLASS="ee-text">
+LIST</SPAN>
+ -- <SPAN CLASS="ee-text">
+extend</SPAN>
+, <SPAN CLASS="ee-text">
+start</SPAN>
+ etc. -- and hence will be effective.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515249"></A>Except in some applications restricted to pure system modeling -- as discussed next -- the main benefit of deferred classes and features comes from polymorphism and dynamic binding. Because <SPAN CLASS="ee-text">
+extend</SPAN>
+ has no implementation in class <SPAN CLASS="ee-text">
+LIST</SPAN>
+, a call of the form <SPAN CLASS="ee-text">
+my_list</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+extend (</SPAN>
+&#8230;<SPAN CLASS="ee-text">
+)</SPAN>
+ with my_list of type <SPAN CLASS="ee-text">
+LIST [T]</SPAN>
+ for some <SPAN CLASS="ee-text">
+T</SPAN>
+ can only be executed if <SPAN CLASS="ee-text">
+my_list</SPAN>
+ is attached to a direct instance of an effective proper descendant of <SPAN CLASS="ee-text">
+LIST</SPAN>
+, such as <SPAN CLASS="ee-text">
+LINKED_LIST</SPAN>
+; then it will use the corresponding version of <SPAN CLASS="ee-text">
+extend</SPAN>
+. Static binding would not even make sense here.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515250"></A>Even an effective feature of <SPAN CLASS="ee-text">
+LIST</SPAN>
+ such as count may depend on deferred features (start and so on), so that a call of the form my_list<SPAN CLASS="ee-dot">
+.</SPAN>
+count can only be executed in the context of an effective descendant.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515251"></A>All this indicates that a deferred class must have<SPAN CLASS="ff-bold">
+ no direct instance</SPAN>
+. (It will have instances, the direct instances of its effective descendants.) If it had any, we could call deferred features on them, leading to execution-time impossibility. The rule that achieves this goal is simple: if the base type of <SPAN CLASS="ee-text">
+x</SPAN>
+ is a deferred class, no creation instruction of target <SPAN CLASS="ee-text">
+x</SPAN>
+, of the form <SPAN CLASS="ee-keyword">
+create</SPAN>
+<SPAN CLASS="ee-text">
+ x</SPAN>
+ &#8230;, is permitted.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515253"></A><A NAME="48949"></A>Applications of deferred classes</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515254"></A>Deferred classes cover abstract notions with many possible variants. They are widely used in Eiffel where they cover various needs:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515255"></A>Capturing high-level classes, with common behaviors.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515256"></A>Defining the higher levels of a general taxonomy, especially in the inheritance structure of a library.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515257"></A>Defining the components of an architecture during system design, without commitment to a final implementation.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515258"></A>Describing domain-specific concepts in analysis and modeling.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-515259"></A>These applications make deferred classes a central tool of the Eiffel method's support for seamlessness and reversibility. The last one in particular uses deferred classes and features to model objects from an application domain, without any commitment to implementation, design, or even software (and computers). Deferred classes are the ideal tool here: they express the properties of the domain's abstractions, without any temptation of implementation bias, yet with the precision afforded by type declarations, inheritance structures (to record classifications of the domain concepts), and contracts to express the abstract properties of the objects being described.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515260"></A>Rather than using a separate method and notation for analysis and design, this apprroach integrates seamlessly with the subsequent phases (assuming the decision is indeed taken to develop a software system): it suffices to refine the deferred classes progressively by introducing effective elements, either by modifying the classes themselves, or by introducing design- and implementation-oriented descendants. In the resulting system, the classes that played an important role for analysis, and are the most meaningful for customers, will remain important; as we have seen (<A HREF="tutorial-4.html#24218" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Seamlessness and reversibility&quot;,  page 9</SPAN>
+</A>) this <SPAN CLASS="ff-italics">
+direct mapping </SPAN>
+property is a great help for extendibility.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-529438"></A>The following sketch (from the book <SPAN CLASS="ff-note">
+<A HREF="http://eiffel.com/doc/oosc/" CLASS="URL"></A></SPAN>
+<SPAN CLASS="ww-crossref">
+Object-Oriented Software Construction</SPAN>
+) illustrates these ideas on the example of scheduling the programs of a TV station. This is pure modeling of an application domain; no computers or software are involved yet. The class describes the notion of program segment.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-529576"></A>Note the use of assertions to define semantic properties of the class, its instances and its features. Although often presented as high-level, most object-oriented analysis methods (with the exception of Wald&eacute;n's and Nerson's Business Object Notation) have no support for the expression of such properties, limiting themselves instead to the description of broad structural relationships.</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-529579"></A><SPAN CLASS="ee-keyword">
+indexing</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529580"></A>	description: &quot;Individual fragments of a broadcasting schedule&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529581"></A><SPAN CLASS="ee-keyword">
+deferred class</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529582"></A><SPAN CLASS="ee-text">
+	SEGMENT</SPAN>
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-529584"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-comment">
+-- Access</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529585"></A>	schedule: SCHEDULE <SPAN CLASS="ee-keyword">
+is</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-keyword">
+deferred</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-keyword">
+end<BR>
+</SPAN>
+			-- Schedule to which segment belongs</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529586"></A>	index: INTEGER <SPAN CLASS="ee-keyword">
+is</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-keyword">
+deferred</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-keyword">
+end<BR>
+</SPAN>
+			-- Position of segment in its schedule</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529587"></A>	starting_time, ending_time: INTEGER <SPAN CLASS="ee-keyword">
+is</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-keyword">
+deferred</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-keyword">
+end<BR>
+</SPAN>
+			-- Beginning and end of scheduled air time</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529588"></A>	next: SEGMENT <SPAN CLASS="ee-keyword">
+is</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-keyword">
+deferred</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-keyword">
+end<BR>
+</SPAN>
+			-- Segment to be played next, if any</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-529590"></A>	sponsor: COMPANY <SPAN CLASS="ee-keyword">
+is deferred end<BR>
+</SPAN>
+			-- Segment's principal sponsor</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529591"></A>	rating: INTEGER <SPAN CLASS="ee-keyword">
+is deferred end<BR>
+</SPAN>
+			-- Segment's rating (for children's viewing etc.)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529592"></A>	Minimum_duration: INTEGER <SPAN CLASS="ee-keyword">
+is</SPAN>
+<SPAN CLASS="ee-text">
+ 30<BR>
+</SPAN>
+			-- Minimum length of segments, in seconds</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529593"></A>	Maximum_interval: INTEGER <SPAN CLASS="ee-keyword">
+is</SPAN>
+<SPAN CLASS="ee-text">
+ 2<BR>
+</SPAN>
+<SPAN CLASS="ee-comment">
+			-- Maximum time (seconds) between successive segments</SPAN>
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-529595"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+ <SPAN CLASS="ee-comment">
+-- Element change</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529596"></A>	set_sponsor (s: SPONSOR) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529597"></A>		<SPAN CLASS="ee-keyword">
+require</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529598"></A>			not_void: s /= Void</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529599"></A>		<SPAN CLASS="ee-keyword">
+deferred</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529600"></A>		<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529601"></A>			sponsor_set: sponsor = s</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529602"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-comment">
+<A NAME="pgfId-529604"></A>	&#8230; <SPAN CLASS="ee-text">
+change_next, set_rating </SPAN>
+<SPAN CLASS="ee-comment">
+omitted</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+&#8230;</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-529606"></A><SPAN CLASS="ee-keyword">
+invariant</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529607"></A>	in_list: (1 &lt;= index) <SPAN CLASS="ee-keyword">
+and</SPAN>
+<SPAN CLASS="ee-text">
+ (index &lt;= </SPAN>
+schedule<SPAN CLASS="ee-dot">
+.</SPAN>
+segments<SPAN CLASS="ee-dot">
+.</SPAN>
+count)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529608"></A>	in_schedule: schedule<SPAN CLASS="ee-dot">
+.</SPAN>
+segments<SPAN CLASS="ee-dot">
+.</SPAN>
+item (index) = Current</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529609"></A>	next_in_list: (next /= Void) <SPAN CLASS="ee-keyword">
+implies<BR>
+</SPAN>
+<SPAN CLASS="ee-text">
+					(</SPAN>
+schedule<SPAN CLASS="ee-dot">
+.</SPAN>
+segments<SPAN CLASS="ee-dot">
+.</SPAN>
+item (index + 1) = next)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529610"></A>	no_next_iff_last: (next = Void) =<BR>
+					(index = schedule<SPAN CLASS="ee-dot">
+.</SPAN>
+segments<SPAN CLASS="ee-dot">
+.</SPAN>
+count)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529611"></A>	non_negative_rating: rating &gt;= 0</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529612"></A>	positive times: (starting_time &gt; 0) <SPAN CLASS="ee-keyword">
+and</SPAN>
+<SPAN CLASS="ee-text">
+ (ending_time &gt; 0)</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529613"></A>	sufficient_duration: ending_time - starting_time &gt;=<BR>
+					Minimum_duration</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529614"></A>	decent_interval: (next<SPAN CLASS="ee-dot">
+.</SPAN>
+starting_time) - ending_time &lt;=<BR>
+					Maximum_interval</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529615"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-529616"></A><A NAME="46202"></A>Structural property classes</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515309"></A>Some deferred classes describe a structural property, useful to the description of many other classes. Typical examples are classes of the Kernel Library in EiffelBase:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-529521"></A><SPAN CLASS="ee-text">
+NUMERIC</SPAN>
+ describes objects on which arithmetic operations +, -, &#8727;, / are available, with the properties of a ring (associativity, distributivity, zero elements etc.). Kernel Library classes such as <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ and <SPAN CLASS="ee-text">
+REAL</SPAN>
+ -- but not, for example, <SPAN CLASS="ee-text">
+STRING</SPAN>
+ -- are descendants of <SPAN CLASS="ee-text">
+NUMERIC</SPAN>
+. An application that defines a class <SPAN CLASS="ee-text">
+MATRIX</SPAN>
+ may also make it a descendant of <SPAN CLASS="ee-text">
+NUMERIC</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-529522"></A><SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+ describes objects on which comparison operations &lt;, &lt;=, &gt;, &gt;= are available, with the properties of a total preorder (transitivity, irreflexivity). Kernel Library classes such as <SPAN CLASS="ee-text">
+CHARACTER</SPAN>
+, <SPAN CLASS="ee-text">
+STRING</SPAN>
+ and <SPAN CLASS="ee-text">
+INTEGER </SPAN>
+-- but not out <SPAN CLASS="ee-text">
+MATRIX </SPAN>
+example -- are descendants of <SPAN CLASS="ee-text">
+NUMERIC</SPAN>
+.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-529523"></A>For such classes it is again essential to permit effective features in a deferred class, and to include assertions. For example class <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+ declares <SPAN CLASS="ee-keyword">
+infix </SPAN>
+&quot;&lt;&quot; as deferred, and expresses <SPAN CLASS="ee-comment">
+&gt;</SPAN>
+, <SPAN CLASS="ee-comment">
+&gt;=</SPAN>
+ and <SPAN CLASS="ee-comment">
+&lt;=</SPAN>
+ effectively in terms of it.</P>
+<P CLASS="jj-small">
+<A NAME="pgfId-529657"></A>The type <SPAN CLASS="ee-keyword">
+like</SPAN>
+<SPAN CLASS="ee-text">
+ Current</SPAN>
+ will be explained in <A HREF="tutorial-10.html#46019" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Covariance and anchored declarations&quot;,  page 79</SPAN>
+</A>; you may understand it, in the following class, as equivalent to <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+.</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-529529"></A><SPAN CLASS="ee-keyword">
+indexing</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529530"></A>	description: &quot;Objects that can be compared according to a total preorder relation&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529531"></A><SPAN CLASS="ee-keyword">
+deferred class</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529532"></A><SPAN CLASS="ee-text">
+	COMPARABLE</SPAN>
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-529534"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-comment">
+-- Comparison</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-529535"></A>	infix &quot;&lt;&quot; (other: like Current): BOOLEAN <SPAN CLASS="ee-keyword">
+is<BR>
+</SPAN>
+			-- Is current object less than <SPAN CLASS="ee-text">
+other</SPAN>
+?</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529536"></A>		require</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529537"></A>			other_exists: other /= Void</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529538"></A>		<SPAN CLASS="ee-keyword">
+deferred</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529539"></A>		<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529540"></A>			asymmetric: Result <SPAN CLASS="ee-keyword">
+implies</SPAN>
+ <SPAN CLASS="ee-keyword">
+not</SPAN>
+ (other &lt; Current)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529541"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-comment">
+<A NAME="pgfId-529562"></A>	infix &quot;&lt;=&quot; (other: like Current): BOOLEAN <SPAN CLASS="ee-text">
+is<BR>
+</SPAN>
+			-- Is current object less than or equal to <SPAN CLASS="ee-text">
+other</SPAN>
+?</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529563"></A>		require</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529564"></A>			other_exists: other /= Void</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529565"></A>		<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529566"></A>			Result := (Current &lt; other) <SPAN CLASS="ee-keyword">
+or</SPAN>
+ is_equal (other)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529567"></A>		<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529568"></A>			definition: Result = (Current &lt; other) <SPAN CLASS="ee-keyword">
+or<BR>
+</SPAN>
+							is_equal (other)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529569"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-529551"></A>&#8230;<SPAN CLASS="ee-comment">
+ Other features:</SPAN>
+ <SPAN CLASS="ee-keyword">
+infix</SPAN>
+ &quot;&gt;&quot;, min, max,<SPAN CLASS="ee-comment">
+ </SPAN>
+&#8230;<SPAN CLASS="ee-comment">
+ </SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529552"></A><SPAN CLASS="ee-keyword">
+invariant</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529553"></A>	irreflexive: not (Current &lt; Current)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-529554"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+<SPAN CLASS="ee-comment">
+ -- class</SPAN>
+<SPAN CLASS="ee-text">
+ COMPARABLE</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515346"></A><A NAME="21906"></A>Multiple inheritance and renaming</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515347"></A>It is often necessary to define a new class in terms of several existing ones. For example:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515348"></A>The Kernel Library classes <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ and <SPAN CLASS="ee-text">
+REAL</SPAN>
+ must inherit from both <SPAN CLASS="ee-text">
+NUMERIC</SPAN>
+ and <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515349"></A>A class <SPAN CLASS="ee-text">
+TENNIS_PLAYER</SPAN>
+, in a system for keeping track of player ranking, will inherit from <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+, as well as from other domain-specific classes.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515350"></A>A class <SPAN CLASS="ee-text">
+COMPANY_PLANE</SPAN>
+ may inherit from both <SPAN CLASS="ee-text">
+PLANE</SPAN>
+ and <SPAN CLASS="ee-text">
+ASSET</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515351"></A>Class <SPAN CLASS="ee-text">
+ARRAYED_LIST</SPAN>
+, describing an implementation of lists through arrays, may inherit from both <SPAN CLASS="ee-text">
+LIST</SPAN>
+ and <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-515352"></A>In all such cases multiple inheritance provides the answer.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515353"></A>Multiple inheritance can cause <SPAN CLASS="ff-bold">
+name clashes</SPAN>
+: two parents may include a feature with the same name. This would conflict with the ban on name overloading within a class -- the rule that no two features of a class may have the same name. Eiffel provides a simple way to remove the name clash at the point of inheritance through the <SPAN CLASS="ee-keyword">
+rename</SPAN>
+ subclause, as in</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515356"></A><SPAN CLASS="ee-keyword">
+indexing</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515357"></A>	description: &quot;Sequential finite lists implemented as arrays&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515358"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515359"></A><SPAN CLASS="ee-text">
+	ARRAYED_LIST </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+G</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515360"></A><SPAN CLASS="ee-keyword">
+inherit</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515361"></A>	LIST <SPAN CLASS="ee-comment">
+[</SPAN>
+G<SPAN CLASS="ee-comment">
+]</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515362"></A>	ARRAY <SPAN CLASS="ee-comment">
+[</SPAN>
+G<SPAN CLASS="ee-comment">
+]</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515363"></A>		<SPAN CLASS="ee-keyword">
+rename</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515364"></A>			count <SPAN CLASS="ee-keyword">
+as</SPAN>
+ capacity, item <SPAN CLASS="ee-keyword">
+as</SPAN>
+ array_item</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515365"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515366"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515367"></A>	&#8230; </P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515368"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-comment">
+-- clas</SPAN>
+<SPAN CLASS="ee-text">
+s ARRAYED_LIST</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515369"></A>Here both <SPAN CLASS="ee-text">
+LIST</SPAN>
+ and <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+ have features called <SPAN CLASS="ee-text">
+count</SPAN>
+ and <SPAN CLASS="ee-text">
+item</SPAN>
+. To make the new class valid, we give new names to the features inherited from <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+, which will be known within <SPAN CLASS="ee-text">
+ARRAYED_LIST</SPAN>
+ as<SPAN CLASS="ee-text">
+ capacity</SPAN>
+ and <SPAN CLASS="ee-text">
+array_item</SPAN>
+. Of course we could have renamed the <SPAN CLASS="ee-text">
+LIST</SPAN>
+ versions instead, or renamed along both inheritance branches.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515370"></A>Every feature of a class has a <SPAN CLASS="ff-bold">
+final name</SPAN>
+: for a feature introduced in the class itself (&quot;immediate&quot; feature) it is the name appearing in the declaration; for an inherited feature that is not renamed, it is the feature's name in the parent; for a renamed feature, it is the name resulting from the renaming. This definition yields a precise statement of the rule against in-class overloading:</P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-515374"></A><A NAME="25265"></A>Final Name rule</P>
+<P CLASS="mm-celltext">
+<A NAME="pgfId-515375"></A>Two different features of a class may not have the same final name.</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515376"></A>It is interesting to compare renaming and redefinition. The principal distinction is between features and feature names. Renaming keeps a feature, but changes its name. Redefinition keeps the name, but changes the feature. In some cases, it is of course appropriate to do both.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515377"></A>Renaming is interesting even in the absence of name clashes. A class may inherit from a parent a feature which it finds useful for its purposes, but whose name, appropriate for the context of the parent, is not consistent with the context of the heir. This is the case with <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+ 's feature <SPAN CLASS="ee-text">
+count</SPAN>
+ in the last example: the feature that defines the number of items in an array -- the total number of available entries -- becomes, for an arrayed list, the <SPAN CLASS="ff-italics">
+maximum</SPAN>
+ number of list items; the truly interesting indication of the number of items is the count of how many items have been inserted in the list, as given by feature <SPAN CLASS="ee-text">
+count</SPAN>
+ from <SPAN CLASS="ee-text">
+LIST</SPAN>
+. But even if we did not have a name clash because of the two inherited <SPAN CLASS="ee-text">
+count</SPAN>
+ features we should rename <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+'s <SPAN CLASS="ee-text">
+count</SPAN>
+ as <SPAN CLASS="ee-text">
+capacity </SPAN>
+to maintain the consistency of the local feature terminology.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515378"></A>The <SPAN CLASS="ee-keyword">
+rename</SPAN>
+ subclause appears before all the other feature adaptation subclauses -- <SPAN CLASS="ee-keyword">
+redefine</SPAN>
+ already seen, and the remaining ones <SPAN CLASS="ee-keyword">
+export</SPAN>
+, <SPAN CLASS="ee-keyword">
+undefine</SPAN>
+ and <SPAN CLASS="ee-keyword">
+select</SPAN>
+ -- since an inherited feature that has been renamed sheds its earlier identity once and for all: within the class, and to its own clients and descendants, it will be known solely through the new name. The original name has simply disappeared from the name space. This is essential to the view of classes presented earlier: self-contained, consistent abstractions prepared carefully for the greatest enjoyment of clients and descendants.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515380"></A><A NAME="83610"></A>Inheritance and contracts</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515381"></A>A proper understanding of inheritance requires looking at the mechanism in the framework of Design by Contract, where it will appear as a form of <SPAN CLASS="ff-italics">
+subcontracting</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515386"></A>The first rule is that invariants accumulate down an inheritance structure:</P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-515384"></A>Invariant Accumulation rule</P>
+<P CLASS="mm-celltext">
+<A NAME="pgfId-515385"></A>The invariants of all the parents of a class apply to the class itself. </P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515387"></A>The invariant of a class is automatically considered to include -- in the sense of logical &quot;and&quot; -- the invariants of all its parents. This is a consequence of the view of inheritance as an &quot;is&quot; relation: if we may consider every instance of <SPAN CLASS="ee-text">
+B</SPAN>
+ as an instance of <SPAN CLASS="ee-text">
+A</SPAN>
+, then every consistency constraint on instances of <SPAN CLASS="ee-text">
+A</SPAN>
+ must also apply to instances of <SPAN CLASS="ee-text">
+B</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515388"></A>Next we consider routine preconditions and postconditions. The rule here will follow from an examination of what contracts mean in the presence of polymorphism and dynamic binding.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515389"></A>Consider a parent <SPAN CLASS="ee-text">
+A</SPAN>
+ and a proper descendant <SPAN CLASS="ee-text">
+B</SPAN>
+ (a direct heir on the following figure), which redefines a routine <SPAN CLASS="ee-text">
+r</SPAN>
+ inherited from <SPAN CLASS="ee-text">
+A</SPAN>
+.</P>
+<DIV>
+<MAP NAME="tutorial-12">
+</MAP>
+<IMG SRC="tutorial-12.png" USEMAP="#tutorial-12">
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-515443"></A>As a result of dynamic binding, a call <SPAN CLASS="ee-text">
+a1</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+r</SPAN>
+ from a client <SPAN CLASS="ee-text">
+C </SPAN>
+may be serviced not by <SPAN CLASS="ee-text">
+A</SPAN>
+'s version of <SPAN CLASS="ee-text">
+r </SPAN>
+but by <SPAN CLASS="ee-text">
+B</SPAN>
+'s version if <SPAN CLASS="ee-text">
+a1</SPAN>
+, although declared of type <SPAN CLASS="ee-text">
+A</SPAN>
+, becomes at run time attached to an instance of <SPAN CLASS="ee-text">
+B</SPAN>
+. This shows the combination of inheritance, redefinition, polymorphism and dynamic binding as providing a form of subcontracting; <SPAN CLASS="ee-text">
+A</SPAN>
+ subcontracts certain calls to <SPAN CLASS="ee-text">
+B</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515444"></A>The problem is to keep subcontractors honest. Assuming preconditions and postconditions as shown on the last figure, a call in <SPAN CLASS="ee-text">
+C </SPAN>
+of the form</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515447"></A><SPAN CLASS="ee-keyword">
+if</SPAN>
+ a1<SPAN CLASS="ee-dot">
+.</SPAN>
+pre <SPAN CLASS="ee-keyword">
+then</SPAN>
+ a1<SPAN CLASS="ee-dot">
+.</SPAN>
+r <SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-529744"></A>or just <SPAN CLASS="ee-text">
+a1</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+q</SPAN>
+; <SPAN CLASS="ee-text">
+a1</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+r </SPAN>
+where the postcondition of <SPAN CLASS="ee-text">
+q</SPAN>
+ implies the precondition <SPAN CLASS="ee-text">
+pre </SPAN>
+of <SPAN CLASS="ee-text">
+r</SPAN>
+, satisfies the terms of the contract and hence is entitled to being handled correctly -- to terminate in a state satisfying <SPAN CLASS="ee-text">
+a1</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+post</SPAN>
+. But if we let the subcontractor <SPAN CLASS="ee-text">
+B</SPAN>
+ redefine the assertions to arbitrary <SPAN CLASS="ee-text">
+pre</SPAN>
+<SPAN CLASS="ee-comment">
+' </SPAN>
+and <SPAN CLASS="ee-text">
+post'</SPAN>
+, this is not necessarily the case: <SPAN CLASS="ee-text">
+pre'</SPAN>
+ could be stronger than <SPAN CLASS="ee-text">
+pre</SPAN>
+, enabling <SPAN CLASS="ee-text">
+B</SPAN>
+ not to process correctly certain calls that are correct from <SPAN CLASS="ee-text">
+A</SPAN>
+'s perspective; and <SPAN CLASS="ee-text">
+post'</SPAN>
+ could be weaker than <SPAN CLASS="ee-text">
+post</SPAN>
+, enabling <SPAN CLASS="ee-text">
+B</SPAN>
+ to do less of a job than advertized for <SPAN CLASS="ee-text">
+r</SPAN>
+ in the Contract Form of <SPAN CLASS="ee-text">
+A</SPAN>
+, the only official reference for authors of client classes such as <SPAN CLASS="ee-text">
+C</SPAN>
+. (An assertion <SPAN CLASS="ee-text">
+p</SPAN>
+ is stronger than or equal to an assertion <SPAN CLASS="ee-text">
+q</SPAN>
+ if <SPAN CLASS="ee-text">
+p</SPAN>
+ implies <SPAN CLASS="ee-text">
+q</SPAN>
+ in the sense of boolean implication.)</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515449"></A>The rule, then, is that for the redefinition to be correct the new precondition <SPAN CLASS="ee-text">
+pre'</SPAN>
+ must be weaker than or equal to the original <SPAN CLASS="ee-text">
+pre</SPAN>
+, and the new postcondition <SPAN CLASS="ee-text">
+post'</SPAN>
+ must be stronger than or equal to the original <SPAN CLASS="ee-text">
+post'</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515450"></A>Because it is impossible to check simply that an assertion is weaker or stronger than another, the language rule relies on different forms of the assertion constructs, <SPAN CLASS="ee-keyword">
+require else </SPAN>
+and <SPAN CLASS="ee-keyword">
+ensure then</SPAN>
+, for redeclared routines. They rely on the mathematical property that, for any assertions <SPAN CLASS="ee-text">
+p</SPAN>
+ and <SPAN CLASS="ee-text">
+q</SPAN>
+, <SPAN CLASS="ee-text">
+p </SPAN>
+implies <SPAN CLASS="ee-comment">
+(</SPAN>
+  <SPAN CLASS="ee-text">
+p </SPAN>
+<SPAN CLASS="ee-keyword">
+or</SPAN>
+<SPAN CLASS="ee-text">
+ q</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+, and <SPAN CLASS="ee-comment">
+(</SPAN>
+  <SPAN CLASS="ee-text">
+p </SPAN>
+<SPAN CLASS="ee-keyword">
+and</SPAN>
+<SPAN CLASS="ee-text">
+ q</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ implies <SPAN CLASS="ee-text">
+p</SPAN>
+. For a precondition, using <SPAN CLASS="ee-keyword">
+require else</SPAN>
+ with a new assertion will perform an <SPAN CLASS="ee-keyword">
+or</SPAN>
+, which can only weaken the original; for a postcondition, <SPAN CLASS="ee-keyword">
+ensure then</SPAN>
+ will perform an <SPAN CLASS="ee-keyword">
+and</SPAN>
+, which can only strengthen the original. Hence the rule:</P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-515453"></A>Assertion Redeclaration rule</P>
+<P CLASS="mm-celltext">
+<A NAME="pgfId-529767"></A>In the redeclared version of a routine, it is not permitted to use a <SPAN CLASS="ee-keyword">
+require</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+or <SPAN CLASS="ee-keyword">
+ensure</SPAN>
+ clause. Instead you may:</P>
+<UL>
+<LI CLASS="mm-bull">
+<A NAME="pgfId-529768"></A>Introduce a new condition with <SPAN CLASS="ee-keyword">
+require</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-keyword">
+else</SPAN>
+, for or-ing with the original precondition.</LI>
+<LI CLASS="mm-bull">
+<A NAME="pgfId-515456"></A>Introduce a new condition with <SPAN CLASS="ee-keyword">
+ensure</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-keyword">
+then</SPAN>
+, for and-ing with the original postcondition.</LI>
+</UL>
+<P CLASS="mm-celltext">
+<A NAME="pgfId-515457"></A>In the absence of such a clause, the original assertions are retained.</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515458"></A>The last case -- retaining the original -- is frequent but by no means universal.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515459"></A>The Assertion Redeclaration rule applies to <SPAN CLASS="ff-bold">
+redeclarations</SPAN>
+. This terms covers not just redefinition but also effecting (the implementation, by a class, of a feature that it inherits deferred). The rules -- not just for assertions but also, as reviewed below, for typing -- are indeed the same in both cases. Without the Assertion Redeclaration rule, assertions on deferred features, such as those on <SPAN CLASS="ee-text">
+extend</SPAN>
+, <SPAN CLASS="ee-text">
+count</SPAN>
+ and <SPAN CLASS="ee-text">
+forth </SPAN>
+in <A HREF="tutorial-10.html#41757" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Deferred features and classes&quot;,  page 57</SPAN>
+</A>, would be almost useless -- wishful thinking; the rule makes them binding on all effectings in descendants.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515463"></A>From the Assertion Redeclaration rule follows an interesting technique: <SPAN CLASS="ff-bold">
+abstract preconditions</SPAN>
+. What needs to be weakened for a precondition (or strengthened for a postcondition) is not the assertion's concrete semantics but its abstract specification as seen by the client. A descendant can change the <SPAN CLASS="ff-italics">
+implementation</SPAN>
+ of that specification as it pleases, even to the effect of strengthening the concrete precondition, as long as the abstract form is kept or weakened. The precondition of procedure <SPAN CLASS="ee-text">
+extend</SPAN>
+ in the deferred class <SPAN CLASS="ee-text">
+LIST</SPAN>
+ provided an example. We wrote the routine (page <A HREF="tutorial-10.html#17380" CLASS="XRef"><SPAN CLASS="ww-crossref">
+58</SPAN>
+</A>) as</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515469"></A>	extend (x: G) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515470"></A>			-- Add <SPAN CLASS="ee-text">
+x</SPAN>
+ at end of list.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515471"></A>		<SPAN CLASS="ee-keyword">
+require</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515472"></A>			space_available: <SPAN CLASS="ee-keyword">
+not</SPAN>
+ full</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515473"></A>		<SPAN CLASS="ee-keyword">
+deferred</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515474"></A>		<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515475"></A>			one_more: count = <SPAN CLASS="ee-keyword">
+old </SPAN>
+count + 1</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515476"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515477"></A>The precondition expresses that it is only possible to add an item to a list if the representation is not full. We may well consider -- in line with the Eiffel principle that whenever possible structures should be of unbounded capacity -- that <SPAN CLASS="ee-text">
+LIST </SPAN>
+should by default make <SPAN CLASS="ee-text">
+full</SPAN>
+ always return false:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515480"></A><SPAN CLASS="ee-text">
+full: BOOLEAN</SPAN>
+ <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515481"></A>		-- Is representation full?</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515482"></A>		-- (Default: no)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515483"></A><SPAN CLASS="ee-text">
+	</SPAN>
+<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515484"></A>		Result := False</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515485"></A>	<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515486"></A>Now a class <SPAN CLASS="ee-text">
+BOUNDED_LIST </SPAN>
+that implements bounded-size lists (inheriting, like the earlier <SPAN CLASS="ee-text">
+ARRAYED_LIST</SPAN>
+, from both <SPAN CLASS="ee-text">
+LIST</SPAN>
+ and <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+) may redefine <SPAN CLASS="ee-text">
+full</SPAN>
+:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515489"></A><SPAN CLASS="ee-text">
+full: BOOLEAN</SPAN>
+ <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515490"></A>		-- Is representation full?</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515491"></A>		-- (Answer: if and only if number of items is <SPAN CLASS="ee-text">
+capacity</SPAN>
+)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515492"></A><SPAN CLASS="ee-text">
+	</SPAN>
+<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515493"></A>		<SPAN CLASS="ee-text">
+Result</SPAN>
+ := (<SPAN CLASS="ee-text">
+count</SPAN>
+ = <SPAN CLASS="ee-text">
+capacity</SPAN>
+)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515494"></A><SPAN CLASS="ee-text">
+	</SPAN>
+<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515495"></A>Procedure <SPAN CLASS="ee-text">
+extend</SPAN>
+ remains applicable as before; any client that used it properly with <SPAN CLASS="ee-text">
+LIST</SPAN>
+ can rely polymorphically on the <SPAN CLASS="ee-text">
+FIXED_LIST</SPAN>
+ implementation. The abstract precondition of <SPAN CLASS="ee-text">
+extend</SPAN>
+ has not changed, even though the concrete implementation of that precondition has in fact been strengthened.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515496"></A>Note that a class such as <SPAN CLASS="ee-text">
+BOUNDED_LIST</SPAN>
+, the likes of which indeed appear in EiffelBase, is not a violation of the Eiffel advice to stay away from fixed-size structures. The corresponding structures are bounded, but the bounds are changeable. Although <SPAN CLASS="ee-text">
+extend</SPAN>
+ requires <SPAN CLASS="ee-keyword">
+not</SPAN>
+<SPAN CLASS="ee-text">
+ full</SPAN>
+, another feature, called <SPAN CLASS="ee-text">
+force</SPAN>
+ in all applicable classes, will add an element at the appropriate position by resizing and reallocating the structure if necessary. Even arrays in Eiffel are not fixed-size, and have a procedure <SPAN CLASS="ee-text">
+force</SPAN>
+ with no precondition, accepting any index position.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515497"></A>The Assertion Redeclaration rule, together with the Invariant Accumulation rule, provides the right methodological perspective for understanding inheritance and the associated mechanisms. Defining a class as inheriting from another is a strong commitment; it means inheriting not only the features but the logical constraints. Redeclaring a routine is bound by a similar committment: to provide a new implementation (or, for an effecting, a first implementation) of a previously defined semantics, as expressed by the original contract. Usually you have a wide margin for choosing your implementation, since the contract only defines a range of possible behaviors (rather than just one behavior), but you <SPAN CLASS="ff-bold">
+must</SPAN>
+ remain within that range. Otherwise you would be perverting the goals of redeclaration, using this mechanism as a sort of late-stage hacking to override bugs in ancestor classes.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515499"></A><A NAME="61102"></A>Join and uneffecting</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515500"></A>It is not an error to inherit two deferred features from different parents under the same name, provided they have the same signature (number and types of arguments and result). In that case a process of <SPAN CLASS="ff-bold">
+feature join</SPAN>
+ takes place: the features are merged into just one -- with their preconditions and postconditions, if any, respectively or-ed and and-ed.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515501"></A>More generally, it is permitted to have any number of deferred features and at most <SPAN CLASS="ff-italics">
+one</SPAN>
+ effective feature that share the same name: the effective version, if present will effect all the others.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515505"></A>All this is not a violation of the Final Name rule (page <A HREF="tutorial-10.html#25265" CLASS="XRef"><SPAN CLASS="ww-crossref">
+65</SPAN>
+</A>), since the name clashes prohibited by the rule involve two <SPAN CLASS="ff-italics">
+different</SPAN>
+ features having the same final name; here the result is just <SPAN CLASS="ff-italics">
+one</SPAN>
+ feature, resulting from the join of all the inherited versions.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515506"></A>Sometimes we may want to join <SPAN CLASS="ff-italics">
+effective</SPAN>
+ features inherited from different parents, assuming again the features have compatible signatures. One way is to redefine them all into a new version; then they again become one feature, with no name clash in the sense of the Final Name rule. But in other cases we may simply want one of the inherited implementations to take over the others. The solution is to revert to the preceding case by <SPAN CLASS="ff-bold">
+uneffecting</SPAN>
+<SPAN CLASS="ee-keyword">
+ </SPAN>
+the other features; uneffecting an inherited effective feature makes it deferred (this is the reverse of effecting, which turns an inherited deferred feature into an effective one). The syntax uses the <SPAN CLASS="ee-keyword">
+undefine</SPAN>
+ subclause:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515509"></A><SPAN CLASS="ee-keyword">
+class </SPAN>
+D <SPAN CLASS="ee-keyword">
+inherit</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515510"></A>	A</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515511"></A>		<SPAN CLASS="ee-keyword">
+rename</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515512"></A><SPAN CLASS="ee-keyword">
+			</SPAN>
+g <SPAN CLASS="ee-keyword">
+as </SPAN>
+f			-- g <SPAN CLASS="ee-comment">
+was effective in</SPAN>
+ A</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515513"></A>		<SPAN CLASS="ee-keyword">
+undefine</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515514"></A>			f</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515515"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515516"></A>	B</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515517"></A>		<SPAN CLASS="ee-keyword">
+undefine</SPAN>
+ f <SPAN CLASS="ee-keyword">
+end</SPAN>
+				-- f<SPAN CLASS="ee-comment">
+ was effective in</SPAN>
+ B</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515518"></A>	C</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515519"></A>		-- <SPAN CLASS="ee-text">
+C</SPAN>
+ also has an effective feature <SPAN CLASS="ee-text">
+f</SPAN>
+, which will serve as</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-529833"></A>		-- implementation for the result of the join.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515521"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515522"></A>	&#8230; </P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515523"></A>Again what counts, to determine if there is an invalid name clash, is the final name of the features. In this example to of the joined features were originally called <SPAN CLASS="ee-text">
+f</SPAN>
+; the one from <SPAN CLASS="ee-text">
+A</SPAN>
+ was called <SPAN CLASS="ee-text">
+g</SPAN>
+, but in <SPAN CLASS="ee-text">
+D</SPAN>
+ it is renamed as <SPAN CLASS="ee-text">
+f</SPAN>
+, so without the undefinition it would cause an invalid name clash.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515524"></A>Feature joining is the most common application of uneffecting. In some non-joining cases, however, it may be useful to forget the original implementation of a feature and let it start a new life devoid of any burden from the past.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515525"></A>Changing the export status</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515526"></A>Another Feature Adaptation subclause, <SPAN CLASS="ee-keyword">
+export</SPAN>
+, makes it possible to change the export status of an inherited feature. By default -- covering the behavior desired in the vast majority of practical cases -- an inherited feature keeps its original export status (exported, secret, selectively exported). In some cases, however, this is not appropriate:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515527"></A>A feature may have played a purely implementation-oriented role in the parent, but become interesting to clients of the heir. Its status will change from secret to exported.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515528"></A>In implementation inheritance (for example <SPAN CLASS="ee-text">
+ARRAYED_LIST</SPAN>
+ inheriting from <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+) an exported feature of the parent may not be suitable for direct use by clients of the heir. The change of status in this case is from exported to secret.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-515535"></A>You can achieve either of these goals by writing</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515531"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ D <SPAN CLASS="ee-keyword">
+inherit</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515532"></A>	A</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515533"></A>		<SPAN CLASS="ee-keyword">
+export </SPAN>
+{X, Y, &#8230;} feature1, feature2, &#8230; <SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515534"></A>	&#8230; </P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515536"></A>This gives a new export status to the features listed (under their final names since, as noted, <SPAN CLASS="ee-keyword">
+export</SPAN>
+ like all other subclauses comes after <SPAN CLASS="ee-keyword">
+rename</SPAN>
+ if present): they become exported to the classes listed. In most cases this list of classes, <SPAN CLASS="ee-text">
+X</SPAN>
+, <SPAN CLASS="ee-text">
+Y</SPAN>
+, &#8230;, consists of just <SPAN CLASS="ee-text">
+ANY</SPAN>
+, to re-export a previously secret feature, or <SPAN CLASS="ee-text">
+NONE</SPAN>
+, to hide a previously exported feature. It is also possible, in lieu of the feature list, to use the keyword <SPAN CLASS="ee-keyword">
+all </SPAN>
+to apply the new status to all features inherited from the listed parent. Then there can be more than one class-feature list, as in</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515539"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ ARRAYED_LIST <SPAN CLASS="ee-comment">
+[</SPAN>
+G<SPAN CLASS="ee-comment">
+]</SPAN>
+ <SPAN CLASS="ee-keyword">
+inherit</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515540"></A>	ARRAY <SPAN CLASS="ee-comment">
+[</SPAN>
+G<SPAN CLASS="ee-comment">
+]</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515541"></A>		<SPAN CLASS="ee-keyword">
+rename</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515542"></A>			count <SPAN CLASS="ee-keyword">
+as</SPAN>
+ capacity, item <SPAN CLASS="ee-keyword">
+as</SPAN>
+ array_item, put as array_put</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515543"></A>		<SPAN CLASS="ee-keyword">
+export</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515544"></A>			{NONE} <SPAN CLASS="ee-keyword">
+all</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515545"></A>			{ANY} capacity</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515546"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515547"></A>	&#8230; </P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515548"></A>where any explicit listing of a feature, such as <SPAN CLASS="ee-text">
+capacity</SPAN>
+, takes precedence over the export status specified for <SPAN CLASS="ee-keyword">
+all</SPAN>
+. Here most features of <SPAN CLASS="ee-text">
+ARRAY </SPAN>
+are secret in <SPAN CLASS="ee-text">
+ARRAYED_LIST</SPAN>
+, because the clients should not permitted to manipulate array entries directly: they will manipulate them indirectly through list features such as <SPAN CLASS="ee-text">
+extend</SPAN>
+ and <SPAN CLASS="ee-text">
+item</SPAN>
+, whose implementation relies on <SPAN CLASS="ee-text">
+array_item</SPAN>
+ and <SPAN CLASS="ee-text">
+array_put</SPAN>
+. But <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+'s feature <SPAN CLASS="ee-text">
+count</SPAN>
+ remains useful, under the name <SPAN CLASS="ee-text">
+capacity</SPAN>
+, to the clients of <SPAN CLASS="ee-text">
+ARRAYED_LIST</SPAN>
+.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515550"></A><A NAME="11134"></A>Flat and Flat-Contract Forms</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515551"></A>Thanks to inheritance, a concise class text may achieve a lot, relying on all the features inherited from direct and indirect ancestors.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515552"></A>This is part of the power of the object-oriented form of reuse, but can create a comprehension and documentation problem when the inheritance structures become deep: how does one understand such a class, either as client author or as maintainer? For clients, the Contract Form, entirely deduced from the class text, does not tell the full story about available features; and maintainers must look to proper ancestors for much of the relevant information.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515553"></A>These observations suggest ways to produce, from a class text, a version that is equivalent feature-wise and assertion-wise, but has no inheritance dependency. This is called the<SPAN CLASS="ff-bold">
+ Flat Form</SPAN>
+ of the class. It is a class text that has no inheritance clause and includes all the features of the class, immediate (declared in the class itself) as well as inherited. For the inherited features, the flat form must of course take account of all the feature adaptation mechanisms: renaming (each feature must appear under its final name), redefinition, effecting, uneffecting and export status change. For redeclared features, <SPAN CLASS="ee-keyword">
+require else</SPAN>
+ clauses are or-ed with the precursors' preconditions, and <SPAN CLASS="ee-keyword">
+ensure then</SPAN>
+ clauses are and-ed with precursors' postconditions. For invariants, all the ancestors' clauses are concatenated. As a result, the flat form yields a view of the class, its features and its assertions that conforms exactly to the view offered to clients and (except for polymorphic uses) heirs.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515554"></A>As with the Contract Form (<A HREF="tutorial-9.html#78482" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;The contract form of a class&quot;,  page 44</SPAN>
+</A>), producing the Flat Form is the responsibility of tools in the development environment. In EiffelStudio, you will just click the &quot;Flat&quot; icon.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515558"></A>The Contract Form of the Flat Form of a class is known as its F<SPAN CLASS="ff-bold">
+lat-Contract Form</SPAN>
+. It gives the complete interface specification, documenting all exported features and assertions -- immediate or inherited -- and hiding implementation aspects. It is the appropriate documentation for a class.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515560"></A><A NAME="69912"></A>Repeated inheritance and selection</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515561"></A>An inheritance mechanism, following from multiple inheritance, remains to be seen. Through multiple inheritance, a class can be a proper descendant of another through more than one path. This is called repeated inheritance and can be indirect, as in the following figure, or even direct, when a class <SPAN CLASS="ee-text">
+D</SPAN>
+ lists a class <SPAN CLASS="ee-text">
+A</SPAN>
+ twice in its <SPAN CLASS="ee-keyword">
+inherit</SPAN>
+ clause.</P>
+<DIV>
+<MAP NAME="tutorial-13">
+</MAP>
+<IMG SRC="tutorial-13.png" USEMAP="#tutorial-13">
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-515592"></A>The figure's particular example is in fact often used by introductory presentations of <SPAN CLASS="ff-italics">
+multiple</SPAN>
+ inheritance, which is a pedagogical mistake: simple multiple inheritance examples (such as <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ inheriting from <SPAN CLASS="ee-text">
+NUMERIC</SPAN>
+ and <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+, or <SPAN CLASS="ee-text">
+COMPANY_PLANE</SPAN>
+ from <SPAN CLASS="ee-text">
+ASSET</SPAN>
+ and <SPAN CLASS="ee-text">
+PLANE</SPAN>
+) should involve the combination of <SPAN CLASS="ff-bold">
+separate abstractions</SPAN>
+. Repeated inheritance is an advanced technique; although invaluable, it does not arise in elementary uses and requires a little more care.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515593"></A>In fact there is only one non-trivial issue in repeated inheritance: what does a feature of the repeated ancestor, such as <SPAN CLASS="ee-text">
+change_address</SPAN>
+ and <SPAN CLASS="ee-text">
+computer_account</SPAN>
+, mean for the repeated descendant, here <SPAN CLASS="ee-text">
+TEACHING_ASSISTANT  </SPAN>
+? (The example features chosen involve a routine and an attribute; the basic rules will be the same.)</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515599"></A>There are two possibilities: sharing (the repeatedly inherited feature yields just one feature in the repeated descendant) and duplication (it yields two). Examination of various cases shows quickly that a fixed policy, or one that would apply to all the features of a class, would be inappropriate. </P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-530189"></A>Feature <SPAN CLASS="ee-text">
+change_address</SPAN>
+ calls for sharing: as a teaching assistant, you may be both teacher and student, but you are just one person, with just one official domicile.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-530190"></A>If there are separate accounts for students' course work and for faculty, you may need one of each kind, suggesting that <SPAN CLASS="ee-text">
+computer_account</SPAN>
+ calls for duplication.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-515600"></A>The Eiffel rule enables, once again, the software developer to craft the resulting class so as to tune it to the exact requirements. Not surprisingly, it is based on names, in accordance with the Final Name rule (no in-class overloading):</P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-515603"></A>Repeated Inheritance rule</P>
+<UL>
+<LI CLASS="mm-bull">
+<A NAME="pgfId-515604"></A>A feature inherited multiply under one name will be shared: it is considered to be just one feature in the repeated descendant.</LI>
+<LI CLASS="mm-bull">
+<A NAME="pgfId-515605"></A>A feature inherited multiply under different names will be replicated, yielding as many variants as names.</LI>
+</UL>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-530268"></A>So to tune the repeated descendant, feature by feature, for sharing and replication it suffices to use renaming.</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-530285"></A>Doing nothing will cause sharing, which is indeedthe desired policy in most cases (especially those cases of <SPAN CLASS="ff-italics">
+unintended</SPAN>
+ repeated inheritance: making <SPAN CLASS="ee-text">
+D</SPAN>
+ inherit from <SPAN CLASS="ee-text">
+A</SPAN>
+ even though it also inherits from <SPAN CLASS="ee-text">
+B</SPAN>
+, which you forgot is already a descendant of <SPAN CLASS="ee-text">
+A</SPAN>
+).</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-530286"></A>If you use renaming somewhere along the way, so that the final names are different, you will obtain two separate features. It does not matter where the renaming occurs; all that counts is whether in the common descendant, <SPAN CLASS="ee-text">
+TEACHING_ASSISTANT</SPAN>
+ in the last figure, the names are the same or different. So you can use renaming at that last stage to cause replication; but if the features have been renamed higher you can also use last-minute renaming to <SPAN CLASS="ff-italics">
+avoid</SPAN>
+ replication, by bringing them back to a single name.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-515607"></A>The Repeated Inheritance rule gives the desired flexibility to disambiguate the meaning of repeatedly inherited features. There remains a problem in case of redeclaration and polymorphism. Assume that somewhere along the inheritance paths one or both of two replicated versions of a feature <SPAN CLASS="ee-text">
+f</SPAN>
+, such as <SPAN CLASS="ee-text">
+computer_account</SPAN>
+ in the example, has been redeclared; we need to define the effect of a call <SPAN CLASS="ee-text">
+a</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+f</SPAN>
+ (<SPAN CLASS="ee-text">
+a</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+computer_account</SPAN>
+ in the example) if <SPAN CLASS="ee-text">
+a</SPAN>
+ is of the repeated ancestor type, here <SPAN CLASS="ee-text">
+UNIVERSITY_PERSON</SPAN>
+, and has become attached as a result of polymorphism to an instance of the repeated descendant, here <SPAN CLASS="ee-text">
+TEACHING_ASSISTANT</SPAN>
+. If one or more of the intermediate ancestors has redefined its version of the feature, the dynamically-bound call has two or more versions to choose from.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515622"></A>A <SPAN CLASS="ee-keyword">
+select</SPAN>
+ clause will resolve the ambiguity, as in</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515610"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ TEACHING_ASSISTANT <SPAN CLASS="ee-keyword">
+inherit</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515611"></A>	TEACHER</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515612"></A>		<SPAN CLASS="ee-keyword">
+rename</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515613"></A>			computer_account <SPAN CLASS="ee-keyword">
+as</SPAN>
+ faculty_account</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515614"></A>		<SPAN CLASS="ee-keyword">
+select</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515615"></A>			faculty_account</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515616"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515617"></A>	STUDENT</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515618"></A>		<SPAN CLASS="ee-keyword">
+rename</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515619"></A>			computer_account <SPAN CLASS="ee-keyword">
+as</SPAN>
+ student_account</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515620"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515621"></A>&#8230; </P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515623"></A>We assume here that that no other renaming has occurred -- <SPAN CLASS="ee-text">
+TEACHING_ASSISTANT</SPAN>
+ takes care of the renaming to ensure replication -- but that one of the two parents has redefined <SPAN CLASS="ee-text">
+computer_account</SPAN>
+, for example <SPAN CLASS="ee-text">
+TEACHER </SPAN>
+to express the special privileges of faculty accounts. In such a case the rule is that one (and exactly one) of the two parent clauses in <SPAN CLASS="ee-text">
+TEACHING_ASSISTANT</SPAN>
+ <SPAN CLASS="ff-bold">
+must</SPAN>
+ select the corresponding version. Note that no problem arises for an entity declared as</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515626"></A>ta: TEACHING_ASSISTANT</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515627"></A>since the valid calls are of the form <SPAN CLASS="ee-text">
+ta</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+faculty_account</SPAN>
+ and <SPAN CLASS="ee-text">
+ta</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+student_account</SPAN>
+, neither of them ambiguous; the call <SPAN CLASS="ee-text">
+ta</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+computer_account</SPAN>
+ would be invalid, since after the renamings class <SPAN CLASS="ee-text">
+TEACHING_ASSISTANT</SPAN>
+ has no feature of that name. The <SPAN CLASS="ee-keyword">
+select</SPAN>
+ only applies to a call</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515630"></A><SPAN CLASS="ee-text">
+up</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+computer_account</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515631"></A>with <SPAN CLASS="ee-text">
+up</SPAN>
+ of type <SPAN CLASS="ee-text">
+UNIVERSITY_PERSON</SPAN>
+, dynamically attached to an instance of <SPAN CLASS="ee-text">
+TEACHING_ASSISTANT</SPAN>
+; then the <SPAN CLASS="ee-keyword">
+select</SPAN>
+ resolves the ambiguity by causing the call to use the version from <SPAN CLASS="ee-text">
+TEACHER</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-530300"></A>So if you traverse a list <SPAN CLASS="ee-text">
+computer_users</SPAN>
+: <SPAN CLASS="ee-text">
+LIST </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+UNIVERSITY_PERSON</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ to print some information about the computer account of each list element, the account used for a teaching assistant is the faculty account, not the student account.</P>
+<P CLASS="jj-small">
+<A NAME="pgfId-530319"></A>You may, if desired, redefine <SPAN CLASS="ee-text">
+faculty_account</SPAN>
+ in class <SPAN CLASS="ee-text">
+TEACHING_ASSISTANT</SPAN>
+, using <SPAN CLASS="ee-text">
+student_account</SPAN>
+ if necessary, to take into consideration the existence of another account. But in all cases we need a precise disambiguation of what <SPAN CLASS="ee-text">
+computer_account</SPAN>
+ means for a <SPAN CLASS="ee-text">
+TEACHING_ASSISTANT</SPAN>
+ object known only through a <SPAN CLASS="ee-text">
+UNIVERSITY_PERSON</SPAN>
+ entity.</P>
+<P CLASS="nn-first">
+<A NAME="pgfId-515632"></A>The <SPAN CLASS="ee-keyword">
+select</SPAN>
+ is only needed in case of replication. If the Repeated Inheritance rule would imply sharing, as with change_address, and one or both of the shared versions has been redeclared, the Final Name rule makes the class invalid, since it now has <SPAN CLASS="ff-bold">
+two different features</SPAN>
+ with the same name. (This is only a problem if both versions are effective; if one or both are deferred there is no conflict but a mere case of feature joining as explained in <A HREF="tutorial-10.html#61102" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Join and uneffecting&quot;,  page 70</SPAN>
+</A>.) The two possible solutions follow from the previous discussions:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515636"></A>If you do want sharing, one of the two versions must take precedence over the other. It suffices to <SPAN CLASS="ff-bold">
+undefine</SPAN>
+ the other, and everything gets back to order. Alternatively, you can redefine both into a new version, which takes precedence over both.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515637"></A>If you want to keep both versions, switch from sharing to replication: rename one or both of the features so that they will have different names; then you must <SPAN CLASS="ee-keyword">
+select</SPAN>
+ one of them.</LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515638"></A>Constrained genericity</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515639"></A>Eiffel's inheritance mechanism has an important application to extending the flexibility of the <SPAN CLASS="ff-bold">
+genericity</SPAN>
+ mechanism. In a class <SPAN CLASS="ee-text">
+SOME_CONTAINER </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+G</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+, as noted (section <A HREF="tutorial-8.html#15572" CLASS="XRef"><SPAN CLASS="ww-crossref">
+7</SPAN>
+</A>), the only operations available on entities of type <SPAN CLASS="ee-text">
+G</SPAN>
+, the formal generic parameter, are those applicable to entities of all types. A generic class may, however, need to assume more about the generic parameter, as with a class <SPAN CLASS="ee-text">
+SORTABLE_ARRAY </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+G</SPAN>
+&#8230; <SPAN CLASS="ee-comment">
+]</SPAN>
+ which will have a procedure <SPAN CLASS="ee-text">
+sort</SPAN>
+ that needs, at some stage, to perform tests of the form</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515645"></A><SPAN CLASS="ee-keyword">
+if</SPAN>
+ <SPAN CLASS="ee-text">
+item</SPAN>
+ (<SPAN CLASS="ee-text">
+i</SPAN>
+) &lt; <SPAN CLASS="ee-text">
+item</SPAN>
+ (  <SPAN CLASS="ee-text">
+j</SPAN>
+) <SPAN CLASS="ee-keyword">
+then </SPAN>
+&#8230;</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515646"></A>where <SPAN CLASS="ee-text">
+item</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+i</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ and <SPAN CLASS="ee-text">
+item</SPAN>
+ <SPAN CLASS="ee-comment">
+(</SPAN>
+  <SPAN CLASS="ee-text">
+j</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ are of type <SPAN CLASS="ee-text">
+G</SPAN>
+. But this requires the availability of a feature <SPAN CLASS="ee-keyword">
+infix </SPAN>
+<SPAN CLASS="ee-comment">
+&quot;&lt;&quot;</SPAN>
+ in all types that may serve as actual generic parameters corresponding to <SPAN CLASS="ee-text">
+G</SPAN>
+. Using the type <SPAN CLASS="ee-text">
+SORTABLE_ARRAY</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+INTEGER</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ should be permitted, because <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ has such a feature; but not <SPAN CLASS="ee-text">
+SORTABLE_ARRAY</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+COMPLEX</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ if there is no total order relation on <SPAN CLASS="ee-text">
+COMPLEX</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515650"></A>To cover such cases, declare the class as</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515649"></A><SPAN CLASS="ee-keyword">
+class </SPAN>
+<SPAN CLASS="ee-text">
+SORTABLE_ARRAY </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+G</SPAN>
+<SPAN CLASS="ee-comment">
+ -&gt;</SPAN>
+ <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515651"></A>making it <SPAN CLASS="ff-bold">
+constrained generic</SPAN>
+. The symbol <SPAN CLASS="ee-comment">
+-&gt;</SPAN>
+ recalls the arrow of inheritance diagrams; what follows it is a type, known as the generic constraint. Such a declaration means that:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515652"></A>Within the class, you may apply the features of the generic constraint -- here the features of <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+: <SPAN CLASS="ee-keyword">
+infix </SPAN>
+<SPAN CLASS="ee-syntax">
+&quot;&lt;&quot;</SPAN>
+, <SPAN CLASS="ee-keyword">
+infix </SPAN>
+<SPAN CLASS="ee-comment">
+&quot;&lt;=&quot;</SPAN>
+ etc. -- to expressions of type <SPAN CLASS="ee-text">
+G</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515653"></A>A generic derivation is only valid if the chosen actual generic parameter conforms to the constraint. Here you can use <SPAN CLASS="ee-text">
+SORTABLE_ARRAY </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+INTEGER</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ since <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ inherits from <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+, but not <SPAN CLASS="ee-text">
+SORTABLE_ARRAY </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+COMPLEX</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ if <SPAN CLASS="ee-text">
+COMPLEX</SPAN>
+ is not a descendant of <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-515654"></A>A class can have a mix of constrained and unconstrained generic parameters, as in the EiffelBase class <SPAN CLASS="ee-text">
+HASH_TABLE </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+G</SPAN>
+, <SPAN CLASS="ee-text">
+H</SPAN>
+ -&gt; <SPAN CLASS="ee-text">
+HASHABLE</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ whose first parameter represents the types of objects stored in a hash table, the second representing the types of the keys used to store them, which must be <SPAN CLASS="ee-text">
+HASHABLE</SPAN>
+. As these examples suggest, structural property classes such as <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+, <SPAN CLASS="ee-text">
+NUMERIC </SPAN>
+and <SPAN CLASS="ee-text">
+HASHABLE </SPAN>
+are the most common choice for generic constraints.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515655"></A>Unconstrained genericity, as in <SPAN CLASS="ee-text">
+C</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+G</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+, is defined as equivalent to <SPAN CLASS="ee-text">
+C</SPAN>
+ <SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+G</SPAN>
+ <SPAN CLASS="ee-comment">
+-&gt;</SPAN>
+ <SPAN CLASS="ee-text">
+ANY</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515656"></A>Assignment attempt</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515660"></A>The Type Conformance rule (<A HREF="tutorial-10.html#65123" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Polymorphism&quot;,  page 53</SPAN>
+</A>) ensures type safety by requiring all assignments to be from a more specific source to a more general target.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515661"></A>Sometimes you can't be sure of the source object's type. This happens for example when the object comes from the outside -- a file, a database, a network. The persistence storage mechanism(<A HREF="tutorial-7.html#35815" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Deep operations and persistence&quot;,  page 30</SPAN>
+</A>) includes, along with the procedure <SPAN CLASS="ee-text">
+store</SPAN>
+ seen there, the reverse operation, a function <SPAN CLASS="ee-text">
+retrieved</SPAN>
+ which yields an object structure retrieved from a file or network, to which it was sent using <SPAN CLASS="ee-text">
+store</SPAN>
+. But <SPAN CLASS="ee-text">
+retrieved</SPAN>
+ as declared in the corresponding class <SPAN CLASS="ee-text">
+STORABLE</SPAN>
+ of EiffelBase can only return the most general type, <SPAN CLASS="ee-text">
+ANY</SPAN>
+; it is not possible to know its exact type until execution time, since the corresponding objects are not under the control of the retrieving system, and might even have been corrupted by some external agent.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515665"></A>In such cases you cannot trust the declared type but must check it against the type of an actual run-time object. Eiffel introduces for this purpose the<SPAN CLASS="ff-bold">
+ assignment attempt</SPAN>
+ operation, written</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515668"></A><SPAN CLASS="ee-text">
+x </SPAN>
+?= <SPAN CLASS="ee-text">
+y</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515669"></A>with the following effect (only applicable if <SPAN CLASS="ee-text">
+x</SPAN>
+ is a writable entity of reference type):</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515670"></A>If <SPAN CLASS="ee-text">
+y</SPAN>
+ is attached, at the time of the instruction's execution to an object whose type conforms to the type of <SPAN CLASS="ee-text">
+x</SPAN>
+, perform a normal reference assignment.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-515671"></A>Otherwise (if <SPAN CLASS="ee-text">
+y</SPAN>
+ is void, or attached to a non-conforming object), make <SPAN CLASS="ee-text">
+x</SPAN>
+ void.</LI>
+</UL>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515680"></A>Using this mechanism, a typical object structure retrieval will be of the form</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515674"></A>x ?= retrieved</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515675"></A><SPAN CLASS="ee-keyword">
+if</SPAN>
+ x = Void <SPAN CLASS="ee-keyword">
+then</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515676"></A>	&quot;We did not get what we expected&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515677"></A><SPAN CLASS="ee-keyword">
+else</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515678"></A>	&quot;Proceed with normal computation, which will typically involve<BR>
+	 calls of the form <SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+some_feature</SPAN>
+&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515679"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515681"></A>As another application, assume we have a <SPAN CLASS="ee-text">
+LIST </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+ and class <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT</SPAN>
+, a descendant of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, has a feature <SPAN CLASS="ee-text">
+interest_rate</SPAN>
+ which was not in <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+. We want to find the maximum interest rate for savings accounts in the list. Assignment attempt easily solves the problem:</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515684"></A><SPAN CLASS="ee-keyword">
+local</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515685"></A>	s: SAVINGS_ACCOUNT</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515686"></A><SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515687"></A><SPAN CLASS="ee-keyword">
+	from </SPAN>
+account_list<SPAN CLASS="ee-dot">
+.</SPAN>
+start <SPAN CLASS="ee-keyword">
+until </SPAN>
+account_list<SPAN CLASS="ee-dot">
+.</SPAN>
+after <SPAN CLASS="ee-keyword">
+loop</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515688"></A>			s ?= acc_list<SPAN CLASS="ee-dot">
+.</SPAN>
+item		</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515689"></A>				-- <SPAN CLASS="ee-text">
+item</SPAN>
+ from <SPAN CLASS="ee-text">
+LIST</SPAN>
+ yields the element at<BR>
+				-- cursor position</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515690"></A>		<SPAN CLASS="ee-keyword">
+if </SPAN>
+s /= Void <SPAN CLASS="ee-keyword">
+and</SPAN>
+ <SPAN CLASS="ee-keyword">
+then</SPAN>
+ s<SPAN CLASS="ee-dot">
+.</SPAN>
+interest_rate &gt; Result <SPAN CLASS="ee-keyword">
+then</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515691"></A>				-- Using <SPAN CLASS="ee-keyword">
+and</SPAN>
+ <SPAN CLASS="ee-keyword">
+then</SPAN>
+ (rather than <SPAN CLASS="ee-keyword">
+and</SPAN>
+) guarantees</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515692"></A>				-- that <SPAN CLASS="ee-text">
+s</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+interest_rate</SPAN>
+ is not evaluated<BR>
+				-- if <SPAN CLASS="ee-text">
+s</SPAN>
+ = <SPAN CLASS="ee-text">
+Void</SPAN>
+ is true.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515693"></A>			Result := s<SPAN CLASS="ee-dot">
+.</SPAN>
+interest_rate</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515694"></A>		<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515695"></A>		account_list<SPAN CLASS="ee-dot">
+.</SPAN>
+forth</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515696"></A>	<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515697"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515698"></A>Note that if there is no savings account at all in the list the assignment attempt will always yield void, so that the result of the function will be 0, the default initialization.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515699"></A>Assignment attempt is useful in the cases cited -- access to external objects beyond the software's own control, and access to specific properties in a polymorphic data structure. The form of the instruction precisely serves these purposes; not being a general type comparison, but only a verification of a specific expected type, it does not carry the risk of encouraging developers to revert to multi-branch instruction structures, for which Eiffel provides the far preferable alternative of polymorphic, dynamically-bound feature calls.</P>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515701"></A><A NAME="46019"></A>Covariance and anchored declarations</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515702"></A>The final property of Eiffel inheritance involves the rules for adapting not only the implementation of inherited features (through redeclaration of either kind, redeclaration and redefinition, as seen so far) and their contracts (through the Assertion Redeclaration rule), but also their types. More general than type is the notion of a feature's <SPAN CLASS="ff-bold">
+signature</SPAN>
+, defined by the number of its arguments, their types, the indication of whether it has a result (that is to say, is a function or attribute rather than a procedure) and, if so, the type of the result.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515703"></A>In many cases the signature of a redeclared feature remains the same as the original's. But in some cases you may want to adapt it to the new class. Assume for example that class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ has features</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515706"></A>owner: HOLDER</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515707"></A>set_owner (h: HOLDER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515708"></A>		-- Make <SPAN CLASS="ee-text">
+h</SPAN>
+ the account owner.</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515709"></A>	<SPAN CLASS="ee-keyword">
+require</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515710"></A>		not_void: h /= Void</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515711"></A>	<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515712"></A>		owner := h</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515713"></A>	<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515714"></A>We introduce an heir <SPAN CLASS="ee-text">
+BUSINESS_ACCOUNT</SPAN>
+ of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ to represent special business accounts, corresponding to class <SPAN CLASS="ee-text">
+BUSINESS</SPAN>
+ inheriting from <SPAN CLASS="ee-text">
+HOLDER:</SPAN>
+</P>
+<DIV>
+<MAP NAME="tutorial-14">
+</MAP>
+<IMG SRC="tutorial-14.png" USEMAP="#tutorial-14">
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-515767"></A>Clearly, we must redefine <SPAN CLASS="ee-text">
+owner</SPAN>
+ in class <SPAN CLASS="ee-text">
+BUSINESS_ACCOUNT</SPAN>
+ to yield a result of type <SPAN CLASS="ee-text">
+BUSINESS</SPAN>
+; the same signature redefinition must be applied to the argument of <SPAN CLASS="ee-text">
+set_owner</SPAN>
+. This case is typical of the general scheme of signature redefinition: in a descendant, you may need to redefine both results and arguments to types conforming to the originals. This is reflected by a language rule:</P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-515770"></A>Covariance rule</P>
+<P CLASS="mm-celltext">
+<A NAME="pgfId-515771"></A>In a feature redeclaration, both the result type if the feature is a query (attribute or function) and the type of any argument if it is a routine (procedure or function) must conform to the original type as declared in the precursor version.</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515772"></A>The term &quot;covariance&quot; reflects the property that all types -- those of arguments and those of results -- vary together in the same direction as the inheritance structure.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515773"></A>If a feature such as <SPAN CLASS="ee-text">
+set_owner </SPAN>
+has to be redefined for more than its signature -- to update its implementation or assertions -- the signature redefinition will be explicit. For example <SPAN CLASS="ee-text">
+set_owner </SPAN>
+could do more for business owners than it does for ordinary owners. Then the redefinition will be of the form</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515776"></A>set_owner (b: BUSINESS) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515777"></A>		-- Make <SPAN CLASS="ee-text">
+b</SPAN>
+ the account owner.</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515778"></A>	&#8230; New routine body &#8230;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515779"></A>	<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515780"></A>In other cases, however, the body will be exactly the same as in the precursor. Then explicit redefinition would be tedious, implying much text duplication. The mechanism of <SPAN CLASS="ff-bold">
+anchored redeclaration</SPAN>
+ solves this problem. The original declaration of <SPAN CLASS="ee-text">
+set_owner</SPAN>
+ in <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ should be of the form</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515783"></A>set_owner (h: <SPAN CLASS="ee-keyword">
+like</SPAN>
+ Current) <SPAN CLASS="ee-keyword">
+is</SPAN>
+</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515784"></A>		-- Make <SPAN CLASS="ee-text">
+h</SPAN>
+ the account owner.</P>
+<P CLASS="ee-comment">
+<A NAME="pgfId-515785"></A>		-- The rest as before:</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515786"></A>	<SPAN CLASS="ee-keyword">
+require</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515787"></A>		not_void: h /= Void</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515788"></A>	<SPAN CLASS="ee-keyword">
+do</SPAN>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515789"></A>		owner := h</P>
+<P CLASS="ee-text">
+<A NAME="pgfId-515790"></A>	<SPAN CLASS="ee-keyword">
+end</SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515791"></A>A <SPAN CLASS="ee-keyword">
+like</SPAN>
+<SPAN CLASS="ee-text">
+ anchor </SPAN>
+type, known as an anchored type, may appear in any context in which <SPAN CLASS="ee-text">
+anchor</SPAN>
+ has a well-defined type; <SPAN CLASS="ee-text">
+anchor </SPAN>
+can be an attribute or function of the enclosing class, or an argument of the enclosing routine. Then, assuming <SPAN CLASS="ee-text">
+T</SPAN>
+ is the type of <SPAN CLASS="ee-text">
+anchor</SPAN>
+, the type <SPAN CLASS="ee-keyword">
+like</SPAN>
+<SPAN CLASS="ee-text">
+ anchor</SPAN>
+ means the following:</P>
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-530477"></A>In the class in which it appears, <SPAN CLASS="ee-keyword">
+like</SPAN>
+<SPAN CLASS="ee-text">
+ anchor</SPAN>
+ means the same as <SPAN CLASS="ee-text">
+T</SPAN>
+. Ffor example, in <SPAN CLASS="ee-text">
+set_owner</SPAN>
+ above, the declaration of <SPAN CLASS="ee-text">
+h</SPAN>
+ has the same effect as if <SPAN CLASS="ee-text">
+h</SPAN>
+ had been declared of type <SPAN CLASS="ee-text">
+HOLDER</SPAN>
+, the type of the anchor <SPAN CLASS="ee-text">
+owner</SPAN>
+ in class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-530483"></A>The difference comes in proper descendants: if a type redefinition changes the type of <SPAN CLASS="ee-text">
+anchor</SPAN>
+, any entity declared <SPAN CLASS="ee-keyword">
+like</SPAN>
+ <SPAN CLASS="ee-text">
+anchor</SPAN>
+ will be considered to have been redefined too.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-530491"></A>This means that anchored declaration are a form of of implicit covariant redeclaration. </P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515792"></A>In the example, class <SPAN CLASS="ee-text">
+BUSINESS_ACCOUNT</SPAN>
+ only needs to redefine the type of <SPAN CLASS="ee-text">
+owner</SPAN>
+ (to <SPAN CLASS="ee-text">
+BUSINESS</SPAN>
+). It doesn't have to redefine <SPAN CLASS="ee-text">
+set_owner </SPAN>
+except if it needs to change its implementation or assertions.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515793"></A>It is possible to use <SPAN CLASS="ee-text">
+Current</SPAN>
+ as anchor; the declaration <SPAN CLASS="ee-keyword">
+like</SPAN>
+<SPAN CLASS="ee-text">
+ Current</SPAN>
+ denotes a type based on the current class (with the same generic parameters if any). This is in fact a common case; we saw in <A HREF="tutorial-10.html#46202" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;Structural property classes&quot;,  page 62</SPAN>
+</A>, that it applies in class <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+ to features such as</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515799"></A><SPAN CLASS="ee-text">
+	</SPAN>
+<SPAN CLASS="ee-keyword">
+infix </SPAN>
+&quot;&lt;&quot;<SPAN CLASS="ee-text">
+ </SPAN>
+(<SPAN CLASS="ee-text">
+other</SPAN>
+: <SPAN CLASS="ee-keyword">
+like</SPAN>
+ <SPAN CLASS="ee-text">
+Current</SPAN>
+):<SPAN CLASS="ee-text">
+ BOOLEAN is </SPAN>
+&#8230;<SPAN CLASS="ee-text">
+ </SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515800"></A>since we only want to compare two comparable elements of compatible types -- but not, for example, integer and strings, even if both types conform to <SPAN CLASS="ee-text">
+COMPARABLE</SPAN>
+. (A &quot;balancing rule&quot; makes it possible, however, to mix the various arithmetic types, consistently with mathematical traditions, in arithmetic expressions such as <SPAN CLASS="ee-text">
+3 </SPAN>
+<SPAN CLASS="ee-comment">
++</SPAN>
+<SPAN CLASS="ee-text">
+ 45.82</SPAN>
+ or boolean expressions such as <SPAN CLASS="ee-text">
+3 </SPAN>
+<SPAN CLASS="ee-comment">
+&lt;</SPAN>
+ <SPAN CLASS="ee-text">
+45.82</SPAN>
+.)</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515804"></A>Similarly, class <SPAN CLASS="ee-text">
+ANY</SPAN>
+ declares procedure <SPAN CLASS="ee-text">
+copy </SPAN>
+as</P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-515803"></A><SPAN CLASS="ee-text">
+	copy </SPAN>
+(<SPAN CLASS="ee-text">
+other</SPAN>
+: <SPAN CLASS="ee-keyword">
+like </SPAN>
+<SPAN CLASS="ee-text">
+Current</SPAN>
+) <SPAN CLASS="ee-keyword">
+is</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+&#8230;<SPAN CLASS="ee-text">
+ </SPAN>
+</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="nn-first">
+<A NAME="pgfId-515805"></A>with the argument anchored to the current object. Function <SPAN CLASS="ee-text">
+clone</SPAN>
+, for its part, has signature <SPAN CLASS="ee-text">
+clone </SPAN>
+<SPAN CLASS="ee-comment">
+(</SPAN>
+<SPAN CLASS="ee-text">
+other</SPAN>
+: <SPAN CLASS="ee-text">
+ANY</SPAN>
+<SPAN CLASS="ee-comment">
+):</SPAN>
+ <SPAN CLASS="ee-keyword">
+like</SPAN>
+<SPAN CLASS="ee-text">
+ other</SPAN>
+, with both argument and result anchored to the argument, so that for any <SPAN CLASS="ee-text">
+x </SPAN>
+the type of <SPAN CLASS="ee-text">
+clone</SPAN>
+<SPAN CLASS="ee-comment">
+ (</SPAN>
+<SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-comment">
+)</SPAN>
+ is the same as the type of <SPAN CLASS="ee-text">
+x</SPAN>
+.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-515806"></A>A final, more application-oriented example of anchoring to <SPAN CLASS="ee-text">
+Current</SPAN>
+ is the feature <SPAN CLASS="ee-text">
+merge</SPAN>
+ posited in an earlier example (page <A HREF="tutorial-7.html#ROUTINE &quot;MERGE&quot;" CLASS="XRef"><SPAN CLASS="ww-crossref">
+33</SPAN>
+</A>) with the signature <SPAN CLASS="ee-text">
+merge </SPAN>
+(<SPAN CLASS="ee-text">
+other</SPAN>
+: <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+). By using instead <SPAN CLASS="ee-text">
+merge </SPAN>
+(<SPAN CLASS="ee-text">
+other</SPAN>
+: <SPAN CLASS="ee-keyword">
+like </SPAN>
+<SPAN CLASS="ee-text">
+Current</SPAN>
+) we can ensure that in any descendant class -- <SPAN CLASS="ee-text">
+BUSINESS_ACCOUNT</SPAN>
+, <SPAN CLASS="ee-text">
+SAVINGS_ACCOUNT</SPAN>
+, <SPAN CLASS="ee-text">
+MINOR_ACCOUNT</SPAN>
+&#8230; -- an account will only be mergeable with another of a compatible type.</P>
+<P CLASS="nn-normal">
+<A NAME="pgfId-554954"></A>Covariance makes static type checking more delicate; mechanisms of &quot;system validity&quot; and &quot;catcalls&quot; address the problem, discussed in detail in the book <SPAN CLASS="ff-note">
+<A HREF="http://eiffel.com/doc/oosc" CLASS="URL"></A></SPAN>
+<SPAN CLASS="ww-crossref">
+Object-Oriented Software Construction</SPAN>
+<SPAN CLASS="ff-italics">
+ </SPAN>
+(see the bibliography).</P>
+<P CLASS="nn-first">
+<A NAME="pgfId-555114"></A>.</P>
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-9.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-11.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

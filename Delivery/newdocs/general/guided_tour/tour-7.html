@@ -1,0 +1,492 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 6  STARTING TO BROWSE</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tour-6.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tour.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tour-8.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-475544"></A>6  <A NAME="84105"></A>STARTING TO BROWSE</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-475545"></A>It was important to take a look at how EiffelStudio stores your project, but unless your idea of fun is to poke around the file system to look at compiler-generated files that's not really the exciting part yet. Among the most innovative aspects of EiffelStudio is a unique set of facilities to <SPAN CLASS="ff-italics">
+browse</SPAN>
+ through a software system.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-475757"></A>Browsing styles</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-475756"></A>Browsing -- traversing the structure -- is particularly important in object-oriented development and especially in Eiffel because of the speed at which you can construct sophisticated class structures, making use of inheritance, genericity, the client relation and information hiding, and subjecting features to all kinds of adaptations -- renaming, redefinition, undefinition, effecting -- that are key to the expressive power of the software, but call for smart tools to keep track of what's going on. EiffelStudio's tools are second to none. Among their key properties:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-475598"></A>You can choose many different ways of browsing: sometimes you know the <SPAN CLASS="ff-italics">
+name</SPAN>
+ of a class or feature, and will get to it just by typing its name; sometimes you want to traverse the system through its cluster-subcluster <SPAN CLASS="ff-italics">
+structure</SPAN>
+; often, you see a reference to element (class or feature) in the text of another element, and just want to get to it by following that reference, like a <SPAN CLASS="ff-italics">
+hyperlink</SPAN>
+. You'll be able to use all these techniques, and alternate freely between them.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-475603"></A>The browsing facilities are always available. There is no &quot;browser&quot; in EiffelStudio; you just browse when you want to, by looking at the information you need. You can do this while editing, debugging, or performing any other of the analysis, design, implementation, extension and maintenance tasks of system construction.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-475606"></A>Although classes are stored in files and clusters in directories, you can for the most part forget about the file system. Unlike most environments, which let you manipulate files containing software texts, EiffelStudio lets you concentrate on your <SPAN CLASS="ff-italics">
+development objects</SPAN>
+ -- the units that make sense for you: features, classes, clusters, systems. You think in terms of those conceptual units, and don't have to worry about where they are stored. Most of the time, you'll just forget about files and directories.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-475609"></A>You can produce many <SPAN CLASS="ff-italics">
+views</SPAN>
+ of the development objects. For a class, you may see the full text, the interface only, the inheritance structure, the clients, the features, and many other views. You can even disply <SPAN CLASS="ff-italics">
+graphical</SPAN>
+ views along with textual ones. All these are fully browsable; you can go from one to the other as you please.</LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-475758"></A>A Development Tool</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-475771"></A>Let's see how this works. First, take a look at the EiffelStudio window:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-8.png"><IMG WIDTH="100" SRC="tour-8.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="jj-small">
+<A NAME="pgfId-475772"></A>If some parts are too small, just resize the window to arrive at something like what's on the figure. When it first comes up, EiffelStudio initially uses a fairly small window, because it's designed to run on a 800x600 display, although of course a bigger display is recommended. But as soon as you have resized it, EiffelStudio will come up, in the next session, with the size you've set.
+<P CLASS="nn-first">
+<A NAME="pgfId-475773"></A>You can see four panes, marked on the figure: <SPAN CLASS="ee-keyword">
+Features</SPAN>
+, <SPAN CLASS="ee-keyword">
+Class</SPAN>
+, <SPAN CLASS="ee-keyword">
+Clusters</SPAN>
+, <SPAN CLASS="ee-keyword">
+Context</SPAN>
+. There will be others, such as <SPAN CLASS="ee-keyword">
+Search</SPAN>
+, and you can remove any of them, except <SPAN CLASS="ee-keyword">
+Class</SPAN>
+, at any time to make room for the others.
+<P CLASS="nn-normal">
+<A NAME="pgfId-475627"></A>So far we have talked about &quot;<SPAN CLASS="ff-italics">
+the</SPAN>
+ EiffelStudio window&quot;, but in fact that's not correct. What you see is <SPAN CLASS="ff-italics">
+one</SPAN>
+ &quot;<SPAN CLASS="ff-bold">
+Development Tool</SPAN>
+&quot;, of which you can have as many as you wish. Some people prefer to use a single development tool, avoiding screen clutter; others don't think twice about having lots of windows, taking the &quot;desktop metaphor&quot; to its full conclusion (as many non-computer desktops are quite cluttered). There are many ways to start a new Development Tool; for example if you look at the entries in the <SPAN CLASS="ee-keyword">
+File</SPAN>
+ menu at the top left -- don't select any of these entries yet, just look -- you'll see, among others, <SPAN CLASS="ee-keyword">
+New window</SPAN>
+, which would create a new Tool.
+<P CLASS="nn-normal">
+<A NAME="pgfId-475681"></A>Whether you have one Development Tool or many, each one may have a <SPAN CLASS="ff-bold">
+target</SPAN>
+, which is an element of the system -- system, cluster, class (the most common case), feature. This simply means that the tool displays information about that element.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-475765"></A><A NAME="30112"></A>Retargeting by name</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-475645"></A>Our first example screen was targeted to the whole system. There are many ways to retarget it to a class. If you know the name of that class, you can just type it into the Class Field at the top left:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-9.png"><IMG WIDTH="100" SRC="tour-9.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-475650"></A>Let's use one of the most basic classes, <SPAN CLASS="ee-text">
+STRING</SPAN>
+ from the Kernel Library of EiffelBase. Bring the cursor to the Class Field, click to make it active, type <SPAN CLASS="ee-text">
+string</SPAN>
+ (or <SPAN CLASS="ee-text">
+STRING</SPAN>
+) followed by the Enter key. As shown on the next figure, this retargets the tool to class <SPAN CLASS="ee-text">
+STRING</SPAN>
+. Note that you didn't have to worry about where the class resides in the file system. Also, the Class Field will now show the target's class name, <SPAN CLASS="ee-text">
+STRING</SPAN>
+, in upper case since that is the standard Eiffel convention for class names. It doesn't matter, when you enter the name into the field, whether you use lower or upper case (or some mix); EiffelStudio will show the name back in all upper case.
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-10.png"><IMG WIDTH="100" SRC="tour-10.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-475672"></A>The Development Tool is now targeted to class <SPAN CLASS="ee-text">
+STRING</SPAN>
+. Here's what the four panes show:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495564"></A>Features pane, top-left: a tree view of all the features of the class, grouped by the feature categories (<SPAN CLASS="ee-keyword">
+Initialization</SPAN>
+, <SPAN CLASS="ee-keyword">
+Access</SPAN>
+, <SPAN CLASS="tt-nsymbol">
+&#8230;</SPAN>
+) as they appear in the class.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495565"></A>Class pane, top-right: the source text of the class, editable. For the moment the display is too small to display much of interest -- it only shows the very first few lines -- but we'll enlarge it when we need to modify class texts. (Not <SPAN CLASS="ee-text">
+STRING</SPAN>
+, though, as it's not the kind of class you want to change during your first session with EiffelStudio, so just wait a bit.)</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-475701"></A>Cluster pane, bottom-left: a tree view of the clusters of the system.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-475706"></A>Context pane, bottom right: a bag full of neat tricks. At the moment it just shows some general information about the system (where it resides, the name of its root class <SPAN CLASS="ee-text">
+TESTROOT</SPAN>
+), but more generally it's there to give you all kinds of interesting views of the system, through the various tabs at the bottom: <SPAN CLASS="ee-keyword">
+Output</SPAN>
+, <SPAN CLASS="ee-keyword">
+Diagram</SPAN>
+, <SPAN CLASS="ee-keyword">
+Class</SPAN>
+, <SPAN CLASS="ee-keyword">
+Features</SPAN>
+, <SPAN CLASS="ee-keyword">
+Metrics</SPAN>
+.</LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-475713"></A><A NAME="46460"></A>A peek at diagrams</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-475776"></A>There's indeed a lot in the Context pane, too much to see right now, but to feed our curiosity let's just take a peak at the Diagram View. Click the <SPAN CLASS="ee-keyword">
+Diagram</SPAN>
+ tab at the bottom:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-11.png"><IMG WIDTH="100" SRC="tour-11.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-475730"></A>This displays a class diagram in the Context pane:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-12.png"><IMG WIDTH="100" SRC="tour-12.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-475739"></A>It doesn't show enough because it's cropped to the available area; to get the whole diagram, resize the window from the bottom-right corner. You can now see the inheritance structure:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-13.png"><IMG WIDTH="100" SRC="tour-13.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-475755"></A>The red arrows show inheritance relations: <SPAN CLASS="ee-text">
+STRING </SPAN>
+inherits from <SPAN CLASS="ee-text">
+INDEXABLE </SPAN>
+and so on. You'll also be able to see the other key inter-class relation, client, but it's not particularly interesting for <SPAN CLASS="ee-text">
+STRING</SPAN>
+. The default placement of the classes is quite good in this case, but if you don't like it you can change it; your changes will be retained the next time you bring up this diagram, in this session or a later one. (That's part of the information the <SPAN CLASS="ee-keyword">
+Diagram</SPAN>
+ directory keeps.) It will also be used in Web diagrams if you choose to generate an HTML form. To move a class bubble, just use standard drag-and-drop. For example you may move everything to the left and make the figure more compact:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-14.png"><IMG WIDTH="100" SRC="tour-14.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-475676"></A>Later on you will learn how to use the Diagram View not just to display system structures graphically but also to build and modify systems. EiffelStudio indeed integrates the functionality of a CASE (Computer-Aided Software Engineering) workbench, seamlessly integrated with the programming facilities. But for the moment this peak at the Diagram View is enough, so let's get back to browsing.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-479426"></A><A NAME="30655"></A>Retargeting from the Cluster Tree</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-479427"></A>Your first browsing action used a class of which you knew the name, <SPAN CLASS="ee-text">
+STRING</SPAN>
+. What if you don't know what's in the system and want to explore it? Among other techniques, you can let the Cluster Tree, in the Cluster pane at the bottom left of the Development Tool, guide you through the system's structure:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-15.png"><IMG WIDTH="100" SRC="tour-15.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-479442"></A>An Eiffel system, as you know, is organized into clusters, which you can structure hierarchically into subclusters. Here we see the top two clusters: <SPAN CLASS="ee-text">
+base</SPAN>
+, containing the EiffelBase library; and <SPAN CLASS="ee-text">
+root</SPAN>
+, containing the few classes specific to our Guided Tour system. Let's go into <SPAN CLASS="ee-text">
+base</SPAN>
+, ISE's open-source library of fundamental reusable mechanisms. Click the little <SPAN CLASS="ee-keyword">
++</SPAN>
+ sign to the left of its name; this expands the first level of the <SPAN CLASS="ee-text">
+base</SPAN>
+ cluster, to show its four subclusters: <SPAN CLASS="ee-text">
+event</SPAN>
+ for event handling, <SPAN CLASS="ee-text">
+kernel</SPAN>
+ for the Kernel Library, <SPAN CLASS="ee-text">
+structures</SPAN>
+ for the Data Structure Library, and <SPAN CLASS="ee-text">
+support</SPAN>
+ for additional supporting mechanisms.
+<DIV>
+<p>
+<ul>
+<!----><IMG SRC="tour-16.png">
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-479445"></A>The most extensive of these EiffelBase libraries is <SPAN CLASS="ee-text">
+structure</SPAN>
+, which contains implementations of the major data structures and algorithms of computing science. Click the <SPAN CLASS="ee-keyword">
++</SPAN>
+ next to <SPAN CLASS="ee-text">
+structure</SPAN>
+ to see its own subclusters:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-17.png"><IMG WIDTH="100" SRC="tour-17.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="jj-small">
+<A NAME="pgfId-479526"></A>If you initially don't see as many details as shown on this figure, you may get them by resizing the window, moving the vertical pane boundary, and possibly scrolling.
+<P CLASS="nn-first">
+<A NAME="pgfId-511390"></A>The EiffelBase Data Structure library and its subclusters are described in the book <SPAN CLASS="ww-crossref">
+<A HREF="http://www.eiffel.com/doc/documentation.html#rs" CLASS="URL">Reusable Software</A></SPAN>
+. Let's go to one of the most frequently used subclusters, <SPAN CLASS="ee-text">
+list</SPAN>
+, containing implementations of list structures. Click the <SPAN CLASS="ee-keyword">
++ </SPAN>
+next to <SPAN CLASS="ee-text">
+list</SPAN>
+. This time, since list is a terminal cluster, it's not subclusters you'll see, but <SPAN CLASS="ff-bold">
+classes</SPAN>
+, identified by small ellipses:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-18.png"><IMG WIDTH="100" SRC="tour-18.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-511395"></A>The ellipse, or &quot;bubble&quot;, is indeed throughout EiffelStudio, as in the Business Object Notation (BON, the underlying graphical conventions), the distinctive symbol for classes; remember the larger bubbles showing classes in the Diagram View a few moments ago.
+<P CLASS="nn-first">
+<A NAME="pgfId-479546"></A>Our second technique for retargeting a Development Tool to a class (other than typing the class name as we did before) is to click the class in the Cluster Tree. Do this now: click <SPAN CLASS="ee-text">
+LIST</SPAN>
+ in the tree. It doesn't matter whether you click on the class name or the adjacent bubble. This retargets the tool to class <SPAN CLASS="ee-text">
+LIST</SPAN>
+. Because the Context Tool is still in <SPAN CLASS="ee-keyword">
+Diagram</SPAN>
+ view, it will display the inheritance structure for the new target class:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-19.png"><IMG WIDTH="100" SRC="tour-19.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-479679"></A>While this view is being produced you may see (or just get a glimpse of, if your machine is fast) messages indicating that it's producing the diagram for <SPAN CLASS="ee-text">
+LIST</SPAN>
+. In a moment we'll switch views in the Context Pane as we won't need the diagrams.
+<P CLASS="nn-normal">
+<A NAME="pgfId-479680"></A>As the tool is now targeted to <SPAN CLASS="ee-text">
+LIST</SPAN>
+, the Class Field at the top left now shows the name of that class, exactly as if we had typed that name, the way we did with <SPAN CLASS="ee-text">
+STRING </SPAN>
+in the previous method of retargeting.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-483292"></A><A NAME="24386"></A>Moving back and forth</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-483293"></A>Here now is a third way to retarget. Towards the top-left part of the Development Tool there are <SPAN CLASS="ee-keyword">
+Back</SPAN>
+ and <SPAN CLASS="ee-keyword">
+Forth</SPAN>
+ buttons, which will enable you to revisit classes seen during the current session:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-20.png"><IMG WIDTH="100" SRC="tour-20.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-483311"></A>Click the <SPAN CLASS="ee-keyword">
+Back</SPAN>
+ button. This retargets the tool to the class you visited previously: <SPAN CLASS="ee-text">
+STRING</SPAN>
+. The <SPAN CLASS="ee-keyword">
+Forth</SPAN>
+ button, immediately to the right of <SPAN CLASS="ee-keyword">
+Back</SPAN>
+, becomes active. Click it to retarget back to <SPAN CLASS="ee-text">
+LIST</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-483315"></A>Note that all buttons of the interface have a &quot;tooltip&quot;: if you move the cursor on a button, <SPAN CLASS="ff-bold">
+without clicking</SPAN>
+, and wait a second or so, a small message comes up, explaining the purpose of the button. You may try this now on the <SPAN CLASS="ee-keyword">
+Back</SPAN>
+ and <SPAN CLASS="ee-keyword">
+Forth</SPAN>
+ buttons.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-483316"></A><A NAME="62602"></A>The Target History</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-483317"></A>As a fourth way to retarget -- there are more, but after this one we'll stop counting -- you can also use the Target History menu, which you can trigger through the little arrow to the right of the Class Field:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-21.png"><IMG WIDTH="100" SRC="tour-21.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-483340"></A>If you click this arrow -- the little black triangle -- you will see a menu of all your recent targets. Doing this now will only show the two classes visited so far, <SPAN CLASS="ee-text">
+STRING</SPAN>
+ and <SPAN CLASS="ee-text">
+LIST</SPAN>
+, but later on there will be more entries. By default EiffelStudio remembers 10 classes; this is one of the settings you can change later if you wish, through the menu <SPAN CLASS="ee-keyword">
+Tools </SPAN>
+<SPAN CLASS="ee-symbol">
+--> </SPAN>
+<SPAN CLASS="ee-keyword">
+Preferences</SPAN>
+. (There's no point in doing this now.)
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-483350"></A><A NAME="85879"></A>Adding to Favorites</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-483351"></A>If you find yourself often needing to examine a particular class, you can add it to your &quot;Favorites&quot;, similar to the favorites, also called <SPAN CLASS="ff-italics">
+bookmarks</SPAN>
+, which you use to retain interesting pages in a Web browser.
+<P CLASS="nn-normal">
+<A NAME="pgfId-483352"></A>It's easy to add the current target -- right now, <SPAN CLASS="ee-text">
+LIST</SPAN>
+ -- to your Favorites. Do it now: go to the <SPAN CLASS="ee-keyword">
+Favorites</SPAN>
+ menu and select <SPAN CLASS="ee-keyword">
+Add to favorites</SPAN>
+. Now display the favorites; one way is to go back to that same Favorites menu and select <SPAN CLASS="ee-keyword">
+Show favorites</SPAN>
+. The Favorites Pane appears below the Cluster Tree:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-22.png"><IMG WIDTH="100" SRC="tour-22.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-483364"></A>This also means one more way to retarget a Development Tool: click a class in the Favorites pane.
+<P CLASS="nn-normal">
+<A NAME="pgfId-483369"></A>Right now we don't need the Favorites Pane, so you can get rid of it by either selecting <SPAN CLASS="ee-keyword">
+Hide favorites</SPAN>
+ in the <SPAN CLASS="ee-keyword">
+Favorites</SPAN>
+ menu or clicking the little Close icon at the top right of the Favorites Pane:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-23.png"><IMG WIDTH="100" SRC="tour-23.png"></A>
+</ul>
+<p>
+</DIV>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-479686"></A><A NAME="14762"></A>Starting a new tool</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-483289"></A>With all the techniques seen so far, you have retargeted the current Development Tool to a new class. As noted, you may also wish to have two or more Development Tools targeted to different classes; this is useful to keep track of several things at one. A simple way to start a new tool on a class is to find the class somewhere in the interface and <SPAN CLASS="ff-bold">
+control-right-click</SPAN>
+ on it.
+<P CLASS="nn-normal">
+<A NAME="pgfId-483394"></A>Here, for example, the diagram in the Context Tool shows, at the top, a yellow bubble for the class <SPAN CLASS="ee-text">
+CHAIN</SPAN>
+, a parent of <SPAN CLASS="ee-text">
+LIST.</SPAN>
+ (You can see it for example on the next-to-last figure.) Go to that bubble and control-right-click on it, that is to say, click with the rightmost button of the mouse while holding the CONTROL key on the keyboard. This starts a new Development Tool, targeted to the chosen class, <SPAN CLASS="ee-text">
+CHAIN</SPAN>
+:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-24.png"><IMG WIDTH="100" SRC="tour-24.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-479687"></A>The place where we found the class <SPAN CLASS="ee-text">
+CHAIN</SPAN>
+ in the original tool (the one targeted to <SPAN CLASS="ee-text">
+LIST</SPAN>
+) was the bubble representing the class in the Diagram View. But that's just one possibility. A general principle of EiffelStudio is <SPAN CLASS="ff-bold">
+semantic consistency</SPAN>
+: when you want to work with a development object -- a class, a feature, a cluster -- you can grab it wherever it appears in the interface, and in whatever format it is displayed: it may be in the Diagram View, in the text of a class in the editor, in the Cluster or Feature Tree, or in any of the class documentation formats that we will soon see; and the form in which it appears may be text -- the name of the class in a text document -- or some graphical representation, such as a class bubble in a diagram. These variants don't matter: if the class or other development object catches your fancy, you can do whatever operations make sense for it, such as Control-right-click to start a new development object targeted to it, or any of the other operations we'll see next.
+<P CLASS="nn-normal">
+<A NAME="pgfId-483429"></A>While you are at it, try a couple of other ways to create a new Development Tool. Go to <SPAN CLASS="ee-keyword">
+File</SPAN>
+<SPAN CLASS="ee-symbol">
+ --></SPAN>
+<SPAN CLASS="ee-keyword">
+ New window</SPAN>
+; this creates a new tool, untargeted. The title bar says &quot;<SPAN CLASS="ee-keyword">
+Empty development tool #1</SPAN>
+&quot;. You can get the same effect by clicking the Create New Window icon, leftmost on the top row of buttons, just below &quot;<SPAN CLASS="ee-keyword">
+File</SPAN>
+&quot;. The corresponding keyboard accelerator is CTRL-<SPAN CLASS="ee-keyword">
+N</SPAN>
+.
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tour-6.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tour.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tour-8.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

@@ -1,0 +1,448 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 13  DEBUGGING AND RUN-TIME MONITORING</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tour-13.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tour.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tour-15.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-515824"></A>13  DEBUGGING AND RUN-TIME MONITORING</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-520167"></A>The next set of EiffelStudio capabilities enable you to control and monitor the execution of your systems. The obvious immediate application is to debugging; but the more general goal is to let you follow the execution of your systems, explore the object structures, and gain a better understanding of the software.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-520202"></A>A reminder about debugging in Eiffel</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-520203"></A>Before looking at debugging facilities don't forget that debugging in Eiffel is different. The presence of Design by Contract mechanisms gives the debugging process a clear sense of direction. The speed of the recompilation process makes it easy to recompile after a change; after getting rid of syntax and validity errors, you run the system again, and remaining errors are often caught as violations of contract clauses -- routine preconditions, routine postconditions, class invariants.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520215"></A>The facilities to be described now are also useful when you find such an error, as they will help you study its execution context. In fact, one of the characteristics of the debugging mechanism is that there is no &quot;debugger&quot; proper, no more than there is a &quot;browser&quot;; you have instead a set of facilities supporting controlled execution and debugging. This means for example that:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-520222"></A>While debugging, you can access all the browsing capabilities to explore the features and classes surrounding the cause of an error.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-520235"></A>While browsing, you can launch or resume execution, and follow its progress through the debugging facilities.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-520243"></A>If execution stops on an exception -- assertion violation, arithmetic overflow, call on a void target <SPAN CLASS="tt-nsymbol">
+&#8230;</SPAN>
+ -- you have all the environment's facilities at your disposal to understand what happened.</LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-520216"></A>Setting breakpoints</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-520217"></A>To control the execution you will set breakpoints, indicating places where you want to interrupt the execution. You may set a breakpoint on an individual instruction of a routine, on the routine's precondition or postcondition, or on the routine as a whole, meaning its first operation (precondition or instruction).
+<P CLASS="nn-normal">
+<A NAME="pgfId-520246"></A>A group of icons on the Project Toolbar help control breakpoints. They are known in EiffelStudio terminology as &quot;<SPAN CLASS="ff-italics">
+buttonholes</SPAN>
+&quot;, meaning that they can serve both as buttons (you can click them to get some functions) and holes (you can pick-and-drop into them to get some other functions).
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-82.png"><IMG WIDTH="100" SRC="tour-82.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-520254"></A>The labels correspond to the icons' use as buttons: enable all set breakpoints, disable them all, clear all, display information on current breakpoints. The difference between &quot;disabling&quot; and &quot;removing&quot; is that disabling turns breakpoints off until further notice but remembers them, so that you can later re-enable them, whereas &quot;removing&quot; clears them for good.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520257"></A>Target a Development Tool to the class <SPAN CLASS="ee-text">
+TESTROOT</SPAN>
+ and pick-and-drop the name of the procedure <SPAN CLASS="ee-text">
+make</SPAN>
+ (the first routine, after the declaration of the two attributes o1 and o2) to the <SPAN CLASS="ee-keyword">
+Enable all</SPAN>
+ icon, used here as a hole. This sets a breakpoint on the routine. Click the button labeled <SPAN CLASS="ee-keyword">
+Display info</SPAN>
+above to get the list of breakpoints, as shown in the the next figure.
+<P CLASS="jj-small">
+<A NAME="pgfId-520262"></A>If you don't see this list in the Context pane, make sure the Context pane is present (if not, click on the <SPAN CLASS="ee-keyword">
+Context</SPAN>
+ button in the top tool bar). In this case you can get the same effect as that of <SPAN CLASS="ee-keyword">
+Display info </SPAN>
+by selecting the <SPAN CLASS="ee-keyword">
+Output</SPAN>
+ tab in the Context pane..
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-83.png"><IMG WIDTH="100" SRC="tour-83.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-520395"></A>This shows that so far you have enabled only one breakpoint. For a finer degree of control, let's look at the feature's flat form. Pick-and-drop <SPAN CLASS="ee-text">
+make</SPAN>
+ to the Context pane -- from the Context pane itself, since its name appears there, or the Text pane); this sets the Context to the <SPAN CLASS="ee-keyword">
+Feature</SPAN>
+ tab. Select the <SPAN CLASS="ee-keyword">
+Flat</SPAN>
+ view if that wasn't the last one used:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-84.png"><IMG WIDTH="100" SRC="tour-84.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-520433"></A>The small circles on the left side of the Flat form indicate breakpoint positions. Empty ones are not set; set breakpoints are marked by a circle filled with red. At the moment only one is set, corresponding to the first instruction of the routine since, as noted, setting a breakpoint on a routine as a whole means setting it on its first operation.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520436"></A>By (left) clicking on a breakpoint mark, you toggle it between set and not set. You can also right-click on a mark to get a menu of possibilities. Try setting and unsetting a few of these marks; you might get something like this:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-85.png"><IMG WIDTH="100" SRC="tour-85.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-520471"></A>The breakpoint mark for the routine's third instruction, <SPAN CLASS="ee-keyword">
+create </SPAN>
+<SPAN CLASS="ee-text">
+o2</SPAN>
+, is red but not filled; this means it is set but not enabled. You can obtain this by right-clicking on the mark and choosing <SPAN CLASS="ee-keyword">
+Disable breakpoint</SPAN>
+ on the menu that comes up. Any potential breakpoint will be in one of three states: not set; enabled; set but disabled.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520482"></A>You can see the list of enabled and disabled breakpoints by clicking the <SPAN CLASS="ee-keyword">
+Output</SPAN>
+ tab, or the <SPAN CLASS="ee-keyword">
+Display info</SPAN>
+ button in the Project Tool.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520487"></A>For the continuation of this tour it doesn't matter which exact breakpoints of <SPAN CLASS="ee-text">
+make </SPAN>
+you've set, as long as the one of its first instruction is set and enabled (red-filled circle) as above. Please make sure this is the case before proceeding.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-520500"></A>Executing with breakpoints</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-520501"></A>To execute, you will use the following Run buttons in the Project toolbar, or the corresponding entries in the <SPAN CLASS="ee-keyword">
+Debug </SPAN>
+menu: 
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-86.png"><IMG WIDTH="100" SRC="tour-86.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="jj-small">
+<A NAME="pgfId-520510"></A>The buttons are shown here in full bloom, but at any times some of them will be grayed out. <SPAN CLASS="ee-keyword">
+Terminate </SPAN>
+is only active when execution has started and not terminated; <SPAN CLASS="ee-keyword">
+Interrupt</SPAN>
+ is only active when the execution is active (not stopped at a breakpoint).
+<P CLASS="nn-first">
+<A NAME="pgfId-520515"></A>The <SPAN CLASS="ee-keyword">
+Debug </SPAN>
+menu entries will also remind you of shortcuts: F10 for <SPAN CLASS="ee-keyword">
+Step-by-step</SPAN>
+, F11 for <SPAN CLASS="ee-keyword">
+Step into routine</SPAN>
+, Shift-F11 for <SPAN CLASS="ee-keyword">
+Step out of routine</SPAN>
+, CTRL-F5 for <SPAN CLASS="ee-keyword">
+Run without breakpoints</SPAN>
+, F5 for <SPAN CLASS="ee-keyword">
+Run with breakpoints</SPAN>
+, CTRL-Shift-F5 for <SPAN CLASS="ee-keyword">
+Interrupt</SPAN>
+, Shift-F5 for <SPAN CLASS="ee-keyword">
+Terminate</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520532"></A>Start execution of the compiled system by clicking <SPAN CLASS="ee-keyword">
+Run with breakpoints</SPAN>
+. The display automatically switches to accommodate supplementary panes providing debugging information. Execution stops on the breakpoint that you have enabled on the first instruction of procedure <SPAN CLASS="ee-text">
+make</SPAN>
+:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-87.png"><IMG WIDTH="100" SRC="tour-87.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-520541"></A>The pane at the bottom left indicates that execution has stopped in <SPAN CLASS="ee-text">
+make</SPAN>
+. The Context shows the flat form of that routine, with a new icon to indicate the stop point which execution has reached. At the bottom right is a new tool, the <SPAN CLASS="ff-bold">
+object editor</SPAN>
+, which shows the content of current object and (later) related objects. At the moment you can see that:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-520551"></A>The current object is an instance of class <SPAN CLASS="ee-text">
+TESTROOT</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-520552"></A>The class (as you can also see from its text in a Development Tool) has two attributes o1 and o2, for which the corresponding fields in the current object are both void; this is as expected since you haven't yet executed the two creation instructions <SPAN CLASS="ee-keyword">
+create </SPAN>
+<SPAN CLASS="ee-comment">
+{</SPAN>
+<SPAN CLASS="ee-text">
+HEIR</SPAN>
+<SPAN CLASS="ee-comment">
+} </SPAN>
+<SPAN CLASS="ee-text">
+o1</SPAN>
+ and <SPAN CLASS="ee-keyword">
+create</SPAN>
+ <SPAN CLASS="ee-text">
+o2</SPAN>
+, which come after the breakpoint.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-520571"></A>Along with attributes, an Eiffel class may have <SPAN CLASS="ff-bold">
+once functions</SPAN>
+, executed at most once -- the first time they are called -- in a given session, and from then on always returning the same value. Here the once function <SPAN CLASS="ee-text">
+io</SPAN>
+, has been called and returned an object of type <SPAN CLASS="ee-text">
+STD_FILES</SPAN>
+, but <SPAN CLASS="ee-text">
+operating_environment</SPAN>
+ (coming, like <SPAN CLASS="ee-text">
+io</SPAN>
+, from the top-level class <SPAN CLASS="ee-text">
+ANY</SPAN>
+) has not yet been called.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-520574"></A>The execution-time objects that you may display in an Object Editor are our latest kind of EiffelStudio &quot;development object&quot;, along with classes, features, explanations, clusters; notice their distinctive icon, a rectangular mesh suggestion an object's division into fields. It appears colored for actual objects, gray for void references such as <SPAN CLASS="ee-text">
+operating_environment.</SPAN>
+
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-520579"></A>Monitoring progress</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-520584"></A>Click twice on <SPAN CLASS="ee-keyword">
+Step-by-step</SPAN>
+ (or press the function key F10 twice). Monitor, in the flat form of <SPAN CLASS="ee-text">
+make</SPAN>
+, the marker that shows execution progress; note that the marker always points to the <SPAN CLASS="ff-italics">
+next</SPAN>
+ operation to be executed. After the two steps, the Context and Object panes look like this:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-88.png"><IMG WIDTH="100" SRC="tour-88.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-520593"></A>The last instruction that you executed is <SPAN CLASS="ee-keyword">
+create </SPAN>
+<SPAN CLASS="ee-comment">
+{</SPAN>
+<SPAN CLASS="ee-text">
+HEIR</SPAN>
+<SPAN CLASS="ee-comment">
+} </SPAN>
+<SPAN CLASS="ee-text">
+o1</SPAN>
+, meaning create an object and attach it to <SPAN CLASS="ee-text">
+o1</SPAN>
+, but instead of using the declared type <SPAN CLASS="ee-text">
+PARENT</SPAN>
+ of <SPAN CLASS="ee-text">
+o1 </SPAN>
+use its proper descendant <SPAN CLASS="ee-text">
+HEIR</SPAN>
+. As a result, the entry for <SPAN CLASS="ee-text">
+o1</SPAN>
+ in the Object Tool no longer shows void but an object of type <SPAN CLASS="ee-text">
+HEIR</SPAN>
+. Note that all objects are identified by their address in hexadecimal; such an address is by itself meaningless, but enables you to see quickly whether two object references are attached to the same object. The addresses you see as you run the Guided Tour will -- except for some unlikely coincidence -- different from the ones appearing here.<SPAN CLASS="ee-text">
+</SPAN>
+
+<P CLASS="jj-small">
+<A NAME="pgfId-520600"></A>Note that since the ISE Eiffel garbage collector compacts memory and hence may move objects around, the address of a given object is not guaranteed to remain the same throughout a session.
+<P CLASS="nn-first">
+<A NAME="pgfId-520607"></A>To see the details of the object, pick-and-drop its indentifer in place (that is to say, drop it in the Object pane itself). A new object entry appears, showing the object:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-89.png"><IMG WIDTH="100" SRC="tour-89.png"></A>
+</ul>
+<p>
+</DIV>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-520655"></A>From the instance to the class</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-520669"></A>Now try pick-and-dropping that same object, the instance of <SPAN CLASS="ee-text">
+HEIR</SPAN>
+, to the Context pane above the Object window<SPAN CLASS="ee-text">
+. </SPAN>
+The effect is the same as if you had pick-and-dropped the <SPAN CLASS="ff-bold">
+class</SPAN>
+ name <SPAN CLASS="ee-text">
+HEIR</SPAN>
+: retarget the Context pane to that class.
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-90.png"><IMG WIDTH="100" SRC="tour-90.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-520659"></A>In the same way that you can drop a <SPAN CLASS="ff-italics">
+feature</SPAN>
+ pebble into a tool that expects a class, you can also drop an <SPAN CLASS="ff-italics">
+object</SPAN>
+ pebble, which will be understood as denoting the object's generating class.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520670"></A>Because the Context pane is showing a class, it has switched to the default format for classes, <SPAN CLASS="ee-keyword">
+Ancestors</SPAN>
+, and is showing the ancestors of <SPAN CLASS="ee-text">
+HEIR</SPAN>
+. Click the <SPAN CLASS="ee-keyword">
+Feature</SPAN>
+ tab of the Context pane to set it back to feature information for the continuation of our debugging session. No feature is currently displayed.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-520615"></A>Stepping into and out of a routine</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-520616"></A>Click <SPAN CLASS="ee-keyword">
+Step-by-step </SPAN>
+once more to advance just before the call <SPAN CLASS="ee-text">
+o1</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+display</SPAN>
+:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-91.png"><IMG WIDTH="100" SRC="tour-91.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-520627"></A>If at this stage you chose <SPAN CLASS="ee-keyword">
+Step-by-step </SPAN>
+again this would execute the next step in the current routine, the call <SPAN CLASS="ee-text">
+o1</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+display</SPAN>
+, treating the entire execution of <SPAN CLASS="ee-text">
+display </SPAN>
+from class <SPAN CLASS="ee-text">
+HEIR</SPAN>
+ as a single operation. Assume instead that you want to get into that routine and follow the details of its execution. For one thing, you might not know that it's a routine of class <SPAN CLASS="ee-text">
+HEIR</SPAN>
+, since <SPAN CLASS="ee-text">
+o1 </SPAN>
+is declared of type <SPAN CLASS="ee-text">
+PARENT</SPAN>
+ and it's only through polymorphism, <SPAN CLASS="ee-text">
+o1</SPAN>
+ being dynamically of type <SPAN CLASS="ee-text">
+HEIR</SPAN>
+ at this point, and through dynamic binding, that the execution ends up calling a routine from <SPAN CLASS="ee-text">
+HEIR</SPAN>
+. Of course here it's obvious because of the wording of the <SPAN CLASS="ee-keyword">
+create </SPAN>
+a few lines up, but in many cases, especially all those for which polymorphism and dynamic binding are <SPAN CLASS="ff-italics">
+really </SPAN>
+interetsing, the exact type won't be obvious from the software text.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520634"></A>Click the <SPAN CLASS="ee-keyword">
+Step into routine</SPAN>
+ button (or press F11). This brings execution to the beginning of the appropriate <SPAN CLASS="ee-text">
+display </SPAN>
+routine in class <SPAN CLASS="ee-text">
+HEIR</SPAN>
+:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="tour-92.png"><IMG WIDTH="100" SRC="tour-92.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-520641"></A>You can also expand the <SPAN CLASS="ee-keyword">
+Call stack </SPAN>
+pane on the left to see the full call stack, consisting here of only two levels. Minimize it to get the above display back.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520644"></A>Now click <SPAN CLASS="ee-keyword">
+Step out of routine </SPAN>
+(Shift-F11) to finish the execution of <SPAN CLASS="ee-text">
+display</SPAN>
+. This brings you back to the next instruction of the calling routine, <SPAN CLASS="ee-text">
+make</SPAN>
+ of <SPAN CLASS="ee-text">
+TESTROOT</SPAN>
+.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-520649"></A>Terminating</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-520650"></A>You may now click the <SPAN CLASS="ee-keyword">
+Terminate</SPAN>
+ button (Shift-F5) to end execution. The execution-specific panes go away and the display returns to what it was before execution.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-520676"></A>Other debugging capabilities</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-520651"></A>In this little application nothing runs long enough to give you the time to interrupt it. In a longer-running application you may want to interrupt execution, <SPAN CLASS="ff-italics">
+without</SPAN>
+ necessarily terminating it, while it's running (not stopped on a breakpoint). This is the purpose of the <SPAN CLASS="ee-keyword">
+Interrupt</SPAN>
+ button (CTRL-Shift-F5). It will interrupt execution at the closest potential breakpoint position, letting you -- as when execution stops because of an exception -- take advantage of all the debugging and browsing facilities to see what's going on inside the program. You may then restart execution -- with or without breakpoints, single-stepping, out of the current routine, into the next routine -- by choosing the appropriate Run button
+<P CLASS="nn-normal">
+<A NAME="pgfId-520672"></A>In debugging sessions for more advanced applications, you will also find the self-explanatory mechanisms enabling you, in addition to what we have seen, to examine all the objects on the &quot;call stack&quot;: arguments and local entities of the current routine, its caller, caller's caller and so on.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520681"></A>The combination of these facilities provides you with a level of <SPAN CLASS="ff-italics">
+dynamic</SPAN>
+ information on the execution of your system that matches the <SPAN CLASS="ff-italics">
+static </SPAN>
+information that the browsing mechanisms studied in preceding chapters provide about the system's structure.
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tour-13.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tour.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tour-15.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

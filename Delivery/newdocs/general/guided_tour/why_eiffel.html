@@ -1,0 +1,509 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE>Why your next project should use Eiffel</TITLE>
+</HEAD>
+<body bgcolor="#f5f5dc">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" align="left"><IMG SRC="topdoc.gif" ALT="Getting Started with Eiffel" border="0" usemap="#navigation"><map name="navigation"><area shape="RECT" alt="Getting Started with Eiffel" coords="0,0,100,40" href="index.html"><area shape="default" nohref></map>
+</DIV>
+<P CLASS="book-title">
+Why your next project should use Eiffel
+<br><br>
+<p class="nn-first">
+(After an article in the special Eiffel issue of
+the <I>Journal of
+Object-Oriented Programming</I>, May 1996.)
+
+<br><br><br><br>
+
+<p class="nn-first"><BIG><B><I>O</I></B></BIG>
+ver its ten-year life Eiffel has evolved into one of the most usable software 
+development environments available today. Other articles discuss its theoretical 
+contributions. This one addresses a more mundane subject: how practical software 
+projects can benefit, today, from the power of Eiffel. In so doing it will largely rely on 
+published assessments from both Eiffel users and book authors. In fact a quotation from 
+one of the best-known books in the object-oriented field -- <I> Object-Oriented Modeling and 
+Design</I> by James Rumbaugh and his colleagues, the text that introduced the OMT O-O 
+analysis method -- provides a good start:
+
+<BLOCKQUOTE>
+Eiffel is arguably the best commercial object-oriented language available 
+today.  <UL><p class="nn-first"> [Jim Rumbaugh et al. in <I>Object-Oriented Modeling and Design</I>, 
+Prentice Hall 1988]. </UL>
+</BLOCKQUOTE>
+
+<h1 class="aa-sec2">
+What is Eiffel?
+</h1>
+<p class="nn-first">
+First we should define what the word "Eiffel" means. If you are thinking "a programming 
+language" you are not wrong (and the preceding quotation shows that you are in good 
+company). The programming language is indeed the most visible part, but it is only a 
+reflection of something broader: a comprehensive approach to the production of quality 
+software. As Richard Wiener wrote:
+
+<BLOCKQUOTE>
+ Eiffel is more than a language; it is a framework for thinking about, 
+designing and implementing object-oriented software.  <UL><p class="nn-first"> [Richard Wiener 
+in <I>Software Development using Eiffel: There is life other than C++</I>, Prentice 
+Hall, 1995.] </UL>
+</BLOCKQUOTE>
+
+<p class="nn-first">
+The Eiffel approach includes a method (a "methodology", as it is sometimes
+called) based on a 
+number of pervasive ideas such as Design by Contract<SUP><FONT SIZE=1>TM</FONT></SUP>, seamlessness, reversibility, 
+rigorous architectural rules, systematic use of single and multiple inheritance, static type 
+checking and several others. Besides a method and a language Eiffel also means powerful 
+graphical development environments, such as ISE Eiffel, available across a wide number 
+of industry-standard platforms and supporting analysis and design as well as 
+implementation, maintenance and evolution.
+
+<p class="nn-first">
+The language itself, indeed (which Wiener calls "an elegant and powerful language 
+for object-oriented problem solving") is not just a programming language but extends 
+to the phases of system construction that both precede and follow implementation. This is 
+sometimes hard to accept if you have been raised in the view that software development 
+must involve a sequence of separate steps; that one should initially use an analysis method 
+and then at some point switch to a programming language, with perhaps a design method 
+in-between. This view is detrimental to the software process and to the quality of the 
+resulting product, as it does not support the inevitable back-and-forth hesitations that 
+characterize real software development.
+
+<p class="nn-first">
+Wisdom sometimes blooms late in the season. However careful you may have been 
+at the analysis stage, some great ideas will hit you - or your implementers - past the 
+point at which you thought you had all the specifications right. Why renounce the benefit 
+of such belated but valuable ideas? Eiffel and the associated Business Object Notation 
+approach to analysis and design accommodate them naturally, by providing a single 
+conceptual framework from the beginning to the end of the process.
+
+<p class="nn-first">
+Here Eiffel does not have much competition. The most bright-eyed Smalltalk or C++ 
+enthusiast would not seriously claim that one can do design, let alone analysis, in his 
+language of choice. And users of any of the popular O-O analysis notations know that at 
+some stage they must stop working on their model and move on to the implementation in 
+some programming language. Eiffel is unique in helping you for all of these tasks, without 
+ever introducing the impedance mismatches that characterize other approaches.
+
+<p class="nn-first">
+As a recent reviewer wrote:
+
+<BLOCKQUOTE>
+ As a design language, Eiffel continues to be a better model for object-
+oriented programming than Ada. It is even better than the new Ada 9X 
+standard.  <UL><p class="nn-first"> [Richard Riehle in HP Professional, October 1994, <I>A Tour of 
+Eiffel</I>.] </UL>
+</BLOCKQUOTE>
+
+<h1 class="aa-sec2">
+The commercial and political context
+</h1>
+
+<p class="nn-first">
+The next few sections give a glimpse of the technical contributions of Eiffel, or more 
+precisely of what other people have written about them. But of course the best technology 
+in the world requires infrastructure and support to succeed.
+
+<p class="nn-first">
+Eiffel has plenty of these. It has been around for ten years (the first compiler was 
+available from ISE at the end of 1986, but was started about a year earlier). Compilers exist 
+from three commercial sources - two in the US and one in Europe - with more to come. 
+Free compilers exist, in particular one from ISE (you can download it directly from <A HREF="http://eiffel.com/page.html">http://eiffel.com</A>).
+Full graphical environments start at $79.95 (ISE's 
+Personal Eiffel for Windows). The number of licenses sold is in the tens of thousands. 
+Reusable library classes are in the thousands.
+
+<p class="nn-first">
+The platforms covered range from Unix (all of Unix, the famous and the arcane) and 
+Linux to VMS, OS/2, Windows 3.1, Windows NT, Windows 95/98. The last major platform 
+not yet addressed, MVS, will be added for the greatest benefit of large financial and 
+corporate users; IBM has just announced a partnership with ISE to bring Eiffel to MVS.
+
+<p class="nn-first">
+Particularly impressive is the growth of Eiffel usage in education. Eiffel is quickly 
+becoming the language of choice for teaching modern software technology, including, 
+increasingly, introductory programming. A dozen of excellent textbooks are now available 
+from Prentice Hall, Addison-Wesley, Macmillan and others, with about as many 
+announced just for the coming months. (Someone was remarking recently that there seems 
+to be more Eiffel textbooks than Smalltalk textbooks, even though Smalltalk has been 
+around for so much longer.) Addison-Wesley even has a book series devoted to Eiffel: 
+Eiffel in Practice.
+
+<p class="nn-first">
+It is not just the professors who like the approach. Here is just one typical comment 
+on student reaction, from an institution (Rochester Institute of Technology) having 
+adopted Eiffel as its first-year introductory language on a massive scale:
+
+<BLOCKQUOTE>
+We were pleased to discover many of our more skeptical students turning 
+around and admitting that Eiffel was a "fun" language in which to work. 
+<UL><p class="nn-first"> [Jim Heliotis in the Proceedings of OOPSLA 95,
+<I>Experiences teaching objects: A new curriculum for 
+computer science students</I>.] </UL>
+</BLOCKQUOTE>
+
+<p class="nn-first">
+A recent ComputerWorld confirmed the need for Eiffel in training the high-powered 
+software professionals of tomorrow. Quoting Amy Cody-Quinn from Management 
+Recruiters International, the journalist writes
+
+<BLOCKQUOTE>
+There is a big problem with people who say they know C++ - but they don't 
+really know how to do objects. If they have Eiffel on their résumé, then we 
+know they really have the proper understanding of what they are doing.  
+<UL><p class="nn-first"> [Leslie Goff in ComputerWorld, <I>Object Edge</I>, December 18, 1995.] </UL>
+</BLOCKQUOTE>
+
+<p class="nn-first">
+But it would be a mistake to think of Eiffel as an academic tool. A little-known fact 
+is that some of the biggest object-oriented projects ever undertaken (at least the successful 
+ones - other O-O languages have had their share of large-scale failures) are being done 
+in Eiffel. The hot areas at the moment are banking and the financial industry (in particular 
+some very large derivative trading systems), telecommunications, health care. These are 
+all areas in which all that counts in the end is quality and time to market, so that projects 
+need to select the best technology available. Quoting from an article by Philippe Stephan, 
+the system architect of such a project (Rainbow, a major derivative trading system built 
+with ISE Eiffel):
+
+<BLOCKQUOTE>
+We evaluated three major object-oriented languages for the project - 
+Smalltalk, C++ and Eiffel - and chose Eiffel. [...] Rainbow currently 
+comprises over 400,000 lines of code, for about 3000 classes. [Current 
+figures are way over these mid-1995 counts.] The developers feel very 
+productive. This was confirmed when Rainbow's financial backers brought in 
+object professionals to audit the project. The auditors evaluated the project 
+during July 1994 and were impressed with the productivity of the Rainbow 
+development group.  <UL><p class="nn-first"> [Philippe Stephan in Object Magazine, July-August 1995, <I>Building 
+financial software with object technology</I>.] </UL>
+</BLOCKQUOTE>
+
+<p class="nn-first">
+The development group in question is remarkable for being made only for a third of 
+software professionals. The others are professionals from other disciplines (such as 
+trading and financial analysis), who, Stephan writes,
+
+<BLOCKQUOTE>
+can express business concepts in Eiffel because they can focus on design and 
+implementation, rather than struggling with memory management problems 
+and debugging.
+</BLOCKQUOTE>
+
+<p class="nn-first">
+The result has received lavish praise from such publications as ComputerWorld and 
+analysts:
+
+<BLOCKQUOTE>
+Industry experts briefed on Rainbow said they were impressed with the 
+results. CALFP is "progressive" in [...] committing the organization's 
+mission-critical systems development efforts to this architecture, said 
+Richard Crone, senior manager of financial services at KPMG Peat Marwick 
+in Los Angeles. "What's unique here is that [CALFP is] delivering this 
+system end-to-end using object-oriented technologies", said Henry Morris, a 
+research analyst at International Data Corporation (IDC) in Framingham, 
+Mass.  <UL><p class="nn-first"> [Thomas Hoffmann in ComputerWorld, May 8, 1995, <I>Object-
+Oriented financial package tames transactions</I>.] </UL>
+</BLOCKQUOTE>
+
+<p class="nn-first">
+Along with these Eiffel mega-projects, you will also find myriad smaller endeavors. 
+Many consultants, in particular, have found for themselves the key competitive advantage 
+that they can gain from Eiffel's excellence. In ensuring this spread of Eiffel throughout the 
+industry, the benefit of cheap yet complete environments such as ISE Eiffel for Linux has 
+been immeasurable.
+
+<p class="nn-first">
+Also crucial to the development of Eiffel has been the neutral status of its definition, 
+now controlled by a consortium of vendors and users, NICE (the Nonprofit International 
+Consortium for Eiffel). NICE has already produced a library standard and expects
+to produce soon the language standard that should shortly thereafter enjoy
+a smooth 
+ride through ANSI and other international standards bodies.
+
+<p class="nn-first">
+The pace of Eiffel history has been accelerating in the past few months. This has 
+been picked up by many journalists. As Dan Wilder wrote:
+
+<BLOCKQUOTE>
+With an open specification for both the language and the kernel libraries, and 
+support from multiple vendors, Eiffel now stands poised to take off. 
+<UL><p class="nn-first"> [Dan Wilder in Linux Journal, June 1995, <I>Introduction to Eiffel</I>.] </UL>
+</BLOCKQUOTE>
+
+<h1 class="aa-sec2">
+The criteria
+</h1>
+
+<p class="nn-first">
+Eiffel - the method, the language, the environment - is based on a small set of goals, 
+addressing the crucial needs of software quality and productivity.
+Quoting from a recent article in <I>Byte</I> magazine:
+
+<BLOCKQUOTE>
+Developers who want an object-oriented language that adheres to the 
+keystone principles of software engineering need look no further than Eiffel.
+<UL><p class="nn-first"> [Peter Varhol in Byte Magazine, February 1996.] </UL>
+</BLOCKQUOTE>
+
+or, as Steve Bilow wrote in a review of ISE's Melting Ice compiling technology (which he 
+calls "an outstanding marriage between portability and development speed"):
+
+<BLOCKQUOTE>
+Eiffel was designed precisely for the purpose of enabling software developers 
+to deliver high quality, reliable, efficient, reusable code. 
+<UL><p class="nn-first"> [Steve Bilow in The X Journal, <I>The Eiffel alternative</I>, July-August 1995.] </UL>
+</BLOCKQUOTE>
+
+<h1 class="aa-sec2">
+Reliability
+</h1>
+
+<p class="nn-first">
+The first goal is reliability. No other approach available today has made the effort to give 
+developers all the tools that they need to produce bug-free software - software that will 
+run without bugs the first time around. Crucial in this effort is the presence of static typing 
+(<I>real</I> static typing, not "a little bit typed" as in those languages that still keep 
+C-like type conversions); assertions and the whole mechanism of Design by Contract, on which 
+more than one Eiffel developer has said "this has changed my life" by enabling him or her to 
+specify precisely what the software should do, and to track at run time that it does it; 
+disciplined exception handling; automatic garbage collection, which eliminates a source 
+of horrendous bugs in C++-based environments (and a large part of the code, tedious and 
+error-prone); a clean approach to inheritance; the use of dynamic binding as the default 
+policy, meaning the guarantee that all calls will use the right version of each operation; 
+and the simplicity of the language design, which enables Eiffel developers to know <B>all</B> of 
+Eiffel and feel in control.
+
+<p class="nn-first">
+The role of assertions and Design by Contract is particularly important here. 
+According to the <I>Journal of Object-Oriented Programming</I>:
+
+<BLOCKQUOTE>
+The contribution of Eiffel is significant: it shows how invariants, 
+preconditions, and postconditions can be incorporated into a practical 
+developer's view of a class. Wider use of Eiffel [...] will encourage a greater 
+use of simple but powerful mathematics during development. 
+<UL><p class="nn-first"> [Richard Mitchell et al. in Journal of Object-Oriented Programming, July-August 1995, <I>As-a: a relationship to support 
+code reuse</I>.] </UL>
+</BLOCKQUOTE>
+
+<h1 class="aa-sec2">
+Reusability
+</h1>
+
+<p class="nn-first">
+The second goal is reusability. This has become a catchword, but Eiffel is the only 
+approach that has taken this requirement and its consequences all the way to the end. 
+Quoting Roland Racko:
+
+<BLOCKQUOTE>
+Everything about [Eiffel] is single-mindedly, unambiguously, gloriously 
+focused on reusability - right down to the choice of reserved words and 
+punctuation and right up to the compile time environment. 
+<UL><p class="nn-first">
+[Roland Racko in Software Development, December 1994, <I>In praise of Eiffel</I>.]
+</UL>
+</BLOCKQUOTE>
+
+<p class="nn-first">
+Eiffel benefits here from being a simple ("but not simplistic", writes Racko) and 
+consistent design, not a transposition from older, unrelated technology. Beyond the 
+language and the environment facilities (such as precompilation), the crucial help to 
+reusability is of course the presence of thousands of high-quality library <I>classes</I>, 
+such as, in ISE Eiffel: EiffelBase (a "Linnaean approach to the reconstruction of software 
+fundamentals"), EiffelNet for client-server communication, EiffelStore for relational and 
+O-O database manipulations, EiffelLex and EiffelParse for lexical analysis and parsing, 
+EiffelMath for object-oriented numerical computation, EiffelVision for portable graphics, 
+WEL (the Windows Eiffel Library) for Windows-specific graphics, EiffelWeb to process 
+forms from the Web, and many others.
+Not even mentioning 
+quality, the result is probably the biggest repository of object-oriented components 
+available elsewhere. The care that has been applied to the production of these libraries also 
+has considerable pedagogical benefits: the way people learn Eiffel is by learning the 
+libraries - first to use them, then to adapt them if necessary, then to write their own 
+software.
+
+<p class="nn-first">
+Part of the single-mindedness mentioned by Racko is the emphasis on abstraction. 
+In contrast with, say, Smalltalk, you do not read the source code of a class when you want 
+to use it. This may be fine for a couple dozen classes, but not for a large, powerful library. 
+Eiffel introduces the notion of <B>short form</B>: an abstract version of the class, 
+keeping only the interface information including assertions. This is an ideal tool for 
+documenting classes but also for discussing designs and presenting them to outsiders - managers 
+or customers - who need to know what is going on without getting bogged down in the details.
+
+<p class="nn-first">
+Let me mention just one of the unique reusability-supporting features of Eiffel, 
+without which it is, in my experience, impossible to have a long-term reuse effort. Racko 
+again:
+
+<BLOCKQUOTE>
+The language's designer [...] recognized that no reusable library is ever 
+perfect and, thus, that libraries are always in flux. So he built a kind of 
+version-control system into the language. Specifically, there are language 
+elements to demarcate obsolete code that is, however, still being supported. 
+When these elements are referenced by someone unaware of such code's 
+obsolescence, the compiler will issue a warning at compile time about the 
+impending doom that awaits persons who continue the referencing.
+</BLOCKQUOTE>
+
+<p class="nn-first">
+It is this kind of detail that can make or break the success of reuse in a company.
+
+<h1 class="aa-sec2">
+Extendibility
+</h1>
+
+<p class="nn-first">
+Next comes extendibility. With Eiffel, modifying software is part of the normal process. 
+As Philippe Stephan writes of the external audit of his project:
+
+<BLOCKQUOTE>
+The auditors rated the responsiveness of the development team as very high. 
+</BLOCKQUOTE>
+
+<p class="nn-first">
+Chief among the method's support for extendibility is the careful design of the 
+inheritance mechanism. Unlike Smalltalk, which is fatally limited by the absence of 
+multiple inheritance, the Eiffel approach fundamentally relies on multiple inheritance to 
+combine various abstractions into one. As Dan Wilder notes:
+
+<BLOCKQUOTE>
+Most object-oriented languages do not attempt multiple-inheritance. The 
+literature is full of elaborate explanations why. This is sad. Eiffel 
+demonstrates that multiple inheritance need not be difficult or complex, and 
+it can also yield some quite practical results.
+</BLOCKQUOTE>
+
+<p class="nn-first">
+The approach also enforces a strict form of information hiding, which means that a 
+module (a <B>client</B> in Eiffel Design by Contract terminology) that uses another's facilities 
+(its <B>supplier</B>) is protected against many of the changes that can be made later on to these 
+facilities. This is essential in preserving the coherent evolution of a large system - and 
+the sanity of its developers.
+
+<h1 class="aa-sec2">
+Efficiency
+</h1>
+
+<p class="nn-first">
+Performance is almost as much an obsession in Eiffel as reusability. The software field is 
+still, and will remain for a long time, largely driven by performance considerations. (Do 
+not believe anyone who says that speed does not matter. If we get faster computers, it is to 
+do things faster and especially to do more things - not to use more CPU cycles to run the 
+same old applications at the same old visible speed.)
+
+<p class="nn-first">
+There is no reason whatsoever to leave the mantle of efficiency to the proponents of 
+machine-oriented languages such as C/C++, or to follow the path of Smalltalk which 
+sacrifices performance to object orientation. With Eiffel you can have
+the best of both worlds.
+Thanks to a performance-obsessed language 
+design and ten years of research and competition on compiling algorithms, the speed of 
+Eiffel-generated code (in such modes as what is known as "finalization" in ISE Eiffel) is 
+as good as that of hand-produced C code, or better.
+
+<p class="nn-first">
+Software producers should stand up to their ideas. That is what we do at ISE: apart 
+from the run-time engine (a few thousand lines of C), all of our software - thousands of 
+classes, hundreds of thousands of lines - is written in Eiffel, and it runs fast. Typical of 
+the situation is a recent incident with the EiffelLex library: it still had a few C elements, 
+remnants of an earlier design. We rewrote them in Eiffel - for a 30% performance gain.
+
+<p class="nn-first">
+Why these gains? The answer is simple. The C/C++ approach of doing everything 
+by hand, under tight programmer control, works well for small programs. Similarly, a 
+good secretary has no equivalent for keeping one person's records. But in the same way 
+that no humans can match the performance of a computer for managing, say, the records 
+of a bank or a city, no programmer can beat a sophisticated Eiffel compiler for optimizing 
+a large program. Against the automatic application of inlining, static binding, memory 
+management and other optimizations, the human does not stand a chance.
+
+<p class="nn-first">
+To have one's cake and eat it also means not to have to choose between run-time and 
+compilation-time performance. For programmers used to the contrast between a 
+Smalltalk-like style of rapid turnaround and the interminable edit-compile-link cycle of 
+most compiled environment, the following comments by Dan Wilder (in a separate article) 
+will be a shock:
+
+<BLOCKQUOTE>
+ISE Ebench uses "melting ice technology", which allows incremental 
+changes to run in an interpreted mode. Only modified classes are recompiled. 
+Changing one class and clicking the Melt button caused only a few seconds 
+of compilation. [...] My test application took 20 seconds to compile from 
+scratch in "melt" mode.  
+<UL><p class="nn-first"> [Dan Wilder in Linux Journal, September 1995, <I>Two Eiffel implementations</I>.] </UL>
+</BLOCKQUOTE>
+
+Steve Bilow provides further explanations:
+
+<BLOCKQUOTE>
+Based on the observation that software development is an iterative process 
+which is usually focused on constructing systems from code modifications, 
+the folks at ISE have developed something that they call "Melting Ice 
+Technology". Essentially, this means that when you make a [change] and you 
+want to try it out, you simply "melt" it into the system. You don't need to 
+regenerate a bunch of C code, so your changes are integrated into the system 
+proportionally to the amount of code changed. Even in C and C++, `make' 
+still has to relink.
+
+</BLOCKQUOTE>
+
+<p class="nn-first">
+What this also indicates in passing is the technology choice made by ISE Eiffel and 
+all current implementations: using C as the portable implementation vehicle. By going 
+through C, the compilers gain efficiency and portability. This also makes Eiffel one of the 
+most open environments around; in contrast to the self-centered view that predominates in 
+Smalltalk, Eiffel software is born with a sociable attitude, ready to interface with all kinds 
+of other software written in C or other languages. This, needless to say, is a key to the 
+success of realistic applications.
+
+<h1 class="aa-sec2">
+With us, everything's the face
+</h1>
+
+<p class="nn-first">
+A good way to think about Eiffel - the seamlessness of it, the insistency on getting 
+everything right, the conviction that software should be beautiful in and out, specification 
+and implementation - is this little anecdote stolen from Roman Jakobson's Essays on 
+<I>General Linguistics</I>:
+
+<BLOCKQUOTE>
+In a far-away country, a missionary was scolding the natives."You should not 
+go around naked, showing your body like this!". One day a young girl spoke 
+back, pointing at him: "But you, Father, you are also showing a part of your 
+body!". "But of course", the missionary said in a dignified tone; "That is 
+my face". The girl replied: "So you see, Father, it is really the same thing. 
+Only, with us, everything is the face".  <BR><BR>
+</BLOCKQUOTE>
+<p class="nn-first">
+So it is with Eiffel too. Everything is the face.
+<BR><BR>
+<CENTER>
+<!--<IMG SRC="/images/pictures/environment.gif">-->
+</CENTER>
+
+<p class="nn-first">
+Hundreds of thousands of people have now been exposed to Eiffel through books, through 
+courses, through hearing about other people's successes, and most importantly (for the 
+most fortunate among them) through using it to complete a project on time, within budget, 
+and to the satisfaction of their customers. Shouldn't your next project use Eiffel too?
+
+
+<p class="nn-first">
+<SMALL>
+"Design by Contract" is a trademark of Interactive Software Engineering.
+</SMALL>
+
+<p class="bottom" align="left"><IMG SRC="topdoc.gif" ALT="Getting Started with Eiffel" BORDER="0" usemap="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Getting Started with Eiffel" COORDS="0,0,100,40" HREF="index.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home
+Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001

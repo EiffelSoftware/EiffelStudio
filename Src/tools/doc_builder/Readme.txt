@@ -12,16 +12,19 @@ COMPILATION
 Requirements:
 
 	- Precompiled .NET Vision2
+	- Gobo 3.1 library
 
 
 1) Run `setup.bat'
-2) Compile 'docbuilder.ace'
+2) Extract the contents of the file gobo_win.tgz found in CVS at Src/free_add_ons/gobo to your EIFFEL_SRC/library directory
+3) Compile 'docbuilder.ace'
 
 
 Classic Mode Compilation
 ------------------------
 
-1) Compile 'docbuilder_classic.ace'
+1) Extract the contents of the file gobo_win.tgz found in CVS at Src/free_add_ons/gobo to your EIFFEL_SRC/library directory
+2) Compile 'docbuilder_classic.ace'
 
 
 ------------------------------------

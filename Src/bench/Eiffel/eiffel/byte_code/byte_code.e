@@ -413,6 +413,8 @@ feature -- Byte code generation
 			inh_assert: INHERITED_ASSERTION;
 			feat: FEATURE_I;
 		do
+			local_list := context.local_list;
+			local_list.wipe_out;
 			feat := Context.associated_class.feature_table.item (feature_name);
 			inh_assert := Context.inherited_assertion;
 			inh_assert.init;
@@ -490,7 +492,6 @@ feature -- Byte code generation
 			end;
 
 			from
-				local_list := context.local_list;
 				Temp_byte_code_array.append_short_integer (local_list.count);
 				local_list.start
 			until
@@ -531,7 +532,6 @@ feature -- Byte code generation
 			context.byte_prepend (ba, Temp_byte_code_array);
 
 				-- Clean the context
-			local_list.wipe_out;
 			inh_assert.wipe_out;
 		end;
 
@@ -551,13 +551,13 @@ feature -- Byte code generation
 					-- Local SK value
 				Context.add_local 
 						(context.real_type (locals.item (position)));
-				position := position + 1;
+				position := position + 1
 			end;
 			if old_expressions /= Void then
 				from
 					nb := old_expressions.count;
 					old_expressions.start;
-					i := i
+					i := 1
 				until
 					i > nb
 				loop

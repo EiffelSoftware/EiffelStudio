@@ -259,6 +259,7 @@ feature -- rest
 	update_command: UPDATE_PROJECT;
 --	run_command: RUN;
 	debug_run_command: DEBUG_RUN;
+	debug_step_command: DEBUG_STEP;
 	debug_quit_command: DEBUG_QUIT;
 	special_command: SPECIAL_COMMAND;
 	freeze_command: FREEZE_PROJECT;
@@ -273,6 +274,7 @@ feature -- rest
 				!!update_command.make (icing, text_window);
 --				!!run_command.make (icing, text_window);
 				!!debug_run_command.make (icing, text_window);
+				!!debug_step_command.make (icing, text_window);
 				!!debug_quit_command.make (icing, text_window);
 				!!special_command.make (icing, text_window);
 				!!freeze_command.make (icing, text_window);
@@ -280,7 +282,8 @@ feature -- rest
 			icing.attach_top (update_command, 0);
 --			icing.attach_top_widget (update_command, run_command, 0);
 			icing.attach_top_widget (update_command, debug_run_command, 0);
-			icing.attach_top_widget (debug_run_command, debug_quit_command, 0);
+			icing.attach_top_widget (debug_run_command, debug_step_command, 0);
+			icing.attach_top_widget (debug_step_command, debug_quit_command, 0);
 			icing.attach_top_widget (debug_quit_command, special_command, 0);
 			icing.attach_bottom_widget (freeze_command, special_command, 0);
 			icing.attach_bottom_widget (finalize_command, freeze_command, 0);

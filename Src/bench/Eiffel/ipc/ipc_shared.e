@@ -19,6 +19,18 @@ feature {NONE} -- For workbench requests.
 		-- #define BYTECODE 20
 		-- /* Byte code transfer */
 
+	Rqst_adopt: INTEGER is 22;
+		-- #define ADOPT 22
+		-- /* Adopt object */
+
+	Rqst_access: INTEGER is 23;
+		-- #define ACCESS 23
+		-- /* Access object through hector */
+
+	Rqst_wean: INTEGER is 24;
+		-- #define WEAN 24
+		-- /* Wean adopted object */
+
 	Rqst_resume: INTEGER is 11;
 		-- #define RESUME 11
 		-- /* Resume execution */

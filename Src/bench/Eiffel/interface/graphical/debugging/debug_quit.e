@@ -36,8 +36,8 @@ feature {NONE}
 			kill_request: EWB_REQUEST
 		do
 			if Run_info.is_running then
+				hide_stopped_mark;
 				if Run_info.is_stopped then
-					hide_stopped_mark;
 					request.send;
 				else
 					!! kill_request.make (Rqst_kill);
@@ -50,23 +50,27 @@ feature {NONE}
 			-- Remove the stopped mark in the routine tools containing the 
 			-- related routine and set with the `show_breakpoints' format.
 		local
-			 rout_wnds: LINKED_LIST [ROUTINE_W];
-			 rout_text: ROUTINE_TEXT
+			rout_wnds: LINKED_LIST [ROUTINE_W];
+			rout_text: ROUTINE_TEXT;
+			routine: FEATURE_I
 		do
-			from
-				rout_wnds := window_manager.routine_win_mgr.active_editors;
-				rout_wnds.start
-			until
-				rout_wnds.after
-			loop
-				rout_text := rout_wnds.item.text_window;
-				if
-					rout_text.root_stone.feature_i.body_id = Run_info.feature_i.body_id
-					and rout_text.in_debug_format
-				then
-					rout_text.redisplay_breakable_mark (Run_info.break_index, False)
-				end;
-				rout_wnds.forth
+			routine := Run_info.feature_i;
+			if routine /= Void then
+				from
+					rout_wnds := window_manager.routine_win_mgr.active_editors;
+					rout_wnds.start
+				until
+					rout_wnds.after
+				loop
+					rout_text := rout_wnds.item.text_window;
+					if
+						rout_text.root_stone.feature_i.body_id = routine.body_id
+						and rout_text.in_debug_format
+					then
+						rout_text.redisplay_breakable_mark (Run_info.break_index, False)
+					end;
+					rout_wnds.forth
+				end
 			end
 		end; -- hide_stopped_mark
 	

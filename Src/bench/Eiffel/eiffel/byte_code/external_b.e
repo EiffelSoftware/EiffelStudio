@@ -95,7 +95,7 @@ feature -- Byte code generation
 			-- Generate byte code for a call to an external. If not `flag',
 			-- generate an invariant check before the call.
 		local
-			nb_protections, i, local_count: INTEGER;
+			nb_protections, i: INTEGER;
 			param: EXPR_B;
 		do
 			if parameters /= Void then

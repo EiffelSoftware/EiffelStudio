@@ -201,7 +201,7 @@ feature
 
 	deselect_all is
 		do
-			highlight_selected (cursor_position, cursor_position)
+			clear_selection
 		end;
 
 	clean is

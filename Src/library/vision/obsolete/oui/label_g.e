@@ -38,7 +38,7 @@ feature {NONE} -- Creation
 			-- Create an unmanaged label gadget with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
-			create_ev_widget (a_name, a_parent, True)
+			create_ev_widget (a_name, a_parent, False)
 		end;
 
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is

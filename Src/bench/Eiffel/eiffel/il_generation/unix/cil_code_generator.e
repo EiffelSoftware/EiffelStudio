@@ -636,6 +636,11 @@ feature -- IL Generation
 		do
 		end
 
+	generate_invariant_feature (feat: INVARIANT_FEAT_I) is
+			-- Generate `_invariant' that checks `current_class_type' invariants.
+		do
+		end
+
 	start_new_body (method_token: INTEGER) is
 			-- Start a new body definition for method `method_token'.
 		require
@@ -1462,6 +1467,17 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 
 	class_mapping: ARRAY [INTEGER]
 			-- Array of type token indexed by their `type_id'.
+
+
+	class_type_token (a_type_id: INTEGER): INTEGER is
+			-- Given `a_type_id' returns its associated metadata token.
+		require
+			valid_type_id: a_type_id > 0
+		do
+			check
+				not_implemented: False
+			end
+		end
 
 feature {NONE} -- Implementation
 

@@ -21,7 +21,17 @@ inherit
 
 creation
 	make,
-	make_by_pointer
+	make_by_pointer,
+	make_from_decimal
+
+feature -- Initialization
+
+	make_from_decimal (dec_value: ECOM_DECIMAL) is
+			-- Create with value 'dec_value'
+		do
+			make
+			ccom_currency_from_decimal (dec_value.item, item)
+		end
 
 feature  -- Access
 
@@ -121,6 +131,14 @@ feature -- Conversion
 			valid_result: Result /= Void
 		end
 
+	truncated_to_double: DOUBLE is
+			-- Truncated to DOUBLE
+		require
+			valid_item: item /= default_pointer
+		do
+			Result := ccom_currency_to_double (item)
+		end
+
 feature -- Element Change
 
 	set_high_bits (an_integer: INTEGER) is
@@ -194,6 +212,18 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Externals
+
+	ccom_currency_from_decimal (dec_value: POINTER cy_item: POINTER) is
+		external
+			"C [macro <oleauto.h>](DECIMAL *, CY *)"
+		alias
+			"VarCyFromDec"
+		end
+
+	ccom_currency_to_double (a_ptr: POINTER):DOUBLE is
+		external
+			"C (CY *): EIF_DOUBLE|%"E_currency.h%""
+		end
 
 	ccom_currency_value_zero (a_ptr: POINTER) is
 		external

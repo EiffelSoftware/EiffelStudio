@@ -13,6 +13,16 @@
 
 #include "E_Currency.h"
 
+EIF_DOUBLE ccom_currency_to_double (CY * a_value)
+{
+	EIF_DOUBLE dbl_value =0;
+	HRESULT hr = VarR8FromCy (*a_value, &dbl_value);
+	
+	if (FAILED (hr))
+		dbl_value = 0;
+	return dbl_value;
+}
+
 void ccom_currency_value_zero (CY * a_value)
 {
 	long zero = 0;

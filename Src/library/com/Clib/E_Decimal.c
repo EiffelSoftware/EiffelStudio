@@ -28,10 +28,10 @@ void ccom_decimal_value_one (DECIMAL * a_value)
 
 EIF_DOUBLE ccom_decimal_to_double (DECIMAL * a_value)
 {
-	EIF_DOUBLE * a_double = 0;
-	HRESULT hr = VarR8FromDec (a_value, (DOUBLE *)a_double);
+	EIF_DOUBLE a_double = 0;
+	HRESULT hr = VarR8FromDec (a_value, (double *)&a_double);
 	if (FAILED(hr))
-		*a_double = 0;
+		a_double = 0;
 	
-	return *a_double;
+	return a_double;
 };

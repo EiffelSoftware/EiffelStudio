@@ -1,5 +1,5 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL15]
-: $X-Id: Jmake.tmpl,v 3.0.1.1 1993/08/20 07:36:36 ram Exp $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL60]
+: $X-Id: Jmake.tmpl,v 3.0.1.2 1995/01/11 14:50:21 ram Exp $
 
 case $CONFIG in
 '')
@@ -20,7 +20,9 @@ esac
 CURRENT=ipc/app
 DIR=`echo $CURRENT/ | sed -e 's/\.\///g'`
 echo "Extracting ${DIR}Makefile (with variable substitutions)"
+
 DATE=`date`
+
 $spitshell >Makefile <<!GROK!THIS!
 ########################################################################
 # Makefile generated from Makefile.SH on $DATE
@@ -58,10 +60,9 @@ SOURCES =  \$(LIB)
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
-
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0 1993/08/18 12:04:14 ram Exp $
+# $X-Id: Jmake.rules,v 3.0.1.5 1995/09/25 09:07:19 ram Exp $
 
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
@@ -111,7 +112,7 @@ depend:: ../../mkdep
 depend::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
 	$(MKDEP) $(SOURCES) | \
-	$(SED) 's/: \.\//: /; /\/usr\/include/d' \
+	$(SED) -e 's/: \.\//: /; s/\/usr\/include[^ ]*//g' -e '/: *$$/d' \
 	) > Makefile.new
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
@@ -166,12 +167,12 @@ local_clobber:: local_realclean
 
 Makefile.SH: Jmakefile
 	-@if test -f $(TOP)/.package; then \
-		if test -f Makefile.SH; then \
-			echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
-			$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
-		fi; \
-		echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
-		$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
+	if test -f Makefile.SH; then \
+	echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
+	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
+	fi; \
+	echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
+	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
 	else touch $@; exit 0; fi
 
 Makefile: Makefile.SH

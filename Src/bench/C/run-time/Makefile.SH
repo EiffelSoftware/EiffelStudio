@@ -1,16 +1,17 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 2.8 PL13]
-: $X-Id: Jmake.tmpl,v 2.8.1.2 91/11/18 13:22:54 ram Exp Locker: ram $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL60]
+: $X-Id: Jmake.tmpl,v 3.0.1.2 1995/01/11 14:50:21 ram Exp $
 
 case $CONFIG in
 '')
-	if test ! -f config.sh; then
-		ln ../config.sh . || \
-		ln ../../config.sh . || \
-		ln ../../../config.sh . || \
-		ln ../../../../config.sh . || \
-		(echo "Can't find config.sh."; exit 1)
-	fi 2>/dev/null
-	. ./config.sh
+	if test -f config.sh; then TOP=.;
+	elif test -f ../config.sh; then TOP=..;
+	elif test -f ../../config.sh; then TOP=../..;
+	elif test -f ../../../config.sh; then TOP=../../..;
+	elif test -f ../../../../config.sh; then TOP=../../../..;
+	else
+		echo "Can't find config.sh."; exit 1
+	fi
+	. $TOP/config.sh
 	;;
 esac
 case "$0" in
@@ -19,7 +20,10 @@ esac
 CURRENT=run-time
 DIR=`echo $CURRENT/ | sed -e 's/\.\///g'`
 echo "Extracting ${DIR}Makefile (with variable substitutions)"
+
+INSTALL=`echo $install | sed -e 's,\./i,\$(TOP)/i,'`
 DATE=`date`
+
 $spitshell >Makefile <<!GROK!THIS!
 ########################################################################
 # Makefile generated from Makefile.SH on $DATE
@@ -29,7 +33,7 @@ JMAKE = jmake
 TOP = ..
 CURRENT = $CURRENT
 DIR = $DIR
-INSTALL = ../install
+INSTALL = $INSTALL
 
 ########################################################################
 # Parameters set by Configure -- edit config.sh if changes are needed
@@ -43,20 +47,20 @@ L = $manext
 LIBS = $libs
 LINT = lint
 LN = $ln
-MANSRC = $mansrc
+MANSRC = $installmansrc
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
 RANLIB = $ranlib
 RM = $rm -f
-SCRIPTDIR = $scriptdir
+SCRIPTDIR = $installscript
 SED = $sed
 
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  \$(LSRC) x2c.c debug.c interp.c update.c wbench.c main.c
-OBJECTS =  \$(LOBJ) \$(WOBJ) \$(WOBJ) \$(EOBJ) \$(EOBJ) x2c.o debug.o interp.o update.o wbench.o main.o
+SOURCES =  console.c option.c \$(LSRC) x2c.c debug.c interp.c option.c update.c wbench.c main.c
+OBJECTS =  \$(LOBJ) \$(WOBJ) \$(WOBJ) \$(EOBJ) \$(EOBJ) x2c.o debug.o interp.o option.o update.o wbench.o main.o
 LSCRIPTS =  size.h
 
 ########################################################################
@@ -70,7 +74,7 @@ LSCRIPTS =  size.h
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 2.8.1.4 91/11/18 13:19:07 ram Exp Locker: ram $
+# $X-Id: Jmake.rules,v 3.0.1.5 1995/09/25 09:07:19 ram Exp $
 
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
@@ -87,14 +91,14 @@ DPFLAGS = -I$(TOP)
 
 NETWORK_OBJ = ../ipc/app/network.o
 
-LSRC = math.c malloc.c garcol.c local.c except.c store.c retrieve.c \
+LSRC = math.c malloc.c garcol.c local.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
-	console.c run_idr.c path_name.c dle.c object_id.c option.c
+	run_idr.c path_name.c dle.c object_id.c
 
-OTHER = main.c
+OTHER = main.c except.c
 
 WADD = debug.c interp.c update.c wbench.c
 
@@ -102,11 +106,11 @@ NETWORK = network.o
 
 WSRC = \
 	console.c \
+	woption.c \
 	wmath.c \
 	wmalloc.c \
 	wgarcol.c \
 	wlocal.c \
-	wexcept.c \
 	wstore.c \
 	wretrieve.c \
 	whash.c \
@@ -136,12 +140,12 @@ WSRC = \
 	wargv.c \
 	wboolstr.c \
 	wsearch.c \
-	wmain.c \
 	wrun_idr.c \
 	wpath_name.c \
 	wdle.c \
 	wobject_id.c \
-	woption.c
+	wmain.c \
+	wexcept.c 
 
 ESRC = \
 	console.c \
@@ -149,7 +153,6 @@ ESRC = \
 	wmalloc.c \
 	wgarcol.c \
 	wlocal.c \
-	bexcept.c \
 	wstore.c \
 	wretrieve.c \
 	whash.c \
@@ -179,19 +182,20 @@ ESRC = \
 	wargv.c \
 	wboolstr.c \
 	wsearch.c \
-	bmain.c \
 	wrun_idr.c \
 	wpath_name.c \
 	wdle.c \
-	wobject_id.c
+	wobject_id.c \
+	bmain.c \
+	bexcept.c 
 
 LOBJ = \
 	console.o \
+	option.o \
 	math.o \
 	malloc.o \
 	garcol.o \
 	local.o \
-	except.o \
 	store.o \
 	retrieve.o \
 	hash.o \
@@ -221,21 +225,21 @@ LOBJ = \
 	argv.o \
 	boolstr.o \
 	search.o \
-	main.o \
 	run_idr.o \
 	path_name.o \
 	dle.o \
 	object_id.o \
-	option.o
+	main.o \
+	except.o 
 
 WOBJ = \
 	$(NETWORK) \
 	console.o \
+	woption.o \
 	wmath.o \
 	wmalloc.o \
 	wgarcol.o \
 	wlocal.o \
-	wexcept.o \
 	wstore.o \
 	wretrieve.o \
 	whash.o \
@@ -265,24 +269,24 @@ WOBJ = \
 	wargv.o \
 	wboolstr.o \
 	wsearch.o \
-	wmain.o \
-	debug.o \
-	interp.o \
-	update.o \
-	wbench.o \
 	wrun_idr.o \
 	wpath_name.o \
 	wdle.o \
 	wobject_id.o \
-	woption.o
+	wmain.o \
+	wexcept.o \
+	debug.o \
+	interp.o \
+	update.o \
+	wbench.o 
 
 EOBJ = \
+	woption.o \
 	console.o \
 	wmath.o \
 	wmalloc.o \
 	wgarcol.o \
 	wlocal.o \
-	bexcept.o \
 	wstore.o \
 	wretrieve.o \
 	whash.o \
@@ -312,16 +316,16 @@ EOBJ = \
 	wargv.o \
 	wboolstr.o \
 	wsearch.o \
-	bmain.o \
-	debug.o \
-	interp.o \
-	update.o \
-	wbench.o \
 	wrun_idr.o \
 	wpath_name.o \
 	wdle.o \
 	wobject_id.o \
-	woption.o
+	bmain.o \
+	bexcept.o \
+	debug.o \
+	interp.o \
+	update.o \
+	wbench.o 
 
 all:: size.h
 
@@ -414,7 +418,7 @@ depend:: ../mkdep
 depend::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
 	$(MKDEP) $(SOURCES) | \
-	$(SED) 's/: \.\//: /; /\/usr\/include/d' \
+	$(SED) -e 's/: \.\//: /; s/\/usr\/include[^ ]*//g' -e '/: *$$/d' \
 	) > Makefile.new
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
@@ -447,12 +451,6 @@ wlocal.c: local.c
 remove::
 	$(RM) wlocal.c
 
-wexcept.c: except.c
-	$(RM) wexcept.c
-	$(LN) except.c wexcept.c
-remove::
-	$(RM) wexcept.c
-
 wstore.c: store.c
 	$(RM) wstore.c
 	$(LN) store.c wstore.c
@@ -464,12 +462,6 @@ wretrieve.c: retrieve.c
 	$(LN) retrieve.c wretrieve.c
 remove::
 	$(RM) wretrieve.c
-
-wrun_idr.c: run_idr.c
-	$(RM) wrun_idr.c
-	$(LN) run_idr.c wrun_idr.c
-remove::
-	$(RM) wrun_idr.c
 
 whash.c: hash.c
 	$(RM) whash.c
@@ -573,30 +565,6 @@ wfile.c: file.c
 remove::
 	$(RM) wfile.c
 
-wpath_name.c: path_name.c
-	$(RM) wpath_name.c
-	$(LN) path_name.c wpath_name.c
-remove::
-	$(RM) wpath_name.c
-
-wdle.c: dle.c
-	$(RM) wdle.c
-	$(LN) dle.c wdle.c
-remove::
-	$(RM) wdle.c
-
-woption.c: option.c
-	$(RM) woption.c
-	$(LN) option.c woption.c
-remove::
-	$(RM) woption.c
-
-wobject_id.c: object_id.c
-	$(RM) wobject_id.c
-	$(LN) object_id.c wobject_id.c
-remove::
-	$(RM) wobject_id.c
-
 wdir.c: dir.c
 	$(RM) wdir.c
 	$(LN) dir.c wdir.c
@@ -657,12 +625,52 @@ wsearch.c: search.c
 remove::
 	$(RM) wsearch.c
 
+wrun_idr.c: run_idr.c
+	$(RM) wrun_idr.c
+	$(LN) run_idr.c wrun_idr.c
+remove::
+	$(RM) wrun_idr.c
+
+wpath_name.c: path_name.c
+	$(RM) wpath_name.c
+	$(LN) path_name.c wpath_name.c
+remove::
+	$(RM) wpath_name.c
+
+wdle.c: dle.c
+	$(RM) wdle.c
+	$(LN) dle.c wdle.c
+remove::
+	$(RM) wdle.c
+
+wobject_id.c: object_id.c
+	$(RM) wobject_id.c
+	$(LN) object_id.c wobject_id.c
+remove::
+	$(RM) wobject_id.c
+
 wmain.c: main.c
 	$(RM) wmain.c
 	$(LN) main.c wmain.c
 remove::
 	$(RM) wmain.c
 
+wexcept.c: except.c
+	$(RM) wexcept.c
+	$(LN) except.c wexcept.c
+remove::
+	$(RM) wexcept.c
+
+woption.c: option.c
+	$(RM) woption.c
+	$(LN) option.c woption.c
+remove::
+	$(RM) woption.c
+
+
+woption.o: woption.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
 
 wmath.o: wmath.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
@@ -680,20 +688,12 @@ wlocal.o: wlocal.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 
-wexcept.o: wexcept.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
-	$(RM) $*.c
-
 wstore.o: wstore.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 
 wretrieve.o: wretrieve.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
-	$(RM) $*.c
-
-wrun_idr.o: wrun_idr.c
-	$(CC) -c $(JCFLAGS) -I../idrs -DWORKBENCH $*.c
 	$(RM) $*.c
 
 whash.o: whash.c
@@ -764,18 +764,6 @@ wfile.o: wfile.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 
-wpath_name.o: wpath_name.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
-	$(RM) $*.c
-
-wdle.o: wdle.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
-	$(RM) $*.c
-
-wobject_id.o: wobject_id.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
-	$(RM) $*.c
-
 wdir.o: wdir.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
@@ -816,7 +804,27 @@ wsearch.o: wsearch.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 
+wrun_idr.o: wrun_idr.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+wpath_name.o: wpath_name.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+wdle.o: wdle.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+wobject_id.o: wobject_id.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
 wmain.o: wmain.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+wexcept.o: wexcept.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 
@@ -825,9 +833,6 @@ debug.o: debug.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 
 interp.o: interp.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
-
-woption.o: woption.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 
 update.o: update.c
@@ -860,17 +865,16 @@ bmain.c: main.c
 remove::
 	$(RM) bmain.c
 
-
-bmain.o: bmain.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $*.c
-	$(RM) $*.c
-
 bexcept.c: except.c
 	$(RM) bexcept.c
 	$(LN) except.c bexcept.c
 remove::
 	$(RM) bexcept.c
 
+
+bmain.o: bmain.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $*.c
+	$(RM) $*.c
 
 bexcept.o: bexcept.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $*.c

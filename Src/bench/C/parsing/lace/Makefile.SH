@@ -1,16 +1,17 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 2.8 PL13]
-: $X-Id: Jmake.tmpl,v 2.8.1.2 91/11/18 13:22:54 ram Exp Locker: ram $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL60]
+: $X-Id: Jmake.tmpl,v 3.0.1.2 1995/01/11 14:50:21 ram Exp $
 
 case $CONFIG in
 '')
-	if test ! -f config.sh; then
-		ln ../config.sh . || \
-		ln ../../config.sh . || \
-		ln ../../../config.sh . || \
-		ln ../../../../config.sh . || \
-		(echo "Can't find config.sh."; exit 1)
-	fi 2>/dev/null
-	. ./config.sh
+	if test -f config.sh; then TOP=.;
+	elif test -f ../config.sh; then TOP=..;
+	elif test -f ../../config.sh; then TOP=../..;
+	elif test -f ../../../config.sh; then TOP=../../..;
+	elif test -f ../../../../config.sh; then TOP=../../../..;
+	else
+		echo "Can't find config.sh."; exit 1
+	fi
+	. $TOP/config.sh
 	;;
 esac
 case "$0" in
@@ -19,7 +20,9 @@ esac
 CURRENT=parsing/lace
 DIR=`echo $CURRENT/ | sed -e 's/\.\///g'`
 echo "Extracting ${DIR}Makefile (with variable substitutions)"
+
 DATE=`date`
+
 $spitshell >Makefile <<!GROK!THIS!
 ########################################################################
 # Makefile generated from Makefile.SH on $DATE
@@ -52,6 +55,8 @@ YACC = $yacc
 ########################################################################
 # Automatically generated parameters -- do not edit
 
+RUN_TIME = ../../run-time
+SHARED_CLIB = ../shared
 SOURCES =  \$(SRCS) lace_y.y
 OBJECTS =  \$(OBJS) lace_l.o lace_y.o eif_l.o
 
@@ -64,10 +69,9 @@ OBJECTS =  \$(OBJS) lace_l.o lace_y.o eif_l.o
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
-
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 2.8.1.4 91/11/18 13:19:07 ram Exp Locker: ram $
+# $X-Id: Jmake.rules,v 3.0.1.5 1995/09/25 09:07:19 ram Exp $
 
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
@@ -79,13 +83,11 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-RUN_TIME = ../../run-time
-SHARED_CLIB = ../shared
 DPFLAGS = -I$(TOP) -I$(SHARED_CLIB) -I$(RUN_TIME)
 CFLAGS = $(DPFLAGS)
 YFLAGS = -d
 
-SRCS = lace_y.y lace_c.c lac_err.c keyword.c
+SRCS = lace_l.c lace_y.y lace_c.c eif_l.c lac_err.c keyword.c
 
 OBJS = \
 	lace_l.o \
@@ -128,19 +130,19 @@ local_realclean::
 
 lace_y.h: lace_y.c
 	@if test -f y.tab.h; then \
-		echo "	$(SED) -e 's/yy\(.\)/xx\1/g' < y.tab.h > lace_y.h"; \
-		$(SED) -e 's/yy\(.\)/xx\1/g' < y.tab.h > lace_y.h; \
-		echo "	$(RM) y.tab.h"; \
-		$(RM) y.tab.h; \
+	echo "	$(SED) -e 's/yy\(.\)/xx\1/g' < y.tab.h > lace_y.h"; \
+	$(SED) -e 's/yy\(.\)/xx\1/g' < y.tab.h > lace_y.h; \
+	echo "	$(RM) y.tab.h"; \
+	$(RM) y.tab.h; \
 	elif test -f lace_y.h; then \
-		echo "	$(CP) lace_y.h lace_y.ht"; \
-		$(CP) lace_y.h lace_y.ht; \
-		echo "	$(SED) -e 's/yy\(.\)/xx\1/g' < lace_y.ht > lace_y.h"; \
-		$(SED) -e 's/yy\(.\)/xx\1/g' < lace_y.ht > lace_y.h; \
-		echo "	$(RM) lace_y.ht"; \
-		$(RM) lace_y.ht; \
+	echo "	$(CP) lace_y.h lace_y.ht"; \
+	$(CP) lace_y.h lace_y.ht; \
+	echo "	$(SED) -e 's/yy\(.\)/xx\1/g' < lace_y.ht > lace_y.h"; \
+	$(SED) -e 's/yy\(.\)/xx\1/g' < lace_y.ht > lace_y.h; \
+	echo "	$(RM) lace_y.ht"; \
+	$(RM) lace_y.ht; \
 	else \
-		exit 0; \
+	exit 0; \
 	fi
 
 local_realclean::
@@ -162,7 +164,7 @@ depend:: ../../mkdep
 depend::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
 	$(MKDEP) $(SOURCES) | \
-	$(SED) 's/: \.\//: /; /\/usr\/include/d' \
+	$(SED) -e 's/: \.\//: /; s/\/usr\/include[^ ]*//g' -e '/: *$$/d' \
 	) > Makefile.new
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
@@ -199,12 +201,12 @@ local_clobber:: local_realclean
 
 Makefile.SH: Jmakefile
 	-@if test -f $(TOP)/.package; then \
-		if test -f Makefile.SH; then \
-			echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
-			$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
-		fi; \
-		echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
-		$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
+	if test -f Makefile.SH; then \
+	echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
+	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
+	fi; \
+	echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
+	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
 	else touch $@; exit 0; fi
 
 Makefile: Makefile.SH

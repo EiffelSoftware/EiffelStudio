@@ -1,5 +1,5 @@
 <document title="6 STARTING TO BROWSE" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>
 			<link>
@@ -19,7 +19,7 @@
 			<item>You can choose many different ways of browsing: sometimes you know the 
 				<span>name</span> of a class or feature, and will get to it just by typing it; sometimes you want to traverse the system through its cluster-subcluster 
 				<span>structure</span> ; often, you see a reference to element (class or feature) in the text of another element, and just want to get to it by following that reference, like a 
-				<span>hyperlink</span> .  You'll be able to use all these techniques, and alternate freely between them.
+				<span>hyperlink</span>.  You'll be able to use all these techniques, and alternate freely between them.
 			</item>
 			<item>The browsing facilities are always available.  There is no "browser" in EiffelStudio; you just browse when you want to, by looking at the information you need.  You can do this while editing, debugging, or performing any other of the analysis, design, implementation, extension and maintenance tasks of system construction.  </item>
 			<item>Although classes are stored in files and clusters in directories, you can for the most part forget about the file system.  Unlike most environments, which let you manipulate files containing software texts, EiffelStudio lets you concentrate on your 
@@ -59,7 +59,7 @@
 			</code>, 
 			<code>
 				<keyword>Context</keyword>
-			</code> .  There will be others, such as 
+			</code>.  There will be others, such as 
 			<code>
 				<keyword>Search</keyword>
 			</code>, and you can remove any of them, except 
@@ -108,7 +108,7 @@
 			</code> ) and the Enter key.  As shown on the next figure, this retargets the tool to class 
 			<code>
 				<string>STRING</string>
-			</code> .  Note that you didn't have to worry about where the class resides in the files of your computer.  Also, the Class Field will now show the target's class name, 
+			</code>.  Note that you didn't have to worry about where the class resides in the files of your computer.  Also, the Class Field will now show the target's class name, 
 			<code>
 				<string>STRING</string>
 			</code>, in upper case, since that is the standard Eiffel convention for class names.  It doesn't matter, when you enter the name into the field, whether you use lower or upper case, or some mix; EiffelStudio will show the name back in all upper case.
@@ -126,7 +126,7 @@
 		<paragraph>The Development Window is now targeted to class 
 			<code>
 				<string>STRING</string>
-			</code> .  Each of the four panes contains a tool:
+			</code>.  Each of the four panes contains a tool:
 		</paragraph>
 		<list ordered="false">
 			<item>Features Tree, top-left: a tree view of all the features of the class, grouped by the feature categories ( 
@@ -162,7 +162,7 @@
 				</code>, 
 				<code>
 					<keyword>Metrics</keyword>
-				</code> .
+				</code>.
 			</item>
 		</list>
 		<heading>
@@ -237,7 +237,7 @@
 			<span>client</span>, but it's not particularly interesting for 
 			<code>
 				<string>STRING</string>
-			</code> .  The default placement of the classes is quite good in this case, but if you don't like it you can change it; your changes will be retained the next time you bring up this diagram, in this session or a later one.  (That's part of the information the 
+			</code>.  The default placement of the classes is quite good in this case, but if you don't like it you can change it; your changes will be retained the next time you bring up this diagram, in this session or a later one.  (That's part of the information the 
 			<code>
 				<keyword>Diagram</keyword>
 			</code> directory keeps.  ) It will also be used in Web diagrams if you choose to generate an HTML form.  To move a class bubble, just use standard drag-and-drop.  For example you may move everything to the left and make the figure more compact:
@@ -252,7 +252,7 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>Later on you will learn how to use the Diagram View not just to display system structures graphically but also to build and modify systems.  EiffelStudio indeed integratesthe functionality of a CASE (Computer-Aided Software Engineering) workbench, seamlessly integrated with the programming facilities.  But for the moment this peek at the Diagram View is enough, so let's get back to browsing.  </paragraph>
+		<paragraph>Later on you will learn how to use the Diagram View not just to display system structures graphically but also to build and modify systems.  EiffelStudio indeed integrates the functionality of a CASE (Computer-Aided Software Engineering) workbench, seamlessly integrated with the programming facilities.  But for the moment this peek at the Diagram View is enough, so let's get back to browsing.  </paragraph>
 		<heading>
 			<size>2</size>
 			<content>Retargeting from the Cluster Tree</content>
@@ -260,7 +260,7 @@
 		<paragraph>Your first browsing action used a class of which you knew the name, 
 			<code>
 				<string>STRING</string>
-			</code> .  What if you don't know what's in the system and want to explore it? Among other techniques, you can let the Cluster Tree, in the Cluster Tool at the bottom left of the Development Window, guide you through the system's structure:
+			</code>.  What if you don't know what's in the system and want to explore it? Among other techniques, you can let the Cluster Tree, in the Cluster Tool at the bottom left of the Development Window, guide you through the system's structure:
 		</paragraph>
 		<div>
 			<image_link>
@@ -345,7 +345,7 @@
 			</code> next to 
 			<code>
 				<string>list</string>
-			</code> .  This time, since list is a terminal cluster, it's not subclusters you'll see, but 
+			</code>.  This time, since list is a terminal cluster, it's not subclusters you'll see, but 
 			<bold>classes</bold>, identified by small ellipses:
 		</paragraph>
 		<div>
@@ -365,7 +365,7 @@
 			</code> in the tree.  It doesn't matter whether you click on the class name or the adjacent bubble.  This retargets the tool to class 
 			<code>
 				<string>LIST</string>
-			</code> .  Because the Context Tool is still in 
+			</code>.  Because the Context Tool is still in 
 			<code>
 				<keyword>Diagram</keyword>
 			</code> view, it will display the inheritance structure for the new target class:
@@ -383,7 +383,7 @@
 		<paragraph>While this view is being produced you may see (or just get a glimpse of, if your machine is fast) messages indicating that it's producing the diagram for 
 			<code>
 				<string>LIST</string>
-			</code> .  In a moment we'll switch views in the Context Tool as we won't need the diagrams.
+			</code>.  In a moment we'll switch views in the Context Tool as we won't need the diagrams.
 		</paragraph>
 		<paragraph>As the tool is now targeted to 
 			<code>
@@ -421,7 +421,7 @@
 			</code> button.  This retargets the tool to the class you visited previously: 
 			<code>
 				<string>STRING</string>
-			</code> .  The 
+			</code>.  The 
 			<code>
 				<keyword>Forth</keyword>
 			</code> button, immediately to the right of 
@@ -430,7 +430,7 @@
 			</code>, becomes active.  Click it to retarget back to 
 			<code>
 				<string>LIST</string>
-			</code> .
+			</code>.
 		</paragraph>
 		<paragraph>Note that all buttons of the interface have a "tooltip": if you move the cursor on a button, 
 			<bold>without clicking</bold>, and wait a second or so, a small message comes up, explaining the purpose of the button.  You may try this now on the 
@@ -489,7 +489,7 @@
 			</code> menu and select 
 			<code>
 				<keyword>Add to favorites</keyword>
-			</code> .  Now display the favorites; one way is to go back to that same Favorites menu and select 
+			</code>.  Now display the favorites; one way is to go back to that same Favorites menu and select 
 			<code>
 				<keyword>Show favorites</keyword>
 			</code>.  The Favorites Tool appears below the Cluster Tree:
@@ -583,7 +583,7 @@
 			</code>".  The corresponding keyboard accelerator is CTRL- 
 			<code>
 				<keyword>N</keyword>
-			</code> .
+			</code>.
 		</paragraph>
 		<paragraph>
 	<link>

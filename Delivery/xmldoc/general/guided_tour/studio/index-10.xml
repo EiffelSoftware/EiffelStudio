@@ -1,5 +1,5 @@
 <document title="9 BROWSING FEATURES" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>Let us get back to EiffelStudio.  We won't need a browser any more for this Tour, so you may close any browser window (other than the 
 			<span>current</span> window if you are reading this in HTML!) opened to look up the generated documentation in the previous section.  
@@ -14,11 +14,7 @@
 			</code>, from the last view, 
 			<code>
 				<keyword>Routines</keyword>
-			</code>, that you displayed on it (
-			<link>
-				<label>here</label>
-				<url>index.xml</url>
-			</link> ).  If you've lost it, just retarget a Development Window to this class.  
+			</code>, that you displayed on it.  If you've lost it, just retarget a Development Window to this class.  
 		</paragraph>
 		<paragraph>If the Features Tool is not visible, bring it back by clicking the 
 			<code>
@@ -43,8 +39,14 @@
 				<symbol>--&gt;</symbol>
 			</code> 
 			<code>
-				<keyword>EiffelStudio bar</keyword>
-			</code>.  )
+				<keyword>Tools</keyword>
+			</code>			 
+			<code>
+				<symbol>--&gt;</symbol>
+			</code> 
+			<code>
+				<keyword>Features</keyword>
+			</code> ).
 		</paragraph>
 		<heading>
 			<size>2</size>
@@ -68,7 +70,7 @@
 		</paragraph>
 		<div>
 			<image_link>
-				<url>index-52png</url>
+				<url>index-52.png</url>
 				<target>screenshots</target>
 				<image>
 					<url>index-52.png</url>
@@ -131,10 +133,10 @@
 		</paragraph>
 		<div>
 			<image_link>
-				<url>index-55.png</url>
+				<url>index-54.png</url>
 				<target>screenshots</target>
 				<image>
-					<url>index-55.png</url>
+					<url>index-54.png</url>
 					<width>100</width>
 				</image>
 			</image_link>
@@ -159,10 +161,10 @@
 			</paragraph>
 			<div>
 				<image_link>
-					<url>index-56.png</url>
+					<url>index-55.png</url>
 					<target>screenshots</target>
 					<image>
-						<url>index-56.png</url>
+						<url>index-55.png</url>
 						<width>100</width>
 					</image>
 				</image_link>

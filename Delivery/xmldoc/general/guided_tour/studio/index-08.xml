@@ -1,5 +1,5 @@
 <document title="7 CLASS VIEWS" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>
 			<link>
@@ -13,7 +13,7 @@
 		<paragraph>We'll need just one Development Window for the moment, the one that was targeted to 
 			<code>
 				<string>LIST</string>
-			</code> .  You can get rid of the others by closing their windows (through the top right cross mark on Windows and the equivalent in other window managers), or through 
+			</code>.  You can get rid of the others by closing their windows (through the top right cross mark on Windows and the equivalent in other window managers), or through 
 			<code>
 				<keyword>File</keyword>
 			</code>
@@ -71,7 +71,7 @@
 			<bold>views</bold> of the class.  The currently highlighted button indicates the default view: 
 			<code>
 				<keyword>Ancestors</keyword>
-			</code> .  You can see the others' names by moving the cursor over the various view icons, 
+			</code>.  You can see the others' names by moving the cursor over the various view icons, 
 			<bold>without clicking</bold>, and reading the tooltips.
 		</paragraph>
 		<div>
@@ -118,7 +118,7 @@
 			<span>repeated</span> inheritance -- 
 			<code>
 				<string>SEQUENCE</string>
-			</code> .  If, because of direct or indirect repeated inheritance, a class appears more than once, the display doesn't repeat its ancestry the second and subsequent times; the omitted repetition appears as just three dots, 
+			</code>.  If, because of direct or indirect repeated inheritance, a class appears more than once, the display doesn't repeat its ancestry the second and subsequent times; the omitted repetition appears as just three dots, 
 			<bold>...</bold>, as illustrated here for the second occurrences of 
 			<code>
 				<string>BAG</string>
@@ -188,7 +188,7 @@
 				</code>
 				<code>
 					<keyword>Preferences</keyword>
-				</code> .  (Now's not the time.  )
+				</code>.  (Now's not the time.  )
 			</item>
 		</list>
 		<paragraph>This view is called "clickable" because, as we'll see later, every syntactical element on it is a hyperlink, which you can use for browsing.  Here is the beginning of the 
@@ -294,7 +294,7 @@
 			</code> and 
 			<code>
 				<keyword>Flat Contract</keyword>
-			</code> .  Based on Eiffel's principles of Design by Contract, they document the interface properties of a class.  Unlike the previous two, they do not show actual Eiffel texts, but information useful for client classes.
+			</code>.  Based on Eiffel's principles of Design by Contract, they document the interface properties of a class.  Unlike the previous two, they do not show actual Eiffel texts, but information useful for client classes.
 		</paragraph>
 		<paragraph>Here is the beginning of the 
 			<code>
@@ -338,13 +338,13 @@
 			</code> view, the next one, 
 			<code>
 				<keyword>Flat Contract</keyword>
-			</code>, alsoknown as "flat-short form" and "interface form", which applies the same rules to the flat form rather than to the original class.  This means it shows information on all the features of the class, immediate (defined in the class itself) as well as inherited, whereas the short form, non-flat, only considers immediate features.  The 
+			</code>, also known as "flat-short form" and "interface form", which applies the same rules to the flat form rather than to the original class.  This means it shows information on all the features of the class, immediate (defined in the class itself) as well as inherited, whereas the short form, non-flat, only considers immediate features.  The 
 			<code>
 				<keyword>Flat Contract</keyword>
 			</code> view provides the complete interface information for the class.  Try it now on class 
 			<code>
 				<string>LIST</string>
-			</code> .
+			</code>.
 		</paragraph>
 		<paragraph>The next two buttons are for the 
 			<code>
@@ -382,7 +382,7 @@
 			</code> as client, although some use its descendant 
 			<code>
 				<string>ARRAYED_LIST</string>
-			</code> .  Now click the next button to see the 
+			</code>.  Now click the next button to see the 
 			<code>
 				<keyword>Suppliers</keyword>
 			</code> of 
@@ -409,7 +409,7 @@
 			</code> and 
 			<code>
 				<string>INTEGER</string>
-			</code> .  In Eiffel, as you may remember, all types are defined by classes, even those describing such elementary values as integers and booleans.
+			</code>.  In Eiffel, as you may remember, all types are defined by classes, even those describing such elementary values as integers and booleans.
 		</paragraph>
 		<heading>
 			<size>2</size>
@@ -485,7 +485,7 @@
 				</code> : constant attributes, "once functions" which provide shared objects (close to the "singleton" pattern), and once procedures which provide a convenient initialization mechanism. 
 				<code>
 					<string>LIST</string>
-				</code> hasn't any.
+				</code> has 'Operating_environment' and 'Io' inherited from the parent class ANY.
 			</item>
 			<item>
 				<code>

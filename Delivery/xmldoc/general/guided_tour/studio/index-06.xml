@@ -1,5 +1,5 @@
 <document title="5 A LOOK AT THE PROJECT DIRECTORY" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>
 			<link>
@@ -108,7 +108,7 @@
 				<bold>Lace</bold> (Language for Assembling Classes in Eiffel).  If you like you can take a peek at Lace by opening the relevant 
 				<code>
 					<keyword>.ace</keyword>
-				</code> file with a text viewer or editor now (but don't make any change);it shouldn't be hard to understand what it's all about.  But that's not really necessary at this stage.  
+				</code> file with a text viewer or editor now (but don't make any change, iit shouldn't be hard to understand what it's all about.  But that's not really necessary at this stage.  
 			</item> 
 			<item>Next you see a file called 
 				<code>
@@ -122,11 +122,7 @@
 				</code> .  To open an existing project when you start EiffelStudio (this was the option " 
 				<code>
 					<keyword>Open compiled project</keyword>
-				</code> " in the initial screen  
-				<link>
-					<label>here</label>
-					<url>index.xml</url><anchor_name>PROJECT START SCREEN</anchor_name>
-				</link> ), you will just select the corresponding 
+				</code> " on the initial screen), you will just select the corresponding 
 				<code>
 					<keyword>.epr</keyword>
 				</code> file.  

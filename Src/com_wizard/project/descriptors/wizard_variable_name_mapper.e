@@ -133,7 +133,9 @@ feature -- Basic Operations
 			valid_name: not a_name.empty
 		do
 			Result := to_eiffel_name (a_name)
-
+			if a_name.item (1).is_equal ('_') then
+				Result.prepend ("x_")
+			end
 			Result.to_lower
 		ensure
 			non_void_feature_name: Result /= Void

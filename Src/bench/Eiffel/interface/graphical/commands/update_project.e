@@ -20,13 +20,13 @@ inherit
 		end;
 	SHARED_RESCUE_STATUS;
 	SHARED_FORMAT_TABLES;
-	--SHARED_BENCH_RESOURCES;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_help as choose_template,
 			execute_warner_ok as warner_ok
 		end;
-	EB_CONSTANTS
+	SHARED_CONFIGURE_RESOURCES;
+	EB_CONSTANTS;
 	CREATE_ACE_CALLER
 
 creation
@@ -51,16 +51,34 @@ feature -- Callbacks
 
 feature -- Properties
 
+	is_quick_melt: BOOLEAN
+			-- Is this a quick melt?
+
 	symbol: PIXMAP is
 			-- Pixmap for the button.
-		once
-			Result := Pixmaps.bm_Update
+		do
+			if is_quick_melt then
+				Result := Pixmaps.bm_Quick_update
+			else
+				Result := Pixmaps.bm_Update
+			end
 		end;
 
 	tool: PROJECT_W;
 			-- Project tool
 
+	generate_code_only: ANY is
+		once
+			!! Result
+		end
+
 feature -- Status Setting
+
+	set_quick_melt is
+			-- Set `is_quick_melt' to True
+		do
+			is_quick_melt := True
+		end;
 
 	set_run_after_melt (b: BOOLEAN) is
 			-- Request for the system to be executed after a
@@ -120,6 +138,7 @@ feature {NONE} -- Implementation
 							end
 						end;
 					end;
+					error_window.display
 					tool_resynchronization (argument)
 				else
 						-- The project may be corrupted => the project
@@ -127,11 +146,10 @@ feature {NONE} -- Implementation
 					warner (popup_parent).gotcha_call (Warning_messages.w_Project_may_be_corrupted);
 				end;
 				Degree_output.finish_degree_output;
-				error_window.display;
 				mp.restore
 			end
 		rescue
-			if not resources.get_boolean (r_Fail_on_rescue, False) then
+			if not fail_on_rescue then
 				if original_exception = Io_exception then
 						-- We probably don't have the write permissions
 						-- on the server files.
@@ -157,10 +175,11 @@ feature {NONE} -- Implementation
 			!! saved_msg.make (messages.count);
 			saved_msg.append (messages);
 			if Window_manager.has_active_editor_tools then
-				Degree_output.put_string (l_Resynchronizing_tools);
+				Degree_output.put_string (Interface_names.d_Resynchronizing_tools);
 				Window_manager.class_win_mgr.synchronize_to_default;
 				Window_manager.routine_win_mgr.synchronize_to_default;
 			end;
+			Project_tool.synchronize_routine_tool_to_default;
 			if system_tool.realized and then system_tool.shown then
 				system_tool.set_default_format;
 				system_tool.synchronize
@@ -219,7 +238,11 @@ feature {NONE} -- Implementation
 	perform_compilation (argument: ANY) is
 			-- The real compilation. (This is melting.)
 		do
-			Eiffel_project.melt
+			if not is_quick_melt or else not System_defined then
+				Eiffel_project.melt
+			else
+				Eiffel_project.quick_melt
+			end
 		end
 
 	load_default_ace is
@@ -304,19 +327,31 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := Interface_names.f_Update
+			if is_quick_melt then
+				Result := Interface_names.f_Quick_update
+			else
+				Result := Interface_names.f_Update
+			end
 		end;
 
 	menu_name: STRING is
 			-- Name used in menu entry
 		do
-			Result := Interface_names.m_Update
+			if is_quick_melt then
+				Result := Interface_names.m_Quick_update
+			else
+				Result := Interface_names.m_Update
+			end
 		end;
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-			Result := Interface_names.a_Update
+			if is_quick_melt then
+				Result := Interface_names.a_Quick_Update
+			else
+				Result := Interface_names.a_Update
+			end
 		end;
 
 feature {NONE} -- Implementation
@@ -362,7 +397,7 @@ feature {NONE} -- Implementation; Execution
 				elseif compilation_allowed then
 					if Eiffel_ace.file_name /= Void then
 						confirm_and_compile (arg);
-						if Project_tool_resources.raise_on_error.actual_value then
+						if Project_resources.raise_on_error.actual_value then
 							tool.raise
 						end
 					elseif arg = Void then

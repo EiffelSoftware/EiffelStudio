@@ -535,26 +535,29 @@ feature {NONE} -- Implementation
 			-- Default height for the window if set, -1 otherwise.
 			-- (see. `gtk_window_set_default_size' for more information)
 
-	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
+	on_size_allocate (a_x_invalid, a_y_invalid, a_width_invalid, a_height_invalid: INTEGER) is
 			-- Gtk_Widget."size-allocate" happened.
+		local
+			x_pos, y_pos, wid, hght: INTEGER
 		do
+			-- We completely ignore passed in arguments as they are sometimes bogus, therefore we query ourselves.
+			x_pos := x_position
+			y_pos := y_position
+			wid := width
+			hght := height
 			--| `default_width' and `default_height' are not useful anymore
 			default_width := -1
 			default_height := -1
 			positioned_by_user := False
-			Precursor (a_x, a_y, a_width, a_height)
-			if x_position /= previous_x or y_position /= previous_y then
-				previous_x := x_position
-				previous_y := y_position
-				user_x_position := screen_x
+			Precursor (x_pos, y_pos, wid, hght)
+			if x_pos /= user_x_position or y_pos /= user_y_position then
+				user_x_position := x_pos
 				user_y_position := screen_y			
 				if move_actions_internal /= Void then
-					move_actions_internal.call ([previous_x, previous_y, width, height])
+					move_actions_internal.call ([user_x_position, user_y_position, wid, hght])
 				end	
 			end
 		end
-		
-	previous_x, previous_y: INTEGER
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.

@@ -12,6 +12,10 @@ inherit
 	ARRAY [ANY]
 		rename
 			make as array_make
+		export
+			{NONE} all
+			{ANY} item, put, infix "@", lower, upper, valid_index,
+			is_empty, count
 		end
 
 create
@@ -32,7 +36,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = 'b')
+			Result := (eif_gen_typecode ($Current, index) = boolean_code)
 		end
 
 	is_character_item (index: INTEGER): BOOLEAN is
@@ -40,7 +44,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = 'c')
+			Result := (eif_gen_typecode ($Current, index) = character_code)
 		end
 
 	is_double_item (index: INTEGER): BOOLEAN is
@@ -48,15 +52,39 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = 'd')
+			Result := (eif_gen_typecode ($Current, index) = double_code)
 		end
 
-	is_integer_item (index: INTEGER): BOOLEAN is
+	is_integer_8_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an INTEGER_8?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (eif_gen_typecode ($Current, index) = integer_8_code)
+		end
+
+	is_integer_16_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an INTEGER_16?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (eif_gen_typecode ($Current, index) = integer_16_code)
+		end
+
+	is_integer_item, is_integer_32_item (index: INTEGER): BOOLEAN is
 			-- Is item at `index' an INTEGER?
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = 'i')
+			Result := (eif_gen_typecode ($Current, index) = integer_code)
+		end
+
+	is_integer_64_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an INTEGER_64?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (eif_gen_typecode ($Current, index) = integer_64_code)
 		end
 
 	is_pointer_item (index: INTEGER): BOOLEAN is
@@ -64,7 +92,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = 'p')
+			Result := (eif_gen_typecode ($Current, index) = pointer_code)
 		end
 
 	is_real_item (index: INTEGER): BOOLEAN is
@@ -72,7 +100,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = 'f')
+			Result := (eif_gen_typecode ($Current, index) = real_code)
 		end
 
 	is_reference_item (index: INTEGER): BOOLEAN is
@@ -80,7 +108,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = 'r')
+			Result := (eif_gen_typecode ($Current, index) = reference_code)
 		end
 
 	is_numeric_item (index: INTEGER): BOOLEAN is
@@ -91,19 +119,15 @@ feature -- Type queries
 			tcode: CHARACTER
 		do
 			tcode := eif_gen_typecode ($Current, index)
-			Result := (tcode = 'i') or else
-					 (tcode = 'f') or else
-					 (tcode = 'd')
+			Result := (tcode = integer_code) or else
+					 (tcode = real_code) or else
+					 (tcode = double_code)
 		end
 
 	is_uniform: BOOLEAN is
 			-- Are all items of the same basic type or all of reference type?
 		do
-			if count > 0 then
-				Result := eif_gen_is_uniform ($Current, '?')
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (any_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -111,11 +135,7 @@ feature -- Type queries
 	is_uniform_boolean: BOOLEAN is
 			-- Are all items of type BOOLEAN?
 		do
-			if count > 0 then
-				Result := eif_gen_is_uniform ($Current, 'b')
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (boolean_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -123,11 +143,7 @@ feature -- Type queries
 	is_uniform_character: BOOLEAN is
 			-- Are all items of type CHARACTER?
 		do
-			if count > 0 then
-				Result := eif_gen_is_uniform ($Current, 'c')
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (character_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -135,23 +151,39 @@ feature -- Type queries
 	is_uniform_double: BOOLEAN is
 			-- Are all items of type DOUBLE?
 		do
-			if count > 0 then
-				Result := eif_gen_is_uniform ($Current, 'd')
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (double_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_integer: BOOLEAN is
+	is_uniform_integer_8: BOOLEAN is
+			-- Are all items of type INTEGER_8?
+		do
+			Result := is_tuple_uniform (integer_8_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_integer_16: BOOLEAN is
+			-- Are all items of type INTEGER_16?
+		do
+			Result := is_tuple_uniform (integer_16_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_integer, is_uniform_integer_32: BOOLEAN is
 			-- Are all items of type INTEGER?
 		do
-			if count > 0 then
-				Result := eif_gen_is_uniform ($Current, 'i')
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (integer_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_integer_64: BOOLEAN is
+			-- Are all items of type INTEGER_64?
+		do
+			Result := is_tuple_uniform (integer_64_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -159,11 +191,7 @@ feature -- Type queries
 	is_uniform_pointer: BOOLEAN is
 			-- Are all items of type POINTER?
 		do
-			if count > 0 then
-				Result := eif_gen_is_uniform ($Current, 'p')
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (pointer_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -171,11 +199,7 @@ feature -- Type queries
 	is_uniform_real: BOOLEAN is
 			-- Are all items of type REAL?
 		do
-			if count > 0 then
-				Result := eif_gen_is_uniform ($Current, 'f')
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (real_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -183,11 +207,7 @@ feature -- Type queries
 	is_uniform_reference: BOOLEAN is
 			-- Are all items of reference type?
 		do
-			if count > 0 then
-				Result := eif_gen_is_uniform ($Current, 'r')
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (reference_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -208,9 +228,9 @@ feature -- Type conversion queries
 				i > cnt or else not Result
 			loop
 				tcode := eif_gen_typecode ($Current, i)
-				Result := (tcode = 'i') or else 
-						 (tcode = 'f') or else 
-						 (tcode = 'd')
+				Result := (tcode = integer_code) or else 
+						 (tcode = real_code) or else 
+						 (tcode = double_code)
 				i := i + 1
 			end
 		ensure
@@ -231,7 +251,7 @@ feature -- Type conversion queries
 				i > cnt or else not Result
 			loop
 				tcode := eif_gen_typecode ($Current, i)
-				Result := (tcode = 'i') or else (tcode = 'f')
+				Result := (tcode = integer_code) or else (tcode = real_code)
 				i := i + 1
 			end
 		ensure
@@ -294,13 +314,55 @@ feature -- Access
 			end
 		end
 
-	integer_item (index: INTEGER): INTEGER is
+	integer_8_item (index: INTEGER): INTEGER_8 is
+			-- Integer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_integer_8_item (index)
+		local
+			ref: INTEGER_8_REF
+		do
+			ref ?= item (index)
+			if ref /= Void then
+				Result := ref.item
+			end
+		end
+
+	integer_16_item (index: INTEGER): INTEGER_16 is
+			-- Integer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_integer_16_item (index)
+		local
+			ref: INTEGER_16_REF
+		do
+			ref ?= item (index)
+			if ref /= Void then
+				Result := ref.item
+			end
+		end
+
+	integer_item, integer_32_item (index: INTEGER): INTEGER is
 			-- Integer item at `index'.
 		require
 			valid_index: valid_index (index)
 			is_integer: is_integer_item (index)
 		local
 			ref: INTEGER_REF
+		do
+			ref ?= item (index)
+			if ref /= Void then
+				Result := ref.item
+			end
+		end
+
+	integer_64_item (index: INTEGER): INTEGER_64 is
+			-- Integer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_integer_64_item (index)
+		local
+			ref: INTEGER_64_REF
 		do
 			ref ?= item (index)
 			if ref /= Void then
@@ -546,6 +608,29 @@ feature {ROUTINE}
 		end
 
 feature {NONE} -- Implementation
+
+	boolean_code: CHARACTER is 'b'
+	character_code: CHARACTER is 'c'
+	double_code: CHARACTER is 'd'
+	real_code: CHARACTER is 'f'
+	integer_code: CHARACTER is 'i'
+	pointer_code: CHARACTER is 'p'
+	reference_code: CHARACTER is 'r'
+	integer_8_code: CHARACTER is 'j'
+	integer_16_code: CHARACTER  is 'k'
+	integer_64_code: CHARACTER is 'l'
+	any_code: CHARACTER is '?'
+			-- Code used to identify type in TUPLE.
+
+	is_tuple_uniform (code: CHARACTER): BOOLEAN is
+			-- Are all items of type `code'? 
+		do
+			if count > 0 then
+				Result := eif_gen_is_uniform ($Current, code)
+			else
+				Result := True
+			end
+		end
 
 	eif_gen_is_uniform (obj: POINTER; code: CHARACTER): BOOLEAN is
 			-- Are all items in `obj' of type `code'?

@@ -7,6 +7,10 @@ indexing
 class
 	XML_UTILITIES
 
+inherit
+	
+	GB_CONSTANTS
+
 feature -- Initialization
 
 feature -- Access
@@ -18,16 +22,6 @@ feature -- Access
 		end
 		
 		--| FIXME These constants may need to be moved into a constants file.
-
-	True_string: STRING is "True"
-		-- String constant representing True.
-		
-	False_string: STRING is "False"
-		-- String constant representing False.
-		
-	Item_string: STRING is "item"
-		-- String constant representing "item".
-
 
 feature -- Measurement
 

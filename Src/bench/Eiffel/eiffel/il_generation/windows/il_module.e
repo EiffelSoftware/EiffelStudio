@@ -279,11 +279,6 @@ feature {NONE} -- Access: metadata generation
 	last_parents: ARRAY [INTEGER]
 			-- List of parents tokens last described after call to `update_parents'.
 
-	last_parents_index: INTEGER
-			-- Index in `last_parents' to mark last parents added. Needed to add
-			-- `ise_eiffel_type_info_type_token' in `last_parents' when no inheritance
-			-- includes id (eg you inherit from a .NET interface).
-
 	single_inheritance_parent_id: INTEGER
 			-- Implementation ID of parent when no interface is being generated:
 			-- either if `is_single_inheritance_implementation' or if class `is_single'.
@@ -695,25 +690,13 @@ feature -- Metadata description
 			then
 				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
 			else
-				update_parents (class_type, class_c)
-				if last_parents = Void then
-					last_parents := << ise_eiffel_type_info_type_token >>
-				elseif not class_c.simple_conform_to (System.any_class.compiled_class) then
-						-- We need to add `ise_eiffel_type_info_type_token' to last_parents.
-					last_parents.force (ise_eiffel_type_info_type_token, last_parents_index)
-					last_parents.force (0, last_parents_index + 1)
-				end
+				update_parents (class_type, class_c, True)
 
 				l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
 					feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
 					feature {MD_TYPE_ATTRIBUTES}.Ansi_class
 
-				if not class_type.is_generated_as_single_type then
-					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Is_interface |
-						feature {MD_TYPE_ATTRIBUTES}.Abstract
-					l_type_token := md_emit.define_type (l_uni_string, l_attributes, 0,
-						last_parents)
-				else
+				if class_type.is_generated_as_single_type then
 					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Is_class |
 						feature {MD_TYPE_ATTRIBUTES}.Serializable
 					if class_c.is_frozen or class_type.is_expanded then
@@ -722,10 +705,13 @@ feature -- Metadata description
 
 					single_parent_mapping.put (single_inheritance_parent_id,
 						class_type.implementation_id)
-					l_type_token := md_emit.define_type (l_uni_string, l_attributes,
-						single_inheritance_token, last_parents)
+				else
+					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Is_interface |
+						feature {MD_TYPE_ATTRIBUTES}.Abstract
 				end
 
+				l_type_token := md_emit.define_type (l_uni_string, l_attributes,
+					single_inheritance_token, last_parents)
 				
 				if not il_code_generator.is_single_module then
 					class_type.set_last_type_token (l_type_token)
@@ -768,7 +754,6 @@ feature -- Metadata description
 			then
 				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
 			else
-				update_parents (class_type, class_c)
 				l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
 					feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
 					feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
@@ -783,16 +768,7 @@ feature -- Metadata description
 					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
 				end
 			
-				if not class_type.is_generated_as_single_type then
-					last_parents := << actual_class_type_token (class_type.static_type_id) >>
-				elseif last_parents = Void then
-					last_parents := << ise_eiffel_type_info_type_token >>
-				elseif not class_c.simple_conform_to (System.any_class.compiled_class) then
-						-- We need to add `ise_eiffel_type_info_type_token' to last_parents.
-					last_parents.force (ise_eiffel_type_info_type_token, last_parents_index)
-					last_parents.force (0, last_parents_index + 1)
-				end
-				
+				update_parents (class_type, class_c, False)
 				single_parent_mapping.put (single_inheritance_parent_id,
 					class_type.implementation_id)
 				l_type_token := md_emit.define_type (l_uni_string, l_attributes,
@@ -819,9 +795,9 @@ feature -- Metadata description
 			class_mapping.put (l_type_token, class_type.implementation_id)
 		end
 
-	update_parents (class_type: CLASS_TYPE; class_c: CLASS_C) is
-			-- Generate ancestors map of `class_c'.
-			-- (export status {NONE})
+	update_parents (class_type: CLASS_TYPE; class_c: CLASS_C; for_interface: BOOLEAN) is
+			-- Generate ancestors map of `class_type' associated to `class_c' for context
+			-- `for_interface'.
 		require
 			is_generated: is_generated
 			class_c_not_void: class_c /= Void
@@ -837,6 +813,7 @@ feature -- Metadata description
 			l_parent_class: CLASS_C
 			l_class_type: CLASS_TYPE
 			l_single_inheritance_parent_id: like single_inheritance_parent_id
+			l_has_an_eiffel_parent: BOOLEAN
 		do
 			l_class_type := byte_context.class_type
 			parents := class_c.parents
@@ -854,6 +831,7 @@ feature -- Metadata description
 				byte_context.set_class_type (class_type)
 				parent_type ?= byte_context.real_type (parents.item.type_i)
 				l_parent_type := parent_type.associated_class_type
+				l_has_an_eiffel_parent := l_has_an_eiffel_parent or else not l_parent_type.is_external
 				id := l_parent_type.static_type_id
 				if not l_list.has (id) then
 					l_list.force (id)
@@ -891,12 +869,21 @@ feature -- Metadata description
 			end
 
 			if l_single_inheritance_parent_id = 0 then
-				if class_type.is_expanded then
-					single_inheritance_parent_id := value_type_id
-					single_inheritance_token := value_type_token
+				if for_interface then
+					single_inheritance_parent_id := 0
+					single_inheritance_token := 0
 				else
-					single_inheritance_parent_id := object_type_id
-					single_inheritance_token := object_type_token
+						-- We are not a single class.
+					if class_type.is_expanded then
+							-- If we are expanded, we need to explicitely inherit
+							-- from System.ValueType
+						single_inheritance_parent_id := value_type_id
+						single_inheritance_token := value_type_token
+					else
+							-- We are not expanded, simply inherit from System.Object
+						single_inheritance_parent_id := object_type_id
+						single_inheritance_token := object_type_token
+					end
 				end
 			else
 				single_inheritance_token := actual_class_type_token (l_single_inheritance_parent_id)
@@ -905,13 +892,44 @@ feature -- Metadata description
 
 				-- Element after last added should be 0.
 			if i = 0 then
-				last_parents := Void
+					-- Let's add the necessary interfaces so that we have a proper Eiffel type.
+				if l_single_inheritance_parent_id = 0 then
+					if for_interface then
+							-- We must handle ANY here, thus we simply add EIFFEL_TYPE_INFO
+							-- as parent.
+						last_parents := << ise_eiffel_type_info_type_token, 0 >>
+					else
+							-- We are in the implementation, therefore we simply for
+							-- the associated interface.
+						last_parents := << actual_class_type_token (class_type.static_type_id), 0 >>
+					end
+				else
+						-- We inherit from a .NET class or an Eiffel single class.
+						-- If the parent is an Eiffel class then nothing to be done,
+						-- if not, we need to add the ANY interface to ensure that
+						-- the run-time knows we are handling an Eiffel type.
+					if not l_has_an_eiffel_parent then
+						last_parents := << actual_class_type_token (any_type_id), 0 >>
+					else
+						last_parents := Void
+					end	
+				end
 			else
-				l_parents.put (0, i)
+				if not l_has_an_eiffel_parent then
+						-- We do not explicitely inherit from an Eiffel type, thus we
+						-- need inheritance to ANY to let the runtime know that we are
+						-- an Eiffel type
+					l_parents.force (actual_class_type_token (any_type_id), i)
+					i := i + 1
+				else
+					if not for_interface then
+						l_parents.force (actual_class_type_token (class_type.static_type_id), i)
+						i := i + 1
+					end
+				end
+				l_parents.force (0, i)
 				last_parents := l_parents
 			end
-
-			last_parents_index := i
 
 				-- Restore byte context if any.
 			if l_class_type /= Void then
@@ -1955,7 +1973,7 @@ feature {NONE} -- Once per modules being generated.
 			create l_ass_info.make
 			l_ass_info.set_major_version (5)
 			l_ass_info.set_minor_version (5)
-			l_ass_info.set_build_number (723)
+			l_ass_info.set_build_number (801)
 
 			create l_pub_key.make_from_array (
 				<<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)

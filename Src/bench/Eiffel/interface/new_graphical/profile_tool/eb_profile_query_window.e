@@ -1,13 +1,11 @@
 indexing
-
 	description:
 		"Window to display results from a query."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
-
-EB_PROFILE_QUERY_WINDOW
+class
+	EB_PROFILE_QUERY_WINDOW
 
 inherit
 	EV_WINDOW
@@ -15,7 +13,9 @@ inherit
 			make as window_make
 		end
 
-	EB_CONSTANTS
+	EB_PROFILE_TOOL_DATA
+
+	NEW_EB_CONSTANTS
 
 	SHARED_CONFIGURE_RESOURCES
 
@@ -23,7 +23,7 @@ inherit
 
 --	WINDOW_ATTRIBUTES
 
-	WINDOWS
+--	WINDOWS
 
 creation
 	make
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			a_tool_exists: not a_tool.destroyed
 		do
 			tool := a_tool
-			window_make (a_tool.parent)
+			window_make (tool.parent_window)
 			set_title (Interface_names.t_Profile_query_window)
 
 			create all_subqueries.make
@@ -61,12 +61,13 @@ feature -- Access
 		local
 			ptf: RAW_FILE	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			aok: BOOLEAN
+			wd: EV_WARNING_DIALOG
 		do
 			create ptf.make (fn)
 			aok := True
 			if ptf.exists and then not ptf.is_plain then
 				aok := False
---				warner (Current).gotcha_call (Warning_messages.w_Not_a_plain_file (fn))
+				create wd.make_default (Current, Interface_names.t_Warning, Warning_messages.w_Not_a_plain_file (fn))
 			elseif ptf.exists and then ptf.is_writable then
 				aok := False
 --				warner (Current).custom_call (Void, 
@@ -74,10 +75,10 @@ feature -- Access
 --					Interface_names.b_Overwrite, Void, Interface_names.b_Cancel)
 			elseif ptf.exists and then not ptf.is_writable then
 				aok := False
---				warner (Current).gotcha_call (Warning_messages.w_Not_writable (fn))
+				create wd.make_default (Current, Interface_names.t_Warning, Warning_messages.w_Not_writable (fn))
 			elseif not ptf.is_creatable then
 				aok := False
---				warner (Current).gotcha_call (Warning_messages.w_Not_creatable (fn))
+				create wd.make_default (Current, Interface_names.t_Warning, Warning_messages.w_Not_creatable (fn))
 			end
 
 			if aok then
@@ -123,12 +124,13 @@ feature -- Status Setting
 				end
 			end
 
-			update_query_form  
+			update_query_frame  
 			subquery_text.set_text ("")
---			text_window.clear_window
---			text_window.process_text (st)
---			text_window.set_cursor_position (0)
---			text_window.display
+			text_window.clear_window
+			text_window.hide
+			text_window.process_text (st)
+			text_window.set_position (0)
+			text_window.show
 		end
 
 feature -- Update
@@ -138,47 +140,48 @@ feature -- Update
 		do
 			text_window.clear_window
 			text_window.init_resource_values
---			run_query_cmd.execute (Void)
+			run_query_cmd.execute (Void, Void)
 		end
 
-	update_query_form is
+	update_query_frame is
 		local
---			i : INTEGER
---			scrollable_subquery: EB_SUBQUERY_ITEM
+			i : INTEGER
+			scrollable_subquery: EB_SUBQUERY_ITEM
+			op: STRING
 		do
---			active_query_window.wipe_out
---			inactive_subqueries_window.wipe_out
---			if all_subqueries.count > 0 then
---				all_subqueries.start
---				create scrollable_subquery.make_first (all_subqueries.item.image)
---				if all_subqueries.item.is_active then
---					active_query_window.force (scrollable_subquery)
---				else
---					inactive_subqueries_window.force (scrollable_subquery)
---				end
---				if all_operators.count > 0 then
---					from
---						all_subqueries.forth
---						all_operators.start
---						i := 2
---					until
---						all_subqueries.after or else all_operators.after
---					loop
---						create scrollable_subquery.make (all_operators.item.actual_operator, all_subqueries.item.image, i )
---						if all_subqueries.item.is_active then
---							if active_query_window.empty then
---								create scrollable_subquery.make ("", all_subqueries.item.image, i) 
---							end
---							active_query_window.force (scrollable_subquery)
---						else
---							inactive_subqueries_window.force (scrollable_subquery)
---						end
---						all_subqueries.forth
---						all_operators.forth
---						i := i + 1
---					end							
---				end
---			end
+			active_query_window.clear_items
+			inactive_subqueries_window.clear_items
+			if all_subqueries.count > 0 then
+				all_subqueries.start
+				if all_subqueries.item.is_active then
+					create scrollable_subquery.make_first (active_query_window, all_subqueries.item.image)
+				else
+					create scrollable_subquery.make_first (inactive_subqueries_window, all_subqueries.item.image)
+				end
+				if all_operators.count > 0 then
+					from
+						all_subqueries.forth
+						all_operators.start
+						i := 2
+					until
+						all_subqueries.after or else all_operators.after
+					loop
+						if all_subqueries.item.is_active then
+							if active_query_window.count = 0 then
+								op := ""
+							else
+								op := all_operators.item.actual_operator
+							end
+							create scrollable_subquery.make_normal (active_query_window, op, all_subqueries.item.image, i)
+						else
+							create scrollable_subquery.make_normal (inactive_subqueries_window, all_operators.item.actual_operator, all_subqueries.item.image, i)
+						end
+						all_subqueries.forth
+						all_operators.forth
+						i := i + 1
+					end							
+				end
+			end
 		end
 
 	update_profiler_query is
@@ -217,12 +220,12 @@ feature {NONE} -- Graphical User Interface
 			create reactivate_button.make_with_text (query_button_form, "<")
 			reactivate_button.set_horizontal_resize (False)
 			reactivate_button.set_vertical_resize (False)
---			reactivate_button.add_click_command (Current, reactivate_subqueries)
+			reactivate_button.add_click_command (Current, reactivate_subqueries)
 			create inactivate_label.make_with_text (query_button_form, Interface_names.l_Inactivate)
 			create inactivate_button.make_with_text (query_button_form, ">")
 			inactivate_button.set_horizontal_resize (False)
 			inactivate_button.set_vertical_resize (False)
---			inactivate_button.add_click_command (Current, inactivate_subqueries)
+			inactivate_button.add_click_command (Current, inactivate_subqueries)
 
 			create change_operator_label.make_with_text (query_button_form, Interface_names.l_Change_operator) 
 			create change_operator_box.make (query_button_form)
@@ -245,13 +248,9 @@ feature {NONE} -- Graphical User Interface
 
 				-- result display
 			create text_frame.make_with_text (container, Interface_names.l_Results)
---			if is_graphics_disabled then
---				!SCROLLED_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
---			else
---				!GRAPHICAL_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
---			end
-
---			text_window.init_resource_values
+			!EB_CLICKABLE_RICH_TEXT! text_window.make (text_frame)
+			text_window.init_resource_values
+			text_window.set_editable (False)
 
 				-- subsquery frame
 			create subquery_frame.make_with_text (container, Interface_names.l_Subquery)
@@ -294,14 +293,14 @@ feature {NONE} -- Graphical User Interface
 			run_button.set_minimum_width (100)
 			run_button.set_horizontal_resize (False)
 			run_button.set_vertical_resize (False)
---			create run_query_cmd.make (Current)
---			run_button.add_click_command (run_query_cmd, Void)
+			create run_query_cmd.make (Current)
+			run_button.add_click_command (run_query_cmd, Void)
 			create save_as_button.make_with_text (button_box, Interface_names.b_Save)
 			save_as_button.set_minimum_width (100)
 			save_as_button.set_horizontal_resize (False)
 			save_as_button.set_vertical_resize (False)
---			create save_result_cmd.make (Current)
---			save_as_button.add_click_command (save_result_cmd, Void)
+			create save_result_cmd.make (Current)
+			save_as_button.add_click_command (save_result_cmd, Void)
 			create close_button.make_with_text (button_box, Interface_names.b_Close)
 			close_button.set_minimum_width (100)
 			close_button.set_horizontal_resize (False)
@@ -310,8 +309,8 @@ feature {NONE} -- Graphical User Interface
 			close_button.add_click_command (close_cmd, Void)
 
 				--| Sizing
-			set_minimum_size (Profiler_resources.query_tool_width.actual_value, 
-					Profiler_resources.query_tool_height.actual_value)
+			set_minimum_size (Profile_resources.query_tool_width.actual_value, 
+					Profile_resources.query_tool_height.actual_value)
 		end
 
 feature {NONE} -- Attributes
@@ -352,8 +351,8 @@ feature {NONE} -- Attributes
 	change_operator_label: EV_LABEL
 			-- Label for 'change_operator_button'
 
-	text_window: TEXT_WINDOW
-			-- Output window for the results
+	text_window: EB_FORMATTED_TEXT
+			-- Output text for the results
 
 	run_button,
 			-- Button for `run_subquery_cmd'
@@ -453,10 +452,10 @@ feature {EB_ADD_SUBQUERY_CMD} -- Access
 
 feature -- Commands
 
---	run_query_cmd: EB_RUN_QUERY_CMD
+	run_query_cmd: EB_RUN_QUERY_CMD
 			-- Command to run a subquery from Current
 
---	save_result_cmd: EB_SAVE_RESULT_CMD
+	save_result_cmd: EB_SAVE_RESULT_CMD
 			-- Command to save the result of currently displayed query
 
 	close_cmd: EB_CLOSE_QUERY_WINDOW_CMD
@@ -492,131 +491,92 @@ feature {NONE} -- Implementation
 		end
 	
 	inactivate is
-		-- copy all the selected 'scrollable_subquery' from 'active_query_window'
+		-- copy all the selected 'scrollable_subqueries' from 'active_query_window'
 		-- into 'inactive_subqueries_window', activate the corresponding subqueries
 		-- and operators in 'all_subqueries' and 'all_operators'
 		local
---			selected_subqueries: LINKED_LIST [EV_LIST_ITEM]
---			i: INTEGER
---			inactive_subquery: EB_SUBQUERY_ITEM
---			selected_subquery: EB_SUBQUERY_ITEM
+			selected_subqueries: LINKED_LIST [EV_LIST_ITEM]
+			selected_subquery: EB_SUBQUERY_ITEM
+			i: INTEGER
 		do
---			if active_query_window.count > 0 then
---				selected_subqueries := active_query_window.selected_items
---				from
---					selected_subqueries.start
---				until
---					selected_items.after
---				loop
---					selected_subquery ?= selected_subqueries.item
---					if not inactive_subqueries_window.empty then
---						from
---							i := 0
---							inactive_subquery ?= inactive_subqueries_window.get_item (i)
---						until
---							i >= inactive_subqueries_window.count
---							or else inactive_subquery.number >= selected_subquery.number
---						loop
---							inactive_subqueries ?= inactive_subqueries_window.get_item (i)
---							i := i + 1
---						end
---					end
---						--| remove the inactivated subquery from 'active_query_window'
---				--	active_query_window.remove
---						--| add the inactivated subquery in the 'inactive_subqueries_window'
---				--	inactive_subqueries_window.put_left ( selected_subquery )
---
---						--| inactivate the subquery in 'all_subqueries'
---					all_subqueries.go_i_th ( selected_subquery.number )
---					all_subqueries.item.inactivate
---
---						--| inactivate the subquery operator in 'all_operators'
---					if not all_operators.empty then
---						if inactive_subquery = void or else inactive_subquery.number = 1 then
---							all_operators.start
---						else
---							all_operators.go_i_th ( selected_subquery.number - 1 )
---						end
---						all_operators.item.inactivate	
---					end					
---					selected_subqueries.forth
---				end
---				profiler_query.set_subqueries ( all_subqueries )
---				profiler_query.set_subquery_operators ( all_operators )
---			end
---			update_query_form
+			selected_subqueries := active_query_window.selected_items
+			from
+				selected_subqueries.start
+			until
+				selected_subqueries.after
+			loop
+				selected_subquery ?= selected_subqueries.item
+				i := selected_subquery.number			
+					--| inactivate the subquery in 'all_subqueries'
+				all_subqueries.go_i_th (i)
+				all_subqueries.item.inactivate
+					--| inactivate the operator in 'all_subquery_operators'
+				if i > 1 then
+					all_operators.go_i_th (i-1)
+					all_operators.item.inactivate
+				end					
+				selected_subquery.set_parent (Void)					
+				selected_subqueries.forth
+			end
+			if active_query_window.count > 0 then
+				selected_subquery ?= active_query_window.get_item (1)
+				i := selected_subquery.number			
+				if i > 1 then
+					all_operators.go_i_th (i-1)
+					all_operators.item.inactivate					
+				end
+			end
+			profiler_query.set_subqueries ( all_subqueries )
+			profiler_query.set_subquery_operators ( all_operators )
+			update_query_frame
 		end
 
 	reactivate is
-		-- copy all the selected 'scrollable_subquery' from 'inactive_subqueries_window'
+		-- copy all the selected 'scrollable_subqueries' from 'inactive_subqueries_window'
 		-- into 'active_query_window', activate the corresponding subqueries
 		-- and operators in 'all_subqueries' and 'all_operators'
 		local
---			selected_positions: SORTED_TWO_WAY_LIST [INTEGER]
---			i: INTEGER
---			inactive_element, active_element: EB_SCROLLABLE_SUBQUERY
+			selected_subqueries: LINKED_LIST [EV_LIST_ITEM]
+			selected_subquery: EB_SUBQUERY_ITEM
+			i, smallest_active: INTEGER
+			empty: BOOLEAN
+				-- is `active_subquery_window' empty?
 		do
---			if inactive_subqueries_window.selected_count > 0 then
---				create selected_positions.make
---				selected_positions.fill ( inactive_subqueries_window.selected_positions )
---				from
---					selected_positions.sort
---					selected_positions.start
---					i := selected_positions.item
---					inactive_subqueries_window.go_i_th ( i )
---					active_query_window.start
---					create active_element.make ("", "", 0)
---					active_element ?= active_query_window.item
---					create inactive_element.make ("", "", 0)
---					inactive_element ?= inactive_subqueries_window.item
---				until
---					i > selected_positions.last
---				loop
---					if i = selected_positions.item then
---						inactive_element ?= inactive_subqueries_window.item
---						if not active_query_window.empty then
---							from
---								active_element ?= active_query_window.item
---							until
---								active_query_window.after
---								or else active_element.index >= inactive_element.index
---							loop
---								active_query_window.forth
---								active_element ?= active_query_window.item
---							end
---						end
---
---							--| add the inactivated subquery in the 'inactive_subqueries_window'
---						active_query_window.put_left ( inactive_element )
---						
---							--| reactivate the subquery in 'all_subqueries'
---						all_subqueries.go_i_th ( inactive_element.index )
---						all_subqueries.item.activate
---						
---							--| reactivate the subquery operator in 'all_operators'
---						if not all_operators.empty then
---							if active_element = void or else active_element.index = 1 then
---								all_operators.go_i_th ( 1 )
---							else
---								all_operators.go_i_th ( inactive_element.index - 1 )
---							end
---							all_operators.item.activate
---						end	
---						
---							--| remove the reactivated subquery from 'inactive_subqueries_window'
---						inactive_subqueries_window.remove
---						i := i + 1
---						
---						selected_positions.forth
---					else
---						i := i + 1
---						inactive_subqueries_window.forth
---					end
---					profiler_query.set_subqueries ( all_subqueries )
---					profiler_query.set_subquery_operators ( all_operators )
---				end
---			end
---			update_query_form
+			if inactive_subqueries_window.count > 0 then
+				selected_subqueries := inactive_subqueries_window.selected_items
+				empty := (active_query_window.count = 0)
+				if not empty then
+					selected_subquery ?= active_query_window.get_item (1)
+					smallest_active := selected_subquery.number
+				end
+				from
+					selected_subqueries.start
+				until
+					selected_subqueries.after
+				loop
+					selected_subquery ?= selected_subqueries.item
+
+					i := selected_subquery.number			
+						--| inactivate the subquery in 'all_subqueries'
+					all_subqueries.go_i_th (i)
+					all_subqueries.item.activate
+						--| inactivate the operator in 'all_subquery_operators'
+					if empty then
+						smallest_active := i
+					elseif i < smallest_active then
+						all_operators.go_i_th (smallest_active - 1)
+						all_operators.item.activate
+						smallest_active := i
+					else
+						all_operators.go_i_th (i - 1)
+						all_operators.item.activate
+					end
+					selected_subqueries.forth
+				end
+				profiler_query.set_subqueries ( all_subqueries )
+				profiler_query.set_subquery_operators ( all_operators )
+				update_query_frame
+			end
 		end
 
 feature {NONE} -- Execution arguments

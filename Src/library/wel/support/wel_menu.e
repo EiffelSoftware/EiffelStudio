@@ -229,7 +229,7 @@ feature -- Element change
 			item_not_exists: not item_exists (an_id)
 		do
 			cwin_insert_menu (item, a_position,
-				Mf_bitmap + Mf_bycommand, an_id, bitmap.item)
+				Mf_bitmap + Mf_byposition, an_id, bitmap.item)
 		ensure
 			new_count: count = old count + 1
 		end

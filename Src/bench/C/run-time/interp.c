@@ -1044,6 +1044,16 @@ rt_private void interpret(int flag, int where)
 						eif_panic ("Illegal type");
 				}	
 				break;
+			case SK_POINTER:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_ptr; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_ptr; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_ptr; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_ptr; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
 
 			default:
 				eif_panic (MTC "Illegal cast operation");
@@ -1189,6 +1199,16 @@ rt_private void interpret(int flag, int where)
 					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_real64; break;
 					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_real64; break;
 					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_real64; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_POINTER:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_ptr; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_ptr; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_ptr; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_ptr; break;
 					default:
 						eif_panic ("Illegal type");
 				}	

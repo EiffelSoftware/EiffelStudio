@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 										t.get_is_abstract,
 										t.get_is_sealed,
 										t.get_is_value_type,
+										t.get_is_enum,
 										parent,
 										interfaces)
 			internal_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |

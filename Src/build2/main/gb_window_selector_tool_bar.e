@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			directory ?= selector_item
-			if directory /= Void then
+			if directory /= Void and directory.tree_item.parent = Void then
 				if directory.parent /= window_selector then
 					add_to_tree_node_alphabetically (directory.parent.tree_item, directory.tree_item)
 				else

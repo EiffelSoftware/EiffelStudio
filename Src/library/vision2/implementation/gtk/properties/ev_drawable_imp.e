@@ -612,7 +612,7 @@ feature {NONE} -- Implemention
 			pts_exists: pts /= Void
 			equal_size: C.c_gdk_point_struct_size = integer_bits // 8
 		local
-			i, x, y, array_count: INTEGER
+			i, array_count: INTEGER
 			a_pts: ARRAY [EV_COORDINATE]
 			a_coord: EV_COORDINATE
 		do

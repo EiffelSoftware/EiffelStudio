@@ -271,8 +271,11 @@ feature -- Transformation
 
 	delete_previous is
 		do
-			go_left_char
-			delete_char
+			if (line.previous /= Void) or else (token.previous /= Void)
+					or else (pos_in_token = 1) then
+				go_left_char
+				delete_char
+			end
 		end
 
 

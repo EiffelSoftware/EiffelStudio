@@ -12,8 +12,16 @@ inherit
 	CODE_STOCK_TYPE_REFERENCES
 		export
 			{NONE} all
-		undefine
-			is_equal
+		end
+
+	CODE_SHARED_EIFFEL_METADATA_PROVIDER
+		export
+			{NONE} all
+		end
+
+	CODE_DIRECTIONS
+		export
+			{NONE} all
 		end
 
 create
@@ -21,22 +29,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_getter: like getter; a_target: like target) is
+	make (a_getter: like property_name; a_target: like target) is
 			-- Initialize instance
 		require
 			non_void_getter: a_getter /= Void
 			non_void_target: a_target /= Void
 		do
-			getter := a_getter
+			property_name := a_getter
 			target := a_target
 		ensure
-			getter_set: getter = a_getter
+			getter_set: property_name = a_getter
 			target_set: target = a_target
 		end
 		
 feature -- Access
 
-	getter: CODE_MEMBER_REFERENCE
+	property_name: STRING
 			-- Name of property to reference
 			
 	target: CODE_EXPRESSION
@@ -51,32 +59,23 @@ feature -- Access
 			-- | OR		:= "feature {`target_object'}.set/get_`property_name'" if typeof `target_object' is CODE_TYPE_REFERENCE_EXPRESSION
 			-- Eiffel code of property reference expression
 		local
-			l_target_name, l_current_name: STRING
 			l_type_ref_exp: CODE_TYPE_REFERENCE_EXPRESSION
 		do
 			create Result.make (120)
-			
-			l_type_ref_exp ?= target
-			if l_type_ref_exp /= Void then
-				Result.append ("feature {")
-				Result.append (target.code)
-				Result.append ("}.")
-			else
-				l_target_name := target.code
-				
-				create l_current_name.make (240)
-				l_current_name.append (getter.result_type.namespace)
-				l_current_name.append_character ('.')
-				l_current_name.append (getter.result_type.eiffel_name)
-				if 	not l_target_name.is_equal (l_current_name) and not l_target_name.is_equal ("Current") then
-					Result.append (l_target_name)
+			if not is_current_generated_type (target.type) then
+				l_type_ref_exp ?= target
+				if l_type_ref_exp /= Void then
+					Result.append ("feature {")
+					Result.append (target.code)
+					Result.append ("}.")
+				else
+					Result.append (target.code)
 					Result.append (".")
 				end
 			end
-			if is_set_reference then
-				Result.append ("set_")
+			if property_accesser /= Void then
+				Result.append (property_accesser.eiffel_name)
 			end
-			Result.append (getter.eiffel_name)
 		end
 		
 feature -- Status Report
@@ -87,7 +86,7 @@ feature -- Status Report
 			if is_set_reference then
 				Result := None_type_reference
 			else
-				Result := getter.result_type
+				Result := property_type
 			end
 		end
 
@@ -100,9 +99,57 @@ feature {CODE_STATEMENT_FACTORY} -- Element Settings
 		ensure
 			is_set_reference_set: is_set_reference = a_is_set_reference
 		end
+
+feature {NONE} -- Implementation
+
+	property_type: CODE_TYPE_REFERENCE is
+			-- Type of property
+		do
+			if internal_property_type = Void and property_accesser /= Void then
+				if is_set_reference then
+					internal_property_type := property_accesser.arguments.first.type
+				else
+					internal_property_type := property_accesser.result_type
+				end
+			end
+			Result := internal_property_type
+		end
 		
+	property_accesser: CODE_MEMBER_REFERENCE is
+			-- Property getter
+		local
+			l_name: STRING
+		do
+			if not property_searched then
+				property_searched := True
+				if is_set_reference then
+					l_name := "set_" + property_name
+					internal_property_accesser := target.type.member_from_name (l_name)
+					if internal_property_accesser = Void then
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [l_name, target.type.name])
+					end
+				else
+					l_name := "get_" + property_name
+					internal_property_accesser := target.type.member (l_name, Void)
+					if internal_property_accesser = Void then
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [l_name, target.type.name])
+					end
+				end
+			end
+			Result := internal_property_accesser
+		end
+		
+	internal_property_accesser: CODE_MEMBER_REFERENCE
+			-- Cache for `property_accesser'
+
+	internal_property_type: CODE_TYPE_REFERENCE
+			-- Cache for `property_type'
+
+	property_searched: BOOLEAN
+			-- Was `property_getter' or `property_setter' called?
+
 invariant
-	non_void_getter: getter /= Void
+	non_void_property_name: property_name /= Void
 	non_void_target: target /= Void
 	
 end -- class CODE_PROPERTY_REFERENCE_EXPRESSION

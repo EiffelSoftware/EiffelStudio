@@ -22,14 +22,14 @@ feature -- Access
 	force_extend (action: PROCEDURE [ANY, TUPLE]) is
 			-- Extend without type checking.
 		do
-			extend (~wrapper (?, action))
+			extend (agent wrapper (?, action))
 		end
 
-	wrapper (a_a_column: INTEGER; action: PROCEDURE [ANY, TUPLE]) is
+	wrapper (a_column: INTEGER; action: PROCEDURE [ANY, TUPLE]) is
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do
-			action.call ([a_a_column])
+			action.call ([a_column])
 		end
 end
 

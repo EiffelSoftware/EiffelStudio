@@ -7,7 +7,8 @@ inherit
 			is_once,
 			--redefinable,
 			replicated,
-			unselected
+			unselected,
+			can_be_inlined
 		end
 	
 feature 
@@ -39,5 +40,9 @@ feature
 			unselect.set_access_in (in);
 			Result := unselect;
 		end;
+
+feature -- Inlining
+
+	can_be_inlined: BOOLEAN is False
 
 end

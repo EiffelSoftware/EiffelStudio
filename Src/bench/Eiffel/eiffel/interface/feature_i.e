@@ -1605,6 +1605,10 @@ feature -- C code generation
 					-- the associated class of the current type.
 				byte_context.set_byte_code (byte_code);
 
+				if System.in_final_mode and then System.inlining_on then
+					byte_code := byte_code.inlined_byte_code
+				end
+
 					-- Generation of the C routine
 				byte_code.analyze;
 				byte_code.set_real_body_id (real_body_id);
@@ -2005,5 +2009,54 @@ feature -- Case storage informatio
 			temp.append (feature_name);
 			!! Result.make (temp, written_in)
 		end;
+
+feature -- Inlining
+
+	can_be_inlined: BOOLEAN is
+			-- Can the feature be inlined? (no expanded, bits, once, constant
+			-- or external, rescue)
+		local
+			type_a: TYPE_A;
+			byte_code: BYTE_CODE
+			loc: ARRAY [TYPE_I]
+			type_i: TYPE_I
+			i: INTEGER
+			args: FEAT_ARG
+		do
+			byte_code := Byte_server.item (body_id);
+
+			type_a ?= type;
+			Result := (type_a = Void or else not (type_a.is_expanded or else type_a.is_bits))
+				and then (byte_code.rescue_clause = Void)
+
+			if Result then
+				loc := byte_code.locals
+				if loc /= Void then
+					from
+						i := loc.count
+					until
+						i = 0 or else not Result
+					loop
+						type_i := loc.item (i);
+						Result := not (type_i.is_expanded or else type_i.is_bit)
+						i := i - 1
+					end
+				end;
+			end;
+			if Result then
+				args := arguments;
+				if args /= Void then
+					from
+						i := args.count
+					until
+						i = 0 or else not Result
+					loop
+						type_a ?= args @ i;
+						Result := not (type_a.is_expanded or else type_a.is_bits)
+						i := i - 1
+					end
+				end
+			end;
+		end
 
 end

@@ -5,7 +5,7 @@ inherit
 	PROCEDURE_I
 		redefine
 			is_deferred, has_poly_unit, to_generate_in,
-			to_melt_in
+			to_melt_in, can_be_inlined
 		end
 	
 feature 
@@ -56,5 +56,9 @@ feature
 			unselect.set_access_in (in);
 			Result := unselect;
 		end;
+
+feature -- Inlining
+
+	can_be_inlined: BOOLEAN is False
 
 end

@@ -21,7 +21,7 @@ feature -- Basic operations
 	join_all is
 			-- The calling thread waits for all other threads to terminate.
 		external
-			"C | %"eif_threads.h%""
+			"C blocking use %"eif_threads.h%""
 		alias
 			"eif_thr_join_all"
 		end
@@ -51,7 +51,7 @@ feature {NONE} -- Externals
 			-- The calling C thread waits for the current Eiffel thread to
 			-- terminate.
 		external
-			"C | %"eif_threads.h%""
+			"C blocking use %"eif_threads.h%""
 		alias
 			"eif_thr_wait"
 		end
@@ -60,7 +60,7 @@ feature {NONE} -- Externals
 			-- The calling thread uses the low-level join routine to
 			-- join the current Eiffel thread.
 		external
-			"C | %"eif_threads.h%""
+			"C blocking use %"eif_threads.h%""
 		alias
 			"eif_thr_join"
 		end

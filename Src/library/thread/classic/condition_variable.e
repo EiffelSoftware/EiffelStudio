@@ -115,12 +115,12 @@ feature {NONE} -- Externals
 
 	eif_thr_cond_wait (a_cond_ptr: POINTER; a_mutex_ptr: POINTER) is
 		external
-			"C | %"eif_threads.h%""
+			"C blocking  use %"eif_threads.h%""
 		end
 
 	eif_thr_cond_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER) is
 		external
-			"C | %"eif_threads.h%""
+			"C blocking use %"eif_threads.h%""
 		end
 
 	eif_thr_cond_destroy (a_mutex_ptr: POINTER) is

@@ -48,6 +48,14 @@ feature -- Access
 			Result := True
 		end
 
+feature -- Status report
+
+	accept_child: BOOLEAN is
+			-- Is another child accepted by the container?
+		do
+			Result := implementation.add_child_ok
+		end
+
 feature -- Basic operations
 
 	propagate_background_color is

@@ -33,12 +33,12 @@ large: ""
 -- linker flags
 ar: ""
 ld: ""
-ldflags: "-c -Tpe"
-mtldflags: "-c -Tpe"
+ldflags: "-c -x -Tpe"
+mtldflags: "-c -x -Tpe"
 console_flags: "-ap"
 windows_flags: "-aa"
-ldsharedflags: "-dll"
-mtldsharedflags: "-dll"
+ldsharedflags: "-Tpd -Gn"
+mtldsharedflags: "-Tpd -Gn"
 
 -- eiffel run-time specification
 prefix: "$(ISE_C_COMPILER)\"

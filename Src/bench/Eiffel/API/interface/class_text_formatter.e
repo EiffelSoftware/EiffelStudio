@@ -81,7 +81,7 @@ feature -- Output
 			f: FORMAT_CONTEXT_B
 		do
 			!! f.make (e_class);
-			if is_short or else e_class.lace_class.hide_implementation then
+			if is_short then
 				f.set_is_short
 			end;
 			if is_one_class_only then

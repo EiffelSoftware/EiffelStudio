@@ -13,27 +13,18 @@ inherit
 	TERMINAL_M
 		rename
 			clean_up as terminal_clean_up
-		export
-			{NONE} all
-		undefine
+		redefine
 			make
 		end;
 
 	TERMINAL_M
-		export
-			{NONE} all
-		undefine
-			make
 		redefine
-			clean_up
+			make, clean_up
 		select
 			clean_up
 		end;
 
 	PROMPT_R_M
-		export
-			{NONE} all
-		end
 
 creation
 
@@ -51,6 +42,59 @@ feature {NONE} -- Creation
 			screen_object := create_prompt ($ext_name,
 				parent_screen_object (a_prompt, widget_index),
 				man);
+		end;
+
+feature {NONE} -- Color
+
+	update_other_fg_color (pixel: POINTER) is
+		local
+			ext_name: ANY;
+		do
+			ext_name := Mforeground_color.to_c
+			c_set_color (xm_selection_box_get_child 
+					(screen_object, MDIALOG_TEXT),
+					pixel,
+					$ext_name);
+		end;
+
+	update_other_bg_color (pixel: POINTER) is
+		do
+			xm_set_children_bg_color (pixel, screen_object)
+		end;
+
+feature {NONE} -- Font
+
+	update_text_font (f_ptr: POINTER) is
+		do
+			set_primitive_font (xm_selection_box_get_child 
+					(screen_object, MDIALOG_TEXT),
+					f_ptr)
+		end;
+
+	update_label_font (f_ptr: POINTER) is
+		do
+			set_primitive_font (xm_selection_box_get_child 
+					(screen_object, MDIALOG_SELECTION_LABEL),
+					f_ptr)
+		end;
+
+	update_button_font (f_ptr: POINTER) is
+		do
+			set_primitive_font (xm_selection_box_get_child 
+					(screen_object, MDIALOG_APPLY_BUTTON),
+					f_ptr)
+			set_primitive_font (xm_selection_box_get_child 
+					(screen_object, MDIALOG_CANCEL_BUTTON),
+					f_ptr)
+			set_primitive_font (xm_selection_box_get_child 
+					(screen_object, MDIALOG_DEFAULT_BUTTON),
+					f_ptr)
+			set_primitive_font (xm_selection_box_get_child 
+					(screen_object, MDIALOG_HELP_BUTTON),
+					f_ptr)
+			set_primitive_font (xm_selection_box_get_child 
+					(screen_object, MDIALOG_OK_BUTTON),
+					f_ptr)
 		end;
 
 feature 

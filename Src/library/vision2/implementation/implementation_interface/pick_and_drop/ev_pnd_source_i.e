@@ -167,6 +167,8 @@ feature {EV_ANY_I} -- Implementation
 			deny_cursor_not_void: deny_cursor /= Void
 		local
 			target: EV_PICK_AND_DROPABLE
+			target_imp: EV_PICK_AND_DROPABLE_IMP
+			item_target: EV_ITEM
 			curs_code: EV_CURSOR_CODE
 			curs: EV_CURSOR
 		do
@@ -176,18 +178,15 @@ feature {EV_ANY_I} -- Implementation
 			target := pointed_target
 			if
 				target /= Void and then (
-					target = last_pointed_target or else
 					target.drop_actions.accepts_pebble (pebble)
 				)
 			then
 				over_valid_target := True
 				last_pointed_target := target
-				--| FIXME IEK  Can be optimised to prevent
-				--| re-instantiation of cursors
-			--	widget_source.set_pointer_style (accept_cursor)
+				target_imp ?= target.implementation
+				set_pointer_style (target_imp.accept_cursor)
 			else
-				over_valid_target := False
-			--	widget_source.set_pointer_style (deny_cursor)
+				set_pointer_style (deny_cursor)
 			end
 		end
 
@@ -223,6 +222,10 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 feature {EV_WIDGET}
+
+	set_pointer_style (c: EV_CURSOR) is
+			deferred
+		end
 
     enable_capture is
             -- Grab the user input.
@@ -269,6 +272,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/17 23:09:53  rogers
+--| Fixed execute. Added set_pointer_style.
+--|
 --| Revision 1.17  2000/02/22 18:39:41  oconnor
 --| updated copyright date and formatting
 --|

@@ -59,7 +59,7 @@ feature -- Code generation
 		do
 			!!Result.make (0);
 			if id = 0 then
-				Result.append ("Result");
+				Result.append ("tmp_result");
 			elseif id < 0 then
 					-- local
 				Result.append ("loc");

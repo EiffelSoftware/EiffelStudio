@@ -49,6 +49,9 @@
 				</link>.
 			</item>
 		</list>
+		<paragraph>The <link><url>../30_type_selector/index.xml</url><label>type selector</label></link>, <link><url>../63_component_selector/index.xml</url><label>component selector</label></link> and <link><url>../64_window_selector/index.xml</url><label>window selector</label></link> may all be docked from their original position, permitting re-ordering and customization of the main window. Each of these may be docked external to the main window, permitting each to be displayed in their own moveable window. For more information regarding the docking mechanism, see <link><url>50_docking.xml</url><label>docking</label></link>.
+
+</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>
@@ -75,6 +78,11 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/63_component_selector/index.xml</url>
 				<label> Component_selector</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>50_docking.xml</url>
+				<label> Docking</label>
 			</link>
 			<line_break/>
 		</seealso>

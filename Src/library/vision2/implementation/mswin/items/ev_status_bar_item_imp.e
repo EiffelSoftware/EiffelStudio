@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision status bar item."
@@ -154,6 +155,9 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/28 21:45:51  brendel
+--| Unreleased.
+--|
 --| Revision 1.21  2000/04/21 21:57:18  rogers
 --| Removed set_capture, release_capture, set_heavy_capture,
 --| release_heavy_capture.

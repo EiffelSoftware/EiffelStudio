@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision status bar."
@@ -46,6 +47,9 @@ end -- class EV_STATUS_BAR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/28 21:45:49  brendel
+--| Unreleased.
+--|
 --| Revision 1.6  2000/02/22 18:39:45  oconnor
 --| updated copyright date and formatting
 --|

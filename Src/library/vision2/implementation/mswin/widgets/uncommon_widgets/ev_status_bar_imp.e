@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision status bar. Mswindows implementation."
@@ -445,6 +446,9 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/28 21:45:52  brendel
+--| Unreleased.
+--|
 --| Revision 1.30  2000/04/27 23:25:16  rogers
 --| Undefined on_left_button_up from EV_PRIMITIVE_IMP.
 --|

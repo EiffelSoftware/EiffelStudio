@@ -34,7 +34,7 @@ inherit
 	WEL_RADIO_BUTTON
 		rename
 			make as wel_radio_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
@@ -159,6 +159,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/04/25 00:34:07  rogers
+--| Parent from WEL_RADIO_BUTTON is now renamed as wel_parent.
+--|
 --| Revision 1.28  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
 --|

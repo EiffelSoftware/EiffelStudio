@@ -85,14 +85,13 @@ DPFLAGS = -I$(TOP) -I$(SHARED_CLIB) -I$(RUN_TIME)
 CFLAGS = $(DPFLAGS)
 YFLAGS = -d
 
-SRCS = lace_l.l lace_y.y lace_c.c eif_l.l eif_c.c lac_err.c keyword.c
+SRCS = lace_l.l lace_y.y lace_c.c eif_l.l lac_err.c keyword.c
 
 OBJS = \
 	lace_l.o \
 	lace_y.o \
 	lace_c.o \
 	eif_l.o \
-	eif_c.o \
 	lac_err.o \
 	keyword.o 
 

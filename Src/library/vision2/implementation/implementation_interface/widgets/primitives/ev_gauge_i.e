@@ -51,7 +51,7 @@ feature -- Status report
 			-- Relative position of `value' in `range'. Range: [0, 1].
 		do
 			if maximum > minimum then
-				Result := (value - minimum) / (maximum - minimum)
+				Result := value / (maximum - minimum)
 			else
 				--| By definition:
 				Result := 0.0
@@ -214,6 +214,9 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/20 00:37:48  rogers
+--| Fixed formula used in proportion.
+--|
 --| Revision 1.9  2000/04/19 21:56:51  brendel
 --| Corrected set_proportion.
 --|

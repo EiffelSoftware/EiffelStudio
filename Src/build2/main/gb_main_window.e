@@ -84,7 +84,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize is
-			--
+			-- Initialize `Current'.
 		do
 			Precursor {EV_TITLED_WINDOW}
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).icon_build_window @ 1)
@@ -170,6 +170,8 @@ feature -- Basic operation
 
 				-- Now restore from preferences
 			set_split_position (horizontal_split_area, preferences.integer_resource_value (Preferences.main_split__position, 100))
+			initialize_tool_positions (preferences.array_resource_value (preferences.tool_order, create {ARRAY [STRING]}.make (1, 1)))
+			
 	
 			unlock_update
 			
@@ -198,6 +200,7 @@ feature -- Basic operation
 		do
 				-- Now store to preferences
 			Preferences.set_integer_resource (Preferences.main_split__position, horizontal_split_area.split_position)
+			store_tool_positions
 
 					-- Actually save the preferences.
 			Preferences.save_resources;
@@ -327,7 +330,6 @@ feature {NONE} -- Implementation
 			vertical_holder: GB_VERTICAL_SPLIT_AREA_THREE_PART_TOOL_HOLDER
 			temp_tool_bar: EV_TOOL_BAR
 			sa: EV_SPLIT_AREA
-			multiple_split_area: MULTIPLE_SPLIT_AREA
 		do
 				-- Now we perform a large hack. In Wizard, mode, the
 				-- fourth state may be re-built, if we go back and change a setting
@@ -376,9 +378,6 @@ feature {NONE} -- Implementation
 			multiple_split_area.set_maximize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)
 			multiple_split_area.set_minimize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)
 			multiple_split_area.set_restore_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_restore @ 1)
-			multiple_split_area.extend (type_selector, "Type selector")
-			multiple_split_area.extend (component_selector, "Component selector")
-			multiple_split_area.extend (window_selector, "Window selector")
 
 			create constructor_box
 			create horizontal_split_area.make_with_tools (multiple_split_area, layout_constructor, "Layout constructor")
@@ -470,6 +469,96 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
+	multiple_split_area: MULTIPLE_SPLIT_AREA
+		-- Multiple slit area to hold tools.
+
+	initialize_tool_positions (info: ARRAY [STRING]) is
+			-- Initialize tools in `multiple_split_area', based on `info'.
+		require
+			info_not_void: info /= Void
+		local
+			tool_name: STRING
+			tool: EV_WIDGET
+			info_string: STRING
+			state: STRING
+			index: INTEGER
+			a_width, a_height: INTEGER
+			counter: INTEGER
+			temp_string: STRING
+			stored_heights: ARRAYED_LIST [INTEGER]
+			stored_widths: ARRAYED_LIST [INTEGER]
+		do
+			multiple_split_area.wipe_out
+			create stored_heights.make (info.count)
+			create stored_widths.make (info.count)
+			from
+				counter := 1
+			until
+				counter > info.count
+			loop
+				info_string := info @ counter
+				index := info_string.index_of ('_', 1)
+				tool_name := info_string.substring (1, index - 1)
+				info_string := info_string.substring (index + 1, info_string.count)
+				
+				index := info_string.index_of ('_', 1)
+				state := info_string.substring (1, index - 1)
+				info_string := info_string.substring (index + 1, info_string.count)
+				
+				index := info_string.index_of ('_', 1)
+				stored_heights.extend (info_string.substring (1, index - 1).to_integer)
+				info_string := info_string.substring (index + 1, info_string.count)
+				
+				index := info_string.index_of ('_', 1)
+				stored_heights.extend (info_string.substring (1, index - 1).to_integer)
+				info_string := info_string.substring (index + 1, info_string.count)
+				
+					-- Note that we convert from the stored name to the real name for the second argument.
+				multiple_split_area.extend (tool_by_name (tool_name), name_by_tool (tool_by_name (tool_name)))				
+				counter := counter + 1
+			end
+
+				-- The heights are restored after the multiple split area is built, as otherwise, the building
+				-- will affect the heights, and they will not be restored correctly.
+				-- The heights are only temporary, hence if the multiple split area is too small to contain
+				-- all widgets at those heights, only some will remain at the desired height.
+			from
+				stored_heights.start
+			until
+				stored_heights.off
+			loop
+				multiple_split_area.resize_widget_to (multiple_split_area.linear_representation.i_th (stored_heights.index), stored_heights.item)
+				stored_heights.forth
+			end
+		end
+		
+	store_tool_positions is
+			-- Store positions of all tools in `multiple_split_area'
+			-- into preferences.
+		local
+			info: ARRAY [STRING]
+			linear_rep: ARRAYED_LIST [EV_WIDGET]
+			output: STRING
+		do
+			output := ""
+			create info.make (1, multiple_split_area.count)
+			linear_rep := multiple_split_area.linear_representation
+			from
+				linear_rep.start
+			until
+				linear_rep.off
+			loop
+				output := storable_name_by_tool (linear_rep.item)
+				output := output + "_"
+				output := output + "normal"
+				output := output + "_" + linear_rep.item.height.out
+				output := output + "_" + linear_rep.item.width.out
+				info.put (output, linear_rep.index)
+				linear_rep.forth
+			end
+			preferences.set_array_resource (preferences.tool_order, info)
+		end
+		
 	assign_command_accelerators_to_window is
 			-- For all command accelerators,
 			-- add them to the accelerators of `Current'.

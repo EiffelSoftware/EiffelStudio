@@ -79,7 +79,6 @@ feature {NONE} -- Processing
 							-- Move the header and footer up a level				
 					if header_inserted then
 						l_content.put_first (l_parent.item (1))
-						l_parent.remove_first
 					end
 					
 					l_content.put_last (l_parent)

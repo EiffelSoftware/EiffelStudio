@@ -429,8 +429,15 @@ feature -- Generation constants
 		-- Constant used for referencing notebook item texts in XML.
 		
 	Item_pixmap_string: STRING is "Item_pixmap"
-		-- String used to represent the pixmap of the notebook tabs in the XML	
-
+		-- String used to represent the pixmap of the notebook tabs in the XML
+		
+	font_string: STRING is "Font"
+	font_family_string: STRING is "Family"
+	font_weight_string: STRING is "Weight"
+	font_shape_string: STRING is "Shape"
+	font_height_string: STRING is "Height"
+	font_height_points_string: STRING is "Height_in_points"
+	font_preferred_family_string: STRING is "Preferred_family"
 
 feature -- Wizard
 
@@ -621,6 +628,9 @@ feature -- Object editor properties
 	gb_ev_widget_minimum_width_tooltip: STRING is "feature `minimum_width' from EV_WIDGET."
 	gb_ev_widget_minimum_height: STRING is "Minimum Height"
 	gb_ev_widget_minimum_height_tooltip: STRING is "feature `minimum_height' from EV_WIDGET."
+	
+	gb_ev_fontable_font: STRING is "Font"
+	gb_ev_fontable_font_tooltip: STRING is "feature `font' from EV_FONTABLE."
 	
 	gb_ev_gauge_value: STRING is "Value"
 	gb_ev_gauge_value_tooltip: STRING is "feature `value' from EV_GAUGE."

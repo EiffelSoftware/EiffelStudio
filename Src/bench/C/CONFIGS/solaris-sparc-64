@@ -139,11 +139,11 @@ spitshell='cat'
 
 #Compiler/Preprocessor
 add_log='undef'
-binary_format=''
+binary_format='-m64'
 cc='gcc'
-ccflags='-m64 -pipe -D__BUILTIN_VA_ARG_INCR'
+ccflags='-pipe -D__BUILTIN_VA_ARG_INCR'
 cpp='g++'
-cppflags='-m64 -pipe -D__BUILTIN_VA_ARG_INCR'
+cppflags='-pipe -D__BUILTIN_VA_ARG_INCR'
 cpp_stuff='42'
 defvoidused='15'
 #Check value for next 4

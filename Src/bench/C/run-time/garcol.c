@@ -1668,6 +1668,9 @@ rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, MARKER marker)
 		return (marker)(&root);		/* Mark non-expanded objects directly */
 	}
 
+		/* Expanded in the call stack have a size of `0' therefore
+		 * the following code is still safe because it is just equivalent to
+		 * marking `root'. */
 	offset = zone->ov_size & B_SIZE;
 	enclosing = root - offset;
 

@@ -71,7 +71,7 @@ feature -- Setting
 				raise
 			else
 				popup;
-				focus_label.initialize_focusables
+				focus_label.initialize_focusables (Current)
 			end
 		end;
 

@@ -5,19 +5,11 @@
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
-		<code>
-			<bold>#include "eif_cecil. h"</bold>
-			<bold/>
-			<bold>EIFFEL_TYPE eif_attribute (EIF_REFERENCE</bold> 
-			<italic>object</italic>
-			<bold>, char *</bold> 
-			<italic>name</italic>
-			<bold>,</bold> 
-			<italic>EIFFEL_TYPE</italic>
-			<bold>, int *</bold> 
-			<italic>status</italic>
-			<bold>);</bold>
-		</code>
+		<code_block>
+	<bold>#include "eif_cecil.h"
+
+	EIFFEL_TYPE eif_attribute (EIF_REFERENCE</bold> <italic>object</italic><bold>, char *</bold> <italic>name</italic><bold>, EIFFEL_TYPE, int *</bold> <italic>status</italic>
+		</code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 

@@ -4,11 +4,12 @@
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
-		<code>
-			<bold>#include "eif_cecil. h"</bold>
-			<bold>void eif_enable_visible_exception ();</bold>
-			<bold>void eif_disable_visible_exception ();</bold>
-		</code>
+		<code_block>
+	<bold>#include "eif_cecil.h"
+
+	void eif_enable_visible_exception ();
+	void eif_disable_visible_exception ();</bold>
+		</code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 

@@ -55,7 +55,7 @@ feature -- Access
 				until
 					l_types.after
 				loop
-					Eiffel_types.update_generated_type (l_types.item)
+					Resolver.update_generated_type (l_types.item)
 					l_types.forth
 				end
 

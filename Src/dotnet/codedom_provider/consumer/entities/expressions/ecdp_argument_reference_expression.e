@@ -8,6 +8,8 @@ class
 
 inherit
 	ECDP_REFERENCE_EXPRESSION
+	
+	ECDP_SHARED_CONSUMER_CONTEXT
 
 create
 	make
@@ -36,7 +38,7 @@ feature -- Access
 				not_empty_argument_name: not argument_name.is_empty
 			end
 		
-			create Result.make_from_string (Eiffel_types.find_variable_name (argument_name))
+			create Result.make_from_string (Resolver.eiffel_entity_name (argument_name))
 		end
 		
 feature -- Status Report
@@ -52,9 +54,9 @@ feature -- Status Report
 		local
 			l_dotnet_type_name: STRING
 		do
-			l_dotnet_type_name := Eiffel_types.returned_type_feature (Void, argument_name, arguments)
+			l_dotnet_type_name := Resolver.feature_result_type (Void, argument_name, arguments)
 			if l_dotnet_type_name /= Void then
-				Result := Eiffel_types.dotnet_type (l_dotnet_type_name)
+				Result := Dotnet_types.dotnet_type (l_dotnet_type_name)
 			end
 		end
 

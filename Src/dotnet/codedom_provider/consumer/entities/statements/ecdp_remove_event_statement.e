@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 
 			create feature_arguments.make (1)
 			feature_arguments.put (0, listener.type)
-			Result := Eiffel_types.eiffel_feature_name_from_static_args (removed_event.target_object.type, Remover + removed_event.event_name, feature_arguments)	
+			Result := Feature_finder.eiffel_feature_name_from_static_args (removed_event.target_object.type, Remover + removed_event.event_name, feature_arguments)	
 		end
 
 end -- class ECDP_REMOVE_EVENT_STATEMENT

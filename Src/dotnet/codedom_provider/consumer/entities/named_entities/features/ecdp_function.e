@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			Result := Precursor {ECDP_ROUTINE}
 			Result.append (Dictionary.Colon)
 			Result.append (Dictionary.Space)
-			l_type_name := Eiffel_types.eiffel_type_name (returned_type)
+			l_type_name := Resolver.eiffel_type_name (returned_type)
 			if is_array_returned_type then
 				Result.append ("NATIVE_ARRAY [")
 				Result.append (l_type_name)

@@ -52,13 +52,13 @@ feature -- Access
 			
 			create Result.make (120)
 			Result.append (indent_string) 
-			l_name := Eiffel_types.unique_variable_name (name)
+			l_name := Resolver.unique_entity_name (name)
 			if not dotnet_type.is_empty then
-				Eiffel_types.add_variable (dotnet_type, l_name)
+				Resolver.add_variable (dotnet_type, l_name)
 			else
-				Eiffel_types.add_variable (eiffel_type, l_name)
+				Resolver.add_variable (eiffel_type, l_name)
 			end
-			Result.append (Eiffel_types.find_variable_name (l_name))
+			Result.append (Resolver.eiffel_entity_name (l_name))
 			Result.append (Dictionary.Colon)
 			Result.append (Dictionary.Space)
 			if is_array_element then
@@ -67,7 +67,7 @@ feature -- Access
 			if not eiffel_type.is_empty then
 				Result.append (eiffel_type)
 			else
-				Result.append (eiffel_types.eiffel_type_name (dotnet_type))
+				Result.append (Resolver.eiffel_type_name (dotnet_type))
 			end
 			if is_array_element then
 				Result.append ("]")
@@ -97,7 +97,7 @@ feature -- Access
 			if init_expression /= Void then
 				create Result.make (160)
 				Result.append (indent_string)
-				Result.append (Eiffel_types.find_variable_name (name))
+				Result.append (Resolver.eiffel_entity_name (name))
 				set_new_line (False)
 				l_cast_exp ?= init_expression
 				if l_cast_exp /= Void then

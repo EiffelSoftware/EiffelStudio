@@ -59,10 +59,10 @@ feature -- Access
 			Result.append (Dictionary.Create_keyword)
 			Result.append (Dictionary.Space)
 			if not object_created.is_empty then
-				Result.append (eiffel_types.find_variable_name (object_created))
+				Result.append (Resolver.eiffel_entity_name (object_created))
 			else
 				Result.append (Dictionary.Opening_brace_bracket)
-				Result.append (Eiffel_types.eiffel_type_name (target_type))
+				Result.append (Resolver.eiffel_type_name (target_type))
 				Result.append (Dictionary.Closing_brace_bracket)				
 			end
 			

@@ -10,6 +10,8 @@ inherit
 	ECDP_EXPRESSION
 
 	ECDP_DIRECTIONS
+	
+	ECDP_SHARED_CONSUMER_CONTEXT
 
 create
 	make
@@ -56,16 +58,16 @@ feature -- Access
 			end
 
 			create Result.make (120)
-			l_name := Eiffel_types.unique_variable_name (name)
-			Eiffel_types.add_variable (parameter_type, l_name)
-			Result.append (Eiffel_types.find_variable_name (l_name))
+			l_name := Resolver.unique_entity_name (name)
+			Resolver.add_variable (parameter_type, l_name)
+			Result.append (Resolver.eiffel_entity_name (l_name))
 			Result.append (dictionary.Colon)
 			Result.append (dictionary.Space)
 			l_byref := direction = out_argument or direction = inout_argument
 			if l_byref then
 				Result.append ("TYPED_POINTER [")
 			end
-			Result.append (Eiffel_types.eiffel_type_name (parameter_type))
+			Result.append (Resolver.eiffel_type_name (parameter_type))
 			if l_byref then
 				Result.append ("]")
 			end
@@ -86,8 +88,8 @@ feature -- Status Report
 			l_arguments: LINKED_LIST [ECDP_EXPRESSION]
 		do
 			create l_arguments.make
-			l_dotnet_type_name := Eiffel_types.returned_type_feature (Void, name, l_arguments)
-			Result := Eiffel_types.dotnet_type (l_dotnet_type_name)
+			l_dotnet_type_name := Resolver.feature_result_type (Void, name, l_arguments)
+			Result := Dotnet_types.dotnet_type (l_dotnet_type_name)
 		end
 
 feature -- Status Setting

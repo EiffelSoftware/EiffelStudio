@@ -32,7 +32,7 @@ feature -- Access
 			-- | Result := "`referred_type'"
 			-- Eiffel code of type reference expression
 		do
-			Result := Eiffel_types.eiffel_type_name (referred_type).twin
+			Result := Resolver.eiffel_type_name (referred_type).twin
 		end
 		
 feature -- Status Report

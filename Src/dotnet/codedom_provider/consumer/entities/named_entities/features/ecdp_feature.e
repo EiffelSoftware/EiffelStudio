@@ -184,12 +184,12 @@ feature {ECDP_GENERATED_TYPE} -- Code Generation
 					if first_element then
 						Result.append (Dictionary.Space)
 						Result.append (Dictionary.Opening_brace_bracket)
-						Result.append (eiffel_types.eiffel_type_name (export_type))
+						Result.append (Resolver.eiffel_type_name (export_type))
 						first_element := false
 					else
 						Result.append (Dictionary.Comma)
 						Result.append (Dictionary.Space)
-						Result.append (eiffel_types.eiffel_type_name (export_type))
+						Result.append (Resolver.eiffel_type_name (export_type))
 					end
 				end
 				feature_clauses.forth

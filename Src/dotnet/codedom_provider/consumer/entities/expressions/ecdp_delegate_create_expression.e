@@ -53,7 +53,7 @@ feature -- Access
 			Result.append (Dictionary.Create_keyword)
 			Result.append (Dictionary.Space)
 			Result.append (Dictionary.Opening_brace_bracket)
-			Result.append (Eiffel_types.eiffel_type_name (delegate_type))
+			Result.append (Resolver.eiffel_type_name (delegate_type))
 			Result.append (Dictionary.Closing_brace_bracket)
 			Result.append (Dictionary.Dot_keyword)
 			Result.append (generate_constructor_name)
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 				Ace_file.Referenced_assemblies.forth
 			end
 
-			Result := Eiffel_types.eiffel_feature_name_from_static_args (l_type, ".ctor", constructor_delegate_arguments)
+			Result := Feature_finder.eiffel_feature_name_from_static_args (l_type, ".ctor", constructor_delegate_arguments)
 		ensure
 			Result_set: Result /= Void
 		end
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			target_object_set: target_object /= Void
 		do
 				-- Already formatted
-			Result := Eiffel_types.find_variable_name (method_name)
+			Result := Resolver.eiffel_entity_name (method_name)
 		ensure
 			Result_set: Result /= Void
 		end

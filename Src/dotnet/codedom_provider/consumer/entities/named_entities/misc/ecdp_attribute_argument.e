@@ -12,6 +12,12 @@ inherit
 			ready,
 			set_name
 		end
+		
+	ECDP_SHARED_CONSUMER_CONTEXT
+		undefine
+			default_create,
+			is_equal
+		end
 
 create
 	default_create
@@ -39,9 +45,9 @@ feature -- Access
 				Result.append ("[")
 				create feature_arguments.make
 				Result.append (Dictionary.Double_quotes)
-				l_eiffel_name := Eiffel_types.eiffel_feature_name_from_dynamic_args (Eiffel_types.dotnet_type (type), name, feature_arguments)
+				l_eiffel_name := Feature_finder.eiffel_feature_name_from_dynamic_args (Dotnet_types.dotnet_type (type), name, feature_arguments)
 				if l_eiffel_name = Void then
-					l_eiffel_name := Eiffel_types.eiffel_feature_name_from_dynamic_args (Eiffel_types.dotnet_type (type), "get_" + name, feature_arguments)
+					l_eiffel_name := Feature_finder.eiffel_feature_name_from_dynamic_args (Dotnet_types.dotnet_type (type), "get_" + name, feature_arguments)
 				end
 				check
 					non_void_l_eiffel_name: l_eiffel_name /= Void

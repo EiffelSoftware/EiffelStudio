@@ -9,6 +9,12 @@ class
 inherit
 	ECDP_TYPE
 
+	ECDP_SHARED_CONSUMER_CONTEXT
+		undefine
+			default_create,
+			is_equal
+		end
+
 create
 	make
 
@@ -26,7 +32,7 @@ feature -- Access
 	type: TYPE is
 			-- type associated to `name'
 		do
-			Result := Eiffel_types.dotnet_type (name)
+			Result := Dotnet_types.dotnet_type (name)
 		end
 
 end -- class ECDP_EXTERNAL_CLASS

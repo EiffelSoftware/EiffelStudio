@@ -49,9 +49,6 @@ feature	-- Access
 
 	code: STRING is
 			-- | Result := "`name' [`inheritace_clauses']"
-		local
-			first_element: BOOLEAN
-			no_clauses: BOOLEAN
 		do
 			check
 				name_set: not name.is_empty
@@ -59,7 +56,7 @@ feature	-- Access
 			create Result.make (250)
 			
 			Result.append (dictionary.Tab)
-			Result.append (eiffel_types.eiffel_type_name (name))
+			Result.append (Resolver.eiffel_type_name (name))
 			Result.append (dictionary.New_line)
 
 			Result.append (generate_clauses (rename_clauses, Dictionary.Rename_keyword))

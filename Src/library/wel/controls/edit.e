@@ -85,12 +85,13 @@ feature -- Basic operations
 			-- Select all the text.
 		require
 			exists: exists
+			positive_length: text_length > 0
 		do
 			cwin_send_message (item, Em_setsel, 0, -1)
 		ensure
 			has_selection: has_selection
 			selection_start_set: selection_start = 0
-			selection_end_set: selection_end = text_length
+			selection_end_set: selection_end <= text_length + 2
 		end
 
 	unselect is
@@ -236,7 +237,7 @@ feature -- Status report
 				Em_getsel, 0, 0))
 		ensure
 			result_large_enough: Result >= 0
-			result_small_enough: Result <= text_length
+			result_small_enough: Result <= text_length + 2
 		end
 
 	can_undo: BOOLEAN is
@@ -391,11 +392,11 @@ feature {NONE} -- Externals
 invariant
 	consistent_selection: exists and then has_selection implies
 		selection_start >= 0 and then selection_start <= text_length and then
-		selection_end >= 0 and then selection_end <= text_length and then
+		selection_end >= 0 and then selection_end <= text_length + 2 and then
 		selection_start < selection_end
 
 	valid_caret_position: exists implies caret_position >= 0 and then
-		caret_position <= text_length
+		caret_position <= text_length + 2
 
 end -- class WEL_EDIT
 

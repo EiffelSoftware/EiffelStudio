@@ -9,14 +9,14 @@
 #endif
 
 #include <sys/types.h>
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <sys/time.h>
 #endif
 #include <errno.h>
 #ifndef BSD
 #define BSD_COMP
 #endif
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <sys/ioctl.h>
 #endif
 #include "cecil.h"
@@ -35,13 +35,13 @@
 #ifdef I_SYS_IN
 #include <sys/in.h>
 #endif
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <sys/un.h>
 #endif
 
 #include "bitmask.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern void eio(void);
 void do_init(void);
 EIF_INTEGER int_size(void);
@@ -70,6 +70,7 @@ void do_init()
 			eraise ("Unable to start WINSOCK", EN_PROG);
 			}
 		eif_register_cleanup (eif_winsock_cleanup);
+		done = TRUE;
 		}
 }
 #endif

@@ -324,6 +324,9 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
 				  GtkWidget *pixmap_parent,
 				  char *file_name );
 
+/* Create a pixmap with the given size */
+GtkWidget* c_gtk_pixmap_create_with_size (GtkWidget *window_parent, gint width, gint height);
+
 /*==============================================================================
  gtk_editable functions
 ==============================================================================*/
@@ -364,12 +367,17 @@ gint c_gtk_clist_append_row (GtkWidget* list);
 guint c_gtk_clist_selected (GtkWidget* list);
 gint c_gtk_clist_ith_selected_item (GtkWidget* list, guint i);
 guint c_gtk_clist_selection_length (GtkWidget* list);
+void c_gtk_clist_set_fg_color (GtkWidget* clist_row, int row, int r, int g, int b);
+void c_gtk_clist_set_bg_color (GtkWidget* clist_row, int row, int r, int g, int b);
+void c_gtk_clist_get_fg_color (GtkWidget* list_row, int row, EIF_INTEGER *r, EIF_INTEGER *g, EIF_INTEGER *b);
+void c_gtk_clist_get_bg_color (GtkWidget* list_row, int row, EIF_INTEGER *r, EIF_INTEGER *g, EIF_INTEGER *b);
+void c_gtk_clist_set_pixtext (GtkWidget* clist, int row, int column, GtkWidget *pixmap, gchar *text);
+void c_gtk_clist_unset_pixmap (GtkWidget* clist, int row, int column);
 
 /* CList */
 #define c_gtk_clist_rows(p)     (GTK_CLIST(p)->rows)     /*integer*/
 #define c_gtk_clist_columns(p)  (GTK_CLIST(p)->columns)  /*integer*/
 #define c_gtk_clist_selection_mode(p) (GTK_CLIST(p)->selection_mode)  /*integer*/
-
 
 /*==============================================================================
  gtk_table functions
@@ -459,6 +467,25 @@ char* c_gtk_window_title(GtkWindow* window);
 #define c_gtk_check_menu_item_active(p) (((GtkCheckMenuItem*)p)->active)
 /* guint */
 	
+/*==============================================================================
+ gtk_statusbar functions
+==============================================================================*/
+
+/* Sets the pixmap in the status bar item */
+void c_gtk_statusbar_item_set_pixmap (GtkWidget *statusbar, GtkWidget *pixmap);
+
+/* Unsets the pixmap of the status bar item */
+void c_gtk_statusbar_item_unset_pixmap (GtkWidget *statusbar, GtkWidget *pixmap);
+
+/*==============================================================================
+ gtk_pixmap functions
+==============================================================================*/
+
+/* Width of the given pixmap */
+EIF_INTEGER c_gtk_pixmap_width (GtkWidget *pixmap);
+
+/* Height of the given pixmap */
+EIF_INTEGER c_gtk_pixmap_height (GtkWidget *pixmap);
 
 /*==============================================================================
  gtk_style functions

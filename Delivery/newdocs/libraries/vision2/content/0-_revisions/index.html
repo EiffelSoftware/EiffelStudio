@@ -26,6 +26,7 @@
 			</LI>
 			<LI><B>EV_SPLIT_AREA</B> - Added `splitter_width' which returns the width of the splitter in pixels.</li>
 		<li><B>EV_ANY_HANDLER</B> - This is the only class to which `default_create' from EV_ANY is supposed to be exported. However, paticular descendents were exporting `default_create' to ANY instead. This has now been fixed.</li>
+		<li><B>EV_DOCKABLE_SOURCE</B> - Added features `is_external_docking_relative', `enable_external_docking_relative' and `disable_external_docking_relative'. This permits you to dock a source to an EV_DOCKABLE_DIALOG that is not displayed relative to the original top window.</li>
 		</UL>
 		<p><b>Bug fixes</b></p>
 		<UL>

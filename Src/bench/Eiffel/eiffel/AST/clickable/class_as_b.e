@@ -136,7 +136,7 @@ feature -- Formatting
 		local
 			s: STRING;
 		do
-			ctxt.put_text_item (ti_Before_class_declaration);
+			ctxt.put_front_text_item (ti_Before_class_declaration);
 			ctxt.prepare_class_text;
 			if indexes /= void and not indexes.empty then
 				ctxt.put_text_item (ti_Before_indexing);

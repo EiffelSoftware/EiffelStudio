@@ -45,4 +45,8 @@ feature
 			cmd_editor.remove_label (data)
 		end
 
+invariant
+
+	visible: (implementation /= Void and then managed) implies shown
+
 end -- class LABEL_ICON

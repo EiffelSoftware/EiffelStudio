@@ -209,10 +209,8 @@ feature -- Project retrieval
 			old_title: STRING
 		do	
 			io.error.putstring ("Retrieving project...%N")
-			Eiffel_project.make (project_dir)
-
 				-- Retrieve the project
-			Eiffel_project.retrieve
+			Eiffel_project.make (project_dir)
 
 			if Eiffel_project.retrieval_error then
 				if Eiffel_project.is_incompatible then

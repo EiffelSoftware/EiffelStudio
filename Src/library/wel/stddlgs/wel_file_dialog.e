@@ -65,14 +65,14 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	multiple_file_names: LINKED_LIST[STRING] is
+	multiple_file_names: LINKED_LIST [STRING] is
 			-- return the full path name of all selected files.
 		require
 			multiple_files_flag_set: has_flag (Ofn_allowmultiselect)
 		local
 			directory_name: STRING
 		do
-			if has_flag(Ofn_explorer) then
+			if has_flag (Ofn_explorer) then
 					-- Explorer-like dialog returns a buffer where
 					-- filename are NULL separated.
 				Result := str_file_name.null_separated_strings

@@ -24,11 +24,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
-		end
-
 	WIZARD_MESSAGES
 		export
 			{NONE} all

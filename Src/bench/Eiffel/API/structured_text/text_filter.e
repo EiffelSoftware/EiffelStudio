@@ -58,10 +58,26 @@ feature -- Initialization
 			!!image.make (2000)
 		end;
 
+feature -- Removal
+
+	wipe_out_image is
+			-- Wipe out the image.
+		do
+			!! image.make (2000)
+		end
+
 feature -- Access
 
 	image: STRING;
 			-- Filtered output text
+
+    Default_unknown_name: FILE_NAME is
+			-- *** FIXME to be added to eiffel_env
+        once
+            !! Result.make_from_string (Eiffel3_dir_name);
+            Result.extend_from_array (<<"bench", "help", "defaults">>);
+            Result.set_file_name ("unknown");
+        end;
 
 	file_suffix: STRING is
 			-- Suffix of the file name where the filtered output text is stored;
@@ -194,6 +210,7 @@ feature {NONE} -- Text processing
 			format: CELL2 [STRING, STRING];
 			last_character, current_character: CHARACTER;
 			format_item: STRING;
+			d_name: FILE_NAME;
 			i, format_item_count: INTEGER
 		do
 			if format_table.has (f_Class_name) then
@@ -210,7 +227,12 @@ feature {NONE} -- Text processing
 						if last_character = '%%' then
 							image.extend ('$')
 						else
-							image.append (text.file_name)
+							d_name := text.class_i.document_file_name;
+							if d_name = Void then
+								image.append (Default_unknown_name)
+							else
+								image.append (d_name)
+							end
 						end
 					else
 						if last_character = '%%' then
@@ -236,7 +258,14 @@ feature {NONE} -- Text processing
 							if last_character = '%%' then
 								image.extend ('$')
 							else
-								image.append (text.file_name)
+								if d_name = Void then
+									d_name := text.class_i.document_file_name;
+								end;
+								if d_name = Void then	
+									image.append (Default_unknown_name)
+								else
+									image.append (d_name)
+								end
 							end
 						else
 							if last_character = '%%' then

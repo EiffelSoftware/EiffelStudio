@@ -14,7 +14,7 @@ inherit
 --			System_type as stone_type
 		redefine
 			make, build_interface,
---			open_cmd, save_cmd,
+			save_text,
 			empty_tool_name, stone, 
 			synchronise_stone,
 --			process_system,
@@ -91,13 +91,13 @@ feature -- Access
 	has_editable_text: BOOLEAN is
 			-- Does Current tool have an editable text window?
 		do
---			Result := last_format = showtext_frmt_holder
+			Result := (last_format = format_list.text_format)
 		end
 
 	able_to_edit: BOOLEAN is
 			-- Are we able to edit the text?
 		do
---			Result := last_format = showtext_frmt_holder
+			Result := (last_format = format_list.text_format)
 		end
 
 	changed: BOOLEAN is
@@ -158,8 +158,11 @@ feature -- Update
 	process_ace_syntax (syn: ACE_SYNTAX_STONE) is
 			-- Display the syntax error in the System tool.
 			--| If the text has been modified, we are loosing the changes.
+		local
+			arg: EV_ARGUMENT1 [ANY]
 		do
---			showtext_frmt_holder.execute (syn)
+			create arg.make (syn)
+			format_list.text_format.launch_cmd.execute (arg, Void)
 			text_window.deselect_all
 			text_window.set_position (syn.start_position)
 			text_window.highlight_selected (syn.start_position, syn.end_position)
@@ -412,9 +415,6 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 	build_file_menu (a_menu: EV_MENU_ITEM_HOLDER) is
 		local
 			i: EV_MENU_ITEM
-			open_cmd: EB_OPEN_SYSTEM_CMD
-			save_cmd: EB_SAVE_SYSTEM_CMD
-			save_as_cmd: EB_SAVE_SYSTEM_AS_CMD
 		do
 			create open_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Open)
@@ -436,6 +436,19 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 		end
 
+	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		local
+			i: EV_MENU_ITEM
+		do
+			create shell_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Shell)
+			i.add_select_command (shell_cmd, Void)
+
+			create filter_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Filter)
+			i.add_select_command (filter_cmd, Void)
+		end
+
 feature {WINDOWS} -- Attributes
 
 	empty_tool_name: STRING is
@@ -454,24 +467,24 @@ feature {NONE} -- Attributes Forms And Holes
 --	hole: SYSTEM_HOLE
 			-- Hole charaterizing current
 
+feature
+
+	save_text is
+			-- launches the save command, if any.
+		do
+			save_cmd.execute (Void, Void)
+		end
+
 feature {NONE} -- Commands
 
---	open_cmd_holder: COMMAND_HOLDER
+	open_cmd: EB_OPEN_SYSTEM_CMD
 
---	save_cmd_holder: TWO_STATE_CMD_HOLDER
+	save_cmd: EB_SAVE_SYSTEM_CMD
 
---	showlist_frmt_holder: FORMAT_HOLDER
+	save_as_cmd: EB_SAVE_SYSTEM_AS_CMD
 
---	showclasses_frmt_holder: FORMAT_HOLDER
+	shell_cmd: EB_OPEN_SHELL_CMD
 
---	showhier_frmt_holder: FORMAT_HOLDER
-
---	showmodified_frmt_holder: FORMAT_HOLDER
-
---	showindexing_frmt_holder: FORMAT_HOLDER
-
---	showstatistics_frmt_holder: FORMAT_HOLDER
-
---	shell: COMMAND_HOLDER
+	filter_cmd: EB_FILTER_CMD
 
 end -- class EB_SYSTEM_TOOL

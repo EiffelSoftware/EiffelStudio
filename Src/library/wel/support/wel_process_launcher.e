@@ -30,6 +30,26 @@ inherit
 			{NONE} all
 		end
 
+feature -- Element settings
+
+	set_block_size (a_size: INTEGER) is
+			-- Set `block_size' woth `a_size'
+		require
+			valid_size: a_size > 0
+		do
+			internal_block_size := a_size
+		ensure
+			size_set: block_size = a_size
+		end
+	
+	run_hidden is
+			-- Should process be run hidden?
+		do
+			hidden := True
+		ensure
+			hidden: hidden
+		end
+
 feature -- Basic Operations
 
 	spawn (a_command_line, a_working_directory: STRING) is
@@ -135,6 +155,9 @@ feature -- Access
 	last_process_result: INTEGER
 			-- Last launched process return value
 
+	hidden: BOOLEAN
+			-- Should process be hidden?
+
 feature {NONE} -- Implementation
 
 	input_pipe: WEL_PIPE
@@ -150,8 +173,10 @@ feature {NONE} -- Implementation
 			create output_pipe.make
 			create Result.make
 			Result.set_flags (Startf_use_std_handles)
-		--	Result.set_show_command (Sw_hide)
-		--	Result.add_flag (Startf_use_show_window)
+			if hidden then
+				Result.set_show_command (Sw_hide)
+			end
+			Result.add_flag (Startf_use_show_window)
 			Result.set_std_input (input_pipe.input_handle)
 			Result.set_std_output(output_pipe.input_handle)
 			Result.set_std_error (output_pipe.input_handle)
@@ -160,8 +185,20 @@ feature {NONE} -- Implementation
 	process_info: WEL_PROCESS_INFO
 			-- Process information
 
-	Block_size: INTEGER is 255
+	Default_block_size: INTEGER is 255
+			-- Default output block size
+
+	Block_size: INTEGER is
 			-- Read block size
+		do
+			if internal_block_size = 0 then
+				internal_block_size := Default_block_size
+			end
+			Result := internal_block_size
+		end
+
+	internal_block_size: INTEGER
+			-- Output block size
 
 	terminate_process is
 			-- Terminate current process (corresponding to `process_info').

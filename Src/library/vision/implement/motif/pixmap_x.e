@@ -123,10 +123,12 @@ feature -- Element change
 		local
 			bitmap_format: MEL_BITMAP_FORMAT;
 			pixmap: MEL_PIXMAP;
-			gc: MEL_GC
+			gc: MEL_GC;
+			def_screen: MEL_SCREEN
 		do
 			free_resources;
-			!! bitmap_format.make_from_file (display.default_screen, a_file_name);
+			def_screen := display.default_screen;
+			!! bitmap_format.make_from_file (def_screen, a_file_name);
 			if bitmap_format.is_valid then
 				is_allocated := True;
 				height := bitmap_format.height;
@@ -139,8 +141,10 @@ feature -- Element change
 				if hot_y < 0 or else hot_y >= height then
 					hot_y := height // 2
 				end;
-				!! gc.make (display.default_screen);
-				pixmap := bitmap_format.to_pixmap (display.default_screen, gc);
+				!! gc.make (def_screen);
+				gc.set_background_color (def_screen.white_pixel);
+				gc.set_foreground_color (def_screen.black_pixel);
+				pixmap := bitmap_format.to_pixmap (def_screen, gc);
 				identifier := pixmap.identifier;
 				display_handle := pixmap.display_handle;
 				depth := 2; -- Black and white bitmap
@@ -201,11 +205,15 @@ feature -- Element change
 		require
 			is_valid: is_valid
 		local
-			gc: MEL_GC
+			gc: MEL_GC;
+			def_screen: MEL_SCREEN
 		do
 			if bitmap = Void then
-				!! bitmap.make (display.default_screen, width, height, 1)
+				def_screen := display.default_screen;
+				!! bitmap.make (def_screen, width, height, 1)
 				!! gc.make (bitmap);
+				gc.set_background_color (def_screen.white_pixel);
+				gc.set_foreground_color (def_screen.black_pixel);
 				bitmap.copy_plane (Current, gc, 0, 0, width, height, 0, 0, 1)
 			end;
 		ensure

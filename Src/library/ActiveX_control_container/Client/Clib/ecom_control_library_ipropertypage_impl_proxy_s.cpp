@@ -19,6 +19,7 @@ ecom_control_library::IPropertyPage_impl_proxy::IPropertyPage_impl_proxy( IUnkno
       com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
     com_eraise (f.c_format_message (hr), EN_PROG);
   };
+  p_unknown = NULL;
   hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
   if (FAILED (hr))
   {
@@ -27,6 +28,7 @@ ecom_control_library::IPropertyPage_impl_proxy::IPropertyPage_impl_proxy( IUnkno
     com_eraise (f.c_format_message (hr), EN_PROG);
   };
 
+  p_IPropertyPage = NULL;
   hr = a_pointer->QueryInterface(IID_IPropertyPage_, (void **)&p_IPropertyPage);
   if (FAILED (hr))
   {

@@ -19,6 +19,7 @@ ecom_control_library::IOleParentUndoUnit_impl_proxy::IOleParentUndoUnit_impl_pro
       com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
     com_eraise (f.c_format_message (hr), EN_PROG);
   };
+  p_unknown = NULL;
   hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
   if (FAILED (hr))
   {
@@ -27,6 +28,7 @@ ecom_control_library::IOleParentUndoUnit_impl_proxy::IOleParentUndoUnit_impl_pro
     com_eraise (f.c_format_message (hr), EN_PROG);
   };
 
+  p_IOleParentUndoUnit = NULL;
   hr = a_pointer->QueryInterface(IID_IOleParentUndoUnit_, (void **)&p_IOleParentUndoUnit);
   if (FAILED (hr))
   {

@@ -11,7 +11,7 @@ extern "C" {
 
 ecom_control_library::IAdviseSink_impl_proxy::IAdviseSink_impl_proxy( IUnknown * a_pointer )
 {
-  HRESULT hr, hr2;
+  HRESULT hr = 0, hr2 = 0;
   hr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);
   if (FAILED (hr))
   {
@@ -19,6 +19,7 @@ ecom_control_library::IAdviseSink_impl_proxy::IAdviseSink_impl_proxy( IUnknown *
       com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
     com_eraise (f.c_format_message (hr), EN_PROG);
   };
+  p_unknown = NULL;
   hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
   if (FAILED (hr))
   {
@@ -27,6 +28,7 @@ ecom_control_library::IAdviseSink_impl_proxy::IAdviseSink_impl_proxy( IUnknown *
     com_eraise (f.c_format_message (hr), EN_PROG);
   };
 
+  p_IAdviseSink = NULL;
   hr = a_pointer->QueryInterface(IID_IAdviseSink_, (void **)&p_IAdviseSink);
   if (FAILED (hr))
   {

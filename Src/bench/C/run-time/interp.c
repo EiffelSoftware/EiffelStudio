@@ -3816,8 +3816,8 @@ rt_private void monadic_op(int code)
 		dprintf(2)("BC_UMINUS\n");
 #endif
 		switch(first->type & SK_HEAD) {
-		case SK_INT8:	first->it_int8 = (EIF_INTEGER_8) -first->it_int8; break;
-		case SK_INT16:	first->it_int16 = (EIF_INTEGER_16) -first->it_int16; break;
+		case SK_INT8:	first->it_int8 = -first->it_int8; break;
+		case SK_INT16:	first->it_int16 = -first->it_int16; break;
 		case SK_INT32:	first->it_int32 = -first->it_int32; break;
 		case SK_INT64:	first->it_int64 = -first->it_int64; break;
 		case SK_FLOAT:	first->it_float = -first->it_float; break;

@@ -71,7 +71,7 @@ feature -- Access
 							-- We have a class name here
 						item_name := analyzed_string.substring (1, min_index - 1)
 						analyzed_string := analyzed_string.substring (min_index, analyzed_string.count)
-						create favorites_class.make (item_name, Current)
+						create favorites_class.make_from_string (item_name, Current)
 						extend (favorites_class)
 					end
 				elseif min_index = index_next_bracket then
@@ -88,7 +88,7 @@ feature -- Access
 							-- We have a class name here
 						item_name := analyzed_string.substring (1, min_index - 1)
 						analyzed_string := analyzed_string.substring (min_index, analyzed_string.count)
-						create favorites_class.make (item_name, Current)
+						create favorites_class.make_from_string (item_name, Current)
 						if favorites_class.associated_class_i /= Void then
 							extend (favorites_class)
 						end
@@ -241,15 +241,61 @@ feature -- Element change
 			-- Insert `a_stone' after `insert_point'.
 		require
 			has_insert_point: has (insert_point)
+		local
+			l_feat_stone: FEATURE_STONE
+			l_class_stone: CLASSI_STONE
 		do
-			extend (create {EB_FAVORITES_CLASS}.make (a_stone.class_name, Current))
+			l_feat_stone ?= a_stone
+			if l_feat_stone /= Void then
+				add_feature_stone (l_feat_stone)
+			else
+				l_class_stone ?= a_stone
+				add_class_stone (l_class_stone)
+			end
 		end
 
 	add_class_stone (a_stone: CLASSI_STONE) is
 			-- Append a favorite class defined by `a_stone'.
+		local
+			l_fav_class_stone: EB_FAVORITES_CLASS_STONE
+			l_fav_class: EB_FAVORITES_CLASS
+			l_target_fav_class: EB_FAVORITES_CLASS
 		do
-			add_class (a_stone.class_name)
+			l_fav_class_stone ?= a_stone
+			if l_fav_class_stone /= Void then
+				add_class (a_stone.class_name)
+				l_target_fav_class ?= favorite_by_name (a_stone.class_name)
+				if l_target_fav_class /= Void then
+					l_fav_class := l_fav_class_stone.origin
+					from
+						l_fav_class.start
+					until
+						l_fav_class.after
+					loop
+						l_target_fav_class.add_feature (l_fav_class.item.name)
+						l_fav_class.forth
+					end					
+				end
+
+			else
+				add_class (a_stone.class_name)
+			end
 		end
+		
+	add_feature_stone (a_stone: FEATURE_STONE) is
+			-- Append a favorite feature defined by `a_stone'.
+		local
+			l_fav_class: EB_FAVORITES_CLASS
+		do
+			l_fav_class ?= favorite_by_name (a_stone.class_name)
+			if l_fav_class = Void then
+				create l_fav_class.make (a_stone.class_name, Current)
+				extend (l_fav_class)
+			end
+			if not l_fav_class.contains_name (a_stone.feature_name) then
+				l_fav_class.extend (create {EB_FAVORITES_FEATURE}.make_from_feature_stone (a_stone, l_fav_class))				
+			end
+		end		
 
 	add_favorite_folder (a_folder: EB_FAVORITES_FOLDER) is
 			-- Append a favorite folder defined by `a_folder'.
@@ -257,18 +303,25 @@ feature -- Element change
 			extend (a_folder)
 		end
 
+	add_feature (a_feature_name: STRING) is
+			-- Add the class named `a_feature_name' into this folder if no
+			-- item with the same name is already present.
+		do
+			add_item (a_feature_name, False, False, True)
+		end
+		
 	add_class (a_class_name: STRING) is
 			-- Add the class named `a_class_name' into this folder if no
 			-- item with the same name is already present.
 		do
-			add_item (a_class_name, False)
+			add_item (a_class_name, False, True, False)
 		end
 
 	add_folder (a_folder_name: STRING) is
 			-- Add the folder named `a_folder_name' into this folder if no
 			-- item with the same name is already present.
 		do
-			add_item (a_folder_name, True)
+			add_item (a_folder_name, True, False, False)
 		end
 	
 	add_class_to_folder (a_class_name: STRING; a_path: ARRAYED_LIST [STRING]) is
@@ -278,7 +331,7 @@ feature -- Element change
 			-- If `a_item' is in the root, `a_path' can be set to an 
 			-- empty list or `Void'
 		do
-			add_item_to_folder (a_class_name, a_path, False)
+			add_item_to_folder (a_class_name, a_path, False, True, False)
 		end
 	
 	add_folder_to_folder (a_folder_name: STRING; a_path: ARRAYED_LIST [STRING]) is
@@ -288,10 +341,10 @@ feature -- Element change
 			-- If `a_item' is in the root, `a_path' can be set to an 
 			-- empty list or `Void'
 		do
-			add_item_to_folder (a_folder_name, a_path, True)
+			add_item_to_folder (a_folder_name, a_path, True, False, False)
 		end
 	
-	remove_class, remove_folder (a_item_name: STRING) is
+	remove_feature, remove_class, remove_folder (a_item_name: STRING) is
 			-- Remove the class/folder named `a_item_name' into this folder if it
 			-- exists.
 		local
@@ -324,41 +377,71 @@ feature -- Element change
 
 feature {EB_FAVORITES_ITEM_LIST} -- Observer pattern
 
-	on_item_added (an_item: EB_FAVORITES_ITEM; a_folder_list: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_added (an_item: EB_FAVORITES_ITEM; a_item_list: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
 			-- Notify the root parent of a change
 		require
-			valig_args: an_item /= Void and a_folder_list /= Void
+			valig_args: an_item /= Void and a_item_list /= Void
 		local
-			a_folder: EB_FAVORITES_FOLDER
+			l_item: EB_FAVORITES_FOLDER
 		do
 			if not in_operation then
-				a_folder ?= Current
-				if a_folder /= Void then
-					a_folder_list.put_front (a_folder)
-					parent.on_item_added (an_item, a_folder_list)
+				l_item ?= Current
+				if l_item /= Void then
+					a_item_list.put_front (l_item)
+					parent.on_item_added (an_item, a_item_list)
 				end
 			end
 		end
 
-	on_item_removed (an_item: EB_FAVORITES_ITEM; a_folder_list: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_removed (an_item: EB_FAVORITES_ITEM; a_item_list: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
 			-- Notify the root parent of a change
 		require
-			valig_args: an_item /= Void and a_folder_list /= Void
+			valig_args: an_item /= Void and a_item_list /= Void
 		local
-			a_folder: EB_FAVORITES_FOLDER
+			a_item: EB_FAVORITES_FOLDER
 		do
 			if not in_operation then
-				a_folder ?= Current
-				if a_folder /= Void then
-					a_folder_list.put_front (a_folder)
-					parent.on_item_removed (an_item, a_folder_list)
+				a_item ?= Current
+				if a_item /= Void then
+					a_item_list.put_front (a_item)
+					parent.on_item_removed (an_item, a_item_list)
 				end
 			end
 		end
 
+feature -- Query
+
+	contains_name (a_name: STRING): BOOLEAN is
+			-- Does Current contains an item with name `a_name'.
+			-- The name comparison is not case-sensitive.
+		do
+			Result := favorite_by_name (a_name) /= Void
+		end
+
+	favorite_by_name (a_name: STRING): EB_FAVORITES_ITEM is
+			-- Favorite item for name `a_name'.
+		local
+			item_name: STRING
+			curr_name: STRING
+		do
+			curr_name := a_name.as_lower
+
+			from
+				start
+			until
+				after or Result /= Void
+			loop
+				item_name := item.name.as_lower
+				if item_name.is_equal (curr_name) then
+					Result := item
+				end
+				forth
+			end
+		end
+		
 feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 
-	add_item_to_folder (a_item_name: STRING; a_path: ARRAYED_LIST [STRING]; is_folder: BOOLEAN) is
+	add_item_to_folder (a_item_name: STRING; a_path: ARRAYED_LIST [STRING]; is_folder, is_class, is_feature: BOOLEAN) is
 			-- Add the item named `item_name' to this favorites if no
 			-- item with the same name is already present.
 			-- The item is a folder is `is_folder' is set, a class otherwise.
@@ -373,7 +456,7 @@ feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 			curr_folder_name: STRING
 		do
 			if a_path = Void or else a_path.is_empty then
-				add_item (a_item_name, is_folder)
+				add_item (a_item_name, is_folder, is_class, is_feature)
 			else
 				new_path := a_path.twin
 				new_path.start
@@ -393,16 +476,17 @@ feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 				end
 					-- Recurse
 				if found then
-					curr_folder_item.add_item_to_folder (a_item_name, new_path, is_folder)
+					curr_folder_item.add_item_to_folder (a_item_name, new_path, is_folder, is_class, is_feature)
 				end
 			end
 		end
 	
-	add_item (a_name: STRING; is_folder: BOOLEAN) is
+	add_item (a_name: STRING; is_folder, is_class, is_feature: BOOLEAN) is
 			-- Add a new item to the class. A favorites class if
 			-- `is_folder' is False, a new folder is `is_folder' is
 			-- set to True.
 		local
+			l_class_item: EB_FAVORITES_CLASS
 			added_item: EB_FAVORITES_ITEM
 			added_name: STRING
 		do
@@ -410,35 +494,22 @@ feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 			if not contains_name (a_name) then
 				if is_folder then
 					create {EB_FAVORITES_FOLDER} added_item.make (a_name, Current)
-				else
+				elseif is_class then
 					added_name := a_name.as_upper
-
 					create {EB_FAVORITES_CLASS} added_item.make (added_name, Current)
+				elseif is_feature then
+					l_class_item ?= Current
+					if l_class_item.is_class then
+						added_name := a_name.as_lower
+						if l_class_item.associated_class_c.feature_named (added_name) /= Void then
+							create {EB_FAVORITES_FEATURE} added_item.make_with_class_c (added_name, l_class_item.associated_class_c, l_class_item)							
+						end
+					end				
 				end
-
 					-- Add the item and send the `added' notification to observers.
-				extend (added_item)
-			end
-		end
-
-	contains_name (a_name: STRING): BOOLEAN is
-			-- Does Current contains an item with name `a_name'.
-			-- The name comparison is not case-sensitive.
-		local
-			item_name: STRING
-			curr_name: STRING
-		do
-			curr_name := a_name.as_lower
-
-			from
-				start
-			until
-				after or Result
-			loop
-				item_name := item.name.as_lower
-
-				Result := item_name.is_equal (curr_name)
-				forth
+				if added_item /= Void then
+					extend (added_item)
+				end
 			end
 		end
 

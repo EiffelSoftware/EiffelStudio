@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status setting
 
-	go_to (a_favorite_class: EB_FAVORITES_CLASS) is
+	go_to_class (a_favorite_class: EB_FAVORITES_CLASS) is
 			-- `a_favorite_class' has been selected, the associated class
 			-- window should load the class corresponding to `a_favorite_class'.
 		local
@@ -48,6 +48,18 @@ feature -- Status setting
 				development_window.set_stone (class_stone)
 			end
 		end
+		
+	go_to_feature (a_favorite_feat: EB_FAVORITES_FEATURE) is
+			-- `a_favorite_feat' has been selected, the associated feature
+			-- window should load the class corresponding to `a_favorite_feat'.
+		local
+			feat_stone: FEATURE_STONE
+		do
+			feat_stone := a_favorite_feat.associated_feature_stone
+			if feat_stone /= Void then
+				development_window.set_stone (feat_stone)
+			end
+		end		
 
 feature -- Basic Operations
 

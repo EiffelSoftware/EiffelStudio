@@ -71,8 +71,6 @@ feature {NONE} -- Initialization Implementation
 			menu_item: EV_MENU_ITEM
 			an_item: EB_FAVORITES_ITEM
 			menu_sep: EV_MENU_SEPARATOR
-			a_folder_item: EB_FAVORITES_FOLDER
-			a_class_item: EB_FAVORITES_CLASS
 			a_favorites: like favorites
 		do
 			a_favorites := favorites
@@ -101,16 +99,7 @@ feature {NONE} -- Initialization Implementation
 				a_favorites.after
 			loop
 				an_item := a_favorites.item
-				if an_item.is_folder then
-					a_folder_item ?= an_item
-					menu_item := build_menu_folder (a_folder_item)
-				else
-					a_class_item ?= an_item
-					create menu_item
-					menu_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
-				end
-				menu_item.set_text (an_item.name)
-				menu_item.set_data (an_item)
+				menu_item := favorite_to_menu_item (an_item)
 				extend (menu_item)
 
 					-- prepare next iteration
@@ -123,8 +112,6 @@ feature {NONE} -- Initialization Implementation
 		local
 			menu_item: EV_MENU_ITEM
 			an_item: EB_FAVORITES_ITEM
-			a_folder_item: EB_FAVORITES_FOLDER
-			a_class_item: EB_FAVORITES_CLASS
 		do
 			create Result
 			from
@@ -133,21 +120,47 @@ feature {NONE} -- Initialization Implementation
 				a_favorites_folder.after
 			loop
 				an_item := a_favorites_folder.item
-				if an_item.is_folder then
-					a_folder_item ?= an_item
-					menu_item := build_menu_folder (a_folder_item)
-				else
-					a_class_item ?= an_item
-					create menu_item
-					menu_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
-				end
-				menu_item.set_text (an_item.name)
-				menu_item.set_data (an_item)
+				menu_item := favorite_to_menu_item (an_item)
 				Result.extend (menu_item)
 
 					-- prepare next iteration
 				a_favorites_folder.forth
 			end
+		end
+
+	favorite_to_menu_item (an_item: EB_FAVORITES_ITEM): EV_MENU is
+		local
+			l_menu_item: EV_MENU_ITEM
+			a_folder_item: EB_FAVORITES_FOLDER
+			a_class_item: EB_FAVORITES_CLASS
+			a_feat_item: EB_FAVORITES_FEATURE
+		do
+
+			if an_item.is_class then
+				a_class_item ?= an_item
+				create Result
+				Result.select_actions.extend (agent favorites_manager.go_to_class (a_class_item))
+				if not a_class_item.is_empty then
+					from
+						a_class_item.start
+					until
+						a_class_item.after
+					loop
+						l_menu_item := favorite_to_menu_item (a_class_item.item)
+						Result.extend (l_menu_item)
+						a_class_item.forth
+					end
+				end
+			elseif an_item.is_folder then
+				a_folder_item ?= an_item
+				Result := build_menu_folder (a_folder_item)				
+			elseif an_item.is_feature then
+				a_feat_item ?= an_item
+				create Result
+				Result.select_actions.extend (agent favorites_manager.go_to_feature (a_feat_item))					
+			end
+			Result.set_text (an_item.name)
+			Result.set_data (an_item)
 		end
 
 feature -- Observer pattern
@@ -160,17 +173,22 @@ feature -- Observer pattern
 		local
 			item_list: EV_MENU_ITEM_LIST
 			a_class_item: EB_FAVORITES_CLASS
+			a_feat_item: EB_FAVORITES_FEATURE
 			menu_item: EV_MENU_ITEM
 		do
 				-- Create a new entry for `a_item' in the menu.
 			item_list := get_menu_item_from_path (Current, a_path)
 			if item_list /= Void then
-				if a_item.is_folder then
+				if a_item.is_class then
 					create {EV_MENU} menu_item
-				else
-					create menu_item
 					a_class_item ?= a_item
-					menu_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
+					menu_item.select_actions.extend (agent favorites_manager.go_to_class (a_class_item))
+				elseif a_item.is_folder then
+					create {EV_MENU} menu_item					
+				elseif a_item.is_feature then
+					create menu_item
+					a_feat_item ?= a_item
+					menu_item.select_actions.extend (agent favorites_manager.go_to_feature (a_feat_item))					
 				end
 				menu_item.set_text (a_item.name)
 				menu_item.set_data (a_item)
@@ -193,7 +211,7 @@ feature -- Observer pattern
 			item_list := get_menu_item_from_path (Current, a_path)
 			if item_list /= Void then
 				menu_item_to_remove ?= item_list.retrieve_item_by_data (a_item, True)
-				if menu_item_to_remove /= void then
+				if menu_item_to_remove /= Void then
 					item_list.prune_all (menu_item_to_remove)
 				end
 			end

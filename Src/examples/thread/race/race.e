@@ -1,7 +1,7 @@
-class RACE
+class 
+	RACE
 inherit
 	THREAD_CONTROL
-	MEMORY
 
 creation
 	make

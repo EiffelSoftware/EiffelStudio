@@ -11,6 +11,25 @@ as big as you want provided your system ressource can manage it.
 race use threads and mutex but the Eiffelthreads library also provides
 condition variables, semaphore, policy scheduling, thread control mechanisms.
 
+Compilation:
+In most case, you just need to melt the code and run the example.
+
+Compilation without precompilation:
+By default, you will use a mt-precompilation (base-mt), but if you do not have
+this precompile mt-library (or another one containing it), you should first 
+precompile the base library in multihreaded mode and once it is done, 
+compile the  race example with it. This way, you will be able to reuse the
+base-mt library for other multithreaded applications. Note that the base-mt
+library is located in the $EIFFEL4/precomp/spec/$PLATFORM/base-mt directory
+but this name could be mt-base or mtbase depending on the deliveries. In this 
+case, just replace the name in the Ace.ace file at the line calling the 
+precompiled library `precompiled(...)'.
+
+You can also remove the line calling the precompiled library and run the
+Eiffel compilation but this is likely to be very long since you will compile
+all the base and thread libraries.
+
+
 Compatibility with Eiffel 4.1:
 To compile this example with ISE Eiffel 4.1, you need to modify the Eiffel
 code: the PROXY class was expanded in Eiffel 4.1, then you have to remove

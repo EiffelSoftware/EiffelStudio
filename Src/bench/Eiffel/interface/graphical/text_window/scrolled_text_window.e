@@ -50,7 +50,7 @@ inherit
 			widget as source
 		redefine
 			clear_window, display, 
-			update_before_transport, initial_x, initial_y,
+			update_before_transport, initial_coord,
 			update_after_transport, set_font_to_default
 		end;
 	SHARED_APPLICATION_EXECUTION

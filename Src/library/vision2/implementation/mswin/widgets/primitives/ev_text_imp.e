@@ -12,6 +12,9 @@ inherit
 	EV_TEXT_AREA_I
 		
 	EV_TEXT_COMPONENT_IMP
+		undefine
+			on_key_down
+		end
 
 	WEL_MULTIPLE_LINE_EDIT
 		rename
@@ -40,7 +43,8 @@ inherit
 			wel_background_color,
 			wel_foreground_color
 		redefine
-			default_style
+			default_style,
+			default_ex_style
 		end
 
 creation
@@ -71,9 +75,31 @@ feature {NONE} -- Implementation
  
 	default_style: INTEGER is
 			-- Default style used to create the control
-		once
+		do
 			Result := {WEL_MULTIPLE_LINE_EDIT} Precursor
 						+ Es_wantreturn
+		end
+
+	default_ex_style: INTEGER is
+			-- Default style used to create the control
+		do
+			Result := Ws_ex_clientedge
+		end
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
 
 end -- class EV_TEXT_AREA_IMP

@@ -8,12 +8,15 @@ indexing
 	
 class
 	EV_TEXT_FIELD_IMP
-	
+
 inherit
 	EV_TEXT_FIELD_I
-	
+
 	EV_TEXT_COMPONENT_IMP
-	
+		redefine
+			on_key_down
+		end
+
 	EV_BAR_ITEM_IMP
 
 	WEL_SINGLE_LINE_EDIT
@@ -43,10 +46,9 @@ inherit
 			wel_background_color,
 			wel_foreground_color
 		redefine
-			on_key_down
+			on_key_down,
+			default_style
 		end
-
-	WEL_VK_CONSTANTS
 
 creation
 	make,
@@ -69,7 +71,7 @@ feature -- Initialization
 			check
 				par_imp /= Void
 			end
-			wel_make (par_imp, txt, 0, 0, 0, 0, 0)
+			wel_make (par_imp, txt, 0, 0, 0, 0, 1)
 		end
 
 feature -- Event - command association
@@ -88,12 +90,37 @@ feature {NONE} -- Implementation
 			-- We check if the enter key is pressed)
 			-- 13 is the number of the return key.
 		do
+			{EV_TEXT_COMPONENT_IMP} Precursor (virtual_key, key_data)
 			if virtual_key = Vk_return then
 				execute_command (Cmd_activate, Void)
 				set_caret_position (0)
-				disable_default_processing
 			end
 		end	
+
+	default_style: INTEGER is
+			-- We specified the Es_autovscroll style otherwise
+			-- the system keep on beeping when we press the
+			-- return key.
+		do
+			Result := Ws_visible + Ws_child + Ws_group 
+				+ Ws_tabstop + Ws_border + Es_left + Es_autohscroll
+		end
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+		end
 
 end -- class EV_TEXT_FIELD_IMP
 

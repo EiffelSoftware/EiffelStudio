@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			-- notify the parent.
 		do
 			{EV_PRIMITIVE_IMP} Precursor (par)
-			set_minimum_height (wel_font.log_font.height + 6)
+			set_minimum_height (wel_font.log_font.height + 7)
 			set_minimum_width (30)
 		end
 

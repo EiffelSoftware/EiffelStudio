@@ -30,7 +30,22 @@ inherit
 			{NONE} all
 		end
 
+	WEL_BIT_OPERATIONS
+		export
+			{NONE} all
+		end
+
+	WEL_SB_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_WM_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_WS_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -58,6 +73,12 @@ inherit
 	WEL_ID_CONSTANTS
 		export
 			{NONE} all
+		end
+
+	WEL_HWND_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_hwnd_constant
 		end
 
 feature -- Access
@@ -120,7 +141,7 @@ feature -- Status report
 		end
 
 	has_focus: BOOLEAN is
-			-- Does this window has the focus?
+			-- Does this window have the focus?
 		require
 			exists: exists
 		do
@@ -128,11 +149,27 @@ feature -- Status report
 		end
 
 	has_capture: BOOLEAN is
-			-- Does this window has the capture?
+			-- Does this window have the capture?
 		require
 			exists: exists
 		do
 			Result := captured_window = Current
+		end
+
+	has_vertical_scroll_bar: BOOLEAN is
+			-- Does this window have a vertical scroll bar?
+		require
+			exists: exists
+		do
+			Result := flag_set (style, Ws_vscroll)
+		end
+
+	has_horizontal_scroll_bar: BOOLEAN is
+			-- Does this window have a horizontal scroll bar?
+		require
+			exists: exists
+		do
+			Result := flag_set (style, Ws_hscroll)
 		end
 
 	x: INTEGER is
@@ -188,7 +225,8 @@ feature -- Status report
 		do
 			Result := window_rect.width
 		ensure
-			Result = window_rect.width
+			result_small_enough: Result <= maximal_width
+			result_large_enough: Result >= minimal_width
 		end
 
 	height: INTEGER is
@@ -198,7 +236,8 @@ feature -- Status report
 		do
 			Result := window_rect.height
 		ensure
-			Result = window_rect.height
+			result_small_enough: Result <= maximal_height
+			result_large_enough: Result >= minimal_height
 		end
 
 	absolute_x: INTEGER is
@@ -224,41 +263,35 @@ feature -- Status report
 	minimal_width: INTEGER is
 			-- Minimal width allowed for the window
 			-- Zero by default.
-		require
-			exists: exists
 		do
 		ensure
 			positive_result: Result >= 0
+			result_small_enough: Result <= maximal_width
 		end
 
 	maximal_width: INTEGER is
 			-- Maximal width allowed for the window
-		require
-			exists: exists
 		do
 			Result := screen_width
 		ensure
-			positive_result: Result >= 0
+			result_large_enough: Result >= minimal_width
 		end
 
 	minimal_height: INTEGER is
 			-- Minimal height allowed for the window
 			-- Zero by default.
-		require
-			exists: exists
 		do
 		ensure
 			positive_result: Result >= 0
+			result_small_enough: Result <= maximal_height
 		end
 
 	maximal_height: INTEGER is
 			-- Maximal height allowed for the window
-		require
-			exists: exists
 		do
 			Result := screen_height
 		ensure
-			positive_result: Result >= 0
+			result_large_enough: Result >= minimal_height
 		end
 
 	client_rect: WEL_RECT is
@@ -357,7 +390,8 @@ feature -- Status setting
 			-- Show the window
 		require
 			exists: exists
-			parent_shown: parent /= Void implies parent.exists and parent.shown
+			parent_shown: parent /= Void implies parent.exists and
+				parent.shown
 		do
 			cwin_show_window (item, Sw_show)
 		ensure
@@ -437,6 +471,16 @@ feature -- Status setting
 			not_has_capture: not has_capture
 		end
 
+	set_style (a_style: INTEGER) is
+			-- Set `style' with `a_style'.
+		require
+			exists: exists
+		do
+			cwin_set_window_long (item, Gwl_style, a_style)
+		ensure
+			style_set: style = a_style
+		end
+
 feature -- Element change
 
 	set_text (a_text: STRING) is
@@ -469,6 +513,7 @@ feature -- Element change
 			-- Set `x' with `a_x'
 		require
 			exists: exists
+			not_minimized: not minimized
 		do
 			move (a_x, y)
 		ensure
@@ -479,6 +524,7 @@ feature -- Element change
 			-- Set `y' with `a_y'
 		require
 			exists: exists
+			not_minimized: not minimized
 		do
 			move (x, a_y)
 		ensure
@@ -491,6 +537,7 @@ feature -- Element change
 			exists: exists
 			a_width_small_enough: a_width <= maximal_width
 			a_width_large_enough: a_width >= minimal_width
+			not_minimized: not minimized
 		do
 			resize (a_width, height)
 		ensure
@@ -503,6 +550,7 @@ feature -- Element change
 			exists: exists
 			a_height_small_enough: a_height <= maximal_height
 			a_height_large_enough: a_height >= minimal_height
+			not_minimized: not minimized
 		do
 			resize (width, a_height)
 		ensure
@@ -537,9 +585,11 @@ feature -- Basic operations
 
 	show_with_option (cmd_show: INTEGER) is
 			-- Set the window's visibility with `cmd_show'.
-			-- See class WEL_SW_CONSTANTS for `cmd_show' value
+			-- See class WEL_SW_CONSTANTS for `cmd_show' value.
 		require
 			exists: exists
+			parent_shown: parent /= Void implies parent.exists and
+				parent.shown
 		do
 			cwin_show_window (item, cmd_show)
 		end
@@ -554,23 +604,26 @@ feature -- Basic operations
 			a_width_large_enough: a_width >= minimal_width
 			a_height_small_enough: a_height <= maximal_height
 			a_height_large_enough: a_height >= minimal_height
+			not_minimized: not minimized
 		do
 			cwin_move_window (item, a_x, a_y,
 				a_width, a_height, repaint)
 		ensure
-			new_x: x = a_x
-			new_y: y = a_y
-			new_width: width = a_width
-			new_height: height = a_height
+			x_set: x = a_x
+			y_set: y = a_y
+			width_set: width = a_width
+			height_set: height = a_height
 		end
 
 	move (a_x, a_y: INTEGER) is
 			-- Move the window to `a_x', `a_y'.
 		require
 			exists: exists
+			not_minimized: not minimized
 		do
 			cwin_set_window_pos (item, default_pointer,
-				a_x, a_y, 0, 0, Swp_nosize + Swp_nozorder)
+				a_x, a_y, 0, 0,
+				Swp_nosize + Swp_nozorder + Swp_noactivate)
 		ensure
 			x_set: x = a_x
 			y_set: y = a_y
@@ -584,13 +637,86 @@ feature -- Basic operations
 			a_width_large_enough: a_width >= minimal_width
 			a_height_small_enough: a_height <= maximal_height
 			a_height_large_enough: a_height >= minimal_height
+			not_minimized: not minimized
 		do
 			cwin_set_window_pos (item, default_pointer,
 				0, 0, a_width, a_height,
-				Swp_nomove + Swp_nozorder)
+				Swp_nomove + Swp_nozorder + Swp_noactivate)
 		ensure
-			new_width: width = a_width
-			new_height: height = a_height
+			width_set: width = a_width
+			height_set: height = a_height
+		end
+
+	set_z_order (z_order: INTEGER) is
+			-- Set the z-order of the window.
+			-- See class WEL_HWND_CONSTANTS for `z_order' values.
+		require
+			exists: exists
+			valid_hwnd_constant: valid_hwnd_constant (z_order)
+		do
+			cwin_set_window_pos (item,
+				cwel_integer_to_pointer (z_order),
+				0, 0, 0, 0, Swp_nosize + Swp_nomove +
+				Swp_noactivate)
+		end
+
+	insert_after (a_window: WEL_WINDOW) is
+			-- Insert the current window after `a_window'.
+		require
+			exists: exists
+			a_window_not_void: a_window /= Void
+			a_window_exists: a_window.exists
+		do
+			cwin_set_window_pos (item, a_window.item, 0, 0, 0, 0,
+				Swp_nosize + Swp_nomove + Swp_noactivate)
+		end
+
+	show_scroll_bars is
+			-- Show the horizontal and vertical scroll bars.
+		require
+			exists: exists
+		do
+			cwin_show_scroll_bar (item, Sb_both, True)
+		end
+
+	show_vertical_scroll_bar is
+			-- Show the vertical scroll bar.
+		require
+			exists: exists
+		do
+			cwin_show_scroll_bar (item, Sb_vert, True)
+		end
+
+	show_horizontal_scroll_bar is
+			-- Show the horizontal scroll bar.
+		require
+			exists: exists
+		do
+			cwin_show_scroll_bar (item, Sb_horz, True)
+		end
+
+	hide_scroll_bars is
+			-- Hide the horizontal and vertical scroll bars.
+		require
+			exists: exists
+		do
+			cwin_show_scroll_bar (item, Sb_both, False)
+		end
+
+	hide_vertical_scroll_bar is
+			-- Hide the vertical scroll bar.
+		require
+			exists: exists
+		do
+			cwin_show_scroll_bar (item, Sb_vert, False)
+		end
+
+	hide_horizontal_scroll_bar is
+			-- Hide the horizontal scroll bar.
+		require
+			exists: exists
+		do
+			cwin_show_scroll_bar (item, Sb_horz, False)
 		end
 
 	message_box (a_text, a_title: STRING; a_style: INTEGER): INTEGER is
@@ -644,7 +770,7 @@ feature -- Basic operations
 		end
 
 	error_message_box (a_text: STRING) is
-			-- Show an error message box  with `Current' as
+			-- Show an error message box with `Current' as
 			-- parent with `a_text' and error as title.
 		require
 			exists: exists
@@ -655,6 +781,14 @@ feature -- Basic operations
 			a1 := a_text.to_c
 			cwin_message_box (item, $a1, default_pointer,
 				Mb_ok + Mb_iconhand)
+		end
+
+	update is
+			-- Update the client area by sending a Wm_paint message.
+		require
+			exists: exists
+		do
+			cwin_update_window (item)
 		end
 
 	invalidate is
@@ -727,23 +861,48 @@ feature -- Basic operations
 			cwin_kill_timer (item, timer_id)
 		end
 
-feature {NONE} -- Messages
-
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
-			-- Wm_paint message.
-			-- May be redefined to paint something on
-			-- the `paint_dc'. `invalid_rect' defines
-			-- the invalid rectangle of the client area that
-			-- needs to be repainted.
+	scroll (a_x, a_y: INTEGER) is
+			-- Scroll the contents of the window's client area.
+			-- `a_x' and `a_y' specify the amount of horizontal
+			-- and vertical scrolling.
 		require
-			paint_dc_not_void: paint_dc /= Void
-			invalid_rect_not_void: invalid_rect /= Void
+			exists: exists
 		do
+			cwin_scroll_window (item, a_x, a_y,
+				default_pointer, default_pointer)
 		end
+
+	win_help (help_file: STRING; command, data: INTEGER) is
+			-- Start the Windows Help program with `help_file'.
+			-- `command' specifies the type of help requested. See
+			-- class WEL_HELP_CONSTANTS for `command' values.
+		require
+			exists: exists
+			help_file_not_void: help_file /= Void
+		local
+			a: ANY
+		do
+			a := help_file.to_c
+			cwin_win_help (item, $a, command, data)
+		end
+
+feature {NONE} -- Messages
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
+		require
+			exists: exists
+		do
+		end
+
+	on_move (x_pos, y_pos: INTEGER) is
+			-- Wm_move message.
+			-- This message is sent after a window has been moved.
+			-- `x_pos' specifies the x-coordinate of the upper-left
+			-- corner of the client area of the window.
+			-- `y_pos' specifies the y-coordinate of the upper-left
+			-- corner of the client area of the window.
 		require
 			exists: exists
 		do
@@ -973,10 +1132,8 @@ feature {WEL_DISPATCHER}
 			--| Wm_* are not real constants.
 			if msg = Wm_mousemove then
 				on_mouse_move (wparam,
-					cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
-			elseif msg = Wm_paint then
-				on_wm_paint
+					c_mouse_message_x (lparam),
+					c_mouse_message_y (lparam))
 			elseif msg = Wm_setcursor then
 				if on_set_cursor (cwin_lo_word (lparam)) then
 					Result := -1
@@ -985,30 +1142,33 @@ feature {WEL_DISPATCHER}
 				on_size (wparam,
 					cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
+			elseif msg = Wm_move then
+				on_move (cwin_lo_word (lparam),
+					cwin_hi_word (lparam))
 			elseif msg = Wm_lbuttondown then
 				on_left_button_down (wparam,
-					cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
+					c_mouse_message_x (lparam),
+					c_mouse_message_y (lparam))
 			elseif msg = Wm_lbuttonup then
 				on_left_button_up (wparam,
-					cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
+					c_mouse_message_x (lparam),
+					c_mouse_message_y (lparam))
 			elseif msg = Wm_lbuttondblclk then
 				on_left_button_double_click (wparam,
-					cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
+					c_mouse_message_x (lparam),
+					c_mouse_message_y (lparam))
 			elseif msg = Wm_rbuttondown then
 				on_right_button_down (wparam,
-					cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
+					c_mouse_message_x (lparam),
+					c_mouse_message_y (lparam))
 			elseif msg = Wm_rbuttonup then
 				on_right_button_up (wparam,
-					cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
+					c_mouse_message_x (lparam),
+					c_mouse_message_y (lparam))
 			elseif msg = Wm_rbuttondblclk then
 				on_right_button_double_click (wparam,
-					cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
+					c_mouse_message_x (lparam),
+					c_mouse_message_y (lparam))
 			elseif msg = Wm_timer then
 				on_timer (wparam)
 			elseif msg = wm_setfocus then
@@ -1050,25 +1210,6 @@ feature {WEL_DISPATCHER}
 		ensure
 			destroyed: not exists
 			unregistered: not registered (Current)
-		end
-
-	on_wm_paint is
-			-- Wm_paint message.
-			-- A WEL_DC and WEL_PAINT_STRUCT are created and
-			-- passed to the `on_paint' routine.
-			-- To be more efficient when the windows does not
-			-- need to paint something, this routine can be
-			-- redefined to do nothing (eg. The object creation are
-			-- useless).
-		require
-			exists: exists
-		local
-			paint_dc: WEL_PAINT_DC
-		do
-			!! paint_dc.make (Current)
-			paint_dc.get
-			on_paint (paint_dc, paint_dc.paint_struct.rect_paint)
-			paint_dc.release
 		end
 
 feature {NONE} -- Removal
@@ -1265,6 +1406,14 @@ feature {NONE} -- Externals
 			"DefWindowProc"
 		end
 
+	cwin_update_window (hwnd: POINTER) is
+			-- SDK UpdateWindow
+		external
+			"C [macro <wel.h>] (HWND)"
+		alias
+			"UpdateWindow"
+		end
+
 	cwin_invalidate_rect (hwnd, a_rect: POINTER;
 			erase_background: BOOLEAN) is
 			-- SDK InvalidateRect
@@ -1360,6 +1509,42 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HWND, WINDOWPLACEMENT *)"
 		alias
 			"SetWindowPlacement"
+		end
+
+	cwin_show_scroll_bar (hwnd: POINTER; bar_flag: INTEGER;
+			show_flag: BOOLEAN) is
+			-- SDK ShowScrollBar
+		external
+			"C [macro <wel.h>] (HWND, int, BOOL)"
+		alias
+			"ShowScrollBar"
+		end
+
+	cwin_scroll_window (hwnd: POINTER; a_x, a_y: INTEGER;
+			scroll_rect, clip_rect: POINTER) is
+			-- SDK ScrollWindow
+		external
+			"C [macro <wel.h>] (HWND, int, int, RECT *, RECT *)"
+		alias
+			"ScrollWindow"
+		end
+
+	cwin_win_help (hwnd, file: POINTER; command, data: INTEGER) is
+			-- SDK WinHelp
+		external
+			"C [macro <wel.h>] (HWND, LPCSTR, UINT, DWORD)"
+		alias
+			"WinHelp"
+		end
+
+	c_mouse_message_x (lparam: INTEGER): INTEGER is
+		external
+			"C [macro <wel.h>]"
+		end
+
+	c_mouse_message_y (lparam: INTEGER): INTEGER is
+		external
+			"C [macro <wel.h>]"
 		end
 
 	cwel_window_procedure_address: POINTER is

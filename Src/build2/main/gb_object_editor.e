@@ -409,8 +409,6 @@ feature {NONE} -- Implementation
 	update_visual_representations_on_name_change is
 			-- Update visual representations of `object' to reflect new name
 			-- in `name_field'.
-		local
-			current_caret_position: INTEGER
 		do
 			if valid_class_name (name_field.text) or name_field.text.is_empty  then
 				object.set_edited_name (name_field.text)

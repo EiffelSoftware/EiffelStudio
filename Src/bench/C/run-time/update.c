@@ -65,6 +65,10 @@ char ignore_updt;
 	char *meltpath;							/* directory of .UPDT */
 	char *filename;							/* .UPDT complet path */
 	long pattern_id;
+#ifdef __WATCOMC__
+	char *inipath;
+	char buf[128];
+#endif
 
 
 	if (ignore_updt != (char) 0) {

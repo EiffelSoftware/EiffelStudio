@@ -8,6 +8,9 @@ class
 	GB_COMMAND_HANDLER
 	
 inherit
+	
+	ANY
+	
 	GB_ACCESSIBLE_XML_HANDLER
 	
 feature -- Access

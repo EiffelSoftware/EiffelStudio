@@ -105,7 +105,7 @@ feature -- Status setting
 				timeout := default_timeout
 			end
 		ensure
-			timeout_set: timeout = n
+			timeout_set: timeout = n or timeout = default_timeout
 		end
 
 feature {NONE} -- Constants

@@ -105,9 +105,6 @@ feature -- Access: IL code generation
 	msil_version: STRING
 			-- Version of current assembly.
 
-	msil_full_name: STRING
-			-- Full name of current assembly.
-
 	msil_assembly_compatibility: STRING
 			-- Compatibility of current assembly with other assemblies.
 
@@ -237,9 +234,6 @@ feature -- Update
 
 	set_msil_culture (cult: STRING) is
 			-- Set `msil_culture' with `cult'.
-		require
-			cult_not_void: cult /= Void
-			cult_not_empty: not cult.is_empty
 		do
 			msil_culture := cult
 		ensure
@@ -254,17 +248,6 @@ feature -- Update
 			msil_version := vers
 		ensure
 			msil_version_set: msil_version = vers
-		end
-
-	set_msil_full_name (name: STRING) is
-			-- Set `msil_full_name' with `name'.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-		do
-			msil_full_name := name
-		ensure
-			msil_full_name_set: msil_full_name = name
 		end
 
 	set_msil_assembly_compatibility (comp: STRING) is
@@ -384,9 +367,6 @@ feature -- Update
 	set_line_generation (b: BOOLEAN) is
 			-- Set `line_generation' to `b'
 		do
-			if line_generation /= b then
-				set_freeze
-			end
 			line_generation := b
 		ensure
 			line_generation_set : line_generation = b

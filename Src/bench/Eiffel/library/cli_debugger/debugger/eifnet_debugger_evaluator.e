@@ -35,11 +35,13 @@ create
 feature {NONE} -- Initialization
 
 	make (dbg: EIFNET_DEBUGGER) is
+			-- Initializing Current with `dbg'
 		do
 			eifnet_debugger := dbg
 		end
 
 	eifnet_debugger: EIFNET_DEBUGGER
+			-- Bridge to the dotnet debugger
 	
 feature -- Status
 	
@@ -105,10 +107,8 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 
 	new_i4_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with i4
-		require
 		local
 			l_gen_obj: ICOR_DEBUG_GENERIC_VALUE
-			
 		do
 			prepare_evaluation (a_frame)
 			Result := last_icor_debug_eval.create_value (Element_type_i4 , Void)
@@ -118,17 +118,14 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 
 				l_gen_obj.set_value ($a_val)
 				l_gen_obj.set_associated_frame (a_frame)				
-				Result := l_gen_obj
 			end
 			end_evaluation
 		end
 		
 	new_boolean_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with Boolean
-		require
 		local
 			l_gen_obj: ICOR_DEBUG_GENERIC_VALUE
-			
 		do
 			prepare_evaluation (a_frame)
 			Result := last_icor_debug_eval.create_value (element_type_boolean , Void)
@@ -138,17 +135,14 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 
 				l_gen_obj.set_value ($a_val)
 				l_gen_obj.set_associated_frame (a_frame)				
-				Result := l_gen_obj
 			end
 			end_evaluation
 		end
 
 	new_char_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: CHARACTER): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with Character
-		require
 		local
 			l_gen_obj: ICOR_DEBUG_GENERIC_VALUE
-			
 		do
 			prepare_evaluation (a_frame)
 			Result := last_icor_debug_eval.create_value (element_type_char , Void)
@@ -158,14 +152,12 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 
 				l_gen_obj.set_value ($a_val)
 				l_gen_obj.set_associated_frame (a_frame)				
-				Result := l_gen_obj
 			end
 			end_evaluation
 		end	
 		
 	new_void_evaluation (a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with Void
-		require
 		do
 			prepare_evaluation (a_frame)
 			Result := last_icor_debug_eval.create_value (element_type_class, Void)
@@ -177,14 +169,12 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 
 	new_eiffel_string_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: STRING): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with String
-		require
 		local
 			l_str_icdv: ICOR_DEBUG_VALUE
 		do
 			l_str_icdv := new_string_evaluation (a_frame, a_val)
 			Result := icdv_string_from_icdv_system_string (a_frame, l_str_icdv)
-		end
-		
+		end	
 		
 	new_i4_ref_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with i4 _REF
@@ -207,9 +197,10 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			Result := icdv_character_ref_from_icdv_character (a_frame, Result)
 		end			
 		
-feature {NONE} -- Class construction facilities
+feature {DBG_EVALUATOR} -- Class construction facilities
 
 	icdv_string_from_icdv_system_string (a_frame: ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+			-- ICorDebugValue for STRING object created from SystemString `a_sys_string'
 		do
 			prepare_evaluation (a_frame)
 			last_icor_debug_eval.new_object_no_constructor (eiffel_string_icd_class)
@@ -220,6 +211,7 @@ feature {NONE} -- Class construction facilities
 		end	
 		
 	icdv_integer_ref_from_icdv_integer (a_frame: ICOR_DEBUG_FRAME; a_icdv_integer: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+			-- ICorDebugValue for INTEGER_REF object created from SystemInteger `a_icdv_integer'
 		do
 			prepare_evaluation (a_frame)
 			last_icor_debug_eval.new_object_no_constructor (integer_32_ref_icd_class)
@@ -229,6 +221,7 @@ feature {NONE} -- Class construction facilities
 		end	
 		
 	icdv_boolean_ref_from_icdv_boolean (a_frame: ICOR_DEBUG_FRAME; a_icdv_boolean: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+			-- ICorDebugValue for BOOLEAN_REF object created from SystemBoolean `a_icdv_boolean'
 		do
 			prepare_evaluation (a_frame)
 			last_icor_debug_eval.new_object_no_constructor (boolean_ref_icd_class)
@@ -238,6 +231,7 @@ feature {NONE} -- Class construction facilities
 		end		
 
 	icdv_character_ref_from_icdv_character (a_frame: ICOR_DEBUG_FRAME; a_icdv_character: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+			-- ICorDebugValue for CHARACTER_REF object created from SystemChar `a_icdv_character'
 		do
 			prepare_evaluation (a_frame)
 			last_icor_debug_eval.new_object_no_constructor (character_ref_icd_class)
@@ -246,19 +240,26 @@ feature {NONE} -- Class construction facilities
 			Result.set_associated_frame (a_frame)
 		end				
 
+feature {NONE} -- Implementation : ICorDebugClass
+
 	integer_32_ref_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for INTEGER_REF
 		once
 			Result := eifnet_debugger.integer_32_ref_icd_class
 		ensure
 			Result /= Void
 		end
+
 	boolean_ref_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for BOOLEAN_REF
 		once
 			Result := eifnet_debugger.boolean_ref_icd_class
 		ensure
 			Result /= Void
 		end
+
 	character_ref_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for CHARACTER_REF
 		once
 			Result := eifnet_debugger.character_ref_icd_class
 		ensure
@@ -266,6 +267,7 @@ feature {NONE} -- Class construction facilities
 		end
 						
 	eiffel_string_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for STRING
 		once
 			Result := eifnet_debugger.eiffel_string_icd_class
 		ensure
@@ -273,6 +275,7 @@ feature {NONE} -- Class construction facilities
 		end
 		
 	integer_32_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for INTEGER_32_REF.set_item (..)
 		once
 			Result := eifnet_debugger.integer_32_ref_set_item_method
 		ensure
@@ -280,6 +283,7 @@ feature {NONE} -- Class construction facilities
 		end		
 		
 	boolean_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for BOOLEAN_REF.set_item (..)
 		once
 			Result := eifnet_debugger.boolean_ref_set_item_method
 		ensure
@@ -287,6 +291,7 @@ feature {NONE} -- Class construction facilities
 		end	
 				
 	character_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for CHARACTER_REF.set_item (..)
 		once
 			Result := eifnet_debugger.character_ref_set_item_method
 		ensure
@@ -294,22 +299,18 @@ feature {NONE} -- Class construction facilities
 		end	
 		
 	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for STRING.make_from_cil (..)
 		once
 			Result := eifnet_debugger.eiffel_string_make_from_cil_constructor
 		ensure
 			Result /= Void
 		end		
 
---	eiffel_string_ctor: ICOR_DEBUG_FUNCTION is
---		once
---			Result := eifnet_debugger.eiffel_string_ctor
---		ensure
---			Result /= Void
---		end
-
 feature {NONE} -- Backup state
 
 	saved_last_managed_callback: INTEGER
+			-- Last managed callback saved data 
+			-- try to impact the less possible other debugger functionalities
 	
 	save_state_info is
 			-- Save current debugger state information
@@ -326,10 +327,13 @@ feature {NONE} -- Backup state
 feature {NONE}
 
 	last_icor_debug_eval: ICOR_DEBUG_EVAL
+			-- Last ICorDebugEval object used for evalutation
+
 	last_app_status: APPLICATION_STATUS_DOTNET
+			-- Last APPLICATION_STATUS_DOTNET data
 
 	prepare_evaluation (a_frame: ICOR_DEBUG_FRAME) is
-		require
+			-- Prepare data for evaluation.
 		local
 			l_chain: ICOR_DEBUG_CHAIN
 			l_icd_thread: ICOR_DEBUG_THREAD
@@ -356,6 +360,9 @@ feature {NONE}
 		end
 
 	end_evaluation is
+			-- In case of direct evaluation, with no callback,
+			-- Complete the evaluation by cleaning temporary data
+			-- and restoring state
 		require
 			last_icor_debug_eval /= Void
 			last_app_status /= Void
@@ -371,6 +378,9 @@ feature {NONE}
 		end
 
 	complete_method_evaluation is
+			-- In case of method evaluation, requiring a callback,
+			-- Complete the evaluation by cleaning temporary data
+			-- and restoring state
 		require
 			last_icor_debug_eval /= Void
 			last_app_status /= Void
@@ -384,7 +394,7 @@ feature {NONE}
 
 			eifnet_debugger.do_continue
 				--| And we wait for all callback to be finished
-			eifnet_debugger.lock_and_wait_for_callback
+			eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_process)
 			eifnet_debugger.reset_data_changed
 			if 
 				eifnet_debugger.last_managed_callback_is_exception 
@@ -395,9 +405,6 @@ feature {NONE}
 					print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occured %N")
 				end
 				eifnet_debugger.do_clear_exception
---				Result := False
---			else
---				Result := True
 			end
 			l_status.set_is_evaluating (False)
 			eifnet_debugger.start_dbg_timer
@@ -405,6 +412,9 @@ feature {NONE}
 		end
 
 	complete_function_evaluation: ICOR_DEBUG_VALUE is
+			-- In case of function evaluation, requiring a callback and a result value,
+			-- Complete the evaluation by cleaning temporary data
+			-- and restoring state
 		require
 			last_icor_debug_eval /= Void
 			last_app_status /= Void
@@ -417,7 +427,7 @@ feature {NONE}
 
 			eifnet_debugger.do_continue
 				--| And we wait for all callback to be finished
-			eifnet_debugger.lock_and_wait_for_callback
+			eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_process)
 			eifnet_debugger.reset_data_changed
 			if 
 				eifnet_debugger.last_managed_callback_is_exception 
@@ -439,7 +449,8 @@ feature {NONE}
 		end
 
 	display_last_exception is
-			-- 
+			-- Display information related to Last Exception
+			-- debug purpose only
 		require
 			eifnet_debugger.last_managed_callback_is_exception 
 		local

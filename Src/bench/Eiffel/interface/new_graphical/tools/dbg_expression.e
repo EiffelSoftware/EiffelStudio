@@ -21,7 +21,6 @@ inherit
 
 create
 	make_with_class,
---	make_with_object,
 	make_for_context
 
 create {DBG_EXPRESSION}
@@ -388,6 +387,8 @@ feature {NONE} -- Implementation
 							 Syntax_checker.is_constant (feature_name) or
 							 is_equality_test or is_non_equality_test
 							) 
+--| FIXME: JFIAT : we need to reensure this assertion, but not this way
+--| 			   indeed, here we were lowering everything, including manifest strings
 --							and (feature_name = fn)
 						  )
 			valid_flags: (not syntax_error) implies (

@@ -552,6 +552,7 @@ feature {NONE} -- Implementation
 			l_body.append ("hr = RegisterTypeLib (ptl, ws_file_name, 0);%R%N%T%T")
 			l_body.append ("ptl->Release ();%R%N%T}%R%N%T")
 			l_body.append ("return hr;")
+			Result.set_body (l_body)
 		end
 
 	entries_count: STRING is "const int com_entries_count = sizeof (reg_entries)/sizeof (*reg_entries);"

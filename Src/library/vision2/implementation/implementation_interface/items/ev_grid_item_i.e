@@ -165,6 +165,12 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 	
 	internal_foreground_color: EV_COLOR
 		-- Background color used for `Current'
+		
+	redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
+			-- Redraw `Current'.
+		do
+			-- Nothing to do here as this is the dummy item.
+		end
 
 feature {NONE} -- Implementation
 

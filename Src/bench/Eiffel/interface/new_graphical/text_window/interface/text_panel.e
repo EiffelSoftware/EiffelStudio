@@ -24,7 +24,7 @@ inherit
 			on_text_loaded,
 			on_text_block_loaded
 		end
-
+		
 create
 	make
 
@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 
 			editor_area.expose_actions.extend (agent on_repaint)
 			editor_area.resize_actions.extend (agent on_size)
+			editor_area.mouse_wheel_actions.extend (agent on_mouse_wheel)
+			
 				
 				-- Create scrollbars
 
@@ -569,6 +571,27 @@ feature {NONE} -- Scroll bars Management
  		do
 			offset := scroll_pos
 			update_display
+		end
+		
+	on_mouse_wheel (delta: INTEGER) is
+			-- Mouse wheel has been moved `delta' units, adjust `Current' accordingly.
+		local
+			l_offset: INTEGER
+		do
+			if delta > 0 then
+				l_offset := (1).max (
+					first_line_displayed - scrolling_quantum * delta)
+			else
+				l_offset := (maximum_top_line_index).min (
+					first_line_displayed - scrolling_quantum * delta) 
+			end
+			set_first_line_displayed (l_offset, True)
+		end
+
+	scrolling_quantum: INTEGER is
+			-- Number of lines to scroll per mouse wheel scroll increment.
+		do
+			Result := 3
 		end
 
 feature {NONE} -- Display functions

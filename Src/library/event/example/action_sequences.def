@@ -6,6 +6,8 @@
 
 birthday: what to do on a birthday; age: INTEGER; name: STRING
 
+sweet_sixteen = birthday ( = 16,?): what to do on a 16th birthday
+
 pointer_button: for mouse click events;	x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: REAL; y_tilt: REAL; pressure: REAL
 
 left_click = pointer_button (?,?, = 1,-,-, > 0.5): for mouse left click events

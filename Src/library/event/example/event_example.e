@@ -22,7 +22,8 @@ feature -- Initialization
 
 	make is
 		do
-			create birthday_actions.make
+			create birthday_actions
+			create sweet_sixteen_actions.make (birthday_actions)
 			birthday_actions.extend (~send_card (?, ?, "Sam"))
 			birthday_actions.extend (~buy_gift (?, ?, "cigars", "Sam"))
 			birthday_actions.extend (~buy_gift (?, ?, "wine", "Sam"))
@@ -30,6 +31,10 @@ feature -- Initialization
 
 			create nirvana_actions.make ("nirvana", <<>>)
 			nirvana_actions.extend (~bliss_out)
+
+			sweet_sixteen_actions.extend (~buy_car (?, "Sam"))
+
+			birthday_actions.call ([16, "Alice"])
 
 			birthday_actions.call ([35, "Bertrand"])
 			birthday_actions.call ([36, "Bertrand"])
@@ -61,6 +66,8 @@ feature -- Initialization
 feature -- Event handlers
 
 	birthday_actions: BIRTHDAY_ACTION_SEQUENCE
+
+	sweet_sixteen_actions: SWEET_SIXTEEN_ACTION_SEQUENCE
 
 	nirvana_actions:  ACTION_SEQUENCE [TUPLE []]
 
@@ -99,6 +106,12 @@ feature -- Brown-nosing
 			else
 				increase_karma
 			end
+		end
+
+	buy_car (lucky, broke: STRING) is
+			-- Buy car for `lucky' from `broke'. 
+		do
+			print ("T-bird for "+lucky+" from "+broke+", vrrrrmmmm!%N")
 		end
 
 feature -- Virtue

@@ -617,7 +617,7 @@ feature -- Element change
 			spsubcopy ($other_area, $area, start0, end0, index0)
 		ensure
 			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),
-			--	 item (index_pos + i) = other.item (start_pos + i)
+			--	 item (index_pos + i) = old other.item (start_pos + i)
 		end
 
 	replace_substring (s: like Current; start_pos, end_pos: INTEGER) is
@@ -994,7 +994,8 @@ feature -- Element change
 			str_insert ($area, $s_area, count, s.count, i)
 			count := new_size
 		ensure
-			new_count: count = old count + s.count
+			inserted: is_equal (old substring (1, i - 1)
+				+ old clone (s) + old substring (i, count))
 		end
 
 	insert_character (c: CHARACTER; i: INTEGER) is

@@ -874,7 +874,9 @@ feature -- Class info
 			l_native_array ?= class_type
 			if l_native_array /= Void then
 				external_class_mapping.put (class_type.type, l_native_array.il_type_name)
-			elseif class_c.is_external then
+			elseif class_c.is_external and then not (class_c.is_basic and then class_c.actual_type.is_typed_pointer) then
+					-- We do not process TYPED_POINTER as it is not a real class type in .NET so
+					-- TYPED_POINTER doesn't really have a `full_il_type_name'.
 				l_type := class_type.type
 				if l_type.base_class.is_basic then
 					l_type := l_type.base_class.actual_type.type_i

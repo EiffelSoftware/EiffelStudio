@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			a_log_palette_not_void: a_log_palette /= Void
 		do
 			item := cwin_create_palette (a_log_palette.item)
+			gdi_make
 		end
 
 feature -- Access
@@ -31,7 +32,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			!! Result.make_by_color (cwin_palette_index (i))
+			create Result.make_by_color (cwin_palette_index (i))
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -32,6 +32,9 @@ feature {NONE} -- Initialization
 				orientation, weight, italic, underline,
 				strike_out, charset, output_precision,
 				clip_precision, quality, pitch_and_family, a_wel_string.item)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 	make_indirect (a_log_font: WEL_LOG_FONT) is
@@ -40,6 +43,9 @@ feature {NONE} -- Initialization
 			a_log_font_not_void: a_log_font /= Void
 		do
 			item := cwin_create_font_indirect (a_log_font.item)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 feature -- Re-initialisation
@@ -49,9 +55,17 @@ feature -- Re-initialisation
 			-- creating new object
 		require
 			a_log_font_not_void: a_log_font /= Void
+		local
+			object_destroyed: BOOLEAN
 		do
 				-- we delete the current C item
-			cwin_delete_object (item)
+			debug ("GDI_COUNT")
+				decrease_gdi_objects_count
+			end
+			object_destroyed := cwin_delete_object (item)
+			check
+				c_object_destroyed: object_destroyed
+			end
 			item := Default_pointer
 
 			check
@@ -60,6 +74,9 @@ feature -- Re-initialisation
 
 				-- Then we retrieve an new C item.
 			item := cwin_create_font_indirect (a_log_font.item)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 feature	-- Access

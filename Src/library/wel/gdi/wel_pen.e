@@ -41,6 +41,9 @@ feature {NONE} -- Initialization
 					io.putstring("Error while creating a pen in class WEL_PEN. error_code = "+error_code.out+"%N")
 				end
 			end
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		ensure
 			pen_created: item /= default_pointer
 		end
@@ -52,6 +55,9 @@ feature {NONE} -- Initialization
 			a_color_not_void: a_color /= Void
 		do
 			item := cwin_create_pen (Ps_solid, a_width, a_color.item)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		ensure
 			style_set: exists implies style = Ps_solid
 			width_set: exists implies width = a_width
@@ -64,6 +70,9 @@ feature {NONE} -- Initialization
 			a_log_pen_not_void: a_log_pen /= Void
 		do
 			item := cwin_create_pen_indirect (a_log_pen.item)
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 feature -- Access

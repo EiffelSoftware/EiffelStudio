@@ -12,6 +12,13 @@ inherit
 	WEL_GDI_ANY
 
 	WEL_RESOURCE
+		undefine
+			make_by_pointer
+		redefine
+			make_by_id,
+			make_by_pointer,
+			make_by_name
+		end
 
 	WEL_DIB_COLORS_CONSTANTS
 		export
@@ -35,6 +42,29 @@ creation
 
 feature {NONE} -- Initialization
 
+	make_by_id (id: INTEGER) is
+			-- Load the resource by an `id'
+		do
+			debug ("GDI_COUNT")
+				io.putstring ("Creating WEL_BITMAP")
+			end
+			Precursor (id)
+			references_number := 1
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
+		end
+
+	make_by_name (name: STRING) is
+			-- Load the resource by a `name'
+		do
+			Precursor (name)
+			references_number := 1
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
+		end
+
 	make_compatible (a_dc: WEL_DC; a_width, a_height: INTEGER) is
 			-- Initialize current bitmap to be compatible
 			-- with `a_dc' and with `a_width' as `width',
@@ -47,6 +77,10 @@ feature {NONE} -- Initialization
 		do
 			item := cwin_create_compatible_bitmap (a_dc.item,
 				a_width, a_height)
+			references_number := 1
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 	make_by_dib (a_dc: WEL_DC; dib: WEL_DIB; mode: INTEGER) is
@@ -61,16 +95,24 @@ feature {NONE} -- Initialization
 		do
 			item := cwin_create_di_bitmap (a_dc.item, dib.info_header.item,
 				Cbm_init, dib.item_bits, dib.item, mode)
+			references_number := 1
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		ensure
 			bitmap_created: item /= item.default
 		end
 
-	make_by_bitmap(a_bitmap: WEL_BITMAP) is
+	make_by_bitmap (a_bitmap: WEL_BITMAP) is
 			-- Create a WEL_BITMAP from another WEL_BITMAP. The
 			-- bitmap is copied by value
 		do
 			item := cwin_copy_image(a_bitmap.item, Image_bitmap, a_bitmap.width, a_bitmap.height, 0)
 			shared := False
+			references_number := 1
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 	make_indirect (a_log_bitmap: WEL_LOG_BITMAP) is
@@ -79,6 +121,10 @@ feature {NONE} -- Initialization
 			a_log_bitmap_not_void: a_log_bitmap /= Void
 		do
 			item := cwin_create_bitmap_indirect (a_log_bitmap.item)
+			references_number := 1
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		end
 
 feature -- Access

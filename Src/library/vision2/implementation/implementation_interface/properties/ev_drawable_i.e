@@ -30,6 +30,20 @@ inherit
 
 feature -- Access
 
+	width: INTEGER is
+		-- Horizontal size in pixels.
+	deferred
+        ensure
+            positive: Result > 0
+        end
+
+	height: INTEGER is
+		-- Vertical size in pixels.
+	deferred
+	ensure
+		positive: Result > 0
+	end
+
 	line_width: INTEGER is
 			-- Line thickness.
 		deferred
@@ -167,10 +181,29 @@ feature -- Drawing operations
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		deferred
 		end
-
+		
 	draw_straight_line (x1, y1, x2, y2: INTEGER) is
-		-- Draw infinite straight line through (`x1', 'y1') and (`x2', 'y2').
-		deferred
+			-- Draw infinite straight line through (`x1','y1') and (`x2','y2').
+		local
+			ax1, ax2, ay1, ay2, dx, dy: INTEGER
+		do
+			--| VB: Should work now. Draws lines that are too big.
+			--| Catch worst cases like when `dy' approaches zero.
+			--| This implementation is the same for GTK.
+			dx := (x2 - x1)
+			dy := (y2 - y1)
+			if dy /= 0 then
+				ax1 := x2 - ((dx / dy) * y2).rounded
+				ax2 := x1 - ((dx / dy) * (y1 - height)).rounded
+				ay1 := 0
+				ay2 := height
+			else
+				ay1 := y1
+				ay2 := y2
+				ax1 := 0
+				ax2 := width
+			end
+			draw_segment (ax1, ay1, ax2, ay2)			
 		end
 
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is

@@ -44,7 +44,7 @@ extern char *simple_out();	/* Out routine for simple time (from run-time) */
 public void prt_init()
 {
 	if (-1 == idrf_create(&idrf, IDRF_SIZE))
-		fatal("cannot initialize streams");		/* Run-time routine */
+		fatal_error("cannot initialize streams");		/* Run-time routine */
 }
 
 /*

@@ -384,7 +384,7 @@ private void cnode_updt()
 #ifdef DEBUG
 	dprintf(2)("\tcreation_id = %ld\n", node->cn_creation_id);
 	dprintf(2)("\tstatic_id = %ld\n", node->static_id);
-	dprintf(2)("\tdispose_id = %ld\n", node->dispose_id);
+	dprintf(2)("\tdispose_id = %ld\n", node->cn_disposed);
 #endif
 }
 
@@ -685,6 +685,15 @@ private void desc_updt()
 					desc_ptr[i].info = wshort();
 					desc_ptr[i].type = wshort();
 				}
+#ifdef DEBUG
+	dprintf(2)("Melted descriptor\n\torigin = %d, dtype = %d, RTUD = %d, size = %d\n", 
+						org_id, type_id, RTUD(type_id-1), rout_count);
+	{
+		int i;
+		for (i=0;i<rout_count;i++)
+			printf ("\t%d: body_index = %d, type = %d\n", i, desc_ptr[i].info, desc_ptr[i].type);
+	}
+#endif
 				IMDSC(desc_ptr, org_id, RTUD(type_id-1));
 			}
 

@@ -108,7 +108,7 @@ public void eraise();			/* Raises an Eiffel exception */
 public void eviol();			/* Signals assertion violation */
 public void exfail();			/* Signals: reached end of a rescue clause */
 public void panic();			/* Run-time raised panic */
-public void fatal();			/* Run-time raised fatal errors */
+public void fatal_error();			/* Run-time raised fatal errors */
 shared void xraise();			/* Raises an exception with no tag */
 public struct ex_vect *exset();	/* Set execution stack on routine entrance */
 #ifndef WORKBENCH
@@ -1355,7 +1355,7 @@ char *msg;
 	/* NOTREACHED */
 }
 
-public void fatal(msg)
+public void fatal_error(msg)
 char *msg;
 {
 	/* In case of run-time fatal error, print the final message 'msg' and dumps

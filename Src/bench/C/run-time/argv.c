@@ -31,7 +31,7 @@ char **argv;
 {
 	/* Save command-line arguments array and number */
 
-	extern void fatal();
+	extern void fatal_error();
 	int i;
 
 	eif_argc = argc;					/* Save number of arguments */
@@ -39,13 +39,13 @@ char **argv;
 	/* Allocate memory for array duplication */
 	eif_argv = (char **) cmalloc((argc + 1) * sizeof(char *));
 	if (eif_argv == (char **)0)
-		fatal(error);
+		fatal_error(error);
 
 	/* Duplicate arguments array */
 	for (i = 0; i < argc; i++) {
 		eif_argv[i] = cmalloc(strlen(argv[i]) + 1);
 		if (eif_argv[i] == (char *)0)
-			fatal(error);
+			fatal_error(error);
 		strcpy (eif_argv[i], argv[i]);
 	}
 

@@ -2645,8 +2645,6 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 
 		gdp->name = bits;
 
-		eif_free (bits);	
-
 		return;
 	}
 	

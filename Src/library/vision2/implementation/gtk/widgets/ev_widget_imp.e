@@ -130,6 +130,14 @@ feature {NONE} -- Initialization
 		
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
+	on_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Used for pointer button release events
+		do
+			if a_button >= 1 and a_button <= 3 and then pointer_button_release_actions /= Void then
+				pointer_button_release_actions.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+			end
+		end
+
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
 		local

@@ -34,6 +34,22 @@ void c_free_call_back_block (callback_data_t *p)
 	free (p);
 }
 
+ /*********************************
+ *
+ * Function `c_gtk_events_process_events_queue'
+ *
+ * Note :  Process all the events in the events queue.
+ * 
+ * Author: Alex.
+ *
+ *********************************/
+
+void c_gtk_events_process_events_queue ()
+{
+  while (gtk_events_pending())
+	gtk_main_iteration();	
+}
+
 /*********************************
  *
  * Function `c_gtk_init_toolkit'

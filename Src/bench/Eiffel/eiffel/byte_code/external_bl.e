@@ -166,7 +166,10 @@ feature
 				else
 					buf.putchar ('(');
 				end;
-				if extension /= Void and then extension.has_arg_list then
+				if
+					not encapsulated and then
+					extension /= Void and then extension.has_arg_list
+				then
 					type_c.generate_external_function_cast (buf, extension)
 					extension.generate_header_files
 				else

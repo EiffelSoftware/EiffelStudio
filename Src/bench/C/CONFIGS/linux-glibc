@@ -35,7 +35,7 @@ shared_prefix='lib'
 sharedlibversion='.1.0'
 wkeiflib='wkbench'
 
-command_makefile='make'
+command_makefile='make -f'
 make='make'
 lngpad_2='8'
 d_bsd='undef'

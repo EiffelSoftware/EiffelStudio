@@ -189,6 +189,8 @@ feature -- Status
 			end
 		end
 
+feature {NONE} -- Access
+
 	Any_constraint_type: CL_TYPE_A is
 			-- Default constraint actual type
 		once

@@ -358,7 +358,8 @@ feature -- Status report
 		do
 			if not retried then
 				internal_file.refresh
-				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read, internal_file.full_name)
+				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read,
+					internal_file.full_name)
 				perm.demand
 			end
 			Result := not retried
@@ -375,7 +376,8 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
-				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.write, name.to_cil)
+				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.write,
+					name.to_cil)
 				perm.demand
 			end
 			Result := not retried
@@ -402,7 +404,8 @@ feature -- Status report
 			if not retried then
 					-- Is the parent directory writable?
 				internal_file.refresh
-				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read, internal_file.directory_name)
+				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read,
+					internal_file.directory_name)
 				perm.demand
 				Result := not exists or else writable
 			else
@@ -625,7 +628,8 @@ feature -- Status setting
 			-- create it if it does not exist.
 		do
 			internal_file.refresh
-			internal_stream := internal_file.open_file_mode_file_access (feature {FILE_MODE}.open_or_create, feature {FILE_ACCESS}.write)
+			internal_stream := internal_file.open_file_mode_file_access (
+				feature {FILE_MODE}.open_or_create, feature {FILE_ACCESS}.write)
 			mode := Write_file
 		ensure
 			exists: exists
@@ -639,7 +643,8 @@ feature -- Status setting
 			is_closed: is_closed
 		do
 			internal_file.refresh
-			internal_stream := internal_file.open_file_mode_file_access (feature {FILE_MODE}.append, feature {FILE_ACCESS}.write)
+			internal_stream := internal_file.open_file_mode_file_access (
+				feature {FILE_MODE}.append, feature {FILE_ACCESS}.write)
 			mode := Append_file
 		ensure
 			exists: exists
@@ -653,9 +658,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.open,
-				feature {FILE_ACCESS}.read_write
-			)
+				feature {FILE_MODE}.open, feature {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -671,9 +674,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.open_or_create,
-				feature {FILE_ACCESS}.read_write
-			)
+				feature {FILE_MODE}.open_or_create, feature {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -701,7 +702,8 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl, feature {FILE_ACCESS}.read)
+			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl,
+				feature {FILE_ACCESS}.read)
 			mode := Read_file
 		ensure
 			exists: exists
@@ -714,7 +716,8 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl, feature {FILE_ACCESS}.write)
+			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl,
+				feature {FILE_ACCESS}.write)
 			mode := Write_file
 		ensure
 			exists: exists
@@ -727,7 +730,8 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl, feature {FILE_ACCESS}.write)
+			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl,
+				feature {FILE_ACCESS}.write)
 			mode := Append_file
 		ensure
 			exists: exists
@@ -740,7 +744,8 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl, feature {FILE_ACCESS}.read_write)
+			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl,
+				feature {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -755,7 +760,8 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl, feature {FILE_ACCESS}.read_write)
+			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl,
+				feature {FILE_ACCESS}.read_write)
 			mode := Append_read_file
 		ensure
 			exists: exists
@@ -1108,8 +1114,8 @@ feature -- Element change
 			internal_file.refresh
 			internal_file.set_last_write_time (dot_net_file_date_time (time))
 		ensure
-			access_date_unchanged: access_date = old access_date	-- But race condition might occur
-			date_updated: date = time					-- Modulo a race condition
+			access_date_unchanged: access_date = old access_date -- But race condition might occur
+			date_updated: date = time -- Modulo a race condition
 		end
 
 	change_name (new_name: STRING) is
@@ -1607,7 +1613,7 @@ feature {FILE} -- Implementation
 			Result := eiffel_base_file_time - dot_net_base_file_time
 		end
 		
-	dot_net_file_date_time (time:INTEGER): SYSTEM_DATE_TIME is
+	dot_net_file_date_time (time: INTEGER): SYSTEM_DATE_TIME is
 			-- convert an eiffel date to a .NET file date time
 			-- 'eiffel_date' must be the seconds from 01/01/1970:00:00:00:00 (file system time)
 			-- returns nano-seconds since 01/01/1601:00:00:00:00
@@ -1618,10 +1624,10 @@ feature {FILE} -- Implementation
 			Result := t
 		end
 
-	eiffel_file_date_time (dot_net_date:SYSTEM_DATE_TIME): INTEGER is
+	eiffel_file_date_time (dot_net_date: SYSTEM_DATE_TIME): INTEGER is
 			-- convert a .NET file date time to an eiffel date
-			-- 'dot_net_date' must be the nano-seconds from 01/01/1601:00:00:00:00 (file system time)
-			-- returns seconds since 01/01/1970:00:00:00:00
+			-- 'dot_net_date' must be the nano-seconds from 01/01/1601:00:00:00:00
+			-- (file system time) returns seconds since 01/01/1970:00:00:00:00
 		local
 			i64: INTEGER_64
 		do
@@ -1636,8 +1642,8 @@ feature {FILE} -- Implementation
 	Read_file: INTEGER is 1
 	Write_file: INTEGER	is 2
 	Append_file: INTEGER is 3
-	Read_Write_file: INTEGER is 4
-	Append_Read_file: INTEGER is 5
+	Read_write_file: INTEGER is 4
+	Append_read_file: INTEGER is 5
 
 	set_read_mode is
 			-- Define file mode as read.

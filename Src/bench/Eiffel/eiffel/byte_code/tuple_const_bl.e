@@ -180,17 +180,17 @@ feature {NONE} -- C code generation
 					end
 					buf.putchar (';')
 					buf.new_line
-						-- Generation of the RTAS_OPT protection
+						-- Generation of the RTAR protection
 						-- since the array contains references
 					if not actual_type.is_basic then
-						buf.putstring ("RTAS(")
+						buf.putstring ("RTAR(")
+						print_register
+						buf.putchar (',')
 						if metamorphosed then
 							metamorphose_reg.print_register
 						else
 							expr.print_register
 						end
-						buf.putchar (',')
-						print_register
 						buf.putchar (')')
 						buf.putchar (';')
 						buf.new_line

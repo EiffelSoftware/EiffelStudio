@@ -53,12 +53,10 @@ feature -- Generation
 					buf.putstring (";")
 					buf.new_line
 					if type_c.level = C_ref then
-						buf.putstring ("RTAS_OPT(")
-						parameters.i_th (1).print_register
-						buf.putchar (',')
-						parameters.i_th (2).print_register
-						buf.putchar (',')
+						buf.putstring ("RTAR(")
 						gen_reg.print_register
+						buf.putchar (',')
+						parameters.i_th (1).print_register
 						buf.putstring (");")
 						buf.new_line
 					end

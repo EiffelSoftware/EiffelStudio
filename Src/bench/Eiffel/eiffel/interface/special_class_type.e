@@ -149,7 +149,7 @@ feature {NONE} -- C code generation
 				type_c.generate_access_cast (buffer)
 				buffer.putstring (" Current + arg2) = arg1;")
 				if type_c.level = c_ref then
-					buffer.putstring ("%TRTAS_OPT(arg1, arg2, Current);%N");
+					buffer.putstring ("%TRTAR(Current, arg1);%N");
 				end;
 			end;
 

@@ -218,21 +218,19 @@ feature {NONE} -- C code generation
 						target_type.c_type.generate_cast (buf);
 						expr.print_register;
 					end;
-						-- Generation of the RTAS_OPT protection
+						-- Generation of the RTAR protection
 						-- if the array contains references
 					if target_type.is_reference or target_type.is_bit then
 						buf.putchar (';');
 						buf.new_line
-						buf.putstring ("RTAS_OPT(");
+						buf.putstring ("RTAR(");
+						array_area_reg.print_register;
+						buf.putchar (',');
 						if metamorphosed then
 							metamorphose_reg.print_register
 						else
 							expr.print_register;
 						end;
-						buf.putchar (',');
-						buf.putint (position);
-						buf.putchar (',');
-						array_area_reg.print_register;
 						buf.putchar (')');
 					end
 				end

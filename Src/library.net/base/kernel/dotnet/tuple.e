@@ -148,8 +148,8 @@ feature -- Comparison
 		do
 			l_cur := native_array
 			l_other := other.native_array
-			nb := l_cur.count
-			if nb = l_other.count then
+			nb := l_cur.count - 1
+			if nb = l_other.count - 1 then
 				from
 					Result := True
 				until

@@ -100,8 +100,8 @@ feature -- Status Setting
 	enable_default_push_button is
 			-- Set the style of the button corresponding
 			-- to the default push button.
-		local
-			par_ptr: POINTER
+--		local
+--			par_ptr: POINTER
 		do
 			enable_can_default
 --			from
@@ -119,8 +119,8 @@ feature -- Status Setting
 	disable_default_push_button is
 			-- Remove the style of the button corresponding
 			-- to the default push button.
-		local
-			par_ptr: POINTER
+--		local
+--			par_ptr: POINTER
 		do		
 			--| FIXME IEK Undraw default widget style.
 			is_default_push_button := False

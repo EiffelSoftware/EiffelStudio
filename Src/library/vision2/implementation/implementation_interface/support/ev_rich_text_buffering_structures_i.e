@@ -347,6 +347,7 @@ feature {NONE} -- Implementation
 		local
 			character_format: EV_CHARACTER_FORMAT
 			a_font: EV_FONT
+			effects: EV_CHARACTER_FORMAT_EFFECTS
 		do
 			if not all_formats.has (current_format.out) then
 					-- Only create a new character format if an equivalent one does not already
@@ -364,11 +365,22 @@ feature {NONE} -- Implementation
 				else
 					character_format.set_background_color (all_colors.item (current_format.highlight_color))
 				end
-				a_font := all_fonts.item (current_format.character_format)
+				a_font := all_fonts.item (current_format.character_format).twin
 				if current_format.is_bold then
-					a_font := a_font.twin
 					a_font.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
-				end	
+				end
+				if current_format.is_italic then
+					a_font.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
+				end
+				create effects
+				if current_format.is_striked_out then
+					effects.enable_striked_out
+				end
+				if current_format.is_underlined then
+					effects.enable_underlined
+				end
+				effects.set_vertical_offset (half_points_to_pixels (current_format.vertical_offset))
+				character_format.set_effects (effects)
 				a_font.set_height (half_points_to_pixels (current_format.font_height))
 				character_format.set_font (a_font)
 				all_formats.put (character_format, current_format.out)
@@ -464,10 +476,42 @@ feature {NONE} -- Implementation
 					current_format.set_bold (True)
 				else
 					check
-						tag_value.is_equal ("0")
+						tag_is_zero: tag_value.is_equal ("0")
 					end
 					current_format.set_bold (False)
 				end
+			elseif tag.is_equal (rtf_italic_string) then
+				if tag_value.is_empty then
+					current_format.set_italic (True)
+				else
+					check
+						tag_is_zero: tag_value.is_equal ("0")
+					end
+					current_format.set_italic (False)
+				end
+			elseif tag.is_equal (rtf_strikeout_string) then
+				if tag_value.is_empty then
+					current_format.set_striked_out (True)
+				else
+					check
+						tag_is_zero: tag_value.is_equal ("0")
+					end
+					current_format.set_striked_out (False)
+				end
+			elseif tag.is_equal (rtf_underline_string) then
+				if tag_value.is_empty then
+					current_format.set_underlined (True)
+				else
+					check
+						tag_is_zero: tag_value.is_equal ("0")
+					end
+					current_format.set_underlined (False)
+				end
+			elseif tag.is_equal (rtf_vertical_offset) then
+				check
+					tag_not_empty: not tag.is_empty
+				end
+				current_format.set_vertical_offset (tag_value.to_integer)
 			elseif tag.is_equal (rtf_highlight_string) then
 				current_format.set_highlight_color (tag_value.to_integer)
 			elseif tag.is_equal (rtf_color_string) then

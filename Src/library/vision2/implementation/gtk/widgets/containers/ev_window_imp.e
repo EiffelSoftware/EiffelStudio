@@ -15,9 +15,6 @@ inherit
 	EV_WINDOW_I	
 		
 	EV_CONTAINER_IMP
-		rename
-			make as widget_make
-		end
 	
 creation
 	
@@ -25,15 +22,39 @@ creation
 	
 feature {NONE} -- Initialization
 	
-        make is
+        make (interf: EV_WINDOW) is
                         -- Create a window. Window does not have any
                         -- parents
+		local
+			i: INTEGER
+			a: ANY
+			s: string
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
+			
+			-- connect delete and destroy events to exit signals
+			-- Temporary XXX!
+			!!s.make (0)
+			s := "destroy"
+			a ?= s.to_c
+			interface := interf
+			i := c_gtk_signal_connect (widget, $a, routine_address ($delete_window_action), 
+						   $Current, Default_pointer)
+			s := "delete"
+			a ?= s.to_c
+--			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)
+			
 		end
 
-
-		
+feature  -- Implementation XX
+	
+	delete_window_action is
+		do
+			interface.delete_window_action
+		end
+	
+	interface: EV_WINDOW
+	
 feature  -- Access
 
 

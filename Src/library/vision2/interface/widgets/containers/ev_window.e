@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		require
 			-- toolkit initialized
 		do
-			!EV_WINDOW_IMP!implementation.make
+			!EV_WINDOW_IMP!implementation.make (Current)
 		end
 	
 		
@@ -93,7 +93,7 @@ feature  -- Access
 
 
 feature -- Element change
-
+	
         set_icon_mask (mask: EV_PIXMAP) is
                         -- Set `icon_mask' to `mask'.
                 require
@@ -170,12 +170,14 @@ feature -- Element change
                 end
 
         delete_window_action is
-                        -- Called when 'top' is destroyed.
-                        -- (Will exit application if
-                        -- `delete_command' is not set).
+                        -- Called when the window is deleted (closed).
+                        -- (Will exit application if `delete_command'
+                        -- is not set).
                 do
                         if delete_command = Void then
---XX                                toolkit.exit
+                                if application /= Void then
+					application.exit
+				end
                         else
                                 delete_command.execute (Void)
                         end
@@ -192,11 +194,24 @@ feature {NONE} -- Implementation
 
         delete_command: EV_COMMAND
 
-feature {EV_APPLICATION} -- Implementation
 
         implementation: EV_WINDOW_I
                         -- Implementation of window
 
+feature {EV_APPLICATION} -- Implementation
+	
+	application: EV_APPLICATION
+			-- EiffelVision application associated to the
+			-- window.
+	
+	set_application (app: EV_APPLICATION) is
+			-- Associate the window with 'app'. Is this 
+			-- is done, exiting the window will exit the 
+			-- application, unless delete_command is set.
+		do
+			application := app
+		end
+		
 invariant
 
 --        Depth_is_zero: depth = 0

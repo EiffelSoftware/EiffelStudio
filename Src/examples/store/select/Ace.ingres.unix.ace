@@ -1,0 +1,49 @@
+system selector
+
+root
+	
+	SELECTOR_ODBC (root_cluster): "make"
+
+default
+
+	assertion (all);
+	multithreaded (yes)
+
+cluster
+
+	root_cluster:		"$EIFFEL4/examples/store/select";
+	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
+	ingres_handle:		"$EIFFEL4/examples/store/Utilities/ingres";
+
+-- EiffelBase
+
+	all base:			"$EIFFEL4/library/base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
+-- EiffelStore
+
+	estore_support:		"$EIFFEL4/library/store/support";
+	estore_interface:	"$EIFFEL4/library/store/interface";
+	estore_ingres:		"$EIFFEL4/library/store/dbms/rdbms/ingres";
+	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
+	estore_converter:	"$EIFFEL4/library/store/converter";
+
+-- EiffelTime
+	
+	time:				"$EIFFEL4/library/time";
+	time_format: 		"$EIFFEL4/library/time/format";
+	time_english:		"$EIFFEL4/library/time/format/english";
+
+external
+
+	object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
+		"-lsupport";
+		"-lingres_store";
+		"-L$(EIFFEL4)/library/time/spec/$(PLATFORM)/lib";
+		"-ldatetime";
+		"-L$(II_SYSTEM)/ingres/lib"; 
+		"-lingres"
+
+end

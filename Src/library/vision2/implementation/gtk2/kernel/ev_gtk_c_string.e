@@ -30,8 +30,25 @@ feature {NONE} -- Initialization
 
 	make_from_pointer (a_utf8_ptr: POINTER) is
 			-- Set `Current' to use `a_utf8_ptr'
+		local
+			end_byte: POINTER
+			utf8_valid: BOOLEAN
 		do
-			create managed_data.make_from_pointer (a_utf8_ptr, feature {EV_GTK_DEPENDENT_EXTERNALS}.g_utf8_strlen (a_utf8_ptr, -1) + 1)
+			utf8_valid := feature {EV_GTK_DEPENDENT_EXTERNALS}.g_utf8_validate (a_utf8_ptr, -1, $end_byte)
+			if utf8_valid then
+				create managed_data.make_from_pointer (a_utf8_ptr, pointer_diff (a_utf8_ptr, end_byte) + 1)
+			else
+				create managed_data.make_from_pointer (a_utf8_ptr, feature {EV_GTK_EXTERNALS}.g_utf8_strlen (a_utf8_ptr, -1) + 1)
+			end
+		end
+
+	pointer_diff (a_ptr1, a_ptr2: POINTER): INTEGER is
+			-- Difference between two pointers
+			--| FIXME Remove when pointer arithmetic is added
+		external
+			"C inline"
+		alias
+			"(EIF_INTEGER) ($a_ptr2 - $a_ptr1)"
 		end
 
 feature -- Access
@@ -48,10 +65,12 @@ feature -- Access
 			str_ptr: POINTER
 			bytes_read, bytes_written: INTEGER
 			gerror: POINTER
+			len: INTEGER
 		do
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_from_utf8 (item, managed_data.count - 1, $bytes_read, $bytes_written, $gerror, $str_ptr)
 			if str_ptr /= default_pointer then
-				create Result.make_from_c (str_ptr)
+				create Result.make (bytes_written)
+				Result.from_c_substring (str_ptr, 1, bytes_written)
 				feature {EV_GTK_EXTERNALS}.g_free (str_ptr)
 			else
 				-- Sometimes the UTF8 string cannot be translated

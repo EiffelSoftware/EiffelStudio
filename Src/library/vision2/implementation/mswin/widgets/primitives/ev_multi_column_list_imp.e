@@ -147,11 +147,8 @@ feature -- Access
 
 feature -- Status report
 
-	multiple_selection_enabled: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN
 			-- Can more that one item be selected?
-		do
-			Result := not flag_set (style, Lvs_singlesel)
-		end
 	
 	title_shown: BOOLEAN is
 			-- Is a row displaying column titles shown?
@@ -192,19 +189,20 @@ feature -- Status setting
 	enable_multiple_selection is
 			-- Allow more than one item to be selected.
 		do
-			if not multiple_selection_enabled then
+			if not multiple_selection_enabled and parent_imp /= Void then
 				if has_headers then
 					set_style (default_style)
 				else
 					set_style (default_style + Lvs_nocolumnheader)
 				end
 			end
+			multiple_selection_enabled := True
 		end
 
 	disable_multiple_selection is
 			-- Allow only one item to be selected.
 		do
-			if multiple_selection_enabled then
+			if multiple_selection_enabled and parent_imp /= Void then
 				if has_headers then
 					set_style (default_style + Lvs_singlesel)
 				else
@@ -212,6 +210,7 @@ feature -- Status setting
 						Lvs_nocolumnheader)
 				end
 			end
+			multiple_selection_enabled := False
 		end
 
 	show_title_row is
@@ -855,6 +854,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.73  2000/03/30 16:29:32  rogers
+--| Multiple selection no longer requires pre-parenting.
+--|
 --| Revision 1.72  2000/03/29 02:19:00  brendel
 --| Removed silly column_count.
 --| Added set_row_pixmap from _I.

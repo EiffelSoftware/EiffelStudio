@@ -181,7 +181,7 @@ rt_public EIF_REFERENCE ewean(EIF_OBJECT object)
 			eraise("hector weaning", EN_MEM);	/* No more memory */
 	}
 	ret = eif_access(object);
-	eif_access(object) = (char *) 0;		/* Reset hector's entry */
+	eif_access(object) = (EIF_REFERENCE) 0;		/* Reset hector's entry */
 
 	return ret;				/* return unprotected address */
 	EIF_END_GET_CONTEXT

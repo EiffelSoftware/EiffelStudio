@@ -14,11 +14,6 @@ deferred class
 inherit
 	
 	EV_CONTAINER_I
-		redefine
-			interface,
-			parent,
-			parent_imp
-		end
 	
 feature {NONE} -- Initialization
 	
@@ -37,21 +32,6 @@ feature {NONE} -- Initialization
 		end
 
 feature  -- Access
-
-	parent: EV_WINDOW is
-			-- The parent of the Current window: a window
-			-- If the widget is an EV_WINDOW without parent,
-			-- this attribute will be `Void'
-		do
-			Result := parent_imp.interface
-		end
-
-	interface: EV_WINDOW
-			-- Current interface of the window
-
-	parent_imp: EV_WINDOW_IMP
-			-- Parent of the window, has to be a window.
-			-- Is `Void' if no parent.
 
 	icon_name: STRING is
 			-- Short form of application name to be
@@ -178,11 +158,11 @@ feature -- Element change
                 deferred
                 end
 
-        set_widget_group (group_widget: EV_WIDGET) is
+	set_widget_group (group_widget: EV_WIDGET) is
                         -- Set `widget_group' to `group_widget'.
-                require
-                        exists: not destroyed
-                deferred
+		require
+				exists: not destroyed
+		deferred
 		end
 	
 	window_closed is
@@ -192,26 +172,31 @@ feature -- Element change
                         -- application if `close_command' is not set).
 		local
 			a: EV_ARGUMENT1[EV_WINDOW]
-                do
-					if close_command = Void then
-						if application /= Void then
+			window_interface: EV_WINDOW
+		do
+			if close_command = Void then
+				if application /= Void then
 						application.exit
 						end
-					else
-						!!a.make (interface)
-						close_command.execute (a)
+				else
+					window_interface ?= interface
+					check
+						window_interface /= Void
 					end
-                end
+					!!a.make (window_interface)
+					close_command.execute (a)
+				end
+		end
         
 	set_close_command (c: EV_COMMAND) is
-                do
-                        close_command := c
-                end	
+		do
+			close_command := c
+		end	
 
 	set_icon_name (new_name: STRING) is
-                        -- Set `icon_name' to `new__name'.
-                deferred
-                end
+			-- Set `icon_name' to `new__name'.
+		deferred
+		end
 
 feature -- Resizing
 
@@ -251,8 +236,6 @@ feature {EV_WINDOW, EV_APPLICATION} -- Implementation
 
 feature {NONE} -- Implementation
 	
---	interface: EV_WINDOW
-
 	close_command: EV_COMMAND	
 
 end -- clas EV_WINDOW_I

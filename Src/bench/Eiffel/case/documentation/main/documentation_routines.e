@@ -592,22 +592,28 @@ feature {NONE} -- Indexing clauses
 			ic := indexes_to_table (indexes)
 			exc := excluded_indexing_items
 			from
+				exc.start
+			until
+				exc.after
+			loop
+				ic.remove (exc.item)
+				exc.forth
+			end
+			from
 				ic.start
 			until
 				ic.after
 			loop
 				t := ic.key_for_iteration
-				if not exc.has (t) then
-					content := ic.item_for_iteration.twin
-					content.replace_substring_all ("%%N", " ")
-					content.prune_all ('%%')
-					content.prune_all ('"')
-					if t.is_equal ("keywords") and added_keywords /= Void then
-						content.prepend (", ")
-						content.prepend (added_keywords)
-					end
-					Result.append (indexing_tuple_to_string (t, content))
+				content := ic.item_for_iteration.twin
+				content.replace_substring_all ("%%N", " ")
+				content.prune_all ('%%')
+				content.prune_all ('"')
+				if t.is_equal ("keywords") and added_keywords /= Void then
+					content.prepend (", ")
+					content.prepend (added_keywords)
 				end
+				Result.append (indexing_tuple_to_string (t, content))
 				ic.forth
 			end
 			if not ic.has ("keywords") and not exc.has ("keywords") and added_keywords /= Void then

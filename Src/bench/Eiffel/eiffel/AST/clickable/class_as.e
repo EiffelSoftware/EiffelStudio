@@ -345,6 +345,14 @@ feature -- Access
 				Result := top_indexes.interface_custom_attributes
 			end
 		end
+		
+	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Custom attributes of current class if any.
+		do
+			if top_indexes /= Void then
+				Result := top_indexes.assembly_custom_attributes
+			end
+		end
 
 feature -- Comparison
 

@@ -96,6 +96,12 @@ feature -- Access
 		do
 			Result := internal_custom_attributes (Interface_attribute_header)
 		end
+		
+	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Expression representing custom attributes for an assembly
+		do
+			Result := internal_custom_attributes (Assembly_attribute_header)
+		end
 
 	has_global_once: BOOLEAN is
 			-- Is current once construct used to be a global once in
@@ -193,6 +199,10 @@ feature -- Constants
 
 	Interface_attribute_header: STRING is "interface_attribute"
 			-- Index name which holds custom attributes applied to associated interface only.
+			
+	Assembly_attribute_header: STRING is "assembly_attribute"
+			-- Index name which holds custom attributes applied to associated assembly.
+			-- They are only taken into account for the root_class.
 			
 	Description_header: STRING is "description"
 			-- Index name which holds class/feature desciption.

@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; args: like arguments; ret: like return_type; froz, static, defer, inf, pref: BOOLEAN) is
+	make (en, dn: STRING; args: like arguments; ret: like return_type; froz, static, defer, inf, pref, pub: BOOLEAN) is
 			-- Initialize consumed method.
 		require
 			non_void_eiffel_name: en /= Void
@@ -29,13 +29,13 @@ feature {NONE} -- Initialization
 			non_void_arguments: args /= Void
 			non_void_return_type: ret /= Void
 		do
-			method_make (en, dn, args, froz, static, defer)
+			method_make (en, dn, args, froz, static, defer, pub)
 			return_type := ret
 			if inf then
-				internal_flags := internal_flags | Is_infix_mask
+				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_infix
 			end
 			if pref then
-				internal_flags := internal_flags | Is_prefix_mask				
+				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_prefix				
 			end
 		ensure
 			eiffel_name_set: eiffel_name = en
@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			is_deferred_set: is_deferred = defer
 			is_infix_set: is_infix = inf
 			is_prefix_set: is_prefix = pref
+			is_public_set: is_public = pub
 		end
 
 feature -- Access
@@ -59,23 +60,19 @@ feature -- Status report
 	is_infix: BOOLEAN is
 			-- Is function an infix feature?
 		do
-			Result := internal_flags & Is_infix_mask = Is_infix_mask
+			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_infix =
+				feature {FEATURE_ATTRIBUTE}.Is_infix
 		end
 			
 	is_prefix: BOOLEAN is
 			-- Is function a prefix feature?
 		do
-			Result := internal_flags & Is_prefix_mask = Is_prefix_mask
+			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_prefix = 
+				feature {FEATURE_ATTRIBUTE}.Is_prefix
 		end
 
 	has_return_value: BOOLEAN is True
 			-- A function always return a value.
-
-feature {NONE} -- Internal
-
-	is_infix_mask: INTEGER is 8
-	is_prefix_mask: INTEGER is 16
-			-- Additional mask from CONSUMED_PROCEDURE
 
 invariant
 	non_void_return_type: return_type /= Void

@@ -11,7 +11,7 @@ inherit
 		rename
 			make as entity_make
 		redefine
-			has_arguments, arguments
+			has_arguments, arguments, is_public
 		end
 
 create
@@ -19,24 +19,28 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en: STRING; args: like arguments) is
+	make (en: STRING; args: like arguments; pub: BOOLEAN) is
 			-- Initialize consumed constructor.
 		require
 			non_void_eiffel_name: en /= Void
 			valid_eiffel_name: not en.is_empty
 			non_void_arguments: arguments /= Void
 		do
-			entity_make (en)
+			entity_make (en, pub)
 			arguments := args
 		ensure
 			eiffel_name_set: eiffel_name = en
 			arguments_set: arguments = args
+			is_public_set: is_public = pub
 		end
 
 feature -- Access
 
 	arguments: ARRAY [CONSUMED_ARGUMENT]
 			-- Constructor arguments
+
+	is_public: BOOLEAN
+			-- Is constructor public?
 
 feature -- Status report
 

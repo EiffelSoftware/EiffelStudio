@@ -148,8 +148,15 @@ rt_public void run_idr_init (long idrf_size, int type)
 		/* When writting a storable we mark some space at the front of the buffer
 		 * to store upon writting the size of block, so that only one write operation
 		 * is performed */
-	if (type)
+	if (type) {
 		run_idr_setpos (&idrf.i_encode, sizeof(int32));
+	}
+
+		/* Because we might mark the first `n' bytes of the buffer (see above
+		 * instruction), we need to make sure that both storable and retrieval
+		 * will use the same buffer size, so we substract `n' to original
+		 * value of `idrf_buffer_size'. */
+	idrf_buffer_size = idrf_buffer_size - sizeof(int32);
 }
 
 rt_public void run_idr_destroy (void)

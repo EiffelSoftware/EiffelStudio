@@ -52,6 +52,7 @@ int *size;		/* Filled in with size of read string */
 	Request rqst;		/* Leading request */
 	char *buffer;		/* Where bytes are stored */
 
+	Request_Clean (rqst);
 #ifdef DEBUG
 #ifdef USE_ADD_LOG
 	add_log(20, "waiting for leading request on #%d", readfd(sp));
@@ -105,6 +106,7 @@ int size;
 
 	Request rqst;		/* Leading request */
 
+	Request_Clean (rqst);
 	rqst.rq_type = TRANSFER;
 	rqst.rq_ack.ak_type = size;
 

@@ -53,6 +53,8 @@ struct dump {
 #define DMP_ITEM	0			/* Opertional stack cell */
 #define DMP_VECT	1			/* Exception vector */
 #define DMP_OBJ		2			/* Object address */
+#define DMP_MELTED	3			/* Exception vector (same as DMP_VECT).
+									The routine is melted */
 
 /* Visible routine */
 extern void send_stack();		/* Send a stack dump to ewb */

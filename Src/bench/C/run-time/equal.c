@@ -623,7 +623,7 @@ uint32 s_flags;
 
 		/* Evaluation of the source attribute offset */
 		CAttrOffs(offset,attr_key,s_type);
-		s_ref = target + offset;
+		s_ref = source + offset;
 
 		for(s_index=0; scn_attr[s_index] != attr_key; s_index++)
 			;

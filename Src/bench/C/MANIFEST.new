@@ -35,6 +35,8 @@ idrs/Makefile.SH
 idrs/idr.h
 idrs/idr_array.c
 idrs/idr_char.c
+idrs/idr_double.c
+idrs/idr_float.c
 idrs/idr_getpos.c
 idrs/idr_int.c
 idrs/idr_long.c
@@ -88,6 +90,7 @@ ipc/ewb
 ipc/ewb/Jmakefile
 ipc/ewb/Makefile.SH
 ipc/ewb/connect.c
+ipc/ewb/dumped.c
 ipc/ewb/eif_in.c
 ipc/ewb/eif_io.h
 ipc/ewb/eif_out.c

@@ -12,13 +12,15 @@
 
 #include "eif_io.h"
 #include "eiffel.h"
+#include "stack.h"
 
 public void send_rqst_0 (code) 
 long code;
 {
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
-
+	
+	Request_Clean (rqst);
 	rqst.rq_type = code;
 	send_packet(writefd(sp), &rqst);
 };
@@ -30,6 +32,7 @@ long info1;
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
+	Request_Clean (rqst);
 	rqst.rq_type = code;
 	rqst.rq_opaque.op_first = (int) info1;
 	send_packet(writefd(sp), &rqst);
@@ -43,6 +46,7 @@ long info2;
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
+	Request_Clean (rqst);
 	rqst.rq_type = code;
 	rqst.rq_opaque.op_first = (int) info1;
 	rqst.rq_opaque.op_second = (int) info2;
@@ -58,6 +62,7 @@ long info3;
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
+	Request_Clean (rqst);
 	rqst.rq_type = code;
 	rqst.rq_opaque.op_first = (int) info1;
 	rqst.rq_opaque.op_second = (int) info2;
@@ -69,7 +74,8 @@ public EIF_BOOLEAN recv_ack ()
 {
 	Request pack;
 	STREAM *sp = stream_by_fd[EWBOUT];
-	
+
+	Request_Clean (pack);
 	if (-1 == recv_packet(readfd(sp), &pack))
 		return (EIF_BOOLEAN) 0;
 
@@ -89,6 +95,7 @@ public EIF_BOOLEAN recv_ack ()
 	}
 }
 
+
 public void c_send_str (s)
 char *s;
 {
@@ -103,6 +110,16 @@ long l;
 	twrite (s, (int) l);
 }
 
+EIF_REFERENCE c_tread () 
+{
+
+	int size;
+	char *str;
+
+	str = tread (&size);
+	return (EIF_REFERENCE) makestr (str, size);
+}
+
 public void send_simple_request(code)
 long code;		/* Request type */
 {
@@ -111,6 +128,7 @@ long code;		/* Request type */
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
+	Request_Clean (rqst);
 	rqst.rq_type = code;
 	send_packet(writefd(sp), &rqst);
 }
@@ -135,6 +153,7 @@ long len;
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
+	Request_Clean (rqst);
 	rqst.rq_type = code;
 
 	if (-1 == send_packet (writefd(sp), &rqst))
@@ -145,4 +164,11 @@ long len;
 	ACK ???
 */
 }
+
+
+request_dump ()
+{
+	send_rqst_1 (DUMP, 2L /* ST_FULL */);
+}
+	
 

@@ -23,6 +23,7 @@
 #include <signal.h>
 #include "logfile.h"
 #include "stream.h"
+#include "stdlib.h"
 
 #define EIFFEL3		"/usr/lib/Eiffel3"	/* Default installation directory */
 #define EWB			"/bin/es3 -bench"			/* Ewb process within Eiffel dir */
@@ -75,6 +76,8 @@ char **argv;
 #endif
 
 	set_signal();						/* Set up signal handler */
+	signal (SIGABRT ,exit);
+	signal (SIGQUIT, exit);
 
 #ifdef USE_ADD_LOG
 	add_log(20, "ised process started");

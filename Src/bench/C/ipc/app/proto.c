@@ -14,6 +14,7 @@
 #include "portable.h"
 #include <stdio.h>		/* For error reports -- FIXME */
 #include <sys/types.h>
+#include <sys/signal.h>
 #include "request.h"
 #include "rqst_idrs.h"
 #include "com.h"
@@ -26,8 +27,10 @@
 #include "except.h"
 #include "server.h"
 #include "interp.h"
+#include "select.h"
 
 public int rqstcnt = 0;				/* Request count */
+private char gc_stopped;
 
 private void process_request();		/* Dispatch request processing */
 private void inspect();				/* Object inspection */
@@ -61,6 +64,7 @@ int s;
 	
 	Request rqst;		/* The request we are waiting for */
 
+	Request_Clean (rqst); /* zero recognized as non initialized -- Didier */
 	recv_packet(s, &rqst);		/* Get request */
 	process_request(s, &rqst);	/* Process the received request */
 }
@@ -83,10 +87,10 @@ Request *rqst;				/* The received request to be processed */
 
 	switch (rqst->rq_type) {
 	case INSPECT:					/* Object inspection */
-		inspect(s, &rqst->rq_opaque);
+		inspect(writefd (sp), &rqst->rq_opaque);
 		break;
 	case DUMP:						/* General stack dump request */
-		send_stack(s, arg_1);
+		send_stack(writefd (sp), arg_1);
 		break;
 	case MOVE:						/* Change active routine */
 		dmove(arg_1);
@@ -95,6 +99,7 @@ Request *rqst;				/* The received request to be processed */
 		dsetbreak(arg_1, (uint32) arg_3, arg_2);
 		break;
 	case RESUME:					/* Resume execution */
+		if (!gc_stopped) gc_run();
 		dstatus(arg_1);				/* Debugger status (DX_STEP, DX_NEXT,..) */
 #ifdef USE_ADD_LOG
 		add_log(9, "RESUME");
@@ -139,7 +144,7 @@ Request *rqst;		/* The request to be sent */
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR unable to serialize request %d", rqst->rq_type);
 #endif
-		fprintf(stderr, "cannot serialize request\n");
+		fprintf(stderr, "GGGGGGGcannot serialize request, %d\n", rqst->rq_type);
 		esdie(1);
 	}
 
@@ -148,8 +153,10 @@ Request *rqst;		/* The request to be sent */
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR send: %m (%e)");
 #endif
-		fprintf(stderr, "cannot send request\n");
-		esdie(1);
+		fprintf(stderr, "cannot send request (Didier)\n");
+		signal (SIGABRT, SIG_DFL);
+		signal (SIGQUIT, SIG_DFL);
+		abort ();
 	}
 
 #ifdef DEBUG
@@ -205,6 +212,10 @@ int s;
 #define st_excode	rq_stop.st_code
 #define st_wh		rq_stop.st_where
 
+	gc_stopped = !gc_ison();
+	gc_stop();
+
+	Request_Clean (rqst);
 	rqst.rq_type = STOPPED;				/* Stop request */
 	rqst.st_status = d_cxt.pg_status;	/* Why we stopped */
 	rqst.st_extag = "";			/* No exception tag by default */
@@ -218,6 +229,8 @@ int s;
 		rqst.st_excode = echval;		/* Exception code */
 		if (echtg != (char *) 0)		/* XDR might not like a null pointer */
 			rqst.rq_stop.st_tag = echtg;	/* Exception tag computed */
+		else
+			rqst.rq_stop.st_tag = "FOO";
 	}
 
 	ewhere(&wh);			/* Find out where we are */
@@ -248,6 +261,7 @@ Opaque *what;		/* Generic structure describing request */
 	char *out;				/* Buffer where out form is stored */
 	struct item *val;		/* Value in operational stack */
 
+
 	switch (what->op_first) {		/* First value describes request */
 	case IN_ADDRESS:				/* Address inspection */
 		out = dview((char *) what->op_third);	/* long -> (char *) */
@@ -273,7 +287,7 @@ Opaque *what;		/* Generic structure describing request */
 	/* Now we got a string, holding the appropriate representation of the
 	 * object. Send it to the remote process verbatim and free it.
 	 */
-	
+
 	twrite(out, strlen(out));
 	free(out);
 }
@@ -298,6 +312,7 @@ int amount;		/* Amount of byte codes to be downloaded */
 	int r = readfd(sp);			/* Reading "socket" */
 	int i;
 
+	Request_Clean (rqst);
 	if (-1 == dmake_room(slots)) {		/* Extend melting table */
 		send_ack(s, AK_ERROR);			/* Notify failure */
 		return;							/* Abort procedure */

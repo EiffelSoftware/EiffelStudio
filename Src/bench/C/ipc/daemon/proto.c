@@ -38,6 +38,7 @@ private void commute();				/* Commute data from one file to another */
 private void run_command();			/* Run specified command */
 private void run_asynchronous();	/* Run command in background */
 private void start_app();			/* Start Eiffel application */
+private void kill_app();			/* Kill Eiffel application brutally*/
 
 private IDRF idrf;					/* IDR filters used for serializing */
 
@@ -64,6 +65,8 @@ int s;
 	/* Given a connected socket, wait for a request and process it */
 	
 	Request rqst;		/* The request we are waiting for */
+
+	Request_Clean (rqst); /* recognized as non initialized -- Didier */
 
 	if (-1 == recv_packet(s, &rqst))		/* Get request */
 		return;
@@ -97,6 +100,9 @@ Request *rqst;				/* The received request to be processed */
 		break;
 	case APPLICATION:		/* Start application */
 		start_app(s);
+		break;
+	case KILL:				/* Kill application asynchronously */
+		kill_app();
 		break;
 	default:
 		send_packet(writefd(OTHER(s)), rqst);
@@ -413,9 +419,7 @@ int s;
 	Pid_t pid;			/* Child pid */
 	
 	sp = stream_by_fd[s];				/* Fetch associated stream */
-	printf("Ised: reading name of application\n");
 	cmd = recv_str(sp, (int *) 0);		/* Get command */
-	printf("Application is %s\n", cmd);
 	cp = spawn_child(cmd, &pid);			/* Start up children */
 	if (cp != (STREAM *) 0) {
 		d_data.d_app = (int) pid;			/* Record its pid */
@@ -429,6 +433,13 @@ int s;
 			send_ack(writefd(sp), AK_OK);		/* Application started ok */
 	} else
 		send_ack(writefd(sp), AK_ERROR);	/* Could not start application */
+}
+
+private void kill_app () 
+{
+	/* Kill the application brutally */
+
+	kill((Pid_t) d_data.d_app, SIGKILL);
 }
 
 public void dead_app()

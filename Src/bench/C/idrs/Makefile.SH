@@ -79,6 +79,8 @@ DPFLAGS = -I$(TOP)
 CFLAGS = $(DPFLAGS)
 
 LSRC = \
+	idr_double.c \
+	idr_float.c \
 	idr_array.c \
 	idr_char.c \
 	idr_getpos.c \
@@ -107,6 +109,8 @@ LSRC = \
 	idrm_dstry.c
 
 LOBJ = \
+	idr_double.o \
+	idr_float.o \
 	idr_array.o \
 	idr_char.o \
 	idr_getpos.o \

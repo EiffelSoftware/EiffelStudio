@@ -14,6 +14,7 @@
 #define _logfile_h_
 #ifdef USE_ADD_LOG
 
+#include <sys/types.h>
 #include "config.h"
 
 

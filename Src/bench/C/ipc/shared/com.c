@@ -55,6 +55,7 @@ int code;	/* The acknowledgment code */
 
 	Request pack;		/* The answer we'll send back */
 
+	Request_Clean (pack);
 	pack.rq_type = ACKNLGE;				/* We are sending an acknowledgment */
 	pack.rq_ack.ak_type = code;			/* Report code */
 	send_packet(s, &pack);
@@ -79,6 +80,7 @@ char *buffer;	/* Where the string is held */
 	 * P_NOMEM status.
 	 */
 
+	Request_Clean (pack);
 	size = strlen(buffer);			/* Length of string */
 	pack.rq_type = OPAQUE;
 	pack.rq_opaque.op_size = size;	/* Send length without final null */
@@ -135,6 +137,7 @@ int *sizeptr;	/* Set to the size of the string if non null pointer */
 
 	/* The protocol used here is the symetric of the one used by send_str() */
 
+	Request_Clean (pack);
 	if (-1 == recv_packet(readfd(sp), &pack))	/* Wait for length */
 		return (char *) 0;
 

@@ -25,6 +25,12 @@
 #include "stack.h"
 #include "com.h"
 #include "request.h"
+#include "macros.h"
+
+#define IGNORE	-1	/*	We do not want this item sent, but there are still
+					 *	items to send. Useful for getting rid of EX_OSTK
+					 *	pseudo exception vector -- Didier
+					 */
 
 /* Record a stack context, while performing dumps, and restore it afterwards.
  * We have a provision here for all the possible stack we may inspect.
@@ -70,9 +76,11 @@ int what;		/* Which stack should be sent */
 	struct dump *dp;			/* Pointer to static data where dump is */
 
 	stk_start(what);			/* Initialize processing */
-	while (dp = (stk_next)())	/* While still some data to send */
-		send_dump(s, dp);
-
+	while (dp = (stk_next)()){	/* While still some data to send */
+		if ((int) dp != IGNORE)
+			send_dump(s, dp);
+	}
+	stk_end (what);
 	send_ack(s, AK_OK);			/* End of list -- you got everything */
 }
 
@@ -82,6 +90,7 @@ struct dump *dp;	/* Item to send */
 {
 	Request rqst;					/* What we send back */
 
+	Request_Clean (rqst);
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
 	bcopy(dp, &rqst.rq_dump, sizeof(struct dump));
 	send_packet(s, &rqst);			/* Send to network */
@@ -135,11 +144,12 @@ int what;		/* Dumping status wanted */
 	}
 }
 
-private void stk_end()
+private void stk_end(what)
+ 	int what;
 {
 	/* Restore context of all the stack we had to modify/inspect */
 
-	switch (dump_mode) {
+	switch (what) {
 	case ST_PENDING:
 		bcopy(&xstk_context, &eif_trace, sizeof(struct xstack));
 		break;
@@ -214,6 +224,7 @@ private struct dump *execution()
 	 */
 
 	struct ex_vect *top;				/* Exception vector */
+	static struct ex_vect copy;			/* copy of the exception vector */
 	struct dump *dp;					/* Partial dump pointer */
 	struct dcall *dc;					/* Debugger's calling context */
 	static struct dump dumped;			/* Item returned */
@@ -221,7 +232,8 @@ private struct dump *execution()
 	static int arg_done = 0;			/* True when arguments processed */
 	static int argn = 0;				/* Argument number */
 	static int locn = 0;				/* Local number */
-	
+	long hack;							/* Temporary solution: 2 integers sent in one */
+
 	/* When the last exception vector returned was melted, we want to send
 	 * the routine arguments (if any), and maybe the local variables.
 	 * So instead of sending another exception vector, we start returning
@@ -231,15 +243,17 @@ private struct dump *execution()
 	if (last_melted) {					/* Last vector was melted */
 		if (!arg_done) {				/* There are still some arguments */
 			dp = argument(argn++);			/* Get next argument */
-			if (dp != (struct dump *) 0)	/* Got it */
+			if (dp != (struct dump *) 0){	/* Got it */
 				return dp;					/* An argument dump */
+			}
 			arg_done = 1;					/* No more arguments */
 			argn = 0;						/* Reset number for next vector */
 		}
 		if (dump_mode == ST_FULL) {			/* But we need locals */
 			dp = local(locn++);				/* Get next local */
-			if (dp != (struct dump *) 0)	/* Got one */
+			if (dp != (struct dump *) 0){	/* Got one */
 				return dp;					/* A local variable dump */
+			}
 			locn = 0;						/* Reset for next vector */
 		}
 		dpop();							/* Remove calling context now */
@@ -250,32 +264,58 @@ private struct dump *execution()
 	 * not associated with a melted feature. So go on and grab next one, unless
 	 * the end of the stack has been reached.
 	 */
-
-	if (eif_stack.st_cur->sk_arena == eif_stack.st_top)
+	if (eif_stack.st_cur->sk_arena == eif_stack.st_top){
 		return (struct dump *) 0;	/* Reached end of stack */
+	}
+/*	expop(&eif_stack); */				/* Remove top vector logically */
+/*	top = extop(&eif_stack);*/		/* And get a pointer to it (ghost!) */
+/*	printf ("extop done \n"); */
 
-	expop(&eif_stack);				/* Remove top vector logically */
-	top = extop(&eif_stack);		/* And get a pointer to it (ghost!) */
+	top = extop (&eif_stack); 		/* Let's do it the right way -- Didier */
+	expop (&eif_stack);
+	
+	
+	if (top -> ex_type == EX_OSTK 
+			|| (top -> ex_type == EX_CALL && top -> exu.exur.exur_id == 0))
+		return (struct dump *) IGNORE;
+		/* This vector should not be sent */
+		
 
 	/* Now check whether by chance the vector associated with the callling
 	 * context on top of the debugger's stack is precisely the one we've just
 	 * popped. That would mean we reached a melted feature...
 	 */
-
 	dc = safe_dtop();				/* Returns null pointer if empty */
-	if (dc != (struct dcall *) 0)	/* Stack not empty */ 
+	if (dc != (struct dcall *) 0){	/* Stack not empty */ 
 		if (dc->dc_exec == top) {	/* We've reached a melted feature */
 			last_melted = 1;		/* Calling context will be popped later */
+			arg_done = 0;
 			init_var_dump(dc);		/* Make this feature "active" */
 		}
+	}
 
 	/* Finally, build up the dumped structure for the current vector. If this
 	 * vector is associated with a melted feature, the next call to this routine
 	 * will dump the arguments and possibluy the local variables.
 	 */
 
-	dumped.dmp_type = DMP_VECT;			/* Structure contains vector */
-	dumped.dmp_vect = top;
+	dumped.dmp_type = last_melted ? DMP_MELTED : DMP_VECT;		
+									/* Structure contains vector */
+	copy = *top;	
+	dumped.dmp_vect = &copy; /* static variable  -- Didier */
+
+	/* Temporary hack:
+	 * With the time constraints we had it was not an option to change the 
+	 * protocol in order to send the origin type and the dynamic type
+	 * sowe use the same integer to send bith values with a 16 bit shift
+	 */
+
+	if (dumped.dmp_vect -> ex_type){ 
+		hack = dumped.dmp_vect -> exu.exur.exur_orig;
+		hack <<= 16;
+		hack += Dtype (dumped.dmp_vect -> exu.exur.exur_id);
+		dumped.dmp_vect -> exu.exur.exur_orig = hack;
+	}
 
 	return &dumped;			/* Pointer to static data */
 }
@@ -289,7 +329,7 @@ private struct dcall *safe_dtop()
 
 	if (db_stack.st_top && db_stack.st_top == db_stack.st_hd->sk_arena)
 		return (struct dcall *) 0;
-	
+
 	return dtop();		/* Stack is not empty */
 }
 
@@ -426,4 +466,37 @@ private struct dump *once()
 
 	return &dumped;			/* Pointer to static data */
 }
+
+
+show_dumped (d)
+	struct dump d;
+{
+	struct ex_vect *dmpu;
+	switch (d.dmp_type) {
+		case DMP_MELTED:
+		case DMP_VECT:
+			printf ("Vector	");
+			dmpu = d.dmpu.dmpu_vect;
+			show_vector (dmpu);
+			return;
+		default:
+			printf ("unknown dump\n");
+	}
+}
+
+
+
+show_vector (dmpu)
+	struct ex_vect *dmpu;
+{
+		printf ("VECTOR %x\n", (char *) dmpu);
+		printf ("type = %i; retry = %i; rescue = %i\n", dmpu -> ex_type, 
+			dmpu -> ex_retry, dmpu -> ex_rescue);
+		printf ("obj_id = %i, rout_name = %s orig = %i\n",
+			dmpu -> exu.exur.exur_id, dmpu -> exu.exur.exur_rout, 
+			dmpu -> exu.exur.exur_orig);
+}
+
+
+
 

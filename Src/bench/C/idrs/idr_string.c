@@ -42,33 +42,41 @@ unsigned int maxlen;	/* Maximum length, 0 = no limit */
 
 	if (idrs->i_op == IDR_ENCODE) {
 		string = *sp;
-		if (string == (char *) 0)
+		if (string == (char *) 0){
 			return FALSE;
+		}
 		len = (unsigned int) strlen(string);
-		if (maxlen > 0 && len > maxlen)
+		if (maxlen > 0 && len > maxlen){
 			return FALSE;
-		if (maxlen < 0 && len > -maxlen)
+		}
+		if (maxlen < 0 && len > -maxlen){
 			len = -maxlen;				/* Truncate string if too long */
-		if (!idr_u_int(idrs, &len))		/* Emit string length */
+		}
+		if (!idr_u_int(idrs, &len)){		/* Emit string length */
 			return FALSE;
+		}
 		CHK_SIZE(idrs, len);			/* Make sure there is enough room */
-		bcopy(string, idrs->i_ptr, len);
+		bcopy(string, idrs->i_ptr, len + 1);
 	} else {
-		if (!idr_u_int(idrs, &len))		/* Get string length */
+		if (!idr_u_int(idrs, &len)){		/* Get string length */
 			return FALSE;
-		if (maxlen != 0 && len > maxlen)
+		}
+		if (maxlen != 0 && len > maxlen){
 			return FALSE;
+		}
 		string = *sp;
 		if (string == (char *) 0) {
 			string = malloc(len + 1);	/* Don't forget trailing null byte */
-			if (string == (char *) 0)
+			if (string == (char *) 0){
 				return FALSE;
+			}
 			*sp = string;				/* Set up string pointer dynamically */
 		}
-		bcopy(idrs->i_ptr, string, len);
+		bcopy(idrs->i_ptr, string, len + 1);
 	}
 
-	idrs->i_ptr += len;
+	
+	idrs->i_ptr += len + 1;
 
 	return TRUE;
 }

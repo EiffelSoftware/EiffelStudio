@@ -97,4 +97,9 @@ typedef struct {			/* General client request format */
 #define rq_stop			rqu.rqu_stop
 #define rq_where		rqu.rqu_where
 
+#define Request_Clean(rqst)		(bzero (&(rqst), sizeof (Request)))
+	/* Ensure that the Request is properly initialized
+	 * Remember C does NOT automaically set locals to a default `0' value
+	 */
+
 #endif

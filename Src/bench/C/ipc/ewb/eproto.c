@@ -39,6 +39,8 @@ char *cmd;
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
+	Request_Clean (rqst);	/* Recognized as non initialized -- Didier */ 
+
 	rqst.rq_type = CMD;					/* Command will be run in foreground */
 	send_packet(writefd(sp), &rqst);	/* Processing done by ised */
 	if (-1 == send_str(sp, cmd)) {		/* Send command string */
@@ -65,6 +67,7 @@ char *cmd;
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
+	Request_Clean (rqst);
 	rqst.rq_type = ASYNCMD;				/* Daemon will run it in background */
 	rqst.rq_opaque.op_first = rqstcnt;	/* Use request count as job number */
 	send_packet(writefd(sp), &rqst);	/* Processing done by ised */
@@ -88,6 +91,7 @@ char *cmd;			/* The command string (without i/o redirection) */
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
+	Request_Clean (rqst);
 	rqst.rq_type = APPLICATION;			/* Request application start-up */
 	send_packet(writefd(sp), &rqst);	/* Send request for ised processing */
 	send_str(sp, cmd);					/* Now send the command string */

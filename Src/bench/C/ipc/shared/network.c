@@ -121,6 +121,7 @@ int size;			/* Amount of data to be sent */
 	if (0 != setjmp(env)) {
 		signal(SIGPIPE, oldpipe);
 		errno = EPIPE;
+		printf ("net_send: setjmp /= 0\n");
 		return -1;
 	}
 
@@ -129,11 +130,14 @@ int size;			/* Amount of data to be sent */
 		if (amount > BUFSIZ)	/* do not write more than BUFSIZ */
 			amount = BUFSIZ;
 		error = write(cs, buf, amount);
-		if (error == -1)
-			if (errno != EINTR)
+		if (error == -1){
+			if (errno != EINTR){
+				printf ("net_send: write failed. fdesc = %i, errno = %i\n", cs,  errno);
 				return -1;
+			}
 			else
 				error = 0;		/* number of bytes send */
+		}
 	}
 
 	signal(SIGPIPE, oldpipe);	/* restore default handler */

@@ -29,6 +29,8 @@
 #include <strings.h>
 #endif
 
+extern int in_assertion;
+
 #undef STACK_CHUNK
 #undef MIN_FREE
 #define STACK_CHUNK		400		/* Number of exception vectors in a chunk */
@@ -428,6 +430,8 @@ register3 char *object;		/* The object on which invariant is checked */
 		return;								/* May be ignored */
 	}
 
+	in_assertion = ~0;
+
 	vector->ex_type = EX_CINV;		/* Class invariant checking */
 	vector->ex_name = tag;			/* The associated assertion tag */
 	vector->ex_oid = object;		/* The value of Current (object ID) */
@@ -455,6 +459,8 @@ int type;								/* Type of assertion */
 		xraise(EN_MEM);						/* Non-critical exception */
 		return;								/* Exception may be ignored */
 	}
+
+	in_assertion = ~0;
 
 	/* The ex_where field for EX_PRE is set only during backtracking */
 

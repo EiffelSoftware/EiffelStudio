@@ -1,5 +1,7 @@
 indexing
-	-- Referenced assemblies.
+	description:	"Codedom referenced assemblies."
+	date:			"$Date$"
+	revision:		"$Revision$"
 
 class
 	ECDP_REFERENCED_ASSEMBLIES

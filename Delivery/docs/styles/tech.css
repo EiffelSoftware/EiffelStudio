@@ -17,6 +17,16 @@ font-family: Courrier;
 font-size: x-small;
 }
 
+LI {
+	font-family: Arial, Helvetica;
+	font-size: x-small;
+	margin-top: 10;
+	}
+
+LI.small {
+	margin-top: 0;
+	}
+		
 H5 {
 font-size: x-large;
 font-family: arial, helvetica;

@@ -9,32 +9,55 @@ indexing
 		%f_: Focus label text; %
 		%h_: Help text; %
 		%m_: Mnemonic (menu entry); %
+		%l_: Label texts; %
 		%n_: widget Names; %
 		%s_: Stone names; %
-		%t_: Title (part); %
-		%w_: Warning message";
+		%t_: Title (part)";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class INTERFACE_NAMES
 	
-feature {NONE}
+feature -- Button texts
 
 	b_Apply: STRING is					" Apply ";
+	b_All: STRING is					" All ";
 	b_Browse: STRING is					"Browse...";
 	b_Build: STRING is					"Build";
 	b_Cancel: STRING is					" Cancel ";
+	b_C_functions: STRING is			"C functions";
+	b_Close: STRING is					"Close";
 	b_Compile: STRING is				"Compile";
+	b_Create: STRING is					"Create";
+	b_Descendent_time: STRING is		"Descendent time";
 	b_Discard_assertions: STRING is		"Discard assertions";
+	b_Display: STRING is				" Display ";
+	b_Eiffel_features: STRING is		"Eiffel features";
+	b_Execute: STRING is				" Execute ";
+	b_Exit: STRING is					"Exit";
+	b_Exit_now: STRING is				"Exit now";
+	b_Feature_name: STRING is			"Feature name";
+	b_Final: STRING is					"Final mode";
 	b_Finalize_now: STRING is			"Finalize now";
 	b_Freeze_now: STRING is				"Freeze now";
+	b_Function_time: STRING is			"Function time";
 	b_Keep_assertions: STRING is		"Keep assertions";
 	b_Non_clickable_Stoppoints_of: STRING is "Non clickable stop points of ";
-	b_Non_clickable_showstops: STRING is "Non clickable stop points";
+	b_Number_of_calls: STRING is		"Number of calls";
 	b_Ok: STRING is						" OK ";
 	b_Overwrite: STRING is				"Overwrite";
+	b_Percentage: STRING is				"Percentage";
 	b_Precompile_now: STRING is			"Precompile now";
+	b_Recursive_functions: STRING is	"Recursive functions";
+	b_Run: STRING is					"Run";
+	b_Run_query: STRING is				"Run query";
+	b_Run_subquery: STRING is			"Run subquery";
 	b_Save: STRING is					"Save";
+	b_Save_as: STRING is				"Save as";
+	b_Total_time: STRING is				"Total time";
+	b_Workbench: STRING is				"Workbench mode";
+
+feature -- Graphical degree output
 
 	d_Classes_to_go: STRING is			"Classes to go:";
 	d_Clusters_to_go: STRING is			"Clusters to go:";
@@ -43,227 +66,265 @@ feature {NONE}
 	d_Compilation_progress: STRING is	"Compilation Progress";
 	d_Degree: STRING is					"Degree:";
 	d_Features_processed: STRING is		"Features processed: ";
+	d_Features_to_go: STRING is			"Features to go: ";
 	d_Resynchronizing_breakpoints: STRING is "Resynchronzing breakpoints";
 	d_Resynchronizing_tools: STRING is	"Resynchronzing tools";
 	d_Reverse_engineering: STRING is	"Reverse Engineering Project";
 
+feature -- Help text
+
 	h_No_help_available: STRING is		"No help available for this element";
 
-	a_Case_storgae: STRING is			"Ctrl-E";
+feature -- Accelerator, focus label and menu name
+
 	f_Case_storage: STRING is			"Case storage";
-	m_Case_storage: STRING is			"Cas&e storage%TCtrl+E";
-	a_Change_font: STRING is			"Ctrl-T";
-	f_Change_font: STRING is			"Font";
-	m_Change_font: STRING is			"Fon&t%TCtrl+T";
-	a_Change_font_tabs: STRING is		"Ctrl-T";
-	f_Change_font_tabs: STRING is		"Font/Tabs";
-	m_Change_font_tabs: STRING is		"Fon&t/Tabs%TCtrl+T";
-	a_Clear_breakpoints: STRING is		"Ctrl-L";
+	m_Case_storage: STRING is			"Cas&e storage";
+	a_Clear_breakpoints: STRING is		"Ctrl<Key>l";
 	f_Clear_breakpoints: STRING is		"Clear stop points";
 	m_Clear_breakpoints: STRING is		"C&lear stop points%TCtrl+L";
-	a_Current: STRING is				"Ctrl-U";
+	a_Close_all_tools: STRING is		"Ctrl<Key>a";
+	f_Close_all_tools: STRING is		"Close all tools";
+	m_Close_all_tools: STRING is		"Close &all tools%TCtrl+A";
+	a_Copy: STRING is					"Ctrl<Key>c";
+	f_Copy: STRING is					"Copy";
+	m_Copy: STRING is					"&Copy%TCtrl+C";
+	a_Current: STRING is				"Ctrl<Key>u";
 	f_Current: STRING is				"Current";
-	m_Current: STRING is				"C&urrent%TCtrl;+U";
-	a_Debug_quit: STRING is				"Ctrl-E";
+	m_Current: STRING is				"C&urrent%TCtrl+U";
+	a_Cut: STRING is					"Ctrl<Key>x";
+	f_Cut: STRING is					"Cut";
+	m_Cut: STRING is					"&Cut%TCtrl+X";
+	a_Debug_quit: STRING is				"Ctrl<Key>e";
 	f_Debug_quit: STRING is				"End run";
 	m_Debug_quit: STRING is				"&End run%TCtrl+E";
-	a_Debug_run: STRING is				"Ctrl-R";
+	a_Debug_run: STRING is				"Ctrl<Key>r";
 	f_Debug_run: STRING is				"Run";
 	m_Debug_run: STRING is				"&Run%TCtrl+R";
-	a_Debug_status: STRING is			"Ctrl-X";
 	f_Debug_status: STRING is			"Execution status";
-	m_Debug_status: STRING is			"E&xecution status%TCtrl+X";
-	a_Down_stack: STRING is				"Ctrl-D";
+	m_Debug_status: STRING is			"E&xecution status";
+	a_Down_stack: STRING is				"Ctrl<Key>d";
 	f_Down_stack: STRING is				"Go down one level";
 	m_Down_stack: STRING is				"Go &down one level%TCtrl+D";
-	a_Exec_last: STRING is				"Ctrl-U";
+	a_Exec_last: STRING is				"Ctrl<Key>o";
 	f_Exec_last: STRING is				"Out of routine";
-	m_Exec_last: STRING is				"O&ut of routine%TCtrl+U";
-	a_Exec_nostop: STRING is			"Ctrl-I";
+	m_Exec_last: STRING is				"&Out of routine%TCtrl+O";
+	a_Exec_nostop: STRING is			"Ctrl<Key>i";
 	f_Exec_nostop: STRING is			"Ignore stop points";
 	m_Exec_nostop: STRING is			"&Ignore stop points%TCtrl+I";
-	a_Exec_step: STRING is				"Ctrl-T";
+	a_Exec_step: STRING is				"Ctrl<Key>t";
 	f_Exec_step: STRING is				"Step by step";
 	m_Exec_step: STRING is				"S&tep by step%TCtrl+T";
-	a_Exec_stop: STRING is				"Ctrl-X";
+	a_Exec_stop: STRING is				"Ctrl<Key>x";
 	f_Exec_stop: STRING is				"To next stop point";
 	m_Exec_stop: STRING is				"To ne&xt stop point%TCtrl+X";
-	a_Exit: STRING is					"Ctrl-F4";
 	f_Exit: STRING is					"Exit tool";
-	m_Exit: STRING is					"E&xit tool%TCtrl+F4";
-	a_Exit_project: STRING is			"Alt-F4";
+	m_Exit: STRING is					"E&xit tool%TAlt+F4";
+	a_Exit_project: STRING is			"Ctrl<Key>F4";
 	f_Exit_project: STRING is			"End session";
-	m_Exit_project: STRING is			"E&nd session%TAlt+F4";
-	a_Filter: STRING is					"Alt-F";
+	m_Exit_project: STRING is			"E&nd session%TCtrl+F4";
 	f_Filter: STRING is					"Filter";
-	m_Filter: STRING is					"&Filter%TAlt+F";
-	a_Finalize: STRING is				"Ctrl-Alt-F";
+	m_Filter: STRING is					"&Filter";
+	a_Finalize: STRING is				"Ctrl Alt<Key>z";
 	f_Finalize: STRING is				"Finalize...";
-	m_Finalize: STRING is				"&Finalize...%TCtrl+Alt+F";
-	a_Find: STRING is					"Ctrl+F";
+	m_Finalize: STRING is				"Finali&ze...%TCtrl+Alt+Z";
+	a_Find: STRING is					"Ctrl<Key>f";
 	f_Find: STRING is					"Find";
-	m_Find: STRING is					"&Find";
-	a_Freeze: STRING is					"Ctrl-Alt-R";
+	m_Find: STRING is					"&Find%TCtrl+F";
+	f_flat_doc: STRING is				"Flat";
+	m_flat_doc: STRING is				"&Flat";
+	f_flat_short_doc: STRING is			"Flat short";
+	m_flat_short_doc: STRING is			"F&lat short";
+	f_text_doc: STRING is				"Text";
+	m_text_doc: STRING is				"&Text";
+	f_short_doc: STRING is				"Short";
+	m_short_doc: STRING is				"&Short";
+	a_Freeze: STRING is					"Ctrl Alt<Key>f";
 	f_Freeze: STRING is					"Freeze...";
-	m_Freeze: STRING is					"F&reeze...%TCtrl+Alt+R";
-	a_List_targets: STRING is			"Ctrl-L";
+	m_Freeze: STRING is					"&Freeze...%TCtrl+Alt+F";
+	f_Generate: STRING is				"Generate";
+	m_Generate: STRING is				"&Generate";
+	f_Help: STRING is					"Help";
+	m_Help: STRING is					"&Help";
+	f_Hide_feature: STRING is			"Hide feature";
+	m_Hide_feature: STRING is			"Hide &feature";
+	f_Hide_object: STRING is			"Hide object";
+	m_Hide_object: STRING is			"Hide &object";
+	a_List_targets: STRING is			"Ctrl<Key>l";
 	f_List_targets: STRING is			"List targets";
 	m_List_targets: STRING is			"&List targets%TCtrl+L";
-	a_New_class: STRING is				"";
 	f_New_class: STRING is				"New class tool";
 	m_New_class: STRING is				"New &class tool";
-	a_New_explain: STRING is			"";
 	f_New_explain: STRING is			"New explain tool";
 	m_New_explain: STRING is			"New &explain tool";
-	a_New_object: STRING is				"";
 	f_New_object: STRING is				"New object tool";
 	m_New_object: STRING is				"New &object tool";
-	a_New_routine: STRING is			"";
 	f_New_routine: STRING is			"New feature tool";
 	m_New_routine: STRING is			"New &feature tool";
-	a_Next_target: STRING is			"";
 	f_Next_target: STRING is			"Next";
 	m_Next_target: STRING is			"N&ext";
-	a_Non_clickable_showstops: STRING is "";
 	f_Non_clickable_showstops: STRING is "Non clickable stop points";
 	m_Non_clickable_showstops: STRING is "&Non clickable stop points";
-	a_Open: STRING is					"Ctrl-O";
+	a_Open: STRING is					"Ctrl<Key>o";
 	f_Open: STRING is					"Open";
 	m_Open: STRING is					"&Open%TCtrl+O";
-	a_Open_project: STRING is			"";
-	f_Open_project: STRING is			"Open project ...";
-	m_Open_project: STRING is			"&Open project ...";
-	a_Precompile: STRING is				"Ctrl-Alt-P";
+	a_Paste: STRING is					"Ctrl<Key>v";
+	f_Paste: STRING is					"Paste";
+	m_Paste: STRING is					"&Paste%TCtrl+V";
+	a_Precompile: STRING is				"Ctrl Alt<Key>P";
 	f_Precompile: STRING is				"&Precompile...";
 	m_Precompile: STRING is				"Precompile...%TCtrl+Alt+P";
-	a_Previous_target: STRING is		"";
+	f_Preferences: STRING is			"Preferences";
+	m_Preferences: STRING is			"&Preferences";
+	f_Profile_tool: STRING is			"Profile tool";
+	m_Profile_tool: STRING is			"Pro&file tool";
 	f_Previous_target: STRING is		"Previous";
-	m_Previous_target: STRING is		"P&revious";
-	a_Run_finalized: STRING is			"";
+	m_Previous_target: STRING is		"&Previous";
 	f_Run_finalized: STRING is			"Run finalized system";
 	m_Run_finalized: STRING is			"&Run finalized system";
-	a_Save: STRING is					"Ctrl-S";
+	a_Save: STRING is					"Ctrl<Key>S";
 	f_Save: STRING is					"Save";
 	m_Save: STRING is					"&Save%TCtrl+S";
-	a_Save_As: STRING is				"";
 	f_Save_As: STRING is				"Save as...";
 	m_Save_As: STRING is				"S&ave as...";
-	a_Shell: STRING is					"";
 	f_Shell: STRING is					"Shell";
 	m_Shell: STRING is					"S&hell";
-	a_Showallcallers: STRING is			"";
 	f_Showallcallers: STRING is			"All callers";
-	m_Showallcallers: STRING is			"&All callers";
-	a_Showancestors: STRING is			"";
+	m_Showallcallers: STRING is			"All &callers";
 	f_Showancestors: STRING is			"Ancestors";
 	m_Showancestors: STRING is			"&Ancestors";
-	a_Showattributes: STRING is			"";
 	f_Showattributes: STRING is			"Attributes";
 	m_Showattributes: STRING is			"A&ttributes";
-	a_Showcallers: STRING is			"";
 	f_Showcallers: STRING is			"Callers";
 	m_Showcallers: STRING is			"&Callers";
-	a_Showclass_list: STRING is			"";
 	f_Showclass_list: STRING is			"Classes";
 	m_Showclass_list: STRING is			"C&lasses";
-	a_Showclick: STRING is				"";
 	f_Showclick: STRING is				"Clickable";
 	m_Showclick: STRING is				"Cl&ickable";
-	a_Showclients: STRING is			"";
 	f_Showclients: STRING is			"Clients";
 	m_Showclients: STRING is			"Cli&ents";
-	a_Showclusters: STRING is			"";
 	f_Showclusters: STRING is			"Clusters";
 	m_Showclusters: STRING is			"&Clusters";
-	a_Showdeferreds: STRING is			"";
 	f_Showdeferreds: STRING is			"Deferred";
 	m_Showdeferreds: STRING is			"&Deferred";
-	a_Showdescendants: STRING is		"";
 	f_Showdescendants: STRING is		"Descendants";
 	m_Showdescendants: STRING is		"Des&cendants";
-	a_Showexported: STRING is			"";
 	f_Showexported: STRING is			"Exported";
 	m_Showexported: STRING is			"E&xported";
-	a_Showexternals: STRING is			"";
 	f_Showexternals: STRING is			"Externals";
 	m_Showexternals: STRING is			"Ex&ternals";
-	a_Showflat: STRING is				"";
 	f_Showflat: STRING is				"Flat";
 	m_Showflat: STRING is				"&Flat";
-	a_Showfs: STRING is					"";
 	f_Showfs: STRING is					"Flat/short";
 	m_Showfs: STRING is					"Flat/s&hort";
 	a_Showfuture: STRING is				"versions";
 	f_Showfuture: STRING is				"Descendant versions";
 	m_Showfuture: STRING is				"&Descendant versions";
-	a_Showhistory: STRING is			"";
 	f_Showhistory: STRING is			"Implementers";
 	m_Showhistory: STRING is			"&Implementers";
-	a_Showindexing: STRING is			"";
 	f_Showindexing: STRING is			"Indexing clauses";
 	m_Showindexing: STRING is			"&Indexing clauses";
-	a_Showmodified: STRING is			"";
 	f_Showmodified: STRING is			"Modified classes";
 	m_Showmodified: STRING is			"&Modified classes";
-	a_Showonces: STRING is				"";
+	f_Show_feature: STRING is			"Show feature";
+	m_Show_feature: STRING is			"Show &feature";
+	f_Show_object: STRING is			"Show object";
+	m_Show_object: STRING is			"Show &object";
 	f_Showonces: STRING is				"Once/Constants";
 	m_Showonces: STRING is				"&Once/Constants";
-	a_Showoncefunc: STRING is			"";
 	f_Showoncefunc: STRING is			"`Once' functions";
 	m_Showoncefunc: STRING is			"`&Once' functions";
-	a_Showpast: STRING is				"";
 	f_Showpast: STRING is				"Ancestor versions";
 	m_Showpast: STRING is				"&Ancestor versions";
-	a_Showroutines: STRING is			"";
 	f_Showroutines: STRING is			"Routines";
 	m_Showroutines: STRING is			"&Routines";
-	a_Showshort: STRING is				"";
 	f_Showshort: STRING is				"Short";
 	m_Showshort: STRING is				"&Short";
-	a_Showstatistics: STRING is			"";
 	f_Showstatistics: STRING is			"Statistics";
 	m_Showstatistics: STRING is			"&Statistics";
-	a_Showhomonyms: STRING is			"";
 	f_Showhomonyms: STRING is			"Homonyms";
 	m_Showhomonyms: STRING is			"&Homonyms";
-	a_Showsuppliers: STRING is			"";
+	f_Showstops: STRING is				"Stop points";
+	m_Showstops: STRING is				"Stop &points";
 	f_Showsuppliers: STRING is			"Suppliers";
 	m_Showsuppliers: STRING is			"&Suppliers";
-	a_Showtext: STRING is				"";
+	a_Showtext: STRING is				"Ctrl<Key>t";
 	f_Showtext: STRING is				"Text";
-	m_Showtext: STRING is				"&Text";
-	a_Slice: STRING is					"";
+	m_Showtext: STRING is				"&Text%TCtrl+T";
 	f_Slice: STRING is					"Slice";
 	m_Slice: STRING is					"S&lice";
-	a_Stoppable: STRING is				"";
 	f_Stoppable: STRING is				"Stoppable";
 	m_Stoppable: STRING is				"&Stoppable";
-	a_System: STRING is					"";
 	f_System: STRING is					"System";
 	m_System: STRING is					"&System";
-	a_Update: STRING is					"Ctrl-Alt-M";
+	a_Update: STRING is					"Ctrl Alt<Key>m";
 	f_Update: STRING is					"Melt";
 	m_Update: STRING is					"&Melt%TCtrl+Alt+M";
-	a_Up_stack: STRING is				"Ctrl-U";
+	a_Up_stack: STRING is				"Ctrl<Key>u";
 	f_Up_stack: STRING is				"Go up one level";
 	m_Up_stack: STRING is				"Go &up one level%TCtrl+U";
+	f_Validate: STRING is				"Validate";
+	m_Validate: STRING is				"&Validate";
+	f_Version: STRING is				"Version";
+	m_Version: STRING is				"&Version";
+
+feature -- Menu mnenomics
+
+	m_Class_tools: STRING is			"&Class tools";
+	m_Commands: STRING is				"&Commands";
+	m_Compile: STRING is				"&Compile";
+	m_Debug: STRING is					"&Debug";
+	m_Edit: STRING is					"&Edit";
+	m_Explain_tools: STRING is			"&Explain tools";
+	m_Feature: STRING is				"&Feature";
+	m_Feature_tools: STRING is			"&Feature tools";
+	m_File: STRING is					"&File";
+	m_Formats: STRING is				"&Formats";
+	m_Object: STRING is					"&Object";
+	m_Object_tools: STRING is			"&Object tools";
+	m_Special: STRING is				"&Special";
+	m_Windows: STRING is				"&Windows";
+
+feature -- Label texts
+
+	l_Cluster: STRING is				"Cluster:";
+	l_Compile_type: STRING is			"Compile type";
+	l_File_name: STRING is					"File name: ";
+	l_Input_file: STRING is				"Input file";
+	l_Language_type: STRING is			"Language type";
+	l_Non_clickable_showstops: STRING is "Non clickable stop points";
+	l_Output_switches: STRING is		"Output switches";
+	l_Query: STRING is					"Query";
+	l_Results: STRING is				"Results";
+	l_Select_profiler: STRING is		"Select used profiler";
+	l_Showallcallers: STRING is			"Show all callers";
+	l_Showcallers: STRING is			"Show callers";
+	l_Showstops: STRING is				"Show stoppoints";
+	l_Specify_arguments: STRING is		"Specify arguments";
+	l_Subquery: STRING is				"Subquery";
+
+feature -- Widget names
 
 	n_Command_bar_name: STRING is		"Command bar";
 	n_Format_bar_name: STRING is		"Format bar";
-	n_X_resourse_name: STRING is		"ebench";
+	n_X_resource_name: STRING is		"ebench";
+
+feature -- Stone names
 
 	s_Class_stone: STRING is			"Class";
 	s_Explain_stone: STRING is			"Explanation";
 	s_Object_stone: STRING is			"Object";
 	s_Routine_stone: STRING is			"Feature";
-	s_Showstops: STRING is				"Stop points";
+	s_Showstops: STRING is				"Show stoppoints";
 	s_System: STRING is					"System";
+
+feature -- Title part
 
 	t_All_callers: STRING is			"All callers of ";
 	t_Argument_w: STRING is				"Execution arguments";
 	t_Ancestors_of: STRING is			"Ancestors of class ";
 	t_Attributes_of: STRING is			"Attributes of class ";
 	t_Attrvalues_of: STRING is			"Attributes of ";
+	t_Browse: STRING is					"Browse...";
 	t_Callers: STRING is				"Callers of ";
 	t_Class_list_of: STRING is			"Classes in universe ";
 	t_Click_form_of: STRING is			"Clickable form of class ";
@@ -273,6 +334,7 @@ feature {NONE}
 	t_Custom_of: STRING is				"Custom view of class ";
 	t_Deferreds_of: STRING is			"Deferred routines of class ";
 	t_Descendants_of: STRING is			"Descendants of class ";
+	t_Empty: STRING is					"";
 	t_Empty_class: STRING is			"Empty class tool";
 	t_Empty_explain: STRING is			"Empty explain tool";
 	t_Empty_object: STRING is			"Empty object tool";
@@ -286,28 +348,35 @@ feature {NONE}
 	t_Feature_flat_form_of: STRING is	"Flat form of feature ";
 	t_Flatshort_form_of: STRING is		"Interface of class ";
 	t_Future: STRING is					"Descendant versions of ";
+	t_Generation_options: STRING is		"Generation options...";
 	t_History: STRING is				"Implementers of ";
 	t_Homonyms_of: STRING is			"Homonyms of ";
 	t_Indexing_of: STRING is			"Indexing clauses of classes in universe ";
 	t_Modified_of: STRING is			"Modified classes in universe ";
+	t_Name_chooser: STRING is			"Name chooser...";
+	t_New_class: STRING is				"New class";
 	t_New_project: STRING is			"New project";
+	t_Non_clickable_stoppoints_of: STRING is "Non clickable stop points";
 	t_Onces_of: STRING is				"`Once/Constant' routines of class ";
 	t_Oncefunc_of: STRING is			"`Once' functions of ";
 	t_Past: STRING is					"Ancestor versions of ";
 	t_Project: STRING is				"Project";
 	t_Profile_tool: STRING is			"Profile tool";
+	t_Profile_query_window: STRING is	"Profile query window";
+	t_Preference_tool: STRING is		"Preference tool";
 	t_Routines_of: STRING is			"Routines of class ";
 	t_Suppliers_of: STRING is			"Suppliers of class ";
 	t_Routine_custom_tool: STRING is	"Routine custom tool";
+	t_Search: STRING is					"Search";
 	t_Select_a_file: STRING is			"Select a file";
 	t_Select_a_directory: STRING is		"Select a directory";
 	t_Shell_w: STRING is				"Shell command";
 	t_Short_form_of: STRING is			"Short form of class ";
+	t_Specify_ace: STRING is			"Specify ace";
 	t_Stoppoints_of: STRING is			"Stop points of ";
 	t_Slice_w: STRING is				"Special object slice";
 	t_Statistics_of: STRING is			"Statistics of system ";
 	t_System: STRING is					"System";
 	t_Warning: STRING is				"Warning";
-
 
 end -- class INTERFACE_NAMES

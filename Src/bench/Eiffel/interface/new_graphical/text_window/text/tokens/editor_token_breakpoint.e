@@ -8,12 +8,14 @@ class
 	EDITOR_TOKEN_BREAKPOINT
 
 inherit
-	EDITOR_TOKEN
+	EDITOR_TOKEN_MARGIN
+		rename
+			cursors as editor_editor_cursors
 		redefine
 			pebble,
 			update_position,
 			background_color,
-			is_beginning_token
+			editor_preferences
 		end
 
 	EB_CONSTANTS
@@ -33,6 +35,7 @@ feature -- Initialization
 		do
 			image := ""
 			length := 0
+			width := 14
 		end
 
 feature -- Access
@@ -41,15 +44,9 @@ feature -- Access
 			-- pebble to de picked when user right-clicks
 			-- on this token
 
-	is_beginning_token: BOOLEAN is True
-			-- Is the current token a beginning token?
-			-- A beginning token is a behavior token and does not
-			-- contains any text. An example of a beginning token is
-			-- the EDITOR_TOKEN_BREAKPOINT.
-
 feature -- Width & height
 
-	width: INTEGER is 12
+	width: INTEGER
 			-- Width in pixel of the entire token.
 			-- The width is equal to the pixmap width since this token is not
 			-- a real text token.
@@ -82,15 +79,16 @@ feature -- Miscellaneous
 			end
 		end
 
-	display (d_y: INTEGER; device: EV_PIXMAP; panel: TEXT_PANEL) is
+	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
 		local
 			a_background_color: like background_color
 		do
+			width := 14
  				-- Change drawing style here.
 			a_background_color := background_color
 			if a_background_color /= Void then
 				device.set_background_color (a_background_color)
-				device.clear_rectangle (0, d_y, left_margin_width, height)
+				device.clear_rectangle (0, d_y, width, height)
 			end
 
 				-- Display the text.
@@ -99,6 +97,12 @@ feature -- Miscellaneous
 				device.draw_pixmap (1, d_y, pixmap)
 			end
 		end
+
+	hide is
+			-- Hide Current
+		do
+			width := 0
+		end		
 
 	pixmap: EV_PIXMAP is 
 			-- Graphical representation of the breakable mark.
@@ -149,6 +153,12 @@ feature -- Miscellaneous
 	background_color: EV_COLOR is
 		do
 			Result := editor_preferences.breakpoint_background_color
+		end
+
+	editor_preferences: EB_EDITOR_DATA is
+			-- 
+		once
+			Result ?= editor_preferences_cell.item
 		end
 
 invariant

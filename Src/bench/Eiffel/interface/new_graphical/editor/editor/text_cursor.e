@@ -73,9 +73,10 @@ feature -- Element change
 			from
 				current_token := a_token.previous
 			until
-				current_token.previous = Void
+				current_token = Void or else current_token.previous = Void
 			loop
 				current_width := current_width + current_token.width
+				current_token := current_token.previous
 			end
 
 				-- Update the value of `x_in_pixels'

@@ -85,35 +85,32 @@ feature -- Miscellaneous
 			old_text_color: WEL_COLOR_REF
 			old_background_color: WEL_COLOR_REF
 		do
-				-- Remember the device context
-			dc := a_dc
-
 				-- Change drawing style here.
 			if text_color /= Void then
-				old_text_color := dc.text_color
-				dc.set_text_color(text_color)
+				old_text_color := a_dc.text_color
+				a_dc.set_text_color(text_color)
 			end
 			if background_color /= Void then
-				old_background_color := dc.background_color
-				dc.set_background_color(background_color)
+				old_background_color := a_dc.background_color
+				a_dc.set_background_color(background_color)
 			end
 			if font /= Void then
-				dc.select_font(font)
+				a_dc.select_font(font)
 			end
 
 				-- Display the text.
-			dc.text_out (d_x, d_y, image)
-			Result := d_x + dc.string_width(image)
+			a_dc.text_out (d_x, d_y, image)
+			Result := d_x + a_dc.string_width(image)
 
 				-- Restore drawing style here.
 			if text_color /= Void then
-				dc.set_text_color(old_text_color)
+				a_dc.set_text_color(old_text_color)
 			end
 			if background_color /= Void then
-				dc.set_background_color(old_background_color)
+				a_dc.set_background_color(old_background_color)
 			end
 			if font /= Void then
-				dc.unselect_font
+				a_dc.unselect_font
 			end
 				-- update width
 			width := Result - d_x
@@ -138,7 +135,10 @@ feature {NONE} -- Properties used to display the token
 			create Result.make_indirect(log_font)
 		end
 
-	dc: WEL_DC
+	dc: WEL_MEMORY_DC is
+		once
+			create Result.make
+		end
 
 
 end -- class EDITOR_TOKEN

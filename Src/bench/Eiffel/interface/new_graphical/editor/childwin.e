@@ -7,7 +7,7 @@ inherit
 			make as mdi_child_window_make
 		redefine
 			on_paint, on_size, class_icon, default_style,
-			on_vertical_scroll, on_key_down
+			on_vertical_scroll, on_key_down, on_char
 		end
 
 	APPLICATION_IDS
@@ -199,13 +199,25 @@ feature -- Basic operations
 			-- key `virtual_key' and the associated data `key_data'.
 		do
 			if virtual_key = Vk_left and then cursor /= Void then
+	   			io.putstring("go left%N")
 				cursor.go_left_char
+				invalidate
+				update
 			elseif  virtual_key = Vk_right and then cursor /= Void then
+	   			io.putstring("go right")
 				cursor.go_right_char
+				invalidate
+				update
 			else
 				-- Key not handled, do nothing
 			end
 		end
+
+ 	on_char (character_code, key_data: INTEGER) is
+   			-- Wm_char message
+   			-- See class WEL_VK_CONSTANTS for `character_code' value.
+   		do
+ 		end
 
 feature {NONE} -- Display functions
 	

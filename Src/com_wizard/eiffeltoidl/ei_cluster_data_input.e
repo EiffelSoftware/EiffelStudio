@@ -136,6 +136,9 @@ feature {NONE} -- Implementation
 					if raw_data.item.item (raw_data.item.count) = ';' then
 						raw_data.item.put (',', raw_data.item.count)
 					end
+					if raw_data.item.item (raw_data.item.count) /= ',' then
+						raw_data.item.append_character (',')
+					end
 
 					if is_object and not is_common_path (raw_data.item) and raw_data.item.index_of ('%"', 1) > 0 then
 						objects.extend (raw_data.item)

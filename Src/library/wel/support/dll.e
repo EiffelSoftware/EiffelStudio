@@ -23,10 +23,10 @@ feature {NONE} -- Initialization
 			dll_name_not_void: dll_name /= Void
 			dll_name_not_empty: not dll_name.empty
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := dll_name.to_c
-			item := cwin_load_library ($a)
+			!! a_wel_string.make (dll_name)
+			item := cwin_load_library (a_wel_string.item)
 		end
 
 feature -- Access
@@ -36,13 +36,16 @@ feature -- Access
 		require
 			exists: exists
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
+			nb: INTEGER
 		do
 			!! Result.make (Max_name_length + 1)
 			Result.fill_blank
-			a := Result.to_c
-			Result.head (cwin_get_module_file_name (item, $a,
-				Max_name_length + 1))
+			!! a_wel_string.make (Result)
+			nb := cwin_get_module_file_name (item, a_wel_string.item,
+				Max_name_length + 1)
+			Result := a_wel_string.string
+			Result.head (nb)
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.empty

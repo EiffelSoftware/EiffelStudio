@@ -29,10 +29,10 @@ feature {NONE} -- Initialization
 			name_not_void: name /= Void
 			name_not_empty: not name.empty
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := name.to_c
-			load_item (main_args.current_instance.item, $a)
+			!! a_wel_string.make (name)
+			load_item (main_args.current_instance.item, a_wel_string.item)
 		ensure
 			not_shared: not shared
 		end

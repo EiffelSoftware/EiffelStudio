@@ -20,10 +20,10 @@ feature -- Basic operations
 		require
 			s_not_void: s /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := s.to_c
-			cwin_output_debug_string ($a)
+			!! a_wel_string.make (s)
+			cwin_output_debug_string (a_wel_string.item)
 		end
 
 	message_beep_asterisk is
@@ -77,14 +77,17 @@ feature -- Basic operations
 	resource_string_id (an_id: INTEGER): STRING is
 			-- String identified by `an_id' in the resource file.
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
+			nb: INTEGER
 		do
 			!! Result.make (1024)
 			Result.fill_blank
-			a := Result.to_c
-			Result.head (cwin_load_string (
+			!! a_wel_string.make (Result)
+			nb := cwin_load_string (
 				wr_main_args.current_instance.item,
-				an_id, $a, Result.count))
+				an_id, a_wel_string.item, Result.count)
+			Result := a_wel_string.string
+			Result.head (nb)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -109,12 +112,15 @@ feature -- Status report
 	system_directory: STRING is
 			-- Path of the Windows system directory
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
+			nb: INTEGER
 		do
 			!! Result.make (cwin_get_system_directory (default_pointer, 0))
 			Result.fill_blank
-			a := Result.to_c
-			Result.head (cwin_get_system_directory ($a, Result.count))
+			!! a_wel_string.make (Result)
+			nb := cwin_get_system_directory (a_wel_string.item, Result.count)
+			Result := a_wel_string.string
+			Result.head (nb)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -122,12 +128,15 @@ feature -- Status report
 	windows_directory: STRING is
 			-- Path of the Windows directory
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
+			nb: INTEGER
 		do
 			!! Result.make (cwin_get_windows_directory (default_pointer, 0))
 			Result.fill_blank
-			a := Result.to_c
-			Result.head (cwin_get_windows_directory ($a, Result.count))
+			!! a_wel_string.make (Result)
+			nb := cwin_get_windows_directory (a_wel_string.item, Result.count)
+			Result := a_wel_string.string
+			Result.head (nb)
 		ensure
 			result_not_void: Result /= Void
 		end

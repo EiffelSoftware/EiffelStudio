@@ -362,7 +362,7 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 	int r;
 	char s[2038];
 	FILE *exception_saved;
-	char saved_cwd [MAX_PATH];
+	char saved_cwd [PATH_MAX + 1];
 
 	va_start (ap, StrFmt);
 	r = vsprintf (s,StrFmt, ap);
@@ -376,7 +376,7 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 	EIF_MUTEX_LOCK(eif_exception_trace_mutex, "Could not lock mutex for saving the exception trace in a file\n");
 #endif
 
-	getcwd(saved_cwd, MAX_PATH);
+	getcwd(saved_cwd, PATH_MAX);
 	chdir (starting_working_directory);
 
 		/* If we are not allowed to write the exception, we don't do it */

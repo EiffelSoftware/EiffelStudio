@@ -114,7 +114,7 @@ long EIF_bonce_count = 0;	/* Nr. of once routines in bytecode */
 char **EIF_once_values = (char **) 0;	/* Array to save the value of each computed once */
 #endif
 
-char starting_working_directory [MAX_PATH];	/* Store the working directory during the session, */
+char starting_working_directory [PATH_MAX + 1];	/* Store the working directory during the session, */
 							/* ie where to put output files from the runtime */
 
 rt_private void display_reminder (void);	/* display reminder of license */
@@ -203,7 +203,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 		/* Get the current working directory, ie the one where we
 		/* are going to save the ouput files */
-	if (getcwd(starting_working_directory, MAX_PATH) == NULL)
+	if (getcwd(starting_working_directory, PATH_MAX) == NULL)
 		print_err_msg(stderr, "Unable to get the current working directory.\n");
 
 	_fmode = O_BINARY;

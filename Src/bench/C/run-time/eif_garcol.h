@@ -14,6 +14,7 @@
 #define _eif_garcol_h_
 
 #include "eif_portable.h"
+#include "eif_macros.h"
 #include "eif_struct.h"
 #ifndef TEST
 #include "eif_plug.h"		/* Not wanted when runnning tests */

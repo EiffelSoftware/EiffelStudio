@@ -10,6 +10,7 @@
 */
 
 #include <windows.h>
+#include "eif_file.h"
 
 char *win_eif_getenv (char *k, char *app)
 /*
@@ -20,11 +21,11 @@ char *win_eif_getenv (char *k, char *app)
 	char *key, *lower_k;
 	static char buf[1024];
 	int appl_len, key_len;
-	char modulename [MAX_PATH];
+	char modulename [PATH_MAX + 1];
 	HKEY hkey;
 	DWORD bsize;
 
-	GetModuleFileName (NULL, modulename, MAX_PATH);
+	GetModuleFileName (NULL, modulename, PATH_MAX);
 
 	if (app == NULL)
 		appl_len = strrchr (modulename, '.') - strrchr (modulename, '\\') -1;
@@ -81,13 +82,13 @@ int win_eif_putenv ( char *v, char *k,  char *app)
  	*/
 
 	char *key, *lower_k;
-	char modulename [MAX_PATH];
+	char modulename [PATH_MAX + 1];
 	int appl_len, key_len;
 	extern char **_argv;
 	HKEY hkey;
 	DWORD disp;
 
-	GetModuleFileName (NULL, modulename, MAX_PATH);
+	GetModuleFileName (NULL, modulename, PATH_MAX);
 
 	if (app == NULL)
 		appl_len = strrchr (modulename, '.') - strrchr (modulename, '\\') -1;

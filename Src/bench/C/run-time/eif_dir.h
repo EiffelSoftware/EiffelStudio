@@ -56,7 +56,7 @@ extern char *   dir_dot_dir (char * dir);
 #include <windef.h>
 
 typedef struct tagEIF_WIN_DIRENT {
-	char	name [MAX_PATH];
+	char	name [PATH_MAX + 1];
 	HANDLE	handle;
 } EIF_WIN_DIRENT;
 #endif

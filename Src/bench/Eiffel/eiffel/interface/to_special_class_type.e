@@ -61,7 +61,7 @@ feature -- C Code generation
 		local
 			gen_param: TYPE_I
 			bit_i: BIT_I
-			is_expanded: BOOLEAN
+			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
 			expanded_type, non_expanded_type: CL_TYPE_I
 			exp_class_type: CLASS_TYPE
@@ -76,7 +76,7 @@ feature -- C Code generation
 			l_local_b: LOCAL_B
 		do
 			gen_param := first_generic
-			is_expanded := gen_param.is_true_expanded
+			l_param_is_expanded := gen_param.is_true_expanded
 			final_mode := byte_context.final_mode
 			type_c := gen_param.c_type
 
@@ -98,7 +98,7 @@ feature -- C Code generation
 			buffer.putstring ("union overhead *zone;")
 			buffer.new_line
 
-			if is_expanded then
+			if l_param_is_expanded then
 				buffer.putstring ("int16 pdtype;")
 				buffer.new_line
 				buffer.putstring ("EIF_INTEGER elem_size = (EIF_Size(")
@@ -165,7 +165,7 @@ feature -- C Code generation
 				--		loc1 = spmalloc(arg1 * sizeof(EIF_REFERENCE) + LNGPAD(2))
 			buffer.putstring ("loc1 = spmalloc(CHRPAD(arg1 * ")
 		
-			if is_expanded then
+			if l_param_is_expanded then
 				buffer.putstring ("elem_size")
 			else
 				type_c.generate_size (buffer)
@@ -206,7 +206,7 @@ feature -- C Code generation
 
 				-- Set element size
 			buffer.putstring ("*(EIF_INTEGER *) (ref + sizeof(EIF_INTEGER)) = ")
-			if is_expanded then
+			if l_param_is_expanded then
 				exp_class_type := expanded_type.associated_class_type
 				has_creation := exp_class_type.associated_class.creation_feature /= Void
 

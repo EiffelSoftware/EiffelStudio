@@ -100,13 +100,13 @@ feature {NONE} -- C code generation
 		local
 			gen_param: TYPE_I;
 			non_expanded_type: CL_TYPE_I;
-			is_expanded: BOOLEAN;
+			l_param_is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			final_mode: BOOLEAN;
 			encoded_name: STRING;
 		do
 			gen_param := first_generic;
-			is_expanded := gen_param.is_true_expanded;
+			l_param_is_expanded := gen_param.is_true_expanded;
 			type_c := gen_param.c_type;
 
 			buffer.putstring ("/* put */%N");
@@ -120,7 +120,7 @@ feature {NONE} -- C code generation
 
 			final_mode := byte_context.final_mode;
 
-			if is_expanded then
+			if l_param_is_expanded then
 				buffer.putstring ("%
 					%%Tif (arg1 == (EIF_REFERENCE) 0)%N%
 					%%T%TRTEC(EN_VEXP);%N");
@@ -128,7 +128,7 @@ feature {NONE} -- C code generation
 
 			generate_precondition (buffer, final_mode, "arg2")
 
-			if is_expanded then
+			if l_param_is_expanded then
 				if final_mode then
 						-- Optimization: size is know at compile time
 
@@ -166,13 +166,13 @@ feature {NONE} -- C code generation
 		local
 			gen_param: TYPE_I;
 			non_expanded_type: CL_TYPE_I;
-			is_expanded: BOOLEAN;
+			l_param_is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			final_mode: BOOLEAN;
 			encoded_name: STRING
 		do
 			gen_param := first_generic;
-			is_expanded := gen_param.is_true_expanded;
+			l_param_is_expanded := gen_param.is_true_expanded;
 			type_c := gen_param.c_type;
 
 			buffer.putstring ("/* item */%N");
@@ -189,7 +189,7 @@ feature {NONE} -- C code generation
 
 			generate_precondition (buffer, final_mode, "arg1")
 
-			if is_expanded then
+			if l_param_is_expanded then
 				if final_mode then
 						-- Optimization: size of expanded is known at compile time
 
@@ -222,12 +222,12 @@ feature {NONE} -- C code generation
 			consistency: feat.feature_name_id = feature {PREDEFINED_NAMES}.item_address_name_id
 		local
 			result_type, gen_param: TYPE_I;
-			is_expanded: BOOLEAN;
+			l_param_is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			encoded_name: STRING
 		do
 			gen_param := first_generic;
-			is_expanded := gen_param.is_true_expanded;
+			l_param_is_expanded := gen_param.is_true_expanded;
 			type_c := gen_param.c_type;
 
 			buffer.putstring ("/* item_address */%N");
@@ -250,7 +250,7 @@ feature {NONE} -- C code generation
 			buffer.putstring ("%Treturn ")
 			result_type.c_type.generate_cast (buffer)
 			buffer.putstring ("(Current + ")
-			if is_expanded then
+			if l_param_is_expanded then
 				buffer.putstring ("OVERHEAD + arg1 * sp_elem_size (Current));")
 			else
 				buffer.putstring ("arg1 * sizeof(")
@@ -268,13 +268,13 @@ feature {NONE} -- C code generation
 			consistency: feat.feature_name_id = feature {PREDEFINED_NAMES}.base_address_name_id
 		local
 			gen_param, result_type: TYPE_I;
-			is_expanded: BOOLEAN;
+			l_param_is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			final_mode: BOOLEAN;
 			encoded_name: STRING
 		do
 			gen_param := first_generic;
-			is_expanded := gen_param.is_true_expanded;
+			l_param_is_expanded := gen_param.is_true_expanded;
 			type_c := gen_param.c_type;
 
 			buffer.putstring ("/* base_address */%N");
@@ -294,7 +294,7 @@ feature {NONE} -- C code generation
 
 			final_mode := byte_context.final_mode;
 
-			if is_expanded and not final_mode then
+			if l_param_is_expanded and not final_mode then
 				buffer.putstring ("%TEIF_INTEGER elem_size;%N");
 			end;
 

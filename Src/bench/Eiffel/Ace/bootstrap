@@ -12,6 +12,9 @@
 
 # Remove old compilations
 rm -rf EIFGEN
+rm -f ec_stage1
+rm -f ec_stage2
+rm -f ec_stage3
 rm -rf F_code_stage1
 rm -rf F_code_stage2
 rm -rf F_code_stage3

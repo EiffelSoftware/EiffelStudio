@@ -291,7 +291,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	insert_pixmap is
 		local
 			gdkpix, gdkmask, text_ptr: POINTER
-			is_leaf, is_expded: BOOLEAN
+			is_leaf, is_expded: INTEGER
 			success: INTEGER
 		do
 			C.gtk_label_get (text_label, $text_ptr)

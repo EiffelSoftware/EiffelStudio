@@ -2728,22 +2728,25 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
 		// Initialize `result' to contents of SAFEARRAY
 		memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
-			hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER,
-					EIF_REFERENCE))put)(eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER,
+						EIF_REFERENCE))put)(eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -2860,22 +2863,25 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 		// Initialize `result' to contents of SAFEARRAY
 		memcpy (index_aaaa, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index_aaaa, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index_aaaa [dim_count - 1 - i];
-			}
-			hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER,
-					EIF_REFERENCE))put) (eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
+				eif_make_from_c (eif_access (eif_index), index_aaaa, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index_aaaa [dim_count - 1 - i];
+				}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER,
+						EIF_REFERENCE))put) (eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index_aaaa));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index_aaaa));
+		}
 
 		// free memory
 
@@ -3428,22 +3434,25 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
 		// Initialize `result' to contents of SAFEARRAY
 		memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
-			hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REAL,
-					EIF_REFERENCE))put)(eif_access (result), (EIF_REAL)sa_element, eif_access (eif_index));
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REAL,
+						EIF_REFERENCE))put)(eif_access (result), (EIF_REAL)sa_element, eif_access (eif_index));
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -3563,22 +3572,25 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
 		// Initialize `result' to contents of SAFEARRAY
 		memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
-			hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_DOUBLE,
-					EIF_REFERENCE))put)(eif_access (result), (EIF_DOUBLE)sa_element, eif_access (eif_index));
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_DOUBLE,
+						EIF_REFERENCE))put)(eif_access (result), (EIF_DOUBLE)sa_element, eif_access (eif_index));
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -3700,23 +3712,26 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
 		// Initialize `result' to contents of SAFEARRAY
 		memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
-			hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
 
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_CHARACTER,
-					EIF_REFERENCE))put)(eif_access (result), (EIF_CHARACTER)sa_element, eif_access (eif_index));
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_CHARACTER,
+						EIF_REFERENCE))put)(eif_access (result), (EIF_CHARACTER)sa_element, eif_access (eif_index));
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -3836,23 +3851,26 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
 		// Initialize `result' to contents of SAFEARRAY
 		memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
-			hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
-			eif_array_element = (sa_element == 0) ? EIF_FALSE : EIF_TRUE;
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN,
-					EIF_REFERENCE))put)(eif_access (result), eif_array_element, eif_access (eif_index));
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
+				eif_array_element = (sa_element == 0) ? EIF_FALSE : EIF_TRUE;
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN,
+						EIF_REFERENCE))put)(eif_access (result), eif_array_element, eif_access (eif_index));
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -3977,32 +3995,35 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 			currency_id = eif_type_id ("ECOM_CURRENCY");
 
 		make = eif_procedure ("make", currency_id);
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
 
-			eif_array_element = eif_create (currency_id);
+				eif_array_element = eif_create (currency_id);
 
-			nstcall = 0;
-			(FUNCTION_CAST ( void, (EIF_REFERENCE))make)(eif_access (eif_array_element));
-			sa_element = (CURRENCY *) eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
+				nstcall = 0;
+				(FUNCTION_CAST ( void, (EIF_REFERENCE))make)(eif_access (eif_array_element));
+				sa_element = (CURRENCY *) eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
-			hr = SafeArrayGetElement (a_safearray, sa_indices, sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
 
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
-					EIF_REFERENCE))put)(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+						EIF_REFERENCE))put)(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
 
-			eif_wean (eif_array_element);
+				eif_wean (eif_array_element);
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -4122,27 +4143,30 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
 		memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
 		EIF_OBJECT date_object = 0;
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
-			hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
 
-			date_object = eif_protect (ccom_ce_date (sa_element));
+				date_object = eif_protect (ccom_ce_date (sa_element));
 
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
-					(eif_access (result), eif_access (date_object), eif_access (eif_index));
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+						(eif_access (result), eif_access (date_object), eif_access (eif_index));
 
-			eif_wean (date_object);
+				eif_wean (date_object);
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -4267,33 +4291,36 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 			decimal_id = eif_type_id ("ECOM_DECIMAL");
 
 		make = eif_procedure ("make", decimal_id);
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
 
-			eif_array_element = eif_create (decimal_id);
+				eif_array_element = eif_create (decimal_id);
 
-			nstcall = 0;
-			(FUNCTION_CAST ( void, (EIF_REFERENCE))make)(eif_access (eif_array_element));
+				nstcall = 0;
+				(FUNCTION_CAST ( void, (EIF_REFERENCE))make)(eif_access (eif_array_element));
 
-			sa_element = (DECIMAL *) eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
+				sa_element = (DECIMAL *) eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
-			hr = SafeArrayGetElement (a_safearray, sa_indices, sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
 
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
-					(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+						(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
 
-			eif_wean (eif_array_element);
+				eif_wean (eif_array_element);
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -4415,27 +4442,30 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
 
 		EIF_OBJECT string_object = 0;
 
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
-			hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
 
-			string_object = eif_protect (ccom_ce_bstr (sa_element));
+				string_object = eif_protect (ccom_ce_bstr (sa_element));
 
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
-					(eif_access (result), eif_access (string_object), eif_access (eif_index));
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+						(eif_access (result), eif_access (string_object), eif_access (eif_index));
 
-			eif_wean (string_object);
+				eif_wean (string_object);
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -4560,32 +4590,35 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 			variant_id = eif_type_id ("ECOM_VARIANT");
 
 		make = eif_procedure ("make", variant_id);
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
 
-			eif_array_element = eif_create (variant_id);
+				eif_array_element = eif_create (variant_id);
 
-			nstcall = 0;
-			(FUNCTION_CAST ( void, (EIF_REFERENCE))make)(eif_access (eif_array_element));
+				nstcall = 0;
+				(FUNCTION_CAST ( void, (EIF_REFERENCE))make)(eif_access (eif_array_element));
 
-			sa_element = (VARIANT *)eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
+				sa_element = (VARIANT *)eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
-			hr = SafeArrayGetElement (a_safearray, sa_indices, sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
-					(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
+				hr = SafeArrayGetElement (a_safearray, sa_indices, sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+						(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
 
-			eif_wean (eif_array_element);
+				eif_wean (eif_array_element);
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -4707,25 +4740,28 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
 
 		EIF_OBJECT hresult_object = 0;
 
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
-			hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
-			hresult_object = eif_protect (ccom_ce_hresult (sa_element));
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
+				hresult_object = eif_protect (ccom_ce_hresult (sa_element));
 
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
-					(eif_access (result), eif_access (hresult_object), eif_access (eif_index));
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+						(eif_access (result), eif_access (hresult_object), eif_access (eif_index));
 
-			eif_wean (hresult_object);
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+				eif_wean (hresult_object);
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -4846,28 +4882,31 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
 		memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
 		EIF_OBJECT unknown_object = 0;
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
-			hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
 
-			unknown_object = eif_protect (ccom_ce_pointed_unknown (sa_element));
+				unknown_object = eif_protect (ccom_ce_pointed_unknown (sa_element));
 
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
-					(eif_access (result), eif_access (unknown_object), eif_access (eif_index));
-			eif_wean (unknown_object);
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+						(eif_access (result), eif_access (unknown_object), eif_access (eif_index));
+				eif_wean (unknown_object);
 
-			sa_element->AddRef();
+				sa_element->AddRef();
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 
@@ -4983,25 +5022,28 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
 		memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
 		EIF_OBJECT dispatch_object = 0;
-		do
+		if (ccom_element_number (dim_count, element_counts) > 0)
 		{
-			eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
-			for (i = 0; i < dim_count; i++)
+			do
 			{
-				sa_indices[i] = index [dim_count - 1 - i];
-			}
-			hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
-			if (hr != S_OK)
-			{
-				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-			}
-			dispatch_object = eif_protect (ccom_ce_pointed_dispatch (sa_element));
+				eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+				for (i = 0; i < dim_count; i++)
+				{
+					sa_indices[i] = index [dim_count - 1 - i];
+				}
+				hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
+				if (hr != S_OK)
+				{
+					com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+				}
+				dispatch_object = eif_protect (ccom_ce_pointed_dispatch (sa_element));
 
-			put (eif_access (result), eif_access (dispatch_object), eif_access (eif_index));
-			eif_wean (dispatch_object);
-			sa_element->AddRef();
+				put (eif_access (result), eif_access (dispatch_object), eif_access (eif_index));
+				eif_wean (dispatch_object);
+				sa_element->AddRef();
 
-		} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+			} while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+		}
 
 		// free memory
 

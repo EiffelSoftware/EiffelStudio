@@ -71,6 +71,8 @@ feature -- Access
 			end
 		end
 
+feature {NONE} -- Status report
+
 	is_tuple (a_class_i: CLASS_I): BOOLEAN is
 			-- Is it a TUPLE type?
 		do

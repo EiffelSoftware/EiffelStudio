@@ -10,6 +10,10 @@ class
 inherit
 	EV_ACCELERATOR_DIALOG_I
 
+	EV_EVENT_HANDLER_IMP
+
+	EV_DIALOG_EVENTS_CONSTANTS_IMP
+
 create
 	make,
 	make_with_text,
@@ -23,6 +27,7 @@ feature -- Event - command association
 			-- the "OK" button is pressed.
 			-- If there is no "OK" button, the event never occurs.
 		do
+			add_command (Cmd_ok, cmd, arg)
 		end
 
 	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -30,6 +35,7 @@ feature -- Event - command association
 			-- the "Cancel" button is pressed.
 			-- If there is no "Cancel" button, the event never occurs.
 		do
+			add_command (Cmd_cancel, cmd, arg)
 		end
 
 feature -- Event -- removing command association
@@ -38,12 +44,28 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- "OK" button is pressed.
 		do
+			remove_command (Cmd_ok)
 		end
 
 	remove_cancel_commands is
 			-- Empty the list of commands to be executed when
 			-- "Cancel" button is pressed.
 		do
+			remove_command (Cmd_cancel)
+		end
+
+feature {NONE} -- Implementation
+
+	execute_ok_commands is
+			-- Executes the commands added by the user.
+		do
+			execute_command (Cmd_ok, Void)
+		end
+
+	execute_cancel_commands is
+			-- Executes the commands added by the user.
+		do
+			execute_command (Cmd_cancel, Void)
 		end
 
 end -- class EV_ACCELERATOR_DIALOG_IMP

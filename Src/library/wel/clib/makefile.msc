@@ -2,10 +2,10 @@
 
 CC = cl
 # Finalized Version
-#CFLAGS = -c -Ox -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
+CFLAGS = -c -Ox -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
 
 # Debug Version
-CFLAGS = -c -Zi -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
+#CFLAGS = -c -Zi /W4 -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

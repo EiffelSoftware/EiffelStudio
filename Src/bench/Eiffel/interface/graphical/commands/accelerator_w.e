@@ -47,17 +47,17 @@ feature {NONE} -- Execution
 			elseif argument = status_acc then
 				Project_tool.debug_status_cmd_holder.associated_command.execute (default_argument)
 			elseif argument = stop_acc then
-				-- Project_tool.stop_points_hole.execute (default_argument)
+				Project_tool.stop_points_hole_holder.execute (default_argument)
 			elseif argument = object_acc then
-				-- Project_tool.object_hole.execute (default_argument)
+				Project_tool.object_hole_holder.execute (default_argument)
 			elseif argument = class_acc then
-				-- Project_tool.class_hole.execute (default_argument)
+				Project_tool.class_hole_holder.execute (default_argument)
 			elseif argument = feature_acc then
-				-- Project_tool.routine_hole.execute (default_argument)
+				Project_tool.routine_hole_holder.execute (default_argument)
 			elseif argument = system_acc then
-				-- Project_tool.system_hole.execute (default_argument)
+				Project_tool.system_hole_holder.execute (default_argument)
 			elseif argument = explain_acc then
-				-- Project_tool.explain_hole.execute (default_argument)
+				Project_tool.explain_hole_holder.execute (default_argument)
 			elseif argument = next_acc then
 				Project_tool.exec_stop_frmt_holder.execute (default_argument)
 			elseif argument = next_run_acc then

@@ -242,6 +242,10 @@ feature -- Generation structure
 	void generate_feature_internal_duplicate (int FeatureID);
 	void GenerateImplementationFeatureIL (int FeatureID);
 
+	void generate_finalize_feature (int feature_id);
+		// Generate `Finalize' feature on Eiffel objects.
+
+
 	// Generate a MethodImpl from `ParentTypeID::ParentFeatureID' into 
 	// `CurrentTypeID::FeatureID'.
 	void GenerateMethodImpl (int FeatureID, int ParentTypeID, int ParentFeatureID);

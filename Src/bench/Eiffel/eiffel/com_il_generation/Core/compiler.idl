@@ -16,7 +16,7 @@ library EiffelCompiler
 
     [
       odl,
-      uuid(EBAC202D-6108-3E2F-85E4-17BFE1A1FF49),
+      uuid(AB264B67-735C-3637-A7CC-89BA03243363),
       version(1.0),
       oleautomation
     ]
@@ -134,6 +134,7 @@ library EiffelCompiler
                         [in] long CodeFeatureID);
         HRESULT _stdcall generate_feature_internal_duplicate([in] long FeatureID);
         HRESULT _stdcall GenerateImplementationFeatureIL([in] long FeatureID);
+        HRESULT _stdcall generate_finalize_feature([in] long feature_id);
         HRESULT _stdcall GenerateMethodImpl(
                         [in] long FeatureID, 
                         [in] long ParentTypeID, 
@@ -292,3 +293,4 @@ library EiffelCompiler
         [default] interface COMPILER_PROXY_I;
     };
 };
+

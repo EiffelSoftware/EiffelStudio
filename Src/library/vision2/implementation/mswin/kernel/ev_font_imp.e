@@ -58,6 +58,8 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 			shape := convert_font_shape(default_wel_log_font.italic)
 			weight := convert_font_weight(default_wel_log_font.weight)
 			family := Ev_font_family_screen
+			internal_face_name := default_wel_log_font.face_name
+			update_internal_is_proportional(default_wel_log_font)
 		end
 
 
@@ -200,7 +202,7 @@ feature -- Status report
 	name: STRING is
 			-- Face name chosen by toolkit.
 		do
-			Result := wel_log_font.face_name
+			Result := internal_face_name
 		end
 
 	ascent: INTEGER is
@@ -262,10 +264,7 @@ feature -- Status report
 	is_proportional: BOOLEAN is
 			-- Can characters in the font have different sizes?
 		do
-			check
-				to_be_implemented: False
-			end
-			Result := True
+			Result := internal_is_proportional
 		end
  
 feature -- Obsolete
@@ -336,8 +335,6 @@ feature {NONE} -- Implementation
 				-- First, set the family
 			inspect family
 			when Ev_font_family_screen then
-					--| FIXME ARNAUD: Retrieve user
-					--| preferences from Windows Registry.
 				wel_log_font.set_family(wel_screen_font_family)
 				wel_log_font.set_pitch(wel_screen_font_pitch)
 
@@ -370,6 +367,13 @@ feature {NONE} -- Implementation
 
 				-- commit changes to `wel_log_font' into `wel_font'.
 			wel_font.set_indirect (wel_log_font)
+
+				-- retrieve values set by windows
+			wel_log_font.update_by_font(wel_font)
+
+				-- Update internal attributes.
+			internal_face_name := clone(wel_log_font.face_name)
+			update_internal_is_proportional(wel_log_font)
 		end
 
 	set_name (str: STRING) is
@@ -382,7 +386,7 @@ feature {NONE} -- Implementation
 			wel_log_font.set_face_name (str)
 
 				-- commit changes to `wel_log_font' into `wel_font'.
-			wel_font.set_indirect (wel_log_font)
+			update_font_face
 		end
 
 	remove_name is
@@ -396,7 +400,26 @@ feature {NONE} -- Implementation
 			wel_log_font.set_face_name ("")
 
 				-- commit changes to `wel_log_font' into `wel_font'.
-			wel_font.set_indirect (wel_log_font)
+			update_font_face
+		end
+
+	internal_face_name: STRING
+		-- Font face name
+
+	internal_is_proportional: BOOLEAN
+		-- Is the font proportional? (or fixed)
+
+	update_internal_is_proportional(logfont: WEL_LOG_FONT) is
+		do	
+			if logfont.pitch = Default_pitch then
+				internal_is_proportional := not (logfont.family = Ff_modern)
+						
+			elseif logfont.pitch = Fixed_pitch then
+				internal_is_proportional := False
+
+			elseif logfont.pitch = Variable_pitch then
+				internal_is_proportional := True
+			end
 		end
 
 	maximum_line_width (dc: WEL_DC; str: STRING; number_of_lines: INTEGER): INTEGER is
@@ -696,6 +719,10 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/03 02:37:48  pichery
+--| - Optimizated feature `name'.
+--| - Implemented feature `is_proportional'
+--|
 --| Revision 1.28  2000/03/03 01:37:45  brendel
 --| Removed calculate_text_extent.
 --| Added string_width_and_height.

@@ -38,6 +38,24 @@ feature
 	nl: INTEGER;
 			-- Number of consecutive new line generated
 
+feature -- Open, close features for C files
+
+	open_write_c is
+			-- Open-write a C-file with the extern C declaration
+			-- in case a C++ compiler is used.
+		do
+			open_write
+			putstring ("#ifdef __cplusplus%Nextern %"C%" {%N#endif%N%N")
+		end
+
+	close_c is
+			-- Close a C-file with the extern C declaration
+			-- in case a C++ compiler is used.
+		do
+			putstring ("%N#ifdef __cplusplus%N}%N#endif%N")
+			close
+		end
+
 feature 
 
 	indent is
@@ -250,26 +268,22 @@ feature
 feature {INDENT_FILE} -- prototype code generation
 
 	generate_function_declaration (type: STRING; f_name: STRING;
-			protected, extern: BOOLEAN; arg_types: ARRAY [STRING]) is
+			extern: BOOLEAN; arg_types: ARRAY [STRING]) is
 				-- Generate funtion declaration using macros
 		local
 			i, nb: INTEGER
 			arg_type: STRING
 		do
-			if protected then
-				putstring ("CPP_WRAPPER_START%N")
-			end
-
 			if extern then
-				putstring ("EXTERN_DECL(")
+				putstring ("extern ")
 			else
-				putstring ("STATIC_DECL(")
+				putstring ("static ")
 			end
 
 			putstring (type)
-			putstring (", ")
+			putstring (" ")
 			putstring (f_name)
-			putstring (", (")
+			putstring ("(")
 			from
 				i := 1
 				nb := arg_types.count
@@ -280,34 +294,13 @@ feature {INDENT_FILE} -- prototype code generation
 					putstring (", ")
 				end
 				arg_type := arg_types @ i
-				if arg_type.is_equal ("EIF_REAL") then
-					putstring ("EIF_REAL") -- ss for ANSI rt
-					--putstring ("EIF_DOUBLE")
-				else
 					putstring (arg_type)
-				end
 				i := i + 1
 			end
-			putstring ("));%N")
-
-			if protected then
-				putstring ("CPP_WRAPPER_END%N")
+			putstring (");%N")
 			end
-		end
 
 feature -- prototype code generation
-
-	generate_cpp_wrapper_start is
-			-- Generate the C++ wrapper start for C functions
-		do
-			putstring ("CPP_WRAPPER_START%N")
-		end
-
-	generate_cpp_wrapper_end is
-			-- Generate the C++ wrapper end for C functions
-		do
-			putstring ("CPP_WRAPPER_END%N")
-		end
 
 	generate_extern_declaration (type: STRING; f_name: STRING;
 					arg_types: ARRAY [STRING]) is
@@ -317,7 +310,7 @@ feature -- prototype code generation
 				arg_types /= Void
 			valid_lower:arg_types.lower = 1
 		do
-			generate_function_declaration (type, f_name, False, True, arg_types)
+			generate_function_declaration (type, f_name, True, arg_types)
 		end
 
 	generate_static_declaration (type: STRING; f_name: STRING;
@@ -328,31 +321,7 @@ feature -- prototype code generation
 				arg_types /= Void
 			valid_lower:arg_types.lower = 1
 		do
-			generate_function_declaration (type, f_name, False, False, arg_types)
-		end
-
-	generate_protected_extern_declaration (type: STRING; f_name: STRING;
-					arg_types: ARRAY [STRING]) is
-			-- Generate the external declaration for a C function
-			-- with the C++ wrapper
-		require
-			non_void_args: type /= Void and f_name /= Void and
-				arg_types /= Void
-			valid_lower:arg_types.lower = 1
-		do
-			generate_function_declaration (type, f_name, True, True, arg_types)
-		end
-
-	generate_protected_static_declaration (type: STRING; f_name: STRING;
-					arg_types: ARRAY [STRING]) is
-			-- Generate the static declaration for a C function
-			-- with the C++ wrapper
-		require
-			non_void_args: type /= Void and f_name /= Void and
-				arg_types /= Void
-			valid_lower:arg_types.lower = 1
-		do
-			generate_function_declaration (type, f_name, True, False, arg_types)
+			generate_function_declaration (type, f_name, False, arg_types)
 		end
 
 	generate_function_signature (type: STRING; f_name: STRING;
@@ -370,7 +339,7 @@ feature -- prototype code generation
 			arg_type: STRING
 		do
 			extern_dec_file.generate_function_declaration
-				(type, f_name, True, extern, arg_types)
+				(type, f_name, extern, arg_types)
 			putstring ("#if defined(__STDC__) || defined(__cplusplus)%N")
 			if not extern then
 				putstring ("static ")

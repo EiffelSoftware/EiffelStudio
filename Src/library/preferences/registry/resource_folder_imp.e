@@ -138,9 +138,11 @@ feature -- Update
 			loop
 				act_resource := load_resource (s, key_value (p_handle, s))
 				
-				resource ?= structure.item (act_resource.name)
-				if resource /= Void then
-					resource.set_value (act_resource.value)
+				if act_resource /= Void then
+					resource ?= structure.item (act_resource.name)
+					if resource /= Void then
+						resource.set_value (act_resource.value)
+					end
 				end
 
 				i := i + 1

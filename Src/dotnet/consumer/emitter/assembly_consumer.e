@@ -46,22 +46,15 @@ feature -- Basic Operations
 			referenced_assemblies := ass.get_referenced_assemblies
 			reset_assembly_mapping
 			count := referenced_assemblies.count
-			create assembly_ids.make (1, count + 1)
+			create assembly_ids.make
 			ca := Consumed_assembly_factory.consumed_assembly (ass)
-			assembly_ids.put (ca, 1)
-			assembly_mapping.put (1, ca.out)
-			from
-				i := 1
-			until
-				i > count
-			loop
-				ca := Consumed_assembly_factory.consumed_assembly_from_name (referenced_assemblies.item (i - 1))
-				i := i + 1
-				assembly_ids.put (ca, i)
-				assembly_mapping.put (i, ca.out)
-			end
+			last_index := 1
+			assembly_ids.extend (ca)
+			assembly_mapping.put (last_index, ca.out)
+			assembly_mapping.compare_objects
+			build_referenced_assemblies (ass)
 			prepare_consumed_types (ass)
-			serialize_consumed_types				
+			serialize_consumed_types			
 		end
 
 	consume_from_name (aname: ASSEMBLY_NAME) is
@@ -155,6 +148,39 @@ feature -- Element Settings
 		end
 		
 feature {NONE} -- Implementation
+
+	last_index: INTEGER
+			-- Last index where has been added a referened assembly.
+
+	build_referenced_assemblies (ass: ASSEMBLY) is
+			-- build referenced assemblies.
+		require
+			non_void_assembly: ass /= Void
+			positive_last_index: last_index > 0
+			assembly_mapping_object_comparison: assembly_mapping.object_comparison
+		local
+			referenced_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
+			i, count, index: INTEGER
+			ca: CONSUMED_ASSEMBLY
+		do
+			referenced_assemblies := ass.get_referenced_assemblies
+			count := referenced_assemblies.count
+			from
+				i := 1
+			until
+				i > count
+			loop
+				ca := Consumed_assembly_factory.consumed_assembly_from_name (referenced_assemblies.item (i - 1))
+				if not assembly_mapping.has (ca.out) then
+					last_index := last_index + 1
+					assembly_ids.extend (ca)
+					assembly_mapping.put (last_index, ca.out)
+						-- add also referenced assemblies of assembly referenced.
+					build_referenced_assemblies (feature {ASSEMBLY}.load_assembly_name (referenced_assemblies.item (i - 1)))
+				end
+				i := i + 1
+			end
+		end
 
 	prepare_consumed_types (ass: ASSEMBLY) is
 			-- Build `consumed_types'.
@@ -352,7 +378,7 @@ feature {NONE} -- Implementation
 	type_consumers: HASH_TABLE [TYPE_CONSUMER, STRING]
 			-- Assembly type consumers
 
-	assembly_ids: ARRAY [CONSUMED_ASSEMBLY]
+	assembly_ids: LINKED_LIST [CONSUMED_ASSEMBLY]
 			-- Assembly ids
 
 feature {NONE} -- Constants

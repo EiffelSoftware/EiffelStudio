@@ -24,7 +24,8 @@ inherit
 			make,
 			initialize,
 			default_style,
-			default_ex_style
+			default_ex_style,
+			wel_move_and_resize
 		end
 
 create
@@ -131,31 +132,64 @@ feature {NONE} -- Implementation
 			Result := Ws_ex_controlparent + Ws_ex_clientedge + Ws_ex_rightscrollbar
 		end
 
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- Move the window to `a_x', `a_y' position and
+			-- resize it with `a_width', `a_height'.
+			--| FIXME Scrollbars should ALWAYS be visible.
+		local
+			ch, cw: INTEGER
+		do
+			wel_cw_move_and_resize (a_x, a_y, a_width, a_height, repaint)
+	
+			if child /= Void then
+				child.set_move_and_size (0, 0, client_width, client_height)
+				cw := child.height - client_height
+				ch := child.width - client_width
+
+				if cw > 0 then
+					enable_horizontal_scroll_bar
+					set_horizontal_range (0, cw)
+				else
+					disable_horizontal_scroll_bar
+				end
+
+				if ch > 0 then
+					enable_vertical_scroll_bar
+					set_vertical_range (0, ch)
+				else
+					disable_vertical_scroll_bar
+				end
+			end
+		end
+
 	interface: EV_VIEWPORT
 
 end -- class EV_SCROLLABLE_AREA_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/21 00:50:09  brendel
+--| Scrollbars are always visible, but disabled. To be implemented tomorrow.
+--|
 --| Revision 1.19  2000/03/09 16:29:34  brendel
 --| Added `show_scroll_bars' to initialization but does not seem to make a
 --| difference.

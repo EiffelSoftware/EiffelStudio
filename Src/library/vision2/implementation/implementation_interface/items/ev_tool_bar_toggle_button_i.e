@@ -45,16 +45,7 @@ feature -- Event : command association
 		deferred
 		end
 
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is selected.
-		--require
-			--exists: not destroyed
-			--valid_command: cmd /= Void
-		deferred
-		end
-
-	add_toggled_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is toggled.
 		require
@@ -68,6 +59,14 @@ feature -- Event -- removing command association
 	remove_unselect_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is unselected.
+		require
+			exists: not destroyed
+		deferred	
+		end
+
+	remove_toggle_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is toggled.
 		require
 			exists: not destroyed
 		deferred	

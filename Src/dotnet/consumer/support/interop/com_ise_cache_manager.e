@@ -84,8 +84,7 @@ feature -- Basic Exportations
 			l_app_domain: APP_DOMAIN
 			l_impl: MARSHAL_ISE_CACHE_MANAGER
 		do	
-			l_app_domain := feature {APP_DOMAIN}.create_domain ("Emitter_exe",
-				new_evidence, new_setup (Void))
+			l_app_domain := feature {APP_DOMAIN}.create_domain ("Emitter_exe", Void, Void)
 			
 			l_impl := new_cache_manager (l_app_domain)
 			l_impl.consume_gac_assembly (aname, aversion, aculture, akey)
@@ -124,8 +123,7 @@ feature -- Basic Exportations
 				i := i + 1
 			end
 			
-			l_app_domain := feature {APP_DOMAIN}.create_domain ("Emitter_exe",
-				new_evidence, new_setup (l_path))
+			l_app_domain := feature {APP_DOMAIN}.create_domain ("Emitter_exe", Void, Void)
 		
 			l_impl := new_cache_manager (l_app_domain)
 			
@@ -173,8 +171,7 @@ feature -- Basic Exportations
 			l_app_domain: APP_DOMAIN
 			l_impl: MARSHAL_ISE_CACHE_MANAGER
 		do	
-			l_app_domain := feature {APP_DOMAIN}.create_domain ("Emitter_exe",
-				new_evidence, new_setup (Void))
+			l_app_domain := feature {APP_DOMAIN}.create_domain ("Emitter_exe", Void, Void)
 			
 			if akey /= Void and akey.length > 0 then
 				create key.make_from_cil (akey)				
@@ -200,8 +197,7 @@ feature -- Basic Exportations
 			l_app_domain: APP_DOMAIN
 			l_impl: MARSHAL_ISE_CACHE_MANAGER
 		do
-			l_app_domain := feature {APP_DOMAIN}.create_domain ("Emitter_exe",
-				new_evidence, new_setup (feature {PATH}.get_directory_name (apath)))
+			l_app_domain := feature {APP_DOMAIN}.create_domain ("Emitter_exe", Void, Void)
 				
 			l_impl := new_cache_manager (l_app_domain)
 			Result := l_impl.assembly_info_from_assembly (apath)
@@ -214,44 +210,6 @@ feature -- Basic Exportations
 
 feature {NONE} -- Implementation
 
-	new_setup (apath: SYSTEM_STRING): APP_DOMAIN_SETUP is
-			-- New setup for soon to be created AppDomain. If `apath' is not
-			-- Void it contains a list of assemblies which needs to be added
-			-- in `private_bin_path' of newly created APP_DOMAIN_SETUP instance.
-		indexing
-			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
-		local
-			l_private_bin_path: SYSTEM_STRING
-		do
-			if apath /= Void then
-				l_private_bin_path := apath
-				l_private_bin_path := feature {SYSTEM_STRING}.concat_string_string (
-					";" , l_private_bin_path)
-				l_private_bin_path := feature {SYSTEM_STRING}.concat_string_string (
-					feature {PATH}.get_directory_name (to_dotnet.get_type.assembly.location) ,
-					l_private_bin_path)
-			else
-				l_private_bin_path := feature {PATH}.get_directory_name (to_dotnet.get_type.assembly.location)
-			end
-			create Result.make
-				-- `application_base' needs to be setup to the magic "file://" so
-				-- that when loading assemblies in the app domain initialized with
-				-- `Result' it will look for those assemblies in `apath'.
-			Result.set_application_base ("file://")
-			Result.set_private_bin_path (l_private_bin_path)
-			Result.set_application_name ("emitter")
-		ensure
-			new_setup_not_void: Result /= Void
-		end
-
-	new_evidence: EVIDENCE is
-			-- New evidence for soon to be created AppDomain
-		indexing
-			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
-		do
-			-- Void for the moment. If it is not Void we get too many security exceptions.
-		end
-		
 	update_current (a_impl: MARSHAL_ISE_CACHE_MANAGER) is
 			-- Update Current with `a_impl'.
 		indexing

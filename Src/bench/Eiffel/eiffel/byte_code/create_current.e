@@ -39,9 +39,8 @@ feature -- C code generation
 			buffer: GENERATION_BUFFER
 		do
 			buffer := context.buffer
-			buffer.putstring ("RTLN(Dftype(")
+			buffer.putstring ("RTLNC(")
 			context.Current_register.print_register
-			buffer.putchar (')')
 			buffer.putchar (')')
 		end
 

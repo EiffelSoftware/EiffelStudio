@@ -162,7 +162,8 @@ int accounting;
 		}
     } else {
 		/* Normal object */
-        count = References(flags & EO_TYPE);
+        count = flags & EO_TYPE;
+        count = References(count);
 
 		/* Traversal of references of `object' */
 		for (i = 0; i < count; i++) {

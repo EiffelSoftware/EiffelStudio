@@ -83,7 +83,7 @@
 					<url>../../how_to_s/60_designing_a_project/15_history.xml</url>
 					<label>History tool</label>
 				</link>
-				<line_break/> Click to open the
+				<line_break/> Click to open the 
 				<bold>History tool</bold>.
 			</item>
 			<item>
@@ -144,7 +144,7 @@
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/20_select_depth.xml</url>
 					<label>Select depth of relations</label>
 				</link>
-				<line_break/> Click to bring up the
+				<line_break/> Click to bring up the 
 				<bold>Select depth</bold> dialog.
 			</item>
 			<item>
@@ -219,7 +219,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_export_to.png_color.gif</url>
+					<url>/images/eiffelstudio/icons/icon_export_to_png_color.gif</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/60_to_image.xml</url>

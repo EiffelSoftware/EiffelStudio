@@ -12,7 +12,7 @@
 		</code> with the relation depth for superclusters 1 and subclusters zero. 
 		<div>
 			<image>
-				<url>../../../../images/eiffelstudio/diagram/bon-subcluster.png</url>
+				<url>/images/eiffelstudio/diagram/bon-subcluster.png</url>
 			</image>
 		</div>
 		<line_break/>
@@ -28,7 +28,7 @@
 		</code>, with ancestor depth 2, descendant depth 2 and both client and supplier depth zero. 
 		<div>
 			<image>
-				<url>../../../../images/eiffelstudio/diagram/bon-list-relations.png</url>
+				<url>/images/eiffelstudio/diagram/bon-list-relations.png</url>
 			</image>
 		</div>
 		<line_break/>

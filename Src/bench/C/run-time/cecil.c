@@ -616,11 +616,11 @@ register1 char *key;
 	 * location in the value array. Return a null pointer if item is not found.
 	 */
 	
-	register2 int32 pos;		/* Position in H table */
+	register2 long pos;		/* Position in H table */
 	register3 int32 hsize;		/* Size of H table */
 	register4 char **hkeys;		/* Array of keys */
 	register5 int32 try = 0;	/* Count number of attempts */
-	register6 int32 inc;		/* Loop increment */
+	register6 long inc;		/* Loop increment */
 
 	/* Initializations */
 	hsize = ct->h_size;
@@ -632,7 +632,7 @@ register1 char *key;
 	/* Jump from one hashed position to another until we find the value or
 	 * go to an empty entry or reached the end of the table.
 	 */
-	inc = hashcode(key, strlen(key));
+	inc = hashcode(key, (long) strlen(key));
 	for (
 		pos = inc % hsize, inc = 1 + (inc % (hsize - 1));
 		try < hsize;

@@ -305,7 +305,7 @@ long object_count;
 	long count, elem_size;
 	union overhead *zone = HEADER(object);		/* Object header */
 	uint32 flags;								/* Object flags */
-	int32 key = ((int32) object) - 1;
+	unsigned long key = ((unsigned long) object) - 1;
 
 	flags = zone->ov_flags;
 

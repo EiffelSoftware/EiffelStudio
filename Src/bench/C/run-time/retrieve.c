@@ -255,8 +255,8 @@ register3 EIF_OBJ new;
 	 * possible references with it, before putting it in the hash table.
 	 */
 
-	uint32 key = ((uint32) old) - 1;	/* Key in the hash table */
-	uint32 solved_key;
+	unsigned long key = ((unsigned long) old) - 1;	/* Key in the hash table */
+	unsigned long solved_key;
 	long offset;
 	struct rt_struct *rt_info, *rt_solved;
 	struct rt_cell *rt_unsolved, *next;
@@ -363,7 +363,7 @@ update:
 			rt_update2(old + offset, new + offset, parent);	/* Recursion */
 		} else {
 			struct rt_struct *rt_info;
-			uint32 key = ((uint32) reference) - 1;
+			unsigned long key = ((unsigned long) reference) - 1;
 			char *supplier;
 
 			rt_info = (struct rt_struct *) ht_first(rt_table, key);
@@ -377,7 +377,7 @@ update:
 				struct rt_cell *new_cell, *old_cell;
 
 				new_cell = (struct rt_cell *) cmalloc(sizeof(struct rt_cell));
-				new_cell->key = ((uint32) old) - 1;
+				new_cell->key = ((unsigned long) old) - 1;
 				new_cell->offset = (long) (addr - parent);
 				old_cell = rt_info->rt_list;
 				new_cell->next = old_cell;
@@ -400,7 +400,7 @@ private void read_header()
 	int dtype, new_dtype;
 	long size;
 	int nb_gen;
-	char vis_name[512];
+	char vis_name[512], end;
 
 	errno = 0;
 
@@ -421,12 +421,13 @@ private void read_header()
 			4 != fscanf(rt_file, "%d %s %ld %d",&dtype,vis_name,&size,&nb_gen)
 		)
 			eio();
+
 		if (nb_gen > 0) {
 			struct gt_info *info;
 			int32 *t;
 			int matched;
 			int j, index;
-			int32 gtype[GEN_MAX];
+			long gtype[GEN_MAX];
 			int32 itype[GEN_MAX];
 
 			/* Generic class */
@@ -437,9 +438,10 @@ private void read_header()
 			if (info->gt_param != nb_gen)
 				eraise(vis_name, EN_RETR);	/* No good generic count */
 
-			for (j=0; j<nb_gen; j++)		/* Read meta-types */
+			for (j=0; j<nb_gen; j++) {		/* Read meta-types */
 				if (fscanf(rt_file," %ld", &gtype[j]) != 1)
 					eio();
+			}
 
 			for (t = info->gt_gen; /* empty */; /* empty */) {
 
@@ -448,8 +450,11 @@ private void read_header()
 
 				matched = 1;					/* Assume a perfect match */
 				for (j=0; j<nb_gen; j++) {
+					int32 gt;
+
+					gt = (int32) gtype[j];
 					itype[j] = *t++;
-					if (itype[j] !=  gtype[j])	/* Matching done on the fly */
+					if (itype[j] != gt)	/* Matching done on the fly */
 						matched = 0;			/* The types do not match */
 				}
 				if (matched) {					/* We found the type */
@@ -457,7 +462,7 @@ private void read_header()
 					break;						/* End of loop processing */
 				}
 			}
-			index = (t - info->gt_gen) / nb_gen;
+			index = (int) ((t - info->gt_gen) / nb_gen);
 			new_dtype = info->gt_type[index] & SK_DTYPE;
 		} else {
 			int32 *addr;
@@ -471,7 +476,7 @@ private void read_header()
 		if (Size(new_dtype) != size)
 			eraise(vis_name, EN_RETR);		/* No good size */
 		dtypes[dtype] = new_dtype;
-		fscanf(rt_file,"\n");
+		end = getc(rt_file);
 	}
 }
 

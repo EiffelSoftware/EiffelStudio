@@ -19,6 +19,8 @@
 #include "traverse.h"
 #include "except.h"
 #include "cecil.h"
+#include <stdio.h>
+#include "struct.h"
 
 public FILE *st_file;
 
@@ -246,16 +248,22 @@ private void make_header()
 			}
 			gt_type--;
 			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-			for (j=0; j<nb_gen; j++)
-				if (0 > fprintf(st_file, " %ld", *gt_gen++))
+			for (j=0; j<nb_gen; j++) {
+				long dgen;
+
+				dgen = *gt_gen;
+				gt_gen++;
+				if (0 > fprintf(st_file, " %ld", dgen))
 					eio();
+			}
 			if (0 > fprintf(st_file,"\n"))
 				eio();
-		} else
+		} else {
 			/* Non-generic type, write in file:
 			 *    "dtype visible_name size 0"
 			 */
 			if (0 > fprintf(st_file, "%d %s %ld 0\n", i, vis_name, Size(i)))
 				eio();
+		}
 	}
 }

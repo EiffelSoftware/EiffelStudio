@@ -28,7 +28,7 @@
 struct rt_cell {
 	struct rt_cell *next;
 	long offset;
-	int32 key;
+	unsigned long key;
 };
 
 /*

@@ -245,6 +245,16 @@ feature -- Status setting
 		ensure
 			assigned: real_target = a_target
 		end
+		
+	remove_real_target is
+			-- Ensure `real_target' is `Void'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.remove_real_target
+		ensure
+			real_target_void: real_target = Void
+		end
 
 feature -- Element change
 

@@ -82,7 +82,7 @@ public:
 	/*-----------------------------------------------------------
 	Feature location, full path to file and line number
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP feature_location(  /* [in, out] */ BSTR * file_path, /* [in, out] */ LONG * line_number ) = 0;
+	virtual STDMETHODIMP feature_location(  /* [in, out] */ BSTR * file_path, /* [in, out] */ ULONG * line_number ) = 0;
 
 
 	/*-----------------------------------------------------------

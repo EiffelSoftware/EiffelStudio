@@ -180,7 +180,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descripti
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_location(  /* [in, out] */ BSTR * file_path, /* [in, out] */ LONG * line_number )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_location(  /* [in, out] */ BSTR * file_path, /* [in, out] */ ULONG * line_number )
 
 /*-----------------------------------------------------------
 	Feature location, full path to file and line number
@@ -196,7 +196,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_l
 	EIF_OBJECT tmp_line_number = NULL;
 	if (line_number != NULL)
 	{
-		tmp_line_number = eif_protect (rt_ce.ccom_ce_pointed_long (line_number, NULL));
+		tmp_line_number = eif_protect (rt_ce.ccom_ce_pointed_unsigned_long (line_number, NULL));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
@@ -207,7 +207,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_l
 	if (*file_path != NULL)
 		rt_ce.free_memory_bstr (*file_path);
 	grt_ec_Eif_compiler.ccom_ec_pointed_cell_61 (((tmp_file_path != NULL) ? eif_wean (tmp_file_path) : NULL), file_path);
-	rt_ec.ccom_ec_pointed_long (((tmp_line_number != NULL) ? eif_wean (tmp_line_number) : NULL), line_number);
+	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_line_number != NULL) ? eif_wean (tmp_line_number) : NULL), line_number);
 	
 	END_ECATCH;
 	return S_OK;

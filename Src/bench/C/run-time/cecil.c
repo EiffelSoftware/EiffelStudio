@@ -37,7 +37,7 @@
 #endif
 #endif
 
-#define GEN_MAX	4				/* Maximum number of generic parameters */
+#define GEN_MAX	8				/* Maximum number of generic parameters */
 
 /* Function declarations */
 rt_private int cid_to_dtype(EIF_TYPE_ID cid);		/* Converts a class ID into a dynamic type */

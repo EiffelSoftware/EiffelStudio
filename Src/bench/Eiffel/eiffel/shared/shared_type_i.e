@@ -1,3 +1,8 @@
+indexing
+	description: "List of precomputed TYPE_I instances that can be reused."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class SHARED_TYPE_I
 	
 feature {NONE}
@@ -79,4 +84,5 @@ feature {NONE}
 		once
 			!! Result
 		end
+
 end

@@ -26,9 +26,7 @@ inherit
 		redefine
 			interface,
 			initialize,
-			list_widget,
-			remove_i_th,
-			insert_i_th
+			list_widget
 		end
 
 create
@@ -40,6 +38,9 @@ feature {NONE} -- Initialization
 		do
 			list_widget := C.gtk_menu_new
 			C.gtk_widget_show (list_widget)
+			C.gtk_menu_item_set_submenu (
+				c_object, list_widget
+			)
 			Precursor
 		end
 
@@ -65,26 +66,6 @@ feature -- Basic operations
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	insert_i_th (v: like item; i: INTEGER) is
-			-- Insert `v' at position `i'.
-		do
-			if count = 0 then
-				C.gtk_menu_item_set_submenu (
-					c_object, list_widget
-				)
-			end
-			Precursor (v, i)
-		end
-
-	remove_i_th (i: INTEGER) is
-			-- Remove item at `i'-th position.
-		do
-			Precursor (i)
-			if count = 0 then
-				C.gtk_menu_item_remove_submenu (c_object)
-			end
-		end
 
 	list_widget: POINTER
 
@@ -113,6 +94,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/19 16:16:41  brendel
+--| Submenu is now always visible again, like on Windows.
+--|
 --| Revision 1.31  2000/04/14 15:50:18  brendel
 --| Corrected removal of submenu.
 --|

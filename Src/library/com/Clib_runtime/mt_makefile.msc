@@ -1,0 +1,19 @@
+# ecom_runtime.lib - Makefile for Microsoft C
+
+CC = cl
+CFLAGS = -MT -DEIF_THREADS -c -Zi -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
+
+OBJ = ecom_runtime_c_e.obj ecom_runtime_ce_arrays.obj ecom_runtime_e_c.obj
+
+mtcom_runtime.lib: $(OBJ)
+	if exist $@ del $@
+	lib /OUT:$@ $(OBJ)
+	if not exist ..\spec\msc mkdir ..\spec\msc
+	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
+	copy $@ ..\spec\msc\lib
+	del $@
+	del *.obj
+
+.cpp.obj:
+	$(CC) $(CFLAGS) $<
+

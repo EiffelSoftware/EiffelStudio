@@ -3,7 +3,7 @@
 CC = cl
 
 # Finalized Version
-CFLAGS = -nologo -c -Ox -W1 -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
+CFLAGS = -nologo -c -Ox -W4 -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
 
 # Debug Version
 #CFLAGS = -c -Zi -nologo -Od -W4 -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION

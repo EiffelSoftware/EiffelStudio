@@ -53,6 +53,20 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
+	EV_KEY_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
 
 create
 	default_create
@@ -64,9 +78,7 @@ feature {NONE} -- Initialization
 			-- item to represent a window.
 		do
 			Precursor {EV_TREE}
-				-- Does nothing right now, but as it was previously
-				-- necessary to redefine this feature, we leave it
-				-- for the time being.
+			key_press_actions.extend (agent check_for_object_delete)
 		end
 		
 feature -- Basic operation
@@ -198,6 +210,58 @@ feature {NONE} -- Implementation
 				an_object.layout_item.expand				
 			end
 		end
+		
+	check_for_object_delete (a_key: EV_KEY) is
+			-- Respond to keypress of `a_key' and delete selected object.
+		require
+			a_key_not_void: a_key /= Void
+		local
+		
+			warning_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+		do
+			if a_key.code = Key_delete and selected_item /= Void then
+					-- Only perform deletion if delete key pressed, and an
+					-- object was selected.
+				if Preferences.boolean_resource_value (preferences.show_deleting_keyboard_warning, True) then
+					create warning_dialog.make_initialized (2, preferences.show_deleting_keyboard_warning, delete_warning1 + "object" + delete_warning2, delete_do_not_show_again)
+					warning_dialog.set_ok_action (agent delete_object)
+					warning_dialog.show_modal_to_window (parent_window (Current))
+				else
+					delete_object
+				end
+			end
+		end
+		
+	delete_object is
+			-- Delete selected object.
+		require
+			item_selected: selected_item /= Void
+		local
+			delete_object_command: GB_COMMAND_DELETE_OBJECT
+			delete_window_object_command: GB_COMMAND_DELETE_WINDOW_OBJECT
+			selected_object: GB_OBJECT
+			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			delete_position: INTEGER
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+		do
+				layout_item ?= selected_item
+				check
+					selected_item_was_layout_item: layout_item /= Void
+				end
+				selected_object := layout_item.object
+				titled_window_object ?= selected_object
+				if titled_window_object /= Void then
+						-- window objects must be handled seperately.
+					create delete_window_object_command.make (titled_window_object)
+					delete_window_object_command.execute
+				else
+					delete_position := selected_object.parent_object.layout_item.index_of (selected_object.layout_item, 1)
+					create delete_object_command.make (selected_object.parent_object, selected_object, delete_position)
+					delete_object_command.execute
+				end
+		end
+		
+		
 
 invariant
 	has_only_one_root: count <= 1

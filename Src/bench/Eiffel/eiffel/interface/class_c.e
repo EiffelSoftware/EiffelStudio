@@ -445,7 +445,7 @@ feature -- Action
 			class_info.set_class_id (class_id)
 
 				-- Initialization of the current class
-			init (ast_b, class_info, old_syntactical_suppliers)
+			init (ast_b, old_syntactical_suppliers)
 
 				-- Check sum error
 			Error_handler.checksum
@@ -1758,31 +1758,21 @@ feature -- Skeleton processing
 
 feature -- Class initialization
 
-	init (ast_b: CLASS_AS; class_info: CLASS_INFO; old_suppliers: like syntactical_suppliers) is
+	init (ast_b: CLASS_AS; old_suppliers: like syntactical_suppliers) is
 			-- Initialization of the class with AST produced by yacc
 		require
 			good_argument: ast_b /= Void
 		local
-			old_parents: like parents_classes
 			old_generics: like generics
 			old_is_expanded: BOOLEAN
 			old_is_deferred: BOOLEAN
 			old_is_frozen: BOOLEAN
-			parents_as: EIFFEL_LIST [PARENT_AS]
-			p: ARRAY [PARENT_AS]
-			lower, upper: INTEGER
-			raw_type: CLASS_TYPE_AS
-			parent_type: CL_TYPE_A
-			parent_class: CLASS_C
-			ve04: VE04
-			vhpr1: VHPR1
-			dummy_list: LINKED_LIST [INTEGER]
+			old_parents: like parents_classes
 			a_client: CLASS_C
 			changed_status, changed_frozen: BOOLEAN
 			is_exp, changed_generics, changed_expanded: BOOLEAN
 			gens: like generics
 			obs_msg: like obsolete_message
-			ancestor_id: INTEGER
 		do
 				-- Assign external name clause
 			if System.il_generation then
@@ -1810,6 +1800,13 @@ feature -- Class initialization
 			set_obsolete_message (obs_msg)
 			old_parents := parents_classes
 
+				-- We reset computed information about `parents'
+				-- that will be later computed in `fill_parents'.
+				-- We do not reset `parent_classes' as the previous value is
+				-- used in `fill_parents'.
+			parents := Void
+			computed_parents := Void
+
 			if old_parents /= Void then
 					-- Class was compiled before so we have to update
 					-- parent/descendant relation.
@@ -1831,13 +1828,11 @@ feature -- Class initialization
 			is_exp := ast_b.is_expanded
 			set_is_expanded (is_exp)
 
-			if is_exp then
+			if is_exp and not is_basic then
 					-- Record the fact that an expanded is in the system, but only
 					-- if it is not a known basic type. This is necessary as some
 					-- extra checks must be done after pass2.
-				if not is_basic then
-					System.set_has_expanded
-				end
+				System.set_has_expanded
 			end
 
 			if (is_exp /= old_is_expanded and then old_parents /= Void) then
@@ -1894,94 +1889,6 @@ feature -- Class initialization
 						-- We need to reset its `types' so that they are recomputed.
 					remove_types
 				end
-			end
-
-				-- Initialization of the parent types `parents': put
-				-- the default parent HERE if needed. Calculates also the
-				-- lists `descendants'. Since the routine `check_suppliers'
-				-- has been called before, all the instances of CLASS_C
-				-- corresponding to the parents of the current class are
-				-- in the system (even if a parent is not already parsed).
-
-			Inst_context.set_cluster (cluster)
-			parents_as := ast_b.parents
-
-				-- We reset computed information about `parents'
-				-- that will be later computed in `fill_parents'.
-			parents := Void
-			computed_parents := Void
-
-			ancestor_id := System.any_id
-			if parents_as /= Void and then not parents_as.is_empty then
-				if class_id = ancestor_id then
-					create vhpr1
-					create dummy_list.make
-					dummy_list.extend (class_id)
-					vhpr1.set_involved_classes (dummy_list)
-					Error_handler.insert_error (vhpr1)
-						-- Cannot go on here
-					Error_handler.raise_error
-				end
-
-					-- Separate loop for VHPR3 checking
-				from
-					p := parents_as
-					check p.lower = 1 end
-					lower := 1
-					upper := parents_as.count
-				until
-					lower > upper
-				loop
-						-- Evaluation of the parent type
-					raw_type := p.item (lower).type
-						-- Check if there is no anchor in the parent type
-					if raw_type.has_like then
-						create ve04
-						ve04.set_class (Current)
-						ve04.set_parent_type (parent_type)
-						Error_handler.insert_error (ve04)
-							-- Cannot go on here
-						Error_handler.raise_error
-					end
-					lower := lower + 1
-				end
-
-					-- Take the structure produced by Yacc
-				from
-					p := parents_as
-					check p.lower = 1 end
-					lower := 1
-					upper := parents_as.count
-					create parents_classes.make_filled (upper)
-				until
-					lower > upper
-				loop
-						-- Insertion of a new descendant for the parent class
-					parent_class := p.item (lower).type.associated_classi.compiled_class
-					check
-						parent_class_exists: parent_class /= Void
-							-- This ensures that routine `check_suppliers'
-							-- has been called before.
-					end
-					parent_class.add_descendant (Current)
-
-						-- Insertion in `parents_classes'.
-					parents_classes.put_i_th (parent_class, lower)
-					lower := lower + 1
-				end
-			elseif not (class_id = ancestor_id) then
-					-- No parents are syntactiaclly specified: ANY is
-					-- the default parent for Eiffel classes.
-				create parents_classes.make (1)
-
-					-- Add a descendant to class ANY
-				System.any_class.compiled_class.add_descendant (Current)
-					-- Insertion in `parents_classes'
-				parents_classes.extend (System.any_class.compiled_class)
-			else
-					-- In case of the ancestor class to all classes, just create an empty
-					-- parent structure.
-				create parents_classes.make (0)
 			end
 
 				-- Init generics
@@ -2071,40 +1978,6 @@ feature -- Class initialization
 					-- We need to reset its `types' so that they are recomputed.
 				remove_types
 			end
-
-			if old_parents /= Void then
-				if not same_parents (old_parents) then
-						-- Conformance tables incrementality
-					set_changed (True)
-					set_changed3a (True)
-					System.set_update_sort (True)
-
-						-- Take care of signature conformance for redefinion of
-						-- f(p:PARENT) in f(c: CHILD). If CHILD does not inherit
-						-- from PARENT anymore, the redefinition of f is not valid
-					if removed_parent (old_parents) then
-						from
-							syntactical_clients.start
-						until
-							syntactical_clients.after
-						loop
-							a_client := syntactical_clients.item
-							a_client.set_changed2 (True)
-							Degree_4.insert_new_class (a_client)
-							syntactical_clients.forth
-						end
-					end
-				end
-				if not changed then
-						-- If the class is not changed, it is marked `changed2'
-					changed2 := True
-				end
-			else
-					-- First compilation of the class
-				System.set_update_sort (True)
-			end
-		ensure
-			parents_classes_set: parents_classes /= Void
 		end
 
 	init_class_interface is
@@ -2497,39 +2370,138 @@ feature
 feature -- Parent checking
 
 	fill_parents (a_class_info: CLASS_INFO) is
-			-- File `parents' and update `a_class_info' accordingly.
+			-- Initialization of the parent types `parents': put
+			-- the default parent HERE if needed. Calculates also the
+			-- lists `descendants'. Since the routine `check_suppliers'
+			-- has been called before, all the instances of CLASS_C
+			-- corresponding to the parents of the current class are
+			-- in the system (even if a parent is not already parsed).
 		require
 			a_class_info_not_void: a_class_info /= Void
-			parents_classes_not_void: parents_classes /= Void
 		local
 			l_parents_as: EIFFEL_LIST [PARENT_AS]
 			l_parent_c: PARENT_C
+			l_parent_class: CLASS_C
+			l_parent_as: PARENT_AS
+			l_raw_type: CLASS_TYPE_AS
+			l_old_parents: like parents_classes
+			l_ancestor_id, l_count: INTEGER
+			l_vhpr1: VHPR1
+			l_ve04: VE04
+			l_dummy_list: LINKED_LIST [INTEGER]
+			l_client: CLASS_C
 		do
-			create computed_parents.make (parents_classes.count)
-			create parents.make (parents_classes.count)
+			Inst_context.set_cluster (cluster)
 			l_parents_as := a_class_info.parents
+			l_old_parents := parents_classes
+			l_ancestor_id := System.any_id
 
 			if l_parents_as /= Void and then not l_parents_as.is_empty then
-					-- Take the structure produced by Yacc
+				if class_id = l_ancestor_id then
+					create l_vhpr1
+					create l_dummy_list.make
+					l_dummy_list.extend (class_id)
+					l_vhpr1.set_involved_classes (l_dummy_list)
+					Error_handler.insert_error (l_vhpr1)
+						-- Cannot go on here
+					Error_handler.raise_error
+				end
+
+					-- VHPR3 checking and extract structure from parsing.
 				from
+					l_count := l_parents_as.count
+					create parents_classes.make (l_count)
+					create computed_parents.make (l_count)
+					create parents.make (l_count)
 					l_parents_as.start
 				until
 					l_parents_as.after
 				loop
-					l_parent_c := l_parents_as.item.parent_c
-					computed_parents.extend (l_parent_c)
-					parents.extend (l_parent_c.parent_type)
+						-- Evaluation of the parent type
+					l_parent_as := l_parents_as.item
+					l_raw_type := l_parent_as.type
+						-- Check if there is no anchor in the parent type
+					if l_raw_type.has_like then
+						create l_ve04
+						l_ve04.set_class (Current)
+						l_ve04.set_parent_type (l_raw_type)
+						Error_handler.insert_error (l_ve04)
+					else
+						l_parent_c := l_parent_as.parent_c
+						computed_parents.extend (l_parent_c)
+						parents.extend (l_parent_c.parent_type)
+
+						l_parent_class := l_parent_as.type.associated_classi.compiled_class
+							-- Insertion of a new descendant for the parent class
+						check
+							parent_class_exists: l_parent_class /= Void
+								-- This ensures that routine `check_suppliers'
+								-- has been called before.
+						end
+						l_parent_class.add_descendant (Current)
+
+							-- Insertion in `parents_classes'.
+						parents_classes.extend (l_parent_class)
+					end
 					l_parents_as.forth
 				end
-			elseif not (class_id = System.any_id) then
+			elseif not (class_id = l_ancestor_id) then
 					-- No parents are syntactiaclly specified: ANY is
-					-- the default parent for Eiffel classes
+					-- the default parent for Eiffel classes.
+				create parents_classes.make (1)
+				create computed_parents.make (1)
+				create parents.make (1)
+
+					-- Add a descendant to class ANY
+				System.any_class.compiled_class.add_descendant (Current)
+					-- Insertion in `parents_classes'
+				parents_classes.extend (System.any_class.compiled_class)
+					-- Insertion in `parents'
 				parents.extend (Any_type)
-					-- Fill parent list of corresponding class info
+					-- Insertion in `computed_parents'
 				computed_parents.extend (Any_parent)
+			else
+					-- In case of the ancestor class to all classes, just create an empty
+					-- parent structure.
+				create parents_classes.make (0)
+				create parents.make (0)
+				create computed_parents.make (0)
+			end
+
+			if l_old_parents /= Void then
+				if not same_parents (l_old_parents) then
+						-- Conformance tables incrementality
+					set_changed (True)
+					set_changed3a (True)
+					System.set_update_sort (True)
+
+						-- Take care of signature conformance for redefinion of
+						-- f(p:PARENT) in f(c: CHILD). If CHILD does not inherit
+						-- from PARENT anymore, the redefinition of f is not valid
+					if removed_parent (l_old_parents) then
+						from
+							syntactical_clients.start
+						until
+							syntactical_clients.after
+						loop
+							l_client := syntactical_clients.item
+							l_client.set_changed2 (True)
+							Degree_4.insert_new_class (l_client)
+							syntactical_clients.forth
+						end
+					end
+				end
+				if not changed then
+						-- If the class is not changed, it is marked `changed2'
+					changed2 := True
+				end
+			else
+					-- First compilation of the class
+				System.set_update_sort (True)
 			end
 		ensure
 			parents_not_void: parents /= Void
+			parents_classes_not_void: parents_classes /= Void
 			computed_parents_not_void: computed_parents /= Void
 		end
 
@@ -2717,7 +2689,6 @@ feature -- Supplier checking
 			good_argument: cl_name /= Void
 		local
 			supplier_class: CLASS_I
-			vtct: VTCT
 			comp_class: CLASS_C
 		do
 				-- 1.	Check if the supplier class is in the universe
@@ -2754,13 +2725,10 @@ feature -- Supplier checking
 					end
 				end
 			else
-					-- ERROR: Cannot find a supplier class
-				create vtct
-				vtct.set_class (Current)
-				vtct.set_class_name (cl_name)
-				Error_handler.insert_error (vtct)
-					-- Cannot go on here
-				Error_handler.raise_error
+					-- We could not find class of name `cl_name', but it does not mean
+					-- that we actually need the class, as maybe, at the end of
+					-- the compilation, Current might not be needed anymore.
+				system.record_potential_vtct_error (Current, cl_name)
 			end
 		end
 

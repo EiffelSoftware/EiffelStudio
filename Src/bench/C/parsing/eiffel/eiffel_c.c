@@ -130,7 +130,7 @@ char *c_parse(FILE *f, char *filename)
 	/* Stack initialization */
 	object_top = 0;
 	count_top = -1;
-	bzero (count_stack, count_size * sizeof(int));
+	memset  (count_stack, 0, count_size * sizeof(int));
 	generic_count = 0;
 
 	/* Parsing */

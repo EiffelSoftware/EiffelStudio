@@ -56,8 +56,8 @@ rt_public int econnect(char *host)
 	static struct servent *sp = 0;	/* Pointer to service info */
 
 	/* Clear out address structures */
-	bzero((char *) &addr, sizeof(struct sockaddr_in));
-	bzero((char *) &peer_addr, sizeof(struct sockaddr_in));
+	memset (&addr, 0, sizeof(struct sockaddr_in));
+	memset (&peer_addr, 0, sizeof(struct sockaddr_in));
 
 	/* Initialize peer address */
 	peer_addr.sin_family = AF_INET;

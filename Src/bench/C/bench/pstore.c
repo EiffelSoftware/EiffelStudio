@@ -13,6 +13,7 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "rt_macros.h"
+#include "rt_struct.h"
 #include "rt_traverse.h"
 #include "eif_garcol.h"
 #include "eif_except.h"

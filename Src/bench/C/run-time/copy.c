@@ -23,7 +23,7 @@ doc:<file name="copy.c" header="eif_copy.h" version="$Id$" summary="Various obje
 #include "rt_hash.h"			/* For deep copies */
 #endif
 
-#include "eif_struct.h"
+#include "rt_struct.h"
 #include "rt_except.h"
 #include "eif_local.h"
 #include "eif_hector.h"

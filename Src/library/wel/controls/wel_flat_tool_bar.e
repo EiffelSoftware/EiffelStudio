@@ -128,6 +128,37 @@ feature -- Status report
 			create coordinates.make(a_x, a_y)
 			Result := cwin_send_message_result (item, Tb_hittest, 0, cwel_pointer_to_integer(coordinates.item))
 		end
+	
+	get_max_width: INTEGER is
+			-- Retrieves the total width of all of the visible buttons and separators in the toolbar. 
+		require
+			function_supported: comctl32_version >= version_471
+		do
+			Result := get_max_size.width
+		end
+
+	get_max_height: INTEGER is
+			-- Retrieves the common height of all of the visible buttons and separators in the toolbar. 
+		require
+			function_supported: comctl32_version >= version_471
+		do
+			Result := get_max_size.height
+		end
+
+	get_max_size: WEL_SIZE is
+			-- Retrieves the total size of all of the visible buttons and separators in the toolbar
+		require
+			function_supported: comctl32_version >= version_471
+		local
+			a_size: WEL_SIZE
+			error_code: INTEGER
+		do
+			create Result
+			error_code := cwin_send_message_result (item, Tb_getmaxsize, 0, cwel_pointer_to_integer(Result.item))
+			check
+				no_error: error_code /= 0
+			end
+		end
 
 feature -- Status setting
 

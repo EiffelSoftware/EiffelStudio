@@ -11,10 +11,12 @@ inherit
 	WEL_STRUCTURE
 		rename
 			make as structure_make
+		redefine
+			default_create
 		end
 
 creation
-	make
+	make, default_create
 
 feature {NONE} -- Initialization
 
@@ -28,6 +30,17 @@ feature {NONE} -- Initialization
 		ensure
 			width_set: width = a_width
 			height_set: height = a_height
+		end
+
+	default_create is
+			-- Make a size where all fields are set to zero.
+		do
+			structure_make
+			set_width (0)
+			set_height (0)
+		ensure then
+			width_set: width = 0
+			height_set: height = 0
 		end
 
 feature -- Access

@@ -1,8 +1,9 @@
 indexing
-	description: "Toolbar messages."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Toolbar message (TB_...) constants."
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_TB_CONSTANTS
@@ -275,7 +276,7 @@ feature -- Access
 			"TB_SETTOOLTIPS"
 		end
 
-feature -- Access (Windows95 + IE3 and above)
+feature -- Access Comctl32.dll >= 4.70 (Windows95 + IE4 and above)
 
 	--|------------------------------------------------------|
 	--| Note, Arnaud PICHERY [ aranud@mail.dotcom.fr ]       |
@@ -342,11 +343,64 @@ feature -- Access (Windows95 + IE3 and above)
 			-- Retrieves the maximum number of text rows that can be
 			-- displayed on a toolbar button.
 
+
+feature -- Access Comctl32.dll >= 4.71 (Windows95 + IE4 and above)
+
+	Tb_getobject: INTEGER is 1086
+		-- Retrieves the IDropTarget for a toolbar control. 
+
+	Tb_gethotitem: INTEGER is 1095
+		-- Retrieves the index of the hot item in a toolbar. 
+
+	Tb_sethotitem: INTEGER is 1096
+		-- Sets the hot item in a toolbar. 
+		-- This message is ignored for toolbar controls that do not have the
+		-- TBSTYLE_FLAT style. 
+
+	Tb_setanchorhighlight: INTEGER is 1097
+		-- Sets the anchor highlight setting for a toolbar. 
+
+	Tb_getanchorhighlight: INTEGER is 1098
+		-- Retrieves the anchor highlight setting for a toolbar. 
+
+	Tb_getinsertmark: INTEGER is 1103
+		-- Retrieves the current insertion mark for the toolbar. 
+
+	Tb_setinsertmark: INTEGER is 1104
+		-- Sets the current insertion mark for the toolbar. 
+
+	Tb_insertmarkhittest: INTEGER is 1105
+		-- Retrieves the insertion mark information for a point in a toolbar.
+
+	Tb_movebutton: INTEGER is 1106
+		-- Moves a button from one index to another. 
+
+	Tb_getmaxsize: INTEGER is 1107
+		-- Retrieves the total size of all of the visible buttons and separators in the toolbar. 
+
+	Tb_setextendedstyle: INTEGER is 1108
+		-- Sets the extended styles for a toolbar control. 
+
+	Tb_getextendedstyle: INTEGER is 1109
+		-- Retrieves the extended styles for a toolbar control. 
+
+	Tb_getpadding: INTEGER is 1110
+		-- Retrieves the padding for a toolbar control. 
+
+	Tb_setpadding: INTEGER is 1111
+		-- Sets the padding for a toolbar control. 
+
+	Tb_setinsertmarkcolor: INTEGER is 1112
+		-- Sets the color used to draw the insertion mark for the toolbar. 
+
+	Tb_getinsertmarkcolor: INTEGER is 1113
+		-- Retrieves the color used to draw the insertion mark for the toolbar. 
+
 end -- class WEL_TB_CONSTANTS
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

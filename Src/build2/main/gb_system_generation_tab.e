@@ -27,10 +27,6 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current' and build widget structure.
-		local
-			label: EV_LABEL
-			frame: EV_FRAME
-			vertical_box: EV_VERTICAL_BOX
 		do
 			create local_check_button.make_with_text ("Local declarations grouped?")
 			extend (local_check_button)
@@ -95,8 +91,6 @@ feature {GB_SYSTEM_WINDOW} -- Implementation
 
 	validate is
 			-- Validate input fields of `Current'.
-		local
-			warning_dialog: EV_WARNING_DIALOG	
 		do
 				-- As we have only check buttons in `Current',
 				-- their state cannot be invalid.

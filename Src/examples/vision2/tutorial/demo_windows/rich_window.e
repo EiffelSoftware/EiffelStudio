@@ -28,16 +28,11 @@ feature {NONE} -- Initialization
 			{EV_RICH_TEXT} Precursor (Void)
 			add_button_release_command (3, Current, Void)
 			set_minimum_size (200, 200)
-			set_text ("Bonjour,%N%NJe m'appelle Leila.%N%
-			%Je suis bien heureuse de pouvoir tester les rich-edit.%N%
-			%%NA plus.")
-			!! color.make_rgb (180, 180, 180)
-			set_background_color (color)
+			set_text ("Hello,%N%NThis is a rich edit.%N%
+			%You can choose the color, the font, the size...%
+			%%Nof each word.%N%NHave a good day.%N")
 			apply_format (make_format)
 			set_parent (par)
-
-			append_text ("append")
-			prepend_text ("prepend")
 		end
 
 feature -- Access
@@ -59,9 +54,8 @@ feature -- Basic operation
 			!! format.make
 			!! color.make_rgb (0, 0, 255)
 			format.set_color (color)
-			format.set_underline (True)
 			set_character_format (format)
-			Result.add_character_format_with_regions (format, <<1, 8, 87, 87, 93, 93>>)		
+			Result.add_character_format_with_regions (format, <<1, 8, 86, 89, 93, 108>>)		
 
 			!! format.make
 			!! font.make_by_name ("tahoma")
@@ -71,7 +65,7 @@ feature -- Basic operation
 			format.set_color (color)
 			format.set_italic (True)
 			set_character_format (format)
-			Result.add_character_format_with_regions (format, <<11, 84, 89, 92>>)
+			Result.add_character_format_with_regions (format, <<9, 84, 90, 90>>)
 		end
 
 feature -- Command execution
@@ -84,7 +78,6 @@ feature -- Command execution
 		do
 			format.set_bold (False)
 			format.set_italic (False)
-			format.set_underline (False)
 			!! ft.make_by_name ("Symbol")
 			!! colors
 			format.set_color (colors.black)

@@ -84,7 +84,8 @@ feature -- Status setting
 			an_item_index := index_of (an_item, 1)
 			
 				-- Show the item at position `item_index'
-			C.gtk_clist_moveto (list_widget, an_item_index, 0, 0.0, 1.0)
+		--	C.gtk_clist_moveto (list_widget, an_item_index, 0, 0.0, 1.0)
+			--| FIXME IEK This needs to be properly implement
 		end
 
 	enable_multiple_selection is
@@ -267,7 +268,7 @@ feature {NONE} -- Implementation
 			is_out := a_value
 		end
 		
-	button_is_pressed:BOOLEAN is
+	button_is_pressed: BOOLEAN is
 			-- Is one of the mouse buttons pressed?
 		local
 			temp_mask, temp_x, temp_y: INTEGER

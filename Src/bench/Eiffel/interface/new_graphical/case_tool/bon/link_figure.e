@@ -733,16 +733,16 @@ feature -- Implementation
 
 feature {CONTEXT_DIAGRAM} -- XML
 
-	xml_element (a_parent: XML_ELEMENT): XML_ELEMENT is
+	xml_element (a_parent: XM_ELEMENT): XM_ELEMENT is
 			-- XML representation.
 		deferred
 		end
 
-	set_with_xml_element (an_element: XML_ELEMENT) is
+	set_with_xml_element (an_element: XM_ELEMENT) is
 			-- Set attributes from XML element.
 		require else
-			an_element_has_src_attribute: an_element.attributes.has ("SRC")
-			an_element_has_trg_attribute: an_element.attributes.has ("TRG")
+			an_element_has_src_attribute: an_element.has_attribute_by_name ("SRC")
+			an_element_has_trg_attribute: an_element.has_attribute_by_name ("TRG")
 		deferred
 		end
 

@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_TEXT_I
+	EV_RICH_TEXT_I
 
 inherit
-	EV_TEXT_AREA_I
+	EV_TEXT_I
 
 feature -- Access
 
@@ -78,7 +78,7 @@ feature -- Basic operation
 			result_not_void: Result /= Void
 		end
 
-end -- class EV_TEXT_I
+end -- class EV_RICH_TEXT_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

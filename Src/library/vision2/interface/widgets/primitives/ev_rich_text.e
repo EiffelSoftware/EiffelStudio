@@ -7,10 +7,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_TEXT
+	EV_RICH_TEXT
 
 inherit
-	EV_TEXT_AREA
+	EV_TEXT
 		redefine
 			implementation,
 			make
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Create an empty text area with `par' as
 			-- parent.
 		do
-			!EV_TEXT_IMP!implementation.make
+			!EV_RICH_TEXT_IMP!implementation.make
 			widget_make (par)
 		end
 
@@ -104,9 +104,9 @@ feature -- Basic operation
 
 feature -- Implementation
 
-	implementation: EV_TEXT_I
+	implementation: EV_RICH_TEXT_I
 
-end -- class EV_TEXT
+end -- class EV_RICH_TEXT
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -103,9 +103,9 @@ feature -- Element change
 			character_format_list.extend (internal)
 		end
 
-feature {EV_TEXT_IMP} -- Basic_operation
+feature {EV_RICH_TEXT_IMP} -- Basic_operation
 
-	apply (text: EV_TEXT) is
+	apply (text: EV_RICH_TEXT) is
 			-- Apply the current format to the given `text'.
 		local
 			list: ARRAYED_LIST [EV_INTERNAL_CHARACTER_FORMAT]

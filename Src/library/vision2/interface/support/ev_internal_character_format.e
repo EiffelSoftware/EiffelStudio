@@ -70,7 +70,7 @@ feature -- Element change
 
 feature -- Basic operation
 
-	apply (text: EV_TEXT) is
+	apply (text: EV_RICH_TEXT) is
 			-- Apply the current format to the given `text'.
 		local
 			r: ARRAYED_LIST [INTEGER]

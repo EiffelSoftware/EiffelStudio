@@ -74,7 +74,7 @@ feature -- Basic operations
 					column_offsets.start
 						-- Compute the virtual positions of the invalidated area.
 					invalid_x_start := internal_client_x + an_x - horizontal_buffer_offset
-					invalid_x_end := internal_client_x + an_x - horizontal_buffer_offset + a_width		
+					invalid_x_end := internal_client_x + an_x - horizontal_buffer_offset + a_width
 				until
 					last_column_index_set or column_offsets.off
 				loop
@@ -156,6 +156,9 @@ feature -- Basic operations
 							i > last_row_index
 						loop
 							Result.extend (i)
+							check
+								i_positive: i >= 0
+							end
 							i := i + 1
 						end
 					end
@@ -181,6 +184,9 @@ feature -- Basic operations
 						end
 						if first_row_index_set then
 							Result.extend (row_counter)
+--							check
+--								row_counter_positive: row_counter >= 0
+--							end
 						end
 
 						if not last_row_index_set and then invalid_y_end <= i + current_height then
@@ -287,6 +293,11 @@ feature -- Basic operations
 			are_tree_node_connectors_shown: BOOLEAN
 		do
 			dynamic_content_function := grid.dynamic_content_function
+			
+			grid.perform_vertical_computation
+				-- Recompute vertical row heights and scroll bar positions before
+				-- calculating the draw positions. The recomputation is only
+				-- performed internally if they are flagged as requiring a re-compute.
 			
 			create column_widths.make (8)
 			column_widths.extend (0)

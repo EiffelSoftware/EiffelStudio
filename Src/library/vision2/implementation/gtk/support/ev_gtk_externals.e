@@ -925,7 +925,7 @@ feature -- C enums
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"GTK_STATE_NORMAL"
+			"GTK_STATE_INSENSITIVE"
 		end
 
 	frozen gtk_sensitive_enum: INTEGER is

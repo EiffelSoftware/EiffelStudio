@@ -295,12 +295,12 @@ feature -- Basic operations
 				%EIF_INTEGER * lower_indexes = 0, * element_counts = 0, * upper_indexes = 0;%N%T%
 				%EIF_INTEGER * tmp_index = 0;%N%T%
 				%int dimensions = 0, loop_control = 0, i = 0;%N%T%
-				%EIF_POINTER_FUNCTION f_to_c = 0, f_element_item = 0;%N%T	%
+				%EIF_POINTER_FUNCTION f_to_c = 0;%N%T%
 				%EIF_OBJECT tmp_object1 = 0, tmp_object2 = 0, tmp_object3 = 0, eif_index = 0;%N%T%
 				%SAFEARRAYBOUND * array_bound = 0;%N%T%
 				%SAFEARRAY * c_safe_array = 0;%N%T%
 				%EIF_REFERENCE_FUNCTION f_array_item = 0;%N%T%
-				%EIF_PROCEDURE p_array_create = 0, p_array_put = 0;%N%T%
+				%EIF_PROCEDURE p_array_create = 0, p_array_put = 0, p_set_shared = 0;%N%T%
 				%long * c_index = 0;%N%T" +
 				tmp_element_c_type + " * an_element = 0;%N%T%
 				%HRESULT hr;%N%T%
@@ -342,7 +342,7 @@ feature -- Basic operations
 				%f_array_item = eif_reference_function (%"item%", ecom_array_tid);%N%T%
 				%p_array_create = eif_procedure (%"make%", int_array_tid);%N%T%
 				%p_array_put = eif_procedure (%"put%", int_array_tid);%N%T%
-				%f_element_item = eif_pointer_function (%"item%", eif_element_tid);%N%T%
+				%p_set_shared = eif_procedure (%"set_shared%", eif_element_tid);%N%T%
 				%eif_index = eif_create (int_array_tid);%N%T%
 				%nstcall = 0;%N%T%
 				%(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))p_array_create)%N%T%T%
@@ -360,8 +360,8 @@ feature -- Basic operations
 					%%>%N%T%T%
 					%eif_element = eif_protect ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)%N%T%T%T%
 						%(eif_access (eif_safe_array), eif_access (eif_index)));%N%T%T%
-					%an_element = (" + tmp_element_c_type + " *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_element_item)%N%T%T%T%
-						%(eif_access (eif_element));%N%T%T	%
+					%(FUNCTION_CAST (void, (EIF_REFERENCE)) p_set_shared) (eif_access (eif_element));%N%T%T%
+					%an_element = (" + tmp_element_c_type + " *) eif_field (eif_access (eif_element), %"item%", EIF_POINTER);%N%T%T%
 					%eif_wean (eif_element);%N%T%T%
 					%hr = SafeArrayPutElement (c_safe_array, c_index, an_element);%N%T%T%
 					%if (FAILED (hr))%N%T%T%
@@ -549,7 +549,7 @@ feature -- Basic operations
 				%EIF_INTEGER * lower_indexes = 0, * element_counts = 0, * upper_indexes = 0;%N%T%
 				%EIF_INTEGER * tmp_index = 0;%N%T%
 				%int dimensions = 0, loop_control = 0, i = 0;%N%T%
-				%EIF_POINTER_FUNCTION f_to_c = 0, f_element_item = 0;%N%T%
+				%EIF_POINTER_FUNCTION f_to_c = 0;%N%T%
 				%EIF_OBJECT tmp_object1 = 0, tmp_object2 = 0, tmp_object3 = 0, eif_index = 0;%N%T%
 				%SAFEARRAYBOUND * array_bound = 0;%N%T%
 				%SAFEARRAY * c_safe_array = 0;%N%T%
@@ -589,7 +589,6 @@ feature -- Basic operations
 				%f_array_item = eif_reference_function (%"item%", ecom_array_tid);%N%T%
 				%p_array_create = eif_procedure (%"make%", int_array_tid);%N%T%
 				%p_array_put = eif_procedure (%"put%", int_array_tid);%N%T%
-				%f_element_item = eif_pointer_function (%"item%", eif_element_tid);%N%T%
 				%eif_index = eif_create (int_array_tid);%N%T%
 				%nstcall = 0;%N%T%
 				%(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))p_array_create)%N%T%T%
@@ -607,9 +606,9 @@ feature -- Basic operations
 					%%>%N%T%T%
 					%eif_element = eif_protect ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)%N%T%T%T%
 						%(eif_access (eif_safe_array), eif_access (eif_index)));%N%T%T%
-					%an_element = (" + tmp_element_c_type + " ) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_element_item)%N%T%T%T%
-						%(eif_access (eif_element));%N%T%T	%
+					%an_element = (" + tmp_element_c_type + " *) eif_field (eif_access (eif_element), %"item%", EIF_POINTER);%N%T%T%
 					%eif_wean (eif_element);%N%T%T%
+					%an_element.AddRef ();%N%T%T%
 					%hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);%N%T%T%
 					%if (FAILED (hr))%N%T%T%
 					%%<%N%T%T%T%

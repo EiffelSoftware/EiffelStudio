@@ -589,7 +589,11 @@ feature -- Status setting
 		do
 			cwin_set_window_long (item, Gwl_style, a_style)
 		ensure
-			style_set: style = a_style
+			style_set: style >= a_style
+				-- we cannot be sure that the two styles are
+				-- exactly the same. Windows may have added a
+				-- flag (for example, when a_style=Ws_popup,
+				-- Windows automatically adds Ws_clipsiblings)
 		end
 
 	set_ex_style (an_ex_style: INTEGER) is

@@ -414,25 +414,17 @@ feature {COMPILER_EXPORTER} -- Access
 			end
 		end
 
-	weight: INTEGER is
-			-- Weight of Current.
-			-- Used to evaluate type of an expression with balancing rule.
-		do
-		end
-
-	heaviest (type: TYPE_A): TYPE_A is
+	heaviest (a_type: TYPE_A): TYPE_A is
 			-- Heaviest numeric type for balancing rule.
-			-- When Current is a bit type, `type' has to be
-			-- a bit type as well.
 		require
-			good_argument: type /= Void
-			consistency: is_bits implies type.is_bits
+			type_not_void: a_type /= Void
+			numeric_or_bit_type:
+				is_numeric and then a_type.is_numeric or
+				is_bits implies a_type.is_bits
 		do
-			if weight > type.weight then
-				Result := Current
-			else
-				Result := type
-			end
+		ensure
+			heaviest_not_void: Result /= Void
+			heaviest_known: Result = Current or Result = a_type
 		end
 
 	create_info: CREATE_INFO is

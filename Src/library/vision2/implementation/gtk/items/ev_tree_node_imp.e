@@ -548,7 +548,9 @@ feature {EV_TREE_IMP} -- Implementation
 			a_d_node := remove_on_expand_node
 			if remove_on_expand_node /= NULL then
 				remove_on_expand_node := NULL
-				feature {EV_GTK_EXTERNALS}.gtk_ctree_remove_node (parent_tree_imp.list_widget, a_d_node)		
+				if parent_tree_imp /= Void then
+					feature {EV_GTK_EXTERNALS}.gtk_ctree_remove_node (parent_tree_imp.list_widget, a_d_node)
+				end		
 			end
 		end
 

@@ -36,7 +36,7 @@ feature -- Access
 			-- control
 			-- Can be redefined by the user
 		do
-			!! Result.make_rgb (255, 255, 255)
+			!! Result.make_system (Color_window)
 		end
 
 feature -- Basic operations

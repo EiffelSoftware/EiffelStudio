@@ -28,10 +28,16 @@ inherit
 		undefine
 			default_create
 		end
+	
+	GB_SHARED_XML_HANDLER
+		undefine
+			default_create
+		end
 
 creation
-	make_and_launch 
-
+	make_and_launch,
+	make_and_launch_as_modify_wizard
+	
 feature {NONE} -- Initialization
 
 	make_and_launch (hwnd: INTEGER) is
@@ -46,6 +52,27 @@ feature {NONE} -- Initialization
 				cancel_actions.extend (agent clear_status_after_transport)
 				prepare (hwnd)
 			end
+		end
+		
+	make_and_launch_as_modify_wizard (location: STRING) is
+			-- Initialize and launch application. Wizard will be launched
+			-- directly for interface modification (fourth page).
+		do
+			default_create
+			xml_handler.load_components
+			set_application (Current)
+			pnd_motion_actions.extend (agent clear_status_during_transport)
+			cancel_actions.extend (agent clear_status_after_transport)
+			first_window.set_title (Wizard_title)
+			first_window.show
+			
+				-- We only do this if we are a modify wizard, as
+				-- we jump directly to the fourth state (building), and for
+				-- this to work, launch must be called.
+			if is_modify_wizard then
+				post_launch_actions.extend (agent first_window.load_first_state)
+			end
+			launch
 		end
 
 	prepare (hwnd: INTEGER) is

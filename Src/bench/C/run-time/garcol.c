@@ -19,6 +19,7 @@ extern "C" {
 
 #include "eif_project.h" /* for egc_prof_enabled */
 #include "eif_config.h"
+#include "eif_once.h"
 #include "eif_eiffel.h"		/* For bcopy/memcpy */
 #include "eif_globals.h"
 #include "eif_misc.h"	/* %%ss added for eif_free_dlls */

@@ -79,7 +79,6 @@ feature -- Output
 			-- current position.
 		local
 			i: INTEGER
-			byte: INTEGER_8
 		do
 			from
 				i := 0
@@ -111,8 +110,6 @@ feature -- Output
 		
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at current position.
-		local
-			i: INTEGER_8
 		do
 			writer.write_integer_8 (c.code.to_integer.to_integer_8)
 		end

@@ -637,8 +637,6 @@ feature {NONE} -- Disposal
 
 	dispose is
 			-- Release memory pointed by `item'.
-		local
-			null: POINTER
 		do
 			if not is_shared then
 				item.memory_free

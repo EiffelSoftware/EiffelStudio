@@ -758,8 +758,6 @@ feature -- Element change
 			original_exists: original /= Void
 			new_exists: new /= Void
 			original_not_empty: not original.is_empty
-		local
-			change_pos: INTEGER
 		do
 			internal_string_builder := internal_string_builder.replace_string_string (original.to_cil, new.to_cil)
 		end
@@ -869,8 +867,6 @@ feature -- Element change
 			-- do nothing if `n' >= `count'.
 		require
 			non_negative_argument: n >= 0
-		local
-			i, j: INTEGER
 		do
 			if n < count then
 				internal_string_builder := internal_string_builder.remove (0, count - n)
@@ -915,7 +911,7 @@ feature -- Element change
 	right_adjust is
 			-- Remove trailing whitespace.
 		local
-			lnw, i, cnt: INTEGER
+			lnw: INTEGER
 			wc: ARRAY [CHARACTER]
 		do
 			from

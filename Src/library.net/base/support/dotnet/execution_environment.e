@@ -131,7 +131,6 @@ feature {NONE} -- Implementation
 		require
 			s_not_void: s /= Void
 		local
-			nm: SYSTEM_STRING
 			l_comspec: STRING
 			si: SYSTEM_DLL_PROCESS_START_INFO
 			l_pos: INTEGER

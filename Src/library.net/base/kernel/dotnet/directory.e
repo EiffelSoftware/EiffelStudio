@@ -241,7 +241,6 @@ feature -- Status report
 		require
 			directory_exists: exists
 		local
-			l_name: SYSTEM_STRING
 			pa: FILE_IOPERMISSION
 			di: DIRECTORY_INFO
 			retried: BOOLEAN
@@ -263,7 +262,6 @@ feature -- Status report
 		require
 			directory_exists: exists
 		local
-			l_name: SYSTEM_STRING
 			pa: FILE_IOPERMISSION
 			di: DIRECTORY_INFO
 			retried: BOOLEAN
@@ -286,7 +284,6 @@ feature -- Status report
 		require
 			directory_exists: exists
 		local
-			l_name: SYSTEM_STRING
 			pa: FILE_IOPERMISSION
 			di: DIRECTORY_INFO
 			retried: BOOLEAN

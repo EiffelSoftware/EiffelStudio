@@ -742,7 +742,6 @@ feature {NONE} -- Implementation
 			index_small_enough: i <= field_count_of_type (type_id)
 		local
 			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
-			t: TYPE
 		do
 			m := get_members (type_id)
 			if m /= Void and then m.valid_index (i) then

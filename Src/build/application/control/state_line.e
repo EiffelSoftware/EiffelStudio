@@ -156,6 +156,9 @@ feature
 feature {NONE}
 
 	draw is
+		require else
+			arrow_attached: arrow_head /= Void
+			selection_square_exists: selection_square /= Void
 		do
 			arrow_draw;
 			selection_square.draw;

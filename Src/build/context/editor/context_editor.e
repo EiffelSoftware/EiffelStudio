@@ -331,14 +331,14 @@ feature
 			end;
 			current_form := new_form;
 			current_form.reset_form;
-			if not menu_button.shown then
-				menu_button.show;
-			end;
 			if not menu_button.managed then
 				menu_button.set_managed (True);
 			end;
 			current_form.show;
 			current_form.set_managed (True);
+			if not menu_button.shown then
+				menu_button.show;
+			end;
 		end;
 
 	behavior_form_shown: BOOLEAN is

@@ -156,6 +156,8 @@ feature
 		end;
 
 	root: CONTEXT is
+		require else
+			valid_parent: True;
 		do
 			Result := Current
 		end;

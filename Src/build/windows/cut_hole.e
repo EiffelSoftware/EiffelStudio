@@ -9,9 +9,6 @@ inherit
 			{NONE} all
 		end;
 	FOCUSABLE
-		rename
-			focus_source as button
-		
 		export
 			{NONE} all
 		end
@@ -23,6 +20,11 @@ creation
 
 	
 feature {NONE}
+
+	focus_source: PICT_COLOR_B is
+		do
+			Result := button;
+		end;
 
 	focus_label: LABEL is
 		do

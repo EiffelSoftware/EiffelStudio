@@ -218,11 +218,13 @@ feature
 	wipe_out is
 			-- Empty the history list
 		do
-			if history_list.last = last_command_saved then
-				last_command_saved := Void;
-			end;
-			list.wipe_out;
-			history_list.wipe_out
+			if not history_list.empty then
+				if history_list.last = last_command_saved then
+					last_command_saved := Void;
+				end;
+				list.wipe_out;
+				history_list.wipe_out;
+			end
 		end;
 
 	history_list: TWO_WAY_LIST [like item];

@@ -195,15 +195,12 @@ feature
 			!!focus_label.make (L_abel1, Current);
 			!!page_sw.make (S_croll, Current);
 			!!page_form.make (F_orm2, page_sw);
-			!!type_button.make ("Create/edit type"); 	
+			!!type_button.make ("Create/edit type"); 
 			!!create_inst_b.make ("Create instance");
-			--!!inst_button.make ("Edit instance");
 			type_button.make_visible (button_form);
 			create_inst_b.make_visible (button_form);
-			--inst_button.make_visible (button_form);
 			button_form.attach_left (type_button, 5);
 			button_form.attach_left_widget (type_button, create_inst_b, 0);
-			--button_form.attach_right_widget (create_inst_b, inst_button, 0);
 			button_form.detach_right (create_inst_b);
 			attach_left (button_form, 10);
 			attach_right (button_form, 10);
@@ -224,7 +221,7 @@ feature
 			attach_top_widget (separator1, page_sw, 10);
 			attach_bottom (page_sw, 10);
 			focus_label.set_text ("");
-			!!pages.make;
+			!!pages.make;;
 			define_command_pages;
 			update_interface;
 		end;

@@ -608,12 +608,18 @@ feature
 
 	hide is
 		do
-			widget.hide
+			if widget.realized and then widget.shown then
+				widget.hide
+			end
 		end;
 
 	show is
 		do
-			widget.show
+			if widget.realized then
+				widget.show
+			else
+				widget.realize
+			end
 		end;
 
 	select_widget is

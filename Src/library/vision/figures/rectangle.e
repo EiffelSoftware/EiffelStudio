@@ -202,11 +202,11 @@ feature -- Output
 		do
 			if drawing.is_drawable then
 				drawing.set_join_style (join_style);
-				if not (interior = Void) then
+				if interior /= Void then
 					interior.set_drawing_attributes (drawing);
 					drawing.fill_rectangle (center, width, height, orientation)
 				end;
-				if not (path = Void) then
+				if path /= Void then
 					path.set_drawing_attributes (drawing);
 					drawing.draw_rectangle (center, width, height, orientation)
 				end

@@ -58,6 +58,8 @@ feature
 feature {NONE}
 
 	process_stone is
+		require else
+			valid_stone: stone /= void;
 		local
 			inst_editor: CMD_INST_EDITOR;
 			inst: CMD_INSTANCE;

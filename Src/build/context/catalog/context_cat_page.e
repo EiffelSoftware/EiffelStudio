@@ -59,7 +59,6 @@ feature
 			a_form.attach_right (Current, 10);
 			a_form.attach_left (Current, 10);
 			a_form.attach_bottom (Current, 10);
-
 			page_name := a_name;
 			build;
 		end;

@@ -128,11 +128,11 @@ feature -- Output
             		-- Draw the circle.
         	do
             		if drawing.is_drawable then
-                		if not (interior = Void) then
+                		if interior /= Void then
                     			interior.set_drawing_attributes (drawing);
                     			drawing.fill_arc (center, radius, radius, 0, 360, 0, 0)
                			end;
-                		if not (path = Void) then
+                		if path /= Void then
                     			path.set_drawing_attributes (drawing);
                     			drawing.draw_arc (center, radius, radius, 0, 360, 0, -1)
                 		end

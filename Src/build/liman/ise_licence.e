@@ -190,7 +190,7 @@ feature
 		do
 			if override then
 				is_alive := True;
-			elseif not override and registered and licenced then
+			elseif registered and licenced then
 				answer := limalive;
 				if answer = -1 then
 					is_alive := false;
@@ -219,9 +219,6 @@ feature
 				licenced := True;
 			else
 				answer := limfree (l_feature, 0, 0);
-				if answer = -1 then
-					handle_error ("Error freeing license for");
-				end;
 				licenced := False;
 			end;
 		end;	

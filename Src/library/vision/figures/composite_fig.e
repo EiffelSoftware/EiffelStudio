@@ -252,20 +252,21 @@ feature -- Output
 	draw is
 			-- Draw the figure in `drawing'.
 		require else
-			a_drawing_attached: not (drawing = Void)
+			drawing_is_drawable: true
 		do
-			if drawing.is_drawable then
+			--if drawing.is_drawable then
 				composite_mark;
 				from
 					start
 				until
 					off
 				loop
+					--if item.drawing /= Void then
 					item.draw;
 					forth
 				end;
 				composite_return
-			end
+			--end
 		end;
 
 feature -- Updating

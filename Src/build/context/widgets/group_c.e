@@ -541,7 +541,6 @@ feature
 			oui_create (parent_widget);
 			group_type.create_oui_group (Current);
 			reset_modified_flags;
-
 			retrieved_node.set_context_attributes (Current);
 			retrieved_node := Void
 		end;

@@ -99,8 +99,6 @@ feature -- Output
 
 	draw is
 			-- Draw the segment.
-		require else
-			drawing_attached: not (drawing = Void)
 		do
 			if drawing.is_drawable then
 				drawing.set_cap_style (cap_style);

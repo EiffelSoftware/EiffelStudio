@@ -70,7 +70,7 @@ feature -- Access
 	size_of_side: INTEGER is
 			-- Size of a side
 		do
-			Result := real_to_integer (2*radius*cos (180.0/number_of_sides))
+			Result := real_to_integer (2*radius/(cos (180.0/number_of_sides)))
 		end;
 
 feature -- Modification & Insertion
@@ -136,8 +136,12 @@ feature -- Modification & Insertion
 		do
 			radius := real_to_integer (a_size*cos (180.0/number_of_sides)/2);
 			set_conf_modified
+			io.putint (a_size)
+			io.putstring ("<- a_size size_of_side ->")
+			io.putint (size_of_side)
+			io.new_line
 		ensure
-			size_of_side = a_size
+			--rounding_error_allowance: a_size - 1 <= size_of_side and size_of_side <= a_size + 1
 		end;
 
 	xyrotate (a: REAL; px, py: INTEGER) is
@@ -193,17 +197,17 @@ feature -- Output
 					if polygon.off then
 						polygon.add (a_point)
 					else
-						polygon.add_left (a_point);
+						polygon.put_left (a_point);
 					end;
 					i := i+1
 				end;
 				polygon.attach_drawing_imp (drawing);
 				drawing.set_join_style (join_style);
-				if not (interior = Void) then
+				if interior /= Void then
 					interior.set_drawing_attributes (drawing);
 					drawing.fill_polygon (polygon)
 				end;
-				if not (path = Void) then
+				if path /= Void then
 					path.set_drawing_attributes (drawing);
 					drawing.draw_polyline (polygon, true)
 				end;

@@ -71,11 +71,11 @@ feature -- Output
 			-- Draw the square.
 		do
 			if drawing.is_drawable then
-				if not (interior = Void) then
+				if interior /= Void then
 					interior.set_drawing_attributes (drawing);
 					drawing.fill_rectangle (center, size_of_side, size_of_side, orientation)
 				end;
-				if not (path = Void) then
+				if path /= Void then
 					path.set_drawing_attributes (drawing);
 					drawing.draw_rectangle (center, size_of_side, size_of_side, orientation)
 				end

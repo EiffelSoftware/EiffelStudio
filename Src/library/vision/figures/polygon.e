@@ -169,16 +169,15 @@ feature -- Output
 
 	draw is
 			-- Draw the polygon.
-		require else
-			drawing_attached: not (drawing = Void)
+		
 		do
 			if (count > 2) and then drawing.is_drawable then
 				drawing.set_join_style (join_style);
-				if not (interior = Void) then
+				if interior /= Void then
 					interior.set_drawing_attributes (drawing);
 					drawing.fill_polygon (Current)
 				end;
-				if not (path = Void) then
+				if path /= Void then
 					path.set_drawing_attributes (drawing);
 					drawing.draw_polyline (Current, true)
 				end

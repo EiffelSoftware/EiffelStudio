@@ -94,10 +94,10 @@ feature {NONE}
 
 	dispose is
 			-- Called when the pixmap is garbaged
-		require else
-			objects.empty
 		do
-			free_resources
+			--if objects /= Void and then  not objects.empty then
+			--	free_resources
+			--end;
 		end; 
 
 	free_resources is

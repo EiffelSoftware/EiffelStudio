@@ -91,6 +91,7 @@ feature
 			scroll_page.make (S_crolled_items, Scrolled_w_pixmap);
 
 			!!page_label.make (L_abel, top_form);
+
 			page_label.set_left_alignment;
 		
 		

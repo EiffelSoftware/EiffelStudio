@@ -90,7 +90,7 @@ feature {NONE}
 				!!a_segment.make;
 				a_segment.set_line_width (arrow_head_line_w);	
 				a_segment.set_foreground_color (black);
-				arrow_head.put (a_segment);
+				arrow_head.replace (a_segment);
 				arrow_head.forth
 			end;
 		ensure
@@ -171,6 +171,9 @@ feature {NONE}
 
 	draw is
 			-- Draw the arrow line.
+		require else
+			arrow_valid: arrow_head /= Void
+			drawing_valid: drawing /= Void
 		do
 			segment_draw;
 			from
@@ -184,6 +187,6 @@ feature {NONE}
 		end; -- draw
 
 	invariant
-		not_avoid_arrow_head: not (arrow_head = Void)
+		not_avoid_arrow_head: arrow_head /= Void
 
 end -- class ARROW_LINE

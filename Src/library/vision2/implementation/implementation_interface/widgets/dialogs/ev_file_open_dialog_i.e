@@ -12,6 +12,32 @@ inherit
 		redefine
 			internal_accept
 		end
+
+feature -- Status report
+
+	multiple_selection_enabled: BOOLEAN is
+			-- Can more than one item be selected?
+		deferred
+		end
+		
+	file_names: ARRAYED_LIST [STRING] is
+			-- Full names of currently selected files including path.
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- Status setting
+
+	enable_multiple_selection is
+			-- Allow multiple items to be selected.
+		deferred
+		end
+
+	disable_multiple_selection is
+			-- Allow only one item to be selected.
+		deferred
+		end
 	
 feature {NONE} -- Implementation
 

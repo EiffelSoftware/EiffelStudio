@@ -91,7 +91,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::GetMoniker(  /* [in] */ ULONG dw_assign, /* [in] */ ULONG dw_which_moniker, /* [out] */ ecom_control_library::IMoniker * * ppmk )
+STDMETHODIMP ecom_control_library::control_site::GetMoniker(  /* [in] */ ULONG dw_assign, /* [in] */ ULONG dw_which_moniker, /* [out] */ ::IMoniker * * ppmk )
 
 /*-----------------------------------------------------------
   No description available.
@@ -125,7 +125,7 @@ STDMETHODIMP ecom_control_library::control_site::GetMoniker(  /* [in] */ ULONG d
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::GetContainer(  /* [out] */ ecom_control_library::IOleContainer * * pp_container )
+STDMETHODIMP ecom_control_library::control_site::GetContainer(  /* [out] */ ::IOleContainer * * pp_container )
 
 /*-----------------------------------------------------------
   No description available.
@@ -211,7 +211,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::GetWindow(  /* [out] */ ecom_control_library::wireHWND * phwnd )
+STDMETHODIMP ecom_control_library::control_site::GetWindow(  /* [out] */ HWND * phwnd )
 
 /*-----------------------------------------------------------
   No description available.
@@ -307,7 +307,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::GetWindowContext(  /* [out] */ ecom_control_library::IOleInPlaceFrame * * pp_frame, /* [out] */ ecom_control_library::IOleInPlaceUIWindow * * pp_doc, /* [out] */ ecom_control_library::tagRECT * lprc_pos_rect, /* [out] */ ecom_control_library::tagRECT * lprc_clip_rect, /* [in, out] */ ecom_control_library::tagOIFI * lp_frame_info )
+STDMETHODIMP ecom_control_library::control_site::GetWindowContext(  /* [out] */ ::IOleInPlaceFrame * * pp_frame, /* [out] */ ::IOleInPlaceUIWindow * * pp_doc, /* [out] */ ecom_control_library::tagRECT * lprc_pos_rect, /* [out] */ ecom_control_library::tagRECT * lprc_clip_rect, /* [in, out] */ ecom_control_library::tagOIFI * lp_frame_info )
 
 /*-----------------------------------------------------------
   No description available.
@@ -998,7 +998,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::ParseDisplayName(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ LPWSTR psz_display_name, /* [out] */ ULONG * pch_eaten, /* [out] */ ecom_control_library::IMoniker * * ppmk_out )
+STDMETHODIMP ecom_control_library::control_site::ParseDisplayName(  /* [in] */ ::IBindCtx * pbc, /* [in] */ LPWSTR psz_display_name, /* [out] */ ULONG * pch_eaten, /* [out] */ ::IMoniker * * ppmk_out )
 
 /*-----------------------------------------------------------
   No description available.
@@ -1051,7 +1051,7 @@ STDMETHODIMP ecom_control_library::control_site::ParseDisplayName(  /* [in] */ e
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::EnumObjects(  /* [in] */ ULONG grf_flags, /* [out] */ ecom_control_library::IEnumUnknown * * ppenum )
+STDMETHODIMP ecom_control_library::control_site::EnumObjects(  /* [in] */ ULONG grf_flags, /* [out] */ ::IEnumUnknown * * ppenum )
 
 /*-----------------------------------------------------------
   No description available.
@@ -1914,7 +1914,7 @@ STDMETHODIMP ecom_control_library::control_site::GetHostInfo(  /* [in, out] */ e
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::ShowUI(  /* [in] */ ULONG dw_id, /* [in] */ ecom_control_library::IOleInPlaceActiveObject * p_active_object, /* [in] */ ecom_control_library::IOleCommandTarget * p_command_target, /* [in] */ ecom_control_library::IOleInPlaceFrame * p_frame, /* [in] */ ecom_control_library::IOleInPlaceUIWindow * p_doc )
+STDMETHODIMP ecom_control_library::control_site::ShowUI(  /* [in] */ ULONG dw_id, /* [in] */ ::IOleInPlaceActiveObject * p_active_object, /* [in] */ ::IOleCommandTarget * p_command_target, /* [in] */ ::IOleInPlaceFrame * p_frame, /* [in] */ ::IOleInPlaceUIWindow * p_doc )
 
 /*-----------------------------------------------------------
   No description available.
@@ -2060,7 +2060,7 @@ STDMETHODIMP ecom_control_library::control_site::OnFrameWindowActivate(  /* [in]
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::ResizeBorder(  /* [in] */ ecom_control_library::tagRECT * prc_border, /* [in] */ ecom_control_library::IOleInPlaceUIWindow * p_uiwindow, /* [in] */ LONG f_rame_window )
+STDMETHODIMP ecom_control_library::control_site::ResizeBorder(  /* [in] */ ecom_control_library::tagRECT * prc_border, /* [in] */ ::IOleInPlaceUIWindow * p_uiwindow, /* [in] */ LONG f_rame_window )
 
 /*-----------------------------------------------------------
   No description available.
@@ -2155,7 +2155,7 @@ STDMETHODIMP ecom_control_library::control_site::GetOptionKeyPath(  /* [out] */ 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::GetDropTarget(  /* [in] */ ecom_control_library::IDropTarget * p_drop_target, /* [out] */ ecom_control_library::IDropTarget * * pp_drop_target )
+STDMETHODIMP ecom_control_library::control_site::GetDropTarget(  /* [in] */ ::IDropTarget * p_drop_target, /* [out] */ ::IDropTarget * * pp_drop_target )
 
 /*-----------------------------------------------------------
   No description available.
@@ -2227,7 +2227,7 @@ STDMETHODIMP ecom_control_library::control_site::GetExternal(  /* [out] */ IDisp
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::TranslateUrl(  /* [in] */ ULONG dw_translate, /* [in] */ SHORT * pch_urlin, /* [out] */ SHORT * * ppch_urlout )
+STDMETHODIMP ecom_control_library::control_site::TranslateUrl(  /* [in] */ ULONG dw_translate, /* [in] */ OLECHAR * pch_urlin, /* [out] */ OLECHAR * * ppch_urlout )
 
 /*-----------------------------------------------------------
   No description available.
@@ -2239,7 +2239,7 @@ STDMETHODIMP ecom_control_library::control_site::TranslateUrl(  /* [in] */ ULONG
   EIF_OBJECT tmp_pch_urlin = NULL;
   if (pch_urlin != NULL)
   {
-    tmp_pch_urlin = eif_protect (rt_ce.ccom_ce_pointed_short (pch_urlin, NULL));
+    tmp_pch_urlin = eif_protect (ccom_wide_str_to_string (pch_urlin));
   }
   EIF_OBJECT tmp_ppch_urlout = NULL;
   if (ppch_urlout != NULL)
@@ -2263,7 +2263,7 @@ STDMETHODIMP ecom_control_library::control_site::TranslateUrl(  /* [in] */ ULONG
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::FilterDataObject(  /* [in] */ ecom_control_library::IDataObject * p_do, /* [out] */ ecom_control_library::IDataObject * * pp_doret )
+STDMETHODIMP ecom_control_library::control_site::FilterDataObject(  /* [in] */ ::IDataObject * p_do, /* [out] */ ::IDataObject * * pp_doret )
 
 /*-----------------------------------------------------------
   No description available.
@@ -2336,14 +2336,12 @@ STDMETHODIMP ecom_control_library::control_site::OnDataChange(  /* [in] */ ecom_
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnViewChange(  /* [in] */ ULONG dw_aspect, /* [in] */ LONG lindex )
+void STDMETHODCALLTYPE ecom_control_library::control_site::OnViewChange(  /* [in] */ DWORD dw_aspect, /* [in] */ LONG lindex )
 
 /*-----------------------------------------------------------
   No description available.
 -----------------------------------------------------------*/
 {
-  ECATCH;
-
   EIF_INTEGER tmp_dw_aspect = (EIF_INTEGER)dw_aspect;
   EIF_INTEGER tmp_lindex = (EIF_INTEGER)lindex;
   
@@ -2351,20 +2349,15 @@ STDMETHODIMP ecom_control_library::control_site::OnViewChange(  /* [in] */ ULONG
   eiffel_procedure = eif_procedure ("on_view_change", type_id);
 
   (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_dw_aspect, (EIF_INTEGER)tmp_lindex);
-  
-  END_ECATCH;
-  return S_OK;
-};
+ };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnRename(  /* [in] */ ecom_control_library::IMoniker * pmk )
+void STDMETHODCALLTYPE  ecom_control_library::control_site::OnRename(  /* [in] */ ::IMoniker * pmk )
 
 /*-----------------------------------------------------------
   No description available.
 -----------------------------------------------------------*/
 {
-  ECATCH;
-
   EIF_OBJECT tmp_pmk = NULL;
   if (pmk != NULL)
   {
@@ -2379,42 +2372,34 @@ STDMETHODIMP ecom_control_library::control_site::OnRename(  /* [in] */ ecom_cont
   if (tmp_pmk != NULL)
     eif_wean (tmp_pmk);
   
-  END_ECATCH;
-  return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnSave( void )
+void STDMETHODCALLTYPE  ecom_control_library::control_site::OnSave( void )
 
 /*-----------------------------------------------------------
   No description available.
 -----------------------------------------------------------*/
 {
-  ECATCH;
 EIF_PROCEDURE eiffel_procedure;
   eiffel_procedure = eif_procedure ("on_save", type_id);
 
   (FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
   
-  END_ECATCH;
-  return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnClose( void )
+void STDMETHODCALLTYPE  ecom_control_library::control_site::OnClose( void )
 
 /*-----------------------------------------------------------
   No description available.
 -----------------------------------------------------------*/
 {
-  ECATCH;
 EIF_PROCEDURE eiffel_procedure;
   eiffel_procedure = eif_procedure ("on_close", type_id);
 
   (FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
   
-  END_ECATCH;
-  return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -3914,31 +3899,31 @@ STDMETHODIMP ecom_control_library::control_site::QueryInterface( REFIID riid, vo
   else if (riid == IID_IDispatch)
     *ppv = static_cast<IAxWinAmbientDispatch*>(this);
   else if (riid == IID_IOleClientSite_)
-    *ppv = static_cast<ecom_control_library::IOleClientSite*>(this);
+    *ppv = static_cast<::IOleClientSite*>(this);
   else if (riid == IID_IOleInPlaceSiteWindowless_)
-    *ppv = static_cast<ecom_control_library::IOleInPlaceSiteWindowless*>(this);
+    *ppv = static_cast<::IOleInPlaceSiteWindowless*>(this);
   else if (riid == IID_IOleInPlaceSiteEx_)
-    *ppv = static_cast<ecom_control_library::IOleInPlaceSiteEx*>(this);
+    *ppv = static_cast<::IOleInPlaceSiteEx*>(this);
   else if (riid == IID_IOleInPlaceSite_)
-    *ppv = static_cast<ecom_control_library::IOleInPlaceSite*>(this);
+    *ppv = static_cast<::IOleInPlaceSite*>(this);
   else if (riid == IID_IOleWindow_)
-    *ppv = static_cast<ecom_control_library::IOleWindow*>(this);
+    *ppv = static_cast<::IOleWindow*>(this);
   else if (riid == IID_IOleControlSite_)
-    *ppv = static_cast<ecom_control_library::IOleControlSite*>(this);
+    *ppv = static_cast<::IOleControlSite*>(this);
   else if (riid == IID_IOleContainer_)
-    *ppv = static_cast<ecom_control_library::IOleContainer*>(this);
+    *ppv = static_cast<::IOleContainer*>(this);
   else if (riid == IID_IObjectWithSite_)
-    *ppv = static_cast<ecom_control_library::IObjectWithSite*>(this);
+    *ppv = static_cast<::IObjectWithSite*>(this);
   else if (riid == IID_IPropertyNotifySink_)
-    *ppv = static_cast<ecom_control_library::IPropertyNotifySink*>(this);
+    *ppv = static_cast<::IPropertyNotifySink*>(this);
   else if (riid == IID_IAxWinAmbientDispatch_)
     *ppv = static_cast<ecom_control_library::IAxWinAmbientDispatch*>(this);
   else if (riid == IID_IDocHostUIHandler_)
-    *ppv = static_cast<ecom_control_library::IDocHostUIHandler*>(this);
+    *ppv = static_cast<::IDocHostUIHandler*>(this);
   else if (riid == IID_IAdviseSink_)
-    *ppv = static_cast<ecom_control_library::IAdviseSink*>(this);
+    *ppv = static_cast<::IAdviseSink*>(this);
   else if (riid == IID_IServiceProvider_)
-    *ppv = static_cast<ecom_control_library::IServiceProvider*>(this);
+    *ppv = static_cast<::IServiceProvider*>(this);
   else
     return (*ppv = 0), E_NOINTERFACE;
 

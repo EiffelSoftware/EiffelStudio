@@ -17,10 +17,12 @@ feature -- Initialization
 		do
 			cpp_class_writer := Void
 			interface_names := Void
+			dispinterface_names := Void
 			dispatch_interface := False
 		ensure
 			void_atributes: cpp_class_writer = Void and
 				interface_names = Void and
+				dispinterface_names = Void and
 				dispatch_interface = False
 		end
 
@@ -28,8 +30,10 @@ feature -- Initialization
 feature {NONE} -- Access
 
 	interface_names: LINKED_LIST[STRING]
-			-- Interface names
+			-- Interface names.
 
+	dispinterface_names: LINKED_LIST [STRING]
+			-- Names of dispinterfaces.
 
 feature {NONE} -- Implementation
 

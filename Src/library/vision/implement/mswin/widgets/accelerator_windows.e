@@ -56,9 +56,7 @@ feature -- Removal
 			until
 				accelerator_list.after
 			loop
-				if
-					accelerator_list.item.command_id = acc.command_id
-				then
+				if accelerator_list.item.command_id = acc.command_id then
 					accelerator_list.remove
 					accelerator_list.finish
 				else

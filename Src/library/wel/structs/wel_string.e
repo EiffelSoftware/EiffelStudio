@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 
 	cwel_string_length (ptr: POINTER): INTEGER is
 		external
-			"C | %"wel.h%""
+			"C signature (char *): EIF_INTEGER use %"eif_str.h%""
 		alias
 			"strlen"
 		end

@@ -73,17 +73,6 @@ RT_LNK void globalonceset(EIF_REFERENCE);			/* Recording of once function result
 RT_LNK void gc_stop(void);				/* Stop the garbage collector */
 RT_LNK void gc_run(void);				/* Restart the garbage collector */
 
-#ifdef EIF_THREADS
-#define EIF_GLOBAL_ONCE_MUTEX_LOCK \
-	EIF_ENTER_C; \
-	eif_thr_mutex_lock(eif_global_once_mutex); \
-	EIF_EXIT_C; \
-	RTGC
-#define EIF_GLOBAL_ONCE_MUTEX_UNLOCK	eif_thr_mutex_unlock(eif_global_once_mutex)
-RT_LNK EIF_MUTEX_TYPE *eif_global_once_mutex;	/* Mutex used to protect insertion of global onces in `global_once_set' */
-#endif
-
-
 #ifdef __cplusplus
 }
 #endif

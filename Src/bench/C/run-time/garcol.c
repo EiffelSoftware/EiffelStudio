@@ -182,9 +182,8 @@ rt_public struct stack once_set = {			/* Once functions */
 /*
 doc:	<attribute name="global_once_set" return_type="struct stack" export="public">
 doc:		<summary>Same as `once_set' but for results that are computed per process.</summary>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>We should synchronize insertions. Although it is partially done with `eif_global_once_mutex' this is not perfect as we can easily create a dead lock (for recursive calls on same global once.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_global_once_set_mutex'</synchronization>
 doc:	</attribute>
 */
 rt_public struct stack global_once_set = {			/* Once functions */ 
@@ -432,13 +431,12 @@ rt_public EIF_LW_MUTEX_TYPE *eif_g_data_mutex = NULL;
 #endif
 
 /*
-doc:	<attribute name="eif_global_once_mutex" return_type="EIF_MUTEX_TYPE *" export="public">
-doc:		<summary>Mutex used to compute result of global onces.</summary>
+doc:	<attribute name="eif_global_once_set_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:		<summary>Mutex used to protect insertion of global once result in `global_once_set'.</summary>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<fixme>There is a potential deadlock so code generation needs to be changed.</fixme>
 doc:	</attribute>
 */
-rt_public EIF_MUTEX_TYPE *eif_global_once_mutex = NULL;	/* Mutex used to protect insertion and computation of global onces. */
+rt_public EIF_LW_MUTEX_TYPE *eif_global_once_set_mutex = NULL;
 #endif
 
 /*
@@ -4587,15 +4585,23 @@ rt_public void new_onceset(EIF_REFERENCE address)
 }
 
 #ifdef EIF_THREADS
+/*
+doc:	<routine name="globalonceset" export="public">
+doc:		<summary>Insert a global once result `address' which is an EIF_REFERENCE into `global_once_set' so that GC can update `address' and track objects references by `address' during a collection.</summary>
+doc:		<param name="address" type="EIF_REFERENCE">Address that needs to be tracked/protected.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_global_once_set_mutex'</synchronization>
+doc:	</attribute>
+*/
+
 rt_public void globalonceset(EIF_REFERENCE address)
 {
-	/* Record result of once functions onto the global global_once_set stack, so that the
-	 * run-time may update the address should the result be moved around by
-	 * the garbage collector (we are storing the address of a C static variable.
-	 */
-
-	if (-1 == epush(&global_once_set, address))
+	EIF_LW_MUTEX_LOCK(eif_global_once_set_mutex, "Could not lock global once mutex");
+	if (-1 == epush(&global_once_set, address)) {
+		EIF_LW_MUTEX_UNLOCK(eif_global_once_set_mutex, "Could not unlock global once mutex");
 		eraise("once function recording", EN_MEM);
+	}
+	EIF_LW_MUTEX_UNLOCK(eif_global_once_set_mutex, "Could not unlock global once mutex");
 }
 #endif
 

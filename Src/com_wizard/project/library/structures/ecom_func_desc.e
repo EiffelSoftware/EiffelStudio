@@ -22,7 +22,7 @@ inherit
 	ECOM_FUNC_FLAGS
 
 creation
-	make, make_by_pointer
+	make, make_from_pointer
 
 feature -- Access
 
@@ -86,7 +86,7 @@ feature -- Access
 			until
 				i > total_param_count
 			loop
-				!! elem.make_by_pointer (ccom_funcdesc_parameter_i (item, i -1))
+				!! elem.make_from_pointer (ccom_funcdesc_parameter_i (item, i -1))
 				Result.put (elem, i)
 				i := i + 1
 			end
@@ -129,7 +129,7 @@ feature -- Access
 	return_type: ECOM_ELEM_DESC is
 			-- Return type
 		do
-			!! Result.make_by_pointer (ccom_funcdesc_return_type (item))
+			!! Result.make_from_pointer (ccom_funcdesc_return_type (item))
 		end
 
 	func_flags: INTEGER IS
@@ -156,6 +156,14 @@ feature -- Status setting
 		do
 			parent := a_parent
 			is_parent_valid := true
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature -- Measurement

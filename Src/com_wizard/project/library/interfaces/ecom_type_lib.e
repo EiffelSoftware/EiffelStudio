@@ -72,7 +72,7 @@ feature -- Access
 		do
 			if not are_attributes_valid then
 				type_attr_pointer := ccom_get_lib_attr (initializer)
-				create library_attributes_impl.make_by_pointer (type_attr_pointer)
+				create library_attributes_impl.make_from_pointer (type_attr_pointer)
 				are_attributes_valid := True
 			end
 			Result := library_attributes_impl

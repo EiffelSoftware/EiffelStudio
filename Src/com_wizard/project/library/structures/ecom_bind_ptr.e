@@ -12,7 +12,7 @@ inherit
 
 creation
 	make,
-	make_by_pointer
+	make_from_pointer
 
 
 feature -- Access
@@ -20,19 +20,19 @@ feature -- Access
 	func_desc: ECOM_FUNC_DESC is
 			-- FUNCDESC structure
 		do
-			!! Result.make_by_pointer (ccom_bindptr_funcdesc (item))
+			create Result.make_from_pointer (ccom_bindptr_funcdesc (item))
 		end
 
 	var_desc: ECOM_VAR_DESC is
 			-- VARDESC structure
 		do
-			!! Result.make_by_pointer (ccom_bindptr_vardesc (item))
+			create Result.make_from_pointer (ccom_bindptr_vardesc (item))
 		end
 
 	type_comp: ECOM_TYPE_COMP is
 			-- ITypeComp interface
 		do
-			!! Result.make_from_pointer (ccom_bindptr_itypecomp (item))
+			create Result.make_from_pointer (ccom_bindptr_itypecomp (item))
 		end
 
 feature -- Measurement
@@ -41,6 +41,14 @@ feature -- Measurement
 			-- Size of BINDPTR structure
 		do
 			Result := c_size_of_bind_ptr
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Externals

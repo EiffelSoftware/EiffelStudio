@@ -12,7 +12,7 @@ inherit
 
 creation
 	make,
-	make_by_pointer
+	make_from_pointer
 
 feature -- Access
 
@@ -48,6 +48,14 @@ feature -- Measurement
 			-- Size of SAFEARRAYBOUND structure
 		do
 			Result := c_size_of_safe_array_bound
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Externals

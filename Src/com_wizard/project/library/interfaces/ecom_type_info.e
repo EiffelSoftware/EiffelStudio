@@ -92,7 +92,7 @@ feature -- Access
 				create func_descs.make
 			end
 			tmp_pointer := ccom_get_func_desc (initializer, an_index)
-			create Result.make_by_pointer (tmp_pointer)
+			create Result.make_from_pointer (tmp_pointer)
 			Result.set_parent (Current)
 			func_descs.extend (Result)
 		ensure
@@ -173,7 +173,7 @@ feature -- Access
 		do
 			if not is_type_attr_set then
 				tmp_pointer := ccom_get_type_attr (initializer)
-				create type_attr_impl.make_by_pointer (tmp_pointer)
+				create type_attr_impl.make_from_pointer (tmp_pointer)
 				is_type_attr_set := True
 			end
 			Result := type_attr_impl
@@ -201,7 +201,7 @@ feature -- Access
 				create var_descs.make
 			end
 			tmp_pointer := ccom_get_var_desc (initializer, an_index)
-			create Result.make_by_pointer (tmp_pointer)
+			create Result.make_from_pointer (tmp_pointer)
 			Result.set_parent (Current)
 			var_descs.extend (Result)
 		ensure

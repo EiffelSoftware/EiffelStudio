@@ -75,7 +75,7 @@ feature -- Element Change
 			-- Set `bind_ptr' with `ptr'.
 			-- Should not be called (used by C-side).
 		do
-			create bind_ptr.make_by_pointer (ptr)
+			create bind_ptr.make_from_pointer (ptr)
 		end
 	
 feature -- Status report

@@ -15,14 +15,14 @@ inherit
 	ECOM_LIB_FLAGS
 
 creation
-	make, make_by_pointer
+	make, make_from_pointer
 
 feature -- Access
 
 	guid: ECOM_GUID is
 			-- Unique ID of the library
 		do
-			!! Result.make_by_pointer (ccom_tlibattr_guid (item))
+			!! Result.make_from_pointer (ccom_tlibattr_guid (item))
 		end
 
 	lcid: INTEGER is
@@ -67,6 +67,14 @@ feature -- Measurement
 			-- Size of TLIBATTR structure
 		do
 			Result := c_size_of_tlib_attr 
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Externals

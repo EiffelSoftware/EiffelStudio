@@ -12,8 +12,9 @@ inherit
 
 	ECOM_VAR_TYPE
 
-creation	make,
-	make_by_pointer
+creation	
+	make,
+	make_from_pointer
 
 feature -- Initialization
 
@@ -33,7 +34,7 @@ feature -- Access
 		require 
 			valid_type: is_ptr (var_type) or is_safearray (var_type)
 		do
-			!! Result.make_by_pointer (ccom_typedesc_typedesc (item))
+			!! Result.make_from_pointer (ccom_typedesc_typedesc (item))
 		end
 
 	array_desc: ECOM_ARRAY_DESC is
@@ -41,7 +42,7 @@ feature -- Access
 		require
 			valid_type: is_carray (var_type)
 		do
-			!! Result.make_by_pointer (ccom_typedesc_arraydesc (item))
+			!! Result.make_from_pointer (ccom_typedesc_arraydesc (item))
 		end
 
 	href_type: INTEGER is
@@ -60,6 +61,13 @@ feature -- Measurement
 			Result := c_size_of_type_desc
 		end
 
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
+		end
 
 feature {NONE} -- Externals
 

@@ -32,7 +32,7 @@ feature -- Initialization
 			c_type_name := clone (name)
 			
 			eiffel_class_name := name_for_class (name, type_kind, True)
-
+				
 			c_header_file_name := header_name (name)
 
 			description := "Implemented "

@@ -1559,7 +1559,7 @@ rt_private int free_last_chunk(void)
 	 * accessed any more.
 	 */
 
-	memcpy (&last_desc, &last_desc, sizeof(struct chunk));
+	memcpy (&last_desc, last_chk, sizeof(struct chunk));
 
 	/* The bloc we are about to remove from the process memory is to be removed
 	 * from the free list (may manipulate some pointers in a zone where no

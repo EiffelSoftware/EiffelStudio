@@ -183,9 +183,10 @@ feature -- Element change
 			end
 		end
 
-	set_column_width (value: INTEGER; column: INTEGER) is
+	set_column_width (a_width: INTEGER; column: INTEGER) is
 			-- Make `value' the new width of the one-based column.
 		require
+			valid_width: a_width >= 1
 			column_exists: column >= 1 and column <= columns
 		deferred
 		end
@@ -249,6 +250,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/03 21:20:02  king
+--| Added valid_width precond to set_column_width
+--|
 --| Revision 1.31  2000/03/03 18:21:47  king
 --| Renamed get_column_width -> column_width, added column_title
 --|

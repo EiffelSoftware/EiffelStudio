@@ -226,6 +226,6 @@ feature {NONE} -- Implementation
 
 invariant
 	window_selector_not_void: window_selector /= Void
-	bi_directional: window_selector.tool_bar = Current
+	bi_directional: window_selector.tool_bar /= Void implies window_selector.tool_bar = Current
 
 end -- class GB_WINDOW_SELECTOR_TOOL_BAR

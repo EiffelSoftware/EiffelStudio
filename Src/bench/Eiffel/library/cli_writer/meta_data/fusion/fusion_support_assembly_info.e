@@ -68,33 +68,33 @@ feature {NONE} -- Implementation
 	c_name (p, a_name: POINTER): INTEGER is
 			-- Call `IAssemblyInfo->assembly_name'.
 		external
-			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"vs_support.h%""
+			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
 		alias
-			"AssemblyName"
+			"get_AssemblyName"
 		end
 		
 	c_version (p, a_version: POINTER): INTEGER is
 			-- Call `IAssemblyInfo->assembly_version ((IUnknown **) &iai)'.
 		external
-			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"vs_support.h%""
+			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
 		alias
-			"Version"
+			"get_Version"
 		end
 		
 	c_culture (p, a_culture: POINTER): INTEGER is
 			-- Call `IAssemblyInfo->assembly_culture'.
 		external
-			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"vs_support.h%""
+			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
 		alias
-			"Culture"
+			"get_Culture"
 		end
 		
 	c_public_key_token (p, a_public_key_token: POINTER): INTEGER is
 			-- Call `IAssemblyInfo->assembly_public_key_token'.
 		external
-			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"vs_support.h%""
+			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
 		alias
-			"PublicKeyToken"
+			"get_PublicKeyToken"
 		end
 
 end -- class FUSION_SUPPORT_ASSEMBLY_INFO

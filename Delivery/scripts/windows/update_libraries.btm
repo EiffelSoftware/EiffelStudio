@@ -19,6 +19,8 @@ remtrace gobo
 exprt -r %DEFAULT_CVS_TAG -d gobo "Src/library/gobo"
 remtrace helpers
 exprt -r %DEFAULT_CVS_TAG -d helpers "Src/library/helpers"
+remtrace keygen
+exprt -r %DEFAULT_CVS_TAG -d keygen "Src/library/keygen"
 remtrace lex
 exprt -r %DEFAULT_CVS_TAG -d lex "Src/library/lex"
 remtrace net

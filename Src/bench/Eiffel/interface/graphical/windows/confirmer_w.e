@@ -43,13 +43,24 @@ feature
 		local
 			new_x, new_y: INTEGER
 		do
-			if is_popped_up then popdown end;
 			if window /= Void then
 				new_x := window.real_x + (window.width - width) // 2;
 				new_y := window.real_y + (window.height - height) // 2;
 			else
 				new_x := (screen.width - width) // 2;
 				new_y := (screen.height - height) // 2
+			end;
+			if new_x + width > screen.width then
+				new_x := screen.width - width
+			end;
+			if new_x < 0 then
+				new_x := 0
+			end;
+			if new_y + height > screen.height then
+				new_y := screen.height - height
+			end;
+			if new_y < 0 then
+				new_y := 0
 			end;
 			set_x_y (new_x, new_y);
 			question_popup;

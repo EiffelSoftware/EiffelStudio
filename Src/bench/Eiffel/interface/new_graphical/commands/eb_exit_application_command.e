@@ -21,9 +21,6 @@ inherit
 	EB_CONSTANTS
 		export {NONE} all end
 
-	SHARED_BENCH_LICENSES
-		export {NONE} all end
-
 	SHARED_WORKBENCH
 		export {NONE} all end
 
@@ -32,11 +29,6 @@ inherit
 		
 	EV_SHARED_APPLICATION
 		export {NONE} all end
-
-feature -- License managment
-	
-	license_checked: BOOLEAN is True
-			-- Is the license checked.
 
 feature -- Basic operations
 
@@ -98,7 +90,6 @@ feature {NONE} -- Callbacks
 			if Workbench.Eiffel_project.initialized then
 				Workbench.Eiffel_project.manager.on_project_close;
 			end
-			discard_licenses
 
 			Recent_projects_manager.save_environment
 

@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 			search_is_possible: search_button.is_sensitive
 			manager_is_not_void: manager /= Void
 		do
-			if editor.number_of_lines /= 0 then
+			if not editor.is_empty then
 				-- search box is shown
 					-- user choices are taken into account
 				search_performer.set_editor (editor)

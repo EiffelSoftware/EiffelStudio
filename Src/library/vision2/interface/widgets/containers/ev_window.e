@@ -18,7 +18,8 @@ inherit
 			implementation,
 			parent,
 			show,
-			widget_make
+			widget_make,
+			parent_needed
 		end
 
 creation
@@ -30,8 +31,6 @@ feature {NONE} -- Initialization
     make_top_level is
 			-- Create a top level window (a Window 
 			-- without a parent).
-		require
-			-- toolkit initialized XXX
 		do
 			!EV_WINDOW_IMP!implementation.make
 			widget_make (Void)
@@ -281,6 +280,14 @@ feature -- Element change
 			valid_widget: is_valid (widget)
 		do
 			implementation.set_widget_group (widget)
+		end
+
+feature -- Assertion features
+
+	parent_needed: BOOLEAN is
+			-- Is a parent needed by the widget
+		do
+			Result := True
 		end
 
 feature -- Event - command association

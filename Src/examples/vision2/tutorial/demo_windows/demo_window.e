@@ -241,6 +241,25 @@ feature -- Basic operation
 			create Result.make (Void)
 		end
 
+	text_tab: TEXT_TAB is
+			-- Creation of the text_tab.
+		once
+			create Result.make (Void)
+		end
+	
+	list_tab: LIST_TAB is
+			-- Creation of the list tab.
+		once
+			create Result.make (Void)
+		end
+
+	tree_tab: TREE_TAB is
+			-- Creation of the tree tab.
+		once
+			create Result.make (Void)
+		end
+
+
 
 feature -- Deferred features
 

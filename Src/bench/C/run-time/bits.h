@@ -33,13 +33,13 @@ extern "C" {
 /* 
  * Functions declarations
  */
-rt_public int b_equal();	/* needed in interp.c */
+rt_public EIF_BOOLEAN b_equal();	/* needed in interp.c */
 
 extern char *b_clone();			/* Clones bit */
 extern void b_copy();			/* Copies bit */
 extern char *bmalloc();			/* Bit object creation */
 extern void b_put();
-extern char b_item();
+extern EIF_BOOLEAN b_item();
 extern char *b_shift();
 extern char *b_rotate();
 extern char *b_and();

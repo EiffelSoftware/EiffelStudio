@@ -113,7 +113,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 			non_void_interface_descriptors: a_coclass_descriptor.interface_descriptors /= Void
-			not_empty_interface_descriptors: not a_coclass_descriptor.interface_descriptors.empty
 		do
 			create Result.make (10000)
 			Result.append (Tab)
@@ -161,7 +160,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 			non_void_interface_descriptors: a_coclass_descriptor.interface_descriptors /= Void
-			not_empty_interface_descriptors: not a_coclass_descriptor.interface_descriptors.empty
 		local
 			constructor_body: STRING
 		do
@@ -228,7 +226,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 			non_void_interface_descriptors: a_coclass_descriptor.interface_descriptors /= Void
-			not_empty_interface_descriptors: not a_coclass_descriptor.interface_descriptors.empty
 		local
 			constructor_body: STRING
 			a_signature: STRING

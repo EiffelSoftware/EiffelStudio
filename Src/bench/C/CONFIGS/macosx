@@ -18,7 +18,7 @@ ld='ld'
 mt_prefix='mt'
 
 # FIXME: Manu 02/14/2002: fix threads flag
-mtccflags='-pipe -fno-common -DEIF_THREADS -DEIF_POSIX_THREADS'
+mtccflags='-pipe -no-cpp-precomp -fno-common -DEIF_THREADS -DEIF_POSIX_THREADS'
 mtlibs='-L/opt/local/lib -lcompat -lpthread'
 mtsharedlibs='-L/opt/local/lib -lcompat -lpthread'
 
@@ -31,7 +31,7 @@ create_test='touch finished'
 
 libs='-L/opt/local/lib -lcompat'
 sharedlibs='-L/opt/local/lib -lcompat'
-ccflags='-pipe -fno-common'
+ccflags='-pipe -no-cpp-precomp -fno-common'
 sharedccflags='-fPIC'
 
 suffix='.a'

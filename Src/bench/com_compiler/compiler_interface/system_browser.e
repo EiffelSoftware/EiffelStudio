@@ -293,66 +293,89 @@ feature -- Basic Operations
 			-- `is_substring' [in].  
 		local
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
-			matching_classes: LIST [CLASS_I]
-			classes: ARRAY [CLASS_C]
 			class_desc: CLASS_DESCRIPTOR
-			count, i: INTEGER
 			matcher: KMP_MATCHER
 			eiffel_class: CLASS_I
-			dotnet_class: EXTERNAL_CLASS_I
+			dotnet_class: EXTERNAL_CLASS_I		
+			cur: CURSOR
+			cluster_classes: HASH_TABLE [CLASS_I, STRING]
+			string_to_match, class_name_string: STRING
 		do
 			if Eiffel_project.initialized and then a_string /= Void then
-				if is_substring then
-					classes := Eiffel_system.Workbench.system.classes.sorted_classes
-					count := Eiffel_system.Workbench.system.classes.count
-					create res.make (count)
+				-- Retrieve a list of all the CLASS_I objects in the Eiffel Universe.
+					string_to_match := clone (a_string)
+					string_to_match.to_lower
 					create matcher.make_empty
 					matcher.disable_case_sensitive
-					matcher.set_pattern (a_string)
+					matcher.set_pattern (string_to_match)
+					create res.make (100)
+				from
+					cur := Eiffel_universe.clusters.cursor
+					Eiffel_universe.clusters.start
+				until
+					Eiffel_universe.clusters.after
+				loop
+					cluster_classes := Eiffel_universe.clusters.item.classes
 					from
-						i := 1
+						cluster_classes.start
 					until
-						i > count
+						cluster_classes.after
 					loop
-						eiffel_class := classes.item (i).lace_class
-						matcher.set_text (eiffel_class.name)
-						if matcher.search_for_pattern then
-							create class_desc.make_with_class_i (eiffel_class)
-							res.extend (class_desc)
+						eiffel_class := cluster_classes.item_for_iteration
+						if is_substring then
+							matcher.set_text (eiffel_class.name)
+							if matcher.search_for_pattern then
+								create class_desc.make_with_class_i (eiffel_class)
+								res.extend (class_desc)
+							else
+								dotnet_class ?= eiffel_class
+								if dotnet_class /= Void then
+									if dotnet_class.is_compiled then
+										matcher.set_text (dotnet_class.compiled_class.name)
+									else
+										matcher.set_text (dotnet_class.external_name)
+									end
+									if matcher.search_for_pattern then
+										create class_desc.make_with_class_i (dotnet_class)
+										res.extend (class_desc)
+									end
+								end
+							end		
 						else
-							dotnet_class ?= eiffel_class
-							if dotnet_class /= Void then
-								if dotnet_class.is_compiled then
-									matcher.set_text (dotnet_class.compiled_class.name)
-								else
-									matcher.set_text (dotnet_class.external_name)
-								end
-								if matcher.search_for_pattern then
-									create class_desc.make_with_class_i (dotnet_class)
-									res.extend (class_desc)
-								end
-							end
-						end	
-						i := i + 1
-					end
-				else
-					matching_classes := Eiffel_universe.classes_with_name (a_string)
-					create res.make (matching_classes.count)
-					from
-						matching_classes.start
-					until
-						matching_classes.after
-					loop
-						create class_desc.make_with_class_i (matching_classes.item)
-						if not class_desc.is_external then
-							res.extend (class_desc)
-						end
-						matching_classes.forth
-					end
-				end
+							class_name_string := clone (eiffel_class.name)
+							class_name_string.to_lower
+							if class_name_string.is_equal (string_to_match) then
+								create class_desc.make_with_class_i (eiffel_class)
+								res.extend (class_desc)
+							else
+								dotnet_class ?= eiffel_class
+								if dotnet_class /= Void then
+									if dotnet_class.is_compiled then
+										class_name_string := clone (dotnet_class.compiled_class.name)
+										class_name_string.to_lower
+										if class_name_string.is_equal (string_to_match) then
+											create class_desc.make_with_class_i (eiffel_class)
+											res.extend (class_desc)
+										end -- if
+									else
+										class_name_string := clone (dotnet_class.external_name)
+										class_name_string.to_lower
+										if class_name_string.is_equal (string_to_match) then
+											create class_desc.make_with_class_i (eiffel_class)
+											res.extend (class_desc)
+										end -- if
+									end -- if
+								end -- if
+							end -- if
+						end -- if
+						cluster_classes.forth
+					end -- loop
+					Eiffel_universe.clusters.forth
+				end -- loop
+				Eiffel_universe.clusters.go_to (cur)
 				create Result.make (res)
-			end
-		end
+			end -- if
+		end -- search_classes
 
 	search_features (a_string: STRING; is_substring: BOOLEAN): FEATURE_ENUMERATOR is
 			-- Search feature with names matching `a_string'.

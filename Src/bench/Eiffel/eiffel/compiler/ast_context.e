@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			extend_stack_make
 			create locals.make (10)
 			create access_line.make
-			create multi_line.make
+			create array_line.make
 			create tuple_line.make
 			create interval_line.make
 			create creation_types.make
@@ -76,7 +76,7 @@ feature -- Access
 			-- List of access encountered by the type checker: then the
 			-- building of the byte code takes those access.
 
-	multi_line: LINE [MULTI_TYPE_A]
+	array_line: LINE [GEN_TYPE_A]
 			-- Line of manifest array types
 
 	tuple_line: LINE [TUPLE_TYPE_A]
@@ -376,7 +376,7 @@ feature -- Managing the type stack
 			-- Start all the lines computed by `type_check'.
 		do
 			access_line.start;
-			multi_line.start;	
+			array_line.start;	
 			tuple_line.start;	
 			interval_line.start;
 			creation_types.start;
@@ -401,7 +401,7 @@ feature -- Managing the type stack
 			a_feature := Void;
 			locals.clear_all;
 			access_line.wipe_out;
-			multi_line.wipe_out;
+			array_line.wipe_out;
 			tuple_line.wipe_out;
 			interval_line.wipe_out;
 			creation_types.wipe_out;

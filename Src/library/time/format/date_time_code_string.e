@@ -53,10 +53,12 @@ feature -- Creation
 					i := i + 1
 				end
 			end
-			base_century := c_year_now // 100 * 100
+			base_century := c_year_now // 100 * -100
+				-- A negative value of `base_century' indicates that it has
+				-- been calculated automatically, therefore '* -100'.
 		ensure
 			value_set: value /= Void
-			base_century_set: base_century > 0 and (base_century \\ 100 = 0)
+			base_century_set: base_century < 0 and (base_century \\ 100 = 0)
 		end
 
 feature -- Attributes
@@ -175,8 +177,9 @@ feature -- Interface
 					if code.is_numeric then
 						Result := Result and substrg.is_integer
 						if code.value_max /= -1 and code.value_min /= -1 then
-							Result := Result and substrg.to_integer <= code.value_max and
-							substrg.to_integer >= code.value_min
+							Result := Result and 
+								substrg.to_integer <= code.value_max and
+								substrg.to_integer >= code.value_min
 						end
 					else
 						if code.is_day_text (code.value) then 
@@ -187,7 +190,8 @@ feature -- Interface
 					end
 					code := value.item (i+1)
 					if code /= Void then
-						Result := Result and (pos2 /= s.count) and substrg2.is_equal (code.value)
+						Result := Result and (pos2 /= s.count) and 
+							substrg2.is_equal (code.value)
 					end
 					pos1 := pos2 + 1
 					i := i + 2
@@ -198,7 +202,7 @@ feature -- Interface
 	create_string (date_time: DATE_TIME): STRING is
 			-- Create the output of `date_time' according to the code string.
 		require
-			date_time /= Void
+			non_void: date_time /= Void
 		local
 			date: DATE
 			time: TIME
@@ -300,7 +304,8 @@ feature -- Interface
 					end
 					Result.append (int.out)
 				when 16 then
-					double := time.fractional_second * 10^(value.item(i).count_max)
+					double := time.fractional_second * 
+						10^(value.item(i).count_max)
 					int := double.truncated_to_integer
 					Result.append (int.out)
 				else
@@ -319,7 +324,7 @@ feature -- Interface
 		end	
 	
 	create_date_string (date: DATE): STRING is
-					-- Create the output of `date' according to the code string.
+				-- Create the output of `date' according to the code string.
 		require
 			date_exists: date /= Void
 		local
@@ -333,13 +338,14 @@ feature -- Interface
 		end
 
 	create_time_string (time: TIME): STRING is
-					-- Create the output of `time' according to the code string.
+				-- Create the output of `time' according to the code string.
 		require
 			time_exists: time /= Void
 		local
 			date_time: DATE_TIME
 		do
-			create date_time.make_fine (1, 1, 1, time.hour, time.minute, time.fine_second)
+			create date_time.make_fine (1, 1, 1, time.hour, time.minute, 
+				time.fine_second)
 			Result := create_string (date_time)
 		ensure
 			string_exists: Result /= Void
@@ -532,7 +538,10 @@ feature {NONE} -- Implementation
 			non_empty_string: s /= Void and then not s.empty
 		do
 			if parser = Void or else not equal (parser.source_string, s) then
-				create parser.make (value, months, days, base_century)
+				create parser.make (value)
+				parser.set_day_array (days)
+				parser.set_month_array (months)
+				parser.set_base_century (base_century)
 				parser.set_source_string (s)
 				parser.parse
 			end

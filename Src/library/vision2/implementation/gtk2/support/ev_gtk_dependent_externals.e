@@ -8,6 +8,15 @@ class
 
 feature -- Externals
 
+	frozen gtk_button_set_label (tool_button, a_text: POINTER) is
+		external
+			"C signature (GtkButton*, gchar*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_button_get_label (tool_button: POINTER): POINTER is
+		external
+			"C signature (GtkButton*): gchar* use <gtk/gtk.h>"
+		end
 
 	frozen add_g_type_boolean (an_array: POINTER; a_pos: INTEGER) is
 			-- Add G_TYPE_BOOLEAN constant in `an_array' at `a_pos' bytes from beginning
@@ -612,6 +621,16 @@ feature -- Externals
 			"C signature (GtkToolButton*, GtkWidget*) use <gtk/gtk.h>"
 		end
 
+	frozen gtk_tool_button_set_label (tool_button, a_text: POINTER) is
+		external
+			"C signature (GtkToolButton*, gchar*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_tool_button_get_label (tool_button: POINTER): POINTER is
+		external
+			"C signature (GtkToolButton*): gchar* use <gtk/gtk.h>"
+		end
+
 	frozen gtk_toolbar_get_nth_item (a_toolbar: POINTER; a_index: INTEGER): POINTER is
 		external
 			"C signature (GtkToolbar*, gint): GtkToolItem* use <gtk/gtk.h>"
@@ -621,9 +640,6 @@ feature -- Externals
 		external
 			"C signature (GtkToolbar*, GtkToolItem*, gint) use <gtk/gtk.h>"
 		end
-		
-		
-		
 
 	frozen gtk_file_filter_new: POINTER is
 		external

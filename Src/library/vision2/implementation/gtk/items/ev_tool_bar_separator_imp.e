@@ -13,6 +13,36 @@ inherit
 
 	EV_SEPARATOR_ITEM_IMP
 
+creation
+	make
+
+feature -- Initialization
+
+	make is
+			-- create the widget
+		do
+		end
+
+feature -- Access
+
+	parent_imp: EV_ANY_I is
+			-- The parent of the Current widget
+			-- Can be void.
+			-- XXX
+		local
+			tmp: EV_ANY_I
+		do
+			Result := tmp
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_ANY) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+		end
+
 end -- class EV_TOOL_BAR_SEPARATOR_I
 
 --|----------------------------------------------------------------

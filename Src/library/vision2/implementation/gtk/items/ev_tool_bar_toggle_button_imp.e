@@ -13,6 +13,9 @@ inherit
 
 	EV_TOOL_BAR_BUTTON_IMP
 
+creation
+	make
+
 feature -- Status report
 
 	is_selected: BOOLEAN is

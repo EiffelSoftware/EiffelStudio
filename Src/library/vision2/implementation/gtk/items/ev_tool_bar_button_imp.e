@@ -13,8 +13,11 @@ inherit
 	EV_TOOL_BAR_BUTTON_I
 
 	EV_SIMPLE_ITEM_IMP
+		undefine
+			pixmap_size_ok,
+			set_insensitive
 		redefine
-			pixmap_size_ok
+			make_with_text
 		end
 
 creation
@@ -26,31 +29,30 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_TOOL_BAR) is
+	make is
 			-- Create the widget with `par' as parent.
 		do
 		end
 
-	make_with_text (par: EV_TOOL_BAR; txt: STRING) is
+	make_with_text (txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
 		end
 
-	make_with_pixmap (par: EV_TOOL_BAR; pix: EV_PIXMAP) is
+	make_with_pixmap (pix: EV_PIXMAP) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
 		end
 
-	make_with_index (par: EV_TOOL_BAR; value: INTEGER) is
+	make_with_index (value: INTEGER) is
 			-- Create an item with `par' as parent and `value'
 			-- as index.
 		do
 		end
 
-	make_with_all (par: EV_TOOL_BAR; txt: STRING; pix: EV_PIXMAP; 
-					value: INTEGER) is
+	make_with_all (txt: STRING; pix: EV_PIXMAP; value: INTEGER) is
 			-- Create an item with `par' as parent and `txt' as
 			-- text, `pix' as pixmap and `index' as index.
 			-- Any of these attibute can be Void and `index' can
@@ -60,14 +62,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: EV_TOOL_BAR is
-			-- Parent of the current item.
+	parent_imp: EV_ANY_I is
+			-- The parent of the Current widget
+			-- Can be void.
+		local
+			tmp: EV_ANY_I
 		do
-			Result ?= {EV_SIMPLE_ITEM} Precursor
+			Result := tmp
 		end
 
 	index: INTEGER is
 			-- Index of the button in the tool-bar.
+		do
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_ANY) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
 		do
 		end
 
@@ -82,6 +95,12 @@ feature -- Status setting
 
 	set_insensitive (flag: BOOLEAN) is
 			-- Make the current button insensitive if `flag' and
+			-- enable if `not flag'
+		do
+		end
+
+	set_sensitive (flag: BOOLEAN) is
+			-- Make the current button sensitive if `flag' and
 			-- enable if `not flag'
 		do
 		end

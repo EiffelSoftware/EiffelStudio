@@ -386,10 +386,9 @@ feature -- Output
 				-- If the class is not compiled anymore (or doesnot
 				-- exist at all), the resulting stone will not be
 				-- valid (`is_valid' = false because `class_c' = Void).
-			aclassi := Universe.class_named 
-						(class_name, reference_class.cluster);
+			aclassi := Universe.class_named (class_name, reference_class.cluster);
 			if aclassi /= Void then
-				Result := aclassi.compiled_eclass
+				Result := aclassi.compiled_class
 			end
 		end;
 

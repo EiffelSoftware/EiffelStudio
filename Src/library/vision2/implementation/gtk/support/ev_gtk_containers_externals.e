@@ -14,7 +14,7 @@ feature {NONE} -- GTK C functions for general containers
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_container_border_width (container: POINTER; border_width: INTEGER) is
+	gtk_container_set_border_width (container: POINTER; border_width: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
 
@@ -140,6 +140,14 @@ feature {NONE} -- GTK C functions for notebooks
 		end
 	
 	gtk_notebook_set_page (notebook: POINTER; page: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_notebook_get_current_page (notebook: POINTER): INTEGER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_notebook_count (notebook: POINTER): INTEGER is
 		external "C | <gtk/gtk.h>"
 		end
 

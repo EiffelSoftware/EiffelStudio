@@ -1,9 +1,7 @@
 <document title="Main toolbar">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Main toolbar 
-		</heading>At the top of the EiffelBuild development window, one toolbar is displayed by default, as shown below: 
+At the top of the EiffelBuild development window, one toolbar is displayed by default, as shown below: 
 		<paragraph>
 			<image>
 				<url>/images/eiffelbuild/screenshots/toolbar.png</url>
@@ -178,5 +176,8 @@
 				</row>
 			</table>
 		</paragraph>
+		<paragraph>The screenshot at the top of this page shows all of the buttons enabled. As the state of the currently open project changes, the state of each of these buttons is updated to reflect this. For example, immediately after saving the project, the save button is disabled until the project is modified again.</paragraph>
+
+
 		<bold>Note</bold>: It is not possible to customize the toolbar. 
 	</paragraph></document>

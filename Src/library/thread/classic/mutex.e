@@ -10,11 +10,6 @@ class
 	MUTEX
 
 inherit
-	OBJECT_OWNER
-		redefine
-			default_create
-		end
-
 	MEMORY
 		redefine
 			dispose,
@@ -30,7 +25,6 @@ feature -- Initialization
 	default_create is
 			-- Create mutex.
 		do
-			record_owner
 			mutex_pointer := eif_thr_mutex_create
 		ensure then
 			valid_mutex: mutex_pointer /= default_pointer
@@ -101,7 +95,7 @@ feature {NONE} -- Removal
 			-- Called by the garbage collector when the mutex is
 			-- collected.
 		do
-			if thread_is_owner and is_set then
+			if is_set then
 				destroy
 			end
 		end

@@ -15,8 +15,10 @@ inherit
 		rename
 			make as make_variable,
 			make_from_existing as list_make_from_existing
+		export
+			{NONE} list_make_from_existing
 		redefine
-			make_variable, clean_up
+			make_variable, parent, clean_up
 		end;
 
 creation
@@ -25,18 +27,17 @@ creation
 	make_resize_if_possible,
 	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make_variable (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif scrolled list.
 		local
 			widget_name: ANY
 		do
-			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scrolled_list (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
-			!! scrolled_window.make_from_existing (xt_parent (screen_object));
+			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
@@ -48,59 +49,67 @@ feature {NONE} -- Initialization
 	make_constant (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif scrolled list with a constant width.
 		require
-			a_name_exists: a_name /= Void
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
-			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scrolled_list_constant (a_parent.screen_object, $widget_name);
-			Mel_widgets.put (Current, screen_object);
-			!! scrolled_window.make_from_existing (xt_parent (screen_object));
+			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
 			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent;
+			name_set: name.is_equal (a_name)
 			list_size_policy_set: is_list_size_policy_constant
 		end;
 
 	make_resize_if_possible (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif scrolled list with an horizontal scrollbar if it's too large.
 		require
-			a_name_exists: a_name /= Void
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
-			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scrolled_list_resize (a_parent.screen_object, $widget_name);
-			!! scrolled_window.make_from_existing (xt_parent (screen_object));
-			Mel_widgets.put (Current, screen_object);
+			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
 			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent;
+			name_set: name.is_equal (a_name)
 			list_size_policy_set: is_list_size_policy_resize_if_possible
 		end;
 
-	make_from_existing (a_screen_object: POINTER) is
+	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE) is
 			-- Create a motif widget from an existing widget.
 		require
-			valid_a_screen_object: a_screen_object /= default_pointer
+			valid_a_screen_object: a_screen_object /= default_pointer;
+			valid_parent: a_parent /= Void
 		do
-			list_make_from_existing (a_screen_object);
-			!! scrolled_window.make_from_existing (xt_parent (a_screen_object));
+			!! parent.make_from_existing (xt_parent (a_screen_object), 
+				a_parent);
+			screen_object := a_screen_object;
+			Mel_widgets.add (Current);
+		ensure
+			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent
 		end
 
 feature -- Access
 
-	scrolled_window: MEL_SCROLLED_WINDOW;
+	parent: MEL_SCROLLED_WINDOW;
 			-- Scrolled window
 
 feature -- Status report
@@ -159,13 +168,12 @@ feature -- Status setting
 			policy_set: not is_scroll_bar_dirplay_policy_static 
 		end;
 
-feature -- Removal
+feature {NONE} -- Implementation
 
 	clean_up is
-			-- Destroy the widget.
+			-- Clean up the object.
 		do
-			object_clean_up;
-			scrolled_window.object_clean_up
+			parent.clean_up;
 		end;
 
 feature {NONE} -- Implementation

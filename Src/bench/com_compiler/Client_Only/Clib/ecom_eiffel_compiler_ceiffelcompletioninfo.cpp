@@ -159,7 +159,7 @@ EIF_REFERENCE ecom_eiffel_compiler::CEiffelCompletionInfo::ccom_target_features(
 rt_ce.free_memory_bstr (tmp_feature_name);
 rt_ce.free_memory_bstr (tmp_file_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE_c.ccom_ce_pointed_interface_230 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE_c.ccom_ce_pointed_interface_231 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -201,7 +201,7 @@ EIF_REFERENCE ecom_eiffel_compiler::CEiffelCompletionInfo::ccom_target_feature( 
 rt_ce.free_memory_bstr (tmp_feature_name);
 rt_ce.free_memory_bstr (tmp_file_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE_c.ccom_ce_pointed_interface_45 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE_c.ccom_ce_pointed_interface_46 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

@@ -1,17 +1,8 @@
 indexing
 	description: "[
-	
-		Descendants :
-			ICOR_DEBUG_VALUE
-				ICOR_DEBUG_OBJECT_VALUE
-				ICOR_DEBUG_HEAP_VALUE
-					ICOR_DEBUG_STRING_VALUE
-					ICOR_DEBUG_ARRAY_VALUE
-					ICOR_DEBUG_BOX_VALUE
-				ICOR_DEBUG_VALUE_WITH_VALUE
-					ICOR_DEBUG_REFERENCE_VALUE
-					ICOR_DEBUG_GENERIC_VALUE	
+			Object representing Value from dotnet debugger.
 		]"
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -164,8 +155,6 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-
-
 feature {NONE} -- Implementation
 
 	cpp_get_type (obj: POINTER; a_p_type: TYPED_POINTER [INTEGER]): INTEGER is
@@ -249,6 +238,27 @@ feature {NONE} -- Implementation / QueryInterface HEAP
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugArrayValue, (void **) $a_p)"
+		end
+		
+feature -- test
+
+	query: TUPLE [STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE] is
+		local
+			i_obj: like query_interface_icor_debug_object_value
+			i_ref: like query_interface_icor_debug_reference_value
+			i_str: like query_interface_icor_debug_string_value
+			i_gen: like query_interface_icor_debug_generic_value
+			i_arr: like query_interface_icor_debug_array_value
+
+		do
+			i_obj := query_interface_icor_debug_object_value
+			i_ref := query_interface_icor_debug_reference_value
+			i_str := query_interface_icor_debug_string_value			
+			i_gen := query_interface_icor_debug_generic_value			
+			i_arr := query_interface_icor_debug_array_value			
+
+			Result := ["Object", i_obj, "Reference", i_ref, "String", i_str, "Generic", i_gen, "Array", i_arr ]
+			
 		end
 
 end -- class ICOR_DEBUG_VALUE

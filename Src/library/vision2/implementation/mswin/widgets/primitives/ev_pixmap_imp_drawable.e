@@ -659,6 +659,13 @@ feature -- Delegated features
 		do
 		end
 
+	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
+			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
+			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
+			-- as on some platforms, they end up in an invalid state, and need refreshing.
+		do
+		end
+
 	erase_rubber_band is
 			-- Erase previously drawn rubber band.
 		do

@@ -175,7 +175,7 @@ feature -- Status Report
 			then
 				Result := first_position_from_line_number (a_line + 1) - 1
 			else
-				Result := text_length
+				Result := wel_text_length
 			end
 		end
 
@@ -198,7 +198,7 @@ feature -- Status Settings
 		do
 			a_string := clone (txt)
 			previous_caret_position := caret_position
-			set_caret_position (text_length + 1)
+			set_caret_position (wel_text_length + 1)
 				-- Replace "%N" with "%R%N" for Windows.
 			convert_string (a_string)
 			replace_selection (a_string)

@@ -23,10 +23,9 @@ feature {NONE} -- Initialization
 			create location_field
 			extend (location_field)
 			location_field.disable_sensitive
-			
+			is_initialized := True
 			disable_all_items (Current)
 			align_labels_left (Current)
-			is_initialized := True
 		end
 		
 feature -- Basic operation

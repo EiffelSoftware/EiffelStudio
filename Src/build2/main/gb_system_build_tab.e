@@ -50,9 +50,9 @@ feature {NONE} -- Initialization
 			create main_window_file_name_field
 			extend (main_window_file_name_field)
 
+			is_initialized := True
 			disable_all_items (Current)
 			align_labels_left (Current)
-			is_initialized := True
 		end
 		
 feature -- Access

@@ -786,6 +786,7 @@ rt_public EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** icd)
 
 	mscoree_module = NULL;
 	mscoree_module = LoadLibrary("mscoree.dll");
+	CHECKHR (((mscoree_module != NULL) ? 0 : 1), hr, "Could not load mscoree.dll");
 
 	create_debug_address = NULL;
 	create_debug_address = GetProcAddress (mscoree_module, "CreateDebuggingInterfaceFromVersion");

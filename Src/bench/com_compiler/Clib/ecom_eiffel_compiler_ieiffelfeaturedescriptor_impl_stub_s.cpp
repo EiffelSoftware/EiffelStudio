@@ -562,30 +562,23 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendan
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::exported_to(  /* [out, retval] */ SAFEARRAY *  * names )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::exported_to_all(  /* [out, retval] */ VARIANT_BOOL * names )
 
 /*-----------------------------------------------------------
-	List of classes, to which feature is exported.
+	Is feature exported to all classes?
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
 	
-	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("exported_to", type_id);
-	EIF_REFERENCE tmp_value = 0;
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("exported_to_all", type_id);
+	EIF_BOOLEAN tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "exported_to", EIF_REFERENCE);
-	if (tmp_value != NULL)
-	{
-		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*names = rt_ec.ccom_ec_safearray_bstr (eif_access (tmp_object));
-		eif_wean (tmp_object);
-	}
-	else
-		*names = NULL;
+		tmp_value = eif_field (eif_access (eiffel_object), "exported_to_all", EIF_BOOLEAN);
+	*names = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;

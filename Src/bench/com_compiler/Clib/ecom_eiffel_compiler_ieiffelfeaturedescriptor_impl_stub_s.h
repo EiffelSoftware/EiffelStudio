@@ -155,9 +155,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	List of classes, to which feature is exported.
+	Is feature exported to all classes?
 	-----------------------------------------------------------*/
-	STDMETHODIMP exported_to(  /* [out, retval] */ SAFEARRAY *  * names );
+	STDMETHODIMP exported_to_all(  /* [out, retval] */ VARIANT_BOOL * names );
 
 
 	/*-----------------------------------------------------------

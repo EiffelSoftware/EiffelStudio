@@ -23,40 +23,50 @@ not null in which case it is either a TUPLE or a generic class. The type of this
 attribute is an <span class="eclass">EIFFEL_DERIVATION</span>.</p>
 <p>We create a new type called <span class="eclass">EIFFEL_DERIVATION</span> in which there is:</p>
 <ul>
-  <li><span class="efeature">type</span>: an instance of a <span class="eclass">CONCRETE_TYPE</span>.</li>
+	<li><span class="efeature">type</span>: an instance of a <span class="eclass">CLASS_TYPE</span>.</li>
   <li><span class="efeature">nb_generics</span>: number of generic parameter, 0 otherwise.</li>
-  <li><span class="efeature">generics_type</span>: an array of <span class="eclass">CONCRETE_TYPE</span>, there is  <span class="efeature">nb_generics</span> 
+  <li><span class="efeature">generics_type</span>: an array of <span class="eclass">CLASS_TYPE</span>, there is  <span class="efeature">nb_generics</span> 
   element in this array, so that we know exactly what the generic derivation is.</li>
 </ul>
 <p>To create an instance of <span class="eclass">EIFFEL_DERIVATION</span>, we 
-need to know more about <span class="eclass">CONCRETE_TYPE</span>. Here is the 
+need to know more about <span class="eclass">CLASS_TYPE</span>. Here is the 
 hierarchy:</p>
 <pre><span class="ekeyword">class
-</span>	<span class="eclass">TYPE</span>
+</span>	<span class="eclass">TYPE></span>
+<span class="ekeyword">feature</span>
+	<span class="efeature">class_name</span>: <span class="eclass">SYSTEM_STRING</span>
+	<span class="efeature">type_name</span>: <span class="eclass">SYSTEM_STRING</span>
+			-- Corresponding to `generator' and `generating_type' in
+			-- class ANY.
 <span class="ekeyword">end</span>
 
 <span class="ekeyword">class
-	</span><span class="eclass">CONCRETE_TYPE</span>
+</span><span class="eclass">	CLASS_TYPE</span>
 <span class="ekeyword">inherit
 </span>	<span class="eclass">TYPE</span>
 <span class="ekeyword">feature</span>
-	<span class="efeature">type</span>: <span class="eclass">SYSTEM_TYPE</span>
+	<span class="efeature">type</span>: <span class="eclass">RUNTIME_TYPE_HANDLER</span>
 			-- .NET Run-time type information.
 <span class="ekeyword">end</span>
 
-<span class="ekeyword">class
-	COMPUTED</span><span class="eclass">_TYPE</span>
+<span class="ekeyword">class</span>
+	<span class="eclass">GENERIC_TYPE</span>
 <span class="ekeyword">inherit
-</span>	<span class="eclass">CONCRETE_TYPE</span>
+</span>	<span class="eclass">CLASS_TYPE</span>
 <span class="ekeyword">feature</span>
-	<span class="efeature">derivation</span>: <span class="eclass">EIFFEL_DERIVATION</span>
-			-- Information about computed type.
+	<span class="efeature">type_array</span>: <span class="eclass">NATIVE_ARRAY [TYPE]</span>
+			-- Information about generic parameters of current generic type.
+			-- Count of array is `<span class="efeature">nb_generics</span>'.
+
+	<span class="efeature">nb_generics</span>: <span class="eclass">INTEGER</span>
+			-- Number of generic parameters in Current.
+
 <span class="ekeyword">end</span></pre>
-<p>The <span class="eclass">CONCRETE_TYPE</span> stores the run-time information 
-about current Eiffel type with no generic derivations. It is used for external 
-classes or for Eiffel classes that are not generics. A <span class="eclass">COMPUTED_TYPE</span> 
-stores the information about a generic type and instances of <span class="eclass">CONCRETE_TYPE</span> 
-are computed during the execution.</p>
+<p>The <span class="eclass">CLASS_TYPE</span> stores the run-time information 
+about current Eiffel type with no generic parameters information. A <span class="eclass">GENERIC_TYPE</span> 
+stores the information about a generic type as seen during compilation. When an 
+object of a certain type is instantiated we will evaluate the <span class="eclass">GENERIC_TYPE</span> 
+object in the context of the creation.</p>
 <pre><span class="ekeyword">class</span><span class="eclass">
 </span>	<span class="eclass">FORMAL_TYPE</span>
 <span class="ekeyword">inherit</span><span class="eclass">
@@ -77,55 +87,45 @@ are just place holder to tell the run-time how to compute certain type.</p>
 <h2>Generating the type information</h2>
 <p>The best way to describe it is to do a small example. In our case, we will 
 try to create a LINKED_LIST [HASH_TABLE [INTEGER, STRING]]. In order to create 
-this type, we are going to create an array of	<span class="eclass">TYPE </span>
-that fully describes this type. We are using `create' to show that we have a 
-certain instance initialized in a certain way, most likely the implementation 
-will not create a new instance, but reuse the same instance for all compatible 
-type.</p>
+this type, we are going to create an instance of	<span class="eclass">TYPE </span>
+that fully describes this type.</p>
 <p class="note"><b>example:<br>
 </b>LINKED_LIST [HASH_TABLE [INTEGER, STRING]] corresponds to the 
-LINKED_LIST_ANY type definition in .NET.<br>
-<span class="efeature"><br>
-types</span> = [create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
-(&quot;LINKED_LIST_ANY&quot;)),<br>
+LINKED_LIST_ANY type definition in .NET. Since it is generic we are going to 
+create an instance of <span class="eclass">GENERIC_TYPE</span> with the 
+following content:<br>
+<br>
+	<span class="efeature">type</span> =  create {<span class="eclass">CLASS_TYPE</span>}.make (runtime_type_handle 
+(&quot;LINKED_LIST_ANY&quot;))<br>
+<span class="efeature">nb_generics</span> = 1<br>
+<span class="efeature">type_array</span> = [a <span class="eclass">GENERIC_TYPE</span> instance of HASH_TABLE [INTEGER, STRING] described 
+below]<br>
+<br>
+Here is the second <span class="eclass">GENERIC_TYPE</span> instance for 
+HASH_TABLE:<br>
+<br>
+	<span class="efeature">type</span> =  create {<span class="eclass">CLASS_TYPE</span>}.make (runtime_type_handle 
+(&quot;HASH_TABLE_INTEGER_ANY&quot;))<br>
+<span class="efeature">nb_generics</span> = 2<br>
+<span class="efeature">type_array</span> = [create {<span class="eclass">BASIC_TYPE</span>}.make (runtime_type_handle (&quot;Int32&quot;)),<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType (&quot;HASH_TABLE_Int32_ANY&quot;)),<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType (&quot;Int32&quot;)),<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
+create {<span class="eclass">CLASS_TYPE</span>}.make (runtime_type_handle&nbsp; 
 (&quot;STRING&quot;))]</p>
 <p>
 This approach of representing <span class="efeature">types</span> is directly 
-taken from our representation in the C code generation. Given this array, we are 
+taken from our representation in the C code generation, however much simplified 
+thanks to the use of classes. Given this array, we are 
 going to compute an associated <span class="eclass">EIFFEL_DERIVATION </span>
 object that we will store after having created the a new instance of the class 
 LINKED_LIST [HASH_TABLE [INTEGER, STRING]].</p>
 <p>
-In this particular case, the <span class="eclass">EIFFEL_DERIVATION</span> instance 
-should look like:</p>
-<p class="note">
-<span class="efeature">type</span> = create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
-(&quot;LINKED_LIST_ANY&quot;))<br>
-<span class="efeature">nb_generics</span> = 1<br>
-<span class="efeature">generic_types</span> = [create {<span class="eclass">COMPUTED_TYPE</span>}.make (&quot;HASH_TABLE [INTEGER, STRING]&quot;)]</p>
-<p>
-For the type HASH_TABLE [INTEGER, STRING], the <span class="eclass">EIFFEL_DERIVATION</span> instance
-should look like:
-</p>
-<p class="note">
-<span class="efeature">type</span> = create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
-(&quot;HASH_TABLE_Int32_ANY&quot;))<br>
-<span class="efeature">nb_generics</span> = 2<br>
-<span class="efeature">generic_types</span> = [create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
-(&quot;Int32&quot;)),<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
-(&quot;STRING&quot;))]</p>
-<p>
-The <span class="eclass">CONCRETE_TYPE </span>instance is created at run-time in 
-case you have a formal generic parameter in the type you create, or if what you 
-create depends on an anchored type definition.</p>
+In this particular case, the <span class="eclass">EIFFEL_DERIVATION</span> 
+instance should have a content very similar to the one described above for just 
+describing the type as there is no unknown part in the <span class="eclass">GENERIC_TYPE</span> 
+object. In case <span class="eclass">GENERIC_TYPE</span> contains a formal 
+generic parameter, then the formal generic parameter will need to be evaluated 
+before the creation of the new object and after its evaluation the <span class="eclass">EIFFEL_DERIVATION</span> 
+object is created with the correct content.</p>
 <h2>
 Special case of SPECIAL/.NET arrays</h2>
 <p>

@@ -20,13 +20,6 @@ inherit
 			copy
 		end
 
-	WIZARD_SHARED_DATA
-		undefine
-			default_create,
-			is_equal,
-			copy
-		end
-
 feature {NONE} -- Initialization
 
 	user_initialization is

@@ -20,13 +20,6 @@ inherit
 			is_equal
 		end
 
-	WIZARD_SHARED_DATA
-		undefine
-			default_create,
-			copy,
-			is_equal
-		end
-
 	WIZARD_SHARED_PROFILE_MANAGER
 		export
 			{NONE} all

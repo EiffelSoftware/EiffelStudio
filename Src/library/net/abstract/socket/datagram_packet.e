@@ -33,14 +33,14 @@ feature -- Initialization
 
 	make (size: INTEGER) is
 		do
-			old_make (size + int_size)
+			old_make (size + c_packet_number_size)
 		end
 
 feature -- Measurement
 
 	data_area_size: INTEGER is
 		do
-			Result := count - int_size
+			Result := count - c_packet_number_size
 		end
 
 feature -- Status_report
@@ -66,13 +66,13 @@ feature -- Status_report
 	valid_position (pos: INTEGER): BOOLEAN is
 			-- Is the position 'pos' a valid data position
 		do
-			Result := (pos >= 0 and pos < (count - int_size))
+			Result := (pos >= 0 and pos < data_area_size)
 		end
 
 	element (pos: INTEGER): CHARACTER is
 			-- Element located at data position 'pos'
 		do
-			Result := data.item (pos + int_size)
+			Result := data.item (pos + c_packet_number_size)
 		end
 
 feature -- Status_setting
@@ -90,6 +90,9 @@ feature -- Status_setting
 
 	set_packet_number (n: INTEGER) is
 			-- set the packet number for this packet
+		require
+			number_big_enough: n >= -2147483648			-- -2^31
+			number_small_enough: n < 2147483647			-- 2^31 - 1
 		do
 			c_set_number ($data, n)
 		ensure
@@ -99,15 +102,15 @@ feature -- Status_setting
 	put_element (a_item: CHARACTER; pos: INTEGER) is
 			-- put 'a_item' at data position 'pos'
 		do
-			data.put (a_item, (pos + int_size))
+			data.put (a_item, (pos + c_packet_number_size))
 		ensure then
 			element_put: element (pos) = a_item
 		end
 
 feature {NONE} -- Externals
 
-	int_size: INTEGER is
-			-- size to allow for packet number
+	c_packet_number_size: INTEGER is
+			-- Offset to effectively access the data in the packet
 		external
 			"C"
 		end

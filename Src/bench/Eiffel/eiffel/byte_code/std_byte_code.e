@@ -1043,9 +1043,9 @@ end
 			feature_as	: FEATURE_AS
 			routine_as	: ROUTINE_AS
 			i			: INTEGER
-			id_list		: EIFFEL_LIST [ID_AS]
+			id_list		: ARRAYED_LIST [INTEGER]
 			rout_locals	: EIFFEL_LIST [TYPE_DEC_AS]
-			good_id_as	: ID_AS
+			good_id		: INTEGER
 			warning_msg	: UNUSED_LOCAL_WARNING
 		do
 			feature_as := System.Body_server.item (body_index)
@@ -1066,16 +1066,16 @@ end
 					loop
 						i := i + 1
 						if i = an_index then 
-							good_id_as := id_list.item
+							good_id := id_list.item
 						end
 						id_list.forth
 					end
 					rout_locals.forth
 				end
 
-				if good_id_as /= Void then
+				if good_id > 0 then
 					create warning_msg
-					warning_msg.set_associated_local (good_id_as)
+					warning_msg.set_associated_local (good_id)
 					warning_msg.set_associated_type (context.current_type.type_a)
 					warning_msg.set_associated_feature_i (context.current_feature)
 					Error_handler.insert_warning (warning_msg)

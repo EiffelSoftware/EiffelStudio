@@ -54,10 +54,9 @@ feature {NONE} -- GUI
 		local
 			set_colors: SET_WINDOW_ATTRIBUTES_COM
 		do
-			set_size (300, 165)
+			set_size (475, 165)
 			!! set_colors
 			set_colors.execute (Current)
-			query_label.set_left_alignment
 			select_radio_box.set_always_one (True)
 			field_toggle_b.set_toggle_on
 			menu_choice_sc_l.set_visible_item_count (4)
@@ -68,14 +67,15 @@ feature {NONE} -- GUI
 	attach_all is
 			-- Perform attachments.
 		do
-			attach_top (query_label, 8)
-			attach_top (procedure_label, 8)
-			attach_top (procedure_opt_pull, 5)
-			attach_left (query_label, 0)
-			attach_right (procedure_opt_pull, 0)
-			attach_right_widget (procedure_opt_pull, procedure_label, 5)
-			attach_right_widget (procedure_label, query_label, 0)
-			
+ 			attach_top (query_label, 8)
+ 			attach_top (procedure_label, 8)
+ 			attach_top (procedure_opt_pull, 5)
+			attach_top (query_label, 5)
+ 			attach_left (query_label, 0)
+  			attach_right (procedure_opt_pull, 0)
+  			attach_right_widget (procedure_opt_pull, procedure_label, 5)
+
+ 			
 			attach_left (test_toggle_b, 5)
 	   		attach_top_widget (query_label, test_toggle_b, 5)
 			attach_top_widget (procedure_label, test_text_field, 0)

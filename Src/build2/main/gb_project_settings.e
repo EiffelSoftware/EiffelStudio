@@ -64,50 +64,54 @@ feature -- Basic operation
 			file_handler.create_file ("Project_settings", file_name, data)
 		end
 		
-	load (a_file_name: STRING) is
+	load (a_file_name: STRING; file_handler: GB_SIMPLE_XML_FILE_HANDLER) is
 			-- Load `Current' from file `a_file_name' in location `project_location'.
+		require
+			file_handler_not_void: file_handler /= Void
 		local
-			file_handler: GB_SIMPLE_XML_FILE_HANDLER
 			data: ARRAYED_LIST [TUPLE [STRING, STRING]]
 			temp_tuple: TUPLE [STRING, STRING]
 			temp_string :STRING
 		do
-			create file_handler
 			data := file_handler.load_file (a_file_name)
-			check
-				data_not_void: data /= Void
-				data_count_is_4: data.count = 4
-			end
-			temp_tuple := data @ 1
-			temp_string ?= temp_tuple @ 2
-			check
-				data_was_string: temp_string /= Void
-			end
-			set_project_location (temp_string)
-			
-			temp_tuple := data @ 2
-			temp_string ?= temp_tuple @ 2
-			check
-				data_was_string: temp_string /= Void
-			end
-			set_main_window_class_name (temp_string)
-			
-			temp_tuple := data @ 3
-			temp_string ?= temp_tuple @ 2
-			check
-				data_was_string: temp_string /= Void
-			end
-			set_main_window_file_name (temp_string)
-			
-			temp_tuple := data @ 4
-			temp_string ?= temp_tuple @ 2
-			check
-				data_was_string: temp_string /= Void
-			end
-			if temp_string.is_equal ("True") then
-				complete_project := True
-			else
-				complete_project := False
+				-- We only retrieve the data if the
+				-- loading completed succcessfully.
+			if file_handler.last_load_successful then
+				check
+					data_not_void: data /= Void
+					data_count_is_4: data.count = 4
+				end
+				temp_tuple := data @ 1
+				temp_string ?= temp_tuple @ 2
+				check
+					data_was_string: temp_string /= Void
+				end
+				set_project_location (temp_string)
+				
+				temp_tuple := data @ 2
+				temp_string ?= temp_tuple @ 2
+				check
+					data_was_string: temp_string /= Void
+				end
+				set_main_window_class_name (temp_string)
+				
+				temp_tuple := data @ 3
+				temp_string ?= temp_tuple @ 2
+				check
+					data_was_string: temp_string /= Void
+				end
+				set_main_window_file_name (temp_string)
+				
+				temp_tuple := data @ 4
+				temp_string ?= temp_tuple @ 2
+				check
+					data_was_string: temp_string /= Void
+				end
+				if temp_string.is_equal ("True") then
+					complete_project := True
+				else
+					complete_project := False
+				end
 			end
 		end
 

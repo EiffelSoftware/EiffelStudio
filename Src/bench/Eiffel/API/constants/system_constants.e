@@ -57,6 +57,8 @@ feature {NONE}
 
 	Dot_profile_information: STRING is "pfi"
 
+	Eac_browser_file: STRING is "eac_browser.exe"
+
 	Epoly: STRING is "epoly"
 
 	Ecall: STRING is "ecall"

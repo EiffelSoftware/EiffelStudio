@@ -1,92 +1,192 @@
 <!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
 <HTML>
 	<HEAD>
-		<TITLE>Example overview topic</TITLE>
-		<META NAME="MS-HKWD" CONTENT="keyword here">
+		<TITLE>Default values for keyword completion preferences</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Keyword completion, Default values">
+		<META NAME="MS-HKWD" CONTENT="Preferences, Default keyword completion">
 		<LINK REL="stylesheet" HREF="default.css" TYPE="text/css">
 	</HEAD>
 
 	<BODY>
-		<H1>Header 1</H1>
-		<H2>Header 2</H2>
-		<H3>Header 3</H3>
-		<P>Text. </P>
-
-		<UL>
-			<LI>First item of bulleted list with a <A HREF="overview.html">link</A> in it.
-			<LI>Second item in bulleted list.
-		</UL>
-
+		<H1>Default values for keyword completion preferences</H1>
+		<P>This document contains the description of default completion for recognized keywords.
+		The <a href="./20_keyword_completion_customization.html">syntax</A> used is the one used to redefine keyword completion in the preferences.<BR>
+		Four tables list default values for each of the <a href="./10_automatic_keyword_completion.html">four preferences</A> attached to each keyword.
 		<OL>
-			<LI>First item of ordered list with a <A HREF="overview.html">link</A> in it.
-			<LI>Second item in ordered list.
-		</OL>
+		<LI><P>Default value for "Customized autocomplete (Space after keyword was typed)"<BR>
+<TABLE>
+<TR><TD><NOBR>Keyword</NOBR></TD><TD><NOBR>Value</NOBR></TD></TR>
+<TR><TD><NOBR>indexing</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>class</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>inherit</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>creation</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>feature</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>is</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>require</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>require else</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>local</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>do</NOBR></TD><TD><NOBR>" $cursor$ end"</NOBR></TD></TR>
+<TR><TD><NOBR>once</NOBR></TD><TD><NOBR>" $cursor$ end"</NOBR></TD></TR>
+<TR><TD><NOBR>deferred</NOBR></TD><TD><NOBR>" end$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>external</NOBR></TD><TD><NOBR>" "$cursor$" end"</NOBR></TD></TR>
+<TR><TD><NOBR>rescue</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>ensure</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>ensure then</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>if</NOBR></TD><TD><NOBR>" $cursor$ then%N$indent$%T%N$indent$end"</NOBR></TD></TR>
+<TR><TD><NOBR>then</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>elseif</NOBR></TD><TD><NOBR>" $cursor$ then%N$indent$%T"</NOBR></TD></TR>
+<TR><TD><NOBR>else</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>inspect</NOBR></TD><TD><NOBR>" $cursor$%N$indent$when  then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end"</NOBR></TD></TR>
+<TR><TD><NOBR>when</NOBR></TD><TD><NOBR>" $cursor$ then%N$indent$%T"</NOBR></TD></TR>
+<TR><TD><NOBR>from</NOBR></TD><TD><NOBR>" $cursor$%N$indent$until%N$indent$loop%N$indent$end"</NOBR></TD></TR>
+<TR><TD><NOBR>variant</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>until</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>loop</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>debug</NOBR></TD><TD><NOBR>" $cursor$ end"</NOBR></TD></TR>
+<TR><TD><NOBR>check</NOBR></TD><TD><NOBR>" $cursor$ end"</NOBR></TD></TR>
+<TR><TD><NOBR>rename</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>redefine</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>undefine</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>select</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>export</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>Precursor</NOBR></TD><TD><NOBR>" {$cursor$}"</NOBR></TD></TR>
+<TR><TD><NOBR>create</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>obsolete</NOBR></TD><TD><NOBR>" "$cursor$""</NOBR></TD></TR>
+<TR><TD><NOBR>invariant</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>end</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+</TABLE><BR></P>
+				<LI><P>Default value for "Customized autocomplete (Return after keyword was typed)"<BR>
+<TABLE>
+<TR><TD><NOBR>Keyword</NOBR></TD><TD><NOBR>Return</NOBR></TD></TR>
+<TR><TD><NOBR>indexing</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>class</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>inherit</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>creation</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>feature</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>is</NOBR></TD><TD><NOBR>"%N$indent$%T%T-- $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>require</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>require else</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>local</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>do</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$%N$indent$end"</NOBR></TD></TR>
+<TR><TD><NOBR>once</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$%N$indent$end"</NOBR></TD></TR>
+<TR><TD><NOBR>deferred</NOBR></TD><TD><NOBR>"%N$indent$end$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>external</NOBR></TD><TD><NOBR>"%N$indent$%T"$cursor$"%N$indent$end"</NOBR></TD></TR>
+<TR><TD><NOBR>rescue</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>ensure</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>ensure then</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>if</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$%N$indent$then%N$indent$%T%N$indent$end"</NOBR></TD></TR>
+<TR><TD><NOBR>then</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>elseif</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$%N$indent$then%N$indent$%T"</NOBR></TD></TR>
+<TR><TD><NOBR>else</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>inspect</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$%N$indent$when  then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end"</NOBR></TD></TR>
+<TR><TD><NOBR>when</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$%N$indent$then%N$indent$%T"</NOBR></TD></TR>
+<TR><TD><NOBR>from</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$%N$indent$until%N$indent$%T%N$indent$loop%N$indent$%T%N$indent$end"</NOBR></TD></TR>
+<TR><TD><NOBR>variant</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>until</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>loop</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>debug</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$%N$indent$end"</NOBR></TD></TR>
+<TR><TD><NOBR>check</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$%N$indent$end"</NOBR></TD></TR>
+<TR><TD><NOBR>rename</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>redefine</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>undefine</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>select</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>export</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>Precursor</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>create</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>obsolete</NOBR></TD><TD><NOBR>"%N$indent$%T"$cursor$""</NOBR></TD></TR>
+<TR><TD><NOBR>invariant</NOBR></TD><TD><NOBR>"%N$indent$%T$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>end</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+</TABLE><BR>
+</P>
 
-		<CODE>
-			<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <BR>
-			 &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../vision2/ev_action_sequence.html">EV_ACTION_SEQUENCE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">EVENT_DATA</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../base/tuple.html">TUPLE</A> <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">end</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
-			<BR>
-			<SPAN CLASS="ekeyword">inherit</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/base/reference/event/action_sequence.html">ACTION_SEQUENCE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">EVENT_DATA</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
-			<BR>
-			<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN><BR>
-			<BR>
-			 &nbsp; &nbsp; &nbsp;<A NAME="f_force_extend"><A CLASS="efeature" HREF="../../../vision2/ev_action_sequence.html#f_force_extend">force_extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/procedure.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/tuple.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Extend without checking type of </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
-			<BR>
-			 &nbsp; &nbsp; &nbsp;<A NAME="f_extend_kamikaze"><A CLASS="efeature" HREF="../../../vision2/ev_action_sequence.html#f_extend_kamikaze">extend_kamikaze</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Extend </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment"> and remove it again after it is called.</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../base/linked_list.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../event/action_sequence.html#f_prune_when_called">prune_when_called</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
-			 &nbsp; &nbsp; &nbsp;<BR>
-			<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_ACTION_SEQUENCE<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
-		</CODE>
-		<BR>
-
-		<TABLE>
-			<TR>
-				<TD>
-					Row 1 Column 1
-				</TD>
-				<TD>
-					Row 1 Column 2
-				</TD>
-			</TR>
-			<TR>
-				<TD>
-					Row 2 Column 1
-				</TD>
-				<TD>
-					Row 2 Column 2
-				</TD>
-			</TR>
-		</TABLE>
-
-		<P>
-		[FIGURE]
-		<P CLASS="figuretitle">Fig. 1: Figure Title</P>
-
-		<P CLASS="Note">
-		<B>Note</B>: Did you know?<BR>
-		</P>
-		<P CLASS="tip">
-		<B>Tip</B>: Cool trick<BR>
-		</P>
-		<P CLASS="warning">
-		<B>Caution</B>: Be careful<BR>
-		</P>
-
+		<LI><P>Default value for "Customized autocomplete (Space, other cases)"<BR>
+<TABLE>
+<TR><TD><NOBR>Keyword</NOBR></TD><TD><NOBR>Space</NOBR></TD></TR>
+<TR><TD><NOBR>indexing</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>class</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>inherit</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>creation</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>feature</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>is</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>require</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>require else</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>local</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>do</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>once</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>deferred</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>external</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>rescue</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>ensure</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>ensure then</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>if</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>then</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>elseif</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>else</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>inspect</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>when</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>from</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>variant</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>until</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>loop</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>debug</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>check</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>rename</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>redefine</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>undefine</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>select</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>export</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>Precursor</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>create</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>obsolete</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>invariant</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>end</NOBR></TD><TD><NOBR>" $cursor$"</NOBR></TD></TR>
+</TABLE><BR></P>
+		<LI><P>Default value for "Customized autocomplete (Return, other cases)"<BR>
+<TABLE>
+<TR><TD><NOBR>Keyword</NOBR></TD><TD><NOBR>Return</NOBR></TD></TR>
+<TR><TD><NOBR>indexing</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>class</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>inherit</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>creation</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>feature</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>is</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>require</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>require else</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>local</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>do</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>once</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>deferred</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>external</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>rescue</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>ensure</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>ensure then</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>if</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>then</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>elseif</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>else</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>inspect</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>when</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>from</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>variant</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>until</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>loop</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>debug</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>check</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>rename</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>redefine</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>undefine</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>select</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>export</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>Precursor</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>create</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>obsolete</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>invariant</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+<TR><TD><NOBR>end</NOBR></TD><TD><NOBR>"%N$indent$$cursor$"</NOBR></TD></TR>
+</TABLE><BR></P>
 		<P CLASS="seealso">
 		<B>See Also</B><BR>
-					<A HREF="Decision.html">Related Topic</A><BR>
-		</P>
-		<P CLASS="sample">
-		<B>Samples</B><BR>
-					<A HREF="sourcecode.html">1+1=2</A><BR>
+		<a href="./10_automatic_keyword_completion.html">Keywords automatic completion preferences</A><BR>
+		<a href="./20_keyword_completion_customization.html">Keyword completion customization</A><BR>
 		</P>
 	</BODY>
 </HTML>

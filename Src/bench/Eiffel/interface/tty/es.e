@@ -374,7 +374,11 @@ feature -- Update
 			elseif option.is_equal ("-version") then
 				version_only := True
 			elseif option.is_equal ("-quick_melt") then
-				create {EWB_QUICK_MELT} command 
+				if command = Void then
+					create {EWB_QUICK_MELT} command 
+				else
+					option_error := True	
+				end
 			elseif has_documentation_generation and then option.is_equal ("-implementers") then
 				if current_option < argument_count then
 					if command /= Void then

@@ -53,16 +53,16 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Connect action sequences to signals.
-		local
-			temp_c_object: POINTER
+
 		do
 			{EV_PRIMITIVE_IMP} Precursor
-			temp_c_object := c_object
-			c_object := list_widget
-			signal_connect ("select_child", ~select_callback)
+
+			real_signal_connect (list_widget, "select_child", ~select_callback)
+			
 			-- Gtk bug means that select_child signal is fired on mouse press.
-			c_object := temp_c_object
 		end
+
+feature {EV_TREE_ITEM_IMP} -- Implementation
 
 	select_callback (a_tree_item: POINTER) is
 			-- Called when a tree item is selected
@@ -70,16 +70,22 @@ feature {NONE} -- Initialization
 			t_item: EV_TREE_ITEM_IMP
 		do
 		 	t_item ?= eif_object_from_c (a_tree_item)
+
+			if previous_selected_item /= Void and then
+			previous_selected_item.parent_tree = interface and
+			previous_selected_item /= t_item.interface then
+				previous_selected_item.deselect_actions.call ([])
+			end
 			
 			if t_item.is_selected then
 				t_item.interface.select_actions.call ([])
 				interface.select_actions.call ([])
+				previous_selected_item := t_item.interface
 			else
-				t_item.interface.deselect_actions.call ([])
 				interface.deselect_actions.call ([])
-			end
+				previous_selected_item := Void
+			end		
 		end
-
 
 feature -- Status setting
 
@@ -185,6 +191,9 @@ feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
 
 feature {NONE} -- Implementation
 
+	previous_selected_item: EV_TREE_ITEM
+		-- Item that was selected previously.
+
 	add_to_container (v: like item) is
 			-- Add `v' to tree.
 		local
@@ -248,6 +257,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/01 23:42:46  king
+--| Corrected select_callback, corrected initialize
+--|
 --| Revision 1.29  2000/03/01 18:09:22  oconnor
 --| released
 --|

@@ -76,7 +76,7 @@ feature -- Reinitialization
 			reading_text_finished := False
 			current_string := Void
 			current_pos := 0
-			on_text_reset
+			on_text_reset			
 		end
 
 feature -- Access
@@ -334,9 +334,11 @@ feature {NONE} -- Text Loading
 
 	finish_reading_string is
 			-- Read the file named `a_name' and perform a lexical analysis
+		require
+			current_string_not_void: current_string /= Void
 		local
 			curr_string	: STRING
-			j		: INTEGER
+			j			: INTEGER
 			lines_read	: INTEGER
 		do
 			if not reading_text_finished then

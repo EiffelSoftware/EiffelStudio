@@ -10,7 +10,13 @@ class FONT_LIST_X
 
 inherit
 
-	FONT_LIST_I;
+	FONT_LIST_I
+		rename
+			position as index,
+			go as go_i_th,
+			offleft as before,
+			offright as after
+		end
 
 	FIXED_LIST [FONT]
 		rename

@@ -366,21 +366,20 @@ feature -- Access
 			class_ast: CLASS_AS;
 			bid: INTEGER
 		do
-			if not is_external then
-				bid := body_index;
-				if bid /= 0 then
-						-- Server in the temporary server first to get the latest version of the AST.
-					if Tmp_ast_server.has (written_in) then
-						class_ast := Tmp_ast_server.item (written_in)
-						Result := class_ast.feature_with_name (name)
-					elseif Body_server.has (bid) then
-						Result := Body_server.item (bid)
-					end
-				elseif Tmp_ast_server.has (written_in) then
+			bid := body_index;
+			if bid /= 0 then
+					-- Server in the temporary server first to get the latest version of the AST.
+				if Tmp_ast_server.has (written_in) then
 					class_ast := Tmp_ast_server.item (written_in)
 					Result := class_ast.feature_with_name (name)
-				end;
+				elseif Body_server.has (bid) then
+					Result := Body_server.item (bid)
+				end
+			elseif Tmp_ast_server.has (written_in) then
+				class_ast := Tmp_ast_server.item (written_in)
+				Result := class_ast.feature_with_name (name)
 			else
+					-- In this case we must certainly be handling a dotnet feature.
 				create Result
 			end			
 		end;

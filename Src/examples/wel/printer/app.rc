@@ -1,4 +1,9 @@
-#include "app_ids.h"
+#define ID_ICO_APPLICATION		1
+
+#define ID_MAIN_MENU			1
+
+#define CMD_PRINT			100
+#define CMD_EXIT			1000
 
 ID_ICO_APPLICATION ICON "app.ico"
 

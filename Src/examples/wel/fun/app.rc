@@ -1,5 +1,15 @@
 #include <windows.h>
-#include "app_ids.h"
+
+#define ID_BMP_ISE_LOGO 	1
+
+#define ID_ICO_APPLICATION	1
+#define ID_ICO_ARTIST		2
+
+#define ID_CUR_INVISIBLE	1
+
+#define ID_DIALOG		1
+
+#define CMD_EXIT		1000
 
 ID_ICO_APPLICATION ICON "app.ico"
 ID_ICO_ARTIST ICON "artist.ico"

@@ -1492,7 +1492,6 @@ feature -- Graphical Interface
 		end
 
 	save_environment is
-
 			-- Save the current environment
 			--| ie, save windows positions, save breakpoints
 		require
@@ -1509,6 +1508,7 @@ feature -- Graphical Interface
 			if
 				not saving_done
 				and then Eiffel_project.system /= Void
+				and then Eiffel_project.system.name /= Void
 			then
 				saving_done := True
 				!! last_opened_projects.make (512)

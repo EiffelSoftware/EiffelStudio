@@ -79,6 +79,12 @@ XCOPY /Y Src\Build2\interface\properties\gb_ev_text_alignable_editor_constructor
 XCOPY /Y Src\Build2\interface\properties\gb_ev_textable_editor_constructor.e .\interface
 XCOPY /Y Src\Build2\interface\properties\gb_ev_tooltipable_editor_constructor.e .\interface
 
+REM Copy image used for executable icon.
+
+XCOPY %EIFFEL_SRC%\library\vision2\Clib\default_vision2_icon.ico .
+ren default_vision2_icon.ico vision2_tour.ico
+
+
 REM Remove all temporary checked out files.
 rm -r Src
 rm -r Delivery

@@ -210,7 +210,7 @@ feature -- Basic operation
 			check
 				new_object_is_cell_or_container: cell_object /= Void or container_object /= Void
 			end
-			children := clone (old_object.children)
+			children := old_object.children.twin
 
 			from
 				children.start
@@ -897,7 +897,7 @@ feature -- Basic operation
 				some_objects.off
 			loop
 				if not some_objects.item.name.is_empty then
-					names.extend (clone (some_objects.item.name))
+					names.extend (some_objects.item.name.twin)
 				end
 				some_objects.forth
 			end

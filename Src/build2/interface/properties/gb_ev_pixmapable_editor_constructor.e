@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 							-- Must set the pixmap before the stretch takes place.
 						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
 						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (dialog.file_name))
-						add_pixmap_to_pixmap_container (clone (new_pixmap))
+						add_pixmap_to_pixmap_container (new_pixmap.twin)
 						modify_button.set_text (Remove_button_text)
 						modify_button.set_tooltip (Remove_tooltip)
 						opened_file := True

@@ -95,7 +95,7 @@ feature -- Basic operations
 				file_name.extend ("default.xml")
 			end
 			initialize (file_name, Eiffel_preferences)
-			directory := clone (Bitmaps_path)
+			directory := Bitmaps_path.twin
 			directory.extend ("png")
 			Pixmaps_path_cell.put (directory)
 			Pixmaps_extension_cell.put ("png")

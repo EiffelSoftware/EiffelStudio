@@ -48,7 +48,7 @@ feature -- Access
 
 	name: STRING is
 		do
-			Result := clone (menu_name)
+			Result := menu_name.twin
 			Result.prune_all ('&')
 		end
 
@@ -123,7 +123,7 @@ feature -- Basic operations
 			end
 			Result.select_actions.extend (~execute)
 			Result.enable_sensitive
-			tt := clone (tooltip)
+			tt := tooltip.twin
 			if accelerator /= Void then
 				tt.append (Opening_parenthesis)
 				tt.append (accelerator.out)
@@ -143,7 +143,7 @@ feature -- Basic operations
 			end
 				-- Create the menu item
 			create Result.make (Current)
-			mname := clone (menu_name)
+			mname := menu_name.twin
 			if accelerator /= Void then
 				mname.append (Tabulation)
 				mname.append (accelerator.out)

@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			a_name_valid: a_name /= Void and then a_value /= Void
 			a_value_valid: a_value /= Void and then a_value /= Void
 		do
-			name := clone (a_name)
+			name := a_name.twin
 			value := a_value
 			create referers.make (4)
 		ensure

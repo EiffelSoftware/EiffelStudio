@@ -70,7 +70,7 @@ feature -- Access
 				switch_constants_mode
 				constants_button.select_actions.resume
 				if first.pixmap_path /= Void and then first.pixmap_exists then
-					add_pixmap_to_pixmap_container (clone (first))
+					add_pixmap_to_pixmap_container (first.twin)
 					for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
 					modify_button.set_text (Clear_text)
 					modify_button.set_tooltip (Clear_tooltip)
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 						for_all_objects (agent {EV_PIXMAP}.set_with_named_file (dialog.file_name))
 						for_all_objects (agent {EV_PIXMAP}.set_pixmap_path (dialog.file_name))
 						for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
-						add_pixmap_to_pixmap_container (clone (new_pixmap))
+						add_pixmap_to_pixmap_container (new_pixmap.twin)
 						modify_button.set_text (Clear_text)
 						modify_button.set_tooltip (Clear_tooltip)
 						opened_file := True

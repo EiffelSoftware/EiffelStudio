@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 		require
 			name_not_void: a_name /= Void
 		do
-			Result := clone (a_name)
+			Result := a_name.twin
 			Result.to_lower
 			Result.prune_all (' ')
 		end

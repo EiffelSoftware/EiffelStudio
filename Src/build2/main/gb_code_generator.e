@@ -182,7 +182,7 @@ feature -- Basic operation
 									if current_name.is_equal (Internal_properties_string)  then
 										full_information := get_unique_full_info (window_element)
 										element_info := full_information @ (name_string)
-										directory_name := clone (generated_path)
+										directory_name := generated_path.twin
 										directory_name.extend (element_info.data)
 										create directory.make (directory_name)
 										if not directory.exists then
@@ -208,9 +208,9 @@ feature -- Basic operation
 							
 						else
 							reset_generation_constants
-							directory_name := clone (generated_path)
+							directory_name := generated_path.twin
 							prepass_xml (current_element, document_info, 1)
-							window_file_name := clone (generated_path)
+							window_file_name := generated_path.twin
 							build_main_window_implementation (directory_name)
 							build_main_window (directory_name)
 						end
@@ -318,15 +318,15 @@ feature {NONE} -- Implementation
 				create debug_ace_file.make_from_string (visual_studio_information.wizard_installation_path)
 				debug_ace_file.extend ("templates")
 				debug_ace_file.extend ("windows")
-				release_ace_file := clone (debug_ace_file)
+				release_ace_file := debug_ace_file.twin
 				debug_ace_file.extend ("debug.ace")
 				release_ace_file.extend ("release.ace")
 				generate_ace_file (release_ace_file, "release.ace")
 				generate_ace_file (debug_ace_file, "debug.ace")
 			else
 					-- Now generate ace files on both platforms as standard.
-				generate_ace_file (clone (windows_ace_file_name), windows_ace_name)
-				generate_ace_file (clone (unix_ace_file_name), unix_ace_name)
+				generate_ace_file (windows_ace_file_name.twin, windows_ace_name)
+				generate_ace_file (unix_ace_file_name.twin, unix_ace_name)
 			end	
 		end
 		
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 					add_generated_string (ace_text, Visual_studio_information.clr_version, Clr_version_tag)
 				end
 				
-				ace_file_name := clone (generated_path)
+				ace_file_name := generated_path.twin
 				ace_file_name.extend (file_name)
 						-- Store `ace_text'.
 				create ace_output_file.make (ace_file_name)
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 					add_generated_string (constants_content, generated_constants_string, constants_tag)
 					
 						-- Now write the new constants file to disk.
-					constants_file_name := clone (generated_path)
+					constants_file_name := generated_path.twin
 					constants_file_name.extend (project_settings.constants_class_name.as_lower + Class_implementation_extension.as_lower + ".e")
 					create constants_file.make_open_write (constants_file_name)
 					constants_file.start
@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 						
 						
 							-- Now write the new constants file to disk.
-						constants_file_name := clone (generated_path)
+						constants_file_name := generated_path.twin
 						constants_file_name.extend (project_settings.constants_class_name.as_lower + ".e")
 						create constants_file.make (constants_file_name)
 						if not constants_file.exists then
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 					all_constants.forth
 				end
 					-- Now write the new constants file to disk.
-				constants_file_name := clone (generated_path)
+				constants_file_name := generated_path.twin
 				constants_file_name.extend ("constants.txt")
 				create constants_file.make_open_write (constants_file_name)
 				constants_file.start
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 					change_pos := application_text.substring_index (application_tag, 1)
 					application_text.replace_substring (application_class_name, change_pos, change_pos + application_tag.count - 1)
 					
-					application_file_name := clone (generated_path)
+					application_file_name := generated_path.twin
 					application_file_name.extend (application_class_name.as_lower + eiffel_class_extension)
 	
 					create application_output_file.make_open_write (application_file_name)
@@ -621,7 +621,7 @@ feature {NONE} -- Implementation
 					name_not_void: document_info.name /= Void
 				end
 				a_class_name := document_info.name.as_upper + Class_implementation_extension 
-				file_name := clone (directory_name)
+				file_name := directory_name.twin
 				file_name.extend (a_class_name.as_lower + ".e")
 				
 					-- Retrieve the template for a class file to generate.
@@ -714,10 +714,10 @@ feature {NONE} -- Implementation
 
 						-- Add code for inheritance structure to `class_text'.
 					if project_settings.client_of_window then
-						temp_string := clone (window_access)
+						temp_string := window_access.twin
 						if not document_info.type.is_equal (Ev_titled_window_string)  then
 								-- Ensure that the inheritance references the correct type.
-							temp_string := clone (Window_access_as_dialog_part1) + project_settings.constants_class_name.as_upper + clone (Window_access_as_dialog_part2)
+							temp_string := Window_access_as_dialog_part1.twin + project_settings.constants_class_name.as_upper + Window_access_as_dialog_part2.twin
 							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
 								-- Replace "window" from `window_access' with "dialog" only in comment.
 								--| FIXME This is a hack and should probably be improved as the code generation
@@ -725,7 +725,7 @@ feature {NONE} -- Implementation
 						end
 						add_generated_string (class_text, temp_string,  inheritance_tag)
 					else
-						temp_string := clone (Window_inheritance_part1) + project_settings.constants_class_name.as_upper + clone (Window_inheritance_part2)
+						temp_string := Window_inheritance_part1.twin + project_settings.constants_class_name.as_upper + Window_inheritance_part2.twin
 						if not document_info.type.is_equal (Ev_titled_window_string)  then
 							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
 						end
@@ -774,7 +774,7 @@ feature {NONE} -- Implementation
 				document_info_not_void: document_info /= Void
 				name_not_void: document_info.name /= Void
 			end
-			file_name := clone (directory_name)
+			file_name := directory_name.twin
 			a_class_name := document_info.name.as_upper
 			file_name.extend (a_class_name.as_lower + ".e")
 			
@@ -814,7 +814,7 @@ feature {NONE} -- Implementation
 				set_inherited_class_name (temp_string)
 				
 				if project_settings.client_of_window then
-					temp_string := clone (redefined_creation)
+					temp_string := redefined_creation.twin
 						if not document_info.type.is_equal (Ev_titled_window_string)  then
 							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
 						end

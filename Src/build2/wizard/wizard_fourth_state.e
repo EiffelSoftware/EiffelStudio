@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			title_white_box.extend (cell)
 
 				-- Icon Pixmap
-			icon_pixmap := clone (pixmap)
+			icon_pixmap := pixmap.twin
 			icon_pixmap.set_minimum_width (dialog_unit_to_pixels(48))
 			icon_pixmap.set_minimum_height (dialog_unit_to_pixels(48))
 			title_white_box.extend (icon_pixmap)

@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 		require
 			a_name_valid: a_name /= Void
 		do
-			name := clone (a_name)
-			value := clone (a_value)
-			directory := clone (a_directory)
-			filename := clone (a_filename)
+			name := a_name.twin
+			value := a_value.twin
+			directory := a_directory.twin
+			filename := a_filename.twin
 			is_absolute := absolute
 			create referers.make (4)
 			retrieve_pixmap_image
@@ -60,10 +60,10 @@ feature {GB_PIXMAP_SETTINGS_DIALOG}
 		require
 			a_name_valid: a_name /= Void and then a_value /= Void
 		do
-			name := clone (a_name)
-			value := clone (a_value)
-			directory := clone (a_directory)
-			filename := clone (a_filename)
+			name := a_name.twin
+			value := a_value.twin
+			directory := a_directory.twin
+			filename := a_filename.twin
 			is_absolute := absolute
 			if referers = Void then
 				create referers.make (4)
@@ -133,7 +133,7 @@ feature -- Access
 			directory_value: STRING
 		do
 			if is_absolute then
-				Result := clone (value)	
+				Result := value.twin
 			else
 				directory_constant ?= constants.all_constants.item (directory)
 				check
@@ -227,11 +227,11 @@ feature {NONE} -- Implementation
 				if file.exists then
 					create pixmap
 					pixmap.set_with_named_file (value)
-					small_pixmap := clone (pixmap)
+					small_pixmap := pixmap.twin
 					small_pixmap := scaled_pixmap (pixmap, 16, 16)
 				else
 					pixmap := Icon_missing_pixmap_small @ 1
-					small_pixmap := clone (pixmap)
+					small_pixmap := pixmap.twin
 				end
 			else
 				directory_constant := constants.directory_constant_by_name (directory)	
@@ -248,11 +248,11 @@ feature {NONE} -- Implementation
 				if file.exists then
 					create pixmap
 					pixmap.set_with_named_file (file_name)
-					small_pixmap := clone (pixmap)
+					small_pixmap := pixmap.twin
 					small_pixmap := scaled_pixmap (pixmap, 16, 16)
 				else
 					pixmap := Icon_missing_pixmap_small @ 1
-					small_pixmap := clone (pixmap)
+					small_pixmap := pixmap.twin
 				end
 			end
 		end

@@ -892,7 +892,7 @@ feature {NONE} -- Implementation
 		do
 			output := ""
 			create info.make (1, multiple_split_area.count)
-			linear_rep := clone (multiple_split_area.linear_representation)
+			linear_rep := multiple_split_area.linear_representation.twin
 				-- Firstly determine if one item is maximized
 			from
 				linear_rep.start
@@ -926,7 +926,7 @@ feature {NONE} -- Implementation
 				linear_rep.forth
 			end
 			preferences.set_array_resource (preferences.tool_order, info)
-			linear_rep := clone (multiple_split_area.external_representation)
+			linear_rep := multiple_split_area.external_representation.twin
 			create info.make (1, linear_rep.count)
 			from	
 				linear_rep.start				

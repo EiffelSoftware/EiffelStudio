@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 		do
 			constant := a_constant
 			object := an_object
-			property := clone (a_property)
-			attribute := clone (an_attribute)
+			property := a_property.twin
+			attribute := an_attribute.twin
 		end
 		
 

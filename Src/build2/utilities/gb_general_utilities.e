@@ -142,7 +142,7 @@ feature -- Basic operations
 			sub_index: INTEGER
 			index_of_old_name: INTEGER
 		do
-			reversed := clone (class_text)
+			reversed := class_text.twin
 			reversed.mirror
 			sub_index := reversed.substring_index ("dne", 1)
 			index_of_old_name := class_text.substring_index (old_name, class_text.count - sub_index)

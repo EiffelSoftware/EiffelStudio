@@ -100,6 +100,10 @@ feature -- Access
 	
 	name: STRING
 		-- Name associated with object.
+		
+	generated_name: BOOLEAN
+		-- Was `name' generated during generation? Names
+		-- are generated if an object was not named by a user.
 	
 	element: XM_ELEMENT
 		-- XML element that was representing object.
@@ -147,7 +151,13 @@ feature -- Status setting
 			is_root_object := True
 		end
 		
-	
+		
+	enable_generated_name is
+			-- Assign `True' to `generated_name'.
+		do
+			generated_name := True
+		end
+
 	set_element (an_element: XM_ELEMENT) is
 			-- Assign `an_element' to `element'.
 		do

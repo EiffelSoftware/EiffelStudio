@@ -1502,7 +1502,7 @@ feature -- Externals
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"gdk_pixbuf_scale_simple ((GdkPixbuf*) $a_gdkpixbuf, (int) $a_width, (int) $a_width, (int) $a_interp_mode)"
+			"gdk_pixbuf_scale_simple ((GdkPixbuf*) $a_gdkpixbuf, (int) $a_width, (int) $a_height, (int) $a_interp_mode)"
 		end
 
 	frozen gdk_interp_bilinear: INTEGER is
@@ -2353,6 +2353,11 @@ feature -- Externals
 	frozen gtk_image_get_pixmap (a_image: POINTER; a_pixmap: POINTER; a_mask: POINTER) is
 		external
 			"C signature (GtkImage*, GdkPixmap**, GdkBitmap**) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_image_get_pixbuf (a_image: POINTER): POINTER is
+		external
+			"C signature (GtkImage*): GdkPixbuf* use <gtk/gtk.h>"
 		end
 		
 	frozen gtk_image_new_from_pixmap (a_pixmap: POINTER; a_mask: POINTER): POINTER is

@@ -72,8 +72,6 @@ feature -- Access
 	color: EV_COLOR is
 			-- Currently selected color.
 		local
-			a_colorsel: POINTER
-			a_colors: POINTER
 			color_struct: POINTER
 		do
 			if not user_clicked_ok and then internal_set_color /= Void then

@@ -310,7 +310,7 @@ rt_private int rdeepiso(char *target, char *source)
 	flags = zone->ov_flags;
 
 	/* Check if the object has already been inspected */
-	if (s_put(table, target) == S_CONFLICT)
+	if (s_put(table, target) == EIF_SEARCH_CONFLICT)
 		return TRUE;
 
 	/* Isomorphism test between `source' and `target'.

@@ -27,112 +27,136 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
+		local 
+			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+			l_ev_frame_1, l_ev_frame_2, l_ev_frame_3: EV_FRAME
+			l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4, 
+			l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7: EV_VERTICAL_BOX
+			l_ev_label_1, l_ev_label_2, l_ev_label_3: EV_LABEL
+			l_ev_notebook_1: EV_NOTEBOOK
+			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+			l_ev_cell_1: EV_CELL
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
 			
-			create l_horizontal_box_8
-			create l_frame_2
-			create l_vertical_box_7
-			create l_horizontal_box_9
-			create l_label_4
+			create l_ev_horizontal_box_1
+			create l_ev_frame_1
+			create l_ev_vertical_box_1
+			create l_ev_horizontal_box_2
+			create l_ev_label_1
 			create location_field
-			create l_notebook_1
-			create l_vertical_box_8
-			create l_frame_3
-			create l_vertical_box_9
-			create l_frame_4
-			create l_vertical_box_10
-			create l_horizontal_box_10
+			create l_ev_notebook_1
+			create l_ev_vertical_box_2
+			create l_ev_frame_2
+			create l_ev_vertical_box_3
+			create l_ev_horizontal_box_3
 			create project_radio_button
 			create rebuild_ace_file_check_button
-			create l_horizontal_box_11
+			create l_ev_horizontal_box_4
 			create class_radio_button
 			create class_naming_frame
-			create l_vertical_box_11
-			create l_label_5
+			create l_ev_vertical_box_4
+			create l_ev_label_2
 			create project_class_name_field
-			create l_label_6
+			create l_ev_label_3
 			create application_class_name_field
-			create l_vertical_box_12
-			create l_frame_5
-			create l_vertical_box_13
-			create local_check_button
+			create l_ev_vertical_box_5
+			create l_ev_frame_3
+			create l_ev_vertical_box_6
 			create attributes_local_check_button
+			create attributes_non_local_check_button
+			create attributes_optimal_local_check_button
+			create l_ev_horizontal_separator_1
+			create local_check_button
 			create debugging_check_button
 			create client_check_button
 			create load_constants_check_button
-			create l_vertical_box_14
+			create l_ev_vertical_box_7
 			create ok_button
 			create cancel_button
-			create l_cell_7
+			create l_ev_cell_1
 			
-			extend (l_horizontal_box_8)
-			l_horizontal_box_8.extend (l_frame_2)
-			l_frame_2.extend (l_vertical_box_7)
-			l_vertical_box_7.extend (l_horizontal_box_9)
-			l_horizontal_box_9.extend (l_label_4)
-			l_horizontal_box_9.extend (location_field)
-			l_vertical_box_7.extend (l_notebook_1)
-			l_notebook_1.extend (l_vertical_box_8)
-			l_vertical_box_8.extend (l_frame_3)
-			l_frame_3.extend (l_vertical_box_9)
-			l_vertical_box_9.extend (l_frame_4)
-			l_frame_4.extend (l_vertical_box_10)
-			l_vertical_box_10.extend (l_horizontal_box_10)
-			l_horizontal_box_10.extend (project_radio_button)
-			l_horizontal_box_10.extend (rebuild_ace_file_check_button)
-			l_vertical_box_10.extend (l_horizontal_box_11)
-			l_horizontal_box_11.extend (class_radio_button)
-			l_vertical_box_9.extend (class_naming_frame)
-			class_naming_frame.extend (l_vertical_box_11)
-			l_vertical_box_11.extend (l_label_5)
-			l_vertical_box_11.extend (project_class_name_field)
-			l_vertical_box_11.extend (l_label_6)
-			l_vertical_box_11.extend (application_class_name_field)
-			l_notebook_1.extend (l_vertical_box_12)
-			l_vertical_box_12.extend (l_frame_5)
-			l_frame_5.extend (l_vertical_box_13)
-			l_vertical_box_13.extend (local_check_button)
-			l_vertical_box_13.extend (attributes_local_check_button)
-			l_vertical_box_13.extend (debugging_check_button)
-			l_vertical_box_13.extend (client_check_button)
-			l_vertical_box_13.extend (load_constants_check_button)
-			l_horizontal_box_8.extend (l_vertical_box_14)
-			l_vertical_box_14.extend (ok_button)
-			l_vertical_box_14.extend (cancel_button)
-			l_vertical_box_14.extend (l_cell_7)
+			extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (l_ev_frame_1)
+			l_ev_frame_1.extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (l_ev_label_1)
+			l_ev_horizontal_box_2.extend (location_field)
+			l_ev_vertical_box_1.extend (l_ev_notebook_1)
+			l_ev_notebook_1.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (l_ev_frame_2)
+			l_ev_frame_2.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (project_radio_button)
+			l_ev_horizontal_box_3.extend (rebuild_ace_file_check_button)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (class_radio_button)
+			l_ev_vertical_box_2.extend (class_naming_frame)
+			class_naming_frame.extend (l_ev_vertical_box_4)
+			l_ev_vertical_box_4.extend (l_ev_label_2)
+			l_ev_vertical_box_4.extend (project_class_name_field)
+			l_ev_vertical_box_4.extend (l_ev_label_3)
+			l_ev_vertical_box_4.extend (application_class_name_field)
+			l_ev_notebook_1.extend (l_ev_vertical_box_5)
+			l_ev_vertical_box_5.extend (l_ev_frame_3)
+			l_ev_frame_3.extend (l_ev_vertical_box_6)
+			l_ev_vertical_box_6.extend (attributes_local_check_button)
+			l_ev_vertical_box_6.extend (attributes_non_local_check_button)
+			l_ev_vertical_box_6.extend (attributes_optimal_local_check_button)
+			l_ev_vertical_box_6.extend (l_ev_horizontal_separator_1)
+			l_ev_vertical_box_6.extend (local_check_button)
+			l_ev_vertical_box_5.extend (debugging_check_button)
+			l_ev_vertical_box_5.extend (client_check_button)
+			l_ev_vertical_box_5.extend (load_constants_check_button)
+			l_ev_horizontal_box_1.extend (l_ev_vertical_box_7)
+			l_ev_vertical_box_7.extend (ok_button)
+			l_ev_vertical_box_7.extend (cancel_button)
+			l_ev_vertical_box_7.extend (l_ev_cell_1)
 			
 			set_title (system_window_title)
-			l_horizontal_box_8.disable_item_expand (l_vertical_box_14)
-			l_vertical_box_7.set_border_width (2)
-			l_vertical_box_7.disable_item_expand (l_horizontal_box_9)
-			l_horizontal_box_9.set_padding_width (5)
-			l_horizontal_box_9.set_border_width (5)
-			l_horizontal_box_9.disable_item_expand (l_label_4)
-			l_label_4.set_text ("Project Location:")
-			l_notebook_1.set_item_text (l_vertical_box_8, "Build")
-			l_notebook_1.set_item_text (l_vertical_box_12, "Generation")
-			l_frame_4.set_text ("Build Type")
-			l_horizontal_box_11.merge_radio_button_groups (l_horizontal_box_10)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_7)
+			l_ev_vertical_box_1.set_border_width (2)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.set_padding_width (5)
+			l_ev_horizontal_box_2.set_border_width (5)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_1)
+			l_ev_label_1.set_text ("Project Location:")
+			l_ev_notebook_1.set_item_text (l_ev_vertical_box_2, "Build")
+			l_ev_notebook_1.set_item_text (l_ev_vertical_box_5, "Generation")
+			l_ev_vertical_box_2.set_padding_width (small_padding)
+			l_ev_vertical_box_2.set_border_width (small_padding)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_frame_2)
+			l_ev_vertical_box_2.disable_item_expand (class_naming_frame)
+			l_ev_frame_2.set_text ("Build Type")
+			l_ev_horizontal_box_4.merge_radio_button_groups (l_ev_horizontal_box_3)
 			project_radio_button.set_text ("Project")
 			rebuild_ace_file_check_button.set_text ("Always rebuild ace?")
-			l_horizontal_box_10.merge_radio_button_groups (l_horizontal_box_11)
+			l_ev_horizontal_box_3.merge_radio_button_groups (l_ev_horizontal_box_4)
 			class_radio_button.set_text ("Class")
 			class_naming_frame.set_text ("Names")
-			l_label_5.set_text ("Project name:")
-			l_label_5.align_text_left
-			l_label_6.set_text ("Application class name:")
-			l_label_6.align_text_left
-			local_check_button.set_text ("Attribute declarations grouped?")
-			attributes_local_check_button.set_text ("Attributes declared as locals?")
+			l_ev_label_2.set_text ("Project name:")
+			l_ev_label_2.align_text_left
+			l_ev_label_3.set_text ("Application class name:")
+			l_ev_label_3.align_text_left
+			l_ev_vertical_box_5.set_padding_width (small_padding)
+			l_ev_vertical_box_5.set_border_width (small_padding)
+			l_ev_vertical_box_5.disable_item_expand (l_ev_frame_3)
+			l_ev_vertical_box_5.disable_item_expand (debugging_check_button)
+			l_ev_vertical_box_5.disable_item_expand (client_check_button)
+			l_ev_vertical_box_5.disable_item_expand (load_constants_check_button)
+			l_ev_frame_3.set_text ("Attribute declarations")
+			attributes_local_check_button.set_text ("Local")
+			attributes_non_local_check_button.set_text ("Exported")
+			attributes_optimal_local_check_button.set_text ("Export only named")
+			local_check_button.set_text ("Grouped?")
 			debugging_check_button.set_text ("Generate debugging information?")
 			client_check_button.set_text ("Client of windows?")
 			load_constants_check_button.set_text ("Load constants from file?")
-			l_vertical_box_14.set_padding_width (5)
-			l_vertical_box_14.set_border_width (10)
-			l_vertical_box_14.disable_item_expand (ok_button)
-			l_vertical_box_14.disable_item_expand (cancel_button)
+			l_ev_vertical_box_7.set_padding_width (5)
+			l_ev_vertical_box_7.set_border_width (10)
+			l_ev_vertical_box_7.disable_item_expand (ok_button)
+			l_ev_vertical_box_7.disable_item_expand (cancel_button)
 			ok_button.set_text (ok_button_text)
 			ok_button.set_minimum_width (default_button_width)
 			cancel_button.set_text (cancel_button_text)
@@ -152,6 +176,16 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
+feature -- Access
+
+	location_field, project_class_name_field, application_class_name_field: EV_TEXT_FIELD
+	project_radio_button, class_radio_button, attributes_local_check_button, attributes_non_local_check_button, 
+	attributes_optimal_local_check_button: EV_RADIO_BUTTON
+	rebuild_ace_file_check_button, local_check_button, debugging_check_button, client_check_button, 
+	load_constants_check_button: EV_CHECK_BUTTON
+	class_naming_frame: EV_FRAME
+	ok_button, cancel_button: EV_BUTTON
+
 feature {NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN is
@@ -166,19 +200,6 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
-	l_horizontal_box_8, l_horizontal_box_9, l_horizontal_box_10, l_horizontal_box_11: EV_HORIZONTAL_BOX
-	l_frame_2, l_frame_3, l_frame_4, class_naming_frame, l_frame_5: EV_FRAME
-	l_vertical_box_7, l_vertical_box_8, l_vertical_box_9, l_vertical_box_10, l_vertical_box_11, 
-	l_vertical_box_12, l_vertical_box_13, l_vertical_box_14: EV_VERTICAL_BOX
-	l_label_4, l_label_5, l_label_6: EV_LABEL
-	location_field, project_class_name_field, application_class_name_field: EV_TEXT_FIELD
-	l_notebook_1: EV_NOTEBOOK
-	project_radio_button, class_radio_button: EV_RADIO_BUTTON
-	rebuild_ace_file_check_button, local_check_button, attributes_local_check_button, 
-	debugging_check_button, client_check_button, load_constants_check_button: EV_CHECK_BUTTON
-	ok_button, cancel_button: EV_BUTTON
-	l_cell_7: EV_CELL
 	
 	display_project_information is
 			-- Called by `show_actions' of `gb_system_window'.

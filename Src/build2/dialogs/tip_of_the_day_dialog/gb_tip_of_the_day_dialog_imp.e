@@ -27,93 +27,100 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local
+		local 
+			l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4: EV_VERTICAL_BOX
+			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+			l_ev_frame_1: EV_FRAME
+			l_ev_pixmap_1: EV_PIXMAP
+			l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5, l_ev_cell_6, 
+			l_ev_cell_7: EV_CELL
+			l_ev_label_1: EV_LABEL
 			internal_font: EV_FONT
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
 			
-			create l_vertical_box_23
-			create l_horizontal_box_25
-			create l_vertical_box_24
-			create l_frame_7
-			create l_vertical_box_25
-			create l_horizontal_box_26
-			create l_pixmap_1
-			create l_cell_14
-			create l_vertical_box_26
-			create l_cell_15
-			create l_label_11
-			create l_cell_16
-			create l_horizontal_box_27
-			create l_cell_17
+			create l_ev_vertical_box_1
+			create l_ev_horizontal_box_1
+			create l_ev_vertical_box_2
+			create l_ev_frame_1
+			create l_ev_vertical_box_3
+			create l_ev_horizontal_box_2
+			create l_ev_pixmap_1
+			create l_ev_cell_1
+			create l_ev_vertical_box_4
+			create l_ev_cell_2
+			create l_ev_label_1
+			create l_ev_cell_3
+			create l_ev_horizontal_box_3
+			create l_ev_cell_4
 			create tip_label
-			create l_cell_18
-			create l_cell_19
-			create l_horizontal_box_28
+			create l_ev_cell_5
+			create l_ev_cell_6
+			create l_ev_horizontal_box_4
 			create show_tips_button
-			create l_cell_20
+			create l_ev_cell_7
 			create next_tip_button
 			create close_button
 			
-			extend (l_vertical_box_23)
-			l_vertical_box_23.extend (l_horizontal_box_25)
-			l_horizontal_box_25.extend (l_vertical_box_24)
-			l_vertical_box_24.extend (l_frame_7)
-			l_frame_7.extend (l_vertical_box_25)
-			l_vertical_box_25.extend (l_horizontal_box_26)
-			l_horizontal_box_26.extend (l_pixmap_1)
-			l_horizontal_box_26.extend (l_cell_14)
-			l_horizontal_box_26.extend (l_vertical_box_26)
-			l_vertical_box_26.extend (l_cell_15)
-			l_vertical_box_26.extend (l_label_11)
-			l_vertical_box_26.extend (l_cell_16)
-			l_vertical_box_25.extend (l_horizontal_box_27)
-			l_horizontal_box_27.extend (l_cell_17)
-			l_horizontal_box_27.extend (tip_label)
-			l_horizontal_box_27.extend (l_cell_18)
-			l_vertical_box_25.extend (l_cell_19)
-			l_vertical_box_23.extend (l_horizontal_box_28)
-			l_horizontal_box_28.extend (show_tips_button)
-			l_horizontal_box_28.extend (l_cell_20)
-			l_horizontal_box_28.extend (next_tip_button)
-			l_horizontal_box_28.extend (close_button)
+			extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (l_ev_frame_1)
+			l_ev_frame_1.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (l_ev_pixmap_1)
+			l_ev_horizontal_box_2.extend (l_ev_cell_1)
+			l_ev_horizontal_box_2.extend (l_ev_vertical_box_4)
+			l_ev_vertical_box_4.extend (l_ev_cell_2)
+			l_ev_vertical_box_4.extend (l_ev_label_1)
+			l_ev_vertical_box_4.extend (l_ev_cell_3)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (l_ev_cell_4)
+			l_ev_horizontal_box_3.extend (tip_label)
+			l_ev_horizontal_box_3.extend (l_ev_cell_5)
+			l_ev_vertical_box_3.extend (l_ev_cell_6)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (show_tips_button)
+			l_ev_horizontal_box_4.extend (l_ev_cell_7)
+			l_ev_horizontal_box_4.extend (next_tip_button)
+			l_ev_horizontal_box_4.extend (close_button)
 			
 			set_title (tip_of_day_dialog_title)
-			l_vertical_box_23.set_padding_width (large_spacing_width)
-			l_vertical_box_23.set_border_width (large_spacing_width)
-			l_vertical_box_23.disable_item_expand (l_horizontal_box_28)
-			l_frame_7.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_vertical_box_25.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_vertical_box_25.set_padding_width (5)
-			l_vertical_box_25.disable_item_expand (l_horizontal_box_26)
-			l_vertical_box_25.disable_item_expand (l_horizontal_box_27)
-			l_horizontal_box_26.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_horizontal_box_26.disable_item_expand (l_pixmap_1)
-			l_horizontal_box_26.disable_item_expand (l_cell_14)
-			l_pixmap_1.set_minimum_width (39)
-			l_pixmap_1.set_minimum_height (33)
-			l_pixmap_1.copy (lightbulb_png)
-			l_cell_14.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_cell_14.set_minimum_width (5)
-			l_vertical_box_26.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_vertical_box_26.disable_item_expand (l_label_11)
-			l_cell_15.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_label_11.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_vertical_box_1.set_padding_width (large_spacing_width)
+			l_ev_vertical_box_1.set_border_width (large_spacing_width)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)
+			l_ev_frame_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_vertical_box_3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_vertical_box_3.set_padding_width (5)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_2.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_pixmap_1)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_1)
+			l_ev_pixmap_1.set_minimum_width (39)
+			l_ev_pixmap_1.set_minimum_height (33)
+			l_ev_pixmap_1.copy (lightbulb_png)
+			l_ev_cell_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_cell_1.set_minimum_width (5)
+			l_ev_vertical_box_4.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_vertical_box_4.disable_item_expand (l_ev_label_1)
+			l_ev_cell_2.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_label_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			create internal_font
 			internal_font.set_family (3)
 			internal_font.set_weight (7)
 			internal_font.set_shape (10)
 			internal_font.set_height (19)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
-			l_label_11.set_font (internal_font)
-			l_label_11.set_text ("Did you know...")
-			l_label_11.align_text_left
-			l_cell_16.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_horizontal_box_27.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_horizontal_box_27.disable_item_expand (l_cell_17)
-			l_cell_17.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_cell_17.set_minimum_width (20)
+			l_ev_label_1.set_font (internal_font)
+			l_ev_label_1.set_text ("Did you know...")
+			l_ev_label_1.align_text_left
+			l_ev_cell_3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_horizontal_box_3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_horizontal_box_3.disable_item_expand (l_ev_cell_4)
+			l_ev_cell_4.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_cell_4.set_minimum_width (20)
 			tip_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			create internal_font
 			internal_font.set_family (3)
@@ -123,14 +130,14 @@ feature {NONE}-- Initialization
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			tip_label.set_font (internal_font)
 			tip_label.align_text_left
-			l_cell_18.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_cell_18.set_minimum_width (20)
-			l_cell_19.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_cell_19.set_minimum_height (10)
-			l_horizontal_box_28.set_padding_width (large_spacing_width)
-			l_horizontal_box_28.disable_item_expand (show_tips_button)
-			l_horizontal_box_28.disable_item_expand (next_tip_button)
-			l_horizontal_box_28.disable_item_expand (close_button)
+			l_ev_cell_5.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_cell_5.set_minimum_width (20)
+			l_ev_cell_6.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			l_ev_cell_6.set_minimum_height (10)
+			l_ev_horizontal_box_4.set_padding_width (large_spacing_width)
+			l_ev_horizontal_box_4.disable_item_expand (show_tips_button)
+			l_ev_horizontal_box_4.disable_item_expand (next_tip_button)
+			l_ev_horizontal_box_4.disable_item_expand (close_button)
 			show_tips_button.set_text ("Show tips at startup")
 			next_tip_button.set_text (next_tip_text)
 			next_tip_button.set_minimum_width (default_button_width)
@@ -146,6 +153,12 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
+feature -- Access
+
+	tip_label: EV_LABEL
+	show_tips_button: EV_CHECK_BUTTON
+	next_tip_button, close_button: EV_BUTTON
+
 feature {NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN is
@@ -160,15 +173,6 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
-	l_vertical_box_23, l_vertical_box_24, l_vertical_box_25, l_vertical_box_26: EV_VERTICAL_BOX
-	l_horizontal_box_25, l_horizontal_box_26, l_horizontal_box_27, l_horizontal_box_28: EV_HORIZONTAL_BOX
-	l_frame_7: EV_FRAME
-	l_pixmap_1: EV_PIXMAP
-	l_cell_14, l_cell_15, l_cell_16, l_cell_17, l_cell_18, l_cell_19, l_cell_20: EV_CELL
-	l_label_11, tip_label: EV_LABEL
-	show_tips_button: EV_CHECK_BUTTON
-	next_tip_button, close_button: EV_BUTTON
 	
 	window_shown is
 			-- Called by `show_actions' of `gb_tip_of_the_day_dialog'.

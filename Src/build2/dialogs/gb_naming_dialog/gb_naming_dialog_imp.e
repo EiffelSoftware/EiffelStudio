@@ -27,50 +27,54 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
+		local 
+			l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
+			l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+			l_ev_cell_1, l_ev_cell_2, l_ev_cell_3: EV_CELL
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
 			
-			create l_vertical_box_27
-			create l_vertical_box_28
+			create l_ev_vertical_box_1
+			create l_ev_vertical_box_2
 			create prompt_label
-			create l_horizontal_box_29
+			create l_ev_horizontal_box_1
 			create name_field
-			create l_cell_21
-			create l_horizontal_box_30
-			create l_cell_22
+			create l_ev_cell_1
+			create l_ev_horizontal_box_2
+			create l_ev_cell_2
 			create ok_button
-			create l_cell_23
+			create l_ev_cell_3
 			create cancel_button
 			
-			extend (l_vertical_box_27)
-			l_vertical_box_27.extend (l_vertical_box_28)
-			l_vertical_box_28.extend (prompt_label)
-			l_vertical_box_28.extend (l_horizontal_box_29)
-			l_horizontal_box_29.extend (name_field)
-			l_vertical_box_28.extend (l_cell_21)
-			l_vertical_box_28.extend (l_horizontal_box_30)
-			l_horizontal_box_30.extend (l_cell_22)
-			l_horizontal_box_30.extend (ok_button)
-			l_horizontal_box_30.extend (l_cell_23)
-			l_horizontal_box_30.extend (cancel_button)
+			extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (prompt_label)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (name_field)
+			l_ev_vertical_box_2.extend (l_ev_cell_1)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (l_ev_cell_2)
+			l_ev_horizontal_box_2.extend (ok_button)
+			l_ev_horizontal_box_2.extend (l_ev_cell_3)
+			l_ev_horizontal_box_2.extend (cancel_button)
 			
 			set_minimum_width (250)
 			set_minimum_height (120)
 			set_title ("Display window")
-			l_vertical_box_27.set_padding_width (large_spacing_width)
-			l_vertical_box_27.set_border_width (small_padding)
-			l_vertical_box_28.disable_item_expand (prompt_label)
-			l_vertical_box_28.disable_item_expand (l_horizontal_box_29)
-			l_vertical_box_28.disable_item_expand (l_horizontal_box_30)
+			l_ev_vertical_box_1.set_padding_width (large_spacing_width)
+			l_ev_vertical_box_1.set_border_width (small_padding)
+			l_ev_vertical_box_2.disable_item_expand (prompt_label)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_2)
 			prompt_label.align_text_left
-			l_cell_21.set_minimum_height (small_padding)
-			l_horizontal_box_30.disable_item_expand (ok_button)
-			l_horizontal_box_30.disable_item_expand (l_cell_23)
-			l_horizontal_box_30.disable_item_expand (cancel_button)
+			l_ev_cell_1.set_minimum_height (small_padding)
+			l_ev_horizontal_box_2.disable_item_expand (ok_button)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_3)
+			l_ev_horizontal_box_2.disable_item_expand (cancel_button)
 			ok_button.set_text (ok_button_text)
 			ok_button.set_minimum_width (default_button_width)
-			l_cell_23.set_minimum_width (small_padding)
+			l_ev_cell_3.set_minimum_width (small_padding)
 			cancel_button.set_text (cancel_button_text)
 			cancel_button.set_minimum_width (default_button_width)
 			
@@ -80,6 +84,12 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
+feature -- Access
+
+	prompt_label: EV_LABEL
+	name_field: EV_TEXT_FIELD
+	ok_button, cancel_button: EV_BUTTON
+
 feature {NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN is
@@ -94,11 +104,4 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
-	l_vertical_box_27, l_vertical_box_28: EV_VERTICAL_BOX
-	prompt_label: EV_LABEL
-	l_horizontal_box_29, l_horizontal_box_30: EV_HORIZONTAL_BOX
-	name_field: EV_TEXT_FIELD
-	l_cell_21, l_cell_22, l_cell_23: EV_CELL
-	ok_button, cancel_button: EV_BUTTON
 	end -- class GB_NAMING_DIALOG_IMP

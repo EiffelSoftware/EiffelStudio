@@ -16,7 +16,7 @@ inherit
 			{ANY}
 				cursor, start, forth, back, after, off, item, empty,
 				finish, wipe_out, islast, first_element, last, append,
-				index, put_right, put_left, put_front, go_to
+				index, put_right, put_left, put_front, go_to, before
 		end;
 	SHARED_RESCUE_STATUS;
 	SHARED_TEXT_ITEMS
@@ -175,7 +175,7 @@ feature -- Element change
 		local
 			l_item: like item
 		do
-			!BASIC_TEXT! l_item.make (str);
+			!CLUSTER_NAME_TEXT! l_item.make (str, e_cluster);
 			add (l_item)
 		end;
 

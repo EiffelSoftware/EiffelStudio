@@ -68,19 +68,18 @@ feature -- Implementation
 				radius := distance (center_point.x_abs, center_point.y_abs,
 					corner_point.x_abs, corner_point.y_abs)
 				create Result.make (1, side_count)
-				Result.put (corner_point.absolute_coordinates, 1)
-				n := 2
+				n := 1
 				ang_step := 2 * Pi / side_count
 				ang := line_angle (center_point.x_abs, center_point.y_abs,
 					corner_point.x_abs, corner_point.y_abs)
 			until
 				n > side_count
 			loop
-				ang := ang + ang_step
 				create crd.set (
-					center_point.x_abs - delta_x (ang, radius),
+					center_point.x_abs + delta_x (ang, radius),
 					center_point.y_abs + delta_y (ang, radius))
 				Result.put (crd, n)
+				ang := ang + ang_step
 				n := n + 1
 			end
 		ensure

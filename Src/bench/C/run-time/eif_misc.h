@@ -42,8 +42,8 @@ RT_LNK EIF_INTEGER esreal_size(void);
 RT_LNK EIF_INTEGER esint_size(void);
 RT_LNK EIF_INTEGER esdouble_size(void);
 RT_LNK EIF_INTEGER eif_system (char *s);
-RT_LNK EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k);
-RT_LNK EIF_OBJ eif_getenv(EIF_OBJ k);
+RT_LNK EIF_INTEGER eif_putenv (char * v, char * k);
+RT_LNK char * eif_getenv(char * k);
 RT_LNK EIF_INTEGER eif_safe_putenv (EIF_OBJ v, EIF_OBJ k); /* Safe Eiffel putenv dealing only with env. var. */
 
 RT_LNK char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k);

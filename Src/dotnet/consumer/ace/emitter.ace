@@ -1,27 +1,26 @@
 system
-	"emitter"
+	"emdc"
 
 root
-	emitter: make
+	EMITTER: make
 
 default
-	assertion (no)
+	assertion (check)
+	assertion (require)
 	msil_generation (yes)
-	disabled_debug (yes)
-	debug (no)
-	line_generation (no)
+	line_generation (yes)
 	profile (no)
-	trace (no)
+	trace (yes)
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (no)
 	use_cluster_name_as_namespace (no)
 	use_all_cluster_name_as_namespace (no)
 	msil_generation_type ("exe")
-	namespace ("ISE.Cache")
-	version ("5.5.316.0")
+	namespace ("EiffelSoftware.MetadataConsumer")
+	version ("5.5.627.0")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
-	msil_clr_version ("v1.0.3705")
+	msil_clr_version ("v1.1.4322")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (yes)
@@ -34,27 +33,26 @@ default
 	inlining (no)
 	multithreaded (no)
 
-
 cluster
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic"; "CVS"; 
+		default
+			namespace ("Base")
 		end
 
 	all base_net:		"$EIFFEL_SRC\library.net\base"
 		exclude
 			"CVS"; 
+		default
+			namespace ("Base")
 		end
 
 	all emitter:		"$EIFFEL_SRC\dotnet\consumer"
 		exclude
 			"CVS"; "EIFGEN"; 
 		visible
-			local_cache_reader
-				end
-			com_ise_cache_manager
-				end
-			com_assembly_information
+			CACHE_REFLECTION
 				end
 		end
 
@@ -63,23 +61,17 @@ cluster
 			"CVS"; 
 		end
 
-	all wel:		"$EIFFEL_SRC\library\wel"
-		exclude
-			"CVS"; 
-		end
-
 assembly
-	"mscorlib":	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+	"mscorlib":	"mscorlib","1.0.5000.0","neutral","b77a5c561934e089"
 
-	"system_":	"System","1.0.3300.0","neutral","b77a5c561934e089"
+	"System":	"System","1.0.5000.0","neutral","b77a5c561934e089"
 		prefix
-			system_dll_
+			"SYSTEM_DLL_"
 		end
 
-	"system_xml":	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+	"System.Xml":	"System.Xml","1.0.5000.0","neutral","b77a5c561934e089"
 		prefix
-			xml_
+			"XML_"
 		end
-
 
 end

@@ -314,9 +314,10 @@ feature {NONE} -- Implementation
 			end
 			remove_displayed_input_field
 			entry_selection_parent.extend (string_input)
-			if not display_all_types.is_selected then
+			if not display_all_types.is_selected and not currently_selected_type.is_equal (String_constant_type) then
 				rebuild_for_selected_type (string_item.text)
 			end
+			currently_selected_type := String_constant_type
 		end
 
 	integer_item_selected is
@@ -332,9 +333,10 @@ feature {NONE} -- Implementation
 			end
 			remove_displayed_input_field
 			entry_selection_parent.extend (integer_input)	
-			if not display_all_types.is_selected then
+			if not display_all_types.is_selected and not currently_selected_type.is_equal (Integer_constant_type) then
 				rebuild_for_selected_type (integer_item.text)
 			end
+			currently_selected_type := Integer_constant_type
 		end
 
 	directory_item_selected is
@@ -350,9 +352,10 @@ feature {NONE} -- Implementation
 			end
 			remove_displayed_input_field
 			entry_selection_parent.extend (directory_input)
-			if not display_all_types.is_selected then
+			if not display_all_types.is_selected and not currently_selected_type.is_equal (Directory_constant_type) then
 				rebuild_for_selected_type (directory_item.text)
 			end
+			currently_selected_type := Directory_constant_type
 		end
 	
 	pixmap_item_selected is
@@ -367,10 +370,10 @@ feature {NONE} -- Implementation
 				new_button.enable_sensitive
 			end
 			remove_displayed_input_field
-			if not display_all_types.is_selected then
+			if not display_all_types.is_selected and not currently_selected_type.is_equal (Pixmap_constant_type) then
 				rebuild_for_selected_type (pixmap_item.text)
 			end
-			--| FIXME add rebuilding if only selected type is to be displayed.
+			currently_selected_type := Pixmap_constant_type
 		end
 		
 	new_button_selected is
@@ -728,6 +731,9 @@ feature {NONE} -- Implementation
 	
 	reverse_sort: BOOLEAN
 		-- Should sort opertion be reversed?
+		
+	currently_selected_type: STRING
+		-- Type currently selected in `Current'.
 
 	select_pixmap is
 			-- Display a pixmap dialog permitting addition of pixmap constants.
@@ -765,15 +771,15 @@ feature {NONE} -- Implementation
 			pixmap_item.select_actions.block
 			directory_item.select_actions.block
 			select_named_combo_item (type_combo_box, modify_constant.type)
-				if modify_constant.type.is_equal (String_constant_type) then
-					string_item_selected
-				elseif modify_constant.type.is_equal (Integer_constant_type) then
-					integer_item_selected
-				elseif modify_constant.type.is_equal (Directory_constant_type) then
-					directory_item_selected 
-				elseif modify_constant.type.is_equal (Pixmap_constant_type) then
-					pixmap_item_selected
-				end
+			if modify_constant.type.is_equal (String_constant_type) then
+				string_item_selected
+			elseif modify_constant.type.is_equal (Integer_constant_type) then
+				integer_item_selected
+			elseif modify_constant.type.is_equal (Directory_constant_type) then
+				directory_item_selected 
+			elseif modify_constant.type.is_equal (Pixmap_constant_type) then
+				pixmap_item_selected
+			end
 			string_item.select_actions.resume
 			integer_item.select_actions.resume
 			pixmap_item.select_actions.resume
@@ -813,6 +819,7 @@ feature {NONE} -- Implementation
 		local
 			temp_constants: HASH_TABLE [GB_CONSTANT, STRING]
 		do
+			parent_window (constants_list).lock_update
 			constants_list.wipe_out
 			temp_constants := Constants.all_constants
 			from
@@ -825,6 +832,7 @@ feature {NONE} -- Implementation
 				end
 				temp_constants.forth
 			end
+			parent_window (constants_list).unlock_update
 		end
 
 invariant

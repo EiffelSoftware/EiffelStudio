@@ -47,8 +47,6 @@ feature {NONE} -- Initialization
 			object_value := icd_value_info.interface_debug_object_value
 			if object_value /= Void then
 				value_class_token := icd_value_info.value_class_token
---			else
---				is_external_type := True
 			end
 
 			is_null := icd_value_info.is_null
@@ -117,7 +115,6 @@ feature -- Access
 						if Result = Void then
 								--| This means we are dealing with an external type (dotnet)
 							internal_dynamic_class := icd_value_info.value_class_c
---							internal_dynamic_class := Eiffel_system.System.system_object_class.compiled_class
 							Result := internal_dynamic_class.types.first
 							is_external_type := True
 						end

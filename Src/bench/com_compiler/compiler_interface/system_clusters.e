@@ -14,7 +14,8 @@ inherit
 			remove_cluster,
 			add_cluster,
 			store,
-			cluster_tree
+			cluster_tree,
+			change_cluster_name
 		end
 	
 	LACE_AST_FACTORY
@@ -225,6 +226,24 @@ feature -- Basic Operations
 		do
 			Result := cluster_table_by_id.item (cluster_id)
 		end
+
+feature -- Element change
+
+	change_cluster_name (a_name: STRING; a_new_name: STRING) is
+			-- Renames and cluster
+			-- 'a_name' [in]
+			-- 'a_new_name' [in]
+		local
+			cluster: CLUSTER_PROPERTIES
+		do
+--			cluster ?= clusters_table.item (a_name)
+--			if cluster /= Void then
+--				clusters_table.remove (a_name)
+--				clusters_table.put (cluster, a_new_name)
+--				cluster.set_name (a_new_name);
+--			end
+		end
+		
 
 feature {NONE} -- Implementation
 

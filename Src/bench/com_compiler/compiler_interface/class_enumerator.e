@@ -6,7 +6,7 @@ class
 	CLASS_ENUMERATOR
 
 inherit
-	IENUM_CLASS_INTERFACE
+	IENUM_EIFFEL_CLASS_INTERFACE
 
 	ECOM_STUB
 
@@ -28,7 +28,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: like Current): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEnumClass_impl_stub %"ecom_eiffel_compiler_IEnumClass_impl_stub_s.h%"](EIF_OBJECT)"
+			"C++ [new ecom_eiffel_compiler::IEnumEiffelClass_impl_stub %"ecom_eiffel_compiler_IEnumEiffelClass_impl_stub_s.h%"](EIF_OBJECT)"
 		end
 
 end -- CLASS_ENUMERATOR

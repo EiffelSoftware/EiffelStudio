@@ -188,7 +188,7 @@ feature -- Access
 			end
 		end
 		
-	assemblies: ECOM_ARRAY [STRING] is
+	assemblies: IENUM_IMPORTED_ASSEMBLIES_INTERFACE is
 			-- Imported assemblies.
 			-- Void if none.
 		local
@@ -196,25 +196,25 @@ feature -- Access
 			ace_res: LINKED_LIST [STRING]
 			i: INTEGER
 		do
-			if is_valid then
-				ace_res := ace.assemblies
-				if ace_res /= Void and then not ace_res.is_empty then
-					create res.make (1, ace_res.count)
-					from
-						ace_res.start
-						i := 1
-					until
-						ace_res.after
-					loop
-						res.put (ace_res.item, i)
-						i := i + 1
-						ace_res.forth
-					end
-				end
-				if res /= Void then
-					create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
-				end
-			end
+--			if is_valid then
+--				ace_res := ace.assemblies
+--				if ace_res /= Void and then not ace_res.is_empty then
+--					create res.make (1, ace_res.count)
+--					from
+--						ace_res.start
+--						i := 1
+--					until
+--						ace_res.after
+--					loop
+--						res.put (ace_res.item, i)
+--						i := i + 1
+--						ace_res.forth
+--					end
+--				end
+--				if res /= Void then
+--					create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
+--				end
+--			end
 		end
 
 		

@@ -75,7 +75,7 @@ feature -- Status Report
 				
 feature -- Basic Operations
 		
-	store_assembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY): TYPE_STORER is
+	store_assembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY): TYPE_STORER is --FACTORY): TYPE_STORER is
 		indexing
 			description: "[
 						Store assembly corresponding to `an_eiffel_assembly': 
@@ -84,12 +84,11 @@ feature -- Basic Operations
 			external_name: "StoreAssembly"
 		require
 			non_void_assembly: an_eiffel_assembly /= Void
-			non_void_assembly_name: an_eiffel_assembly.get_assembly_name /= Void
-			not_empty_assembly_name: an_eiffel_assembly.get_assembly_name.get_length > 0
+			non_void_assembly_name: an_eiffel_assembly.get_assembly_descriptor.get_name /= Void
+			not_empty_assembly_name: an_eiffel_assembly.get_assembly_descriptor.get_name.get_length > 0
 		do
 			eiffel_assembly := an_eiffel_assembly
-			create assembly_descriptor.make1
-			assembly_descriptor.Make (eiffel_assembly.get_assembly_name, eiffel_assembly.get_assembly_version, eiffel_assembly.get_assembly_culture, eiffel_assembly.get_assembly_public_key)
+			assembly_descriptor := eiffel_assembly.get_assembly_descriptor
 			prepare_assembly_storage
 			create Result.make_type_storer (assembly_folder_path)
 			assembly_folder_path := Void
@@ -111,10 +110,10 @@ feature -- Basic Operations
 		do
 			check
 				non_void_assembly: eiffel_assembly /= Void
-				non_void_assembly_name: eiffel_assembly.get_assembly_name /= Void
-				not_empty_assembly_name: eiffel_assembly.get_assembly_name.get_length > 0
+				non_void_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name /= Void
+				not_empty_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name.get_length > 0
 			end
-			generate_assembly_xml_file
+			--generate_assembly_xml_file
 			create notifier_handle.make1
 			notifier := notifier_handle.current_notifier
 			notifier.notify_add (assembly_descriptor)
@@ -406,7 +405,7 @@ feature {NONE} -- Implementation
 			external_name: "AssemblyFolderPath"
 		end
 	
-	eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY
+	eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY--FACTORY
 		indexing
 			description: "Assembly being stored"
 			external_name: "EiffelAssembly"
@@ -469,6 +468,7 @@ feature {NONE} -- Implementation
 						else
 							write_lock.Close
 							update_index
+							generate_assembly_xml_file
 							last_write_successful := True
 						end
 					end
@@ -484,6 +484,7 @@ feature {NONE} -- Implementation
 					else
 						write_lock.Close
 						update_index
+						generate_assembly_xml_file
 						last_write_successful := True
 					end
 				else
@@ -634,8 +635,8 @@ feature {NONE} -- Implementation
 			if not retried then
 				check
 					non_void_assembly: eiffel_assembly /= Void
-					non_void_assembly_name: eiffel_assembly.get_assembly_name /= Void
-					not_empty_assembly_name: eiffel_assembly.get_assembly_name.get_Length > 0
+					non_void_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name /= Void
+					not_empty_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name.get_Length > 0
 				end
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
@@ -661,27 +662,21 @@ feature {NONE} -- Implementation
 				text_writer.write_start_element (Assembly_Element)
 
 					-- <assembly_name>
-				text_writer.write_element_string (Assembly_Name_Element, eiffel_assembly.get_assembly_name)
+				text_writer.write_element_string (Assembly_Name_Element, eiffel_assembly.get_assembly_descriptor.get_name)
 
 					-- <assembly_version>
-				if eiffel_assembly.get_assembly_version /= Void then
-					if eiffel_assembly.get_assembly_version.get_length > 0 then
-						text_writer.write_element_string (Assembly_Version_Element, eiffel_assembly.get_assembly_version)
-					end
+				if eiffel_assembly.get_assembly_descriptor.get_version /= Void and then eiffel_assembly.get_assembly_descriptor.get_version.get_length > 0 then
+					text_writer.write_element_string (Assembly_Version_Element, eiffel_assembly.get_assembly_descriptor.get_version)
 				end
 
 					-- <assembly_culture>
-				if eiffel_assembly.get_assembly_culture /= Void then
-					if eiffel_assembly.get_assembly_culture.get_length > 0 then
-						text_writer.write_element_string (Assembly_Culture_Element, eiffel_assembly.get_assembly_culture)
-					end
+				if eiffel_assembly.get_assembly_descriptor.get_culture /= Void and then eiffel_assembly.get_assembly_descriptor.get_culture.get_length > 0 then
+					text_writer.write_element_string (Assembly_Culture_Element, eiffel_assembly.get_assembly_descriptor.get_culture)
 				end
 
 					-- <assembly_public_key>
-				if eiffel_assembly.get_assembly_public_key /= Void then
-					if eiffel_assembly.get_assembly_public_key.get_length > 0 then
-						text_writer.write_element_string (Assembly_Public_Key_Element, eiffel_assembly.get_assembly_public_key)
-					end
+				if eiffel_assembly.get_assembly_descriptor.get_public_key /= Void and then eiffel_assembly.get_assembly_descriptor.get_public_key.get_length > 0 then
+					text_writer.write_element_string (Assembly_Public_Key_Element, eiffel_assembly.get_assembly_descriptor.get_public_key)
 				end
 
 					-- <eiffel_cluster_path>
@@ -699,22 +694,22 @@ feature {NONE} -- Implementation
 				end
 
 					-- <assembly_types>
-				assembly_types := eiffel_assembly.get_types
-				if assembly_types /= Void then
-					if assembly_types.get_count > 0 then
-						text_writer.write_start_element (Assembly_Types_Element)
-						from
-						until
-							i = assembly_types.get_count
-						loop
-							assembly_type ?= assembly_types.get_item (i)
-							if assembly_type /= Void then
-								text_writer.write_element_string (Assembly_Type_Filename_Element, reflection_support.Xml_Type_Filename (assembly_type.get_assembly_descriptor, assembly_type.get_full_external_name))
-							end
-							i := i + 1
-						end
-					end
-				end
+	--			assembly_types := eiffel_assembly.get_types
+	--			if assembly_types /= Void then
+	--				if assembly_types.get_count > 0 then
+	--					text_writer.write_start_element (Assembly_Types_Element)
+	--					from
+	--					until
+	--						i = assembly_types.get_count
+	--					loop
+	--						assembly_type ?= assembly_types.get_item (i)
+	--						if assembly_type /= Void then
+	--							text_writer.write_element_string (Assembly_Type_Filename_Element, reflection_support.Xml_Type_Filename (assembly_type.get_assembly_descriptor, assembly_type.get_full_external_name))
+	--						end
+	--						i := i + 1
+	--					end
+	--				end
+	--			end
 
 					-- </assembly>
 				text_writer.write_end_element

@@ -29,6 +29,7 @@ feature -- Initialization
 			full_pathname: STRING
 		do
 			!!format_table.make (50);
+			!!escape_characters.make;
 			full_pathname := clone (filter_path);
 			full_pathname.append (filtername);
 			full_pathname.append (".fil");
@@ -43,6 +44,7 @@ feature -- Initialization
 			not_filename_empty: not filename.empty
 		do
 			!!format_table.make (50);
+			!!escape_characters.make;
 			read_formats (filename);
 			!!image.make (2000)
 		end;
@@ -95,11 +97,11 @@ feature {NONE} -- Text processing
 			if format /= Void then
 				image.append (format.item1);
 				if format.item2 /= Void then
-					image.append (text.image);
+					print_escaped_text (text.image);
 					image.append (format.item2)
 				end
 			else
-				image.append (text.image)
+				print_escaped_text (text.image)
 			end
 		end;
 
@@ -189,13 +191,53 @@ feature {NONE} -- Text processing
 				process_indentation (indentation);
 				indentation := Void
 			end;
-			image.extend (' ');
+			print_escaped_text (" ");
 			process_basic_text (ti_Dashdash);
-			image.extend (' ');
+			print_escaped_text (" ");
 			!!item.make ("class ");
 			item.set_is_comment;
 			process_basic_text (item);
-			image.append (text.class_name)
+			print_escaped_text (text.class_name)
+		end;
+
+	print_escaped_text (str: STRING) is
+			-- Append `str' to `image' with escape characters
+			-- substitutions if required.
+		require
+			str_not_void: str /= Void
+		local
+			i, str_count: INTEGER;
+			char: CHARACTER;
+			found: BOOLEAN
+		do
+			if escape_characters.empty then
+				image.append (str)
+			else
+				from
+					str_count := str.count
+					i := 1
+				until
+					i > str_count
+				loop
+					from
+						escape_characters.start;
+						char := str.item (i);
+						found := false
+					until
+						found or escape_characters.after
+					loop
+						if escape_characters.item.item1 = char then
+							image.append (escape_characters.item.item2);
+							found := true
+						end;
+						escape_characters.forth
+					end;
+					if not found then
+						image.extend (char)
+					end;
+					i := i + 1
+				end
+			end
 		end;
 
 invariant

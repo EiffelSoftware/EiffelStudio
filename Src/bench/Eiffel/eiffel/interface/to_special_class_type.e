@@ -225,13 +225,14 @@ feature
 			rout_id: INTEGER;
 			table: POLY_TABLE [ENTRY];
 			table_name: STRING;
+			rout_info: ROUT_INFO
 		do
 			file.putstring ("*(char **) (l[0] + ");
 
 			area_feature := associated_class.feature_table.item ("area");
 
+			rout_id := - area_feature.rout_id_set.first;
 			if byte_context.final_mode then
-				rout_id := - area_feature.rout_id_set.first;
 				table := Eiffel_table.item_id (rout_id);
 			
 				if table.is_polymorphic (type_id) then
@@ -251,13 +252,22 @@ feature
 					skeleton.generate_offset (file, area_feature.feature_id);
 				end;
 				file.putchar (')');
+			elseif
+				Compilation_modes.is_precompiling or
+				associated_class.is_precompiled
+			then
+				rout_info := System.rout_info_table.item (rout_id);
+				file.putstring ("RTWPA(");
+				file.putint (rout_info.origin);
+				file.putstring (", ");
+				file.putint (rout_info.offset);
+				file.putstring (", Dtype(l[0])))");
 			else
 				file.putstring ("RTWA(");
 				file.putint (id - 1);
 				file.putstring (", ");
 				file.putint (area_feature.feature_id);
-				file.putstring (", ");
-				file.putstring ("Dtype(l[0])))");
+				file.putstring (", Dtype(l[0])))");
 			end;				
 		end;
 

@@ -78,8 +78,6 @@ feature {NONE} -- Initialization
 				-- Initialise the device for painting.
 			dc.set_background_opaque
 			dc.set_background_transparent
---			dc.set_text_alignment (Ta_baseline)
-
 			set_drawing_mode (Ev_drawing_mode_copy)
 			set_line_width (1)
 			reset_pen
@@ -95,10 +93,7 @@ feature --{EV_ANY_I} -- Implementation
 		deferred
 		ensure
 			not_void: dc /= Void
-			exists: dc.exists
 		end
-
-	get_dc: BOOLEAN
 
 feature -- Access
 
@@ -180,7 +175,7 @@ feature -- Element change
 					-- update current pen & brush (lazzy evaluation)
 				internal_initialized_brush := False
 				internal_initialized_pen := False
-				dc.set_text_color (wel_fg_color)
+				internal_initialized_text_color := False
 			end
 		end
 
@@ -188,7 +183,6 @@ feature -- Element change
 			-- Assign `a_width' to `line_width'.
 		do
 			line_width := a_width
-
 			internal_initialized_pen := False
 		end
 
@@ -242,9 +236,7 @@ feature -- Element change
 			-- Set tile used to fill figures.
 			-- Set to Void to use `background_color' to fill.
 		do
-			--| FIXME DO net set reference but copy.
 			tile := a_pixmap
-			reset_brush
 		end
 
 	remove_tile is
@@ -252,7 +244,6 @@ feature -- Element change
 		do
 			tile := Void
 			internal_initialized_brush := False
-			reset_brush
 		end
 
 	enable_dashed_line_style is
@@ -260,7 +251,6 @@ feature -- Element change
 		do
 			dashed_line_style := True
 			internal_initialized_pen := False
-			reset_pen
 		end
 
 	disable_dashed_line_style is
@@ -268,20 +258,13 @@ feature -- Element change
 		do
 			dashed_line_style := False
 			internal_initialized_pen := False
-			reset_pen
 		end
 
 	set_font (a_font: EV_FONT) is
 			-- Set `font' to `a_font'.
-		local
-			font_imp: EV_FONT_IMP
 		do
 			internal_font := a_font
-			font_imp ?= internal_font.implementation
-			if dc.font_selected then
-				dc.unselect_font
-			end
-			dc.select_font (font_imp.wel_font)
+			internal_initialized_font := False
 		end
 
 feature -- Clearing and drawing operations
@@ -316,6 +299,15 @@ feature -- Drawing operations
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' at (`x', `y') using `font'.
 		do
+			if not internal_initialized_text_color then
+				dc.set_text_color (wel_fg_color)
+				internal_initialized_text_color := True
+			end
+
+			if not internal_initialized_font then
+				dc.select_font (wel_font)
+				internal_initialized_font := True
+			end
 			dc.text_out (x, y, a_text)
 		end
 
@@ -410,7 +402,6 @@ feature -- Drawing operations
 				reset_pen
 			end
 			dc.rectangle (x, y, x + a_width, y + a_height)
-			reset_brush
 		end
 
 	draw_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
@@ -423,7 +414,6 @@ feature -- Drawing operations
 			end
 			dc.ellipse (x - a_horizontal_radius, y - a_vertical_radius,
 				x + a_vertical_radius, y + a_vertical_radius)
-			reset_brush
 		end
 
 	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
@@ -459,6 +449,7 @@ feature -- Drawing operations
 				flat_points.put ((points.item (i)).y, flat_index)
 			end
 
+			remove_brush
 			if not internal_initialized_pen then
 				reset_pen
 			end
@@ -499,7 +490,6 @@ feature -- Drawing operations
 			end
 			dc.pie (left, top, right, bottom, x_start_arc,
 				y_start_arc, x_end_arc, y_end_arc)
-			reset_brush
 		end
 
 feature -- Filling operations
@@ -513,7 +503,6 @@ feature -- Filling operations
 				reset_brush
 			end
 			dc.rectangle (x, y, x + a_width, y + a_height)
-			reset_pen
 		end 
 
 	fill_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
@@ -527,7 +516,6 @@ feature -- Filling operations
 			end
 			dc.ellipse (x - a_horizontal_radius, y - a_vertical_radius,
 				x + a_vertical_radius, y + a_vertical_radius)
-			reset_pen
 		end
 
 	fill_polygon (points: ARRAY [EV_COORDINATES]) is
@@ -555,7 +543,6 @@ feature -- Filling operations
 				reset_brush
 			end
 			dc.polygon (flat_points)
-			reset_pen
 		end
 
 	fill_pie_slice (
@@ -591,13 +578,22 @@ feature -- Filling operations
 			end
 			dc.pie (left, top, right, bottom, x_start_arc,
 				y_start_arc, x_end_arc, y_end_arc)
-			reset_pen
 		end
 
 feature {NONE} -- Implementation
 
 	wel_drawing_mode: INTEGER
 			-- The WEL equivalent for the Ev_drawing_mode_* selected.
+
+	wel_font: WEL_FONT is
+		local
+			font_imp: EV_FONT_IMP
+		do
+			font_imp ?= internal_font.implementation
+			Result := font_imp.wel_font
+		ensure
+			not_void: Result /= Void
+		end
 
 	wel_bg_color: WEL_COLOR_REF is
 		do
@@ -696,6 +692,7 @@ feature {NONE} -- Implementation
 				dc.unselect_pen
 			end
 			dc.select_pen (empty_pen)
+			internal_initialized_pen := False
 		end
 
 	remove_brush is
@@ -708,6 +705,7 @@ feature {NONE} -- Implementation
 				dc.unselect_brush
 			end
 			dc.select_brush (empty_brush)
+			internal_initialized_brush := False
 		end
 
 
@@ -730,11 +728,19 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 
 	internal_pen: WEL_PEN
 			-- Buffered current pen. Created in order to
-			-- avoid multiple WEL_BRUSHes creation.
+			-- avoid multiple WEL_PENs creation.
 
 	internal_initialized_pen: BOOLEAN
 			-- Is `internal_pen' valid? (can be invalidated if
 			-- the user change the foreground color, the width, ...)
+
+	internal_initialized_text_color: BOOLEAN
+			-- Is the current text valid? (can be invalidated if
+			-- the user change the foreground color)
+
+	internal_initialized_font: BOOLEAN
+			-- Is the current selected font valid? (can be invalidated if
+			-- the user change the font)
 
 	internal_initialized_background_brush: BOOLEAN
 			-- Is `internal_background_brush' valid?
@@ -792,6 +798,10 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/13 00:20:23  pichery
+--| Improved pens & brush caching. Text color and font
+--| selection are now also cached.
+--|
 --| Revision 1.24  2000/04/12 01:28:44  pichery
 --| - commented some stuff to run with the new
 --|   pixmap implementation

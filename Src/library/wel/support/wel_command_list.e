@@ -9,6 +9,9 @@ class
 
 inherit
 	WEL_COMMAND
+		undefine
+			copy, is_equal
+		end
 
 	LINKED_LIST [WEL_COMMAND_EXEC]
 

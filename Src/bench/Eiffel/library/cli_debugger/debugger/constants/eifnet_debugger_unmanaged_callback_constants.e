@@ -9,7 +9,7 @@ class
 
 feature {NONE} -- Constants
 
-	Cst_unmanaged_debug_event: INTEGER is unique
+	Cst_unmanaged_debug_event: INTEGER is 27
 
 feature
 

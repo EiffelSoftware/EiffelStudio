@@ -22,7 +22,7 @@ feature -- Access
 	force_extend (action: PROCEDURE [ANY, TUPLE]) is
 			-- Extend without type checking.
 		do
-			extend (~wrapper (?, action))
+			extend (agent wrapper (?, action))
 		end
 
 	wrapper (a_key: EV_KEY; action: PROCEDURE [ANY, TUPLE]) is

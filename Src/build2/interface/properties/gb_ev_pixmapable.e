@@ -87,13 +87,14 @@ feature -- Access
 					-- as the pixmap will no be no longer visible.
 				filler_label.remove_tooltip
 				if first.pixmap_path /= Void then
-					create error_label.make_with_text ("Error - Pixmap does not exist")
+					create error_label.make_with_text ("Error - named pixmap missing.")
 					error_label.set_tooltip (first.pixmap_path)
 					pixmap_container.extend (error_label)
+					modify_button.set_text (Remove_string)
+					modify_button.set_tooltip (Remove_tooltip)
 				end
 			end
 		end
-		
 		
 feature {GB_XML_STORE} -- Output
 
@@ -123,9 +124,6 @@ feature {GB_XML_STORE} -- Output
 				if file.exists then
 					new_pixmap.set_with_named_file (element_info.data)
 					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
-				else
-					new_pixmap.draw_text (10, 10, "Error - Pixmap does not exist")
-					new_pixmap.set_minimum_height (20)
 				end
 				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (element_info.data))
 			end
@@ -168,7 +166,7 @@ feature {NONE} -- Implementation
 			shown_once, opened_file: BOOLEAN
 			error_dialog: EV_WARNING_DIALOG
 		do
-			if first.pixmap = Void then
+			if first.pixmap = Void and first.pixmap_path = Void then
 				from
 					create dialog
 				until

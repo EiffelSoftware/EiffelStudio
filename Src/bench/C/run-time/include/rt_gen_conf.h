@@ -21,6 +21,7 @@
 #define _rt_gen_conf_h_
 
 #include "eif_gen_conf.h"
+#include "rt_threads.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,6 +56,9 @@ extern int eif_par_table_size;
 extern struct eif_par_types **eif_par_table2;
 extern int eif_par_table2_size;
 
+#ifdef EIF_THREADS
+extern EIF_LW_MUTEX_TYPE *eif_gen_mutex;
+#endif
 extern void eif_gen_conf_thread_init (void);
 extern void eif_gen_conf_thread_cleanup (void);
 

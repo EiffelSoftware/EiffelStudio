@@ -107,9 +107,9 @@ exprt -r $DEFAULT_CVS_TAG -d C_library Src/C_library
 remtrace Free add ons
 exprt -r $DEFAULT_CVS_TAG -d free_add_ons free_add_ons
 cd $INSTALL_DIR/free_add_ons
-gunzip -c gobo/gobo30.tar.gz | tar -xf -
-fullrf gobo/gobo30.tar.gz
-fullrf gobo/gobo30win.tgz
+gunzip -c gobo/gobo_unix.tgz | tar -xf -
+fullrf gobo/gobo_unix.tgz
+fullrf gobo/gobo_win.tgz
 fullrd wex
 cd $INSTALL_DIR
 remtrace root

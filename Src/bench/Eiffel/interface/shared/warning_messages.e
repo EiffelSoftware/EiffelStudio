@@ -937,13 +937,6 @@ feature -- Dynamic library warnings
 
 feature -- Preferences warnings
 
-	w_Invalid_preference_file_root (file_name: STRING): STRING is
-			-- file named `file_name' is not an XML file with "EIFFEL_DOCUMENT" as
-			-- root tag.
-		do
-			Result := "EIFFEL_DOCUMENT tag missing in file: "+ file_name + "."
-		end
-
 	w_Preferences_delayed_resources: STRING is
 		once
 			Result := "The changes you have made to the following resources%N%

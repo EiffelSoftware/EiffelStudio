@@ -595,25 +595,28 @@ feature -- Setting
 			buffer.putstring ("body")
 		end
 
-	generate_current_label is
+	generate_current_label_definition is
 			-- Generate current label `label'.
 		do
-			generate_label (label)
+			generate_label_definition (label)
 		end
 
-	generate_label (l: INTEGER) is
+	generate_label_definition (l: INTEGER) is
 			-- Generate label number `l'
 		require
-			label_exists: l > 0
+			label_exists: l >= 0
 		local
 			buf: GENERATION_BUFFER
 		do
-			buf := buffer
-			buf.exdent
-			print_label (l)
-			buf.putchar (':')
-			buf.new_line
-			buf.indent
+			if label > 0 then
+				buf := buffer
+				buf.exdent
+				buf.new_line
+				print_label (l)
+				buf.putchar (':')
+				buf.new_line
+				buf.indent
+			end
 		end
 
 	print_current_label is
@@ -625,7 +628,7 @@ feature -- Setting
 	print_label (l: INTEGER) is
 			-- Print label number `l'
 		require
-			label_exists: l >= 0
+			label_exists: l > 0
 		local
 			buf: GENERATION_BUFFER
 		do

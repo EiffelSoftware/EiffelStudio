@@ -121,6 +121,9 @@ feature -- Translation names
 			Result.append (text);
 			Result.append ("%", ");
 		end;
-
-
+	
+invariant
+	
+	text_not_void: text /= Void
+	
 end

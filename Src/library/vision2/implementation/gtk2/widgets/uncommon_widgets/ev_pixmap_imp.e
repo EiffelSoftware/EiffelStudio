@@ -386,6 +386,15 @@ feature -- Duplication
 		end
 		
 feature {EV_ANY_I} -- Implementation
+
+	set_pixmap_from_pixbuf (a_pixbuf: POINTER) is
+			-- Construct `Current' from GdkPixbuf `a_pixbuf'
+		local
+			a_gdkpix, a_gdkmask: POINTER
+		do
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_pixbuf, $a_gdkpix, $a_gdkmask, 255)
+			set_pixmap (a_gdkpix, a_gdkmask)			
+		end
 		
 	copy_from_gdk_data (a_src_pix, a_src_mask: POINTER; a_width, a_height: INTEGER) is
 			-- Update `Current' to use passed gdk pixmap data.
@@ -468,15 +477,6 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 		end		
 
 feature {NONE} -- Implementation
-
-	set_pixmap_from_pixbuf (a_pixbuf: POINTER) is
-			-- Construct `Current' from GdkPixbuf `a_pixbuf'
-		local
-			a_gdkpix, a_gdkmask: POINTER
-		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_pixbuf, $a_gdkpix, $a_gdkmask, 255)
-			set_pixmap (a_gdkpix, a_gdkmask)			
-		end
 
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
 			-- Save `Current' in `a_format' to `a_filename'

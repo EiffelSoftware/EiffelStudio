@@ -523,8 +523,16 @@ feature {NONE} -- Implementation
 	widget_source_being_docked: EV_WIDGET_IMP is
 			-- `Result' is `source_being_docked' or `Void' if
 			-- it is not a widget.
+		local
+			widget_i: EV_WIDGET_I
 		do
-			Result ?= source_being_docked
+				-- On Gtk items, also inherit EV_WIDGET_IMP so
+				-- we protect against this by using the _I as an intermediary
+				-- step.
+			widget_i ?= source_being_docked
+			if widget_i /= Void then
+				Result ?= widget_i	
+			end
 		end
 		
 	item_source_being_docked: EV_ITEM_IMP is

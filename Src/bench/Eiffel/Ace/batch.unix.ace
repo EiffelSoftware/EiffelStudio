@@ -120,7 +120,7 @@ cluster
 			"eiffel_envision_10"; "windows"; "CVS"; "EIFGEN"; 
 		end
 
-	preferences:	"$EIFFEL_SRC\library\preferences"
+	preferences:	"$EIFFEL_SRC/library/preferences"
 
 external
 

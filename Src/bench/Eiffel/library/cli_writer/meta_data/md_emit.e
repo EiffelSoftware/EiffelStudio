@@ -157,7 +157,26 @@ feature -- Definition: creation
 		ensure
 			valid_result: Result & Md_mask = Md_assembly
 		end
-		
+
+	define_manifest_resource (resource_name: UNI_STRING; implementation_token: INTEGER;
+			offset, resource_flags: INTEGER): INTEGER
+		is
+			-- Define a new assembly.
+		require
+			resource_name_not_void: resource_name /= Void
+			resource_name_not_empty: not resource_name.is_empty
+			valid_flags:
+				(resource_flags & feature {MD_RESOURCE_FLAGS}.public =
+					feature {MD_RESOURCE_FLAGS}.public) or
+				(resource_flags & feature {MD_RESOURCE_FLAGS}.private =
+					feature {MD_RESOURCE_FLAGS}.private)
+		do
+			Result := assembly_emitter.define_manifest_resource (resource_name,
+				implementation_token, offset, resource_flags)
+		ensure
+			valid_result: Result & Md_mask = Md_manifest_resource
+		end
+				
 	define_type (type_name: UNI_STRING; flags: INTEGER; extend_token: INTEGER;
 			implements: ARRAY [INTEGER]): INTEGER
 		is
@@ -207,15 +226,18 @@ feature -- Definition: creation
 			valid_result: Result & Md_mask = Md_exported_type
 		end
 		
-	define_file (file_name: UNI_STRING; hash_value: MANAGED_POINTER): INTEGER is
+	define_file (file_name: UNI_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER is
 			-- Create a row in File table
 		require
 			file_name_not_void: file_name /= Void
 			file_name_not_empty: not file_name.is_empty
 			hash_value_not_void: hash_value /= Void
 			hash_value_not_empty: hash_value.count > 0
+			valid_file_flags:
+				(file_flags = 0) or
+				(file_flags = feature {MD_FILE_FLAGS}.has_no_meta_data)
 		do
-			Result := assembly_emitter.define_file (file_name, hash_value, 0)
+			Result := assembly_emitter.define_file (file_name, hash_value, file_flags)
 		ensure
 			valid_result: Result & Md_mask = Md_file
 		end

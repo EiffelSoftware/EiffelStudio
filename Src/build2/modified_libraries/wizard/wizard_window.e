@@ -13,7 +13,8 @@ inherit
 			copy as copy_titled_window
 		redefine
 			destroy,
-			initialize
+			initialize,
+			is_in_default_state
 		select
 			copy_titled_window
 		end
@@ -24,17 +25,30 @@ inherit
 		end
 
 create
-	make
+	make, default_create
 
 feature {NONE} -- Initialization
 
 	make is
 			-- Initialize Current window.
+		obsolete "Use `default_create' instead"
+		do
+			default_create			
+		end
+		
+	initialize is
+			-- Initialize `Current'.
 		local
+			button: EV_BUTTON
 			v1: EV_VERTICAL_BOX
 		do
-			default_create
+			precursor {EV_DIALOG}
 			disable_user_resize
+			create button
+			extend (button)
+			button.select_actions.extend (agent cancel_actions)
+			set_default_cancel_button (button)
+			prune (button)
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 			set_minimum_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			create wizard_page
@@ -43,20 +57,6 @@ feature {NONE} -- Initialization
 			build_navigation_bar (v1)
 			extend (v1)
 		end
-		
-	initialize is
-			-- Initialize `Current'.
-		local
-			button: EV_BUTTON
-		do
-			precursor {EV_DIALOG}
-			create button
-			extend (button)
-			button.select_actions.extend (agent cancel_actions)
-			set_default_cancel_button (button)
-			prune (button)
-		end
-		
 
 	build_navigation_bar (a_box: EV_BOX) is
 			-- Build the navigation bar.
@@ -226,6 +226,11 @@ feature -- Basic Operations
 			end
 			update_navigation
 		end
+
+feature {NONE} -- Contract support
+
+	is_in_default_state: BOOLEAN is True
+		-- Is `Current' in its default state?
 
 end -- class WIZARD_WINDOW
 

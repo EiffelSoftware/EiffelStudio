@@ -20,7 +20,7 @@
 
 # $Id$
 #
-# Generated on Wed Oct 25 16:08:36 PDT 1995 [metaconfig 3.0 PL60]
+# Generated on Thu Nov  7 17:23:31 PST 1996 [metaconfig 3.0 PL60]
 
 cat >/tmp/c1$$ <<EOF
 ARGGGHHHH!!!!!
@@ -233,6 +233,7 @@ d_bcopy=''
 d_bsdjmp=''
 d_bzero=''
 d_chown=''
+d_dlopen=''
 d_dup2=''
 d_eofpipe=''
 d_fcntl=''
@@ -272,8 +273,6 @@ d_safebcpy=''
 d_safemcpy=''
 d_sbrk=''
 d_select=''
-d_bsdpgrp=''
-d_setpgrp=''
 d_siglist=''
 d_sigsetmk=''
 d_sigaction=''
@@ -316,6 +315,7 @@ i_direct=''
 d_dirnamlen=''
 direntrytype=''
 i_dirent=''
+i_dlfcn=''
 i_fcntl=''
 i_fd_setsyss=''
 i_grp=''
@@ -334,11 +334,6 @@ i_string=''
 strings=''
 i_sysdir=''
 i_sysfile=''
-d_voidtty=''
-i_bsdioctl=''
-i_sysfilio=''
-i_sysioctl=''
-i_syssockio=''
 i_sysndir=''
 i_sysresrc=''
 i_sysselct=''
@@ -346,9 +341,6 @@ i_syssock=''
 i_systimeb=''
 i_systimes=''
 i_sysun=''
-i_sgtty=''
-i_termio=''
-i_termios=''
 i_systime=''
 i_systimek=''
 i_time=''
@@ -359,6 +351,8 @@ i_stdarg=''
 i_varargs=''
 i_varhdr=''
 i_xm_protocols=''
+install=''
+installdir=''
 intsize=''
 lex=''
 lexflags=''
@@ -422,7 +416,6 @@ reg8=''
 reg9=''
 registers=''
 sbrksmart=''
-sbrktype=''
 installscript=''
 scriptdir=''
 scriptdirexp=''
@@ -1181,6 +1174,7 @@ echo
 expr
 grep
 ln
+mkdir
 mv
 rm
 sed
@@ -3649,51 +3643,6 @@ set d_bsdjmp
 eval $setvar
 $rm -f set.c set
 
-: see if setpgrp exists
-set setpgrp d_setpgrp
-eval $inlibc
-
-: see which flavor of setpgrp is in use
-case "$d_setpgrp" in
-"$define")
-	echo " "
-	$cat >set.c <<EOP
-main()
-{
-	if (getuid() == 0) {
-		printf("(I see you are running Configure as super-user...)\n");
-		setuid(1);
-	}
-	if (-1 == setpgrp(1, 1))
-		exit(1);
-	exit(0);
-}
-EOP
-	if $cc $ccflags $ldflags -o set set.c $libs >/dev/null 2>&1; then
-		./set 2>/dev/null
-		case $? in
-		0) echo "You have to use setpgrp() instead of setpgrp(pid, pgrp)." >&4
-			val="$undef";;
-		*) echo "You have to use setpgrp(pid, pgrp) instead of setpgrp()." >&4
-			val="$define";;
-		esac
-	else
-		if ./usg; then
-			xxx="USG one, i.e. you use setpgrp()."
-			val="$undef"
-		else
-			xxx="BSD one, i.e. you use setpgrp(pid, pgrp)."
-			val="$define"
-		fi
-		echo "Assuming your setpgrp is a $xxx" >&4
-	fi
-	;;
-*) val="$undef";;
-esac
-set d_bsdpgrp
-eval $setvar
-$rm -f set set.c
-
 : see if bzero exists
 set bzero d_bzero
 eval $inlibc
@@ -3734,6 +3683,13 @@ fi
 set d_dirnamlen
 eval $setvar
 $rm -f try.c
+
+: see if dlopen exists
+xxx_runnm="$runnm"
+runnm=false
+set dlopen d_dlopen
+eval $inlibc
+runnm="$xxx_runnm"
 
 : see if dup2 exists
 set dup2 d_dup2
@@ -4232,9 +4188,6 @@ set d_keepalive
 eval $setvar
 $rm -f socket socket.c
 
-if echo `uname -a` | grep -i 'linux' >/dev/null; then
-	echo "Skipping signal handlers test for Linux ..."
-else
 : see if signals are kept
 val="$undef";
 echo " "
@@ -4270,7 +4223,6 @@ fi
 set d_keepsig
 eval $setvar
 $rm -f try*
-fi
 
 : see if link exists
 set link d_link
@@ -4791,219 +4743,6 @@ eval $inlibc
 set utime d_utime
 eval $inlibc
 
-: get C preprocessor symbols handy
-echo " "
-$echo $n "Hmm... $c"
-echo $al | $tr ' ' '\012' >Cppsym.know
-$cat <<EOSS >Cppsym
-$startsh
-case "\$1" in
--l) list=true
-	shift
-	;;
-esac
-unknown=''
-case "\$list\$#" in
-1|2)
-	for sym do
-		if $contains "^\$1$" Cppsym.true >/dev/null 2>&1; then
-			exit 0
-		elif $contains "^\$1$" Cppsym.know >/dev/null 2>&1; then
-			:
-		else
-			unknown="\$unknown \$sym"
-		fi
-	done
-	set X \$unknown
-	shift
-	;;
-esac
-case \$# in
-0) exit 1;;
-esac
-echo \$* | $tr ' ' '\012' | $sed -e 's/\(.*\)/\\
-#ifdef \1\\
-exit 0; _ _ _ _\1\\	 \1\\
-#endif\\
-/' >Cppsym\$\$
-echo "exit 1; _ _ _" >>Cppsym\$\$
-$cppstdin $cppminus <Cppsym\$\$ | $grep '^exit [01]; _ _'  >Cppsym2\$\$
-case "\$list" in
-true) $awk 'NF > 5 {print substr(\$6,2,100)}' <Cppsym2\$\$ ;;
-*)
-	sh Cppsym2\$\$
-	status=\$?
-	;;
-esac
-$rm -f Cppsym\$\$ Cppsym2\$\$
-exit \$status
-EOSS
-chmod +x Cppsym
-$eunicefix Cppsym
-./Cppsym -l $al | $sort | $grep -v '^$' >Cppsym.true
-
-: now check the C compiler for additional symbols
-$cat >ccsym <<EOS
-$startsh
-$cat >tmp.c <<EOF
-extern int foo;
-EOF
-for i in \`$cc -v -c tmp.c 2>&1\`
-do
-	case "\$i" in
-	-D*) echo "\$i" | $sed 's/^-D//';;
-	-A*) $test "$gccversion" && echo "\$i" | $sed 's/^-A\(.*\)(\(.*\))/\1=\2/';;
-	esac
-done
-$rm -f try.c
-EOS
-chmod +x ccsym
-$eunicefix ccsym
-./ccsym | $sort | $uniq >ccsym.raw
-$awk '/\=/ { print $0; next }
-	{ print $0"=1" }' ccsym.raw >ccsym.list
-$awk '{ print $0"=1" }' Cppsym.true >ccsym.true
-$comm -13 ccsym.true ccsym.list >ccsym.own
-$comm -12 ccsym.true ccsym.list >ccsym.com
-$comm -23 ccsym.true ccsym.list >ccsym.cpp
-also=''
-symbols='symbols'
-if $test -z ccsym.raw; then
-	echo "Your C compiler doesn't seem to define any symbol!" >&4
-	echo " "
-	echo "However, your C preprocessor defines the following ones:"
-	$cat Cppsym.true
-else
-	if $test -s ccsym.com; then
-		echo "Your C compiler and pre-processor define these symbols:"
-		$sed -e 's/\(.*\)=.*/\1/' ccsym.com
-		also='also '
-		symbols='ones'
-		$test "$silent" || sleep 1
-	fi
-	if $test -s ccsym.cpp; then
-		$test "$also" && echo " "
-		echo "Your C pre-processor ${also}defines the following $symbols:"
-		$sed -e 's/\(.*\)=.*/\1/' ccsym.cpp
-		also='further '
-		$test "$silent" || sleep 1
-	fi
-	if $test -s ccsym.own; then
-		$test "$also" && echo " "
-		echo "Your C compiler ${also}defines the following cpp variables:"
-		$sed -e 's/\(.*\)=1/\1/' ccsym.own
-		$sed -e 's/\(.*\)=.*/\1/' ccsym.own | $uniq >>Cppsym.true
-		$test "$silent" || sleep 1
-	fi
-fi
-$rm -f ccsym*
-
-: see if this is a termio system
-val="$undef"
-val2="$undef"
-val3="$undef"
-if $test `./findhdr termios.h`; then
-	set tcsetattr i_termios
-	eval $inlibc
-	val3="$i_termios"
-fi
-echo " "
-case "$val3" in
-"$define") echo "You have POSIX termios.h... good!" >&4;;
-*) if ./Cppsym pyr; then
-		case "`/bin/universe`" in
-		ucb) if $test `./findhdr sgtty.h`; then
-				val2="$define"
-				echo "<sgtty.h> found." >&4
-			else
-				echo "System is pyramid with BSD universe."
-				echo "<sgtty.h> not found--you could have problems." >&4
-			fi;;
-		*) if $test `./findhdr termio.h`; then
-				val="$define"
-				echo "<termio.h> found." >&4
-			else
-				echo "System is pyramid with USG universe."
-				echo "<termio.h> not found--you could have problems." >&4
-			fi;;
-		esac
-	elif ./usg; then
-		if $test `./findhdr termio.h`; then
-			echo "<termio.h> found." >&4
-			val="$define"
-		elif $test `./findhdr sgtty.h`; then
-			echo "<sgtty.h> found." >&4
-			val2="$define"
-		else
-echo "Neither <termio.h> nor <sgtty.h> found--you could have problems." >&4
-		fi
-	else
-		if $test `./findhdr sgtty.h`; then
-			echo "<sgtty.h> found." >&4
-			val2="$define"
-		elif $test `./findhdr termio.h`; then
-			echo "<termio.h> found." >&4
-			val="$define"
-		else
-echo "Neither <sgtty.h> nor <termio.h> found--you could have problems." >&4
-		fi
-	fi;;
-esac
-set i_termio; eval $setvar
-val=$val2; set i_sgtty; eval $setvar
-val=$val3; set i_termios; eval $setvar
-
-: see if ioctl defs are in sgtty, termio, sys/filio or sys/ioctl
-set sys/filio.h i_sysfilio
-eval $inhdr
-echo " "
-if $test `./findhdr sys/ioctl.h`; then
-	val="$define"
-	echo '<sys/ioctl.h> found.' >&4
-else
-	val="$undef"
-	if $test $i_sysfilio = "$define"; then
-	    echo '<sys/ioctl.h> NOT found.' >&4
-	else
-		$test $i_sgtty = "$define" && xxx="sgtty.h"
-		$test $i_termio = "$define" && xxx="termio.h"
-		$test $i_termios = "$define" && xxx="termios.h"
-echo "No <sys/ioctl.h> found, assuming ioctl args are defined in <$xxx>." >&4
-	fi
-fi
-set i_sysioctl
-eval $setvar
-
-: check how to void tty association
-echo " "
-case "$i_sysioctl" in
-"$define") xxx='sys/ioctl.h';;
-esac
-$cat > tcio.c <<EOM
-#include <sys/types.h>	/* Just in case */
-#include <$xxx>
-
-main()
-{
-#ifdef TIOCNOTTY
-	exit(0);
-#else
-	exit(1);
-#endif
-}
-EOM
-if ($cc -o tcio tcio.c && ./tcio) >/dev/null 2>&1; then
-	val="$define"
-	echo "TIOCNOTTY found in <$xxx>." >&4
-	echo "Using ioctl() call on /dev/tty to void tty association." >&4
-else
-	val="$undef"
-	echo "Closing standard file descriptors should void tty association." >&4
-fi
-set d_voidtty
-eval $setvar
-$rm -f tcio tcio.? core
-
 : preserve RCS keywords in files with variable substitution, grrr
 Id='$Id'
 Log='$Log'
@@ -5338,6 +5077,89 @@ EOM
 	;;
 *)  groupstype="$gidtype";;
 esac
+
+: locate a BSD compatible install program
+echo " "
+echo "Looking for a BSD-compatible install program..." >&4
+case "$install" in
+'')
+	tryit=''
+	for dir in $pth; do
+		for file in ginstall installbsd scoinst install; do
+			if $test -f $dir/$file; then
+				tryit="$tryit $dir/$file"
+			fi
+		done
+	done
+	$cat >try.c <<EOC
+main()
+{
+	printf("OK\n");
+	exit(0);
+}
+EOC
+	if $cc try.c -o try >/dev/null 2>&1; then
+		cp try try.ns
+		strip try >/dev/null 2>&1
+	else
+		echo "(I can't seem to compile a trivial C program -- bypassing.)"
+		echo "try" >try
+		cp try try.ns
+	fi
+	$cat >tryinst <<EOS
+$startsh
+$rm -rf foo d
+$mkdir d
+\$1 -c -m 764 try.ns d
+\$1 -c -s -m 642 try.ns d/try
+EOS
+	chmod +x tryinst
+	$eunicefix tryinst
+	dflt=''
+	either=''
+	for prog in $tryit; do
+		$echo $n "Checking $prog... $c"
+		./tryinst $prog >/dev/null 2>&1
+		(ls -l d/try >try.ls; ls -l d/try.ns >tryno.ls) 2>/dev/null
+		if (cmp -s d/try try && cmp -s d/try.ns try.ns && \
+			$contains 'rwxrw-r--' tryno.ls && \
+			$contains 'rw-r---w-' try.ls) >/dev/null 2>&1
+		then
+			dflt="$prog"
+			echo "ok, that will do."
+			break
+		fi
+		echo "not good$either."
+		either=' either'
+		$rm -f try*.ls
+	done
+	$rm -rf foo d tryinst try try*.ls try.*
+	case "$dflt" in
+	'')
+		echo "Hopefully, $package comes with its own install script!"
+		dflt='./install'
+		;;
+	esac
+	;;
+*) dflt="$install";;
+esac
+$cat <<EOM
+
+I will be requiring a BSD-compatible install program (one that allows
+options like -s to strip executables or -m to specify a file mode) to
+install $package.
+
+If the question below contains a fully qualified default path, then it
+is probably ok. If it is an unqualified name such as 'install', then it
+means I was unable to find out a good install program I could use. If
+you know of one, please tell me about it. If the default is './install',
+then I shall be using the install script supplied with $package.
+
+EOM
+fn='/fe~(install,./install)'
+rp='Which install program shall I use?'
+. ./getfile
+install="$ans"
 
 : check for length of integer
 echo " "
@@ -5941,6 +5763,113 @@ else
 fi
 $rm -f foo* bar* 
 
+: get C preprocessor symbols handy
+echo " "
+$echo $n "Hmm... $c"
+echo $al | $tr ' ' '\012' >Cppsym.know
+$cat <<EOSS >Cppsym
+$startsh
+case "\$1" in
+-l) list=true
+	shift
+	;;
+esac
+unknown=''
+case "\$list\$#" in
+1|2)
+	for sym do
+		if $contains "^\$1$" Cppsym.true >/dev/null 2>&1; then
+			exit 0
+		elif $contains "^\$1$" Cppsym.know >/dev/null 2>&1; then
+			:
+		else
+			unknown="\$unknown \$sym"
+		fi
+	done
+	set X \$unknown
+	shift
+	;;
+esac
+case \$# in
+0) exit 1;;
+esac
+echo \$* | $tr ' ' '\012' | $sed -e 's/\(.*\)/\\
+#ifdef \1\\
+exit 0; _ _ _ _\1\\	 \1\\
+#endif\\
+/' >Cppsym\$\$
+echo "exit 1; _ _ _" >>Cppsym\$\$
+$cppstdin $cppminus <Cppsym\$\$ | $grep '^exit [01]; _ _'  >Cppsym2\$\$
+case "\$list" in
+true) $awk 'NF > 5 {print substr(\$6,2,100)}' <Cppsym2\$\$ ;;
+*)
+	sh Cppsym2\$\$
+	status=\$?
+	;;
+esac
+$rm -f Cppsym\$\$ Cppsym2\$\$
+exit \$status
+EOSS
+chmod +x Cppsym
+$eunicefix Cppsym
+./Cppsym -l $al | $sort | $grep -v '^$' >Cppsym.true
+
+: now check the C compiler for additional symbols
+$cat >ccsym <<EOS
+$startsh
+$cat >tmp.c <<EOF
+extern int foo;
+EOF
+for i in \`$cc -v -c tmp.c 2>&1\`
+do
+	case "\$i" in
+	-D*) echo "\$i" | $sed 's/^-D//';;
+	-A*) $test "$gccversion" && echo "\$i" | $sed 's/^-A\(.*\)(\(.*\))/\1=\2/';;
+	esac
+done
+$rm -f try.c
+EOS
+chmod +x ccsym
+$eunicefix ccsym
+./ccsym | $sort | $uniq >ccsym.raw
+$awk '/\=/ { print $0; next }
+	{ print $0"=1" }' ccsym.raw >ccsym.list
+$awk '{ print $0"=1" }' Cppsym.true >ccsym.true
+$comm -13 ccsym.true ccsym.list >ccsym.own
+$comm -12 ccsym.true ccsym.list >ccsym.com
+$comm -23 ccsym.true ccsym.list >ccsym.cpp
+also=''
+symbols='symbols'
+if $test -z ccsym.raw; then
+	echo "Your C compiler doesn't seem to define any symbol!" >&4
+	echo " "
+	echo "However, your C preprocessor defines the following ones:"
+	$cat Cppsym.true
+else
+	if $test -s ccsym.com; then
+		echo "Your C compiler and pre-processor define these symbols:"
+		$sed -e 's/\(.*\)=.*/\1/' ccsym.com
+		also='also '
+		symbols='ones'
+		$test "$silent" || sleep 1
+	fi
+	if $test -s ccsym.cpp; then
+		$test "$also" && echo " "
+		echo "Your C pre-processor ${also}defines the following $symbols:"
+		$sed -e 's/\(.*\)=.*/\1/' ccsym.cpp
+		also='further '
+		$test "$silent" || sleep 1
+	fi
+	if $test -s ccsym.own; then
+		$test "$also" && echo " "
+		echo "Your C compiler ${also}defines the following cpp variables:"
+		$sed -e 's/\(.*\)=1/\1/' ccsym.own
+		$sed -e 's/\(.*\)=.*/\1/' ccsym.own | $uniq >>Cppsym.true
+		$test "$silent" || sleep 1
+	fi
+fi
+$rm -f ccsym*
+
 : see how many register declarations we want to use
 case "$registers" in
 '')
@@ -6029,23 +5958,6 @@ EOC
 	;;
 esac
 $rm -f sbrk sbrk.* core
-
-: see what type sbrk is declared as in the kernel
-case "$sbrktype" in
-'')
-	if $contains 'caddr_t;' `./findhdr sys/types.h` >/dev/null 2>&1 ; then
-		dflt='caddr_t';
-	else
-		dflt='char *';
-	fi
-	;;
-*)  dflt="$sbrktype"
-	;;
-esac
-echo " "
-rp="What is the return type of sbrk() on this system?"
-. ./myread
-sbrktype="$ans"
 
 : see if sys/select.h has to be included
 set sys/select.h i_sysselct
@@ -6482,6 +6394,10 @@ esac
 
 : see if this is a direct system
 set direct.h i_direct
+eval $inhdr
+
+: see if dlfcn is available
+set dlfcn.h i_dlfcn
 eval $inhdr
 
 : see if this is a sys/file.h system
@@ -6961,6 +6877,7 @@ d_bcopy='$d_bcopy'
 d_bsdjmp='$d_bsdjmp'
 d_bzero='$d_bzero'
 d_chown='$d_chown'
+d_dlopen='$d_dlopen'
 d_dup2='$d_dup2'
 d_eofpipe='$d_eofpipe'
 d_fcntl='$d_fcntl'
@@ -7000,8 +6917,6 @@ d_safebcpy='$d_safebcpy'
 d_safemcpy='$d_safemcpy'
 d_sbrk='$d_sbrk'
 d_select='$d_select'
-d_bsdpgrp='$d_bsdpgrp'
-d_setpgrp='$d_setpgrp'
 d_siglist='$d_siglist'
 d_sigsetmk='$d_sigsetmk'
 d_sigaction='$d_sigaction'
@@ -7044,6 +6959,7 @@ i_direct='$i_direct'
 d_dirnamlen='$d_dirnamlen'
 direntrytype='$direntrytype'
 i_dirent='$i_dirent'
+i_dlfcn='$i_dlfcn'
 i_fcntl='$i_fcntl'
 i_fd_setsyss='$i_fd_setsyss'
 i_grp='$i_grp'
@@ -7062,11 +6978,6 @@ i_string='$i_string'
 strings='$strings'
 i_sysdir='$i_sysdir'
 i_sysfile='$i_sysfile'
-d_voidtty='$d_voidtty'
-i_bsdioctl='$i_bsdioctl'
-i_sysfilio='$i_sysfilio'
-i_sysioctl='$i_sysioctl'
-i_syssockio='$i_syssockio'
 i_sysndir='$i_sysndir'
 i_sysresrc='$i_sysresrc'
 i_sysselct='$i_sysselct'
@@ -7074,9 +6985,6 @@ i_syssock='$i_syssock'
 i_systimeb='$i_systimeb'
 i_systimes='$i_systimes'
 i_sysun='$i_sysun'
-i_sgtty='$i_sgtty'
-i_termio='$i_termio'
-i_termios='$i_termios'
 i_systime='$i_systime'
 i_systimek='$i_systimek'
 i_time='$i_time'
@@ -7087,6 +6995,8 @@ i_stdarg='$i_stdarg'
 i_varargs='$i_varargs'
 i_varhdr='$i_varhdr'
 i_xm_protocols='$i_xm_protocols'
+install='$install'
+installdir='$installdir'
 intsize='$intsize'
 lex='$lex'
 lexflags='$lexflags'
@@ -7150,7 +7060,6 @@ reg8='$reg8'
 reg9='$reg9'
 registers='$registers'
 sbrksmart='$sbrksmart'
-sbrktype='$sbrktype'
 installscript='$installscript'
 scriptdir='$scriptdir'
 scriptdirexp='$scriptdirexp'

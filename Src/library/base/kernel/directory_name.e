@@ -24,12 +24,12 @@ feature
 			any: ANY
 		do
 			any := to_c
-			Result := c_is_directory_valid ($any);
+			Result := eif_is_directory_valid ($any);
 		end
 
 feature {NONE} -- Externals
 
-	c_is_directory_valid (p: POINTER): BOOLEAN is
+	eif_is_directory_valid (p: POINTER): BOOLEAN is
 		external
 			"C"
 		end

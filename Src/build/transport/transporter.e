@@ -200,18 +200,18 @@ feature
 			-- will control the drag and drop
 			-- mechanism,
 		do
-			base_create (a_name, a_screen);
+			base_create (a_name, a_screen)
 			tooltip_initialize (Current)
-			set_drawing (screen);
-			set_logical_mode (10); 
-			set_subwindow_mode (1);
-			add_pointer_motion_action (Current, First);
-			add_button_press_action (3, Current, Second);
-			set_action ("<Btn1Up>", Current, Third);
-			set_action ("<Btn2Up>", Current, Third);
-			set_action ("<Unmap>,<Prop>", Current, Fifth);
-			set_action ("<Map>,<Prop>", Current, Sixth);
-			!!holes.make
+			set_drawing (screen)
+			set_logical_mode (10);
+			set_subwindow_mode (1)
+			add_pointer_motion_action (Current, First)
+			add_button_press_action (3, Current, Second)
+			add_button_release_action (1, Current, Third)
+			add_button_release_action (2, Current, Third)
+			set_action ("<Unmap>,<Prop>", Current, Fifth)
+			set_action ("<Prop>,<Map>", Current, Sixth)
+			!! holes.make
 			add_undo_redo_accelerator (Current)
 		end;
 

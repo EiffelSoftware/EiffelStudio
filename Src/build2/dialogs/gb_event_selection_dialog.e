@@ -22,6 +22,14 @@ inherit
 			default_create, copy
 		end
 		
+	GB_SHARED_SYSTEM_STATUS
+		undefine
+			default_create, copy
+		end
+		
+	GB_SHARED_COMMAND_HANDLER
+
+
 create
 	make_with_object
 	
@@ -291,6 +299,13 @@ feature {NONE} -- Implementation
 				horizontal_box.prune (all_text_fields @ index)
 			end
 			unlock_update
+			
+				-- We update the system settings to reflect
+				-- the fact that a user modification has taken place.
+				-- This enables us to do things such as enable the save
+				-- options.
+			system_status.enable_project_modified
+			command_handler.update
 		end
 		
 	update_object_and_destroy is

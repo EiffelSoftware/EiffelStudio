@@ -21,6 +21,7 @@ rt_public EIF_POINTER console_def (EIF_INTEGER file)
 	switch (file) {
 	case 0:
 	  	return (EIF_POINTER) stdin;
+
 	case 1:
 			/* Output is set to only have line buffered. Meaning that
 			 * each displayed %N will flush the buffer. */
@@ -28,13 +29,32 @@ rt_public EIF_POINTER console_def (EIF_INTEGER file)
 			/* Per Microsoft documentation, it has to be at least 2 for buffer size
 			 * in case of _IOLBF. */
 	  	setvbuf(stdout, NULL, _IOLBF, 2);
+#elif defined EIF_VMS
+		/*  On VMS, stdout is unbuffered by default when bound to a
+		**  terminal device (CRTL Reference, setvbuf). Setting it to
+		**  line buffered causes a problem with prompts: with stdout
+		**  line buffered, a prompt without a newline is not written to
+		**  the terminal until after the response is entered).
+		**  Strictly speaking, programs should flush output after
+		**  writing prompt and before reading input, but many do not.
+		**  Further, VMS does the "right thing" by default."
+		*/
 #else
 	  	setvbuf(stdout, NULL, _IOLBF, 0);
 #endif
 		return (EIF_POINTER) stdout;
+
 	case 2:
+#ifdef EIF_VMS
+		/*  On VMS, stderr is (line) buffered. If set to unbuffered,
+		**  each distinct write I/O call will create a separate record
+		**  when stderr is bound to a file.
+		*/
+#else
 		setvbuf (stderr, NULL, _IONBF, 0);
+#endif
 		return (EIF_POINTER) stderr;
+
 	default:
 		CHECK ("Invalid File Request", EIF_FALSE);
 		return NULL;

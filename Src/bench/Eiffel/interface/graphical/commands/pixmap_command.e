@@ -10,7 +10,8 @@ inherit
 	PICT_COLOR_B
 		rename
 			make as pict_create
-		end
+		end;
+	BUILD_LIC
 
 feature {NONE}
 
@@ -47,10 +48,42 @@ feature
 			elseif argument = get_out then
 				text_window.tool.clean_type
 			else
-				work (argument)
+				execute_licenced (argument)
 			end
 		end;
 
+feature -- Licence managment
+
+	execute_licenced (argument: ANY) is
+		do
+			if licence_checked then
+				work (argument)
+			else
+				if licence.daemon_alive and then try_reconnect then
+					work (argument)
+				else
+					 warner.custom_call (Void, "%
+						%  YOU HAVE LOST YOUR LICENCE!%N%
+						%(You can still save your changes%N%
+						% and exit the project)", "OK", Void, Void);
+				end;
+			end;
+		end;
+
+	try_reconnect: BOOLEAN is
+		do
+			licence.register;
+			if licence.registered then
+				licence.open_licence;
+				Result := licence.licenced and then licence_checked;
+			end;
+		end;
+
+	licence_checked: BOOLEAN is
+		do
+			licence.alive;
+			Result := licence.is_alive;
+		end;
 	
 feature {NONE}
 

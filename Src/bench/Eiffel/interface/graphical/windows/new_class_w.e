@@ -10,6 +10,7 @@ inherit
 			make as form_d_make
 		end;
 	COMMAND_W;
+	SHARED_WORKBENCH
 
 creation
 
@@ -22,7 +23,7 @@ feature
 	cluster_name: LABEL;
 	create_b, cancel_b: PUSH_B;
 	row_column: ROW_COLUMN;
-	create, cancel: ANY;
+	create, cancel, clust: ANY;
 
 	cluster: CLUSTER_I;
 	class_name: STRING;
@@ -32,7 +33,7 @@ feature
 	make (comp: COMPOSITE; text: CLASS_TEXT) is
 		do
 			class_text := text;
-			!!create; !!cancel;
+			!!create; !!cancel; !!clust;
 			form_d_make ("New Class", comp);
 			set_title ("New Class");
 			!!class_l.make ("", Current);
@@ -60,7 +61,7 @@ feature
 			row_column.set_same_size;
 			cluster_name.set_text ("Cluster: ");
 			message.set_text ("No such class in system");
-			cluster_entry.add_activate_action (Current, Void);
+			cluster_entry.add_activate_action (Current, clust);
 			cancel_b.add_activate_action (Current, cancel);
 			create_b.add_activate_action (Current, create);
 			set_exclusive_grab
@@ -70,13 +71,16 @@ feature
 		require
 			valid_args: class_n /= Void and cl /= Void
 		local
-			str: STRING
+			str, str2: STRING
 		do
 			cluster := cl;
-			class_name := class_n;
+			class_name := class_n.duplicate;
+			str2 :=  class_n.duplicate;
+			str2.to_upper;
+			class_name.to_lower;
 			!!str.make (0);
 			str.append ("Class name: ");
-			str.append (class_name);
+			str.append (str2);
 			class_l.set_text (str);	
 			cluster_entry.set_text (cluster.cluster_name);
 			popup;
@@ -88,6 +92,8 @@ feature
 			fname: STRING;
 			file: UNIX_FILE;
 			stone: CLASSI_STONE;
+			str: STRING;
+			clu: CLUSTER_I; clun: STRING
 		do
 			if argument = create then
 				!!class_i.make;
@@ -113,8 +119,10 @@ feature
 						popdown
 					else
 						fname.wipe_out;
+						str := class_name.duplicate;
+						str.to_upper;
 						fname.append ("Class ");
-						fname.append (class_name);
+						fname.append (str);
 						fname.append (" already exist in cluster");
 						warner.custom_call (Void, fname, "Continue",
 										Void, Void); 
@@ -127,7 +135,16 @@ feature
 				end;
 			elseif argument = cancel then
 				popdown
-			else
+			elseif argument = clust then
+				clun := cluster_entry.text; 
+				clun.to_lower;
+				clu := Universe.cluster_of_name (clun);
+				if clu = Void then
+					warner.custom_call (Void, "Invalid cluster name", "Continue",
+									Void, Void); 
+				else
+					cluster := clu
+				end;
 			end;
 		end;
 

@@ -16,11 +16,15 @@ feature
 
 	melt is
 			-- Melt the features of the class
+		local
+			temp: STRING
 		do
 			if associated_class.has_features_to_melt then
 					-- Verbose
-				io.error.putstring ("Pass 4 on class ");
-				io.error.putstring (associated_class.class_name);
+				io.error.putstring ("Degree 2: class ");
+					temp := associated_class.class_name.duplicate;
+					temp.to_upper;
+				io.error.putstring (temp);
 				io.error.new_line;
 
 				associated_class.melt;
@@ -29,11 +33,15 @@ feature
 
 	update_dispatch_table is
 			-- Melt the features of the class
+		local
+			temp: STRING
 		do
 			if associated_class.has_features_to_melt then
 					-- Verbose
-				io.error.putstring ("Pass 4 on class ");
-				io.error.putstring (associated_class.class_name);
+				io.error.putstring ("Degree 2: class ");
+					temp := associated_class.class_name.duplicate;
+					temp.to_upper;
+				io.error.putstring (temp);
 				io.error.new_line;
 
 				associated_class.update_dispatch_table;

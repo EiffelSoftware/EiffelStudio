@@ -31,7 +31,13 @@ feature
 			Result := error_i.code
 		end;
 
-	header: STRING is do end;
+	header: STRING is 
+		do 
+			Result := code;
+			if Result = Void then
+				!!Result.make (0)
+			end;
+		end;
 
 	stone_type: INTEGER is do Result := Explain_type end;
 

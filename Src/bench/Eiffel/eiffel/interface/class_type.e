@@ -158,6 +158,29 @@ feature -- Generation
 
 	valid_body_ids: SORTED_SET [INTEGER];
 
+	update_valid_body_ids is
+		local
+			feature_table: FEATURE_TABLE;
+			current_class: CLASS_C;
+			feature_i: FEATURE_I
+		do
+			!! valid_body_ids.make;
+			current_class := associated_class;
+			feature_table := current_class.feature_table;
+
+			from
+				feature_table.start;
+			until
+				feature_table.after
+			loop
+				feature_i := feature_table.item_for_iteration;
+				if feature_i.to_generate_in (current_class) then
+					valid_body_ids.add (feature_i.body_id);
+				end;
+				feature_table.forth;
+			end;
+		end;
+
 	pass4 is
 			-- Generation of the C file
 		local
@@ -176,8 +199,6 @@ feature -- Generation
 			current_class_id := current_class.id;
 
 			feature_table := current_class.feature_table;
-
-			!!valid_body_ids.make;
 
 			if final_mode then
 					-- Check to see if there is really something to generate
@@ -241,7 +262,6 @@ feature -- Generation
 			loop
 				feature_i := feature_table.item_for_iteration;
 				if feature_i.to_generate_in (current_class) then
-					valid_body_ids.add (feature_i.body_id);
 					generate_feature (feature_i, file);
 				end;
 				feature_table.forth;
@@ -271,11 +291,10 @@ feature -- Generation
 			end;
         rescue
             Dialog_window.display ("Cannot generate C code ");
-            -- FIXME remember to put back retry
-			--if not file.is_closed then
-			--	file.close;
-            -- retry;
-			--end
+			if not file.is_closed then
+				file.close;
+             	retry;
+			end
 		end;
 
 	generate_feature (f: FEATURE_I; file: INDENT_FILE) is

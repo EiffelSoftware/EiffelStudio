@@ -54,10 +54,14 @@ feature
 		end;
 
 	execute is
+		local
+			temp: STRING
 		do
 				-- Verbose
-			io.error.putstring ("Pass 2 on class ");
-			io.error.putstring (associated_class.class_name);
+			io.error.putstring ("Degree 4: class ");
+				temp := associated_class.class_name.duplicate;
+				temp.to_upper;
+			io.error.putstring (temp);
 			io.error.new_line;
 
 			if	

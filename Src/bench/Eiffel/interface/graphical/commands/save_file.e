@@ -5,7 +5,7 @@ inherit
 
 	ICONED_COMMAND
 		redefine
-			dark_symbol
+			dark_symbol, licence_checked
 		end
 
 creation
@@ -20,6 +20,8 @@ feature
 		end;
 	
 feature {NONE}
+
+	licence_checked: BOOLEAN is True;
 
 	work (argument: ANY) is
 			-- Save a file with the chosen name.

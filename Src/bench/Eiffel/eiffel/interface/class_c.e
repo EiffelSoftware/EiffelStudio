@@ -412,10 +412,13 @@ feature -- Third pass: byte code production and type check
 			body_id: INTEGER;
 			feat_dep: FEATURE_DEPENDANCE;
 			rep_removed: BOOLEAN;
+			temp: STRING
 		do
 				-- Verbose
-			io.error.putstring ("Pass 3 on class ");
-			io.error.putstring (class_name);
+			io.error.putstring ("Degree 3: class ");
+				temp := class_name.duplicate;
+				temp.to_upper;
+			io.error.putstring (temp);
 			io.error.new_line;
 
 			from
@@ -528,10 +531,8 @@ end;
 							feature_i.type_check;
 							type_check_error := Error_handler.new_error;
 
---							if 	feature_changed
---								and then
-
-							if
+							if 	feature_changed
+								and then
 								not type_check_error
 							then
 								if f_suppliers /= Void then
@@ -549,18 +550,19 @@ end;
 									new_suppliers.add_occurence (f_suppliers);
 								end;
 
+									-- Byte code processing
+--								if feature_i.is_deferred then
+--										-- No byte code and melted info for
+--										-- deferred features
+--									feature_changed := False;
+--								else
 debug ("ACTIVITY")
 	io.error.putstring ("%Tbyte code for ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
-								feature_i.compute_byte_code;
-								if	not feature_i.is_deferred then
-										-- Remember the melted feature information
-										-- if it is not deferred.
-									!!melted_info.make (feature_i);
-									melt_set.put (melted_info);
-								end;
+									feature_i.compute_byte_code;
+--								end;
 
 							end;
 						else
@@ -577,6 +579,15 @@ end;
 
 					ast_context.clear2;
 
+					if	feature_changed
+						and then
+						not (type_check_error or else feature_i.is_deferred)
+					then
+							-- Remember the melted feature information
+							-- if it is not deferred.
+						!!melted_info.make (feature_i);
+						melt_set.put (melted_info);
+					end;
 					type_check_error := False;
 
 				elseif ((not feature_i.in_pass3) or else
@@ -590,6 +601,14 @@ end;
 						ast_context.clear2;
 					end;
 					record_suppliers (feature_i, dependances);
+				--elseif (feature_i.is_deferred or else
+						--feature_i.is_external) and then
+					--(id = feature_i.written_in) then
+						-- Just type check it. See if VRRR or
+						-- VMRX error has occurred.
+					--ast_context.set_a_feature (feature_i);
+					--feature_i.type_check;
+					--ast_context.clear2;
 				end;
 
 				feat_table.forth;
@@ -851,6 +870,25 @@ end;
 		end;
 
 feature -- Generation
+
+	update_valid_body_ids is
+		local
+			local_cursor: LINKABLE [CLASS_TYPE];
+			ct: CLASS_TYPE
+		do
+			Inst_context.set_cluster (cluster);
+			from
+				local_cursor := types.first_element
+			until
+				local_cursor = Void
+			loop
+				ct := local_cursor.item;
+				if not ct.is_precompiled then
+					ct.update_valid_body_ids;
+				end;
+				local_cursor := local_cursor.right
+			end;
+		end;
 
 	pass4 is
 			-- Generation of C files for each type associated to the current

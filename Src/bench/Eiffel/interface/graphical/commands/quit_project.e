@@ -8,6 +8,9 @@ inherit
 	PROJECT_CONTEXT;
 	SHARED_WORKBENCH;
 	ICONED_COMMAND
+		redefine
+			licence_checked
+		end			
 
 creation
 
@@ -32,16 +35,31 @@ feature {NONE}
 					set_global_cursor (watch_cursor);
 					project_tool.set_changed (false);
 					restore_cursors;
+					discard_licence;
 					exit
 				else
 					confirmer.call (Current, "Do you really want to exit ?");
 				end
 			else
+				discard_licence;
 				exit
 			end;
 		end;
 
+feature -- Licence managment
 	
+	discard_licence is
+		do
+			if licence.licenced then
+				licence.free_licence;
+			end;
+			if licence.registered then
+				licence.unregister
+			end;
+		end;
+
+	licence_checked: BOOLEAN is True;
+
 feature 
 
 	symbol: PIXMAP is 

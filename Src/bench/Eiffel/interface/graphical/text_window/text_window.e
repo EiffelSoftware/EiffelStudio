@@ -256,22 +256,47 @@ feature
 	search (s: STRING) is
 			-- Highlight and show next occurence of `s';
 			-- Do nothing if none
-		
+			-- This routine should really use the nice functions
+			-- that RAM has writen for the STRING class (str_str)
+			-- but it is 2:30 AM and we are doing bootstrap today
+			-- so we are implementing a stupid but safe algorithm.		
 		local
+			search_sub: STRING;
 			c_pos: INTEGER;
-			start_position: INTEGER
+			start_position: INTEGER;
+			s1, s2: ANY
 		do
 			c_pos := cursor_position;
-			start_position := text.search_substring (s, c_pos);
-			if start_position = c_pos then
-				start_position := text.search_substring (s, c_pos+1);
+			if
+				(c_pos >= 0)	and then
+				(c_pos + 1 < text.count)
+			then
+				search_sub := text.substring (c_pos + 1, text.count);
+				s1 := search_sub.to_c;
+				s2 := s.to_c;
+				start_position := text_window_search_str_after (s1, s2);
+				if start_position >= 0 then
+					start_position := start_position + c_pos;
+					set_cursor_position (start_position + s.count);
+					highlight_selected (start_position, start_position + s.count);
+					found := true
+				else
+					if (c_pos > 0) then
+						search_sub := text.substring (1, c_pos);
+						s1 := search_sub.to_c;
+						s2 := s.to_c;
+						start_position := 
+							text_window_search_str_after (s1, s2);
+						if start_position >= 0 then
+							start_position := start_position;
+							set_cursor_position (start_position + s.count);
+							highlight_selected 
+								(start_position, start_position + s.count);
+							found := true
+						end;	
+					end;
+				end
 			end;
-			if start_position >= 0 then
-				start_position := start_position - 1;
-				set_cursor_position (start_position);
-				highlight_selected (start_position, start_position + s.count);
-				found := true
-			end
 		end;
 
 	found: BOOLEAN;

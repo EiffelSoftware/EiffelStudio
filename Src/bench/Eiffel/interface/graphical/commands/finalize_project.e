@@ -7,7 +7,8 @@ inherit
 	SHARED_WORKBENCH;
 	PROJECT_CONTEXT;
 	ICONED_COMMAND;
-	SHARED_DEBUG
+	SHARED_DEBUG;
+	SHARED_DIALOG
  
 creation
 
@@ -37,7 +38,7 @@ feature {NONE}
 						warner.custom_call (Current,
 							"Finalizing implies some C compilation%N%
                             %and linking. Do you want to do it now?",
-                            "Finalizing now", "Cancel", Void);
+                            "Finalize now", "Cancel", Void);
 					elseif argument = warner then
 						set_global_cursor (watch_cursor);
 						project_tool.set_changed (true);
@@ -45,10 +46,7 @@ feature {NONE}
 						if Workbench.successfull then
 							System.server_controler.wipe_out;
 							project_tool.set_changed (false);
-							!!file.make (Project_file_name);
-							file.open_write;
-							workbench.basic_store (file);
-							file.close;
+							save_workbench_file;
 								-- The project is saved before the finalization
 								-- so that it can be reused after the finalization.
 							System.finalized_generation;
@@ -63,9 +61,9 @@ feature {NONE}
 -- various stones.
 
 -- Exiting: Popup window
+							error_window.put_string ("System recompiled%N");
+							error_window.display;
 						end;
-						error_window.put_string ("System recompiled%N");
-						error_window.display;
 					end;
 					restore_cursors;
 				elseif argument = warner then
@@ -99,8 +97,25 @@ feature {NONE}
 				warner.call(Current, l_Initialize);
 			end;
 		end;
-
 	
+    save_workbench_file is
+            -- Save the `.workbench' file.
+        local
+            file: UNIX_FILE
+        do
+            !!file.make (Project_file_name);
+            file.open_write;
+            workbench.basic_store (file);
+            file.close;
+        rescue
+            if not file.is_closed then
+                file.close
+            end;
+            Dialog_window.display 
+				("Error in opening/writing EIFFELGEN/.workbench file ");
+            retry
+        end;
+
 feature 
 
 	symbol: PIXMAP is 
@@ -149,7 +164,7 @@ feature {NONE}
 		do
 				!!file_name.make (50);	
 				file_name.append (Eiffel3_dir_name);
-				file_name.append ("/bench/help/defaults/Ace.default");
+				file_name.append ("/bench/help/defaults/Ace");
 				system_tool.text_window.show_file_content (file_name);
 		end;
 

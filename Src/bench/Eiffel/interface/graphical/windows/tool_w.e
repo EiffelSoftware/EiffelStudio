@@ -198,7 +198,7 @@ feature {NONE}
 
 	screen: SCREEN is deferred end;
 	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is deferred end;
-	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
+	--add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
 	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
 	grab (cursor: SCREEN_CURSOR) is deferred end;
 	ungrab is deferred end;

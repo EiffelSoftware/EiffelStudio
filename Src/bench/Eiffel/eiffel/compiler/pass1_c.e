@@ -22,10 +22,13 @@ feature
 		local
 			ast: CLASS_AS;
 			class_id: INTEGER;
+			temp: STRING
 		do
 				-- Verbose
-			io.error.putstring ("Pass 1 on class ");
-			io.error.putstring (associated_class.class_name);
+			io.error.putstring ("Degree 5: class ");
+				temp := associated_class.class_name.duplicate;
+				temp.to_upper;
+			io.error.putstring (temp);
 			io.error.new_line;
 
 			class_id := associated_class.id;

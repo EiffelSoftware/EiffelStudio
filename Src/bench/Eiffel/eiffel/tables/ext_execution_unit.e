@@ -70,7 +70,41 @@ feature
 	is_valid: BOOLEAN is
 		do
 			Result := Externals.has (external_name) and then
-				old_is_valid
+				IRS_valid
 		end;
 
+	IRS_valid: BOOLEAN is
+			-- Is the executino unit still valid ?
+		local
+			written_type: CL_TYPE_I;
+			written_class: CLASS_C
+		do
+			written_class := System.class_of_id (written_in);
+			if written_class /= Void and then
+				System.class_type_of_id (type_id) /= Void
+			then
+				written_type := class_type.written_type (written_class);
+				if written_type /= Void then
+					if
+						written_type.associated_class_type.is_precompiled
+					then
+						Result := True
+						-- The next line is solely here to grow some extra
+						-- gray hair on the head of whoever is going to read it.
+						-- Seriously: the body id may correspond to a FEATURE_I
+						-- having undergone a "body id change". In that case the
+						-- body id is not valid if the system has an equivalent
+						-- one which is different.
+					elseif (System.onbidt.item (body_id) = body_id) then
+						Result := server_has
+					end;
+				end;
+			end;
+		end;
+
+	server_has: BOOLEAN is
+		do
+			Result := Body_server.has (body_id)
+		end;
+ 
 end

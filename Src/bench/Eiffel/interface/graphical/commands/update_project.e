@@ -15,12 +15,6 @@ creation
 
 	make
 
-feature
-
-	gogogo: BUILD_LIC;
-	gagaga: ISE_LICENCE;
-	gigigi: LIMAN_R;
-	
 feature 
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
@@ -95,7 +89,8 @@ feature {NONE}
 			if not file.is_closed then
 				file.close
 			end;
-			Dialog_window.display ("Error in opening/writing .workbench file ");
+			Dialog_window.display 
+				("Error in opening/writing EIFFELGEN/.workbench file ");
 			retry
 		end;
 
@@ -119,7 +114,7 @@ feature {NONE}
 		do
 				!!file_name.make (50);	
 				file_name.append (Eiffel3_dir_name);
-				file_name.append ("/bench/help/defaults/Ace.default");
+				file_name.append ("/bench/help/defaults/Ace");
 				system_tool.text_window.show_file_content (file_name);
 		end;
 				

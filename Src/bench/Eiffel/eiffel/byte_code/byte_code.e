@@ -540,6 +540,7 @@ feature -- Byte code generation
 					Context.add_local
 						(context.real_type (item.type));
 					item.set_position (position);
+					position := position + 1;
 					old_expressions.forth;
 					i := i + 1;
 				end;

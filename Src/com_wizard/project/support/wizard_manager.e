@@ -87,7 +87,7 @@ feature -- Basic Operations
 					if shared_wizard_environment.use_universal_marshaller then
 						progress_report.set_range (1)
 					else
-						progress_report.set_range (5)
+						progress_report.set_range (6)
 					end
 					message_output.add_title (Current, Idl_compilation_title)
 					compiler.compile_idl
@@ -115,7 +115,13 @@ feature -- Basic Operations
 										compiler.link
 										if not shared_wizard_environment.abort then
 											progress_report.step
-											generate
+											-- Registration
+											message_output.add_title (Current, Ps_registration_title)
+											compiler.register_ps
+											if not shared_wizard_environment.abort then
+												progress_report.step
+												generate
+											end
 										end
 									end
 								end
@@ -526,6 +532,9 @@ feature {NONE} -- Implementation
 
 	Eiffel_compilation_title: STRING is "Compiling Eiffel code"
 			-- Eiffel compilation message.
+
+	Ps_registration_title: STRING is "Registering Proxy/Stub"
+			-- Proxy/Stub Registration
 
 end -- class WIZARD_MANAGER
 

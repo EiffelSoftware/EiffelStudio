@@ -307,7 +307,17 @@ feature -- Basic Operations
 			a_file.close
 			resource_file_generated := True
 		end
-	
+
+	register_ps is
+			-- Register generated proxy stub.
+		local
+			a_string: STRING
+		do
+			a_string := "regsvr32 /s "
+			a_string.append (Shared_wizard_environment.proxy_stub_file_name)
+			launch (a_string, Shared_wizard_environment.destination_folder)
+		end
+
 feature {NONE} -- Implementation
 
 	proxy_stub_file_name: STRING is

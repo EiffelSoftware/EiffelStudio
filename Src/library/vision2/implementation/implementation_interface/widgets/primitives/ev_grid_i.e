@@ -1639,7 +1639,23 @@ feature {NONE} -- Drawing implementation
 			viewport.extend (drawable)
 			extend (horizontal_box)
 			viewport.resize_actions.extend (agent viewport_resized)
-			drawable.pointer_button_press_actions.extend (agent grid_pressed)
+			
+				-- Now connect all of the events to `drawable' which will be used to propagate events to the `interface'.			
+			drawable.expose_actions.extend (agent expose_received (?, ?, ?, ?))
+			drawable.pointer_motion_actions.extend (agent pointer_motion_received (?, ?, ?, ?, ?, ?, ?))
+			drawable.pointer_button_press_actions.extend (agent pointer_button_press_received (?, ?, ?, ?, ?, ?, ?, ?))
+			drawable.pointer_double_press_actions.extend (agent pointer_double_press_received (?, ?, ?, ?, ?, ?, ?, ?))
+			drawable.pointer_button_release_actions.extend (agent pointer_button_release_received (?, ?, ?, ?, ?, ?, ?, ?))
+			drawable.pointer_enter_actions.extend (agent pointer_enter_received)
+			drawable.pointer_leave_actions.extend (agent pointer_leave_received)
+			drawable.key_press_actions.extend (agent key_press_received (?))
+			drawable.key_press_string_actions.extend (agent key_press_string_received (?))
+			drawable.key_release_actions.extend (agent key_release_received (?))
+			drawable.focus_in_actions.extend (agent focus_in_received)
+			drawable.focus_out_actions.extend (agent focus_out_received)
+			drawable.resize_actions.extend (agent resize_received (?, ?, ?, ?))
+
+			
 			drawable.expose_actions.force_extend (agent drawer.partial_redraw)
 			update_scroll_bar_spacer
 			
@@ -1931,13 +1947,13 @@ feature {NONE} -- Drawing implementation
 	resizing_line_border: INTEGER is 4
 		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
 		
-	buffered_drawable_size: INTEGER is 2000
+	buffered_drawable_size: INTEGER is 32000--2000
 		-- Default size of `drawable' used for scrolling purposes.
 		
 feature {NONE} -- Event handling
 
-	grid_pressed (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			--
+	pointer_button_press_received (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- A pointer button press has been received by `drawable' so propagate to the interface.
 		local
 			pointed_item: EV_GRID_ITEM_I
 			a_subrow_indent: INTEGER
@@ -1983,6 +1999,66 @@ feature {NONE} -- Event handling
 					end
 				end
 			end
+		end
+		
+	expose_received (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Called by `expose_actions' of `drawable'.
+		do
+		end
+
+	pointer_motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Called by `pointer_motion_actions' of `drawable'.
+		do
+		end
+
+	pointer_double_press_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Called by `pointer_double_press_actions' of `drawable'.
+		do
+		end
+
+	pointer_button_release_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Called by `pointer_button_release_actions' of `drawable'.
+		do
+		end
+
+	pointer_enter_received is
+			-- Called by `pointer_enter_actions' of `drawable'.
+		do
+		end
+
+	pointer_leave_received is
+			-- Called by `pointer_leave_actions' of `drawable'.
+		do
+		end
+
+	key_press_received (a_key: EV_KEY) is
+			-- Called by `key_press_actions' of `drawable'.
+		do
+		end
+
+	key_press_string_received (a_keystring: STRING) is
+			-- Called by `key_press_string_actions' of `drawable'.
+		do
+		end
+
+	key_release_received (a_key: EV_KEY) is
+			-- Called by `key_release_actions' of `drawable'.
+		do
+		end
+
+	focus_in_received is
+			-- Called by `focus_in_actions' of `drawable'.
+		do
+		end
+
+	focus_out_received is
+			-- Called by `focus_out_actions' of `drawable'.
+		do
+		end
+
+	resize_received (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Called by `resize_actions' of `drawable'.
+		do
 		end
 
 feature {NONE} -- Implementation

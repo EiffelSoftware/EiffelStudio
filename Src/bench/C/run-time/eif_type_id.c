@@ -378,6 +378,14 @@ rt_private int32 sk_type (int32 cecil_id)
 		return SK_WCHAR;
 	} else if (cecil_id == egc_bool_dtype) {
 		return SK_BOOL;
+	} else if (cecil_id == egc_uint8_dtype) {
+		return SK_UINT8;
+	} else if (cecil_id == egc_uint16_dtype) {
+		return SK_UINT16;
+	} else if (cecil_id == egc_uint32_dtype) {
+		return SK_UINT32;
+	} else if (cecil_id == egc_uint64_dtype) {
+		return SK_UINT64;
 	} else if (cecil_id == egc_int8_dtype) {
 		return SK_INT8;
 	} else if (cecil_id == egc_int16_dtype) {

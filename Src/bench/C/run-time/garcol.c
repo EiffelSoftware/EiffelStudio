@@ -1832,49 +1832,24 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 			int i; struct item *lst = last;
 			for (i = 0; i < roots; i++, lst++) {
 				switch (lst->type & SK_HEAD) {
-				case SK_EXP:
-					printf("\t%d: expanded 0x%lx\n", i, lst->it_ref);
-					break;
-				case SK_REF:
-					printf("\t%d: 0x%lx\n", i, lst->it_ref);
-					break;
-				case SK_BOOL:
-					printf("\t%d: bool %s\n", i,
-						lst->it_char ? "true" : "false");
-					break;
-				case SK_CHAR:
-					printf("\t%d: char %d\n", i, lst->it_char);
-					break;
-				case SK_WCHAR:
-					printf("\t%d: wide char %lu\n", i, lst->it_wchar);
-					break;
-				case SK_INT8:
-					printf("\t%d: int8 %ld\n", i, lst->it_int8);
-					break;
-				case SK_INT16:
-					printf("\t%d: int16 %ld\n", i, lst->it_int16);
-					break;
-				case SK_INT32:
-					printf("\t%d: int32 %ld\n", i, lst->it_int32);
-					break;
-				case SK_INT64:
-					printf("\t%d: int64 %ld\n", i, lst->it_int64);
-					break;
-				case SK_REAL32:
-					printf("\t%d: real32 %f\n", i, lst->it_real32);
-					break;
-				case SK_REAL64:
-					printf("\t%d: real64 %lf\n", i, lst->it_real64);
-					break;
-				case SK_BIT:
-					printf("\t%d: BITS\n", i);
-					break;
-				case SK_POINTER:
-					printf("\t%d: pointer 0x%lx\n", i, lst->it_ref);
-					break;
-				case SK_VOID:
-					printf("\t%d: void\n", i);
-					break;
+				case SK_EXP: printf("\t%d: expanded 0x%lx\n", i, lst->it_ref); break;
+				case SK_REF: printf("\t%d: 0x%lx\n", i, lst->it_ref); break;
+				case SK_BOOL: printf("\t%d: bool %s\n", i, lst->it_char ? "true" : "false"); break;
+				case SK_CHAR: printf("\t%d: char %d\n", i, lst->it_char); break;
+				case SK_WCHAR: printf("\t%d: wide char %lu\n", i, lst->it_wchar); break;
+				case SK_UINT8: printf("\t%d: uint8 %ld\n", i, lst->it_uint8); break;
+				case SK_UINT16: printf("\t%d: uint16 %ld\n", i, lst->it_uint16); break;
+				case SK_UINT32: printf("\t%d: uint32 %ld\n", i, lst->it_uint32); break;
+				case SK_UINT64: printf("\t%d: uint64 %ld\n", i, lst->it_uint64); break;
+				case SK_INT8: printf("\t%d: int8 %ld\n", i, lst->it_int8); break;
+				case SK_INT16: printf("\t%d: int16 %ld\n", i, lst->it_int16); break;
+				case SK_INT32: printf("\t%d: int32 %ld\n", i, lst->it_int32); break;
+				case SK_INT64: printf("\t%d: int64 %ld\n", i, lst->it_int64); break;
+				case SK_REAL32: printf("\t%d: real32 %f\n", i, lst->it_real32); break;
+				case SK_REAL64: printf("\t%d: real64 %lf\n", i, lst->it_real64); break;
+				case SK_BIT: printf("\t%d: BITS\n", i); break;
+				case SK_POINTER: printf("\t%d: pointer 0x%lx\n", i, lst->it_ref); break;
+				case SK_VOID: printf("\t%d: void\n", i); break;
 				default:
 					printf("\t%d: UNKNOWN TYPE 0x%lx\n", i, lst->type);
 				}
@@ -1911,49 +1886,24 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 			int i; struct item *lst = last;
 			for (i = 0; i < roots; i++, lst++) {
 				switch (lst->type & SK_HEAD) {
-				case SK_EXP:
-					printf("\t%d: expanded 0x%lx\n", i, lst->it_ref);
-					break;
-				case SK_REF:
-					printf("\t%d: 0x%lx\n", i, lst->it_ref);
-					break;
-				case SK_BOOL:
-					printf("\t%d: bool %s\n", i,
-						lst->it_char ? "true" : "false");
-					break;
-				case SK_CHAR:
-					printf("\t%d: char %d\n", i, lst->it_char);
-					break;
-				case SK_WCHAR:
-					printf("\t%d: wide char %lu\n", i, lst->it_wchar);
-					break;
-				case SK_INT8:
-					printf("\t%d: int %ld\n", i, lst->it_int8);
-					break;
-				case SK_INT16:
-					printf("\t%d: int %ld\n", i, lst->it_int16);
-					break;
-				case SK_INT32:
-					printf("\t%d: int %ld\n", i, lst->it_int32);
-					break;
-				case SK_INT64:
-					printf("\t%d: int %ld\n", i, lst->it_int64);
-					break;
-				case SK_REAL32:
-					printf("\t%d: real32 %f\n", i, lst->it_real32);
-					break;
-				case SK_REAL64:
-					printf("\t%d: real64 %lf\n", i, lst->it_real64);
-					break;
-				case SK_BIT:
-					printf("\t%d: BITS\n", i);
-					break;
-				case SK_POINTER:
-					printf("\t%d: pointer 0x%lx\n", i, lst->it_ref);
-					break;
-				case SK_VOID:
-					printf("\t%d: void\n", i);
-					break;
+				case SK_EXP: printf("\t%d: expanded 0x%lx\n", i, lst->it_ref); break;
+				case SK_REF: printf("\t%d: 0x%lx\n", i, lst->it_ref); break;
+				case SK_BOOL: printf("\t%d: bool %s\n", i, lst->it_char ? "true" : "false"); break;
+				case SK_CHAR: printf("\t%d: char %d\n", i, lst->it_char); break;
+				case SK_WCHAR: printf("\t%d: wide char %lu\n", i, lst->it_wchar); break;
+				case SK_UINT8: printf("\t%d: uint8 %ld\n", i, lst->it_uint8); break;
+				case SK_UINT16: printf("\t%d: uint16 %ld\n", i, lst->it_uint16); break;
+				case SK_UINT32: printf("\t%d: uint32 %ld\n", i, lst->it_uint32); break;
+				case SK_UINT64: printf("\t%d: uint64 %ld\n", i, lst->it_uint64); break;
+				case SK_INT8: printf("\t%d: int %ld\n", i, lst->it_int8); break;
+				case SK_INT16: printf("\t%d: int %ld\n", i, lst->it_int16); break;
+				case SK_INT32: printf("\t%d: int %ld\n", i, lst->it_int32); break;
+				case SK_INT64: printf("\t%d: int %ld\n", i, lst->it_int64); break;
+				case SK_REAL32: printf("\t%d: real32 %f\n", i, lst->it_real32); break;
+				case SK_REAL64: printf("\t%d: real64 %lf\n", i, lst->it_real64); break;
+				case SK_BIT: printf("\t%d: BITS\n", i); break;
+				case SK_POINTER: printf("\t%d: pointer 0x%lx\n", i, lst->it_ref); break;
+				case SK_VOID: printf("\t%d: void\n", i); break;
 				default:
 					printf("\t%d: UNKNOWN TYPE 0x%lx\n", i, lst->type);
 				}

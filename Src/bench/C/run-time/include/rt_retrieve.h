@@ -235,6 +235,10 @@ typedef union {
 	EIF_BOOLEAN		vbool;
 	EIF_CHARACTER	vchar;
 	EIF_WIDE_CHAR	vwchar;
+	EIF_NATURAL_8	vuint8;
+	EIF_NATURAL_16	vuint16;
+	EIF_NATURAL_32	vuint32;
+	EIF_NATURAL_64	vuint64;
 	EIF_INTEGER_8	vint8;
 	EIF_INTEGER_16	vint16;
 	EIF_INTEGER_32	vint32;

@@ -73,6 +73,38 @@ rt_public char *ei_field (long i, EIF_REFERENCE object)
 			*(EIF_WIDE_CHAR *) new_obj = val;
 			return new_obj;
 		}
+	case SK_UINT8:
+		{
+			EIF_NATURAL_8 val = *(EIF_NATURAL_8 *) o_ref;
+
+			new_obj = RTLN(egc_uint8_ref_dtype);
+			*(EIF_NATURAL_8 *) new_obj = val;
+			return new_obj;
+		}
+	case SK_UINT16:
+		{
+			EIF_NATURAL_16 val = *(EIF_NATURAL_16 *) o_ref;
+
+			new_obj = RTLN(egc_uint16_ref_dtype);
+			*(EIF_NATURAL_16 *) new_obj = val;
+			return new_obj;
+		}
+	case SK_UINT32:
+		{
+			EIF_NATURAL_32 val = *(EIF_NATURAL_32 *) o_ref;
+
+			new_obj = RTLN(egc_uint32_ref_dtype);
+			*(EIF_NATURAL_32 *) new_obj = val;
+			return new_obj;
+		}
+	case SK_UINT64:
+		{
+			EIF_NATURAL_64 val = *(EIF_NATURAL_64 *) o_ref;
+
+			new_obj = RTLN(egc_uint64_ref_dtype);
+			*(EIF_NATURAL_64 *) new_obj = val;
+			return new_obj;
+		}
 	case SK_INT8:
 		{
 			EIF_INTEGER_8 val = *(EIF_INTEGER_8 *) o_ref;
@@ -159,6 +191,10 @@ rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)
 	case SK_CHAR:	return EIF_CHARACTER_TYPE;
 	case SK_WCHAR:	return EIF_WIDE_CHAR_TYPE;
 	case SK_BOOL:	return EIF_BOOLEAN_TYPE;
+	case SK_UINT8:	return EIF_NATURAL_8_TYPE;
+	case SK_UINT16:	return EIF_NATURAL_16_TYPE;
+	case SK_UINT32:	return EIF_NATURAL_32_TYPE;
+	case SK_UINT64:	return EIF_NATURAL_64_TYPE;
 	case SK_INT8:	return EIF_INTEGER_8_TYPE;
 	case SK_INT16:	return EIF_INTEGER_16_TYPE;
 	case SK_INT32:	return EIF_INTEGER_32_TYPE;

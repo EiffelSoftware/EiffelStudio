@@ -569,6 +569,22 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 			if (*(EIF_WIDE_CHAR *) t_ref != *(EIF_WIDE_CHAR *) s_ref)
 				return EIF_FALSE;
 			break;
+		case SK_UINT8:
+			if (*(EIF_NATURAL_8 *) t_ref != *(EIF_NATURAL_8 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_UINT16:
+			if (*(EIF_NATURAL_16 *) t_ref != *(EIF_NATURAL_16 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_UINT32:
+			if (*(EIF_NATURAL_32 *) t_ref != *(EIF_NATURAL_32 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_UINT64:
+			if (*(EIF_NATURAL_64 *) t_ref != *(EIF_NATURAL_64 *) s_ref)
+				return EIF_FALSE;
+			break;
 		case SK_INT8:
 			if (*(EIF_INTEGER_8 *) t_ref != *(EIF_INTEGER_8 *) s_ref)
 				return EIF_FALSE;
@@ -682,6 +698,22 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 			break;
 		case SK_WCHAR:
 			if (*(EIF_WIDE_CHAR *) t_ref != *(EIF_WIDE_CHAR *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_UINT8:
+			if (*(EIF_NATURAL_8 *) t_ref != *(EIF_NATURAL_8 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_UINT16:
+			if (*(EIF_NATURAL_16 *) t_ref != *(EIF_NATURAL_16 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_UINT32:
+			if (*(EIF_NATURAL_32 *) t_ref != *(EIF_NATURAL_32 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_UINT64:
+			if (*(EIF_NATURAL_64 *) t_ref != *(EIF_NATURAL_64 *) s_ref)
 				return EIF_FALSE;
 			break;
 		case SK_INT8:

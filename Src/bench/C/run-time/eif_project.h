@@ -59,6 +59,10 @@ extern "C" {
 	RT_LNK uint32 egc_sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
 	RT_LNK uint32 egc_sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
 	RT_LNK uint32 egc_sp_wchar;		/* Dynamic type of SPECIAL[WIDE_CHARACTER] */
+	RT_LNK uint32 egc_sp_uint8;			/* Dynamic type of SPECIAL[NATURAL_8] */
+	RT_LNK uint32 egc_sp_uint16;		/* Dynamic type of SPECIAL[NATURAL_16] */
+	RT_LNK uint32 egc_sp_uint32;		/* Dynamic type of SPECIAL[NATURAL_32] */
+	RT_LNK uint32 egc_sp_uint64;		/* Dynamic type of SPECIAL[NATURAL_64] */
 	RT_LNK uint32 egc_sp_int8;			/* Dynamic type of SPECIAL[INTEGER_8] */
 	RT_LNK uint32 egc_sp_int16;		/* Dynamic type of SPECIAL[INTEGER_16] */
 	RT_LNK uint32 egc_sp_int32;		/* Dynamic type of SPECIAL[INTEGER_32] */
@@ -68,6 +72,10 @@ extern "C" {
 	RT_LNK uint32 egc_sp_pointer;		/* Dynamic type of SPECIAL[POINTER] */
 	RT_LNK uint32 egc_sp_ref;			/* Dynamic type of SPECIAL[ANY] */
 
+	RT_LNK int egc_uint8_ref_dtype;	/* Dynamic type of NATURAL_8_REF */
+	RT_LNK int egc_uint16_ref_dtype;	/* Dynamic type of NATURAL_16_REF */
+	RT_LNK int egc_uint32_ref_dtype;	/* Dynamic type of NATURAL_32_REF */
+	RT_LNK int egc_uint64_ref_dtype;	/* Dynamic type of NATURAL_64_REF */
 	RT_LNK int egc_int8_ref_dtype;	/* Dynamic type of INTEGER_8_REF */
 	RT_LNK int egc_int16_ref_dtype;	/* Dynamic type of INTEGER_16_REF */
 	RT_LNK int egc_int32_ref_dtype;	/* Dynamic type of INTEGER_32_REF */
@@ -79,6 +87,10 @@ extern "C" {
 	RT_LNK int egc_wchar_ref_dtype;	/* Dynamic type of WIDE_CHARACTER_REF */
 	RT_LNK int egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
 	
+	RT_LNK int egc_uint8_dtype;	/* Dynamic type of NATURAL_8 */
+	RT_LNK int egc_uint16_dtype;	/* Dynamic type of NATURAL_16 */
+	RT_LNK int egc_uint32_dtype;	/* Dynamic type of NATURAL_32 */
+	RT_LNK int egc_uint64_dtype;	/* Dynamic type of NATURAL_64 */
 	RT_LNK int egc_int8_dtype;	/* Dynamic type of INTEGER_8 */
 	RT_LNK int egc_int16_dtype;	/* Dynamic type of INTEGER_16 */
 	RT_LNK int egc_int32_dtype;	/* Dynamic type of INTEGER_32 */

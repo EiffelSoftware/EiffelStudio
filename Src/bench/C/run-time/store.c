@@ -1160,31 +1160,22 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 		for (; num_attrib > 0;) {
 			attrib_offset = get_alpha_offset(o_type, --num_attrib);
 			switch (*(System(o_type).cn_types + num_attrib) & SK_HEAD) {
-				case SK_INT8:
-					buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_8));
-					break;
-				case SK_INT16:
-					buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_16));
-					break;
-				case SK_INT32:
-					buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_32));
-					break;
-				case SK_INT64:
-					buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_64));
-					break;
-				case SK_WCHAR:
-					buffer_write(object + attrib_offset, sizeof(EIF_WIDE_CHAR));
-					break;
+				case SK_UINT8: buffer_write(object + attrib_offset, sizeof(EIF_NATURAL_8)); break;
+				case SK_UINT16: buffer_write(object + attrib_offset, sizeof(EIF_NATURAL_16)); break;
+				case SK_UINT32: buffer_write(object + attrib_offset, sizeof(EIF_NATURAL_32)); break;
+				case SK_UINT64: buffer_write(object + attrib_offset, sizeof(EIF_NATURAL_64)); break;
+				case SK_INT8: buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_8)); break;
+				case SK_INT16: buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_16)); break;
+				case SK_INT32: buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_32)); break;
+				case SK_INT64: buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_64)); break;
+				case SK_WCHAR: buffer_write(object + attrib_offset, sizeof(EIF_WIDE_CHAR)); break;
 				case SK_BOOL:
-				case SK_CHAR:
-					buffer_write(object + attrib_offset, sizeof(EIF_CHARACTER));
-					break;
-				case SK_REAL32:
-					buffer_write(object + attrib_offset, sizeof(EIF_REAL_32));
-					break;
-				case SK_REAL64:
-					buffer_write(object + attrib_offset, sizeof(EIF_REAL_64));
-					break;
+				case SK_CHAR: buffer_write(object + attrib_offset, sizeof(EIF_CHARACTER)); break;
+				case SK_REAL32: buffer_write(object + attrib_offset, sizeof(EIF_REAL_32)); break;
+				case SK_REAL64: buffer_write(object + attrib_offset, sizeof(EIF_REAL_64)); break;
+				case SK_EXP: gst_write (object + attrib_offset, HEADER(object + attrib_offset)->ov_flags); break;
+				case SK_REF:
+				case SK_POINTER: buffer_write(object + attrib_offset, sizeof(EIF_REFERENCE)); break;
 				case SK_BIT:
 					{
 						/* int q;*/ /* %%ss removed unused */
@@ -1196,13 +1187,6 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 						buffer_write((char *)(&(bptr->b_length)), sizeof(uint32));
 						buffer_write((char *) (bptr->b_value), bptr->b_length);
 					}
-					break;
-				case SK_EXP:
-					gst_write (object + attrib_offset, HEADER(object + attrib_offset)->ov_flags);
-					break;
-				case SK_REF:
-				case SK_POINTER:
-					buffer_write(object + attrib_offset, sizeof(EIF_REFERENCE));
 					break;
 				default:
 					eise_io("General store: not an Eiffel object.");
@@ -1245,6 +1229,10 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 	
 				if (!(flags & EO_REF)) {		/* Special of simple types */
 					switch (dgen & SK_HEAD) {
+						case SK_UINT8: buffer_write(object, count*sizeof(EIF_NATURAL_8)); break;
+						case SK_UINT16: buffer_write(object, count*sizeof(EIF_NATURAL_16)); break;
+						case SK_UINT32: buffer_write(object, count*sizeof(EIF_NATURAL_32)); break;
+						case SK_UINT64: buffer_write(object, count*sizeof(EIF_NATURAL_64)); break;
 						case SK_INT8: buffer_write(object, count*sizeof(EIF_INTEGER_8)); break;
 						case SK_INT16: buffer_write(object, count*sizeof(EIF_INTEGER_16)); break;
 						case SK_INT32: buffer_write(object, count*sizeof(EIF_INTEGER_32)); break;
@@ -1371,31 +1359,25 @@ rt_private void object_write(char * object, uint32 fflags)
 		for (; num_attrib > 0;) {
 			attrib_offset = get_offset(o_type, --num_attrib);
 			switch (*(System(o_type).cn_types + num_attrib) & SK_HEAD) {
-				case SK_INT8:
-					widr_multi_int8 ((EIF_INTEGER_8 *)(object + attrib_offset), 1);
-					break;
-				case SK_INT16:
-					widr_multi_int16 ((EIF_INTEGER_16 *)(object + attrib_offset), 1);
-					break;
-				case SK_INT32:
-					widr_multi_int32 ((EIF_INTEGER_32 *)(object + attrib_offset), 1);
-					break;
-				case SK_INT64:
-					widr_multi_int64 ((EIF_INTEGER_64 *)(object + attrib_offset), 1);
-					break;
+					/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
+					 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
+					 * unsigned SK_UINTXX too. */
+				case SK_UINT8: widr_multi_int8 ((EIF_NATURAL_8 *)(object + attrib_offset), 1); break;
+				case SK_UINT16: widr_multi_int16 ((EIF_NATURAL_16 *)(object + attrib_offset), 1); break;
+				case SK_UINT32: widr_multi_int32 ((EIF_NATURAL_32 *)(object + attrib_offset), 1); break;
+				case SK_UINT64: widr_multi_int64 ((EIF_NATURAL_64 *)(object + attrib_offset), 1); break;
+				case SK_INT8: widr_multi_int8 ((EIF_INTEGER_8 *)(object + attrib_offset), 1); break;
+				case SK_INT16: widr_multi_int16 ((EIF_INTEGER_16 *)(object + attrib_offset), 1); break;
+				case SK_INT32: widr_multi_int32 ((EIF_INTEGER_32 *)(object + attrib_offset), 1); break;
+				case SK_INT64: widr_multi_int64 ((EIF_INTEGER_64 *)(object + attrib_offset), 1); break;
 				case SK_BOOL:
-				case SK_CHAR:
-					widr_multi_char ((EIF_CHARACTER *) (object + attrib_offset), 1);
-					break;
-				case SK_WCHAR:
-					widr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1);
-					break;
-				case SK_REAL32:
-					widr_multi_float ((EIF_REAL_32 *)(object + attrib_offset), 1);
-					break;
-				case SK_REAL64:
-					widr_multi_double ((EIF_REAL_64 *)(object + attrib_offset), 1);
-					break;
+				case SK_CHAR: widr_multi_char ((EIF_CHARACTER *) (object + attrib_offset), 1); break;
+				case SK_WCHAR: widr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1); break;
+				case SK_REAL32: widr_multi_float ((EIF_REAL_32 *)(object + attrib_offset), 1); break;
+				case SK_REAL64: widr_multi_double ((EIF_REAL_64 *)(object + attrib_offset), 1); break;
+				case SK_EXP: ist_write (object + attrib_offset, HEADER(object + attrib_offset)->ov_flags); break;
+				case SK_REF:
+				case SK_POINTER: widr_multi_any (object + attrib_offset, 1); break;
 				case SK_BIT:
 					{
 						struct bit *bptr = (struct bit *)(object + attrib_offset);
@@ -1417,18 +1399,6 @@ rt_private void object_write(char * object, uint32 fflags)
 					}
 
 					break;
-				case SK_EXP:
-					ist_write (object + attrib_offset, HEADER(object + attrib_offset)->ov_flags);
-					break;
-				case SK_REF:
-				case SK_POINTER:
-#if DEBUG &1
-					printf (" %lx", *((long *)(object + attrib_offset)));
-#endif
-					widr_multi_any (object + attrib_offset, 1);
-
-					break;
-
 				default:
 					eise_io("Basic store: not an Eiffel object.");
 			}
@@ -1470,6 +1440,13 @@ rt_private void object_write(char * object, uint32 fflags)
 		
 				if (!(flags & EO_REF)) {		/* Special of simple types */
 					switch (dgen & SK_HEAD) {
+							/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
+							 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
+							 * unsigned SK_UINTXX too. */
+						case SK_UINT8: widr_multi_int8 ((EIF_NATURAL_8 *)object, count); break;
+						case SK_UINT16: widr_multi_int16 ((EIF_NATURAL_16 *)object, count); break;
+						case SK_UINT32: widr_multi_int32 ((EIF_NATURAL_32 *)object, count); break;
+						case SK_UINT64: widr_multi_int64 ((EIF_NATURAL_64 *)object, count); break;
 						case SK_INT8: widr_multi_int8 (((EIF_INTEGER_8 *)object), count); break;
 						case SK_INT16: widr_multi_int16 (((EIF_INTEGER_16 *)object), count); break;
 						case SK_INT32: widr_multi_int32 (((EIF_INTEGER_32 *)object), count); break;

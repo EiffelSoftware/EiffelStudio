@@ -93,6 +93,20 @@ feature -- Conversion
 			Result = cwel_pointer_to_integer (item)
 		end
 
+feature -- Removal
+
+	dispose is
+			-- Destroy the inner structure of `Current'.
+			--
+			-- This function should be called by the GC when the
+			-- object is collected or by the user if `Current' is
+			-- no more usefull. 
+		do
+			if exists and then not shared then
+				destroy_item
+			end
+		end
+
 feature {NONE} -- Removal
 
 	destroy_item is
@@ -103,15 +117,6 @@ feature {NONE} -- Removal
 		require
 			exists: exists
 		deferred
-		end
-
-	dispose is
-			-- Ensure `item' is destroyed when
-			-- garbage collected by calling `destroy_item'
-		do
-			if exists and then not shared then
-				destroy_item
-			end
 		end
 
 feature {NONE} -- Externals

@@ -94,15 +94,7 @@ typedef struct TLoadPixmapCtx  LoadPixmapCtx;
 void c_ev_load_pixmap(
 		void *pCurrObject, 
 		char *pszFileName, 
-		void (*LoadPixmapUpdateObject)(
-				void*, 
-				unsigned int, 
-				unsigned int, 
-				unsigned int, 
-				unsigned int, 
-				void*, 
-				void*
-			)
+		void *fnptr
 		);
 
 unsigned char	c_ev_find_file_format(BufferedFile *);
@@ -586,18 +578,19 @@ void c_ev_save_png (char image[], char *path, int array_width, int array_height,
 void c_ev_load_pixmap(
 		void *pCurrObject, 
 		char *pszFileName, 
-		void (*LoadPixmapUpdateObject)(
-				void*,
-				unsigned int,
-				unsigned int,
-				unsigned int,
-				unsigned int,
-				void*,
-				void*
-			)
+		void *fnptr
 		)
 	{
 	FILE *pFile;
+	void (*LoadPixmapUpdateObject)(
+			void*,
+			unsigned int,
+			unsigned int,
+			unsigned int,
+			unsigned int,
+			void*,
+			void*
+		);
 	unsigned char*	pBuffer;
 	BufferedFile	stBufFile;
 	unsigned char	nFileFormat; /* File format found: one of FILEFORMAT_XXXX */
@@ -605,6 +598,16 @@ void c_ev_load_pixmap(
 	unsigned char	bFileToBeDeleted = FALSE;
 	int				bFreeFileName = FALSE;
 	
+	LoadPixmapUpdateObject = (void (*) (
+			void*,
+			unsigned int,
+			unsigned int,
+			unsigned int,
+			unsigned int,
+			void*,
+			void*
+		)) fnptr;
+
 	if (pszFileName == NULL)
 		{
 		/* Load the default Vision2 icon */

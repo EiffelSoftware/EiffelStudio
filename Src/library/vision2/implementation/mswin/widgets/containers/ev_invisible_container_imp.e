@@ -26,7 +26,8 @@ inherit
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			set_parent as wel_set_parent,
+			-- Make `flag' the new expand option.
 			destroy as wel_destroy
 		undefine
 			set_width,
@@ -128,7 +129,7 @@ feature {NONE} -- Implementation : WEL features
 			-- By default there is no background
 		do
 			if background_color /= Void then
-				!! Result.make_solid (background_color)
+				!! Result.make_solid (background_color_imp)
 			end
 		end
 

@@ -59,7 +59,9 @@ feature
 		do
 			l_x_files := x_files.linear_representation
 			l_directories := directories.linear_representation
+debug ("OUTPUT")
 			print("x files%N")
+end
 			if not l_x_files.empty then 
 				l_big_file_name := clone(name)
 				l_big_file_name.append("\big_file")
@@ -91,22 +93,33 @@ feature
 						l_makefile_sh.put_string("OLD")
 					end
 					l_makefile_sh.put_string(makefile_sh.last_string)
+debug ("OUTPUT")
 					print (makefile_sh.last_string)
 					io.new_line
+end
 					l_makefile_sh.put_string("%N")
 				end
 				l_makefile_sh.close
 				makefile_sh.close
 			end
+debug ("OUTPUT")
 			print("Directories%N")
-			from l_directories.start until l_directories.off
+end
+			from
+				l_directories.start
+			until
+				l_directories.off
 			loop
+debug ("OUTPUT")
 				print (l_directories.item.name);io.new_line
+end
 				l_directories.item.convert
 				l_directories.forth
 			end
+debug ("OUTPUT")
 			print("Makefile SH%N")
 			print (makefile_sh.name);io.new_line
+end
 		end
 
 	x_files : LINKED_LIST[X_FILE]

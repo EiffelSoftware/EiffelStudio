@@ -106,6 +106,7 @@ feature {CASE_CLUSTER_INFO}
 				s_class_data.set_color (fi.last_string)
 				fi.read_line
 				s_class_data.set_hidden ( fi.last_string)
+				add_handles_to_links(fi)
 				fi.close
 			end
 			if error2 then
@@ -122,5 +123,104 @@ feature {CASE_CLUSTER_INFO}
 		end
 		retry
 	end
+
+	add_handles_to_links(fi: PLAIN_TEXT_FILE ) is
+		local
+			err : BOOLEAN
+			li : LINKED_LIST [ S_HANDLE_REVERSE ]
+			st,st1,st2 : STRING
+			han : S_HANDLE_REVERSE
+			i,x,y : INTEGER
+			s_link : S_RELATION_DATA
+			cla : CLASS_I
+			li_cla : LINKED_LIST [ CLASS_I ]
+			doo_nothing : BOOLEAN
+		do
+			if not err then
+				from
+				until
+					fi.end_of_file
+				loop
+					fi.read_line
+					!! st.make(20)
+					st.append ( fi.last_string)
+					li_cla := universe.classes_with_name ( st )
+					if li_cla /= Void and then li_cla.count >0 then
+					cla := li_cla.first
+					doo_nothing := check_belong_to_same_cluster ( cla) 
+						s_link := search_link ( cla.compiled_class.id.id )
+						if s_link/= Void then
+							-- we found it !!
+							from
+								!! li.make 
+								fi.read_line
+								!! st.make(20)
+								st.append(fi.last_string)
+								i:=0
+							until
+								i=st.to_integer or i > 10
+							loop
+								fi.read_line
+								!! st1.make ( 3 )
+									st1.append ( fi.last_string)
+								x := st1.to_integer
+								fi.read_line
+								!! st2.make ( 3)
+								st2.append ( fi.last_string)
+								y := st2.to_integer
+								!! han.make ( x,y )
+								li.extend ( han )
+								i := i+1
+							end
+							if not doo_nothing then
+								s_link.create_handles
+								s_link.handles_reverse.set_list ( li )
+							end
+						end
+					end
+				end
+			end
+		end
+
+check_belong_to_same_cluster( cla : CLASS_I): BOOLEAN is
+		do
+			if cla.cluster.cluster_name.is_equal(classc.id.associated_class.cluster.cluster_name ) then
+				Result := FALSE
+			else
+				Result := TRUE
+			end
+		end
+
+search_link ( id : INTEGER ): S_RELATION_DATA  is
+	local
+		found : BOOLEAN
+	do
+		if s_class_data.client_links/= Void then
+		from
+			s_class_data.client_links.start
+		until
+			found or s_class_data.client_links.after
+		loop
+			if s_class_data.client_links.item.supplier=id then
+				REsult := s_class_data.client_links.item
+				found := TRUE
+			end
+			s_class_data.client_links.forth
+		end
+		end
+		if s_class_data.heir_links/= Void then
+		from
+			s_class_data.heir_links.start
+		until
+			found or s_class_data.heir_links.after
+		loop
+			if s_class_data.heir_links.item.t_o=id then
+				Result := s_class_data.heir_links.item
+				found := TRUE
+			end
+			s_class_data.heir_links.forth
+		end
+		end
+ 	end
 
 end

@@ -63,7 +63,7 @@ feature {NONE} -- Recording information for eiffelcase
 									c_l.start
 								until
 									c_l.after or else 
-									c_l.item.supplier = sup_class_id.id
+					c_l.item.supplier = sup_class_id.id
 								loop
 									c_l.forth
 								end;
@@ -82,7 +82,7 @@ feature {NONE} -- Recording information for eiffelcase
 					features.forth
 				end;
 				record_remaining_suppliers (c_l, s_class_data.public_features, False);
-				record_remaining_suppliers (c_l, s_class_data.private_features, True);
+				record_remaining_suppliers (c_l, s_class_data.private_features, FALSE);
 				if not c_l.empty then
 					s_class_data.set_client_links (c_l);
 				end;

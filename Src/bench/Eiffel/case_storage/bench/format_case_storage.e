@@ -138,6 +138,89 @@ feature -- Execution
 			end;
 		end
 
+
+feature -- genericity
+		-- we want to avoid the case : A=>B[INTEGER] is lost !! 
+		-- with es4, b{STRIng] and b[INTEGER] are two distinct id ...
+		
+		deal_with_genericity (s : S_SYSTEM_DATA ) is
+		local
+			cl : S_CLUSTER_DATA 	
+		do
+			--cl := s.root_cluster
+			--if cl/= Void then
+			--	generic_cluster ( cl )	
+			--end	
+		end	
+
+		generic_cluster ( cl : S_CLUSTER_DATA ) is
+		do
+			if cl.clusters/= Void and then cl.clusters.count>0 then
+				from
+					cl.clusters.start
+				until
+					cl.clusters.after
+				loop
+					generic_cluster ( cl.clusters.item )
+					cl.clusters.forth
+				end
+			end
+			if cl.classes/= Void and then cl.classes.count>0 then
+				from
+					cl.classes.start
+				until
+					cl.classes.after
+				loop
+					generic_class ( cl.classes.item )
+					cl.classes.forth
+				end
+			end
+		end
+
+		generic_class ( cl : S_CLASS_DATA ) is
+		local
+			fc : ARRAYED_LIST [ S_FEATURE_CLAUSE ]
+			fcl : S_FEATURE_CLAUSE
+			feat : S_FEATURE_DATA
+			st1,st2 : STRING	
+			ind : INTEGER	
+		do 
+			if cl/= Void and then cl.disk_content/= Void and then
+				cl.disk_content.feature_clause_list/= Void then
+				fc := cl.disk_content.feature_clause_list
+				from
+					fc.start
+				until
+					fc.after
+				loop
+					if fc.item/= Void and then fc.item.features/= VOid and then
+						fc.item.features.count>0 then
+						fcl := fc.item		
+						from
+							fcl.features.start
+						until
+							fcl.features.after
+						loop
+							if fcl.features.item/= Void and then
+								fcl.features.item.result_type/= Void and then
+								fcl.features.item.result_type.type/= Void then
+								feat := fcl.features.item
+								st1 := feat.result_type.type.string_value --text
+								ind := st1.index_of ('[',1 )
+								if ind>0 then
+									-- ALL THIS WORK FOR THIS !!!
+									-- Let's research now if we can not establish a link ...
+									io.put_string(feat.name)
+								end
+							end
+							fcl.features.forth
+						end
+					end
+					fc.forth
+				end		
+			end
+		end
+
 feature -- calculus
 
 	count_classes: INTEGER is
@@ -225,6 +308,8 @@ feature {NONE} -- Implementation
 			if generate_all then
 				update_eiffel_project;
 			end
+			Reverse_engineering_window.put_case_message("Process generic linkables")
+			deal_with_genericity ( s_system_data )	
 			Reverse_engineering_window.finish_degree_output
 		rescue
 			if Case_file_server.had_io_problems then

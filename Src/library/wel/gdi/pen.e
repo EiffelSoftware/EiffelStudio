@@ -10,6 +10,12 @@ class
 inherit
 	WEL_GDI_ANY
 
+	WEL_PS_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_pen_style_constant
+		end
+
 creation
 	make,
 	make_indirect,
@@ -21,6 +27,7 @@ feature {NONE} -- Initialization
 			-- Make a pen using `a_style', `a_width' and `a_color'.
 			-- See class WEL_PS_CONSTANTS for `a_style' values.
 		require
+			valid_pen_style_constant: valid_pen_style_constant (a_style)
 			positive_width: a_width >= 0
 			color_not_void: a_color /= Void
 		do
@@ -30,6 +37,15 @@ feature {NONE} -- Initialization
 			style_set: style = a_style
 			width_set: width = a_width
 			color_set: color.item = a_color.item
+		end
+
+	make_solid (a_width: INTEGER; a_color: WEL_COLOR_REF) is
+			-- Make a solid pen using `a_width' and `a_color'.
+		require
+			positive_width: a_width >= 0
+			a_color_not_void: a_color /= Void
+		do
+			item := cwin_create_pen (Ps_solid, a_width, a_color.item)
 		end
 
 	make_indirect (a_log_pen: WEL_LOG_PEN) is

@@ -15,12 +15,20 @@ inherit
 
 	EV_VIEWPORT_IMP
 		redefine
+			show_horizontal_scroll_bar,
+			show_vertical_scroll_bar,
+			hide_horizontal_scroll_bar,
+			hide_vertical_scroll_bar,
 			interface,	
 			make,
 			initialize,
 			default_style,
 			default_ex_style,
-			wel_move_and_resize
+			wel_move_and_resize,
+			x_offset,
+			y_offset,
+			set_x_offset,
+			set_y_offset
 		end
 
 create
@@ -37,8 +45,9 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			Precursor
-			create scroller.make_with_options (Current, 0, 10, 0, 10, 10, 30, 10, 30)
-			show_scroll_bars
+			create scroller.make (Current, 1, 1, 10, 30)
+			disable_horizontal_scroll_bar
+			disable_vertical_scroll_bar
 		end
 
 feature -- Access
@@ -57,17 +66,11 @@ feature -- Access
 			Result := scroller.vertical_line
 		end
 
-	is_horizontal_scroll_bar_visible: BOOLEAN is
+	is_horizontal_scroll_bar_visible: BOOLEAN
 			-- Should horizontal scroll bar be displayed?
-		do
-			Result := minimal_horizontal_position /= maximal_horizontal_position
-		end
 
-	is_vertical_scroll_bar_visible: BOOLEAN is
+	is_vertical_scroll_bar_visible: BOOLEAN
 			-- Should vertical scrollbar be displayed?
-		do
-			Result := minimal_vertical_position /= maximal_vertical_position
-		end
 
 feature -- Element change
 
@@ -81,6 +84,70 @@ feature -- Element change
 			-- Set `vertical_step' to `a_step'.
 		do
 			scroller.set_vertical_line (a_step)
+		end
+
+	show_horizontal_scroll_bar is
+			-- Display horizontal scroll bar.
+		do
+			Precursor
+			is_horizontal_scroll_bar_visible := True
+		end
+
+	hide_horizontal_scroll_bar is
+			-- Do not display horizontal scroll bar.
+		do
+			Precursor
+			is_horizontal_scroll_bar_visible := False
+		end
+
+	show_vertical_scroll_bar is
+			-- Display vertical scroll bar.
+		do
+			Precursor
+			is_vertical_scroll_bar_visible := True
+		end
+
+	hide_vertical_scroll_bar is
+			-- Do not display vertical scroll bar.
+		do
+			Precursor
+			is_vertical_scroll_bar_visible := False
+		end
+
+feature -- Access
+
+	x_offset: INTEGER is
+			-- Horizontal position of viewport relative to `item'.
+		do
+			if child /= Void then
+				Result := - child.x_position
+			end
+		end
+
+	y_offset: INTEGER is
+			-- Vertical position of viewport relative to `item'.
+		do
+			if child /= Void then
+				Result := - child.y_position
+			end
+		end
+
+feature -- Element change
+
+	set_x_offset (an_x: INTEGER) is
+			-- Set `x_offset' to `an_x'.
+		do
+			if child /= Void then
+				child.wel_move (- an_x, child.y_position)
+			end
+		end
+
+	set_y_offset (a_y: INTEGER) is
+			-- Set `y_offset' to `a_y'.
+		do
+			if child /= Void then
+				child.wel_move (child.x_position, - a_y)
+			end
 		end
 
 feature -- Obsolete
@@ -181,6 +248,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/22 00:06:17  brendel
+--| Started implementation of interface features.
+--|
 --| Revision 1.23  2000/04/21 23:07:57  brendel
 --| scrollbar -> scroll_bar.
 --|

@@ -95,6 +95,8 @@ feature -- Access
 
 	implementation: TABBED_TEXT_WINDOWS
 
+	dummy_text: WEL_RICH_EDIT
+
 feature -- Output
 
 	clear_window is
@@ -130,11 +132,25 @@ feature -- Output
 	process_text (texts: STRUCTURED_TEXT) is
 			-- Process structured text `text' to be
 			-- generated as output.
+		local
+			p: WEL_COMPOSITE_WINDOW
 		do
+			if dummy_text = Void then
+				p ?= top.implementation;
+				!! dummy_text.make (p, 
+					"toto", implementation.wel_x + 10, 	
+					implementation.wel_y + 10,
+					10, 10, 0)
+			else
+				dummy_text.show
+			end;
+			implementation.wel_hide
 			set_changed (True);
 			st_process_text (texts);
 			set_cursor_position (0);
 			set_changed (False)
+			implementation.wel_show;
+			dummy_text.hide
 		end;
 
 feature -- Update

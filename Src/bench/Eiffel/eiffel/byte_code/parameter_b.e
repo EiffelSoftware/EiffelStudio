@@ -10,7 +10,8 @@ inherit
 			is_simple_expr, has_gcable_variable, has_call,
 			stored_register, is_unsafe, optimized_byte_node,
 			calls_special_features, size,
-			pre_inlined_code, inlined_byte_code
+			pre_inlined_code, inlined_byte_code,
+			allocates_memory
 		end;
 	
 feature 
@@ -67,6 +68,11 @@ feature
 			-- Does the expression have a call ?
 		do
 			Result := expression.has_call;
+		end;
+
+	allocates_memory: BOOLEAN is
+		do
+			Result := expression.allocates_memory
 		end;
 
 	stored_register: REGISTRABLE is

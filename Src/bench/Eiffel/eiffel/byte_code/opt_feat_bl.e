@@ -5,6 +5,7 @@ inherit
 	OPT_FEAT_B
 		undefine
 			is_polymorphic, free_register, has_call,
+			allocates_memory,
 			generate_on, basic_register, generate_access,
 			register, analyze_on, set_register,
 			is_feature_call, generate_special_feature, set_parent,

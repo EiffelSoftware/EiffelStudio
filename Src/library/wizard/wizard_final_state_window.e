@@ -11,7 +11,6 @@ inherit
 	WIZARD_STATE_WINDOW
 		export
 			{NONE} all
-			{WIZARD_WINDOW} is_final_state
 		redefine
 			proceed_with_current_info,is_final_state
 		end
@@ -48,7 +47,7 @@ feature -- Basic Operations
 			application_dead: first_window.is_destroyed
 		end
 
-feature -- Access
+feature {NONE}-- Access
 
 	is_final_state: BOOLEAN is TRUE
 

@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a composite command
 		do
-			create {TWO_WAY_LIST} children.make
+--			create {TWO_WAY_LIST} children.make
 		ensure
 			children /= Void
 		end
@@ -96,8 +96,8 @@ feature -- Debug
 			until
 				children.off
 			loop
-				children.item.print_contents
-				children.forth
+--				children.item.print_contents
+--				children.forth
 			end
 		end
 

@@ -18,14 +18,14 @@ feature
 			Result := True
 		end;
 
-    to_melt_in (a_class: CLASS_C): BOOLEAN is
-            -- Has the current feature to be melted in class `a_class' ?
+	to_melt_in (a_class: CLASS_C): BOOLEAN is
+			-- Has the current feature to be melted in class `a_class' ?
 			-- (Deferred routines with pre or post conditions are
 			-- melted)
-        do
-            Result := (a_class.id = written_in) and then 
+		do
+			Result := (a_class.id = written_in) and then 
 					(has_precondition or else has_postcondition);
-        end;
+		end;
 
 	to_generate_in (a_class: CLASS_C): BOOLEAN is
 			-- Has the current feature to be generated in class `a_class' ?

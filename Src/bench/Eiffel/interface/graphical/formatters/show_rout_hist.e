@@ -34,8 +34,9 @@ feature {NONE}
 		local
 			ewb_history: EWB_HISTORY;
 		do
-			!! ewb_history.null;
-			ewb_history.display_hist (text_window, f.feature_i, f.class_c);
+			!!ewb_history.null;
+			ewb_history.set_output_window (text_window);
+			ewb_history.display (f.feature_i, f.class_c);
 		end;
 
 end

@@ -40,7 +40,7 @@ feature {NONE}
 			-- lengthy confirmation needed
 		do
 			if argument = warner then
-				confirmer.call (Current, "Think again%NAre you really sure ?");
+				confirmer.call (Current, "Think again%NAre you really sure ?", "OK");
 			elseif argument = confirmer then
 				system.purge
 			elseif workbench.successfull then

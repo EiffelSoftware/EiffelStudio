@@ -158,14 +158,13 @@ feature
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
 				table_name := Encoder.table_name (rout_id).twin;
-                generated_file.putchar ('(');
-                real_type (type).c_type.generate_function_cast
-                    (generated_file);
-                generated_file.putchar ('(');
-                generated_file.putstring (table_name);
-                generated_file.putchar ('-');
-                generated_file.putint (entry.min_used - 1);
-                generated_file.putchar (')');
+				generated_file.putchar ('(');
+				real_type (type).c_type.generate_function_cast (generated_file);
+				generated_file.putchar ('(');
+				generated_file.putstring (table_name);
+				generated_file.putchar ('-');
+				generated_file.putint (entry.min_used - 1);
+				generated_file.putchar (')');
 				if reg.is_current then
 					if context.dt_current > 1 then
 						generated_file.putstring ("[dtype])");
@@ -180,9 +179,9 @@ feature
 					generated_file.putstring (")])");
 				end;
 					-- Mark routine table used.
-                Eiffel_table.mark_used (rout_id);
-                    -- Remember external routine table declaration
-                Extern_declarations.add_routine_table (table_name);
+				Eiffel_table.mark_used (rout_id);
+					-- Remember external routine table declaration
+				Extern_declarations.add_routine_table (table_name);
 			else
 				context.real_type (type).c_type.generate_cast (generated_file);
 					-- The call is not polymorphic in the given context,
@@ -195,7 +194,7 @@ feature
 				end;
 				generated_file.putstring (internal_name);
 					-- Remember external routine declaration
-                Extern_declarations.add_routine
+				Extern_declarations.add_routine
 						(real_type (type).c_type, internal_name);
 			end;
 		end;

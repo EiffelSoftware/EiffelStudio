@@ -36,7 +36,8 @@ feature {NONE}
 			ewb_clients: EWB_CLIENTS
 		do
 			!! ewb_clients.null;
-			ewb_clients.display_clients (text_window, c.class_c);
+			ewb_clients.set_output_window (text_window);
+			ewb_clients.display (c.class_c);
 		end
 
 end

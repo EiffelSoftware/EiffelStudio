@@ -85,18 +85,18 @@ feature
 			-- Type description for skeletons
 		local
 			exp: EXPANDED_DESC;
-            types: TYPE_LIST;
-            pos: INTEGER;
-        do
+			types: TYPE_LIST;
+			pos: INTEGER;
+		do
 			if is_expanded then
 				!!exp;
 				is_expanded := False;
 
-                types := base_class.types;
-                pos := types.position;
-                types.search (Current);
+				types := base_class.types;
+				pos := types.position;
+				types.search (Current);
 				exp.set_class_type (types.item);
-                types.go (pos);
+				types.go (pos);
 
 				is_expanded := True;
 				Result := exp;
@@ -122,19 +122,19 @@ feature
 	associated_class_type: CLASS_TYPE is
 			-- Associated class type
 		local
-            types: TYPE_LIST;
-            pos: INTEGER;
-        do
-            if is_expanded then
-                Result := associated_expanded_class_type
-            else
-                types := base_class.types;
-                pos := types.position;
-                types.search (Current);
-                Result := types.item;
-                types.go (pos);
-            end;
-        end;
+			types: TYPE_LIST;
+			pos: INTEGER;
+		do
+			if is_expanded then
+				Result := associated_expanded_class_type
+			else
+				types := base_class.types;
+				pos := types.position;
+				types.search (Current);
+				Result := types.item;
+				types.go (pos);
+			end;
+		end;
 
 	associated_expanded_class_type: CLASS_TYPE is
 			-- Associated expanded class type
@@ -142,8 +142,8 @@ feature
 			is_expanded: is_expanded
 		do
 			is_expanded := false;
-            Result := associated_class_type;
-            is_expanded := true;
+			Result := associated_class_type;
+			is_expanded := true;
 		end;
 
 	type_id: INTEGER is

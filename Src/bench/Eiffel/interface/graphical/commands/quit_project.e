@@ -39,7 +39,7 @@ feature {NONE}
 					discard_license;
 					exit
 				else
-					confirmer.call (Current, "Do you really want to exit ?");
+					confirmer.call (Current, "Do you really want to exit ?", "Exit");
 				end
 			else
 				discard_license;

@@ -4,10 +4,7 @@ class SHOW_ONCES
 
 inherit
 
-	ROUTINE_FORM
-		redefine
-			display_feature
-		end
+	FORMATTER
 
 creation
 
@@ -31,23 +28,13 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Onces_of end;
 
-	criterium (f: FEATURE_I): BOOLEAN is
-		do
-			Result := any_criterium (f);
-			Result := Result and then (f.is_once or else
-							f.is_constant)
-		end;
-
-	display_feature (f: FEATURE_I; c: CLASS_C) is
+	display_info (i: INTEGER; c: CLASSC_STONE) is
 		local
-			const: CONSTANT_I
+			cmd: EWB_ONCE
 		do
-			f.append_clickable_signature (text_window, c);
-			if f.is_constant then
-				text_window.put_string (" is ");
-				const ?= f;	--| Cannot fail
-				text_window.put_string (const.value.dump);
-			end
-		end;
+			!!cmd.null;
+			cmd.set_output_window (text_window);
+			cmd.display (c.class_c);
+		end
 
 end

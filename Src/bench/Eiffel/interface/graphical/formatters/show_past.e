@@ -35,7 +35,8 @@ feature {NONE}
 			ewb_past: EWB_PAST;
 		do
 			!! ewb_past.null;
-			ewb_past.display_hist (text_window, f.feature_i, f.class_c);
+			ewb_past.set_output_window (text_window);
+			ewb_past.display (f.feature_i, f.class_c);
 		end;
 
 end

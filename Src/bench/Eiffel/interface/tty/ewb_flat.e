@@ -6,7 +6,8 @@ inherit
 	EWB_CMD
 		rename
 			name as flat_cmd_name,
-			help_message as flat_help
+			help_message as flat_help,
+			abbreviation as flat_abb
 		end
 
 creation
@@ -54,7 +55,7 @@ feature
 					else
 						!!ctxt.make (class_c);
 						ctxt.execute;
-						io.putstring (ctxt.text.image)
+						output_window.put_string (ctxt.text.image)
 					end;
 				end;
 			end;

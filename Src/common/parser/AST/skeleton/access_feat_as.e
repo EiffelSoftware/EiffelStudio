@@ -260,32 +260,35 @@ feature -- Type check, byte code and dead code removal
 					obs_warn.set_feature (context.a_feature);
 					Error_handler.insert_warning (obs_warn);
 				end;
-				--if context.level4 and then context.check_for_vape then
+				if context.level4 and then context.check_for_vape then
 					-- In precondition and checking for vape
-					--context_export := context.a_feature.export_status;
-					--feature_export := a_feature.export_status;
-					--io.error.putstring ("feature ");
-					--io.error.putstring (context.a_feature.feature_name);
-					--io.error.putstring (" export ");
-					--io.error.new_line;
-					--context_export.trace;
-					--io.error.new_line;
-					--io.error.putstring ("feature ");
-					--io.error.putstring (a_feature.feature_name);
-					--io.error.putstring (" export ");
-					--io.error.new_line;
-					--feature_export.trace;
-					--io.error.new_line;
-					--if 
-						--not a_feature.feature_name.is_equal ("void") and then
-						--not context_export.is_subset (feature_export) 
-					--then
-						--!!vape;
-						--context.init_error (vape);
-						--vape.set_exported_feature (a_feature);
-						--Error_handler.insert_error (vape);
-					--end;
-				--end;
+					context_export := context.a_feature.export_status;
+					feature_export := a_feature.export_status;
+debug
+	io.error.putstring ("feature ");
+	io.error.putstring (context.a_feature.feature_name);
+	io.error.putstring (" export ");
+	io.error.new_line;
+	context_export.trace;
+	io.error.new_line;
+	io.error.putstring ("feature ");
+	io.error.putstring (a_feature.feature_name);
+	io.error.putstring (" export ");
+	io.error.new_line;
+	feature_export.trace;
+	io.error.new_line;
+end;
+					if 
+						not a_feature.feature_name.is_equal ("void") and then
+						not context_export.is_subset (feature_export) 
+					then
+						!!vape;
+						context.init_error (vape);
+						vape.set_exported_feature (a_feature);
+						vape.trace
+						Error_handler.insert_error (vape);
+					end;
+				end;
 					-- Access managment
 				access_b := a_feature.access (Result.type_i);
 				context.access_line.insert (access_b);

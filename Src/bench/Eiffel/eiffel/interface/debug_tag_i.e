@@ -76,8 +76,8 @@ feature
 	generate_keys (file: UNIX_FILE; id: INTEGER) is
 			-- Generate keys C array
 		require
-            good_argument: file /= Void;
-            is_open: file.is_open_write;
+			good_argument: file /= Void;
+			is_open: file.is_open_write;
 		local
 			l: SORTED_TWO_WAY_LIST [STRING];
 		do

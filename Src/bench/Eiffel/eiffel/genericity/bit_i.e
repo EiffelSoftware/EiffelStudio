@@ -119,8 +119,8 @@ feature
 	metamorphose
 	(reg, value: REGISTRABLE; file: UNIX_FILE; workbench_mode: BOOLEAN) is
 			-- Generate the metamorphism from simple type to reference and
-		   	-- put result in register `reg'. The value of the basic type is
-		   	-- held in `value'. 
+			-- put result in register `reg'. The value of the basic type is
+			-- held in `value'. 
 		do
 			reg.print_register;
 			file.putstring (" = ");

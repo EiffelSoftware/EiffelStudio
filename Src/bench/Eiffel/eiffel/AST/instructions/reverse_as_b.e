@@ -14,11 +14,20 @@ feature
 	check_validity is
 			-- Check validity of the reverse assignment
 		local
-			target_type: TYPE_A;
+			source_type, target_type: TYPE_A;
 			vjrv: VJRV;
+			vkcn3: VKCN3
 		do
 				-- Stack managment
+			source_type := context.item;
 			context.pop (1);
+			if source_type.is_void then
+				!!vkcn3;
+				context.init_error (vkcn3);
+				Error_handler.insert_error (vkcn3);
+				Error_handler.raise_error;
+			end;
+
 			target_type := context.item;
 			
 			if 	target_type.is_basic

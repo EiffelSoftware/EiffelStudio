@@ -104,8 +104,12 @@ feature -- Widgets
 		local
 			temp: STRING;
 			i: INTEGER;
-			toto: BOOLEAN
+			registered: BOOLEAN
 		do
+			registered := licence.registered;
+			if not registered then
+				licence.register;
+			end;
 			if licence.daemon_alive then
 					-- Total number of licenses
 				!! temp.make (0);
@@ -121,14 +125,7 @@ feature -- Widgets
 				label7.set_text (licence.licence_host);
 	
 					-- Usage information
-				toto := licence.registered;
-				if not toto then
-					licence.register;
-				end;
 				scrolled_text1.set_text (licence.usage_info);
-				if not toto then
-					licence.unregister;
-				end;
 				Label1.set_text ("EiffelBench users:");
 			else
 				!! temp.make (0);
@@ -143,6 +140,9 @@ feature -- Widgets
 				Label1.set_text ("Info:");
 			end;
 
+			if not registered then
+				licence.unregister;
+			end;
 
 			bulletin_d_popup
 		end;	

@@ -6,7 +6,8 @@ inherit
 	EWB_CMD
 		rename
 			name as melt_cmd_name,
-			help_message as melt_help
+			help_message as melt_help,
+			abbreviation as melt_abb
 		end
 
 feature

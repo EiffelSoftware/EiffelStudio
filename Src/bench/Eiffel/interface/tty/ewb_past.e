@@ -3,77 +3,20 @@ class EWB_PAST
 
 inherit
 
-	EWB_CMD
+	EWB_FEATURE
 		rename
-			name as aversions_cmd_name,
-			help_message as aversions_help
+			name as ancestors_cmd_name,
+			help_message as aversions_help,
+			abbreviation as ancestors_abb
 		end
 
 creation
 
 	make, null
 
-feature -- Creation
-
-	make (cn, fn: STRING) is
-		do
-			class_name := cn;
-			class_name.to_lower;
-			feature_name := fn;
-			feature_name.to_lower;
-		end;
-
-	class_name, feature_name: STRING;
-
 feature
 
-	name: STRING is "compute the history";
-
-	loop_execute is
-		do
-			get_class_name;
-			class_name := last_input;
-			class_name.to_lower;
-			get_feature_name;
-			feature_name := last_input;
-			feature_name.to_lower;
-			execute;
-		end;
-
-	execute is
-		local
-			class_c: CLASS_C;
-			feature_i: FEATURE_I;
-			class_i: CLASS_I
-		do
-			init_project;
-			if not (error_occurred or project_is_new) then
-				retrieve_project;
-				if not error_occurred then
-                    class_i := Universe.unique_class (class_name);
-                    if class_i /= Void then
-                        class_c := class_i.compiled_class;
-                    end;
-
-					if class_c = Void then
-						io.error.putstring (class_name);
-						io.error.putstring (" is not in the system%N");
-					else
-						feature_i := class_c.feature_table.item (feature_name);
-						if feature_i = Void then
-							io.error.putstring (feature_name);
-							io.error.putstring (" is not a feature of ");
-							io.error.putstring (class_name);
-							io.error.new_line
-						else
-							display_hist (error_window, feature_i, class_c);
-						end;
-					end;
-				end;
-			end;
-		end;
-
-	display_hist (display: CLICK_WINDOW; feature_i: FEATURE_I; class_c: CLASS_C) is
+	display (feature_i: FEATURE_I; class_c: CLASS_C) is
 		local
 			classes: SORTED_SET [CLASS_C];
 			rout_id_set: ROUT_ID_SET;
@@ -90,9 +33,9 @@ feature
 			until
 				i > rout_id_set.count
 			loop
-				display.put_string ("%NHistory branch #");
-				display.put_int (i);
-				display.put_string ("%N-----------------%N");
+				output_window.put_string ("%NHistory branch #");
+				output_window.put_int (i);
+				output_window.put_string ("%N-----------------%N");
 				from
 					classes.start
 				until
@@ -106,18 +49,18 @@ feature
 					loop
 						other_feature := feature_table.item_for_iteration;
 						if other_feature.rout_id_set.has (rout_id_set.item (i)) then
-							classes.item.append_clickable_name (display);
-							display.put_string (" ");
-							other_feature.append_clickable_signature (display,classes.item);
-							display.put_string ("%N%TVersion from class ");
-							other_feature.written_class.append_clickable_name (display);
-							display.new_line;	
+							classes.item.append_clickable_name (output_window);
+							output_window.put_string (" ");
+							other_feature.append_clickable_signature (output_window, classes.item);
+							output_window.put_string ("%N%TVersion from class ");
+							other_feature.written_class.append_clickable_name (output_window);
+							output_window.new_line;	
 						end;
 						feature_table.forth
 					end;
 					classes.forth
 				end;
-				display.new_line;
+				output_window.new_line;
 				i := i + 1
 			end;
 		end;

@@ -5,7 +5,8 @@ inherit
 	EWB_CMD
 		rename
 			name as freeze_cmd_name,
-			help_message as freeze_help
+			help_message as freeze_help,
+			abbreviation as freeze_abb
 		end
 
 feature

@@ -68,7 +68,7 @@ feature {NONE}
 
 	Updt: STRING is ".UPDT"
 
-	Version_number: STRING is "3.2 level 3 alpha"
+	Version_number: STRING is "3.2.3"
 
 	W_code: STRING is "W_code"
 

@@ -61,8 +61,8 @@ feature
 	metamorphose
 	(reg, value: REGISTRABLE; file: UNIX_FILE; workbench_mode: BOOLEAN) is
 			-- Generate the metamorphism from simple type to reference and
-		   -- put result in register `reg'. The value of the basic type is
-		   -- held in `value'.
+			-- put result in register `reg'. The value of the basic type is
+			-- held in `value'.
 		require
 			valid_reg: reg /= Void;
 			valid_value: value /= Void;
@@ -73,7 +73,7 @@ feature
 			file.putstring("RTLN(");
 			if workbench_mode then
 				file.putstring ("RTUD(");
-				file.putint (associated_reference.id  - 1);
+				file.putint (associated_reference.id - 1);
 				file.putchar (')');
 			else
 				file.putint (associated_dtype);

@@ -3,75 +3,16 @@ class EWB_DEPEND
 
 inherit
 
-	EWB_CMD;
+	EWB_FEATURE;
 	SHARED_SERVER
 
 creation
 
 	make, null
 
-feature -- Creation
-
-	make (cn, fn: STRING) is
-		do
-			class_name := cn;
-			class_name.to_lower;
-			feature_name := fn;
-			feature_name.to_lower
-		end;
-
-	class_name, feature_name: STRING;
-
 feature
 
-	name: STRING is "compute the dependents";
-
-	loop_execute is
-		do
-			get_class_name;
-			class_name := last_input;
-			class_name.to_lower;
-			get_feature_name;
-			feature_name := last_input;
-			feature_name.to_lower;
-			execute;
-		end;
-
-	execute is
-		local
-			class_c: CLASS_C;
-			class_i: CLASS_I;
-			f: FEATURE_I;
-		do
-			init_project;
-			if not (error_occurred or project_is_new) then
-				retrieve_project;
-				if not error_occurred then
-						-- Get the class
-						-- Note: class name amiguities are not resolved.
-                    class_i := Universe.unique_class (class_name);
-                    if class_i /= Void then
-                        class_c := class_i.compiled_class;
-                    end;
-					if class_c = Void then
-						io.error.putstring (class_name);
-						io.error.putstring (" is not in the system%N");
-					else
-						f := class_c.feature_table.item (feature_name);
-						if f = Void then
-							io.error.putstring (feature_name);
-							io.error.putstring (" is not a feature of ");
-							io.error.putstring (class_name);
-							io.error.new_line
-						else
-							display_depend (error_window, class_c, f);
-						end;
-					end;
-				end;
-			end;
-		end;
-
-	display_depend (display: CLICK_WINDOW; class_c: CLASS_C; f: FEATURE_I) is
+	display (class_c: CLASS_C; f: FEATURE_I) is
 		local
 			dep: CLASS_DEPENDANCE;
 			fdep: FEATURE_DEPENDANCE;
@@ -82,7 +23,7 @@ feature
 			dep := Depend_server.item (class_c.id);
 			fdep := dep.item (f.feature_name);
 
-			display.put_string ("Dependents:%N");
+			output_window.put_string ("Dependents:%N");
 			from
 				fdep.start
 			until
@@ -94,10 +35,10 @@ feature
 				supplier := System.class_of_id (class_id);
 				supp_f := supplier.feature_table.feature_of_feature_id (fid);
 
-				supplier.append_clickable_name (display);
-				display.put_string (".");
-				supp_f.append_clickable_name (display, supplier);
-				display.new_line;
+				supplier.append_clickable_name (output_window);
+				output_window.put_string (".");
+				supp_f.append_clickable_name (output_window, supplier);
+				output_window.new_line;
 
 				fdep.forth
 			end;

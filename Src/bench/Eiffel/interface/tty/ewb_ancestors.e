@@ -4,76 +4,30 @@ class EWB_ANCESTORS
 
 inherit
 
-	EWB_CMD
+	EWB_CLASS
 		rename
 			name as ancestors_cmd_name,
-			help_message as ancestors_help
+			help_message as ancestors_help,
+			abbreviation as ancestors_abb
 		end
 
 creation
 
 	make, null
 
-feature -- Creation
-
-	make (cn: STRING) is
-		do
-			class_name := cn;
-			class_name.to_lower;
-		end;
-
-	class_name: STRING;
-
 feature
 
-	loop_execute is
+	display (a_class: CLASS_C) is
 		do
-			get_class_name;
-			class_name := last_input;
-			class_name.to_lower;
-			execute;
+			!!displayed.make;
+			current_class := a_class;
+			a_class.append_clickable_signature (output_window);
+			output_window.new_line;
+			rec_display (1, a_class);
+			displayed := void;	
 		end;
 
-	execute is
-		local
-			class_c: CLASS_C;
-			class_i: CLASS_I
-		do
-			init_project;
-			if not (error_occurred or project_is_new) then
-				retrieve_project;
-				if not error_occurred then
-					class_i := Universe.unique_class (class_name);
-					if class_i /= Void then
-						class_c := class_i.compiled_class;
-					end;
-					if class_c = Void then
-						io.putstring (class_name);
-						io.putstring (" not in system%N");
-					else
-						print_ancestors (class_c, 0);
-					end;
-				end;
-			end;
-		end;
-
-	print_ancestors (c: CLASS_C; i: INTEGER) is
-		local
-			ancestors: FIXED_LIST [CL_TYPE_A]
-		do
-			from	
-				ancestors := c.parents;
-				ancestors.start
-			until
-				ancestors.after
-			loop
-				io.putstring (tabs(i));
-				io.putstring (ancestors.item.associated_class.signature);
-				io.new_line;
-				print_ancestors (ancestors.item.associated_class, i + 1);
-				ancestors.forth
-			end
-		end;
+	displayed: LINKED_LIST [CL_TYPE_A];
 
 	tabs (i: INTEGER): STRING is
 		local
@@ -81,13 +35,46 @@ feature
 		do
 			from
 				j := 1;
-				!!Result.make (4 * i)
+				!!Result.make (i)
 			until
 				j > i
 			loop
-				Result.append ("	");
+				Result.append_character ('%T');
 				j := j + 1
 			end;
+		end;
+
+	rec_display (i: INTEGER; c: CLASS_C) is
+			-- Display parents of `c' in tree form.
+		local
+			parents: FIXED_LIST [CL_TYPE_A];
+			parent_class: CLASS_C;
+		do
+			if 
+				(c.id /= System.any_id) or else
+				(c = current_class)
+			then
+				parents := c.parents;
+				if not parents.empty then
+					from
+						parents.start
+					until
+						parents.after
+					loop
+						parent_class := parents.item.associated_class;
+						output_window.put_string (tabs (i));
+						parent_class.append_clickable_signature (output_window);
+						if displayed.has (parents.item) then
+							output_window.put_string ("...%N")
+						else	
+							output_window.new_line;
+							displayed.add (parents.item);
+							rec_display (i+1, parent_class);
+						end;			
+						parents.forth
+					end
+				end
+			end
 		end;
 
 end

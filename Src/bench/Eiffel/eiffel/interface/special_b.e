@@ -1,6 +1,6 @@
 --- Compiled class SPECIAL
 
-class SPECIAL_B 
+class SPECIAL_B
 
 inherit
 
@@ -15,7 +15,7 @@ creation
 
 	make
 	
-feature 
+feature
 
 	check_validity is
 			-- Check validity of class SPECIAL
@@ -45,7 +45,7 @@ feature
 			
 			-- Third, check if class has a feature put (Generic #1, INTEGER)
 			put_feature := feat_table.item ("put");
-			if  put_feature = Void
+			if put_feature = Void
 				or else
 				put_feature.written_in /= id
 				or else
@@ -106,7 +106,7 @@ feature
 			gen_type: GEN_TYPE_I;
 			gen_param: TYPE_I;
 			dtype, char_dtype, long_dtype,
-			float_dtype, double_dtype, 
+			float_dtype, double_dtype,
 			pointer_dtype, boolean_dtype: INTEGER;
 			Plug_file: UNIX_FILE;
 		do
@@ -148,17 +148,17 @@ feature
 			Plug_file.putint (boolean_dtype);
 			Plug_file.putstring (";%N");
 			Plug_file.putstring ("int sp_int = ");
-            Plug_file.putint (long_dtype);    
-            Plug_file.putstring (";%N");
+			Plug_file.putint (long_dtype);
+			Plug_file.putstring (";%N");
 			Plug_file.putstring ("int sp_real = ");
-            Plug_file.putint (float_dtype);    
-            Plug_file.putstring (";%N");
+			Plug_file.putint (float_dtype);
+			Plug_file.putstring (";%N");
 			Plug_file.putstring ("int sp_double = ");
-            Plug_file.putint (double_dtype);    
-            Plug_file.putstring (";%N");
+			Plug_file.putint (double_dtype);
+			Plug_file.putstring (";%N");
 			Plug_file.putstring ("int sp_pointer = ");
-            Plug_file.putint (pointer_dtype);    
-            Plug_file.putstring (";%N");
+			Plug_file.putint (pointer_dtype);
+			Plug_file.putstring (";%N");
 		end;
 
 end

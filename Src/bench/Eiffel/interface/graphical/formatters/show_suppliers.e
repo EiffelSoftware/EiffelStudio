@@ -35,7 +35,8 @@ feature {NONE}
 			ewb_suppliers: EWB_SUPPLIERS
 		do
 			!! ewb_suppliers.null;
-			ewb_suppliers.display_suppliers (text_window, c.class_c);
+			ewb_suppliers.set_output_window (text_window);
+			ewb_suppliers.display (c.class_c);
 		end
 
 end

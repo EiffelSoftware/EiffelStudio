@@ -46,7 +46,7 @@ feature
 			-- Reference class associated with simple type
 		do
 			Result := system.boolean_ref_class.compiled_class.types.first;
-	   end;
+		end;
 
 	generate_cecil_value (file: UNIX_FILE) is
 			-- Generate cecil type value

@@ -38,6 +38,11 @@ feature
 			Result := flatshort_help
 		end;
 
+	abbreviation: CHARACTER is
+		do
+			Result := flatshort_abb
+		end;
+
 	loop_execute is
 		do
 			get_class_name;
@@ -79,9 +84,9 @@ feature
 						if troffed then
 							!! troffer.make;
 							troffer.process_text (ctxt.text);
-							io.putstring (troffer.image)
+							output_window.put_string (troffer.image)
 						else
-							io.putstring (ctxt.text.image)
+							output_window.put_string (ctxt.text.image)
 						end
 					end
 				end;

@@ -33,51 +33,15 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Ancestors_of end;
 
-
-	displayed: LINKED_LIST [CL_TYPE_A];
-
-	current_class: CLASS_C;
-
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display parents of `c' in tree form.
+		local
+			cmd: EWB_ANCESTORS
 		do
-			!!displayed.make;
-			current_class := c.class_c;
-			rec_display (i, current_class);
-			displayed := void;	
+			!!cmd.null;
+			cmd.set_output_window (text_window);
+			cmd.display (c.class_c);
 		end;
 
-	rec_display (i: INTEGER; c: CLASS_C) is
-			-- Display parents of `c' in tree form.
-		local
-			parents: FIXED_LIST [CL_TYPE_A];
-			parent_class: CLASS_C;
-		do
-			if 
-				(c.id /= System.any_id) or else
-				(c = current_class)
-			then
-				parents := c.parents;
-				if not parents.empty then
-					from
-						parents.start
-					until
-						parents.after
-					loop
-						parent_class := parents.item.associated_class;
-						text_window.put_string (tabs (i));
-						parent_class.append_clickable_signature (text_window);
-						if displayed.has (parents.item) then
-							text_window.put_string ("...%N")
-						else	
-							text_window.new_line;
-							displayed.add (parents.item);
-							rec_display (i+1, parent_class);
-						end;			
-						parents.forth
-					end
-				end
-			end
-		end;
 
 end

@@ -173,6 +173,15 @@ feature -- Queries Feature
 				l_name_id  := l_infos.integer_item (2)
 				l_class_c := Il_debug_info.class_of_id (l_class_id)
 				Result := l_class_c.feature_table.item_id (l_name_id)
+--| NOTA JFIAT: 2004/05/28 : fix invariant cursor in call stack
+--| When we'll decide to fix the cursor in call stack on invariant
+--| this may be a start ..
+--				if Result = Void then
+--					Result := l_class_c.invariant_feature
+--					if Result.feature_name_id /= l_name_id then
+--						Result := Void
+--					end
+--				end
 			end
 		ensure
 			Result /= Void implies list_feature_info.has (a_feature_token)

@@ -678,6 +678,10 @@ feature {NONE} -- Record processing
 			a_feat_not_void: a_feat /= Void
 		do
 			Result := a_feat.feature_name.item(1).is_equal ('_')
+--| NOTA JFIAT: 2004/05/28 : fix invariant cursor in call stack
+--| When we'll decide to fix the cursor in call stack on invariant
+--| this may be a start ..
+				--| and then not a_feat.feature_name.is_equal ("_invariant")
 		end
 
 	process_il_feature_info_recording (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_feature: FEATURE_I; a_class_token, a_feature_token: INTEGER) is

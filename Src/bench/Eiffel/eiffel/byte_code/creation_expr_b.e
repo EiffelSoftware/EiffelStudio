@@ -12,7 +12,7 @@ inherit
 			make_byte_code, analyze, unanalyze,
 			generate, register, get_register,
 			enlarged, size, generate_il, is_simple_expr, is_single,
-			line_number, set_line_number
+			line_number, set_line_number, has_call, allocates_memory
 		end
 
 creation
@@ -75,6 +75,17 @@ feature -- Analyze
 				call.unanalyze
 			end
 		end
+
+feature -- Status report
+
+	has_call: BOOLEAN is 
+			-- Does current node include a call?
+		do
+			Result := call /= Void
+		end
+
+	allocates_memory: BOOLEAN is True
+			-- Current always allocates memory.
 
 	is_single: BOOLEAN is
 			-- True if no call after inline object creation or if call

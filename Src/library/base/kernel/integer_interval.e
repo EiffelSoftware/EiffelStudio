@@ -206,6 +206,14 @@ feature -- Resizing
 			upper := upper.max (maxindex)
 		end
 
+	resize_exactly (min_index, max_index: INTEGER) is
+			-- Rearrange interval to go from
+			-- `min_index' to `max_index'.
+		do
+			lower := min_index
+			upper := max_index
+		end
+
 	grow (i: INTEGER) is
 			-- Ensure that capacity is at least `i'.
 		do

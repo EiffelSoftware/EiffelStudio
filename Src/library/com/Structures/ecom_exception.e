@@ -98,7 +98,7 @@ feature {NONE} -- External
 
 	ccom_raise (a_pointer: POINTER; code: INTEGER) is
 		external
-			"C | %"eif_except.h%""
+			"C signature (char *, long) use %"eif_except.h%""
 		alias
 			"com_eraise"
 		end;

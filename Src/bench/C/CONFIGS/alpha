@@ -19,6 +19,7 @@ eiflib='finalized'
 wkeiflib='wkbench'
 suffix='.a'
 
+warning_level=''
 optimize='-O2'
 wkoptimize=''
 

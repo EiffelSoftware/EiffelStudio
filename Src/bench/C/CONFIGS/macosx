@@ -22,7 +22,8 @@ mtccflags='-pipe -no-cpp-precomp -fno-common -DEIF_THREADS -DEIF_POSIX_THREADS'
 mtlibs='-L/opt/local/lib -lcompat -lpthread'
 mtsharedlibs='-L/opt/local/lib -lcompat -lpthread'
 
-optimize='-Wall -O3'
+warning_level='-Wall'
+optimize='-O3'
 wkoptimize='-O'
 
 start_test='if [ ! -f finished ] ; then'

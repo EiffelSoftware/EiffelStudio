@@ -11,6 +11,7 @@
 binary_fmt='-n32'
 mips_arch='-mips4'
 
+warning_level=''
 optimize=" -O3 $binary_fmt $mips_arch "
 wkoptimize=" -O3 $binary_fmt $mips_arch "
 

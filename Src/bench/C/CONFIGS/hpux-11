@@ -30,6 +30,7 @@ ldflags=''
 ldsharedflags='-b -o'
 mtldsharedflags='-b -o'
 
+warning_level='-Wall'
 optimize='-O3'
 wkoptimize=''
 

@@ -1,7 +1,7 @@
 indexing
 	description: "Representation of an eiffel line of class text.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class EIFFEL_LINE
 
@@ -16,10 +16,13 @@ feature -- Initialization
 		require
 			good_values: start_pos >= 0 and then end_pos >= 0;
 			valid_positions: end_pos >= start_pos;
+			s_not_void: s /= Void
 		do
 			start_position := start_pos;
 			end_position := end_pos;
-			text := clone (s);
+			text := s.twin
+		ensure
+			text_set: text.is_equal (s)
 		end;
 
 feature -- Properites
@@ -102,5 +105,8 @@ feature -- Debug
 			io.error.putstring (text);
 			io.error.new_line;	
 		end
+
+invariant
+	text_not_void: text /= Void
 
 end

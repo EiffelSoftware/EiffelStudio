@@ -260,7 +260,6 @@ feature {NONE} -- Implementation
 			-- so validate, and update display accordingly.
 		local
 			current_text_field: EV_TEXT_FIELD
-			current_caret_position: INTEGER
 		do
 			current_text_field := all_text_fields @ index
 			if valid_class_name (current_text_field.text) or current_text_field.text.is_empty then

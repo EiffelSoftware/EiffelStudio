@@ -294,6 +294,7 @@ timetype=''
 clocktype=''
 d_times=''
 d_unlink=''
+d_nanosleep=''
 d_usleep=''
 d_utime=''
 d_voidsig=''
@@ -4475,6 +4476,10 @@ eval $inlibc
 set usleep d_usleep
 eval $inlibc
 
+: see if nanosleep exists
+set nanosleep d_nanosleep
+eval $inlibc
+
 : see if utime exists
 set utime d_utime
 eval $inlibc
@@ -6602,6 +6607,7 @@ pidtype='$pidtype'
 prototype='$prototype'
 d_gethid='$d_gethid'
 d_maypanic='$d_maypanic'
+d_nanosleep='$d_nanosleep'
 d_pidcheck='$d_pidcheck'
 d_sbrk='$d_sbrk'
 d_sbrksmart='$d_sbrksmart'

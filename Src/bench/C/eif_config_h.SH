@@ -315,6 +315,12 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -
  */
 #$d_usleep HAS_USLEEP		/* NC */
 
+/* HAS_NANOSLEEP:
+ *	This symbol, if defined, indicates that the nanosleep routine is
+ *	available to let the process sleep on a sub-second accuracy.
+ */
+#$d_nanosleep HAS_NANOSLEEP		/* NC */
+
 /* Signal_t:
  *	This symbol's value is either "void" or "int", corresponding to the
  *	appropriate return type of a signal handler.  Thus, you can declare

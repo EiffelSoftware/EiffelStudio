@@ -83,27 +83,17 @@ feature -- Status setting
 			-- Does nothing by default.
 		local
 			fw: FONT_WINDOWS
-			client_dc: WEL_CLIENT_DC
-			ww: WEL_WINDOW
 		do
+			fw ?= font.implementation
+			check
+				font_not_void: fw /= Void
+			end
 			if exists then
-				ww ?= Current
-				!! client_dc.make (ww)
-				client_dc.get
-				set_size (client_dc.string_width (text) + extra_width, (7 * client_dc.string_height (text)) // 4)
-				client_dc.release
+				set_size (fw.string_width (Current, text) + extra_width,
+					(7 * fw.string_height (Current, text)) // 4)
 			else
-				if font /= Void then
-					fw ?= font.implementation
-					check
-						fw_not_void: fw /= Void
-					end
-					set_form_width (fw.string_width (Current, text) + extra_width)
-					set_form_height ((7 * fw.string_height (Current, text)) // 4)
-				else
-					set_form_width ((text.count * 10) + extra_width)
-					set_form_height (25)
-				end
+				set_form_width (fw.string_width (Current, text) + extra_width)
+				set_form_height ((7 * fw.string_height (Current, text)) // 4)
 			end
 		end
 

@@ -2,13 +2,14 @@ indexing
 	description: "EiffelVision container. Allows only one children.%
 				 % Deferred class, parent of all the containers.   %
 				 % Mswindows implementation."
+	note: "This class would be the equivalent of a wel_composite_window%
+			% in the wel hierarchy."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_CONTAINER_IMP
 	
 inherit
@@ -17,53 +18,9 @@ inherit
 	EV_WIDGET_IMP
 		redefine
 			parent_ask_resize,
-			set_move_and_size,
 			set_insensitive
 		end
-
-	WEL_COMPOSITE_WINDOW
-		rename
-			parent as wel_parent
-		undefine
-				-- We undefine the features that have been redefined
-				-- by EV_WIDGET_IMP
-			remove_command,
-				-- Then, we undefine what is redefine later
-			set_width,
-			set_height,
-			set_menu,
-			minimal_width,
-			minimal_height,
-			maximal_width,
-			maximal_height,
-			move_and_resize,
-			move,
-			set_default_window_procedure,
-			call_default_window_procedure,
-			process_message,
-			on_wm_menu_command,
-			on_wm_control_id_command,
-			on_show,
-			on_size,
-			on_get_min_max_info,
-			on_destroy,
-			on_menu_command,
-			on_set_cursor,
-			on_mouse_move,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_char,
-			on_key_up,
-			on_paint
-		redefine
-			destroy
-		end
 			
-
 feature -- Access
 	
 	client_width: INTEGER is
@@ -87,7 +44,7 @@ feature -- Status report
 			if child /= Void then
 				child.set_insensitive (flag)
 			end
-			Precursor (flag)
+			{EV_WIDGET_IMP} Precursor (flag)
 		end
 
 feature -- Status setting
@@ -99,7 +56,7 @@ feature -- Status setting
 			if parent_imp /= Void then
 				parent_imp.set_insensitive (False)
 			end
-			{WEL_COMPOSITE_WINDOW} Precursor
+			wel_destroy
 		end
 
 feature -- Element change
@@ -116,53 +73,58 @@ feature {EV_WIDGET_IMP} -- Implementation
 			-- When the parent asks the resize, it's not 
 			-- necessary to send him back the information
 		do
-			Precursor (new_width, new_height)
+			{EV_WIDGET_IMP} Precursor (new_width, new_height)
 			if child /= Void then
 				child.parent_ask_resize (client_width, client_height)
 			end
 		end
 	
-	child_width_changed (new_child_width: INTEGER; the_child: EV_WIDGET_IMP) is
+	child_width_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the size of the container because of the child.
 		do
-			set_width (new_child_width)
+			set_width (value.max (minimum_width))
 		end
 
-	child_height_changed (new_child_height: INTEGER; the_child: EV_WIDGET_IMP) is
+	child_height_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the size of the container because of the child.
 		do
-			set_height (new_child_height)
+			set_height (value.max (minimum_height))
 		end
 
-	child_minwidth_changed (new_child_minimum: INTEGER) is
+	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
 			-- By default, the minimum width of a container is
 			-- the one of its child, to change this, just use
 			-- set_minimum_width
 		do
-			set_minimum_width (new_child_minimum)
+			set_minimum_width (value)
 		end
 
-	child_minheight_changed (new_child_minimum: INTEGER) is
+	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
 			-- By default, the minimum width of a container is
 			-- the one of its child, to change this, just use
 			-- set_minimum_width
 		do
-			set_minimum_height (new_child_minimum)
+			set_minimum_height (value)
 		end
 
-	set_move_and_size (a_x, a_y, new_width, new_height: INTEGER) is
-			-- When the parent asks to move and resize, it does it
-			-- and the notice the child.
-		do
-			Precursor (a_x, a_y, new_width, new_height)
-			if child /= void then
-				child.parent_ask_resize (client_width, client_height)
-			end
+feature -- Implementation : deferred features of 
+		-- WEL_COMPOSITE_WINDOW that are used here but not 
+		-- defined
+
+	client_rect: WEL_RECT is
+			-- Client rectangle
+		deferred
 		end
+
+	wel_destroy is
+			-- Destroy the window and quit the application
+			-- if `Current' is the application's main window.
+		deferred
+		end	
 
 end -- class EV_CONTAINER_IMP
 

@@ -328,6 +328,17 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_WIDGET} and Precursor {EV_PIXMAPABLE}
 		end
+		
+feature -- Contract support
+		
+	is_parent_recursive (a_widget: EV_WIDGET): BOOLEAN is
+			-- Is `a_widget' `parent', or recursivly, `parent' of `parent'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := a_widget = parent or else
+				(parent /= Void and then parent.is_parent_recursive (a_widget))
+		end
 
 feature {EV_ANY_I} -- Implementation
 

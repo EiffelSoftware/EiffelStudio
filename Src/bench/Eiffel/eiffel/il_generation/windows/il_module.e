@@ -408,7 +408,7 @@ feature {NONE} -- Implementations: signatures
 					set_signature_type (a_sig, l_native_array_type.true_generics.item (1))
 				else
 					a_sig.set_type (a_type.element_type,
-						class_type_token (a_type.static_type_id))
+						actual_class_type_token (a_type.static_type_id))
 				end
 			end
 		end
@@ -779,7 +779,7 @@ feature -- Metadata description
 				end
 			
 				if not class_type.is_generated_as_single_type then
-					last_parents := << class_type_token (class_type.static_type_id) >>
+					last_parents := << actual_class_type_token (class_type.static_type_id) >>
 				elseif last_parents = Void then
 					last_parents := << ise_eiffel_type_info_type_token >>
 				elseif not class_c.simple_conform_to (System.any_class.compiled_class) then
@@ -844,7 +844,7 @@ feature -- Metadata description
 				parents.after
 			loop
 					-- We need to reset context at each iteration because calls to
-					-- `class_type_token' might trigger a recursive call to `update_parents'
+					-- `xxx_class_type_token' might trigger a recursive call to `update_parents'
 					-- thus changing the context.
 				byte_context.set_class_type (class_type)
 				parent_type ?= byte_context.real_type (parents.item.type_i)
@@ -858,7 +858,7 @@ feature -- Metadata description
 						(not l_parent_class.is_external or else l_parent_class.is_interface)
 					then
 							-- Add parent interfaces only.
-						l_parents.put (class_type_token (l_parent_type.static_type_id), i)
+						l_parents.put (actual_class_type_token (l_parent_type.static_type_id), i)
 						i := i + 1
 						if
 							is_single_inheritance_implementation and then
@@ -894,7 +894,7 @@ feature -- Metadata description
 					single_inheritance_token := object_type_token
 				end
 			else
-				single_inheritance_token := class_type_token (l_single_inheritance_parent_id)
+				single_inheritance_token := actual_class_type_token (l_single_inheritance_parent_id)
 				single_inheritance_parent_id := l_single_inheritance_parent_id
 			end
 
@@ -927,7 +927,7 @@ feature -- Metadata description
 			l_uni_string: like uni_string
 			l_class: CLASS_C
 		do
-				-- Do not use `uni_string' as it might be used by `class_type_token'.
+				-- Do not use `uni_string' as it might be used by `xxx_class_type_token'.
 			create l_uni_string.make (".ctor")
 			l_sig := default_sig
 			
@@ -939,10 +939,10 @@ feature -- Metadata description
 				il_code_generator.il_module (class_type) /= Current
 			then
 				l_meth_token := md_emit.define_member_ref (l_uni_string,
-					class_type_token (class_type.implementation_id), l_sig)
+					actual_class_type_token (class_type.implementation_id), l_sig)
 			else
 				l_meth_token := md_emit.define_method (l_uni_string,
-					class_type_token (class_type.implementation_id),
+					actual_class_type_token (class_type.implementation_id),
 					feature {MD_METHOD_ATTRIBUTES}.Public |
 					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
 					feature {MD_METHOD_ATTRIBUTES}.Special_name |
@@ -1139,7 +1139,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				set_signature_type (l_sig, l_class_type.type)
 
 				Result := md_emit.define_member_ref (create {UNI_STRING}.make ("$$_invariant"),
-					class_type_token (a_type_id), l_sig)
+					actual_class_type_token (a_type_id), l_sig)
 				internal_invariant_token.put (Result, a_type_id)
 			end
 		ensure
@@ -1150,8 +1150,8 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			-- Array of invariant feature indexed by `type_id' of class in
 			-- which they are defined.
 
-	class_type_token (a_type_id: INTEGER): INTEGER is
-			-- Given `a_type_id' returns its associated metadata token.
+	actual_class_type_token (a_type_id: INTEGER): INTEGER is
+			-- Given `a_type_id' returns its associated metadata token
 		require
 			is_generated: is_generated
 			valid_type_id: a_type_id > 0
@@ -1162,7 +1162,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			l_class_mapping := class_mapping
 			Result := l_class_mapping.item (a_type_id)
 			if Result = 0 then
-					-- Although we do not require `is_generated' for `class_type_token'
+					-- Although we do not require `is_generated' for `actual_class_type_token'
 					-- we need it in the case it was not yet generated.
 				check
 					is_generated: is_generated
@@ -1176,6 +1176,25 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					generate_implementation_class_mapping (l_class_type)
 				end
 				Result := l_class_mapping.item (a_type_id)
+			end
+		ensure
+			class_token_valid: Result /= 0
+		end
+		
+	mapped_class_type_token (a_type_id: INTEGER): INTEGER is
+			-- Given `a_type_id' returns its associated metadata token
+			-- to be used in signatures and code generation token where
+			-- ANY needs to be mapped into System.Object.
+		require
+			is_generated: is_generated
+			valid_type_id: a_type_id > 0
+		do
+				-- We only map the interface of ANY into System.object
+				-- for code generation.
+			if a_type_id = any_type_id then
+				Result := actual_class_type_token (object_type_id)
+			else
+				Result := actual_class_type_token (a_type_id)
 			end
 		ensure
 			class_token_valid: Result /= 0
@@ -1716,13 +1735,13 @@ feature {NONE} -- Once per modules being generated.
 			internal_constructor_token.put (l_meth_token, l_gen.eiffel_type_info_type_id)
 		ensure
 			inserted:
-				class_type_token (il_code_generator.runtime_type_id) = ise_type_token and
-				class_type_token (il_code_generator.class_type_id) = ise_class_type_token and
-				class_type_token (il_code_generator.basic_type_id) = ise_basic_type_token and
-				class_type_token (il_code_generator.generic_type_id) = ise_generic_type_token and
-				class_type_token (il_code_generator.formal_type_id) = ise_formal_type_token and
-				class_type_token (il_code_generator.none_type_id) = ise_none_type_token and
-				class_type_token (il_code_generator.eiffel_type_info_type_id) = ise_eiffel_type_info_type_token
+				actual_class_type_token (il_code_generator.runtime_type_id) = ise_type_token and
+				actual_class_type_token (il_code_generator.class_type_id) = ise_class_type_token and
+				actual_class_type_token (il_code_generator.basic_type_id) = ise_basic_type_token and
+				actual_class_type_token (il_code_generator.generic_type_id) = ise_generic_type_token and
+				actual_class_type_token (il_code_generator.formal_type_id) = ise_formal_type_token and
+				actual_class_type_token (il_code_generator.none_type_id) = ise_none_type_token and
+				actual_class_type_token (il_code_generator.eiffel_type_info_type_id) = ise_eiffel_type_info_type_token
 		end
 	
 	initialize_tokens is

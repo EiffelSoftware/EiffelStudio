@@ -10,6 +10,11 @@ inherit
 		rename
 			context as byte_context
 		end;
+		
+	STRING_CONVERTER
+		export
+			{NONE} all
+		end
 
 feature
 
@@ -46,14 +51,15 @@ feature
 			good_argument: feat /= Void;
 			valid_class_id: class_id > 0
 			feat_is_visible: is_visible (feat, class_id)
-		local
-			feature_name: STRING;
 		do
-			feature_name := feat.feature_name;
-			if renamings /= Void and then renamings.has (feature_name) then
+			Result := feat.feature_name;
+			if renamings /= Void and then renamings.has (Result) then
 				Result := renamings.found_item
 			else
-				Result := feature_name
+				if feat.is_prefix or feat.is_infix then
+					create Result.make (Result.count + 2)
+					escape_string (Result, feat.feature_name)
+				end
 			end;
 		end;
 

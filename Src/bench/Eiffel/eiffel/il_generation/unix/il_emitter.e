@@ -71,12 +71,63 @@ feature -- Access
 			end
 		end
 
+	is_consumed: BOOLEAN is
+			-- Has assembly been consumed
+		require
+			assembly_found: assembly_found
+		do
+			check
+				False
+			end
+		end
+		
+	consumed_folder_name: STRING is
+			-- Path to consumed assembly folder
+		require
+			assembly_found: assembly_found
+			assembly_consumed: is_consumed
+		do
+			check
+				False
+			end
+		end	
+
 feature -- Retrieval
 
-	retrieve_assembly_info (an_assembly: STRING) is
+	relative_folder_name (a_name, a_version, a_culture, a_key: STRING): STRING is
+			-- returns the relative path to an assembly using at least `a_name'
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+		do
+			check
+				False
+			end
+		ensure
+			non_void_result: Result /= Void
+			non_empty_result: not Result.is_empty
+		end
+		
+	relative_folder_name_from_path (a_path: STRING): STRING is
+			-- Relative path to consumed assembly metadata given `a_path'
+		require
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
+			path_exists: (create {RAW_FILE}.make (a_path)).exists
+		do	
+			check
+				False
+			end
+		ensure
+			non_void_result: Result /= Void
+			non_empty_result: not Result.is_empty
+		end
+
+	retrieve_assembly_info (a_path: STRING) is
 			-- Retrieve data about assembly stored at `an_assembly'.
 		require
-			an_assembly_not_void: an_assembly /= Void
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
 		do
 			check
 				False
@@ -85,17 +136,12 @@ feature -- Retrieval
 
 feature -- XML generation
 
-	consume_local_assembly (an_assembly, a_destination: STRING) is
-			-- Consume local assembly `an_assembly' and all of its local dependencies
-			-- into 'a_destination'.
-			-- GAC dependencies will be put into the EAC
+	consume_assembly_from_path (a_path: STRING) is
+			-- Consume local assembly `a_assembly' and all of its dependencies into EAC
 		require
 			exists: exists
-			non_void_path: an_assembly /= Void
-			non_empty_path: not an_assembly.is_empty
-			non_void_dest: a_destination /= Void
-			assembly_exists: (create {RAW_FILE}.make (an_assembly.string)).exists
-			dest_exists: (create {DIRECTORY}.make (a_destination.string)).exists
+			non_void_path: a_path /= Void
+			non_empty_path: not a_path.is_empty
 		do
 			check
 				False
@@ -103,9 +149,9 @@ feature -- XML generation
 		end
 		
 
-	consume_gac_assembly (a_name, a_version, a_culture, a_key: STRING) is
-			-- consume an assembly into the EAC from the gac defined by
-			-- "'a_name', Version='a_version', Culture='a_culture', PublicKeyToken='a_key'"
+	consume_assembly (a_name, a_version, a_culture, a_key: STRING) is
+			-- consume an assembly into the EAC from assemblyy defined by
+			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
 			exists: exists
 			non_void_name: a_name /= Void
@@ -121,6 +167,7 @@ feature -- XML generation
 				False
 			end
 		end
+	
 	
 end -- class IL_EMITTER
 

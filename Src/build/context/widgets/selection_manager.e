@@ -4,7 +4,6 @@ class SELECTION_MANAGER
 inherit
 
 	WINDOWS
---	COMMAND
 	INTERNAL_META_COMMAND
 		redefine
 			context_data_useful,
@@ -28,7 +27,7 @@ feature {NONE} -- Creation
 		do
 			set_drawing (eb_screen)
 			set_logical_mode (10) -- GXinvert
-			!!group.make
+			!! group.make
 			Precursor
 		end
 	
@@ -40,7 +39,7 @@ feature {NONE} -- Creation
 				group.after
 			loop
 				if not group.item.widget.destroyed then
-					group.item.set_grouped (false)
+					group.item.set_grouped (False)
 				end
 				group.forth
 			end
@@ -61,6 +60,8 @@ feature {NONE}
 		do
 			Result := True
 		end
+
+	previous_context_data: CONTEXT_DATA
 
 feature 
 
@@ -104,7 +105,7 @@ feature {NONE}
 			bt_data ?= context_data
 			x := context.real_x
 			y := context.real_y
-			width := context.width
+			width := context.width 
 			height := context.height
 			new_x := bt_data.absolute_x
 			new_y := bt_data.absolute_y
@@ -132,12 +133,12 @@ feature {NONE}
 					width := new_x - x
 					height := new_y - y
 				end
-			end
-			if shift_selected then
-				display_shift_selected_rectangles
-			else
-				display_selected_rectangles
-			end
+ 			end
+ 			if shift_selected then
+ 				display_shift_selected_rectangles
+ 			else
+ 				display_selected_rectangles
+ 			end
 			parent := context.parent
 			if parent /= Void then
 					-- cursor does not change in the form
@@ -156,49 +157,51 @@ feature {NONE}
 			if grabbed then
 					-- Button release after some change
 				widget.ungrab
-				grabbed := false
+				grabbed := False
 				display_selected_rectangles
-				if context.is_group_composite and then
-					context.is_in_a_group
-				then
-					display_rectangle
+				!! cmd
+				cmd.execute (context)
+				if context.is_group_composite then
 					draw_grouped_comp_items
+					display_rectangle
+ 					if not context.is_in_a_group and then cursor_shape /= Cursors.move_cursor then
+							--| Resize
+						context.set_size (widget.width, height + 2)
+					end
+						--| end_group_composite
+					move_context
 				elseif width >= 0 and height >= 0 and then
 					not (context.is_group_composite and then
 						context.is_in_a_group)
 				then
-					!!cmd
-					cmd.execute (context)
 					if cursor_shape /= Cursors.move_cursor then
-							-- Resize
+							--| Resize
 						context.set_size (width + 2, height + 2)
-						move_context
-					else
-						move_context
 					end
+					move_context
 				end
 				context_catalog.update_editors (context, 
 						Context_const.geometry_form_nbr)
 			end
 		end
 
-	end_group_composite is
-		do
-			if grabbed then
-				widget.ungrab
-				grabbed := false
-				draw_grouped_comp_items
-				move_context
-			end
-		end
-
+-- 	end_group_composite is
+-- 		do
+-- 			if grabbed then
+-- 				widget.ungrab
+-- 				grabbed := false
+-- 				draw_grouped_comp_items
+-- 				move_context
+-- 			end
+-- 		end
+ 
 	end_shift_action is
 		do
-			shift_selected := false
+			shift_selected := False
 			if grabbed then
 					-- Button release after some change
 				widget.ungrab
-				grabbed := false
+				grabbed := False
 				if width > 0 and then height > 0 then
 					display_shift_selected_rectangles
 					create_new_contexts (True)
@@ -215,9 +218,10 @@ feature {NONE}
 			is_a_group: BOOLEAN
 			a_list: LINKED_LIST [CONTEXT]
 		do
+			--widget.top.raise
 			widget.ungrab
-			--context.widget.top.raise
-			ctrl_selected := false
+			grabbed := False
+			ctrl_selected := False
 			display_rectangle
 			set_cursor (True)
 			if not motion then
@@ -325,10 +329,10 @@ feature {NONE}
 			motnot: MOTNOT_DATA
 		do
 			motnot ?= context_data
-			if context.is_group_composite then
-				draw_grouped_comp_items
-			elseif shift_selected then
+			if shift_selected then  
 				display_shift_selected_rectangles
+			elseif context.is_group_composite then
+				draw_grouped_comp_items
 			else
 				display_rectangle
 			end
@@ -352,10 +356,10 @@ feature {NONE}
 				width := new_x - x
 				height := new_y - y
 			end
-			if context.is_group_composite then
+			if shift_selected then
+				display_shift_selected_rectangles 
+			elseif context.is_group_composite then
 				draw_grouped_comp_items
-			elseif shift_selected then
-				display_shift_selected_rectangles
 			else
 				display_rectangle
 			end
@@ -377,6 +381,7 @@ feature {NONE}
 				new_x := x - parent.real_x 
 				new_y := y - parent.real_y
 			end
+			context.set_insensitive
 			if context.grouped and then cursor_shape = Cursors.move_cursor then
 				d_x := new_x - context.x
 				d_y := new_y - context.y
@@ -396,6 +401,7 @@ feature {NONE}
 				context_catalog.update_editors (context, 
 					Context_const.geometry_form_nbr)
 			end
+			context.set_sensitive
 		end
 
 	create_new_contexts (real_mode: BOOLEAN) is
@@ -405,6 +411,7 @@ feature {NONE}
 			i, j: INTEGER
 			new_context: CONTEXT
 			parent: COMPOSITE_C
+			a_group_composite: GROUP_COMPOSITE_C
 			rect_x, rect_y, rect_w, rect_h: INTEGER
 		do
 			x_inc := context.width + 10
@@ -422,8 +429,8 @@ feature {NONE}
 			if not real_mode then
 				rect_x := context.real_x+1+ (context.width // 2)
 				rect_y := context.real_y+1+ (context.height // 2)
-				rect_w := context.width-4
-				rect_h := context.height-4
+				rect_w := context.width - 4
+				rect_h := context.height - 4
 				if rect_w <= 0 then
 					rect_w := 1
 				end
@@ -444,10 +451,15 @@ feature {NONE}
 				loop
 					if (i /= 0) or else (j /= 0) then
 						if not real_mode then
-							draw_rectangle (rect_x+i*x_inc, rect_y+j*y_inc, rect_w, rect_h, 0.0)
+							draw_rectangle (rect_x + i * x_inc, rect_y + j * y_inc, rect_w, rect_h, 0.0)
 						elseif not context.is_in_a_group then
 							-- Create new context
-							new_context := context.create_context (parent)
+							a_group_composite ?= context
+							if a_group_composite /= Void then
+								new_context := a_group_composite.old_create_context (parent)
+							else
+								new_context := context.create_context (parent)
+							end
 							new_context.set_position (context.real_x+i*x_inc, context.real_y+j*y_inc)
 							new_context.widget.manage
 						end
@@ -481,7 +493,7 @@ feature {NONE} -- Display Section
 					group.after
 				loop
 					a_context := group.item
-					draw_rectangle (a_context.real_x+(a_context.width // 2)+d_x, a_context.real_y+(a_context.height // 2)+d_y, a_context.width, a_context.height, 0.0)
+					draw_rectangle (a_context.real_x + (a_context.width // 2) + d_x, a_context.real_y + (a_context.height // 2) + d_y, a_context.width + 6, a_context.height + 2, 0.0)
 					group.forth
 				end
 			elseif not context.is_group_composite or else context.arity > 0 then
@@ -492,7 +504,8 @@ feature {NONE} -- Display Section
 	display_rectangle is
 		do
 			if width > 0 and then height > 0 then
-				draw_rectangle (x+(width // 2), y+(height // 2), width, height, 0.0)
+				draw_rectangle (x + (width // 2), y + (height // 2), width + 6, height + 2, 0.0)
+					--| a bit wider than the widget	
 			end
 		end
 
@@ -521,7 +534,8 @@ feature {NONE} -- Display Section
 			if number > 0 then
 				display_rectangle
 				a_child :=  context.first_child
-				new_number := height // (a_child.height+3)
+				new_number := height // a_child.height
+					--| A small space between the resize rectangle and the inside rectangles
 				if new_number > number then
 						-- Draw ghost rectangles for the children	
 					from
@@ -530,9 +544,9 @@ feature {NONE} -- Display Section
 							(cursor_shape 
 									= Cursors.top_left_corner_cursor)
 						then
-							d_x := 3 + x +(a_child.width // 2)
+							d_x := x + (a_child.width // 2)
 						else
-							d_x := a_child.real_x+(a_child.width // 2)
+							d_x := a_child.real_x + (a_child.width // 2)
 						end
 						if (cursor_shape = 
 							Cursors.bottom_left_corner_cursor) or else
@@ -540,18 +554,18 @@ feature {NONE} -- Display Section
 									= Cursors.bottom_right_corner_cursor)
 						then
 							d_y := a_child.real_y+(a_child.height // 2) 
-										+ number * (a_child.height+3)
+										+ number * a_child.height
 							down := 1
 						else
-							d_y := a_child.real_y+(a_child.height // 2)
-										-a_child.height-3 
+							d_y := a_child.real_y + (a_child.height // 2)
+										- a_child.height 
 							down := -1
 						end
 					until
 						new_number = number
 					loop
 						draw_rectangle (d_x, d_y, a_child.width, a_child.height, 0.0)
-						d_y := d_y + (a_child.height+3)*down
+						d_y := d_y + a_child.height * down
 						number := number + 1
 					end
 				end
@@ -596,7 +610,7 @@ feature {NONE} -- Cursor shape
 					cursor_shape := Cursors.bottom_right_corner_cursor
 				end
 			end
-			widget.set_cursor (cursor_shape)
+				context_data.widget.set_cursor (cursor_shape)
 		end
 
 feature {PERM_WIND_C}
@@ -630,7 +644,7 @@ feature {PERM_WIND_C}
 					if not grabbed then
 						-- First call
 						-- Keep track of old values
-						context.set_insensitive
+-- (Initially)			context.set_insensitive
 						begin_mvt
 					elseif cursor_shape = Cursors.move_cursor then
 						move_rectangle
@@ -640,11 +654,11 @@ feature {PERM_WIND_C}
 				end
 			elseif (argument = Second) then
 				-- Button release
-				selected := false
 				if abort_button_release then
 					if grabbed then
+						widget.top.raise
 						widget.ungrab
-						grabbed := false
+						grabbed := False
 					end
 					abort_button_release := False
 				else
@@ -652,42 +666,47 @@ feature {PERM_WIND_C}
 						end_shift_action
 					elseif ctrl_selected then
 						end_group_action
-					elseif context.is_group_composite and then
-						cursor_shape = Cursors.move_cursor 
-					then
-						end_group_composite
-					else
+-- 					elseif context.is_group_composite and then
+-- 						cursor_shape = Cursors.move_cursor 
+-- 					then
+-- 						end_group_composite
+					elseif selected then
 						end_mvt
 					end
 				end
-				context.set_sensitive
+				selected := False
+-- (Initially)	context.set_sensitive
 			elseif (argument = Third) then
 					-- Button press
-				if context.is_selectionable then
-					selected := true
+				if context.is_selectionable and then not selected then
+					selected := True
+					widget.ungrab
+					grabbed := False
 				end
 			elseif (argument = Fourth) then
 				-- Shift press
 				if cursor_shape /= Cursors.move_cursor then
-					selected := true
-					shift_selected := true
+					selected := True
+					shift_selected := True
 				else
 					abort_button_release := True
 				end
 			elseif (argument = Fifth) then
 				-- Group (control selected)
-				selected := true
-				ctrl_selected := true
-				motion := false
-				bd ?= context_data
-				x := bd.absolute_x
-				y := bd.absolute_y
-				width := 0
-				height := 0
-				delta_w := bd.absolute_x
-				delta_h := bd.absolute_y
-				display_rectangle
-				widget.grab (Cursors.cross_cursor)
+				if not (ctrl_selected or selected) then
+					selected := True
+					ctrl_selected := True
+					motion := False
+					bd ?= context_data
+					x := bd.absolute_x
+					y := bd.absolute_y
+					width := 0
+					height := 0
+					delta_w := bd.absolute_x
+					delta_h := bd.absolute_y
+					display_rectangle
+					widget.grab (Cursors.cross_cursor)
+				end
 			elseif argument = Sixth then
 					-- Left arrow
 				!! arrow_cmd
@@ -710,11 +729,12 @@ feature {PERM_WIND_C}
 				arrow_cmd.move_context (0, 1)
 			elseif not (grabbed or ctrl_selected) then
 					-- Enter event
-				selected := false;
-				abort_button_release := false;
-				if context /= Void then
-					context.widget.set_cursor (cursors.Arrow_cursor)
+				selected := False;
+				abort_button_release := False;
+				if previous_context_data /= Void then
+					previous_context_data.widget.set_cursor (cursors.arrow_cursor)
 				end
+				previous_context_data := context_data
 				a_context ?= argument
 				if not a_context.deleted then
 					context := a_context

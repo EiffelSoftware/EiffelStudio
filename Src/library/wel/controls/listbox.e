@@ -33,15 +33,10 @@ feature {NONE} -- Initialization
 		require
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
-			a_width_small_enough: a_width <= maximal_width
-			a_width_large_enough: a_width >= minimal_width
-			a_height_small_enough: a_height <= maximal_height
-			a_height_large_enough: a_height >= minimal_height
 		do
 			internal_window_make (a_parent, Void,
-				default_style,
-				a_x, a_y, a_width, a_height, an_id,
-				default_pointer)
+				default_style, a_x, a_y, a_width, a_height,
+				an_id, default_pointer)
 			id := an_id
 		ensure
 			parent_set: parent = a_parent

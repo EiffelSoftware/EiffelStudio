@@ -140,15 +140,20 @@ feature -- Element change
 
 	insert_class (a_class: CLASS_C) is
 			-- Add `a_class' to be processed.
+		local
+			l_ext: EXTERNAL_CLASS_C
 		do
-			if a_class.degree_4_needed then
-				if a_class.degree_4_processed then
-					a_class.remove_from_degree_4
+			l_ext ?= a_class
+			if l_ext = Void or else not l_ext.is_built then
+				if a_class.degree_4_needed then
+					if a_class.degree_4_processed then
+						a_class.remove_from_degree_4
+						a_class.add_to_degree_4
+					end
+				else
 					a_class.add_to_degree_4
+					count := count + 1
 				end
-			else
-				a_class.add_to_degree_4
-				count := count + 1
 			end
 		end
 

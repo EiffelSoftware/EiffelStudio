@@ -7,10 +7,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_MENU_ITEM
+class
+	EV_MENU_ITEM
 
 inherit
-
 	EV_ITEM
 		redefine
 			implementation
@@ -59,7 +59,7 @@ feature -- Implementation
 
 	implementation: EV_MENU_ITEM_I
 
-end -- class EV_MENU
+end -- class EV_MENU_ITEM
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

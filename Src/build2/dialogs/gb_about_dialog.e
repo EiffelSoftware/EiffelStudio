@@ -40,6 +40,7 @@ feature -- Initialization
 			hbox: EV_HORIZONTAL_BOX
 			copyright_label: EV_LABEL
 			info_label: EV_LABEL
+			version_label: EV_LABEL
 			hsep: EV_HORIZONTAL_SEPARATOR
 			ok_button: EV_BUTTON
 			white_cell: EV_CELL
@@ -56,6 +57,10 @@ feature -- Initialization
 			info_label.align_text_left
 			info_label.set_background_color (White)
 			
+			create version_label.make_with_text (t_version_info)
+			version_label.align_text_left
+			version_label.set_background_color (White)
+			
 			create copyright_label.make_with_text (t_Copyright_info)
 			copyright_label.align_text_left
 			copyright_label.set_background_color (White)
@@ -67,7 +72,7 @@ feature -- Initialization
 			eiffel_text_box.set_background_color (White)
 			eiffel_text_box.set_padding (Default_padding_size)
 			eiffel_text_box.set_background_color (White)
-		--	eiffel_text_box.extend (version_label)
+			eiffel_text_box.extend (version_label)
 			eiffel_text_box.extend (copyright_label)
 			eiffel_text_box.extend (info_label)
 
@@ -112,6 +117,12 @@ feature -- Initialization
 		end
 
 feature -- Constant strings
+
+	t_version_info: STRING is
+		once
+			Result := "EiffelBuild (5.3.0204)"
+		end
+		
 
 	t_Copyright_info: STRING is
 		once

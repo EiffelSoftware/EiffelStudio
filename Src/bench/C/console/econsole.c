@@ -17,7 +17,9 @@
 #include <windows.h>
 #include <commdlg.h>
 #define EIF_WINDOWS				/* Used to trick err_msg.h */
-#include "..\..\..\run-time\err_msg.h"
+#include "argcargv.h"
+#include "..\..\..\run-time\error.h"		/* Needs relative path here... */
+#include "err_msg.h"
 #include "eif_cons.h"
 
 #define BUFFER_SIZE 255
@@ -26,7 +28,7 @@ static HANDLE eif_coninfile, eif_conoutfile;	/* Handles for the non windowed con
 static char eif_console_buffer [BUFFER_SIZE];	/* buffer for reads from windowed console	*/
 static char transfer_buffer [30];		/* buffer to output of numbers as strings	*/
 static DWORD buffer_length = 0;			/* Length of data in buffer			*/
-static int buffer_place = 0;			/* Position in buffer we are currently at 	*/
+static unsigned int buffer_place = 0;			/* Position in buffer we are currently at 	*/
 
 int dummy_length;				/* Length holder for some calls			*/
 
@@ -76,8 +78,7 @@ long eif_console_readint()
 		buffer_place = 0;
 		}
 
-	
-	if (0 >= sscanf (eif_console_buffer+buffer_place, "%i", &lastint))
+	if (0 >= sscanf (eif_console_buffer + buffer_place, "%i", &lastint))
 		eio();
 
 	while ((buffer_place < buffer_length) && (!isspace(eif_console_buffer[buffer_place])))
@@ -258,23 +259,20 @@ long eif_console_readstream(char *s, long bound)
 */
 {
 	long amount = bound;
-	BOOL result;
 
 	if (!eif_console_allocated)
 		eif_make_console();
 
-	if (windowed_application)
-		{
+	if (windowed_application) {
 		eif_GetWindowedInput();
 		strcat (eif_console_buffer, "\r\n");
 		buffer_length += 2;
-		}
-	else    
-		if (!ReadConsole(eif_coninfile, s, bound, &amount, NULL))
-			 {
+	} else    
+		if (!ReadConsole(eif_coninfile, s, bound, &amount, NULL)) {
 			 eif_console_eof_value = 1;
 			 return bound - amount - 1;
-			 }
+		 }
+
 	return bound - amount - 1;
 }
 
@@ -464,21 +462,18 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 {
 	OPENFILENAME ofn;
 	FILE *f;
-	long i;
 	static char *szFilter [] = {    "Log Files (*.LOG)", "*.LOG",
 					"All Files (*.*)", "*.*",
 					"" };
 	char szFile[MAX_PATH];
 
-	switch (umsg)
-		{
+	switch (umsg) {
 		case WM_INITDIALOG:
 			SendDlgItemMessage (hwnd, 1000, WM_SETTEXT, 0, (LPARAM) exception_trace_string);
 			SendDlgItemMessage (hwnd, 1000, WM_SETFONT, (WPARAM) GetStockObject (ANSI_FIXED_FONT), 0L);
 			return 1;
 		case WM_COMMAND:
-			switch LOWORD (wparam)
-				{
+			switch LOWORD (wparam) {
 				case IDCANCEL:
 					EndDialog (hwnd, 0);
 					return 1;
@@ -504,20 +499,18 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 					ofn.lCustData = 0L;
 					ofn.lpfnHook = NULL;
 					ofn.lpTemplateName = NULL;
-					if (GetSaveFileName (&ofn))
-						{
+					if (GetSaveFileName (&ofn)) {
 						f = fopen (ofn.lpstrFile, "wb");
-						if (f != NULL)
-							{
+						if (f != NULL) {
 							fputs (exception_trace_string, f);
 							fclose (f);
-							}
 						}
-				}
+					}
+			}
 			return 1;
 		default:
 			return 0;       
-		}
+	}
 }
 
 void eif_console_cleanup ()
@@ -692,7 +685,7 @@ void eif_PutWindowedOutput(char *s, int l)
 #define BUFSIZE 16000
 	char *buffer, *sp, *bp, *ss = s;
 	MSG msg;
-	int size, t, lv = l, newlines = 0;
+	int size, lv = l, newlines = 0;
 	BOOL update = FALSE;
 
 	/*

@@ -146,34 +146,34 @@ EIF_POINTER p;
 #endif
 
 		/* Test to see if `p' is a valid file name (no directory part) */
-	int dot, len, i;
+	int len;
 	char * s, valid [] = "_^$~!#%&-{}@'`()";
 
 	if ((p == NULL) || ((len = strlen (p)) == 0) || (len > MAX_FILE_LEN) )
 		return EIF_FALSE;
 
 #ifdef EIF_WIN_31
-	dot = 0;
-	for (i = 0, s = p; i < len; i++, s++)
-		if (*s == '.')
-			{
-			if ((i > 0) && (len - i) <= 4)
-				if (dot == 0)
-					dot = i;
+	{
+		int dot, i;
+		dot = 0;
+		for (i = 0, s = p; i < len; i++, s++)
+			if (*s == '.') {
+				if ((i > 0) && (len - i) <= 4)
+					if (dot == 0)
+						dot = i;
+					else
+						return EIF_FALSE;
 				else
 					return EIF_FALSE;
-			else
-				return EIF_FALSE;
-			}
-		else
-			if (!isprint (*s))
-				return EIF_FALSE;
-			else
-				if ( (!isalnum (*s)) && (strchr (valid, *s) == 0) )
+			} else
+				if (!isprint (*s))
 					return EIF_FALSE;
+				else
+					if ( (!isalnum (*s)) && (strchr (valid, *s) == 0) )
+						return EIF_FALSE;
 
-	if ((dot == 0) && (len > 8))
-		return EIF_FALSE;
+		if ((dot == 0) && (len > 8))
+			return EIF_FALSE;
 #else
 	for (s = p; *s; s++)
 		if ((*s == '\\') ||

@@ -127,7 +127,7 @@ feature -- Status
 		do
 			class_type ?= constraint_type
 			if class_type /= Void then
-				class_id := class_type.base_class_id
+				class_id := class_type.class_id
 				feat_table := Feat_tbl_server.item (class_id)
 				check
 						-- A feature table associated to `base_class_id' should
@@ -168,7 +168,7 @@ feature -- Status
 			if creation_feature_list /= Void then
 				class_type ?= constraint_type
 				if class_type /= Void then
-					Result := Feat_tbl_server.item (class_type.base_class_id) /= Void
+					Result := Feat_tbl_server.item (class_type.class_id) /= Void
 				end
 			end
 		end
@@ -194,8 +194,7 @@ feature {NONE} -- Access
 	Any_constraint_type: CL_TYPE_A is
 			-- Default constraint actual type
 		once
-			!!Result
-			Result.set_base_class_id (System.any_id)
+			create Result.make (System.any_id)
 		end
 
 feature -- creation feature check

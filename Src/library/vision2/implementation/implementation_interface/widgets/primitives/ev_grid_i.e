@@ -11,7 +11,9 @@ deferred class
 
 inherit
 	
-	EV_PRIMITIVE_I
+	EV_CELL_I
+		rename
+			item as cell_item
 		redefine
 			interface
 		end
@@ -70,11 +72,8 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	is_header_displayed: BOOLEAN is
+	is_header_displayed: BOOLEAN
 			-- Is the header displayed in `Current'.
-		do
-			to_implement ("EV_GRID_I.is_header_displayed")
-		end
 
 feature -- Status setting
 
@@ -167,7 +166,8 @@ feature -- Status setting
 	show_header is
 			-- Ensure header displayed.
 		do
-			to_implement ("EV_GRID_I.show_header")
+			is_header_displayed := True
+			rebuild_widget_structure
 		ensure
 			header_displayed: is_header_displayed
 		end
@@ -175,7 +175,8 @@ feature -- Status setting
 	hide_header is
 			-- Ensure header is hidden.
 		do
-			to_implement ("EV_GRID_I.hide_header")
+			is_header_displayed := False
+			rebuild_widget_structure
 		ensure
 			header_not_displayed: not is_header_displayed
 		end
@@ -383,17 +384,89 @@ feature {NONE} -- Implementation
 	initialize_grid is
 			-- Initialize `Current'. To be called during `initialize' of
 			-- the implementation classes.
+		local
+			header_item: EV_HEADER_ITEM
 		do
+			set_minimum_size (default_minimum_size, default_minimum_size)
 			create row_list.make (5)
 			create drawer.make_with_grid (Current)	
 			create drawable
+			create vertical_scroll_bar
+			create horizontal_scroll_bar
+			create fixed
+			fixed.extend (vertical_scroll_bar)
+			fixed.extend (horizontal_scroll_bar)
+			create viewport
+			fixed.extend (viewport)
+			create vertical_box
+			create header
+			header.set_minimum_height (default_header_height)
+			vertical_box.extend (header)
+			vertical_box.disable_item_expand (header)
+			create drawable
+			vertical_box.extend (drawable)
+			viewport.extend (vertical_box)
+			viewport.resize_actions.extend (agent viewport_resized)
+			fixed.resize_actions.extend (agent fixed_resized)
+			extend (fixed)
 		end
+		
+	rebuild_widget_structure is
+			-- Rebuild widget structure of `Current' based on current size
+			-- and internal properties.
+		do
+			fixed_resized (0, 0, width, height)
+			drawer.full_redraw
+		end
+
+	fixed_resized (an_x, a_y, a_width, a_height: INTEGER) is
+			-- Respond to a resize of `fixed'. Must position all contents based
+			-- on current state.
+		do
+			fixed.set_item_position (vertical_scroll_bar, a_width - vertical_scroll_bar.minimum_width, 0)
+			fixed.set_item_size (vertical_scroll_bar, vertical_scroll_bar.minimum_width, height - horizontal_scroll_bar.height)
+			
+			fixed.set_item_position (horizontal_scroll_bar, 0, a_height - horizontal_scroll_bar.minimum_height)
+			fixed.set_item_size (horizontal_scroll_bar, width - vertical_scroll_bar.width, horizontal_scroll_bar.minimum_height)
+			fixed.set_item_size (viewport, width - vertical_scroll_bar.width, height - horizontal_scroll_bar.height)
+		end
+		
+	viewport_resized (an_x, a_y, a_width, a_height: INTEGER) is
+			--
+		do
+			viewport.set_item_size ((viewport.width).max (viewport.item.minimum_width), (viewport.height).max (viewport.item.minimum_height))
+		end
+		
+	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
+		-- Vertical scroll bar of `Current'.
+	
+	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
+		-- Horizontal scroll bar of `Current'.
+		
+	viewport: EV_VIEWPORT
+		-- Viewport containing `header' and `drawable', permitting the header to be offset
+		-- correctly in relation to the horizontal scroll bar.
 
 	drawable: EV_DRAWING_AREA
 		-- Drawing area for `Current' on which all drawing operations are performed.
 		
+	header: EV_HEADER
+		-- Header displayed at top of `Current'.
+	
+	vertical_box: EV_VERTICAL_BOX
+		-- A vertical box to hold `header' and and `drawable' which is inserted within `viewport'.
+	
+	fixed: EV_FIXED
+		-- Main widget contained in `Current' used to manipulate the individual widgets required.
+		
 	drawer: EV_GRID_DRAWER_I
 		-- Drawer which is able to redraw `Current'.
+		
+	default_header_height: INTEGER is 16
+		-- Default height applied to `header'.
+	
+	default_minimum_size: INTEGER is 50
+		-- Default minimum size dimensions for `Current'.
 
 feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN} -- Implementation
 

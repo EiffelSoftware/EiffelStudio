@@ -1314,13 +1314,17 @@ end
 				dtype := a_class.types.first.type_id - 1
 				if creation_name /= Void then
 					root_feat := a_class.feature_table.item (creation_name)
-					if root_feat.has_arguments then
-						has_argument := 1
+					if root_feat /= Void then
+						if root_feat.has_arguments then
+							has_argument := 1
+						end
+						rout_id := root_feat.rout_id_set.first
+						rout_info := rout_info_table.item (rout_id)
+						rcorigin := rout_info.origin
+						rcoffset := rout_info.offset
+					else
+						rcorigin := - 1
 					end
-					rout_id := root_feat.rout_id_set.first
-					rout_info := rout_info_table.item (rout_id)
-					rcorigin := rout_info.origin
-					rcoffset := rout_info.offset
 				else
 					rcorigin := -1
 				end

@@ -21,4 +21,3 @@ rem Installation of .NET components terminated.
 rem
 
 echo off
-exit

@@ -24,17 +24,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; has_getter, has_setter, pub, stat: BOOLEAN; type, decl_type: CONSUMED_REFERENCED_TYPE) is
+	make (en, dn: STRING; args:ARRAY [CONSUMED_ARGUMENT]; has_getter, has_setter, pub, stat: BOOLEAN; type, decl_type: CONSUMED_REFERENCED_TYPE) is
 			-- Initialize event.
 		require
 			non_void_eiffel_name: en /= Void
 			non_void_dotnet_name: dn /= Void
+			non_void_args: args /= Void
 			valid_eiffel_name: not en.is_empty
 			valid_dotnet_name: not dn.is_empty
 			non_void_type: type /= Void
 			non_void_declaring_type: decl_type /= Void
-		local
-			args: ARRAY [CONSUMED_ARGUMENT]
 		do
 			dotnet_name := dn
 			is_public := pub
@@ -43,14 +42,12 @@ feature {NONE} -- Initialization
 			if has_getter then
 				create getter.make (	en,
 									dn,
-									create {ARRAY [CONSUMED_ARGUMENT]}.make (1, 0),
+									args,
 									type,
 									False, stat, False, False, False, pub, True,
 									decl_type)
 			end
 			if has_setter then
-				create args.make (1, 1)
-				args.put (create {CONSUMED_ARGUMENT}.make ("Value", "value", type, False), 1)
 				create setter.make (
 									"set_" + en,
 									"set_" + dn,

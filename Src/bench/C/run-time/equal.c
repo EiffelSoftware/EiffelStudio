@@ -238,8 +238,8 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 			s_ref = (EIF_REFERENCE)source, t_ref = (EIF_REFERENCE) target;
 			count > 0;
 			count --,
-				s_ref = (EIF_REFERENCE) ((EIF_REFERENCE) s_ref + 1),
-				t_ref = (EIF_REFERENCE) ((EIF_REFERENCE) t_ref + 1)
+				s_ref = (EIF_REFERENCE) ((EIF_REFERENCE *) s_ref + 1),
+				t_ref = (EIF_REFERENCE) ((EIF_REFERENCE *) t_ref + 1)
 		) {
 			/* Evaluation of two references */
 			s_field = *(EIF_REFERENCE *) s_ref;
@@ -342,7 +342,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 				s_ref = (EIF_REFERENCE)source, t_ref = (EIF_REFERENCE) target;
 				count > 0;
 				count --,
-					s_ref = (EIF_REFERENCE) ((EIF_REFERENCE) s_ref + 1),
+					s_ref = (EIF_REFERENCE) ((EIF_REFERENCE *) s_ref + 1),
 					t_ref = (EIF_REFERENCE) ((EIF_REFERENCE *) t_ref + 1)
 			) {
 				/* Evaluation of two references */

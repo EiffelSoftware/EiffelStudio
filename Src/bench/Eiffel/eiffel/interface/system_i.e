@@ -57,6 +57,9 @@ feature
 	class_counter: COUNTER;
 			-- Counter of classes
 
+	cluster_counter: COUNTER;
+			-- Counter of clusters
+
 	body_id_counter: BODY_ID_COUNTER;
 			-- Counter for body ids
 
@@ -169,6 +172,9 @@ feature
 
 	c_file_names: FIXED_LIST [STRING];
 			-- C file names to include
+
+	include_paths:  FIXED_LIST [STRING];
+			-- Include paths to add in the Makefile C flags
 
 	object_file_names: FIXED_LIST [STRING];
 			-- Object file names to link with the application
@@ -367,6 +373,7 @@ feature
 			!!m_desc_server.make;
 				-- Counter creation
 			!!class_counter;
+			!!cluster_counter;
 			!!body_id_counter.make;
 			!!routine_id_counter.make;
 			!!type_id_counter;
@@ -3488,8 +3495,18 @@ feature -- Conveniences
 
 	set_c_file_names (l: like c_file_names) is
 			-- Assign `l' to `c_file_names'.
+			--| Set `freeze' flag if needed
 		do
+			if not deep_equal (l, c_file_names) then
+				freeze := True
+			end
 			c_file_names := l;
+		end;
+
+	set_include_paths (l: like include_paths) is
+			-- Assign `l' to `include_paths'.
+		do
+			include_paths := l;
 		end;
 
 	set_object_file_names (l: like object_file_names) is
@@ -3509,6 +3526,7 @@ feature -- Conveniences
 			-- Incrementality of the generated makefile
 		do
 			c_file_names := Void;
+			include_paths := Void;
 			object_file_names := Void;
 			makefile_names := Void;
 		end;

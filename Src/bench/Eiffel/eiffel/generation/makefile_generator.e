@@ -606,7 +606,7 @@ feature -- Generation (Linking rules)
 			-- Generate rules to produce executable
 		do
 			Make_file.putstring ("all: ");
-			Make_file.putstring (System.system_name);
+			Make_file.putstring (system_name);
 			Make_file.new_line;
 			Make_file.new_line;
 			generate_partial_objects_dependencies;
@@ -619,7 +619,7 @@ feature -- Generation (Linking rules)
 			-- Generate rule to produce simple executable, linked in
 			-- with `run_time' archive.
 		do
-			Make_file.putstring (System.system_name);
+			Make_file.putstring (system_name);
 			Make_file.putstring (": ");
 			generate_objects_macros;
 			Make_file.putchar (' ');
@@ -1100,6 +1100,18 @@ feature -- Removal of empty classes
 			-- are not generated
 		do
 			empty_class_types.extend (a_class_type);
+		end;
+
+feature -- DLE
+
+	record_dle_class_type (a_class_type: INTEGER) is
+			-- Add `a_class_type' to the set of static class types that
+			-- needs to be regenerated (they are containing removed
+			-- features which are used by the dynamic system)
+		require
+			dynamic_system: System.is_dynamic;
+			final_mode: System.in_final_mode
+		do
 		end;
 
 end

@@ -128,7 +128,7 @@ feature {NONE} -- Special childrens
 								-- We need to retrieve the rest of the data
 							l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, l_tokens_count - 10)
 --							l_tokens.fill (l_tokens_array)
-							l_tokens.extend_last (create {DS_ARRAYED_LIST [INTEGER]}.make_from_array (l_tokens_array))
+							l_tokens.append_last (create {DS_ARRAYED_LIST [INTEGER]}.make_from_array (l_tokens_array))
 						end
 					end
 					l_md_import.close_enum (l_enum_hdl)

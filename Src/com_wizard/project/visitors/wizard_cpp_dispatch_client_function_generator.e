@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 				if visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
 				else
-					Result.append (Ce_mapper)
+					Result.append ("rt_ce")
 				end
 				Result.append (".")
 				Result.append (visitor.ce_function_name)

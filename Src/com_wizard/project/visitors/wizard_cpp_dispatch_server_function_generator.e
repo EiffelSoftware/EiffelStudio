@@ -127,8 +127,8 @@ feature {NONE} -- Implementation
 				arguments.append (Close_parenthesis)
 
 				create variables.make (1000)
-				create out_value.make (10000)
-				create free_object.make (10000)
+				create out_value.make (1000)
+				create free_object.make (1000)
 
 				from
 					func_desc.arguments.start
@@ -161,8 +161,7 @@ feature {NONE} -- Implementation
 					func_desc.arguments.forth
 				end
 
-				arguments.append (Close_parenthesis)
-				arguments.append (Semicolon)
+				arguments.append (");")
 
 				visitor := func_desc.return_type.visitor
 				if not does_routine_have_result (func_desc) then
@@ -176,42 +175,34 @@ feature {NONE} -- Implementation
 				Result.append (New_line_tab)
 				if variables.count > 0 then
 					Result.append (variables)
-					Result.append (New_line_tab)
+					Result.append ("%N%T")
 				end
 
 				Result.append (cecil_call)
-				Result.append (New_line_tab)
+				Result.append ("%N%T")
 
 				if does_routine_have_result (func_desc) then
-					Result.append (Asterisk)
-					Result.append (Return_value_name)
-					Result.append (Space_equal_space)
-					Result.append (Open_parenthesis)
+					Result.append ("*ret_value = (")
 					Result.append (visitor.c_type)
-					Result.append (Close_parenthesis)
+					Result.append (")")
 
 					if visitor.is_basic_type or visitor.is_enumeration then
-						Result.append (Tmp_variable_name)
-						Result.append (Semicolon)
+						Result.append ("tmp_value;")
 					else
 						if visitor.need_generate_ec then
 							Result.append (Generated_ec_mapper)
 						else
-							Result.append (Ec_mapper)
+							Result.append ("rt_ec")
 						end
-						Result.append (Dot)
+						Result.append (".")
 						Result.append (visitor.ec_function_name)
-						Result.append (Space_open_parenthesis)
-						Result.append (Tmp_variable_name)
+						Result.append (" (tmp_value")
 						if visitor.writable then
-							Result.append (Comma_space)
-							Result.append (Null)
+							Result.append (", NULL")
 						end
-						Result.append (Close_parenthesis)
-						Result.append (Semicolon)
+						Result.append (");")
 					end
-					Result.append (New_line)
-					Result.append (New_line_tab)
+					Result.append ("%N%N%T")
 				end
 
 				if 
@@ -223,9 +214,7 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			Result.append (New_line_tab)
-			Result.append (End_ecatch)
-			Result.append (Return_s_ok)
+			Result.append ("%N%TEND_ECATCH;%N%Treturn S_OK;")
 		end
 
 end -- class WIZARD_CPP_SERVER_FUNCTION_GENERATOR

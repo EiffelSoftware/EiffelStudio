@@ -425,7 +425,7 @@ feature -- Basic operations
 			if l_visitor.need_generate_ec then
 				Result.append (Generated_ec_mapper)
 			else
-				Result.append (Ec_mapper)
+				Result.append ("rt_ec")
 			end
 			Result.append (".")
 			Result.append (l_visitor.ec_function_name)
@@ -486,8 +486,7 @@ feature -- Basic operations
 			a_lcid := an_interface_descriptor.library_descriptor.lcid
 			create tmp_element_ec_function.make (100)
 			if not l_visitor.need_generate_ce then
-				tmp_element_ec_function.append (Ce_mapper)
-				tmp_element_ec_function.append (Dot)
+				tmp_element_ec_function.append ("rt_ce.")
 			end
 			tmp_element_ec_function.append (l_visitor.ec_function_name)
 
@@ -955,7 +954,7 @@ feature -- Basic operations
 			if l_visitor.need_generate_ce then
 				Result.append (Generated_ce_mapper)
 			else
-				Result.append (Ce_mapper)
+				Result.append ("rt_ce")
 			end
 			Result.append (".")
 			Result.append (l_element_ce_function)

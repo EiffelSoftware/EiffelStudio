@@ -267,7 +267,7 @@ feature -- Execution
 						destroy
 					end
 				else
-					ebench_name := clone ((create {EIFFEL_ENV}).Ebench_command_name)
+					ebench_name := clone ((create {EIFFEL_ENV}).Estudio_command_name)
 					ebench_name.append (" -create ")
 					ebench_name.append (directory_name)
 					ebench_name.append (" -ace ")

@@ -554,14 +554,37 @@ feature -- JIT info
 		local
 			l_module_key_name: STRING
 			l_module_key_name_tail: STRING
+			l_module_stored: ICOR_DEBUG_MODULE
 		do
 			l_module_key_name := module_key (a_module.get_name)
 			loaded_modules.put (a_module, l_module_key_name)
 			if not loaded_modules.inserted then
-				print ("ERROR while inserting new ICorDebugModule %N")
+				l_module_stored := loaded_modules.item (l_module_key_name)
+				if l_module_stored /= Void then
+					if l_module_stored.is_equal_as_icor_object (a_module) then
+						debug ("debugger_trace_eifnet")
+							print ("WARNING: Reloading same ICorDebugModule %N")
+							print (" address -> " + a_module.item.out + "%N")
+							print ("    name -> " + l_module_key_name + "%N")
+						end
+					else
+						debug ("debugger_trace_eifnet")
+							print ("WARNING: Overwriting same ICorDebugModule %N")
+							print (" address -> " + a_module.item.out + "%N")
+							print ("    name -> " + l_module_key_name + "%N")
+						end
+	
+						loaded_modules.force (a_module, l_module_key_name)
+						check
+							inserted: loaded_modules.inserted
+						end
+					end
+				else
+					print ("[ERROR] while inserting new ICorDebugModule %N")
+				end
 			end
 			
-			debug ("DEBUGGER_TRACE")
+			debug ("debugger_trace_eifnet")
 				l_module_key_name_tail := clone (l_module_key_name)
 				l_module_key_name_tail.keep_tail (30)
 				print ("Load module [.. " + l_module_key_name_tail + "]%N")

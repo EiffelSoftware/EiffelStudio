@@ -39,6 +39,19 @@ feature {ICOR_EXPORTER} -- Initialisation
 		do
 		end		
 
+feature -- Equality
+
+	is_equal_as_icor_object (other: like Current): BOOLEAN is
+			-- Comparison of pointer
+		require
+			other_not_void: other /= void			
+		do
+			Result := item.is_equal (other.item)
+		ensure
+			symmetric: Result implies other.is_equal_as_icor_object (Current)
+			consistent: is_equal_as_icor_object (other) implies Result		
+		end
+
 feature {ICOR_EXPORTER} -- Access
 
 	check_last_call_succeed: BOOLEAN is

@@ -276,7 +276,7 @@ feature -- Access
 			end
 		end
 
-	selected_items: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+	selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
 			-- List of all the selected items. For a single
 			-- selection list, it gives a list with only one
 			-- element which is `selected_item'. Therefore, one
@@ -293,7 +293,7 @@ feature -- Access
 					C.gtk_clist_struct_selection (list_widget)
 				)
 			end
-			create Result.make
+			create Result.make (0)
 			from
 				i := 0
 			until
@@ -306,7 +306,7 @@ feature -- Access
 					)
 				)
 				row ?= (ev_children @ (an_index + 1)).interface
-				Result.extend (row)
+				Result.force (row)
 				i := i + 1
 			end
 		end
@@ -923,6 +923,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.70  2000/04/27 18:23:34  king
+--| Selected items is now arrayed_list
+--|
 --| Revision 1.69  2000/04/26 20:14:30  king
 --| Pixmap setting cause sig seg on mask retrieval
 --|

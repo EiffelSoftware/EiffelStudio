@@ -160,6 +160,23 @@ feature {NONE} -- Implementation
 		do
 		end
 
+	clear_ev_children is
+			-- Clear all the items of the list.
+		local
+			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
+		do
+			from
+				list := ev_children
+				list.start
+			until
+				list.after
+			loop
+				list.item.interface.remove_implementation
+				list.forth
+			end
+			list.wipe_out
+		end
+
 feature {EV_LIST_ITEM_IMP} -- Deferred features
 
 	graphical_insert_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
@@ -196,10 +213,6 @@ feature {EV_LIST_ITEM_IMP} -- Deferred features
 		end
 
 	foreground_color_imp: EV_COLOR_IMP is
-		deferred
-		end
-
-	clear_ev_children is
 		deferred
 		end
 

@@ -13,7 +13,8 @@ inherit
 			pass_address, copy, setup, consistent, is_equal
 		redefine
 			adapt
-		end;
+		end
+
 	CONSTRUCT_LIST [T]
 
 creation
@@ -24,15 +25,16 @@ feature {COMPILER_EXPORTER}
 	adapt is
 			-- Adaptation iteration
 		local
+			l_area: SPECIAL [T]
 			i, nb: INTEGER;
 		do
 			from
-				i := 1;
+				l_area := area
 				nb := count;
 			until
-				i > nb
+				i = nb
 			loop
-				i_th (i).adapt;
+				l_area.item (i).adapt;
 				i := i + 1
 			end
 		end

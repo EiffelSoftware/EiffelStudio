@@ -8,7 +8,13 @@ class
 
 inherit
 	WIZARD_CONSTANTS_IMP
+		redefine
+			icons_directory
+		end
 
--- Perform any constant redefinitions in this class.
-	
+feature -- Access
+
+	icons_directory: STRING is "resources"
+			-- Icons directory
+		
 end -- class WIZARD_CONSTANTS

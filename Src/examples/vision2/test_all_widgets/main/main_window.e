@@ -46,6 +46,7 @@ feature -- Initialization
 			c8: SPLIT_AREA_DEMO_WINDOW
 			c9: SCROLLABLE_AREA_DEMO_WINDOW
 			c10: BUTTONS_DEMO_WINDOW
+			c11: LIST_DEMO_WINDOW
 		do
 			Precursor
 			!!container.make (Current)
@@ -59,6 +60,7 @@ feature -- Initialization
 			!!c8.make (Current)
 			!!c9.make (Current)
 			!!c10.make (Current)
+			!!c11.make (Current)
 			
 			!!b.make_button (Current, "Label", "", c1)
 			!!b.make_button (Current, "Buttons", "../pixmaps/buttons.xpm", c10)
@@ -70,7 +72,8 @@ feature -- Initialization
 			!!b.make_button (Current, "Menu", "../pixmaps/menu.xpm", c7)
 			!!b.make_button (Current, "Split area", "../pixmaps/split_area.xpm", c8)
 			!!b.make_button (Current, "Scrollable area", "../pixmaps/scrollable_area.xpm", c9)
-			
+			!!b.make_button (Current, "List", "", c11)
+
 			set_values
 		end
 	

@@ -53,11 +53,11 @@ feature -- Duplication
 			"standard_clone"
 		end
 
-	frozen deep_clone (o: SYSTEM_OBJECT): SYSTEM_OBJECT is
+	frozen deep_twin (target: SYSTEM_OBJECT): SYSTEM_OBJECT is
 		external
 			"IL static signature (System.Object): System.Object use ISE.Runtime.RUN_TIME"
 		alias
-			"deep_clone"
+			"deep_twin"
 		end
 		
 feature -- Hash code

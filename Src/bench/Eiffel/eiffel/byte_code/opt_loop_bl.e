@@ -148,9 +148,9 @@ feature
 					end
 					System.remover.array_optimizer.array_item_type (id).
 						generate (generated_file);
-					generated_file.putchar (',');
+					generated_file.putstring (gc_comma);
 					generated_file.putstring (reg_name (id));
-					generated_file.putchar (',');
+					generated_file.putstring (gc_comma);
 					generated_file.putstring (register_acces (id));
 					generated_file.putstring (gc_rparan_comma);
 					generated_file.new_line;
@@ -169,7 +169,7 @@ feature
                     r_name := reg_name (id);
                     generated_file.putstring ("RTAIOFFSETS(");
                     generated_file.putstring (r_name);
-					generated_file.putchar (',');
+					generated_file.putstring (gc_comma);
 					generated_file.putstring (register_acces (id));
                     generated_file.putstring (gc_rparan_comma);
 					generated_file.new_line;
@@ -192,7 +192,7 @@ feature
 					generated_file.putstring ("RTAF(");
 					id := array_desc.item
 					generated_file.putstring (reg_name (id));
-					generated_file.putchar (',');
+					generated_file.putstring (gc_comma);
 					generated_file.putstring (register_acces (id));
 					generated_file.putstring (gc_rparan_comma);
 					generated_file.new_line;

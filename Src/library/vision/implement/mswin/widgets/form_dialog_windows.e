@@ -76,6 +76,7 @@ inherit
 		undefine
 			realize_current,
 			default_style,
+			default_ex_style,
 			destroy,
 			height,
 			minimal_height,

@@ -59,7 +59,7 @@ feature -- Status report
 			-- Path of the socket address file
 		do
 			create Result.make(0);
-			Result.from_c (get_unix_sock_path($socket_address))
+			Result.from_c (get_unix_sock_path (socket_address.item))
 		end
 
 feature -- Status settings
@@ -67,10 +67,10 @@ feature -- Status settings
 	set_path (p: STRING) is 
 			-- Set socket path to `p'.
 		local
-			ext: ANY
+			ext: C_STRING
 		do
-			ext := p.to_c;
-			set_unix_sock_path ($socket_address, $ext)
+			create ext.make (p)
+			set_unix_sock_path (socket_address.item, ext.item)
 		end
 
 feature {NONE} -- External

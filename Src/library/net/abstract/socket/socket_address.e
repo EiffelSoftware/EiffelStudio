@@ -12,10 +12,7 @@ class
 	SOCKET_ADDRESS
 
 inherit
-	TO_SPECIAL [CHARACTER]
-		rename
-			area as socket_address,
-			make_area as make_socket_address
+	ANY
 		redefine
 			copy, is_equal
 		end
@@ -29,8 +26,13 @@ feature -- Initalization
 	make is
 			-- Make space available for address size.
 		do
-			make_socket_address (address_size)
+			create socket_address.make (address_size)
 		end
+
+feature -- Access
+
+	socket_address: MANAGED_POINTER
+			-- Hold data.
 
 feature -- Measurement
 
@@ -53,7 +55,7 @@ feature -- Status report
 	family: INTEGER is
 			-- Get the socket family of socket address.
 		do
-			Result := get_sock_family ($socket_address)
+			Result := get_sock_family (socket_address.item)
 		end
 
 feature -- Status setting
@@ -61,7 +63,7 @@ feature -- Status setting
 	set_family (f: INTEGER) is
 			-- Set socket address family to `f'.
 		do
-			set_sock_family ($socket_address, f)
+			set_sock_family (socket_address.item, f)
 		end
 
 feature -- Duplication
@@ -70,12 +72,8 @@ feature -- Duplication
 			-- Reinitialize by copying characters of `other'.
 			-- (This is also used by `clone'.)
 		do
-			Precursor {TO_SPECIAL} (other);
-			if other.count > address_size then
-				make_socket_address (other.count)
-			else
-				make
-			end;
+			standard_copy (other)
+			socket_address.resize (other.count)
 			socket_address.copy (other.socket_address)
 		ensure then
 			new_result_count: count = other.count or else count = address_size

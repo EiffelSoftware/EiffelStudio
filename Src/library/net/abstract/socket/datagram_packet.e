@@ -42,7 +42,7 @@ feature -- Status_report
 		do
 			l_count:= data_area_size
 			create Result.make (l_count)
-			Result.data.area.memory_copy (data.area + c_packet_number_size, l_count)
+			Result.data.item.memory_copy (data.item + c_packet_number_size, l_count)
 		end
 
 	packet_number: INTEGER is
@@ -50,7 +50,7 @@ feature -- Status_report
 		require
 			data_not_void: data /= Void
 		do
-			Result := c_get_number (data.area)
+			Result := c_get_number (data.item)
 		end
 
 	valid_position (pos: INTEGER): BOOLEAN is
@@ -62,7 +62,7 @@ feature -- Status_report
 	element (pos: INTEGER): CHARACTER is
 			-- Element located at data position `pos'
 		do
-			Result := data.item (pos + c_packet_number_size).to_character
+			Result := data.read_integer_8 (pos + c_packet_number_size).to_character
 		end
 
 feature -- Status_setting
@@ -72,7 +72,7 @@ feature -- Status_setting
 		require
 			large_enough: p /= Void and then p.count <= data_area_size
 		do
-			(data.area + c_packet_number_size).memory_copy (p.data.area, p.count)
+			(data.item + c_packet_number_size).memory_copy (p.data.item, p.count)
 		end
 
 	set_packet_number (n: INTEGER) is
@@ -81,7 +81,7 @@ feature -- Status_setting
 			number_big_enough: n >= c_int32_min
 			number_small_enough: n <= c_int32_max
 		do
-			c_set_number (data.area, n)
+			c_set_number (data.item, n)
 		ensure
 			number_set: packet_number = n
 		end
@@ -89,7 +89,7 @@ feature -- Status_setting
 	put_element (an_item: CHARACTER; pos: INTEGER) is
 			-- Put `an_item' at data position `pos'.
 		do
-			data.put (an_item.code.to_integer_8, (pos + c_packet_number_size))
+			data.put_integer_8 (an_item.code.to_integer_8, (pos + c_packet_number_size))
 		ensure then
 			element_put: element (pos) = an_item
 		end

@@ -35,14 +35,12 @@ feature -- Initialization
 	create_from_descriptor (fd: INTEGER) is
 			-- Create socket from descriptor `fd'.
 		local
-			ext: ANY
 			retried: BOOLEAN
 		do
 			if not retried then
 				descriptor := fd;
 				create address.make;
-				ext := address.socket_address;
-				c_sock_name (descriptor, $ext, address.count);
+				c_sock_name (descriptor, address.socket_address.item, address.count);
 				family := address.family;
 				descriptor_available := True;
 				is_open_read := True;
@@ -134,12 +132,10 @@ feature -- Basic commands
 			socket_exists: exists;
 			valid_local_address: address /= Void
 		local
-			ext: ANY
 			retried: BOOLEAN
 		do
 			if not retried then
-				ext := address.socket_address;
-				c_bind (descriptor, $ext, address.count);
+				c_bind (descriptor, address.socket_address.item, address.count);
 				is_open_read := True
 			end
 		rescue
@@ -156,12 +152,10 @@ feature -- Basic commands
 			socket_exists: exists;
 			valid_peer_address: peer_address /= Void
 		local
-			ext: ANY
 			retried: BOOLEAN
 		do
 			if not retried then
-				ext := peer_address.socket_address;
-				c_connect (descriptor, $ext, peer_address.count);
+				c_connect (descriptor, peer_address.socket_address.item, peer_address.count);
 				is_open_write := True;
 				is_open_read := True
 			end
@@ -287,10 +281,10 @@ feature -- Output
 			socket_exists: exists;
 			opened_for_write: is_open_write
 		local
-			ext: ANY
+			ext: C_STRING
 		do
-			ext := s.to_c;
-			c_put_stream (descriptor, $ext, s.count)
+			create ext.make (s)
+			c_put_stream (descriptor, ext.item, s.count)
 		end;
 
 	put_character, putchar (c: CHARACTER) is
@@ -354,7 +348,7 @@ feature -- Output
 			count: INTEGER
 		do
 			from 
-				ext_data := a_packet.data.area;
+				ext_data := a_packet.data.item;
 				count := a_packet.count
 			until
 				count = amount_sent
@@ -380,7 +374,7 @@ feature -- Output
 			count: INTEGER
 		do
 			from 
-				ext_data := a_packet.data.area;
+				ext_data := a_packet.data.item
 				count := a_packet.count
 			until
 				count = amount_sent 
@@ -502,20 +496,17 @@ feature -- Input
 			socket_exists: exists;
 			opened_for_read: is_open_read
 		local
-			ext: ANY;
+			ext: C_STRING
 			return_val: INTEGER
 		do
-			if last_string = Void or else last_string.capacity <= nb_char then
-				create last_string.make (nb_char + 1)
-			end;
-			ext := last_string.to_c;
-			return_val := c_read_stream (descriptor, nb_char, $ext);
+			create ext.make_empty (nb_char + 1)
+			return_val := c_read_stream (descriptor, nb_char, ext.item);
 			if return_val >= 0 then
-				last_string.set_count (return_val)
+				last_string := ext.substring (1, return_val)
 			else
 					-- All errors except EWOULDBLOCK will raise an I/O
 					-- exception
-				last_string.set_count (0)
+				create last_string.make (0)
 			end
 		end;
 
@@ -542,7 +533,7 @@ feature -- Input
 			socket_exists: exists;
 			opened_for_read: is_open_read
 		local
-			l_data, recv_packet: MEMORY_STREAM;
+			l_data, recv_packet: MANAGED_POINTER;
 			amount_read: INTEGER;
 			return_val: INTEGER;
 			ext_data: POINTER;
@@ -569,7 +560,7 @@ feature -- Input
 				end
 			end
 			if l_data /= Void then
-				create Result.make_from_memory_stream (l_data)
+				create Result.make_from_managed_pointer (l_data)
 			end
 		end;
 
@@ -579,7 +570,7 @@ feature -- Input
 			socket_exists: exists;
 			opened_for_read: is_open_read
 		local
-			l_data, recv_packet: MEMORY_STREAM
+			l_data, recv_packet: MANAGED_POINTER
 			amount_read: INTEGER;
 			return_val: INTEGER;
 			ext_data: POINTER;
@@ -606,7 +597,7 @@ feature -- Input
 				end
 			end
 			if l_data /= Void then
-				create Result.make_from_memory_stream (l_data)
+				create Result.make_from_managed_pointer (l_data)
 			end
 		end;
 

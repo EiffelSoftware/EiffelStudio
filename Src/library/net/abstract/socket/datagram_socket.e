@@ -86,18 +86,14 @@ feature -- Input
 			opened_for_read: is_open_read
 		local
 			return_val: INTEGER;
-			ext_data: ANY;
-			ext_addr: ANY;
 			peer_addr_size: INTEGER
 		do
 			if peer_address = Void then
 				make_peer_address
 			end;
-			ext_addr := peer_address.socket_address;
 			peer_addr_size := peer_address.count;
 			create Result.make (size);
-			ext_data := Result.data;
-			return_val := c_rcv_from (descriptor, $ext_data, Result.count, flags, $ext_addr, $peer_addr_size);
+			return_val := c_rcv_from (descriptor, Result.data.item, Result.count, flags, peer_address.socket_address.item, $peer_addr_size);
 		ensure
 			known_address: peer_address /= Void
 		end
@@ -112,25 +108,18 @@ feature -- Output
 			valid_peer: to_address /= Void;
 			valid_packet: a_packet /= Void
 		local
-			ext_data: ANY;
-			ext_addr: ANY;
 			return_val: INTEGER
 		do
-			ext_data := a_packet.data;
-			ext_addr := to_address.socket_address;
-			return_val := c_send_to (descriptor, $ext_data, a_packet.count, flags, $ext_addr, to_address.count)
+			return_val := c_send_to (descriptor, a_packet.data.item, a_packet.count, flags, to_address.socket_address.item, to_address.count)
 		end;
 
 	send (a_packet: PACKET; flags: INTEGER) is
 			-- Send `a_packet' to address in `peer_address'.
 		local
-			ext_data: ANY;
-			ext_addr: ANY;
 			return_val: INTEGER
 		do
-			ext_data := a_packet.data;
-			ext_addr := peer_address.socket_address;
-			return_val := c_send_to (descriptor, $ext_data, a_packet.count, flags, $ext_addr, peer_address.count)
+			return_val := c_send_to (descriptor, a_packet.data.item, a_packet.count, flags,
+				peer_address.socket_address.item, peer_address.count)
 		end;
 
 	put_string, putstring (s: STRING) is
@@ -140,12 +129,11 @@ feature -- Output
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
 		local
-			ext: ANY;
-			ext_addr: ANY
+			ext: C_STRING
 		do
-			ext := s.to_c;
-			ext_addr := peer_address.socket_address;
-			c_send_stream_to (descriptor, $ext, s.count, 0, $ext_addr, peer_address.count)
+			create ext.make (s)
+			c_send_stream_to (descriptor, ext.item, s.count, 0,
+				peer_address.socket_address.item, peer_address.count)
 		end;
 
 	put_character, putchar (c: CHARACTER) is
@@ -154,11 +142,8 @@ feature -- Output
 			socket_exists: exists;
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
-		local
-			ext_addr: ANY
 		do
-			ext_addr := peer_address.socket_address;
-			c_send_char_to (descriptor, c, 0, $ext_addr, peer_address.count)
+			c_send_char_to (descriptor, c, 0, peer_address.socket_address.item, peer_address.count)
 		end;
 
 	put_real, putreal (r: REAL) is
@@ -167,11 +152,8 @@ feature -- Output
 			socket_exists: exists;
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
-		local
-			ext_addr: ANY
 		do
-			ext_addr := peer_address.socket_address;
-			c_send_float_to (descriptor, r, 0, $ext_addr, peer_address.count)
+			c_send_float_to (descriptor, r, 0, peer_address.socket_address.item, peer_address.count)
 		end;
 
 	put_integer, putint (i: INTEGER) is
@@ -180,11 +162,8 @@ feature -- Output
 			socket_exists: exists;
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
-		local
-			ext_addr: ANY
 		do
-			ext_addr := peer_address.socket_address;
-			c_send_int_to (descriptor, i, 0, $ext_addr, peer_address.count)
+			c_send_int_to (descriptor, i, 0, peer_address.socket_address.item, peer_address.count)
 		end;
 
 	put_boolean, putbool (b: BOOLEAN) is
@@ -193,10 +172,7 @@ feature -- Output
 			socket_exists: exists;
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
-		local
-			ext_addr: ANY
 		do
-			ext_addr := peer_address.socket_address;
 			if b then
 				put_character ('T')
 			else
@@ -210,11 +186,8 @@ feature -- Output
 			socket_exists: exists;
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
-		local
-			ext_addr: ANY
 		do
-			ext_addr := peer_address.socket_address;
-			c_send_double_to (descriptor, d, 0, $ext_addr, peer_address.count)
+			c_send_double_to (descriptor, d, 0, peer_address.socket_address.item, peer_address.count)
 		end;
 
 feature {NONE} -- Implementation

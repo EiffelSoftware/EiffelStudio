@@ -15,7 +15,7 @@ inherit
 		
 create
 	make,
-	make_from_memory_stream
+	make_from_managed_pointer
 
 feature -- Initialization
 
@@ -27,7 +27,7 @@ feature -- Initialization
 			create data.make (size)
 		end
 
-	make_from_memory_stream (a_data: like data) is
+	make_from_managed_pointer (a_data: like data) is
 			-- Create packet from `a_data' memory stream.
 		require
 			a_data_not_void: a_data /= Void
@@ -52,7 +52,7 @@ feature -- Access
 		require
 			valid_position: valid_position (i)			
 		do
-			Result := data.item (i).to_character
+			Result := data.read_integer_8 (i).to_character
 		end
 		
 feature -- Status report
@@ -70,7 +70,7 @@ feature -- Element change
 		require
 			valid_position: valid_position (i)
 		do
-			data.put (v.code.to_integer_8, i)
+			data.put_integer_8 (v.code.to_integer_8, i)
 		ensure
 			inserted: element (i) = v
 		end
@@ -97,7 +97,7 @@ feature -- Duplication
 
 feature -- Storage
 
-	data: MEMORY_STREAM
+	data: MANAGED_POINTER
 			-- Place holder
 			
 invariant

@@ -48,11 +48,9 @@ feature
 		local
 			pass_address: like address;
 			return: INTEGER;
-			ext: ANY
 		do
 			pass_address := clone (address);
-			ext := pass_address.socket_address;
-			return := c_accept (descriptor, $ext, address.count);
+			return := c_accept (descriptor, pass_address.socket_address.item, address.count);
 			if return > 0 then
 				create accepted.create_from_descriptor (return);
 				accepted.set_peer_address (pass_address)

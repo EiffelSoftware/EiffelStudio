@@ -39,12 +39,10 @@ feature -- Status report
 		require
 			valid_socket: exists
 		local
-			ext: ANY;
 			temp_addr: like address
 		do
 			create temp_addr.make;
-			ext := temp_addr.socket_address;
-			c_sock_name (descriptor, $ext, temp_addr.count);
+			c_sock_name (descriptor, temp_addr.socket_address.item, temp_addr.count);
 			Result := temp_addr.port
 		end
 

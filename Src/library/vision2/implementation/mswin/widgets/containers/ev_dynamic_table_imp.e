@@ -16,6 +16,7 @@ inherit
 		redefine
 			make,
 			add_child,
+			child_added,
 			set_child_position,
 			child_minwidth_changed,
 			child_minheight_changed
@@ -91,6 +92,14 @@ feature -- Element change
 					row_index := row_index + 1
 				end
 			end			
+		end
+
+feature -- Assertion
+
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
+		do
+			Result := find_widget_child (a_child) /= Void
 		end
 
 feature {NONE} -- Implementation

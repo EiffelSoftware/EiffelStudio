@@ -128,7 +128,7 @@ RT_LNK void expop(register1 struct xstack *stk);	/* Pops an execution vector off
 #else
 RT_LNK void eraise(EIF_CONTEXT char *tag, long num);		/* Raise Eiffel exception */
 RT_LNK void com_eraise(EIF_CONTEXT char *tag, long num);	/* Raise EiffelCOM exception */
-RT_LNK void enomem();										/* Raises "Out of memory" exception */
+RT_LNK void enomem(void);										/* Raises "Out of memory" exception */
 #endif
 
 RT_LNK void eviol(EIF_CONTEXT_NOARG);			/* Eiffel violation of last assertion */

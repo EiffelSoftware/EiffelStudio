@@ -20,8 +20,6 @@ inherit
 			interface
 		end
 
-	SINGLE_MATH
-
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
 		redefine
 			create_drop_actions

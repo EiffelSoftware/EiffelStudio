@@ -48,7 +48,6 @@ feature {NONE} -- Initialization
 
 			list_widget := C.gtk_tree_new
 			C.gtk_tree_set_selection_mode (list_widget, C.GTK_SELECTION_SINGLE_ENUM)
-			C.gtk_tree_set_view_mode (list_widget, C.GTK_TREE_VIEW_ITEM_ENUM)
 			C.gtk_widget_show (list_widget)
 			C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
 		end
@@ -86,6 +85,24 @@ feature {NONE} -- Initialization
 			interface.deselect_actions.call ([])	
 		end
 
+feature -- Status setting
+
+	enable_multiple_selection is
+			-- Allow the user to do a multiple selection simply
+			-- by clicking on several choices.
+			-- For constants, see EV_GTK_CONSTANTS
+		do
+			C.gtk_tree_set_selection_mode (list_widget, C.GTK_SELECTION_MULTIPLE_ENUM)
+		end
+
+	disable_multiple_selection is
+			-- Allow the user to do only one selection. It is the
+			-- default status of the list.
+			-- For constants, see EV_GTK_CONSTANTS
+		do
+			C.gtk_tree_set_selection_mode (list_widget, C.GTK_SELECTION_SINGLE_ENUM)
+		end
+
 
 feature -- Status report
 
@@ -97,7 +114,7 @@ feature -- Status report
 			p: POINTER
 			o: EV_ANY_IMP
 		do
-			p := C.gtk_tree_struct_selection (list_widget)
+			p := GTK_TREE_SELECTION (list_widget)
 			if p /= Default_pointer then
 				p := C.g_list_nth_data (p, 0)
 				if p /= Default_pointer then
@@ -107,10 +124,50 @@ feature -- Status report
 			end
 		end
 
+	selected_items: LINKED_LIST [EV_TREE_ITEM] is
+			-- Items which are currently selected.
+		local
+			list_pointer, item_pointer: POINTER
+			o: EV_ANY_IMP
+			a_counter: INTEGER
+			current_item: EV_TREE_ITEM
+		do
+			create Result.make
+			list_pointer := GTK_TREE_SELECTION (list_widget)
+			if list_pointer /= Default_pointer then
+				from
+					a_counter := 0
+				until
+					a_counter = C.g_list_length (list_pointer)
+				loop
+					item_pointer := C.g_list_nth_data (
+						list_pointer,
+						a_counter
+					)
+					o := eif_object_from_c (item_pointer)
+					current_item ?= o.interface
+					Result.extend (current_item)
+					a_counter := a_counter + 1
+				end
+			end	
+		end
+
+	multiple_selection_enabled: BOOLEAN is
+			-- Can multiple items be selected ?
+		do
+			Result := C.gtk_tree_struct_selection_mode (list_widget) 
+					= C.GTK_SELECTION_MULTIPLE_ENUM
+		end
+
 	selected: BOOLEAN is
 			-- Is one item selected ?
+		local
+			list_pointer: POINTER
 		do
-			Result := (selected_item /= Void)
+			list_pointer := C.gtk_tree_struct_selection (list_widget)
+			if list_pointer /= Default_pointer then
+				Result := C.g_list_length (list_pointer) > 0
+			end
 		end
 
 
@@ -120,6 +177,16 @@ feature {EV_ANY_I} -- Implementation
 
 	list_widget: POINTER
 			-- Pointer to the tree widget
+
+feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
+
+	gtk_tree_selection (a_tree: POINTER): POINTER is
+			-- Selection of root tree.
+		external
+			" C [macro <gtk/gtktree.h>]"
+		alias
+			"GTK_TREE_SELECTION"
+		end
 
 feature {NONE} -- Implementation
 
@@ -186,6 +253,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/02/29 00:01:53  king
+--| Added multiple selection features
+--|
 --| Revision 1.25  2000/02/26 01:28:43  king
 --| Implemented to set sub_tree of children
 --|

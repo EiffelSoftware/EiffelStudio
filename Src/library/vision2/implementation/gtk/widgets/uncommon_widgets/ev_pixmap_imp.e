@@ -73,11 +73,14 @@ feature {NONE} -- Initialization
 			gdkpix := C.gdk_pixmap_new (C.gdk_root_parent, 1, 1, -1)
 			--gdkmask := create_mask (1, 1)
 			--| FIXME IEK correctly implement masking function	
-			set_c_object (C.gtk_pixmap_new (gdkpix, gdkmask))
-			C.gtk_widget_show (c_object)
+			set_c_object (C.gtk_event_box_new)
+			gtk_pixmap := C.gtk_pixmap_new (gdkpix, gdkmask)
+			C.gtk_widget_show (gtk_pixmap)
+			C.gtk_container_add (c_object, gtk_pixmap)
+--|hmm?		C.gtk_widget_show (c_object)
 
 				-- Initialize the GC
-			gc := C.gdk_gc_new (C.gtk_pixmap_struct_pixmap (c_object))
+			gc := C.gdk_gc_new (C.gtk_pixmap_struct_pixmap (gtk_pixmap))
 			C.gdk_gc_set_function (gc, C.GDK_COPY_ENUM)
 			initialize_gc
 			gcvalues := C.c_gdk_gcvalues_struct_allocate
@@ -137,7 +140,7 @@ feature -- Measurement
 			wid, hgt: INTEGER
 		do
 			C.gdk_window_get_size (
-				C.gtk_pixmap_struct_pixmap (c_object),
+				C.gtk_pixmap_struct_pixmap (gtk_pixmap),
 				$wid, $hgt
 			)
 			Result := wid
@@ -149,7 +152,7 @@ feature -- Measurement
 			wid, hgt: INTEGER
 		do
 			C.gdk_window_get_size (
-				C.gtk_pixmap_struct_pixmap (c_object),
+				C.gtk_pixmap_struct_pixmap (gtk_pixmap),
 				$wid, $hgt
 			)
 			Result := hgt
@@ -344,7 +347,7 @@ feature -- Access
 	mask: POINTER is
 			-- Pointer to the GdkBitmap used for masking.
 		do
-			Result := C.gtk_pixmap_struct_mask (c_object)
+			Result := C.gtk_pixmap_struct_mask (gtk_pixmap)
 		end	
 
 feature {NONE} -- Implementation
@@ -354,7 +357,7 @@ feature {NONE} -- Implementation
 	set_pixmap (pix, msk: POINTER) is
 			-- Set the GtkPixmap using Gdk pixmap data and mask.
 		do
-			C.gtk_pixmap_set (c_object, pix, msk)
+			C.gtk_pixmap_set (gtk_pixmap, pix, msk)
 		end
 
 	initialize_gc is
@@ -393,12 +396,16 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 
 	drawable: POINTER is
 		do
-			Result := C.gtk_pixmap_struct_pixmap (c_object)
+			Result := C.gtk_pixmap_struct_pixmap (gtk_pixmap)
 		end
 
 feature {EV_PIXMAP_I, EV_PIXMAPABLE_IMP} -- Implementation
 
 	interface: EV_PIXMAP
+
+feature {EV_PIXMAPABLE_IMP, EV_CURSOR_IMP, EV_MULTI_COLUMN_LIST_IMP} -- Implementation
+
+	gtk_pixmap: POINTER
 
 feature {NONE} -- Implementation
 	
@@ -451,6 +458,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/26 17:04:52  oconnor
+--| put GtkPixmap in an event box
+--|
 --| Revision 1.32  2000/04/19 18:27:08  brendel
 --| made 1 bit color work on 8bit and high color displays
 --|

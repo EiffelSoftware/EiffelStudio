@@ -756,7 +756,7 @@ feature {NONE} -- Implementation
 					a_column - 1,
 					eiffel_to_c (a_text),
 					0,
-					C.gtk_pixmap_struct_pixmap (pixmap_imp.c_object),
+					C.gtk_pixmap_struct_pixmap (pixmap_imp.gtk_pixmap),
 					C.gtk_cell_pixmap_struct_mask (
 						pointer_array_i_th (
 							C.gtk_clist_row_struct_cell (
@@ -921,6 +921,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.68  2000/04/26 17:04:51  oconnor
+--| put GtkPixmap in an event box
+--|
 --| Revision 1.67  2000/04/25 00:59:40  oconnor
 --| removed obsolete is_pnd_in_transport and is_dnd_in_transport
 --|

@@ -57,7 +57,7 @@ feature -- Element change
 
 			pix_imp ?= a_pixmap.implementation
 
-			C.gtk_pixmap_get (pix_imp.c_object, $pix_val, $pix_mask)
+			C.gtk_pixmap_get (pix_imp.gtk_pixmap, $pix_val, $pix_mask)
 
 			fg := C.c_gdk_color_struct_allocate
 			bg := C.c_gdk_color_struct_allocate
@@ -131,6 +131,9 @@ end -- class EV_CURSOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/26 17:04:48  oconnor
+--| put GtkPixmap in an event box
+--|
 --| Revision 1.8  2000/03/15 22:44:05  king
 --| Revised cursor imp, implemented pixmap functionality
 --|

@@ -10,6 +10,9 @@ class BREAKPOINT_ITEM
 inherit
 
 	TEXT_ITEM
+		rename
+			Empty_string as image
+		end
 
 creation
 	make 
@@ -28,8 +31,6 @@ feature {NONE} -- Initialization
 		end;
 
 feature -- Property
-
-	image: STRING is "";
 
 	index: INTEGER;
 			-- Breakpoint index

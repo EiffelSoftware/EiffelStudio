@@ -344,7 +344,7 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_PICK_AND_DROPABLE} and Precursor {EV_SENSITIVE} and
 				Precursor {EV_COLORIZABLE} and Precursor {EV_POSITIONED} and
-				Precursor {EV_HELP_CONTEXTABLE}
+				Precursor {EV_HELP_CONTEXTABLE} and Precursor {EV_DOCKABLE_SOURCE}
 		end
 		
 feature {EV_ANY_I} -- Implementation

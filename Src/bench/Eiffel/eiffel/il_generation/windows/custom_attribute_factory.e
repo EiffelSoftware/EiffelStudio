@@ -38,22 +38,41 @@ feature -- Settings
 			a_feature_token_valid: a_feature_token /= 0
 		local
 			feature_as: FEATURE_AS
-			attributes: EIFFEL_LIST [CREATION_EXPR_AS]
+			attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+			l_attributes: BYTE_LIST [BYTE_NODE]
+			l_class_c: CLASS_C
 		do
-			feature_as := a_feature.body
-			if feature_as /= Void then
-				attributes := feature_as.custom_attribute
-				if attributes /= Void then
-					generate_custom_attribute (a_feature_token, il_generator.current_class_type,
-						attributes)
+			if not a_feature.is_attribute and not a_feature.is_type_feature then
+				l_attributes := a_feature.custom_attributes
+			else
+				feature_as := a_feature.body
+				if feature_as /= Void then
+					attributes := feature_as.custom_attributes
+					if attributes /= Void then
+							-- Initialize data structures needed to perform a `type_check'
+							-- and to create a `byte_node' for every creation expression
+							-- that represent the custom attribute
+						l_class_c := il_generator.current_class_type.associated_class
+						Inst_context.set_cluster (l_class_c.cluster)
+						context.clear2
+						context.set_current_class (l_class_c)
+						attributes.type_check
+						context.start_lines
+						l_attributes := attributes.byte_node
+						context.clear2
+					end
 				end
+			end
+			if l_attributes /= Void then
+				generate_custom_attributes (a_feature_token, il_generator.current_class_type,
+					l_attributes)
 			end
 		end
 
 feature {IL_CODE_GENERATOR} -- Generation
 
-	generate_custom_attribute (a_owner_token: INTEGER; class_type: CLASS_TYPE;
-			ca: EIFFEL_LIST [CREATION_EXPR_AS])
+	generate_custom_attributes (a_owner_token: INTEGER; class_type: CLASS_TYPE;
+			ca: BYTE_LIST [BYTE_NODE])
 		is
 			-- Generate custom attributes represented by `ca' in `class_type'
 			-- using `a_owner_token' as target.
@@ -62,6 +81,7 @@ feature {IL_CODE_GENERATOR} -- Generation
 			class_type_not_void: class_type /= Void
 			has_custom_attributes: ca /= Void
 		local
+			ca_b: CUSTOM_ATTRIBUTE_B
 			cb: CREATION_EXPR_B
 			l_creation_external: CREATION_EXTERNAL_B
 			l_extension: IL_EXTENSION_I
@@ -69,45 +89,30 @@ feature {IL_CODE_GENERATOR} -- Generation
 			param: BYTE_LIST [EXPR_B]
 			param_b: PARAMETER_B
 			exp: CREATION_EXPR_AS
+			l_tuple: TUPLE_AS
+			l_tuple_const, l_sub_tuple_const: TUPLE_CONST_B
 			l_ca: MD_CUSTOM_ATTRIBUTE
 			l_ctor_token: INTEGER
 			l_class_c: CLASS_C
+			l_creation_class: CLASS_C
+			l_type: CL_TYPE_I
 		do
 			from
-					-- Initialize data structures needed to perform a `type_check'
-					-- and to create a `byte_node' for every creation expression
-					-- that represent the custom attribute
-				l_class_c := class_type.associated_class
-				Inst_context.set_cluster (l_class_c.cluster)
-				context.clear2
-				if not l_class_c.is_external then
-					context.set_current_class (l_class_c)
-				end
 				ca.start
 			until
 				ca.after
 			loop
-				exp := ca.item
-				ca.forth
+				ca_b ?= ca.item
+				cb := ca_b.creation_expr
+				l_type ?= cb.type
+				l_creation_class := l_type.base_class
+				l_tuple_const := ca_b.tuple
 
-					-- Type checking and byte code generation
-					-- Since the first statement in `type_check' of CREATION_EXPR_AS
-					-- is `context.pop (1)' we insert a dummy Void element.
-				context.put (Void)
-				exp.type_check
-				context.start_lines
-				cb := exp.byte_node
-
-					-- FIXME: Manu 06/02/2002 we should also take currently
-					-- defined custom attributes.
 				l_creation_external ?= cb.call
 				if l_creation_external /= Void then
 					l_extension ?= l_creation_external.extension
 					l_ctor_token := l_extension.token
 				end
-
-					-- Clean up of AST_CONTEXT for next type checking.
-				context.clear2
 
 				param := cb.call.parameters
 				if param /= Void then
@@ -128,22 +133,96 @@ feature {IL_CODE_GENERATOR} -- Generation
 						check
 							param_b_not_void: param_b /= Void
 						end
-						add_custom_attribute_argument (l_ca, param_b.expression)
+						add_fixed_argument (l_ca, param_b.expression)
 						param.forth
 					end
 				end
 
-					-- Mark end of custom attribute
-				l_ca.put_integer_16 (0)
+					-- Generate name argument
+				if l_tuple_const /= Void then
+					l_ca.put_integer_16 (l_tuple_const.expressions.count.to_integer_16)
+					
+					from
+						l_tuple_const.expressions.start
+					until
+						l_tuple_const.expressions.after					
+					loop
+						l_sub_tuple_const ?= l_tuple_const.expressions.item
+						check
+							tuple_present: l_sub_tuple_const /= Void
+						end
+						add_named_argument (l_ca, l_creation_class, l_sub_tuple_const)
+						l_tuple_const.expressions.forth
+					end
+				else
+					l_ca.put_integer_16 (0)
+				end
 				
 					-- Assign `l_ca' to `a_owner_token'.
 				il_generator.define_custom_attribute (a_owner_token, l_ctor_token, l_ca)
+
+				ca.forth
 			end
 		end
 
 feature {NONE} -- Generation
 
-	add_custom_attribute_argument (a_ca_blob: MD_CUSTOM_ATTRIBUTE; e: EXPR_B) is
+	add_named_argument (
+			a_ca_blob: MD_CUSTOM_ATTRIBUTE; a_class: CLASS_C; a_tuple: TUPLE_CONST_B)
+		is
+			-- Lookup named argument in `a_tuple' and insert it in `a_ca_blob'.
+		require
+			blob_not_void: a_ca_blob /= Void
+			tuple_not_void: a_tuple /= Void
+			tuple_valid: a_tuple.expressions.count = 2
+		local
+			l_expr_b: EXPR_B
+			l_feat: FEATURE_I
+			l_extension: IL_EXTENSION_I
+			l_string_b: STRING_B
+			l_feat_name: STRING
+		do
+			l_string_b ?= a_tuple.expressions.first
+			check
+				has_string: l_string_b /= Void
+			end
+			l_feat_name := l_string_b.value
+			
+			l_feat := a_class.feature_table.item (l_feat_name)
+			check
+				has_feature: l_feat /= Void
+			end
+
+				-- First mark if it is an attribute or a property.
+			if l_feat.is_attribute then
+				a_ca_blob.put_integer_8 (0x53)
+			else
+				a_ca_blob.put_integer_8 (0x54)
+			end
+
+				-- Then mark type of attribute or property.
+			l_expr_b ?= a_tuple.expressions.i_th (2)
+			check
+				has_expression: l_expr_b /= Void
+			end
+			a_ca_blob.put_integer_8 (l_expr_b.type.element_type)
+
+				-- Put name of attribute or property.
+			if l_feat.written_class.is_external then
+				l_extension ?= l_feat.extension
+				l_feat_name := l_extension.alias_name
+				if not l_feat.is_attribute then
+					l_feat_name := clone (l_feat_name)
+					l_feat_name.remove_head (4)
+				end
+			end
+			a_ca_blob.put_string (l_feat_name)
+
+				-- Finally generate value.
+			add_fixed_argument (a_ca_blob, l_expr_b)
+		end
+
+	add_fixed_argument (a_ca_blob: MD_CUSTOM_ATTRIBUTE; e: EXPR_B) is
 			-- Add `e' to list of arguments needed by custom attribute
 			-- creation routine.
 		require
@@ -190,8 +269,11 @@ feature {NONE} -- Generation
 								a_ca_blob.put_character (char.value)
 							else
 								nested_b ?= e
-								if nested_b /= Void then
-									ext ?= nested_b.message
+								ext ?= e
+								if nested_b /= Void or ext /= Void then
+									if ext = Void then
+										ext ?= nested_b.message
+									end
 									if ext /= Void then
 										il_ext ?= ext.extension
 										if

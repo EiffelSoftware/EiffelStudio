@@ -20,69 +20,71 @@ inherit
 creation
 	make
 
-feature -- Creation is
+feature -- Initialization
 
 	make is
+			-- Initialize Current.
 		do
-		end
+		end;
 
 feature -- Checking
 
 	copy_value (item: PROFILE_DATA) is
 		do
-			item_value := item.function.out
+			item_value := item.function.out;
 			item_value.to_lower
-		end
+		end;
 
 	filtering_is_allowed: BOOLEAN is
 			-- May `filter' be called?
 		do
 			Result := operator /= Void and then value /= Void
-		end
+		end;
 
 feature -- Value setting
 
 	set_value (new_value: COMPARABLE) is
 			-- Value as used in Comparing-features
 		do
-			value ?= new_value
+			value ?= new_value;
 			check
 				new_value_must_be_a_STRING: value /= Void
-			end
+			end;
 			value.to_lower
-		end
+		end;
 
 feature -- Comparing
 
 	equal_to: BOOLEAN is
 			-- Is value equal to the specified value?
 		local
-			wildcard_matcher: OLD_WILDCARD_MATCHER
+			wildcard_matcher: KMP_WILD
 		do
 			if has_wildcards (value) then
-				!! wildcard_matcher.make (value)
-				wildcard_matcher.set_input_string (item_value)
-				wildcard_matcher.match
-				Result := wildcard_matcher.matched
+				!! wildcard_matcher.make_empty;
+				wildcard_matcher.set_text (value);
+				wildcard_matcher.set_pattern (item_value);
+				wildcard_matcher.search_for_pattern;
+				Result := wildcard_matcher.found
 			else
 				Result := item_value.is_equal (value)
 			end
-		end
+		end;
 
 	min: BOOLEAN is
 			-- Is value equal to the minimum value?
 		do
-		end
+		end;
 
 	max: BOOLEAN is
 			-- Is value equal to the maximum value?
 		do
-		end
+		end;
 
 	avg: BOOLEAN is
 			-- Is value equal to average value?
 		do
-		end
+		end;
 
 	less_than: BOOLEAN is
 			-- Is value less than the specified value?
@@ -92,7 +94,7 @@ feature -- Comparing
 			else
 				Result := false
 			end
-		end
+		end;
 
 	in_interval: BOOLEAN is
 			-- Is value in specified interval?
@@ -111,12 +113,12 @@ feature {NONE} -- Implementation
 	set_value_range (first, second: COMPARABLE) is
 			-- Value range as used in the Comparing-features 
 		do
-		end
+		end;
 
 	has_wildcards (item: STRING): BOOLEAN is
 		do
 			Result := (item.index_of ('*', 1) > 0) or else
 					(item.index_of ('?', 1) > 0)
-		end
+		end;
 
 end -- class NAME_FILTER

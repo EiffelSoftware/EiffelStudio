@@ -19,7 +19,7 @@ feature
 			-- Create objects baskets.
 		local
 			basket_nb, i: INTEGER;
-			basket: EXTEND_STACK [STRING]
+			basket: LINKED_LIST [STRING]
 		do
 			basket_nb := 1 + 
 					System.static_type_id_counter.value // Packet_number;
@@ -87,43 +87,43 @@ feature
 
 	add_cecil_objects is
 		do
-			cecil_rt_basket.put ("math.o");
-			cecil_rt_basket.put ("malloc.o");
-			cecil_rt_basket.put ("garcol.o");
-			cecil_rt_basket.put ("local.o");
-			cecil_rt_basket.put ("except.o");
-			cecil_rt_basket.put ("store.o");
-			cecil_rt_basket.put ("retrieve.o");
-			cecil_rt_basket.put ("hash.o");
-			cecil_rt_basket.put ("traverse.o");
-			cecil_rt_basket.put ("hashin.o");
-			cecil_rt_basket.put ("tools.o");
-			cecil_rt_basket.put ("internal.o");
-			cecil_rt_basket.put ("plug.o");
-			cecil_rt_basket.put ("copy.o");
-			cecil_rt_basket.put ("equal.o");
-			cecil_rt_basket.put ("lmalloc.o");
-			cecil_rt_basket.put ("out.o");
-			cecil_rt_basket.put ("timer.o");
-			cecil_rt_basket.put ("urgent.o");
-			cecil_rt_basket.put ("sig.o");
-			cecil_rt_basket.put ("hector.o");
-			cecil_rt_basket.put ("cecil.o");
-			cecil_rt_basket.put ("bits.o");
-			cecil_rt_basket.put ("file.o");
-			cecil_rt_basket.put ("dir.o");
-			cecil_rt_basket.put ("string.o");
-			cecil_rt_basket.put ("misc.o");
-			cecil_rt_basket.put ("pattern.o");
-			cecil_rt_basket.put ("error.o");
-			cecil_rt_basket.put ("umain.o");
-			cecil_rt_basket.put ("memory.o");
-			cecil_rt_basket.put ("argv.o");
-			cecil_rt_basket.put ("boolstr.o");
-			cecil_rt_basket.put ("search.o");
-			cecil_rt_basket.put ("main.o");
-			cecil_rt_basket.put ("run_idr.o");
-			cecil_rt_basket.put ("console.o");
+			cecil_rt_basket.extend ("math.o");
+			cecil_rt_basket.extend ("malloc.o");
+			cecil_rt_basket.extend ("garcol.o");
+			cecil_rt_basket.extend ("local.o");
+			cecil_rt_basket.extend ("except.o");
+			cecil_rt_basket.extend ("store.o");
+			cecil_rt_basket.extend ("retrieve.o");
+			cecil_rt_basket.extend ("hash.o");
+			cecil_rt_basket.extend ("traverse.o");
+			cecil_rt_basket.extend ("hashin.o");
+			cecil_rt_basket.extend ("tools.o");
+			cecil_rt_basket.extend ("internal.o");
+			cecil_rt_basket.extend ("plug.o");
+			cecil_rt_basket.extend ("copy.o");
+			cecil_rt_basket.extend ("equal.o");
+			cecil_rt_basket.extend ("lmalloc.o");
+			cecil_rt_basket.extend ("out.o");
+			cecil_rt_basket.extend ("timer.o");
+			cecil_rt_basket.extend ("urgent.o");
+			cecil_rt_basket.extend ("sig.o");
+			cecil_rt_basket.extend ("hector.o");
+			cecil_rt_basket.extend ("cecil.o");
+			cecil_rt_basket.extend ("bits.o");
+			cecil_rt_basket.extend ("file.o");
+			cecil_rt_basket.extend ("dir.o");
+			cecil_rt_basket.extend ("string.o");
+			cecil_rt_basket.extend ("misc.o");
+			cecil_rt_basket.extend ("pattern.o");
+			cecil_rt_basket.extend ("error.o");
+			cecil_rt_basket.extend ("umain.o");
+			cecil_rt_basket.extend ("memory.o");
+			cecil_rt_basket.extend ("argv.o");
+			cecil_rt_basket.extend ("boolstr.o");
+			cecil_rt_basket.extend ("search.o");
+			cecil_rt_basket.extend ("main.o");
+			cecil_rt_basket.extend ("run_idr.o");
+			cecil_rt_basket.extend ("console.o");
 		end;
 
 	add_eiffel_objects is
@@ -159,7 +159,7 @@ feature
 							!!file_name.make (16);
 							file_name.append (object_name);
 							file_name.append (Dot_o);
-							object_baskets.item (cl_type.packet_number).put (file_name);
+							object_baskets.item (cl_type.packet_number).extend (file_name);
 						end;
 
 						types.forth;

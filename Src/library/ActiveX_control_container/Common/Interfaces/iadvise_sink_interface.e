@@ -10,7 +10,7 @@ inherit
 
 feature -- Status Report
 
-	on_data_change_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]): BOOLEAN is
+	on_data_change_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_STGMEDIUM_ALIAS]): BOOLEAN is
 			-- User-defined preconditions for `on_data_change'.
 			-- Redefine in descendants if needed.
 		do
@@ -47,7 +47,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]) is
+	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_STGMEDIUM_ALIAS]) is
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `p_stgmed' [in].  

@@ -1331,7 +1331,7 @@ feature -- Icons
 
 	Icon_exception: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_exec_quit_color")
+			Result := pixmap_file_content ("icon_dbg_error")
 		end
 		
 	Icon_word_wrap_color: ARRAY [EV_PIXMAP] is

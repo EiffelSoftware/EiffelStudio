@@ -19,6 +19,8 @@ inherit
 
 	SHARED_CONFIGURE_RESOURCES
 
+	SHARED_PLATFORM_CONSTANTS
+
 	EB_CONSTANTS
 
 feature -- Window Properties

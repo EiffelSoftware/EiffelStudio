@@ -973,8 +973,10 @@ rt_public void st_write(EIF_REFERENCE object, uint32 fflags)
 	} else
 		/* Evaluation of the size of a normal object */
 		nb_char = EIF_Size((uint16)(flags & EO_TYPE));
-	/* Write the body of the object */
-	buffer_write(object, (sizeof(char) * nb_char));
+	if (nb_char > 0) {
+		/* Write the body of the object */
+		buffer_write(object, (sizeof(char) * nb_char));
+	}
 
 #if DEBUG & 2
 {

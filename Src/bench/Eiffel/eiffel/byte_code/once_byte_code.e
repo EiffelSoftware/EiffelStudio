@@ -45,6 +45,8 @@ feature -- IL code generation
 			r_type := context.real_type(result_type)
 			has_result := not r_type.is_void
 
+			il_generator.set_once_generation (True)
+			
 			il_generator.generate_once_done_info (feature_name)
 			if has_result then
 				il_generator.generate_once_result_info (feature_name, r_type)
@@ -79,6 +81,8 @@ feature -- IL code generation
 
 			il_generator.mark_label (il_label_end)
 			generate_il_return (has_result)
+
+			il_generator.set_once_generation (False)
 		end
 
 feature -- C code generation

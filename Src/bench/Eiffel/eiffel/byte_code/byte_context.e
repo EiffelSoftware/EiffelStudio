@@ -89,9 +89,6 @@ feature -- Access
 			-- Currently used registers for reference variables which do not
 			-- need to be under GC control (e.g. Hector references).
 
-	exp_args: INTEGER
-			-- Number of (declared) expanded arguments.
-
 	local_vars: ARRAY [BOOLEAN]
 			-- Local variables used have their flag set to True.
 
@@ -483,12 +480,6 @@ feature -- Access
 			non_gc_reg_vars := non_gc_reg_vars - 1
 		end
 
-	inc_exp_args is
-			-- One more expanded parameter found
-		do
-			exp_args := exp_args + 1
-		end
-
 	init_propagation is
 			-- Reset `propagated' to False.
 		do
@@ -811,7 +802,6 @@ feature -- Access
 			local_index_table.clear_all
 			associated_register_table.clear_all
 			local_index_counter := 0
-			exp_args := 0
 			dt_current := 0
 			inlined_dt_current := 0
 			dftype_current := 0
@@ -882,23 +872,6 @@ feature -- Access
 			local_index_table := saved_context.local_index_table
 			local_index_counter := saved_context.local_index_counter
 			associated_register_table := saved_context.associated_register_table
-		end
-
-	Local_var: LOCAL_B is
-			-- Instance used to generate local variable name
-			-- (In case GC hooks are needed, we might need to refer to the
-			-- variable via the local l[] array.)
-		once
-			create Result
-		end
-
-	Arg_var: ARGUMENT_B is
-			-- Instance used to generate Result variable name
-			-- (In case GC hooks are needed, we might need to refer to the
-			-- variable via the local l[] array.)
-		once
-				-- FIXME???? -- at least the comment part
-			create Result
 		end
 
 	generate_current_dtype is
@@ -1050,13 +1023,11 @@ feature -- Access
 			--| for the compound or post- pre- or invariant routine. -- FREDD
 		local
 			nb_refs: INTEGER	-- Total number of references to be pushed
-			nb_exp: INTEGER	-- Expanded argument number for cloning
 			hash_table: HASH_TABLE [INTEGER, STRING]
 			associated: HASH_TABLE [REGISTRABLE, STRING]
 			rname: STRING
 			position: INTEGER
 			reg: REGISTRABLE
-			argument_b: ARGUMENT_B
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -1092,64 +1063,24 @@ feature -- Access
 						reference_type: not reg.is_current implies reg.c_type.is_pointer
 					end
 
-					argument_b ?= reg
 					if
-						argument_b /= Void and then
-						real_type (argument_b.type).is_true_expanded and exp_args > 1
+						((reg.is_predefined or reg.is_temporary)
+						and not (reg.is_current or reg.is_argument)
+						and not (reg.is_result and compound_or_post))
 					then
-						-- Expanded cloning protocol
-						buf.putstring ("if (RTIE(")
-						buf.putstring (rname)
-						buf.putstring (")) {")
-						buf.new_line
-						buf.indent
-						nb_exp := expanded_number (argument_b.position) - 1
-						buf.putstring ("idx[")
-						buf.putint (nb_exp)
-						buf.putstring ("] = RTOF(arg")
-						buf.putint (argument_b.position)
-						buf.putstring (gc_rparan_semi_c)
-						buf.new_line
-						buf.put_argument_registration (position, argument_b.position)
-						buf.new_line
-						buf.putstring ("arg")
-						buf.putint (argument_b.position)
-						buf.putstring (" = (EIF_REFERENCE) RTEO(arg")
-						buf.putint (argument_b.position)
-						buf.putstring (gc_rparan_semi_c)
-						buf.new_line
-						buf.exdent
-						buf.putstring (gc_lacc_else_r_acc)
-						buf.new_line
-						buf.indent
 						buf.put_local_registration (position, rname)
-						buf.new_line
-						buf.putstring ("idx[")
-						buf.putint (nb_exp)
-						buf.putstring ("] = -1;")
-						buf.new_line
-						buf.exdent
-						buf.putchar ('}')
 					else
-						if
-							((reg.is_predefined or reg.is_temporary)
-							and not (reg.is_current or reg.is_argument)
-							and not (reg.is_result and compound_or_post))
-						then
+						if (reg.c_type.is_bit) and (reg.is_argument) then
+								-- Clone argument if it is bit
 							buf.put_local_registration (position, rname)
+							buf.new_line
+							buf.putstring (rname)
+							buf.putstring (" = RTCB(")
+							buf.putstring (rname)
+							buf.putchar (')')
+							buf.putchar (';')
 						else
-							if (reg.c_type.is_bit) and (reg.is_argument) then
-									-- Clone argument if it is bit
-								buf.put_local_registration (position, rname)
-								buf.new_line
-								buf.putstring (rname)
-								buf.putstring (" = RTCB(")
-								buf.putstring (rname)
-								buf.putchar (')')
-								buf.putchar (';')
-							else
-								buf.put_local_registration (position, rname)
-							end
+							buf.put_local_registration (position, rname)
 						end
 					end
 					buf.new_line

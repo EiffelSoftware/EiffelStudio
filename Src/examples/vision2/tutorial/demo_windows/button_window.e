@@ -47,8 +47,9 @@ feature {NONE} -- Initialization
 
 			!! radio1_b.make_with_text (box, "Radio 1")
 			!! radio2_b.make_with_text (box, "Radio 2")
-			radio2_b.set_pixmap (pixmap)
 			!! radio3_b.make_with_text (box, "Radio 3")
+			radio2_b.set_pixmap (pixmap)
+
 			-- There is no action window for these buttons
 			-- Each descendant has a seperate action window.
 			--Sets the tabs for the action window

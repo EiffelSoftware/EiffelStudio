@@ -57,7 +57,7 @@ long n1, n2;
 	 * integer division of `n1' by `n2'
 	 */
 
-	return n1 * n2 > 0 ? n1 / n2: n1 / n2 - 1;
+	return ((n1 >= 0) ^ (n2 > 0))  ? (n1 % n2 ? n1 / n2 - 1: n1 / n2) : n1 / n2;
 }
 
 public long upintdiv(n1,n2)
@@ -67,7 +67,7 @@ long n1, n2;
 	 * integer division of `n1' by `n2'
 	 */
 
-    return n1 * n2 > 0 ? n1 / n2 +1: n1 / n2;
+    return ((n1 >= 0) ^ (n2 > 0)) ? n1 / n2: ((n1 % n2) ? n1 / n2 + 1: n1 / n2);
 }
 
 public char *arycpy(area, i, j, k)

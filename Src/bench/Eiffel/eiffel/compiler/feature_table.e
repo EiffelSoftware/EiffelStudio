@@ -276,7 +276,7 @@ end;
 				end;
 
 				if feat_tbl_id /= Void then
-					-- Bug fix: moving a class around can crete problems:
+					-- Bug fix: moving a class around can create problems:
 					-- class test1 t: TEST2 end; class test2 inherit t1 end
 					-- class test2 moved from one cluster to another
 				if propagate_feature then

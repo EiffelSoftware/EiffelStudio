@@ -103,10 +103,10 @@ DEBUG ("DEAD_CODE")
 end
 					if not is_treated (body_id.id, depend_unit.rout_id) then
 						mark_treated (body_id.id, depend_unit.rout_id)
-						-- we mark dead because if it was already alive and not
-						-- treated then we are in the case of a double inheritance
-						-- with one redefine, one rename (cf the doc I MAY write 
-						-- about it)
+							-- we mark dead because if it was already alive and not
+							-- treated then we are in the case of a double inheritance
+							-- with one redefine, one rename (cf the doc I MAY write 
+							-- about it)
 						mark_dead (body_id.id)
 						control.extend (depend_unit)
 					end

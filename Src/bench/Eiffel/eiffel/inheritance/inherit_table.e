@@ -188,23 +188,15 @@ feature
 				-- Compute attribute `feature_table'.
 			compute_feature_table;
 
+				-- Check generic parents of the class
+			a_class.check_parents;
+
 				-- Merge parents table: the topological sort and the
 				-- sort of list `changed_classes' of the system ensures
 				-- that the second pass has been applied to the parents
 				-- of class `cl' before.
-			from
-					-- Iteration on the parents of class `cl'.
-				parents.start
-			until
-				parents.after
-			loop
-					-- Insert features inherited from a parent in the
-					-- inheritance table `Inherit_table'.
-				merge (parents.item);
-				parents.forth
-			end;
-				-- Check if the feature renamed are available
-			check_validity1;
+				-- We also check if renamed features are available
+			parents.merge_and_check_renamings (Current)
 
 			Error_handler.checksum;
 				-- Treat the renamings
@@ -253,8 +245,7 @@ feature
 			Error_handler.checksum;
 			
 				-- Compute selection table
-			Origin_table.compute_feature_table
-					(parents, feature_table, resulting_table);
+			Origin_table.compute_feature_table (parents, feature_table, resulting_table);
 			resulting_table.set_origin_table (Origin_table.computed);
 				-- Check sum error: because of possible bad selections,
 				-- anchored types on features could not be evaluated here.
@@ -265,7 +256,7 @@ feature
 				-- Check the adaptations
 			check_validity3 (resulting_table);
 				-- Check useless selections
-			check_validity4;
+			parents.check_validity4;
 
 				-- Creators processing
 			old_creators := a_class.creators;
@@ -503,9 +494,6 @@ end;
 			feature_i: FEATURE_I;
 				-- Inherited feature
 		do
-				-- Check generic parents of the class
-			a_class.check_parents;
-
 			from
 				parent := parent_c.parent;
 					-- Look for the parent table on the disk
@@ -561,23 +549,18 @@ end;
 			-- Check all the renamings made in the table of
 			-- inherited features
 		local
-			c_keys: ARRAY [STRING];
 			i, nb: INTEGER;
 			inh_feat: INHERIT_FEAT
 		do
 			from
-				c_keys := current_keys;
-				i := 1;
-				nb := c_keys.count
+				start;
 			until
-				i > nb
+				after
 			loop
-				inh_feat := item (c_keys.item (i));
-				if inh_feat /= Void then
-						-- Check the renamings on one name
-					inh_feat.check_renamings;
-				end;
-				i := i + 1;
+				inh_feat := item_for_iteration
+					-- Check the renamings on one name
+				inh_feat.check_renamings;
+				forth
 			end;
 		end;
 
@@ -1199,12 +1182,6 @@ end;
 			Result := System.body_index_counter;
 		end;
 
-	check_validity1 is
-			-- Check renamings valididty
-		do
-			parents.check_validity1;
-		end;
-	
 	check_validity2 is
 			-- Check if redefinitions are effectively done and does
 			-- joins an deferred features if needed
@@ -1353,12 +1330,6 @@ end;
 					(resulting_table, feature_table, origins, Origin_table);
 				adaptations.forth;
 			end;
-		end;
-
-	check_validity4 is
-			-- Check if there is no useless selections
-		do
-			parents.check_validity4;
 		end;
 
 	insert_feature (f: FEATURE_I) is

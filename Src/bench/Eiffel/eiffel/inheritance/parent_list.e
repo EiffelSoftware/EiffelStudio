@@ -8,62 +8,90 @@ inherit
 creation
 	make, make_filled
 
-feature -- Validity
+feature -- Merging parents
 
-	check_validity1 is
-			-- Check the renaming clause of the parents
+	merge_and_check_renamings (inherit_table: INHERIT_TABLE) is
+			-- Go through each parents and merge them into `inherit_table'
+			-- Check also the renaming clause of the parents
+		local
+			p: PARENT_C
+			sp_area: SPECIAL [PARENT_C]
+			i, nb: INTEGER
 		do
 			from
-				start
+				sp_area := area
+				i := 0
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				item.check_validity1;
-				forth;
-			end;
-		end; -- check_validity1
+				p := sp_area.item (i)
+				inherit_table.merge (p)
+				p.check_validity1
+				i := i + 1
+			end
+		end
+
+feature -- Validity
 
 	check_validity2 is
 			-- Check the redefine and select clause
+		local
+			sp_area: SPECIAL [PARENT_C]
+			i, nb: INTEGER
 		do
 			from
-				start
+				sp_area := area
+				i := 0
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				item.check_validity2;
-				forth;
-			end;
-		end; -- check_validity2
+				sp_area.item(i).check_validity2
+				i := i + 1
+			end
+		end
 
 	check_validity4 is
 			-- Check useless selection 
+		local
+			sp_area: SPECIAL [PARENT_C]
+			i, nb: INTEGER
+			p: PARENT_C
 		do
 			from
-				start
+				sp_area := area
+				i := 0
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				if not (item.selecting = Void) then
-					item.check_validity4;
-				end;
-				forth;
-			end;
-		end; -- check_validity4
+				p := sp_area.item(i)
+				if not (p.selecting = Void) then
+					p.check_validity4
+				end
+				i := i + 1
+			end
+		end
 
 	is_selecting (feature_name: STRING): BOOLEAN is
 			-- Are the parents selecting `feature_name' ?
 		require
-			good_argument: not (feature_name = Void);
+			good_argument: not (feature_name = Void)
+		local
+			sp_area: SPECIAL [PARENT_C]
+			i, nb: INTEGER
 		do
 			from
-				start
+				sp_area := area
+				i := 0
+				nb := count
 			until
-				after or else Result
+				Result or else i = nb
 			loop
-				Result := item.is_selecting (feature_name);
-				forth
-			end;
-		end; -- is_selecting
+				Result := sp_area.item(i).is_selecting (feature_name)
+				i := i + 1
+			end
+		end
 
 end -- class PARENT_LIST

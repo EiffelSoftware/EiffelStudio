@@ -81,21 +81,24 @@ feature  -- Access
 			end
 		end
 
+	--| FIXME Why do we compare status bar and menu bar?
+	--| "like item" = EV_WIDGET and menu bar is not a widget
+	--| so the user can never check if some menu bar is even in here.
 	has (v: like item): BOOLEAN is
 			-- Does structure include `v'?
 		local
-			ilist: EV_ITEM_LIST_I [EV_ITEM]
+		--|	ilist: EV_ITEM_LIST_I [EV_ITEM]
 		do
-			ilist ?= v.implementation
-			if (status_bar /= Void) then
-				Result := ilist = status_bar.implementation
-			elseif (menu_bar /= Void and then Result = False) then
-				Result := ilist = menu_bar.implementation
-			end
+		--|	ilist ?= v.implementation
+		--|	if (status_bar /= Void) then
+		--|		Result := ilist = status_bar.implementation
+		--|	elseif (menu_bar /= Void and then Result = False) then
+		--|		Result := ilist = menu_bar.implementation
+		--|	end
 
-			if Result = False then
+		--|	if Result = False then
 				Result := item = v
-			end	
+		--|	end	
 		end
     
 	menu_bar: EV_MENU_BAR is
@@ -318,6 +321,9 @@ end -- class EV_WINDOW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/28 22:04:13  brendel
+--| Commented out strange redefintion of `has'.
+--|
 --| Revision 1.12  2000/04/28 21:43:34  brendel
 --| Replaced EV_STATUS_BAR with EV_WIDGET.
 --|

@@ -27,14 +27,14 @@ feature {NONE} -- Initialization
 			external_name: "MakeFromInfo"
 		require
 			non_void_assembly_description_filename: an_assembly_description_filename /= Void
-			not_empty_assembly_description_filename: an_assembly_description_filename.Length > 0
+			not_empty_assembly_description_filename: an_assembly_description_filename.get_length > 0
 		local
 			support: ISE_REFLECTION_CODEGENERATIONSUPPORT
 		do
 			assembly_description_filename := an_assembly_description_filename
 			create support.make_codegenerationsupport
 			support.make
-			eiffel_assembly := support.EiffelAssemblyFromXml (assembly_description_filename)
+			eiffel_assembly := support.Eiffel_Assembly_From_Xml (assembly_description_filename)
 			create eiffel_code_generator.make_from_info (eiffel_assembly)
 		ensure
 			assembly_description_set: assembly_description_filename.Equals_String (an_assembly_description_filename)
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			external_name: "MakeFromInfoAndPath"
 		require
 			non_void_assembly_description_filename: an_assembly_description_filename /= Void
-			not_empty_assembly_description_filename: an_assembly_description_filename.Length > 0
+			not_empty_assembly_description_filename: an_assembly_description_filename.get_length > 0
 		local
 			support: ISE_REFLECTION_CODEGENERATIONSUPPORT
 		do
@@ -90,7 +90,7 @@ feature -- Basic Operations
 			external_name: "GenerateEiffelCodeFromXml"
 		require
 			non_void_type_description_filename: type_description_filename /= Void
-			not_empty_type_description_filename: type_description_filename.Length > 0
+			not_empty_type_description_filename: type_description_filename.get_length > 0
 		do
 			eiffel_code_generator.generate_eiffel_class (eiffel_class_from_xml (type_description_filename))
 		end	
@@ -103,7 +103,7 @@ feature -- Basic Operations
 		require
 			non_void_assembly: eiffel_assembly /= Void
 			non_void_type_description_filename: type_description_filename /= Void
-			not_empty_type_description_filename: type_description_filename.Length > 0
+			not_empty_type_description_filename: type_description_filename.get_length > 0
 		do
 			eiffel_code_generator.generate_eiffel_class_from_path (eiffel_class_from_xml (type_description_filename), a_path)
 		end	
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			external_name: "EiffelClassFromXml"
 		require
 			non_void_type_description_filename: type_description_filename /= Void
-			not_empty_type_description_filename: type_description_filename.Length > 0
+			not_empty_type_description_filename: type_description_filename.get_length > 0
 		local
 			support: ISE_REFLECTION_CODEGENERATIONSUPPORT
 			eiffel_class: ISE_REFLECTION_EIFFELCLASS
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 		do
 			create support.make_codegenerationsupport
 			support.make
-			Result := support.EiffelClassFromXml (type_description_filename)
+			Result := support.Eiffel_Class_From_Xml (type_description_filename)
 		end
 
 	update_assembly_description (new_path: STRING) is
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			external_name: "UpdateAssemblyDescription"
 		require
 			non_void_new_path: new_path /= Void
-			not_empty_new_path: new_path.length > 0
+			not_empty_new_path: new_path.get_length > 0
 			non_void_eiffel_assembly: eiffel_assembly /= Void
 		local
 			assembly_cache_handler: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER
@@ -143,16 +143,16 @@ feature {NONE} -- Implementation
 			dotnet_library_path: STRING
 		do
 			create assembly_cache_handler.make_eiffelassemblycachehandler
-			assembly_cache_handler.makecachehandler			
+			assembly_cache_handler.make_cache_handler			
 			create reflection_support.make_reflectionsupport
 			reflection_support.make
 			path := new_path
-			eiffel_delivery_path := reflection_support.Eiffeldeliverypath
+			eiffel_delivery_path := reflection_support.Eiffel_delivery_path
 			dotnet_library_path := eiffel_delivery_path.concat_string_string (eiffel_delivery_path, Dotnet_library_relative_path)
-			if path.indexof (dotnet_library_path) > - 1 then
-				path := path.replace (reflection_support.Eiffeldeliverypath, reflection_support.Eiffelkey)
+			if path.index_of (dotnet_library_path) > - 1 then
+				path := path.replace (reflection_support.Eiffel_delivery_path, reflection_support.Eiffel_key)
 			end
-			assembly_cache_handler.updateassemblydescription (eiffel_assembly, path)
+			assembly_cache_handler.update_assembly_description (eiffel_assembly, path)
 		end
 	
 	Dotnet_library_relative_path: STRING is "\library.net"

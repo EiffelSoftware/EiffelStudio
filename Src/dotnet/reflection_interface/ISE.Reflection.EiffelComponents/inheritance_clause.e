@@ -14,7 +14,7 @@ feature {NONE} -- Initialization
  			external_name: "Make"
  		require
  			non_void_source_name: a_source_name /= Void
- 			not_empty_source_name: a_source_name.length > 0		
+ 			not_empty_source_name: a_source_name.get_length > 0		
  		do
  			set_source_name (a_source_name)
  		ensure
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		deferred		
 		ensure
 			non_void_eiffel_keyword: Result /= Void
-			not_empty_eiffel_keyword: Result.length > 0
+			not_empty_eiffel_keyword: Result.get_length > 0
 		end
 		
 feature -- Status Setting
@@ -47,7 +47,7 @@ feature -- Status Setting
 			external_name: "SetSourceName"
  		require
  			non_void_source_name: a_source_name /= Void
- 			not_empty_source_name: a_source_name.length > 0		
+ 			not_empty_source_name: a_source_name.get_length > 0		
  		do
  			source_name := a_source_name
  		ensure
@@ -56,16 +56,16 @@ feature -- Status Setting
 			
 feature -- Basic Operations
 
-	to_string: STRING is
+	string_representation: STRING is
 		indexing
 			description: "Give a string representation of the inheritance clause."
-			external_name: "ToString"
+			external_name: "StringRepresentation"
 		require
 			non_void_source_name: source_name /= Void
 		deferred
 		ensure
 			non_void_result: Result /= Void
-			not_empty_result: Result.length > 0
+			not_empty_result: Result.get_length > 0
 		end
 		
  end -- class INHERITANCE_CLAUSE

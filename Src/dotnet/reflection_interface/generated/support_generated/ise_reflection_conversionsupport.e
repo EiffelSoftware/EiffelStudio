@@ -1,15 +1,11 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.ConversionSupport"
-
 external class
 	ISE_REFLECTION_CONVERSIONSUPPORT
 
 inherit
 	ISE_REFLECTION_CONVERT
-		redefine
-			NeutralCulture
-		end
 
 create
 	make_conversionsupport
@@ -23,88 +19,81 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	NeutralCulture: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
-		alias
-			"NeutralCulture"
-		end
-
-	EmptyString: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
-		alias
-			"EmptyString"
-		end
-
-	ExportClauseFromText (a_text: STRING): ISE_REFLECTION_EXPORTCLAUSE is
-		external
-			"IL signature (System.String): ISE.Reflection.ExportClause use ISE.Reflection.ConversionSupport"
-		alias
-			"ExportClauseFromText"
-		end
-
-	AssemblyNameFromDescriptor (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): SYSTEM_REFLECTION_ASSEMBLYNAME is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Reflection.AssemblyName use ISE.Reflection.ConversionSupport"
-		alias
-			"AssemblyNameFromDescriptor"
-		end
-
-	RenameClauseFromText (a_text: STRING): ISE_REFLECTION_RENAMECLAUSE is
-		external
-			"IL signature (System.String): ISE.Reflection.RenameClause use ISE.Reflection.ConversionSupport"
-		alias
-			"RenameClauseFromText"
-		end
-
-	ClosingCurlBracket: STRING is
+	closing_curl_bracket: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
 		alias
 			"ClosingCurlBracket"
 		end
 
-	SourceFromText (a_text: STRING): STRING is
-		external
-			"IL signature (System.String): System.String use ISE.Reflection.ConversionSupport"
-		alias
-			"SourceFromText"
-		end
-
-	Space: STRING is
+	space: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
 		alias
 			"Space"
 		end
 
-	OpeningCurlBracket: STRING is
+	as_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
 		alias
-			"OpeningCurlBracket"
+			"AsKeyword"
 		end
 
-	AssemblyDescriptorFromName (an_assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME): ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
-		external
-			"IL signature (System.Reflection.AssemblyName): ISE.Reflection.AssemblyDescriptor use ISE.Reflection.ConversionSupport"
-		alias
-			"AssemblyDescriptorFromName"
-		end
-
-	TargetFromText (a_text: STRING): STRING is
+	target_from_text (a_text: STRING): STRING is
 		external
 			"IL signature (System.String): System.String use ISE.Reflection.ConversionSupport"
 		alias
 			"TargetFromText"
 		end
 
-	AsKeyword: STRING is
+	opening_curl_bracket: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
 		alias
-			"AsKeyword"
+			"OpeningCurlBracket"
+		end
+
+	assembly_name_from_descriptor (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): SYSTEM_REFLECTION_ASSEMBLYNAME is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Reflection.AssemblyName use ISE.Reflection.ConversionSupport"
+		alias
+			"AssemblyNameFromDescriptor"
+		end
+
+	rename_clause_from_text (a_text: STRING): ISE_REFLECTION_RENAMECLAUSE is
+		external
+			"IL signature (System.String): ISE.Reflection.RenameClause use ISE.Reflection.ConversionSupport"
+		alias
+			"RenameClauseFromText"
+		end
+
+	source_from_text (a_text: STRING): STRING is
+		external
+			"IL signature (System.String): System.String use ISE.Reflection.ConversionSupport"
+		alias
+			"SourceFromText"
+		end
+
+	empty_string: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
+		alias
+			"EmptyString"
+		end
+
+	export_clause_from_text (a_text: STRING): ISE_REFLECTION_EXPORTCLAUSE is
+		external
+			"IL signature (System.String): ISE.Reflection.ExportClause use ISE.Reflection.ConversionSupport"
+		alias
+			"ExportClauseFromText"
+		end
+
+	assembly_descriptor_from_name (an_assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME): ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+		external
+			"IL signature (System.Reflection.AssemblyName): ISE.Reflection.AssemblyDescriptor use ISE.Reflection.ConversionSupport"
+		alias
+			"AssemblyDescriptorFromName"
 		end
 
 end -- class ISE_REFLECTION_CONVERSIONSUPPORT

@@ -9,7 +9,7 @@ class
 inherit
 	ANY
 		redefine
-			GetHashCode
+			get_hash_code
 		end	
 
 create 
@@ -27,13 +27,13 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.Length > 0
+			not_empty_name: a_name.get_length > 0
 			non_void_version: a_version /= Void
-			not_empty_version: a_version.Length > 0
+			not_empty_version: a_version.get_length > 0
 			non_void_culture: a_culture /= Void
-			not_empty_culture: a_culture.Length > 0			
+			not_empty_culture: a_culture.get_length > 0			
 			non_void_public_key: a_public_key /= Void
-			not_empty_public_key: a_public_key.Length > 0
+			not_empty_public_key: a_public_key.get_length > 0
 		do
 			name := a_name
 			version := a_version
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			assembly_info: ARRAY [STRING]
 			retried: BOOLEAN
 		do
-			an_assembly_name := a_dot_net_assembly.getname 
+			an_assembly_name := a_dot_net_assembly.get_name 
 			create convert
 			if not retried then
 				assembly_info := convert.assembly_info_from_name (an_assembly_name)
@@ -99,7 +99,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	GetHashCode: INTEGER is
+	get_hash_code: INTEGER is
 		indexing
 			description: "Hash code for an assembly descriptor"
 			external_name: "GetHashCode"
@@ -108,17 +108,17 @@ feature -- Basic Operations
 		do
 			string_to_code ?= name.clone
 			string_to_code := string_to_code.concat_string_string_string_string (string_to_code, version, culture, public_key)
-			Result := string_to_code.GetHashCode
+			Result := string_to_code.get_hash_code
 		end
 		
 invariant
 	non_void_name: name /= Void
-	not_empty_name: name.Length > 0
+	not_empty_name: name.get_length > 0
 	non_void_version: version /= Void
-	not_empty_version: version.Length > 0
+	not_empty_version: version.get_length > 0
 	non_void_culture: culture /= Void
-	not_empty_culture: culture.Length > 0			
+	not_empty_culture: culture.get_length > 0			
 	non_void_public_key: public_key /= Void
-	not_empty_public_key: public_key.Length > 0
+	not_empty_public_key: public_key.get_length > 0
 
 end -- class ASSEMBLY_DESCRIPTOR

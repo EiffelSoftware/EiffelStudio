@@ -31,11 +31,11 @@ feature {NONE} -- Initialization
 			external_name: "MakeFromInfo"
 		require
 			non_void_eiffel_assembly: an_eiffel_assembly /= Void
-			non_void_eiffel_assembly_name: an_eiffel_assembly.assemblydescriptor.Name /= Void
-			not_empty_eiffel_assembly_name: an_eiffel_assembly.AssemblyDescriptor.Name.Length > 0
-			non_void_eiffel_cluster_path: an_eiffel_assembly.EiffelClusterPath.Length > 0
-			non_void_emitter_version_number: an_eiffel_assembly.EmitterVersionNumber /= Void
-			not_empty_emitter_version_number: an_eiffel_assembly.EmitterVersionNumber.Length > 0
+			non_void_eiffel_assembly_name: an_eiffel_assembly.assembly_descriptor.Name /= Void
+			not_empty_eiffel_assembly_name: an_eiffel_assembly.assembly_descriptor.Name.get_length > 0
+			non_void_eiffel_cluster_path: an_eiffel_assembly.Eiffel_Cluster_Path.get_length > 0
+			non_void_emitter_version_number: an_eiffel_assembly.Emitter_Version_Number /= Void
+			not_empty_emitter_version_number: an_eiffel_assembly.Emitter_Version_Number.get_length > 0
 		local
 			code_generation_support: ISE_REFLECTION_CODEGENERATIONSUPPORT
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
@@ -46,12 +46,12 @@ feature {NONE} -- Initialization
 			code_generation_support.make
 			create reflection_support.make_reflectionsupport
 			reflection_support.make
-			cluster_path := eiffel_assembly.eiffelclusterpath
-			if cluster_path.indexof (reflection_support.Eiffelkey) > -1 then
-				cluster_path := cluster_path.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
+			cluster_path := eiffel_assembly.eiffel_cluster_path
+			if cluster_path.index_of (reflection_support.eiffel_key) > -1 then
+				cluster_path := cluster_path.replace (reflection_support.eiffel_key, reflection_support.eiffel_delivery_path)
 			end
-			if not code_generation_support.validpath (cluster_path) then
-				code_generation_support.createfolder (cluster_path)
+			if not code_generation_support.valid_path (cluster_path) then
+				code_generation_support.create_folder (cluster_path)
 			end
 		ensure
 			eiffel_assembly_set: eiffel_assembly = an_eiffel_assembly
@@ -85,16 +85,16 @@ feature -- Basic Operations
 			external_name: "GenerateEiffelClass"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
-			non_void_eiffel_class_name: an_eiffel_class.EiffelName /= Void
-			not_empty_eiffel_class_name: an_eiffel_class.EiffelName.Length > 0
-			non_void_eiffel_class_full_external_name: an_eiffel_class.FullExternalName /= Void
-			not_empty_eiffel_class_full_external_name: an_eiffel_class.FullExternalName.Length > 0
+			non_void_eiffel_class_name: an_eiffel_class.eiffel_name /= Void
+			not_empty_eiffel_class_name: an_eiffel_class.eiffel_name.get_length > 0
+			non_void_eiffel_class_full_external_name: an_eiffel_class.Full_External_Name /= Void
+			not_empty_eiffel_class_full_external_name: an_eiffel_class.Full_External_Name.get_length > 0
 			non_void_eiffel_assembly: eiffel_assembly /= Void
-			non_void_eiffel_assembly_name: eiffel_assembly.AssemblyDescriptor.Name /= Void
-			not_empty_eiffel_assembly_name: eiffel_assembly.AssemblyDescriptor.Name.Length > 0
-			non_void_eiffel_cluster_path: eiffel_assembly.EiffelClusterPath.Length > 0
-			non_void_emitter_version_number: eiffel_assembly.EmitterVersionNumber /= Void
-			not_empty_emitter_version_number: eiffel_assembly.EmitterVersionNumber.Length > 0
+			non_void_eiffel_assembly_name: eiffel_assembly.assembly_descriptor.Name /= Void
+			not_empty_eiffel_assembly_name: eiffel_assembly.assembly_descriptor.Name.get_length > 0
+			non_void_eiffel_cluster_path: eiffel_assembly.Eiffel_Cluster_Path.get_length > 0
+			non_void_emitter_version_number: eiffel_assembly.Emitter_Version_Number /= Void
+			not_empty_emitter_version_number: eiffel_assembly.Emitter_Version_Number.get_length > 0
 		local
 			eiffel_cluster_path: STRING
 			full_external_name: STRING
@@ -104,14 +104,14 @@ feature -- Basic Operations
 		do
 			eiffel_class := an_eiffel_class
 			create formatter.make
-			eiffel_cluster_path := eiffel_assembly.EiffelClusterPath
-			if eiffel_cluster_path.Length > 0 and then not eiffel_cluster_path.EndsWith ("\") then
+			eiffel_cluster_path := eiffel_assembly.Eiffel_Cluster_Path
+			if eiffel_cluster_path.get_length > 0 and then not eiffel_cluster_path.Ends_With ("\") then
 				eiffel_cluster_path := eiffel_cluster_path.Concat_String_String (eiffel_cluster_path, "\")
 			end
 			create reflection_support.make_reflectionsupport
 			reflection_support.make
-			if eiffel_cluster_path.indexof (reflection_support.Eiffelkey) > -1 then
-				eiffel_cluster_path := eiffel_cluster_path.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
+			if eiffel_cluster_path.index_of (reflection_support.eiffel_key) > -1 then
+				eiffel_cluster_path := eiffel_cluster_path.replace (reflection_support.eiffel_key, reflection_support.eiffel_delivery_path)
 			end
 			intern_generate_eiffel_class (eiffel_cluster_path)
 		end
@@ -122,15 +122,15 @@ feature -- Basic Operations
 			external_name: "GenerateEiffelClassFromPath"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
-			non_void_eiffel_class_name: an_eiffel_class.EiffelName /= Void
-			not_empty_eiffel_class_name: an_eiffel_class.EiffelName.Length > 0
-			non_void_eiffel_class_full_external_name: an_eiffel_class.FullExternalName /= Void
-			not_empty_eiffel_class_full_external_name: an_eiffel_class.FullExternalName.Length > 0
+			non_void_eiffel_class_name: an_eiffel_class.eiffel_name /= Void
+			not_empty_eiffel_class_name: an_eiffel_class.eiffel_name.get_length > 0
+			non_void_eiffel_class_full_external_name: an_eiffel_class.Full_External_Name /= Void
+			not_empty_eiffel_class_full_external_name: an_eiffel_class.Full_External_Name.get_length > 0
 			non_void_eiffel_assembly: eiffel_assembly /= Void
-			non_void_eiffel_assembly_name: eiffel_assembly.AssemblyDescriptor.Name /= Void
-			not_empty_eiffel_assembly_name: eiffel_assembly.AssemblyDescriptor.Name.Length > 0
-			non_void_emitter_version_number: eiffel_assembly.EmitterVersionNumber /= Void
-			not_empty_emitter_version_number: eiffel_assembly.EmitterVersionNumber.Length > 0
+			non_void_eiffel_assembly_name: eiffel_assembly.assembly_descriptor.Name /= Void
+			not_empty_eiffel_assembly_name: eiffel_assembly.assembly_descriptor.Name.get_length > 0
+			non_void_emitter_version_number: eiffel_assembly.Emitter_Version_Number /= Void
+			not_empty_emitter_version_number: eiffel_assembly.Emitter_Version_Number.get_length > 0
 		local
 			code_generation_support: ISE_REFLECTION_CODEGENERATIONSUPPORT
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
@@ -142,11 +142,11 @@ feature -- Basic Operations
 			create reflection_support.make_reflectionsupport
 			reflection_support.make
 			path := a_path
-			if path.indexof (reflection_support.Eiffelkey) > -1 then
-				path := path.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
+			if path.index_of (reflection_support.eiffel_key) > -1 then
+				path := path.replace (reflection_support.eiffel_key, reflection_support.eiffel_delivery_path)
 			end
-			if not code_generation_support.validpath (path) then
-				code_generation_support.createfolder (path)
+			if not code_generation_support.valid_path (path) then
+				code_generation_support.create_folder (path)
 			end
 			intern_generate_eiffel_class (path)
 		end
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_eiffel_class: eiffel_class /= Void
 			non_void_filename: a_filename /= Void
-			not_empty_filename: a_filename.length > 0
+			not_empty_filename: a_filename.get_length > 0
 		local
 			file_stream: SYSTEM_IO_STREAMWRITER
 			filename: STRING
@@ -171,8 +171,8 @@ feature {NONE} -- Implementation
 			cluster_path: STRING
 		do
 			create formatter.make
-			full_external_name := eiffel_class.FullExternalName
-			filename := a_filename.Concat_String_String_String (a_filename, formatter.FormatTypeName (full_external_name).ToLower, Eiffel_class_extension)
+			full_external_name := eiffel_class.Full_External_Name
+			filename := a_filename.Concat_String_String_String (a_filename, formatter.Format_Type_Name (full_external_name).To_Lower, Eiffel_class_extension)
 
 			create file_stream.make_streamwriter_5 (filename, False, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 			create generated_code.make_2 ('%U', 0)
@@ -180,34 +180,41 @@ feature {NONE} -- Implementation
 				-- indexing
 				--  	Generator: "Eiffel Emitter Version number"
 				-- 	external_name: "ClassName"
-			generated_code := generated_code.Concat_String_String_String_String (generated_code, Indexing_keyword, New_line, Tab)
+			generated_code := generated_code.Concat_String_String_String_String (generated_code, Indexing_keyword, Windows_new_line, Tab)
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, Generator_indexing_clause, Colon, Space) 
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, Generator_name, Space)
-			generated_code := generated_code.Concat_String_String_String_String (generated_code, eiffel_assembly.EmitterVersionNumber, Inverted_comma, New_line)	
+			generated_code := generated_code.Concat_String_String_String_String (generated_code, eiffel_assembly.Emitter_Version_Number, Inverted_comma, Windows_new_line)	
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, Tab, external_name_keyword, Colon)
-			generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Inverted_comma, formatter.FormatStrongName (eiffel_class.FullExternalName))
-			generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, New_line, New_line)
+			generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Inverted_comma, formatter.Format_Strong_Name (eiffel_class.Full_External_Name))
+			generated_code := generated_code.Concat_String_String_String (generated_code, Inverted_comma, Windows_new_line)
+			
+				-- enum_type
+			if eiffel_class.Enum_Type /= Void and then eiffel_class.Enum_Type.get_length > 0 then
+				generated_code := generated_code.concat_string_string_string_string (generated_code, Tab, Enum_type_keyword, Colon)
+				generated_code := generated_code.concat_string_string_string_string (generated_code, Space, Inverted_comma, eiffel_class.Enum_Type)
+				generated_code := generated_code.concat_string_string_string_string (generated_code, Inverted_comma, Windows_new_line, Windows_new_line)
+			end			
 
 				-- frozen
-			if eiffel_class.IsFrozen then
+			if eiffel_class.Is_Frozen then
 				generated_code := generated_code.Concat_String_String_String (generated_code, Frozen_keyword, Space)
 			end
 				
 				-- expanded
-			if eiffel_class.IsExpanded then
+			if eiffel_class.Is_Expanded then
 				generated_code := generated_code.Concat_String_String_String (generated_code, Expanded_keyword, Space)
 			end
 
 				-- deferred
-			if eiffel_class.IsDeferred then
+			if eiffel_class.Is_Deferred then
 				generated_code := generated_code.Concat_String_String_String (generated_code, Deferred_keyword, Space)
 			end
 			
 				-- external class
 				-- 	CLASS_NAME
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, External_keyword, Space, Class_keyword)
-			generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, eiffel_class.EiffelName.ToUpper)
-			generated_code := generated_code.Concat_String_String_String (generated_code, New_line, New_line)
+			generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, eiffel_class.eiffel_name.To_Upper)
+			generated_code := generated_code.Concat_String_String_String (generated_code, Windows_new_line, Windows_new_line)
 
 				-- inherit
 				-- 	PARENT_NAME
@@ -226,7 +233,7 @@ feature {NONE} -- Implementation
 				-- `end -- class CLASS_NAME'
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, End_keyword, Space, Dashes)
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Class_keyword, Space)
-			generated_code := generated_code.Concat_String_String_String (generated_code, eiffel_class.EiffelName.ToUpper, New_line)
+			generated_code := generated_code.Concat_String_String_String (generated_code, eiffel_class.eiffel_name.To_Upper, Windows_new_line)
 		
 			file_stream.Write_String (generated_code)
 			file_stream.Close
@@ -256,8 +263,8 @@ feature {NONE} -- Implementation
 			external_name: "GenerateInheritClause"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
-			non_void_class_name: eiffel_class.EiffelName /= Void
-			not_empty_class_name: eiffel_class.EiffelName.Length > 0
+			non_void_class_name: eiffel_class.eiffel_name /= Void
+			not_empty_class_name: eiffel_class.eiffel_name.get_length > 0
 		local			
 			parents_names: SYSTEM_COLLECTIONS_ICOLLECTION
 			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR			
@@ -272,17 +279,17 @@ feature {NONE} -- Implementation
 		do
 			parents := eiffel_class.Parents
 			
-			if parents.Count > 1 or has_any_rename or has_any_undefine or  has_any_redefine or (parents.Count = 1 and (not parents.Contains (Any_class))) then
+			if parents.get_count > 1 or has_any_rename or has_any_undefine or  has_any_redefine or (parents.get_count = 1 and (not parents.Contains (Any_class))) then
 				generated_code := generated_code.Concat_String_String (generated_code, Inherit_keyword)
 				
-				parents_names := parents.Keys
-				enumerator := parents_names.GetEnumerator
+				parents_names := parents.get_Keys
+				enumerator := parents_names.Get_Enumerator
 				from
-					create formatted_parents.make (parents.Count)
+					create formatted_parents.make (parents.get_count)
 				until
-					not enumerator.MoveNext
+					not enumerator.Move_Next
 				loop
-					a_parent ?= enumerator.Current_
+					a_parent ?= enumerator.get_Current
 					if a_parent /= Void then
 						formatted_parents.put (i, a_parent)
 					end
@@ -297,62 +304,62 @@ feature {NONE} -- Implementation
 					a_parent := formatted_parents.item (i)
 					if a_parent /= Void then
 						if (not a_parent.Equals_String (Any_class)) or has_any_rename or has_any_redefine or has_any_undefine then
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, a_parent)
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, a_parent)
 						end
 					end
 					
-					inheritance_clauses ?= parents.Item (a_parent)
+					inheritance_clauses ?= parents.get_Item (a_parent)
 					if inheritance_clauses /= Void then
 						-- rename clauses
-						if inheritance_clauses.Item (0).Count > 0 then
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
+						if inheritance_clauses.Item (0).get_count > 0 then
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab)
 							generated_code := generated_code.Concat_String_String (generated_code, Rename_keyword)
 							rename_clauses := inheritance_clauses.Item (0)					
-							if rename_clauses /= Void and then rename_clauses.Count > 0 then
+							if rename_clauses /= Void and then rename_clauses.get_count > 0 then
 								generate_inheritance_clauses (rename_clauses)
 							end
 						end
 
 							-- undefine clauses
-						if inheritance_clauses.Item (1).Count > 0 then
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
+						if inheritance_clauses.Item (1).get_count > 0 then
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab)
 							generated_code := generated_code.Concat_String_String (generated_code, Undefine_keyword)						
 							undefine_clauses := inheritance_clauses.Item (1)
-							if undefine_clauses /= Void and then undefine_clauses.Count > 0 then
+							if undefine_clauses /= Void and then undefine_clauses.get_count > 0 then
 								generate_inheritance_clauses (undefine_clauses)
 							end
 						end
 
 							-- redefine clauses
-						if inheritance_clauses.Item (2).Count > 0 then
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
+						if inheritance_clauses.Item (2).get_count > 0 then
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab)
 							generated_code := generated_code.Concat_String_String (generated_code, Redefine_keyword)						
 							redefine_clauses := inheritance_clauses.Item (2)
-							if redefine_clauses /= Void and then redefine_clauses.Count > 0 then
+							if redefine_clauses /= Void and then redefine_clauses.get_count > 0 then
 								generate_inheritance_clauses (redefine_clauses)
 							end
 						end
 
 							-- select clauses
-						if inheritance_clauses.Item (3).Count > 0 then
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
+						if inheritance_clauses.Item (3).get_count > 0 then
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab)
 							generated_code := generated_code.Concat_String_String (generated_code, Select_keyword)						
 							select_clauses := inheritance_clauses.Item (3)
-							if select_clauses /= Void and then select_clauses.Count > 0 then
+							if select_clauses /= Void and then select_clauses.get_count > 0 then
 								generate_inheritance_clauses (select_clauses)
 							end
 						end
 						
 						-- Add `end' keyword at the end of inheritance clauses
-						if inheritance_clauses.Item (0).Count > 0 or inheritance_clauses.Item (1).Count > 0 or inheritance_clauses.Item (2).Count > 0 or inheritance_clauses.Item (3).Count > 0 then
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
+						if inheritance_clauses.Item (0).get_count > 0 or inheritance_clauses.Item (1).get_count > 0 or inheritance_clauses.Item (2).get_count > 0 or inheritance_clauses.Item (3).get_count > 0 then
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab)
 							generated_code := generated_code.Concat_String_String (generated_code, End_keyword)
 						end
 					end
 					i := i - 1
 				end
 				
-				generated_code := generated_code.Concat_String_String_String (generated_code, New_line, New_line)
+				generated_code := generated_code.Concat_String_String_String (generated_code, Windows_new_line, Windows_new_line)
 			end
 		end
 		
@@ -363,8 +370,8 @@ feature {NONE} -- Implementation
 			external_name: "GenerateCreateClause"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
-			non_void_class_name: eiffel_class.EiffelName /= Void
-			not_empty_class_name: eiffel_class.EiffelName.Length > 0
+			non_void_class_name: eiffel_class.eiffel_name /= Void
+			not_empty_class_name: eiffel_class.eiffel_name.get_length > 0
 		local	
 			creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST
 			i: INTEGER
@@ -372,7 +379,7 @@ feature {NONE} -- Implementation
 			a_feature: ISE_REFLECTION_EIFFELFEATURE
 			initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST
 		do
-			creation_routines := eiffel_class.CreationRoutines
+			creation_routines := eiffel_class.Creation_Routines
 			
 			create special_classes.make (9)
 			special_classes.put (0, Any_class)
@@ -385,40 +392,40 @@ feature {NONE} -- Implementation
 			special_classes.put (7, Real_class)
 			special_classes.put (8, Boolean_class)
 
-			if eiffel_class.CreationRoutines.Count > 0 and not eiffel_class.IsDeferred and not is_special_class then			
+			if eiffel_class.Creation_Routines.get_count > 0 and not eiffel_class.Is_Deferred and not is_special_class then			
 					-- Do not generate creation clause for expanded classes
-				if not eiffel_class.IsExpanded then
+				if not eiffel_class.Is_Expanded then
 					generated_code := generated_code.Concat_String_String (generated_code, Create_keyword) 
 					from
 						i := 0
 					until
-						i = creation_routines.Count
+						i = creation_routines.get_count
 					loop
-						a_routine ?= creation_routines.Item (i)
-						if a_routine /= Void and then a_routine.Length > 0 then
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, a_routine)
-							if i < (creation_routines.Count - 1) then
+						a_routine ?= creation_routines.get_Item (i)
+						if a_routine /= Void and then a_routine.get_length > 0 then
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, a_routine)
+							if i < (creation_routines.get_count - 1) then
 								generated_code := generated_code.Concat_String_String (generated_code, Comma)
 							end
 						end
 						i := i + 1
 					end
 				end				
-			elseif eiffel_class.CreationRoutines.Count = 0 and not eiffel_class.IsDeferred and not eiffel_class.IsExpanded then--and eiffel_class.CreateNone then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Create_none, New_line, New_line)
+			elseif eiffel_class.Creation_Routines.get_count = 0 and not eiffel_class.Is_Deferred and not eiffel_class.Is_Expanded then--and eiffel_class.CreateNone then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Create_none, Windows_new_line, Windows_new_line)
 			end
 			
-			if eiffel_class.InitializationFeatures.Count > 0 and not eiffel_class.IsDeferred and not is_special_class then
+			if eiffel_class.Initialization_Features.get_count > 0 and not eiffel_class.Is_Deferred and not is_special_class then
 					-- Generate initialization feature clause.
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, New_line, Initialization_feature_clause)
-				generated_code := generated_code.Concat_String_String_String (generated_code, New_line, New_line)
-				initialization_features := eiffel_class.InitializationFeatures
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Windows_new_line, Initialization_feature_clause)
+				generated_code := generated_code.Concat_String_String_String (generated_code, Windows_new_line, Windows_new_line)
+				initialization_features := eiffel_class.Initialization_Features
 				from
 					i := 0
 				until
-					i = initialization_features.Count
+					i = initialization_features.get_count
 				loop
-					a_feature ?= initialization_features.Item (i)
+					a_feature ?= initialization_features.get_Item (i)
 					if a_feature /= Void then
 						generate_eiffel_feature (a_feature)
 					end
@@ -433,8 +440,8 @@ feature {NONE} -- Implementation
 			external_name: "GenerateClassFeatures"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
-			non_void_class_name: eiffel_class.EiffelName /= Void
-			not_empty_class_name: eiffel_class.EiffelName.Length > 0
+			non_void_class_name: eiffel_class.eiffel_name /= Void
+			not_empty_class_name: eiffel_class.eiffel_name.get_length > 0
 		local
 			access_features: SYSTEM_COLLECTIONS_ARRAYLIST
 			element_change_features: SYSTEM_COLLECTIONS_ARRAYLIST
@@ -445,51 +452,51 @@ feature {NONE} -- Implementation
 			implementation_features: SYSTEM_COLLECTIONS_ARRAYLIST
 		do		
 				-- Generate access feature clause.
-			access_features := eiffel_class.AccessFeatures
-			if access_features.Count > 0 then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Access_feature_clause, New_line, New_line)
+			access_features := eiffel_class.Access_Features
+			if access_features.get_count > 0 then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Access_feature_clause, Windows_new_line, Windows_new_line)
 				intern_generate_class_features (access_features)
 			end	
 				
 				-- Generate element change feature clause.
-			element_change_features := eiffel_class.ElementChangeFeatures
-			if element_change_features.Count > 0 then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Element_change_feature_clause, New_line, New_line)
+			element_change_features := eiffel_class.Element_Change_Features
+			if element_change_features.get_count > 0 then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Element_change_feature_clause, Windows_new_line, Windows_new_line)
 				intern_generate_class_features (element_change_features)
 			end					
 
 				-- Generate basic operations feature clause.
-			basic_operations_features := eiffel_class.BasicOperations
-			if basic_operations_features.Count > 0 then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Basic_operations_feature_clause, New_line, New_line)
+			basic_operations_features := eiffel_class.Basic_Operations
+			if basic_operations_features.get_count > 0 then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Basic_operations_feature_clause, Windows_new_line, Windows_new_line)
 				intern_generate_class_features (basic_operations_features)
 			end	
 
 				-- Generate unary operators feature clause.
-			unary_operators_features := eiffel_class.UnaryOperatorsFeatures
-			if unary_operators_features.Count > 0 then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Unary_operators_feature_clause, New_line, New_line)
+			unary_operators_features := eiffel_class.Unary_Operators_Features
+			if unary_operators_features.get_count > 0 then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Unary_operators_feature_clause, Windows_new_line, Windows_new_line)
 				intern_generate_class_features (unary_operators_features)
 			end	
 
 				-- Generate binary operators feature clause.
-			binary_operators_features := eiffel_class.BinaryOperatorsFeatures
-			if binary_operators_features.Count > 0 then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Binary_operators_feature_clause, New_line, New_line)
+			binary_operators_features := eiffel_class.Binary_Operators_Features
+			if binary_operators_features.get_count > 0 then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Binary_operators_feature_clause, Windows_new_line, Windows_new_line)
 				intern_generate_class_features (binary_operators_features)
 			end	
 
 				-- Generate specials feature clause.
-			specials_features := eiffel_class.SpecialFeatures
-			if specials_features.Count > 0 then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Specials_feature_clause, New_line, New_line)
+			specials_features := eiffel_class.Special_Features
+			if specials_features.get_count > 0 then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Specials_feature_clause, Windows_new_line, Windows_new_line)
 				intern_generate_class_features (specials_features)
 			end	
 
 				-- Generate implementation feature clause.
-			implementation_features := eiffel_class.ImplementationFeatures
-			if implementation_features.Count > 0 then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Implementation_feature_clause, New_line, New_line)
+			implementation_features := eiffel_class.Implementation_Features
+			if implementation_features.get_count > 0 then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Implementation_feature_clause, Windows_new_line, Windows_new_line)
 				intern_generate_class_features (implementation_features)
 			end
 		end
@@ -501,20 +508,20 @@ feature {NONE} -- Implementation
 			external_name: "GenerateInheritanceClauses"
 		require
 			non_void_clauses: clauses /= Void
-			not_empty_clauses: clauses.Count > 0
+			not_empty_clauses: clauses.get_count > 0
 		local
 			i: INTEGER
 			a_clause: ISE_REFLECTION_INHERITANCECLAUSE
 		do
 			from
 			until
-				i = clauses.Count
+				i = clauses.get_count
 			loop
-				a_clause ?= clauses.Item (i)
+				a_clause ?= clauses.get_Item (i)
 				if a_clause /= Void then
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab) 
-					generated_code := generated_code.Concat_String_String_String (generated_code, Tab, a_clause.tostring) 
-					if i < (clauses.Count - 1) then
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab) 
+					generated_code := generated_code.Concat_String_String_String (generated_code, Tab, a_clause.string_representation) 
+					if i < (clauses.get_count - 1) then
 						generated_code := generated_code.Concat_String_String (generated_code, Comma)
 					end
 				end
@@ -533,9 +540,9 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				i = special_classes.Count or Result
+				i = special_classes.count or Result
 			loop
-				Result := eiffel_class.EiffelName.Equals_String (special_classes.item (i))
+				Result := eiffel_class.eiffel_name.Equals_String (special_classes.item (i))
 				i := i + 1
 			end
 		end
@@ -551,10 +558,10 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				i = a_list.Count
+				i = a_list.get_count
 			loop
-				a_feature ?= a_list.Item (i)
-				if a_feature /= Void and then (a_feature.EiffelName /= Void and a_feature.EiffelName.Length > 0) then
+				a_feature ?= a_list.get_Item (i)
+				if a_feature /= Void and then (a_feature.eiffel_name /= Void and a_feature.eiffel_name.get_length > 0) then
 					generate_eiffel_feature (a_feature)
 				end
 				i := i + 1
@@ -567,8 +574,8 @@ feature {NONE} -- Implementation
 			external_name: "GenerateEiffelFeature"
 		require
 			non_void_feature: a_feature /= Void
-			non_void_feature_name: a_feature.EiffelName /= Void
-			not_empty_feature_name: a_feature.EiffelName.Length > 0
+			non_void_feature_name: a_feature.eiffel_name /= Void
+			not_empty_feature_name: a_feature.eiffel_name.get_length > 0
 		local
 			is_binary_operator: BOOLEAN
 			is_unary_operator: BOOLEAN
@@ -584,45 +591,45 @@ feature {NONE} -- Implementation
 			preconditions: SYSTEM_COLLECTIONS_ARRAYLIST
 			postconditions: SYSTEM_COLLECTIONS_ARRAYLIST
 		do
-			is_binary_operator := eiffel_class.BinaryOperatorsFeatures.Contains (a_feature)
-			is_unary_operator := eiffel_class.UnaryOperatorsFeatures.Contains (a_feature)	
+			is_binary_operator := eiffel_class.Binary_Operators_Features.Contains (a_feature)
+			is_unary_operator := eiffel_class.Unary_Operators_Features.Contains (a_feature)	
 			
 			generated_code := generated_code.Concat_String_String (generated_code, Tab)
 			
 				-- frozen
-			if a_feature.IsFrozen then
+			if a_feature.Is_Frozen then
 				generated_code := generated_code.Concat_String_String_String (generated_code, Frozen_keyword, Space)
 			end
 				
 				-- feature name
-			if is_unary_operator and a_feature.IsPrefix then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Prefix_keyword, Space, a_feature.EiffelName)
+			if is_unary_operator and a_feature.Is_Prefix then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Prefix_keyword, Space, a_feature.eiffel_name)
 			else
 				--if is_binary_operator and a_feature.IsInfix then
-				if a_feature.IsInfix then
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, Infix_keyword, Space, a_feature.EiffelName)
+				if a_feature.Is_Infix then
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Infix_keyword, Space, a_feature.eiffel_name)
 				else
-					generated_code := generated_code.Concat_String_String (generated_code, a_feature.EiffelName)
+					generated_code := generated_code.Concat_String_String (generated_code, a_feature.eiffel_name)
 				end
 			end
 			
 				-- feature arguments
 			arguments := a_feature.Arguments
-			if not is_unary_operator and arguments.Count > 0 then
+			if not is_unary_operator and arguments.get_count > 0 then
 				generated_code := generated_code.Concat_String_String_String (generated_code, Space, Opening_round_bracket)
 				from
 					 i := 0
 				until
-					i = arguments.Count 
+					i = arguments.get_count 
 				loop
-					an_argument ?= arguments.Item (i)
+					an_argument ?= arguments.get_Item (i)
 					if an_argument /= Void then
-						argument_name := an_argument.eiffelname
-						argument_type := an_argument.typeeiffelname
+						argument_name := an_argument.eiffel_name
+						argument_type := an_argument.type_eiffel_name
 					end
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, argument_name, Colon, Space)
 					generated_code := generated_code.Concat_String_String (generated_code, argument_type)
-					if i < (arguments.Count - 1) then
+					if i < (arguments.get_count - 1) then
 						generated_code := generated_code.Concat_String_String_String (generated_code, Semi_colon, Space)						
 					end
 					i := i + 1
@@ -631,11 +638,11 @@ feature {NONE} -- Implementation
 			end
 		
 				-- feature return type
-			if a_feature.IsMethod and then a_feature.ReturnType /= Void and then a_feature.ReturnType.TypeEiffelName /= Void then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.ReturnType.TypeEiffelName)
+			if a_feature.Is_Method and then a_feature.Return_Type /= Void and then a_feature.Return_Type.Type_eiffel_name /= Void then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.Return_Type.Type_eiffel_name)
 			end
-			if a_feature.IsField and not a_feature.EiffelName.StartsWith (Property_set_prefix) then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.ReturnType.TypeEiffelName)
+			if a_feature.Is_Field and not a_feature.eiffel_name.Starts_With (Property_set_prefix) then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.Return_Type.Type_eiffel_name)
 			end
 
 				-- `is' keyword
@@ -646,56 +653,49 @@ feature {NONE} -- Implementation
 			from
 				i := 0
 			until
-				i = comments.Count
+				i = comments.get_count
 			loop
-				a_comment ?= comments.Item (i)
-				if a_comment /= Void and then a_comment.Length > 0 then
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
-					generated_code := generated_code.Concat_String_String_String (generated_code, Tab, Dashes)
-					--generated_code := generated_code.Concat_String_String_String_String (generated_code, Tab, Dashes, Space)
-					--generated_code := generated_code.Concat_String_String (generated_code, a_comment)
+				a_comment ?= comments.get_Item (i)
+				if a_comment /= Void and then a_comment.get_length > 0 then
+					--generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab)
+					--generated_code := generated_code.Concat_String_String_String (generated_code, Tab, Dashes)
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Tab, Dashes, Space)
+					generated_code := generated_code.Concat_String_String (generated_code, a_comment)
 				end
 				i := i + 1
 			end
 			
 				-- feature preconditions
 			preconditions := a_feature.Preconditions
-			if preconditions.Count > 0 then
+			if preconditions.get_count > 0 then
 				generate_feature_assertions (preconditions, Require_keyword)
 			end
 				
 				-- `external' keyword
-			generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
-			generated_code := generated_code.Concat_String_String_String_String (generated_code, External_keyword, New_line, Tab)
+			generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab)
+			generated_code := generated_code.Concat_String_String_String_String (generated_code, External_keyword, Windows_new_line, Tab)
 			generated_code := generated_code.Concat_String_String_String (generated_code, Tab, Tab)
 			generate_external_clause (a_feature)
 
 				-- feature alias
-			if a_feature.IsMethod or a_feature.IsField then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
+			if a_feature.Is_Method or a_feature.Is_Field then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab)
 				generated_code := generated_code.Concat_String_String (generated_code, Alias_keyword)
 
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Tab, Inverted_comma, a_feature.ExternalName)
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab)
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Tab, Inverted_comma, a_feature.External_Name)
 				generated_code := generated_code.Concat_String_String (generated_code, Inverted_comma)
 			end
 
 				-- feature postconditions
 			postconditions := a_feature.Postconditions
-			if postconditions.Count > 0 then
+			if postconditions.get_count > 0 then
 				generate_feature_assertions (postconditions, Ensure_keyword)
 			end
 
---##FIXME
-			if a_feature.postcondition then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
-				generated_code := generated_code.Concat_String_String_String (generated_code, Tab, Dashes)
-			end
---##
-
 				-- `end' keyword
-			generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab,Tab)
-			generated_code := generated_code.Concat_String_String_String_String (generated_code, End_keyword, New_line, New_line)
+			generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab,Tab)
+			generated_code := generated_code.Concat_String_String_String_String (generated_code, End_keyword, Windows_new_line, Windows_new_line)
 		end	
 
 	generate_feature_assertions (assertions: SYSTEM_COLLECTIONS_ARRAYLIST; keyword: STRING) is
@@ -704,7 +704,7 @@ feature {NONE} -- Implementation
 			external_name: "GenerateFeatureAssertions"
 		require
 			non_void_assertions: assertions /= Void
-			not_empty_assertions: assertions.Count > 0
+			not_empty_assertions: assertions.get_count > 0
 			non_void_keyword: keyword /= Void
 			valid_keyword: keyword.Equals_String (Require_keyword) or keyword.Equals_String (Ensure_keyword)
 		local
@@ -715,22 +715,22 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				i = assertions.Count
+				i = assertions.get_count
 			loop
-				an_assertion ?= assertions.Item (i)
-				if an_assertion /= Void and then an_assertion.Count >= 1 then
+				an_assertion ?= assertions.get_Item (i)
+				if an_assertion /= Void and then an_assertion.count >= 1 then
 					if i = 0 then
-						generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
+						generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab)
 						generated_code := generated_code.Concat_String_String (generated_code, keyword)
 					end
 					an_assertion_tag := an_assertion.Item (0)
 					an_assertion_text := an_assertion.Item (1)
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, Tab)
 					generated_code := generated_code.Concat_String_String (generated_code, Tab)
-					if an_assertion_tag /= Void and then an_assertion_tag.Length > 0 then
+					if an_assertion_tag /= Void and then an_assertion_tag.get_length > 0 then
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, an_assertion_tag, Colon, Space)
 					end
-					generated_code := generated_code.Concat_String_String_String (generated_code, an_assertion_text, New_line)
+					generated_code := generated_code.Concat_String_String_String (generated_code, an_assertion_text, Windows_new_line)
 				end
 				i := i + 1
 			end			
@@ -742,8 +742,8 @@ feature {NONE} -- Implementation
 			external_name: "GenerateExternalClause"
 		require
 			non_void_feature: a_feature /= Void
-			non_void_feature_name: a_feature.EiffelName /= Void
-			not_empty_feature_name: a_feature.EiffelName.Length > 0
+			non_void_feature_name: a_feature.eiffel_name /= Void
+			not_empty_feature_name: a_feature.eiffel_name.get_length > 0
 		local
 			signature: STRING
 			is_binary_operator: BOOLEAN
@@ -752,57 +752,63 @@ feature {NONE} -- Implementation
 		do
 			create formatter.make
 			signature := feature_signature (a_feature)
-			is_binary_operator := eiffel_class.BinaryOperatorsFeatures.Contains (a_feature)
-			is_unary_operator := eiffel_class.UnaryOperatorsFeatures.Contains (a_feature)	
+			is_binary_operator := eiffel_class.Binary_Operators_Features.Contains (a_feature)
+			is_unary_operator := eiffel_class.Unary_Operators_Features.Contains (a_feature)	
 			
-			if a_feature.IsMethod then
+			if a_feature.Is_Method then
 				if is_unary_operator or is_binary_operator then
 						-- "IL operator `signature' use `alias' "
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, Operator, signature, Use)
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.Format_Strong_Name (eiffel_class.Full_External_Name), Inverted_comma)
 				else
-					if a_feature.IsStatic then
+					if a_feature.Is_Static then
 							-- "IL static `signature' use `alias' "
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Static, signature, Use)
-						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
+						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.Format_Strong_Name (eiffel_class.Full_External_Name), Inverted_comma)
 					else
-						if a_feature.IsAbstract then
+						if a_feature.Is_Abstract then
 								-- "IL deferred `signature' use `alias' "
 							generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 							generated_code := generated_code.Concat_String_String_String_String (generated_code, Deferred_keyword, signature, Use)
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.Format_Strong_Name (eiffel_class.Full_External_Name), Inverted_comma)
 						else
 								-- "IL `signature' use `alias' "
 							generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, signature)
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, Use, Space, formatter.FormatStrongName (eiffel_class.FullExternalName))
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Use, Space, formatter.Format_Strong_Name (eiffel_class.Full_External_Name))
 							generated_code := generated_code.Concat_String_String (generated_code, Inverted_comma)
 						end	
 					end
 				end
 			else
-				if a_feature.IsField then
-					if a_feature.IsStatic then
-							-- "IL static_field signature : `type_full_name' use `alias'.
-						generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
-						generated_code := generated_code.Concat_String_String_String_String (generated_code, Static_field, Space, Signature_keyword)
-						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Colon, a_feature.ReturnType.TypeFullExternalName)				
-						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Use, Space)
-						generated_code := generated_code.Concat_String_String_String (generated_code, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
+				if a_feature.Is_Field then
+					if a_feature.Is_Static then
+						if a_feature.Is_Enum_Literal then
+								-- "IL enum signature : `type_full_name' use `alias'.
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
+							generated_code := generated_code.Concat_String_String_String (generated_code, Enum_keyword, Space)
+						else
+								-- "IL static_field signature : `type_full_name' use `alias'.
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
+							generated_code := generated_code.Concat_String_String_String (generated_code, Static_field, Space)
+						end
+						generated_code := generated_code.Concat_String_String_String_String (generated_code, Signature_keyword, Space, Colon)
+						generated_code := generated_code.Concat_String_String_String_String (generated_code, a_feature.Return_Type.Type_Full_External_Name, Space, Use)
+						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.Format_Strong_Name (eiffel_class.Full_External_Name), Inverted_comma)
 					else
 							-- "IL field signature : `type_full_name' use `alias'.
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Field, Space, Signature_keyword)
-						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Colon, a_feature.ReturnType.TypeFullExternalName)				
+						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Colon, a_feature.Return_Type.Type_Full_External_Name)				
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Use, Space)
-						generated_code := generated_code.Concat_String_String_String (generated_code, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
+						generated_code := generated_code.Concat_String_String_String (generated_code, formatter.Format_Strong_Name (eiffel_class.Full_External_Name), Inverted_comma)
 					end
 				else
 						-- "IL creator `signature' use `alias' "
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, Creator, signature, Use)
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.Format_Strong_Name (eiffel_class.Full_External_Name), Inverted_comma)
 				end
 			end		
 		end
@@ -813,8 +819,8 @@ feature {NONE} -- Implementation
 			external_name: "FeatureSignature"
 		require
 			non_void_feature: a_feature /= Void
-			non_void_feature_name: a_feature.EiffelName /= Void
-			not_empty_feature_name: a_feature.EiffelName.Length > 0	
+			non_void_feature_name: a_feature.eiffel_name /= Void
+			not_empty_feature_name: a_feature.eiffel_name.get_length > 0	
 		local
 			is_unary_operator: BOOLEAN
 			is_binary_operator: BOOLEAN
@@ -825,26 +831,23 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_2 ('%U', 0)
 			
-			is_binary_operator := eiffel_class.BinaryOperatorsFeatures.Contains (a_feature)
-			is_unary_operator := eiffel_class.UnaryOperatorsFeatures.Contains (a_feature)
+			is_binary_operator := eiffel_class.Binary_Operators_Features.Contains (a_feature)
+			is_unary_operator := eiffel_class.Unary_Operators_Features.Contains (a_feature)
 
-			if a_feature.IsMethod then
+			if a_feature.Is_Method then
 				arguments := a_feature.Arguments
-				if not is_unary_operator or arguments.Count > 0 then
+				if not is_unary_operator or arguments.get_count > 0 then
 					Result := Space
 					Result := Result.Concat_String_String_String_String (Result, Signature_keyword, Space, Opening_round_bracket)
 					from
 						i := 0
 					until
-						i = arguments.Count
+						i = arguments.get_count
 					loop
-						an_argument ?= arguments.Item (i)
+						an_argument ?= arguments.get_Item (i)
 						if an_argument /= Void then
-							if an_argument.IsEnum then
-								Result := Result.concat_string_string_string (Result, Enum_keyword, Space)
-							end
-							Result := Result.Concat_String_String (Result, an_argument.TypeFullExternalName)
-							if i < arguments.Count - 1 then
+							Result := Result.Concat_String_String (Result, an_argument.Type_Full_External_Name)
+							if i < arguments.get_count - 1 then
 								Result := Result.Concat_String_String_String (Result, Comma, Space)
 							end
 						end
@@ -856,34 +859,28 @@ feature {NONE} -- Implementation
 					temp := Signature_keyword
 					temp := temp.Concat_String_String_String_String (temp, Space, Colon, Space)
 				end
-				
-				if a_feature.ReturnType /= Void and then a_feature.ReturnType.IsEnum then
-					temp := temp.concat_string_string_string (Enum_keyword, Space, temp)
-				end
-				if a_feature.ReturnType /= Void and then a_feature.ReturnType.TypeFullExternalName /= Void and then a_feature.ReturnType.TypeFullExternalName.length > 0 then
-					Result := Result.Concat_String_String_String (Result, temp, a_feature.ReturnType.TypeFullExternalName)
+
+				if a_feature.Return_Type /= Void and then a_feature.Return_Type.Type_Full_External_Name /= Void and then a_feature.Return_Type.Type_Full_External_Name.get_length > 0 then
+					Result := Result.Concat_String_String_String (Result, temp, a_feature.Return_Type.Type_Full_External_Name)
 				end
 				Result := Result.Concat_String_String (Result, Space)
 			end
 			
-			if not a_feature.IsMethod and not a_feature.IsField then
+			if not a_feature.Is_Method and not a_feature.Is_Field then
 				arguments := a_feature.Arguments
-				if arguments.Count > 0 then
+				if arguments.get_count > 0 then
 					Result := Space
 					Result := Result.Concat_String_String_String_String (Result, Signature_keyword, Space, Opening_round_bracket)
 					from
 						i := 0
 					until
-						i = arguments.Count
+						i = arguments.get_count
 					loop
-						an_argument ?= arguments.Item (i)
+						an_argument ?= arguments.get_Item (i)
 						if an_argument /= Void then
-							if an_argument.IsEnum then
-								Result := Result.concat_string_string_string (Result, Enum_keyword, Space)
-							end
-							Result := Result.Concat_String_String (Result, an_argument.TypeFullExternalName)
+							Result := Result.Concat_String_String (Result, an_argument.Type_Full_External_Name)
 						end
-						if i < arguments.Count - 1 then
+						if i < arguments.get_count - 1 then
 							Result := Result.Concat_String_String_String (Result, Comma, Space)
 						end
 						i := i + 1
@@ -905,10 +902,10 @@ feature {NONE} -- Implementation
 		local
 			inheritance_clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]
 		do
-			if parents.ContainsKey (Any_class) then
-				inheritance_clauses ?= parents.Item (Any_class)
+			if parents.Contains_Key (Any_class) then
+				inheritance_clauses ?= parents.get_Item (Any_class)
 				if inheritance_clauses /= Void then
-					Result := inheritance_clauses.item (0).Count > 0
+					Result := inheritance_clauses.item (0).get_count > 0
 				end
 			else
 				Result := False
@@ -924,10 +921,10 @@ feature {NONE} -- Implementation
 		local
 			inheritance_clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]
 		do
-			if parents.ContainsKey (Any_class) then
-				inheritance_clauses ?= parents.Item (Any_class)
+			if parents.Contains_Key (Any_class) then
+				inheritance_clauses ?= parents.get_Item (Any_class)
 				if inheritance_clauses /= Void then
-					Result := inheritance_clauses.item (1).Count > 0
+					Result := inheritance_clauses.item (1).get_count > 0
 				end
 			else
 				Result := False
@@ -943,10 +940,10 @@ feature {NONE} -- Implementation
 		local
 			inheritance_clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]
 		do
-			if parents.ContainsKey (Any_class) then
-				inheritance_clauses ?= parents.Item (Any_class)
+			if parents.Contains_Key (Any_class) then
+				inheritance_clauses ?= parents.get_Item (Any_class)
 				if inheritance_clauses /= Void then
-					Result := inheritance_clauses.item (2).Count > 0
+					Result := inheritance_clauses.item (2).get_count > 0
 				end
 			else
 				Result := False

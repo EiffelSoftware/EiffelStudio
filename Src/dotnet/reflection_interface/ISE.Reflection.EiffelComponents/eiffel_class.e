@@ -61,6 +61,12 @@ feature -- Access
 			external_name: "ExternalName"
 		end
 	
+	enum_type: STRING
+		indexing
+			description: "Enum type (in case current type is an enum)"
+			external_name: "EnumType"
+		end
+		
 	assembly_descriptor: ASSEMBLY_DESCRIPTOR
 		indexing
 			description: "Descriptor of assembly defining current type"
@@ -162,7 +168,7 @@ feature -- Eiffel names from .NET reflection info
 		require
 			non_void_info: info /= Void
 		do
-			if creation_routines.Count = 0 then
+			if creation_routines.get_count = 0 then
 				Result := Void
 			else
 				if has_creation_routine (info) then
@@ -173,7 +179,7 @@ feature -- Eiffel names from .NET reflection info
 			end
 		ensure
 			non_void_feature_if_creation_routine_found: has_creation_routine (info) implies Result /= Void	
-			void_feature_if_no_creation_routine_or_not_found: (creation_routines.Count = 0 or else not has_creation_routine (info)) implies Result = Void
+			void_feature_if_no_creation_routine_or_not_found: (creation_routines.get_count = 0 or else not has_creation_routine (info)) implies Result = Void
 		end
 		
 	attribute_from_info (info: SYSTEM_REFLECTION_MEMBERINFO): EIFFEL_FEATURE is
@@ -360,7 +366,7 @@ feature -- Status Setting
 			external_name: "SetEiffelName"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.Length > 0
+			not_empty_name: a_name.get_length > 0
 		do
 			eiffel_name := a_name
 		ensure
@@ -373,20 +379,33 @@ feature -- Status Setting
 			external_name: "SetExternalName"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.Length > 0
+			not_empty_name: a_name.get_length > 0
 		do
 			external_name := a_name
 		ensure
 			external_name_set: external_name.Equals_String (a_name)
 		end	
 	
+	set_enum_type (an_enum_type: like enum_type) is
+		indexing
+			description: "Set `enum_type' with `an_enum_type'."
+			external_name: "SetEnumType"
+		require
+			non_void_enum_type: an_enum_type /= Void
+			not_empty_enum_type: an_enum_type.get_length > 0
+		do
+			enum_type := an_enum_type
+		ensure
+			enum_type_set: enum_type.equals_string (an_enum_type)
+		end
+		
 	set_namespace (a_name: like namespace) is
 		indexing
 			description: "Set `namespace' with `a_name'."
 			external_name: "SetNamespace"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.Length > 0
+			not_empty_name: a_name.get_length > 0
 		do
 			namespace := a_name
 		ensure
@@ -400,7 +419,7 @@ feature -- Status Setting
 			external_name: "SetExternalNames"
 		require
 			non_void_full_name: a_full_name /= Void
-			not_empty_full_name: a_full_name.Length > 0
+			not_empty_full_name: a_full_name.get_length > 0
 		local
 			dot_index: INTEGER
 			full_name: STRING
@@ -409,7 +428,7 @@ feature -- Status Setting
 			full_name ?= a_full_name.Clone
 			if full_name /= Void then
 				full_name := full_name.Trim				
-				dot_index := full_name.LastIndexOf_Char ('.')
+				dot_index := full_name.Last_Index_Of_Char ('.')
 				if dot_index > -1 then
 					set_namespace (full_name.Substring_Int32_Int32 (0, dot_index))
 					set_external_name (full_name.Substring (dot_index + 1))
@@ -439,7 +458,7 @@ feature -- Status Setting
 			external_name: "SetFullExternalName"
 		require
 			non_void_full_name: a_full_name /= Void
-			not_empty_full_name: a_full_name.Length > 0
+			not_empty_full_name: a_full_name.get_length > 0
 		do
 			full_external_name := a_full_name
 		ensure
@@ -468,7 +487,7 @@ feature -- Basic Operations
 			external_name: "AddParent"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.Length > 0
+			not_empty_name: a_name.get_length > 0
 			non_void_rename_clauses: rename_clauses /= Void
 			non_void_undefine_clauses: undefine_clauses /= Void
 			non_void_redefine_clauses: redefine_clauses /= Void
@@ -486,7 +505,7 @@ feature -- Basic Operations
 			
 			parents.Add (a_name, inheritance_clauses)
 		ensure
-			parent_added: parents.ContainsKey (a_name)
+			parent_added: parents.Contains_Key (a_name)
 		end
 	
 	add_creation_routine (a_name: STRING) is
@@ -495,7 +514,7 @@ feature -- Basic Operations
 			external_name: "AddCreationRoutine"
 		require
 			non_void_routine_name: a_name /= Void
-			not_empty_routine_name: a_name.Length > 0
+			not_empty_routine_name: a_name.get_length > 0
 		local
 			routine_added: INTEGER
 		do
@@ -623,7 +642,7 @@ feature -- Basic Operations
 		require
 			non_void_tag: a_tag /= Void
 			non_void_text: a_text /= Void
-			not_empty_text: a_text.Length > 0
+			not_empty_text: a_text.get_length > 0
 		local
 			invariant_added: INTEGER
 			an_invariant: ARRAY [STRING]
@@ -650,9 +669,9 @@ feature {NONE} -- Implementation
 			from
 				routine := Void
 			until
-				i = creation_routines.Count or Result 
+				i = creation_routines.get_count or Result 
 			loop
-				a_routine_name ?= creation_routines.Item (i)
+				a_routine_name ?= creation_routines.get_item (i)
 				if a_routine_name /= Void then
 					Result := has_routine (info, initialization_features)
 				end
@@ -683,11 +702,11 @@ feature {NONE} -- Implementation
 				from
 					attribute := Void
 				until
-					i = a_list.Count or Result
+					i = a_list.get_count or Result
 				loop
-					eiffel_feature ?= a_list.Item (i)
+					eiffel_feature ?= a_list.get_item (i)
 					if eiffel_feature /= Void then
-						if info.Name.Equals_String (eiffel_feature.external_name) then
+						if info.get_name.equals_String (eiffel_feature.external_name) then
 							attribute := eiffel_feature
 							Result := True
 						end
@@ -727,11 +746,11 @@ feature {NONE} -- Implementation
 				from
 					routine := Void
 				until
-					i = a_list.Count or Result
+					i = a_list.get_count or Result
 				loop
-					eiffel_feature ?= a_list.Item (i)
+					eiffel_feature ?= a_list.get_item (i)
 					if eiffel_feature /= Void then
-						if info.Name.Equals_String (eiffel_feature.external_name) then
+						if info.get_name.equals_string (eiffel_feature.external_name) then
 							Result := intern_has_routine (eiffel_feature, info)
 						elseif constructor_info /= Void then	
 							Result := intern_has_routine (eiffel_feature, constructor_info)
@@ -760,7 +779,7 @@ feature {NONE} -- Implementation
 			matching: BOOLEAN		
 		do
 			arguments := eiffel_feature.arguments
-			if arguments.Count > 0 then
+			if arguments.get_count > 0 then
 				matching := matching_arguments (info, arguments)
 				if matching then
 					routine := eiffel_feature
@@ -785,19 +804,19 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				if info.GetParameters /= Void then
-					if info.GetParameters.count /= arguments.count then
+				if info.get_parameters /= Void then
+					if info.get_parameters.count /= arguments.get_count then
 						Result := False
 					else
 						from
 							Result := True
 							j := 0
 						until
-							j = arguments.Count or not Result
+							j = arguments.get_count or not Result
 						loop
-							an_argument ?= arguments.Item (j)
+							an_argument ?= arguments.get_item (j)
 							if an_argument /= Void then
-								Result := info.GetParameters.item (j).ParameterType.FullName.Equals_String (an_argument.type_full_external_name)
+								Result := info.get_parameters.item (j).get_parameter_type.get_full_name.equals_String (an_argument.type_full_external_name)
 							else
 								Result := False
 							end
@@ -828,6 +847,6 @@ invariant
 	non_void_implementation_features: implementation_features /= Void
 	non_void_invariants: invariants /= Void
 	frozen_xor_deferred: is_frozen xor is_deferred
-	is_expanded_implies_no_creation_routine: is_expanded implies creation_routines.count = 0
+	is_expanded_implies_no_creation_routine: is_expanded implies creation_routines.get_count = 0
 
 end -- class EIFFEL_CLASS

@@ -107,16 +107,16 @@ feature -- Basic Operations
 			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
 			first_key: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 		do
-			if assemblies_table.count > Maximum_count then
-				enumerator := assemblies_table.keys.getenumerator
-				first_key ?= enumerator.current_
+			if assemblies_table.get_count > Maximum_count then
+				enumerator := assemblies_table.get_keys.get_enumerator
+				first_key ?= enumerator.get_current
 				if first_key /= Void then
 					assemblies_table.remove (first_key)
 				end
 			end
 			assemblies_table.add (a_descriptor, an_eiffel_assembly)
 		ensure
-			assembly_added: assemblies_table.containskey (a_descriptor)
+			assembly_added: assemblies_table.contains_key (a_descriptor)
 		end
 
 	add_type (a_type: SYSTEM_TYPE; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
@@ -131,16 +131,16 @@ feature -- Basic Operations
 			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
 			first_key: SYSTEM_TYPE
 		do
-			if types_table.count > Maximum_count then
-				enumerator := types_table.keys.getenumerator
-				first_key ?= enumerator.current_
+			if types_table.get_count > Maximum_count then
+				enumerator := types_table.get_keys.get_enumerator
+				first_key ?= enumerator.get_current
 				if first_key /= Void then
 					types_table.remove (first_key)
 				end
 			end
 			types_table.add (a_type, an_eiffel_class)
 		ensure
-			assembly_added: types_table.containskey (a_type)
+			assembly_added: types_table.contains_key (a_type)
 		end
 	
 	search_for_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
@@ -152,7 +152,7 @@ feature -- Basic Operations
 		do
 			assembly_found := assemblies_table.contains (a_descriptor)
 			if assembly_found then
-				search_for_assembly_result ?= assemblies_table.item (a_descriptor)
+				search_for_assembly_result ?= assemblies_table.get_item (a_descriptor)
 			end
 		end
 
@@ -169,14 +169,14 @@ feature -- Basic Operations
 		do
 			type_found := types_table.contains (a_type)
 			if type_found then
-				search_for_type_result ?= types_table.item (a_type)
+				search_for_type_result ?= types_table.get_item (a_type)
 			end
 		end
 		
 invariant
 	non_void_assemblies_table: assemblies_table /= Void
 	non_void_types_table: types_table /= Void	
-	assemblies_table_count_under_maximum: assemblies_table.count <= 50
-	types_table_count_under_maximum: types_table.count <= 50
+	assemblies_table_count_under_maximum: assemblies_table.get_count <= 50
+	types_table_count_under_maximum: types_table.get_count <= 50
 	
 end -- class HISTORY

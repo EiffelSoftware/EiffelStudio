@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.ReflectionInterfaceErrorMessages"
-
 external class
 	ISE_REFLECTION_REFLECTIONINTERFACEERRORMESSAGES
 
@@ -20,130 +19,130 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	AssemblyRetrievalFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"AssemblyRetrievalFailedMessage"
-		end
-
-	HasWriteLock: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"HasWriteLock"
-		end
-
-	TypeRetrievalFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"TypeRetrievalFailedMessage"
-		end
-
-	HasWriteLockMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"HasWriteLockMessage"
-		end
-
-	FileAccessFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"FileAccessFailed"
-		end
-
-	TypeRetrievalFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"TypeRetrievalFailed"
-		end
-
-	AssemblyRetrievalFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"AssemblyRetrievalFailed"
-		end
-
-	ReadLockCreationFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"ReadLockCreationFailed"
-		end
-
-	HasReadLock: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"HasReadLock"
-		end
-
-	ReadLockCreationFailedMessage: STRING is
+	read_lock_creation_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
 			"ReadLockCreationFailedMessage"
 		end
 
-	AssemblyRemovalFailedMessage: STRING is
+	assembly_retrieval_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
-			"AssemblyRemovalFailedMessage"
+			"AssemblyRetrievalFailedMessage"
 		end
 
-	InvalidAssemblyQualifiedName: STRING is
+	type_retrieval_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
-			"InvalidAssemblyQualifiedName"
+			"TypeRetrievalFailed"
 		end
 
-	AssembliesRetrievalFailedMessage: STRING is
+	assemblies_retrieval_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
 			"AssembliesRetrievalFailedMessage"
 		end
 
-	HasReadLockMessage: STRING is
+	file_access_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
-			"HasReadLockMessage"
+			"FileAccessFailed"
 		end
 
-	AssemblyRemovalFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"AssemblyRemovalFailed"
-		end
-
-	FileAccessFailedMessage: STRING is
+	file_access_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
 			"FileAccessFailedMessage"
 		end
 
-	InvalidAssemblyQualifiedNameMessage: STRING is
+	has_write_lock: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"HasWriteLock"
+		end
+
+	assemblies_retrieval_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"AssembliesRetrievalFailed"
+		end
+
+	read_lock_creation_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"ReadLockCreationFailed"
+		end
+
+	invalid_assembly_qualified_name_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
 			"InvalidAssemblyQualifiedNameMessage"
 		end
 
-	AssembliesRetrievalFailed: STRING is
+	type_retrieval_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
-			"AssembliesRetrievalFailed"
+			"TypeRetrievalFailedMessage"
+		end
+
+	has_read_lock_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"HasReadLockMessage"
+		end
+
+	has_write_lock_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"HasWriteLockMessage"
+		end
+
+	assembly_retrieval_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"AssemblyRetrievalFailed"
+		end
+
+	assembly_removal_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"AssemblyRemovalFailedMessage"
+		end
+
+	invalid_assembly_qualified_name: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"InvalidAssemblyQualifiedName"
+		end
+
+	has_read_lock: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"HasReadLock"
+		end
+
+	assembly_removal_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"AssemblyRemovalFailed"
 		end
 
 end -- class ISE_REFLECTION_REFLECTIONINTERFACEERRORMESSAGES

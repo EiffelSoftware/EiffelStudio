@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.NamedSignatureType"
-
 external class
 	ISE_REFLECTION_NAMEDSIGNATURETYPE
 
@@ -20,34 +19,34 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen EiffelName: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.NamedSignatureType"
-		alias
-			"EiffelName"
-		end
-
-	frozen ExternalName: STRING is
+	frozen external_name: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.NamedSignatureType"
 		alias
 			"ExternalName"
 		end
 
-feature -- Basic Operations
-
-	SetExternalName (a_name: STRING) is
+	frozen eiffel_name: STRING is
 		external
-			"IL signature (System.String): System.Void use ISE.Reflection.NamedSignatureType"
+			"IL field signature :System.String use ISE.Reflection.NamedSignatureType"
 		alias
-			"SetExternalName"
+			"EiffelName"
 		end
 
-	SetEiffelName (a_name: STRING) is
+feature -- Basic Operations
+
+	set_eiffel_name (a_name: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.NamedSignatureType"
 		alias
 			"SetEiffelName"
+		end
+
+	set_external_name (a_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.NamedSignatureType"
+		alias
+			"SetExternalName"
 		end
 
 end -- class ISE_REFLECTION_NAMEDSIGNATURETYPE

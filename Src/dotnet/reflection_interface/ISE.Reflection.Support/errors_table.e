@@ -37,17 +37,17 @@ feature -- Access
 			description: "Error name corresponding to `a_code'"
 			external_name: "ErrorName"
 		require
-			valid_code: a_code >= 0 and errors_table.ContainsKey (a_code)
+			valid_code: a_code >= 0 and errors_table.contains_key (a_code)
 		local
 			description_array: ARRAY [STRING]
 		do
-			description_array ?= errors_table.Item (a_code)	
+			description_array ?= errors_table.get_item (a_code)	
 			if description_array /= Void and then description_array.count = 2 then
 				Result := description_array.item (0)
 			end
 		ensure
 			error_name_found: Result /= Void
-			not_empty_error_name: Result.Length > 0
+			not_empty_error_name: Result.get_length > 0
 		end
 
 	error_description (a_code: INTEGER): STRING is
@@ -55,17 +55,17 @@ feature -- Access
 			description: "Error name corresponding to `a_code'"
 			external_name: "ErrorDescription"
 		require
-			valid_code: a_code >= 0 and errors_table.ContainsKey (a_code)
+			valid_code: a_code >= 0 and errors_table.contains_key (a_code)
 		local
 			description_array: ARRAY [STRING]
 		do
-			description_array ?= errors_table.Item (a_code)	
+			description_array ?= errors_table.get_item (a_code)	
 			if description_array /= Void and then description_array.count = 2 then
 				Result := description_array.item (1)
 			end
 		ensure
 			error_description_found: Result /= Void
-			not_empty_error_description: Result.Length > 0
+			not_empty_error_description: Result.get_length > 0
 		end
 
 	error_info (a_code: INTEGER): ERROR_INFO is
@@ -73,13 +73,13 @@ feature -- Access
 			description: "Error info from `a_code'"
 			external_name: "ErrorInfo"
 		require
-			valid_code: a_code >= 0 and errors_table.ContainsKey (a_code)
+			valid_code: a_code >= 0 and errors_table.contains_key (a_code)
 		local
 			description_array: ARRAY [STRING]
 			a_name: STRING
 			a_description: STRING
 		do
-			description_array ?= errors_table.Item (a_code)	
+			description_array ?= errors_table.get_item (a_code)	
 			if description_array /= Void and then description_array.count = 2 then
 				a_name := description_array.item (0)
 				a_description := description_array.item (1)
@@ -100,15 +100,15 @@ feature -- Access
 			added: INTEGER
 			moved: BOOLEAN
 		do
-			enumerator := errors_table.keys.getenumerator
+			enumerator := errors_table.get_keys.get_enumerator
 			from
 				create Result.make
 			until
-				not enumerator.movenext
+				not enumerator.move_next
 			loop
-				a_code ?= enumerator.current_
+				a_code ?= enumerator.get_current
 				added := Result.add (error_info (a_code))	
-				moved := enumerator.movenext
+				moved := enumerator.move_next
 			end
 		ensure
 			errors_created: Result /= Void
@@ -122,7 +122,7 @@ feature -- Basic Operations
 			external_name: "AddError"
 		require
 			non_void_error: an_error /= Void
-			not_in_table: not errors_table.containskey (an_error.code)
+			not_in_table: not errors_table.contains_key (an_error.code)
 		local
 			description_array: ARRAY [STRING]
 		do
@@ -131,8 +131,8 @@ feature -- Basic Operations
 			description_array.put (1, an_error.description)
 			errors_table.Add (an_error.code, description_array)
 		ensure
-			error_added: errors_table.containskey (an_error.code)
-			table_updated: errors_table.count = old errors_table.count + 1
+			error_added: errors_table.contains_key (an_error.code)
+			table_updated: errors_table.get_count = old errors_table.get_count + 1
 		end
 	
 	replace_error_name (a_code: INTEGER; new_name: STRING) is
@@ -140,14 +140,14 @@ feature -- Basic Operations
 			description: "Replace error name corresponding to `a_code' with `new_name'."
 			external_name: "ReplaceErrorName"
 		require
-			valid_code: a_code >= 0 and errors_table.containskey (a_code)
+			valid_code: a_code >= 0 and errors_table.contains_key (a_code)
 			non_void_new_name: new_name /= Void
-			not_empty_new_name: new_name.Length > 0
+			not_empty_new_name: new_name.get_length > 0
 		local
 			description_array: ARRAY [STRING]
 			new_description_array: ARRAY [STRING]
 		do
-			description_array ?= errors_table.Item (a_code)	
+			description_array ?= errors_table.get_item (a_code)	
 			if description_array /= Void and then description_array.count = 2 then
 				create new_description_array.make (2)
 				new_description_array.put (0, new_name)
@@ -164,14 +164,14 @@ feature -- Basic Operations
 			description: "Replace error description corresponding to `a_code' with `new_description'."
 			external_name: "ReplaceErrorDescription"
 		require
-			valid_code: a_code >= 0 and errors_table.ContainsKey (a_code)
+			valid_code: a_code >= 0 and errors_table.Contains_Key (a_code)
 			non_void_new_description: new_description /= Void
-			not_empty_new_description: new_description.Length > 0
+			not_empty_new_description: new_description.get_length > 0
 		local
 			description_array: ARRAY [STRING]
 			new_description_array: ARRAY [STRING]
 		do
-			description_array ?= errors_table.Item (a_code)	
+			description_array ?= errors_table.get_item (a_code)	
 			if description_array /= Void and then description_array.count = 2 then
 				create new_description_array.make (2)
 				new_description_array.put (0, description_array.item (0))
@@ -188,11 +188,11 @@ feature -- Basic Operations
 			description: "Remove error corresponding to `a_code' from `errors_table'."
 			external_name: "RemoveError"
 		require
-			valid_code: a_code >= 0 and errors_table.containskey (a_code)
+			valid_code: a_code >= 0 and errors_table.contains_key (a_code)
 		do
 			errors_table.remove (a_code)
 		ensure
-			error_removed: not errors_table.containskey (a_code)
+			error_removed: not errors_table.contains_key (a_code)
 		end
 		
 invariant

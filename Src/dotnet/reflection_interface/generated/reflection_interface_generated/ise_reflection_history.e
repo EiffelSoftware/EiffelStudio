@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.History"
-
 external class
 	ISE_REFLECTION_HISTORY
 
@@ -17,90 +16,97 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen TypeFound: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.History"
-		alias
-			"TypeFound"
-		end
-
-	frozen AssembliesTable: SYSTEM_COLLECTIONS_HASHTABLE is
+	frozen assemblies_table: SYSTEM_COLLECTIONS_HASHTABLE is
 		external
 			"IL field signature :System.Collections.Hashtable use ISE.Reflection.History"
 		alias
 			"AssembliesTable"
 		end
 
-	frozen SearchForTypeResult: ISE_REFLECTION_EIFFELCLASS is
+	frozen type_found: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.History"
+		alias
+			"TypeFound"
+		end
+
+	frozen search_for_type_result: ISE_REFLECTION_EIFFELCLASS is
 		external
 			"IL field signature :ISE.Reflection.EiffelClass use ISE.Reflection.History"
 		alias
 			"SearchForTypeResult"
 		end
 
-	frozen SearchForAssemblyResult: ISE_REFLECTION_EIFFELASSEMBLY is
-		external
-			"IL field signature :ISE.Reflection.EiffelAssembly use ISE.Reflection.History"
-		alias
-			"SearchForAssemblyResult"
-		end
-
-	frozen AssemblyFound: BOOLEAN is
+	frozen assembly_found: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.History"
 		alias
 			"AssemblyFound"
 		end
 
-	frozen TypesTable: SYSTEM_COLLECTIONS_HASHTABLE is
+	frozen types_table: SYSTEM_COLLECTIONS_HASHTABLE is
 		external
 			"IL field signature :System.Collections.Hashtable use ISE.Reflection.History"
 		alias
 			"TypesTable"
 		end
 
+	frozen search_for_assembly_result: ISE_REFLECTION_EIFFELASSEMBLY is
+		external
+			"IL field signature :ISE.Reflection.EiffelAssembly use ISE.Reflection.History"
+		alias
+			"SearchForAssemblyResult"
+		end
+
 feature -- Basic Operations
 
-	Make is
-		external
-			"IL signature (): System.Void use ISE.Reflection.History"
-		alias
-			"Make"
-		end
-
-	SearchForAssembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.History"
-		alias
-			"SearchForAssembly"
-		end
-
-	MaximumCount: INTEGER is
+	maximum_count: INTEGER is
 		external
 			"IL signature (): System.Int32 use ISE.Reflection.History"
 		alias
 			"MaximumCount"
 		end
 
-	AddAssembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
+	add_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.History"
 		alias
 			"AddAssembly"
 		end
 
-	SearchForType (a_type: SYSTEM_TYPE) is
+	search_for_type (a_type: SYSTEM_TYPE) is
 		external
 			"IL signature (System.Type): System.Void use ISE.Reflection.History"
 		alias
 			"SearchForType"
 		end
 
-	HasType (a_type: SYSTEM_TYPE): BOOLEAN is
+	make is
+		external
+			"IL signature (): System.Void use ISE.Reflection.History"
+		alias
+			"Make"
+		end
+
+	has_type (a_type: SYSTEM_TYPE): BOOLEAN is
 		external
 			"IL signature (System.Type): System.Boolean use ISE.Reflection.History"
 		alias
 			"HasType"
+		end
+
+	add_type (a_type: SYSTEM_TYPE; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
+		external
+			"IL signature (System.Type, ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.History"
+		alias
+			"AddType"
+		end
+
+	search_for_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.History"
+		alias
+			"SearchForAssembly"
 		end
 
 	a_invariant is
@@ -110,14 +116,7 @@ feature -- Basic Operations
 			"_invariant"
 		end
 
-	AddType (a_type: SYSTEM_TYPE; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
-		external
-			"IL signature (System.Type, ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.History"
-		alias
-			"AddType"
-		end
-
-	HasAssembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
+	has_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Boolean use ISE.Reflection.History"
 		alias

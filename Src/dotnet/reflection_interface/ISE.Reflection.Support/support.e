@@ -32,18 +32,18 @@ feature -- Basic Operations
 			external_name: "CreateError"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.length > 0
+			not_empty_name: a_name.get_length > 0
 			non_void_description: a_description /= Void
-			not_empty_description: a_description.length > 0
+			not_empty_description: a_description.get_length > 0
 		local
 			a_code: INTEGER
 		do
-			a_code := errors_table.errors_table.count
+			a_code := errors_table.errors_table.get_count
 			create last_error.make (a_code, a_name, a_description)
 			errors_table.add_error (last_error)
 		ensure
 			non_void_error: last_error /= Void
-			error_added: errors_table.errors_table.count = old errors_table.errors_table.count + 1
+			error_added: errors_table.errors_table.get_count = old errors_table.errors_table.get_count + 1
 		end
 
 	create_error_from_info (a_code: INTEGER; a_name, a_description: STRING) is
@@ -54,11 +54,11 @@ feature -- Basic Operations
 			non_void_name: a_name /= Void
 			non_void_description: a_description /= Void
 			valid_code: a_code >= 0
-			not_empty_name: a_name.length > 0
-			not_empty_description: a_description.length > 0
+			not_empty_name: a_name.get_length > 0
+			not_empty_description: a_description.get_length > 0
 		do
 			create last_error.make (a_code, a_name, a_description)
-			if not errors_table.errors_table.containskey (a_code) then 
+			if not errors_table.errors_table.contains_key (a_code) then 
 				errors_table.add_error (last_error)
 			end
 		end

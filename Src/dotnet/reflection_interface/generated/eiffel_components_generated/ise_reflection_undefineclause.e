@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.UndefineClause"
-
 external class
 	ISE_REFLECTION_UNDEFINECLAUSE
 
@@ -20,25 +19,25 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	UndefineKeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.UndefineClause"
-		alias
-			"UndefineKeyword"
-		end
-
-	ToString: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.UndefineClause"
-		alias
-			"ToString"
-		end
-
-	EiffelKeyword: STRING is
+	eiffel_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.UndefineClause"
 		alias
 			"EiffelKeyword"
+		end
+
+	string_representation: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.UndefineClause"
+		alias
+			"StringRepresentation"
+		end
+
+	undefine_keyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.UndefineClause"
+		alias
+			"UndefineKeyword"
 		end
 
 end -- class ISE_REFLECTION_UNDEFINECLAUSE

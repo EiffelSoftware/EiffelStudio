@@ -93,11 +93,11 @@ feature -- Eiffel names from .NET information
 			if not retried then
 				from
 				until
-					i = arguments.Count 
+					i = arguments.get_count 
 				loop
-					an_argument ?= arguments.Item (i)
+					an_argument ?= arguments.get_item (i)
 					if an_argument /= Void then
-						if info.Name.Equals_String (an_argument.external_name) and then info.ParameterType.FullName.Equals_String (an_argument.type_full_external_name) then
+						if info.get_name.equals_string (an_argument.external_name) and then info.get_parameter_type.get_full_name.equals_string (an_argument.type_full_external_name) then
 							create Result.make (2)
 							Result.put (0, an_argument.eiffel_name)
 							Result.put (1, an_argument.type_eiffel_name)							
@@ -174,10 +174,19 @@ feature -- Status Report
 			description: "Has current feature been modified (i.e. has name changed or have arguments been renamed)?"
 			external_name: "Modified"
 		end
+
+	new_slot: BOOLEAN
+		indexing
+			description: "Is feature a new slot (i.e. not inherited)?"
+			external_name: "NewSlot"
+		end
+
+	is_enum_literal: BOOLEAN
+		indexing
+			description: "Is feature a literal enum?"
+			external_name: "IsEnumLiteral"
+		end
 		
---##FIXME
-	postcondition: BOOLEAN
---
 feature -- Status Setting
 
 	set_frozen (a_value: like is_frozen) is
@@ -260,6 +269,16 @@ feature -- Status Setting
 			infix_set: is_infix = a_value
 		end
 
+	set_new_slot is
+		indexing
+			description: "Set `new_slot' with `True'."
+			external_name: "SetNewSlot"
+		do
+			new_slot := True
+		ensure
+			new_slot: new_slot
+		end
+		
 	set_modified is
 		indexing
 			description: "Set `modified' with `True'."
@@ -269,6 +288,16 @@ feature -- Status Setting
 		ensure
 			modified: modified
 		end
+
+	set_enum_literal is
+		indexing
+			description: "Set `enum_literal' with `True'."
+			external_name: "SetEnumLiteral"
+		do
+			is_enum_literal := True
+		ensure
+			is_enum_literal: is_enum_literal
+		end
 		
 	set_eiffel_name (a_name: like eiffel_name) is
 		indexing
@@ -276,7 +305,7 @@ feature -- Status Setting
 			external_name: "SetEiffelName"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.Length > 0
+			not_empty_name: a_name.get_length > 0
 		do
 			eiffel_name := a_name
 		ensure
@@ -289,7 +318,7 @@ feature -- Status Setting
 			external_name: "SetExternalName"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.Length > 0
+			not_empty_name: a_name.get_length > 0
 		do
 			external_name := a_name
 		ensure
@@ -306,17 +335,6 @@ feature -- Status Setting
 			return_type := a_type
 		ensure
 			return_type_set: return_type = a_type
-		end
-	
---##FIXME
-	set_postcondition (a_postcondition: like postcondition) is
-		indexing
-			description: "Set `postcondition' with `a_postcondition'."
-			external_name: "SetPostcondition"
-		do
-			postcondition := a_postcondition
-		ensure
-			postcondition_set: postcondition = a_postcondition
 		end
 
 feature -- Basic Operations
@@ -340,7 +358,7 @@ feature -- Basic Operations
 		require
 			non_void_tag: a_tag /= Void
 			non_void_text: a_text /= Void
-			not_empty_text: a_text.Length > 0
+			not_empty_text: a_text.get_length > 0
 		local
 			precondition_added: INTEGER
 			a_precondition: ARRAY [STRING]
@@ -358,7 +376,7 @@ feature -- Basic Operations
 		require
 			non_void_tag: a_tag /= Void
 			non_void_text: a_text /= Void
-			not_empty_text: a_text.Length > 0
+			not_empty_text: a_text.get_length > 0
 		local
 			postcondition_added: INTEGER
 			a_postcondition: ARRAY [STRING]
@@ -375,7 +393,7 @@ feature -- Basic Operations
 			external_name: "AddComment"
 		require
 			non_void_comment: a_comment /= Void
-			not_empty_comment: a_comment.Length > 0
+			not_empty_comment: a_comment.get_length > 0
 		local
 			comment_added: INTEGER
 		do

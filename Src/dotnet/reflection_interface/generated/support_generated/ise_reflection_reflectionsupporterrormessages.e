@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.ReflectionSupportErrorMessages"
-
 external class
 	ISE_REFLECTION_REFLECTIONSUPPORTERRORMESSAGES
 
@@ -20,46 +19,46 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	NoAssemblyDescriptionMessage: STRING is
+	hash_value_computation_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
 		alias
-			"NoAssemblyDescriptionMessage"
+			"HashValueComputationFailedMessage"
 		end
 
-	HashValueComputationFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
-		alias
-			"HashValueComputationFailed"
-		end
-
-	NoTypeDescription: STRING is
+	no_type_description: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
 		alias
 			"NoTypeDescription"
 		end
 
-	NoAssemblyDescription: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
-		alias
-			"NoAssemblyDescription"
-		end
-
-	NoTypeDescriptionMessage: STRING is
+	no_type_description_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
 		alias
 			"NoTypeDescriptionMessage"
 		end
 
-	HashValueComputationFailedMessage: STRING is
+	hash_value_computation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
 		alias
-			"HashValueComputationFailedMessage"
+			"HashValueComputationFailed"
+		end
+
+	no_assembly_description_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
+		alias
+			"NoAssemblyDescriptionMessage"
+		end
+
+	no_assembly_description: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
+		alias
+			"NoAssemblyDescription"
 		end
 
 end -- class ISE_REFLECTION_REFLECTIONSUPPORTERRORMESSAGES

@@ -23,9 +23,9 @@ feature {NONE} -- Initialization
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
 			non_void_path: a_path /= Void
-			not_empty_path: a_path.length > 0
+			not_empty_path: a_path.get_length > 0
 			non_void_emitter_version_number: a_number /= Void
-			not_empty_emitter_version_number: a_number.length > 0
+			not_empty_emitter_version_number: a_number.get_length > 0
 		do
 			assembly_descriptor := a_descriptor
 			eiffel_cluster_path := a_path
@@ -88,6 +88,7 @@ feature -- Access
 			version_number: STRING			
 			retried: BOOLEAN
 			added: INTEGER
+			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
 		do
 			if not retried then
 				create Result.make
@@ -96,45 +97,44 @@ feature -- Access
 				a_filename := a_filename.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
 				
 				create assembly_description.make_xmltextreader_10 (a_filename)	
-					-- WhitespaceHandling = None
-				assembly_description.set_WhitespaceHandling (2)
+				assembly_description.set_Whitespace_Handling (white_space_handling.none)
 				
-				assembly_description.ReadStartElement_String (xml_elements.Assembly_element)
+				assembly_description.read_start_element_string (xml_elements.Assembly_element)
 
-				if assembly_description.Name.Equals_String (xml_elements.Assembly_name_element) then
-					assembly_name := assembly_description.ReadElementString_String (xml_elements.Assembly_name_element)
+				if assembly_description.get_Name.equals_string (xml_elements.Assembly_name_element) then
+					assembly_name := assembly_description.read_element_string_string (xml_elements.Assembly_name_element)
 				end
-				if assembly_description.Name.Equals_String (xml_elements.Assembly_version_element) then
-					assembly_version := assembly_description.ReadElementString_String (xml_elements.Assembly_version_element)
+				if assembly_description.get_Name.equals_string (xml_elements.Assembly_version_element) then
+					assembly_version := assembly_description.read_element_string_string (xml_elements.Assembly_version_element)
 				end
-				if assembly_description.Name.Equals_String (xml_elements.Assembly_culture_element) then
-					assembly_culture := assembly_description.ReadElementString_String (xml_elements.Assembly_culture_element)
+				if assembly_description.get_Name.equals_string (xml_elements.Assembly_culture_element) then
+					assembly_culture := assembly_description.read_element_string_string (xml_elements.Assembly_culture_element)
 				end
-				if assembly_description.Name.Equals_String (xml_elements.Assembly_public_key_element) then
-					assembly_public_key := assembly_description.ReadElementString_String (xml_elements.Assembly_public_key_element)
+				if assembly_description.get_Name.equals_string (xml_elements.Assembly_public_key_element) then
+					assembly_public_key := assembly_description.read_element_string_string (xml_elements.Assembly_public_key_element)
 				end
-				if assembly_description.Name.Equals_String (xml_elements.Eiffel_cluster_path_element) then
-					eiffel_path := assembly_description.ReadElementString_String (xml_elements.Eiffel_cluster_path_element)
+				if assembly_description.get_Name.equals_string (xml_elements.Eiffel_cluster_path_element) then
+					eiffel_path := assembly_description.read_element_string_string (xml_elements.Eiffel_cluster_path_element)
 				end
-				if assembly_description.Name.Equals_String (xml_elements.Emitter_version_number_element) then
-					version_number := assembly_description.ReadElementString_String (xml_elements.Emitter_version_number_element)
+				if assembly_description.get_Name.equals_string (xml_elements.Emitter_version_number_element) then
+					version_number := assembly_description.read_element_string_string (xml_elements.Emitter_version_number_element)
 				end
 				
 					-- Read `types'.
-				if assembly_description.Name.Equals_String (xml_elements.Assembly_types_element) then
+				if assembly_description.get_Name.equals_string (xml_elements.Assembly_types_element) then
 					create generation_support.make
-					assembly_description.ReadStartElement_String (xml_elements.Assembly_types_element)
+					assembly_description.read_start_element_string (xml_elements.Assembly_types_element)
 					from
 					until
-						not assembly_description.Name.Equals_String (xml_elements.Assembly_type_filename_element)
+						not assembly_description.get_Name.equals_string (xml_elements.Assembly_type_filename_element)
 					loop
-						type_filename := assembly_description.ReadElementString_String (xml_elements.Assembly_type_filename_element)
+						type_filename := assembly_description.read_element_string_string (xml_elements.Assembly_type_filename_element)
 						type_filename := type_filename.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
 						added := Result.add (generation_support.eiffel_class_from_xml (type_filename))
 					end
-					assembly_description.ReadEndElement
+					assembly_description.read_end_element
 				end
-				assembly_description.ReadEndElement
+				assembly_description.read_end_element
 				assembly_description.Close
 			else
 				Result := Void
@@ -156,8 +156,8 @@ feature {NONE} -- Implementation
 invariant
 	non_void_assembly_descriptor: assembly_descriptor /= Void
 	non_void_eiffel_cluster_path: eiffel_cluster_path /= Void
-	not_empty_eiffel_cluster_path: eiffel_cluster_path.length > 0
+	not_empty_eiffel_cluster_path: eiffel_cluster_path.get_length > 0
 	non_void_emitter_version_number: emitter_version_number /= Void
-	not_empty_emitter_version_number: emitter_version_number.length > 0
+	not_empty_emitter_version_number: emitter_version_number.get_length > 0
 	
 end -- class EIFFEL_ASSEMBLY

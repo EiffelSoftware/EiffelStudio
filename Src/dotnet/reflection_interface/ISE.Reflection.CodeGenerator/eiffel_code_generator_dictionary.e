@@ -127,6 +127,12 @@ feature -- Access
 			description: "End keyword"
 			external_name: "EndKeyword"
 		end
+	
+	Enum_type_keyword: STRING is "enum_type"
+		indexing
+			description: "`Enum_type' keyword"
+			external_name: "EnumTypeKeyword"
+		end
 		
 	Ensure_keyword: STRING is "ensure"
 		indexing
@@ -366,6 +372,12 @@ feature -- Access
 		indexing
 			description: "Use"
 			external_name: "Use"
+		end
+
+	Windows_new_line: STRING is "%R%N"
+		indexing
+			description: "New line as a string"
+			external_name: "WindowsNewLine"
 		end
 		
 end -- class EIFFEL_CODE_GENERATOR_DICTIONARY

@@ -126,6 +126,12 @@ feature -- Access
 			external_name: "AliasElement"
 		end
 		
+	Enum_type_element: STRING is "enum_type"
+		indexing
+			description: "Enum type element in XML file for a type"
+			external_name: "EnumTypeElement"
+		end
+		
 	Simple_name_element: STRING is "simple_name"
 		indexing
 			description: "Simple name element in XML file for a type"
@@ -311,6 +317,18 @@ feature -- Access
 			description: "Creation routine element in XML file for a type"
 			external_name: "CreationRoutineElement"
 		end
+	
+	New_slot_element: STRING is "new_slot"
+		indexing
+			description: "New slot element in XML file for a type"
+			external_name: "NewSlotElement"
+		end
+		
+	Enum_literal_element: STRING is "enum_literal"
+		indexing
+			description: "Enum literal element in XML file for a type"
+			external_name: "EnumLiteralElement"
+		end
 		
 	Feature_eiffel_name_element: STRING is "feature_eiffel_name"
 		indexing
@@ -359,13 +377,7 @@ feature -- Access
 			description: "Argument type external full name element in XML file for a type"
 			external_name: "ArgumentTypeFullNameElement"
 		end
-	
-	Argument_type_enum_element: STRING is "argument_type_enum"
-		indexing
-			description: "Argument type enum element in XML file for a type (is argument type an enum?)"
-			external_name: "ArgumentTypeEnumElement"
-		end
-		
+			
 	Return_type_element: STRING is "return_type"
 		indexing
 			description: "Return type element in XML file for a type (Eiffel name)"
@@ -378,12 +390,6 @@ feature -- Access
 			external_name: "ReturnTypeFullNameElement"
 		end
 	
-	Return_type_enum_element: STRING is "return_type_enum"
-		indexing
-			description: "Return type enum element in XML file for a type (is return type an enum?)"
-			external_name: "ReturnTypeEnumElement"
-		end
-		
 	Comments_element: STRING is "comments"
 		indexing
 			description: "Comments element in XML file for a type"

@@ -1,8 +1,8 @@
 indexing
-	description: "Virtual Key code (VK) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Virtual Key code (VK) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_VK_CONSTANTS
@@ -555,15 +555,51 @@ feature -- Access
 			"VK_RMENU"
 		end
 
-	-- Vk_A thru Vk_Z are the same as their ASCII equivalents: 'A' thru 'Z'.
-
 	-- Vk_0 thru Vk_9 are the same as their ASCII equivalents: '0' thru '9'.
+	Vk_0: INTEGER is 48
+	Vk_1: INTEGER is 49
+	Vk_2: INTEGER is 50
+	Vk_3: INTEGER is 51
+	Vk_4: INTEGER is 52
+	Vk_5: INTEGER is 53
+	Vk_6: INTEGER is 54
+	Vk_7: INTEGER is 55
+	Vk_8: INTEGER is 56
+	Vk_9: INTEGER is 57
+
+	-- Vk_a thru Vk_z are the same as their ASCII equivalents: 'A' thru 'Z'.
+	Vk_a: INTEGER is 65
+	Vk_b: INTEGER is 66
+	Vk_c: INTEGER is 67
+	Vk_d: INTEGER is 68
+	Vk_e: INTEGER is 69
+	Vk_f: INTEGER is 70
+	Vk_g: INTEGER is 71
+	Vk_h: INTEGER is 72
+	Vk_i: INTEGER is 73
+	Vk_j: INTEGER is 74
+	Vk_k: INTEGER is 75
+	Vk_l: INTEGER is 76
+	Vk_m: INTEGER is 77
+	Vk_n: INTEGER is 78
+	Vk_o: INTEGER is 79
+	Vk_p: INTEGER is 80
+	Vk_q: INTEGER is 81
+	Vk_r: INTEGER is 82
+	Vk_s: INTEGER is 83
+	Vk_t: INTEGER is 84
+	Vk_u: INTEGER is 85
+	Vk_v: INTEGER is 86
+	Vk_w: INTEGER is 87
+	Vk_x: INTEGER is 88
+	Vk_y: INTEGER is 89
+	Vk_z: INTEGER is 90
 
 end -- class WEL_VK_CONSTANTS
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

@@ -447,12 +447,15 @@ feature {NONE} -- Implementation
 						end
 						all_constants.forth
 					end
-	
+					
+						-- First replace the name of the class.
+					Constants_content.replace_substring_all (class_name_tag, project_settings.constants_class_name.as_upper)
+					
 					add_generated_string (constants_content, generated_constants_string, constants_tag)
 					
 						-- Now write the new constants file to disk.
 					constants_file_name := clone (generated_path)
-					constants_file_name.extend ("constants.e")
+					constants_file_name.extend (project_settings.constants_class_name.as_lower + ".e")
 					create constants_file.make_open_write (constants_file_name)
 					constants_file.start
 					constants_file.putstring (constants_content)
@@ -663,7 +666,7 @@ feature {NONE} -- Implementation
 						end
 						add_generated_string (class_text, temp_string,  inheritance_tag)
 					else
-						temp_string := clone (window_inheritance)
+						temp_string := clone (Window_inheritance_part1) + project_settings.constants_class_name.as_upper + clone (Window_inheritance_part2)
 						if not document_info.type.is_equal (Ev_titled_window_string)  then
 							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
 						end

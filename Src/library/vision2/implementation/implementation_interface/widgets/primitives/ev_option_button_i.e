@@ -40,8 +40,10 @@ feature {EV_OPTION_BUTTON} -- Status report
 		deferred
 		end
 
-	menu: EV_MENU_IMP
+	menu: EV_MENU_IMP is
 			-- The menu contained in the option button.
+		deferred
+		end
 
 feature {NONE} -- Inapplicable
 

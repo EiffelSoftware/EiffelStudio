@@ -96,11 +96,14 @@ feature -- dragging
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore. It may also 
 			-- be a classc_stone if the class is compiled now)
+		local
+			new_cluster: CLUSTER_I
 		do
 			if class_i /= Void then
+				new_cluster := Universe.cluster_of_name (class_i.cluster.cluster_name);
 				if
-					Universe.clusters.has (class_i.cluster) and then
-					class_i.cluster.classes.has_item (class_i)
+					new_cluster /= Void and then
+					new_cluster.classes.has_item (class_i)
 				then
 					if class_i.compiled then
 						Result := class_i.compiled_class.stone

@@ -24,6 +24,9 @@ inherit
 		end
 
 	EV_DRAWABLE_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_drawing_mode
 		undefine
 			default_create,
 			copy

@@ -133,8 +133,9 @@ feature -- Element Change
 			valid_folder: not a_folder.empty
 		do
 			destination_folder := clone (a_folder)
-		ensure
-			destination_folder_set: destination_folder.is_equal (a_folder)
+			if not (destination_folder.item (destination_folder.count) = Directory_separator) then
+				destination_folder.append_character (Directory_separator)
+			end
 		end
 
 	set_project_name (a_name: like project_name) is

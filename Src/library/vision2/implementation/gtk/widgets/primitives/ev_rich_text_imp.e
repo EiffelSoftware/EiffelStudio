@@ -23,6 +23,12 @@ create
 
 feature -- Status Report
 
+	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Create a file access action sequence.
+		do
+			create Result
+		end
+
 	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 			-- Internal version which permits optimizations as caret position and selection

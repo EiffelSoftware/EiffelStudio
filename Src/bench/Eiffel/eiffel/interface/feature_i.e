@@ -117,7 +117,7 @@ feature
 			-- of a class: tow features of different names have two
 			-- different feature ids.
 
-	written_in: INTEGER;
+	written_in: CLASS_ID;
 			-- Class id where the feature is written
 
 	body_index: INTEGER;
@@ -185,7 +185,7 @@ feature
 			feature_name := s;
 		end;
 
-	set_written_in (s: INTEGER) is
+	set_written_in (s: like written_in) is
 			-- Assign `s' to `written_in'.
 		do
 			written_in := s;
@@ -238,7 +238,7 @@ feature
 		require
 			good_argument: a_class /= Void
 		do
-			Result := a_class.id = written_in
+			Result := equal (a_class.id, written_in)
 		end;
 
 	to_generate_in (a_class: CLASS_C): BOOLEAN is
@@ -246,10 +246,10 @@ feature
 		require
 			good_argument: a_class /= Void
 		do
-			Result := a_class.id = written_in
+			Result := equal (a_class.id, written_in)
 		end;
 
-	generation_class_id: INTEGER is
+	generation_class_id: CLASS_ID is
 			-- Id of the class where the feature has to be generated in
 		do
 			Result := written_in
@@ -292,7 +292,7 @@ feature -- Incrementality
 		require
 			good_argument: other /= Void
 		do
-			Result :=	written_in = other.written_in
+			Result :=	equal (written_in, other.written_in)
 						and then
 						is_selected = other.is_selected
 						and then	
@@ -314,8 +314,8 @@ feature -- Incrementality
 						and then
 						has_postcondition = other.has_postcondition;
 debug ("ACTIVITY")
-	if not result then
-			io.error.putbool (written_in = other.written_in); io.error.new_line;
+	if not Result then
+			io.error.putbool (equal (written_in, other.written_in)); io.error.new_line;
 			io.error.putbool (is_selected = other.is_selected); io.error.new_line;
 			io.error.putbool (rout_id_set.same_as (other.rout_id_set)); io.error.new_line;
 			io.error.putbool (is_origin = other.is_origin); io.error.new_line;
@@ -350,7 +350,7 @@ end;
 			good_argumnet: other /= Void
 
 		do
-			Result :=	written_in = other.written_in
+			Result :=	equal (written_in, other.written_in)
 						and then	
 						rout_id_set.same_as (other.rout_id_set)
 						and then
@@ -640,7 +640,7 @@ feature -- Conveniences
 	written_class: CLASS_C is
 			-- Class where the feature is written in
 		require
-			good_written_in: written_in > 0;
+			good_written_in: written_in /= Void
 		do
 			Result := System.class_of_id (written_in);
 		end;
@@ -700,18 +700,18 @@ feature -- Export checking
 			end;
 		end;
 
-	suppliers: TWO_WAY_SORTED_SET [INTEGER] is
+	suppliers: TWO_WAY_SORTED_SET [CLASS_ID] is
 			-- Class ids of all the suppliers of the feature
 		require
-			Tmp_depend_server.has (written_in) or else
-			Depend_server.has (written_in)
+			Tmp_depend_server.has (written_in.id) or else
+			Depend_server.has (written_in.id)
 		local
 			class_dependance: CLASS_DEPENDANCE
 		do
-			if Tmp_depend_server.has (written_in) then
-				class_dependance := Tmp_depend_server.item (written_in)
+			if Tmp_depend_server.has (written_in.id) then
+				class_dependance := Tmp_depend_server.item (written_in.id)
 			else
-				class_dependance := Depend_server.item (written_in)
+				class_dependance := Depend_server.item (written_in.id)
 			end;
 			Result := class_dependance.item (feature_name).suppliers
 		end;
@@ -746,11 +746,11 @@ feature -- Check
 				end
 			end;
 			if Result = Void then
-				if Tmp_ast_server.has (written_in) then
+				if Tmp_ast_server.has (written_in.id) then
 					-- Means a degree 4 error has occurred so the
 					-- best we can do is to search through the
 					-- class ast and find the feature as
-					class_ast := Tmp_ast_server.item (written_in)
+					class_ast := Tmp_ast_server.item (written_in.id)
 					Result ?= class_ast.feature_with_name (feature_name)
 				end
 			end;
@@ -950,7 +950,7 @@ feature -- Polymorphism
  				if is_attr then
  					Result := 	feature_id = other.feature_id
 				else
-	 				Result :=	written_in = other.written_in
+	 				Result :=	equal (written_in, other.written_in)
  								and then
  								body_index = other.body_index
  								and then
@@ -992,7 +992,7 @@ feature -- Signature checking
 			-- Check the argument names
 		require
 			argument_names_exists: argument_names /= Void;
-			written_in_class: written_in = feat_table.feat_tbl_id;
+			written_in_class: equal (written_in, feat_table.feat_tbl_id);
 				-- The feature must be written in the associated class
 				-- of `feat_table'.
 		local
@@ -1153,7 +1153,7 @@ debug ("CHECK_EXPANDED")
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
-			if class_c.id = written_in then
+			if equal (class_c.id, written_in) then
 					-- Check validity of an expanded result type
 
 					-- `set_type' has been called in `check_types' so
@@ -1526,7 +1526,7 @@ feature -- Replication
 			-- Do nothing
 		end;
 
-	access_in: INTEGER is
+	access_in: CLASS_ID is
 			-- Id of the class where the current feature can be accessed
 			-- through its routine id
 			-- Useful for replication
@@ -1553,7 +1553,7 @@ feature -- Replication
 			Result := System.body_id_counter.next
 		end;
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: CLASS_ID): FEATURE_I is
 			-- Unselected feature
 		deferred
 		ensure
@@ -1677,7 +1677,7 @@ feature -- C code generation
 		require
 			valid_file: file /= Void;
 			file_open_for_writing: file.is_open_write or file.is_open_append;
-			written_in_type: class_type.associated_class.id = generation_class_id;
+			written_in_type: equal (class_type.associated_class.id, generation_class_id)
 			not_deferred: not is_deferred;
 		local
 			byte_code: BYTE_CODE;
@@ -1980,7 +1980,7 @@ feature -- Case storage informatio
 		do
 			!! temp.make (0);
 			temp.append (feature_name);
-			!! Result.make (temp, written_in)
+			!! Result.make (temp, written_in.id)
 		end;
 
 feature -- Inlining

@@ -5,7 +5,9 @@ inherit
 	DEBUG_I
 		redefine
 			is_partial
-		end
+		end;
+
+	COMPILER_EXPORTER
 
 creation
 
@@ -64,17 +66,17 @@ feature
 			l.go_i_th (pos);
 		end;
 
-	generate (file: INDENT_FILE; id: INTEGER) is
+	generate (file: INDENT_FILE; id: CLASS_ID) is
 			-- Generate assertion value in `file'.
 		do
 			file.putstring ("{OPT_ALL, (int16) ");
 			file.putint (tags.count);
 			file.putstring (", keys");
-			file.putint (id);
+			file.putint (id.id);
 			file.putstring ("}");
 		end;
 
-	generate_keys (file: INDENT_FILE; id: INTEGER) is
+	generate_keys (file: INDENT_FILE; id: CLASS_ID) is
 			-- Generate keys C array
 		require
 			good_argument: file /= Void;
@@ -83,7 +85,7 @@ feature
 			l: SORTED_TWO_WAY_LIST [STRING];
 		do
 			file.putstring ("static char *keys");
-			file.putint (id);
+			file.putint (id.id);
 			file.putstring ("[] = {");
 			from
 				l := tags;
@@ -119,7 +121,7 @@ feature
 
 feature -- DLE
 
-	generate_dle (file: INDENT_FILE; id: INTEGER) is
+	generate_dle (file: INDENT_FILE; id: CLASS_ID) is
 			-- Generate assertion value in `file'.
 		do
 			file.putstring ("dle_dbg->debug_level = OPT_ALL;");
@@ -129,7 +131,7 @@ feature -- DLE
 			file.putchar (';');
 			file.new_line;
 			file.putstring ("dle_dbg->keys = keys");
-			file.putint (id);
+			file.putint (id.id);
 			file.putchar (';');
 			file.new_line
 		end;

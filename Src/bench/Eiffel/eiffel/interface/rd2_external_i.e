@@ -19,10 +19,10 @@ inherit
 
 feature
 
-	access_in: INTEGER;
+	access_in: CLASS_ID;
 			-- Access class id
 
-	set_access_in (i: INTEGER) is
+	set_access_in (i: CLASS_ID) is
 			-- Assign `i' to `access_in'.
 		do
 			access_in := i

@@ -254,7 +254,7 @@ feature
 			Result := rep;
 		end;
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: CLASS_ID): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: D_EXTERNAL_I
@@ -270,7 +270,7 @@ feature
 		require else
 			valid_file: file /= Void;
 			file_open_for_writing: file.is_open_write or file.is_open_append;
-			written_in_type: class_type.associated_class.id = generation_class_id;
+			written_in_type: equal (class_type.associated_class.id, generation_class_id);
 			not_deferred: not is_deferred;
 		local
 			byte_code: BYTE_CODE;

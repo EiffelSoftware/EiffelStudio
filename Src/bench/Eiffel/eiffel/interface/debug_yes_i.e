@@ -26,7 +26,7 @@ feature
 			io.error.putstring ("all debug");
 		end;
 
-	generate (file: INDENT_FILE; id: INTEGER) is
+	generate (file: INDENT_FILE; id: CLASS_ID) is
 			-- Generate assertion value in `file'.
 		do
 			file.putstring ("{OPT_ALL, (int16) 0, (char **) 0}");
@@ -40,7 +40,7 @@ feature
 
 feature -- DLE
 
-	generate_dle (file: INDENT_FILE; id: INTEGER) is
+	generate_dle (file: INDENT_FILE; id: CLASS_ID) is
 			-- Generate assertion value in `file'.
 		do
 			file.putstring ("dle_dbg->debug_level = OPT_ALL;");

@@ -131,7 +131,7 @@ feature -- C code generation
 			then
 				generate_header (file);
 				type_i := type.actual_type.type_i;
-				internal_name := Encoder.feature_name (class_type.id, body_id); 
+				internal_name := Encoder.feature_name (class_type.id.id, body_id); 
 				add_in_log (class_type, internal_name);
 					-- Generation of function's header
 				type_i.c_type.generate (file);
@@ -286,7 +286,7 @@ feature -- Byte code generation
 			Result := rep;
 		end;
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: CLASS_ID): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: D_CONSTANT_I;

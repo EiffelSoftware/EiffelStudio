@@ -13,8 +13,8 @@ inherit
 			make, make_top_level, tool
 		end
 	INTERFACE_NAMES
-creation
 
+creation
 	make, make_top_level
 
 feature {NONE} -- Initialization
@@ -27,12 +27,12 @@ feature {NONE} -- Initialization
 			Precursor (par)
 			forbid_resize
 
-			create tool.make (Current, Current)
+			create tool.make (Current)
 
 			initialize_main_menu
 
 				-- a tester
---			add_delete_command (quit_cmd, arg)
+			add_close_command (tool.close_cmd, Void)
 
 		ensure then
 			created: not destroyed
@@ -43,9 +43,11 @@ feature {NONE} -- Initialization
 		local
 		do
 			Precursor
-			create tool.make (Current, Current)
+			create tool.make (Current)
 
 			initialize_main_menu
+
+			add_close_command (tool.close_cmd, Void)
 
 		ensure then
 			created: not destroyed
@@ -56,29 +58,26 @@ feature {NONE} -- Initialization
 			-- Create and initialize `menu_bar'.
 		local
 			i: EV_MENU_ITEM
---			generate_cmd: EB_GENERATE_PROFILE_INFO_CMD
+			generate_cmd: EB_GENERATE_PROFILE_INFO_CMD
 			show_pref_cmd: EB_SHOW_PREFERENCE_TOOL
 			arg: EV_ARGUMENT1 [EV_CONTAINER]
 
 		do
 			create menu_bar.make (Current)
 
-			create file_menu.make_with_text (menu_bar, m_File)
-			create i.make_with_text (file_menu, "Close Tool")
-			i.add_activate_command (tool.quit_cmd, Void)
-
 			create commands_menu.make_with_text (menu_bar, m_Commands)
 			create i.make_with_text (commands_menu, "Generate")
+			create generate_cmd.make (tool)
+			i.add_select_command (generate_cmd, Void)
+			create i.make_with_text (commands_menu, "Close Tool")
+			i.add_select_command (tool.quit_cmd, Void)
 
 			create window_menu.make_with_text (menu_bar, m_Windows)
 			create i.make_with_text (window_menu, "Preferences")
 			create show_pref_cmd.make
 			create arg.make (Current)
-			i.add_activate_command (show_pref_cmd, arg)
+			i.add_select_command (show_pref_cmd, arg)
 			
-
---			create show_pref_menu_entry.make_default (show_pref_cmd, window_menu)
-
 			create help_menu.make_with_text (menu_bar, m_Help)
 		end			
 
@@ -114,14 +113,12 @@ feature {NONE} -- Initialization
 --			create menu_entry.make (raise_tool_cmd, window_menu)
 --		end
 
-
-feature {NONE} -- Implementation
+feature -- Access
 
 	tool: EB_PROFILE_TOOL
 			-- the profile tool
 	
-	file_menu,
-			-- The file menu
+feature {NONE} -- Implementation
 
 	commands_menu,
 			-- The commands menu

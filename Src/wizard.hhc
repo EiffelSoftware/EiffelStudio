@@ -11,7 +11,7 @@
 <UL>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value=".NET Wizard">
-		<param name="Local" value="help\wizards\edotnet\docs\index.html">
+		<param name="Local" value="index.html">
 		</OBJECT>
 	<UL>
 		<LI> <OBJECT type="text/sitemap">
@@ -136,6 +136,10 @@
 				<param name="Local" value="dotnet\reflection_interface\docs\reference\index.html">
 				</OBJECT>
 			<UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Definitions">
+					<param name="Local" value="dotnet\reflection_interface\docs\reference\00_definitions\index.html">
+					</OBJECT>
 				<LI> <OBJECT type="text/sitemap">
 					<param name="Name" value="Imported assembly viewer">
 					<param name="Local" value="dotnet\reflection_interface\docs\reference\01_imported_assembly_viewer\index.html">

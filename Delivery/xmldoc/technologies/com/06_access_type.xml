@@ -10,7 +10,228 @@
 		<link>
 			<url>07_deeper_into_com.xml#20493</url>
 			<label>Marshaling</label>
-		</link> for information on what a marshaler is). The supported types (known as Automation types) and their Eiffel equivalents are listed in the following table: The other advantage is a more dynamic discovery of the methods and properties of a component at runtime. Indeed the IDispatch interface also includes methods to check whether a method or property is available and, in that case, get its identifier. This process is called late binding and allows component to discover at runtime what are other components functionality.
+		</link> for information on what a marshaler is). The supported types (known as Automation types) and their Eiffel equivalents are listed in the following table:
+		<table>
+			<row>
+				<cell>
+					<paragraph>COM Type</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Eiffel equivalent</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Description</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph> VARIANT_BOOL</paragraph>
+				</cell>
+				<cell>
+					<paragraph>BOOLEAN</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Standard boolean</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>unsigned char</paragraph>
+				</cell>
+				<cell>
+					<paragraph>CHARACTER</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Standard character</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>double</paragraph>
+				</cell>
+				<cell>
+					<paragraph>DOUBLE</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Standard double</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>float</paragraph>
+				</cell>
+				<cell>
+					<paragraph>REAL</paragraph>
+				</cell>
+				<cell>
+					<paragraph>2 bytes real</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>int</paragraph>
+				</cell>
+				<cell>
+					<paragraph>INTEGER</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Standard integer</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>long</paragraph>
+				</cell>
+				<cell>
+					<paragraph>INTEGER</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Standard integer</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>short</paragraph>
+				</cell>
+				<cell>
+					<paragraph>INTEGER</paragraph>
+				</cell>
+				<cell>
+					<paragraph>2 bytes integer</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>BSTR</paragraph>
+				</cell>
+				<cell>
+					<paragraph>STRING</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Standard string</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>CURRENCY</paragraph>
+				</cell>
+				<cell>
+					<paragraph>ECOM_CURRENCY</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Currency value</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>DATE</paragraph>
+				</cell>
+				<cell>
+					<paragraph>DATE_TIME</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Standard date</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>SCODE</paragraph>
+				</cell>
+				<cell>
+					<paragraph>INTEGER</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Return status</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>Interface IDispatch *</paragraph>
+				</cell>
+				<cell>
+					<paragraph> ECOM_INTERFACE</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Automation interface</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>Interface IUnknown *</paragraph>
+				</cell>
+				<cell>
+					<paragraph> ECOM_INTERFACE</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Generic interface</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>dispinterface</paragraph>
+				</cell>
+				<cell>
+					<paragraph> ECOM_INTERFACE</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Automation interface</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>Coclass Typename </paragraph>
+				</cell>
+				<cell>
+					<paragraph>TYPE_NAME</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Component main class</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>SAFEARRAY(TypeName)</paragraph>
+				</cell>
+				<cell>
+					<paragraph> ECOM_ARRAY [TypeName]</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Array</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>TypeName*</paragraph>
+				</cell>
+				<cell>
+					<paragraph>CELL [TypeName]</paragraph>
+				</cell>
+				<cell>
+					<paragraph>Pointer to type</paragraph>
+				</cell>
+			</row>
+			<row>
+				<cell>VARIANT</cell>
+				<cell>ECOM_VARIANT</cell>
+				<cell>Variant value</cell>
+			</row>
+			<row>
+				<cell>enum</cell>
+				<cell>INTEGER</cell>
+				<cell>Enumeration</cell>
+			</row>
+			<row>
+				<cell>
+					<paragraph>Decimal</paragraph>
+				</cell>
+				<cell>
+					<paragraph>ECOM_DECIMAL</paragraph>
+				</cell>
+				<cell>
+					<paragraph> Decimal value</paragraph>
+				</cell>
+			</row>
+		</table>The other advantage is a more dynamic discovery of the methods and properties of a component at runtime. Indeed the IDispatch interface also includes methods to check whether a method or property is available and, in that case, get its identifier. This process is called late binding and allows component to discover at runtime what are other components functionality.
 		<paragraph>This approach has also a lot of drawbacks: first, late binding is not an efficient way of calling a function on an interface since its identifier must first be requested and then the function called. That's two round trips which can be expensive in a distributed environment. Second, since the marshaler is built-in, it has to know in advance all the possible types that a function can accept to be able to marshal the corresponding data. There are consequently a limitation on the number of types that one can use in signatures of functions on an Automation compatible interface. The set of available types is called Variant and cover most of the standard types. It does not allow however the passing of complex user defined data types. For these reasons Automation is mostly used in scripting environments (where speed is not an important factor) to accomplish simple tasks. </paragraph>
 		<heading>
 			<size>2</size>Direct Access
@@ -42,6 +263,11 @@
 			</link>
 			<line_break/>
 			<link>
+				<url>02_generalities.xml</url>
+				<label>Generalities</label>
+			</link>
+			<line_break/>
+			<link>
 				<url>03_interfaces.xml</url>
 				<label> COM Interfaces</label>
 			</link>
@@ -54,11 +280,6 @@
 			<link>
 				<url>05_component_location.xml</url>
 				<label> Component Location</label>
-			</link>
-			<line_break/>
-			<link>
-				<url>06_access_type.xml</url>
-				<label> Access Type</label>
 			</link>
 			<line_break/>
 			<link>

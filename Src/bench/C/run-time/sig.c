@@ -13,9 +13,9 @@
 	executable.
 */
 
+#include <signal.h>
 #include "config.h"
 #include "portable.h"
-#include <signal.h>
 #include "except.h"
 #include "sig.h"
 #include <errno.h>

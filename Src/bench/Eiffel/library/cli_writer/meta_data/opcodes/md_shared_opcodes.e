@@ -16,10 +16,12 @@ feature -- Access
 				-- Commented lines are because opcodes are not in use.
 				-- If new opcodes are added we should uncomment corresponding lines.
 
-			Result.put (
-				create {MD_OPCODE}.make (feature {MD_OPCODES}.nop, 0,
-					feature {MD_OPCODE_FORMAT}.no_arg),
-				feature {MD_OPCODES}.nop)
+--	Exception here because `nop' is `0' and HASH_TABLE does not like
+--  a key whose value is 0.
+-- 			Result.put (
+-- 				create {MD_OPCODE}.make (feature {MD_OPCODES}.nop, 0,
+-- 					feature {MD_OPCODE_FORMAT}.no_arg),
+-- 				feature {MD_OPCODES}.nop)
 			Result.put (
 				create {MD_OPCODE}.make (feature {MD_OPCODES}.break, 0,
 					feature {MD_OPCODE_FORMAT}.no_arg),

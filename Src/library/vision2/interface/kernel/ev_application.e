@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 		do
 			!EV_APPLICATION_IMP!implementation.make
 			-- Ensure the call to main_window
-			if (main_window = Void) then end
+			main_window.set_application (Current)
 			implementation.iterate
 		end
 	
@@ -27,6 +27,12 @@ feature
 			-- Must be defined as a once funtion to create
 			-- the application's main_window.
 		deferred
+		end
+	
+	exit is
+			-- Exit the application
+		do
+			implementation.exit
 		end
 	
 	

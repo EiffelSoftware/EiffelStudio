@@ -23,6 +23,11 @@ feature {EV_APPLICATION} -- Implementation
                         -- Loop the application.
                 deferred
                 end	
+
+	exit is
+			-- Exit the application
+		deferred
+		end
 end
 
 --|----------------------------------------------------------------

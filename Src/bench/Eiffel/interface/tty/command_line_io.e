@@ -25,8 +25,7 @@ feature -- Input/output
 			io.error.putstring ("%N%
 				%Press <Return> to resume compilation or <Q> to quit%N")
 			wait_for_return
-			str := clone (io.laststring)
-			str.to_lower
+			str := io.laststring.as_lower
 			Result := ((str.count >= 1) and then (str.item (1) = 'q'))
 		end
 
@@ -158,8 +157,7 @@ feature -- Input/output
 			if last_input = Void or else last_input.is_empty then
 				last_input := value.out
 			else
-				tmp := clone (last_input)
-				tmp.to_lower
+				tmp := last_input.as_lower
 				if tmp.is_equal ("yes") or else tmp.is_equal ("y") then
 					last_input := (True).out
 				else

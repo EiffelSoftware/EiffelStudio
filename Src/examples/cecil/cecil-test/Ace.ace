@@ -15,7 +15,7 @@ default
 
 cluster
 
-        root_cluster:           "f:/examples/cecil/cecil-test"
+        root_cluster:           "$EIFFEL4/examples/cecil/cecil-test"
                 -- If you intend to modify any part of the example,
                 -- copy all the files of $EIFFEL4/examples/cecil/cecil-test
                 -- into one of your directories, and replace

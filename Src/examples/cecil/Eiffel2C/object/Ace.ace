@@ -13,7 +13,7 @@ default
 
 cluster
 
-	ROOT_CLUSTER: 		"$EIFFEL4/examples/Eiffel2C/object";
+	ROOT_CLUSTER: 		"$EIFFEL4/examples/cecil/Eiffel2C/object";
 				-- If you intend to modify any part of the example,
 				-- copy all the files of  $EIFFEL4/examples/Eiffel2C/object
 				-- into one of your directories, and replace

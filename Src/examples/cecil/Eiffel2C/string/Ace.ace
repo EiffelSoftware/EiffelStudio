@@ -7,12 +7,13 @@ root
 
 default
 
+	assertion (require);
 	console_application (yes);
 	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
 
-	ROOT_CLUSTER: 		"$EIFFEL4/examples/Eiffel2C/string";
+	ROOT_CLUSTER: 		"$EIFFEL4/examples/cecil/Eiffel2C/string";
 				-- If you intend to modify any part of the example,
 				-- copy all the files of $EIFFEL4/examples/Eiffel2C/string
 				-- into one of your directories, and replace

@@ -783,7 +783,7 @@ feature -- Status setting
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_face_name)
+			create a_wel_string.make (a_face_name)
 			cwel_log_font_set_facename (item, a_wel_string.item)
 		ensure
 			face_name_set: face_name.is_equal (a_face_name)

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		do
 			structure_make
 
-			!! a.make (to_find)
+			create a.make (to_find)
 			set_string_to_find (a)
 			set_range (a_range)
 		end
@@ -36,20 +36,20 @@ feature -- Access
 	range: WEL_CHARACTER_RANGE is
 			-- Range of search
 		do
-			!! Result.make_by_pointer (cwel_findargument_get_range (item))
+			create Result.make_by_pointer (cwel_findargument_get_range (item))
 		end
 
 	string_to_find: WEL_STRING is
 			-- String to find
 		do
-			!! Result.make_by_pointer (cwel_findargument_get_string_to_find (item))
+			create Result.make_by_pointer (cwel_findargument_get_string_to_find (item))
 		end
 
 	range_out: WEL_CHARACTER_RANGE is
 			-- Range in which text is found
 			-- Return (0,0) if no text was found
 		do
-			!! Result.make_by_pointer (cwel_findargument_get_range_out (item))
+			create Result.make_by_pointer (cwel_findargument_get_range_out (item))
 		end
 		
 feature -- Element change

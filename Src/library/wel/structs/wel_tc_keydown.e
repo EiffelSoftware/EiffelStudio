@@ -31,7 +31,7 @@ feature -- Access
 	hdr: WEL_NMHDR is
 			-- Information about the Wm_notify message.
 		do
-			!! Result.make_by_pointer (cwel_tc_keydown_get_hdr (item))
+			create Result.make_by_pointer (cwel_tc_keydown_get_hdr (item))
 		ensure
 			result_not_void: Result /= Void
 		end

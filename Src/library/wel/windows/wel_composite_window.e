@@ -893,7 +893,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-
+		
 feature {WEL_DISPATCHER}
 
 	frozen composite_process_message, process_message (hwnd: POINTER;

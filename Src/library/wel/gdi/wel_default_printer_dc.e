@@ -24,9 +24,9 @@ feature {NONE} -- Initialization
 			loc_driver, loc_device, loc_output: WEL_STRING
 		do
 			retrieve_default_printer
-			!! loc_device.make (device)
-			!! loc_driver.make (driver)
-			!! loc_output.make (output)
+			create loc_device.make (device)
+			create loc_driver.make (driver)
+			create loc_output.make (output)
 			item := cwin_create_dc (loc_driver.item, loc_device.item,
 				loc_output.item, default_pointer)
 		end
@@ -45,12 +45,12 @@ feature -- Basic operations
 			device_count: INTEGER
 			nb: INTEGER
 		do
-			!! windows.make (Windows_const)
-			!! a_device.make (Device_const)
-			!! options.make (Options_const)
-			!! printer.make (Max_printer_name)
+			create windows.make (Windows_const)
+			create a_device.make (Device_const)
+			create options.make (Options_const)
+			create printer.make (Max_printer_name)
 			printer.fill_blank
-			!! a_printer.make (printer)
+			create a_printer.make (printer)
 			nb := cwin_get_profile_string (windows.item,
 				a_device.item, options.item, a_printer.item,
 				Max_printer_name)
@@ -59,9 +59,9 @@ feature -- Basic operations
 			if printer.is_equal (Options_const) then
 				-- There is no default printer connected.
 				-- Let's create empty strings.
-				!! device.make (0)
-				!! driver.make (0)
-				!! output.make (0)
+				create device.make (0)
+				create driver.make (0)
+				create output.make (0)
 			else
 				-- There is a default printer connected.
 				-- Let's parse the string and find the device,

@@ -411,7 +411,7 @@ feature -- Basic operations
 			set_parent (a_parent)
 			selected := cwin_print_dlg (item)
 			if selected then
-				!! private_dc.make_by_pointer (cwel_print_dlg_get_hdc (item))
+				create private_dc.make_by_pointer (cwel_print_dlg_get_hdc (item))
 			else
 				private_dc := Void
 			end

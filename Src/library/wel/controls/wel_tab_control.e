@@ -345,7 +345,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 		do
 			code := notification_info.code
 			if code = Tcn_keydown then
-				!! keydown_info.make_by_nmhdr (notification_info)
+				create keydown_info.make_by_nmhdr (notification_info)
 				on_tcn_keydown (keydown_info.virtual_key, keydown_info.key_data)
 			elseif code = Tcn_selchange then
 				on_tcn_selchange

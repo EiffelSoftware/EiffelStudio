@@ -53,7 +53,7 @@ feature -- Access
 			index_inf: index >= 0
 			index_sup: index < num_entries
 		do
-			!! Result.make_by_pointer (
+			create Result.make_by_pointer (
 				cwel_log_palette_get_pal_entry (item, index))
 		ensure
 			result_not_void: Result /= Void

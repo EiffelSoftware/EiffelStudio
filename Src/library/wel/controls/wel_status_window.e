@@ -79,9 +79,9 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			!! Result.make (text_length_for_part (index))
+			create Result.make (text_length_for_part (index))
 			Result.fill_blank
-			!! a_wel_string.make (Result)
+			create a_wel_string.make (Result)
 			nb := cwin_send_message_result (item,
 				Sb_gettext, index,
 				cwel_pointer_to_integer (a_wel_string.item))
@@ -129,7 +129,7 @@ feature -- Status report
 			index_small_enough: index < number_of_parts
 			index_large_enough: index >= 0
 		do
-			!! Result.make (0, 0, 0, 0)
+			create Result.make (0, 0, 0, 0)
 			cwin_send_message (item, Sb_getrect, index,
 				Result.to_integer)
 		ensure
@@ -144,8 +144,8 @@ feature -- Status report
 		local
 			a: WEL_INTEGER_ARRAY
 		do
-			!! Result.make (0, number_of_parts - 1)
-			!! a.make (Result)
+			create Result.make (0, number_of_parts - 1)
+			create a.make (Result)
 			cwin_send_message (item, Sb_getparts, number_of_parts,
 				cwel_pointer_to_integer (a.item))
 			Result := a.to_array (0)
@@ -222,7 +222,7 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_text)
+			create a_wel_string.make (a_text)
 			cwin_send_message (item, Sb_settext, Simple_part,
 				cwel_pointer_to_integer (a_wel_string.item))
 		end
@@ -237,7 +237,7 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_text)
+			create a_wel_string.make (a_text)
 			cwin_send_message (item, Sb_settext,
 				Simple_part + a_style,
 				cwel_pointer_to_integer (a_wel_string.item))
@@ -257,7 +257,7 @@ feature -- Element change
 		local
 			a: WEL_INTEGER_ARRAY
 		do
-			!! a.make (a_edges)
+			create a.make (a_edges)
 			cwin_send_message (item, Sb_setparts,
 				a_edges.count, cwel_pointer_to_integer (a.item))
 		ensure
@@ -275,7 +275,7 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_text)
+			create a_wel_string.make (a_text)
 			cwin_send_message (item, Sb_settext,
 				index, cwel_pointer_to_integer (a_wel_string.item))
 		ensure
@@ -295,7 +295,7 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_text)
+			create a_wel_string.make (a_text)
 			cwin_send_message (item, Sb_settext, index + a_style,
 				cwel_pointer_to_integer (a_wel_string.item))
 		ensure
@@ -348,8 +348,8 @@ feature {NONE} -- Implementation
 			a: WEL_INTEGER_ARRAY
 			borders: ARRAY [INTEGER]
 		do
-			!! borders.make (0, 2)
-			!! a.make (borders)
+			create borders.make (0, 2)
+			create a.make (borders)
 			cwin_send_message (item, Sb_getborders, 0,
 				cwel_pointer_to_integer (a.item))
 			Result := a.to_array (0).item (index)
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwin_status_window_class)
 		end
 

@@ -63,7 +63,7 @@ feature -- Access
 			exists: exists
 		do
 			set_mask (set_flag (mask, Cbeif_text))
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwel_comboboxex_item_get_psztext (item))
 		ensure
 			result_not_void: Result /= Void
@@ -130,7 +130,7 @@ feature -- Element change
 			valid_text: txt /= Void
 		do
 			set_mask (set_flag (mask, Cbeif_text))
-			!! str_text.make (txt)
+			create str_text.make (txt)
 			cwel_comboboxex_item_set_cchtextmax (item, str_text.length)
 			cwel_comboboxex_item_set_psztext (item, str_text.item)
 		ensure

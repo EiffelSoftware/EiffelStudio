@@ -21,7 +21,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			!! Result.make_by_color (
+			create Result.make_by_color (
 				cwel_color_palette_get_i_th_color (item, i - 1))
 		ensure
 			result_not_void: Result /= Void

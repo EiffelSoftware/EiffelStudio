@@ -26,7 +26,7 @@ feature -- Access
 	nmhdr: WEL_NMHDR is
 			-- Information about the notification
 		do
-			!! Result.make_by_pointer (cwel_integer_to_pointer (l_param))
+			create Result.make_by_pointer (cwel_integer_to_pointer (l_param))
 		ensure
 			result_not_void: Result /= Void
 		end

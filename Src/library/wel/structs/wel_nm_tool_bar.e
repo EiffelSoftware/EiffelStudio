@@ -33,7 +33,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			!! Result.make_by_pointer (cwel_nmtoolbar_get_hdr (item))
+			create Result.make_by_pointer (cwel_nmtoolbar_get_hdr (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -55,7 +55,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			!! Result.make_by_pointer (cwel_nmtoolbar_get_tbbutton (item))
+			create Result.make_by_pointer (cwel_nmtoolbar_get_tbbutton (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -65,7 +65,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwel_nmtoolbar_get_psztext (item))
 		end
 

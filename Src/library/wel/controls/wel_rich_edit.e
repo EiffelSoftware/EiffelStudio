@@ -126,7 +126,7 @@ feature -- Status report
 		local
 			range: WEL_CHARACTER_RANGE
 		do
-			!! range.make_empty
+			create range.make_empty
 			cwin_send_message (item, Em_exgetsel, 0, range.to_integer)
 			Result := range.maximum
 		end
@@ -142,7 +142,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make
+			create Result.make
 			Result.set_all_masks
 			cwin_send_message (item, Em_getcharformat, 0,
 				Result.to_integer)
@@ -155,7 +155,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make
+			create Result.make
 			Result.set_all_masks
 			cwin_send_message (item, Em_getcharformat, 1,
 				Result.to_integer)
@@ -196,9 +196,9 @@ feature -- Status report
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! Result.make (selection_end - selection_start)
+			create Result.make (selection_end - selection_start)
 			Result.fill_blank
-			!! a_wel_string.make (Result)
+			create a_wel_string.make (Result)
 			cwin_send_message (item, Em_getseltext, 0,
 				cwel_pointer_to_integer (a_wel_string.item))
 			Result := a_wel_string.string
@@ -226,7 +226,7 @@ feature -- Status report
 			--| The right parameters has been found in the
 			--| Microsoft Developer Network CD (April 1996).
 			--| See article PSS ID Number: Q137805
-			!! Result.make (0, 0)
+			create Result.make (0, 0)
 			cwin_send_message (item, Em_posfromchar,
 				Result.to_integer, character_index)
 		ensure
@@ -255,7 +255,7 @@ feature -- Status report
 			--| The right parameters has been found in the
 			--| Microsoft Developer Network CD (April 1996).
 			--| See article PSS ID Number: Q137805
-			!! p.make (a_x, a_y)
+			create p.make (a_x, a_y)
 			Result := cwin_send_message_result (item,
 				Em_charfrompos, 0, p.to_integer)
 		end
@@ -287,7 +287,7 @@ feature -- Status report
 		local
 			stream: WEL_RICH_EDIT_BUFFER_SAVER
 		do
-			!! stream.make
+			create stream.make
 			text_stream_out (stream)
 			Result := stream.text
 			stream.release_stream
@@ -346,7 +346,7 @@ feature -- Status setting
 		local
 			para: WEL_PARAGRAPH_FORMAT
 		do
-			!! para.make
+			create para.make
 			para.set_tabulations (tab)
 			set_paragraph_format (para)
 		end
@@ -356,7 +356,7 @@ feature -- Status setting
 		local
 			para: WEL_PARAGRAPH_FORMAT
 		do
-			!! para.make
+			create para.make
 			para.set_tabulation (tab)
 			set_paragraph_format (para)
 		end
@@ -366,7 +366,7 @@ feature -- Status setting
 		local
 			para: WEL_PARAGRAPH_FORMAT
 		do
-			!! para.make
+			create para.make
 			para.set_default_tabulation
 			set_paragraph_format (para)
 		end
@@ -398,7 +398,7 @@ feature -- Status setting
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
 		do
-			!! stream.make (a_text)
+			create stream.make (a_text)
 			text_stream_in (stream)
 			stream.release_stream
 		end
@@ -409,7 +409,7 @@ feature -- Status setting
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
 		do
-			!! stream.make (a_text)
+			create stream.make (a_text)
 			insert_text_stream_in (stream)
 			stream.release_stream
 		end
@@ -477,7 +477,7 @@ feature -- Basic operations
 		local
 			stream: WEL_RICH_EDIT_FILE_LOADER
 		do
-			!! stream.make (file)
+			create stream.make (file)
 			text_stream_in (stream)
 			stream.release_stream
 		ensure
@@ -494,7 +494,7 @@ feature -- Basic operations
 		local
 			stream: WEL_RICH_EDIT_FILE_LOADER
 		do
-			!! stream.make (file)
+			create stream.make (file)
 			rtf_stream_in (stream)
 			stream.release_stream
 		ensure
@@ -512,7 +512,7 @@ feature -- Basic operations
 		local
 			stream: WEL_RICH_EDIT_FILE_SAVER
 		do
-			!! stream.make (file)
+			create stream.make (file)
 			text_stream_out (stream)
 			stream.release_stream
 		ensure
@@ -530,7 +530,7 @@ feature -- Basic operations
 		local
 			stream: WEL_RICH_EDIT_FILE_SAVER
 		do
-			!! stream.make (file)
+			create stream.make (file)
 			rtf_stream_out (stream)
 			stream.release_stream
 		ensure
@@ -642,8 +642,8 @@ feature -- Basic operations
 			range: WEL_CHARACTER_RANGE
 			flags: INTEGER
 		do
-			!! range.make (start_from, count)
-			!! find_text.make (range, text_to_find)
+			create range.make (start_from, count)
+			create find_text.make (range, text_to_find)
 
 			if match_case then
 				flags := Fr_matchcase
@@ -711,7 +711,7 @@ feature -- Element change
 		do
 			from
 				tl := text_length
-				!! fr.make
+				create fr.make
 				fr.set_dc (dc)
 				fr.set_dc_target (dc)
 				fr.character_range.set_range (0, tl)
@@ -725,7 +725,7 @@ feature -- Element change
 				page_height := (dc.height /
 					dc.device_caps (Logical_pixels_y) *
 					1440).truncated_to_integer - 720
-				!! r.make (page_left, page_top,
+				create r.make (page_left, page_top,
 					page_width, page_height)
 			until
 				i >= tl
@@ -803,7 +803,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			!! Result.make (0)
+			create Result.make (0)
 --			Result.from_c (Class_name_pointer) -- for version 2.0
 			Result := "RichEdit" -- for version 1.0
 		end

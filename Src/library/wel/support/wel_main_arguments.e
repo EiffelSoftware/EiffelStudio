@@ -12,7 +12,7 @@ feature -- Access
 	current_instance: WEL_INSTANCE is
 			-- Current instance argument received in WinMain
 		once
-			!! Result.make (cwel_hinstance)
+			create Result.make (cwel_hinstance)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	previous_instance: WEL_INSTANCE is
 			-- Previous instance argument received in WinMain
 		once
-			!! Result.make (cwel_previous_hinstance)
+			create Result.make (cwel_previous_hinstance)
 		ensure
 			result_not_void: Result /= Void
 		end

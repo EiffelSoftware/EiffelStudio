@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			a_menu_exists: a_menu.exists
 		do
 			frame_make_top (a_name)
-			!! client_window.make (Current, a_menu, first_child)
+			create client_window.make (Current, a_menu, first_child)
 		ensure
 			parent_set: parent = Void
 			exists: exists
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 	class_background: WEL_BRUSH is
 			-- Standard application workspace color 
 		once
-			!! Result.make_by_sys_color (Color_appworkspace + 1)
+			create Result.make_by_sys_color (Color_appworkspace + 1)
 		end
 
 feature {NONE} -- Externals

@@ -51,7 +51,7 @@ feature -- Access
 	class_name: STRING is
 			-- Class name of the MDI child window
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwel_mdi_cs_get_class_name (item))
 		ensure
 			result_not_void: Result /= Void
@@ -60,7 +60,7 @@ feature -- Access
 	title: STRING is
 			-- Title of the MDI child window
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwel_mdi_cs_get_class_title (item))
 		ensure
 			result_not_void: Result /= Void
@@ -69,7 +69,7 @@ feature -- Access
 	owner: WEL_INSTANCE is
 			-- Owner of the MDI child window
 		do
-			!! Result.make (cwel_mdi_cs_get_owner (item))
+			create Result.make (cwel_mdi_cs_get_owner (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -117,7 +117,7 @@ feature -- Element change
 		require
 			a_class_name_valid: a_class_name /= Void
 		do
-			!! str_class_name.make (a_class_name)
+			create str_class_name.make (a_class_name)
 			cwel_mdi_cs_set_class_name (item,
 				str_class_name.item)
 		ensure
@@ -129,7 +129,7 @@ feature -- Element change
 		require
 			a_title_valid: a_title /= Void
 		do
-			!! str_title.make (a_title)
+			create str_title.make (a_title)
 			cwel_mdi_cs_set_title (item, str_title.item)
 		ensure
 			title_set: title.is_equal (a_title)
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 
 	main_args: WEL_MAIN_ARGUMENTS is
 		once
-			!! Result
+			create Result
 		ensure
 			result_not_void: Result /= Void
 		end

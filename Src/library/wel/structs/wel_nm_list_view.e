@@ -31,7 +31,7 @@ feature -- Access
 	hdr: WEL_NMHDR is
 			-- Information about the Wm_notify message.
 		do
-			!! Result.make_by_pointer (cwel_nm_listview_get_hdr (item))
+			create Result.make_by_pointer (cwel_nm_listview_get_hdr (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -76,7 +76,7 @@ feature -- Access
 			-- valid argument only for the Lvn_begindrag and
 			-- Lvn_beginrdrag notification messages.
 		do
-			!! Result.make_by_pointer (cwel_nm_listview_get_ptaction (item))
+			create Result.make_by_pointer (cwel_nm_listview_get_ptaction (item))
 		end
 
 feature -- Measurement

@@ -21,7 +21,7 @@ feature -- Access
 			-- Area to render to.
 			-- Units are in TWIPS.
 		do
-			!! Result.make_by_pointer (
+			create Result.make_by_pointer (
 				cwel_formatrange_get_rc (item))
 		ensure
 			result_not_void: Result /= Void
@@ -31,7 +31,7 @@ feature -- Access
 			-- Entire area of rendering device.
 			-- Units are in TWIPS.
 		do
-			!! Result.make_by_pointer (
+			create Result.make_by_pointer (
 				cwel_formatrange_get_rcpage (item))
 		ensure
 			result_not_void: Result /= Void
@@ -40,7 +40,7 @@ feature -- Access
 	character_range: WEL_CHARACTER_RANGE is
 			-- Range of text to format
 		do
-			!! Result.make_by_pointer (
+			create Result.make_by_pointer (
 				cwel_formatrange_get_chrg (item))
 		ensure
 			result_not_void: Result /= Void
@@ -97,7 +97,7 @@ feature -- Element change
 		local
 			cr: WEL_CHARACTER_RANGE
 		do
-			!! cr.make (min, max)
+			create cr.make (min, max)
 			cwel_formatrange_set_chrg (item, cr.item)
 		ensure
 			set_min: character_range.minimum = min

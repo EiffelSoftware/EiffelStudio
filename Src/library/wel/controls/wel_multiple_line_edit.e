@@ -85,7 +85,7 @@ feature -- Status setting
 		local
 			a: WEL_INTEGER_ARRAY
 		do
-			!! a.make (tab)
+			create a.make (tab)
 			cwin_send_message (item, Em_settabstops, tab.count,
 				cwel_pointer_to_integer (a.item))
 		end

@@ -322,28 +322,28 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			code := notification_info.code 
   
 			if code = Hdn_begin_track then
-				!! hd_notify.make_by_nmhdr (notification_info)
+				create hd_notify.make_by_nmhdr (notification_info)
 				on_hdn_begin_track (hd_notify)
 			elseif code = Hdn_divider_dbl_click then
-				!! hd_notify.make_by_nmhdr (notification_info)
+				create hd_notify.make_by_nmhdr (notification_info)
 				on_hdn_divider_dbl_click (hd_notify)
 			elseif code = Hdn_end_track then
-				!! hd_notify.make_by_nmhdr (notification_info)
+				create hd_notify.make_by_nmhdr (notification_info)
 				on_hdn_end_track (hd_notify)
 			elseif code = Hdn_item_changed then
-				!! hd_notify.make_by_nmhdr (notification_info)
+				create hd_notify.make_by_nmhdr (notification_info)
 				on_hdn_item_changed (hd_notify)
 			elseif code = Hdn_item_changing then
-				!! hd_notify.make_by_nmhdr (notification_info)
+				create hd_notify.make_by_nmhdr (notification_info)
 				on_hdn_item_changing (hd_notify)
 			elseif code = Hdn_item_click then
-				!! hd_notify.make_by_nmhdr (notification_info)
+				create hd_notify.make_by_nmhdr (notification_info)
 				on_hdn_item_click (hd_notify)
 			elseif code = Hdn_item_dbl_click then
-				!! hd_notify.make_by_nmhdr (notification_info)
+				create hd_notify.make_by_nmhdr (notification_info)
 				on_hdn_item_dbl_click (hd_notify)
 			elseif code = Hdn_track then
-				!! hd_notify.make_by_nmhdr (notification_info)
+				create hd_notify.make_by_nmhdr (notification_info)
 				on_hdn_track (hd_notify)
 			end
 		end
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwin_wc_header)
 		end
 

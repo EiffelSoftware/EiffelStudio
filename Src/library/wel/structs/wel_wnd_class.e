@@ -110,7 +110,7 @@ feature -- Access
 		require
 			instance_set: instance_set
 		do
-			!! Result.make (cwel_wnd_class_get_instance (item))
+			create Result.make (cwel_wnd_class_get_instance (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -120,7 +120,7 @@ feature -- Access
 		require
 			icon_set: icon_set
 		do
-			!! Result.make_by_pointer (
+			create Result.make_by_pointer (
 				cwel_wnd_class_get_icon (item))
 		ensure
 			result_not_void: Result /= Void
@@ -132,7 +132,7 @@ feature -- Access
 		require
 			cursor_set: cursor_set
 		do
-			!! Result.make_by_pointer (
+			create Result.make_by_pointer (
 				cwel_wnd_class_get_cursor (item))
 		ensure
 			result_not_void: Result /= Void
@@ -144,7 +144,7 @@ feature -- Access
 		require
 			background_set: background_set
 		do
-			!! Result.make_by_pointer (
+			create Result.make_by_pointer (
 				cwel_wnd_class_get_background (item))
 		ensure
 			result_not_void: Result /= Void
@@ -247,7 +247,7 @@ feature -- Element change
 			a_class_name_valid: a_class_name /= Void
 			a_class_name_not_empty: not a_class_name.is_empty
 		do
-			!! str_class_name.make (a_class_name)
+			create str_class_name.make (a_class_name)
 			check
 				str_class_name_not_void: str_class_name /= Void
 				str_class_name_exists: str_class_name.exists
@@ -263,7 +263,7 @@ feature -- Element change
 		require
 			a_menu_name_valid: a_menu_name /= Void
 		do
-			!! str_menu_name.make (a_menu_name)
+			create str_menu_name.make (a_menu_name)
 			check
 				str_menu_name_not_void: str_menu_name /= Void
 				str_menu_name_exists: str_menu_name.exists
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 
 	main_args: WEL_MAIN_ARGUMENTS is
 		once
-			!! Result
+			create Result
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -37,7 +37,7 @@ feature -- Access
 	hdr: WEL_NMHDR is
 			-- Information about the Wm_notify message.
 		do
-			!! Result.make_by_pointer (cwel_tooltiptext_get_hdr (item))
+			create Result.make_by_pointer (cwel_tooltiptext_get_hdr (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -47,7 +47,7 @@ feature -- Access
 		require
 			text_id_not_set: not text_id_set
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwel_tooltiptext_get_lpsztext (item))
 		ensure
 			result_not_void: Result /= Void
@@ -66,7 +66,7 @@ feature -- Access
 			-- Instance that contains a string resource to be
 			-- used as the text.
 		do
-			!! Result.make (cwel_tooltiptext_get_hinst (item))
+			create Result.make (cwel_tooltiptext_get_hinst (item))
 		end
 
 	flags: INTEGER is
@@ -84,7 +84,7 @@ feature -- Element change
 		require
 			text_not_void: a_text /= Void
 		do
-			!! str_text.make (a_text)
+			create str_text.make (a_text)
 			cwel_tooltiptext_set_lpsztext (item, str_text.item)
 		ensure
 			text_set: text.is_equal (a_text)
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 	main_args: WEL_MAIN_ARGUMENTS is
 			-- Main arguments of the application
 		once
-			!! Result
+			create Result
 		ensure
 			result_not_void: Result /= Void
 		end

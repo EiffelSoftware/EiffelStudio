@@ -23,7 +23,7 @@ feature -- Access
 	white_pen: WEL_PEN is
 			-- White pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				white)
 		ensure
 			result_not_void: Result /= Void
@@ -32,7 +32,7 @@ feature -- Access
 	black_pen: WEL_PEN is
 			-- Black pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				black)
 		ensure
 			result_not_void: Result /= Void
@@ -41,7 +41,7 @@ feature -- Access
 	grey_pen: WEL_PEN is
 			-- Grey pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				grey)
 		ensure
 			result_not_void: Result /= Void
@@ -50,7 +50,7 @@ feature -- Access
 	dark_grey_pen: WEL_PEN is
 			-- Dark grey pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				dark_grey)
 		ensure
 			result_not_void: Result /= Void
@@ -59,7 +59,7 @@ feature -- Access
 	blue_pen: WEL_PEN is
 			-- Blue pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				blue)
 		ensure
 			result_not_void: Result /= Void
@@ -68,7 +68,7 @@ feature -- Access
 	dark_blue_pen: WEL_PEN is
 			-- Dark blue pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				dark_blue)
 		ensure
 			result_not_void: Result /= Void
@@ -77,7 +77,7 @@ feature -- Access
 	cyan_pen: WEL_PEN is
 			-- Cyan pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				cyan)
 		ensure
 			result_not_void: Result /= Void
@@ -86,7 +86,7 @@ feature -- Access
 	dark_cyan_pen: WEL_PEN is
 			-- Dark cyan pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				dark_cyan)
 		ensure
 			result_not_void: Result /= Void
@@ -95,7 +95,7 @@ feature -- Access
 	green_pen: WEL_PEN is
 			-- Green pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				green)
 		ensure
 			result_not_void: Result /= Void
@@ -104,7 +104,7 @@ feature -- Access
 	dark_green_pen: WEL_PEN is
 			-- Dark green pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				dark_green)
 		ensure
 			result_not_void: Result /= Void
@@ -113,7 +113,7 @@ feature -- Access
 	yellow_pen: WEL_PEN is
 			-- Yellow pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				yellow)
 		ensure
 			result_not_void: Result /= Void
@@ -122,7 +122,7 @@ feature -- Access
 	dark_yellow_pen: WEL_PEN is
 			-- Dark yellow pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				dark_yellow)
 		ensure
 			result_not_void: Result /= Void
@@ -131,7 +131,7 @@ feature -- Access
 	red_pen: WEL_PEN is
 			-- Red pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				red)
 		ensure
 			result_not_void: Result /= Void
@@ -140,7 +140,7 @@ feature -- Access
 	dark_red_pen: WEL_PEN is
 			-- Dark red pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				dark_red)
 		ensure
 			result_not_void: Result /= Void
@@ -149,7 +149,7 @@ feature -- Access
 	magenta_pen: WEL_PEN is
 			-- Magenta pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				magenta)
 		ensure
 			result_not_void: Result /= Void
@@ -158,7 +158,7 @@ feature -- Access
 	dark_magenta_pen: WEL_PEN is
 			-- Dark magenta pen
 		once
-			!! Result.make (default_pen_style, default_pen_width,
+			create Result.make (default_pen_style, default_pen_width,
 				dark_magenta)
 		ensure
 			result_not_void: Result /= Void

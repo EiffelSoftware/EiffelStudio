@@ -54,7 +54,7 @@ feature -- Basic operations
 		local
 			wel_string: WEL_STRING
 		do
-			!! wel_string.make (txt)
+			create wel_string.make (txt)
 			cwin_draw_state (dc.item, default_pointer, default_pointer,
 					wel_string.to_integer, txt.count, x, y, 50, 20,
 					Dst_text + Dss_disabled)

@@ -55,7 +55,7 @@ feature -- Basic operations
 		local
 			point: WEL_POINT
 		do
-			!! point.make (a_x, a_y)
+			create point.make (a_x, a_y)
 			point.screen_to_client (parent)
 			move (point.x, point.y)
 		end
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			mdi_cs: WEL_MDI_CREATE_STRUCT
 		do
 			parent := a_parent
-			!! mdi_cs.make (class_name, a_name)
+			create mdi_cs.make (class_name, a_name)
 			mdi_cs.set_style (default_style)
 			item := cwel_integer_to_pointer (
 				cwin_send_message_result (a_parent.client_window.item,
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 	class_background: WEL_BRUSH is
 			-- Standard window background color
 		once
-			!! Result.make_by_sys_color (Color_window + 1)
+			create Result.make_by_sys_color (Color_window + 1)
 		end
 
 	class_name: STRING is

@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 	application_main_window_cell: CELL [WEL_COMPOSITE_WINDOW] is
 			-- Application's main window cell
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 	application_cell: CELL [WEL_APPLICATION] is
 			-- Application cell
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		ensure
 			result_not_void: Result /= Void
 		end

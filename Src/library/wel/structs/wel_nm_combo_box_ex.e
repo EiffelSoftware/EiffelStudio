@@ -31,7 +31,7 @@ feature -- Access
 	hdr: WEL_NMHDR is
 			-- Information about the Wm_notify message.
 		do
-			!! Result.make_by_pointer (cwel_nm_comboboxex_get_hdr (item))
+			create Result.make_by_pointer (cwel_nm_comboboxex_get_hdr (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -42,7 +42,7 @@ feature -- Access
 		local
 			combo: WEL_COMBO_BOX_EX
 		do
-			!! Result.make_by_pointer (cwel_nm_comboboxex_get_ceitem (item))
+			create Result.make_by_pointer (cwel_nm_comboboxex_get_ceitem (item))
 			combo ?= hdr.window_from
 			if combo /= Void then
 				Result := combo.get_item_info (Result.index)

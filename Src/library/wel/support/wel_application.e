@@ -65,7 +65,7 @@ feature -- Access
 		local
 			ma: WEL_MAIN_ARGUMENTS
 		once
-			!! ma
+			create ma
 			Result := ma.command_show
 		end
 
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 				-- Process with accelerators
 				-- IsDialogMessage must be called!
 				from
-					!! msg.make
+					create msg.make
 				until
 					done
 				loop
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 				-- Process without accelerators
 				-- IsDialogMessage must be called!
 				from
-					!! msg.make
+					create msg.make
 				until
 					done
 				loop

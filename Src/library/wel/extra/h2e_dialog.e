@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 			-- Make the main window
 		do
 			make_by_id (Id_main_dialog)
-			!! eiffel_file_edit.make_by_id (Current, Id_edit_eiffel)
-			!! h_file_edit.make_by_id (Current, id_edit_h)
-			!! class_name_edit.make_by_id (Current, Id_edit_class_name)
-			!! translate_button.make_by_id (Current, Cmd_file_translate)
+			create eiffel_file_edit.make_by_id (Current, Id_edit_eiffel)
+			create h_file_edit.make_by_id (Current, id_edit_h)
+			create class_name_edit.make_by_id (Current, Id_edit_class_name)
+			create translate_button.make_by_id (Current, Cmd_file_translate)
 		end
 
 feature -- Access
@@ -62,7 +62,7 @@ feature {NONE} -- Behaviors
 			when Cmd_file_browse_h then
 				on_file_select_h_file
 			when Cmd_help_about then
-				!! about.make_by_id (Current, Id_about_dialog)
+				create about.make_by_id (Current, Id_about_dialog)
 				about.activate
 			when Cmd_file_translate then
 				on_translate
@@ -93,7 +93,7 @@ feature {NONE} -- Behaviors
 			if open_eiffel_file_dialog.selected then
 				eiffel_file_edit.set_text (open_eiffel_file_dialog.file_name)
 				if file_exists (open_eiffel_file_dialog.file_name) then
-					!! c.make_by_predefined_id (Idc_wait)
+					create c.make_by_predefined_id (Idc_wait)
 					c.set
 					scan_file_for_classname (open_eiffel_file_dialog.file_name)
 					c.restore_previous
@@ -109,11 +109,11 @@ feature {NONE} -- Behaviors
 			msg_box: WEL_MSG_BOX
 		do
 			if file_exists (h_file_edit.text) then
-				!! c.make_by_predefined_id (Idc_wait)
+				create c.make_by_predefined_id (Idc_wait)
 				c.set
 				previous_text := translate_button.text
 				translate_button.set_text ("Translating...")
-				!! conv.make (class_name_edit.text,
+				create conv.make (class_name_edit.text,
 					eiffel_file_edit.text,
 					h_file_edit.text)
 				conv.convert (h_file_edit.text)
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			a_file: PLAIN_TEXT_FILE
 			break: BOOLEAN
 		do
-			!! a_file.make_open_read (a_file_name)
+			create a_file.make_open_read (a_file_name)
 			from
 				a_file.start
 			until
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 
 	open_eiffel_file_dialog: WEL_OPEN_FILE_DIALOG is
 		once
-			!! Result.make
+			create Result.make
 			Result.set_title ("Select the Eiffel file")
 			Result.set_filter (<<"Eiffel file (*.e)",
 				"All file (*.*)">>, <<"*.e", "*.*">>)
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 
 	open_header_file_dialog: WEL_OPEN_FILE_DIALOG is
 		once
-			!! Result.make
+			create Result.make
 			Result.set_title ("Select the header/resource file")
 			Result.set_filter (<<"Resource file (*.rc)",
 				"Header file (*.h)", "All file (*.*)">>,
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 		local
 			a_file: PLAIN_TEXT_FILE
 		do
-			!! a_file.make (filename)
+			create a_file.make (filename)
 			Result := a_file.exists
 		end
 

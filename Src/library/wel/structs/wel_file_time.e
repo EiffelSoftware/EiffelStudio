@@ -84,7 +84,7 @@ feature -- Conversion
 	system_time: WEL_SYSTEM_TIME is
 			-- FILETIME in SYSTEMTIME format
 		do
-			!!Result.make
+			create Result.make
 			cwel_file_time_to_system_time (item, Result.item)
 		end
 
@@ -92,7 +92,7 @@ feature -- Conversion
 			-- universal FILETIME in local FILETIME form
 			-- `Current' must be in universal time form
 		do
-			!!Result.make
+			create Result.make
 			cwel_file_time_to_local_file_time (item, Result.item)
 		end
 
@@ -100,7 +100,7 @@ feature -- Conversion
 			-- local FILETIME in universal FILETIME form
 			-- `Current' must be in local time form
 		do
-			!!Result.make
+			createResult.make
 			cwel_local_file_time_to_file_time (item, Result.item)
 		end
 
@@ -136,8 +136,8 @@ feature {NONE} -- Implementation
 		local
 			time1, time2: WEL_FILE_TIME
 		do
-			!!time1.make
-			!!time2.make
+			create time1.make
+			create time2.make
 			if (a_creation_time /= Void) then
 				cwel_get_file_time (a_file.descriptor, a_creation_time.item,
 						time1.item, time2.item)

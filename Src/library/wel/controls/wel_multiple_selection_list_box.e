@@ -181,7 +181,7 @@ feature -- Status report
 			i: INTEGER
 		do
 			a := selected_items
-			!! Result.make (a.lower, a.upper)
+			create Result.make (a.lower, a.upper)
 			from
 				i := a.lower
 			until

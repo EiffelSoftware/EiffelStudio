@@ -12,7 +12,7 @@ feature
 	main_window: H2E_DIALOG is
 			-- Create the application's main window
 		once
-			!! Result.make
+			create Result.make
 		end
 
 end -- class H2E

@@ -12,7 +12,7 @@ feature -- Access
 	white: WEL_COLOR_REF is
 			-- White color
 		once
-			!! Result.make_rgb (255, 255, 255)
+			create Result.make_rgb (255, 255, 255)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	black: WEL_COLOR_REF is
 			-- Black color
 		once
-			!! Result.make_rgb (0, 0, 0)
+			create Result.make_rgb (0, 0, 0)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	grey: WEL_COLOR_REF is
 			-- Grey color
 		once
-			!! Result.make_rgb (192, 192, 192)
+			create Result.make_rgb (192, 192, 192)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	dark_grey: WEL_COLOR_REF is
 			-- Dark grey color
 		once
-			!! Result.make_rgb (128, 128, 128)
+			create Result.make_rgb (128, 128, 128)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -44,7 +44,7 @@ feature -- Access
 	blue: WEL_COLOR_REF is
 			-- Blue color
 		once
-			!! Result.make_rgb (0, 0, 255)
+			create Result.make_rgb (0, 0, 255)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -52,7 +52,7 @@ feature -- Access
 	dark_blue: WEL_COLOR_REF is
 			-- Dark blue color
 		once
-			!! Result.make_rgb (0, 0, 128)
+			create Result.make_rgb (0, 0, 128)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -60,7 +60,7 @@ feature -- Access
 	cyan: WEL_COLOR_REF is
 			-- Cyan color
 		once
-			!! Result.make_rgb (0, 255, 255)
+			create Result.make_rgb (0, 255, 255)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -68,7 +68,7 @@ feature -- Access
 	dark_cyan: WEL_COLOR_REF is
 			-- Dark cyan color
 		once
-			!! Result.make_rgb (0, 128, 128)
+			create Result.make_rgb (0, 128, 128)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -76,7 +76,7 @@ feature -- Access
 	green: WEL_COLOR_REF is
 			-- Green color
 		once
-			!! Result.make_rgb (0, 255, 0)
+			create Result.make_rgb (0, 255, 0)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -84,7 +84,7 @@ feature -- Access
 	dark_green: WEL_COLOR_REF is
 			-- Dark green color
 		once
-			!! Result.make_rgb (0, 128, 0)
+			create Result.make_rgb (0, 128, 0)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -92,7 +92,7 @@ feature -- Access
 	yellow: WEL_COLOR_REF is
 			-- Yellow color
 		once
-			!! Result.make_rgb (255, 255, 0)
+			create Result.make_rgb (255, 255, 0)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -100,7 +100,7 @@ feature -- Access
 	dark_yellow: WEL_COLOR_REF is
 			-- Dark yellow color
 		once
-			!! Result.make_rgb (128, 128, 0)
+			create Result.make_rgb (128, 128, 0)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -108,7 +108,7 @@ feature -- Access
 	red: WEL_COLOR_REF is
 			-- Red color
 		once
-			!! Result.make_rgb (255, 0, 0)
+			create Result.make_rgb (255, 0, 0)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -116,7 +116,7 @@ feature -- Access
 	dark_red: WEL_COLOR_REF is
 			-- Dark red color
 		once
-			!! Result.make_rgb (128, 0, 0)
+			create Result.make_rgb (128, 0, 0)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -124,7 +124,7 @@ feature -- Access
 	magenta: WEL_COLOR_REF is
 			-- Magenta color
 		once
-			!! Result.make_rgb (255, 0, 255)
+			create Result.make_rgb (255, 0, 255)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -132,7 +132,7 @@ feature -- Access
 	dark_magenta: WEL_COLOR_REF is
 			-- Dark magenta color
 		once
-			!! Result.make_rgb (128, 0, 128)
+			create Result.make_rgb (128, 0, 128)
 		ensure
 			result_not_void: Result /= Void
 		end

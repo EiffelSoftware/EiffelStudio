@@ -37,7 +37,7 @@ feature -- Basic operations
 		local
 			doc_info: WEL_DOC_INFO
 		do
-			!! doc_info.make (title)
+			create doc_info.make (title)
 			cwin_start_doc (item, doc_info.item)
 		end
 

@@ -57,7 +57,7 @@ feature -- Element change
 		require
 			a_document_name_not_void: a_document_name /= Void
 		do
-			!! str_document_name.make (a_document_name)
+			create str_document_name.make (a_document_name)
 			cwel_doc_info_set_lpszdocname (item, str_document_name.item)
 		ensure
 			document_name_set: document_name.is_equal (a_document_name)
@@ -68,7 +68,7 @@ feature -- Element change
 		require
 			an_output_not_void: an_output /= Void
 		do
-			!! str_output.make (an_output)
+			create str_output.make (an_output)
 			cwel_doc_info_set_lpszoutput (item, str_output.item)
 		ensure
 			output_set: output.is_equal (an_output)

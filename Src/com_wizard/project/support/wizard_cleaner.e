@@ -46,20 +46,17 @@ feature -- Basic Operations
 			delete_file (c_to_obj (Generated_ps_file_name))
 			delete_file (Temporary_input_file_name)
 			delete_file (Def_file_name)
-			a_directory_name := Shared_wizard_environment.destination_folder
-			a_directory_name.append_character (Directory_separator)
+			a_directory_name := clone (Shared_wizard_environment.destination_folder)
 			a_directory_name.append (Client)
 			a_directory_name.append_character (Directory_separator)
 			a_directory_name.append (Clib)
 			delete_object_files (a_directory_name)
-			a_directory_name := Shared_wizard_environment.destination_folder
-			a_directory_name.append_character (Directory_separator)
+			a_directory_name := clone (Shared_wizard_environment.destination_folder)
 			a_directory_name.append (Server)
 			a_directory_name.append_character (Directory_separator)
 			a_directory_name.append (Clib)
 			delete_object_files (a_directory_name)
-			a_directory_name := Shared_wizard_environment.destination_folder
-			a_directory_name.append_character (Directory_separator)
+			a_directory_name := clone (Shared_wizard_environment.destination_folder)
 			a_directory_name.append (Common)
 			a_directory_name.append_character (Directory_separator)
 			a_directory_name.append (Clib)

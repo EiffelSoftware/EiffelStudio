@@ -45,7 +45,7 @@ feature -- Status setting
 		end
 
 	set_with_file (a_file: IO_MEDIUM) is
-			-- Load pixmap data from data-medium `a_file'.
+			-- Attempt to load pixmap data from data-medium `a_file'.
 			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
 			-- exceptions. --FIXME do this!
 		require
@@ -53,6 +53,23 @@ feature -- Status setting
 			medium_data_is_binary: not a_file.is_plain_text
 		do
 			implementation.read_from_file (a_file)
+		end
+
+	set_with_named_file (file_name: STRING) is
+			-- Attempt to load pixmap data from a file specified by `file_name'.
+			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
+			-- exceptions. --FIXME do this!
+		require
+			file_name_not_void: file_name /= Void
+			file_name_not_empty: not file_name.empty
+		local
+			file: RAW_FILE
+		do
+			create file.make_open_read (file_name)
+			read_from_file (file)
+			file.close
+		ensure
+			file_not_open: not file.open
 		end
 
 	set_size (a_x, a_y: INTEGER) is
@@ -109,6 +126,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/18 03:20:36  oconnor
+--| added set_with_named_file
+--|
 --| Revision 1.15  2000/02/16 20:16:15  pichery
 --| - implemented set_size for EV_PIXMAP under windows.
 --|

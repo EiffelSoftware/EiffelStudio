@@ -8,49 +8,7 @@ class
 	GB_STRING_INPUT_FIELD
 
 inherit
-	EV_VERTICAL_BOX
-	
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-	
-	GB_GENERAL_UTILITIES
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-		
-	GB_SHARED_PIXMAPS
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-		
-	GB_SHARED_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-		
-	INTERNAL
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-
-	GB_WIDGET_UTILITIES
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
+	GB_INPUT_FIELD
 		
 create
 	make
@@ -84,7 +42,6 @@ feature {NONE} -- Initialization
 			check
 				object_not_void: object /= Void
 			end
-			internal_gb_ev_any.parent_editor.add_string_input_field (Current)
 			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
 		ensure
 			execution_agent_not_void: execution_agent /= Void
@@ -113,9 +70,14 @@ feature -- Basic operations
 		do
 			label.hide
 		end
-		
 
 feature -- Access
+
+	type: STRING is
+			-- Type represented by `Current'
+		once
+			Result := string_constant_type
+		end
 
 	text: STRING is
 			-- `Result' is text of `text_field'.
@@ -128,49 +90,10 @@ feature -- Access
 	has_multiple_line_entry: BOOLEAN	
 		-- Does `Current' permit the entering of multiple lines of text?
 		
-feature {GB_OBJECT_EDITOR} -- Implementation
-
-	constant_removed (constant: GB_STRING_CONSTANT) is
-			-- Update `Current' to reflect removal of `constant' from system.
-		require
-			constant_not_void: constant /= Void
-		local
-			list_item: EV_LIST_ITEM
-		do
-			if constants_button.is_selected then
-				if constants_combo_box.selected_item /= Void and then
-					constants_combo_box.selected_item.text.is_equal (constant.name) then
-					constants_button.disable_select
-				end
-			end
-			list_item := list_item_with_matching_text (constants_combo_box, constant.name)
-			check
-				list_item_not_void: list_item /= Void
-			end
-			constants_combo_box.prune_all (list_item)
-		ensure
-			list_count_decreased: constants_combo_box.count = old constants_combo_box.count - 1
-		end
-		
-	constant_added (constant: GB_STRING_CONSTANT) is
-			-- Update `Current' to reflect addition of `constant' to system.
-		require
-			constant_not_void: constant /= Void
-		local
-			list_item: EV_LIST_ITEM
-		do
-			create list_item.make_with_text (constant.name)
-			list_item.set_data (constant)
-			list_item.select_actions.extend (agent list_item_selected (list_item))
-			constants_combo_box.extend (list_item)
-		ensure
-			list_count_increased: constants_combo_box.count = old constants_combo_box.count + 1
-		end
-		
 feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 
 	update_constant_display (a_value: STRING) is
-			--
+			-- Update constant display to reflect `a_value' or a constant if associated.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
 			list_item: EV_LIST_ITEM
@@ -180,7 +103,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				constants_button.select_actions.block
 				constants_button.enable_select
 				constants_button.select_actions.resume
-				constants_button_selected
+				switch_constants_mode
 				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
 				check
 					list_item_not_void: list_item /= Void
@@ -193,7 +116,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				constants_button.select_actions.block
 				constants_button.disable_select
 				constants_button.select_actions.resume
-				constants_button_selected
+				switch_constants_mode
 				constants_combo_box.first.enable_select
 				text_entry.change_actions.block
 				text_entry.set_text (a_value)
@@ -212,29 +135,9 @@ feature {NONE} -- Implementation
 
 	value_on_entry: STRING
 		-- Contents of `text_field' when focus in is received.
-	
-	internal_gb_ev_any: GB_EV_ANY
-		-- instance of GB_EV_ANY that is client of `Current'.
-		
-	internal_type: STRING
-		--| The type of the property as it will appear in a constant context.
-		--| For example "EV_BUTTONText" is how the constant may appear in an object
-		--| reference, and "Text" is the internal type.
 
 	validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
-		
-	constants_button: EV_TOGGLE_BUTTON
-		-- Button to switch between constants or values.
-		
-	constants_combo_box: EV_COMBO_BOX
-		-- Combo box which will contain all INTEGER constants.
-		
-	object: GB_OBJECT
-		-- Object referenced by `Current'.
-		
-	label: EV_LABEL
-		-- Label used to display tittle tag.
 		
 	last_selected_constant: GB_CONSTANT
 		-- Last constant that was selected in `Current'.
@@ -249,13 +152,7 @@ feature {NONE} -- Implementation
 		do
 			execution_agent.call ([new_value])
 		end
-		
-	update_editors is
-			-- Short version for calling everywhere.
-		do
-			update_editors_for_property_change (internal_gb_ev_any.objects.first, internal_gb_ev_any.type, internal_gb_ev_any.parent_editor)			
-		end
-		
+
 	set_initial is
 			-- Assign text of text field to `value_on_entry'.
 		require
@@ -274,34 +171,6 @@ feature {NONE} -- Implementation
 			else
 				text_entry.set_text (value_on_entry)
 			end
-		end
-		
-	call_default_create (any: ANY) is
-			-- Call `default_create' and assign `any' to `internal_gb_ev_any'.
-		require
-			gb_ev_any_not_void: any /= Void
-		local
-			gb_ev_any: GB_EV_ANY
-		do
-			gb_ev_any ?= any
-			check
-				gb_ev_any_not_void: gb_ev_any /= Void
-			end
-			internal_gb_ev_any := gb_ev_any
-			default_create
-		end
-		
-	add_label (label_text, tooltip: STRING) is
-			-- Add a label to `Current' with `text' `label_text' and
-			-- tooltip `tooltip'.
-		require
-			label_text_not_void_or_empty: label_text /= Void and not label_text.is_empty
-		do
-			create label.make_with_text (label_text)
-			label.set_tooltip (tooltip)
-			extend (label)
-			disable_item_expand (label)
-			label.align_text_left
 		end
 		
 	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]) is
@@ -346,16 +215,13 @@ feature {NONE} -- Implementation
 			constants_combo_box.disable_edit
 			constants_combo_box.hide
 			horizontal_box.extend (constants_combo_box)
-			create constants_button
-			constants_button.set_tooltip (Select_constant_tooltip)
-			constants_button.select_actions.extend (agent constants_button_selected)
-			constants_button.set_pixmap (Icon_format_onces @ 1)
+			create_constants_button
 			horizontal_box.extend (constants_button)
 			horizontal_box.disable_item_expand (constants_button)
 			populate_constants
 		end
 		
-	constants_button_selected is
+	switch_constants_mode is
 			-- Respond to a user press of `constants_button' and
 			-- update the displayed input fields accordingly.
 		local
@@ -376,7 +242,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	populate_constants  is
+	populate_constants is
 			-- Populate `constants_combo_box' with string constants.
 		local
 			string_constants: ARRAYED_LIST [GB_CONSTANT]
@@ -412,9 +278,6 @@ feature {NONE} -- Implementation
 		
 	list_item_selected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been selected from `constants_combo_box'.
-		require
-			list_item_not_void: list_item /= Void
-			list_item_has_data: list_item.data /= Void
 		local
 			constant: GB_STRING_CONSTANT
 			constant_context: GB_CONSTANT_CONTEXT
@@ -464,6 +327,11 @@ feature {NONE} -- Implementation
 				end
 			last_selected_constant := Void
 			end
+		end
+		
+	list_item_deselected (list_item: EV_LIST_ITEM) is
+			-- `list_item' has been deselected from `constants_combo_box'.
+		do
 		end
 
 end -- class GB_STRING_INPUT_FIELD

@@ -79,6 +79,8 @@ feature -- Access
 			button1.destroy
 			hbox1.extend (new_button1)
 			hbox1.extend (propagate_background_color)
+			hbox1.disable_item_expand (new_button1)
+			hbox1.disable_item_expand (propagate_background_color)
 			
 			
 				-- Secondly rebuild the foreground_color
@@ -91,6 +93,8 @@ feature -- Access
 			button2.destroy
 			hbox2.extend (new_button2)
 			hbox2.extend (propagate_foreground_color)
+			hbox2.disable_item_expand (new_button2)
+			hbox2.disable_item_expand (propagate_foreground_color)
 			
 			update_attribute_editor
 			disable_all_items (Result)

@@ -1030,6 +1030,7 @@ feature -- Description texts
 	e_Not_running: STRING is			"Application is not running"
 	e_Open_dynamic_lib_definition: STRING is "Open a dynamic library definition"
 	e_Open_file: STRING is				"Open a file"
+	e_Open_eac_browser: STRING is		"Open the Eiffel Assembly Cache browser tool"
 	e_Paste: STRING is					"Paste"
 	e_Paused: STRING is					"Application is paused"
 	e_Pretty_print: STRING is			"Display an expanded view of objects"

@@ -32,9 +32,9 @@ feature -- Creation
 		local
 			cut_figure_command: APP_CUT_FIGURE;
 		do
-			!!cut_figure_command;
-			cut_figure_command.execute (Current)
-		end;
+			!!	cut_figure_command.make (Current)
+			cut_figure_command.execute (Void)
+		end
 
 feature
 

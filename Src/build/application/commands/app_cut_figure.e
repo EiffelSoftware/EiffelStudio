@@ -15,6 +15,17 @@ inherit
 		end;
 	ERROR_POPUPER;
 
+creation
+
+	make
+
+feature -- Creation
+
+	make (a_circle: STATE_CIRCLE) is
+		do
+			circle := a_circle
+		end	
+
 feature {NONE}
 
 	state_editor: STATE_EDITOR;
@@ -88,8 +99,8 @@ feature
 	
 feature {NONE}
 
-	work (a_circle: STATE_CIRCLE) is
-			-- Do the work for the removal of `a_circle'. 
+	work (argument: ANY) is
+			-- Do the work for the removal of `circle'. 
 		local
 			transitions: TRANSITION;
 			lines: APP_LINES;
@@ -97,7 +108,6 @@ feature {NONE}
 			sel_figure: STATE_CIRCLE;
 			cut_line_command: APP_CUT_LINE;
 		do 
-			circle := a_circle;
 			if (app_editor.initial_state_circle = circle) then
 				error_box.popup (Current, Messages.remove_init_state_er, Void);
 			else

@@ -317,7 +317,6 @@ feature
 			tool.set_icon_name (tool.tool_name);
 			root_stone := Void;
 			file_name := Void;
-			indentation := Void;
 			set_changed (false);
 			set_mode_for_editing
 		ensure
@@ -338,7 +337,6 @@ feature
 			focus_start := 0;
 			focus_end := 0;
 			set_changed (false);
-			indentation := Void
 		end;
 
 	clear_window is

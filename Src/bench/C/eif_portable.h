@@ -55,7 +55,7 @@ extern "C" {
 #define putenv eif_vms_putenv
 #define setenv eif_vms_setenv
 #define strdup eif_vms_strdup
-#define system eif_vms_system
+/* #define system eif_vms_system -- doesnt work with _POSIX_EXIT */
 /* --- symbols in readdir package (wrappers solve version problems) --- */
 #define opendir   eif_vms_opendir
 #define closedir  eif_vms_closedir

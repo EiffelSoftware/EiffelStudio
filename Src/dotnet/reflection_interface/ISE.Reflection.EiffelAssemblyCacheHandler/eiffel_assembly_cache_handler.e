@@ -91,7 +91,7 @@ feature -- Basic Operations
 			assembly_descriptor := eiffel_assembly.get_assembly_descriptor
 			prepare_assembly_storage
 			create Result.make_type_storer (assembly_folder_path)
-			assembly_folder_path := Void
+			--assembly_folder_path := Void
 		ensure
 			storer_created: Result /= Void
 		end
@@ -107,21 +107,28 @@ feature -- Basic Operations
 		local
 			notifier_handle: ISE_REFLECTION_NOTIFIERHANDLE
 			notifier: ISE_REFLECTION_NOTIFIER
+			retried: BOOLEAN
 		do
-			check
-				non_void_assembly: eiffel_assembly /= Void
-				non_void_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name /= Void
-				not_empty_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name.get_length > 0
+			if not retried then
+				check
+					non_void_assembly: eiffel_assembly /= Void
+					non_void_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name /= Void
+					not_empty_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name.get_length > 0
+				end
+				create notifier_handle.make1
+				notifier := notifier_handle.current_notifier
+				notifier.notify_add (assembly_descriptor)
+
+				assembly_folder_path := Void
+				assembly_descriptor := Void
+				eiffel_assembly := Void
 			end
-			--generate_assembly_xml_file
-			create notifier_handle.make1
-			notifier := notifier_handle.current_notifier
-			notifier.notify_add (assembly_descriptor)
-			assembly_descriptor := Void
-			eiffel_assembly := Void
 		ensure
 			void_eiffel_assembly: eiffel_assembly = Void
 			void_assembly_descriptor: assembly_descriptor = Void
+		rescue
+			retried := True
+			retry
 		end
 		
 	remove_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
@@ -325,7 +332,7 @@ feature -- Basic Operations
 				text_writer.set_Quote_Char ('%"')
 
 					-- Write `<?xml version="1.0">
-				DTD_path := "..\"
+				DTD_path := "../"
 				text_writer.Write_Doc_Type (Dtd_Assembly_Filename, public_string, DTD_path.Concat_String_String_String (DTD_path, Dtd_Assembly_Filename, Dtd_Extension), subset)
 					-- <assembly>
 				text_writer.write_start_element (Assembly_Element)
@@ -547,6 +554,7 @@ feature {NONE} -- Implementation
 				if file.Exists (index_path) then
 					create xml_reader.make_xmltextreader_10 (index_path)
 					xml_reader.set_Whitespace_Handling (white_space_handling.none)
+					
 					xml_reader.Read_Start_Element_String (Assemblies_Element)
 					from
 						create assembly_folders_list.make
@@ -655,7 +663,7 @@ feature {NONE} -- Implementation
 					-- XML generation
 
 					-- Write `<?xml version="1.0">
-				DTD_path := "..\"
+				DTD_path := "../"
 				text_writer.Write_Doc_Type (Dtd_Assembly_Filename, public_string, DTD_path.Concat_String_String_String (DTD_path, Dtd_Assembly_Filename, Dtd_Extension), subset)
 
 					-- <assembly>
@@ -692,24 +700,6 @@ feature {NONE} -- Implementation
 						text_writer.write_element_string (Emitter_Version_Number_Element, eiffel_assembly.get_emitter_version_number)
 					end
 				end
-
-					-- <assembly_types>
-	--			assembly_types := eiffel_assembly.get_types
-	--			if assembly_types /= Void then
-	--				if assembly_types.get_count > 0 then
-	--					text_writer.write_start_element (Assembly_Types_Element)
-	--					from
-	--					until
-	--						i = assembly_types.get_count
-	--					loop
-	--						assembly_type ?= assembly_types.get_item (i)
-	--						if assembly_type /= Void then
-	--							text_writer.write_element_string (Assembly_Type_Filename_Element, reflection_support.Xml_Type_Filename (assembly_type.get_assembly_descriptor, assembly_type.get_full_external_name))
-	--						end
-	--						i := i + 1
-	--					end
-	--				end
-	--			end
 
 					-- </assembly>
 				text_writer.write_end_element

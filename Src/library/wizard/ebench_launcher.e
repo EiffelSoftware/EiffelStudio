@@ -60,7 +60,7 @@ feature -- Initialization
 			ecn: FILE_NAME
 			ffn: FILE_NAME
 		do					
-				ecn := clone (es4_location)
+				ecn := es4_location.twin
 				ecn.set_file_name ("ec")
 				command := ecn
 				command := command + " -batch -ace " + ace_name + " -project_path " + project_path
@@ -69,7 +69,7 @@ feature -- Initialization
 				fn.extend ("EIFGEN")
 				fn.extend ("W_code")
 				change_working_directory (fn)
-				ffn := clone (es4_location)
+				ffn := es4_location.twin
 				ffn.set_file_name ("finish_freezing")
 				ex_launch (ffn)
 				is_compiled := TRUE
@@ -91,7 +91,7 @@ feature -- Initialization
 			fn.add_extension ("epr")
 			if dir.has_entry (fn) then
 				fn.set_directory (project_path)
-				stn := clone (es4_location)
+				stn := es4_location.twin
 				stn.set_file_name ("estudio")
 				command := stn
 				command := command + " " + fn

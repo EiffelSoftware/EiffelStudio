@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 		require
 			info_exists: an_info /= Void
 		do
-			wizard_information := clone (an_info)
+			wizard_information := an_info.twin
 			change_entries
 		ensure
 			information_set: wizard_information /= Void

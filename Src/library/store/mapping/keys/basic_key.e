@@ -4,14 +4,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	BASIC_KEY
 
 inherit
 	KEY
-
-create
-	make
 
 feature -- Initialization
 
@@ -21,25 +18,16 @@ feature -- Initialization
 			item:=type	
 		end
 
-
 feature --Access
 
 	item : HASHABLE
 
-
-feature -- All hash_table
-
-	table : HASH_TABLE[ANY, like item] is 
-		once
-			create Result.make(20)
-		end
-
-
-feature --Process
-	
-	add_key_table (a: ANY ; i: like item) is
+	hash_code: INTEGER is
+			-- Hash code value
 		do
-			table.extend(a,i)
+			Result := item.hash_code 
 		end
+
+	is_basic: BOOLEAN is True
 
 end -- class BASIC_KEY

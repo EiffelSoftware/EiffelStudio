@@ -41,10 +41,10 @@ feature {NONE}
 			Result := Pixmaps.selected_drawing_area_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.drawing_label
--- samik		end;
+	set_focus_string is
+		do
+			button.set_focus_string (Focus_labels.drawing_label)
+		end;
 
 feature {CATALOG}
     

@@ -20,10 +20,10 @@ creation
 
 feature {NONE} 
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.namer_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.namer_label)
+		end;
 	
 	button_symbol: PIXMAP is
 		do
@@ -36,9 +36,6 @@ feature {NONE}
 			make_visible (a_parent);
 			initialize_transport;
 			register;	
-			-- added by samik
-			set_focus_string (Focus_labels.namer_label)
-			-- end of samik
 		end;
 
 	target: WIDGET is

@@ -59,15 +59,15 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	item (a_row: INTEGER; a_column: INTEGER): EV_GRID_ITEM is
-			-- Cell at `a_row' and `a_column' position
+	item (a_column: INTEGER; a_row: INTEGER;): EV_GRID_ITEM is
+			-- Cell at `a_column' and `a_row'   position
 		require
-			a_row_positive: a_row > 0
-			a_row_less_than_row_count: a_row <= row_count
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
+			a_row_positive: a_row > 0
+			a_row_less_than_row_count: a_row <= row_count
 		do
-			Result := item_internal (a_row, a_column, True).interface
+			Result := item_internal (a_column, a_row, True).interface
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -1725,7 +1725,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 			end
 		end
 
-	item_internal (a_row: INTEGER; a_column: INTEGER; create_item_if_void: BOOLEAN): EV_GRID_ITEM_I is
+	item_internal (a_column: INTEGER; a_row: INTEGER; create_item_if_void: BOOLEAN): EV_GRID_ITEM_I is
 			-- Cell at `a_row' and `a_column' position, if `create_item_if_void' then a new item will be created if Void
 		require
 			a_row_positive: a_row > 0

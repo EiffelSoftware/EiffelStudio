@@ -10,9 +10,10 @@ class
 
 inherit
 	EV_TOOL_BAR_SEPARATOR_I
-		select
-			parent,
+		redefine
 			parent_imp
+		select
+			parent			
 		end
 
 	EV_SEPARATOR_ITEM_IMP
@@ -20,17 +21,19 @@ inherit
 			parent,
 			set_foreground_color,
 			set_background_color
+		redefine
+			parent_imp
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
 		rename
-			parent_imp as button_parent_imp,
 			parent as button_parent
 		undefine
 			old_remove_dblclk,
 			old_add_dblclk
 		redefine
-			make
+			make,
+			parent_imp
 		select
 			remove_double_click_commands,
 			add_double_click_command
@@ -52,6 +55,8 @@ feature -- Initialization
 			-- to `destroy' event.
 			initialize_object_handling
 		end
+
+	parent_imp: EV_TOOL_BAR_IMP
 
 end -- class EV_TOOL_BAR_SEPARATOR_I
 

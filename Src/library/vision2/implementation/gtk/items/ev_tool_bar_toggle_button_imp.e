@@ -10,13 +10,21 @@ class
 
 inherit
 	EV_TOOL_BAR_TOGGLE_BUTTON_I
+		redefine
+			parent_imp
+		end
 
 	EV_TOOL_BAR_BUTTON_IMP
+		redefine
+			parent_imp
+		end
 
 create
 	make
 
 feature -- Status report
+
+	parent_imp: EV_TOOL_BAR_IMP
 
 	is_selected: BOOLEAN is
 			-- Is the current button selected?

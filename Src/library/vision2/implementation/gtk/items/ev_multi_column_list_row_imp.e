@@ -10,6 +10,9 @@ class
 
 inherit
 	EV_MULTI_COLUMN_LIST_ROW_I
+		redefine
+			parent_imp
+		end
 
 	EV_COMPOSED_ITEM_IMP
 		rename
@@ -19,13 +22,13 @@ inherit
 			destroy,
 			destroyed,
 			parent
---			top_parent_imp
 		redefine
 			set_foreground_color,
 			set_background_color,
 			foreground_color,
 			background_color,
-			set_parent
+			set_parent,
+			parent_imp
 		end
 
 create
@@ -349,10 +352,7 @@ feature -- Event -- removing command association
 			end
 		end	
 
---feature {NONE} -- Implementation
---
---	parent_imp: EV_MULTI_COLUMN_LIST_IMP
---		-- Multi-column list that own the current object 
+	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 

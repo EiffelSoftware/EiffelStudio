@@ -10,15 +10,7 @@ deferred class
 
 inherit
 	EV_SEPARATOR_ITEM_I
-		redefine
-			parent_imp
-		end
-
-feature -- Access
-
-	parent_imp: EV_MENU_ITEM_HOLDER_IMP
-			-- Parent implementation
-
+		
 end -- class EV_MENU_SEPARATOR_I
 
 --!----------------------------------------------------------------

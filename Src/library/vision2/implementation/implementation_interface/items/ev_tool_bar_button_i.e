@@ -12,8 +12,7 @@ inherit
 	EV_SIMPLE_ITEM_I
 		redefine
 			pixmap_size_ok,
-			parent,
-			parent_imp
+			parent
 		end
 
 	EV_PND_SOURCE_I
@@ -28,9 +27,6 @@ feature -- Access
 		do
 			Result ?= {EV_SIMPLE_ITEM_I} Precursor
 		end
-
-	parent_imp: EV_TOOL_BAR_IMP
-			-- Parent implementation
 
 feature -- Status report
 

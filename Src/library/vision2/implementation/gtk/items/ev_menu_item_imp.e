@@ -12,11 +12,16 @@ class
 	
 inherit
 	EV_MENU_ITEM_I
+		redefine
+			parent_imp
+		end
 
 	EV_SIMPLE_ITEM_IMP
 		undefine
 			pixmap_size_ok,
 			parent
+		redefine
+			parent_imp
 		end
 
 	EV_MENU_ITEM_HOLDER_IMP
@@ -63,6 +68,8 @@ feature -- Access
 			end
 		end
 
+	parent_imp: EV_MENU_ITEM_HOLDER_IMP
+
 feature -- Status report
 
 	is_insensitive: BOOLEAN is
@@ -86,35 +93,7 @@ feature -- Status setting
 			end  
  		end
 
-feature -- Element change
-
 feature -- Element Change
-
-	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void.
-			-- Before to remove the widget from the
-			-- container, we increment the number of
-			-- reference on the object otherwise gtk
-			-- destroyed the object. And after having
-			-- added the object to another container,
-			-- we remove this supplementary reference.
-		do
-			if parent_imp /= Void then
-				gtk_object_ref (widget)
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				check
-					parent_not_void: parent_imp /= Void
-				end
-				parent_imp.add_item (Current)
-				show
-				gtk_object_unref (widget)
-			end
-		end
 	
 	set_index (pos: INTEGER) is
 			-- Make `pos' the new index of the item in the

@@ -10,8 +10,7 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
-			parent,
-			parent_imp
+			parent
 		end
 
 feature -- Access
@@ -22,9 +21,6 @@ feature -- Access
 		do
 			Result ?= {EV_SIMPLE_ITEM_I} Precursor
 		end
-
-	parent_imp: EV_STATUS_BAR_IMP
-			-- Parent of the current item.
 
 feature -- Measurement
 

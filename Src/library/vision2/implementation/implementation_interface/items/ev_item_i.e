@@ -32,11 +32,9 @@ feature -- Access
 			end
 		end
 
-	parent_imp: EV_ITEM_HOLDER_IMP is
+	parent_imp: EV_ITEM_HOLDER_IMP 
 			-- The parent of the Current widget
 			-- Can be void.
-		deferred
-		end
 
 	index: INTEGER is
 			-- Index of the current item.

@@ -9,14 +9,14 @@ class
 inherit
 	CONSTANTS_IMP
 		redefine
-			png_location
+			pixmap_location
 		end
 
 -- Perform any constant redefinitions in this class.
 
 feature -- Access
 
-	png_location: STRING is
+	pixmap_location: STRING is
 			-- `Result' is DIRECTORY constant named `png_location'.
 		once
 			Result := (create {GB_SHARED_PIXMAPS}).png_location

@@ -29,16 +29,32 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	close_text: STRING is
+			-- `Result' is STRING constant named `close_text'.
+		once
+			Result := "Close"
+		end
+
+	small_padding: INTEGER is 
+			-- `Result' is INTEGER constant named small_padding.
+		once
+			Result := 4
+		end
+
 	new_button_text: STRING is
 			-- `Result' is STRING constant named `new_button_text'.
 		once
 			Result := "New..."
 		end
 
-	png_location: STRING is
-			-- `Result' is DIRECTORY constant named `png_location'.
-		once
-			Result := "D:\Eiffel54\build\bitmaps\png"
+	icon_component_build_view_color_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_location)
+			a_file_name.extend ("icon_component_build_view_color.png")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	default_button_width: INTEGER is 
@@ -94,7 +110,7 @@ feature -- Access
 			a_file_name: FILE_NAME
 		Once
 			create Result
-			create a_file_name.make_from_string (png_location)
+			create a_file_name.make_from_string (pixmap_location)
 			a_file_name.extend ("icon_component_viewer_color.png")
 			set_with_named_file (Result, a_file_name)
 		end
@@ -104,7 +120,7 @@ feature -- Access
 			a_file_name: FILE_NAME
 		Once
 			create Result
-			create a_file_name.make_from_string (png_location)
+			create a_file_name.make_from_string (pixmap_location)
 			a_file_name.extend ("lightbulb.png")
 			set_with_named_file (Result, a_file_name)
 		end
@@ -113,16 +129,6 @@ feature -- Access
 			-- `Result' is STRING constant named `tip_of_day_dialog_title'.
 		once
 			Result := "Tip of the Day"
-		end
-
-	icon_component_build_view_color_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (png_location)
-			a_file_name.extend ("icon_component_build_view_color.png")
-			set_with_named_file (Result, a_file_name)
 		end
 
 	negative: INTEGER is 
@@ -143,22 +149,16 @@ feature -- Access
 			Result := "Import Completion Status"
 		end
 
-	close_text: STRING is
-			-- `Result' is STRING constant named `close_text'.
+	pixmap_location: STRING is
+			-- `Result' is DIRECTORY constant named `pixmap_location'.
 		once
-			Result := "Close"
+			Result := "D:\Eiffel54\build\bitmaps\png"
 		end
 
 	ok_button_text: STRING is
 			-- `Result' is STRING constant named `ok_button_text'.
 		once
 			Result := "OK"
-		end
-
-	large_spacing_width: INTEGER is 
-			-- `Result' is INTEGER constant named large_spacing_width.
-		once
-			Result := 12
 		end
 
 	next_tip_text: STRING is
@@ -172,7 +172,7 @@ feature -- Access
 			a_file_name: FILE_NAME
 		Once
 			create Result
-			create a_file_name.make_from_string (png_location)
+			create a_file_name.make_from_string (pixmap_location)
 			a_file_name.extend ("icon_component_display_view_color.png")
 			set_with_named_file (Result, a_file_name)
 		end
@@ -189,14 +189,14 @@ feature -- Access
 			Result := "Pixmap Selection"
 		end
 
-	small_padding: INTEGER is 
-			-- `Result' is INTEGER constant named small_padding.
-		once
-			Result := 4
-		end
-
 	large_padding: INTEGER is 
 			-- `Result' is INTEGER constant named large_padding.
+		once
+			Result := 12
+		end
+
+	large_spacing_width: INTEGER is 
+			-- `Result' is INTEGER constant named large_spacing_width.
 		once
 			Result := 12
 		end

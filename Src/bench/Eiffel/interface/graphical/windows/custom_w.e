@@ -13,6 +13,8 @@ inherit
 	TOP_SHELL
 		rename
 			make as shell_make
+		redefine
+			delete_window_action
 		end
 
 creation
@@ -26,6 +28,8 @@ feature
 		local
 			void_argument: ANY
 		do
+io.error.putstring ("FIXME: delete_window_action is not implemented!!!%N");
+
 			shell_make (tool_name, a_screen);
 			build_widgets;
 			!!format_catalog.make (10);
@@ -42,6 +46,11 @@ feature
 				set_icon_pixmap (hole.symbol);
 			end;
 			set_icon_name (tool_name)
+		end;
+
+	delete_window_action is
+		do
+io.error.putstring ("FIXME: delete_window_action not implemented!!%N");
 		end;
 
 	close_windows is do end;

@@ -11,10 +11,6 @@ inherit
 		redefine
 			loop_execute
 		end;
-	EXECUTION_ENVIRONMENT
-		rename
-			system as exec_env_system
-		end;
 	SHARED_STATUS
 
 feature
@@ -64,8 +60,8 @@ feature
 					io.putstring ("--> Arguments: ");
 					wait_for_return;
 					appl_name.append (io.laststring);
-					put (Workbench_generation_path, "MELT_PATH");
-					exec_env_system (appl_name);
+					env_put (Workbench_generation_path, "MELT_PATH");
+					env_system (appl_name);
 				end;
 			end
 		end;

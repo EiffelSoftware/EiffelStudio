@@ -27,9 +27,15 @@ feature {NONE}
 
 	dversions_cmd_name: STRING is "dversions"
 
+	edit_ace_cmd_name: STRING is "edit"
+
+	edit_class_cmd_name: STRING is "edit"
+
 	externals_cmd_name: STRING is "externals"
 
 	f_compile_cmd_name: STRING is "F-compile"
+
+	feature_cmd_name: STRING is "feature"
 
 	file_cmd_name: STRING is "file"
 

@@ -67,7 +67,7 @@ feature
 		local
 			value, to_append: STRING;
 		do
-			temp_name.clear;
+			temp_name.wipe_out;
 			temp_name.append (Fix_notation);
 			value := fix_operator.value;
 			to_append := code_table.item (value);
@@ -153,13 +153,13 @@ feature
 			ctxt.commit;
 		end;
 
-    main_feature_format (ctxt: FORMAT_CONTEXT) is
-            -- Reconstitute text.
-        do
+	main_feature_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
 			ctxt.begin;
-            if is_frozen then
-                ctxt.put_keyword ("frozen ");
-            end;
+			if is_frozen then
+				ctxt.put_keyword ("frozen ");
+			end;
 			if is_infix then
 				--ctxt.put_keyword ("infix ");
 				ctxt.prepare_for_main_infix;
@@ -169,7 +169,7 @@ feature
 			end;
 			ctxt.put_main_fix;
 			ctxt.commit;
-       end;
+		end;
 	
 	offset: INTEGER is
 		do

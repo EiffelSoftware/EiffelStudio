@@ -71,7 +71,7 @@ feature
 			-- The "loc<num>" string
 		do
 			Result := Buffer;
-			Result.clear;
+			Result.wipe_out;
 			Result.append ("loc");
 			Result.append (position.out);
 		end;

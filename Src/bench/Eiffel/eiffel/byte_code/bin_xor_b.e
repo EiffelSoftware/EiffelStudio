@@ -15,11 +15,11 @@ feature
 	print_register is
 			-- Print the expression
 		do
-			generated_file.putchar ('(');
+			generated_file.putstring ("((");
 			left.print_register;
-			generated_file.putstring (" != ");
+			generated_file.putstring (") != (");
 			right.print_register;
-			generated_file.putchar (')');
+			generated_file.putstring ("))");
 		end;
 
 	operator_constant: CHARACTER is

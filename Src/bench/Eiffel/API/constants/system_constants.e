@@ -6,6 +6,8 @@ feature {NONE}
 
 	Comp: STRING is "COMP"
 
+	Copy_cmd: STRING is "cp"
+
 	Default_precompiled_location: STRING is "$EIFFEL3/precompiled/spec/$PLATFORM/base"
 
 	Descriptor_suffix: STRING is "D"
@@ -78,7 +80,7 @@ feature {NONE}
 
 	Updt: STRING is ".UPDT"
 
-	Version_number: STRING is "3.2.3b"
+	Version_number: STRING is "3.2.4"
 
 	W_code: STRING is "W_code"
 

@@ -25,6 +25,8 @@ inherit
 	BASE
 		rename
 			make as base_make
+		redefine
+			delete_window_action
 		end;
 
 creation
@@ -154,12 +156,26 @@ feature -- xterminal
 					system_tool.close_windows;
 					hidden_system_window := True;
 				end
+			elseif arg = task_end then
+				task_end.remove_action (Current, task_end);
+				quit_command.execute (Void);
 			else
 				old_execute (arg)
 			end
 		end;
 
 	hidden_system_window: BOOLEAN;
+
+feature {NONE}
+
+	task_end: TASK;
+
+	delete_window_action is
+		do
+			!!task_end.make;
+			task_end.add_action (Current, task_end);
+			iterate
+		end;
 
 feature -- rest
 

@@ -207,7 +207,7 @@ feature
 	clean is
 			-- Erase internal structures of current
 		do
-			image.clear;
+			image.wipe_out;
 			clickable_count := 0;
 			position := 0;
 			text_position := 0;

@@ -36,7 +36,7 @@ feature
 			-- ASCII representation of register
 		do
 			Result := Buffer;
-			Result.clear;
+			Result.wipe_out;
 			Result.append ("xp");
 			Result.append(regnum.out);
 		end;

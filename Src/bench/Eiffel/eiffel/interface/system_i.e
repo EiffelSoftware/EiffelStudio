@@ -486,6 +486,7 @@ end;
 			local_cursor: LINKABLE [SUPPLIER_CLASS];
 			ftable: FEATURE_TABLE;
 			f: FEATURE_I;
+			ext: EXTERNAL_I
 		do
 			id := a_class.id;
 
@@ -517,7 +518,8 @@ end;
 							f.is_external and then
 							f.written_in = id
 						then
-							Externals.remove_occurence (ftable.key_for_iteration);
+							ext ?= f;
+							Externals.remove_occurence (ext.external_name);
 						end;
 						ftable.forth
 					end;

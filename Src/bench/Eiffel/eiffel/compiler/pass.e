@@ -56,7 +56,7 @@ end;
 			position: INTEGER;
 		do
 			from
-				position := changed_classes.position;
+				position := changed_classes.index;
 				changed_classes.start
 			until
 				changed_classes.after or else found
@@ -75,7 +75,7 @@ end;
 				end;
 				changed_classes.add_left (Result);
 			end;
-			changed_classes.go (position);
+			changed_classes.go_i_th (position);
 		end;
 
 	new_controler (a_class: CLASS_C): PASS_C is

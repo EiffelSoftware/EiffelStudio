@@ -46,6 +46,7 @@ extern int32 disp_rout_id;			/* Dispose routine id */
 extern void (*strmake)();			/* STRING creation feature */
 extern void (*strset)();			/* STRING `set_count' feature */
 extern void (*arrmake)();			/* STRING creation feature */
+extern char *argarr();				/* ARRAY[STRING] creation from command line arguments */
 
 #ifdef WORKBENCH
 extern void wstdinit();				/* Composite objects initialization */

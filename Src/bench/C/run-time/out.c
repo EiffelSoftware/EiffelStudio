@@ -209,12 +209,12 @@ int tab;
 			break;
 		case SK_FLOAT:
 			/* Real attribute */
-			sprintf(buffer, "REAL = %f\n", *(float *)o_ref);
+			sprintf(buffer, "REAL = %g\n", *(float *)o_ref);
 			write_out();
 			break;
 		case SK_DOUBLE:
 			/* Double attribute */
-			sprintf(buffer, "DOUBLE = %.17lf\n", *(double *)o_ref);
+			sprintf(buffer, "DOUBLE = %.17g\n", *(double *)o_ref);
 			write_out();
 			break;	
 		case SK_BIT:
@@ -330,9 +330,9 @@ int tab;
 				else if (dt_type == sp_bool)
 					sprintf(buffer, "BOOLEAN = %s\n", (*o_ref ? "True" : "False"));
 				else if (dt_type == sp_real)
-					sprintf(buffer, "REAL = %f\n", *(float *)o_ref);
+					sprintf(buffer, "REAL = %g\n", *(float *)o_ref);
 				else if (dt_type == sp_double)
-					sprintf(buffer, "DOUBLE = %.17lf\n", *(double *)o_ref);
+					sprintf(buffer, "DOUBLE = %.17g\n", *(double *)o_ref);
 				else if (dt_type == sp_pointer)
 					sprintf(buffer, "POINTER = C pointer 0x%x\n", *(fnptr *)o_ref);
 				else {
@@ -432,14 +432,14 @@ int i;
 public char *c_outr(f)
 float f;
 {
-	sprintf(buffer, "%f", f);
+	sprintf(buffer, "%g", f);
 	return makestr(buffer, strlen(buffer));
 }
 
 public char *c_outd(d)
 double d;
 {
-	sprintf(buffer, "%g", d);
+	sprintf(buffer, "%.17g", d);
 	return makestr(buffer, strlen(buffer));
 }
 
@@ -495,10 +495,10 @@ struct item *val;			/* Interpreter value cell */
 		sprintf(tagged_out, "INTEGER = %ld", val->it_long);
 		break;
 	case SK_FLOAT:
-		sprintf(tagged_out, "REAL = %f", val->it_float);
+		sprintf(tagged_out, "REAL = %g", val->it_float);
 		break;
 	case SK_DOUBLE:
-		sprintf(tagged_out, "DOUBLE = %.17lf", val->it_double);
+		sprintf(tagged_out, "DOUBLE = %.17g", val->it_double);
 	case SK_BIT:
 		sprintf(tagged_out, "Bit object");
 		break;

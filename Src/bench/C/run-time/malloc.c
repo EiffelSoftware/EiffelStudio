@@ -2889,7 +2889,7 @@ private char *e_what =
 private char *e_waht2 =
 	"@(#)      Frederic Deramat, Frederic Dernbach";
 private char *e_waht3 =
-	"@(#)      Xavier Levourch, Raphael Manfredi";
+	"@(#)      Xavier Le Vourch, Raphael Manfredi";
 private char *e_waht4 =
 	"@(#)      Philippe Stephan, Dino Valente";
 private char *e_waht5 =

@@ -38,6 +38,45 @@ public int nstcall = 0;					/* Is current call a nested one? */
 private void recursive_chkinv();		/* Internal invariant control loop */
 
 /*
+ * ARRAY [STRING] creation for initialization of argument of root's
+ * class creation routine
+ */
+
+public char *argarr(argc,argv)
+int argc;
+char **argv;
+{
+	/* Create an Eiffel ARRAY [STRING] with the values contained in
+	 * `argv'
+	 */
+	char *array, *sp;
+	char *str;
+	int i;
+
+	/*
+	 * Create the array
+	 */
+	array = emalloc(arr_dtype);		/* If we return, it succeeded */
+	epush(&loc_stack, &array); 		/* Protect address in case it moves */
+	nstcall = 0;					/* Turn invariant checking off */
+	(arrmake)(array, 0L, argc-1);	/* Call the `make' routine of ARRAY */
+	sp = *(char **) array;			/* Get the area of the ARRAY */
+	epush (&loc_stack, &sp);		/* Protect the area */
+
+	/* 
+	 * Fill the array
+	 */
+	for (i=0;i<argc;i++) {
+		*((char **) sp) = makestr(argv[i], strlen(argv[i]));
+		sp += sizeof (char *);
+	}
+
+	epop(&loc_stack, 1);		/* Remove protection for area */
+	epop(&loc_stack, 1);		/* Remove protection for array */
+	return array;
+}
+
+/*
  * Manifest array creation for strip
  */
 

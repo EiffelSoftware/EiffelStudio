@@ -209,16 +209,20 @@ feature
 			until
 				i > nb
 			loop
-				entry := array_item (index);
-				if index <= max_position and then i = entry.type_id then
-					r_name := entry.routine_name;
-					buffer.putstring (function_ptr_cast_string);
-					buffer.putstring (r_name);
-					buffer.putstring (",%N");
-
-							-- Remember external declaration
-					Extern_declarations.add_routine (entry.type.c_type, clone (r_name));
-					index := index + 1
+				if index <= max_position then
+					entry := array_item (index)
+					if i = entry.type_id then
+						r_name := entry.routine_name
+						buffer.putstring (function_ptr_cast_string);
+						buffer.putstring (r_name);
+						buffer.putstring (",%N");
+	
+								-- Remember external declaration
+						Extern_declarations.add_routine (entry.type.c_type, clone (r_name));
+						index := index + 1
+					else
+						buffer.putstring (empty_function_ptr_string);
+					end
 				else
 					buffer.putstring (empty_function_ptr_string);
 				end

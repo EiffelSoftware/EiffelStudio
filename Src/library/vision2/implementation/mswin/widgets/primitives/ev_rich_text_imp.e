@@ -440,7 +440,6 @@ feature -- Status report
 		do
 			if start_index = wel_selection_start + 1 and end_index = wel_selection_end + 1 then
 				range_already_selected := True
-				
 			else
 				disable_redraw
 				safe_store_caret
@@ -449,6 +448,45 @@ feature -- Status report
 			mask := wel_character_format.mask
 			create Result.make_with_values (flag_set (mask, cfm_face), flag_set (mask, cfm_bold), flag_set (mask, cfm_italic), flag_set (mask, cfm_size), flag_set (mask, cfm_color), flag_set (mask, cfm_strikeout), flag_set (mask, cfm_underline))
 			if not range_already_selected then
+				safe_restore_caret
+				enable_redraw
+			end
+		end
+		
+	paragraph_format_range_information (start_line, end_line: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from lines `start_line' to `end_line'.
+			-- All attributes in `Result' are set to `True' if they remain consistent from `start_line' to
+			--`end_line' and `False' otherwise.
+			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
+			-- are subsequently changed.
+		local
+			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
+			mask: INTEGER
+			already_selected: BOOLEAN
+			first_position_on_start, last_position_on_start, first_position_on_last, last_position_on_last: INTEGER
+		do
+			first_position_on_start := first_position_from_line_number (start_line)
+			last_position_on_start := last_position_from_line_number (start_line)
+			first_position_on_last := first_position_from_line_number (end_line)
+			last_position_on_last := last_position_from_line_number (end_line)
+			if selection_start >= first_position_on_start and
+				selection_start <= last_position_on_start and
+				selection_end >= first_position_on_last and
+				selection_end <= last_position_on_last then
+				already_selected := True
+			else
+				disable_redraw
+				safe_store_caret
+				set_selection (first_position_on_start, last_position_on_last)
+			end
+			
+			create wel_paragraph_format.make
+			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
+			
+			mask := wel_paragraph_format.mask
+			create Result.make_with_values (flag_set (mask, pfm_alignment), flag_set (mask, pfm_startindent), flag_set (mask, pfm_rightindent), flag_set (mask, pfm_spacebefore), flag_set (mask, pfm_spaceafter))
+
+			if not already_selected then
 				safe_restore_caret
 				enable_redraw
 			end

@@ -25,12 +25,27 @@ inherit
 	EV_CELL
 		redefine
 			implementation,
-			create_implementation
+			create_implementation,
+			make_for_test
 		end
 
 create
 	default_create,
 	make_for_test
+
+feature {NONE} -- Initialization
+
+	make_for_test is
+			-- Create and perform tests.
+		local
+			pixmap: EV_PIXMAP
+		do
+			default_create
+			create pixmap.make_for_test
+			extend (pixmap)
+			pixmap.set_minimum_width (pixmap.width)
+			pixmap.set_minimum_height (pixmap.height)
+		end
 
 feature -- Access
 
@@ -115,6 +130,9 @@ end -- class EV_VIEWPORT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/21 00:39:39  brendel
+--| Added make_for_test.
+--|
 --| Revision 1.6  2000/03/18 00:52:23  oconnor
 --| formatting, layout and comment tweaks
 --|

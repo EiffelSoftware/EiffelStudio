@@ -217,44 +217,28 @@ feature {NONE} -- Implementation
 					-- Generate the event code.
 				generate_events (current_document.root_element, 1)
 	
-				local_tag_index := class_text.substring_index (local_tag, 1)
-				class_text.replace_substring_all (local_tag, "")			
-				class_text.insert_string (local_string, local_tag_index)
-				
-				create_tag_index := class_text.substring_index (create_tag, 1)
-				class_text.replace_substring_all (create_tag, "")			
-				class_text.insert_string (create_string, create_tag_index)
-				
-				temp_index := class_text.substring_index (build_tag, 1)
-				class_text.replace_substring_all (build_tag, "")			
-				class_text.insert_string (build_string, temp_index)
-				
-				temp_index := class_text.substring_index (set_tag, 1)
-				class_text.replace_substring_all (set_tag, "")			
-				class_text.insert_string (set_string, temp_index)
-
-
-					-- Only add the event declaration if it exists.
-					-- If no events were selected, then `event_declaration_string'
-					-- wil be `Void'.
-				if event_connection_string /= Void then
-					temp_index := class_text.substring_index (event_connection_tag, 1)
-					class_text.replace_substring_all (event_connection_tag, "")
-					class_text.insert_string (event_connection_string, temp_index)				
+				if local_string /= Void then
+					local_tag_index := class_text.substring_index (local_tag, 1)
+					class_text.replace_substring_all (local_tag, "")			
+					class_text.insert_string (local_string, local_tag_index)
 				else
-					class_text.replace_substring_all (event_connection_tag, "")
+					class_text.replace_substring_all (local_tag, "")			
 				end
+
+					-- Add code for creation of widgets to `class_text'.
+				add_generated_string (class_text, create_string, create_tag)
 				
-					-- Only add the event declaration if it exists.
-					-- If no events were selected, then `event_declaration_string'
-					-- wil be `Void'.
-				if event_declaration_string /= Void then
-					temp_index := class_text.substring_index (event_declaration_tag, 1)				
-					class_text.replace_substring_all (event_declaration_tag, "")
-					class_text.insert_string (event_declaration_string, temp_index)
-				else
-					class_text.replace_substring_all (event_declaration_tag, "")
-				end
+					-- Add code for construction of widget hierarchy to `class_text'.
+				add_generated_string (class_text, build_string, build_tag)	
+				
+					-- Add code for widget attribute settings to `class_text'.
+				add_generated_string (class_text, set_string, set_tag)	
+	
+					-- Add code connecting events to features to `class_text'.
+				add_generated_string (class_text, event_connection_string, event_connection_tag)
+
+					-- Add declaration of features as deferred to `class_text'.
+				add_generated_string (class_text, event_declaration_string, event_declaration_tag)				
 
 				
 					-- Need to add pixmap initialization if `class_text' contains
@@ -297,16 +281,7 @@ feature {NONE} -- Implementation
 			
 			set_inherited_class_name (system_status.current_project_settings.main_window_class_name + class_implementation_extension)
 			
-				-- Only add the event implementation if it exists.
-				-- If no events were selected, then `event_implementation_string'
-				-- wil be `Void'.
-			if event_implementation_string /= Void then
-				temp_index := class_text.substring_index (event_declaration_tag, 1)				
-				class_text.replace_substring_all (event_declaration_tag, "")
-				class_text.insert_string (event_implementation_string, temp_index)				
-			else
-				class_text.replace_substring_all (event_declaration_tag, "")
-			end
+			add_generated_string (class_text, event_implementation_string, event_declaration_tag)
 			
 				-- Store `class_text'.				
 			window_file_name := clone (generated_path)
@@ -317,7 +292,23 @@ feature {NONE} -- Implementation
 			window_output_file.close
 		end
 		
-
+	add_generated_string (a_class_text, new, tag: STRING) is
+			-- Replace `tag' in `class_text' with `new'.
+			-- If `new' is Void then add "".
+		require
+			a_class_text.has_substring (tag)
+		local
+			temp_index: INTEGER
+		do
+			if new /= Void then
+				temp_index := a_class_text.substring_index (tag, 1)
+				a_class_text.replace_substring_all (tag, "")
+				a_class_text.insert_string (new, temp_index)
+			else
+				a_class_text.replace_substring_all (tag, "")
+			end
+		end
+		
 	set_class_name (a_name: STRING) is
 			-- Replace all occurances of `class_name_tag' with
 			-- `a_name' within `class_text'.

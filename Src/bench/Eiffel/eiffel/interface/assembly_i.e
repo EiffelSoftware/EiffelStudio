@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 				-- Initialize location of XML files representing classes
 				-- of current assembly.
 		
-			l_assembly_location := versioned_assembly_cache_folder.twin
+			l_assembly_location := assembly_cache_folder.twin
 
 			if consumed_folder_name /= Void then
 				l_assembly_location.extend (consumed_folder_name)
@@ -128,12 +128,10 @@ feature {NONE} -- Initialization
 			is_library := True
 			is_recursive := True
 			hide_implementation := True
-			
-				-- Initialize location of XML files representing classes
-				-- of current assembly.
+
 			if consumed_folder_name /= Void then
-				l_assembly_location := versioned_assembly_cache_folder.twin
-				l_assembly_location.extend (l_ass.folder_name)
+				l_assembly_location := assembly_cache_folder.twin
+				l_assembly_location.extend (consumed_folder_name)
 				create dollar_path.make_from_string (l_assembly_location)
 				update_path
 			end
@@ -305,8 +303,11 @@ feature -- Initialization
 				i > nb
 			loop
 				l_cons_assembly := l_referenced_assemblies.assemblies.item (i)
-				l_assembly_location := versioned_assembly_cache_folder.twin
-				l_assembly_location.extend (l_cons_assembly.folder_name)
+				l_assembly_location := assembly_cache_folder.twin
+				l_path := il_emitter.relative_folder_name_from_path (l_cons_assembly.location)
+				if l_path /= Void then
+					l_assembly_location.extend (l_path)
+				end
 				l_path := environ.interpreted_string (l_assembly_location)
 					
 				l_assembly ?= Universe.cluster_of_path (l_path)
@@ -417,7 +418,7 @@ feature {NONE} -- Implementation
 						then
 							public_key_token := Void
 						end
-						consumed_folder_name := l_emitter.consumed_folder_name
+						consumed_folder_name := l_emitter.relative_folder_name_from_path (assembly_path)
 						is_in_gac := l_emitter.is_in_gac
 					end
 				end

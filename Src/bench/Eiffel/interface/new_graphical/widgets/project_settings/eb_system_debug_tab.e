@@ -451,7 +451,7 @@ feature {NONE} -- Graphical initialization
 
 			create debug_check.make_with_text ("Enable debug")
 			enable_select (debug_check)
-			debug_check.select_actions.extend (~desactivation_action
+			debug_check.select_actions.extend (agent desactivation_action
 								(debug_check, debug_list))
 			vbox.extend (debug_check)
 			vbox.disable_item_expand (debug_check)

@@ -28,7 +28,7 @@ create
 
 feature -- Access
 
-	name: STRING is ".NET"
+	name: STRING is "General"
 			-- Name of tab in System Window.
 
 feature -- MSIL options

@@ -59,6 +59,13 @@ feature -- Properties
 		do
 			Result := assembly_name.is_equal (language_name)
 		end
+		
+	is_dotnet_resource: BOOLEAN is
+			-- Is the language "dotnet_resource"?
+		do
+			Result := dotnet_resource_name.is_equal (language_name)
+		end
+		
 
 feature -- Duplication
 
@@ -100,5 +107,8 @@ feature {NONE} -- Constants
 
 	assembly_name: STRING is "assembly"
 			-- Assembly name.
+			
+	dotnet_resource_name: STRING is "dotnet_resource"
+			-- Dotnet resource name.
 
 end -- class LANGUAGE_NAME_SD

@@ -64,6 +64,9 @@ feature -- Tab access
 	msil_assembly_tab: EB_SYSTEM_MSIL_ASSEMBLY_TAB
 			-- Widget describing MSIL assembly specific option tab.
 
+	msil_resources_tab: EB_SYSTEM_MSIL_RESOURCES_TAB
+			-- Widget describing MSIL resources specific option tab.
+
 	advanced_tab: EB_SYSTEM_ADVANCED_TAB
 			-- Widget describing advanced tab.
 
@@ -318,6 +321,7 @@ feature {NONE} -- Initialization
 			button: EV_BUTTON
 			hbox: EV_HORIZONTAL_BOX
 			l_accelerator: EV_ACCELERATOR
+			l_msil_notebook: EV_NOTEBOOK
 		do
 			set_title (default_name)
 			set_minimized_title (default_name)
@@ -346,13 +350,22 @@ feature {NONE} -- Initialization
 			notebook.set_item_text (clusters_tab, clusters_tab.name)
 
 			if Platform_constants.is_windows then
+				create l_msil_notebook
+				
 				create msil_tab.make (Current)
-				notebook.extend (msil_tab)
-				notebook.set_item_text (msil_tab, msil_tab.name)
+				l_msil_notebook.extend (msil_tab)
+				l_msil_notebook.set_item_text (msil_tab, msil_tab.name)
 				
 				create msil_assembly_tab.make (Current)
-				notebook.extend (msil_assembly_tab)
-				notebook.set_item_text (msil_assembly_tab, msil_assembly_tab.name)
+				l_msil_notebook.extend (msil_assembly_tab)
+				l_msil_notebook.set_item_text (msil_assembly_tab, msil_assembly_tab.name)
+
+				create msil_resources_tab.make (Current)
+				l_msil_notebook.extend (msil_resources_tab)
+				l_msil_notebook.set_item_text (msil_resources_tab, msil_resources_tab.name)
+				
+				notebook.extend (l_msil_notebook) 
+				notebook.set_item_text (l_msil_notebook, ".NET")
 			end
 
 			create externals_tab.make (Current)
@@ -514,6 +527,7 @@ feature {NONE} -- Tab access
 				Result.extend (externals_tab)
 				Result.extend (msil_tab)
 				Result.extend (msil_assembly_tab)
+				Result.extend (msil_resources_tab)
 				Result.extend (advanced_tab)
 			else
 				create Result.make (5)

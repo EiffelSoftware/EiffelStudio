@@ -118,7 +118,8 @@ feature {NONE} -- Filling
 							lace_list.after
 						loop
 							create list_item.make_with_text (lace_list.item)
-							list_item.select_actions.extend (text_field~set_text (lace_list.item))
+							list_item.select_actions.extend (
+								agent text_field.set_text (lace_list.item))
 							list.extend (list_item)
 							lace_list.forth
 						end
@@ -133,7 +134,8 @@ feature {NONE} -- Filling
 							lace_list.after
 						loop
 							create list_item.make_with_text (lace_list.item)
-							list_item.select_actions.extend (text_field~set_text (lace_list.item))
+							list_item.select_actions.extend (
+								agent text_field.set_text (lace_list.item))
 							list.extend (list_item)
 							lace_list.forth
 						end

@@ -80,8 +80,8 @@ feature -- Status setting
 	enable_msil_widgets is
 			-- Enable all MSIL widgets and disable all C specific ones.
 		do
-			msil_specific_widgets.do_all ({EV_WIDGET}~enable_sensitive)
-			c_specific_widgets.do_all ({EV_WIDGET}~disable_sensitive)
+			msil_specific_widgets.do_all (agent {EV_WIDGET}.enable_sensitive)
+			c_specific_widgets.do_all (agent {EV_WIDGET}.disable_sensitive)
 			msil_widgets_enabled := True
 			c_widgets_enabled := False
 		end
@@ -89,8 +89,8 @@ feature -- Status setting
 	enable_c_widgets is
 			-- Enable all C widgets and disable all MSIL specific ones.
 		do
-			msil_specific_widgets.do_all ({EV_WIDGET}~disable_sensitive)
-			c_specific_widgets.do_all ({EV_WIDGET}~enable_sensitive)
+			msil_specific_widgets.do_all (agent {EV_WIDGET}.disable_sensitive)
+			c_specific_widgets.do_all (agent {EV_WIDGET}.enable_sensitive)
 			msil_widgets_enabled := False
 			c_widgets_enabled := True
 		end
@@ -99,14 +99,14 @@ feature -- Status setting
 			-- Disable all widgets that can be set only once during
 			-- a project lifetime.
 		do
-			widgets_set_before_has_compilation_started.do_all ({EV_WIDGET}~disable_sensitive)
+			widgets_set_before_has_compilation_started.do_all (agent {EV_WIDGET}.disable_sensitive)
 		end
 
 	disable_widgets_set_before_is_already_compiled is
 			-- Disable all widgets that can be set only once during
 			-- a project lifetime.
 		do
-			widgets_set_before_is_already_compiled.do_all ({EV_WIDGET}~disable_sensitive)
+			widgets_set_before_is_already_compiled.do_all (agent {EV_WIDGET}.disable_sensitive)
 		end
 		
 feature -- Setting
@@ -199,10 +199,10 @@ feature -- Action
 			controler_not_void: controler /= Void
 			l_controlee_not_void: l_controlee /= Void
 			controler_selected: controler.is_selected implies
-				(not l_controlee.for_all ({EV_WIDGET}~is_sensitive)
-				and then not l_controlee.for_all ({EV_WIDGET}~has_focus))
+				(not l_controlee.for_all (agent {EV_WIDGET}.is_sensitive)
+				and then not l_controlee.for_all (agent {EV_WIDGET}.has_focus))
 			controler_not_selected: not controler.is_selected implies
-				l_controlee.for_all ({EV_WIDGET}~is_sensitive)
+				l_controlee.for_all (agent {EV_WIDGET}.is_sensitive)
 		do
 			if controler.is_selected then
 				from
@@ -229,11 +229,11 @@ feature -- Action
 			end
 		ensure
 			controler_selected:
-				controler.is_selected implies (l_controlee.for_all ({EV_WIDGET}~is_sensitive)
+				controler.is_selected implies (l_controlee.for_all (agent {EV_WIDGET}.is_sensitive)
 				and then (l_controlee.last.is_displayed implies l_controlee.last.has_focus))
 			controler_not_selected:
-				not controler.is_selected implies (not l_controlee.for_all ({EV_WIDGET}~is_sensitive)
-				and then (l_controlee.last.is_displayed implies not l_controlee.for_all ({EV_WIDGET}~has_focus)))
+				not controler.is_selected implies (not l_controlee.for_all (agent {EV_WIDGET}.is_sensitive)
+				and then (l_controlee.last.is_displayed implies not l_controlee.for_all (agent {EV_WIDGET}.has_focus)))
 		end
 
 feature -- Convenience

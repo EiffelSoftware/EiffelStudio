@@ -28,7 +28,7 @@ create
 
 feature -- Access
 
-	name: STRING is ".NET Assemblies"
+	name: STRING is "Assemblies"
 			-- Name of tab in System Window.
 
 	gac_assembly_list: EV_EDITABLE_LIST

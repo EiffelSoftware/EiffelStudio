@@ -1251,7 +1251,7 @@ feature {NONE} -- Private Constants
 	unwanted_characters: ARRAY [CHARACTER] is
 			-- Unwanted characters: backspace, tabulation, carriage return and escape. 
 		once
-			Result := <<'%/8/','%/9/','%/13/','%/27/'>>
+			Result := <<'%/8/','%/9/','%/13/','%/27/', '%N'>>
 		end
 
 	meta_key_codes: ARRAY [INTEGER] is

@@ -36,7 +36,6 @@ feature -- Initialization
 			c_str := c_gdk_event_string (p)
 			!!str.make (0)
 
--- alex, temporary: see if it is worth it
 			if c_str/= default_pointer then
 				str.from_c (c_str)
 			end

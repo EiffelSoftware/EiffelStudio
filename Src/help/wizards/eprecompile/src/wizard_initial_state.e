@@ -21,17 +21,22 @@ feature -- basic Operations
 	proceed_with_current_info is 
 		do
 			Precursor
-			proceed_with_new_state(Create {WIZARD_FIRST_STATE}.make(wizard_information))
+			proceed_with_new_state (create {WIZARD_FIRST_STATE}.make(wizard_information))
 		end
 
 	display_state_text is
 		do
-			title.set_text ("Precompile Tool")
-			message.set_text ("Welcome.%NThis tool will allow you to precompile any Eiffel libraries.%
-								%%NYou will be able to choose among the libraries you have bought%
-								% but also you can precompile your own library by providing the Ace file.%
-								%%NIf you need to re-precompile a library, then the previous version will%	
-								% be overwritten")
+			title.set_text ("Welcome to the%NPrecompilation Wizard")
+			message.set_text (
+				"Using this wizard you can precompile any Eiffel library.%N%
+				%You will be able to precompile the shipped libraries%N%
+				%but also your own libraries by providing the corresponding Ace file.%N%
+				%%N%
+				%If you precompile a library already precompiled, the previous%N%
+				%version will be overwritten%N%
+				%%N%
+				%%N%
+				%To continue, click Next.")
 		end
 
 	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"

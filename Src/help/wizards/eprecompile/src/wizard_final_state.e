@@ -1,8 +1,8 @@
 indexing
-	description: "Objects that ..."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Objects that ..."
+	author		: "David Solal / Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WIZARD_FINAL_STATE
@@ -34,7 +34,6 @@ feature -- Basic Operations
 	build_finish is 
 			-- Build user entries.
 		local
-			h1: EV_HORIZONTAL_BOX
 			cell: EV_CELL
 		do
 			choice_box.wipe_out
@@ -76,7 +75,6 @@ feature -- Basic Operations
 			choice_box.extend(cell)
 
 			choice_box.set_background_color (white_color)
-
 		end
 
 
@@ -88,16 +86,20 @@ feature -- Basic Operations
 			launch_precompilations
 			Precursor
 			create mess.make_with_text (final_message)
-			mess.show_modal
+			mess.show_modal_to_window (first_window)
 		end
 
 feature -- Access
 
 	display_state_text is
 		do
-			title.set_text ("LAUNCH PRECOMPILATIONS")
-			message.set_text ("The precompilation will be launched as soon as you will push the Finish button%
-								%%NThis can take a while !")
+			title.set_text ("Launch Precompilations")
+			message.set_text (
+				"The precompilation(s) will be launched as soon%N%
+				%as you push the Finish button%N%
+				%%N%
+				%Be patient, this can take a while!"
+				)
 		end
 
 	final_message: STRING is
@@ -148,15 +150,15 @@ feature -- Access
 		local
 			to_end: BOOLEAN
 			time_left, n_dir: INTEGER
-			s: STRING
 			proj_path, command: STRING
 			total_prog: INTEGER
 		do
 				-- We need to find the path, the exact name and the full name of the Ace file
 				-- knowing the full name. (Can be fixed .. )
 			lib_ace.mirror
-			n_dir:= lib_ace.index_of ('/', 1)
-			if lib_ace.index_of ('\', 1) /= 0 and then n_dir > lib_ace.index_of ('\', 1) then
+			if Eiffel_platform.is_equal ("windows") then
+				n_dir := lib_ace.index_of ('\', 1)
+			else
 				n_dir:= lib_ace.index_of ('/', 1)
 			end
 			proj_path:= lib_ace.substring (n_dir + 1 , lib_ace.count)
@@ -165,10 +167,15 @@ feature -- Access
 
 				-- Launch the precompilation and update the progress bars.
 			from
-				compt:= 1 -- Not needed if the file is used....
-				to_end:= False
+				compt := 1 -- Not needed if the file is used....
+				to_end := False
 				progress_text_2.set_text ("Precompiling " + lib_name + " library: ")
-				command:= wizard_information.es4_location + "es4 -precompile -ace " + lib_ace + " -project_path " + proj_path
+				create command.make (50)
+				command.append (Eiffel_compiler_command)
+				command.append (" -precompile -ace ")
+				command.append (lib_ace)
+				command.append (" -project_path ")
+				command.append (proj_path)
 				launch (command)
 			until
 				to_end = True

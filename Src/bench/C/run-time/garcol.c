@@ -3681,18 +3681,6 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	REQUIRE ("Algorithm moves objects",
 			g_data.status & (GC_GEN | GC_PART) || g_data.status & GC_FAST);
 
-	REQUIRE ("In Generation Scavenge From zone",
-		(g_data.status & GC_PART) ||
-			((g_data.status & (GC_GEN | GC_FAST)) &&
-			(root > sc_from.sc_arena) && 
-			(root <= sc_from.sc_end)));
-
-	REQUIRE ("In Partial Scavenge From zone",
-		(g_data.status & (GC_GEN | GC_FAST)) ||
-			((g_data.status & GC_PART) &&
-			(root > ps_from.sc_arena) && 
-			(root <= ps_from.sc_end)));
-
 	zone = HEADER(root);
 
 	/* Expanded objects are held in one object, and a pseudo-reference field
@@ -3719,6 +3707,19 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 				 * needs to be done */
 			return root;
 		}
+
+		CHECK ("In Generation Scavenge From zone",
+			(g_data.status & GC_PART) ||
+				((g_data.status & (GC_GEN | GC_FAST)) &&
+				(root > sc_from.sc_arena) && 
+				(root <= sc_from.sc_end)));
+
+		CHECK ("In Partial Scavenge From zone",
+			(g_data.status & (GC_GEN | GC_FAST)) ||
+				((g_data.status & GC_PART) &&
+				(root > ps_from.sc_arena) && 
+				(root <= ps_from.sc_end)));
+
 		new = container_zone->ov_fwd;			/* Data space of the scavenged object */
 		exp = new + (root - (EIF_REFERENCE) (container_zone + 1));	/* New data space */
 			
@@ -3726,6 +3727,18 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 		zone->ov_size |= B_FWD;		/* Mark object as forwarded */
 		return exp;					/* This is the new location of expanded */
 	}
+
+	CHECK ("In Generation Scavenge From zone",
+		(g_data.status & GC_PART) ||
+			((g_data.status & (GC_GEN | GC_FAST)) &&
+			(root > sc_from.sc_arena) && 
+			(root <= sc_from.sc_end)));
+
+	CHECK ("In Partial Scavenge From zone",
+		(g_data.status & (GC_GEN | GC_FAST)) ||
+			((g_data.status & GC_PART) &&
+			(root > ps_from.sc_arena) && 
+			(root <= ps_from.sc_end)));
 
 	CHECK ("Not in Generation Scavenge TO zone",
 		!((g_data.status & GC_GEN) &&

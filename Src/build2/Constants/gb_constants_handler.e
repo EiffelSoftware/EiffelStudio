@@ -381,6 +381,41 @@ feature -- Element change
 				end
 			end
 		end
+		
+	flatten_constants (element: XM_ELEMENT) is
+			-- Recurse through `element', and convert all constant values to manifest values
+			-- in the XML.
+		require
+			element_not_void: element /= Void
+		local
+			current_element: XM_ELEMENT
+			current_name: STRING
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			constant: GB_CONSTANT
+		do
+			from
+				element.start
+			until
+				element.off
+			loop
+				current_element ?= element.item_for_iteration
+				if current_element /= Void then
+					current_name := current_element.name
+					if current_name.is_equal (Constant_string) then
+	
+						full_information := get_unique_full_info (element)
+						constant := all_constants.item ((full_information @ Constant_string).data)
+						element.wipe_out
+						add_string_data (element, constant.value_as_string)
+					else
+						flatten_constants (current_element)
+					end
+				end
+				if not element.off then
+					element.forth	
+				end
+			end
+		end
 
 feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operation
 

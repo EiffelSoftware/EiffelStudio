@@ -517,11 +517,12 @@ feature {NONE} -- Implementation
 			if expr.error_message = Void then
 				evaluator := expr.expression_evaluator
 				dmp := evaluator.final_result_value
-				res := dmp.full_output
-				typ := dmp.generating_type_representation
-				
-				l_tooltip.append_string ("--< TYPE >--%N  " + typ + "%N")
-				l_tooltip.append_string ("--< VALUE >--%N  " + res + "%N")
+				if dmp /= Void then
+					res := dmp.full_output
+					typ := dmp.generating_type_representation
+					l_tooltip.append_string ("--< TYPE >--%N  " + typ + "%N")
+					l_tooltip.append_string ("--< VALUE >--%N  " + res + "%N")
+				end
 				
 				Result.set_pixmap (Icon_green_tick)
 				Result.extend (res)

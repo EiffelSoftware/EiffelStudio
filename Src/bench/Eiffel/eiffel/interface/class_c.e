@@ -2447,7 +2447,7 @@ feature -- Parent checking
 						computed_parents.extend (l_parent_c)
 						parents.extend (l_parent_c.parent_type)
 
-						l_parent_class := l_parent_as.type.associated_classi.compiled_class
+						l_parent_class := l_parent_as.associated_class (lace_class).compiled_class
 							-- Insertion of a new descendant for the parent class
 						check
 							parent_class_exists: l_parent_class /= Void
@@ -4892,14 +4892,9 @@ feature -- Implementation
 			-- Feature whose internal name is `n'
 		require
 			n_not_void: n /= Void
-		local
-			ftbl: like feature_table
 		do
-			if not n.is_empty then
-				ftbl := feature_table
-				if ftbl /= Void then
-					Result := ftbl.item (n)
-				end
+			if not n.is_empty and then has_feature_table then
+				Result := feature_table.item (n)
 			end
 		end
 

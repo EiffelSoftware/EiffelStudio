@@ -40,6 +40,7 @@ feature -- Initialization
 	make is
 			-- Make a network datagram socket.
 		do
+			c_reset_error
 			family := af_inet;
 			type := sock_dgrm;
 			make_socket;
@@ -53,6 +54,7 @@ feature -- Initialization
 		local
 			an_address: NETWORK_SOCKET_ADDRESS
 		do
+			c_reset_error
 			create an_address.make_local_from_port (a_port);
 			make_bound_to_address (an_address)
 		end;
@@ -63,6 +65,7 @@ feature -- Initialization
 		local
 			an_address: NETWORK_SOCKET_ADDRESS
 		do
+			c_reset_error
 			create an_address.make_from_name_and_port (a_hostname, a_peer_port);
 			make_connected_to_peer (an_address)
 		end;
@@ -73,6 +76,7 @@ feature -- Initialization
 		local
 			an_address: NETWORK_SOCKET_ADDRESS
 		do
+			c_reset_error
 			create an_address.make_from_ip_and_port (an_ip_number, a_peer_port);
 			make_connected_to_peer (an_address)
 		end;
@@ -163,7 +167,6 @@ feature -- Initialization
 				bind
 			end
 		end
-
 
 feature -- Miscellaneous
 

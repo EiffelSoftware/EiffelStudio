@@ -40,6 +40,7 @@ feature -- Initialization
 	make is
 			-- Create a network stream socket
 		do
+			c_reset_error
 			family := af_inet;
 			type := sock_stream;
 			make_socket

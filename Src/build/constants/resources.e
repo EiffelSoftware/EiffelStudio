@@ -237,10 +237,10 @@ feature {NONE} -- Integer Values initialization
 			app_ed_x := resource.get_integer ("app_ed_x", 500);
 			app_ed_y := resource.get_integer ("app_ed_y", 500);
 
-			cmd_cat_width := resource.get_pos_integer ("com_cat_width", 420);
-			cmd_cat_height := resource.get_pos_integer ("com_cat_height", 270);
-			cmd_cat_x := resource.get_integer ("com_cat_x", 0);
-			cmd_cat_y := resource.get_integer ("com_cat_y", 315);
+			cmd_cat_width := resource.get_pos_integer ("cmd_cat_width", 420);
+			cmd_cat_height := resource.get_pos_integer ("cmd_cat_height", 270);
+			cmd_cat_x := resource.get_integer ("cmd_cat_x", 0);
+			cmd_cat_y := resource.get_integer ("cmd_cat_y", 315);
 
 			cmd_inst_ed_width := resource.get_pos_integer ("cmd_inst_ed_width", 300);
 			cmd_inst_ed_height := resource.get_pos_integer ("cmd_inst_ed_height", 167);

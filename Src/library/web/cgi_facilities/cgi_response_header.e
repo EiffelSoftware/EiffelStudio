@@ -62,7 +62,7 @@ feature -- Basic Operations
 				-- See also CGI_COMMON_STATUS_TYPES
 	 	require			not_yet_sent: not is_sent
 			message_exists: a_message /= Void
-			header_void: header = Void  
+			header_void: header /= Void  
 		do
 			header.append("%NStatus: "+a_status.out+" "+a_message)
 		end	
@@ -78,7 +78,25 @@ feature -- Basic Operations
 			is_complete_header := FALSE
 		ensure
 			reinitialized: header = Void and not is_complete_header and not is_sent
-		end		
+		end
+
+feature {CGI_INTERFACE} -- Exception handling
+
+	send_trace(s: STRING) is
+			-- Send the exception trace 's' to the browser, when
+			-- possible ( most cases ).
+		do
+			if not is_sent then
+				reinitialize_header
+				generate_text_header
+			end
+			if s = Void or else s.empty then
+				output.put_string("No trace available")
+			else
+				output.put_string("<PRE>"+s+"</PRE>")
+			end
+			is_sent := TRUE
+		end
 
 feature -- Advanced Settings
 

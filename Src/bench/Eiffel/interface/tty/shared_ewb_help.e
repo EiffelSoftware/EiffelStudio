@@ -47,7 +47,7 @@ feature {NONE}
 
 	descendants_help: STRING is "show the descendants of a class";
 
-	Descendents_help: STRING is " output of time spent in descendents of a function";
+	Descendants_time_help: STRING is " output of time spent in descendants of a function";
 
 	Documentation_help: STRING is "create documents from the system";
 
@@ -157,7 +157,7 @@ feature {NONE}
 
 	text_help: STRING is "show the text of a class";
 
-	Total_sec_help: STRING is " output of time spent in both the function and its descendents";
+	Total_sec_help: STRING is " output of time spent in both the function and its descendants";
 
 	yank_help: STRING is "yank (save) output of last command to a file";
 

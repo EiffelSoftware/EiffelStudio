@@ -150,9 +150,15 @@ feature {NONE} -- Implementation
 			-- Create the label.
 		local
 			wc: WEL_COMPOSITE_WINDOW
+			windows_font: FONT_WINDOWS
                 do
 			if not exists then
 				wc ?= parent
+				if width = 0 and height = 0 then
+					windows_font ?= font.implementation
+					set_size (windows_font.string_width (Current, text) + 24,
+						windows_font.string_height (Current, text) * 7 // 4)
+				end
 				make_with_coordinates (wc, "", x, y, width, height)
 				exists := True
 				resize_for_shell
@@ -160,7 +166,13 @@ feature {NONE} -- Implementation
 					set_font (private_font)
 				end
 				adjust_label
-				shown := true
+				if not managed then
+					if wel_shown then
+						wel_hide
+					end
+				elseif parent.shown then
+					shown := true
+				end
 			end
 		end
 

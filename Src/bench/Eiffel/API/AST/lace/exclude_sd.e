@@ -23,7 +23,6 @@ feature
 			vd14: VD14;
 			vd21: VD21;
 			vd22: VD22;
-			ptr: ANY;
 		do
 			cluster := context.current_cluster;
 			path := Environ.interpret (file__name);
@@ -50,9 +49,8 @@ feature
 					vd22.set_file_name (file.name);
 					Error_handler.insert_error (vd22);
 				else
+					class_name := c_clname (file.file_pointer);
 					file.close;
-					ptr := file.file_pointer;
-					class_name := c_clname ($ptr);
 					if class_name = Void then
 							-- No class in exclude file
 						!!vd13;
@@ -63,13 +61,13 @@ feature
 						class_name.to_lower;
 						a_class := cluster.classes.item (class_name);
 						if a_class = Void then
-							-- Aready a class named `class_name' in `cluster'.
+							-- no class named `class_name' in `cluster'.
 							!!vd14;
 							vd14.set_cluster (cluster);
 							vd14.set_file_name (file__name);
 							Error_handler.insert_error (vd14);
 						else
-							cluster.classes.remove (class_name);
+							cluster.remove_class (a_class);
 						end;
 					end;
 				end;
@@ -78,7 +76,7 @@ feature
 
 feature {NONE} -- Externals
 
-	c_clname (file_ptr: ANY): STRING is
+	c_clname (file_ptr: POINTER): STRING is
 			-- Class name read in file pointer `file_ptr'.
 		external
 			"C"

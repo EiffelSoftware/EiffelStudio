@@ -213,9 +213,8 @@ feature -- Status report
 				Result := lookup_table.has (v.id)
 			end
 		end
-		
 
-	has_recursive (figure: EV_MODEL): BOOLEAN is
+	has_deep (figure: EV_MODEL): BOOLEAN is
 			-- Does any item contains `figure'?
 		local
 			grp: EV_MODEL_GROUP
@@ -229,8 +228,10 @@ feature -- Status report
 				grp ?= item
 				if grp = Void then
 					Result := figure = item
+				elseif grp = figure then
+					Result := True
 				else
-					Result := grp.has_recursive (figure)
+					Result := grp.has_deep (figure)
 				end
 				forth
 			end

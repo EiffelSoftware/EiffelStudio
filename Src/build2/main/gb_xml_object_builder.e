@@ -66,12 +66,8 @@ feature {NONE} -- Implementation
 						check
 							new_instance_exists: gb_ev_any /= Void
 						end
-						
-							-- Add the appropriate objects to `objects'.
-							-- But not if we are building a component representation.
-						if not is_component then
-							gb_ev_any.add_object (a_new_object.object)
-						end
+
+						gb_ev_any.add_object (a_new_object.object)
 						display_object ?= a_new_object.display_object
 						if display_object = Void then
 							gb_ev_any.add_object (a_new_object.display_object)
@@ -140,12 +136,8 @@ feature {NONE} -- Implementation
 						check
 							new_instance_exists: gb_ev_any /= Void
 						end
-						
-							-- Add the appropriate objects to `objects'.
-							-- But not if we are building a component representation.
-						if not is_component then
-							gb_ev_any.add_object (a_new_object.object)			
-						end
+
+						gb_ev_any.add_object (a_new_object.object)			
 						display_object ?= a_new_object.display_object
 						if display_object = Void then
 							gb_ev_any.add_object (a_new_object.display_object)

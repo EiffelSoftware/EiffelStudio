@@ -39,7 +39,12 @@ feature
 			end;
 		end;
 
-	
+	is_valid_parent (parent_context: COMPOSITE_C): BOOLEAN is
+			-- Is `parent_context' a valid parent?
+		do
+			Result := dummy_context.is_valid_parent (parent_context);
+		end;
+
 feature {NONE}
 
 	int_generator: INT_GENERATOR is

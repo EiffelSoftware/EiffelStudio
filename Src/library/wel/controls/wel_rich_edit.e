@@ -384,6 +384,19 @@ feature -- Status setting
 			set_event_mask (Enm_change + Enm_update + Enm_scroll)
 		end
 
+	enable_all_notifications is
+			-- Enable all notifications.
+		require
+			exists: exists
+		do
+			set_event_mask (
+				Enm_change + Enm_update + Enm_scroll +
+				Enm_keyevents + Enm_mouseevents + Enm_requestresize +
+				Enm_selchange + Enm_dropfiles + Enm_protected +
+				Enm_correcttext + Enm_imechange
+								)
+		end
+
 	disable_notifications is
 			-- Disable all notifications.
 		require

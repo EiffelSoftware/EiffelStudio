@@ -17,7 +17,7 @@ inherit
 feature -- Access
 
 	eifnet_breakpoint (a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64): EIFNET_BREAKPOINT is
-		-- EIFNET_BREAKPOINT corresponding to module,class,feature and line parameters
+			-- EIFNET_BREAKPOINT corresponding to module,class,feature and line parameters
 		local
 			l_bp: EIFNET_BREAKPOINT
 		do
@@ -267,8 +267,10 @@ feature {NONE} -- Implementation
 				l_icd_module := loaded_modules.item (l_module_key_name)
 				l_icd_class := l_icd_module.get_class_from_token (l_class_token)
 				if not l_icd_module.last_call_succeed or else l_icd_class = Void then
+					print ("[ERROR] During Breakpoint addition, eStudio got confused with Module ...%N")
+					print ("        class_token is not inside module %N")
+					print ("        " + l_icd_module.module_name + "%N")
 					l_icd_module := Void
-					print("[ERROR] eStudio got confused with Module ...%N")
 				end
 			end
 			
@@ -290,7 +292,11 @@ feature {NONE} -- Implementation
 
 							debug ("debugger_bp_trace") print ("BreakPoint ADDED ! %N") end
 						else
-							debug ("debugger_bp_trace") print ("Error["+l_icd_code.last_error_code_id+"] in ICorDebugCode->CreateBreakpoint for (" + l_feat_token.out + ")%N") end
+							debug ("debugger_bp_trace") 
+								print ("Error[" + l_icd_code.last_error_code_id 
+										+ "] in ICorDebugCode->CreateBreakpoint for (" 
+										+ l_feat_token.out + ")%N") 
+							end
 						end		
 					end
 				else

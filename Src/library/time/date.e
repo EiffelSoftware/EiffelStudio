@@ -569,8 +569,6 @@ invariant
 
 end -- class DATE
 
-
-
 --|----------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.

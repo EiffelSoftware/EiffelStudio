@@ -24,6 +24,25 @@ feature {EV_GTK_CALLBACK_MARSHAL, EV_ANY_IMP} -- Tuple optimizations
 
 feature {EV_ANY_I} -- Implementation
 
+	new_toolbar_item_select_actions_intermediary (a_object_id: INTEGER) is
+			-- Intermediary agent for toolbar button select action
+			-- (from EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES)
+			-- (export status {EV_ANY_I})
+		local
+			a_toolbar_button_imp: EV_TOOL_BAR_BUTTON_IMP
+			a_radio_button_imp: EV_TOOL_BAR_RADIO_BUTTON_IMP
+		do
+			a_toolbar_button_imp ?= eif_id_object (a_object_id)
+			a_radio_button_imp ?= a_toolbar_button_imp
+			if a_radio_button_imp /= Void then
+				if a_radio_button_imp.is_selected and then a_toolbar_button_imp.select_actions_internal /= Void then
+					a_toolbar_button_imp.select_actions_internal.call (Void)
+				end
+			elseif a_toolbar_button_imp /= Void then
+				a_toolbar_button_imp.call_select_actions
+			end
+		end
+
 	mcl_column_click_callback (a_object_id: INTEGER; int: TUPLE [INTEGER]) is
 		local
 			temp_int: INTEGER_REF

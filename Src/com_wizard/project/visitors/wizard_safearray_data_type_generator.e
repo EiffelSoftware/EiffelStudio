@@ -888,7 +888,7 @@ feature -- Basic operations
 		end
 
 	safearray_safearray_ce_function_body (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR): STRING is
-			-- Body of EC conversion function for SAFEARRAY of safearrays..
+			-- Body of EC conversion function for SAFEARRAY of safearrays.
 		require
 			non_void_safearray_descriptor: a_safearray_descriptor /= Void
 		local
@@ -1016,7 +1016,7 @@ feature -- Basic operations
 					%return eif_wean (result);%N%T%
 				%}%N%T%
 				%else%N%T%T%
-					%return NULL")
+					%return NULL;")
 		ensure
 			non_void_function: Result /= Void
 			valid_function: not Result.is_empty

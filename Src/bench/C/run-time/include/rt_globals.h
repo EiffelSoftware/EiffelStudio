@@ -118,6 +118,7 @@ typedef struct tag_rt_globals
 
 		/* gen_conf.c */
 	int16 cid_array_cx[3];
+	char **non_generic_type_names_cx;
 
 		/* out.c */
 	char buffero_cx[TAG_SIZE];			/* Buffer for printing an object in a string */
@@ -327,7 +328,8 @@ rt_private rt_global_context_t * rt_thr_getspecific (EIF_TSD_TYPE global_key) {
 #endif	/* WORKBENCH */
 
 	/* gen_conf.c */
-#define cid_array			(rt_globals->cid_array_cx)
+#define cid_array				(rt_globals->cid_array_cx)
+#define non_generic_type_names	(rt_globals->non_generic_type_names_cx)
 
 	/* out.c */
 #define buffero				(rt_globals->buffero_cx)		/* rt_private */

@@ -66,17 +66,10 @@ feature {NONE} -- Initialization
 	select_callback (a_tree_item: POINTER) is
 			-- Called when a tree item is selected
 		local
-			t_item: EV_TREE_ITEM_IMP
+			par_tree_imp: EV_TREE_IMP
 		do
-		 	t_item ?= eif_object_from_c (a_tree_item)
-			
-			if t_item.is_selected then
-				t_item.interface.select_actions.call ([])
-				parent_tree.select_actions.call ([])
-			else
-				t_item.interface.deselect_actions.call ([])
-				parent_tree.deselect_actions.call ([])
-			end
+		 	par_tree_imp ?= parent_tree.implementation
+			par_tree_imp.select_callback (a_tree_item)
 		end
 
 	initialize_item_box is
@@ -152,6 +145,7 @@ feature -- Status setting
 			-- Select the item if `flag', unselect it otherwise.
 		do
 			--| FIXME IEK Does not function correctly.
+			check to_be_implemented: False end
 			if a_flag then
 				C.gtk_tree_item_select (c_object)
 			else
@@ -327,6 +321,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/03/01 23:41:57  king
+--| Corrected select_callback, check falsed set_selection
+--|
 --| Revision 1.44  2000/03/01 18:09:22  oconnor
 --| released
 --|

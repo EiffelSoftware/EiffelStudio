@@ -130,6 +130,8 @@ cluster
 		stones:				"$BENCH/Eiffel/interface/graphical/stones";
 		text_window:		"$BENCH/Eiffel/interface/graphical/text_window";
 		windows:			"$BENCH/Eiffel/interface/graphical/windows";
+		wizard_common:			"$BENCH/Eiffel/interface/graphical/wizard/common";
+		wizard_bench:			"$BENCH/Eiffel/interface/graphical/wizard/bench";
 
 		platform_common:	"$BENCH/Eiffel/interface/graphical/spec/common";
 		platform_motif:		"$BENCH/Eiffel/interface/graphical/spec/motif";

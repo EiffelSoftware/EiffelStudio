@@ -2,35 +2,32 @@ system
 	diskspace_demo
 
 root
-	DISKSPACE_DEMO: make
+	DISKSPACE_DEMO (root_cluster): "make"
 
 default
 	assertion (all)
-	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 	console_application (yes)
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 cluster
-		-- diskspace_demo
-	root_cluster:		"."
+	root_cluster:	"."
 
 		-- EiffelBase
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude
-			"table_eiffel3"; "desc"; 
+			"table_eiffel3"
+			"desc"
 		end
 
 		-- WEL
 	all wel:		"$ISE_EIFFEL\library\wel"
 		exclude
-			"spec"; "clib"; 
+			"spec"
+			"clib" 
 		end
 
 external
-	include_path:
-		"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
-	object:
-		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-		"Mpr.lib"
-
-end
+end -- diskspace_demo

@@ -11,7 +11,8 @@ inherit
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
 			has_separate_call, reset_added_gc_hooks,
-			make_end_byte_code, make_end_precomp_byte_code
+			make_end_byte_code, make_end_precomp_byte_code,
+			make_precursor_byte_code
 		end;
 	SHARED_INCLUDE
 
@@ -218,6 +219,12 @@ feature -- Byte code generation
 				ba.append (Bc_pop)
 				ba.append_uint32_integer (nb_expr_address)
 			end
+		end;
+
+	make_precursor_byte_code (ba: BYTE_ARRAY) is
+			-- Add dynamic type of parent.
+		do
+			ba.append_short_integer (-1)
 		end;
 
 	code_first: CHARACTER is

@@ -7,12 +7,13 @@ inherit
 	CALL_ACCESS_B
 		redefine
 			is_feature, set_parameters, 
-			parameters, enlarged,
+			parameters, enlarged, context_type,
 			is_feature_special, make_special_byte_code,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, is_special_feature,
 			size, pre_inlined_code, inlined_byte_code,
-			has_separate_call, reset_added_gc_hooks
+			has_separate_call, reset_added_gc_hooks,
+			make_precursor_byte_code
 		end;
 	SHARED_TABLE;
 	SHARED_SERVER
@@ -31,6 +32,17 @@ feature
 	parameters: BYTE_LIST [EXPR_B];
 			-- Feature parameters: can be Void
 
+	precursor_type : CL_TYPE_I
+			-- Type of parent in a precursor call
+
+	set_precursor_type (p_type : CL_TYPE_I) is
+			-- Assign `p_type' to `precursor_type'.
+		do
+			precursor_type := p_type
+		ensure
+			precursor_set : precursor_type = p_type
+		end
+		
 	set_parameters (p: like parameters) is
 			-- Assign `p' to `parameters'.
 		do
@@ -96,6 +108,32 @@ feature
 			Result := feature_bl
 		end;
 
+feature -- Context type
+
+	context_type: TYPE_I is
+			-- Context type of the access (properly instantiated)
+		local
+			a_parent: NESTED_B;
+		do
+			if precursor_type = Void then
+				if parent = Void then
+					Result := context.current_type;
+				elseif is_message then
+					Result := parent.target.type;
+				else 
+					a_parent := parent.parent;
+					if a_parent = Void then
+						Result := context.current_type;
+					else
+						Result := a_parent.target.type;
+					end;
+				end;
+			else
+				Result := precursor_type
+			end;
+			Result := Context.real_type (Result);
+		end;
+
 feature -- Byte code generation
 
 	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
@@ -113,6 +151,18 @@ feature -- Byte code generation
 			-- Make byte code for special calls.
 		do
 			ba.append (special_routines.bc_code);
+		end;
+
+	make_precursor_byte_code (ba: BYTE_ARRAY) is
+			-- Add dynamic type of parent.
+		do
+			if precursor_type /= Void then
+				ba.append_short_integer (
+						precursor_type.associated_class_type.id.id - 1
+										)
+			else
+				ba.append_short_integer (-1)
+			end
 		end;
 
 	code_first: CHARACTER is
@@ -300,6 +350,7 @@ feature -- Inlining
 			original_feature: FEATURE_I
 			gen_type_i: GEN_TYPE_I
 			m: META_GENERIC
+			true_gen : ARRAY [TYPE_I]
 			real_target_type, actual_type: TYPE_A
 			constraint: TYPE_A
 			formal_a: FORMAL_A
@@ -323,6 +374,7 @@ feature -- Inlining
 					i := 1
 					nb_generics := written_class.generics.count;
 					!!m.make (nb_generics)
+					!!true_gen.make (1, nb_generics)
 				until
 					i > nb_generics
 				loop
@@ -335,10 +387,12 @@ feature -- Inlining
 						constraint := written_class.constraint (i);
 						m.put (constraint.type_i, i)
 					end
+					true_gen.put (actual_type.type_i, i)
 					i := i + 1
 				end
 
 				gen_type_i.set_meta_generic (m)
+--				gen_type_i.set_true_generics (true_gen)
 				Result := gen_type_i
 			end
 		end

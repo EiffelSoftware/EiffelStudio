@@ -1,0 +1,39 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../default.css">
+</head>
+
+<body>
+<h1></h1>
+<h2>Used .NET classes</h2>
+<ul>
+	<li>System.Type</li>
+&nbsp;</ul>
+<h2>Static methods used</h2>
+<ul>
+	<li> `check_assert' from ISE.Runtime.RUN_TIME</li>
+&nbsp;</ul>
+<h2>Security notes</h2>
+<ul>
+	<li>
+&nbsp;</ul>
+<h2>Unhandled exceptions</h2>
+<ul>
+	<li>
+&nbsp;</ul>
+<h2>Other notes</h2>
+<ul>
+	<li> We are using the ISE.Runtime.RUN_TIME class to have access to ISE runtime that
+	manages assertions so that we can turn them on or off. </li>
+	<li> There is no implementation of `copy' and `clone' and therefore this does not work.
+	The solution is to force the compiler to generate a specific version of
+	`standard_copy' and `c_standard_clone' in every descendants of ANY that will do the 
+	correct cloning and copying</li>
+&nbsp;</ul>
+
+</body>
+
+</html>

@@ -8,12 +8,12 @@ inherit
 			make as normal_create
 		redefine
 			text_window, build_format_bar, hole,
-			tool_name, set_default_position
+			tool_name
 		end;
 	BAR_AND_TEXT
 		redefine
 			text_window, build_format_bar, hole,
-			tool_name, set_default_position, make
+			tool_name, make
 		select
 			make
 		end
@@ -52,11 +52,5 @@ feature {NONE}
 
 	hole: EXPLAIN_HOLE;
 			-- Hole caraterizing current
-
-	set_default_position is
-			-- Display the window a the cursor position.
-		do
-			set_x_y (screen.x, screen.y)
-		end;
 
 end

@@ -18,12 +18,12 @@ inherit
 			close_windows as old_close_windows
 		redefine
 			text_window, build_format_bar, hole, build_widgets,
-			tool_name, set_default_position, default_format
+			tool_name, default_format
 		end
 	BAR_AND_TEXT
 		redefine
 			text_window, build_format_bar, hole, default_format, close_windows,
-			tool_name, set_default_position, make, build_widgets, attach_all
+			tool_name, make, build_widgets, attach_all
 		select
 			make, attach_all, close_windows
 		end
@@ -118,12 +118,6 @@ feature {NONE}
 			command_bar.attach_bottom_widget (next_target, previous_target, 0);
 		end;
 
-	set_default_position is
-			-- Display the window at the cursor position.
-		do
-			set_x_y (screen.x, screen.y)
-		end;
-	
 	default_format: FORMATTER is
 			-- Default format shows attributes' values
 		do

@@ -10,6 +10,7 @@
 
 #include "ev_titled_window_imp.h"
 #include "X11/Xlib.h"
+#include "gdk/gdkprivate.h"
 
 void
 c_gdk_window_iconify (GdkWindow * window) // is
@@ -20,7 +21,7 @@ c_gdk_window_iconify (GdkWindow * window) // is
 		g_return_if_fail (window != NULL);
 	// do
 		priv = (GdkWindowPrivate *) window;
-		XIconifyWindow (priv->xdisplay, priv->xwindow, 0)
+		XIconifyWindow (priv->xdisplay, priv->xwindow, 0);
 } 	// end
 
 void
@@ -42,12 +43,12 @@ c_gdk_window_is_iconified (GdkWindow * window) // is
 		GdkWindowPrivate *priv;
 		XWindowAttributes xattr;
 	// require
-		g_return_val_if_fail (window != NULL, false);
+		g_return_val_if_fail (window != NULL, 0);
 	// do
 		priv = (GdkWindowPrivate *) window;
 		XMapRaised (priv->xdisplay, priv->xwindow);
 		xattr.map_state = IsUnmapped;
-		XGetWindowAttributes (priv->xdisplay, priv->xwindow, %xattr);
+		XGetWindowAttributes (priv->xdisplay, priv->xwindow, &xattr);
 		return (xattr.map_state == IsUnmapped);
 } 	// end
 
@@ -72,6 +73,9 @@ c_gdk_window_is_iconified (GdkWindow * window) // is
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.2  2000/03/08 01:25:46  brendel
+// Fixed compliler errors.
+//
 // Revision 1.1  2000/03/07 18:38:14  brendel
 // Initial revision of externals for EV_TITLED_WINDOW_IMP.
 //

@@ -11,7 +11,7 @@
 #ifndef _EV_TITLED_WINDOW_IMP_H_INCLUDED_
 #define _EV_TITLED_WINDOW_IMP_H_INCLUDED_
 
-#include <gtk/gdk.h>
+#include <gtk/gtk.h>
 
 void
 c_gdk_window_iconify (GdkWindow * window);
@@ -45,6 +45,9 @@ c_gdk_window_is_iconified (GdkWindow * window);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.2  2000/03/08 01:25:46  brendel
+// Fixed compliler errors.
+//
 // Revision 1.1  2000/03/07 18:38:14  brendel
 // Initial revision of externals for EV_TITLED_WINDOW_IMP.
 //

@@ -1068,7 +1068,7 @@ feature -- Status setting
 				unselect
 			end
 			text_up_to_date := False
-			set_caret_position (original_position.min (text_length))
+			set_caret_position (original_position.min (text_length + 1))
 		end
 
 	enable_word_wrapping is

@@ -66,8 +66,7 @@ feature -- Access
 			-- Name and indication that the class is not compiled
 		do
 			Result := clone (class_i.name)
-			Result.to_upper;
---			Result.append (" (not in system)")
+			Result.to_upper
 		end;
 
 	icon_name: STRING is

@@ -1,7 +1,6 @@
 indexing
 
-	description:
-		"Encapsulation of an external extension.";
+	description: "Encapsulation of an external extension.";
 	date: "$Date$";
 	revision: "$Revision$"
  
@@ -28,6 +27,10 @@ feature
 		end
 
 	is_macro: BOOLEAN is
+		do
+		end
+
+	is_dll: BOOLEAN is
 		do
 		end
 

@@ -61,7 +61,7 @@ feature -- Access
 					loop
 						f := current_class.feature_with_name (creats.key_for_iteration)
 						if f /= Void then
-							f.append_signature (structured_text)
+							display_feature (f, structured_text)
 							structured_text.add_string (" ")
 							creats.item_for_iteration.append_to (structured_text)
 							structured_text.add_new_line

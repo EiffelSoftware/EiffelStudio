@@ -23,11 +23,12 @@ model and the Eiffel one are quite different and there is no one to one mapping.
 So some conversion needs to be done to map the Eiffel multiple inheritance model
 to the .NET one. This is done through the use of multiple inheritance of
 interfaces as a general mechanism. The goal of this documentation is to explain
-what the ISE Eiffel compiler needs to perform this task.</p>
-<p>A side node comment regarding Java. The compiler supports generation of java
+what the ISE Eiffel compiler needs to perform this task and how it will
+accomplish it.</p>
+<p>A side comment regarding Java. The compiler supports generation of java
 byte code, but it lacks some feature that are really needed to implement
-multiple inheritance, renaming or covariance.</p>
-<p>&nbsp;</p>
+multiple inheritance, renaming or covariance. And this is the reason why our
+java generation will never match the level we achieved with .NET.</p>
 <h2>Content</h2>
 <ul>
   <li><a href="dotnet_mapping.html">Multiple inheritance mapping to .NET</a></li>

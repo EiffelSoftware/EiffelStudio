@@ -1124,7 +1124,8 @@ end;
 
 				execution_table.set_levels;
 				dispatch_table.set_levels;
-				make_update
+					-- Create a non-empty update file ("melted.eif")
+				make_update (False)
 debug ("VERBOSE")
 	io.error.putstring ("Saving melted.eif%N");
 end;
@@ -1531,9 +1532,10 @@ end;
 			end;
 		end;
 
-	make_update is
+	make_update (empty: BOOLEAN) is
 			-- Produce the update file resulting of the consecutive
-			-- melting process after the system has been frozen.
+			-- melting process. It can be `empty' (if the system has
+			-- been frozen.
 		local
 			a_class: CLASS_C;
 			file_pointer: POINTER;
@@ -1543,76 +1545,82 @@ end;
 			rout_info: ROUT_INFO;
 			rcorigin, rcoffset: INTEGER;
 			rout_id: ROUTINE_ID
+			melted_file: RAW_FILE
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Updating melted.eif%N");
 end;
-			Update_file.open_write;
-			file_pointer := Update_file.file_pointer;
+			melted_file := Update_file
+			melted_file.open_write;
 
 				-- There is something to update
-			Update_file.putchar ('%/001/');
+			melted_file.putchar ('%/001/');
 
-			-- Flag indicating whether it's Java or Eiffel byte-code
+				-- Flag indicating whether it's Java or Eiffel byte-code
 			if java_generation then
-				-- This is a Java byte-code file
-				Update_file.putchar ('%/001/');
+					-- This is a Java byte-code file
+				melted_file.putchar ('%/001/');
 			else
-				-- This is an Eiffel byte-code file
-				Update_file.putchar ('%/000/');
+					-- This is an Eiffel byte-code file
+				melted_file.putchar ('%/000/');
 			end
 
-				-- Update the root class info
-			a_class := root_class.compiled_class;
-			dtype := a_class.types.first.type_id - 1;
-			if creation_name /= Void then
-				root_feat := a_class.feature_table.item (creation_name);
-				if root_feat.has_arguments then
-					has_argument := 1;
+			if not empty then
+				file_pointer := melted_file.file_pointer
+
+					-- Update the root class info
+				a_class := root_class.compiled_class;
+				dtype := a_class.types.first.type_id - 1;
+				if creation_name /= Void then
+					root_feat := a_class.feature_table.item (creation_name);
+					if root_feat.has_arguments then
+						has_argument := 1;
+					end;
+					rout_id := root_feat.rout_id_set.first;
+					rout_info := System.rout_info_table.item (rout_id);
+					rcorigin := rout_info.origin.id;
+					rcoffset := rout_info.offset
+				else
+					rcorigin := -1
 				end;
-				rout_id := root_feat.rout_id_set.first;
-				rout_info := System.rout_info_table.item (rout_id);
-				rcorigin := rout_info.origin.id;
-				rcoffset := rout_info.offset
-			else
-				rcorigin := -1
-			end;
-			write_int (file_pointer, rcorigin);
-			write_int (file_pointer, dtype);
-			write_int (file_pointer, rcoffset);
-			write_int (file_pointer, has_argument);
-
-				-- Write first the number of class types now available
-			write_int (file_pointer, type_id_counter.value);
-				-- Write the number of classes now available
-			write_int (file_pointer, class_counter.total_count);
-				-- Write the profiler status
-			if Lace.ace_options.has_profile then
-				write_int (file_pointer, 3)
-			else
-				write_int (file_pointer, 0)
+				write_int (file_pointer, rcorigin);
+				write_int (file_pointer, dtype);
+				write_int (file_pointer, rcoffset);
+				write_int (file_pointer, has_argument);
+	
+					-- Write first the number of class types now available
+				write_int (file_pointer, type_id_counter.value);
+					-- Write the number of classes now available
+				write_int (file_pointer, class_counter.total_count);
+					-- Write the profiler status
+				if Lace.ace_options.has_profile then
+					write_int (file_pointer, 3)
+				else
+					write_int (file_pointer, 0)
+				end
+					-- Write the new `dle_level' 
+					-- (`dle_frozen_level' has the same value).
+				write_int (file_pointer, dle_level);
+				make_update_feature_tables (melted_file);
+				make_update_rout_id_arrays (melted_file);
+					-- Write first the new size of the dispatch table
+				Dispatch_table.write_dispatch_count (melted_file);
+					-- Update the dispatch table
+				Dispatch_table.make_update (melted_file);
+					-- Open the file for reading byte code for melted features
+					-- Update the execution table
+				execution_table.make_update (melted_file);
+				make_conformance_table_byte_code (melted_file);
+				make_option_table (melted_file);
+				make_rout_info_table (melted_file);
+				make_update_descriptors (melted_file);
+					-- End mark
+				write_int (file_pointer, -1);
 			end
-				-- Write the new `dle_level' 
-				-- (`dle_frozen_level' has the same value).
-			write_int (file_pointer, dle_level);
-			make_update_feature_tables (Update_file);
-			make_update_rout_id_arrays (Update_file);
-				-- Write first the new size of the dispatch table
-			Dispatch_table.write_dispatch_count (Update_file);
-				-- Update the dispatch table
-			Dispatch_table.make_update (Update_file);
-				-- Open the file for reading byte code for melted features
-				-- Update the execution table
-			execution_table.make_update (Update_file);
-			make_conformance_table_byte_code (Update_file);
-			make_option_table (Update_file);
-			make_rout_info_table (Update_file);
-			make_update_descriptors (Update_file);
-				-- End mark
-			write_int (file_pointer, -1);
-			Update_file.close
-		end;
 
+			melted_file.close
+		end;
+	
 	make_update_feature_tables (file: RAW_FILE) is
 			-- Write the byte code for feature tables to be updated
 			-- into `file'.
@@ -2168,27 +2176,11 @@ end;
 
 			deg_output.display_degree_output (degree_message, 0, 13)
 			generate_make_file;
-				-- Empty update file
-			generate_empty_update_file;
+
+				-- Create an empty update file ("melted.eif")
+			make_update (True);
 
 			deg_output.put_end_degree
-		end;
-
-	generate_empty_update_file is
-		do
-			Update_file.open_write;
-				-- Nothing to update
-			Update_file.putchar ('%U');
-			-- Flag indicating whether it's Java or Eiffel byte-code
-			if java_generation then
-				-- This is a Java byte-code file
-				Update_file.putchar ('%/001/');
-			else
-				-- This is an Eiffel byte-code file
-				Update_file.putchar ('%/000/');
-			end
-
-			Update_file.close;
 		end;
 
 	update_valid_body_ids is

@@ -20,6 +20,16 @@ inherit
 			{NONE} all
 		end
 		
+	WEL_BIT_OPERATIONS
+		export
+			{NONE} all
+		end
+		
+	WEL_TMPF_CONSTANTS
+		export
+			{NONE} all
+		end
+		
 create 
 	make,
 	make_indirect,
@@ -164,7 +174,7 @@ feature -- Access
 		do
 			Result := string_size (a_string).integer_item (2)
 		end
-		
+
 	string_size_extended (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
 			-- [width, height, leading overhang, trailing overhang] of `a_string'.
 			-- Not all fonts have characters that fit completely within the bounds of
@@ -182,21 +192,27 @@ feature -- Access
 		local
 			cur_width, cur_height: INTEGER
 			screen_dc: WEL_SCREEN_DC
-			bounding_rect: WEL_RECT
 			wel_string: WEL_STRING
 			counter: INTEGER
 			count: INTEGER
-			line_start_index: INTEGER
 			greatest_a, greatest_c: INTEGER
 			pointer: POINTER
-			error_code: INTEGER
 			current_c: INTEGER
 			area: SPECIAL [CHARACTER]
 			screen_dc_pointer: POINTER
-			bounding_rect_pointer: POINTER
-			bounding_rect_width: INTEGER
-			current_character: CHARACTER
-			text_format: INTEGER
+			abc_struct: WEL_ABC_STRUCT
+			abc_struct_size: INTEGER
+			managed_pointer: MANAGED_POINTER
+			char_pointer: POINTER
+			character: CHARACTER
+			a, b, c: INTEGER
+			current_width: INTEGER
+			advance_width: INTEGER
+			text_metric: WEL_TEXT_METRIC
+			metric_height: INTEGER
+			last_newline_index: INTEGER
+			optimize_for_short_strings: BOOLEAN
+			standard_result: TUPLE [INTEGER, INTEGER]
 		do
 			if a_string.is_empty then
 				cur_width := 0
@@ -205,74 +221,101 @@ feature -- Access
 				create wel_string.make (a_string)
 				area := a_string.area
 				pointer := wel_string.item
-				create bounding_rect.make (0, 0, 32767, 32767)
 				create screen_dc
 				screen_dc.get
 				screen_dc.select_font (Current)
 				count := wel_string.count
-				text_format := Dt_calcrect | Dt_expandtabs | Dt_noprefix
 				
-					-- Store pointers to structures for quicker access.
-				screen_dc_pointer := screen_dc.item
-				bounding_rect_pointer := bounding_rect.item
-				
-				from
-					counter := 1
-					line_start_index := 1
-						-- Assign an arbitarily large value, as if we use the
-						-- default value of 0, we cannot return a negative value.
-					greatest_a := 32000
-						-- Retrieve the greatest a value for the first character before iteration.
-					greatest_a := greatest_a.min (get_char_a_width (screen_dc, area.item (counter - 1).code))
-				until
-					counter > count
-				loop
-					current_character := area.item (counter - 1)
-					if current_character = '%N' then
-						if counter < count - 1 then
-								-- Ensure that we do not check a character if the string ends in '%N'.
-							greatest_a := greatest_a.min (get_char_a_width (screen_dc, area.item (counter + 1).code))
-						end
-						if counter < count then
-							current_c := get_char_c_width (screen_dc, area.item (counter - 1).code)
-						end
-						error_code := screen_dc.cwin_draw_text (screen_dc_pointer, pointer + (line_start_index - 1), counter - line_start_index, bounding_rect_pointer, text_format)
-						bounding_rect_width := bounding_rect.width
-						
-						if current_c < 0 then
-							greatest_c := greatest_c.max (bounding_rect_width + current_c.abs)
-						else
-							greatest_c := greatest_c.max (bounding_rect_width)
-						end
+					-- Create a text metric structure from `screen_dc' providing information
+					-- regarding selected font.
+				create text_metric.make (screen_dc)
+					-- We only need to perform the accurate calculations for true type fonts.
+					-- If a font is not truetype, we can simply use `string_size'.
+				if flag_set (text_metric.pitch_and_family, tmpf_truetype) then
 
-						cur_width := bounding_rect_width.max (cur_width)
-						cur_height := cur_height + bounding_rect.height
-						line_start_index := counter + 1
+						-- Store height returned by metrics for quick access.
+					metric_height := text_metric.height				
+					
+						-- It is quicker to perform different implementations
+						-- based on the string length. The value of 48 is an approximate
+						-- value where in testing, the relative merits of each approach becomes
+						-- apparent. This value should not be changed without proper testing. Julian
+					optimize_for_short_strings := count < 48
+									
+					create abc_struct.make
+					abc_struct_size := abc_struct.structure_size
+					if not optimize_for_short_strings then
+							-- If we are dealing with a large string, we retrieve
+							-- all characters from 0-255, for subsequent look up
+							-- as it is quicker.
+						create managed_pointer.make (255 * abc_struct_size)
+						screen_dc.cwel_get_char_abc_widths (screen_dc.item, 1, 255, managed_pointer.item)
+						char_pointer := managed_pointer.item
 					end
-					counter := counter + 1
-				end
-				
-					-- Now check the final character of the last line.
-				error_code := screen_dc.cwin_draw_text (screen_dc_pointer, pointer + (line_start_index - 1), counter - line_start_index, bounding_rect_pointer, text_format)
-				bounding_rect_width := bounding_rect.width
-				
-				current_c := get_char_c_width (screen_dc, area.item (counter - 2).code)
-				if current_c < 0 then
-					greatest_c := greatest_c.max (bounding_rect_width + current_c.abs)
+					
+						-- Store pointers to structures for quicker access.
+					screen_dc_pointer := screen_dc.item
+	
+					greatest_a := 1000
+					greatest_c := -1000
+					from
+						counter := 1
+						current_c := 0
+					until
+						counter > count
+					loop
+						character := area.item (counter - 1)
+						if character = '%N' then
+							cur_width := cur_width.max (current_width)
+							greatest_c := greatest_c.max (current_width - current_c)
+							current_c := 0
+							current_width := 0
+							cur_height := cur_height + metric_height
+							last_newline_index := counter
+						else
+							if optimize_for_short_strings then
+									-- It is quicker to retrieve the item multiple times, rather than
+									-- retrieve all 255 character indexes for short strings.
+								screen_dc.cwel_get_char_abc_widths (screen_dc.item, character.code, character.code, abc_struct.item)	
+							else
+									-- As we are not optimizing for short strings, look up the character
+									-- in the prefetched table.
+								create abc_struct.make_by_pointer (char_pointer + ((character.code - 1) * abc_struct_size))
+							end
+							
+							a := abc_struct.a
+							b := abc_struct.b
+							c := abc_struct.c
+							advance_width := a + b + c
+							current_c := (current_c + advance_width).min (1000)
+							current_c := current_c.min (c)
+							current_width := current_width + advance_width
+							if last_newline_index = counter - 1 or counter = 1 then
+								greatest_a := greatest_a.min (a)
+							end
+						end	
+						counter := counter + 1
+					end
+					cur_height := cur_height + metric_height
+					cur_width := cur_width.max (current_width)
+					greatest_c := greatest_c.max (current_width - current_c)
+					greatest_c := cur_width - greatest_c
+	
+	
+					screen_dc.unselect_font
+					screen_dc.quick_release
 				else
-					greatest_c := greatest_c.max (bounding_rect_width)
+						-- We are not dealing with a true type font, so
+						-- use `string_size' to return the best approximation.
+						-- The third and fourth values of the result will be 0.
+					standard_result := string_size (a_string)
+					cur_width := standard_result.integer_item (1)
+					cur_height := standard_result.integer_item (2)
 				end
-				cur_width := bounding_rect_width.max (cur_width)
-				cur_height := cur_height + bounding_rect.height
-				
-				greatest_c := cur_width - greatest_c
-
-
-				screen_dc.unselect_font
-				screen_dc.quick_release
 			end
-
 			Result := [cur_width, cur_height, greatest_a, greatest_c]
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is

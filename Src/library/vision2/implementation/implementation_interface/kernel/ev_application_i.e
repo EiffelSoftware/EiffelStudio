@@ -438,20 +438,20 @@ feature {NONE} -- Implementation
 			a_container: EV_CONTAINER
 			a_widget_list: LINEAR [EV_WIDGET]
 		do
-			a_container ?= a_widget
-			if a_container /= Void then
-				from
-					a_widget_list := a_container.linear_representation
-					a_widget_list.start
-				until
-					a_widget_list.after or Result /= Void
-				loop
-					Result := focused_widget_from_container (a_widget_list.item)
-					a_widget_list.forth
-				end
+			if a_widget.has_focus then
+				Result := a_widget
 			else
-				if a_widget.has_focus then
-					Result := a_widget
+				a_container ?= a_widget
+				if a_container /= Void then
+					from
+						a_widget_list := a_container.linear_representation
+						a_widget_list.start
+					until
+						a_widget_list.after or Result /= Void
+					loop
+						Result := focused_widget_from_container (a_widget_list.item)
+						a_widget_list.forth
+					end
 				end
 			end
 		ensure

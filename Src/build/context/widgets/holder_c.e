@@ -90,7 +90,8 @@ feature {NONE}
 						then
 							a_context := a_type.create_context (Current);
 						elseif
-							(a_type /= context_catalog.temp_wind_type)
+							(a_type /= context_catalog.temp_wind_type) and then
+							type.is_valid_parent (Current)
 						then
 							a_context := a_type.create_context (Current);
 						end;
@@ -132,13 +133,15 @@ feature {NONE}
 			then
 				dropped_context := dropped.data;
 				window_c ?= dropped_context;
-				if (window_c = Void) then
-					a_context := dropped_context.create_context (Current);
-				elseif window_c.type = context_catalog.temp_wind_type and
-					type = context_catalog.perm_wind_type then
-					a_context := dropped_context.create_context (Current);
-				end;
-				process_created_context (a_context)
+				if dropped_context.is_valid_parent (Current) then
+					if (window_c = Void) then
+						a_context := dropped_context.create_context (Current);
+					elseif window_c.type = context_catalog.temp_wind_type and
+						type = context_catalog.perm_wind_type then
+						a_context := dropped_context.create_context (Current);
+					end;
+					process_created_context (a_context)
+				end
 			end
 		end;
 

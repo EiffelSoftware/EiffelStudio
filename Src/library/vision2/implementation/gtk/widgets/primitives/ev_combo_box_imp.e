@@ -28,7 +28,6 @@ inherit
 			interface,
 			has_focus,
 			set_focus,
-			default_key_processing_blocked,
 			on_focus_changed
 		end
 
@@ -38,7 +37,8 @@ inherit
 			visual_widget,
 			set_composite_widget_pointer_style,
 			destroy,
-			on_key_event
+			on_key_event,
+			default_key_processing_blocked
 		redefine
 			select_callback,
 			remove_i_th,
@@ -49,7 +49,6 @@ inherit
 			interface,
 			has_focus,
 			set_focus,
-			default_key_processing_blocked,
 			on_focus_changed,
 			selected_item
 		end
@@ -208,15 +207,6 @@ feature {NONE} -- Implementation
 			
 	on_item_clicked_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE]
 			-- Intermediary key agent that is reused for list items in `add_to_container'.
-
-	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
-			-- 
-		do
-			-- We don't want to lose focus on up or down keys.
-			if a_key.code = feature {EV_KEY_CONSTANTS}.key_down or else a_key.code = feature {EV_KEY_CONSTANTS}.key_up then
-				Result := True
-			end
-		end
 
 	on_focus_changed (a_has_focus: BOOLEAN) is
 			-- Focus for `Current' has changed'.

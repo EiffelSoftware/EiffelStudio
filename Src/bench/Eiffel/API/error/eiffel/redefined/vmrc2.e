@@ -55,6 +55,7 @@ feature -- Output
 			invalid_feature.append_name (st);
 			st.add_string (" from class: ");
 			u_class.append_name (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

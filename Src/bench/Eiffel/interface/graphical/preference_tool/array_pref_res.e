@@ -10,7 +10,7 @@ class ARRAY_PREF_RES
 inherit
 	STRING_PREF_RES
 		redefine
-			make, associated_resource, validate, store
+			make, associated_resource, validate
 		end
 
 creation
@@ -34,15 +34,9 @@ feature -- Validation
 			is_resource_valid := (text /= Void and then
 				associated_resource.is_valid (text.text)) or else
 				text = Void
-		end
-
-feature  {PREFERENCE_CATEGORY} -- Access
-
-	store (str: STRING; file: PLAIN_TEXT_FILE) is
-		do
-			file.putchar('%"');
-			file.putstring (str);
-			file.putchar ('%"')
+			if not is_resource_valid then
+				raise_warner ("an array")
+			end
 		end
 
 feature {NONE} -- Properties

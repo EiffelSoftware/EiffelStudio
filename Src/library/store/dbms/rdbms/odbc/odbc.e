@@ -30,6 +30,9 @@ inherit
 			unset_catalog_flag
 		end
 
+creation
+	do_nothing
+
 feature -- For DATABASE_STATUS
 
 	is_ok_mat: BOOLEAN

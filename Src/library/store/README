@@ -1,5 +1,5 @@
 
-July 1998, Release: 4.3e
+July 1998, Release: 4.3
 
 --|----------------------------------------------------------------
 --| EiffelStore: library of reusable components for ISE Eiffel.
@@ -45,8 +45,8 @@ The library interface consists of two sets:
    
 Example classes are located in $EIFFEL4/examples/store
 
-EiffelStore 4.3e has currently only been tested with:
-		ISE-Eiffel Release 4.3e
+EiffelStore 4.3 has currently only been tested with:
+		ISE-Eiffel Release 4.3
    		Oracle8 8.0.3
 		Sybase Adaptive Server Enterprise for Windows NT Evaluation Copy
  Version 11.5

@@ -8,7 +8,7 @@ class
 
 feature -- Access
 
-	Class_separator: STRING is "%N__end_class__%N"
+	Class_separator: STRING is "%N--__end_class__--%N"
 			-- Token used to separate class definition in single file
 
 end -- class CODE_SHARED_CLASS_SEPARATOR

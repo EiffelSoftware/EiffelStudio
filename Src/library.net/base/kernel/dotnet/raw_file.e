@@ -197,6 +197,29 @@ feature -- Input
 		
 feature {NONE} -- Implementation
 
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+			-- Fill `a_string', starting at position `pos' with at
+			-- most `nb' characters read from current file.
+			-- Return the number of characters actually read.
+		local
+			i, j: INTEGER
+			str_area: NATIVE_ARRAY [INTEGER_8]
+		do
+			create str_area.make (nb)
+			Result := reader.read_integer_8_array_integer_integer (str_area, 0, nb)
+			internal_end_of_file := reader.peek_char = -1
+			from
+				i := 0
+				j := pos
+			until
+				i >= Result
+			loop
+				a_string.put (str_area.item (i).to_character, j)
+				i := i + 1
+				j := j + 1
+			end
+		end
+
 	c_open_modifier: INTEGER is 32768
 			-- Open the file in binary mode.
 

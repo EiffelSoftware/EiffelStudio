@@ -1482,7 +1482,7 @@ rt_public int16 eif_register_bit_type (long size)
 /*------------------------------------------------------------------*/
 /* Type id for ARRAY [something], where 'something' is a reference  */
 /* type.                                                            */
-/*                                                                  */
+/* dtype : full type id; RTUD(yes)                                  */
 /* Result : RTUD(yes) (doesn't matter actually)                     */
 /*------------------------------------------------------------------*/
 
@@ -1490,19 +1490,15 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 {
 	int16   *typearr, arr_dtype, result;
 
-#ifdef WORKBENCH
 	arr_dtype = RTUD_INV(egc_arr_dtype);
-#else
-	arr_dtype = egc_arr_dtype;
-#endif
 
 	typearr = (int16 *) eif_malloc (4 * sizeof(int16));
-	typearr [0] = -1;		   /* No static call context */
-	typearr [1] = arr_dtype;   /* Base type of ARRAY     */
-	typearr [2] = dtype;       /* Parameter type */
+	typearr [0] = -1;						/* No static call context */
+	typearr [1] = RTUD_INV(egc_arr_dtype);	/* Base type of ARRAY     */
+	typearr [2] = RTUD_INV(dtype);			/* Parameter type */
 	typearr [3] = TERMINATOR;
 
-	result = eif_compound_id ((int16 *)0, (EIF_REFERENCE )0,(int16) arr_dtype, typearr);
+	result = eif_compound_id (NULL, NULL, typearr[1], typearr);
 	eif_free (typearr);
 	return result;
 }

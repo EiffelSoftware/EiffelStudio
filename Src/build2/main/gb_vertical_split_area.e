@@ -12,7 +12,7 @@ inherit
 		redefine
 			initialize
 		end
-
+		
 feature {NONE} -- Initialization
 
 	initialize is

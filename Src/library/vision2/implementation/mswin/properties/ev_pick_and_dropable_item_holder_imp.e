@@ -173,16 +173,14 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			pt := client_to_screen (x_pos, y_pos)
 			if item_is_dockable_source then
 				tool_bar ?= Current
-				if tool_bar /= Void then--and then tool_bar.is_dragging or tool_bar. then
+				if tool_bar /= Void then
 					tool_bar.end_dragable (x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y)	
-				end
-				
-			end
-			if item_is_pnd_source then 
+				end	
+			elseif item_is_pnd_source then 
 				pnd_item_source.check_drag_and_drop_release (x_pos, y_pos)
 			elseif parent_is_pnd_source then
 				check_drag_and_drop_release (x_pos, y_pos)
-				parent_is_pnd_source := False
+				parent_is_pnd_source := False	
 			else
 				check_dragable_release (x_pos, y_pos)
 			end

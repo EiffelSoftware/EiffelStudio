@@ -152,6 +152,8 @@ iff not exist %EIFFEL_SRC\C_library\expat\bin\xmltok.dll then
 endiff
 copy %EIFFEL_SRC\C_library\expat\bin\xmlparse.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 copy %EIFFEL_SRC\C_library\expat\bin\xmltok.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+copy %EIFFEL_SRC\C_library\expat\bin\xmlparse.dll %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin
+copy %EIFFEL_SRC\C_library\expat\bin\xmltok.dll %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin
 copy %EIFFEL_SRC\C_library\expat\xmlparse\Release\xmlparse.lib %EIFFEL_SRC\C_library\expat\lib
 copy %EIFFEL_SRC\C_library\expat\xmltok\Release\xmltok.lib %EIFFEL_SRC\C_library\expat\lib
 
@@ -346,6 +348,7 @@ endiff
 move configure_all.exe %INSTALL_DIR
 
 remtrace Recompiling EiffelBuild
+cdd %INIT_DIR
 call make_build.btm
 
 remtrace Recompile Legacy++

@@ -168,6 +168,7 @@ iff not defined NO_COMPILE then
 	endiff
 	call update_libraries.btm
 	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin\
+	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin\
 	cdd %INIT_DIR
 	give_time_to update libraries
 

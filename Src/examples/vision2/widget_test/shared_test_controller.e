@@ -15,37 +15,8 @@ feature -- Access
 			create Result
 		end
 
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
 invariant
-	invariant_clause: True -- Your invariant here
-
+	test_controller_not_void: test_controller /= Void
+	test_controller_consistent: test_controller = test_controller
+	
 end -- class SHARED_TEST_CONTROLLER

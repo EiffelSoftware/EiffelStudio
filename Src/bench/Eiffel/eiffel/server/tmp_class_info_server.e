@@ -1,6 +1,6 @@
 -- Server for class information on temporary file. This server is
 -- used during the compilation. The goal is to merge the file
--- Tmp_class_info_file and Class_info_file if the compilation is successfull.
+-- Tmp_class_info_file and Class_info_file if the compilation is successful.
 
 class TMP_CLASS_INFO_SERVER 
 

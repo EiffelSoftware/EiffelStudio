@@ -58,7 +58,7 @@ feature
 
 	
 	finalize is
-			-- Finalization after a successfull recompilation.
+			-- Finalization after a successful recompilation.
 		do
 				-- first remove ids
 			from

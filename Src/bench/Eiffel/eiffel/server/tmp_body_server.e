@@ -62,7 +62,7 @@ feature
 		end;
 
 	useless_body_ids: ARRAY [BODY_ID];
-			-- Set of body ids which have to desappear after a successfull
+			-- Set of body ids which have to desappear after a successful
 			-- recompilation
 
 	nb_useless: INTEGER;
@@ -134,7 +134,7 @@ end;
 			-- Array chunk
 
 	finalize is
-			-- Finalization after a successfull recompilation.
+			-- Finalization after a successful recompilation.
 		local
 			i: INTEGER;
 			body_id, useless_body_id: BODY_ID;

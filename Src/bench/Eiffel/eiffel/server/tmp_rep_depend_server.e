@@ -1,6 +1,6 @@
 -- Server of class dependances for incremental type check 
 -- used during the compilation. The goal is to merge the file Tmp_depend_file
--- and Depend_file if the compilation is successfull.
+-- and Depend_file if the compilation is successful.
 
 class TMP_REP_DEPEND_SERVER 
 

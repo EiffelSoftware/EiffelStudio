@@ -1,6 +1,6 @@
 class EXAMPLE
 
-creation
+create
 	make
 
 feature -- Init

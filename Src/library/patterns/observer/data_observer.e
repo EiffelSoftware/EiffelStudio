@@ -7,7 +7,7 @@ indexing
 class
 	DATA_OBSERVER
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -18,7 +18,7 @@ feature -- Initialization
 			data_exists: d /= Void
 		do
 			data := d
-			!! observer_list.make
+			create observer_list.make
 		end
 
 feature -- Properties

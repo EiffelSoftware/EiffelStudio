@@ -15,7 +15,7 @@ inherit
 
 	GD_COLORABLE
 
-creation
+create
 	make
 
 feature -- Initialization

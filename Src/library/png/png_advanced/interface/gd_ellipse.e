@@ -20,7 +20,7 @@ inherit
 			fill_closed_figure as fill_ellipse
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

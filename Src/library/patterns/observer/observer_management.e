@@ -7,7 +7,7 @@ indexing
 class
 	OBSERVER_MANAGEMENT
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -15,7 +15,7 @@ feature -- Initialization
 	make is
 		-- Initialize.
 		do
-			!! data_observer_list.make
+			create data_observer_list.make
 		end
 
 feature -- Operations
@@ -32,7 +32,7 @@ feature -- Operations
 			if data_observer /= Void then
 				data_observer.add_observer (w)
 			else
-				!! data_observer.make (d)
+				create data_observer.make (d)
 				data_observer.add_observer (w)
 				data_observer_list.extend (data_observer)
 			end

@@ -505,6 +505,13 @@ feature -- Update
 			end
 		end;
 
+	resynchronize_debugger is
+		do
+			if feature_part /= Void and then feature_form.managed then
+				feature_part.resynchronize_debugger (Void)
+			end
+		end;
+
 	show_stoppoint (e_feature: E_FEATURE; index: INTEGER) is
 			-- If stone feature is equal to feature `f' and if in debug
 			-- mode then redisplay the sign of the `index'-th breakable point.

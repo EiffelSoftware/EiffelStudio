@@ -133,7 +133,7 @@ debug ("ACTIVITY")
 end;
 						-- This is temporary according to the comments in EXTERNAL_I
 						-- If this is removed, add a test at the beginning on Void for `other'
-					if equal (f1.written_in, feat_tbl_id) and then f1.is_external then
+					if f1.written_in.is_equal (feat_tbl_id) and then f1.is_external then
 						ext_i ?= f1;
 						if ext_i.encapsulated then
 							System.set_freeze (True)
@@ -254,7 +254,7 @@ end;
 					propagate_feature := True;
 				end;
 
-				if 	equal (old_feature_i.written_in, feat_tbl_id) then
+				if 	old_feature_i.written_in.is_equal (feat_tbl_id) then
 					if old_feature_i.is_external then
 							-- Delete one occurence of an external feature
 						external_i ?= old_feature_i;
@@ -272,7 +272,7 @@ end;
 					end;
 					if 	new_feature_i = Void
 						or else
-						not equal (new_feature_i.written_in, feat_tbl_id)
+						not new_feature_i.written_in.is_equal (feat_tbl_id)
 					then
 							-- A feature written in the associated class
 							-- disapear
@@ -347,7 +347,7 @@ end;
 			until
 				after
 			loop
-				if equal (item_for_iteration.written_in, feat_tbl_id) and then 
+				if item_for_iteration.written_in.is_equal (feat_tbl_id) and then
 					not item_for_iteration.is_deferred then
 					from
 						assert_list.start;
@@ -469,7 +469,7 @@ io.error.putstring ("Check feature: ");
 io.error.putstring (f.feature_name);
 io.error.new_line;
 end;
-			if equal (f.written_in, feat_tbl_id) then
+			if f.written_in.is_equal (feat_tbl_id) then
 					-- Take a feature written in the class associated
 					-- to the feature table
 				arguments := f.arguments;
@@ -579,7 +579,7 @@ end;
 				after
 			loop
 				feature_i := item_for_iteration;
-				if equal (feature_i.written_in, feat_tbl_id) then
+				if feature_i.written_in.is_equal (feat_tbl_id) then
 						-- Feature written in the associated class
 					feature_i.update_instantiator2 (a_class);
 				end;
@@ -781,7 +781,7 @@ feature -- Case stuff
 			loop
 				feat := item_for_iteration;
 				Result := feat.is_external and then
-					equal (feat.written_in, feat_tbl_id)
+					feat.written_in.is_equal (feat_tbl_id)
 				forth
 			end
 		end;

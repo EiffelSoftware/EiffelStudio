@@ -39,14 +39,14 @@ feature -- Comparable
 			-- Is `other' greater than Current ?
 		do
 			Result := class_id < other.class_id or else
-			(equal (class_id, other.class_id) and then body_index < other.body_index);
+			(class_id.is_equal (other.class_id) and then body_index < other.body_index);
 		end;
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Are `other' and `Current' equal?
 		do
 			Result := equal (body_index, other.body_index) and
-					equal (class_id, other.class_id)
+					class_id.is_equal (other.class_id)
 		end
 
 

@@ -39,7 +39,7 @@ feature
 	is_equal (other: CLIENT_I): BOOLEAN is
 			-- Is `other' equal to Current ?
 		do
-			Result := equal (written_in, other.written_in)
+			Result := written_in.is_equal (other.written_in)
 		end;
 
 	infix "<" (other: CLIENT_I): BOOLEAN is
@@ -88,7 +88,7 @@ feature -- Incrementality
 			-- [Result implies "`clients' is a subset of `other.clients'"]
 		require
 			good_argument: other /= Void;
-			consistency: equal (other.written_in, written_in)
+			consistency: other.written_in.is_equal (written_in)
 		local
 			other_clients: like clients;
 			cur, other_cur: CURSOR;
@@ -115,7 +115,7 @@ feature -- Incrementality
 			-- Is `other' the same as Current ?
 		require
 			good_argument: other /= Void;
-			same_written_in: equal (written_in, other.written_in)
+			same_written_in: written_in.is_equal (other.written_in)
 		local
 			other_clients: like clients;
 			i, pos, c: INTEGER;

@@ -48,7 +48,7 @@ feature {NONE} -- Recording information for eiffelcase
 				parents.after
 			loop
 				parent_id := parents.item.parent_id;
-				if not equal (parent_id, System.any_id) then
+				if not parent_id.is_equal (System.any_id) then
 					no_repeated_parents.extend (parent_id)
 				end;
 				parents.forth

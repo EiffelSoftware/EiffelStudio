@@ -460,7 +460,7 @@ end;
 				feature_table := Empty_table;
 			end;
 				-- Prepare `inherited_features'.
-			inherited_features.set_feat_tbl_id (a_class.id);
+			inherited_features.set_feat_tbl_id (id);
 				-- Compute `previous_feature_table'.
 			if Tmp_feat_tbl_server.has (id) then
 					-- There eas an error and a feature table has been already
@@ -710,7 +710,7 @@ end;
 				feature_table.after
 			loop
 				feature_i := feature_table.item_for_iteration;
-				if equal (feature_i.written_in, id) then
+				if feature_i.written_in.is_equal (id) then
 					feature_name := feature_table.key_for_iteration;
 						-- recompute a former local declaration
 					analyze_local (feature_i.duplicate, feature_name);
@@ -821,7 +821,7 @@ end;
 				else
 						-- Take the previous feature id
 					feature_i.set_feature_id (old_feature.feature_id);
-					if not equal (old_feature.written_in, a_class.id) then
+					if not old_feature.written_in.is_equal (a_class.id) then
 						feature_i.set_body_index (Body_index_counter.next_id);
 					else
 						feature_i.set_body_index (old_feature.body_index);
@@ -920,7 +920,7 @@ end;
 			feature_i := feature_table.item (feature_name);
 
 			if feature_i /= Void then
-				old_feature_in_class := equal (feature_i.written_in, a_class.id);
+				old_feature_in_class := feature_i.written_in.is_equal (a_class.id);
 				old_body_id := feature_i.original_body_id;
 				if 	
 					old_feature_in_class and then 
@@ -1460,7 +1460,7 @@ end;
 					rep_name := rep_name_list.item;
 					rep_feat :=	rep_name.rep_feature;  
 					if not rep_feat.is_deferred and then
-						not equal (rep_feat.written_in, a_class.id) 
+						not rep_feat.written_in.is_equal (a_class.id) 
 					then
 						if not equal (written_in_cont, rep_feat.written_in) then
 							written_in_cont := rep_feat.written_in;
@@ -1635,7 +1635,7 @@ end;
 				-- Look for a previous definition of the feature
 			feature_i := feature_table.item (feature_name);
 			if feature_i /= Void then
-				old_feature_in_class := equal (feature_i.written_in, a_class.id);
+				old_feature_in_class := feature_i.written_in.is_equal (a_class.id);
 				if old_feature_in_class then
 						-- Found a feature of same name and written in the
 						-- same class.

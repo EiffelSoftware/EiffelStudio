@@ -516,7 +516,7 @@ feature {COMPILER_EXPORTER} -- Merging
 			-- Used when merging precompilations.
 		require
 			other_not_void: other /= Void
-			same_class: equal (id, other.id)
+			same_class: id.is_equal (other.id)
 		local
 			classes: LINKED_LIST [E_CLASS]
 			ec: E_CLASS

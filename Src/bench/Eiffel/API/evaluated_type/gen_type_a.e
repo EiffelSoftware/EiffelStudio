@@ -85,7 +85,7 @@ feature -- Access
 			other_gen_type ?= other;
 			if 	other_gen_type /= Void
 				and then
-				equal (other_gen_type.base_class_id, base_class_id)
+				other_gen_type.base_class_id.is_equal (base_class_id)
 				and then
 				is_expanded = other_gen_type.is_expanded
 			then
@@ -304,7 +304,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_type: GEN_TYPE_A;
 			gen_type_generics: like generics;
 		do
-			if equal (base_class_id, type.base_class_id) then
+			if base_class_id.is_equal (type.base_class_id) then
 				gen_type ?= type;
 				if gen_type /= Void then
 					from
@@ -515,7 +515,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			other_gen_type ?= other;
 			if 	other_gen_type /= Void
 				and then
-				equal (other_gen_type.base_class_id, base_class_id)
+				other_gen_type.base_class_id.is_equal (base_class_id)
 				and then
 				is_expanded = other_gen_type.is_expanded
 			then
@@ -544,7 +544,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			other_gen_type ?= other;
 			if  other_gen_type /= Void
 				and then
-				equal (other_gen_type.base_class_id, base_class_id)
+				other_gen_type.base_class_id.is_equal (base_class_id)
 			then
 				from
 					Result := True;

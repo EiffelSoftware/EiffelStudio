@@ -766,7 +766,7 @@ end;
 
 				elseif ((not feature_i.in_pass3) or else
 							-- The feature is deferred and written in the current class
-						(feature_i.is_deferred and then equal (id, feature_i.written_in))) then
+						(feature_i.is_deferred and then id.is_equal (feature_i.written_in))) then
 					if feature_i.is_deferred then
 							-- Just type check it. See if VRRR or
 							-- VMRX error has occurred.
@@ -777,7 +777,7 @@ end;
 					record_suppliers (feature_i, dependances);
 				--elseif (feature_i.is_deferred or else
 						--feature_i.is_external) and then
-					--(equal (id, feature_i.written_in)) then
+					--(id.is_equal (feature_i.written_in)) then
 						-- Just type check it. See if VRRR or
 						-- VMRX error has occurred.
 					--ast_context.set_a_feature (feature_i);
@@ -1715,7 +1715,7 @@ feature -- Class initialization
 					pars.put_i_th (parent_type, lower);
 					lower := lower + 1;
 				end;
-			elseif not equal (id, System.general_id) then
+			elseif not id.is_equal (System.general_id) then
 					-- No parents are syntactiaclly specified: ANY is
 					-- the default parent, except for class GENERAL which has
 					-- no parent at all (we don't want a cycle in the
@@ -3586,7 +3586,7 @@ feature -- Merging
 			-- Used when merging precompilations.
 		require
 			other_not_void: other /= Void
-			same_class: equal (id, other.id)
+			same_class: id.is_equal (other.id)
 		do
 			is_used_as_expanded :=
 				is_used_as_expanded or other.is_used_as_expanded;

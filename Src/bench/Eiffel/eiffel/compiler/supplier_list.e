@@ -152,7 +152,7 @@ end;
 			until	
 					-- The test for `after' is a defensive programming
 					-- test!!!
-				after or else equal (item.supplier.id, id)
+				after or else item.supplier.id.is_equal (id)
 			loop
 				forth;
 			end;

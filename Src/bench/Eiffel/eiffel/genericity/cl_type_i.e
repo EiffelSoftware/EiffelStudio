@@ -77,7 +77,7 @@ feature
 			other_cl_type ?= other;
 			Result := 	other_cl_type /= Void 
 						and then
-						equal (other_cl_type.base_id, base_id)
+						other_cl_type.base_id.is_equal (base_id)
 						and then
 						other_cl_type.is_expanded = is_expanded
 						and then

@@ -10,6 +10,9 @@ class
 
 inherit
 	WEL_DC
+		redefine
+			destroy_item
+		end
 
 creation
 	make,
@@ -48,9 +51,17 @@ feature -- Basic operations
 feature {NONE} -- Removal
 
 	destroy_item is
+			-- Delete the current device context.
+		local
+			p: POINTER	-- Default_pointer
 		do
-			unselect_all
-			delete
+				-- Protect the call to DeleteDC, because `destroy_item' can 
+				-- be called by the GC so without assertions.
+			if item /= p then
+				unselect_all
+				cwin_delete_dc (item)
+			end
+			item := p
 		end
 
 feature {NONE} -- Externals

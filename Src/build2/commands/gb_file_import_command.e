@@ -86,7 +86,7 @@ feature -- Basic operations
 				file_name: FILE_NAME
 			do
 				create dialog
-				dialog.set_filter (project_file_filter)
+				dialog.filters.extend ([project_file_filter, "Files of type (" + project_file_filter + ")"])
 				create file_handler
 					-- We do not allow the dialog to close until a valid
 					-- file name has been entered or the user clicks the
@@ -133,7 +133,6 @@ feature -- Basic operations
 					error_dialog.button (dialog_constants.ev_retry).hide;
 					(error_dialog.button (dialog_constants.ev_ignore)).hide
 					error_dialog.show_modal_to_window (main_window)
-					system_status.close_current_project
 				end
 			end
 			

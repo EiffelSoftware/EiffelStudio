@@ -6,18 +6,10 @@ iff not defined ISE_PLATFORM then
 	echo ISE_PLATFORM not defined. Cannot continue
 	CANCEL
 endiff
-REM iff not defined ISE_C_COMPILER then
-REM 	echo ISE_C_COMPILER not defined. Cannot continue
-REM 	CANCEL
-REM endiff
 iff not defined NO_COMPILE then
 	iff not defined EIFFEL_SRC then
 		echo TMP_EIFFEL_SRC not defined. Cannot continue
 		CANCEL
-	endiff
-	remtrace EIFFEL_SRC is %EIFFEL_SRC
-	iff isdir %EIFFEL_SRC then
-		echo Warning: %EIFFEL_SRC will be erased by the script!
 	endiff
 	iff not defined FINALIZATION_DIR then
 		echo FINALIZED_DIR not defined. Cannot continue
@@ -36,10 +28,9 @@ iff not defined NO_COMPILE then
 		echo Cannot find a version of ec. Cannot continue
 		CANCEL
 	endiff
-REM	iff not exist %ISE_EIFFEL\BCC55\bcc32.exe then
-REM		echo Cannot find the Borland compiler
-REM		CANCEL
-REM	endiff
+	iff isdir %EIFFEL_SRC then
+		echo Warning: %EIFFEL_SRC will be erased by the script!
+	endiff
 endiff
 iff "%@SEARCH[tar]" == "" then
 	echo Cannot find a version of tar. Cannot continue without cygwin
@@ -58,12 +49,12 @@ iff not defined NO_DOCUMENTATION then
 		echo Cannot find document.exe in %DOCUMENT_DIR
 		CANCEL
 	endiff
-	iff not isdir %DOCUMENT_DIR\newdocs then
-		echo Warning: Documentation will be checked out in %DOCUMENT_DIR\newdocs
-	endiff
 	iff "%@SEARCH[hhc.exe]" == "" then
 		echo Cannot find the HTML help compiler
 		CANCEL
+	endiff
+	iff exist %DOCUMENT_DIR\newdocs then
+		echo Warning: %DOCUMENT_DIR\newdocs will be erased by this script!
 	endiff
 endiff	
 iff not defined NO_INSTALL then
@@ -72,7 +63,6 @@ iff not defined NO_INSTALL then
 		CANCEL
 	endiff
 endiff	
-
 iff not defined INSTALL_LOG then
 	echo Error: No file specified for the log
 	CANCEL

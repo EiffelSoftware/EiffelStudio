@@ -2309,11 +2309,9 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				-- To avoid reentrance
 			if not is_destroying then
 				is_destroying := True
-				if Application.is_running and then debugger_manager.debugging_window = Current
-				then
-					set_array_resource ("left_debug_layout_new", left_panel.save_to_resource)
-					set_array_resource ("right_debug_layout_new", right_panel.save_to_resource)
-					debugger_manager.save_original_layout
+					-- If a launched application is still running, kill it.
+				if Application.is_running and then debugger_manager.debugging_window = Current then
+					Application.kill
 				else
 					save_left_panel_layout (left_panel.save_to_resource)
 					save_right_panel_layout (right_panel.save_to_resource)
@@ -2329,13 +2327,6 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 					-- Commit saves
 				save_resources
 
-					-- If a launched application is still running, kill it.
-				if
-					Application.is_running and then
-					debugger_manager.debugging_window = Current
-				then
-					Application.kill
-				end
 				toolbars_area.wipe_out
 				address_manager.recycle
 				project_customizable_toolbar.recycle

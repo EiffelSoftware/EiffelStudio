@@ -236,13 +236,13 @@ rt_private rt_global_context_t * eif_pthread_getspecific (EIF_TSD_TYPE global_ke
 		(rt_global_context_t *) TlsGetValue (rt_global_key);
 
 #elif defined SOLARIS_THREADS	/* Solaris Threads */
-rt_private rt_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) {
+rt_private rt_global_context_t * rt_thr_getspecific (EIF_TSD_TYPE global_key) {
 	rt_global_context_t * Result;
 	(void) thr_getspecific(global_key,(void **)&Result);
 	return Result;
 }
 #define RT_GET_CONTEXT \
-	rt_global_context_t * EIF_VOLATILE rt_globals = eif_thr_getspecific (rt_global_key);
+	rt_global_context_t * EIF_VOLATILE rt_globals = rt_thr_getspecific (rt_global_key);
 
 #else
 	Platform not supported for multithreading, check that you are using

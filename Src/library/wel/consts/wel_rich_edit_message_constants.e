@@ -121,13 +121,6 @@ feature -- Access
 			"EM_FINDTEXTEX"
 		end
 
-	Em_getlimittext: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETLIMITTEXT"
-		end
-
 	Em_getseltext: INTEGER is
 		external
 			"C [macro %"redit.h%"]"

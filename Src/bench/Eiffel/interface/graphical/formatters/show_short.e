@@ -6,7 +6,7 @@ inherit
 
 	FILTERABLE
 		rename
-			filter_context as short_context
+			filter_context_text as short_context_text
 		redefine
 			dark_symbol, display_temp_header, post_fix
 		end;
@@ -42,7 +42,7 @@ feature {NONE}
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display flat|short form of `c'.
 		do
-			text_window.process_text (short_context (c).text)
+			text_window.process_text (short_context_text (c))
 		end
 
 	display_temp_header (stone: STONE) is

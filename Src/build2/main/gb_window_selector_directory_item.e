@@ -11,7 +11,8 @@ inherit
 	EV_TREE_ITEM
 		redefine
 			extend,
-			prune_all
+			prune_all,
+			put_right
 		end
 	
 	GB_XML_UTILITIES
@@ -161,7 +162,14 @@ feature -- Implementation
 		do
 			Precursor {EV_TREE_ITEM} (v)
 			window_selector.item_removed_from_directory (Current, v)
-		end	
+		end
+
+	put_right (v: like item) is
+			-- Add `v' to right of cursor position. Do not move cursor.
+		do
+			Precursor {EV_TREE_ITEM} (v)
+			window_selector.item_added_to_directory (Current, v)
+		end
 
 feature -- Implementation
 	
@@ -207,5 +215,8 @@ feature -- Implementation
 			Result_not_void: Result /= Void
 			is_empty_implies_parent_is_window_selector: Result.is_empty implies parent = window_selector
 		end
+		
+invariant
+	contents_alphabetical: tree_node_contents_alphabetical (Current)
 
 end -- class GB_WINDOW_SELECTOR_DIRECTORY_ITEM

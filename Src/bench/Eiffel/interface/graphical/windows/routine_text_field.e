@@ -1,7 +1,5 @@
 indexing
-
-	description:	
-		"Routine text field in routine window.";
+	description: "Routine text field in routine window.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -9,9 +7,9 @@ class ROUTINE_TEXT_FIELD
 
 inherit
 
-	COMMAND;
 	WINDOWS;
 	EB_CONSTANTS;
+	COMMAND;
 	TEXT_FIELD
 		rename
 			make as text_field_make
@@ -40,7 +38,7 @@ feature -- Properties
 	tool: ROUTINE_W;
 			-- Routine tool window
 
-feature -- Update
+feature -- Updating
 
 	update_choice_position is
 			-- Update the position of the choice window.
@@ -56,11 +54,7 @@ feature -- Update
 			set_text (text)
 		end;
 
-	popup_choice_window is
-			-- Popup the choice window.
-		do
-			execute (Void)
-		end
+feature -- Closure
 
 	close_choice_window is
 			-- Close the choice window.
@@ -118,9 +112,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 									f_table.after
 								loop
 									feat_name := f_table.key_for_iteration;
-									if
-										pattern.matches (feat_name)
-									then
+									if pattern.matches (feat_name) then
 										feat_names.extend (feat_name)
 									end;
 									f_table.forth

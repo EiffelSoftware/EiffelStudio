@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Implementation of SMTP protocol."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -259,7 +258,7 @@ feature {NONE} -- Basic operations
 						mail_message.append ("%N" + mail_signature)
 					end
 					mail_message.replace_substring_all ("%N.", "%N..")
-					mail_message.append ("%N.%N")
+					mail_message.append ("%R%N.")
 					if not error then
 						send_command (mail_message, Ok)
 					end

@@ -22,11 +22,6 @@ extern "C" {
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include <setjmp.h>
-#ifdef __VMS
-#define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
-	/* this routine is in the library in capital letters */
-	/* need to redefine this before including errno.h */
-#endif
 #include <errno.h>    /* needed in error.c, except.c, retrieve.c */
 
 /* Macros for easy access */

@@ -7,7 +7,8 @@ root
 default
 	assertion (all)
 	line_generation (no)
-	msil_generation ("dll")
+	msil_generation (yes)
+	msil_generation_type ("dll")
 
 cluster	
 	root_cluster: "$EIFFEL_SRC\dotnet\reflection_interface\ISE.Reflection.EiffelAssemblyCacheNotifier"
@@ -20,7 +21,7 @@ cluster
 			"CVS";
 		end
 	
-	all dot_net_base: "$ISE_EIFFEL\library.net\base.net"
+	all dot_net_base: "$ISE_EIFFEL\library.net\base"
 		exclude
 			"CVS";
 		end

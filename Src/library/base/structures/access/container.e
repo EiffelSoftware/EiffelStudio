@@ -58,7 +58,7 @@ feature -- Status setting
 			-- Ensure that future search operations will use `equal'
 			-- rather than `=' for comparing references.
 		require
-			changeable_comparison_criterion
+			changeable_comparison_criterion: changeable_comparison_criterion
 		do
 			object_comparison := True
 		ensure
@@ -69,7 +69,7 @@ feature -- Status setting
 			-- Ensure that future search operations will use `='
 			-- rather than `equal' for comparing references.
 		require
-			changeable_comparison_criterion
+			changeable_comparison_criterion: changeable_comparison_criterion
 		do
 			object_comparison := False
 		ensure

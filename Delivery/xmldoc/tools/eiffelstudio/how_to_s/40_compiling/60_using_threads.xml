@@ -16,9 +16,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Using threads
-		</heading>
 		<paragraph>Eiffel supports multithreaded programs. The 
 			<link>
 				<url>/libraries/thread/index.xml</url>

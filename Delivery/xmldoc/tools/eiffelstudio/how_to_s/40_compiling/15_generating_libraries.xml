@@ -44,7 +44,7 @@
 			</item>
 			<item>Select the Ace file of the library you want to precompile,</item>
 			<item>Give a location where to put the precompiled library,</item>
-			<item> the 
+			<item>Uncheck the 
 				<bold>Compile the generated project</bold> checkbox in the next dialog:
 			</item>
 		</list>

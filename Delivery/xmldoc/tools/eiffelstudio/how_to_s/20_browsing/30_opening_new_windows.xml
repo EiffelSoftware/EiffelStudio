@@ -7,7 +7,8 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>There are several ways to open a new window. First, you can use the pick and drop shortcut. Then, you can use new window menu items and the corresponding icons. There are three such commands:
+	<paragraph>
+	There are several ways to open a new window. First, you can use the pick and drop shortcut. Then, you can use new window menu items and the corresponding icons. There are three such commands:
 		<list ordered="false">
 			<item>Clicking on 
 				<bold>New window</bold> in the 

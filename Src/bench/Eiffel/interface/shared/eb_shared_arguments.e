@@ -36,7 +36,7 @@ feature {NONE} -- Constants
 		do
 			create shared_eiffel
 			Result := shared_eiffel.Eiffel_ace.lace.application_working_directory
-			if Result = Void then
+			if Result = Void or else Result.is_empty then
 				Result := "."
 			end
 		end

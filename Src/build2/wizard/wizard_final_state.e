@@ -38,6 +38,7 @@ feature {NONE} -- Implementation
 			--       a progress bar.
 		do
 			first_window.disable_user_resize
+			first_window.disable_maximize
 			main_window.hide_all_floating_tools
 			choice_box.wipe_out
 			choice_box.set_border_width (10)

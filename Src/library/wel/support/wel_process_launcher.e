@@ -87,8 +87,7 @@ feature -- Basic Operations
 	
 	launch_and_refresh (a_command_line, a_working_directory: STRING; a_refresh_handler: ROUTINE [ANY, TUPLE]) is
 			-- Launch process described in `a_command_line' from `a_working_directory'.
-			-- Refresh current development window while process is active.
-			-- Wait for end of process and terminate it.
+			-- Calls `a_refresh_handler' regularly while waiting for end of process.
 		require
 			non_void_command_line: a_command_line /= Void
 			valid_command_line: not a_command_line.is_empty

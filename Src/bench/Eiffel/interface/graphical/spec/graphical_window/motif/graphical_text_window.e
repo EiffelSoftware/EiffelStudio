@@ -21,7 +21,7 @@ inherit
 		redefine
 			clear_window, is_graphical, disable_clicking,
 			is_editable, display, update_before_transport,
-			update_after_transport, initial_x, initial_y
+			update_after_transport, initial_coord
 		end;
 	SCROLLED_DRAWING_AREA
 		rename
@@ -143,17 +143,14 @@ feature -- Properties
 			!GRAPHICAL_WINDOW_CURSOR! Result.make (x_offset, y_offset)
 		end;
 
-	initial_x: INTEGER is
+	initial_coord: COORD_XY is
 			-- Initial x position for drag
 		do
-			Result := real_x + selected_clickable_text.base_left_x - x_offset
-		end;
-
-	initial_y: INTEGER is
-			-- Initial y position for drag
-		do
+			!! Result
 			if selected_clickable_text /= Void then
-				Result := real_y + selected_clickable_text.base_left_y - y_offset
+				Result.set (
+				real_x + selected_clickable_text.base_left_x - x_offset,
+				real_y + selected_clickable_text.base_left_y - y_offset)
 			end
 		end;
 

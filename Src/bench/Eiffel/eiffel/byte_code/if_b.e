@@ -34,6 +34,9 @@ feature -- Access
 	else_part: BYTE_LIST [BYTE_NODE]
 			-- Default compound {list of INSTR_B}
 
+	end_location: TOKEN_LOCATION
+			-- Line number where `end' keyword is located
+
 feature -- Settings
 
 	set_condition (c: like condition) is
@@ -58,6 +61,16 @@ feature -- Settings
 			-- Assign `e' to `elsif_list'.
 		do
 			else_part := e
+		end
+		
+	set_end_location (e: like end_location) is
+			-- Set `end_location' with `e'.
+		require
+			e_not_void: e /= Void
+		do
+			end_location := e
+		ensure
+			end_location_set: end_location = e
 		end
 
 	need_enlarging: BOOLEAN is
@@ -263,7 +276,7 @@ feature -- Settings
 					-- No else part, so we may continue.
 					-- As this is the LAST compound statement, this
 					-- means we are followed by an implicit return Result.
-				Result := false
+				Result := False
 			end
 			Result := Result and not context.has_postcondition and
 					not context.has_invariant
@@ -396,7 +409,7 @@ feature -- IL code generation
 					elsif_clause.generate_il_line_info
 					elsif_clause.expr.generate_il
 
-						-- Test if false
+						-- Test if False
 					elsif_label := il_label_factory.new_label
 					il_generator.branch_on_false (elsif_label)
 
@@ -422,6 +435,11 @@ feature -- IL code generation
 					-- End of `if' statement.
 				il_generator.mark_label (end_label)
 			end
+			
+			check
+				end_location_not_void: end_location /= Void
+			end
+			il_generator.put_debug_info (end_location)
 		end
 
 feature -- Byte code generation
@@ -471,7 +489,7 @@ feature -- Byte code generation
 						-- Generate byte code for expression
 					elsif_clause.expr.make_byte_code (ba)
 
-						-- Test if false
+						-- Test if False
 					ba.append (Bc_jmp_f)
 					ba.mark_forward
 

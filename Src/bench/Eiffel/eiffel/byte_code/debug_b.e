@@ -23,6 +23,9 @@ feature -- Access
 	keys: ARRAYED_LIST [STRING]
 			-- Keys if any
 
+	end_location: TOKEN_LOCATION
+			-- Line number where `end' keyword is located
+
 feature -- Status setting
 
 	set_compound (c: like compound) is
@@ -35,6 +38,16 @@ feature -- Status setting
 			-- Assign `k' to `keys'.
 		do
 			keys := k
+		end
+
+	set_end_location (e: like end_location) is
+			-- Set `end_location' with `e'.
+		require
+			e_not_void: e /= Void
+		do
+			end_location := e
+		ensure
+			end_location_set: end_location = e
 		end
 
 feature -- Basic Operations
@@ -145,6 +158,10 @@ feature -- IL code generation
 			if compound /= Void and then is_debug_clause_enabled then
 				generate_il_line_info
 				compound.generate_il
+				check
+					end_location_not_void: end_location /= Void
+				end
+				il_generator.put_debug_info (end_location)
 			end
 		end
 

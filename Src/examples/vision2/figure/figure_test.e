@@ -231,16 +231,15 @@ feature -- Initialization
 			box.extend (but)
 			box.extend (my_device)
 			my_device.expose_actions.extend (~on_repaint_test)
-			but.pointer_button_press_actions.extend (~rotate_tests)
+			but.press_actions.extend (~rotate_tests)
 			cur_test := 1
-			cur_text := "Pre-init"
-			my_device.redraw
+			rotate_tests
 		end
 
 	cur_test: INTEGER
 	cur_text: STRING
 
-	rotate_tests (x, y, b: INTEGER; tx, ty, pr: DOUBLE; sx, sy: INTEGER) is
+	rotate_tests is
 		do
 			if cur_test = 1 then
 				my_device.remove_tile
@@ -289,9 +288,9 @@ feature -- Initialization
 		do
 			my_device.fill_rectangle (110, 210, 110, 115)
 			my_device.fill_ellipse (150, 210, 50, 50)
-			my_device.fill_polygon (<<create {EV_COORDINATES}.set (180, 210),
-				create {EV_COORDINATES}.set (190, 220),
-				create {EV_COORDINATES}.set (190, 230)>>)
+			my_device.fill_polygon (<<create {EV_COORDINATES}.set (80, 210),
+				create {EV_COORDINATES}.set (90, 220),
+				create {EV_COORDINATES}.set (90, 230)>>)
 			my_device.fill_pie_slice (200, 200, 120, 120,  0.1, 0.25 * 3.14)
 			my_device.draw_point (10, 10)
 			my_device.draw_text (10, 200, cur_text)

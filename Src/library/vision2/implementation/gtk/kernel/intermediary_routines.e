@@ -91,7 +91,7 @@ feature {EV_ANY_IMP} -- Key Event intermediary agent routines
 	on_key_event_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Key event
 		local
-			a_widget: EV_WIDGET_IMP
+			a_widget: EV_GTK_WIDGET_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
 			if a_widget /= Void then

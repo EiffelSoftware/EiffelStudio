@@ -68,7 +68,7 @@ feature
 					-- we have a quicker algorithm handy.
 				if not system_i.poofter_finalization then
 						-- Go to the entry of type id greater or equal than `type_id':
-						-- note than deferred feature have no entries in the tables
+						-- note that deferred feature have no entries in the tables
 					goto_used (type_id)
 					i := position
 				else
@@ -83,13 +83,13 @@ feature
 					Result or else i > nb
 				loop
 					entry := array_item (i)
-					second_type_id := entry.type_id
-					if second_type_id = type_id then
-						is_deferred := False
-					end
-					cl_type := system_i.class_type_of_id (second_type_id)
-					if cl_type.conform_to (first_type) then
-						if entry.used then
+					if entry.used then
+						second_type_id := entry.type_id
+						if second_type_id = type_id then
+							is_deferred := False
+						end
+						cl_type := system_i.class_type_of_id (second_type_id)
+						if cl_type.conform_to (first_type) then
 							if found then
 								Result := not (entry.body_index = first_body_index)
 							else
@@ -245,8 +245,36 @@ feature
 	goto_implemented (type_id: INTEGER) is
 			-- Go to first implemented feature available in
 			-- a static type greater than `type_id'.
+		require
+			positive: type_id > 0
+		local
+			i, nb: INTEGER
+			first_type, cl_type: CLASS_TYPE
+			l_done: BOOLEAN
+			entry: ENTRY
+			system_i: like system
 		do
 			goto_used (type_id)
+			system_i := System
+			from
+				i := position
+				first_type := system_i.class_type_of_id (type_id)
+				nb := max_position
+			until
+				i > nb or l_done
+			loop
+				entry := array_item (i)
+				if entry.used then
+					cl_type := system_i.class_type_of_id (entry.type_id)
+					l_done := cl_type.conform_to (first_type)
+				end
+				i := i + 1
+			end
+			if l_done then
+				position := i - 1
+			else
+				position := i
+			end
 		ensure
 			is_implemented: position <= max_position implies is_implemented
 		end

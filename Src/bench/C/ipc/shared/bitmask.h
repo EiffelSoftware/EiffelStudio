@@ -16,7 +16,9 @@
 #ifdef I_LIMITS
 #include <limits.h>			/* For WORD_BIT */
 #endif
+#ifndef __VMS
 #include <sys/param.h>		/* For NOFILE */
+#endif /* not VMS */
 
 #undef BPI
 #ifdef WORD_BIT				/* Some systems may not define this */

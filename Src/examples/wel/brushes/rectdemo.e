@@ -29,14 +29,14 @@ feature -- Basic operations
 			brush: WEL_BRUSH
 			color: WEL_COLOR_REF
 		do
-			!! dc.make (Current)
+			create dc.make (Current)
 			dc.get
 			r_left := next_number (width)
 			r_top := next_number (height)
 			r_right := next_number (width)
 			r_bottom := next_number (height)
 			color := std_colors @ (next_number (std_colors.count))
-			!! brush.make_solid (color)
+			create brush.make_solid (color)
 			dc.select_brush (brush)
 			dc.rectangle (r_left, r_top, r_right, r_bottom)
 			dc.release
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 	random: RANDOM is
 			-- Initialize a randon number
 		once
-			!! Result.make
+			create Result.make
 			random.start
 		ensure
 			result_not_void : Result /= Void

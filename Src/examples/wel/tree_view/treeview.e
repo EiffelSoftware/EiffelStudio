@@ -36,89 +36,89 @@ feature {NONE} -- Initialization
 		local
 			tvis1, tvis2, tvis3: WEL_TREE_VIEW_INSERT_STRUCT
 			tv_item1, tv_item2, tv_item3: WEL_TREE_VIEW_ITEM
-			handle: INTEGER
-			root_h: INTEGER
+			handle: POINTER
+			root_h: POINTER
 		do
 			{WEL_TREE_VIEW} Precursor (a_parent, a_x, a_y, a_width, a_height, an_id)
 
 			-- We had some items
-			!! tvis1.make
+			create tvis1.make
 			tvis1.set_root
-			!! tv_item1.make
+			create tv_item1.make
 			tv_item1.set_text ("Root 1")
 			tvis1.set_tree_view_item (tv_item1)
 			Current.insert_item (tvis1)
 			root_h := last_item
 
 			-- Buttons
-			!! tvis2.make
+			create tvis2.make
 			tvis2.set_last
 			tvis2.set_parent (last_item)
-			!! tv_item2.make
+			create tv_item2.make
 			tv_item2.set_text ("Subtree 1")
 			tvis2.set_tree_view_item (tv_item2)
 			Current.insert_item (tvis2)
 			handle := last_item
 
-			!! tvis3.make
+			create tvis3.make
 			tvis3.set_last
 			tvis3.set_parent (handle)
-			!! tv_item3.make
+			create tv_item3.make
 			tv_item3.set_text ("Item 1")
 			tvis3.set_tree_view_item (tv_item3)
 			Current.insert_item (tvis3)
 
-			!! tvis3.make
+			create tvis3.make
 			tvis3.set_last
 			tvis3.set_parent (handle)
-			!! tv_item3.make
+			create tv_item3.make
 			tv_item3.set_text ("Item 2")
 			tvis3.set_tree_view_item (tv_item3)
 			Current.insert_item (tvis3)
 
-			!! tvis2.make
+			create tvis2.make
 			tvis2.set_last
 			tvis2.set_parent (root_h)
-			!! tv_item2.make
+			create tv_item2.make
 			tv_item2.set_text ("Subtree 2")
 			tvis2.set_tree_view_item (tv_item2)
 			Current.insert_item (tvis2)
 
-			!! tvis3.make
+			create tvis3.make
 			tvis3.set_last
 			tvis3.set_parent (last_item)
-			!! tv_item3.make
+			create tv_item3.make
 			tv_item3.set_text ("Item 3")
 			tvis3.set_tree_view_item (tv_item3)
 			Current.insert_item (tvis3)
 
-			!! tvis2.make
+			create tvis2.make
 			tvis2.set_last
 			tvis2.set_parent (root_h)
-			!! tv_item2.make
+			create tv_item2.make
 			tv_item2.set_text ("Item 4")
 			tvis2.set_tree_view_item (tv_item2)
 			Current.insert_item (tvis2)
 
-			!! tvis3.make
+			create tvis3.make
 			tvis3.set_last
 			tvis3.set_parent (root_h)
-			!! tv_item3.make
+			create tv_item3.make
 			tv_item3.set_text ("Item 5")
 			tvis3.set_tree_view_item (tv_item3)
 			Current.insert_item (tvis3)
 
-			!! tvis2.make
+			create tvis2.make
 			tvis2.set_last
-			!! tv_item2.make
+			create tv_item2.make
 			tv_item2.set_text ("Root 2")
 			tvis2.set_tree_view_item (tv_item2)
 			Current.insert_item (tvis2)
 
-			!! tvis3.make
+			create tvis3.make
 			tvis3.set_last
 			tvis3.set_parent (last_item)
-			!! tv_item3.make
+			create tv_item3.make
 			tv_item3.set_text ("item 6")
 			tvis3.set_tree_view_item (tv_item3)
 			Current.insert_item (tvis3)

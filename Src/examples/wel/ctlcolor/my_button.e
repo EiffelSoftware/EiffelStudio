@@ -30,7 +30,7 @@ feature -- Initialization
 
 feature -- Access
 
-	window: MAIN_WINDOW
+	window: PRECOMP_MAIN_WINDOW
 		-- The main_window.
 
 	type: INTEGER
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 		local
 			dialog: WEL_CHOOSE_COLOR_DIALOG 
 		do
-			!! dialog.make
+			create dialog.make
 			dialog.activate (window)
 			if dialog.selected then
 				if type = 1 then

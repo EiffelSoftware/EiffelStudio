@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 			minimum_amount_of_cards: no_cards > 0
 		do
 			number_of_cards := no_cards
-			!! game.make (number_of_cards)
+			create game.make (number_of_cards)
 		end
 
 feature -- Status report
@@ -294,7 +294,7 @@ feature -- Access
 			a_column: LINKED_LIST [INTEGER]
 			a_cardnumber: INTEGER
 		do
-			!! Result.make
+			create Result.make
 			from
 				i := 1
 			until

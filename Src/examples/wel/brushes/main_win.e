@@ -28,11 +28,11 @@ feature {NONE} -- Initialization
 		do
 			make_top (Title)
 			resize (300, 255)
-			!! brush_button.make (Current, "Brushes",
+			create brush_button.make (Current, "Brushes",
 				10, 30, 90, 35, -1)
-			!! rectangle_button.make (Current, "Rectangles",
+			create rectangle_button.make (Current, "Rectangles",
 				10, 70, 90, 35, -1)
-			!! demo3d_button.make (Current, "3D",
+			create demo3d_button.make (Current, "3D",
 				10, 110, 90, 35, -1)
 		end
 
@@ -55,11 +55,11 @@ feature {NONE} -- Implementation
 	on_control_command (control: WEL_CONTROL) is
 		do
 			if control = brush_button then
-				!! brush_demo.make
+				create brush_demo.make
 			elseif control = rectangle_button then
-				!! rectangle_demo.make
+				create rectangle_demo.make
 			elseif control = demo3d_button then
-				!! three_d_demo.make
+				create three_d_demo.make
 			end
 		end
 
@@ -73,13 +73,13 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	ise_logo: WEL_BITMAP is
 			-- ISE logo bitmap
 		once
-			!! Result.make_by_id (Id_bmp_ise_logo)
+			create Result.make_by_id (Id_bmp_ise_logo)
 		ensure
 			result_not_void: Result /= Void
 		end

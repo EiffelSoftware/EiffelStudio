@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 					-- A new font has been selected, let's
 					-- repaint the text with this new font.
 					log_font := choose_font.log_font
-					!! font.make_indirect (log_font)
+					create font.make_indirect (log_font)
 					invalidate
 				end
 			when Cmd_choose_color then
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 					printer_dc := print_dialog.dc
 					printer_dc.start_document ("WEL Print Test")
 					printer_dc.start_page
-					!! rect.make (0, 0, printer_dc.width, printer_dc.height)
+					create rect.make (0, 0, printer_dc.width, printer_dc.height)
 					draw (printer_dc, rect)
 					printer_dc.end_page
 					printer_dc.end_document
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 	choose_file: WEL_OPEN_FILE_DIALOG is
 			-- Dialog box to choose a file.
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 	choose_font: WEL_CHOOSE_FONT_DIALOG is
 			-- Dialog box to choose a text font.
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	choose_color: WEL_CHOOSE_COLOR_DIALOG is
 			-- Dialog box to choose a text color.
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 	print_dialog: WEL_PRINT_DIALOG is
 			-- Dialog box to setup the print job.
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -157,13 +157,13 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	main_menu: WEL_MENU is
 			-- Window's menu
 		once
-			!! Result.make_by_id (Id_main_menu)
+			create Result.make_by_id (Id_main_menu)
 		ensure
 			result_not_void: Result /= Void
 		end

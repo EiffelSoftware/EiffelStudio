@@ -1,0 +1,63 @@
+#include <windows.h>
+
+#define ID_MAIN_MENU			1
+
+#define ID_ICO_APPLICATION		1
+
+#define ABOUT_DLG_ID			1
+#define QUICKREF_DLG_ID 		2
+
+#define CMD_ABOUT			101
+#define CMD_ZOOM_IN			102
+#define CMD_ZOOM_OUT			103
+#define CMD_REFRESH			104
+#define CMD_AUTOMATIC_REFRESH		105
+#define CMD_QUICKREF			106
+#define CMD_EXIT			107
+
+ID_ICO_APPLICATION ICON "magnify_demo.ico"
+
+ID_MAIN_MENU MENU 
+{
+ POPUP "&Display"
+ {
+  MENUITEM "Zoom &in\t+", CMD_ZOOM_IN
+  MENUITEM "Zoom &out\t-", CMD_ZOOM_OUT
+  MENUITEM SEPARATOR
+  MENUITEM "&Refresh\tF5", CMD_REFRESH
+  MENUITEM SEPARATOR
+  MENUITEM "&Automatic refresh", CMD_AUTOMATIC_REFRESH
+  MENUITEM SEPARATOR
+  MENUITEM "E&xit", CMD_EXIT
+ }
+ POPUP "&Help"
+ {
+  MENUITEM "&Quick reference...", CMD_QUICKREF
+  MENUITEM SEPARATOR
+  MENUITEM "&About...", CMD_ABOUT
+ }
+}
+
+ABOUT_DLG_ID DIALOG 28, 23, 212, 158
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About WEL Magnify"
+FONT 8, "MS Sans Serif"
+{
+ DEFPUSHBUTTON "OK", IDOK, 81, 135, 50, 14
+ ICON ID_ICO_APPLICATION, -1, 6, 7, 18, 20
+ LTEXT "This tool can magnify any part of your screen.", -1, 31, 7, 170, 27
+ LTEXT "Magnify is written in Eiffel with ISE's Windows Eiffel Library (WEL). By using the facilities of this library it was possible to implement a usefull program in a few days.", -1, 31, 22, 170, 35
+ LTEXT "If you want to know more about the WEL, please send a piece of e-mail to <wel@eiffel.com>.\n\nCopyright by ISE Inc. 1996.\n\nWritten by Sami Ben Grine\nCredit: Patrice Khawam", -1, 31, 63, 170, 63
+}
+
+QUICKREF_DLG_ID DIALOG 28, 23, 212, 166
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "WEL Magnify Quick Reference"
+FONT 8, "MS Sans Serif"
+{
+ DEFPUSHBUTTON "OK", IDOK, 79, 147, 50, 14
+ ICON ID_ICO_APPLICATION, -1, 6, 7, 18, 20
+ LTEXT "Press the left mouse button and move around to magnify any area of the desktop.", -1, 31, 7, 170, 22
+ LTEXT "You can resize the main window to watch a larger part than initialy displayed.\n\nUse the menu items 'zoom in' and 'zoom out' to change the zoom ratio (the value is 4 by default). You can also press the add and subtract keys to perform these actions.", -1, 31, 33, 170, 62
+ LTEXT "Select the automatic refresh feature of the display menu to redraw the choosen area each 100 millisecond. This option can be disabled if you select it again.", -1, 31, 99, 170, 36
+}

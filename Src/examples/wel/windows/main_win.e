@@ -27,10 +27,10 @@ feature {NONE} -- Initialization
 			set_menu (main_menu)
 			resize (300, 200)
 			move (100, 100)
-			!! modal.make (Current)
-			!! modeless.make (Current)
-			!! on_off.make (Current, 10, 20)
-			!! static.make (Current, "This is a custom on/off %
+			create modal.make (Current)
+			create modeless.make (Current)
+			create on_off.make (Current, 10, 20)
+			create static.make (Current, "This is a custom on/off %
 				%control created with WEL. To try it, %
 				% click on it.", 40, 20, 200, 200, -1)
 		end
@@ -63,16 +63,16 @@ feature {NONE} -- Implementation
 					modeless.set_focus
 				end
 			when Cmd_popup_window_with_parent then
-				!! popup.make_child (Current, "Popup Window with parent")
-				!! static.make (popup, "This window can be moved %
+				create popup.make_child (Current, "Popup Window with parent")
+				create static.make (popup, "This window can be moved %
 					%outside to its parent. When the parent is %
 					%minimized, this window is minimized as well.",
 					10, 10, 300, 300, -1)
 				popup.show
 				popup.resize (350, 200)
 			when Cmd_popup_window_without_parent then
-				!! popup.make_top ("Popup Window without parent")
-				!! static.make (popup, "This window can be moved %
+				create popup.make_top ("Popup Window without parent")
+				create static.make (popup, "This window can be moved %
 					%outside to its parent. When minimized, %
 					%the icon resides on the desktop.",
 					10, 10, 300, 300, -1)
@@ -85,13 +85,13 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	main_menu: WEL_MENU is
 			-- Window's menu
 		once
-			!! Result.make_by_id (Id_main_menu)
+			create Result.make_by_id (Id_main_menu)
 		ensure
 			result_not_void: Result /= Void
 		end

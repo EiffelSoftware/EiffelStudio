@@ -1,0 +1,14 @@
+system
+	tutorial_step1
+
+root 
+	TUTORIAL_STEP1 (root_cluster): "make"
+
+default
+	assertion (all)
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\wel")
+
+cluster 
+	root_cluster:	"$EIFFEL4\examples\wel\tutorial\step1"
+
+end -- tutorial_step1

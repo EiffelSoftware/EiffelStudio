@@ -6,12 +6,15 @@ inherit
 		redefine
 			setup_dialog,
 			notify,
-			on_control_id_command
+			on_control_id_command,
+			dispose
 		end
 
 	WEL_FONT_FAMILY_ENUMERATOR
 		rename
 			make as font_family_enumerator_make
+		redefine
+			dispose
 		end
 
 	APPLICATION_IDS
@@ -33,9 +36,9 @@ feature {NONE} -- Initialization
 			-- Create the main dialog.
 		do
 			make_by_id (Main_dialog)
-			!! edit.make_by_id (Current, Idc_edit)
-			!! size.make_by_id (Current, Idc_edit_size)
-			!! list_box.make_by_id (Current, Idc_font_list_box)
+			create edit.make_by_id (Current, Idc_edit)
+			create size.make_by_id (Current, Idc_edit_size)
+			create list_box.make_by_id (Current, Idc_font_list_box)
 		end
 
 feature -- Access
@@ -68,8 +71,8 @@ feature -- Basic operations
 				if size.text.is_integer then
 					current_size := size.text.to_integer
 				end
-				!! lf.make (current_size, list_box.selected_string)
-				!! current_font.make_indirect (lf)
+				create lf.make (current_size, list_box.selected_string)
+				create current_font.make_indirect (lf)
 				edit.set_font (current_font)
 			end
 		end
@@ -87,7 +90,7 @@ feature -- Basic operations
 		local		
 			dc: WEL_CLIENT_DC
 		do
-			!! dc.make (Current)
+			create dc.make (Current)
 			dc.get
 			font_family_enumerator_make (dc, Void)
 			dc.release
@@ -99,6 +102,13 @@ feature -- Basic operations
 			if font_type = Truetype_fonttype then
 				list_box.add_string (elf.full_name)
 			end
+		end
+
+	dispose is
+			-- Called when the main dialog is destroyed.
+		do
+			{WEL_FONT_FAMILY_ENUMERATOR} Precursor
+			{WEL_MAIN_DIALOG} Precursor
 		end
 
 end -- class MAIN_DIALOG

@@ -51,29 +51,29 @@ feature {NONE} -- Initialization
  			{WEL_LIST_VIEW} Precursor (a_parent, a_x, a_y, a_width, a_height, an_id)
 
 			-- We add the columns
-			!! column.make
+			create column.make
 			column.set_cx (80)
 			column.set_fmt (Lvcfmt_left)
 			column.set_text ("Left")
 			append_column (column)
-			!! column.make
+			create column.make
 			column.set_cx (80)
 			column.set_fmt (Lvcfmt_center)
 			column.set_text ("Center")
 			append_column (column)
-			!! column.make
+			create column.make
 			column.set_cx (80)
 			column.set_fmt (Lvcfmt_right)
 			column.set_text ("Right")
 			append_column (column)
-			!! column.make
+			create column.make
 			column.set_cx (80)
 			column.set_fmt (Lvcfmt_justifymask)
 			column.set_text ("Justify")
 			append_column (column)
 
 			-- We add the items in the first row
-			!! litem.make
+			create litem.make
 			litem.set_text ("Item 1 : 0,0")
 			insert_item (litem)
 			set_cell_text (1, 0, "1,0")
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			set_cell_text (3, 0, "3,0")
 
 			-- We add the items in the second row
-			!! litem.make
+			create litem.make
 			litem.set_text ("Item 2 : 0,1")
 			litem.set_iitem (1)
 			insert_item (litem)
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			set_cell_text (3, 1, "3,1")
 
 			-- We add the items in the third row
-			!! litem.make
+			create litem.make
 			litem.set_text ("Item 3 : 0,2")
 			litem.set_iitem (2)
 			insert_item (litem)
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			set_cell_text (3, 2, "3,2")
 
 			-- We add the items in the forth row
-			!! litem.make
+			create litem.make
 			litem.set_iitem (3)
 			litem.set_text ("Item 4 : 0,3")
 			insert_item (litem)

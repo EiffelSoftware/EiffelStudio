@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Create the dialog
 		do
 			make_by_id (a_parent, Select_cards_dlg_id)
-			!! number_edit.make_by_id (Current, Idc_edit)
+			create number_edit.make_by_id (Current, Idc_edit)
 			no_cards := 52
 		end
 
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 		do
 			if number_edit.text.is_integer then
 				if number_edit.text.to_integer < 1 or number_edit.text.to_integer > 52 then
-					!!msg_box.make
+					create msg_box.make
 					msg_box.information_message_box (Current, "You can only select %
 						%a number of cards%Nwithin the range of 1-52.", "Information")
 					number_edit.set_text (no_cards.out)
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 					terminate (Idok)
 				end
 			else
-				!!msg_box.make
+				create msg_box.make
 				msg_box.information_message_box (Current, "This field requires %
 						%a number.", "Information")
 				number_edit.set_text (no_cards.out)

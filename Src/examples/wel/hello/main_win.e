@@ -5,7 +5,6 @@ inherit
 	WEL_FRAME_WINDOW
 		redefine
 			class_background,
-			class_icon,
 			on_paint
 		end
 
@@ -32,13 +31,7 @@ feature {NONE} -- Implementation
 	class_background: WEL_WHITE_BRUSH is
 			-- White background
 		once
-			!! Result.make
-		end
-
-	class_icon: WEL_ICON is
-			-- Window's icon
-		once
-			!! Result.make_by_id (1)
+			create Result.make
 		end
 
 end -- class MAIN_WINDOW

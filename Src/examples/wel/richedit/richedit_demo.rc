@@ -1,0 +1,58 @@
+#define ID_ICO_APPLICATION		1
+
+#define BMP_TOOLBAR                     1
+
+#define ID_MAIN_MENU			1
+
+#define CMD_NEW 			1001
+#define CMD_OPEN			1002
+#define CMD_SAVE			1003
+#define CMD_SAVE_AS			1004
+#define CMD_PRINT			1005
+#define CMD_EXIT			1006
+#define CMD_BOLD			1007
+#define CMD_ITALIC			1008
+#define CMD_UNDERLINE			1009
+#define CMD_FONT			1010
+#define CMD_COLOR			1011
+#define CMD_LEFT			1012
+#define CMD_CENTER			1013
+#define CMD_RIGHT			1014
+#define CMD_BULLET			1015
+
+ID_ICO_APPLICATION ICON "richedit_demo.ico"
+BMP_TOOLBAR BITMAP "toolbar.bmp"
+
+ID_MAIN_MENU MENU
+{
+	POPUP "&File"
+	{
+		MENUITEM "&New", CMD_NEW
+		MENUITEM "&Open...", CMD_OPEN
+		MENUITEM "&Save", CMD_SAVE
+		MENUITEM "Save &as...", CMD_SAVE_AS
+		MENUITEM SEPARATOR
+		MENUITEM "&Print...", CMD_PRINT
+		MENUITEM SEPARATOR
+		MENUITEM "E&xit", CMD_EXIT
+	}
+}
+
+STRINGTABLE 
+{
+	CMD_NEW, "Creates a new document"
+	CMD_OPEN, "Opens an existing document"
+	CMD_SAVE, "Saves the active document"
+	CMD_SAVE_AS, "Saves the active document with a new name"
+	CMD_PRINT, "Prints the active document"
+	CMD_BOLD, "Bold"
+	CMD_ITALIC, "Italic"
+	CMD_UNDERLINE, "Underline"
+	CMD_FONT, "Font"
+	CMD_COLOR, "Color"
+	CMD_LEFT, "Align left"
+	CMD_CENTER, "Center"
+	CMD_RIGHT, "Align right"
+	CMD_BULLET, "Bullets"
+	CMD_EXIT, "Quits the application"
+}

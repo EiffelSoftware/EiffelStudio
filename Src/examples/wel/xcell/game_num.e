@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			a_parent_not_void: a_parent /= Void
 		do
 			make_by_id (a_parent, Select_game_number_dlg_id)
-			!! number_edit.make_by_id (Current, Idc_edit)
+			create number_edit.make_by_id (Current, Idc_edit)
 		end
 
 feature -- Access
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 		do
 			if number_edit.text.is_integer then
 				if number_edit.text.to_integer < 1 or number_edit.text.to_integer > 65000 then
-					!!msg_box.make
+					create msg_box.make
 					msg_box.information_message_box (Current, "You can only select %
 						%a game number from 1 to 65000.", "Information")
 					number_edit.set_text (game_number.out)
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 					terminate (Idok)
 				end
 			else
-				!!msg_box.make
+				create msg_box.make
 				msg_box.information_message_box (Current, "This field requires %
 					%a number.", "Information")
 				number_edit.set_text (game_number.out)

@@ -1,0 +1,32 @@
+#include <windows.h>
+
+#define MAIN_DIALOG		1
+
+#define IDC_CLOSE_BUTTON	1
+#define IDC_LISTBOX		101
+#define IDC_CHECKBOX		102
+#define IDC_CLEAR_BUTTON	103
+
+1 ICON commands_demo.ico
+
+MAIN_DIALOG DIALOG 8, 35, 322, 188
+STYLE WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX
+CAPTION "WEL Commands"
+MENU 1
+FONT 8, "MS Sans Serif"
+{
+ CHECKBOX "Commands enabled", IDC_CHECKBOX, 7, 4, 90, 12, BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP
+ LISTBOX IDC_LISTBOX, 7, 20, 307, 126, LBS_NOTIFY | WS_BORDER | WS_BORDER | WS_VSCROLL | WS_GROUP | WS_TABSTOP
+ LTEXT "This example shows information about messages WM_LBUTTONDOWN, WM_MOVE and WM_COMMAND. To see these informations resize this window, left-click in the client area or choose a menu option. For more details see cluster 'Messages' of WEL.", -1, 8, 147, 248, 32
+ DEFPUSHBUTTON "C&lear", IDC_CLEAR_BUTTON, 264, 147, 50, 14, BS_DEFPUSHBUTTON | WS_GROUP | WS_TABSTOP
+ DEFPUSHBUTTON "&Close", IDC_CLOSE_BUTTON, 264, 169, 50, 14, BS_DEFPUSHBUTTON | WS_GROUP | WS_TABSTOP
+}
+
+1 MENU 
+{
+ POPUP "&Menu"
+ {
+  MENUITEM "Option 1001", 1001
+  MENUITEM "Option 1002", 1002
+ }
+}

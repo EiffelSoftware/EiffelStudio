@@ -49,23 +49,23 @@ feature {NONE} -- Initialization
 		do
 			make_top (Title)
 			from 
-				!! buttons.make (1, 4)
-				!! flash_rects.make (1, 4)
+				create buttons.make (1, 4)
+				create flash_rects.make (1, 4)
 				i := buttons.lower
 			until 
 				i > buttons.upper
 			loop 
-				!! button.make (Current, Start_timer, 0, 0, 0, 0, i)
+				create button.make (Current, Start_timer, 0, 0, 0, 0, i)
 				buttons.put (button, i)
-				!! rect.make (0, 0, 0, 0)
+				create rect.make (0, 0, 0, 0)
 				flash_rects.put (rect, i)
 				i := i + 1
 			end
-			!! dc.make (Current)
-			!! blue_brush.make_hatch (Hs_horizontal, Blue)
-			!! green_brush.make_hatch (Hs_vertical, Green)
-			!! yellow_brush.make_hatch (Hs_fdiagonal, Yellow)
-			!! red_brush.make_hatch (Hs_bdiagonal, Red)
+			create dc.make (Current)
+			create blue_brush.make_hatch (Hs_horizontal, Blue)
+			create green_brush.make_hatch (Hs_vertical, Green)
+			create yellow_brush.make_hatch (Hs_fdiagonal, Yellow)
+			create red_brush.make_hatch (Hs_bdiagonal, Red)
 		end
 
 feature -- Access
@@ -221,7 +221,7 @@ feature
 	class_icon: WEL_ICON is
 			-- Window's title
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	Timer1: INTEGER is 1

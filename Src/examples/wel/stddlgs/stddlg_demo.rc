@@ -1,0 +1,26 @@
+#define ID_ICO_APPLICATION		1
+
+#define ID_MAIN_MENU			1
+
+#define CMD_CHOOSE_FILE 		101
+#define CMD_CHOOSE_FONT 		102
+#define CMD_CHOOSE_COLOR		103
+#define CMD_PRINT_DIALOG		104
+
+#define CMD_EXIT			1000
+
+ID_ICO_APPLICATION ICON "stddlg_demo.ico"
+
+ID_MAIN_MENU MENU
+{
+	POPUP "&File"
+	{
+		MENUITEM "Choose &file...", CMD_CHOOSE_FILE
+		MENUITEM "Choose f&ont...", CMD_CHOOSE_FONT
+		MENUITEM "Choose &color...", CMD_CHOOSE_COLOR
+		MENUITEM SEPARATOR
+		MENUITEM "&Print...", CMD_PRINT_DIALOG
+		MENUITEM SEPARATOR
+		MENUITEM "E&xit", CMD_EXIT
+	}
+}

@@ -1,0 +1,14 @@
+system
+	stddlg_demo
+
+root 
+	PRECOMP_STDDLG_DEMO (root_cluster): "make"
+
+default
+	assertion (all)
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\wel")
+
+cluster 
+	root_cluster:	"$EIFFEL4\examples\wel\stddlgs"
+
+end -- stddlg_demo

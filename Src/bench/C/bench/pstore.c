@@ -31,7 +31,8 @@
 
 /* Exported feature */
 rt_public long store_append (EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, char *s);
-rt_public void parsing_store_initialize (long size);
+rt_public void parsing_store_initialize (void);
+rt_public void parsing_store_reset (void);
 
 /* Internal variables */
 rt_private fnptr make_index;	/* Index building routine */
@@ -45,7 +46,7 @@ rt_private long parsing_buffer_size = 0;
 
 rt_private long pst_store(char *object, long int object_count);	/* Recursive store */
 rt_private void parsing_store_write(void);
-rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid, char *s);
+rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid);
 
 /* Memory writing function */
 rt_private int parsing_char_write (char *pointer, int size);	/* store in stream */
@@ -53,12 +54,26 @@ rt_private int parsing_char_write (char *pointer, int size);	/* store in stream 
 /* Followings declaration are coming from store.c and eif_store.h */
 #define EIF_BUFFER_SIZE EIF_CMPS_IN_SIZE
 
-rt_public void parsing_store_initialize (long size) {
-	if (parsing_buffer_size < size) {
-		parsing_buffer = (char *) malloc (sizeof (char) * size);
-		parsing_buffer_size = size;
-		parsing_position = 0;
+rt_public void parsing_store_initialize (void) {
+	rt_init_store(
+		parsing_store_write,
+		parsing_char_write,
+		flush_st_buffer,
+		st_write,
+		(void *) (0),
+		0,
+		EIF_BUFFER_SIZE);
+	
+	if (parsing_buffer == (char *) 0) {
+		allocate_gen_buffer ();
+		parsing_buffer = (char *) malloc (sizeof (char) * EIF_BUFFER_SIZE);
 	}
+	parsing_buffer_size = EIF_BUFFER_SIZE;
+	parsing_position = 0;
+}
+
+rt_public void parsing_store_reset (void) {
+	rt_reset_store ();
 }
 
 rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, char *s)
@@ -68,37 +83,25 @@ rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr n
 	 * stored. */
 
 	/* Initialization */
-	parsing_store_initialize (EIF_BUFFER_SIZE);
+	server = s;
 
-	rt_init_store(
-		parsing_store_write,
-		parsing_char_write,
-		flush_st_buffer,
-		st_write,
-		(void *) (0),
-		0,
-		EIF_BUFFER_SIZE);
-
-	file_position = lseek ((int) f_desc, 0, SEEK_END);
-	if (file_position == -1)
+	if ((file_position = lseek ((int) f_desc, 0, SEEK_END)) == -1)
 		eraise ("Unable to seek on internal data files", EN_SYS);
 
-	parsing_store_append(object, mid, nid, s);
+	parsing_store_append(object, mid, nid);
 
 	write (f_desc, parsing_buffer, parsing_position);
 	parsing_position = 0;
-	rt_reset_store();
 
 	return file_position;
 }
 
-rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid, char *s)
+rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid)
 {
 	char gc_stopped;
 
 	make_index = mid;
 	need_index = nid;
-	server = s;
 	gc_stopped = !gc_ison();
 	gc_stop();		/* Procedure `make_index' may call the GC
 				 * while creating objects. */
@@ -110,7 +113,8 @@ rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid, char *s
 	obj_nb = 0;
 	traversal(object,0);
 
-	allocate_gen_buffer();
+	current_position = 0;
+	end_of_buffer = 0;
 
 	/* Write in file `file_descriptor' the count of stored objects */
 	buffer_write((char *) (&obj_nb), sizeof(long));
@@ -158,13 +162,9 @@ rt_private long pst_store(char *object, long int object_count)
 			/* If the object needs an index, the buffer is flushed so that
 			 * a new compression header is stored just before the object
 			 * thus the decompression will work when starting the retrieve
-			 * there
-			 */
+			 * there */
 		flush_st_buffer();
-
 		saved_file_pos = file_position + parsing_position;
-		if (saved_file_pos == -1)
-			esys();
 	}
 
 	flags = zone->ov_flags;
@@ -223,6 +223,7 @@ rt_private long pst_store(char *object, long int object_count)
 	/* Call `make_index' on `server' with `object' */
     if (object_needs_index)
 		(make_index)(server, object, saved_file_pos, object_count - saved_object_count);
+
 
 	return object_count;
 }

@@ -1,12 +1,23 @@
 /*
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
+*/
 
-  ####     ##    #####    ####    ####   #               #    #
- #    #   #  #   #    #  #    #  #    #  #               #    #
- #       #    #  #    #  #       #    #  #               ######
- #  ###  ######  #####   #       #    #  #        ###    #    #
- #    #  #    #  #   #   #    #  #    #  #        ###    #    #
-  ####   #    #  #    #   ####    ####   ######   ###    #    #
-
+/*
 	Private declarations for garbage collector routines.
 */
 
@@ -102,7 +113,7 @@ extern int gc_ran;				/* Has the GC been running */
 extern struct sc_zone ps_from;	/* Partial scavenging 'from' zone */
 extern struct sc_zone ps_to;	/* Partial scavenging 'to' zone */
 extern struct chunk *last_from;	/* Last 'from' chunk used by plsc() */
-extern long th_alloc;			/* Allocation threshold (in bytes) */
+extern size_t th_alloc;			/* Allocation threshold (in bytes) */
 extern int gc_monitor;			/* GC monitoring flag */
 
 /* Overflow stack limit: number of recursive call we authorized

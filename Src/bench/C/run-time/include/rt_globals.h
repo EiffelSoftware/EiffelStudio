@@ -1,21 +1,24 @@
 /*
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
+*/
 
- #####    #####
- #    #     #
- #    #     #
- #####      #
- #   #      #
- #    #     #   #######
-
-  ####   #        ####   #####     ##    #        ####          #    #
- #    #  #       #    #  #    #   #  #   #       #              #    #
- #       #       #    #  #####   #    #  #        ####          ######
- #  ###  #       #    #  #    #  ######  #            #   ###   #    #
- #    #  #       #    #  #    #  #    #  #       #    #   ###   #    #
-  ####   ######   ####   #####   #    #  ######   ####    ###   #    #
-
+/*
 	Private runtime global variables handling.
-
 */
 
 #ifndef _rt_globals_h_
@@ -125,8 +128,8 @@ typedef struct tag_rt_globals
 		/* out.c */
 	char buffero_cx[TAG_SIZE];			/* Buffer for printing an object in a string */
 	char *tagged_out_cx;				/* String where the tagged out is written */
-	int tagged_max_cx;					/* Actual maximum size of `tagged_out' */
-	int tagged_len_cx;					/* Actual length of `tagged_out' */
+	size_t tagged_max_cx;					/* Actual maximum size of `tagged_out' */
+	size_t tagged_len_cx;					/* Actual length of `tagged_out' */
 
 		/* pattern.c */
 	uint32 eif_delta_cx[ASIZE];			/* Records shifting deltas */
@@ -156,16 +159,16 @@ typedef struct tag_rt_globals
 	char *r_buffer_cx;
 	int r_fides_cx;
 	class_translations_table class_translations_cx;
-	int (*retrieve_read_func_cx)(void);
+	size_t (*retrieve_read_func_cx)(void);
 	int (*char_read_func_cx)(char *, int);
-	int (*old_retrieve_read_func_cx)(void);
+	size_t (*old_retrieve_read_func_cx)(void);
 	int (*old_char_read_func_cx)(char *, int);
 	char old_rt_kind_cx;
-	long old_buffer_size_cx;
-	int end_of_buffer_cx;
+	size_t old_buffer_size_cx;
+	size_t end_of_buffer_cx;
 	char *stream_buffer_cx;
 	int stream_buffer_position_cx;
-	long stream_buffer_size_cx;
+	size_t stream_buffer_size_cx;
 	int16 cidarr_cx[CIDARR_SIZE];
 	EIF_PROCEDURE mismatch_information_initialize_cx;
 	EIF_PROCEDURE mismatch_information_add_cx;
@@ -175,7 +178,7 @@ typedef struct tag_rt_globals
 		/* run_idr.c */
 	char *idr_temp_buf_cx;
 	int amount_read_cx;
-	long idrf_buffer_size_cx;
+	size_t idrf_buffer_size_cx;
 	IDRF idrf_cx;
 	int (*run_idr_read_func_cx) (IDR *);
 
@@ -183,10 +186,10 @@ typedef struct tag_rt_globals
 	long object_count_cx;
 	char *cmps_general_buffer_cx;
 	char *general_buffer_cx;
-	int current_position_cx;
-	long buffer_size_cx;
-	long old_store_buffer_size_cx;
-	long cmp_buffer_size_cx;
+	size_t current_position_cx;
+	size_t buffer_size_cx;
+	size_t old_store_buffer_size_cx;
+	size_t cmp_buffer_size_cx;
 	int s_fides_cx;
 	void (*store_write_func_cx)(void);
 	void (*flush_buffer_func_cx)(void);
@@ -204,8 +207,8 @@ typedef struct tag_rt_globals
 	char *account_cx;
 	unsigned int **sorted_attributes_cx;
 	char *store_stream_buffer_cx;
-	long store_stream_buffer_position_cx;
-	long store_stream_buffer_size_cx;
+	size_t store_stream_buffer_position_cx;
+	size_t store_stream_buffer_size_cx;
 	EIF_BOOLEAN eif_is_new_recoverable_format_cx;
 
 		/* string.c */

@@ -21,7 +21,19 @@ feature
 						-- The user will have to specify the Ace file
 					Lace.set_file_name (Void);
 				else
-					retrieve_project
+					retrieve_project;
+					if is_project_writable then
+						Project_read_only.set_item (false)
+					elseif is_project_readable then
+						Project_read_only.set_item (true);
+						io.error.put_string (
+							"No write permissions on project.%N%
+							%Project opened in read-only mode.%N")
+					else
+						io.error.put_string (
+							"Project is not readable; check permissions.%N");
+						error_occurred := true
+					end
 				end
 			end;
 			if not error_occurred then

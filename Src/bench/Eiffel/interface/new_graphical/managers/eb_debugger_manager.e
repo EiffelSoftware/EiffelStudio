@@ -398,8 +398,10 @@ feature -- Status setting
 				--| 200 is the default size of the local tree.
 			split.set_split_position (object_split_position.max (split.minimum_split_position).min (split.maximum_split_position))
 			
-			debugging_window.panel.set_split_position (debug_splitter_position.
-					max (debugging_window.panel.minimum_split_position))
+			if debugging_window.panel.full then
+				debugging_window.panel.set_split_position (debug_splitter_position.
+						max (debugging_window.panel.minimum_split_position))
+			end
 			
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height during debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")

@@ -20,25 +20,25 @@ creation
 	
 feature -- Not to be put in ebuild library in delivery
 	
-	set_parent_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
+--	set_parent_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
 			-- Set `a_command' to be executed when `a_translation' for parent occurs.
 			-- `a_translation' must be specified with the X toolkit conventions.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
-		do
-			dialog_command_target;
-			set_action (a_translation, a_command, argument);
-			widget_command_target;
-		end;
+--		do
+--			dialog_command_target;
+--			set_action (a_translation, a_command, argument);
+--			widget_command_target;
+--		end;
 
-	remove_parent_action (a_translation: STRING) is
+--	remove_parent_action (a_translation: STRING) is
 			-- Remove the command executed when `a_translation' for the parent occurs.
 			-- Do nothing if no command has been specified.
-		do
-			dialog_command_target;
-			remove_action (a_translation);
-			widget_command_target;
-		end;
+--		do
+--			dialog_command_target;
+--			remove_action (a_translation);
+--			widget_command_target;
+--		end;
 
 end
 

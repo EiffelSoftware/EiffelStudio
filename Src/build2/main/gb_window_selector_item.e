@@ -69,6 +69,9 @@ feature -- Access
 			-- as used elsewhere by a system, as `Current' is part of an object and therefore the
 			-- object is responsible for ensuring that the references are correct.
 			
+	is_destroyed: BOOLEAN
+		-- Is `Current' destroyed?
+			
 feature -- Status setting
 
 	update_to_reflect_name_change is
@@ -110,12 +113,13 @@ feature {GB_OBJECT} -- Implementation
 	destroy is
 			-- Destroy `Current'.
 		do
+			is_destroyed := True
 			object := Void
 			Precursor {GB_WINDOW_SELECTOR_COMMON_ITEM}
 		end
 		
 
 invariant
-	object_not_void: object /= Void
+	object_not_void: not is_destroyed implies object /= Void
 
 end -- class GB_WINDOW_SELECTOR_ITEM

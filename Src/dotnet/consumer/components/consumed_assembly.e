@@ -160,7 +160,7 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := has_same_path (other.gac_path)
+			Result := has_same_path (other.gac_path) or else has_same_path (other.location)
 		end
 		
 	has_same_path (a_path: STRING): BOOLEAN is

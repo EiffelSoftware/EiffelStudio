@@ -75,7 +75,11 @@ feature {COMPILER_EXPORTER}
 	internal_conform_to (other: TYPE_A in_generics: BOOLEAN): BOOLEAN is
 			-- Does `other' conform to Current ?
 		do
-			Result := True
+				-- If `other' is a basic, a BIT or an expanded type, it is not
+				-- conform to NONE.
+				--| When doing the check for `is_basic', we also check that `other'
+				--| can be a BIT type, so we do not need to add the check `other.is_bits'.
+			Result := not (other.is_basic or else other.is_expanded)
 		end
 
     storage_info, storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is

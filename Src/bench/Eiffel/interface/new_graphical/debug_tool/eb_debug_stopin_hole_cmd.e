@@ -190,7 +190,7 @@ feature -- Update
 				f := bs.routine
 				index := bs.index
 				if f.is_debuggable then
---					!! mp.set_watch_cursor
+--					create mp.set_watch_cursor
 					Application.add_feature (f)
 					Application.switch_breakpoint (f, index)
 					tool_supervisor.feature_tool_mgr.show_stoppoint (f, index)
@@ -220,7 +220,7 @@ feature -- Update
 			if Eiffel_project.successful then
 				f := fs.e_feature
 				if f.is_debuggable then
---					!! mp.set_watch_cursor
+--					create mp.set_watch_cursor
 					update_debuggable_for (f)
 					execute (Void, Void)
 							-- Feature stone dropped.

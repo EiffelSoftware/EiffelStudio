@@ -26,7 +26,7 @@ feature -- Execution
 			object_address: STRING;
 			dynamic_class: CLASS_C;
 		do
---			!! mp.do_nothing;
+--			create mp.do_nothing;
 			if Application.is_stopped then
 					-- Application has stopped 
 					-- after receiving and updating stack info

@@ -133,6 +133,9 @@
 					<item>
 						<bold>EV_TITLED_WINDOW</bold> - Fixed issue with `raise' where in addition of bringing the window to the front it was changing the previously focused widget within that window. Now it preserves the previously focused widget.
 					</item>
+					<item>
+						<bold>EV_PRIMITIVE</bold> - Fixed bug which affected all primitives that hold items. Calling `destroy' on the primitive and then calling `destroy' on one of the items caused precondition violations internally. The bug was that the call to `destroy' on the primitive did not call `wipe_out' to remove all of the contents and the item was still attempting to access its `parent' which should have been `Void'.
+					</item>
 				</list>
 			</item>
 			<item>

@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			top_index := 1
 			make_area (Chunk)
 			create lookup_table.make (Chunk)
+			initialize_constants
 		end
 		
 feature -- Access
@@ -76,7 +77,27 @@ feature -- Access
 			search (s)
 			Result := found
 		end
-		
+
+feature -- Constants
+
+	put_name_id: INTEGER is 1
+	item_name_id: INTEGER is 2
+	invariant_name_id: INTEGER is 3
+	make_area_name_id: INTEGER is 4
+	infix_at_name_id: INTEGER is 5
+	set_area_name_id: INTEGER is 6
+	area_name_id: INTEGER is 7
+	lower_name_id: INTEGER is 8
+	clone_name_id: INTEGER is 9
+	set_count_name_id: INTEGER is 10
+	make_name_id: INTEGER is 11
+	to_c_name_id: INTEGER is 12
+	set_rout_disp_name_id: INTEGER is 13
+	default_create_name_id: INTEGER is 14
+	default_rescue_name_id: INTEGER is 15
+	dispose_name_id: INTEGER is 16
+			-- Predefined name IDs constants
+	
 feature -- Status report
 
 	valid_index (i: INTEGER): BOOLEAN is
@@ -138,6 +159,27 @@ feature {NONE} -- Implementation: access
 	Chunk: INTEGER is 500
 			-- Default chunk size.
 
+	initialize_constants is
+			-- Initialize Current with predefined constants value
+		do
+			put ("put") check found_item = put_name_id end
+			put ("item") check found_item = item_name_id end
+			put ("invariant") check found_item = invariant_name_id end
+			put ("make_area") check found_item = make_area_name_id end
+			put ("_infix_@") check found_item = infix_at_name_id end
+			put ("set_area") check found_item = set_area_name_id end
+			put ("area") check found_item = area_name_id end
+			put ("lower") check found_item = lower_name_id end
+			put ("clone") check found_item = clone_name_id end
+			put ("set_count") check found_item = set_count_name_id end
+			put ("make") check found_item = make_name_id end
+			put ("to_c") check found_item = to_c_name_id end
+			put ("set_rout_disp") check found_item = set_rout_disp_name_id end
+			put ("default_create") check found_item = default_create_name_id end
+			put ("default_rescue") check found_item = default_rescue_name_id end
+			put ("dispose") check found_item = dispose_name_id end
+		end
+		
 invariant
 	area_not_void: area /= Void
 	lookup_table_not_void: lookup_table /= Void

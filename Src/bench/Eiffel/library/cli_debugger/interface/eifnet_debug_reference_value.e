@@ -111,8 +111,10 @@ feature -- Access
 				if not is_null then
 					Result := icd_value_info.value_class_type
 					if Result = Void then
-						--| This means we are dealing with an external type (dotnet)
-						Result := Eiffel_system.System.system_object_class.compiled_class.types.first
+							--| This means we are dealing with an external type (dotnet)
+						internal_dynamic_class := icd_value_info.value_class_c
+--						internal_dynamic_class := Eiffel_system.System.system_object_class.compiled_class
+						Result := internal_dynamic_class.types.first
 						is_external_type := True
 					end
 					internal_dynamic_class_type := Result
@@ -207,7 +209,7 @@ feature -- Output
 					if l_feature_i.is_attribute then
 						l_att_debug_value := attribute_value (l_icd_class, l_feature_i)
 						if l_att_debug_value /= Void then
-							Result.extend (l_att_debug_value)							
+							Result.extend (l_att_debug_value)
 						end
 					end
 					l_feature_table.forth
@@ -231,7 +233,10 @@ feature -- Output
 					if Result /= Void then
 						Result.set_name (f.feature_name)
 					else
-							--| FIXME: JFIAT : 2003/10/24 maybe add DUMMY_VALUE to say 
+						create {DEBUG_VALUE[INTEGER]} Result.make (0)
+						Result.set_name ("ERROR on " + f.feature_name)
+													
+							--| FIXME JFIAT : 2003/10/24 maybe add DUMMY_VALUE to say 
 							--| we had problem to get its value ...
 						debug ("DEBUGGER_TRACE_CHILDREN")
 							print ("Unable to build debug value for : " 

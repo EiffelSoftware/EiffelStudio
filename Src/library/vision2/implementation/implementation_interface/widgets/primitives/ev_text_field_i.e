@@ -34,29 +34,12 @@ feature -- Event - command association
 		deferred
 		end
 
-	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the text of the widget have changed.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
 feature -- Event -- removing command association
 
 	remove_activate_commands is
 			-- Empty the list of commands to be executed
 			-- when the text field is activated, ie when the user
 			-- press the enter key.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_change_commands is
-			-- Empty the list of commands to be executed
-			-- when the text of the widget have changed.
 		require
 			exists: not destroyed
 		deferred

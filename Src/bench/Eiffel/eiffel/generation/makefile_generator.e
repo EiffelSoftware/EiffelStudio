@@ -711,7 +711,7 @@ feature -- Generation, External archives and object files.
 	generate_externals is
 			-- Generate declaration fo the external variable
 		local
-			object_file_names: FIXED_LIST [STRING]
+			object_file_names: LIST [STRING]
 			i, nb: INTEGER
 		do
 			object_file_names := System.object_file_names
@@ -737,7 +737,7 @@ feature -- Generation, External archives and object files.
 	generate_include_path is
 			-- Generate declaration fo the include_paths
 		local
-			include_paths: FIXED_LIST [STRING]
+			include_paths: LIST [STRING]
 			i, nb: INTEGER
 		do
 			include_paths := System.include_paths
@@ -764,7 +764,7 @@ feature -- Generation, External archives and object files.
 		require
 			list_not_void: System.makefile_names /= Void
 		local
-			makefile_names: FIXED_LIST [STRING]
+			makefile_names: LIST [STRING]
 			i, nb: INTEGER
 		do
 			makefile_names := System.makefile_names

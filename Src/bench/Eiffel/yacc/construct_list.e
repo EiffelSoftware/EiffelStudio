@@ -11,7 +11,7 @@ inherit
 			pass_address
 		end
 
-	FIXED_LIST [T]
+	ARRAYED_LIST [T]
 
 creation
 	make, make_filled

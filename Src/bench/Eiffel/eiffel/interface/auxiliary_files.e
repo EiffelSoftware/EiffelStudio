@@ -104,7 +104,7 @@ feature -- Dynamic Library file
 			dynamic_lib: E_DYNAMIC_LIB
 
 			args: E_FEATURE_ARGUMENTS
-			argument_names: FIXED_LIST [STRING]
+			argument_names: LIST [STRING]
 			return_type: STRING
 			system_name: STRING
 			class_name: STRING

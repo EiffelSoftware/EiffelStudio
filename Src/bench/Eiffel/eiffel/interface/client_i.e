@@ -20,7 +20,7 @@ feature
 	written_in: CLASS_ID;
 			-- Id of the class where the client list is written in
 
-	clients: FIXED_LIST [STRING];
+	clients: LIST [STRING];
 			-- Client list
 
 	set_written_in (i: CLASS_ID) is
@@ -165,7 +165,7 @@ feature -- formatter
 		require
 			good_argument: other /= void
 		local
-			other_clients: FIXED_LIST [STRING];
+			other_clients: LIST [STRING];
 			other_cluster: CLUSTER_I;
 		do
 			other_clients := other.clients;

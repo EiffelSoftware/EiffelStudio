@@ -45,7 +45,9 @@ feature {NONE}
 
 	execute (arg: ANY) is
 		do
-			listen
+			if editor.edited_translation /= Void then
+				listen
+			end
 		end;
 
 	listen is
@@ -65,8 +67,8 @@ feature {NONE}
 			if cd /= Void then
 				kb := cd.keyboard;
 				if kb.control_pressed then
-					if cd.string /= Void then
-						!!ctrl_str.make (cd.string.item_code (1));
+					if cd.string /= Void and then not cd.string.empty then
+						!! ctrl_str.make (cd.string.item_code (1));
 						if (kb.lock_pressed and
 						  not kb.shift_pressed) or
 						  (kb.shift_pressed and
@@ -77,7 +79,7 @@ feature {NONE}
 					end;
 				elseif kb.modifiers.item (1) then
 					if cd.string /= Void then
-						temp.append ("<Alt>");
+						temp.append ("Alt");
 						temp.append ("<Key>");
 						temp.append (cd.string);
 					end;
@@ -86,10 +88,13 @@ feature {NONE}
 						temp.append ("<Key>");
 						temp.append (cd.string);
 					else
-						temp.append ("<Shift>");
+						temp.append ("Shift");
 					end;
 				elseif kb.lock_pressed then
-					if cd.string /= Void and cd.string.item_code (1) <= 31 then
+					if cd.string /= Void and then
+						not cd.string.empty and then 
+						cd.string.item_code (1) <= 31 
+					then
 						!!ctrl_str.make (cd.string.item_code (1));
 						ctrl_str.set_lock (True);
 						temp.append (ctrl_str.cntrl_str);
@@ -127,12 +132,12 @@ feature {NONE}
 		do
 			if kb.control_pressed then
 				if kb.shift_pressed then
-					Result := "<Ctrl><Shift>";
+					Result := "Ctrl Shift";
 				else
-					Result := "<Ctrl>";
+					Result := "Ctrl";
 				end;
 			elseif kb.shift_pressed then
-				Result := "<Shift>";
+				Result := "Shift";
 			else
 				Result := "";
 			end;

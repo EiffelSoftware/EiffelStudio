@@ -98,7 +98,7 @@ feature {NONE}
 			font: FONT;
 		do
 			font := context.font;
-			if font /= Void and then font.is_valid (context.widget) /= Void then
+			if font /= Void and then font.is_font_valid then
 				if font.name /= Void then
 					set_font_text (font.name)
 				else

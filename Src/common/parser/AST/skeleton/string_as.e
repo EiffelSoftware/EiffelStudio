@@ -8,7 +8,8 @@ inherit
 	ATOMIC_AS
 		redefine
 			type_check, byte_node, value_i, format
-		end
+		end;
+	CHARACTER_ROUTINES
 
 feature -- Attributes
 
@@ -59,39 +60,17 @@ feature -- formatter
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		local
-			tmp: STRING;
 			i: INTEGER
 		do
-			!! tmp.make (0);
+			ctxt.put_special ("%"");
 			from
 				i := 1
 			until
 				i > value.count
 			loop
-				inspect value.item (i)
-				when '%N' then
-					tmp.append ("%%N");
-				when '%U' then
-					tmp.append ("%%U");
-				when '%B' then
-					tmp.append ("%%B");
-				when '%F' then
-					tmp.append ("%%F");
-				when '%R' then
-					tmp.append ("%%R");
-				when '%%' then
-					tmp.append ("%%%%");
-				when '%'' then
-					tmp.append ("%%%'");
-				when '%"' then
-					tmp.append ("%%%"");
-				else
-					tmp.extend (value.item (i))
-				end;
+				ctxt.put_string (char_text (value.item (i)));
 				i := i + 1
 			end;
-			ctxt.put_special ("%"");
-			ctxt.put_string (tmp);
 			ctxt.put_special ("%"");
 			ctxt.always_succeed;
 		end;

@@ -39,6 +39,7 @@ feature -- C code generation
 			if is_generic then
 					-- We always need current object when it
 					-- is generic.
+				context.mark_current_used
 				context.add_dftype_current
 			end
 		end

@@ -43,6 +43,7 @@ feature -- C code generation
 	analyze is
 		do
 			if is_generic then
+				context.mark_current_used
 				context.add_dftype_current
 			end
 		end

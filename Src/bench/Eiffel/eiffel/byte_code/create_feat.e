@@ -73,7 +73,7 @@ feature -- Access
 feature -- C code generation
 
 	analyze is
-			-- We need Dtype(Current).
+			-- We need Dftype(Current).
 		local
 			entry: POLY_TABLE [ENTRY]
 		do
@@ -81,11 +81,11 @@ feature -- C code generation
 				entry := Eiffel_table.poly_table (routine_id)
 				if entry /= Void and then (not entry.has_one_type or else is_generic) then
 						-- We are in polymorphic case
+					context.mark_current_used
 					context.add_dftype_current
 				end
 			else
 				context.mark_current_used
-				context.add_dt_current
 			end
 		end
 

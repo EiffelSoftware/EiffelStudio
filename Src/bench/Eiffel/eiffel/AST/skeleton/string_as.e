@@ -72,8 +72,7 @@ feature -- Type check and byte code
 	byte_node: STRING_B is
 			-- Associated byte code
 		do
-			!! Result
-			Result.set_value (value)
+			create Result.make (value)
 		end
 
 feature -- Output

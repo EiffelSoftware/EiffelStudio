@@ -67,7 +67,6 @@ feature {ICOR_EXPORTER} -- Access
 			l_struct_ptr: POINTER
 			i: INTEGER
 			l_item: TUPLE [INTEGER, INTEGER]
-			l_p: POINTER
 			l_size: INTEGER
 		do
 			debug ("debugger_eifnet_data")

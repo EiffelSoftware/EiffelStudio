@@ -16,9 +16,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 #include "eif_globals.h"
-#include "portable.h"
 
 /* 
  * Functions declarations

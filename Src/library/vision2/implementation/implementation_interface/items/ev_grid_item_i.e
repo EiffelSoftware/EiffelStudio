@@ -260,6 +260,8 @@ feature {EV_GRID_I} -- Implementation
 
 	created_from_grid: BOOLEAN
 		-- Was `Current' create from `parent_i'
+		
+feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 
 	parent_i: EV_GRID_I
 		-- Grid that `Current' resides in if any.

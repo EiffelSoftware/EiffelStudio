@@ -97,6 +97,7 @@ feature {NONE} -- Execution
 			-- Execute the command.
 		local
 			classc: CLASSC_STONE;
+			output_list: LINKED_LIST [STRING];
 			classi: CLASSI_STONE
 		do
 			if (choice /= Void) and then (arg = choice) then
@@ -116,6 +117,9 @@ feature {NONE} -- Execution
 					display_choice (classi.class_i);
 				elseif classc /= Void then
 					display_choice (classc.e_class.lace_class);
+				else
+					!! output_list.make;
+					choice.popup (Current, output_list)
 				end
 			end
 		end;

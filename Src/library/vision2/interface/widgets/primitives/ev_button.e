@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			text_assigned: text.is_equal (a_text)
 			select_actions_has_an_action: select_actions.has (an_action)
 		end
-	
+
 feature {EV_DIALOG_I, EV_WINDOW} -- Default push button handling
 
 	is_default_push_button: BOOLEAN is

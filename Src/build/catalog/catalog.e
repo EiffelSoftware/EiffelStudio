@@ -117,10 +117,6 @@ feature
 			end
 			current_page.make_unmanaged (page_sw)
 			current_page.set_selected_symbol
-			if not current_page.empty then
-				current_page.go_i_th (1)
-				current_page.update_display
-			end
 			page_sw.set_working_area (current_page)
 			current_page.manage
 		end -- update_interface 
@@ -149,13 +145,7 @@ feature {NONE}
 			current_page.set_symbol
 			page.set_selected_symbol
 			current_page := page
---			page.unmanage
 			page_sw.set_working_area (page)
-			if not just_created and then not page.empty then
-					-- Refresh page correctly (ok its for motif)
-				page.go_i_th (1)
-				page.refresh_display
-			end
 			page.manage
 		end
 
@@ -166,23 +156,16 @@ feature
 		local
 			mp: MOUSE_PTR
 		do
-	--		if current_page /= page then
-				if not page.is_visible then
-					!! mp					
-					mp.set_watch_shape
-					page.make_unmanaged (page_sw)
-					if not page.empty then
-						page.go_i_th (1)
-						page.update_display
-					end
---					page.manage
-					set_current_page (page, true)
-					mp.restore
-				else
-					page.show
-					set_current_page (page, false)
-				end
-	--		end
-		end -- execute
+			if not page.is_visible then
+				!! mp					
+				mp.set_watch_shape
+				page.make_visible (page_sw)
+				set_current_page (page, true)
+				mp.restore
+			else
+				page.show
+				set_current_page (page, false)
+			end
+		end
 
 end 

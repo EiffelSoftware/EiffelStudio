@@ -78,7 +78,8 @@ feature -- Status report
 		end
 
 	is_address_correct (addr: STRING; mode: INTEGER): BOOLEAN is
-			-- Is address `addr' correct?
+			-- Is address `addr' correct considering `mode'?
+			-- (`mode' is `Readable' or `Writable')
 		require
 			non_empty_address: addr /= Void and then not addr.is_empty
 			mode_in_range: Readable <= mode and mode <= writable

@@ -26,7 +26,7 @@
 #include "stdlib.h"
 
 #define EIFFEL3		"/usr/lib/Eiffel3"	/* Default installation directory */
-#define EWB			"/bin/es3 -bench"			/* Ewb process within Eiffel dir */
+#define EWB			"/bin/es3 -bench"	/* Ewb process within Eiffel dir */
 
 /* Function declaration */
 public void dexit();			/* Daemon's exit */
@@ -59,6 +59,7 @@ char **argv;
 	Pid_t pid;			/* Pid of the spawned child */
 	char *ewb_path;		/* Path leading to the ewb executable */
 	char *eiffel3;		/* Eiffel 3.0 installation directory */
+	char *platform;
 
 	/* Compute program name, removing any leading path to keep only the name
 	 * of the executable file.
@@ -90,16 +91,25 @@ char **argv;
 	 */
 	
 	eiffel3 = getenv("EIFFEL3");		/* Installation directory */
-	if (eiffel3 == (char *) 0)			/* Environment variable not set */
-		eiffel3 = EIFFEL3;				/* Use "standard" path */
+	if (eiffel3 == (char *) 0) {		/* Environment variable not set */
+		fprintf (stderr, "The environment variable EIFFEL3 is not set\n");
+		exit (1);
+	}
+	platform = getenv ("PLATFORM");
+	if (platform == (char *) 0) {		/* Environment variable not set */
+		fprintf (stderr, "The environment variable PLATFORM is not set\n");
+		exit (1);
+	}
 
-	ewb_path = (char *) malloc(strlen(eiffel3) + sizeof(EWB));
+	ewb_path = (char *) malloc(2048);
 	if (ewb_path == (char *) 0) {
 		fprintf(stderr, "%s: out of memory\n", progname);
 		exit(1);
 	}
 	
 	strcpy(ewb_path, eiffel3);			/* Base name */
+	strcat(ewb_path, "/bench/spec/");
+	strcat(ewb_path, platform);
 	strcat(ewb_path, EWB);				/* Append process name */
 
 	sp = spawn_child(ewb_path, &pid);	/* Bring workbench to life */

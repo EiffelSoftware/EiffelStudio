@@ -75,7 +75,7 @@ feature {NONE}
 			set_fraction_base (2);
 			!!text_c;
 			!!text.make (text_c.eiffel_type, Current);
-			text.set_size (110, 110);
+			text.set_size (80, 80);
 			!!text_type.make (Widget_names.text_name, text_c);
 			text_type.initialize_callbacks (text);
 
@@ -94,7 +94,7 @@ feature {NONE}
 				scroll_list.forth;
 				i := i + 1
 			end;
-			scroll_list.set_size (110, 110);
+			scroll_list.set_size (80, 80);
 			!!scroll_list_type.make (Widget_names.scroll_list_name, scroll_list_c);
 			scroll_list_type.initialize_callbacks (scroll_list);
 

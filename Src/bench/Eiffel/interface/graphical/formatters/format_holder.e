@@ -10,20 +10,24 @@ class FORMAT_HOLDER
 inherit
 	EB_HOLDER
 		redefine
-			associated_command, associated_menu_entry,
-			set_selected
-		end;
+			associated_menu_entry, set_selected,
+			associated_command, associated_button
+		end
 
 creation
 	make, make_plain
 
 feature -- Properties
 
-	associated_command: FORMATTER
-			-- Command to execute.
+	associated_command: FORMATTER;
+			-- Command to execute
+
+	associated_button: FORMAT_BUTTON;
+			-- Button to represent `associated_command'
+			-- in the toolbar
 
 	associated_menu_entry: EB_TICKABLE_MENU_ENTRY
-			-- Menu entry with a tick.
+			-- Menu entry with a tick
 
 feature -- Status setting
 

@@ -16,6 +16,8 @@ inherit
 	SET_WINDOW_ATTRIBUTES;
 	SHARED_CURSORS;
 	G_ANY;
+	MEL_COMMAND;
+	SHARED_EIFFEL_PROJECT;
 	DEGREE_OUTPUT
 		redefine
 			put_start_degree_6, put_end_degree_6, put_start_degree, 
@@ -50,14 +52,15 @@ feature -- Start output features
 			nbr_of_clusters := total_nbr;
 			current_degree := 6;
 
-			shake_label (degree_l, l_Degree);
-			shake_label (entity_l, l_Compilation_cluster);
-			shake_label (nbr_to_go_l, l_Clusters_to_go);
-			shake_label (current_nbr_to_go_l, total_nbr.out);
-			shake_label (current_degree_l, current_degree.out);
-			shake_label (current_entity_l, Empty_string);
+			degree_l.set_label_as_string (l_Degree);
+			entity_l.set_label_as_string (l_Compilation_cluster);
+			nbr_to_go_l.set_label_as_string (l_Clusters_to_go);
+			current_nbr_to_go_l.set_label_as_string (total_nbr.out);
+			current_degree_l.set_label_as_string (current_degree.out);
+			current_entity_l.set_label_as_string (Empty_string);
 			percentage_l.set_label_as_string (Zero_percent);
 
+			cancel_b.set_sensitive;
 			popup_window;
 			progress_bar.reset_percentage;
 			i_name := clone (icon_name);
@@ -65,13 +68,12 @@ feature -- Start output features
 			i_name.append (l_Degree);
 			i_name.append (current_degree.out);
 			Project_tool.set_icon_name (i_name);
-			update_display;
+			process_events;
 		end;
 
 	put_end_degree_6 is
 			-- Put message indicating the end of degree six.
 		do
-			current_degree := 0;
 			nbr_of_clusters := 0
 			progress_bar.increase_percentage (100);
 			update_interface (Empty_string, 0, 100);
@@ -87,7 +89,7 @@ feature -- Start output features
 			current_degree := degree_nbr;
 			processed := 0;
 
-			shake_label (entity_l, l_Compilation_class);
+			entity_l.set_label_as_string (l_Compilation_class);
 			nbr_to_go_l.set_label_as_string (l_Classes_to_go);
 			degree_l.set_label_as_string (l_Degree);
 
@@ -102,13 +104,15 @@ feature -- Start output features
 			i_name.append (l_Degree);
 			i_name.append (current_degree.out);
 			Project_tool.set_icon_name (i_name);
-			update_display
+			process_events
 		end;
 
 	put_end_degree is
 			-- Put message indicating the end of a degree.
 		do
-			current_degree := 0;
+			if current_degree = 3 then
+				cancel_b.set_insensitive
+			end;
 			progress_bar.increase_percentage (100);
 			update_interface (Empty_string, 0, 100);
 			total_number := 0;
@@ -132,8 +136,8 @@ feature -- Start output features
 			-- Put message indicating the start of dead code removal.
 		do
 			set_project_icon_name (removing_dead_code_message)
+			nbr_to_go_l.set_label_as_string (l_features_processed);
 			put_non_degree_message (removing_dead_code_message);
-			shake_label (entity_l, l_features_processed);
 		end;
 
 	put_end_dead_code_removal_message  is
@@ -149,7 +153,9 @@ feature -- Start output features
 				Project_tool.set_icon_name (icon_name);
 				icon_name := Void;
 			end;
-			unmanage
+			if not is_destroyed then
+				unmanage
+			end;
 		end;
 
 	put_start_reverse_engineering (total_num: integer) is
@@ -159,11 +165,11 @@ feature -- Start output features
 			icon_name := Project_tool.icon_name;	
 			total_number := total_num;
 			processed := 0;
-			shake_label (degree_l, l_Compilation_cluster);
-			shake_label (entity_l, l_Compilation_class);
-			shake_label (nbr_to_go_l, l_Classes_to_go);
-			shake_label (current_nbr_to_go_l, total_num.out);
-			shake_label (current_entity_l, Empty_string);
+			degree_l.set_label_as_string (l_Compilation_cluster);
+			entity_l.set_label_as_string (l_Compilation_class);
+			nbr_to_go_l.set_label_as_string (l_Classes_to_go);
+			current_nbr_to_go_l.set_label_as_string (total_num.out);
+			current_entity_l.set_label_as_string (Empty_string);
 		end;
 
 	put_case_message (a_message: STRING) is
@@ -171,12 +177,12 @@ feature -- Start output features
         do
 			if is_destroyed then	
 				create_window
-				shake_label (degree_l, Empty_string);
-				shake_label (entity_l, Empty_string);
-				shake_label (nbr_to_go_l, Empty_string);
-				shake_label (current_nbr_to_go_l, Empty_string);
-				shake_label (current_degree_l, Empty_string);
-				shake_label (current_entity_l, Empty_string);
+				degree_l.set_label_as_string (Empty_string);
+				entity_l.set_label_as_string (Empty_string);
+				nbr_to_go_l.set_label_as_string (Empty_string);
+				current_nbr_to_go_l.set_label_as_string (Empty_string);
+				current_degree_l.set_label_as_string (Empty_string);
+				current_entity_l.set_label_as_string (Empty_string);
 				percentage_l.set_label_as_string (Zero_percent);
 			end;
 			if not is_managed then	
@@ -249,7 +255,8 @@ feature -- Output on per class
 		do
 			processed := features_done + processed;
 			current_entity_l.set_label_as_string (processed.out);
-			a_per := (100 * features_done) // nbr_to_go + features_done;
+			a_per := (100 * features_done) // (nbr_to_go + features_done);
+			progress_bar.update_percentage (a_per);
 			update_interface (Empty_string, nbr_to_go, a_per);
 		end;
 
@@ -261,8 +268,8 @@ feature -- Output on per class
 		do
 			str := clone (a_name);
 			str.to_lower;
-			shake_label (current_degree_l, str);
-			update_display
+			current_degree_l.set_label_as_string (str);
+			process_events
 		end;
 
     put_case_class_message (a_class: E_CLASS) is
@@ -291,7 +298,7 @@ feature {NONE} -- Implementation
 			a_per_out := a_per.out;
 			a_per_out.extend ('%%');
 			percentage_l.set_label_as_string (a_per_out);
-			update_display
+			process_events
 		end;
 
 	put_string (a_message: STRING) is
@@ -306,14 +313,14 @@ feature {NONE} -- Implementation
 			valid_message: a_message /= Void
 		do
 			progress_bar.reset_percentage;
-			shake_label (degree_l, a_message);
+			degree_l.set_label_as_string (a_message);
 			current_degree_l.set_label_as_string (Empty_string);
 			entity_l.set_label_as_string (Empty_string);
 			nbr_to_go_l.set_label_as_string (Empty_string);
 			current_nbr_to_go_l.set_label_as_string (Empty_string);
 			current_entity_l.set_label_as_string (Empty_string);
 			percentage_l.set_label_as_string (Zero_percent);
-			update_display
+			process_events
 		end;
 
 feature {NONE} -- Implementation
@@ -352,6 +359,12 @@ feature {NONE} -- Implementation
 	percentage_l: MEL_LABEL_GADGET;
 			-- Percentage label
 
+	app_context: MEL_APPLICATION_CONTEXT;
+			-- Application context
+
+	cancel_b: MEL_PUSH_BUTTON
+			-- Cancel button
+
 	create_window is
 			-- Create the compilation progress window.
 		require
@@ -370,7 +383,9 @@ feature {NONE} -- Implementation
 			!! current_nbr_to_go_l.make ("", Current, True);	
 			!! frame.make ("", Current, True);	
 			!! progress_bar.make ("", frame);	
+			!! cancel_b.make ("Cancel", Current, True);	
 			!! percentage_l.make ("100%%", Current, True);	
+			set_fraction_base (3);
 
 			degree_l.attach_top;
 			degree_l.attach_left;
@@ -398,25 +413,32 @@ feature {NONE} -- Implementation
 			current_nbr_to_go_l.attach_left_to_widget (nbr_to_go_l);
 			current_nbr_to_go_l.set_top_offset (10);
 			current_nbr_to_go_l.set_left_offset (10);
-			current_nbr_to_go_l.set_bottom_offset (10);
 
 			percentage_l.attach_bottom;
 			percentage_l.attach_left_to_widget (frame);
 			percentage_l.set_left_offset (5);
 			percentage_l.set_right_offset (10);
-			percentage_l.set_bottom_offset (10);
 
+			cancel_b.attach_bottom;
+			cancel_b.attach_left_to_position (1);
+			cancel_b.attach_right_to_position (2);
+			cancel_b.set_bottom_offset (5);
+				
 			frame.attach_top_to_widget (nbr_to_go_l);
 			frame.attach_left;
 			frame.attach_right;
-			frame.attach_bottom;
 			frame.set_top_offset (10);
 			frame.set_left_offset (10);
 			frame.set_right_offset (60);
-			frame.set_bottom_offset (10);
-			set_dialog_full_application_modal;
+			frame.set_bottom_offset (5);
+			frame.attach_bottom_to_widget (cancel_b);
+
+			app_context := application_context;
+			cancel_b.set_activate_callback (Current, Void);
 			update_resources;
-		end
+
+			percentage_l.set_bottom_offset (cancel_b.height + 10);
+		end;
 
 	update_resources is
 			-- Update the font/color of progress window.
@@ -424,21 +446,21 @@ feature {NONE} -- Implementation
 			imp: COLOR_X;
 			font_x: FONT_X;
 			a_font_list: MEL_FONT_LIST;
-			an_entry: MEL_FONT_LIST_ENTRY
 		do
 			if bg_color /= Void then
 				imp ?= bg_color.implementation;
 				set_background_color (imp);
+				cancel_b.set_background_color (imp);
 				progress_bar.set_background_color (imp);
 			end;
 			if fg_color /= Void then
 				imp ?= fg_color.implementation;
 				set_foreground_color (imp);
+				cancel_b.set_foreground_color (imp);
 			end;
 			if global_font /= Void then
 				font_x ?= global_font.implementation;
-				!! an_entry.make_default_from_font_struct (font_x);
-				!! a_font_list.append_entry (an_entry);
+				a_font_list := font_x.font_list;
 				if a_font_list.is_valid then
 					degree_l.set_font_list (a_font_list);
 					entity_l.set_font_list (a_font_list);
@@ -446,12 +468,12 @@ feature {NONE} -- Implementation
 					current_degree_l.set_font_list (a_font_list);
 					current_entity_l.set_font_list (a_font_list);
 					percentage_l.set_font_list (a_font_list);
-					a_font_list.free
+					cancel_b.set_font_list (a_font_list);
+					a_font_list.destroy
 				else
 					io.error.putstring ("Warning can not allocate font%N")
 ;
 				end;
-				an_entry.free
 			end
 		end;
 
@@ -480,12 +502,30 @@ feature {NONE} -- Implementation
 			define_cursor (cursor_imp);
 		end;
 
-	shake_label (l: MEL_LABEL_GADGET; a_text: STRING) is
-			-- Shake label `l' with `a_text'.
+	process_events is
+			-- Process all available events in the queue.
+		local
+			event: MEL_EVENT;
+			app: like app_context;
+			mask: INTEGER
 		do
-			l.unmanage;
-			l.set_label_as_string (a_text)
-			l.manage
+			app := app_context;
+			from
+				mask := app.pending;
+			until
+				mask = 0
+			loop
+					-- Dispatch the event
+				app.process_event (mask);
+					-- Get the next event in queue, if any.
+				mask := app.pending;
+			end
+		end;
+
+	execute (arg: ANY) is
+			-- Cancel the compilation.
+		do
+			Eiffel_project.interrupt_compilation
 		end;
 
 end -- class GRAPHICAL_DEGREE_OUTPUT

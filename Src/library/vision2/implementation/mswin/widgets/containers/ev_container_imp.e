@@ -700,15 +700,21 @@ feature -- Status setting
 					end
 				end
 			end
-			check
-				orignal_selection_found: original_selected_button /= Void
+			if not l.is_empty then
+				check
+					had_original_selection: original_selected_button /= Void
+				end
 			end
-				-- We now select a radio button in the new group,
-				-- that does not already have one selected.
-			if original_selected_button.parent_imp = peer then
-				select_first_radio_button
-			else
-				peer.select_first_radio_button
+				-- There was not necessarily a selected item, as
+				-- the containers may not contain a radio button.
+			if original_selected_button /= Void then
+					-- We now select a radio button in the new group,
+					-- that does not already have one selected.
+				if original_selected_button.parent_imp = peer then
+					select_first_radio_button
+				elseif peer.has_radio_button then
+					peer.select_first_radio_button
+				end
 			end
 		end
 		

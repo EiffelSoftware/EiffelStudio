@@ -24,6 +24,7 @@ feature {NONE} -- Formats
 			in_construct, in_before: BOOLEAN;
 			new_format: CELL2 [STRING, STRING];
 			normal_format: BOOLEAN;
+			escape_char: CHARACTER;
 			escape: STRING
 		do
 			!!filter_file.make (filename);
@@ -88,8 +89,15 @@ feature {NONE} -- Formats
 								if escape.is_equal ("escape") then
 									normal_format := false;
 									if before /= Void and after = Void then
+										escape_char :=
+											construct.item (construct.count);
+										construct.right_adjust;
+										if construct.count > 6 then
+											escape_char := 
+												construct.item (construct.count)
+										end;
 										escape_characters.force 
-												(before, construct.item (7))
+												(before, escape_char)
 									else
 										syntax_error 
 												("Escape character expected")

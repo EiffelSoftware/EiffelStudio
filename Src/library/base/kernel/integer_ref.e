@@ -121,6 +121,15 @@ feature -- Basic operation
 			Result.set_item (item \\ other.item)
 		end;
 
+	infix "^" (other: INTEGER_REF): INTEGER_REF is
+			-- Power of `Current' by `other'
+		require
+			other_exists: other /= Void
+		do
+			!!Result;
+			Result.set_item (item ^ other.item)
+		end;
+
 feature -- Modification & Insertion
 
 

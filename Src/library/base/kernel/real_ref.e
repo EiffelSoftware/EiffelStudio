@@ -76,6 +76,13 @@ feature -- Basic operation
 			Result.set_item (item / other.item)
 		end; -- infix "/"
 
+	infix "^" (other: REAL_REF): REAL_REF is
+			-- Power of `Current' by `other'
+		do
+			!!Result;
+			Result.set_item (item ^ other.item)
+		end; -- infix "^"
+
 	prefix "+": REAL_REF is
 			-- Unary addition applied to `Current'
 		do

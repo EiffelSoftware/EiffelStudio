@@ -46,6 +46,13 @@ feature -- Basic operation
 		deferred
 		end;
 
+--	infix "^" (other: NUMERIC): NUMERIC is
+--			-- Power of `Current' by `other'
+--		require
+--			other_exists: other /= Void
+--		deferred
+--		end;
+
 	prefix "+": NUMERIC is
 			-- Unary addition applied to `Current'
 		deferred

@@ -6,9 +6,9 @@ indexing
 */
 
 using System;
-using ISE.Runtime.Enums;
+using EiffelSoftware.Runtime.Enums;
 
-namespace ISE.Runtime.CA
+namespace EiffelSoftware.Runtime.CA
 {
 
 [CLSCompliant(false)]

@@ -1,4 +1,4 @@
-RUNTIME_SRC = eiffel_type_info.cs eiffel_derivation.cs runtime.cs gen_conf.cs runtime_assembly_info.cs assertions.cs eiffel_exception.cs agent_proxy.cs any.cs types/*.cs custom_attributes/*.cs enums/*.cs
+RUNTIME_SRC = eiffel_type_info.cs runtime.cs gen_conf.cs runtime_assembly_info.cs assertions.cs eiffel_exception.cs agent_proxy.cs any.cs types/*.cs custom_attributes/*.cs enums/*.cs
 CSFLAGS = -nologo -w:4 -nowarn:0659 -optimize+
 #CSFLAGS = -nologo -w:4 -nowarn:0659 -debug -d:ASSERTIONS
 GACFLAGS = -nologo
@@ -6,10 +6,10 @@ MKDIR = -mkdir
 RMDIR = -rd /q /s
 CP = -copy
 
-all:: ISE.Runtime.dll
+all:: EiffelSoftware.Runtime.dll
 
-ISE.Runtime.dll: $(RUNTIME_SRC) Makefile
+EiffelSoftware.Runtime.dll: $(RUNTIME_SRC) Makefile
 	$(CP) $(EIFFEL_SRC)\dotnet\helpers\isekey.snk ise_runtime.key
 	csc $(CSFLAGS) -target:library -out:$@ -recurse:"*.cs"
-	gacutil $(GACFLAGS) -if ISE.Runtime.dll
+	gacutil $(GACFLAGS) -if EiffelSoftware.Runtime.dll
 	del ise_runtime.key

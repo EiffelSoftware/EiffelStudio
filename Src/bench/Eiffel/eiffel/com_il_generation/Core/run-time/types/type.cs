@@ -6,7 +6,8 @@ indexing
 */
 	
 using System;
-namespace ISE.Runtime {
+
+namespace EiffelSoftware.Runtime.Types {
 
 [Serializable]
 public abstract class TYPE {

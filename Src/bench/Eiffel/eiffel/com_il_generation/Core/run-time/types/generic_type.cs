@@ -7,7 +7,8 @@ indexing
 */
 	
 using System;
-namespace ISE.Runtime {
+
+namespace EiffelSoftware.Runtime.Types {
 
 [Serializable]
 public class GENERIC_TYPE: CLASS_TYPE {
@@ -15,11 +16,14 @@ public class GENERIC_TYPE: CLASS_TYPE {
 /*
 feature -- Access
 */
-	public TYPE[] type_array;
+	public TYPE[] generics;
 		// Type holding information about current generic derivation
 
-	public int nb_generics;
-		// Number of generics if any.
+	public int count;
+		// Number of elements in `generics'
+
+	private byte has_formal_flags;
+		// Does current generic type has formals?
 
 /*
 feature -- Status Report
@@ -28,27 +32,59 @@ feature -- Status Report
 	public override TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
 		// Evaluate Current in context of `context_object'.
 	{
-		GENERIC_TYPE l_type;
-		Int32 i = 0;
+		GENERIC_TYPE Result;
+		TYPE [] l_generics, l_other_generics;
+		int i, nb;
 
-			// Duplicate current data as after the evaluation in context
-			// of `context_object' it will be the same except for `type_array'
-			// which will only contained fully evaluated types that's why
-			// `type_array' is created of type `CLASS_TYPE []'.
-		l_type = (GENERIC_TYPE) MemberwiseClone();
-		l_type.set_type_array (new CLASS_TYPE [nb_generics]);
+		if (has_formal ()) {
+			i = 0;
+			nb = count;
 
-			// Evaluate all types contained in `type_array' in context of `context_object'
-		for (i = 0; i < nb_generics ; i ++) {
-				// No need for cast here as we are 100% sure that result of evaluation
-				// on each item of the array will yield to an instance of CLASS_TYPE.
-			#if ASSERTIONS
-				ASSERTIONS.CHECK ("Valid element type", type_array [i].evaluated_type (context_object) is CLASS_TYPE);
-			#endif
-			l_type.type_array [i] = type_array [i].evaluated_type (context_object);
+				// Duplicate current data as after the evaluation in context
+				// of `context_object' it will be the same except for `generics'
+				// which will only contained fully evaluated types that's why
+				// `generics' is created of type `CLASS_TYPE []'.
+			Result = (GENERIC_TYPE) MemberwiseClone();
+			l_other_generics = new CLASS_TYPE [nb];
+			Result.set_generics (l_other_generics);
+
+				// Evaluate all types contained in `generics' in context of `context_object'
+			l_generics = generics;
+			for (; i < nb ; i ++) {
+				#if ASSERTIONS
+					ASSERTIONS.CHECK ("Valid element type",
+						l_generics [i].evaluated_type (context_object) is CLASS_TYPE);
+				#endif
+				l_other_generics [i] = l_generics [i].evaluated_type (context_object);
+			}
+			Result.set_has_formal (false);
+		} else {
+			Result = this;
 		}
+		return Result;
+	}
 
-		return l_type;
+	public bool has_formal ()
+		// Does Current have formal generic parameter?
+	{
+		int i, nb;
+		byte l_flags = has_formal_flags;
+		TYPE[] l_generics;
+		
+		if ((l_flags & 0x10) == 0x10) {
+			return (l_flags & 0x01) == 0x01;
+		} else {
+			l_generics = generics;
+
+			for (i = 0, nb = count; i < nb; i++) {
+				if (l_generics [i] is FORMAL_TYPE) {
+					has_formal_flags = 0x11;
+					return true;
+				}
+			}
+			has_formal_flags = 0x10;
+			return false;
+		}
 	}
 
 	public override String type_name ()
@@ -56,33 +92,41 @@ feature -- Status Report
 		// (type of which it is a direct instance)
 	{
 		String Result = base.type_name ();
+		TYPE [] l_generics;
+		int i, nb;
 
-		Result = String.Concat (Result, " [");
+		Result = String.Concat (Result, str_open_generics);
 
-		for (int i = 0; i < nb_generics; i++) {
-			Result = String.Concat (Result, type_array [i].type_name ());
-			if (i + 1 < nb_generics) {
-				Result = String.Concat (Result, ", ");
+		l_generics = generics;
+		for (i = 0, nb = count; i < nb; i++) {
+			Result = String.Concat (Result, l_generics [i].type_name ());
+			if (i + 1 < nb) {
+				Result = String.Concat (Result, str_comma);
 			}
 		}
 
-		Result = String.Concat (Result, "]");
+		Result = String.Concat (Result, str_close_generics);
 		return Result;
 	}
 
 /*
 feature -- Settings
 */
-	public void set_type_array (TYPE[] an_array)
-		// Assign `an_array' to `type_array'.
+	public void set_generics (TYPE[] an_array)
+		// Assign `an_array' to `generics'.
 	{
-		type_array = an_array;
+		generics = an_array;
+		count = an_array.Length;
 	}
 
-	public void set_nb_generics (int nb)
-		// Assign `nb' to `nb_generics'.
+	public void set_has_formal (bool v)
+		// Assign `v' to `has_formal'.
 	{
-		nb_generics = nb;
+		if (v) {
+			has_formal_flags = 0x11;
+		} else {
+			has_formal_flags = 0x10;
+		}
 	}
 
 /*
@@ -93,18 +137,31 @@ feature -- Comparison
 	{
 		bool Result = false;
 		GENERIC_TYPE l_other = other as GENERIC_TYPE;
+		TYPE [] l_generics, l_other_generics;
 		int i, nb;
 
 		if (l_other != null) {
-			if ((type.Value == l_other.type.Value) && (nb_generics == l_other.nb_generics)) {
+			nb = count;
+			if ((type.Value == l_other.type.Value) && (nb == l_other.count)) {
 				Result = true;
-				for (i = 0, nb = nb_generics - 1; (i < nb) && Result; i++) {
-					Result = (type_array [i]).Equals (l_other.type_array [i]);
+				l_generics = generics;
+				l_other_generics = l_other.generics;
+				for (i = 0; (i < nb) && Result; i++) {
+					Result = (l_generics [i]).Equals (l_other_generics [i]);
 				}
 			}
 		}
 		return Result;
 	}
+
+/*
+feature {NONE} -- Implementation
+*/
+
+	private static string str_open_generics = " [";
+	private static string str_close_generics = "]";
+	private static string str_comma = ", ";
+		// Constants for type name formatting.
 
 }
 

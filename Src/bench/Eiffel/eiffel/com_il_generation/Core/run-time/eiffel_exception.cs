@@ -6,7 +6,7 @@ indexing
 */
 	
 using System;
-namespace ISE.Runtime {
+namespace EiffelSoftware.Runtime {
 
 [Serializable]
 public class EIFFEL_EXCEPTION: ApplicationException {

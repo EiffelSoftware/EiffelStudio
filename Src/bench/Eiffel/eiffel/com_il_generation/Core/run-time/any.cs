@@ -9,9 +9,10 @@ using System;
 using System.Collections;
 using System.Text;
 using System.Reflection;
-using ISE.Runtime.CA;
+using EiffelSoftware.Runtime.CA;
+using EiffelSoftware.Runtime.Types;
 
-namespace ISE.Runtime {
+namespace EiffelSoftware.Runtime {
 
 public class ANY {
 
@@ -43,18 +44,18 @@ feature -- Access
 		// (type of which it is a direct instance)
 	{
 		string Result = null;
-		EIFFEL_DERIVATION der;
+		GENERIC_TYPE l_gen_type;
 		EIFFEL_TYPE_INFO l_current = Current as EIFFEL_TYPE_INFO;
 
 		if (Current == null) {
 			generate_call_on_void_target_exception ();
 		} else if (l_current != null) {
-			der = l_current.____type ();
-			if (der == null) {
+			l_gen_type = l_current.____type ();
+			if (l_gen_type == null) {
 					// Not a generic class, we extract stored name.
 				Result = l_current.____class_name ();
 			} else {
-				Result = der.type_name ();
+				Result = l_gen_type.type_name ();
 			}
 		} else {
  			Result = Current.GetType().FullName;
@@ -71,7 +72,7 @@ feature -- Status report
 		// of `other' (as per Eiffel: The Language, chapter 13)?
 	{
 		bool Result = false;
-		EIFFEL_DERIVATION der1, der2;
+		GENERIC_TYPE l_current_type, l_other_type;
 		EIFFEL_TYPE_INFO current_info = Current as EIFFEL_TYPE_INFO;
 		EIFFEL_TYPE_INFO other_info = other as EIFFEL_TYPE_INFO;
 
@@ -89,14 +90,14 @@ feature -- Status report
 					// no conformance. We do nothing since `Result' is already initialized to
 					// false.
 			} else {
-				der1 = current_info.____type ();
-				der2 = other_info.____type ();
-				if (der2 == null) {
+				l_current_type = current_info.____type ();
+				l_other_type = other_info.____type ();
+				if (l_other_type == null) {
 						// Parent type represented by the `other' instance
 						// is not generic, therefore `Current' should directly
 						// conform to the parent type.
 					Result = interface_type (other_info).IsAssignableFrom (Current.GetType ());
-				} else if (der1 == null) {
+				} else if (l_current_type == null) {
 						// Parent is generic, but not type represented by
 						// `Current', so let's first check if it simply
 						// conforms without looking at the generic parameter.
@@ -126,8 +127,8 @@ feature -- Status report
 	{
 		bool Result = false;
 		int i, nb;
-		EIFFEL_DERIVATION der_current, der_other;
-		EIFFEL_TYPE_INFO l_current;
+		GENERIC_TYPE l_current_type, l_other_type;
+		EIFFEL_TYPE_INFO l_current, l_other;
 
 		#if ASSERTIONS
 			ASSERTIONS.REQUIRE ("other_not_void", other != null);
@@ -140,17 +141,20 @@ feature -- Status report
 				l_current = Current as EIFFEL_TYPE_INFO;
 				if (l_current != null) {
 						// We perform generic conformance in case it is needed.
-					der_current = l_current.____type();
-					if (der_current != null) {
-						der_other =  ((EIFFEL_TYPE_INFO) other).____type();
+					l_current_type = l_current.____type();
+					if (l_current_type != null) {
+							// Because we already know that `Current' and `other' have
+							// the same type, therefore cast to EIFFEL_TYPE_INFO is
+							// going to succeed.
+						l_other_type =  ((EIFFEL_TYPE_INFO) other).____type();
 						#if ASSERTIONS
-							ASSERTIONS.CHECK ("has_derivation", der_other != null);
-							ASSERTIONS.CHECK ("Same base type", der_current.type.Equals (der_other.type));
+							ASSERTIONS.CHECK ("has_derivation", l_other_type != null);
+							ASSERTIONS.CHECK ("Same base type", l_current_type.type.Equals (l_other_type.type));
 						#endif
-						Result = (der_current.nb_generics == der_other.nb_generics);
+						Result = (l_current_type.count == l_other_type.count);
 						if (Result) {
-							for (i = 0, nb = der_current.nb_generics - 1; (i < nb) && Result; i++) {
-								Result = (der_current.generics_type [i]).Equals (der_other.generics_type [i]);
+							for (i = 0, nb = l_current_type.count - 1; (i < nb) && Result; i++) {
+								Result = (l_current_type.generics [i]).Equals (l_other_type.generics [i]);
 							}
 						}
 					}

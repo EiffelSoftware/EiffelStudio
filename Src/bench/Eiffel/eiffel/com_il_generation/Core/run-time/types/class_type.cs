@@ -8,9 +8,9 @@ indexing
 */
 	
 using System;
-using ISE.Runtime.CA;
+using EiffelSoftware.Runtime.CA;
 
-namespace ISE.Runtime {
+namespace EiffelSoftware.Runtime.Types {
 
 [Serializable]
 public class CLASS_TYPE: TYPE {

@@ -8,7 +8,7 @@ indexing
 using System;
 using System.Collections;
 
-namespace ISE.Runtime {
+namespace EiffelSoftware.Runtime.Types {
 
 [Serializable]
 public class BASIC_TYPE: CLASS_TYPE {

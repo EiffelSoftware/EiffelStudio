@@ -9,7 +9,7 @@ indexing
 class
 	MEL_GC_CONSTANTS
 
-feature -- Access
+feature -- Function mode access
 
 	GXclear: INTEGER is
 		external
@@ -121,6 +121,144 @@ feature -- Access
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXset"
+		end;
+
+feature -- Arc mode access
+
+	ArcChord: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"ArcChord"
+		end;
+
+	ArcPieSlice: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"ArcPieSlice"
+		end;
+
+feature -- Cap style access
+
+	CapNotLast: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"CapNotLast"
+		end;
+
+	CapButt: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"CapButt"
+		end;
+
+	CapRound: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"CapRound"
+		end;
+
+	CapProjecting: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"CapProjecting"
+		end;
+
+feature -- Fill style access
+
+	FillSolid: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"FillSolid"
+		end;
+
+	FillTiled: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"FillTiled"
+		end;
+
+	FillStippled: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"FillStippled"
+		end;
+
+	FillOpaqueStippled: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"FillOpaqueStippled"
+		end;
+
+feature -- File style access
+
+	JoinMiter: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"JoinMiter"
+		end;
+
+	JoinRound: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"JoinRound"
+		end;
+
+	JoinBevel: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"JoinBevel"
+		end;
+
+feature -- Line style access
+
+	LineSolid: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"LineSolid"
+		end;
+
+	LineOnOffDash: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"LineOnOffDash"
+		end;
+
+	LineDoubleDash: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"LineDoubleDash"
+		end;
+
+feature -- Subwindow mode access
+
+	ClipByChildren: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"ClipByChildren"
+		end;
+
+	IncludeInferiors: INTEGER is
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"IncludeInferiors"
 		end;
 
 end -- class MEL_GC_CONSTANTS

@@ -1,7 +1,5 @@
 <document title="C++ Externals" output="studio">
-	<meta_data>
-		<help/>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>2</size>Introduction
@@ -136,6 +134,7 @@ External_name ==  <keyword>alias</keyword> Manifest_string
 			</item>
 			<item>If the declaration starts with <code><keyword>delete</keyword></code>, it indicates a call to a destructor from the C++ class. In this case the Eiffel class may inherit 
 				<link>
+					<label>MEMORY</label>
 					<url>/libraries/base/reference/kernel/classic/MEMORY_chart.xml</url>
 				</link> and redefine the dispose procedure to execute the destructor operations whenever the Eiffel objects are garbage-collected.
 			</item>

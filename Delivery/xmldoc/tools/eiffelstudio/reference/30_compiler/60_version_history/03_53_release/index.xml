@@ -62,7 +62,7 @@ x: <class_name>X</class_name>
 				<code_block><keyword>create</keyword> x.<feature_name>make</feature_name> (x)</code_block>
 			</item>
 			<item>Fixed undetected 
-				<compiler_error>VDRD(3)</compiler_error> errors: compiler was not strict enough and accepted 
+				<code><compiler_error>VDRD(3)</compiler_error></code> errors: compiler was not strict enough and accepted 
 				<code>
 					<keyword>ensure</keyword>
 				</code> where only 

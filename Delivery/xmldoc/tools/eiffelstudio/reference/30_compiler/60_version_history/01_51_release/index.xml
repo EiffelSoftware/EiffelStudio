@@ -43,14 +43,14 @@
 		</heading>
 		<list ordered="false">
 			<item>Fixed 
-				<compiler_error>VAPE</compiler_error> errors that were not previously reported. Now 
-				<compiler_error>VAPE</compiler_error> errors are checked against arguments of a feature used in a precondition and are also checked for a qualified call.
+				<code><compiler_error>VAPE</compiler_error></code> errors that were not previously reported. Now 
+				<code><compiler_error>VAPE</compiler_error></code> errors are checked against arguments of a feature used in a precondition and are also checked for a qualified call.
 			</item>
 			<item>Fixed a conformance bug that made a manifest array not conform to ANY.</item>
 			<item>Fixed a generic conformance bug where an assignment attempt would change the behavior of the execution.</item>
 			<item>Fixed a wrongly reported error by the compiler in the following case:
 				<paragraph>In a system that has a generic class CLIENT with constraint `G -&gt; SUPPLIER create make end', where the creation procedure of SUPPLIER is exported to {CLIENT}. If another class has an attribute `x: CLIENT [SUPPLIER]' the compiler reports a 
-					<compiler_error>VTCG</compiler_error> error, though it should accept the classes.
+					<code><compiler_error>VTCG</compiler_error></code> error, though it should accept the classes.
 				</paragraph>
 			</item>
 			<item>Fixed a crash when one of the following command lines was used in a directory with no existing project that contains a file named "Ace":
@@ -74,8 +74,8 @@ bar</code_block>
 foo</code_block>
 			</item>
 			<item>Fixed a non reported 
-				<compiler_error>VTEC</compiler_error> or 
-				<compiler_error>VTCG</compiler_error> error when an invalid type used as actual generic parameters in an explicit type in a creation instruction.
+				<code><compiler_error>VTEC</compiler_error></code> or 
+				<code><compiler_error>VTCG</compiler_error></code> error when an invalid type used as actual generic parameters in an explicit type in a creation instruction.
 			</item>
 		</list>
 	</paragraph></document>

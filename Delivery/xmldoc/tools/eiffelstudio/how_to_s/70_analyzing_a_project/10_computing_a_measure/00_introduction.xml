@@ -27,17 +27,11 @@
 					<url>10_calculating_a_measure.xml</url>
 					<label>Calculating a measure<image><url>/images/eiffelstudio/icons/icon_new_measure_color.gif</url></image></label>
 				</link>
-				<link>
-					<url>10_calculating_a_measure.xml</url>
-				</link>
 			</item>
 			<item>
 				<link>
 					<url>20_saving_a_measure.xml</url>
 					<label>Saving a measure<image><url>/images/eiffelstudio/icons/icon_save_measure_color.gif</url></image></label>
-				</link>
-				<link>
-					<url>20_saving_a_measure.xml</url>
 				</link>
 			</item>
 			<item>
@@ -45,26 +39,17 @@
 					<url>30_deleting_measures.xml</url>
 					<label>Deleting measures<image><url>/images/eiffelstudio/icons/icon_delete_measure_color.gif</url></image></label>
 				</link>
-				<link>
-					<url>30_deleting_measures.xml</url>
-				</link>
 			</item>
 			<item>
 				<link>
 					<url>40_viewing_measure_details.xml</url>
-					<label>Detailing a measure<image><url>/images/eiffelstudio/icons/icon_view_measure_plus_color.gif</url></image><image><url>/images/eiffelstudio/icons/icon_view_measure_minus_color.gif</url></image></label>
-				</link>
-				<link>
-					<url>40_viewing_measure_details.xml</url>
-				</link>
-				<link>
-					<url>40_viewing_measure_details.xml</url>
+					<label>Detailing a measure<image><url>/images/eiffelstudio/icons/icon_view_measure_plus_color.gif</url></image></label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>50_updating_recorded_measures.xml</url>
-					<label>Updating measures</label>
+					<label>Updating measures<image><url>/images/eiffelstudio/icons/icon_view_measure_minus_color.gif</url></image></label>
 				</link>
 			</item>
 		</list>

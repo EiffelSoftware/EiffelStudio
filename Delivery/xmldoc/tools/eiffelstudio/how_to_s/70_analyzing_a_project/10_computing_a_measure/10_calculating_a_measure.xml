@@ -51,9 +51,6 @@
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml</url><anchor_name>calculate</anchor_name>
 					<label>calculate<image><url>/images/eiffelstudio/icons/icon_new_measure_color.gif</url></image></label>
-				</link>
-				<link>
-					<url>10_calculating_a_measure.xml</url>
 				</link> button.
 			</item>
 		</list>

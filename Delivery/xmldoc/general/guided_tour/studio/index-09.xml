@@ -134,8 +134,9 @@
 			<keyword>$ISE_EIFFEL/examples/studio/filters</keyword>
 		</code_block>
 		<paragraph>To define a new filter, simply add a file to this directory.  Filters are expressed in a simple notation called EFF ( 
-			<span>Eiffel Filter Format</span> ), general enough to support a wide variety of tools for text processing, project management, Web publishing etc.  The best way to define a new filter is usually to start from an existing one and adapt it.  You will find the specification of EFF at the end of this manual, in 
+			<span>Eiffel Filter Format</span> ), general enough to support a wide variety of tools for text processing, project management, Web publishing etc.  The best way to define a new filter is usually to start from an existing one and adapt it.  You will find the specification of EFF at the end of this manual, 
 			<link>
+				<label>here</label>
 				<url>index-20.xml</url><anchor_name>35873</anchor_name>
 			</link> .
 		</paragraph>

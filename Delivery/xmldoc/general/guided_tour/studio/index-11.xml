@@ -21,8 +21,9 @@
 					<keyword>Feature </keyword>
 				</code>Tab.
 			</paragraph>
-			<paragraph>If for some reason the window doesn't look like the next figure, it's easy to reconstruct it: make sure both the Cluster tree and the Feature tree are visible (if not, click the corresponding buttons as recalled on page 
+			<paragraph>If for some reason the window doesn't look like the next figure, it's easy to reconstruct it: make sure both the Cluster tree and the Feature tree are visible (if not, click the corresponding buttons as recalled on 
 				<link>
+					<label>here</label>
 					<url>index.xml</url><anchor_name>CLUSTERS/FEATURES BUTTON</anchor_name>
 				</link> ); target the tool to class 
 				<code>

@@ -1,9 +1,6 @@
 <document title="Managing new metrics" output="studio">
 	<meta_data>
-		<help>Metric,new,manage
-			<meta_content>
-				<name>MS-HKWD</name>
-			</meta_content>
+		<help><meta><meta_content>Metric,new,manage</meta_content><name>MS-HKWD</name></meta>
 		</help>
 	</meta_data>
 	<paragraph>

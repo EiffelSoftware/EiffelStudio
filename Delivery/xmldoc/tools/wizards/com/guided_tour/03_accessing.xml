@@ -100,10 +100,10 @@
 			<comment>--</comment>
 		</code> ' and comment out the rest of the feature. Now the contract of the 
 		<code>
-			<feature_name>
+			<link>
 				<url>../../../../libraries/base/reference/kernel/string.xml</url><anchor_name>f_replace_substring</anchor_name>
 				<label>replace_substring</label>
-			</feature_name>
+			</link>
 		</code> feature is wrong and erroneous calls can be made. Quick melt the changes and run the client. Enter some invalid numbers in the fields used to call this feature. After you click Replace you will see an error message box warning you that a precondition was violated on the server side. This is how you can use contracts `over the wire'. The preconditions was violated in the server, this exception was caught by the EiffelCOM runtime and sent back to the client.
 		</paragraph>
 		<seealso>

@@ -500,7 +500,7 @@
 	<feature_name>make</feature_name> <symbol>(</symbol>a_nm<symbol>:</symbol> <class_name>STRING</class_name>; a_offset<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
 			<comment>-- Initalize with name `a_nm' and utcoffset `a_offset'</comment>
 		<keyword>require</keyword>
-			name_not_empty<symbol>:</symbol> a_nm <symbol>/<symbol>=</symbol></symbol> Void <keyword>and</keyword> <keyword>then</keyword> <keyword>not</keyword> a_nm.<feature_name>is_empty</feature_name>
+			name_not_empty<symbol>:</symbol> a_nm <symbol>/</symbol><symbol>=</symbol> Void <keyword>and</keyword> <keyword>then</keyword> <keyword>not</keyword> a_nm.<feature_name>is_empty</feature_name>
 			offset_valid<symbol>:</symbol> a_offset &gt;<symbol>=</symbol> -12 <keyword>and</keyword> a_offset &lt;<symbol>=</symbol> 12
 		<keyword>do</keyword>
 			<feature_name>name</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>clone </feature_name><symbol>(</symbol>a_nm<symbol>)</symbol>

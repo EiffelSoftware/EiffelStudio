@@ -8,9 +8,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>  The documentation regarding development in Eiffel ENViSioN! has been divided  into three sections: </paragraph>
 					<list ordered="false">
 						<item>
@@ -80,7 +77,4 @@
 							<line_break/>
 						</seealso>
 					</paragraph>
-				</cell>
-			</row>
-		</table>
 	</paragraph></document>

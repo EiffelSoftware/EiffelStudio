@@ -9,12 +9,10 @@
 			<item>The first command corresponds to the 
 				<bold>Embed in if</bold> entry in the 
 				<bold>Advanced</bold> submenu of the 
-				<bold>
 					<link>
 						<url>../80_edit_menu_commands.xml</url>
-						<label>Edit</label>
+						<label><bold>Edit</bold></label>
 					</link>
-				</bold>
 				<link>
 					<url>../80_edit_menu_commands.xml</url>
 					<label>              Menu</label>
@@ -27,12 +25,10 @@
 			<item>The second command corresponds to the 
 				<bold>Embed in debug</bold> entry in the 
 				<bold>Advanced</bold> submenu of the 
-				<bold>
 					<link>
 						<url>../80_edit_menu_commands.xml</url>
-						<label>Edit</label>
+						<label><bold>Edit</bold></label>
 					</link>
-				</bold>
 				<link>
 					<url>../80_edit_menu_commands.xml</url>
 					<label>              Menu</label>

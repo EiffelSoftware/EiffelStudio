@@ -76,7 +76,7 @@
 	<feature_name>transmit</feature_name><symbol>:</symbol> <symbol>(</symbol>p<symbol>:</symbol> <class_name>PACKET</class_name><symbol>)</symbol>
 			<comment>-- Transmit packet `p'</comment>
 		<keyword>require</keyword>
-			packet_not_void<symbol>:</symbol> p <symbol>/<symbol>=</symbol></symbol> Void
+			packet_not_void<symbol>:</symbol> p <symbol>/</symbol><symbol>=</symbol> Void
 		<keyword>local</keyword>
 			current_retries<symbol>:</symbol> <class_name>INTEGER</class_name>
 			r<symbol>:</symbol> <class_name>RANDOM_NUMBER_GENERATOR</class_name>

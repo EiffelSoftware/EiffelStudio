@@ -14,8 +14,9 @@ Start-&gt;Programs-&gt;EiffelXX-&gt;EiffelCOMWizard
 		</image>
 		<paragraph> The introduction dialog lets you choose between opening an existing project or creating a new one either from a COM definition or from an Eiffel project. Creating a new project will open the 
 			<link>
+				<label>Generated Code Type Dialog</label>
 				<url>02_generated_code_type_d.xml</url>
-			</link>Generated Code Type Dialog. Opening an existing project will display an Open File Dialog from which you can select a previously saved EiffelCOM project.
+			</link>. Opening an existing project will display an Open File Dialog from which you can select a previously saved EiffelCOM project.
 		</paragraph>
 		<paragraph>The four buttons at the bottom of the dialog 
 			<italic>Back</italic>, 

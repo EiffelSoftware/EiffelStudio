@@ -7,9 +7,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>Eiffel for Visual Studio.NET provides the facilities to modify your projects  setting via a number of property pages. The property pages can be used to  modify a single projects configuration (debug, release, etc), modify all  configurations in aproject, modify the configurations of multiple  projects ina multiple project solution, and even multiple configurations  for multiple projects. </paragraph>
 					<heading>
 						<size>2</size>Understanding The Property Page Dialog
@@ -101,7 +98,4 @@
 							<bold>Debugging</bold> - The debugging  options for the project.
 						</item>
 					</list>
-				</cell>
-			</row>
-		</table>
 	</paragraph></document>

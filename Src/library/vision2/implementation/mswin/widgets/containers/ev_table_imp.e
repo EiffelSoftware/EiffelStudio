@@ -275,6 +275,7 @@ feature -- Status settings
 				initialize_rows (a_row)
 		end
 
+	
 	remove (v: EV_WIDGET) is
 			-- Remove `v' from `Current' if present.
 		local
@@ -286,7 +287,9 @@ feature -- Status settings
 			check
 				implementation_not_void: widget_imp /= Void
 			end
-			-- Retrieve the table child for `tchild'.
+				-- Call `remove_item_actions' for `Current'.
+			remove_item_actions.call ([widget_imp.interface])
+				-- Retrieve the table child for `tchild'.
 			tchild := find_widget_child (widget_imp)
 				-- Remove the table child from `ev_children'.
 			ev_children.prune_all (tchild)
@@ -916,6 +919,9 @@ end -- class EV_TABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2001/07/02 20:43:14  rogers
+--| `remove' now calls `remove_item_actions'.
+--|
 --| Revision 1.21  2001/06/07 23:08:15  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -110,7 +110,7 @@ feature -- Removal
 			if destroy_attributes then
 				xpm_free_attributes (handle);
 			end;
-			c_free (handle);
+			x_free (handle);
 			handle := default_pointer
 		end;
 
@@ -146,12 +146,12 @@ feature {NONE} -- Externals
 			"cmalloc"
 		end;
 	
-	c_free (ptr: POINTER) is
+	x_free (ptr: POINTER) is
 			-- C free
 		external
-			"C (Malloc_t) | %"eiffel.h%""
+			"C (char *) | %"eiffel.h%""
 		alias
-			"cfree"
+			"xfree"
 		end;
 
 	c_enomem is

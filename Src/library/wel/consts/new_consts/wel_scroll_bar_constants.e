@@ -14,13 +14,14 @@ inherit
 feature -- ScrollInfo
 
 	valid_sif_constant (i: INTEGER): BOOLEAN is
-			-- Is `i' a good combination of Sif constants?
-		local
-			op: WEL_BIT_OPERATIONS
+			-- Is `i' a valid Sif constant?
 		do
-			create op
-			Result := op.flag_set (i, 1) or else op.flag_set (i, 2) or else
-				op.flag_set (i, 3) or else op.flag_set (i, 4) or else op.flag_set (i, 5)
+			Result := (i = Sif_all) or else
+				(i = Sif_range) or else
+				(i = Sif_page) or else
+				(i = Sif_pos) or else
+				(i = Sif_disablenoscroll) or else
+				(i = Sif_trackpos)
 		end
 
 	Sif_all: INTEGER is 23

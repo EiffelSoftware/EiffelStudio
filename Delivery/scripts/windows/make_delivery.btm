@@ -2,6 +2,8 @@
 set OLD_PATH=%PATH
 set OLD_EIFFEL_SRC=%EIFFEL_SRC
 set INIT_DIR=%@EXECSTR[cd]
+set TMP_ISE_EIFFEL=%ISE_EIFFEL
+
 call set_aliases.btm
 remtrace Set up the environment
 on break goto broken
@@ -91,6 +93,21 @@ exprt -r %DEFAULT_CVS_TAG -d C_library Src/C_library
 fullrd C_library\.libs
 remtrace Free add ons
 exprt -r %DEFAULT_CVS_TAG -d free_add_ons free_add_ons
+iff not defined NO_COMPILE then
+	cd free_add_ons\zadminer\ace
+	sed -e "s/\$ISE_EIFFEL\\free_add_ons/\$INSTALL_DIR\\free_add_ons/g" zad_miner.ace >> new_ace
+	move new_ace zad_miner.ace
+	clean_project
+	finalize zad_miner.ace
+	fff
+	cleanup_eiffel zad_miner.exe
+	iff not exist zad_miner.exe then
+		echo Couldnt finalize zad_miner.exe.
+		CANCEL
+	endiff
+else
+	quick_move free_add_ons\zadminer\zad_miner.exe
+endiff
 remtrace root
 exprt -l -r %DEFAULT_CVS_TAG Delivery/
 move Delivery\*.* . >>& %INSTALL_LOG

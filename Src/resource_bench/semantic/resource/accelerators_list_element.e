@@ -3,12 +3,6 @@ indexing
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- Accelerators_list_element -> event "," id_value More_accelerators
 
@@ -44,7 +38,7 @@ feature
 
 			accelerators ?= tds.current_resource
 
-                        accelerators.insert_accelerator (accelerators_item)
+			accelerators.insert_accelerator (accelerators_item)
 			accelerators.set_current_accelerator (accelerators_item)
 
 			tds.set_identifier_type (Accelerators_event)
@@ -56,3 +50,10 @@ feature
 		end
 
 end -- class ACCELERATORS_LIST_ELEMENT
+
+--|---------------------------------------------------------------
+--|   Copyright (C) Interactive Software Engineering, Inc.      --
+--|    270 Storke Road, Suite 7 Goleta, California 93117        --
+--|                   (805) 685-1006                            --
+--| All rights reserved. Duplication or distribution prohibited --
+--|---------------------------------------------------------------

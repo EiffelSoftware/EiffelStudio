@@ -161,6 +161,10 @@ feature {NONE} -- Retrieval
 					then
 						if l_last_string.item (1) = '[' then
 							-- This is the saved argument so don't add it to the list here.
+							if l_last_string.item (l_last_string.count) = 'o' then
+								is_with_argument := True
+								l_last_string.remove (l_last_string.count)
+							end
 							l_last_string.remove (1)
 							l_last_string.remove (l_last_string.count)
 							saved_argument := l_last_string
@@ -302,6 +306,9 @@ feature {NONE} -- Storage
 				arguments_file.start
 					-- Also save current argument here for retrieval in new execution of compiler.
 				arguments_file.putstring ("[" + clone (saved_argument) + "]")
+				if argument_check.is_selected then
+					arguments_file.putstring ("o")
+				end
 				arguments_file.new_line
 				user_arguments_list.start
 			until
@@ -529,7 +536,7 @@ feature -- Status Setting
 		do
 			if not argument_check.is_selected then	
 				argument_check.enable_select
-				l_unselect := True
+				is_with_argument := False
 			end
 			retrieve_ace_arguments
 			retrieve_user_arguments
@@ -555,7 +562,7 @@ feature -- Status Setting
 				argument_check.disable_select
 			end
 			refresh
-			if l_unselect then
+			if not is_with_argument then
 				argument_check.disable_select
 			end
 		end
@@ -710,9 +717,11 @@ feature {NONE} -- Actions
 			-- Argument check box has been selected.
 		do
 			if argument_check.is_selected then
-				notebook.enable_sensitive				
+				notebook.enable_sensitive
+				is_with_argument := True
 			else
 				notebook.disable_sensitive
+				is_with_argument := False
 			end
 			if notebook.index_of (notebook.selected_item, 1) = 1 then
 				set_mode (Ace_mode)
@@ -883,6 +892,10 @@ feature {NONE} -- Actions
 		end
 
 feature {NONE} -- Implementation
+
+	is_with_argument: BOOLEAN
+			-- Is current execution running supposed to be launched
+			-- with or without an arguments?
 
 	arguments_file: RAW_FILE
 			-- File containing user specific arguments.

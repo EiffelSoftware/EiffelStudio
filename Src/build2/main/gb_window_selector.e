@@ -513,6 +513,11 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 					end
 				end
 			end
+			if dialog.cancelled then
+					-- The adition of the new object has been cancelled so we can delete
+					-- the object as it is not to be used.
+				object_handler.mark_as_deleted (an_object)
+			end
 				-- Update project so it may be saved.
 			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		ensure
@@ -1283,7 +1288,9 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			add_new_object (new_object, selector_item)
 				-- Ensure that the representations are up to date. This is necessary
 				-- for when we have just flattened an object from the clipboard.
-			new_object.update_representations_for_name_or_type_change
+			if object_handler.objects.has (new_object.id) then
+				new_object.update_representations_for_name_or_type_change
+			end
 		end
 		
 feature {GB_WINDOW_SELECTOR_TOOL_BAR, GB_WINDOW_SELECTOR_COMMON_ITEM} -- Implementation

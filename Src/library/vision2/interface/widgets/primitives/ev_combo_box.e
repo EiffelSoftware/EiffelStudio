@@ -36,14 +36,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	read_element (index: INTEGER): STRING is
+	get_item (index: INTEGER): EV_COMBO_BOX_ITEM is
 			-- Text at the zero-based `index'
 		require
 			exists: not destroyed
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			Result := implementation.read_element (index)
+			Result := implementation.get_item (index)
+		end
+
+	selected_item: EV_COMBO_BOX_ITEM is
+			-- Give the item which is currently selected
+		require
+			exists: not destroyed
+		do
+			Result := implementation.selected_item
 		end
 
 feature -- Measurement
@@ -69,31 +77,6 @@ feature -- Status report
 
 feature -- Element change
 
---	add_element (a_string: STRING) is
-			-- Add an element with the text `a_string' 
-			-- to the combo-box.
-			-- If string is `Void', it add an element with 
-			-- an empty string "".
---		require
---			exists: not destroyed
---		do
---			implementation.add_element (a_string)
---		end
-
-	insert_element (a_string: STRING; index: INTEGER) is
-			-- Insert an element with the text `a_string'
-			-- at the zero-based `index' position of the 
-			-- combo box.
-			-- If string is `Void', it add an element with 
-			-- an empty string "".
-		require
-			exists: not destroyed
-			index_large_enough: index >= 0
-			index_small_enough: index < count
-		do
-			implementation.insert_element (a_string, index)
-		end				
-
 --	remove_element (index: INTEGER) is
 			-- Remove the element at the zero-based
 			-- `index' position of the combo-box.
@@ -112,6 +95,8 @@ feature -- Element change
 		do
 			implementation.remove_all_elements
 		end
+
+	
 
 feature -- Implementation
 

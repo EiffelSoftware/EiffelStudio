@@ -48,13 +48,29 @@ feature
 			make_code (ba, True);
 		end;
 
+	require_metamorphosis (con_type: TYPE_I): BOOLEAN is
+			-- Does `con_type' require metamorphosis?
+		do
+			Result := con_type.is_basic
+					and then not con_type.is_bit;
+			
+		end;
+
 	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
-			-- Generate byte code for a feature call. If not `flag', generate
+			-- Generate byte code for a feature call. 
+			-- If not `flag', generate
 			-- an invariant check before the call.
 			-- Doesn't process the parameters
+		deferred
+		end;
+
+	standard_make_code (ba: BYTE_ARRAY; flag: BOOLEAN; 
+				meta: BOOLEAN; instant_context_type: TYPE_I) is
+			-- Generate byte code for a feature call. If not `flag', generate
+			-- an invariant check before the call.
+			-- if `meta', metamorphose the feature call.
+			-- Doesn't process the parameters
 		local
-			metamorphose: BOOLEAN;
-			instant_context_type: TYPE_I;
 			basic_type: BASIC_I;
 			cl_type: CL_TYPE_I;
 			static_type: INTEGER;
@@ -63,11 +79,7 @@ feature
 			feat_tbl: FEATURE_TABLE;
 		do
 			real_feat_id := feature_id;
-			instant_context_type := Context.real_type (context_type);
-			metamorphose := 	instant_context_type.is_basic
-								and then
-								not instant_context_type.is_bit;
-			if metamorphose then
+			if meta then
 				basic_type ?= instant_context_type;
 				static_type := basic_type.associated_dtype;
 					-- Process the feature id of `feature_name' in the
@@ -93,7 +105,7 @@ feature
 					ba.append (Bc_rotate);
 					ba.append_short_integer (parameters.count + 1);
 				end;
-				if metamorphose then
+				if meta then
 					ba.append (Bc_metamorphose);
 					ba.append_short_integer (static_type);
 					static_type := basic_type.associated_reference.id - 1;
@@ -122,7 +134,7 @@ feature
 			static_type: INTEGER;
 		do
 			Result := feature_id;
-			instant_context_type := context.real_type (context_type);
+			instant_context_type := context_type;
 			if 	instant_context_type.is_basic
 				and then
 				not instant_context_type.is_bit
@@ -190,6 +202,18 @@ feature
 		do
 		end;
 
+	generate_special_feature (reg: REGISTRABLE) is
+            -- Generate code for special routines (is_equal, copy ...).
+			-- (Only for feature calls);
+		do
+		end;
+
+	is_feature_special: BOOLEAN is
+			-- Is feature a special routine 
+			-- (Only for feature calls);
+		do
+		end;
+
 	do_generate (reg: REGISTRABLE) is
 			-- Generate call of feature on `reg'
 		require
@@ -198,35 +222,41 @@ feature
 			type_i: TYPE_I;
 			class_type: CL_TYPE_I;
 			basic_type: BASIC_I;
-			gen_reg: REGISTRABLE;
-			metamorphosed: BOOLEAN;
 		do
 			type_i := context_type;
 				-- Special provision is made for calls on basic types
 				-- (they have to be themselves known by the compiler).
 			if type_i.is_basic then
-				-- Generation of metamorphosis is enclosed between (), and
-				-- the expressions are separated with ',' which means the C
-				-- keeps only the last expression, i.e. the function call.
-				-- That way, statements like "s := i.out" are correctly
-				-- generated with a minimum of temporaries.
-				basic_type ?= type_i;
-				class_type := basic_type.associated_reference.type;
-					-- If an invariant is to be checked however, the
-					-- metamorphosis was already made by the invariant
-					-- checking routine.
-				generated_file.putchar ('(');
-				basic_type.metamorphose
-					(basic_register, reg, generated_file, context.workbench_mode);
-				generated_file.putchar (',');
-				generated_file.new_line;
-				generated_file.putchar ('%T');
-				metamorphosed := true;
-				gen_reg := basic_register;
+				if is_feature_special and not type_i.is_bit then
+					generate_special_feature (reg);
+				else
+					-- Generation of metamorphosis is enclosed between (), and
+					-- the expressions are separated with ',' which means the C
+					-- keeps only the last expression, i.e. the function call.
+					-- That way, statements like "s := i.out" are correctly
+					-- generated with a minimum of temporaries.
+					basic_type ?= type_i;
+					class_type := basic_type.associated_reference.type;
+						-- If an invariant is to be checked however, the
+						-- metamorphosis was already made by the invariant
+						-- checking routine.
+					generated_file.putchar ('(');
+					basic_type.metamorphose
+						(basic_register, reg, generated_file, context.workbench_mode);
+					generated_file.putchar (',');
+					generated_file.new_line;
+					generated_file.putchar ('%T');
+					generate_end (basic_register, class_type, True);
+				end
 			else
 				class_type ?= type_i;	-- Cannot fail
-				gen_reg := reg;
+				generate_end (reg, class_type, False);
 			end;
+		end;
+
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; meta: BOOLEAN) is
+			-- Generate final portion of C code.
+		do
 			generate_access_on_type (gen_reg, class_type);
 				-- Now generate the parameters of the call, if needed.
 			if not is_attribute then
@@ -241,7 +271,7 @@ feature
 			if not is_attribute then
 				generated_file.putchar (')');
 			end;
-			if metamorphosed then
+			if meta then
 					-- Close parenthesis opened by metamorphosis code
 				generated_file.putchar (')');
 			end;

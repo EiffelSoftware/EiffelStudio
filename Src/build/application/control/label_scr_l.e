@@ -40,6 +40,7 @@ feature -- Creation
 	make (a_name: STRING; a_parent: COMPOSITE) is
 		do
 			list_make (a_name, a_parent);
+			!! label_names.make 
 			compare_objects;
 			add_button_press_action (3, Current, set_show_action);
 			add_button_press_action (3, Current, set_label_action);

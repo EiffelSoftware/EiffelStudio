@@ -35,6 +35,8 @@ feature	-- Externals
 	dispose is
 		external
 			"C | %"fext.h%""
+		alias
+			"notice_dispose"
 		end
 	
 end	

@@ -112,6 +112,13 @@ ecom.lib: $(WOBJ)
 	$(MV) $@ msc
 	del $@
 
+ecom_final.lib: $(OBJ)
+	if exist $@ del $@
+	lib -OUT:$@ $(OBJ)
+	if not exist msc mkdir msc
+	$(MV) $@ msc
+	del $@
+
 .cpp.obj:
 	$(CC) $(CFLAGS) $<
 

@@ -51,13 +51,13 @@ feature {NONE} -- Initialization
 				-- set the private to a fake value
 			private_body_index := -1
 
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: Creating item%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": Creating item%N"); end
 			create unprocessed_values.make(10)
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: init_recv_c%N"); end
-			init_recv_c
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: init_rout_c%N"); end
-			init_rout_c
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_rout_info%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": init_recv_c%N"); end
+			Init_recv_c
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%%T" + generator + ": init_rout_c%N"); end
+			Init_rout_c
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%%T" + generator + ": c_recv_rout_info%N"); end
 			c_recv_rout_info (Current)
 
 			debug ("DEBUGGER_TRACE")

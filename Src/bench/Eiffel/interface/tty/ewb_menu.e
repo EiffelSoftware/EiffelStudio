@@ -1,3 +1,12 @@
+indexing
+
+	description: 
+		"Representation of a menu for the batch compiler%
+		%invoked by the -loop. It is an array of ewb_cmd%
+		%which can be executed.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class EWB_MENU
 
 inherit
@@ -19,25 +28,14 @@ creation
 
 	make
 
-feature
+feature -- Properties
 
 	is_main: BOOLEAN
 
-	add_entry (cmd: EWB_CMD) is
-		local
-			i: INTEGER
-		do
-			from
-				i := lower
-			until
-				i > upper or else item (i) = Void
-			loop
-				i := i + 1
-			end;
-			put (cmd, i)
-		end;
+feature -- Access
 
 	abbrev_item (abb: CHARACTER): EWB_CMD is
+			-- Command with abbreviated character `abb'
 		local
 			i: INTEGER
 			cmd: EWB_CMD
@@ -57,6 +55,7 @@ feature
 		end;
 
 	cmd_name_item (cmd_name: STRING): EWB_CMD is
+			-- Command with command name `cmd_name'
 		local
 			i: INTEGER
 			cmd: EWB_CMD
@@ -79,6 +78,7 @@ feature
 		end;
 
 	option_item (cmd_name: STRING): EWB_CMD is
+			-- Command with command name `cmd_name'.
 		do
 			if cmd_name.count = 1 then
 				Result := abbrev_item (cmd_name.item(1).lower)
@@ -87,12 +87,34 @@ feature
 			end
 		end
 
+feature -- Element change
+
+	add_entry (cmd: EWB_CMD) is
+			-- Add command entry `cmd' to Current menu.
+		local
+			i: INTEGER
+		do
+			from
+				i := lower
+			until
+				i > upper or else item (i) = Void
+			loop
+				i := i + 1
+			end;
+			put (cmd, i)
+		end;
+
+feature -- Setting
+
 	set_is_main is
 		do
 			is_main := True
 		end;
 
+feature -- Output
+
 	print_help is
+			-- Display the help information for menu.
 		local
 			cmd: EWB_CMD
 			i: INTEGER
@@ -116,7 +138,11 @@ feature
 			io.new_line;
 		end;
 
+feature {NONE} -- Implementation
+
 	print_one_help (opt: STRING; txt: STRING; abb: CHARACTER) is
+			-- Display the help information for option `opt'
+			-- with help text `txt' and abbreviation `abb'.
 		local
 			i: INTEGER;
 			s: STRING;
@@ -142,9 +168,4 @@ feature
 			io.putstring (".%N")
 		end;
 
-	trace is
-		do
-			print_help
-		end
-
-end
+end -- class EWB_MENU

@@ -16,10 +16,19 @@ inherit
 		end
 
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
 		export
@@ -27,8 +36,19 @@ inherit
 		end
 		
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 	
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
+	
+	GB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -96,6 +116,8 @@ feature -- Execution
 				update_tool (parent_dialog (floating_object_editors @ counter))
 				counter := counter + 1
 			end
+			preferences.set_boolean_resource (Preferences.Tools_on_top, is_selected)
+			preferences.save_resources
 		end		
 				
 	update_tool (tool_window: EV_DIALOG) is

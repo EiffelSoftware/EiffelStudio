@@ -50,9 +50,6 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create `Current'.
-		local
-			acc: EV_ACCELERATOR
-			key: EV_KEY
 		do
 			Precursor {EB_STANDARD_CMD}
 			set_tooltip ("Import Project...")
@@ -85,7 +82,6 @@ feature -- Basic operations
 				file_handler: GB_SIMPLE_XML_FILE_HANDLER
 				test_file: RAW_FILE
 				error_dialog: EV_ERROR_DIALOG
-				discardable_error_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 				dialog_constants: EV_DIALOG_CONSTANTS
 				file_name: FILE_NAME
 			do

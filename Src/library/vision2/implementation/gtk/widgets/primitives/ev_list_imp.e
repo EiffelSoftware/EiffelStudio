@@ -154,8 +154,7 @@ feature -- Event : command association
 			-- Make `command' executed when an item is
 			-- selected.
 		do
-			add_command (list_widget, "selection_changed", cmd, arg)
-			-- add_command ("select_child", a_command, arguments)
+			add_command (list_widget, "selection_changed", cmd, arg, default_pointer)
 		end
 
 feature -- Event -- removing command association

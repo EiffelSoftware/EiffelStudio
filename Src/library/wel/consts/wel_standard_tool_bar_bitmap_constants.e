@@ -11,161 +11,161 @@ feature -- Access
 
 	Std_copy: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_COPY"
 		end
 
 	Std_paste: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_PASTE"
 		end
 
 	Std_cut: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_CUT"
 		end
 
 	Std_print: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_PRINT"
 		end
 
 	Std_delete: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_DELETE"
 		end
 
 	Std_printpre: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_PRINTPRE"
 		end
 
 	Std_filenew: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_FILENEW"
 		end
 
 	Std_properties: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_PROPERTIES"
 		end
 
 	Std_fileopen: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_FILEOPEN"
 		end
 
 	Std_redow: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_REDOW"
 		end
 
 	Std_filesave: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_FILESAVE"
 		end
 
 	Std_replace: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_REPLACE"
 		end
 
 	Std_find: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_FIND"
 		end
 
 	Std_undo: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_UNDO"
 		end
 
 	Std_help: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_HELP"
 		end
 
 	View_largeicons: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_LARGEICONS"
 		end
 
 	View_sortname: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_SORTNAME"
 		end
 
 	View_smallicons: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_SMALLICONS"
 		end
 
 	View_sortsize: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_SORTSIZE"
 		end
 
 	View_list: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_LIST"
 		end
 
 	View_sortdate: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_SORTDATE"
 		end
 
 	View_details: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_DETAILS"
 		end
 
 	View_sorttype: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_SORTTYPE"
 		end

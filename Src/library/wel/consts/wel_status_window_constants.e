@@ -11,63 +11,63 @@ feature -- Access
 
 	Sb_getrect: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_GETRECT"
 		end
 
 	Sb_setminheight: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_SETMINHEIGHT"
 		end
 
 	Sb_getborders: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_GETBORDERS"
 		end
 
 	Sb_gettext: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_GETTEXT"
 		end
 
 	Sb_gettextlength: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_GETTEXTLENGTH"
 		end
 
 	Sb_settext: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_SETTEXT"
 		end
 
 	Sb_getparts: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_GETPARTS"
 		end
 
 	Sb_setparts: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_SETPARTS"
 		end
 
 	Sb_simple: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_SIMPLE"
 		end

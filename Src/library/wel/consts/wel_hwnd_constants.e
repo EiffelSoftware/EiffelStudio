@@ -11,28 +11,28 @@ feature -- Access
 
 	Hwnd_top: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HWND_TOP"
 		end
 
 	Hwnd_bottom: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HWND_BOTTOM"
 		end
 
 	Hwnd_topmost: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HWND_TOPMOST"
 		end
 
 	Hwnd_notopmost: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HWND_NOTOPMOST"
 		end

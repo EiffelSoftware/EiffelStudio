@@ -11,259 +11,259 @@ feature -- Access
 
 	Tb_addbitmap: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_ADDBITMAP"
 		end
 
 	Tb_addbuttons: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_ADDBUTTONS"
 		end
 
 	Tb_addstring: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_ADDSTRING"
 		end
 
 	Tb_autosize: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_AUTOSIZE"
 		end
 
 	Tb_buttoncount: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_BUTTONCOUNT"
 		end
 
 	Tb_buttonstructsize: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_BUTTONSTRUCTSIZE"
 		end
 
 	Tb_changebitmap: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_CHANGEBITMAP"
 		end
 
 	Tb_checkbutton: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_CHECKBUTTON"
 		end
 
 	Tb_commandtoindex: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_COMMANDTOINDEX"
 		end
 
 	Tb_customize: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_CUSTOMIZE"
 		end
 
 	Tb_deletebutton: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_DELETEBUTTON"
 		end
 
 	Tb_enablebutton: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_ENABLEBUTTON"
 		end
 
 	Tb_getbitmap: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_GETBITMAP"
 		end
 
 	Tb_getbitmapflags: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_GETBITMAPFLAGS"
 		end
 
 	Tb_getbutton: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_GETBUTTON"
 		end
 
 	Tb_getbuttontext: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_GETBUTTONTEXT"
 		end
 
 	Tb_getitemrect: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_GETITEMRECT"
 		end
 
 	Tb_getrows: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_GETROWS"
 		end
 
 	Tb_getstate: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_GETSTATE"
 		end
 
 	Tb_gettooltips: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_GETTOOLTIPS"
 		end
 
 	Tb_hidebutton: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_HIDEBUTTON"
 		end
 
 	Tb_indeterminate: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_INDETERMINATE"
 		end
 
 	Tb_insertbutton: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_INSERTBUTTON"
 		end
 
 	Tb_isbuttonchecked: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_ISBUTTONCHECKED"
 		end
 
 	Tb_isbuttonenabled: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_ISBUTTONENABLED"
 		end
 
 	Tb_isbuttonhidden: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_ISBUTTONHIDDEN"
 		end
 
 	Tb_isbuttonindeterminate: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_ISBUTTONINDETERMINATE"
 		end
 
 	Tb_isbuttonpressed: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_ISBUTTONPRESSED"
 		end
 
 	Tb_pressbutton: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_PRESSBUTTON"
 		end
 
 	Tb_saverestore: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_SAVERESTORE"
 		end
 
 	Tb_setbitmapsize: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_SETBITMAPSIZE"
 		end
 
 	Tb_setbuttonsize: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_SETBUTTONSIZE"
 		end
 
 	Tb_setcmdid: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_SETCMDID"
 		end
 
 	Tb_setparent: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_SETPARENT"
 		end
 
 	Tb_setrows: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_SETROWS"
 		end
 
 	Tb_setstate: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_SETSTATE"
 		end
 
 	Tb_settooltips: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TB_SETTOOLTIPS"
 		end

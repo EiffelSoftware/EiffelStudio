@@ -11,35 +11,35 @@ feature -- Access
 
 	Mk_control: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MK_CONTROL"
 		end
 
 	Mk_lbutton: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MK_LBUTTON"
 		end
 
 	Mk_mbutton: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MK_MBUTTON"
 		end
 
 	Mk_rbutton: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MK_RBUTTON"
 		end
 
 	Mk_shift: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MK_SHIFT"
 		end

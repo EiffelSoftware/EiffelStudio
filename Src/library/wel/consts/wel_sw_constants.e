@@ -11,98 +11,98 @@ feature -- Access
 
 	Sw_hide: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_HIDE"
 		end
 
 	Sw_minimize: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_MINIMIZE"
 		end
 
 	Sw_restore: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_RESTORE"
 		end
 
 	Sw_shownormal: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_SHOWNORMAL"
 		end
 
 	Sw_show: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_SHOW"
 		end
 
 	Sw_showmaximized: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_SHOWMAXIMIZED"
 		end
 
 	Sw_showminimized: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_SHOWMINIMIZED"
 		end
 
 	Sw_showminnoactive: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_SHOWMINNOACTIVE"
 		end
 
 	Sw_showna: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_SHOWNA"
 		end
 
 	Sw_shownoactivate: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_SHOWNOACTIVATE"
 		end
 
 	Sw_parentclosing: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_PARENTCLOSING"
 		end
 
 	Sw_parentopening: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_PARENTOPENING"
 		end
 
 	Sw_otherzoom: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_OTHERZOOM"
 		end
 
 	Sw_otherunzoom: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SW_OTHERUNZOOM"
 		end

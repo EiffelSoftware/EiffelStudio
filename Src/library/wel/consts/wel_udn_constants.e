@@ -15,7 +15,7 @@ feature -- Access
 			-- up-down control when the position of the control is
 			-- about to change.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDN_DELTAPOS"
 		end

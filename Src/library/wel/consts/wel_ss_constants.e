@@ -11,91 +11,91 @@ feature -- Access
 
 	Ss_left: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_LEFT"
 		end
 
 	Ss_center: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_CENTER"
 		end
 
 	Ss_right: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_RIGHT"
 		end
 
 	Ss_icon: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_ICON"
 		end
 
 	Ss_blackrect: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_BLACKRECT"
 		end
 
 	Ss_grayrect: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_GRAYRECT"
 		end
 
 	Ss_whiterect: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_WHITERECT"
 		end
 
 	Ss_blackframe: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_BLACKFRAME"
 		end
 
 	Ss_grayframe: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_GRAYFRAME"
 		end
 
 	Ss_whiteframe: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_WHITEFRAME"
 		end
 
 	Ss_simple: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_SIMPLE"
 		end
 
 	Ss_leftnowordwrap: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_LEFTNOWORDWRAP"
 		end
 
 	Ss_noprefix: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SS_NOPREFIX"
 		end

@@ -11,42 +11,42 @@ feature -- Access
 
 	Hs_horizontal: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HS_HORIZONTAL"
 		end
 
 	Hs_vertical: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HS_VERTICAL"
 		end
 
 	Hs_fdiagonal: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HS_FDIAGONAL"
 		end
 
 	Hs_bdiagonal: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HS_BDIAGONAL"
 		end
 
 	Hs_cross: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HS_CROSS"
 		end
 
 	Hs_diagcross: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HS_DIAGCROSS"
 		end

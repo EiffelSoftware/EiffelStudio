@@ -19,7 +19,7 @@ feature -- Access
 			-- that the Ccs_adjustable style must be specified to
 			-- enable toolbar buttons to be dragged.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTYLE_ALTDRAG"
 		end
@@ -29,7 +29,7 @@ feature -- Access
 			-- use to display descriptive text for the buttons in
 			-- the toolbar.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTYLE_TOOLTIPS"
 		end
@@ -41,7 +41,7 @@ feature -- Access
 			-- all buttons on the same line. Wrapping occurs on
 			-- separation and non-group boundaries.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTYLE_WRAPABLE"
 		end
@@ -51,7 +51,7 @@ feature -- Access
 	Tbstyle_button: INTEGER is
 			-- Creates a standard push button. 
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTYLE_BUTTON"
 		end
@@ -62,7 +62,7 @@ feature -- Access
 			-- The button has a different background color when it
 			-- is in the pressed state.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTYLE_CHECK"
 		end
@@ -71,7 +71,7 @@ feature -- Access
 			-- Creates a check button that stays pressed until
 			-- another button in the group is pressed.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTYLE_CHECKGROUP"
 		end
@@ -80,7 +80,7 @@ feature -- Access
 			-- Creates a button that stays pressed until another
 			-- button in the group is pressed.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTYLE_GROUP"
 		end
@@ -90,7 +90,7 @@ feature -- Access
 			-- button groups. A button that has this style does not
 			-- receive user input.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTYLE_SEP"
 		end

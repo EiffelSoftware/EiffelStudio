@@ -11,42 +11,42 @@ feature -- Access
 
 	Gw_hwndfirst: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"GW_HWNDFIRST"
 		end
 
 	Gw_hwndlast: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"GW_HWNDLAST"
 		end
 
 	Gw_hwndnext: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"GW_HWNDNEXT"
 		end
 
 	Gw_hwndprev: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"GW_HWNDPREV"
 		end
 
 	Gw_owner: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"GW_OWNER"
 		end
 
 	Gw_child: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"GW_CHILD"
 		end

@@ -13,7 +13,7 @@ feature -- Access
 			-- The button has the Tbstyle_checked style and is
 			-- being pressed.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTATE_CHECKED"
 		end
@@ -22,7 +22,7 @@ feature -- Access
 			-- The button accepts user input. A button not having
 			-- this state does not accept user input and is grayed.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTATE_ENABLED"
 		end
@@ -31,7 +31,7 @@ feature -- Access
 			-- The button is not visible and cannot receive user
 			-- input.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTATE_HIDDEN"
 		end
@@ -39,7 +39,7 @@ feature -- Access
 	Tbstate_indeterminate: INTEGER is
 			-- The button is grayed.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTATE_INDETERMINATE"
 		end
@@ -47,7 +47,7 @@ feature -- Access
 	Tbstate_pressed: INTEGER is
 			-- The button is being pressed.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTATE_PRESSED"
 		end
@@ -56,7 +56,7 @@ feature -- Access
 			-- A line break follows the button. The button must
 			-- also have the Tbstate_enabled state.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTATE_WRAP"
 		end

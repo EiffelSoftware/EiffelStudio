@@ -11,56 +11,56 @@ feature -- Access
 
 	Mm_text: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MM_TEXT"
 		end
 
 	Mm_lometric: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MM_LOMETRIC"
 		end
 
 	Mm_himetric: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MM_HIMETRIC"
 		end
 
 	Mm_loenglish: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MM_LOENGLISH"
 		end
 
 	Mm_hienglish: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MM_HIENGLISH"
 		end
 
 	Mm_twips: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MM_TWIPS"
 		end
 
 	Mm_isotropic: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MM_ISOTROPIC"
 		end
 
 	Mm_anisotropic: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MM_ANISOTROPIC"
 		end

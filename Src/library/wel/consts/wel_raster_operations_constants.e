@@ -11,105 +11,105 @@ feature -- Access
 
 	Srccopy: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SRCCOPY"
 		end
 
 	Srcpaint: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SRCPAINT"
 		end
 
 	Srcand: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SRCAND"
 		end
 
 	Srcinvert: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SRCINVERT"
 		end
 
 	Srcerase: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SRCERASE"
 		end
 
 	Notsrccopy: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"NOTSRCCOPY"
 		end
 
 	Notsrcerase: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"NOTSRCERASE"
 		end
 
 	Mergecopy: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MERGECOPY"
 		end
 
 	Mergepaint: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MERGEPAINT"
 		end
 
 	Patcopy: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PATCOPY"
 		end
 
 	Patpaint: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PATPAINT"
 		end
 
 	Patinvert: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PATINVERT"
 		end
 
 	Dstinvert: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DSTINVERT"
 		end
 
 	Blackness: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BLACKNESS"
 		end
 
 	Whiteness: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"WHITENESS"
 		end

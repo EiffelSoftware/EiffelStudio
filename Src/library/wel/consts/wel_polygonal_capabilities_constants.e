@@ -12,7 +12,7 @@ feature -- Access
 	Pc_none: INTEGER is
 			-- Supports no polygons
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_NONE"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Pc_polygon: INTEGER is
 			-- Supports alternate fill polygons
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_POLYGON"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Pc_rectangle: INTEGER is
 			-- Supports rectangles
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_RECTANGLE"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Pc_windpolygon: INTEGER is
 			-- Supports winding number fill polygons
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_WINDPOLYGON"
 		end
@@ -44,7 +44,7 @@ feature -- Access
 	Pc_scanline: INTEGER is
 			-- Supports scan lines
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_SCANLINE"
 		end
@@ -52,7 +52,7 @@ feature -- Access
 	Pc_wide: INTEGER is
 			-- Supports wide borders
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_WIDE"
 		end
@@ -60,7 +60,7 @@ feature -- Access
 	Pc_styled: INTEGER is
 			-- Supports styled borders
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_STYLED"
 		end
@@ -68,7 +68,7 @@ feature -- Access
 	Pc_widestyled: INTEGER is
 			-- Supports wide, styled borders
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_WIDESTYLED"
 		end
@@ -76,7 +76,7 @@ feature -- Access
 	Pc_interiors: INTEGER is
 			-- Supports interiors
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_INTERIORS"
 		end

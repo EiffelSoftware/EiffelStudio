@@ -11,35 +11,35 @@ feature -- Access
 
 	Idi_application: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDI_APPLICATION"
 		end
 
 	Idi_hand: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDI_HAND"
 		end
 
 	Idi_question: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDI_QUESTION"
 		end
 
 	Idi_exclamation: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDI_EXCLAMATION"
 		end
 
 	Idi_asterisk: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDI_ASTERISK"
 		end

@@ -12,7 +12,7 @@ feature -- Access
 	Sf_text: INTEGER is
 			-- Text with spaces in place of OLE objects.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"SF_TEXT"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Sf_rtf: INTEGER is
 			-- Rich-text format (RTF).
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"SF_RTF"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Sf_rtfnoobjs: INTEGER is
 			-- RTF with spaces in place of OLE object.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"SF_RTFNOOBJS"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Sf_textized: INTEGER is
 			-- Text with a text representation of OLE objects.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"SF_TEXTIZED"
 		end
@@ -44,7 +44,7 @@ feature -- Access
 	Sff_selection: INTEGER is
 			-- Selection only.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"SFF_SELECTION"
 		end

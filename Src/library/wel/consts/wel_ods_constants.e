@@ -11,49 +11,49 @@ feature -- Access
 
 	Ods_selected: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ODS_SELECTED"
 		end
 
 	Ods_grayed: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ODS_GRAYED"
 		end
 
 	Ods_disabled: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ODS_DISABLED"
 		end
 
 	Ods_checked: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ODS_CHECKED"
 		end
 
 	Ods_focus: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ODS_FOCUS"
 		end
 
 	Ods_default: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ODS_DEFAULT"
 		end
 
 	Ods_comboboxedit: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ODS_COMBOBOXEDIT"
 		end

@@ -11,35 +11,35 @@ feature -- Access
 
 	Rgn_and: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RGN_AND"
 		end
 
 	Rgn_or: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RGN_OR"
 		end
 
 	Rgn_xor: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RGN_XOR"
 		end
 
 	Rgn_diff: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RGN_DIFF"
 		end
 
 	Rgn_copy: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RGN_COPY"
 		end

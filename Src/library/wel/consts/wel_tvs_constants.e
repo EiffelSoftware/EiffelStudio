@@ -16,7 +16,7 @@ feature -- Access
 			-- include buttons with items at the root of the tree
 			-- view, Tvs_linesatroot must also be specified.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVS_HASBUTTONS"
 		end
@@ -24,7 +24,7 @@ feature -- Access
 	Tvs_haslines: INTEGER is
 			-- Uses lines to show the hierarchy of items.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVS_HASLINES"
 		end
@@ -34,7 +34,7 @@ feature -- Access
 			-- tree-view control. This value is ignored if
 			-- Tvs_haslines is not also specified.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVS_LINESATROOT"
 		end
@@ -43,7 +43,7 @@ feature -- Access
 			-- Allows the user to edit the labels of tree-view
 			-- items.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVS_EDITLABELS"
 		end
@@ -52,7 +52,7 @@ feature -- Access
 			-- Prevents the tree-view control from sending
 			-- Tvn_begindrag notification messages.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVS_DISABLEDRAGDROP"
 		end
@@ -61,7 +61,7 @@ feature -- Access
 			-- Causes a selected item to remain selected when the
 			-- tree-view control loses focus.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVS_SHOWSELALWAYS"
 		end

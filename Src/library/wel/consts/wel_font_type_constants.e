@@ -11,42 +11,42 @@ feature -- Access
 
 	Simulated_fonttype: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"SIMULATED_FONTTYPE"
 		end
 
 	Printer_fonttype: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"PRINTER_FONTTYPE"
 		end
 
 	Screen_fonttype: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"SCREEN_FONTTYPE"
 		end
 
 	Bold_fonttype: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"BOLD_FONTTYPE"
 		end
 
 	Italic_fonttype: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"ITALIC_FONTTYPE"
 		end
 
 	Regular_fonttype: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"REGULAR_FONTTYPE"
 		end

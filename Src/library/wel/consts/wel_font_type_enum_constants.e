@@ -11,21 +11,21 @@ feature -- Access
 
 	Device_fonttype: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DEVICE_FONTTYPE"
 		end
 
 	Raster_fonttype: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RASTER_FONTTYPE"
 		end
 
 	Truetype_fonttype: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TRUETYPE_FONTTYPE"
 		end

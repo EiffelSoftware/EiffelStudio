@@ -12,7 +12,7 @@ feature -- Access
 	Default_quality: INTEGER is
 			-- Appearance of the font does not matter.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DEFAULT_QUALITY"
 		end
@@ -23,7 +23,7 @@ feature -- Access
 			-- fonts, scaling is enabled. Bold, italic, underline,
 			-- and strikeout fonts are synthesized if necessary.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DRAFT_QUALITY"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 			-- underline, and strikeout fonts are synthesized
 			-- if necessary.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PROOF_QUALITY"
 		end

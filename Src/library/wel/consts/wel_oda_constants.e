@@ -11,21 +11,21 @@ feature -- Access
 
 	Oda_drawentire: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ODA_DRAWENTIRE"
 		end
 
 	Oda_select: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ODA_SELECT"
 		end
 
 	Oda_focus: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ODA_FOCUS"
 		end

@@ -11,14 +11,14 @@ feature -- Access
 
 	Wpf_setminposition: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"WPF_SETMINPOSITION"
 		end
 
 	Wpf_restoretomaximized: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"WPF_RESTORETOMAXIMIZED"
 		end

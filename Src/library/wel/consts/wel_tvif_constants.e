@@ -12,7 +12,7 @@ feature -- Access
 	Tvif_children: INTEGER is
 			-- The cChildren member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVIF_CHILDREN"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Tvif_image: INTEGER is
 			-- The iImage member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVIF_IMAGE"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Tvif_param: INTEGER is
 			-- The lParam member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVIF_PARAM"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Tvif_selectedimage: INTEGER is
 			-- The iSelectedImage member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVIF_SELECTEDIMAGE"
 		end
@@ -44,7 +44,7 @@ feature -- Access
 	Tvif_state: INTEGER is
 			-- The state and stateMask members are valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVIF_STATE"
 		end
@@ -52,14 +52,14 @@ feature -- Access
 	Tvif_text: INTEGER is
 			-- The pszText and cchTextMax members are valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVIF_TEXT"
 		end
 
 	Tvif_handle: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVIF_HANDLE"
 		end

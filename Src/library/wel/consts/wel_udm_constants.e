@@ -13,7 +13,7 @@ feature -- Access
 			-- Retrieves acceleration information for an up-down
 			-- control.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDM_GETACCEL"
 		end
@@ -22,7 +22,7 @@ feature -- Access
 			-- Retrieves the current radix base (that is, either
 			-- base 10 or 16) for an up-down control.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDM_GETBASE"
 		end
@@ -30,7 +30,7 @@ feature -- Access
 	Udm_getbuddy: INTEGER is
 			-- Retrieves the handle of the current buddy window.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDM_GETBUDDY"
 		end
@@ -38,7 +38,7 @@ feature -- Access
 	Udm_getpos: INTEGER is
 			-- Retrieves the current position of an up-down control.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDM_GETPOS"
 		end
@@ -47,7 +47,7 @@ feature -- Access
 			-- Retrieves the minimum and maximum positions (range)
 			-- for an up-down control.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDM_GETRANGE"
 		end
@@ -55,7 +55,7 @@ feature -- Access
 	Udm_setaccel: INTEGER is
 			-- Sets the acceleration for an up-down control.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDM_SETACCEL"
 		end
@@ -67,7 +67,7 @@ feature -- Access
 			-- Hexadecimal numbers are always unsigned, and decimal
 			-- numbers are signed.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDM_SETBASE"
 		end
@@ -75,7 +75,7 @@ feature -- Access
 	Udm_setbuddy: INTEGER is
 			-- Sets the buddy window for an up-down control.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDM_SETBUDDY"
 		end
@@ -83,7 +83,7 @@ feature -- Access
 	Udm_setpos: INTEGER is
 			-- Sets the current position for an up-down control.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDM_SETPOS"
 		end
@@ -92,7 +92,7 @@ feature -- Access
 			-- Sets the minimum and maximum positions (range) for
 			-- an up-down control.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDM_SETRANGE"
 		end

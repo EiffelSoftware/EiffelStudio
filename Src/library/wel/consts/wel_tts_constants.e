@@ -11,14 +11,14 @@ feature -- Access
 
 	Tts_alwaystip: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTS_ALWAYSTIP"
 		end
 
 	Tts_noprefix: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTS_NOPREFIX"
 		end

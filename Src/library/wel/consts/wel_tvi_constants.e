@@ -12,7 +12,7 @@ feature -- Access
 	Tvi_root: INTEGER is
 			-- Inserts the item as the root of the list.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVI_ROOT"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Tvi_first: INTEGER is
 			-- Inserts the item at the beginning of the list.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVI_FIRST"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Tvi_last: INTEGER is
 			-- Inserts the item at the end of the list.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVI_LAST"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Tvi_sort: INTEGER is
 			-- Inserts the item into the list in alphabetical order.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TVI_SORT"
 		end

@@ -166,6 +166,8 @@ feature -- Integer Misc Values
 			-- Tab length within error message dialog box
 			-- (The error display should be changed to the
 			-- command tool window!
+	fail_on_rescue: BOOLEAN
+			-- Fail when crashing (no rescue).
 
 
 feature {NONE} -- Integer Values initialization
@@ -186,7 +188,9 @@ feature {NONE} -- Integer Values initialization
 				:= resource.get_string ("temp_window_file_name", "temp_wind");
 			temp_window_file_name.to_lower;
 			tab_length 
-			:= resource.get_pos_integer ("tab_length", 1);
+				:= resource.get_pos_integer ("tab_length", 1);
+			fail_on_rescue
+				:= resource.get_boolean ("fail_on_rescue", False)
 		end;
 
 feature -- Window sizes

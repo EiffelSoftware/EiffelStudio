@@ -14,10 +14,10 @@ feature -- Access
 	Boolean_type:	INTEGER is 3;
 	Integer_type:	INTEGER is 4;
 	Real_type:		INTEGER is 5;
-	Pointer_type:	INTEGER is 6;
-	Double_type: 	INTEGER is 7;
-	Expanded_type:	INTEGER is 8;
-	Bit_type:		INTEGER is 9;
+	Double_type: 	INTEGER is 6;
+	Expanded_type:	INTEGER is 7;
+	Bit_type:		INTEGER is 8;
+	Pointer_type:	INTEGER is 0;
 
 
 	class_name (object: ANY): STRING is

@@ -93,7 +93,6 @@ extern void eufreeze(char *object);
 
 #define EIF_TSD_GET0(key,val)			 	val=TlsGetValue(key);
 #define EIF_TSD_GET(key,val,msg)			\
-	/*val=TlsGetValue(key); \*/
 	EIF_TSD_GET0(key,val)	\
 	if (GetLastError() != NO_ERROR) eif_thr_panic(msg)
 

@@ -37,9 +37,29 @@ feature -- Access
 			-- Name of command
 		do
 			if go_up_one_level then
-				Result := l_Up_stack
+				Result := Interface_names.f_Up_stack
 			else
-				Result := l_Down_stack
+				Result := Interface_names.f_Down_stack
+			end
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			if go_up_one_level then
+				Result := Interface_names.m_Up_stack
+			else
+				Result := Interface_names.m_Down_stack
+			end
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			if go_up_one_level then
+				Result := Interface_names.a_Up_stack
+			else
+				Result := Interface_names.a_Down_stack
 			end
 		end;
 
@@ -47,9 +67,9 @@ feature -- Access
 			-- Symbol of command
 		do
 			if go_up_one_level then
-				Result := bm_Up_stack
+				Result := Pixmaps.bm_Up_stack
 			else
-				Result := bm_Down_stack
+				Result := Pixmaps.bm_Down_stack
 			end
 		end;
 

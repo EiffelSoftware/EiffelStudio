@@ -23,19 +23,34 @@ feature -- Properties
 			-- Short name for Current
 		do
 			if is_shown then
-				Result := "Hide feature"
+				Result := Interface_names.f_Hide_feature
 			else
-				Result := "Show feature"
+				Result := Interface_names.f_Show_feature
 			end
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			if is_shown then
+				Result := Interface_names.m_Hide_feature
+			else
+				Result := Interface_names.m_Show_feature
+			end
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	symbol: PIXMAP is
 			-- Symbol to represent Current on a button
 		do
 			if is_shown then
-				Result := bm_Hide_routine
+				Result := Pixmaps.bm_Hide_routine
 			else
-				Result := bm_Show_routine
+				Result := Pixmaps.bm_Show_routine
 			end
 		end;
 

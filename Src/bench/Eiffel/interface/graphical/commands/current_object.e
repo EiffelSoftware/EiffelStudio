@@ -25,13 +25,25 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Pixmap for the button.
 		once
-			Result := bm_Current
+			Result := Pixmaps.bm_Current
 		end;
 
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Current
+			Result := Interface_names.f_Current
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Current
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Current
 		end;
 
 feature {NONE} -- Implementation
@@ -46,14 +58,14 @@ feature {NONE} -- Implementation
 		do
 			status := Application.status;
 			if status = Void then
-				warner (popup_parent).gotcha_call (w_System_not_running)
+				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_running)
 			elseif not status.is_stopped then
-				warner (popup_parent).gotcha_call (w_System_not_stopped)
+				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_stopped)
 			else
 				address := status.object_address;
 				if address = Void or status.dynamic_class = Void then
 						-- Should never happen.
-					warner (popup_parent).gotcha_call (w_Unknown_object)
+					warner (popup_parent).gotcha_call (Warning_messages.w_Unknown_object)
 				else
 					e_class := status.dynamic_class;
 					!! stone.make (address, e_class);

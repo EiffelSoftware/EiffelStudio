@@ -10,7 +10,10 @@ class FILTER_COMMAND
 inherit
 
 	EIFFEL_ENV;
-	TOOL_COMMAND;
+	TOOL_COMMAND
+		rename
+			init as make
+		end;
 	SHARED_FORMAT_TABLES;
 	SHARED_BENCH_RESOURCES;
 	WARNER_CALLBACKS
@@ -19,17 +22,7 @@ inherit
 		end
 
 creation
-
 	make
-
-feature -- Initialization
-
-	make (a_tool: TOOL_W) is
-			-- Initialize the filter window, and add a 
-			-- button click action for button number 3.
-		do
-			init (a_tool);
-		end;
 
 feature -- Callbacks
 
@@ -122,7 +115,7 @@ feature {NONE} -- Implementation
 			elseif argument = filter_window then
 					-- Display the filter output in `text_window'
 				if text_window.changed then
-					warner (popup_parent).call (Current, w_File_changed)
+					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 				else
 					tool.last_format.associated_command.filter (filter_name)
 				end
@@ -130,7 +123,7 @@ feature {NONE} -- Implementation
 					-- Execute the shell command
 				filterable_format ?= tool.last_format.associated_command;
 				if filterable_format = Void then
-					warner (popup_parent).gotcha_call (w_Not_a_filterable_format)
+					warner (popup_parent).gotcha_call (Warning_messages.w_Not_a_filterable_format)
 				else
 					!! mp.set_watch_cursor;
 					if 
@@ -180,13 +173,13 @@ feature {NONE} -- Implementation
 				!!new_file.make (a_filename);
 				if new_file.exists and then not new_file.is_plain then
 					warner (popup_parent).gotcha_call 
-						(w_Not_a_plain_file (new_file.name))
+						(Warning_messages.w_Not_a_plain_file (new_file.name))
 				elseif new_file.exists and then not new_file.is_writable then
 					warner (popup_parent).gotcha_call 
-						(w_Not_writable (new_file.name))
+						(Warning_messages.w_Not_writable (new_file.name))
 				elseif not new_file.exists and then not new_file.is_creatable then
 					warner (popup_parent).gotcha_call 
-						(w_Not_creatable (new_file.name))
+						(Warning_messages.w_Not_creatable (new_file.name))
 				else
 					new_file.open_write;
 					if not a_text.empty then
@@ -203,13 +196,24 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-feature {NONE} -- Attributes
+feature -- Access
 
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Filter
+			Result := Interface_names.f_Filter
 		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Filter
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+		end
 
 invariant
 

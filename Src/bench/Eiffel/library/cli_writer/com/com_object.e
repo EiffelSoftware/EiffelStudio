@@ -7,14 +7,7 @@ deferred class
 	COM_OBJECT
 
 inherit
-	MEMORY
-		export
-			{NONE} all
-		redefine
-			dispose
-		end
-		
-	ANY
+	DISPOSABLE
 	
 feature {NONE} -- Initialization
 

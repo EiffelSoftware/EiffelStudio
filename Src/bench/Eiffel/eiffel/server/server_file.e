@@ -18,10 +18,7 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 create
 	make

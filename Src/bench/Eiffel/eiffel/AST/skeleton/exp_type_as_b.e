@@ -41,7 +41,7 @@ feature
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
 		do
-			Result := {CLASS_TYPE_AS_B} precursor (feat_table, f)
+			Result := {CLASS_TYPE_AS_B} Precursor (feat_table, f)
 			Result.set_is_expanded (True)
 			record_exp_dependance (Result.associated_class)
 		end
@@ -49,7 +49,7 @@ feature
 	actual_type: CL_TYPE_A is
 			-- Expanded actual class type
 		do
-			Result := {CLASS_TYPE_AS_B} precursor
+			Result := {CLASS_TYPE_AS_B} Precursor
 			Result.set_is_expanded (True)
 			record_exp_dependance (Result.associated_class)
 		end

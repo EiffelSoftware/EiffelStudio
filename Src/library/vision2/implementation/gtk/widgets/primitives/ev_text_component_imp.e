@@ -132,15 +132,12 @@ feature -- Basic operation
 			-- 'start_pos' and 'end_pos'.
 		do
 			select_region_internal (start_pos, end_pos)
-			internal_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-			internal_timeout_imp.interface.actions.extend 
-				(agent select_region_internal (start_pos, end_pos))
-			internal_timeout_imp.set_interval_kamikaze (0)
 		end	
 
 	select_region_internal (start_pos, end_pos: INTEGER) is
 			-- Select region
 		do
+			C.gtk_editable_set_position (entry_widget, end_pos)
 			C.gtk_editable_select_region (entry_widget, start_pos - 1, end_pos)
 		end
 
@@ -202,8 +199,6 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	internal_timeout_imp: EV_TIMEOUT_IMP
-			-- Timeout to call 'select_region'
 
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do

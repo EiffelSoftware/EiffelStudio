@@ -1139,20 +1139,23 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 rt_private void mark_special_table (register struct special_table *spt, register EIF_REFERENCE (*marker) (EIF_REFERENCE),  register int move)
 {
 	/* 
-	 * Mark the special table: scan only the references recorded in the
-	 * special table.	-- ET
+	 * Mark the special table: The special table is an optmized rem_set
+	 * table, which recorded the special objects, full of references and
+	 * their indices to the new references that they references. This
+	 * prevent from spending time in scanning the old sub-references.
+	 * -- ET
 	 */
  
 	EIF_GET_CONTEXT
 
 	int 			count; 				/* Count of special table. */
-	char 			**hvalues;			/* Array of pointers. */
-	char 			**container;		/* Special object. */
+	EIF_REFERENCE	*hvalues;			/* Array of pointers. */
+	EIF_REFERENCE	*container;			/* Special object. */
 	union overhead	*zone;				/* Special object malloc info zone. */
 	union overhead	*iz;				/* Item header. */
-	long 			ofst;				/* Index of item in special. */
-	long 			*hkeys;				/* Array of indexes. */
-	int 			i;					/* Index. */
+	EIF_INTEGER		ofst;				/* Index of item in special. */
+	EIF_INTEGER		*hkeys;				/* Array of indexes. */
+	int				i;					/* Index. */
 
 	assert (g_data.status & GC_FAST);
 
@@ -1164,10 +1167,10 @@ rt_private void mark_special_table (register struct special_table *spt, register
 
 	count   = spt->count;				/* Number of elements in table. */
 	hvalues = spt->h_values;			/* Object pointers table. */
-	hkeys = spt->h_keys;				/* Indexes table. */
+	hkeys 	= spt->h_keys;				/* Indexes table. */
 
-	assert (hkeys != (long *) 0);
-	assert (hvalues != (EIF_REFERENCE *) 0);
+	assert (hkeys != (EIF_INTEGER *) 0);		/* Cannot be empty. */
+	assert (hvalues != (EIF_REFERENCE *) 0);	/* Cannot be empty. */
 	assert (count <= spt->h_size);		/* Special table must be coherent. */
 
 #ifdef MARK_SPECIAL_TABLE_DEBUG
@@ -1287,7 +1290,7 @@ rt_private void mark_special_table (register struct special_table *spt, register
 							
 	 		{
 						/* Then, it's a twin and it is already processed. */
-
+			
 #ifdef MARK_SPECIAL_TABLE_DEBUG
 				printf ("MARK_SPECIAL_TABLE:Item %x is already processed!\n", *container);
 #endif	/* MARK_SPECIAL_TABLE_DEBUG */
@@ -5420,13 +5423,14 @@ rt_private int update_special_rem_set(void)
 
 	EIF_GET_CONTEXT
 
-	char 					*object;	/* Current inspected remembered object */
-	char 					*item;		/* Current inspected item. */
-	struct special_table 	*new_table;	/* The new table built from the old one */
+	EIF_REFERENCE			object;	/* Current inspected remembered object */
+	EIF_REFERENCE			item;		/* Current inspected item. */
+	struct special_table 	*new_table;
+									/* The new table built from the old one */
 	register2 char 			moving;		/* May GC move objects around? */
 	union overhead 			*zone;		/* Malloc info zone of current object.*/
 	union overhead 			*izone;		/* Malloc info zone of current item. */
-	int 					generational;	/* Are we in a generational cycle? */
+	int 					generational;/* Are we in a generational cycle? */
 	int						hsize;
 	int						count;			
 	int						i;			/* Index for loop. */
@@ -5446,13 +5450,12 @@ rt_private int update_special_rem_set(void)
 		
 	
 	count = special_rem_set->count;		
-								/* Fetch number of special remembered objects. */
+							/* Fetch number of special remembered objects. */
 	if (count == 0) 					/* No object in special_rem_set . */
 		return 0;						/* Pass it. */
 
 
 	/* Initializations. */
-
 	hsize = special_rem_set->h_size;	/* Fetch fields of "special_rem_set". */
 	hkeys = special_rem_set->h_keys;
 	hvalues = special_rem_set->h_values;	 
@@ -5492,9 +5495,9 @@ rt_private int update_special_rem_set(void)
 	for (i = 0 ; i < count  ; i++)
 	{
 		union overhead 	*zone = HEADER (hvalues [i]);
-										/* Current special's Malloc info zone. */
+									/* Current special's Malloc info zone. */
 		uint32 		flags;	
-										/* Fetch curennt special Eiffel flags. */
+									/* Fetch curennt special Eiffel flags. */
 		if (zone->ov_size & B_FWD)		/* Is object forwarded? */
 			zone = HEADER (zone->ov_fwd);	/* Update Malloc info zone. */
 		flags = zone->ov_flags;			/* fetch Eiffel flags. */

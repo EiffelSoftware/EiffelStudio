@@ -152,7 +152,19 @@ feature {NONE} -- Implementation
 				loop
 					lines.remove			
 				end
-			end			
+			end	
+			from
+				lines.start
+			until
+				lines.after
+			loop
+				if lines.item.is_empty then
+					lines.remove
+				else
+					lines.forth
+				end	
+			end
+			parse_row := lines.count
 			truncate_last_line
 		ensure
 			non_void_lines: lines /= Void

@@ -161,8 +161,6 @@ class ecom_gce_control_interfaces2;
 
 #include "ecom_control_library_IOleInPlaceFrame_s.h"
 
-#include "ecom_control_library_tagOIFI_s.h"
-
 #include "ecom_control_library_tagSIZE_s.h"
 
 #include "ecom_control_library_IOleClientSite_s.h"
@@ -1687,15 +1685,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::tagOIFI  to TAG_OIFI_RECORD.
+  Convert OLEINPLACEFRAMEINFO  to TAG_OIFI_RECORD.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_record_tag_oifi_record228( ecom_control_library::tagOIFI a_record );
+  EIF_REFERENCE ccom_ce_record_tag_oifi_record228( OLEINPLACEFRAMEINFO a_record );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::tagOIFI *  to TAG_OIFI_RECORD.
+  Convert OLEINPLACEFRAMEINFO *  to TAG_OIFI_RECORD.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_record_229( ecom_control_library::tagOIFI * a_record_pointer );
+  EIF_REFERENCE ccom_ce_pointed_record_229( OLEINPLACEFRAMEINFO * a_record_pointer );
 
 
   /*-----------------------------------------------------------

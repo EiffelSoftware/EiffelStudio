@@ -3638,20 +3638,20 @@ void ecom_gce_control_interfaces2::ccom_free_memory_pointed_227( ::IOleInPlaceUI
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_record_tag_oifi_record228( ecom_control_library::tagOIFI a_record )
+EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_record_tag_oifi_record228( OLEINPLACEFRAMEINFO a_record )
 
 /*-----------------------------------------------------------
-  Convert ecom_control_library::tagOIFI  to TAG_OIFI_RECORD.
+  Convert OLEINPLACEFRAMEINFO  to TAG_OIFI_RECORD.
 -----------------------------------------------------------*/
 {
-  return rt_ce.ccom_ce_record (&a_record, "TAG_OIFI_RECORD", sizeof (ecom_control_library::tagOIFI));
+  return rt_ce.ccom_ce_record (&a_record, "TAG_OIFI_RECORD", sizeof (OLEINPLACEFRAMEINFO));
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_record_229( ecom_control_library::tagOIFI * a_record_pointer )
+EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_record_229( OLEINPLACEFRAMEINFO * a_record_pointer )
 
 /*-----------------------------------------------------------
-  Convert ecom_control_library::tagOIFI *  to TAG_OIFI_RECORD.
+  Convert OLEINPLACEFRAMEINFO *  to TAG_OIFI_RECORD.
 -----------------------------------------------------------*/
 {
   if (a_record_pointer != NULL)

@@ -3395,10 +3395,10 @@ LONG* ecom_gec_control_interfaces2::ccom_ec_array_automation219( EIF_REFERENCE a
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_control_library::tagOIFI ecom_gec_control_interfaces2::ccom_ec_record_tag_oifi_record228( EIF_REFERENCE eif_ref )
+OLEINPLACEFRAMEINFO ecom_gec_control_interfaces2::ccom_ec_record_tag_oifi_record228( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-  Convert TAG_OIFI_RECORD to ecom_control_library::tagOIFI.
+  Convert TAG_OIFI_RECORD to OLEINPLACEFRAMEINFO.
 -----------------------------------------------------------*/
 {
   EIF_OBJECT eif_object = 0;
@@ -3406,14 +3406,14 @@ ecom_control_library::tagOIFI ecom_gec_control_interfaces2::ccom_ec_record_tag_o
 
   eif_object = eif_protect (eif_ref);
   a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);eif_wean (eif_object);
-  return * (ecom_control_library::tagOIFI *) a_pointer;
+  return * (OLEINPLACEFRAMEINFO *) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_control_library::tagOIFI * ecom_gec_control_interfaces2::ccom_ec_pointed_record_229( EIF_REFERENCE eif_ref )
+OLEINPLACEFRAMEINFO * ecom_gec_control_interfaces2::ccom_ec_pointed_record_229( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-  Convert TAG_OIFI_RECORD to ecom_control_library::tagOIFI *.
+  Convert TAG_OIFI_RECORD to OLEINPLACEFRAMEINFO *.
 -----------------------------------------------------------*/
 {
   EIF_OBJECT eif_object = 0;
@@ -3429,7 +3429,7 @@ ecom_control_library::tagOIFI * ecom_gec_control_interfaces2::ccom_ec_pointed_re
     (FUNCTION_CAST (void, (EIF_REFERENCE))set_shared) (eif_access (eif_object));
     eif_wean (eif_object);
   }
-  return  (ecom_control_library::tagOIFI * ) a_pointer;
+  return  (OLEINPLACEFRAMEINFO * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

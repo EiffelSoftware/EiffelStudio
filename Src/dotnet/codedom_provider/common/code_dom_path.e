@@ -72,6 +72,22 @@ feature -- Access
 			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
+	Default_precompile_ace_file: STRING is
+			-- Default path to precompile ace file
+		once
+			if Codedom_installation_path /= Void then
+				create Result.make_from_string (Codedom_installation_path)
+				Result.append_character (Directory_separator)
+				Result.append ("compiler")
+				Result.append_character (Directory_separator)
+				Result.append ("precomp")
+				Result.append_character (Directory_separator)
+				Result.append ("ace.ace")
+			end
+		ensure
+			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
+		end
+
 	Default_configs_directory: STRING is
 			-- Path to configs directory used by default if config file path is not specified in registry
 		local

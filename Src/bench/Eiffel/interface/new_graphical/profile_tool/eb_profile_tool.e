@@ -11,18 +11,23 @@ class
 inherit
 	EB_TOOL
 		redefine
-			show_imp, hide_imp
+			make,
+			show, hide, destroy,
+			init_commands
+		end
+
+	EB_PROFILE_TOOL_DATA
+		rename
+			Profile_resources as resources
 		end
 
 	EV_COMMAND
 
-	EB_CONSTANTS
+--	WINDOWS
 
-	WINDOWS
-
-	RESOURCE_USER
+	EB_RESOURCE_USER
 		redefine
-			update_integer_resource
+			dispatch_modified_resource
 		end
 
 	SYSTEM_CONSTANTS
@@ -32,24 +37,22 @@ creation
 
 feature {NONE} -- Initialization
 
---	make (a_command: EB_SHOW_PROFILE_TOOL) is
-	make (man: EB_TOOL_CONTAINER; par: EV_WINDOW) is
-		require
---			a_command_not_void: a_command /= Void
+	make (man: EB_TOOL_MANAGER) is
 		do
-			Profiler_resources.add_user (Current)
-
-				-- Linking with parent
-			parent := par
-			manager := man
-			set_title ("Profile Tool")
-
---			Precursor {EB_TOOL} (man, par)			
-
+			resources.add_user (Current)
 			create open_tools.make 
---			command := a_command
 
-			
+			precursor {EB_TOOL} (man)			
+		end
+
+
+	build_interface is
+		local
+			h_box: EV_HORIZONTAL_BOX
+			switch_form, language_form, compile_form: EV_FRAME
+			input_frame, query_frame: EV_FRAME
+		do
+
 --			if Platform_constants.is_windows then
 --					-- For windows we need the id for the Icon
 --				top_shell_make (Interface_names.i_Class_id.out, Project_tool.screen)
@@ -60,44 +63,135 @@ feature {NONE} -- Initialization
 			
 			set_title (Interface_names.t_Profile_tool)
 --			set_icon_name (Interface_names.t_Profile_tool)
-			init_commands
-			build_widgets
+
+
+				-- User Interface Components
+			create container.make (parent)
+			container.set_spacing (4)
+			container.set_border_width (4)
+
+			create h_box.make (container)
+			h_box.set_spacing (4)
+
+				-- Switches frame
+			create switch_form.make_with_text (h_box, Interface_names.l_Output_switches)
+			create switch_box.make (switch_form)
+			create name_switch.make_with_text (switch_box, Interface_names.b_Feature_name)
+			name_switch.set_state (True)
+			create number_of_calls_switch.make_with_text (switch_box, Interface_names.b_Number_of_calls)
+			number_of_calls_switch.set_state (True)
+			create time_switch.make_with_text (switch_box, Interface_names.b_Function_time)
+			create descendant_switch.make_with_text (switch_box, Interface_names.b_Descendant_time)
+			create total_time_switch.make_with_text (switch_box, Interface_names.b_Total_time)
+			create percentage_switch.make_with_text (switch_box, Interface_names.b_Percentage)
+
+				-- Language Frame
+			create language_form.make_with_text (h_box, Interface_names.l_Language_type)
+			create language_box.make (language_form)
+			create eiffel_switch.make_with_text (language_box, Interface_names.b_Eiffel_features)
+			eiffel_switch.set_state (True)
+			create c_switch.make_with_text (language_box, Interface_names.b_C_functions)
+			create recursive_switch.make_with_text (language_box, Interface_names.b_Recursive_functions)
+
+				-- Compilation Mode Frame
+			create compile_form.make_with_text (container, "Input file compilation type")
+			create compile_box.make (compile_form)
+			create workbench_button.make_with_text (compile_box, Interface_names.b_Workbench)
+			workbench_button.set_state (True)
+			create final_button.make_with_text (compile_box, Interface_names.b_Final)
+
+				-- Input File Frame
+			create input_frame.make_with_text (container, Interface_names.l_Input_file)
+			create h_box.make (input_frame)
+			create input_text.make_with_text (h_box, Interface_names.t_Empty)
+			input_text.set_text ("profinfo.pfi")
+			create browse_button.make_with_text (h_box, Interface_names.b_Browse)
+--			browse_button.set_minimum_width (100)
+			browse_button.set_horizontal_resize (False)
+			browse_button.set_vertical_resize (False)
+			browse_button.set_expand (False)
+			browse_button.add_click_command (Current, browse_it)
+
+				-- Query Frame
+			create query_frame.make_with_text (container, Interface_names.l_Query)
+			create query_text.make_with_text (query_frame, Interface_names.t_Empty)
+			query_text.set_horizontal_resize (True)
+			query_text.add_activate_command (run_prof_query_cmd, Void)
+
+				-- Button bar
+			create button_bar.make (container)
+			button_bar.set_expand (False)
+			button_bar.set_border_width (4)
+
+			create run_button.make_with_text (button_bar, Interface_names.b_Run_query)
+			run_button.add_click_command (run_prof_query_cmd, Void)
+			run_button.set_minimum_width (100)
+			run_button.set_horizontal_resize (False)
+			run_button.set_vertical_resize (False)
+			create exit_button.make_with_text (button_bar, Interface_names.b_Exit)
+			exit_button.add_click_command (quit_cmd, Void)
+			exit_button.set_minimum_width (100)
+			exit_button.set_horizontal_resize (False)
+			exit_button.set_vertical_resize (False)
+
+				-- Sizing policy
+			set_size (resources.tool_width.actual_value,
+				resources.tool_height.actual_value)
 		end
 
+	init_commands is
+			-- Initialize basic commands
+		do
+			precursor
+			create quit_cmd.make (Current)
+			create run_prof_query_cmd.make (Current)
+		end
+	
 
 feature -- Updating
 
-	update_integer_resource (old_res, new_res: INTEGER_RESOURCE) is
+
+	dispatch_modified_resource (mod_res: EB_MODIFIED_RESOURCE) is
 		local
---			pr: like Profiler_resources
+			old_i, new_i: EB_INTEGER_RESOURCE
 		do
---			pr := Profiler_resources
---			if new_res.actual_value >= 0 then
---				if old_res = pr.tool_width then
---					set_width (new_res.actual_value)
---				elseif old_res = pr.tool_height then
---					set_height (new_res.actual_value)
---				elseif old_res = pr.query_tool_width then
---					from
---						open_tools.start
---					until
---						open_tools.after
---					loop
---						open_tools.item.set_width (new_res.actual_value)
---						open_tools.forth
---					end
---				elseif old_res = pr.query_tool_height then
---					from
---						open_tools.start
---					until
---						open_tools.after
---					loop
---						open_tools.item.set_height (new_res.actual_value)
---						open_tools.forth
---					end
---				end
---				old_res.update_with (new_res)
---			end
+			old_i ?= mod_res.old_resource
+			if old_i /= Void then
+				new_i ?= mod_res.new_resource
+				update_integer_resource (old_i, new_i)
+			end
+		end
+
+	update_integer_resource (old_res, new_res: EB_INTEGER_RESOURCE) is
+		local
+			pr: like resources
+		do
+			pr := resources
+			if new_res.actual_value >= 0 then
+				if old_res = pr.tool_width then
+					set_width (new_res.actual_value)
+				elseif old_res = pr.tool_height then
+					set_height (new_res.actual_value)
+				elseif old_res = pr.query_tool_width then
+					from
+						open_tools.start
+					until
+						open_tools.after
+					loop
+						open_tools.item.set_width (new_res.actual_value)
+						open_tools.forth
+					end
+				elseif old_res = pr.query_tool_height then
+					from
+						open_tools.start
+					until
+						open_tools.after
+					loop
+						open_tools.item.set_height (new_res.actual_value)
+						open_tools.forth
+					end
+				end
+			end
 		end
 
 feature -- Graphical User Interface
@@ -112,17 +206,6 @@ feature -- Graphical User Interface
 			new_window.show
 			new_window.update_window (st, pq, po, profinfo)
 			open_tools.extend (new_window)
-		end
-
-	display is
-			-- Display the tool
-		do
---			if not realized then
---				realize
---			else
---				show
---			end
---			raise
 		end
 
 feature {EB_RUN_PROFILE_QUERY_CMD} -- Access
@@ -197,120 +280,11 @@ feature {EB_RUN_PROFILE_QUERY_CMD} -- Access
 			end
 		end
 
-feature {NONE} -- Graphical User Interface
-
-	build_widgets is
-		local
-			h_box: EV_HORIZONTAL_BOX
-			switch_form, language_form, compile_form: EV_FRAME
-			input_frame, query_frame: EV_FRAME
-		do
-				-- User Interface Components
-			create container.make (parent)
-			container.set_spacing (4)
-			container.set_border_width (4)
-
-			create h_box.make (container)
-			h_box.set_spacing (4)
-
-				-- Switches frame
-			create switch_form.make_with_text (h_box, Interface_names.l_Output_switches)
-			create switch_box.make (switch_form)
-			create name_switch.make_with_text (switch_box, Interface_names.b_Feature_name)
-			name_switch.set_state (True)
-			create number_of_calls_switch.make_with_text (switch_box, Interface_names.b_Number_of_calls)
-			number_of_calls_switch.set_state (True)
-			create time_switch.make_with_text (switch_box, Interface_names.b_Function_time)
-			create descendant_switch.make_with_text (switch_box, Interface_names.b_Descendant_time)
-			create total_time_switch.make_with_text (switch_box, Interface_names.b_Total_time)
-			create percentage_switch.make_with_text (switch_box, Interface_names.b_Percentage)
-
-				-- Language Frame
-			create language_form.make_with_text (h_box, Interface_names.l_Language_type)
-			create language_box.make (language_form)
-			create eiffel_switch.make_with_text (language_box, Interface_names.b_Eiffel_features)
-			eiffel_switch.set_state (True)
-			create c_switch.make_with_text (language_box, Interface_names.b_C_functions)
-			create recursive_switch.make_with_text (language_box, Interface_names.b_Recursive_functions)
-
-				-- Compilation Mode Frame
-			create compile_form.make_with_text (container, "Input file compilation type")
-			create compile_box.make (compile_form)
-			create workbench_button.make_with_text (compile_box, Interface_names.b_Workbench)
-			workbench_button.set_state (True)
-			create final_button.make_with_text (compile_box, Interface_names.b_Final)
-
-				-- Input File Frame
-			create input_frame.make_with_text (container, Interface_names.l_Input_file)
-			create h_box.make (input_frame)
-			create input_text.make_with_text (h_box, Interface_names.t_Empty)
-			input_text.set_text ("profinfo.pfi")
-			create browse_button.make_with_text (h_box, Interface_names.b_Browse)
-			browse_button.set_minimum_width (100)
-			browse_button.set_horizontal_resize (False)
-			browse_button.set_vertical_resize (False)
---			browse_button.add_click_command (Current, browse_it)
-
-				-- Query Frame
-			create query_frame.make_with_text (container, Interface_names.l_Query)
-			create query_text.make_with_text (query_frame, Interface_names.t_Empty)
-			query_text.set_horizontal_resize (True)
-			query_text.add_activate_command (run_prof_query_cmd, Void)
-
-				-- Button bar
-			create button_bar.make (container)
-			button_bar.set_expand (False)
-			button_bar.set_border_width (4)
-
-			create run_button.make_with_text (button_bar, Interface_names.b_Run_query)
-			run_button.add_click_command (run_prof_query_cmd, Void)
-			run_button.set_minimum_width (100)
-			run_button.set_horizontal_resize (False)
-			run_button.set_vertical_resize (False)
-			create exit_button.make_with_text (button_bar, Interface_names.b_Exit)
-			exit_button.add_click_command (quit_cmd, Void)
-			exit_button.set_minimum_width (100)
-			exit_button.set_horizontal_resize (False)
-			exit_button.set_vertical_resize (False)
-
-				-- Sizing policy
-			set_minimum_size (Profiler_resources.tool_width.actual_value,
-				Profiler_resources.tool_height.actual_value)
-		end
-
-init_commands is
-			-- Initialize basic commands
-		do
-			create quit_cmd.make (Current)
-			create run_prof_query_cmd.make (Current)
-		end
-	
-
 feature {NONE} -- Execution Arguments
 
 	browse_it: EV_ARGUMENT1 [ANY] is
 		once
 			create Result.make (Void)
-		end
-
-feature -- Update
-
-	close is
-			-- Close Current
-		local
---			a_wnd: EB_PROFILE_QUERY_WINDOW
-		do
---			from
---				open_tools.start
---			until
---				open_tools.after
---			loop
---				a_wnd := open_tools.item
---				a_wnd.popdown
---				a_wnd.destroy
---				open_tools.remove
---			end
-			command.done_profiling
 		end
 
 feature -- Update
@@ -330,12 +304,12 @@ feature -- Update
 			end
 		end
 
-feature {EB_TOOL_CONTAINER} -- Widget Implementation
+feature  -- status Setting
 
-	show_imp is
+	show is
 			-- Show Current and open_tools.
 		do
-			container.show
+			precursor
 			from
 				open_tools.start
 			until
@@ -346,10 +320,10 @@ feature {EB_TOOL_CONTAINER} -- Widget Implementation
 			end
 		end
 
-	hide_imp is
+	hide is
 			-- Hide Current and open_tools.
 		do
-			container.hide
+			precursor
 			from
 				open_tools.start
 			until
@@ -360,18 +334,39 @@ feature {EB_TOOL_CONTAINER} -- Widget Implementation
 			end
 		end
 
+	destroy is
+			-- Destroys Current
+		local
+			a_wnd: EB_PROFILE_QUERY_WINDOW
+		do
+			from
+				open_tools.start
+			until
+				open_tools.after
+			loop
+				a_wnd := open_tools.item
+				a_wnd.hide
+				a_wnd.destroy
+				open_tools.remove
+			end
+			resources.remove_user (Current)
+			precursor
+		end
+
 feature {NONE} -- Execution
 
-	execute (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]; data: EV_EVENT_DATA) is
 			-- Execute Current
+		local
+			name_chooser: EV_FILE_OPEN_DIALOG
 		do
 			if arg = browse_it then
 					--| User wants to browse
 				browse_for_inputfile
-			elseif arg.first = last_name_chooser then
+			else
+				name_chooser := arg.first
 					--| User came up with OK in file selection
-				input_text.set_text (last_name_chooser.selected_file)
-				last_name_chooser.hide
+				input_text.set_text (name_chooser.file)
 			end
 		end
 
@@ -381,18 +376,16 @@ feature {NONE} -- Implementation
 			-- Bring up a dialog with which the user can browse for an
 			-- input file.
 		local
-		--	new_name_chooser: EV_FILE_OPEN_DIALOG
-		--	arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]
+			name_chooser: EV_FILE_OPEN_DIALOG
+			arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]
 		do
---			new_name_chooser := name_chooser (Current)
-		--	create new_name_chooser.make (container)
-		--	new_name_chooser.set_title (Interface_names.t_Browse)
-		--	new_name_chooser.set_default_extension ("pfi")
-		--	new_name_chooser.set_filter ( <<"Profile File Info (*.pfi)">> , <<"*.pfi">>)
---			new_name_chooser.set_file_selection
-		--	create arg.make (Current)
-		--	new_name_chooser.add_ok_action (Current, Void)
-		--	new_name_chooser.show
+			create name_chooser.make (container)
+			name_chooser.set_title (Interface_names.t_Browse)
+			name_chooser.set_default_extension ("pfi")
+			name_chooser.set_filter ( <<"Profile File Info (*.pfi)">> , <<"*.pfi">>)
+			create arg.make (name_chooser)
+			name_chooser.add_ok_command (Current, arg)
+			name_chooser.show
 		end
 
 	working_directory : STRING is
@@ -450,7 +443,6 @@ feature {NONE} -- Implementation
 	language_box: EV_VERTICAL_BOX
 			-- Form to display possible languages on
 
---	
 	name_switch,
 			-- Switch for the feature names
 
@@ -508,13 +500,10 @@ feature {NONE} -- Implementation
 
 feature {EB_PROFILE_WINDOW} -- Commands
 
-	quit_cmd: EB_QUIT_PROFILE_TOOL
+	quit_cmd: EB_CLOSE_TOOL_CMD
 			-- Command to quit Current
 
 	run_prof_query_cmd: EB_RUN_PROFILE_QUERY_CMD
 			-- Command to run the typed query
-
-	command: EB_SHOW_PROFILE_TOOL
-			-- Command that invokes Current
 
 end -- EB_PROFILE_TOOL

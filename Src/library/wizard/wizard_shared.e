@@ -11,9 +11,6 @@ inherit
 	WIZARD_PROJECT_SHARED
 
 	ARGUMENTS
-		export
-			{NONE} all
-		end
 
 feature -- Access
 

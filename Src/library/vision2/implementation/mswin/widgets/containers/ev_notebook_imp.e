@@ -169,7 +169,8 @@ feature -- Status setting
 			-- Set the current minimum size.
 		do
 			set_font (font)
-			if tab_pos = interface.Tab_top or tab_pos = interface.Tab_bottom then
+			if tab_pos = interface.Tab_top
+					or else tab_pos = interface.Tab_bottom then
 				internal_set_minimum_height (tab_height)
 			else
 				internal_set_minimum_width (tab_height)
@@ -273,7 +274,8 @@ feature -- Element change
 		local
 			local_font_windows: EV_FONT_IMP
 		do
-			if (tab_pos = interface.Tab_top) or (tab_pos = interface.Tab_bottom) then
+			if (tab_pos = interface.Tab_top)
+				or else (tab_pos = interface.Tab_bottom) then
 				private_font := f
 				local_font_windows ?= private_font.implementation
 				check
@@ -281,7 +283,8 @@ feature -- Element change
 				end
 				wel_set_font (local_font_windows.wel_font)
 			else
-				cwin_send_message (wel_item, wm_setfont, 0, cwin_make_long (1, 0))
+				cwin_send_message (wel_item, wm_setfont, 0,
+					cwin_make_long (1, 0))
 			end
 		end
 
@@ -414,9 +417,9 @@ feature -- Assertion features
 feature {NONE} -- Implementation
 
 	tab_action (direction: BOOLEAN) is
-			-- Go to the next widget that takes the focus through to the tab key.
-			-- If `direction' it goes to the next widget otherwise, it goes to the 
-			-- previous one.
+			-- Go to the next widget that takes the focus through to the tab
+			-- key. If `direction' it goes to the next widget otherwise, it
+			-- goes to the previous one.
 		local
 			hwnd: POINTER
 			window: WEL_WINDOW
@@ -428,9 +431,9 @@ feature {NONE} -- Implementation
 
 
 	process_tab_key (virtual_key: INTEGER) is
-			-- Process a tab or arrow key press to give the focus to the next widget
-			-- Need to be called in the feature on_key_down when the control need to
-			-- process this kind of keys.
+			-- Process a tab or arrow key press to give the focus to the next
+			-- widget. Need to be called in the feature on_key_down when the
+			-- control need to process this kind of keys.
 		local
 			tab_control: WEL_TAB_CONTROL_ITEM
 			window: WEL_WINDOW
@@ -477,7 +480,8 @@ feature {NONE} -- Implementation
 			end
 
 			-- We found the biggest child
-			if tab_pos = interface.Tab_top or tab_pos = interface.Tab_bottom then
+			if tab_pos = interface.Tab_top
+					or else tab_pos = interface.Tab_bottom then
 				internal_set_minimum_width (value + 6)
 			else
 				internal_set_minimum_width (value + tab_height + 2)
@@ -512,7 +516,8 @@ feature {NONE} -- Implementation
 			end
 
 			-- We found the biggest child
-			if tab_pos = interface.Tab_left or tab_pos = interface.Tab_right then
+			if tab_pos = interface.Tab_left
+					or else tab_pos = interface.Tab_right then
 				internal_set_minimum_height (value + tab_height + 2)
 			else
 				internal_set_minimum_height (value + 6)
@@ -549,9 +554,11 @@ feature {NONE} -- Implementation
 			end
 
 			-- We found the biggest child
-			if tab_pos = interface.Tab_top or tab_pos = interface.Tab_bottom then
+			if tab_pos = interface.Tab_top
+					or else tab_pos = interface.Tab_bottom then
 				internal_set_minimum_size (mw + 6, mh + tab_height + 2)
-			elseif tab_pos = interface.Tab_left or tab_pos = interface.Tab_right then
+			elseif tab_pos = interface.Tab_left
+					or else tab_pos = interface.Tab_right then
 				internal_set_minimum_size (mw + tab_height + 2, mh + 6)
 			end
 		end
@@ -594,7 +601,8 @@ feature {NONE} -- WEL Implementation
 				check
 					child_imp_not_void: child_imp /= Void
 				end
-				child_imp.set_move_and_size (rect.left, rect.top, rect.width, rect.height)
+				child_imp.set_move_and_size (rect.left, rect.top, rect.width,
+					rect.height)
 				counter := counter + 1
 			end
 		end
@@ -662,9 +670,9 @@ feature {NONE} -- WEL Implementation
 
 	show_current_selection is
 			-- Show the current selected page.
-			-- Do not use directly show, because there is no use to notify back the parent.
-			-- Though, if there was any change done on the child, it should be reset directly
-			-- on the child.
+			-- Do not use directly show, because there is no use to notify
+			-- back the parent. Though, if there was any change done on the
+			-- child, it should be reset directly on the child.
 		local
 			ww: EV_WIDGET_IMP
 			rect: WEL_RECT
@@ -673,7 +681,8 @@ feature {NONE} -- WEL Implementation
 			if ww /= Void and then ww.exists then
 				ww.show_window (ww.wel_item, Sw_show)
 				rect := sheet_rect
-				ww.move_and_resize (rect.left, rect.top, rect.width, rect.height, True)
+				ww.move_and_resize (rect.left, rect.top, rect.width,
+					height, True)
 			end
 		end
 
@@ -956,27 +965,6 @@ feature --|FIXME all of these need implementating
 			notify_change (2 + 1)
 		end
 
-	put_left (v: like item) is
-			-- Add `v' to left of `item'
-		local
-			a_wel_item: WEL_TAB_CONTROL_ITEM
-			ww: WEL_WINDOW
-			widget_imp: EV_WIDGET_IMP
-			child_imp: EV_WIDGET_I
-		do
-			child_imp := v.implementation
-			ww ?= child_imp
-			!! a_wel_item.make
-			a_wel_item.set_window (ww)
-			insert_item (index - 1, a_wel_item)
-			index := index + 1
-			widget_imp ?= child_imp
-			widget_imp.wel_set_parent (Current)
-			widget_imp.set_top_level_window_imp (top_level_window_imp)
-			widget_imp.hide
-			notify_change (2 + 1)
-		end
-
 	remove is
 			-- Remove `item'
 		local
@@ -1141,6 +1129,9 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/03/03 19:41:05  brendel
+--| Removed feature `put_left'.
+--|
 --| Revision 1.47  2000/03/03 18:34:43  brendel
 --| Implemented feature `put_left'.
 --|
@@ -1160,10 +1151,16 @@ end -- EV_NOTEBOOK_IMP
 --| Removed the FIXME from item_text as it now works.
 --|
 --| Revision 1.41.6.16  2000/02/03 19:21:23  rogers
---| Added missing comments, implemented remaining features and removed some redundent code.
+--| Added missing comments, implemented remaining features and removed some
+--| redundent code.
 --|
 --| Revision 1.41.6.15  2000/02/02 20:57:37  rogers
---| Redefined useable, so it can be turned on and off from within this class, to enable the assertions from EV_NOTEBOOK_I, to be effectively ignored during WEL calls by setting check_notebook_assertions to false. Redefined initialize, and set check_notebook_assertions to true within this. Impleemnted remove. Also implemented enable_notebook_assertions and disable_notebook_assertions.
+--| Redefined useable, so it can be turned on and off from within this class,
+--| to enable the assertions from EV_NOTEBOOK_I, to be effectively ignored
+--| during WEL calls by setting check_notebook_assertions to false. Redefined
+--| initialize, and set check_notebook_assertions to true within this.
+--| Impleemnted remove. Also implemented enable_notebook_assertions and
+--| disable_notebook_assertions.
 --|
 --| Revision 1.41.6.14  2000/01/31 19:29:46  brendel
 --| Added redefine of child_added.
@@ -1184,20 +1181,26 @@ end -- EV_NOTEBOOK_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.41.6.8  2000/01/27 17:47:51  rogers
---| redefined interface in EV_NOTEBOOK_I, EV_WIDGET_LIST_I, EV_CONTAINER_IMP and renamed it in EV_FONTABLE_IMP. ev_notebook_imp.e
+--| redefined interface in EV_NOTEBOOK_I, EV_WIDGET_LIST_I, EV_CONTAINER_IMP
+--| and renamed it in EV_FONTABLE_IMP. ev_notebook_imp.e
 --|
 --| Revision 1.41.6.7  2000/01/25 17:37:52  brendel
 --| Removed code associated with old events.
 --| Implementation and more removal is needed.
 --|
 --| Revision 1.41.6.6  2000/01/18 20:12:19  rogers
---| Any reference to tab_left, tab_right, tab_top or tab_bottom now come from the interface. Index has been defined, so all internal temporary variables named index have been renamed.
+--| Any reference to tab_left, tab_right, tab_top or tab_bottom now come from
+--| the interface. Index has been defined, so all internal temporary variables
+--| named index have been renamed.
 --|
 --| Revision 1.41.6.5  2000/01/18 18:02:42  rogers
---| Now inherits from EV_WIDGET_LIST_I. All the deferred features have been added to this class, but not yet implemented.
+--| Now inherits from EV_WIDGET_LIST_I. All the deferred features have been
+--| added to this class, but not yet implemented.
 --|
 --| Revision 1.41.6.4  2000/01/18 00:28:46  rogers
---| Commented out propagate_foreground_color and propagate_background_color in class text, as they are now inherited from EV_NOTEBOOK_I, added a fixme for when notebooks are reviewed.
+--| Commented out propagate_foreground_color and propagate_background_color in
+--| class text, as they are now inherited from EV_NOTEBOOK_I, added a fixme
+--| or when notebooks are reviewed.
 --|
 --| Revision 1.41.6.3  2000/01/14 19:30:07  rogers
 --| Added features required by notebook. None of them are yet implementaed.

@@ -24,8 +24,7 @@ inherit
 			replace as dl_replace,
 			put as dl_put,
 			put_front as dl_put_front,
-			put_right as dl_put_right,
-			put_left as dl_put_left
+			put_right as dl_put_right
 		export
 			{NONE} duplicate, new_chain
 		undefine
@@ -36,8 +35,7 @@ inherit
 			start,
 			finish,
 			merge_left,
-			merge_right,
-			dl_put_left
+			merge_right
 		select
 			dl_put
 		end
@@ -171,23 +169,6 @@ feature -- Element change
 	 		same_index: index = old index
 		end
 
-	put_left (v: like item) is
-			-- If `v' not already in list add to the left of cursor position.
-			-- Do not move cursor.
-			-- Remove `v' from existing parent.
-		require
-			extendible: extendible
-			not_before: not before
-			v_not_void: v /= Void
-			not_has_v: not has (v)
-		do
-			implementation.put_left (v)
-		ensure
-			item_inserted: has (v)
-	 		new_count: count = old count + 1
-	 		new_index: index = old index + 1
-		end
-
 	merge_left (other: like Current) is
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
@@ -200,6 +181,9 @@ feature -- Element change
 				other.empty
 			loop
 				put_left (other.item)
+				check
+					not_other_has_item: not other.has (item)
+				end
 			end
 		end
 
@@ -216,6 +200,9 @@ feature -- Element change
 			loop
 				put_right (other.item)
 				other.back
+				check
+					not_other_has_item: not other.has (item)
+				end
 			end
 		end
 
@@ -276,11 +263,6 @@ feature {NONE} -- Inapplicable
 	dl_put_right (v: like item) is
 		do
 			put_right (v)
-		end
-
-	dl_put_left (v: like item) is
-		do
-			put_left (v)
 		end
 
 	new_chain: like Current is
@@ -369,6 +351,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/03 19:41:04  brendel
+--| Removed feature `put_left'.
+--|
 --| Revision 1.11  2000/03/03 18:31:12  brendel
 --| Added redefinition of `put_left', since the implementation in
 --| DYNAMIC_CHAIN causes the invariant to be called.

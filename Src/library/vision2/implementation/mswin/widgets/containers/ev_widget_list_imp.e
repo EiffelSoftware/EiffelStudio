@@ -190,28 +190,6 @@ feature -- Element change
 			new_item_actions.call ([v])
 		end
 
-	put_left (v: like item) is
-			-- Add `v' to the right of cursor position.
-			-- Do not move cursor.
-		local
-			v_imp: EV_WIDGET_IMP
-			ww: WEL_WINDOW
-		do
-			if v.parent /= Void then
-				v.parent.prune (v)
-			end
-			v_imp ?= v.implementation
-			check
-				v_imp_not_void: v_imp /= Void
-			end
-			ev_children.put_left (v_imp)
-			notify_change (Nc_minsize)
-			ww ?= Current
-			v_imp.wel_set_parent (ww)
-			v_imp.set_top_level_window_imp (top_level_window_imp)
-			new_item_actions.call ([v])
-		end
-
 feature -- Removal
 
 	prune (v: like item) is
@@ -315,6 +293,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/03 19:41:05  brendel
+--| Removed feature `put_left'.
+--|
 --| Revision 1.11  2000/03/03 18:34:43  brendel
 --| Implemented feature `put_left'.
 --|

@@ -28,14 +28,10 @@ feature -- creation
 			valid_parent: a_name /= Void;
 			parent_not_void: a_parent /= Void
 		do
-			depth := a_parent.depth+1;
-			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
-			implementation:= toolkit.message_d (Current, a_parent);
+			{MESSAGE_D} Precursor (a_name, a_parent)
 			add_ok_action (Current, ok);
 			hide_help_button
 			hide_cancel_button
-			set_default
 		ensure then
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name)

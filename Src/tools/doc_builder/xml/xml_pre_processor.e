@@ -363,9 +363,9 @@ feature {NONE} -- Implementation
 			if Result.last_index_of ('/', Result.count) > 0 then				
 				Result := Result.substring (1, Result.last_index_of ('/', Result.count))
 			end
-			if generation_data.filter_toc_hash.count < 2 and then Result.substring (1, 3).is_equal ("../") then
-				Result.replace_substring ("", 1, 3)
-			end
+--			if generation_data.filter_toc_hash.count < 2 and then Result.substring (1, 3).is_equal ("../") then
+--				Result.replace_substring ("", 1, 3)
+--			end
 		end		
 		
 invariant

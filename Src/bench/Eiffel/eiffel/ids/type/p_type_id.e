@@ -11,7 +11,7 @@ inherit
 		undefine
 			compilation_id, is_precompiled
 		redefine
-			generated_id, counter, prefix_name
+			generated_id, generated_id_string, counter, prefix_name
 		end
 
 creation
@@ -20,7 +20,26 @@ creation
 
 feature -- Access
 
-	generated_id: STRING is
+	generated_id (f: INDENT_FILE) is
+			-- Generate textual representation of static type id
+			-- in generated C code
+		local
+			statement, buff: STRING
+		do
+			if Compilation_modes.is_precompiling then
+				buff := Type_offset_buffer;
+				eif011 ($buff, compilation_id);
+				!! statement.make (15);
+				statement.append (buff);
+				statement.extend ('+');
+				statement.append_integer (internal_id - 1)
+				f.putstring (statement)
+			else
+				f.putint (id - 1)
+			end
+		end
+
+	generated_id_string: STRING is
 			-- Textual representation of static type id
 			-- used in generated C code
 		local
@@ -34,7 +53,7 @@ feature -- Access
 				Result.extend ('+');
 				Result.append_integer (internal_id - 1)
 			else
-				!! Result.make (5);
+				!! Result.make (5)
 				Result.append_integer (id - 1)
 			end
 		end

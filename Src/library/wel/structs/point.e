@@ -58,6 +58,16 @@ feature -- Access
 
 feature -- Element change
 
+	set_x_y (a_x, a_y: INTEGER) is
+			-- Set `x' with `a_x' and `y' with `a_y'.
+		do
+			cwel_point_set_x (item, a_x)
+			cwel_point_set_y (item, a_y)
+		ensure
+			x_set: x = a_x
+			y_set: y = a_y
+		end
+
 	set_x (a_x: INTEGER) is
 			-- Set `x' with `a_x'
 		do

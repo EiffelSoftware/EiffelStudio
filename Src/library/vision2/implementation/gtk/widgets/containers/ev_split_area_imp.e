@@ -105,12 +105,6 @@ feature
 			end
 		end
 
-	extend (an_item: like item) is
-			-- Add `an_item' to `Current'.
-		do
-			put (an_item)
-		end
-
 	enable_item_expand (an_item: like item) is
 			-- Let `an_item' expand when `Current' is resized.
 		do

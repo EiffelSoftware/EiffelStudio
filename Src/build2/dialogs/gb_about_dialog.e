@@ -22,6 +22,8 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_CONSTANTS
 
 creation
 	make
@@ -43,7 +45,7 @@ feature -- Initialization
 			white_cell: EV_CELL
 		do
 			default_create
-			set_title ("Vision2 builder")
+			set_title (Product_name)
 			disable_user_resize
 
 				-- Create controls.
@@ -113,7 +115,7 @@ feature -- Constant strings
 	t_Copyright_info: STRING is
 		once
 			Result := 
-				"Copyright (C) 1985-2000 Interactive Software Engineering Inc.%N%
+				"Copyright (C) 1985-2001 Interactive Software Engineering Inc.%N%
 				%All right reserved"
 		end
 
@@ -122,8 +124,8 @@ feature -- Constant strings
 			create Result.make (500)
 			Result.append (
 				"Interactive Software Engineering Inc.%N%
-				%ISE Building, 2nd floor%N%
-				%270 Storke Road, Goleta, CA 93117 USA%N%
+				%ISE Building%N%
+				%360 Storke Road, Goleta, CA 93117 USA%N%
 				%Telephone: 805-685-1006, Fax 805-685-6869%N%
 				%Electronic mail: <info@eiffel.com>%N%
 				% %N%

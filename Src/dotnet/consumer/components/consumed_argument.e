@@ -4,6 +4,12 @@ indexing
 class
 	CONSUMED_ARGUMENT
 
+inherit
+	ANY
+		redefine
+			is_equal
+		end
+
 create
 	make
 
@@ -45,5 +51,23 @@ feature -- Access
 
 	is_out: BOOLEAN
 			-- Out argument?
+
+feature {CONSUMED_ARGUMENT, OVERLOAD_SOLVER} -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+			-- Only compare arguments from same assembly as types are identified per assembly!
+		do
+			Result := other.dotnet_name.is_equal (dotnet_name) and
+						other.type.is_equal (type)
+		end
+
+invariant
+	non_void_dotnet_name: dotnet_name /= Void
+	valid_dotnet_name: not dotnet_name.is_empty
+	non_void_eiffel_name: eiffel_name /= Void
+	valid_eiffel_name: not eiffel_name.is_empty
+	non_void_type: type /= Void
 
 end -- class CONSUMED_ARGUMENT

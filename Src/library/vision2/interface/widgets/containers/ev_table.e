@@ -144,6 +144,9 @@ feature -- Access
 					i := i + 1
 				end
 			end
+		ensure
+			Result_not_void: Result /= Void
+			count_matches_widget_count: Result.count = widget_count
 		end
 
 feature -- Status report

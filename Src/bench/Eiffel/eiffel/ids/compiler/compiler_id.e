@@ -3,15 +3,18 @@
 deferred class COMPILER_ID
 
 inherit
-
-	SHARED_ID;
-	SHARED_COUNTER;
-	HASHABLE;
 	COMPARABLE
 		undefine
 			is_equal
-		end;
+		end
+
 	COMPILER_EXPORTER
+
+	HASHABLE
+
+	SHARED_ID
+
+	SHARED_COUNTER
 
 feature {NONE} -- Initialization
 

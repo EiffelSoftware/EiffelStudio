@@ -800,14 +800,16 @@ feature {NONE} -- Implementation
 					ot.set_is_keyword
 				end;
 				item := ot;
+				text.insert_two (format.insertion_point, item, ti_Space)
 			else
 				if is_key then
 					!KEYWORD_TEXT! item.make (f_name)
 				else
 					!SYMBOL_TEXT! item.make (f_name)
 				end;
+				text.go_to (format.insertion_point)
+				text.add (item);
 			end;
-			text.add (item);
 			last_was_printed := True;
 		end;
 

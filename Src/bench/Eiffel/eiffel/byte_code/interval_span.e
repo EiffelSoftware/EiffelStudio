@@ -37,8 +37,8 @@ feature -- Measurement
 
 feature -- IL code generation
 
-	generate_il (min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]) is
-			-- Generate code for span assuming that inspect value is in range `min_value'..`max_value'
+	generate_il (min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
+			-- Generate code for span in `instruction' assuming that inspect value is in range `min'..`max'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.
 		require
@@ -48,6 +48,7 @@ feature -- IL code generation
 			labels_not_empty: not labels.is_empty
 			labels_has_else_label: labels.lower = 0
 			else_label_not_void: labels.item (0) /= Void
+			instruction_not_void: instruction /= Void
 		deferred
 		end
 

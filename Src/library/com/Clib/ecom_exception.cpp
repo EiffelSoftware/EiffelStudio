@@ -19,6 +19,7 @@ extern "C" {
 #endif
 
 Formatter f;
+char string_buffer [500];
 
 #ifdef __cplusplus
 }
@@ -35,6 +36,8 @@ Formatter::~Formatter()
 EIF_OBJ Formatter::ccom_format_message( EIF_INTEGER Code )
 {
 	LPVOID szErrorMessage;
+	char hresult [12];
+	sprintf (hresult, "0x%.8x", Code);
 	
 	if( FormatMessage(
 					FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
@@ -44,13 +47,25 @@ EIF_OBJ Formatter::ccom_format_message( EIF_INTEGER Code )
 					( LPTSTR )&szErrorMessage,
 					0,
 					NULL ) == 0)
-		szErrorMessage =( LPVOID )( "No help available" );
-	return makestr( ( char* )szErrorMessage, strlen( (char *)szErrorMessage ));
+		strcpy (string_buffer, "No help available" );
+	else
+	{
+		strncpy (string_buffer, ( char* )szErrorMessage, 469);
+		string_buffer [469] = '\0';
+		LocalFree(szErrorMessage);
+	}
+	
+	strcat (string_buffer, " HRESULT = ");
+	strcat (string_buffer, hresult);
+	
+	return makestr( ( char* )string_buffer, strlen( (char *)szErrorMessage ));
 }
 
 char* Formatter::c_format_message( long Code )
 {
 	LPVOID szErrorMessage;
+	char hresult [12];
+	sprintf (hresult, "0x%.8x", Code);
 	
 	if( FormatMessage(
 					FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
@@ -60,7 +75,17 @@ char* Formatter::c_format_message( long Code )
 					( LPTSTR )&szErrorMessage,
 					0,
 					NULL ) == 0)
-		szErrorMessage =( LPVOID )( "No help available" );
-	return ( char* )szErrorMessage;
+		strcpy (string_buffer, "No help available" );
+	else
+	{
+		strncpy (string_buffer, ( char* )szErrorMessage, 469);
+		string_buffer [469] = '\0';
+		LocalFree(szErrorMessage);
+	}
+	
+	strcat (string_buffer, " HRESULT = ");
+	strcat (string_buffer, hresult);
+	
+	return ( char* )string_buffer;
 }
 	

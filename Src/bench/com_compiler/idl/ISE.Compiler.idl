@@ -1347,6 +1347,9 @@ library EiffelComCompiler
         [id (DISPID_EiffelComCompiler_AddAssembly), helpstring ("Add an assembly to the project.")]
         HRESULT AddAssembly ([in] BSTR bstrPrefix, [in] BSTR bstrClusterName, [in] BSTR bstrFileName, VARIANT_BOOL vbCopyLocally);
 
+        [id (DISPID_EiffelComCompiler_AddFusionAssembly), helpstring ("Add an assembly to the project using it's fusion name parts.")]
+        HRESULT AddFusionAssembly ([in] BSTR bstrPrefix, [in] BSTR bstrClusterName, [in] BSTR bstrName, [in] BSTR bstrVersion, [in] BSTR bstrCulture, [in] BSTR bstrPublicKeyToken, VARIANT_BOOL vbCopyLocally);
+
         [id (DISPID_EiffelComCompiler_LastException), helpstring ("Last execption to occur"), propget]
         HRESULT LastException ([out, retval] IEiffelException** pException);
 

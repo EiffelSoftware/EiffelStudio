@@ -21,6 +21,8 @@ feature
 
 	data: CONTEXT;
 
+	selected: BOOLEAN;
+
 	mfont: FONT is
 		once
 			if Result = Void then
@@ -74,8 +76,6 @@ feature
 	
 feature {NONE}
 
-	selected: BOOLEAN;
-
 	reference_point, parent_reference: COORD_XY_FIG;
 
 	right_ref_point: COORD_XY_FIG;
@@ -115,7 +115,7 @@ feature
 			text_image_create;
 			set_foreground_color (Resources.foreground_figure_color);
 			set_background_color (Resources.background_figure_color);
-			set_text (a_context.label);
+			set_text (a_context.full_label);
 			attach_drawing (tree);
 			tree.append (Current);
 		end;

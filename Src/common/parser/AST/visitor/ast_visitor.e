@@ -294,13 +294,6 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
-	process_separate_type_as (l_as: SEPARATE_TYPE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 			-- Process `l_as'.
 		require
@@ -688,17 +681,17 @@ feature {AST_EIFFEL} -- Expressions visitors
 		deferred
 		end
 
-	process_exp_type_as (l_as: EXP_TYPE_AS) is
+	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
 		deferred
 		end
-
-	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS) is
+		
+	process_void_as (l_as: VOID_AS) is
 			-- Process `l_as'.
 		require
-			non_void_as: l_as /= Void
+			l_as_not_void: l_as /= Void
 		deferred
 		end
 

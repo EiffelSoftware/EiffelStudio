@@ -19,6 +19,9 @@ inherit
 		export
 			{NONE} all
 			{ANY} empty, to_c
+			{PATH_NAME} count, area
+		redefine
+			is_equal
 		end
 
 feature -- Initialization
@@ -34,6 +37,7 @@ feature -- Initialization
 			-- path name `p'
 		do
 			string_make (0);
+			count := 0;
 			append (p);
 		ensure
 			valid_file_name: is_valid
@@ -68,7 +72,7 @@ feature
 			end
 			str1 := to_c;
 			str2 := directory_name.to_c;
-			c_append_directory ($Current, $str1, $str2);
+			eif_append_directory ($Current, $str1, $str2);
 		ensure
 			valid_file_name: is_valid
 		end
@@ -88,7 +92,7 @@ feature
 			end
 			str1 := to_c;
 			str2 := directory_name.to_c;
-			c_set_directory ($Current, $str1, $str2);
+			eif_set_directory ($Current, $str1, $str2);
 		ensure
 			valid_file_name: is_valid
 		end
@@ -113,6 +117,20 @@ feature
 			valid_file_name: is_valid
 		end
 
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is the path name equal to `other'?
+		local
+			o_area: like area;
+			i: INTEGER
+		do
+			if other.count = count then
+				o_area := other.area
+				Result := eif_path_name_compare ($area, $o_area, count)
+			end
+		end
+
 feature
 
 	is_directory_name_valid (dir_name: STRING): BOOLEAN is
@@ -123,7 +141,7 @@ feature
 			any: ANY
 		do
 			any := dir_name.to_c;
-			Result := c_is_directory_name_valid ($any);
+			Result := eif_is_directory_name_valid ($any);
 		end
 
 	is_volume_name_valid (vol_name: STRING): BOOLEAN is
@@ -134,7 +152,7 @@ feature
 			any: ANY
 		do
 			any := vol_name.to_c;
-			Result := c_is_volume_name_valid ($any);
+			Result := eif_is_volume_name_valid ($any);
 		end
 
 	is_valid: BOOLEAN is
@@ -144,22 +162,37 @@ feature
 
 feature {NONE} -- Externals
 
-	c_is_volume_name_valid (p: POINTER): BOOLEAN is
+	eif_is_volume_name_valid (p: POINTER): BOOLEAN is
 		external
 			"C"
 		end
 
-	c_is_directory_name_valid (p: POINTER): BOOLEAN is
+	eif_is_directory_name_valid (p: POINTER): BOOLEAN is
 		external
 			"C"
 		end
 
-	c_append_directory (s, p, v: POINTER) is
+	eif_append_directory (s, p, v: POINTER) is
 		external
 			"C"
 		end
 
-	c_set_directory (s, p, v: POINTER) is
+	eif_set_directory (s, p, v: POINTER) is
+		external
+			"C"
+		end
+
+	eif_path_name_compare (s, t: POINTER; length: INTEGER): BOOLEAN is
+		external
+			"C"
+		end
+
+	eif_volumne_name (s: POINTER): STRING is
+		external
+			"C"
+		end
+
+	eif_extracted_paths (s: POINTER): ARRAY [STRING] is
 		external
 			"C"
 		end

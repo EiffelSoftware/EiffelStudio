@@ -9,8 +9,11 @@ class
 
 inherit
 	WEL_BAR
+		redefine
+			on_size
+		end
 
-	WEL_SBS_CONSTANTS
+	WEL_SCROLL_BAR_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -35,6 +38,7 @@ feature {NONE} -- Initialization
 				a_x, a_y, a_width, a_height, an_id,
 				default_pointer)
 			id := an_id
+			create scroll_info_struct.make
 			set_line (Default_line_value)
 			set_page (Default_page_value)
 		ensure
@@ -57,6 +61,8 @@ feature {NONE} -- Initialization
 				a_x, a_y, a_width, a_height, an_id,
 				default_pointer)
 			id := an_id
+			create scroll_info_struct.make
+			is_horizontal := True
 			set_line (Default_line_value)
 			set_page (Default_page_value)
 		ensure
@@ -70,34 +76,42 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_horizontal: BOOLEAN
+			-- Is current scrollbar an horizontal one?
+
 	line: INTEGER
 			-- Number of scroll units per line
 
-	page: INTEGER
+	page: INTEGER is
 			-- Number of scroll units per page
+		do
+			scroll_info_struct.set_mask (Sif_page)
+			cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+			Result := scroll_info_struct.page
+		end
 
 	position: INTEGER is
 			-- Current position of the scroll box
 		do
-			Result := cwin_get_scroll_pos (item, Sb_ctl)
+			scroll_info_struct.set_mask (Sif_pos)
+			cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+			Result := scroll_info_struct.position
 		end
 
 	minimum: INTEGER is
 			-- Minimum position
-		local
-			min, max: INTEGER
 		do
-			cwin_get_scroll_range (item, Sb_ctl, $min, $max)
-			Result := min
+			scroll_info_struct.set_mask (Sif_range)
+			cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+			Result := scroll_info_struct.minimum
 		end
 
 	maximum: INTEGER is
 			-- Maximum position
-		local
-			min, max: INTEGER
 		do
-			cwin_get_scroll_range (item, Sb_ctl, $min, $max)
-			Result := max
+			scroll_info_struct.set_mask (Sif_range)
+			cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+			Result := scroll_info_struct.maximum
 		end
 
 	background_color: WEL_COLOR_REF is
@@ -105,7 +119,7 @@ feature -- Access
 			-- control
 			-- Can be redefined by the user
 		do
-			!! Result.make_system (Color_scrollbar)
+			!! Result.make_system (color_scrollbar)
 		end
 
 feature -- Element change
@@ -113,15 +127,19 @@ feature -- Element change
 	set_position (new_position: INTEGER) is
 			-- Set `position' with `new_position'
 		do
-			cwin_set_scroll_pos (item, Sb_ctl, new_position, True)
+			scroll_info_struct.set_mask (Sif_pos)
+			scroll_info_struct.set_position (new_position)
+			cwin_set_scroll_info (item, Sb_ctl, scroll_info_struct.item, True)
 		end
 
 	set_range (a_minimum, a_maximum: INTEGER) is
 			-- Set `minimum' and `maximum' with
 			-- `a_minimum' and `a_maximum'
 		do
-			cwin_set_scroll_range (item, Sb_ctl,
-				a_minimum, a_maximum, True)
+			scroll_info_struct.set_mask (Sif_range)
+			scroll_info_struct.set_minimum (a_minimum)
+			scroll_info_struct.set_maximum (a_maximum)
+			cwin_set_scroll_info (item, Sb_ctl, scroll_info_struct.item, True)
 		end
 
 	set_line (line_magnitude: INTEGER) is
@@ -139,7 +157,9 @@ feature -- Element change
 		require
 			positive_page: page >= 0
 		do
-			page := page_magnitude
+			scroll_info_struct.set_mask (Sif_page)
+			scroll_info_struct.set_page (page_magnitude)
+			cwin_set_scroll_info (item, Sb_ctl, scroll_info_struct.item, True)
 		ensure
 			page_set: page = page_magnitude
 		end
@@ -155,6 +175,7 @@ feature -- Basic operations
 			exists: exists
 		local
 			new_pos: INTEGER
+			old_pos: INTEGER
 		do
 			new_pos := position
 			if scroll_code = Sb_pagedown then
@@ -180,6 +201,12 @@ feature -- Basic operations
 				new_pos := minimum
 			end
 			set_position (new_pos)
+		end
+
+	on_size (size_type, a_width, a_height: INTEGER) is
+		do
+			scroll_info_struct.set_mask (Sif_range + Sif_page)
+			cwin_set_scroll_info (item, Sb_Ctl, scroll_info_struct.item, True)
 		end
 
 feature {NONE} -- Inapplicable
@@ -208,44 +235,26 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		once
-			Result := Ws_visible + Ws_child + Ws_group + Ws_tabstop
+			Result := Ws_visible + Ws_child + Ws_group
 		end
+
+	scroll_info_struct: WEL_SCROLL_BAR_INFO
+		-- Associated SCROLLINFO struct to current toolbar.
 
 feature {NONE} -- Externals
 
-	cwin_set_scroll_pos (hwnd: POINTER; flag, a_position: INTEGER;
-			redraw: BOOLEAN) is
-			-- SDK SetScrollPos
+	cwin_set_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER; redraw: BOOLEAN) is
 		external
-			"C [macro <wel.h>] (HWND, int, int, BOOL)"
+			"C [macro <windows.h>] (HWND, int, LPCSCROLLINFO, BOOL)"
 		alias
-			"SetScrollPos"
+			"SetScrollInfo"
 		end
 
-	cwin_set_scroll_range (hwnd: POINTER; flag, min, max: INTEGER;
-			redraw: BOOLEAN) is
-			-- SDK SetScrollRange
+	cwin_get_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER) is
 		external
-			"C [macro <wel.h>] (HWND, int, int, int, BOOL)"
+			"C [macro <windows.h>] (HWND, int, LPCSCROLLINFO)"
 		alias
-			"SetScrollRange"
-		end
-
-	cwin_get_scroll_pos (hwnd: POINTER; flag: INTEGER): INTEGER is
-			-- SDK GetScrollPos
-		external
-			"C [macro <wel.h>] (HWND, int): EIF_INTEGER"
-		alias
-			"GetScrollPos"
-		end
-
-	cwin_get_scroll_range (hwnd: POINTER; flag: INTEGER;
-			min, max: POINTER) is
-			-- SDK GetScrollRange
-		external
-			"C [macro <wel.h>] (HWND, int, LPINT, LPINT)"
-		alias
-			"GetScrollRange"
+			"GetScrollInfo"
 		end
 
 invariant

@@ -58,6 +58,8 @@ feature -- Implementation
 			my_window.set_accept_button (my_button)
 			my_window.set_accessible_description (("Simple Form that demonstrates accessibility").to_cil)
 --			set_client_size_size (create {DRAWING_SIZE}.make_from_width_and_height (392, 117))
+			l_size.make_from_width_and_height (392, 117)
+			my_window.set_client_size (l_size)
 			
 				-- Initialize my_button.
 			my_button.set_accessible_description (("Once you've entered some text push this my_button").to_cil)

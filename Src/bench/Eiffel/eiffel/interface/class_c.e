@@ -205,6 +205,119 @@ feature -- Access
 
 feature -- Action
 
+	remove_c_generated_files is
+			-- Remove the C generated files when we remove `Current' from system.
+		local
+			retried, file_exists: BOOLEAN
+			l_types: TYPE_LIST
+			cl_type: CLASS_TYPE
+			object_name: STRING
+			description_dir, feature_tbl_dir, code_dir: DIRECTORY_NAME
+			generation_dir: DIRECTORY_NAME
+			dir_name: STRING
+			c_file_name: FILE_NAME
+			packet_nb: INTEGER
+			file: PLAIN_TEXT_FILE
+			finished_file_name: FILE_NAME
+			finished_file: PLAIN_TEXT_FILE
+		do
+			if not retried and System.makefile_generator /= Void then
+				!! generation_dir.make_from_string (Workbench_generation_path)
+				
+				from
+					l_types := types
+					l_types.start
+				until
+					l_types.after
+				loop
+					cl_type := l_types.item
+					if not cl_type.is_precompiled then
+						packet_nb := cl_type.packet_number
+	
+							-- Descriptor file removal
+						object_name := clone (Descriptor_suffix)
+						object_name.append_integer (packet_nb)
+						!! c_file_name.make_from_string (generation_dir)
+						c_file_name.extend (object_name)
+						object_name := cl_type.base_file_name
+						object_name.append_character (Descriptor_file_suffix)
+						object_name.append (Dot_c)
+						finished_file_name := clone (c_file_name)
+						c_file_name.set_file_name (object_name)
+						!! file.make (c_file_name)
+						file_exists := file.exists
+						if file_exists and then file.is_writable then
+							file.delete
+						end
+						if file_exists then
+								-- We delete `finished' only if there was a file to delete
+								-- If there was no file, maybe it was simply a melted class.
+							finished_file_name.set_file_name ("finished")
+							!! finished_file.make (finished_file_name)
+							if finished_file.exists and then finished_file.is_writable then
+								finished_file.delete
+							end
+						end
+	
+							-- C Code file removal
+						!! c_file_name.make_from_string (generation_dir)
+						object_name := clone (Class_suffix)
+						object_name.append_integer (packet_nb)
+						c_file_name.extend (object_name)
+						finished_file_name := clone (c_file_name)
+						object_name := cl_type.base_file_name
+						if cl_type.has_cpp_externals then
+							object_name.append (Dot_cpp)
+						else
+							object_name.append (Dot_c)
+						end
+						c_file_name.set_file_name (object_name)
+						!! file.make (c_file_name)
+						file_exists := file.exists
+						if file_exists and then file.is_writable then
+							file.delete
+						end
+						if file_exists then
+								-- We delete `finished' only if there was a file to delete
+								-- If there was no file, maybe it was simply a melted class.
+							finished_file_name.set_file_name ("finished")
+							!! finished_file.make (finished_file_name)
+							if finished_file.exists and then finished_file.is_writable then
+								finished_file.delete
+							end
+						end
+					end
+					l_types.forth
+				end
+
+				!! c_file_name.make_from_string (generation_dir)
+				object_name := clone (Feature_table_suffix)
+				object_name.append_integer (packet_number)
+				c_file_name.extend (object_name)
+				finished_file_name := clone (c_file_name)
+				object_name := base_file_name
+				object_name.append_integer (id.id)
+				object_name.append_character (Feature_table_file_suffix)
+				object_name.append (Dot_c)
+				c_file_name.set_file_name (object_name)
+				!! file.make (c_file_name)
+				file_exists := file.exists
+				if file_exists and then file.is_writable then
+					file.delete
+				end
+				if file_exists then
+					finished_file_name.set_file_name ("finished")
+					!! finished_file.make (finished_file_name)
+					if finished_file.exists and then finished_file.is_writable then
+						finished_file.delete
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	build_ast: CLASS_AS is
 			-- Parse the file and generate the AST
 		local
@@ -1499,24 +1612,35 @@ feature
 			subdirectory: STRING
 			dir: DIRECTORY
 			f_name: FILE_NAME
-			d_name: DIRECTORY_NAME
+			dir_name: DIRECTORY_NAME
+			finished_file: PLAIN_TEXT_FILE
+			finished_file_name: FILE_NAME
 		do
 			if System.in_final_mode then
-				!!d_name.make_from_string (Final_generation_path)
+				Result := Final_generation_path
 			else
-				!!d_name.make_from_string (Workbench_generation_path)
+				Result := Workbench_generation_path
 			end
-			!!subdirectory.make (5)
+			!! subdirectory.make (5)
 			subdirectory.append (Feature_table_suffix)
 			subdirectory.append_integer (packet_number)
-			d_name.extend (subdirectory)
-			!!dir.make (d_name)
+
+			!! dir_name.make_from_string (Result)
+			dir_name.extend (subdirectory)
+			!! dir.make (dir_name)
 			if not dir.exists then	
 				dir.create_dir
 			end
-			!!f_name.make_from_string (d_name)
+			!! f_name.make_from_string (dir_name)
 			f_name.set_file_name (base_file_name)
 			Result := f_name
+
+			!! finished_file_name.make_from_string (dir_name)
+			finished_file_name.set_file_name ("finished")
+			!! finished_file.make (finished_file_name)
+			if finished_file.exists and then finished_file.is_writable then
+				finished_file.delete	
+			end
 		end
 
 	base_file_name: STRING is

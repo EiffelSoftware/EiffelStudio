@@ -185,7 +185,7 @@ feature -- Implementation
 	update is
 		do
 			old_update
-			command_instantiator.update_command
+			command_instantiator_generator.update_command
 		end
 
 feature {NONE} -- Features of QUEST_POPUPER

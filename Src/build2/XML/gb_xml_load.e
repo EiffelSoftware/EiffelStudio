@@ -9,10 +9,6 @@ class
 	GB_XML_LOAD
 	
 inherit
-	TOE_TREE_FACTORY
-		export
-			{NONE} all
-		end	
 	
 	GB_XML_UTILITIES
 		export
@@ -74,7 +70,13 @@ inherit
 	GB_POST_LOAD_OBJECT_EXPANDER
 		export
 			{NONE} all
-		end	
+		end
+		
+	XM_CALLBACKS_FILTER_FACTORY
+		export
+			{NONE} all 
+		end
+
 
 feature -- Basic operation
 
@@ -85,8 +87,6 @@ feature -- Basic operation
 			System_status.enable_loading_project
 			
 			initialize_load_output
-				-- Do initialization necessary
-			parser := create_tree_parser
 
 			--|FIXME this is a test to see whether either of these windows
 			--| is shown while executing this code. I think that this is now impossible
@@ -123,30 +123,36 @@ feature -- Basic operation
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	rebuild_window (window_object: GB_TITLED_WINDOW_OBJECT; window: XML_ELEMENT) is
+	rebuild_window (window_object: GB_TITLED_WINDOW_OBJECT; window: XM_ELEMENT) is
 			-- Rebuild properties of `window_object' from `window'.
 			-- Note that the handling of children, and other miscellaneous operations
 			-- must be handled externally. This will simply reset `window_object' from `window'.
+		require
+			window_object_not_void: window_object /= Void
+			window_not_void: window /= Void
 		do
 			internal_build_window (window, "", window_object)
 		end
 		
-	build_window (window: XML_ELEMENT; directory_name: STRING) is
+	build_window (window: XM_ELEMENT; directory_name: STRING) is
 			-- Build a new window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
 			-- window selector.
+		require
+			window_not_void: window /= Void
+			directory_not_void: directory_name /= Void
 		do
 			internal_build_window (window, directory_name, Void)
 		end
 
-	internal_build_window (window: XML_ELEMENT; directory_name: STRING; titled_window_object: GB_TITLED_WINDOW_OBJECT) is
+	internal_build_window (window: XM_ELEMENT; directory_name: STRING; titled_window_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Build a window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
 			-- window selector.
 		local
-			current_element: XML_ELEMENT
+			current_element: XM_ELEMENT
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
 			window_object: GB_TITLED_WINDOW_OBJECT
@@ -155,7 +161,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			if titled_window_object = Void then
 					-- As `titled_window_object' = Void, it means that we are building a new object,
 					-- and hence we must create it accordingly.
-				window_object := object_handler.add_root_window (window.attribute_by_name (type_string).value.to_utf8)
+				window_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
 				if not directory_name.is_empty then
 						--| FIXME should probably add a procedure in the directory item to handle this.
 					directory_item := Window_selector.directory_object_from_name (directory_name)
@@ -176,7 +182,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			loop
 				current_element ?= window.item_for_iteration
 				if current_element /= Void then
-					current_name := current_element.name.to_utf8
+					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
 						if titled_window_object = Void then
 								-- As `titled_window_object' = Void it means we must rebuild all the children,
@@ -216,16 +222,16 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			end
 		end
 
-	retrieve_new_object (element: XML_ELEMENT; object: GB_OBJECT; pos: INTEGER): GB_OBJECT is
+	retrieve_new_object (element: XM_ELEMENT; object: GB_OBJECT; pos: INTEGER): GB_OBJECT is
 			-- Build a new object from information in `element', into `object' at position `pos'.
 			-- `Result' is the new object.
 		require
 			element_not_void: element /= Void
-			element_type_is_item: element.name.to_utf8.is_equal (Item_string)
+			element_type_is_item: element.name.is_equal (Item_string)
 		local
 			new_object: GB_OBJECT
 		do
-			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value.to_utf8)
+			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
 			Result := new_object
 			object_handler.add_object (object, new_object, pos)
 			modify_from_xml (element, new_object)
@@ -233,23 +239,23 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 		
-	build_new_object (element: XML_ELEMENT; object: GB_OBJECT) is
+	build_new_object (element: XM_ELEMENT; object: GB_OBJECT) is
 			-- Build a new object from information in `element' into `object'.
 		require
 			element_not_void: element /= Void
-			element_type_is_item: element.name.to_utf8.is_equal (Item_string)
+			element_type_is_item: element.name.is_equal (Item_string)
 		local
 			new_object: GB_OBJECT
 		do
-			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value.to_utf8)
+			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
 			object_handler.add_object (object, new_object, object.layout_item.count + 1)
 			modify_from_xml (element, new_object)
 		end
 		
-	modify_from_xml (element: XML_ELEMENT; object: GB_OBJECT) is
+	modify_from_xml (element: XM_ELEMENT; object: GB_OBJECT) is
 			-- Update properties of `object' based on information in `element'.
 		local
-			current_element: XML_ELEMENT
+			current_element: XM_ELEMENT
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
 			display_object: GB_DISPLAY_OBJECT
@@ -262,7 +268,7 @@ feature {NONE} -- Implementation
 				Application.process_events
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
-					current_name := current_element.name.to_utf8
+					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
 							-- The element represents an item, so we must add new objects.
 						build_new_object (current_element, object)
@@ -305,15 +311,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	extract_event_information (element: XML_ELEMENT; object: GB_OBJECT) is
+	extract_event_information (element: XM_ELEMENT; object: GB_OBJECT) is
 			-- Generate event information into `object', from `element'.
 		require
 			element_not_void: element /= Void
-			element_type_is_events: element.name.to_utf8.is_equal (Events_string)
+			element_type_is_events: element.name.is_equal (Events_string)
 		local
-			current_element: XML_ELEMENT
+			current_element: XM_ELEMENT
 			current_name: STRING
-			current_data_element: XML_CHARACTER_DATA
+			current_data_element: XM_CHARACTER_DATA
 			data: STRING
 		do
 			from
@@ -323,7 +329,7 @@ feature {NONE} -- Implementation
 			loop
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
-					current_name := current_element.name.to_utf8
+					current_name := current_element.name
 					if current_name.is_equal (Event_string) then
 						from
 							current_element.start
@@ -332,7 +338,7 @@ feature {NONE} -- Implementation
 						loop
 							current_data_element ?= current_element.item_for_iteration
 							if current_data_element /= Void then
-								data := current_data_element.content.to_utf8
+								data := current_data_element.content
 									-- Add data into `object'.
 								object.events.extend (string_to_action_sequence_info (data))
 							end
@@ -347,14 +353,14 @@ feature {NONE} -- Implementation
 	create_system is
 			-- Create a system from the parsed XML file.
 		local
-			application_element: XML_ELEMENT
-			window_element: XML_ELEMENT
-			current_element: XML_ELEMENT
+			application_element: XM_ELEMENT
+			window_element: XM_ELEMENT
+			current_element: XM_ELEMENT
 			current_name: STRING
 			current_type: STRING
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
-			application_element := parser.document.root_element
+			application_element := pipe_callback.document.root_element
 			from
 				application_element.start
 			until
@@ -362,9 +368,9 @@ feature {NONE} -- Implementation
 			loop
 				current_element ?= application_element.item_for_iteration
 				if current_element /= Void then
-					current_name := current_element.name.to_utf8
+					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
-						current_type := current_element.attribute_by_name (type_string).value.to_utf8
+						current_type := current_element.attribute_by_name (type_string).value
 						if current_type.is_equal (directory_string) then
 							from
 								current_element.start
@@ -373,7 +379,7 @@ feature {NONE} -- Implementation
 							loop
 								window_element ?= current_element.item_for_iteration
 								if window_element /= Void then
-									current_name := window_element.name.to_utf8
+									current_name := window_element.name
 									if current_name.is_equal (Internal_properties_string)  then
 										create directory_item.make_with_name ("")
 										directory_item.modify_from_xml (window_element)
@@ -419,20 +425,30 @@ feature {NONE} -- Implementation
 				create_system
 			end
 		end
-		
+
 	parse_file (a_filename: STRING) is
 			-- Parse XML file `filename' with `parser'.
 		local
 			file: RAW_FILE
 			buffer: STRING
+			l_concat_filter: XM_CONTENT_CONCATENATOR
 		do
 			create file.make_open_read (a_filename)
 			create buffer.make (file.count) 
 			file.start
 			file.read_stream (file.count)
 			buffer := file.last_string
+			create l_concat_filter.make_null
+			create parser.make
+			parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, pipe_callback.start>>))
 			parser.parse_from_string (buffer)
-			parser.set_end_of_document
+			parser.finish_incremental
+		end
+		
+	pipe_callback: XM_TREE_CALLBACKS_PIPE is
+			-- Create unique callback pipe.
+		once
+			create Result.make
 		end
 		
 	initialize_load_output is
@@ -471,11 +487,12 @@ feature {NONE} -- Implementation
 		end
 
 	load_timer: EV_TIMEOUT
+		-- A timeout which times the animation for the status bar.
 
-	parser: XML_TREE_PARSER
+	parser: XM_EIFFEL_PARSER
 		-- XML tree parser.
 		
-	document: XML_DOCUMENT
+	document: XM_DOCUMENT
 		-- XML document generated from created window.
 
 end -- class GB_XML_LOAD

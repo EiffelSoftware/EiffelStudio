@@ -13,21 +13,26 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: like node; s, e: INTEGER) is
+	initialize (n: like node; l, s, e: INTEGER) is
 			-- Create a new clickable element for `n'.
 		require
 			n_not_void: n /= Void
 		do
 			node := n
+			start_line_number := l
 			start_position := s
 			end_position := e
 		ensure
 			node_set: node = n
+			start_line_number_set: start_line_number = l
 			start_position_set: start_position = s
 			end_position_set: end_position = e
 		end
 
 feature -- Access
+
+	start_line_number: INTEGER
+			-- Line number of clickable.
 
 	start_position: INTEGER
 			-- Start position of clickable.

@@ -9,16 +9,11 @@ class
 inherit
 	COMMON_PATH
 
---	KEY_ENCODER
---		export
---			{NONE} all
---		end
-
 feature {TYPE_PRINTER} -- Access
 
 	relative_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING is
-			-- Path to folder containing `an_assembly' types relative to `Eac_path'
-			-- Always return a value even if `an_assembly' in not in EAC
+			-- Path to folder containing `an_assembly' types relative to `Eac_path'.
+			-- Always return a value even if `an_assembly' in not in EAC.
 		require
 			non_void_assembly: an_assembly /= Void
 		local
@@ -47,7 +42,7 @@ feature {TYPE_PRINTER} -- Access
 	
 	absolute_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING is
 			-- Absolute path to folder containing `an_assembly' types.
-			-- Always return a value even if `an_assembly' in not in EAC
+			-- Always return a value even if `an_assembly' in not in EAC.
 		require
 			non_void_assembly: an_assembly /= Void
 		local
@@ -64,8 +59,7 @@ feature {TYPE_PRINTER} -- Access
 		end
 
 	relative_type_path (assembly_relative_path: STRING; a_dotnet_type_name: STRING): STRING is
-			-- Path to file describing `t' relative to `Eac_path'
-			-- Always return a value even if `t' in not in EAC
+			-- Path to file describing `t' relative to `Eac_path'.
 		require
 			non_void_a_dotnet_type_name: a_dotnet_type_name /= Void
 			not_empty_a_dotnet_type_name: not a_dotnet_type_name.is_empty
@@ -78,13 +72,12 @@ feature {TYPE_PRINTER} -- Access
 			Result.append (a_dotnet_type_name)
 			Result.append (".xml")
 		ensure
-			non_void_path: Result /= Void
---			ends_with_xml_extention: Result.tail (4).is_equal (".xml")
+			non_void_result: Result /= Void
 		end
 
 	absolute_type_path (assembly_relative_path: STRING; a_dotnet_type_name: STRING): STRING is
-			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'
-			-- Always return a value even if `t' in not in EAC
+			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'.
+			-- Return Void if `a_dotnet_type_name' is not in EAC.
 		require
 			non_void_a_dotnet_type_name: a_dotnet_type_name /= Void
 			not_empty_a_dotnet_type_name: not a_dotnet_type_name.is_empty
@@ -98,14 +91,17 @@ feature {TYPE_PRINTER} -- Access
 			Result.append (Eiffel_path)
 			Result.append (Eac_path)
 			Result.append (type_relative_path)
+
+			if not (create {RAW_FILE}.make (Result)).exists then
+				Result := Void
+			end
 		ensure
-			non_void_path: Result /= Void
---			ends_with_xml_extention: Result.tail (4) = (".xml")
+			valid_path: Result /= Void implies (create {RAW_FILE}.make (Result)).exists
 		end
 
 	absolute_referenced_assemblies_path (an_assembly: CONSUMED_ASSEMBLY): STRING is
 			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'
-			-- Always return a value even if `t' in not in EAC
+			-- Return Void if `an_assembly' is not in EAC.
 		require
 			non_void_an_assembly: an_assembly /= Void
 		local
@@ -117,68 +113,87 @@ feature {TYPE_PRINTER} -- Access
 			Result.append (Eac_path)
 			Result.append (assembly_relative_path)
 			Result.append (Assembly_mapping_file_name)
+
+			if not (create {RAW_FILE}.make (Result)).exists then
+				Result := Void
+			end
 		ensure
-			non_void_path: Result /= Void
---			ends_with_xml_extention: Result.tail (4) = (".xml")
+			valid_path: Result /= Void implies (create {RAW_FILE}.make (Result)).exists
 		end
 
 feature {MAIN_WINDOW} -- Access
 
 	absolute_info_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING is
-			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'
-			-- Always return a value even if `t' in not in EAC
+			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'.
+			-- Return Void if `an_assembly' is not in EAC.
 		require
 			non_void_an_assembly: an_assembly /= Void
 		local
 			assembly_relative_path: STRING
 		do
 			assembly_relative_path := relative_assembly_path (an_assembly)
-			create Result.make (Eiffel_path.count + Eac_path.count + assembly_relative_path.count + Assembly_types_file_name.count + 4)
+			create Result.make (Eiffel_path.count + Eac_path.count + assembly_relative_path.count + Assembly_original_types_file_name.count + 4)
 			Result.append (Eiffel_path)
 			Result.append (Eac_path)
 			Result.append (assembly_relative_path)
-			Result.append (Assembly_types_file_name)
+			Result.append (Assembly_original_types_file_name)
+			
+			if not (create {RAW_FILE}.make (Result)).exists then
+				create Result.make (Eiffel_path.count + Eac_path.count + assembly_relative_path.count + Assembly_types_file_name.count + 4)
+				Result.append (Eiffel_path)
+				Result.append (Eac_path)
+				Result.append (assembly_relative_path)
+				Result.append (Assembly_types_file_name)
+				
+				if not (create {RAW_FILE}.make (Result)).exists then
+					Result := Void
+				end
+			end
 		ensure
-			non_void_path: Result /= Void
---			ends_with_xml_extention: Result.tail (4) = (".xml")
+			valid_path: Result /= Void implies (create {RAW_FILE}.make (Result)).exists
+		end
+		
+	absolute_info_assemblies_path: STRING is
+			-- Absolute path to EAC assemblies file info.
+		once
+			create Result.make (Eiffel_path.count + Eac_path.count + Info_path.count)
+			Result.append (Eiffel_path)
+			Result.append (Eac_path)
+			Result.append (Info_path)
+
+			if not (create {RAW_FILE}.make (Result)).exists then
+				Result := Void
+			end
+		ensure
+			valid_path: Result /= Void implies (create {RAW_FILE}.make (Result)).exists
 		end
 
 feature {NONE} -- Implementation
 
 	Info_path: STRING is "info.xml"
 			-- Path to EAC info file relative to `Eac_path'.
-
-	Absolute_info_path: STRING is
-			-- Absolute path to EAC assemblies file info
-		once
-			create Result.make (Eiffel_path.count + Eac_path.count + Info_path.count)
-			Result.append (Eiffel_path)
-			Result.append (Eac_path)
-			Result.append (Info_path)
-		ensure
-			exist: Result /= Void
---			ends_with_xml_extention: Result.tail (4) = (".xml")
-		end
 		
 	Ise_key: STRING is "ISE_EIFFEL"
-			-- Environment variable $ISE_EIFFEL
+			-- Environment variable $ISE_EIFFEL.
 
 	Eac_path: STRING is "dotnet\assemblies\"
-			-- EAC path relative to $ISE_EIFFEL
+			-- EAC path relative to $ISE_EIFFEL.
+
+	Assembly_original_types_file_name: STRING is "original_types.xml"
+			-- Original file of types which lists all types in assembly.
 
 feature {NONE} -- Implementation
 
 	Eiffel_path: STRING is
-			-- Path to Eiffel installation
+			-- Path to Eiffel installation.
 		once
---			Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_key)
---			check
---				Ise_eiffel_defined: Result /= Void
---			end
---			if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
---				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
---			end
-			Result := "e:\eac\"
+			Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_key)
+			check
+				Ise_eiffel_defined: Result /= Void
+			end
+			if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
+				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+			end
 		ensure
 			exist: Result /= Void
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator

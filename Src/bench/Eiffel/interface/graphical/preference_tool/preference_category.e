@@ -129,18 +129,6 @@ feature {NONE} -- Properties
 	holder: CATEGORY_HOLDER;
 			-- Holder for the visual aspects
 
-	read_pixmap (file: FILE_NAME): PIXMAP is
-			-- Read pixmap stored in `file'.
-		do
-			!! Result.make
-			Result.read_from_file (file);
-			if not Result.is_valid then
-				io.error.putstring ("Warning: cannot read pixmap file ");
-				io.error.putstring (file);
-				io.error.new_line
-			end
-		end
-
 feature {PREFERENCE_COMMAND} -- Execution
 
 	execute (argument: ANY) is

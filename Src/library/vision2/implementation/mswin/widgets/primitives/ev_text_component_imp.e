@@ -38,10 +38,7 @@ feature {NONE} -- Initialization
 	set_default_minimum_size is
 			-- Called after creation. Set current size and
 			-- notify parent.
-		local
-			log_font: WEL_LOG_FONT
 		do
-			log_font := wel_font.log_font
 			ev_set_minimum_size (
 				maximum_character_width * 4, internal_font_height +
 				total_vertical_padding)

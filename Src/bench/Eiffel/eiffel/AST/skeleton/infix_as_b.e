@@ -14,16 +14,14 @@ inherit
 		undefine
 			temp_name
 		redefine
-			fix_operator, infix "<", internal_name, 
-			main_feature_format
+			fix_operator, infix "<", internal_name
 		end;
 
 	FEATURE_NAME_B
 		undefine
-			is_infix, is_valid, offset, 
-			main_feature_format, simple_format
+			is_infix, is_valid, offset, simple_format
 		redefine
-			format
+			main_feature_format, format
 		end
 
 feature -- Attributes
@@ -73,49 +71,36 @@ feature
 			Result.to_lower;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			if is_frozen then 
-				ctxt.put_text_item (ti_Frozen_keyword);
-				ctxt.put_space
-			end;
-			if is_infix then
-				ctxt.put_text_item (ti_Infix_keyword);
-				ctxt.put_space;
-				ctxt.put_text_item (ti_Double_quote);
-				ctxt.prepare_for_infix (internal_name, void);
-			else
-				ctxt.put_text_item (ti_Prefix_keyword);
-				ctxt.put_space;
-				ctxt.put_text_item (ti_Double_quote);
-				ctxt.prepare_for_prefix (internal_name);
-			end;
-			ctxt.put_fix_name (ctxt.new_types.final_name);
-			ctxt.put_text_item (ti_Double_quote);
-			ctxt.commit;
-		end;
+feature -- Output
 
-	main_feature_format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
+	format (ctxt: FORMAT_CONTEXT_B) is
+			-- Reconstitute text features calls 
+			-- within main features.
 		do
-			ctxt.begin;
 			if is_frozen then
 				ctxt.put_text_item (ti_Frozen_keyword);
 				ctxt.put_space
 			end;
+				-- Use the source type and target type
+				-- of local_adapt
+			ctxt.local_adapt.set_evaluated_type;
 			if is_infix then
-				--ctxt.put_text_item (ti_Infix_keyword);
-				--ctxt.put_space;
-				ctxt.prepare_for_main_infix;
+				ctxt.prepare_for_infix (internal_name, void);
 			else
-				--ctxt.put_text_item (ti_Prefix_keyword);
-				--ctxt.put_space;
-				ctxt.prepare_for_main_prefix;
+				ctxt.prepare_for_prefix (internal_name);
 			end;
-			ctxt.put_main_fix;
-			ctxt.commit;
+			adapt_main_feature (ctxt)
 		end;
-	
-end -- INFIX_AS_B
+
+	main_feature_format (ctxt: FORMAT_CONTEXT_B) is
+			-- Reconstitute text for main features of a class.
+		do
+			if is_frozen then 
+				ctxt.put_text_item (ti_Frozen_keyword);
+				ctxt.put_space
+			end;
+			ctxt.prepare_for_main_feature;
+			adapt_main_feature (ctxt)
+		end;
+
+end -- class INFIX_AS_B

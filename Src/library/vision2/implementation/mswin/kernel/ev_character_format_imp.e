@@ -150,7 +150,7 @@ feature -- Access
 			if flag_set (effects_flag, Cfm_underline) then
 				Result.enable_underlined
 			end
-			Result.set_vertical_offset (point_to_pixel (screen_dc, vertical_offset, 20))
+			Result.set_vertical_offset (vertical_offset)
 			screen_dc.release
 		end
 
@@ -217,7 +217,7 @@ feature -- Status setting
 			else
 				disable_striked_out
 			end
-			set_offset (pixel_to_point (screen_dc, an_effect.vertical_offset) * 20)
+			set_offset (pixel_to_point (screen_dc, an_effect.vertical_offset * 20))
 			
 			screen_dc.release
 		end
@@ -292,7 +292,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 		end
 		
 	vertical_offset: INTEGER is
-			-- Vertical offset of `Current'.
+			-- Vertical offset of `Current' in pixels.
 		local
 			screen_dc: WEL_SCREEN_DC
 		do

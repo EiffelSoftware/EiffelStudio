@@ -224,7 +224,7 @@ feature -- Access
 		end
 
 	field_type (i: INTEGER; object: ANY): INTEGER is
-			-- Type of `i'-th field of `object'
+			-- Abstract type of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
@@ -234,7 +234,7 @@ feature -- Access
 		end
 
 	field_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
-			-- Type of `i'-th field of dynamic type `type_id'
+			-- Abstract type of `i'-th field of dynamic type `type_id'
 		require
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count_of_type (type_id)

@@ -85,13 +85,15 @@ feature -- Execution
 		local
 			fs: FEATURE_STONE;
 			super_melt_cmd: SUPER_MELT;
-			classc: CLASSC_STONE
+			classc: CLASSC_STONE;
+			new_tool: CLASS_W
 		do
 			fs := tool.stone;
 			if argument = control_button_three_action then
 				if fs /= Void and then fs.e_class /= Void then
-					!! classc.make (fs.e_class);
-					Project_tool.receive (classc)
+					new_tool := window_manager.class_window;
+					new_tool.display;
+					new_tool.process_feature (fs)
 				end
 			elseif argument = shift_button_three_action then
 				!! super_melt_cmd.do_nothing;

@@ -47,22 +47,22 @@ feature -- Initialize
 			temp_sig_id := c_signal_connect (
 					list_widget,
 					eiffel_to_c ("leave-notify-event"),
-					~set_is_out (True)
+					agent set_is_out (True)
 			)
 			temp_sig_id := c_signal_connect (
 					list_widget,
 					eiffel_to_c ("enter-notify-event"),
-					~set_is_out (False)
+					agent set_is_out (False)
 			)
 			temp_sig_id := c_signal_connect (
 					visual_widget,
 					eiffel_to_c ("focus-in-event"),
-					~attain_focus
+					agent attain_focus
 			)
 			temp_sig_id := c_signal_connect (
 					visual_widget,
 					eiffel_to_c ("focus-out-event"),
-					~lose_focus
+					agent lose_focus
 			)
 			disable_multiple_selection
 		end
@@ -76,8 +76,13 @@ feature -- Status setting
 
 	ensure_item_visible (an_item: EV_LIST_ITEM) is
 			-- Ensure item `an_index' is visible in `Current'.
+		local
+			an_item_index: INTEGER
 		do
-			--| FIXME To be implemented.
+			an_item_index := index_of (an_item, 1)
+			
+				-- Show the item at position `item_index'
+			C.gtk_clist_moveto (list_widget, an_item_index, 0, 0.0, 1.0)
 		end
 
 	enable_multiple_selection is
@@ -87,15 +92,9 @@ feature -- Status setting
 		do
 			multiple_selection_enabled := True
 			if selection_mode_is_single then
-				C.gtk_list_set_selection_mode (
-					list_widget,
-					C.GTK_SELECTION_MULTIPLE_ENUM
-				)
+				C.gtk_list_set_selection_mode (list_widget, C.GTK_SELECTION_MULTIPLE_ENUM)
 			else
-				C.gtk_list_set_selection_mode (
-					list_widget,
-					C.GTK_SELECTION_EXTENDED_ENUM
-				)
+				C.gtk_list_set_selection_mode (list_widget, C.GTK_SELECTION_EXTENDED_ENUM)
 			end
 		end
 
@@ -107,10 +106,7 @@ feature -- Status setting
 			multiple_selection_enabled := False
 			selection_mode_is_single := True
 			C.gtk_list_unselect_all (list_widget)
-			C.gtk_list_set_selection_mode (
-				list_widget,
-				C.GTK_SELECTION_SINGLE_ENUM
-			)
+			C.gtk_list_set_selection_mode (list_widget, C.GTK_SELECTION_SINGLE_ENUM)
 		end
 		
 	select_item (an_index: INTEGER) is
@@ -153,9 +149,7 @@ feature {NONE} -- Implementation
 			l_item: EV_LIST_ITEM_IMP
 		do
 			switch_to_browse_mode_if_necessary		
-		 	l_item ?= eif_object_from_c (
-				gtk_value_pointer (args)
-			)
+		 	l_item ?= eif_object_from_c (gtk_value_pointer (args))
 			call_select_actions (l_item)
 		end
 
@@ -168,22 +162,12 @@ feature {NONE} -- Implementation
 			if not selection_mode_is_single then
 				if multiple_selection_enabled then
 					sel_items := selected_items
-					if 
-						sel_items = Void 
-							or else
-						selected_items.count <= 1
-					then
-						C.gtk_list_set_selection_mode (
-							list_widget,
-							C.Gtk_selection_multiple_enum
-						)
+					if sel_items = Void or else selected_items.count <= 1 then
+						C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_multiple_enum)
 						selection_mode_is_single := True
 					end
 				else
-					C.gtk_list_set_selection_mode (
-						list_widget,
-						C.Gtk_selection_single_enum
-					)
+					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_single_enum)
 					selection_mode_is_single := True
 				end
 			end
@@ -195,15 +179,9 @@ feature {NONE} -- Implementation
 		do
 			if selection_mode_is_single then
 				if multiple_selection_enabled then
-					C.gtk_list_set_selection_mode (
-						list_widget, 
-						C.Gtk_selection_extended_enum
-					)					
+					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_extended_enum)					
 				else
-					C.gtk_list_set_selection_mode (
-						list_widget,
-						C.Gtk_selection_browse_enum
-					)
+					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_browse_enum)
 				end
 				selection_mode_is_single := False
 			end
@@ -244,13 +222,10 @@ feature {NONE} -- Implementation
 				-- This routine is called when an item loses the focus too.
 				-- The follwing test prevent call to `focus_out_actions' when
 				-- the user has only changed the selected item.
-			if not has_capture
-					and then
-				(is_out or else not button_is_pressed)
-					and then
-				not list_has_been_clicked
-					and then
-				not arrow_used
+			if (not has_capture) and then 
+				(is_out or else not button_is_pressed) and then
+				(not list_has_been_clicked) and then
+				(not arrow_used)
 			then
 				has_focus := False
 				top_level_window_imp.set_focus_widget (Void)
@@ -262,7 +237,7 @@ feature {NONE} -- Implementation
 		end
 
 	is_out: BOOLEAN
-		-- Is the mouse pointer over the list?
+			-- Is the mouse pointer over the list?
 		
 	set_is_out (a_value: BOOLEAN) is
 			-- Assign `a_value' to `is_out'.
@@ -277,15 +252,8 @@ feature {NONE} -- Implementation
 			button_pressed_mask: INTEGER
 			temp_ptr: POINTER
 		do
-			temp_ptr := C.gdk_window_get_pointer (
-								default_pointer,
-								$temp_x,
-								$temp_y,
-								$temp_mask
-							)
-			button_pressed_mask := C.gdk_button1_mask_enum 
-						+ C.gdk_button2_mask_enum
-						+ C.gdk_button3_mask_enum
+			temp_ptr := C.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
+			button_pressed_mask := C.gdk_button1_mask_enum + C.gdk_button2_mask_enum + C.gdk_button3_mask_enum
 			Result := (temp_mask.bit_and (button_pressed_mask)).to_boolean
 		end	
 

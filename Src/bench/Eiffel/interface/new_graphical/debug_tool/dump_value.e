@@ -359,7 +359,7 @@ feature -- Status report
 			elseif type = Type_string_dotnet then
 				Result := "%"" + Character_routines.eiffel_string (value_string) + "%""			
 			else
-				l_str := string_representation (0, Application.displayed_string_size)
+				l_str := truncated_string_representation (0, Application.displayed_string_size)
 				if l_str /= Void then
 					create Result.make (Application.displayed_string_size + 2)
 					Result.append_character ('%"')
@@ -392,9 +392,34 @@ feature -- Status report
 	last_string_representation_length: INTEGER
 			-- Length of last string_representation Result
 
-	string_representation (min, max: INTEGER): STRING is
+	formatted_truncated_string_representation (min, max: INTEGER): STRING is
+		do
+			Result := truncated_string_representation (min, max)
+--			Result.prune_all ('%U')
+			Result.replace_substring_all ("%U", "%%U")
+		end
+		
+	truncated_string_representation (min, max: INTEGER): STRING is
+		do
+			Result := raw_string_representation (min, max)
+			if Result /= Void then
+					--| If what is displayed is less than the count of the STRING object,
+					--| we display `...' to show that there is something more.
+				if (max > 0) and then last_string_representation_length > (max - min + 1) then
+					Result.append ("...")
+				end
+			else
+				Result := "Could not find string representation"
+			end
+		ensure
+			truncated_string_representation_not_void: Result /= Void
+		end
+
+feature {DUMP_VALUE} -- string_representation Implementation
+
+	raw_string_representation (min, max: INTEGER): STRING is
 			-- Get the `debug_output' representation with bounds from `min' and `max'.
-			-- Special characters are not converted but '%U's are removed.
+			-- Special characters are not converted but '%U's are replaced by '%/1/' .
 		require
 			object_with_debug_output: address /= Void and has_formatted_output
 		do
@@ -411,21 +436,7 @@ feature -- Status report
 			else
 				Result := classic_string_representation (min, max)
 			end
-			if Result /= Void then
-				Result.prune_all ('%U')
-					--| If what is displayed is less than the count of the STRING object,
-					--| we display `...' to show that there is something more.
-				if (max > 0) and then last_string_representation_length > (max - min + 1) then
-					Result.append ("...")
-				end
-			else
-				Result := "Could not find string representation"
-			end
-		ensure
-			string_representation_not_void: Result /= Void
 		end
-			
-feature {DUMP_VALUE} -- string_representation Implementation
 
 	classic_string_representation (min, max: INTEGER): STRING is
 			-- String representation for classic value

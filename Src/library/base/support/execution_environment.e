@@ -43,7 +43,7 @@ feature -- Access
 			ext: ANY;
 		do
 			ext := s.to_c
-			ext := getenv($ext)
+			ext := eif_getenv($ext)
 			if ext /= Void then
 				!!Result.make (0)
 				Result.from_c (ext)
@@ -92,7 +92,7 @@ feature -- Status setting
 
 feature {NONE} -- External
 
-	getenv (s : ANY): ANY is
+	eif_getenv (s : ANY): ANY is
 			-- Value of environment variable `s'
 		external
 			"C"	

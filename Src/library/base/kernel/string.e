@@ -838,8 +838,6 @@ feature {STRING} -- Implementation
 			-- Length of the C string: `c_string'
 		external
 			"C"
-		alias
-			"strlen"
 		end;
 
 	str_cmp (this, other: like area; this_len, other_len: INTEGER ): INTEGER is

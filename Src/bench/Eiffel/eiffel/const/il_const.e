@@ -69,5 +69,6 @@ feature -- Constants for variable kind
 	il_u2: INTEGER is 39
 	il_u4: INTEGER is 40
 	il_u8: INTEGER is 41
+	il_expanded: INTEGER is 42
 	
 end -- class IL_CONST

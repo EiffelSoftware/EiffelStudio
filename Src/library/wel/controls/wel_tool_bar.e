@@ -273,7 +273,7 @@ feature -- Status report
 		require
 			tooltip_exists: tooltip_exists
 		do
-			Result ?= windows.item (cwel_integer_to_pointer (
+			Result ?= window_of_item (cwel_integer_to_pointer (
 				cwin_send_message_result (item, Tb_gettooltips,
 				0, 0)))
 		end

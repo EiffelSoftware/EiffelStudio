@@ -31,11 +31,11 @@ feature {NONE} -- Implementation
 			-- Insert `v' at position `i'.
 		do
 			add_to_container (v)
+			child_array.go_i_th (i)
+			child_array.put_left (v)
 			if i < count then
 				reorder_child (v, i)
 			end
-			child_array.go_i_th (i)
-			child_array.put_left (v)
 			on_new_item (v)
 		end
 

@@ -1,8 +1,12 @@
 class INLINER
 
 inherit
-	SHARED_SERVER;
+	SHARED_SERVER
 	COMPILER_EXPORTER
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
 
 creation
 	make
@@ -158,7 +162,7 @@ feature -- Status
 					cid := bindex_cid_table.item (body_index)
 					wc := System.class_of_id (cid)
 					Result := not (wc.is_basic or else (wc.is_special
-							and then byte_code.feature_name.is_equal ("make_area")))
+							and then byte_code.feature_name_id = Names_heap.make_area_name_id))
 				end
 
 				if Result then

@@ -6,7 +6,6 @@ indexing
 class CLASS_C
 
 inherit
-
 	SHARED_COUNTER
 
 	SHARED_AST_CONTEXT
@@ -64,6 +63,11 @@ inherit
 		rename
 			id as class_id,
 			set_id as set_class_id
+		end
+
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
 		end
 
 creation

@@ -17,6 +17,11 @@ inherit
 
 	COMPILER_EXPORTER
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -44,18 +49,21 @@ feature
 		local
 			array_class: CLASS_C
 			ftable: FEATURE_TABLE
+			l_names_heap: like Names_heap
 		do
 			array_class := System.array_class.compiled_class
 
 			ftable := array_class.feature_table
+			l_names_heap := Names_heap
+
 				-- get the rout_ids of the special/unsafe features
-			put_rout_id := ftable.item ("put").rout_id_set.first
-			item_rout_id := ftable.item ("item").rout_id_set.first
-			infix_at_rout_id := ftable.item ("_infix_@").rout_id_set.first
-			make_area_rout_id := ftable.item ("make_area").rout_id_set.first
-			set_area_rout_id := ftable.item ("set_area").rout_id_set.first
-			lower_rout_id := ftable.item ("lower").rout_id_set.first
-			area_rout_id := ftable.item ("area").rout_id_set.first
+			put_rout_id := ftable.item_id (l_names_heap.put_name_id).rout_id_set.first
+			item_rout_id := ftable.item_id (l_names_heap.item_name_id).rout_id_set.first
+			infix_at_rout_id := ftable.item_id (l_names_heap.infix_at_name_id).rout_id_set.first
+			make_area_rout_id := ftable.item_id (l_names_heap.make_area_name_id).rout_id_set.first
+			set_area_rout_id := ftable.item_id (l_names_heap.set_area_name_id).rout_id_set.first
+			lower_rout_id := ftable.item_id (l_names_heap.lower_name_id).rout_id_set.first
+			area_rout_id := ftable.item_id (l_names_heap.area_name_id).rout_id_set.first
 			
 			!!array_descendants.make
 
@@ -195,7 +203,7 @@ end
 				-- features from ANY (hints to stop propagation)
 				-- Does it work?
 			a_class := System.any_class.compiled_class
-			a_feature := a_class.feature_table.item ("clone")
+			a_feature := a_class.feature_table.item_id (Names_heap.clone_name_id)
 			!!dep.make (a_class.class_id, a_feature)
 			unsafe_features.extend (dep)
 			unsafe_body_indexes.put (True, a_feature.body_index)

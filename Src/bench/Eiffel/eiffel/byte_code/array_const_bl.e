@@ -3,7 +3,6 @@
 class ARRAY_CONST_BL
 
 inherit
-
 	ARRAY_CONST_B
 		redefine
 			analyze, generate, 
@@ -265,7 +264,7 @@ feature {NONE} -- C code generation
 			internal_name: STRING
 			rout_id: INTEGER
 		do
-			rout_id := real_ty.base_class.feature_table.item ("make").rout_id_set.first;
+			rout_id := real_ty.base_class.feature_table.item_id (Names_heap.make_name_id).rout_id_set.first;
 			rout_table ?= Eiffel_table.poly_table (rout_id);
 
 				-- Generate the signature of the function
@@ -302,7 +301,7 @@ feature {NONE} -- C code generation
 		do
 			base_class := real_ty.base_class;
 			f_table := base_class.feature_table;
-			feat_i := f_table.item ("make");
+			feat_i := f_table.item_id (Names_heap.make_name_id);
 			buf := buffer
 			buf.putstring ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))");
 			if 

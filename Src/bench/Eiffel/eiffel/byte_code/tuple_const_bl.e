@@ -315,7 +315,7 @@ feature {NONE} -- C code generation
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			rout_id := real_ty.base_class.feature_table.item ("make").rout_id_set.first
+			rout_id := real_ty.base_class.feature_table.item_id (Names_heap.make_name_id).rout_id_set.first
 			rout_table ?= Eiffel_table.poly_table (rout_id)
 
 				-- Generate the signature of the function
@@ -352,7 +352,7 @@ feature {NONE} -- C code generation
 			buf := buffer
 			base_class := real_ty.base_class
 			f_table := base_class.feature_table
-			feat_i := f_table.item ("make")
+			feat_i := f_table.item_id (Names_heap.make_name_id)
 			buf.putstring ("(FUNCTION_CAST(void, (EIF_REFERENCE))")
 			if 
 				Compilation_modes.is_precompiling or else

@@ -62,7 +62,7 @@ feature
 				loop
 					creat_feat := feature_table.item (creators.key_for_iteration);
 					if
-						creat_feat.feature_name.is_equal (Make_signature.feature_name) and then
+						creat_feat.feature_name_id = Make_signature.feature_name_id and then
 						creat_feat.same_signature (Make_signature)
 					then
 						done := True
@@ -78,7 +78,7 @@ feature
 			end;
 
 			-- Fourth, presence of a procedure `set_count'.
-			set_count_feat := feature_table.item ("set_count");
+			set_count_feat := feature_table.item_id (Names_heap.set_count_name_id);
 			if 	set_count_feat = Void
 				or else
 				(not set_count_feat.same_signature (Set_count_signature))
@@ -111,7 +111,7 @@ feature
 			args.put_i_th (Integer_type, 1);
 			!!Result;
 			Result.set_arguments (args);
-			Result.set_feature_name ("make");
+			Result.set_feature_name_id (Names_heap.make_name_id);
 		end;
 
 	Set_count_signature: DYN_PROC_I is
@@ -123,7 +123,7 @@ feature
 			args.put_i_th (Integer_type, 1);
 			!!Result;
 			Result.set_arguments (args);
-			Result.set_feature_name ("set_count");
+			Result.set_feature_name_id (Names_heap.set_count_name_id);
 		end;
 
 	mark_all_used (remover: REMOVER) is
@@ -134,9 +134,9 @@ feature
 		do
 			creators.start;
 			feat_table := feature_table;
-			feat := feat_table.item ("make");
+			feat := feat_table.item_id (Names_heap.make_name_id)
 			remover.record (feat, Current);
-			feat := feat_table.item ("set_count");
+			feat := feat_table.item_id (Names_heap.set_count_name_id);
 			remover.record (feat, Current);
 		end;
 

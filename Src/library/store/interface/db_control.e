@@ -9,7 +9,6 @@ indexing
 class DB_CONTROL
 
 inherit
-
 	DB_STATUS_USE
 		export 
 			{ANY} all
@@ -20,6 +19,11 @@ inherit
 		export 
 			{ANY} all
 			{NONE} handle
+		end
+
+	NUMERIC_NULL_VALUE
+		export
+			{ANY} numeric_null_value, set_numeric_null_value
 		end
 
 creation -- Creation procedure

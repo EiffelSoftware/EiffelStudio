@@ -30,7 +30,7 @@ extern "C" {
 	/*----------------*/
 	/*  eif_memory.h  */
 	/*----------------*/
-#define CLSC_PER	0;
+#define CLSC_PER	20
 
 /*
  * Garbage collector's statistics

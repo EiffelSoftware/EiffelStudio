@@ -19,12 +19,16 @@ feature -- Basic operation
 
 	cos (a: EV_ANGLE): REAL is
 			-- Trigonometric cosine of `a' degrees
+		obsolete
+			"use cosine of ev_angle instead"
 		do
 			Result := cosine (a.radians)
 		end
 
 	sin (a: EV_ANGLE): REAL is
 			-- Trigonometric sine of `a' degrees
+		obsolete
+			"use sine of ev_angle instead"
 		do
 			Result := sine (a.radians)
 		end

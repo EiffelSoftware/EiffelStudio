@@ -47,6 +47,20 @@ feature -- Comparison
 			end
 		end
 
+	contains (point: EV_POINT): BOOLEAN is
+		-- Does the rectangle contain 'point'
+		require
+			not_void: point /= Void
+		do
+			if not infinite then
+				if not empty then
+					Result := point >= up_left and point<= down_right
+				end
+			else
+				Result := True
+			end
+		end
+
 	override (clip: EV_CLIP): BOOLEAN is
 			-- Does rectangle override clip zone ?
 		require

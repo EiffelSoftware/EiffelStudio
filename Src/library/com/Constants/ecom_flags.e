@@ -10,8 +10,14 @@ class
 
 feature {NONE} -- Externals
 
-	c_and (operand1, operand2: INTEGER): INTEGER is
+	binary_and (operand1, operand2: INTEGER): INTEGER is
 			-- Binary 'and'.
+		external
+			"C [macro %"ecom_flags.h%"]"
+		end
+
+	binary_or (operand1, operand2: INTEGER): INTEGER is
+			-- Binary 'or'.
 		external
 			"C [macro %"ecom_flags.h%"]"
 		end

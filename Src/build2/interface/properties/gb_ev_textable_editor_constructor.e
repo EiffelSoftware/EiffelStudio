@@ -35,11 +35,21 @@ feature -- Access
 			create label.make_with_text (gb_ev_textable_text)
 			label.set_tooltip (gb_ev_textable_text_tooltip)
 			Result.extend (label)
-			create text_entry
-			text_entry.set_tooltip (gb_ev_textable_text_tooltip)
-			Result.extend (text_entry)
-			text_entry.change_actions.extend (agent set_text)
-			text_entry.change_actions.extend (agent update_editors)
+			if is_instance_of (first, dynamic_type_from_string ("EV_TEXT")) or is_instance_of (first, dynamic_type_from_string ("EV_LABEL")) then
+				create text_entry
+				text_entry.set_minimum_height (50)
+				text_entry.set_tooltip (gb_ev_textable_text_tooltip)
+				text_entry.change_actions.extend (agent set_text)
+				text_entry.change_actions.extend (agent update_editors)
+				Result.extend (text_entry)
+			else
+				create text_field_entry	
+				text_field_entry.set_tooltip (gb_ev_textable_text_tooltip)
+				text_field_entry.change_actions.extend (agent set_text)
+				text_field_entry.change_actions.extend (agent update_editors)
+				Result.extend (text_field_entry)
+			end
+
 			update_attribute_editor
 
 			disable_all_items (Result)
@@ -51,23 +61,41 @@ feature {NONE} -- Implementation
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
+		local
+			text_field: EV_TEXT_FIELD
+			text: EV_TEXT
 		do
-			text_entry.change_actions.block
-			text_entry.set_text (first.text)
-			text_entry.change_actions.resume
+			if text_entry /= Void then
+				text_entry.change_actions.block
+				text_entry.set_text (first.text)
+				text_entry.change_actions.resume
+			else
+				text_field_entry.change_actions.block
+				text_field_entry.set_text (first.text)
+				text_field_entry.change_actions.resume
+			end	
 		end
 
 	set_text is
 			-- Assign `text' of `text_entry' to all objects.
 		do
-			for_all_objects (agent {EV_TEXTABLE}.set_text (text_entry.text))
+			if text_entry /= Void then
+				for_all_objects (agent {EV_TEXTABLE}.set_text (text_entry.text))
+			else
+				for_all_objects (agent {EV_TEXTABLE}.set_text (text_field_entry.text))
+			end
 		end
+		
 		
 	label: EV_LABEL
 		-- Identifies `combo_box'.
 		
-	text_entry: EV_TEXT_FIELD
+	text_entry: EV_TEXT
+	text_field_entry: EV_TEXT_FIELD
 
 	Text_string: STRING is "Text"
+	
+invariant
+	text_or_field_not_void: (text_entry /= Void or text_field_entry /= Void) and not (text_entry /= Void and text_field_entry /= Void)
 
 end -- class GB_EV_TEXTABLE_EDITOR_CONSTRUCTOR

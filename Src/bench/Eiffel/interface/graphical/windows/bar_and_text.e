@@ -82,6 +82,7 @@ feature -- Standard Interface
 			
 			build_text_windows;
 			build_menus;
+			build_bar;
 			build_format_bar;
 			build_toolbar_menu;
 			set_last_format (default_format);

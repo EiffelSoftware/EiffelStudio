@@ -10,11 +10,9 @@ feature
 
 	System: SYSTEM_I is
 			-- Shared access to the current system
+		require
+			system_defined: Workbench.system_defined
 		once
-debug ("DLE SYSTEM")
-io.error.put_string ("First call to `System'.");
-io.error.new_line
-end;
 			Result := Workbench.system
 		end;
 
@@ -28,6 +26,12 @@ end;
 			-- Access to the lace controller
 		once
 			Result := Workbench.lace;
+		end;
+
+	compilation_modes: COMPILATION_MODES is
+			-- Status of current compilation
+		once
+			!! Result;
 		end;
 
 feature {NONE}

@@ -237,23 +237,6 @@ int offset;			/* Offset within enclosing where attachment is made */
 	bcopy(source, clone, size);					/* Block copy */
 	*hash_zone = clone;					/* Fill it in with the clone address */
 
-	/* Once the duplication is done, the receiving object might refer to a new
-	 * object (a newly allocated object is always new), and thus aging tests
-	 * must be performed, to eventually remember the enclosing object of the
-	 * receiver.
-	 */
-
-	flags = HEADER(enclosing)->ov_flags;
-
-	if (!(flags & EO_OLD))				/* Receiver is a new object */
-		return clone;					/* No aging tests necessary */
-
-	if (flags & EO_REM)					/* Old object is already remembered */
-		return clone;					/* No further action necessary */
-
-	if (refers_new_object(clone))		/* Copied refers to new objects */
-		erembq(enclosing);				/* Then remember the enclosing object */
-
 	return clone;
 }
 
@@ -327,7 +310,20 @@ int offset;				/* Offset within enclosing where attachment is made */
 		}
 
 	} else
-		expanded_update(source, clone, DEEP);		/* Update intra expanded refs */
+		expanded_update(source, clone, DEEP); /* Update intra expanded refs */
+
+	/* Mark `clone' as remembered if it is old and references a young one.
+	 * This has to be done for the garbage collector to work properly.
+	 * Otherwise, the GC may move the young object and update the reference
+	 * in the old one (which has not been moved because of its age).
+	 * All this stuff is done here (after the objects referenced by `clone'
+	 * have been duplicated) instead of at this end of `duplicate' because
+	 * at that time `clone' still referenced the (possibly old) attributes
+	 * of the source.
+	 */
+	flags = HEADER(enclosing)->ov_flags;
+	if ((flags & EO_OLD) && (!(flags & EO_REM)) && refers_new_object(clone))
+		erembq(enclosing);
 }
 
 public void xcopy(source, target)

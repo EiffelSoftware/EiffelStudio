@@ -190,7 +190,6 @@ void eif_gr_call_finish_freezing(EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ fr
 }
 
 
-
 void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_command_name, EIF_OBJ driver_name)
 {
 #if defined EIF_WIN32 || defined EIF_OS2
@@ -219,12 +218,11 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 	fo = fopen (system_exe, "wb");
 
 	amount = 4096;
-	while (amount == 4096)
-		{
+	while (amount == 4096) {
 		amount = fread (buffer, sizeof(char), amount, fi);
 		if (amount != fwrite (buffer, sizeof(char), amount, fo))
 			eio();
-		}
+	}
 
 	fclose (fi);
 	fclose (fo);
@@ -264,7 +262,7 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 
 void eif_gr_link_driver (EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_command_name, EIF_OBJ driver_name)
 {
-#if defined EIF_WINDOWS || __VMS || defined EIF_OS2
+#if defined EIF_WIN32 || __VMS || defined EIF_OS2
 	eif_link_driver(c_code_dir, system_name, prelink_command_name, driver_name);
 #else
 	char *cmd;

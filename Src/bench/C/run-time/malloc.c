@@ -1083,7 +1083,8 @@ rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, regist
 	EIF_GET_CONTEXT
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in hlist */
-	register3 union overhead *selected;	/* The selected block */
+	register3 union overhead *selected = (union overhead *) 0;	
+							/* The selected block */
 	register4 union overhead *p;		/* To walk through free-list */
 
 #ifdef DEBUG
@@ -1276,7 +1277,13 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 	 * list, but left out of any free list.
 	 */
 	EIF_GET_CONTEXT	
-	register1 union overhead *oldbrk;		/* Previous break value */
+#if defined HAS_SMART_MMAP || defined HAS_SBRK
+	register1 union overhead *oldbrk = (union overhead *) -1;
+						/* Initialized with `failed' value. */
+#else
+	register1 union overhead *oldbrk = (union overhead *) -1;
+						/* Initialized with `failed' value. */
+#endif
 	register2 int32 asked = (int32) nbytes;	/* Bytes requested */
 	int over_chunk;
 
@@ -1868,6 +1875,10 @@ rt_public void xfree(register EIF_REFERENCE ptr)
 	union overhead *zone;		/* The to-be-freed zone */
 	uint32 i;					/* Index in hlist */
 
+#ifdef LMALLOC_CHECK
+	if (is_in_lm (ptr))
+		fprintf (stderr, "Warning: try to xfree a malloc'ed ptr\n");
+#endif	/* LMALLOC_CHECK */
 	zone = ((union overhead *) ptr) - 1;	/* Walk backward to header */
 	r = zone->ov_size;						/* Size of block */
 
@@ -2087,6 +2098,10 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	EIF_REFERENCE safeptr;						/* GC-safe pointer */
 	int size_gain;						/* Gain in size brought by coalesc */
 	
+#ifdef LMALLOC_CHECK
+	if (is_in_lm (ptr))
+		fprintf (stderr, "Warning: try to xrealloc a malloc'ed pointer\n");
+#endif
 	if (nbytes & ~B_SIZE)
 		return (EIF_REFERENCE) 0;		/* I guess we can't malloc more than 2^27 */
 
@@ -3821,7 +3836,7 @@ rt_private void inspect_chunk(register char *chunk, register char *arena, int ty
 
 	register1 union overhead *zone;		/* Malloc info zone */
 	register2 uint32 size;				/* Object's size in bytes */
-	register3 char *end;				/* First address beyond chunk */
+	register3 char *end = (char *) 0;				/* First address beyond chunk */
 
 	switch (type) {
 	case CHUNK_T:
@@ -3830,6 +3845,8 @@ rt_private void inspect_chunk(register char *chunk, register char *arena, int ty
 	case ZONE_T:
 		end = (char *) ((struct sc_zone *) chunk)->sc_top;
 		break;
+	default:
+		eif_panic ("Unknown chunk type");	
 	}
 
 	for (
@@ -3925,19 +3942,6 @@ rt_public void eif_trace_types(FILE *f)
 	EIF_END_GET_CONTEXT
 }
 
-
-#ifndef lint
-rt_private char *e_what =
-	"@(#) ISE Eiffel by:";
-rt_private char *e_what2 =
-	"@(#)      Frederic Deramat, Frederic Dernbach";
-rt_private char *e_what3 =
-	"@(#)      Xavier Le Vourch, Raphael Manfredi";
-rt_private char *e_what4 =
-	"@(#)      Philippe Stephan, Dino Valente";
-rt_private char *e_what5 =
-	"@(#) Language design: Bertrand Meyer";
-#endif
 
 #ifdef TEST
 

@@ -1,0 +1,2 @@
+Error: class inherits a frozen class, i.e. a class that cannot be inherited.
+What to do: remove class from inheritance clause.

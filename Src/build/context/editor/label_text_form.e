@@ -50,38 +50,52 @@ feature {NONE} -- Interface
 		end;
 
 feature -- Interface
+	
+	label: LABEL;
+	radio_box: RADIO_BOX;
 
-	make_visible (a_parent: COMPOSITE) is
-		local
-			label: LABEL;
-			radio_box: RADIO_BOX
+	create_widgets is
 		do
-			initialize (Widget_names.label_text_form_name, a_parent);
-			!!label.make (Widget_names.text_label_name, Current);
-			!!text.make (Widget_names.textfield, Current, Label_text_cmd, 
-						editor);
-			!!forbid_recomp.make (Widget_names.forbid_recomp_size_name, 
-						Current, Label_resize_cmd, editor);
-			!!radio_box.make (Widget_names.radio_box, Current);
-			!!left_alignment.make (Widget_names.left_alignment_name, 
-						radio_box, Label_alignment_cmd, editor);
-			!!center_alignment.make (Widget_names.center_alignment_name, 
-						radio_box, Label_alignment_cmd, editor);
+            !!label.make (Widget_names.text_label_name, Current);
+            !!text.make (Widget_names.textfield, Current, Label_text_cmd,
+                        editor);
+            !!forbid_recomp.make (Widget_names.forbid_recomp_size_name,
+                        Current, Label_resize_cmd, editor);
+            !!radio_box.make (Widget_names.radio_box, Current);
+            !!left_alignment.make (Widget_names.left_alignment_name,
+                        radio_box, Label_alignment_cmd, editor);
+            !!center_alignment.make (Widget_names.center_alignment_name,
+                        radio_box, Label_alignment_cmd, editor);
+		end;
+
+	set_values is
+		do
 			left_alignment.arm;
 			radio_box.set_always_one (True);
+		end;
 
-			attach_left (label, 10);
-			attach_right (text, 10);
-			attach_left (text, 100);
+	attach_widgets is 
+		do
+            attach_left (label, 10);
+            attach_right (text, 10);
+            attach_left (text, 100);
 
-			attach_left (forbid_recomp, 10);
-			attach_left (radio_box, 10);
+            attach_left (forbid_recomp, 10);
+            attach_left (radio_box, 10);
 
-			attach_top (text, 10);
-			attach_top (label, 10);
-			attach_top_widget (text, forbid_recomp, 10);
-			attach_top_widget (forbid_recomp, radio_box, 10);
-			detach_bottom (radio_box);
+            attach_top (text, 10);
+            attach_top (label, 10);
+            attach_top_widget (text, forbid_recomp, 10);
+            attach_top_widget (forbid_recomp, radio_box, 10);
+            detach_bottom (radio_box);
+		end;
+
+	make_visible (a_parent: COMPOSITE) is
+		do
+			initialize (Widget_names.label_text_form_name, a_parent);
+			create_widgets;
+			set_values;
+			attach_widgets
 			show_current
 		end;
 

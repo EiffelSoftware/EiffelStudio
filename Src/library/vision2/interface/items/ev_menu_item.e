@@ -115,7 +115,7 @@ feature -- Assertion
 			-- False otherwise.
 			-- we use it only when the grand parent is an option button.
    		require
-			parent_is_an_option_button: grand_parent_is_option_button
+			valid_grand_parent: grand_parent_is_option_button
 		do
 			Result := implementation.is_selected
 		end

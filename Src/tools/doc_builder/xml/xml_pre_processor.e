@@ -289,16 +289,22 @@ feature {NONE} -- Processing
 			l_toc_name: STRING
 			l_parent,
 			l_script_tag: XM_ELEMENT
+			l_util: UTILITY_FUNCTIONS
 		do
 			if not shared_constants.help_constants.is_tree_web_help then				
 				l_toc_name := "simple_toc.js"
 			else				
 				l_toc_name := "toc.js"
 			end
-			l_script_text := "doc = window.location.href;if (parent.toc_frame){parent.toc_frame.documentLoaded(doc);}%
-				%else{var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);%
+			create l_util		
+			l_script_text := "doc = '"
+			l_script_text.append (l_util.toc_friendly_url (l_util.file_no_extension (internal_xml.name)) + ".html';")
+			l_script_text.append ("toc = '" + l_util.short_name (shared_constants.help_constants.toc.name) + "';")
+			l_script_text.append ("deleteCookie('tocName');var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);setCookie ('tocName', toc, expdate);")
+			l_script_text.append ("if (parent.toc_frame){parent.toc_frame.documentLoaded(doc);}%
+				%else{var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);setCookie ('delete', 'true', expdate);%
 				%setCookie ('redirecturl', doc, expdate);window.location.replace ('" + relative_path_to_help_project (internal_xml.name) + 
-				shared_constants.help_constants.help_project_name + ".html');}"
+				shared_constants.help_constants.help_project_name + "_no_content.html');}")
 			l_parent := internal_xml.element_by_name ("document")
 			if l_parent /= Void then
 					-- Insert script in header

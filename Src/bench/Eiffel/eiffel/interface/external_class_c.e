@@ -34,6 +34,8 @@ feature -- Initialization
 
 	process_degree_5 is
 			-- Read XML data and analyzes syntactical suppliers.
+		require
+			not_built: not is_built
 		local
 			l_reader: EIFFEL_XML_DESERIALIZER
 			l_ast: CLASS_AS
@@ -115,6 +117,7 @@ feature -- Initialization
 	process_degree_4 is
 			-- Read XML data and create feature table.
 		require
+			not_built: not is_built
 			external_class_not_void: external_class /= Void
 		local
 			nb: INTEGER
@@ -162,14 +165,19 @@ feature -- Initialization
 				-- Save freshly computed feature table on disk.
 			Tmp_feat_tbl_server.put (l_feat_tbl)
 			external_class := Void
+			is_built := True
 		ensure
 			external_class_void: external_class = Void
 			feature_table_not_void: feature_table /= Void
 			types_not_void: types /= Void
 			class_interface_not_void: class_interface /= Void
+			is_built: is_built
 		end
 
 feature -- Access
+
+	is_built: BOOLEAN
+			-- Is Current class built?
 
 	lace_class: EXTERNAL_CLASS_I
 			-- Corresponding lace class.
@@ -359,6 +367,16 @@ feature {NONE} -- Initialization
 					add_syntactical_supplier (parent_type)
 					i := i + 1
 				end
+			end
+			
+			if class_id = System.system_object_id then
+					-- Add ANY as a parent class of SYSTEM_OBJECT, and therefore
+					-- of all .NET classes
+				parent_class := any_type.associated_class
+				parents.extend (any_type)
+				parents_classes.extend (parent_class)
+				parent_class.add_descendant (Current)
+				add_syntactical_supplier (any_type)
 			end
 		ensure
 			parents_not_void: parents /= Void
@@ -831,7 +849,6 @@ feature {NONE} -- Implementation
 		require
 			a_feat_not_void: a_feat /= Void
 			a_class_not_void: a_class /= Void
-			a_class_is_true_external: a_class.is_true_external
 			a_member_not_void: a_member /= Void
 		local
 			l_feat_tbl: FEATURE_TABLE
@@ -853,7 +870,7 @@ feature {NONE} -- Implementation
 				check
 					frozen_feature: a_feat.is_frozen or a_feat.is_constant
 				end
-			else
+			elseif a_class.is_true_external then
 					-- Let's find a matching inherited feature.
 				l_feat_tbl := a_class.feature_table
 				from

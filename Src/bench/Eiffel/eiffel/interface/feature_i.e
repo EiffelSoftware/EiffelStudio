@@ -2021,10 +2021,12 @@ feature -- Case storage informatio
 							deal_with_loc ( bod3.locals, li_st )
 						end	
 						deal_with_body (bod3.routine_body, li_st)	
+						if bod3.rescue_clause/= Void and then bod3.rescue_clause.count>0 then
+							deal_with_rescue ( bod3.rescue_clause , li_st )
+						end
 					else
 						bod4?= bod2.content
 						if bod4/= Void then
-		
 						end		
 					end	
 				end			
@@ -2034,16 +2036,75 @@ feature -- Case storage informatio
 			s.set_body(s_body)		
 		end		
 
+	deal_with_rescue ( li : EIFFEL_LIST [ INSTRUCTION_AS ]; li_st : LINKED_LIST [ STRING ] ) is
+	local
+		instruc : INSTRUCTION_AS
+		format_c : FORMAT_CONTEXT
+		ss : STRING
+	do
+		li_st.extend("rescue")	
+		from
+			li.start
+		until
+			li.after
+		loop			
+			instruc := li.item
+			!! format_c.make_for_case
+			instruc.simple_format(format_c)
+			!!ss.make ( 20 )
+			if format_c.text/= Void then
+						from
+							format_c.text.start
+						until
+							format_c.text.after
+						loop
+							ss.append(format_c.text.item.image)	
+							format_c.text.forth
+						end	
+					li_st.extend(ss)
+			end
+			li.forth
+		end
+	end
+
+
+
 	deal_with_body ( rot_body : ROUT_BODY_AS ; li_st : LINKED_LIST [ STRING ] ) is
 	local
 		intern : INTERNAL_AS
 		instruc : INSTRUCTION_AS
 		format_c : FORMAT_CONTEXT
 		ss : STRING	
+		defer : DEFERRED_AS
+		exter : EXTERNAL_AS
 	do
 		intern ?= rot_body
-		
+		defer ?= rot_body
+		exter ?= rot_body
+
+		if defer/= Void then
+			-- Deferred
+			-- nothing special to add 
+		end
+		if exter/= Void then
+			-- external	
+				!! format_c.make_for_case
+				exter.simple_format(format_c)
+				!!ss.make ( 20 )
+				if format_c.text/= Void then
+						from
+							format_c.text.start
+						until
+							format_c.text.after
+						loop
+							ss.append(format_c.text.item.image)	
+							format_c.text.forth
+						end	
+						li_st.extend(ss)
+				end
+		end
 		if intern/= Void then
+			-- Internal
 			if intern.is_once then
 				li_st.extend("Once") 
 			else

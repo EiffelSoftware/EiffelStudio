@@ -16,10 +16,7 @@ inherit
 		
 	EV_INVISIBLE_CONTAINER_IMP
 		undefine
-			add_child,
-			child_expand_changed,
-			child_horiresize_changed,
-			child_vertresize_changed
+			add_child
 		end
 
 feature {NONE} -- Initialization
@@ -37,6 +34,12 @@ feature -- Element change (box specific)
 		do
 			gtk_box_set_homogeneous (widget, flag)
 		end
+
+	set_border_width (value: INTEGER) is
+			-- Border width around container
+		do
+			gtk_container_border_width (widget, value)
+		end	
 	
 	set_spacing (value: INTEGER) is
 			-- Spacing between the objects in the box

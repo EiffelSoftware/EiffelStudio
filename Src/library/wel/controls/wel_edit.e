@@ -233,20 +233,27 @@ feature -- Status report
 			-- Caret position
 		require
 			exists: exists
+		local
+			sel_end: INTEGER	
 		do
-			Result := cwin_hi_word (cwin_send_message_result (item,
-				Em_getsel, 0, 0))
+				-- We pass `Void' as the previous implementation only returned
+				-- the high value part of the result, corresponding to the
+				-- end position.
+			 cwin_send_message (item,
+				Em_getsel, 0, cwel_pointer_to_integer ($sel_end))
+			Result := sel_end
 		end
 
 	has_selection: BOOLEAN is
 			-- Has a current selection?
 		require
 			exists: exists
+		local
+			sel_start, sel_end: INTEGER
 		do
-			Result := cwin_lo_word (cwin_send_message_result (item,
-				Em_getsel, 0, 0)) /=
-				cwin_hi_word (cwin_send_message_result (item,
-				Em_getsel, 0, 0))
+			cwin_send_message (item, Em_getsel, cwel_pointer_to_integer ($sel_start),
+				cwel_pointer_to_integer ($sel_end))
+			Result := sel_end /= sel_start	
 		end
 
 	selection_start: INTEGER is
@@ -254,9 +261,11 @@ feature -- Status report
 		require
 			exists: exists
 			has_selection: has_selection
+		local
+			sel_start: INTEGER
 		do
-			Result := cwin_lo_word (cwin_send_message_result (item,
-				Em_getsel, 0, 0))
+			cwin_send_message (item, Em_getsel, cwel_pointer_to_integer ($sel_start), 0)
+			Result := sel_start
 		ensure
 			result_large_enough: Result >= 0
 			result_small_enough: Result <= text_length
@@ -267,9 +276,11 @@ feature -- Status report
 		require
 			exists: exists
 			has_selection: has_selection
+		local
+			sel_end: INTEGER
 		do
-			Result := cwin_hi_word (cwin_send_message_result (item,
-				Em_getsel, 0, 0))
+			cwin_send_message (item, Em_getsel, 0, cwel_pointer_to_integer ($sel_end))
+			Result := sel_end
 		ensure
 			result_large_enough: Result >= 0
 			result_small_enough: Result <= text_length + 2

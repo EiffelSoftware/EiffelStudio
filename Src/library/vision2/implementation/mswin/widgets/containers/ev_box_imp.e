@@ -21,28 +21,13 @@ inherit
 
 	EV_INVISIBLE_CONTAINER_IMP
 		undefine
-			parent_ask_resize
+			move_and_resize
 		redefine
-			set_width,
-			set_height,
 			child_add_successful,
-			on_first_display,
 			client_width,
-			client_height
-		end
-
-feature -- Access
-
-	client_width: INTEGER is
-			-- Width of the client area of container
-		do
-			Result := (client_rect.width - 2 * border_width).max (0)
-		end
-	
-	client_height: INTEGER is
-			-- Height of the client area of container
-		do
-			Result := (client_rect.height  - 2 * border_width).max (0)
+			client_height,
+			on_first_display,
+			update_display
 		end
 
 feature {NONE} -- Initialization
@@ -60,9 +45,22 @@ feature {NONE} -- Initialization
 			initialize
 			is_homogeneous := Default_homogeneous
 			spacing := Default_spacing
+			border_width := Default_border_width
 		end
 
 feature -- Access
+
+	client_width: INTEGER is
+			-- Width of the client area of container
+		do
+			Result := (client_rect.width - 2 * border_width).max (0)
+		end
+	
+	client_height: INTEGER is
+			-- Height of the client area of container
+		do
+			Result := (client_rect.height  - 2 * border_width).max (0)
+		end
 
 	is_homogeneous: BOOLEAN
 			-- Must the children have the same size ?
@@ -80,10 +78,7 @@ feature -- Access
 			Result := spacing * ( children.count - 1 )
 		end
 
-	already_displayed: BOOLEAN
-			-- Tell if the box has already been displayed
-
-feature -- Status setting (box specific)
+feature -- Status setting
 
 	set_homogeneous (flag: BOOLEAN) is
 			-- set `is_homogeneous' to `flag'.
@@ -91,7 +86,7 @@ feature -- Status setting (box specific)
 		do
 			is_homogeneous := flag
 			if not ev_children.empty then
-				initialize_display
+				update_display
 			end
 		end
 
@@ -100,7 +95,7 @@ feature -- Status setting (box specific)
 		do
 			spacing := value
 			if not ev_children.empty then
-				initialize_display
+				update_display
 			end
 		end
 
@@ -109,20 +104,6 @@ feature -- Status setting (box specific)
 		do
 			border_width := value
 			-- Update view
-		end
-
-feature -- Resizing
-
-	set_width (value: INTEGER) is
-		do
-			child_cell.set_width (value.max (minimum_width))
-			set_local_width (child_cell.width)
-		end
-
-	set_height (value: INTEGER) is
-		do
-			child_cell.set_height (value.max (minimum_height))
-			set_local_height (child_cell.height)
 		end
 
 feature {NONE} -- Basic operation
@@ -175,11 +156,6 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	initialize_display is
-			-- Reinitialize the box at the same size.
-		deferred
-		end
-
 	initialize_length_at_minimum is
 			-- Initialize the width of the window and of the children.
 		deferred
@@ -202,6 +178,18 @@ feature {EV_WIDGET_I} -- Implementation
  			Result := ev_children.has (child_imp)
  		end
 
+	update_display is
+			-- Feature that update the actual container.
+			-- It check the size of the child and resize
+			-- the child or the container itself depending
+			-- on the case.
+		do
+			if already_displayed then
+				initialize_length_at_minimum
+				parent_ask_resize (child_cell.width, child_cell.height)
+			end
+		end
+
 	on_first_display is
 			-- Called by the top_level window.
 		local
@@ -217,10 +205,11 @@ feature {EV_WIDGET_I} -- Implementation
 					i := i + 1
 				end
 			end
+			already_displayed := True
+			resize (minimum_width, minimum_height)
 			initialize_length_at_minimum
 			child_cell.set_width (minimum_width)
 			child_cell.set_height (minimum_height)
-			already_displayed := True
 		end
 
 end -- class EV_BOX_IMP

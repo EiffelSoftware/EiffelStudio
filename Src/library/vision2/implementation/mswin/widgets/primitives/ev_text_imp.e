@@ -247,6 +247,12 @@ feature -- Status Report
 			end
 		end
 		
+	line_number_from_position (i: INTEGER): INTEGER is
+			-- Line containing caret position `i'.
+		do
+			Result := cwin_send_message_result (wel_item, em_linefromchar, i + 1, 0) + 1
+		end
+		
 	selection_start: INTEGER is
 			-- Index of first character selected.
 		local

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 	make (reference: POINTER; id: like dynamic_type_id) is
 			-- Set `address' to `reference' address
-			-- and `dynamic_type' to `type'.
+			-- and `dynamic_type_id' to `id'.
 		local
 			void_pointer: POINTER
 		do
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		end;
 
 	make_attribute (attr_name: like name; a_class: like e_class;
-						type: like dynamic_type_name; addr: like address) is
+						type: like dynamic_type_id; addr: like address) is
 		require
 			not_attr_name_void: attr_name /= Void;
 			not_addr_void: addr /= Void
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 				e_class := a_class;
 				is_attribute := True;
 			end;
-			dynamic_type_name := type;
+			dynamic_type_id := type;
 			if not addr.is_equal ("Void") then
 				address := addr
 			end
@@ -73,25 +73,14 @@ feature -- Properties
 feature -- Access
 
 	dynamic_class: E_CLASS is
-		local
-			class_i: CLASS_I;
-			type_name: STRING
 		do
 			Result := private_dynamic_class;
 			if Result = Void then
-				if dynamic_type_name /= Void then
-					type_name := clone (dynamic_type_name);
-					type_name.to_lower;
-					class_i := Eiffel_universe.class_with_name (type_name);
-					if class_i /= Void then
-						Result := class_i.compiled_eclass;
-						private_dynamic_class := Result
-					end
-				elseif Eiffel_system.valid_dynamic_id (dynamic_type_id + 1) then
+				if Eiffel_system.valid_dynamic_id (dynamic_type_id) then
 					--| Extra safe test. The dynamic type should be known
 					--| from the system, but somehow Dino managed to crash
 					--| ebench here. This is very weird!!!
-					Result := Eiffel_system.class_of_dynamic_id (dynamic_type_id + 1)
+					Result := Eiffel_system.class_of_dynamic_id (dynamic_type_id)
 					private_dynamic_class := Result
 				end
 			end;
@@ -172,9 +161,6 @@ feature {NONE} -- Property
 
 	dynamic_type_id: INTEGER;
 			-- Dynamic type id of return type
-
-	dynamic_type_name: STRING;
-			-- Dynamic type name of return type
 
 	private_dynamic_class: E_CLASS
 			-- Saved class 

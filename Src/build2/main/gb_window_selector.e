@@ -14,7 +14,7 @@ inherit
 	EV_TREE
 		export
 			{NONE} all
-			{ANY} start, off, forth, item, extend, wipe_out, is_empty, prune_all, has, i_th
+			{ANY} start, off, forth, item, extend, wipe_out, is_empty, prune_all, has, i_th, has_recursively
 		redefine
 			initialize
 		end
@@ -155,34 +155,15 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Access
-
-	directory_object_from_name (a_name: STRING): GB_WINDOW_SELECTOR_DIRECTORY_ITEM is
+		
+	directory_object_from_name (path_name: ARRAYED_LIST [STRING]): GB_WINDOW_SELECTOR_DIRECTORY_ITEM is
 			-- `Result' is directory item representing directory `a_name'.
 		require
-			a_name_not_void: a_name /= Void
-		local
-			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			a_cursor: EV_DYNAMIC_LIST_CURSOR [EV_TREE_NODE]
+			path_name_not_void: path_name /= Void
 		do
-				-- Note that we do not need to check recursively, as we
-				-- only support one level of directories.
-			a_cursor := cursor
-			from
-				start
-			until
-				off
-			loop
-				directory ?= item
-				if directory /= Void then
-					if directory.text.is_equal (a_name) then
-						Result := directory
-					end
-				end
-				forth
-			end
-			go_to (a_cursor)
+			Result ?= tree_item_matching_path (Current, path_name)
 		ensure
-			result_contained: has (Result)
+			result_contained: has_recursively (Result)
 			Cursor_not_moved: old index = index
 		end
 
@@ -260,44 +241,9 @@ feature -- Access
 	objects: ARRAYED_LIST [GB_OBJECT] is
 			-- `Result' is all objects represented in `Current'.
 			-- No paticular order is guaranteed.
-		local
-			layout_item: GB_WINDOW_SELECTOR_ITEM
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			l_cursor, l_cursor2: CURSOR
 		do
-			create Result.make (2)
-			l_cursor ?= cursor
-			from
-				start
-			until
-				off
-			loop
-				layout_item ?= item
-				if layout_item /= Void then
-					Result.extend (layout_item.object)
-				else
-					directory_item ?= item
-					check
-						item_was_directory: directory_item /= Void
-					end
-					l_cursor2 ?= directory_item.cursor
-					from
-						directory_item.start
-					until
-						directory_item.off
-					loop
-						layout_item ?= directory_item.item
-						check
-							item_was_layout_item: layout_item /= Void
-						end
-						Result.extend (layout_item.object)
-						directory_item.forth
-					end
-					directory_item.go_to (l_cursor2)
-				end
-				forth
-			end
-			go_to (l_cursor)
+			create Result.make (10)
+			internal_return_objects (Current, Result)
 		ensure
 			result_not_void: Result /= Void
 			position_not_changed: index = old index
@@ -354,10 +300,56 @@ feature -- Access
 			Result.extend (new_directory_button)
 			Result.extend (expand_all_button)
 			Result.extend (set_root_window_command.new_toolbar_item (True, False))
+			Result.extend (include_directory_button)
 				-- If the children in `Result' is modified, must also update
 				-- code for `update_select_root_window_command'.
 		end
 		
+	include_directory_button: EV_TOOL_BAR_BUTTON is
+			-- A button which is used to add all directories within the current
+			-- directory structure to the current project.
+		once
+			create Result
+			Result.set_pixmap (icon_object_window @ 1)
+			Result.select_actions.extend (agent include_dirs)
+		ensure
+			result_not_void: result /= Void
+		end
+		
+	include_dirs is
+			-- Include all dirs reachable from the project location, to the current project
+		local
+			iterated_directory, current_directory: DIRECTORY
+			file_name: FILE_NAME
+			items: LINEAR [STRING]
+			command_add_directory: GB_COMMAND_ADD_DIRECTORY
+		do
+			create current_directory.make_open_read (system_status.current_project_settings.project_location)
+			check
+				directory_exists: current_directory.exists
+			end
+			items := current_directory.linear_representation
+			from
+				items.start
+			until
+				items.off
+			loop
+				create file_name.make_from_string (current_directory.name)
+				file_name.extend (items.item)
+				create iterated_directory.make (file_name)
+				if iterated_directory.exists and not items.item.is_equal (".") and not items.item.is_equal ("..") then
+					create command_add_directory.make (Void, items.item)
+					command_add_directory.create_new_directory
+					if command_add_directory.directory_added_succesfully then
+						command_add_directory.execute
+						system_status.enable_project_modified
+						command_handler.update
+					end
+				end
+				items.forth
+			end
+		end
+
 	update_select_root_window_command is
 			-- Update status of root window button based on the currently selected window.
 		local
@@ -400,7 +392,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			-- Remove `a_directory' from `Current'.
 		require
 			directory_not_void: a_directory /= Void
-			has_directory: has (a_directory)
+			has_directory: has_recursively (a_directory)
 		local
 			perform_delete: BOOLEAN
 			all_objects: ARRAYED_LIST [GB_OBJECT]
@@ -435,10 +427,8 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 		require
 			a_directory_not_void: a_directory /= Void
 		local
-			window_item: GB_WINDOW_SELECTOR_ITEM
 			all_objects: ARRAYED_LIST [GB_OBJECT]
 			directory_of_root_window: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
 		do
 			all_objects := objects
 			if all_objects.count >= 1 then
@@ -453,26 +443,51 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 						mark_next_window_as_root (a_directory.count)
 					end
 				end
-				from
-					a_directory.start
-				until
-					a_directory.is_empty
-				loop
-					window_item ?= a_directory.item
-					check
-						item_was_window: window_item /= Void
-					end
-						-- Now remove the window from the directory.
-					Command_handler.Delete_object_command.delete_object (window_item.object)
-				end
+					
+					-- Now actually perform the deletion of the directory, all of its sub directories and objects recursively.
+				delete_objects_in_directory (a_directory)
 			end
 
-			create command_delete_directory.make (a_directory.text)
-			command_delete_directory.execute
-			
 				-- Update project so it may be saved.
 			system_status.enable_project_modified
 			command_handler.update
+		end
+		
+	delete_objects_in_directory (a_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
+			-- Recursively delete all objects within `a_directory'.
+		require
+			a_directory_not_void: a_directory /= Void
+		local
+			current_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			current_object_item: GB_WINDOW_SELECTOR_ITEM
+			parent_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
+		do
+			from
+				a_directory.start
+			until
+				a_directory.off
+			loop
+				current_directory_item ?= a_directory.item
+				if current_directory_item /= Void then
+					delete_objects_in_directory (current_directory_item)
+				else
+					current_object_item ?= a_directory.item
+					check
+						item_was_object: current_object_item /= Void
+					end
+					Command_handler.Delete_object_command.delete_object (current_object_item.object)	
+				end
+				if not a_directory.off then
+						-- The act of deleting the directory may have made it `off'.
+					a_directory.forth
+				end
+			end
+			parent_directory ?= a_directory.parent
+			create command_delete_directory.make (a_directory, parent_directory)
+			command_delete_directory.execute
+		ensure
+			directory_empty: a_directory.is_empty
 		end
 	
 feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementation
@@ -578,26 +593,43 @@ feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 		local
 			original, new: FILE_NAME
 			original_directory, new_directory: DIRECTORY
+			original_path, new_path: ARRAYED_LIST [STRING]
 		do
 			create original.make_from_string (generated_path.string)
 			if an_original_directory /= Void then
-				original.extend (an_original_directory.text)	
+				original_path := an_original_directory.path
+				from
+					original_path.start
+				until
+					original_path.off
+				loop
+					original.extend (original_path.item)
+					original_directory := create {DIRECTORY}.make (original)
+					if not original_directory.exists then
+						-- Ensure that the directory actually exists on disk.
+						create_directory (original_directory)
+					end
+					original_path.forth
+				end
 			end
 			create new.make_from_string (generated_path.string)
 			if a_new_directory /= Void then
-				new.extend (a_new_directory.text)	
+				new_path := a_new_directory.path
+				from
+					new_path.start
+				until
+					new_path.off
+				loop
+					new.extend (new_path.item)
+					new_directory := create {DIRECTORY}.make (new)
+					if not new_directory.exists then
+							-- Ensure that the directory actually exists on disk.
+						create_directory (new_directory)
+					end
+					new_path.forth
+				end
 			end
-			original_directory := create {DIRECTORY}.make (original)
-			new_directory := create {DIRECTORY}.make (new)
 			
-				-- If the directories do not exist, then create them. They may have been removed from
-				-- outside Build.
-			if not new_directory.exists then
-				create_directory (new_directory)
-			end
-			if not original_directory.exists then
-				create_directory (original_directory)
-			end
 			move_file_between_directories (original_directory, new_directory, window_item.object.name.as_lower + ".e")
 			move_file_between_directories (original_directory, new_directory, (window_item.object.name + Class_implementation_extension).as_lower + ".e")
 		end
@@ -883,7 +915,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
 	
-	silent_add_named_directory (directory_name: STRING) is
+	silent_add_named_directory (directory_name: ARRAYED_LIST [STRING]) is
 			-- Add a new directory named `directory_name' to `Current',
 			-- but do not mark it as a command, simply add a new item in `Current'.
 			-- This will be called by `undo' of GB_COMMAND_DELETE_DIRECTORY and
@@ -892,14 +924,26 @@ feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
 			name_valid: directory_name /= Void and not directory_name.is_empty
 		local
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			parent_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			parent_name: ARRAYED_LIST [STRING]
 		do
-			create directory_item.make_with_name (directory_name)
-			extend (directory_item)
+			create directory_item.make_with_name (directory_name.i_th (directory_name.count))
+			if directory_name.count = 1 then
+				extend (directory_item)
+			else
+				parent_name := directory_name.twin
+				parent_name.prune_all (parent_name.last)
+				parent_directory := directory_object_from_name (parent_name)
+				check
+					parent_directory_found: parent_directory /= Void
+				end
+				parent_directory.extend (directory_item)
+			end
 				-- Update project so it may be saved.
 			system_status.enable_project_modified
 			command_handler.update
 		ensure
-			count_increaed: count = old count + 1
+			--count_increaed: count = old count + 1
 		end
 		
 feature {GB_XML_LOAD} -- Implementation
@@ -978,7 +1022,11 @@ feature {NONE} -- Implementation
 			
 			if not dialog.cancelled then
 				last_dialog_name := dialog.name
-				create command_add_directory.make (last_dialog_name)
+				if selected_directory /= Void then
+					create command_add_directory.make (selected_directory, last_dialog_name)
+				else
+					create command_add_directory.make (Void, last_dialog_name)
+				end
 				command_add_directory.create_new_directory
 				if command_add_directory.directory_added_succesfully then
 					command_add_directory.execute
@@ -1192,6 +1240,34 @@ feature {NONE} -- Implementation
 			hash_table.extend (an_object.name, an_object.name)
 		ensure
 			object_name_contained: hash_table.item (an_object.name) /= Void and then hash_table.item (an_object.name) = an_object.name
+		end
+		
+	internal_return_objects (node_list: EV_TREE_NODE_LIST; list: ARRAYED_LIST [GB_OBJECT]) is
+			-- For all items in `node_list' recursively, add a GB_OBJECT to `list' if the
+			-- item is an instance of GB_WINDOW_SELECTOR_ITEM.
+		require
+			node_list_not_void: node_list /= Void
+			list_not_void: list /= Void
+		local
+			layout_item: GB_WINDOW_SELECTOR_ITEM
+			l_cursor: CURSOR
+		do
+			l_cursor := node_list.cursor
+			from
+				node_list.start
+			until
+				node_list.off
+			loop
+				layout_item ?= node_list.item
+				if layout_item /= Void then
+					list.extend (layout_item.object)
+				end
+				internal_return_objects (node_list.item, list)	
+				node_list.forth
+			end
+			node_list.go_to (l_cursor)
+		ensure
+			position_not_changed: index = old index
 		end
 
 end -- class GB_WINDOW_SELECTOR

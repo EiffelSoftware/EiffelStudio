@@ -23,7 +23,7 @@ feature -- Basic Operations
 			not_yet_sent: not is_sent
 		do
 			output.put_string (header + "%N%N")
-			is_sent := TRUE
+			is_sent := True
 		ensure
 			header_sent: is_sent
 		end
@@ -36,7 +36,7 @@ feature -- Basic Operations
 			not_yet_sent: not is_sent
 		do
 			header := "Content-type: text/html"
-			is_complete_header := TRUE
+			is_complete_header := True
 		end
 
 	generate_http_redirection (an_url: STRING;is_secure: BOOLEAN) is	
@@ -75,7 +75,7 @@ feature -- Basic Operations
 			not_yet_sent: not is_sent
 		do
 			header := Void
-			is_complete_header := FALSE
+			is_complete_header := False
 		ensure
 			reinitialized: header = Void and not is_complete_header and not is_sent
 		end
@@ -89,13 +89,14 @@ feature {CGI_ERROR_HANDLING} -- Exception handling
 			if not is_sent then
 				reinitialize_header
 				generate_text_header
+				send_to_browser
 			end
 			if s = Void or else s.is_empty then
 				output.put_string ("No trace available")
 			else
 				output.put_string ("<PRE>" + s + "</PRE>")
 			end
-			is_sent := TRUE
+			is_sent := True
 		end
 
 feature -- Advanced Settings

@@ -217,5 +217,19 @@ feature
 				forth;
 			end;
 		end;
-			
+
+feature -- Case storage
+
+	storage_info: S_EXPORT_I is
+		do
+				-- Note for the future release of eiffelcase
+				-- the resulting type would be S_EXPORT_SET_I
+				-- However, only have none or all. (dinov)
+			if valid_for (System.any_class.compiled_class) then
+				! S_EXPORT_ALL_I ! Result
+			else
+				! S_EXPORT_NONE_I ! Result
+			end
+		end
+
 end

@@ -160,7 +160,7 @@ feature {NONE}
 
 feature {ROUTINE_AS} -- Case Storage
 
-	storage_info (classc: CLASS_C): FIXED_LIST [S_ASSERTION_DATA] is
+	storage_info (classc: CLASS_C): FIXED_LIST [S_TAG_DATA] is
 			-- Assertion storage info for Case in the 
 			-- context of class `class_c'
 		require

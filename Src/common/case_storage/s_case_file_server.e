@@ -1,6 +1,6 @@
 class S_CASE_FILE_SERVER
 
-feature {NONE}
+feature 
 
 	saved_system: S_SYSTEM_DATA;
 			-- System saved to disk
@@ -92,10 +92,6 @@ end
 	remove_tmp_files is
 			-- Remove temporary files (in case of a crash)
 		do
-debug ("CASE_SERVER")
-	io.error.putstring ("Crash occurred: Removing tmp files: ");		
-	io.error.new_line
-end
 			if saved_classes /= Void then
 				from
 					saved_classes.start	
@@ -103,7 +99,7 @@ end
 					saved_classes.after	
 				loop
 debug ("CASE_SERVER")
-	io.error.putstring ("%T class: ");
+	io.error.putstring ("%T Removing tmp class: ");
 	io.error.putstring (saved_classes.item_for_iteration.name);		
 	io.error.new_line
 end
@@ -126,5 +122,14 @@ feature -- Class information
 		ensure
 			valid_result: Result /= Void implies Result.is_valid
 		end
+
+feature 
+
+	set_saved_classes (classes: like saved_classes) is
+		require
+			valid_classes: classes /= Void
+		do
+			saved_classes := classes
+		end;
 
 end

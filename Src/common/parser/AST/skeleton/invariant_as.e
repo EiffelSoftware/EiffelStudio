@@ -132,7 +132,7 @@ feature -- Formatter
 
 feature -- Case Storage
 
-	storage_info (classc: CLASS_C): FIXED_LIST [S_ASSERTION_DATA] is
+	storage_info (classc: CLASS_C): FIXED_LIST [S_TAG_DATA] is
 			-- Storage information for Current in the
 			-- context class `classc'.
 		require

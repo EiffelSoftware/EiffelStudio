@@ -101,7 +101,9 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			classes: LINKED_LIST [CLASS_C];
 			class_c: CLASS_C;
 			s_cluster_data: S_CLUSTER_DATA;
-			view_id: INTEGER
+			view_id: INTEGER;
+			old_cluster_info: OLD_CASE_LINKABLE_INFO;
+			s_chart: S_CHART
 		do
 				-- Need to covert to a string since
 				-- the dynamic type of cluster name
@@ -113,6 +115,17 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			name.to_upper;
 			!! Result.make (name);
 			Result.set_file_name (file_name);
+				-- Get old descrition for data (if any) and update
+			   	-- s_class_data
+			old_cluster_info := old_clusters_info.item (name);
+			if old_cluster_info /= Void then
+				if old_cluster_info.description /= Void then
+					Result.set_description (old_cluster_info.description)
+				end
+				if old_cluster_info.explanation /= Void then
+					Result.set_explanation (old_cluster_info.explanation)
+				end
+			end;
 			if cluster_i /= Void then
 				classes_i := cluster_i.classes;
 				!! classes.make;

@@ -67,4 +67,12 @@ feature
 			ctxt.put_string ("NONE");
 			ctxt.put_text_item (ti_R_curly)
 		end;
+
+feature -- Case storage
+
+	storage_info: S_EXPORT_NONE_I is
+		do
+			!! Result
+		end
+
 end

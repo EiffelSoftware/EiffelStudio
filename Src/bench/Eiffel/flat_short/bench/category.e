@@ -173,8 +173,10 @@ feature
 
 feature {FLAT_STRUCT}
 
-	features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
+	public_features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
 			-- List of features relevant for EiffelCase.
+		local
+			feat_clause: FEATURE_CLAUSE_EXPORT
 		do
 			!! Result.make;
 			from
@@ -182,8 +184,31 @@ feature {FLAT_STRUCT}
 			until
 				clauses.after
 			loop
+				feat_clause := clauses.item;
 					-- Store feature information
-				Result.append (clauses.item.features_storage_info);
+				if feat_clause.reference.storage_info.is_all then
+					Result.append (feat_clause.features_storage_info);
+				end;
+				clauses.forth
+			end;
+		end;	
+
+	private_features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
+			-- List of features relevant for EiffelCase.
+		local
+			feat_clause: FEATURE_CLAUSE_EXPORT
+		do
+			!! Result.make;
+			from
+				clauses.start
+			until
+				clauses.after
+			loop
+				feat_clause := clauses.item;
+				if feat_clause.reference.storage_info.is_none then
+						-- Store feature information
+					Result.append (clauses.item.features_storage_info);
+				end;
 				clauses.forth
 			end;
 		end;	

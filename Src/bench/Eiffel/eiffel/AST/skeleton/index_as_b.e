@@ -57,16 +57,12 @@ feature -- Case storage
 			end
 		end;
 
-	storage_info: S_TEXT_DATA is
+	storage_info: S_TAG_DATA is
 		local
 			txt: STRING;
-			tmp: STRING
+			tmp: STRING;
 		do
 			!! txt.make (0);
-			if tag /= Void then
-				txt.append (tag.string_value);
-				txt.append (": ");
-			end;
 			from
 				index_list.start
 			until
@@ -78,7 +74,11 @@ feature -- Case storage
 					txt.append (", ");
 				end;
 			end;
-			!! Result.make (txt)
+			if tag = Void then
+				!! Result.make (Void, txt)
+			else
+				!! Result.make (tag.string_value, txt)
+			end
 		end;
 
 end

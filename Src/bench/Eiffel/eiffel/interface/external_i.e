@@ -35,13 +35,13 @@ feature -- Attributes for externals
 	special_file_name: STRING;
 			-- File name including the macro definition
  
-	arg_list: ARRAY[STRING];
+	arg_list: EXTERNALS_LIST;
 			-- List of arguments for the signature
 
 	return_type: STRING;
 			-- Result type of signature
 
-	include_list: ARRAY[STRING];
+	include_list: EXTERNALS_LIST;
 			-- List of include files
 
 feature -- Routines for externals
@@ -94,7 +94,7 @@ feature -- Routines for externals
 			special_file_name := s;
 		end;
 
-	set_arg_list (a: ARRAY[STRING]) is
+	set_arg_list (a: like arg_list) is
 			-- Assign `a' to `arg_list'
 		do
 			arg_list := a;
@@ -106,7 +106,7 @@ feature -- Routines for externals
 			return_type := s;
 		end;
 
-	set_include_list (a: ARRAY[STRING]) is
+	set_include_list (a: like include_list) is
 			-- Assign `a' to `include_list'
 		do
 			include_list := a;
@@ -121,17 +121,25 @@ feature -- Incrementality
 			Result := procedure_equiv (other);
 			if Result then
 				other_ext ?= other; -- Cannot fail
-				if encapsulated then
-					Result := other_ext.encapsulated and then
-						equal (alias_name, other_ext.alias_name) and then
-						equal (arg_list, other_ext.arg_list) and then
+				if include_list /= Void then
+					Result := include_list.equiv (other_ext.include_list)
+				else
+					Result := other_ext.include_list = Void
+				end;
+				Result := Result and then
+					equal (alias_name, other_ext.alias_name) and then
+					encapsulated = other_ext.encapsulated
+				if Result and then encapsulated then
+					if arg_list /= Void then
+						Result := arg_list.equiv (other_ext.arg_list)
+					else
+						Result := other_ext.arg_list = Void
+					end
+					Result := Result and then
 						equal (dll_arg, other_ext.dll_arg) and then
-						equal (include_list, other_ext.include_list) and then
 						equal (return_type, other_ext.return_type) and then
 						equal (special_file_name, other_ext.special_file_name) and then
 						special_id = other_ext.special_id
-				else
-					Result := equal (alias_name, other_ext.alias_name)
 				end
 			end
 		end

@@ -65,6 +65,10 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_SHARED_STATUS_BAR
+		undefine
+			copy, default_create
+		end
 create
 	default_create	
 
@@ -259,6 +263,8 @@ feature {NONE} -- Implementation
 			separator: EV_HORIZONTAL_SEPARATOR
 			horizontal_box: EV_HORIZONTAL_BOX
 			the_tool_holder: EV_VERTICAL_BOX
+			frame: EV_FRAME
+			padding_box: EV_HORIZONTAL_BOX
 		do
 			if a_tool_holder /= Void then
 				the_tool_holder := a_tool_holder
@@ -281,6 +287,20 @@ feature {NONE} -- Implementation
 			horizontal_box.extend (horizontal_split_area)
 			horizontal_box.extend (docked_object_editor)
 			horizontal_box.disable_item_expand (docked_object_editor)
+			
+				-- Now build the status bar
+			create horizontal_box
+			create frame
+			horizontal_box.extend (frame)
+			frame.set_style (1)
+			create padding_box
+			padding_box.set_minimum_height (2)
+			tool_holder.extend (padding_box)
+			tool_holder.disable_item_expand (padding_box)
+			tool_holder.extend (horizontal_box)
+			tool_holder.disable_item_expand (horizontal_box)
+			frame.extend (status_bar_label)
+			frame.set_minimum_height (frame.minimum_height + 3)
 			
 			if not system_status.is_wizard_system then
 				create filler

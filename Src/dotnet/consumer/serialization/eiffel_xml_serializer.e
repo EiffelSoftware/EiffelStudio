@@ -45,17 +45,15 @@ feature -- Basic Operations
 			f: STREAM_WRITER
 			retried: BOOLEAN
 			l_so: SYSTEM_OBJECT
-			l_ver: STRING
 		do
 			last_error := No_error
 			last_error_context := Void
 			if not retried then
 				l_so := Current
-				l_ver := l_so.get_type.assembly.get_name.version.to_string	
 				create f.make_from_path (path.to_cil)
 				f.write_string (xml_header)
 				f.write_string (open_xmls_field)
-				f.write_string (l_ver)
+				f.write_string (xmls_ver)
 				f.write_string (end_element)
 				f.write_string (new_line)
 				internal_serialize (root_reference, a, 1, f)

@@ -48,7 +48,6 @@ feature -- Basic Operations
 			bin_des: EIFFEL_BINARY_DESERIALIZER
 			ser: EIFFEL_BINARY_SERIALIZER
 			l_version: STRING
-			l_running_version: STRING
 			l_so: SYSTEM_OBJECT
 		do
 			if not retried then
@@ -70,9 +69,8 @@ feature -- Basic Operations
 							read_next
 							if successful and xml_reader.node_type = feature {XML_XML_NODE_TYPE}.element then
 								l_so := Current
-								l_running_version := l_so.get_type.assembly.get_name.version.to_string
 								l_version := xml_reader.get_attribute (Version_xml_attribute)
-								if l_version /= Void and then l_version.is_equal (l_running_version) then
+								if l_version /= Void and then l_version.is_equal (xmls_ver) then
 										-- ensure compatibility
 									read_next
 									deserialized_object := reference_from_xml

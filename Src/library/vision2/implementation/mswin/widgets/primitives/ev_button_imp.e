@@ -163,7 +163,7 @@ feature -- Status setting
 				check
 					font_not_void: fw /= Void
 				end
-				w := extra_width + fw.string_width (safe_text)
+				w := extra_width + fw.string_width (wel_text)
 				h := 7 * fw.height // 4 
 			else
 				w := extra_width
@@ -317,6 +317,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/03/28 16:35:47  rogers
+--| Now use wel_text in set_default_minimum_size.
+--|
 --| Revision 1.44  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
 --|

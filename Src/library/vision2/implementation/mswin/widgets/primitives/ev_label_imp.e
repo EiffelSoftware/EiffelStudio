@@ -141,7 +141,7 @@ feature -- Status setting
 			check
 				font_not_void: fw /= Void
 			end
-			t := fw.string_width_and_height (safe_text)
+			t := fw.string_width_and_height (wel_text)
 			internal_set_minimum_size (t.integer_item (1), t.integer_item (2))
 		end
 
@@ -254,6 +254,9 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/28 16:35:18  rogers
+--| Now use wel_text in set_default_minimum_size.
+--|
 --| Revision 1.37  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
 --|

@@ -908,6 +908,7 @@ private void read_header()
 	}
 	xfree (bufer);
 	bufer = (char *) 0;
+	expop(&eif_stack);
 }
 
 
@@ -1108,6 +1109,7 @@ private void iread_header()
 	}
 	xfree (bufer);
 	bufer = (char*) 0;
+	expop(&eif_stack);
 }
 
 

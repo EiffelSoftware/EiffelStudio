@@ -8,6 +8,7 @@ class ACCESS_ADDRESS_AS
 inherit
 	ACCESS_ID_AS
 		redefine
+			process,
 			feature_access_type, format, simple_format
 		end
 
@@ -27,6 +28,14 @@ feature
 			feature_name := s
 		ensure
 			feature_name_set: feature_name = s
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_access_address_as (Current)
 		end
 
 feature -- Type check

@@ -11,7 +11,16 @@ class ACCESS_ASSERT_AS
 inherit
 	ACCESS_INV_AS
 		redefine
+			process,
 			access_type, is_argument
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_access_assert_as (Current)
 		end
 
 feature -- Access

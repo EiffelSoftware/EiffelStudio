@@ -32,6 +32,14 @@ feature {AST_FACTORY} -- Initialization
 			upper_set: upper = u
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_interval_as (Current)
+		end
+
 feature -- Attributes
 
 	lower: ATOMIC_AS

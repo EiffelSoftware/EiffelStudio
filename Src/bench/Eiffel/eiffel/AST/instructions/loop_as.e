@@ -42,6 +42,14 @@ feature {AST_FACTORY} -- Initialization
 			end_location_set: end_location.is_equal (e)
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_loop_as (Current)
+		end
+
 feature -- Attributes
 
 	from_part: EIFFEL_LIST [INSTRUCTION_AS]

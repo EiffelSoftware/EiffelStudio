@@ -91,7 +91,7 @@ feature -- Status report
 			--| Implemented as a drawing area (6A-page298)
 
 	horizontal_scroll_bar: MEL_SCROLL_BAR is
-			-- Horizontal scrollbar
+			-- Horizontal scroll_bar
 		require
 			exists: not is_destroyed
 		local
@@ -107,7 +107,7 @@ feature -- Status report
 		end;
 
 	vertical_scroll_bar: MEL_SCROLL_BAR is
-			-- Vertical scrollbar
+			-- Vertical scroll_bar
 		require
 			exists: not is_destroyed
 		local

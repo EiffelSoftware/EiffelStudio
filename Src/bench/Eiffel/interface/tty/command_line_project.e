@@ -17,12 +17,21 @@ inherit
 
 	EB_SHARED_OUTPUT_TOOLS
 
-	SHARED_BENCH_LICENSES
-		rename
-			class_name as except_class_name
-		end;
-
 	SHARED_EXEC_ENVIRONMENT
+	
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
+	EXCEPTIONS
+		rename
+			class_name as except_class_name,
+			raise as raise_exception,
+			die as lic_die
+		export
+			{NONE} all
+		end
 
 feature -- Properties
 

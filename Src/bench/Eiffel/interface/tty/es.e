@@ -22,31 +22,13 @@ inherit
 	EIFFEL_ENV
 
 creation
-	make, make_unlicensed
+	make
 
 feature -- Initialization
 
 	make is
 			-- Analyze the command line options and
 			-- execute the appropriate command.
-		do
-			invoke_batch (True)
-		end
-
-	make_unlicensed is
-			-- Analyze the command line options and
-			-- execute the appropriate command.
-		do
-			invoke_batch (False)
-		end
-
-feature {NONE} -- Initialization
-
-	invoke_batch (licensed: BOOLEAN) is
-			-- Analyze the command line options and 
-			-- execute the appropriate command.
-			-- `licensed' indicates whether we need to check the
-			-- license or not.
 		local
 			temp: STRING
 			eifgen_init: INIT_SERVERS
@@ -67,70 +49,60 @@ feature {NONE} -- Initialization
 					--| directory
 				create eifgen_init.make
 
-					-- Call `init_license' only if `licensed' is `True'
-				if not licensed or else init_license then
-					if has_limited_license then
-						io.error.putstring (expiration_message)
-					end
-							-- Read the resource files
-					create new_resources.initialize
+						-- Read the resource files
+				create new_resources.initialize
 
-					if not new_resources.error_occurred then
-						analyze_options
-						if option_error then
-							print_option_error
-						elseif help_only then
-							print_help
-						elseif version_only then
-							print_version
-						elseif not file_error then
-							if output_window = Void then
-								command.set_output_window (Error_window)
+				if not new_resources.error_occurred then
+					analyze_options
+					if option_error then
+						print_option_error
+					elseif help_only then
+						print_help
+					elseif version_only then
+						print_version
+					elseif not file_error then
+						if output_window = Void then
+							command.set_output_window (Error_window)
+						else
+							command.set_output_window (output_window)
+						end
+						init_project (Project_file_name)
+						if not error_occurred then
+							if project_is_new then
+								make_new_project (equal (command.name, loop_cmd_name))
 							else
-								command.set_output_window (output_window)
+								retrieve_project
 							end
-							init_project (Project_file_name)
-							if not error_occurred then
-								if project_is_new then
-									make_new_project (equal (command.name, loop_cmd_name))
-								else
-									retrieve_project
-								end
-							end
-	
-							if output_file_option then
-								create file_degree_output.make (output_file_name)
-								Eiffel_project.set_degree_output (file_degree_output)
-							end
-	
-							if not error_occurred then
-								compilation ?= command
-								ewb_loop ?= command
-								if
-									project_is_new and then
-									compilation = Void and then ewb_loop = Void
-								then
-									create {EWB_QUICK_MELT} compilation		
-									compilation.execute
-									if system.successful then
-										command.execute
-									end
-								else
+						end
+
+						if output_file_option then
+							create file_degree_output.make (output_file_name)
+							Eiffel_project.set_degree_output (file_degree_output)
+						end
+
+						if not error_occurred then
+							compilation ?= command
+							ewb_loop ?= command
+							if
+								project_is_new and then
+								compilation = Void and then ewb_loop = Void
+							then
+								create {EWB_QUICK_MELT} compilation		
+								compilation.execute
+								if system.successful then
 									command.execute
 								end
+							else
+								command.execute
 							end
-							discard_licenses
 						end
 					end
 				end
-				if output_window /= Void and then not output_window.is_closed then
-					output_window.close
-				end
-			else
-				die (-1)
+			end
+			if output_window /= Void and then not output_window.is_closed then
+				output_window.close
 			end
 		rescue
-			discard_licenses
 			io.error.putstring ("ISE Eiffel 5: Session aborted%N")
 			io.error.putstring ("Exception tag: ")
 			temp := original_tag_name

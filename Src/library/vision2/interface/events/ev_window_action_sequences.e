@@ -48,17 +48,5 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
-feature -- Obsolete
-
-	close_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Actions to be performed when window is closed.
-		Obsolete
-			"Use close_request_actions instead."
-		do
-			Result := implementation.close_request_actions
-		ensure
-			not_void: Result /= Void
-		end
 
 end

@@ -63,5 +63,29 @@
 			</UL>
 		</UL>
 		</P>
+
+<H2>Eiffel Studio 5.2</H2>
+		<P><B>Interface modifications</B></P>
+		<UL>
+			<LI><B>EV_TEXTABLE</B> - `align_text_left', `align_text_right' and `align_text_center' have been extracted into a new class, EV_TEXT_ALIGNABLE which inherits EV_TEXTABLE. All previous descendents of EV_TEXTABLE now inherit EV_TEXT_ALIGNABLE, except EV_TREE_NODE, EV_MENU_ITEM, EV_LIST_ITEM and EV_TOOL_BAR_BUTTON</LI>
+			<LI><B>EV_TEXT_COMPONENT</B> - Now inherits EV_TEXTABLE.</LI>
+			<LI><B>EV_TEXT_ALIGNMENT_CONSTANTS</B> - New class added to support EV_TEXT_ALIGNABLE.</LI>
+		</UL>
+		<P><B>Bug fixes</B>
+		<UL>
+		<LI><B>Platform independent</B></LI>
+			<UL>
+			</UL>
+		<LI><B>Windows</B></LI>
+			<UL>
+			<LI><B>EV_RADIO_BUTTON</B> - The default minimum height after `default_create' is now enough to display the widget correctly. </LI>
+			<LI><B>EV_CHECK_BUTTON</B> - The default minimu height after `default_create' is now enough to display the widget correctly.</LI>
+			<LI><B>EV_NOTEBOOK</B> - When removing a widget from a notebook, it is now visible. Previously, the widget would be hidden.</LI>
+			</UL>
+		<LI><B>Gtk</B></LI>
+			<UL>
+			</UL>
+		</UL>
+		</P>
 		
 </HTML>

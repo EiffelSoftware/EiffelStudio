@@ -1,0 +1,18 @@
+:Base eiffelcom.hlp>ECOM
+:Title EiffelCOM Help
+1 Getting Started
+2 Creating a New Component=createnew
+2 Accessing a New Component=accessnew
+1 Microsoft Component Object Model
+2 Overview=comoverview
+2 Generalities=generalities
+2 Component Types=comtypes
+2 Deeper into COM=deepintocom
+1 The EiffelCOM Wizard
+2 Overview=wizardoverview
+2 The Wizard=wizard
+2 Accessing a Component=accesscomponent
+2 Building a Component=buildcomponent
+1 EiffelCOM Library
+2 Overview=liboverview
+2 Compound File=compoundfile

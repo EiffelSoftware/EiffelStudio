@@ -14,10 +14,11 @@ inherit
 			interface
 		end
 
-	EV_ANY_IMP
+	EV_ANY_I
 		redefine
 			interface
 		end
+
 create
 	make
 
@@ -27,8 +28,6 @@ feature {NONE}-- Initialization
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_label_new (NULL))
-				-- We need a dummy c_object as the clipboards are not widgets.
 		end
 
 	initialize is
@@ -49,14 +48,20 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
+	has_text: BOOLEAN is
+			-- Does the clipboard currently contain text?
+		do
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_is_text_available (clipboard)
+		end
+
 	text: STRING is
 			-- `Result' is current clipboard content.
 		local
 			utf8_string: EV_GTK_C_STRING
 			text_ptr: POINTER
-		do
-			if feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_is_text_available (clipboard) then
-				text_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_for_text (clipboard)
+		do			
+			text_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_for_text (clipboard)
+			if text_ptr /= Default_pointer then
 				create utf8_string.make_from_pointer (text_ptr)
 				feature {EV_GTK_EXTERNALS}.g_free (text_ptr)
 				Result := utf8_string.string
@@ -91,6 +96,12 @@ feature {NONE} -- Implementation
 			-- Pointer to the PRIMARY Gtk clipboard
 
 feature {EV_ANY_I}
+
+	destroy is
+			-- Destroy `Current'
+		do
+			is_destroyed := True
+		end
 
 	interface: EV_CLIPBOARD
 		-- Interface of `Current'

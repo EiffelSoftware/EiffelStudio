@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		local
 			filename: FILE_NAME
 			extension: STRING
-			file_location: STRING
+			file: RAW_FILE
 		do
 			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
 				extension := "ico"
@@ -112,8 +112,13 @@ feature {NONE} -- Implementation
 				filename.extend ("bitmaps")
 				filename.extend (extension)
 				filename.extend (a_type.as_lower + "." + extension)
-				create Result
-				Result.set_with_named_file (filename.out)
+				create file.make (filename.out)
+				if file.exists then
+					create Result
+					Result.set_with_named_file (filename.out)
+				else
+				Missing_files.extend (a_type.as_lower + "." + extension)
+				end
 			else
 				Missing_files.extend (a_type.as_lower + "." + extension)
 			end

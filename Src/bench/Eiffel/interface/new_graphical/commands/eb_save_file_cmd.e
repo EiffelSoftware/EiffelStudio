@@ -33,11 +33,12 @@ feature -- Properties
 --			Result := Pixmaps.bm_Modified
 --		end
 
---	tool: EB_EDITOR
-	tool: EB_CLASS_TOOL
+	tool: EB_EDITOR
+--	tool: EB_CLASS_TOOL
 			-- The tool
 
 feature {NONE} -- Implementation
+feature -- Execution
 
 	execute (argument: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Save a file with the chosen name.
@@ -104,9 +105,10 @@ feature {NONE} -- Implementation
 					end
 
 					tool.text_window.disable_clicking
-					if tool.stone /= Void and then tool.resources.parse_class_after_saving.actual_value then
+					if tool.stone /= Void then
+-- and then tool.resources.parse_class_after_saving.actual_value then
 						if tool.parse_file then
-							tool.update
+--							tool.update
 						end
 					end
 					tool.update_save_symbol

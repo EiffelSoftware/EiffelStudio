@@ -8,7 +8,7 @@ inherit
 	TEXT_FORMATTER
 		redefine
 			process_filter_item, process_after_class,
-			process_text
+			process_text, process_class_name_text
 		end;
 
 	EIFFEL_ENV;
@@ -110,6 +110,74 @@ feature {NONE} -- Text processing
 				if format.item2 /= Void then
 					print_escaped_text (text.image);
 					image.append (format.item2)
+				end
+			else
+				print_escaped_text (text.image)
+			end
+		end;
+
+	process_class_name_text (text: CLASS_NAME_TEXT) is
+		local
+			format: CELL2 [STRING, STRING];
+			last_character, current_character: CHARACTER;
+			format_item: STRING;
+			i, format_item_count: INTEGER
+		do
+			if indentation /= Void then
+				process_indentation (indentation);
+				indentation := Void
+			end;
+			if format_table.has (f_Class_name) then
+				format := format_table.item (f_Class_name);
+				from
+					format_item := format.item1;
+					format_item_count := format_item.count;
+					i := 1
+				until
+					i > format_item_count
+				loop
+					current_character := format_item.item (i);
+					if current_character = '$' then
+						if last_character = '%%' then
+							image.extend ('$')
+						else
+							image.append (text.file_name)
+						end
+					else
+						if last_character = '%%' then
+							image.extend ('%%')
+						end;
+						image.extend (current_character)
+					end;
+					last_character := current_character;
+					i := i + 1
+				end;
+				if format.item2 /= Void then
+					print_escaped_text (text.image);
+					from
+						format_item := format.item2;
+						format_item_count := format_item.count;
+						last_character := '%U';
+						i := 1
+					until
+						i > format_item_count
+					loop
+						current_character := format_item.item (i);
+						if current_character = '$' then
+							if last_character = '%%' then
+								image.extend ('$')
+							else
+								image.append (text.file_name)
+							end
+						else
+							if last_character = '%%' then
+								image.extend ('%%')
+							end;
+							image.extend (current_character)
+						end;
+						last_character := current_character;
+						i := i + 1
+					end
 				end
 			else
 				print_escaped_text (text.image)

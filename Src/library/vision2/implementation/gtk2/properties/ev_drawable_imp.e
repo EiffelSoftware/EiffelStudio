@@ -450,7 +450,7 @@ feature -- Drawing operations
 				pixmap_imp ?= a_pixmap.implementation
 				if pixmap_imp.mask /= default_pointer then
 					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
-					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, -x_src, -y_src)
+					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, x - x_src, y - y_src)
 				end
 				feature {EV_GTK_EXTERNALS}.gdk_draw_pixmap (drawable, gc,
 					pixmap_imp.drawable,

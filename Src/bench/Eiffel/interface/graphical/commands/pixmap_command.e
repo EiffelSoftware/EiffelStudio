@@ -14,7 +14,7 @@ inherit
 			execute
 		end;
 	NAMER;
-	LICENSED_COMMAND
+	BENCH_LICENSED_COMMAND
 		rename
 			parent_window as Project_tool
 		end

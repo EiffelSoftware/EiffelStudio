@@ -10,24 +10,17 @@ class
 inherit
 	EV_TOOL_BAR_TOGGLE_BUTTON_I
 		redefine
-			parent_imp,
 			interface
 		end
 
 	EV_TOOL_BAR_SELECT_BUTTON_IMP
 		redefine
 			type,
-			parent_imp,
 			interface
 		end
 
 creation
 	make
-
-feature --  Access
-	
-	parent_imp: EV_TOOL_BAR_IMP
-		-- The implementation of the parent.
 
 feature -- Status report
 
@@ -77,6 +70,9 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/04/26 16:35:12  rogers
+--| Removed unecessary redefinition of parent_imp.
+--|
 --| Revision 1.16  2000/04/24 21:23:58  rogers
 --| Removed FIXME_NOT_REVIEWED.
 --|

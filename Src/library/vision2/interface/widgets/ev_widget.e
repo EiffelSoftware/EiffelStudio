@@ -60,6 +60,8 @@ feature -- Access
 
 	cursor: EV_CURSOR is
 			-- Cursor used currently on the widget.
+		require
+			exists: not destroyed
 		do
 			Result := implementation.cursor
 		end
@@ -270,10 +272,13 @@ feature -- Element change
 			parent_set: parent = par
 		end
 
-	set_cursor (value: EV_CURSOR) is
+	set_cursor (cur: EV_CURSOR) is
 			-- Make `value' the new cursor of the widget
+		require
+			exists: not destroyed
+			valid_cursor: cur /= Void
 		do
-			implementation.set_cursor (value)
+			implementation.set_cursor (cur)
 		end
 
 	set_background_color (color: EV_COLOR) is

@@ -34,7 +34,7 @@ creation
 
 feature -- Initialization
 
-	make (w,d: INTEGER) is
+	make (w, d: INTEGER) is
 		require
 			reasonable_field: w >= 1
 			reasonable_decimals: d <= w
@@ -138,7 +138,6 @@ feature -- Status setting
 			not after_decimal_separate
 		end
 
-
 	show_zero is
 			-- Show 0.5 as 0.5 .
 		do
@@ -166,7 +165,7 @@ feature -- Conversion
 		do
 			if d < 0 then
 				sign := -1
-				integral :=  floor (-d)
+				integral := floor (-d)
 				fraction := floor ((-d - integral ) * 10^(decimals+1))
 			elseif d > 0 then
 				sign := 1
@@ -260,7 +259,9 @@ feature {NONE} -- Implementation
 invariant
 	separate_all: no_separator implies not after_decimal_separate
 
-end -- class FORMAT_REAL
+end -- class FORMAT_DOUBLE
+
+
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software

@@ -10,7 +10,6 @@
 	Handling Eiffel-C Transfer of Objects to Routines.
 */
 
-#ifdef ISE_GC
 #include "eif_portable.h"
 #include "eif_globals.h"
 #include "rt_malloc.h"
@@ -19,6 +18,7 @@
 #include "eif_cecil.h"
 #include "eif_hector.h"
 
+#ifdef ISE_GC
 #ifdef DEBUG2
 int stck_nb_items (const struct stack stk);
 int stck_nb_items_free_stack ();

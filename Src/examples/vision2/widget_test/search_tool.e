@@ -32,6 +32,7 @@ feature -- Access
 		do
 			internal_text_entry := text_entry
 			internal_text_entry.change_actions.extend (agent update_text_entry_for_change)
+			internal_text_entry.return_actions.extend (agent return_pressed_so_search)
 		ensure
 			text_entry_set: internal_text_entry = text_entry
 		end
@@ -121,5 +122,13 @@ feature {NONE} -- Implementation
 	internal_text_entry: EV_TEXT_FIELD
 		-- text field used for inputting search strings.
 		-- External to `Currrent' and may be Void if not associated.
+		
+	return_pressed_so_search is
+			-- Return has been pressed in `internal_text_entry', so
+			-- perform a search
+		do
+			search (internal_text_entry.text)
+		end
+		
 
 end -- class SEARCH_TOOL

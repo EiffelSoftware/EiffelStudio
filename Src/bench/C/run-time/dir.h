@@ -34,6 +34,7 @@
 #include <descrip.h>
 #include "vmsdirent.h"		/* local to run-time */
 #define DIRENTRY struct dirent 
+#elif defined EIF_WIN32
 #else
 	Sorry! You have to find a directory package...
 #endif

@@ -43,6 +43,41 @@ feature -- Properties
 		do
 		end;
 
+feature -- Properties for EiffelCase ( reverse )
+
+	set_x ( a : INTEGER ) is
+		do
+			x := a
+		end
+	set_y ( a : INTEGER ) is
+		do
+			y := a
+		end
+
+	set_color ( cl : STRING ) is
+		do
+			if cl /= Void then
+				color_name := clone (cl)
+			end
+		end
+
+	set_hidden ( h : STRING ) is
+		do
+			if h=Void or h.is_equal("FALSE") then
+				is_hidden := FALSE
+			else
+				is_hidden := TRUE
+			end
+		end
+
+	x : INTEGER
+
+	y : INTEGER
+
+	color_name : STRING
+
+	is_hidden : BOOLEAN
+
 feature -- Setting 
 
 	make (s: STRING) is

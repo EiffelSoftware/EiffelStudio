@@ -69,6 +69,58 @@ feature {CASE_CLUSTER_INFO}
 			record_relation_com.execute;
 			!! record_inherit_info_com.make (classc, s_class_data);
 			record_inherit_info_com.execute;
+			info_reverse 
 		end
+
+	info_reverse  is
+		 local                                                                                   
+            fi : PLAIN_TEXT_FILE                                                                
+            file_n : FILE_NAME                                                                  
+            st : STRING 
+	    error : BOOLEAN  
+	    error2 : BOOLEAN                                                                                                                                   
+        do                       
+		if not error then
+			!! file_n.make
+			file_n.extend(classc.cluster.path)
+			file_n.extend(classc.lace_class.name)
+			file_n.add_extension ("cas")
+			!! fi.make (file_n)
+			if fi.exists then
+				fi.open_read
+				fi.read_line
+				st := clone ( fi.last_string)
+				if st.is_integer then
+					s_class_data.set_x ( st.to_integer )
+				else
+					error2 := TRUE
+				end
+				fi.read_line
+				st := clone (fi.last_string)
+				if st.is_integer then
+					s_class_data.set_y ( st.to_integer)
+				else
+					error2 := TRUE
+				end
+				fi.read_line
+				s_class_data.set_color (fi.last_string)
+				fi.read_line
+				s_class_data.set_hidden ( fi.last_string)
+				fi.close
+			end
+			if error2 then
+				io.put_string("%Nerror1%N")
+				s_class_data.set_x (0)
+				s_class_data.set_y (0)
+			end
+		end
+	rescue
+		error := TRUE
+		io.put_string ("%N repechage %N")
+		if not fi.is_closed then
+			fi.close
+		end
+		retry
+	end
 
 end

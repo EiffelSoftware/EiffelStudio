@@ -35,12 +35,15 @@ feature {NONE} -- Recording information for eiffelcase
 			feat_dep: FEATURE_DEPENDANCE;
 			sup_class_id: CLASS_ID;
 			features: ARRAYED_LIST [S_FEATURE_DATA];
+			counter : INTEGER
 		do
 			class_dep := Depend_server.disk_item (classc.id);
 			if not class_dep.empty and then class_dep.count > 1 then
 				-- count > 1 is required since the class itself is always
 				features := s_class_data.features;
-				!! c_l.make (1);
+				counter := features.count + s_class_data.public_features.count +
+						s_class_data.private_features.count
+				!! c_l.make (counter )
 				from
 					features.start
 				until
@@ -89,8 +92,8 @@ feature {NONE} -- Recording information for eiffelcase
 	record_remaining_suppliers (c_l: ARRAYED_LIST [S_CLI_SUP_DATA]; 
 				features: ARRAYED_LIST [S_FEATURE_DATA]; is_hidden: BOOLEAN) is
 			-- Record remaining supplies that are not detected by the compiler.
-			--| Generics are not recorded - Eg LINKED_LIST [FOO] will produce
-			--| a relation from class to LINKED_LIST and not FOO.
+			-- Generics are not recorded - Eg LINKED_LIST [FOO] will produce
+			-- a relation from class to LINKED_LIST and not FOO. pascalf
 			-- Set the labels for the suppliers `c_l' for routines that are not
 			-- hidden (`is_hidden').
 		require
@@ -113,11 +116,6 @@ feature {NONE} -- Recording information for eiffelcase
 				features.after
 			loop
 				feature_data := features.item;
-debug ("CASE_FEATURE")
-	io.error.putstring ("%T%T%Tanalyzing feature: ");
-	io.error.putstring (feature_data.name);
-	io.error.new_line;
-end;
 				if feature_data.result_type /= Void then
 					result_type ?= feature_data.result_type.type	
 					if result_type /= Void then
@@ -155,8 +153,9 @@ end;
 							if not is_hidden then
 								label := cli_sup_data.label;
 								if label = Void then
-									!! label.make (0);
-									label.append (feature_data.name);
+									--!! label.make (0);
+									--label.append (feature_data.name)
+									label := clone (feature_data.name)
 									cli_sup_data.set_label (label);
 								elseif not label_done then
 									label.append (", ...");
@@ -201,12 +200,6 @@ end;
 								loop
 									c_l.forth
 								end;
-debug ("CASE_FEATURE")
-	io.error.putstring ("%T%T%TArgument: ");
--- Not available (class_id in an INTEGER)
---	io.error.putstring (System.class_of_id (result_type.class_id).name);
-	io.error.new_line;
-end
 								if c_l.after then
 										-- Supplier hasn't been recorded.
 									!! cli_sup_data;

@@ -21,14 +21,11 @@ feature {NONE} -- Initialization
 			non_void_name: n /= Void
 			non_void_signature: s /= Void
 		do
-			name := clone (n)
-			check
-				name_set: n = name
-			end
-			name.to_lower
+			name := n.as_lower
 			signature := s
 		ensure
 			signature_set: signature = s
+			name_set: name.is_equal (n.as_lower)
 		end
 
 feature -- Access

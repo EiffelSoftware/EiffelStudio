@@ -71,6 +71,7 @@ cluster
 		eiffel_error_unredefined:		"$BENCH/Eiffel/eiffel/error/unredefined";
 		generation:			"$BENCH/Eiffel/eiffel/generation";
 		genericity:			"$BENCH/Eiffel/eiffel/genericity";
+		ids:				"$BENCH/Eiffel/eiffel/ids";
 		inheritance:		"$BENCH/Eiffel/eiffel/inheritance";
 		interface:			"$BENCH/Eiffel/eiffel/interface";
 		polymorphism:		"$BENCH/Eiffel/eiffel/polymorphism";

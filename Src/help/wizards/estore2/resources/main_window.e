@@ -32,6 +32,7 @@ feature -- Initialization
 			not_void: appli /= Void
 		do
 			default_create
+			close_actions.extend (~exit)
 			application := appli		
 			create_widgets
 			retrieve_info
@@ -49,7 +50,10 @@ feature -- Initialization
 		do
 			if not b then
 				if not initialized then
-					db_manager.log_and_connect (username, password, data_source)
+					db_manager.set_connection_information (username, password, data_source)
+					if not db_manager.has_error then
+						db_manager.establish_connection
+					end
 				end
 				b := db_manager.session_control.is_connected 
 				if b then
@@ -211,7 +215,6 @@ feature -- Actions
 		require
 			appli_not_void: application /= Void
 		do
-			current.destroy
 			application.destroy_windows
 		end
 

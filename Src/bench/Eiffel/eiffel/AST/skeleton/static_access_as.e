@@ -211,7 +211,7 @@ feature -- Conveniences
 		do
 			constant_i := associated_constant
 			integer_value ?= constant_i.value
-			create Result.make (associated_class, integer_value.value, constant_i)
+			create Result.make (associated_class, integer_value.integer_32_value, constant_i)
 		end
 
 	make_character: CHAR_CONST_VAL_B is

@@ -102,7 +102,7 @@ feature -- Conveniences
 		do
 			constant_i ?= context.current_class.feature_table.item (Current)
 			integer_value ?= constant_i.value
-			create Result.make (context.current_class, integer_value.value, constant_i)
+			create Result.make (context.current_class, integer_value.integer_32_value, constant_i)
 		end
 
 	make_character: CHAR_CONST_VAL_B is

@@ -41,7 +41,18 @@ feature -- Access
 			valid_data: dt /= Void
 			valid_type: dt_type /= Void
 		do
-			implementation.activate_pick_and_drop (mouse_button, dt, dt_type)
+			default_activate_pnd (Void, mouse_button, dt, dt_type)
+		end
+
+	default_activate_pnd (pt: EV_POINT; mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE) is
+			-- Activate the pick and drop mechanism.
+			-- Draw a line from the point `pt'
+			-- to the current cursor position.
+		require
+			valid_data: dt /= Void
+			valid_type: dt_type /= Void
+		do
+			implementation.activate_pick_and_drop (pt, mouse_button, dt, dt_type)
 		end
 
 feature {NONE} -- Implementation

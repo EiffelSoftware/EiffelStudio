@@ -1,33 +1,28 @@
--- Binary arithmetic operation
+indexing
 
-deferred class ARITHMETIC_AS
+	description: "Binary arithmetic operation. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+deferred class ARITHMETIC_AS_B
 
 inherit
 
-	BINARY_AS
+	ARITHMETIC_AS
+		rename
+			left as old_left,
+			right as old_right
+		end; 
+
+	BINARY_AS_B
+		undefine
+			operator_is_keyword, balanced_result,
+			balanced, operator_is_special
 		redefine
 			balanced, balanced_result, operator_is_special,
 			operator_is_keyword
+		select
+			left, right
 		end
 
-feature
-
-	balanced: BOOLEAN is
-			-- Is the current binary operation subject to the balancing
-			-- rule proper to simple numeric types ?
-		do
-			Result := True;
-		end;
-
-	balanced_result: BOOLEAN is
-			-- is the result of the infix operation subject to the
-			-- balancing rule ?
-		do
-			Result := True;
-		end;
-
-	operator_is_special: BOOLEAN is true;
-
-	operator_is_keyword: BOOLEAN is false;
-
-end
+end -- class ARITHMETIC_AS_B
